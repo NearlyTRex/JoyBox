@@ -39,6 +39,17 @@ parser.add_enum_argument(
 parser.add_string_argument(args = ("-w", "--exclude_paths"), default = "", description = "Excluded paths (comma separated list)")
 parser.add_boolean_argument(args = ("-e", "--skip_existing"), description = "Skip existing files")
 parser.add_boolean_argument(args = ("-a", "--skip_identical"), description = "Skip identical files")
+parser.add_enum_argument(
+    args = ("-r", "--cryption_type"),
+    arg_type = config.CryptionType,
+    default = config.CryptionType.NONE,
+    description = "Cryption type (encrypt or decrypt files during copy)")
+parser.add_enum_argument(
+    args = ("-k", "--locker_type"),
+    arg_type = config.LockerType,
+    default = config.LockerType.HETZNER,
+    description = "Locker type (for encryption passphrase)")
+parser.add_boolean_argument(args = ("-d", "--delete_original"), description = "Delete original files after encrypt/decrypt")
 parser.add_common_arguments()
 args, unknownargs = parser.parse_known_args()
 
@@ -77,16 +88,24 @@ def main():
             "Destination: %s" % dest_file_root,
             "Type: %s" % args.backup_type
         ]
+        if args.cryption_type != config.CryptionType.NONE:
+            details.append("Cryption: %s" % args.cryption_type)
         if not system.PromptForPreview("Backup files", details):
             system.LogWarning("Operation cancelled by user")
             return
+
+    # Get exclude paths (filter empty strings)
+    exclude_paths = [p for p in args.exclude_paths.split(",") if p]
 
     # Copy files
     if args.backup_type == config.BackupType.COPY:
         backup.CopyFiles(
             input_base_path = source_file_root,
             output_base_path = dest_file_root,
-            exclude_paths = args.exclude_paths.split(","),
+            cryption_type = args.cryption_type,
+            locker_type = args.locker_type,
+            exclude_paths = exclude_paths,
+            delete_original = args.delete_original,
             show_progress = True,
             skip_existing = args.skip_existing,
             skip_identical = args.skip_identical,
@@ -100,7 +119,7 @@ def main():
             input_base_path = source_file_root,
             output_base_path = dest_file_root,
             archive_type = config.ArchiveFileType.SEVENZIP,
-            exclude_paths = args.exclude_paths.split(","),
+            exclude_paths = exclude_paths,
             show_progress = True,
             skip_existing = args.skip_existing,
             skip_identical = args.skip_identical,

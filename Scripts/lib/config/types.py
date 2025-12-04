@@ -206,6 +206,12 @@ class BackupType(EnumType):
     COPY                    = ("Copy")
     ARCHIVE                 = ("Archive")
 
+# Cryption types
+class CryptionType(EnumType):
+    NONE                    = ("None")
+    ENCRYPT                 = ("Encrypt")
+    DECRYPT                 = ("Decrypt")
+
 # Decompiler action type
 class DecompilerActionType(EnumType):
     LAUNCH_PROGRAM          = ("LaunchProgram")

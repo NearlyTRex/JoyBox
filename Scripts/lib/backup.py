@@ -7,6 +7,8 @@ import config
 import system
 import environment
 import archive
+import cryption
+import lockerinfo
 
 # Resolve path
 def ResolvePath(
@@ -37,8 +39,8 @@ def ResolvePath(
     # Return result
     return resolved_path
 
-# Copy files
-def CopyFiles(
+# Copy files normally
+def CopyFilesNormally(
     input_base_path,
     output_base_path,
     exclude_paths = [],
@@ -49,13 +51,15 @@ def CopyFiles(
     pretend_run = False,
     exit_on_failure = False):
 
-    # Look at non-excluded dirs in the input base path
+    # Look at non-excluded files in the input base path
     for src_file in system.BuildFileList(input_base_path, excludes = exclude_paths, use_relative_paths = True):
+        src_path = system.JoinPaths(input_base_path, src_file)
+        dest_path = system.JoinPaths(output_base_path, src_file)
 
-        # Copy files
+        # Copy file
         success = system.SmartCopy(
-            src = system.JoinPaths(input_base_path, src_file),
-            dest = system.JoinPaths(output_base_path, src_file),
+            src = src_path,
+            dest = dest_path,
             show_progress = show_progress,
             skip_existing = skip_existing,
             skip_identical = skip_identical,
@@ -63,11 +67,199 @@ def CopyFiles(
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if not success:
-            system.LogError("Unable to copy backup files from %s to %s" % (input_base_path, output_base_path))
+            system.LogError("Unable to copy file '%s'" % src_path)
             return False
 
     # Should be successful
     return True
+
+# Copy and encrypt files
+def CopyAndEncryptFiles(
+    input_base_path,
+    output_base_path,
+    passphrase,
+    exclude_paths = [],
+    delete_original = False,
+    skip_existing = False,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Validate passphrase
+    if not cryption.IsPassphraseValid(passphrase):
+        system.LogError("Invalid passphrase")
+        return False
+
+    # Look at non-excluded files in the input base path
+    for src_file in system.BuildFileList(input_base_path, excludes = exclude_paths, use_relative_paths = True):
+        src_path = system.JoinPaths(input_base_path, src_file)
+        src_dir = system.GetFilenameDirectory(src_file)
+        src_filename = system.GetFilenameFile(src_file)
+        dest_dir = system.JoinPaths(output_base_path, src_dir)
+
+        # Generate encrypted output path
+        encrypted_name = cryption.GenerateEncryptedFilename(src_filename)
+        dest_path = system.JoinPaths(dest_dir, encrypted_name)
+
+        # Skip if already exists
+        if skip_existing and system.DoesPathExist(dest_path):
+            continue
+
+        # Ensure destination directory exists
+        system.MakeDirectory(
+            src = dest_dir,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+
+        # Encrypt the file
+        success = cryption.EncryptFile(
+            src = src_path,
+            passphrase = passphrase,
+            output_file = dest_path,
+            delete_original = delete_original,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if not success:
+            system.LogError("Unable to encrypt file '%s'" % src_path)
+            return False
+
+    # Should be successful
+    return True
+
+# Copy and decrypt files
+def CopyAndDecryptFiles(
+    input_base_path,
+    output_base_path,
+    passphrase,
+    exclude_paths = [],
+    delete_original = False,
+    skip_existing = False,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Validate passphrase
+    if not cryption.IsPassphraseValid(passphrase):
+        system.LogError("Invalid passphrase")
+        return False
+
+    # Look at non-excluded files in the input base path
+    for src_file in system.BuildFileList(input_base_path, excludes = exclude_paths, use_relative_paths = True):
+        src_path = system.JoinPaths(input_base_path, src_file)
+        src_dir = system.GetFilenameDirectory(src_file)
+        dest_dir = system.JoinPaths(output_base_path, src_dir)
+
+        # Get real filename from encrypted file
+        if cryption.IsFileEncrypted(src_path):
+            real_name = cryption.GetEmbeddedFilename(
+                src = src_path,
+                passphrase = passphrase,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
+            if not real_name:
+                system.LogError("Unable to get embedded filename from '%s'" % src_path)
+                return False
+        else:
+            real_name = system.GetFilenameFile(src_path)
+
+        # Generate decrypted output path
+        dest_path = system.JoinPaths(dest_dir, real_name)
+
+        # Skip if already exists
+        if skip_existing and system.DoesPathExist(dest_path):
+            continue
+
+        # Ensure destination directory exists
+        system.MakeDirectory(
+            src = dest_dir,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+
+        # Decrypt the file
+        success = cryption.DecryptFile(
+            src = src_path,
+            passphrase = passphrase,
+            output_file = dest_path,
+            delete_original = delete_original,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if not success:
+            system.LogError("Unable to decrypt file '%s'" % src_path)
+            return False
+
+    # Should be successful
+    return True
+
+# Copy files
+def CopyFiles(
+    input_base_path,
+    output_base_path,
+    cryption_type = None,
+    locker_type = None,
+    exclude_paths = [],
+    delete_original = False,
+    show_progress = False,
+    skip_existing = False,
+    skip_identical = False,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Default to no cryption
+    if not cryption_type:
+        cryption_type = config.CryptionType.NONE
+
+    # Plain copy
+    if cryption_type == config.CryptionType.NONE:
+        return CopyFilesNormally(
+            input_base_path = input_base_path,
+            output_base_path = output_base_path,
+            exclude_paths = exclude_paths,
+            show_progress = show_progress,
+            skip_existing = skip_existing,
+            skip_identical = skip_identical,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+
+    # Get passphrase from locker
+    locker_info = lockerinfo.LockerInfo(locker_type)
+    if not locker_info:
+        system.LogError("Locker %s not found" % locker_type)
+        return False
+    passphrase = locker_info.get_passphrase()
+
+    # Encrypt
+    if cryption_type == config.CryptionType.ENCRYPT:
+        return CopyAndEncryptFiles(
+            input_base_path = input_base_path,
+            output_base_path = output_base_path,
+            passphrase = passphrase,
+            exclude_paths = exclude_paths,
+            delete_original = delete_original,
+            skip_existing = skip_existing,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+
+    # Decrypt
+    elif cryption_type == config.CryptionType.DECRYPT:
+        return CopyAndDecryptFiles(
+            input_base_path = input_base_path,
+            output_base_path = output_base_path,
+            passphrase = passphrase,
+            exclude_paths = exclude_paths,
+            delete_original = delete_original,
+            skip_existing = skip_existing,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+    return False
 
 # Archive folder
 def ArchiveFolder(
