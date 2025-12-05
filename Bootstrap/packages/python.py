@@ -20,6 +20,7 @@ python[constants.EnvironmentType.REMOTE_WINDOWS] = []
 ###########################################################
 python[constants.EnvironmentType.LOCAL_UBUNTU] += [
     "aenum",
+    "anthropic",
     "bs4",
     "colorama",
     "cryptography",

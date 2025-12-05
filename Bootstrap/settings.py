@@ -144,6 +144,10 @@ ini_defaults["UserData.GitHub"] = {}
 ini_defaults["UserData.GitHub"]["github_username"] = ""
 ini_defaults["UserData.GitHub"]["github_access_token"] = ""
 
+# UserData.Anthropic
+ini_defaults["UserData.Anthropic"] = {}
+ini_defaults["UserData.Anthropic"]["anthropic_api_key"] = ""
+
 # UserData.Audible
 ini_defaults["UserData.Audible"] = {}
 ini_defaults["UserData.Audible"]["audible_activation_bytes"] = ""
