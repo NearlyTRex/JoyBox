@@ -47,7 +47,7 @@ When using encryption or decryption, the passphrase is retrieved from the config
 
 ### Game Path Resolution
 
-These options build paths relative to the locker root directory:
+These options build paths relative to the locker root directory. When no explicit input/output paths are provided, the tool resolves paths based on game categories:
 
 | Option | Description |
 |--------|-------------|
@@ -55,8 +55,10 @@ These options build paths relative to the locker root directory:
 | `-c, --game_category` | Category (e.g., `Nintendo`, `Sony`, `Computer`) |
 | `-s, --game_subcategory` | Subcategory (e.g., `Nintendo Switch`, `Steam`) |
 | `-g, --game_offset` | Additional path offset |
-| `-l, --source_type` | Source location: `Local` (default) or `Remote` |
-| `-q, --destination_type` | Destination location: `Local` (default) or `Remote` |
+| `-l, --source_type` | Source location: `Local` (default) or `Remote` (mounted) |
+| `-q, --destination_type` | Destination location: `Local` (default) or `Remote` (mounted) |
+
+**Note:** The `Remote` source/destination type requires the remote locker to be mounted first using `sync_tool -a Mount`. This allows copying between local and mounted remote storage.
 
 ### Common Options
 
@@ -123,6 +125,30 @@ Decrypt files and remove the encrypted originals after successful decryption:
 
 ```bash
 backup_tool -i /encrypted -o /decrypted -r Decrypt -d
+```
+
+### Copy from mounted remote to local
+
+First mount the remote locker, then copy and decrypt files:
+
+```bash
+# Mount the remote locker
+sync_tool -a Mount -t Hetzner
+
+# Copy from remote (mounted) to local, decrypting in the process
+backup_tool -l Remote -q Local -u Roms -c Nintendo -s "Nintendo Switch" -r Decrypt
+```
+
+### Copy from local to mounted remote
+
+Encrypt and copy local files to the mounted remote:
+
+```bash
+# Mount the remote locker
+sync_tool -a Mount -t Hetzner
+
+# Copy from local to remote (mounted), encrypting in the process
+backup_tool -l Local -q Remote -u Roms -c Nintendo -s "Nintendo Switch" -r Encrypt
 ```
 
 ## Notes
