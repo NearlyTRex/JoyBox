@@ -1116,13 +1116,16 @@ def IterateSelectedGameInfos(
         if game_name_filter:
             game_names = [g for g in game_names if g == game_name_filter]
         for game_name in game_names:
-            yield GameInfo(
-                game_supercategory = game_supercategory,
-                game_category = game_category,
-                game_subcategory = game_subcategory,
-                game_name = game_name,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+            try:
+                yield GameInfo(
+                    game_supercategory = game_supercategory,
+                    game_category = game_category,
+                    game_subcategory = game_subcategory,
+                    game_name = game_name,
+                    verbose = verbose,
+                    pretend_run = pretend_run,
+                    exit_on_failure = exit_on_failure)
+            except Exception as e:
+                system.LogWarning("Skipping '%s': %s" % (game_name, str(e)))
 
 ###########################################################
