@@ -263,6 +263,12 @@ class Ghidra(toolbase.ToolBase):
                 },
                 "package_dir": "Ghidra/lib/Ghidra/Features/PyGhidra/pypkg/src",
                 "package_name": "pyghidra"
+            },
+            "GhidraHeadless": {
+                "program": {
+                    "windows": "Ghidra/lib/support/analyzeHeadless.bat",
+                    "linux": "Ghidra/lib/support/analyzeHeadless"
+                }
             }
         }
 

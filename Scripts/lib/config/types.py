@@ -215,12 +215,7 @@ class CryptionType(EnumType):
 # Decompiler action type
 class DecompilerActionType(EnumType):
     LAUNCH_PROGRAM          = ("LaunchProgram")
-    EXPORT_FUNCTIONS        = ("ExportFunctions")
-    EXPORT_STRINGS          = ("ExportStrings")
-    EXPORT_STRUCTS          = ("ExportStructs")
-    EXPORT_UNIONS           = ("ExportUnions")
-    EXPORT_TYPEDEFS         = ("ExportTypedefs")
-    EXPORT_ENUMS            = ("ExportEnums")
+    RUN_HEADLESS            = ("RunHeadless")
 
 # Github action type
 class GithubActionType(EnumType):

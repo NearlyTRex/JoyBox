@@ -25,9 +25,15 @@ parser.add_string_argument(args = ("-n", "--project_name"), description = "Proje
 parser.add_string_argument(args = ("-l", "--project_language"), default = "x86:LE:32:watcom", description = "Project language")
 parser.add_string_argument(args = ("-c", "--project_cspec"), default = "watcomcpp", description = "Project compiler spec")
 parser.add_input_path_argument(args = ("-r", "--project_dir"), description = "Project directory")
-parser.add_input_path_argument(args = ("-i", "--program_binary_file"), description = "Program binary file")
 parser.add_string_argument(args = ("-g", "--program_name"), description = "Program name")
-parser.add_output_path_argument(args = ("-o", "--export_dir"), description = "Export directory")
+parser.add_string_argument(args = ("--preset",), description = "Preset name (e.g., NocturneDecomp)")
+parser.add_string_argument(args = ("--script",), description = "Script name from preset (e.g., export_annotations)")
+parser.add_input_path_argument(args = ("--script_path",), description = "Script directory path (manual mode)")
+parser.add_string_argument(args = ("--script_name",), description = "Script filename (manual mode)")
+parser.add_string_argument(args = ("--script_args",), description = "Arguments to pass to the script")
+parser.add_boolean_argument(args = ("--run_analysis",), description = "Run Ghidra analysis before script (slower)")
+parser.add_boolean_argument(args = ("--list_presets",), description = "List available presets and exit")
+parser.add_boolean_argument(args = ("--list_scripts",), description = "List available scripts for a preset and exit")
 parser.add_common_arguments()
 args, unknown = parser.parse_known_args()
 
@@ -37,6 +43,30 @@ def main():
     # Check requirements
     setup.CheckRequirements()
 
+    # List presets
+    if args.list_presets:
+        system.LogInfo("Available presets:")
+        for preset_name, desc in decompiler.ListPresets():
+            system.LogInfo("  %s - %s" % (preset_name, desc))
+        return
+
+    # List scripts
+    if args.list_scripts:
+        if args.preset:
+            scripts = decompiler.ListPresetScripts(args.preset)
+            if scripts is None:
+                system.LogError("Preset not found: %s" % args.preset)
+                return
+            system.LogInfo("Available scripts for '%s':" % args.preset)
+            for script_name, desc in scripts:
+                system.LogInfo("  %s - %s" % (script_name, desc))
+        else:
+            for preset_name, preset_desc in decompiler.ListPresets():
+                system.LogInfo("%s:" % preset_name)
+                for script_name, desc in decompiler.ListPresetScripts(preset_name):
+                    system.LogInfo("  %s - %s" % (script_name, desc))
+        return
+
     # Launch program
     if args.action == config.DecompilerActionType.LAUNCH_PROGRAM:
         decompiler.LaunchProgram(
@@ -45,60 +75,44 @@ def main():
             exit_on_failure = args.exit_on_failure)
         return
 
-    # Create project options
-    project_options = decompiler.ProjectOptions(
-        project_name = args.project_name,
-        project_dir = parser.get_checked_path("project_dir"),
-        project_language = args.project_language,
-        project_cspec = args.project_cspec,
-        program_name = args.program_name,
-        program_binary_file = parser.get_checked_path("program_binary_file"),
-        export_dir = parser.get_checked_path("export_dir"))
+    # Run headless script
+    if args.action == config.DecompilerActionType.RUN_HEADLESS:
 
-    # Open project
-    with decompiler.DecompilerProject(project_options) as project:
-
-        # Export functions
-        if args.action == config.DecompilerActionType.EXPORT_FUNCTIONS:
-            project.ExportFunctions(
+        # Preset mode
+        if args.preset:
+            if not args.script:
+                system.LogError("--script is required when using --preset")
+                system.LogInfo("Use --list_scripts --preset %s to see available scripts" % args.preset)
+                return
+            decompiler.RunHeadlessScriptFromPreset(
+                preset_name = args.preset,
+                script_name = args.script,
+                script_args = args.script_args,
+                noanalysis = not args.run_analysis,
                 verbose = args.verbose,
                 pretend_run = args.pretend_run,
                 exit_on_failure = args.exit_on_failure)
+            return
 
-        # Export strings
-        elif args.action == config.DecompilerActionType.EXPORT_STRINGS:
-            project.ExportStrings(
-                verbose = args.verbose,
-                pretend_run = args.pretend_run,
-                exit_on_failure = args.exit_on_failure)
-
-        # Export structs
-        elif args.action == config.DecompilerActionType.EXPORT_STRUCTS:
-            project.ExportStructs(
-                verbose = args.verbose,
-                pretend_run = args.pretend_run,
-                exit_on_failure = args.exit_on_failure)
-
-        # Export unions
-        elif args.action == config.DecompilerActionType.EXPORT_UNIONS:
-            project.ExportUnions(
-                verbose = args.verbose,
-                pretend_run = args.pretend_run,
-                exit_on_failure = args.exit_on_failure)
-
-        # Export typedefs
-        elif args.action == config.DecompilerActionType.EXPORT_TYPEDEFS:
-            project.ExportTypedefs(
-                verbose = args.verbose,
-                pretend_run = args.pretend_run,
-                exit_on_failure = args.exit_on_failure)
-
-        # Export enums
-        elif args.action == config.DecompilerActionType.EXPORT_ENUMS:
-            project.ExportEnums(
-                verbose = args.verbose,
-                pretend_run = args.pretend_run,
-                exit_on_failure = args.exit_on_failure)
+        # Manual mode
+        project_dir = parser.get_checked_path("project_dir")
+        script_path = parser.get_checked_path("script_path")
+        if not all([project_dir, args.project_name, args.program_name, script_path, args.script_name]):
+            system.LogError("Manual mode requires: --project_dir, --project_name, --program_name, --script_path, --script_name")
+            system.LogInfo("Or use preset mode with: --preset <name> --script <script>")
+            system.LogInfo("Use --list_presets to see available presets")
+            return
+        decompiler.RunHeadlessScript(
+            project_dir = project_dir,
+            project_name = args.project_name,
+            program_name = args.program_name,
+            script_path = script_path,
+            script_name = args.script_name,
+            script_args = args.script_args,
+            noanalysis = not args.run_analysis,
+            verbose = args.verbose,
+            pretend_run = args.pretend_run,
+            exit_on_failure = args.exit_on_failure)
 
 # Start
 if __name__ == "__main__":
