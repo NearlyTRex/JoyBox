@@ -6,7 +6,7 @@ import sys
 decompiler_presets = {
     "NocturneDecomp": {
         "description": "Nocturne game decompilation project",
-        "repo_path": "~/Repositories/NocturneDecomp",
+        "repository": "NocturneDecomp",
         "project_dir": "projects",
         "project_name": "NocturneEdit",
         "program_name": "nocedit.exe",

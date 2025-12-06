@@ -5,6 +5,7 @@ import sys
 # Local imports
 import config
 import system
+import environment
 import programs
 import command
 
@@ -35,24 +36,26 @@ def ResolvePresetPaths(preset_name):
     if not preset:
         return None
 
-    # Resolve script paths
+    # Resolve repository path
     resolved = dict(preset)
-    repo_path = os.path.expanduser(preset.get("repo_path", ""))
-    resolved["repo_path"] = os.path.abspath(repo_path)
-    resolved["project_dir_abs"] = os.path.join(resolved["repo_path"], preset.get("project_dir", ""))
+    repo_path = os.path.join(environment.GetRepositoriesRootDir(), preset.get("repository", ""))
+    resolved["repo_path"] = repo_path
+    resolved["project_dir_abs"] = os.path.join(repo_path, preset.get("project_dir", ""))
+
+    # Resolve script paths
     if "scripts" in resolved:
         resolved_scripts = {}
         for name, script_config in resolved["scripts"].items():
             resolved_script = dict(script_config)
             resolved_script["script_path_abs"] = os.path.join(
-                resolved["repo_path"],
+                repo_path,
                 script_config.get("script_path", "")
             )
             if "default_args" in script_config:
                 resolved_args = []
                 for arg in script_config["default_args"]:
                     if not arg.startswith("-") and "/" in arg:
-                        resolved_args.append(os.path.join(resolved["repo_path"], arg))
+                        resolved_args.append(os.path.join(repo_path, arg))
                     else:
                         resolved_args.append(arg)
                 resolved_script["default_args_abs"] = resolved_args

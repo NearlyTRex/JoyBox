@@ -603,6 +603,14 @@ def GetScriptsExecutableExtension():
         return ""
 
 ###########################################################
+# Repositories
+###########################################################
+
+# Get repositories root dir
+def GetRepositoriesRootDir():
+    return ini.GetIniPathValue("UserData.Dirs", "repositories_dir")
+
+###########################################################
 # Cache
 ###########################################################
 
