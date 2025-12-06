@@ -170,12 +170,16 @@ class ArgumentParser:
             description = description)
 
     # Get input path
-    def get_input_path(self):
-        return self.get_checked_path("input_path")
+    def get_input_path(self, check_exists = True):
+        if check_exists:
+            return self.get_checked_path("input_path")
+        return self.get_path("input_path")
 
     # Get output path
-    def get_output_path(self):
-        return self.get_checked_path("output_path")
+    def get_output_path(self, check_exists = True):
+        if check_exists:
+            return self.get_checked_path("output_path")
+        return self.get_path("output_path")
 
     #################################################
 

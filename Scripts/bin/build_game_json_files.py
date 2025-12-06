@@ -58,7 +58,7 @@ def main():
         if args.game_name:
             game_names = [g for g in game_names if g == args.game_name]
         for game_name in game_names:
-            game_root = parser.get_input_path() if args.game_name else None
+            game_root = parser.get_input_path(check_exists = False)
             json_file = environment.GetGameJsonMetadataFile(game_supercategory, game_category, game_subcategory, game_name)
             games_to_process.append((game_supercategory, game_category, game_subcategory, game_name, game_root, json_file))
 
