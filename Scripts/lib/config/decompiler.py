@@ -60,6 +60,12 @@ decompiler_presets = {
                 "script_path": "scripts/Jython",
                 "script_name": "import_annotations_headless.py",
                 "default_args": ["annotations/nocedit.exe"]
+            },
+            "analyze_crt": {
+                "description": "Analyze CRT functions for calling convention and signature issues",
+                "script_path": "scripts/Jython",
+                "script_name": "analyze_crt_functions.py",
+                "default_args": []
             }
         }
     }
