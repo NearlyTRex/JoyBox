@@ -191,6 +191,51 @@ config_files["Ghidra/lib/Ghidra/Processors/x86/data/languages/x86watcom.cspec"] 
             <register name="EDX" />
         </killedbycall>
     </prototype>
+    <prototype name="__crtmath" extrapop="unknown" stackshift="4">
+        <!-- CRT math functions like floor/ceil: double on stack, returns EDX:EAX -->
+        <input>
+            <pentry minsize="1" maxsize="500" align="4"><addr offset="4" space="stack" /></pentry>
+        </input>
+        <output killedbycall="true">
+            <!-- Force EDX:EAX return for doubles, NOT ST0 -->
+            <pentry minsize="1" maxsize="4"><register name="EAX" /></pentry>
+            <pentry minsize="5" maxsize="8">
+                <addr space="join" piece1="EDX" piece2="EAX" />
+            </pentry>
+        </output>
+        <unaffected>
+            <register name="EBX" />
+            <register name="ESI" />
+            <register name="EDI" />
+            <register name="EBP" />
+        </unaffected>
+        <killedbycall>
+            <register name="EAX" />
+            <register name="ECX" />
+            <register name="EDX" />
+        </killedbycall>
+    </prototype>
+    <prototype name="__fpureg" extrapop="0" stackshift="0">
+        <!-- Pure FPU register convention: input ST0, output ST0 (for exp, internal math) -->
+        <input>
+            <pentry minsize="4" maxsize="10" metatype="float"><register name="ST0" /></pentry>
+            <pentry minsize="4" maxsize="10" metatype="float"><register name="ST1" /></pentry>
+        </input>
+        <output killedbycall="true">
+            <pentry minsize="4" maxsize="10" metatype="float" extension="float"><register name="ST0" /></pentry>
+        </output>
+        <unaffected>
+            <register name="EBX" />
+            <register name="ESI" />
+            <register name="EDI" />
+            <register name="EBP" />
+        </unaffected>
+        <killedbycall>
+            <register name="EAX" />
+            <register name="ECX" />
+            <register name="EDX" />
+        </killedbycall>
+    </prototype>
 </compiler_spec>
 """
 config_files["Ghidra/lib/Ghidra/Processors/x86/data/languages/x86watcom.ldefs"] = """
