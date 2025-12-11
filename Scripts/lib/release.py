@@ -474,22 +474,16 @@ def DownloadWebpageRelease(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
-# Build AppImage from source
-def BuildAppImageFromSource(
+# Build from source
+def BuildFromSource(
     release_url = "",
     webpage_url = "",
     webpage_base_url = "",
     starts_with = "",
     ends_with = "",
-    output_file = "",
-    install_name = "",
-    install_dir = "",
-    backups_dir = "",
     build_cmd = "",
     build_dir = "",
-    internal_copies = [],
-    internal_symlinks = [],
-    external_copies = [],
+    source_patches = [],
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -507,7 +501,7 @@ def BuildAppImageFromSource(
             exit_on_failure = exit_on_failure)
         if not release_url:
             system.LogError("No release url could be found from webpage %s" % webpage_url)
-            return False
+            return None
 
     # Create temporary directory
     tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(
@@ -515,10 +509,9 @@ def BuildAppImageFromSource(
         pretend_run = pretend_run)
     if not tmp_dir_success:
         system.LogError("Unable to create temporary directory")
-        return False
+        return None
 
     # Get directories
-    appimage_dir = system.JoinPaths(tmp_dir_result, "AppImage")
     source_dir = system.JoinPaths(tmp_dir_result, "Source")
     download_dir = system.JoinPaths(tmp_dir_result, "Download")
     source_build_dir = source_dir
@@ -527,17 +520,7 @@ def BuildAppImageFromSource(
 
     # Make folders
     system.MakeDirectory(
-        src = install_dir,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    system.MakeDirectory(
         src = source_dir,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    system.MakeDirectory(
-        src = appimage_dir,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -560,7 +543,7 @@ def BuildAppImageFromSource(
             exit_on_failure = exit_on_failure)
         if not success:
             system.LogError("Unable to download release from '%s'" % release_url)
-            return False
+            return None
     else:
 
         # Get archive info
@@ -577,7 +560,7 @@ def BuildAppImageFromSource(
             exit_on_failure = exit_on_failure)
         if not success:
             system.LogError("Unable to download release from '%s'" % release_url)
-            return False
+            return None
 
         # Extract source archive
         success = archive.ExtractArchive(
@@ -588,7 +571,42 @@ def BuildAppImageFromSource(
             exit_on_failure = exit_on_failure)
         if not success:
             system.LogError("Unable to extract source archive")
-            return False
+            return None
+
+    # Apply source patches
+    if isinstance(source_patches, list) and len(source_patches):
+        for patch_entry in source_patches:
+            patch_file = patch_entry.get("file", "")
+            patch_content = patch_entry.get("content", "")
+            if len(patch_file) and len(patch_content):
+
+                # Write patch to temp file
+                patch_temp_file = system.JoinPaths(tmp_dir_result, system.GetFilenameFile(patch_file) + ".patch")
+                success = system.TouchFile(
+                    src = patch_temp_file,
+                    contents = patch_content.strip(),
+                    verbose = verbose,
+                    pretend_run = pretend_run,
+                    exit_on_failure = exit_on_failure)
+                if not success:
+                    system.LogError("Unable to write patch file '%s'" % patch_temp_file)
+                    return None
+
+                # Apply patch with git apply
+                code = command.RunReturncodeCommand(
+                    cmd = [
+                        programs.GetToolProgram("Git"),
+                        "apply",
+                        patch_temp_file
+                    ],
+                    options = command.CreateCommandOptions(
+                        cwd = source_dir),
+                    verbose = verbose,
+                    pretend_run = pretend_run,
+                    exit_on_failure = exit_on_failure)
+                if code != 0:
+                    system.LogError("Unable to apply patch '%s'" % patch_file)
+                    return None
 
     # Make build folder
     success = system.MakeDirectory(
@@ -598,7 +616,7 @@ def BuildAppImageFromSource(
         exit_on_failure = exit_on_failure)
     if not success:
         system.LogError("Unable to make build folder '%s'" % source_build_dir)
-        return False
+        return None
 
     # Build release
     code = command.RunReturncodeCommand(
@@ -611,12 +629,179 @@ def BuildAppImageFromSource(
         exit_on_failure = exit_on_failure)
     if code != 0:
         system.LogError("Unable to build release")
+        return None
+
+    # Return build info
+    return {
+        "tmp_dir": tmp_dir_result,
+        "source_dir": source_dir,
+        "build_dir": source_build_dir
+    }
+
+# Build binary from source
+def BuildBinaryFromSource(
+    release_url = "",
+    webpage_url = "",
+    webpage_base_url = "",
+    starts_with = "",
+    ends_with = "",
+    output_file = "",
+    install_name = "",
+    install_dir = "",
+    backups_dir = "",
+    build_cmd = "",
+    build_dir = "",
+    external_copies = [],
+    source_patches = [],
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Build from source
+    build_info = BuildFromSource(
+        release_url = release_url,
+        webpage_url = webpage_url,
+        webpage_base_url = webpage_base_url,
+        starts_with = starts_with,
+        ends_with = ends_with,
+        build_cmd = build_cmd,
+        build_dir = build_dir,
+        source_patches = source_patches,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    if not build_info:
         return False
+
+    # Get build result
+    tmp_dir = build_info["tmp_dir"]
+
+    # Make install folder
+    system.MakeDirectory(
+        src = install_dir,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+
+    # Find built release file
+    built_file = None
+    for path in system.BuildFileList(tmp_dir):
+        if path.endswith(output_file):
+            built_file = path
+    if not built_file:
+        system.LogError("No built files could be found")
+        return False
+
+    # Get final file
+    final_file = install_name + system.GetFilenameExtension(output_file)
+
+    # Copy release file
+    success = system.SmartCopy(
+        src = built_file,
+        dest = system.JoinPaths(install_dir, final_file),
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    if not success:
+        system.LogError("Unable to copy release files")
+        return False
+
+    # Copy other objects
+    for obj in external_copies:
+        src_obj = system.JoinPaths(tmp_dir, obj["from"])
+        dest_obj = system.JoinPaths(install_dir, obj["to"])
+        success = system.SmartCopy(
+            src = src_obj,
+            dest = dest_obj,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if not success:
+            system.LogError("Unable to copy other files")
+            return False
+
+    # Backup files
+    if system.IsPathValid(backups_dir):
+        success = locker.BackupFiles(
+            src = built_file,
+            dest = system.JoinPaths(backups_dir, final_file),
+            show_progress = True,
+            skip_existing = True,
+            skip_identical = True,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if not success:
+            system.LogError("Unable to backup files")
+            return False
+
+    # Delete temporary directory
+    system.RemoveDirectory(
+        src = tmp_dir,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+
+    # Check result
+    return os.path.exists(system.JoinPaths(install_dir, final_file))
+
+# Build AppImage from source
+def BuildAppImageFromSource(
+    release_url = "",
+    webpage_url = "",
+    webpage_base_url = "",
+    starts_with = "",
+    ends_with = "",
+    output_file = "",
+    install_name = "",
+    install_dir = "",
+    backups_dir = "",
+    build_cmd = "",
+    build_dir = "",
+    internal_copies = [],
+    internal_symlinks = [],
+    external_copies = [],
+    source_patches = [],
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Build from source
+    build_info = BuildFromSource(
+        release_url = release_url,
+        webpage_url = webpage_url,
+        webpage_base_url = webpage_base_url,
+        starts_with = starts_with,
+        ends_with = ends_with,
+        build_cmd = build_cmd,
+        build_dir = build_dir,
+        source_patches = source_patches,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    if not build_info:
+        return False
+
+    # Get build result
+    tmp_dir = build_info["tmp_dir"]
+    appimage_dir = system.JoinPaths(tmp_dir, "AppImage")
+
+    # Make folders
+    system.MakeDirectory(
+        src = install_dir,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    system.MakeDirectory(
+        src = appimage_dir,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
 
     # Copy AppImage objects
     for obj in internal_copies:
-        src_obj = system.JoinPaths(tmp_dir_result, obj["from"])
-        dest_obj = system.JoinPaths(tmp_dir_result, obj["to"])
+        src_obj = system.JoinPaths(tmp_dir, obj["from"])
+        dest_obj = system.JoinPaths(tmp_dir, obj["to"])
         if obj["from"].startswith("AppImageTool"):
             src_obj = system.JoinPaths(environment.GetToolsRootDir(), obj["from"])
         success = system.SmartCopy(
@@ -648,7 +833,7 @@ def BuildAppImageFromSource(
     code = command.RunReturncodeCommand(
         cmd = [programs.GetToolProgram("AppImageTool"), appimage_dir],
         options = command.CreateCommandOptions(
-            cwd = tmp_dir_result),
+            cwd = tmp_dir),
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -658,7 +843,7 @@ def BuildAppImageFromSource(
 
     # Find built release file
     built_file = None
-    for path in system.BuildFileList(tmp_dir_result):
+    for path in system.BuildFileList(tmp_dir):
         if path.endswith(output_file):
             built_file = path
     if not built_file:
@@ -681,7 +866,7 @@ def BuildAppImageFromSource(
 
     # Copy other objects
     for obj in external_copies:
-        src_obj = system.JoinPaths(tmp_dir_result, obj["from"])
+        src_obj = system.JoinPaths(tmp_dir, obj["from"])
         dest_obj = system.JoinPaths(install_dir, obj["to"])
         success = system.SmartCopy(
             src = src_obj,
@@ -695,7 +880,7 @@ def BuildAppImageFromSource(
 
     # Backup files
     if system.IsPathValid(backups_dir):
-        sucess = locker.BackupFiles(
+        success = locker.BackupFiles(
             src = built_file,
             dest = system.JoinPaths(backups_dir, final_file),
             show_progress = True,
@@ -710,7 +895,7 @@ def BuildAppImageFromSource(
 
     # Delete temporary directory
     system.RemoveDirectory(
-        src = tmp_dir_result,
+        src = tmp_dir,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
