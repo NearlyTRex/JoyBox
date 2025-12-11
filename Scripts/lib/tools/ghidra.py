@@ -5,7 +5,6 @@ import sys
 # Local imports
 import config
 import system
-import network
 import release
 import programs
 import environment
@@ -422,17 +421,41 @@ class Ghidra(toolbase.ToolBase):
     # Setup
     def Setup(self, verbose = False, pretend_run = False, exit_on_failure = False):
 
-        # Download library
+        # Build library from source
         if programs.ShouldLibraryBeInstalled("Ghidra"):
-            success = release.DownloadGithubRelease(
-                github_user = "NationalSecurityAgency",
-                github_repo = "ghidra",
-                starts_with = "ghidra_",
-                ends_with = ".zip",
+
+            # Get build command
+            if environment.IsWindowsPlatform():
+                build_cmd = [
+                    "gradlew.bat", "-I", "gradle/support/fetchDependencies.gradle", "init",
+                    "&&",
+                    "gradlew.bat", "buildGhidra"
+                ]
+            else:
+                build_cmd = [
+                    "./gradlew", "-I", "gradle/support/fetchDependencies.gradle", "init",
+                    "&&",
+                    "./gradlew", "buildGhidra"
+                ]
+
+            # Convert patch_files to source_patches format
+            source_patches = []
+            for patch_file, patch_content in patch_files.items():
+                source_patches.append({
+                    "file": patch_file,
+                    "content": patch_content
+                })
+
+            # Build Ghidra from source
+            success = release.BuildBinaryFromSource(
+                release_url = "https://github.com/NearlyTRex/Ghidra.git",
+                output_file = ".zip",
                 search_file = "ghidraRun",
                 install_name = "Ghidra",
                 install_dir = programs.GetLibraryInstallDir("Ghidra", "lib"),
                 backups_dir = programs.GetLibraryBackupDir("Ghidra", "lib"),
+                build_cmd = build_cmd,
+                source_patches = source_patches,
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
@@ -463,8 +486,6 @@ class Ghidra(toolbase.ToolBase):
 
         # Create config files
         for config_filename, config_contents in config_files.items():
-            print(config_filename)
-
             success = system.TouchFile(
                 src = system.JoinPaths(environment.GetToolsRootDir(), config_filename),
                 contents = config_contents.strip(),

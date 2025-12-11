@@ -646,6 +646,7 @@ def BuildBinaryFromSource(
     starts_with = "",
     ends_with = "",
     output_file = "",
+    search_file = "",
     install_name = "",
     install_dir = "",
     backups_dir = "",
@@ -692,19 +693,58 @@ def BuildBinaryFromSource(
         system.LogError("No built files could be found")
         return False
 
-    # Get final file
+    # Get final file for backup
     final_file = install_name + system.GetFilenameExtension(output_file)
 
-    # Copy release file
-    success = system.SmartCopy(
-        src = built_file,
-        dest = system.JoinPaths(install_dir, final_file),
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    if not success:
-        system.LogError("Unable to copy release files")
-        return False
+    # Check if output is an archive that needs extraction
+    is_archive = archive.IsArchive(built_file)
+    if is_archive and len(search_file):
+
+        # Extract archive and install contents
+        extract_dir = system.JoinPaths(tmp_dir, "Extract")
+        system.MakeDirectory(
+            src = extract_dir,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        success = archive.ExtractArchive(
+            archive_file = built_file,
+            extract_dir = extract_dir,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if not success:
+            system.LogError("Unable to extract built archive")
+            return False
+
+        # Find directory containing search_file
+        search_dir = extract_dir
+        for file in system.BuildFileList(extract_dir):
+            if file.endswith(search_file):
+                search_dir = system.GetFilenameDirectory(file)
+                break
+
+        # Copy contents to install directory
+        success = system.CopyContents(
+            src = search_dir,
+            dest = install_dir,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if not success:
+            system.LogError("Unable to copy release files")
+            return False
+    else:
+        # Copy release file directly
+        success = system.SmartCopy(
+            src = built_file,
+            dest = system.JoinPaths(install_dir, final_file),
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if not success:
+            system.LogError("Unable to copy release files")
+            return False
 
     # Copy other objects
     for obj in external_copies:
@@ -743,7 +783,7 @@ def BuildBinaryFromSource(
         exit_on_failure = exit_on_failure)
 
     # Check result
-    return os.path.exists(system.JoinPaths(install_dir, final_file))
+    return system.DoesDirectoryContainFiles(install_dir)
 
 # Build AppImage from source
 def BuildAppImageFromSource(
