@@ -363,9 +363,11 @@ config_files["Ghidra/lib/Ghidra/Processors/x86/data/patterns/x86watcomcpp_patter
 # Patch files
 patch_files = {}
 patch_files["Ghidra/Processors/x86/data/languages/ia.sinc"] = """
+diff --git a/Ghidra/Processors/x86/data/languages/ia.sinc b/Ghidra/Processors/x86/data/languages/ia.sinc
+index d216d902..7ad07c27 100644
 --- a/Ghidra/Processors/x86/data/languages/ia.sinc
 +++ b/Ghidra/Processors/x86/data/languages/ia.sinc
-@@ -2604,6 +2604,17 @@
+@@ -2604,6 +2604,18 @@ with : lockprefx=0 {
  :AND Rmr64,simm32    is $(LONGMODE_ON) & vexMode=0 & opsize=2 & byte=0x81; mod=3 & Rmr64 & reg_opcode=4; simm32  { logicalflags();  Rmr64 =  Rmr64 & simm32; resultflags( Rmr64); }
  @endif
  :AND Rmr16,usimm8_16		is vexMode=0 & opsize=0 & byte=0x83; mod=3 & Rmr16 & reg_opcode=4; usimm8_16	{ logicalflags();  Rmr16 =  Rmr16 & usimm8_16; resultflags( Rmr16); }
