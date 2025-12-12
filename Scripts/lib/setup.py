@@ -32,83 +32,118 @@ def CheckRequirements():
     if not ini.IsIniPresent():
         system.LogError("Ini file not found, please run setup first", quit_program = True)
 
-# Setup tools
-def SetupTools(offline = False, configure = False, clean = False, verbose = False, pretend_run = False, exit_on_failure = False):
+# Setup packages
+def SetupPackages(
+    package_list,
+    package_type,
+    root_dir,
+    offline = False,
+    configure = False,
+    clean = False,
+    force = False,
+    packages = None,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
 
-    # Clean tools directory
+    # Clean root directory
     if clean:
-        tools_dir = environment.GetToolsRootDir()
-        if system.DoesPathExist(tools_dir):
-            system.LogInfo("Cleaning tools directory %s ..." % tools_dir)
+        if system.DoesPathExist(root_dir):
+            system.LogInfo("Cleaning %s directory %s ..." % (package_type, root_dir))
             system.RemoveDirectory(
-                src = tools_dir,
+                src = root_dir,
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
 
-    # Install tools
-    for tool in programs.GetTools():
-        system.LogInfo("Installing tool %s ..." % tool.GetName())
+    # Install packages
+    for package in package_list:
+        package_name = package.GetName()
+
+        # Skip if not in package list (when specified)
+        if packages is not None and package_name not in packages:
+            continue
+
+        # Force reinstall by cleaning the install directory
+        if force:
+            install_dir = programs.GetLibraryInstallDir(package_name)
+            if system.DoesPathExist(install_dir):
+                system.LogInfo("Forcing rebuild of %s (removing %s) ..." % (package_name, install_dir))
+                system.RemoveDirectory(
+                    src = install_dir,
+                    verbose = verbose,
+                    pretend_run = pretend_run,
+                    exit_on_failure = exit_on_failure)
+
+        # Install package
+        system.LogInfo("Installing %s %s ..." % (package_type, package_name))
         success = False
         if offline:
-            success = tool.SetupOffline(
+            success = package.SetupOffline(
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
         else:
-            success = tool.Setup(
+            success = package.Setup(
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
         if not success:
             return False
         if configure:
-            success = tool.Configure(
+            success = package.Configure(
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
                 return False
     return True
+
+# Setup tools
+def SetupTools(
+    offline = False,
+    configure = False,
+    clean = False,
+    force = False,
+    packages = None,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+    return SetupPackages(
+        package_list = programs.GetTools(),
+        package_type = "tool",
+        root_dir = environment.GetToolsRootDir(),
+        offline = offline,
+        configure = configure,
+        clean = clean,
+        force = force,
+        packages = packages,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
 
 # Setup emulators
-def SetupEmulators(offline = False, configure = False, clean = False, verbose = False, pretend_run = False, exit_on_failure = False):
-
-    # Clean emulators directory
-    if clean:
-        emulators_dir = environment.GetEmulatorsRootDir()
-        if system.DoesPathExist(emulators_dir):
-            system.LogInfo("Cleaning emulators directory %s ..." % emulators_dir)
-            system.RemoveDirectory(
-                src = emulators_dir,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
-
-    # Install emulators
-    for emulator in programs.GetEmulators():
-        system.LogInfo("Installing emulator %s ..." % emulator.GetName())
-        success = False
-        if offline:
-            success = emulator.SetupOffline(
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
-        else:
-            success = emulator.Setup(
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
-        if not success:
-            return False
-        if configure:
-            success = emulator.Configure(
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
-            if not success:
-                return False
-    return True
+def SetupEmulators(
+    offline = False,
+    configure = False,
+    clean = False,
+    force = False,
+    packages = None,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+    return SetupPackages(
+        package_list = programs.GetEmulators(),
+        package_type = "emulator",
+        root_dir = environment.GetEmulatorsRootDir(),
+        offline = offline,
+        configure = configure,
+        clean = clean,
+        force = force,
+        packages = packages,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
 
 # Setup assets
 def SetupAssets(verbose = False, pretend_run = False, exit_on_failure = False):
