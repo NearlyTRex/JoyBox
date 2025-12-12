@@ -512,15 +512,12 @@ def BuildFromSource(
         return None
 
     # Get directories
-    source_dir = system.JoinPaths(tmp_dir_result, "Source")
+    source_base_dir = system.JoinPaths(tmp_dir_result, "Source")
     download_dir = system.JoinPaths(tmp_dir_result, "Download")
-    source_build_dir = source_dir
-    if len(build_dir) > 0:
-        source_build_dir = os.path.abspath(system.JoinPaths(source_dir, build_dir))
 
     # Make folders
     system.MakeDirectory(
-        src = source_dir,
+        src = source_base_dir,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -532,6 +529,10 @@ def BuildFromSource(
 
     # Download sources
     if release_url.endswith(".git"):
+
+        # Get repo name
+        repo_name = system.GetFilenameBasename(release_url.rstrip("/"))
+        source_dir = system.JoinPaths(source_base_dir, repo_name)
 
         # Download git release
         success = network.DownloadGitUrl(
@@ -550,6 +551,7 @@ def BuildFromSource(
         archive_basename = system.GetFilenameBasename(release_url)
         archive_extension = system.GetFilenameExtension(release_url)
         archive_file = system.JoinPaths(download_dir, archive_basename + archive_extension)
+        source_dir = system.JoinPaths(source_base_dir, archive_basename)
 
         # Download source archive
         success = network.DownloadUrl(
@@ -573,6 +575,11 @@ def BuildFromSource(
             system.LogError("Unable to extract source archive")
             return None
 
+    # Get build directory
+    source_build_dir = source_dir
+    if len(build_dir) > 0:
+        source_build_dir = os.path.abspath(system.JoinPaths(source_dir, build_dir))
+
     # Apply source patches
     if isinstance(source_patches, list) and len(source_patches):
         for patch_entry in source_patches:
@@ -584,7 +591,7 @@ def BuildFromSource(
                 patch_temp_file = system.JoinPaths(tmp_dir_result, system.GetFilenameFile(patch_file) + ".patch")
                 success = system.TouchFile(
                     src = patch_temp_file,
-                    contents = patch_content.strip(),
+                    contents = patch_content.strip() + "\n",
                     verbose = verbose,
                     pretend_run = pretend_run,
                     exit_on_failure = exit_on_failure)
