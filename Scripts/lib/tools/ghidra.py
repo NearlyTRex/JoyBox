@@ -429,15 +429,15 @@ class Ghidra(toolbase.ToolBase):
             # Get build command
             if environment.IsWindowsPlatform():
                 build_cmd = [
-                    "gradlew.bat", "-I", "gradle/support/fetchDependencies.gradle", "init",
+                    "gradlew.bat", "-I", "gradle/support/fetchDependencies.gradle",
                     "&&",
-                    "gradlew.bat", "buildGhidra"
+                    "gradlew.bat", "buildGhidra", "-x", "createJavadocs", "-x", "createJsondocs", "-x", "test"
                 ]
             else:
                 build_cmd = [
-                    "./gradlew", "-I", "gradle/support/fetchDependencies.gradle", "init",
+                    "./gradlew", "-I", "gradle/support/fetchDependencies.gradle",
                     "&&",
-                    "./gradlew", "buildGhidra"
+                    "./gradlew", "buildGhidra", "-x", "createJavadocs", "-x", "createJsondocs", "-x", "test"
                 ]
 
             # Convert patch_files to source_patches format
