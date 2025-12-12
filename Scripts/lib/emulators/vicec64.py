@@ -58,7 +58,9 @@ class ViceC64(emulatorbase.EmulatorBase):
         }
 
     # Setup
-    def Setup(self, verbose = False, pretend_run = False, exit_on_failure = False):
+    def Setup(self, setup_params = None):
+        if not setup_params:
+            setup_params = config.SetupParams()
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("VICE-C64", "windows"):
@@ -72,9 +74,9 @@ class ViceC64(emulatorbase.EmulatorBase):
                 install_dir = programs.GetProgramInstallDir("VICE-C64", "windows"),
                 backups_dir = programs.GetProgramBackupDir("VICE-C64", "windows"),
                 get_latest = True,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup VICE-C64")
                 return False
@@ -105,16 +107,19 @@ class ViceC64(emulatorbase.EmulatorBase):
                 internal_symlinks = [
                     {"from": "usr/bin/x64sc", "to": "AppRun"}
                 ],
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                locker_type = setup_params.locker_type,
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup VICE-C64")
                 return False
         return True
 
     # Setup offline
-    def SetupOffline(self, verbose = False, pretend_run = False, exit_on_failure = False):
+    def SetupOffline(self, setup_params = None):
+        if not setup_params:
+            setup_params = config.SetupParams()
 
         # Setup windows program
         if programs.ShouldProgramBeInstalled("VICE-C64", "windows"):
@@ -123,11 +128,11 @@ class ViceC64(emulatorbase.EmulatorBase):
                 install_name = "VICE-C64",
                 install_dir = programs.GetProgramInstallDir("VICE-C64", "windows"),
                 search_file = "x64sc.exe",
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup REPLACEME")
+                system.LogError("Could not setup VICE-C64")
                 return False
 
         # Setup linux program
@@ -136,25 +141,27 @@ class ViceC64(emulatorbase.EmulatorBase):
                 archive_dir = programs.GetProgramBackupDir("VICE-C64", "linux"),
                 install_name = "VICE-C64",
                 install_dir = programs.GetProgramInstallDir("VICE-C64", "linux"),
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup VICE-C64")
                 return False
         return True
 
     # Configure
-    def Configure(self, verbose = False, pretend_run = False, exit_on_failure = False):
+    def Configure(self, setup_params = None):
+        if not setup_params:
+            setup_params = config.SetupParams()
 
         # Create config files
         for config_filename, config_contents in config_files.items():
             success = system.TouchFile(
                 src = system.JoinPaths(environment.GetEmulatorsRootDir(), config_filename),
                 contents = config_contents.strip(),
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup VICE-C64 config files")
                 return False

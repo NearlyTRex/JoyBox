@@ -35,7 +35,9 @@ class SteamDepotDownloader(toolbase.ToolBase):
         }
 
     # Setup
-    def Setup(self, verbose = False, pretend_run = False, exit_on_failure = False):
+    def Setup(self, setup_params = None):
+        if not setup_params:
+            setup_params = config.SetupParams()
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("SteamDepotDownloader", "windows"):
@@ -49,9 +51,9 @@ class SteamDepotDownloader(toolbase.ToolBase):
                 install_dir = programs.GetProgramInstallDir("SteamDepotDownloader", "windows"),
                 backups_dir = programs.GetProgramBackupDir("SteamDepotDownloader", "windows"),
                 install_files = ["DepotDownloader.exe"],
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup SteamDepotDownloader")
                 return False
@@ -75,16 +77,18 @@ class SteamDepotDownloader(toolbase.ToolBase):
                     }
                 ],
                 get_latest = True,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup SteamDepotDownloader")
                 return False
         return True
 
     # Setup offline
-    def SetupOffline(self, verbose = False, pretend_run = False, exit_on_failure = False):
+    def SetupOffline(self, setup_params = None):
+        if not setup_params:
+            setup_params = config.SetupParams()
 
         # Setup windows program
         if programs.ShouldProgramBeInstalled("SteamDepotDownloader", "windows"):
@@ -93,9 +97,9 @@ class SteamDepotDownloader(toolbase.ToolBase):
                 install_name = "SteamDepotDownloader",
                 install_dir = programs.GetProgramInstallDir("SteamDepotDownloader", "windows"),
                 search_file = "DepotDownloader.exe",
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup SteamDepotDownloader")
                 return False
@@ -106,9 +110,9 @@ class SteamDepotDownloader(toolbase.ToolBase):
                 archive_dir = programs.GetProgramBackupDir("SteamDepotDownloader", "linux"),
                 install_name = "SteamDepotDownloader",
                 install_dir = programs.GetProgramInstallDir("SteamDepotDownloader", "linux"),
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup SteamDepotDownloader")
                 return False

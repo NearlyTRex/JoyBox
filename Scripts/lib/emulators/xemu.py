@@ -79,7 +79,9 @@ class Xemu(emulatorbase.EmulatorBase):
         }
 
     # Setup
-    def Setup(self, verbose = False, pretend_run = False, exit_on_failure = False):
+    def Setup(self, setup_params = None):
+        if not setup_params:
+            setup_params = config.SetupParams()
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("Xemu", "windows"):
@@ -93,9 +95,9 @@ class Xemu(emulatorbase.EmulatorBase):
                 install_dir = programs.GetProgramInstallDir("Xemu", "windows"),
                 backups_dir = programs.GetProgramBackupDir("Xemu", "windows"),
                 get_latest = True,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup Xemu")
                 return False
@@ -119,16 +121,19 @@ class Xemu(emulatorbase.EmulatorBase):
                 internal_symlinks = [
                     {"from": "usr/bin/xemu", "to": "AppRun"}
                 ],
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                locker_type = setup_params.locker_type,
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup Xemu")
                 return False
         return True
 
     # Setup offline
-    def SetupOffline(self, verbose = False, pretend_run = False, exit_on_failure = False):
+    def SetupOffline(self, setup_params = None):
+        if not setup_params:
+            setup_params = config.SetupParams()
 
         # Setup windows program
         if programs.ShouldProgramBeInstalled("Xemu", "windows"):
@@ -137,9 +142,9 @@ class Xemu(emulatorbase.EmulatorBase):
                 install_name = "Xemu",
                 install_dir = programs.GetProgramInstallDir("Xemu", "windows"),
                 search_file = "xemu.exe",
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup Xemu")
                 return False
@@ -150,25 +155,27 @@ class Xemu(emulatorbase.EmulatorBase):
                 archive_dir = programs.GetProgramBackupDir("Xemu", "linux"),
                 install_name = "Xemu",
                 install_dir = programs.GetProgramInstallDir("Xemu", "linux"),
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup Xemu")
                 return False
         return True
 
     # Configure
-    def Configure(self, verbose = False, pretend_run = False, exit_on_failure = False):
+    def Configure(self, setup_params = None):
+        if not setup_params:
+            setup_params = config.SetupParams()
 
         # Create config files
         for config_filename, config_contents in config_files.items():
             success = system.TouchFile(
                 src = system.JoinPaths(environment.GetEmulatorsRootDir(), config_filename),
                 contents = config_contents.strip(),
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup Xemu config files")
                 return False
@@ -177,9 +184,9 @@ class Xemu(emulatorbase.EmulatorBase):
         for filename, expected_md5 in system_files.items():
             actual_md5 = hashing.CalculateFileMD5(
                 src = system.JoinPaths(environment.GetLockerGamingEmulatorSetupDir("Xemu"), filename),
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             success = (expected_md5 == actual_md5)
             if not success:
                 system.LogError("Could not verify Xemu system file %s" % filename)
@@ -191,9 +198,9 @@ class Xemu(emulatorbase.EmulatorBase):
                 success = system.SmartCopy(
                     src = system.JoinPaths(environment.GetLockerGamingEmulatorSetupDir("Xemu"), filename),
                     dest = system.JoinPaths(programs.GetEmulatorPathConfigValue("Xemu", "setup_dir", platform), filename),
-                    verbose = verbose,
-                    pretend_run = pretend_run,
-                    exit_on_failure = exit_on_failure)
+                    verbose = setup_params.verbose,
+                    pretend_run = setup_params.pretend_run,
+                    exit_on_failure = setup_params.exit_on_failure)
                 if not success:
                     system.LogError("Could not setup Xemu system files")
                     return False

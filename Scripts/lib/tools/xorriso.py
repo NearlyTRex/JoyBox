@@ -36,7 +36,9 @@ class XorrISO(toolbase.ToolBase):
         }
 
     # Setup
-    def Setup(self, verbose = False, pretend_run = False, exit_on_failure = False):
+    def Setup(self, setup_params = None):
+        if not setup_params:
+            setup_params = config.SetupParams()
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("XorrISO", "windows"):
@@ -46,9 +48,9 @@ class XorrISO(toolbase.ToolBase):
                 output_dir = programs.GetProgramInstallDir("XorrISO", "windows"),
                 recursive = True,
                 clean = True,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup XorrISO")
                 return False
@@ -58,9 +60,9 @@ class XorrISO(toolbase.ToolBase):
                 output_dir = programs.GetProgramBackupDir("XorrISO", "windows"),
                 recursive = True,
                 clean = True,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup XorrISO")
                 return False
@@ -89,16 +91,19 @@ class XorrISO(toolbase.ToolBase):
                 internal_symlinks = [
                     {"from": "usr/bin/xorriso", "to": "AppRun"}
                 ],
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                locker_type = setup_params.locker_type,
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup XorrISO")
                 return False
         return True
 
     # Setup offline
-    def SetupOffline(self, verbose = False, pretend_run = False, exit_on_failure = False):
+    def SetupOffline(self, setup_params = None):
+        if not setup_params:
+            setup_params = config.SetupParams()
 
         # Setup windows program
         if programs.ShouldProgramBeInstalled("XorrISO", "windows"):
@@ -106,9 +111,9 @@ class XorrISO(toolbase.ToolBase):
                 archive_dir = programs.GetProgramBackupDir("XorrISO", "windows"),
                 install_name = "XorrISO",
                 install_dir = programs.GetProgramInstallDir("XorrISO", "windows"),
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup XorrISO")
                 return False
@@ -119,9 +124,9 @@ class XorrISO(toolbase.ToolBase):
                 archive_dir = programs.GetProgramBackupDir("XorrISO", "linux"),
                 install_name = "XorrISO",
                 install_dir = programs.GetProgramInstallDir("XorrISO", "linux"),
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup XorrISO")
                 return False

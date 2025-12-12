@@ -49,7 +49,9 @@ class ProjectCTR(toolbase.ToolBase):
         }
 
     # Setup
-    def Setup(self, verbose = False, pretend_run = False, exit_on_failure = False):
+    def Setup(self, setup_params = None):
+        if not setup_params:
+            setup_params = config.SetupParams()
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("CtrMakeRom", "windows"):
@@ -63,9 +65,9 @@ class ProjectCTR(toolbase.ToolBase):
                 install_dir = programs.GetProgramInstallDir("CtrMakeRom", "windows"),
                 backups_dir = programs.GetProgramBackupDir("CtrMakeRom", "windows"),
                 install_files = ["makerom.exe"],
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup CtrMakeRom")
                 return False
@@ -82,9 +84,9 @@ class ProjectCTR(toolbase.ToolBase):
                 install_dir = programs.GetProgramInstallDir("CtrTool", "windows"),
                 backups_dir = programs.GetProgramBackupDir("CtrTool", "windows"),
                 install_files = ["ctrtool.exe"],
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup CtrTool")
                 return False
@@ -108,9 +110,9 @@ class ProjectCTR(toolbase.ToolBase):
                         "perms": 755
                     }
                 ],
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup CtrMakeRom")
                 return False
@@ -134,16 +136,18 @@ class ProjectCTR(toolbase.ToolBase):
                         "perms": 755
                     }
                 ],
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup CtrTool")
                 return False
         return True
 
     # Setup offline
-    def SetupOffline(self, verbose = False, pretend_run = False, exit_on_failure = False):
+    def SetupOffline(self, setup_params = None):
+        if not setup_params:
+            setup_params = config.SetupParams()
 
         # Setup windows program
         if programs.ShouldProgramBeInstalled("CtrMakeRom", "windows"):
@@ -152,9 +156,9 @@ class ProjectCTR(toolbase.ToolBase):
                 install_name = "CtrMakeRom",
                 install_dir = programs.GetProgramInstallDir("CtrMakeRom", "windows"),
                 search_file = "makerom.exe",
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup CtrMakeRom")
                 return False
@@ -166,9 +170,9 @@ class ProjectCTR(toolbase.ToolBase):
                 install_name = "CtrTool",
                 install_dir = programs.GetProgramInstallDir("CtrTool", "windows"),
                 search_file = "ctrtool.exe",
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup CtrTool")
                 return False
@@ -179,9 +183,9 @@ class ProjectCTR(toolbase.ToolBase):
                 archive_dir = programs.GetProgramBackupDir("CtrMakeRom", "linux"),
                 install_name = "CtrMakeRom",
                 install_dir = programs.GetProgramInstallDir("CtrMakeRom", "linux"),
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup CtrMakeRom")
                 return False
@@ -192,9 +196,9 @@ class ProjectCTR(toolbase.ToolBase):
                 archive_dir = programs.GetProgramBackupDir("CtrTool", "linux"),
                 install_name = "CtrTool",
                 install_dir = programs.GetProgramInstallDir("CtrTool", "linux"),
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup CtrTool")
                 return False

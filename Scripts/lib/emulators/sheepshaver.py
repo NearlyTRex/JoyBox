@@ -43,7 +43,9 @@ class SheepShaver(emulatorbase.EmulatorBase):
         }
 
     # Setup
-    def Setup(self, verbose = False, pretend_run = False, exit_on_failure = False):
+    def Setup(self, setup_params = None):
+        if not setup_params:
+            setup_params = config.SetupParams()
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("SheepShaver", "windows"):
@@ -53,9 +55,9 @@ class SheepShaver(emulatorbase.EmulatorBase):
                 install_name = "SheepShaver",
                 install_dir = programs.GetProgramInstallDir("SheepShaver", "windows"),
                 backups_dir = programs.GetProgramBackupDir("SheepShaver", "windows"),
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup SheepShaver")
                 return False
@@ -71,16 +73,18 @@ class SheepShaver(emulatorbase.EmulatorBase):
                 install_dir = programs.GetProgramInstallDir("SheepShaver", "linux"),
                 backups_dir = programs.GetProgramBackupDir("SheepShaver", "linux"),
                 get_latest = True,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup SheepShaver")
                 return False
         return True
 
     # Setup offline
-    def SetupOffline(self, verbose = False, pretend_run = False, exit_on_failure = False):
+    def SetupOffline(self, setup_params = None):
+        if not setup_params:
+            setup_params = config.SetupParams()
 
         # Setup windows program
         if programs.ShouldProgramBeInstalled("SheepShaver", "windows"):
@@ -89,9 +93,9 @@ class SheepShaver(emulatorbase.EmulatorBase):
                 install_name = "SheepShaver",
                 install_dir = programs.GetProgramInstallDir("SheepShaver", "windows"),
                 search_file = "SheepShaver.exe",
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup SheepShaver")
                 return False
@@ -102,9 +106,9 @@ class SheepShaver(emulatorbase.EmulatorBase):
                 archive_dir = programs.GetProgramBackupDir("SheepShaver", "linux"),
                 install_name = "SheepShaver",
                 install_dir = programs.GetProgramInstallDir("SheepShaver", "linux"),
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup SheepShaver")
                 return False

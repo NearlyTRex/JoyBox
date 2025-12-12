@@ -35,7 +35,9 @@ class NDecrypt(toolbase.ToolBase):
         }
 
     # Setup
-    def Setup(self, verbose = False, pretend_run = False, exit_on_failure = False):
+    def Setup(self, setup_params = None):
+        if not setup_params:
+            setup_params = config.SetupParams()
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("NDecrypt", "windows"):
@@ -49,9 +51,9 @@ class NDecrypt(toolbase.ToolBase):
                 install_dir = programs.GetProgramInstallDir("NDecrypt", "windows"),
                 backups_dir = programs.GetProgramBackupDir("NDecrypt", "windows"),
                 install_files = ["NDecrypt.exe"],
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup NDecrypt")
                 return False
@@ -74,16 +76,18 @@ class NDecrypt(toolbase.ToolBase):
                         "perms": 755
                     }
                 ],
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup NDecrypt")
                 return False
         return True
 
     # Setup offline
-    def SetupOffline(self, verbose = False, pretend_run = False, exit_on_failure = False):
+    def SetupOffline(self, setup_params = None):
+        if not setup_params:
+            setup_params = config.SetupParams()
 
         # Setup windows program
         if programs.ShouldProgramBeInstalled("NDecrypt", "windows"):
@@ -92,9 +96,9 @@ class NDecrypt(toolbase.ToolBase):
                 install_name = "NDecrypt",
                 install_dir = programs.GetProgramInstallDir("NDecrypt", "windows"),
                 search_file = "NDecrypt.exe",
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup NDecrypt")
                 return False
@@ -105,9 +109,9 @@ class NDecrypt(toolbase.ToolBase):
                 archive_dir = programs.GetProgramBackupDir("NDecrypt", "linux"),
                 install_name = "NDecrypt",
                 install_dir = programs.GetProgramInstallDir("NDecrypt", "linux"),
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup NDecrypt")
                 return False

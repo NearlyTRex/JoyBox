@@ -71,7 +71,9 @@ class FSUAE(emulatorbase.EmulatorBase):
         }
 
     # Setup
-    def Setup(self, verbose = False, pretend_run = False, exit_on_failure = False):
+    def Setup(self, setup_params = None):
+        if not setup_params:
+            setup_params = config.SetupParams()
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("FS-UAE", "windows"):
@@ -85,9 +87,9 @@ class FSUAE(emulatorbase.EmulatorBase):
                 install_dir = programs.GetProgramInstallDir("FS-UAE", "windows"),
                 backups_dir = programs.GetProgramBackupDir("FS-UAE", "windows"),
                 get_latest = True,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup FS-UAE")
                 return False
@@ -118,16 +120,19 @@ class FSUAE(emulatorbase.EmulatorBase):
                 external_copies = [
                     {"from": "Source/fs-uae-3.1.66/fs-uae.dat", "to": "fs-uae.dat"}
                 ],
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                locker_type = setup_params.locker_type,
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup FS-UAE")
                 return False
         return True
 
     # Setup offline
-    def SetupOffline(self, verbose = False, pretend_run = False, exit_on_failure = False):
+    def SetupOffline(self, setup_params = None):
+        if not setup_params:
+            setup_params = config.SetupParams()
 
         # Setup windows program
         if programs.ShouldProgramBeInstalled("FS-UAE", "windows"):
@@ -136,9 +141,9 @@ class FSUAE(emulatorbase.EmulatorBase):
                 install_name = "FS-UAE",
                 install_dir = programs.GetProgramInstallDir("FS-UAE", "windows"),
                 search_file = "Plugin.ini",
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup FS-UAE")
                 return False
@@ -149,25 +154,27 @@ class FSUAE(emulatorbase.EmulatorBase):
                 archive_dir = programs.GetProgramBackupDir("FS-UAE", "linux"),
                 install_name = "FS-UAE",
                 install_dir = programs.GetProgramInstallDir("FS-UAE", "linux"),
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup FS-UAE")
                 return False
         return True
 
     # Configure
-    def Configure(self, verbose = False, pretend_run = False, exit_on_failure = False):
+    def Configure(self, setup_params = None):
+        if not setup_params:
+            setup_params = config.SetupParams()
 
         # Create config files
         for config_filename, config_contents in config_files.items():
             success = system.TouchFile(
                 src = system.JoinPaths(environment.GetEmulatorsRootDir(), config_filename),
                 contents = config_contents.strip(),
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup FS-UAE config files")
                 return False
@@ -176,9 +183,9 @@ class FSUAE(emulatorbase.EmulatorBase):
         for filename, expected_md5 in system_files.items():
             actual_md5 = hashing.CalculateFileMD5(
                 src = system.JoinPaths(environment.GetLockerGamingEmulatorSetupDir("FS-UAE"), filename),
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             success = (expected_md5 == actual_md5)
             if not success:
                 system.LogError("Could not verify FS-UAE system file %s" % filename)
@@ -190,9 +197,9 @@ class FSUAE(emulatorbase.EmulatorBase):
                 success = system.SmartCopy(
                     src = system.JoinPaths(environment.GetLockerGamingEmulatorSetupDir("FS-UAE"), filename),
                     dest = system.JoinPaths(programs.GetEmulatorPathConfigValue("FS-UAE", "setup_dir", platform), filename),
-                    verbose = verbose,
-                    pretend_run = pretend_run,
-                    exit_on_failure = exit_on_failure)
+                    verbose = setup_params.verbose,
+                    pretend_run = setup_params.pretend_run,
+                    exit_on_failure = setup_params.exit_on_failure)
                 if not success:
                     system.LogError("Could not setup FS-UAE system files")
                     return False

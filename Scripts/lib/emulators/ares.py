@@ -181,7 +181,9 @@ class Ares(emulatorbase.EmulatorBase):
         }
 
     # Setup
-    def Setup(self, verbose = False, pretend_run = False, exit_on_failure = False):
+    def Setup(self, setup_params = None):
+        if not setup_params:
+            setup_params = config.SetupParams()
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("Ares", "windows"):
@@ -195,9 +197,9 @@ class Ares(emulatorbase.EmulatorBase):
                 install_dir = programs.GetProgramInstallDir("Ares", "windows"),
                 backups_dir = programs.GetProgramBackupDir("Ares", "windows"),
                 get_latest = True,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup Ares")
                 return False
@@ -225,16 +227,19 @@ class Ares(emulatorbase.EmulatorBase):
                     {"from": "Source/mia/Database", "to": "Ares.AppImage.home/.local/share/ares/Database"},
                     {"from": "Source/mia/Firmware", "to": "Ares.AppImage.home/.local/share/ares/Firmware"}
                 ],
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                locker_type = setup_params.locker_type,
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup Ares")
                 return False
         return True
 
     # Setup offline
-    def SetupOffline(self, verbose = False, pretend_run = False, exit_on_failure = False):
+    def SetupOffline(self, setup_params = None):
+        if not setup_params:
+            setup_params = config.SetupParams()
 
         # Setup windows program
         if programs.ShouldProgramBeInstalled("Ares", "windows"):
@@ -243,9 +248,9 @@ class Ares(emulatorbase.EmulatorBase):
                 install_name = "Ares",
                 install_dir = programs.GetProgramInstallDir("Ares", "windows"),
                 search_file = "ares.exe",
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup Ares")
                 return False
@@ -256,25 +261,27 @@ class Ares(emulatorbase.EmulatorBase):
                 archive_dir = programs.GetProgramBackupDir("Ares", "linux"),
                 install_name = "Ares",
                 install_dir = programs.GetProgramInstallDir("Ares", "linux"),
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup Ares")
                 return False
         return True
 
     # Configure
-    def Configure(self, verbose = False, pretend_run = False, exit_on_failure = False):
+    def Configure(self, setup_params = None):
+        if not setup_params:
+            setup_params = config.SetupParams()
 
         # Create config files
         for config_filename, config_contents in config_files.items():
             success = system.TouchFile(
                 src = system.JoinPaths(environment.GetEmulatorsRootDir(), config_filename),
                 contents = config_contents.strip(),
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup Ares config files")
                 return False
@@ -283,9 +290,9 @@ class Ares(emulatorbase.EmulatorBase):
         for filename, expected_md5 in system_files.items():
             actual_md5 = hashing.CalculateFileMD5(
                 src = system.JoinPaths(environment.GetLockerGamingEmulatorSetupDir("Ares"), filename),
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             success = (expected_md5 == actual_md5)
             if not success:
                 system.LogError("Could not verify Ares system file %s" % filename)
@@ -297,9 +304,9 @@ class Ares(emulatorbase.EmulatorBase):
                 success = system.SmartCopy(
                     src = system.JoinPaths(environment.GetLockerGamingEmulatorSetupDir("Ares"), filename),
                     dest = system.JoinPaths(programs.GetEmulatorPathConfigValue("Ares", "setup_dir", platform), filename),
-                    verbose = verbose,
-                    pretend_run = pretend_run,
-                    exit_on_failure = exit_on_failure)
+                    verbose = setup_params.verbose,
+                    pretend_run = setup_params.pretend_run,
+                    exit_on_failure = setup_params.exit_on_failure)
                 if not success:
                     system.LogError("Could not setup Ares system files")
                     return False

@@ -37,7 +37,9 @@ class MameTools(toolbase.ToolBase):
         }
 
     # Setup
-    def Setup(self, verbose = False, pretend_run = False, exit_on_failure = False):
+    def Setup(self, setup_params = None):
+        if not setup_params:
+            setup_params = config.SetupParams()
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("MameChdman", "windows"):
@@ -54,9 +56,9 @@ class MameTools(toolbase.ToolBase):
                 installer_type = config.InstallerType.SEVENZIP,
                 release_type = config.ReleaseType.ARCHIVE,
                 get_latest = True,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup MameChdman")
                 return False
@@ -80,16 +82,19 @@ class MameTools(toolbase.ToolBase):
                 internal_symlinks = [
                     {"from": "usr/bin/chdman", "to": "AppRun"}
                 ],
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                locker_type = setup_params.locker_type,
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup MameChdman")
                 return False
         return True
 
     # Setup offline
-    def SetupOffline(self, verbose = False, pretend_run = False, exit_on_failure = False):
+    def SetupOffline(self, setup_params = None):
+        if not setup_params:
+            setup_params = config.SetupParams()
 
         # Setup windows program
         if programs.ShouldProgramBeInstalled("MameChdman", "windows"):
@@ -98,9 +103,9 @@ class MameTools(toolbase.ToolBase):
                 install_name = "MameChdman",
                 install_dir = programs.GetProgramInstallDir("MameChdman", "windows"),
                 search_file = "chdman.exe",
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup MameChdman")
                 return False
@@ -111,9 +116,9 @@ class MameTools(toolbase.ToolBase):
                 archive_dir = programs.GetProgramBackupDir("MameChdman", "linux"),
                 install_name = "MameChdman",
                 install_dir = programs.GetProgramInstallDir("MameChdman", "linux"),
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup MameChdman")
                 return False

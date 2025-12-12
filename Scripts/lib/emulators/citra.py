@@ -91,7 +91,9 @@ class Citra(emulatorbase.EmulatorBase):
         return True
 
     # Setup
-    def Setup(self, verbose = False, pretend_run = False, exit_on_failure = False):
+    def Setup(self, setup_params = None):
+        if not setup_params:
+            setup_params = config.SetupParams()
 
         # Setup windows program
         if programs.ShouldProgramBeInstalled("Citra", "windows"):
@@ -100,9 +102,9 @@ class Citra(emulatorbase.EmulatorBase):
                 install_name = "Citra",
                 install_dir = programs.GetProgramInstallDir("Citra", "windows"),
                 search_file = "citra-qt.exe",
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup Citra")
                 return False
@@ -114,29 +116,33 @@ class Citra(emulatorbase.EmulatorBase):
                 install_name = "Citra",
                 install_dir = programs.GetProgramInstallDir("Citra", "linux"),
                 search_file = "citra-qt.AppImage",
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup Citra")
                 return False
         return True
 
     # Setup offline
-    def SetupOffline(self, verbose = False, pretend_run = False, exit_on_failure = False):
-        self.Setup(verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure)
+    def SetupOffline(self, setup_params = None):
+        if not setup_params:
+            setup_params = config.SetupParams()
+        self.Setup(setup_params = setup_params)
 
     # Configure
-    def Configure(self, verbose = False, pretend_run = False, exit_on_failure = False):
+    def Configure(self, setup_params = None):
+        if not setup_params:
+            setup_params = config.SetupParams()
 
         # Create config files
         for config_filename, config_contents in config_files.items():
             success = system.TouchFile(
                 src = system.JoinPaths(environment.GetEmulatorsRootDir(), config_filename),
                 contents = config_contents.strip(),
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup Citra config files")
                 return False
@@ -145,9 +151,9 @@ class Citra(emulatorbase.EmulatorBase):
         for filename, expected_md5 in system_files.items():
             actual_md5 = hashing.CalculateFileMD5(
                 src = system.JoinPaths(environment.GetLockerGamingEmulatorSetupDir("Citra"), filename),
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             success = (expected_md5 == actual_md5)
             if not success:
                 system.LogError("Could not verify Citra system file %s" % filename)
@@ -161,9 +167,9 @@ class Citra(emulatorbase.EmulatorBase):
                         archive_file = system.JoinPaths(environment.GetLockerGamingEmulatorSetupDir("Citra"), obj + config.ArchiveFileType.ZIP.cval()),
                         extract_dir = system.JoinPaths(programs.GetEmulatorPathConfigValue("Citra", "setup_dir", platform), obj),
                         skip_existing = True,
-                        verbose = verbose,
-                        pretend_run = pretend_run,
-                        exit_on_failure = exit_on_failure)
+                        verbose = setup_params.verbose,
+                        pretend_run = setup_params.pretend_run,
+                        exit_on_failure = setup_params.exit_on_failure)
                     if not success:
                         system.LogError("Could not extract Citra system files")
                         return False

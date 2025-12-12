@@ -43,7 +43,9 @@ class Mesen(emulatorbase.EmulatorBase):
         }
 
     # Setup
-    def Setup(self, verbose = False, pretend_run = False, exit_on_failure = False):
+    def Setup(self, setup_params = None):
+        if not setup_params:
+            setup_params = config.SetupParams()
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("Mesen", "windows"):
@@ -53,9 +55,9 @@ class Mesen(emulatorbase.EmulatorBase):
                 install_name = "Mesen",
                 install_dir = programs.GetProgramInstallDir("Mesen", "windows"),
                 backups_dir = programs.GetProgramBackupDir("Mesen", "windows"),
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup Mesen")
                 return False
@@ -68,16 +70,18 @@ class Mesen(emulatorbase.EmulatorBase):
                 install_name = "Mesen",
                 install_dir = programs.GetProgramInstallDir("Mesen", "linux"),
                 backups_dir = programs.GetProgramBackupDir("Mesen", "linux"),
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup Mesen")
                 return False
         return True
 
     # Setup offline
-    def SetupOffline(self, verbose = False, pretend_run = False, exit_on_failure = False):
+    def SetupOffline(self, setup_params = None):
+        if not setup_params:
+            setup_params = config.SetupParams()
 
         # Setup windows program
         if programs.ShouldProgramBeInstalled("Mesen", "windows"):
@@ -86,9 +90,9 @@ class Mesen(emulatorbase.EmulatorBase):
                 install_name = "Mesen",
                 install_dir = programs.GetProgramInstallDir("Mesen", "windows"),
                 search_file = "Mesen.exe",
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup Mesen")
                 return False
@@ -100,9 +104,9 @@ class Mesen(emulatorbase.EmulatorBase):
                 install_name = "Mesen",
                 install_dir = programs.GetProgramInstallDir("Mesen", "linux"),
                 search_file = "Mesen.AppImage",
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup Mesen")
                 return False

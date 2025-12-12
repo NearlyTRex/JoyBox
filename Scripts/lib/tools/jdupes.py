@@ -35,7 +35,9 @@ class JDupes(toolbase.ToolBase):
         }
 
     # Setup
-    def Setup(self, verbose = False, pretend_run = False, exit_on_failure = False):
+    def Setup(self, setup_params = None):
+        if not setup_params:
+            setup_params = config.SetupParams()
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("JDupes", "windows"):
@@ -48,9 +50,9 @@ class JDupes(toolbase.ToolBase):
                 install_name = "JDupes",
                 install_dir = programs.GetProgramInstallDir("JDupes", "windows"),
                 backups_dir = programs.GetProgramBackupDir("JDupes", "windows"),
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup JDupes")
                 return False
@@ -66,16 +68,18 @@ class JDupes(toolbase.ToolBase):
                 install_name = "JDupes",
                 install_dir = programs.GetProgramInstallDir("JDupes", "linux"),
                 backups_dir = programs.GetProgramBackupDir("JDupes", "linux"),
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup JDupes")
                 return False
         return True
 
     # Setup offline
-    def SetupOffline(self, verbose = False, pretend_run = False, exit_on_failure = False):
+    def SetupOffline(self, setup_params = None):
+        if not setup_params:
+            setup_params = config.SetupParams()
 
         # Setup windows program
         if programs.ShouldProgramBeInstalled("JDupes", "windows"):
@@ -84,9 +88,9 @@ class JDupes(toolbase.ToolBase):
                 install_name = "JDupes",
                 install_dir = programs.GetProgramInstallDir("JDupes", "windows"),
                 search_file = "jdupes.exe",
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup JDupes")
                 return False
@@ -97,9 +101,9 @@ class JDupes(toolbase.ToolBase):
                 archive_dir = programs.GetProgramBackupDir("JDupes", "linux"),
                 install_name = "JDupes",
                 install_dir = programs.GetProgramInstallDir("JDupes", "linux"),
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup JDupes")
                 return False

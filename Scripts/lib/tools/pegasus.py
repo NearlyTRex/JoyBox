@@ -68,7 +68,9 @@ class Pegasus(toolbase.ToolBase):
         }
 
     # Setup
-    def Setup(self, verbose = False, pretend_run = False, exit_on_failure = False):
+    def Setup(self, setup_params = None):
+        if not setup_params:
+            setup_params = config.SetupParams()
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("Pegasus", "windows"):
@@ -83,9 +85,9 @@ class Pegasus(toolbase.ToolBase):
                 backups_dir = programs.GetProgramBackupDir("Pegasus", "windows"),
                 install_files = ["pegasus-fe.exe"],
                 get_latest = True,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup Pegasus")
                 return False
@@ -94,9 +96,9 @@ class Pegasus(toolbase.ToolBase):
                 github_repo = "PegasusThemeGrid",
                 output_dir = system.JoinPaths(programs.GetToolPathConfigValue("Pegasus", "themes_dir", "windows"), "PegasusThemeGrid"),
                 clean = True,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup Pegasus theme")
                 return False
@@ -123,9 +125,10 @@ class Pegasus(toolbase.ToolBase):
                 internal_symlinks = [
                     {"from": "usr/bin/pegasus-fe", "to": "AppRun"}
                 ],
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                locker_type = setup_params.locker_type,
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup Pegasus")
                 return False
@@ -134,16 +137,18 @@ class Pegasus(toolbase.ToolBase):
                 github_repo = "PegasusThemeGrid",
                 output_dir = system.JoinPaths(programs.GetToolPathConfigValue("Pegasus", "themes_dir", "linux"), "PegasusThemeGrid"),
                 clean = True,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup Pegasus theme")
                 return False
         return True
 
     # Setup offline
-    def SetupOffline(self, verbose = False, pretend_run = False, exit_on_failure = False):
+    def SetupOffline(self, setup_params = None):
+        if not setup_params:
+            setup_params = config.SetupParams()
 
         # Setup windows program
         if programs.ShouldProgramBeInstalled("Pegasus", "windows"):
@@ -152,9 +157,9 @@ class Pegasus(toolbase.ToolBase):
                 install_name = "Pegasus",
                 install_dir = programs.GetProgramInstallDir("Pegasus", "windows"),
                 search_file = "pegasus-fe.exe",
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup Pegasus")
                 return False
@@ -165,16 +170,18 @@ class Pegasus(toolbase.ToolBase):
                 archive_dir = programs.GetProgramBackupDir("Pegasus", "linux"),
                 install_name = "Pegasus",
                 install_dir = programs.GetProgramInstallDir("Pegasus", "linux"),
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup Pegasus")
                 return False
         return True
 
     # Configure
-    def Configure(self, verbose = False, pretend_run = False, exit_on_failure = False):
+    def Configure(self, setup_params = None):
+        if not setup_params:
+            setup_params = config.SetupParams()
 
         # Generate game dirs
         game_dirs = []
@@ -191,9 +198,9 @@ class Pegasus(toolbase.ToolBase):
             success = system.TouchFile(
                 src = system.JoinPaths(environment.GetToolsRootDir(), config_filename),
                 contents = config_contents.strip(),
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup Pegasus config files")
                 return False

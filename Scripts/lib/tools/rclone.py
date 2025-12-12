@@ -65,7 +65,9 @@ class RClone(toolbase.ToolBase):
         }
 
     # Setup
-    def Setup(self, verbose = False, pretend_run = False, exit_on_failure = False):
+    def Setup(self, setup_params = None):
+        if not setup_params:
+            setup_params = config.SetupParams()
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("RClone", "windows"):
@@ -75,9 +77,9 @@ class RClone(toolbase.ToolBase):
                 install_name = "RClone",
                 install_dir = programs.GetProgramInstallDir("RClone", "windows"),
                 backups_dir = programs.GetProgramBackupDir("RClone", "windows"),
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup RClone")
                 return False
@@ -90,16 +92,18 @@ class RClone(toolbase.ToolBase):
                 install_name = "RClone",
                 install_dir = programs.GetProgramInstallDir("RClone", "linux"),
                 backups_dir = programs.GetProgramBackupDir("RClone", "linux"),
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup RClone")
                 return False
         return True
 
     # Setup offline
-    def SetupOffline(self, verbose = False, pretend_run = False, exit_on_failure = False):
+    def SetupOffline(self, setup_params = None):
+        if not setup_params:
+            setup_params = config.SetupParams()
 
         # Setup windows program
         if programs.ShouldProgramBeInstalled("RClone", "windows"):
@@ -108,9 +112,9 @@ class RClone(toolbase.ToolBase):
                 install_name = "RClone",
                 install_dir = programs.GetProgramInstallDir("RClone", "windows"),
                 search_file = "rclone.exe",
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup RClone")
                 return False
@@ -121,16 +125,18 @@ class RClone(toolbase.ToolBase):
                 archive_dir = programs.GetProgramBackupDir("RClone", "linux"),
                 install_name = "RClone",
                 install_dir = programs.GetProgramInstallDir("RClone", "linux"),
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup RClone")
                 return False
         return True
 
     # Configure
-    def Configure(self, verbose = False, pretend_run = False, exit_on_failure = False):
+    def Configure(self, setup_params = None):
+        if not setup_params:
+            setup_params = config.SetupParams()
 
         # Get gdrive options
         gdrive_remote_name = ini.GetIniValue("UserData.Share", "locker_gdrive_remote_name", throw_exception = False)
@@ -181,9 +187,9 @@ class RClone(toolbase.ToolBase):
             success = system.TouchFile(
                 src = system.JoinPaths(environment.GetToolsRootDir(), config_filename),
                 contents = config_contents.strip(),
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup RClone config files")
                 return False

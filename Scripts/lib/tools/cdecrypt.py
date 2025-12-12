@@ -35,7 +35,9 @@ class CDecrypt(toolbase.ToolBase):
         }
 
     # Setup
-    def Setup(self, verbose = False, pretend_run = False, exit_on_failure = False):
+    def Setup(self, setup_params = None):
+        if not setup_params:
+            setup_params = config.SetupParams()
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("CDecrypt", "windows"):
@@ -49,9 +51,9 @@ class CDecrypt(toolbase.ToolBase):
                 install_dir = programs.GetProgramInstallDir("CDecrypt", "windows"),
                 backups_dir = programs.GetProgramBackupDir("CDecrypt", "windows"),
                 install_files = ["cdecrypt.exe"],
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup CDecrypt")
                 return False
@@ -75,16 +77,19 @@ class CDecrypt(toolbase.ToolBase):
                 internal_symlinks = [
                     {"from": "usr/bin/cdecrypt", "to": "AppRun"}
                 ],
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                locker_type = setup_params.locker_type,
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup CDecrypt")
                 return False
         return True
 
     # Setup offline
-    def SetupOffline(self, verbose = False, pretend_run = False, exit_on_failure = False):
+    def SetupOffline(self, setup_params = None):
+        if not setup_params:
+            setup_params = config.SetupParams()
 
         # Setup windows program
         if programs.ShouldProgramBeInstalled("CDecrypt", "windows"):
@@ -93,9 +98,9 @@ class CDecrypt(toolbase.ToolBase):
                 install_name = "CDecrypt",
                 install_dir = programs.GetProgramInstallDir("CDecrypt", "windows"),
                 search_file = "cdecrypt.exe",
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup CDecrypt")
                 return False
@@ -106,9 +111,9 @@ class CDecrypt(toolbase.ToolBase):
                 archive_dir = programs.GetProgramBackupDir("CDecrypt", "linux"),
                 install_name = "CDecrypt",
                 install_dir = programs.GetProgramInstallDir("CDecrypt", "linux"),
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup CDecrypt")
                 return False

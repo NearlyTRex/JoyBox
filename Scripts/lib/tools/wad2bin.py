@@ -35,7 +35,9 @@ class Wad2Bin(toolbase.ToolBase):
         }
 
     # Setup
-    def Setup(self, verbose = False, pretend_run = False, exit_on_failure = False):
+    def Setup(self, setup_params = None):
+        if not setup_params:
+            setup_params = config.SetupParams()
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("Wad2Bin", "windows"):
@@ -48,9 +50,9 @@ class Wad2Bin(toolbase.ToolBase):
                 install_name = "Wad2Bin",
                 install_dir = programs.GetProgramInstallDir("Wad2Bin", "windows"),
                 backups_dir = programs.GetProgramBackupDir("Wad2Bin", "windows"),
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup Wad2Bin")
                 return False
@@ -66,16 +68,18 @@ class Wad2Bin(toolbase.ToolBase):
                 install_name = "Wad2Bin",
                 install_dir = programs.GetProgramInstallDir("Wad2Bin", "linux"),
                 backups_dir = programs.GetProgramBackupDir("Wad2Bin", "linux"),
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup Wad2Bin")
                 return False
         return True
 
     # Setup offline
-    def SetupOffline(self, verbose = False, pretend_run = False, exit_on_failure = False):
+    def SetupOffline(self, setup_params = None):
+        if not setup_params:
+            setup_params = config.SetupParams()
 
         # Setup windows program
         if programs.ShouldProgramBeInstalled("Wad2Bin", "windows"):
@@ -84,9 +88,9 @@ class Wad2Bin(toolbase.ToolBase):
                 install_name = "Wad2Bin",
                 install_dir = programs.GetProgramInstallDir("Wad2Bin", "windows"),
                 search_file = "wad2bin-windows-x64.exe",
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup Wad2Bin")
                 return False
@@ -98,9 +102,9 @@ class Wad2Bin(toolbase.ToolBase):
                 install_name = "Wad2Bin",
                 install_dir = programs.GetProgramInstallDir("Wad2Bin", "linux"),
                 search_file = "wad2bin",
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup Wad2Bin")
                 return False

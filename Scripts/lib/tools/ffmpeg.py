@@ -35,7 +35,9 @@ class FFMpeg(toolbase.ToolBase):
         }
 
     # Setup
-    def Setup(self, verbose = False, pretend_run = False, exit_on_failure = False):
+    def Setup(self, setup_params = None):
+        if not setup_params:
+            setup_params = config.SetupParams()
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("FFMpeg", "windows"):
@@ -49,9 +51,9 @@ class FFMpeg(toolbase.ToolBase):
                 install_dir = programs.GetProgramInstallDir("FFMpeg", "windows"),
                 backups_dir = programs.GetProgramBackupDir("FFMpeg", "windows"),
                 install_files = ["ffmpeg.exe"],
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup FFMpeg")
                 return False
@@ -68,16 +70,18 @@ class FFMpeg(toolbase.ToolBase):
                 install_dir = programs.GetProgramInstallDir("FFMpeg", "linux"),
                 backups_dir = programs.GetProgramBackupDir("FFMpeg", "linux"),
                 install_files = ["ffmpeg"],
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup FFMpeg")
                 return False
         return True
 
     # Setup offline
-    def SetupOffline(self, verbose = False, pretend_run = False, exit_on_failure = False):
+    def SetupOffline(self, setup_params = None):
+        if not setup_params:
+            setup_params = config.SetupParams()
 
         # Setup windows program
         if programs.ShouldProgramBeInstalled("FFMpeg", "windows"):
@@ -86,9 +90,9 @@ class FFMpeg(toolbase.ToolBase):
                 install_name = "FFMpeg",
                 install_dir = programs.GetProgramInstallDir("FFMpeg", "windows"),
                 search_file = "ffmpeg.exe",
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup FFMpeg")
                 return False
@@ -100,9 +104,9 @@ class FFMpeg(toolbase.ToolBase):
                 install_name = "FFMpeg",
                 install_dir = programs.GetProgramInstallDir("FFMpeg", "linux"),
                 search_file = "ffmpeg",
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup FFMpeg")
                 return False

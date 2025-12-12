@@ -37,7 +37,9 @@ class Moonlight(toolbase.ToolBase):
         }
 
     # Setup
-    def Setup(self, verbose = False, pretend_run = False, exit_on_failure = False):
+    def Setup(self, setup_params = None):
+        if not setup_params:
+            setup_params = config.SetupParams()
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("Moonlight", "windows"):
@@ -50,9 +52,9 @@ class Moonlight(toolbase.ToolBase):
                 install_name = "Moonlight",
                 install_dir = programs.GetProgramInstallDir("Moonlight", "windows"),
                 backups_dir = programs.GetProgramBackupDir("Moonlight", "windows"),
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup Moonlight")
                 return False
@@ -67,16 +69,18 @@ class Moonlight(toolbase.ToolBase):
                 install_name = "Moonlight",
                 install_dir = programs.GetProgramInstallDir("Moonlight", "linux"),
                 backups_dir = programs.GetProgramBackupDir("Moonlight", "linux"),
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup Moonlight")
                 return False
         return True
 
     # Setup offline
-    def SetupOffline(self, verbose = False, pretend_run = False, exit_on_failure = False):
+    def SetupOffline(self, setup_params = None):
+        if not setup_params:
+            setup_params = config.SetupParams()
 
         # Setup windows program
         if programs.ShouldProgramBeInstalled("Moonlight", "windows"):
@@ -85,9 +89,9 @@ class Moonlight(toolbase.ToolBase):
                 install_name = "Moonlight",
                 install_dir = programs.GetProgramInstallDir("Moonlight", "windows"),
                 search_file = "Moonlight.exe",
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup Moonlight")
                 return False
@@ -98,25 +102,27 @@ class Moonlight(toolbase.ToolBase):
                 archive_dir = programs.GetProgramBackupDir("Moonlight", "linux"),
                 install_name = "Moonlight",
                 install_dir = programs.GetProgramInstallDir("Moonlight", "linux"),
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup Moonlight")
                 return False
         return True
 
     # Configure
-    def Configure(self, verbose = False, pretend_run = False, exit_on_failure = False):
+    def Configure(self, setup_params = None):
+        if not setup_params:
+            setup_params = config.SetupParams()
 
         # Create config files
         for config_filename, config_contents in config_files.items():
             success = system.TouchFile(
                 src = system.JoinPaths(environment.GetToolsRootDir(), config_filename),
                 contents = config_contents.strip(),
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup Moonlight config files")
                 return False

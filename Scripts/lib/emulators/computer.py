@@ -158,7 +158,9 @@ class Computer(emulatorbase.EmulatorBase):
         return None
 
     # Setup
-    def Setup(self, verbose = False, pretend_run = False, exit_on_failure = False):
+    def Setup(self, setup_params = None):
+        if not setup_params:
+            setup_params = config.SetupParams()
 
         # Download windows programs
         if programs.ShouldProgramBeInstalled("DosBoxX", "windows"):
@@ -172,9 +174,9 @@ class Computer(emulatorbase.EmulatorBase):
                 install_dir = programs.GetProgramInstallDir("DosBoxX", "windows"),
                 backups_dir = programs.GetProgramBackupDir("DosBoxX", "windows"),
                 get_latest = True,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup DosBoxX")
                 return False
@@ -192,9 +194,9 @@ class Computer(emulatorbase.EmulatorBase):
                     {"from": "scummvm-*.exe", "to": "scummvm.exe", "ratio": 75}
                 ],
                 get_latest = True,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup ScummVM")
                 return False
@@ -239,9 +241,10 @@ class Computer(emulatorbase.EmulatorBase):
                 internal_symlinks = [
                     {"from": "usr/bin/dosbox-x", "to": "AppRun"}
                 ],
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                locker_type = setup_params.locker_type,
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup DosBoxX")
                 return False
@@ -282,16 +285,19 @@ class Computer(emulatorbase.EmulatorBase):
                 internal_symlinks = [
                     {"from": "usr/bin/scummvm", "to": "AppRun"}
                 ],
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                locker_type = setup_params.locker_type,
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup ScummVM")
                 return False
         return True
 
     # Setup offline
-    def SetupOffline(self, verbose = False, pretend_run = False, exit_on_failure = False):
+    def SetupOffline(self, setup_params = None):
+        if not setup_params:
+            setup_params = config.SetupParams()
 
         # Setup windows program
         if programs.ShouldProgramBeInstalled("DosBoxX", "windows"):
@@ -300,9 +306,9 @@ class Computer(emulatorbase.EmulatorBase):
                 install_name = "DosBoxX",
                 install_dir = programs.GetProgramInstallDir("DosBoxX", "windows"),
                 search_file = "dosbox-x.exe",
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup DosBoxX")
                 return False
@@ -312,9 +318,9 @@ class Computer(emulatorbase.EmulatorBase):
                 install_name = "ScummVM",
                 install_dir = programs.GetProgramInstallDir("ScummVM", "windows"),
                 search_file = "scummvm.exe",
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup ScummVM")
                 return False
@@ -325,9 +331,9 @@ class Computer(emulatorbase.EmulatorBase):
                 archive_dir = programs.GetProgramBackupDir("DosBoxX", "linux"),
                 install_name = "DosBoxX",
                 install_dir = programs.GetProgramInstallDir("DosBoxX", "linux"),
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup DosBoxX")
                 return False
@@ -336,25 +342,27 @@ class Computer(emulatorbase.EmulatorBase):
                 archive_dir = programs.GetProgramBackupDir("ScummVM", "linux"),
                 install_name = "ScummVM",
                 install_dir = programs.GetProgramInstallDir("ScummVM", "linux"),
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup ScummVM")
                 return False
         return True
 
     # Configure
-    def Configure(self, verbose = False, pretend_run = False, exit_on_failure = False):
+    def Configure(self, setup_params = None):
+        if not setup_params:
+            setup_params = config.SetupParams()
 
         # Create config files
         for config_filename, config_contents in config_files.items():
             success = system.TouchFile(
                 src = system.JoinPaths(environment.GetEmulatorsRootDir(), config_filename),
                 contents = config_contents.strip(),
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup DosBoxX/ScummVM config files")
                 return False

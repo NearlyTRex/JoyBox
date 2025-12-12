@@ -43,7 +43,9 @@ class BlastEm(emulatorbase.EmulatorBase):
         }
 
     # Setup
-    def Setup(self, verbose = False, pretend_run = False, exit_on_failure = False):
+    def Setup(self, setup_params = None):
+        if not setup_params:
+            setup_params = config.SetupParams()
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("BlastEm", "windows"):
@@ -56,16 +58,18 @@ class BlastEm(emulatorbase.EmulatorBase):
                 install_name = "BlastEm",
                 install_dir = programs.GetProgramInstallDir("BlastEm", "windows"),
                 backups_dir = programs.GetProgramBackupDir("BlastEm", "windows"),
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup BlastEm")
                 return False
         return True
 
     # Setup offline
-    def SetupOffline(self, verbose = False, pretend_run = False, exit_on_failure = False):
+    def SetupOffline(self, setup_params = None):
+        if not setup_params:
+            setup_params = config.SetupParams()
 
         # Setup windows program
         if programs.ShouldProgramBeInstalled("BlastEm", "windows"):
@@ -74,9 +78,9 @@ class BlastEm(emulatorbase.EmulatorBase):
                 install_name = "BlastEm",
                 install_dir = programs.GetProgramInstallDir("BlastEm", "windows"),
                 search_file = "blastem.exe",
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup BlastEm")
                 return False

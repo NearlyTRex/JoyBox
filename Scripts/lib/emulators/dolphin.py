@@ -147,7 +147,9 @@ class Dolphin(emulatorbase.EmulatorBase):
         return True
 
     # Setup
-    def Setup(self, verbose = False, pretend_run = False, exit_on_failure = False):
+    def Setup(self, setup_params = None):
+        if not setup_params:
+            setup_params = config.SetupParams()
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("Dolphin", "windows"):
@@ -161,9 +163,9 @@ class Dolphin(emulatorbase.EmulatorBase):
                 install_dir = programs.GetProgramInstallDir("Dolphin", "windows"),
                 backups_dir = programs.GetProgramBackupDir("Dolphin", "windows"),
                 get_latest = True,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup Dolphin")
                 return False
@@ -192,16 +194,19 @@ class Dolphin(emulatorbase.EmulatorBase):
                 internal_symlinks = [
                     {"from": "usr/bin/dolphin-emu", "to": "AppRun"}
                 ],
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                locker_type = setup_params.locker_type,
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup Dolphin")
                 return False
         return True
 
     # Setup offline
-    def SetupOffline(self, verbose = False, pretend_run = False, exit_on_failure = False):
+    def SetupOffline(self, setup_params = None):
+        if not setup_params:
+            setup_params = config.SetupParams()
 
         # Setup windows program
         if programs.ShouldProgramBeInstalled("Dolphin", "windows"):
@@ -210,9 +215,9 @@ class Dolphin(emulatorbase.EmulatorBase):
                 install_name = "Dolphin",
                 install_dir = programs.GetProgramInstallDir("Dolphin", "windows"),
                 search_file = "Dolphin.exe",
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup Dolphin")
                 return False
@@ -223,25 +228,27 @@ class Dolphin(emulatorbase.EmulatorBase):
                 archive_dir = programs.GetProgramBackupDir("Dolphin", "linux"),
                 install_name = "Dolphin",
                 install_dir = programs.GetProgramInstallDir("Dolphin", "linux"),
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup Dolphin")
                 return False
         return True
 
     # Configure
-    def Configure(self, verbose = False, pretend_run = False, exit_on_failure = False):
+    def Configure(self, setup_params = None):
+        if not setup_params:
+            setup_params = config.SetupParams()
 
         # Create config files
         for config_filename, config_contents in config_files.items():
             success = system.TouchFile(
                 src = system.JoinPaths(environment.GetEmulatorsRootDir(), config_filename),
                 contents = config_contents.strip(),
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup Dolphin config files")
                 return False
@@ -250,9 +257,9 @@ class Dolphin(emulatorbase.EmulatorBase):
         for filename, expected_md5 in system_files.items():
             actual_md5 = hashing.CalculateFileMD5(
                 src = system.JoinPaths(environment.GetLockerGamingEmulatorSetupDir("Dolphin"), filename),
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             success = (expected_md5 == actual_md5)
             if not success:
                 system.LogError("Could not verify Dolphin system file %s" % filename)
@@ -266,9 +273,9 @@ class Dolphin(emulatorbase.EmulatorBase):
                         archive_file = system.JoinPaths(environment.GetLockerGamingEmulatorSetupDir("Dolphin"), obj + config.ArchiveFileType.ZIP.cval()),
                         extract_dir = system.JoinPaths(programs.GetEmulatorPathConfigValue("Dolphin", "setup_dir", platform), obj),
                         skip_existing = True,
-                        verbose = verbose,
-                        pretend_run = pretend_run,
-                        exit_on_failure = exit_on_failure)
+                        verbose = setup_params.verbose,
+                        pretend_run = setup_params.pretend_run,
+                        exit_on_failure = setup_params.exit_on_failure)
                     if not success:
                         system.LogError("Could not extract Dolphin system files")
                         return False

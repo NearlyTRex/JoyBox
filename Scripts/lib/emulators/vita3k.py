@@ -77,7 +77,9 @@ class Vita3K(emulatorbase.EmulatorBase):
         }
 
     # Setup
-    def Setup(self, verbose = False, pretend_run = False, exit_on_failure = False):
+    def Setup(self, setup_params = None):
+        if not setup_params:
+            setup_params = config.SetupParams()
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("Vita3K", "windows"):
@@ -91,9 +93,9 @@ class Vita3K(emulatorbase.EmulatorBase):
                 install_dir = programs.GetProgramInstallDir("Vita3K", "windows"),
                 backups_dir = programs.GetProgramBackupDir("Vita3K", "windows"),
                 get_latest = True,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup Vita3K")
                 return False
@@ -109,16 +111,18 @@ class Vita3K(emulatorbase.EmulatorBase):
                 install_dir = programs.GetProgramInstallDir("Vita3K", "linux"),
                 backups_dir = programs.GetProgramBackupDir("Vita3K", "linux"),
                 get_latest = True,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup Vita3K")
                 return False
         return True
 
     # Setup offline
-    def SetupOffline(self, verbose = False, pretend_run = False, exit_on_failure = False):
+    def SetupOffline(self, setup_params = None):
+        if not setup_params:
+            setup_params = config.SetupParams()
 
         # Setup windows program
         if programs.ShouldProgramBeInstalled("Vita3K", "windows"):
@@ -127,9 +131,9 @@ class Vita3K(emulatorbase.EmulatorBase):
                 install_name = "Vita3K",
                 install_dir = programs.GetProgramInstallDir("Vita3K", "windows"),
                 search_file = "Vita3K.exe",
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup Vita3K")
                 return False
@@ -140,25 +144,27 @@ class Vita3K(emulatorbase.EmulatorBase):
                 archive_dir = programs.GetProgramBackupDir("Vita3K", "linux"),
                 install_name = "Vita3K",
                 install_dir = programs.GetProgramInstallDir("Vita3K", "linux"),
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup Vita3K")
                 return False
         return True
 
     # Configure
-    def Configure(self, verbose = False, pretend_run = False, exit_on_failure = False):
+    def Configure(self, setup_params = None):
+        if not setup_params:
+            setup_params = config.SetupParams()
 
         # Create config files
         for config_filename, config_contents in config_files.items():
             success = system.TouchFile(
                 src = system.JoinPaths(environment.GetEmulatorsRootDir(), config_filename),
                 contents = config_contents.strip(),
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup Vita3K config files")
                 return False
@@ -167,9 +173,9 @@ class Vita3K(emulatorbase.EmulatorBase):
         for filename, expected_md5 in system_files.items():
             actual_md5 = hashing.CalculateFileMD5(
                 src = system.JoinPaths(environment.GetLockerGamingEmulatorSetupDir("Vita3K"), filename),
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             success = (expected_md5 == actual_md5)
             if not success:
                 system.LogError("Could not verify Vita3K system file %s" % filename)
@@ -183,9 +189,9 @@ class Vita3K(emulatorbase.EmulatorBase):
                         archive_file = system.JoinPaths(environment.GetLockerGamingEmulatorSetupDir("Vita3K"), obj + config.ArchiveFileType.ZIP.cval()),
                         extract_dir = system.JoinPaths(programs.GetEmulatorPathConfigValue("Vita3K", "setup_dir", platform), obj),
                         skip_existing = True,
-                        verbose = verbose,
-                        pretend_run = pretend_run,
-                        exit_on_failure = exit_on_failure)
+                        verbose = setup_params.verbose,
+                        pretend_run = setup_params.pretend_run,
+                        exit_on_failure = setup_params.exit_on_failure)
                     if not success:
                         system.LogError("Could not extract Vita3K system files")
                         return False

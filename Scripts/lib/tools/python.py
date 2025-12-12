@@ -66,7 +66,9 @@ class Python(toolbase.ToolBase):
         }
 
     # Configure
-    def Configure(self, verbose = False, pretend_run = False, exit_on_failure = False):
+    def Configure(self, setup_params = None):
+        if not setup_params:
+            setup_params = config.SetupParams()
 
         # Create wrapper scripts
         for obj in system.GetDirectoryContents(environment.GetScriptsBinDir()):
@@ -83,9 +85,9 @@ class Python(toolbase.ToolBase):
                     success = system.TouchFile(
                         src = script_path_windows,
                         contents = wrapper_script_windows.strip().replace(config.token_python_bin, programs.GetToolProgram("PythonVenvPython")),
-                        verbose = verbose,
-                        pretend_run = pretend_run,
-                        exit_on_failure = exit_on_failure)
+                        verbose = setup_params.verbose,
+                        pretend_run = setup_params.pretend_run,
+                        exit_on_failure = setup_params.exit_on_failure)
                     if not success:
                         system.LogError("Could not setup Python wrapper scripts")
                         return False
@@ -95,17 +97,17 @@ class Python(toolbase.ToolBase):
                     success = system.TouchFile(
                         src = script_path_unix,
                         contents = wrapper_script_unix.strip().replace(config.token_python_bin, programs.GetToolProgram("PythonVenvPython")),
-                        verbose = verbose,
-                        pretend_run = pretend_run,
-                        exit_on_failure = exit_on_failure)
+                        verbose = setup_params.verbose,
+                        pretend_run = setup_params.pretend_run,
+                        exit_on_failure = setup_params.exit_on_failure)
                     if not success:
                         system.LogError("Could not setup Python wrapper scripts")
                         return False
                     success = system.MarkAsExecutable(
                         src = script_path_unix,
-                        verbose = verbose,
-                        pretend_run = pretend_run,
-                        exit_on_failure = exit_on_failure)
+                        verbose = setup_params.verbose,
+                        pretend_run = setup_params.pretend_run,
+                        exit_on_failure = setup_params.exit_on_failure)
                     if not success:
                         system.LogError("Could not setup Python wrapper scripts")
                         return False

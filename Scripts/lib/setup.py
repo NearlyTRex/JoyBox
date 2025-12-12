@@ -42,9 +42,11 @@ def SetupPackages(
     clean = False,
     force = False,
     packages = None,
-    verbose = False,
-    pretend_run = False,
-    exit_on_failure = False):
+    setup_params = None):
+
+    # Create default setup params if not provided
+    if not setup_params:
+        setup_params = config.SetupParams()
 
     # Clean root directory
     if clean:
@@ -52,9 +54,9 @@ def SetupPackages(
             system.LogInfo("Cleaning %s directory %s ..." % (package_type, root_dir))
             system.RemoveDirectory(
                 src = root_dir,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
 
     # Install packages
     for package in package_list:
@@ -71,30 +73,21 @@ def SetupPackages(
                 system.LogInfo("Forcing rebuild of %s (removing %s) ..." % (package_name, install_dir))
                 system.RemoveDirectory(
                     src = install_dir,
-                    verbose = verbose,
-                    pretend_run = pretend_run,
-                    exit_on_failure = exit_on_failure)
+                    verbose = setup_params.verbose,
+                    pretend_run = setup_params.pretend_run,
+                    exit_on_failure = setup_params.exit_on_failure)
 
         # Install package
         system.LogInfo("Installing %s %s ..." % (package_type, package_name))
         success = False
         if offline:
-            success = package.SetupOffline(
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+            success = package.SetupOffline(setup_params = setup_params)
         else:
-            success = package.Setup(
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+            success = package.Setup(setup_params = setup_params)
         if not success:
             return False
         if configure:
-            success = package.Configure(
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+            success = package.Configure(setup_params = setup_params)
             if not success:
                 return False
     return True
@@ -106,9 +99,7 @@ def SetupTools(
     clean = False,
     force = False,
     packages = None,
-    verbose = False,
-    pretend_run = False,
-    exit_on_failure = False):
+    setup_params = None):
     return SetupPackages(
         package_list = programs.GetTools(),
         package_type = "tool",
@@ -118,9 +109,7 @@ def SetupTools(
         clean = clean,
         force = force,
         packages = packages,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
+        setup_params = setup_params)
 
 # Setup emulators
 def SetupEmulators(
@@ -129,9 +118,7 @@ def SetupEmulators(
     clean = False,
     force = False,
     packages = None,
-    verbose = False,
-    pretend_run = False,
-    exit_on_failure = False):
+    setup_params = None):
     return SetupPackages(
         package_list = programs.GetEmulators(),
         package_type = "emulator",
@@ -141,9 +128,7 @@ def SetupEmulators(
         clean = clean,
         force = force,
         packages = packages,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
+        setup_params = setup_params)
 
 # Setup assets
 def SetupAssets(verbose = False, pretend_run = False, exit_on_failure = False):

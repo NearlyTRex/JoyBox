@@ -118,7 +118,9 @@ class Yuzu(emulatorbase.EmulatorBase):
         return True
 
     # Setup
-    def Setup(self, verbose = False, pretend_run = False, exit_on_failure = False):
+    def Setup(self, setup_params = None):
+        if not setup_params:
+            setup_params = config.SetupParams()
 
         # Setup windows program
         if programs.ShouldProgramBeInstalled("Yuzu", "windows"):
@@ -128,9 +130,9 @@ class Yuzu(emulatorbase.EmulatorBase):
                 install_dir = programs.GetProgramInstallDir("Yuzu", "windows"),
                 preferred_archive = "Windows-Yuzu-EA-4176",
                 search_file = "yuzu.exe",
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup Yuzu")
                 return False
@@ -142,29 +144,33 @@ class Yuzu(emulatorbase.EmulatorBase):
                 install_name = "Yuzu",
                 install_dir = programs.GetProgramInstallDir("Yuzu", "linux"),
                 preferred_archive = "Linux-Yuzu-EA-4176",
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup Yuzu")
                 return False
         return True
 
     # Setup offline
-    def SetupOffline(self, verbose = False, pretend_run = False, exit_on_failure = False):
-        return self.Setup(verbose = verbose, pretend_run = pretend_run,exit_on_failure = exit_on_failure)
+    def SetupOffline(self, setup_params = None):
+        if not setup_params:
+            setup_params = config.SetupParams()
+        return self.Setup(setup_params = setup_params)
 
     # Configure
-    def Configure(self, verbose = False, pretend_run = False, exit_on_failure = False):
+    def Configure(self, setup_params = None):
+        if not setup_params:
+            setup_params = config.SetupParams()
 
         # Create config files
         for config_filename, config_contents in config_files.items():
             success = system.TouchFile(
                 src = system.JoinPaths(environment.GetEmulatorsRootDir(), config_filename),
                 contents = config_contents.strip(),
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup Yuzu config files")
                 return False
@@ -175,9 +181,9 @@ class Yuzu(emulatorbase.EmulatorBase):
                 profiles_file = programs.GetEmulatorPathConfigValue("Yuzu", "profiles_file", platform),
                 user_id = programs.GetEmulatorConfigValue("Yuzu", "profile_user_id"),
                 account_name = programs.GetEmulatorConfigValue("Yuzu", "profile_account_name"),
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup Yuzu profiles")
                 return False
@@ -186,9 +192,9 @@ class Yuzu(emulatorbase.EmulatorBase):
         for filename, expected_md5 in system_files.items():
             actual_md5 = hashing.CalculateFileMD5(
                 src = system.JoinPaths(environment.GetLockerGamingEmulatorSetupDir("Yuzu"), filename),
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             success = (expected_md5 == actual_md5)
             if not success:
                 system.LogError("Could not verify Yuzu system file %s" % filename)
@@ -200,9 +206,9 @@ class Yuzu(emulatorbase.EmulatorBase):
                 success = system.SmartCopy(
                     src = system.JoinPaths(environment.GetLockerGamingEmulatorSetupDir("Yuzu"), filename),
                     dest = system.JoinPaths(programs.GetEmulatorPathConfigValue("Yuzu", "setup_dir", platform), filename),
-                    verbose = verbose,
-                    pretend_run = pretend_run,
-                    exit_on_failure = exit_on_failure)
+                    verbose = setup_params.verbose,
+                    pretend_run = setup_params.pretend_run,
+                    exit_on_failure = setup_params.exit_on_failure)
                 if not success:
                     system.LogError("Could not setup Yuzu system files")
                     return False

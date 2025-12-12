@@ -6,6 +6,7 @@ import sys
 import config
 import system
 import network
+import release
 import programs
 import toolbase
 
@@ -28,7 +29,9 @@ class SteamAppIDList(toolbase.ToolBase):
         }
 
     # Setup
-    def Setup(self, verbose = False, pretend_run = False, exit_on_failure = False):
+    def Setup(self, setup_params = None):
+        if not setup_params:
+            setup_params = config.SetupParams()
 
         # Download library
         if programs.ShouldLibraryBeInstalled("SteamAppIDList"):
@@ -37,9 +40,9 @@ class SteamAppIDList(toolbase.ToolBase):
                 github_repo = "SteamAppIDList",
                 output_dir = programs.GetLibraryInstallDir("SteamAppIDList", "lib"),
                 clean = True,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup SteamAppIDList")
                 return False
@@ -49,16 +52,18 @@ class SteamAppIDList(toolbase.ToolBase):
                 output_dir = programs.GetLibraryBackupDir("SteamAppIDList", "lib"),
                 recursive = True,
                 clean = True,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup SteamAppIDList")
                 return False
         return True
 
     # Setup offline
-    def SetupOffline(self, verbose = False, pretend_run = False, exit_on_failure = False):
+    def SetupOffline(self, setup_params = None):
+        if not setup_params:
+            setup_params = config.SetupParams()
 
         # Setup library
         if programs.ShouldLibraryBeInstalled("SteamAppIDList"):
@@ -66,9 +71,9 @@ class SteamAppIDList(toolbase.ToolBase):
                 archive_dir = programs.GetLibraryBackupDir("SteamAppIDList", "lib"),
                 install_name = "SteamAppIDList",
                 install_dir = programs.GetLibraryInstallDir("SteamAppIDList", "lib"),
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup SteamAppIDList")
                 return False

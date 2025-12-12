@@ -43,7 +43,9 @@ class AppImageTool(toolbase.ToolBase):
         }
 
     # Setup
-    def Setup(self, verbose = False, pretend_run = False, exit_on_failure = False):
+    def Setup(self, setup_params = None):
+        if not setup_params:
+            setup_params = config.SetupParams()
 
         # Download linux program
         if programs.ShouldProgramBeInstalled("AppImageTool", "linux"):
@@ -56,16 +58,18 @@ class AppImageTool(toolbase.ToolBase):
                 install_name = "AppImageTool",
                 install_dir = programs.GetProgramInstallDir("AppImageTool", "linux"),
                 backups_dir = programs.GetProgramBackupDir("AppImageTool", "linux"),
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup AppImageTool")
                 return False
         return True
 
     # Setup offline
-    def SetupOffline(self, verbose = False, pretend_run = False, exit_on_failure = False):
+    def SetupOffline(self, setup_params = None):
+        if not setup_params:
+            setup_params = config.SetupParams()
 
         # Setup linux program
         if programs.ShouldProgramBeInstalled("AppImageTool", "linux"):
@@ -73,25 +77,27 @@ class AppImageTool(toolbase.ToolBase):
                 archive_dir = programs.GetProgramBackupDir("AppImageTool", "linux"),
                 install_name = "AppImageTool",
                 install_dir = programs.GetProgramInstallDir("AppImageTool", "linux"),
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup AppImageTool")
                 return False
         return True
 
     # Configure
-    def Configure(self, verbose = False, pretend_run = False, exit_on_failure = False):
+    def Configure(self, setup_params = None):
+        if not setup_params:
+            setup_params = config.SetupParams()
 
         # Copy icon
         if environment.IsLinuxPlatform():
             success = system.CopyFileOrDirectory(
                 src = system.JoinPaths(environment.GetScriptsIconsDir(), "BostonIcons", "128", "mimes", "application-x-executable-script.svg"),
                 dest = system.JoinPaths(programs.GetProgramInstallDir("AppImageTool", "linux"), "icon.svg"),
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not copy AppImageTool icons")
                 return False
@@ -102,9 +108,9 @@ class AppImageTool(toolbase.ToolBase):
                 success = system.TouchFile(
                     src = system.JoinPaths(environment.GetToolsRootDir(), config_filename),
                     contents = config_contents.strip(),
-                    verbose = verbose,
-                    pretend_run = pretend_run,
-                    exit_on_failure = exit_on_failure)
+                    verbose = setup_params.verbose,
+                    pretend_run = setup_params.pretend_run,
+                    exit_on_failure = setup_params.exit_on_failure)
                 if not success:
                     system.LogError("Could not create AppImageTool config files")
                     return False

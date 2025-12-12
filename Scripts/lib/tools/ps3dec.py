@@ -35,7 +35,9 @@ class PS3Dec(toolbase.ToolBase):
         }
 
     # Setup
-    def Setup(self, verbose = False, pretend_run = False, exit_on_failure = False):
+    def Setup(self, setup_params = None):
+        if not setup_params:
+            setup_params = config.SetupParams()
 
         # Download windows program
         if programs.ShouldProgramBeInstalled("PS3Dec", "windows"):
@@ -49,9 +51,9 @@ class PS3Dec(toolbase.ToolBase):
                 install_dir = programs.GetProgramInstallDir("PS3Dec", "windows"),
                 backups_dir = programs.GetProgramBackupDir("PS3Dec", "windows"),
                 install_files = ["PS3Dec.exe"],
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup PS3Dec")
                 return False
@@ -78,16 +80,19 @@ class PS3Dec(toolbase.ToolBase):
                 internal_symlinks = [
                     {"from": "usr/bin/PS3Dec", "to": "AppRun"}
                 ],
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                locker_type = setup_params.locker_type,
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup PS3Dec")
                 return False
         return True
 
     # Setup offline
-    def SetupOffline(self, verbose = False, pretend_run = False, exit_on_failure = False):
+    def SetupOffline(self, setup_params = None):
+        if not setup_params:
+            setup_params = config.SetupParams()
 
         # Setup windows program
         if programs.ShouldProgramBeInstalled("PS3Dec", "windows"):
@@ -96,9 +101,9 @@ class PS3Dec(toolbase.ToolBase):
                 install_name = "PS3Dec",
                 install_dir = programs.GetProgramInstallDir("PS3Dec", "windows"),
                 search_file = "PS3Dec.exe",
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup PS3Dec")
                 return False
@@ -109,9 +114,9 @@ class PS3Dec(toolbase.ToolBase):
                 archive_dir = programs.GetProgramBackupDir("PS3Dec", "linux"),
                 install_name = "PS3Dec",
                 install_dir = programs.GetProgramInstallDir("PS3Dec", "linux"),
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup PS3Dec")
                 return False

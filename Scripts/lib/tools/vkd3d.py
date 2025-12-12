@@ -54,7 +54,9 @@ class VKD3D(toolbase.ToolBase):
         }
 
     # Setup
-    def Setup(self, verbose = False, pretend_run = False, exit_on_failure = False):
+    def Setup(self, setup_params = None):
+        if not setup_params:
+            setup_params = config.SetupParams()
 
         # Download library
         if programs.ShouldLibraryBeInstalled("VKD3D"):
@@ -66,16 +68,18 @@ class VKD3D(toolbase.ToolBase):
                 install_name = "VKD3D-Proton",
                 install_dir = programs.GetLibraryInstallDir("VKD3D", "lib"),
                 backups_dir = programs.GetLibraryBackupDir("VKD3D", "lib"),
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup VKD3D")
                 return False
         return True
 
     # Setup offline
-    def SetupOffline(self, verbose = False, pretend_run = False, exit_on_failure = False):
+    def SetupOffline(self, setup_params = None):
+        if not setup_params:
+            setup_params = config.SetupParams()
 
         # Setup library
         if programs.ShouldLibraryBeInstalled("VKD3D"):
@@ -83,9 +87,9 @@ class VKD3D(toolbase.ToolBase):
                 archive_dir = programs.GetLibraryBackupDir("VKD3D", "lib"),
                 install_name = "VKD3D",
                 install_dir = programs.GetLibraryInstallDir("VKD3D", "lib"),
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup VKD3D")
                 return False

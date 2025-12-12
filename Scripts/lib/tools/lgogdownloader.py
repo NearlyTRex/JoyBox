@@ -37,7 +37,9 @@ class LGOGDownloader(toolbase.ToolBase):
         }
 
     # Setup
-    def Setup(self, verbose = False, pretend_run = False, exit_on_failure = False):
+    def Setup(self, setup_params = None):
+        if not setup_params:
+            setup_params = config.SetupParams()
 
         # Build linux program
         if programs.ShouldProgramBeInstalled("LGOGDownloader", "linux"):
@@ -61,16 +63,19 @@ class LGOGDownloader(toolbase.ToolBase):
                 internal_symlinks = [
                     {"from": "usr/bin/lgogdownloader", "to": "AppRun"}
                 ],
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                locker_type = setup_params.locker_type,
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup LGOGDownloader")
                 return False
         return True
 
     # Setup offline
-    def SetupOffline(self, verbose = False, pretend_run = False, exit_on_failure = False):
+    def SetupOffline(self, setup_params = None):
+        if not setup_params:
+            setup_params = config.SetupParams()
 
         # Setup linux program
         if programs.ShouldProgramBeInstalled("LGOGDownloader", "linux"):
@@ -78,16 +83,18 @@ class LGOGDownloader(toolbase.ToolBase):
                 archive_dir = programs.GetProgramBackupDir("LGOGDownloader", "linux"),
                 install_name = "LGOGDownloader",
                 install_dir = programs.GetProgramInstallDir("LGOGDownloader", "linux"),
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup LGOGDownloader")
                 return False
         return True
 
     # Configure
-    def Configure(self, verbose = False, pretend_run = False, exit_on_failure = False):
+    def Configure(self, setup_params = None):
+        if not setup_params:
+            setup_params = config.SetupParams()
 
         # Create config files
         if environment.IsLinuxPlatform():
@@ -95,9 +102,9 @@ class LGOGDownloader(toolbase.ToolBase):
                 success = system.TouchFile(
                     src = system.JoinPaths(environment.GetToolsRootDir(), config_filename),
                     contents = config_contents.strip(),
-                    verbose = verbose,
-                    pretend_run = pretend_run,
-                    exit_on_failure = exit_on_failure)
+                    verbose = setup_params.verbose,
+                    pretend_run = setup_params.pretend_run,
+                    exit_on_failure = setup_params.exit_on_failure)
                 if not success:
                     system.LogError("Could not setup LGOGDownloader config files")
                     return False

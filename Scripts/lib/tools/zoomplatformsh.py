@@ -28,7 +28,9 @@ class ZoomPlatformSH(toolbase.ToolBase):
         }
 
     # Setup
-    def Setup(self, verbose = False, pretend_run = False, exit_on_failure = False):
+    def Setup(self, setup_params = None):
+        if not setup_params:
+            setup_params = config.SetupParams()
 
         # Download library
         if programs.ShouldLibraryBeInstalled("ZoomPlatformSH"):
@@ -50,16 +52,18 @@ class ZoomPlatformSH(toolbase.ToolBase):
                     }
                 ],
                 get_latest = True,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup ZoomPlatformSH")
                 return False
         return True
 
     # Setup offline
-    def SetupOffline(self, verbose = False, pretend_run = False, exit_on_failure = False):
+    def SetupOffline(self, setup_params = None):
+        if not setup_params:
+            setup_params = config.SetupParams()
 
         # Setup library
         if programs.ShouldLibraryBeInstalled("ZoomPlatformSH"):
@@ -67,9 +71,9 @@ class ZoomPlatformSH(toolbase.ToolBase):
                 archive_dir = programs.GetLibraryBackupDir("ZoomPlatformSH", "lib"),
                 install_name = "ZoomPlatformSH",
                 install_dir = programs.GetLibraryInstallDir("ZoomPlatformSH", "lib"),
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 system.LogError("Could not setup ZoomPlatformSH")
                 return False
