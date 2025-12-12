@@ -79,6 +79,7 @@ def SetupGeneralRelease(
     rename_files = [],
     installer_type = None,
     release_type = None,
+    locker_type = None,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -259,9 +260,10 @@ def SetupGeneralRelease(
 
     # Backup files
     if system.IsPathValid(backups_dir):
-        sucess = locker.BackupFiles(
+        success = locker.BackupFiles(
             src = archive_file,
             dest = system.JoinPaths(backups_dir, archive_filename),
+            locker_type = locker_type,
             show_progress = True,
             skip_existing = True,
             skip_identical = True,
@@ -661,6 +663,7 @@ def BuildBinaryFromSource(
     build_dir = "",
     external_copies = [],
     source_patches = [],
+    locker_type = None,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -772,6 +775,7 @@ def BuildBinaryFromSource(
         success = locker.BackupFiles(
             src = built_file,
             dest = system.JoinPaths(backups_dir, final_file),
+            locker_type = locker_type,
             show_progress = True,
             skip_existing = True,
             skip_identical = True,
@@ -809,6 +813,7 @@ def BuildAppImageFromSource(
     internal_symlinks = [],
     external_copies = [],
     source_patches = [],
+    locker_type = None,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -930,6 +935,7 @@ def BuildAppImageFromSource(
         success = locker.BackupFiles(
             src = built_file,
             dest = system.JoinPaths(backups_dir, final_file),
+            locker_type = locker_type,
             show_progress = True,
             skip_existing = True,
             skip_identical = True,

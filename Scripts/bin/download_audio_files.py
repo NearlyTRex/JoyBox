@@ -20,6 +20,11 @@ parser.add_enum_argument(
     arg_type = config.AudioGenreType,
     description = "Genre type")
 parser.add_string_argument(args = ("-c", "--cookie_source"), default = "firefox", description = "Cookie source")
+parser.add_enum_argument(
+    args = ("-k", "--locker_type"),
+    arg_type = config.LockerType,
+    default = config.LockerType.ALL,
+    description = "Locker type for backup upload")
 parser.add_common_arguments()
 args, unknown = parser.parse_known_args()
 
@@ -33,6 +38,7 @@ def main():
     if args.genre_type == config.AudioGenreType.STORY:
         success = audio.DownloadStoryAudioFiles(
             cookie_source = args.cookie_source,
+            locker_type = args.locker_type,
             verbose = args.verbose,
             pretend_run = args.pretend_run,
             exit_on_failure = args.exit_on_failure)
@@ -44,6 +50,7 @@ def main():
     elif args.genre_type == config.AudioGenreType.ASMR:
         success = audio.DownloadASMRAudioFiles(
             cookie_source = args.cookie_source,
+            locker_type = args.locker_type,
             verbose = args.verbose,
             pretend_run = args.pretend_run,
             exit_on_failure = args.exit_on_failure)

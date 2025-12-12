@@ -33,6 +33,7 @@ def DownloadMetadataAsset(
     game_info,
     asset_type,
     skip_existing = False,
+    locker_type = None,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -149,6 +150,7 @@ def DownloadMetadataAsset(
     success = locker.BackupFiles(
         src = tmp_asset_file_converted,
         dest = output_asset_file,
+        locker_type = locker_type,
         show_progress = True,
         skip_existing = skip_existing,
         verbose = verbose,

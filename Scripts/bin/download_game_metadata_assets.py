@@ -31,6 +31,11 @@ parser.add_enum_argument(
     default = config.GenerationModeType.STANDARD,
     description = "Generation mode")
 parser.add_boolean_argument(args = ("-e", "--skip_existing"), description = "Skip existing files")
+parser.add_enum_argument(
+    args = ("-k", "--locker_type"),
+    arg_type = config.LockerType,
+    default = config.LockerType.ALL,
+    description = "Locker type for backup upload")
 parser.add_common_arguments()
 args, unknown = parser.parse_known_args()
 
@@ -62,9 +67,9 @@ def main():
     for game_info in games_to_process:
         success = collection.DownloadMetadataAsset(
             game_info = game_info,
-            asset_url = None,
             asset_type = args.asset_type,
             skip_existing = args.skip_existing,
+            locker_type = args.locker_type,
             verbose = args.verbose,
             pretend_run = args.pretend_run,
             exit_on_failure = args.exit_on_failure)

@@ -33,6 +33,11 @@ parser.add_string_argument(args = ("-e", "--exclude_repos"), default = "", descr
 parser.add_boolean_argument(args = ("-f", "--force"), description = "Force action")
 parser.add_boolean_argument(args = ("-r", "--recursive"), description = "Use recursion")
 parser.add_boolean_argument(args = ("-c", "--clean"), description = "Use cleaning first")
+parser.add_enum_argument(
+    args = ("-k", "--locker_type"),
+    arg_type = config.LockerType,
+    default = config.LockerType.ALL,
+    description = "Locker type for backup upload")
 parser.add_common_arguments()
 args, unknown = parser.parse_known_args()
 
@@ -98,6 +103,7 @@ def main():
                 output_dir = system.JoinPaths(archive_base_dir, github_username, github_repository.name),
                 recursive = args.recursive,
                 clean = args.clean,
+                locker_type = args.locker_type,
                 verbose = args.verbose,
                 pretend_run = args.pretend_run,
                 exit_on_failure = args.exit_on_failure)

@@ -44,6 +44,7 @@ def CanSaveBeUnpacked(game_info):
 def PackSave(
     game_info,
     save_dir = None,
+    locker_type = None,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -135,6 +136,7 @@ def PackSave(
     success = locker.BackupFiles(
         src = tmp_save_archive_file,
         dest = out_save_archive_file,
+        locker_type = locker_type,
         show_progress = True,
         skip_existing = True,
         skip_identical = True,

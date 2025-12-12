@@ -47,7 +47,7 @@ def GetAlbumDirectories(genre_type = None, album_name = None, artist_name = None
     return album_dirs
 
 # Download channel audio files
-def DownloadChannelAudioFiles(channels, genre_type, cookie_source = None, verbose = False, pretend_run = False, exit_on_failure = False):
+def DownloadChannelAudioFiles(channels, genre_type, cookie_source = None, locker_type = None, verbose = False, pretend_run = False, exit_on_failure = False):
 
     # Download channels
     system.LogInfo(f"Starting audio download process for genre: {genre_type}")
@@ -141,6 +141,7 @@ def DownloadChannelAudioFiles(channels, genre_type, cookie_source = None, verbos
         backup_success = locker.BackupFiles(
             src = audio_only_dir,
             dest = channel_music_dir,
+            locker_type = locker_type,
             show_progress = True,
             skip_existing = True,
             skip_identical = True,
@@ -169,21 +170,23 @@ def DownloadChannelAudioFiles(channels, genre_type, cookie_source = None, verbos
     return True
 
 # Download story audio files
-def DownloadStoryAudioFiles(cookie_source = None, verbose = False, pretend_run = False, exit_on_failure = False):
+def DownloadStoryAudioFiles(cookie_source = None, locker_type = None, verbose = False, pretend_run = False, exit_on_failure = False):
     return DownloadChannelAudioFiles(
         channels = config.story_channels,
         genre_type = config.AudioGenreType.STORY,
         cookie_source = cookie_source,
+        locker_type = locker_type,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
 # Download asmr audio files
-def DownloadASMRAudioFiles(cookie_source = None, verbose = False, pretend_run = False, exit_on_failure = False):
+def DownloadASMRAudioFiles(cookie_source = None, locker_type = None, verbose = False, pretend_run = False, exit_on_failure = False):
     return DownloadChannelAudioFiles(
         channels = config.asmr_channels,
         genre_type = config.AudioGenreType.ASMR,
         cookie_source = cookie_source,
+        locker_type = locker_type,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)

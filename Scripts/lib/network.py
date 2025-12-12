@@ -476,6 +476,7 @@ def ArchiveGithubRepository(
     output_dir = "",
     recursive = True,
     clean = False,
+    locker_type = None,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -553,6 +554,7 @@ def ArchiveGithubRepository(
     success = locker.BackupFiles(
         src = tmp_file_archive,
         dest = out_file_archive,
+        locker_type = locker_type,
         show_progress = True,
         skip_existing = True,
         skip_identical = True,

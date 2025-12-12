@@ -25,6 +25,11 @@ parser.add_enum_argument(
 parser.add_game_category_argument()
 parser.add_game_subcategory_argument()
 parser.add_game_name_argument()
+parser.add_enum_argument(
+    args = ("-k", "--locker_type"),
+    arg_type = config.LockerType,
+    default = config.LockerType.ALL,
+    description = "Locker type for backup upload")
 parser.add_common_arguments()
 args, unknown = parser.parse_known_args()
 
@@ -66,11 +71,15 @@ def main():
 
     # Process games
     for game_info in games_to_process:
-        success = handler(
-            game_info = game_info,
-            verbose = args.verbose,
-            pretend_run = args.pretend_run,
-            exit_on_failure = args.exit_on_failure)
+        handler_kwargs = {
+            "game_info": game_info,
+            "verbose": args.verbose,
+            "pretend_run": args.pretend_run,
+            "exit_on_failure": args.exit_on_failure
+        }
+        if args.action == config.SaveActionType.PACK:
+            handler_kwargs["locker_type"] = args.locker_type
+        success = handler(**handler_kwargs)
         if not success:
             system.LogError(
                 message = error_message,

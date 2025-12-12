@@ -226,6 +226,65 @@ def UploadAndEncryptPath(
         exit_on_failure = exit_on_failure)
     return success
 
+# Get all configured lockers
+def GetConfiguredLockers():
+    configured = []
+    for locker_type in config.LockerType.members():
+        if locker_type == config.LockerType.ALL:
+            continue
+        locker_info = lockerinfo.LockerInfo(locker_type)
+        if locker_info and locker_info.get_remote_name():
+            if sync.IsRemoteConfigured(
+                remote_name = locker_info.get_remote_name(),
+                remote_type = locker_info.get_remote_type()):
+                configured.append(locker_type)
+    return configured
+
+# Upload to single locker
+def UploadToLocker(
+    dest,
+    locker_type,
+    upload_encrypted = False,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Get locker info
+    locker_info = lockerinfo.LockerInfo(locker_type)
+    if not locker_info:
+        system.LogError("Locker %s not found" % locker_type)
+        return False
+
+    # Upload encrypted files
+    system.LogInfo("Uploading to locker %s..." % locker_type)
+    if upload_encrypted:
+        system.LogInfo("Uploading encrypted files to %s..." % locker_type)
+        success = UploadAndEncryptPath(
+            src = dest,
+            locker_type = locker_type,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if not success:
+            system.LogError("Encrypted upload to %s failed" % locker_type)
+            return False
+        system.LogInfo("Encrypted upload to %s completed" % locker_type)
+
+    # Upload plain files
+    else:
+        system.LogInfo("Uploading plain files to %s..." % locker_type)
+        success = UploadPath(
+            src = dest,
+            locker_type = locker_type,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if not success:
+            system.LogError("Plain upload to %s failed" % locker_type)
+            return False
+        system.LogInfo("Plain upload to %s completed" % locker_type)
+    return True
+
 # Backup files
 def BackupFiles(
     src,
@@ -240,12 +299,6 @@ def BackupFiles(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-
-    # Get locker info
-    locker_info = lockerinfo.LockerInfo(locker_type)
-    if not locker_info:
-        system.LogError("Locker %s not found" % locker_type)
-        return False
 
     # Transfer files
     system.LogInfo(f"Starting file transfer from {src} to {dest}")
@@ -270,44 +323,40 @@ def BackupFiles(
 
     # Upload files
     system.LogInfo("Checking if sync tool is installed...")
-    if sync.IsToolInstalled():
-        system.LogInfo("Sync tool is installed, checking remote configuration...")
+    if not sync.IsToolInstalled():
+        system.LogInfo("Sync tool not installed, skipping upload")
+        return True
 
-        # Check if remote configured
-        if sync.IsRemoteConfigured(
+    # Determine which lockers to upload to
+    if locker_type == config.LockerType.ALL:
+        lockers_to_upload = GetConfiguredLockers()
+        if not lockers_to_upload:
+            system.LogInfo("No configured lockers found, skipping upload")
+            return True
+        system.LogInfo("Uploading to all configured lockers: %s" % ", ".join(str(l) for l in lockers_to_upload))
+    else:
+        locker_info = lockerinfo.LockerInfo(locker_type)
+        if not locker_info:
+            system.LogError("Locker %s not found" % locker_type)
+            return False
+        if not sync.IsRemoteConfigured(
             remote_name = locker_info.get_remote_name(),
             remote_type = locker_info.get_remote_type()):
-            system.LogInfo("Remote is configured, starting upload...")
+            system.LogInfo("Remote not configured for locker %s, skipping upload" % locker_type)
+            return True
+        lockers_to_upload = [locker_type]
 
-            # Upload encryped files
-            if upload_encrypted:
-                system.LogInfo("Uploading encrypted files...")
-                success = UploadAndEncryptPath(
-                    src = dest,
-                    verbose = verbose,
-                    pretend_run = pretend_run,
-                    exit_on_failure = exit_on_failure)
-                if not success:
-                    system.LogError("Encrypted upload failed")
-                    return False
-                system.LogInfo("Encrypted upload completed")
-
-            # Upload plain files
-            else:
-                system.LogInfo("Uploading plain files to remote...")
-                success = UploadPath(
-                    src = dest,
-                    verbose = verbose,
-                    pretend_run = pretend_run,
-                    exit_on_failure = exit_on_failure)
-                if not success:
-                    system.LogError("Plain upload failed")
-                    return False
-                system.LogInfo("Plain upload completed")
-        else:
-            system.LogInfo("Remote not configured, skipping upload")
-    else:
-        system.LogInfo("Sync tool not installed, skipping upload")
+    # Upload to each locker
+    for locker in lockers_to_upload:
+        success = UploadToLocker(
+            dest = dest,
+            locker_type = locker,
+            upload_encrypted = upload_encrypted,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if not success and exit_on_failure:
+            return False
 
     # Should be successful
     system.LogInfo("BackupFiles completed successfully")
