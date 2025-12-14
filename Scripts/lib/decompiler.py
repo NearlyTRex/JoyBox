@@ -106,42 +106,45 @@ def LaunchProgram(verbose = False, pretend_run = False, exit_on_failure = False)
         exit_on_failure = exit_on_failure)
     return (code == 0)
 
-def RunHeadlessScript(
+def RunScript(
     project_dir,
     project_name,
     program_name,
     script_path,
     script_name,
     script_args = None,
-    noanalysis = True,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
 
     # Get tool
-    analyze_tool = None
-    if programs.IsToolInstalled("GhidraHeadless"):
-        analyze_tool = programs.GetToolProgram("GhidraHeadless")
-    if not analyze_tool:
-        system.LogError("Ghidra headless analyzer was not found")
+    python_tool = None
+    if programs.IsToolInstalled("PythonVenvPython"):
+        python_tool = programs.GetToolProgram("PythonVenvPython")
+    if not python_tool:
+        system.LogError("PythonVenvPython was not found")
         return False
 
-    # Validate paths exist
+    # Get the full script path
+    script_file = os.path.join(script_path, script_name)
+
+    # Validate script exists
+    if not os.path.isfile(script_file):
+        system.LogError("Script not found: %s" % script_file)
+        return False
+
+    # Validate project directory exists
     if not os.path.isdir(project_dir):
         system.LogError("Project directory not found: %s" % project_dir)
-        return False
-    if not os.path.isdir(script_path):
-        system.LogError("Script path not found: %s" % script_path)
         return False
 
     # Build command
     cmd = [
-        analyze_tool,
+        python_tool,
+        script_file,
         project_dir,
         project_name,
-        "-process", program_name,
-        "-scriptPath", script_path,
-        "-postScript", script_name
+        program_name
     ]
 
     # Add script arguments
@@ -151,16 +154,12 @@ def RunHeadlessScript(
         else:
             cmd.append(script_args)
 
-    # Add noanalysis flag
-    if noanalysis:
-        cmd.insert(cmd.index("-scriptPath"), "-noanalysis")
-
     # Log what we're doing
     if verbose:
-        system.LogInfo("Running Ghidra headless:")
+        system.LogInfo("Running PyGhidra script:")
         system.LogInfo("  Project: %s/%s" % (project_dir, project_name))
         system.LogInfo("  Program: %s" % program_name)
-        system.LogInfo("  Script: %s/%s" % (script_path, script_name))
+        system.LogInfo("  Script: %s" % script_file)
         if script_args:
             system.LogInfo("  Args: %s" % script_args)
 
@@ -172,11 +171,10 @@ def RunHeadlessScript(
         exit_on_failure = exit_on_failure)
     return (code == 0)
 
-def RunHeadlessScriptFromPreset(
+def RunScriptFromPreset(
     preset_name,
     script_name,
     script_args = None,
-    noanalysis = True,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -200,14 +198,13 @@ def RunHeadlessScriptFromPreset(
         script_args = script_config.get("default_args_abs", script_config.get("default_args"))
 
     # Run the script
-    return RunHeadlessScript(
+    return RunScript(
         project_dir = preset["project_dir_abs"],
         project_name = preset["project_name"],
         program_name = preset["program_name"],
         script_path = script_config["script_path_abs"],
         script_name = script_config["script_name"],
         script_args = script_args,
-        noanalysis = noanalysis,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)

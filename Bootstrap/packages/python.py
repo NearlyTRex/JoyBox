@@ -44,6 +44,7 @@ python[constants.EnvironmentType.LOCAL_UBUNTU] += [
     "psutil",
     "pycryptodome",
     "pycryptodomex",
+    "pyghidra",
     "PyGithub",
     "python-dateutil",
     "python-Levenshtein",

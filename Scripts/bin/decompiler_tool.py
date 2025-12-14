@@ -31,11 +31,10 @@ parser.add_string_argument(args = ("--script",), description = "Script name from
 parser.add_input_path_argument(args = ("--script_path",), description = "Script directory path (manual mode)")
 parser.add_string_argument(args = ("--script_name",), description = "Script filename (manual mode)")
 parser.add_string_argument(args = ("--script_args",), description = "Arguments to pass to the script")
-parser.add_boolean_argument(args = ("--run_analysis",), description = "Run Ghidra analysis before script (slower)")
 parser.add_boolean_argument(args = ("--list_presets",), description = "List available presets and exit")
 parser.add_boolean_argument(args = ("--list_scripts",), description = "List available scripts for a preset and exit")
 parser.add_common_arguments()
-args, unknown = parser.parse_known_args()
+args = parser.parse_args()
 
 # Main
 def main():
@@ -75,8 +74,8 @@ def main():
             exit_on_failure = args.exit_on_failure)
         return
 
-    # Run headless script
-    if args.action == config.DecompilerActionType.RUN_HEADLESS:
+    # Run script
+    if args.action == config.DecompilerActionType.RUN_SCRIPT:
 
         # Preset mode
         if args.preset:
@@ -84,11 +83,10 @@ def main():
                 system.LogError("--script is required when using --preset")
                 system.LogInfo("Use --list_scripts --preset %s to see available scripts" % args.preset)
                 return
-            decompiler.RunHeadlessScriptFromPreset(
+            decompiler.RunScriptFromPreset(
                 preset_name = args.preset,
                 script_name = args.script,
                 script_args = args.script_args,
-                noanalysis = not args.run_analysis,
                 verbose = args.verbose,
                 pretend_run = args.pretend_run,
                 exit_on_failure = args.exit_on_failure)
@@ -102,14 +100,13 @@ def main():
             system.LogInfo("Or use preset mode with: --preset <name> --script <script>")
             system.LogInfo("Use --list_presets to see available presets")
             return
-        decompiler.RunHeadlessScript(
+        decompiler.RunScript(
             project_dir = project_dir,
             project_name = args.project_name,
             program_name = args.program_name,
             script_path = script_path,
             script_name = args.script_name,
             script_args = args.script_args,
-            noanalysis = not args.run_analysis,
             verbose = args.verbose,
             pretend_run = args.pretend_run,
             exit_on_failure = args.exit_on_failure)

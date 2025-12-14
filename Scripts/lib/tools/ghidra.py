@@ -401,7 +401,7 @@ class Ghidra(toolbase.ToolBase):
             setup_params = config.SetupParams()
 
         # Build library from source
-        if programs.ShouldLibraryBeInstalled("Ghidra"):
+        if programs.ShouldLibraryBeInstalled("Ghidra/lib"):
 
             # Get build command
             if environment.IsWindowsPlatform():
@@ -429,6 +429,7 @@ class Ghidra(toolbase.ToolBase):
             success = release.BuildBinaryFromSource(
                 release_url = "https://github.com/NearlyTRex/Ghidra.git",
                 output_file = ".zip",
+                output_dir = "build/dist",
                 search_file = "ghidraRun",
                 install_name = "Ghidra",
                 install_dir = programs.GetLibraryInstallDir("Ghidra", "lib"),
@@ -450,7 +451,7 @@ class Ghidra(toolbase.ToolBase):
             setup_params = config.SetupParams()
 
         # Setup library
-        if programs.ShouldLibraryBeInstalled("Ghidra"):
+        if programs.ShouldLibraryBeInstalled("Ghidra/lib"):
             success = release.SetupStoredRelease(
                 archive_dir = programs.GetLibraryBackupDir("Ghidra", "lib"),
                 install_name = "Ghidra",

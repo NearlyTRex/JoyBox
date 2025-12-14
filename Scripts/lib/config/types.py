@@ -245,7 +245,7 @@ class CryptionType(EnumType):
 # Decompiler action type
 class DecompilerActionType(EnumType):
     LAUNCH_PROGRAM          = ("LaunchProgram")
-    RUN_HEADLESS            = ("RunHeadless")
+    RUN_SCRIPT              = ("RunScript")
 
 # Github action type
 class GithubActionType(EnumType):
