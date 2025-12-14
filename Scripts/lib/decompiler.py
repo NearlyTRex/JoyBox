@@ -125,6 +125,12 @@ def RunScript(
         system.LogError("PythonVenvPython was not found")
         return False
 
+    # Get Ghidra install directory for pyghidra
+    ghidra_install_dir = programs.GetLibraryInstallDir("Ghidra", "lib")
+    if not ghidra_install_dir or not os.path.isdir(ghidra_install_dir):
+        system.LogError("Ghidra installation not found at: %s" % ghidra_install_dir)
+        return False
+
     # Get the full script path
     script_file = os.path.join(script_path, script_name)
 
@@ -160,12 +166,18 @@ def RunScript(
         system.LogInfo("  Project: %s/%s" % (project_dir, project_name))
         system.LogInfo("  Program: %s" % program_name)
         system.LogInfo("  Script: %s" % script_file)
+        system.LogInfo("  Ghidra: %s" % ghidra_install_dir)
         if script_args:
             system.LogInfo("  Args: %s" % script_args)
+
+    # Create command options with Ghidra install dir environment variable
+    cmd_options = command.CreateCommandOptions()
+    cmd_options.set_env_var("GHIDRA_INSTALL_DIR", ghidra_install_dir)
 
     # Run command
     code = command.RunReturncodeCommand(
         cmd = cmd,
+        options = cmd_options,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
