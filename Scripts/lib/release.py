@@ -655,6 +655,7 @@ def BuildBinaryFromSource(
     starts_with = "",
     ends_with = "",
     output_file = "",
+    output_dir = "",
     search_file = "",
     install_name = "",
     install_dir = "",
@@ -686,6 +687,7 @@ def BuildBinaryFromSource(
 
     # Get build result
     tmp_dir = build_info["tmp_dir"]
+    source_dir = build_info["source_dir"]
 
     # Make install folder
     system.MakeDirectory(
@@ -694,9 +696,14 @@ def BuildBinaryFromSource(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
+    # Determine search directory for built files
+    search_dir = tmp_dir
+    if len(output_dir) > 0:
+        search_dir = system.JoinPaths(source_dir, output_dir)
+
     # Find built release file
     built_file = None
-    for path in system.BuildFileList(tmp_dir):
+    for path in system.BuildFileList(search_dir):
         if path.endswith(output_file):
             built_file = path
     if not built_file:

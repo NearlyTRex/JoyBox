@@ -36,6 +36,10 @@ class ArgumentParser:
 
     #################################################
 
+    # Parse arguments
+    def parse_args(self):
+        return self.parser.parse_args()
+
     # Parse known arguments
     def parse_known_args(self):
         return self.parser.parse_known_args()
