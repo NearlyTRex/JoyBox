@@ -587,6 +587,15 @@ def BuildFromSource(
         for patch_entry in source_patches:
             patch_file = patch_entry.get("file", "")
             patch_content = patch_entry.get("content", "")
+            patch_path = patch_entry.get("path", "")
+
+            # Load patch content from file if path is provided
+            if len(patch_path) and os.path.isfile(patch_path):
+                with open(patch_path, "r") as f:
+                    patch_content = f.read()
+                if not patch_file:
+                    patch_file = os.path.basename(patch_path)
+
             if len(patch_file) and len(patch_content):
 
                 # Write patch to temp file
