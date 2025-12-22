@@ -31,6 +31,7 @@ import hashing
 import programs
 import network
 import logger
+import modules
 
 ###########################################################
 
@@ -2334,7 +2335,7 @@ def GetFilenameInfo(path):
 def GetLinkInfo(lnk_path, lnk_base_path):
 
     # Import pylnk
-    pylnk = environment.ImportPythonModuleFile(
+    pylnk = modules.import_python_module_file(
         module_path = programs.GetToolProgram("PyLnk"),
         module_name = "pylnk")
 

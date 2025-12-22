@@ -19,6 +19,7 @@ import webpage
 import storebase
 import metadataentry
 import manifest
+import modules
 
 # Get steam page
 def GetSteamPage(appid):
@@ -160,7 +161,7 @@ def FindSteamGridDBCovers(
     steamgriddb_api_key = ini.GetIniValue("UserData.Scraping", "steamgriddb_api_key")
 
     # Import steamgrid
-    steamgrid = environment.ImportPythonModulePackage(
+    steamgrid = modules.import_python_module_package(
         module_path = programs.GetToolPathConfigValue("PySteamGridDB", "package_dir"),
         module_name = programs.GetToolConfigValue("PySteamGridDB", "package_name"))
 

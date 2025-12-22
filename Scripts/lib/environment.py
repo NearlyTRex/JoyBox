@@ -1,15 +1,11 @@
 # Imports
 import os, os.path
 import sys
-import signal
-import ntpath
 import time
 
 # Local imports
 import config
-import command
 import system
-import logger
 import gameinfo
 import platforms
 import ini
@@ -81,125 +77,6 @@ def AreSymlinksSupported():
         system.CreateSymlink(test_file_src, test_file_dest)
         return os.path.islink(test_file_dest)
     return False
-
-###########################################################
-# Python modules
-###########################################################
-
-# Import python module package
-def ImportPythonModulePackage(module_path, module_name):
-    import importlib
-    if system.IsPathDirectory(module_path):
-        if module_name not in sys.modules:
-            sys.path.append(module_path)
-            module = importlib.import_module(module_name)
-            return module
-        else:
-            return sys.modules[module_name]
-    return None
-
-# Import python module file
-def ImportPythonModuleFile(module_path, module_name):
-    import importlib.util
-    if system.IsPathFile(module_path):
-        spec = importlib.util.spec_from_file_location(module_name, module_path)
-        module = importlib.util.module_from_spec(spec)
-        sys.modules[module_name] = module
-        spec.loader.exec_module(module)
-        return sys.modules[module_name]
-    return None
-
-###########################################################
-# Root access
-###########################################################
-
-# Determine if user is root
-def IsUserRoot():
-    if IsWindowsPlatform():
-        try:
-            import pyuac
-            return pyuac.isUserAdmin()
-        except:
-            return False
-    else:
-        return os.getuid() == 0
-
-# Run as root
-def RunAsRoot(func):
-    if not callable(func):
-        return
-    if IsWindowsPlatform():
-        try:
-            import pyuac
-            if not pyuac.isUserAdmin():
-                pyuac.runAsAdmin()
-            else:
-                func()
-        except ModuleNotFoundError as e:
-            func()
-        except:
-            raise
-
-###########################################################
-# Process management
-###########################################################
-
-# Find active processes
-def FindActiveNamedProcesses(process_names = []):
-    import psutil
-    process_objs = []
-    try:
-        for proc in psutil.process_iter():
-            for process_name in process_names:
-                if process_name == proc.name():
-                    process_objs.append(proc)
-                elif ntpath.basename(process_name) == ntpath.basename(proc.name()):
-                    process_objs.append(proc)
-    except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess) as e:
-        pass
-    return process_objs
-
-# Kill active processes
-def KillActiveNamedProcesses(process_names = []):
-    import psutil
-    try:
-        for proc in FindActiveNamedProcesses(process_names):
-            proc.kill()
-    except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess) as e:
-        logger.log_error(e)
-
-# Interrupt active processes
-def InterruptActiveNamedProcesses(process_names = []):
-    import psutil
-    try:
-        for proc in FindActiveNamedProcesses(process_names):
-            if hasattr(signal, "CTRL_C_EVENT"):
-                proc.send_signal(signal.CTRL_C_EVENT)
-            else:
-                proc.send_signal(signal.SIGINT)
-    except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess) as e:
-        logger.log_error(e)
-
-# Wait for processes
-def WaitForNamedProcesses(process_names = [], timeout = 1200):
-    import psutil
-    try:
-        start_time = time.time()
-        for proc in FindActiveNamedProcesses(process_names):
-            logger.log_info("Waiting for process %s (pid=%d)..." % (proc.name(), proc.pid))
-            while True:
-                if not proc.is_running():
-                    logger.log_info("Process %s (pid=%d) finished" % (proc.name(), proc.pid))
-                    break
-                elapsed = time.time() - start_time
-                if timeout and elapsed > timeout:
-                    logger.log_warning("Timeout after %d seconds waiting for %s (pid=%d)" % (timeout, proc.name(), proc.pid))
-                    break
-                system.SleepProgram(1)
-    except (psutil.NoSuchProcess, psutil.ZombieProcess):
-        pass  # Process already finished, which is fine
-    except psutil.AccessDenied as e:
-        logger.log_warning("Access denied while waiting for process: %s" % e)
 
 ###########################################################
 # Tools

@@ -17,6 +17,7 @@ import programs
 import sandbox
 import capture
 import ini
+import process
 
 ###########################################################
 
@@ -384,7 +385,7 @@ def RunOutputCommand(
 
             # Wait for any other blocking processes
             if isinstance(options.get_blocking_processes(), list) and len(options.get_blocking_processes()) > 0:
-                environment.WaitForNamedProcesses(options.get_blocking_processes())
+                process.wait_for_named_processes(options.get_blocking_processes())
 
             # Post-process command
             if options.allow_processing():
@@ -513,7 +514,7 @@ def RunReturncodeCommand(
 
             # Wait for any other blocking processes
             if isinstance(options.get_blocking_processes(), list) and len(options.get_blocking_processes()) > 0:
-                environment.WaitForNamedProcesses(options.get_blocking_processes())
+                process.wait_for_named_processes(options.get_blocking_processes())
 
             # Post-process command
             if options.allow_processing():
@@ -650,7 +651,7 @@ def RunInteractiveCommand(
 
             # Wait for any other blocking processes
             if isinstance(options.get_blocking_processes(), list) and len(options.get_blocking_processes()) > 0:
-                environment.WaitForNamedProcesses(options.get_blocking_processes())
+                process.wait_for_named_processes(options.get_blocking_processes())
 
             # Post-process command
             if options.allow_processing():

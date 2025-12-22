@@ -16,6 +16,7 @@ import archive
 import chd
 import gui
 import ini
+import process
 
 ###########################################################
 
@@ -900,7 +901,7 @@ def CleanupWine(cmd, options, verbose = False, pretend_run = False, exit_on_fail
         exit_on_failure = exit_on_failure)
 
     # Kill wine itself
-    environment.KillActiveNamedProcesses([wine_server_tool])
+    process.kill_active_named_processes([wine_server_tool])
 
 # Cleanup sandboxie
 def CleanupSandboxie(cmd, options, verbose = False, pretend_run = False, exit_on_failure = False):

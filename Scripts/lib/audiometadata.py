@@ -14,6 +14,7 @@ import logger
 import environment
 import hashing
 import image
+import modules
 
 # Audio metadata class
 class AudioMetadata:
@@ -22,16 +23,16 @@ class AudioMetadata:
     def __init__(self):
 
         # Import mutagen modules
-        self.mutagen = environment.ImportPythonModulePackage(
+        self.mutagen = modules.import_python_module_package(
             module_path = programs.GetToolPathConfigValue("Mutagen", "package_dir"),
             module_name = programs.GetToolConfigValue("Mutagen", "package_name"))
-        self.mutagen_mp3 = environment.ImportPythonModulePackage(
+        self.mutagen_mp3 = modules.import_python_module_package(
             module_path = programs.GetToolPathConfigValue("MutagenMP3", "package_dir"),
             module_name = programs.GetToolConfigValue("MutagenMP3", "package_name"))
-        self.mutagen_id3 = environment.ImportPythonModulePackage(
+        self.mutagen_id3 = modules.import_python_module_package(
             module_path = programs.GetToolPathConfigValue("MutagenID3", "package_dir"),
             module_name = programs.GetToolConfigValue("MutagenID3", "package_name"))
-        self.mutagen_mp4 = environment.ImportPythonModulePackage(
+        self.mutagen_mp4 = modules.import_python_module_package(
             module_path = programs.GetToolPathConfigValue("MutagenMP4", "package_dir"),
             module_name = programs.GetToolConfigValue("MutagenMP4", "package_name"))
         if self.mutagen is None or self.mutagen_mp3 is None or self.mutagen_id3 is None or self.mutagen_mp4 is None:

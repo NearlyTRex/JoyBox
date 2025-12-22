@@ -12,6 +12,7 @@ import environment
 import programs
 import sandbox
 import background
+import process
 
 # Capture screenshot
 def CaptureScreenshot(
@@ -202,7 +203,7 @@ def CaptureVideoWhileRunning(
     run_func()
 
     # Stop capture
-    environment.InterruptActiveNamedProcesses([ffmpeg_tool])
+    process.interrupt_active_named_processes([ffmpeg_tool])
 
     # Check result
     return os.path.exists(output_file)
