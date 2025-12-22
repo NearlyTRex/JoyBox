@@ -574,7 +574,7 @@ class Steam(storebase.StoreBase):
         # Apply base path cleaning logic
         json_data.set_value(config.json_key_store_paths, game_paths)
         json_data.set_value(config.json_key_store_keys, game_keys)
-        return super().AugmentJsondata(
+        return super().augment_jsondata(
             json_data = json_data,
             identifier = identifier,
             verbose = verbose,

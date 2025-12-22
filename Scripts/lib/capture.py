@@ -85,8 +85,8 @@ def capture_video(
     validation.assert_is_valid_path(output_file, "output_file")
 
     # Get prefix
-    prefix_dir = programs.GetProgramPrefixDir("FFMpeg")
-    prefix_name = programs.GetProgramPrefixName("FFMpeg")
+    prefix_dir = programs.get_program_prefix_dir("FFMpeg")
+    prefix_name = programs.get_program_prefix_name("FFMpeg")
 
     # Get tool
     ffmpeg_tool = None

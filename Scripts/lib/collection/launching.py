@@ -118,9 +118,9 @@ def launch_local_game(
         return False
 
     # Get game launcher info
-    game_launcher_config_file = game_launcher.GetConfigFile()
-    game_launcher_save_dir = game_launcher.GetSaveDir(game_info.get_platform())
-    game_launcher_setup_dir = game_launcher.GetSetupDir()
+    game_launcher_config_file = game_launcher.get_config_file()
+    game_launcher_save_dir = game_launcher.get_save_dir(game_info.get_platform())
+    game_launcher_setup_dir = game_launcher.get_setup_dir()
 
     # Import save
     success = import_local_game_save(
@@ -155,7 +155,7 @@ def launch_local_game(
             exit_on_failure = exit_on_failure)
 
     # Launch game
-    success = game_launcher.Launch(
+    success = game_launcher.launch(
         game_info = game_info,
         capture_type = capture_type,
         fullscreen = fullscreen,

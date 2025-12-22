@@ -1175,8 +1175,8 @@ def translate_path_if_necessary(path, program_exe, program_name):
 
     # Get prefix options
     options = command.create_command_options(
-        prefix_dir = programs.GetProgramPrefixDir(program_name),
-        prefix_name = programs.GetProgramPrefixName(program_name),
+        prefix_dir = programs.get_program_prefix_dir(program_name),
+        prefix_name = programs.get_program_prefix_name(program_name),
         is_wine_prefix = should_run_via_wine,
         is_sandboxie_prefix = should_run_via_sandboxie)
 

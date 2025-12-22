@@ -47,7 +47,7 @@ def get_emulator_map():
     instances = {}
     def add_instance(class_name):
         instance = class_name()
-        instances[instance.GetName()] = instance
+        instances[instance.get_name()] = instance
     add_instance(A7800)
     add_instance(Ares)
     add_instance(Atari800)
@@ -99,6 +99,6 @@ def get_emulator_list():
 # Get emulator by name
 def get_emulator_by_name(tool_name):
     for instance in get_emulator_list():
-        if instance.GetName() == tool_name:
+        if instance.get_name() == tool_name:
             return instance
     return None

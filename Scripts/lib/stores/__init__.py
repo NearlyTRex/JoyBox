@@ -24,7 +24,7 @@ def get_store_map():
     instances = {}
     def add_instance(class_name):
         instance = class_name()
-        instances[instance.GetName()] = instance
+        instances[instance.get_name()] = instance
     add_instance(Amazon)
     add_instance(Disc)
     add_instance(Epic)
@@ -51,7 +51,7 @@ def prepare_store(
     pretend_run = False,
     exit_on_failure = False):
     if instance and login:
-        instance.Login(
+        instance.login(
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
@@ -65,7 +65,7 @@ def get_store_by_name(
     pretend_run = False,
     exit_on_failure = False):
     for instance in get_store_list():
-        if instance.GetName() == store_name:
+        if instance.get_name() == store_name:
             return prepare_store(instance, login, verbose, pretend_run, exit_on_failure)
     return None
 
@@ -77,7 +77,7 @@ def get_store_by_type(
     pretend_run = False,
     exit_on_failure = False):
     for instance in get_store_list():
-        if instance.GetType() == store_type:
+        if instance.get_type() == store_type:
             return prepare_store(instance, login, verbose, pretend_run, exit_on_failure)
     return None
 
@@ -89,7 +89,7 @@ def get_store_by_platform(
     pretend_run = False,
     exit_on_failure = False):
     for instance in get_store_list():
-        if instance.GetPlatform() == store_platform:
+        if instance.get_platform() == store_platform:
             return prepare_store(instance, login, verbose, pretend_run, exit_on_failure)
     return None
 
@@ -103,9 +103,9 @@ def get_store_by_categories(
     pretend_run = False,
     exit_on_failure = False):
     for instance in get_store_list():
-        same_supercategory = instance.GetSupercategory() == store_supercategory
-        same_category = instance.GetCategory() == store_category
-        same_subcategory = instance.GetSubcategory() == store_subcategory
+        same_supercategory = instance.get_supercategory() == store_supercategory
+        same_category = instance.get_category() == store_category
+        same_subcategory = instance.get_subcategory() == store_subcategory
         if same_supercategory and same_category and same_subcategory:
             return prepare_store(instance, login, verbose, pretend_run, exit_on_failure)
     return None
@@ -118,26 +118,26 @@ def is_store_platform(store_platform):
 def can_handle_installing(store_platform):
     instance = get_store_by_platform(store_platform)
     if instance:
-        return instance.CanHandleInstalling()
+        return instance.can_handle_installing()
     return False
 
 # Check if store can handle launching
 def can_handle_launching(store_platform):
     instance = get_store_by_platform(store_platform)
     if instance:
-        return instance.CanHandleLaunching()
+        return instance.can_handle_launching()
     return False
 
 # Check if purchases can be imported
 def can_import_purchases(store_platform):
     instance = get_store_by_platform(store_platform)
     if instance:
-        return instance.CanImportPurchases()
+        return instance.can_import_purchases()
     return False
 
 # Check if purchases can be downloaded
 def can_download_purchases(store_platform):
     instance = get_store_by_platform(store_platform)
     if instance:
-        return instance.CanDownloadPurchases()
+        return instance.can_download_purchases()
     return False

@@ -74,7 +74,7 @@ def get_tool_map():
     instances = {}
     def add_instance(class_name):
         instance = class_name()
-        instances[instance.GetName()] = instance
+        instances[instance.get_name()] = instance
     add_instance(AppImageTool)
     add_instance(BalenaEtcher)
     add_instance(Brave)
@@ -149,6 +149,6 @@ def get_tool_list():
 # Get tool by name
 def get_tool_by_name(tool_name):
     for instance in get_tool_list():
-        if instance.GetName() == tool_name:
+        if instance.get_name() == tool_name:
             return instance
     return None

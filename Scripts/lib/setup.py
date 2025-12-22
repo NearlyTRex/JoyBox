@@ -63,7 +63,7 @@ def setup_packages(
 
     # Install packages
     for package in package_list:
-        package_name = package.GetName()
+        package_name = package.get_name()
 
         # Skip if not in package list (when specified)
         if packages is not None and package_name not in packages:
@@ -84,9 +84,9 @@ def setup_packages(
         logger.log_info("Installing %s %s ..." % (package_type, package_name))
         success = False
         if offline:
-            success = package.SetupOffline(setup_params = setup_params)
+            success = package.setup_offline(setup_params = setup_params)
         else:
-            success = package.Setup(setup_params = setup_params)
+            success = package.setup(setup_params = setup_params)
         if not success:
             return False
         if configure:
