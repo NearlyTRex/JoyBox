@@ -7,6 +7,7 @@ import sys
 import config
 import environment
 import system
+import logger
 import release
 import programs
 import hashing
@@ -145,7 +146,7 @@ class Mame(emulatorbase.EmulatorBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup Mame")
+                logger.log_error("Could not setup Mame")
                 return False
 
         # Build linux program
@@ -186,7 +187,7 @@ class Mame(emulatorbase.EmulatorBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup Mame")
+                logger.log_error("Could not setup Mame")
                 return False
         return True
 
@@ -208,7 +209,7 @@ class Mame(emulatorbase.EmulatorBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup Mame")
+                logger.log_error("Could not setup Mame")
                 return False
 
         # Setup linux program
@@ -221,7 +222,7 @@ class Mame(emulatorbase.EmulatorBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup Mame")
+                logger.log_error("Could not setup Mame")
                 return False
         return True
 
@@ -241,7 +242,7 @@ class Mame(emulatorbase.EmulatorBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup Mame config files")
+                logger.log_error("Could not setup Mame config files")
                 return False
 
         # Verify system files
@@ -253,7 +254,7 @@ class Mame(emulatorbase.EmulatorBase):
                 exit_on_failure = setup_params.exit_on_failure)
             success = (expected_md5 == actual_md5)
             if not success:
-                system.LogError("Could not verify Mame system file %s" % filename)
+                logger.log_error("Could not verify Mame system file %s" % filename)
                 return False
 
         # Copy system files
@@ -266,7 +267,7 @@ class Mame(emulatorbase.EmulatorBase):
                     pretend_run = setup_params.pretend_run,
                     exit_on_failure = setup_params.exit_on_failure)
                 if not success:
-                    system.LogError("Could not setup Mame system files")
+                    logger.log_error("Could not setup Mame system files")
                     return False
         return True
 

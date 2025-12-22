@@ -6,6 +6,7 @@ import sys
 import config
 import command
 import programs
+import logger
 import ini
 
 # Get current screen resolution
@@ -24,7 +25,7 @@ def SetScreenResolution(width, height, colors, verbose = False, pretend_run = Fa
     if programs.IsToolInstalled("NirCmd"):
         nircmd_tool = programs.GetToolProgram("NirCmd")
     if not nircmd_tool:
-        system.LogError("NirCmd was not found")
+        logger.log_error("NirCmd was not found")
         return False
 
     # Get resolution command

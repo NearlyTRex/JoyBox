@@ -6,6 +6,7 @@ import random
 # Local imports
 import config
 import system
+import logger
 import environment
 import platforms
 import gameinfo
@@ -139,7 +140,7 @@ class Metadata:
         for game_platform in self.get_sorted_platforms():
             for game_name in self.get_sorted_names(game_platform):
                 if verbose:
-                    system.LogInfo("Checking '%s - %s' ..." % (game_platform, game_name))
+                    logger.log_info("Checking '%s - %s' ..." % (game_platform, game_name))
 
                 # Get game entry
                 game_entry = self.get_game(game_platform, game_name)
@@ -148,8 +149,8 @@ class Metadata:
                 file_path_relative = game_entry.get_file()
                 file_path_real = system.JoinPaths(environment.GetGameJsonMetadataRootDir(), file_path_relative)
                 if not system.DoesPathExist(file_path_real):
-                    system.LogError("File not found:\n%s" % file_path_relative)
-                    system.LogError("Verification of '%s - %s' failed" % (game_platform, game_name), quit_program = True)
+                    logger.log_error("File not found:\n%s" % file_path_relative)
+                    logger.log_error("Verification of '%s - %s' failed" % (game_platform, game_name), quit_program = True)
 
     # Import from pegasus file
     def import_from_pegasus_file(

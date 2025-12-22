@@ -11,6 +11,7 @@ import config
 import arguments
 import system
 import setup
+import logger
 
 # Parse arguments
 parser = arguments.ArgumentParser(description = "Setup tools.")
@@ -32,6 +33,9 @@ def main():
 
     # Check requirements
     setup.CheckRequirements()
+
+    # Setup logging
+    logger.setup_logging()
 
     # Parse package list
     packages = None

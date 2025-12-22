@@ -10,6 +10,7 @@ import threading
 # Local imports
 import config
 import system
+import logger
 import environment
 import commandoptions
 import programs
@@ -326,9 +327,9 @@ def PostprocessCommand(
 # Print command
 def PrintCommand(cmd):
     if isinstance(cmd, str):
-        system.LogInfo(cmd)
+        logger.log_info(cmd)
     if isinstance(cmd, list):
-        system.LogInfo(" ".join(cmd))
+        logger.log_info(" ".join(cmd))
 
 ###########################################################
 
@@ -396,17 +397,17 @@ def RunOutputCommand(
         return ""
     except subprocess.CalledProcessError as e:
         if verbose:
-            system.LogError(e)
+            logger.log_error(e)
         elif exit_on_failure:
-            system.LogError(e, quit_program = True)
+            logger.log_error(e, quit_program = True)
         if options.include_stderr():
             return e.output
         return ""
     except Exception as e:
         if verbose:
-            system.LogError(e)
+            logger.log_error(e)
         elif exit_on_failure:
-            system.LogError(e, quit_program = True)
+            logger.log_error(e, quit_program = True)
         return ""
 
 # Run returncode command
@@ -489,8 +490,8 @@ def RunReturncodeCommand(
                             break
 
                 # Create threads to handle real-time I/O
-                stdout_thread = threading.Thread(target = handle_output, args = (process.stdout, system.LogInfo, stdout_target))
-                stderr_thread = threading.Thread(target = handle_output, args = (process.stderr, system.LogInfo, stderr_target))
+                stdout_thread = threading.Thread(target = handle_output, args = (process.stdout, logger.log_info, stdout_target))
+                stderr_thread = threading.Thread(target = handle_output, args = (process.stderr, logger.log_info, stderr_target))
                 stdout_thread.start()
                 stderr_thread.start()
 
@@ -525,15 +526,15 @@ def RunReturncodeCommand(
         return 0
     except subprocess.CalledProcessError as e:
         if verbose:
-            system.LogError(e)
+            logger.log_error(e)
         elif exit_on_failure:
-            system.LogError(e, quit_program = True)
+            logger.log_error(e, quit_program = True)
         return e.returncode
     except Exception as e:
         if verbose:
-            system.LogError(e)
+            logger.log_error(e)
         elif exit_on_failure:
-            system.LogError(e, quit_program = True)
+            logger.log_error(e, quit_program = True)
         return 1
 
 # Run interactive command
@@ -662,15 +663,15 @@ def RunInteractiveCommand(
         return 0
     except subprocess.CalledProcessError as e:
         if verbose:
-            system.LogError(e)
+            logger.log_error(e)
         elif exit_on_failure:
-            system.LogError(e, quit_program = True)
+            logger.log_error(e, quit_program = True)
         return e.returncode
     except Exception as e:
         if verbose:
-            system.LogError(e)
+            logger.log_error(e)
         elif exit_on_failure:
-            system.LogError(e, quit_program = True)
+            logger.log_error(e, quit_program = True)
         return 1
 
 # Run capture command

@@ -9,6 +9,7 @@ import command
 import archive
 import programs
 import system
+import logger
 import ini
 import jsondata
 import webpage
@@ -114,7 +115,7 @@ class Legacy(storebase.StoreBase):
         if programs.IsToolInstalled("PythonVenvPython"):
             python_tool = programs.GetToolProgram("PythonVenvPython")
         if not python_tool:
-            system.LogError("PythonVenvPython was not found")
+            logger.log_error("PythonVenvPython was not found")
             return False
 
         # Get script
@@ -122,7 +123,7 @@ class Legacy(storebase.StoreBase):
         if programs.IsToolInstalled("Heirloom"):
             heirloom_script = programs.GetToolProgram("Heirloom")
         if not heirloom_script:
-            system.LogError("Heirloom was not found")
+            logger.log_error("Heirloom was not found")
             return False
 
         # Get login command
@@ -175,7 +176,7 @@ class Legacy(storebase.StoreBase):
 
         # Check identifier
         if not self.IsValidPageIdentifier(identifier):
-            system.LogWarning("Page identifier '%s' was not valid" % identifier)
+            logger.log_warning("Page identifier '%s' was not valid" % identifier)
             return None
 
         # Store web driver for cleanup
@@ -295,7 +296,7 @@ class Legacy(storebase.StoreBase):
         if programs.IsToolInstalled("PythonVenvPython"):
             python_tool = programs.GetToolProgram("PythonVenvPython")
         if not python_tool:
-            system.LogError("PythonVenvPython was not found")
+            logger.log_error("PythonVenvPython was not found")
             return None
 
         # Get script
@@ -303,7 +304,7 @@ class Legacy(storebase.StoreBase):
         if programs.IsToolInstalled("Heirloom"):
             heirloom_script = programs.GetToolProgram("Heirloom")
         if not heirloom_script:
-            system.LogError("Heirloom was not found")
+            logger.log_error("Heirloom was not found")
             return None
 
         # Get list command
@@ -321,7 +322,7 @@ class Legacy(storebase.StoreBase):
             verbose = verbose,
             exit_on_failure = exit_on_failure)
         if len(list_output) == 0:
-            system.LogError("Unable to find legacy purchases")
+            logger.log_error("Unable to find legacy purchases")
             return None
 
         # Get legacy json
@@ -329,9 +330,9 @@ class Legacy(storebase.StoreBase):
         try:
             legacy_json = json.loads(list_output)
         except Exception as e:
-            system.LogError(e)
-            system.LogError("Unable to parse legacy game list")
-            system.LogError("Received output:\n%s" % info_output)
+            logger.log_error(e)
+            logger.log_error("Unable to parse legacy game list")
+            logger.log_error("Received output:\n%s" % info_output)
             return None
 
         # Parse output
@@ -362,7 +363,7 @@ class Legacy(storebase.StoreBase):
 
         # Check identifier
         if not self.IsValidInfoIdentifier(identifier):
-            system.LogWarning("Info identifier '%s' was not valid" % identifier)
+            logger.log_warning("Info identifier '%s' was not valid" % identifier)
             return None
 
         # Get tool
@@ -370,7 +371,7 @@ class Legacy(storebase.StoreBase):
         if programs.IsToolInstalled("PythonVenvPython"):
             python_tool = programs.GetToolProgram("PythonVenvPython")
         if not python_tool:
-            system.LogError("PythonVenvPython was not found")
+            logger.log_error("PythonVenvPython was not found")
             return None
 
         # Get script
@@ -378,7 +379,7 @@ class Legacy(storebase.StoreBase):
         if programs.IsToolInstalled("Heirloom"):
             heirloom_script = programs.GetToolProgram("Heirloom")
         if not heirloom_script:
-            system.LogError("Heirloom was not found")
+            logger.log_error("Heirloom was not found")
             return None
 
         # Get info command
@@ -396,7 +397,7 @@ class Legacy(storebase.StoreBase):
             verbose = verbose,
             exit_on_failure = exit_on_failure)
         if len(info_output) == 0 or "No game information available" in info_output:
-            system.LogError("Unable to find legacy information for '%s'" % identifier)
+            logger.log_error("Unable to find legacy information for '%s'" % identifier)
             return None
 
         # Get legacy json
@@ -404,9 +405,9 @@ class Legacy(storebase.StoreBase):
         try:
             legacy_json = json.loads(info_output)
         except Exception as e:
-            system.LogError(e)
-            system.LogError("Unable to parse legacy game information for '%s'" % identifier)
-            system.LogError("Received output:\n%s" % info_output)
+            logger.log_error(e)
+            logger.log_error("Unable to parse legacy game information for '%s'" % identifier)
+            logger.log_error("Received output:\n%s" % info_output)
             return None
 
         # Build jsondata
@@ -436,7 +437,7 @@ class Legacy(storebase.StoreBase):
 
         # Check identifier
         if not self.IsValidAssetIdentifier(identifier):
-            system.LogWarning("Asset identifier '%s' was not valid" % identifier)
+            logger.log_warning("Asset identifier '%s' was not valid" % identifier)
             return None
 
         # Latest asset url

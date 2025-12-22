@@ -14,6 +14,7 @@ import collection
 import gameinfo
 import arguments
 import setup
+import logger
 
 # Parse arguments
 parser = arguments.ArgumentParser(description = "Upload game files.")
@@ -45,6 +46,9 @@ def main():
     # Check requirements
     setup.CheckRequirements()
 
+    # Setup logging
+    logger.setup_logging()
+
     # Get custom input path if provided
     custom_input_path = parser.get_path("input_path")
 
@@ -69,7 +73,7 @@ def main():
     if not args.no_preview:
         details = [game_root for _, game_root in games_to_process]
         if not system.PromptForPreview("Upload game files (encrypt and upload to %s)" % args.locker_type, details):
-            system.LogWarning("Operation cancelled by user")
+            logger.log_warning("Operation cancelled by user")
             return
 
     # Upload game files
@@ -82,7 +86,7 @@ def main():
             pretend_run = args.pretend_run,
             exit_on_failure = args.exit_on_failure)
         if not success:
-            system.LogError(
+            logger.log_error(
                 message = "Upload of game files failed!",
                 game_supercategory = game_info.get_supercategory(),
                 game_category = game_info.get_category(),

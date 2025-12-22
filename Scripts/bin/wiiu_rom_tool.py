@@ -11,6 +11,7 @@ import system
 import nintendo
 import arguments
 import setup
+import logger
 
 # Parse arguments
 parser = arguments.ArgumentParser(description = "Nintendo Wii U rom tool.")
@@ -27,6 +28,9 @@ def main():
     # Check requirements
     setup.CheckRequirements()
 
+    # Setup logging
+    logger.setup_logging()
+
     # Get input path
     input_path = parser.get_input_path()
 
@@ -42,7 +46,7 @@ def main():
         if args.delete_originals:
             details.append("Delete originals: %s" % args.delete_originals)
         if not system.PromptForPreview("Wii U ROM tool", details):
-            system.LogWarning("Operation cancelled by user")
+            logger.log_warning("Operation cancelled by user")
             return
 
     # Find rom files

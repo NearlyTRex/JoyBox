@@ -14,6 +14,7 @@ import command
 import programs
 import arguments
 import setup
+import logger
 
 # Parse arguments
 parser = arguments.ArgumentParser(description = "Launch pegasus.")
@@ -26,12 +27,15 @@ def main():
     # Check requirements
     setup.CheckRequirements()
 
+    # Setup logging
+    logger.setup_logging()
+
     # Get tool
     pegasus_tool = None
     if programs.IsToolInstalled("Pegasus"):
         pegasus_tool = programs.GetToolProgram("Pegasus")
     if not pegasus_tool:
-        system.LogError("Pegasus was not found", quit_program = True)
+        logger.log_error("Pegasus was not found", quit_program = True)
 
     # Get launch command
     launch_cmd = [
@@ -52,7 +56,7 @@ def main():
         pretend_run = args.pretend_run,
         exit_on_failure = args.exit_on_failure)
     if code != 0:
-        system.LogError("Launch command failed with code %d" % code)
+        logger.log_error("Launch command failed with code %d" % code)
 
 # Start
 if __name__ == "__main__":

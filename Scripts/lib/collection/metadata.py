@@ -5,6 +5,7 @@ import sys
 # Local imports
 import config
 import system
+import logger
 import environment
 import gameinfo
 import platforms
@@ -211,7 +212,7 @@ def BuildGameMetadataEntry(
     exit_on_failure = False):
 
     # Log categories
-    system.LogInfo("Building metadata [Category: '%s', Subcategory: '%s', Name: '%s'] ..." %
+    logger.log_info("Building metadata [Category: '%s', Subcategory: '%s', Name: '%s'] ..." %
         (game_category, game_subcategory, game_name))
 
     # Create metadata entry

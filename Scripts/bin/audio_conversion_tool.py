@@ -12,6 +12,7 @@ import system
 import audible
 import arguments
 import setup
+import logger
 
 # Parse arguments
 parser = arguments.ArgumentParser(description = "Audio conversion tool for converting between audio formats.")
@@ -42,6 +43,9 @@ def main():
 
     # Check requirements
     setup.CheckRequirements()
+
+    # Setup logging
+    logger.setup_logging()
 
     # Get input path
     input_path = parser.get_input_path()
@@ -75,7 +79,7 @@ def main():
                 pretend_run = args.pretend_run,
                 exit_on_failure = args.exit_on_failure)
     else:
-        system.LogError(f"Unknown action: {args.action}")
+        logger.log_error(f"Unknown action: {args.action}")
         return False
 
 # Main

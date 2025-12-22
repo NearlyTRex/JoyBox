@@ -5,6 +5,7 @@ import sys
 # Local imports
 import config
 import system
+import logger
 import release
 import programs
 import toolbase
@@ -60,7 +61,7 @@ class MameTools(toolbase.ToolBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup MameChdman")
+                logger.log_error("Could not setup MameChdman")
                 return False
 
         # Build linux program
@@ -87,7 +88,7 @@ class MameTools(toolbase.ToolBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup MameChdman")
+                logger.log_error("Could not setup MameChdman")
                 return False
         return True
 
@@ -107,7 +108,7 @@ class MameTools(toolbase.ToolBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup MameChdman")
+                logger.log_error("Could not setup MameChdman")
                 return False
 
         # Setup linux program
@@ -120,6 +121,6 @@ class MameTools(toolbase.ToolBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup MameChdman")
+                logger.log_error("Could not setup MameChdman")
                 return False
         return True

@@ -6,6 +6,7 @@ import argparse
 # Local imports
 import config
 import system
+import logger
 
 # Enum parser
 def ParseEnumValue(enum_type, enum_value):
@@ -68,7 +69,7 @@ class ArgumentParser:
     def get_checked_path(self, argname):
         path = self.get_path(argname)
         if not system.DoesPathExist(path):
-            system.LogError("Path '%s' does not exist" % path, quit_program = True)
+            logger.log_error("Path '%s' does not exist" % path, quit_program = True)
         return path
 
     #################################################

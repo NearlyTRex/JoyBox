@@ -13,6 +13,7 @@ import metadata
 import environment
 import arguments
 import setup
+import logger
 
 # Parse arguments
 parser = arguments.ArgumentParser(description = "Clean metadata files.")
@@ -24,6 +25,9 @@ def main():
 
     # Check requirements
     setup.CheckRequirements()
+
+    # Setup logging
+    logger.setup_logging()
 
     # Collect metadata files to process
     metadata_files_to_process = []
@@ -40,12 +44,12 @@ def main():
     if not args.no_preview:
         details = [metadata_file for _, _, metadata_file in metadata_files_to_process]
         if not system.PromptForPreview("Clean game metadata files (sort entries)", details):
-            system.LogWarning("Operation cancelled by user")
+            logger.log_warning("Operation cancelled by user")
             return
 
     # Sort metadata files
     for game_category, game_subcategory, metadata_file in metadata_files_to_process:
-        system.LogInfo("Sorting metadata files for %s - %s..." % (game_category, game_subcategory))
+        logger.log_info("Sorting metadata files for %s - %s..." % (game_category, game_subcategory))
         metadata_obj = metadata.Metadata()
         metadata_obj.import_from_metadata_file(metadata_file)
         metadata_obj.export_to_metadata_file(metadata_file)

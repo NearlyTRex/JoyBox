@@ -7,6 +7,7 @@ import sys
 import config
 import environment
 import system
+import logger
 import release
 import programs
 import hashing
@@ -157,7 +158,7 @@ class PCSX2(emulatorbase.EmulatorBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup PCSX2")
+                logger.log_error("Could not setup PCSX2")
                 return False
 
         # Download linux program
@@ -174,7 +175,7 @@ class PCSX2(emulatorbase.EmulatorBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup PCSX2")
+                logger.log_error("Could not setup PCSX2")
                 return False
         return True
 
@@ -194,7 +195,7 @@ class PCSX2(emulatorbase.EmulatorBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup PCSX2")
+                logger.log_error("Could not setup PCSX2")
                 return False
 
         # Setup linux program
@@ -207,7 +208,7 @@ class PCSX2(emulatorbase.EmulatorBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup PCSX2")
+                logger.log_error("Could not setup PCSX2")
                 return False
         return True
 
@@ -225,7 +226,7 @@ class PCSX2(emulatorbase.EmulatorBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup PCSX2 config files")
+                logger.log_error("Could not setup PCSX2 config files")
                 return False
 
         # Verify system files
@@ -237,7 +238,7 @@ class PCSX2(emulatorbase.EmulatorBase):
                 exit_on_failure = setup_params.exit_on_failure)
             success = (expected_md5 == actual_md5)
             if not success:
-                system.LogError("Could not verify PCSX2 system file %s" % filename)
+                logger.log_error("Could not verify PCSX2 system file %s" % filename)
                 return False
 
         # Copy system files
@@ -250,7 +251,7 @@ class PCSX2(emulatorbase.EmulatorBase):
                     pretend_run = setup_params.pretend_run,
                     exit_on_failure = setup_params.exit_on_failure)
                 if not success:
-                    system.LogError("Could not setup PCSX2 system files")
+                    logger.log_error("Could not setup PCSX2 system files")
                     return False
         return True
 

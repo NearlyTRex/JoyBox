@@ -5,6 +5,7 @@ import sys
 # Local imports
 import ini
 import system
+import logger
 
 # Default model
 DEFAULT_MODEL = "claude-sonnet-4-20250514"
@@ -26,11 +27,11 @@ def CreateClient():
     try:
         import anthropic as anthropic_lib
     except ImportError:
-        system.LogError("Anthropic not installed")
+        logger.log_error("Anthropic not installed")
         return None
     api_key = GetApiKey()
     if not api_key:
-        system.LogError("Anthropic API key not configured in JoyBox.ini")
+        logger.log_error("Anthropic API key not configured in JoyBox.ini")
         return None
     return anthropic_lib.Anthropic(api_key=api_key)
 
@@ -69,7 +70,7 @@ def SendMessage(
 
         # Send request
         if verbose:
-            system.LogInfo("Sending request to %s (max_tokens=%d)" % (model, max_tokens))
+            logger.log_info("Sending request to %s (max_tokens=%d)" % (model, max_tokens))
         response = client.messages.create(**params)
 
         # Extract text from response
@@ -81,15 +82,15 @@ def SendMessage(
     except Exception as e:
         error_str = str(e)
         if "credit balance is too low" in error_str:
-            system.LogWarning("Anthropic API: Insufficient credits. Add credits at https://console.anthropic.com/settings/billing")
+            logger.log_warning("Anthropic API: Insufficient credits. Add credits at https://console.anthropic.com/settings/billing")
         elif "invalid_api_key" in error_str or "authentication" in error_str.lower():
-            system.LogWarning("Anthropic API: Invalid API key. Check your key in JoyBox.ini")
+            logger.log_warning("Anthropic API: Invalid API key. Check your key in JoyBox.ini")
         elif "rate_limit" in error_str.lower():
-            system.LogWarning("Anthropic API: Rate limited. Please wait and try again")
+            logger.log_warning("Anthropic API: Rate limited. Please wait and try again")
         elif "overloaded" in error_str.lower():
-            system.LogWarning("Anthropic API: Service overloaded. Please try again later")
+            logger.log_warning("Anthropic API: Service overloaded. Please try again later")
         else:
-            system.LogWarning("Anthropic API error: %s" % error_str)
+            logger.log_warning("Anthropic API error: %s" % error_str)
         return None
 
 # Process a file with a prompt template
@@ -149,7 +150,7 @@ def ProcessFiles(
     # Read prompt template
     prompt_template = system.ReadTextFile(prompt_file)
     if prompt_template is None:
-        system.LogError("Failed to read prompt file: %s" % prompt_file)
+        logger.log_error("Failed to read prompt file: %s" % prompt_file)
         return (0, 0, 0)
 
     # Build file list
@@ -158,7 +159,7 @@ def ProcessFiles(
     else:
         files_to_process = system.BuildFileList(input_path)
     if not files_to_process:
-        system.LogWarning("No files found to process")
+        logger.log_warning("No files found to process")
         return (0, 0, 0)
 
     # Create output directory if needed
@@ -182,14 +183,14 @@ def ProcessFiles(
         # Skip if exists and skip_existing is set
         if skip_existing and system.DoesPathExist(output_file):
             if verbose:
-                system.LogInfo("Skipping (exists): %s" % rel_path)
+                logger.log_info("Skipping (exists): %s" % rel_path)
             skip_count += 1
             continue
 
         # Start processing file
-        system.LogInfo("Processing: %s" % rel_path)
+        logger.log_info("Processing: %s" % rel_path)
         if pretend_run:
-            system.LogInfo("  Would write to: %s" % output_file)
+            logger.log_info("  Would write to: %s" % output_file)
             success_count += 1
             continue
 
@@ -204,7 +205,7 @@ def ProcessFiles(
             system_prompt = system_prompt,
             verbose = verbose)
         if result is None:
-            system.LogWarning("Failed to process: %s" % rel_path)
+            logger.log_warning("Failed to process: %s" % rel_path)
             error_count += 1
             continue
 

@@ -17,6 +17,7 @@ import stores
 import manifest
 import arguments
 import setup
+import logger
 
 # Parse arguments
 parser = arguments.ArgumentParser(description = "Scan roms files.")
@@ -43,12 +44,15 @@ def main():
     # Check requirements
     setup.CheckRequirements()
 
+    # Setup logging
+    logger.setup_logging()
+
     # Log filtering if specified
     if args.categories:
         category_names = [c for c in args.categories.split(",")]
-        system.LogInfo(f"Filtering to categories: {args.categories}")
+        logger.log_info(f"Filtering to categories: {args.categories}")
     if args.subcategories:
-        system.LogInfo(f"Filtering to subcategories: {args.subcategories}")
+        logger.log_info(f"Filtering to subcategories: {args.subcategories}")
 
     # Show preview
     if not args.no_preview:
@@ -58,19 +62,19 @@ def main():
             "Published dir: %s" % environment.GetGamePublishedMetadataRootDir()
         ]
         if not system.PromptForPreview("Scan game files (build store purchases, JSON, metadata, publish)", details):
-            system.LogWarning("Operation cancelled by user")
+            logger.log_warning("Operation cancelled by user")
             return
 
     # Load manifest
     if args.load_manifest:
-        system.LogInfo("Loading manifest ...")
+        logger.log_info("Loading manifest ...")
         manifest.GetManifestInstance().load(
             verbose = args.verbose,
             pretend_run = args.pretend_run,
             exit_on_failure = args.exit_on_failure)
 
     # Build game store purchases
-    system.LogInfo("Building store purchases ...")
+    logger.log_info("Building store purchases ...")
     success = collection.BuildAllGameStorePurchases(
         locker_type = args.locker_type,
         source_type = args.source_type,
@@ -80,10 +84,10 @@ def main():
         pretend_run = args.pretend_run,
         exit_on_failure = args.exit_on_failure)
     if not success:
-        system.LogError("Building store purchases failed", quit_program = True)
+        logger.log_error("Building store purchases failed", quit_program = True)
 
     # Build game json files
-    system.LogInfo("Building json files ...")
+    logger.log_info("Building json files ...")
     success = collection.BuildAllGameJsonFiles(
         locker_type = args.locker_type,
         source_type = args.source_type,
@@ -93,10 +97,10 @@ def main():
         pretend_run = args.pretend_run,
         exit_on_failure = args.exit_on_failure)
     if not success:
-        system.LogError("Building json files failed", quit_program = True)
+        logger.log_error("Building json files failed", quit_program = True)
 
     # Build game metadata files
-    system.LogInfo("Building metadata files ...")
+    logger.log_info("Building metadata files ...")
     success = collection.BuildAllGameMetadataEntries(
         categories = args.categories,
         subcategories = args.subcategories,
@@ -104,11 +108,11 @@ def main():
         pretend_run = args.pretend_run,
         exit_on_failure = args.exit_on_failure)
     if not success:
-        system.LogError("Building metadata files failed", quit_program = True)
+        logger.log_error("Building metadata files failed", quit_program = True)
 
     # Download game metadata assets
     if args.download_assets:
-        system.LogInfo("Downloading metadata assets ...")
+        logger.log_info("Downloading metadata assets ...")
         success = collection.DownloadAllMetadataAssets(
             categories = args.categories,
             subcategories = args.subcategories,
@@ -117,10 +121,10 @@ def main():
             pretend_run = args.pretend_run,
             exit_on_failure = args.exit_on_failure)
         if not success:
-            system.LogError("Downloading metadata assets failed", quit_program = True)
+            logger.log_error("Downloading metadata assets failed", quit_program = True)
 
     # Publish game metadata files
-    system.LogInfo("Publishing metadata files ...")
+    logger.log_info("Publishing metadata files ...")
     success = collection.PublishAllGameMetadataEntries(
         categories = args.categories,
         subcategories = args.subcategories,
@@ -128,7 +132,7 @@ def main():
         pretend_run = args.pretend_run,
         exit_on_failure = args.exit_on_failure)
     if not success:
-        system.LogError("Publishing metadata files failed", quit_program = True)
+        logger.log_error("Publishing metadata files failed", quit_program = True)
 
 # Start
 if __name__ == "__main__":

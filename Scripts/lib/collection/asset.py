@@ -5,6 +5,7 @@ import sys
 # Local imports
 import config
 import system
+import logger
 import environment
 import gameinfo
 import asset
@@ -108,7 +109,7 @@ def DownloadMetadataAsset(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if not success:
-        system.LogError(
+        logger.log_error(
             message = "Download failed for asset %s " % (asset_type),
             game_supercategory = game_info.get_supercategory(),
             game_category = game_info.get_category(),
@@ -124,7 +125,7 @@ def DownloadMetadataAsset(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if not success:
-        system.LogError(
+        logger.log_error(
             message = "Convert failed for asset %s " % (asset_type),
             game_supercategory = game_info.get_supercategory(),
             game_category = game_info.get_category(),
@@ -139,7 +140,7 @@ def DownloadMetadataAsset(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if not success:
-        system.LogError(
+        logger.log_error(
             message = "Clean failed for asset %s " % (asset_type),
             game_supercategory = game_info.get_supercategory(),
             game_category = game_info.get_category(),
@@ -157,7 +158,7 @@ def DownloadMetadataAsset(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if not success:
-        system.LogError(
+        logger.log_error(
             message = "Backup failed for asset %s " % (asset_type),
             game_supercategory = game_info.get_supercategory(),
             game_category = game_info.get_category(),

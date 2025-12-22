@@ -5,6 +5,7 @@ import sys
 # Local imports
 import config
 import system
+import logger
 import environment
 import release
 import programs
@@ -56,7 +57,7 @@ class Moonlight(toolbase.ToolBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup Moonlight")
+                logger.log_error("Could not setup Moonlight")
                 return False
 
         # Download linux program
@@ -73,7 +74,7 @@ class Moonlight(toolbase.ToolBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup Moonlight")
+                logger.log_error("Could not setup Moonlight")
                 return False
         return True
 
@@ -93,7 +94,7 @@ class Moonlight(toolbase.ToolBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup Moonlight")
+                logger.log_error("Could not setup Moonlight")
                 return False
 
         # Setup linux program
@@ -106,7 +107,7 @@ class Moonlight(toolbase.ToolBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup Moonlight")
+                logger.log_error("Could not setup Moonlight")
                 return False
         return True
 
@@ -124,6 +125,6 @@ class Moonlight(toolbase.ToolBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup Moonlight config files")
+                logger.log_error("Could not setup Moonlight config files")
                 return False
         return True

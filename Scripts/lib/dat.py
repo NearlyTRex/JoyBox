@@ -6,6 +6,7 @@ from xml.dom import minidom
 # Local imports
 import config
 import system
+import logger
 import environment
 import hashing
 
@@ -35,7 +36,7 @@ class Dat:
     def import_cache_dat_file(self, dat_file, verbose = False, pretend_run = False, exit_on_failure = False):
         try:
             if verbose:
-                system.LogInfo("Importing cache dat file '%s'" % dat_file)
+                logger.log_info("Importing cache dat file '%s'" % dat_file)
             if not pretend_run:
                 with open(dat_file, "r", encoding="utf8", newline="\n") as file:
                     for line in file.readlines():
@@ -51,15 +52,15 @@ class Dat:
             return True
         except Exception as e:
             if exit_on_failure:
-                system.LogError("Unable import cache dat file '%s'" % dat_file)
-                system.LogError(e, quit_program = True)
+                logger.log_error("Unable import cache dat file '%s'" % dat_file)
+                logger.log_error(e, quit_program = True)
             return False
 
     # Export cache dat file
     def export_cache_dat_file(self, dat_file, verbose = False, pretend_run = False, exit_on_failure = False):
         try:
             if verbose:
-                system.LogInfo("Exporting cache dat file '%s'" % dat_file)
+                logger.log_info("Exporting cache dat file '%s'" % dat_file)
             if not pretend_run:
                 with open(dat_file, "w", encoding="utf8", newline="\n") as file:
                     for key in self.game_database.keys():
@@ -75,15 +76,15 @@ class Dat:
             return True
         except Exception as e:
             if exit_on_failure:
-                system.LogError("Unable to export cache dat file '%s'" % dat_file)
-                system.LogError(e, quit_program = True)
+                logger.log_error("Unable to export cache dat file '%s'" % dat_file)
+                logger.log_error(e, quit_program = True)
             return False
 
     # Import clrmamepro dat file
     def import_clrmamepro_dat_file(self, dat_file, verbose = False, pretend_run = False, exit_on_failure = False):
         try:
             if verbose:
-                system.LogInfo("Importing clrmamepro dat file '%s'" % dat_file)
+                logger.log_info("Importing clrmamepro dat file '%s'" % dat_file)
             if not pretend_run:
                 dom = minidom.parse(dat_file)
                 game_tags = dom.getElementsByTagName("game")
@@ -107,8 +108,8 @@ class Dat:
             return True
         except Exception as e:
             if exit_on_failure:
-                system.LogError("Unable to import clrmamepro dat file '%s'" % dat_file)
-                system.LogError(e, quit_program = True)
+                logger.log_error("Unable to import clrmamepro dat file '%s'" % dat_file)
+                logger.log_error(e, quit_program = True)
             return False
 
     # Import clrmamepro dat files
@@ -119,10 +120,10 @@ class Dat:
     # Rename files
     def rename_files(self, input_dir, verbose = False, pretend_run = False, exit_on_failure = False):
         if verbose:
-            system.LogInfo("Renaming files in '%s' according to imported dats ..." % input_dir)
+            logger.log_info("Renaming files in '%s' according to imported dats ..." % input_dir)
         for file in system.BuildFileList(input_dir):
             if verbose:
-                system.LogInfo("Examining '%s'" % file)
+                logger.log_info("Examining '%s'" % file)
             file_dir = system.GetFilenameDirectory(file)
             file_md5 = hashing.CalculateFileMD5(file, verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure)
             if self.is_md5_present(file_md5):

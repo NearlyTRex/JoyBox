@@ -8,6 +8,7 @@ import config
 import command
 import sandbox
 import system
+import logger
 import environment
 import archive
 import programs
@@ -37,20 +38,20 @@ def GetRemoteJson(
     exit_on_failure = False):
     try:
         if verbose:
-            system.LogInfo("Processing GET request to '%s'" % url)
+            logger.log_info("Processing GET request to '%s'" % url)
         import requests
         if not headers:
             headers = {"Accept": "application/json"}
         get = requests.get(url, headers=headers)
         if verbose:
-            system.LogInfo("Got response: %s" % str(get.status_code))
+            logger.log_info("Got response: %s" % str(get.status_code))
         if get.status_code == 200:
             return get.json()
         return None
     except Exception as e:
         if exit_on_failure:
-            system.LogError("Unable to process GET request to '%s'" % url)
-            system.LogError(e, quit_program = True)
+            logger.log_error("Unable to process GET request to '%s'" % url)
+            logger.log_error(e, quit_program = True)
         return None
 
 # Post remote json
@@ -63,20 +64,20 @@ def PostRemoteJson(
     exit_on_failure = False):
     try:
         if verbose:
-            system.LogInfo("Processing POST request to '%s'" % url)
+            logger.log_info("Processing POST request to '%s'" % url)
         import requests
         if not headers:
             headers = {"Accept": "application/json"}
         post = requests.post(url, headers=headers, json=data)
         if verbose:
-            system.LogInfo("Got response: %s" % str(post.status_code))
+            logger.log_info("Got response: %s" % str(post.status_code))
         if post.status_code == 200:
             return post.json()
         return None
     except Exception as e:
         if exit_on_failure:
-            system.LogError("Unable to process POST request to '%s'" % url)
-            system.LogError(e, quit_program = True)
+            logger.log_error("Unable to process POST request to '%s'" % url)
+            logger.log_error(e, quit_program = True)
         return None
 
 # Get remote xml
@@ -88,21 +89,21 @@ def GetRemoteXml(
     exit_on_failure = False):
     try:
         if verbose:
-            system.LogInfo("Processing GET request to '%s'" % url)
+            logger.log_info("Processing GET request to '%s'" % url)
         import requests
         import xmltodict
         if not headers:
             headers = {"Accept": "text/xml"}
         get = requests.get(url, headers=headers)
         if verbose:
-            system.LogInfo("Got response: %s" % str(get.status_code))
+            logger.log_info("Got response: %s" % str(get.status_code))
         if get.status_code == 200:
             return xmltodict.parse(get.text)
         return None
     except Exception as e:
         if exit_on_failure:
-            system.LogError("Unable to process GET request to '%s'" % url)
-            system.LogError(e, quit_program = True)
+            logger.log_error("Unable to process GET request to '%s'" % url)
+            logger.log_error(e, quit_program = True)
         return None
 
 ###########################################################
@@ -123,7 +124,7 @@ def DownloadUrl(
     if programs.IsToolInstalled("Curl"):
         download_tool = programs.GetToolProgram("Curl")
     if not download_tool:
-        system.LogError("Curl was not found")
+        logger.log_error("Curl was not found")
         return False
 
     # Get download command
@@ -159,7 +160,7 @@ def DownloadUrl(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if code != 0:
-        system.LogError("Download of %s failed" % url)
+        logger.log_error("Download of %s failed" % url)
         return False
 
     # Check result
@@ -205,7 +206,7 @@ def DownloadGitUrl(
     if programs.IsToolInstalled("Git"):
         download_tool = programs.GetToolProgram("Git")
     if not download_tool:
-        system.LogError("Git was not found")
+        logger.log_error("Git was not found")
         return False
 
     # Get download command
@@ -230,7 +231,7 @@ def DownloadGitUrl(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if code != 0:
-        system.LogError("Git download of %s failed" % url)
+        logger.log_error("Git download of %s failed" % url)
         return False
 
     # Check result
@@ -356,14 +357,14 @@ def GetGithubRepository(
     try:
         import github
         if verbose:
-            system.LogInfo("Getting github repository '%s/%s'" % (github_user, github_repo))
+            logger.log_info("Getting github repository '%s/%s'" % (github_user, github_repo))
         gh = github.Github(github_token)
         repo = gh.get_repo("%s/%s" % (github_user, github_repo))
         return repo
     except Exception as e:
         if exit_on_failure:
-            system.LogError("Unable to get github repository '%s/%s'" % (github_user, github_repo))
-            system.LogError(e, quit_program = True)
+            logger.log_error("Unable to get github repository '%s/%s'" % (github_user, github_repo))
+            logger.log_error(e, quit_program = True)
         return None
 
 # Get github repositories
@@ -380,7 +381,7 @@ def GetGithubRepositories(
     try:
         import github
         if verbose:
-            system.LogInfo("Getting github repositories for '%s'" % github_user)
+            logger.log_info("Getting github repositories for '%s'" % github_user)
         gh = github.Github(github_token)
         user = gh.get_user()
         login = user.login
@@ -400,8 +401,8 @@ def GetGithubRepositories(
         return repositories
     except Exception as e:
         if exit_on_failure:
-            system.LogError("Unable to get github repositories for '%s'" % github_user)
-            system.LogError(e, quit_program = True)
+            logger.log_error("Unable to get github repositories for '%s'" % github_user)
+            logger.log_error(e, quit_program = True)
         return []
 
 # Download github repository
@@ -461,9 +462,9 @@ def UpdateGithubRepository(
     if "message" in update_response:
         update_message = update_response["message"]
         if "success" in update_message.lower():
-            system.LogInfo("Repository '%s' - '%s' was successfully updated from upstream" % (github_user, github_repo))
+            logger.log_info("Repository '%s' - '%s' was successfully updated from upstream" % (github_user, github_repo))
         if "branch is not behind" in update_message.lower():
-            system.LogInfo("Repository '%s' - '%s' was already up to date with upstream" % (github_user, github_repo))
+            logger.log_info("Repository '%s' - '%s' was already up to date with upstream" % (github_user, github_repo))
 
     # Should be successful
     return True
@@ -516,7 +517,7 @@ def ArchiveGithubRepository(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if not success:
-        system.LogError("Unable to download repository '%s' - '%s'" % (github_user, github_repo))
+        logger.log_error("Unable to download repository '%s' - '%s'" % (github_user, github_repo))
         return False
 
     # Remove git folder
@@ -537,7 +538,7 @@ def ArchiveGithubRepository(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if not os.path.exists(tmp_file_archive):
-        system.LogError("Unable to archive repository '%s' - '%s'" % (github_user, github_repo))
+        logger.log_error("Unable to archive repository '%s' - '%s'" % (github_user, github_repo))
         return False
 
     # Test archive
@@ -547,7 +548,7 @@ def ArchiveGithubRepository(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if not success:
-        system.LogError("Validation failed for archive of repository '%s' - '%s'" % (github_user, github_repo))
+        logger.log_error("Validation failed for archive of repository '%s' - '%s'" % (github_user, github_repo))
         return False
 
     # Backup archive
@@ -562,7 +563,7 @@ def ArchiveGithubRepository(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if not success:
-        system.LogError("Backup failed for archive of repository '%s' - '%s'" % (github_user, github_repo))
+        logger.log_error("Backup failed for archive of repository '%s' - '%s'" % (github_user, github_repo))
         return False
 
     # Delete temporary directory

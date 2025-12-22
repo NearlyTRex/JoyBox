@@ -5,6 +5,7 @@ import sys
 # Local imports
 import config
 import system
+import logger
 import environment
 import archive
 import cryption
@@ -67,7 +68,7 @@ def CopyFilesNormally(
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if not success:
-            system.LogError("Unable to copy file '%s'" % src_path)
+            logger.log_error("Unable to copy file '%s'" % src_path)
             return False
 
     # Should be successful
@@ -87,7 +88,7 @@ def CopyAndEncryptFiles(
 
     # Validate passphrase
     if not cryption.IsPassphraseValid(passphrase):
-        system.LogError("Invalid passphrase")
+        logger.log_error("Invalid passphrase")
         return False
 
     # Look at non-excluded files in the input base path
@@ -122,7 +123,7 @@ def CopyAndEncryptFiles(
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if not success:
-            system.LogError("Unable to encrypt file '%s'" % src_path)
+            logger.log_error("Unable to encrypt file '%s'" % src_path)
             return False
 
     # Should be successful
@@ -142,7 +143,7 @@ def CopyAndDecryptFiles(
 
     # Validate passphrase
     if not cryption.IsPassphraseValid(passphrase):
-        system.LogError("Invalid passphrase")
+        logger.log_error("Invalid passphrase")
         return False
 
     # Look at non-excluded files in the input base path
@@ -160,7 +161,7 @@ def CopyAndDecryptFiles(
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not real_name:
-                system.LogError("Unable to get embedded filename from '%s'" % src_path)
+                logger.log_error("Unable to get embedded filename from '%s'" % src_path)
                 return False
         else:
             real_name = system.GetFilenameFile(src_path)
@@ -189,7 +190,7 @@ def CopyAndDecryptFiles(
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if not success:
-            system.LogError("Unable to decrypt file '%s'" % src_path)
+            logger.log_error("Unable to decrypt file '%s'" % src_path)
             return False
 
     # Should be successful
@@ -230,7 +231,7 @@ def CopyFiles(
     # Get passphrase from locker
     locker_info = lockerinfo.LockerInfo(locker_type)
     if not locker_info:
-        system.LogError("Locker %s not found" % locker_type)
+        logger.log_error("Locker %s not found" % locker_type)
         return False
     passphrase = locker_info.get_passphrase()
 
@@ -305,7 +306,7 @@ def ArchiveFolder(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if not success:
-        system.LogError("Unable to archive backup file from %s to %s" % (input_path, output_path))
+        logger.log_error("Unable to archive backup file from %s to %s" % (input_path, output_path))
         return False
 
     # Clean output
@@ -327,7 +328,7 @@ def ArchiveFolder(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if not success:
-        system.LogError("Unable to move archived backup file from %s to %s" % (input_path, output_path))
+        logger.log_error("Unable to move archived backup file from %s to %s" % (input_path, output_path))
         return False
 
     # Delete temporary directory
@@ -393,7 +394,7 @@ def ArchiveSubFolders(
                     pretend_run = pretend_run,
                     exit_on_failure = exit_on_failure)
                 if not success:
-                    system.LogError("Unable to archive backup files from %s to %s" % (input_base_path, output_base_path))
+                    logger.log_error("Unable to archive backup files from %s to %s" % (input_base_path, output_base_path))
                     return False
 
                 # Clean output
@@ -415,7 +416,7 @@ def ArchiveSubFolders(
                     pretend_run = pretend_run,
                     exit_on_failure = exit_on_failure)
                 if not success:
-                    system.LogError("Unable to move archived backup files from %s to %s" % (input_base_path, output_base_path))
+                    logger.log_error("Unable to move archived backup files from %s to %s" % (input_base_path, output_base_path))
                     return False
 
     # Delete temporary directory

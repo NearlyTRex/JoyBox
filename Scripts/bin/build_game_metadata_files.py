@@ -14,6 +14,7 @@ import gameinfo
 import collection
 import arguments
 import setup
+import logger
 
 # Parse arguments
 parser = arguments.ArgumentParser(description = "Build metadata files.")
@@ -35,6 +36,9 @@ def main():
     # Check requirements
     setup.CheckRequirements()
 
+    # Setup logging
+    logger.setup_logging()
+
     # Collect games to process
     games_to_process = []
     for game_supercategory, game_category, game_subcategory in gameinfo.IterateSelectedGameCategories(
@@ -54,7 +58,7 @@ def main():
     if not args.no_preview:
         details = list(set([metadata_file for _, _, _, _, metadata_file in games_to_process]))
         if not system.PromptForPreview("Build game metadata files", details):
-            system.LogWarning("Operation cancelled by user")
+            logger.log_warning("Operation cancelled by user")
             return
 
     # Build metadata files
@@ -68,7 +72,7 @@ def main():
             pretend_run = args.pretend_run,
             exit_on_failure = args.exit_on_failure)
         if not success:
-            system.LogError(
+            logger.log_error(
                 message = "Build of metadata file failed!",
                 game_supercategory = game_supercategory,
                 game_category = game_category,

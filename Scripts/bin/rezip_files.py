@@ -11,6 +11,7 @@ import system
 import archive
 import arguments
 import setup
+import logger
 
 # Parse arguments
 parser = arguments.ArgumentParser(description = "Rezip files deterministically.")
@@ -24,6 +25,9 @@ def main():
     # Check requirements
     setup.CheckRequirements()
 
+    # Setup logging
+    logger.setup_logging()
+
     # Get input path
     input_path = parser.get_input_path()
 
@@ -31,7 +35,7 @@ def main():
     if not args.no_preview:
         details = ["Path: %s" % input_path]
         if not system.PromptForPreview("Rezip files deterministically", details):
-            system.LogWarning("Operation cancelled by user")
+            logger.log_warning("Operation cancelled by user")
             return
 
     # Rezip zip files
@@ -42,7 +46,7 @@ def main():
         current_file_extract_dir = system.JoinPaths(current_file_dir, current_file_basename + "_extracted")
 
         # Unzip file
-        system.LogInfo("Unzipping file %s ..." % current_file)
+        logger.log_info("Unzipping file %s ..." % current_file)
         success = archive.ExtractArchive(
             archive_file = current_file,
             extract_dir = current_file_extract_dir,
@@ -51,10 +55,10 @@ def main():
             pretend_run = args.pretend_run,
             exit_on_failure = args.exit_on_failure)
         if not success:
-            system.LogError("Unable to unzip file %s" % current_file, quit_program = True)
+            logger.log_error("Unable to unzip file %s" % current_file, quit_program = True)
 
         # Deterministically zip file
-        system.LogInfo("Deterministically rezipping ...")
+        logger.log_info("Deterministically rezipping ...")
         success = archive.CreateArchiveFromFolder(
             archive_file = current_file,
             source_dir = current_file_extract_dir,
@@ -63,7 +67,7 @@ def main():
             pretend_run = args.pretend_run,
             exit_on_failure = args.exit_on_failure)
         if not success:
-            system.LogError("Unable to rezip file %s" % current_file, quit_program = True)
+            logger.log_error("Unable to rezip file %s" % current_file, quit_program = True)
 
 # Start
 if __name__ == "__main__":

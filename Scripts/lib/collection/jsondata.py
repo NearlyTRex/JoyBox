@@ -5,6 +5,7 @@ import sys
 # Local imports
 import config
 import system
+import logger
 import environment
 import gameinfo
 import cryption
@@ -318,7 +319,7 @@ def BuildGameJsonFile(
         return False
 
     # Log categories
-    system.LogInfo("Building json [Category: '%s', Subcategory: '%s', Name: '%s'] ..." %
+    logger.log_info("Building json [Category: '%s', Subcategory: '%s', Name: '%s'] ..." %
         (game_category, game_subcategory, game_name))
 
     # Create json file

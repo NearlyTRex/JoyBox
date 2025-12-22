@@ -9,6 +9,7 @@ import command
 import archive
 import programs
 import system
+import logger
 import environment
 import ini
 import jsondata
@@ -121,7 +122,7 @@ class Epic(storebase.StoreBase):
         if programs.IsToolInstalled("PythonVenvPython"):
             python_tool = programs.GetToolProgram("PythonVenvPython")
         if not python_tool:
-            system.LogError("PythonVenvPython was not found")
+            logger.log_error("PythonVenvPython was not found")
             return False
 
         # Get script
@@ -129,7 +130,7 @@ class Epic(storebase.StoreBase):
         if programs.IsToolInstalled("Legendary"):
             legendary_script = programs.GetToolProgram("Legendary")
         if not legendary_script:
-            system.LogError("Legendary was not found")
+            logger.log_error("Legendary was not found")
             return False
 
         # Get login command
@@ -166,7 +167,7 @@ class Epic(storebase.StoreBase):
 
         # Check identifier
         if not self.IsValidPageIdentifier(identifier):
-            system.LogWarning("Page identifier '%s' was not valid" % identifier)
+            logger.log_warning("Page identifier '%s' was not valid" % identifier)
             return None
 
         # Connect to web
@@ -263,7 +264,7 @@ class Epic(storebase.StoreBase):
             if cache_age_hours < 24:
                 use_cache = True
                 if verbose:
-                    system.LogInfo("Using cached Epic purchases data (%.1f hours old)" % cache_age_hours)
+                    logger.log_info("Using cached Epic purchases data (%.1f hours old)" % cache_age_hours)
 
         # Load from cache if available
         if use_cache:
@@ -282,7 +283,7 @@ class Epic(storebase.StoreBase):
                 return cached_purchases
             else:
                 if verbose:
-                    system.LogWarning("Failed to load Epic cache, will fetch fresh data")
+                    logger.log_warning("Failed to load Epic cache, will fetch fresh data")
                 use_cache = False
 
         # Get tool
@@ -290,7 +291,7 @@ class Epic(storebase.StoreBase):
         if programs.IsToolInstalled("PythonVenvPython"):
             python_tool = programs.GetToolProgram("PythonVenvPython")
         if not python_tool:
-            system.LogError("PythonVenvPython was not found")
+            logger.log_error("PythonVenvPython was not found")
             return None
 
         # Get script
@@ -298,7 +299,7 @@ class Epic(storebase.StoreBase):
         if programs.IsToolInstalled("Legendary"):
             legendary_script = programs.GetToolProgram("Legendary")
         if not legendary_script:
-            system.LogError("Legendary was not found")
+            logger.log_error("Legendary was not found")
             return None
 
         # Get list command
@@ -315,7 +316,7 @@ class Epic(storebase.StoreBase):
             verbose = verbose,
             exit_on_failure = exit_on_failure)
         if len(list_output) == 0:
-            system.LogError("Unable to find epic purchases")
+            logger.log_error("Unable to find epic purchases")
             return None
 
         # Get epic json
@@ -323,9 +324,9 @@ class Epic(storebase.StoreBase):
         try:
             epic_json = json.loads(list_output)
         except Exception as e:
-            system.LogError(e)
-            system.LogError("Unable to parse epic game list")
-            system.LogError("Received output:\n%s" % list_output)
+            logger.log_error(e)
+            logger.log_error("Unable to parse epic game list")
+            logger.log_error("Received output:\n%s" % list_output)
             return None
 
         # Parse output
@@ -365,9 +366,9 @@ class Epic(storebase.StoreBase):
             pretend_run = pretend_run,
             exit_on_failure = False)
         if success and verbose:
-            system.LogInfo("Saved Epic purchases data to cache")
+            logger.log_info("Saved Epic purchases data to cache")
         elif not success and verbose:
-            system.LogWarning("Failed to save Epic cache")
+            logger.log_warning("Failed to save Epic cache")
         return purchases
 
     ############################################################
@@ -385,7 +386,7 @@ class Epic(storebase.StoreBase):
 
         # Check identifier
         if not self.IsValidInfoIdentifier(identifier):
-            system.LogWarning("Info identifier '%s' was not valid" % identifier)
+            logger.log_warning("Info identifier '%s' was not valid" % identifier)
             return None
 
         # Get tool
@@ -393,7 +394,7 @@ class Epic(storebase.StoreBase):
         if programs.IsToolInstalled("PythonVenvPython"):
             python_tool = programs.GetToolProgram("PythonVenvPython")
         if not python_tool:
-            system.LogError("PythonVenvPython was not found")
+            logger.log_error("PythonVenvPython was not found")
             return None
 
         # Get script
@@ -401,7 +402,7 @@ class Epic(storebase.StoreBase):
         if programs.IsToolInstalled("Legendary"):
             legendary_script = programs.GetToolProgram("Legendary")
         if not legendary_script:
-            system.LogError("Legendary was not found")
+            logger.log_error("Legendary was not found")
             return None
 
         # Get info command
@@ -418,7 +419,7 @@ class Epic(storebase.StoreBase):
             verbose = verbose,
             exit_on_failure = exit_on_failure)
         if len(info_output) == 0 or "No game information available" in info_output:
-            system.LogError("Unable to find epic information for '%s'" % identifier)
+            logger.log_error("Unable to find epic information for '%s'" % identifier)
             return None
 
         # Get epic json
@@ -426,9 +427,9 @@ class Epic(storebase.StoreBase):
         try:
             epic_json = json.loads(info_output)
         except Exception as e:
-            system.LogError(e)
-            system.LogError("Unable to parse epic game information for '%s'" % identifier)
-            system.LogError("Received output:\n%s" % info_output)
+            logger.log_error(e)
+            logger.log_error("Unable to parse epic game information for '%s'" % identifier)
+            logger.log_error("Received output:\n%s" % info_output)
             return None
 
         # Build jsondata
@@ -468,7 +469,7 @@ class Epic(storebase.StoreBase):
 
         # Check identifier
         if not self.IsValidMetadataIdentifier(identifier):
-            system.LogWarning("Metadata identifier '%s' was not valid" % identifier)
+            logger.log_warning("Metadata identifier '%s' was not valid" % identifier)
             return None
 
         # Store web driver for cleanup

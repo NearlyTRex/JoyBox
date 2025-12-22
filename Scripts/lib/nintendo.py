@@ -8,6 +8,7 @@ import config
 import command
 import programs
 import system
+import logger
 import hashing
 import webpage
 
@@ -28,7 +29,7 @@ def EncryptNDSRom(
     if programs.IsToolInstalled("NDecrypt"):
         encrypt_tool = programs.GetToolProgram("NDecrypt")
     if not encrypt_tool:
-        system.LogError("NDecrypt was not found")
+        logger.log_error("NDecrypt was not found")
         return False
 
     # Get encrypt command
@@ -61,7 +62,7 @@ def DecryptNDSRom(
     if programs.IsToolInstalled("NDecrypt"):
         decrypt_tool = programs.GetToolProgram("NDecrypt")
     if not decrypt_tool:
-        system.LogError("NDecrypt was not found")
+        logger.log_error("NDecrypt was not found")
         return False
 
     # Get decrypt command
@@ -98,7 +99,7 @@ def Convert3DSCIAtoCCI(
     if programs.IsToolInstalled("CtrMakeRom"):
         convert_tool = programs.GetToolProgram("CtrMakeRom")
     if not convert_tool:
-        system.LogError("CtrMakeRom was not found")
+        logger.log_error("CtrMakeRom was not found")
         return False
 
     # Get convert command
@@ -136,7 +137,7 @@ def Convert3DSCCItoCIA(
     if programs.IsToolInstalled("CtrMakeRom"):
         convert_tool = programs.GetToolProgram("CtrMakeRom")
     if not convert_tool:
-        system.LogError("CtrMakeRom was not found")
+        logger.log_error("CtrMakeRom was not found")
         return False
 
     # Get convert command
@@ -174,7 +175,7 @@ def Trim3DSCCI(
     if programs.IsToolInstalled("3DSRomTool"):
         trim_tool = programs.GetToolProgram("3DSRomTool")
     if not trim_tool:
-        system.LogError("3DSRomTool was not found")
+        logger.log_error("3DSRomTool was not found")
         return False
 
     # Create temporary directory
@@ -242,7 +243,7 @@ def Untrim3DSCCI(
     if programs.IsToolInstalled("3DSRomTool"):
         trim_tool = programs.GetToolProgram("3DSRomTool")
     if not trim_tool:
-        system.LogError("3DSRomTool was not found")
+        logger.log_error("3DSRomTool was not found")
         return False
 
     # Create temporary directory
@@ -312,7 +313,7 @@ def Extract3DSCIA(
     if programs.IsToolInstalled("CtrTool"):
         extract_tool = programs.GetToolProgram("CtrTool")
     if not extract_tool:
-        system.LogError("CtrTool was not found")
+        logger.log_error("CtrTool was not found")
         return False
 
     # Create temporary directory
@@ -391,7 +392,7 @@ def Get3DSFileInfo(
     if programs.IsToolInstalled("CtrTool"):
         print_tool = programs.GetToolProgram("CtrTool")
     if not print_tool:
-        system.LogError("CtrTool was not found")
+        logger.log_error("CtrTool was not found")
         return ""
 
     # Get print command
@@ -474,7 +475,7 @@ def DecryptWiiUNUSPackage(
     if programs.IsToolInstalled("CDecrypt"):
         decrypt_tool = programs.GetToolProgram("CDecrypt")
     if not decrypt_tool:
-        system.LogError("CDecrypt was not found")
+        logger.log_error("CDecrypt was not found")
         return False
 
     # Get input files
@@ -760,7 +761,7 @@ def TrimSwitchXCI(
     if programs.IsToolInstalled("PythonVenvPython"):
         python_tool = programs.GetToolProgram("PythonVenvPython")
     if not python_tool:
-        system.LogError("PythonVenvPython was not found")
+        logger.log_error("PythonVenvPython was not found")
         return False
 
     # Get script
@@ -768,7 +769,7 @@ def TrimSwitchXCI(
     if programs.IsToolInstalled("XCITrimmer"):
         trim_script = programs.GetToolProgram("XCITrimmer")
     if not trim_script:
-        system.LogError("XCITrimmer was not found")
+        logger.log_error("XCITrimmer was not found")
         return False
 
     # Create temporary directory
@@ -845,7 +846,7 @@ def UntrimSwitchXCI(
     if programs.IsToolInstalled("PythonVenvPython"):
         python_tool = programs.GetToolProgram("PythonVenvPython")
     if not python_tool:
-        system.LogError("PythonVenvPython was not found")
+        logger.log_error("PythonVenvPython was not found")
         return False
 
     # Get script
@@ -853,7 +854,7 @@ def UntrimSwitchXCI(
     if programs.IsToolInstalled("XCITrimmer"):
         untrim_script = programs.GetToolProgram("XCITrimmer")
     if not untrim_script:
-        system.LogError("XCITrimmer was not found")
+        logger.log_error("XCITrimmer was not found")
         return False
 
     # Create temporary directory
@@ -929,7 +930,7 @@ def ExtractSwitchNSP(
     if programs.IsToolInstalled("HacTool"):
         extract_tool = programs.GetToolProgram("HacTool")
     if not extract_tool:
-        system.LogError("HacTool was not found")
+        logger.log_error("HacTool was not found")
         return False
 
     # Get extract command

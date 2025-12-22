@@ -5,6 +5,7 @@ import sys
 # Local imports
 import config
 import system
+import logger
 import release
 import programs
 import toolbase
@@ -55,7 +56,7 @@ class FFMpeg(toolbase.ToolBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup FFMpeg")
+                logger.log_error("Could not setup FFMpeg")
                 return False
 
         # Download linux program
@@ -74,7 +75,7 @@ class FFMpeg(toolbase.ToolBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup FFMpeg")
+                logger.log_error("Could not setup FFMpeg")
                 return False
         return True
 
@@ -94,7 +95,7 @@ class FFMpeg(toolbase.ToolBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup FFMpeg")
+                logger.log_error("Could not setup FFMpeg")
                 return False
 
         # Setup linux program
@@ -108,6 +109,6 @@ class FFMpeg(toolbase.ToolBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup FFMpeg")
+                logger.log_error("Could not setup FFMpeg")
                 return False
         return True

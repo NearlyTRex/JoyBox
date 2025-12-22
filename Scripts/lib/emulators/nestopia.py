@@ -6,6 +6,7 @@ import sys
 import config
 import environment
 import system
+import logger
 import release
 import programs
 import emulatorbase
@@ -63,7 +64,7 @@ class Nestopia(emulatorbase.EmulatorBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup Nestopia")
+                logger.log_error("Could not setup Nestopia")
                 return False
         return True
 
@@ -83,6 +84,6 @@ class Nestopia(emulatorbase.EmulatorBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup Nestopia")
+                logger.log_error("Could not setup Nestopia")
                 return False
         return True

@@ -8,6 +8,7 @@ import config
 import command
 import programs
 import system
+import logger
 import environment
 import network
 import ini
@@ -143,7 +144,7 @@ class GOG(storebase.StoreBase):
         if programs.IsToolInstalled("LGOGDownloader"):
             gog_tool = programs.GetToolProgram("LGOGDownloader")
         if not gog_tool:
-            system.LogError("LGOGDownloader was not found")
+            logger.log_error("LGOGDownloader was not found")
             return None
 
         # Get login command
@@ -174,7 +175,7 @@ class GOG(storebase.StoreBase):
         if programs.IsToolInstalled("PythonVenvPython"):
             python_tool = programs.GetToolProgram("PythonVenvPython")
         if not python_tool:
-            system.LogError("PythonVenvPython was not found")
+            logger.log_error("PythonVenvPython was not found")
             return False
 
         # Get script
@@ -183,7 +184,7 @@ class GOG(storebase.StoreBase):
             login_script = programs.GetToolPathConfigValue("HeroicGogDL", "login_script")
             auth_json = programs.GetToolPathConfigValue("HeroicGogDL", "auth_json")
         if not login_script and not auth_json:
-            system.LogError("HeroicGogDL was not found")
+            logger.log_error("HeroicGogDL was not found")
             return False
 
         # Get login command
@@ -246,7 +247,7 @@ class GOG(storebase.StoreBase):
 
         # Check identifier
         if not self.IsValidPageIdentifier(identifier):
-            system.LogWarning("Page identifier '%s' was not valid" % identifier)
+            logger.log_warning("Page identifier '%s' was not valid" % identifier)
             return None
 
         # Return latest url
@@ -275,7 +276,7 @@ class GOG(storebase.StoreBase):
             if cache_age_hours < 24:
                 use_cache = True
                 if verbose:
-                    system.LogInfo("Using cached GOG purchases data (%.1f hours old)" % cache_age_hours)
+                    logger.log_info("Using cached GOG purchases data (%.1f hours old)" % cache_age_hours)
 
         # Load from cache if available
         if use_cache:
@@ -286,7 +287,7 @@ class GOG(storebase.StoreBase):
                 exit_on_failure = False)
             if not gog_json:
                 if verbose:
-                    system.LogWarning("Failed to load GOG cache, will fetch fresh data")
+                    logger.log_warning("Failed to load GOG cache, will fetch fresh data")
                 use_cache = False
 
         # Fetch fresh data if not using cache
@@ -296,7 +297,7 @@ class GOG(storebase.StoreBase):
             if programs.IsToolInstalled("LGOGDownloader"):
                 gog_tool = programs.GetToolProgram("LGOGDownloader")
             if not gog_tool:
-                system.LogError("LGOGDownloader was not found")
+                logger.log_error("LGOGDownloader was not found")
                 return None
 
             # Create temporary directory
@@ -322,7 +323,7 @@ class GOG(storebase.StoreBase):
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if code != 0:
-                system.LogError("Unable to find gog purchases")
+                logger.log_error("Unable to find gog purchases")
                 return False
 
             # Get gog json
@@ -332,7 +333,7 @@ class GOG(storebase.StoreBase):
                 pretend_run = pretend_run,
                 exit_on_failure = False)
             if not gog_json:
-                system.LogError("Unable to parse gog game list")
+                logger.log_error("Unable to parse gog game list")
                 return None
 
             # Save to cache
@@ -344,9 +345,9 @@ class GOG(storebase.StoreBase):
                 pretend_run = pretend_run,
                 exit_on_failure = False)
             if success and verbose:
-                system.LogInfo("Saved GOG purchases data to cache")
+                logger.log_info("Saved GOG purchases data to cache")
             elif not success and verbose:
-                system.LogWarning("Failed to save GOG cache")
+                logger.log_warning("Failed to save GOG cache")
 
         # Parse json
         purchases = []
@@ -417,7 +418,7 @@ class GOG(storebase.StoreBase):
 
         # Check identifier
         if not self.IsValidInfoIdentifier(identifier):
-            system.LogWarning("Info identifier '%s' was not valid" % identifier)
+            logger.log_warning("Info identifier '%s' was not valid" % identifier)
             return None
 
         # Get gog url
@@ -432,7 +433,7 @@ class GOG(storebase.StoreBase):
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if not gog_json:
-            system.LogError("Unable to find gog release information from '%s'" % gog_url)
+            logger.log_error("Unable to find gog release information from '%s'" % gog_url)
             return None
 
         # Build jsondata
@@ -473,7 +474,7 @@ class GOG(storebase.StoreBase):
 
         # Check identifier
         if not self.IsValidMetadataIdentifier(identifier):
-            system.LogWarning("Metadata identifier '%s' was not valid" % identifier)
+            logger.log_warning("Metadata identifier '%s' was not valid" % identifier)
             return None
 
         # Store web driver for cleanup
@@ -587,7 +588,7 @@ class GOG(storebase.StoreBase):
 
         # Check identifier
         if not self.IsValidAssetIdentifier(identifier):
-            system.LogWarning("Asset identifier '%s' was not valid" % identifier)
+            logger.log_warning("Asset identifier '%s' was not valid" % identifier)
             return None
 
         # Latest asset url
@@ -631,7 +632,7 @@ class GOG(storebase.StoreBase):
 
         # Check identifier
         if not self.IsValidInstallIdentifier(identifier):
-            system.LogWarning("Install identifier '%s' was not valid" % identifier)
+            logger.log_warning("Install identifier '%s' was not valid" % identifier)
             return False
 
         # Get tool
@@ -639,7 +640,7 @@ class GOG(storebase.StoreBase):
         if programs.IsToolInstalled("PythonVenvPython"):
             python_tool = programs.GetToolProgram("PythonVenvPython")
         if not python_tool:
-            system.LogError("PythonVenvPython was not found")
+            logger.log_error("PythonVenvPython was not found")
             return False
 
         # Get script
@@ -648,7 +649,7 @@ class GOG(storebase.StoreBase):
             gogdl_script = programs.GetToolProgram("HeroicGogDL")
             auth_json = programs.GetToolPathConfigValue("HeroicGogDL", "auth_json")
         if not gogdl_script and not auth_json:
-            system.LogError("HeroicGogDL was not found")
+            logger.log_error("HeroicGogDL was not found")
             return False
 
         # Get install command
@@ -704,7 +705,7 @@ class GOG(storebase.StoreBase):
 
         # Check identifier
         if not self.IsValidDownloadIdentifier(identifier):
-            system.LogWarning("Download identifier '%s' was not valid" % identifier)
+            logger.log_warning("Download identifier '%s' was not valid" % identifier)
             return False
 
         # Get tool
@@ -712,7 +713,7 @@ class GOG(storebase.StoreBase):
         if programs.IsToolInstalled("LGOGDownloader"):
             gog_tool = programs.GetToolProgram("LGOGDownloader")
         if not gog_tool:
-            system.LogError("LGOGDownloader was not found")
+            logger.log_error("LGOGDownloader was not found")
             return None
 
         # Create temporary directory

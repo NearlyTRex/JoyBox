@@ -7,6 +7,7 @@ import sys
 import config
 import environment
 import system
+import logger
 import release
 import programs
 import hashing
@@ -66,7 +67,7 @@ class Yuzu(emulatorbase.EmulatorBase):
         profile_user_id = ini.GetIniValue("UserData.Switch", "profile_user_id")
         profile_account_name = ini.GetIniValue("UserData.Switch", "profile_account_name")
         if not nintendo.IsValidSwitchProfileInfo(profile_user_id, profile_account_name):
-            system.LogWarning("No Switch profile found in ini, using default")
+            logger.log_warning("No Switch profile found in ini, using default")
             profile_user_id = "F6F389D41D6BC0BDD6BD928C526AE556"
             profile_account_name = "yuzu"
 
@@ -134,7 +135,7 @@ class Yuzu(emulatorbase.EmulatorBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup Yuzu")
+                logger.log_error("Could not setup Yuzu")
                 return False
 
         # Setup linux program
@@ -148,7 +149,7 @@ class Yuzu(emulatorbase.EmulatorBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup Yuzu")
+                logger.log_error("Could not setup Yuzu")
                 return False
         return True
 
@@ -172,7 +173,7 @@ class Yuzu(emulatorbase.EmulatorBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup Yuzu config files")
+                logger.log_error("Could not setup Yuzu config files")
                 return False
 
         # Create profiles
@@ -185,7 +186,7 @@ class Yuzu(emulatorbase.EmulatorBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup Yuzu profiles")
+                logger.log_error("Could not setup Yuzu profiles")
                 return False
 
         # Verify system files
@@ -197,7 +198,7 @@ class Yuzu(emulatorbase.EmulatorBase):
                 exit_on_failure = setup_params.exit_on_failure)
             success = (expected_md5 == actual_md5)
             if not success:
-                system.LogError("Could not verify Yuzu system file %s" % filename)
+                logger.log_error("Could not verify Yuzu system file %s" % filename)
                 return False
 
         # Copy system files
@@ -210,7 +211,7 @@ class Yuzu(emulatorbase.EmulatorBase):
                     pretend_run = setup_params.pretend_run,
                     exit_on_failure = setup_params.exit_on_failure)
                 if not success:
-                    system.LogError("Could not setup Yuzu system files")
+                    logger.log_error("Could not setup Yuzu system files")
                     return False
         return True
 

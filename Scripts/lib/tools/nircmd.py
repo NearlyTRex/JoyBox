@@ -5,6 +5,7 @@ import sys
 # Local imports
 import config
 import system
+import logger
 import release
 import programs
 import toolbase
@@ -51,7 +52,7 @@ class NirCmd(toolbase.ToolBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup NirCmd")
+                logger.log_error("Could not setup NirCmd")
                 return False
         return True
 
@@ -71,6 +72,6 @@ class NirCmd(toolbase.ToolBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup NirCmd")
+                logger.log_error("Could not setup NirCmd")
                 return False
         return True

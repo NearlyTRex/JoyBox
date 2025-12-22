@@ -7,6 +7,7 @@ import sys
 import config
 import environment
 import system
+import logger
 import release
 import programs
 import hashing
@@ -97,7 +98,7 @@ class Vita3K(emulatorbase.EmulatorBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup Vita3K")
+                logger.log_error("Could not setup Vita3K")
                 return False
 
         # Download linux program
@@ -115,7 +116,7 @@ class Vita3K(emulatorbase.EmulatorBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup Vita3K")
+                logger.log_error("Could not setup Vita3K")
                 return False
         return True
 
@@ -135,7 +136,7 @@ class Vita3K(emulatorbase.EmulatorBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup Vita3K")
+                logger.log_error("Could not setup Vita3K")
                 return False
 
         # Setup linux program
@@ -148,7 +149,7 @@ class Vita3K(emulatorbase.EmulatorBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup Vita3K")
+                logger.log_error("Could not setup Vita3K")
                 return False
         return True
 
@@ -166,7 +167,7 @@ class Vita3K(emulatorbase.EmulatorBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup Vita3K config files")
+                logger.log_error("Could not setup Vita3K config files")
                 return False
 
         # Verify system files
@@ -178,7 +179,7 @@ class Vita3K(emulatorbase.EmulatorBase):
                 exit_on_failure = setup_params.exit_on_failure)
             success = (expected_md5 == actual_md5)
             if not success:
-                system.LogError("Could not verify Vita3K system file %s" % filename)
+                logger.log_error("Could not verify Vita3K system file %s" % filename)
                 return False
 
         # Extract system files
@@ -193,7 +194,7 @@ class Vita3K(emulatorbase.EmulatorBase):
                         pretend_run = setup_params.pretend_run,
                         exit_on_failure = setup_params.exit_on_failure)
                     if not success:
-                        system.LogError("Could not extract Vita3K system files")
+                        logger.log_error("Could not extract Vita3K system files")
                         return False
         return True
 

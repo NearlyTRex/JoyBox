@@ -13,6 +13,7 @@ import gameinfo
 import system
 import arguments
 import setup
+import logger
 
 # Parse arguments
 parser = arguments.ArgumentParser(description = "Analyze json files.")
@@ -29,6 +30,9 @@ def main():
 
     # Check requirements
     setup.CheckRequirements()
+
+    # Setup logging
+    logger.setup_logging()
 
     # Json lists
     json_files_no_files = []
@@ -67,16 +71,16 @@ def main():
     # List games with no files
     if args.mode == config.AnalyzeModeType.ALL or args.mode == config.AnalyzeModeType.MISSING_GAME_FILES:
         if len(json_files_no_files):
-            system.LogInfo("Games with no files:")
+            logger.log_info("Games with no files:")
             for json_file in json_files_no_files:
-                system.LogInfo(json_file)
+                logger.log_info(json_file)
 
     # List unplayable games
     if args.mode == config.AnalyzeModeType.ALL or args.mode == config.AnalyzeModeType.UNPLAYABLE_GAMES:
         if len(json_files_unplayable):
-            system.LogInfo("Games marked as unplayable:")
+            logger.log_info("Games marked as unplayable:")
             for json_file in json_files_unplayable:
-                system.LogInfo(json_file)
+                logger.log_info(json_file)
 
 # Start
 if __name__ == "__main__":

@@ -9,6 +9,7 @@ import command
 import archive
 import programs
 import system
+import logger
 import environment
 import hashing
 import jsondata
@@ -153,7 +154,7 @@ class Itchio(storebase.StoreBase):
             if cache_age_hours < 24:
                 use_cache = True
                 if verbose:
-                    system.LogInfo("Using cached itch.io purchases data (%.1f hours old)" % cache_age_hours)
+                    logger.log_info("Using cached itch.io purchases data (%.1f hours old)" % cache_age_hours)
 
         # Load from cache if available
         if use_cache:
@@ -172,7 +173,7 @@ class Itchio(storebase.StoreBase):
                 return cached_purchases
             else:
                 if verbose:
-                    system.LogWarning("Failed to load itch.io cache, will fetch fresh data")
+                    logger.log_warning("Failed to load itch.io cache, will fetch fresh data")
                 use_cache = False
 
         # Connect to web
@@ -262,9 +263,9 @@ class Itchio(storebase.StoreBase):
             pretend_run = pretend_run,
             exit_on_failure = False)
         if success and verbose:
-            system.LogInfo("Saved itch.io purchases data to cache")
+            logger.log_info("Saved itch.io purchases data to cache")
         elif not success and verbose:
-            system.LogWarning("Failed to save itch.io cache")
+            logger.log_warning("Failed to save itch.io cache")
 
         # Return purchases
         return purchases
@@ -283,7 +284,7 @@ class Itchio(storebase.StoreBase):
 
         # Check identifier
         if not self.IsValidMetadataIdentifier(identifier):
-            system.LogWarning("Metadata identifier '%s' was not valid" % identifier)
+            logger.log_warning("Metadata identifier '%s' was not valid" % identifier)
             return None
 
         # Store web driver for cleanup
@@ -418,7 +419,7 @@ class Itchio(storebase.StoreBase):
 
         # Check identifier
         if not self.IsValidAssetIdentifier(identifier):
-            system.LogWarning("Asset identifier '%s' was not valid" % identifier)
+            logger.log_warning("Asset identifier '%s' was not valid" % identifier)
             return None
 
         # Latest asset url

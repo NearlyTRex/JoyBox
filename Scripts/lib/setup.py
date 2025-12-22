@@ -6,6 +6,7 @@ import sys
 import config
 import environment
 import system
+import logger
 import programs
 import ini
 
@@ -14,23 +15,23 @@ def CheckRequirements():
 
     # Check python version
     if sys.version_info < config.minimum_python_version:
-        system.LogError("Minimum required python version is %s.%s.%s" % config.minimum_python_version)
-        system.LogError("Please upgrade your python version")
+        logger.log_error("Minimum required python version is %s.%s.%s" % config.minimum_python_version)
+        logger.log_error("Please upgrade your python version")
         system.QuitProgram()
 
     # Check operating system
     is_windows = environment.IsWindowsPlatform()
     is_linux = environment.IsLinuxPlatform()
     if is_windows == False and is_linux == False:
-        system.LogError("Only windows and linux are supported right now", quit_program = True)
+        logger.log_error("Only windows and linux are supported right now", quit_program = True)
 
     # Check symlink support
     if not environment.AreSymlinksSupported():
-        system.LogError("Symlinks are required, please enable them for your system", quit_program = True)
+        logger.log_error("Symlinks are required, please enable them for your system", quit_program = True)
 
     # Check ini file
     if not ini.IsIniPresent():
-        system.LogError("Ini file not found, please run setup first", quit_program = True)
+        logger.log_error("Ini file not found, please run setup first", quit_program = True)
 
 # Setup packages
 def SetupPackages(
@@ -51,7 +52,7 @@ def SetupPackages(
     # Clean root directory
     if clean:
         if system.DoesPathExist(root_dir):
-            system.LogInfo("Cleaning %s directory %s ..." % (package_type, root_dir))
+            logger.log_info("Cleaning %s directory %s ..." % (package_type, root_dir))
             system.RemoveDirectory(
                 src = root_dir,
                 verbose = setup_params.verbose,
@@ -70,7 +71,7 @@ def SetupPackages(
         if force:
             install_dir = programs.GetLibraryInstallDir(package_name)
             if system.DoesPathExist(install_dir):
-                system.LogInfo("Forcing rebuild of %s (removing %s) ..." % (package_name, install_dir))
+                logger.log_info("Forcing rebuild of %s (removing %s) ..." % (package_name, install_dir))
                 system.RemoveDirectory(
                     src = install_dir,
                     verbose = setup_params.verbose,
@@ -78,7 +79,7 @@ def SetupPackages(
                     exit_on_failure = setup_params.exit_on_failure)
 
         # Install package
-        system.LogInfo("Installing %s %s ..." % (package_type, package_name))
+        logger.log_info("Installing %s %s ..." % (package_type, package_name))
         success = False
         if offline:
             success = package.SetupOffline(setup_params = setup_params)
@@ -134,7 +135,7 @@ def SetupEmulators(
 def SetupAssets(verbose = False, pretend_run = False, exit_on_failure = False):
     for game_category in config.Category.members():
         for game_subcategory in config.subcategory_map[game_category]:
-            system.LogInfo("Creating asset symlinks for %s - %s ..." % (game_category, game_subcategory))
+            logger.log_info("Creating asset symlinks for %s - %s ..." % (game_category, game_subcategory))
             for asset_type in config.AssetType.members():
 
                 # Get directories

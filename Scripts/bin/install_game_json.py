@@ -13,8 +13,9 @@ import environment
 import collection
 import gameinfo
 import arguments
-import setup
 import gui
+import setup
+import logger
 
 # Parse arguments
 parser = arguments.ArgumentParser(description = "Install json files.")
@@ -37,6 +38,9 @@ def main():
 
     # Check requirements
     setup.CheckRequirements()
+
+    # Setup logging
+    logger.setup_logging()
 
     # Get input path
     input_path = parser.get_input_path()
@@ -81,7 +85,7 @@ def main():
             "Source: %s" % args.source_type
         ]
         if not system.PromptForPreview("Install game", details):
-            system.LogWarning("Operation cancelled by user")
+            logger.log_warning("Operation cancelled by user")
             return
 
     # Install game

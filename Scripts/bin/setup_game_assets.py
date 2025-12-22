@@ -10,6 +10,7 @@ sys.path.append(lib_folder)
 import arguments
 import system
 import setup
+import logger
 
 # Parse arguments
 parser = arguments.ArgumentParser(description = "Setup assets.")
@@ -21,6 +22,9 @@ def main():
 
     # Check requirements
     setup.CheckRequirements()
+
+    # Setup logging
+    logger.setup_logging()
 
     # Setup assets
     setup.SetupAssets(

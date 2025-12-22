@@ -6,6 +6,7 @@ import sys
 import config
 import command
 import system
+import logger
 import environment
 import programs
 import sandbox
@@ -36,7 +37,7 @@ def CreateISO(
     if programs.IsToolInstalled("XorrISO"):
         iso_tool = programs.GetToolProgram("XorrISO")
     if not iso_tool:
-        system.LogError("XorrISO was not found")
+        logger.log_error("XorrISO was not found")
         return False
 
     # Get create command
@@ -104,7 +105,7 @@ def ExtractISO(
     if programs.IsToolInstalled("XorrISO"):
         iso_tool = programs.GetToolProgram("XorrISO")
     if not iso_tool:
-        system.LogError("XorrISO was not found")
+        logger.log_error("XorrISO was not found")
         return False
 
     # Get extract command
@@ -235,7 +236,7 @@ def MountISO(
         if programs.IsToolInstalled("FuseISO"):
             iso_tool = programs.GetToolProgram("FuseISO")
         if not iso_tool:
-            system.LogError("FuseISO was not found")
+            logger.log_error("FuseISO was not found")
             return False
 
         # Get mount command
@@ -296,7 +297,7 @@ def UnmountISO(
         if programs.IsToolInstalled("FUserMount"):
             iso_tool = programs.GetToolProgram("FUserMount")
         if not iso_tool:
-            system.LogError("FUserMount was not found")
+            logger.log_error("FUserMount was not found")
             return False
 
         # Get unmount command

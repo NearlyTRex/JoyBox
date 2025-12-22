@@ -5,6 +5,7 @@ import sys
 # Local imports
 import config
 import system
+import logger
 import gameinfo
 import google
 import stores
@@ -152,19 +153,19 @@ def FindMetadataAsset(
         exit_on_failure = exit_on_failure)
 
     # Show possible assets to the user
-    system.LogInfo("")
-    system.LogInfo("=" * 80)
-    system.LogInfo("MANUAL ASSET SELECTION REQUIRED")
-    system.LogInfo("Asset Type: %s" % asset_type.val())
-    system.LogInfo("Game/Identifier: %s" % game_name)
-    system.LogInfo("Platform: %s" % game_platform)
-    system.LogInfo("-" * 80)
-    system.LogInfo("Found %d possible %s asset(s):" % (len(search_results), asset_type.val()))
+    logger.log_info("")
+    logger.log_info("=" * 80)
+    logger.log_info("MANUAL ASSET SELECTION REQUIRED")
+    logger.log_info("Asset Type: %s" % asset_type.val())
+    logger.log_info("Game/Identifier: %s" % game_name)
+    logger.log_info("Platform: %s" % game_platform)
+    logger.log_info("-" * 80)
+    logger.log_info("Found %d possible %s asset(s):" % (len(search_results), asset_type.val()))
     for index, search_result in enumerate(search_results):
-        system.LogInfo("  [%d] %s" % (index, search_result.get_description()))
-        system.LogInfo("      URL: %s" % search_result.get_url())
-    system.LogInfo("=" * 80)
-    system.LogInfo("")
+        logger.log_info("  [%d] %s" % (index, search_result.get_description()))
+        logger.log_info("      URL: %s" % search_result.get_url())
+    logger.log_info("=" * 80)
+    logger.log_info("")
 
     # Ask them which one they want to use
     value = system.PromptForValue("Enter the index number (0-%d) of the asset to use, or paste a custom URL (or press Enter to skip)" % (len(search_results) - 1))

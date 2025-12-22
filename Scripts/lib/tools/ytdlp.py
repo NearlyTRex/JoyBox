@@ -5,6 +5,7 @@ import sys
 # Local imports
 import config
 import system
+import logger
 import environment
 import release
 import programs
@@ -57,7 +58,7 @@ class YtDlp(toolbase.ToolBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup YtDlp")
+                logger.log_error("Could not setup YtDlp")
                 return False
 
         # Download linux program
@@ -84,7 +85,7 @@ class YtDlp(toolbase.ToolBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup YtDlp")
+                logger.log_error("Could not setup YtDlp")
                 return False
         return True
 
@@ -104,7 +105,7 @@ class YtDlp(toolbase.ToolBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup YtDlp")
+                logger.log_error("Could not setup YtDlp")
                 return False
 
         # Setup linux program
@@ -117,6 +118,6 @@ class YtDlp(toolbase.ToolBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup YtDlp")
+                logger.log_error("Could not setup YtDlp")
                 return False
         return True

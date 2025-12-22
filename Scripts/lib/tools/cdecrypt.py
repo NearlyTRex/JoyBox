@@ -5,6 +5,7 @@ import sys
 # Local imports
 import config
 import system
+import logger
 import release
 import programs
 import toolbase
@@ -55,7 +56,7 @@ class CDecrypt(toolbase.ToolBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup CDecrypt")
+                logger.log_error("Could not setup CDecrypt")
                 return False
 
         # Build linux program
@@ -82,7 +83,7 @@ class CDecrypt(toolbase.ToolBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup CDecrypt")
+                logger.log_error("Could not setup CDecrypt")
                 return False
         return True
 
@@ -102,7 +103,7 @@ class CDecrypt(toolbase.ToolBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup CDecrypt")
+                logger.log_error("Could not setup CDecrypt")
                 return False
 
         # Setup linux program
@@ -115,6 +116,6 @@ class CDecrypt(toolbase.ToolBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup CDecrypt")
+                logger.log_error("Could not setup CDecrypt")
                 return False
         return True

@@ -11,6 +11,7 @@ import system
 import playstation
 import arguments
 import setup
+import logger
 
 # Parse arguments
 parser = arguments.ArgumentParser(description = "Sony PlayStation 3 rom tool.")
@@ -25,6 +26,9 @@ def main():
     # Check requirements
     setup.CheckRequirements()
 
+    # Setup logging
+    logger.setup_logging()
+
     # Get input path
     input_path = parser.get_input_path()
 
@@ -35,7 +39,7 @@ def main():
             "Action: Verify CHD"
         ]
         if not system.PromptForPreview("PS3 ROM tool", details):
-            system.LogWarning("Operation cancelled by user")
+            logger.log_warning("Operation cancelled by user")
             return
 
     # Find rom files

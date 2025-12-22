@@ -6,6 +6,7 @@ import base64
 # Local imports
 import config
 import system
+import logger
 
 # Get image format
 def GetImageFormat(image_file):
@@ -50,7 +51,7 @@ def ConvertImage(
     exit_on_failure = False):
     try:
         if verbose:
-            system.LogInfo("Converting image %s to %s" % (image_src, image_dest))
+            logger.log_info("Converting image %s to %s" % (image_src, image_dest))
         if not pretend_run:
             from PIL import Image
             src_image = Image.open(image_src)
@@ -69,8 +70,8 @@ def ConvertImage(
         return False
     except Exception as e:
         if exit_on_failure:
-            system.LogError("Unable to convert %s to %s" % (image_src, image_dest))
-            system.LogError(e)
+            logger.log_error("Unable to convert %s to %s" % (image_src, image_dest))
+            logger.log_error(e)
             system.QuitProgram()
         return False
 

@@ -13,6 +13,7 @@ import environment
 import collection
 import arguments
 import setup
+import logger
 
 # Parse arguments
 parser = arguments.ArgumentParser(description = "Publish metadata files.")
@@ -25,21 +26,24 @@ def main():
     # Check requirements
     setup.CheckRequirements()
 
+    # Setup logging
+    logger.setup_logging()
+
     # Show preview
     if not args.no_preview:
         publish_dir = environment.GetGamePublishedMetadataRootDir()
         if not system.PromptForPreview("Publish game metadata files to HTML", [publish_dir]):
-            system.LogWarning("Operation cancelled by user")
+            logger.log_warning("Operation cancelled by user")
             return
 
     # Publish game metadata files
-    system.LogInfo("Publishing game metadata files ...")
+    logger.log_info("Publishing game metadata files ...")
     success = collection.PublishAllGameMetadataEntries(
         verbose = args.verbose,
         pretend_run = args.pretend_run,
         exit_on_failure = args.exit_on_failure)
     if not success:
-        system.LogError("Publishing metadata files failed", quit_program = True)
+        logger.log_error("Publishing metadata files failed", quit_program = True)
 
 # Start
 if __name__ == "__main__":

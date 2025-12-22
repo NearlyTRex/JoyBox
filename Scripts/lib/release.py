@@ -6,6 +6,7 @@ import sys
 import config
 import command
 import system
+import logger
 import environment
 import archive
 import programs
@@ -34,7 +35,7 @@ def SetupStoredRelease(
     # Get list of potential archives
     potential_archives = system.BuildFileList(archive_dir)
     if len(potential_archives) == 0:
-        system.LogError("No available archives found in '%s'" % archive_dir)
+        logger.log_error("No available archives found in '%s'" % archive_dir)
         return False
 
     # Select archive file
@@ -49,7 +50,7 @@ def SetupStoredRelease(
     elif use_last_found:
         selected_archive = potential_archives[-1]
     if not os.path.exists(selected_archive):
-        system.LogError("No archive could be selected")
+        logger.log_error("No archive could be selected")
         return False
 
     # Setup selected archive
@@ -89,7 +90,7 @@ def SetupGeneralRelease(
         verbose = verbose,
         pretend_run = pretend_run)
     if not tmp_dir_success:
-        system.LogError("Unable to create temporary directory")
+        logger.log_error("Unable to create temporary directory")
         return False
 
     # Get archive info
@@ -110,7 +111,7 @@ def SetupGeneralRelease(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if not success:
-        system.LogError("Unable to create install directory %s" % install_dir)
+        logger.log_error("Unable to create install directory %s" % install_dir)
         return False
 
     # Set initial search dir
@@ -142,7 +143,7 @@ def SetupGeneralRelease(
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
-                system.LogError("Unable to copy app image")
+                logger.log_error("Unable to copy app image")
                 return False
 
             # Mark app images as executable
@@ -152,7 +153,7 @@ def SetupGeneralRelease(
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
-                system.LogError("Unable to mark app image as executable")
+                logger.log_error("Unable to mark app image as executable")
                 return False
 
             # Set install files
@@ -177,14 +178,14 @@ def SetupGeneralRelease(
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if not success:
-            system.LogError("Unable to extract downloaded release archive %s" % archive_file)
+            logger.log_error("Unable to extract downloaded release archive %s" % archive_file)
             return False
 
     ####################################
     # Unknown
     ####################################
     else:
-        system.LogError("Unknown release type, please specify it")
+        logger.log_error("Unknown release type, please specify it")
         return False
 
     # Further refine search dir if we are looking for a particular file
@@ -208,7 +209,7 @@ def SetupGeneralRelease(
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
-                system.LogError("Unable to copy install file %s" % install_file)
+                logger.log_error("Unable to copy install file %s" % install_file)
                 return False
     else:
         success = system.CopyContents(
@@ -218,7 +219,7 @@ def SetupGeneralRelease(
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if not success:
-            system.LogError("Unable to copy install files from %s" % search_dir)
+            logger.log_error("Unable to copy install files from %s" % search_dir)
             return False
 
     # Chmod files
@@ -235,7 +236,7 @@ def SetupGeneralRelease(
                         pretend_run = pretend_run,
                         exit_on_failure = exit_on_failure)
                     if not success:
-                        system.LogError("Unable to update permissions for %s" % filename)
+                        logger.log_error("Unable to update permissions for %s" % filename)
                         return False
 
     # Rename files
@@ -255,7 +256,7 @@ def SetupGeneralRelease(
                         pretend_run = pretend_run,
                         exit_on_failure = exit_on_failure)
                     if not success:
-                        system.LogError("Unable to rename file %s" % filename)
+                        logger.log_error("Unable to rename file %s" % filename)
                         return False
 
     # Backup files
@@ -271,7 +272,7 @@ def SetupGeneralRelease(
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if not success:
-            system.LogError("Unable to backup files")
+            logger.log_error("Unable to backup files")
             return False
 
     # Delete temporary directory
@@ -305,7 +306,7 @@ def DownloadGeneralRelease(
         verbose = verbose,
         pretend_run = pretend_run)
     if not tmp_dir_success:
-        system.LogError("Unable to create temporary directory")
+        logger.log_error("Unable to create temporary directory")
         return False
 
     # Get archive info
@@ -323,7 +324,7 @@ def DownloadGeneralRelease(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if not success:
-        system.LogError("Unable to download release from '%s'" % archive_url)
+        logger.log_error("Unable to download release from '%s'" % archive_url)
         return False
 
     # Setup release
@@ -380,7 +381,7 @@ def DownloadGithubRelease(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if not release_json_list:
-        system.LogError("Unable to find github release information from '%s'" % github_url)
+        logger.log_error("Unable to find github release information from '%s'" % github_url)
         return False
     if not isinstance(release_json_list, list):
         release_json_list = [release_json_list]
@@ -407,7 +408,7 @@ def DownloadGithubRelease(
 
     # Did not find any matching release
     if not archive_url:
-        system.LogError("Unable to find any release from '%s' matching start='%s' and end='%s'" % (github_url, starts_with, ends_with))
+        logger.log_error("Unable to find any release from '%s' matching start='%s' and end='%s'" % (github_url, starts_with, ends_with))
         return False
 
     # Download release
@@ -457,7 +458,7 @@ def DownloadWebpageRelease(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if not archive_url:
-        system.LogError("Unable to find any release from '%s' matching start='%s' and end='%s'" % (webpage_url, starts_with, ends_with))
+        logger.log_error("Unable to find any release from '%s' matching start='%s' and end='%s'" % (webpage_url, starts_with, ends_with))
         return False
 
     # Download release
@@ -502,7 +503,7 @@ def BuildFromSource(
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if not release_url:
-            system.LogError("No release url could be found from webpage %s" % webpage_url)
+            logger.log_error("No release url could be found from webpage %s" % webpage_url)
             return None
 
     # Create temporary directory
@@ -510,7 +511,7 @@ def BuildFromSource(
         verbose = verbose,
         pretend_run = pretend_run)
     if not tmp_dir_success:
-        system.LogError("Unable to create temporary directory")
+        logger.log_error("Unable to create temporary directory")
         return None
 
     # Get directories
@@ -545,7 +546,7 @@ def BuildFromSource(
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if not success:
-            system.LogError("Unable to download release from '%s'" % release_url)
+            logger.log_error("Unable to download release from '%s'" % release_url)
             return None
     else:
 
@@ -563,7 +564,7 @@ def BuildFromSource(
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if not success:
-            system.LogError("Unable to download release from '%s'" % release_url)
+            logger.log_error("Unable to download release from '%s'" % release_url)
             return None
 
         # Extract source archive
@@ -574,7 +575,7 @@ def BuildFromSource(
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if not success:
-            system.LogError("Unable to extract source archive")
+            logger.log_error("Unable to extract source archive")
             return None
 
     # Get build directory
@@ -607,7 +608,7 @@ def BuildFromSource(
                     pretend_run = pretend_run,
                     exit_on_failure = exit_on_failure)
                 if not success:
-                    system.LogError("Unable to write patch file '%s'" % patch_temp_file)
+                    logger.log_error("Unable to write patch file '%s'" % patch_temp_file)
                     return None
 
                 # Apply patch with git apply
@@ -623,7 +624,7 @@ def BuildFromSource(
                     pretend_run = pretend_run,
                     exit_on_failure = exit_on_failure)
                 if code != 0:
-                    system.LogError("Unable to apply patch '%s'" % patch_file)
+                    logger.log_error("Unable to apply patch '%s'" % patch_file)
                     return None
 
     # Make build folder
@@ -633,7 +634,7 @@ def BuildFromSource(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if not success:
-        system.LogError("Unable to make build folder '%s'" % source_build_dir)
+        logger.log_error("Unable to make build folder '%s'" % source_build_dir)
         return None
 
     # Build release
@@ -646,7 +647,7 @@ def BuildFromSource(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if code != 0:
-        system.LogError("Unable to build release")
+        logger.log_error("Unable to build release")
         return None
 
     # Return build info
@@ -716,7 +717,7 @@ def BuildBinaryFromSource(
         if path.endswith(output_file):
             built_file = path
     if not built_file:
-        system.LogError("No built files could be found")
+        logger.log_error("No built files could be found")
         return False
 
     # Get final file for backup
@@ -740,7 +741,7 @@ def BuildBinaryFromSource(
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if not success:
-            system.LogError("Unable to extract built archive")
+            logger.log_error("Unable to extract built archive")
             return False
 
         # Find directory containing search_file
@@ -758,7 +759,7 @@ def BuildBinaryFromSource(
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if not success:
-            system.LogError("Unable to copy release files")
+            logger.log_error("Unable to copy release files")
             return False
     else:
         # Copy release file directly
@@ -769,7 +770,7 @@ def BuildBinaryFromSource(
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if not success:
-            system.LogError("Unable to copy release files")
+            logger.log_error("Unable to copy release files")
             return False
 
     # Copy other objects
@@ -783,7 +784,7 @@ def BuildBinaryFromSource(
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if not success:
-            system.LogError("Unable to copy other files")
+            logger.log_error("Unable to copy other files")
             return False
 
     # Backup files
@@ -799,7 +800,7 @@ def BuildBinaryFromSource(
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if not success:
-            system.LogError("Unable to backup files")
+            logger.log_error("Unable to backup files")
             return False
 
     # Delete temporary directory
@@ -879,7 +880,7 @@ def BuildAppImageFromSource(
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if not success:
-            system.LogError("Unable to copy AppImage file '%s' to '%s'" % (src_obj, dest_obj))
+            logger.log_error("Unable to copy AppImage file '%s' to '%s'" % (src_obj, dest_obj))
             return False
 
     # Symlink AppImage objects
@@ -894,7 +895,7 @@ def BuildAppImageFromSource(
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if not success:
-            system.LogError("Unable to symlink AppImage object '%s' to '%s'" % (src_obj, dest_obj))
+            logger.log_error("Unable to symlink AppImage object '%s' to '%s'" % (src_obj, dest_obj))
             return False
 
     # Build AppImage
@@ -906,7 +907,7 @@ def BuildAppImageFromSource(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if code != 0:
-        system.LogError("Unable to create AppImage from built release")
+        logger.log_error("Unable to create AppImage from built release")
         return False
 
     # Find built release file
@@ -915,7 +916,7 @@ def BuildAppImageFromSource(
         if path.endswith(output_file):
             built_file = path
     if not built_file:
-        system.LogError("No built files could be found")
+        logger.log_error("No built files could be found")
         return False
 
     # Get final file
@@ -929,7 +930,7 @@ def BuildAppImageFromSource(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if not success:
-        system.LogError("Unable to copy release files")
+        logger.log_error("Unable to copy release files")
         return False
 
     # Copy other objects
@@ -943,7 +944,7 @@ def BuildAppImageFromSource(
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if not success:
-            system.LogError("Unable to copy other files")
+            logger.log_error("Unable to copy other files")
             return False
 
     # Backup files
@@ -959,7 +960,7 @@ def BuildAppImageFromSource(
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if not success:
-            system.LogError("Unable to backup files")
+            logger.log_error("Unable to backup files")
             return False
 
     # Delete temporary directory

@@ -6,6 +6,7 @@ import sys
 import config
 import environment
 import system
+import logger
 import release
 import programs
 import hashing
@@ -127,7 +128,7 @@ class BasiliskII(emulatorbase.EmulatorBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup BasiliskII")
+                logger.log_error("Could not setup BasiliskII")
                 return False
 
         # Download linux program
@@ -145,7 +146,7 @@ class BasiliskII(emulatorbase.EmulatorBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup BasiliskII")
+                logger.log_error("Could not setup BasiliskII")
                 return False
         return True
 
@@ -165,7 +166,7 @@ class BasiliskII(emulatorbase.EmulatorBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup BasiliskII")
+                logger.log_error("Could not setup BasiliskII")
                 return False
 
         # Setup linux program
@@ -178,7 +179,7 @@ class BasiliskII(emulatorbase.EmulatorBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup BasiliskII")
+                logger.log_error("Could not setup BasiliskII")
                 return False
         return True
 
@@ -196,7 +197,7 @@ class BasiliskII(emulatorbase.EmulatorBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup BasiliskII config files")
+                logger.log_error("Could not setup BasiliskII config files")
                 return False
 
         # Verify system files
@@ -208,7 +209,7 @@ class BasiliskII(emulatorbase.EmulatorBase):
                 exit_on_failure = setup_params.exit_on_failure)
             success = (expected_md5 == actual_md5)
             if not success:
-                system.LogError("Could not verify BasiliskII system file %s" % filename)
+                logger.log_error("Could not verify BasiliskII system file %s" % filename)
                 return False
 
         # Copy system files
@@ -221,7 +222,7 @@ class BasiliskII(emulatorbase.EmulatorBase):
                     pretend_run = setup_params.pretend_run,
                     exit_on_failure = setup_params.exit_on_failure)
                 if not success:
-                    system.LogError("Could not setup BasiliskII system files")
+                    logger.log_error("Could not setup BasiliskII system files")
                     return False
         return True
 

@@ -5,6 +5,7 @@ import sys
 # Local imports
 import config
 import system
+import logger
 import release
 import programs
 import toolbase
@@ -55,7 +56,7 @@ class NDecrypt(toolbase.ToolBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup NDecrypt")
+                logger.log_error("Could not setup NDecrypt")
                 return False
 
         # Download linux program
@@ -80,7 +81,7 @@ class NDecrypt(toolbase.ToolBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup NDecrypt")
+                logger.log_error("Could not setup NDecrypt")
                 return False
         return True
 
@@ -100,7 +101,7 @@ class NDecrypt(toolbase.ToolBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup NDecrypt")
+                logger.log_error("Could not setup NDecrypt")
                 return False
 
         # Setup linux program
@@ -113,6 +114,6 @@ class NDecrypt(toolbase.ToolBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup NDecrypt")
+                logger.log_error("Could not setup NDecrypt")
                 return False
         return True

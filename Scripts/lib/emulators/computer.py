@@ -7,6 +7,7 @@ import sys
 import config
 import system
 import environment
+import logger
 import command
 import programs
 import release
@@ -178,7 +179,7 @@ class Computer(emulatorbase.EmulatorBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup DosBoxX")
+                logger.log_error("Could not setup DosBoxX")
                 return False
         if programs.ShouldProgramBeInstalled("ScummVM", "windows"):
             success = release.DownloadWebpageRelease(
@@ -198,7 +199,7 @@ class Computer(emulatorbase.EmulatorBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup ScummVM")
+                logger.log_error("Could not setup ScummVM")
                 return False
 
         # Build linux programs
@@ -246,7 +247,7 @@ class Computer(emulatorbase.EmulatorBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup DosBoxX")
+                logger.log_error("Could not setup DosBoxX")
                 return False
         if programs.ShouldProgramBeInstalled("ScummVM", "linux"):
             success = release.BuildAppImageFromSource(
@@ -290,7 +291,7 @@ class Computer(emulatorbase.EmulatorBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup ScummVM")
+                logger.log_error("Could not setup ScummVM")
                 return False
         return True
 
@@ -310,7 +311,7 @@ class Computer(emulatorbase.EmulatorBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup DosBoxX")
+                logger.log_error("Could not setup DosBoxX")
                 return False
         if programs.ShouldProgramBeInstalled("ScummVM", "windows"):
             success = release.SetupStoredRelease(
@@ -322,7 +323,7 @@ class Computer(emulatorbase.EmulatorBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup ScummVM")
+                logger.log_error("Could not setup ScummVM")
                 return False
 
         # Setup linux program
@@ -335,7 +336,7 @@ class Computer(emulatorbase.EmulatorBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup DosBoxX")
+                logger.log_error("Could not setup DosBoxX")
                 return False
         if programs.ShouldProgramBeInstalled("ScummVM", "linux"):
             success = release.SetupStoredRelease(
@@ -346,7 +347,7 @@ class Computer(emulatorbase.EmulatorBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup ScummVM")
+                logger.log_error("Could not setup ScummVM")
                 return False
         return True
 
@@ -364,7 +365,7 @@ class Computer(emulatorbase.EmulatorBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup DosBoxX/ScummVM config files")
+                logger.log_error("Could not setup DosBoxX/ScummVM config files")
                 return False
         return True
 

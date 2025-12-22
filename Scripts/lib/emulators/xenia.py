@@ -7,6 +7,7 @@ import sys
 import config
 import environment
 import system
+import logger
 import release
 import programs
 import gui
@@ -84,7 +85,7 @@ class Xenia(emulatorbase.EmulatorBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup Xenia")
+                logger.log_error("Could not setup Xenia")
                 return False
         return True
 
@@ -104,7 +105,7 @@ class Xenia(emulatorbase.EmulatorBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup Xenia")
+                logger.log_error("Could not setup Xenia")
                 return False
         return True
 
@@ -122,7 +123,7 @@ class Xenia(emulatorbase.EmulatorBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup Xenia config files")
+                logger.log_error("Could not setup Xenia config files")
                 return False
         return True
 

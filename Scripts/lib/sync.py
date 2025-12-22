@@ -10,6 +10,7 @@ import config
 import command
 import programs
 import system
+import logger
 import environment
 
 # Check if tool is installed
@@ -86,7 +87,7 @@ def GetConfiguredRemotes(
     if programs.IsToolInstalled("RClone"):
         rclone_tool = programs.GetToolProgram("RClone")
     if not rclone_tool:
-        system.LogError("RClone was not found")
+        logger.log_error("RClone was not found")
         return []
 
     # Get list command
@@ -117,11 +118,11 @@ def IsRemoteConfigured(
     exit_on_failure = False):
 
     # Check if the remote name exists in the list of remotes
-    system.LogInfo("Checking if remote '%s' exists..." % remote_name)
+    logger.log_info("Checking if remote '%s' exists..." % remote_name)
     configured_remotes = GetConfiguredRemotes()
-    system.LogInfo("Found %d configured remotes" % len(configured_remotes))
+    logger.log_info("Found %d configured remotes" % len(configured_remotes))
     if not any(remote.startswith(remote_name) for remote in configured_remotes):
-        system.LogInfo("Remote '%s' not in configured remotes" % remote_name)
+        logger.log_info("Remote '%s' not in configured remotes" % remote_name)
         return False
 
     # Get tool
@@ -129,7 +130,7 @@ def IsRemoteConfigured(
     if programs.IsToolInstalled("RClone"):
         rclone_tool = programs.GetToolProgram("RClone")
     if not rclone_tool:
-        system.LogError("RClone was not found")
+        logger.log_error("RClone was not found")
         return False
 
     # Get show command
@@ -151,13 +152,13 @@ def IsRemoteConfigured(
     if isinstance(show_output, bytes):
         show_text = show_output.decode()
     if "couldn't find type of fs for" in show_text:
-        system.LogInfo("Remote type not found")
+        logger.log_info("Remote type not found")
         return False
 
     # Check if the remote type matches
     match = re.search(r"type\s*=\s*(\S+)", show_text)
     result = match and (match.group(1) == GetRemoteRawType(remote_type))
-    system.LogInfo("Remote type match result: %s" % result)
+    logger.log_info("Remote type match result: %s" % result)
     return result
 
 # Setup autoconnect remote
@@ -173,7 +174,7 @@ def SetupAutoconnectRemote(
     if programs.IsToolInstalled("RClone"):
         rclone_tool = programs.GetToolProgram("RClone")
     if not rclone_tool:
-        system.LogError("RClone was not found")
+        logger.log_error("RClone was not found")
         return False
 
     # Get create command
@@ -228,7 +229,7 @@ def SetupManualRemote(
     if programs.IsToolInstalled("RClone"):
         rclone_tool = programs.GetToolProgram("RClone")
     if not rclone_tool:
-        system.LogError("RClone was not found")
+        logger.log_error("RClone was not found")
         return False
 
     # Get create command
@@ -266,7 +267,7 @@ def SetupEncryptedRemote(
     if programs.IsToolInstalled("RClone"):
         rclone_tool = programs.GetToolProgram("RClone")
     if not rclone_tool:
-        system.LogError("RClone was not found")
+        logger.log_error("RClone was not found")
         return False
 
     # Get create command
@@ -333,7 +334,7 @@ def GetPathMD5(
     if programs.IsToolInstalled("RClone"):
         rclone_tool = programs.GetToolProgram("RClone")
     if not rclone_tool:
-        system.LogError("RClone was not found")
+        logger.log_error("RClone was not found")
         return None
 
     # Get md5sum command
@@ -375,7 +376,7 @@ def GetPathModTime(
     if programs.IsToolInstalled("RClone"):
         rclone_tool = programs.GetToolProgram("RClone")
     if not rclone_tool:
-        system.LogError("RClone was not found")
+        logger.log_error("RClone was not found")
         return None
 
     # Get lsl command (outputs: size modtime filename)
@@ -447,7 +448,7 @@ def DoesPathExist(
     if programs.IsToolInstalled("RClone"):
         rclone_tool = programs.GetToolProgram("RClone")
     if not rclone_tool:
-        system.LogError("RClone was not found")
+        logger.log_error("RClone was not found")
         return False
 
     # Get list command
@@ -490,7 +491,7 @@ def DoesPathContainFiles(
     if programs.IsToolInstalled("RClone"):
         rclone_tool = programs.GetToolProgram("RClone")
     if not rclone_tool:
-        system.LogError("RClone was not found")
+        logger.log_error("RClone was not found")
         return False
 
     # Get list command
@@ -532,7 +533,7 @@ def DownloadFilesFromRemote(
     if programs.IsToolInstalled("RClone"):
         rclone_tool = programs.GetToolProgram("RClone")
     if not rclone_tool:
-        system.LogError("RClone was not found")
+        logger.log_error("RClone was not found")
         return False
 
     # Get copy command
@@ -585,7 +586,7 @@ def UploadFilesToRemote(
     if programs.IsToolInstalled("RClone"):
         rclone_tool = programs.GetToolProgram("RClone")
     if not rclone_tool:
-        system.LogError("RClone was not found")
+        logger.log_error("RClone was not found")
         return False
 
     # Get copy command
@@ -636,7 +637,7 @@ def MoveFilesOnRemote(
     if programs.IsToolInstalled("RClone"):
         rclone_tool = programs.GetToolProgram("RClone")
     if not rclone_tool:
-        system.LogError("RClone was not found")
+        logger.log_error("RClone was not found")
         return False
 
     # Build full remote paths
@@ -682,7 +683,7 @@ def PurgePathOnRemote(
     if programs.IsToolInstalled("RClone"):
         rclone_tool = programs.GetToolProgram("RClone")
     if not rclone_tool:
-        system.LogError("RClone was not found")
+        logger.log_error("RClone was not found")
         return False
 
     # Build full remote path
@@ -774,7 +775,7 @@ def PullFilesFromRemote(
     if programs.IsToolInstalled("RClone"):
         rclone_tool = programs.GetToolProgram("RClone")
     if not rclone_tool:
-        system.LogError("RClone was not found")
+        logger.log_error("RClone was not found")
         return False
 
     # Get sync command
@@ -824,7 +825,7 @@ def PushFilesToRemote(
     if programs.IsToolInstalled("RClone"):
         rclone_tool = programs.GetToolProgram("RClone")
     if not rclone_tool:
-        system.LogError("RClone was not found")
+        logger.log_error("RClone was not found")
         return False
 
     # Get sync command
@@ -875,7 +876,7 @@ def MergeFilesBothWays(
     if programs.IsToolInstalled("RClone"):
         rclone_tool = programs.GetToolProgram("RClone")
     if not rclone_tool:
-        system.LogError("RClone was not found")
+        logger.log_error("RClone was not found")
         return False
 
     # Get bisync command
@@ -943,7 +944,7 @@ def DiffFiles(
     if programs.IsToolInstalled("RClone"):
         rclone_tool = programs.GetToolProgram("RClone")
     if not rclone_tool:
-        system.LogError("RClone was not found")
+        logger.log_error("RClone was not found")
         return False
 
     # Get check command
@@ -1002,11 +1003,11 @@ def DiffFiles(
                     count_changed += 1
                 elif line.startswith("!"):
                     count_error += 1
-        system.LogInfo("Number of unchanged files: %d" % count_unchanged)
-        system.LogInfo("Number of changed files: %d" % count_changed)
-        system.LogInfo("Number of files only on %s%s: %d" % (GetRemoteRawType(remote_type), remote_path, count_only_dest))
-        system.LogInfo("Number of files only on %s: %d" % (local_path, count_only_src))
-        system.LogInfo("Number of error files: %d" % count_error)
+        logger.log_info("Number of unchanged files: %d" % count_unchanged)
+        logger.log_info("Number of changed files: %d" % count_changed)
+        logger.log_info("Number of files only on %s%s: %d" % (GetRemoteRawType(remote_type), remote_path, count_only_dest))
+        logger.log_info("Number of files only on %s: %d" % (local_path, count_only_src))
+        logger.log_info("Number of error files: %d" % count_error)
 
     # Sort diff files
     for diff_path in [diff_combined_path, diff_intersected_path, diff_missing_src_path, diff_missing_dest_path, diff_error_path]:
@@ -1045,7 +1046,7 @@ def DiffSyncFiles(
     if not diff_dir:
         diff_dir = system.CreateTempDirectory()
     if not system.DoesPathExist(diff_dir):
-        system.LogError("Diff directory was invalid")
+        logger.log_error("Diff directory was invalid")
         return False
 
     # Exclude hidden files/folders (starting with .) from diff operations
@@ -1072,7 +1073,7 @@ def DiffSyncFiles(
 
     # Diff files if necessary
     if generate_diffs:
-        system.LogInfo("Running diff to identify file differences...")
+        logger.log_info("Running diff to identify file differences...")
         DiffFiles(
             remote_name = remote_name,
             remote_type = remote_type,
@@ -1107,13 +1108,13 @@ def DiffSyncFiles(
             changed_files = [line.strip() for line in f.readlines() if line.strip()]
 
     # Log file change
-    system.LogInfo("Files to upload (missing on remote): %d" % len(files_to_upload))
-    system.LogInfo("Files to download (missing on local): %d" % len(files_to_download))
-    system.LogInfo("Files changed (differ on both): %d" % len(changed_files))
+    logger.log_info("Files to upload (missing on remote): %d" % len(files_to_upload))
+    logger.log_info("Files to download (missing on local): %d" % len(files_to_download))
+    logger.log_info("Files changed (differ on both): %d" % len(changed_files))
 
     # Handle changed files by comparing modification times
     if changed_files:
-        system.LogInfo("Comparing modification times for changed files...")
+        logger.log_info("Comparing modification times for changed files...")
         changed_to_upload = []
         changed_to_download = []
         for file_path in changed_files:
@@ -1133,22 +1134,22 @@ def DiffSyncFiles(
                 exit_on_failure = exit_on_failure)
             if local_mtime is None or remote_mtime is None:
                 if verbose:
-                    system.LogWarning("Could not get modtime for: %s" % file_path)
+                    logger.log_warning("Could not get modtime for: %s" % file_path)
                 continue
 
             # Add to changes lists
             if local_mtime > remote_mtime:
                 if verbose:
-                    system.LogInfo("Local is newer: %s" % file_path)
+                    logger.log_info("Local is newer: %s" % file_path)
                 changed_to_upload.append(file_path)
             elif remote_mtime > local_mtime:
                 if verbose:
-                    system.LogInfo("Remote is newer: %s" % file_path)
+                    logger.log_info("Remote is newer: %s" % file_path)
                 changed_to_download.append(file_path)
 
         # Add changed files to upload/download lists
-        system.LogInfo("Changed files to upload (local newer): %d" % len(changed_to_upload))
-        system.LogInfo("Changed files to download (remote newer): %d" % len(changed_to_download))
+        logger.log_info("Changed files to upload (local newer): %d" % len(changed_to_upload))
+        logger.log_info("Changed files to download (remote newer): %d" % len(changed_to_download))
         files_to_upload.extend(changed_to_upload)
         files_to_download.extend(changed_to_download)
 
@@ -1156,7 +1157,7 @@ def DiffSyncFiles(
     if files_to_upload:
         final_upload_path = system.CreateTemporaryFile(suffix = ".txt")
         system.WriteTextFile(final_upload_path, "\n".join(files_to_upload))
-        system.LogInfo("Uploading %d files to remote..." % len(files_to_upload))
+        logger.log_info("Uploading %d files to remote..." % len(files_to_upload))
         if not UploadFilesToRemote(
             remote_name = remote_name,
             remote_type = remote_type,
@@ -1174,7 +1175,7 @@ def DiffSyncFiles(
         if recycle_missing:
             final_recycle_path = system.CreateTemporaryFile(suffix = ".txt")
             system.WriteTextFile(final_recycle_path, "\n".join(files_to_download))
-            system.LogInfo("Recycling %d files on remote (moving to %s)..." % (len(files_to_download), recycle_folder))
+            logger.log_info("Recycling %d files on remote (moving to %s)..." % (len(files_to_download), recycle_folder))
             if not RecycleFilesOnRemote(
                 remote_name = remote_name,
                 remote_type = remote_type,
@@ -1188,7 +1189,7 @@ def DiffSyncFiles(
         else:
             final_download_path = system.CreateTemporaryFile(suffix = ".txt")
             system.WriteTextFile(final_download_path, "\n".join(files_to_download))
-            system.LogInfo("Downloading %d files from remote..." % len(files_to_download))
+            logger.log_info("Downloading %d files from remote..." % len(files_to_download))
             if not DownloadFilesFromRemote(
                 remote_name = remote_name,
                 remote_type = remote_type,
@@ -1202,7 +1203,7 @@ def DiffSyncFiles(
                 return False
 
     # Done
-    system.LogInfo("DiffSync complete!")
+    logger.log_info("DiffSync complete!")
     return True
 
 # List files
@@ -1221,7 +1222,7 @@ def ListFiles(
     if programs.IsToolInstalled("RClone"):
         rclone_tool = programs.GetToolProgram("RClone")
     if not rclone_tool:
-        system.LogError("RClone was not found")
+        logger.log_error("RClone was not found")
         return False
 
     # Get list command
@@ -1274,7 +1275,7 @@ def MountFiles(
             verbose = verbose,
             exit_on_failure = exit_on_failure)
         if not system.DoesPathExist(mount_path) or not system.IsDirectoryEmpty(mount_path):
-            system.LogError("Mount point %s needs to exist and be empty" % mount_path)
+            logger.log_error("Mount point %s needs to exist and be empty" % mount_path)
             return False
 
     # Get tool
@@ -1282,7 +1283,7 @@ def MountFiles(
     if programs.IsToolInstalled("RClone"):
         rclone_tool = programs.GetToolProgram("RClone")
     if not rclone_tool:
-        system.LogError("RClone was not found")
+        logger.log_error("RClone was not found")
         return False
 
     # Get mount command

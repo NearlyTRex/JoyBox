@@ -14,6 +14,7 @@ import sync
 import lockerinfo
 import arguments
 import setup
+import logger
 
 # Parse arguments
 parser = arguments.ArgumentParser(description = "Sync tool.")
@@ -47,10 +48,13 @@ def main():
     # Check requirements
     setup.CheckRequirements()
 
+    # Setup logging
+    logger.setup_logging()
+
     # Get locker info
     locker_info = lockerinfo.LockerInfo(args.locker_type)
     if not locker_info:
-        system.LogError("Invalid locker", quit_program = True)
+        logger.log_error("Invalid locker", quit_program = True)
 
     # Sync options
     remote_type = locker_info.get_remote_type()
@@ -72,7 +76,7 @@ def main():
         if mount_path:
             details.append("Mount: %s" % mount_path)
         if not system.PromptForPreview("Sync %s (%s)" % (args.action, args.locker_type), details):
-            system.LogWarning("Operation cancelled by user")
+            logger.log_warning("Operation cancelled by user")
             return
 
     # Init sync

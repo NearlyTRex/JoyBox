@@ -14,6 +14,7 @@ import collection
 import gameinfo
 import arguments
 import setup
+import logger
 
 # Parse arguments
 parser = arguments.ArgumentParser(description = "Download metadata assets.")
@@ -45,6 +46,9 @@ def main():
     # Check requirements
     setup.CheckRequirements()
 
+    # Setup logging
+    logger.setup_logging()
+
     # Collect games to process
     games_to_process = []
     for game_info in gameinfo.IterateSelectedGameInfos(
@@ -60,7 +64,7 @@ def main():
         details = [environment.GetLockerGamingAssetsRootDir()]
         asset_desc = args.asset_type if args.asset_type else "all types"
         if not system.PromptForPreview("Download metadata assets (%s)" % asset_desc, details):
-            system.LogWarning("Operation cancelled by user")
+            logger.log_warning("Operation cancelled by user")
             return
 
     # Download metadata assets
@@ -74,7 +78,7 @@ def main():
             pretend_run = args.pretend_run,
             exit_on_failure = args.exit_on_failure)
         if not success:
-            system.LogError(
+            logger.log_error(
                 message = "Download of metadata assets failed!",
                 game_supercategory = game_info.get_supercategory(),
                 game_category = game_info.get_category(),

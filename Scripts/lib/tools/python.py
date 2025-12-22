@@ -5,6 +5,7 @@ import sys
 # Local imports
 import config
 import system
+import logger
 import environment
 import programs
 import toolbase
@@ -89,7 +90,7 @@ class Python(toolbase.ToolBase):
                         pretend_run = setup_params.pretend_run,
                         exit_on_failure = setup_params.exit_on_failure)
                     if not success:
-                        system.LogError("Could not setup Python wrapper scripts")
+                        logger.log_error("Could not setup Python wrapper scripts")
                         return False
 
                 # Create unix wrapper script
@@ -101,7 +102,7 @@ class Python(toolbase.ToolBase):
                         pretend_run = setup_params.pretend_run,
                         exit_on_failure = setup_params.exit_on_failure)
                     if not success:
-                        system.LogError("Could not setup Python wrapper scripts")
+                        logger.log_error("Could not setup Python wrapper scripts")
                         return False
                     success = system.MarkAsExecutable(
                         src = script_path_unix,
@@ -109,6 +110,6 @@ class Python(toolbase.ToolBase):
                         pretend_run = setup_params.pretend_run,
                         exit_on_failure = setup_params.exit_on_failure)
                     if not success:
-                        system.LogError("Could not setup Python wrapper scripts")
+                        logger.log_error("Could not setup Python wrapper scripts")
                         return False
         return True

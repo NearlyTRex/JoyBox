@@ -5,6 +5,7 @@ import sys
 # Local imports
 import config
 import system
+import logger
 import environment
 import release
 import programs
@@ -58,7 +59,7 @@ class Sunshine(toolbase.ToolBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup Sunshine")
+                logger.log_error("Could not setup Sunshine")
                 return False
 
         # Download linux program
@@ -76,7 +77,7 @@ class Sunshine(toolbase.ToolBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup Sunshine")
+                logger.log_error("Could not setup Sunshine")
                 return False
         return True
 
@@ -96,7 +97,7 @@ class Sunshine(toolbase.ToolBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup Sunshine")
+                logger.log_error("Could not setup Sunshine")
                 return False
 
         # Setup linux program
@@ -109,7 +110,7 @@ class Sunshine(toolbase.ToolBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup Sunshine")
+                logger.log_error("Could not setup Sunshine")
                 return False
         return True
 
@@ -127,6 +128,6 @@ class Sunshine(toolbase.ToolBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup Sunshine config files")
+                logger.log_error("Could not setup Sunshine config files")
                 return False
         return True

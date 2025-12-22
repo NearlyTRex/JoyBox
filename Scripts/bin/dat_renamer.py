@@ -13,6 +13,7 @@ import environment
 import dat
 import arguments
 import setup
+import logger
 
 # Parse arguments
 parser = arguments.ArgumentParser(description = "Dat renamer.")
@@ -28,6 +29,9 @@ def main():
 
     # Check requirements
     setup.CheckRequirements()
+
+    # Setup logging
+    logger.setup_logging()
 
     # Get input path
     input_path = parser.get_input_path()
@@ -50,7 +54,7 @@ def main():
         if dat_cachefile:
             details.append("DAT cachefile: %s" % dat_cachefile)
         if not system.PromptForPreview("Rename files using DAT", details):
-            system.LogWarning("Operation cancelled by user")
+            logger.log_warning("Operation cancelled by user")
             return
 
     # Load game dat(s)

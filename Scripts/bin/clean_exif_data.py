@@ -13,6 +13,7 @@ import programs
 import asset
 import arguments
 import setup
+import logger
 
 # Parse arguments
 parser = arguments.ArgumentParser(description = "Clean exif data.")
@@ -25,6 +26,9 @@ def main():
 
     # Check requirements
     setup.CheckRequirements()
+
+    # Setup logging
+    logger.setup_logging()
 
     # Get input path
     input_path = parser.get_input_path()

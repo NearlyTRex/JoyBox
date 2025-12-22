@@ -5,6 +5,7 @@ import sys
 # Local imports
 import config
 import system
+import logger
 import release
 import programs
 import environment
@@ -106,7 +107,7 @@ class Ludusavi(toolbase.ToolBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup Ludusavi")
+                logger.log_error("Could not setup Ludusavi")
                 return False
 
         # Download linux program
@@ -131,7 +132,7 @@ class Ludusavi(toolbase.ToolBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup Ludusavi")
+                logger.log_error("Could not setup Ludusavi")
                 return False
         return True
 
@@ -151,7 +152,7 @@ class Ludusavi(toolbase.ToolBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup Ludusavi")
+                logger.log_error("Could not setup Ludusavi")
                 return False
 
         # Setup linux program
@@ -164,7 +165,7 @@ class Ludusavi(toolbase.ToolBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup Ludusavi")
+                logger.log_error("Could not setup Ludusavi")
                 return False
         return True
 
@@ -182,6 +183,6 @@ class Ludusavi(toolbase.ToolBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup Ludusavi config files")
+                logger.log_error("Could not setup Ludusavi config files")
                 return False
         return True

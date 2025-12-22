@@ -12,6 +12,7 @@ import system
 import playlist
 import arguments
 import setup
+import logger
 
 # Parse arguments
 parser = arguments.ArgumentParser(description = "Generate playlists.")
@@ -33,6 +34,9 @@ def main():
 
     # Check requirements
     setup.CheckRequirements()
+
+    # Setup logging
+    logger.setup_logging()
 
     # Get input path
     input_path = parser.get_input_path()

@@ -12,6 +12,7 @@ import programs
 import command
 import arguments
 import setup
+import logger
 
 # Parse arguments
 parser = arguments.ArgumentParser(description = "List duplicate files.")
@@ -25,6 +26,9 @@ def main():
     # Check requirements
     setup.CheckRequirements()
 
+    # Setup logging
+    logger.setup_logging()
+
     # Get input path
     input_path = parser.get_input_path()
 
@@ -33,7 +37,7 @@ def main():
     if programs.IsToolInstalled("JDupes"):
         dupes_tool = programs.GetToolProgram("JDupes")
     if not dupes_tool:
-        system.LogError("JDupes was not found", quit_program = True)
+        logger.log_error("JDupes was not found", quit_program = True)
 
     # Get list command
     list_cmd = [
@@ -51,7 +55,7 @@ def main():
         pretend_run = args.pretend_run,
         exit_on_failure = args.exit_on_failure)
     if code != 0:
-        system.LogError("List command failed with code %d" % code)
+        logger.log_error("List command failed with code %d" % code)
 
 # Start
 if __name__ == "__main__":

@@ -5,6 +5,7 @@ import sys
 # Local imports
 import config
 import system
+import logger
 import environment
 import hashing
 import lockerinfo
@@ -39,7 +40,7 @@ def BuildHashFiles(
     # Get locker info
     locker_info = lockerinfo.LockerInfo(locker_type)
     if not locker_info:
-        system.LogError("Locker %s not found" % locker_type)
+        logger.log_error("Locker %s not found" % locker_type)
         return False
 
     # Hash files

@@ -5,6 +5,7 @@ import sys
 # Local imports
 import config
 import system
+import logger
 import release
 import programs
 import toolbase
@@ -55,7 +56,7 @@ class SteamDepotDownloader(toolbase.ToolBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup SteamDepotDownloader")
+                logger.log_error("Could not setup SteamDepotDownloader")
                 return False
 
         # Download linux program
@@ -81,7 +82,7 @@ class SteamDepotDownloader(toolbase.ToolBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup SteamDepotDownloader")
+                logger.log_error("Could not setup SteamDepotDownloader")
                 return False
         return True
 
@@ -101,7 +102,7 @@ class SteamDepotDownloader(toolbase.ToolBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup SteamDepotDownloader")
+                logger.log_error("Could not setup SteamDepotDownloader")
                 return False
 
         # Setup linux program
@@ -114,6 +115,6 @@ class SteamDepotDownloader(toolbase.ToolBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup SteamDepotDownloader")
+                logger.log_error("Could not setup SteamDepotDownloader")
                 return False
         return True

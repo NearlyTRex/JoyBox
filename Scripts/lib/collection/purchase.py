@@ -5,6 +5,7 @@ import sys
 # Local imports
 import config
 import system
+import logger
 import environment
 import gameinfo
 import stores
@@ -74,7 +75,7 @@ def ImportGameStorePurchases(
         return True
 
     # Get all purchases
-    system.LogInfo("Retrieving purchases for %s" % store_obj.GetType())
+    logger.log_info("Retrieving purchases for %s" % store_obj.GetType())
     purchases = store_obj.GetLatestPurchases(
         verbose = verbose,
         pretend_run = pretend_run,
@@ -83,7 +84,7 @@ def ImportGameStorePurchases(
         return True
 
     # Get all ignores
-    system.LogInfo("Fetching ignore entries for %s" % store_obj.GetType())
+    logger.log_info("Fetching ignore entries for %s" % store_obj.GetType())
     ignores = GetGameJsonIgnoreEntries(
         game_supercategory = store_obj.GetSupercategory(),
         game_category = store_obj.GetCategory(),
@@ -93,7 +94,7 @@ def ImportGameStorePurchases(
         exit_on_failure = exit_on_failure)
 
     # Import each purchase
-    system.LogInfo("Starting to import purchases for %s" % store_obj.GetType())
+    logger.log_info("Starting to import purchases for %s" % store_obj.GetType())
     for purchase in purchases:
         purchase_appid = purchase.get_value(config.json_key_store_appid)
         purchase_appname = purchase.get_value(config.json_key_store_appname)
@@ -126,15 +127,15 @@ def ImportGameStorePurchases(
             continue
 
         # Determine if this should be imported
-        system.LogInfo("Found new potential entry:")
+        logger.log_info("Found new potential entry:")
         if purchase_appid:
-            system.LogInfo(" - Appid:\t" + purchase_appid)
+            logger.log_info(" - Appid:\t" + purchase_appid)
         if purchase_appname:
-            system.LogInfo(" - Appname:\t" + purchase_appname)
+            logger.log_info(" - Appname:\t" + purchase_appname)
         if purchase_appurl:
-            system.LogInfo(" - Appurl:\t" + purchase_appurl)
+            logger.log_info(" - Appurl:\t" + purchase_appurl)
         if purchase_name:
-            system.LogInfo(" - Name:\t" + purchase_name)
+            logger.log_info(" - Name:\t" + purchase_name)
         should_import = system.PromptForValue("Import this? (n to skip, i to ignore)", default_value = "y")
         if should_import.lower() == "n":
             continue
@@ -177,7 +178,7 @@ def ImportGameStorePurchases(
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if not success:
-            system.LogError("Unable to create json file for game '%s'" % entry_name)
+            logger.log_error("Unable to create json file for game '%s'" % entry_name)
             return False
 
         # Create metadata entry
@@ -191,7 +192,7 @@ def ImportGameStorePurchases(
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if not success:
-            system.LogError("Unable to add metadata entry for game '%s'" % entry_name)
+            logger.log_error("Unable to add metadata entry for game '%s'" % entry_name)
             return False
 
     # Should be successful
@@ -222,7 +223,7 @@ def UpdateGameStorePurchases(
         return True
 
     # Get all purchases
-    system.LogInfo("Retrieving purchases for %s" % store_obj.GetType())
+    logger.log_info("Retrieving purchases for %s" % store_obj.GetType())
     purchases = store_obj.GetLatestPurchases(
         verbose = verbose,
         pretend_run = pretend_run,
@@ -231,7 +232,7 @@ def UpdateGameStorePurchases(
         return True
 
     # Get all ignores
-    system.LogInfo("Fetching ignore entries for %s" % store_obj.GetType())
+    logger.log_info("Fetching ignore entries for %s" % store_obj.GetType())
     ignores = GetGameJsonIgnoreEntries(
         game_supercategory = store_obj.GetSupercategory(),
         game_category = store_obj.GetCategory(),
@@ -241,7 +242,7 @@ def UpdateGameStorePurchases(
         exit_on_failure = exit_on_failure)
 
     # Update each purchase
-    system.LogInfo("Starting to update purchases for %s" % store_obj.GetType())
+    logger.log_info("Starting to update purchases for %s" % store_obj.GetType())
     for purchase in purchases:
         purchase_appid = purchase.get_value(config.json_key_store_appid)
         purchase_appname = purchase.get_value(config.json_key_store_appname)
@@ -299,7 +300,7 @@ def UpdateGameStorePurchases(
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if not success:
-            system.LogError("Unable to update json file for game '%s'" % game_name)
+            logger.log_error("Unable to update json file for game '%s'" % game_name)
             return False
 
         # Update metadata entry
@@ -314,7 +315,7 @@ def UpdateGameStorePurchases(
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if not success:
-            system.LogError("Unable to update metadata entry for game '%s'" % game_name)
+            logger.log_error("Unable to update metadata entry for game '%s'" % game_name)
             return False
 
     # Should be successful
@@ -336,7 +337,7 @@ def BuildGameStorePurchases(
     exit_on_failure = False):
 
     # Log categories
-    system.LogInfo("Building store purchases [Category: '%s', Subcategory: '%s'] ..." %
+    logger.log_info("Building store purchases [Category: '%s', Subcategory: '%s'] ..." %
         (game_category, game_subcategory))
 
     # Import store purchases

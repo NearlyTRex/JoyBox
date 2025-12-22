@@ -5,6 +5,7 @@ import sys
 # Local imports
 import config
 import system
+import logger
 import release
 import programs
 import environment
@@ -62,7 +63,7 @@ class AppImageTool(toolbase.ToolBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup AppImageTool")
+                logger.log_error("Could not setup AppImageTool")
                 return False
         return True
 
@@ -81,7 +82,7 @@ class AppImageTool(toolbase.ToolBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup AppImageTool")
+                logger.log_error("Could not setup AppImageTool")
                 return False
         return True
 
@@ -99,7 +100,7 @@ class AppImageTool(toolbase.ToolBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not copy AppImageTool icons")
+                logger.log_error("Could not copy AppImageTool icons")
                 return False
 
         # Create config files
@@ -112,6 +113,6 @@ class AppImageTool(toolbase.ToolBase):
                     pretend_run = setup_params.pretend_run,
                     exit_on_failure = setup_params.exit_on_failure)
                 if not success:
-                    system.LogError("Could not create AppImageTool config files")
+                    logger.log_error("Could not create AppImageTool config files")
                     return False
         return True

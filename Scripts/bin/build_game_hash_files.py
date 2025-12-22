@@ -14,6 +14,7 @@ import collection
 import gameinfo
 import arguments
 import setup
+import logger
 
 # Parse arguments
 parser = arguments.ArgumentParser(description = "Build file hashes.")
@@ -44,6 +45,9 @@ def main():
     # Check requirements
     setup.CheckRequirements()
 
+    # Setup logging
+    logger.setup_logging()
+
     # Collect games to process
     games_to_process = []
     for game_info in gameinfo.IterateSelectedGameInfos(
@@ -65,7 +69,7 @@ def main():
     if not args.no_preview:
         details = [game_root for _, game_root in games_to_process]
         if not system.PromptForPreview("Build game hash files", details):
-            system.LogWarning("Operation cancelled by user")
+            logger.log_warning("Operation cancelled by user")
             return
 
     # Build hash files
@@ -79,7 +83,7 @@ def main():
             pretend_run = args.pretend_run,
             exit_on_failure = args.exit_on_failure)
         if not success:
-            system.LogError(
+            logger.log_error(
                 message = "Build of hash files failed!",
                 game_supercategory = game_info.get_supercategory(),
                 game_category = game_info.get_category(),

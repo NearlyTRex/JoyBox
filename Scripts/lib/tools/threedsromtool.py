@@ -5,6 +5,7 @@ import sys
 # Local imports
 import config
 import system
+import logger
 import release
 import programs
 import toolbase
@@ -55,7 +56,7 @@ class ThreeDSRomTool(toolbase.ToolBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup 3DSRomTool")
+                logger.log_error("Could not setup 3DSRomTool")
                 return False
 
         # Build linux program
@@ -84,7 +85,7 @@ class ThreeDSRomTool(toolbase.ToolBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup 3DSRomTool")
+                logger.log_error("Could not setup 3DSRomTool")
                 return False
         return True
 
@@ -104,7 +105,7 @@ class ThreeDSRomTool(toolbase.ToolBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup 3DSRomTool")
+                logger.log_error("Could not setup 3DSRomTool")
                 return False
 
         # Setup linux program
@@ -117,6 +118,6 @@ class ThreeDSRomTool(toolbase.ToolBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup 3DSRomTool")
+                logger.log_error("Could not setup 3DSRomTool")
                 return False
         return True

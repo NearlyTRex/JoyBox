@@ -6,6 +6,7 @@ import sys
 import config
 import environment
 import system
+import logger
 import release
 import programs
 import hashing
@@ -106,7 +107,7 @@ class Citra(emulatorbase.EmulatorBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup Citra")
+                logger.log_error("Could not setup Citra")
                 return False
 
         # Setup linux program
@@ -120,7 +121,7 @@ class Citra(emulatorbase.EmulatorBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup Citra")
+                logger.log_error("Could not setup Citra")
                 return False
         return True
 
@@ -144,7 +145,7 @@ class Citra(emulatorbase.EmulatorBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup Citra config files")
+                logger.log_error("Could not setup Citra config files")
                 return False
 
         # Verify system files
@@ -156,7 +157,7 @@ class Citra(emulatorbase.EmulatorBase):
                 exit_on_failure = setup_params.exit_on_failure)
             success = (expected_md5 == actual_md5)
             if not success:
-                system.LogError("Could not verify Citra system file %s" % filename)
+                logger.log_error("Could not verify Citra system file %s" % filename)
                 return False
 
         # Extract system files
@@ -171,7 +172,7 @@ class Citra(emulatorbase.EmulatorBase):
                         pretend_run = setup_params.pretend_run,
                         exit_on_failure = setup_params.exit_on_failure)
                     if not success:
-                        system.LogError("Could not extract Citra system files")
+                        logger.log_error("Could not extract Citra system files")
                         return False
         return True
 

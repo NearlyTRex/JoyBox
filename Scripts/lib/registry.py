@@ -5,6 +5,7 @@ import sys
 # Local imports
 import config
 import system
+import logger
 import environment
 import command
 import programs
@@ -23,14 +24,14 @@ def ReadRegistryFile(
     registry_text = ""
     try:
         if verbose:
-            system.LogInfo("Reading registry file '%s'" % registry_file)
+            logger.log_info("Reading registry file '%s'" % registry_file)
         if not pretend_run:
             with open(registry_file, "r", encoding="utf-16") as file:
                 registry_text = file.read()
     except Exception as e:
         if exit_on_failure:
-            system.LogError("Unable to read registry file '%s'" % registry_file)
-            system.LogError(e, quit_program = True)
+            logger.log_error("Unable to read registry file '%s'" % registry_file)
+            logger.log_error(e, quit_program = True)
         return {}
 
     # Create registry container
@@ -114,15 +115,15 @@ def WriteRegistryFile(
     # Write registry file
     try:
         if verbose:
-            system.LogInfo("Writing registry file '%s'" % registry_file)
+            logger.log_info("Writing registry file '%s'" % registry_file)
         if not pretend_run:
             with open(registry_file, "w", encoding="utf-16") as file:
                 file.write(registry_text)
         return True
     except Exception as e:
         if exit_on_failure:
-            system.LogError("Unable to write registry file '%s'" % registry_file)
-            system.LogError(e, quit_program = True)
+            logger.log_error("Unable to write registry file '%s'" % registry_file)
+            logger.log_error(e, quit_program = True)
         return False
     return False
 

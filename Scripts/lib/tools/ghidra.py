@@ -5,6 +5,7 @@ import sys
 # Local imports
 import config
 import system
+import logger
 import release
 import programs
 import environment
@@ -86,7 +87,7 @@ class Ghidra(toolbase.ToolBase):
                 patch_path = os.path.join(extra_files_dir, patch_filename)
                 patch_content = system.ReadTextFile(patch_path, exit_on_failure = setup_params.exit_on_failure)
                 if patch_content is None:
-                    system.LogError("Could not read Ghidra patch file: %s" % patch_filename)
+                    logger.log_error("Could not read Ghidra patch file: %s" % patch_filename)
                     return False
                 source_patches.append({
                     "file": patch_filename,
@@ -109,7 +110,7 @@ class Ghidra(toolbase.ToolBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup Ghidra")
+                logger.log_error("Could not setup Ghidra")
                 return False
         return True
 
@@ -128,7 +129,7 @@ class Ghidra(toolbase.ToolBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup Ghidra")
+                logger.log_error("Could not setup Ghidra")
                 return False
         return True
 
@@ -142,7 +143,7 @@ class Ghidra(toolbase.ToolBase):
             src_path = os.path.join(extra_files_dir, src_filename)
             contents = system.ReadTextFile(src_path, exit_on_failure = setup_params.exit_on_failure)
             if contents is None:
-                system.LogError("Could not read Ghidra config file: %s" % src_filename)
+                logger.log_error("Could not read Ghidra config file: %s" % src_filename)
                 return False
             success = system.TouchFile(
                 src = system.JoinPaths(environment.GetToolsRootDir(), dest_path),
@@ -151,6 +152,6 @@ class Ghidra(toolbase.ToolBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not create Ghidra config files")
+                logger.log_error("Could not create Ghidra config files")
                 return False
         return True

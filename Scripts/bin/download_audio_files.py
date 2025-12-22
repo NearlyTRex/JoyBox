@@ -12,6 +12,7 @@ import system
 import audio
 import arguments
 import setup
+import logger
 
 # Parse arguments
 parser = arguments.ArgumentParser(description = "Download audio files.")
@@ -34,6 +35,9 @@ def main():
     # Check requirements
     setup.CheckRequirements()
 
+    # Setup logging
+    logger.setup_logging()
+
     # Story
     if args.genre_type == config.AudioGenreType.STORY:
         success = audio.DownloadStoryAudioFiles(
@@ -43,7 +47,7 @@ def main():
             pretend_run = args.pretend_run,
             exit_on_failure = args.exit_on_failure)
         if not success:
-            system.LogError("Story audio download failed")
+            logger.log_error("Story audio download failed")
             sys.exit(1)
 
     # ASMR
@@ -55,7 +59,7 @@ def main():
             pretend_run = args.pretend_run,
             exit_on_failure = args.exit_on_failure)
         if not success:
-            system.LogError("ASMR audio download failed")
+            logger.log_error("ASMR audio download failed")
             sys.exit(1)
 
 # Start

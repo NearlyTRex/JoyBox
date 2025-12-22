@@ -12,6 +12,7 @@ import system
 import archive
 import arguments
 import setup
+import logger
 
 # Parse arguments
 parser = arguments.ArgumentParser(description = "Compress files.")
@@ -34,6 +35,9 @@ def main():
     # Check requirements
     setup.CheckRequirements()
 
+    # Setup logging
+    logger.setup_logging()
+
     # Get input path
     input_path = parser.get_input_path()
 
@@ -46,7 +50,7 @@ def main():
             "Delete originals: %s" % args.delete_originals
         ]
         if not system.PromptForPreview("Compress files", details):
-            system.LogWarning("Operation cancelled by user")
+            logger.log_warning("Operation cancelled by user")
             return
 
     # Compress files

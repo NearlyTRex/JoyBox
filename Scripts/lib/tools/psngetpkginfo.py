@@ -5,6 +5,7 @@ import sys
 # Local imports
 import config
 import system
+import logger
 import network
 import release
 import programs
@@ -44,7 +45,7 @@ class PSNGetPkgInfo(toolbase.ToolBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup PSNGetPkgInfo")
+                logger.log_error("Could not setup PSNGetPkgInfo")
                 return False
             success = network.ArchiveGithubRepository(
                 github_user = "NearlyTRex",
@@ -56,7 +57,7 @@ class PSNGetPkgInfo(toolbase.ToolBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup PSNGetPkgInfo")
+                logger.log_error("Could not setup PSNGetPkgInfo")
                 return False
         return True
 
@@ -75,6 +76,6 @@ class PSNGetPkgInfo(toolbase.ToolBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup PSNGetPkgInfo")
+                logger.log_error("Could not setup PSNGetPkgInfo")
                 return False
         return True

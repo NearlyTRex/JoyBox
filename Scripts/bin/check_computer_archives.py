@@ -10,6 +10,7 @@ sys.path.append(lib_folder)
 import system
 import arguments
 import setup
+import logger
 
 # Parse arguments
 parser = arguments.ArgumentParser(description = "Check computer archives.")
@@ -23,6 +24,9 @@ def main():
     # Check requirements
     setup.CheckRequirements()
 
+    # Setup logging
+    logger.setup_logging()
+
     # Get input path
     input_path = parser.get_input_path()
 
@@ -30,10 +34,10 @@ def main():
     for file in system.BuildFileListByExtensions(input_path, extensions = [".exe"]):
 
         # Check exe size
-        system.LogInfo("Checking exe file %s ..." % file)
+        logger.log_info("Checking exe file %s ..." % file)
         exe_filesize = os.path.getsize(file)
         if exe_filesize > 4290772992:
-            system.LogError("Executable '%s' is larger than 4092 MB" % file, quit_program = True)
+            logger.log_error("Executable '%s' is larger than 4092 MB" % file, quit_program = True)
 
 # Start
 if __name__ == "__main__":

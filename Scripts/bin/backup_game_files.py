@@ -14,6 +14,7 @@ import collection
 import gameinfo
 import arguments
 import setup
+import logger
 
 # Parse arguments
 parser = arguments.ArgumentParser(description = "Backup game files.")
@@ -44,6 +45,9 @@ def main():
     # Check requirements
     setup.CheckRequirements()
 
+    # Setup logging
+    logger.setup_logging()
+
     # Collect games to process
     games_to_process = []
     for game_info in gameinfo.IterateSelectedGameInfos(
@@ -64,7 +68,7 @@ def main():
     if not args.no_preview:
         details = [game_path for _, game_path in games_to_process]
         if not system.PromptForPreview("Backup game files (download from %s)" % args.locker_type, details):
-            system.LogWarning("Operation cancelled by user")
+            logger.log_warning("Operation cancelled by user")
             return
 
     # Backup game files
@@ -76,7 +80,7 @@ def main():
             pretend_run = args.pretend_run,
             exit_on_failure = args.exit_on_failure)
         if not success:
-            system.LogError(
+            logger.log_error(
                 message = "Backup of game files failed!",
                 game_supercategory = game_info.get_supercategory(),
                 game_category = game_info.get_category(),

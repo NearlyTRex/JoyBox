@@ -11,6 +11,7 @@ import command
 import programs
 import environment
 import system
+import logger
 import ini
 
 ###########################################################
@@ -48,13 +49,13 @@ def CreateChromeWebDriver(
     if programs.IsToolInstalled("ChromeDriver"):
         webdriver_tool = programs.GetToolProgram("ChromeDriver")
     if not webdriver_tool:
-        system.LogError("ChromeDriver was not found")
+        logger.log_error("ChromeDriver was not found")
         return None
 
     # Create web driver
     try:
         if verbose:
-            system.LogInfo("Creating chrome web driver")
+            logger.log_info("Creating chrome web driver")
         if not pretend_run:
             from selenium.webdriver.chrome.service import Service as ChromeService
             from selenium.webdriver.chrome.options import Options as ChromeOptions
@@ -79,8 +80,8 @@ def CreateChromeWebDriver(
         return None
     except Exception as e:
         if exit_on_failure:
-            system.LogError("Unable to create chrome web driver")
-            system.LogError(e)
+            logger.log_error("Unable to create chrome web driver")
+            logger.log_error(e)
             system.QuitProgram()
     return None
 
@@ -99,13 +100,13 @@ def CreateFirefoxWebDriver(
     if programs.IsToolInstalled("GeckoDriver"):
         webdriver_tool = programs.GetToolProgram("GeckoDriver")
     if not webdriver_tool:
-        system.LogError("GeckoDriver was not found")
+        logger.log_error("GeckoDriver was not found")
         return None
 
     # Create web driver
     try:
         if verbose:
-            system.LogInfo("Creating firefox web driver")
+            logger.log_info("Creating firefox web driver")
         if not pretend_run:
             from selenium.webdriver.firefox.service import Service as FirefoxService
             from selenium.webdriver.firefox.options import Options as FirefoxOptions
@@ -128,8 +129,8 @@ def CreateFirefoxWebDriver(
         return None
     except Exception as e:
         if exit_on_failure:
-            system.LogError("Unable to create firefox web driver")
-            system.LogError(e)
+            logger.log_error("Unable to create firefox web driver")
+            logger.log_error(e)
             system.QuitProgram()
     return None
 
@@ -183,7 +184,7 @@ def DestroyWebDriver(
     exit_on_failure = False):
     try:
         if verbose:
-            system.LogInfo("Destroying web driver")
+            logger.log_info("Destroying web driver")
         if not pretend_run:
             if driver:
                 driver.close()
@@ -191,8 +192,8 @@ def DestroyWebDriver(
         return True
     except Exception as e:
         if exit_on_failure:
-            system.LogError("Unable to destroy web driver")
-            system.LogError(e)
+            logger.log_error("Unable to destroy web driver")
+            logger.log_error(e)
             system.QuitProgram()
     return False
 
@@ -208,18 +209,18 @@ def LoadUrl(
             return False
         if not url or not isinstance(url, str):
             if verbose:
-                system.LogWarning("LoadUrl: Invalid URL provided")
+                logger.log_warning("LoadUrl: Invalid URL provided")
             return False
-        system.LogInfo("Loading url %s" % url)
+        logger.log_info("Loading url %s" % url)
         if not pretend_run:
             driver.get(url)
         return True
     except Exception as e:
         if verbose:
-            system.LogWarning("LoadUrl: Failed to load URL '%s': %s" % (url, str(e)))
+            logger.log_warning("LoadUrl: Failed to load URL '%s': %s" % (url, str(e)))
         if exit_on_failure:
-            system.LogError("Unable to load url %s" % url)
-            system.LogError(e)
+            logger.log_error("Unable to load url %s" % url)
+            logger.log_error(e)
             system.QuitProgram()
     return False
 
@@ -231,7 +232,7 @@ def GetCurrentPageUrl(driver, verbose = False):
         return driver.current_url
     except Exception as e:
         if verbose:
-            system.LogWarning("GetCurrentPageUrl: Failed to get current URL: %s" % str(e))
+            logger.log_warning("GetCurrentPageUrl: Failed to get current URL: %s" % str(e))
         return None
 
 # Check if page url is loaded
@@ -241,7 +242,7 @@ def IsUrlLoaded(driver, url, verbose = False):
             return False
         if not url or not isinstance(url, str):
             if verbose:
-                system.LogWarning("IsUrlLoaded: Invalid URL provided")
+                logger.log_warning("IsUrlLoaded: Invalid URL provided")
             return False
         current_url = GetCurrentPageUrl(driver, verbose)
         if current_url:
@@ -249,7 +250,7 @@ def IsUrlLoaded(driver, url, verbose = False):
         return False
     except Exception as e:
         if verbose:
-            system.LogWarning("IsUrlLoaded: Failed to check if URL is loaded: %s" % str(e))
+            logger.log_warning("IsUrlLoaded: Failed to check if URL is loaded: %s" % str(e))
         return False
 
 ###########################################################
@@ -298,21 +299,21 @@ def WaitForAllElements(
         from selenium.webdriver.support.ui import WebDriverWait
         from selenium.webdriver.support import expected_conditions as EC
         if verbose:
-            system.LogInfo("WaitForAllElements: Waiting for all %d element(s) (timeout: %d seconds)" % (len(locators), wait_time))
+            logger.log_info("WaitForAllElements: Waiting for all %d element(s) (timeout: %d seconds)" % (len(locators), wait_time))
             for i, locator in enumerate(locators):
-                system.LogInfo("  Locator %d: %s" % (i + 1, str(locator.Get())))
+                logger.log_info("  Locator %d: %s" % (i + 1, str(locator.Get())))
         conditions = [EC.presence_of_element_located(locator.Get()) for locator in locators]
         result = WebDriverWait(driver, wait_time).until(
             EC.all_of(*conditions)
         )
         if verbose:
-            system.LogInfo("WaitForAllElements: All elements found successfully")
+            logger.log_info("WaitForAllElements: All elements found successfully")
         return result
     except Exception as e:
         if verbose:
-            system.LogWarning("WaitForAllElements: Failed to find all elements: %s" % str(e))
+            logger.log_warning("WaitForAllElements: Failed to find all elements: %s" % str(e))
         if exit_on_failure:
-            system.LogError(e)
+            logger.log_error(e)
             system.QuitProgram()
     return None
 
@@ -328,21 +329,21 @@ def WaitForAnyElement(
         from selenium.webdriver.support.ui import WebDriverWait
         from selenium.webdriver.support import expected_conditions as EC
         if verbose:
-            system.LogInfo("WaitForAnyElement: Waiting for any of %d element(s) (timeout: %d seconds)" % (len(locators), wait_time))
+            logger.log_info("WaitForAnyElement: Waiting for any of %d element(s) (timeout: %d seconds)" % (len(locators), wait_time))
             for i, locator in enumerate(locators):
-                system.LogInfo("  Locator %d: %s" % (i + 1, str(locator.Get())))
+                logger.log_info("  Locator %d: %s" % (i + 1, str(locator.Get())))
         conditions = [EC.presence_of_element_located(locator.Get()) for locator in locators]
         result = WebDriverWait(driver, wait_time).until(
             EC.any_of(*conditions)
         )
         if verbose:
-            system.LogInfo("WaitForAnyElement: Found at least one element")
+            logger.log_info("WaitForAnyElement: Found at least one element")
         return result
     except Exception as e:
         if verbose:
-            system.LogWarning("WaitForAnyElement: Failed to find any elements: %s" % str(e))
+            logger.log_warning("WaitForAnyElement: Failed to find any elements: %s" % str(e))
         if exit_on_failure:
-            system.LogError(e)
+            logger.log_error(e)
             system.QuitProgram()
     return None
 
@@ -353,14 +354,14 @@ def IsSessionValid(
     try:
         if not obj:
             if verbose:
-                system.LogWarning("Object session is None")
+                logger.log_warning("Object session is None")
             return False
         if hasattr(obj, 'current_url'):
             obj.current_url
         return True
     except Exception:
         if verbose:
-            system.LogWarning("Object session invalid")
+            logger.log_warning("Object session invalid")
         return False
 
 # Wait for element
@@ -376,28 +377,28 @@ def WaitForElement(
         from selenium.webdriver.support import expected_conditions as EC
         from selenium.common.exceptions import TimeoutException, WebDriverException
         if verbose:
-            system.LogInfo("WaitForElement: Waiting for element (timeout: %d seconds)" % wait_time)
-            system.LogInfo("  Locator: %s" % str(locator.Get()))
+            logger.log_info("WaitForElement: Waiting for element (timeout: %d seconds)" % wait_time)
+            logger.log_info("  Locator: %s" % str(locator.Get()))
         if not IsSessionValid(driver, verbose):
             return None
         element = WebDriverWait(driver, wait_time).until(EC.presence_of_element_located(locator.Get()))
         if verbose:
-            system.LogInfo("WaitForElement: Element found successfully")
+            logger.log_info("WaitForElement: Element found successfully")
         return element
     except TimeoutException:
         if verbose:
-            system.LogWarning("WaitForElement: Timeout waiting for element after %d seconds" % wait_time)
-            system.LogWarning("  Locator: %s" % str(locator.Get()))
+            logger.log_warning("WaitForElement: Timeout waiting for element after %d seconds" % wait_time)
+            logger.log_warning("  Locator: %s" % str(locator.Get()))
         return None
     except WebDriverException as e:
         if verbose:
-            system.LogWarning("WaitForElement: WebDriver error: %s" % str(e))
+            logger.log_warning("WaitForElement: WebDriver error: %s" % str(e))
         return None
     except Exception as e:
         if verbose:
-            system.LogWarning("WaitForElement: Unexpected error: %s" % str(e))
+            logger.log_warning("WaitForElement: Unexpected error: %s" % str(e))
         if exit_on_failure:
-            system.LogError(e)
+            logger.log_error(e)
             system.QuitProgram()
         return None
 
@@ -412,34 +413,34 @@ def GetElement(
     try:
         from selenium.common.exceptions import NoSuchElementException, WebDriverException
         if verbose:
-            system.LogInfo("GetElement: Searching for element%s" % (" (all instances)" if all_elements else ""))
-            system.LogInfo("  Locator: %s" % str(locator.Get()))
+            logger.log_info("GetElement: Searching for element%s" % (" (all instances)" if all_elements else ""))
+            logger.log_info("  Locator: %s" % str(locator.Get()))
         if not IsSessionValid(parent, verbose):
             return None
         if all_elements:
             elements = parent.find_elements(*locator.Get())
             if verbose:
-                system.LogInfo("GetElement: Found %d element(s)" % len(elements))
+                logger.log_info("GetElement: Found %d element(s)" % len(elements))
             return elements
         else:
             element = parent.find_element(*locator.Get())
             if verbose:
-                system.LogInfo("GetElement: Element found successfully")
+                logger.log_info("GetElement: Element found successfully")
             return element
     except NoSuchElementException:
         if verbose:
-            system.LogWarning("GetElement: Element not found")
-            system.LogWarning("  Locator: %s" % str(locator.Get()))
+            logger.log_warning("GetElement: Element not found")
+            logger.log_warning("  Locator: %s" % str(locator.Get()))
         return None
     except WebDriverException as e:
         if verbose:
-            system.LogWarning("GetElement: WebDriver error: %s" % str(e))
+            logger.log_warning("GetElement: WebDriver error: %s" % str(e))
         return None
     except Exception as e:
         if verbose:
-            system.LogWarning("GetElement: Unexpected error: %s" % str(e))
+            logger.log_warning("GetElement: Unexpected error: %s" % str(e))
         if exit_on_failure:
-            system.LogError(e)
+            logger.log_error(e)
             system.QuitProgram()
         return None
 
@@ -448,12 +449,12 @@ def GetElementText(element, verbose = False):
     try:
         if not element:
             if verbose:
-                system.LogWarning("GetElementText: Element is None")
+                logger.log_warning("GetElementText: Element is None")
             return None
         return element.text
     except Exception as e:
         if verbose:
-            system.LogWarning("GetElementText: Failed to get element text: %s" % str(e))
+            logger.log_warning("GetElementText: Failed to get element text: %s" % str(e))
         return None
 
 # Get element attribute
@@ -461,16 +462,16 @@ def GetElementAttribute(element, attribute_name, verbose = False):
     try:
         if not element:
             if verbose:
-                system.LogWarning("GetElementAttribute: Element is None")
+                logger.log_warning("GetElementAttribute: Element is None")
             return None
         if not attribute_name or not isinstance(attribute_name, str):
             if verbose:
-                system.LogWarning("GetElementAttribute: Invalid attribute name")
+                logger.log_warning("GetElementAttribute: Invalid attribute name")
             return None
         return element.get_attribute(attribute_name)
     except Exception as e:
         if verbose:
-            system.LogWarning("GetElementAttribute: Failed to get attribute '%s': %s" % (attribute_name, str(e)))
+            logger.log_warning("GetElementAttribute: Failed to get attribute '%s': %s" % (attribute_name, str(e)))
         return None
 
 # Get element children text
@@ -478,7 +479,7 @@ def GetElementChildrenText(element, verbose = False):
     try:
         if not element:
             if verbose:
-                system.LogWarning("GetElementChildrenText: Element is None")
+                logger.log_warning("GetElementChildrenText: Element is None")
             return None
         attribute = GetElementAttribute(element, "innerHTML", verbose)
         if attribute:
@@ -486,7 +487,7 @@ def GetElementChildrenText(element, verbose = False):
         return None
     except Exception as e:
         if verbose:
-            system.LogWarning("GetElementChildrenText: Failed to get element children text: %s" % str(e))
+            logger.log_warning("GetElementChildrenText: Failed to get element children text: %s" % str(e))
         return None
 
 # Get element link url
@@ -494,7 +495,7 @@ def GetElementLinkUrl(element, verbose = False):
     try:
         if not element:
             if verbose:
-                system.LogWarning("GetElementLinkUrl: Element is None")
+                logger.log_warning("GetElementLinkUrl: Element is None")
             return None
         link_element = GetElement(parent = element, locator = ElementLocator({"tag": "a"}), verbose = verbose)
         if link_element:
@@ -502,7 +503,7 @@ def GetElementLinkUrl(element, verbose = False):
         return None
     except Exception as e:
         if verbose:
-            system.LogWarning("GetElementLinkUrl: Failed to get element link URL: %s" % str(e))
+            logger.log_warning("GetElementLinkUrl: Failed to get element link URL: %s" % str(e))
         return None
 
 # Click element
@@ -514,21 +515,21 @@ def ClickElement(
     try:
         if not element:
             if verbose:
-                system.LogWarning("ClickElement: Element is None")
+                logger.log_warning("ClickElement: Element is None")
             return False
         if verbose:
-            system.LogInfo("ClickElement: Attempting to click element")
+            logger.log_info("ClickElement: Attempting to click element")
         if not pretend_run:
             element.click()
         if verbose:
-            system.LogInfo("ClickElement: Successfully clicked element")
+            logger.log_info("ClickElement: Successfully clicked element")
         return True
     except Exception as e:
         if verbose:
-            system.LogWarning("ClickElement: Failed to click element: %s" % str(e))
+            logger.log_warning("ClickElement: Failed to click element: %s" % str(e))
         if exit_on_failure:
-            system.LogError("Unable to click element")
-            system.LogError(e)
+            logger.log_error("Unable to click element")
+            logger.log_error(e)
             system.QuitProgram()
         return False
 
@@ -542,25 +543,25 @@ def SendKeysToElement(
     try:
         if not element:
             if verbose:
-                system.LogWarning("SendKeysToElement: Element is None")
+                logger.log_warning("SendKeysToElement: Element is None")
             return False
         if keys is None:
             if verbose:
-                system.LogWarning("SendKeysToElement: Keys is None")
+                logger.log_warning("SendKeysToElement: Keys is None")
             return False
         if verbose:
-            system.LogInfo("SendKeysToElement: Attempting to send keys to element (%d characters)" % len(str(keys)))
+            logger.log_info("SendKeysToElement: Attempting to send keys to element (%d characters)" % len(str(keys)))
         if not pretend_run:
             element.send_keys(keys)
         if verbose:
-            system.LogInfo("SendKeysToElement: Successfully sent keys to element")
+            logger.log_info("SendKeysToElement: Successfully sent keys to element")
         return True
     except Exception as e:
         if verbose:
-            system.LogWarning("SendKeysToElement: Failed to send keys: %s" % str(e))
+            logger.log_warning("SendKeysToElement: Failed to send keys: %s" % str(e))
         if exit_on_failure:
-            system.LogError("Unable to send keys to element")
-            system.LogError(e)
+            logger.log_error("Unable to send keys to element")
+            logger.log_error(e)
             system.QuitProgram()
         return False
 
@@ -574,16 +575,16 @@ def ScrollToEndOfPage(
         if not IsSessionValid(driver, verbose):
             return False
         if verbose:
-            system.LogInfo("Scrolling to end of page")
+            logger.log_info("Scrolling to end of page")
         if not pretend_run:
             driver.execute_script("window.scrollTo(0, document.body.scrollHeight)")
         return True
     except Exception as e:
         if verbose:
-            system.LogWarning("ScrollToEndOfPage: Failed to scroll: %s" % str(e))
+            logger.log_warning("ScrollToEndOfPage: Failed to scroll: %s" % str(e))
         if exit_on_failure:
-            system.LogError("Unable to scroll to end of page")
-            system.LogError(e)
+            logger.log_error("Unable to scroll to end of page")
+            logger.log_error(e)
             system.QuitProgram()
         return False
 
@@ -600,22 +601,22 @@ def GetPageSource(
         if url:
             if not isinstance(url, str):
                 if verbose:
-                    system.LogWarning("GetPageSource: Invalid URL provided")
+                    logger.log_warning("GetPageSource: Invalid URL provided")
                 return None
             success = LoadUrl(driver, url, verbose, pretend_run, exit_on_failure)
             if not success:
                 return None
         if verbose:
-            system.LogInfo("Getting page source")
+            logger.log_info("Getting page source")
         if not pretend_run:
             return str(driver.page_source)
         return ""
     except Exception as e:
         if verbose:
-            system.LogWarning("GetPageSource: Failed to get page source: %s" % str(e))
+            logger.log_warning("GetPageSource: Failed to get page source: %s" % str(e))
         if exit_on_failure:
-            system.LogError("Unable to get page source")
-            system.LogError(e)
+            logger.log_error("Unable to get page source")
+            logger.log_error(e)
             system.QuitProgram()
         return None
 
@@ -633,15 +634,15 @@ def SaveCookie(
             return False
         if not system.IsPathValid(path):
             if verbose:
-                system.LogWarning("SaveCookie: Invalid path provided")
+                logger.log_warning("SaveCookie: Invalid path provided")
             return False
         cookies = driver.get_cookies()
         if not cookies:
             if verbose:
-                system.LogWarning("SaveCookie: No cookies to save")
+                logger.log_warning("SaveCookie: No cookies to save")
             return False
         if verbose:
-            system.LogInfo("Saving cookies to %s" % path)
+            logger.log_info("Saving cookies to %s" % path)
         success = system.MakeDirectory(
             src = system.GetFilenameDirectory(path),
             verbose = verbose,
@@ -649,7 +650,7 @@ def SaveCookie(
             exit_on_failure = exit_on_failure)
         if not success:
             if verbose:
-                system.LogWarning("SaveCookie: Failed to create cookie directory")
+                logger.log_warning("SaveCookie: Failed to create cookie directory")
             return False
         success = system.TouchFile(
             src = path,
@@ -658,14 +659,14 @@ def SaveCookie(
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if success and verbose:
-            system.LogInfo("Successfully saved cookies")
+            logger.log_info("Successfully saved cookies")
         return success
     except Exception as e:
         if verbose:
-            system.LogWarning("SaveCookie: Failed to save cookies: %s" % str(e))
+            logger.log_warning("SaveCookie: Failed to save cookies: %s" % str(e))
         if exit_on_failure:
-            system.LogError("Unable to save cookies")
-            system.LogError(e)
+            logger.log_error("Unable to save cookies")
+            logger.log_error(e)
             system.QuitProgram()
         return False
 
@@ -681,10 +682,10 @@ def LoadCookie(
             return False
         if not system.DoesPathExist(path):
             if verbose:
-                system.LogWarning("LoadCookie: Cookie file does not exist: %s" % path)
+                logger.log_warning("LoadCookie: Cookie file does not exist: %s" % path)
             return False
         if verbose:
-            system.LogInfo("Loading cookies from %s" % path)
+            logger.log_info("Loading cookies from %s" % path)
         cookie_list = system.ReadJsonFile(
             src = path,
             verbose = verbose,
@@ -692,7 +693,7 @@ def LoadCookie(
             exit_on_failure = exit_on_failure)
         if not isinstance(cookie_list, list):
             if verbose:
-                system.LogWarning("LoadCookie: Cookie file does not contain valid cookie list")
+                logger.log_warning("LoadCookie: Cookie file does not contain valid cookie list")
             return False
         if not pretend_run:
             cookies_loaded = 0
@@ -702,16 +703,16 @@ def LoadCookie(
                     cookies_loaded += 1
                 except Exception as cookie_error:
                     if verbose:
-                        system.LogWarning("LoadCookie: Failed to add cookie: %s" % str(cookie_error))
+                        logger.log_warning("LoadCookie: Failed to add cookie: %s" % str(cookie_error))
             if verbose:
-                system.LogInfo("Successfully loaded %d cookies" % cookies_loaded)
+                logger.log_info("Successfully loaded %d cookies" % cookies_loaded)
         return True
     except Exception as e:
         if verbose:
-            system.LogWarning("LoadCookie: Failed to load cookies: %s" % str(e))
+            logger.log_warning("LoadCookie: Failed to load cookies: %s" % str(e))
         if exit_on_failure:
-            system.LogError("Unable to load cookies")
-            system.LogError(e)
+            logger.log_error("Unable to load cookies")
+            logger.log_error(e)
             system.QuitProgram()
         return False
 
@@ -814,13 +815,13 @@ def GetWebsiteText(
 
     # Log attempt
     if verbose:
-        system.LogInfo("GetWebsiteText: Fetching content from URL: %s" % url)
+        logger.log_info("GetWebsiteText: Fetching content from URL: %s" % url)
         if params:
-            system.LogInfo("  Params: %s" % params)
+            logger.log_info("  Params: %s" % params)
 
     # First, try webdriver
     if verbose:
-        system.LogInfo("GetWebsiteText: Attempting to fetch using web driver")
+        logger.log_info("GetWebsiteText: Attempting to fetch using web driver")
     driver = CreateWebDriver(
         make_headless = True,
         verbose = verbose,
@@ -828,7 +829,7 @@ def GetWebsiteText(
         exit_on_failure = exit_on_failure)
     if driver:
         if verbose:
-            system.LogInfo("GetWebsiteText: Web driver created successfully")
+            logger.log_info("GetWebsiteText: Web driver created successfully")
         page_text = GetPageSource(
             driver = driver,
             url = url,
@@ -842,28 +843,28 @@ def GetWebsiteText(
             exit_on_failure = exit_on_failure)
         if page_text:
             if verbose:
-                system.LogInfo("GetWebsiteText: Successfully fetched content using web driver (%d chars)" % len(page_text))
+                logger.log_info("GetWebsiteText: Successfully fetched content using web driver (%d chars)" % len(page_text))
             return page_text
         else:
             if verbose:
-                system.LogWarning("GetWebsiteText: Web driver returned empty content")
+                logger.log_warning("GetWebsiteText: Web driver returned empty content")
 
     # Next, try requests
     if verbose:
-        system.LogInfo("GetWebsiteText: Attempting to fetch using requests library")
+        logger.log_info("GetWebsiteText: Attempting to fetch using requests library")
     try:
         import requests
         reqs = requests.get(url, params=params)
         if verbose:
-            system.LogInfo("GetWebsiteText: Successfully fetched content using requests (%d chars)" % len(reqs.text))
+            logger.log_info("GetWebsiteText: Successfully fetched content using requests (%d chars)" % len(reqs.text))
         return reqs.text
     except Exception as e:
         if verbose:
-            system.LogWarning("GetWebsiteText: Requests library failed: %s" % str(e))
+            logger.log_warning("GetWebsiteText: Requests library failed: %s" % str(e))
 
     # No results
     if verbose:
-        system.LogWarning("GetWebsiteText: All fetch methods failed, returning empty string")
+        logger.log_warning("GetWebsiteText: All fetch methods failed, returning empty string")
     return ""
 
 # Get all matching urls
@@ -879,10 +880,10 @@ def GetMatchingUrls(
 
     # Log attempt
     if verbose:
-        system.LogInfo("GetMatchingUrls: Starting URL discovery")
-        system.LogInfo("  URL: %s" % url)
-        system.LogInfo("  Base URL: %s" % base_url)
-        system.LogInfo("  Pattern: starts_with='%s', ends_with='%s'" % (starts_with, ends_with))
+        logger.log_info("GetMatchingUrls: Starting URL discovery")
+        logger.log_info("  URL: %s" % url)
+        logger.log_info("  Base URL: %s" % base_url)
+        logger.log_info("  Pattern: starts_with='%s', ends_with='%s'" % (starts_with, ends_with))
 
     # Get page text
     page_text = GetWebsiteText(
@@ -893,17 +894,17 @@ def GetMatchingUrls(
         exit_on_failure = exit_on_failure)
     if not page_text:
         if verbose:
-            system.LogWarning("GetMatchingUrls: Failed to fetch page content")
+            logger.log_warning("GetMatchingUrls: Failed to fetch page content")
         return []
     if verbose:
-        system.LogInfo("GetMatchingUrls: Successfully fetched page content (%d chars)" % len(page_text))
+        logger.log_info("GetMatchingUrls: Successfully fetched page content (%d chars)" % len(page_text))
 
     # Parse the HTML page
     matching_urls = []
     parser = ParseHtmlPageSource(page_text)
     if parser:
         if verbose:
-            system.LogInfo("GetMatchingUrls: Parsing HTML content for URLs")
+            logger.log_info("GetMatchingUrls: Parsing HTML content for URLs")
 
         # List to store potential URLs
         potential_urls = []
@@ -941,18 +942,18 @@ def GetMatchingUrls(
 
         # Filter URLs that match the starts_with and ends_with patterns
         if verbose:
-            system.LogInfo("GetMatchingUrls: Found %d potential URLs, filtering by pattern" % len(potential_urls))
+            logger.log_info("GetMatchingUrls: Found %d potential URLs, filtering by pattern" % len(potential_urls))
         for potential_url in potential_urls:
             if re.match("^%s.*%s$" % (starts_with, ends_with), potential_url):
                 matching_urls.append(potential_url)
                 if verbose:
-                    system.LogInfo("  Matched: %s" % potential_url)
+                    logger.log_info("  Matched: %s" % potential_url)
     else:
         if verbose:
-            system.LogWarning("GetMatchingUrls: Failed to parse HTML page")
+            logger.log_warning("GetMatchingUrls: Failed to parse HTML page")
 
     if verbose:
-        system.LogInfo("GetMatchingUrls: Returning %d matching URL(s)" % len(matching_urls))
+        logger.log_info("GetMatchingUrls: Returning %d matching URL(s)" % len(matching_urls))
     return matching_urls
 
 # Get matching url
@@ -969,14 +970,14 @@ def GetMatchingUrl(
 
     # Log attempt
     if verbose:
-        system.LogInfo("GetMatchingUrl: Searching for matching URL")
-        system.LogInfo("  URL: %s" % url)
-        system.LogInfo("  Base URL: %s" % base_url)
-        system.LogInfo("  Starts with: '%s'" % starts_with)
-        system.LogInfo("  Ends with: '%s'" % ends_with)
-        system.LogInfo("  Get latest: %s" % get_latest)
+        logger.log_info("GetMatchingUrl: Searching for matching URL")
+        logger.log_info("  URL: %s" % url)
+        logger.log_info("  Base URL: %s" % base_url)
+        logger.log_info("  Starts with: '%s'" % starts_with)
+        logger.log_info("  Ends with: '%s'" % ends_with)
+        logger.log_info("  Get latest: %s" % get_latest)
         if params:
-            system.LogInfo("  Params: %s" % params)
+            logger.log_info("  Params: %s" % params)
 
     # Find potential matching archive urls
     potential_urls = GetMatchingUrls(
@@ -992,10 +993,10 @@ def GetMatchingUrl(
     # Did not find any matching release
     if len(potential_urls) == 0:
         if verbose:
-            system.LogWarning("GetMatchingUrl: No matching URLs found")
+            logger.log_warning("GetMatchingUrl: No matching URLs found")
         return None
     if verbose:
-        system.LogInfo("GetMatchingUrl: Found %d potential URL(s)" % len(potential_urls))
+        logger.log_info("GetMatchingUrl: Found %d potential URL(s)" % len(potential_urls))
 
     # Select final url
     matching_url = None
@@ -1006,18 +1007,18 @@ def GetMatchingUrl(
             if len(url_tokens) > 0:
                 potential_map[url_tokens[-1]] = potential_url
         if verbose:
-            system.LogInfo("GetMatchingUrl: Sorting %d URLs to find latest" % len(potential_map))
+            logger.log_info("GetMatchingUrl: Sorting %d URLs to find latest" % len(potential_map))
         for potential_key in sorted(potential_map.keys(), reverse = True):
             matching_url = potential_map[potential_key]
             if verbose:
-                system.LogInfo("GetMatchingUrl: Selected latest URL key: %s" % potential_key)
+                logger.log_info("GetMatchingUrl: Selected latest URL key: %s" % potential_key)
             break
     else:
         matching_url = potential_urls[0]
         if verbose:
-            system.LogInfo("GetMatchingUrl: Selected first URL from list")
+            logger.log_info("GetMatchingUrl: Selected first URL from list")
     if verbose:
-        system.LogInfo("GetMatchingUrl: Final result: %s" % matching_url)
+        logger.log_info("GetMatchingUrl: Final result: %s" % matching_url)
     return matching_url
 
 ###########################################################

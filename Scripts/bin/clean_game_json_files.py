@@ -13,6 +13,7 @@ import gameinfo
 import system
 import arguments
 import setup
+import logger
 
 # Parse arguments
 parser = arguments.ArgumentParser(description = "Clean json files.")
@@ -24,6 +25,9 @@ def main():
 
     # Check requirements
     setup.CheckRequirements()
+
+    # Setup logging
+    logger.setup_logging()
 
     # Collect json files to process
     json_files_to_process = []
@@ -46,7 +50,7 @@ def main():
     # Show preview
     if not args.no_preview:
         if not system.PromptForPreview("Clean game JSON files (sort keys, remove empty values)", json_files_to_process):
-            system.LogWarning("Operation cancelled by user")
+            logger.log_warning("Operation cancelled by user")
             return
 
     # Clean json files

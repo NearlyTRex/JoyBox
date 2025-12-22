@@ -6,6 +6,7 @@ import json
 # Local imports
 import config
 import system
+import logger
 import environment
 import google
 import locker
@@ -50,23 +51,23 @@ def GetAlbumDirectories(genre_type = None, album_name = None, artist_name = None
 def DownloadChannelAudioFiles(channels, genre_type, cookie_source = None, locker_type = None, verbose = False, pretend_run = False, exit_on_failure = False):
 
     # Download channels
-    system.LogInfo(f"Starting audio download process for genre: {genre_type}")
-    system.LogInfo(f"Processing {len(channels)} channels")
+    logger.log_info(f"Starting audio download process for genre: {genre_type}")
+    logger.log_info(f"Processing {len(channels)} channels")
     for i, channel in enumerate(channels, 1):
         channel_name = channel.get("name")
         channel_url = channel.get("url")
-        system.LogInfo(f"[{i}/{len(channels)}] Processing channel: {channel_name}")
-        system.LogInfo(f"Channel URL: {channel_url}")
+        logger.log_info(f"[{i}/{len(channels)}] Processing channel: {channel_name}")
+        logger.log_info(f"Channel URL: {channel_url}")
 
         # Create temporary directory
-        system.LogInfo("Creating temporary directory...")
+        logger.log_info("Creating temporary directory...")
         tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(
             verbose = verbose,
             pretend_run = pretend_run)
         if not tmp_dir_success:
-            system.LogError(f"Failed to create temporary directory for channel: {channel_name}")
+            logger.log_error(f"Failed to create temporary directory for channel: {channel_name}")
             return False
-        system.LogInfo(f"Created temporary directory: {tmp_dir_result}")
+        logger.log_info(f"Created temporary directory: {tmp_dir_result}")
 
         # Get channel info
         channel_archive_file = environment.GetFileAudioMetadataArchiveFile(genre_type, channel_name)
@@ -74,11 +75,11 @@ def DownloadChannelAudioFiles(channels, genre_type, cookie_source = None, locker
             album_name = channel_name,
             source_type = config.SourceType.LOCAL,
             genre_type = genre_type)
-        system.LogInfo(f"Archive file: {channel_archive_file}")
-        system.LogInfo(f"Target music directory: {channel_music_dir}")
+        logger.log_info(f"Archive file: {channel_archive_file}")
+        logger.log_info(f"Target music directory: {channel_music_dir}")
 
         # Download channel
-        system.LogInfo("Starting video download...")
+        logger.log_info("Starting video download...")
         success = google.DownloadVideo(
             video_url = channel_url,
             audio_only = True,
@@ -90,21 +91,21 @@ def DownloadChannelAudioFiles(channels, genre_type, cookie_source = None, locker
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if not success:
-            system.LogError(f"Failed to download videos for channel: {channel_name}")
+            logger.log_error(f"Failed to download videos for channel: {channel_name}")
             return False
 
         # Check what was downloaded
         if system.IsPathDirectory(tmp_dir_result):
             downloaded_files = system.GetDirectoryContents(tmp_dir_result)
             audio_files = [f for f in downloaded_files if f.endswith('.mp3')]
-            system.LogInfo(f"Downloaded {len(audio_files)} audio files")
+            logger.log_info(f"Downloaded {len(audio_files)} audio files")
             if len(audio_files) > 0:
-                system.LogInfo(f"First few files: {audio_files[:3]}")
+                logger.log_info(f"First few files: {audio_files[:3]}")
         else:
-            system.LogWarning(f"Temporary directory doesn't exist after download: {tmp_dir_result}")
+            logger.log_warning(f"Temporary directory doesn't exist after download: {tmp_dir_result}")
 
         # Make music dir
-        system.LogInfo(f"Creating target music directory: {channel_music_dir}")
+        logger.log_info(f"Creating target music directory: {channel_music_dir}")
         system.MakeDirectory(
             src = channel_music_dir,
             verbose = verbose,
@@ -112,7 +113,7 @@ def DownloadChannelAudioFiles(channels, genre_type, cookie_source = None, locker
             exit_on_failure = exit_on_failure)
 
         # Backup audio files only (filter out thumbnails and other non-audio files)
-        system.LogInfo(f"Starting backup from {tmp_dir_result} to {channel_music_dir}")
+        logger.log_info(f"Starting backup from {tmp_dir_result} to {channel_music_dir}")
 
         # Create a subdirectory for audio files only
         audio_only_dir = system.JoinPaths(tmp_dir_result, "audio_only")
@@ -149,24 +150,24 @@ def DownloadChannelAudioFiles(channels, genre_type, cookie_source = None, locker
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if backup_success:
-            system.LogInfo("Backup completed successfully")
+            logger.log_info("Backup completed successfully")
         else:
-            system.LogError("Backup process failed")
+            logger.log_error("Backup process failed")
             return False
 
         # Delete temporary directory
-        system.LogInfo(f"Cleaning up temporary directory: {tmp_dir_result}")
+        logger.log_info(f"Cleaning up temporary directory: {tmp_dir_result}")
         cleanup_success = system.RemoveDirectory(
             src = tmp_dir_result,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if cleanup_success:
-            system.LogInfo("Temporary directory cleanup completed")
+            logger.log_info("Temporary directory cleanup completed")
         else:
-            system.LogWarning("Failed to clean up temporary directory")
-        system.LogInfo(f"[{i}/{len(channels)}] Completed processing channel: {channel_name}")
-    system.LogInfo("Audio download process completed successfully")
+            logger.log_warning("Failed to clean up temporary directory")
+        logger.log_info(f"[{i}/{len(channels)}] Completed processing channel: {channel_name}")
+    logger.log_info("Audio download process completed successfully")
     return True
 
 # Download story audio files
@@ -221,7 +222,7 @@ def BuildAudioMetadataFiles(
         parent_name = system.GetFilenameFile(parent_dir)
         if parent_name != genre_type.value:
             detected_artist_name = parent_name
-        system.LogInfo(f"Scanning album: {album_name}" + (f" by {detected_artist_name}" if detected_artist_name else ""))
+        logger.log_info(f"Scanning album: {album_name}" + (f" by {detected_artist_name}" if detected_artist_name else ""))
 
         # Extract album metadata
         album_data = audio_metadata.get_album_tags(
@@ -233,7 +234,7 @@ def BuildAudioMetadataFiles(
             verbose = verbose,
             exit_on_failure = exit_on_failure)
         if not album_data:
-            system.LogError(f"Failed to extract metadata from album: {album_name}")
+            logger.log_error(f"Failed to extract metadata from album: {album_name}")
             return False
 
         # Write album metadata JSON
@@ -249,9 +250,9 @@ def BuildAudioMetadataFiles(
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure):
-            system.LogInfo(f"Generated metadata file: {json_file}")
+            logger.log_info(f"Generated metadata file: {json_file}")
         else:
-            system.LogError(f"Failed to write metadata file: {json_file}")
+            logger.log_error(f"Failed to write metadata file: {json_file}")
             return False
     return True
 
@@ -285,16 +286,16 @@ def ClearAudioMetadataTags(
             detected_artist_name = parent_name
 
         # Clear album tags
-        system.LogInfo(f"Clearing tags from album: {album_name}" + (f" by {detected_artist_name}" if detected_artist_name else ""))
+        logger.log_info(f"Clearing tags from album: {album_name}" + (f" by {detected_artist_name}" if detected_artist_name else ""))
         if audio_metadata.clear_album_tags(
             album_dir = album_dir,
             preserve_artwork = preserve_artwork,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure):
-            system.LogInfo(f"Cleared tags from album: {album_name}")
+            logger.log_info(f"Cleared tags from album: {album_name}")
         else:
-            system.LogError(f"Failed to clear tags from album: {album_name}")
+            logger.log_error(f"Failed to clear tags from album: {album_name}")
             return False
     return True
 
@@ -334,7 +335,7 @@ def ApplyAudioMetadataTags(
             album_name,
             detected_artist_name)
         if not system.IsPathFile(json_file):
-            system.LogError(f"Metadata file not found: {json_file}")
+            logger.log_error(f"Metadata file not found: {json_file}")
             return False
 
         # Read album metadata
@@ -343,11 +344,11 @@ def ApplyAudioMetadataTags(
             verbose = verbose,
             exit_on_failure = exit_on_failure)
         if not album_data:
-            system.LogError(f"Failed to read metadata file: {json_file}")
+            logger.log_error(f"Failed to read metadata file: {json_file}")
             return False
 
         # Apply tags to album
-        system.LogInfo(f"Applying tags to album: {album_name}" + (f" by {detected_artist_name}" if detected_artist_name else ""))
+        logger.log_info(f"Applying tags to album: {album_name}" + (f" by {detected_artist_name}" if detected_artist_name else ""))
         if audio_metadata.set_album_tags(
             album_dir = album_dir,
             album_metadata = album_data,
@@ -355,8 +356,8 @@ def ApplyAudioMetadataTags(
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure):
-            system.LogInfo(f"Applied tags to album: {album_name}")
+            logger.log_info(f"Applied tags to album: {album_name}")
         else:
-            system.LogError(f"Failed to apply tags to album: {album_name}")
+            logger.log_error(f"Failed to apply tags to album: {album_name}")
             return False
     return True

@@ -12,6 +12,7 @@ import command
 import programs
 import arguments
 import setup
+import logger
 
 # Parse arguments
 parser = arguments.ArgumentParser(description = "Launch sunshine.")
@@ -24,12 +25,15 @@ def main():
     # Check requirements
     setup.CheckRequirements()
 
+    # Setup logging
+    logger.setup_logging()
+
     # Get tool
     sunshine_tool = None
     if programs.IsToolInstalled("Sunshine"):
         sunshine_tool = programs.GetToolProgram("Sunshine")
     if not sunshine_tool:
-        system.LogError("Sunshine was not found", quit_program = True)
+        logger.log_error("Sunshine was not found", quit_program = True)
 
     # Get launch command
     launch_cmd = [
@@ -43,7 +47,7 @@ def main():
         pretend_run = args.pretend_run,
         exit_on_failure = args.exit_on_failure)
     if code != 0:
-        system.LogError("Launch command failed with code %d" % code)
+        logger.log_error("Launch command failed with code %d" % code)
 
 # Start
 if __name__ == "__main__":

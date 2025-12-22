@@ -7,6 +7,7 @@ import config
 import command
 import programs
 import system
+import logger
 import iso
 import archive
 
@@ -38,7 +39,7 @@ def CreateDiscCHD(
     if programs.IsToolInstalled("MameChdman"):
         chd_tool = programs.GetToolProgram("MameChdman")
     if not chd_tool:
-        system.LogError("MameChdman was not found")
+        logger.log_error("MameChdman was not found")
         return False
 
     # Get create command
@@ -88,7 +89,7 @@ def ExtractDiscCHD(
     if programs.IsToolInstalled("MameChdman"):
         chd_tool = programs.GetToolProgram("MameChdman")
     if not chd_tool:
-        system.LogError("MameChdman was not found")
+        logger.log_error("MameChdman was not found")
         return False
 
     # Get extract command
@@ -188,7 +189,7 @@ def VerifyDiscCHD(
     if programs.IsToolInstalled("MameChdman"):
         chd_tool = programs.GetToolProgram("MameChdman")
     if not chd_tool:
-        system.LogError("MameChdman was not found")
+        logger.log_error("MameChdman was not found")
         return False
 
     # Get verify command

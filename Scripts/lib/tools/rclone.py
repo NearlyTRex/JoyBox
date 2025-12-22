@@ -6,6 +6,7 @@ import json
 # Local imports
 import config
 import system
+import logger
 import environment
 import release
 import programs
@@ -81,7 +82,7 @@ class RClone(toolbase.ToolBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup RClone")
+                logger.log_error("Could not setup RClone")
                 return False
 
         # Download linux program
@@ -96,7 +97,7 @@ class RClone(toolbase.ToolBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup RClone")
+                logger.log_error("Could not setup RClone")
                 return False
         return True
 
@@ -116,7 +117,7 @@ class RClone(toolbase.ToolBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup RClone")
+                logger.log_error("Could not setup RClone")
                 return False
 
         # Setup linux program
@@ -129,7 +130,7 @@ class RClone(toolbase.ToolBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup RClone")
+                logger.log_error("Could not setup RClone")
                 return False
         return True
 
@@ -191,6 +192,6 @@ class RClone(toolbase.ToolBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup RClone config files")
+                logger.log_error("Could not setup RClone config files")
                 return False
         return True

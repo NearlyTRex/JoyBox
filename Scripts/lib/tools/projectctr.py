@@ -5,6 +5,7 @@ import sys
 # Local imports
 import config
 import system
+import logger
 import release
 import programs
 import toolbase
@@ -69,7 +70,7 @@ class ProjectCTR(toolbase.ToolBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup CtrMakeRom")
+                logger.log_error("Could not setup CtrMakeRom")
                 return False
 
         # Download windows program
@@ -88,7 +89,7 @@ class ProjectCTR(toolbase.ToolBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup CtrTool")
+                logger.log_error("Could not setup CtrTool")
                 return False
 
         # Download linux program
@@ -114,7 +115,7 @@ class ProjectCTR(toolbase.ToolBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup CtrMakeRom")
+                logger.log_error("Could not setup CtrMakeRom")
                 return False
 
         # Download linux program
@@ -140,7 +141,7 @@ class ProjectCTR(toolbase.ToolBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup CtrTool")
+                logger.log_error("Could not setup CtrTool")
                 return False
         return True
 
@@ -160,7 +161,7 @@ class ProjectCTR(toolbase.ToolBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup CtrMakeRom")
+                logger.log_error("Could not setup CtrMakeRom")
                 return False
 
         # Setup windows program
@@ -174,7 +175,7 @@ class ProjectCTR(toolbase.ToolBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup CtrTool")
+                logger.log_error("Could not setup CtrTool")
                 return False
 
         # Setup linux program
@@ -187,7 +188,7 @@ class ProjectCTR(toolbase.ToolBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup CtrMakeRom")
+                logger.log_error("Could not setup CtrMakeRom")
                 return False
 
         # Setup linux program
@@ -200,6 +201,6 @@ class ProjectCTR(toolbase.ToolBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup CtrTool")
+                logger.log_error("Could not setup CtrTool")
                 return False
         return True

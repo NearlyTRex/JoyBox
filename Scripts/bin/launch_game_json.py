@@ -16,8 +16,9 @@ import collection
 import metadata
 import gameinfo
 import arguments
-import setup
 import gui
+import setup
+import logger
 
 # Setup argument parser
 parser = arguments.ArgumentParser(description = "Launch json files.")
@@ -46,6 +47,9 @@ def main():
 
     # Check requirements
     setup.CheckRequirements()
+
+    # Setup logging
+    logger.setup_logging()
 
     # Json file to load
     json_file = None

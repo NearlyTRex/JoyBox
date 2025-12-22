@@ -8,6 +8,7 @@ import subprocess
 # Local imports
 import config
 import system
+import logger
 import environment
 import command
 import programs
@@ -77,7 +78,7 @@ def DecryptAAXToM4A(
     # Validate input file
     system.AssertIsValidPath(input_file, "input_file")
     if not system.IsPathFile(input_file):
-        system.LogError(f"Input file does not exist: {input_file}")
+        logger.log_error(f"Input file does not exist: {input_file}")
         if exit_on_failure:
             system.QuitProgram()
         return False
@@ -85,7 +86,7 @@ def DecryptAAXToM4A(
     # Check file extension
     input_ext = system.GetFilenameExtension(input_file).lower()
     if input_ext not in [".aax", ".aa"]:
-        system.LogError(f"Input file must be .aax or .aa format: {input_file}")
+        logger.log_error(f"Input file must be .aax or .aa format: {input_file}")
         if exit_on_failure:
             system.QuitProgram()
         return False
@@ -96,7 +97,7 @@ def DecryptAAXToM4A(
 
     # Check if output already exists
     if system.IsPathFile(output_file) and not overwrite:
-        system.LogWarning(f"Output file already exists, skipping: {output_file}")
+        logger.log_warning(f"Output file already exists, skipping: {output_file}")
         return True
 
     # Get activation bytes
@@ -106,14 +107,14 @@ def DecryptAAXToM4A(
             verbose = verbose,
             exit_on_failure = exit_on_failure)
     if not activation_bytes:
-        system.LogError("Activation bytes not provided or found in environment")
+        logger.log_error("Activation bytes not provided or found in environment")
         if exit_on_failure:
             system.QuitProgram()
         return False
 
     # Validate activation bytes format (should be 8 hex characters)
     if len(activation_bytes) != 8 or not all(c in '0123456789abcdefABCDEF' for c in activation_bytes):
-        system.LogError(f"Invalid activation bytes format. Expected 8 hex characters, got: {activation_bytes}")
+        logger.log_error(f"Invalid activation bytes format. Expected 8 hex characters, got: {activation_bytes}")
         if exit_on_failure:
             system.QuitProgram()
         return False
@@ -123,14 +124,14 @@ def DecryptAAXToM4A(
     if programs.IsToolInstalled("FFMpeg"):
         ffmpeg_tool = programs.GetToolProgram("FFMpeg")
     if not ffmpeg_tool:
-        system.LogError("FFMpeg was not found")
+        logger.log_error("FFMpeg was not found")
         if exit_on_failure:
             system.QuitProgram()
         return False
 
     # Log operation
-    system.LogInfo(f"Decrypting AAX file: {input_file}")
-    system.LogInfo(f"Output file: {output_file}")
+    logger.log_info(f"Decrypting AAX file: {input_file}")
+    logger.log_info(f"Output file: {output_file}")
 
     # Create output directory if needed
     output_dir = system.GetFilenameDirectory(output_file)
@@ -163,11 +164,11 @@ def DecryptAAXToM4A(
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if code != 0:
-            system.LogError(f"FFMpeg decryption failed with code {code}")
+            logger.log_error(f"FFMpeg decryption failed with code {code}")
             if exit_on_failure:
                 system.QuitProgram()
             return False
-    system.LogInfo(f"Successfully decrypted: {output_file}")
+    logger.log_info(f"Successfully decrypted: {output_file}")
     return True
 
 # Decrypt multiple AAX files to M4A
@@ -183,7 +184,7 @@ def DecryptAAXFilesToM4A(
 
     # Validate input
     if not input_files:
-        system.LogError("No input files provided")
+        logger.log_error("No input files provided")
         if exit_on_failure:
             system.QuitProgram()
         return False
@@ -195,7 +196,7 @@ def DecryptAAXFilesToM4A(
             verbose = verbose,
             exit_on_failure = exit_on_failure)
     if not activation_bytes:
-        system.LogError("Activation bytes not provided")
+        logger.log_error("Activation bytes not provided")
         if exit_on_failure:
             system.QuitProgram()
         return False
@@ -226,11 +227,11 @@ def DecryptAAXFilesToM4A(
         else:
             fail_count += 1
             if exit_on_failure:
-                system.LogError(f"Failed to decrypt: {input_file}")
+                logger.log_error(f"Failed to decrypt: {input_file}")
                 system.QuitProgram()
 
     # Log summary
-    system.LogInfo(f"Decryption complete: {success_count} succeeded, {fail_count} failed")
+    logger.log_info(f"Decryption complete: {success_count} succeeded, {fail_count} failed")
     return fail_count == 0
 
 # Decrypt all AAX files in a directory
@@ -248,7 +249,7 @@ def DecryptAAXDirectory(
     # Validate input directory
     system.AssertIsValidPath(input_dir, "input_dir")
     if not system.IsPathDirectory(input_dir):
-        system.LogError(f"Input directory does not exist: {input_dir}")
+        logger.log_error(f"Input directory does not exist: {input_dir}")
         if exit_on_failure:
             system.QuitProgram()
         return False
@@ -277,9 +278,9 @@ def DecryptAAXDirectory(
             if item.lower().endswith((".aax", ".aa")):
                 aax_files.append(system.JoinPaths(input_dir, item))
     if not aax_files:
-        system.LogWarning(f"No AAX/AA files found in: {input_dir}")
+        logger.log_warning(f"No AAX/AA files found in: {input_dir}")
         return True
-    system.LogInfo(f"Found {len(aax_files)} AAX/AA files to decrypt")
+    logger.log_info(f"Found {len(aax_files)} AAX/AA files to decrypt")
 
     # Decrypt files
     return DecryptAAXFilesToM4A(

@@ -5,6 +5,7 @@ import sys
 # Local imports
 import config
 import system
+import logger
 import release
 import programs
 import toolbase
@@ -56,7 +57,7 @@ class ZoomPlatformSH(toolbase.ToolBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup ZoomPlatformSH")
+                logger.log_error("Could not setup ZoomPlatformSH")
                 return False
         return True
 
@@ -75,6 +76,6 @@ class ZoomPlatformSH(toolbase.ToolBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup ZoomPlatformSH")
+                logger.log_error("Could not setup ZoomPlatformSH")
                 return False
         return True

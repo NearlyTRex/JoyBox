@@ -5,6 +5,7 @@ import sys
 # Local imports
 import config
 import system
+import logger
 import network
 import release
 import programs
@@ -89,7 +90,7 @@ class Pegasus(toolbase.ToolBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup Pegasus")
+                logger.log_error("Could not setup Pegasus")
                 return False
             success = network.DownloadGithubRepository(
                 github_user = "NearlyTRex",
@@ -100,7 +101,7 @@ class Pegasus(toolbase.ToolBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup Pegasus theme")
+                logger.log_error("Could not setup Pegasus theme")
                 return False
 
         # Build linux program
@@ -130,7 +131,7 @@ class Pegasus(toolbase.ToolBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup Pegasus")
+                logger.log_error("Could not setup Pegasus")
                 return False
             success = network.DownloadGithubRepository(
                 github_user = "NearlyTRex",
@@ -141,7 +142,7 @@ class Pegasus(toolbase.ToolBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup Pegasus theme")
+                logger.log_error("Could not setup Pegasus theme")
                 return False
         return True
 
@@ -161,7 +162,7 @@ class Pegasus(toolbase.ToolBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup Pegasus")
+                logger.log_error("Could not setup Pegasus")
                 return False
 
         # Setup linux program
@@ -174,7 +175,7 @@ class Pegasus(toolbase.ToolBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup Pegasus")
+                logger.log_error("Could not setup Pegasus")
                 return False
         return True
 
@@ -202,6 +203,6 @@ class Pegasus(toolbase.ToolBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup Pegasus config files")
+                logger.log_error("Could not setup Pegasus config files")
                 return False
         return True

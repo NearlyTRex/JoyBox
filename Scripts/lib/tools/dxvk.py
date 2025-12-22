@@ -5,6 +5,7 @@ import sys
 # Local imports
 import config
 import system
+import logger
 import release
 import programs
 import toolbase
@@ -75,7 +76,7 @@ class DXVK(toolbase.ToolBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup DXVK")
+                logger.log_error("Could not setup DXVK")
                 return False
         return True
 
@@ -94,6 +95,6 @@ class DXVK(toolbase.ToolBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup DXVK")
+                logger.log_error("Could not setup DXVK")
                 return False
         return True

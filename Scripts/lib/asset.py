@@ -5,6 +5,7 @@ import sys
 # Local imports
 import config
 import system
+import logger
 import command
 import programs
 import network
@@ -23,7 +24,7 @@ def CleanExifData(
     if programs.IsToolInstalled("ExifTool"):
         exif_tool = programs.GetToolProgram("ExifTool")
     if not exif_tool:
-        system.LogError("ExifTool was not found")
+        logger.log_error("ExifTool was not found")
         return False
 
     # Get clean command

@@ -6,6 +6,7 @@ import json
 # Local imports
 import config
 import system
+import logger
 import environment
 import command
 import backup
@@ -102,7 +103,7 @@ class Amazon(storebase.StoreBase):
         if programs.IsToolInstalled("PythonVenvPython"):
             python_tool = programs.GetToolProgram("PythonVenvPython")
         if not python_tool:
-            system.LogError("PythonVenvPython was not found")
+            logger.log_error("PythonVenvPython was not found")
             return False
 
         # Get script
@@ -110,7 +111,7 @@ class Amazon(storebase.StoreBase):
         if programs.IsToolInstalled("Nile"):
             nile_script = programs.GetToolProgram("Nile")
         if not nile_script:
-            system.LogError("Nile was not found")
+            logger.log_error("Nile was not found")
             return False
 
         # Get login command
@@ -175,7 +176,7 @@ class Amazon(storebase.StoreBase):
             if cache_age_hours < 24:
                 use_cache = True
                 if verbose:
-                    system.LogInfo("Using cached Amazon purchases data (%.1f hours old)" % cache_age_hours)
+                    logger.log_info("Using cached Amazon purchases data (%.1f hours old)" % cache_age_hours)
 
         # Load from cache if available
         if use_cache:
@@ -194,7 +195,7 @@ class Amazon(storebase.StoreBase):
                 return cached_purchases
             else:
                 if verbose:
-                    system.LogWarning("Failed to load Amazon cache, will fetch fresh data")
+                    logger.log_warning("Failed to load Amazon cache, will fetch fresh data")
                 use_cache = False
 
         # Get tool
@@ -202,7 +203,7 @@ class Amazon(storebase.StoreBase):
         if programs.IsToolInstalled("PythonVenvPython"):
             python_tool = programs.GetToolProgram("PythonVenvPython")
         if not python_tool:
-            system.LogError("PythonVenvPython was not found")
+            logger.log_error("PythonVenvPython was not found")
             return None
 
         # Get script
@@ -210,7 +211,7 @@ class Amazon(storebase.StoreBase):
         if programs.IsToolInstalled("Nile"):
             nile_script = programs.GetToolProgram("Nile")
         if not nile_script:
-            system.LogError("Nile was not found")
+            logger.log_error("Nile was not found")
             return None
 
         # Get refresh command
@@ -264,7 +265,7 @@ class Amazon(storebase.StoreBase):
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if len(list_output) == 0:
-            system.LogError("Unable to find amazon purchases")
+            logger.log_error("Unable to find amazon purchases")
             return None
 
         # Parse output
@@ -308,9 +309,9 @@ class Amazon(storebase.StoreBase):
             pretend_run = pretend_run,
             exit_on_failure = False)
         if success and verbose:
-            system.LogInfo("Saved Amazon purchases data to cache")
+            logger.log_info("Saved Amazon purchases data to cache")
         elif not success and verbose:
-            system.LogWarning("Failed to save Amazon cache")
+            logger.log_warning("Failed to save Amazon cache")
         return purchases
 
     ############################################################
@@ -328,7 +329,7 @@ class Amazon(storebase.StoreBase):
 
         # Check identifier
         if not self.IsValidInfoIdentifier(identifier):
-            system.LogWarning("Info identifier '%s' was not valid" % identifier)
+            logger.log_warning("Info identifier '%s' was not valid" % identifier)
             return None
 
         # Get tool
@@ -336,7 +337,7 @@ class Amazon(storebase.StoreBase):
         if programs.IsToolInstalled("PythonVenvPython"):
             python_tool = programs.GetToolProgram("PythonVenvPython")
         if not python_tool:
-            system.LogError("PythonVenvPython was not found")
+            logger.log_error("PythonVenvPython was not found")
             return None
 
         # Get script
@@ -344,7 +345,7 @@ class Amazon(storebase.StoreBase):
         if programs.IsToolInstalled("Nile"):
             nile_script = programs.GetToolProgram("Nile")
         if not nile_script:
-            system.LogError("Nile was not found")
+            logger.log_error("Nile was not found")
             return None
 
         # Get info command
@@ -363,7 +364,7 @@ class Amazon(storebase.StoreBase):
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if len(info_output) == 0:
-            system.LogError("Unable to find amazon information for '%s'" % identifier)
+            logger.log_error("Unable to find amazon information for '%s'" % identifier)
             return None
 
         # Get amazon json
@@ -371,9 +372,9 @@ class Amazon(storebase.StoreBase):
         try:
             amazon_json = json.loads(info_output)
         except Exception as e:
-            system.LogError(e)
-            system.LogError("Unable to parse amazon information for '%s'" % identifier)
-            system.LogError("Received output:\n%s" % info_output)
+            logger.log_error(e)
+            logger.log_error("Unable to parse amazon information for '%s'" % identifier)
+            logger.log_error("Received output:\n%s" % info_output)
             return None
 
         # Build jsondata
@@ -409,7 +410,7 @@ class Amazon(storebase.StoreBase):
 
         # Check identifier
         if not self.IsValidDownloadIdentifier(identifier):
-            system.LogWarning("Download identifier '%s' was not valid" % identifier)
+            logger.log_warning("Download identifier '%s' was not valid" % identifier)
             return False
 
         # Get tool
@@ -417,7 +418,7 @@ class Amazon(storebase.StoreBase):
         if programs.IsToolInstalled("PythonVenvPython"):
             python_tool = programs.GetToolProgram("PythonVenvPython")
         if not python_tool:
-            system.LogError("PythonVenvPython was not found")
+            logger.log_error("PythonVenvPython was not found")
             return False
 
         # Get script
@@ -425,7 +426,7 @@ class Amazon(storebase.StoreBase):
         if programs.IsToolInstalled("Nile"):
             nile_script = programs.GetToolProgram("Nile")
         if not nile_script:
-            system.LogError("Nile was not found")
+            logger.log_error("Nile was not found")
             return False
 
         # Create temporary directory

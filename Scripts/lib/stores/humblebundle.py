@@ -6,6 +6,7 @@ import json
 # Local imports
 import config
 import system
+import logger
 import environment
 import programs
 import command
@@ -140,7 +141,7 @@ class HumbleBundle(storebase.StoreBase):
             if cache_age_hours < 24:
                 use_cache = True
                 if verbose:
-                    system.LogInfo("Using cached Humble Bundle purchases data (%.1f hours old)" % cache_age_hours)
+                    logger.log_info("Using cached Humble Bundle purchases data (%.1f hours old)" % cache_age_hours)
 
         # Load from cache if available
         if use_cache:
@@ -159,7 +160,7 @@ class HumbleBundle(storebase.StoreBase):
                 return cached_purchases
             else:
                 if verbose:
-                    system.LogWarning("Failed to load Humble Bundle cache, will fetch fresh data")
+                    logger.log_warning("Failed to load Humble Bundle cache, will fetch fresh data")
                 use_cache = False
 
         # Get tool
@@ -167,7 +168,7 @@ class HumbleBundle(storebase.StoreBase):
         if programs.IsToolInstalled("PythonVenvPython"):
             python_tool = programs.GetToolProgram("PythonVenvPython")
         if not python_tool:
-            system.LogError("PythonVenvPython was not found")
+            logger.log_error("PythonVenvPython was not found")
             return False
 
         # Get script
@@ -175,7 +176,7 @@ class HumbleBundle(storebase.StoreBase):
         if programs.IsToolInstalled("HumbleBundleManager"):
             humble_script = programs.GetToolProgram("HumbleBundleManager")
         if not humble_script:
-            system.LogError("HumbleBundleManager was not found")
+            logger.log_error("HumbleBundleManager was not found")
             return False
 
         # Get list command
@@ -195,7 +196,7 @@ class HumbleBundle(storebase.StoreBase):
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if len(list_output) == 0:
-            system.LogError("Unable to find humble purchases")
+            logger.log_error("Unable to find humble purchases")
             return None
 
         # Parse output
@@ -226,7 +227,7 @@ class HumbleBundle(storebase.StoreBase):
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if len(info_output) == 0:
-                system.LogError(f"Unable to describe humble purchase {line_appname}")
+                logger.log_error(f"Unable to describe humble purchase {line_appname}")
                 return None
 
             # Get humble json
@@ -234,9 +235,9 @@ class HumbleBundle(storebase.StoreBase):
             try:
                 humble_json = json.loads(info_output)
             except Exception as e:
-                system.LogError(e)
-                system.LogError("Unable to parse humble game information for '%s'" % line_appname)
-                system.LogError("Received output:\n%s" % info_output)
+                logger.log_error(e)
+                logger.log_error("Unable to parse humble game information for '%s'" % line_appname)
+                logger.log_error("Received output:\n%s" % info_output)
                 return None
 
             # Gather info
@@ -266,9 +267,9 @@ class HumbleBundle(storebase.StoreBase):
             pretend_run = pretend_run,
             exit_on_failure = False)
         if success and verbose:
-            system.LogInfo("Saved Humble Bundle purchases data to cache")
+            logger.log_info("Saved Humble Bundle purchases data to cache")
         elif not success and verbose:
-            system.LogWarning("Failed to save Humble Bundle cache")
+            logger.log_warning("Failed to save Humble Bundle cache")
         return purchases
 
     ############################################################
@@ -286,7 +287,7 @@ class HumbleBundle(storebase.StoreBase):
 
         # Check identifier
         if not self.IsValidInfoIdentifier(identifier):
-            system.LogWarning("Info identifier '%s' was not valid" % identifier)
+            logger.log_warning("Info identifier '%s' was not valid" % identifier)
             return None
 
         # Get tool
@@ -294,7 +295,7 @@ class HumbleBundle(storebase.StoreBase):
         if programs.IsToolInstalled("PythonVenvPython"):
             python_tool = programs.GetToolProgram("PythonVenvPython")
         if not python_tool:
-            system.LogError("PythonVenvPython was not found")
+            logger.log_error("PythonVenvPython was not found")
             return False
 
         # Get script
@@ -302,7 +303,7 @@ class HumbleBundle(storebase.StoreBase):
         if programs.IsToolInstalled("HumbleBundleManager"):
             humble_script = programs.GetToolProgram("HumbleBundleManager")
         if not humble_script:
-            system.LogError("HumbleBundleManager was not found")
+            logger.log_error("HumbleBundleManager was not found")
             return False
 
         # Get info command
@@ -322,7 +323,7 @@ class HumbleBundle(storebase.StoreBase):
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if len(info_output) == 0:
-            system.LogError(f"Unable to describe humble purchase {identifier}")
+            logger.log_error(f"Unable to describe humble purchase {identifier}")
             return None
 
         # Get humble json
@@ -330,9 +331,9 @@ class HumbleBundle(storebase.StoreBase):
         try:
             humble_json = json.loads(info_output)
         except Exception as e:
-            system.LogError(e)
-            system.LogError("Unable to parse humble game information for '%s'" % identifier)
-            system.LogError("Received output:\n%s" % info_output)
+            logger.log_error(e)
+            logger.log_error("Unable to parse humble game information for '%s'" % identifier)
+            logger.log_error("Received output:\n%s" % info_output)
             return None
 
         # Build jsondata

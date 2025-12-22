@@ -10,6 +10,7 @@ import config
 import command
 import programs
 import system
+import logger
 import environment
 import sandbox
 
@@ -222,18 +223,18 @@ def CreateArchiveFromFile(
     if programs.IsToolInstalled("7-Zip"):
         archive_tool = programs.GetToolProgram("7-Zip")
     if not archive_tool:
-        system.LogError("7-Zip was not found")
+        logger.log_error("7-Zip was not found")
         return False
 
     # Get archive type
     archive_type = GetArchiveType(archive_file)
     if not archive_type:
-        system.LogError("Unrecognized archive type for %s" % archive_file)
+        logger.log_error("Unrecognized archive type for %s" % archive_file)
         return False
 
     # Check if creatable
     if not IsCreatableArchiveType(archive_type):
-        system.LogError("Unable to create archives of type %s" % archive_type.val())
+        logger.log_error("Unable to create archives of type %s" % archive_type.val())
         return False
 
     # Get path to add
@@ -303,18 +304,18 @@ def CreateArchiveFromFolder(
     if programs.IsToolInstalled("7-Zip"):
         archive_tool = programs.GetToolProgram("7-Zip")
     if not archive_tool:
-        system.LogError("7-Zip was not found")
+        logger.log_error("7-Zip was not found")
         return False
 
     # Get archive type
     archive_type = GetArchiveType(archive_file)
     if not archive_type:
-        system.LogError("Unrecognized archive type for %s" % archive_file)
+        logger.log_error("Unrecognized archive type for %s" % archive_file)
         return False
 
     # Check if creatable
     if not IsCreatableArchiveType(archive_type):
-        system.LogError("Unable to create archives of type %s" % archive_type.val())
+        logger.log_error("Unable to create archives of type %s" % archive_type.val())
         return False
 
     # Create list of objects to add
@@ -389,24 +390,24 @@ def ExtractArchive(
         if programs.IsToolInstalled("Tar"):
             archive_tool = programs.GetToolProgram("Tar")
         if not archive_tool:
-            system.LogError("Tar was not found")
+            logger.log_error("Tar was not found")
             return False
     else:
         if programs.IsToolInstalled("7-Zip"):
             archive_tool = programs.GetToolProgram("7-Zip")
         if not archive_tool:
-            system.LogError("7-Zip was not found")
+            logger.log_error("7-Zip was not found")
             return False
 
     # Get archive type
     archive_type = GetArchiveType(archive_file)
     if not archive_type:
-        system.LogError("Unrecognized archive type for %s" % archive_file)
+        logger.log_error("Unrecognized archive type for %s" % archive_file)
         return False
 
     # Check if extractable
     if not IsExtractableArchiveType(archive_type):
-        system.LogError("Unable to extract archives of type %s" % archive_type.val())
+        logger.log_error("Unable to extract archives of type %s" % archive_type.val())
         return False
 
     # Get extract command
@@ -470,7 +471,7 @@ def TestArchive(
     if programs.IsToolInstalled("7-Zip"):
         archive_tool = programs.GetToolProgram("7-Zip")
     if not archive_tool:
-        system.LogError("7-Zip was not found")
+        logger.log_error("7-Zip was not found")
         return False
 
     # Get test command
@@ -502,7 +503,7 @@ def ListArchive(
     if programs.IsToolInstalled("7-Zip"):
         archive_tool = programs.GetToolProgram("7-Zip")
     if not archive_tool:
-        system.LogError("7-Zip was not found")
+        logger.log_error("7-Zip was not found")
         return []
 
     # Get list command

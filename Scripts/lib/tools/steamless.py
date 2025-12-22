@@ -5,6 +5,7 @@ import sys
 # Local imports
 import config
 import system
+import logger
 import release
 import programs
 import toolbase
@@ -54,7 +55,7 @@ class Steamless(toolbase.ToolBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup Steamless")
+                logger.log_error("Could not setup Steamless")
                 return False
         return True
 
@@ -74,6 +75,6 @@ class Steamless(toolbase.ToolBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup Steamless")
+                logger.log_error("Could not setup Steamless")
                 return False
         return True

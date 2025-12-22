@@ -5,6 +5,7 @@ import sys
 # Local imports
 import config
 import system
+import logger
 import environment
 import programs
 import transform
@@ -257,7 +258,7 @@ def InstallLocalTransformedGame(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if not transform_success:
-        system.LogError(transform_result)
+        logger.log_error(transform_result)
         return False
 
     # Add to cache

@@ -12,6 +12,7 @@ import system
 import audio
 import arguments
 import setup
+import logger
 
 # Parse arguments
 parser = arguments.ArgumentParser(description = "Audio metadata management tool for scanning, clearing, and applying ID3 tags.")
@@ -52,6 +53,9 @@ def main():
     # Check requirements
     setup.CheckRequirements()
 
+    # Setup logging
+    logger.setup_logging()
+
     # Execute action
     if args.action == config.AudioMetadataAction.TAG:
         return audio.BuildAudioMetadataFiles(
@@ -82,7 +86,7 @@ def main():
             pretend_run = args.pretend_run,
             exit_on_failure = args.exit_on_failure)
     else:
-        system.LogError(f"Unknown action: {args.action}")
+        logger.log_error(f"Unknown action: {args.action}")
         return False
 
 # Main

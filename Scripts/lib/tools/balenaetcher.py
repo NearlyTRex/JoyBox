@@ -5,6 +5,7 @@ import sys
 # Local imports
 import config
 import system
+import logger
 import environment
 import release
 import programs
@@ -55,7 +56,7 @@ class BalenaEtcher(toolbase.ToolBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup BalenaEtcher")
+                logger.log_error("Could not setup BalenaEtcher")
                 return False
 
         # Download linux program
@@ -72,7 +73,7 @@ class BalenaEtcher(toolbase.ToolBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup BalenaEtcher")
+                logger.log_error("Could not setup BalenaEtcher")
                 return False
         return True
 
@@ -92,7 +93,7 @@ class BalenaEtcher(toolbase.ToolBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup BalenaEtcher")
+                logger.log_error("Could not setup BalenaEtcher")
                 return False
 
         # Setup linux program
@@ -105,6 +106,6 @@ class BalenaEtcher(toolbase.ToolBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup BalenaEtcher")
+                logger.log_error("Could not setup BalenaEtcher")
                 return False
         return True

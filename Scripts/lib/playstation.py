@@ -9,6 +9,7 @@ import config
 import command
 import programs
 import system
+import logger
 import environment
 import iso
 import chd
@@ -39,14 +40,14 @@ def EncryptPS3ISO(
     if programs.IsToolInstalled("PS3Dec"):
         encrypt_tool = programs.GetToolProgram("PS3Dec")
     if not encrypt_tool:
-        system.LogError("PS3Dec was not found")
+        logger.log_error("PS3Dec was not found")
         return False
 
     # Get encryption key
     encryption_key = GetPS3DecryptionKey(dkey_file)
     if len(encryption_key) == 0:
         if exit_on_failure:
-            system.LogError("PS3 key file '%s' is invalid" % dkey_file, quit_program = True)
+            logger.log_error("PS3 key file '%s' is invalid" % dkey_file, quit_program = True)
         return False
 
     # Get encrypt command
@@ -66,7 +67,7 @@ def EncryptPS3ISO(
         exit_on_failure = exit_on_failure)
     if (code != 0):
         if exit_on_failure:
-            system.LogError("Unable to encrypt ps3 iso '%s' to '%s'" % (iso_file_dec, iso_file_enc), quit_program = True)
+            logger.log_error("Unable to encrypt ps3 iso '%s' to '%s'" % (iso_file_dec, iso_file_enc), quit_program = True)
         return False
 
     # Check result
@@ -86,14 +87,14 @@ def DecryptPS3ISO(
     if programs.IsToolInstalled("PS3Dec"):
         decrypt_tool = programs.GetToolProgram("PS3Dec")
     if not decrypt_tool:
-        system.LogError("PS3Dec was not found")
+        logger.log_error("PS3Dec was not found")
         return False
 
     # Get decryption key
     decryption_key = GetPS3DecryptionKey(dkey_file)
     if len(decryption_key) == 0:
         if exit_on_failure:
-            system.LogError("PS3 key file '%s' is invalid" % dkey_file, quit_program = True)
+            logger.log_error("PS3 key file '%s' is invalid" % dkey_file, quit_program = True)
         return False
 
     # Get decrypt command
@@ -113,7 +114,7 @@ def DecryptPS3ISO(
         exit_on_failure = exit_on_failure)
     if (code != 0):
         if exit_on_failure:
-            system.LogError("Unable to decrypt ps3 iso '%s' to '%s'" % (iso_file_enc, iso_file_dec), quit_program = True)
+            logger.log_error("Unable to decrypt ps3 iso '%s' to '%s'" % (iso_file_enc, iso_file_dec), quit_program = True)
         return False
 
     # Check result
@@ -162,8 +163,8 @@ def ExtractPS3ISO(
     if os.path.exists(license_file):
         if not system.IsFileCorrectlyHeadered(license_file, "PS3LICDA"):
             if exit_on_failure:
-                system.LogError("Decryption failure, LIC.DAT '%s' has the wrong header (expected PS3LICDA)." % license_file)
-                system.LogError("It seems likely that the decryption key file '%s' is not compatible with '%s'" % (dkey_file, iso_file_enc))
+                logger.log_error("Decryption failure, LIC.DAT '%s' has the wrong header (expected PS3LICDA)." % license_file)
+                logger.log_error("It seems likely that the decryption key file '%s' is not compatible with '%s'" % (dkey_file, iso_file_enc))
                 system.QuitProgram()
             return False
 
@@ -172,8 +173,8 @@ def ExtractPS3ISO(
     if os.path.exists(eboot_file):
         if not system.IsFileCorrectlyHeadered(eboot_file, "SCE"):
             if exit_on_failure:
-                system.LogError("Decryption failure, EBOOT.BIN '%s' has the wrong header (expected SCE)." % eboot_file)
-                system.LogError("It seems likely that the decryption key file '%s' is not compatible with '%s'" % (dkey_file, iso_file_enc))
+                logger.log_error("Decryption failure, EBOOT.BIN '%s' has the wrong header (expected SCE)." % eboot_file)
+                logger.log_error("It seems likely that the decryption key file '%s' is not compatible with '%s'" % (dkey_file, iso_file_enc))
                 system.QuitProgram()
             return False
 
@@ -270,7 +271,7 @@ def ExtractPSNPKG(
     if programs.IsToolInstalled("PythonVenvPython"):
         python_tool = programs.GetToolProgram("PythonVenvPython")
     if not python_tool:
-        system.LogError("PythonVenvPython was not found")
+        logger.log_error("PythonVenvPython was not found")
         return False
 
     # Get script
@@ -278,7 +279,7 @@ def ExtractPSNPKG(
     if programs.IsToolInstalled("PSNGetPkgInfo"):
         extract_script = programs.GetToolProgram("PSNGetPkgInfo")
     if not extract_script:
-        system.LogError("PSNGetPkgInfo was not found")
+        logger.log_error("PSNGetPkgInfo was not found")
         return False
 
     # Get extract command
@@ -296,7 +297,7 @@ def ExtractPSNPKG(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if code != 0:
-        system.LogError("Unable to extract psn pkg '%s' to '%s'" % (pkg_file, extract_dir), quit_program = True)
+        logger.log_error("Unable to extract psn pkg '%s' to '%s'" % (pkg_file, extract_dir), quit_program = True)
         return False
 
     # Clean up
@@ -328,7 +329,7 @@ def StripPSV(
     if programs.IsToolInstalled("PSVStrip"):
         strip_tool = programs.GetToolProgram("PSVStrip")
     if not strip_tool:
-        system.LogError("PSVStrip was not found")
+        logger.log_error("PSVStrip was not found")
         return False
 
     # Get strip command
@@ -347,7 +348,7 @@ def StripPSV(
         exit_on_failure = exit_on_failure)
     if (code != 0):
         if exit_on_failure:
-            system.LogError("Unable to strip psv file '%s'" % src_psv_file, quit_program = True)
+            logger.log_error("Unable to strip psv file '%s'" % src_psv_file, quit_program = True)
         return False
 
     # Clean up
@@ -376,7 +377,7 @@ def UnstripPSV(
     if programs.IsToolInstalled("PSVStrip"):
         unstrip_tool = programs.GetToolProgram("PSVStrip")
     if not unstrip_tool:
-        system.LogError("PSVStrip was not found")
+        logger.log_error("PSVStrip was not found")
         return False
 
     # Get unstrip command
@@ -396,7 +397,7 @@ def UnstripPSV(
         exit_on_failure = exit_on_failure)
     if (code != 0):
         if exit_on_failure:
-            system.LogError("Unable to unstrip psv file '%s'" % src_psv_file, quit_program = True)
+            logger.log_error("Unable to unstrip psv file '%s'" % src_psv_file, quit_program = True)
         return False
 
     # Clean up
@@ -424,7 +425,7 @@ def TrimPSV(
     if programs.IsToolInstalled("PythonVenvPython"):
         python_tool = programs.GetToolProgram("PythonVenvPython")
     if not python_tool:
-        system.LogError("PythonVenvPython was not found")
+        logger.log_error("PythonVenvPython was not found")
         return False
 
     # Get script
@@ -432,7 +433,7 @@ def TrimPSV(
     if programs.IsToolInstalled("PSVTools"):
         trim_script = programs.GetToolProgram("PSVTools")
     if not trim_script:
-        system.LogError("PSVTools was not found")
+        logger.log_error("PSVTools was not found")
         return False
 
     # Get trim command
@@ -452,7 +453,7 @@ def TrimPSV(
         exit_on_failure = exit_on_failure)
     if (code != 0):
         if exit_on_failure:
-            system.LogError("Unable to trim psv file '%s'" % src_psv_file, quit_program = True)
+            logger.log_error("Unable to trim psv file '%s'" % src_psv_file, quit_program = True)
         return False
 
     # Clean up
@@ -480,7 +481,7 @@ def UntrimPSV(
     if programs.IsToolInstalled("PythonVenvPython"):
         python_tool = programs.GetToolProgram("PythonVenvPython")
     if not python_tool:
-        system.LogError("PythonVenvPython was not found")
+        logger.log_error("PythonVenvPython was not found")
         return False
 
     # Get script
@@ -488,7 +489,7 @@ def UntrimPSV(
     if programs.IsToolInstalled("PSVTools"):
         untrim_script = programs.GetToolProgram("PSVTools")
     if not untrim_script:
-        system.LogError("PSVTools was not found")
+        logger.log_error("PSVTools was not found")
         return False
 
     # Get untrim command
@@ -508,7 +509,7 @@ def UntrimPSV(
         exit_on_failure = exit_on_failure)
     if (code != 0):
         if exit_on_failure:
-            system.LogError("Unable to untrim psv file '%s'" % src_psv_file, quit_program = True)
+            logger.log_error("Unable to untrim psv file '%s'" % src_psv_file, quit_program = True)
         return False
 
     # Clean up
@@ -534,7 +535,7 @@ def VerifyPSV(
     if programs.IsToolInstalled("PythonVenvPython"):
         python_tool = programs.GetToolProgram("PythonVenvPython")
     if not python_tool:
-        system.LogError("PythonVenvPython was not found")
+        logger.log_error("PythonVenvPython was not found")
         return False
 
     # Get script
@@ -542,7 +543,7 @@ def VerifyPSV(
     if programs.IsToolInstalled("PSVTools"):
         verify_script = programs.GetToolProgram("PSVTools")
     if not verify_script:
-        system.LogError("PSVTools was not found")
+        logger.log_error("PSVTools was not found")
         return False
 
     # Get verify command
@@ -561,7 +562,7 @@ def VerifyPSV(
         exit_on_failure = exit_on_failure)
     if (code != 0):
         if exit_on_failure:
-            system.LogError("Unable to verify psv file '%s'" % psv_file, quit_program = True)
+            logger.log_error("Unable to verify psv file '%s'" % psv_file, quit_program = True)
         return False
 
     # Must be good
@@ -627,7 +628,7 @@ def GetPSNPackageInfo(
     if programs.IsToolInstalled("PythonVenvPython"):
         python_tool = programs.GetToolProgram("PythonVenvPython")
     if not python_tool:
-        system.LogError("PythonVenvPython was not found")
+        logger.log_error("PythonVenvPython was not found")
         return None
 
     # Get script
@@ -635,7 +636,7 @@ def GetPSNPackageInfo(
     if programs.IsToolInstalled("PSNGetPkgInfo"):
         extract_script = programs.GetToolProgram("PSNGetPkgInfo")
     if not extract_script:
-        system.LogError("PSNGetPkgInfo was not found")
+        logger.log_error("PSNGetPkgInfo was not found")
         return None
 
     # Get info command

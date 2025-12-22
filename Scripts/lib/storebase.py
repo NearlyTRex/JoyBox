@@ -5,6 +5,7 @@ import sys
 # Local imports
 import config
 import system
+import logger
 import jsondata
 import webpage
 import metadatacollector
@@ -425,7 +426,7 @@ class StoreBase:
 
         # Check identifier
         if not self.IsValidInfoIdentifier(identifier):
-            system.LogWarning("Info identifier '%s' was not valid" % identifier)
+            logger.log_warning("Info identifier '%s' was not valid" % identifier)
             return None
 
         # Build jsondata
@@ -450,7 +451,7 @@ class StoreBase:
 
         # Check identifier
         if not self.IsValidMetadataIdentifier(identifier):
-            system.LogWarning("Metadata identifier '%s' was not valid" % identifier)
+            logger.log_warning("Metadata identifier '%s' was not valid" % identifier)
             return None
 
         # Collect metadata entry
@@ -478,7 +479,7 @@ class StoreBase:
 
         # Check identifier
         if not self.IsValidAssetIdentifier(identifier):
-            system.LogWarning("Asset identifier '%s' was not valid" % identifier)
+            logger.log_warning("Asset identifier '%s' was not valid" % identifier)
             return None
 
         # Collect asset url

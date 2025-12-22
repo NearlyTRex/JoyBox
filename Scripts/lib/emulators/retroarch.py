@@ -7,6 +7,7 @@ import sys
 import config
 import environment
 import system
+import logger
 import release
 import programs
 import hashing
@@ -117,7 +118,7 @@ class RetroArch(emulatorbase.EmulatorBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup RetroArch")
+                logger.log_error("Could not setup RetroArch")
                 return False
             success = release.DownloadGeneralRelease(
                 archive_url = "https://buildbot.libretro.com/nightly/windows/x86_64/RetroArch_cores.7z",
@@ -129,7 +130,7 @@ class RetroArch(emulatorbase.EmulatorBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup RetroArch cores")
+                logger.log_error("Could not setup RetroArch cores")
                 return False
 
         # Download linux program
@@ -144,7 +145,7 @@ class RetroArch(emulatorbase.EmulatorBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup RetroArch")
+                logger.log_error("Could not setup RetroArch")
                 return False
             success = release.DownloadGeneralRelease(
                 archive_url = "https://buildbot.libretro.com/nightly/linux/x86_64/RetroArch_cores.7z",
@@ -156,7 +157,7 @@ class RetroArch(emulatorbase.EmulatorBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup RetroArch cores")
+                logger.log_error("Could not setup RetroArch cores")
                 return False
         return True
 
@@ -177,7 +178,7 @@ class RetroArch(emulatorbase.EmulatorBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup RetroArch")
+                logger.log_error("Could not setup RetroArch")
                 return False
             success = release.SetupStoredRelease(
                 archive_dir = programs.GetProgramBackupDir("RetroArch", "windows"),
@@ -189,7 +190,7 @@ class RetroArch(emulatorbase.EmulatorBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup RetroArch cores")
+                logger.log_error("Could not setup RetroArch cores")
                 return False
 
         # Setup linux program
@@ -204,7 +205,7 @@ class RetroArch(emulatorbase.EmulatorBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup RetroArch")
+                logger.log_error("Could not setup RetroArch")
                 return False
             success = release.SetupStoredRelease(
                 archive_dir = programs.GetProgramBackupDir("RetroArch", "linux"),
@@ -216,7 +217,7 @@ class RetroArch(emulatorbase.EmulatorBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup RetroArch cores")
+                logger.log_error("Could not setup RetroArch cores")
                 return False
         return True
 
@@ -234,7 +235,7 @@ class RetroArch(emulatorbase.EmulatorBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup RetroArch config files")
+                logger.log_error("Could not setup RetroArch config files")
                 return False
 
         # Verify system files
@@ -246,7 +247,7 @@ class RetroArch(emulatorbase.EmulatorBase):
                 exit_on_failure = setup_params.exit_on_failure)
             success = (expected_md5 == actual_md5)
             if not success:
-                system.LogError("Could not verify RetroArch system file %s" % filename)
+                logger.log_error("Could not verify RetroArch system file %s" % filename)
                 return False
 
         # Copy system files
@@ -259,7 +260,7 @@ class RetroArch(emulatorbase.EmulatorBase):
                     pretend_run = setup_params.pretend_run,
                     exit_on_failure = setup_params.exit_on_failure)
                 if not success:
-                    system.LogError("Could not setup RetroArch system files")
+                    logger.log_error("Could not setup RetroArch system files")
                     return False
         return True
 

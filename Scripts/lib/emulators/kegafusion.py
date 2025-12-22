@@ -6,6 +6,7 @@ import sys
 import config
 import environment
 import system
+import logger
 import release
 import programs
 import emulatorbase
@@ -59,7 +60,7 @@ class KegaFusion(emulatorbase.EmulatorBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup KegaFusion")
+                logger.log_error("Could not setup KegaFusion")
                 return False
         return True
 
@@ -79,6 +80,6 @@ class KegaFusion(emulatorbase.EmulatorBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup KegaFusion")
+                logger.log_error("Could not setup KegaFusion")
                 return False
         return True

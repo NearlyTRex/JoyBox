@@ -7,6 +7,7 @@ import config
 import command
 import programs
 import system
+import logger
 import hashing
 
 # Determine if file is encrypted
@@ -48,7 +49,7 @@ def GetEmbeddedFilename(
     if programs.IsToolInstalled("Gpg"):
         gpg_tool = programs.GetToolProgram("Gpg")
     if not gpg_tool:
-        system.LogError("Gpg was not found")
+        logger.log_error("Gpg was not found")
         return None
 
     # Get info command
@@ -225,7 +226,7 @@ def EncryptFile(
     if programs.IsToolInstalled("Gpg"):
         gpg_tool = programs.GetToolProgram("Gpg")
     if not gpg_tool:
-        system.LogError("Gpg was not found")
+        logger.log_error("Gpg was not found")
         return False
 
     # Get encrypt command
@@ -250,7 +251,7 @@ def EncryptFile(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if code != 0:
-        system.LogError("Unable to encrypt file '%s'" % src)
+        logger.log_error("Unable to encrypt file '%s'" % src)
         return False
 
     # Delete original
@@ -310,7 +311,7 @@ def DecryptFile(
     if programs.IsToolInstalled("Gpg"):
         gpg_tool = programs.GetToolProgram("Gpg")
     if not gpg_tool:
-        system.LogError("Gpg was not found")
+        logger.log_error("Gpg was not found")
         return False
 
     # Get decrypt command
@@ -334,7 +335,7 @@ def DecryptFile(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if code != 0:
-        system.LogError("Unable to decrypt file '%s'" % src)
+        logger.log_error("Unable to decrypt file '%s'" % src)
         return False
 
     # Delete original

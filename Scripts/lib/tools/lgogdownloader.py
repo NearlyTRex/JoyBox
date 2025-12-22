@@ -5,6 +5,7 @@ import sys
 # Local imports
 import config
 import system
+import logger
 import environment
 import release
 import programs
@@ -68,7 +69,7 @@ class LGOGDownloader(toolbase.ToolBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup LGOGDownloader")
+                logger.log_error("Could not setup LGOGDownloader")
                 return False
         return True
 
@@ -87,7 +88,7 @@ class LGOGDownloader(toolbase.ToolBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup LGOGDownloader")
+                logger.log_error("Could not setup LGOGDownloader")
                 return False
         return True
 
@@ -106,6 +107,6 @@ class LGOGDownloader(toolbase.ToolBase):
                     pretend_run = setup_params.pretend_run,
                     exit_on_failure = setup_params.exit_on_failure)
                 if not success:
-                    system.LogError("Could not setup LGOGDownloader config files")
+                    logger.log_error("Could not setup LGOGDownloader config files")
                     return False
         return True

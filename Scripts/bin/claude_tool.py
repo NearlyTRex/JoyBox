@@ -11,6 +11,7 @@ import system
 import arguments
 import setup
 import claude
+import logger
 
 # Parse arguments
 parser = arguments.ArgumentParser(description = "Process files with Claude AI.")
@@ -43,6 +44,9 @@ def main():
     # Check requirements
     setup.CheckRequirements()
 
+    # Setup logging
+    logger.setup_logging()
+
     # Get input/output paths
     input_path = parser.get_input_path()
     output_path = args.output_path
@@ -50,13 +54,13 @@ def main():
     # Validate prompt file
     prompt_file = args.prompt_file
     if not prompt_file:
-        system.LogError("Prompt file is required (-f/--prompt_file)", quit_program = True)
+        logger.log_error("Prompt file is required (-f/--prompt_file)", quit_program = True)
     if not system.DoesPathExist(prompt_file):
-        system.LogError("Prompt file not found: %s" % prompt_file, quit_program = True)
+        logger.log_error("Prompt file not found: %s" % prompt_file, quit_program = True)
 
     # Check API key is configured
     if not args.pretend_run and not claude.IsConfigured():
-        system.LogError("Anthropic API key not configured", quit_program = True)
+        logger.log_error("Anthropic API key not configured", quit_program = True)
 
     # Parse extensions
     extensions = []
@@ -80,7 +84,7 @@ def main():
         if extensions:
             details.append("Extensions: %s" % ", ".join(extensions))
         if not system.PromptForPreview("Process files with Claude", details):
-            system.LogWarning("Operation cancelled by user")
+            logger.log_warning("Operation cancelled by user")
             return
 
     # Process files
@@ -97,9 +101,9 @@ def main():
 
     # Summary
     if error_count > 0:
-        system.LogWarning("Completed: %d success, %d skipped, %d errors" % (success_count, skip_count, error_count))
+        logger.log_warning("Completed: %d success, %d skipped, %d errors" % (success_count, skip_count, error_count))
     else:
-        system.LogInfo("Completed: %d success, %d skipped, %d errors" % (success_count, skip_count, error_count))
+        logger.log_info("Completed: %d success, %d skipped, %d errors" % (success_count, skip_count, error_count))
 
 # Start
 if __name__ == "__main__":

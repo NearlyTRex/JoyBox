@@ -14,6 +14,7 @@ import gameinfo
 import collection
 import arguments
 import setup
+import logger
 
 # Parse arguments
 parser = arguments.ArgumentParser(description = "Login stores.")
@@ -34,6 +35,9 @@ def main():
     # Check requirements
     setup.CheckRequirements()
 
+    # Setup logging
+    logger.setup_logging()
+
     # Login game stores
     for game_supercategory, game_category, game_subcategory in gameinfo.IterateSelectedGameCategories(
         parser = parser,
@@ -46,7 +50,7 @@ def main():
             pretend_run = args.pretend_run,
             exit_on_failure = args.exit_on_failure)
         if not success:
-            system.LogError(
+            logger.log_error(
                 message = "Login of store failed!",
                 game_supercategory = game_supercategory,
                 game_category = game_category,

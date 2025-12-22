@@ -13,6 +13,7 @@ import metadata
 import google
 import arguments
 import setup
+import logger
 
 # Parse arguments
 parser = arguments.ArgumentParser(description = "Download youtube videos.")
@@ -31,6 +32,9 @@ def main():
 
     # Check requirements
     setup.CheckRequirements()
+
+    # Setup logging
+    logger.setup_logging()
 
     # Download videos
     google.DownloadVideo(

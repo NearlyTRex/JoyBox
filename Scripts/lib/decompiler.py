@@ -5,6 +5,7 @@ import sys
 # Local imports
 import config
 import system
+import logger
 import environment
 import programs
 import command
@@ -90,7 +91,7 @@ def LaunchProgram(verbose = False, pretend_run = False, exit_on_failure = False)
     if programs.IsToolInstalled("Ghidra"):
         ghidra_tool = programs.GetToolProgram("Ghidra")
     if not ghidra_tool:
-        system.LogError("Ghidra was not found")
+        logger.log_error("Ghidra was not found")
         return False
 
     # Get launch command
@@ -122,13 +123,13 @@ def RunScript(
     if programs.IsToolInstalled("PythonVenvPython"):
         python_tool = programs.GetToolProgram("PythonVenvPython")
     if not python_tool:
-        system.LogError("PythonVenvPython was not found")
+        logger.log_error("PythonVenvPython was not found")
         return False
 
     # Get Ghidra install directory for pyghidra
     ghidra_install_dir = programs.GetLibraryInstallDir("Ghidra", "lib")
     if not ghidra_install_dir or not os.path.isdir(ghidra_install_dir):
-        system.LogError("Ghidra installation not found at: %s" % ghidra_install_dir)
+        logger.log_error("Ghidra installation not found at: %s" % ghidra_install_dir)
         return False
 
     # Get the full script path
@@ -136,12 +137,12 @@ def RunScript(
 
     # Validate script exists
     if not os.path.isfile(script_file):
-        system.LogError("Script not found: %s" % script_file)
+        logger.log_error("Script not found: %s" % script_file)
         return False
 
     # Validate project directory exists
     if not os.path.isdir(project_dir):
-        system.LogError("Project directory not found: %s" % project_dir)
+        logger.log_error("Project directory not found: %s" % project_dir)
         return False
 
     # Build command
@@ -162,13 +163,13 @@ def RunScript(
 
     # Log what we're doing
     if verbose:
-        system.LogInfo("Running PyGhidra script:")
-        system.LogInfo("  Project: %s/%s" % (project_dir, project_name))
-        system.LogInfo("  Program: %s" % program_name)
-        system.LogInfo("  Script: %s" % script_file)
-        system.LogInfo("  Ghidra: %s" % ghidra_install_dir)
+        logger.log_info("Running PyGhidra script:")
+        logger.log_info("  Project: %s/%s" % (project_dir, project_name))
+        logger.log_info("  Program: %s" % program_name)
+        logger.log_info("  Script: %s" % script_file)
+        logger.log_info("  Ghidra: %s" % ghidra_install_dir)
         if script_args:
-            system.LogInfo("  Args: %s" % script_args)
+            logger.log_info("  Args: %s" % script_args)
 
     # Create command options with Ghidra install dir environment variable
     cmd_options = command.CreateCommandOptions()
@@ -194,15 +195,15 @@ def RunScriptFromPreset(
     # Get resolved preset
     preset = ResolvePresetPaths(preset_name)
     if not preset:
-        system.LogError("Preset not found: %s" % preset_name)
-        system.LogInfo("Available presets: %s" % ", ".join(GetDecompilerPresetNames()))
+        logger.log_error("Preset not found: %s" % preset_name)
+        logger.log_info("Available presets: %s" % ", ".join(GetDecompilerPresetNames()))
         return False
 
     # Get script config
     script_config = preset.get("scripts", {}).get(script_name)
     if not script_config:
-        system.LogError("Script '%s' not found in preset '%s'" % (script_name, preset_name))
-        system.LogInfo("Available scripts: %s" % ", ".join(GetPresetScriptNames(preset_name)))
+        logger.log_error("Script '%s' not found in preset '%s'" % (script_name, preset_name))
+        logger.log_info("Available scripts: %s" % ", ".join(GetPresetScriptNames(preset_name)))
         return False
 
     # Use default args if none provided

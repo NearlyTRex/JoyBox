@@ -30,10 +30,7 @@ import environment
 import hashing
 import programs
 import network
-
-# Globals
-console_logger = None
-file_logger = None
+import logger
 
 ###########################################################
 
@@ -51,15 +48,15 @@ def RunMain(main_func):
         success = main_func()
         if success is not None:
             if success:
-                LogInfo("Script completed successfully")
+                logger.log_info("Script completed successfully")
             else:
-                LogError("Script completed with errors")
+                logger.log_error("Script completed with errors")
                 sys.exit(1)
     except KeyboardInterrupt:
-        LogWarning("\nOperation cancelled by user")
+        logger.log_warning("\nOperation cancelled by user")
         sys.exit(130)
     except Exception as e:
-        LogError(f"Script failed with exception: {e}")
+        logger.log_error(f"Script failed with exception: {e}")
         sys.exit(1)
 
 ###########################################################
@@ -162,7 +159,7 @@ def PromptForIntegerValue(description, default_value = None):
         try:
             return int(value)
         except:
-            LogWarning("That was not a valid integer, please try again")
+            logger.log_warning("That was not a valid integer, please try again")
 
 # Prompt for url
 def PromptForUrl(description, default_value = None):
@@ -170,7 +167,7 @@ def PromptForUrl(description, default_value = None):
         value = PromptForValue(description, default_value)
         if network.IsUrlReachable(value):
             return value
-        LogWarning("That was not a valid url, please try again")
+        logger.log_warning("That was not a valid url, please try again")
 
 # Prompt for confirmation (y/n)
 def PromptForConfirmation(description, default_yes = False):
@@ -183,28 +180,28 @@ def PromptForConfirmation(description, default_yes = False):
             return True
         if value in ("n", "no"):
             return False
-        LogWarning("Please enter 'y' or 'n'")
+        logger.log_warning("Please enter 'y' or 'n'")
 
 # Show preview and prompt for confirmation
 def PromptForPreview(operation, details = [], default_yes = True, max_details = 20):
-    LogInfo("=" * 60)
-    LogInfo("Operation: %s" % operation)
+    logger.log_info("=" * 60)
+    logger.log_info("Operation: %s" % operation)
     if details:
-        LogInfo("-" * 60)
+        logger.log_info("-" * 60)
         total_count = len(details)
         if total_count <= max_details:
             for detail in details:
-                LogInfo("  %s" % detail)
+                logger.log_info("  %s" % detail)
         else:
             show_count = max_details // 2
             for detail in details[:show_count]:
-                LogInfo("  %s" % detail)
-            LogInfo("  ... (%d more items) ..." % (total_count - max_details))
+                logger.log_info("  %s" % detail)
+            logger.log_info("  ... (%d more items) ..." % (total_count - max_details))
             for detail in details[-show_count:]:
-                LogInfo("  %s" % detail)
-        LogInfo("-" * 60)
-        LogInfo("Total items: %d" % total_count)
-    LogInfo("=" * 60)
+                logger.log_info("  %s" % detail)
+        logger.log_info("-" * 60)
+        logger.log_info("Total items: %d" % total_count)
+    logger.log_info("=" * 60)
     return PromptForConfirmation("Proceed?", default_yes = default_yes)
 
 ###########################################################
@@ -577,24 +574,24 @@ def RetryWithBackoff(
                 return result
         except Exception as e:
             if verbose and operation_name:
-                LogWarning("%s failed (attempt %d/%d): %s" % (operation_name, attempt + 1, max_retries, str(e)))
+                logger.log_warning("%s failed (attempt %d/%d): %s" % (operation_name, attempt + 1, max_retries, str(e)))
             elif verbose:
-                LogWarning("Operation failed (attempt %d/%d): %s" % (attempt + 1, max_retries, str(e)))
+                logger.log_warning("Operation failed (attempt %d/%d): %s" % (attempt + 1, max_retries, str(e)))
             if cleanup_func:
                 try:
                     cleanup_func()
                 except Exception as cleanup_error:
                     if verbose:
-                        LogWarning("Cleanup failed: %s" % str(cleanup_error))
+                        logger.log_warning("Cleanup failed: %s" % str(cleanup_error))
             if attempt == max_retries - 1:
                 if verbose and operation_name:
-                    LogError("%s failed after %d attempts" % (operation_name, max_retries))
+                    logger.log_error("%s failed after %d attempts" % (operation_name, max_retries))
                 elif verbose:
-                    LogError("Operation failed after %d attempts" % max_retries)
+                    logger.log_error("Operation failed after %d attempts" % max_retries)
                 return None
             delay = initial_delay * (backoff_factor ** attempt)
             if verbose:
-                LogInfo("Retrying in %.1f seconds..." % delay)
+                logger.log_info("Retrying in %.1f seconds..." % delay)
             time.sleep(delay)
     return None
 
@@ -620,123 +617,6 @@ def GetBacktrace():
 
 ###########################################################
 
-# Get console logger
-def GetConsoleLogger():
-    global console_logger
-    if not console_logger:
-        console_logger = logging.getLogger("ConsoleLogger")
-        console_logger.setLevel(logging.DEBUG)
-        console_handler = logging.StreamHandler()
-        console_handler.setLevel(logging.DEBUG)
-        formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
-        console_handler.setFormatter(formatter)
-        console_logger.addHandler(console_handler)
-    return console_logger
-
-# Get file logger
-def GetFileLogger():
-    global file_logger
-    if not file_logger:
-        file_logger = logging.getLogger("FileLogger")
-        file_logger.setLevel(logging.DEBUG)
-        file_handler = logging.FileHandler(environment.GetLogFile(), mode="a", encoding="utf-8")
-        file_handler.setLevel(logging.DEBUG)
-        file_formatter = logging.Formatter("%(asctime)s - %(levelname)s - %(message)s")
-        file_handler.setFormatter(file_formatter)
-        file_logger.addHandler(file_handler)
-    return file_logger
-
-# Add logging context
-def AddLoggingContext(
-    message,
-    game_supercategory = None,
-    game_category = None,
-    game_subcategory = None,
-    game_name = None):
-    context = ""
-    if game_supercategory:
-        context += "[%s]" % game_supercategory.val()
-    if game_category:
-        context += "[%s]" % game_category.val()
-    if game_subcategory:
-        context += "[%s]" % game_subcategory.val()
-    if game_name:
-        context += "[%s]" % game_name
-    if len(context) > 0:
-        return f"{context} {message}"
-    return message
-
-# Log info
-def LogInfo(
-    message,
-    game_supercategory = None,
-    game_category = None,
-    game_subcategory = None,
-    game_name = None):
-    message = AddLoggingContext(
-        message = message,
-        game_supercategory = game_supercategory,
-        game_category = game_category,
-        game_subcategory = game_subcategory,
-        game_name = game_name)
-    console_logger = GetConsoleLogger()
-    file_logger = GetFileLogger()
-    if console_logger:
-        console_logger.info(message)
-    if file_logger:
-        file_logger.info(message)
-
-# Log warning
-def LogWarning(
-    message,
-    game_supercategory = None,
-    game_category = None,
-    game_subcategory = None,
-    game_name = None):
-    message = AddLoggingContext(
-        message = message,
-        game_supercategory = game_supercategory,
-        game_category = game_category,
-        game_subcategory = game_subcategory,
-        game_name = game_name)
-    console_logger = GetConsoleLogger()
-    file_logger = GetFileLogger()
-    if console_logger:
-        console_logger.warning(message)
-    if file_logger:
-        file_logger.warning(message)
-
-# Log error
-def LogError(
-    message,
-    game_supercategory = None,
-    game_category = None,
-    game_subcategory = None,
-    game_name = None,
-    quit_program = False):
-    message = AddLoggingContext(
-        message = message,
-        game_supercategory = game_supercategory,
-        game_category = game_category,
-        game_subcategory = game_subcategory,
-        game_name = game_name)
-    console_logger = GetConsoleLogger()
-    file_logger = GetFileLogger()
-    if console_logger:
-        console_logger.error(GetBacktrace())
-        console_logger.error(message)
-    if file_logger:
-        file_logger.error(GetBacktrace())
-        file_logger.error(message)
-    if quit_program:
-        QuitProgram()
-
-# Log percent complete
-def LogPercentComplete(percent_complete):
-    print(">>> Percent complete: %s%% " % percent_complete, end='\r', flush=True)
-
-###########################################################
-
 # Display table
 def DisplayTable(table_data):
     try:
@@ -750,7 +630,7 @@ def DisplayTable(table_data):
         print(table.draw())
         return True
     except Exception as e:
-        LogError(e)
+        logger.log_error(e)
         return False
 
 ###########################################################
@@ -912,10 +792,10 @@ def ReplaceStringsInFile(src, replacements = [], verbose = False, pretend_run = 
     try:
         if not os.path.isfile(src):
             if verbose:
-                LogInfo("Path %s is not a file" % src)
+                logger.log_info("Path %s is not a file" % src)
             return False
         if verbose:
-            LogInfo("Replacing lines in file %s" % src)
+            logger.log_info("Replacing lines in file %s" % src)
         if not pretend_run:
             src_contents = ""
             with open(src, "r", encoding="utf-8") as f:
@@ -930,8 +810,8 @@ def ReplaceStringsInFile(src, replacements = [], verbose = False, pretend_run = 
         return True
     except Exception as e:
         if exit_on_failure:
-            LogError("Unable to replace strings in file %s" % src)
-            LogError(e)
+            logger.log_error("Unable to replace strings in file %s" % src)
+            logger.log_error(e)
             QuitProgram()
         return False
 
@@ -940,10 +820,10 @@ def AppendLineToFile(src, line, verbose = False, pretend_run = False, exit_on_fa
     try:
         if not os.path.isfile(src):
             if verbose:
-                LogInfo("Path %s is not a file" % src)
+                logger.log_info("Path %s is not a file" % src)
             return False
         if verbose:
-            LogInfo("Adding line '%s' to file %s" % (line, src))
+            logger.log_info("Adding line '%s' to file %s" % (line, src))
         if not pretend_run:
             with open(src, "r+", encoding="utf8") as f:
                 ends_with_newline = True
@@ -958,8 +838,8 @@ def AppendLineToFile(src, line, verbose = False, pretend_run = False, exit_on_fa
         return True
     except Exception as e:
         if exit_on_failure:
-            LogError("Unable to add line '%s' to file %s" % (line, src))
-            LogError(e)
+            logger.log_error("Unable to add line '%s' to file %s" % (line, src))
+            logger.log_error(e)
             QuitProgram()
         return False
 
@@ -968,10 +848,10 @@ def SortFileContents(src, verbose = False, pretend_run = False, exit_on_failure 
     try:
         if not os.path.isfile(src):
             if verbose:
-                LogInfo("Path %s is not a file" % src)
+                logger.log_info("Path %s is not a file" % src)
             return False
         if verbose:
-            LogInfo("Sorting contents of file %s" % src)
+            logger.log_info("Sorting contents of file %s" % src)
         if not pretend_run:
             sorted_contents = ""
             with open(src, "r", encoding="utf8") as f:
@@ -982,8 +862,8 @@ def SortFileContents(src, verbose = False, pretend_run = False, exit_on_failure 
         return True
     except Exception as e:
         if exit_on_failure:
-            LogError("Unable to sort contents of file %s" % src)
-            LogError(e)
+            logger.log_error("Unable to sort contents of file %s" % src)
+            logger.log_error(e)
             QuitProgram()
         return False
 
@@ -1024,7 +904,7 @@ def ReplaceSymlinkedDirectories(src, verbose = False, pretend_run = False, exit_
 def LowercaseAllPaths(src, verbose = False, pretend_run = False, exit_on_failure = False):
     try:
         if verbose:
-            LogInfo("Lowercasing all paths in directory %s" % src)
+            logger.log_info("Lowercasing all paths in directory %s" % src)
         def onFoundItems(root, items):
             for name in items:
                 if not pretend_run:
@@ -1038,8 +918,8 @@ def LowercaseAllPaths(src, verbose = False, pretend_run = False, exit_on_failure
         return True
     except Exception as e:
         if exit_on_failure:
-            LogError("Unable to lowercase directory %s" % src)
-            LogError(e)
+            logger.log_error("Unable to lowercase directory %s" % src)
+            logger.log_error(e)
             QuitProgram()
         return False
 
@@ -1049,7 +929,7 @@ def LowercaseAllPaths(src, verbose = False, pretend_run = False, exit_on_failure
 def TouchFile(src, contents = "", contents_mode = "w", encoding = None, verbose = False, pretend_run = False, exit_on_failure = False):
     try:
         if verbose:
-            LogInfo("Touching file %s" % src)
+            logger.log_info("Touching file %s" % src)
         if not pretend_run:
             os.makedirs(GetFilenameDirectory(src), exist_ok = True)
             if len(contents):
@@ -1064,8 +944,8 @@ def TouchFile(src, contents = "", contents_mode = "w", encoding = None, verbose 
         return True
     except Exception as e:
         if exit_on_failure:
-            LogError("Unable to touch file %s" % src)
-            LogError(e)
+            logger.log_error("Unable to touch file %s" % src)
+            logger.log_error(e)
             QuitProgram()
         return False
 
@@ -1073,7 +953,7 @@ def TouchFile(src, contents = "", contents_mode = "w", encoding = None, verbose 
 def ChmodFileOrDirectory(src, perms, dperms = None, verbose = False, pretend_run = False, exit_on_failure = False):
     try:
         if verbose:
-            LogInfo("Changing permissions of %s to %s" % (src, str(perms)))
+            logger.log_info("Changing permissions of %s to %s" % (src, str(perms)))
         if not pretend_run:
             if os.path.isfile(src):
                 os.chmod(src, int(str(perms), base=8))
@@ -1089,8 +969,8 @@ def ChmodFileOrDirectory(src, perms, dperms = None, verbose = False, pretend_run
         return True
     except Exception as e:
         if exit_on_failure:
-            LogError("Unable to change permissions of %s to %s" % (src, str(perms)))
-            LogError(e)
+            logger.log_error("Unable to change permissions of %s to %s" % (src, str(perms)))
+            logger.log_error(e)
             QuitProgram()
         return False
 
@@ -1098,27 +978,27 @@ def ChmodFileOrDirectory(src, perms, dperms = None, verbose = False, pretend_run
 def MarkAsExecutable(src, verbose = False, pretend_run = False, exit_on_failure = False):
     try:
         if verbose:
-            LogInfo("Marking %s as executable" % src)
+            logger.log_info("Marking %s as executable" % src)
         if not pretend_run:
             st = os.stat(src)
             os.chmod(src, st.st_mode | stat.S_IEXEC)
         return True
     except Exception as e:
         if exit_on_failure:
-            LogError("Unable to mark %s as executable" % src)
-            LogError(e)
+            logger.log_error("Unable to mark %s as executable" % src)
+            logger.log_error(e)
             QuitProgram()
         return False
 
 # Create temporary directory
 def CreateTemporaryDirectory(verbose = False, pretend_run = False):
     if verbose:
-        LogInfo("Creating temporary directory")
+        logger.log_info("Creating temporary directory")
     temp_dir = ""
     if not pretend_run:
         temp_dir = os.path.realpath(tempfile.mkdtemp())
         if verbose:
-            LogInfo("Created temporary directory %s" % temp_dir)
+            logger.log_info("Created temporary directory %s" % temp_dir)
     if not os.path.isdir(temp_dir):
         return (False, "Unable to create temporary directory")
     return (True, temp_dir)
@@ -1126,13 +1006,13 @@ def CreateTemporaryDirectory(verbose = False, pretend_run = False):
 # Create temporary file
 def CreateTemporaryFile(suffix = "", verbose = False, pretend_run = False):
     if verbose:
-        LogInfo("Creating temporary file")
+        logger.log_info("Creating temporary file")
     temp_file = ""
     if not pretend_run:
         with tempfile.NamedTemporaryFile(suffix=suffix, delete=False) as tf:
             temp_file = tf.name
         if verbose:
-            LogInfo("Created temporary file %s" % temp_file)
+            logger.log_info("Created temporary file %s" % temp_file)
     return temp_file
 
 # Create symlink
@@ -1147,7 +1027,7 @@ def CreateSymlink(
     exit_on_failure = False):
     try:
         if verbose:
-            LogInfo("Creating symlink from %s to %s" % (src, dest))
+            logger.log_info("Creating symlink from %s to %s" % (src, dest))
         if not pretend_run:
             if cwd:
                 os.chdir(cwd)
@@ -1155,11 +1035,11 @@ def CreateSymlink(
                 parent_dir = os.path.dirname(dest)
                 if parent_dir:
                     if verbose:
-                        LogInfo("Making parent dir %s" % parent_dir)
+                        logger.log_info("Making parent dir %s" % parent_dir)
                     os.makedirs(parent_dir, exist_ok = True)
             if overwrite:
                 if verbose:
-                    LogInfo("Removing destination %s first" % dest)
+                    logger.log_info("Removing destination %s first" % dest)
                 if os.path.islink(dest):
                     os.unlink(dest)
                 elif os.path.isfile(dest):
@@ -1170,8 +1050,8 @@ def CreateSymlink(
         return True
     except Exception as e:
         if exit_on_failure:
-            LogError("Unable to create symlink from %s to %s" % (src, dest))
-            LogError(e)
+            logger.log_error("Unable to create symlink from %s to %s" % (src, dest))
+            logger.log_error(e)
             QuitProgram()
         return False
 
@@ -1179,15 +1059,15 @@ def CreateSymlink(
 def ResolveSymlink(src, verbose = False, pretend_run = False, exit_on_failure = False):
     try:
         if verbose:
-            LogInfo("Resolving symlink %s" % src)
+            logger.log_info("Resolving symlink %s" % src)
         if not pretend_run:
             if os.path.islink(src):
                 return os.path.realpath(src)
         return None
     except Exception as e:
         if exit_on_failure:
-            LogError("Unable to resolve symlink %s" % src)
-            LogError(e)
+            logger.log_error("Unable to resolve symlink %s" % src)
+            logger.log_error(e)
             QuitProgram()
         return None
 
@@ -1213,7 +1093,7 @@ def CopyFileOrDirectory(
                 exit_on_failure = exit_on_failure):
                 return True
         if verbose:
-            LogInfo("Copying %s to %s" % (src, dest))
+            logger.log_info("Copying %s to %s" % (src, dest))
         if not pretend_run:
             if os.path.isdir(src):
                 shutil.copytree(src, dest, dirs_exist_ok=True)
@@ -1222,8 +1102,8 @@ def CopyFileOrDirectory(
         return True
     except Exception as e:
         if exit_on_failure:
-            LogError("Unable to copy %s to %s" % (src, dest))
-            LogError(e)
+            logger.log_error("Unable to copy %s to %s" % (src, dest))
+            logger.log_error(e)
             QuitProgram()
         return False
 
@@ -1249,14 +1129,14 @@ def MoveFileOrDirectory(
                 exit_on_failure = exit_on_failure):
                 return True
         if verbose:
-            LogInfo("Moving %s to %s" % (src, dest))
+            logger.log_info("Moving %s to %s" % (src, dest))
         if not pretend_run:
             shutil.move(src, dest)
         return True
     except Exception as e:
         if exit_on_failure:
-            LogError("Unable to move %s to %s" % (src, dest))
-            LogError(e)
+            logger.log_error("Unable to move %s to %s" % (src, dest))
+            logger.log_error(e)
             QuitProgram()
         return False
 
@@ -1284,7 +1164,7 @@ def TransferFile(
                 exit_on_failure = exit_on_failure):
                 return True
         if verbose:
-            LogInfo("Transferring %s to %s" % (src, dest))
+            logger.log_info("Transferring %s to %s" % (src, dest))
         if not pretend_run:
             total_size = GetFileSize(src)
             progress_bar = None
@@ -1310,8 +1190,8 @@ def TransferFile(
         return True
     except Exception as e:
         if exit_on_failure:
-            LogError("Unable to transfer %s to %s" % (src, dest))
-            LogError(e)
+            logger.log_error("Unable to transfer %s to %s" % (src, dest))
+            logger.log_error(e)
             QuitProgram()
         return False
 
@@ -1320,15 +1200,15 @@ def MakeDirectory(src, verbose = False, pretend_run = False, exit_on_failure = F
     try:
         if not os.path.isdir(src):
             if verbose:
-                LogInfo("Making directory %s" % src)
+                logger.log_info("Making directory %s" % src)
             if not pretend_run:
                 os.makedirs(src, exist_ok = True)
         return True
     except Exception as e:
         if not os.path.isdir(src):
             if exit_on_failure:
-                LogError("Unable to make directory %s" % src)
-                LogError(e)
+                logger.log_error("Unable to make directory %s" % src)
+                logger.log_error(e)
                 QuitProgram()
             return False
         return True
@@ -1337,15 +1217,15 @@ def MakeDirectory(src, verbose = False, pretend_run = False, exit_on_failure = F
 def RemoveFile(src, verbose = False, pretend_run = False, exit_on_failure = False):
     try:
         if verbose:
-            LogInfo("Removing file %s" % src)
+            logger.log_info("Removing file %s" % src)
         if not pretend_run:
             if os.path.isfile(src):
                 os.remove(src)
         return True
     except Exception as e:
         if exit_on_failure:
-            LogError("Unable to remove file %s" % src)
-            LogError(e)
+            logger.log_error("Unable to remove file %s" % src)
+            logger.log_error(e)
             QuitProgram()
         return False
 
@@ -1353,15 +1233,15 @@ def RemoveFile(src, verbose = False, pretend_run = False, exit_on_failure = Fals
 def RemoveSymlink(src, verbose = False, pretend_run = False, exit_on_failure = False):
     try:
         if verbose:
-            LogInfo("Removing symlink %s" % src)
+            logger.log_info("Removing symlink %s" % src)
         if not pretend_run:
             if os.path.islink(src):
                 os.unlink(src)
         return True
     except Exception as e:
         if exit_on_failure:
-            LogError("Unable to remove symlink %s" % src)
-            LogError(e)
+            logger.log_error("Unable to remove symlink %s" % src)
+            logger.log_error(e)
             QuitProgram()
         return False
 
@@ -1369,15 +1249,15 @@ def RemoveSymlink(src, verbose = False, pretend_run = False, exit_on_failure = F
 def RemoveDirectory(src, verbose = False, pretend_run = False, exit_on_failure = False):
     try:
         if verbose:
-            LogInfo("Removing directory %s" % src)
+            logger.log_info("Removing directory %s" % src)
         if not pretend_run:
             if os.path.isdir(src):
                 shutil.rmtree(src)
         return True
     except Exception as e:
         if exit_on_failure:
-            LogError("Unable to remove directory %s" % src)
-            LogError(e)
+            logger.log_error("Unable to remove directory %s" % src)
+            logger.log_error(e)
             QuitProgram()
         return False
 
@@ -1385,7 +1265,7 @@ def RemoveDirectory(src, verbose = False, pretend_run = False, exit_on_failure =
 def RemoveDirectoryContents(src, verbose = False, pretend_run = False, exit_on_failure = False):
     try:
         if verbose:
-            LogInfo("Removing contents of directory %s" % src)
+            logger.log_info("Removing contents of directory %s" % src)
         if not pretend_run:
             for root, dirs, files in os.walk(src):
                 for f in files:
@@ -1403,8 +1283,8 @@ def RemoveDirectoryContents(src, verbose = False, pretend_run = False, exit_on_f
         return True
     except Exception as e:
         if exit_on_failure:
-            LogError("Unable to remove contents of directory %s" % src)
-            LogError(e)
+            logger.log_error("Unable to remove contents of directory %s" % src)
+            logger.log_error(e)
             QuitProgram()
         return False
 
@@ -1425,7 +1305,7 @@ def CopyContents(
     exit_on_failure = False):
     if not DoesPathExist(src, case_sensitive_paths):
         if exit_on_failure:
-            LogError("Source %s does not exist, cannot copy" % src)
+            logger.log_error("Source %s does not exist, cannot copy" % src)
             QuitProgram()
     file_list = BuildFileList(
         root = src,
@@ -1472,7 +1352,7 @@ def MoveContents(
     exit_on_failure = False):
     if not DoesPathExist(src, case_sensitive_paths):
         if exit_on_failure:
-            LogError("Source %s does not exist, cannot move" % src)
+            logger.log_error("Source %s does not exist, cannot move" % src)
             QuitProgram()
     file_list = BuildFileList(
         root = src,
@@ -1749,7 +1629,7 @@ def SyncContents(
     exit_on_failure = False):
     if not DoesPathExist(src):
         if exit_on_failure:
-            LogError("Source %s does not exist, cannot sync" % src)
+            logger.log_error("Source %s does not exist, cannot sync" % src)
             QuitProgram()
     success = MakeDirectory(
         src = dest,
@@ -1833,13 +1713,13 @@ def RemoveObject(obj, verbose = False, pretend_run = False, exit_on_failure = Fa
 def ReadTextFile(src, verbose = False, exit_on_failure = False):
     try:
         if verbose:
-            LogInfo("Reading %s" % src)
+            logger.log_info("Reading %s" % src)
         with open(src, "r", encoding="utf-8") as input_file:
             return input_file.read()
     except Exception as e:
         if exit_on_failure:
-            LogError("Unable to read %s" % src)
-            LogError(e)
+            logger.log_error("Unable to read %s" % src)
+            logger.log_error(e)
             QuitProgram()
         return None
 
@@ -1847,7 +1727,7 @@ def ReadTextFile(src, verbose = False, exit_on_failure = False):
 def WriteTextFile(src, contents, verbose = False, pretend_run = False, exit_on_failure = False):
     try:
         if verbose:
-            LogInfo("Writing %s" % src)
+            logger.log_info("Writing %s" % src)
         if not pretend_run:
             parent_dir = os.path.dirname(src)
             if parent_dir and not os.path.exists(parent_dir):
@@ -1857,8 +1737,8 @@ def WriteTextFile(src, contents, verbose = False, pretend_run = False, exit_on_f
         return True
     except Exception as e:
         if exit_on_failure:
-            LogError("Unable to write %s" % src)
-            LogError(e)
+            logger.log_error("Unable to write %s" % src)
+            logger.log_error(e)
             QuitProgram()
         return False
 
@@ -1868,13 +1748,13 @@ def WriteTextFile(src, contents, verbose = False, pretend_run = False, exit_on_f
 def ParseJsonString(string, verbose = False, pretend_run = False, exit_on_failure = False):
     try:
         if verbose:
-            LogInfo("Parsing %s" % string)
+            logger.log_info("Parsing %s" % string)
         json_data = json.loads(string)
         return json_data
     except Exception as e:
         if exit_on_failure:
-            LogError("Unable to read %s" % string)
-            LogError(e)
+            logger.log_error("Unable to read %s" % string)
+            logger.log_error(e)
             QuitProgram()
         return {}
 
@@ -1884,7 +1764,7 @@ def ReadJsonFile(src, verbose = False, pretend_run = False, exit_on_failure = Fa
         if not src.endswith(".json"):
             return {}
         if verbose:
-            LogInfo("Reading %s" % src)
+            logger.log_info("Reading %s" % src)
         json_data = {}
         with open(src, "r") as input_file:
             file_contents = input_file.read()
@@ -1892,8 +1772,8 @@ def ReadJsonFile(src, verbose = False, pretend_run = False, exit_on_failure = Fa
         return json_data
     except Exception as e:
         if exit_on_failure:
-            LogError("Unable to read %s" % src)
-            LogError(e)
+            logger.log_error("Unable to read %s" % src)
+            logger.log_error(e)
             QuitProgram()
         return {}
 
@@ -1903,7 +1783,7 @@ def WriteJsonFile(src, json_data, sort_keys = False, verbose = False, pretend_ru
         if not src.endswith(".json"):
             return False
         if verbose:
-            LogInfo("Writing %s" % src)
+            logger.log_info("Writing %s" % src)
         if not pretend_run:
             parent_dir = os.path.dirname(src)
             if parent_dir and not os.path.exists(parent_dir):
@@ -1914,8 +1794,8 @@ def WriteJsonFile(src, json_data, sort_keys = False, verbose = False, pretend_ru
         return True
     except Exception as e:
         if exit_on_failure:
-            LogError("Unable to write %s" % src)
-            LogError(e)
+            logger.log_error("Unable to write %s" % src)
+            logger.log_error(e)
             QuitProgram()
         return False
 
@@ -1925,7 +1805,7 @@ def CleanJsonFile(src, sort_keys = False, remove_empty_values = False, verbose =
         if not src.endswith(".json"):
             return False
         if verbose:
-            LogInfo("Cleaning %s" % src)
+            logger.log_info("Cleaning %s" % src)
         if not pretend_run:
             json_data = None
             with open(src, "r") as input_file:
@@ -1952,8 +1832,8 @@ def CleanJsonFile(src, sort_keys = False, remove_empty_values = False, verbose =
         return True
     except Exception as e:
         if exit_on_failure:
-            LogError("Unable to clean %s" % src)
-            LogError(e)
+            logger.log_error("Unable to clean %s" % src)
+            logger.log_error(e)
             QuitProgram()
         return False
 
@@ -1985,7 +1865,7 @@ def ReadYamlFile(src, verbose = False, pretend_run = False, exit_on_failure = Fa
         if not src.endswith(".yaml"):
             return {}
         if verbose:
-            LogInfo("Reading %s" % src)
+            logger.log_info("Reading %s" % src)
         yaml_data = {}
         with open(src, "r") as input_file:
             file_contents = input_file.read()
@@ -1995,8 +1875,8 @@ def ReadYamlFile(src, verbose = False, pretend_run = False, exit_on_failure = Fa
         return yaml_data
     except Exception as e:
         if exit_on_failure:
-            LogError("Unable to read %s" % src)
-            LogError(e)
+            logger.log_error("Unable to read %s" % src)
+            logger.log_error(e)
             QuitProgram()
         return {}
 
@@ -2008,7 +1888,7 @@ def ReadCsvFile(src, headers, verbose = False, pretend_run = False, exit_on_fail
         if not src.endswith(".csv"):
             return []
         if verbose:
-            LogInfo("Reading %s" % src)
+            logger.log_info("Reading %s" % src)
         csv_data = []
         with open(src, mode="r", newline="", encoding="utf-8") as input_file:
             csv_reader = csv.reader(input_file)
@@ -2020,8 +1900,8 @@ def ReadCsvFile(src, headers, verbose = False, pretend_run = False, exit_on_fail
         return csv_data
     except Exception as e:
         if exit_on_failure:
-            LogError("Unable to read %s" % src)
-            LogError(e)
+            logger.log_error("Unable to read %s" % src)
+            logger.log_error(e)
             QuitProgram()
         return []
 
@@ -2518,7 +2398,7 @@ def GetLinkInfo(lnk_path, lnk_base_path):
             info["cwd"] = lnk_cwd
             info["args"] = lnk_arguments
     except Exception as e:
-        LogError(e)
+        logger.log_error(e)
     return info
 
 ###########################################################

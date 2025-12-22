@@ -14,6 +14,7 @@ import gameinfo
 import collection
 import arguments
 import setup
+import logger
 
 # Parse arguments
 parser = arguments.ArgumentParser(description = "Build store purchases.")
@@ -43,6 +44,9 @@ def main():
     # Check requirements
     setup.CheckRequirements()
 
+    # Setup logging
+    logger.setup_logging()
+
     # Collect categories to process
     categories_to_process = []
     for game_supercategory, game_category, game_subcategory in gameinfo.IterateSelectedGameCategories(
@@ -54,7 +58,7 @@ def main():
     if not args.no_preview:
         details = ["%s/%s/%s" % (sc, c, sub) for sc, c, sub in categories_to_process]
         if not system.PromptForPreview("Build game store purchases (source: %s)" % args.source_type, details):
-            system.LogWarning("Operation cancelled by user")
+            logger.log_warning("Operation cancelled by user")
             return
 
     # Build store purchases
@@ -69,7 +73,7 @@ def main():
             pretend_run = args.pretend_run,
             exit_on_failure = args.exit_on_failure)
         if not success:
-            system.LogError(
+            logger.log_error(
                 message = "Build of store purchases failed!",
                 game_supercategory = game_supercategory,
                 game_category = game_category,

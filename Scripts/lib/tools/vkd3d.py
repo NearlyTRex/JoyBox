@@ -6,6 +6,7 @@ import sys
 import config
 import release
 import system
+import logger
 import programs
 import environment
 import toolbase
@@ -72,7 +73,7 @@ class VKD3D(toolbase.ToolBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup VKD3D")
+                logger.log_error("Could not setup VKD3D")
                 return False
         return True
 
@@ -91,6 +92,6 @@ class VKD3D(toolbase.ToolBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup VKD3D")
+                logger.log_error("Could not setup VKD3D")
                 return False
         return True

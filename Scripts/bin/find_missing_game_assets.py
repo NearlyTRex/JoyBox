@@ -14,6 +14,7 @@ import gameinfo
 import system
 import arguments
 import setup
+import logger
 
 # Parse arguments
 parser = arguments.ArgumentParser(description = "Find missing game assets.")
@@ -26,6 +27,9 @@ def main():
     # Check requirements
     setup.CheckRequirements()
 
+    # Setup logging
+    logger.setup_logging()
+
     # Get search info
     assets_dir = environment.GetLockerGamingAssetsRootDir()
     metadata_dir = environment.GetGamePegasusMetadataRootDir()
@@ -37,7 +41,7 @@ def main():
             "Metadata dir: %s" % metadata_dir
         ]
         if not system.PromptForPreview("Find missing game assets (writes Missing_*.txt and Extras.txt)", details):
-            system.LogWarning("Operation cancelled by user")
+            logger.log_warning("Operation cancelled by user")
             return
 
     # Find all possible assets

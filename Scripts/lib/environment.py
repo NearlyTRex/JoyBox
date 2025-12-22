@@ -9,6 +9,7 @@ import time
 import config
 import command
 import system
+import logger
 import gameinfo
 import platforms
 import ini
@@ -66,10 +67,6 @@ def GetCookieDirectory():
 # Get log directory
 def GetLogDirectory():
     return system.JoinPaths(GetHomeDirectory(), "Logs")
-
-# Get log file
-def GetLogFile():
-    return system.JoinPaths(GetLogDirectory(), "output.log")
 
 # Determine if symlinks are supported
 def AreSymlinksSupported():
@@ -169,7 +166,7 @@ def KillActiveNamedProcesses(process_names = []):
         for proc in FindActiveNamedProcesses(process_names):
             proc.kill()
     except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess) as e:
-        system.LogError(e)
+        logger.log_error(e)
 
 # Interrupt active processes
 def InterruptActiveNamedProcesses(process_names = []):
@@ -181,7 +178,7 @@ def InterruptActiveNamedProcesses(process_names = []):
             else:
                 proc.send_signal(signal.SIGINT)
     except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess) as e:
-        system.LogError(e)
+        logger.log_error(e)
 
 # Wait for processes
 def WaitForNamedProcesses(process_names = [], timeout = 1200):
@@ -189,20 +186,20 @@ def WaitForNamedProcesses(process_names = [], timeout = 1200):
     try:
         start_time = time.time()
         for proc in FindActiveNamedProcesses(process_names):
-            system.LogInfo("Waiting for process %s (pid=%d)..." % (proc.name(), proc.pid))
+            logger.log_info("Waiting for process %s (pid=%d)..." % (proc.name(), proc.pid))
             while True:
                 if not proc.is_running():
-                    system.LogInfo("Process %s (pid=%d) finished" % (proc.name(), proc.pid))
+                    logger.log_info("Process %s (pid=%d) finished" % (proc.name(), proc.pid))
                     break
                 elapsed = time.time() - start_time
                 if timeout and elapsed > timeout:
-                    system.LogWarning("Timeout after %d seconds waiting for %s (pid=%d)" % (timeout, proc.name(), proc.pid))
+                    logger.log_warning("Timeout after %d seconds waiting for %s (pid=%d)" % (timeout, proc.name(), proc.pid))
                     break
                 system.SleepProgram(1)
     except (psutil.NoSuchProcess, psutil.ZombieProcess):
         pass  # Process already finished, which is fine
     except psutil.AccessDenied as e:
-        system.LogWarning("Access denied while waiting for process: %s" % e)
+        logger.log_warning("Access denied while waiting for process: %s" % e)
 
 ###########################################################
 # Tools

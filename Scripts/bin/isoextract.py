@@ -9,10 +9,11 @@ lib_folder = os.path.realpath(os.path.join(os.path.dirname(__file__), "..", "lib
 sys.path.append(lib_folder)
 import config
 import system
-import setup
 import iso
 import arguments
 import archive
+import setup
+import logger
 
 # Parse arguments
 parser = arguments.ArgumentParser(description = "Extract data from ISO files.")
@@ -32,6 +33,9 @@ def main():
 
     # Check requirements
     setup.CheckRequirements()
+
+    # Setup logging
+    logger.setup_logging()
 
     # Get input path
     input_path = parser.get_input_path()

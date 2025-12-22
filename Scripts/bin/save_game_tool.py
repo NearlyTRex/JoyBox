@@ -10,9 +10,10 @@ sys.path.append(lib_folder)
 import config
 import system
 import arguments
-import setup
 import collection
 import gameinfo
+import setup
+import logger
 
 # Parse arguments
 parser = arguments.ArgumentParser(description = "Save tool.")
@@ -39,6 +40,9 @@ def main():
     # Check requirements
     setup.CheckRequirements()
 
+    # Setup logging
+    logger.setup_logging()
+
     # Action handlers
     action_handlers = {
         config.SaveActionType.PACK: (collection.PackSave, "Packing of save failed!"),
@@ -51,7 +55,7 @@ def main():
     # Get handler for action
     handler, error_message = action_handlers.get(args.action, (None, None))
     if not handler:
-        system.LogError("Unknown action", quit_program = True)
+        logger.log_error("Unknown action", quit_program = True)
 
     # Collect games to process
     games_to_process = []
@@ -66,7 +70,7 @@ def main():
     if not args.no_preview:
         details = ["%s/%s/%s" % (g.get_category(), g.get_subcategory(), g.get_name()) for g in games_to_process]
         if not system.PromptForPreview("Save game %s" % args.action, details):
-            system.LogWarning("Operation cancelled by user")
+            logger.log_warning("Operation cancelled by user")
             return
 
     # Process games
@@ -81,7 +85,7 @@ def main():
             handler_kwargs["locker_type"] = args.locker_type
         success = handler(**handler_kwargs)
         if not success:
-            system.LogError(
+            logger.log_error(
                 message = error_message,
                 game_supercategory = game_info.get_supercategory(),
                 game_category = game_info.get_category(),

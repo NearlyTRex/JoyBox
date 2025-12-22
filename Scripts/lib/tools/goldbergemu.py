@@ -5,6 +5,7 @@ import sys
 # Local imports
 import config
 import system
+import logger
 import release
 import programs
 import toolbase
@@ -177,7 +178,7 @@ class GoldbergEmu(toolbase.ToolBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup GoldbergEmu")
+                logger.log_error("Could not setup GoldbergEmu")
                 return False
         return True
 
@@ -196,6 +197,6 @@ class GoldbergEmu(toolbase.ToolBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup GoldbergEmu")
+                logger.log_error("Could not setup GoldbergEmu")
                 return False
         return True

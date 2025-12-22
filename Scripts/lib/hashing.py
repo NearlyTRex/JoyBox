@@ -6,6 +6,7 @@ import sys
 import config
 import environment
 import system
+import logger
 import archive
 import cryption
 
@@ -55,7 +56,7 @@ def CalculateFileCRC32(
     exit_on_failure = False):
     try:
         if verbose:
-            system.LogInfo("Calculating crc32 for %s" % src)
+            logger.log_info("Calculating crc32 for %s" % src)
         if not pretend_run:
             import zlib
             with open(src, "rb") as file:
@@ -64,19 +65,19 @@ def CalculateFileCRC32(
                 percent_done = 0
                 checksum = 0
                 if verbose:
-                    system.LogPercentComplete(percent_done)
+                    logger.log_percent_complete(percent_done)
                 while (chunk := file.read(chunksize)):
                     checksum = zlib.crc32(chunk, checksum)
                     if verbose:
                         read_size += len(chunk)
                         percent_done = int(round(100 * read_size / total_size))
-                        system.LogPercentComplete(percent_done)
+                        logger.log_percent_complete(percent_done)
                 return "%x" % checksum
         return ""
     except Exception as e:
         if exit_on_failure:
-            system.LogError("Unable to calculate crc32 for %s" % src)
-            system.LogError(e, quit_program = True)
+            logger.log_error("Unable to calculate crc32 for %s" % src)
+            logger.log_error(e, quit_program = True)
         return ""
 
 # Calculate file md5
@@ -88,7 +89,7 @@ def CalculateFileMD5(
     exit_on_failure = False):
     try:
         if verbose:
-            system.LogInfo("Calculating md5 for %s" % src)
+            logger.log_info("Calculating md5 for %s" % src)
         if not pretend_run:
             import hashlib
             with open(src, "rb") as file:
@@ -97,19 +98,19 @@ def CalculateFileMD5(
                 percent_done = 0
                 md5_hash = hashlib.md5()
                 if verbose:
-                    system.LogPercentComplete(percent_done)
+                    logger.log_percent_complete(percent_done)
                 for chunk in iter(lambda: file.read(chunksize),b""):
                     md5_hash.update(chunk)
                     if verbose:
                         read_size += len(chunk)
                         percent_done = int(round(100 * read_size / total_size))
-                        system.LogPercentComplete(percent_done)
+                        logger.log_percent_complete(percent_done)
                 return md5_hash.hexdigest()
         return ""
     except Exception as e:
         if exit_on_failure:
-            system.LogError("Unable to calculate md5 for %s" % src)
-            system.LogError(e, quit_program = True)
+            logger.log_error("Unable to calculate md5 for %s" % src)
+            logger.log_error(e, quit_program = True)
         return ""
 
 # Calculate file sha1
@@ -121,7 +122,7 @@ def CalculateFileSHA1(
     exit_on_failure = False):
     try:
         if verbose:
-            system.LogInfo("Calculating sha1 for %s" % src)
+            logger.log_info("Calculating sha1 for %s" % src)
         if not pretend_run:
             import hashlib
             with open(src, "rb") as file:
@@ -130,19 +131,19 @@ def CalculateFileSHA1(
                 percent_done = 0
                 sha1_hash = hashlib.sha1()
                 if verbose:
-                    system.LogPercentComplete(percent_done)
+                    logger.log_percent_complete(percent_done)
                 for chunk in iter(lambda: file.read(chunksize),b""):
                     sha1_hash.update(chunk)
                     if verbose:
                         read_size += len(chunk)
                         percent_done = int(round(100 * read_size / total_size))
-                        system.LogPercentComplete(percent_done)
+                        logger.log_percent_complete(percent_done)
                 return sha1_hash.hexdigest()
         return ""
     except Exception as e:
         if exit_on_failure:
-            system.LogError("Unable to calculate sha1 for %s" % src)
-            system.LogError(e, quit_program = True)
+            logger.log_error("Unable to calculate sha1 for %s" % src)
+            logger.log_error(e, quit_program = True)
         return ""
 
 # Calculate file sha256
@@ -154,7 +155,7 @@ def CalculateFileSHA256(
     exit_on_failure = False):
     try:
         if verbose:
-            system.LogInfo("Calculating sha256 for %s" % src)
+            logger.log_info("Calculating sha256 for %s" % src)
         if not pretend_run:
             import hashlib
             with open(src, "rb") as file:
@@ -163,19 +164,19 @@ def CalculateFileSHA256(
                 percent_done = 0
                 sha256_hash = hashlib.sha256()
                 if verbose:
-                    system.LogPercentComplete(percent_done)
+                    logger.log_percent_complete(percent_done)
                 for chunk in iter(lambda: file.read(chunksize),b""):
                     sha256_hash.update(chunk)
                     if verbose:
                         read_size += len(chunk)
                         percent_done = int(round(100 * read_size / total_size))
-                        system.LogPercentComplete(percent_done)
+                        logger.log_percent_complete(percent_done)
                 return sha256_hash.hexdigest()
         return ""
     except Exception as e:
         if exit_on_failure:
-            system.LogError("Unable to calculate sha256 for %s" % src)
-            system.LogError(e, quit_program = True)
+            logger.log_error("Unable to calculate sha256 for %s" % src)
+            logger.log_error(e, quit_program = True)
         return ""
 
 # Calculate file xxh3
@@ -187,7 +188,7 @@ def CalculateFileXXH3(
     exit_on_failure = False):
     try:
         if verbose:
-            system.LogInfo("Calculating xxh3 for %s" % src)
+            logger.log_info("Calculating xxh3 for %s" % src)
         if not pretend_run:
             import xxhash
             with open(src, "rb") as file:
@@ -196,19 +197,19 @@ def CalculateFileXXH3(
                 percent_done = 0
                 xxh3_hash = xxhash.xxh3_64()
                 if verbose:
-                    system.LogPercentComplete(percent_done)
+                    logger.log_percent_complete(percent_done)
                 for chunk in iter(lambda: file.read(chunksize),b""):
                     xxh3_hash.update(chunk)
                     if verbose:
                         read_size += len(chunk)
                         percent_done = int(round(100 * read_size / total_size))
-                        system.LogPercentComplete(percent_done)
+                        logger.log_percent_complete(percent_done)
                 return xxh3_hash.hexdigest()
         return ""
     except Exception as e:
         if exit_on_failure:
-            system.LogError("Unable to calculate xxh3 for %s" % src)
-            system.LogError(e, quit_program = True)
+            logger.log_error("Unable to calculate xxh3 for %s" % src)
+            logger.log_error(e, quit_program = True)
         return ""
 
 ###########################################################
@@ -418,7 +419,7 @@ def SortHashFile(
     pretend_run = False,
     exit_on_failure = False):
     if verbose:
-        system.LogInfo("Sorting hash file %s" % src)
+        logger.log_info("Sorting hash file %s" % src)
     hash_contents = ReadHashFile(
         src = src,
         verbose = verbose,
@@ -459,7 +460,7 @@ def CalculateHash(
     path_file = system.GetFilenameFile(src)
     path_dir = system.GetFilenameDirectory(src)
     path_full = system.JoinPaths(base_path, path_dir, path_file)
-    system.LogInfo("Hashing file %s ..." % path_full)
+    logger.log_info("Hashing file %s ..." % path_full)
 
     # Create hash data
     hash_data = {}

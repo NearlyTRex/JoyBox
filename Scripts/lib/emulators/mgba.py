@@ -7,6 +7,7 @@ import sys
 import config
 import environment
 import system
+import logger
 import release
 import programs
 import hashing
@@ -101,7 +102,7 @@ class MGBA(emulatorbase.EmulatorBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup mGBA")
+                logger.log_error("Could not setup mGBA")
                 return False
 
         # Download linux program
@@ -119,7 +120,7 @@ class MGBA(emulatorbase.EmulatorBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup mGBA")
+                logger.log_error("Could not setup mGBA")
                 return False
         return True
 
@@ -139,7 +140,7 @@ class MGBA(emulatorbase.EmulatorBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup mGBA")
+                logger.log_error("Could not setup mGBA")
                 return False
 
         # Setup linux program
@@ -152,7 +153,7 @@ class MGBA(emulatorbase.EmulatorBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup mGBA")
+                logger.log_error("Could not setup mGBA")
                 return False
         return True
 
@@ -170,7 +171,7 @@ class MGBA(emulatorbase.EmulatorBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup mGBA config files")
+                logger.log_error("Could not setup mGBA config files")
                 return False
 
         # Verify system files
@@ -182,7 +183,7 @@ class MGBA(emulatorbase.EmulatorBase):
                 exit_on_failure = setup_params.exit_on_failure)
             success = (expected_md5 == actual_md5)
             if not success:
-                system.LogError("Could not verify mGBA system file %s" % filename)
+                logger.log_error("Could not verify mGBA system file %s" % filename)
                 return False
 
         # Copy system files
@@ -195,7 +196,7 @@ class MGBA(emulatorbase.EmulatorBase):
                     pretend_run = setup_params.pretend_run,
                     exit_on_failure = setup_params.exit_on_failure)
                 if not success:
-                    system.LogError("Could not setup mGBA system files")
+                    logger.log_error("Could not setup mGBA system files")
                     return False
         return True
 

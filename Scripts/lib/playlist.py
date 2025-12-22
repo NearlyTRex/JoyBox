@@ -8,6 +8,7 @@ import config
 import command
 import programs
 import system
+import logger
 import environment
 
 # Read playlist file
@@ -18,7 +19,7 @@ def ReadPlaylist(
     exit_on_failure = False):
     try:
         if verbose:
-            system.LogInfo("Reading playlist file %s" % input_file)
+            logger.log_info("Reading playlist file %s" % input_file)
         if not pretend_run:
             playlist_contents = []
             with open(input_file, "r", encoding="utf8") as f:
@@ -29,8 +30,8 @@ def ReadPlaylist(
         return []
     except Exception as e:
         if exit_on_failure:
-            system.LogError("Unable to read playlist file %s" % input_file)
-            system.LogError(e, quit_program = True)
+            logger.log_error("Unable to read playlist file %s" % input_file)
+            logger.log_error(e, quit_program = True)
         return []
 
 # Write playlist file
@@ -42,7 +43,7 @@ def WritePlaylist(
     exit_on_failure = False):
     try:
         if verbose:
-            system.LogInfo("Writing playlist file %s" % output_file)
+            logger.log_info("Writing playlist file %s" % output_file)
         if not pretend_run:
             with open(output_file, "w", encoding="utf8") as f:
                 for entry in playlist_contents:
@@ -50,8 +51,8 @@ def WritePlaylist(
         return True
     except Exception as e:
         if exit_on_failure:
-            system.LogError("Unable to write playlist file %s" % output_file)
-            system.LogError(e, quit_program = True)
+            logger.log_error("Unable to write playlist file %s" % output_file)
+            logger.log_error(e, quit_program = True)
         return False
 
 # Generate playlist file

@@ -15,6 +15,7 @@ import hashing
 import gameinfo
 import arguments
 import setup
+import logger
 
 # Parse arguments
 parser = arguments.ArgumentParser(description = "Verify rom files.")
@@ -27,6 +28,9 @@ def main():
     # Check requirements
     setup.CheckRequirements()
 
+    # Setup logging
+    logger.setup_logging()
+
     # Show preview
     if not args.no_preview:
         details = [
@@ -35,19 +39,19 @@ def main():
             "Hashes dir: %s" % environment.GetGameHashesMetadataRootDir()
         ]
         if not system.PromptForPreview("Verify game files (check JSON, metadata, and hash files)", details):
-            system.LogWarning("Operation cancelled by user")
+            logger.log_warning("Operation cancelled by user")
             return
 
     # Find extra json files
     for json_file in system.BuildFileListByExtensions(environment.GetGameJsonMetadataRootDir(), extensions = [".json"]):
 
         # Check if json file matches up to a real game path
-        system.LogInfo("Checking if game matching '%s' exists ..." % json_file)
+        logger.log_info("Checking if game matching '%s' exists ..." % json_file)
         game_supercategory, game_category, game_subcategory = gameinfo.DeriveGameCategoriesFromFile(json_file)
         game_name = system.GetFilenameBasename(json_file)
         game_base_dir = environment.GetLockerGamingFilesDir(game_supercategory, game_category, game_subcategory, game_name)
         if not os.path.exists(game_base_dir):
-            system.LogError("Extraneous json file '%s' found" % json_file, quit_program = True)
+            logger.log_error("Extraneous json file '%s' found" % json_file, quit_program = True)
 
     # Verify metadata files
     for game_category in config.Category.members():
@@ -102,7 +106,7 @@ def main():
                             environment.GetLockerGamingFilesDir(game_supercategory, game_category, game_subcategory, game_name),
                             file_to_check)
                         if not os.path.exists(stored_file):
-                            system.LogError("File '%s' referenced in json file not found" % file_to_check, quit_program = True)
+                            logger.log_error("File '%s' referenced in json file not found" % file_to_check, quit_program = True)
 
     # Verify hash files
     for game_supercategory in config.Supercategory.members():
@@ -115,14 +119,14 @@ def main():
                     continue
 
                 # Read hash file
-                system.LogInfo("Checking hash file '%s' ..." % hash_file_path)
+                logger.log_info("Checking hash file '%s' ..." % hash_file_path)
                 hash_file_data = hashing.ReadHashFile(hash_file_path)
                 for hash_reference_file in hash_file_data.keys():
 
                     # Check if file exists
                     stored_file = system.JoinPaths(environment.GetLockerGamingRootDir(), hash_reference_file)
                     if not os.path.exists(stored_file):
-                        system.LogError("File '%s' referenced in hash file not found" % stored_file, quit_program = True)
+                        logger.log_error("File '%s' referenced in hash file not found" % stored_file, quit_program = True)
 
 # Start
 if __name__ == "__main__":

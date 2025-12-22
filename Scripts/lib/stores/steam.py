@@ -8,6 +8,7 @@ import command
 import archive
 import programs
 import system
+import logger
 import environment
 import network
 import ini
@@ -371,7 +372,7 @@ class Steam(storebase.StoreBase):
         if programs.IsToolInstalled("SteamCMD"):
             steam_tool = programs.GetToolProgram("SteamCMD")
         if not steam_tool:
-            system.LogError("SteamCMD was not found")
+            logger.log_error("SteamCMD was not found")
             return False
 
         # Get login command
@@ -410,7 +411,7 @@ class Steam(storebase.StoreBase):
 
         # Check identifier
         if not self.IsValidPageIdentifier(identifier):
-            system.LogWarning("Page identifier '%s' was not valid" % identifier)
+            logger.log_warning("Page identifier '%s' was not valid" % identifier)
             return None
 
         # Return latest url
@@ -438,7 +439,7 @@ class Steam(storebase.StoreBase):
             if cache_age_hours < 24:
                 use_cache = True
                 if verbose:
-                    system.LogInfo("Using cached Steam purchases data (%.1f hours old)" % cache_age_hours)
+                    logger.log_info("Using cached Steam purchases data (%.1f hours old)" % cache_age_hours)
 
         # Load from cache if available
         if use_cache:
@@ -457,7 +458,7 @@ class Steam(storebase.StoreBase):
                 return cached_purchases
             else:
                 if verbose:
-                    system.LogWarning("Failed to load Steam cache, will fetch fresh data")
+                    logger.log_warning("Failed to load Steam cache, will fetch fresh data")
                 use_cache = False
 
         # Get steam url
@@ -477,7 +478,7 @@ class Steam(storebase.StoreBase):
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if not steam_json:
-            system.LogError("Unable to find steam release information from '%s'" % steam_url)
+            logger.log_error("Unable to find steam release information from '%s'" % steam_url)
             return None
 
         # Parse json
@@ -524,9 +525,9 @@ class Steam(storebase.StoreBase):
             pretend_run = pretend_run,
             exit_on_failure = False)
         if success and verbose:
-            system.LogInfo("Saved Steam purchases data to cache")
+            logger.log_info("Saved Steam purchases data to cache")
         elif not success and verbose:
-            system.LogWarning("Failed to save Steam cache")
+            logger.log_warning("Failed to save Steam cache")
         return purchases
 
     ############################################################
@@ -585,7 +586,7 @@ class Steam(storebase.StoreBase):
 
         # Check identifier
         if not self.IsValidInfoIdentifier(identifier):
-            system.LogWarning("Info identifier '%s' was not valid" % identifier)
+            logger.log_warning("Info identifier '%s' was not valid" % identifier)
             return None
 
         # Get tool
@@ -593,7 +594,7 @@ class Steam(storebase.StoreBase):
         if programs.IsToolInstalled("SteamCMD"):
             steamcmd_tool = programs.GetToolProgram("SteamCMD")
         if not steamcmd_tool:
-            system.LogError("SteamCMD was not found")
+            logger.log_error("SteamCMD was not found")
             return None
 
         # Get info command
@@ -613,7 +614,7 @@ class Steam(storebase.StoreBase):
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if len(info_output) == 0:
-            system.LogError("Unable to find steam information for '%s'" % identifier)
+            logger.log_error("Unable to find steam information for '%s'" % identifier)
             return None
 
         # Get steam json
@@ -638,9 +639,9 @@ class Steam(storebase.StoreBase):
             vdf_text = info_output[vdf_start:vdf_end].strip()
             steam_json = vdf.loads(vdf_text)
         except Exception as e:
-            system.LogError(e)
-            system.LogError("Unable to parse steam information for '%s'" % identifier)
-            system.LogError("Received output:\n%s" % info_output)
+            logger.log_error(e)
+            logger.log_error("Unable to parse steam information for '%s'" % identifier)
+            logger.log_error("Received output:\n%s" % info_output)
             return None
 
         # Build jsondata
@@ -689,7 +690,7 @@ class Steam(storebase.StoreBase):
 
         # Check identifier
         if not self.IsValidMetadataIdentifier(identifier):
-            system.LogWarning("Metadata identifier '%s' was not valid" % identifier)
+            logger.log_warning("Metadata identifier '%s' was not valid" % identifier)
             return None
 
         # Store web driver for cleanup
@@ -854,7 +855,7 @@ class Steam(storebase.StoreBase):
 
         # Check identifier
         if not self.IsValidAssetIdentifier(identifier):
-            system.LogWarning("Asset identifier '%s' was not valid" % identifier)
+            logger.log_warning("Asset identifier '%s' was not valid" % identifier)
             return None
 
         # Latest asset url
@@ -889,7 +890,7 @@ class Steam(storebase.StoreBase):
 
         # Check identifier
         if not self.IsValidInstallIdentifier(identifier):
-            system.LogWarning("Install identifier '%s' was not valid" % identifier)
+            logger.log_warning("Install identifier '%s' was not valid" % identifier)
             return False
 
         # Check for manifest
@@ -905,7 +906,7 @@ class Steam(storebase.StoreBase):
 
         # Check identifier
         if not self.IsValidInstallIdentifier(identifier):
-            system.LogWarning("Install identifier '%s' was not valid" % identifier)
+            logger.log_warning("Install identifier '%s' was not valid" % identifier)
             return False
 
         # Get tool
@@ -913,7 +914,7 @@ class Steam(storebase.StoreBase):
         if programs.IsToolInstalled("SteamCMD"):
             steam_tool = programs.GetToolProgram("SteamCMD")
         if not steam_tool:
-            system.LogError("SteamCMD was not found", quit_program = True)
+            logger.log_error("SteamCMD was not found", quit_program = True)
             return False
 
         # Get install command
@@ -950,7 +951,7 @@ class Steam(storebase.StoreBase):
 
         # Check identifier
         if not self.IsValidInstallIdentifier(identifier):
-            system.LogWarning("Launch identifier '%s' was not valid" % identifier)
+            logger.log_warning("Launch identifier '%s' was not valid" % identifier)
             return False
 
         # Get tool
@@ -958,7 +959,7 @@ class Steam(storebase.StoreBase):
         if programs.IsToolInstalled("Steam"):
             steam_tool = programs.GetToolProgram("Steam")
         if not steam_tool:
-            system.LogError("Steam was not found", quit_program = True)
+            logger.log_error("Steam was not found", quit_program = True)
             return False
 
         # Get launch command
@@ -998,7 +999,7 @@ class Steam(storebase.StoreBase):
 
         # Check identifier
         if not self.IsValidDownloadIdentifier(identifier):
-            system.LogWarning("Download identifier '%s' was not valid" % identifier)
+            logger.log_warning("Download identifier '%s' was not valid" % identifier)
             return False
 
         # Get tool
@@ -1006,7 +1007,7 @@ class Steam(storebase.StoreBase):
         if programs.IsToolInstalled("SteamDepotDownloader"):
             steamdepot_tool = programs.GetToolProgram("SteamDepotDownloader")
         if not steamdepot_tool:
-            system.LogError("SteamDepotDownloader was not found", quit_program = True)
+            logger.log_error("SteamDepotDownloader was not found", quit_program = True)
             return False
 
         # Create temporary directory

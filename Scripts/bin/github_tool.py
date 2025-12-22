@@ -14,6 +14,7 @@ import network
 import ini
 import arguments
 import setup
+import logger
 
 # Parse arguments
 parser = arguments.ArgumentParser(description = "Github tool.")
@@ -46,6 +47,9 @@ def main():
 
     # Check requirements
     setup.CheckRequirements()
+
+    # Setup logging
+    logger.setup_logging()
 
     # Get archive base directory
     archive_base_dir = ""
@@ -90,7 +94,7 @@ def main():
         if args.action == config.GithubActionType.ARCHIVE:
             details.append("Archive dir: %s" % archive_base_dir)
         if not system.PromptForPreview("GitHub %s" % args.action, details):
-            system.LogWarning("Operation cancelled by user")
+            logger.log_warning("Operation cancelled by user")
             return
 
     # Archive repositories
@@ -108,7 +112,7 @@ def main():
                 pretend_run = args.pretend_run,
                 exit_on_failure = args.exit_on_failure)
             if not success:
-                system.LogWarning("Unable to archive repository %s" % github_repository.name)
+                logger.log_warning("Unable to archive repository %s" % github_repository.name)
 
     # Update repositories
     elif args.action == config.GithubActionType.UPDATE:
@@ -123,7 +127,7 @@ def main():
                     pretend_run = args.pretend_run,
                     exit_on_failure = args.exit_on_failure)
                 if not success:
-                    system.LogWarning("Unable to update repository %s" % github_repository.name)
+                    logger.log_warning("Unable to update repository %s" % github_repository.name)
 
 # Start
 if __name__ == "__main__":

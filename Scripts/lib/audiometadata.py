@@ -10,6 +10,7 @@ import config
 import command
 import programs
 import system
+import logger
 import environment
 import hashing
 import image
@@ -135,14 +136,14 @@ class AudioMetadata:
 
         # Check file exists
         if not system.IsPathFile(audio_file):
-            system.LogError(f"Audio file not found: {audio_file}")
+            logger.log_error(f"Audio file not found: {audio_file}")
             return None
 
         # Read tags from audio file
-        system.LogInfo(f"Reading ID3 tags from {audio_file}")
+        logger.log_info(f"Reading ID3 tags from {audio_file}")
         audio = self.mp3_class(audio_file, ID3 = self.id3_class)
         if audio.tags is None:
-            system.LogError(f"Failed to load audio file")
+            logger.log_error(f"Failed to load audio file")
             return {}
 
         # Extract text frames
@@ -216,11 +217,11 @@ class AudioMetadata:
 
         # Check file exists
         if not system.IsPathFile(audio_file):
-            system.LogError(f"Audio file not found: {audio_file}")
+            logger.log_error(f"Audio file not found: {audio_file}")
             return False
 
         # Load audio file
-        system.LogInfo(f"Setting ID3 tags on {audio_file}")
+        logger.log_info(f"Setting ID3 tags on {audio_file}")
         audio = self.mp3_class(audio_file, ID3 = self.id3_class)
 
         # Add ID3 tags if they don"t exist
@@ -270,11 +271,11 @@ class AudioMetadata:
 
         # Check file exists
         if not system.IsPathFile(audio_file):
-            system.LogError(f"Audio file not found: {audio_file}")
+            logger.log_error(f"Audio file not found: {audio_file}")
             return False
 
         # Load audio file
-        system.LogInfo(f"Removing ID3 tags from {audio_file}")
+        logger.log_info(f"Removing ID3 tags from {audio_file}")
         audio = self.mp3_class(audio_file, ID3 = self.id3_class)
 
         # No tags to remove
@@ -324,15 +325,15 @@ class AudioMetadata:
 
         # Check file exists
         if not system.IsPathFile(audio_file):
-            system.LogError(f"Audio file not found: {audio_file}")
+            logger.log_error(f"Audio file not found: {audio_file}")
             return None
 
         # Read tags from audio file
-        system.LogInfo(f"Reading MP4 tags from {audio_file}")
+        logger.log_info(f"Reading MP4 tags from {audio_file}")
         try:
             audio = self.mp4_class(audio_file)
         except Exception as e:
-            system.LogError(f"Failed to load MP4 file: {e}")
+            logger.log_error(f"Failed to load MP4 file: {e}")
             return None
         if audio.tags is None:
             return {}
@@ -384,15 +385,15 @@ class AudioMetadata:
 
         # Check file exists
         if not system.IsPathFile(audio_file):
-            system.LogError(f"Audio file not found: {audio_file}")
+            logger.log_error(f"Audio file not found: {audio_file}")
             return False
 
         # Load audio file
-        system.LogInfo(f"Setting MP4 tags on {audio_file}")
+        logger.log_info(f"Setting MP4 tags on {audio_file}")
         try:
             audio = self.mp4_class(audio_file)
         except Exception as e:
-            system.LogError(f"Failed to load MP4 file: {e}")
+            logger.log_error(f"Failed to load MP4 file: {e}")
             return False
 
         # Add tags if they don't exist
@@ -447,15 +448,15 @@ class AudioMetadata:
 
         # Check file exists
         if not system.IsPathFile(audio_file):
-            system.LogError(f"Audio file not found: {audio_file}")
+            logger.log_error(f"Audio file not found: {audio_file}")
             return False
 
         # Load audio file
-        system.LogInfo(f"Removing MP4 tags from {audio_file}")
+        logger.log_info(f"Removing MP4 tags from {audio_file}")
         try:
             audio = self.mp4_class(audio_file)
         except Exception as e:
-            system.LogError(f"Failed to load MP4 file: {e}")
+            logger.log_error(f"Failed to load MP4 file: {e}")
             return False
 
         # No tags to remove
@@ -497,7 +498,7 @@ class AudioMetadata:
 
         # Check file exists
         if not system.IsPathFile(audio_file):
-            system.LogError(f"Audio file not found: {audio_file}")
+            logger.log_error(f"Audio file not found: {audio_file}")
             return None
 
         # Get audio info
@@ -515,7 +516,7 @@ class AudioMetadata:
             }
             return file_info
         except Exception as e:
-            system.LogError(f"Failed to get MP4 file info: {e}")
+            logger.log_error(f"Failed to get MP4 file info: {e}")
             return None
 
     ###########################################################
@@ -532,7 +533,7 @@ class AudioMetadata:
 
         # Check file exists
         if not system.IsPathFile(audio_file):
-            system.LogError(f"Audio file not found: {audio_file}")
+            logger.log_error(f"Audio file not found: {audio_file}")
             return None
 
         # Detect format by extension
@@ -562,7 +563,7 @@ class AudioMetadata:
 
         # Check file exists
         if not system.IsPathFile(audio_file):
-            system.LogError(f"Audio file not found: {audio_file}")
+            logger.log_error(f"Audio file not found: {audio_file}")
             return False
 
         # Detect format by extension
@@ -594,7 +595,7 @@ class AudioMetadata:
 
         # Check file exists
         if not system.IsPathFile(audio_file):
-            system.LogError(f"Audio file not found: {audio_file}")
+            logger.log_error(f"Audio file not found: {audio_file}")
             return False
 
         # Detect format by extension
@@ -631,7 +632,7 @@ class AudioMetadata:
 
         # Check file exists
         if not system.IsPathFile(audio_file):
-            system.LogError(f"Audio file not found: {audio_file}")
+            logger.log_error(f"Audio file not found: {audio_file}")
             return None
 
         # Detect format by extension
@@ -655,7 +656,7 @@ class AudioMetadata:
 
         # Check file exists
         if not system.IsPathFile(audio_file):
-            system.LogError(f"Audio file not found: {audio_file}")
+            logger.log_error(f"Audio file not found: {audio_file}")
             return None
 
         # Get audio info
@@ -683,13 +684,13 @@ class AudioMetadata:
 
         # Check album exists
         if not system.IsPathDirectory(album_dir):
-            system.LogError(f"Album directory not found: {album_dir}")
+            logger.log_error(f"Album directory not found: {album_dir}")
             return None
 
         # Get all audio files (MP3 and M4A/M4B)
         audio_files = system.BuildFileListByExtensions(album_dir, extensions=['.mp3', '.m4a', '.m4b', '.mp4', '.aac'])
         if not audio_files:
-            system.LogWarning(f"No audio files found in {album_dir}")
+            logger.log_warning(f"No audio files found in {album_dir}")
             return None
 
         # Sort files by name
@@ -780,12 +781,12 @@ class AudioMetadata:
 
         # Check album exists
         if not system.IsPathDirectory(album_dir):
-            system.LogError(f"Album directory not found: {album_dir}")
+            logger.log_error(f"Album directory not found: {album_dir}")
             return False
 
         # Check tracks
         if "tracks" not in album_metadata:
-            system.LogError("No tracks found in album metadata")
+            logger.log_error("No tracks found in album metadata")
             return False
 
         # Get album artwork if available
@@ -815,7 +816,7 @@ class AudioMetadata:
                     exit_on_failure = exit_on_failure):
                     return False
             else:
-                system.LogError(f"Track file not found: {audio_file}")
+                logger.log_error(f"Track file not found: {audio_file}")
                 return False
         return True
 
@@ -829,7 +830,7 @@ class AudioMetadata:
 
         # Check album exists
         if not system.IsPathDirectory(album_dir):
-            system.LogError(f"Album directory not found: {album_dir}")
+            logger.log_error(f"Album directory not found: {album_dir}")
             return False
 
         # Get all audio files (MP3 and M4A/M4B)

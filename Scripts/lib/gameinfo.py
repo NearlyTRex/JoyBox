@@ -7,6 +7,7 @@ import string
 # Local imports
 import config
 import system
+import logger
 import environment
 import metadata
 import metadataentry
@@ -1126,6 +1127,6 @@ def IterateSelectedGameInfos(
                     pretend_run = pretend_run,
                     exit_on_failure = exit_on_failure)
             except Exception as e:
-                system.LogWarning("Skipping '%s': %s" % (game_name, str(e)))
+                logger.log_warning("Skipping '%s': %s" % (game_name, str(e)))
 
 ###########################################################

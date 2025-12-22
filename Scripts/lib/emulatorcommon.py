@@ -6,6 +6,7 @@ import sys
 import config
 import command
 import system
+import logger
 import metadata
 import environment
 import gameinfo
@@ -59,7 +60,7 @@ def SimpleLaunch(
 
     # Nothing to run
     if len(selected_launch_file) == 0 and not game_launch_name:
-        system.LogWarning("Nothing to run")
+        logger.log_warning("Nothing to run")
         return False
 
     # Replace game tokens

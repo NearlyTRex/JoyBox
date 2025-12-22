@@ -6,6 +6,7 @@ import sys
 import config
 import environment
 import system
+import logger
 import release
 import programs
 import hashing
@@ -167,7 +168,7 @@ class Dolphin(emulatorbase.EmulatorBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup Dolphin")
+                logger.log_error("Could not setup Dolphin")
                 return False
 
         # Build linux program
@@ -199,7 +200,7 @@ class Dolphin(emulatorbase.EmulatorBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup Dolphin")
+                logger.log_error("Could not setup Dolphin")
                 return False
         return True
 
@@ -219,7 +220,7 @@ class Dolphin(emulatorbase.EmulatorBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup Dolphin")
+                logger.log_error("Could not setup Dolphin")
                 return False
 
         # Setup linux program
@@ -232,7 +233,7 @@ class Dolphin(emulatorbase.EmulatorBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup Dolphin")
+                logger.log_error("Could not setup Dolphin")
                 return False
         return True
 
@@ -250,7 +251,7 @@ class Dolphin(emulatorbase.EmulatorBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup Dolphin config files")
+                logger.log_error("Could not setup Dolphin config files")
                 return False
 
         # Verify system files
@@ -262,7 +263,7 @@ class Dolphin(emulatorbase.EmulatorBase):
                 exit_on_failure = setup_params.exit_on_failure)
             success = (expected_md5 == actual_md5)
             if not success:
-                system.LogError("Could not verify Dolphin system file %s" % filename)
+                logger.log_error("Could not verify Dolphin system file %s" % filename)
                 return False
 
         # Extract system files
@@ -277,7 +278,7 @@ class Dolphin(emulatorbase.EmulatorBase):
                         pretend_run = setup_params.pretend_run,
                         exit_on_failure = setup_params.exit_on_failure)
                     if not success:
-                        system.LogError("Could not extract Dolphin system files")
+                        logger.log_error("Could not extract Dolphin system files")
                         return False
         return True
 

@@ -13,6 +13,7 @@ import cryption
 import ini
 import arguments
 import setup
+import logger
 
 # Parse arguments
 parser = arguments.ArgumentParser(description = "Encrypt/decrypt files.")
@@ -33,6 +34,9 @@ def main():
     # Check requirements
     setup.CheckRequirements()
 
+    # Setup logging
+    logger.setup_logging()
+
     # Get input path
     input_path = parser.get_input_path()
 
@@ -43,7 +47,7 @@ def main():
     elif args.passphrase_type == config.PassphraseType.LOCKER:
         passphrase = ini.GetIniValue("UserData.Protection", "locker_passphrase")
     if not passphrase:
-        system.LogError("No passphrase set", quit_program = True)
+        logger.log_error("No passphrase set", quit_program = True)
 
     # Show preview
     if not args.no_preview:
@@ -54,7 +58,7 @@ def main():
             "Keep originals: %s" % args.keep_originals
         ]
         if not system.PromptForPreview("%s files" % action, details):
-            system.LogWarning("Operation cancelled by user")
+            logger.log_warning("Operation cancelled by user")
             return
 
     # Encrypt file

@@ -7,6 +7,7 @@ import sys
 import command
 import programs
 import system
+import logger
 
 # Extract Xbox ISO
 def ExtractXboxISO(
@@ -22,7 +23,7 @@ def ExtractXboxISO(
     if programs.IsToolInstalled("ExtractXIso"):
         extract_tool = programs.GetToolProgram("ExtractXIso")
     if not extract_tool:
-        system.LogError("ExtractXIso was not found")
+        logger.log_error("ExtractXIso was not found")
         return False
 
     # Get extract command
@@ -42,7 +43,7 @@ def ExtractXboxISO(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if code != 0:
-        system.LogError("Unable to extract xbox iso '%s' to '%s'" % (iso_file, extract_dir))
+        logger.log_error("Unable to extract xbox iso '%s' to '%s'" % (iso_file, extract_dir))
         return False
 
     # Clean up
@@ -69,7 +70,7 @@ def RewriteXboxISO(
     if programs.IsToolInstalled("ExtractXIso"):
         extract_tool = programs.GetToolProgram("ExtractXIso")
     if not extract_tool:
-        system.LogError("ExtractXIso was not found")
+        logger.log_error("ExtractXIso was not found")
         return False
 
     # Get rewrite command
@@ -91,7 +92,7 @@ def RewriteXboxISO(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if code != 0:
-        system.LogError("Unable to rewrite xbox iso '%s'" % iso_file)
+        logger.log_error("Unable to rewrite xbox iso '%s'" % iso_file)
         return False
 
     # Must have worked

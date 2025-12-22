@@ -13,6 +13,7 @@ import environment
 import decompiler
 import arguments
 import setup
+import logger
 
 # Parse arguments
 parser = arguments.ArgumentParser(description = "Decompiler tool.")
@@ -42,11 +43,14 @@ def main():
     # Check requirements
     setup.CheckRequirements()
 
+    # Setup logging
+    logger.setup_logging()
+
     # List presets
     if args.list_presets:
-        system.LogInfo("Available presets:")
+        logger.log_info("Available presets:")
         for preset_name, desc in decompiler.ListPresets():
-            system.LogInfo("  %s - %s" % (preset_name, desc))
+            logger.log_info("  %s - %s" % (preset_name, desc))
         return
 
     # List scripts
@@ -54,16 +58,16 @@ def main():
         if args.preset:
             scripts = decompiler.ListPresetScripts(args.preset)
             if scripts is None:
-                system.LogError("Preset not found: %s" % args.preset)
+                logger.log_error("Preset not found: %s" % args.preset)
                 return
-            system.LogInfo("Available scripts for '%s':" % args.preset)
+            logger.log_info("Available scripts for '%s':" % args.preset)
             for script_name, desc in scripts:
-                system.LogInfo("  %s - %s" % (script_name, desc))
+                logger.log_info("  %s - %s" % (script_name, desc))
         else:
             for preset_name, preset_desc in decompiler.ListPresets():
-                system.LogInfo("%s:" % preset_name)
+                logger.log_info("%s:" % preset_name)
                 for script_name, desc in decompiler.ListPresetScripts(preset_name):
-                    system.LogInfo("  %s - %s" % (script_name, desc))
+                    logger.log_info("  %s - %s" % (script_name, desc))
         return
 
     # Launch program
@@ -80,8 +84,8 @@ def main():
         # Preset mode
         if args.preset:
             if not args.script:
-                system.LogError("--script is required when using --preset")
-                system.LogInfo("Use --list_scripts --preset %s to see available scripts" % args.preset)
+                logger.log_error("--script is required when using --preset")
+                logger.log_info("Use --list_scripts --preset %s to see available scripts" % args.preset)
                 return
             decompiler.RunScriptFromPreset(
                 preset_name = args.preset,
@@ -96,9 +100,9 @@ def main():
         project_dir = parser.get_checked_path("project_dir")
         script_path = parser.get_checked_path("script_path")
         if not all([project_dir, args.project_name, args.program_name, script_path, args.script_name]):
-            system.LogError("Manual mode requires: --project_dir, --project_name, --program_name, --script_path, --script_name")
-            system.LogInfo("Or use preset mode with: --preset <name> --script <script>")
-            system.LogInfo("Use --list_presets to see available presets")
+            logger.log_error("Manual mode requires: --project_dir, --project_name, --program_name, --script_path, --script_name")
+            logger.log_info("Or use preset mode with: --preset <name> --script <script>")
+            logger.log_info("Use --list_presets to see available presets")
             return
         decompiler.RunScript(
             project_dir = project_dir,

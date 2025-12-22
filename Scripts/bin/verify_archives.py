@@ -12,6 +12,7 @@ import system
 import archive
 import arguments
 import setup
+import logger
 
 # Parse arguments
 parser = arguments.ArgumentParser(description = "Verify archive files.")
@@ -31,6 +32,9 @@ def main():
     # Check requirements
     setup.CheckRequirements()
 
+    # Setup logging
+    logger.setup_logging()
+
     # Get input path
     input_path = parser.get_input_path()
 
@@ -41,22 +45,22 @@ def main():
             "Archive types: %s" % [t.cval() for t in args.archive_types]
         ]
         if not system.PromptForPreview("Verify archives", details):
-            system.LogWarning("Operation cancelled by user")
+            logger.log_warning("Operation cancelled by user")
             return
 
     # Verify archives
     archive_extensions = [archive_type.cval() for archive_type in args.archive_types]
     for file in system.BuildFileListByExtensions(input_path, extensions = archive_extensions):
-        system.LogInfo("Verifying %s ..." % file)
+        logger.log_info("Verifying %s ..." % file)
         verification_success = archive.TestArchive(
             archive_file = file,
             verbose = args.verbose,
             pretend_run = args.pretend_run,
             exit_on_failure = args.exit_on_failure)
         if verification_success:
-            system.LogInfo("Verified!")
+            logger.log_info("Verified!")
         else:
-            system.LogError("Verification failed!", quit_program = True)
+            logger.log_error("Verification failed!", quit_program = True)
 
 # Start
 if __name__ == "__main__":

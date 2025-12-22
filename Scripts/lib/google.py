@@ -6,6 +6,7 @@ import json
 # Local imports
 import config
 import system
+import logger
 import command
 import programs
 import network
@@ -45,7 +46,7 @@ def FindImages(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if not image_json:
-        system.LogError("Unable to find images from '%s'" % search_url)
+        logger.log_error("Unable to find images from '%s'" % search_url)
         return False
 
     # Build search results
@@ -98,7 +99,7 @@ def FindVideos(
     if programs.IsToolInstalled("YtDlp"):
         youtube_tool = programs.GetToolProgram("YtDlp")
     if not youtube_tool:
-        system.LogError("YtDlp was not found")
+        logger.log_error("YtDlp was not found")
         return False
 
     # Get search command
@@ -175,7 +176,7 @@ def DownloadVideo(
     if programs.IsToolInstalled("YtDlp"):
         youtube_tool = programs.GetToolProgram("YtDlp")
     if not youtube_tool:
-        system.LogError("YtDlp was not found")
+        logger.log_error("YtDlp was not found")
         return False
 
     # Get download command
@@ -218,7 +219,7 @@ def DownloadVideo(
     download_cmd += [video_url]
 
     # Run download command
-    system.LogInfo(f"Executing download command: {' '.join(download_cmd[:5])}...")
+    logger.log_info(f"Executing download command: {' '.join(download_cmd[:5])}...")
     code = command.RunReturncodeCommand(
         cmd = download_cmd,
         options = command.CreateCommandOptions(
@@ -226,11 +227,11 @@ def DownloadVideo(
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
-    system.LogInfo(f"Download command completed with return code: {code}")
+    logger.log_info(f"Download command completed with return code: {code}")
     if code != 0:
-        system.LogWarning(f"Download completed with some failures (return code: {code})")
+        logger.log_warning(f"Download completed with some failures (return code: {code})")
     else:
-        system.LogInfo("Download command completed successfully")
+        logger.log_info("Download command completed successfully")
 
     # Check what was downloaded
     download_success = True
@@ -239,9 +240,9 @@ def DownloadVideo(
         downloaded_files = system.GetDirectoryContents(output_dir)
         media_files = [f for f in downloaded_files if f.endswith(('.mp3', '.mp4'))]
         new_files_count = len(media_files)
-        system.LogInfo(f"Found {new_files_count} new media files after download")
+        logger.log_info(f"Found {new_files_count} new media files after download")
     else:
-        system.LogWarning(f"Output directory doesn't exist after download: {output_dir}")
+        logger.log_warning(f"Output directory doesn't exist after download: {output_dir}")
 
     # Determine if the operation was successful
     # yt-dlp returns exit code 1 for partial failures, but this doesn't mean total failure
@@ -253,19 +254,19 @@ def DownloadVideo(
     # - Exit code > 1 (serious error)
     # - Exit code 1 with no progress and genuine failures (not just archives)
     if code == 0:
-        system.LogInfo("Download completed without any issues")
+        logger.log_info("Download completed without any issues")
     elif code == 1:
         if new_files_count > 0:
-            system.LogInfo(f"Download completed with some issues but {new_files_count} new files were downloaded")
+            logger.log_info(f"Download completed with some issues but {new_files_count} new files were downloaded")
         else:
-            system.LogInfo("Download completed - no new files (likely all videos already archived)")
+            logger.log_info("Download completed - no new files (likely all videos already archived)")
     else:
-        system.LogError(f"Download failed with serious error (exit code: {code})")
+        logger.log_error(f"Download failed with serious error (exit code: {code})")
         download_success = False
 
     # Sanitize filenames
     if sanitize_filenames:
-        system.LogInfo("Starting filename sanitization...")
+        logger.log_info("Starting filename sanitization...")
 
         # Get sanitize dir
         sanitize_dir = None
@@ -276,7 +277,7 @@ def DownloadVideo(
 
         # Sanitize files in dir
         if sanitize_dir:
-            system.LogInfo(f"Sanitizing filenames in directory: {sanitize_dir}")
+            logger.log_info(f"Sanitizing filenames in directory: {sanitize_dir}")
             success = system.SanitizeFilenames(
                 path = sanitize_dir,
                 extension = ".mp3" if audio_only else ".mp4",
@@ -284,16 +285,16 @@ def DownloadVideo(
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
-                system.LogError("Filename sanitization failed")
+                logger.log_error("Filename sanitization failed")
                 return False
-            system.LogInfo("Filename sanitization completed successfully")
+            logger.log_info("Filename sanitization completed successfully")
         else:
-            system.LogWarning("No sanitization directory found")
+            logger.log_warning("No sanitization directory found")
 
     # Return success status based on our analysis
     if download_success:
-        system.LogInfo("Video download process completed successfully")
+        logger.log_info("Video download process completed successfully")
         return True
     else:
-        system.LogError("Video download process failed")
+        logger.log_error("Video download process failed")
         return False

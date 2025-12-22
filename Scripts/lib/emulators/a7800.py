@@ -6,6 +6,7 @@ import sys
 import config
 import environment
 import system
+import logger
 import release
 import programs
 import emulatorbase
@@ -62,7 +63,7 @@ class A7800(emulatorbase.EmulatorBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup A7800")
+                logger.log_error("Could not setup A7800")
                 return False
         return True
 
@@ -82,6 +83,6 @@ class A7800(emulatorbase.EmulatorBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup A7800")
+                logger.log_error("Could not setup A7800")
                 return False
         return True

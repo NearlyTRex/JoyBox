@@ -6,6 +6,7 @@ import sys
 import config
 import environment
 import system
+import logger
 import release
 import programs
 import nintendo
@@ -105,7 +106,7 @@ class Cemu(emulatorbase.EmulatorBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup Cemu")
+                logger.log_error("Could not setup Cemu")
                 return False
 
         # Download linux program
@@ -122,7 +123,7 @@ class Cemu(emulatorbase.EmulatorBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup Cemu")
+                logger.log_error("Could not setup Cemu")
                 return False
         return True
 
@@ -142,7 +143,7 @@ class Cemu(emulatorbase.EmulatorBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup Cemu")
+                logger.log_error("Could not setup Cemu")
                 return False
 
         # Setup linux program
@@ -155,7 +156,7 @@ class Cemu(emulatorbase.EmulatorBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup Cemu")
+                logger.log_error("Could not setup Cemu")
                 return False
         return True
 
@@ -173,7 +174,7 @@ class Cemu(emulatorbase.EmulatorBase):
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
-                system.LogError("Could not setup Cemu config files")
+                logger.log_error("Could not setup Cemu config files")
                 return False
         return True
 
