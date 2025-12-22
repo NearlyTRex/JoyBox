@@ -7,14 +7,19 @@ import string
 # Local imports
 import config
 import system
+import text
+import validation
 import logger
 import environment
 import metadata
 import metadataentry
+import paths
 import platforms
+import serialization
 import jsondata
 import computer
 import stores
+import strings
 import gui
 
 ###########################################################
@@ -37,13 +42,13 @@ class GameInfo:
         # Json info
         self.json_data = jsondata.JsonData()
         self.json_file = json_file
-        if not system.IsPathFile(self.json_file):
+        if not paths.is_path_file(self.json_file):
             self.json_file = environment.GetGameJsonMetadataFile(
                 game_supercategory = game_supercategory,
                 game_category = game_category,
                 game_subcategory = game_subcategory,
                 game_name = game_name)
-        if not system.IsPathFile(self.json_file):
+        if not paths.is_path_file(self.json_file):
             raise Exception("Unable to find associated json file")
 
         # Metadata info
@@ -72,7 +77,7 @@ class GameInfo:
         exit_on_failure = False):
 
         # Read json data
-        self.json_data = jsondata.JsonData(system.ReadJsonFile(
+        self.json_data = jsondata.JsonData(serialization.read_json_file(
             src = json_file,
             verbose = verbose,
             pretend_run = pretend_run,
@@ -86,14 +91,14 @@ class GameInfo:
         ##############################
 
         # Get basic info based on json location
-        self.game_name = system.GetFilenameBasename(json_file)
+        self.game_name = paths.get_filename_basename(json_file)
         self.game_supercategory, self.game_category, self.game_subcategory = DeriveGameCategoriesFromFile(json_file)
         self.game_platform = DeriveGamePlatformFromCategories(self.game_category, self.game_subcategory)
-        system.AssertIsNotNone(self.game_supercategory, "game_supercategory")
-        system.AssertIsNotNone(self.game_category, "game_category")
-        system.AssertIsNotNone(self.game_subcategory, "game_subcategory")
-        system.AssertIsNotNone(self.game_platform, "game_platform")
-        system.AssertIsNotNone(self.game_name, "game_name")
+        validation.assert_is_not_none(self.game_supercategory, "game_supercategory")
+        validation.assert_is_not_none(self.game_category, "game_category")
+        validation.assert_is_not_none(self.game_subcategory, "game_subcategory")
+        validation.assert_is_not_none(self.game_platform, "game_platform")
+        validation.assert_is_not_none(self.game_name, "game_name")
 
         # Save metadata file
         self.metadata_file = environment.GetGameMetadataFile(self.game_category, self.game_subcategory)
@@ -175,7 +180,7 @@ class GameInfo:
         verbose = False,
         pretend_run = False,
         exit_on_failure = False):
-        return system.ReadJsonFile(
+        return serialization.read_json_file(
             src = self.get_json_file(),
             verbose = verbose,
             pretend_run = pretend_run,
@@ -188,7 +193,7 @@ class GameInfo:
         verbose = False,
         pretend_run = False,
         exit_on_failure = False):
-        return system.WriteJsonFile(
+        return serialization.write_json_file(
             src = self.get_json_file(),
             json_data = json_data,
             sort_keys = True,
@@ -702,7 +707,7 @@ class GameInfo:
         if len(launch_programs) == 0:
 
             # Get the complete list of runnable files from the install
-            runnable_files_all = system.BuildFileListByExtensions(
+            runnable_files_all = paths.build_file_list_by_extensions(
                 root = base_dir,
                 extensions = config.WindowsProgramFileType.cvalues(),
                 use_relative_paths = True,
@@ -711,7 +716,7 @@ class GameInfo:
             # Parse down the complete list to the ones most likely to be games
             runnable_files_likely = []
             for relative_path in runnable_files_all:
-                path_to_add = system.NormalizeFilePath(relative_path, separator = config.os_pathsep)
+                path_to_add = paths.normalize_file_path(relative_path, separator = config.os_pathsep)
                 should_ignore = False
                 for ignore_path in config.ignored_paths_install:
                     if path_to_add.startswith(ignore_path):
@@ -724,8 +729,8 @@ class GameInfo:
             # Add to launch programs
             for runnable_file_likely in runnable_files_likey:
                 runnable_program = computer.Program()
-                runnable_program.set_exe(system.GetFilenameFile(runnable_file))
-                runnable_program.set_cwd(system.GetFilenameDirectory(runnable_file))
+                runnable_program.set_exe(paths.get_filename_file(runnable_file))
+                runnable_program.set_cwd(paths.get_filename_directory(runnable_file))
                 launch_programs.append(runnable_program)
 
             # Try to record these for later
@@ -737,7 +742,7 @@ class GameInfo:
             for launch_program in launch_programs:
                 launch_exe = launch_program.get_exe()
                 launch_cwd = launch_program.get_cwd()
-                if system.JoinPaths(launch_cwd, launch_exe) in game_exe:
+                if paths.join_paths(launch_cwd, launch_exe) in game_exe:
                     return launch_program
             return None
 
@@ -764,7 +769,7 @@ class GameInfo:
         for launch_program in launch_programs:
             launch_exe = launch_program.get_exe()
             launch_cwd = launch_program.get_cwd()
-            runnable_choices.append(system.JoinPaths(launch_cwd, launch_exe))
+            runnable_choices.append(paths.join_paths(launch_cwd, launch_exe))
 
         # Display list of runnable files and let user decide which to run
         gui.DisplayChoicesWindow(
@@ -850,7 +855,7 @@ def FindBestGameFile(game_files):
 def FindAllGameNames(base_dir, game_supercategory, game_category, game_subcategory):
 
     # Get base path
-    base_path = system.JoinPaths(base_dir, game_supercategory, game_category, game_subcategory)
+    base_path = paths.join_paths(base_dir, game_supercategory, game_category, game_subcategory)
 
     # Get platform
     game_platform = DeriveGamePlatformFromCategories(game_category, game_subcategory)
@@ -858,11 +863,11 @@ def FindAllGameNames(base_dir, game_supercategory, game_category, game_subcatego
     # Collect game names
     game_names = []
     if platforms.IsLetterPlatform(game_platform):
-        for game_letter in sorted(system.GetDirectoryContents(base_path)):
-            for game_name in sorted(system.GetDirectoryContents(system.JoinPaths(base_path, game_letter))):
+        for game_letter in sorted(paths.get_directory_contents(base_path)):
+            for game_name in sorted(paths.get_directory_contents(paths.join_paths(base_path, game_letter))):
                 game_names.append(game_name)
     else:
-        for game_name in sorted(system.GetDirectoryContents(base_path)):
+        for game_name in sorted(paths.get_directory_contents(base_path)):
             game_names.append(game_name)
     return game_names
 
@@ -897,9 +902,9 @@ def DeriveGameNameFromRegularName(regular_name, region="USA"):
     game_name = game_name.replace(":", " -")
     game_name = game_name.replace("&", "and")
     game_name = re.sub(r"-?\s*CE$", " Collector's Edition", game_name)
-    game_name = system.CleanRichText(game_name)
-    game_name = system.CapitalizeText(game_name)
-    game_name = system.ReplaceInvalidPathCharacters(game_name)
+    game_name = text.clean_rich_text(game_name)
+    game_name = text.capitalize_text(game_name)
+    game_name = paths.replace_invalid_path_characters(game_name)
     for flippable_word in config.flippable_words:
         if game_name.startswith(f"{flippable_word} "):
             base_name = game_name[len(flippable_word) + 1:]
@@ -918,7 +923,7 @@ def DeriveGameNameFromRegularName(regular_name, region="USA"):
 
 # Derive slug name from regular name
 def DeriveSlugNameFromRegularName(regular_name):
-    return system.GetSlugString(regular_name)
+    return strings.get_slug_string(regular_name)
 
 # Derive slug name from game name
 def DeriveSlugNameFromGameName(game_name, custom_prefix = "", custom_suffix = ""):
@@ -937,12 +942,12 @@ def DeriveGameLetterFromName(game_name):
 # Derive game search terms from name
 def DeriveGameSearchTermsFromName(game_name, game_platform, custom_prefix = "", custom_suffix = ""):
     regular_name = DeriveRegularNameFromGameName(game_name, custom_prefix, custom_suffix)
-    return system.EncodeUrlString(regular_name, use_plus = True)
+    return strings.encode_url_string(regular_name, use_plus = True)
 
 # Derive game name path from name
 def DeriveGameNamePathFromName(game_name, game_platform):
     if platforms.IsLetterPlatform(game_platform):
-        return system.JoinPaths(DeriveGameLetterFromName(game_name), game_name)
+        return paths.join_paths(DeriveGameLetterFromName(game_name), game_name)
     else:
         return game_name
 
@@ -976,24 +981,24 @@ def DeriveGamePlatformFromCategories(game_category, game_subcategory):
 def DeriveGameCategoriesFromFile(game_file):
 
     # Check file
-    if not system.IsPathValid(game_file):
+    if not paths.is_path_valid(game_file):
         return (None, None, None)
 
     # Get source directory and basename
-    source_dir = system.GetFilenameDirectory(system.NormalizeFilePath(game_file))
-    base_name = system.GetFilenameBasename(system.NormalizeFilePath(game_file))
+    source_dir = paths.get_filename_directory(paths.normalize_file_path(game_file))
+    base_name = paths.get_filename_basename(paths.normalize_file_path(game_file))
 
     # Get possible root dirs
     root_dirs = [
-        system.NormalizeFilePath(environment.GetLockerGamingRootDir()),
-        system.NormalizeFilePath(environment.GetCacheGamingRootDir()),
-        system.NormalizeFilePath(environment.GetGameJsonMetadataRootDir())
+        paths.normalize_file_path(environment.GetLockerGamingRootDir()),
+        paths.normalize_file_path(environment.GetCacheGamingRootDir()),
+        paths.normalize_file_path(environment.GetGameJsonMetadataRootDir())
     ]
 
     # Get relative source directory
     relative_source_dir = source_dir
     for root_dir in root_dirs:
-        relative_source_dir = system.RebaseFilePath(relative_source_dir, root_dir, "")
+        relative_source_dir = paths.rebase_file_path(relative_source_dir, root_dir, "")
 
     # Derive supercategory
     derived_supercategory = None

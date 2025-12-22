@@ -4,6 +4,7 @@ import sys
 
 # Local imports
 import config
+import fileops
 import system
 import logger
 import command
@@ -117,7 +118,7 @@ def ConvertAsset(
             return False
 
     # Transfer file by default
-    success = system.SmartTransfer(
+    success = fileops.smart_transfer(
         src = asset_src,
         dest = asset_dest,
         skip_existing = True,

@@ -9,7 +9,9 @@ import command
 import sandbox
 import system
 import logger
+import paths
 import environment
+import fileops
 import archive
 import programs
 import webpage
@@ -145,7 +147,7 @@ def DownloadUrl(
 
     # Create output directory
     if output_dir:
-        system.MakeDirectory(
+        fileops.make_directory(
             src = output_dir,
             verbose = verbose,
             pretend_run = pretend_run,
@@ -165,12 +167,12 @@ def DownloadUrl(
 
     # Check result
     if output_dir:
-        for obj in system.GetDirectoryContents(output_dir):
-            obj_path = system.JoinPaths(output_dir, obj)
-            if system.IsPathFile(obj_path) and obj.endswith(system.GetFilenameFile(url)):
+        for obj in paths.get_directory_contents(output_dir):
+            obj_path = paths.join_paths(output_dir, obj)
+            if paths.is_path_file(obj_path) and obj.endswith(paths.get_filename_file(url)):
                 return True
     elif output_file:
-        return system.IsPathFile(output_file)
+        return paths.is_path_file(output_file)
     return False
 
 # Download git url
@@ -185,20 +187,20 @@ def DownloadGitUrl(
 
     # Clear output dir
     if clean:
-        system.ChmodFileOrDirectory(
+        fileops.chmod_file_or_directory(
             src = output_dir,
             perms = 777,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-        system.RemoveDirectoryContents(
+        fileops.remove_directory_contents(
             src = output_dir,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
     # Check output dir
-    if system.IsPathDirectory(output_dir) and system.DoesDirectoryContainFiles(output_dir):
+    if paths.is_path_directory(output_dir) and paths.does_directory_contain_files(output_dir):
         return True
 
     # Get tool
@@ -235,7 +237,7 @@ def DownloadGitUrl(
         return False
 
     # Check result
-    return system.DoesDirectoryContainFiles(output_dir)
+    return paths.does_directory_contain_files(output_dir)
 
 ###########################################################
 # Shares
@@ -246,7 +248,7 @@ def IsNetworkShareMounted(mount_dir, base_location, network_share):
 
     # Windows
     if environment.IsWindowsPlatform():
-        return system.IsPathDirectory(mount_dir) and not system.IsDirectoryEmpty(mount_dir)
+        return paths.is_path_directory(mount_dir) and not paths.is_directory_empty(mount_dir)
 
     # Linux
     elif environment.IsLinuxPlatform():
@@ -276,14 +278,14 @@ def MountNetworkShare(
     if environment.IsWindowsPlatform():
 
         # Check if already mounted
-        if system.IsPathDirectory(mount_dir):
+        if paths.is_path_directory(mount_dir):
             return True
 
         # Get mount command
         mount_cmd = [
             "net",
             "use",
-            "%s:" % system.GetDirectoryDrive(mount_dir),
+            "%s:" % paths.get_directory_drive(mount_dir),
             "\\\\%s\\%s" % (base_location, network_share),
             "/USER:%s" % username,
             password
@@ -318,7 +320,7 @@ def MountNetworkShare(
             return False
 
         # Check if already mounted
-        if not system.IsDirectoryEmpty(mount_dir):
+        if not paths.is_directory_empty(mount_dir):
             return True
 
         # Get mount command
@@ -483,23 +485,23 @@ def ArchiveGithubRepository(
     exit_on_failure = False):
 
     # Create temporary directory
-    tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(
+    tmp_dir_success, tmp_dir_result = fileops.create_temporary_directory(
         verbose = verbose,
         pretend_run = pretend_run)
     if not tmp_dir_success:
         return False
 
     # Make temporary dirs
-    tmp_dir_download = system.JoinPaths(tmp_dir_result, "download")
-    tmp_dir_archive = system.JoinPaths(tmp_dir_result, "archive")
-    tmp_file_archive = system.JoinPaths(tmp_dir_archive, "tmp.zip")
-    out_file_archive = system.JoinPaths(output_dir, github_repo + "_" + str(environment.GetCurrentTimestamp()) + config.ArchiveFileType.ZIP.cval())
-    system.MakeDirectory(
+    tmp_dir_download = paths.join_paths(tmp_dir_result, "download")
+    tmp_dir_archive = paths.join_paths(tmp_dir_result, "archive")
+    tmp_file_archive = paths.join_paths(tmp_dir_archive, "tmp.zip")
+    out_file_archive = paths.join_paths(output_dir, github_repo + "_" + str(environment.GetCurrentTimestamp()) + config.ArchiveFileType.ZIP.cval())
+    fileops.make_directory(
         src = tmp_dir_download,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
-    system.MakeDirectory(
+    fileops.make_directory(
         src = tmp_dir_archive,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -522,8 +524,8 @@ def ArchiveGithubRepository(
 
     # Remove git folder
     if clean:
-        success = system.RemoveDirectory(
-            src = system.JoinPaths(tmp_dir_download, ".git"),
+        success = fileops.remove_directory(
+            src = paths.join_paths(tmp_dir_download, ".git"),
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
@@ -567,7 +569,7 @@ def ArchiveGithubRepository(
         return False
 
     # Delete temporary directory
-    system.RemoveDirectory(
+    fileops.remove_directory(
         src = tmp_dir_result,
         verbose = verbose,
         pretend_run = pretend_run,

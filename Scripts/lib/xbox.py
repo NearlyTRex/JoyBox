@@ -5,9 +5,11 @@ import sys
 
 # Local imports
 import command
+import fileops
 import programs
 import system
 import logger
+import paths
 
 # Extract Xbox ISO
 def ExtractXboxISO(
@@ -48,7 +50,7 @@ def ExtractXboxISO(
 
     # Clean up
     if delete_original:
-        system.RemoveFile(
+        fileops.remove_file(
             src = iso_file,
             verbose = verbose,
             pretend_run = pretend_run,
@@ -77,7 +79,7 @@ def RewriteXboxISO(
     rewrite_cmd = [
         extract_tool,
         "-r",
-        "-d", system.GetFilenameDirectory(iso_file)
+        "-d", paths.get_filename_directory(iso_file)
     ]
     if delete_original:
         rewrite_cmd += ["-D"]

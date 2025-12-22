@@ -7,7 +7,9 @@ import json
 import config
 import system
 import logger
+import paths
 import environment
+import fileops
 import release
 import programs
 import toolbase
@@ -185,8 +187,8 @@ class RClone(toolbase.ToolBase):
             "RClone/linux/rclone.conf"
         ]
         for config_filename in config_files:
-            success = system.TouchFile(
-                src = system.JoinPaths(environment.GetToolsRootDir(), config_filename),
+            success = fileops.touch_file(
+                src = paths.join_paths(environment.GetToolsRootDir(), config_filename),
                 contents = config_contents.strip(),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,

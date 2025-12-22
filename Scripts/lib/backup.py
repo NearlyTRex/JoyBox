@@ -6,7 +6,9 @@ import sys
 import config
 import system
 import logger
+import paths
 import environment
+import fileops
 import archive
 import cryption
 import lockerinfo
@@ -21,7 +23,7 @@ def ResolvePath(
     game_offset = None):
 
     # Use existing path if it exists
-    if system.DoesPathExist(path):
+    if paths.does_path_exist(path):
         return path
 
     # Start building resolved path
@@ -29,13 +31,13 @@ def ResolvePath(
 
     # Augment with gaming categories
     if game_supercategory:
-        resolved_path = system.JoinPaths(resolved_path, config.LockerFolderType.GAMING, game_supercategory)
+        resolved_path = paths.join_paths(resolved_path, config.LockerFolderType.GAMING, game_supercategory)
         if game_category:
-            resolved_path = system.JoinPaths(resolved_path, game_category)
+            resolved_path = paths.join_paths(resolved_path, game_category)
             if game_subcategory:
-                resolved_path = system.JoinPaths(resolved_path, game_subcategory)
+                resolved_path = paths.join_paths(resolved_path, game_subcategory)
                 if game_offset:
-                    resolved_path = system.JoinPaths(resolved_path, game_offset)
+                    resolved_path = paths.join_paths(resolved_path, game_offset)
 
     # Return result
     return resolved_path
@@ -53,12 +55,12 @@ def CopyFilesNormally(
     exit_on_failure = False):
 
     # Look at non-excluded files in the input base path
-    for src_file in system.BuildFileList(input_base_path, excludes = exclude_paths, use_relative_paths = True):
-        src_path = system.JoinPaths(input_base_path, src_file)
-        dest_path = system.JoinPaths(output_base_path, src_file)
+    for src_file in paths.build_file_list(input_base_path, excludes = exclude_paths, use_relative_paths = True):
+        src_path = paths.join_paths(input_base_path, src_file)
+        dest_path = paths.join_paths(output_base_path, src_file)
 
         # Copy file
-        success = system.SmartCopy(
+        success = fileops.smart_copy(
             src = src_path,
             dest = dest_path,
             show_progress = show_progress,
@@ -92,22 +94,22 @@ def CopyAndEncryptFiles(
         return False
 
     # Look at non-excluded files in the input base path
-    for src_file in system.BuildFileList(input_base_path, excludes = exclude_paths, use_relative_paths = True):
-        src_path = system.JoinPaths(input_base_path, src_file)
-        src_dir = system.GetFilenameDirectory(src_file)
-        src_filename = system.GetFilenameFile(src_file)
-        dest_dir = system.JoinPaths(output_base_path, src_dir)
+    for src_file in paths.build_file_list(input_base_path, excludes = exclude_paths, use_relative_paths = True):
+        src_path = paths.join_paths(input_base_path, src_file)
+        src_dir = paths.get_filename_directory(src_file)
+        src_filename = paths.get_filename_file(src_file)
+        dest_dir = paths.join_paths(output_base_path, src_dir)
 
         # Generate encrypted output path
         encrypted_name = cryption.GenerateEncryptedFilename(src_filename)
-        dest_path = system.JoinPaths(dest_dir, encrypted_name)
+        dest_path = paths.join_paths(dest_dir, encrypted_name)
 
         # Skip if already exists
-        if skip_existing and system.DoesPathExist(dest_path):
+        if skip_existing and paths.does_path_exist(dest_path):
             continue
 
         # Ensure destination directory exists
-        system.MakeDirectory(
+        fileops.make_directory(
             src = dest_dir,
             verbose = verbose,
             pretend_run = pretend_run,
@@ -147,10 +149,10 @@ def CopyAndDecryptFiles(
         return False
 
     # Look at non-excluded files in the input base path
-    for src_file in system.BuildFileList(input_base_path, excludes = exclude_paths, use_relative_paths = True):
-        src_path = system.JoinPaths(input_base_path, src_file)
-        src_dir = system.GetFilenameDirectory(src_file)
-        dest_dir = system.JoinPaths(output_base_path, src_dir)
+    for src_file in paths.build_file_list(input_base_path, excludes = exclude_paths, use_relative_paths = True):
+        src_path = paths.join_paths(input_base_path, src_file)
+        src_dir = paths.get_filename_directory(src_file)
+        dest_dir = paths.join_paths(output_base_path, src_dir)
 
         # Get real filename from encrypted file
         if cryption.IsFileEncrypted(src_path):
@@ -164,17 +166,17 @@ def CopyAndDecryptFiles(
                 logger.log_error("Unable to get embedded filename from '%s'" % src_path)
                 return False
         else:
-            real_name = system.GetFilenameFile(src_path)
+            real_name = paths.get_filename_file(src_path)
 
         # Generate decrypted output path
-        dest_path = system.JoinPaths(dest_dir, real_name)
+        dest_path = paths.join_paths(dest_dir, real_name)
 
         # Skip if already exists
-        if skip_existing and system.DoesPathExist(dest_path):
+        if skip_existing and paths.does_path_exist(dest_path):
             continue
 
         # Ensure destination directory exists
-        system.MakeDirectory(
+        fileops.make_directory(
             src = dest_dir,
             verbose = verbose,
             pretend_run = pretend_run,
@@ -282,7 +284,7 @@ def ArchiveFolder(
         archive_type = config.ArchiveFileType.SEVENZIP
 
     # Create temporary directory
-    tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(
+    tmp_dir_success, tmp_dir_result = fileops.create_temporary_directory(
         verbose = verbose,
         pretend_run = pretend_run)
     if not tmp_dir_success:
@@ -293,8 +295,8 @@ def ArchiveFolder(
     archive_ext = archive_type.cval()
 
     # Get paths
-    tmp_archive_file = system.JoinPaths(tmp_dir_result, archive_basename + archive_ext)
-    out_archive_file = system.JoinPaths(output_base_path, base_obj, archive_basename + archive_ext)
+    tmp_archive_file = paths.join_paths(tmp_dir_result, archive_basename + archive_ext)
+    out_archive_file = paths.join_paths(output_base_path, base_obj, archive_basename + archive_ext)
 
     # Archive files
     success = archive.CreateArchiveFromFolder(
@@ -311,14 +313,14 @@ def ArchiveFolder(
 
     # Clean output
     if clean_output:
-        system.RemoveDirectoryContents(
+        fileops.remove_directory_contents(
             src = output_path,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
     # Move archive
-    success = system.SmartMove(
+    success = fileops.smart_move(
         src = tmp_dir_archive,
         dest = out_archive_file,
         show_progress = show_progress,
@@ -332,14 +334,14 @@ def ArchiveFolder(
         return False
 
     # Delete temporary directory
-    system.RemoveDirectory(
+    fileops.remove_directory(
         src = tmp_dir_result,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
     # Check result
-    return system.DoesPathExist(out_archive_file)
+    return paths.does_path_exist(out_archive_file)
 
 # Archive sub-folders
 def ArchiveSubFolders(
@@ -360,21 +362,21 @@ def ArchiveSubFolders(
         archive_type = config.ArchiveFileType.SEVENZIP
 
     # Create temporary directory
-    tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(
+    tmp_dir_success, tmp_dir_result = fileops.create_temporary_directory(
         verbose = verbose,
         pretend_run = pretend_run)
     if not tmp_dir_success:
         return False
 
     # Look at non-excluded dirs in the input base path
-    for base_obj in system.GetDirectoryContents(input_base_path, excludes = exclude_paths):
-        base_dir = system.JoinPaths(input_base_path, base_obj)
-        if system.IsPathDirectory(base_dir):
+    for base_obj in paths.get_directory_contents(input_base_path, excludes = exclude_paths):
+        base_dir = paths.join_paths(input_base_path, base_obj)
+        if paths.is_path_directory(base_dir):
 
             # Only look for subdirectories to archive in each main directory
-            for sub_obj in system.GetDirectoryContents(base_dir):
-                sub_dir = system.JoinPaths(base_dir, sub_obj)
-                if not system.IsPathDirectory(sub_dir):
+            for sub_obj in paths.get_directory_contents(base_dir):
+                sub_dir = paths.join_paths(base_dir, sub_obj)
+                if not paths.is_path_directory(sub_dir):
                     continue
 
                 # Get archive info
@@ -382,8 +384,8 @@ def ArchiveSubFolders(
                 archive_ext = archive_type.cval()
 
                 # Get paths
-                tmp_archive_file = system.JoinPaths(tmp_dir_result, archive_basename + "." + archive_ext)
-                out_archive_file = system.JoinPaths(output_base_path, base_obj, archive_basename + "." + archive_ext)
+                tmp_archive_file = paths.join_paths(tmp_dir_result, archive_basename + "." + archive_ext)
+                out_archive_file = paths.join_paths(output_base_path, base_obj, archive_basename + "." + archive_ext)
 
                 # Archive subdirectory
                 success = archive.CreateArchiveFromFolder(
@@ -399,14 +401,14 @@ def ArchiveSubFolders(
 
                 # Clean output
                 if clean_output:
-                    system.RemoveDirectoryContents(
-                        src = system.JoinPaths(output_base_path, base_obj),
+                    fileops.remove_directory_contents(
+                        src = paths.join_paths(output_base_path, base_obj),
                         verbose = verbose,
                         pretend_run = pretend_run,
                         exit_on_failure = exit_on_failure)
 
                 # Move archive
-                success = system.SmartMove(
+                success = fileops.smart_move(
                     src = tmp_archive_file,
                     dest = out_archive_file,
                     show_progress = show_progress,
@@ -420,7 +422,7 @@ def ArchiveSubFolders(
                     return False
 
     # Delete temporary directory
-    system.RemoveDirectory(
+    fileops.remove_directory(
         src = tmp_dir_result,
         verbose = verbose,
         pretend_run = pretend_run,

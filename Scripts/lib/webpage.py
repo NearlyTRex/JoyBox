@@ -9,9 +9,14 @@ import re
 import config
 import command
 import programs
+import serialization
+import strings
 import environment
+import fileops
 import system
+import text
 import logger
+import paths
 import ini
 
 ###########################################################
@@ -73,7 +78,7 @@ def CreateChromeWebDriver(
             if make_headless:
                 options.add_argument("--headless")
                 options.add_argument("--window-size=1920,1080")
-            if system.IsPathValid(binary_location) and system.DoesPathExist(binary_location):
+            if paths.is_path_valid(binary_location) and paths.does_path_exist(binary_location):
                 options.binary_location = binary_location
             web_driver = Chrome(service=service, options=options)
             return web_driver
@@ -115,14 +120,14 @@ def CreateFirefoxWebDriver(
             from webdriver_manager.firefox import GeckoDriverManager
             service = FirefoxService(executable_path=GeckoDriverManager().install())
             options = FirefoxOptions()
-            if system.IsPathValid(download_dir) and system.DoesPathExist(download_dir):
+            if paths.is_path_valid(download_dir) and paths.does_path_exist(download_dir):
                 options.set_preference("browser.download.folderList", 2)
                 options.set_preference("browser.download.dir", download_dir)
-            if system.IsPathValid(profile_dir) and system.DoesPathExist(profile_dir):
+            if paths.is_path_valid(profile_dir) and paths.does_path_exist(profile_dir):
                 options.set_preference('profile', profile_dir)
             if make_headless:
                 options.add_argument("--headless")
-            if system.IsPathValid(binary_location) and system.DoesPathExist(binary_location):
+            if paths.is_path_valid(binary_location) and paths.does_path_exist(binary_location):
                 options.binary_location = binary_location
             web_driver = Firefox(service=service, options=options)
             return web_driver
@@ -483,7 +488,7 @@ def GetElementChildrenText(element, verbose = False):
             return None
         attribute = GetElementAttribute(element, "innerHTML", verbose)
         if attribute:
-            return system.ExtractWebText(attribute)
+            return text.extract_web_text(attribute)
         return None
     except Exception as e:
         if verbose:
@@ -632,7 +637,7 @@ def SaveCookie(
     try:
         if not IsSessionValid(driver, verbose):
             return False
-        if not system.IsPathValid(path):
+        if not paths.is_path_valid(path):
             if verbose:
                 logger.log_warning("SaveCookie: Invalid path provided")
             return False
@@ -643,8 +648,8 @@ def SaveCookie(
             return False
         if verbose:
             logger.log_info("Saving cookies to %s" % path)
-        success = system.MakeDirectory(
-            src = system.GetFilenameDirectory(path),
+        success = fileops.make_directory(
+            src = paths.get_filename_directory(path),
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
@@ -652,7 +657,7 @@ def SaveCookie(
             if verbose:
                 logger.log_warning("SaveCookie: Failed to create cookie directory")
             return False
-        success = system.TouchFile(
+        success = fileops.touch_file(
             src = path,
             contents = json.dumps(cookies),
             verbose = verbose,
@@ -680,13 +685,13 @@ def LoadCookie(
     try:
         if not IsSessionValid(driver, verbose):
             return False
-        if not system.DoesPathExist(path):
+        if not paths.does_path_exist(path):
             if verbose:
                 logger.log_warning("LoadCookie: Cookie file does not exist: %s" % path)
             return False
         if verbose:
             logger.log_info("Loading cookies from %s" % path)
-        cookie_list = system.ReadJsonFile(
+        cookie_list = serialization.read_json_file(
             src = path,
             verbose = verbose,
             pretend_run = pretend_run,
@@ -720,7 +725,7 @@ def LoadCookie(
 def GetCookieFile(base_name):
     cookie_file = base_name + config.cookie_suffix_path
     cookie_dir = environment.GetCookieDirectory()
-    return system.JoinPaths(cookie_dir, cookie_file)
+    return paths.join_paths(cookie_dir, cookie_file)
 
 ###########################################################
 
@@ -917,8 +922,8 @@ def GetMatchingUrls(
                 if is_iframe and value.startswith("//"):
                     value = "https:" + value
                 elif not is_iframe:
-                    value = system.JoinStringsAsUrl(base_url, value)
-            return [value, system.StripStringQueryParams(value)]
+                    value = strings.join_strings_as_url(base_url, value)
+            return [value, strings.strip_string_query_params(value)]
 
         # Look through tags to find links
         for tag in parser.find_all("a", href=True):
@@ -933,12 +938,12 @@ def GetMatchingUrls(
             for attr, value in tag.attrs.items():
                 if isinstance(value, str) and re.match(r'https?://', value):
                     potential_urls.append(value)
-                    potential_urls.append(system.StripStringQueryParams(value))
+                    potential_urls.append(strings.strip_string_query_params(value))
 
         # Look through text nodes to find links
         for value in parser.find_all(string=re.compile("^http")):
             potential_urls.append(value)
-            potential_urls.append(system.StripStringQueryParams(value))
+            potential_urls.append(strings.strip_string_query_params(value))
 
         # Filter URLs that match the starts_with and ends_with patterns
         if verbose:

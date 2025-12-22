@@ -16,6 +16,8 @@ import arguments
 import gui
 import setup
 import logger
+import paths
+import prompts
 
 # Parse arguments
 parser = arguments.ArgumentParser(description = "Install json files.")
@@ -65,7 +67,7 @@ def main():
         gui.DisplayErrorPopup(
             title_text = "No json file specified",
             message_text = "No json file was specified")
-    if not system.IsPathFile(json_file):
+    if not paths.is_path_file(json_file):
         gui.DisplayErrorPopup(
             title_text = "Json file not found",
             message_text = "Json file %s was not found" % json_file)
@@ -84,7 +86,7 @@ def main():
             "Game: %s" % game_info.get_name(),
             "Source: %s" % args.source_type
         ]
-        if not system.PromptForPreview("Install game", details):
+        if not prompts.prompt_for_preview("Install game", details):
             logger.log_warning("Operation cancelled by user")
             return
 
@@ -99,7 +101,7 @@ def main():
     if not success:
         gui.DisplayErrorPopup(
             title_text = "Json file failed to install",
-            message_text = "Json file '%s' failed to install" % system.GetFilenameFile(json_file))
+            message_text = "Json file '%s' failed to install" % paths.get_filename_file(json_file))
 
     # Install game addons
     if install_addon_files:
@@ -111,7 +113,7 @@ def main():
         if not success:
             gui.DisplayErrorPopup(
                 title_text = "Json file addons failed to install",
-                message_text = "Json file '%s' addons failed to install" % system.GetFilenameFile(json_file))
+                message_text = "Json file '%s' addons failed to install" % paths.get_filename_file(json_file))
 
 # Start
 if __name__ == "__main__":

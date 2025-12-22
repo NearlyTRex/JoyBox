@@ -15,6 +15,7 @@ import collection
 import arguments
 import setup
 import logger
+import prompts
 
 # Parse arguments
 parser = arguments.ArgumentParser(description = "Build store purchases.")
@@ -57,7 +58,7 @@ def main():
     # Show preview
     if not args.no_preview:
         details = ["%s/%s/%s" % (sc, c, sub) for sc, c, sub in categories_to_process]
-        if not system.PromptForPreview("Build game store purchases (source: %s)" % args.source_type, details):
+        if not prompts.prompt_for_preview("Build game store purchases (source: %s)" % args.source_type, details):
             logger.log_warning("Operation cancelled by user")
             return
 

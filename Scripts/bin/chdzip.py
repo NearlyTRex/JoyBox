@@ -13,6 +13,8 @@ import chd
 import arguments
 import setup
 import logger
+import paths
+import prompts
 
 # Parse arguments
 parser = arguments.ArgumentParser(description = "Convert CHD files into zip files.")
@@ -39,20 +41,20 @@ def main():
             "Path: %s" % input_path,
             "Delete originals: %s" % args.delete_originals
         ]
-        if not system.PromptForPreview("CHD to ZIP", details):
+        if not prompts.prompt_for_preview("CHD to ZIP", details):
             logger.log_warning("Operation cancelled by user")
             return
 
     # Convert disc image files
-    for file in system.BuildFileListByExtensions(input_path, extensions = [".chd"]):
+    for file in paths.build_file_list_by_extensions(input_path, extensions = [".chd"]):
 
         # Get file info
         current_file = file
-        current_dir = system.GetFilenameDirectory(current_file)
-        current_basename = system.GetFilenameBasename(current_file)
+        current_dir = paths.get_filename_directory(current_file)
+        current_basename = paths.get_filename_basename(current_file)
 
         # Check if output already exists
-        output_zip = system.JoinPaths(current_dir, current_basename + config.ArchiveFileType.ZIP.cval())
+        output_zip = paths.join_paths(current_dir, current_basename + config.ArchiveFileType.ZIP.cval())
         if os.path.exists(output_zip):
             continue
 

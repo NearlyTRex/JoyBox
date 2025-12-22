@@ -15,6 +15,7 @@ import collection
 import arguments
 import setup
 import logger
+import prompts
 
 # Parse arguments
 parser = arguments.ArgumentParser(description = "Build metadata files.")
@@ -57,7 +58,7 @@ def main():
     # Show preview
     if not args.no_preview:
         details = list(set([metadata_file for _, _, _, _, metadata_file in games_to_process]))
-        if not system.PromptForPreview("Build game metadata files", details):
+        if not prompts.prompt_for_preview("Build game metadata files", details):
             logger.log_warning("Operation cancelled by user")
             return
 

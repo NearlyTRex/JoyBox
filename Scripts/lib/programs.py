@@ -6,6 +6,7 @@ import sys
 import config
 import command
 import environment
+import paths
 import system
 import tools
 import emulators
@@ -35,7 +36,7 @@ def GetPathConfigValue(program_config, base_dir, program_name, program_key, prog
     if program_path:
         if os.path.exists(program_path):
             return program_path
-        return system.JoinPaths(base_dir, program_path)
+        return paths.join_paths(base_dir, program_path)
     return None
 
 # Get program
@@ -47,9 +48,9 @@ def GetProgram(program_config, base_dir, program_name, program_platform = None):
 # Get program install dir
 def GetProgramInstallDir(program_name, program_platform = None):
     if IsProgramNameTool(program_name, program_platform):
-        return system.JoinPaths(environment.GetToolsRootDir(), program_name, program_platform)
+        return paths.join_paths(environment.GetToolsRootDir(), program_name, program_platform)
     elif IsProgramNameEmulator(program_name, program_platform):
-        return system.JoinPaths(environment.GetEmulatorsRootDir(), program_name, program_platform)
+        return paths.join_paths(environment.GetEmulatorsRootDir(), program_name, program_platform)
     return None
 
 # Get program backup dir
@@ -63,14 +64,14 @@ def GetProgramBackupDir(program_name, program_platform = None):
 # Get library install dir
 def GetLibraryInstallDir(library_name, library_platform = None):
     if library_platform:
-        return system.JoinPaths(environment.GetToolsRootDir(), library_name, library_platform)
+        return paths.join_paths(environment.GetToolsRootDir(), library_name, library_platform)
     else:
-        return system.JoinPaths(environment.GetToolsRootDir(), library_name)
+        return paths.join_paths(environment.GetToolsRootDir(), library_name)
 
 # Get library backup dir
 def GetLibraryBackupDir(library_name, library_platform = None):
     if library_platform:
-        return system.JoinPaths(environment.GetLockerProgramToolDir(library_name), library_platform)
+        return paths.join_paths(environment.GetLockerProgramToolDir(library_name), library_platform)
     else:
         return environment.GetLockerProgramToolDir(library_name)
 
@@ -99,7 +100,7 @@ def ShouldProgramBeInstalled(program_name, program_platform = None):
 
 # Determine if library should be installed
 def ShouldLibraryBeInstalled(library_name):
-    return system.IsDirectoryEmpty(GetLibraryInstallDir(library_name))
+    return paths.is_directory_empty(GetLibraryInstallDir(library_name))
 
 # Determine if program is installed
 def IsProgramInstalled(program_name, program_platform = None):
@@ -152,11 +153,11 @@ def GetEmulatorProgram(emulator_name, emulator_platform = None):
 
 # Get tool program dir
 def GetToolProgramDir(tool_name, tool_platform = None):
-    return system.GetFilenameDirectory(GetToolProgram(tool_name, tool_platform))
+    return paths.get_filename_directory(GetToolProgram(tool_name, tool_platform))
 
 # Get emulator program dir
 def GetEmulatorProgramDir(emulator_name, emulator_platform = None):
-    return system.GetFilenameDirectory(GetEmulatorProgram(emulator_name, emulator_platform))
+    return paths.get_filename_directory(GetEmulatorProgram(emulator_name, emulator_platform))
 
 # Get tool config value
 def GetToolConfigValue(tool_name, tool_key, tool_platform = None):

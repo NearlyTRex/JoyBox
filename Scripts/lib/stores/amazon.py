@@ -7,12 +7,16 @@ import json
 import config
 import system
 import logger
+import paths
 import environment
+import fileops
 import command
 import backup
 import programs
+import serialization
 import jsondata
 import storebase
+import strings
 import ini
 
 # Amazon store
@@ -24,7 +28,7 @@ class Amazon(storebase.StoreBase):
 
         # Get install dir
         self.install_dir = ini.GetIniPathValue("UserData.Amazon", "amazon_install_dir")
-        if not system.IsPathValid(self.install_dir):
+        if not paths.is_path_valid(self.install_dir):
             raise RuntimeError("Ini file does not have a valid install dir")
 
     ############################################################
@@ -167,12 +171,12 @@ class Amazon(storebase.StoreBase):
 
         # Get cache file path
         cache_dir = environment.GetCacheRootDir()
-        cache_file_purchases = system.JoinPaths(cache_dir, "amazon_purchases_cache.json")
+        cache_file_purchases = paths.join_paths(cache_dir, "amazon_purchases_cache.json")
 
         # Check if cache exists and is recent (less than 24 hours old)
         use_cache = False
-        if system.DoesPathExist(cache_file_purchases):
-            cache_age_hours = system.GetFileAgeInHours(cache_file_purchases)
+        if paths.does_path_exist(cache_file_purchases):
+            cache_age_hours = paths.get_file_age_in_hours(cache_file_purchases)
             if cache_age_hours < 24:
                 use_cache = True
                 if verbose:
@@ -180,7 +184,7 @@ class Amazon(storebase.StoreBase):
 
         # Load from cache if available
         if use_cache:
-            cached_data = system.ReadJsonFile(
+            cached_data = serialization.read_json_file(
                 src = cache_file_purchases,
                 verbose = verbose,
                 pretend_run = pretend_run,
@@ -274,7 +278,7 @@ class Amazon(storebase.StoreBase):
         for line in list_output.split("\n"):
 
             # Gather info
-            line = system.RemoveStringEscapeSequences(line)
+            line = strings.remove_string_escape_sequences(line)
             line = line.replace("(INSTALLED) ", "")
             tokens = line.split(" GENRES: ")
             if len(tokens) != 2:
@@ -301,8 +305,8 @@ class Amazon(storebase.StoreBase):
             })
 
         # Save to cache
-        system.MakeDirectory(cache_dir, verbose = verbose, pretend_run = pretend_run)
-        success = system.WriteJsonFile(
+        fileops.make_directory(cache_dir, verbose = verbose, pretend_run = pretend_run)
+        success = serialization.write_json_file(
             src = cache_file_purchases,
             json_data = purchases_data,
             verbose = verbose,
@@ -430,7 +434,7 @@ class Amazon(storebase.StoreBase):
             return False
 
         # Create temporary directory
-        tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(
+        tmp_dir_success, tmp_dir_result = fileops.create_temporary_directory(
             verbose = verbose,
             pretend_run = pretend_run)
         if not tmp_dir_success:
@@ -470,13 +474,13 @@ class Amazon(storebase.StoreBase):
             return False
 
         # Delete temporary directory
-        system.RemoveDirectory(
+        fileops.remove_directory(
             src = tmp_dir_result,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
         # Check results
-        return system.DoesDirectoryContainFiles(output_dir)
+        return paths.does_directory_contain_files(output_dir)
 
     ############################################################

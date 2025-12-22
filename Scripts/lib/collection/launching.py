@@ -4,10 +4,12 @@ import sys
 
 # Local imports
 import config
+import fileops
 import system
 import programs
 import stores
 import gui
+import paths
 from .installing import InstallStoreGame
 from .installing import InstallLocalGame
 from .saves import ImportStoreGameSave
@@ -130,8 +132,8 @@ def LaunchLocalGame(
         return False
 
     # Setup launcher save directory
-    if system.IsPathValid(game_launcher_save_dir):
-        success = system.CreateSymlink(
+    if paths.is_path_valid(game_launcher_save_dir):
+        success = fileops.create_symlink(
             src = game_info.get_save_dir(),
             dest = game_launcher_save_dir,
             verbose = verbose,
@@ -141,8 +143,8 @@ def LaunchLocalGame(
             return False
 
     # Setup launcher config file
-    if system.IsPathFile(game_launcher_config_file):
-        system.ReplaceStringsInFile(
+    if paths.is_path_file(game_launcher_config_file):
+        fileops.replace_strings_in_file(
             src = game_launcher_config_file,
             replacements = [
                 {"from": config.token_emulator_setup_root, "to": game_launcher_setup_dir},
@@ -164,8 +166,8 @@ def LaunchLocalGame(
         return False
 
     # Revert launcher config file
-    if system.IsPathFile(game_launcher_config_file):
-        system.ReplaceStringsInFile(
+    if paths.is_path_file(game_launcher_config_file):
+        fileops.replace_strings_in_file(
             src = game_launcher_config_file,
             replacements = [
                 {"from": game_launcher_setup_dir, "to": config.token_emulator_setup_root},
@@ -176,15 +178,15 @@ def LaunchLocalGame(
             exit_on_failure = exit_on_failure)
 
     # Revert launcher save directory
-    if system.IsPathValid(game_launcher_save_dir):
-        success = system.RemoveObject(
+    if paths.is_path_valid(game_launcher_save_dir):
+        success = fileops.remove_object(
             obj = game_launcher_save_dir,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if not success:
             return False
-        success = system.MakeDirectory(
+        success = fileops.make_directory(
             src = game_launcher_save_dir,
             verbose = verbose,
             pretend_run = pretend_run,

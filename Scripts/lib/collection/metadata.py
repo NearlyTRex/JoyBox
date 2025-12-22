@@ -7,12 +7,15 @@ import config
 import system
 import logger
 import environment
+import fileops
 import gameinfo
 import platforms
 import metadata
 import metadataentry
+import paths
 import metadatacollector
 import stores
+import strings
 from .jsondata import ReadGameJsonData
 
 ############################################################
@@ -50,7 +53,7 @@ def CreateGameMetadataEntry(
 
     # Load metadata file
     metadata_obj = metadata.Metadata()
-    if system.DoesPathExist(metadata_file_path):
+    if paths.does_path_exist(metadata_file_path):
         metadata_obj.import_from_metadata_file(
             metadata_file = metadata_file_path,
             verbose = verbose,
@@ -61,7 +64,7 @@ def CreateGameMetadataEntry(
 
     # Get json file path
     json_file_path = environment.GetGameJsonMetadataFile(game_supercategory, game_category, game_subcategory, game_name)
-    json_file_path = system.RebaseFilePath(
+    json_file_path = paths.rebase_file_path(
         path = json_file_path,
         old_base_path = environment.GetGameJsonMetadataRootDir(),
         new_base_path = "")
@@ -125,7 +128,7 @@ def UpdateGameMetadataEntry(
 
     # Load metadata file
     metadata_obj = metadata.Metadata()
-    if system.DoesPathExist(metadata_file_path):
+    if paths.does_path_exist(metadata_file_path):
         metadata_obj.import_from_metadata_file(
             metadata_file = metadata_file_path,
             verbose = verbose,
@@ -304,7 +307,7 @@ def PublishGameMetadataEntries(
 
         # Get metadata file
         metadata_file = environment.GetGameMetadataFile(game_category, game_subcategory)
-        if not system.IsPathFile(metadata_file):
+        if not paths.is_path_file(metadata_file):
             continue
 
         # Read metadata
@@ -321,7 +324,7 @@ def PublishGameMetadataEntries(
                     game_entry_natural_name = gameinfo.DeriveRegularNameFromGameName(game_entry_name)
                     game_entry_players = game_entry.get_players()
                     game_entry_coop = game_entry.get_coop()
-                    game_entry_urlname = system.EncodeUrlString(game_entry_natural_name, use_plus = True)
+                    game_entry_urlname = strings.encode_url_string(game_entry_natural_name, use_plus = True)
                     game_entry_info = (
                         game_entry_id,
                         game_platform,
@@ -344,8 +347,8 @@ def PublishGameMetadataEntries(
     publish_contents += config.publish_html_footer
 
     # Write publish file
-    success = system.TouchFile(
-        src = system.JoinPaths(environment.GetGamePublishedMetadataRootDir(), game_category + ".html"),
+    success = fileops.touch_file(
+        src = paths.join_paths(environment.GetGamePublishedMetadataRootDir(), game_category + ".html"),
         contents = publish_contents,
         encoding = None,
         verbose = verbose,

@@ -12,6 +12,8 @@ import nintendo
 import arguments
 import setup
 import logger
+import paths
+import prompts
 
 # Parse arguments
 parser = arguments.ArgumentParser(description = "Nintendo Switch rom tool.")
@@ -44,21 +46,21 @@ def main():
             "Action: %s" % action,
             "Delete originals: %s" % args.delete_originals
         ]
-        if not system.PromptForPreview("Switch ROM tool", details):
+        if not prompts.prompt_for_preview("Switch ROM tool", details):
             logger.log_warning("Operation cancelled by user")
             return
 
     # Find xci files
-    for file in system.BuildFileListByExtensions(input_path, extensions = [".xci"]):
+    for file in paths.build_file_list_by_extensions(input_path, extensions = [".xci"]):
         current_file = file
-        current_file_dir = system.GetFilenameDirectory(current_file)
-        current_file_basename = system.GetFilenameBasename(current_file)
+        current_file_dir = paths.get_filename_directory(current_file)
+        current_file_basename = paths.get_filename_basename(current_file)
 
         # Trim xci
         if args.trim:
             nintendo.TrimSwitchXCI(
                 src_xci_file = current_file,
-                dest_xci_file = system.JoinPaths(current_file_dir, current_file_basename + "_trimmed.xci"),
+                dest_xci_file = paths.join_paths(current_file_dir, current_file_basename + "_trimmed.xci"),
                 delete_original = args.delete_originals,
                 verbose = args.verbose,
                 pretend_run = args.pretend_run,
@@ -68,7 +70,7 @@ def main():
         elif args.untrim:
             nintendo.UntrimSwitchXCI(
                 src_xci_file = current_file,
-                dest_xci_file = system.JoinPaths(current_file_dir, current_file_basename + "_untrimmed.xci"),
+                dest_xci_file = paths.join_paths(current_file_dir, current_file_basename + "_untrimmed.xci"),
                 delete_original = args.delete_originals,
                 verbose = args.verbose,
                 pretend_run = args.pretend_run,

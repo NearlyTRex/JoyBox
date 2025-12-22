@@ -4,9 +4,11 @@ import sys
 
 # Local imports
 import config
+import datautils
 import system
 import environment
 import platforms
+import strings
 import gameinfo
 import webpage
 import google
@@ -89,7 +91,7 @@ def CollectMetadataFromTGDB(
                 if potential_title:
                     score_entry = {}
                     score_entry["element"] = game_cell
-                    score_entry["ratio"] = system.GetStringSimilarityRatio(natural_name, potential_title)
+                    score_entry["ratio"] = strings.get_string_similarity_ratio(natural_name, potential_title)
                     scores_list.append(score_entry)
 
         # Click on the highest score element
@@ -139,38 +141,38 @@ def CollectMetadataFromTGDB(
                             continue
 
                         # Genre
-                        if system.DoesStringStartWithSubstring(element_text, "Genre(s):"):
-                            genre_text = system.TrimSubstringFromStart(element_text, "Genre(s):").replace(" | ", ";").strip()
+                        if strings.does_string_start_with_substring(element_text, "Genre(s):"):
+                            genre_text = strings.trim_substring_from_start(element_text, "Genre(s):").replace(" | ", ";").strip()
                             metadata_result.set_genre(genre_text)
 
                         # Co-op
-                        elif system.DoesStringStartWithSubstring(element_text, "Co-op:"):
-                            coop_text = system.TrimSubstringFromStart(element_text, "Co-op:").strip()
+                        elif strings.does_string_start_with_substring(element_text, "Co-op:"):
+                            coop_text = strings.trim_substring_from_start(element_text, "Co-op:").strip()
                             metadata_result.set_coop(coop_text)
 
                         # Developer
-                        elif system.DoesStringStartWithSubstring(element_text, "Developer(s):"):
-                            developer_text = system.TrimSubstringFromStart(element_text, "Developer(s):").strip()
+                        elif strings.does_string_start_with_substring(element_text, "Developer(s):"):
+                            developer_text = strings.trim_substring_from_start(element_text, "Developer(s):").strip()
                             metadata_result.set_developer(developer_text)
 
                         # Publisher
-                        elif system.DoesStringStartWithSubstring(element_text, "Publishers(s):"):
-                            publisher_text = system.TrimSubstringFromStart(element_text, "Publishers(s):").strip()
+                        elif strings.does_string_start_with_substring(element_text, "Publishers(s):"):
+                            publisher_text = strings.trim_substring_from_start(element_text, "Publishers(s):").strip()
                             metadata_result.set_publisher(publisher_text)
 
                         # Players
-                        elif system.DoesStringStartWithSubstring(element_text, "Players:"):
-                            players_text = system.TrimSubstringFromStart(element_text, "Players:").strip()
+                        elif strings.does_string_start_with_substring(element_text, "Players:"):
+                            players_text = strings.trim_substring_from_start(element_text, "Players:").strip()
                             metadata_result.set_players(players_text)
 
                         # Release
-                        elif system.DoesStringStartWithSubstring(element_text, "ReleaseDate:"):
-                            release_text = system.TrimSubstringFromStart(element_text, "ReleaseDate:").strip()
+                        elif strings.does_string_start_with_substring(element_text, "ReleaseDate:"):
+                            release_text = strings.trim_substring_from_start(element_text, "ReleaseDate:").strip()
                             metadata_result.set_release(release_text)
         return metadata_result
 
     # Use retry function with cleanup
-    result = system.RetryWithBackoff(
+    result = datautils.retry_with_backoff(
         func = attempt_metadata_fetch,
         cleanup_func = cleanup_driver,
         max_retries = 3,
@@ -335,39 +337,39 @@ def CollectMetadataFromGameFAQS(
                     continue
 
                 # Genre
-                if system.DoesStringStartWithSubstring(element_text, "Genre:"):
-                    genre_text = system.TrimSubstringFromStart(element_text, "Genre:").replace(" » ", ";").strip()
+                if strings.does_string_start_with_substring(element_text, "Genre:"):
+                    genre_text = strings.trim_substring_from_start(element_text, "Genre:").replace(" » ", ";").strip()
                     metadata_result.set_genre(genre_text)
 
                 # Developer
-                elif system.DoesStringStartWithSubstring(element_text, "Developer:"):
-                    developer_text = system.TrimSubstringFromStart(element_text, "Developer:").strip()
+                elif strings.does_string_start_with_substring(element_text, "Developer:"):
+                    developer_text = strings.trim_substring_from_start(element_text, "Developer:").strip()
                     metadata_result.set_developer(developer_text)
 
                 # Publisher
-                elif system.DoesStringStartWithSubstring(element_text, "Publisher:"):
-                    publisher_text = system.TrimSubstringFromStart(element_text, "Publisher:").strip()
+                elif strings.does_string_start_with_substring(element_text, "Publisher:"):
+                    publisher_text = strings.trim_substring_from_start(element_text, "Publisher:").strip()
                     metadata_result.set_publisher(publisher_text)
 
                 # Developer/Publisher
-                elif system.DoesStringStartWithSubstring(element_text, "Developer/Publisher:"):
-                    devpub_text = system.TrimSubstringFromStart(element_text, "Developer/Publisher:").strip()
+                elif strings.does_string_start_with_substring(element_text, "Developer/Publisher:"):
+                    devpub_text = strings.trim_substring_from_start(element_text, "Developer/Publisher:").strip()
                     metadata_result.set_developer(devpub_text)
                     metadata_result.set_publisher(devpub_text)
 
                 # Release/First Released
-                elif system.DoesStringStartWithSubstring(element_text, "Release:") or system.DoesStringStartWithSubstring(element_text, "First Released:"):
+                elif strings.does_string_start_with_substring(element_text, "Release:") or strings.does_string_start_with_substring(element_text, "First Released:"):
                     release_text = ""
-                    if system.DoesStringStartWithSubstring(element_text, "Release:"):
-                        release_text = system.TrimSubstringFromStart(element_text, "Release:").strip()
-                    elif system.DoesStringStartWithSubstring(element_text, "First Released:"):
-                        release_text = system.TrimSubstringFromStart(element_text, "First Released:").strip()
-                    release_text = system.ConvertUnknownDateString(release_text, "%Y-%m-%d")
+                    if strings.does_string_start_with_substring(element_text, "Release:"):
+                        release_text = strings.trim_substring_from_start(element_text, "Release:").strip()
+                    elif strings.does_string_start_with_substring(element_text, "First Released:"):
+                        release_text = strings.trim_substring_from_start(element_text, "First Released:").strip()
+                    release_text = strings.convert_unknown_date_string(release_text, "%Y-%m-%d")
                     metadata_result.set_release(release_text)
         return metadata_result
 
     # Use retry function with cleanup
-    result = system.RetryWithBackoff(
+    result = datautils.retry_with_backoff(
         func = attempt_metadata_fetch,
         cleanup_func = cleanup_driver,
         max_retries = 3,
@@ -457,7 +459,7 @@ def CollectMetadataFromBigFishGames(
         return metadata_result
 
     # Use retry function with cleanup
-    result = system.RetryWithBackoff(
+    result = datautils.retry_with_backoff(
         func = attempt_metadata_fetch,
         cleanup_func = cleanup_driver,
         max_retries = 3,

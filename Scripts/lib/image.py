@@ -5,12 +5,14 @@ import base64
 
 # Local imports
 import config
+import fileops
 import system
 import logger
+import paths
 
 # Get image format
 def GetImageFormat(image_file):
-    if system.IsPathFile(image_file):
+    if paths.is_path_file(image_file):
         try:
             from PIL import Image
             with Image.open(image_file) as img:
@@ -18,7 +20,7 @@ def GetImageFormat(image_file):
         except:
             return None
     else:
-        image_ext = system.GetFilenameExtension(image_file).lower()
+        image_ext = paths.get_filename_extension(image_file).lower()
         if image_ext in [".jpg", ".jpeg"]:
             return config.ImageFileType.JPEG
         if image_ext in [".png"]:
@@ -59,14 +61,14 @@ def ConvertImage(
                 src_image.seek(0)
             rgb_image = src_image.convert("RGB")
             if not image_format:
-                image_ext = system.GetFilenameExtension(image_dest).lower()
+                image_ext = paths.get_filename_extension(image_dest).lower()
                 if image_ext in [".jpg", ".jpeg"]:
                     image_format = config.ImageFileType.JPEG
                 elif image_ext in [".png"]:
                     image_format = config.ImageFileType.PNG
             if not pretend_run:
                 rgb_image.save(image_dest, image_format.val())
-            return system.DoesPathExist(image_dest)
+            return paths.does_path_exist(image_dest)
         return False
     except Exception as e:
         if exit_on_failure:
@@ -83,7 +85,7 @@ def ConvertImageToJPEG(
     pretend_run = False,
     exit_on_failure = False):
     if IsImageJPEG(image_src):
-        return system.SmartTransfer(
+        return fileops.smart_transfer(
             src = image_src,
             dest = image_dest,
             skip_existing = True,
@@ -106,7 +108,7 @@ def ConvertImageToPNG(
     pretend_run = False,
     exit_on_failure = False):
     if IsImagePNG(image_src):
-        return system.SmartTransfer(
+        return fileops.smart_transfer(
             src = image_src,
             dest = image_dest,
             skip_existing = True,
@@ -130,8 +132,8 @@ def ConvertImageDataToFormat(
     exit_on_failure = False):
 
     # Create temporary files for conversion
-    temp_input = system.CreateTemporaryFile(suffix=".tmp")
-    temp_output = system.CreateTemporaryFile(suffix=target_format.cval())
+    temp_input = fileops.create_temporary_file(suffix=".tmp")
+    temp_output = fileops.create_temporary_file(suffix=target_format.cval())
 
     # Write original image data to temp file
     with open(temp_input, "wb") as f:
@@ -151,13 +153,13 @@ def ConvertImageDataToFormat(
             converted_data = f.read()
 
         # Clean up temp files
-        system.RemoveFile(temp_input)
-        system.RemoveFile(temp_output)
+        fileops.remove_file(temp_input)
+        fileops.remove_file(temp_output)
 
         # Return base64 encoded data
         return base64.b64encode(converted_data).decode("utf-8")
 
     # Clean up temp files on failure
-    system.RemoveFile(temp_input)
-    system.RemoveFile(temp_output)
+    fileops.remove_file(temp_input)
+    fileops.remove_file(temp_output)
     return None

@@ -6,9 +6,11 @@ import sys
 import config
 import environment
 import system
+import validation
 import display
 import programs
 import modules
+import paths
 
 # Display popup
 def DisplayPopup(
@@ -41,8 +43,8 @@ def DisplayPopup(
         module_name = "psg")
 
     # Check parameters
-    system.AssertIsNonEmptyString(title_text, "title_text")
-    system.AssertIsNonEmptyString(message_text, "message_text")
+    validation.assert_is_non_empty_string(title_text, "title_text")
+    validation.assert_is_non_empty_string(message_text, "message_text")
 
     # Set theme
     psg.theme(theme)
@@ -222,10 +224,10 @@ def DisplayLoadingWindow(
         module_name = "psg")
 
     # Check parameters
-    system.AssertIsNonEmptyString(title_text, "title_text")
-    system.AssertIsNonEmptyString(message_text, "message_text")
-    system.AssertIsString(completion_text, "completion_text")
-    system.AssertIsString(failure_text, "failure_text")
+    validation.assert_is_non_empty_string(title_text, "title_text")
+    validation.assert_is_non_empty_string(message_text, "message_text")
+    validation.assert_is_string(completion_text, "completion_text")
+    validation.assert_is_string(failure_text, "failure_text")
 
     # Get window size
     if window_size == (None, None):
@@ -264,7 +266,7 @@ def DisplayLoadingWindow(
     ]
 
     # Add image
-    if system.IsPathValid(image_file) and os.path.exists(image_file):
+    if paths.is_path_valid(image_file) and os.path.exists(image_file):
         window_layout += [
             [
                 psg.Image(
@@ -285,7 +287,7 @@ def DisplayLoadingWindow(
         window.maximize()
     window.bind("<Escape>", "KEYPRESS_ESCAPE")
     window["progress"].Widget.config(mode = "indeterminate")
-    if system.IsPathValid(image_file) and os.path.exists(image_file):
+    if paths.is_path_valid(image_file) and os.path.exists(image_file):
         try:
             from PIL import Image, ImageTk
             window_width, window_height = window.size
@@ -351,9 +353,9 @@ def DisplayChoicesWindow(
         module_name = "psg")
 
     # Check parameters
-    system.AssertIsNonEmptyString(title_text, "title_text")
-    system.AssertIsNonEmptyString(message_text, "message_text")
-    system.AssertIsNonEmptyString(button_text, "button_text")
+    validation.assert_is_non_empty_string(title_text, "title_text")
+    validation.assert_is_non_empty_string(message_text, "message_text")
+    validation.assert_is_non_empty_string(button_text, "button_text")
 
     # Get window size
     if window_size == (None, None):

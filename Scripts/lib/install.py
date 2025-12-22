@@ -6,12 +6,14 @@ import json
 # Local imports
 import config
 import environment
+import fileops
+import paths
 import system
 import archive
 
 # Check if install image is mounted
 def IsInstallImageMounted(install_file, mount_dir):
-    return system.DoesDirectoryContainFiles(mount_dir)
+    return paths.does_directory_contain_files(mount_dir)
 
 # Mount install image
 def MountInstallImage(
@@ -20,7 +22,7 @@ def MountInstallImage(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    if system.IsDirectoryEmpty(mount_dir):
+    if paths.is_directory_empty(mount_dir):
         return UnpackInstallImage(
             input_image = install_file,
             output_dir = mount_dir,
@@ -39,14 +41,14 @@ def PackInstallImage(
     exit_on_failure = False):
 
     # Create temporary directory
-    tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(
+    tmp_dir_success, tmp_dir_result = fileops.create_temporary_directory(
         verbose = verbose,
         pretend_run = pretend_run)
     if not tmp_dir_success:
         return False
 
     # Copy important paths
-    for relative_path in system.BuildFileList(input_dir, use_relative_paths = True):
+    for relative_path in paths.build_file_list(input_dir, use_relative_paths = True):
 
         # Skip ignored paths
         should_ignore = False
@@ -58,14 +60,14 @@ def PackInstallImage(
             continue
 
         # Copy path
-        path_from = system.JoinPaths(input_dir, relative_path)
-        path_to = system.JoinPaths(tmp_dir_result, relative_path)
-        system.MakeDirectory(
-            src = system.GetFilenameDirectory(path_to),
+        path_from = paths.join_paths(input_dir, relative_path)
+        path_to = paths.join_paths(tmp_dir_result, relative_path)
+        fileops.make_directory(
+            src = paths.get_filename_directory(path_to),
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-        system.CopyFileOrDirectory(
+        fileops.copy_file_or_directory(
             src = path_from,
             dest = path_to,
             verbose = verbose,
@@ -73,7 +75,7 @@ def PackInstallImage(
             exit_on_failure = exit_on_failure)
 
     # There are no files to pack
-    if not system.DoesDirectoryContainFiles(tmp_dir_result):
+    if not paths.does_directory_contain_files(tmp_dir_result):
         return False
 
     # Create archive
@@ -87,13 +89,13 @@ def PackInstallImage(
         return False
 
     # Clean up
-    system.RemoveDirectory(
+    fileops.remove_directory(
         src = tmp_dir_result,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if delete_original:
-        system.RemoveDirectory(
+        fileops.remove_directory(
             src = input_dir,
             verbose = verbose,
             pretend_run = pretend_run,

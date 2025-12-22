@@ -15,6 +15,7 @@ import environment
 import hashing
 import image
 import modules
+import paths
 
 # Audio metadata class
 class AudioMetadata:
@@ -136,7 +137,7 @@ class AudioMetadata:
             artwork_format = config.ImageFileType.JPEG
 
         # Check file exists
-        if not system.IsPathFile(audio_file):
+        if not paths.is_path_file(audio_file):
             logger.log_error(f"Audio file not found: {audio_file}")
             return None
 
@@ -217,7 +218,7 @@ class AudioMetadata:
         exit_on_failure = False):
 
         # Check file exists
-        if not system.IsPathFile(audio_file):
+        if not paths.is_path_file(audio_file):
             logger.log_error(f"Audio file not found: {audio_file}")
             return False
 
@@ -271,7 +272,7 @@ class AudioMetadata:
         exit_on_failure = False):
 
         # Check file exists
-        if not system.IsPathFile(audio_file):
+        if not paths.is_path_file(audio_file):
             logger.log_error(f"Audio file not found: {audio_file}")
             return False
 
@@ -306,7 +307,7 @@ class AudioMetadata:
     def has_id3_tags(self, audio_file):
 
         # Check file exists
-        if not system.IsPathFile(audio_file):
+        if not paths.is_path_file(audio_file):
             return False
 
         # Load and check tags
@@ -325,7 +326,7 @@ class AudioMetadata:
         exit_on_failure = False):
 
         # Check file exists
-        if not system.IsPathFile(audio_file):
+        if not paths.is_path_file(audio_file):
             logger.log_error(f"Audio file not found: {audio_file}")
             return None
 
@@ -385,7 +386,7 @@ class AudioMetadata:
         exit_on_failure = False):
 
         # Check file exists
-        if not system.IsPathFile(audio_file):
+        if not paths.is_path_file(audio_file):
             logger.log_error(f"Audio file not found: {audio_file}")
             return False
 
@@ -448,7 +449,7 @@ class AudioMetadata:
         exit_on_failure = False):
 
         # Check file exists
-        if not system.IsPathFile(audio_file):
+        if not paths.is_path_file(audio_file):
             logger.log_error(f"Audio file not found: {audio_file}")
             return False
 
@@ -485,7 +486,7 @@ class AudioMetadata:
     def has_mp4_tags(self, audio_file):
 
         # Check file exists
-        if not system.IsPathFile(audio_file):
+        if not paths.is_path_file(audio_file):
             return False
 
         # Load and check tags
@@ -498,7 +499,7 @@ class AudioMetadata:
     def get_mp4_file_info(self, audio_file, verbose = False, exit_on_failure = False):
 
         # Check file exists
-        if not system.IsPathFile(audio_file):
+        if not paths.is_path_file(audio_file):
             logger.log_error(f"Audio file not found: {audio_file}")
             return None
 
@@ -533,12 +534,12 @@ class AudioMetadata:
         exit_on_failure = False):
 
         # Check file exists
-        if not system.IsPathFile(audio_file):
+        if not paths.is_path_file(audio_file):
             logger.log_error(f"Audio file not found: {audio_file}")
             return None
 
         # Detect format by extension
-        ext = system.GetFilenameExtension(audio_file).lower()
+        ext = paths.get_filename_extension(audio_file).lower()
         if ext in [".m4a", ".m4b", ".mp4", ".aac"]:
             return self.get_mp4_tags(
                 audio_file = audio_file,
@@ -563,12 +564,12 @@ class AudioMetadata:
         exit_on_failure = False):
 
         # Check file exists
-        if not system.IsPathFile(audio_file):
+        if not paths.is_path_file(audio_file):
             logger.log_error(f"Audio file not found: {audio_file}")
             return False
 
         # Detect format by extension
-        ext = system.GetFilenameExtension(audio_file).lower()
+        ext = paths.get_filename_extension(audio_file).lower()
         if ext in [".m4a", ".m4b", ".mp4", ".aac"]:
             return self.set_mp4_tags(
                 audio_file = audio_file,
@@ -595,12 +596,12 @@ class AudioMetadata:
         exit_on_failure = False):
 
         # Check file exists
-        if not system.IsPathFile(audio_file):
+        if not paths.is_path_file(audio_file):
             logger.log_error(f"Audio file not found: {audio_file}")
             return False
 
         # Detect format by extension
-        ext = system.GetFilenameExtension(audio_file).lower()
+        ext = paths.get_filename_extension(audio_file).lower()
         if ext in [".m4a", ".m4b", ".mp4", ".aac"]:
             return self.remove_mp4_tags(
                 audio_file = audio_file,
@@ -619,11 +620,11 @@ class AudioMetadata:
     def has_tags(self, audio_file):
 
         # Check file exists
-        if not system.IsPathFile(audio_file):
+        if not paths.is_path_file(audio_file):
             return False
 
         # Detect format by extension
-        ext = system.GetFilenameExtension(audio_file).lower()
+        ext = paths.get_filename_extension(audio_file).lower()
         if ext in [".m4a", ".m4b", ".mp4", ".aac"]:
             return self.has_mp4_tags(audio_file)
         else:
@@ -632,12 +633,12 @@ class AudioMetadata:
     def get_file_info(self, audio_file, verbose = False, exit_on_failure = False):
 
         # Check file exists
-        if not system.IsPathFile(audio_file):
+        if not paths.is_path_file(audio_file):
             logger.log_error(f"Audio file not found: {audio_file}")
             return None
 
         # Detect format by extension
-        ext = system.GetFilenameExtension(audio_file).lower()
+        ext = paths.get_filename_extension(audio_file).lower()
         if ext in [".m4a", ".m4b", ".mp4", ".aac"]:
             return self.get_mp4_file_info(
                 audio_file = audio_file,
@@ -656,7 +657,7 @@ class AudioMetadata:
     def get_audio_file_info(self, audio_file, verbose = False, exit_on_failure = False):
 
         # Check file exists
-        if not system.IsPathFile(audio_file):
+        if not paths.is_path_file(audio_file):
             logger.log_error(f"Audio file not found: {audio_file}")
             return None
 
@@ -684,12 +685,12 @@ class AudioMetadata:
         exit_on_failure = False):
 
         # Check album exists
-        if not system.IsPathDirectory(album_dir):
+        if not paths.is_path_directory(album_dir):
             logger.log_error(f"Album directory not found: {album_dir}")
             return None
 
         # Get all audio files (MP3 and M4A/M4B)
-        audio_files = system.BuildFileListByExtensions(album_dir, extensions=['.mp3', '.m4a', '.m4b', '.mp4', '.aac'])
+        audio_files = paths.build_file_list_by_extensions(album_dir, extensions=['.mp3', '.m4a', '.m4b', '.mp4', '.aac'])
         if not audio_files:
             logger.log_warning(f"No audio files found in {album_dir}")
             return None
@@ -739,7 +740,7 @@ class AudioMetadata:
 
                 # Store track info
                 track_info = {
-                    "filename": system.GetFilenameFile(audio_file),
+                    "filename": paths.get_filename_file(audio_file),
                     "tags": track_tags
                 }
 
@@ -751,7 +752,7 @@ class AudioMetadata:
                 # Collect album-level info from first track
                 if not album_info:
                     album_info = {
-                        "album": tags.get("album", system.GetFilenameFile(album_dir)),
+                        "album": tags.get("album", paths.get_filename_file(album_dir)),
                         "album_artist": tags.get("album_artist", tags.get("artist", "")),
                         "artist": tags.get("artist", ""),
                         "year": tags.get("year", ""),
@@ -762,7 +763,7 @@ class AudioMetadata:
         result = {
             "album_info": album_info,
             "tracks": tracks,
-            "album_path": system.GetFilenameFile(album_dir),
+            "album_path": paths.get_filename_file(album_dir),
             "total_tracks": len(tracks)
         }
 
@@ -781,7 +782,7 @@ class AudioMetadata:
         exit_on_failure = False):
 
         # Check album exists
-        if not system.IsPathDirectory(album_dir):
+        if not paths.is_path_directory(album_dir):
             logger.log_error(f"Album directory not found: {album_dir}")
             return False
 
@@ -795,8 +796,8 @@ class AudioMetadata:
 
         # Apply tags
         for track in album_metadata["tracks"]:
-            audio_file = system.JoinPaths(album_dir, track["filename"])
-            if system.IsPathFile(audio_file):
+            audio_file = paths.join_paths(album_dir, track["filename"])
+            if paths.is_path_file(audio_file):
 
                 # Prepare tags for this track
                 track_tags = track["tags"].copy()
@@ -830,12 +831,12 @@ class AudioMetadata:
         exit_on_failure = False):
 
         # Check album exists
-        if not system.IsPathDirectory(album_dir):
+        if not paths.is_path_directory(album_dir):
             logger.log_error(f"Album directory not found: {album_dir}")
             return False
 
         # Get all audio files (MP3 and M4A/M4B)
-        audio_files = system.BuildFileListByExtensions(album_dir, extensions=['.mp3', '.m4a', '.m4b', '.mp4', '.aac'])
+        audio_files = paths.build_file_list_by_extensions(album_dir, extensions=['.mp3', '.m4a', '.m4b', '.mp4', '.aac'])
 
         # Remove tags (auto-detects format)
         for audio_file in audio_files:

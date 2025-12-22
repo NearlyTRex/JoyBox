@@ -19,6 +19,7 @@ import arguments
 import gui
 import setup
 import logger
+import paths
 
 # Setup argument parser
 parser = arguments.ArgumentParser(description = "Launch json files.")
@@ -105,7 +106,7 @@ def main():
         gui.DisplayErrorPopup(
             title_text = "No json file specified",
             message_text = "No json file was specified")
-    if not system.IsPathFile(json_file):
+    if not paths.is_path_file(json_file):
         gui.DisplayErrorPopup(
             title_text = "Json file not found",
             message_text = "Json file %s was not found" % json_file)
@@ -121,7 +122,7 @@ def main():
     if not game_info.is_playable():
         gui.DisplayErrorPopup(
             title_text = "Json file not launchable",
-            message_text = "Json file '%s' is not launchable" % system.GetFilenameFile(json_file))
+            message_text = "Json file '%s' is not launchable" % paths.get_filename_file(json_file))
 
     # Launch game
     success = collection.LaunchGame(
@@ -135,7 +136,7 @@ def main():
     if not success:
         gui.DisplayErrorPopup(
             title_text = "Json file failed to launch",
-            message_text = "Json file '%s' failed to launch" % system.GetFilenameFile(json_file))
+            message_text = "Json file '%s' failed to launch" % paths.get_filename_file(json_file))
 
 # Start
 if __name__ == "__main__":

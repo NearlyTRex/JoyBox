@@ -9,6 +9,7 @@ import system
 import ini
 import storebase
 import metadatacollector
+import paths
 
 # RedCandle store
 class RedCandle(storebase.StoreBase):
@@ -19,7 +20,7 @@ class RedCandle(storebase.StoreBase):
 
         # Get install dir
         self.install_dir = ini.GetIniPathValue("UserData.RedCandle", "redcandle_install_dir")
-        if not system.IsPathValid(self.install_dir):
+        if not paths.is_path_valid(self.install_dir):
             raise RuntimeError("Ini file does not have a valid install dir")
 
     ############################################################

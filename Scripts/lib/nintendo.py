@@ -5,10 +5,12 @@ import textwrap
 
 # Local imports
 import config
+import fileops
 import command
 import programs
 import system
 import logger
+import paths
 import hashing
 import webpage
 
@@ -179,15 +181,15 @@ def Trim3DSCCI(
         return False
 
     # Create temporary directory
-    tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(verbose = verbose, pretend_run = pretend_run)
+    tmp_dir_success, tmp_dir_result = fileops.create_temporary_directory(verbose = verbose, pretend_run = pretend_run)
     if not tmp_dir_success:
         return False
 
     # Temporary files
-    tmp_3ds_file = system.JoinPaths(tmp_dir_result, "temp.3ds")
+    tmp_3ds_file = paths.join_paths(tmp_dir_result, "temp.3ds")
 
     # Copy source file
-    system.CopyFileOrDirectory(
+    fileops.copy_file_or_directory(
         src = src_3ds_file,
         dest = tmp_3ds_file,
         verbose = verbose,
@@ -213,7 +215,7 @@ def Trim3DSCCI(
         return False
 
     # Move new file
-    system.MoveFileOrDirectory(
+    fileops.move_file_or_directory(
         src = tmp_3ds_file,
         dest = dest_3ds_file,
         verbose = verbose,
@@ -221,7 +223,7 @@ def Trim3DSCCI(
         exit_on_failure = exit_on_failure)
 
     # Delete temporary directory
-    system.RemoveDirectory(
+    fileops.remove_directory(
         src = tmp_dir_result,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -247,17 +249,17 @@ def Untrim3DSCCI(
         return False
 
     # Create temporary directory
-    tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(
+    tmp_dir_success, tmp_dir_result = fileops.create_temporary_directory(
         verbose = verbose,
         pretend_run = pretend_run)
     if not tmp_dir_success:
         return False
 
     # Temporary files
-    tmp_3ds_file = system.JoinPaths(tmp_dir_result, "temp.3ds")
+    tmp_3ds_file = paths.join_paths(tmp_dir_result, "temp.3ds")
 
     # Copy source file
-    system.CopyFileOrDirectory(
+    fileops.copy_file_or_directory(
         src = src_3ds_file,
         dest = tmp_3ds_file,
         verbose = verbose,
@@ -283,7 +285,7 @@ def Untrim3DSCCI(
         return False
 
     # Move new file
-    system.MoveFileOrDirectory(
+    fileops.move_file_or_directory(
         src = tmp_3ds_file,
         dest = dest_3ds_file,
         verbose = verbose,
@@ -291,7 +293,7 @@ def Untrim3DSCCI(
         exit_on_failure = exit_on_failure)
 
     # Delete temporary directory
-    system.RemoveDirectory(
+    fileops.remove_directory(
         src = tmp_dir_result,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -317,17 +319,17 @@ def Extract3DSCIA(
         return False
 
     # Create temporary directory
-    tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(
+    tmp_dir_success, tmp_dir_result = fileops.create_temporary_directory(
         verbose = verbose,
         pretend_run = pretend_run)
     if not tmp_dir_success:
         return False
 
     # Get temporary files
-    tmp_file_cer = system.JoinPaths(tmp_dir_result, "00000000.cer")
-    tmp_file_tik = system.JoinPaths(tmp_dir_result, "00000000.tik")
-    tmp_file_tmd = system.JoinPaths(tmp_dir_result, "00000000.tmd")
-    tmp_base_contents = system.JoinPaths(tmp_dir_result, "contents")
+    tmp_file_cer = paths.join_paths(tmp_dir_result, "00000000.cer")
+    tmp_file_tik = paths.join_paths(tmp_dir_result, "00000000.tik")
+    tmp_file_tmd = paths.join_paths(tmp_dir_result, "00000000.tmd")
+    tmp_base_contents = paths.join_paths(tmp_dir_result, "contents")
 
     # Get extract command
     extract_cmd = [
@@ -351,19 +353,19 @@ def Extract3DSCIA(
         return False
 
     # Rename app files
-    for obj in system.GetDirectoryContents(tmp_dir_result):
+    for obj in paths.get_directory_contents(tmp_dir_result):
         if obj.startswith("contents"):
-            obj_path = system.JoinPaths(tmp_dir_result, obj)
-            obj_basename = system.GetFilenameExtension(obj).strip(".")
-            system.MoveFileOrDirectory(
+            obj_path = paths.join_paths(tmp_dir_result, obj)
+            obj_basename = paths.get_filename_extension(obj).strip(".")
+            fileops.move_file_or_directory(
                 src = obj_path,
-                dest = system.JoinPaths(tmp_dir_result, obj_basename + ".app"),
+                dest = paths.join_paths(tmp_dir_result, obj_basename + ".app"),
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
 
     # Move extracted files
-    system.MoveContents(
+    fileops.move_contents(
         src = tmp_dir_result,
         dest = extract_dir,
         verbose = verbose,
@@ -371,14 +373,14 @@ def Extract3DSCIA(
         exit_on_failure = exit_on_failure)
 
     # Delete temporary directory
-    system.RemoveDirectory(
+    fileops.remove_directory(
         src = tmp_dir_result,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
     # Check result
-    return os.path.exists(extract_dir) and not system.IsDirectoryEmpty(extract_dir)
+    return os.path.exists(extract_dir) and not paths.is_directory_empty(extract_dir)
 
 # Get 3DS file info
 def Get3DSFileInfo(
@@ -442,8 +444,8 @@ def Install3DSCIA(
     # Get app info
     app_type = app_titleid[:8].lower()
     app_folder = app_titleid[8:].lower()
-    app_base_dir = system.JoinPaths(sdmc_dir, "Nintendo 3DS", "00000000000000000000000000000000", "00000000000000000000000000000000", "title")
-    app_install_dir = system.JoinPaths(app_base_dir, app_type, app_folder, "content")
+    app_base_dir = paths.join_paths(sdmc_dir, "Nintendo 3DS", "00000000000000000000000000000000", "00000000000000000000000000000000", "title")
+    app_install_dir = paths.join_paths(app_base_dir, app_type, app_folder, "content")
 
     # Extract cia file
     success = Extract3DSCIA(
@@ -479,8 +481,8 @@ def DecryptWiiUNUSPackage(
         return False
 
     # Get input files
-    input_file_tmd = system.JoinPaths(nus_package_dir, "title.tmd")
-    input_file_tik = system.JoinPaths(nus_package_dir, "title.tik")
+    input_file_tmd = paths.join_paths(nus_package_dir, "title.tmd")
+    input_file_tik = paths.join_paths(nus_package_dir, "title.tik")
     if not os.path.exists(input_file_tmd) or not os.path.exists(input_file_tik):
         return False
 
@@ -506,13 +508,13 @@ def DecryptWiiUNUSPackage(
 
     # Clean up
     if delete_original:
-        for obj in system.GetDirectoryContents(nus_package_dir):
-            obj_path = system.JoinPaths(nus_package_dir, obj)
-            if not system.IsPathFile(obj_path):
+        for obj in paths.get_directory_contents(nus_package_dir):
+            obj_path = paths.join_paths(nus_package_dir, obj)
+            if not paths.is_path_file(obj_path):
                 continue
-            obj_ext = system.GetFilenameExtension(obj_path)
+            obj_ext = paths.get_filename_extension(obj_path)
             if obj_ext in config.NintendoWiiUFileType.cvalues():
-                system.RemoveFile(
+                fileops.remove_file(
                     src = obj_path,
                     verbose = verbose,
                     pretend_run = pretend_run,
@@ -529,14 +531,14 @@ def VerifyWiiUNUSPackage(
     exit_on_failure = False):
 
     # Create temporary directory
-    tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(
+    tmp_dir_success, tmp_dir_result = fileops.create_temporary_directory(
         verbose = verbose,
         pretend_run = pretend_run)
     if not tmp_dir_success:
         return False
 
     # Copy package
-    system.CopyContents(
+    fileops.copy_contents(
         src = nus_package_dir,
         dest = tmp_dir_result,
         verbose = verbose,
@@ -551,7 +553,7 @@ def VerifyWiiUNUSPackage(
         exit_on_failure = exit_on_failure)
 
     # Delete temporary directory
-    system.RemoveDirectory(
+    fileops.remove_directory(
         src = tmp_dir_result,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -569,20 +571,20 @@ def InstallWiiUNusPackage(
     exit_on_failure = False):
 
     # Create temporary directory
-    tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(
+    tmp_dir_success, tmp_dir_result = fileops.create_temporary_directory(
         verbose = verbose,
         pretend_run = pretend_run)
     if not tmp_dir_success:
         return False
 
     # Copy package
-    system.CopyContents(
+    fileops.copy_contents(
         src = nus_package_dir,
         dest = tmp_dir_result,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
-    if system.IsDirectoryEmpty(tmp_dir_result):
+    if paths.is_directory_empty(tmp_dir_result):
         return False
 
     # Decrypt package
@@ -595,7 +597,7 @@ def InstallWiiUNusPackage(
         return False
 
     # Get app xml
-    app_xml_file = system.JoinPaths(tmp_dir_result, "code", "app.xml")
+    app_xml_file = paths.join_paths(tmp_dir_result, "code", "app.xml")
     if not os.path.exists(app_xml_file):
         return False
 
@@ -618,8 +620,8 @@ def InstallWiiUNusPackage(
     for obj in ["code", "content", "meta"]:
 
         # Make folder
-        success = system.MakeDirectory(
-            src = system.JoinPaths(tmp_dir_result, obj),
+        success = fileops.make_directory(
+            src = paths.join_paths(tmp_dir_result, obj),
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
@@ -627,9 +629,9 @@ def InstallWiiUNusPackage(
             return False
 
         # Move folder
-        success = system.MoveFileOrDirectory(
-            src = system.JoinPaths(tmp_dir_result, obj),
-            dest = system.JoinPaths(nand_dir, "usr", "title", app_type, app_folder, obj),
+        success = fileops.move_file_or_directory(
+            src = paths.join_paths(tmp_dir_result, obj),
+            dest = paths.join_paths(nand_dir, "usr", "title", app_type, app_folder, obj),
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
@@ -637,7 +639,7 @@ def InstallWiiUNusPackage(
             return False
 
     # Delete temporary directory
-    system.RemoveDirectory(
+    fileops.remove_directory(
         src = tmp_dir_result,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -734,7 +736,7 @@ def CreateSwitchProfilesDat(
         file_contents[file_index + offset] = bytes([account_name_bytes[offset]])
 
     # Write file
-    success = system.TouchFile(
+    success = fileops.touch_file(
         src = profiles_file,
         contents = b"".join(file_contents),
         contents_mode = "wb",
@@ -773,17 +775,17 @@ def TrimSwitchXCI(
         return False
 
     # Create temporary directory
-    tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(verbose = verbose, pretend_run = pretend_run)
+    tmp_dir_success, tmp_dir_result = fileops.create_temporary_directory(verbose = verbose, pretend_run = pretend_run)
     if not tmp_dir_success:
         return False
 
     # Temporary files
-    tmp_xci_basename = system.GetFilenameBasename(src_xci_file)
-    tmp_xci_src_file = system.JoinPaths(tmp_dir_result, tmp_xci_basename + ".xci")
-    tmp_xci_dest_file = system.JoinPaths(tmp_dir_result, tmp_xci_basename + "_trimmed.xci")
+    tmp_xci_basename = paths.get_filename_basename(src_xci_file)
+    tmp_xci_src_file = paths.join_paths(tmp_dir_result, tmp_xci_basename + ".xci")
+    tmp_xci_dest_file = paths.join_paths(tmp_dir_result, tmp_xci_basename + "_trimmed.xci")
 
     # Copy source file
-    system.CopyFileOrDirectory(
+    fileops.copy_file_or_directory(
         src = src_xci_file,
         dest = tmp_xci_src_file,
         verbose = verbose,
@@ -809,7 +811,7 @@ def TrimSwitchXCI(
         return False
 
     # Move new file
-    system.MoveFileOrDirectory(
+    fileops.move_file_or_directory(
         src = tmp_xci_dest_file,
         dest = dest_xci_file,
         verbose = verbose,
@@ -818,12 +820,12 @@ def TrimSwitchXCI(
 
     # Clean up
     if delete_original:
-        system.RemoveFile(
+        fileops.remove_file(
             src = src_xci_file,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-    system.RemoveDirectory(
+    fileops.remove_directory(
         src = tmp_dir_result,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -858,17 +860,17 @@ def UntrimSwitchXCI(
         return False
 
     # Create temporary directory
-    tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(verbose = verbose, pretend_run = pretend_run)
+    tmp_dir_success, tmp_dir_result = fileops.create_temporary_directory(verbose = verbose, pretend_run = pretend_run)
     if not tmp_dir_success:
         return False
 
     # Temporary files
-    tmp_xci_basename = system.GetFilenameBasename(src_xci_file)
-    tmp_xci_src_file = system.JoinPaths(tmp_dir_result, tmp_xci_basename + ".xci")
-    tmp_xci_dest_file = system.JoinPaths(tmp_dir_result, tmp_xci_basename + "_padded.xci")
+    tmp_xci_basename = paths.get_filename_basename(src_xci_file)
+    tmp_xci_src_file = paths.join_paths(tmp_dir_result, tmp_xci_basename + ".xci")
+    tmp_xci_dest_file = paths.join_paths(tmp_dir_result, tmp_xci_basename + "_padded.xci")
 
     # Copy source file
-    system.CopyFileOrDirectory(
+    fileops.copy_file_or_directory(
         src = src_xci_file,
         dest = tmp_xci_src_file,
         verbose = verbose,
@@ -894,7 +896,7 @@ def UntrimSwitchXCI(
         return False
 
     # Move new file
-    system.MoveFileOrDirectory(
+    fileops.move_file_or_directory(
         src = tmp_xci_dest_file,
         dest = dest_xci_file,
         verbose = verbose,
@@ -903,12 +905,12 @@ def UntrimSwitchXCI(
 
     # Clean up
     if delete_original:
-        system.RemoveFile(
+        fileops.remove_file(
             src = src_xci_file,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-    system.RemoveDirectory(
+    fileops.remove_directory(
         src = tmp_dir_result,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -955,7 +957,7 @@ def ExtractSwitchNSP(
         return False
 
     # Check result
-    return os.path.exists(extract_dir) and not system.IsDirectoryEmpty(extract_dir)
+    return os.path.exists(extract_dir) and not paths.is_directory_empty(extract_dir)
 
 # Install Switch NSP file
 def InstallSwitchNSP(
@@ -966,7 +968,7 @@ def InstallSwitchNSP(
     exit_on_failure = False):
 
     # Create temporary directory
-    tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(
+    tmp_dir_success, tmp_dir_result = fileops.create_temporary_directory(
         verbose = verbose,
         pretend_run = pretend_run)
     if not tmp_dir_success:
@@ -981,21 +983,21 @@ def InstallSwitchNSP(
         exit_on_failure = exit_on_failure)
 
     # Look at all the extracted nca files
-    for nca_file in system.BuildFileListByExtensions(tmp_dir_result, extensions = [".nca"]):
+    for nca_file in paths.build_file_list_by_extensions(tmp_dir_result, extensions = [".nca"]):
 
         # Get NCA id
-        nca_id = system.GetFilenameBasename(nca_file)
+        nca_id = paths.get_filename_basename(nca_file)
         if nca_id.endswith(".cnmt"):
-            nca_id = system.GetFilenameBasename(nca_id)
+            nca_id = paths.get_filename_basename(nca_id)
 
         # Get NCA dir
         nca_id_bytes = bytes.fromhex(nca_id)
         nca_id_sha256 = hashing.CalculateStringSHA256(nca_id_bytes).upper()
         nca_id_dir = "000000%s" % nca_id_sha256[0:2]
-        nca_output_dir = system.JoinPaths(nand_dir, "user", "Contents", "registered", nca_id_dir)
+        nca_output_dir = paths.join_paths(nand_dir, "user", "Contents", "registered", nca_id_dir)
 
         # Make NCA dir
-        success = system.MakeDirectory(
+        success = fileops.make_directory(
             src = nca_output_dir,
             verbose = verbose,
             pretend_run = pretend_run,
@@ -1004,9 +1006,9 @@ def InstallSwitchNSP(
             return False
 
         # Copy NCA file
-        success = system.CopyFileOrDirectory(
+        success = fileops.copy_file_or_directory(
             src = nca_file,
-            dest = system.JoinPaths(nca_output_dir, nca_id + ".nca"),
+            dest = paths.join_paths(nca_output_dir, nca_id + ".nca"),
             skip_identical = True,
             verbose = verbose,
             pretend_run = pretend_run,
@@ -1015,7 +1017,7 @@ def InstallSwitchNSP(
             return False
 
     # Delete temporary directory
-    system.RemoveDirectory(
+    fileops.remove_directory(
         src = tmp_dir_result,
         verbose = verbose,
         pretend_run = pretend_run,

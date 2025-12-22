@@ -5,8 +5,10 @@ import sys
 # Local imports
 import config
 import environment
+import fileops
 import system
 import logger
+import paths
 import release
 import programs
 import hashing
@@ -277,8 +279,8 @@ class Ares(emulatorbase.EmulatorBase):
 
         # Create config files
         for config_filename, config_contents in config_files.items():
-            success = system.TouchFile(
-                src = system.JoinPaths(environment.GetEmulatorsRootDir(), config_filename),
+            success = fileops.touch_file(
+                src = paths.join_paths(environment.GetEmulatorsRootDir(), config_filename),
                 contents = config_contents.strip(),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
@@ -290,7 +292,7 @@ class Ares(emulatorbase.EmulatorBase):
         # Verify system files
         for filename, expected_md5 in system_files.items():
             actual_md5 = hashing.CalculateFileMD5(
-                src = system.JoinPaths(environment.GetLockerGamingEmulatorSetupDir("Ares"), filename),
+                src = paths.join_paths(environment.GetLockerGamingEmulatorSetupDir("Ares"), filename),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
@@ -302,9 +304,9 @@ class Ares(emulatorbase.EmulatorBase):
         # Copy system files
         for filename in system_files.keys():
             for platform in ["windows", "linux"]:
-                success = system.SmartCopy(
-                    src = system.JoinPaths(environment.GetLockerGamingEmulatorSetupDir("Ares"), filename),
-                    dest = system.JoinPaths(programs.GetEmulatorPathConfigValue("Ares", "setup_dir", platform), filename),
+                success = fileops.smart_copy(
+                    src = paths.join_paths(environment.GetLockerGamingEmulatorSetupDir("Ares"), filename),
+                    dest = paths.join_paths(programs.GetEmulatorPathConfigValue("Ares", "setup_dir", platform), filename),
                     verbose = setup_params.verbose,
                     pretend_run = setup_params.pretend_run,
                     exit_on_failure = setup_params.exit_on_failure)

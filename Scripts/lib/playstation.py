@@ -10,7 +10,9 @@ import command
 import programs
 import system
 import logger
+import paths
 import environment
+import fileops
 import iso
 import chd
 
@@ -131,10 +133,10 @@ def ExtractPS3ISO(
     exit_on_failure = False):
 
     # Get file info
-    iso_file_basename = system.GetFilenameBasename(iso_file)
-    iso_file_directory = system.GetFilenameDirectory(iso_file)
+    iso_file_basename = paths.get_filename_basename(iso_file)
+    iso_file_directory = paths.get_filename_directory(iso_file)
     iso_file_enc = iso_file
-    iso_file_dec = system.JoinPaths(iso_file_directory, iso_file_basename + ".dec.iso")
+    iso_file_dec = paths.join_paths(iso_file_directory, iso_file_basename + ".dec.iso")
 
     # Decrypt iso
     success = DecryptPS3ISO(
@@ -159,9 +161,9 @@ def ExtractPS3ISO(
         return False
 
     # Check license file
-    license_file = system.JoinPaths(extract_dir, "PS3_GAME", "LICDIR", "LIC.DAT")
+    license_file = paths.join_paths(extract_dir, "PS3_GAME", "LICDIR", "LIC.DAT")
     if os.path.exists(license_file):
-        if not system.IsFileCorrectlyHeadered(license_file, "PS3LICDA"):
+        if not fileops.is_file_correctly_headered(license_file, "PS3LICDA"):
             if exit_on_failure:
                 logger.log_error("Decryption failure, LIC.DAT '%s' has the wrong header (expected PS3LICDA)." % license_file)
                 logger.log_error("It seems likely that the decryption key file '%s' is not compatible with '%s'" % (dkey_file, iso_file_enc))
@@ -169,9 +171,9 @@ def ExtractPS3ISO(
             return False
 
     # Check eboot file
-    eboot_file = system.JoinPaths(extract_dir, "PS3_GAME", "USRDIR", "EBOOT.BIN")
+    eboot_file = paths.join_paths(extract_dir, "PS3_GAME", "USRDIR", "EBOOT.BIN")
     if os.path.exists(eboot_file):
-        if not system.IsFileCorrectlyHeadered(eboot_file, "SCE"):
+        if not fileops.is_file_correctly_headered(eboot_file, "SCE"):
             if exit_on_failure:
                 logger.log_error("Decryption failure, EBOOT.BIN '%s' has the wrong header (expected SCE)." % eboot_file)
                 logger.log_error("It seems likely that the decryption key file '%s' is not compatible with '%s'" % (dkey_file, iso_file_enc))
@@ -180,7 +182,7 @@ def ExtractPS3ISO(
 
     # Clean up
     if delete_original:
-        system.RemoveFile(
+        fileops.remove_file(
             src = iso_file_dec,
             verbose = verbose,
             pretend_run = pretend_run,
@@ -197,29 +199,29 @@ def VerifyPS3CHD(
     exit_on_failure = False):
 
     # Create temporary directory
-    tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(
+    tmp_dir_success, tmp_dir_result = fileops.create_temporary_directory(
         verbose = verbose,
         pretend_run = pretend_run)
     if not tmp_dir_success:
         return False
 
     # Get rom file info
-    iso_tmp_dir = system.JoinPaths(tmp_dir_result, "iso")
-    raw_tmp_dir = system.JoinPaths(tmp_dir_result, "raw")
+    iso_tmp_dir = paths.join_paths(tmp_dir_result, "iso")
+    raw_tmp_dir = paths.join_paths(tmp_dir_result, "raw")
     input_chd_file = chd_file
-    input_chd_dir = system.GetFilenameDirectory(input_chd_file)
-    input_chd_basename = system.GetFilenameBasename(input_chd_file)
-    input_dkey_file = system.JoinPaths(input_chd_dir, input_chd_basename + ".dkey")
-    output_iso_bin_file = system.JoinPaths(iso_tmp_dir, input_chd_basename + config.DiscImageFileType.ISO.cval())
-    output_iso_toc_file = system.JoinPaths(iso_tmp_dir, input_chd_basename + ".toc")
+    input_chd_dir = paths.get_filename_directory(input_chd_file)
+    input_chd_basename = paths.get_filename_basename(input_chd_file)
+    input_dkey_file = paths.join_paths(input_chd_dir, input_chd_basename + ".dkey")
+    output_iso_bin_file = paths.join_paths(iso_tmp_dir, input_chd_basename + config.DiscImageFileType.ISO.cval())
+    output_iso_toc_file = paths.join_paths(iso_tmp_dir, input_chd_basename + ".toc")
 
     # Make directories
-    system.MakeDirectory(
+    fileops.make_directory(
         src = iso_tmp_dir,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
-    system.MakeDirectory(
+    fileops.make_directory(
         src = raw_tmp_dir,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -248,7 +250,7 @@ def VerifyPS3CHD(
         return False
 
     # Delete temporary directory
-    system.RemoveDirectory(
+    fileops.remove_directory(
         src = tmp_dir_result,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -302,7 +304,7 @@ def ExtractPSNPKG(
 
     # Clean up
     if delete_original:
-        system.RemoveFile(
+        fileops.remove_file(
             src = pkg_file,
             verbose = verbose,
             pretend_run = pretend_run,
@@ -353,7 +355,7 @@ def StripPSV(
 
     # Clean up
     if delete_original:
-        system.RemoveFile(
+        fileops.remove_file(
             src = src_psv_file,
             verbose = verbose,
             pretend_run = pretend_run,
@@ -402,7 +404,7 @@ def UnstripPSV(
 
     # Clean up
     if delete_original:
-        system.RemoveFile(
+        fileops.remove_file(
             src = src_psv_file,
             verbose = verbose,
             pretend_run = pretend_run,
@@ -458,7 +460,7 @@ def TrimPSV(
 
     # Clean up
     if delete_original:
-        system.RemoveFile(
+        fileops.remove_file(
             src = src_psv_file,
             verbose = verbose,
             pretend_run = pretend_run,
@@ -514,7 +516,7 @@ def UntrimPSV(
 
     # Clean up
     if delete_original:
-        system.RemoveFile(
+        fileops.remove_file(
             src = src_psv_file,
             verbose = verbose,
             pretend_run = pretend_run,
@@ -696,9 +698,9 @@ def RenamePSNPackageFile(
     content_id = GetPSNPackageContentID(pkg_file)
     if not content_id:
         return False
-    return system.MoveFileOrDirectory(
+    return fileops.move_file_or_directory(
         src = pkg_file,
-        dest = system.JoinPaths(system.GetFilenameDirectory(pkg_file), content_id + ".pkg"),
+        dest = paths.join_paths(paths.get_filename_directory(pkg_file), content_id + ".pkg"),
         skip_existing = True,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -710,15 +712,15 @@ def RenamePSNRapFile(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    pkg_file = system.JoinPaths(system.GetFilenameDirectory(rap_file), system.GetFilenameBasename(rap_file) + ".pkg")
-    if not system.IsPathFile(pkg_file):
+    pkg_file = paths.join_paths(paths.get_filename_directory(rap_file), paths.get_filename_basename(rap_file) + ".pkg")
+    if not paths.is_path_file(pkg_file):
         return False
     content_id = GetPSNPackageContentID(pkg_file)
     if not content_id:
         return False
-    return system.MoveFileOrDirectory(
+    return fileops.move_file_or_directory(
         src = rap_file,
-        dest = system.JoinPaths(system.GetFilenameDirectory(rap_file), content_id + ".rap"),
+        dest = paths.join_paths(paths.get_filename_directory(rap_file), content_id + ".rap"),
         skip_existing = True,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -733,9 +735,9 @@ def RenamePSNWorkBinFile(
     content_id = GetPSNWorkBinContentID(workbin_file)
     if not content_id:
         return False
-    return system.MoveFileOrDirectory(
+    return fileops.move_file_or_directory(
         src = workbin_file,
-        dest = system.JoinPaths(system.GetFilenameDirectory(workbin_file), content_id + ".work.bin"),
+        dest = paths.join_paths(paths.get_filename_directory(workbin_file), content_id + ".work.bin"),
         skip_existing = True,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -750,9 +752,9 @@ def RenamePSNFakeRifFile(
     content_id = GetPSNFakeRifContentID(fakerif_file)
     if not content_id:
         return False
-    return system.MoveFileOrDirectory(
+    return fileops.move_file_or_directory(
         src = fakerif_file,
-        dest = system.JoinPaths(system.GetFilenameDirectory(fakerif_file), content_id + ".fake.rif"),
+        dest = paths.join_paths(paths.get_filename_directory(fakerif_file), content_id + ".fake.rif"),
         skip_existing = True,
         verbose = verbose,
         pretend_run = pretend_run,

@@ -6,6 +6,7 @@ import sys
 import config
 import programs
 import environment
+import paths
 
 # Base emulator
 class EmulatorBase:
@@ -83,7 +84,7 @@ class EmulatorBase:
         # Construct actual saves dir
         if saves_base_dir and save_sub_dirs and game_platform:
             if game_platform in save_sub_dirs.keys():
-                return system.JoinPaths(saves_base_dir, save_sub_dirs[game_platform])
+                return paths.join_paths(saves_base_dir, save_sub_dirs[game_platform])
         return saves_dir
 
     # Install add-ons

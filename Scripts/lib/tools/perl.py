@@ -6,6 +6,7 @@ import sys
 import system
 import toolbase
 import ini
+import paths
 
 # Config files
 config_files = {}
@@ -29,6 +30,6 @@ class Perl(toolbase.ToolBase):
 
             # Perl
             "Perl": {
-                "program": system.JoinPaths(perl_install_dir, perl_exe)
+                "program": paths.join_paths(perl_install_dir, perl_exe)
             }
         }

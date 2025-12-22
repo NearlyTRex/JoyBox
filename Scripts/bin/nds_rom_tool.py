@@ -12,6 +12,8 @@ import nintendo
 import arguments
 import setup
 import logger
+import paths
+import prompts
 
 # Parse arguments
 parser = arguments.ArgumentParser(description = "Nintendo DS rom tool.")
@@ -43,15 +45,15 @@ def main():
             "Path: %s" % input_path,
             "Action: %s" % action
         ]
-        if not system.PromptForPreview("NDS ROM tool", details):
+        if not prompts.prompt_for_preview("NDS ROM tool", details):
             logger.log_warning("Operation cancelled by user")
             return
 
     # Find rom files
-    for file in system.BuildFileListByExtensions(input_path, extensions = [".nds"]):
+    for file in paths.build_file_list_by_extensions(input_path, extensions = [".nds"]):
         current_file = file
-        current_file_dir = system.GetFilenameDirectory(current_file)
-        current_file_basename = system.GetFilenameBasename(current_file)
+        current_file_dir = paths.get_filename_directory(current_file)
+        current_file_basename = paths.get_filename_basename(current_file)
 
         # Decrypt NDS file
         if args.decrypt:

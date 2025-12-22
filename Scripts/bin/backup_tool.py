@@ -13,6 +13,8 @@ import backup
 import arguments
 import setup
 import logger
+import paths
+import prompts
 
 # Setup argument parser
 parser = arguments.ArgumentParser(description = "Backup tool.")
@@ -71,7 +73,7 @@ def main():
         game_category = args.game_category,
         game_subcategory = args.game_subcategory,
         game_offset = args.game_offset)
-    if not system.IsPathDirectory(source_file_root):
+    if not paths.is_path_directory(source_file_root):
         logger.log_error("Could not resolve source path", quit_program = True)
 
     # Get destination file root
@@ -82,7 +84,7 @@ def main():
         game_category = args.game_category,
         game_subcategory = args.game_subcategory,
         game_offset = args.game_offset)
-    if not system.IsPathDirectory(dest_file_root):
+    if not paths.is_path_directory(dest_file_root):
         logger.log_error("Could not resolve destination path", quit_program = True)
 
     # Show preview
@@ -94,7 +96,7 @@ def main():
         ]
         if args.cryption_type != config.CryptionType.NONE:
             details.append("Cryption: %s" % args.cryption_type)
-        if not system.PromptForPreview("Backup files", details):
+        if not prompts.prompt_for_preview("Backup files", details):
             logger.log_warning("Operation cancelled by user")
             return
 

@@ -7,6 +7,7 @@ import system
 import environment
 import toolbase
 import ini
+import paths
 
 # Config files
 config_files = {}
@@ -38,22 +39,22 @@ class Sandboxie(toolbase.ToolBase):
 
             # Sandboxie
             "Sandboxie": {
-                "program": system.JoinPaths(sandboxie_install_dir, sandboxie_exe),
+                "program": paths.join_paths(sandboxie_install_dir, sandboxie_exe),
                 "sandbox_dir": sandboxie_sandbox_dir
             },
 
             # SandboxieIni
             "SandboxieIni": {
-                "program": system.JoinPaths(sandboxie_install_dir, sandboxie_ini_exe)
+                "program": paths.join_paths(sandboxie_install_dir, sandboxie_ini_exe)
             },
 
             # SandboxieRpcss
             "SandboxieRpcss": {
-                "program": system.JoinPaths(sandboxie_install_dir, sandboxie_rpcss_exe)
+                "program": paths.join_paths(sandboxie_install_dir, sandboxie_rpcss_exe)
             },
 
             # SandboxieDcomlaunch
             "SandboxieDcomlaunch": {
-                "program": system.JoinPaths(sandboxie_install_dir, sandboxie_dcomlaunch_exe)
+                "program": paths.join_paths(sandboxie_install_dir, sandboxie_dcomlaunch_exe)
             }
         }

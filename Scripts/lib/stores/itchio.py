@@ -5,18 +5,23 @@ import json
 
 # Local imports
 import config
+import datautils
 import command
 import archive
 import programs
+import serialization
 import system
 import logger
 import environment
+import fileops
 import hashing
 import jsondata
 import webpage
 import collection
 import storebase
+import strings
 import metadataentry
+import paths
 import ini
 
 # Itchio store
@@ -28,7 +33,7 @@ class Itchio(storebase.StoreBase):
 
         # Get install dir
         self.install_dir = ini.GetIniPathValue("UserData.Itchio", "itchio_install_dir")
-        if not system.IsPathValid(self.install_dir):
+        if not paths.is_path_valid(self.install_dir):
             raise RuntimeError("Ini file does not have a valid install dir")
 
     ############################################################
@@ -145,12 +150,12 @@ class Itchio(storebase.StoreBase):
 
         # Get cache file path
         cache_dir = environment.GetCacheRootDir()
-        cache_file_purchases = system.JoinPaths(cache_dir, "itchio_purchases_cache.json")
+        cache_file_purchases = paths.join_paths(cache_dir, "itchio_purchases_cache.json")
 
         # Check if cache exists and is recent (less than 24 hours old)
         use_cache = False
-        if system.DoesPathExist(cache_file_purchases):
-            cache_age_hours = system.GetFileAgeInHours(cache_file_purchases)
+        if paths.does_path_exist(cache_file_purchases):
+            cache_age_hours = paths.get_file_age_in_hours(cache_file_purchases)
             if cache_age_hours < 24:
                 use_cache = True
                 if verbose:
@@ -158,7 +163,7 @@ class Itchio(storebase.StoreBase):
 
         # Load from cache if available
         if use_cache:
-            cached_data = system.ReadJsonFile(
+            cached_data = serialization.read_json_file(
                 src = cache_file_purchases,
                 verbose = verbose,
                 pretend_run = pretend_run,
@@ -255,8 +260,8 @@ class Itchio(storebase.StoreBase):
             return None
 
         # Save to cache
-        system.MakeDirectory(cache_dir, verbose = verbose, pretend_run = pretend_run)
-        success = system.WriteJsonFile(
+        fileops.make_directory(cache_dir, verbose = verbose, pretend_run = pretend_run)
+        success = serialization.write_json_file(
             src = cache_file_purchases,
             json_data = purchases_data,
             verbose = verbose,
@@ -364,33 +369,33 @@ class Itchio(storebase.StoreBase):
                     for game_detail_line in raw_game_details.split("\n"):
 
                         # Release
-                        if system.DoesStringStartWithSubstring(game_detail_line, "Release date"):
-                            release_text = system.TrimSubstringFromStart(game_detail_line, "Release date").strip()
-                            release_text = system.ConvertDateString(release_text, "%b %d, %Y", "%Y-%m-%d")
+                        if strings.does_string_start_with_substring(game_detail_line, "Release date"):
+                            release_text = strings.trim_substring_from_start(game_detail_line, "Release date").strip()
+                            release_text = strings.convert_date_string(release_text, "%b %d, %Y", "%Y-%m-%d")
                             metadata_entry.set_release(release_text)
-                        elif system.DoesStringStartWithSubstring(game_detail_line, "Published"):
-                            release_text = system.TrimSubstringFromStart(game_detail_line, "Published").strip()
-                            release_text = system.ConvertDateString(release_text, "%b %d, %Y", "%Y-%m-%d")
+                        elif strings.does_string_start_with_substring(game_detail_line, "Published"):
+                            release_text = strings.trim_substring_from_start(game_detail_line, "Published").strip()
+                            release_text = strings.convert_date_string(release_text, "%b %d, %Y", "%Y-%m-%d")
                             metadata_entry.set_release(release_text)
 
                         # Developer/publisher
-                        elif system.DoesStringStartWithSubstring(game_detail_line, "Authors"):
-                            author_text = system.TrimSubstringFromStart(game_detail_line, "Authors").strip()
+                        elif strings.does_string_start_with_substring(game_detail_line, "Authors"):
+                            author_text = strings.trim_substring_from_start(game_detail_line, "Authors").strip()
                             metadata_entry.set_developer(author_text)
                             metadata_entry.set_publisher(author_text)
-                        elif system.DoesStringStartWithSubstring(game_detail_line, "Author"):
-                            author_text = system.TrimSubstringFromStart(game_detail_line, "Author").strip()
+                        elif strings.does_string_start_with_substring(game_detail_line, "Author"):
+                            author_text = strings.trim_substring_from_start(game_detail_line, "Author").strip()
                             metadata_entry.set_developer(author_text)
                             metadata_entry.set_publisher(author_text)
 
                         # Genre
-                        elif system.DoesStringStartWithSubstring(game_detail_line, "Genre"):
-                            genre_text = system.TrimSubstringFromStart(game_detail_line, "Genre").strip().replace(", ", ";")
+                        elif strings.does_string_start_with_substring(game_detail_line, "Genre"):
+                            genre_text = strings.trim_substring_from_start(game_detail_line, "Genre").strip().replace(", ", ";")
                             metadata_entry.set_genre(genre_text)
             return metadata_entry
 
         # Use retry function with cleanup
-        result = system.RetryWithBackoff(
+        result = datautils.retry_with_backoff(
             func = attempt_metadata_fetch,
             cleanup_func = cleanup_driver,
             max_retries = 3,
@@ -438,7 +443,7 @@ class Itchio(storebase.StoreBase):
                 return None
 
             # Get search terms
-            search_terms = system.GetUrlPath(identifier).strip("/")
+            search_terms = strings.get_url_path(identifier).strip("/")
 
             # Load url
             success = webpage.LoadCookieWebsite(

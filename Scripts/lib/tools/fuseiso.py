@@ -7,6 +7,7 @@ import config
 import system
 import toolbase
 import ini
+import paths
 
 # Config files
 config_files = {}
@@ -34,7 +35,7 @@ class FuseISO(toolbase.ToolBase):
             "FuseISO": {
                 "program": {
                     "windows": None,
-                    "linux": system.JoinPaths(fuseiso_install_dir, fuseiso_exe)
+                    "linux": paths.join_paths(fuseiso_install_dir, fuseiso_exe)
                 }
             },
 
@@ -42,7 +43,7 @@ class FuseISO(toolbase.ToolBase):
             "FUserMount": {
                 "program": {
                     "windows": None,
-                    "linux": system.JoinPaths(fusermount_install_dir, fusermount_exe)
+                    "linux": paths.join_paths(fusermount_install_dir, fusermount_exe)
                 }
             }
         }

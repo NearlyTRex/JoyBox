@@ -7,7 +7,9 @@ import config
 import command
 import system
 import logger
+import paths
 import environment
+import fileops
 import programs
 import sandbox
 import registry
@@ -16,9 +18,9 @@ import archive
 # Check if iso is mounted
 def IsISOMounted(iso_file, mount_dir):
     return (
-        system.IsPathFile(iso_file) and
-        system.DoesPathExist(GetActualMountPoint(iso_file, mount_dir)) and
-        not system.IsDirectoryEmpty(mount_dir)
+        paths.is_path_file(iso_file) and
+        paths.does_path_exist(GetActualMountPoint(iso_file, mount_dir)) and
+        not paths.is_directory_empty(mount_dir)
     )
 
 # Create iso
@@ -54,7 +56,7 @@ def CreateISO(
 
     if volume_name:
         create_command += ["-volid", volume_name]
-    if system.IsPathValid(source_dir):
+    if paths.is_path_valid(source_dir):
         create_command += [source_dir]
 
     # Run create command
@@ -71,7 +73,7 @@ def CreateISO(
 
     # Clean up
     if delete_original:
-        system.RemoveDirectory(
+        fileops.remove_directory(
             src = source_dir,
             verbose = verbose,
             pretend_run = pretend_run,
@@ -130,7 +132,7 @@ def ExtractISO(
         return False
 
     # Reset permissions on extracted files
-    system.ChmodFileOrDirectory(
+    fileops.chmod_file_or_directory(
         src = extract_dir,
         perms = 666,
         dperms = 777,
@@ -140,7 +142,7 @@ def ExtractISO(
 
     # Clean up
     if delete_original:
-        system.RemoveFile(
+        fileops.remove_file(
             src = iso_file,
             verbose = verbose,
             pretend_run = pretend_run,
@@ -203,7 +205,7 @@ def MountISO(
         return True
 
     # Make mount directories
-    system.MakeDirectory(
+    fileops.make_directory(
         src = mount_dir,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -318,7 +320,7 @@ def UnmountISO(
             return False
 
     # Remove mount point
-    system.RemoveDirectory(
+    fileops.remove_directory(
         src = mount_dir,
         verbose = verbose,
         pretend_run = pretend_run,

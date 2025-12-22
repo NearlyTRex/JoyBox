@@ -11,6 +11,7 @@ import system
 import arguments
 import setup
 import logger
+import paths
 
 # Parse arguments
 parser = arguments.ArgumentParser(description = "Check computer archives.")
@@ -31,7 +32,7 @@ def main():
     input_path = parser.get_input_path()
 
     # Check computer archives
-    for file in system.BuildFileListByExtensions(input_path, extensions = [".exe"]):
+    for file in paths.build_file_list_by_extensions(input_path, extensions = [".exe"]):
 
         # Check exe size
         logger.log_info("Checking exe file %s ..." % file)

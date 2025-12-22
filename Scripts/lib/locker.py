@@ -8,7 +8,9 @@ import config
 import sync
 import system
 import logger
+import paths
 import environment
+import fileops
 import cryption
 import lockerinfo
 
@@ -16,7 +18,7 @@ import lockerinfo
 def IsLocalPath(path):
     if path.startswith(environment.GetLockerRootDir(config.SourceType.LOCAL) + config.os_pathsep):
         return True
-    if system.DoesPathExist(path):
+    if paths.does_path_exist(path):
         return True
     return False
 
@@ -29,7 +31,7 @@ def ConvertToRemotePath(path):
     old_base_path = environment.GetLockerRootDir(config.SourceType.REMOTE)
     if IsLocalPath(path):
         old_base_path = environment.GetLockerRootDir(config.SourceType.LOCAL)
-    return system.RebaseFilePath(
+    return paths.rebase_file_path(
         path = path,
         old_base_path = old_base_path,
         new_base_path = "")
@@ -38,7 +40,7 @@ def ConvertToRemotePath(path):
 def ConvertToLocalPath(path):
     if IsLocalPath(path):
         return path
-    return system.RebaseFilePath(
+    return paths.rebase_file_path(
         path = path,
         old_base_path = environment.GetLockerRootDir(config.SourceType.REMOTE),
         new_base_path = environment.GetLockerRootDir(config.SourceType.LOCAL))
@@ -121,7 +123,7 @@ def UploadPath(
     exit_on_failure = False):
 
     # Check path
-    if not system.DoesPathExist(src, locker_type):
+    if not paths.does_path_exist(src, locker_type):
         logger.log_error("Path '%s' does not exist" % src)
         return False
 
@@ -135,10 +137,10 @@ def UploadPath(
     local_path = src
     remote_path = dest
     if not remote_path:
-        if system.IsPathDirectory(src):
+        if paths.is_path_directory(src):
             remote_path = ConvertToRemotePath(src)
         else:
-            remote_path = ConvertToRemotePath(system.GetFilenameDirectory(src))
+            remote_path = ConvertToRemotePath(paths.get_filename_directory(src))
 
     # Upload files
     success = sync.UploadFilesToRemote(
@@ -188,7 +190,7 @@ def DownloadAndDecryptPath(
         return (False, "")
 
     # Return result
-    if system.IsPathFile(result) or len(output_files) == 1:
+    if paths.is_path_file(result) or len(output_files) == 1:
         return (True, output_files[0])
     return (True, result)
 
@@ -303,10 +305,10 @@ def BackupFiles(
 
     # Transfer files
     logger.log_info(f"Starting file transfer from {src} to {dest}")
-    if system.IsPathDirectory(src):
-        src_files = system.GetDirectoryContents(src)
+    if paths.is_path_directory(src):
+        src_files = paths.get_directory_contents(src)
         logger.log_info(f"Source directory contains {len(src_files)} items")
-    success = system.SmartTransfer(
+    success = fileops.smart_transfer(
         src = src,
         dest = dest,
         delete_afterwards = delete_afterwards,

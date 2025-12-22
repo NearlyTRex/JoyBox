@@ -6,6 +6,7 @@ import sys
 import system
 import toolbase
 import ini
+import paths
 
 # Config files
 config_files = {}
@@ -27,6 +28,6 @@ class Tar(toolbase.ToolBase):
         # Return config
         return {
             "Tar": {
-                "program": system.JoinPaths(tar_install_dir, tar_exe)
+                "program": paths.join_paths(tar_install_dir, tar_exe)
             }
         }

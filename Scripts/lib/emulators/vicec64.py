@@ -6,8 +6,10 @@ import sys
 # Local imports
 import config
 import environment
+import fileops
 import system
 import logger
+import paths
 import release
 import programs
 import gui
@@ -157,8 +159,8 @@ class ViceC64(emulatorbase.EmulatorBase):
 
         # Create config files
         for config_filename, config_contents in config_files.items():
-            success = system.TouchFile(
-                src = system.JoinPaths(environment.GetEmulatorsRootDir(), config_filename),
+            success = fileops.touch_file(
+                src = paths.join_paths(environment.GetEmulatorsRootDir(), config_filename),
                 contents = config_contents.strip(),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,

@@ -6,6 +6,7 @@ import threading
 # Local imports
 import config
 import system
+import validation
 
 # Background job
 class BackgroundJob:
@@ -19,7 +20,7 @@ class BackgroundJob:
         sleep_interval = 0):
 
         # Check params
-        system.AssertCallable(job_func, "job_func")
+        validation.assert_callable(job_func, "job_func")
 
         # Save params
         self.job = None

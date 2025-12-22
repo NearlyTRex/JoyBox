@@ -8,10 +8,14 @@ import subprocess
 # Local imports
 import config
 import system
+import validation
 import logger
+import paths
 import environment
+import fileops
 import command
 import programs
+import serialization
 import ini
 
 # Extract activation bytes from text (finds 8 hex character sequence)
@@ -34,8 +38,8 @@ def GetActivationBytes(authcode_file = None, verbose = False, exit_on_failure = 
             return extracted
 
     # Check authcode file
-    if authcode_file and system.IsPathFile(authcode_file):
-        authcode = system.ReadTextFile(
+    if authcode_file and paths.is_path_file(authcode_file):
+        authcode = serialization.read_text_file(
             src = authcode_file,
             verbose = verbose,
             exit_on_failure = exit_on_failure)
@@ -52,9 +56,9 @@ def GetActivationBytes(authcode_file = None, verbose = False, exit_on_failure = 
             return extracted
 
     # Check default location
-    default_authcode_file = system.JoinPaths(environment.GetUserHomeDir(), ".audible_authcode")
-    if system.IsPathFile(default_authcode_file):
-        authcode = system.ReadTextFile(
+    default_authcode_file = paths.join_paths(environment.GetUserHomeDir(), ".audible_authcode")
+    if paths.is_path_file(default_authcode_file):
+        authcode = serialization.read_text_file(
             src = default_authcode_file,
             verbose = verbose,
             exit_on_failure = exit_on_failure)
@@ -76,15 +80,15 @@ def DecryptAAXToM4A(
     exit_on_failure = False):
 
     # Validate input file
-    system.AssertIsValidPath(input_file, "input_file")
-    if not system.IsPathFile(input_file):
+    validation.assert_is_valid_path(input_file, "input_file")
+    if not paths.is_path_file(input_file):
         logger.log_error(f"Input file does not exist: {input_file}")
         if exit_on_failure:
             system.QuitProgram()
         return False
 
     # Check file extension
-    input_ext = system.GetFilenameExtension(input_file).lower()
+    input_ext = paths.get_filename_extension(input_file).lower()
     if input_ext not in [".aax", ".aa"]:
         logger.log_error(f"Input file must be .aax or .aa format: {input_file}")
         if exit_on_failure:
@@ -93,10 +97,10 @@ def DecryptAAXToM4A(
 
     # Determine output file
     if not output_file:
-        output_file = system.ChangeFilenameExtension(input_file, ".m4a")
+        output_file = paths.change_filename_extension(input_file, ".m4a")
 
     # Check if output already exists
-    if system.IsPathFile(output_file) and not overwrite:
+    if paths.is_path_file(output_file) and not overwrite:
         logger.log_warning(f"Output file already exists, skipping: {output_file}")
         return True
 
@@ -134,9 +138,9 @@ def DecryptAAXToM4A(
     logger.log_info(f"Output file: {output_file}")
 
     # Create output directory if needed
-    output_dir = system.GetFilenameDirectory(output_file)
-    if output_dir and not system.IsPathDirectory(output_dir):
-        system.MakeDirectory(
+    output_dir = paths.get_filename_directory(output_file)
+    if output_dir and not paths.is_path_directory(output_dir):
+        fileops.make_directory(
             src = output_dir,
             verbose = verbose,
             pretend_run = pretend_run,
@@ -209,9 +213,9 @@ def DecryptAAXFilesToM4A(
         # Determine output file
         output_file = None
         if output_dir:
-            filename = system.GetFilenameFile(input_file)
-            filename = system.ChangeFilenameExtension(filename, ".m4a")
-            output_file = system.JoinPaths(output_dir, filename)
+            filename = paths.get_filename_file(input_file)
+            filename = paths.change_filename_extension(filename, ".m4a")
+            output_file = paths.join_paths(output_dir, filename)
 
         # Decrypt file
         success = DecryptAAXToM4A(
@@ -247,8 +251,8 @@ def DecryptAAXDirectory(
     exit_on_failure = False):
 
     # Validate input directory
-    system.AssertIsValidPath(input_dir, "input_dir")
-    if not system.IsPathDirectory(input_dir):
+    validation.assert_is_valid_path(input_dir, "input_dir")
+    if not paths.is_path_directory(input_dir):
         logger.log_error(f"Input directory does not exist: {input_dir}")
         if exit_on_failure:
             system.QuitProgram()
@@ -259,8 +263,8 @@ def DecryptAAXDirectory(
         output_dir = input_dir
 
     # Create output directory if needed
-    if not system.IsPathDirectory(output_dir):
-        system.MakeDirectory(
+    if not paths.is_path_directory(output_dir):
+        fileops.make_directory(
             src = output_dir,
             verbose = verbose,
             pretend_run = pretend_run,
@@ -272,11 +276,11 @@ def DecryptAAXDirectory(
         for root, dirs, files in os.walk(input_dir):
             for filename in files:
                 if filename.lower().endswith((".aax", ".aa")):
-                    aax_files.append(system.JoinPaths(root, filename))
+                    aax_files.append(paths.join_paths(root, filename))
     else:
-        for item in system.GetDirectoryContents(input_dir):
+        for item in paths.get_directory_contents(input_dir):
             if item.lower().endswith((".aax", ".aa")):
-                aax_files.append(system.JoinPaths(input_dir, item))
+                aax_files.append(paths.join_paths(input_dir, item))
     if not aax_files:
         logger.log_warning(f"No AAX/AA files found in: {input_dir}")
         return True

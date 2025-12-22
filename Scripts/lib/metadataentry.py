@@ -4,9 +4,12 @@ import sys
 
 # Local imports
 import config
+import datautils
 import system
+import text
 import environment
 import gameinfo
+import paths
 
 # Metadata entry class
 class MetadataEntry:
@@ -42,7 +45,7 @@ class MetadataEntry:
     def merge(self, other, merge_type = None):
         if not merge_type:
             merge_type = config.MergeType.REPLACE
-        self.game_entry = system.MergeDictionaries(
+        self.game_entry = datautils.merge_dictionaries(
             dict1 = other.game_entry,
             dict2 = self.game_entry,
             merge_type = merge_type)
@@ -90,9 +93,9 @@ class MetadataEntry:
         if isinstance(value, list):
             self.set_value(config.metadata_key_description, value)
         elif isinstance(value, str):
-            text = system.CleanWebText(value)
-            lines = system.WrapTextToLines(text)
-            lines = system.DeduplicateAdjacentLines(lines)
+            text = text.clean_web_text(value)
+            lines = text.wrap_text_to_lines(text)
+            lines = datautils.deduplicate_adjacent_lines(lines)
             self.set_value(config.metadata_key_description, lines)
 
     # Game url
@@ -212,7 +215,7 @@ class MetadataEntry:
                 game_metadata_key = config.metadata_key_screenshot
             elif asset_type == config.AssetType.VIDEO:
                 game_metadata_key = config.metadata_key_video
-            if system.IsPathFile(game_asset_file):
+            if paths.is_path_file(game_asset_file):
                 self.set_value(game_metadata_key, game_asset_string)
             else:
                 if self.is_key_set(game_metadata_key):

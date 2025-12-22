@@ -7,7 +7,9 @@ import ntpath
 import config
 import system
 import environment
+import fileops
 import jsondata
+import paths
 import command
 import programs
 import sandbox
@@ -145,15 +147,15 @@ class Program(jsondata.JsonData):
         program_is_win31 = self.is_win31()
         program_is_scumm = self.is_scumm()
         program_is_windows = program_exe and not program_is_dos and not program_is_win31 and not program_is_scumm
-        program_path = system.JoinPaths(program_cwd, program_exe)
+        program_path = paths.join_paths(program_cwd, program_exe)
         if program_is_dos or program_is_win31:
-            program_path = system.JoinPaths(options.get_prefix_dos_c_drive(), program_cwd, program_exe)
+            program_path = paths.join_paths(options.get_prefix_dos_c_drive(), program_cwd, program_exe)
         if program_is_windows:
-            program_path = system.JoinPaths(options.get_prefix_c_drive_real(), program_cwd, program_exe)
-        program_drive = system.GetFilenameDrive(program_path)
-        program_dir = system.GetFilenameDirectory(program_path)
-        program_file = system.GetFilenameFile(program_path)
-        program_offset = system.GetFilenameDriveOffset(program_dir)
+            program_path = paths.join_paths(options.get_prefix_c_drive_real(), program_cwd, program_exe)
+        program_drive = paths.get_filename_drive(program_path)
+        program_dir = paths.get_filename_directory(program_path)
+        program_file = paths.get_filename_file(program_path)
+        program_offset = paths.get_filename_drive_offset(program_dir)
         program_options = options.copy()
 
         ##########################
@@ -297,7 +299,7 @@ class ProgramStep(jsondata.JsonData):
 
         # Copy step
         if program_step_type == "copy":
-            return system.SmartCopy(
+            return fileops.smart_copy(
                 src = program_step_from,
                 dest = program_step_to,
                 skip_existing = program_skip_existing,
@@ -309,7 +311,7 @@ class ProgramStep(jsondata.JsonData):
 
         # Move step
         elif program_step_type == "move":
-            return system.SmartMove(
+            return fileops.smart_move(
                 src = program_step_from,
                 dest = program_step_to,
                 skip_existing = program_skip_existing,
@@ -331,7 +333,7 @@ class ProgramStep(jsondata.JsonData):
 
         # Lowercase step
         elif program_step_type == "lowercase":
-            return system.LowercaseAllPaths(
+            return fileops.lowercase_all_paths(
                 src = program_step_dir,
                 verbose = verbose,
                 pretend_run = pretend_run,
@@ -358,7 +360,7 @@ def SetupComputerGame(
 
     # Get setup directory
     game_setup_dir = environment.GetCacheGamingSetupDir(game_category, game_subcategory, game_name)
-    success = system.MakeDirectory(
+    success = fileops.make_directory(
         src = game_setup_dir,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -381,8 +383,8 @@ def SetupComputerGame(
         return False
 
     # Copy game files
-    success = system.CopyContents(
-        src = system.GetFilenameDirectory(source_file),
+    success = fileops.copy_contents(
+        src = paths.get_filename_directory(source_file),
         dest = game_setup_dir,
         show_progress = True,
         skip_existing = True,
@@ -393,7 +395,7 @@ def SetupComputerGame(
         return False
 
     # Get game disc files
-    game_disc_files = system.BuildFileListByExtensions(game_setup_dir, extensions = [".chd"])
+    game_disc_files = paths.build_file_list_by_extensions(game_setup_dir, extensions = [".chd"])
 
     # Build token map
     game_token_map = sandbox.BuildTokenMap(
@@ -405,19 +407,19 @@ def SetupComputerGame(
         use_drive_letters = game_keep_discs)
 
     # Make dos drives
-    system.MakeDirectory(
+    fileops.make_directory(
         src = game_setup_options.get_prefix_dos_c_drive(),
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
-    system.MakeDirectory(
+    fileops.make_directory(
         src = game_setup_options.get_prefix_dos_d_drive(),
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
     # Make scumm dir
-    system.MakeDirectory(
+    fileops.make_directory(
         src = game_setup_options.get_prefix_scumm_dir(),
         verbose = verbose,
         pretend_run = pretend_run,
@@ -429,7 +431,7 @@ def SetupComputerGame(
         # Mount disc
         success = sandbox.MountDiscImage(
             src = game_disc_file,
-            mount_dir = system.JoinPaths(game_setup_dir, system.GetFilenameBasename(game_disc_file)),
+            mount_dir = paths.join_paths(game_setup_dir, paths.get_filename_basename(game_disc_file)),
             options = game_setup_options,
             verbose = verbose,
             pretend_run = pretend_run,
@@ -439,7 +441,7 @@ def SetupComputerGame(
 
         # Keep copy of disc
         if game_keep_discs:
-            success = system.CopyFileOrDirectory(
+            success = fileops.copy_file_or_directory(
                 src = game_disc_file,
                 dest = game_setup_options.get_prefix_dos_d_drive(),
                 verbose = verbose,
@@ -476,14 +478,14 @@ def SetupComputerGame(
     # Copy public files
     prefix_public_profile_path = sandbox.GetPublicProfilePath(game_setup_options)
     if os.path.exists(prefix_public_profile_path):
-        system.MakeDirectory(
-            src = system.JoinPaths(game_setup_options.get_prefix_c_drive_real(), "Public"),
+        fileops.make_directory(
+            src = paths.join_paths(game_setup_options.get_prefix_c_drive_real(), "Public"),
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-        system.CopyContents(
+        fileops.copy_contents(
             src = prefix_public_profile_path,
-            dest = system.JoinPaths(game_setup_options.get_prefix_c_drive_real(), "Public"),
+            dest = paths.join_paths(game_setup_options.get_prefix_c_drive_real(), "Public"),
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
@@ -502,7 +504,7 @@ def SetupComputerGame(
     for game_disc_file in game_disc_files:
         success = sandbox.UnmountDiscImage(
             src = game_disc_file,
-            mount_dir = system.JoinPaths(game_setup_dir, system.GetFilenameBasename(game_disc_file)),
+            mount_dir = paths.join_paths(game_setup_dir, paths.get_filename_basename(game_disc_file)),
             options = game_setup_options,
             verbose = verbose,
             pretend_run = pretend_run,
@@ -511,13 +513,13 @@ def SetupComputerGame(
             return False
 
     # Cleanup
-    system.RemoveDirectory(
+    fileops.remove_directory(
         src = game_setup_options.get_prefix_dir(),
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if not keep_setup_files:
-        system.RemoveDirectory(
+        fileops.remove_directory(
             src = game_setup_dir,
             verbose = verbose,
             pretend_run = pretend_run,
@@ -541,9 +543,9 @@ def LaunchComputerGame(
 
     # Get mount links
     game_mount_links = []
-    for obj in system.GetDirectoryContents(game_info.get_local_cache_dir()):
+    for obj in paths.get_directory_contents(game_info.get_local_cache_dir()):
         game_mount_links.append({
-            "from": system.JoinPaths(game_info.get_local_cache_dir(), obj),
+            "from": paths.join_paths(game_info.get_local_cache_dir(), obj),
             "to": obj
         })
 

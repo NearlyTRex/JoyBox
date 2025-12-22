@@ -14,6 +14,7 @@ import collection
 import arguments
 import setup
 import logger
+import prompts
 
 # Parse arguments
 parser = arguments.ArgumentParser(description = "Publish metadata files.")
@@ -32,7 +33,7 @@ def main():
     # Show preview
     if not args.no_preview:
         publish_dir = environment.GetGamePublishedMetadataRootDir()
-        if not system.PromptForPreview("Publish game metadata files to HTML", [publish_dir]):
+        if not prompts.prompt_for_preview("Publish game metadata files to HTML", [publish_dir]):
             logger.log_warning("Operation cancelled by user")
             return
 

@@ -7,7 +7,10 @@ import json
 import config
 import system
 import logger
+import paths
+import serialization
 import environment
+import fileops
 import google
 import locker
 import audiometadata
@@ -17,7 +20,7 @@ def GetAlbumDirectories(genre_type = None, album_name = None, artist_name = None
 
     # Get music dir
     music_dir = environment.GetLockerMusicDir(genre_type)
-    if not system.IsPathDirectory(music_dir):
+    if not paths.is_path_directory(music_dir):
         return []
 
     # Get album dirs
@@ -28,20 +31,20 @@ def GetAlbumDirectories(genre_type = None, album_name = None, artist_name = None
             artist_name = artist_name,
             source_type = config.SourceType.LOCAL,
             genre_type = genre_type.value if genre_type else None)
-        if system.IsPathDirectory(album_path):
+        if paths.is_path_directory(album_path):
             album_dirs.append(album_path)
     else:
-        for item in system.GetDirectoryContents(music_dir):
-            item_path = system.JoinPaths(music_dir, item)
-            if system.IsPathDirectory(item_path):
-                subdirs = [subitem for subitem in system.GetDirectoryContents(item_path)
-                          if system.IsPathDirectory(system.JoinPaths(item_path, subitem))]
-                direct_mp3_files = [f for f in system.GetDirectoryContents(item_path)
-                                   if f.lower().endswith('.mp3') and system.IsPathFile(system.JoinPaths(item_path, f))]
+        for item in paths.get_directory_contents(music_dir):
+            item_path = paths.join_paths(music_dir, item)
+            if paths.is_path_directory(item_path):
+                subdirs = [subitem for subitem in paths.get_directory_contents(item_path)
+                          if paths.is_path_directory(paths.join_paths(item_path, subitem))]
+                direct_mp3_files = [f for f in paths.get_directory_contents(item_path)
+                                   if f.lower().endswith('.mp3') and paths.is_path_file(paths.join_paths(item_path, f))]
                 if subdirs and not direct_mp3_files:
                     for subdir in subdirs:
-                        subdir_path = system.JoinPaths(item_path, subdir)
-                        if system.IsPathDirectory(subdir_path):
+                        subdir_path = paths.join_paths(item_path, subdir)
+                        if paths.is_path_directory(subdir_path):
                             album_dirs.append(subdir_path)
                 else:
                     album_dirs.append(item_path)
@@ -61,7 +64,7 @@ def DownloadChannelAudioFiles(channels, genre_type, cookie_source = None, locker
 
         # Create temporary directory
         logger.log_info("Creating temporary directory...")
-        tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(
+        tmp_dir_success, tmp_dir_result = fileops.create_temporary_directory(
             verbose = verbose,
             pretend_run = pretend_run)
         if not tmp_dir_success:
@@ -95,8 +98,8 @@ def DownloadChannelAudioFiles(channels, genre_type, cookie_source = None, locker
             return False
 
         # Check what was downloaded
-        if system.IsPathDirectory(tmp_dir_result):
-            downloaded_files = system.GetDirectoryContents(tmp_dir_result)
+        if paths.is_path_directory(tmp_dir_result):
+            downloaded_files = paths.get_directory_contents(tmp_dir_result)
             audio_files = [f for f in downloaded_files if f.endswith('.mp3')]
             logger.log_info(f"Downloaded {len(audio_files)} audio files")
             if len(audio_files) > 0:
@@ -106,7 +109,7 @@ def DownloadChannelAudioFiles(channels, genre_type, cookie_source = None, locker
 
         # Make music dir
         logger.log_info(f"Creating target music directory: {channel_music_dir}")
-        system.MakeDirectory(
+        fileops.make_directory(
             src = channel_music_dir,
             verbose = verbose,
             pretend_run = pretend_run,
@@ -116,22 +119,22 @@ def DownloadChannelAudioFiles(channels, genre_type, cookie_source = None, locker
         logger.log_info(f"Starting backup from {tmp_dir_result} to {channel_music_dir}")
 
         # Create a subdirectory for audio files only
-        audio_only_dir = system.JoinPaths(tmp_dir_result, "audio_only")
-        system.MakeDirectory(
+        audio_only_dir = paths.join_paths(tmp_dir_result, "audio_only")
+        fileops.make_directory(
             src = audio_only_dir,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
         # Move only audio files to the audio-only subdirectory
-        if system.IsPathDirectory(tmp_dir_result):
-            downloaded_files = system.GetDirectoryContents(tmp_dir_result)
+        if paths.is_path_directory(tmp_dir_result):
+            downloaded_files = paths.get_directory_contents(tmp_dir_result)
             for file_name in downloaded_files:
                 if file_name.lower().endswith(('.mp3', '.m4a', '.wav', '.flac', '.ogg')):
-                    src_file = system.JoinPaths(tmp_dir_result, file_name)
-                    dest_file = system.JoinPaths(audio_only_dir, file_name)
-                    if system.IsPathFile(src_file):
-                        system.MoveFileOrDirectory(
+                    src_file = paths.join_paths(tmp_dir_result, file_name)
+                    dest_file = paths.join_paths(audio_only_dir, file_name)
+                    if paths.is_path_file(src_file):
+                        fileops.move_file_or_directory(
                             src = src_file,
                             dest = dest_file,
                             verbose = verbose,
@@ -157,7 +160,7 @@ def DownloadChannelAudioFiles(channels, genre_type, cookie_source = None, locker
 
         # Delete temporary directory
         logger.log_info(f"Cleaning up temporary directory: {tmp_dir_result}")
-        cleanup_success = system.RemoveDirectory(
+        cleanup_success = fileops.remove_directory(
             src = tmp_dir_result,
             verbose = verbose,
             pretend_run = pretend_run,
@@ -214,12 +217,12 @@ def BuildAudioMetadataFiles(
 
     # Process each album
     for album_dir in sorted(album_dirs):
-        album_name = system.GetFilenameFile(album_dir)
+        album_name = paths.get_filename_file(album_dir)
 
         # Detect artist name
         detected_artist_name = None
-        parent_dir = system.GetFilenameDirectory(album_dir)
-        parent_name = system.GetFilenameFile(parent_dir)
+        parent_dir = paths.get_filename_directory(album_dir)
+        parent_name = paths.get_filename_file(parent_dir)
         if parent_name != genre_type.value:
             detected_artist_name = parent_name
         logger.log_info(f"Scanning album: {album_name}" + (f" by {detected_artist_name}" if detected_artist_name else ""))
@@ -243,7 +246,7 @@ def BuildAudioMetadataFiles(
             genre_type.value if genre_type else None,
             album_name,
             detected_artist_name)
-        if system.WriteJsonFile(
+        if serialization.write_json_file(
             src = json_file,
             json_data = album_data,
             sort_keys = True,
@@ -276,12 +279,12 @@ def ClearAudioMetadataTags(
 
     # Process each album
     for album_dir in sorted(album_dirs):
-        album_name = system.GetFilenameFile(album_dir)
+        album_name = paths.get_filename_file(album_dir)
 
         # Detect artist name
         detected_artist_name = None
-        parent_dir = system.GetFilenameDirectory(album_dir)
-        parent_name = system.GetFilenameFile(parent_dir)
+        parent_dir = paths.get_filename_directory(album_dir)
+        parent_name = paths.get_filename_file(parent_dir)
         if parent_name != genre_type.value:
             detected_artist_name = parent_name
 
@@ -319,12 +322,12 @@ def ApplyAudioMetadataTags(
 
     # Process each album
     for album_dir in sorted(album_dirs):
-        album_name = system.GetFilenameFile(album_dir)
+        album_name = paths.get_filename_file(album_dir)
 
         # Detect artist name
         detected_artist_name = None
-        parent_dir = system.GetFilenameDirectory(album_dir)
-        parent_name = system.GetFilenameFile(parent_dir)
+        parent_dir = paths.get_filename_directory(album_dir)
+        parent_name = paths.get_filename_file(parent_dir)
         if parent_name != genre_type.value:
             detected_artist_name = parent_name
 
@@ -334,12 +337,12 @@ def ApplyAudioMetadataTags(
             genre_type.value if genre_type else None,
             album_name,
             detected_artist_name)
-        if not system.IsPathFile(json_file):
+        if not paths.is_path_file(json_file):
             logger.log_error(f"Metadata file not found: {json_file}")
             return False
 
         # Read album metadata
-        album_data = system.ReadJsonFile(
+        album_data = serialization.read_json_file(
             src = json_file,
             verbose = verbose,
             exit_on_failure = exit_on_failure)

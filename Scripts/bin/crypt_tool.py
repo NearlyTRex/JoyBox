@@ -14,6 +14,8 @@ import ini
 import arguments
 import setup
 import logger
+import paths
+import prompts
 
 # Parse arguments
 parser = arguments.ArgumentParser(description = "Encrypt/decrypt files.")
@@ -57,13 +59,13 @@ def main():
             "Action: %s" % action,
             "Keep originals: %s" % args.keep_originals
         ]
-        if not system.PromptForPreview("%s files" % action, details):
+        if not prompts.prompt_for_preview("%s files" % action, details):
             logger.log_warning("Operation cancelled by user")
             return
 
     # Encrypt file
     if args.encrypt:
-        for file in system.BuildFileList(input_path):
+        for file in paths.build_file_list(input_path):
             cryption.EncryptFile(
                 src = file,
                 passphrase = passphrase,
@@ -74,7 +76,7 @@ def main():
 
     # Decrypt file
     elif args.decrypt:
-        for file in system.BuildFileList(input_path):
+        for file in paths.build_file_list(input_path):
             cryption.DecryptFile(
                 src = file,
                 passphrase = passphrase,

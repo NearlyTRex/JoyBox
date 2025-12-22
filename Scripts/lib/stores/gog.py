@@ -5,16 +5,21 @@ import json
 
 # Local imports
 import config
+import datautils
 import command
 import programs
+import serialization
 import system
 import logger
 import environment
+import fileops
 import network
+import paths
 import ini
 import jsondata
 import webpage
 import storebase
+import strings
 import metadataentry
 import metadataassetcollector
 import manifest
@@ -49,7 +54,7 @@ class GOG(storebase.StoreBase):
 
         # Get install dir
         self.install_dir = ini.GetIniPathValue("UserData.GOG", "gog_install_dir")
-        if not system.IsPathValid(self.install_dir):
+        if not paths.is_path_valid(self.install_dir):
             raise RuntimeError("Ini file does not have a valid install dir")
 
     ############################################################
@@ -267,12 +272,12 @@ class GOG(storebase.StoreBase):
 
         # Get cache file path
         cache_dir = environment.GetCacheRootDir()
-        cache_file_manifest = system.JoinPaths(cache_dir, "gog_purchases_cache.json")
+        cache_file_manifest = paths.join_paths(cache_dir, "gog_purchases_cache.json")
 
         # Check if cache exists and is recent (less than 24 hours old)
         use_cache = False
-        if system.DoesPathExist(cache_file_manifest):
-            cache_age_hours = system.GetFileAgeInHours(cache_file_manifest)
+        if paths.does_path_exist(cache_file_manifest):
+            cache_age_hours = paths.get_file_age_in_hours(cache_file_manifest)
             if cache_age_hours < 24:
                 use_cache = True
                 if verbose:
@@ -280,7 +285,7 @@ class GOG(storebase.StoreBase):
 
         # Load from cache if available
         if use_cache:
-            gog_json = system.ReadJsonFile(
+            gog_json = serialization.read_json_file(
                 src = cache_file_manifest,
                 verbose = verbose,
                 pretend_run = pretend_run,
@@ -301,12 +306,12 @@ class GOG(storebase.StoreBase):
                 return None
 
             # Create temporary directory
-            tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(verbose = verbose)
+            tmp_dir_success, tmp_dir_result = fileops.create_temporary_directory(verbose = verbose)
             if not tmp_dir_success:
                 return None
 
             # Get temporary paths
-            tmp_file_manifest = system.JoinPaths(tmp_dir_result, "manifest.json")
+            tmp_file_manifest = paths.join_paths(tmp_dir_result, "manifest.json")
 
             # Get list command
             list_cmd = [
@@ -327,7 +332,7 @@ class GOG(storebase.StoreBase):
                 return False
 
             # Get gog json
-            gog_json = system.ReadJsonFile(
+            gog_json = serialization.read_json_file(
                 src = tmp_file_manifest,
                 verbose = verbose,
                 pretend_run = pretend_run,
@@ -337,8 +342,8 @@ class GOG(storebase.StoreBase):
                 return None
 
             # Save to cache
-            system.MakeDirectory(cache_dir, verbose = verbose, pretend_run = pretend_run)
-            success = system.WriteJsonFile(
+            fileops.make_directory(cache_dir, verbose = verbose, pretend_run = pretend_run)
+            success = serialization.write_json_file(
                 src = cache_file_manifest,
                 json_data = gog_json,
                 verbose = verbose,
@@ -538,8 +543,8 @@ class GOG(storebase.StoreBase):
                         element_detail_text = element_detail_text.strip()
 
                         # Developer/Publisher
-                        if system.DoesStringStartWithSubstring(element_detail_text, "Company:"):
-                            company_text = system.TrimSubstringFromStart(element_detail_text, "Company:").strip()
+                        if strings.does_string_start_with_substring(element_detail_text, "Company:"):
+                            company_text = strings.trim_substring_from_start(element_detail_text, "Company:").strip()
                             for index, company_part in enumerate(company_text.split("/")):
                                 if index == 0:
                                     metadata_entry.set_developer(company_part.strip())
@@ -547,19 +552,19 @@ class GOG(storebase.StoreBase):
                                     metadata_entry.set_publisher(company_part.strip())
 
                         # Release
-                        elif system.DoesStringStartWithSubstring(element_detail_text, "Release date:"):
-                            release_text = system.TrimSubstringFromStart(element_detail_text, "Release date:").strip()
-                            release_text = system.ConvertDateString(release_text, "%B %d, %Y", "%Y-%m-%d")
+                        elif strings.does_string_start_with_substring(element_detail_text, "Release date:"):
+                            release_text = strings.trim_substring_from_start(element_detail_text, "Release date:").strip()
+                            release_text = strings.convert_date_string(release_text, "%B %d, %Y", "%Y-%m-%d")
                             metadata_entry.set_release(release_text)
 
                         # Genre
-                        elif system.DoesStringStartWithSubstring(element_detail_text, "Genre:"):
-                            genre_text = system.TrimSubstringFromStart(element_detail_text, "Genre:").strip().replace(" - ", ";")
+                        elif strings.does_string_start_with_substring(element_detail_text, "Genre:"):
+                            genre_text = strings.trim_substring_from_start(element_detail_text, "Genre:").strip().replace(" - ", ";")
                             metadata_entry.set_genre(genre_text)
             return metadata_entry
 
         # Use retry function with cleanup
-        result = system.RetryWithBackoff(
+        result = datautils.retry_with_backoff(
             func = attempt_metadata_fetch,
             cleanup_func = cleanup_driver,
             max_retries = 3,
@@ -717,14 +722,14 @@ class GOG(storebase.StoreBase):
             return None
 
         # Create temporary directory
-        tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(verbose = verbose)
+        tmp_dir_success, tmp_dir_result = fileops.create_temporary_directory(verbose = verbose)
         if not tmp_dir_success:
             return False
 
         # Get temporary paths
-        tmp_dir_extra = system.JoinPaths(tmp_dir_result, "extra")
-        tmp_dir_dlc = system.JoinPaths(tmp_dir_result, "dlc")
-        tmp_dir_dlc_extra = system.JoinPaths(tmp_dir_dlc, "extra")
+        tmp_dir_extra = paths.join_paths(tmp_dir_result, "extra")
+        tmp_dir_dlc = paths.join_paths(tmp_dir_result, "dlc")
+        tmp_dir_dlc_extra = paths.join_paths(tmp_dir_dlc, "extra")
 
         # Get download command
         download_cmd = [
@@ -760,15 +765,15 @@ class GOG(storebase.StoreBase):
             return False
 
         # Move dlc extra into main extra
-        if system.DoesDirectoryContainFiles(tmp_dir_dlc_extra):
-            system.MoveContents(
+        if paths.does_directory_contain_files(tmp_dir_dlc_extra):
+            fileops.move_contents(
                 src = tmp_dir_dlc_extra,
                 dest = tmp_dir_extra,
                 skip_existing = True,
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-            system.RemoveDirectory(
+            fileops.remove_directory(
                 src = tmp_dir_dlc_extra,
                 verbose = verbose,
                 pretend_run = pretend_run,
@@ -776,14 +781,14 @@ class GOG(storebase.StoreBase):
 
         # Clean output
         if clean_output:
-            system.RemoveDirectoryContents(
+            fileops.remove_directory_contents(
                 src = output_dir,
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
 
         # Move downloaded files
-        success = system.MoveContents(
+        success = fileops.move_contents(
             src = tmp_dir_result,
             dest = output_dir,
             show_progress = True,
@@ -791,7 +796,7 @@ class GOG(storebase.StoreBase):
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if not success:
-            system.RemoveDirectory(
+            fileops.remove_directory(
                 src = tmp_dir_result,
                 verbose = verbose,
                 pretend_run = pretend_run,
@@ -799,7 +804,7 @@ class GOG(storebase.StoreBase):
             return False
 
         # Delete temporary directory
-        system.RemoveDirectory(
+        fileops.remove_directory(
             src = tmp_dir_result,
             verbose = verbose,
             pretend_run = pretend_run,

@@ -7,9 +7,11 @@ import config
 import system
 import logger
 import environment
+import fileops
 import gameinfo
 import asset
 import network
+import paths
 import locker
 import stores
 import metadataassetcollector
@@ -25,7 +27,7 @@ def DoesMetadataAssetExist(game_info, asset_type):
         game_subcategory = game_info.get_subcategory(),
         game_name = game_info.get_name(),
         asset_type = asset_type)
-    return system.DoesPathExist(output_asset_file)
+    return paths.does_path_exist(output_asset_file)
 
 ############################################################
 
@@ -56,10 +58,10 @@ def DownloadMetadataAsset(
         game_info.get_subcategory(),
         game_info.get_name(),
         asset_type)
-    output_asset_ext = system.GetFilenameExtension(output_asset_file)
+    output_asset_ext = paths.get_filename_extension(output_asset_file)
 
     # Create temporary directory
-    tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(verbose = verbose)
+    tmp_dir_success, tmp_dir_result = fileops.create_temporary_directory(verbose = verbose)
     if not tmp_dir_success:
         return False
 
@@ -92,9 +94,9 @@ def DownloadMetadataAsset(
         return False
 
     # Get temp asset
-    tmp_asset_file_original = system.JoinPaths(tmp_dir_result, system.ReplaceInvalidPathCharacters(system.GetFilenameFile(latest_asset_url)))
+    tmp_asset_file_original = paths.join_paths(tmp_dir_result, paths.replace_invalid_path_characters(paths.get_filename_file(latest_asset_url)))
     tmp_asset_file_converted = tmp_asset_file_original + output_asset_ext
-    system.MakeDirectory(
+    fileops.make_directory(
         src = output_asset_dir,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -166,7 +168,7 @@ def DownloadMetadataAsset(
         return False
 
     # Delete temporary directory
-    system.RemoveDirectory(
+    fileops.remove_directory(
         src = tmp_dir_result,
         verbose = verbose,
         pretend_run = pretend_run,

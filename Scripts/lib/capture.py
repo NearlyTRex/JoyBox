@@ -7,6 +7,7 @@ import threading
 import config
 import command
 import system
+import validation
 import logger
 import environment
 import programs
@@ -22,7 +23,7 @@ def CaptureScreenshot(
     exit_on_failure = False):
 
     # Check params
-    system.AssertIsValidPath(output_file, "output_file")
+    validation.assert_is_valid_path(output_file, "output_file")
 
     # Capture screenshot
     import PIL.ImageGrab
@@ -44,7 +45,7 @@ def CaptureScreenshotWhileRunning(
     exit_on_failure = False):
 
     # Check params
-    system.AssertCallable(run_func, "run_func")
+    validation.assert_callable(run_func, "run_func")
 
     # Create capture func
     def capture_func():
@@ -81,7 +82,7 @@ def CaptureVideo(
     exit_on_failure = False):
 
     # Check params
-    system.AssertIsValidPath(output_file, "output_file")
+    validation.assert_is_valid_path(output_file, "output_file")
 
     # Get prefix
     prefix_dir = programs.GetProgramPrefixDir("FFMpeg")
@@ -173,7 +174,7 @@ def CaptureVideoWhileRunning(
     exit_on_failure = False):
 
     # Check params
-    system.AssertCallable(run_func, "run_func")
+    validation.assert_callable(run_func, "run_func")
 
     # Get tool
     ffmpeg_tool = None

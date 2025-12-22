@@ -15,6 +15,8 @@ import system
 import arguments
 import setup
 import logger
+import paths
+import prompts
 
 # Parse arguments
 parser = arguments.ArgumentParser(description = "Find missing game assets.")
@@ -40,19 +42,19 @@ def main():
             "Assets dir: %s" % assets_dir,
             "Metadata dir: %s" % metadata_dir
         ]
-        if not system.PromptForPreview("Find missing game assets (writes Missing_*.txt and Extras.txt)", details):
+        if not prompts.prompt_for_preview("Find missing game assets (writes Missing_*.txt and Extras.txt)", details):
             logger.log_warning("Operation cancelled by user")
             return
 
     # Find all possible assets
     all_assets = set()
-    for filename in system.BuildFileList(assets_dir):
+    for filename in paths.build_file_list(assets_dir):
         all_assets.add(filename)
 
     # Find missing assets
     found_assets = set()
     missing_assets = dict()
-    for filename in system.BuildFileList(metadata_dir):
+    for filename in paths.build_file_list(metadata_dir):
         if environment.IsGameMetadataFile(filename):
 
             # Load metadata

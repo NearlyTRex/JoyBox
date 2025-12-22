@@ -6,6 +6,7 @@ import sys
 import config
 import system
 import logger
+import paths
 import environment
 import cryption
 import locker
@@ -25,14 +26,14 @@ def UploadGameFiles(
     exit_on_failure = False):
 
     # Get game root
-    if not system.IsPathDirectory(game_root):
+    if not paths.is_path_directory(game_root):
         game_root = environment.GetLockerGamingFilesDir(
             game_supercategory = game_info.get_supercategory(),
             game_category = game_info.get_category(),
             game_subcategory = game_info.get_subcategory(),
             game_name = game_info.get_name(),
             source_type = source_type)
-    if not system.IsPathDirectory(game_root):
+    if not paths.is_path_directory(game_root):
         return False
 
     # Get locker info

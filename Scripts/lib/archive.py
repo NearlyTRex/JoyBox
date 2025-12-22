@@ -11,7 +11,9 @@ import command
 import programs
 import system
 import logger
+import paths
 import environment
+import fileops
 import sandbox
 
 # Determine if file is a known archive
@@ -19,9 +21,9 @@ def IsKnownArchive(archive_file, extensions = [], mime_types = []):
     for ext in extensions:
         if archive_file.lower().endswith(ext.lower()):
             return True
-    if not system.IsPathFile(archive_file):
+    if not paths.is_path_file(archive_file):
         return False
-    actual_mime_type = system.GetFileMimeType(archive_file)
+    actual_mime_type = paths.get_file_mime_type(archive_file)
     for potential_mime_type in mime_types:
         if potential_mime_type.lower() in actual_mime_type.lower():
             return True
@@ -94,7 +96,7 @@ def IsAppImageArchive(archive_file):
 
 # Get archive type
 def GetArchiveType(archive_file):
-    archive_ext = system.GetFilenameExtension(archive_file)
+    archive_ext = paths.get_filename_extension(archive_file)
     for archive_type in config.ArchiveFileType.members():
         if archive_ext == archive_type.cval():
             return archive_type
@@ -123,7 +125,7 @@ def IsExtractableArchiveType(archive_type):
 # Check archive checksums
 def GetArchiveChecksums(archive_file):
     checksums = []
-    if system.IsPathFile(archive_file):
+    if paths.is_path_file(archive_file):
         if IsZipArchive(archive_file):
             with zipfile.ZipFile(archive_file) as zf:
                 for info in zf.infolist():
@@ -191,7 +193,7 @@ def CheckArchiveCompressionOutputFiles(
         if len(output_files) == 1:
             old_output_file = output_files[0]
             new_output_file = old_output_file.replace(".001", "")
-            system.MoveFileOrDirectory(
+            fileops.move_file_or_directory(
                 src = old_output_file,
                 dest = new_output_file,
                 verbose = verbose,
@@ -261,7 +263,7 @@ def CreateArchiveFromFile(
     code = command.RunReturncodeCommand(
         cmd = create_command,
         options = command.CreateCommandOptions(
-            cwd = system.GetFilenameDirectory(source_file),
+            cwd = paths.get_filename_directory(source_file),
             output_paths = [archive_file],
             blocking_processes = [archive_tool]),
         verbose = verbose,
@@ -272,7 +274,7 @@ def CreateArchiveFromFile(
 
     # Clean up
     if delete_original:
-        system.RemoveFile(
+        fileops.remove_file(
             src = source_file,
             verbose = verbose,
             pretend_run = pretend_run,
@@ -320,11 +322,11 @@ def CreateArchiveFromFolder(
 
     # Create list of objects to add
     objs_to_add = []
-    for obj in system.GetDirectoryContents(source_dir):
+    for obj in paths.get_directory_contents(source_dir):
         if obj in excludes:
             continue
         path_to_add = sandbox.TranslatePathIfNecessary(
-            path = system.JoinPaths(source_dir, obj),
+            path = paths.join_paths(source_dir, obj),
             program_exe = archive_tool,
             program_name = "7-Zip")
         objs_to_add.append(path_to_add)
@@ -358,7 +360,7 @@ def CreateArchiveFromFolder(
 
     # Clean up
     if delete_original:
-        system.RemoveDirectory(
+        fileops.remove_directory(
             src = source_dir,
             verbose = verbose,
             pretend_run = pretend_run,
@@ -450,14 +452,14 @@ def ExtractArchive(
 
     # Clean up
     if delete_original:
-        system.RemoveFile(
+        fileops.remove_file(
             src = archive_file,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
     # Check result
-    return os.path.exists(extract_dir) and not system.IsDirectoryEmpty(extract_dir)
+    return os.path.exists(extract_dir) and not paths.is_directory_empty(extract_dir)
 
 # Test archive
 def TestArchive(

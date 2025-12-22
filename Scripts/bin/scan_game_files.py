@@ -18,6 +18,7 @@ import manifest
 import arguments
 import setup
 import logger
+import prompts
 
 # Parse arguments
 parser = arguments.ArgumentParser(description = "Scan roms files.")
@@ -61,7 +62,7 @@ def main():
             "Metadata dir: %s" % environment.GetGameMetadataRootDir(),
             "Published dir: %s" % environment.GetGamePublishedMetadataRootDir()
         ]
-        if not system.PromptForPreview("Scan game files (build store purchases, JSON, metadata, publish)", details):
+        if not prompts.prompt_for_preview("Scan game files (build store purchases, JSON, metadata, publish)", details):
             logger.log_warning("Operation cancelled by user")
             return
 

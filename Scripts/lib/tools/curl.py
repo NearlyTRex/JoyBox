@@ -6,6 +6,7 @@ import sys
 import system
 import toolbase
 import ini
+import paths
 
 # Config files
 config_files = {}
@@ -27,6 +28,6 @@ class Curl(toolbase.ToolBase):
         # Return config
         return {
             "Curl": {
-                "program": system.JoinPaths(curl_install_dir, curl_exe)
+                "program": paths.join_paths(curl_install_dir, curl_exe)
             }
         }

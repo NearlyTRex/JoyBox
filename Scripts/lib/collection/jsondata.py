@@ -6,10 +6,14 @@ import sys
 import config
 import system
 import logger
+import paths
+import serialization
 import environment
+import fileops
 import gameinfo
 import cryption
 import stores
+import strings
 import jsondata
 import lockerinfo
 
@@ -40,11 +44,11 @@ def ReadGameJsonData(
 
     # Get json file path
     json_file_path = environment.GetGameJsonMetadataFile(game_supercategory, game_category, game_subcategory, game_name)
-    if not system.DoesPathExist(json_file_path):
+    if not paths.does_path_exist(json_file_path):
         return None
 
     # Read json data
-    json_file_data = system.ReadJsonFile(
+    json_file_data = serialization.read_json_file(
         src = json_file_path,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -78,7 +82,7 @@ def CreateGameJsonFile(
 
     # Get json file path
     json_file_path = environment.GetGameJsonMetadataFile(game_supercategory, game_category, game_subcategory, game_name)
-    if system.DoesPathExist(json_file_path):
+    if paths.does_path_exist(json_file_path):
         return True
 
     # Get platform
@@ -95,8 +99,8 @@ def CreateGameJsonFile(
         json_platform = game_platform)
 
     # Create json directory
-    success = system.MakeDirectory(
-        src = system.GetFilenameDirectory(json_file_path),
+    success = fileops.make_directory(
+        src = paths.get_filename_directory(json_file_path),
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -104,8 +108,8 @@ def CreateGameJsonFile(
         return False
 
     # Create json directory
-    success = system.MakeDirectory(
-        src = system.GetFilenameDirectory(json_file_path),
+    success = fileops.make_directory(
+        src = paths.get_filename_directory(json_file_path),
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -113,7 +117,7 @@ def CreateGameJsonFile(
         return False
 
     # Write json file
-    success = system.WriteJsonFile(
+    success = serialization.write_json_file(
         src = json_file_path,
         json_data = json_obj.get_data(),
         verbose = verbose,
@@ -147,11 +151,11 @@ def UpdateGameJsonFile(
 
     # Get json file path
     json_file_path = environment.GetGameJsonMetadataFile(game_supercategory, game_category, game_subcategory, game_name)
-    if not system.DoesPathExist(json_file_path):
+    if not paths.does_path_exist(json_file_path):
         return False
 
     # Read json data
-    json_file_data = system.ReadJsonFile(
+    json_file_data = serialization.read_json_file(
         src = json_file_path,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -166,7 +170,7 @@ def UpdateGameJsonFile(
     locker_info = lockerinfo.LockerInfo(locker_type)
 
     # Get all files
-    all_files = system.BuildFileList(game_root)
+    all_files = paths.build_file_list(game_root)
     if locker_info:
         all_files = cryption.GetRealFilePaths(
             src = all_files,
@@ -176,7 +180,7 @@ def UpdateGameJsonFile(
             exit_on_failure = exit_on_failure)
 
     # Get rebased files
-    rebased_files = system.ConvertFileListToRelativePaths(all_files, game_root)
+    rebased_files = paths.convert_file_list_to_relative_paths(all_files, game_root)
 
     # Build path lists
     all_main = []
@@ -186,7 +190,7 @@ def UpdateGameJsonFile(
     all_dependencies = []
     for rebased_file in rebased_files:
         if game_supercategory in [config.Supercategory.ROMS]:
-            rebased_subfile = system.GetFilenameFrontSlice(rebased_file)
+            rebased_subfile = paths.get_filename_front_slice(rebased_file)
             if rebased_file.startswith(config.json_key_dlc):
                 all_dlc.append(rebased_subfile)
             elif rebased_file.startswith(config.json_key_update):
@@ -201,13 +205,13 @@ def UpdateGameJsonFile(
             all_main.append(rebased_file)
 
     # Get top level paths
-    top_level_paths = system.ConvertToTopLevelPaths(rebased_files)
+    top_level_paths = paths.convert_to_top_level_paths(rebased_files)
 
     # Get best game file
     best_game_file = None
     if game_supercategory in [config.Supercategory.ROMS]:
         best_game_file = gameinfo.FindBestGameFile(top_level_paths)
-        best_game_file = system.GetFilenameFile(best_game_file)
+        best_game_file = paths.get_filename_file(best_game_file)
 
     # Set common keys
     if isinstance(rebased_files, list) and len(rebased_files) > 0:
@@ -238,8 +242,8 @@ def UpdateGameJsonFile(
             if store_obj:
                 json_obj.fill_value(store_obj.GetKey(), {})
                 if game_platform in config.manual_import_platforms:
-                    json_obj.fill_subvalue(store_obj.GetKey(), config.json_key_store_appid, system.GenerateUniqueID())
-                    json_obj.fill_subvalue(store_obj.GetKey(), config.json_key_store_appname, system.GetSlugString(game_regular_name))
+                    json_obj.fill_subvalue(store_obj.GetKey(), config.json_key_store_appid, strings.generate_unique_id())
+                    json_obj.fill_subvalue(store_obj.GetKey(), config.json_key_store_appname, strings.get_slug_string(game_regular_name))
                     json_obj.fill_subvalue(store_obj.GetKey(), config.json_key_store_name, game_regular_name)
 
         # Set other platform keys
@@ -269,11 +273,11 @@ def UpdateGameJsonFile(
                     json_obj.fill_subvalue(store_obj.GetKey(), store_subdata_key, latest_jsondata.get_value(store_subdata_key))
                     if store_subdata_key == config.json_key_store_paths:
                         paths = json_obj.get_subvalue(store_obj.GetKey(), store_subdata_key, [])
-                        paths = system.PruneChildPaths(paths)
+                        paths = paths.prune_child_paths(paths)
                         json_obj.set_subvalue(store_obj.GetKey(), store_subdata_key, paths)
 
     # Write json file
-    success = system.WriteJsonFile(
+    success = serialization.write_json_file(
         src = json_file_path,
         json_data = json_obj.get_data(),
         verbose = verbose,
@@ -283,7 +287,7 @@ def UpdateGameJsonFile(
         return False
 
     # Clean json file
-    success = system.CleanJsonFile(
+    success = serialization.clean_json_file(
         src = json_file_path,
         sort_keys = True,
         remove_empty_values = True,
@@ -308,14 +312,14 @@ def BuildGameJsonFile(
     exit_on_failure = False):
 
     # Get game root
-    if not system.IsPathDirectory(game_root):
+    if not paths.is_path_directory(game_root):
         game_root = environment.GetLockerGamingFilesDir(
             game_supercategory = game_supercategory,
             game_category = game_category,
             game_subcategory = game_subcategory,
             game_name = game_name,
             source_type = source_type)
-    if not system.IsPathDirectory(game_root):
+    if not paths.is_path_directory(game_root):
         return False
 
     # Log categories
@@ -406,8 +410,8 @@ def GetGameJsonIgnoreEntries(
     json_file_path = environment.GetGameJsonMetadataIgnoreFile(game_supercategory, game_category, game_subcategory)
 
     # Create file if necessary
-    if not system.DoesPathExist(json_file_path):
-        system.TouchFile(
+    if not paths.does_path_exist(json_file_path):
+        fileops.touch_file(
             src = json_file_path,
             contents = "{}",
             verbose = verbose,
@@ -415,7 +419,7 @@ def GetGameJsonIgnoreEntries(
             exit_on_failure = exit_on_failure)
 
     # Read json data
-    json_file_data = system.ReadJsonFile(
+    json_file_data = serialization.read_json_file(
         src = json_file_path,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -444,8 +448,8 @@ def AddGameJsonIgnoreEntry(
     json_file_path = environment.GetGameJsonMetadataIgnoreFile(game_supercategory, game_category, game_subcategory)
 
     # Create file if necessary
-    if not system.DoesPathExist(json_file_path):
-        system.TouchFile(
+    if not paths.does_path_exist(json_file_path):
+        fileops.touch_file(
             src = json_file_path,
             contents = "{}",
             verbose = verbose,
@@ -453,7 +457,7 @@ def AddGameJsonIgnoreEntry(
             exit_on_failure = exit_on_failure)
 
     # Read json data
-    json_file_data = system.ReadJsonFile(
+    json_file_data = serialization.read_json_file(
         src = json_file_path,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -468,7 +472,7 @@ def AddGameJsonIgnoreEntry(
     json_obj.set_value(game_identifier, game_name)
 
     # Write json file
-    system.WriteJsonFile(
+    serialization.write_json_file(
         src = json_file_path,
         json_data = json_obj.get_data(),
         sort_keys = True,
@@ -477,7 +481,7 @@ def AddGameJsonIgnoreEntry(
         exit_on_failure = exit_on_failure)
 
     # Clean json file
-    success = system.CleanJsonFile(
+    success = serialization.clean_json_file(
         src = json_file_path,
         sort_keys = True,
         remove_empty_values = True,

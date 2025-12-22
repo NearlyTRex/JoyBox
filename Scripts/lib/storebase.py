@@ -9,6 +9,8 @@ import logger
 import jsondata
 import webpage
 import metadatacollector
+import paths
+import strings
 import metadataassetcollector
 import manifest
 
@@ -40,13 +42,13 @@ def CreateTokenizedPath(path, base_path = None):
     new_path = new_path.replace("<winDocuments>", config.token_user_profile_dir + "/Documents")
     new_path = new_path.replace("<home>", config.token_user_profile_dir)
     new_path = new_path.replace("<root>", config.token_store_install_dir)
-    if system.IsPathValid(base_path):
+    if paths.is_path_valid(base_path):
         new_path = new_path.replace("<base>", base_path)
     else:
         new_path = new_path.replace("<base>", config.token_game_install_dir)
 
     # Return path
-    return system.NormalizeFilePath(new_path)
+    return paths.normalize_file_path(new_path)
 
 # Convert to tokenized path
 def ConvertToTokenizedPath(
@@ -55,17 +57,17 @@ def ConvertToTokenizedPath(
     store_user_id = None):
 
     # Replace tokens
-    path = path.replace(system.JoinPaths(config.SaveType.GENERAL, config.computer_folder_gamedata), config.token_game_install_dir)
-    path = path.replace(system.JoinPaths(config.SaveType.GENERAL, config.computer_folder_public), config.token_user_public_dir)
-    path = path.replace(system.JoinPaths(config.SaveType.GENERAL, config.computer_folder_registry), config.token_user_registry_dir)
+    path = path.replace(paths.join_paths(config.SaveType.GENERAL, config.computer_folder_gamedata), config.token_game_install_dir)
+    path = path.replace(paths.join_paths(config.SaveType.GENERAL, config.computer_folder_public), config.token_user_public_dir)
+    path = path.replace(paths.join_paths(config.SaveType.GENERAL, config.computer_folder_registry), config.token_user_registry_dir)
     if store_type:
-        path = path.replace(system.JoinPaths(config.SaveType.GENERAL, config.computer_folder_store, store_type), config.token_store_install_dir)
+        path = path.replace(paths.join_paths(config.SaveType.GENERAL, config.computer_folder_store, store_type), config.token_store_install_dir)
     if store_user_id:
         path = path.replace(store_user_id, config.token_store_user_id)
     path = path.replace(config.SaveType.GENERAL.val(), config.token_user_profile_dir)
 
     # Return path
-    return system.NormalizeFilePath(path)
+    return paths.normalize_file_path(path)
 
 # Convert from tokenized path
 def ConvertFromTokenizedPath(
@@ -74,17 +76,17 @@ def ConvertFromTokenizedPath(
     store_user_id = None):
 
     # Replace tokens
-    path = path.replace(config.token_game_install_dir, system.JoinPaths(config.SaveType.GENERAL, config.computer_folder_gamedata))
-    path = path.replace(config.token_user_public_dir, system.JoinPaths(config.SaveType.GENERAL, config.computer_folder_public))
-    path = path.replace(config.token_user_registry_dir, system.JoinPaths(config.SaveType.GENERAL, config.computer_folder_registry))
+    path = path.replace(config.token_game_install_dir, paths.join_paths(config.SaveType.GENERAL, config.computer_folder_gamedata))
+    path = path.replace(config.token_user_public_dir, paths.join_paths(config.SaveType.GENERAL, config.computer_folder_public))
+    path = path.replace(config.token_user_registry_dir, paths.join_paths(config.SaveType.GENERAL, config.computer_folder_registry))
     if store_type:
-        path = path.replace(config.token_store_install_dir, system.JoinPaths(config.SaveType.GENERAL, config.computer_folder_store, store_type))
+        path = path.replace(config.token_store_install_dir, paths.join_paths(config.SaveType.GENERAL, config.computer_folder_store, store_type))
     if store_user_id:
         path = path.replace(config.token_store_user_id, store_user_id)
     path = path.replace(config.token_user_profile_dir, config.SaveType.GENERAL.val())
 
     # Return path
-    return system.NormalizeFilePath(path)
+    return paths.normalize_file_path(path)
 
 # Base store
 class StoreBase:
@@ -411,8 +413,8 @@ class StoreBase:
         game_paths = list(dict.fromkeys(game_paths))
 
         # Save paths and keys
-        json_data.set_value(config.json_key_store_paths, system.SortStrings(game_paths))
-        json_data.set_value(config.json_key_store_keys, system.SortStrings(game_keys))
+        json_data.set_value(config.json_key_store_paths, strings.sort_strings(game_paths))
+        json_data.set_value(config.json_key_store_keys, strings.sort_strings(game_keys))
         return json_data
 
     # Get latest jsondata

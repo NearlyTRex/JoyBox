@@ -6,7 +6,9 @@ import sys
 import config
 import system
 import logger
+import paths
 import environment
+import fileops
 import release
 import programs
 import toolbase
@@ -118,8 +120,8 @@ class Moonlight(toolbase.ToolBase):
 
         # Create config files
         for config_filename, config_contents in config_files.items():
-            success = system.TouchFile(
-                src = system.JoinPaths(environment.GetToolsRootDir(), config_filename),
+            success = fileops.touch_file(
+                src = paths.join_paths(environment.GetToolsRootDir(), config_filename),
                 contents = config_contents.strip(),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,

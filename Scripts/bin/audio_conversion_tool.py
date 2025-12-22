@@ -13,6 +13,7 @@ import audible
 import arguments
 import setup
 import logger
+import paths
 
 # Parse arguments
 parser = arguments.ArgumentParser(description = "Audio conversion tool for converting between audio formats.")
@@ -57,7 +58,7 @@ def main():
     if args.action == config.AudioConversionAction.AAX_TO_M4A:
 
         # Check if input is a directory or file
-        if system.IsPathDirectory(input_path):
+        if paths.is_path_directory(input_path):
             return audible.DecryptAAXDirectory(
                 input_dir = input_path,
                 output_dir = output_path,
@@ -68,7 +69,7 @@ def main():
                 verbose = args.verbose,
                 pretend_run = args.pretend_run,
                 exit_on_failure = args.exit_on_failure)
-        elif system.IsPathFile(input_path):
+        elif paths.is_path_file(input_path):
             return audible.DecryptAAXToM4A(
                 input_file = input_path,
                 output_file = output_path,

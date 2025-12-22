@@ -9,9 +9,12 @@ import datetime
 import config
 import command
 import programs
+import serialization
 import system
 import logger
+import paths
 import environment
+import fileops
 
 # Check if tool is installed
 def IsToolInstalled():
@@ -310,7 +313,7 @@ def SetupRemote(
     # Others should use manual
     else:
         if isinstance(remote_config, str):
-            remote_config = system.ParseJsonString(remote_config)
+            remote_config = serialization.parse_json_string(remote_config)
         return SetupManualRemote(
             remote_type = remote_type,
             remote_name = remote_name,
@@ -548,7 +551,7 @@ def DownloadFilesFromRemote(
         remote_type = remote_type,
         remote_action_type = config.RemoteActionType.DOWNLOAD)
     copy_cmd += GetExcludeFlags(excludes)
-    if files_from and system.IsPathFile(files_from):
+    if files_from and paths.is_path_file(files_from):
         copy_cmd += ["--files-from", files_from]
     if pretend_run:
         copy_cmd += ["--dry-run"]
@@ -601,7 +604,7 @@ def UploadFilesToRemote(
         remote_type = remote_type,
         remote_action_type = config.RemoteActionType.UPLOAD)
     copy_cmd += GetExcludeFlags(excludes)
-    if files_from and system.IsPathFile(files_from):
+    if files_from and paths.is_path_file(files_from):
         copy_cmd += ["--files-from", files_from]
     if pretend_run:
         copy_cmd += ["--dry-run"]
@@ -651,7 +654,7 @@ def MoveFilesOnRemote(
         src_full,
         dest_full
     ]
-    if files_from and system.IsPathFile(files_from):
+    if files_from and paths.is_path_file(files_from):
         move_cmd += ["--files-from", files_from]
     if pretend_run:
         move_cmd += ["--dry-run"]
@@ -959,15 +962,15 @@ def DiffFiles(
         remote_type = remote_type,
         remote_action_type = config.RemoteActionType.DIFF)
     check_cmd += GetExcludeFlags(excludes)
-    if system.IsPathValid(diff_combined_path):
+    if paths.is_path_valid(diff_combined_path):
         check_cmd += ["--combined", diff_combined_path]
-    if system.IsPathValid(diff_intersected_path):
+    if paths.is_path_valid(diff_intersected_path):
         check_cmd += ["--differ", diff_intersected_path]
-    if system.IsPathValid(diff_missing_src_path):
+    if paths.is_path_valid(diff_missing_src_path):
         check_cmd += ["--missing-on-src", diff_missing_src_path]
-    if system.IsPathValid(diff_missing_dest_path):
+    if paths.is_path_valid(diff_missing_dest_path):
         check_cmd += ["--missing-on-dst", diff_missing_dest_path]
-    if system.IsPathValid(diff_error_path):
+    if paths.is_path_valid(diff_error_path):
         check_cmd += ["--error", diff_error_path]
     if quick:
         check_cmd += ["--size-only"]
@@ -1012,7 +1015,7 @@ def DiffFiles(
     # Sort diff files
     for diff_path in [diff_combined_path, diff_intersected_path, diff_missing_src_path, diff_missing_dest_path, diff_error_path]:
         if diff_path and os.path.exists(diff_path):
-            system.SortFileContents(
+            fileops.sort_file_contents(
                 src = diff_path,
                 verbose = verbose,
                 pretend_run = pretend_run,
@@ -1044,8 +1047,8 @@ def DiffSyncFiles(
 
     # Get diff directory
     if not diff_dir:
-        diff_dir = system.CreateTempDirectory()
-    if not system.DoesPathExist(diff_dir):
+        diff_dir = fileops.create_temporary_directory()
+    if not paths.does_path_exist(diff_dir):
         logger.log_error("Diff directory was invalid")
         return False
 
@@ -1122,7 +1125,7 @@ def DiffSyncFiles(
             remote_file_path = os.path.join(remote_path, file_path).replace("\\", "/")
 
             # Get local modtime
-            local_mtime = system.GetFileModTime(local_file)
+            local_mtime = paths.get_file_mod_time(local_file)
 
             # Get remote modtime
             remote_mtime = GetPathModTime(
@@ -1155,8 +1158,8 @@ def DiffSyncFiles(
 
     # Upload files
     if files_to_upload:
-        final_upload_path = system.CreateTemporaryFile(suffix = ".txt")
-        system.WriteTextFile(final_upload_path, "\n".join(files_to_upload))
+        final_upload_path = fileops.create_temporary_file(suffix = ".txt")
+        serialization.write_text_file(final_upload_path, "\n".join(files_to_upload))
         logger.log_info("Uploading %d files to remote..." % len(files_to_upload))
         if not UploadFilesToRemote(
             remote_name = remote_name,
@@ -1173,8 +1176,8 @@ def DiffSyncFiles(
     # Download or recycle files
     if files_to_download:
         if recycle_missing:
-            final_recycle_path = system.CreateTemporaryFile(suffix = ".txt")
-            system.WriteTextFile(final_recycle_path, "\n".join(files_to_download))
+            final_recycle_path = fileops.create_temporary_file(suffix = ".txt")
+            serialization.write_text_file(final_recycle_path, "\n".join(files_to_download))
             logger.log_info("Recycling %d files on remote (moving to %s)..." % (len(files_to_download), recycle_folder))
             if not RecycleFilesOnRemote(
                 remote_name = remote_name,
@@ -1187,8 +1190,8 @@ def DiffSyncFiles(
                 exit_on_failure = exit_on_failure):
                 return False
         else:
-            final_download_path = system.CreateTemporaryFile(suffix = ".txt")
-            system.WriteTextFile(final_download_path, "\n".join(files_to_download))
+            final_download_path = fileops.create_temporary_file(suffix = ".txt")
+            serialization.write_text_file(final_download_path, "\n".join(files_to_download))
             logger.log_info("Downloading %d files from remote..." % len(files_to_download))
             if not DownloadFilesFromRemote(
                 remote_name = remote_name,
@@ -1265,16 +1268,16 @@ def MountFiles(
     exit_on_failure = False):
 
     # Ignore already mounted
-    if system.DoesPathExist(mount_path) and not system.IsDirectoryEmpty(mount_path):
+    if paths.does_path_exist(mount_path) and not paths.is_directory_empty(mount_path):
         return True
 
     # Create mount point
     if environment.IsUnixPlatform():
-        system.MakeDirectory(
+        fileops.make_directory(
             src = mount_path,
             verbose = verbose,
             exit_on_failure = exit_on_failure)
-        if not system.DoesPathExist(mount_path) or not system.IsDirectoryEmpty(mount_path):
+        if not paths.does_path_exist(mount_path) or not paths.is_directory_empty(mount_path):
             logger.log_error("Mount point %s needs to exist and be empty" % mount_path)
             return False
 

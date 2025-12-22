@@ -14,6 +14,8 @@ import dat
 import arguments
 import setup
 import logger
+import paths
+import prompts
 
 # Parse arguments
 parser = arguments.ArgumentParser(description = "Dat renamer.")
@@ -53,13 +55,13 @@ def main():
             details.append("DAT directory: %s" % dat_directory)
         if dat_cachefile:
             details.append("DAT cachefile: %s" % dat_cachefile)
-        if not system.PromptForPreview("Rename files using DAT", details):
+        if not prompts.prompt_for_preview("Rename files using DAT", details):
             logger.log_warning("Operation cancelled by user")
             return
 
     # Load game dat(s)
     game_dat = dat.Dat()
-    if system.IsPathDirectory(dat_directory):
+    if paths.is_path_directory(dat_directory):
         game_dat.import_clrmamepro_dat_files(
             dat_dir = dat_directory,
             verbose = args.verbose,
@@ -71,7 +73,7 @@ def main():
                 verbose = args.verbose,
                 pretend_run = args.pretend_run,
                 exit_on_failure = args.exit_on_failure)
-    elif system.IsPathFile(dat_cachefile):
+    elif paths.is_path_file(dat_cachefile):
         game_dat.import_cache_dat_file(
             dat_file = dat_cachefile,
             verbose = args.verbose,

@@ -11,6 +11,8 @@ import system
 import arguments
 import setup
 import logger
+import fileops
+import paths
 
 # Parse arguments
 parser = arguments.ArgumentParser(description = "Create folders from certain file types.")
@@ -32,20 +34,20 @@ def main():
     input_path = parser.get_input_path()
 
     # Make folders from file types
-    for obj in system.GetDirectoryContents(input_path):
-        obj_path = system.JoinPaths(input_path, obj)
-        if system.IsPathFile(obj_path):
+    for obj in paths.get_directory_contents(input_path):
+        obj_path = paths.join_paths(input_path, obj)
+        if paths.is_path_file(obj_path):
             if obj.endswith(tuple(args.file_types.split(","))):
                 selected_file = obj_path
-                selected_file_basename = system.GetFilenameBasename(selected_file)
-                new_folder = system.JoinPaths(input_path, selected_file_basename)
-                new_file = system.JoinPaths(input_path, selected_file_basename, obj)
-                system.MakeDirectory(
+                selected_file_basename = paths.get_filename_basename(selected_file)
+                new_folder = paths.join_paths(input_path, selected_file_basename)
+                new_file = paths.join_paths(input_path, selected_file_basename, obj)
+                fileops.make_directory(
                     src = new_folder,
                     verbose = args.verbose,
                     pretend_run = args.pretend_run,
                     exit_on_failure = args.exit_on_failure)
-                system.MoveFileOrDirectory(
+                fileops.move_file_or_directory(
                     src = selected_file,
                     dest = new_file,
                     verbose = args.verbose,

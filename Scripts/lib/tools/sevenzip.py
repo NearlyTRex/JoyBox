@@ -6,6 +6,7 @@ import sys
 import system
 import toolbase
 import ini
+import paths
 
 # Config files
 config_files = {}
@@ -27,6 +28,6 @@ class SevenZip(toolbase.ToolBase):
         # Return config
         return {
             "7-Zip": {
-                "program": system.JoinPaths(sevenzip_install_dir, sevenzip_exe)
+                "program": paths.join_paths(sevenzip_install_dir, sevenzip_exe)
             }
         }

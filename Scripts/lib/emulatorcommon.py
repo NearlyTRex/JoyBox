@@ -8,6 +8,7 @@ import command
 import system
 import logger
 import metadata
+import paths
 import environment
 import gameinfo
 import gui
@@ -73,7 +74,7 @@ def SimpleLaunch(
 
         # Replace game file
         if selected_launch_file:
-            cmd_segment = cmd_segment.replace(config.token_game_file, system.JoinPaths(game_cache_dir, selected_launch_file))
+            cmd_segment = cmd_segment.replace(config.token_game_file, paths.join_paths(game_cache_dir, selected_launch_file))
 
         # Replace game dir
         cmd_segment = cmd_segment.replace(config.token_game_dir, game_cache_dir)

@@ -8,10 +8,13 @@ import command
 import system
 import logger
 import environment
+import fileops
 import archive
 import programs
+import strings
 import webpage
 import network
+import paths
 import locker
 
 # Setup stored release
@@ -33,7 +36,7 @@ def SetupStoredRelease(
     exit_on_failure = False):
 
     # Get list of potential archives
-    potential_archives = system.BuildFileList(archive_dir)
+    potential_archives = paths.build_file_list(archive_dir)
     if len(potential_archives) == 0:
         logger.log_error("No available archives found in '%s'" % archive_dir)
         return False
@@ -42,7 +45,7 @@ def SetupStoredRelease(
     selected_archive = ""
     if isinstance(preferred_archive, str) and len(preferred_archive) > 0:
         for archive_path in potential_archives:
-            if preferred_archive in system.GetFilenameFile(archive_path):
+            if preferred_archive in paths.get_filename_file(archive_path):
                 selected_archive = archive_path
                 break
     elif use_first_found:
@@ -86,7 +89,7 @@ def SetupGeneralRelease(
     exit_on_failure = False):
 
     # Create temporary directory
-    tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(
+    tmp_dir_success, tmp_dir_result = fileops.create_temporary_directory(
         verbose = verbose,
         pretend_run = pretend_run)
     if not tmp_dir_success:
@@ -94,10 +97,10 @@ def SetupGeneralRelease(
         return False
 
     # Get archive info
-    archive_dir = system.GetFilenameDirectory(archive_file)
-    archive_basename = system.GetFilenameBasename(archive_file)
-    archive_extension = system.GetFilenameExtension(archive_file)
-    archive_filename = system.GetFilenameFile(archive_file)
+    archive_dir = paths.get_filename_directory(archive_file)
+    archive_basename = paths.get_filename_basename(archive_file)
+    archive_extension = paths.get_filename_extension(archive_file)
+    archive_filename = paths.get_filename_file(archive_file)
     archive_is_zip = archive.IsZipArchive(archive_file)
     archive_is_7z = archive.Is7zArchive(archive_file)
     archive_is_tarball = archive.IsTarballArchive(archive_file)
@@ -105,7 +108,7 @@ def SetupGeneralRelease(
     archive_is_appimage = archive.IsAppImageArchive(archive_file)
 
     # Create install dir if necessary
-    success = system.MakeDirectory(
+    success = fileops.make_directory(
         src = install_dir,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -133,10 +136,10 @@ def SetupGeneralRelease(
         if archive_extension.lower() == ".appimage":
 
             # Get new appimage file
-            appimage_file = system.JoinPaths(tmp_dir_result, install_name + ".AppImage")
+            appimage_file = paths.join_paths(tmp_dir_result, install_name + ".AppImage")
 
             # Copy app image
-            success = system.SmartCopy(
+            success = fileops.smart_copy(
                 src = archive_file,
                 dest = appimage_file,
                 verbose = verbose,
@@ -147,7 +150,7 @@ def SetupGeneralRelease(
                 return False
 
             # Mark app images as executable
-            success = system.MarkAsExecutable(
+            success = fileops.mark_as_executable(
                 src = appimage_file,
                 verbose = verbose,
                 pretend_run = pretend_run,
@@ -157,7 +160,7 @@ def SetupGeneralRelease(
                 return False
 
             # Set install files
-            install_files = [system.GetFilenameFile(appimage_file)]
+            install_files = [paths.get_filename_file(appimage_file)]
 
         # Other formats
         else:
@@ -190,9 +193,9 @@ def SetupGeneralRelease(
 
     # Further refine search dir if we are looking for a particular file
     if isinstance(search_file, str) and len(search_file):
-        for file in system.BuildFileList(search_dir):
-            current_dir = system.GetFilenameDirectory(file)
-            current_basefile = system.GetFilenameFile(file)
+        for file in paths.build_file_list(search_dir):
+            current_dir = paths.get_filename_directory(file)
+            current_basefile = paths.get_filename_file(file)
             if file.endswith(search_file):
                 search_dir = current_dir
                 break
@@ -200,9 +203,9 @@ def SetupGeneralRelease(
     # Copy release files
     if isinstance(install_files, list) and len(install_files):
         for install_file in install_files:
-            install_file_src = os.path.abspath(system.JoinPaths(search_dir, install_file))
-            install_file_dest = system.JoinPaths(install_dir, install_file)
-            success = system.SmartCopy(
+            install_file_src = os.path.abspath(paths.join_paths(search_dir, install_file))
+            install_file_dest = paths.join_paths(install_dir, install_file)
+            success = fileops.smart_copy(
                 src = install_file_src,
                 dest = install_file_dest,
                 verbose = verbose,
@@ -212,7 +215,7 @@ def SetupGeneralRelease(
                 logger.log_error("Unable to copy install file %s" % install_file)
                 return False
     else:
-        success = system.CopyContents(
+        success = fileops.copy_contents(
             src = search_dir,
             dest = install_dir,
             verbose = verbose,
@@ -224,12 +227,12 @@ def SetupGeneralRelease(
 
     # Chmod files
     if isinstance(chmod_files, list) and len(chmod_files):
-        for filename in system.BuildFileList(install_dir):
+        for filename in paths.build_file_list(install_dir):
             for chmod_entry in chmod_files:
-                chmod_file = system.NormalizeFilePath(chmod_entry["file"])
+                chmod_file = paths.normalize_file_path(chmod_entry["file"])
                 chmod_perms = chmod_entry["perms"]
                 if filename.endswith(chmod_file):
-                    success = system.ChmodFileOrDirectory(
+                    success = fileops.chmod_file_or_directory(
                         src = filename,
                         perms = chmod_perms,
                         verbose = verbose,
@@ -241,17 +244,17 @@ def SetupGeneralRelease(
 
     # Rename files
     if isinstance(rename_files, list) and len(rename_files):
-        for filename in system.BuildFileList(install_dir):
-            filename_dir = system.GetFilenameDirectory(filename)
-            filename_file = system.GetFilenameFile(filename)
+        for filename in paths.build_file_list(install_dir):
+            filename_dir = paths.get_filename_directory(filename)
+            filename_file = paths.get_filename_file(filename)
             for rename_entry in rename_files:
                 rename_from = rename_entry["from"]
                 rename_to = rename_entry["to"]
                 rename_ratio = rename_entry["ratio"]
-                if system.GetStringSimilarityRatio(rename_from, filename_file) > rename_ratio:
-                    success = system.SmartMove(
+                if strings.get_string_similarity_ratio(rename_from, filename_file) > rename_ratio:
+                    success = fileops.smart_move(
                         src = filename,
-                        dest = system.JoinPaths(filename_dir, rename_to),
+                        dest = paths.join_paths(filename_dir, rename_to),
                         verbose = verbose,
                         pretend_run = pretend_run,
                         exit_on_failure = exit_on_failure)
@@ -260,10 +263,10 @@ def SetupGeneralRelease(
                         return False
 
     # Backup files
-    if system.IsPathValid(backups_dir):
+    if paths.is_path_valid(backups_dir):
         success = locker.BackupFiles(
             src = archive_file,
-            dest = system.JoinPaths(backups_dir, archive_filename),
+            dest = paths.join_paths(backups_dir, archive_filename),
             locker_type = locker_type,
             show_progress = True,
             skip_existing = True,
@@ -276,14 +279,14 @@ def SetupGeneralRelease(
             return False
 
     # Delete temporary directory
-    system.RemoveDirectory(
+    fileops.remove_directory(
         src = tmp_dir_result,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
     # Check result
-    return system.DoesDirectoryContainFiles(install_dir)
+    return paths.does_directory_contain_files(install_dir)
 
 # Download general release
 def DownloadGeneralRelease(
@@ -302,7 +305,7 @@ def DownloadGeneralRelease(
     exit_on_failure = False):
 
     # Create temporary directory
-    tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(
+    tmp_dir_success, tmp_dir_result = fileops.create_temporary_directory(
         verbose = verbose,
         pretend_run = pretend_run)
     if not tmp_dir_success:
@@ -310,10 +313,10 @@ def DownloadGeneralRelease(
         return False
 
     # Get archive info
-    archive_basename = system.GetFilenameBasename(archive_url)
-    archive_extension = system.GetFilenameExtension(archive_url)
-    archive_filename = system.GetFilenameFile(archive_url)
-    archive_file = system.JoinPaths(tmp_dir_result, archive_filename)
+    archive_basename = paths.get_filename_basename(archive_url)
+    archive_extension = paths.get_filename_extension(archive_url)
+    archive_filename = paths.get_filename_file(archive_url)
+    archive_file = paths.join_paths(tmp_dir_result, archive_filename)
 
     # Download release
     success = network.DownloadUrl(
@@ -342,7 +345,7 @@ def DownloadGeneralRelease(
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
-    system.RemoveDirectory(
+    fileops.remove_directory(
         src = tmp_dir_result,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -507,7 +510,7 @@ def BuildFromSource(
             return None
 
     # Create temporary directory
-    tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(
+    tmp_dir_success, tmp_dir_result = fileops.create_temporary_directory(
         verbose = verbose,
         pretend_run = pretend_run)
     if not tmp_dir_success:
@@ -515,16 +518,16 @@ def BuildFromSource(
         return None
 
     # Get directories
-    source_base_dir = system.JoinPaths(tmp_dir_result, "Source")
-    download_dir = system.JoinPaths(tmp_dir_result, "Download")
+    source_base_dir = paths.join_paths(tmp_dir_result, "Source")
+    download_dir = paths.join_paths(tmp_dir_result, "Download")
 
     # Make folders
-    system.MakeDirectory(
+    fileops.make_directory(
         src = source_base_dir,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
-    system.MakeDirectory(
+    fileops.make_directory(
         src = download_dir,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -534,8 +537,8 @@ def BuildFromSource(
     if release_url.endswith(".git"):
 
         # Get repo name
-        repo_name = system.GetFilenameBasename(release_url.rstrip("/"))
-        source_dir = system.JoinPaths(source_base_dir, repo_name)
+        repo_name = paths.get_filename_basename(release_url.rstrip("/"))
+        source_dir = paths.join_paths(source_base_dir, repo_name)
 
         # Download git release
         success = network.DownloadGitUrl(
@@ -551,10 +554,10 @@ def BuildFromSource(
     else:
 
         # Get archive info
-        archive_basename = system.GetFilenameBasename(release_url)
-        archive_extension = system.GetFilenameExtension(release_url)
-        archive_file = system.JoinPaths(download_dir, archive_basename + archive_extension)
-        source_dir = system.JoinPaths(source_base_dir, archive_basename)
+        archive_basename = paths.get_filename_basename(release_url)
+        archive_extension = paths.get_filename_extension(release_url)
+        archive_file = paths.join_paths(download_dir, archive_basename + archive_extension)
+        source_dir = paths.join_paths(source_base_dir, archive_basename)
 
         # Download source archive
         success = network.DownloadUrl(
@@ -581,7 +584,7 @@ def BuildFromSource(
     # Get build directory
     source_build_dir = source_dir
     if len(build_dir) > 0:
-        source_build_dir = os.path.abspath(system.JoinPaths(source_dir, build_dir))
+        source_build_dir = os.path.abspath(paths.join_paths(source_dir, build_dir))
 
     # Apply source patches
     if isinstance(source_patches, list) and len(source_patches):
@@ -600,8 +603,8 @@ def BuildFromSource(
             if len(patch_file) and len(patch_content):
 
                 # Write patch to temp file
-                patch_temp_file = system.JoinPaths(tmp_dir_result, system.GetFilenameFile(patch_file) + ".patch")
-                success = system.TouchFile(
+                patch_temp_file = paths.join_paths(tmp_dir_result, paths.get_filename_file(patch_file) + ".patch")
+                success = fileops.touch_file(
                     src = patch_temp_file,
                     contents = patch_content.strip() + "\n",
                     verbose = verbose,
@@ -628,7 +631,7 @@ def BuildFromSource(
                     return None
 
     # Make build folder
-    success = system.MakeDirectory(
+    success = fileops.make_directory(
         src = source_build_dir,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -700,7 +703,7 @@ def BuildBinaryFromSource(
     source_dir = build_info["source_dir"]
 
     # Make install folder
-    system.MakeDirectory(
+    fileops.make_directory(
         src = install_dir,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -709,11 +712,11 @@ def BuildBinaryFromSource(
     # Determine search directory for built files
     search_dir = tmp_dir
     if len(output_dir) > 0:
-        search_dir = system.JoinPaths(source_dir, output_dir)
+        search_dir = paths.join_paths(source_dir, output_dir)
 
     # Find built release file
     built_file = None
-    for path in system.BuildFileList(search_dir):
+    for path in paths.build_file_list(search_dir):
         if path.endswith(output_file):
             built_file = path
     if not built_file:
@@ -721,15 +724,15 @@ def BuildBinaryFromSource(
         return False
 
     # Get final file for backup
-    final_file = install_name + system.GetFilenameExtension(output_file)
+    final_file = install_name + paths.get_filename_extension(output_file)
 
     # Check if output is an archive that needs extraction
     is_archive = archive.IsArchive(built_file)
     if is_archive and len(search_file):
 
         # Extract archive and install contents
-        extract_dir = system.JoinPaths(tmp_dir, "Extract")
-        system.MakeDirectory(
+        extract_dir = paths.join_paths(tmp_dir, "Extract")
+        fileops.make_directory(
             src = extract_dir,
             verbose = verbose,
             pretend_run = pretend_run,
@@ -746,13 +749,13 @@ def BuildBinaryFromSource(
 
         # Find directory containing search_file
         search_dir = extract_dir
-        for file in system.BuildFileList(extract_dir):
+        for file in paths.build_file_list(extract_dir):
             if file.endswith(search_file):
-                search_dir = system.GetFilenameDirectory(file)
+                search_dir = paths.get_filename_directory(file)
                 break
 
         # Copy contents to install directory
-        success = system.CopyContents(
+        success = fileops.copy_contents(
             src = search_dir,
             dest = install_dir,
             verbose = verbose,
@@ -763,9 +766,9 @@ def BuildBinaryFromSource(
             return False
     else:
         # Copy release file directly
-        success = system.SmartCopy(
+        success = fileops.smart_copy(
             src = built_file,
-            dest = system.JoinPaths(install_dir, final_file),
+            dest = paths.join_paths(install_dir, final_file),
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
@@ -775,9 +778,9 @@ def BuildBinaryFromSource(
 
     # Copy other objects
     for obj in external_copies:
-        src_obj = system.JoinPaths(tmp_dir, obj["from"])
-        dest_obj = system.JoinPaths(install_dir, obj["to"])
-        success = system.SmartCopy(
+        src_obj = paths.join_paths(tmp_dir, obj["from"])
+        dest_obj = paths.join_paths(install_dir, obj["to"])
+        success = fileops.smart_copy(
             src = src_obj,
             dest = dest_obj,
             verbose = verbose,
@@ -788,10 +791,10 @@ def BuildBinaryFromSource(
             return False
 
     # Backup files
-    if system.IsPathValid(backups_dir):
+    if paths.is_path_valid(backups_dir):
         success = locker.BackupFiles(
             src = built_file,
-            dest = system.JoinPaths(backups_dir, final_file),
+            dest = paths.join_paths(backups_dir, final_file),
             locker_type = locker_type,
             show_progress = True,
             skip_existing = True,
@@ -804,14 +807,14 @@ def BuildBinaryFromSource(
             return False
 
     # Delete temporary directory
-    system.RemoveDirectory(
+    fileops.remove_directory(
         src = tmp_dir,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
     # Check result
-    return system.DoesDirectoryContainFiles(install_dir)
+    return paths.does_directory_contain_files(install_dir)
 
 # Build AppImage from source
 def BuildAppImageFromSource(
@@ -853,15 +856,15 @@ def BuildAppImageFromSource(
 
     # Get build result
     tmp_dir = build_info["tmp_dir"]
-    appimage_dir = system.JoinPaths(tmp_dir, "AppImage")
+    appimage_dir = paths.join_paths(tmp_dir, "AppImage")
 
     # Make folders
-    system.MakeDirectory(
+    fileops.make_directory(
         src = install_dir,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
-    system.MakeDirectory(
+    fileops.make_directory(
         src = appimage_dir,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -869,11 +872,11 @@ def BuildAppImageFromSource(
 
     # Copy AppImage objects
     for obj in internal_copies:
-        src_obj = system.JoinPaths(tmp_dir, obj["from"])
-        dest_obj = system.JoinPaths(tmp_dir, obj["to"])
+        src_obj = paths.join_paths(tmp_dir, obj["from"])
+        dest_obj = paths.join_paths(tmp_dir, obj["to"])
         if obj["from"].startswith("AppImageTool"):
-            src_obj = system.JoinPaths(environment.GetToolsRootDir(), obj["from"])
-        success = system.SmartCopy(
+            src_obj = paths.join_paths(environment.GetToolsRootDir(), obj["from"])
+        success = fileops.smart_copy(
             src = src_obj,
             dest = dest_obj,
             verbose = verbose,
@@ -887,7 +890,7 @@ def BuildAppImageFromSource(
     for obj in internal_symlinks:
         src_obj = obj["from"]
         dest_obj = obj["to"]
-        success = system.CreateSymlink(
+        success = fileops.create_symlink(
             src = src_obj,
             dest = dest_obj,
             cwd = appimage_dir,
@@ -912,7 +915,7 @@ def BuildAppImageFromSource(
 
     # Find built release file
     built_file = None
-    for path in system.BuildFileList(tmp_dir):
+    for path in paths.build_file_list(tmp_dir):
         if path.endswith(output_file):
             built_file = path
     if not built_file:
@@ -923,9 +926,9 @@ def BuildAppImageFromSource(
     final_file = install_name + ".AppImage"
 
     # Copy release file
-    success = system.SmartCopy(
+    success = fileops.smart_copy(
         src = built_file,
-        dest = system.JoinPaths(install_dir, final_file),
+        dest = paths.join_paths(install_dir, final_file),
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -935,9 +938,9 @@ def BuildAppImageFromSource(
 
     # Copy other objects
     for obj in external_copies:
-        src_obj = system.JoinPaths(tmp_dir, obj["from"])
-        dest_obj = system.JoinPaths(install_dir, obj["to"])
-        success = system.SmartCopy(
+        src_obj = paths.join_paths(tmp_dir, obj["from"])
+        dest_obj = paths.join_paths(install_dir, obj["to"])
+        success = fileops.smart_copy(
             src = src_obj,
             dest = dest_obj,
             verbose = verbose,
@@ -948,10 +951,10 @@ def BuildAppImageFromSource(
             return False
 
     # Backup files
-    if system.IsPathValid(backups_dir):
+    if paths.is_path_valid(backups_dir):
         success = locker.BackupFiles(
             src = built_file,
-            dest = system.JoinPaths(backups_dir, final_file),
+            dest = paths.join_paths(backups_dir, final_file),
             locker_type = locker_type,
             show_progress = True,
             skip_existing = True,
@@ -964,11 +967,11 @@ def BuildAppImageFromSource(
             return False
 
     # Delete temporary directory
-    system.RemoveDirectory(
+    fileops.remove_directory(
         src = tmp_dir,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
     # Check result
-    return os.path.exists(system.JoinPaths(install_dir, final_file))
+    return os.path.exists(paths.join_paths(install_dir, final_file))

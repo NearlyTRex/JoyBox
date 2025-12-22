@@ -9,8 +9,12 @@ import system
 import logger
 import command
 import programs
+import strings
 import network
+import paths
 import containers
+import datautils
+import fileops
 import ini
 
 # Find images
@@ -30,7 +34,7 @@ def FindImages(
 
     # Get search url
     search_url = "https://www.googleapis.com/customsearch/v1"
-    search_url += "?q=%s" % system.EncodeUrlString(search_name)
+    search_url += "?q=%s" % strings.encode_url_string(search_name)
     search_url += "&searchType=image"
     if config.ImageFileType.is_member(image_type):
         search_url += "&fileType=%s" % image_type.lower()
@@ -53,7 +57,7 @@ def FindImages(
     search_results = []
     if "items" in image_json:
         image_json_items = image_json["items"]
-        if system.IsIterableContainer(image_json_items):
+        if datautils.is_iterable_container(image_json_items):
             for image_json_item in image_json_items:
 
                 # Get item info
@@ -64,11 +68,11 @@ def FindImages(
                 item_height = int(image_json_item["image"]["height"])
 
                 # Ignore dissimilar images
-                if not system.AreStringsHighlySimilar(search_name, item_title):
+                if not strings.are_strings_highly_similar(search_name, item_title):
                     continue
 
                 # Ignore images that do not match requested dimensions
-                if system.IsIterableNonString(image_dimensions) and len(image_dimensions) == 2:
+                if datautils.is_iterable_non_string(image_dimensions) and len(image_dimensions) == 2:
                     requested_width, requested_height = map(int, image_dimensions)
                     if item_width != requested_width or item_height != requested_height:
                         continue
@@ -80,7 +84,7 @@ def FindImages(
                 search_result.set_mime(item_mime)
                 search_result.set_width(item_width)
                 search_result.set_height(item_height)
-                search_result.set_relevance(system.GetStringSimilarityRatio(search_name, item_title))
+                search_result.set_relevance(strings.get_string_similarity_ratio(search_name, item_title))
                 search_results.append(search_result)
 
     # Return search results
@@ -142,7 +146,7 @@ def FindVideos(
             line_url = line_json["url"] if "url" in line_json else ""
 
             # Ignore dissimilar videos
-            if not system.AreStringsModeratelySimilar(search_name, line_title):
+            if not strings.are_strings_moderately_similar(search_name, line_title):
                 continue
 
             # Add search result
@@ -203,16 +207,16 @@ def DownloadVideo(
         download_cmd += ["--progress"]
     if pretend_run:
         download_cmd += ["--simulate"]
-    if system.IsPathValid(output_dir):
+    if paths.is_path_valid(output_dir):
         download_cmd += ["-P", output_dir]
-    if system.IsPathValid(output_file):
+    if paths.is_path_valid(output_file):
         download_cmd += ["-o", output_file]
     else:
         download_cmd += ["-o", "%(upload_date)s - %(title).200s.%(ext)s"]
-    if system.IsPathValid(download_archive):
+    if paths.is_path_valid(download_archive):
         download_cmd += ["--download-archive", download_archive]
     if isinstance(cookie_source, str) and len(cookie_source) > 0:
-        if system.DoesPathExist(cookie_source):
+        if paths.does_path_exist(cookie_source):
             download_cmd += ["--cookies", cookie_source]
         else:
             download_cmd += ["--cookies-from-browser", cookie_source]
@@ -236,8 +240,8 @@ def DownloadVideo(
     # Check what was downloaded
     download_success = True
     new_files_count = 0
-    if system.IsPathDirectory(output_dir):
-        downloaded_files = system.GetDirectoryContents(output_dir)
+    if paths.is_path_directory(output_dir):
+        downloaded_files = paths.get_directory_contents(output_dir)
         media_files = [f for f in downloaded_files if f.endswith(('.mp3', '.mp4'))]
         new_files_count = len(media_files)
         logger.log_info(f"Found {new_files_count} new media files after download")
@@ -270,15 +274,15 @@ def DownloadVideo(
 
         # Get sanitize dir
         sanitize_dir = None
-        if system.IsPathFile(output_file):
-            sanitize_dir = system.GetFilenameDirectory(output_file)
-        elif system.IsPathDirectory(output_dir):
+        if paths.is_path_file(output_file):
+            sanitize_dir = paths.get_filename_directory(output_file)
+        elif paths.is_path_directory(output_dir):
             sanitize_dir = output_dir
 
         # Sanitize files in dir
         if sanitize_dir:
             logger.log_info(f"Sanitizing filenames in directory: {sanitize_dir}")
-            success = system.SanitizeFilenames(
+            success = fileops.sanitize_filenames(
                 path = sanitize_dir,
                 extension = ".mp3" if audio_only else ".mp4",
                 verbose = verbose,

@@ -6,6 +6,7 @@ import sys
 import system
 import toolbase
 import ini
+import paths
 
 # Config files
 config_files = {}
@@ -29,6 +30,6 @@ class SteamCMD(toolbase.ToolBase):
 
             # SteamCMD
             "SteamCMD": {
-                "program": system.JoinPaths(steamcmd_install_dir, steamcmd_exe)
+                "program": paths.join_paths(steamcmd_install_dir, steamcmd_exe)
             }
         }

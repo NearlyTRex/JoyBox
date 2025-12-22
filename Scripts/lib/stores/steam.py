@@ -7,16 +7,21 @@ import config
 import command
 import archive
 import programs
+import serialization
 import system
 import logger
 import environment
+import fileops
 import network
+import paths
 import ini
 import image
 import jsondata
 import containers
+import datautils
 import webpage
 import storebase
+import strings
 import metadataentry
 import manifest
 import modules
@@ -57,11 +62,11 @@ def GetSteamTrailer(
 
 # Get steam prefix dir
 def GetSteamPrefixDir(install_dir, appid):
-    return system.JoinPaths(install_dir, "steamapps", "compatdata", appid, "pfx")
+    return paths.join_paths(install_dir, "steamapps", "compatdata", appid, "pfx")
 
 # Get steam manifest file
 def GetSteamManifestFile(install_dir, appid):
-    return system.JoinPaths(install_dir, "steamapps", f"appmanifest_{appid}.acf")
+    return paths.join_paths(install_dir, "steamapps", f"appmanifest_{appid}.acf")
 
 # Find steam appid matches
 def FindSteamAppIDMatches(
@@ -71,7 +76,7 @@ def FindSteamAppIDMatches(
     exit_on_failure = False):
 
     # Load appid list
-    appid_list = system.ReadCsvFile(
+    appid_list = serialization.read_csv_file(
         src = programs.GetToolPathConfigValue("SteamAppIDList", "csv"),
         headers = [config.search_result_key_id, config.search_result_key_title],
         verbose = verbose,
@@ -82,8 +87,8 @@ def FindSteamAppIDMatches(
     search_results = []
     for entry in appid_list:
         search_result = containers.AssetSearchResult(entry)
-        if system.AreStringsHighlySimilar(search_name, search_result.get_title()):
-            search_result.set_relevance(system.GetStringSimilarityRatio(search_name, search_result.get_title()))
+        if strings.are_strings_highly_similar(search_name, search_result.get_title()):
+            search_result.set_relevance(strings.get_string_similarity_ratio(search_name, search_result.get_title()))
             search_results.append(search_result)
     return search_results
 
@@ -170,9 +175,9 @@ def FindSteamGridDBCovers(
 
     # Build search results
     search_results = []
-    for game_entry in sgdb.search_game(system.EncodeUrlString(search_name, use_plus = True)):
+    for game_entry in sgdb.search_game(strings.encode_url_string(search_name, use_plus = True)):
         search_grids = sgdb.get_grids_by_gameid(game_ids=[game_entry.id])
-        if system.IsIterableContainer(search_grids):
+        if datautils.is_iterable_container(search_grids):
             for search_grid in search_grids:
 
                 # Get grid info
@@ -184,17 +189,17 @@ def FindSteamGridDBCovers(
                 grid_height = int(search_grid.height)
 
                 # Ignore dissimilar images
-                if not system.AreStringsHighlySimilar(search_name, grid_name):
+                if not strings.are_strings_highly_similar(search_name, grid_name):
                     continue
 
                 # Ignore images that do not match requested dimensions
-                if system.IsIterableNonString(image_dimensions) and len(image_dimensions) == 2:
+                if datautils.is_iterable_non_string(image_dimensions) and len(image_dimensions) == 2:
                     requested_width, requested_height = map(int, image_dimensions)
                     if grid_width != requested_width or grid_height != requested_height:
                         continue
 
                 # Ignore images that do not match requested types
-                if system.IsIterableNonString(image_types) and len(image_types) > 0:
+                if datautils.is_iterable_non_string(image_types) and len(image_types) > 0:
                     found_type = image.GetImageFormat(grid_url)
                     if found_type and found_type not in image_types:
                         continue
@@ -208,7 +213,7 @@ def FindSteamGridDBCovers(
                 search_result.set_url(grid_url)
                 search_result.set_width(grid_width)
                 search_result.set_height(grid_height)
-                search_result.set_relevance(system.GetStringSimilarityRatio(search_name, grid_name))
+                search_result.set_relevance(strings.get_string_similarity_ratio(search_name, grid_name))
                 search_results.append(search_result)
 
     # Return search results
@@ -245,7 +250,7 @@ class Steam(storebase.StoreBase):
 
         # Get install dir
         self.install_dir = ini.GetIniPathValue("UserData.Steam", "steam_install_dir")
-        if not system.IsPathValid(self.install_dir):
+        if not paths.is_path_valid(self.install_dir):
             raise RuntimeError("Ini file does not have a valid install dir")
 
     ############################################################
@@ -431,12 +436,12 @@ class Steam(storebase.StoreBase):
 
         # Get cache file path
         cache_dir = environment.GetCacheRootDir()
-        cache_file_purchases = system.JoinPaths(cache_dir, "steam_purchases_cache.json")
+        cache_file_purchases = paths.join_paths(cache_dir, "steam_purchases_cache.json")
 
         # Check if cache exists and is recent (less than 24 hours old)
         use_cache = False
-        if system.DoesPathExist(cache_file_purchases):
-            cache_age_hours = system.GetFileAgeInHours(cache_file_purchases)
+        if paths.does_path_exist(cache_file_purchases):
+            cache_age_hours = paths.get_file_age_in_hours(cache_file_purchases)
             if cache_age_hours < 24:
                 use_cache = True
                 if verbose:
@@ -444,7 +449,7 @@ class Steam(storebase.StoreBase):
 
         # Load from cache if available
         if use_cache:
-            cached_data = system.ReadJsonFile(
+            cached_data = serialization.read_json_file(
                 src = cache_file_purchases,
                 verbose = verbose,
                 pretend_run = pretend_run,
@@ -492,7 +497,7 @@ class Steam(storebase.StoreBase):
             line_title = str(entry.get("name", ""))
             line_keys = []
             line_paths = [
-                system.JoinPaths(config.token_store_install_dir, "userdata", config.token_store_user_id, line_appid)
+                paths.join_paths(config.token_store_install_dir, "userdata", config.token_store_user_id, line_appid)
             ]
 
             # Create purchase
@@ -518,8 +523,8 @@ class Steam(storebase.StoreBase):
             })
 
         # Save to cache
-        system.MakeDirectory(cache_dir, verbose = verbose, pretend_run = pretend_run)
-        success = system.WriteJsonFile(
+        fileops.make_directory(cache_dir, verbose = verbose, pretend_run = pretend_run)
+        success = serialization.write_json_file(
             src = cache_file_purchases,
             json_data = purchases_data,
             verbose = verbose,
@@ -557,7 +562,7 @@ class Steam(storebase.StoreBase):
         if manifest_entry:
             base_path = None
             if json_data.has_key(config.json_key_store_installdir):
-                base_path = system.JoinPaths(
+                base_path = paths.join_paths(
                     config.token_store_install_dir,
                     "steamapps",
                     "common",
@@ -654,7 +659,7 @@ class Steam(storebase.StoreBase):
         else:
             json_data.set_value(config.json_key_store_branchid, "public")
         json_data.set_value(config.json_key_store_paths, [
-            system.JoinPaths(config.token_store_install_dir, "userdata", config.token_store_user_id, identifier)
+            paths.join_paths(config.token_store_install_dir, "userdata", config.token_store_user_id, identifier)
         ])
         if identifier in steam_json:
             appdata = steam_json.get(identifier, {})
@@ -785,9 +790,9 @@ class Steam(storebase.StoreBase):
                 raw_game_description = webpage.GetElementChildrenText(element_game_description)
                 if raw_game_description:
                     description_text = raw_game_description
-                    description_text = system.TrimSubstringFromStart(description_text, "About This Game")
-                    description_text = system.TrimSubstringFromStart(description_text, "About This Software")
-                    description_text = system.TrimSubstringFromStart(description_text, "About This Demo")
+                    description_text = strings.trim_substring_from_start(description_text, "About This Game")
+                    description_text = strings.trim_substring_from_start(description_text, "About This Software")
+                    description_text = strings.trim_substring_from_start(description_text, "About This Demo")
                     metadata_entry.set_description(description_text)
 
             # Look for game details
@@ -805,29 +810,29 @@ class Steam(storebase.StoreBase):
                     for game_detail_line in raw_game_details.split("\n"):
 
                         # Release
-                        if system.DoesStringStartWithSubstring(game_detail_line, "Release Date:"):
-                            release_text = system.TrimSubstringFromStart(game_detail_line, "Release Date:").strip()
-                            release_text = system.ConvertDateString(release_text, "%b %d, %Y", "%Y-%m-%d")
+                        if strings.does_string_start_with_substring(game_detail_line, "Release Date:"):
+                            release_text = strings.trim_substring_from_start(game_detail_line, "Release Date:").strip()
+                            release_text = strings.convert_date_string(release_text, "%b %d, %Y", "%Y-%m-%d")
                             metadata_entry.set_release(release_text)
 
                         # Developer
-                        elif system.DoesStringStartWithSubstring(game_detail_line, "Developer:"):
-                            developer_text = system.TrimSubstringFromStart(game_detail_line, "Developer:").strip()
+                        elif strings.does_string_start_with_substring(game_detail_line, "Developer:"):
+                            developer_text = strings.trim_substring_from_start(game_detail_line, "Developer:").strip()
                             metadata_entry.set_developer(developer_text)
 
                         # Publisher
-                        elif system.DoesStringStartWithSubstring(game_detail_line, "Publisher:"):
-                            publisher_text = system.TrimSubstringFromStart(game_detail_line, "Publisher:").strip()
+                        elif strings.does_string_start_with_substring(game_detail_line, "Publisher:"):
+                            publisher_text = strings.trim_substring_from_start(game_detail_line, "Publisher:").strip()
                             metadata_entry.set_publisher(publisher_text)
 
                         # Genre
-                        elif system.DoesStringStartWithSubstring(game_detail_line, "Genre:"):
-                            genre_text = system.TrimSubstringFromStart(game_detail_line, "Genre:").strip().replace(", ", ";")
+                        elif strings.does_string_start_with_substring(game_detail_line, "Genre:"):
+                            genre_text = strings.trim_substring_from_start(game_detail_line, "Genre:").strip().replace(", ", ";")
                             metadata_entry.set_genre(genre_text)
             return metadata_entry
 
         # Use retry function with cleanup
-        result = system.RetryWithBackoff(
+        result = datautils.retry_with_backoff(
             func = attempt_metadata_fetch,
             cleanup_func = cleanup_driver,
             max_retries = 3,
@@ -895,7 +900,7 @@ class Steam(storebase.StoreBase):
             return False
 
         # Check for manifest
-        return system.IsPathFile(GetSteamManifestFile(self.GetInstallDir(), identifier))
+        return paths.is_path_file(GetSteamManifestFile(self.GetInstallDir(), identifier))
 
     # Install
     def Install(
@@ -1012,7 +1017,7 @@ class Steam(storebase.StoreBase):
             return False
 
         # Create temporary directory
-        tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(verbose = verbose)
+        tmp_dir_success, tmp_dir_result = fileops.create_temporary_directory(verbose = verbose)
         if not tmp_dir_success:
             return False
 
@@ -1062,14 +1067,14 @@ class Steam(storebase.StoreBase):
             return False
 
         # Delete temporary directory
-        system.RemoveDirectory(
+        fileops.remove_directory(
             src = tmp_dir_result,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
         # Check results
-        return system.DoesDirectoryContainFiles(output_dir)
+        return paths.does_directory_contain_files(output_dir)
 
     ############################################################
     # Paths
@@ -1083,8 +1088,8 @@ class Steam(storebase.StoreBase):
         if appid:
             prefix_path = GetSteamPrefixDir(self.GetInstallDir(), appid)
             translation_map[config.token_user_registry_dir].append(prefix_path)
-            translation_map[config.token_user_public_dir].append(system.JoinPaths(prefix_path, "drive_c", "users", "Public"))
-            translation_map[config.token_user_profile_dir].append(system.JoinPaths(prefix_path, "drive_c", "users", "steamuser"))
+            translation_map[config.token_user_public_dir].append(paths.join_paths(prefix_path, "drive_c", "users", "Public"))
+            translation_map[config.token_user_profile_dir].append(paths.join_paths(prefix_path, "drive_c", "users", "steamuser"))
         return translation_map
 
     # Get registered paths

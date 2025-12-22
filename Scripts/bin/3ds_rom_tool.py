@@ -12,6 +12,8 @@ import nintendo
 import arguments
 import setup
 import logger
+import paths
+import prompts
 
 # Parse arguments
 parser = arguments.ArgumentParser(description = "Nintendo 3DS rom tool.")
@@ -58,20 +60,20 @@ def main():
             "Path: %s" % input_path,
             "Action: %s" % action
         ]
-        if not system.PromptForPreview("3DS ROM tool", details):
+        if not prompts.prompt_for_preview("3DS ROM tool", details):
             logger.log_warning("Operation cancelled by user")
             return
 
     # Find rom files
-    for file in system.BuildFileListByExtensions(input_path, extensions = [".cia", ".3ds"]):
+    for file in paths.build_file_list_by_extensions(input_path, extensions = [".cia", ".3ds"]):
         current_file = file
-        current_file_dir = system.GetFilenameDirectory(current_file)
-        current_file_basename = system.GetFilenameBasename(current_file).replace(".trim", "")
-        current_file_ext = system.GetFilenameExtension(current_file)
-        output_file_cia = system.JoinPaths(current_file_dir, current_file_basename + ".cia")
-        output_file_3ds = system.JoinPaths(current_file_dir, current_file_basename + ".3ds")
-        output_file_trimmed_3ds = system.JoinPaths(current_file_dir, current_file_basename + ".trim.3ds")
-        output_dir = system.JoinPaths(current_file_dir, current_file_basename)
+        current_file_dir = paths.get_filename_directory(current_file)
+        current_file_basename = paths.get_filename_basename(current_file).replace(".trim", "")
+        current_file_ext = paths.get_filename_extension(current_file)
+        output_file_cia = paths.join_paths(current_file_dir, current_file_basename + ".cia")
+        output_file_3ds = paths.join_paths(current_file_dir, current_file_basename + ".3ds")
+        output_file_trimmed_3ds = paths.join_paths(current_file_dir, current_file_basename + ".trim.3ds")
+        output_dir = paths.join_paths(current_file_dir, current_file_basename)
 
         # Convert CIA to 3DS(CCI)
         if args.cia_to_cci and current_file.endswith(".cia"):

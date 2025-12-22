@@ -4,6 +4,7 @@ import sys
 
 # Local imports
 import config
+import fileops
 import command
 import programs
 import system
@@ -64,7 +65,7 @@ def CreateDiscCHD(
 
     # Clean up
     if delete_original:
-        system.RemoveFile(
+        fileops.remove_file(
             src = source_iso,
             verbose = verbose,
             pretend_run = pretend_run,
@@ -117,7 +118,7 @@ def ExtractDiscCHD(
 
     # Clean up
     if delete_original:
-        system.RemoveFile(
+        fileops.remove_file(
             src = chd_file,
             verbose = verbose,
             pretend_run = pretend_run,
@@ -136,7 +137,7 @@ def ArchiveDiscCHD(
     exit_on_failure = False):
 
     # Create temporary directory
-    tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(
+    tmp_dir_success, tmp_dir_result = fileops.create_temporary_directory(
         verbose = verbose,
         pretend_run = pretend_run)
     if not tmp_dir_success:
@@ -164,11 +165,11 @@ def ArchiveDiscCHD(
 
     # Clean up
     if delete_original:
-        system.RemoveFile(
+        fileops.remove_file(
             src = chd_file,
             verbose = verbose,
             pretend_run = pretend_run)
-    system.RemoveDirectory(
+    fileops.remove_directory(
         src = tmp_dir_result,
         verbose = verbose,
         pretend_run = pretend_run,

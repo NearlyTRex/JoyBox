@@ -12,6 +12,8 @@ import playstation
 import arguments
 import setup
 import logger
+import paths
+import prompts
 
 # Parse arguments
 parser = arguments.ArgumentParser(description = "Sony PlayStation Network rom tool.")
@@ -38,32 +40,32 @@ def main():
             "Path: %s" % input_path,
             "Action: Rename PSN files"
         ]
-        if not system.PromptForPreview("PSN ROM tool", details):
+        if not prompts.prompt_for_preview("PSN ROM tool", details):
             logger.log_warning("Operation cancelled by user")
             return
 
     # Rename psn files
     if args.rename:
-        for rap_file in system.BuildFileListByExtensions(input_path, extensions = [".rap"]):
+        for rap_file in paths.build_file_list_by_extensions(input_path, extensions = [".rap"]):
             playstation.RenamePSNRapFile(
                 rap_file = rap_file,
                 verbose = args.verbose,
                 pretend_run = args.pretend_run,
                 exit_on_failure = args.exit_on_failure)
-        for pkg_file in system.BuildFileListByExtensions(input_path, extensions = [".pkg"]):
+        for pkg_file in paths.build_file_list_by_extensions(input_path, extensions = [".pkg"]):
             playstation.RenamePSNPackageFile(
                 pkg_file = pkg_file,
                 verbose = args.verbose,
                 pretend_run = args.pretend_run,
                 exit_on_failure = args.exit_on_failure)
-        for bin_file in system.BuildFileListByExtensions(input_path, extensions = [".bin"]):
+        for bin_file in paths.build_file_list_by_extensions(input_path, extensions = [".bin"]):
             if bin_file.endswith(".work.bin"):
                 playstation.RenamePSNWorkBinFile(
                     workbin_file = bin_file,
                     verbose = args.verbose,
                     pretend_run = args.pretend_run,
                     exit_on_failure = args.exit_on_failure)
-        for rif_file in system.BuildFileListByExtensions(input_path, extensions = [".rif"]):
+        for rif_file in paths.build_file_list_by_extensions(input_path, extensions = [".rif"]):
             if rif_file.endswith(".fake.rif"):
                 playstation.RenamePSNFakeRifFile(
                     fakerif_file = rif_file,

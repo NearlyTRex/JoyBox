@@ -6,8 +6,10 @@ import sys
 # Local imports
 import config
 import environment
+import fileops
 import system
 import logger
+import paths
 import release
 import programs
 import hashing
@@ -149,8 +151,8 @@ class RPCS3(emulatorbase.EmulatorBase):
 
         # Create config files
         for config_filename, config_contents in config_files.items():
-            success = system.TouchFile(
-                src = system.JoinPaths(environment.GetEmulatorsRootDir(), config_filename),
+            success = fileops.touch_file(
+                src = paths.join_paths(environment.GetEmulatorsRootDir(), config_filename),
                 contents = config_contents.strip(),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
@@ -162,7 +164,7 @@ class RPCS3(emulatorbase.EmulatorBase):
         # Verify system files
         for filename, expected_md5 in system_files.items():
             actual_md5 = hashing.CalculateFileMD5(
-                src = system.JoinPaths(environment.GetLockerGamingEmulatorSetupDir("RPCS3"), filename),
+                src = paths.join_paths(environment.GetLockerGamingEmulatorSetupDir("RPCS3"), filename),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
@@ -174,10 +176,10 @@ class RPCS3(emulatorbase.EmulatorBase):
         # Extract system files
         for platform in ["windows", "linux"]:
             for obj in ["dev_flash"]:
-                if os.path.exists(system.JoinPaths(environment.GetLockerGamingEmulatorSetupDir("RPCS3"), obj + config.ArchiveFileType.ZIP.cval())):
+                if os.path.exists(paths.join_paths(environment.GetLockerGamingEmulatorSetupDir("RPCS3"), obj + config.ArchiveFileType.ZIP.cval())):
                     success = archive.ExtractArchive(
-                        archive_file = system.JoinPaths(environment.GetLockerGamingEmulatorSetupDir("RPCS3"), obj + config.ArchiveFileType.ZIP.cval()),
-                        extract_dir = system.JoinPaths(programs.GetEmulatorPathConfigValue("RPCS3", "setup_dir", platform), obj),
+                        archive_file = paths.join_paths(environment.GetLockerGamingEmulatorSetupDir("RPCS3"), obj + config.ArchiveFileType.ZIP.cval()),
+                        extract_dir = paths.join_paths(programs.GetEmulatorPathConfigValue("RPCS3", "setup_dir", platform), obj),
                         skip_existing = True,
                         verbose = setup_params.verbose,
                         pretend_run = setup_params.pretend_run,
@@ -205,10 +207,10 @@ class RPCS3(emulatorbase.EmulatorBase):
 
         # Copy exdata files
         if game_platform == config.Platform.SONY_PLAYSTATION_NETWORK_PS3:
-            for exdata_file in system.BuildFileListByExtensions(game_cache_dir, extensions = [".rap", ".edat"]):
-                system.SmartCopy(
+            for exdata_file in paths.build_file_list_by_extensions(game_cache_dir, extensions = [".rap", ".edat"]):
+                fileops.smart_copy(
                     src = exdata_file,
-                    dest = system.JoinPaths(game_save_dir, "exdata"),
+                    dest = paths.join_paths(game_save_dir, "exdata"),
                     verbose = verbose,
                     pretend_run = pretend_run,
                     exit_on_failure = exit_on_failure)

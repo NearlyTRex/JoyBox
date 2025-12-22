@@ -3,9 +3,12 @@ import os, os.path
 import sys
 
 # Local imports
+import fileops
 import ini
 import system
 import logger
+import paths
+import serialization
 
 # Default model
 DEFAULT_MODEL = "claude-sonnet-4-20250514"
@@ -105,14 +108,14 @@ def ProcessFile(
     verbose = False):
 
     # Read file content
-    file_content = system.ReadTextFile(input_file)
+    file_content = serialization.read_text_file(input_file)
     if file_content is None:
         return None
 
     # Get filename components
     filename = os.path.basename(input_file)
-    file_basename = system.GetFilenameBasename(input_file)
-    file_extension = system.GetFilenameExtension(input_file)
+    file_basename = paths.get_filename_basename(input_file)
+    file_extension = paths.get_filename_extension(input_file)
 
     # Substitute variables in prompt
     prompt = prompt_template
@@ -148,23 +151,23 @@ def ProcessFiles(
     pretend_run = False):
 
     # Read prompt template
-    prompt_template = system.ReadTextFile(prompt_file)
+    prompt_template = serialization.read_text_file(prompt_file)
     if prompt_template is None:
         logger.log_error("Failed to read prompt file: %s" % prompt_file)
         return (0, 0, 0)
 
     # Build file list
     if extensions:
-        files_to_process = system.BuildFileListByExtensions(input_path, extensions = extensions)
+        files_to_process = paths.build_file_list_by_extensions(input_path, extensions = extensions)
     else:
-        files_to_process = system.BuildFileList(input_path)
+        files_to_process = paths.build_file_list(input_path)
     if not files_to_process:
         logger.log_warning("No files found to process")
         return (0, 0, 0)
 
     # Create output directory if needed
-    if not system.DoesPathExist(output_path):
-        system.MakeDirectory(
+    if not paths.does_path_exist(output_path):
+        fileops.make_directory(
             src = output_path,
             verbose = verbose,
             pretend_run = pretend_run)
@@ -181,7 +184,7 @@ def ProcessFiles(
         output_dir = os.path.dirname(output_file)
 
         # Skip if exists and skip_existing is set
-        if skip_existing and system.DoesPathExist(output_file):
+        if skip_existing and paths.does_path_exist(output_file):
             if verbose:
                 logger.log_info("Skipping (exists): %s" % rel_path)
             skip_count += 1
@@ -210,13 +213,13 @@ def ProcessFiles(
             continue
 
         # Create output directory if needed
-        if not system.DoesPathExist(output_dir):
-            system.MakeDirectory(
+        if not paths.does_path_exist(output_dir):
+            fileops.make_directory(
                 src = output_dir,
                 verbose = verbose)
 
         # Write output file
-        success = system.WriteTextFile(
+        success = serialization.write_text_file(
             src = output_file,
             contents = result,
             verbose = verbose)

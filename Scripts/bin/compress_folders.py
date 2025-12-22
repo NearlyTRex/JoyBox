@@ -13,6 +13,8 @@ import system
 import arguments
 import setup
 import logger
+import paths
+import prompts
 
 # Parse arguments
 parser = arguments.ArgumentParser(description = "Compress folders.")
@@ -47,20 +49,20 @@ def main():
             "Archive type: %s" % args.archive_type,
             "Delete originals: %s" % args.delete_originals
         ]
-        if not system.PromptForPreview("Compress folders", details):
+        if not prompts.prompt_for_preview("Compress folders", details):
             logger.log_warning("Operation cancelled by user")
             return
 
     # Compress folders
-    for obj in system.GetDirectoryContents(input_path):
-        obj_path = system.JoinPaths(input_path, obj)
-        if not system.IsPathDirectory(obj_path):
+    for obj in paths.get_directory_contents(input_path):
+        obj_path = paths.join_paths(input_path, obj)
+        if not paths.is_path_directory(obj_path):
             continue
 
         # Get output file
         output_basename = obj
         output_ext = args.archive_type.cval()
-        output_file = system.JoinPaths(input_path, output_basename + output_ext)
+        output_file = paths.join_paths(input_path, output_basename + output_ext)
         if os.path.exists(output_file):
             continue
 

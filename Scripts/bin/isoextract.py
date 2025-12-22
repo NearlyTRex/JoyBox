@@ -14,6 +14,7 @@ import arguments
 import archive
 import setup
 import logger
+import paths
 
 # Parse arguments
 parser = arguments.ArgumentParser(description = "Extract data from ISO files.")
@@ -41,16 +42,16 @@ def main():
     input_path = parser.get_input_path()
 
     # Convert disc image files
-    for file in system.BuildFileListByExtensions(input_path, extensions = [".iso"]):
+    for file in paths.build_file_list_by_extensions(input_path, extensions = [".iso"]):
 
         # Get file info
         current_file = file
-        current_dir = system.GetFilenameDirectory(current_file)
-        current_basename = system.GetFilenameBasename(current_file)
+        current_dir = paths.get_filename_directory(current_file)
+        current_basename = paths.get_filename_basename(current_file)
 
         # Check if output dir already exists
-        output_dir = system.JoinPaths(current_dir, current_basename)
-        if system.IsPathDirectory(output_dir):
+        output_dir = paths.join_paths(current_dir, current_basename)
+        if paths.is_path_directory(output_dir):
             continue
 
         # Extract as iso

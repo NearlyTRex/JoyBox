@@ -6,6 +6,7 @@ import sys
 import config
 import system
 import logger
+import paths
 import environment
 import hashing
 import lockerinfo
@@ -23,19 +24,19 @@ def BuildHashFiles(
     exit_on_failure = False):
 
     # Get game root
-    if not system.IsPathDirectory(game_root):
+    if not paths.is_path_directory(game_root):
         game_root = environment.GetLockerGamingFilesDir(
             game_supercategory = game_info.get_supercategory(),
             game_category = game_info.get_category(),
             game_subcategory = game_info.get_subcategory(),
             game_name = game_info.get_name(),
             source_type = source_type)
-    if not system.IsPathDirectory(game_root):
+    if not paths.is_path_directory(game_root):
         return False
 
     # Get hash info
     hash_file = environment.GetGameHashesMetadataFile(game_info.get_supercategory(), game_info.get_category(), game_info.get_subcategory())
-    hash_offset = system.JoinPaths(game_info.get_supercategory(), game_info.get_category(), game_info.get_subcategory())
+    hash_offset = paths.join_paths(game_info.get_supercategory(), game_info.get_category(), game_info.get_subcategory())
 
     # Get locker info
     locker_info = lockerinfo.LockerInfo(locker_type)
@@ -104,7 +105,7 @@ def SortHashFile(
         game_supercategory = game_info.get_supercategory(),
         game_category = game_info.get_category(),
         game_subcategory = game_info.get_subcategory())
-    if not system.IsPathFile(hash_file):
+    if not paths.is_path_file(hash_file):
         return False
 
     # Sort hash file
@@ -131,7 +132,7 @@ def SortAllHashFiles(
                     game_supercategory = game_supercategory,
                     game_category = game_category,
                     game_subcategory = game_subcategory)
-                if not system.IsPathFile(hash_file):
+                if not paths.is_path_file(hash_file):
                     continue
 
                 # Sort hash file

@@ -5,8 +5,10 @@ import sys
 # Local imports
 import config
 import environment
+import fileops
 import system
 import logger
+import paths
 import release
 import programs
 import hashing
@@ -147,8 +149,8 @@ class EKA2L1(emulatorbase.EmulatorBase):
 
         # Create config files
         for config_filename, config_contents in config_files.items():
-            success = system.TouchFile(
-                src = system.JoinPaths(environment.GetEmulatorsRootDir(), config_filename),
+            success = fileops.touch_file(
+                src = paths.join_paths(environment.GetEmulatorsRootDir(), config_filename),
                 contents = config_contents.strip(),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
@@ -160,7 +162,7 @@ class EKA2L1(emulatorbase.EmulatorBase):
         # Verify system files
         for filename, expected_md5 in system_files.items():
             actual_md5 = hashing.CalculateFileMD5(
-                src = system.JoinPaths(environment.GetLockerGamingEmulatorSetupDir("EKA2L1"), filename),
+                src = paths.join_paths(environment.GetLockerGamingEmulatorSetupDir("EKA2L1"), filename),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
@@ -172,10 +174,10 @@ class EKA2L1(emulatorbase.EmulatorBase):
         # Extract system files
         for platform in ["windows", "linux"]:
             for obj in ["data"]:
-                if os.path.exists(system.JoinPaths(environment.GetLockerGamingEmulatorSetupDir("EKA2L1"), obj + config.ArchiveFileType.ZIP.cval())):
+                if os.path.exists(paths.join_paths(environment.GetLockerGamingEmulatorSetupDir("EKA2L1"), obj + config.ArchiveFileType.ZIP.cval())):
                     success = archive.ExtractArchive(
-                        archive_file = system.JoinPaths(environment.GetLockerGamingEmulatorSetupDir("EKA2L1"), obj + config.ArchiveFileType.ZIP.cval()),
-                        extract_dir = system.JoinPaths(programs.GetEmulatorPathConfigValue("EKA2L1", "setup_dir", platform), obj),
+                        archive_file = paths.join_paths(environment.GetLockerGamingEmulatorSetupDir("EKA2L1"), obj + config.ArchiveFileType.ZIP.cval()),
+                        extract_dir = paths.join_paths(programs.GetEmulatorPathConfigValue("EKA2L1", "setup_dir", platform), obj),
                         skip_existing = True,
                         verbose = setup_params.verbose,
                         pretend_run = setup_params.pretend_run,

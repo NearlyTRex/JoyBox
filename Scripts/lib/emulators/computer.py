@@ -7,7 +7,9 @@ import sys
 import config
 import system
 import environment
+import fileops
 import logger
+import paths
 import command
 import programs
 import release
@@ -358,8 +360,8 @@ class Computer(emulatorbase.EmulatorBase):
 
         # Create config files
         for config_filename, config_contents in config_files.items():
-            success = system.TouchFile(
-                src = system.JoinPaths(environment.GetEmulatorsRootDir(), config_filename),
+            success = fileops.touch_file(
+                src = paths.join_paths(environment.GetEmulatorsRootDir(), config_filename),
                 contents = config_contents.strip(),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,

@@ -12,6 +12,8 @@ import system
 import arguments
 import setup
 import logger
+import fileops
+import prompts
 
 # Parse arguments
 parser = arguments.ArgumentParser(description = "Sanitize filenames.")
@@ -34,12 +36,12 @@ def main():
     # Show preview
     if not args.no_preview:
         details = ["Path: %s" % input_path]
-        if not system.PromptForPreview("Sanitize filenames", details):
+        if not prompts.prompt_for_preview("Sanitize filenames", details):
             logger.log_warning("Operation cancelled by user")
             return
 
     # Sanitize filenames
-    system.SanitizeFilenames(
+    fileops.sanitize_filenames(
         path = input_path,
         verbose = args.verbose,
         pretend_run = args.pretend_run,

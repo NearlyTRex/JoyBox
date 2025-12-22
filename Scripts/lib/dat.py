@@ -7,7 +7,9 @@ from xml.dom import minidom
 import config
 import system
 import logger
+import paths
 import environment
+import fileops
 import hashing
 
 # General datfile class
@@ -100,7 +102,7 @@ class Dat:
                             continue
                         game_entry = {}
                         game_entry[config.dat_key_game] = game_tag.attributes["name"].value
-                        game_entry[config.dat_key_file] = system.GetFilenameFile(rom_tag.attributes["name"].value.replace("\\", "/"))
+                        game_entry[config.dat_key_file] = paths.get_filename_file(rom_tag.attributes["name"].value.replace("\\", "/"))
                         game_entry[config.dat_key_size] = rom_tag.attributes["size"].value
                         game_entry[config.dat_key_crc] = rom_tag.attributes["crc"].value
                         game_entry[config.dat_key_md5] = rom_tag.attributes["md5"].value
@@ -114,23 +116,23 @@ class Dat:
 
     # Import clrmamepro dat files
     def import_clrmamepro_dat_files(self, dat_dir, verbose = False, pretend_run = False, exit_on_failure = False):
-        for dat_file in system.BuildFileListByExtensions(dat_dir, extensions = [".dat"]):
+        for dat_file in paths.build_file_list_by_extensions(dat_dir, extensions = [".dat"]):
             self.import_clrmamepro_dat_file(dat_file, verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure)
 
     # Rename files
     def rename_files(self, input_dir, verbose = False, pretend_run = False, exit_on_failure = False):
         if verbose:
             logger.log_info("Renaming files in '%s' according to imported dats ..." % input_dir)
-        for file in system.BuildFileList(input_dir):
+        for file in paths.build_file_list(input_dir):
             if verbose:
                 logger.log_info("Examining '%s'" % file)
-            file_dir = system.GetFilenameDirectory(file)
+            file_dir = paths.get_filename_directory(file)
             file_md5 = hashing.CalculateFileMD5(file, verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure)
             if self.is_md5_present(file_md5):
                 game_entry = self.get_by_md5(file_md5)
-                file_path_new = system.JoinPaths(file_dir, game_entry[config.dat_key_file])
+                file_path_new = paths.join_paths(file_dir, game_entry[config.dat_key_file])
                 if file != file_path_new:
-                    system.MoveFileOrDirectory(
+                    fileops.move_file_or_directory(
                         src = file,
                         dest = file_path_new,
                         verbose = verbose,

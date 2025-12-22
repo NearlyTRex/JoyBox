@@ -15,6 +15,8 @@ import ini
 import arguments
 import setup
 import logger
+import paths
+import prompts
 
 # Parse arguments
 parser = arguments.ArgumentParser(description = "Github tool.")
@@ -93,7 +95,7 @@ def main():
         ]
         if args.action == config.GithubActionType.ARCHIVE:
             details.append("Archive dir: %s" % archive_base_dir)
-        if not system.PromptForPreview("GitHub %s" % args.action, details):
+        if not prompts.prompt_for_preview("GitHub %s" % args.action, details):
             logger.log_warning("Operation cancelled by user")
             return
 
@@ -104,7 +106,7 @@ def main():
                 github_user = github_username,
                 github_repo = github_repository.name,
                 github_token = github_access_token,
-                output_dir = system.JoinPaths(archive_base_dir, github_username, github_repository.name),
+                output_dir = paths.join_paths(archive_base_dir, github_username, github_repository.name),
                 recursive = args.recursive,
                 clean = args.clean,
                 locker_type = args.locker_type,

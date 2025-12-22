@@ -13,6 +13,8 @@ import chd
 import arguments
 import setup
 import logger
+import paths
+import prompts
 
 # Parse arguments
 parser = arguments.ArgumentParser(description = "Convert disc images to CHD files.")
@@ -46,21 +48,21 @@ def main():
             "Disc image types: %s" % [t.cval() for t in args.disc_image_types],
             "Delete originals: %s" % args.delete_originals
         ]
-        if not system.PromptForPreview("Convert to CHD", details):
+        if not prompts.prompt_for_preview("Convert to CHD", details):
             logger.log_warning("Operation cancelled by user")
             return
 
     # Convert disc image files
     disc_image_extensions = [disc_image_type.cval() for disc_image_type in args.disc_image_types]
-    for file in system.BuildFileListByExtensions(input_path, extensions = disc_image_extensions):
+    for file in paths.build_file_list_by_extensions(input_path, extensions = disc_image_extensions):
 
         # Get file info
         current_file = file
-        current_dir = system.GetFilenameDirectory(current_file)
-        current_basename = system.GetFilenameBasename(current_file)
+        current_dir = paths.get_filename_directory(current_file)
+        current_basename = paths.get_filename_basename(current_file)
 
         # Check if output already exists
-        output_chd = system.JoinPaths(current_dir, current_basename + config.DiscImageFileType.CHD.cval())
+        output_chd = paths.join_paths(current_dir, current_basename + config.DiscImageFileType.CHD.cval())
         if os.path.exists(output_chd):
             continue
 

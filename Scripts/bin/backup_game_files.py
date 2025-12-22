@@ -15,6 +15,7 @@ import gameinfo
 import arguments
 import setup
 import logger
+import prompts
 
 # Parse arguments
 parser = arguments.ArgumentParser(description = "Backup game files.")
@@ -67,7 +68,7 @@ def main():
     # Show preview
     if not args.no_preview:
         details = [game_path for _, game_path in games_to_process]
-        if not system.PromptForPreview("Backup game files (download from %s)" % args.locker_type, details):
+        if not prompts.prompt_for_preview("Backup game files (download from %s)" % args.locker_type, details):
             logger.log_warning("Operation cancelled by user")
             return
 

@@ -12,6 +12,8 @@ import arguments
 import setup
 import claude
 import logger
+import paths
+import prompts
 
 # Parse arguments
 parser = arguments.ArgumentParser(description = "Process files with Claude AI.")
@@ -55,7 +57,7 @@ def main():
     prompt_file = args.prompt_file
     if not prompt_file:
         logger.log_error("Prompt file is required (-f/--prompt_file)", quit_program = True)
-    if not system.DoesPathExist(prompt_file):
+    if not paths.does_path_exist(prompt_file):
         logger.log_error("Prompt file not found: %s" % prompt_file, quit_program = True)
 
     # Check API key is configured
@@ -71,9 +73,9 @@ def main():
     # Show preview
     if not args.no_preview:
         if extensions:
-            file_count = len(system.BuildFileListByExtensions(input_path, extensions = extensions))
+            file_count = len(paths.build_file_listByExtensions(input_path, extensions = extensions))
         else:
-            file_count = len(system.BuildFileList(input_path))
+            file_count = len(paths.build_file_list(input_path))
         details = [
             "Input: %s" % input_path,
             "Output: %s" % output_path,
@@ -83,7 +85,7 @@ def main():
         ]
         if extensions:
             details.append("Extensions: %s" % ", ".join(extensions))
-        if not system.PromptForPreview("Process files with Claude", details):
+        if not prompts.prompt_for_preview("Process files with Claude", details):
             logger.log_warning("Operation cancelled by user")
             return
 

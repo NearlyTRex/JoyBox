@@ -12,6 +12,8 @@ import archive
 import arguments
 import setup
 import logger
+import paths
+import prompts
 
 # Parse arguments
 parser = arguments.ArgumentParser(description = "Rezip files deterministically.")
@@ -34,16 +36,16 @@ def main():
     # Show preview
     if not args.no_preview:
         details = ["Path: %s" % input_path]
-        if not system.PromptForPreview("Rezip files deterministically", details):
+        if not prompts.prompt_for_preview("Rezip files deterministically", details):
             logger.log_warning("Operation cancelled by user")
             return
 
     # Rezip zip files
-    for file in system.BuildFileListByExtensions(input_path, extensions = [".zip"]):
+    for file in paths.build_file_list_by_extensions(input_path, extensions = [".zip"]):
         current_file = file
-        current_file_dir = system.GetFilenameDirectory(current_file)
-        current_file_basename = system.GetFilenameBasename(current_file)
-        current_file_extract_dir = system.JoinPaths(current_file_dir, current_file_basename + "_extracted")
+        current_file_dir = paths.get_filename_directory(current_file)
+        current_file_basename = paths.get_filename_basename(current_file)
+        current_file_extract_dir = paths.join_paths(current_file_dir, current_file_basename + "_extracted")
 
         # Unzip file
         logger.log_info("Unzipping file %s ..." % current_file)

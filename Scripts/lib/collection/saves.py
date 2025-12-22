@@ -6,7 +6,9 @@ import sys
 import config
 import system
 import logger
+import paths
 import environment
+import fileops
 import archive
 import locker
 import gameinfo
@@ -18,13 +20,13 @@ import hashing
 
 # Check if save dir is packable
 def IsSaveDirPackable(input_save_dir, output_save_dir):
-    return system.DoesDirectoryContainFiles(input_save_dir)
+    return paths.does_directory_contain_files(input_save_dir)
 
 # Check if save dir is unpackable
 def IsSaveDirUnpackable(input_save_dir, output_save_dir):
-    if not system.IsPathDirectory(input_save_dir) or system.IsDirectoryEmpty(input_save_dir):
+    if not paths.is_path_directory(input_save_dir) or paths.is_directory_empty(input_save_dir):
         return False
-    if system.IsPathDirectory(output_save_dir) or not system.IsDirectoryEmpty(output_save_dir):
+    if paths.is_path_directory(output_save_dir) or not paths.is_directory_empty(output_save_dir):
         return False
     return True
 
@@ -64,22 +66,22 @@ def PackSave(
     logger.log_info(f"Packing save for {game_info.get_name()}")
 
     # Make output save dir
-    system.MakeDirectory(
+    fileops.make_directory(
         src = output_save_dir,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
     # Create temporary directory
-    tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(
+    tmp_dir_success, tmp_dir_result = fileops.create_temporary_directory(
         verbose = verbose,
         pretend_run = pretend_run)
     if not tmp_dir_success:
         return False
 
     # Get save archive info
-    tmp_save_archive_file = system.JoinPaths(tmp_dir_result, game_info.get_name() + config.ArchiveFileType.ZIP.cval())
-    out_save_archive_file = system.JoinPaths(output_save_dir, game_info.get_name() + "_" + str(environment.GetCurrentTimestamp()) + config.ArchiveFileType.ZIP.cval())
+    tmp_save_archive_file = paths.join_paths(tmp_dir_result, game_info.get_name() + config.ArchiveFileType.ZIP.cval())
+    out_save_archive_file = paths.join_paths(output_save_dir, game_info.get_name() + "_" + str(environment.GetCurrentTimestamp()) + config.ArchiveFileType.ZIP.cval())
 
     # Get excludes
     input_excludes = []
@@ -125,7 +127,7 @@ def PackSave(
         exit_on_failure = exit_on_failure)
     if len(found_files) > 0:
         logger.log_info("Save is already packed, skipping")
-        system.RemoveDirectory(
+        fileops.remove_directory(
             src = tmp_dir_result,
             verbose = verbose,
             pretend_run = pretend_run,
@@ -153,7 +155,7 @@ def PackSave(
         return False
 
     # Delete temporary directory
-    system.RemoveDirectory(
+    fileops.remove_directory(
         src = tmp_dir_result,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -163,7 +165,7 @@ def PackSave(
     logger.log_info("Save packed successfully")
 
     # Check result
-    return system.DoesPathExist(out_save_archive_file)
+    return paths.does_path_exist(out_save_archive_file)
 
 # Pack all saves
 def PackAllSaves(
@@ -221,17 +223,17 @@ def UnpackSave(
     logger.log_info(f"Unpacking save for {game_info.get_name()}")
 
     # Make output save dir
-    system.MakeDirectory(
+    fileops.make_directory(
         src = output_save_dir,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
-    if not system.IsDirectoryEmpty(output_save_dir):
+    if not paths.is_directory_empty(output_save_dir):
         logger.log_info("Save already unpacked, skipping")
         return True
 
     # Get latest save archive
-    archived_save_files = system.BuildFileList(input_save_dir)
+    archived_save_files = paths.build_file_list(input_save_dir)
     latest_save_archive = archived_save_files[-1] if archived_save_files else None
     if not latest_save_archive:
         if verbose:
@@ -259,7 +261,7 @@ def UnpackSave(
     logger.log_info("Save unpacked successfully")
 
     # Check result
-    return not system.IsDirectoryEmpty(output_save_dir)
+    return not paths.is_directory_empty(output_save_dir)
 
 # Unpack all saves
 def UnpackAllSaves(
@@ -338,7 +340,7 @@ def ImportStoreGameSavePaths(
     save_paths = game_info.get_store_paths()
 
     # Read save files and add paths
-    for archive_file in system.BuildFileList(game_info.get_save_dir()):
+    for archive_file in paths.build_file_list(game_info.get_save_dir()):
         archive_paths = archive.ListArchive(
             archive_file = archive_file,
             verbose = verbose,
@@ -354,7 +356,7 @@ def ImportStoreGameSavePaths(
 
     # Update current paths
     save_paths = list(set(save_paths))
-    save_paths = system.PruneChildPaths(save_paths)
+    save_paths = paths.prune_child_paths(save_paths)
     game_info.set_store_paths(save_paths)
 
     # Write back changes
@@ -380,7 +382,7 @@ def ExportStoreGameSave(
     exit_on_failure = False):
 
     # Create temporary directory
-    tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(verbose = verbose)
+    tmp_dir_success, tmp_dir_result = fileops.create_temporary_directory(verbose = verbose)
     if not tmp_dir_success:
         return False
 
@@ -398,10 +400,10 @@ def ExportStoreGameSave(
         path_relative = store_path_entry.get("relative")
         if verbose:
             logger.log_info(f"Checking path: {path_full}")
-        if system.DoesDirectoryContainFiles(path_full):
-            success = system.SmartCopy(
+        if paths.does_directory_contain_files(path_full):
+            success = fileops.smart_copy(
                 src = path_full,
-                dest = system.JoinPaths(tmp_dir_result, path_relative),
+                dest = paths.join_paths(tmp_dir_result, path_relative),
                 show_progress = True,
                 skip_existing = True,
                 ignore_symlinks = True,
@@ -411,7 +413,7 @@ def ExportStoreGameSave(
             if success:
                 at_least_one_copy = True
     if not at_least_one_copy:
-        system.RemoveDirectory(
+        fileops.remove_directory(
             src = tmp_dir_result,
             verbose = verbose,
             pretend_run = pretend_run,
@@ -429,7 +431,7 @@ def ExportStoreGameSave(
         return False
 
     # Delete temporary directory
-    system.RemoveDirectory(
+    fileops.remove_directory(
         src = tmp_dir_result,
         verbose = verbose,
         pretend_run = pretend_run,

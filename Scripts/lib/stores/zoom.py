@@ -9,6 +9,7 @@ import system
 import ini
 import storebase
 import metadatacollector
+import paths
 
 # Zoom store
 class Zoom(storebase.StoreBase):
@@ -19,7 +20,7 @@ class Zoom(storebase.StoreBase):
 
         # Get install dir
         self.install_dir = ini.GetIniPathValue("UserData.Zoom", "zoom_install_dir")
-        if not system.IsPathValid(self.install_dir):
+        if not paths.is_path_valid(self.install_dir):
             raise RuntimeError("Ini file does not have a valid install dir")
 
     ############################################################

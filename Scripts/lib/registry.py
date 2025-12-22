@@ -5,8 +5,11 @@ import sys
 # Local imports
 import config
 import system
+import validation
 import logger
+import paths
 import environment
+import fileops
 import command
 import programs
 import sandbox
@@ -137,8 +140,8 @@ def ExportRegistryFile(
     exit_on_failure = False):
 
     # Check params
-    system.AssertIsValidPath(registry_file, "registry_file")
-    system.AssertIsNonEmptyString(registry_key, "registry_key")
+    validation.assert_is_valid_path(registry_file, "registry_file")
+    validation.assert_is_non_empty_string(registry_key, "registry_key")
 
     # Get registry command
     registry_cmd = [
@@ -177,7 +180,7 @@ def ImportRegistryFile(
     exit_on_failure = False):
 
     # Check params
-    system.AssertPathExists(registry_file, "registry_file")
+    validation.assert_path_exists(registry_file, "registry_file")
 
     # Get registry command
     registry_cmd = [
@@ -215,17 +218,17 @@ def BackupUserRegistry(
     exit_on_failure = False):
 
     # Check params
-    system.AssertIsValidPath(registry_file, "registry_file")
+    validation.assert_is_valid_path(registry_file, "registry_file")
 
     # Create temporary directory
-    tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(
+    tmp_dir_success, tmp_dir_result = fileops.create_temporary_directory(
         verbose = verbose,
         pretend_run = pretend_run)
     if not tmp_dir_success:
         return False
 
     # Temporary files
-    temp_reg_file = system.JoinPaths(tmp_dir_result, "temp.reg")
+    temp_reg_file = paths.join_paths(tmp_dir_result, "temp.reg")
 
     # Export current user registry
     for base_key in export_keys:

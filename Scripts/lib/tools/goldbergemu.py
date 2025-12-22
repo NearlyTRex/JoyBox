@@ -4,8 +4,10 @@ import sys
 
 # Local imports
 import config
+import fileops
 import system
 import logger
+import paths
 import release
 import programs
 import toolbase
@@ -17,7 +19,7 @@ config_files = {}
 def GetLibs(key):
     lib_files = []
     lib_root = programs.GetLibraryInstallDir("GoldbergEmu", "lib")
-    for potential_file in system.BuildFileList(lib_root):
+    for potential_file in paths.build_file_list(lib_root):
         for lib_file in programs.GetToolConfigValue("GoldbergEmu", key):
             if potential_file.endswith(lib_file):
                 lib_files.append(potential_file)
@@ -33,26 +35,26 @@ def GetLibs64():
 
 # Generate base path
 def GenerateBasePath(prefix_dir):
-    return system.JoinPaths(prefix_dir, "AppData", "Roaming", "Goldberg SteamEmu Saves")
+    return paths.join_paths(prefix_dir, "AppData", "Roaming", "Goldberg SteamEmu Saves")
 
 # Generate username file path
 def GenerateUserNameFile(prefix_dir):
-    return system.JoinPaths(GenerateBasePath(prefix_dir), "settings", "account_name.txt")
+    return paths.join_paths(GenerateBasePath(prefix_dir), "settings", "account_name.txt")
 
 # Generate userid file path
 def GenerateUserIDFile(prefix_dir):
-    return system.JoinPaths(GenerateBasePath(prefix_dir), "settings", "user_steam_id.txt")
+    return paths.join_paths(GenerateBasePath(prefix_dir), "settings", "user_steam_id.txt")
 
 # Convert from native path
 def ConvertFromNativePath(path, user_id):
-    src_path = system.JoinPaths(config.computer_folder_store, config.StoreType.STEAM, "userdata", user_id)
-    dest_path = system.JoinPaths(config.computer_folder_appdata, "Roaming", "Goldberg SteamEmu Saves")
+    src_path = paths.join_paths(config.computer_folder_store, config.StoreType.STEAM, "userdata", user_id)
+    dest_path = paths.join_paths(config.computer_folder_appdata, "Roaming", "Goldberg SteamEmu Saves")
     return path.replace(src_path, dest_path)
 
 # Convert to native path
 def ConvertToNativePath(path, user_id):
-    src_path = system.JoinPaths(config.computer_folder_appdata, "Roaming", "Goldberg SteamEmu Saves")
-    dest_path = system.JoinPaths(config.computer_folder_store, config.StoreType.STEAM, "userdata", user_id)
+    src_path = paths.join_paths(config.computer_folder_appdata, "Roaming", "Goldberg SteamEmu Saves")
+    dest_path = paths.join_paths(config.computer_folder_store, config.StoreType.STEAM, "userdata", user_id)
     return path.replace(src_path, dest_path)
 
 # Setup user files
@@ -65,7 +67,7 @@ def SetupUserFiles(
     exit_on_failure = False):
 
     # Create username file
-    success = system.TouchFile(
+    success = fileops.touch_file(
         src = GenerateUserNameFile(prefix_dir),
         contents = "%s\n" % user_name,
         verbose = verbose,
@@ -75,7 +77,7 @@ def SetupUserFiles(
         return False
 
     # Create userid file
-    success = system.TouchFile(
+    success = fileops.touch_file(
         src = GenerateUserIDFile(prefix_dir),
         contents = "%s\n" % user_id,
         verbose = verbose,
@@ -96,15 +98,15 @@ def ConvertToNativeSave(
     exit_on_failure = False):
 
     # Get relative paths
-    roaming_path = system.JoinPaths(config.SaveType.GENERAL, config.computer_folder_appdata, "Roaming")
-    search_path = system.JoinPaths(config.SaveType.GENERAL, config.computer_folder_appdata, "Roaming", "Goldberg SteamEmu Saves")
-    ignore_path = system.JoinPaths(config.SaveType.GENERAL, config.computer_folder_appdata, "Roaming", "Goldberg SteamEmu Saves", "settings")
-    replace_path = system.JoinPaths(config.SaveType.GENERAL, config.computer_folder_store, config.StoreType.STEAM, "userdata", user_id)
+    roaming_path = paths.join_paths(config.SaveType.GENERAL, config.computer_folder_appdata, "Roaming")
+    search_path = paths.join_paths(config.SaveType.GENERAL, config.computer_folder_appdata, "Roaming", "Goldberg SteamEmu Saves")
+    ignore_path = paths.join_paths(config.SaveType.GENERAL, config.computer_folder_appdata, "Roaming", "Goldberg SteamEmu Saves", "settings")
+    replace_path = paths.join_paths(config.SaveType.GENERAL, config.computer_folder_store, config.StoreType.STEAM, "userdata", user_id)
 
     # Move save files
-    for save_file in system.BuildFileList(save_dir):
+    for save_file in paths.build_file_list(save_dir):
         if search_path in save_file and ignore_path not in save_file:
-            success = system.SmartMove(
+            success = fileops.smart_move(
                 src = save_file,
                 dest = save_file.replace(search_path, replace_path),
                 show_progress = True,
@@ -119,8 +121,8 @@ def ConvertToNativeSave(
                 return False
 
     # Clean search path
-    full_search_path = system.JoinPaths(save_dir, search_path)
-    success = system.RemoveDirectory(
+    full_search_path = paths.join_paths(save_dir, search_path)
+    success = fileops.remove_directory(
         src = full_search_path,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -129,9 +131,9 @@ def ConvertToNativeSave(
         return False
 
     # Clean roaming dir
-    full_roaming_path = system.JoinPaths(save_dir, roaming_path)
-    if not system.DoesDirectoryContainFiles(full_roaming_path):
-        success = system.RemoveDirectory(
+    full_roaming_path = paths.join_paths(save_dir, roaming_path)
+    if not paths.does_directory_contain_files(full_roaming_path):
+        success = fileops.remove_directory(
             src = full_roaming_path,
             verbose = verbose,
             pretend_run = pretend_run,

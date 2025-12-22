@@ -5,17 +5,22 @@ import json
 
 # Local imports
 import config
+import datautils
 import command
 import archive
 import programs
+import serialization
 import system
 import logger
 import environment
+import fileops
 import ini
 import jsondata
 import webpage
 import storebase
+import strings
 import metadataentry
+import paths
 
 # Epic store
 class Epic(storebase.StoreBase):
@@ -31,7 +36,7 @@ class Epic(storebase.StoreBase):
 
         # Get install dir
         self.install_dir = ini.GetIniPathValue("UserData.Epic", "epic_install_dir")
-        if not system.IsPathValid(self.install_dir):
+        if not paths.is_path_valid(self.install_dir):
             raise RuntimeError("Ini file does not have a valid install dir")
 
     ############################################################
@@ -180,7 +185,7 @@ class Epic(storebase.StoreBase):
             return None
 
         # Get search terms
-        search_terms = system.EncodeUrlString(identifier.strip(), use_plus = True)
+        search_terms = strings.encode_url_string(identifier.strip(), use_plus = True)
 
         # Load url
         success = webpage.LoadUrl(web_driver, "https://store.epicgames.com/en-US/browse?sortBy=relevancy&sortDir=DESC&q=" + search_terms)
@@ -216,7 +221,7 @@ class Epic(storebase.StoreBase):
                 # Add comparison score
                 score_entry = {}
                 score_entry["element"] = game_cell
-                score_entry["ratio"] = system.GetStringSimilarityRatio(identifier, game_cell_text)
+                score_entry["ratio"] = strings.get_string_similarity_ratio(identifier, game_cell_text)
                 scores_list.append(score_entry)
 
         # Get the best url match
@@ -255,12 +260,12 @@ class Epic(storebase.StoreBase):
 
         # Get cache file path
         cache_dir = environment.GetCacheRootDir()
-        cache_file_purchases = system.JoinPaths(cache_dir, "epic_purchases_cache.json")
+        cache_file_purchases = paths.join_paths(cache_dir, "epic_purchases_cache.json")
 
         # Check if cache exists and is recent (less than 24 hours old)
         use_cache = False
-        if system.DoesPathExist(cache_file_purchases):
-            cache_age_hours = system.GetFileAgeInHours(cache_file_purchases)
+        if paths.does_path_exist(cache_file_purchases):
+            cache_age_hours = paths.get_file_age_in_hours(cache_file_purchases)
             if cache_age_hours < 24:
                 use_cache = True
                 if verbose:
@@ -268,7 +273,7 @@ class Epic(storebase.StoreBase):
 
         # Load from cache if available
         if use_cache:
-            cached_data = system.ReadJsonFile(
+            cached_data = serialization.read_json_file(
                 src = cache_file_purchases,
                 verbose = verbose,
                 pretend_run = pretend_run,
@@ -358,8 +363,8 @@ class Epic(storebase.StoreBase):
             })
 
         # Save to cache
-        system.MakeDirectory(cache_dir, verbose = verbose, pretend_run = pretend_run)
-        success = system.WriteJsonFile(
+        fileops.make_directory(cache_dir, verbose = verbose, pretend_run = pretend_run)
+        success = serialization.write_json_file(
             src = cache_file_purchases,
             json_data = purchases_data,
             verbose = verbose,
@@ -441,7 +446,7 @@ class Epic(storebase.StoreBase):
         if cloud_save_folder:
             base_path = None
             if json_data.has_key(config.json_key_store_installdir):
-                base_path = system.JoinPaths(
+                base_path = paths.join_paths(
                     config.token_game_install_dir,
                     json_data.get_value(config.json_key_store_installdir)
                 )
@@ -560,24 +565,24 @@ class Epic(storebase.StoreBase):
                     if element_detail_text:
 
                         # Developer
-                        if system.DoesStringStartWithSubstring(element_detail_text, "Developer"):
-                            developer_text = system.TrimSubstringFromStart(element_detail_text, "Developer").strip()
+                        if strings.does_string_start_with_substring(element_detail_text, "Developer"):
+                            developer_text = strings.trim_substring_from_start(element_detail_text, "Developer").strip()
                             metadata_entry.set_developer(developer_text)
 
                         # Publisher
-                        elif system.DoesStringStartWithSubstring(element_detail_text, "Publisher"):
-                            published_text = system.TrimSubstringFromStart(element_detail_text, "Publisher").strip()
+                        elif strings.does_string_start_with_substring(element_detail_text, "Publisher"):
+                            published_text = strings.trim_substring_from_start(element_detail_text, "Publisher").strip()
                             metadata_entry.set_publisher(published_text)
 
                         # Release
-                        elif system.DoesStringStartWithSubstring(element_detail_text, "Release Date"):
-                            release_text = system.TrimSubstringFromStart(element_detail_text, "Release Date").strip()
-                            release_text = system.ConvertDateString(release_text, "%m/%d/%y", "%Y-%m-%d")
+                        elif strings.does_string_start_with_substring(element_detail_text, "Release Date"):
+                            release_text = strings.trim_substring_from_start(element_detail_text, "Release Date").strip()
+                            release_text = strings.convert_date_string(release_text, "%m/%d/%y", "%Y-%m-%d")
                             metadata_entry.set_release(release_text)
             return metadata_entry
 
         # Use retry function with cleanup
-        result = system.RetryWithBackoff(
+        result = datautils.retry_with_backoff(
             func = attempt_metadata_fetch,
             cleanup_func = cleanup_driver,
             max_retries = 3,

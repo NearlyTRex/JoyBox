@@ -6,6 +6,7 @@ import sys
 import config
 import system
 import environment
+import fileops
 import gameinfo
 import stores
 from .purchase import DownloadGameStorePurchase
@@ -63,7 +64,7 @@ def BackupStoreGameFiles(
         return True
 
     # Create temporary directory
-    tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(verbose = verbose)
+    tmp_dir_success, tmp_dir_result = fileops.create_temporary_directory(verbose = verbose)
     if not tmp_dir_success:
         return False
 
@@ -89,7 +90,7 @@ def BackupStoreGameFiles(
         return False
 
     # Delete temporary directory
-    system.RemoveDirectory(
+    fileops.remove_directory(
         src = tmp_dir_result,
         verbose = verbose,
         pretend_run = pretend_run,

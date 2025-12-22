@@ -7,9 +7,11 @@ import config
 import system
 import logger
 import network
+import paths
 import release
 import programs
 import environment
+import fileops
 import toolbase
 
 # Config files
@@ -95,7 +97,7 @@ class Pegasus(toolbase.ToolBase):
             success = network.DownloadGithubRepository(
                 github_user = "NearlyTRex",
                 github_repo = "PegasusThemeGrid",
-                output_dir = system.JoinPaths(programs.GetToolPathConfigValue("Pegasus", "themes_dir", "windows"), "PegasusThemeGrid"),
+                output_dir = paths.join_paths(programs.GetToolPathConfigValue("Pegasus", "themes_dir", "windows"), "PegasusThemeGrid"),
                 clean = True,
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
@@ -136,7 +138,7 @@ class Pegasus(toolbase.ToolBase):
             success = network.DownloadGithubRepository(
                 github_user = "NearlyTRex",
                 github_repo = "PegasusThemeGrid",
-                output_dir = system.JoinPaths(programs.GetToolPathConfigValue("Pegasus", "themes_dir", "linux"), "PegasusThemeGrid"),
+                output_dir = paths.join_paths(programs.GetToolPathConfigValue("Pegasus", "themes_dir", "linux"), "PegasusThemeGrid"),
                 clean = True,
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
@@ -186,9 +188,9 @@ class Pegasus(toolbase.ToolBase):
 
         # Generate game dirs
         game_dirs = []
-        for pegasus_file in system.BuildFileListByExtensions(environment.GetGamePegasusMetadataRootDir(), extensions = [".txt"]):
+        for pegasus_file in paths.build_file_list_by_extensions(environment.GetGamePegasusMetadataRootDir(), extensions = [".txt"]):
             if pegasus_file.endswith("metadata.pegasus.txt"):
-                game_dirs.append(system.GetFilenameDirectory(pegasus_file))
+                game_dirs.append(paths.get_filename_directory(pegasus_file))
 
         # Update game dir files
         config_files["Pegasus/windows/config/game_dirs.txt"] = "\n".join(game_dirs)
@@ -196,8 +198,8 @@ class Pegasus(toolbase.ToolBase):
 
         # Create config files
         for config_filename, config_contents in config_files.items():
-            success = system.TouchFile(
-                src = system.JoinPaths(environment.GetToolsRootDir(), config_filename),
+            success = fileops.touch_file(
+                src = paths.join_paths(environment.GetToolsRootDir(), config_filename),
                 contents = config_contents.strip(),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,

@@ -14,6 +14,7 @@ import system
 import arguments
 import setup
 import logger
+import paths
 
 # Parse arguments
 parser = arguments.ArgumentParser(description = "Run tool presets.")
@@ -49,7 +50,7 @@ def main():
 
     # Create base command
     base_cmd = [
-        system.JoinPaths(environment.GetScriptsBinDir(), args.preset_tool_type.val() + environment.GetScriptsCommandExtension())
+        paths.join_paths(environment.GetScriptsBinDir(), args.preset_tool_type.val() + environment.GetScriptsCommandExtension())
     ]
     if args.verbose:
         base_cmd += ["--verbose"]

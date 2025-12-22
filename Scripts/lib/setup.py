@@ -5,8 +5,10 @@ import sys
 # Local imports
 import config
 import environment
+import fileops
 import system
 import logger
+import paths
 import programs
 import ini
 
@@ -51,9 +53,9 @@ def SetupPackages(
 
     # Clean root directory
     if clean:
-        if system.DoesPathExist(root_dir):
+        if paths.does_path_exist(root_dir):
             logger.log_info("Cleaning %s directory %s ..." % (package_type, root_dir))
-            system.RemoveDirectory(
+            fileops.remove_directory(
                 src = root_dir,
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
@@ -70,9 +72,9 @@ def SetupPackages(
         # Force reinstall by cleaning the install directory
         if force:
             install_dir = programs.GetLibraryInstallDir(package_name)
-            if system.DoesPathExist(install_dir):
+            if paths.does_path_exist(install_dir):
                 logger.log_info("Forcing rebuild of %s (removing %s) ..." % (package_name, install_dir))
-                system.RemoveDirectory(
+                fileops.remove_directory(
                     src = install_dir,
                     verbose = setup_params.verbose,
                     pretend_run = setup_params.pretend_run,
@@ -141,18 +143,18 @@ def SetupAssets(verbose = False, pretend_run = False, exit_on_failure = False):
                 # Get directories
                 source_dir = environment.GetLockerGamingAssetDir(game_category, game_subcategory, asset_type)
                 dest_dir = environment.GetGamePegasusMetadataAssetDir(game_category, game_subcategory, asset_type)
-                dest_parent_dir = system.GetDirectoryParent(dest_dir)
+                dest_parent_dir = paths.get_directory_parent(dest_dir)
 
                 # Create source dir if it doesn't exist
-                if not system.DoesPathExist(source_dir):
-                    system.MakeDirectory(
+                if not paths.does_path_exist(source_dir):
+                    fileops.make_directory(
                         src = source_dir,
                         verbose = verbose,
                         pretend_run = pretend_run,
                         exit_on_failure = exit_on_failure)
 
                 # Make new symlink
-                success = system.CreateSymlink(
+                success = fileops.create_symlink(
                     src = source_dir,
                     dest = dest_dir,
                     cwd = dest_parent_dir,

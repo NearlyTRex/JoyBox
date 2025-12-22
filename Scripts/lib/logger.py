@@ -8,6 +8,7 @@ from datetime import datetime
 import config
 import system
 import environment
+import fileops
 
 # ANSI color codes for terminal output
 class Colors:
@@ -90,7 +91,7 @@ class Logger:
         self._current_log_file = None
 
         # Ensure log directory exists
-        system.MakeDirectory(self.log_dir)
+        fileops.make_directory(self.log_dir)
 
         # Create the underlying logger
         self._logger = logging.getLogger("logs.%s" % name)

@@ -6,6 +6,7 @@ import sys
 # Local imports
 import config
 import environment
+import fileops
 import system
 import logger
 import release
@@ -13,6 +14,7 @@ import programs
 import hashing
 import archive
 import nintendo
+import paths
 import gui
 import ini
 import emulatorcommon
@@ -107,10 +109,10 @@ class Yuzu(emulatorbase.EmulatorBase):
     def InstallAddons(self, dlc_dirs = [], update_dirs = [], verbose = False, pretend_run = False, exit_on_failure = False):
         for package_dirset in [dlc_dirs, update_dirs]:
             for package_dir in package_dirset:
-                for nsp_file in system.BuildFileListByExtensions(package_dir, extensions = [".nsp"]):
+                for nsp_file in paths.build_file_list_by_extensions(package_dir, extensions = [".nsp"]):
                     success = nintendo.InstallSwitchNSP(
                         nsp_file = nsp_file,
-                        nand_dir = system.JoinPaths(programs.GetEmulatorPathConfigValue("Yuzu", "setup_dir"), "nand"),
+                        nand_dir = paths.join_paths(programs.GetEmulatorPathConfigValue("Yuzu", "setup_dir"), "nand"),
                         verbose = verbose,
                         pretend_run = pretend_run,
                         exit_on_failure = exit_on_failure)
@@ -166,8 +168,8 @@ class Yuzu(emulatorbase.EmulatorBase):
 
         # Create config files
         for config_filename, config_contents in config_files.items():
-            success = system.TouchFile(
-                src = system.JoinPaths(environment.GetEmulatorsRootDir(), config_filename),
+            success = fileops.touch_file(
+                src = paths.join_paths(environment.GetEmulatorsRootDir(), config_filename),
                 contents = config_contents.strip(),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
@@ -192,7 +194,7 @@ class Yuzu(emulatorbase.EmulatorBase):
         # Verify system files
         for filename, expected_md5 in system_files.items():
             actual_md5 = hashing.CalculateFileMD5(
-                src = system.JoinPaths(environment.GetLockerGamingEmulatorSetupDir("Yuzu"), filename),
+                src = paths.join_paths(environment.GetLockerGamingEmulatorSetupDir("Yuzu"), filename),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
@@ -204,9 +206,9 @@ class Yuzu(emulatorbase.EmulatorBase):
         # Copy system files
         for filename in system_files.keys():
             for platform in ["windows", "linux"]:
-                success = system.SmartCopy(
-                    src = system.JoinPaths(environment.GetLockerGamingEmulatorSetupDir("Yuzu"), filename),
-                    dest = system.JoinPaths(programs.GetEmulatorPathConfigValue("Yuzu", "setup_dir", platform), filename),
+                success = fileops.smart_copy(
+                    src = paths.join_paths(environment.GetLockerGamingEmulatorSetupDir("Yuzu"), filename),
+                    dest = paths.join_paths(programs.GetEmulatorPathConfigValue("Yuzu", "setup_dir", platform), filename),
                     verbose = setup_params.verbose,
                     pretend_run = setup_params.pretend_run,
                     exit_on_failure = setup_params.exit_on_failure)

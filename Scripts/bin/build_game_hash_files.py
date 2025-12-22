@@ -15,6 +15,7 @@ import gameinfo
 import arguments
 import setup
 import logger
+import prompts
 
 # Parse arguments
 parser = arguments.ArgumentParser(description = "Build file hashes.")
@@ -68,7 +69,7 @@ def main():
     # Show preview
     if not args.no_preview:
         details = [game_root for _, game_root in games_to_process]
-        if not system.PromptForPreview("Build game hash files", details):
+        if not prompts.prompt_for_preview("Build game hash files", details):
             logger.log_warning("Operation cancelled by user")
             return
 

@@ -15,6 +15,7 @@ import gameinfo
 import arguments
 import setup
 import logger
+import prompts
 
 # Parse arguments
 parser = arguments.ArgumentParser(description = "Upload game files.")
@@ -72,7 +73,7 @@ def main():
     # Show preview
     if not args.no_preview:
         details = [game_root for _, game_root in games_to_process]
-        if not system.PromptForPreview("Upload game files (encrypt and upload to %s)" % args.locker_type, details):
+        if not prompts.prompt_for_preview("Upload game files (encrypt and upload to %s)" % args.locker_type, details):
             logger.log_warning("Operation cancelled by user")
             return
 

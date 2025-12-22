@@ -14,6 +14,7 @@ import collection
 import arguments
 import setup
 import logger
+import prompts
 
 # Parse arguments
 parser = arguments.ArgumentParser(description = "Clean hash files.")
@@ -32,7 +33,7 @@ def main():
     # Show preview
     if not args.no_preview:
         details = [environment.GetGameHashesMetadataRootDir()]
-        if not system.PromptForPreview("Clean game hash files (sort entries)", details):
+        if not prompts.prompt_for_preview("Clean game hash files (sort entries)", details):
             logger.log_warning("Operation cancelled by user")
             return
 

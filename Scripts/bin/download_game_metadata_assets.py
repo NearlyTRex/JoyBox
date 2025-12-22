@@ -15,6 +15,7 @@ import gameinfo
 import arguments
 import setup
 import logger
+import prompts
 
 # Parse arguments
 parser = arguments.ArgumentParser(description = "Download metadata assets.")
@@ -63,7 +64,7 @@ def main():
     if not args.no_preview:
         details = [environment.GetLockerGamingAssetsRootDir()]
         asset_desc = args.asset_type if args.asset_type else "all types"
-        if not system.PromptForPreview("Download metadata assets (%s)" % asset_desc, details):
+        if not prompts.prompt_for_preview("Download metadata assets (%s)" % asset_desc, details):
             logger.log_warning("Operation cancelled by user")
             return
 

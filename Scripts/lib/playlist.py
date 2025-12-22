@@ -7,8 +7,10 @@ import functools
 import config
 import command
 import programs
+import strings
 import system
 import logger
+import paths
 import environment
 
 # Read playlist file
@@ -71,15 +73,15 @@ def GeneratePlaylist(
     # Generate playlist contents
     playlist_contents = []
     if recursive:
-        for file in system.BuildFileListByExtensions(source_dir, extensions = extensions):
+        for file in paths.build_file_list_by_extensions(source_dir, extensions = extensions):
             if only_keep_ends:
-                playlist_contents.append(system.GetFilenameFile(file))
+                playlist_contents.append(paths.get_filename_file(file))
             else:
                 playlist_contents.append(file)
     else:
-        for obj in system.GetDirectoryContents(source_dir):
-            obj_path = system.JoinPaths(source_dir, obj)
-            if system.IsPathFile(obj_path):
+        for obj in paths.get_directory_contents(source_dir):
+            obj_path = paths.join_paths(source_dir, obj)
+            if paths.is_path_file(obj_path):
                 for extension in extensions:
                     if obj_path.endswith(extension):
                         if only_keep_ends:
@@ -96,7 +98,7 @@ def GeneratePlaylist(
     # Write playlist
     return WritePlaylist(
         output_file = output_file,
-        playlist_contents = system.SortStringsWithLength(playlist_contents),
+        playlist_contents = strings.sort_strings_with_length(playlist_contents),
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -133,8 +135,8 @@ def GenerateLocalPlaylists(
     exit_on_failure = False):
 
     # Check each directory for the requested files
-    for input_dir in system.BuildDirectoryList(source_dir):
-        if system.DoesDirectoryContainFilesByExtensions(
+    for input_dir in paths.build_directory_list(source_dir):
+        if paths.does_directory_contain_files_by_extensions(
             path = input_dir,
             extensions = extensions,
             recursive = False):
@@ -142,7 +144,7 @@ def GenerateLocalPlaylists(
             # Generate local playlist
             success = GeneratePlaylist(
                 source_dir = input_dir,
-                output_file = system.JoinPaths(input_dir, system.GetDirectoryName(input_dir) + ".m3u"),
+                output_file = paths.join_paths(input_dir, paths.get_directory_name(input_dir) + ".m3u"),
                 extensions = extensions,
                 recursive = False,
                 allow_empty_lists = allow_empty_lists,

@@ -11,10 +11,12 @@ import threading
 import config
 import system
 import logger
+import paths
 import environment
 import commandoptions
 import programs
 import sandbox
+import strings
 import capture
 import ini
 import process
@@ -54,7 +56,7 @@ def CreateCommandList(cmd):
         return copy.deepcopy(cmd)
     if isinstance(cmd, str):
         cmd = cmd.replace(" ", config.token_command_split)
-        for quoted_substring in system.SplitByEnclosedSubstrings(cmd, "\"", "\""):
+        for quoted_substring in strings.split_by_enclosed_substrings(cmd, "\"", "\""):
             cmd = cmd.replace(quoted_substring, quoted_substring.replace(config.token_command_split, " "))
         return cmd.split(config.token_command_split)
     return []
@@ -87,9 +89,9 @@ def IsOnlyStarterCommand(cmd):
 # Get runnable command path
 def GetRunnableCommandPath(cmd, search_dirs = []):
     for search_dir in search_dirs:
-        potential_paths = [system.JoinPaths(search_dir, cmd)]
+        potential_paths = [paths.join_paths(search_dir, cmd)]
         for cmd_ext in config.WindowsProgramFileType.cvalues():
-            potential_paths.append(system.JoinPaths(search_dir, cmd + cmd_ext))
+            potential_paths.append(paths.join_paths(search_dir, cmd + cmd_ext))
         for potential_path in potential_paths:
             verified_path = shutil.which(potential_path)
             if verified_path:
@@ -213,10 +215,10 @@ def SetupAppImageCommand(
         if cmd_segment.lower().endswith(".appimage"):
             appimage_home_dir = os.path.realpath(cmd_segment + ".home")
             if os.path.exists(appimage_home_dir):
-                new_options.set_env_var("XDG_CONFIG_HOME", system.JoinPaths(appimage_home_dir, ".config"))
-                new_options.set_env_var("XDG_CACHE_HOME", system.JoinPaths(appimage_home_dir, ".cache"))
-                new_options.set_env_var("XDG_DATA_HOME", system.JoinPaths(appimage_home_dir, ".local", "share"))
-                new_options.set_env_var("XDG_STATE_HOME", system.JoinPaths(appimage_home_dir, ".local", "state"))
+                new_options.set_env_var("XDG_CONFIG_HOME", paths.join_paths(appimage_home_dir, ".config"))
+                new_options.set_env_var("XDG_CACHE_HOME", paths.join_paths(appimage_home_dir, ".cache"))
+                new_options.set_env_var("XDG_DATA_HOME", paths.join_paths(appimage_home_dir, ".local", "share"))
+                new_options.set_env_var("XDG_STATE_HOME", paths.join_paths(appimage_home_dir, ".local", "state"))
                 break
     return (new_cmd, new_options)
 
@@ -443,9 +445,9 @@ def RunReturncodeCommand(
             # Determine output file handling
             stdout_target = None
             stderr_target = None
-            if system.IsPathValid(options.get_stdout()):
+            if paths.is_path_valid(options.get_stdout()):
                 stdout_target = open(options.get_stdout(), "w")
-            if system.IsPathValid(options.get_stderr()):
+            if paths.is_path_valid(options.get_stderr()):
                 stderr_target = open(options.get_stderr(), "w")
 
             # Open process
@@ -710,7 +712,7 @@ def RunCaptureCommand(
     if capture_type == config.CaptureType.SCREENSHOT:
 
         # Run while capturing screenshots
-        if system.IsPathFile(capture_file) and not overwrite_screenshots:
+        if paths.is_path_file(capture_file) and not overwrite_screenshots:
             return run_start()
         else:
             return capture.CaptureScreenshotWhileRunning(
@@ -729,7 +731,7 @@ def RunCaptureCommand(
     elif capture_type == config.CaptureType.VIDEO:
 
         # Run while capturing video
-        if system.IsPathFile(capture_file) and not overwrite_videos:
+        if paths.is_path_file(capture_file) and not overwrite_videos:
             return run_start()
         else:
             return capture.CaptureVideoWhileRunning(
@@ -800,7 +802,7 @@ def GetDosLaunchCommand(
     fullscreen = False):
 
     # Search for disc images
-    disc_images = system.BuildFileListByExtensions(options.get_prefix_dos_d_drive(), extensions = [".chd"])
+    disc_images = paths.build_file_list_by_extensions(options.get_prefix_dos_d_drive(), extensions = [".chd"])
 
     # Create launch command
     launch_cmd = [programs.GetEmulatorProgram("DosBoxX")]
@@ -828,13 +830,13 @@ def GetDosLaunchCommand(
 
     # Add initial launch params
     launch_cmd += ["-c", "%s:" % start_letter]
-    if system.IsPathValid(start_offset):
+    if paths.is_path_valid(start_offset):
         launch_cmd += ["-c", "cd %s" % start_offset]
-    if system.IsPathValid(start_program):
+    if paths.is_path_valid(start_program):
         if isinstance(start_args, list) and len(start_args) > 0:
-            launch_cmd += ["-c", "%s %s" % (system.GetFilenameFile(start_program), " ".join(start_args))]
+            launch_cmd += ["-c", "%s %s" % (paths.get_filename_file(start_program), " ".join(start_args))]
         else:
-            launch_cmd += ["-c", "%s" % system.GetFilenameFile(start_program)]
+            launch_cmd += ["-c", "%s" % paths.get_filename_file(start_program)]
 
     # Add other flags
     if fullscreen:
@@ -853,7 +855,7 @@ def GetWin31LaunchCommand(
     fullscreen = False):
 
     # Search for disc images
-    disc_images = system.BuildFileListByExtensions(options.get_prefix_dos_d_drive(), extensions = [".chd"])
+    disc_images = paths.build_file_list_by_extensions(options.get_prefix_dos_d_drive(), extensions = [".chd"])
 
     # Create launch command
     launch_cmd = [programs.GetEmulatorProgram("DosBoxX")]
@@ -883,13 +885,13 @@ def GetWin31LaunchCommand(
     launch_cmd += ["-c", "SET PATH=%PATH%;C:\WINDOWS;"]
     launch_cmd += ["-c", "SET TEMP=C:\WINDOWS\TEMP"]
     launch_cmd += ["-c", "%s:" % start_letter]
-    if system.IsPathValid(start_offset):
+    if paths.is_path_valid(start_offset):
         launch_cmd += ["-c", "cd %s" % start_offset]
-    if system.IsPathValid(start_program):
+    if paths.is_path_valid(start_program):
         if isinstance(start_args, list) and len(start_args) > 0:
-            launch_cmd += ["-c", "WIN RUNEXIT %s %s" % (system.GetFilenameFile(start_program), " ".join(start_args))]
+            launch_cmd += ["-c", "WIN RUNEXIT %s %s" % (paths.get_filename_file(start_program), " ".join(start_args))]
         else:
-            launch_cmd += ["-c", "WIN RUNEXIT %s" % system.GetFilenameFile(start_program)]
+            launch_cmd += ["-c", "WIN RUNEXIT %s" % paths.get_filename_file(start_program)]
         launch_cmd += ["-c", "EXIT"]
 
     # Add other flags

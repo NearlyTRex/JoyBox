@@ -5,11 +5,13 @@ import sys
 # Local imports
 import config
 import environment
+import fileops
 import system
 import logger
 import release
 import programs
 import nintendo
+import paths
 import gui
 import emulatorcommon
 import emulatorbase
@@ -73,12 +75,12 @@ class Cemu(emulatorbase.EmulatorBase):
     def InstallAddons(self, dlc_dirs = [], update_dirs = [], verbose = False, pretend_run = False, exit_on_failure = False):
         for package_dirset in [dlc_dirs, update_dirs]:
             for package_dir in package_dirset:
-                for tik_file in system.BuildFileListByExtensions(package_dir, extensions = [".tik"]):
+                for tik_file in paths.build_file_list_by_extensions(package_dir, extensions = [".tik"]):
                     if tik_file.endswith("title.tik"):
-                        tik_dir = system.GetFilenameDirectory(tik_file)
+                        tik_dir = paths.get_filename_directory(tik_file)
                         success = nintendo.InstallWiiUNusPackage(
                             nus_package_dir = tik_dir,
-                            nand_dir = system.JoinPaths(programs.GetEmulatorPathConfigValue("Cemu", "setup_dir"), "mlc01"),
+                            nand_dir = paths.join_paths(programs.GetEmulatorPathConfigValue("Cemu", "setup_dir"), "mlc01"),
                             verbose = verbose,
                             pretend_run = pretend_run,
                             exit_on_failure = exit_on_failure)
@@ -167,8 +169,8 @@ class Cemu(emulatorbase.EmulatorBase):
 
         # Create config files
         for config_filename, config_contents in config_files.items():
-            success = system.TouchFile(
-                src = system.JoinPaths(environment.GetEmulatorsRootDir(), config_filename),
+            success = fileops.touch_file(
+                src = paths.join_paths(environment.GetEmulatorsRootDir(), config_filename),
                 contents = config_contents.strip(),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
@@ -193,7 +195,7 @@ class Cemu(emulatorbase.EmulatorBase):
         game_cache_dir = game_info.get_local_cache_dir()
 
         # Update keys
-        for key_file in system.BuildFileListByExtensions(game_cache_dir, extensions = [".txt"]):
+        for key_file in paths.build_file_list_by_extensions(game_cache_dir, extensions = [".txt"]):
             if key_file.endswith(".key.txt"):
                 for platform in ["windows", "linux"]:
                     nintendo.UpdateWiiUKeys(

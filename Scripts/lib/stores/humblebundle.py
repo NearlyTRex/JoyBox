@@ -8,11 +8,15 @@ import config
 import system
 import logger
 import environment
+import fileops
 import programs
+import serialization
 import command
 import jsondata
 import storebase
+import strings
 import metadatacollector
+import paths
 import ini
 
 # HumbleBundle store
@@ -44,7 +48,7 @@ class HumbleBundle(storebase.StoreBase):
 
         # Get install dir
         self.install_dir = ini.GetIniPathValue("UserData.HumbleBundle", "humblebundle_install_dir")
-        if not system.IsPathValid(self.install_dir):
+        if not paths.is_path_valid(self.install_dir):
             raise RuntimeError("Ini file does not have a valid install dir")
 
     ############################################################
@@ -132,12 +136,12 @@ class HumbleBundle(storebase.StoreBase):
 
         # Get cache file path
         cache_dir = environment.GetCacheRootDir()
-        cache_file_purchases = system.JoinPaths(cache_dir, "humble_purchases_cache.json")
+        cache_file_purchases = paths.join_paths(cache_dir, "humble_purchases_cache.json")
 
         # Check if cache exists and is recent (less than 24 hours old)
         use_cache = False
-        if system.DoesPathExist(cache_file_purchases):
-            cache_age_hours = system.GetFileAgeInHours(cache_file_purchases)
+        if paths.does_path_exist(cache_file_purchases):
+            cache_age_hours = paths.get_file_age_in_hours(cache_file_purchases)
             if cache_age_hours < 24:
                 use_cache = True
                 if verbose:
@@ -145,7 +149,7 @@ class HumbleBundle(storebase.StoreBase):
 
         # Load from cache if available
         if use_cache:
-            cached_data = system.ReadJsonFile(
+            cached_data = serialization.read_json_file(
                 src = cache_file_purchases,
                 verbose = verbose,
                 pretend_run = pretend_run,
@@ -205,7 +209,7 @@ class HumbleBundle(storebase.StoreBase):
         for line in list_output.split("\n"):
 
             # Gather info
-            line = system.RemoveStringEscapeSequences(line)
+            line = strings.remove_string_escape_sequences(line)
             tokens = line.split(" ")
             if len(tokens) != 1:
                 continue
@@ -241,7 +245,7 @@ class HumbleBundle(storebase.StoreBase):
                 return None
 
             # Gather info
-            line_appid = system.GenerateUniqueID()
+            line_appid = strings.generate_unique_id()
             line_name = humble_json.get("human_name", "")
 
             # Create purchase
@@ -259,8 +263,8 @@ class HumbleBundle(storebase.StoreBase):
             })
 
         # Save to cache
-        system.MakeDirectory(cache_dir, verbose = verbose, pretend_run = pretend_run)
-        success = system.WriteJsonFile(
+        fileops.make_directory(cache_dir, verbose = verbose, pretend_run = pretend_run)
+        success = serialization.write_json_file(
             src = cache_file_purchases,
             json_data = purchases_data,
             verbose = verbose,
@@ -338,7 +342,7 @@ class HumbleBundle(storebase.StoreBase):
 
         # Build jsondata
         json_data = self.CreateDefaultJsondata()
-        json_data.set_value(config.json_key_store_appid, system.GenerateUniqueID())
+        json_data.set_value(config.json_key_store_appid, strings.generate_unique_id())
         json_data.set_value(config.json_key_store_appname, identifier)
         json_data.set_value(config.json_key_store_name, humble_json.get("human_name"))
         for download in humble_json.get("downloads", []):

@@ -6,9 +6,12 @@ import sys
 import config
 import system
 import logger
+import paths
 import release
+import serialization
 import programs
 import environment
+import fileops
 import toolbase
 
 # Extra files directory
@@ -85,7 +88,7 @@ class Ghidra(toolbase.ToolBase):
             source_patches = []
             for patch_filename in patch_files:
                 patch_path = os.path.join(extra_files_dir, patch_filename)
-                patch_content = system.ReadTextFile(patch_path, exit_on_failure = setup_params.exit_on_failure)
+                patch_content = serialization.read_text_file(patch_path, exit_on_failure = setup_params.exit_on_failure)
                 if patch_content is None:
                     logger.log_error("Could not read Ghidra patch file: %s" % patch_filename)
                     return False
@@ -141,12 +144,12 @@ class Ghidra(toolbase.ToolBase):
         # Create config files
         for dest_path, src_filename in config_files.items():
             src_path = os.path.join(extra_files_dir, src_filename)
-            contents = system.ReadTextFile(src_path, exit_on_failure = setup_params.exit_on_failure)
+            contents = serialization.read_text_file(src_path, exit_on_failure = setup_params.exit_on_failure)
             if contents is None:
                 logger.log_error("Could not read Ghidra config file: %s" % src_filename)
                 return False
-            success = system.TouchFile(
-                src = system.JoinPaths(environment.GetToolsRootDir(), dest_path),
+            success = fileops.touch_file(
+                src = paths.join_paths(environment.GetToolsRootDir(), dest_path),
                 contents = contents.strip(),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,

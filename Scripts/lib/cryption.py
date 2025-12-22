@@ -4,10 +4,15 @@ import sys
 
 # Local imports
 import config
+import fileops
 import command
 import programs
+import strings
 import system
+import text
+import validation
 import logger
+import paths
 import hashing
 
 # Determine if file is encrypted
@@ -29,9 +34,9 @@ def GenerateEncryptedFilename(src):
 
 # Generate encrypted path
 def GenerateEncryptedPath(source_path):
-    output_dir = system.GetFilenameDirectory(source_path)
-    output_name = GenerateEncryptedFilename(system.GetFilenameFile(source_path))
-    return system.JoinPaths(output_dir, output_name)
+    output_dir = paths.get_filename_directory(source_path)
+    output_name = GenerateEncryptedFilename(paths.get_filename_file(source_path))
+    return paths.join_paths(output_dir, output_name)
 
 # Get embedded filename
 def GetEmbeddedFilename(
@@ -42,7 +47,7 @@ def GetEmbeddedFilename(
     exit_on_failure = False):
 
     # Check passphrase
-    system.AssertIsNonEmptyString(passphrase, "passphrase")
+    validation.assert_is_non_empty_string(passphrase, "passphrase")
 
     # Get tool
     gpg_tool = None
@@ -72,8 +77,8 @@ def GetEmbeddedFilename(
     # Get embedded name
     if isinstance(info_output, bytes):
         info_output = info_output.decode()
-    for possible_name in system.FindEnclosedSubstrings(info_output, "\"", "\""):
-        return system.CleanRichText(possible_name)
+    for possible_name in strings.find_enclosed_substrings(info_output, "\"", "\""):
+        return text.clean_rich_text(possible_name)
     return None
 
 # Get embedded file info
@@ -97,14 +102,14 @@ def GetEmbeddedFileInfo(
         return None
 
     # Create temporary directory
-    tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(
+    tmp_dir_success, tmp_dir_result = fileops.create_temporary_directory(
         verbose = verbose,
         pretend_run = pretend_run)
     if not tmp_dir_success:
         return None
 
     # Get temporary file
-    tmp_file = system.JoinPaths(tmp_dir_result, embedded_filename)
+    tmp_file = paths.join_paths(tmp_dir_result, embedded_filename)
 
     # Decrypt file
     success = DecryptFile(
@@ -115,7 +120,7 @@ def GetEmbeddedFileInfo(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if not success:
-        system.RemoveDirectory(
+        fileops.remove_directory(
             src = tmp_dir_result,
             verbose = verbose,
             pretend_run = pretend_run,
@@ -136,7 +141,7 @@ def GetEmbeddedFileInfo(
     file_info["mtime"] = int(os.path.getmtime(src))
 
     # Clean up
-    system.RemoveDirectory(
+    fileops.remove_directory(
         src = tmp_dir_result,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -154,7 +159,7 @@ def GetRealFilePath(
     exit_on_failure = False):
     if not IsFileEncrypted(src):
         return src
-    real_dir = system.GetFilenameDirectory(src)
+    real_dir = paths.get_filename_directory(src)
     real_name = GetEmbeddedFilename(
         src = src,
         passphrase = passphrase,
@@ -162,7 +167,7 @@ def GetRealFilePath(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if real_name:
-        return system.JoinPaths(real_dir, real_name)
+        return paths.join_paths(real_dir, real_name)
     return None
 
 # Get real file paths
@@ -196,23 +201,23 @@ def EncryptFile(
     exit_on_failure = False):
 
     # Check passphrase
-    system.AssertIsNonEmptyString(passphrase, "passphrase")
+    validation.assert_is_non_empty_string(passphrase, "passphrase")
 
     # Check source file
-    if not system.IsPathValid(src):
+    if not paths.is_path_valid(src):
         return False
 
     # Check output file
     if not output_file:
         output_file = GenerateEncryptedPath(src)
-    if not system.IsPathValid(output_file):
+    if not paths.is_path_valid(output_file):
         return False
-    if system.DoesPathExist(output_file):
+    if paths.does_path_exist(output_file):
         return True
 
     # Plain copy if already encrypted
     if IsFileEncrypted(src):
-        success = system.SmartCopy(
+        success = fileops.smart_copy(
             src = src,
             dest = output_file,
             skip_existing = True,
@@ -256,7 +261,7 @@ def EncryptFile(
 
     # Delete original
     if delete_original and os.path.exists(output_file):
-        system.RemoveFile(
+        fileops.remove_file(
             src = src,
             verbose = verbose,
             pretend_run = pretend_run,
@@ -276,10 +281,10 @@ def DecryptFile(
     exit_on_failure = False):
 
     # Check passphrase
-    system.AssertIsNonEmptyString(passphrase, "passphrase")
+    validation.assert_is_non_empty_string(passphrase, "passphrase")
 
     # Check source file
-    if not system.IsPathValid(src):
+    if not paths.is_path_valid(src):
         return False
 
     # Check output file
@@ -290,14 +295,14 @@ def DecryptFile(
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-    if not system.IsPathValid(output_file):
+    if not paths.is_path_valid(output_file):
         return False
-    if system.DoesPathExist(output_file):
+    if paths.does_path_exist(output_file):
         return True
 
     # Plain copy if already decrypted
     if not IsFileEncrypted(src):
-        success = system.SmartCopy(
+        success = fileops.smart_copy(
             src = src,
             dest = output_file,
             skip_existing = True,
@@ -340,7 +345,7 @@ def DecryptFile(
 
     # Delete original
     if delete_original and os.path.exists(output_file):
-        system.RemoveFile(
+        fileops.remove_file(
             src = src,
             verbose = verbose,
             pretend_run = pretend_run,
@@ -358,7 +363,7 @@ def EncryptFiles(
     pretend_run = False,
     exit_on_failure = False):
     output_files = []
-    for file in system.BuildFileList(src):
+    for file in paths.build_file_list(src):
         output_file = GenerateEncryptedPath(file)
         success = EncryptFile(
             src = file,
@@ -381,7 +386,7 @@ def DecryptFiles(
     pretend_run = False,
     exit_on_failure = False):
     output_files = []
-    for file in system.BuildFileList(src):
+    for file in paths.build_file_list(src):
         output_file = GetRealFilePath(
             src = file,
             passphrase = passphrase,

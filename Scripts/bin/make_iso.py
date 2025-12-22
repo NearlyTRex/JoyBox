@@ -14,6 +14,7 @@ import iso
 import arguments
 import setup
 import logger
+import paths
 
 # Parse arguments
 parser = arguments.ArgumentParser(description = "Make ISO images out of all folders or zips in a path.")
@@ -43,13 +44,13 @@ def main():
 
     # Create iso images from folders
     if args.disc_source_type == config.DiscSourceType.FOLDER:
-        for obj in system.GetDirectoryContents(input_path):
-            obj_path = system.JoinPaths(input_path, obj)
-            if not system.IsPathDirectory(obj_path):
+        for obj in paths.get_directory_contents(input_path):
+            obj_path = paths.join_paths(input_path, obj)
+            if not paths.is_path_directory(obj_path):
                 continue
 
             # Check if iso already exists
-            output_file = system.JoinPaths(input_path, obj + config.DiscImageFileType.ISO.cval())
+            output_file = paths.join_paths(input_path, obj + config.DiscImageFileType.ISO.cval())
             if os.path.exists(output_file):
                 continue
 
@@ -70,20 +71,20 @@ def main():
 
     # Create iso images from zips
     elif args.disc_source_type == config.DiscSourceType.ZIP:
-        for file in system.BuildFileListByExtensions(input_path, extensions = [".zip"]):
+        for file in paths.build_file_list_by_extensions(input_path, extensions = [".zip"]):
 
             # Get file info
             current_file = file
-            current_dir = system.GetFilenameDirectory(current_file)
-            current_basename = system.GetFilenameBasename(current_file)
+            current_dir = paths.get_filename_directory(current_file)
+            current_basename = paths.get_filename_basename(current_file)
 
             # Check if iso already exists
-            output_file = system.JoinPaths(current_dir, current_basename + config.DiscImageFileType.ISO.cval())
+            output_file = paths.join_paths(current_dir, current_basename + config.DiscImageFileType.ISO.cval())
             if os.path.exists(output_file):
                 continue
 
             # Decompress zip
-            extracted_dir = system.JoinPaths(current_dir, current_basename + "_extracted")
+            extracted_dir = paths.join_paths(current_dir, current_basename + "_extracted")
             archive.ExtractArchive(
                 archive_file = current_file,
                 extract_dir = extracted_dir,

@@ -13,6 +13,8 @@ import chd
 import arguments
 import setup
 import logger
+import paths
+import prompts
 
 # Parse arguments
 parser = arguments.ArgumentParser(description = "Extract disc images from CHD files.")
@@ -42,21 +44,21 @@ def main():
             "Output: %s + %s" % (args.toc_ext, args.bin_ext),
             "Delete originals: %s" % args.delete_originals
         ]
-        if not system.PromptForPreview("Extract CHD", details):
+        if not prompts.prompt_for_preview("Extract CHD", details):
             logger.log_warning("Operation cancelled by user")
             return
 
     # Convert disc image files
-    for file in system.BuildFileListByExtensions(input_path, extensions = [".chd"]):
+    for file in paths.build_file_list_by_extensions(input_path, extensions = [".chd"]):
 
         # Get file info
         current_file = file
-        current_dir = system.GetFilenameDirectory(current_file)
-        current_basename = system.GetFilenameBasename(current_file)
+        current_dir = paths.get_filename_directory(current_file)
+        current_basename = paths.get_filename_basename(current_file)
 
         # Check if output already exists
-        output_bin = system.JoinPaths(current_dir, current_basename + args.bin_ext)
-        output_toc = system.JoinPaths(current_dir, current_basename + args.toc_ext)
+        output_bin = paths.join_paths(current_dir, current_basename + args.bin_ext)
+        output_toc = paths.join_paths(current_dir, current_basename + args.toc_ext)
         if os.path.exists(output_bin) or os.path.exists(output_toc):
             continue
 

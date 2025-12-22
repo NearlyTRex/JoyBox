@@ -9,7 +9,9 @@ import system
 import environment
 import containers
 import programs
+import serialization
 import storebase
+import strings
 
 # Manifest entry
 class ManifestEntry:
@@ -62,7 +64,7 @@ class Manifest:
 
     # Load
     def load(self, verbose = False, pretend_run = False, exit_on_failure = False):
-        self.manifest = system.ReadYamlFile(
+        self.manifest = serialization.read_yaml_file(
             src = programs.GetToolPathConfigValue("LudusaviManifest", "yaml"),
             verbose = verbose,
             pretend_run = pretend_run,
@@ -72,10 +74,10 @@ class Manifest:
     def find_entry_by_name(self, name, verbose = False, pretend_run = False, exit_on_failure = False):
         search_results = []
         for manifest_name, manifest_entry in self.manifest.items():
-            if system.AreStringsHighlySimilar(manifest_name, name):
+            if strings.are_strings_highly_similar(manifest_name, name):
                 search_result = containers.SearchResult()
                 search_result.set_title(manifest_name)
-                search_result.set_relevance(system.GetStringSimilarityRatio(name, manifest_name))
+                search_result.set_relevance(strings.get_string_similarity_ratio(name, manifest_name))
                 search_result.set_data(manifest_entry)
                 search_results.append(search_result)
         for search_result in sorted(search_results, key=lambda x: x.get_relevance(), reverse = True):

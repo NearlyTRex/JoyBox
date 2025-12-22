@@ -6,6 +6,7 @@ import sys
 import system
 import toolbase
 import ini
+import paths
 
 # Config files
 config_files = {}
@@ -29,7 +30,7 @@ class Firefox(toolbase.ToolBase):
         # Return config
         return {
             "Firefox": {
-                "program": system.JoinPaths(firefox_install_dir, firefox_exe),
+                "program": paths.join_paths(firefox_install_dir, firefox_exe),
                 "download_dir": firefox_download_dir,
                 "profile_dir": firefox_profile_dir
             }

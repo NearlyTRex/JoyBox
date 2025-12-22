@@ -6,6 +6,9 @@ import sys
 import config
 import system
 import logger
+import paths
+import prompts
+import serialization
 import environment
 import gameinfo
 import stores
@@ -114,7 +117,7 @@ def ImportGameStorePurchases(
             continue
 
         # Skip if json file already exists
-        json_matches = system.SearchJsonFiles(
+        json_matches = serialization.search_json_files(
             src = environment.GetJsonMetadataDir(
                 game_supercategory = store_obj.GetSupercategory(),
                 game_category = store_obj.GetCategory(),
@@ -136,7 +139,7 @@ def ImportGameStorePurchases(
             logger.log_info(" - Appurl:\t" + purchase_appurl)
         if purchase_name:
             logger.log_info(" - Name:\t" + purchase_name)
-        should_import = system.PromptForValue("Import this? (n to skip, i to ignore)", default_value = "y")
+        should_import = prompts.prompt_for_value("Import this? (n to skip, i to ignore)", default_value = "y")
         if should_import.lower() == "n":
             continue
 
@@ -155,7 +158,7 @@ def ImportGameStorePurchases(
 
         # Prompt for entry name
         default_name = gameinfo.DeriveGameNameFromRegularName(purchase_name)
-        entry_name = system.PromptForValue("Choose entry name", default_value = default_name)
+        entry_name = prompts.prompt_for_value("Choose entry name", default_value = default_name)
 
         # Get appurl if possible
         if not purchase_appurl and purchase_name:
@@ -262,7 +265,7 @@ def UpdateGameStorePurchases(
             continue
 
         # Find matching json file
-        json_matches = system.SearchJsonFiles(
+        json_matches = serialization.search_json_files(
             src = environment.GetJsonMetadataDir(
                 game_supercategory = store_obj.GetSupercategory(),
                 game_category = store_obj.GetCategory(),
@@ -274,11 +277,11 @@ def UpdateGameStorePurchases(
         json_file = None
         if len(json_matches):
             json_file = json_matches[0]
-        if not system.IsPathFile(json_file):
+        if not paths.is_path_file(json_file):
             continue
 
         # Get game name
-        game_name = system.GetFilenameBasename(json_file)
+        game_name = paths.get_filename_basename(json_file)
 
         # Get game root
         game_root = environment.GetLockerGamingFilesDir(
@@ -429,14 +432,14 @@ def DownloadGameStorePurchase(
             game_category = game_info.get_category(),
             game_subcategory = game_info.get_subcategory(),
             game_name = game_info.get_name())
-        output_dir = system.JoinPaths(os.path.realpath(output_dir), output_offset)
+        output_dir = paths.join_paths(os.path.realpath(output_dir), output_offset)
     else:
         output_dir = environment.GetLockerGamingFilesDir(
             game_supercategory = game_info.get_supercategory(),
             game_category = game_info.get_category(),
             game_subcategory = game_info.get_subcategory(),
             game_name = game_info.get_name())
-    if skip_existing and system.DoesDirectoryContainFiles(output_dir):
+    if skip_existing and paths.does_directory_contain_files(output_dir):
         return True
 
     # Get store info

@@ -14,6 +14,9 @@ import system
 import arguments
 import setup
 import logger
+import paths
+import prompts
+import serialization
 
 # Parse arguments
 parser = arguments.ArgumentParser(description = "Clean json files.")
@@ -43,19 +46,19 @@ def main():
 
                     # Get json file
                     json_file = environment.GetGameJsonMetadataFile(game_supercategory, game_category, game_subcategory, game_name)
-                    if not system.IsPathFile(json_file):
+                    if not paths.is_path_file(json_file):
                         continue
                     json_files_to_process.append(json_file)
 
     # Show preview
     if not args.no_preview:
-        if not system.PromptForPreview("Clean game JSON files (sort keys, remove empty values)", json_files_to_process):
+        if not prompts.prompt_for_preview("Clean game JSON files (sort keys, remove empty values)", json_files_to_process):
             logger.log_warning("Operation cancelled by user")
             return
 
     # Clean json files
     for json_file in json_files_to_process:
-        system.CleanJsonFile(
+        serialization.clean_json_file(
             src = json_file,
             sort_keys = True,
             remove_empty_values = True,

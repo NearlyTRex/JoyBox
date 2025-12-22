@@ -5,6 +5,7 @@ import json
 
 # Local imports
 import config
+import datautils
 import command
 import archive
 import programs
@@ -14,7 +15,9 @@ import ini
 import jsondata
 import webpage
 import storebase
+import strings
 import metadataentry
+import paths
 import metadatacollector
 import metadataassetcollector
 
@@ -32,7 +35,7 @@ class Legacy(storebase.StoreBase):
 
         # Get install dir
         self.install_dir = ini.GetIniPathValue("UserData.Legacy", "legacy_install_dir")
-        if not system.IsPathValid(self.install_dir):
+        if not paths.is_path_valid(self.install_dir):
             raise RuntimeError("Ini file does not have a valid install dir")
 
     ############################################################
@@ -205,7 +208,7 @@ class Legacy(storebase.StoreBase):
                 raise Exception("Failed to connect to web driver")
 
             # Get search terms
-            search_terms = system.EncodeUrlString(identifier.strip(), use_plus = True)
+            search_terms = strings.encode_url_string(identifier.strip(), use_plus = True)
 
             # Load url
             success = webpage.LoadUrl(web_driver, "https://www.bigfishgames.com/us/en/games/search.html?platform=150&language=114&search_query=" + search_terms)
@@ -246,7 +249,7 @@ class Legacy(storebase.StoreBase):
                             # Add comparison score
                             score_entry = {}
                             score_entry["element"] = game_cell
-                            score_entry["ratio"] = system.GetStringSimilarityRatio(identifier, game_cell_text)
+                            score_entry["ratio"] = strings.get_string_similarity_ratio(identifier, game_cell_text)
                             scores_list.append(score_entry)
 
             # Get the best url match
@@ -262,12 +265,12 @@ class Legacy(storebase.StoreBase):
                 if game_link_element:
                     appurl = webpage.GetElementAttribute(game_link_element, "href")
                     if appurl:
-                        appurl = system.StripStringQueryParams(appurl)
+                        appurl = strings.strip_string_query_params(appurl)
                         break
             return appurl
 
         # Use retry function with cleanup
-        result = system.RetryWithBackoff(
+        result = datautils.retry_with_backoff(
             func = attempt_url_search,
             cleanup_func = cleanup_driver,
             max_retries = 3,

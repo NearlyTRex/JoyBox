@@ -6,7 +6,9 @@ import sys
 import config
 import system
 import logger
+import paths
 import environment
+import fileops
 import programs
 import toolbase
 import ini
@@ -45,23 +47,23 @@ class Python(toolbase.ToolBase):
 
             # Python
             "Python": {
-                "program": system.JoinPaths(python_install_dir, python_exe),
+                "program": paths.join_paths(python_install_dir, python_exe),
                 "venv_dir": python_venv_dir
             },
 
             # PythonVenvPython
             "PythonVenvPython": {
                 "program": {
-                    "windows": system.JoinPaths(python_venv_dir, "Scripts", python_exe),
-                    "linux": system.JoinPaths(python_venv_dir, "bin", python_exe)
+                    "windows": paths.join_paths(python_venv_dir, "Scripts", python_exe),
+                    "linux": paths.join_paths(python_venv_dir, "bin", python_exe)
                 }
             },
 
             # PythonVenvPip
             "PythonVenvPip": {
                 "program": {
-                    "windows": system.JoinPaths(python_venv_dir, "Scripts", python_pip_exe),
-                    "linux": system.JoinPaths(python_venv_dir, "bin", python_pip_exe)
+                    "windows": paths.join_paths(python_venv_dir, "Scripts", python_pip_exe),
+                    "linux": paths.join_paths(python_venv_dir, "bin", python_pip_exe)
                 }
             }
         }
@@ -72,18 +74,18 @@ class Python(toolbase.ToolBase):
             setup_params = config.SetupParams()
 
         # Create wrapper scripts
-        for obj in system.GetDirectoryContents(environment.GetScriptsBinDir()):
+        for obj in paths.get_directory_contents(environment.GetScriptsBinDir()):
             if obj.endswith(".py"):
 
                 # Get script info
-                script_basename = system.GetFilenameBasename(obj)
-                script_path_orig = system.JoinPaths(environment.GetScriptsBinDir(), obj)
-                script_path_windows = system.JoinPaths(environment.GetScriptsBinDir(), script_basename + config.WindowsProgramFileType.BAT.cval())
-                script_path_unix = system.JoinPaths(environment.GetScriptsBinDir(), script_basename)
+                script_basename = paths.get_filename_basename(obj)
+                script_path_orig = paths.join_paths(environment.GetScriptsBinDir(), obj)
+                script_path_windows = paths.join_paths(environment.GetScriptsBinDir(), script_basename + config.WindowsProgramFileType.BAT.cval())
+                script_path_unix = paths.join_paths(environment.GetScriptsBinDir(), script_basename)
 
                 # Create windows wrapper script
                 if environment.IsWindowsPlatform():
-                    success = system.TouchFile(
+                    success = fileops.touch_file(
                         src = script_path_windows,
                         contents = wrapper_script_windows.strip().replace(config.token_python_bin, programs.GetToolProgram("PythonVenvPython")),
                         verbose = setup_params.verbose,
@@ -95,7 +97,7 @@ class Python(toolbase.ToolBase):
 
                 # Create unix wrapper script
                 if environment.IsUnixPlatform():
-                    success = system.TouchFile(
+                    success = fileops.touch_file(
                         src = script_path_unix,
                         contents = wrapper_script_unix.strip().replace(config.token_python_bin, programs.GetToolProgram("PythonVenvPython")),
                         verbose = setup_params.verbose,
@@ -104,7 +106,7 @@ class Python(toolbase.ToolBase):
                     if not success:
                         logger.log_error("Could not setup Python wrapper scripts")
                         return False
-                    success = system.MarkAsExecutable(
+                    success = fileops.mark_as_executable(
                         src = script_path_unix,
                         verbose = setup_params.verbose,
                         pretend_run = setup_params.pretend_run,

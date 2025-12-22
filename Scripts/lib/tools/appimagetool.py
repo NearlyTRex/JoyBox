@@ -6,9 +6,11 @@ import sys
 import config
 import system
 import logger
+import paths
 import release
 import programs
 import environment
+import fileops
 import toolbase
 
 # Config files
@@ -93,9 +95,9 @@ class AppImageTool(toolbase.ToolBase):
 
         # Copy icon
         if environment.IsLinuxPlatform():
-            success = system.CopyFileOrDirectory(
-                src = system.JoinPaths(environment.GetScriptsIconsDir(), "BostonIcons", "128", "mimes", "application-x-executable-script.svg"),
-                dest = system.JoinPaths(programs.GetProgramInstallDir("AppImageTool", "linux"), "icon.svg"),
+            success = fileops.copy_file_or_directory(
+                src = paths.join_paths(environment.GetScriptsIconsDir(), "BostonIcons", "128", "mimes", "application-x-executable-script.svg"),
+                dest = paths.join_paths(programs.GetProgramInstallDir("AppImageTool", "linux"), "icon.svg"),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
@@ -106,8 +108,8 @@ class AppImageTool(toolbase.ToolBase):
         # Create config files
         if environment.IsLinuxPlatform():
             for config_filename, config_contents in config_files.items():
-                success = system.TouchFile(
-                    src = system.JoinPaths(environment.GetToolsRootDir(), config_filename),
+                success = fileops.touch_file(
+                    src = paths.join_paths(environment.GetToolsRootDir(), config_filename),
                     contents = config_contents.strip(),
                     verbose = setup_params.verbose,
                     pretend_run = setup_params.pretend_run,

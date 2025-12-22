@@ -6,6 +6,7 @@ import sys
 import config
 import system
 import logger
+import prompts
 import gameinfo
 import google
 import stores
@@ -168,7 +169,7 @@ def FindMetadataAsset(
     logger.log_info("")
 
     # Ask them which one they want to use
-    value = system.PromptForValue("Enter the index number (0-%d) of the asset to use, or paste a custom URL (or press Enter to skip)" % (len(search_results) - 1))
+    value = prompts.prompt_for_value("Enter the index number (0-%d) of the asset to use, or paste a custom URL (or press Enter to skip)" % (len(search_results) - 1))
     if not value:
         return None
 

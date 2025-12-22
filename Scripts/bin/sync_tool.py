@@ -15,6 +15,7 @@ import lockerinfo
 import arguments
 import setup
 import logger
+import prompts
 
 # Parse arguments
 parser = arguments.ArgumentParser(description = "Sync tool.")
@@ -75,7 +76,7 @@ def main():
             details.append("Remote: %s:%s" % (remote_name, remote_path))
         if mount_path:
             details.append("Mount: %s" % mount_path)
-        if not system.PromptForPreview("Sync %s (%s)" % (args.action, args.locker_type), details):
+        if not prompts.prompt_for_preview("Sync %s (%s)" % (args.action, args.locker_type), details):
             logger.log_warning("Operation cancelled by user")
             return
 

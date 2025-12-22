@@ -5,6 +5,7 @@ import copy
 
 # Local imports
 import config
+import datautils
 import platforms
 import system
 
@@ -94,7 +95,7 @@ class JsonData:
             if not self.has_key(key):
                 self.set_value(key, value)
         elif platforms.IsMergeJsonKey(self.json_platform, key):
-            self.set_value(key, system.MergeData(
+            self.set_value(key, datautils.merge_data(
                 data1 = self.get_value(key),
                 data2 = value,
                 merge_type = config.MergeType.SAFE_ADDITIVE))
@@ -107,7 +108,7 @@ class JsonData:
             if not self.has_subkey(key, subkey):
                 self.set_subvalue(key, subkey, value)
         elif platforms.IsMergeJsonKey(self.json_platform, subkey):
-            self.set_subvalue(key, subkey, system.MergeData(
+            self.set_subvalue(key, subkey, datautils.merge_data(
                 data1 = self.get_subvalue(key, subkey),
                 data2 = value,
                 merge_type = config.MergeType.SAFE_ADDITIVE))

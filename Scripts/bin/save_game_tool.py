@@ -14,6 +14,7 @@ import collection
 import gameinfo
 import setup
 import logger
+import prompts
 
 # Parse arguments
 parser = arguments.ArgumentParser(description = "Save tool.")
@@ -69,7 +70,7 @@ def main():
     # Show preview
     if not args.no_preview:
         details = ["%s/%s/%s" % (g.get_category(), g.get_subcategory(), g.get_name()) for g in games_to_process]
-        if not system.PromptForPreview("Save game %s" % args.action, details):
+        if not prompts.prompt_for_preview("Save game %s" % args.action, details):
             logger.log_warning("Operation cancelled by user")
             return
 

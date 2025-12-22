@@ -15,6 +15,7 @@ import programs
 import arguments
 import setup
 import logger
+import paths
 
 # Parse arguments
 parser = arguments.ArgumentParser(description = "Launch pegasus.")
@@ -44,9 +45,9 @@ def main():
 
     # Get launch options
     launch_options = command.CreateCommandOptions()
-    launch_options.set_cwd(system.GetFilenameDirectory(pegasus_tool))
+    launch_options.set_cwd(paths.get_filename_directory(pegasus_tool))
     launch_options.set_env(os.environ)
-    launch_options.set_env_var("JOYBOX_LAUNCH_JSON", system.JoinPaths(environment.GetScriptsBinDir(), "launch_json" + environment.GetScriptsCommandExtension()))
+    launch_options.set_env_var("JOYBOX_LAUNCH_JSON", paths.join_paths(environment.GetScriptsBinDir(), "launch_json" + environment.GetScriptsCommandExtension()))
 
     # Run launch command
     code = command.RunReturncodeCommand(

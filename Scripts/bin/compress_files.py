@@ -13,6 +13,8 @@ import archive
 import arguments
 import setup
 import logger
+import paths
+import prompts
 
 # Parse arguments
 parser = arguments.ArgumentParser(description = "Compress files.")
@@ -49,14 +51,14 @@ def main():
             "File types: %s" % args.file_types,
             "Delete originals: %s" % args.delete_originals
         ]
-        if not system.PromptForPreview("Compress files", details):
+        if not prompts.prompt_for_preview("Compress files", details):
             logger.log_warning("Operation cancelled by user")
             return
 
     # Compress files
-    for obj in system.GetDirectoryContents(input_path):
-        obj_path = system.JoinPaths(input_path, obj)
-        if not system.IsPathFile(obj_path):
+    for obj in paths.get_directory_contents(input_path):
+        obj_path = paths.join_paths(input_path, obj)
+        if not paths.is_path_file(obj_path):
             continue
 
         # Check file type
@@ -68,9 +70,9 @@ def main():
             continue
 
         # Get output file
-        output_basename = system.GetFilenameBasename(obj_path)
+        output_basename = paths.get_filename_basename(obj_path)
         output_ext = args.archive_type.cval()
-        output_file = system.JoinPaths(input_path, output_basename + output_ext)
+        output_file = paths.join_paths(input_path, output_basename + output_ext)
         if os.path.exists(output_file):
             continue
 

@@ -5,12 +5,15 @@ import random
 
 # Local imports
 import config
+import datautils
 import system
 import logger
 import environment
+import fileops
 import platforms
 import gameinfo
 import metadataentry
+import paths
 
 # Metadata database class
 class Metadata:
@@ -121,7 +124,7 @@ class Metadata:
     def merge_contents(self, other, merge_type = None):
         if not merge_type:
             merge_type = config.MergeType.REPLACE
-        self.game_database = system.MergeDictionaries(
+        self.game_database = datautils.merge_dictionaries(
             dict1 = self.game_database,
             dict2 = other.game_database,
             merge_type = merge_type)
@@ -147,8 +150,8 @@ class Metadata:
 
                 # Check file paths
                 file_path_relative = game_entry.get_file()
-                file_path_real = system.JoinPaths(environment.GetGameJsonMetadataRootDir(), file_path_relative)
-                if not system.DoesPathExist(file_path_real):
+                file_path_real = paths.join_paths(environment.GetGameJsonMetadataRootDir(), file_path_relative)
+                if not paths.does_path_exist(file_path_real):
                     logger.log_error("File not found:\n%s" % file_path_relative)
                     logger.log_error("Verification of '%s - %s' failed" % (game_platform, game_name), quit_program = True)
 
@@ -159,7 +162,7 @@ class Metadata:
         verbose = False,
         pretend_run = False,
         exit_on_failure = False):
-        if system.DoesPathExist(pegasus_file):
+        if paths.does_path_exist(pegasus_file):
             with open(pegasus_file, "r", encoding="utf8") as file:
                 data = file.read()
 
@@ -298,13 +301,13 @@ class Metadata:
         pretend_run = False,
         exit_on_failure = False):
         file_mode = "a" if append_existing else "w"
-        if not system.DoesPathExist(pegasus_file):
-            system.MakeDirectory(
-                src = system.GetFilenameDirectory(pegasus_file),
+        if not paths.does_path_exist(pegasus_file):
+            fileops.make_directory(
+                src = paths.get_filename_directory(pegasus_file),
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-            system.TouchFile(
+            fileops.touch_file(
                 src = pegasus_file,
                 verbose = verbose,
                 pretend_run = pretend_run,

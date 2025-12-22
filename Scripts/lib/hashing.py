@@ -5,10 +5,14 @@ import sys
 # Local imports
 import config
 import environment
+import fileops
 import system
 import logger
+import paths
+import serialization
 import archive
 import cryption
+import datautils
 
 ###########################################################
 
@@ -223,9 +227,9 @@ def FindDuplicateFiles(
     exit_on_failure = False):
     found_files = []
     test_checksum = CalculateFileCRC32(filename, verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure)
-    for obj in system.GetDirectoryContents(directory):
-        obj_path = system.JoinPaths(directory, obj)
-        if system.IsPathFile(obj_path):
+    for obj in paths.get_directory_contents(directory):
+        obj_path = paths.join_paths(directory, obj)
+        if paths.is_path_file(obj_path):
             obj_checksum = CalculateFileCRC32(obj_path, verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure)
             if test_checksum == obj_checksum:
                 found_files.append(obj_path)
@@ -240,9 +244,9 @@ def FindDuplicateArchives(
     exit_on_failure = False):
     found_files = []
     test_checksums = archive.GetArchiveChecksums(filename)
-    for obj in system.GetDirectoryContents(directory):
-        obj_path = system.JoinPaths(directory, obj)
-        if system.IsPathFile(obj_path):
+    for obj in paths.get_directory_contents(directory):
+        obj_path = paths.join_paths(directory, obj)
+        if paths.is_path_file(obj_path):
             obj_checksums = archive.GetArchiveChecksums(obj_path)
             if [i for i in test_checksums if i not in obj_checksums] == []:
                 found_files.append(obj_path)
@@ -256,8 +260,8 @@ def ArePlainFilesIdentical(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    first_exists = system.DoesPathExist(first, case_sensitive_paths = case_sensitive_paths)
-    second_exists = system.DoesPathExist(second, case_sensitive_paths = case_sensitive_paths)
+    first_exists = paths.does_path_exist(first, case_sensitive_paths = case_sensitive_paths)
+    second_exists = paths.does_path_exist(second, case_sensitive_paths = case_sensitive_paths)
     if first_exists and second_exists:
         first_crc32 = CalculateFileCRC32(first, verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure)
         second_crc32 = CalculateFileCRC32(second, verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure)
@@ -340,7 +344,7 @@ def GetFileGroupings(filenames, max_group_size):
         hash_contents = ReadHashFile(hash_filename)
         for hash_key in sorted(hash_contents.keys()):
             file_location = hash_key
-            file_directory = system.GetFilenameDirectory(file_location)
+            file_directory = paths.get_filename_directory(file_location)
             file_size = int(hash_contents[hash_key]["size"])
             if not file_directory in hash_sets:
                 hash_sets[file_directory] = {}
@@ -375,7 +379,7 @@ def ReadHashFile(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    json_hashes = system.ReadJsonFile(
+    json_hashes = serialization.read_json_file(
         src = src,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -389,7 +393,7 @@ def ReadHashFile(
                 json_hash["hash_enc"] = ""
             if "size_enc" not in json_hash:
                 json_hash["size_enc"] = 0
-            file_location = system.JoinPaths(json_hash["dir"], json_hash["filename"])
+            file_location = paths.join_paths(json_hash["dir"], json_hash["filename"])
             hash_contents[file_location] = json_hash
     return hash_contents
 
@@ -403,7 +407,7 @@ def WriteHashFile(
     json_hashes = []
     for hash_key in sorted(hash_contents.keys()):
         json_hashes.append(hash_contents[hash_key])
-    success = system.WriteJsonFile(
+    success = serialization.write_json_file(
         src = src,
         json_data = json_hashes,
         sort_keys = True,
@@ -436,7 +440,7 @@ def SortHashFile(
 def DoesFileNeedToBeHashed(src, base_path, hash_contents = {}):
     if src not in hash_contents.keys():
         return True
-    input_file_fullpath = system.JoinPaths(base_path, src)
+    input_file_fullpath = paths.join_paths(base_path, src)
     input_file_size = str(os.path.getsize(input_file_fullpath))
     input_file_mtime = str(int(os.path.getmtime(input_file_fullpath)))
     if input_file_size != hash_contents[src]["size"]:
@@ -457,9 +461,9 @@ def CalculateHash(
     exit_on_failure = False):
 
     # Get path info
-    path_file = system.GetFilenameFile(src)
-    path_dir = system.GetFilenameDirectory(src)
-    path_full = system.JoinPaths(base_path, path_dir, path_file)
+    path_file = paths.get_filename_file(src)
+    path_dir = paths.get_filename_directory(src)
+    path_full = paths.join_paths(base_path, path_dir, path_file)
     logger.log_info("Hashing file %s ..." % path_full)
 
     # Create hash data
@@ -513,15 +517,15 @@ def HashFiles(
     exit_on_failure = False):
 
     # Make sure directory exists
-    system.MakeDirectory(
-        src = system.GetFilenameDirectory(output_file),
+    fileops.make_directory(
+        src = paths.get_filename_directory(output_file),
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
     # Get hash contents
     hash_contents = {}
-    if system.IsPathFile(output_file):
+    if paths.is_path_file(output_file):
         hash_contents = ReadHashFile(
             src = output_file,
             verbose = verbose,
@@ -529,18 +533,18 @@ def HashFiles(
             exit_on_failure = exit_on_failure)
 
     # Hash each file in the input path
-    for file in system.BuildFileList(src):
+    for file in paths.build_file_list(src):
         if os.path.realpath(file) == os.path.realpath(output_file):
             continue
 
         # Split by base path
-        file_parts = system.SplitFilePath(file, offset)
+        file_parts = paths.split_file_path(file, offset)
         if len(file_parts) != 2:
             continue
 
         # Check if file needs to be hashed
         relative_base = file_parts[0]
-        relative_file = system.JoinPaths(offset, file_parts[1])
+        relative_file = paths.join_paths(offset, file_parts[1])
         if DoesFileNeedToBeHashed(relative_file, relative_base, hash_contents):
 
             # Calculate hash
@@ -551,7 +555,7 @@ def HashFiles(
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-            hash_entry_key = system.JoinPaths(hash_data["dir"], hash_data["filename"])
+            hash_entry_key = paths.join_paths(hash_data["dir"], hash_data["filename"])
 
             # Merge hash
             if hash_entry_key in hash_contents:
@@ -560,7 +564,7 @@ def HashFiles(
                 different_hash_enc = hash_contents[hash_entry_key]["hash_enc"] == hash_data["hash_enc"]
                 different_size_enc = int(hash_contents[hash_entry_key]["size_enc"]) == int(hash_data["size_enc"])
                 if different_hash or different_size or different_hash_enc or different_size_enc:
-                    hash_contents[hash_entry_key] = system.MergeDictionaries(
+                    hash_contents[hash_entry_key] = datautils.merge_dictionaries(
                         dict1 = hash_contents[hash_entry_key],
                         dict2 = hash_data,
                         merge_type = config.MergeType.REPLACE)

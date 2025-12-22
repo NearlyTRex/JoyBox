@@ -14,6 +14,8 @@ import environment
 import arguments
 import setup
 import logger
+import paths
+import prompts
 
 # Parse arguments
 parser = arguments.ArgumentParser(description = "Clean metadata files.")
@@ -36,14 +38,14 @@ def main():
 
             # Get metadata file
             metadata_file = environment.GetGameMetadataFile(game_category, game_subcategory)
-            if not system.IsPathFile(metadata_file):
+            if not paths.is_path_file(metadata_file):
                 continue
             metadata_files_to_process.append((game_category, game_subcategory, metadata_file))
 
     # Show preview
     if not args.no_preview:
         details = [metadata_file for _, _, metadata_file in metadata_files_to_process]
-        if not system.PromptForPreview("Clean game metadata files (sort entries)", details):
+        if not prompts.prompt_for_preview("Clean game metadata files (sort entries)", details):
             logger.log_warning("Operation cancelled by user")
             return
 

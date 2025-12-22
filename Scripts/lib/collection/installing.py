@@ -6,7 +6,9 @@ import sys
 import config
 import system
 import logger
+import paths
 import environment
+import fileops
 import programs
 import transform
 import platforms
@@ -116,7 +118,7 @@ def UninstallStoreGame(
 # Check if local game is installed
 def IsLocalGameInstalled(game_info):
     cache_dir = game_info.get_local_cache_dir()
-    return system.DoesDirectoryContainFiles(cache_dir)
+    return paths.does_directory_contain_files(cache_dir)
 
 # Install local game
 def InstallLocalGame(
@@ -145,7 +147,7 @@ def InstallLocalGame(
         return False
 
     # Create temporary directory
-    tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(
+    tmp_dir_success, tmp_dir_result = fileops.create_temporary_directory(
         verbose = verbose,
         pretend_run = pretend_run)
     if not tmp_dir_success:
@@ -197,7 +199,7 @@ def InstallLocalGame(
             run_func = InstallGame)
 
     # Delete temporary directory
-    system.RemoveDirectory(
+    fileops.remove_directory(
         src = tmp_dir_result,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -219,7 +221,7 @@ def InstallLocalUntransformedGame(
     exit_on_failure = False):
 
     # Copy game files
-    success = system.CopyContents(
+    success = fileops.copy_contents(
         src = source_dir,
         dest = game_info.get_local_cache_dir(),
         show_progress = True,
@@ -242,7 +244,7 @@ def InstallLocalTransformedGame(
     exit_on_failure = False):
 
     # Create temporary directory
-    tmp_dir_success, tmp_dir_result = system.CreateTemporaryDirectory(
+    tmp_dir_success, tmp_dir_result = fileops.create_temporary_directory(
         verbose = verbose,
         pretend_run = pretend_run)
     if not tmp_dir_success:
@@ -264,7 +266,7 @@ def InstallLocalTransformedGame(
     # Add to cache
     success = InstallLocalUntransformedGame(
         game_info = game_info,
-        source_dir = system.GetFilenameDirectory(transform_result),
+        source_dir = paths.get_filename_directory(transform_result),
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -272,7 +274,7 @@ def InstallLocalTransformedGame(
         return False
 
     # Delete temporary directory
-    system.RemoveDirectory(
+    fileops.remove_directory(
         src = tmp_dir_result,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -299,9 +301,9 @@ def InstallLocalGameAddons(
     source_dlc_dirs = []
     source_update_dirs = []
     for filename in game_info.get_value(config.json_key_dlc):
-        source_dlc_dirs += [system.JoinPaths(environment.GetLockerGamingDLCRootDir(), filename)]
+        source_dlc_dirs += [paths.join_paths(environment.GetLockerGamingDLCRootDir(), filename)]
     for filename in game_info.get_value(config.json_key_update):
-        source_update_dirs += [system.JoinPaths(environment.GetLockerGamingUpdateRootDir(), filename)]
+        source_update_dirs += [paths.join_paths(environment.GetLockerGamingUpdateRootDir(), filename)]
 
     # Install add-ons
     for emulator in programs.GetEmulators():
@@ -331,7 +333,7 @@ def UninstallLocalGame(
         return True
 
     # Remove local cache
-    success = system.RemoveDirectory(
+    success = fileops.remove_directory(
         src = game_info.get_local_cache_dir(),
         verbose = verbose,
         pretend_run = pretend_run,
@@ -340,7 +342,7 @@ def UninstallLocalGame(
         return False
 
     # Remove remote cache
-    success = system.RemoveDirectory(
+    success = fileops.remove_directory(
         src = game_info.get_remote_cache_dir(),
         verbose = verbose,
         pretend_run = pretend_run,

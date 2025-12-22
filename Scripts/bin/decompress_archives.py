@@ -13,6 +13,8 @@ import archive
 import arguments
 import setup
 import logger
+import paths
+import prompts
 
 # Parse arguments
 parser = arguments.ArgumentParser(description = "Decompress archive files.")
@@ -48,19 +50,19 @@ def main():
             "Same dir: %s" % args.same_dir,
             "Delete originals: %s" % args.delete_originals
         ]
-        if not system.PromptForPreview("Decompress archives", details):
+        if not prompts.prompt_for_preview("Decompress archives", details):
             logger.log_warning("Operation cancelled by user")
             return
 
     # Decompress archives
     archive_extensions = [archive_type.cval() for archive_type in args.archive_types]
-    for file in system.BuildFileListByExtensions(input_path, extensions = archive_extensions):
+    for file in paths.build_file_list_by_extensions(input_path, extensions = archive_extensions):
 
         # Get file info
         current_file = file
-        file_dir = system.GetFilenameDirectory(current_file)
-        file_basename = system.GetFilenameBasename(current_file)
-        output_dir = system.JoinPaths(file_dir, file_basename)
+        file_dir = paths.get_filename_directory(current_file)
+        file_basename = paths.get_filename_basename(current_file)
+        output_dir = paths.join_paths(file_dir, file_basename)
         if args.same_dir:
             output_dir = file_dir
 

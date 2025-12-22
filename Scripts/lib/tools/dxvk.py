@@ -6,6 +6,7 @@ import sys
 import config
 import system
 import logger
+import paths
 import release
 import programs
 import toolbase
@@ -17,7 +18,7 @@ config_files = {}
 def GetLibs(key):
     lib_files = []
     lib_root = programs.GetLibraryInstallDir("DXVK", "lib")
-    for potential_file in system.BuildFileList(lib_root):
+    for potential_file in paths.build_file_list(lib_root):
         for lib_file in programs.GetToolConfigValue("DXVK", key):
             if potential_file.endswith(lib_file):
                 lib_files.append(potential_file)
