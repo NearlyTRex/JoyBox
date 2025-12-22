@@ -157,6 +157,7 @@ backup_tool -l Local -q Remote -u Roms -c Nintendo -s "Nintendo Switch" -r Encry
 - Encrypted files use the `.enc` extension with MD5-hashed filenames
 - The encryption passphrase comes from the locker configuration (not specified on command line)
 - Directory structure is preserved during copy operations
+- When using `--skip_identical` with encryption/decryption, the tool decrypts to a temp directory first to compare file contents, then moves or skips accordingly. This avoids re-encrypting or re-decrypting files that haven't changed.
 
 ## See Also
 
