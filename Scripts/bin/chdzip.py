@@ -59,7 +59,7 @@ def main():
             continue
 
         # Extract disc chd
-        chd.ArchiveDiscCHD(
+        chd.archive_disc_chd(
             chd_file = current_file,
             zip_file = output_zip,
             delete_original = args.delete_originals,

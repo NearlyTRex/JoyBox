@@ -72,7 +72,7 @@ def main():
 
         # Strip psv
         if args.strip:
-            playstation.StripPSV(
+            playstation.strip_psv(
                 src_psv_file = current_file,
                 dest_psv_file = paths.join_paths(current_file_dir, current_file_basename + "_stripped.psv"),
                 delete_original = args.delete_originals,
@@ -82,7 +82,7 @@ def main():
 
         # Unstrip psv
         elif args.unstrip:
-            playstation.UnstripPSV(
+            playstation.unstrip_psv(
                 src_psv_file = current_file,
                 src_psve_file = paths.join_paths(current_file_dir, current_file_basename + ".psve"),
                 dest_psv_file = paths.join_paths(current_file_dir, current_file_basename + "_unstripped.psv"),
@@ -93,7 +93,7 @@ def main():
 
         # Trim psv
         elif args.trim:
-            playstation.TrimPSV(
+            playstation.trim_psv(
                 src_psv_file = current_file,
                 dest_psv_file = paths.join_paths(current_file_dir, current_file_basename + "_trimmed.psv"),
                 delete_original = args.delete_originals,
@@ -103,7 +103,7 @@ def main():
 
         # Untrim psv
         elif args.untrim:
-            playstation.UntrimPSV(
+            playstation.untrim_psv(
                 src_psv_file = current_file,
                 dest_psv_file = paths.join_paths(current_file_dir, current_file_basename + "_untrimmed.psv"),
                 delete_original = args.delete_originals,
@@ -113,7 +113,7 @@ def main():
 
         # Verify psv
         elif args.verify:
-            playstation.VerifyPSV(
+            playstation.verify_psv(
                 psv_file = current_file,
                 verbose = args.verbose,
                 pretend_run = args.pretend_run,

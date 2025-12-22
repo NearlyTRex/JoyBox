@@ -60,7 +60,7 @@ def main():
 
             # Decrypt NUS package
             if args.decrypt_nus:
-                nintendo.DecryptWiiUNUSPackage(
+                nintendo.decrypt_wiiu_nus_package(
                     nus_package_dir = current_file_dir,
                     delete_original = args.delete_originals,
                     verbose = args.verbose,
@@ -69,7 +69,7 @@ def main():
 
             # Verify NUS package
             elif args.verify_nus:
-                nintendo.VerifyWiiUNUSPackage(
+                nintendo.verify_wiiu_nus_package(
                     nus_package_dir = current_file_dir,
                     verbose = args.verbose,
                     pretend_run = args.pretend_run,

@@ -22,8 +22,8 @@ class Steam(toolbase.ToolBase):
     def get_config(self):
 
         # Get steam info
-        steam_exe = ini.GetIniValue("Tools.Steam", "steam_exe")
-        steam_install_dir = ini.GetIniPathValue("Tools.Steam", "steam_install_dir")
+        steam_exe = ini.get_ini_value("Tools.Steam", "steam_exe")
+        steam_install_dir = ini.get_ini_path_value("Tools.Steam", "steam_install_dir")
 
         # Return config
         return {

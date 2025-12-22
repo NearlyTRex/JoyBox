@@ -43,7 +43,7 @@ def upload_game_files(
         return False
 
     # Encrypt all files
-    success = cryption.EncryptFiles(
+    success = cryption.encrypt_files(
         src = game_root,
         passphrase = locker_info.get_passphrase(),
         delete_original = True,
@@ -83,7 +83,7 @@ def upload_all_game_files(
     for game_supercategory in [config.Supercategory.ROMS]:
         for game_category in config.Category.members():
             for game_subcategory in config.subcategory_map[game_category]:
-                game_names = gameinfo.FindJsonGameNames(
+                game_names = gameinfo.find_json_game_names(
                     game_supercategory,
                     game_category,
                     game_subcategory)

@@ -40,7 +40,7 @@ def main():
 
     # Story
     if args.genre_type == config.AudioGenreType.STORY:
-        success = audio.DownloadStoryAudioFiles(
+        success = audio.download_story_audio_files(
             cookie_source = args.cookie_source,
             locker_type = args.locker_type,
             verbose = args.verbose,
@@ -52,7 +52,7 @@ def main():
 
     # ASMR
     elif args.genre_type == config.AudioGenreType.ASMR:
-        success = audio.DownloadASMRAudioFiles(
+        success = audio.download_asmr_audio_files(
             cookie_source = args.cookie_source,
             locker_type = args.locker_type,
             verbose = args.verbose,

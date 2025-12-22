@@ -51,7 +51,7 @@ def main():
 
     # Collect games to process
     games_to_process = []
-    for game_info in gameinfo.IterateSelectedGameInfos(
+    for game_info in gameinfo.iterate_selected_game_infos(
         parser = parser,
         generation_mode = args.generation_mode,
         source_type = args.source_type,

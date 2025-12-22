@@ -52,7 +52,7 @@ def SimpleLaunch(
             selected_launch_file = selected_file
 
         # Display choices
-        gui.DisplayChoicesWindow(
+        gui.display_choices_window(
             choice_list = game_launch_file,
             title_text = "Select Game",
             message_text = "Select game to run",

@@ -56,7 +56,7 @@ def main():
 
         # Extract as iso
         if args.extract_method == config.DiscExtractType.ISO:
-            iso.ExtractISO(
+            iso.extract_iso(
                 iso_file = current_file,
                 extract_dir = output_dir,
                 delete_original = args.delete_originals,
@@ -66,7 +66,7 @@ def main():
 
         # Extract as archive
         elif args.extract_method == config.DiscExtractType.ARCHIVE:
-            archive.ExtractArchive(
+            archive.extract_archive(
                 archive_file = current_file,
                 extract_dir = output_dir,
                 skip_existing = args.skip_existing,

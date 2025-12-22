@@ -67,7 +67,7 @@ def main():
             continue
 
         # Compress folder
-        archive.CreateArchiveFromFolder(
+        archive.create_archive_from_folder(
             archive_file = output_file,
             source_dir = obj_path,
             password = args.password,

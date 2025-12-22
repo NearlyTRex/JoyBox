@@ -32,7 +32,7 @@ def check_requirements():
         logger.log_error("Symlinks are required, please enable them for your system", quit_program = True)
 
     # Check ini file
-    if not ini.IsIniPresent():
+    if not ini.is_ini_present():
         logger.log_error("Ini file not found, please run setup first", quit_program = True)
 
 # Setup packages

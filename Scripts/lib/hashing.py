@@ -17,42 +17,42 @@ import datautils
 ###########################################################
 
 # Calculate string crc32
-def CalculateStringCRC32(string):
+def calculate_string_crc32(string):
     import zlib
     if isinstance(string, str):
         string = string.encode("utf8")
     return "%x" % zlib.crc32(string)
 
 # Calculate string md5
-def CalculateStringMD5(string):
+def calculate_string_md5(string):
     import hashlib
     if isinstance(string, str):
         string = string.encode("utf8")
     return hashlib.md5(string).hexdigest()
 
 # Calculate string sha1
-def CalculateStringSHA1(string):
+def calculate_string_sha1(string):
     import hashlib
     if isinstance(string, str):
         string = string.encode("utf8")
     return hashlib.sha1(string).hexdigest()
 
 # Calculate string sha256
-def CalculateStringSHA256(string):
+def calculate_string_sha256(string):
     import hashlib
     if isinstance(string, str):
         string = string.encode("utf8")
     return hashlib.sha256(string).hexdigest()
 
 # Calculate string XXH3
-def CalculateStringXXH3(string):
+def calculate_string_xxh3(string):
     import xxhash
     return xxhash.xxh3_64(string).hexdigest()
 
 ###########################################################
 
 # Calculate file crc32
-def CalculateFileCRC32(
+def calculate_file_crc32(
     src,
     chunksize = config.hash_chunk_size,
     verbose = False,
@@ -85,7 +85,7 @@ def CalculateFileCRC32(
         return ""
 
 # Calculate file md5
-def CalculateFileMD5(
+def calculate_file_md5(
     src,
     chunksize = config.hash_chunk_size,
     verbose = False,
@@ -118,7 +118,7 @@ def CalculateFileMD5(
         return ""
 
 # Calculate file sha1
-def CalculateFileSHA1(
+def calculate_file_sha1(
     src,
     chunksize = config.hash_chunk_size,
     verbose = False,
@@ -151,7 +151,7 @@ def CalculateFileSHA1(
         return ""
 
 # Calculate file sha256
-def CalculateFileSHA256(
+def calculate_file_sha256(
     src,
     chunksize = config.hash_chunk_size,
     verbose = False,
@@ -184,7 +184,7 @@ def CalculateFileSHA256(
         return ""
 
 # Calculate file xxh3
-def CalculateFileXXH3(
+def calculate_file_xxh3(
     src,
     chunksize = config.hash_chunk_size,
     verbose = False,
@@ -219,41 +219,41 @@ def CalculateFileXXH3(
 ###########################################################
 
 # Find duplicate files in the search directory
-def FindDuplicateFiles(
+def find_duplicate_files(
     filename,
     directory,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
     found_files = []
-    test_checksum = CalculateFileCRC32(filename, verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure)
+    test_checksum = calculate_file_crc32(filename, verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure)
     for obj in paths.get_directory_contents(directory):
         obj_path = paths.join_paths(directory, obj)
         if paths.is_path_file(obj_path):
-            obj_checksum = CalculateFileCRC32(obj_path, verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure)
+            obj_checksum = calculate_file_crc32(obj_path, verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure)
             if test_checksum == obj_checksum:
                 found_files.append(obj_path)
     return found_files
 
 # Find duplicate archives in the search directory
-def FindDuplicateArchives(
+def find_duplicate_archives(
     filename,
     directory,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
     found_files = []
-    test_checksums = archive.GetArchiveChecksums(filename)
+    test_checksums = archive.get_archive_checksums(filename)
     for obj in paths.get_directory_contents(directory):
         obj_path = paths.join_paths(directory, obj)
         if paths.is_path_file(obj_path):
-            obj_checksums = archive.GetArchiveChecksums(obj_path)
+            obj_checksums = archive.get_archive_checksums(obj_path)
             if [i for i in test_checksums if i not in obj_checksums] == []:
                 found_files.append(obj_path)
     return found_files
 
 # Check if plain files are identical
-def ArePlainFilesIdentical(
+def are_plain_files_identical(
     first,
     second,
     case_sensitive_paths = True,
@@ -263,29 +263,29 @@ def ArePlainFilesIdentical(
     first_exists = paths.does_path_exist(first, case_sensitive_paths = case_sensitive_paths)
     second_exists = paths.does_path_exist(second, case_sensitive_paths = case_sensitive_paths)
     if first_exists and second_exists:
-        first_crc32 = CalculateFileCRC32(first, verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure)
-        second_crc32 = CalculateFileCRC32(second, verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure)
+        first_crc32 = calculate_file_crc32(first, verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure)
+        second_crc32 = calculate_file_crc32(second, verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure)
         return first_crc32 == second_crc32
     return False
 
 # Check if archive files are identical
-def AreArchiveFilesIdentical(
+def are_archive_files_identical(
     first,
     second,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    first_is_archive = archive.IsArchive(first)
-    second_is_archive = archive.IsArchive(second)
+    first_is_archive = archive.is_archive(first)
+    second_is_archive = archive.is_archive(second)
     if first_is_archive and second_is_archive:
-        first_checksums = sorted(archive.GetArchiveChecksums(first), key=lambda item: (item['path'], item['crc']))
-        second_checksums = sorted(archive.GetArchiveChecksums(second), key=lambda item: (item['path'], item['crc']))
+        first_checksums = sorted(archive.get_archive_checksums(first), key=lambda item: (item['path'], item['crc']))
+        second_checksums = sorted(archive.get_archive_checksums(second), key=lambda item: (item['path'], item['crc']))
         if len(first_checksums) > 0 and len(second_checksums) > 0:
             return first_checksums == second_checksums
     return False
 
 # Check if files are identical
-def AreFilesIdentical(
+def are_files_identical(
     first,
     second,
     case_sensitive_paths = True,
@@ -294,7 +294,7 @@ def AreFilesIdentical(
     exit_on_failure = False):
 
     # Compare as plain files
-    identical = ArePlainFilesIdentical(
+    identical = are_plain_files_identical(
         first = first,
         second = second,
         case_sensitive_paths = case_sensitive_paths,
@@ -305,7 +305,7 @@ def AreFilesIdentical(
         return True
 
     # Compare as archive files
-    identical = AreArchiveFilesIdentical(
+    identical = are_archive_files_identical(
         first = first,
         second = second,
         verbose = verbose,
@@ -318,7 +318,7 @@ def AreFilesIdentical(
     return False
 
 # Get file groupings
-def GetFileGroupings(filenames, max_group_size):
+def get_file_groupings(filenames, max_group_size):
 
     # Group results
     results = {}
@@ -341,7 +341,7 @@ def GetFileGroupings(filenames, max_group_size):
     # Aggregate similar files together into sets
     hash_sets = {}
     for hash_filename in sorted(filenames):
-        hash_contents = ReadHashFile(hash_filename)
+        hash_contents = read_hash_file(hash_filename)
         for hash_key in sorted(hash_contents.keys()):
             file_location = hash_key
             file_directory = paths.get_filename_directory(file_location)
@@ -374,7 +374,7 @@ def GetFileGroupings(filenames, max_group_size):
 ###########################################################
 
 # Read hash file
-def ReadHashFile(
+def read_hash_file(
     src,
     verbose = False,
     pretend_run = False,
@@ -388,7 +388,7 @@ def ReadHashFile(
     if isinstance(json_hashes, list):
         for json_hash in json_hashes:
             if "filename_enc" not in json_hash:
-                json_hash["filename_enc"] = cryption.GenerateEncryptedFilename(json_hash["filename"])
+                json_hash["filename_enc"] = cryption.generate_encrypted_filename(json_hash["filename"])
             if "hash_enc" not in json_hash:
                 json_hash["hash_enc"] = ""
             if "size_enc" not in json_hash:
@@ -398,7 +398,7 @@ def ReadHashFile(
     return hash_contents
 
 # Write hash file
-def WriteHashFile(
+def write_hash_file(
     src,
     hash_contents,
     verbose = False,
@@ -424,12 +424,12 @@ def sort_hash_file(
     exit_on_failure = False):
     if verbose:
         logger.log_info("Sorting hash file %s" % src)
-    hash_contents = ReadHashFile(
+    hash_contents = read_hash_file(
         src = src,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
-    return WriteHashFile(
+    return write_hash_file(
         src = src,
         hash_contents = hash_contents,
         verbose = verbose,
@@ -437,7 +437,7 @@ def sort_hash_file(
         exit_on_failure = exit_on_failure)
 
 # Check if file needs to be hashed
-def DoesFileNeedToBeHashed(src, base_path, hash_contents = {}):
+def does_file_need_to_be_hashed(src, base_path, hash_contents = {}):
     if src not in hash_contents.keys():
         return True
     input_file_fullpath = paths.join_paths(base_path, src)
@@ -452,7 +452,7 @@ def DoesFileNeedToBeHashed(src, base_path, hash_contents = {}):
 ###########################################################
 
 # Calculate hash
-def CalculateHash(
+def calculate_hash(
     src,
     base_path,
     passphrase = None,
@@ -468,8 +468,8 @@ def CalculateHash(
 
     # Create hash data
     hash_data = {}
-    if cryption.IsFileEncrypted(path_full) and cryption.IsPassphraseValid(passphrase):
-        file_info = cryption.GetEmbeddedFileInfo(
+    if cryption.is_file_encrypted(path_full) and cryption.is_passphrase_valid(passphrase):
+        file_info = cryption.get_embedded_file_info(
             src = path_full,
             passphrase = passphrase,
             hasher = CalculateFileXXH3,
@@ -481,7 +481,7 @@ def CalculateHash(
             hash_data["filename"] = file_info["filename"]
             hash_data["filename_enc"] = path_file
             hash_data["hash"] = file_info["hash"]
-            hash_data["hash_enc"] = CalculateFileMD5(
+            hash_data["hash_enc"] = calculate_file_md5(
                 src = path_full,
                 verbose = verbose,
                 pretend_run = pretend_run,
@@ -492,8 +492,8 @@ def CalculateHash(
     else:
         hash_data["dir"] = path_dir
         hash_data["filename"] = path_file
-        hash_data["filename_enc"] = cryption.GenerateEncryptedFilename(path_file)
-        hash_data["hash"] = CalculateFileXXH3(
+        hash_data["filename_enc"] = cryption.generate_encrypted_filename(path_file)
+        hash_data["hash"] = calculate_file_xxh3(
             src = path_full,
             verbose = verbose,
             pretend_run = pretend_run,
@@ -507,7 +507,7 @@ def CalculateHash(
     return hash_data
 
 # Hash files
-def HashFiles(
+def hash_files(
     src,
     offset,
     output_file,
@@ -526,7 +526,7 @@ def HashFiles(
     # Get hash contents
     hash_contents = {}
     if paths.is_path_file(output_file):
-        hash_contents = ReadHashFile(
+        hash_contents = read_hash_file(
             src = output_file,
             verbose = verbose,
             pretend_run = pretend_run,
@@ -545,10 +545,10 @@ def HashFiles(
         # Check if file needs to be hashed
         relative_base = file_parts[0]
         relative_file = paths.join_paths(offset, file_parts[1])
-        if DoesFileNeedToBeHashed(relative_file, relative_base, hash_contents):
+        if does_file_need_to_be_hashed(relative_file, relative_base, hash_contents):
 
             # Calculate hash
-            hash_data = CalculateHash(
+            hash_data = calculate_hash(
                 src = relative_file,
                 base_path = relative_base,
                 passphrase = passphrase,
@@ -572,7 +572,7 @@ def HashFiles(
                 hash_contents[hash_entry_key] = hash_data
 
             # Write hash file
-            success = WriteHashFile(
+            success = write_hash_file(
                 src = output_file,
                 hash_contents = hash_contents,
                 verbose = verbose,
@@ -582,7 +582,7 @@ def HashFiles(
                 return False
 
     # Write hash file
-    return WriteHashFile(
+    return write_hash_file(
         src = output_file,
         hash_contents = hash_contents,
         verbose = verbose,

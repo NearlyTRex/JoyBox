@@ -45,7 +45,7 @@ def build_hash_files(
         return False
 
     # Hash files
-    success = hashing.HashFiles(
+    success = hashing.hash_files(
         src = game_root,
         offset = hash_offset,
         output_file = hash_file,
@@ -65,7 +65,7 @@ def build_all_hash_files(
     for game_supercategory in [config.Supercategory.ROMS]:
         for game_category in config.Category.members():
             for game_subcategory in config.subcategory_map[game_category]:
-                game_names = gameinfo.FindJsonGameNames(
+                game_names = gameinfo.find_json_game_names(
                     game_supercategory,
                     game_category,
                     game_subcategory)
@@ -109,7 +109,7 @@ def sort_hash_file(
         return False
 
     # Sort hash file
-    success = hashing.SortHashFile(
+    success = hashing.sort_hash_file(
         src = hash_file,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -136,7 +136,7 @@ def sort_all_hash_files(
                     continue
 
                 # Sort hash file
-                success = hashing.SortHashFile(
+                success = hashing.sort_hash_file(
                     src = hash_file,
                     verbose = verbose,
                     pretend_run = pretend_run,

@@ -142,14 +142,14 @@ class RClone(toolbase.ToolBase):
             setup_params = config.SetupParams()
 
         # Get gdrive options
-        gdrive_remote_name = ini.GetIniValue("UserData.Share", "locker_gdrive_remote_name", throw_exception = False)
-        gdrive_remote_type = ini.GetIniValue("UserData.Share", "locker_gdrive_remote_type", throw_exception = False)
-        gdrive_remote_token = ini.GetIniValue("UserData.Share", "locker_gdrive_remote_token", throw_exception = False)
+        gdrive_remote_name = ini.get_ini_value("UserData.Share", "locker_gdrive_remote_name", throw_exception = False)
+        gdrive_remote_type = ini.get_ini_value("UserData.Share", "locker_gdrive_remote_type", throw_exception = False)
+        gdrive_remote_token = ini.get_ini_value("UserData.Share", "locker_gdrive_remote_token", throw_exception = False)
 
         # Get hetzner options
-        hetzner_remote_name = ini.GetIniValue("UserData.Share", "locker_hetzner_remote_name", throw_exception = False)
-        hetzner_remote_type = ini.GetIniValue("UserData.Share", "locker_hetzner_remote_type", throw_exception = False)
-        hetzner_remote_config_str = ini.GetIniValue("UserData.Share", "locker_hetzner_remote_config", throw_exception = False)
+        hetzner_remote_name = ini.get_ini_value("UserData.Share", "locker_hetzner_remote_name", throw_exception = False)
+        hetzner_remote_type = ini.get_ini_value("UserData.Share", "locker_hetzner_remote_type", throw_exception = False)
+        hetzner_remote_config_str = ini.get_ini_value("UserData.Share", "locker_hetzner_remote_config", throw_exception = False)
         hetzner_remote_config = {}
         if hetzner_remote_config_str:
             try:

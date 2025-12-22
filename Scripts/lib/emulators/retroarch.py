@@ -242,7 +242,7 @@ class RetroArch(emulatorbase.EmulatorBase):
 
         # Verify system files
         for filename, expected_md5 in system_files.items():
-            actual_md5 = hashing.CalculateFileMD5(
+            actual_md5 = hashing.calculate_file_md5(
                 src = paths.join_paths(environment.get_locker_gaming_emulator_setup_dir("RetroArch"), filename),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
@@ -287,14 +287,14 @@ class RetroArch(emulatorbase.EmulatorBase):
 
         # Check if this platform is valid
         if not game_platform in cores_mapping:
-            gui.DisplayErrorPopup(
+            gui.display_error_popup(
                 title_text = "Launch platform not defined",
                 message_text = "Launch platform %s not defined in RetroArch config" % game_platform)
 
         # Check if core is installed
         core_file = paths.join_paths(cores_dir, cores_mapping[game_platform] + cores_ext)
         if not os.path.exists(core_file):
-            gui.DisplayErrorPopup(
+            gui.display_error_popup(
                 title_text = "RetroArch core not found",
                 message_text = "RetroArch core '%s' could not be found!" % cores_mapping[game_platform])
 

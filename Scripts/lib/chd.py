@@ -13,21 +13,21 @@ import iso
 import archive
 
 # Get disc iso
-def GetDiscISO(chd_file):
+def get_disc_iso(chd_file):
     return chd_file.replace(config.DiscImageFileType.CHD.cval(), config.DiscImageFileType.ISO.cval())
 
 # Get disc toc
-def GetDiscTOC(chd_file):
+def get_disc_toc(chd_file):
     return chd_file.replace(config.DiscImageFileType.CHD.cval(), config.DiscImageFileType.TOC.cval())
 
 # Check if disc chd is mounted
-def IsDiscCHDMounted(chd_file, mount_dir):
-    return iso.IsISOMounted(
-        iso_file = GetDiscISO(chd_file),
+def is_disc_chd_mounted(chd_file, mount_dir):
+    return iso.is_iso_mounted(
+        iso_file = get_disc_iso(chd_file),
         mount_dir = mount_dir)
 
 # Create disc chd
-def CreateDiscCHD(
+def create_disc_chd(
     chd_file,
     source_iso,
     delete_original = False,
@@ -75,7 +75,7 @@ def CreateDiscCHD(
     return os.path.exists(chd_file)
 
 # Extract disc chd
-def ExtractDiscCHD(
+def extract_disc_chd(
     chd_file,
     binary_file,
     toc_file,
@@ -128,7 +128,7 @@ def ExtractDiscCHD(
     return os.path.exists(binary_file)
 
 # Archive disc chd
-def ArchiveDiscCHD(
+def archive_disc_chd(
     chd_file,
     zip_file,
     delete_original = False,
@@ -144,7 +144,7 @@ def ArchiveDiscCHD(
         return False
 
     # Mount chd
-    success = MountDiscCHD(
+    success = mount_disc_chd(
         chd_file = chd_file,
         mount_dir = tmp_dir_result,
         verbose = verbose,
@@ -154,7 +154,7 @@ def ArchiveDiscCHD(
         return False
 
     # Archive contents
-    success = archive.CreateArchiveFromFolder(
+    success = archive.create_archive_from_folder(
         archive_file = zip_file,
         source_dir = tmp_dir_result,
         verbose = verbose,
@@ -179,7 +179,7 @@ def ArchiveDiscCHD(
     return os.path.exists(zip_file)
 
 # Verify disc chd
-def VerifyDiscCHD(
+def verify_disc_chd(
     chd_file,
     verbose = False,
     pretend_run = False,
@@ -214,7 +214,7 @@ def VerifyDiscCHD(
     return "Overall SHA1 verification successful!" in verify_text
 
 # Mount disc chd
-def MountDiscCHD(
+def mount_disc_chd(
     chd_file,
     mount_dir,
     verbose = False,
@@ -222,14 +222,14 @@ def MountDiscCHD(
     exit_on_failure = False):
 
     # Check if mounted
-    if IsDiscCHDMounted(chd_file, mount_dir):
+    if is_disc_chd_mounted(chd_file, mount_dir):
         return True
 
     # Extract iso from chd
-    success = ExtractDiscCHD(
+    success = extract_disc_chd(
         chd_file = chd_file,
-        binary_file = GetDiscISO(chd_file),
-        toc_file = GetDiscTOC(chd_file),
+        binary_file = get_disc_iso(chd_file),
+        toc_file = get_disc_toc(chd_file),
         force_overwrite = True,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -238,8 +238,8 @@ def MountDiscCHD(
         return False
 
     # Mount iso
-    success = iso.MountISO(
-        iso_file = GetDiscISO(chd_file),
+    success = iso.mount_iso(
+        iso_file = get_disc_iso(chd_file),
         mount_dir = mount_dir,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -248,10 +248,10 @@ def MountDiscCHD(
         return False
 
     # Check result
-    return IsDiscCHDMounted(chd_file, mount_dir)
+    return is_disc_chd_mounted(chd_file, mount_dir)
 
 # Unmount disc chd
-def UnmountDiscCHD(
+def unmount_disc_chd(
     chd_file,
     mount_dir,
     verbose = False,
@@ -259,12 +259,12 @@ def UnmountDiscCHD(
     exit_on_failure = False):
 
     # Check if mounted
-    if not IsDiscCHDMounted(chd_file, mount_dir):
+    if not is_disc_chd_mounted(chd_file, mount_dir):
         return True
 
     # Unmount iso
-    success = iso.UnmountISO(
-        iso_file = GetDiscISO(chd_file),
+    success = iso.unmount_iso(
+        iso_file = get_disc_iso(chd_file),
         mount_dir = mount_dir,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -273,4 +273,4 @@ def UnmountDiscCHD(
         return False
 
     # Check result
-    return not IsDiscCHDMounted(chd_file, mount_dir)
+    return not is_disc_chd_mounted(chd_file, mount_dir)

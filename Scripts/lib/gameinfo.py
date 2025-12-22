@@ -92,8 +92,8 @@ class GameInfo:
 
         # Get basic info based on json location
         self.game_name = paths.get_filename_basename(json_file)
-        self.game_supercategory, self.game_category, self.game_subcategory = DeriveGameCategoriesFromFile(json_file)
-        self.game_platform = DeriveGamePlatformFromCategories(self.game_category, self.game_subcategory)
+        self.game_supercategory, self.game_category, self.game_subcategory = derive_game_categories_from_file(json_file)
+        self.game_platform = derive_game_platform_from_categories(self.game_category, self.game_subcategory)
         validation.assert_is_not_none(self.game_supercategory, "game_supercategory")
         validation.assert_is_not_none(self.game_category, "game_category")
         validation.assert_is_not_none(self.game_subcategory, "game_subcategory")
@@ -748,7 +748,7 @@ class GameInfo:
 
         # Check that we have something to run
         if len(launch_programs) == 0:
-            gui.DisplayErrorPopup(
+            gui.display_error_popup(
                 title_text = "No runnable files",
                 message_text = "Computer install has no runnable files")
 
@@ -772,7 +772,7 @@ class GameInfo:
             runnable_choices.append(paths.join_paths(launch_cwd, launch_exe))
 
         # Display list of runnable files and let user decide which to run
-        gui.DisplayChoicesWindow(
+        gui.display_choices_window(
             choice_list = runnable_choices,
             title_text = "Select Program",
             message_text = "Select program to run",
@@ -829,7 +829,7 @@ class GameInfo:
 ###########################################################
 
 # Find best suited game file
-def FindBestGameFile(game_files):
+def find_best_game_file(game_files):
 
     # Collect game file entries
     game_file_entries = []
@@ -852,17 +852,17 @@ def FindBestGameFile(game_files):
     return game_file
 
 # Find all game names
-def FindAllGameNames(base_dir, game_supercategory, game_category, game_subcategory):
+def find_all_game_names(base_dir, game_supercategory, game_category, game_subcategory):
 
     # Get base path
     base_path = paths.join_paths(base_dir, game_supercategory, game_category, game_subcategory)
 
     # Get platform
-    game_platform = DeriveGamePlatformFromCategories(game_category, game_subcategory)
+    game_platform = derive_game_platform_from_categories(game_category, game_subcategory)
 
     # Collect game names
     game_names = []
-    if platforms.IsLetterPlatform(game_platform):
+    if platforms.is_letter_platform(game_platform):
         for game_letter in sorted(paths.get_directory_contents(base_path)):
             for game_name in sorted(paths.get_directory_contents(paths.join_paths(base_path, game_letter))):
                 game_names.append(game_name)
@@ -872,19 +872,19 @@ def FindAllGameNames(base_dir, game_supercategory, game_category, game_subcatego
     return game_names
 
 # Find json game names
-def FindJsonGameNames(game_supercategory, game_category, game_subcategory):
+def find_json_game_names(game_supercategory, game_category, game_subcategory):
     base_dir = environment.get_game_json_metadata_root_dir()
-    return FindAllGameNames(base_dir, game_supercategory, game_category, game_subcategory)
+    return find_all_game_names(base_dir, game_supercategory, game_category, game_subcategory)
 
 # Find locker game names
-def FindLockerGameNames(game_supercategory, game_category, game_subcategory, source_type = None):
+def find_locker_game_names(game_supercategory, game_category, game_subcategory, source_type = None):
     base_dir = environment.get_locker_gaming_root_dir(source_type)
-    return FindAllGameNames(base_dir, game_supercategory, game_category, game_subcategory)
+    return find_all_game_names(base_dir, game_supercategory, game_category, game_subcategory)
 
 ###########################################################
 
 # Derive regular name from game name
-def DeriveRegularNameFromGameName(game_name, custom_prefix = "", custom_suffix = ""):
+def derive_regular_name_from_game_name(game_name, custom_prefix = "", custom_suffix = ""):
     regular_name = game_name
     for flippable_word in config.flippable_words:
         segment_before = f", {flippable_word} "
@@ -897,7 +897,7 @@ def DeriveRegularNameFromGameName(game_name, custom_prefix = "", custom_suffix =
     return regular_name
 
 # Derive game name from regular name
-def DeriveGameNameFromRegularName(regular_name, region="USA"):
+def derive_game_name_from_regular_name(regular_name, region="USA"):
     game_name = regular_name.strip()
     game_name = game_name.replace(":", " -")
     game_name = game_name.replace("&", "and")
@@ -922,16 +922,16 @@ def DeriveGameNameFromRegularName(regular_name, region="USA"):
     return f"{game_name} ({region})"
 
 # Derive slug name from regular name
-def DeriveSlugNameFromRegularName(regular_name):
+def derive_slug_name_from_regular_name(regular_name):
     return strings.get_slug_string(regular_name)
 
 # Derive slug name from game name
-def DeriveSlugNameFromGameName(game_name, custom_prefix = "", custom_suffix = ""):
-    regular_name = DeriveRegularNameFromGameName(game_name, custom_prefix, custom_suffix)
-    return DeriveSlugNameFromRegularName(regular_name)
+def derive_slug_name_from_game_name(game_name, custom_prefix = "", custom_suffix = ""):
+    regular_name = derive_regular_name_from_game_name(game_name, custom_prefix, custom_suffix)
+    return derive_slug_name_from_regular_name(regular_name)
 
 # Derive game letter from name
-def DeriveGameLetterFromName(game_name):
+def derive_game_letter_from_name(game_name):
     letter = ""
     if len(game_name):
         letter = game_name[0].upper()
@@ -940,23 +940,23 @@ def DeriveGameLetterFromName(game_name):
     return letter
 
 # Derive game search terms from name
-def DeriveGameSearchTermsFromName(game_name, game_platform, custom_prefix = "", custom_suffix = ""):
-    regular_name = DeriveRegularNameFromGameName(game_name, custom_prefix, custom_suffix)
+def derive_game_search_terms_from_name(game_name, game_platform, custom_prefix = "", custom_suffix = ""):
+    regular_name = derive_regular_name_from_game_name(game_name, custom_prefix, custom_suffix)
     return strings.encode_url_string(regular_name, use_plus = True)
 
 # Derive game name path from name
-def DeriveGameNamePathFromName(game_name, game_platform):
-    if platforms.IsLetterPlatform(game_platform):
-        return paths.join_paths(DeriveGameLetterFromName(game_name), game_name)
+def derive_game_name_path_from_name(game_name, game_platform):
+    if platforms.is_letter_platform(game_platform):
+        return paths.join_paths(derive_game_letter_from_name(game_name), game_name)
     else:
         return game_name
 
 # Derive game asset path from name
-def DeriveGameAssetPathFromName(game_name, asset_type):
+def derive_game_asset_path_from_name(game_name, asset_type):
     return "%s/%s%s" % (asset_type.val(), game_name, asset_type.cval())
 
 # Derive game categories from platform
-def DeriveGameCategoriesFromPlatform(game_platform):
+def derive_game_categories_from_platform(game_platform):
     if not game_platform:
         return (None, None, None)
     derived_supercategory = config.Supercategory.ROMS
@@ -971,14 +971,14 @@ def DeriveGameCategoriesFromPlatform(game_platform):
     return (derived_supercategory, derived_category, derived_subcategory)
 
 # Derive game platform from categories
-def DeriveGamePlatformFromCategories(game_category, game_subcategory):
+def derive_game_platform_from_categories(game_category, game_subcategory):
     for game_platform in config.Platform.members():
         if game_platform.val().endswith(game_subcategory.val()):
             return game_platform
     return None
 
 # Derive game categories from file
-def DeriveGameCategoriesFromFile(game_file):
+def derive_game_categories_from_file(game_file):
 
     # Check file
     if not paths.is_path_valid(game_file):
@@ -1033,7 +1033,7 @@ def DeriveGameCategoriesFromFile(game_file):
 ###########################################################
 
 # Iterate selected game categories
-def IterateSelectedGameCategories(
+def iterate_selected_game_categories(
     parser,
     generation_mode = None,
     game_supercategories = None,
@@ -1066,7 +1066,7 @@ def IterateSelectedGameCategories(
 ###########################################################
 
 # Iterate selected game infos
-def IterateSelectedGameInfos(
+def iterate_selected_game_infos(
     parser,
     generation_mode = None,
     source_type = None,
@@ -1103,19 +1103,19 @@ def IterateSelectedGameInfos(
     # Standard mode - iterate filesystem
     if game_name_filter is None:
         game_name_filter = getattr(args, "game_name", None)
-    for game_supercategory, game_category, game_subcategory in IterateSelectedGameCategories(
+    for game_supercategory, game_category, game_subcategory in iterate_selected_game_categories(
         parser = parser,
         generation_mode = generation_mode,
         game_supercategories = game_supercategories,
         game_subcategory_map = game_subcategory_map):
         if source_type is not None:
-            game_names = FindLockerGameNames(
+            game_names = find_locker_game_names(
                 game_supercategory,
                 game_category,
                 game_subcategory,
                 source_type)
         else:
-            game_names = FindJsonGameNames(
+            game_names = find_json_game_names(
                 game_supercategory,
                 game_category,
                 game_subcategory)

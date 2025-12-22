@@ -49,7 +49,7 @@ def main():
 
         # Verify chd
         if args.verify_chd:
-            playstation.VerifyPS3CHD(
+            playstation.verify_ps3_chd(
                 chd_file = file,
                 verbose = args.verbose,
                 pretend_run = args.pretend_run,

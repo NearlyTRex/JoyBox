@@ -49,7 +49,7 @@ def main():
 
         # Check if json file matches up to a real game path
         logger.log_info("Checking if game matching '%s' exists ..." % json_file)
-        game_supercategory, game_category, game_subcategory = gameinfo.DeriveGameCategoriesFromFile(json_file)
+        game_supercategory, game_category, game_subcategory = gameinfo.derive_game_categories_from_file(json_file)
         game_name = paths.get_filename_basename(json_file)
         game_base_dir = environment.get_locker_gaming_files_dir(game_supercategory, game_category, game_subcategory, game_name)
         if not os.path.exists(game_base_dir):
@@ -68,8 +68,8 @@ def main():
     for game_supercategory in config.Supercategory.members():
         for game_category in config.Category.members():
             for game_subcategory in config.subcategory_map[game_category]:
-                game_platform = gameinfo.DeriveGamePlatformFromCategories(game_category, game_subcategory)
-                game_names = gameinfo.FindJsonGameNames(
+                game_platform = gameinfo.derive_game_platform_from_categories(game_category, game_subcategory)
+                game_names = gameinfo.find_json_game_names(
                     game_supercategory,
                     game_category,
                     game_subcategory)
@@ -122,7 +122,7 @@ def main():
 
                 # Read hash file
                 logger.log_info("Checking hash file '%s' ..." % hash_file_path)
-                hash_file_data = hashing.ReadHashFile(hash_file_path)
+                hash_file_data = hashing.read_hash_file(hash_file_path)
                 for hash_reference_file in hash_file_data.keys():
 
                     # Check if file exists

@@ -108,7 +108,7 @@ def ConvertAsset(
 
     # Image assets
     if asset_type in config.AssetImageType.members():
-        success = image.ConvertImageToJPEG(
+        success = image.convert_image_to_jpeg(
             image_src = asset_src,
             image_dest = asset_dest,
             verbose = verbose,

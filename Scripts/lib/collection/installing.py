@@ -141,7 +141,7 @@ def install_local_game(
 
     # Check if source files are available
     if not locker.does_remote_path_contain_files(game_remote_rom_dir):
-        gui.DisplayErrorPopup(
+        gui.display_error_popup(
             title_text = "Source files unavailable",
             message_text = "Source files are not available\n%s\n%s" % (game_name, game_platform))
         return False
@@ -164,7 +164,7 @@ def install_local_game(
         return False
 
     # Check if transformation is required
-    if platforms.IsTransformPlatform(game_platform):
+    if platforms.is_transform_platform(game_platform):
 
         # Install transformed game
         def InstallTransformedGame():
@@ -175,7 +175,7 @@ def install_local_game(
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-        gui.DisplayLoadingWindow(
+        gui.display_loading_window(
             title_text = "Installing to cache",
             message_text = "Transforming and adding game to cache\n%s\n%s" % (game_name, game_platform),
             failure_text = "Unable to install game to cache",
@@ -191,7 +191,7 @@ def install_local_game(
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-        gui.DisplayLoadingWindow(
+        gui.display_loading_window(
             title_text = "Installing to cache",
             message_text = "Adding game to cache\n%s\n%s" % (game_name, game_platform),
             failure_text = "Unable to install game to cache",
@@ -207,7 +207,7 @@ def install_local_game(
 
     # Check if game is now installed
     if not is_local_game_installed(game_info):
-        gui.DisplayErrorPopup(
+        gui.display_error_popup(
             title_text = "Failed to cache game",
             message_text = "Game could not be cached\n%s\n%s" % (game_name, game_platform))
     return True
@@ -294,7 +294,7 @@ def install_local_game_addons(
     game_platform = game_info.get_platform()
 
     # No addon possible
-    if not platforms.AreAddonsPossible(game_platform):
+    if not platforms.are_addons_possible(game_platform):
         return True
 
     # Get directories

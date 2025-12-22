@@ -22,8 +22,8 @@ class Git(toolbase.ToolBase):
     def get_config(self):
 
         # Get git info
-        git_exe = ini.GetIniValue("Tools.Git", "git_exe")
-        git_install_dir = ini.GetIniPathValue("Tools.Git", "git_install_dir")
+        git_exe = ini.get_ini_value("Tools.Git", "git_exe")
+        git_install_dir = ini.get_ini_path_value("Tools.Git", "git_install_dir")
 
         # Return config
         return {

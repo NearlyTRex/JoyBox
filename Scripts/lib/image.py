@@ -11,7 +11,7 @@ import logger
 import paths
 
 # Get image format
-def GetImageFormat(image_file):
+def get_image_format(image_file):
     if paths.is_path_file(image_file):
         try:
             from PIL import Image
@@ -28,23 +28,23 @@ def GetImageFormat(image_file):
         return None
 
 # Detect if image is a certain format
-def IsImageFormat(image_file, image_format):
-    return (GetImageFormat(image_file) == image_format)
+def is_image_format(image_file, image_format):
+    return (get_image_format(image_file) == image_format)
 
 # Detect if image is jpeg
-def IsImageJPEG(image_file):
-    return IsImageFormat(
+def is_image_jpeg(image_file):
+    return is_image_format(
         image_file = image_file,
         image_format = config.ImageFileType.JPEG)
 
 # Detect if image is png
-def IsImagePNG(image_file):
-    return IsImageFormat(
+def is_image_png(image_file):
+    return is_image_format(
         image_file = image_file,
         image_format = config.ImageFileType.PNG)
 
 # Convert image
-def ConvertImage(
+def convert_image(
     image_src,
     image_dest,
     image_format = None,
@@ -78,13 +78,13 @@ def ConvertImage(
         return False
 
 # Convert image to jpeg
-def ConvertImageToJPEG(
+def convert_image_to_jpeg(
     image_src,
     image_dest,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    if IsImageJPEG(image_src):
+    if is_image_jpeg(image_src):
         return fileops.smart_transfer(
             src = image_src,
             dest = image_dest,
@@ -92,7 +92,7 @@ def ConvertImageToJPEG(
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-    return ConvertImage(
+    return convert_image(
         image_src = image_src,
         image_dest = image_dest,
         image_format = config.ImageFileType.JPEG,
@@ -101,13 +101,13 @@ def ConvertImageToJPEG(
         exit_on_failure = exit_on_failure)
 
 # Convert image to png
-def ConvertImageToPNG(
+def convert_image_to_png(
     image_src,
     image_dest,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    if IsImagePNG(image_src):
+    if is_image_png(image_src):
         return fileops.smart_transfer(
             src = image_src,
             dest = image_dest,
@@ -115,7 +115,7 @@ def ConvertImageToPNG(
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-    return ConvertImage(
+    return convert_image(
         image_src = image_src,
         image_dest = image_dest,
         image_format = config.ImageFileType.PNG,
@@ -124,7 +124,7 @@ def ConvertImageToPNG(
         exit_on_failure = exit_on_failure)
 
 # Convert image data to format and return base64 string
-def ConvertImageDataToFormat(
+def convert_image_data_to_format(
     image_data,
     target_format,
     verbose = False,
@@ -140,7 +140,7 @@ def ConvertImageDataToFormat(
         f.write(image_data)
 
     # Convert to target format
-    if ConvertImage(
+    if convert_image(
         image_src = temp_input,
         image_dest = temp_output,
         image_format = target_format,

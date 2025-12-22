@@ -79,7 +79,7 @@ def PackInstallImage(
         return False
 
     # Create archive
-    success = archive.CreateArchiveFromFolder(
+    success = archive.create_archive_from_folder(
         archive_file = output_image,
         source_dir = tmp_dir_result,
         verbose = verbose,
@@ -112,7 +112,7 @@ def UnpackInstallImage(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    return archive.ExtractArchive(
+    return archive.extract_archive(
         archive_file = input_image,
         extract_dir = output_dir,
         delete_original = delete_original,

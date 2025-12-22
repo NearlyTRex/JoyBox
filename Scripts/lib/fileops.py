@@ -360,7 +360,7 @@ def copy_file_or_directory(
         if skip_existing and paths.does_path_exist(dest, case_sensitive_paths):
             return True
         if skip_identical:
-            if hashing.AreFilesIdentical(
+            if hashing.are_files_identical(
                 first = src,
                 second = dest,
                 case_sensitive_paths = case_sensitive_paths,
@@ -396,7 +396,7 @@ def move_file_or_directory(
         if skip_existing and paths.does_path_exist(dest, case_sensitive_paths):
             return True
         if skip_identical:
-            if hashing.AreFilesIdentical(
+            if hashing.are_files_identical(
                 first = src,
                 second = dest,
                 case_sensitive_paths = case_sensitive_paths,
@@ -431,7 +431,7 @@ def transfer_file(
         if skip_existing and paths.does_path_exist(dest, case_sensitive_paths):
             return True
         if skip_identical:
-            if hashing.AreFilesIdentical(
+            if hashing.are_files_identical(
                 first = src,
                 second = dest,
                 case_sensitive_paths = case_sensitive_paths,

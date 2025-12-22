@@ -86,7 +86,7 @@ def are_symlinks_supported():
 
 # Get tools root dir
 def get_tools_root_dir():
-    return ini.GetIniPathValue("UserData.Dirs", "tools_dir")
+    return ini.get_ini_path_value("UserData.Dirs", "tools_dir")
 
 ###########################################################
 # Emulators
@@ -94,7 +94,7 @@ def get_tools_root_dir():
 
 # Get emulators root dir
 def get_emulators_root_dir():
-    return ini.GetIniPathValue("UserData.Dirs", "emulators_dir")
+    return ini.get_ini_path_value("UserData.Dirs", "emulators_dir")
 
 ###########################################################
 # Locker
@@ -102,11 +102,11 @@ def get_emulators_root_dir():
 
 # Get local locker root dir
 def get_local_locker_root_dir():
-    return ini.GetIniPathValue("UserData.Dirs", "local_locker_dir")
+    return ini.get_ini_path_value("UserData.Dirs", "local_locker_dir")
 
 # Get remote locker root dir
 def get_remote_locker_root_dir():
-    return ini.GetIniPathValue("UserData.Dirs", "remote_locker_dir")
+    return ini.get_ini_path_value("UserData.Dirs", "remote_locker_dir")
 
 # Get locker root dir
 def get_locker_root_dir(source_type = None):
@@ -171,8 +171,8 @@ def get_locker_gaming_tags_root_dir(source_type = None):
 
 # Get locker gaming files offset
 def get_locker_gaming_files_offset(game_supercategory, game_category, game_subcategory, game_name):
-    game_platform = gameinfo.DeriveGamePlatformFromCategories(game_category, game_subcategory)
-    game_name_path = gameinfo.DeriveGameNamePathFromName(game_name, game_platform)
+    game_platform = gameinfo.derive_game_platform_from_categories(game_category, game_subcategory)
+    game_name_path = gameinfo.derive_game_name_path_from_name(game_name, game_platform)
     return paths.join_paths(
         game_supercategory,
         game_category,
@@ -197,8 +197,8 @@ def get_locker_gaming_saves_root_dir(source_type = None):
 
 # Get locker gaming save dir
 def get_locker_gaming_save_dir(game_supercategory, game_category, game_subcategory, game_name, source_type = None):
-    game_platform = gameinfo.DeriveGamePlatformFromCategories(game_category, game_subcategory)
-    game_name_path = gameinfo.DeriveGameNamePathFromName(game_name, game_platform)
+    game_platform = gameinfo.derive_game_platform_from_categories(game_category, game_subcategory)
+    game_name_path = gameinfo.derive_game_name_path_from_name(game_name, game_platform)
     return paths.join_paths(
         get_locker_gaming_saves_root_dir(source_type),
         game_category,
@@ -325,7 +325,7 @@ def get_locker_program_tool_dir(tool_name, tool_platform = None, source_type = N
 
 # Get game metadata root dir
 def get_game_metadata_root_dir():
-    return ini.GetIniPathValue("UserData.Dirs", "game_metadata_dir")
+    return ini.get_ini_path_value("UserData.Dirs", "game_metadata_dir")
 
 # Get pegasus metadata root dir
 def get_game_pegasus_metadata_root_dir():
@@ -393,8 +393,8 @@ def get_json_metadata_dir(game_supercategory, game_category, game_subcategory):
 
 # Get json metadata file
 def get_game_json_metadata_file(game_supercategory, game_category, game_subcategory, game_name):
-    game_platform = gameinfo.DeriveGamePlatformFromCategories(game_category, game_subcategory)
-    game_name_path = gameinfo.DeriveGameNamePathFromName(game_name, game_platform)
+    game_platform = gameinfo.derive_game_platform_from_categories(game_category, game_subcategory)
+    game_name_path = gameinfo.derive_game_name_path_from_name(game_name, game_platform)
     return paths.join_paths(
         get_json_metadata_dir(game_supercategory, game_category, game_subcategory),
         game_name_path,
@@ -412,7 +412,7 @@ def get_game_json_metadata_ignore_file(game_supercategory, game_category, game_s
 
 # Get file metadata root dir
 def get_file_metadata_root_dir():
-    return ini.GetIniPathValue("UserData.Dirs", "file_metadata_dir")
+    return ini.get_ini_path_value("UserData.Dirs", "file_metadata_dir")
 
 # Get audio metadata root dir
 def get_file_audio_metadata_root_dir(metadata_type, genre_type):
@@ -450,7 +450,7 @@ def get_file_audio_metadata_file(metadata_type, genre_type, album_name, artist_n
 
 # Get scripts root dir
 def get_scripts_root_dir():
-    return ini.GetIniPathValue("UserData.Dirs", "scripts_dir")
+    return ini.get_ini_path_value("UserData.Dirs", "scripts_dir")
 
 # Get scripts bin dir
 def get_scripts_bin_dir():
@@ -484,7 +484,7 @@ def get_scripts_executable_extension():
 
 # Get repositories root dir
 def get_repositories_root_dir():
-    return ini.GetIniPathValue("UserData.Dirs", "repositories_dir")
+    return ini.get_ini_path_value("UserData.Dirs", "repositories_dir")
 
 ###########################################################
 # Cache
@@ -492,7 +492,7 @@ def get_repositories_root_dir():
 
 # Get cache root dir
 def get_cache_root_dir():
-    return ini.GetIniPathValue("UserData.Dirs", "cache_dir")
+    return ini.get_ini_path_value("UserData.Dirs", "cache_dir")
 
 # Get cache gaming root dir
 def get_cache_gaming_root_dir():
@@ -522,8 +522,8 @@ def get_cache_gaming_installs_root_dir():
 
 # Get cache gaming install dir
 def get_cache_gaming_install_dir(game_category, game_subcategory, game_name):
-    game_platform = gameinfo.DeriveGamePlatformFromCategories(game_category, game_subcategory)
-    game_name_path = gameinfo.DeriveGameNamePathFromName(game_name, game_platform)
+    game_platform = gameinfo.derive_game_platform_from_categories(game_category, game_subcategory)
+    game_name_path = gameinfo.derive_game_name_path_from_name(game_name, game_platform)
     return paths.join_paths(
         get_cache_gaming_installs_root_dir(),
         game_category,

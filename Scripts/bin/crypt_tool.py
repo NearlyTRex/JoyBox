@@ -45,9 +45,9 @@ def main():
     # Get passphrase
     passphrase = None
     if args.passphrase_type == config.PassphraseType.GENERAL:
-        passphrase = ini.GetIniValue("UserData.Protection", "general_passphrase")
+        passphrase = ini.get_ini_value("UserData.Protection", "general_passphrase")
     elif args.passphrase_type == config.PassphraseType.LOCKER:
-        passphrase = ini.GetIniValue("UserData.Protection", "locker_passphrase")
+        passphrase = ini.get_ini_value("UserData.Protection", "locker_passphrase")
     if not passphrase:
         logger.log_error("No passphrase set", quit_program = True)
 
@@ -66,7 +66,7 @@ def main():
     # Encrypt file
     if args.encrypt:
         for file in paths.build_file_list(input_path):
-            cryption.EncryptFile(
+            cryption.encrypt_file(
                 src = file,
                 passphrase = passphrase,
                 delete_original = not args.keep_originals,
@@ -77,7 +77,7 @@ def main():
     # Decrypt file
     elif args.decrypt:
         for file in paths.build_file_list(input_path):
-            cryption.DecryptFile(
+            cryption.decrypt_file(
                 src = file,
                 passphrase = passphrase,
                 delete_original = not args.keep_originals,

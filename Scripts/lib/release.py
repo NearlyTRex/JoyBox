@@ -101,11 +101,11 @@ def setup_general_release(
     archive_basename = paths.get_filename_basename(archive_file)
     archive_extension = paths.get_filename_extension(archive_file)
     archive_filename = paths.get_filename_file(archive_file)
-    archive_is_zip = archive.IsZipArchive(archive_file)
-    archive_is_7z = archive.Is7zArchive(archive_file)
-    archive_is_tarball = archive.IsTarballArchive(archive_file)
-    archive_is_exe = archive.IsExeArchive(archive_file)
-    archive_is_appimage = archive.IsAppImageArchive(archive_file)
+    archive_is_zip = archive.is_zip_archive(archive_file)
+    archive_is_7z = archive.is_7z_archive(archive_file)
+    archive_is_tarball = archive.is_tarball_archive(archive_file)
+    archive_is_exe = archive.is_exe_archive(archive_file)
+    archive_is_appimage = archive.is_appimage_archive(archive_file)
 
     # Create install dir if necessary
     success = fileops.make_directory(
@@ -174,7 +174,7 @@ def setup_general_release(
     elif release_type == config.ReleaseType.ARCHIVE:
 
         # Extract archive
-        success = archive.ExtractArchive(
+        success = archive.extract_archive(
             archive_file = archive_file,
             extract_dir = tmp_dir_result,
             verbose = verbose,
@@ -571,7 +571,7 @@ def build_from_source(
             return None
 
         # Extract source archive
-        success = archive.ExtractArchive(
+        success = archive.extract_archive(
             archive_file = archive_file,
             extract_dir = source_dir,
             verbose = verbose,
@@ -727,7 +727,7 @@ def build_binary_from_source(
     final_file = install_name + paths.get_filename_extension(output_file)
 
     # Check if output is an archive that needs extraction
-    is_archive = archive.IsArchive(built_file)
+    is_archive = archive.is_archive(built_file)
     if is_archive and len(search_file):
 
         # Extract archive and install contents
@@ -737,7 +737,7 @@ def build_binary_from_source(
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-        success = archive.ExtractArchive(
+        success = archive.extract_archive(
             archive_file = built_file,
             extract_dir = extract_dir,
             verbose = verbose,

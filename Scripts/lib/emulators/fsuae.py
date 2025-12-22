@@ -184,7 +184,7 @@ class FSUAE(emulatorbase.EmulatorBase):
 
         # Verify system files
         for filename, expected_md5 in system_files.items():
-            actual_md5 = hashing.CalculateFileMD5(
+            actual_md5 = hashing.calculate_file_md5(
                 src = paths.join_paths(environment.get_locker_gaming_emulator_setup_dir("FS-UAE"), filename),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,

@@ -698,15 +698,15 @@ def run_capture_command(
         return (code == 0)
 
     # Get capture info
-    capture_duration = ini.GetIniIntegerValue("UserData.Capture", "capture_duration")
-    capture_interval = ini.GetIniIntegerValue("UserData.Capture", "capture_interval")
-    capture_origin_x = ini.GetIniIntegerValue("UserData.Capture", "capture_origin_x")
-    capture_origin_y = ini.GetIniIntegerValue("UserData.Capture", "capture_origin_y")
-    capture_resolution_w = ini.GetIniIntegerValue("UserData.Capture", "capture_resolution_w")
-    capture_resolution_h = ini.GetIniIntegerValue("UserData.Capture", "capture_resolution_h")
-    capture_framerate = ini.GetIniIntegerValue("UserData.Capture", "capture_framerate")
-    overwrite_screenshots = ini.GetIniBoolValue("UserData.Capture", "overwrite_screenshots")
-    overwrite_videos = ini.GetIniBoolValue("UserData.Capture", "overwrite_videos")
+    capture_duration = ini.get_ini_integer_value("UserData.Capture", "capture_duration")
+    capture_interval = ini.get_ini_integer_value("UserData.Capture", "capture_interval")
+    capture_origin_x = ini.get_ini_integer_value("UserData.Capture", "capture_origin_x")
+    capture_origin_y = ini.get_ini_integer_value("UserData.Capture", "capture_origin_y")
+    capture_resolution_w = ini.get_ini_integer_value("UserData.Capture", "capture_resolution_w")
+    capture_resolution_h = ini.get_ini_integer_value("UserData.Capture", "capture_resolution_h")
+    capture_framerate = ini.get_ini_integer_value("UserData.Capture", "capture_framerate")
+    overwrite_screenshots = ini.get_ini_bool_value("UserData.Capture", "overwrite_screenshots")
+    overwrite_videos = ini.get_ini_bool_value("UserData.Capture", "overwrite_videos")
 
     # Screenshot capturing
     if capture_type == config.CaptureType.SCREENSHOT:

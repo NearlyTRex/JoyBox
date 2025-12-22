@@ -396,7 +396,7 @@ def mount_disc_image(
     validation.assert_path_exists(src, "src")
 
     # Mount disc
-    success = chd.MountDiscCHD(
+    success = chd.mount_disc_chd(
         chd_file = src,
         mount_dir = mount_dir,
         verbose = verbose,
@@ -437,7 +437,7 @@ def unmount_disc_image(
         return False
 
     # Unmount directory
-    success = chd.UnmountDiscCHD(
+    success = chd.unmount_disc_chd(
         chd_file = src,
         mount_dir = mount_dir,
         verbose = verbose,
@@ -867,7 +867,7 @@ def setup_prefix_command(
         has_valid_target = paths.does_path_exist(info["target"])
         has_valid_cwd = paths.does_path_exist(info["cwd"])
         if not has_valid_target or not has_valid_cwd:
-            gui.DisplayErrorPopup(
+            gui.display_error_popup(
                 title_text = "Unable to resolve LNK file",
                 message_text = "Unable to resolve LNK file %s to an actual target" % orig_cmd_starter)
         new_cmd += [info["target"]]

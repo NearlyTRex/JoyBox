@@ -19,7 +19,7 @@ import webpage
 ######################################################
 
 # Encrypt Nintendo DS rom
-def EncryptNDSRom(
+def encrypt_nds_rom(
     nds_file,
     generate_hash = False,
     verbose = False,
@@ -52,7 +52,7 @@ def EncryptNDSRom(
     return (code == 0)
 
 # Decrypt Nintendo DS rom
-def DecryptNDSRom(
+def decrypt_nds_rom(
     nds_file,
     generate_hash = False,
     verbose = False,
@@ -89,7 +89,7 @@ def DecryptNDSRom(
 ######################################################
 
 # Convert 3DS CIA file to CCI file
-def Convert3DSCIAtoCCI(
+def convert_3ds_cia_to_cci(
     src_3ds_file,
     dest_3ds_file,
     verbose = False,
@@ -127,7 +127,7 @@ def Convert3DSCIAtoCCI(
     return os.path.exists(dest_3ds_file)
 
 # Convert 3DS CCI file to CIA file
-def Convert3DSCCItoCIA(
+def convert_3ds_cci_to_cia(
     src_3ds_file,
     dest_3ds_file,
     verbose = False,
@@ -165,7 +165,7 @@ def Convert3DSCCItoCIA(
     return os.path.exists(dest_3ds_file)
 
 # Trim 3DS CCI file
-def Trim3DSCCI(
+def trim_3ds_cci(
     src_3ds_file,
     dest_3ds_file,
     verbose = False,
@@ -233,7 +233,7 @@ def Trim3DSCCI(
     return os.path.exists(dest_3ds_file)
 
 # Untrim 3DS CCI file
-def Untrim3DSCCI(
+def untrim_3ds_cci(
     src_3ds_file,
     dest_3ds_file,
     verbose = False,
@@ -303,7 +303,7 @@ def Untrim3DSCCI(
     return os.path.exists(dest_3ds_file)
 
 # Extract 3DS CIA file
-def Extract3DSCIA(
+def extract_3ds_cia(
     src_3ds_file,
     extract_dir,
     verbose = False,
@@ -383,7 +383,7 @@ def Extract3DSCIA(
     return os.path.exists(extract_dir) and not paths.is_directory_empty(extract_dir)
 
 # Get 3DS file info
-def Get3DSFileInfo(
+def get_3ds_file_info(
     src_3ds_file,
     verbose = False,
     pretend_run = False,
@@ -414,7 +414,7 @@ def Get3DSFileInfo(
     return output
 
 # Install 3DS CIA file
-def Install3DSCIA(
+def install_3ds_cia(
     src_3ds_file,
     sdmc_dir,
     verbose = False,
@@ -422,7 +422,7 @@ def Install3DSCIA(
     exit_on_failure = False):
 
     # Get file info
-    file_info = Get3DSFileInfo(
+    file_info = get_3ds_file_info(
         src_3ds_file = src_3ds_file,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -448,7 +448,7 @@ def Install3DSCIA(
     app_install_dir = paths.join_paths(app_base_dir, app_type, app_folder, "content")
 
     # Extract cia file
-    success = Extract3DSCIA(
+    success = extract_3ds_cia(
         src_3ds_file = src_3ds_file,
         extract_dir = app_install_dir,
         verbose = verbose,
@@ -465,7 +465,7 @@ def Install3DSCIA(
 ######################################################
 
 # Decrypt Wii U NUS package
-def DecryptWiiUNUSPackage(
+def decrypt_wiiu_nus_package(
     nus_package_dir,
     delete_original = False,
     verbose = False,
@@ -524,7 +524,7 @@ def DecryptWiiUNUSPackage(
     return True
 
 # Verify Wii U NUS package
-def VerifyWiiUNUSPackage(
+def verify_wiiu_nus_package(
     nus_package_dir,
     verbose = False,
     pretend_run = False,
@@ -546,7 +546,7 @@ def VerifyWiiUNUSPackage(
         exit_on_failure = exit_on_failure)
 
     # Test decryption
-    decryption_result = DecryptWiiUNUSPackage(
+    decryption_result = decrypt_wiiu_nus_package(
         nus_package_dir = nus_package_dir,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -563,7 +563,7 @@ def VerifyWiiUNUSPackage(
     return decryption_result
 
 # Install Wii U NUS package
-def InstallWiiUNusPackage(
+def install_wiiu_nus_package(
     nus_package_dir,
     nand_dir,
     verbose = False,
@@ -588,7 +588,7 @@ def InstallWiiUNusPackage(
         return False
 
     # Decrypt package
-    success = DecryptWiiUNUSPackage(
+    success = decrypt_wiiu_nus_package(
         nus_package_dir = tmp_dir_result,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -649,7 +649,7 @@ def InstallWiiUNusPackage(
     return True
 
 # Update Wii U keys file
-def UpdateWiiUKeys(
+def update_wiiu_keys(
     src_key_file,
     dest_key_file,
     verbose = False,
@@ -681,7 +681,7 @@ def UpdateWiiUKeys(
 ######################################################
 
 # Check if switch profile info is valid
-def IsValidSwitchProfileInfo(user_id, account_name):
+def is_valid_switch_profile_info(user_id, account_name):
 
     # Check user id
     if not isinstance(user_id, str) or len(user_id) != 32:
@@ -695,7 +695,7 @@ def IsValidSwitchProfileInfo(user_id, account_name):
     return True
 
 # Create Switch profiles dat
-def CreateSwitchProfilesDat(
+def create_switch_profiles_dat(
     profiles_file,
     user_id,
     account_name,
@@ -704,7 +704,7 @@ def CreateSwitchProfilesDat(
     exit_on_failure = False):
 
     # Check profile info
-    if not IsValidSwitchProfileInfo(user_id, account_name):
+    if not is_valid_switch_profile_info(user_id, account_name):
         return False
 
     # Get user id bytes
@@ -750,7 +750,7 @@ def CreateSwitchProfilesDat(
     return os.path.exists(profiles_file)
 
 # Trim Switch XCI file
-def TrimSwitchXCI(
+def trim_switch_xci(
     src_xci_file,
     dest_xci_file,
     delete_original = False,
@@ -835,7 +835,7 @@ def TrimSwitchXCI(
     return os.path.exists(dest_xci_file)
 
 # Untrim Switch XCI file
-def UntrimSwitchXCI(
+def untrim_switch_xci(
     src_xci_file,
     dest_xci_file,
     delete_original = False,
@@ -920,7 +920,7 @@ def UntrimSwitchXCI(
     return os.path.exists(dest_xci_file)
 
 # Extract Switch NSP file
-def ExtractSwitchNSP(
+def extract_switch_nsp(
     nsp_file,
     extract_dir,
     verbose = False,
@@ -960,7 +960,7 @@ def ExtractSwitchNSP(
     return os.path.exists(extract_dir) and not paths.is_directory_empty(extract_dir)
 
 # Install Switch NSP file
-def InstallSwitchNSP(
+def install_switch_nsp(
     nsp_file,
     nand_dir,
     verbose = False,
@@ -975,7 +975,7 @@ def InstallSwitchNSP(
         return False
 
     # Extract nsp file
-    success = ExtractSwitchNSP(
+    success = extract_switch_nsp(
         nsp_file = nsp_file,
         extract_dir = tmp_dir_result,
         verbose = verbose,
@@ -992,7 +992,7 @@ def InstallSwitchNSP(
 
         # Get NCA dir
         nca_id_bytes = bytes.fromhex(nca_id)
-        nca_id_sha256 = hashing.CalculateStringSHA256(nca_id_bytes).upper()
+        nca_id_sha256 = hashing.calculate_string_sha256(nca_id_bytes).upper()
         nca_id_dir = "000000%s" % nca_id_sha256[0:2]
         nca_output_dir = paths.join_paths(nand_dir, "user", "Contents", "registered", nca_id_dir)
 

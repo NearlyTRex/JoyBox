@@ -31,7 +31,7 @@ def ExtractActivationBytes(text):
 def GetActivationBytes(authcode_file = None, verbose = False, exit_on_failure = False):
 
     # Check ini file first
-    authcode = ini.GetIniValue("UserData.Audible", "audible_activation_bytes")
+    authcode = ini.get_ini_value("UserData.Audible", "audible_activation_bytes")
     if authcode:
         extracted = ExtractActivationBytes(authcode)
         if extracted:

@@ -63,7 +63,7 @@ def main():
             continue
 
         # Extract disc chd
-        chd.ExtractDiscCHD(
+        chd.extract_disc_chd(
             chd_file = current_file,
             binary_file = output_bin,
             toc_file = output_toc,

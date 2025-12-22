@@ -22,10 +22,10 @@ class Firefox(toolbase.ToolBase):
     def get_config(self):
 
         # Get firefox info
-        firefox_exe = ini.GetIniValue("Tools.Firefox", "firefox_exe")
-        firefox_install_dir = ini.GetIniPathValue("Tools.Firefox", "firefox_install_dir")
-        firefox_download_dir = ini.GetIniPathValue("Tools.Firefox", "firefox_download_dir")
-        firefox_profile_dir = ini.GetIniPathValue("Tools.Firefox", "firefox_profile_dir")
+        firefox_exe = ini.get_ini_value("Tools.Firefox", "firefox_exe")
+        firefox_install_dir = ini.get_ini_path_value("Tools.Firefox", "firefox_install_dir")
+        firefox_download_dir = ini.get_ini_path_value("Tools.Firefox", "firefox_download_dir")
+        firefox_profile_dir = ini.get_ini_path_value("Tools.Firefox", "firefox_profile_dir")
 
         # Return config
         return {

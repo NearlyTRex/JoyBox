@@ -11,11 +11,11 @@ ini_file = os.path.join(ini_folder, "JoyBox.ini")
 ini_parser = configparser.ConfigParser(interpolation=None)
 
 # Check if ini is present
-def IsIniPresent():
+def is_ini_present():
     return os.path.exists(ini_file)
 
 # Get ini sections
-def GetIniSections(throw_exception = True):
+def get_ini_sections(throw_exception = True):
     try:
         ini_parser.read(ini_file)
         return ini_parser.sections()
@@ -25,7 +25,7 @@ def GetIniSections(throw_exception = True):
         return []
 
 # Determine if ini has section
-def HasIniSection(section, throw_exception = True):
+def has_ini_section(section, throw_exception = True):
     try:
         ini_parser.read(ini_file)
         return section in ini_parser
@@ -35,7 +35,7 @@ def HasIniSection(section, throw_exception = True):
         return False
 
 # Determine if ini has field
-def HasIniField(section, field, throw_exception = True):
+def has_ini_field(section, field, throw_exception = True):
     try:
         ini_parser.read(ini_file)
         return (section in ini_parser) and (field in ini_parser[section])
@@ -45,7 +45,7 @@ def HasIniField(section, field, throw_exception = True):
         return False
 
 # Get ini value
-def GetIniValue(section, field, default_value = None, throw_exception = True):
+def get_ini_value(section, field, default_value = None, throw_exception = True):
     try:
         ini_parser.read(ini_file)
         return ini_parser.get(section, field, fallback = default_value)
@@ -55,7 +55,7 @@ def GetIniValue(section, field, default_value = None, throw_exception = True):
         return default_value
 
 # Get ini integer value
-def GetIniIntegerValue(section, field, default_value = None, throw_exception = True):
+def get_ini_integer_value(section, field, default_value = None, throw_exception = True):
     try:
         ini_parser.read(ini_file)
         return ini_parser.getint(section, field, fallback = default_value)
@@ -65,7 +65,7 @@ def GetIniIntegerValue(section, field, default_value = None, throw_exception = T
         return default_value
 
 # Get ini bool value
-def GetIniBoolValue(section, field, default_value = None, throw_exception = True):
+def get_ini_bool_value(section, field, default_value = None, throw_exception = True):
     try:
         ini_parser.read(ini_file)
         return ini_parser.getboolean(section, field, fallback = default_value)
@@ -75,9 +75,9 @@ def GetIniBoolValue(section, field, default_value = None, throw_exception = True
         return default_value
 
 # Get ini path value
-def GetIniPathValue(section, field, default_value = None, throw_exception = True):
+def get_ini_path_value(section, field, default_value = None, throw_exception = True):
     try:
-        value = GetIniValue(section, field)
+        value = get_ini_value(section, field)
         return os.path.expandvars(value)
     except:
         if throw_exception:
@@ -85,9 +85,9 @@ def GetIniPathValue(section, field, default_value = None, throw_exception = True
         return default_value
 
 # Get ini list value
-def GetIniListValue(section, field, delimiter = ",", default_value = None, throw_exception = True):
+def get_ini_list_value(section, field, delimiter = ",", default_value = None, throw_exception = True):
     try:
-        value = GetIniValue(section, field)
+        value = get_ini_value(section, field)
         return value.split(delimiter)
     except:
         if throw_exception:

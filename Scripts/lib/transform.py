@@ -37,7 +37,7 @@ def TransformComputerPrograms(
     game_subcategory = game_info.get_subcategory()
 
     # Get paths
-    output_extract_dir = paths.join_paths(output_dir, gameinfo.DeriveRegularNameFromGameName(game_name))
+    output_extract_dir = paths.join_paths(output_dir, gameinfo.derive_regular_name_from_game_name(game_name))
     output_extract_index_file = paths.join_paths(output_extract_dir, config.raw_files_index)
     output_install_file = paths.join_paths(output_dir, game_name + ".install")
     cached_install_dir = environment.get_cache_gaming_install_dir(game_category, game_subcategory, game_name)
@@ -67,7 +67,7 @@ def TransformComputerPrograms(
     if paths.is_path_file(prepackaged_archive):
 
         # Extract file
-        success = archive.ExtractArchive(
+        success = archive.extract_archive(
             archive_file = prepackaged_archive,
             extract_dir = output_extract_dir,
             verbose = verbose,
@@ -159,7 +159,7 @@ def TransformDiscImage(
     # Extract disc images
     for disc_image_file in disc_image_files:
         if disc_image_file.endswith(".chd"):
-            success = chd.ExtractDiscCHD(
+            success = chd.extract_disc_chd(
                 chd_file = paths.join_paths(paths.get_filename_directory(source_file), disc_image_file),
                 binary_file = paths.join_paths(output_dir, paths.get_filename_basename(disc_image_file) + config.DiscImageFileType.ISO.cval()),
                 toc_file = paths.join_paths(output_dir, paths.get_filename_basename(disc_image_file) + ".toc"),
@@ -224,7 +224,7 @@ def TransformXboxDiscImage(
     # Rewrite xbox disc images
     for disc_image_file in disc_image_files:
         if disc_image_file.endswith(".iso"):
-            success = xbox.RewriteXboxISO(
+            success = xbox.rewrite_xbox_iso(
                 iso_file = paths.join_paths(paths.get_filename_directory(source_file), disc_image_file),
                 delete_original = True,
                 verbose = verbose,
@@ -270,7 +270,7 @@ def TransformPS3DiscImage(
         if disc_image_file.endswith(".iso"):
 
             # Extract ps3 disc image
-            success = playstation.ExtractPS3ISO(
+            success = playstation.extract_ps3_iso(
                 iso_file = paths.join_paths(paths.get_filename_directory(source_file), disc_image_file),
                 dkey_file = source_file_dkey,
                 extract_dir = output_dir,
@@ -290,7 +290,7 @@ def TransformPS3DiscImage(
                 if should_extract:
                     pkg_dir = paths.get_filename_directory(pkg_file)
                     pkg_name = paths.get_filename_basename(pkg_file)
-                    success = playstation.ExtractPSNPKG(
+                    success = playstation.extract_psn_pkg(
                         pkg_file = pkg_file,
                         extract_dir = paths.join_paths(pkg_dir, pkg_name),
                         verbose = verbose,
@@ -333,7 +333,7 @@ def TransformPS3NetworkPackage(
         if obj.endswith(".rap"):
             rap_file = paths.join_paths(paths.get_filename_directory(source_file), obj)
             pkg_file = paths.join_paths(paths.get_filename_directory(source_file), obj.replace(".rap", ".pkg"))
-            content_id = playstation.GetPSNPackageContentID(pkg_file)
+            content_id = playstation.get_psn_package_content_id(pkg_file)
             if content_id:
                 success = fileops.copy_file_or_directory(
                     src = rap_file,
@@ -348,7 +348,7 @@ def TransformPS3NetworkPackage(
     for obj in paths.get_directory_contents(paths.get_filename_directory(source_file)):
         if obj.endswith(".pkg"):
             pkg_file = paths.join_paths(paths.get_filename_directory(source_file), obj)
-            success = playstation.ExtractPSNPKG(
+            success = playstation.extract_psn_pkg(
                 pkg_file = pkg_file,
                 extract_dir = output_dir,
                 verbose = verbose,
@@ -403,7 +403,7 @@ def TransformPSVNetworkPackage(
     for obj in paths.get_directory_contents(paths.get_filename_directory(source_file)):
         if obj.endswith(".pkg"):
             pkg_file = paths.join_paths(paths.get_filename_directory(source_file), obj)
-            success = playstation.ExtractPSNPKG(
+            success = playstation.extract_psn_pkg(
                 pkg_file = pkg_file,
                 extract_dir = output_dir,
                 verbose = verbose,

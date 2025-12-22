@@ -89,7 +89,7 @@ def CopyAndEncryptFiles(
     exit_on_failure = False):
 
     # Validate passphrase
-    if not cryption.IsPassphraseValid(passphrase):
+    if not cryption.is_passphrase_valid(passphrase):
         logger.log_error("Invalid passphrase")
         return False
 
@@ -101,7 +101,7 @@ def CopyAndEncryptFiles(
         dest_dir = paths.join_paths(output_base_path, src_dir)
 
         # Generate encrypted output path
-        encrypted_name = cryption.GenerateEncryptedFilename(src_filename)
+        encrypted_name = cryption.generate_encrypted_filename(src_filename)
         dest_path = paths.join_paths(dest_dir, encrypted_name)
 
         # Skip if already exists
@@ -116,7 +116,7 @@ def CopyAndEncryptFiles(
             exit_on_failure = exit_on_failure)
 
         # Encrypt the file
-        success = cryption.EncryptFile(
+        success = cryption.encrypt_file(
             src = src_path,
             passphrase = passphrase,
             output_file = dest_path,
@@ -144,7 +144,7 @@ def CopyAndDecryptFiles(
     exit_on_failure = False):
 
     # Validate passphrase
-    if not cryption.IsPassphraseValid(passphrase):
+    if not cryption.is_passphrase_valid(passphrase):
         logger.log_error("Invalid passphrase")
         return False
 
@@ -155,8 +155,8 @@ def CopyAndDecryptFiles(
         dest_dir = paths.join_paths(output_base_path, src_dir)
 
         # Get real filename from encrypted file
-        if cryption.IsFileEncrypted(src_path):
-            real_name = cryption.GetEmbeddedFilename(
+        if cryption.is_file_encrypted(src_path):
+            real_name = cryption.get_embedded_filename(
                 src = src_path,
                 passphrase = passphrase,
                 verbose = verbose,
@@ -183,7 +183,7 @@ def CopyAndDecryptFiles(
             exit_on_failure = exit_on_failure)
 
         # Decrypt the file
-        success = cryption.DecryptFile(
+        success = cryption.decrypt_file(
             src = src_path,
             passphrase = passphrase,
             output_file = dest_path,
@@ -299,7 +299,7 @@ def ArchiveFolder(
     out_archive_file = paths.join_paths(output_base_path, base_obj, archive_basename + archive_ext)
 
     # Archive files
-    success = archive.CreateArchiveFromFolder(
+    success = archive.create_archive_from_folder(
         archive_file = tmp_archive_file,
         source_dir = input_path,
         excludes = exclude_paths,
@@ -388,7 +388,7 @@ def ArchiveSubFolders(
                 out_archive_file = paths.join_paths(output_base_path, base_obj, archive_basename + "." + archive_ext)
 
                 # Archive subdirectory
-                success = archive.CreateArchiveFromFolder(
+                success = archive.create_archive_from_folder(
                     archive_file = tmp_archive_file,
                     source_dir = sub_dir,
                     volume_size = "4092m",

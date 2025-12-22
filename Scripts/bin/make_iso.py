@@ -60,7 +60,7 @@ def main():
                 volume_name = obj
 
             # Create iso
-            iso.CreateISO(
+            iso.create_iso(
                 iso_file = output_file,
                 source_dir = obj_path,
                 volume_name = volume_name,
@@ -85,7 +85,7 @@ def main():
 
             # Decompress zip
             extracted_dir = paths.join_paths(current_dir, current_basename + "_extracted")
-            archive.ExtractArchive(
+            archive.extract_archive(
                 archive_file = current_file,
                 extract_dir = extracted_dir,
                 work_dir = current_dir,
@@ -100,7 +100,7 @@ def main():
                 volume_name = current_basename
 
             # Create iso
-            iso.CreateISO(
+            iso.create_iso(
                 iso_file = output_file,
                 source_dir = extracted_dir,
                 work_dir = extracted_dir,

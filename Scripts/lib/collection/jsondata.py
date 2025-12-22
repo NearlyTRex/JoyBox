@@ -55,7 +55,7 @@ def read_game_json_data(
         exit_on_failure = exit_on_failure)
 
     # Get platform
-    game_platform = gameinfo.DeriveGamePlatformFromCategories(game_category, game_subcategory)
+    game_platform = gameinfo.derive_game_platform_from_categories(game_category, game_subcategory)
 
     # Return json data object
     json_obj = jsondata.JsonData(
@@ -86,7 +86,7 @@ def create_game_json_file(
         return True
 
     # Get platform
-    game_platform = gameinfo.DeriveGamePlatformFromCategories(game_category, game_subcategory)
+    game_platform = gameinfo.derive_game_platform_from_categories(game_category, game_subcategory)
 
     # Build json data
     json_file_data = {}
@@ -144,10 +144,10 @@ def update_game_json_file(
         return True
 
     # Get platform
-    game_platform = gameinfo.DeriveGamePlatformFromCategories(game_category, game_subcategory)
+    game_platform = gameinfo.derive_game_platform_from_categories(game_category, game_subcategory)
 
     # Get regular name
-    game_regular_name = gameinfo.DeriveRegularNameFromGameName(game_name)
+    game_regular_name = gameinfo.derive_regular_name_from_game_name(game_name)
 
     # Get json file path
     json_file_path = environment.get_game_json_metadata_file(game_supercategory, game_category, game_subcategory, game_name)
@@ -172,7 +172,7 @@ def update_game_json_file(
     # Get all files
     all_files = paths.build_file_list(game_root)
     if locker_info:
-        all_files = cryption.GetRealFilePaths(
+        all_files = cryption.get_real_file_paths(
             src = all_files,
             passphrase = locker_info.get_passphrase(),
             verbose = verbose,
@@ -210,7 +210,7 @@ def update_game_json_file(
     # Get best game file
     best_game_file = None
     if game_supercategory in [config.Supercategory.ROMS]:
-        best_game_file = gameinfo.FindBestGameFile(top_level_paths)
+        best_game_file = gameinfo.find_best_game_file(top_level_paths)
         best_game_file = paths.get_filename_file(best_game_file)
 
     # Set common keys
@@ -368,8 +368,8 @@ def build_all_game_json_files(
             if selected_subcategories:
                 category_subcategories = [sc for sc in category_subcategories if sc in selected_subcategories]
             for game_subcategory in category_subcategories:
-                game_platform = gameinfo.DeriveGamePlatformFromCategories(game_category, game_subcategory)
-                game_names = gameinfo.FindLockerGameNames(
+                game_platform = gameinfo.derive_game_platform_from_categories(game_category, game_subcategory)
+                game_names = gameinfo.find_locker_game_names(
                     game_supercategory,
                     game_category,
                     game_subcategory,
@@ -442,7 +442,7 @@ def add_game_json_ignore_entry(
         return True
 
     # Get platform
-    game_platform = gameinfo.DeriveGamePlatformFromCategories(game_category, game_subcategory)
+    game_platform = gameinfo.derive_game_platform_from_categories(game_category, game_subcategory)
 
     # Get json file path
     json_file_path = environment.get_game_json_metadata_ignore_file(game_supercategory, game_category, game_subcategory)

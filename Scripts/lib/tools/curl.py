@@ -22,8 +22,8 @@ class Curl(toolbase.ToolBase):
     def get_config(self):
 
         # Get curl info
-        curl_exe = ini.GetIniValue("Tools.Curl", "curl_exe")
-        curl_install_dir = ini.GetIniPathValue("Tools.Curl", "curl_install_dir")
+        curl_exe = ini.get_ini_value("Tools.Curl", "curl_exe")
+        curl_install_dir = ini.get_ini_path_value("Tools.Curl", "curl_install_dir")
 
         # Return config
         return {

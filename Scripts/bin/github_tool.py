@@ -61,12 +61,12 @@ def main():
     # Get github username
     github_username = args.github_username
     if not github_username:
-        github_username = ini.GetIniValue("UserData.GitHub", "github_username")
+        github_username = ini.get_ini_value("UserData.GitHub", "github_username")
 
     # Get github access token
     github_access_token = args.github_access_token
     if not github_access_token:
-        github_access_token = ini.GetIniValue("UserData.GitHub", "github_access_token")
+        github_access_token = ini.get_ini_value("UserData.GitHub", "github_access_token")
 
     # Get include/exclude lists
     include_repos = []

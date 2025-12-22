@@ -22,8 +22,8 @@ class SevenZip(toolbase.ToolBase):
     def get_config(self):
 
         # Get sevenzip info
-        sevenzip_exe = ini.GetIniValue("Tools.7Zip", "7z_exe")
-        sevenzip_install_dir = ini.GetIniPathValue("Tools.7Zip", "7z_install_dir")
+        sevenzip_exe = ini.get_ini_value("Tools.7Zip", "7z_exe")
+        sevenzip_install_dir = ini.get_ini_path_value("Tools.7Zip", "7z_install_dir")
 
         # Return config
         return {

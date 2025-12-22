@@ -49,7 +49,7 @@ def main():
 
         # Unzip file
         logger.log_info("Unzipping file %s ..." % current_file)
-        success = archive.ExtractArchive(
+        success = archive.extract_archive(
             archive_file = current_file,
             extract_dir = current_file_extract_dir,
             delete_original = True,
@@ -61,7 +61,7 @@ def main():
 
         # Deterministically zip file
         logger.log_info("Deterministically rezipping ...")
-        success = archive.CreateArchiveFromFolder(
+        success = archive.create_archive_from_folder(
             archive_file = current_file,
             source_dir = current_file_extract_dir,
             delete_original = True,

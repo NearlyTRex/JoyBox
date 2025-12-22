@@ -15,15 +15,15 @@ class LockerInfo:
         if not locker_type:
             locker_type = config.LockerType.HETZNER
         self.locker_type = locker_type
-        self.remote_type = ini.GetIniValue("UserData.Share", f"locker_{self.locker_type.lower()}_remote_type")
-        self.remote_name = ini.GetIniValue("UserData.Share", f"locker_{self.locker_type.lower()}_remote_name")
-        self.remote_path = ini.GetIniValue("UserData.Share", f"locker_{self.locker_type.lower()}_remote_path")
-        self.remote_config = ini.GetIniValue("UserData.Share", f"locker_{self.locker_type.lower()}_remote_config")
-        self.remote_token = ini.GetIniValue("UserData.Share", f"locker_{self.locker_type.lower()}_remote_token")
-        self.remote_mount_path = ini.GetIniPathValue("UserData.Share", f"locker_{self.locker_type.lower()}_remote_mount_path")
-        self.remote_mount_flags = ini.GetIniValue("UserData.Share", f"locker_{self.locker_type.lower()}_remote_mount_flags").split(",")
-        self.local_path = ini.GetIniPathValue("UserData.Share", f"locker_{self.locker_type.lower()}_local_path")
-        self.passphrase = ini.GetIniValue("UserData.Share", f"locker_{self.locker_type.lower()}_passphrase")
+        self.remote_type = ini.get_ini_value("UserData.Share", f"locker_{self.locker_type.lower()}_remote_type")
+        self.remote_name = ini.get_ini_value("UserData.Share", f"locker_{self.locker_type.lower()}_remote_name")
+        self.remote_path = ini.get_ini_value("UserData.Share", f"locker_{self.locker_type.lower()}_remote_path")
+        self.remote_config = ini.get_ini_value("UserData.Share", f"locker_{self.locker_type.lower()}_remote_config")
+        self.remote_token = ini.get_ini_value("UserData.Share", f"locker_{self.locker_type.lower()}_remote_token")
+        self.remote_mount_path = ini.get_ini_path_value("UserData.Share", f"locker_{self.locker_type.lower()}_remote_mount_path")
+        self.remote_mount_flags = ini.get_ini_value("UserData.Share", f"locker_{self.locker_type.lower()}_remote_mount_flags").split(",")
+        self.local_path = ini.get_ini_path_value("UserData.Share", f"locker_{self.locker_type.lower()}_local_path")
+        self.passphrase = ini.get_ini_value("UserData.Share", f"locker_{self.locker_type.lower()}_passphrase")
 
     def get_remote_type(self):
         return self.remote_type

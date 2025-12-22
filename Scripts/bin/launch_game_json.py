@@ -80,8 +80,8 @@ def main():
         if not game_subcategory:
             potential_subcategories = []
             for potential_subcategory in config.subcategory_map[game_category]:
-                potential_platform = gameinfo.DeriveGamePlatformFromCategories(game_category, potential_subcategory)
-                if not platforms.HasNoLauncher(potential_platform):
+                potential_platform = gameinfo.derive_game_platform_from_categories(game_category, potential_subcategory)
+                if not platforms.has_no_launcher(potential_platform):
                     potential_subcategories.append(potential_subcategory)
             game_subcategory = random.choice(potential_subcategories)
 
@@ -103,11 +103,11 @@ def main():
 
     # Check json file
     if not json_file:
-        gui.DisplayErrorPopup(
+        gui.display_error_popup(
             title_text = "No json file specified",
             message_text = "No json file was specified")
     if not paths.is_path_file(json_file):
-        gui.DisplayErrorPopup(
+        gui.display_error_popup(
             title_text = "Json file not found",
             message_text = "Json file %s was not found" % json_file)
 
@@ -120,7 +120,7 @@ def main():
 
     # Check ability to launch
     if not game_info.is_playable():
-        gui.DisplayErrorPopup(
+        gui.display_error_popup(
             title_text = "Json file not launchable",
             message_text = "Json file '%s' is not launchable" % paths.get_filename_file(json_file))
 
@@ -134,7 +134,7 @@ def main():
         pretend_run = args.pretend_run,
         exit_on_failure = args.exit_on_failure)
     if not success:
-        gui.DisplayErrorPopup(
+        gui.display_error_popup(
             title_text = "Json file failed to launch",
             message_text = "Json file '%s' failed to launch" % paths.get_filename_file(json_file))
 

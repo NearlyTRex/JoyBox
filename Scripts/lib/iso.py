@@ -16,15 +16,15 @@ import registry
 import archive
 
 # Check if iso is mounted
-def IsISOMounted(iso_file, mount_dir):
+def is_iso_mounted(iso_file, mount_dir):
     return (
         paths.is_path_file(iso_file) and
-        paths.does_path_exist(GetActualMountPoint(iso_file, mount_dir)) and
+        paths.does_path_exist(get_actual_mount_point(iso_file, mount_dir)) and
         not paths.is_directory_empty(mount_dir)
     )
 
 # Create iso
-def CreateISO(
+def create_iso(
     iso_file,
     source_dir = None,
     source_dirs = [],
@@ -83,7 +83,7 @@ def CreateISO(
     return os.path.exists(iso_file)
 
 # Extract iso
-def ExtractISO(
+def extract_iso(
     iso_file,
     extract_dir,
     delete_original = False,
@@ -92,7 +92,7 @@ def ExtractISO(
     exit_on_failure = False):
 
     # Try extracting as an archive first
-    success = archive.ExtractArchive(
+    success = archive.extract_archive(
         archive_file = iso_file,
         extract_dir = extract_dir,
         delete_original = delete_original,
@@ -152,7 +152,7 @@ def ExtractISO(
     return os.path.exists(extract_dir)
 
 # Get actual mount point
-def GetActualMountPoint(
+def get_actual_mount_point(
     iso_file,
     mount_dir,
     verbose = False,
@@ -193,7 +193,7 @@ def GetActualMountPoint(
     return mount_dir
 
 # Mount iso
-def MountISO(
+def mount_iso(
     iso_file,
     mount_dir,
     verbose = False,
@@ -201,7 +201,7 @@ def MountISO(
     exit_on_failure = False):
 
     # Check if mounted
-    if IsISOMounted(iso_file, mount_dir):
+    if is_iso_mounted(iso_file, mount_dir):
         return True
 
     # Make mount directories
@@ -258,10 +258,10 @@ def MountISO(
             return False
 
     # Check result
-    return IsISOMounted(iso_file, mount_dir)
+    return is_iso_mounted(iso_file, mount_dir)
 
 # Unmount iso
-def UnmountISO(
+def unmount_iso(
     iso_file,
     mount_dir,
     verbose = False,
@@ -269,7 +269,7 @@ def UnmountISO(
     exit_on_failure = False):
 
     # Check if mounted
-    if not IsISOMounted(iso_file, mount_dir):
+    if not is_iso_mounted(iso_file, mount_dir):
         return True
 
     # Windows
@@ -327,4 +327,4 @@ def UnmountISO(
         exit_on_failure = exit_on_failure)
 
     # Check result
-    return not IsISOMounted(iso_file, mount_dir)
+    return not is_iso_mounted(iso_file, mount_dir)

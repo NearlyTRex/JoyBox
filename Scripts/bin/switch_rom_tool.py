@@ -58,7 +58,7 @@ def main():
 
         # Trim xci
         if args.trim:
-            nintendo.TrimSwitchXCI(
+            nintendo.trim_switch_xci(
                 src_xci_file = current_file,
                 dest_xci_file = paths.join_paths(current_file_dir, current_file_basename + "_trimmed.xci"),
                 delete_original = args.delete_originals,
@@ -68,7 +68,7 @@ def main():
 
         # Untrim xci
         elif args.untrim:
-            nintendo.UntrimSwitchXCI(
+            nintendo.untrim_switch_xci(
                 src_xci_file = current_file,
                 dest_xci_file = paths.join_paths(current_file_dir, current_file_basename + "_untrimmed.xci"),
                 delete_original = args.delete_originals,

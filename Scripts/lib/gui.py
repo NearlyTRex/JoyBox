@@ -13,7 +13,7 @@ import modules
 import paths
 
 # Display popup
-def DisplayPopup(
+def display_popup(
     title_text,
     message_text,
     message_type = None,
@@ -156,16 +156,16 @@ def DisplayPopup(
             modal = modal)
 
 # Display info popup
-def DisplayInfoPopup(title_text, message_text):
-    DisplayPopup(
+def display_info_popup(title_text, message_text):
+    display_popup(
         title_text = title_text,
         message_text = message_text,
         message_type = config.MessageType.OK,
         keep_on_top = True)
 
 # Display warning popup
-def DisplayWarningPopup(title_text, message_text):
-    response = DisplayPopup(
+def display_warning_popup(title_text, message_text):
+    response = display_popup(
         title_text = title_text,
         message_text = message_text,
         message_type = config.MessageType.YES_NO,
@@ -174,8 +174,8 @@ def DisplayWarningPopup(title_text, message_text):
         system.quit_program()
 
 # Display error popup
-def DisplayErrorPopup(title_text, message_text):
-    DisplayPopup(
+def display_error_popup(title_text, message_text):
+    display_popup(
         title_text = title_text,
         message_text = message_text,
         message_type = config.MessageType.ERROR,
@@ -183,28 +183,28 @@ def DisplayErrorPopup(title_text, message_text):
     system.quit_program()
 
 # Display text input popup
-def DisplayTextInputPopup(title_text, message_text):
-    return DisplayPopup(
+def display_text_input_popup(title_text, message_text):
+    return display_popup(
         title_text = title_text,
         message_text = message_text,
         message_type = config.MessageType.GET_TEXT)
 
 # Display file chooser popup
-def DisplayFileChooserPopup(title_text, message_text):
-    return DisplayPopup(
+def display_file_chooser_popup(title_text, message_text):
+    return display_popup(
         title_text = title_text,
         message_text = message_text,
         message_type = config.MessageType.GET_FILE)
 
 # Display folder chooser popup
-def DisplayFolderChooserPopup(title_text, message_text):
-    return DisplayPopup(
+def display_folder_chooser_popup(title_text, message_text):
+    return display_popup(
         title_text = title_text,
         message_text = message_text,
         message_type = config.MessageType.GET_FOLDER)
 
 # Display loading window
-def DisplayLoadingWindow(
+def display_loading_window(
     title_text,
     message_text,
     completion_text = "",
@@ -231,7 +231,7 @@ def DisplayLoadingWindow(
 
     # Get window size
     if window_size == (None, None):
-        window_size = display.GetCurrentScreenResolution()
+        window_size = display.get_current_screen_resolution()
 
     # Set theme
     psg.theme(theme)
@@ -318,12 +318,12 @@ def DisplayLoadingWindow(
         if event == "TASK_COMPLETE":
             if values[event]:
                 if len(completion_text):
-                    DisplayInfoPopup(
+                    display_info_popup(
                         title_text = "Completed",
                         message_text = completion_text)
             else:
                 if len(failure_text):
-                    DisplayErrorPopup(
+                    display_error_popup(
                         title_text = "Failure",
                         message_text = failure_text)
             break
@@ -335,7 +335,7 @@ def DisplayLoadingWindow(
     window.close()
 
 # Display choices window
-def DisplayChoicesWindow(
+def display_choices_window(
     choice_list,
     title_text,
     message_text,
@@ -359,7 +359,7 @@ def DisplayChoicesWindow(
 
     # Get window size
     if window_size == (None, None):
-        window_size = display.GetCurrentScreenResolution()
+        window_size = display.get_current_screen_resolution()
 
     # Run selected choice
     def RunSelectedChoice(choice):

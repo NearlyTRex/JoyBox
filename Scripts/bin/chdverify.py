@@ -46,7 +46,7 @@ def main():
 
         # Verify disc chd
         logger.log_info("Verifying %s ..." % file)
-        verification_success = chd.VerifyDiscCHD(file)
+        verification_success = chd.verify_disc_chd(file)
         if verification_success:
             logger.log_info("Verified!")
         else:

@@ -42,8 +42,8 @@ def main():
     for game_supercategory in config.Supercategory.members():
         for game_category in config.Category.members():
             for game_subcategory in config.subcategory_map[game_category]:
-                game_platform = gameinfo.DeriveGamePlatformFromCategories(game_category, game_subcategory)
-                game_names = gameinfo.FindJsonGameNames(
+                game_platform = gameinfo.derive_game_platform_from_categories(game_category, game_subcategory)
+                game_names = gameinfo.find_json_game_names(
                     game_supercategory,
                     game_category,
                     game_subcategory)

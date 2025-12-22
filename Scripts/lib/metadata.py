@@ -34,7 +34,7 @@ class Metadata:
         game_name = game_entry.get_game()
 
         # Inject categories
-        game_supercategory, game_category, game_subcategory = gameinfo.DeriveGameCategoriesFromPlatform(game_platform)
+        game_supercategory, game_category, game_subcategory = gameinfo.derive_game_categories_from_platform(game_platform)
         game_entry.set_supercategory(game_supercategory)
         game_entry.set_category(game_category)
         game_entry.set_subcategory(game_subcategory)
@@ -314,7 +314,7 @@ class Metadata:
                 exit_on_failure = exit_on_failure)
         with open(pegasus_file, file_mode, encoding="utf8", newline="\n") as file:
             for game_platform in self.get_sorted_platforms():
-                game_supercategory, game_category, game_subcategory = gameinfo.DeriveGameCategoriesFromPlatform(game_platform)
+                game_supercategory, game_category, game_subcategory = gameinfo.derive_game_categories_from_platform(game_platform)
 
                 # Get launch command
                 launch_cmd = [

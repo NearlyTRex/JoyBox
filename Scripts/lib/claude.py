@@ -16,7 +16,7 @@ DEFAULT_MAX_TOKENS = 8192
 
 # Get API key from ini
 def GetApiKey():
-    api_key = ini.GetIniValue("UserData.Anthropic", "anthropic_api_key", throw_exception=False)
+    api_key = ini.get_ini_value("UserData.Anthropic", "anthropic_api_key", throw_exception=False)
     if not api_key:
         return None
     return api_key

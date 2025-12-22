@@ -89,12 +89,12 @@ class JsonData:
 
     # Fill value
     def fill_value(self, key, value):
-        if platforms.IsAutoFillJsonKey(self.json_platform, key):
+        if platforms.is_autofill_json_key(self.json_platform, key):
             self.set_value(key, value)
-        elif platforms.IsFillOnceJsonKey(self.json_platform, key):
+        elif platforms.is_fillonce_json_key(self.json_platform, key):
             if not self.has_key(key):
                 self.set_value(key, value)
-        elif platforms.IsMergeJsonKey(self.json_platform, key):
+        elif platforms.is_merge_json_key(self.json_platform, key):
             self.set_value(key, datautils.merge_data(
                 data1 = self.get_value(key),
                 data2 = value,
@@ -102,12 +102,12 @@ class JsonData:
 
     # Fill subvalue
     def fill_subvalue(self, key, subkey, value):
-        if platforms.IsAutoFillJsonKey(self.json_platform, subkey):
+        if platforms.is_autofill_json_key(self.json_platform, subkey):
             self.set_subvalue(key, subkey, value)
-        elif platforms.IsFillOnceJsonKey(self.json_platform, subkey):
+        elif platforms.is_fillonce_json_key(self.json_platform, subkey):
             if not self.has_subkey(key, subkey):
                 self.set_subvalue(key, subkey, value)
-        elif platforms.IsMergeJsonKey(self.json_platform, subkey):
+        elif platforms.is_merge_json_key(self.json_platform, subkey):
             self.set_subvalue(key, subkey, datautils.merge_data(
                 data1 = self.get_subvalue(key, subkey),
                 data2 = value,

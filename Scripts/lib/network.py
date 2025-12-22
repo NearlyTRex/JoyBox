@@ -533,7 +533,7 @@ def archive_github_repository(
             return False
 
     # Archive repository
-    archive.CreateArchiveFromFolder(
+    archive.create_archive_from_folder(
         archive_file = tmp_file_archive,
         source_dir = tmp_dir_download,
         verbose = verbose,
@@ -544,7 +544,7 @@ def archive_github_repository(
         return False
 
     # Test archive
-    success = archive.TestArchive(
+    success = archive.test_archive(
         archive_file = tmp_file_archive,
         verbose = verbose,
         pretend_run = pretend_run,

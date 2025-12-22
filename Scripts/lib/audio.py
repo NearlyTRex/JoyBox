@@ -16,7 +16,7 @@ import locker
 import audiometadata
 
 # Get album directories for processing
-def GetAlbumDirectories(genre_type = None, album_name = None, artist_name = None):
+def get_album_directories(genre_type = None, album_name = None, artist_name = None):
 
     # Get music dir
     music_dir = environment.get_locker_music_dir(genre_type)
@@ -51,7 +51,7 @@ def GetAlbumDirectories(genre_type = None, album_name = None, artist_name = None
     return album_dirs
 
 # Download channel audio files
-def DownloadChannelAudioFiles(channels, genre_type, cookie_source = None, locker_type = None, verbose = False, pretend_run = False, exit_on_failure = False):
+def download_channel_audio_files(channels, genre_type, cookie_source = None, locker_type = None, verbose = False, pretend_run = False, exit_on_failure = False):
 
     # Download channels
     logger.log_info(f"Starting audio download process for genre: {genre_type}")
@@ -174,8 +174,8 @@ def DownloadChannelAudioFiles(channels, genre_type, cookie_source = None, locker
     return True
 
 # Download story audio files
-def DownloadStoryAudioFiles(cookie_source = None, locker_type = None, verbose = False, pretend_run = False, exit_on_failure = False):
-    return DownloadChannelAudioFiles(
+def download_story_audio_files(cookie_source = None, locker_type = None, verbose = False, pretend_run = False, exit_on_failure = False):
+    return download_channel_audio_files(
         channels = config.story_channels,
         genre_type = config.AudioGenreType.STORY,
         cookie_source = cookie_source,
@@ -185,8 +185,8 @@ def DownloadStoryAudioFiles(cookie_source = None, locker_type = None, verbose = 
         exit_on_failure = exit_on_failure)
 
 # Download asmr audio files
-def DownloadASMRAudioFiles(cookie_source = None, locker_type = None, verbose = False, pretend_run = False, exit_on_failure = False):
-    return DownloadChannelAudioFiles(
+def download_asmr_audio_files(cookie_source = None, locker_type = None, verbose = False, pretend_run = False, exit_on_failure = False):
+    return download_channel_audio_files(
         channels = config.asmr_channels,
         genre_type = config.AudioGenreType.ASMR,
         cookie_source = cookie_source,
@@ -196,7 +196,7 @@ def DownloadASMRAudioFiles(cookie_source = None, locker_type = None, verbose = F
         exit_on_failure = exit_on_failure)
 
 # Build audio metadata files
-def BuildAudioMetadataFiles(
+def build_audio_metadata_files(
     genre_type = None,
     album_name = None,
     artist_name = None,
@@ -211,7 +211,7 @@ def BuildAudioMetadataFiles(
     audio_metadata = audiometadata.AudioMetadata()
 
     # Get album directories
-    album_dirs = GetAlbumDirectories(genre_type, album_name, artist_name)
+    album_dirs = get_album_directories(genre_type, album_name, artist_name)
     if not album_dirs:
         return False
 
@@ -260,7 +260,7 @@ def BuildAudioMetadataFiles(
     return True
 
 # Clear audio metadata tags
-def ClearAudioMetadataTags(
+def clear_audio_metadata_tags(
     genre_type = None,
     album_name = None,
     artist_name = None,
@@ -273,7 +273,7 @@ def ClearAudioMetadataTags(
     audio_metadata = audiometadata.AudioMetadata()
 
     # Get album directories
-    album_dirs = GetAlbumDirectories(genre_type, album_name, artist_name)
+    album_dirs = get_album_directories(genre_type, album_name, artist_name)
     if not album_dirs:
         return False
 
@@ -303,7 +303,7 @@ def ClearAudioMetadataTags(
     return True
 
 # Apply audio metadata tags
-def ApplyAudioMetadataTags(
+def apply_audio_metadata_tags(
     genre_type = None,
     album_name = None,
     artist_name = None,
@@ -316,7 +316,7 @@ def ApplyAudioMetadataTags(
     audio_metadata = audiometadata.AudioMetadata()
 
     # Get album directories
-    album_dirs = GetAlbumDirectories(genre_type, album_name, artist_name)
+    album_dirs = get_album_directories(genre_type, album_name, artist_name)
     if not album_dirs:
         return False
 

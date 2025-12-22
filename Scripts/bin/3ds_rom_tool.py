@@ -77,7 +77,7 @@ def main():
 
         # Convert CIA to 3DS(CCI)
         if args.cia_to_cci and current_file.endswith(".cia"):
-            nintendo.Convert3DSCIAtoCCI(
+            nintendo.convert_3ds_cia_to_cci(
                 src_3ds_file = current_file,
                 dest_3ds_file = output_file_trimmed_3ds,
                 verbose = args.verbose,
@@ -86,7 +86,7 @@ def main():
 
         # Convert 3DS(CCI) to CIA
         elif args.cci_to_cia and current_file.endswith(".3ds"):
-            nintendo.Convert3DSCCItoCIA(
+            nintendo.convert_3ds_cci_to_cia(
                 src_3ds_file = current_file,
                 dest_3ds_file = output_file_cia,
                 verbose = args.verbose,
@@ -95,7 +95,7 @@ def main():
 
         # Trim 3DS
         elif args.trim_cci and current_file.endswith(".3ds") and not ".trim" in current_file:
-            nintendo.Trim3DSCCI(
+            nintendo.trim_3ds_cci(
                 src_3ds_file = current_file,
                 dest_3ds_file = output_file_trimmed_3ds,
                 verbose = args.verbose,
@@ -104,7 +104,7 @@ def main():
 
         # Untrim 3DS
         elif args.untrim_cci and current_file.endswith(".trim.3ds"):
-            nintendo.Untrim3DSCCI(
+            nintendo.untrim_3ds_cci(
                 src_3ds_file = current_file,
                 dest_3ds_file = output_file_3ds,
                 verbose = args.verbose,
@@ -113,7 +113,7 @@ def main():
 
         # Extract CIA
         elif args.extract_cia and current_file.endswith(".cia"):
-            nintendo.Extract3DSCIA(
+            nintendo.extract_3ds_cia(
                 src_3ds_file = current_file,
                 extract_dir = output_dir,
                 verbose = args.verbose,
@@ -122,7 +122,7 @@ def main():
 
         # Print info
         elif args.info:
-            info = nintendo.Get3DSFileInfo(
+            info = nintendo.get_3ds_file_info(
                 src_3ds_file = current_file,
                 verbose = args.verbose,
                 pretend_run = args.pretend_run,

@@ -22,9 +22,9 @@ class Chrome(toolbase.ToolBase):
     def get_config(self):
 
         # Get chrome info
-        chrome_exe = ini.GetIniValue("Tools.Chrome", "chrome_exe")
-        chrome_install_dir = ini.GetIniPathValue("Tools.Chrome", "chrome_install_dir")
-        chrome_download_dir = ini.GetIniPathValue("Tools.Chrome", "chrome_download_dir")
+        chrome_exe = ini.get_ini_value("Tools.Chrome", "chrome_exe")
+        chrome_install_dir = ini.get_ini_path_value("Tools.Chrome", "chrome_install_dir")
+        chrome_download_dir = ini.get_ini_path_value("Tools.Chrome", "chrome_download_dir")
 
         # Return config
         return {

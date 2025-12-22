@@ -179,7 +179,7 @@ def download_and_decrypt_path(
         return (False, "")
 
     # Decrypt files
-    output_files = cryption.DecryptFiles(
+    output_files = cryption.decrypt_files(
         src = result,
         passphrase = locker_info.get_passphrase(),
         delete_original = True,
@@ -210,7 +210,7 @@ def upload_and_encrypt_path(
         return False
 
     # Encrypt files
-    output_files = cryption.EncryptFiles(
+    output_files = cryption.encrypt_files(
         src = src,
         passphrase = locker_info.get_passphrase(),
         delete_original = True,

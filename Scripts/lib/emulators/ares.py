@@ -291,7 +291,7 @@ class Ares(emulatorbase.EmulatorBase):
 
         # Verify system files
         for filename, expected_md5 in system_files.items():
-            actual_md5 = hashing.CalculateFileMD5(
+            actual_md5 = hashing.calculate_file_md5(
                 src = paths.join_paths(environment.get_locker_gaming_emulator_setup_dir("Ares"), filename),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
@@ -334,7 +334,7 @@ class Ares(emulatorbase.EmulatorBase):
 
         # Check if this platform is valid
         if not game_platform in system_types:
-            gui.DisplayErrorPopup(
+            gui.display_error_popup(
                 title_text = "Launch platform not defined",
                 message_text = "Launch platform %s not defined in Ares config" % game_platform)
 

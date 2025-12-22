@@ -21,7 +21,7 @@ import chd
 ######################################################
 
 # Get decryption key
-def GetPS3DecryptionKey(dkey_file):
+def get_ps3_decryption_key(dkey_file):
     dkey_contents = ""
     if os.path.exists(dkey_file):
         with open(dkey_file, "r", encoding="utf-8") as f:
@@ -29,7 +29,7 @@ def GetPS3DecryptionKey(dkey_file):
     return dkey_contents
 
 # Encrypt ps3 iso
-def EncryptPS3ISO(
+def encrypt_ps3_iso(
     iso_file_dec,
     iso_file_enc,
     dkey_file,
@@ -46,7 +46,7 @@ def EncryptPS3ISO(
         return False
 
     # Get encryption key
-    encryption_key = GetPS3DecryptionKey(dkey_file)
+    encryption_key = get_ps3_decryption_key(dkey_file)
     if len(encryption_key) == 0:
         if exit_on_failure:
             logger.log_error("PS3 key file '%s' is invalid" % dkey_file, quit_program = True)
@@ -76,7 +76,7 @@ def EncryptPS3ISO(
     return os.path.exists(iso_file_enc)
 
 # Decrypt ps3 iso
-def DecryptPS3ISO(
+def decrypt_ps3_iso(
     iso_file_enc,
     iso_file_dec,
     dkey_file,
@@ -93,7 +93,7 @@ def DecryptPS3ISO(
         return False
 
     # Get decryption key
-    decryption_key = GetPS3DecryptionKey(dkey_file)
+    decryption_key = get_ps3_decryption_key(dkey_file)
     if len(decryption_key) == 0:
         if exit_on_failure:
             logger.log_error("PS3 key file '%s' is invalid" % dkey_file, quit_program = True)
@@ -123,7 +123,7 @@ def DecryptPS3ISO(
     return os.path.exists(iso_file_dec)
 
 # Extract ps3 iso
-def ExtractPS3ISO(
+def extract_ps3_iso(
     iso_file,
     dkey_file,
     extract_dir,
@@ -139,7 +139,7 @@ def ExtractPS3ISO(
     iso_file_dec = paths.join_paths(iso_file_directory, iso_file_basename + ".dec.iso")
 
     # Decrypt iso
-    success = DecryptPS3ISO(
+    success = decrypt_ps3_iso(
         iso_file_enc = iso_file_enc,
         iso_file_dec = iso_file_dec,
         dkey_file = dkey_file,
@@ -150,7 +150,7 @@ def ExtractPS3ISO(
         return False
 
     # Extract decrypted iso
-    success = iso.ExtractISO(
+    success = iso.extract_iso(
         iso_file = iso_file_dec,
         extract_dir = extract_dir,
         delete_original = delete_original,
@@ -192,7 +192,7 @@ def ExtractPS3ISO(
     return os.path.exists(extract_dir)
 
 # Verify ps3 chd
-def VerifyPS3CHD(
+def verify_ps3_chd(
     chd_file,
     verbose = False,
     pretend_run = False,
@@ -228,7 +228,7 @@ def VerifyPS3CHD(
         exit_on_failure = exit_on_failure)
 
     # Extract chd
-    success = chd.ExtractDiscCHD(
+    success = chd.extract_disc_chd(
         chd_file = input_chd_file,
         binary_file = output_iso_bin_file,
         toc_file = output_iso_toc_file,
@@ -239,7 +239,7 @@ def VerifyPS3CHD(
         return False
 
     # Extract ps3 iso
-    success = ExtractPS3ISO(
+    success = extract_ps3_iso(
         iso_file = output_iso_bin_file,
         dkey_file = input_dkey_file,
         extract_dir = raw_tmp_dir,
@@ -260,7 +260,7 @@ def VerifyPS3CHD(
     return True
 
 # Extract psn pkg
-def ExtractPSNPKG(
+def extract_psn_pkg(
     pkg_file,
     extract_dir,
     delete_original = False,
@@ -318,7 +318,7 @@ def ExtractPSNPKG(
 ######################################################
 
 # Strip psv file
-def StripPSV(
+def strip_psv(
     src_psv_file,
     dest_psv_file,
     delete_original = False,
@@ -365,7 +365,7 @@ def StripPSV(
     return os.path.exists(dest_psv_file)
 
 # Unstrip psv file
-def UnstripPSV(
+def unstrip_psv(
     src_psv_file,
     src_psve_file,
     dest_psv_file,
@@ -414,7 +414,7 @@ def UnstripPSV(
     return os.path.exists(dest_psv_file)
 
 # Trim psv file
-def TrimPSV(
+def trim_psv(
     src_psv_file,
     dest_psv_file,
     delete_original = False,
@@ -470,7 +470,7 @@ def TrimPSV(
     return os.path.exists(dest_psv_file)
 
 # Untrim psv file
-def UntrimPSV(
+def untrim_psv(
     src_psv_file,
     dest_psv_file,
     delete_original = False,
@@ -526,7 +526,7 @@ def UntrimPSV(
     return os.path.exists(dest_psv_file)
 
 # Verify psv file
-def VerifyPSV(
+def verify_psv(
     psv_file,
     verbose = False,
     pretend_run = False,
@@ -575,7 +575,7 @@ def VerifyPSV(
 ######################################################
 
 # Get psn work.bin bytes from zrif string
-def GetPSNWorkBinBytesFromZRifString(zrif_str):
+def get_psn_workbin_bytes_from_zrif_string(zrif_str):
     try:
         zrif_base64 = b"eNpjYBgFo2AU0AsYAIElGt8MRJiDCAsw3xhEmIAIU4N4AwNdRxcXZ3+/EJCAkW6Ac7C7ARwYgviuQAaIdoPSzlDaBUo7QmknIM3ACIZM78+u7kx3VWYEAGJ9HV0="
         zrif_dict = list(zlib.decompress(base64.b64decode(zrif_base64)))
@@ -589,7 +589,7 @@ def GetPSNWorkBinBytesFromZRifString(zrif_str):
     return None
 
 # Get psn package content id
-def GetPSNPackageContentID(pkg_file):
+def get_psn_package_content_id(pkg_file):
     try:
         with open(pkg_file, "rb") as f:
             f.seek(0x30)
@@ -599,7 +599,7 @@ def GetPSNPackageContentID(pkg_file):
     return None
 
 # Get psn work.bin content id
-def GetPSNWorkBinContentID(workbin_file):
+def get_psn_workbin_content_id(workbin_file):
     try:
         with open(workbin_file, "rb") as f:
             f.seek(0x10)
@@ -609,7 +609,7 @@ def GetPSNWorkBinContentID(workbin_file):
     return None
 
 # Get psn fake.rif content id
-def GetPSNFakeRifContentID(fakerif_file):
+def get_psn_fakerif_content_id(fakerif_file):
     try:
         with open(workbin_file, "rb") as f:
             f.seek(0x50)
@@ -619,7 +619,7 @@ def GetPSNFakeRifContentID(fakerif_file):
     return None
 
 # Get psn package info
-def GetPSNPackageInfo(
+def get_psn_package_info(
     pkg_file,
     verbose = False,
     pretend_run = False,
@@ -690,12 +690,12 @@ def GetPSNPackageInfo(
     return info
 
 # Rename psn package file
-def RenamePSNPackageFile(
+def rename_psn_package_file(
     pkg_file,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    content_id = GetPSNPackageContentID(pkg_file)
+    content_id = get_psn_package_content_id(pkg_file)
     if not content_id:
         return False
     return fileops.move_file_or_directory(
@@ -707,7 +707,7 @@ def RenamePSNPackageFile(
         exit_on_failure = exit_on_failure)
 
 # Rename psn rap file
-def RenamePSNRapFile(
+def rename_psn_rap_file(
     rap_file,
     verbose = False,
     pretend_run = False,
@@ -715,7 +715,7 @@ def RenamePSNRapFile(
     pkg_file = paths.join_paths(paths.get_filename_directory(rap_file), paths.get_filename_basename(rap_file) + ".pkg")
     if not paths.is_path_file(pkg_file):
         return False
-    content_id = GetPSNPackageContentID(pkg_file)
+    content_id = get_psn_package_content_id(pkg_file)
     if not content_id:
         return False
     return fileops.move_file_or_directory(
@@ -727,12 +727,12 @@ def RenamePSNRapFile(
         exit_on_failure = exit_on_failure)
 
 # Rename psn work.bin file
-def RenamePSNWorkBinFile(
+def rename_psn_workbin_file(
     workbin_file,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    content_id = GetPSNWorkBinContentID(workbin_file)
+    content_id = get_psn_workbin_content_id(workbin_file)
     if not content_id:
         return False
     return fileops.move_file_or_directory(
@@ -744,12 +744,12 @@ def RenamePSNWorkBinFile(
         exit_on_failure = exit_on_failure)
 
 # Rename psn fake.rif file
-def RenamePSNFakeRifFile(
+def rename_psn_fakerif_file(
     fakerif_file,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    content_id = GetPSNFakeRifContentID(fakerif_file)
+    content_id = get_psn_fakerif_content_id(fakerif_file)
     if not content_id:
         return False
     return fileops.move_file_or_directory(

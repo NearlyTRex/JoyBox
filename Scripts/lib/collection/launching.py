@@ -112,7 +112,7 @@ def launch_local_game(
     # Get launcher
     game_launcher = programs.get_emulator_by_platform(game_info.get_platform())
     if not game_launcher:
-        gui.DisplayErrorPopup(
+        gui.display_error_popup(
             title_text = "Launcher not found",
             message_text = "Launcher for game '%s' in platform '%s' could not be found" % (game_info.get_name(), game_info.get_platform()))
         return False

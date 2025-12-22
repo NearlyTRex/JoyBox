@@ -22,9 +22,9 @@ class Brave(toolbase.ToolBase):
     def get_config(self):
 
         # Get brave info
-        brave_exe = ini.GetIniValue("Tools.Brave", "brave_exe")
-        brave_install_dir = ini.GetIniPathValue("Tools.Brave", "brave_install_dir")
-        brave_download_dir = ini.GetIniPathValue("Tools.Brave", "brave_download_dir")
+        brave_exe = ini.get_ini_value("Tools.Brave", "brave_exe")
+        brave_install_dir = ini.get_ini_path_value("Tools.Brave", "brave_install_dir")
+        brave_download_dir = ini.get_ini_path_value("Tools.Brave", "brave_download_dir")
 
         # Return config
         return {

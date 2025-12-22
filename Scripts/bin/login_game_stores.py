@@ -39,7 +39,7 @@ def main():
     logger.setup_logging()
 
     # Login game stores
-    for game_supercategory, game_category, game_subcategory in gameinfo.IterateSelectedGameCategories(
+    for game_supercategory, game_category, game_subcategory in gameinfo.iterate_selected_game_categories(
         parser = parser,
         generation_mode = args.generation_mode):
         success = collection.LoginGameStore(

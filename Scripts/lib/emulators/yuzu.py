@@ -66,9 +66,9 @@ class Yuzu(emulatorbase.EmulatorBase):
     def get_config(self):
 
         # Get switch info
-        profile_user_id = ini.GetIniValue("UserData.Switch", "profile_user_id")
-        profile_account_name = ini.GetIniValue("UserData.Switch", "profile_account_name")
-        if not nintendo.IsValidSwitchProfileInfo(profile_user_id, profile_account_name):
+        profile_user_id = ini.get_ini_value("UserData.Switch", "profile_user_id")
+        profile_account_name = ini.get_ini_value("UserData.Switch", "profile_account_name")
+        if not nintendo.is_valid_switch_profile_info(profile_user_id, profile_account_name):
             logger.log_warning("No Switch profile found in ini, using default")
             profile_user_id = "F6F389D41D6BC0BDD6BD928C526AE556"
             profile_account_name = "yuzu"
@@ -110,7 +110,7 @@ class Yuzu(emulatorbase.EmulatorBase):
         for package_dirset in [dlc_dirs, update_dirs]:
             for package_dir in package_dirset:
                 for nsp_file in paths.build_file_list_by_extensions(package_dir, extensions = [".nsp"]):
-                    success = nintendo.InstallSwitchNSP(
+                    success = nintendo.install_switch_nsp(
                         nsp_file = nsp_file,
                         nand_dir = paths.join_paths(programs.get_emulator_path_config_value("Yuzu", "setup_dir"), "nand"),
                         verbose = verbose,
@@ -180,7 +180,7 @@ class Yuzu(emulatorbase.EmulatorBase):
 
         # Create profiles
         for platform in ["windows", "linux"]:
-            success = nintendo.CreateSwitchProfilesDat(
+            success = nintendo.create_switch_profiles_dat(
                 profiles_file = programs.get_emulator_path_config_value("Yuzu", "profiles_file", platform),
                 user_id = programs.get_emulator_config_value("Yuzu", "profile_user_id"),
                 account_name = programs.get_emulator_config_value("Yuzu", "profile_account_name"),
@@ -193,7 +193,7 @@ class Yuzu(emulatorbase.EmulatorBase):
 
         # Verify system files
         for filename, expected_md5 in system_files.items():
-            actual_md5 = hashing.CalculateFileMD5(
+            actual_md5 = hashing.calculate_file_md5(
                 src = paths.join_paths(environment.get_locker_gaming_emulator_setup_dir("Yuzu"), filename),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,

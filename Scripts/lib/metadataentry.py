@@ -194,7 +194,7 @@ class MetadataEntry:
     # Sync assets
     def sync_assets(self):
         for asset_type in config.AssetType.members():
-            game_asset_string = gameinfo.DeriveGameAssetPathFromName(
+            game_asset_string = gameinfo.derive_game_asset_path_from_name(
                 game_name = self.get_game(),
                 asset_type = asset_type)
             game_asset_file = environment.get_locker_gaming_asset_file(

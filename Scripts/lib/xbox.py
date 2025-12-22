@@ -12,7 +12,7 @@ import logger
 import paths
 
 # Extract Xbox ISO
-def ExtractXboxISO(
+def extract_xbox_iso(
     iso_file,
     extract_dir,
     delete_original = False,
@@ -60,7 +60,7 @@ def ExtractXboxISO(
     return os.path.exists(extract_dir)
 
 # Rewrite Xbox ISO
-def RewriteXboxISO(
+def rewrite_xbox_iso(
     iso_file,
     delete_original = False,
     verbose = False,

@@ -22,8 +22,8 @@ class Gpg(toolbase.ToolBase):
     def get_config(self):
 
         # Get gpg info
-        gpg_exe = ini.GetIniValue("Tools.Gpg", "gpg_exe")
-        gpg_install_dir = ini.GetIniPathValue("Tools.Gpg", "gpg_install_dir")
+        gpg_exe = ini.get_ini_value("Tools.Gpg", "gpg_exe")
+        gpg_install_dir = ini.get_ini_path_value("Tools.Gpg", "gpg_install_dir")
 
         # Return config
         return {

@@ -54,7 +54,7 @@ def main():
     archive_extensions = [archive_type.cval() for archive_type in args.archive_types]
     for file in paths.build_file_list_by_extensions(input_path, extensions = archive_extensions):
         logger.log_info("Verifying %s ..." % file)
-        verification_success = archive.TestArchive(
+        verification_success = archive.test_archive(
             archive_file = file,
             verbose = args.verbose,
             pretend_run = args.pretend_run,

@@ -163,7 +163,7 @@ class RPCS3(emulatorbase.EmulatorBase):
 
         # Verify system files
         for filename, expected_md5 in system_files.items():
-            actual_md5 = hashing.CalculateFileMD5(
+            actual_md5 = hashing.calculate_file_md5(
                 src = paths.join_paths(environment.get_locker_gaming_emulator_setup_dir("RPCS3"), filename),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
@@ -177,7 +177,7 @@ class RPCS3(emulatorbase.EmulatorBase):
         for platform in ["windows", "linux"]:
             for obj in ["dev_flash"]:
                 if os.path.exists(paths.join_paths(environment.get_locker_gaming_emulator_setup_dir("RPCS3"), obj + config.ArchiveFileType.ZIP.cval())):
-                    success = archive.ExtractArchive(
+                    success = archive.extract_archive(
                         archive_file = paths.join_paths(environment.get_locker_gaming_emulator_setup_dir("RPCS3"), obj + config.ArchiveFileType.ZIP.cval()),
                         extract_dir = paths.join_paths(programs.get_emulator_path_config_value("RPCS3", "setup_dir", platform), obj),
                         skip_existing = True,

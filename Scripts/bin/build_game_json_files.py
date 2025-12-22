@@ -52,10 +52,10 @@ def main():
 
     # Collect games to process
     games_to_process = []
-    for game_supercategory, game_category, game_subcategory in gameinfo.IterateSelectedGameCategories(
+    for game_supercategory, game_category, game_subcategory in gameinfo.iterate_selected_game_categories(
         parser = parser,
         generation_mode = args.generation_mode):
-        game_names = gameinfo.FindLockerGameNames(
+        game_names = gameinfo.find_locker_game_names(
             game_supercategory,
             game_category,
             game_subcategory,

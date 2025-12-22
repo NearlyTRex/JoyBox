@@ -22,8 +22,8 @@ class Tar(toolbase.ToolBase):
     def get_config(self):
 
         # Get tar info
-        tar_exe = ini.GetIniValue("Tools.Tar", "tar_exe")
-        tar_install_dir = ini.GetIniPathValue("Tools.Tar", "tar_install_dir")
+        tar_exe = ini.get_ini_value("Tools.Tar", "tar_exe")
+        tar_install_dir = ini.get_ini_path_value("Tools.Tar", "tar_install_dir")
 
         # Return config
         return {

@@ -16,30 +16,30 @@ import paths
 import hashing
 
 # Determine if file is encrypted
-def IsFileEncrypted(src):
+def is_file_encrypted(src):
     for ext in config.EncryptedFileType.cvalues():
         if src.endswith(ext):
             return True
     return False
 
 # Determine if passphrase is valid
-def IsPassphraseValid(passphrase):
+def is_passphrase_valid(passphrase):
     return isinstance(passphrase, str) and len(passphrase) > 0
 
 # Generate encrypted filename
-def GenerateEncryptedFilename(src):
-    if IsFileEncrypted(src):
+def generate_encrypted_filename(src):
+    if is_file_encrypted(src):
         return src
-    return hashing.CalculateStringMD5(src) + config.EncryptedFileType.ENC.cval()
+    return hashing.calculate_string_md5(src) + config.EncryptedFileType.ENC.cval()
 
 # Generate encrypted path
-def GenerateEncryptedPath(source_path):
+def generate_encrypted_path(source_path):
     output_dir = paths.get_filename_directory(source_path)
-    output_name = GenerateEncryptedFilename(paths.get_filename_file(source_path))
+    output_name = generate_encrypted_filename(paths.get_filename_file(source_path))
     return paths.join_paths(output_dir, output_name)
 
 # Get embedded filename
-def GetEmbeddedFilename(
+def get_embedded_filename(
     src,
     passphrase,
     verbose = False,
@@ -82,7 +82,7 @@ def GetEmbeddedFilename(
     return None
 
 # Get embedded file info
-def GetEmbeddedFileInfo(
+def get_embedded_file_info(
     src,
     passphrase,
     hasher,
@@ -92,7 +92,7 @@ def GetEmbeddedFileInfo(
     exit_on_failure = False):
 
     # Get embedded filename
-    embedded_filename = GetEmbeddedFilename(
+    embedded_filename = get_embedded_filename(
         src = src,
         passphrase = passphrase,
         verbose = verbose,
@@ -112,7 +112,7 @@ def GetEmbeddedFileInfo(
     tmp_file = paths.join_paths(tmp_dir_result, embedded_filename)
 
     # Decrypt file
-    success = DecryptFile(
+    success = decrypt_file(
         src = src,
         passphrase = passphrase,
         output_file = tmp_file,
@@ -151,16 +151,16 @@ def GetEmbeddedFileInfo(
     return file_info
 
 # Get real file path
-def GetRealFilePath(
+def get_real_file_path(
     src,
     passphrase,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    if not IsFileEncrypted(src):
+    if not is_file_encrypted(src):
         return src
     real_dir = paths.get_filename_directory(src)
-    real_name = GetEmbeddedFilename(
+    real_name = get_embedded_filename(
         src = src,
         passphrase = passphrase,
         verbose = verbose,
@@ -171,7 +171,7 @@ def GetRealFilePath(
     return None
 
 # Get real file paths
-def GetRealFilePaths(
+def get_real_file_paths(
     src,
     passphrase,
     verbose = False,
@@ -180,7 +180,7 @@ def GetRealFilePaths(
     real_paths = []
     if isinstance(src, list):
         for source_file in src:
-            real_path = GetRealFilePath(
+            real_path = get_real_file_path(
                 src = source_file,
                 passphrase = passphrase,
                 verbose = verbose,
@@ -191,7 +191,7 @@ def GetRealFilePaths(
     return real_paths
 
 # Encrypt file
-def EncryptFile(
+def encrypt_file(
     src,
     passphrase,
     output_file = None,
@@ -209,14 +209,14 @@ def EncryptFile(
 
     # Check output file
     if not output_file:
-        output_file = GenerateEncryptedPath(src)
+        output_file = generate_encrypted_path(src)
     if not paths.is_path_valid(output_file):
         return False
     if paths.does_path_exist(output_file):
         return True
 
     # Plain copy if already encrypted
-    if IsFileEncrypted(src):
+    if is_file_encrypted(src):
         success = fileops.smart_copy(
             src = src,
             dest = output_file,
@@ -271,7 +271,7 @@ def EncryptFile(
     return os.path.exists(output_file)
 
 # Decrypt file
-def DecryptFile(
+def decrypt_file(
     src,
     passphrase,
     output_file = None,
@@ -289,7 +289,7 @@ def DecryptFile(
 
     # Check output file
     if not output_file:
-        output_file = GetRealFilePath(
+        output_file = get_real_file_path(
             src = src,
             passphrase = passphrase,
             verbose = verbose,
@@ -301,7 +301,7 @@ def DecryptFile(
         return True
 
     # Plain copy if already decrypted
-    if not IsFileEncrypted(src):
+    if not is_file_encrypted(src):
         success = fileops.smart_copy(
             src = src,
             dest = output_file,
@@ -355,7 +355,7 @@ def DecryptFile(
     return os.path.exists(output_file)
 
 # Encrypt files
-def EncryptFiles(
+def encrypt_files(
     src,
     passphrase,
     delete_original = False,
@@ -364,8 +364,8 @@ def EncryptFiles(
     exit_on_failure = False):
     output_files = []
     for file in paths.build_file_list(src):
-        output_file = GenerateEncryptedPath(file)
-        success = EncryptFile(
+        output_file = generate_encrypted_path(file)
+        success = encrypt_file(
             src = file,
             output_file = output_file,
             passphrase = passphrase,
@@ -378,7 +378,7 @@ def EncryptFiles(
     return output_files
 
 # Decrypt files
-def DecryptFiles(
+def decrypt_files(
     src,
     passphrase,
     delete_original = False,
@@ -387,13 +387,13 @@ def DecryptFiles(
     exit_on_failure = False):
     output_files = []
     for file in paths.build_file_list(src):
-        output_file = GetRealFilePath(
+        output_file = get_real_file_path(
             src = file,
             passphrase = passphrase,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-        success = DecryptFile(
+        success = decrypt_file(
             src = file,
             output_file = output_file,
             passphrase = passphrase,

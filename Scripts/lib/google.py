@@ -29,8 +29,8 @@ def FindImages(
     exit_on_failure = False):
 
     # Get authorization info
-    google_search_engine_id = ini.GetIniValue("UserData.Scraping", "google_search_engine_id")
-    google_search_engine_api_key = ini.GetIniValue("UserData.Scraping", "google_search_engine_api_key")
+    google_search_engine_id = ini.get_ini_value("UserData.Scraping", "google_search_engine_id")
+    google_search_engine_api_key = ini.get_ini_value("UserData.Scraping", "google_search_engine_api_key")
 
     # Get search url
     search_url = "https://www.googleapis.com/customsearch/v1"

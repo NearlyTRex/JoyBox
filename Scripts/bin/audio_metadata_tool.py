@@ -58,7 +58,7 @@ def main():
 
     # Execute action
     if args.action == config.AudioMetadataAction.TAG:
-        return audio.BuildAudioMetadataFiles(
+        return audio.build_audio_metadata_files(
             genre_type = args.genre,
             album_name = args.album,
             artist_name = args.artist,
@@ -68,7 +68,7 @@ def main():
             pretend_run = args.pretend_run,
             exit_on_failure = args.exit_on_failure)
     elif args.action == config.AudioMetadataAction.CLEAR:
-        return audio.ClearAudioMetadataTags(
+        return audio.clear_audio_metadata_tags(
             genre_type = args.genre,
             album_name = args.album,
             artist_name = args.artist,
@@ -77,7 +77,7 @@ def main():
             pretend_run = args.pretend_run,
             exit_on_failure = args.exit_on_failure)
     elif args.action == config.AudioMetadataAction.APPLY:
-        return audio.ApplyAudioMetadataTags(
+        return audio.apply_audio_metadata_tags(
             genre_type = args.genre,
             album_name = args.album,
             artist_name = args.artist,

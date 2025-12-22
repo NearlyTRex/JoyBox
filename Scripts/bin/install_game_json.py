@@ -64,11 +64,11 @@ def main():
 
     # Check json file
     if not json_file:
-        gui.DisplayErrorPopup(
+        gui.display_error_popup(
             title_text = "No json file specified",
             message_text = "No json file was specified")
     if not paths.is_path_file(json_file):
-        gui.DisplayErrorPopup(
+        gui.display_error_popup(
             title_text = "Json file not found",
             message_text = "Json file %s was not found" % json_file)
 
@@ -99,7 +99,7 @@ def main():
         pretend_run = args.pretend_run,
         exit_on_failure = args.exit_on_failure)
     if not success:
-        gui.DisplayErrorPopup(
+        gui.display_error_popup(
             title_text = "Json file failed to install",
             message_text = "Json file '%s' failed to install" % paths.get_filename_file(json_file))
 
@@ -111,7 +111,7 @@ def main():
             pretend_run = args.pretend_run,
             exit_on_failure = args.exit_on_failure)
         if not success:
-            gui.DisplayErrorPopup(
+            gui.display_error_popup(
                 title_text = "Json file addons failed to install",
                 message_text = "Json file '%s' addons failed to install" % paths.get_filename_file(json_file))
 

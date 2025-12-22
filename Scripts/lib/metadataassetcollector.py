@@ -28,7 +28,7 @@ def FindMetadataAssetsFromGoogleImages(
 
     # Return search results
     return google.FindImages(
-        search_name = gameinfo.DeriveRegularNameFromGameName(game_name),
+        search_name = gameinfo.derive_regular_name_from_game_name(game_name),
         image_dimensions = config.asset_boxfront_dimensions,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -51,7 +51,7 @@ def FindMetadataAssetsFromYouTube(
 
     # Return search results
     return google.FindVideos(
-        search_name = gameinfo.DeriveRegularNameFromGameName(game_name, custom_suffix = " trailer"),
+        search_name = gameinfo.derive_regular_name_from_game_name(game_name, custom_suffix = " trailer"),
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -73,7 +73,7 @@ def FindMetadataAssetsFromSteam(
 
     # Build asset list
     return stores.FindSteamAssets(
-        search_name = gameinfo.DeriveRegularNameFromGameName(game_name),
+        search_name = gameinfo.derive_regular_name_from_game_name(game_name),
         asset_type = asset_type,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -96,7 +96,7 @@ def FindMetadataAssetsFromSteamGridDB(
 
     # Return search results
     return stores.FindSteamGridDBCovers(
-        search_name = gameinfo.DeriveRegularNameFromGameName(game_name),
+        search_name = gameinfo.derive_regular_name_from_game_name(game_name),
         image_dimensions = config.asset_boxfront_dimensions,
         image_types = config.ImageFileType.members(),
         verbose = verbose,

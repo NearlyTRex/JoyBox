@@ -157,7 +157,7 @@ def import_game_store_purchases(
             continue
 
         # Prompt for entry name
-        default_name = gameinfo.DeriveGameNameFromRegularName(purchase_name)
+        default_name = gameinfo.derive_game_name_from_regular_name(purchase_name)
         entry_name = prompts.prompt_for_value("Choose entry name", default_value = default_name)
 
         # Get appurl if possible
@@ -475,7 +475,7 @@ def download_all_game_store_purchases(
     for game_supercategory in [config.Supercategory.ROMS]:
         for game_category in config.Category.members():
             for game_subcategory in config.subcategory_map[game_category]:
-                game_names = gameinfo.FindJsonGameNames(
+                game_names = gameinfo.find_json_game_names(
                     game_supercategory,
                     game_category,
                     game_subcategory)

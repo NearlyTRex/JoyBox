@@ -89,7 +89,7 @@ def pack_save(
         input_excludes = [config.SaveType.WINE.val(), config.SaveType.SANDBOXIE.val()]
 
     # Archive save
-    success = archive.CreateArchiveFromFolder(
+    success = archive.create_archive_from_folder(
         archive_file = tmp_save_archive_file,
         source_dir = input_save_dir,
         excludes = input_excludes,
@@ -105,7 +105,7 @@ def pack_save(
         return False
 
     # Test archive
-    success = archive.TestArchive(
+    success = archive.test_archive(
         archive_file = tmp_save_archive_file,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -119,7 +119,7 @@ def pack_save(
         return False
 
     # Check if already archived
-    found_files = hashing.FindDuplicateArchives(
+    found_files = hashing.find_duplicate_archives(
         filename = tmp_save_archive_file,
         directory = output_save_dir,
         verbose = verbose,
@@ -175,7 +175,7 @@ def pack_all_saves(
     for game_supercategory in [config.Supercategory.ROMS]:
         for game_category in config.Category.members():
             for game_subcategory in config.subcategory_map[game_category]:
-                game_names = gameinfo.FindJsonGameNames(
+                game_names = gameinfo.find_json_game_names(
                     game_supercategory,
                     game_category,
                     game_subcategory)
@@ -243,7 +243,7 @@ def unpack_save(
     # Unpack save archive
     if verbose:
         logger.log_info(f"Extracting from {latest_save_archive}")
-    success = archive.ExtractArchive(
+    success = archive.extract_archive(
         archive_file = latest_save_archive,
         extract_dir = output_save_dir,
         verbose = verbose,
@@ -271,7 +271,7 @@ def unpack_all_saves(
     for game_supercategory in [config.Supercategory.ROMS]:
         for game_category in config.Category.members():
             for game_subcategory in config.subcategory_map[game_category]:
-                game_names = gameinfo.FindJsonGameNames(
+                game_names = gameinfo.find_json_game_names(
                     game_supercategory,
                     game_category,
                     game_subcategory)
@@ -341,7 +341,7 @@ def import_store_game_save_paths(
 
     # Read save files and add paths
     for archive_file in paths.build_file_list(game_info.get_save_dir()):
-        archive_paths = archive.ListArchive(
+        archive_paths = archive.list_archive(
             archive_file = archive_file,
             verbose = verbose,
             pretend_run = pretend_run,
@@ -514,7 +514,7 @@ def import_all_game_save_paths(
     for game_supercategory in [config.Supercategory.ROMS]:
         for game_category in config.Category.members():
             for game_subcategory in config.subcategory_map[game_category]:
-                game_names = gameinfo.FindJsonGameNames(
+                game_names = gameinfo.find_json_game_names(
                     game_supercategory,
                     game_category,
                     game_subcategory)
@@ -565,7 +565,7 @@ def import_all_game_saves(
     for game_supercategory in [config.Supercategory.ROMS]:
         for game_category in config.Category.members():
             for game_subcategory in config.subcategory_map[game_category]:
-                game_names = gameinfo.FindJsonGameNames(
+                game_names = gameinfo.find_json_game_names(
                     game_supercategory,
                     game_category,
                     game_subcategory)
@@ -616,7 +616,7 @@ def export_all_game_save(
     for game_supercategory in [config.Supercategory.ROMS]:
         for game_category in config.Category.members():
             for game_subcategory in config.subcategory_map[game_category]:
-                game_names = gameinfo.FindJsonGameNames(
+                game_names = gameinfo.find_json_game_names(
                     game_supercategory,
                     game_category,
                     game_subcategory)

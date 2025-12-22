@@ -19,7 +19,7 @@ class Disc(storebase.StoreBase):
         super().__init__()
 
         # Get install dir
-        self.install_dir = ini.GetIniPathValue("UserData.Disc", "disc_install_dir")
+        self.install_dir = ini.get_ini_path_value("UserData.Disc", "disc_install_dir")
         if not paths.is_path_valid(self.install_dir):
             raise RuntimeError("Ini file does not have a valid install dir")
 

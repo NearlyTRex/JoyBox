@@ -17,7 +17,7 @@ import fileops
 import sandbox
 
 # Determine if file is a known archive
-def IsKnownArchive(archive_file, extensions = [], mime_types = []):
+def is_known_archive(archive_file, extensions = [], mime_types = []):
     for ext in extensions:
         if archive_file.lower().endswith(ext.lower()):
             return True
@@ -30,72 +30,72 @@ def IsKnownArchive(archive_file, extensions = [], mime_types = []):
     return False
 
 # Determine if file is an archive
-def IsArchive(archive_file):
-    if IsZipArchive(archive_file):
+def is_archive(archive_file):
+    if is_zip_archive(archive_file):
         return True
-    elif Is7zArchive(archive_file):
+    elif is_7z_archive(archive_file):
         return True
-    elif IsTarballArchive(archive_file):
+    elif is_tarball_archive(archive_file):
         return True
-    elif IsDiscArchive(archive_file):
+    elif is_disc_archive(archive_file):
         return True
-    elif IsExeArchive(archive_file):
+    elif is_exe_archive(archive_file):
         return True
-    elif IsAppImageArchive(archive_file):
+    elif is_appimage_archive(archive_file):
         return True
     return False
 
 # Determine if file is a zip archive
-def IsZipArchive(archive_file):
-    return IsKnownArchive(
+def is_zip_archive(archive_file):
+    return is_known_archive(
         archive_file = archive_file,
         extensions = config.ArchiveZipFileType.cvalues(),
         mime_types = config.mime_types_zip)
 
 # Determine if file is a 7z archive
-def Is7zArchive(archive_file):
-    return IsKnownArchive(
+def is_7z_archive(archive_file):
+    return is_known_archive(
         archive_file = archive_file,
         extensions = config.Archive7zFileType.cvalues(),
         mime_types = config.mime_types_7z)
 
 # Determine if file is a rar archive
-def IsRarArchive(archive_file):
-    return IsKnownArchive(
+def is_rar_archive(archive_file):
+    return is_known_archive(
         archive_file = archive_file,
         extensions = config.ArchiveRarFileType.cvalues(),
         mime_types = config.mime_types_rar)
 
 # Determine if file is a tarball archive
-def IsTarballArchive(archive_file):
-    return IsKnownArchive(
+def is_tarball_archive(archive_file):
+    return is_known_archive(
         archive_file = archive_file,
         extensions = config.ArchiveTarballFileType.cvalues(),
         mime_types = config.mime_types_tarball)
 
 # Determine if file is a disc archive
-def IsDiscArchive(archive_file):
-    return IsKnownArchive(
+def is_disc_archive(archive_file):
+    return is_known_archive(
         archive_file = archive_file,
         extensions = config.ArchiveDiscFileType.cvalues(),
         mime_types = config.mime_types_disc)
 
 # Determine if file is an exe archive
-def IsExeArchive(archive_file):
-    return IsKnownArchive(
+def is_exe_archive(archive_file):
+    return is_known_archive(
         archive_file = archive_file,
         extensions = [config.WindowsProgramFileType.EXE.cval()],
         mime_types = config.mime_types_exe)
 
 # Determine if file is an appimage archive
-def IsAppImageArchive(archive_file):
-    return IsKnownArchive(
+def is_appimage_archive(archive_file):
+    return is_known_archive(
         archive_file = archive_file,
         extensions = [config.LinuxProgramFileType.APPIMAGE.cval()],
         mime_types = config.mime_types_appimage)
 
 # Get archive type
-def GetArchiveType(archive_file):
+def get_archive_type(archive_file):
     archive_ext = paths.get_filename_extension(archive_file)
     for archive_type in config.ArchiveFileType.members():
         if archive_ext == archive_type.cval():
@@ -103,7 +103,7 @@ def GetArchiveType(archive_file):
     return None
 
 # Determine if creatable archive type
-def IsCreatableArchiveType(archive_type):
+def is_creatable_archive_type(archive_type):
     if archive_type in config.ArchiveZipFileType.members():
         return True
     if archive_type in config.Archive7zFileType.members():
@@ -111,7 +111,7 @@ def IsCreatableArchiveType(archive_type):
     return False
 
 # Determine if extractable archive type
-def IsExtractableArchiveType(archive_type):
+def is_extractable_archive_type(archive_type):
     if archive_type in config.ArchiveZipFileType.members():
         return True
     if archive_type in config.Archive7zFileType.members():
@@ -123,10 +123,10 @@ def IsExtractableArchiveType(archive_type):
     return False
 
 # Check archive checksums
-def GetArchiveChecksums(archive_file):
+def get_archive_checksums(archive_file):
     checksums = []
     if paths.is_path_file(archive_file):
-        if IsZipArchive(archive_file):
+        if is_zip_archive(archive_file):
             with zipfile.ZipFile(archive_file) as zf:
                 for info in zf.infolist():
                     if info.is_dir():
@@ -138,7 +138,7 @@ def GetArchiveChecksums(archive_file):
     return checksums
 
 # Get archive compression flags
-def GetArchiveCompressionFlags(archive_type, password, volume_size):
+def get_archive_compression_flags(archive_type, password, volume_size):
     compression_flags = []
     if archive_type == config.ArchiveFileType.ZIP:
         compression_flags += [
@@ -170,7 +170,7 @@ def GetArchiveCompressionFlags(archive_type, password, volume_size):
     return compression_flags
 
 # Check archive compression output files
-def CheckArchiveCompressionOutputFiles(
+def check_archive_compression_output_files(
     archive_file,
     archive_type,
     volume_size,
@@ -210,7 +210,7 @@ def CheckArchiveCompressionOutputFiles(
     return True
 
 # Create archive from file
-def CreateArchiveFromFile(
+def create_archive_from_file(
     archive_file,
     source_file,
     password = None,
@@ -229,13 +229,13 @@ def CreateArchiveFromFile(
         return False
 
     # Get archive type
-    archive_type = GetArchiveType(archive_file)
+    archive_type = get_archive_type(archive_file)
     if not archive_type:
         logger.log_error("Unrecognized archive type for %s" % archive_file)
         return False
 
     # Check if creatable
-    if not IsCreatableArchiveType(archive_type):
+    if not is_creatable_archive_type(archive_type):
         logger.log_error("Unable to create archives of type %s" % archive_type.val())
         return False
 
@@ -250,7 +250,7 @@ def CreateArchiveFromFile(
         archive_tool,
         "a"
     ]
-    create_command += GetArchiveCompressionFlags(
+    create_command += get_archive_compression_flags(
         archive_type = archive_type,
         password = password,
         volume_size = volume_size)
@@ -281,7 +281,7 @@ def CreateArchiveFromFile(
             exit_on_failure = exit_on_failure)
 
     # Check output files
-    return CheckArchiveCompressionOutputFiles(
+    return check_archive_compression_output_files(
         archive_file = archive_file,
         archive_type = archive_type,
         volume_size = volume_size,
@@ -290,7 +290,7 @@ def CreateArchiveFromFile(
         exit_on_failure = exit_on_failure)
 
 # Create archive from folder
-def CreateArchiveFromFolder(
+def create_archive_from_folder(
     archive_file,
     source_dir,
     excludes = [],
@@ -310,13 +310,13 @@ def CreateArchiveFromFolder(
         return False
 
     # Get archive type
-    archive_type = GetArchiveType(archive_file)
+    archive_type = get_archive_type(archive_file)
     if not archive_type:
         logger.log_error("Unrecognized archive type for %s" % archive_file)
         return False
 
     # Check if creatable
-    if not IsCreatableArchiveType(archive_type):
+    if not is_creatable_archive_type(archive_type):
         logger.log_error("Unable to create archives of type %s" % archive_type.val())
         return False
 
@@ -336,7 +336,7 @@ def CreateArchiveFromFolder(
         archive_tool,
         "a"
     ]
-    create_command += GetArchiveCompressionFlags(
+    create_command += get_archive_compression_flags(
         archive_type = archive_type,
         password = password,
         volume_size = volume_size)
@@ -367,7 +367,7 @@ def CreateArchiveFromFolder(
             exit_on_failure = exit_on_failure)
 
     # Check output files
-    return CheckArchiveCompressionOutputFiles(
+    return check_archive_compression_output_files(
         archive_file = archive_file,
         archive_type = archive_type,
         volume_size = volume_size,
@@ -376,7 +376,7 @@ def CreateArchiveFromFolder(
         exit_on_failure = exit_on_failure)
 
 # Extract archive
-def ExtractArchive(
+def extract_archive(
     archive_file,
     extract_dir,
     password = None,
@@ -388,7 +388,7 @@ def ExtractArchive(
 
     # Get tool
     archive_tool = None
-    if IsTarballArchive(archive_file):
+    if is_tarball_archive(archive_file):
         if programs.is_tool_installed("Tar"):
             archive_tool = programs.get_tool_program("Tar")
         if not archive_tool:
@@ -402,19 +402,19 @@ def ExtractArchive(
             return False
 
     # Get archive type
-    archive_type = GetArchiveType(archive_file)
+    archive_type = get_archive_type(archive_file)
     if not archive_type:
         logger.log_error("Unrecognized archive type for %s" % archive_file)
         return False
 
     # Check if extractable
-    if not IsExtractableArchiveType(archive_type):
+    if not is_extractable_archive_type(archive_type):
         logger.log_error("Unable to extract archives of type %s" % archive_type.val())
         return False
 
     # Get extract command
     extract_cmd = []
-    if IsTarballArchive(archive_file):
+    if is_tarball_archive(archive_file):
         extract_cmd = [
             archive_tool,
             "xvf",
@@ -462,7 +462,7 @@ def ExtractArchive(
     return os.path.exists(extract_dir) and not paths.is_directory_empty(extract_dir)
 
 # Test archive
-def TestArchive(
+def test_archive(
     archive_file,
     verbose = False,
     pretend_run = False,
@@ -494,7 +494,7 @@ def TestArchive(
     return (code == 0)
 
 # List archive
-def ListArchive(
+def list_archive(
     archive_file,
     verbose = False,
     pretend_run = False,

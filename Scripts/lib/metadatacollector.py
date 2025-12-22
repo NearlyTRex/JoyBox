@@ -43,7 +43,7 @@ def CollectMetadataFromTGDB(
             raise Exception("Failed to create web driver")
 
         # Get search terms
-        search_terms = gameinfo.DeriveGameSearchTermsFromName(game_name, game_platform)
+        search_terms = gameinfo.derive_game_search_terms_from_name(game_name, game_platform)
 
         # Metadata result
         metadata_result = metadataentry.MetadataEntry()
@@ -54,7 +54,7 @@ def CollectMetadataFromTGDB(
             raise Exception("Failed to load TheGamesDB search page")
 
         # Get natural name
-        natural_name = gameinfo.DeriveRegularNameFromGameName(game_name)
+        natural_name = gameinfo.derive_regular_name_from_game_name(game_name)
 
         # Find the root container element
         element_search_result = webpage.wait_for_element(
@@ -213,7 +213,7 @@ def CollectMetadataFromGameFAQS(
             raise Exception("Failed to create web driver")
 
         # Get search terms
-        search_terms = gameinfo.DeriveGameSearchTermsFromName(game_name, game_platform)
+        search_terms = gameinfo.derive_game_search_terms_from_name(game_name, game_platform)
 
         # Metadata result
         metadata_result = metadataentry.MetadataEntry()
@@ -410,7 +410,7 @@ def CollectMetadataFromBigFishGames(
             raise Exception("Failed to create web driver")
 
         # Get search terms
-        search_terms = gameinfo.DeriveGameSearchTermsFromName(game_name, game_platform)
+        search_terms = gameinfo.derive_game_search_terms_from_name(game_name, game_platform)
 
         # Metadata result
         metadata_result = metadataentry.MetadataEntry()

@@ -37,10 +37,10 @@ class Python(toolbase.ToolBase):
     def get_config(self):
 
         # Get python info
-        python_exe = ini.GetIniValue("Tools.Python", "python_exe")
-        python_pip_exe = ini.GetIniValue("Tools.Python", "python_pip_exe")
-        python_install_dir = ini.GetIniPathValue("Tools.Python", "python_install_dir")
-        python_venv_dir = ini.GetIniPathValue("Tools.Python", "python_venv_dir")
+        python_exe = ini.get_ini_value("Tools.Python", "python_exe")
+        python_pip_exe = ini.get_ini_value("Tools.Python", "python_pip_exe")
+        python_install_dir = ini.get_ini_path_value("Tools.Python", "python_install_dir")
+        python_venv_dir = ini.get_ini_path_value("Tools.Python", "python_venv_dir")
 
         # Return config
         return {

@@ -47,27 +47,27 @@ def main():
     # Rename psn files
     if args.rename:
         for rap_file in paths.build_file_list_by_extensions(input_path, extensions = [".rap"]):
-            playstation.RenamePSNRapFile(
+            playstation.rename_psn_rap_file(
                 rap_file = rap_file,
                 verbose = args.verbose,
                 pretend_run = args.pretend_run,
                 exit_on_failure = args.exit_on_failure)
         for pkg_file in paths.build_file_list_by_extensions(input_path, extensions = [".pkg"]):
-            playstation.RenamePSNPackageFile(
+            playstation.rename_psn_package_file(
                 pkg_file = pkg_file,
                 verbose = args.verbose,
                 pretend_run = args.pretend_run,
                 exit_on_failure = args.exit_on_failure)
         for bin_file in paths.build_file_list_by_extensions(input_path, extensions = [".bin"]):
             if bin_file.endswith(".work.bin"):
-                playstation.RenamePSNWorkBinFile(
+                playstation.rename_psn_workbin_file(
                     workbin_file = bin_file,
                     verbose = args.verbose,
                     pretend_run = args.pretend_run,
                     exit_on_failure = args.exit_on_failure)
         for rif_file in paths.build_file_list_by_extensions(input_path, extensions = [".rif"]):
             if rif_file.endswith(".fake.rif"):
-                playstation.RenamePSNFakeRifFile(
+                playstation.rename_psn_fakerif_file(
                     fakerif_file = rif_file,
                     verbose = args.verbose,
                     pretend_run = args.pretend_run,

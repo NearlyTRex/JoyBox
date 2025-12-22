@@ -67,7 +67,7 @@ def main():
             output_dir = file_dir
 
         # Decompress file
-        archive.ExtractArchive(
+        archive.extract_archive(
             archive_file = current_file,
             extract_dir = output_dir,
             delete_original = args.delete_originals,

@@ -127,7 +127,7 @@ class Dat:
             if verbose:
                 logger.log_info("Examining '%s'" % file)
             file_dir = paths.get_filename_directory(file)
-            file_md5 = hashing.CalculateFileMD5(file, verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure)
+            file_md5 = hashing.calculate_file_md5(file, verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure)
             if self.is_md5_present(file_md5):
                 game_entry = self.get_by_md5(file_md5)
                 file_path_new = paths.join_paths(file_dir, game_entry[config.dat_key_file])

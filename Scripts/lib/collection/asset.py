@@ -193,7 +193,7 @@ def download_all_metadata_assets(
             if selected_subcategories:
                 category_subcategories = [sc for sc in category_subcategories if sc in selected_subcategories]
             for game_subcategory in category_subcategories:
-                game_names = gameinfo.FindJsonGameNames(
+                game_names = gameinfo.find_json_game_names(
                     game_supercategory,
                     game_category,
                     game_subcategory)

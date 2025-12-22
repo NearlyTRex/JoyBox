@@ -46,7 +46,7 @@ def create_game_metadata_entry(
         return True
 
     # Get platform
-    game_platform = gameinfo.DeriveGamePlatformFromCategories(game_category, game_subcategory)
+    game_platform = gameinfo.derive_game_platform_from_categories(game_category, game_subcategory)
 
     # Get metadata file path
     metadata_file_path = environment.get_game_metadata_file(game_category, game_subcategory)
@@ -121,7 +121,7 @@ def update_game_metadata_entry(
         return True
 
     # Get platform
-    game_platform = gameinfo.DeriveGamePlatformFromCategories(game_category, game_subcategory)
+    game_platform = gameinfo.derive_game_platform_from_categories(game_category, game_subcategory)
 
     # Get metadata file path
     metadata_file_path = environment.get_game_metadata_file(game_category, game_subcategory)
@@ -260,8 +260,8 @@ def build_all_game_metadata_entries(
             if selected_subcategories:
                 category_subcategories = [sc for sc in category_subcategories if sc in selected_subcategories]
             for game_subcategory in category_subcategories:
-                game_platform = gameinfo.DeriveGamePlatformFromCategories(game_category, game_subcategory)
-                game_names = gameinfo.FindJsonGameNames(
+                game_platform = gameinfo.derive_game_platform_from_categories(game_category, game_subcategory)
+                game_names = gameinfo.find_json_game_names(
                     game_supercategory,
                     game_category,
                     game_subcategory)
@@ -321,7 +321,7 @@ def publish_game_metadata_entries(
 
                     # Get entry info
                     game_entry_name = game_entry.get_game()
-                    game_entry_natural_name = gameinfo.DeriveRegularNameFromGameName(game_entry_name)
+                    game_entry_natural_name = gameinfo.derive_regular_name_from_game_name(game_entry_name)
                     game_entry_players = game_entry.get_players()
                     game_entry_coop = game_entry.get_coop()
                     game_entry_urlname = strings.encode_url_string(game_entry_natural_name, use_plus = True)

@@ -50,7 +50,7 @@ def main():
 
     # Collect categories to process
     categories_to_process = []
-    for game_supercategory, game_category, game_subcategory in gameinfo.IterateSelectedGameCategories(
+    for game_supercategory, game_category, game_subcategory in gameinfo.iterate_selected_game_categories(
         parser = parser,
         generation_mode = args.generation_mode):
         categories_to_process.append((game_supercategory, game_category, game_subcategory))

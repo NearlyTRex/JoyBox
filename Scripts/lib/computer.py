@@ -228,7 +228,7 @@ class Program(jsondata.JsonData):
             return False
 
         # Restore default screen resolution
-        success = display.RestoreDefaultScreenResolution(
+        success = display.restore_default_screen_resolution(
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
@@ -323,7 +323,7 @@ class ProgramStep(jsondata.JsonData):
 
         # Extract step
         elif program_step_type == "extract":
-            return archive.ExtractArchive(
+            return archive.extract_archive(
                 archive_file = program_step_from,
                 extract_dir = program_step_to,
                 skip_existing = program_skip_existing,
@@ -564,7 +564,7 @@ def LaunchComputerGame(
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-    gui.DisplayLoadingWindow(
+    gui.display_loading_window(
         title_text = "Creating game prefix",
         message_text = "Creating game prefix\n%s\n%s" % (game_info.get_name(), game_info.get_platform()),
         failure_text = "Unable to create game prefix",

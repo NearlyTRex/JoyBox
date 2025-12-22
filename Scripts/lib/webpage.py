@@ -149,7 +149,7 @@ def create_web_driver(
     pretend_run = False,
     exit_on_failure = False):
     if not driver_type:
-        driver_type = config.WebDriverType.from_string(ini.GetIniValue("UserData.Scraping", "web_driver_type"))
+        driver_type = config.WebDriverType.from_string(ini.get_ini_value("UserData.Scraping", "web_driver_type"))
     if not driver_type:
         driver_type = config.WebDriverType.FIREFOX
     if driver_type == config.WebDriverType.FIREFOX:

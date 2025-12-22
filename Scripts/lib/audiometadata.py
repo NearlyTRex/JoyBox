@@ -179,7 +179,7 @@ class AudioMetadata:
                     # Check if image needs conversion
                     target_mime = f"image/{artwork_format.val().lower()}"
                     if mime_type != target_mime:
-                        converted_b64_data = image.ConvertImageDataToFormat(
+                        converted_b64_data = image.convert_image_data_to_format(
                             image_data = image_data,
                             target_format = artwork_format)
                         if converted_b64_data:
@@ -716,7 +716,7 @@ class AudioMetadata:
                 track_artwork = None
                 if "artwork" in tags and tags["artwork"]:
                     track_artwork_data = tags["artwork"][0]["data"]
-                    track_artwork_hash = hashing.CalculateStringSHA256(track_artwork_data)
+                    track_artwork_hash = hashing.calculate_string_sha256(track_artwork_data)
 
                     # Set album artwork from first track if not set
                     if album_artwork is None:

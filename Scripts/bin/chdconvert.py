@@ -67,7 +67,7 @@ def main():
             continue
 
         # Create disc chd
-        chd.CreateDiscCHD(
+        chd.create_disc_chd(
             chd_file = output_chd,
             source_iso = current_file,
             delete_original = args.delete_originals,
