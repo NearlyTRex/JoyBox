@@ -22,7 +22,7 @@ def should_backup_store_game_files(
     exit_on_failure = False):
 
     # Get store
-    store_obj = stores.GetStoreByPlatform(game_info.get_platform())
+    store_obj = stores.get_store_by_platform(game_info.get_platform())
     if not store_obj:
         return False
 
@@ -126,7 +126,7 @@ def should_backup_game_files(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    if stores.IsStorePlatform(game_info.get_platform()):
+    if stores.is_store_platform(game_info.get_platform()):
         return should_backup_store_game_files(
             game_info = game_info,
             verbose = verbose,
@@ -146,7 +146,7 @@ def backup_game_files(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    if stores.IsStorePlatform(game_info.get_platform()):
+    if stores.is_store_platform(game_info.get_platform()):
         return backup_store_game_files(
             game_info = game_info,
             locker_type = locker_type,

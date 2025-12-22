@@ -601,7 +601,7 @@ class GOG(storebase.StoreBase):
 
         # BoxFront
         if asset_type == config.AssetType.BOXFRONT:
-            latest_asset_url = metadataassetcollector.FindMetadataAsset(
+            latest_asset_url = metadataassetcollector.find_metadata_asset(
                 game_platform = self.get_platform(),
                 game_name = game_name if game_name else identifier,
                 asset_type = asset_type,

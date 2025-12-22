@@ -26,7 +26,7 @@ def is_store_game_installed(game_info):
         return False
 
     # Get store
-    store_obj = stores.GetStoreByPlatform(game_info.get_platform())
+    store_obj = stores.get_store_by_platform(game_info.get_platform())
     if not store_obj:
         return False
 
@@ -54,7 +54,7 @@ def install_store_game(
         return False
 
     # Get store
-    store_obj = stores.GetStoreByPlatform(game_info.get_platform())
+    store_obj = stores.get_store_by_platform(game_info.get_platform())
     if not store_obj:
         return False
 
@@ -95,7 +95,7 @@ def uninstall_store_game(
         return False
 
     # Get store
-    store_obj = stores.GetStoreByPlatform(game_info.get_platform())
+    store_obj = stores.get_store_by_platform(game_info.get_platform())
     if not store_obj:
         return False
 
@@ -353,7 +353,7 @@ def uninstall_local_game(
 
 # Check if game is installed
 def is_game_installed(game_info):
-    if stores.IsStorePlatform(game_info.get_platform()):
+    if stores.is_store_platform(game_info.get_platform()):
         return is_store_game_installed(game_info)
     else:
         return is_local_game_installed(game_info)
@@ -366,7 +366,7 @@ def install_game(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    if stores.IsStorePlatform(game_info.get_platform()):
+    if stores.is_store_platform(game_info.get_platform()):
         return install_store_game(
             game_info = game_info,
             source_type = source_type,
@@ -389,7 +389,7 @@ def install_game_addons(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    if stores.IsStorePlatform(game_info.get_platform()):
+    if stores.is_store_platform(game_info.get_platform()):
         return install_store_game_addons(
             game_info = game_info,
             verbose = verbose,
@@ -409,7 +409,7 @@ def uninstall_game(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    if stores.IsStorePlatform(game_info.get_platform()):
+    if stores.is_store_platform(game_info.get_platform()):
         return uninstall_store_game(
             game_info = game_info,
             source_type = source_type,

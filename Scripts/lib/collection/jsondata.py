@@ -231,7 +231,7 @@ def update_game_json_file(
     if game_supercategory in [config.Supercategory.ROMS]:
 
         # Get store
-        store_obj = stores.GetStoreByPlatform(
+        store_obj = stores.get_store_by_platform(
             store_platform = game_platform,
             verbose = verbose,
             pretend_run = pretend_run,

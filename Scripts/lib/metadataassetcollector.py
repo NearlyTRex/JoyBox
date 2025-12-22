@@ -14,7 +14,7 @@ import stores
 ############################################################
 
 # Find metadata assets from google images
-def FindMetadataAssetsFromGoogleImages(
+def find_metadata_assets_from_google_images(
     game_platform,
     game_name,
     asset_type,
@@ -37,7 +37,7 @@ def FindMetadataAssetsFromGoogleImages(
 ############################################################
 
 # Find metadata asset from YouTube
-def FindMetadataAssetsFromYouTube(
+def find_metadata_assets_from_youtube(
     game_platform,
     game_name,
     asset_type,
@@ -59,7 +59,7 @@ def FindMetadataAssetsFromYouTube(
 ############################################################
 
 # Find metadata assets from Steam
-def FindMetadataAssetsFromSteam(
+def find_metadata_assets_from_steam(
     game_platform,
     game_name,
     asset_type,
@@ -72,7 +72,7 @@ def FindMetadataAssetsFromSteam(
         return []
 
     # Build asset list
-    return stores.FindSteamAssets(
+    return stores.find_steam_assets(
         search_name = gameinfo.derive_regular_name_from_game_name(game_name),
         asset_type = asset_type,
         verbose = verbose,
@@ -82,7 +82,7 @@ def FindMetadataAssetsFromSteam(
 ############################################################
 
 # Find metadata assets from SteamGridDB
-def FindMetadataAssetsFromSteamGridDB(
+def find_metadata_assets_from_steamgriddb(
     game_platform,
     game_name,
     asset_type,
@@ -95,7 +95,7 @@ def FindMetadataAssetsFromSteamGridDB(
         return []
 
     # Return search results
-    return stores.FindSteamGridDBCovers(
+    return stores.find_steam_griddb_covers(
         search_name = gameinfo.derive_regular_name_from_game_name(game_name),
         image_dimensions = config.asset_boxfront_dimensions,
         image_types = config.ImageFileType.members(),
@@ -106,7 +106,7 @@ def FindMetadataAssetsFromSteamGridDB(
 ############################################################
 
 # Find metadata asset
-def FindMetadataAsset(
+def find_metadata_asset(
     game_platform,
     game_name,
     asset_type,
@@ -118,7 +118,7 @@ def FindMetadataAsset(
     search_results = []
 
     # Try searching Google Images
-    search_results += FindMetadataAssetsFromGoogleImages(
+    search_results += find_metadata_assets_from_google_images(
         game_platform = game_platform,
         game_name = game_name,
         asset_type = asset_type,
@@ -127,7 +127,7 @@ def FindMetadataAsset(
         exit_on_failure = exit_on_failure)
 
     # Try searching YouTube
-    search_results += FindMetadataAssetsFromYouTube(
+    search_results += find_metadata_assets_from_youtube(
         game_platform = game_platform,
         game_name = game_name,
         asset_type = asset_type,
@@ -136,7 +136,7 @@ def FindMetadataAsset(
         exit_on_failure = exit_on_failure)
 
     # Try searching Steam
-    search_results += FindMetadataAssetsFromSteam(
+    search_results += find_metadata_assets_from_steam(
         game_platform = game_platform,
         game_name = game_name,
         asset_type = asset_type,
@@ -145,7 +145,7 @@ def FindMetadataAsset(
         exit_on_failure = exit_on_failure)
 
     # Try searching SteamGridDB
-    search_results += FindMetadataAssetsFromSteamGridDB(
+    search_results += find_metadata_assets_from_steamgriddb(
         game_platform = game_platform,
         game_name = game_name,
         asset_type = asset_type,

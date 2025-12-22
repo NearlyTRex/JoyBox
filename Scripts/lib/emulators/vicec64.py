@@ -188,7 +188,7 @@ class ViceC64(emulatorbase.EmulatorBase):
         ]
 
         # Launch game
-        return emulatorcommon.SimpleLaunch(
+        return emulatorcommon.simple_launch(
             game_info = game_info,
             launch_cmd = launch_cmd,
             capture_type = capture_type,

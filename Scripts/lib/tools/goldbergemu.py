@@ -16,7 +16,7 @@ import toolbase
 config_files = {}
 
 # Get libs
-def GetLibs(key):
+def get_libs(key):
     lib_files = []
     lib_root = programs.get_library_install_dir("GoldbergEmu", "lib")
     for potential_file in paths.build_file_list(lib_root):
@@ -26,39 +26,39 @@ def GetLibs(key):
     return lib_files
 
 # Get 32-bit libs
-def GetLibs32():
-    return GetLibs("lib32")
+def get_libs32():
+    return get_libs("lib32")
 
 # Get 64-bit libs
-def GetLibs64():
-    return GetLibs("lib64")
+def get_libs64():
+    return get_libs("lib64")
 
 # Generate base path
-def GenerateBasePath(prefix_dir):
+def generate_base_path(prefix_dir):
     return paths.join_paths(prefix_dir, "AppData", "Roaming", "Goldberg SteamEmu Saves")
 
 # Generate username file path
-def GenerateUserNameFile(prefix_dir):
-    return paths.join_paths(GenerateBasePath(prefix_dir), "settings", "account_name.txt")
+def generate_username_file(prefix_dir):
+    return paths.join_paths(generate_base_path(prefix_dir), "settings", "account_name.txt")
 
 # Generate userid file path
-def GenerateUserIDFile(prefix_dir):
-    return paths.join_paths(GenerateBasePath(prefix_dir), "settings", "user_steam_id.txt")
+def generate_userid_file(prefix_dir):
+    return paths.join_paths(generate_base_path(prefix_dir), "settings", "user_steam_id.txt")
 
 # Convert from native path
-def ConvertFromNativePath(path, user_id):
+def convert_from_native_path(path, user_id):
     src_path = paths.join_paths(config.computer_folder_store, config.StoreType.STEAM, "userdata", user_id)
     dest_path = paths.join_paths(config.computer_folder_appdata, "Roaming", "Goldberg SteamEmu Saves")
     return path.replace(src_path, dest_path)
 
 # Convert to native path
-def ConvertToNativePath(path, user_id):
+def convert_to_native_path(path, user_id):
     src_path = paths.join_paths(config.computer_folder_appdata, "Roaming", "Goldberg SteamEmu Saves")
     dest_path = paths.join_paths(config.computer_folder_store, config.StoreType.STEAM, "userdata", user_id)
     return path.replace(src_path, dest_path)
 
 # Setup user files
-def SetupUserFiles(
+def setup_user_files(
     prefix_dir,
     user_name,
     user_id,
@@ -68,7 +68,7 @@ def SetupUserFiles(
 
     # Create username file
     success = fileops.touch_file(
-        src = GenerateUserNameFile(prefix_dir),
+        src = generate_username_file(prefix_dir),
         contents = "%s\n" % user_name,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -78,7 +78,7 @@ def SetupUserFiles(
 
     # Create userid file
     success = fileops.touch_file(
-        src = GenerateUserIDFile(prefix_dir),
+        src = generate_userid_file(prefix_dir),
         contents = "%s\n" % user_id,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -90,7 +90,7 @@ def SetupUserFiles(
     return True
 
 # Convert to native save
-def ConvertToNativeSave(
+def convert_to_native_save(
     save_dir,
     user_id,
     verbose = False,

@@ -43,7 +43,7 @@ from .xenia import Xenia
 from .yuzu import Yuzu
 
 # Get emulator map
-def GetEmulatorMap():
+def get_emulator_map():
     instances = {}
     def AddInstance(class_name):
         instance = class_name()
@@ -93,12 +93,12 @@ def GetEmulatorMap():
     return instances
 
 # Get emulator list
-def GetEmulatorList():
-    return GetEmulatorMap().values()
+def get_emulator_list():
+    return get_emulator_map().values()
 
 # Get emulator by name
-def GetEmulatorByName(tool_name):
-    for instance in GetEmulatorList():
+def get_emulator_by_name(tool_name):
+    for instance in get_emulator_list():
         if instance.GetName() == tool_name:
             return instance
     return None

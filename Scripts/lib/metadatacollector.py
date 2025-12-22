@@ -18,7 +18,7 @@ import metadataentry
 ############################################################
 
 # Collect metadata from TheGamesDB
-def CollectMetadataFromTGDB(
+def collect_metadata_from_tgdb(
     game_platform,
     game_name,
     verbose = False,
@@ -188,7 +188,7 @@ def CollectMetadataFromTGDB(
 ############################################################
 
 # Collect metadata from GameFAQs
-def CollectMetadataFromGameFAQS(
+def collect_metadata_from_gamefaqs(
     game_platform,
     game_name,
     verbose = False,
@@ -385,7 +385,7 @@ def CollectMetadataFromGameFAQS(
 ############################################################
 
 # Collect metadata from BigFishGames
-def CollectMetadataFromBigFishGames(
+def collect_metadata_from_bigfishgames(
     game_platform,
     game_name,
     verbose = False,
@@ -475,7 +475,7 @@ def CollectMetadataFromBigFishGames(
 ############################################################
 
 # Collect metadata from all
-def CollectMetadataFromAll(
+def collect_metadata_from_all(
     game_platform,
     game_name,
     keys_to_check,
@@ -487,7 +487,7 @@ def CollectMetadataFromAll(
     metadata_result = metadataentry.MetadataEntry()
 
     # Try from GameFAQs
-    metadata_result_gamefaqs = CollectMetadataFromGameFAQS(
+    metadata_result_gamefaqs = collect_metadata_from_gamefaqs(
         game_platform = game_platform,
         game_name = game_name,
         verbose = verbose,

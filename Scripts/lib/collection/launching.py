@@ -44,7 +44,7 @@ def launch_store_game(
         return False
 
     # Get store
-    store_obj = stores.GetStoreByPlatform(game_info.get_platform())
+    store_obj = stores.get_store_by_platform(game_info.get_platform())
     if not store_obj:
         return False
 
@@ -213,7 +213,7 @@ def launch_game(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    if stores.IsStorePlatform(game_info.get_platform()):
+    if stores.is_store_platform(game_info.get_platform()):
         return launch_store_game(
             game_info = game_info,
             source_type = source_type,

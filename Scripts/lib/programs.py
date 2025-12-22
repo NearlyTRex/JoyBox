@@ -114,11 +114,11 @@ def is_program_installed(program_name, program_platform = None):
 
 # Get tools
 def get_tools():
-    return tools.GetToolList()
+    return tools.get_tool_list()
 
 # Get emulators
 def get_emulators():
-    return emulators.GetEmulatorList()
+    return emulators.get_emulator_list()
 
 # Get emulator by platform
 def get_emulator_by_platform(emulator_platform):
@@ -130,14 +130,14 @@ def get_emulator_by_platform(emulator_platform):
 # Get tool config
 def get_tool_config():
     merged_config = {}
-    for tool in tools.GetToolList():
+    for tool in tools.get_tool_list():
         merged_config.update(tool.GetConfig())
     return merged_config
 
 # Get emulator config
 def get_emulator_config():
     merged_config = {}
-    for emulator in emulators.GetEmulatorList():
+    for emulator in emulators.get_emulator_list():
         merged_config.update(emulator.get_config())
     return merged_config
 

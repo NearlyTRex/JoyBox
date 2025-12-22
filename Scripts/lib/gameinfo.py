@@ -521,21 +521,21 @@ class GameInfo:
 
     # Get main store key
     def get_main_store_key(self):
-        store_obj = stores.GetStoreByPlatform(self.get_platform())
+        store_obj = stores.get_store_by_platform(self.get_platform())
         if store_obj:
             return store_obj.get_key()
         return None
 
     # Get main store type
     def get_main_store_type(self):
-        store_obj = stores.GetStoreByPlatform(self.get_platform())
+        store_obj = stores.get_store_by_platform(self.get_platform())
         if store_obj:
             return store_obj.get_type()
         return None
 
     # Get main store install dir
     def get_main_store_install_dir(self):
-        store_obj = stores.GetStoreByPlatform(self.get_platform())
+        store_obj = stores.get_store_by_platform(self.get_platform())
         if store_obj:
             return store_obj.get_install_dir()
         return None
@@ -544,49 +544,49 @@ class GameInfo:
 
     # Get store info identifier
     def get_store_info_identifier(self):
-        store_obj = stores.GetStoreByPlatform(self.get_platform())
+        store_obj = stores.get_store_by_platform(self.get_platform())
         if store_obj:
             return self.get_subvalue(store_obj.get_key(), store_obj.get_info_identifier_key())
         return None
 
     # Get store install identifier
     def get_store_install_identifier(self):
-        store_obj = stores.GetStoreByPlatform(self.get_platform())
+        store_obj = stores.get_store_by_platform(self.get_platform())
         if store_obj:
             return self.get_subvalue(store_obj.get_key(), store_obj.get_install_identifier_key())
         return None
 
     # Get store launch identifier
     def get_store_launch_identifier(self):
-        store_obj = stores.GetStoreByPlatform(self.get_platform())
+        store_obj = stores.get_store_by_platform(self.get_platform())
         if store_obj:
             return self.get_subvalue(store_obj.get_key(), store_obj.get_launch_identifier_key())
         return None
 
     # Get store download identifier
     def get_store_download_identifier(self):
-        store_obj = stores.GetStoreByPlatform(self.get_platform())
+        store_obj = stores.get_store_by_platform(self.get_platform())
         if store_obj:
             return self.get_subvalue(store_obj.get_key(), store_obj.get_download_identifier_key())
         return None
 
     # Get store asset identifier
     def get_store_asset_identifier(self):
-        store_obj = stores.GetStoreByPlatform(self.get_platform())
+        store_obj = stores.get_store_by_platform(self.get_platform())
         if store_obj:
             return self.get_subvalue(store_obj.get_key(), store_obj.get_asset_identifier_key())
         return None
 
     # Get store metadata identifier
     def get_store_metadata_identifier(self):
-        store_obj = stores.GetStoreByPlatform(self.get_platform())
+        store_obj = stores.get_store_by_platform(self.get_platform())
         if store_obj:
             return self.get_subvalue(store_obj.get_key(), store_obj.get_metadata_identifier_key())
         return None
 
     # Get store page identifier
     def get_store_page_identifier(self):
-        store_obj = stores.GetStoreByPlatform(self.get_platform())
+        store_obj = stores.get_store_by_platform(self.get_platform())
         if store_obj:
             return self.get_subvalue(store_obj.get_key(), store_obj.get_page_identifier_key())
         return None

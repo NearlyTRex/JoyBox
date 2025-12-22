@@ -10,17 +10,17 @@ from .puppetcombo import PuppetCombo
 from .redcandle import RedCandle
 from .squareenix import SquareEnix
 from .steam import Steam
-from .steam import GetSteamPage
-from .steam import GetSteamCover
-from .steam import GetSteamTrailer
-from .steam import FindSteamAppIDMatches
-from .steam import FindSteamAppIDMatch
-from .steam import FindSteamAssets
-from .steam import FindSteamGridDBCovers
+from .steam import get_steam_page
+from .steam import get_steam_cover
+from .steam import get_steam_trailer
+from .steam import find_steam_appid_matches
+from .steam import find_steam_appid_match
+from .steam import find_steam_assets
+from .steam import find_steam_griddb_covers
 from .zoom import Zoom
 
 # Get store map
-def GetStoreMap():
+def get_store_map():
     instances = {}
     def AddInstance(class_name):
         instance = class_name()
@@ -40,11 +40,11 @@ def GetStoreMap():
     return instances
 
 # Get store list
-def GetStoreList():
-    return GetStoreMap().values()
+def get_store_list():
+    return get_store_map().values()
 
 # Prepare store
-def PrepareStore(
+def prepare_store(
     instance,
     login = False,
     verbose = False,
@@ -58,43 +58,43 @@ def PrepareStore(
     return instance
 
 # Get store by name
-def GetStoreByName(
+def get_store_by_name(
     store_name,
     login = False,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    for instance in GetStoreList():
+    for instance in get_store_list():
         if instance.GetName() == store_name:
-            return PrepareStore(instance, login, verbose, pretend_run, exit_on_failure)
+            return prepare_store(instance, login, verbose, pretend_run, exit_on_failure)
     return None
 
 # Get store by type
-def GetStoreByType(
+def get_store_by_type(
     store_type,
     login = False,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    for instance in GetStoreList():
+    for instance in get_store_list():
         if instance.GetType() == store_type:
-            return PrepareStore(instance, login, verbose, pretend_run, exit_on_failure)
+            return prepare_store(instance, login, verbose, pretend_run, exit_on_failure)
     return None
 
 # Get store by platform
-def GetStoreByPlatform(
+def get_store_by_platform(
     store_platform,
     login = False,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    for instance in GetStoreList():
+    for instance in get_store_list():
         if instance.GetPlatform() == store_platform:
-            return PrepareStore(instance, login, verbose, pretend_run, exit_on_failure)
+            return prepare_store(instance, login, verbose, pretend_run, exit_on_failure)
     return None
 
 # Get store by categories
-def GetStoreByCategories(
+def get_store_by_categories(
     store_supercategory,
     store_category,
     store_subcategory,
@@ -102,42 +102,42 @@ def GetStoreByCategories(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    for instance in GetStoreList():
+    for instance in get_store_list():
         same_supercategory = instance.GetSupercategory() == store_supercategory
         same_category = instance.GetCategory() == store_category
         same_subcategory = instance.GetSubcategory() == store_subcategory
         if same_supercategory and same_category and same_subcategory:
-            return PrepareStore(instance, login, verbose, pretend_run, exit_on_failure)
+            return prepare_store(instance, login, verbose, pretend_run, exit_on_failure)
     return None
 
 # Check if store platform
-def IsStorePlatform(store_platform):
-    return GetStoreByPlatform(store_platform) is not None
+def is_store_platform(store_platform):
+    return get_store_by_platform(store_platform) is not None
 
 # Check if store can handle installing
 def can_handle_installing(store_platform):
-    instance = GetStoreByPlatform(store_platform)
+    instance = get_store_by_platform(store_platform)
     if instance:
         return instance.CanHandleInstalling()
     return False
 
 # Check if store can handle launching
 def can_handle_launching(store_platform):
-    instance = GetStoreByPlatform(store_platform)
+    instance = get_store_by_platform(store_platform)
     if instance:
         return instance.CanHandleLaunching()
     return False
 
 # Check if purchases can be imported
 def can_import_purchases(store_platform):
-    instance = GetStoreByPlatform(store_platform)
+    instance = get_store_by_platform(store_platform)
     if instance:
         return instance.CanImportPurchases()
     return False
 
 # Check if purchases can be downloaded
 def can_download_purchases(store_platform):
-    instance = GetStoreByPlatform(store_platform)
+    instance = get_store_by_platform(store_platform)
     if instance:
         return instance.CanDownloadPurchases()
     return False

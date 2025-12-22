@@ -15,7 +15,7 @@ import toolbase
 config_files = {}
 
 # Get libs
-def GetLibs(key):
+def get_libs(key):
     lib_files = []
     lib_root = programs.get_library_install_dir("DXVK", "lib")
     for potential_file in paths.build_file_list(lib_root):
@@ -25,12 +25,12 @@ def GetLibs(key):
     return lib_files
 
 # Get 32-bit libs
-def GetLibs32():
-    return GetLibs("lib32")
+def get_libs32():
+    return get_libs("lib32")
 
 # Get 64-bit libs
-def GetLibs64():
-    return GetLibs("lib64")
+def get_libs64():
+    return get_libs("lib64")
 
 # DXVK tool
 class DXVK(toolbase.ToolBase):

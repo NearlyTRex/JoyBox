@@ -14,7 +14,7 @@ import gameinfo
 import gui
 
 # Simple generic launcher
-def SimpleLaunch(
+def simple_launch(
     game_info,
     launch_cmd,
     launch_options = None,

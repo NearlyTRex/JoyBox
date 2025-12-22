@@ -66,7 +66,7 @@ def download_metadata_asset(
         return False
 
     # Get store
-    store_obj = stores.GetStoreByPlatform(
+    store_obj = stores.get_store_by_platform(
         store_platform = game_info.get_platform(),
         verbose = verbose,
         pretend_run = pretend_run,
@@ -83,7 +83,7 @@ def download_metadata_asset(
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
     else:
-        latest_asset_url = metadataassetcollector.FindMetadataAsset(
+        latest_asset_url = metadataassetcollector.find_metadata_asset(
             game_platform = game_info.get_platform(),
             game_name = game_info.get_name(),
             asset_type = asset_type,

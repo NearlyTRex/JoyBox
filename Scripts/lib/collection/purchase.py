@@ -29,7 +29,7 @@ def login_game_store(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    stores.GetStoreByCategories(
+    stores.get_store_by_categories(
         store_supercategory = game_supercategory,
         store_category = game_category,
         store_subcategory = game_subcategory,
@@ -69,7 +69,7 @@ def import_game_store_purchases(
     exit_on_failure = False):
 
     # Get store
-    store_obj = stores.GetStoreByCategories(game_supercategory, game_category, game_subcategory)
+    store_obj = stores.get_store_by_categories(game_supercategory, game_category, game_subcategory)
     if not store_obj:
         return True
 
@@ -217,7 +217,7 @@ def update_game_store_purchases(
     exit_on_failure = False):
 
     # Get store
-    store_obj = stores.GetStoreByCategories(game_supercategory, game_category, game_subcategory)
+    store_obj = stores.get_store_by_categories(game_supercategory, game_category, game_subcategory)
     if not store_obj:
         return True
 
@@ -417,7 +417,7 @@ def download_game_store_purchase(
     exit_on_failure = False):
 
     # Get store
-    store_obj = stores.GetStoreByPlatform(game_info.get_platform())
+    store_obj = stores.get_store_by_platform(game_info.get_platform())
     if not store_obj:
         return False
 

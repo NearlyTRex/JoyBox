@@ -27,14 +27,14 @@ import manifest
 import modules
 
 # Get steam page
-def GetSteamPage(appid):
+def get_steam_page(appid):
     url = "https://store.steampowered.com/app/%s" % appid
     if network.is_url_reachable(url):
         return url
     return None
 
 # Get steam cover
-def GetSteamCover(appid):
+def get_steam_cover(appid):
     for cdn_type in config.ContentDeliveryNetworkType.members():
         url = "https://cdn.%s.steamstatic.com/steam/apps/%s/library_600x900_2x.jpg" % (cdn_type.lower(), appid)
         if network.is_url_reachable(url):
@@ -42,14 +42,14 @@ def GetSteamCover(appid):
     return None
 
 # Get steam trailer
-def GetSteamTrailer(
+def get_steam_trailer(
     appid,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
     for cdn_type in config.ContentDeliveryNetworkType.members():
         asset_url = webpage.get_matching_url(
-            url = GetSteamPage(appid),
+            url = get_steam_page(appid),
             base_url = "https://video.%s.steamstatic.com/store_trailers" % cdn_type.lower(),
             starts_with = "https://video.%s.steamstatic.com/store_trailers" % cdn_type.lower(),
             ends_with = ".mp4",
@@ -61,15 +61,15 @@ def GetSteamTrailer(
     return None
 
 # Get steam prefix dir
-def GetSteamPrefixDir(install_dir, appid):
+def get_steam_prefix_dir(install_dir, appid):
     return paths.join_paths(install_dir, "steamapps", "compatdata", appid, "pfx")
 
 # Get steam manifest file
-def GetSteamManifestFile(install_dir, appid):
+def get_steam_manifest_file(install_dir, appid):
     return paths.join_paths(install_dir, "steamapps", f"appmanifest_{appid}.acf")
 
 # Find steam appid matches
-def FindSteamAppIDMatches(
+def find_steam_appid_matches(
     search_name,
     verbose = False,
     pretend_run = False,
@@ -93,7 +93,7 @@ def FindSteamAppIDMatches(
     return search_results
 
 # Find steam appid match
-def FindSteamAppIDMatch(
+def find_steam_appid_match(
     search_name,
     only_active_pages = True,
     verbose = False,
@@ -101,7 +101,7 @@ def FindSteamAppIDMatch(
     exit_on_failure = False):
 
     # Get relevant matches
-    search_results = FindSteamAppIDMatches(
+    search_results = find_steam_appid_matches(
         search_name = search_name,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -112,7 +112,7 @@ def FindSteamAppIDMatch(
     # Return top search result
     if only_active_pages:
         for search_result in sorted(search_results, key=lambda x: x.get_relevance(), reverse=True):
-            steam_page = GetSteamPage(search_result.get_id())
+            steam_page = get_steam_page(search_result.get_id())
             if steam_page:
                 return search_result
         return None
@@ -120,7 +120,7 @@ def FindSteamAppIDMatch(
         return search_results[0]
 
 # Find Steam assets
-def FindSteamAssets(
+def find_steam_assets(
     search_name,
     asset_type,
     verbose = False,
@@ -128,7 +128,7 @@ def FindSteamAssets(
     exit_on_failure = False):
 
     # Get search result
-    search_result = FindSteamAppIDMatch(
+    search_result = find_steam_appid_match(
         search_name = search_name,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -139,9 +139,9 @@ def FindSteamAssets(
     # Get asset url
     asset_url = None
     if asset_type == config.AssetType.BOXFRONT:
-        asset_url = GetSteamCover(search_result.get_id())
+        asset_url = get_steam_cover(search_result.get_id())
     elif asset_type == config.AssetType.VIDEO:
-        asset_url = GetSteamTrailer(
+        asset_url = get_steam_trailer(
             appid = search_result.get_id(),
             verbose = verbose,
             pretend_run = pretend_run,
@@ -154,7 +154,7 @@ def FindSteamAssets(
     return [search_result]
 
 # Find SteamGridDB covers
-def FindSteamGridDBCovers(
+def find_steam_griddb_covers(
     search_name,
     image_dimensions = None,
     image_types = None,
@@ -314,7 +314,7 @@ class Steam(storebase.StoreBase):
         return self.username
 
     # Get user id
-    def GetUserId(self, format_type = None):
+    def get_user_id(self, format_type = None):
         steamid = self.userid
         steamid64ident = 76561197960265728
         steamidacct = int(self.userid) - steamid64ident
@@ -335,7 +335,7 @@ class Steam(storebase.StoreBase):
         return steamid
 
     # Get web api key
-    def GetWebApiKey(self):
+    def get_web_api_key(self):
         return self.web_api_key
 
     # Get install dir
@@ -421,7 +421,7 @@ class Steam(storebase.StoreBase):
             return None
 
         # Return latest url
-        return GetSteamPage(identifier)
+        return get_steam_page(identifier)
 
     ############################################################
     # Purchases
@@ -469,8 +469,8 @@ class Steam(storebase.StoreBase):
 
         # Get steam url
         steam_url = "https://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/"
-        steam_url += "?key=%s" % self.GetWebApiKey()
-        steam_url += "&steamid=%s" % self.GetUserId(config.SteamIDFormatType.STEAMID_64)
+        steam_url += "?key=%s" % self.get_web_api_key()
+        steam_url += "&steamid=%s" % self.get_user_id(config.SteamIDFormatType.STEAMID_64)
         steam_url += "&include_appinfo=true"
         steam_url += "&include_played_free_games=true"
         steam_url += "&format=json"
@@ -869,11 +869,11 @@ class Steam(storebase.StoreBase):
 
         # BoxFront
         if asset_type == config.AssetType.BOXFRONT:
-            latest_asset_url = GetSteamCover(identifier)
+            latest_asset_url = get_steam_cover(identifier)
 
         # Video
         elif asset_type == config.AssetType.VIDEO:
-            latest_asset_url = GetSteamTrailer(
+            latest_asset_url = get_steam_trailer(
                 appid = identifier,
                 verbose = verbose,
                 pretend_run = pretend_run,
@@ -900,7 +900,7 @@ class Steam(storebase.StoreBase):
             return False
 
         # Check for manifest
-        return paths.is_path_file(GetSteamManifestFile(self.get_install_dir(), identifier))
+        return paths.is_path_file(get_steam_manifest_file(self.get_install_dir(), identifier))
 
     # Install
     def install(
@@ -1026,7 +1026,7 @@ class Steam(storebase.StoreBase):
             steamdepot_tool,
             "-app", identifier,
             "-os", self.get_preferred_platform(),
-            "-osarch", self.GetArchitecture(),
+            "-osarch", self.get_architecture(),
             "-dir", tmp_dir_result
         ]
         if isinstance(branch, str) and len(branch) and branch != "public":
@@ -1086,7 +1086,7 @@ class Steam(storebase.StoreBase):
         # Build translation map
         translation_map = super().BuildPathTranslationMap()
         if appid:
-            prefix_path = GetSteamPrefixDir(self.get_install_dir(), appid)
+            prefix_path = get_steam_prefix_dir(self.get_install_dir(), appid)
             translation_map[config.token_user_registry_dir].append(prefix_path)
             translation_map[config.token_user_public_dir].append(paths.join_paths(prefix_path, "drive_c", "users", "Public"))
             translation_map[config.token_user_profile_dir].append(paths.join_paths(prefix_path, "drive_c", "users", "steamuser"))
@@ -1099,9 +1099,9 @@ class Steam(storebase.StoreBase):
         paths = super().AddPathVariants(paths)
 
         # Get user info
-        userid_64 = self.GetUserId(config.SteamIDFormatType.STEAMID_64)
-        userid_3s = self.GetUserId(config.SteamIDFormatType.STEAMID_3S)
-        userid_cs = self.GetUserId(config.SteamIDFormatType.STEAMID_CS)
+        userid_64 = self.get_user_id(config.SteamIDFormatType.STEAMID_64)
+        userid_3s = self.get_user_id(config.SteamIDFormatType.STEAMID_3S)
+        userid_cs = self.get_user_id(config.SteamIDFormatType.STEAMID_CS)
 
         # Add user id variants
         for path in paths:

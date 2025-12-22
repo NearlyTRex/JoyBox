@@ -456,7 +456,7 @@ class StoreBase:
             return None
 
         # Collect metadata entry
-        return metadatacollector.CollectMetadataFromAll(
+        return metadatacollector.collect_metadata_from_all(
             game_platform = self.get_platform(),
             game_name = identifier,
             keys_to_check = config.metadata_keys_downloadable,
@@ -484,7 +484,7 @@ class StoreBase:
             return None
 
         # Collect asset url
-        return metadataassetcollector.FindMetadataAsset(
+        return metadataassetcollector.find_metadata_asset(
             game_platform = self.get_platform(),
             game_name = game_name if game_name else identifier,
             asset_type = asset_type,

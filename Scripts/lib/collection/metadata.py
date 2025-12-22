@@ -160,7 +160,7 @@ def update_game_metadata_entry(
         return True
 
     # Get store
-    store_obj = stores.GetStoreByPlatform(
+    store_obj = stores.get_store_by_platform(
         store_platform = game_platform,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -175,7 +175,7 @@ def update_game_metadata_entry(
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
     else:
-        latest_metadata = metadatacollector.CollectMetadataFromAll(
+        latest_metadata = metadatacollector.collect_metadata_from_all(
             game_platform = game_platform,
             game_name = game_name,
             keys_to_check = config.metadata_keys_downloadable,

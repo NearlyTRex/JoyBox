@@ -305,7 +305,7 @@ def get_store_path_entries(
     exit_on_failure = False):
 
     # Get store
-    store_obj = stores.GetStoreByPlatform(game_info.get_platform())
+    store_obj = stores.get_store_by_platform(game_info.get_platform())
     if not store_obj:
         return []
 
@@ -493,7 +493,7 @@ def import_game_save_paths(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    if stores.IsStorePlatform(game_info.get_platform()):
+    if stores.is_store_platform(game_info.get_platform()):
         return import_store_game_save_paths(
             game_info = game_info,
             verbose = verbose,
@@ -544,7 +544,7 @@ def import_game_save(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    if stores.IsStorePlatform(game_info.get_platform()):
+    if stores.is_store_platform(game_info.get_platform()):
         return import_store_game_save(
             game_info = game_info,
             verbose = verbose,
@@ -595,7 +595,7 @@ def export_game_save(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    if stores.IsStorePlatform(game_info.get_platform()):
+    if stores.is_store_platform(game_info.get_platform()):
         return export_store_game_save(
             game_info = game_info,
             verbose = verbose,

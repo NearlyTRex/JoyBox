@@ -7,8 +7,8 @@ from .chrome import Chrome
 from .chromedriver import ChromeDriver
 from .curl import Curl
 from .dxvk import DXVK
-from .dxvk import GetLibs32 as GetDXVKLibs32
-from .dxvk import GetLibs64 as GetDXVKLibs64
+from .dxvk import get_libs32 as get_dxvk_libs32
+from .dxvk import get_libs64 as get_dxvk_libs64
 from .exiftool import ExifTool
 from .extractxiso import ExtractXIso
 from .ffmpeg import FFMpeg
@@ -60,8 +60,8 @@ from .sunshine import Sunshine
 from .tar import Tar
 from .threedsromtool import ThreeDSRomTool
 from .vkd3d import VKD3D
-from .vkd3d import GetLibs32 as GetVKD3DLibs32
-from .vkd3d import GetLibs64 as GetVKD3DLibs64
+from .vkd3d import get_libs32 as get_vkd3d_libs32
+from .vkd3d import get_libs64 as get_vkd3d_libs64
 from .wad2bin import Wad2Bin
 from .wine import Wine
 from .xcitrimmer import XCITrimmer
@@ -70,7 +70,7 @@ from .ytdlp import YtDlp
 from .zoomplatformsh import ZoomPlatformSH
 
 # Get tool map
-def GetToolMap():
+def get_tool_map():
     instances = {}
     def AddInstance(class_name):
         instance = class_name()
@@ -143,12 +143,12 @@ def GetToolMap():
     return instances
 
 # Get tool list
-def GetToolList():
-    return GetToolMap().values()
+def get_tool_list():
+    return get_tool_map().values()
 
 # Get tool by name
-def GetToolByName(tool_name):
-    for instance in GetToolList():
+def get_tool_by_name(tool_name):
+    for instance in get_tool_list():
         if instance.GetName() == tool_name:
             return instance
     return None
