@@ -39,7 +39,7 @@ def main():
 
     # Publish game metadata files
     logger.log_info("Publishing game metadata files ...")
-    success = collection.PublishAllGameMetadataEntries(
+    success = collection.publish_all_game_metadata_entries(
         verbose = args.verbose,
         pretend_run = args.pretend_run,
         exit_on_failure = args.exit_on_failure)

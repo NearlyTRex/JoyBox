@@ -79,7 +79,7 @@ def main():
 
     # Upload game files
     for game_info, game_root in games_to_process:
-        success = collection.UploadGameFiles(
+        success = collection.upload_game_files(
             game_info = game_info,
             game_root = game_root,
             locker_type = args.locker_type,

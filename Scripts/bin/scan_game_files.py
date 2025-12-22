@@ -76,7 +76,7 @@ def main():
 
     # Build game store purchases
     logger.log_info("Building store purchases ...")
-    success = collection.BuildAllGameStorePurchases(
+    success = collection.build_all_game_store_purchases(
         locker_type = args.locker_type,
         source_type = args.source_type,
         categories = args.categories,
@@ -89,7 +89,7 @@ def main():
 
     # Build game json files
     logger.log_info("Building json files ...")
-    success = collection.BuildAllGameJsonFiles(
+    success = collection.build_all_game_json_files(
         locker_type = args.locker_type,
         source_type = args.source_type,
         categories = args.categories,
@@ -102,7 +102,7 @@ def main():
 
     # Build game metadata files
     logger.log_info("Building metadata files ...")
-    success = collection.BuildAllGameMetadataEntries(
+    success = collection.build_all_game_metadata_entries(
         categories = args.categories,
         subcategories = args.subcategories,
         verbose = args.verbose,
@@ -114,7 +114,7 @@ def main():
     # Download game metadata assets
     if args.download_assets:
         logger.log_info("Downloading metadata assets ...")
-        success = collection.DownloadAllMetadataAssets(
+        success = collection.download_all_metadata_assets(
             categories = args.categories,
             subcategories = args.subcategories,
             skip_existing = True,
@@ -126,7 +126,7 @@ def main():
 
     # Publish game metadata files
     logger.log_info("Publishing metadata files ...")
-    success = collection.PublishAllGameMetadataEntries(
+    success = collection.publish_all_game_metadata_entries(
         categories = args.categories,
         subcategories = args.subcategories,
         verbose = args.verbose,

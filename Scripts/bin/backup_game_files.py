@@ -74,7 +74,7 @@ def main():
 
     # Backup game files
     for game_info, _ in games_to_process:
-        success = collection.BackupGameFiles(
+        success = collection.backup_game_files(
             game_info = game_info,
             locker_type = args.locker_type,
             verbose = args.verbose,

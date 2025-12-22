@@ -125,7 +125,7 @@ def main():
             message_text = "Json file '%s' is not launchable" % paths.get_filename_file(json_file))
 
     # Launch game
-    success = collection.LaunchGame(
+    success = collection.launch_game(
         game_info = game_info,
         source_type = args.source_type,
         capture_type = args.capture_type,

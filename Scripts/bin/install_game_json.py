@@ -91,7 +91,7 @@ def main():
             return
 
     # Install game
-    success = collection.InstallGame(
+    success = collection.install_game(
         game_info = game_info,
         source_type = args.source_type,
         keep_setup_files = args.keep_setup_files,
@@ -105,7 +105,7 @@ def main():
 
     # Install game addons
     if install_addon_files:
-        success = collection.InstallGameAddons(
+        success = collection.install_game_addons(
             game_info = game_info,
             verbose = args.verbose,
             pretend_run = args.pretend_run,

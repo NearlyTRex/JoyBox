@@ -38,7 +38,7 @@ def main():
             return
 
     # Sort hash files
-    success = collection.SortAllHashFiles(
+    success = collection.sort_all_hash_files(
         verbose = args.verbose,
         pretend_run = args.pretend_run,
         exit_on_failure = args.exit_on_failure)

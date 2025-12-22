@@ -64,7 +64,7 @@ def main():
 
     # Build store purchases
     for game_supercategory, game_category, game_subcategory in categories_to_process:
-        success = collection.BuildGameStorePurchases(
+        success = collection.build_game_store_purchases(
             game_supercategory = game_supercategory,
             game_category = game_category,
             game_subcategory = game_subcategory,

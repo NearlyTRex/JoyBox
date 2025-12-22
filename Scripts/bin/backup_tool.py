@@ -66,7 +66,7 @@ def main():
     logger.setup_logging()
 
     # Get source file root
-    source_file_root = backup.ResolvePath(
+    source_file_root = backup.resolve_path(
         path = args.input_path,
         source_type = args.source_type,
         game_supercategory = args.game_supercategory,
@@ -77,7 +77,7 @@ def main():
         logger.log_error("Could not resolve source path", quit_program = True)
 
     # Get destination file root
-    dest_file_root = backup.ResolvePath(
+    dest_file_root = backup.resolve_path(
         path = args.output_path,
         source_type = args.destination_type,
         game_supercategory = args.game_supercategory,
@@ -121,7 +121,7 @@ def main():
 
     # Archive files
     elif args.backup_type == config.BackupType.ARCHIVE:
-        backup.ArchiveFiles(
+        backup.archive_sub_folders(
             input_base_path = source_file_root,
             output_base_path = dest_file_root,
             archive_type = config.ArchiveFileType.SEVENZIP,

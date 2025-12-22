@@ -75,7 +75,7 @@ def main():
 
     # Build hash files
     for game_info, game_root in games_to_process:
-        success = collection.BuildHashFiles(
+        success = collection.build_hash_files(
             game_info = game_info,
             game_root = game_root,
             locker_type = args.locker_type,

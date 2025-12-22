@@ -64,7 +64,7 @@ def main():
 
     # Build metadata files
     for game_supercategory, game_category, game_subcategory, game_name, _ in games_to_process:
-        success = collection.BuildGameMetadataEntry(
+        success = collection.build_game_metadata_entry(
             game_supercategory = game_supercategory,
             game_category = game_category,
             game_subcategory = game_subcategory,

@@ -76,7 +76,7 @@ def main():
 
     # Build json files
     for game_supercategory, game_category, game_subcategory, game_name, game_root, _ in games_to_process:
-        success = collection.BuildGameJsonFile(
+        success = collection.build_game_json_file(
             game_supercategory = game_supercategory,
             game_category = game_category,
             game_subcategory = game_subcategory,

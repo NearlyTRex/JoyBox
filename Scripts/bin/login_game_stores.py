@@ -42,7 +42,7 @@ def main():
     for game_supercategory, game_category, game_subcategory in gameinfo.iterate_selected_game_categories(
         parser = parser,
         generation_mode = args.generation_mode):
-        success = collection.LoginGameStore(
+        success = collection.login_game_store(
             game_supercategory = game_supercategory,
             game_category = game_category,
             game_subcategory = game_subcategory,

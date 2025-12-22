@@ -70,7 +70,7 @@ def main():
 
     # Download metadata assets
     for game_info in games_to_process:
-        success = collection.DownloadMetadataAsset(
+        success = collection.download_metadata_asset(
             game_info = game_info,
             asset_type = args.asset_type,
             skip_existing = args.skip_existing,
