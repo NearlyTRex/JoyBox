@@ -9,13 +9,13 @@ import environment
 import fileops
 import gameinfo
 import stores
-from .purchase import DownloadGameStorePurchase
-from .uploading import UploadGameFiles
+from .purchase import download_game_store_purchase
+from .uploading import upload_game_files
 
 ############################################################
 
 # Determine if store game files should be backed up
-def ShouldBackupStoreGameFiles(
+def should_backup_store_game_files(
     game_info,
     verbose = False,
     pretend_run = False,
@@ -47,7 +47,7 @@ def ShouldBackupStoreGameFiles(
     return latest_version != store_buildid
 
 # Backup store game files
-def BackupStoreGameFiles(
+def backup_store_game_files(
     game_info,
     locker_type,
     verbose = False,
@@ -55,7 +55,7 @@ def BackupStoreGameFiles(
     exit_on_failure = False):
 
     # Check if game files should be backed up
-    should_backup = ShouldBackupStoreGameFiles(
+    should_backup = should_backup_store_game_files(
         game_info = game_info,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -69,7 +69,7 @@ def BackupStoreGameFiles(
         return False
 
     # Download files
-    success = DownloadGameStorePurchase(
+    success = download_game_store_purchase(
         game_info = game_info,
         output_dir = tmp_dir_result,
         verbose = verbose,
@@ -79,7 +79,7 @@ def BackupStoreGameFiles(
         return False
 
     # Upload files
-    success = UploadGameFiles(
+    success = upload_game_files(
         game_info = game_info,
         game_root = tmp_dir_result,
         locker_type = locker_type,
@@ -102,7 +102,7 @@ def BackupStoreGameFiles(
 ###########################################################
 
 # Determine if local game files should be backed up
-def ShouldBackupLocalGameFiles(
+def should_backup_local_game_files(
     game_info,
     verbose = False,
     pretend_run = False,
@@ -110,7 +110,7 @@ def ShouldBackupLocalGameFiles(
     return False
 
 # Backup local game files
-def BackupLocalGameFiles(
+def backup_local_game_files(
     game_info,
     locker_type,
     verbose = False,
@@ -121,40 +121,40 @@ def BackupLocalGameFiles(
 ###########################################################
 
 # Determine if game files should be backed up
-def ShouldBackupGameFiles(
+def should_backup_game_files(
     game_info,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
     if stores.IsStorePlatform(game_info.get_platform()):
-        return ShouldBackupStoreGameFiles(
+        return should_backup_store_game_files(
             game_info = game_info,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
     else:
-        return ShouldBackupLocalGameFiles(
+        return should_backup_local_game_files(
             game_info = game_info,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
 # Backup game files
-def BackupGameFiles(
+def backup_game_files(
     game_info,
     locker_type,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
     if stores.IsStorePlatform(game_info.get_platform()):
-        return BackupStoreGameFiles(
+        return backup_store_game_files(
             game_info = game_info,
             locker_type = locker_type,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
     else:
-        return BackupLocalGameFiles(
+        return backup_local_game_files(
             game_info = game_info,
             locker_type = locker_type,
             verbose = verbose,
@@ -162,7 +162,7 @@ def BackupGameFiles(
             exit_on_failure = exit_on_failure)
 
 # Backup all game files
-def BackupAllGameFiles(
+def backup_all_game_files(
     locker_type,
     verbose = False,
     pretend_run = False,
@@ -183,7 +183,7 @@ def BackupAllGameFiles(
                         verbose = verbose,
                         pretend_run = pretend_run,
                         exit_on_failure = exit_on_failure)
-                    success = BackupGameFiles(
+                    success = backup_game_files(
                         game_info = game_info,
                         locker_type = locker_type,
                         verbose = verbose,

@@ -19,11 +19,11 @@ import hashing
 ############################################################
 
 # Check if save dir is packable
-def IsSaveDirPackable(input_save_dir, output_save_dir):
+def is_save_dir_packable(input_save_dir, output_save_dir):
     return paths.does_directory_contain_files(input_save_dir)
 
 # Check if save dir is unpackable
-def IsSaveDirUnpackable(input_save_dir, output_save_dir):
+def is_save_dir_unpackable(input_save_dir, output_save_dir):
     if not paths.is_path_directory(input_save_dir) or paths.is_directory_empty(input_save_dir):
         return False
     if paths.is_path_directory(output_save_dir) or not paths.is_directory_empty(output_save_dir):
@@ -31,20 +31,20 @@ def IsSaveDirUnpackable(input_save_dir, output_save_dir):
     return True
 
 # Can save be packed
-def CanSaveBePacked(game_info):
+def can_save_be_packed(game_info):
     input_save_dir = game_info.get_save_dir()
-    return IsSaveDirPackable(input_save_dir)
+    return is_save_dir_packable(input_save_dir)
 
 # Can save be unpacked
-def CanSaveBeUnpacked(game_info):
+def can_save_be_unpacked(game_info):
     input_save_dir = game_info.get_local_save_dir()
     output_save_dir = game_info.get_save_dir()
-    return IsSaveDirUnpackable(input_save_dir, output_save_dir)
+    return is_save_dir_unpackable(input_save_dir, output_save_dir)
 
 ############################################################
 
 # Pack save
-def PackSave(
+def pack_save(
     game_info,
     save_dir = None,
     locker_type = None,
@@ -57,7 +57,7 @@ def PackSave(
     if not input_save_dir:
         input_save_dir = game_info.get_save_dir()
     output_save_dir = game_info.get_local_save_dir()
-    if not IsSaveDirPackable(input_save_dir, output_save_dir):
+    if not is_save_dir_packable(input_save_dir, output_save_dir):
         if verbose:
             logger.log_info(f"No save data found for {game_info.get_name()}")
         return False
@@ -168,7 +168,7 @@ def PackSave(
     return paths.does_path_exist(out_save_archive_file)
 
 # Pack all saves
-def PackAllSaves(
+def pack_all_saves(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -188,7 +188,7 @@ def PackAllSaves(
                         verbose = verbose,
                         pretend_run = pretend_run,
                         exit_on_failure = exit_on_failure)
-                    success = PackSave(
+                    success = pack_save(
                         game_info = game_info,
                         verbose = verbose,
                         pretend_run = pretend_run,
@@ -202,7 +202,7 @@ def PackAllSaves(
 ############################################################
 
 # Unpack save
-def UnpackSave(
+def unpack_save(
     game_info,
     save_dir = None,
     verbose = False,
@@ -214,7 +214,7 @@ def UnpackSave(
     if not input_save_dir:
         input_save_dir = game_info.get_local_save_dir()
     output_save_dir = game_info.get_save_dir()
-    if not IsSaveDirUnpackable(input_save_dir, output_save_dir):
+    if not is_save_dir_unpackable(input_save_dir, output_save_dir):
         if verbose:
             logger.log_info(f"No packed save found for {game_info.get_name()}")
         return False
@@ -264,7 +264,7 @@ def UnpackSave(
     return not paths.is_directory_empty(output_save_dir)
 
 # Unpack all saves
-def UnpackAllSaves(
+def unpack_all_saves(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -284,7 +284,7 @@ def UnpackAllSaves(
                         verbose = verbose,
                         pretend_run = pretend_run,
                         exit_on_failure = exit_on_failure)
-                    success = UnpackSave(
+                    success = unpack_save(
                         game_info = game_info,
                         verbose = verbose,
                         pretend_run = pretend_run,
@@ -298,7 +298,7 @@ def UnpackAllSaves(
 ############################################################
 
 # Get store path entries
-def GetStorePathEntries(
+def get_store_path_entries(
     game_info,
     verbose = False,
     pretend_run = False,
@@ -330,7 +330,7 @@ def GetStorePathEntries(
     return translated_paths
 
 # Import store game save paths
-def ImportStoreGameSavePaths(
+def import_store_game_save_paths(
     game_info,
     verbose = False,
     pretend_run = False,
@@ -367,7 +367,7 @@ def ImportStoreGameSavePaths(
     return success
 
 # Import store game save
-def ImportStoreGameSave(
+def import_store_game_save(
     game_info,
     verbose = False,
     pretend_run = False,
@@ -375,7 +375,7 @@ def ImportStoreGameSave(
     return True
 
 # Export store game save
-def ExportStoreGameSave(
+def export_store_game_save(
     game_info,
     verbose = False,
     pretend_run = False,
@@ -387,7 +387,7 @@ def ExportStoreGameSave(
         return False
 
     # Get store path entries
-    store_path_entries = GetStorePathEntries(
+    store_path_entries = get_store_path_entries(
         game_info = game_info,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -421,7 +421,7 @@ def ExportStoreGameSave(
         return True
 
     # Pack save
-    success = PackSave(
+    success = pack_save(
         game_info = game_info,
         save_dir = tmp_dir_result,
         verbose = verbose,
@@ -443,7 +443,7 @@ def ExportStoreGameSave(
 ############################################################
 
 # Import local game save paths
-def ImportLocalGameSavePaths(
+def import_local_game_save_paths(
     game_info,
     verbose = False,
     pretend_run = False,
@@ -451,18 +451,18 @@ def ImportLocalGameSavePaths(
     return False
 
 # Import local game save
-def ImportLocalGameSave(
+def import_local_game_save(
     game_info,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
 
     # Check if save can be unpacked
-    if not CanSaveBeUnpacked(game_info):
+    if not can_save_be_unpacked(game_info):
         return True
 
     # Unpack save
-    success = UnpackSave(
+    success = unpack_save(
         game_info = game_info,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -471,14 +471,14 @@ def ImportLocalGameSave(
         return False
 
 # Export local game save
-def ExportLocalGameSave(
+def export_local_game_save(
     game_info,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
 
     # Pack save
-    success = PackSave(
+    success = pack_save(
         game_info = game_info,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -488,26 +488,26 @@ def ExportLocalGameSave(
 ############################################################
 
 # Import game save paths
-def ImportGameSavePaths(
+def import_game_save_paths(
     game_info,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
     if stores.IsStorePlatform(game_info.get_platform()):
-        return ImportStoreGameSavePaths(
+        return import_store_game_save_paths(
             game_info = game_info,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
     else:
-        return ImportLocalGameSavePaths(
+        return import_local_game_save_paths(
             game_info = game_info,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
 # Import all game save paths
-def ImportAllGameSavePaths(
+def import_all_game_save_paths(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -527,7 +527,7 @@ def ImportAllGameSavePaths(
                         verbose = verbose,
                         pretend_run = pretend_run,
                         exit_on_failure = exit_on_failure)
-                    success = ImportGameSavePaths(
+                    success = import_game_save_paths(
                         game_info = game_info,
                         verbose = verbose,
                         pretend_run = pretend_run,
@@ -539,26 +539,26 @@ def ImportAllGameSavePaths(
     return True
 
 # Import game save
-def ImportGameSave(
+def import_game_save(
     game_info,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
     if stores.IsStorePlatform(game_info.get_platform()):
-        return ImportStoreGameSave(
+        return import_store_game_save(
             game_info = game_info,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
     else:
-        return ImportLocalGameSave(
+        return import_local_game_save(
             game_info = game_info,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
 # Import all game save
-def ImportAllGameSaves(
+def import_all_game_saves(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -578,7 +578,7 @@ def ImportAllGameSaves(
                         verbose = verbose,
                         pretend_run = pretend_run,
                         exit_on_failure = exit_on_failure)
-                    success = ImportGameSave(
+                    success = import_game_save(
                         game_info = game_info,
                         verbose = verbose,
                         pretend_run = pretend_run,
@@ -590,26 +590,26 @@ def ImportAllGameSaves(
     return True
 
 # Export game save
-def ExportGameSave(
+def export_game_save(
     game_info,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
     if stores.IsStorePlatform(game_info.get_platform()):
-        return ExportStoreGameSave(
+        return export_store_game_save(
             game_info = game_info,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
     else:
-        return ExportLocalGameSave(
+        return export_local_game_save(
             game_info = game_info,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
 # Export all game save
-def ExportAllGameSave(
+def export_all_game_save(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -629,7 +629,7 @@ def ExportAllGameSave(
                         verbose = verbose,
                         pretend_run = pretend_run,
                         exit_on_failure = exit_on_failure)
-                    success = ExportGameSave(
+                    success = export_game_save(
                         game_info = game_info,
                         verbose = verbose,
                         pretend_run = pretend_run,

@@ -16,12 +16,12 @@ import paths
 import metadatacollector
 import stores
 import strings
-from .jsondata import ReadGameJsonData
+from .jsondata import read_game_json_data
 
 ############################################################
 
 # Determine if game metadata files are possible
-def AreGameMetadataFilePossible(
+def are_game_metadata_file_possible(
     game_supercategory,
     game_category = None,
     game_subcategory = None):
@@ -30,7 +30,7 @@ def AreGameMetadataFilePossible(
 ############################################################
 
 # Create game metadata entry
-def CreateGameMetadataEntry(
+def create_game_metadata_entry(
     game_supercategory,
     game_category,
     game_subcategory,
@@ -42,7 +42,7 @@ def CreateGameMetadataEntry(
     exit_on_failure = False):
 
     # Check categories
-    if not AreGameMetadataFilePossible(game_supercategory, game_category, game_subcategory):
+    if not are_game_metadata_file_possible(game_supercategory, game_category, game_subcategory):
         return True
 
     # Get platform
@@ -101,7 +101,7 @@ def CreateGameMetadataEntry(
     return True
 
 # Update game metadata entry
-def UpdateGameMetadataEntry(
+def update_game_metadata_entry(
     game_supercategory,
     game_category,
     game_subcategory,
@@ -117,7 +117,7 @@ def UpdateGameMetadataEntry(
         keys = config.metadata_keys_downloadable
 
     # Check categories
-    if not AreGameMetadataFilePossible(game_supercategory, game_category, game_subcategory):
+    if not are_game_metadata_file_possible(game_supercategory, game_category, game_subcategory):
         return True
 
     # Get platform
@@ -138,7 +138,7 @@ def UpdateGameMetadataEntry(
         return True
 
     # Get json data
-    json_obj = ReadGameJsonData(
+    json_obj = read_game_json_data(
         game_supercategory = game_supercategory,
         game_category = game_category,
         game_subcategory = game_subcategory,
@@ -203,7 +203,7 @@ def UpdateGameMetadataEntry(
 ############################################################
 
 # Build game metadata entry
-def BuildGameMetadataEntry(
+def build_game_metadata_entry(
     game_supercategory,
     game_category,
     game_subcategory,
@@ -219,7 +219,7 @@ def BuildGameMetadataEntry(
         (game_category, game_subcategory, game_name))
 
     # Create metadata entry
-    success = CreateGameMetadataEntry(
+    success = create_game_metadata_entry(
         game_supercategory = game_supercategory,
         game_category = game_category,
         game_subcategory = game_subcategory,
@@ -231,7 +231,7 @@ def BuildGameMetadataEntry(
         return False
 
     # Update metadata entry
-    success = UpdateGameMetadataEntry(
+    success = update_game_metadata_entry(
         game_supercategory = game_supercategory,
         game_category = game_category,
         game_subcategory = game_subcategory,
@@ -244,7 +244,7 @@ def BuildGameMetadataEntry(
     return success
 
 # Build all game metadata entries
-def BuildAllGameMetadataEntries(
+def build_all_game_metadata_entries(
     keys = [],
     categories = None,
     subcategories = None,
@@ -266,7 +266,7 @@ def BuildAllGameMetadataEntries(
                     game_category,
                     game_subcategory)
                 for game_name in game_names:
-                    success = BuildGameMetadataEntry(
+                    success = build_game_metadata_entry(
                         game_supercategory = game_supercategory,
                         game_category = game_category,
                         game_subcategory = game_subcategory,
@@ -285,7 +285,7 @@ def BuildAllGameMetadataEntries(
 ############################################################
 
 # Publish game metadata entries
-def PublishGameMetadataEntries(
+def publish_game_metadata_entries(
     game_supercategory,
     game_category,
     verbose = False,
@@ -302,7 +302,7 @@ def PublishGameMetadataEntries(
     for game_subcategory in config.subcategory_map[game_category]:
 
         # Check categories
-        if not AreGameMetadataFilePossible(game_supercategory, game_category, game_subcategory):
+        if not are_game_metadata_file_possible(game_supercategory, game_category, game_subcategory):
             continue
 
         # Get metadata file
@@ -357,7 +357,7 @@ def PublishGameMetadataEntries(
     return success
 
 # Publish all game metadata entries
-def PublishAllGameMetadataEntries(
+def publish_all_game_metadata_entries(
     categories = None,
     subcategories = None,
     verbose = False,
@@ -368,7 +368,7 @@ def PublishAllGameMetadataEntries(
         for game_category in selected_categories:
 
             # Publish metadata
-            success = PublishGameMetadataEntries(
+            success = publish_game_metadata_entries(
                 game_supercategory = game_supercategory,
                 game_category = game_category,
                 verbose = verbose,

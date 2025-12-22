@@ -11,12 +11,12 @@ import environment
 import cryption
 import locker
 import lockerinfo
-from .hashing import BuildHashFiles
+from .hashing import build_hash_files
 
 ############################################################
 
 # Upload game files
-def UploadGameFiles(
+def upload_game_files(
     game_info,
     game_root = None,
     locker_type = None,
@@ -54,7 +54,7 @@ def UploadGameFiles(
         return False
 
     # Hash all files
-    success = BuildHashFiles(
+    success = build_hash_files(
         game_info = game_info,
         game_root = game_root,
         locker_type = locker_type,
@@ -74,7 +74,7 @@ def UploadGameFiles(
     return success
 
 # Upload all game files
-def UploadAllGameFiles(
+def upload_all_game_files(
     locker_type = None,
     source_type = None,
     verbose = False,
@@ -96,7 +96,7 @@ def UploadAllGameFiles(
                         verbose = verbose,
                         pretend_run = pretend_run,
                         exit_on_failure = exit_on_failure)
-                    success = UploadGameFiles(
+                    success = upload_game_files(
                         game_info = game_info,
                         locker_type = locker_type,
                         source_type = source_type,

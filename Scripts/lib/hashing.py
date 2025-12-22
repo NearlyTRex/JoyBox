@@ -417,7 +417,7 @@ def WriteHashFile(
     return success
 
 # Sort hash file
-def SortHashFile(
+def sort_hash_file(
     src,
     verbose = False,
     pretend_run = False,

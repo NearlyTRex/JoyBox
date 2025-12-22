@@ -20,7 +20,7 @@ import lockerinfo
 ############################################################
 
 # Determine if game json files are possible
-def AreGameJsonFilePossible(
+def are_game_json_file_possible(
     game_supercategory,
     game_category = None,
     game_subcategory = None):
@@ -29,7 +29,7 @@ def AreGameJsonFilePossible(
 ############################################################
 
 # Read game json data
-def ReadGameJsonData(
+def read_game_json_data(
     game_supercategory,
     game_category,
     game_subcategory,
@@ -39,7 +39,7 @@ def ReadGameJsonData(
     exit_on_failure = False):
 
     # Check categories
-    if not AreGameJsonFilePossible(game_supercategory, game_category, game_subcategory):
+    if not are_game_json_file_possible(game_supercategory, game_category, game_subcategory):
         return None
 
     # Get json file path
@@ -66,7 +66,7 @@ def ReadGameJsonData(
 ############################################################
 
 # Create game json file
-def CreateGameJsonFile(
+def create_game_json_file(
     game_supercategory,
     game_category,
     game_subcategory,
@@ -77,7 +77,7 @@ def CreateGameJsonFile(
     exit_on_failure = False):
 
     # Check categories
-    if not AreGameJsonFilePossible(game_supercategory, game_category, game_subcategory):
+    if not are_game_json_file_possible(game_supercategory, game_category, game_subcategory):
         return True
 
     # Get json file path
@@ -128,7 +128,7 @@ def CreateGameJsonFile(
 ############################################################
 
 # Update game json file
-def UpdateGameJsonFile(
+def update_game_json_file(
     game_supercategory,
     game_category,
     game_subcategory,
@@ -140,7 +140,7 @@ def UpdateGameJsonFile(
     exit_on_failure = False):
 
     # Check categories
-    if not AreGameJsonFilePossible(game_supercategory, game_category, game_subcategory):
+    if not are_game_json_file_possible(game_supercategory, game_category, game_subcategory):
         return True
 
     # Get platform
@@ -299,7 +299,7 @@ def UpdateGameJsonFile(
 ############################################################
 
 # Build game json file
-def BuildGameJsonFile(
+def build_game_json_file(
     game_supercategory,
     game_category,
     game_subcategory,
@@ -327,7 +327,7 @@ def BuildGameJsonFile(
         (game_category, game_subcategory, game_name))
 
     # Create json file
-    success = CreateGameJsonFile(
+    success = create_game_json_file(
         game_supercategory = game_supercategory,
         game_category = game_category,
         game_subcategory = game_subcategory,
@@ -339,7 +339,7 @@ def BuildGameJsonFile(
         return False
 
     # Update json file
-    success = UpdateGameJsonFile(
+    success = update_game_json_file(
         game_supercategory = game_supercategory,
         game_category = game_category,
         game_subcategory = game_subcategory,
@@ -352,7 +352,7 @@ def BuildGameJsonFile(
     return success
 
 # Build all game json files
-def BuildAllGameJsonFiles(
+def build_all_game_json_files(
     locker_type = None,
     source_type = None,
     categories = None,
@@ -375,7 +375,7 @@ def BuildAllGameJsonFiles(
                     game_subcategory,
                     source_type)
                 for game_name in game_names:
-                    success = BuildGameJsonFile(
+                    success = build_game_json_file(
                         game_supercategory = game_supercategory,
                         game_category = game_category,
                         game_subcategory = game_subcategory,
@@ -394,7 +394,7 @@ def BuildAllGameJsonFiles(
 ############################################################
 
 # Get game json ignore entries
-def GetGameJsonIgnoreEntries(
+def get_game_json_ignore_entries(
     game_supercategory,
     game_category,
     game_subcategory,
@@ -403,7 +403,7 @@ def GetGameJsonIgnoreEntries(
     exit_on_failure = False):
 
     # Check categories
-    if not AreGameJsonFilePossible(game_supercategory, game_category, game_subcategory):
+    if not are_game_json_file_possible(game_supercategory, game_category, game_subcategory):
         return {}
 
     # Get json file path
@@ -427,7 +427,7 @@ def GetGameJsonIgnoreEntries(
     return json_file_data
 
 # Add game json ignore entry
-def AddGameJsonIgnoreEntry(
+def add_game_json_ignore_entry(
     game_supercategory,
     game_category,
     game_subcategory,
@@ -438,7 +438,7 @@ def AddGameJsonIgnoreEntry(
     exit_on_failure = False):
 
     # Check categories
-    if not AreGameJsonFilePossible(game_supercategory, game_category, game_subcategory):
+    if not are_game_json_file_possible(game_supercategory, game_category, game_subcategory):
         return True
 
     # Get platform

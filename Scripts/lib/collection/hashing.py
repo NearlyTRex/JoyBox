@@ -14,7 +14,7 @@ import lockerinfo
 ###########################################################
 
 # Build hash files
-def BuildHashFiles(
+def build_hash_files(
     game_info,
     game_root = None,
     locker_type = None,
@@ -56,7 +56,7 @@ def BuildHashFiles(
     return success
 
 # Build all hash files
-def BuildAllHashFiles(
+def build_all_hash_files(
     locker_type = None,
     source_type = None,
     verbose = False,
@@ -78,7 +78,7 @@ def BuildAllHashFiles(
                         verbose = verbose,
                         pretend_run = pretend_run,
                         exit_on_failure = exit_on_failure)
-                    success = BuildHashFiles(
+                    success = build_hash_files(
                         game_info = game_info,
                         locker_type = locker_type,
                         source_type = source_type,
@@ -94,7 +94,7 @@ def BuildAllHashFiles(
 ############################################################
 
 # Sort hash file
-def SortHashFile(
+def sort_hash_file(
     game_info,
     verbose = False,
     pretend_run = False,
@@ -117,7 +117,7 @@ def SortHashFile(
     return success
 
 # Sort all hash files
-def SortAllHashFiles(
+def sort_all_hash_files(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):

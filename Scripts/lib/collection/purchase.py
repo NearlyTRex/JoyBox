@@ -12,17 +12,17 @@ import serialization
 import environment
 import gameinfo
 import stores
-from .metadata import CreateGameMetadataEntry
-from .metadata import UpdateGameMetadataEntry
-from .jsondata import GetGameJsonIgnoreEntries
-from .jsondata import AddGameJsonIgnoreEntry
-from .jsondata import CreateGameJsonFile
-from .jsondata import UpdateGameJsonFile
+from .metadata import create_game_metadata_entry
+from .metadata import update_game_metadata_entry
+from .jsondata import get_game_json_ignore_entries
+from .jsondata import add_game_json_ignore_entry
+from .jsondata import create_game_json_file
+from .jsondata import update_game_json_file
 
 ############################################################
 
 # Login game store
-def LoginGameStore(
+def login_game_store(
     game_supercategory,
     game_category,
     game_subcategory,
@@ -37,14 +37,14 @@ def LoginGameStore(
     return True
 
 # Login all game stores
-def LoginAllGameStores(
+def login_all_game_stores(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
     for game_supercategory in [config.Supercategory.ROMS]:
         for game_category in config.Category.members():
             for game_subcategory in config.subcategory_map[game_category]:
-                success = LoginGameStore(
+                success = login_game_store(
                     game_supercategory = game_supercategory,
                     game_category = game_category,
                     game_subcategory = game_subcategory,
@@ -60,7 +60,7 @@ def LoginAllGameStores(
 ############################################################
 
 # Import game store purchases
-def ImportGameStorePurchases(
+def import_game_store_purchases(
     game_supercategory,
     game_category,
     game_subcategory,
@@ -88,7 +88,7 @@ def ImportGameStorePurchases(
 
     # Get all ignores
     logger.log_info("Fetching ignore entries for %s" % store_obj.get_type())
-    ignores = GetGameJsonIgnoreEntries(
+    ignores = get_game_json_ignore_entries(
         game_supercategory = store_obj.get_supercategory(),
         game_category = store_obj.get_category(),
         game_subcategory = store_obj.get_subcategory(),
@@ -145,7 +145,7 @@ def ImportGameStorePurchases(
 
         # Add to ignore
         if should_import.lower() == "i":
-            AddGameJsonIgnoreEntry(
+            add_game_json_ignore_entry(
                 game_supercategory = store_obj.get_supercategory(),
                 game_category = store_obj.get_category(),
                 game_subcategory = store_obj.get_subcategory(),
@@ -171,7 +171,7 @@ def ImportGameStorePurchases(
                 purchase.set_value(config.json_key_store_appurl, purchase_appurl)
 
         # Create json file
-        success = CreateGameJsonFile(
+        success = create_game_json_file(
             game_supercategory = store_obj.get_supercategory(),
             game_category = store_obj.get_category(),
             game_subcategory = store_obj.get_subcategory(),
@@ -185,7 +185,7 @@ def ImportGameStorePurchases(
             return False
 
         # Create metadata entry
-        success = CreateGameMetadataEntry(
+        success = create_game_metadata_entry(
             game_supercategory = store_obj.get_supercategory(),
             game_category = store_obj.get_category(),
             game_subcategory = store_obj.get_subcategory(),
@@ -204,7 +204,7 @@ def ImportGameStorePurchases(
 ############################################################
 
 # Update game store purchases
-def UpdateGameStorePurchases(
+def update_game_store_purchases(
     game_supercategory,
     game_category,
     game_subcategory,
@@ -236,7 +236,7 @@ def UpdateGameStorePurchases(
 
     # Get all ignores
     logger.log_info("Fetching ignore entries for %s" % store_obj.get_type())
-    ignores = GetGameJsonIgnoreEntries(
+    ignores = get_game_json_ignore_entries(
         game_supercategory = store_obj.get_supercategory(),
         game_category = store_obj.get_category(),
         game_subcategory = store_obj.get_subcategory(),
@@ -292,7 +292,7 @@ def UpdateGameStorePurchases(
             source_type = source_type)
 
         # Update json file
-        success = UpdateGameJsonFile(
+        success = update_game_json_file(
             game_supercategory = game_supercategory,
             game_category = game_category,
             game_subcategory = game_subcategory,
@@ -307,7 +307,7 @@ def UpdateGameStorePurchases(
             return False
 
         # Update metadata entry
-        success = UpdateGameMetadataEntry(
+        success = update_game_metadata_entry(
             game_supercategory = game_supercategory,
             game_category = game_category,
             game_subcategory = game_subcategory,
@@ -327,7 +327,7 @@ def UpdateGameStorePurchases(
 ############################################################
 
 # Build game store purchase
-def BuildGameStorePurchases(
+def build_game_store_purchases(
     game_supercategory,
     game_category,
     game_subcategory,
@@ -344,7 +344,7 @@ def BuildGameStorePurchases(
         (game_category, game_subcategory))
 
     # Import store purchases
-    success = ImportGameStorePurchases(
+    success = import_game_store_purchases(
         game_supercategory = game_supercategory,
         game_category = game_category,
         game_subcategory = game_subcategory,
@@ -355,7 +355,7 @@ def BuildGameStorePurchases(
         return False
 
     # Update store purchases
-    success = UpdateGameStorePurchases(
+    success = update_game_store_purchases(
         game_supercategory = game_supercategory,
         game_category = game_category,
         game_subcategory = game_subcategory,
@@ -369,7 +369,7 @@ def BuildGameStorePurchases(
     return success
 
 # Build all game store purchases
-def BuildAllGameStorePurchases(
+def build_all_game_store_purchases(
     locker_type = None,
     source_type = None,
     keys = [],
@@ -387,7 +387,7 @@ def BuildAllGameStorePurchases(
             if selected_subcategories:
                 category_subcategories = [sc for sc in category_subcategories if sc in selected_subcategories]
             for game_subcategory in category_subcategories:
-                success = BuildGameStorePurchases(
+                success = build_game_store_purchases(
                     game_supercategory = game_supercategory,
                     game_category = game_category,
                     game_subcategory = game_subcategory,
@@ -407,7 +407,7 @@ def BuildAllGameStorePurchases(
 ############################################################
 
 # Download game store purchase
-def DownloadGameStorePurchase(
+def download_game_store_purchase(
     game_info,
     output_dir = None,
     skip_existing = False,
@@ -468,7 +468,7 @@ def DownloadGameStorePurchase(
     return success
 
 # Download all game store purchases
-def DownloadAllGameStorePurchases(
+def download_all_game_store_purchases(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):

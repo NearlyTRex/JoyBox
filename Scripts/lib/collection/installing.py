@@ -19,7 +19,7 @@ import gui
 ###########################################################
 
 # Check if store game is installed
-def IsStoreGameInstalled(game_info):
+def is_store_game_installed(game_info):
 
     # Check game info
     if not game_info or not game_info.is_valid():
@@ -41,7 +41,7 @@ def IsStoreGameInstalled(game_info):
     return store_obj.is_installed(store_identifier)
 
 # Install store game
-def InstallStoreGame(
+def install_store_game(
     game_info,
     source_type,
     keep_setup_files = False,
@@ -73,7 +73,7 @@ def InstallStoreGame(
         exit_on_failure = exit_on_failure)
 
 # Install store game addons
-def InstallStoreGameAddons(
+def install_store_game_addons(
     game_info,
     verbose = False,
     pretend_run = False,
@@ -83,7 +83,7 @@ def InstallStoreGameAddons(
     return True
 
 # Uninstall store game
-def UninstallStoreGame(
+def uninstall_store_game(
     game_info,
     source_type,
     verbose = False,
@@ -116,12 +116,12 @@ def UninstallStoreGame(
 ###########################################################
 
 # Check if local game is installed
-def IsLocalGameInstalled(game_info):
+def is_local_game_installed(game_info):
     cache_dir = game_info.get_local_cache_dir()
     return paths.does_directory_contain_files(cache_dir)
 
 # Install local game
-def InstallLocalGame(
+def install_local_game(
     game_info,
     source_type,
     keep_setup_files = False,
@@ -136,7 +136,7 @@ def InstallLocalGame(
     game_remote_rom_dir = game_info.get_remote_rom_dir()
 
     # Check if already installed
-    if IsLocalGameInstalled(game_info):
+    if is_local_game_installed(game_info):
         return True
 
     # Check if source files are available
@@ -168,7 +168,7 @@ def InstallLocalGame(
 
         # Install transformed game
         def InstallTransformedGame():
-            return InstallLocalTransformedGame(
+            return install_local_transformed_game(
                 game_info = game_info,
                 source_dir = tmp_dir_result,
                 keep_setup_files = keep_setup_files,
@@ -184,8 +184,8 @@ def InstallLocalGame(
     else:
 
         # Install game
-        def InstallGame():
-            return InstallLocalUntransformedGame(
+        def install_game():
+            return install_local_untransformed_game(
                 game_info = game_info,
                 source_dir = tmp_dir_result,
                 verbose = verbose,
@@ -206,14 +206,14 @@ def InstallLocalGame(
         exit_on_failure = exit_on_failure)
 
     # Check if game is now installed
-    if not IsLocalGameInstalled(game_info):
+    if not is_local_game_installed(game_info):
         gui.DisplayErrorPopup(
             title_text = "Failed to cache game",
             message_text = "Game could not be cached\n%s\n%s" % (game_name, game_platform))
     return True
 
 # Install local untransformed game
-def InstallLocalUntransformedGame(
+def install_local_untransformed_game(
     game_info,
     source_dir,
     verbose = False,
@@ -232,10 +232,10 @@ def InstallLocalUntransformedGame(
         return False
 
     # Return result
-    return IsLocalGameInstalled(game_info)
+    return is_local_game_installed(game_info)
 
 # Add local transformed game
-def InstallLocalTransformedGame(
+def install_local_transformed_game(
     game_info,
     source_dir,
     keep_setup_files = False,
@@ -264,7 +264,7 @@ def InstallLocalTransformedGame(
         return False
 
     # Add to cache
-    success = InstallLocalUntransformedGame(
+    success = install_local_untransformed_game(
         game_info = game_info,
         source_dir = paths.get_filename_directory(transform_result),
         verbose = verbose,
@@ -281,10 +281,10 @@ def InstallLocalTransformedGame(
         exit_on_failure = exit_on_failure)
 
     # Return result
-    return IsLocalGameInstalled(game_info)
+    return is_local_game_installed(game_info)
 
 # Install local game addons
-def InstallLocalGameAddons(
+def install_local_game_addons(
     game_info,
     verbose = False,
     pretend_run = False,
@@ -321,7 +321,7 @@ def InstallLocalGameAddons(
     return True
 
 # Uninstall local game
-def UninstallLocalGame(
+def uninstall_local_game(
     game_info,
     source_type,
     verbose = False,
@@ -329,7 +329,7 @@ def UninstallLocalGame(
     exit_on_failure = False):
 
     # Check if already installed
-    if not IsLocalGameInstalled(game_info):
+    if not is_local_game_installed(game_info):
         return True
 
     # Remove local cache
@@ -352,14 +352,14 @@ def UninstallLocalGame(
 ###########################################################
 
 # Check if game is installed
-def IsGameInstalled(game_info):
+def is_game_installed(game_info):
     if stores.IsStorePlatform(game_info.get_platform()):
-        return IsStoreGameInstalled(game_info)
+        return is_store_game_installed(game_info)
     else:
-        return IsLocalGameInstalled(game_info)
+        return is_local_game_installed(game_info)
 
 # Install game
-def InstallGame(
+def install_game(
     game_info,
     source_type,
     keep_setup_files = False,
@@ -367,7 +367,7 @@ def InstallGame(
     pretend_run = False,
     exit_on_failure = False):
     if stores.IsStorePlatform(game_info.get_platform()):
-        return InstallStoreGame(
+        return install_store_game(
             game_info = game_info,
             source_type = source_type,
             keep_setup_files = keep_setup_files,
@@ -375,7 +375,7 @@ def InstallGame(
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
     else:
-        return InstallLocalGame(
+        return install_local_game(
             game_info = game_info,
             source_type = source_type,
             keep_setup_files = keep_setup_files,
@@ -384,40 +384,40 @@ def InstallGame(
             exit_on_failure = exit_on_failure)
 
 # Install game addons
-def InstallGameAddons(
+def install_game_addons(
     game_info,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
     if stores.IsStorePlatform(game_info.get_platform()):
-        return InstallStoreGameAddons(
+        return install_store_game_addons(
             game_info = game_info,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
     else:
-        return InstallLocalGameAddons(
+        return install_local_game_addons(
             game_info = game_info,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
 # Uninstall game
-def UninstallGame(
+def uninstall_game(
     game_info,
     source_type,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
     if stores.IsStorePlatform(game_info.get_platform()):
-        return UninstallStoreGame(
+        return uninstall_store_game(
             game_info = game_info,
             source_type = source_type,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
     else:
-        return UninstallLocalGame(
+        return uninstall_local_game(
             game_info = game_info,
             source_type = source_type,
             verbose = verbose,

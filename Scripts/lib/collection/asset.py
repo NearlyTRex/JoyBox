@@ -19,7 +19,7 @@ import metadataassetcollector
 ############################################################
 
 # Check if metadata asset exists
-def DoesMetadataAssetExist(game_info, asset_type):
+def does_metadata_asset_exist(game_info, asset_type):
 
     # Check if exists
     output_asset_file = environment.get_locker_gaming_asset_file(
@@ -32,7 +32,7 @@ def DoesMetadataAssetExist(game_info, asset_type):
 ############################################################
 
 # Download metadata asset
-def DownloadMetadataAsset(
+def download_metadata_asset(
     game_info,
     asset_type,
     skip_existing = False,
@@ -42,7 +42,7 @@ def DownloadMetadataAsset(
     exit_on_failure = False):
 
     # Check if asset exists
-    asset_exists = DoesMetadataAssetExist(
+    asset_exists = does_metadata_asset_exist(
         game_info = game_info,
         asset_type = asset_type)
     if skip_existing and asset_exists:
@@ -178,7 +178,7 @@ def DownloadMetadataAsset(
     return True
 
 # Download all metadata assets
-def DownloadAllMetadataAssets(
+def download_all_metadata_assets(
     categories = None,
     subcategories = None,
     skip_existing = False,
@@ -207,7 +207,7 @@ def DownloadAllMetadataAssets(
                         pretend_run = pretend_run,
                         exit_on_failure = exit_on_failure)
                     for asset_type in config.AssetMinType.members():
-                        success = DownloadMetadataAsset(
+                        success = download_metadata_asset(
                             game_info = game_info,
                             asset_type = asset_type,
                             skip_existing = skip_existing,

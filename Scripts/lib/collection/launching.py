@@ -10,17 +10,17 @@ import programs
 import stores
 import gui
 import paths
-from .installing import InstallStoreGame
-from .installing import InstallLocalGame
-from .saves import ImportStoreGameSave
-from .saves import ExportStoreGameSave
-from .saves import ImportLocalGameSave
-from .saves import ExportLocalGameSave
+from .installing import install_store_game
+from .installing import install_local_game
+from .saves import import_store_game_save
+from .saves import export_store_game_save
+from .saves import import_local_game_save
+from .saves import export_local_game_save
 
 ###########################################################
 
 # Launch store game
-def LaunchStoreGame(
+def launch_store_game(
     game_info,
     source_type,
     capture_type = None,
@@ -34,7 +34,7 @@ def LaunchStoreGame(
         return False
 
     # Install store game
-    success = InstallStoreGame(
+    success = install_store_game(
         game_info = game_info,
         source_type = source_type,
         verbose = verbose,
@@ -58,7 +58,7 @@ def LaunchStoreGame(
     store_identifier = game_info.get_subvalue(store_key, store_identifier_key)
 
     # Import save
-    success = ImportStoreGameSave(
+    success = import_store_game_save(
         game_info = game_info,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -76,7 +76,7 @@ def LaunchStoreGame(
         return False
 
     # Export save
-    success = ExportStoreGameSave(
+    success = export_store_game_save(
         game_info = game_info,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -86,7 +86,7 @@ def LaunchStoreGame(
 ###########################################################
 
 # Launch local game
-def LaunchLocalGame(
+def launch_local_game(
     game_info,
     source_type,
     capture_type = None,
@@ -100,7 +100,7 @@ def LaunchLocalGame(
         return False
 
     # Install local game
-    success = InstallLocalGame(
+    success = install_local_game(
         game_info = game_info,
         source_type = source_type,
         verbose = verbose,
@@ -123,7 +123,7 @@ def LaunchLocalGame(
     game_launcher_setup_dir = game_launcher.GetSetupDir()
 
     # Import save
-    success = ImportLocalGameSave(
+    success = import_local_game_save(
         game_info = game_info,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -195,7 +195,7 @@ def LaunchLocalGame(
             return False
 
     # Export save
-    success = ExportLocalGameSave(
+    success = export_local_game_save(
         game_info = game_info,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -205,7 +205,7 @@ def LaunchLocalGame(
 ###########################################################
 
 # Launch game
-def LaunchGame(
+def launch_game(
     game_info,
     source_type,
     capture_type = None,
@@ -214,7 +214,7 @@ def LaunchGame(
     pretend_run = False,
     exit_on_failure = False):
     if stores.IsStorePlatform(game_info.get_platform()):
-        return LaunchStoreGame(
+        return launch_store_game(
             game_info = game_info,
             source_type = source_type,
             capture_type = capture_type,
@@ -223,7 +223,7 @@ def LaunchGame(
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
     else:
-        return LaunchLocalGame(
+        return launch_local_game(
             game_info = game_info,
             source_type = source_type,
             capture_type = capture_type,
