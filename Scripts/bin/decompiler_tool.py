@@ -49,14 +49,14 @@ def main():
     # List presets
     if args.list_presets:
         logger.log_info("Available presets:")
-        for preset_name, desc in decompiler.ListPresets():
+        for preset_name, desc in decompiler.list_presets():
             logger.log_info("  %s - %s" % (preset_name, desc))
         return
 
     # List scripts
     if args.list_scripts:
         if args.preset:
-            scripts = decompiler.ListPresetScripts(args.preset)
+            scripts = decompiler.list_preset_scripts(args.preset)
             if scripts is None:
                 logger.log_error("Preset not found: %s" % args.preset)
                 return
@@ -64,15 +64,15 @@ def main():
             for script_name, desc in scripts:
                 logger.log_info("  %s - %s" % (script_name, desc))
         else:
-            for preset_name, preset_desc in decompiler.ListPresets():
+            for preset_name, preset_desc in decompiler.list_presets():
                 logger.log_info("%s:" % preset_name)
-                for script_name, desc in decompiler.ListPresetScripts(preset_name):
+                for script_name, desc in decompiler.list_preset_scripts(preset_name):
                     logger.log_info("  %s - %s" % (script_name, desc))
         return
 
     # Launch program
     if args.action == config.DecompilerActionType.LAUNCH_PROGRAM:
-        decompiler.LaunchProgram(
+        decompiler.launch_program(
             verbose = args.verbose,
             pretend_run = args.pretend_run,
             exit_on_failure = args.exit_on_failure)
@@ -87,7 +87,7 @@ def main():
                 logger.log_error("--script is required when using --preset")
                 logger.log_info("Use --list_scripts --preset %s to see available scripts" % args.preset)
                 return
-            decompiler.RunScriptFromPreset(
+            decompiler.run_script_from_preset(
                 preset_name = args.preset,
                 script_name = args.script,
                 script_args = args.script_args,
@@ -104,7 +104,7 @@ def main():
             logger.log_info("Or use preset mode with: --preset <name> --script <script>")
             logger.log_info("Use --list_presets to see available presets")
             return
-        decompiler.RunScript(
+        decompiler.run_script(
             project_dir = project_dir,
             project_name = args.project_name,
             program_name = args.program_name,

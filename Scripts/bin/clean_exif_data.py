@@ -34,7 +34,7 @@ def main():
     input_path = parser.get_input_path()
 
     # Clean exif data
-    asset.CleanExifData(
+    asset.clean_exif_data(
         asset_file = input_path,
         verbose = args.verbose,
         pretend_run = args.pretend_run,

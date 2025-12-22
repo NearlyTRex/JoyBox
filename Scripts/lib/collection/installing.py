@@ -251,7 +251,7 @@ def install_local_transformed_game(
         return False
 
     # Transform game file
-    transform_success, transform_result = transform.TransformGameFile(
+    transform_success, transform_result = transform.transform_game_file(
         game_info = game_info,
         source_dir = source_dir,
         output_dir = tmp_dir_result,

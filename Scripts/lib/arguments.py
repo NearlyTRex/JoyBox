@@ -10,7 +10,7 @@ import logger
 import paths
 
 # Enum parser
-def ParseEnumValue(enum_type, enum_value):
+def parse_enum_value(enum_type, enum_value):
     if isinstance(enum_value, enum_type):
         return enum_value
     else:
@@ -26,7 +26,7 @@ class EnumArgparseAction(argparse.Action):
         super().__init__(option_strings, dest, type=str, **kwargs)
 
     def __call__(self, parser, namespace, values, option_string=None):
-        enum_value = ParseEnumValue(self.enum_type, values)
+        enum_value = parse_enum_value(self.enum_type, values)
         setattr(namespace, self.dest, enum_value)
 
 # Argument parser

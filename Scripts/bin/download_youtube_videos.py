@@ -37,7 +37,7 @@ def main():
     logger.setup_logging()
 
     # Download videos
-    google.DownloadVideo(
+    google.download_video(
         video_url = args.youtube_url,
         audio_only = args.audio_only,
         output_file = args.output_file,

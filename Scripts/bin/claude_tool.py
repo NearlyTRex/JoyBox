@@ -61,7 +61,7 @@ def main():
         logger.log_error("Prompt file not found: %s" % prompt_file, quit_program = True)
 
     # Check API key is configured
-    if not args.pretend_run and not claude.IsConfigured():
+    if not args.pretend_run and not claude.is_configured():
         logger.log_error("Anthropic API key not configured", quit_program = True)
 
     # Parse extensions
@@ -90,7 +90,7 @@ def main():
             return
 
     # Process files
-    success_count, skip_count, error_count = claude.ProcessFiles(
+    success_count, skip_count, error_count = claude.process_files(
         input_path = input_path,
         output_path = output_path,
         prompt_file = prompt_file,

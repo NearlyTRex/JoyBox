@@ -12,28 +12,28 @@ import command
 
 ###########################################################
 
-def GetDecompilerPreset(preset_name):
+def get_decompiler_preset(preset_name):
     return config.decompiler_presets.get(preset_name)
 
-def GetDecompilerPresetNames():
+def get_decompiler_preset_names():
     return list(config.decompiler_presets.keys())
 
-def GetPresetScriptNames(preset_name):
-    preset = GetDecompilerPreset(preset_name)
+def get_preset_script_names(preset_name):
+    preset = get_decompiler_preset(preset_name)
     if preset and "scripts" in preset:
         return list(preset["scripts"].keys())
     return []
 
-def GetPresetScript(preset_name, script_name):
-    preset = GetDecompilerPreset(preset_name)
+def get_preset_script(preset_name, script_name):
+    preset = get_decompiler_preset(preset_name)
     if preset and "scripts" in preset:
         return preset["scripts"].get(script_name)
     return None
 
-def ResolvePresetPaths(preset_name):
+def resolve_preset_paths(preset_name):
 
     # Get preset
-    preset = GetDecompilerPreset(preset_name)
+    preset = get_decompiler_preset(preset_name)
     if not preset:
         return None
 
@@ -64,16 +64,16 @@ def ResolvePresetPaths(preset_name):
         resolved["scripts"] = resolved_scripts
     return resolved
 
-def ListPresets():
+def list_presets():
     presets = []
-    for preset_name in GetDecompilerPresetNames():
-        preset = GetDecompilerPreset(preset_name)
+    for preset_name in get_decompiler_preset_names():
+        preset = get_decompiler_preset(preset_name)
         desc = preset.get("description", "No description")
         presets.append((preset_name, desc))
     return presets
 
-def ListPresetScripts(preset_name):
-    preset = GetDecompilerPreset(preset_name)
+def list_preset_scripts(preset_name):
+    preset = get_decompiler_preset(preset_name)
     if not preset:
         return None
     scripts = []
@@ -84,7 +84,7 @@ def ListPresetScripts(preset_name):
 
 ###########################################################
 
-def LaunchProgram(verbose = False, pretend_run = False, exit_on_failure = False):
+def launch_program(verbose = False, pretend_run = False, exit_on_failure = False):
 
     # Get tool
     ghidra_tool = None
@@ -107,7 +107,7 @@ def LaunchProgram(verbose = False, pretend_run = False, exit_on_failure = False)
         exit_on_failure = exit_on_failure)
     return (code == 0)
 
-def RunScript(
+def run_script(
     project_dir,
     project_name,
     program_name,
@@ -184,7 +184,7 @@ def RunScript(
         exit_on_failure = exit_on_failure)
     return (code == 0)
 
-def RunScriptFromPreset(
+def run_script_from_preset(
     preset_name,
     script_name,
     script_args = None,
@@ -193,17 +193,17 @@ def RunScriptFromPreset(
     exit_on_failure = False):
 
     # Get resolved preset
-    preset = ResolvePresetPaths(preset_name)
+    preset = resolve_preset_paths(preset_name)
     if not preset:
         logger.log_error("Preset not found: %s" % preset_name)
-        logger.log_info("Available presets: %s" % ", ".join(GetDecompilerPresetNames()))
+        logger.log_info("Available presets: %s" % ", ".join(get_decompiler_preset_names()))
         return False
 
     # Get script config
     script_config = preset.get("scripts", {}).get(script_name)
     if not script_config:
         logger.log_error("Script '%s' not found in preset '%s'" % (script_name, preset_name))
-        logger.log_info("Available scripts: %s" % ", ".join(GetPresetScriptNames(preset_name)))
+        logger.log_info("Available scripts: %s" % ", ".join(get_preset_script_names(preset_name)))
         return False
 
     # Use default args if none provided
@@ -211,7 +211,7 @@ def RunScriptFromPreset(
         script_args = script_config.get("default_args_abs", script_config.get("default_args"))
 
     # Run the script
-    return RunScript(
+    return run_script(
         project_dir = preset["project_dir_abs"],
         project_name = preset["project_name"],
         program_name = preset["program_name"],

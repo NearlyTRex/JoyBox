@@ -110,7 +110,7 @@ class Manifest:
 shared_manifest = None
 
 # Get manifest instance
-def GetManifestInstance():
+def get_manifest_instance():
     global shared_manifest
     if shared_manifest is None:
         shared_manifest = Manifest()

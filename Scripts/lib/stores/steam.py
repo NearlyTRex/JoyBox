@@ -554,7 +554,7 @@ class Steam(storebase.StoreBase):
         game_keys = list(json_data.get_value(config.json_key_store_keys))
 
         # Augment by manifest
-        manifest_entry = manifest.GetManifestInstance().find_entry_by_steamid(
+        manifest_entry = manifest.get_manifest_instance().find_entry_by_steamid(
             steamid = identifier,
             verbose = verbose,
             pretend_run = pretend_run,
@@ -1051,7 +1051,7 @@ class Steam(storebase.StoreBase):
             return False
 
         # Archive downloaded files
-        success = backup.ArchiveFolder(
+        success = backup.archive_folder(
             input_path = tmp_dir_result,
             output_path = output_dir,
             output_name = output_name,

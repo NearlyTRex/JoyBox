@@ -105,7 +105,7 @@ def main():
 
     # Copy files
     if args.backup_type == config.BackupType.COPY:
-        backup.CopyFiles(
+        backup.copy_files(
             input_base_path = source_file_root,
             output_base_path = dest_file_root,
             cryption_type = args.cryption_type,

@@ -15,7 +15,7 @@ import programs
 import sandbox
 
 # Read registry file
-def ReadRegistryFile(
+def read_registry_file(
     registry_file,
     ignore_keys = [],
     keep_keys = [],
@@ -98,7 +98,7 @@ def ReadRegistryFile(
     return registry
 
 # Write registry file
-def WriteRegistryFile(
+def write_registry_file(
     registry_file,
     registry_data,
     verbose = False,
@@ -131,7 +131,7 @@ def WriteRegistryFile(
     return False
 
 # Export registry file
-def ExportRegistryFile(
+def export_registry_file(
     registry_file,
     registry_key,
     options,
@@ -172,7 +172,7 @@ def ExportRegistryFile(
     return os.path.exists(registry_file)
 
 # Import registry file
-def ImportRegistryFile(
+def import_registry_file(
     registry_file,
     options,
     verbose = False,
@@ -207,7 +207,7 @@ def ImportRegistryFile(
     return True
 
 # Backup registry
-def BackupUserRegistry(
+def backup_user_registry(
     registry_file,
     options,
     export_keys = [],
@@ -232,7 +232,7 @@ def BackupUserRegistry(
 
     # Export current user registry
     for base_key in export_keys:
-        success = ExportRegistryFile(
+        success = export_registry_file(
             registry_file = temp_reg_file,
             registry_key = base_key,
             options = options,
@@ -243,7 +243,7 @@ def BackupUserRegistry(
             return False
 
     # Read registry file
-    registry_data = ReadRegistryFile(
+    registry_data = read_registry_file(
         registry_file = temp_reg_file,
         ignore_keys = ignore_keys,
         keep_keys = keep_keys,
@@ -252,7 +252,7 @@ def BackupUserRegistry(
         exit_on_failure = exit_on_failure)
 
     # Write new pruned registry file
-    return WriteRegistryFile(
+    return write_registry_file(
         registry_file = registry_file,
         registry_data = registry_data,
         verbose = verbose,

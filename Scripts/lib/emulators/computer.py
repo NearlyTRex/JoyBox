@@ -383,7 +383,7 @@ class Computer(emulatorbase.EmulatorBase):
         exit_on_failure = False):
 
         # Launch game
-        return computer.LaunchComputerGame(
+        return computer.launch_computer_game(
             game_info = game_info,
             capture_type = capture_type,
             capture_file = capture_file,

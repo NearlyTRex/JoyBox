@@ -14,7 +14,7 @@ import paths
 import environment
 
 # Read playlist file
-def ReadPlaylist(
+def read_playlist(
     input_file,
     verbose = False,
     pretend_run = False,
@@ -37,7 +37,7 @@ def ReadPlaylist(
         return []
 
 # Write playlist file
-def WritePlaylist(
+def write_playlist(
     output_file,
     playlist_contents = [],
     verbose = False,
@@ -58,7 +58,7 @@ def WritePlaylist(
         return False
 
 # Generate playlist file
-def GeneratePlaylist(
+def generate_playlist(
     source_dir,
     output_file,
     extensions = [],
@@ -96,7 +96,7 @@ def GeneratePlaylist(
         return True
 
     # Write playlist
-    return WritePlaylist(
+    return write_playlist(
         output_file = output_file,
         playlist_contents = strings.sort_strings_with_length(playlist_contents),
         verbose = verbose,
@@ -104,7 +104,7 @@ def GeneratePlaylist(
         exit_on_failure = exit_on_failure)
 
 # Generate tree playlist file
-def GenerateTreePlaylist(
+def generate_tree_playlist(
     source_dir,
     output_file,
     extensions = [],
@@ -113,7 +113,7 @@ def GenerateTreePlaylist(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    return GeneratePlaylist(
+    return generate_playlist(
         source_dir = source_dir,
         output_file = output_file,
         extensions = extensions,
@@ -125,7 +125,7 @@ def GenerateTreePlaylist(
         exit_on_failure = exit_on_failure)
 
 # Generate local playlists
-def GenerateLocalPlaylists(
+def generate_local_playlists(
     source_dir,
     extensions = [],
     allow_empty_lists = False,
@@ -142,7 +142,7 @@ def GenerateLocalPlaylists(
             recursive = False):
 
             # Generate local playlist
-            success = GeneratePlaylist(
+            success = generate_playlist(
                 source_dir = input_dir,
                 output_file = paths.join_paths(input_dir, paths.get_directory_name(input_dir) + ".m3u"),
                 extensions = extensions,

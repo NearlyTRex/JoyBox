@@ -59,7 +59,7 @@ def main():
 
         # Check if input is a directory or file
         if paths.is_path_directory(input_path):
-            return audible.DecryptAAXDirectory(
+            return audible.decrypt_aax_directory(
                 input_dir = input_path,
                 output_dir = output_path,
                 activation_bytes = args.activation_bytes,

@@ -12,18 +12,18 @@ import system
 import archive
 
 # Check if install image is mounted
-def IsInstallImageMounted(install_file, mount_dir):
+def is_install_image_mounted(install_file, mount_dir):
     return paths.does_directory_contain_files(mount_dir)
 
 # Mount install image
-def MountInstallImage(
+def mount_install_image(
     install_file,
     mount_dir,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
     if paths.is_directory_empty(mount_dir):
-        return UnpackInstallImage(
+        return unpack_install_image(
             input_image = install_file,
             output_dir = mount_dir,
             verbose = verbose,
@@ -32,7 +32,7 @@ def MountInstallImage(
     return True
 
 # Pack install image
-def PackInstallImage(
+def pack_install_image(
     input_dir,
     output_image,
     delete_original = False,
@@ -105,7 +105,7 @@ def PackInstallImage(
     return os.path.exists(output_image)
 
 # Unpack install image
-def UnpackInstallImage(
+def unpack_install_image(
     input_image,
     output_dir,
     delete_original = False,

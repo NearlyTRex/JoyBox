@@ -9,7 +9,7 @@ import command
 import programs
 
 # Format C/C++ file
-def FormatCppFile(
+def format_cpp_file(
     src,
     style_name = None,
     style_inline = None,

@@ -343,7 +343,7 @@ class ProgramStep(jsondata.JsonData):
         return True
 
 # Setup computer game
-def SetupComputerGame(
+def setup_computer_game(
     game_info,
     source_file,
     output_image,
@@ -491,7 +491,7 @@ def SetupComputerGame(
             exit_on_failure = exit_on_failure)
 
     # Create install image
-    success = install.PackInstallImage(
+    success = install.pack_install_image(
         input_dir = game_setup_options.get_prefix_c_drive_real(),
         output_image = output_image,
         verbose = verbose,
@@ -529,7 +529,7 @@ def SetupComputerGame(
     return True
 
 # Launch computer game
-def LaunchComputerGame(
+def launch_computer_game(
     game_info,
     capture_type = None,
     capture_file = None,

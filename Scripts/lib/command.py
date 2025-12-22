@@ -715,7 +715,7 @@ def run_capture_command(
         if paths.is_path_file(capture_file) and not overwrite_screenshots:
             return run_start()
         else:
-            return capture.CaptureScreenshotWhileRunning(
+            return capture.capture_screenshot_while_running(
                 run_func = run_start,
                 output_file = capture_file,
                 current_win = True,
@@ -734,7 +734,7 @@ def run_capture_command(
         if paths.is_path_file(capture_file) and not overwrite_videos:
             return run_start()
         else:
-            return capture.CaptureVideoWhileRunning(
+            return capture.capture_video_while_running(
                 run_func = run_start,
                 output_file = capture_file,
                 capture_origin = (capture_origin_x, capture_origin_y),

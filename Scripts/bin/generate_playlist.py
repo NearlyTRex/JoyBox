@@ -43,7 +43,7 @@ def main():
 
     # Generate tree playlists
     if args.playlist_type == config.PlaylistType.TREE:
-        playlist.GenerateTreePlaylist(
+        playlist.generate_tree_playlist(
             source_dir = input_path,
             output_file = args.output_path,
             extensions = args.file_types.split(","),
@@ -55,7 +55,7 @@ def main():
 
     # Generate local playlists
     elif args.playlist_type == config.PlaylistType.LOCAL:
-        playlist.GenerateLocalPlaylists(
+        playlist.generate_local_playlists(
             source_dir = input_path,
             extensions = args.file_types.split(","),
             allow_empty_lists = args.allow_empty_lists,

@@ -16,7 +16,7 @@ import background
 import process
 
 # Capture screenshot
-def CaptureScreenshot(
+def capture_screenshot(
     output_file,
     verbose = False,
     pretend_run = False,
@@ -34,7 +34,7 @@ def CaptureScreenshot(
     return os.path.exists(output_file)
 
 # Capture screenshot while running
-def CaptureScreenshotWhileRunning(
+def capture_screenshot_while_running(
     run_func,
     output_file,
     time_duration,
@@ -49,7 +49,7 @@ def CaptureScreenshotWhileRunning(
 
     # Create capture func
     def capture_func():
-        CaptureScreenshot(
+        capture_screenshot(
             output_file = output_file,
             verbose = verbose,
             pretend_run = pretend_run,
@@ -71,7 +71,7 @@ def CaptureScreenshotWhileRunning(
     return os.path.exists(output_file)
 
 # Capture video
-def CaptureVideo(
+def capture_video(
     output_file,
     capture_origin,
     capture_resolution,
@@ -162,7 +162,7 @@ def CaptureVideo(
     return os.path.exists(output_file)
 
 # Capture video while running
-def CaptureVideoWhileRunning(
+def capture_video_while_running(
     run_func,
     output_file,
     capture_origin,
@@ -186,7 +186,7 @@ def CaptureVideoWhileRunning(
 
     # Create capture func
     def capture_func():
-        CaptureVideo(
+        capture_video(
             output_file = output_file,
             capture_origin = capture_origin,
             capture_resolution = capture_resolution,

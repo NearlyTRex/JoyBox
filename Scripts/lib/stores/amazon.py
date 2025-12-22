@@ -459,7 +459,7 @@ class Amazon(storebase.StoreBase):
             return False
 
         # Archive downloaded files
-        success = backup.ArchiveFolder(
+        success = backup.archive_folder(
             input_path = tmp_dir_result,
             output_path = output_dir,
             output_name = output_name,

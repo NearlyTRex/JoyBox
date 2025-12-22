@@ -14,7 +14,7 @@ import image
 import google
 
 # Clean exif data
-def CleanExifData(
+def clean_exif_data(
     asset_file,
     verbose = False,
     pretend_run = False,
@@ -48,7 +48,7 @@ def CleanExifData(
     return (code == 0)
 
 # Download asset
-def DownloadAsset(
+def download_asset(
     asset_url,
     asset_file,
     asset_type,
@@ -61,7 +61,7 @@ def DownloadAsset(
 
         # YouTube
         if asset_url.startswith("https://www.youtube.com"):
-            success = google.DownloadVideo(
+            success = google.download_video(
                 video_url = asset_url,
                 output_file = asset_file,
                 verbose = verbose,
@@ -78,7 +78,7 @@ def DownloadAsset(
     return success
 
 # Clean asset
-def CleanAsset(
+def clean_asset(
     asset_file,
     asset_type,
     verbose = False,
@@ -86,7 +86,7 @@ def CleanAsset(
     exit_on_failure = False):
 
     # Clean exif data
-    success = CleanExifData(
+    success = clean_exif_data(
         asset_file = asset_file,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -98,7 +98,7 @@ def CleanAsset(
     return True
 
 # Convert asset
-def ConvertAsset(
+def convert_asset(
     asset_src,
     asset_dest,
     asset_type,

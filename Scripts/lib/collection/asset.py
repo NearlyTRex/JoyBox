@@ -103,7 +103,7 @@ def download_metadata_asset(
         exit_on_failure = exit_on_failure)
 
     # Download asset
-    success = asset.DownloadAsset(
+    success = asset.download_asset(
         asset_url = latest_asset_url,
         asset_file = tmp_asset_file_original,
         asset_type = asset_type,
@@ -119,7 +119,7 @@ def download_metadata_asset(
         return False
 
     # Convert asset
-    success = asset.ConvertAsset(
+    success = asset.convert_asset(
         asset_src = tmp_asset_file_original,
         asset_dest = tmp_asset_file_converted,
         asset_type = asset_type,
@@ -135,7 +135,7 @@ def download_metadata_asset(
         return False
 
     # Clean asset
-    success = asset.CleanAsset(
+    success = asset.clean_asset(
         asset_file = tmp_asset_file_converted,
         asset_type = asset_type,
         verbose = verbose,

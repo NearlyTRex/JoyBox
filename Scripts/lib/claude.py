@@ -15,31 +15,31 @@ DEFAULT_MODEL = "claude-sonnet-4-20250514"
 DEFAULT_MAX_TOKENS = 8192
 
 # Get API key from ini
-def GetApiKey():
+def get_api_key():
     api_key = ini.get_ini_value("UserData.Anthropic", "anthropic_api_key", throw_exception=False)
     if not api_key:
         return None
     return api_key
 
 # Check if API key is configured
-def IsConfigured():
-    return GetApiKey() is not None
+def is_configured():
+    return get_api_key() is not None
 
 # Create Anthropic client
-def CreateClient():
+def create_client():
     try:
         import anthropic as anthropic_lib
     except ImportError:
         logger.log_error("Anthropic not installed")
         return None
-    api_key = GetApiKey()
+    api_key = get_api_key()
     if not api_key:
         logger.log_error("Anthropic API key not configured in JoyBox.ini")
         return None
     return anthropic_lib.Anthropic(api_key=api_key)
 
 # Send message to Claude
-def SendMessage(
+def send_message(
     prompt,
     model = None,
     max_tokens = None,
@@ -53,7 +53,7 @@ def SendMessage(
         max_tokens = DEFAULT_MAX_TOKENS
 
     # Create client
-    client = CreateClient()
+    client = create_client()
     if not client:
         return None
 
@@ -97,7 +97,7 @@ def SendMessage(
         return None
 
 # Process a file with a prompt template
-def ProcessFile(
+def process_file(
     input_file,
     prompt_template,
     input_dir = None,
@@ -130,7 +130,7 @@ def ProcessFile(
         prompt = prompt.replace("{output_dir}", output_dir)
 
     # Send to Claude
-    return SendMessage(
+    return send_message(
         prompt = prompt,
         model = model,
         max_tokens = max_tokens,
@@ -138,7 +138,7 @@ def ProcessFile(
         verbose = verbose)
 
 # Process multiple files with a prompt file
-def ProcessFiles(
+def process_files(
     input_path,
     output_path,
     prompt_file,
@@ -198,7 +198,7 @@ def ProcessFiles(
             continue
 
         # Process file with Claude
-        result = ProcessFile(
+        result = process_file(
             input_file = input_file,
             prompt_template = prompt_template,
             input_dir = input_path,

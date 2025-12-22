@@ -22,7 +22,7 @@ import xbox
 ###########################################################
 
 # Transform computer programs
-def TransformComputerPrograms(
+def transform_computer_programs(
     game_info,
     source_file,
     output_dir,
@@ -83,7 +83,7 @@ def TransformComputerPrograms(
         if not paths.does_path_exist(cached_install_file):
 
             # Create install image
-            success = computer.SetupComputerGame(
+            success = computer.setup_computer_game(
                 game_info = game_info,
                 source_file = source_file,
                 output_image = output_install_file,
@@ -107,7 +107,7 @@ def TransformComputerPrograms(
                 return (False, "Unable to backup computer game install")
 
         # Unpack install image
-        success = install.UnpackInstallImage(
+        success = install.unpack_install_image(
             input_image = cached_install_file,
             output_dir = output_extract_dir,
             verbose = verbose,
@@ -131,7 +131,7 @@ def TransformComputerPrograms(
 ###########################################################
 
 # Transform disc images
-def TransformDiscImage(
+def transform_disc_image(
     source_file,
     output_dir,
     verbose = False,
@@ -150,7 +150,7 @@ def TransformDiscImage(
     if source_file.endswith(".chd"):
         disc_image_files = [paths.get_filename_file(source_file)]
     if source_file.endswith(".m3u"):
-        disc_image_files = playlist.ReadPlaylist(
+        disc_image_files = playlist.read_playlist(
             input_file = source_file,
             verbose = verbose,
             pretend_run = pretend_run,
@@ -174,7 +174,7 @@ def TransformDiscImage(
         playlist_contents = []
         for disc_image_file in disc_image_files:
             playlist_contents += [disc_image_file.replace(".chd", ".iso")]
-        success = playlist.WritePlaylist(
+        success = playlist.write_playlist(
             output_file = paths.join_paths(output_dir, paths.get_filename_basename(source_file) + ".m3u"),
             playlist_contents = playlist_contents,
             verbose = verbose,
@@ -196,7 +196,7 @@ def TransformDiscImage(
 ###########################################################
 
 # Transform Xbox disc image
-def TransformXboxDiscImage(
+def transform_xbox_disc_image(
     source_file,
     output_dir,
     verbose = False,
@@ -215,7 +215,7 @@ def TransformXboxDiscImage(
     if source_file.endswith(".iso"):
         disc_image_files = [paths.get_filename_file(source_file)]
     if source_file.endswith(".m3u"):
-        disc_image_files = playlist.ReadPlaylist(
+        disc_image_files = playlist.read_playlist(
             input_file = source_file,
             verbose = verbose,
             pretend_run = pretend_run,
@@ -259,7 +259,7 @@ def TransformPS3DiscImage(
     if source_file.endswith(".iso"):
         disc_image_files = [paths.get_filename_file(source_file)]
     if source_file.endswith(".m3u"):
-        disc_image_files = playlist.ReadPlaylist(
+        disc_image_files = playlist.read_playlist(
             input_file = source_file,
             verbose = verbose,
             pretend_run = pretend_run,
@@ -372,7 +372,7 @@ def TransformPS3NetworkPackage(
 ###########################################################
 
 # Transform PSV network package
-def TransformPSVNetworkPackage(
+def transform_psv_network_package(
     source_file,
     output_dir,
     verbose = False,
@@ -427,7 +427,7 @@ def TransformPSVNetworkPackage(
 ###########################################################
 
 # Transform game file
-def TransformGameFile(
+def transform_game_file(
     game_info,
     source_dir,
     output_dir,
@@ -457,7 +457,7 @@ def TransformGameFile(
 
     # Computer
     if game_category == config.Category.COMPUTER:
-        transform_success, transform_result = TransformComputerPrograms(
+        transform_success, transform_result = transform_computer_programs(
             game_info = game_info,
             source_file = paths.join_paths(source_dir, game_info.get_transform_file()),
             output_dir = tmp_dir_result,
@@ -470,7 +470,7 @@ def TransformGameFile(
 
     # Microsoft Xbox/Xbox 360
     elif game_subcategory in [config.Subcategory.MICROSOFT_XBOX, config.Subcategory.MICROSOFT_XBOX_360]:
-        iso_success, iso_result = TransformDiscImage(
+        iso_success, iso_result = transform_disc_image(
             source_file = paths.join_paths(source_dir, game_info.get_transform_file()),
             output_dir = tmp_dir_result,
             verbose = verbose,
@@ -478,7 +478,7 @@ def TransformGameFile(
             exit_on_failure = exit_on_failure)
         if not iso_success:
             return (False, iso_result)
-        transform_success, transform_result = TransformXboxDiscImage(
+        transform_success, transform_result = transform_xbox_disc_image(
             source_file = iso_result,
             output_dir = tmp_dir_result,
             verbose = verbose,
@@ -489,7 +489,7 @@ def TransformGameFile(
 
     # Sony PlayStation 3
     elif game_subcategory == config.Subcategory.SONY_PLAYSTATION_3:
-        iso_success, iso_result = TransformDiscImage(
+        iso_success, iso_result = transform_disc_image(
             source_file = paths.join_paths(source_dir, game_info.get_transform_file()),
             output_dir = paths.join_paths(tmp_dir_result, "iso"),
             verbose = verbose,
@@ -520,7 +520,7 @@ def TransformGameFile(
 
     # Sony PlayStation Network - PlayStation Vita
     elif game_subcategory == config.Subcategory.SONY_PLAYSTATION_NETWORK_PSV:
-        transform_success, transform_result = TransformPSVNetworkPackage(
+        transform_success, transform_result = transform_psv_network_package(
             source_file = paths.join_paths(source_dir, game_info.get_transform_file()),
             output_dir = tmp_dir_result,
             verbose = verbose,

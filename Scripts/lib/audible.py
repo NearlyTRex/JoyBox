@@ -19,7 +19,7 @@ import serialization
 import ini
 
 # Extract activation bytes from text (finds 8 hex character sequence)
-def ExtractActivationBytes(text):
+def extract_activation_bytes(text):
     if not text:
         return None
     match = re.search(r'\b([0-9a-fA-F]{8})\b', text)
@@ -28,12 +28,12 @@ def ExtractActivationBytes(text):
     return None
 
 # Get activation bytes
-def GetActivationBytes(authcode_file = None, verbose = False, exit_on_failure = False):
+def get_activation_bytes(authcode_file = None, verbose = False, exit_on_failure = False):
 
     # Check ini file first
     authcode = ini.get_ini_value("UserData.Audible", "audible_activation_bytes")
     if authcode:
-        extracted = ExtractActivationBytes(authcode)
+        extracted = extract_activation_bytes(authcode)
         if extracted:
             return extracted
 
@@ -44,14 +44,14 @@ def GetActivationBytes(authcode_file = None, verbose = False, exit_on_failure = 
             verbose = verbose,
             exit_on_failure = exit_on_failure)
         if authcode:
-            extracted = ExtractActivationBytes(authcode)
+            extracted = extract_activation_bytes(authcode)
             if extracted:
                 return extracted
 
     # Check environment variable
     authcode = os.environ.get("AUDIBLE_ACTIVATION_BYTES")
     if authcode:
-        extracted = ExtractActivationBytes(authcode)
+        extracted = extract_activation_bytes(authcode)
         if extracted:
             return extracted
 
@@ -63,7 +63,7 @@ def GetActivationBytes(authcode_file = None, verbose = False, exit_on_failure = 
             verbose = verbose,
             exit_on_failure = exit_on_failure)
         if authcode:
-            extracted = ExtractActivationBytes(authcode)
+            extracted = extract_activation_bytes(authcode)
             if extracted:
                 return extracted
     return None
@@ -106,7 +106,7 @@ def DecryptAAXToM4A(
 
     # Get activation bytes
     if not activation_bytes:
-        activation_bytes = GetActivationBytes(
+        activation_bytes = get_activation_bytes(
             authcode_file = authcode_file,
             verbose = verbose,
             exit_on_failure = exit_on_failure)
@@ -195,7 +195,7 @@ def DecryptAAXFilesToM4A(
 
     # Get activation bytes once for all files
     if not activation_bytes:
-        activation_bytes = GetActivationBytes(
+        activation_bytes = get_activation_bytes(
             authcode_file = authcode_file,
             verbose = verbose,
             exit_on_failure = exit_on_failure)
@@ -239,7 +239,7 @@ def DecryptAAXFilesToM4A(
     return fail_count == 0
 
 # Decrypt all AAX files in a directory
-def DecryptAAXDirectory(
+def decrypt_aax_directory(
     input_dir,
     output_dir = None,
     activation_bytes = None,

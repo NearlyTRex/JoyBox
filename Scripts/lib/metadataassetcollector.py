@@ -27,7 +27,7 @@ def find_metadata_assets_from_google_images(
         return []
 
     # Return search results
-    return google.FindImages(
+    return google.find_images(
         search_name = gameinfo.derive_regular_name_from_game_name(game_name),
         image_dimensions = config.asset_boxfront_dimensions,
         verbose = verbose,
@@ -50,7 +50,7 @@ def find_metadata_assets_from_youtube(
         return []
 
     # Return search results
-    return google.FindVideos(
+    return google.find_videos(
         search_name = gameinfo.derive_regular_name_from_game_name(game_name, custom_suffix = " trailer"),
         verbose = verbose,
         pretend_run = pretend_run,

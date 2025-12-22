@@ -392,7 +392,7 @@ class GOG(storebase.StoreBase):
         game_keys = list(json_data.get_value(config.json_key_store_keys))
 
         # Augment by manifest
-        manifest_entry = manifest.GetManifestInstance().find_entry_by_gogid(
+        manifest_entry = manifest.get_manifest_instance().find_entry_by_gogid(
             gogid = identifier,
             verbose = verbose,
             pretend_run = pretend_run,

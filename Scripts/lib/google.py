@@ -18,7 +18,7 @@ import fileops
 import ini
 
 # Find images
-def FindImages(
+def find_images(
     search_name,
     image_type = None,
     image_size = None,
@@ -91,7 +91,7 @@ def FindImages(
     return sorted(search_results, key=lambda x: x.get_relevance(), reverse = True)
 
 # Find videos
-def FindVideos(
+def find_videos(
     search_name,
     num_results = 20,
     verbose = False,
@@ -163,7 +163,7 @@ def FindVideos(
     return sorted(search_results, key=lambda d: d.get_duration())
 
 # Download video
-def DownloadVideo(
+def download_video(
     video_url,
     audio_only = False,
     output_file = None,

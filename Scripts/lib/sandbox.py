@@ -285,7 +285,7 @@ def restore_registry(
         return True
 
     # Import registry file
-    return registry.ImportRegistryFile(
+    return registry.import_registry_file(
         registry_file = registry_file,
         options = options,
         verbose = verbose,
@@ -331,7 +331,7 @@ def backup_registry(
         registry_ignore_keys = config.ignored_registry_keys_game
 
     # Backup registry
-    return registry.BackupUserRegistry(
+    return registry.backup_user_registry(
         registry_file = registry_file,
         options = options,
         export_keys = registry_export_keys,

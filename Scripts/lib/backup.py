@@ -43,7 +43,7 @@ def resolve_path(
     return resolved_path
 
 # Copy files normally
-def CopyFilesNormally(
+def copy_files_normally(
     input_base_path,
     output_base_path,
     exclude_paths = [],
@@ -77,7 +77,7 @@ def CopyFilesNormally(
     return True
 
 # Copy and encrypt files
-def CopyAndEncryptFiles(
+def copy_and_encrypt_files(
     input_base_path,
     output_base_path,
     passphrase,
@@ -132,7 +132,7 @@ def CopyAndEncryptFiles(
     return True
 
 # Copy and decrypt files
-def CopyAndDecryptFiles(
+def copy_and_decrypt_files(
     input_base_path,
     output_base_path,
     passphrase,
@@ -199,7 +199,7 @@ def CopyAndDecryptFiles(
     return True
 
 # Copy files
-def CopyFiles(
+def copy_files(
     input_base_path,
     output_base_path,
     cryption_type = None,
@@ -219,7 +219,7 @@ def CopyFiles(
 
     # Plain copy
     if cryption_type == config.CryptionType.NONE:
-        return CopyFilesNormally(
+        return copy_files_normally(
             input_base_path = input_base_path,
             output_base_path = output_base_path,
             exclude_paths = exclude_paths,
@@ -239,7 +239,7 @@ def CopyFiles(
 
     # Encrypt
     if cryption_type == config.CryptionType.ENCRYPT:
-        return CopyAndEncryptFiles(
+        return copy_and_encrypt_files(
             input_base_path = input_base_path,
             output_base_path = output_base_path,
             passphrase = passphrase,
@@ -252,7 +252,7 @@ def CopyFiles(
 
     # Decrypt
     elif cryption_type == config.CryptionType.DECRYPT:
-        return CopyAndDecryptFiles(
+        return copy_and_decrypt_files(
             input_base_path = input_base_path,
             output_base_path = output_base_path,
             passphrase = passphrase,
@@ -265,7 +265,7 @@ def CopyFiles(
     return False
 
 # Archive folder
-def ArchiveFolder(
+def archive_folder(
     input_path,
     output_path,
     output_name,
@@ -344,7 +344,7 @@ def ArchiveFolder(
     return paths.does_path_exist(out_archive_file)
 
 # Archive sub-folders
-def ArchiveSubFolders(
+def archive_sub_folders(
     input_base_path,
     output_base_path,
     archive_type = None,

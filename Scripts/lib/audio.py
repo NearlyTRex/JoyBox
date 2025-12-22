@@ -83,7 +83,7 @@ def download_channel_audio_files(channels, genre_type, cookie_source = None, loc
 
         # Download channel
         logger.log_info("Starting video download...")
-        success = google.DownloadVideo(
+        success = google.download_video(
             video_url = channel_url,
             audio_only = True,
             output_dir = tmp_dir_result,
