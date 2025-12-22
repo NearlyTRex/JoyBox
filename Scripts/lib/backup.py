@@ -11,6 +11,7 @@ import environment
 import fileops
 import archive
 import cryption
+import hashing
 import lockerinfo
 
 # Resolve path
@@ -84,6 +85,7 @@ def copy_and_encrypt_files(
     exclude_paths = [],
     delete_original = False,
     skip_existing = False,
+    skip_identical = False,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -107,6 +109,37 @@ def copy_and_encrypt_files(
         # Skip if already exists
         if skip_existing and paths.does_path_exist(dest_path):
             continue
+
+        # Skip if destination decrypts to identical content
+        if skip_identical and paths.does_path_exist(dest_path):
+            tmp_dir_success, tmp_dir_result = fileops.create_temporary_directory(
+                verbose = verbose,
+                pretend_run = pretend_run)
+            if tmp_dir_success:
+                tmp_decrypted = paths.join_paths(tmp_dir_result, src_filename)
+                cryption.decrypt_file(
+                    src = dest_path,
+                    passphrase = passphrase,
+                    output_file = tmp_decrypted,
+                    verbose = verbose,
+                    pretend_run = pretend_run,
+                    exit_on_failure = False)
+                if hashing.are_files_identical(
+                    first = src_path,
+                    second = tmp_decrypted,
+                    verbose = verbose,
+                    exit_on_failure = False):
+                    fileops.remove_directory(
+                        src = tmp_dir_result,
+                        verbose = verbose,
+                        pretend_run = pretend_run,
+                        exit_on_failure = False)
+                    continue
+                fileops.remove_directory(
+                    src = tmp_dir_result,
+                    verbose = verbose,
+                    pretend_run = pretend_run,
+                    exit_on_failure = False)
 
         # Ensure destination directory exists
         fileops.make_directory(
@@ -139,6 +172,7 @@ def copy_and_decrypt_files(
     exclude_paths = [],
     delete_original = False,
     skip_existing = False,
+    skip_identical = False,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -174,6 +208,57 @@ def copy_and_decrypt_files(
         # Skip if already exists
         if skip_existing and paths.does_path_exist(dest_path):
             continue
+
+        # Skip if decrypted content would be identical to destination
+        if skip_identical and paths.does_path_exist(dest_path):
+            tmp_dir_success, tmp_dir_result = fileops.create_temporary_directory(
+                verbose = verbose,
+                pretend_run = pretend_run)
+            if tmp_dir_success:
+                tmp_decrypted = paths.join_paths(tmp_dir_result, real_name)
+                cryption.decrypt_file(
+                    src = src_path,
+                    passphrase = passphrase,
+                    output_file = tmp_decrypted,
+                    verbose = verbose,
+                    pretend_run = pretend_run,
+                    exit_on_failure = False)
+                if hashing.are_files_identical(
+                    first = tmp_decrypted,
+                    second = dest_path,
+                    verbose = verbose,
+                    exit_on_failure = False):
+                    fileops.remove_directory(
+                        src = tmp_dir_result,
+                        verbose = verbose,
+                        pretend_run = pretend_run,
+                        exit_on_failure = False)
+                    continue
+
+                # Files are different - move decrypted temp to destination
+                fileops.make_directory(
+                    src = dest_dir,
+                    verbose = verbose,
+                    pretend_run = pretend_run,
+                    exit_on_failure = exit_on_failure)
+                fileops.move_file_or_directory(
+                    src = tmp_decrypted,
+                    dest = dest_path,
+                    verbose = verbose,
+                    pretend_run = pretend_run,
+                    exit_on_failure = exit_on_failure)
+                fileops.remove_directory(
+                    src = tmp_dir_result,
+                    verbose = verbose,
+                    pretend_run = pretend_run,
+                    exit_on_failure = False)
+                if delete_original:
+                    fileops.remove_file(
+                        src = src_path,
+                        verbose = verbose,
+                        pretend_run = pretend_run,
+                        exit_on_failure = exit_on_failure)
+                continue
 
         # Ensure destination directory exists
         fileops.make_directory(
@@ -246,6 +331,7 @@ def copy_files(
             exclude_paths = exclude_paths,
             delete_original = delete_original,
             skip_existing = skip_existing,
+            skip_identical = skip_identical,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
@@ -259,6 +345,7 @@ def copy_files(
             exclude_paths = exclude_paths,
             delete_original = delete_original,
             skip_existing = skip_existing,
+            skip_identical = skip_identical,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
