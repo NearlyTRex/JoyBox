@@ -211,12 +211,12 @@ class Legacy(storebase.StoreBase):
             search_terms = strings.encode_url_string(identifier.strip(), use_plus = True)
 
             # Load url
-            success = webpage.LoadUrl(web_driver, "https://www.bigfishgames.com/us/en/games/search.html?platform=150&language=114&search_query=" + search_terms)
+            success = webpage.load_url(web_driver, "https://www.bigfishgames.com/us/en/games/search.html?platform=150&language=114&search_query=" + search_terms)
             if not success:
                 raise Exception("Failed to load search URL")
 
             # Find the root container element
-            element_search_result = webpage.WaitForElement(
+            element_search_result = webpage.wait_for_element(
                 driver = web_driver,
                 locator = webpage.ElementLocator({"class": "productcollection__root"}),
                 wait_time = 15,
@@ -228,7 +228,7 @@ class Legacy(storebase.StoreBase):
 
             # Score each potential title compared to the original title
             scores_list = []
-            game_cells = webpage.GetElement(
+            game_cells = webpage.get_element(
                 parent = element_search_result,
                 locator = webpage.ElementLocator({"class": "productcollection__items"}),
                 all_elements = True,
@@ -237,14 +237,14 @@ class Legacy(storebase.StoreBase):
                 exit_on_failure = False)
             if game_cells:
                 for game_cell in game_cells:
-                    game_title_element = webpage.GetElement(
+                    game_title_element = webpage.get_element(
                         parent = game_cell,
                         locator = webpage.ElementLocator({"class": "productcollection__item-title"}),
                         verbose = verbose,
                         pretend_run = pretend_run,
                         exit_on_failure = False)
                     if game_title_element:
-                        game_cell_text = webpage.GetElementChildrenText(game_title_element)
+                        game_cell_text = webpage.get_element_children_text(game_title_element)
                         if game_cell_text:
                             # Add comparison score
                             score_entry = {}
@@ -256,14 +256,14 @@ class Legacy(storebase.StoreBase):
             appurl = None
             for score_entry in sorted(scores_list, key=lambda d: d["ratio"], reverse=True):
                 game_cell = score_entry["element"]
-                game_link_element = webpage.GetElement(
+                game_link_element = webpage.get_element(
                     parent = game_cell,
                     locator = webpage.ElementLocator({"tag": "a"}),
                     verbose = verbose,
                     pretend_run = pretend_run,
                     exit_on_failure = False)
                 if game_link_element:
-                    appurl = webpage.GetElementAttribute(game_link_element, "href")
+                    appurl = webpage.get_element_attribute(game_link_element, "href")
                     if appurl:
                         appurl = strings.strip_string_query_params(appurl)
                         break
@@ -458,7 +458,7 @@ class Legacy(storebase.StoreBase):
 
         # Video
         elif asset_type == config.AssetType.VIDEO:
-            latest_asset_url = webpage.GetMatchingUrl(
+            latest_asset_url = webpage.get_matching_url(
                 url = identifier,
                 base_url = "https://www.bigfishgames.com",
                 starts_with = "https://www.youtube.com/embed",

@@ -267,7 +267,7 @@ class StoreBase:
         exit_on_failure = False):
 
         # Create web driver
-        return webpage.CreateWebDriver(
+        return webpage.create_web_driver(
             make_headless = headless,
             verbose = verbose,
             pretend_run = pretend_run,
@@ -282,7 +282,7 @@ class StoreBase:
         exit_on_failure = False):
 
         # Destroy web driver
-        return webpage.DestroyWebDriver(
+        return webpage.destroy_web_driver(
             driver = web_driver,
             verbose = verbose,
             pretend_run = pretend_run,
@@ -290,7 +290,7 @@ class StoreBase:
 
     # Get cookie file
     def get_cookie_file(self):
-        return webpage.GetCookieFile(self.get_name().lower())
+        return webpage.get_cookie_file(self.get_name().lower())
 
     ############################################################
     # Versions

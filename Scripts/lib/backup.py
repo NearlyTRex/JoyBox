@@ -14,7 +14,7 @@ import cryption
 import lockerinfo
 
 # Resolve path
-def ResolvePath(
+def resolve_path(
     path = None,
     source_type = None,
     game_supercategory = None,

@@ -240,7 +240,7 @@ def CreateArchiveFromFile(
         return False
 
     # Get path to add
-    path_to_add = sandbox.TranslatePathIfNecessary(
+    path_to_add = sandbox.translate_path_if_necessary(
         path = source_file,
         program_exe = archive_tool,
         program_name = "7-Zip")
@@ -325,7 +325,7 @@ def CreateArchiveFromFolder(
     for obj in paths.get_directory_contents(source_dir):
         if obj in excludes:
             continue
-        path_to_add = sandbox.TranslatePathIfNecessary(
+        path_to_add = sandbox.translate_path_if_necessary(
             path = paths.join_paths(source_dir, obj),
             program_exe = archive_tool,
             program_name = "7-Zip")

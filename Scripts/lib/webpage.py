@@ -22,7 +22,7 @@ import ini
 ###########################################################
 
 # Parse page source
-def ParsePageSource(contents, features = "lxml"):
+def parse_page_source(contents, features = "lxml"):
     try:
         import bs4
         return bs4.BeautifulSoup(contents, features=features)
@@ -30,17 +30,17 @@ def ParsePageSource(contents, features = "lxml"):
         return None
 
 # Parse html page source
-def ParseHtmlPageSource(html_contents):
-    return ParsePageSource(html_contents, features = "html.parser")
+def parse_html_page_source(html_contents):
+    return parse_page_source(html_contents, features = "html.parser")
 
 # Parse xml page source
-def ParseXmlPageSource(xml_contents):
-    return ParsePageSource(xml_contents, features = "xml")
+def parse_xml_page_source(xml_contents):
+    return parse_page_source(xml_contents, features = "xml")
 
 ###########################################################
 
 # Create chrome web driver
-def CreateChromeWebDriver(
+def create_chrome_web_driver(
     download_dir = None,
     profile_dir = None,
     binary_location = None,
@@ -91,7 +91,7 @@ def CreateChromeWebDriver(
     return None
 
 # Create firefox web driver
-def CreateFirefoxWebDriver(
+def create_firefox_web_driver(
     download_dir = None,
     profile_dir = None,
     binary_location = None,
@@ -140,7 +140,7 @@ def CreateFirefoxWebDriver(
     return None
 
 # Create web driver
-def CreateWebDriver(
+def create_web_driver(
     driver_type = None,
     download_dir = None,
     profile_dir = None,
@@ -153,7 +153,7 @@ def CreateWebDriver(
     if not driver_type:
         driver_type = config.WebDriverType.FIREFOX
     if driver_type == config.WebDriverType.FIREFOX:
-        return CreateFirefoxWebDriver(
+        return create_firefox_web_driver(
             download_dir = download_dir,
             profile_dir = profile_dir,
             binary_location = programs.GetToolProgram("Firefox"),
@@ -162,7 +162,7 @@ def CreateWebDriver(
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
     elif driver_type == config.WebDriverType.CHROME:
-        return CreateChromeWebDriver(
+        return create_chrome_web_driver(
             download_dir = download_dir,
             profile_dir = profile_dir,
             binary_location = programs.GetToolProgram("Chrome"),
@@ -171,7 +171,7 @@ def CreateWebDriver(
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
     elif driver_type == config.WebDriverType.BRAVE:
-        return CreateChromeWebDriver(
+        return create_chrome_web_driver(
             download_dir = download_dir,
             profile_dir = profile_dir,
             binary_location = programs.GetToolProgram("Brave"),
@@ -182,7 +182,7 @@ def CreateWebDriver(
     return None
 
 # Destroy web driver
-def DestroyWebDriver(
+def destroy_web_driver(
     driver,
     verbose = False,
     pretend_run = False,
@@ -203,14 +203,14 @@ def DestroyWebDriver(
     return False
 
 # Load url
-def LoadUrl(
+def load_url(
     driver,
     url,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
     try:
-        if not IsSessionValid(driver, verbose):
+        if not is_session_valid(driver, verbose):
             return False
         if not url or not isinstance(url, str):
             if verbose:
@@ -230,9 +230,9 @@ def LoadUrl(
     return False
 
 # Get current page url
-def GetCurrentPageUrl(driver, verbose = False):
+def get_current_page_url(driver, verbose = False):
     try:
-        if not IsSessionValid(driver, verbose):
+        if not is_session_valid(driver, verbose):
             return None
         return driver.current_url
     except Exception as e:
@@ -241,15 +241,15 @@ def GetCurrentPageUrl(driver, verbose = False):
         return None
 
 # Check if page url is loaded
-def IsUrlLoaded(driver, url, verbose = False):
+def is_url_loaded(driver, url, verbose = False):
     try:
-        if not IsSessionValid(driver, verbose):
+        if not is_session_valid(driver, verbose):
             return False
         if not url or not isinstance(url, str):
             if verbose:
                 logger.log_warning("IsUrlLoaded: Invalid URL provided")
             return False
-        current_url = GetCurrentPageUrl(driver, verbose)
+        current_url = get_current_page_url(driver, verbose)
         if current_url:
             return current_url.startswith(url)
         return False
@@ -293,7 +293,7 @@ class ElementLocator:
         return (self.by_type, self.by_value)
 
 # Wait for all elements
-def WaitForAllElements(
+def wait_for_all_elements(
     driver,
     locators = [],
     wait_time = 1000,
@@ -323,7 +323,7 @@ def WaitForAllElements(
     return None
 
 # Wait for any element
-def WaitForAnyElement(
+def wait_for_any_element(
     driver,
     locators = [],
     wait_time = 1000,
@@ -353,7 +353,7 @@ def WaitForAnyElement(
     return None
 
 # Check if session is valid for driver or element
-def IsSessionValid(
+def is_session_valid(
     obj,
     verbose = False):
     try:
@@ -370,7 +370,7 @@ def IsSessionValid(
         return False
 
 # Wait for element
-def WaitForElement(
+def wait_for_element(
     driver,
     locator,
     wait_time = 15,
@@ -384,7 +384,7 @@ def WaitForElement(
         if verbose:
             logger.log_info("WaitForElement: Waiting for element (timeout: %d seconds)" % wait_time)
             logger.log_info("  Locator: %s" % str(locator.Get()))
-        if not IsSessionValid(driver, verbose):
+        if not is_session_valid(driver, verbose):
             return None
         element = WebDriverWait(driver, wait_time).until(EC.presence_of_element_located(locator.Get()))
         if verbose:
@@ -408,7 +408,7 @@ def WaitForElement(
         return None
 
 # Get element
-def GetElement(
+def get_element(
     parent,
     locator,
     all_elements = False,
@@ -420,7 +420,7 @@ def GetElement(
         if verbose:
             logger.log_info("GetElement: Searching for element%s" % (" (all instances)" if all_elements else ""))
             logger.log_info("  Locator: %s" % str(locator.Get()))
-        if not IsSessionValid(parent, verbose):
+        if not is_session_valid(parent, verbose):
             return None
         if all_elements:
             elements = parent.find_elements(*locator.Get())
@@ -450,7 +450,7 @@ def GetElement(
         return None
 
 # Get element text
-def GetElementText(element, verbose = False):
+def get_element_text(element, verbose = False):
     try:
         if not element:
             if verbose:
@@ -463,7 +463,7 @@ def GetElementText(element, verbose = False):
         return None
 
 # Get element attribute
-def GetElementAttribute(element, attribute_name, verbose = False):
+def get_element_attribute(element, attribute_name, verbose = False):
     try:
         if not element:
             if verbose:
@@ -480,13 +480,13 @@ def GetElementAttribute(element, attribute_name, verbose = False):
         return None
 
 # Get element children text
-def GetElementChildrenText(element, verbose = False):
+def get_element_children_text(element, verbose = False):
     try:
         if not element:
             if verbose:
                 logger.log_warning("GetElementChildrenText: Element is None")
             return None
-        attribute = GetElementAttribute(element, "innerHTML", verbose)
+        attribute = get_element_attribute(element, "innerHTML", verbose)
         if attribute:
             return text.extract_web_text(attribute)
         return None
@@ -496,15 +496,15 @@ def GetElementChildrenText(element, verbose = False):
         return None
 
 # Get element link url
-def GetElementLinkUrl(element, verbose = False):
+def get_element_link_url(element, verbose = False):
     try:
         if not element:
             if verbose:
                 logger.log_warning("GetElementLinkUrl: Element is None")
             return None
-        link_element = GetElement(parent = element, locator = ElementLocator({"tag": "a"}), verbose = verbose)
+        link_element = get_element(parent = element, locator = ElementLocator({"tag": "a"}), verbose = verbose)
         if link_element:
-            return GetElementAttribute(link_element, "href", verbose)
+            return get_element_attribute(link_element, "href", verbose)
         return None
     except Exception as e:
         if verbose:
@@ -512,7 +512,7 @@ def GetElementLinkUrl(element, verbose = False):
         return None
 
 # Click element
-def ClickElement(
+def click_element(
     element,
     verbose = False,
     pretend_run = False,
@@ -539,7 +539,7 @@ def ClickElement(
         return False
 
 # Send keys to element
-def SendKeysToElement(
+def send_keys_to_element(
     element,
     keys,
     verbose = False,
@@ -571,13 +571,13 @@ def SendKeysToElement(
         return False
 
 # Scroll to end of page
-def ScrollToEndOfPage(
+def scroll_to_end_of_page(
     driver,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
     try:
-        if not IsSessionValid(driver, verbose):
+        if not is_session_valid(driver, verbose):
             return False
         if verbose:
             logger.log_info("Scrolling to end of page")
@@ -594,21 +594,21 @@ def ScrollToEndOfPage(
         return False
 
 # Get page source
-def GetPageSource(
+def get_page_source(
     driver,
     url = None,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
     try:
-        if not IsSessionValid(driver, verbose):
+        if not is_session_valid(driver, verbose):
             return None
         if url:
             if not isinstance(url, str):
                 if verbose:
                     logger.log_warning("GetPageSource: Invalid URL provided")
                 return None
-            success = LoadUrl(driver, url, verbose, pretend_run, exit_on_failure)
+            success = load_url(driver, url, verbose, pretend_run, exit_on_failure)
             if not success:
                 return None
         if verbose:
@@ -628,14 +628,14 @@ def GetPageSource(
 ###########################################################
 
 # Save cookie
-def SaveCookie(
+def save_cookie(
     driver,
     path,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
     try:
-        if not IsSessionValid(driver, verbose):
+        if not is_session_valid(driver, verbose):
             return False
         if not paths.is_path_valid(path):
             if verbose:
@@ -676,14 +676,14 @@ def SaveCookie(
         return False
 
 # Load cookie
-def LoadCookie(
+def load_cookie(
     driver,
     path,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
     try:
-        if not IsSessionValid(driver, verbose):
+        if not is_session_valid(driver, verbose):
             return False
         if not paths.does_path_exist(path):
             if verbose:
@@ -730,7 +730,7 @@ def get_cookie_file(base_name):
 ###########################################################
 
 # Login cookie website
-def LoginCookieWebsite(
+def login_cookie_website(
     driver,
     url,
     cookie,
@@ -741,7 +741,7 @@ def LoginCookieWebsite(
     exit_on_failure = False):
 
     # Load the login page
-    success = LoadUrl(
+    success = load_url(
         driver = driver,
         url = url,
         verbose = verbose,
@@ -751,7 +751,7 @@ def LoginCookieWebsite(
         return False
 
     # Look for element
-    login_check = WaitForElement(
+    login_check = wait_for_element(
         driver = driver,
         locator = locator,
         wait_time = wait_time,
@@ -762,7 +762,7 @@ def LoginCookieWebsite(
         return False
 
     # Save cookie
-    success = SaveCookie(
+    success = save_cookie(
         driver = driver,
         path = cookie,
         verbose = verbose,
@@ -771,7 +771,7 @@ def LoginCookieWebsite(
     return success
 
 # Load cookie website
-def LoadCookieWebsite(
+def load_cookie_website(
     driver,
     url,
     cookie,
@@ -780,7 +780,7 @@ def LoadCookieWebsite(
     exit_on_failure = False):
 
     # First load of cookie url
-    success = LoadUrl(
+    success = load_url(
         driver = driver,
         url = url,
         verbose = verbose,
@@ -790,7 +790,7 @@ def LoadCookieWebsite(
         return False
 
     # Load cookie file
-    success = LoadCookie(
+    success = load_cookie(
         driver = driver,
         path = cookie,
         verbose = verbose,
@@ -800,7 +800,7 @@ def LoadCookieWebsite(
         return False
 
     # Load cookie url a second time
-    success = LoadUrl(
+    success = load_url(
         driver = driver,
         url = url,
         verbose = verbose,
@@ -811,7 +811,7 @@ def LoadCookieWebsite(
 ###########################################################
 
 # Get website text
-def GetWebsiteText(
+def get_website_text(
     url,
     params = {},
     verbose = False,
@@ -827,7 +827,7 @@ def GetWebsiteText(
     # First, try webdriver
     if verbose:
         logger.log_info("GetWebsiteText: Attempting to fetch using web driver")
-    driver = CreateWebDriver(
+    driver = create_web_driver(
         make_headless = True,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -835,13 +835,13 @@ def GetWebsiteText(
     if driver:
         if verbose:
             logger.log_info("GetWebsiteText: Web driver created successfully")
-        page_text = GetPageSource(
+        page_text = get_page_source(
             driver = driver,
             url = url,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-        DestroyWebDriver(
+        destroy_web_driver(
             driver = driver,
             verbose = verbose,
             pretend_run = pretend_run,
@@ -873,7 +873,7 @@ def GetWebsiteText(
     return ""
 
 # Get all matching urls
-def GetMatchingUrls(
+def get_matching_urls(
     url,
     base_url,
     params = {},
@@ -891,7 +891,7 @@ def GetMatchingUrls(
         logger.log_info("  Pattern: starts_with='%s', ends_with='%s'" % (starts_with, ends_with))
 
     # Get page text
-    page_text = GetWebsiteText(
+    page_text = get_website_text(
         url = url,
         params = params,
         verbose = verbose,
@@ -906,7 +906,7 @@ def GetMatchingUrls(
 
     # Parse the HTML page
     matching_urls = []
-    parser = ParseHtmlPageSource(page_text)
+    parser = parse_html_page_source(page_text)
     if parser:
         if verbose:
             logger.log_info("GetMatchingUrls: Parsing HTML content for URLs")
@@ -962,7 +962,7 @@ def GetMatchingUrls(
     return matching_urls
 
 # Get matching url
-def GetMatchingUrl(
+def get_matching_url(
     url,
     base_url,
     params = {},
@@ -985,7 +985,7 @@ def GetMatchingUrl(
             logger.log_info("  Params: %s" % params)
 
     # Find potential matching archive urls
-    potential_urls = GetMatchingUrls(
+    potential_urls = get_matching_urls(
         url = url,
         base_url = base_url,
         params = params,

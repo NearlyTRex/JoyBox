@@ -175,8 +175,8 @@ def IsAppImageCommand(cmd):
 # Check if prefix command
 def IsPrefixCommand(cmd):
     return (
-        sandbox.ShouldBeRunViaWine(cmd) or
-        sandbox.ShouldBeRunViaSandboxie(cmd)
+        sandbox.should_be_run_via_wine(cmd) or
+        sandbox.should_be_run_via_sandboxie(cmd)
     )
 
 ###########################################################
@@ -223,7 +223,7 @@ def SetupAppImageCommand(
     return (new_cmd, new_options)
 
 # Setup prefix command
-def SetupPrefixCommand(
+def setup_prefix_command(
     cmd,
     options = CreateCommandOptions(),
     verbose = False,
@@ -237,20 +237,20 @@ def SetupPrefixCommand(
     # Create prefix if necessary
     if not new_options.has_ready_prefix():
         new_options.create_prefix(
-            is_wine_prefix = sandbox.ShouldBeRunViaWine(cmd),
-            is_sandboxie_prefix = sandbox.ShouldBeRunViaSandboxie(cmd),
+            is_wine_prefix = sandbox.should_be_run_via_wine(cmd),
+            is_sandboxie_prefix = sandbox.should_be_run_via_sandboxie(cmd),
             prefix_name = config.PrefixType.DEFAULT,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
     # Setup prefix command
-    new_cmd, new_options = sandbox.SetupPrefixCommand(
+    new_cmd, new_options = sandbox.setup_prefix_command(
         cmd = new_cmd,
         options = new_options,
         verbose = verbose,
         exit_on_failure = exit_on_failure)
-    new_cmd, new_options = sandbox.SetupPrefixEnvironment(
+    new_cmd, new_options = sandbox.setup_prefix_environment(
         cmd = new_cmd,
         options = new_options,
         verbose = verbose,
@@ -284,7 +284,7 @@ def PreprocessCommand(
 
     # Preprocess for prefix
     if IsPrefixCommand(cmd) or options.force_prefix():
-        cmd, options = SetupPrefixCommand(
+        cmd, options = setup_prefix_command(
             cmd = cmd,
             options = options,
             verbose = verbose,
@@ -301,16 +301,16 @@ def PostprocessCommand(
     exit_on_failure = False):
 
     # Postprocess for wine
-    if sandbox.ShouldBeRunViaWine(cmd):
-        sandbox.CleanupWine(
+    if sandbox.should_be_run_via_wine(cmd):
+        sandbox.cleanup_wine(
             cmd = cmd,
             options = options,
             verbose = verbose,
             exit_on_failure = exit_on_failure)
 
     # Postprocess for sandboxie
-    if sandbox.ShouldBeRunViaSandboxie(cmd):
-        sandbox.CleanupSandboxie(
+    if sandbox.should_be_run_via_sandboxie(cmd):
+        sandbox.cleanup_sandboxie(
             cmd = cmd,
             options = options,
             verbose = verbose,
@@ -319,7 +319,7 @@ def PostprocessCommand(
     # Transfer files from sandbox if necessary
     if isinstance(options.get_output_paths(), list):
         for output_path in options.get_output_paths():
-            sandbox.TransferFromSandbox(
+            sandbox.transfer_from_sandbox(
                 path = output_path,
                 options = options,
                 verbose = verbose,

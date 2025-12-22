@@ -508,7 +508,7 @@ class GOG(storebase.StoreBase):
                 raise Exception("Failed to connect to web driver")
 
             # Load url
-            success = webpage.LoadUrl(web_driver, identifier)
+            success = webpage.load_url(web_driver, identifier)
             if not success:
                 raise Exception("Failed to load URL: %s" % identifier)
 
@@ -516,7 +516,7 @@ class GOG(storebase.StoreBase):
             metadata_entry = metadataentry.MetadataEntry()
 
             # Look for game description (now with improved error handling in webpage module)
-            element_game_description = webpage.WaitForElement(
+            element_game_description = webpage.wait_for_element(
                 driver = web_driver,
                 locator = webpage.ElementLocator({"class": "description"}),
                 wait_time = 15,  # 15 second timeout
@@ -524,12 +524,12 @@ class GOG(storebase.StoreBase):
                 pretend_run = pretend_run,
                 exit_on_failure = False)
             if element_game_description:
-                raw_game_description = webpage.GetElementChildrenText(element_game_description)
+                raw_game_description = webpage.get_element_children_text(element_game_description)
                 if raw_game_description:
                     metadata_entry.set_description(raw_game_description)
 
             # Look for game details (now with improved error handling in webpage module)
-            elements_details = webpage.GetElement(
+            elements_details = webpage.get_element(
                 parent = web_driver,
                 locator = webpage.ElementLocator({"class": "details__row"}),
                 all_elements = True,
@@ -538,7 +538,7 @@ class GOG(storebase.StoreBase):
                 exit_on_failure = False)
             if elements_details:
                 for elements_detail in elements_details:
-                    element_detail_text = webpage.GetElementChildrenText(elements_detail)
+                    element_detail_text = webpage.get_element_children_text(elements_detail)
                     if element_detail_text:
                         element_detail_text = element_detail_text.strip()
 
@@ -611,7 +611,7 @@ class GOG(storebase.StoreBase):
 
         # Video
         elif asset_type == config.AssetType.VIDEO:
-            latest_asset_url = webpage.GetMatchingUrl(
+            latest_asset_url = webpage.get_matching_url(
                 url = identifier,
                 base_url = "https://www.youtube.com/embed",
                 starts_with = "https://www.youtube.com/embed",

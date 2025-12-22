@@ -31,7 +31,7 @@ class Program(jsondata.JsonData):
     def get_exe(self, token_map = None):
         return self.get_value(config.program_key_exe)
         if path and token_map:
-            return sandbox.ResolvePath(path, token_map)
+            return sandbox.resolve_path(path, token_map)
         return path
 
     # Current working directory
@@ -40,7 +40,7 @@ class Program(jsondata.JsonData):
     def get_cwd(self, token_map = None):
         path = self.get_value(config.program_key_cwd)
         if path and token_map:
-            return sandbox.ResolvePath(path, token_map)
+            return sandbox.resolve_path(path, token_map)
         return path
 
     # Environment variables
@@ -140,8 +140,8 @@ class Program(jsondata.JsonData):
         exit_on_failure = False):
 
         # Get program info
-        program_exe = sandbox.ResolvePath(self.get_exe(), token_map)
-        program_cwd = sandbox.ResolvePath(self.get_cwd(), token_map)
+        program_exe = sandbox.resolve_path(self.get_exe(), token_map)
+        program_cwd = sandbox.resolve_path(self.get_cwd(), token_map)
         program_args = self.get_args()
         program_is_dos = self.is_dos()
         program_is_win31 = self.is_win31()
@@ -290,9 +290,9 @@ class ProgramStep(jsondata.JsonData):
         exit_on_failure = False):
 
         # Get program step info
-        program_step_from = sandbox.ResolvePath(self.get_from(), token_map)
-        program_step_to = sandbox.ResolvePath(self.get_to(), token_map)
-        program_step_dir = sandbox.ResolvePath(self.get_dir(), token_map)
+        program_step_from = sandbox.resolve_path(self.get_from(), token_map)
+        program_step_to = sandbox.resolve_path(self.get_to(), token_map)
+        program_step_dir = sandbox.resolve_path(self.get_dir(), token_map)
         program_step_type = self.get_type()
         program_skip_existing = self.skip_existing()
         program_skip_identical = self.skip_identical()
@@ -398,7 +398,7 @@ def SetupComputerGame(
     game_disc_files = paths.build_file_list_by_extensions(game_setup_dir, extensions = [".chd"])
 
     # Build token map
-    game_token_map = sandbox.BuildTokenMap(
+    game_token_map = sandbox.build_token_map(
         store_install_dir = game_info.get_main_store_install_dir(),
         setup_base_dir = game_setup_dir,
         hdd_base_dir = game_setup_options.get_prefix_c_drive_real(),
@@ -429,7 +429,7 @@ def SetupComputerGame(
     for game_disc_file in game_disc_files:
 
         # Mount disc
-        success = sandbox.MountDiscImage(
+        success = sandbox.mount_disc_image(
             src = game_disc_file,
             mount_dir = paths.join_paths(game_setup_dir, paths.get_filename_basename(game_disc_file)),
             options = game_setup_options,
@@ -476,7 +476,7 @@ def SetupComputerGame(
             exit_on_failure = exit_on_failure)
 
     # Copy public files
-    prefix_public_profile_path = sandbox.GetPublicProfilePath(game_setup_options)
+    prefix_public_profile_path = sandbox.get_public_profile_path(game_setup_options)
     if os.path.exists(prefix_public_profile_path):
         fileops.make_directory(
             src = paths.join_paths(game_setup_options.get_prefix_c_drive_real(), "Public"),
@@ -502,7 +502,7 @@ def SetupComputerGame(
 
     # Unmount discs
     for game_disc_file in game_disc_files:
-        success = sandbox.UnmountDiscImage(
+        success = sandbox.unmount_disc_image(
             src = game_disc_file,
             mount_dir = paths.join_paths(game_setup_dir, paths.get_filename_basename(game_disc_file)),
             options = game_setup_options,
@@ -572,7 +572,7 @@ def LaunchComputerGame(
         run_func = CreateGamePrefix)
 
     # Build token map
-    game_token_map = sandbox.BuildTokenMap(
+    game_token_map = sandbox.build_token_map(
         hdd_base_dir = game_launch_options.get_prefix_c_drive_real())
 
     # Get launch directory

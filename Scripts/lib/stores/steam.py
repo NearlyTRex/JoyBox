@@ -48,7 +48,7 @@ def GetSteamTrailer(
     pretend_run = False,
     exit_on_failure = False):
     for cdn_type in config.ContentDeliveryNetworkType.members():
-        asset_url = webpage.GetMatchingUrl(
+        asset_url = webpage.get_matching_url(
             url = GetSteamPage(appid),
             base_url = "https://video.%s.steamstatic.com/store_trailers" % cdn_type.lower(),
             starts_with = "https://video.%s.steamstatic.com/store_trailers" % cdn_type.lower(),
@@ -725,7 +725,7 @@ class Steam(storebase.StoreBase):
                 raise Exception("Failed to connect to web driver")
 
             # Load url
-            success = webpage.LoadUrl(web_driver, identifier)
+            success = webpage.load_url(web_driver, identifier)
             if not success:
                 raise Exception("Failed to load URL: %s" % identifier)
 
@@ -733,7 +733,7 @@ class Steam(storebase.StoreBase):
             metadata_entry = metadataentry.MetadataEntry()
 
             # Check for age gate (don't exit on failure to find the age gate)
-            element_age_gate = webpage.WaitForElement(
+            element_age_gate = webpage.wait_for_element(
                 driver = web_driver,
                 locator = webpage.ElementLocator({"id": "app_agegate"}),
                 wait_time = 5,
@@ -743,19 +743,19 @@ class Steam(storebase.StoreBase):
             if element_age_gate:
 
                 # Get age selectors
-                day_selector = webpage.GetElement(
+                day_selector = webpage.get_element(
                     parent = element_age_gate,
                     locator = webpage.ElementLocator({"id": "ageDay"}),
                     verbose = verbose,
                     pretend_run = pretend_run,
                     exit_on_failure = False)
-                month_selector = webpage.GetElement(
+                month_selector = webpage.get_element(
                     parent = element_age_gate,
                     locator = webpage.ElementLocator({"id": "ageMonth"}),
                     verbose = verbose,
                     pretend_run = pretend_run,
                     exit_on_failure = False)
-                year_selector = webpage.GetElement(
+                year_selector = webpage.get_element(
                     parent = element_age_gate,
                     locator = webpage.ElementLocator({"id": "ageYear"}),
                     verbose = verbose,
@@ -764,22 +764,22 @@ class Steam(storebase.StoreBase):
 
                 # Select date
                 if day_selector and month_selector and year_selector:
-                    webpage.SendKeysToElement(day_selector, "1")
-                    webpage.SendKeysToElement(month_selector, "January")
-                    webpage.SendKeysToElement(year_selector, "1980")
+                    webpage.send_keys_to_element(day_selector, "1")
+                    webpage.send_keys_to_element(month_selector, "January")
+                    webpage.send_keys_to_element(year_selector, "1980")
 
                     # Click confirm button
-                    confirm_button = webpage.GetElement(
+                    confirm_button = webpage.get_element(
                         parent = element_age_gate,
                         locator = webpage.ElementLocator({"id": "view_product_page_btn"}),
                         verbose = verbose,
                         pretend_run = pretend_run,
                         exit_on_failure = False)
                     if confirm_button:
-                        webpage.ClickElement(confirm_button)
+                        webpage.click_element(confirm_button)
 
             # Look for game description
-            element_game_description = webpage.WaitForElement(
+            element_game_description = webpage.wait_for_element(
                 driver = web_driver,
                 locator = webpage.ElementLocator({"id": "aboutThisGame"}),
                 wait_time = 15,
@@ -787,7 +787,7 @@ class Steam(storebase.StoreBase):
                 pretend_run = pretend_run,
                 exit_on_failure = False)
             if element_game_description:
-                raw_game_description = webpage.GetElementChildrenText(element_game_description)
+                raw_game_description = webpage.get_element_children_text(element_game_description)
                 if raw_game_description:
                     description_text = raw_game_description
                     description_text = strings.trim_substring_from_start(description_text, "About This Game")
@@ -796,7 +796,7 @@ class Steam(storebase.StoreBase):
                     metadata_entry.set_description(description_text)
 
             # Look for game details
-            element_game_details = webpage.GetElement(
+            element_game_details = webpage.get_element(
                 parent = web_driver,
                 locator = webpage.ElementLocator({"id": "genresAndManufacturer"}),
                 verbose = verbose,
@@ -805,7 +805,7 @@ class Steam(storebase.StoreBase):
             if element_game_details:
 
                 # Grab the information text
-                raw_game_details = webpage.GetElementText(element_game_details)
+                raw_game_details = webpage.get_element_text(element_game_details)
                 if raw_game_details:
                     for game_detail_line in raw_game_details.split("\n"):
 

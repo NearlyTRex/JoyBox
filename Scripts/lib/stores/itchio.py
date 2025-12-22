@@ -116,7 +116,7 @@ class Itchio(storebase.StoreBase):
             return False
 
         # Log into website
-        success = webpage.LoginCookieWebsite(
+        success = webpage.login_cookie_website(
             driver = web_driver,
             url = "https://itch.io/login",
             cookie = self.get_cookie_file(),
@@ -191,7 +191,7 @@ class Itchio(storebase.StoreBase):
             return None
 
         # Load url
-        success = webpage.LoadCookieWebsite(
+        success = webpage.load_cookie_website(
             driver = web_driver,
             url = "https://itch.io/my-purchases",
             cookie = self.get_cookie_file(),
@@ -203,8 +203,8 @@ class Itchio(storebase.StoreBase):
 
         # Scroll to end of page until everything is loaded
         while True:
-            webpage.ScrollToEndOfPage(web_driver)
-            grid_loader = webpage.GetElement(
+            webpage.scroll_to_end_of_page(web_driver)
+            grid_loader = webpage.get_element(
                 parent = web_driver,
                 locator = webpage.ElementLocator({"class": "grid_loader"}))
             if grid_loader is None:
@@ -213,27 +213,27 @@ class Itchio(storebase.StoreBase):
         # Parse game cells
         purchases = []
         purchases_data = []
-        game_cells = webpage.GetElement(
+        game_cells = webpage.get_element(
             parent = web_driver,
             locator = webpage.ElementLocator({"class": "game_cell"}),
             all_elements = True)
         if game_cells:
             for game_cell in game_cells:
-                game_title = webpage.GetElement(
+                game_title = webpage.get_element(
                     parent = game_cell,
                     locator = webpage.ElementLocator({"class": "title"}))
-                game_cover = webpage.GetElement(
+                game_cover = webpage.get_element(
                     parent = game_cell,
                     locator = webpage.ElementLocator({"class": "lazy_loaded"}))
                 if not game_title or not game_cover:
                     continue
 
                 # Gather info
-                line_appid = webpage.GetElementAttribute(game_cell, "data-game_id")
-                line_appurl = webpage.GetElementAttribute(game_title, "href")
+                line_appid = webpage.get_element_attribute(game_cell, "data-game_id")
+                line_appurl = webpage.get_element_attribute(game_title, "href")
                 if len(line_appurl.split("/download")) == 2:
                     line_appurl = line_appurl.split("/download")[0]
-                line_title = webpage.GetElementText(game_title).rstrip(" \n")
+                line_title = webpage.get_element_text(game_title).rstrip(" \n")
 
                 # Create purchase
                 purchase = jsondata.JsonData(
@@ -318,7 +318,7 @@ class Itchio(storebase.StoreBase):
                 raise Exception("Failed to connect to web driver")
 
             # Load url with cookie
-            success = webpage.LoadCookieWebsite(
+            success = webpage.load_cookie_website(
                 driver = web_driver,
                 url = identifier,
                 cookie = self.get_cookie_file(),
@@ -332,7 +332,7 @@ class Itchio(storebase.StoreBase):
             metadata_entry = metadataentry.MetadataEntry()
 
             # Load more information if necessary
-            element_more_information = webpage.WaitForElement(
+            element_more_information = webpage.wait_for_element(
                 driver = web_driver,
                 locator = webpage.ElementLocator({"xpath": "//div[@class='toggle_row']//a[contains(text(), 'More information')]"}),
                 wait_time = 15,
@@ -340,11 +340,11 @@ class Itchio(storebase.StoreBase):
                 pretend_run = pretend_run,
                 exit_on_failure = False)
             if element_more_information:
-                webpage.ClickElement(element_more_information)
+                webpage.click_element(element_more_information)
                 system.sleep_program(3)
 
             # Look for game description
-            element_game_description = webpage.WaitForElement(
+            element_game_description = webpage.wait_for_element(
                 driver = web_driver,
                 locator = webpage.ElementLocator({"class": "formatted_description"}),
                 wait_time = 15,
@@ -352,19 +352,19 @@ class Itchio(storebase.StoreBase):
                 pretend_run = pretend_run,
                 exit_on_failure = False)
             if element_game_description:
-                raw_game_description = webpage.GetElementText(element_game_description)
+                raw_game_description = webpage.get_element_text(element_game_description)
                 if raw_game_description:
                     metadata_entry.set_description(raw_game_description)
 
             # Look for game details
-            element_game_details = webpage.GetElement(
+            element_game_details = webpage.get_element(
                 parent = web_driver,
                 locator = webpage.ElementLocator({"class": "game_info_panel_widget"}),
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = False)
             if element_game_details:
-                raw_game_details = webpage.GetElementText(element_game_details)
+                raw_game_details = webpage.get_element_text(element_game_details)
                 if raw_game_details:
                     for game_detail_line in raw_game_details.split("\n"):
 
@@ -446,7 +446,7 @@ class Itchio(storebase.StoreBase):
             search_terms = strings.get_url_path(identifier).strip("/")
 
             # Load url
-            success = webpage.LoadCookieWebsite(
+            success = webpage.load_cookie_website(
                 driver = web_driver,
                 url = "https://itch.io/search?q=" + search_terms,
                 cookie = self.get_cookie_file(),
@@ -457,7 +457,7 @@ class Itchio(storebase.StoreBase):
                 return None
 
             # Find the root container element
-            element_search_result = webpage.WaitForElement(
+            element_search_result = webpage.wait_for_element(
                 driver = web_driver,
                 locator = webpage.ElementLocator({"class": "browse_game_grid"}),
                 verbose = verbose,
@@ -467,24 +467,24 @@ class Itchio(storebase.StoreBase):
                 return None
 
             # Search through search results
-            game_cells = webpage.GetElement(
+            game_cells = webpage.get_element(
                 parent = element_search_result,
                 locator = webpage.ElementLocator({"class": "game_cell"}),
                 all_elements = True)
             if game_cells:
                 for game_cell in game_cells:
-                    game_title = webpage.GetElement(
+                    game_title = webpage.get_element(
                         parent = game_cell,
                         locator = webpage.ElementLocator({"class": "title"}))
-                    game_cover = webpage.GetElement(
+                    game_cover = webpage.get_element(
                         parent = game_cell,
                         locator = webpage.ElementLocator({"class": "lazy_loaded"}))
                     if not game_title or not game_cover:
                         continue
 
                     # Check for cover
-                    line_appurl = webpage.GetElementAttribute(game_title, "href")
-                    line_cover = webpage.GetElementAttribute(game_cover, "src")
+                    line_appurl = webpage.get_element_attribute(game_title, "href")
+                    line_cover = webpage.get_element_attribute(game_cover, "src")
                     if line_appurl == identifier:
                         latest_asset_url = line_cover
                         break
@@ -499,7 +499,7 @@ class Itchio(storebase.StoreBase):
 
         # Video
         elif asset_type == config.AssetType.VIDEO:
-            latest_asset_url = webpage.GetMatchingUrl(
+            latest_asset_url = webpage.get_matching_url(
                 url = identifier,
                 base_url = "https://www.youtube.com/embed",
                 starts_with = "https://www.youtube.com/embed",

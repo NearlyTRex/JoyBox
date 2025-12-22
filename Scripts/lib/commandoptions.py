@@ -331,7 +331,7 @@ class CommandOptions:
 
         # Prefix dir
         if not paths.is_path_valid(prefix_dir):
-            prefix_dir = sandbox.GetPrefix(self)
+            prefix_dir = sandbox.get_prefix(self)
         if paths.is_path_valid(prefix_dir):
             self.set_prefix_dir(prefix_dir)
 
@@ -364,7 +364,7 @@ class CommandOptions:
 
         # Create prefix
         if linked_prefix:
-            success = sandbox.CreateLinkedPrefix(
+            success = sandbox.create_linked_prefix(
                 options = self,
                 other_links = other_links,
                 clean_existing = clean_existing,
@@ -374,7 +374,7 @@ class CommandOptions:
             if not success:
                 return False
         else:
-            success = sandbox.CreateBasicPrefix(
+            success = sandbox.create_basic_prefix(
                 options = self,
                 clean_existing = clean_existing,
                 verbose = verbose,
@@ -384,13 +384,13 @@ class CommandOptions:
                 return False
 
         # Set prefix user profile dir
-        self.set_prefix_user_profile_dir(sandbox.GetUserProfilePath(self))
+        self.set_prefix_user_profile_dir(sandbox.get_user_profile_path(self))
         if not self.has_existing_prefix_user_profile_dir():
             return False
 
         # Set prefix C drive
         self.set_prefix_c_drive_virtual(config.drive_root_windows)
-        self.set_prefix_c_drive_real(sandbox.GetRealCDrivePath(self))
+        self.set_prefix_c_drive_real(sandbox.get_real_c_drive_path(self))
         if not self.has_existing_prefix_c_drive_real():
             return False
 

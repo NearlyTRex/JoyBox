@@ -31,14 +31,14 @@ def CollectMetadataFromTGDB(
     # Cleanup function
     def cleanup_driver():
         if web_driver:
-            webpage.DestroyWebDriver(web_driver)
+            webpage.destroy_web_driver(web_driver)
 
     # Fetch function
     def attempt_metadata_fetch():
         nonlocal web_driver
 
         # Create web driver
-        web_driver = webpage.CreateWebDriver(make_headless = True)
+        web_driver = webpage.create_web_driver(make_headless = True)
         if not web_driver:
             raise Exception("Failed to create web driver")
 
@@ -49,7 +49,7 @@ def CollectMetadataFromTGDB(
         metadata_result = metadataentry.MetadataEntry()
 
         # Load url
-        success = webpage.LoadUrl(web_driver, "https://thegamesdb.net/search.php?name=" + search_terms)
+        success = webpage.load_url(web_driver, "https://thegamesdb.net/search.php?name=" + search_terms)
         if not success:
             raise Exception("Failed to load TheGamesDB search page")
 
@@ -57,7 +57,7 @@ def CollectMetadataFromTGDB(
         natural_name = gameinfo.DeriveRegularNameFromGameName(game_name)
 
         # Find the root container element
-        element_search_result = webpage.WaitForElement(
+        element_search_result = webpage.wait_for_element(
             driver = web_driver,
             locator = webpage.ElementLocator({"class": "container-fluid"}),
             wait_time = 15,
@@ -69,7 +69,7 @@ def CollectMetadataFromTGDB(
 
         # Score each potential title compared to the original title
         scores_list = []
-        game_cells = webpage.GetElement(
+        game_cells = webpage.get_element(
             parent = element_search_result,
             locator = webpage.ElementLocator({"class": "card-footer"}),
             all_elements = True,
@@ -80,7 +80,7 @@ def CollectMetadataFromTGDB(
             for game_cell in game_cells:
 
                 # Get possible title
-                game_cell_text = webpage.GetElementText(game_cell)
+                game_cell_text = webpage.get_element_text(game_cell)
                 potential_title = ""
                 if game_cell_text:
                     for game_cell_text_token in game_cell_text.split("\n"):
@@ -97,15 +97,15 @@ def CollectMetadataFromTGDB(
         # Click on the highest score element
         if scores_list:
             for score_entry in sorted(scores_list, key=lambda d: d["ratio"], reverse=True):
-                webpage.ClickElement(score_entry["element"])
+                webpage.click_element(score_entry["element"])
                 break
 
             # Check if the url has changed
-            if webpage.IsUrlLoaded(web_driver, "https://thegamesdb.net/search.php?name="):
+            if webpage.is_url_loaded(web_driver, "https://thegamesdb.net/search.php?name="):
                 return None  # Still on search page, no valid result found
 
         # Look for game description
-        element_game_description = webpage.WaitForElement(
+        element_game_description = webpage.wait_for_element(
             driver = web_driver,
             locator = webpage.ElementLocator({"class": "game-overview"}),
             wait_time = 15,
@@ -113,12 +113,12 @@ def CollectMetadataFromTGDB(
             pretend_run = pretend_run,
             exit_on_failure = False)
         if element_game_description:
-            raw_game_description = webpage.GetElementText(element_game_description)
+            raw_game_description = webpage.get_element_text(element_game_description)
             if raw_game_description and raw_game_description.strip():
                 metadata_result.set_description(raw_game_description)
 
         # Look for game details
-        element_game_details_list = webpage.GetElement(
+        element_game_details_list = webpage.get_element(
             parent = web_driver,
             locator = webpage.ElementLocator({"class": "card-body"}),
             all_elements = True,
@@ -127,7 +127,7 @@ def CollectMetadataFromTGDB(
             exit_on_failure = False)
         if element_game_details_list:
             for element_game_details in element_game_details_list:
-                element_paragraphs = webpage.GetElement(
+                element_paragraphs = webpage.get_element(
                     parent = element_game_details,
                     locator = webpage.ElementLocator({"tag": "p"}),
                     all_elements = True,
@@ -136,7 +136,7 @@ def CollectMetadataFromTGDB(
                     exit_on_failure = False)
                 if element_paragraphs:
                     for element_paragraph in element_paragraphs:
-                        element_text = webpage.GetElementText(element_paragraph)
+                        element_text = webpage.get_element_text(element_paragraph)
                         if not element_text:
                             continue
 
@@ -201,14 +201,14 @@ def CollectMetadataFromGameFAQS(
     # Cleanup function
     def cleanup_driver():
         if web_driver:
-            webpage.DestroyWebDriver(web_driver)
+            webpage.destroy_web_driver(web_driver)
 
     # Fetch function
     def attempt_metadata_fetch():
         nonlocal web_driver
 
         # Create web driver
-        web_driver = webpage.CreateWebDriver(make_headless = True)
+        web_driver = webpage.create_web_driver(make_headless = True)
         if not web_driver:
             raise Exception("Failed to create web driver")
 
@@ -219,12 +219,12 @@ def CollectMetadataFromGameFAQS(
         metadata_result = metadataentry.MetadataEntry()
 
         # Load homepage
-        success = webpage.LoadUrl(web_driver, "https://gamefaqs.gamespot.com")
+        success = webpage.load_url(web_driver, "https://gamefaqs.gamespot.com")
         if not success:
             raise Exception("Failed to load GameFAQs homepage")
 
         # Look for homepage marker
-        element_homepage_marker = webpage.WaitForElement(
+        element_homepage_marker = webpage.wait_for_element(
             driver = web_driver,
             locator = webpage.ElementLocator({"class": "home_jbi_ft"}),
             wait_time = 15,
@@ -235,12 +235,12 @@ def CollectMetadataFromGameFAQS(
             raise Exception("GameFAQs homepage marker not found")
 
         # Load search URL
-        success = webpage.LoadUrl(web_driver, "https://gamefaqs.gamespot.com/search_advanced?game=" + search_terms)
+        success = webpage.load_url(web_driver, "https://gamefaqs.gamespot.com/search_advanced?game=" + search_terms)
         if not success:
             raise Exception("Failed to load GameFAQs search page")
 
         # Look for search results
-        element_search_result = webpage.WaitForElement(
+        element_search_result = webpage.wait_for_element(
             driver = web_driver,
             locator = webpage.ElementLocator({"class": "span12"}),
             wait_time = 15,
@@ -251,7 +251,7 @@ def CollectMetadataFromGameFAQS(
             return None  # No search results found, not an error
 
         # Look for search table
-        elements_search_table = webpage.GetElement(
+        elements_search_table = webpage.get_element(
             parent = element_search_result,
             locator = webpage.ElementLocator({"tag": "tbody"}),
             verbose = verbose,
@@ -260,7 +260,7 @@ def CollectMetadataFromGameFAQS(
         if elements_search_table:
 
             # Look for search rows
-            elements_search_rows = webpage.GetElement(
+            elements_search_rows = webpage.get_element(
                 parent = elements_search_table,
                 locator = webpage.ElementLocator({"tag": "tr"}),
                 all_elements = True,
@@ -271,7 +271,7 @@ def CollectMetadataFromGameFAQS(
                 for elements_search_row in elements_search_rows:
 
                     # Examine columns
-                    elements_search_cols = webpage.GetElement(
+                    elements_search_cols = webpage.get_element(
                         parent = elements_search_row,
                         locator = webpage.ElementLocator({"tag": "td"}),
                         all_elements = True,
@@ -281,20 +281,20 @@ def CollectMetadataFromGameFAQS(
                     if elements_search_cols and len(elements_search_cols) >= 4:
                         search_platform = elements_search_cols[0]
                         search_game = elements_search_cols[1]
-                        search_game_platform = webpage.GetElementChildrenText(search_platform)
-                        search_game_name = webpage.GetElementChildrenText(search_game)
-                        search_game_link = webpage.GetElementLinkUrl(search_game)
+                        search_game_platform = webpage.get_element_children_text(search_platform)
+                        search_game_name = webpage.get_element_children_text(search_game)
+                        search_game_link = webpage.get_element_link_url(search_game)
                         if not search_game_platform or not search_game_name or not search_game_link:
                             continue
 
                         # Navigate to the entry if this matches the search terms
                         if search_game_platform == config.gamefaqs_platforms[game_platform][0]:
-                            success = webpage.LoadUrl(web_driver, search_game_link)
+                            success = webpage.load_url(web_driver, search_game_link)
                             if success:
                                 break
 
         # Look for game description
-        element_game_description = webpage.WaitForElement(
+        element_game_description = webpage.wait_for_element(
             driver = web_driver,
             locator = webpage.ElementLocator({"class": "game_desc"}),
             wait_time = 15,
@@ -304,26 +304,26 @@ def CollectMetadataFromGameFAQS(
         if element_game_description:
 
             # Grab the description text
-            raw_game_description = webpage.GetElementText(element_game_description)
+            raw_game_description = webpage.get_element_text(element_game_description)
 
             # Click the "more" button if it's present
             if raw_game_description and "more »" in raw_game_description:
-                element_game_description_more = webpage.GetElement(
+                element_game_description_more = webpage.get_element(
                     parent = web_driver,
                     locator = webpage.ElementLocator({"link_text": "more »"}),
                     verbose = verbose,
                     pretend_run = pretend_run,
                     exit_on_failure = False)
                 if element_game_description_more:
-                    webpage.ClickElement(element_game_description_more)
-                    raw_game_description = webpage.GetElementText(element_game_description)
+                    webpage.click_element(element_game_description_more)
+                    raw_game_description = webpage.get_element_text(element_game_description)
 
             # Convert description to metadata format
             if isinstance(raw_game_description, str) and raw_game_description.strip():
                 metadata_result.set_description(raw_game_description)
 
         # Look for game details
-        element_game_details_list = webpage.GetElement(
+        element_game_details_list = webpage.get_element(
             parent = web_driver,
             locator = webpage.ElementLocator({"class": "content"}),
             all_elements = True,
@@ -332,7 +332,7 @@ def CollectMetadataFromGameFAQS(
             exit_on_failure = False)
         if element_game_details_list:
             for element_game_details in element_game_details_list:
-                element_text = webpage.GetElementText(element_game_details)
+                element_text = webpage.get_element_text(element_game_details)
                 if not element_text:
                     continue
 
@@ -398,14 +398,14 @@ def CollectMetadataFromBigFishGames(
     # Cleanup function
     def cleanup_driver():
         if web_driver:
-            webpage.DestroyWebDriver(web_driver)
+            webpage.destroy_web_driver(web_driver)
 
     # Fetch function
     def attempt_metadata_fetch():
         nonlocal web_driver
 
         # Create web driver
-        web_driver = webpage.CreateWebDriver(make_headless = True)
+        web_driver = webpage.create_web_driver(make_headless = True)
         if not web_driver:
             raise Exception("Failed to create web driver")
 
@@ -416,12 +416,12 @@ def CollectMetadataFromBigFishGames(
         metadata_result = metadataentry.MetadataEntry()
 
         # Load url
-        success = webpage.LoadUrl(web_driver, "https://www.bigfishgames.com/us/en/games/search.html?platform=150&language=114&search_query=" + search_terms)
+        success = webpage.load_url(web_driver, "https://www.bigfishgames.com/us/en/games/search.html?platform=150&language=114&search_query=" + search_terms)
         if not success:
             raise Exception("Failed to load BigFishGames search page")
 
         # Look for game description
-        element_game_description = webpage.WaitForElement(
+        element_game_description = webpage.wait_for_element(
             driver = web_driver,
             locator = webpage.ElementLocator({"class": "productFullDetail__descriptionContent"}),
             wait_time = 15,
@@ -432,7 +432,7 @@ def CollectMetadataFromBigFishGames(
             return None  # No description found, might be no results
 
         # Look for game bullets
-        element_game_bullets = webpage.WaitForElement(
+        element_game_bullets = webpage.wait_for_element(
             driver = web_driver,
             locator = webpage.ElementLocator({"class": "productFullDetail__bullets"}),
             wait_time = 15,
@@ -441,12 +441,12 @@ def CollectMetadataFromBigFishGames(
             exit_on_failure = False)
 
         # Grab the description text
-        raw_game_description = webpage.GetElementText(element_game_description)
+        raw_game_description = webpage.get_element_text(element_game_description)
 
         # Grab the bullets text (if available)
         raw_game_bullets = ""
         if element_game_bullets:
-            raw_game_bullets = webpage.GetElementText(element_game_bullets)
+            raw_game_bullets = webpage.get_element_text(element_game_bullets)
 
         # Convert to metadata format
         description_parts = []

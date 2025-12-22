@@ -605,7 +605,7 @@ def InstallWiiUNusPackage(
     app_titleid = ""
     with open(app_xml_file, "r") as f:
         data = f.read()
-        soup = webpage.ParseXmlPageSource(data)
+        soup = webpage.parse_xml_page_source(data)
         if soup:
             for tag in soup.find_all("title_id"):
                 app_titleid = tag.text

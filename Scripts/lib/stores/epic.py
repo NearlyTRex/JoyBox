@@ -188,12 +188,12 @@ class Epic(storebase.StoreBase):
         search_terms = strings.encode_url_string(identifier.strip(), use_plus = True)
 
         # Load url
-        success = webpage.LoadUrl(web_driver, "https://store.epicgames.com/en-US/browse?sortBy=relevancy&sortDir=DESC&q=" + search_terms)
+        success = webpage.load_url(web_driver, "https://store.epicgames.com/en-US/browse?sortBy=relevancy&sortDir=DESC&q=" + search_terms)
         if not success:
             return None
 
         # Find the root container element
-        element_search_result = webpage.WaitForElement(
+        element_search_result = webpage.wait_for_element(
             driver = web_driver,
             locator = webpage.ElementLocator({"class": "css-1ufzxyu"}),
             verbose = verbose,
@@ -204,7 +204,7 @@ class Epic(storebase.StoreBase):
 
         # Score each potential title compared to the original title
         scores_list = []
-        game_cells = webpage.GetElement(
+        game_cells = webpage.get_element(
             parent = element_search_result,
             locator = webpage.ElementLocator({"class": "css-2mlzob"}),
             all_elements = True)
@@ -212,11 +212,11 @@ class Epic(storebase.StoreBase):
             for game_cell in game_cells:
 
                 # Get possible title
-                game_title_element = webpage.GetElement(
+                game_title_element = webpage.get_element(
                     parent = game_cell,
                     locator = webpage.ElementLocator({"class": "css-lgj0h8"}),
                     verbose = verbose)
-                game_cell_text = webpage.GetElementChildrenText(game_title_element)
+                game_cell_text = webpage.get_element_children_text(game_title_element)
 
                 # Add comparison score
                 score_entry = {}
@@ -228,12 +228,12 @@ class Epic(storebase.StoreBase):
         appurl = None
         for score_entry in sorted(scores_list, key=lambda d: d["ratio"], reverse=True):
             game_cell = score_entry["element"]
-            game_link_element = webpage.GetElement(
+            game_link_element = webpage.get_element(
                 parent = game_cell,
                 locator = webpage.ElementLocator({"class": "css-1k3j1r9"}),
                 verbose = verbose)
             if game_link_element:
-                appurl = webpage.GetElementAttribute(game_link_element, "href")
+                appurl = webpage.get_element_attribute(game_link_element, "href")
                 break
 
         # Disconnect from web
@@ -503,7 +503,7 @@ class Epic(storebase.StoreBase):
                 raise Exception("Failed to connect to web driver")
 
             # Load url
-            success = webpage.LoadUrl(web_driver, identifier)
+            success = webpage.load_url(web_driver, identifier)
             if not success:
                 raise Exception("Failed to load URL: %s" % identifier)
 
@@ -511,7 +511,7 @@ class Epic(storebase.StoreBase):
             metadata_entry = metadataentry.MetadataEntry()
 
             # Look for game description
-            element_game_description = webpage.WaitForElement(
+            element_game_description = webpage.wait_for_element(
                 driver = web_driver,
                 locator = webpage.ElementLocator({"id": "about-long-description"}),
                 wait_time = 15,
@@ -519,12 +519,12 @@ class Epic(storebase.StoreBase):
                 pretend_run = pretend_run,
                 exit_on_failure = False)
             if element_game_description:
-                raw_game_description = webpage.GetElementChildrenText(element_game_description)
+                raw_game_description = webpage.get_element_children_text(element_game_description)
                 if raw_game_description:
                     metadata_entry.set_description(raw_game_description)
 
             # Look for game genres
-            elements_potential_genres = webpage.GetElement(
+            elements_potential_genres = webpage.get_element(
                 parent = web_driver,
                 locator = webpage.ElementLocator({"class": "css-8f0505"}),
                 all_elements = True,
@@ -533,9 +533,9 @@ class Epic(storebase.StoreBase):
                 exit_on_failure = False)
             if elements_potential_genres:
                 for element_potential_genre in elements_potential_genres:
-                    potential_text = webpage.GetElementChildrenText(element_potential_genre)
+                    potential_text = webpage.get_element_children_text(element_potential_genre)
                     if potential_text and "Genres" in potential_text:
-                        element_game_genres = webpage.GetElement(
+                        element_game_genres = webpage.get_element(
                             parent = element_potential_genre,
                             locator = webpage.ElementLocator({"class": "css-cyjj8t"}),
                             all_elements = True,
@@ -545,14 +545,14 @@ class Epic(storebase.StoreBase):
                         if element_game_genres:
                             game_genres = []
                             for element_game_genre in element_game_genres:
-                                game_genre_text = webpage.GetElementChildrenText(element_game_genre)
+                                game_genre_text = webpage.get_element_children_text(element_game_genre)
                                 if game_genre_text:
                                     game_genres.append(game_genre_text)
                             if game_genres:
                                 metadata_entry.set_genre(";".join(game_genres))
 
             # Look for game details
-            elements_details = webpage.GetElement(
+            elements_details = webpage.get_element(
                 parent = web_driver,
                 locator = webpage.ElementLocator({"class": "css-s97i32"}),
                 all_elements = True,
@@ -561,7 +561,7 @@ class Epic(storebase.StoreBase):
                 exit_on_failure = False)
             if elements_details:
                 for elements_detail in elements_details:
-                    element_detail_text = webpage.GetElementChildrenText(elements_detail)
+                    element_detail_text = webpage.get_element_children_text(elements_detail)
                     if element_detail_text:
 
                         # Developer

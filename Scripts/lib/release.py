@@ -451,7 +451,7 @@ def DownloadWebpageRelease(
     exit_on_failure = False):
 
     # Get archive url
-    archive_url = webpage.GetMatchingUrl(
+    archive_url = webpage.get_matching_url(
         url = webpage_url,
         base_url = webpage_base_url,
         starts_with = starts_with,
@@ -496,7 +496,7 @@ def BuildFromSource(
 
     # Find release url if necessary
     if len(webpage_url):
-        release_url = webpage.GetMatchingUrl(
+        release_url = webpage.get_matching_url(
             url = webpage_url,
             base_url = webpage_base_url,
             starts_with = starts_with,

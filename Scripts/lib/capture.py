@@ -150,8 +150,8 @@ def CaptureVideo(
         options = command.CreateCommandOptions(
             prefix_dir = prefix_dir,
             prefix_name = prefix_name,
-            is_wine_prefix = sandbox.ShouldBeRunViaWine(ffmpeg_tool),
-            is_sandboxie_prefix = sandbox.ShouldBeRunViaSandboxie(ffmpeg_tool),
+            is_wine_prefix = sandbox.should_be_run_via_wine(ffmpeg_tool),
+            is_sandboxie_prefix = sandbox.should_be_run_via_sandboxie(ffmpeg_tool),
             output_paths = [output_file],
             blocking_processes = [ffmpeg_tool]),
         verbose = verbose,
