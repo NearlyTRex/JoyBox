@@ -84,7 +84,7 @@ def DecryptAAXToM4A(
     if not paths.is_path_file(input_file):
         logger.log_error(f"Input file does not exist: {input_file}")
         if exit_on_failure:
-            system.QuitProgram()
+            system.quit_program()
         return False
 
     # Check file extension
@@ -92,7 +92,7 @@ def DecryptAAXToM4A(
     if input_ext not in [".aax", ".aa"]:
         logger.log_error(f"Input file must be .aax or .aa format: {input_file}")
         if exit_on_failure:
-            system.QuitProgram()
+            system.quit_program()
         return False
 
     # Determine output file
@@ -113,14 +113,14 @@ def DecryptAAXToM4A(
     if not activation_bytes:
         logger.log_error("Activation bytes not provided or found in environment")
         if exit_on_failure:
-            system.QuitProgram()
+            system.quit_program()
         return False
 
     # Validate activation bytes format (should be 8 hex characters)
     if len(activation_bytes) != 8 or not all(c in '0123456789abcdefABCDEF' for c in activation_bytes):
         logger.log_error(f"Invalid activation bytes format. Expected 8 hex characters, got: {activation_bytes}")
         if exit_on_failure:
-            system.QuitProgram()
+            system.quit_program()
         return False
 
     # Check for FFMpeg
@@ -130,7 +130,7 @@ def DecryptAAXToM4A(
     if not ffmpeg_tool:
         logger.log_error("FFMpeg was not found")
         if exit_on_failure:
-            system.QuitProgram()
+            system.quit_program()
         return False
 
     # Log operation
@@ -170,7 +170,7 @@ def DecryptAAXToM4A(
         if code != 0:
             logger.log_error(f"FFMpeg decryption failed with code {code}")
             if exit_on_failure:
-                system.QuitProgram()
+                system.quit_program()
             return False
     logger.log_info(f"Successfully decrypted: {output_file}")
     return True
@@ -190,7 +190,7 @@ def DecryptAAXFilesToM4A(
     if not input_files:
         logger.log_error("No input files provided")
         if exit_on_failure:
-            system.QuitProgram()
+            system.quit_program()
         return False
 
     # Get activation bytes once for all files
@@ -202,7 +202,7 @@ def DecryptAAXFilesToM4A(
     if not activation_bytes:
         logger.log_error("Activation bytes not provided")
         if exit_on_failure:
-            system.QuitProgram()
+            system.quit_program()
         return False
 
     # Process each file
@@ -232,7 +232,7 @@ def DecryptAAXFilesToM4A(
             fail_count += 1
             if exit_on_failure:
                 logger.log_error(f"Failed to decrypt: {input_file}")
-                system.QuitProgram()
+                system.quit_program()
 
     # Log summary
     logger.log_info(f"Decryption complete: {success_count} succeeded, {fail_count} failed")
@@ -255,7 +255,7 @@ def DecryptAAXDirectory(
     if not paths.is_path_directory(input_dir):
         logger.log_error(f"Input directory does not exist: {input_dir}")
         if exit_on_failure:
-            system.QuitProgram()
+            system.quit_program()
         return False
 
     # Use input directory as output if not specified

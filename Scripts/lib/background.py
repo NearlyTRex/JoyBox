@@ -42,7 +42,7 @@ class BackgroundJob:
                 while not self.should_stop.is_set():
                     self.job_scheduler.run_pending()
                     if isinstance(self.sleep_interval, int) and self.sleep_interval > 0:
-                        system.SleepProgram(self.sleep_interval)
+                        system.sleep_program(self.sleep_interval)
 
         # Create scheduler
         import schedule

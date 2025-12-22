@@ -87,7 +87,7 @@ def CreateChromeWebDriver(
         if exit_on_failure:
             logger.log_error("Unable to create chrome web driver")
             logger.log_error(e)
-            system.QuitProgram()
+            system.quit_program()
     return None
 
 # Create firefox web driver
@@ -136,7 +136,7 @@ def CreateFirefoxWebDriver(
         if exit_on_failure:
             logger.log_error("Unable to create firefox web driver")
             logger.log_error(e)
-            system.QuitProgram()
+            system.quit_program()
     return None
 
 # Create web driver
@@ -199,7 +199,7 @@ def DestroyWebDriver(
         if exit_on_failure:
             logger.log_error("Unable to destroy web driver")
             logger.log_error(e)
-            system.QuitProgram()
+            system.quit_program()
     return False
 
 # Load url
@@ -226,7 +226,7 @@ def LoadUrl(
         if exit_on_failure:
             logger.log_error("Unable to load url %s" % url)
             logger.log_error(e)
-            system.QuitProgram()
+            system.quit_program()
     return False
 
 # Get current page url
@@ -319,7 +319,7 @@ def WaitForAllElements(
             logger.log_warning("WaitForAllElements: Failed to find all elements: %s" % str(e))
         if exit_on_failure:
             logger.log_error(e)
-            system.QuitProgram()
+            system.quit_program()
     return None
 
 # Wait for any element
@@ -349,7 +349,7 @@ def WaitForAnyElement(
             logger.log_warning("WaitForAnyElement: Failed to find any elements: %s" % str(e))
         if exit_on_failure:
             logger.log_error(e)
-            system.QuitProgram()
+            system.quit_program()
     return None
 
 # Check if session is valid for driver or element
@@ -404,7 +404,7 @@ def WaitForElement(
             logger.log_warning("WaitForElement: Unexpected error: %s" % str(e))
         if exit_on_failure:
             logger.log_error(e)
-            system.QuitProgram()
+            system.quit_program()
         return None
 
 # Get element
@@ -446,7 +446,7 @@ def GetElement(
             logger.log_warning("GetElement: Unexpected error: %s" % str(e))
         if exit_on_failure:
             logger.log_error(e)
-            system.QuitProgram()
+            system.quit_program()
         return None
 
 # Get element text
@@ -535,7 +535,7 @@ def ClickElement(
         if exit_on_failure:
             logger.log_error("Unable to click element")
             logger.log_error(e)
-            system.QuitProgram()
+            system.quit_program()
         return False
 
 # Send keys to element
@@ -567,7 +567,7 @@ def SendKeysToElement(
         if exit_on_failure:
             logger.log_error("Unable to send keys to element")
             logger.log_error(e)
-            system.QuitProgram()
+            system.quit_program()
         return False
 
 # Scroll to end of page
@@ -590,7 +590,7 @@ def ScrollToEndOfPage(
         if exit_on_failure:
             logger.log_error("Unable to scroll to end of page")
             logger.log_error(e)
-            system.QuitProgram()
+            system.quit_program()
         return False
 
 # Get page source
@@ -622,7 +622,7 @@ def GetPageSource(
         if exit_on_failure:
             logger.log_error("Unable to get page source")
             logger.log_error(e)
-            system.QuitProgram()
+            system.quit_program()
         return None
 
 ###########################################################
@@ -672,7 +672,7 @@ def SaveCookie(
         if exit_on_failure:
             logger.log_error("Unable to save cookies")
             logger.log_error(e)
-            system.QuitProgram()
+            system.quit_program()
         return False
 
 # Load cookie
@@ -718,7 +718,7 @@ def LoadCookie(
         if exit_on_failure:
             logger.log_error("Unable to load cookies")
             logger.log_error(e)
-            system.QuitProgram()
+            system.quit_program()
         return False
 
 # Get cookie file

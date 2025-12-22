@@ -341,7 +341,7 @@ class Itchio(storebase.StoreBase):
                 exit_on_failure = False)
             if element_more_information:
                 webpage.ClickElement(element_more_information)
-                system.SleepProgram(3)
+                system.sleep_program(3)
 
             # Look for game description
             element_game_description = webpage.WaitForElement(

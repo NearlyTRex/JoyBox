@@ -74,7 +74,7 @@ def ConvertImage(
         if exit_on_failure:
             logger.log_error("Unable to convert %s to %s" % (image_src, image_dest))
             logger.log_error(e)
-            system.QuitProgram()
+            system.quit_program()
         return False
 
 # Convert image to jpeg

@@ -506,7 +506,7 @@ def RunReturncodeCommand(
             else:
 
                 # Sleep a tiny bit to allow startup before moving on
-                system.SleepProgram(0.5)
+                system.sleep_program(0.5)
 
             # Close file handles if used
             if stdout_target:

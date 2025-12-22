@@ -10,15 +10,15 @@ import logger
 ###########################################################
 
 # Quit program
-def QuitProgram(exit_code = -1):
+def quit_program(exit_code = -1):
     sys.exit(exit_code)
 
 # Sleep program
-def SleepProgram(seconds):
+def sleep_program(seconds):
     time.sleep(seconds)
 
 # Run main function
-def RunMain(main_func):
+def run_main(main_func):
     try:
         success = main_func()
         if success is not None:

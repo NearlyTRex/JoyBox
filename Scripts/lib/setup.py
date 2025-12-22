@@ -19,7 +19,7 @@ def CheckRequirements():
     if sys.version_info < config.minimum_python_version:
         logger.log_error("Minimum required python version is %s.%s.%s" % config.minimum_python_version)
         logger.log_error("Please upgrade your python version")
-        system.QuitProgram()
+        system.quit_program()
 
     # Check operating system
     is_windows = environment.IsWindowsPlatform()

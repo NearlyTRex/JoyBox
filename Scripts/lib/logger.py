@@ -187,7 +187,7 @@ def log_warning(message, game_supercategory = None, game_category = None, game_s
 def log_error(message, game_supercategory = None, game_category = None, game_subcategory = None, game_name = None, quit_program = False):
     get_logger().error(message, game_supercategory, game_category, game_subcategory, game_name)
     if quit_program:
-        system.QuitProgram()
+        system.quit_program()
 
 def log_debug(message, game_supercategory = None, game_category = None, game_subcategory = None, game_name = None):
     get_logger().debug(message, game_supercategory, game_category, game_subcategory, game_name)

@@ -64,4 +64,4 @@ def main():
 
 # Start
 if __name__ == "__main__":
-    system.RunMain(main)
+    system.run_main(main)

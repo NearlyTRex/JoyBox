@@ -167,7 +167,7 @@ def ExtractPS3ISO(
             if exit_on_failure:
                 logger.log_error("Decryption failure, LIC.DAT '%s' has the wrong header (expected PS3LICDA)." % license_file)
                 logger.log_error("It seems likely that the decryption key file '%s' is not compatible with '%s'" % (dkey_file, iso_file_enc))
-                system.QuitProgram()
+                system.quit_program()
             return False
 
     # Check eboot file
@@ -177,7 +177,7 @@ def ExtractPS3ISO(
             if exit_on_failure:
                 logger.log_error("Decryption failure, EBOOT.BIN '%s' has the wrong header (expected SCE)." % eboot_file)
                 logger.log_error("It seems likely that the decryption key file '%s' is not compatible with '%s'" % (dkey_file, iso_file_enc))
-                system.QuitProgram()
+                system.quit_program()
             return False
 
     # Clean up
