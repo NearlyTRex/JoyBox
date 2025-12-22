@@ -289,7 +289,7 @@ class ElementLocator:
                 self.by_value = value
         else:
             raise ValueError("Locator dictionary should contain exactly one key-value pair.")
-    def Get(self):
+    def get(self):
         return (self.by_type, self.by_value)
 
 # Wait for all elements
@@ -306,8 +306,8 @@ def wait_for_all_elements(
         if verbose:
             logger.log_info("WaitForAllElements: Waiting for all %d element(s) (timeout: %d seconds)" % (len(locators), wait_time))
             for i, locator in enumerate(locators):
-                logger.log_info("  Locator %d: %s" % (i + 1, str(locator.Get())))
-        conditions = [EC.presence_of_element_located(locator.Get()) for locator in locators]
+                logger.log_info("  Locator %d: %s" % (i + 1, str(locator.get())))
+        conditions = [EC.presence_of_element_located(locator.get()) for locator in locators]
         result = WebDriverWait(driver, wait_time).until(
             EC.all_of(*conditions)
         )
@@ -336,8 +336,8 @@ def wait_for_any_element(
         if verbose:
             logger.log_info("WaitForAnyElement: Waiting for any of %d element(s) (timeout: %d seconds)" % (len(locators), wait_time))
             for i, locator in enumerate(locators):
-                logger.log_info("  Locator %d: %s" % (i + 1, str(locator.Get())))
-        conditions = [EC.presence_of_element_located(locator.Get()) for locator in locators]
+                logger.log_info("  Locator %d: %s" % (i + 1, str(locator.get())))
+        conditions = [EC.presence_of_element_located(locator.get()) for locator in locators]
         result = WebDriverWait(driver, wait_time).until(
             EC.any_of(*conditions)
         )
@@ -383,17 +383,17 @@ def wait_for_element(
         from selenium.common.exceptions import TimeoutException, WebDriverException
         if verbose:
             logger.log_info("WaitForElement: Waiting for element (timeout: %d seconds)" % wait_time)
-            logger.log_info("  Locator: %s" % str(locator.Get()))
+            logger.log_info("  Locator: %s" % str(locator.get()))
         if not is_session_valid(driver, verbose):
             return None
-        element = WebDriverWait(driver, wait_time).until(EC.presence_of_element_located(locator.Get()))
+        element = WebDriverWait(driver, wait_time).until(EC.presence_of_element_located(locator.get()))
         if verbose:
             logger.log_info("WaitForElement: Element found successfully")
         return element
     except TimeoutException:
         if verbose:
             logger.log_warning("WaitForElement: Timeout waiting for element after %d seconds" % wait_time)
-            logger.log_warning("  Locator: %s" % str(locator.Get()))
+            logger.log_warning("  Locator: %s" % str(locator.get()))
         return None
     except WebDriverException as e:
         if verbose:
@@ -419,23 +419,23 @@ def get_element(
         from selenium.common.exceptions import NoSuchElementException, WebDriverException
         if verbose:
             logger.log_info("GetElement: Searching for element%s" % (" (all instances)" if all_elements else ""))
-            logger.log_info("  Locator: %s" % str(locator.Get()))
+            logger.log_info("  Locator: %s" % str(locator.get()))
         if not is_session_valid(parent, verbose):
             return None
         if all_elements:
-            elements = parent.find_elements(*locator.Get())
+            elements = parent.find_elements(*locator.get())
             if verbose:
                 logger.log_info("GetElement: Found %d element(s)" % len(elements))
             return elements
         else:
-            element = parent.find_element(*locator.Get())
+            element = parent.find_element(*locator.get())
             if verbose:
                 logger.log_info("GetElement: Element found successfully")
             return element
     except NoSuchElementException:
         if verbose:
             logger.log_warning("GetElement: Element not found")
-            logger.log_warning("  Locator: %s" % str(locator.Get()))
+            logger.log_warning("  Locator: %s" % str(locator.get()))
         return None
     except WebDriverException as e:
         if verbose:
@@ -915,7 +915,7 @@ def get_matching_urls(
         potential_urls = []
 
         # Process tag url
-        def ProcessTagUrl(value, base_url, is_iframe = False):
+        def process_tag_url(value, base_url, is_iframe = False):
             if not value:
                 return []
             if not value.startswith("http"):
@@ -928,10 +928,10 @@ def get_matching_urls(
         # Look through tags to find links
         for tag in parser.find_all("a", href=True):
             value = tag.get("href")
-            potential_urls.extend(ProcessTagUrl(value, base_url))
+            potential_urls.extend(process_tag_url(value, base_url))
         for tag in parser.find_all("iframe", src=True):
             value = tag.get("src")
-            potential_urls.extend(ProcessTagUrl(value, base_url, is_iframe=True))
+            potential_urls.extend(process_tag_url(value, base_url, is_iframe=True))
 
         # Look through tag attributes to find links
         for tag in parser.find_all(True):

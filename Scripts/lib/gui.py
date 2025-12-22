@@ -362,7 +362,7 @@ def display_choices_window(
         window_size = display.get_current_screen_resolution()
 
     # Run selected choice
-    def RunSelectedChoice(choice):
+    def run_selected_choice(choice):
         if callable(run_func):
             run_func(choice)
 
@@ -435,4 +435,4 @@ def display_choices_window(
 
     # Run selected choice
     if selected_choice:
-        RunSelectedChoice(selected_choice)
+        run_selected_choice(selected_choice)

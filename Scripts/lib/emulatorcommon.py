@@ -47,7 +47,7 @@ def simple_launch(
     elif isinstance(game_launch_file, list) and len(game_launch_file) > 1:
 
         # Handle game selection
-        def HandleGameSelection(selected_file):
+        def handle_game_selection(selected_file):
             nonlocal selected_launch_file
             selected_launch_file = selected_file
 

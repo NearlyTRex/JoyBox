@@ -550,7 +550,7 @@ def launch_computer_game(
         })
 
     # Create game prefix
-    def CreateGamePrefix():
+    def create_game_prefix():
         nonlocal game_launch_options
         return game_launch_options.create_prefix(
             is_wine_prefix = environment.is_linux_platform(),

@@ -995,7 +995,7 @@ def create_sandboxie_prefix(
     new_options.set_shell(True)
 
     # Set sandboxie param
-    def SetSandboxieBoxParam(options, param, value):
+    def set_sandboxie_box_param(options, param, value):
         cmd = [sandboxie_ini_tool, "set", sandbox_options.get_prefix_name().val(), param, value]
         new_cmd, new_options = setup_prefix_environment(
             cmd = cmd,
@@ -1011,17 +1011,17 @@ def create_sandboxie_prefix(
             exit_on_failure = exit_on_failure)
 
     # Initialize prefix
-    SetSandboxieBoxParam(new_options, "Enabled", "y")
-    SetSandboxieBoxParam(new_options, "FileRootPath", new_options.get_prefix_dir())
-    SetSandboxieBoxParam(new_options, "BlockNetParam", "n")
-    SetSandboxieBoxParam(new_options, "BlockNetworkFiles", "y")
-    SetSandboxieBoxParam(new_options, "RecoverFolder", "%Desktop%")
-    SetSandboxieBoxParam(new_options, "BorderColor", "#00ffff,off,6")
-    SetSandboxieBoxParam(new_options, "ConfigLevel", "10")
-    SetSandboxieBoxParam(new_options, "BoxNameTitle", "-")
-    SetSandboxieBoxParam(new_options, "CopyLimitKb", "-1")
-    SetSandboxieBoxParam(new_options, "NoSecurityIsolation", "y")
-    SetSandboxieBoxParam(new_options, "Template", "OpenBluetooth")
+    set_sandboxie_box_param(new_options, "Enabled", "y")
+    set_sandboxie_box_param(new_options, "FileRootPath", new_options.get_prefix_dir())
+    set_sandboxie_box_param(new_options, "BlockNetParam", "n")
+    set_sandboxie_box_param(new_options, "BlockNetworkFiles", "y")
+    set_sandboxie_box_param(new_options, "RecoverFolder", "%Desktop%")
+    set_sandboxie_box_param(new_options, "BorderColor", "#00ffff,off,6")
+    set_sandboxie_box_param(new_options, "ConfigLevel", "10")
+    set_sandboxie_box_param(new_options, "BoxNameTitle", "-")
+    set_sandboxie_box_param(new_options, "CopyLimitKb", "-1")
+    set_sandboxie_box_param(new_options, "NoSecurityIsolation", "y")
+    set_sandboxie_box_param(new_options, "Template", "OpenBluetooth")
 
     # Creation successful
     return True

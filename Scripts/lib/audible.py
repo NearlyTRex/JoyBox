@@ -69,7 +69,7 @@ def get_activation_bytes(authcode_file = None, verbose = False, exit_on_failure 
     return None
 
 # Decrypt AAX file to M4A using FFMpeg
-def DecryptAAXToM4A(
+def decrypt_aax_to_m4a(
     input_file,
     output_file = None,
     activation_bytes = None,
@@ -176,7 +176,7 @@ def DecryptAAXToM4A(
     return True
 
 # Decrypt multiple AAX files to M4A
-def DecryptAAXFilesToM4A(
+def decrypt_aax_files_to_m4a(
     input_files,
     output_dir = None,
     activation_bytes = None,
@@ -218,7 +218,7 @@ def DecryptAAXFilesToM4A(
             output_file = paths.join_paths(output_dir, filename)
 
         # Decrypt file
-        success = DecryptAAXToM4A(
+        success = decrypt_aax_to_m4a(
             input_file = input_file,
             output_file = output_file,
             activation_bytes = activation_bytes,
@@ -287,7 +287,7 @@ def decrypt_aax_directory(
     logger.log_info(f"Found {len(aax_files)} AAX/AA files to decrypt")
 
     # Decrypt files
-    return DecryptAAXFilesToM4A(
+    return decrypt_aax_files_to_m4a(
         input_files = aax_files,
         output_dir = output_dir,
         activation_bytes = activation_bytes,

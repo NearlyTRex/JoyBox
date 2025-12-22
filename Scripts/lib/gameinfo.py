@@ -738,7 +738,7 @@ class GameInfo:
             self.update_json_file()
 
         # Get launch info
-        def GetLaunchInfo(game_exe):
+        def get_launch_info(game_exe):
             for launch_program in launch_programs:
                 launch_exe = launch_program.get_exe()
                 launch_cwd = launch_program.get_cwd()
@@ -760,9 +760,9 @@ class GameInfo:
         launch_program = None
 
         # Handle game selection
-        def HandleGameSelection(selected_file):
+        def handle_game_selection(selected_file):
             nonlocal launch_program
-            launch_program = GetLaunchInfo(selected_file)
+            launch_program = get_launch_info(selected_file)
 
         # Build runnable choices list
         runnable_choices = []

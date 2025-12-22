@@ -138,7 +138,7 @@ class GOG(storebase.StoreBase):
     ############################################################
 
     # Login LGOGDownloader
-    def LoginLGOGDownloader(
+    def login_lgog_downloader(
         self,
         verbose = False,
         pretend_run = False,
@@ -169,7 +169,7 @@ class GOG(storebase.StoreBase):
         return (code == 0)
 
     # Login HeroicGogDL
-    def LoginHeroicGogDL(
+    def login_heroic_gogdl(
         self,
         verbose = False,
         pretend_run = False,
@@ -219,7 +219,7 @@ class GOG(storebase.StoreBase):
             return True
 
         # Login LGOGDownloader
-        success = self.LoginLGOGDownloader(
+        success = self.login_lgog_downloader(
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
@@ -227,7 +227,7 @@ class GOG(storebase.StoreBase):
             return False
 
         # Login HeroicGogDL
-        success = self.LoginHeroicGogDL(
+        success = self.login_heroic_gogdl(
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)

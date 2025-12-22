@@ -108,7 +108,7 @@ class HumbleBundle(storebase.StoreBase):
         return self.email
 
     # Get auth token
-    def GetAuthToken(self):
+    def get_auth_token(self):
         return self.auth_token
 
     # Get install dir
@@ -187,7 +187,7 @@ class HumbleBundle(storebase.StoreBase):
         list_cmd = [
             python_tool,
             humble_script,
-            "--auth", self.GetAuthToken(),
+            "--auth", self.get_auth_token(),
             "--list",
             "--platform", self.get_preferred_platform(),
             "--quiet"
@@ -314,7 +314,7 @@ class HumbleBundle(storebase.StoreBase):
         info_cmd = [
             python_tool,
             humble_script,
-            "--auth", self.GetAuthToken(),
+            "--auth", self.get_auth_token(),
             "--show", identifier,
             "--json",
             "--quiet"

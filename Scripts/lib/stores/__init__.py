@@ -22,21 +22,21 @@ from .zoom import Zoom
 # Get store map
 def get_store_map():
     instances = {}
-    def AddInstance(class_name):
+    def add_instance(class_name):
         instance = class_name()
         instances[instance.GetName()] = instance
-    AddInstance(Amazon)
-    AddInstance(Disc)
-    AddInstance(Epic)
-    AddInstance(GOG)
-    AddInstance(HumbleBundle)
-    AddInstance(Itchio)
-    AddInstance(Legacy)
-    AddInstance(PuppetCombo)
-    AddInstance(RedCandle)
-    AddInstance(SquareEnix)
-    AddInstance(Steam)
-    AddInstance(Zoom)
+    add_instance(Amazon)
+    add_instance(Disc)
+    add_instance(Epic)
+    add_instance(GOG)
+    add_instance(HumbleBundle)
+    add_instance(Itchio)
+    add_instance(Legacy)
+    add_instance(PuppetCombo)
+    add_instance(RedCandle)
+    add_instance(SquareEnix)
+    add_instance(Steam)
+    add_instance(Zoom)
     return instances
 
 # Get store list

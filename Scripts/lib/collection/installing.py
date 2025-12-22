@@ -167,7 +167,7 @@ def install_local_game(
     if platforms.is_transform_platform(game_platform):
 
         # Install transformed game
-        def InstallTransformedGame():
+        def install_transformed_game():
             return install_local_transformed_game(
                 game_info = game_info,
                 source_dir = tmp_dir_result,

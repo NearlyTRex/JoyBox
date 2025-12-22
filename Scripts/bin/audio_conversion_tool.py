@@ -70,7 +70,7 @@ def main():
                 pretend_run = args.pretend_run,
                 exit_on_failure = args.exit_on_failure)
         elif paths.is_path_file(input_path):
-            return audible.DecryptAAXToM4A(
+            return audible.decrypt_aax_to_m4a(
                 input_file = input_path,
                 output_file = output_path,
                 activation_bytes = args.activation_bytes,
