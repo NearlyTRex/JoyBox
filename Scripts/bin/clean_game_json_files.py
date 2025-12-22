@@ -27,7 +27,7 @@ args, unknown = parser.parse_known_args()
 def main():
 
     # Check requirements
-    setup.CheckRequirements()
+    setup.check_requirements()
 
     # Setup logging
     logger.setup_logging()
@@ -45,7 +45,7 @@ def main():
                 for game_name in game_names:
 
                     # Get json file
-                    json_file = environment.GetGameJsonMetadataFile(game_supercategory, game_category, game_subcategory, game_name)
+                    json_file = environment.get_game_json_metadata_file(game_supercategory, game_category, game_subcategory, game_name)
                     if not paths.is_path_file(json_file):
                         continue
                     json_files_to_process.append(json_file)

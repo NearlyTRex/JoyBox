@@ -41,7 +41,7 @@ args = parser.parse_args()
 def main():
 
     # Check requirements
-    setup.CheckRequirements()
+    setup.check_requirements()
 
     # Setup logging
     logger.setup_logging()

@@ -56,7 +56,7 @@ def GetActivationBytes(authcode_file = None, verbose = False, exit_on_failure = 
             return extracted
 
     # Check default location
-    default_authcode_file = paths.join_paths(environment.GetUserHomeDir(), ".audible_authcode")
+    default_authcode_file = paths.join_paths(environment.get_home_directory(), ".audible_authcode")
     if paths.is_path_file(default_authcode_file):
         authcode = serialization.read_text_file(
             src = default_authcode_file,

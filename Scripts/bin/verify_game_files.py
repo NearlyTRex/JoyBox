@@ -28,7 +28,7 @@ args, unknown = parser.parse_known_args()
 def main():
 
     # Check requirements
-    setup.CheckRequirements()
+    setup.check_requirements()
 
     # Setup logging
     logger.setup_logging()
@@ -36,29 +36,29 @@ def main():
     # Show preview
     if not args.no_preview:
         details = [
-            "JSON dir: %s" % environment.GetGameJsonMetadataRootDir(),
-            "Metadata dir: %s" % environment.GetGameMetadataRootDir(),
-            "Hashes dir: %s" % environment.GetGameHashesMetadataRootDir()
+            "JSON dir: %s" % environment.get_game_json_metadata_root_dir(),
+            "Metadata dir: %s" % environment.get_game_metadata_root_dir(),
+            "Hashes dir: %s" % environment.get_game_hashes_metadata_root_dir()
         ]
         if not prompts.prompt_for_preview("Verify game files (check JSON, metadata, and hash files)", details):
             logger.log_warning("Operation cancelled by user")
             return
 
     # Find extra json files
-    for json_file in paths.build_file_list_by_extensions(environment.GetGameJsonMetadataRootDir(), extensions = [".json"]):
+    for json_file in paths.build_file_list_by_extensions(environment.get_game_json_metadata_root_dir(), extensions = [".json"]):
 
         # Check if json file matches up to a real game path
         logger.log_info("Checking if game matching '%s' exists ..." % json_file)
         game_supercategory, game_category, game_subcategory = gameinfo.DeriveGameCategoriesFromFile(json_file)
         game_name = paths.get_filename_basename(json_file)
-        game_base_dir = environment.GetLockerGamingFilesDir(game_supercategory, game_category, game_subcategory, game_name)
+        game_base_dir = environment.get_locker_gaming_files_dir(game_supercategory, game_category, game_subcategory, game_name)
         if not os.path.exists(game_base_dir):
             logger.log_error("Extraneous json file '%s' found" % json_file, quit_program = True)
 
     # Verify metadata files
     for game_category in config.Category.members():
         for game_subcategory in config.subcategory_map[game_category]:
-            metadata_file = environment.GetGameMetadataFile(game_category, game_subcategory)
+            metadata_file = environment.get_game_metadata_file(game_category, game_subcategory)
             if paths.is_path_file(metadata_file):
                 metadata_obj = metadata.Metadata()
                 metadata_obj.import_from_metadata_file(metadata_file)
@@ -76,7 +76,7 @@ def main():
                 for game_name in game_names:
 
                     # Get json file
-                    json_file = environment.GetGameJsonMetadataFile(game_supercategory, game_category, game_subcategory, game_name)
+                    json_file = environment.get_game_json_metadata_file(game_supercategory, game_category, game_subcategory, game_name)
                     if not paths.is_path_file(json_file):
                         continue
 
@@ -105,7 +105,7 @@ def main():
                     # Each of these files should exist
                     for file_to_check in files_to_check:
                         stored_file = paths.join_paths(
-                            environment.GetLockerGamingFilesDir(game_supercategory, game_category, game_subcategory, game_name),
+                            environment.get_locker_gaming_files_dir(game_supercategory, game_category, game_subcategory, game_name),
                             file_to_check)
                         if not os.path.exists(stored_file):
                             logger.log_error("File '%s' referenced in json file not found" % file_to_check, quit_program = True)
@@ -116,7 +116,7 @@ def main():
             for game_subcategory in config.subcategory_map[game_category]:
 
                 # Get hash file path
-                hash_file_path = environment.GetGameHashesMetadataFile(game_supercategory, game_category, game_subcategory)
+                hash_file_path = environment.get_game_hashes_metadata_file(game_supercategory, game_category, game_subcategory)
                 if not os.path.exists(hash_file_path):
                     continue
 
@@ -126,7 +126,7 @@ def main():
                 for hash_reference_file in hash_file_data.keys():
 
                     # Check if file exists
-                    stored_file = paths.join_paths(environment.GetLockerGamingRootDir(), hash_reference_file)
+                    stored_file = paths.join_paths(environment.get_locker_gaming_root_dir(), hash_reference_file)
                     if not os.path.exists(stored_file):
                         logger.log_error("File '%s' referenced in hash file not found" % stored_file, quit_program = True)
 

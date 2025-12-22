@@ -21,13 +21,13 @@ args, unknown = parser.parse_known_args()
 def main():
 
     # Check requirements
-    setup.CheckRequirements()
+    setup.check_requirements()
 
     # Setup logging
     logger.setup_logging()
 
     # Setup assets
-    setup.SetupAssets(
+    setup.setup_assets(
         verbose = args.verbose,
         pretend_run = args.pretend_run,
         exit_on_failure = args.exit_on_failure)

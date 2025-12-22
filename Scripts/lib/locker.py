@@ -16,7 +16,7 @@ import lockerinfo
 
 # Check if path is local
 def IsLocalPath(path):
-    if path.startswith(environment.GetLockerRootDir(config.SourceType.LOCAL) + config.os_pathsep):
+    if path.startswith(environment.get_locker_root_dir(config.SourceType.LOCAL) + config.os_pathsep):
         return True
     if paths.does_path_exist(path):
         return True
@@ -28,9 +28,9 @@ def IsRemotePath(path):
 
 # Convert to remote path
 def ConvertToRemotePath(path):
-    old_base_path = environment.GetLockerRootDir(config.SourceType.REMOTE)
+    old_base_path = environment.get_locker_root_dir(config.SourceType.REMOTE)
     if IsLocalPath(path):
-        old_base_path = environment.GetLockerRootDir(config.SourceType.LOCAL)
+        old_base_path = environment.get_locker_root_dir(config.SourceType.LOCAL)
     return paths.rebase_file_path(
         path = path,
         old_base_path = old_base_path,
@@ -42,8 +42,8 @@ def ConvertToLocalPath(path):
         return path
     return paths.rebase_file_path(
         path = path,
-        old_base_path = environment.GetLockerRootDir(config.SourceType.REMOTE),
-        new_base_path = environment.GetLockerRootDir(config.SourceType.LOCAL))
+        old_base_path = environment.get_locker_root_dir(config.SourceType.REMOTE),
+        new_base_path = environment.get_locker_root_dir(config.SourceType.LOCAL))
 
 # Check if path exists
 def DoesRemotePathExist(path, locker_type = None):

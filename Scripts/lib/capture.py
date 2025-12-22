@@ -105,7 +105,7 @@ def CaptureVideo(
     ]
 
     # Add linux video/audio sources
-    if environment.IsLinuxPlatform():
+    if environment.is_linux_platform():
 
         # Video
         capture_cmd += [

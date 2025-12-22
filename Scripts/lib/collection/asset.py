@@ -22,7 +22,7 @@ import metadataassetcollector
 def DoesMetadataAssetExist(game_info, asset_type):
 
     # Check if exists
-    output_asset_file = environment.GetLockerGamingAssetFile(
+    output_asset_file = environment.get_locker_gaming_asset_file(
         game_category = game_info.get_category(),
         game_subcategory = game_info.get_subcategory(),
         game_name = game_info.get_name(),
@@ -49,11 +49,11 @@ def DownloadMetadataAsset(
         return True
 
     # Get output asset
-    output_asset_dir = environment.GetLockerGamingAssetDir(
+    output_asset_dir = environment.get_locker_gaming_asset_dir(
         game_info.get_category(),
         game_info.get_subcategory(),
         asset_type)
-    output_asset_file = environment.GetLockerGamingAssetFile(
+    output_asset_file = environment.get_locker_gaming_asset_file(
         game_info.get_category(),
         game_info.get_subcategory(),
         game_info.get_name(),

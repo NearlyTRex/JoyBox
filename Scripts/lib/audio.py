@@ -19,14 +19,14 @@ import audiometadata
 def GetAlbumDirectories(genre_type = None, album_name = None, artist_name = None):
 
     # Get music dir
-    music_dir = environment.GetLockerMusicDir(genre_type)
+    music_dir = environment.get_locker_music_dir(genre_type)
     if not paths.is_path_directory(music_dir):
         return []
 
     # Get album dirs
     album_dirs = []
     if album_name:
-        album_path = environment.GetLockerMusicAlbumDir(
+        album_path = environment.get_locker_music_album_dir(
             album_name = album_name,
             artist_name = artist_name,
             source_type = config.SourceType.LOCAL,
@@ -73,8 +73,8 @@ def DownloadChannelAudioFiles(channels, genre_type, cookie_source = None, locker
         logger.log_info(f"Created temporary directory: {tmp_dir_result}")
 
         # Get channel info
-        channel_archive_file = environment.GetFileAudioMetadataArchiveFile(genre_type, channel_name)
-        channel_music_dir = environment.GetLockerMusicAlbumDir(
+        channel_archive_file = environment.get_file_audio_metadata_archive_file(genre_type, channel_name)
+        channel_music_dir = environment.get_locker_music_album_dir(
             album_name = channel_name,
             source_type = config.SourceType.LOCAL,
             genre_type = genre_type)
@@ -241,7 +241,7 @@ def BuildAudioMetadataFiles(
             return False
 
         # Write album metadata JSON
-        json_file = environment.GetFileAudioMetadataFile(
+        json_file = environment.get_file_audio_metadata_file(
             config.AudioMetadataType.TAG.value,
             genre_type.value if genre_type else None,
             album_name,
@@ -332,7 +332,7 @@ def ApplyAudioMetadataTags(
             detected_artist_name = parent_name
 
         # Find metadata file
-        json_file = environment.GetFileAudioMetadataFile(
+        json_file = environment.get_file_audio_metadata_file(
             config.AudioMetadataType.TAG.value,
             genre_type.value if genre_type else None,
             album_name,

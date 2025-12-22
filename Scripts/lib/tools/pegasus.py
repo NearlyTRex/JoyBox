@@ -188,7 +188,7 @@ class Pegasus(toolbase.ToolBase):
 
         # Generate game dirs
         game_dirs = []
-        for pegasus_file in paths.build_file_list_by_extensions(environment.GetGamePegasusMetadataRootDir(), extensions = [".txt"]):
+        for pegasus_file in paths.build_file_list_by_extensions(environment.get_game_pegasus_metadata_root_dir(), extensions = [".txt"]):
             if pegasus_file.endswith("metadata.pegasus.txt"):
                 game_dirs.append(paths.get_filename_directory(pegasus_file))
 
@@ -199,7 +199,7 @@ class Pegasus(toolbase.ToolBase):
         # Create config files
         for config_filename, config_contents in config_files.items():
             success = fileops.touch_file(
-                src = paths.join_paths(environment.GetToolsRootDir(), config_filename),
+                src = paths.join_paths(environment.get_tools_root_dir(), config_filename),
                 contents = config_contents.strip(),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,

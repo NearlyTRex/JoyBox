@@ -37,7 +37,7 @@ args, unknown = parser.parse_known_args()
 def main():
 
     # Check requirements
-    setup.CheckRequirements()
+    setup.check_requirements()
 
     # Setup logging
     logger.setup_logging()
@@ -50,7 +50,7 @@ def main():
 
     # Create base command
     base_cmd = [
-        paths.join_paths(environment.GetScriptsBinDir(), args.preset_tool_type.val() + environment.GetScriptsCommandExtension())
+        paths.join_paths(environment.get_scripts_bin_dir(), args.preset_tool_type.val() + environment.get_scripts_command_extension())
     ]
     if args.verbose:
         base_cmd += ["--verbose"]

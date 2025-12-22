@@ -100,10 +100,10 @@ class LGOGDownloader(toolbase.ToolBase):
             setup_params = config.SetupParams()
 
         # Create config files
-        if environment.IsLinuxPlatform():
+        if environment.is_linux_platform():
             for config_filename, config_contents in config_files.items():
                 success = fileops.touch_file(
-                    src = paths.join_paths(environment.GetToolsRootDir(), config_filename),
+                    src = paths.join_paths(environment.get_tools_root_dir(), config_filename),
                     contents = config_contents.strip(),
                     verbose = setup_params.verbose,
                     pretend_run = setup_params.pretend_run,

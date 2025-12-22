@@ -108,7 +108,7 @@ class Logger:
             self.add_file_handler()
 
     def get_default_log_dir(self):
-        return environment.GetLogDirectory()
+        return environment.get_log_directory()
 
     def get_timestamped_filename(self):
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")

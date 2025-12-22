@@ -40,7 +40,7 @@ def TransformComputerPrograms(
     output_extract_dir = paths.join_paths(output_dir, gameinfo.DeriveRegularNameFromGameName(game_name))
     output_extract_index_file = paths.join_paths(output_extract_dir, config.raw_files_index)
     output_install_file = paths.join_paths(output_dir, game_name + ".install")
-    cached_install_dir = environment.GetCacheGamingInstallDir(game_category, game_subcategory, game_name)
+    cached_install_dir = environment.get_cache_gaming_install_dir(game_category, game_subcategory, game_name)
     cached_install_file = paths.join_paths(cached_install_dir, game_name + ".install")
 
     # Make directories

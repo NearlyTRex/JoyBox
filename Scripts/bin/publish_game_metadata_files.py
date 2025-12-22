@@ -25,14 +25,14 @@ args, unknown = parser.parse_known_args()
 def main():
 
     # Check requirements
-    setup.CheckRequirements()
+    setup.check_requirements()
 
     # Setup logging
     logger.setup_logging()
 
     # Show preview
     if not args.no_preview:
-        publish_dir = environment.GetGamePublishedMetadataRootDir()
+        publish_dir = environment.get_game_published_metadata_root_dir()
         if not prompts.prompt_for_preview("Publish game metadata files to HTML", [publish_dir]):
             logger.log_warning("Operation cancelled by user")
             return

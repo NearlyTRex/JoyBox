@@ -26,7 +26,7 @@ args, unknown = parser.parse_known_args()
 def main():
 
     # Check requirements
-    setup.CheckRequirements()
+    setup.check_requirements()
 
     # Setup logging
     logger.setup_logging()
@@ -37,7 +37,7 @@ def main():
         for game_subcategory in config.subcategory_map[game_category]:
 
             # Get metadata file
-            metadata_file = environment.GetGameMetadataFile(game_category, game_subcategory)
+            metadata_file = environment.get_game_metadata_file(game_category, game_subcategory)
             if not paths.is_path_file(metadata_file):
                 continue
             metadata_files_to_process.append((game_category, game_subcategory, metadata_file))

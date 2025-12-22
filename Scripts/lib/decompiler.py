@@ -39,7 +39,7 @@ def ResolvePresetPaths(preset_name):
 
     # Resolve repository path
     resolved = dict(preset)
-    repo_path = os.path.join(environment.GetRepositoriesRootDir(), preset.get("repository", ""))
+    repo_path = os.path.join(environment.get_repositories_root_dir(), preset.get("repository", ""))
     resolved["repo_path"] = repo_path
     resolved["project_dir_abs"] = os.path.join(repo_path, preset.get("project_dir", ""))
 

@@ -13,7 +13,7 @@ import programs
 import ini
 
 # Check requirements
-def CheckRequirements():
+def check_requirements():
 
     # Check python version
     if sys.version_info < config.minimum_python_version:
@@ -22,13 +22,13 @@ def CheckRequirements():
         system.quit_program()
 
     # Check operating system
-    is_windows = environment.IsWindowsPlatform()
-    is_linux = environment.IsLinuxPlatform()
+    is_windows = environment.is_windows_platform()
+    is_linux = environment.is_linux_platform()
     if is_windows == False and is_linux == False:
         logger.log_error("Only windows and linux are supported right now", quit_program = True)
 
     # Check symlink support
-    if not environment.AreSymlinksSupported():
+    if not environment.are_symlinks_supported():
         logger.log_error("Symlinks are required, please enable them for your system", quit_program = True)
 
     # Check ini file
@@ -36,7 +36,7 @@ def CheckRequirements():
         logger.log_error("Ini file not found, please run setup first", quit_program = True)
 
 # Setup packages
-def SetupPackages(
+def setup_packages(
     package_list,
     package_type,
     root_dir,
@@ -96,17 +96,17 @@ def SetupPackages(
     return True
 
 # Setup tools
-def SetupTools(
+def setup_tools(
     offline = False,
     configure = False,
     clean = False,
     force = False,
     packages = None,
     setup_params = None):
-    return SetupPackages(
+    return setup_packages(
         package_list = programs.GetTools(),
         package_type = "tool",
-        root_dir = environment.GetToolsRootDir(),
+        root_dir = environment.get_tools_root_dir(),
         offline = offline,
         configure = configure,
         clean = clean,
@@ -115,17 +115,17 @@ def SetupTools(
         setup_params = setup_params)
 
 # Setup emulators
-def SetupEmulators(
+def setup_emulators(
     offline = False,
     configure = False,
     clean = False,
     force = False,
     packages = None,
     setup_params = None):
-    return SetupPackages(
+    return setup_packages(
         package_list = programs.GetEmulators(),
         package_type = "emulator",
-        root_dir = environment.GetEmulatorsRootDir(),
+        root_dir = environment.get_emulators_root_dir(),
         offline = offline,
         configure = configure,
         clean = clean,
@@ -134,15 +134,15 @@ def SetupEmulators(
         setup_params = setup_params)
 
 # Setup assets
-def SetupAssets(verbose = False, pretend_run = False, exit_on_failure = False):
+def setup_assets(verbose = False, pretend_run = False, exit_on_failure = False):
     for game_category in config.Category.members():
         for game_subcategory in config.subcategory_map[game_category]:
             logger.log_info("Creating asset symlinks for %s - %s ..." % (game_category, game_subcategory))
             for asset_type in config.AssetType.members():
 
                 # Get directories
-                source_dir = environment.GetLockerGamingAssetDir(game_category, game_subcategory, asset_type)
-                dest_dir = environment.GetGamePegasusMetadataAssetDir(game_category, game_subcategory, asset_type)
+                source_dir = environment.get_locker_gaming_asset_dir(game_category, game_subcategory, asset_type)
+                dest_dir = environment.get_game_pegasus_metadata_asset_dir(game_category, game_subcategory, asset_type)
                 dest_parent_dir = paths.get_directory_parent(dest_dir)
 
                 # Create source dir if it doesn't exist

@@ -359,7 +359,7 @@ def SetupComputerGame(
     game_keep_discs = game_info.does_store_need_to_keep_discs()
 
     # Get setup directory
-    game_setup_dir = environment.GetCacheGamingSetupDir(game_category, game_subcategory, game_name)
+    game_setup_dir = environment.get_cache_gaming_setup_dir(game_category, game_subcategory, game_name)
     success = fileops.make_directory(
         src = game_setup_dir,
         verbose = verbose,
@@ -373,8 +373,8 @@ def SetupComputerGame(
 
     # Create prefix
     success = game_setup_options.create_prefix(
-        is_wine_prefix = environment.IsWinePlatform(),
-        is_sandboxie_prefix = environment.IsSandboxiePlatform(),
+        is_wine_prefix = environment.is_wine_platform(),
+        is_sandboxie_prefix = environment.is_sandboxie_platform(),
         prefix_name = config.PrefixType.SETUP,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -553,8 +553,8 @@ def LaunchComputerGame(
     def CreateGamePrefix():
         nonlocal game_launch_options
         return game_launch_options.create_prefix(
-            is_wine_prefix = environment.IsLinuxPlatform(),
-            is_sandboxie_prefix = environment.IsWindowsPlatform(),
+            is_wine_prefix = environment.is_linux_platform(),
+            is_sandboxie_prefix = environment.is_windows_platform(),
             prefix_name = config.PrefixType.GAME,
             prefix_dir = game_info.get_save_dir(),
             general_prefix_dir = game_info.get_general_save_dir(),

@@ -43,7 +43,7 @@ args, unknown = parser.parse_known_args()
 def main():
 
     # Check requirements
-    setup.CheckRequirements()
+    setup.check_requirements()
 
     # Setup logging
     logger.setup_logging()
@@ -58,9 +58,9 @@ def main():
     # Show preview
     if not args.no_preview:
         details = [
-            "JSON dir: %s" % environment.GetGameJsonMetadataRootDir(),
-            "Metadata dir: %s" % environment.GetGameMetadataRootDir(),
-            "Published dir: %s" % environment.GetGamePublishedMetadataRootDir()
+            "JSON dir: %s" % environment.get_game_json_metadata_root_dir(),
+            "Metadata dir: %s" % environment.get_game_metadata_root_dir(),
+            "Published dir: %s" % environment.get_game_published_metadata_root_dir()
         ]
         if not prompts.prompt_for_preview("Scan game files (build store purchases, JSON, metadata, publish)", details):
             logger.log_warning("Operation cancelled by user")

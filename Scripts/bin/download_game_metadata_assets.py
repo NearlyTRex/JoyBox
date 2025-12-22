@@ -45,7 +45,7 @@ args, unknown = parser.parse_known_args()
 def main():
 
     # Check requirements
-    setup.CheckRequirements()
+    setup.check_requirements()
 
     # Setup logging
     logger.setup_logging()
@@ -62,7 +62,7 @@ def main():
 
     # Show preview
     if not args.no_preview:
-        details = [environment.GetLockerGamingAssetsRootDir()]
+        details = [environment.get_locker_gaming_assets_root_dir()]
         asset_desc = args.asset_type if args.asset_type else "all types"
         if not prompts.prompt_for_preview("Download metadata assets (%s)" % asset_desc, details):
             logger.log_warning("Operation cancelled by user")

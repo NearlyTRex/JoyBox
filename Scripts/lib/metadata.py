@@ -150,7 +150,7 @@ class Metadata:
 
                 # Check file paths
                 file_path_relative = game_entry.get_file()
-                file_path_real = paths.join_paths(environment.GetGameJsonMetadataRootDir(), file_path_relative)
+                file_path_real = paths.join_paths(environment.get_game_json_metadata_root_dir(), file_path_relative)
                 if not paths.does_path_exist(file_path_real):
                     logger.log_error("File not found:\n%s" % file_path_relative)
                     logger.log_error("Verification of '%s - %s' failed" % (game_platform, game_name), quit_program = True)

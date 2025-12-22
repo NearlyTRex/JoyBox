@@ -71,7 +71,7 @@ class Ghidra(toolbase.ToolBase):
         if programs.ShouldLibraryBeInstalled("Ghidra/lib"):
 
             # Get build command
-            if environment.IsWindowsPlatform():
+            if environment.is_windows_platform():
                 build_cmd = [
                     "gradlew.bat", "-I", "gradle/support/fetchDependencies.gradle",
                     "&&",
@@ -149,7 +149,7 @@ class Ghidra(toolbase.ToolBase):
                 logger.log_error("Could not read Ghidra config file: %s" % src_filename)
                 return False
             success = fileops.touch_file(
-                src = paths.join_paths(environment.GetToolsRootDir(), dest_path),
+                src = paths.join_paths(environment.get_tools_root_dir(), dest_path),
                 contents = contents.strip(),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,

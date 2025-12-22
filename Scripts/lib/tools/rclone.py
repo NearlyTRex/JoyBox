@@ -188,7 +188,7 @@ class RClone(toolbase.ToolBase):
         ]
         for config_filename in config_files:
             success = fileops.touch_file(
-                src = paths.join_paths(environment.GetToolsRootDir(), config_filename),
+                src = paths.join_paths(environment.get_tools_root_dir(), config_filename),
                 contents = config_contents.strip(),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,

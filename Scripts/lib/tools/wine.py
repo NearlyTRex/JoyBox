@@ -23,7 +23,7 @@ class Wine(toolbase.ToolBase):
     def GetConfig(self):
 
         # Check platform
-        if not environment.IsWinePlatform():
+        if not environment.is_wine_platform():
             return {}
 
         # Get wine info

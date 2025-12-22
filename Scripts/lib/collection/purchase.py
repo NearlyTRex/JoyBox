@@ -118,7 +118,7 @@ def ImportGameStorePurchases(
 
         # Skip if json file already exists
         json_matches = serialization.search_json_files(
-            src = environment.GetJsonMetadataDir(
+            src = environment.get_json_metadata_dir(
                 game_supercategory = store_obj.GetSupercategory(),
                 game_category = store_obj.GetCategory(),
                 game_subcategory = store_obj.GetSubcategory()),
@@ -266,7 +266,7 @@ def UpdateGameStorePurchases(
 
         # Find matching json file
         json_matches = serialization.search_json_files(
-            src = environment.GetJsonMetadataDir(
+            src = environment.get_json_metadata_dir(
                 game_supercategory = store_obj.GetSupercategory(),
                 game_category = store_obj.GetCategory(),
                 game_subcategory = store_obj.GetSubcategory()),
@@ -284,7 +284,7 @@ def UpdateGameStorePurchases(
         game_name = paths.get_filename_basename(json_file)
 
         # Get game root
-        game_root = environment.GetLockerGamingFilesDir(
+        game_root = environment.get_locker_gaming_files_dir(
             game_supercategory = game_supercategory,
             game_category = game_category,
             game_subcategory = game_subcategory,
@@ -427,14 +427,14 @@ def DownloadGameStorePurchase(
 
     # Get output dir
     if output_dir:
-        output_offset = environment.GetLockerGamingFilesOffset(
+        output_offset = environment.get_locker_gaming_files_offset(
             game_supercategory = game_info.get_supercategory(),
             game_category = game_info.get_category(),
             game_subcategory = game_info.get_subcategory(),
             game_name = game_info.get_name())
         output_dir = paths.join_paths(os.path.realpath(output_dir), output_offset)
     else:
-        output_dir = environment.GetLockerGamingFilesDir(
+        output_dir = environment.get_locker_gaming_files_dir(
             game_supercategory = game_info.get_supercategory(),
             game_category = game_info.get_category(),
             game_subcategory = game_info.get_subcategory(),

@@ -27,7 +27,7 @@ def UploadGameFiles(
 
     # Get game root
     if not paths.is_path_directory(game_root):
-        game_root = environment.GetLockerGamingFilesDir(
+        game_root = environment.get_locker_gaming_files_dir(
             game_supercategory = game_info.get_supercategory(),
             game_category = game_info.get_category(),
             game_subcategory = game_info.get_subcategory(),

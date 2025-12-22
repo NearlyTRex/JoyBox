@@ -39,7 +39,7 @@ args, unknown = parser.parse_known_args()
 def main():
 
     # Check requirements
-    setup.CheckRequirements()
+    setup.check_requirements()
 
     # Setup logging
     logger.setup_logging()
@@ -56,7 +56,7 @@ def main():
 
     # Next use category values
     elif args.game_category and args.game_subcategory and args.game_name:
-        json_file = environment.GetGameJsonMetadataFile(
+        json_file = environment.get_game_json_metadata_file(
             game_supercategory = config.Supercategory.ROMS,
             game_category = args.game_category,
             game_subcategory = args.game_subcategory,

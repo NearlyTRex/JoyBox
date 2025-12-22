@@ -197,7 +197,7 @@ class MetadataEntry:
             game_asset_string = gameinfo.DeriveGameAssetPathFromName(
                 game_name = self.get_game(),
                 asset_type = asset_type)
-            game_asset_file = environment.GetLockerGamingAssetFile(
+            game_asset_file = environment.get_locker_gaming_asset_file(
                 game_category = self.get_category(),
                 game_subcategory = self.get_subcategory(),
                 game_name = self.get_game(),

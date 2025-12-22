@@ -35,7 +35,7 @@ args, unknown = parser.parse_known_args()
 def main():
 
     # Check requirements
-    setup.CheckRequirements()
+    setup.check_requirements()
 
     # Setup logging
     logger.setup_logging()
@@ -52,7 +52,7 @@ def main():
         if args.game_name:
             game_names = [g for g in game_names if g == args.game_name]
         for game_name in game_names:
-            metadata_file = environment.GetGameMetadataFile(game_category, game_subcategory)
+            metadata_file = environment.get_game_metadata_file(game_category, game_subcategory)
             games_to_process.append((game_supercategory, game_category, game_subcategory, game_name, metadata_file))
 
     # Show preview

@@ -74,17 +74,17 @@ class Python(toolbase.ToolBase):
             setup_params = config.SetupParams()
 
         # Create wrapper scripts
-        for obj in paths.get_directory_contents(environment.GetScriptsBinDir()):
+        for obj in paths.get_directory_contents(environment.get_scripts_bin_dir()):
             if obj.endswith(".py"):
 
                 # Get script info
                 script_basename = paths.get_filename_basename(obj)
-                script_path_orig = paths.join_paths(environment.GetScriptsBinDir(), obj)
-                script_path_windows = paths.join_paths(environment.GetScriptsBinDir(), script_basename + config.WindowsProgramFileType.BAT.cval())
-                script_path_unix = paths.join_paths(environment.GetScriptsBinDir(), script_basename)
+                script_path_orig = paths.join_paths(environment.get_scripts_bin_dir(), obj)
+                script_path_windows = paths.join_paths(environment.get_scripts_bin_dir(), script_basename + config.WindowsProgramFileType.BAT.cval())
+                script_path_unix = paths.join_paths(environment.get_scripts_bin_dir(), script_basename)
 
                 # Create windows wrapper script
-                if environment.IsWindowsPlatform():
+                if environment.is_windows_platform():
                     success = fileops.touch_file(
                         src = script_path_windows,
                         contents = wrapper_script_windows.strip().replace(config.token_python_bin, programs.GetToolProgram("PythonVenvPython")),
@@ -96,7 +96,7 @@ class Python(toolbase.ToolBase):
                         return False
 
                 # Create unix wrapper script
-                if environment.IsUnixPlatform():
+                if environment.is_unix_platform():
                     success = fileops.touch_file(
                         src = script_path_unix,
                         contents = wrapper_script_unix.strip().replace(config.token_python_bin, programs.GetToolProgram("PythonVenvPython")),

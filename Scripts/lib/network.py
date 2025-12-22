@@ -247,11 +247,11 @@ def DownloadGitUrl(
 def IsNetworkShareMounted(mount_dir, base_location, network_share):
 
     # Windows
-    if environment.IsWindowsPlatform():
+    if environment.is_windows_platform():
         return paths.is_path_directory(mount_dir) and not paths.is_directory_empty(mount_dir)
 
     # Linux
-    elif environment.IsLinuxPlatform():
+    elif environment.is_linux_platform():
         mount_lines = command.RunOutputCommand(
             cmd = ["mount"])
         for line in mount_lines.split("\n"):
@@ -275,7 +275,7 @@ def MountNetworkShare(
     exit_on_failure = False):
 
     # Windows
-    if environment.IsWindowsPlatform():
+    if environment.is_windows_platform():
 
         # Check if already mounted
         if paths.is_path_directory(mount_dir):
@@ -300,7 +300,7 @@ def MountNetworkShare(
         return (code == 0)
 
     # Linux
-    elif environment.IsLinuxPlatform():
+    elif environment.is_linux_platform():
 
         # Get mkdir command
         mkdir_cmd = [
@@ -495,7 +495,7 @@ def ArchiveGithubRepository(
     tmp_dir_download = paths.join_paths(tmp_dir_result, "download")
     tmp_dir_archive = paths.join_paths(tmp_dir_result, "archive")
     tmp_file_archive = paths.join_paths(tmp_dir_archive, "tmp.zip")
-    out_file_archive = paths.join_paths(output_dir, github_repo + "_" + str(environment.GetCurrentTimestamp()) + config.ArchiveFileType.ZIP.cval())
+    out_file_archive = paths.join_paths(output_dir, github_repo + "_" + str(environment.get_current_timestamp()) + config.ArchiveFileType.ZIP.cval())
     fileops.make_directory(
         src = tmp_dir_download,
         verbose = verbose,

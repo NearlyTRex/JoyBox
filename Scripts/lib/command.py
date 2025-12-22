@@ -129,13 +129,13 @@ def IsCommandTypeFound(cmd, cmd_exts = [], search_start = 0, search_len = -1):
 # Check if cached game command
 def IsCachedGameCommand(cmd):
     starter_cmd = os.path.normpath(GetStarterCommand(cmd)).lower()
-    cached_dir = os.path.normpath(environment.GetCacheGamingRootDir()).lower()
+    cached_dir = os.path.normpath(environment.get_cache_gaming_root_dir()).lower()
     return starter_cmd.startswith(cached_dir)
 
 # Check if local script command
 def IsLocalScriptCommand(cmd):
     starter_cmd = os.path.normpath(GetStarterCommand(cmd)).lower()
-    scripts_dir = os.path.normpath(environment.GetScriptsBinDir()).lower()
+    scripts_dir = os.path.normpath(environment.get_scripts_bin_dir()).lower()
     return starter_cmd.startswith(scripts_dir)
 
 # Check if local program command
@@ -573,7 +573,7 @@ def RunInteractiveCommand(
             returncode = 0
 
             # Windows
-            if environment.IsWindowsPlatform():
+            if environment.is_windows_platform():
 
                 # Open psuedo-terminal
                 import pywinpty

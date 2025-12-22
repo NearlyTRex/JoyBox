@@ -139,7 +139,7 @@ class Computer(emulatorbase.EmulatorBase):
 
     # Get save type
     def GetSaveType(self):
-        if environment.IsWindowsPlatform():
+        if environment.is_windows_platform():
             return config.SaveType.SANDBOXIE
         else:
             return config.SaveType.WINE
@@ -361,7 +361,7 @@ class Computer(emulatorbase.EmulatorBase):
         # Create config files
         for config_filename, config_contents in config_files.items():
             success = fileops.touch_file(
-                src = paths.join_paths(environment.GetEmulatorsRootDir(), config_filename),
+                src = paths.join_paths(environment.get_emulators_root_dir(), config_filename),
                 contents = config_contents.strip(),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,

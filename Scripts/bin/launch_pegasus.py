@@ -26,7 +26,7 @@ args, unknown = parser.parse_known_args()
 def main():
 
     # Check requirements
-    setup.CheckRequirements()
+    setup.check_requirements()
 
     # Setup logging
     logger.setup_logging()
@@ -47,7 +47,7 @@ def main():
     launch_options = command.CreateCommandOptions()
     launch_options.set_cwd(paths.get_filename_directory(pegasus_tool))
     launch_options.set_env(os.environ)
-    launch_options.set_env_var("JOYBOX_LAUNCH_JSON", paths.join_paths(environment.GetScriptsBinDir(), "launch_json" + environment.GetScriptsCommandExtension()))
+    launch_options.set_env_var("JOYBOX_LAUNCH_JSON", paths.join_paths(environment.get_scripts_bin_dir(), "launch_json" + environment.get_scripts_command_extension()))
 
     # Run launch command
     code = command.RunReturncodeCommand(

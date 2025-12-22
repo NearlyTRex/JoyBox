@@ -724,7 +724,7 @@ def LoadCookie(
 # Get cookie file
 def GetCookieFile(base_name):
     cookie_file = base_name + config.cookie_suffix_path
-    cookie_dir = environment.GetCookieDirectory()
+    cookie_dir = environment.get_cookie_directory()
     return paths.join_paths(cookie_dir, cookie_file)
 
 ###########################################################

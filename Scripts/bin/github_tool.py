@@ -29,7 +29,7 @@ parser.add_string_argument(args = ("-u", "--github_username"), description = "Gi
 parser.add_string_argument(args = ("-t", "--github_access_token"), description = "Github access token")
 parser.add_string_argument(
     args = ("-d", "--archive_base_dir"),
-    default = environment.GetLockerDevelopmentArchivesRootDir(),
+    default = environment.get_locker_development_archives_root_dir(),
     description = "Archive base directory")
 parser.add_string_argument(args = ("-i", "--include_repos"), default = "", description = "Only include these repos (comma delimited)")
 parser.add_string_argument(args = ("-e", "--exclude_repos"), default = "", description = "Use all repos except these (comma delimited)")
@@ -48,7 +48,7 @@ args, unknown = parser.parse_known_args()
 def main():
 
     # Check requirements
-    setup.CheckRequirements()
+    setup.check_requirements()
 
     # Setup logging
     logger.setup_logging()

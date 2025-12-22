@@ -149,7 +149,7 @@ class Itchio(storebase.StoreBase):
         exit_on_failure = False):
 
         # Get cache file path
-        cache_dir = environment.GetCacheRootDir()
+        cache_dir = environment.get_cache_root_dir()
         cache_file_purchases = paths.join_paths(cache_dir, "itchio_purchases_cache.json")
 
         # Check if cache exists and is recent (less than 24 hours old)

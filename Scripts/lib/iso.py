@@ -160,7 +160,7 @@ def GetActualMountPoint(
     exit_on_failure = False):
 
     # Windows
-    if environment.IsWindowsPlatform():
+    if environment.is_windows_platform():
 
         # Get drive command
         drive_cmd = [
@@ -212,7 +212,7 @@ def MountISO(
         exit_on_failure = exit_on_failure)
 
     # Windows
-    if environment.IsWindowsPlatform():
+    if environment.is_windows_platform():
 
         # Get mount command
         mount_cmd = [
@@ -231,7 +231,7 @@ def MountISO(
             return False
 
     # Linux
-    elif environment.IsLinuxPlatform():
+    elif environment.is_linux_platform():
 
         # Get tool
         iso_tool = None
@@ -273,7 +273,7 @@ def UnmountISO(
         return True
 
     # Windows
-    if environment.IsWindowsPlatform():
+    if environment.is_windows_platform():
 
         # Get unmount command
         unmount_cmd = [
@@ -292,7 +292,7 @@ def UnmountISO(
             return False
 
     # Linux
-    elif environment.IsLinuxPlatform():
+    elif environment.is_linux_platform():
 
         # Get tool
         iso_tool = None

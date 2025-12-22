@@ -10,7 +10,7 @@ import environment
 
 # Determine if user is root
 def is_user_root():
-    if environment.IsWindowsPlatform():
+    if environment.is_windows_platform():
         try:
             import pyuac
             return pyuac.isUserAdmin()
@@ -23,7 +23,7 @@ def is_user_root():
 def run_as_root(func):
     if not callable(func):
         return
-    if environment.IsWindowsPlatform():
+    if environment.is_windows_platform():
         try:
             import pyuac
             if not pyuac.isUserAdmin():

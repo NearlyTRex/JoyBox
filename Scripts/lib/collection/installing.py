@@ -301,9 +301,9 @@ def InstallLocalGameAddons(
     source_dlc_dirs = []
     source_update_dirs = []
     for filename in game_info.get_value(config.json_key_dlc):
-        source_dlc_dirs += [paths.join_paths(environment.GetLockerGamingDLCRootDir(), filename)]
+        source_dlc_dirs += [paths.join_paths(environment.get_locker_gaming_dlc_root_dir(), filename)]
     for filename in game_info.get_value(config.json_key_update):
-        source_update_dirs += [paths.join_paths(environment.GetLockerGamingUpdateRootDir(), filename)]
+        source_update_dirs += [paths.join_paths(environment.get_locker_gaming_update_root_dir(), filename)]
 
     # Install add-ons
     for emulator in programs.GetEmulators():

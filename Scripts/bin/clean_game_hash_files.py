@@ -25,14 +25,14 @@ args, unknown = parser.parse_known_args()
 def main():
 
     # Check requirements
-    setup.CheckRequirements()
+    setup.check_requirements()
 
     # Setup logging
     logger.setup_logging()
 
     # Show preview
     if not args.no_preview:
-        details = [environment.GetGameHashesMetadataRootDir()]
+        details = [environment.get_game_hashes_metadata_root_dir()]
         if not prompts.prompt_for_preview("Clean game hash files (sort entries)", details):
             logger.log_warning("Operation cancelled by user")
             return

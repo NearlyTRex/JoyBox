@@ -283,7 +283,7 @@ def DisplayLoadingWindow(
         size = window_size,
         resizable = True,
         finalize = True)
-    if environment.IsWindowsPlatform():
+    if environment.is_windows_platform():
         window.maximize()
     window.bind("<Escape>", "KEYPRESS_ESCAPE")
     window["progress"].Widget.config(mode = "indeterminate")
@@ -412,7 +412,7 @@ def DisplayChoicesWindow(
         size = window_size,
         resizable = True,
         finalize = True)
-    if environment.IsWindowsPlatform():
+    if environment.is_windows_platform():
         window.maximize()
     window.bind("<Escape>", "ESCAPE_PRESSED")
 

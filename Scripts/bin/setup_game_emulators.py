@@ -32,7 +32,7 @@ args, unknown = parser.parse_known_args()
 def main():
 
     # Check requirements
-    setup.CheckRequirements()
+    setup.check_requirements()
 
     # Setup logging
     logger.setup_logging()
@@ -46,7 +46,7 @@ def main():
     setup_params = config.SetupParams.from_args(args)
 
     # Setup emulators
-    setup.SetupEmulators(
+    setup.setup_emulators(
         offline = args.offline,
         configure = args.configure,
         clean = args.clean,

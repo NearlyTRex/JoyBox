@@ -23,7 +23,7 @@ class Sandboxie(toolbase.ToolBase):
     def GetConfig(self):
 
         # Check platform
-        if not environment.IsSandboxiePlatform():
+        if not environment.is_sandboxie_platform():
             return {}
 
         # Get sandboxie info

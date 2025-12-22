@@ -1272,7 +1272,7 @@ def MountFiles(
         return True
 
     # Create mount point
-    if environment.IsUnixPlatform():
+    if environment.is_unix_platform():
         fileops.make_directory(
             src = mount_path,
             verbose = verbose,
@@ -1306,7 +1306,7 @@ def MountFiles(
         GetRemoteConnectionPath(remote_name, remote_type, remote_path),
         mount_path
     ]
-    if environment.IsUnixPlatform():
+    if environment.is_unix_platform():
         mount_cmd += ["--daemon"]
     if no_checksum:
         mount_cmd += ["--no-checksum"]
@@ -1326,7 +1326,7 @@ def MountFiles(
     code = command.RunReturncodeCommand(
         cmd = mount_cmd,
         options = command.CreateCommandOptions(
-            is_daemon = environment.IsUnixPlatform()),
+            is_daemon = environment.is_unix_platform()),
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)

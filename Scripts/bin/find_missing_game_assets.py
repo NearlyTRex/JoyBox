@@ -27,14 +27,14 @@ args, unknown = parser.parse_known_args()
 def main():
 
     # Check requirements
-    setup.CheckRequirements()
+    setup.check_requirements()
 
     # Setup logging
     logger.setup_logging()
 
     # Get search info
-    assets_dir = environment.GetLockerGamingAssetsRootDir()
-    metadata_dir = environment.GetGamePegasusMetadataRootDir()
+    assets_dir = environment.get_locker_gaming_assets_root_dir()
+    metadata_dir = environment.get_game_pegasus_metadata_root_dir()
 
     # Show preview
     if not args.no_preview:
@@ -55,7 +55,7 @@ def main():
     found_assets = set()
     missing_assets = dict()
     for filename in paths.build_file_list(metadata_dir):
-        if environment.IsGameMetadataFile(filename):
+        if environment.is_game_metadata_file(filename):
 
             # Load metadata
             metadata_obj = metadata.Metadata()
@@ -69,7 +69,7 @@ def main():
                         game_supercategory, game_category, game_subcategory = gameinfo.DeriveGameCategoriesFromPlatform(game_platform)
 
                         # Get asset file
-                        asset_file = environment.GetLockerGameAssetFile(game_category, game_subcategory, game_name, asset_type)
+                        asset_file = environment.get_locker_gaming_asset_file(game_category, game_subcategory, game_name, asset_type)
 
                         # Check if asset exists
                         if os.path.exists(asset_file):

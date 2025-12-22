@@ -49,7 +49,7 @@ def CreateGameMetadataEntry(
     game_platform = gameinfo.DeriveGamePlatformFromCategories(game_category, game_subcategory)
 
     # Get metadata file path
-    metadata_file_path = environment.GetGameMetadataFile(game_category, game_subcategory)
+    metadata_file_path = environment.get_game_metadata_file(game_category, game_subcategory)
 
     # Load metadata file
     metadata_obj = metadata.Metadata()
@@ -63,10 +63,10 @@ def CreateGameMetadataEntry(
         return True
 
     # Get json file path
-    json_file_path = environment.GetGameJsonMetadataFile(game_supercategory, game_category, game_subcategory, game_name)
+    json_file_path = environment.get_game_json_metadata_file(game_supercategory, game_category, game_subcategory, game_name)
     json_file_path = paths.rebase_file_path(
         path = json_file_path,
-        old_base_path = environment.GetGameJsonMetadataRootDir(),
+        old_base_path = environment.get_game_json_metadata_root_dir(),
         new_base_path = "")
 
     # Create game entry
@@ -124,7 +124,7 @@ def UpdateGameMetadataEntry(
     game_platform = gameinfo.DeriveGamePlatformFromCategories(game_category, game_subcategory)
 
     # Get metadata file path
-    metadata_file_path = environment.GetGameMetadataFile(game_category, game_subcategory)
+    metadata_file_path = environment.get_game_metadata_file(game_category, game_subcategory)
 
     # Load metadata file
     metadata_obj = metadata.Metadata()
@@ -306,7 +306,7 @@ def PublishGameMetadataEntries(
             continue
 
         # Get metadata file
-        metadata_file = environment.GetGameMetadataFile(game_category, game_subcategory)
+        metadata_file = environment.get_game_metadata_file(game_category, game_subcategory)
         if not paths.is_path_file(metadata_file):
             continue
 
@@ -348,7 +348,7 @@ def PublishGameMetadataEntries(
 
     # Write publish file
     success = fileops.touch_file(
-        src = paths.join_paths(environment.GetGamePublishedMetadataRootDir(), game_category + ".html"),
+        src = paths.join_paths(environment.get_game_published_metadata_root_dir(), game_category + ".html"),
         contents = publish_contents,
         encoding = None,
         verbose = verbose,

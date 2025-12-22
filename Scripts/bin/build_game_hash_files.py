@@ -44,7 +44,7 @@ args, unknown = parser.parse_known_args()
 def main():
 
     # Check requirements
-    setup.CheckRequirements()
+    setup.check_requirements()
 
     # Setup logging
     logger.setup_logging()
@@ -58,7 +58,7 @@ def main():
         verbose = args.verbose,
         pretend_run = args.pretend_run,
         exit_on_failure = args.exit_on_failure):
-        game_root = parser.get_input_path() or environment.GetLockerGamingFilesDir(
+        game_root = parser.get_input_path() or environment.get_locker_gaming_files_dir(
             game_info.get_supercategory(),
             game_info.get_category(),
             game_info.get_subcategory(),

@@ -81,7 +81,7 @@ def PackSave(
 
     # Get save archive info
     tmp_save_archive_file = paths.join_paths(tmp_dir_result, game_info.get_name() + config.ArchiveFileType.ZIP.cval())
-    out_save_archive_file = paths.join_paths(output_save_dir, game_info.get_name() + "_" + str(environment.GetCurrentTimestamp()) + config.ArchiveFileType.ZIP.cval())
+    out_save_archive_file = paths.join_paths(output_save_dir, game_info.get_name() + "_" + str(environment.get_current_timestamp()) + config.ArchiveFileType.ZIP.cval())
 
     # Get excludes
     input_excludes = []

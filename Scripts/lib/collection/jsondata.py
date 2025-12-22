@@ -43,7 +43,7 @@ def ReadGameJsonData(
         return None
 
     # Get json file path
-    json_file_path = environment.GetGameJsonMetadataFile(game_supercategory, game_category, game_subcategory, game_name)
+    json_file_path = environment.get_game_json_metadata_file(game_supercategory, game_category, game_subcategory, game_name)
     if not paths.does_path_exist(json_file_path):
         return None
 
@@ -81,7 +81,7 @@ def CreateGameJsonFile(
         return True
 
     # Get json file path
-    json_file_path = environment.GetGameJsonMetadataFile(game_supercategory, game_category, game_subcategory, game_name)
+    json_file_path = environment.get_game_json_metadata_file(game_supercategory, game_category, game_subcategory, game_name)
     if paths.does_path_exist(json_file_path):
         return True
 
@@ -150,7 +150,7 @@ def UpdateGameJsonFile(
     game_regular_name = gameinfo.DeriveRegularNameFromGameName(game_name)
 
     # Get json file path
-    json_file_path = environment.GetGameJsonMetadataFile(game_supercategory, game_category, game_subcategory, game_name)
+    json_file_path = environment.get_game_json_metadata_file(game_supercategory, game_category, game_subcategory, game_name)
     if not paths.does_path_exist(json_file_path):
         return False
 
@@ -313,7 +313,7 @@ def BuildGameJsonFile(
 
     # Get game root
     if not paths.is_path_directory(game_root):
-        game_root = environment.GetLockerGamingFilesDir(
+        game_root = environment.get_locker_gaming_files_dir(
             game_supercategory = game_supercategory,
             game_category = game_category,
             game_subcategory = game_subcategory,
@@ -407,7 +407,7 @@ def GetGameJsonIgnoreEntries(
         return {}
 
     # Get json file path
-    json_file_path = environment.GetGameJsonMetadataIgnoreFile(game_supercategory, game_category, game_subcategory)
+    json_file_path = environment.get_game_json_metadata_ignore_file(game_supercategory, game_category, game_subcategory)
 
     # Create file if necessary
     if not paths.does_path_exist(json_file_path):
@@ -445,7 +445,7 @@ def AddGameJsonIgnoreEntry(
     game_platform = gameinfo.DeriveGamePlatformFromCategories(game_category, game_subcategory)
 
     # Get json file path
-    json_file_path = environment.GetGameJsonMetadataIgnoreFile(game_supercategory, game_category, game_subcategory)
+    json_file_path = environment.get_game_json_metadata_ignore_file(game_supercategory, game_category, game_subcategory)
 
     # Create file if necessary
     if not paths.does_path_exist(json_file_path):

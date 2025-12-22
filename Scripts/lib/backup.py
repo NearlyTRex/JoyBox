@@ -27,7 +27,7 @@ def ResolvePath(
         return path
 
     # Start building resolved path
-    resolved_path = environment.GetLockerRootDir(source_type)
+    resolved_path = environment.get_locker_root_dir(source_type)
 
     # Augment with gaming categories
     if game_supercategory:

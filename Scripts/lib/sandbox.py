@@ -27,7 +27,7 @@ import process
 def ShouldBeRunViaWine(cmd):
 
     # Check platform
-    if not environment.IsWinePlatform():
+    if not environment.is_wine_platform():
         return False
 
     # Already using wine
@@ -50,7 +50,7 @@ def ShouldBeRunViaWine(cmd):
 def ShouldBeRunViaSandboxie(cmd):
 
     # Check platform
-    if not environment.IsSandboxiePlatform():
+    if not environment.is_sandboxie_platform():
         return False
 
     # Already using sandboxie
@@ -703,7 +703,7 @@ def GetPrefixPathInfo(
         else:
             path_drive_offset = new_path[len(paths.get_directory_anchor(new_path)):]
             path_drive_base = paths.get_directory_drive(new_path)
-            if environment.IsWinePlatform():
+            if environment.is_wine_platform():
                 path_drive_letter = "z"
             else:
                 path_drive_letter = paths.get_directory_drive(new_path)

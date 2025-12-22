@@ -27,7 +27,7 @@ class EmulatorBase:
     def GetConfigFile(self, emulator_platform = None):
         return programs.GetPathConfigValue(
             program_config = self.GetConfig(),
-            base_dir = environment.GetEmulatorsRootDir(),
+            base_dir = environment.get_emulators_root_dir(),
             program_name = self.GetName(),
             program_key = "config_file",
             program_platform = emulator_platform)
@@ -36,7 +36,7 @@ class EmulatorBase:
     def GetSetupDir(self, emulator_platform = None):
         return programs.GetPathConfigValue(
             program_config = self.GetConfig(),
-            base_dir = environment.GetEmulatorsRootDir(),
+            base_dir = environment.get_emulators_root_dir(),
             program_name = self.GetName(),
             program_key = "setup_dir",
             program_platform = emulator_platform)
@@ -49,7 +49,7 @@ class EmulatorBase:
     def GetSaveBaseDir(self, emulator_platform = None):
         return programs.GetPathConfigValue(
             program_config = self.GetConfig(),
-            base_dir = environment.GetEmulatorsRootDir(),
+            base_dir = environment.get_emulators_root_dir(),
             program_name = self.GetName(),
             program_key = "save_base_dir",
             program_platform = emulator_platform)
@@ -67,12 +67,12 @@ class EmulatorBase:
 
         # Use current platform if none specified
         if not emulator_platform:
-            emulator_platform = environment.GetCurrentPlatform()
+            emulator_platform = environment.get_current_platform()
 
         # Get basic saves dir
         saves_dir = programs.GetPathConfigValue(
             program_config = self.GetConfig(),
-            base_dir = environment.GetEmulatorsRootDir(),
+            base_dir = environment.get_emulators_root_dir(),
             program_name = self.GetName(),
             program_key = "save_dir",
             program_platform = emulator_platform)

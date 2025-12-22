@@ -875,7 +875,7 @@ def BuildAppImageFromSource(
         src_obj = paths.join_paths(tmp_dir, obj["from"])
         dest_obj = paths.join_paths(tmp_dir, obj["to"])
         if obj["from"].startswith("AppImageTool"):
-            src_obj = paths.join_paths(environment.GetToolsRootDir(), obj["from"])
+            src_obj = paths.join_paths(environment.get_tools_root_dir(), obj["from"])
         success = fileops.smart_copy(
             src = src_obj,
             dest = dest_obj,

@@ -43,7 +43,7 @@ class GameInfo:
         self.json_data = jsondata.JsonData()
         self.json_file = json_file
         if not paths.is_path_file(self.json_file):
-            self.json_file = environment.GetGameJsonMetadataFile(
+            self.json_file = environment.get_game_json_metadata_file(
                 game_supercategory = game_supercategory,
                 game_category = game_category,
                 game_subcategory = game_subcategory,
@@ -101,7 +101,7 @@ class GameInfo:
         validation.assert_is_not_none(self.game_name, "game_name")
 
         # Save metadata file
-        self.metadata_file = environment.GetGameMetadataFile(self.game_category, self.game_subcategory)
+        self.metadata_file = environment.get_game_metadata_file(self.game_category, self.game_subcategory)
 
         # Get metadata
         metadata_obj = metadata.Metadata()
@@ -116,40 +116,40 @@ class GameInfo:
         ##############################
 
         # Get paths
-        save_dir = environment.GetCacheGamingSaveDir(self.game_category, self.game_subcategory, self.game_name)
+        save_dir = environment.get_cache_gaming_save_dir(self.game_category, self.game_subcategory, self.game_name)
         if self.game_category == config.Category.COMPUTER:
-            if environment.IsWindowsPlatform():
-                save_dir = environment.GetCacheGamingSaveDir(self.game_category, self.game_subcategory, self.game_name, config.SaveType.SANDBOXIE)
+            if environment.is_windows_platform():
+                save_dir = environment.get_cache_gaming_save_dir(self.game_category, self.game_subcategory, self.game_name, config.SaveType.SANDBOXIE)
             else:
-                save_dir = environment.GetCacheGamingSaveDir(self.game_category, self.game_subcategory, self.game_name, config.SaveType.WINE)
-        general_save_dir = environment.GetCacheGamingSaveDir(self.game_category, self.game_subcategory, self.game_name, config.SaveType.GENERAL)
-        local_cache_dir = environment.GetCacheGamingRomDir(
+                save_dir = environment.get_cache_gaming_save_dir(self.game_category, self.game_subcategory, self.game_name, config.SaveType.WINE)
+        general_save_dir = environment.get_cache_gaming_save_dir(self.game_category, self.game_subcategory, self.game_name, config.SaveType.GENERAL)
+        local_cache_dir = environment.get_cache_gaming_rom_dir(
             self.game_category,
             self.game_subcategory,
             self.game_name)
-        remote_cache_dir = environment.GetCacheGamingInstallDir(
+        remote_cache_dir = environment.get_cache_gaming_install_dir(
             self.game_category,
             self.game_subcategory,
             self.game_name)
-        local_rom_dir = environment.GetLockerGamingFilesDir(
+        local_rom_dir = environment.get_locker_gaming_files_dir(
             self.game_supercategory,
             self.game_category,
             self.game_subcategory,
             self.game_name,
             config.SourceType.LOCAL)
-        remote_rom_dir = environment.GetLockerGamingFilesDir(
+        remote_rom_dir = environment.get_locker_gaming_files_dir(
             self.game_supercategory,
             self.game_category,
             self.game_subcategory,
             self.game_name,
             config.SourceType.REMOTE)
-        local_save_dir = environment.GetLockerGamingSaveDir(
+        local_save_dir = environment.get_locker_gaming_save_dir(
             self.game_supercategory,
             self.game_category,
             self.game_subcategory,
             self.game_name,
             config.SourceType.LOCAL)
-        remote_save_dir = environment.GetLockerGamingSaveDir(
+        remote_save_dir = environment.get_locker_gaming_save_dir(
             self.game_supercategory,
             self.game_category,
             self.game_subcategory,
@@ -380,7 +380,7 @@ class GameInfo:
 
     # Get background asset
     def get_background_asset(self):
-        return environment.GetLockerGamingAssetFile(
+        return environment.get_locker_gaming_asset_file(
             game_category = self.get_category(),
             game_subcategory = self.get_subcategory(),
             game_name = self.get_name(),
@@ -388,7 +388,7 @@ class GameInfo:
 
     # Get boxback asset
     def get_boxback_asset(self):
-        return environment.GetLockerGamingAssetFile(
+        return environment.get_locker_gaming_asset_file(
             game_category = self.get_category(),
             game_subcategory = self.get_subcategory(),
             game_name = self.get_name(),
@@ -396,7 +396,7 @@ class GameInfo:
 
     # Get boxfront asset
     def get_boxfront_asset(self):
-        return environment.GetLockerGamingAssetFile(
+        return environment.get_locker_gaming_asset_file(
             game_category = self.get_category(),
             game_subcategory = self.get_subcategory(),
             game_name = self.get_name(),
@@ -404,7 +404,7 @@ class GameInfo:
 
     # Get label asset
     def get_label_asset(self):
-        return environment.GetLockerGamingAssetFile(
+        return environment.get_locker_gaming_asset_file(
             game_category = self.get_category(),
             game_subcategory = self.get_subcategory(),
             game_name = self.get_name(),
@@ -412,7 +412,7 @@ class GameInfo:
 
     # Get screenshot asset
     def get_screenshot_asset(self):
-        return environment.GetLockerGamingAssetFile(
+        return environment.get_locker_gaming_asset_file(
             game_category = self.get_category(),
             game_subcategory = self.get_subcategory(),
             game_name = self.get_name(),
@@ -420,7 +420,7 @@ class GameInfo:
 
     # Get video asset
     def get_video_asset(self):
-        return environment.GetLockerGamingAssetFile(
+        return environment.get_locker_gaming_asset_file(
             game_category = self.get_category(),
             game_subcategory = self.get_subcategory(),
             game_name = self.get_name(),
@@ -873,12 +873,12 @@ def FindAllGameNames(base_dir, game_supercategory, game_category, game_subcatego
 
 # Find json game names
 def FindJsonGameNames(game_supercategory, game_category, game_subcategory):
-    base_dir = environment.GetGameJsonMetadataRootDir()
+    base_dir = environment.get_game_json_metadata_root_dir()
     return FindAllGameNames(base_dir, game_supercategory, game_category, game_subcategory)
 
 # Find locker game names
 def FindLockerGameNames(game_supercategory, game_category, game_subcategory, source_type = None):
-    base_dir = environment.GetLockerGamingRootDir(source_type)
+    base_dir = environment.get_locker_gaming_root_dir(source_type)
     return FindAllGameNames(base_dir, game_supercategory, game_category, game_subcategory)
 
 ###########################################################
@@ -990,9 +990,9 @@ def DeriveGameCategoriesFromFile(game_file):
 
     # Get possible root dirs
     root_dirs = [
-        paths.normalize_file_path(environment.GetLockerGamingRootDir()),
-        paths.normalize_file_path(environment.GetCacheGamingRootDir()),
-        paths.normalize_file_path(environment.GetGameJsonMetadataRootDir())
+        paths.normalize_file_path(environment.get_locker_gaming_root_dir()),
+        paths.normalize_file_path(environment.get_cache_gaming_root_dir()),
+        paths.normalize_file_path(environment.get_game_json_metadata_root_dir())
     ]
 
     # Get relative source directory
