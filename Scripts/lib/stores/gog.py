@@ -146,8 +146,8 @@ class GOG(storebase.StoreBase):
 
         # Get tool
         gog_tool = None
-        if programs.IsToolInstalled("LGOGDownloader"):
-            gog_tool = programs.GetToolProgram("LGOGDownloader")
+        if programs.is_tool_installed("LGOGDownloader"):
+            gog_tool = programs.get_tool_program("LGOGDownloader")
         if not gog_tool:
             logger.log_error("LGOGDownloader was not found")
             return None
@@ -159,9 +159,9 @@ class GOG(storebase.StoreBase):
         ]
 
         # Run login command
-        code = command.RunInteractiveCommand(
+        code = command.run_interactive_command(
             cmd = login_cmd,
-            options = command.CreateCommandOptions(
+            options = command.create_command_options(
                 blocking_processes = [gog_tool]),
             verbose = verbose,
             pretend_run = pretend_run,
@@ -177,17 +177,17 @@ class GOG(storebase.StoreBase):
 
         # Get tool
         python_tool = None
-        if programs.IsToolInstalled("PythonVenvPython"):
-            python_tool = programs.GetToolProgram("PythonVenvPython")
+        if programs.is_tool_installed("PythonVenvPython"):
+            python_tool = programs.get_tool_program("PythonVenvPython")
         if not python_tool:
             logger.log_error("PythonVenvPython was not found")
             return False
 
         # Get script
         login_script = None
-        if programs.IsToolInstalled("HeroicGogDL"):
-            login_script = programs.GetToolPathConfigValue("HeroicGogDL", "login_script")
-            auth_json = programs.GetToolPathConfigValue("HeroicGogDL", "auth_json")
+        if programs.is_tool_installed("HeroicGogDL"):
+            login_script = programs.get_tool_path_config_value("HeroicGogDL", "login_script")
+            auth_json = programs.get_tool_path_config_value("HeroicGogDL", "auth_json")
         if not login_script and not auth_json:
             logger.log_error("HeroicGogDL was not found")
             return False
@@ -200,7 +200,7 @@ class GOG(storebase.StoreBase):
         ]
 
         # Run login command
-        code = command.RunInteractiveCommand(
+        code = command.run_interactive_command(
             cmd = login_cmd,
             verbose = verbose,
             pretend_run = pretend_run,
@@ -299,8 +299,8 @@ class GOG(storebase.StoreBase):
         if not use_cache:
             # Get tool
             gog_tool = None
-            if programs.IsToolInstalled("LGOGDownloader"):
-                gog_tool = programs.GetToolProgram("LGOGDownloader")
+            if programs.is_tool_installed("LGOGDownloader"):
+                gog_tool = programs.get_tool_program("LGOGDownloader")
             if not gog_tool:
                 logger.log_error("LGOGDownloader was not found")
                 return None
@@ -320,9 +320,9 @@ class GOG(storebase.StoreBase):
             ]
 
             # Run list command
-            code = command.RunReturncodeCommand(
+            code = command.run_returncode_command(
                 cmd = list_cmd,
-                options = command.CreateCommandOptions(
+                options = command.create_command_options(
                     stdout = tmp_file_manifest),
                 verbose = False,
                 pretend_run = pretend_run,
@@ -642,17 +642,17 @@ class GOG(storebase.StoreBase):
 
         # Get tool
         python_tool = None
-        if programs.IsToolInstalled("PythonVenvPython"):
-            python_tool = programs.GetToolProgram("PythonVenvPython")
+        if programs.is_tool_installed("PythonVenvPython"):
+            python_tool = programs.get_tool_program("PythonVenvPython")
         if not python_tool:
             logger.log_error("PythonVenvPython was not found")
             return False
 
         # Get script
         gogdl_script = None
-        if programs.IsToolInstalled("HeroicGogDL"):
-            gogdl_script = programs.GetToolProgram("HeroicGogDL")
-            auth_json = programs.GetToolPathConfigValue("HeroicGogDL", "auth_json")
+        if programs.is_tool_installed("HeroicGogDL"):
+            gogdl_script = programs.get_tool_program("HeroicGogDL")
+            auth_json = programs.get_tool_path_config_value("HeroicGogDL", "auth_json")
         if not gogdl_script and not auth_json:
             logger.log_error("HeroicGogDL was not found")
             return False
@@ -670,7 +670,7 @@ class GOG(storebase.StoreBase):
         ]
 
         # Run login command
-        code = command.RunReturncodeCommand(
+        code = command.run_returncode_command(
             cmd = install_cmd,
             verbose = verbose,
             exit_on_failure = exit_on_failure)
@@ -715,8 +715,8 @@ class GOG(storebase.StoreBase):
 
         # Get tool
         gog_tool = None
-        if programs.IsToolInstalled("LGOGDownloader"):
-            gog_tool = programs.GetToolProgram("LGOGDownloader")
+        if programs.is_tool_installed("LGOGDownloader"):
+            gog_tool = programs.get_tool_program("LGOGDownloader")
         if not gog_tool:
             logger.log_error("LGOGDownloader was not found")
             return None
@@ -754,9 +754,9 @@ class GOG(storebase.StoreBase):
             ]
 
         # Run download command
-        code = command.RunReturncodeCommand(
+        code = command.run_returncode_command(
             cmd = download_cmd,
-            options = command.CreateCommandOptions(
+            options = command.create_command_options(
                 blocking_processes = [gog_tool]),
             verbose = verbose,
             pretend_run = pretend_run,

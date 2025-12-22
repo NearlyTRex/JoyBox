@@ -42,7 +42,7 @@ class BalenaEtcher(toolbase.ToolBase):
             setup_params = config.SetupParams()
 
         # Download windows program
-        if programs.ShouldProgramBeInstalled("BalenaEtcher", "windows"):
+        if programs.should_program_be_installed("BalenaEtcher", "windows"):
             success = release.DownloadGithubRelease(
                 github_user = "balena-io",
                 github_repo = "etcher",
@@ -50,8 +50,8 @@ class BalenaEtcher(toolbase.ToolBase):
                 ends_with = ".zip",
                 search_file = "balenaEtcher.exe",
                 install_name = "BalenaEtcher",
-                install_dir = programs.GetProgramInstallDir("BalenaEtcher", "windows"),
-                backups_dir = programs.GetProgramBackupDir("BalenaEtcher", "windows"),
+                install_dir = programs.get_program_install_dir("BalenaEtcher", "windows"),
+                backups_dir = programs.get_program_backup_dir("BalenaEtcher", "windows"),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
@@ -60,15 +60,15 @@ class BalenaEtcher(toolbase.ToolBase):
                 return False
 
         # Download linux program
-        if programs.ShouldProgramBeInstalled("BalenaEtcher", "linux"):
+        if programs.should_program_be_installed("BalenaEtcher", "linux"):
             success = release.DownloadGithubRelease(
                 github_user = "balena-io",
                 github_repo = "etcher",
                 starts_with = "balenaEtcher",
                 ends_with = ".AppImage",
                 install_name = "BalenaEtcher",
-                install_dir = programs.GetProgramInstallDir("BalenaEtcher", "linux"),
-                backups_dir = programs.GetProgramBackupDir("BalenaEtcher", "linux"),
+                install_dir = programs.get_program_install_dir("BalenaEtcher", "linux"),
+                backups_dir = programs.get_program_backup_dir("BalenaEtcher", "linux"),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
@@ -83,11 +83,11 @@ class BalenaEtcher(toolbase.ToolBase):
             setup_params = config.SetupParams()
 
         # Setup windows program
-        if programs.ShouldProgramBeInstalled("BalenaEtcher", "windows"):
+        if programs.should_program_be_installed("BalenaEtcher", "windows"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetProgramBackupDir("BalenaEtcher", "windows"),
+                archive_dir = programs.get_program_backup_dir("BalenaEtcher", "windows"),
                 install_name = "BalenaEtcher",
-                install_dir = programs.GetProgramInstallDir("BalenaEtcher", "windows"),
+                install_dir = programs.get_program_install_dir("BalenaEtcher", "windows"),
                 search_file = "balenaEtcher.exe",
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
@@ -97,11 +97,11 @@ class BalenaEtcher(toolbase.ToolBase):
                 return False
 
         # Setup linux program
-        if programs.ShouldProgramBeInstalled("BalenaEtcher", "linux"):
+        if programs.should_program_be_installed("BalenaEtcher", "linux"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetProgramBackupDir("BalenaEtcher", "linux"),
+                archive_dir = programs.get_program_backup_dir("BalenaEtcher", "linux"),
                 install_name = "BalenaEtcher",
-                install_dir = programs.GetProgramInstallDir("BalenaEtcher", "linux"),
+                install_dir = programs.get_program_install_dir("BalenaEtcher", "linux"),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)

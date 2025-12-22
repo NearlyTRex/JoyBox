@@ -41,7 +41,7 @@ class ChromeDriver(toolbase.ToolBase):
             setup_params = config.SetupParams()
 
         # Download windows program
-        if programs.ShouldProgramBeInstalled("ChromeDriver", "windows"):
+        if programs.should_program_be_installed("ChromeDriver", "windows"):
             success = release.DownloadWebpageRelease(
                 webpage_url = "https://googlechromelabs.github.io/chrome-for-testing/",
                 webpage_base_url = "https://storage.googleapis.com/chrome-for-testing-public",
@@ -49,8 +49,8 @@ class ChromeDriver(toolbase.ToolBase):
                 ends_with = "win64/chromedriver-win64.zip",
                 search_file = "chromedriver.exe",
                 install_name = "ChromeDriver",
-                install_dir = programs.GetProgramInstallDir("ChromeDriver", "windows"),
-                backups_dir = programs.GetProgramBackupDir("ChromeDriver", "windows"),
+                install_dir = programs.get_program_install_dir("ChromeDriver", "windows"),
+                backups_dir = programs.get_program_backup_dir("ChromeDriver", "windows"),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
@@ -59,7 +59,7 @@ class ChromeDriver(toolbase.ToolBase):
                 return False
 
         # Download linux program
-        if programs.ShouldProgramBeInstalled("ChromeDriver", "linux"):
+        if programs.should_program_be_installed("ChromeDriver", "linux"):
             success = release.DownloadWebpageRelease(
                 webpage_url = "https://googlechromelabs.github.io/chrome-for-testing/",
                 webpage_base_url = "https://storage.googleapis.com/chrome-for-testing-public",
@@ -67,8 +67,8 @@ class ChromeDriver(toolbase.ToolBase):
                 ends_with = "linux64/chromedriver-linux64.zip",
                 search_file = "chromedriver",
                 install_name = "ChromeDriver",
-                install_dir = programs.GetProgramInstallDir("ChromeDriver", "linux"),
-                backups_dir = programs.GetProgramBackupDir("ChromeDriver", "linux"),
+                install_dir = programs.get_program_install_dir("ChromeDriver", "linux"),
+                backups_dir = programs.get_program_backup_dir("ChromeDriver", "linux"),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
@@ -83,11 +83,11 @@ class ChromeDriver(toolbase.ToolBase):
             setup_params = config.SetupParams()
 
         # Setup windows program
-        if programs.ShouldProgramBeInstalled("ChromeDriver", "windows"):
+        if programs.should_program_be_installed("ChromeDriver", "windows"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetProgramBackupDir("ChromeDriver", "windows"),
+                archive_dir = programs.get_program_backup_dir("ChromeDriver", "windows"),
                 install_name = "ChromeDriver",
-                install_dir = programs.GetProgramInstallDir("ChromeDriver", "windows"),
+                install_dir = programs.get_program_install_dir("ChromeDriver", "windows"),
                 search_file = "chromedriver.exe",
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
@@ -97,11 +97,11 @@ class ChromeDriver(toolbase.ToolBase):
                 return False
 
         # Setup linux program
-        if programs.ShouldProgramBeInstalled("ChromeDriver", "linux"):
+        if programs.should_program_be_installed("ChromeDriver", "linux"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetProgramBackupDir("ChromeDriver", "linux"),
+                archive_dir = programs.get_program_backup_dir("ChromeDriver", "linux"),
                 install_name = "ChromeDriver",
-                install_dir = programs.GetProgramInstallDir("ChromeDriver", "linux"),
+                install_dir = programs.get_program_install_dir("ChromeDriver", "linux"),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)

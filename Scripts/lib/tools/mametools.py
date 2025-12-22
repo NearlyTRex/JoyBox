@@ -43,7 +43,7 @@ class MameTools(toolbase.ToolBase):
             setup_params = config.SetupParams()
 
         # Download windows program
-        if programs.ShouldProgramBeInstalled("MameChdman", "windows"):
+        if programs.should_program_be_installed("MameChdman", "windows"):
             success = release.DownloadGithubRelease(
                 github_user = "mamedev",
                 github_repo = "mame",
@@ -51,8 +51,8 @@ class MameTools(toolbase.ToolBase):
                 ends_with = "64bit.exe",
                 search_file = "chdman.exe",
                 install_name = "MameChdman",
-                install_dir = programs.GetProgramInstallDir("MameChdman", "windows"),
-                backups_dir = programs.GetProgramBackupDir("MameChdman", "windows"),
+                install_dir = programs.get_program_install_dir("MameChdman", "windows"),
+                backups_dir = programs.get_program_backup_dir("MameChdman", "windows"),
                 install_files = ["chdman.exe"],
                 installer_type = config.InstallerType.SEVENZIP,
                 release_type = config.ReleaseType.ARCHIVE,
@@ -65,13 +65,13 @@ class MameTools(toolbase.ToolBase):
                 return False
 
         # Build linux program
-        if programs.ShouldProgramBeInstalled("MameChdman", "linux"):
+        if programs.should_program_be_installed("MameChdman", "linux"):
             success = release.BuildAppImageFromSource(
                 release_url = "https://github.com/NearlyTRex/Mame.git",
                 output_file = "App-x86_64.AppImage",
                 install_name = "MameChdman",
-                install_dir = programs.GetProgramInstallDir("MameChdman", "linux"),
-                backups_dir = programs.GetProgramBackupDir("MameChdman", "linux"),
+                install_dir = programs.get_program_install_dir("MameChdman", "linux"),
+                backups_dir = programs.get_program_backup_dir("MameChdman", "linux"),
                 build_cmd = [
                     "make", "TOOLS=1", "EMULATOR=0", "-j5"
                 ],
@@ -98,11 +98,11 @@ class MameTools(toolbase.ToolBase):
             setup_params = config.SetupParams()
 
         # Setup windows program
-        if programs.ShouldProgramBeInstalled("MameChdman", "windows"):
+        if programs.should_program_be_installed("MameChdman", "windows"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetProgramBackupDir("MameChdman", "windows"),
+                archive_dir = programs.get_program_backup_dir("MameChdman", "windows"),
                 install_name = "MameChdman",
-                install_dir = programs.GetProgramInstallDir("MameChdman", "windows"),
+                install_dir = programs.get_program_install_dir("MameChdman", "windows"),
                 search_file = "chdman.exe",
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
@@ -112,11 +112,11 @@ class MameTools(toolbase.ToolBase):
                 return False
 
         # Setup linux program
-        if programs.ShouldProgramBeInstalled("MameChdman", "linux"):
+        if programs.should_program_be_installed("MameChdman", "linux"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetProgramBackupDir("MameChdman", "linux"),
+                archive_dir = programs.get_program_backup_dir("MameChdman", "linux"),
                 install_name = "MameChdman",
-                install_dir = programs.GetProgramInstallDir("MameChdman", "linux"),
+                install_dir = programs.get_program_install_dir("MameChdman", "linux"),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)

@@ -87,7 +87,7 @@ class Xemu(emulatorbase.EmulatorBase):
             setup_params = config.SetupParams()
 
         # Download windows program
-        if programs.ShouldProgramBeInstalled("Xemu", "windows"):
+        if programs.should_program_be_installed("Xemu", "windows"):
             success = release.DownloadGithubRelease(
                 github_user = "mborgerson",
                 github_repo = "xemu",
@@ -95,8 +95,8 @@ class Xemu(emulatorbase.EmulatorBase):
                 ends_with = "win-release.zip",
                 search_file = "xemu.exe",
                 install_name = "Xemu",
-                install_dir = programs.GetProgramInstallDir("Xemu", "windows"),
-                backups_dir = programs.GetProgramBackupDir("Xemu", "windows"),
+                install_dir = programs.get_program_install_dir("Xemu", "windows"),
+                backups_dir = programs.get_program_backup_dir("Xemu", "windows"),
                 get_latest = True,
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
@@ -106,13 +106,13 @@ class Xemu(emulatorbase.EmulatorBase):
                 return False
 
         # Build linux program
-        if programs.ShouldProgramBeInstalled("Xemu", "linux"):
+        if programs.should_program_be_installed("Xemu", "linux"):
             success = release.BuildAppImageFromSource(
                 release_url = "https://github.com/NearlyTRex/Xemu.git",
                 output_file = "xemu-x86_64.AppImage",
                 install_name = "Xemu",
-                install_dir = programs.GetProgramInstallDir("Xemu", "linux"),
-                backups_dir = programs.GetProgramBackupDir("Xemu", "linux"),
+                install_dir = programs.get_program_install_dir("Xemu", "linux"),
+                backups_dir = programs.get_program_backup_dir("Xemu", "linux"),
                 build_cmd = [
                     "./build.sh"
                 ],
@@ -139,11 +139,11 @@ class Xemu(emulatorbase.EmulatorBase):
             setup_params = config.SetupParams()
 
         # Setup windows program
-        if programs.ShouldProgramBeInstalled("Xemu", "windows"):
+        if programs.should_program_be_installed("Xemu", "windows"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetProgramBackupDir("Xemu", "windows"),
+                archive_dir = programs.get_program_backup_dir("Xemu", "windows"),
                 install_name = "Xemu",
-                install_dir = programs.GetProgramInstallDir("Xemu", "windows"),
+                install_dir = programs.get_program_install_dir("Xemu", "windows"),
                 search_file = "xemu.exe",
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
@@ -153,11 +153,11 @@ class Xemu(emulatorbase.EmulatorBase):
                 return False
 
         # Setup linux program
-        if programs.ShouldProgramBeInstalled("Xemu", "linux"):
+        if programs.should_program_be_installed("Xemu", "linux"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetProgramBackupDir("Xemu", "linux"),
+                archive_dir = programs.get_program_backup_dir("Xemu", "linux"),
                 install_name = "Xemu",
-                install_dir = programs.GetProgramInstallDir("Xemu", "linux"),
+                install_dir = programs.get_program_install_dir("Xemu", "linux"),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
@@ -200,7 +200,7 @@ class Xemu(emulatorbase.EmulatorBase):
             for platform in ["windows", "linux"]:
                 success = fileops.smart_copy(
                     src = paths.join_paths(environment.get_locker_gaming_emulator_setup_dir("Xemu"), filename),
-                    dest = paths.join_paths(programs.GetEmulatorPathConfigValue("Xemu", "setup_dir", platform), filename),
+                    dest = paths.join_paths(programs.get_emulator_path_config_value("Xemu", "setup_dir", platform), filename),
                     verbose = setup_params.verbose,
                     pretend_run = setup_params.pretend_run,
                     exit_on_failure = setup_params.exit_on_failure)
@@ -222,7 +222,7 @@ class Xemu(emulatorbase.EmulatorBase):
 
         # Get launch command
         launch_cmd = [
-            programs.GetEmulatorProgram("Xemu"),
+            programs.get_emulator_program("Xemu"),
             "-dvd_path", config.token_game_file
         ]
         if fullscreen:

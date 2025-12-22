@@ -49,13 +49,13 @@ class Phoenix(emulatorbase.EmulatorBase):
             setup_params = config.SetupParams()
 
         # Download windows program
-        if programs.ShouldProgramBeInstalled("Phoenix", "windows"):
+        if programs.should_program_be_installed("Phoenix", "windows"):
             success = release.DownloadGeneralRelease(
                 archive_url = "https://archive.org/download/PHX_EMU/ph28jag-win64.zip",
                 search_file = "PhoenixEmuProject.exe",
                 install_name = "Phoenix",
-                install_dir = programs.GetProgramInstallDir("Phoenix", "windows"),
-                backups_dir = programs.GetProgramBackupDir("Phoenix", "windows"),
+                install_dir = programs.get_program_install_dir("Phoenix", "windows"),
+                backups_dir = programs.get_program_backup_dir("Phoenix", "windows"),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
@@ -70,11 +70,11 @@ class Phoenix(emulatorbase.EmulatorBase):
             setup_params = config.SetupParams()
 
         # Setup windows program
-        if programs.ShouldProgramBeInstalled("Phoenix", "windows"):
+        if programs.should_program_be_installed("Phoenix", "windows"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetProgramBackupDir("Phoenix", "windows"),
+                archive_dir = programs.get_program_backup_dir("Phoenix", "windows"),
                 install_name = "Phoenix",
-                install_dir = programs.GetProgramInstallDir("Phoenix", "windows"),
+                install_dir = programs.get_program_install_dir("Phoenix", "windows"),
                 search_file = "PhoenixEmuProject.exe",
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,

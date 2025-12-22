@@ -85,7 +85,7 @@ class Citra(emulatorbase.EmulatorBase):
                 for cia_file in paths.build_file_list_by_extensions(package_dir, extensions = [".cia"]):
                     success = nintendo.Install3DSCIA(
                         src_3ds_file = cia_file,
-                        sdmc_dir = paths.join_paths(programs.GetEmulatorPathConfigValue("Citra", "setup_dir"), "sdmc"),
+                        sdmc_dir = paths.join_paths(programs.get_emulator_path_config_value("Citra", "setup_dir"), "sdmc"),
                         verbose = verbose,
                         pretend_run = pretend_run,
                         exit_on_failure = exit_on_failure)
@@ -99,11 +99,11 @@ class Citra(emulatorbase.EmulatorBase):
             setup_params = config.SetupParams()
 
         # Setup windows program
-        if programs.ShouldProgramBeInstalled("Citra", "windows"):
+        if programs.should_program_be_installed("Citra", "windows"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetProgramBackupDir("Citra", "windows"),
+                archive_dir = programs.get_program_backup_dir("Citra", "windows"),
                 install_name = "Citra",
-                install_dir = programs.GetProgramInstallDir("Citra", "windows"),
+                install_dir = programs.get_program_install_dir("Citra", "windows"),
                 search_file = "citra-qt.exe",
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
@@ -113,11 +113,11 @@ class Citra(emulatorbase.EmulatorBase):
                 return False
 
         # Setup linux program
-        if programs.ShouldProgramBeInstalled("Citra", "linux"):
+        if programs.should_program_be_installed("Citra", "linux"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetProgramBackupDir("Citra", "linux"),
+                archive_dir = programs.get_program_backup_dir("Citra", "linux"),
                 install_name = "Citra",
-                install_dir = programs.GetProgramInstallDir("Citra", "linux"),
+                install_dir = programs.get_program_install_dir("Citra", "linux"),
                 search_file = "citra-qt.AppImage",
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
@@ -168,7 +168,7 @@ class Citra(emulatorbase.EmulatorBase):
                 if os.path.exists(paths.join_paths(environment.get_locker_gaming_emulator_setup_dir("Citra"), obj + config.ArchiveFileType.ZIP.cval())):
                     success = archive.ExtractArchive(
                         archive_file = paths.join_paths(environment.get_locker_gaming_emulator_setup_dir("Citra"), obj + config.ArchiveFileType.ZIP.cval()),
-                        extract_dir = paths.join_paths(programs.GetEmulatorPathConfigValue("Citra", "setup_dir", platform), obj),
+                        extract_dir = paths.join_paths(programs.get_emulator_path_config_value("Citra", "setup_dir", platform), obj),
                         skip_existing = True,
                         verbose = setup_params.verbose,
                         pretend_run = setup_params.pretend_run,
@@ -191,7 +191,7 @@ class Citra(emulatorbase.EmulatorBase):
 
         # Get launch command
         launch_cmd = [
-            programs.GetEmulatorProgram("Citra"),
+            programs.get_emulator_program("Citra"),
             config.token_game_file
         ]
 

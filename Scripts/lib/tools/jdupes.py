@@ -41,7 +41,7 @@ class JDupes(toolbase.ToolBase):
             setup_params = config.SetupParams()
 
         # Download windows program
-        if programs.ShouldProgramBeInstalled("JDupes", "windows"):
+        if programs.should_program_be_installed("JDupes", "windows"):
             success = release.DownloadGithubRelease(
                 github_user = "NearlyTRex",
                 github_repo = "JDupes",
@@ -49,8 +49,8 @@ class JDupes(toolbase.ToolBase):
                 ends_with = "win64.zip",
                 search_file = "jdupes.exe",
                 install_name = "JDupes",
-                install_dir = programs.GetProgramInstallDir("JDupes", "windows"),
-                backups_dir = programs.GetProgramBackupDir("JDupes", "windows"),
+                install_dir = programs.get_program_install_dir("JDupes", "windows"),
+                backups_dir = programs.get_program_backup_dir("JDupes", "windows"),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
@@ -59,7 +59,7 @@ class JDupes(toolbase.ToolBase):
                 return False
 
         # Download linux program
-        if programs.ShouldProgramBeInstalled("JDupes", "linux"):
+        if programs.should_program_be_installed("JDupes", "linux"):
             success = release.DownloadGithubRelease(
                 github_user = "NearlyTRex",
                 github_repo = "JDupes",
@@ -67,8 +67,8 @@ class JDupes(toolbase.ToolBase):
                 ends_with = "linux-x86_64.pkg.tar.xz",
                 search_file = "jdupes",
                 install_name = "JDupes",
-                install_dir = programs.GetProgramInstallDir("JDupes", "linux"),
-                backups_dir = programs.GetProgramBackupDir("JDupes", "linux"),
+                install_dir = programs.get_program_install_dir("JDupes", "linux"),
+                backups_dir = programs.get_program_backup_dir("JDupes", "linux"),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
@@ -83,11 +83,11 @@ class JDupes(toolbase.ToolBase):
             setup_params = config.SetupParams()
 
         # Setup windows program
-        if programs.ShouldProgramBeInstalled("JDupes", "windows"):
+        if programs.should_program_be_installed("JDupes", "windows"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetProgramBackupDir("JDupes", "windows"),
+                archive_dir = programs.get_program_backup_dir("JDupes", "windows"),
                 install_name = "JDupes",
-                install_dir = programs.GetProgramInstallDir("JDupes", "windows"),
+                install_dir = programs.get_program_install_dir("JDupes", "windows"),
                 search_file = "jdupes.exe",
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
@@ -97,11 +97,11 @@ class JDupes(toolbase.ToolBase):
                 return False
 
         # Setup linux program
-        if programs.ShouldProgramBeInstalled("JDupes", "linux"):
+        if programs.should_program_be_installed("JDupes", "linux"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetProgramBackupDir("JDupes", "linux"),
+                archive_dir = programs.get_program_backup_dir("JDupes", "linux"),
                 install_name = "JDupes",
-                install_dir = programs.GetProgramInstallDir("JDupes", "linux"),
+                install_dir = programs.get_program_install_dir("JDupes", "linux"),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)

@@ -87,7 +87,7 @@ class Python(toolbase.ToolBase):
                 if environment.is_windows_platform():
                     success = fileops.touch_file(
                         src = script_path_windows,
-                        contents = wrapper_script_windows.strip().replace(config.token_python_bin, programs.GetToolProgram("PythonVenvPython")),
+                        contents = wrapper_script_windows.strip().replace(config.token_python_bin, programs.get_tool_program("PythonVenvPython")),
                         verbose = setup_params.verbose,
                         pretend_run = setup_params.pretend_run,
                         exit_on_failure = setup_params.exit_on_failure)
@@ -99,7 +99,7 @@ class Python(toolbase.ToolBase):
                 if environment.is_unix_platform():
                     success = fileops.touch_file(
                         src = script_path_unix,
-                        contents = wrapper_script_unix.strip().replace(config.token_python_bin, programs.GetToolProgram("PythonVenvPython")),
+                        contents = wrapper_script_unix.strip().replace(config.token_python_bin, programs.get_tool_program("PythonVenvPython")),
                         verbose = setup_params.verbose,
                         pretend_run = setup_params.pretend_run,
                         exit_on_failure = setup_params.exit_on_failure)

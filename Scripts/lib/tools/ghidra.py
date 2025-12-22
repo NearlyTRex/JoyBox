@@ -68,7 +68,7 @@ class Ghidra(toolbase.ToolBase):
             setup_params = config.SetupParams()
 
         # Build library from source
-        if programs.ShouldLibraryBeInstalled("Ghidra/lib"):
+        if programs.should_library_be_installed("Ghidra/lib"):
 
             # Get build command
             if environment.is_windows_platform():
@@ -104,8 +104,8 @@ class Ghidra(toolbase.ToolBase):
                 output_dir = "build/dist",
                 search_file = "ghidraRun",
                 install_name = "Ghidra",
-                install_dir = programs.GetLibraryInstallDir("Ghidra", "lib"),
-                backups_dir = programs.GetLibraryBackupDir("Ghidra", "lib"),
+                install_dir = programs.get_library_install_dir("Ghidra", "lib"),
+                backups_dir = programs.get_library_backup_dir("Ghidra", "lib"),
                 build_cmd = build_cmd,
                 source_patches = source_patches,
                 locker_type = setup_params.locker_type,
@@ -123,11 +123,11 @@ class Ghidra(toolbase.ToolBase):
             setup_params = config.SetupParams()
 
         # Setup library
-        if programs.ShouldLibraryBeInstalled("Ghidra/lib"):
+        if programs.should_library_be_installed("Ghidra/lib"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetLibraryBackupDir("Ghidra", "lib"),
+                archive_dir = programs.get_library_backup_dir("Ghidra", "lib"),
                 install_name = "Ghidra",
-                install_dir = programs.GetLibraryInstallDir("Ghidra", "lib"),
+                install_dir = programs.get_library_install_dir("Ghidra", "lib"),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)

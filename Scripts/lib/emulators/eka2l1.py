@@ -72,7 +72,7 @@ class EKA2L1(emulatorbase.EmulatorBase):
             setup_params = config.SetupParams()
 
         # Download windows program
-        if programs.ShouldProgramBeInstalled("EKA2L1", "windows"):
+        if programs.should_program_be_installed("EKA2L1", "windows"):
             success = release.DownloadGithubRelease(
                 github_user = "EKA2L1",
                 github_repo = "EKA2L1",
@@ -80,8 +80,8 @@ class EKA2L1(emulatorbase.EmulatorBase):
                 ends_with = ".zip",
                 search_file = "eka2l1_qt.exe",
                 install_name = "EKA2L1",
-                install_dir = programs.GetProgramInstallDir("EKA2L1", "windows"),
-                backups_dir = programs.GetProgramBackupDir("EKA2L1", "windows"),
+                install_dir = programs.get_program_install_dir("EKA2L1", "windows"),
+                backups_dir = programs.get_program_backup_dir("EKA2L1", "windows"),
                 get_latest = True,
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
@@ -91,15 +91,15 @@ class EKA2L1(emulatorbase.EmulatorBase):
                 return False
 
         # Download linux program
-        if programs.ShouldProgramBeInstalled("EKA2L1", "linux"):
+        if programs.should_program_be_installed("EKA2L1", "linux"):
             success = release.DownloadGithubRelease(
                 github_user = "EKA2L1",
                 github_repo = "EKA2L1",
                 starts_with = "EKA2L1-Linux-x86_64",
                 ends_with = ".AppImage",
                 install_name = "EKA2L1",
-                install_dir = programs.GetProgramInstallDir("EKA2L1", "linux"),
-                backups_dir = programs.GetProgramBackupDir("EKA2L1", "linux"),
+                install_dir = programs.get_program_install_dir("EKA2L1", "linux"),
+                backups_dir = programs.get_program_backup_dir("EKA2L1", "linux"),
                 get_latest = True,
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
@@ -115,11 +115,11 @@ class EKA2L1(emulatorbase.EmulatorBase):
             setup_params = config.SetupParams()
 
         # Setup windows program
-        if programs.ShouldProgramBeInstalled("EKA2L1", "windows"):
+        if programs.should_program_be_installed("EKA2L1", "windows"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetProgramBackupDir("EKA2L1", "windows"),
+                archive_dir = programs.get_program_backup_dir("EKA2L1", "windows"),
                 install_name = "EKA2L1",
-                install_dir = programs.GetProgramInstallDir("EKA2L1", "windows"),
+                install_dir = programs.get_program_install_dir("EKA2L1", "windows"),
                 search_file = "eka2l1_qt.exe",
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
@@ -129,11 +129,11 @@ class EKA2L1(emulatorbase.EmulatorBase):
                 return False
 
         # Setup linux program
-        if programs.ShouldProgramBeInstalled("EKA2L1", "linux"):
+        if programs.should_program_be_installed("EKA2L1", "linux"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetProgramBackupDir("EKA2L1", "linux"),
+                archive_dir = programs.get_program_backup_dir("EKA2L1", "linux"),
                 install_name = "EKA2L1",
-                install_dir = programs.GetProgramInstallDir("EKA2L1", "linux"),
+                install_dir = programs.get_program_install_dir("EKA2L1", "linux"),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
@@ -177,7 +177,7 @@ class EKA2L1(emulatorbase.EmulatorBase):
                 if os.path.exists(paths.join_paths(environment.get_locker_gaming_emulator_setup_dir("EKA2L1"), obj + config.ArchiveFileType.ZIP.cval())):
                     success = archive.ExtractArchive(
                         archive_file = paths.join_paths(environment.get_locker_gaming_emulator_setup_dir("EKA2L1"), obj + config.ArchiveFileType.ZIP.cval()),
-                        extract_dir = paths.join_paths(programs.GetEmulatorPathConfigValue("EKA2L1", "setup_dir", platform), obj),
+                        extract_dir = paths.join_paths(programs.get_emulator_path_config_value("EKA2L1", "setup_dir", platform), obj),
                         skip_existing = True,
                         verbose = setup_params.verbose,
                         pretend_run = setup_params.pretend_run,
@@ -200,7 +200,7 @@ class EKA2L1(emulatorbase.EmulatorBase):
 
         # Get launch command
         launch_cmd = [
-            programs.GetEmulatorProgram("EKA2L1"),
+            programs.get_emulator_program("EKA2L1"),
             "--mount", config.token_game_dir,
             "--app", config.token_game_name
         ]

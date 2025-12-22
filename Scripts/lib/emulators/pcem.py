@@ -49,7 +49,7 @@ class PCEm(emulatorbase.EmulatorBase):
             setup_params = config.SetupParams()
 
         # Download windows program
-        if programs.ShouldProgramBeInstalled("PCEm", "windows"):
+        if programs.should_program_be_installed("PCEm", "windows"):
             success = release.DownloadGithubRelease(
                 github_user = "sarah-walker-pcem",
                 github_repo = "pcem",
@@ -57,8 +57,8 @@ class PCEm(emulatorbase.EmulatorBase):
                 ends_with = "Win.zip",
                 search_file = "PCem.exe",
                 install_name = "PCEm",
-                install_dir = programs.GetProgramInstallDir("PCEm", "windows"),
-                backups_dir = programs.GetProgramBackupDir("PCEm", "windows"),
+                install_dir = programs.get_program_install_dir("PCEm", "windows"),
+                backups_dir = programs.get_program_backup_dir("PCEm", "windows"),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
@@ -73,11 +73,11 @@ class PCEm(emulatorbase.EmulatorBase):
             setup_params = config.SetupParams()
 
         # Setup windows program
-        if programs.ShouldProgramBeInstalled("PCEm", "windows"):
+        if programs.should_program_be_installed("PCEm", "windows"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetProgramBackupDir("PCEm", "windows"),
+                archive_dir = programs.get_program_backup_dir("PCEm", "windows"),
                 install_name = "PCEm",
-                install_dir = programs.GetProgramInstallDir("PCEm", "windows"),
+                install_dir = programs.get_program_install_dir("PCEm", "windows"),
                 search_file = "PCem.exe",
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,

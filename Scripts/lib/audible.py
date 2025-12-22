@@ -125,8 +125,8 @@ def DecryptAAXToM4A(
 
     # Check for FFMpeg
     ffmpeg_tool = None
-    if programs.IsToolInstalled("FFMpeg"):
-        ffmpeg_tool = programs.GetToolProgram("FFMpeg")
+    if programs.is_tool_installed("FFMpeg"):
+        ffmpeg_tool = programs.get_tool_program("FFMpeg")
     if not ffmpeg_tool:
         logger.log_error("FFMpeg was not found")
         if exit_on_failure:
@@ -162,7 +162,7 @@ def DecryptAAXToM4A(
 
     # Run FFMpeg
     if not pretend_run:
-        code = command.RunReturncodeCommand(
+        code = command.run_returncode_command(
             cmd = ffmpeg_cmd,
             verbose = verbose,
             pretend_run = pretend_run,

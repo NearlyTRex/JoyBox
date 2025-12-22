@@ -49,7 +49,7 @@ class Nestopia(emulatorbase.EmulatorBase):
             setup_params = config.SetupParams()
 
         # Download windows program
-        if programs.ShouldProgramBeInstalled("Nestopia", "windows"):
+        if programs.should_program_be_installed("Nestopia", "windows"):
             success = release.DownloadGithubRelease(
                 github_user = "0ldsk00l",
                 github_repo = "nestopia",
@@ -57,8 +57,8 @@ class Nestopia(emulatorbase.EmulatorBase):
                 ends_with = "win32.zip",
                 search_file = "nestopia.exe",
                 install_name = "Nestopia",
-                install_dir = programs.GetProgramInstallDir("Nestopia", "windows"),
-                backups_dir = programs.GetProgramBackupDir("Nestopia", "windows"),
+                install_dir = programs.get_program_install_dir("Nestopia", "windows"),
+                backups_dir = programs.get_program_backup_dir("Nestopia", "windows"),
                 get_latest = True,
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
@@ -74,11 +74,11 @@ class Nestopia(emulatorbase.EmulatorBase):
             setup_params = config.SetupParams()
 
         # Setup windows program
-        if programs.ShouldProgramBeInstalled("Nestopia", "windows"):
+        if programs.should_program_be_installed("Nestopia", "windows"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetProgramBackupDir("Nestopia", "windows"),
+                archive_dir = programs.get_program_backup_dir("Nestopia", "windows"),
                 install_name = "Nestopia",
-                install_dir = programs.GetProgramInstallDir("Nestopia", "windows"),
+                install_dir = programs.get_program_install_dir("Nestopia", "windows"),
                 search_file = "nestopia.exe",
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,

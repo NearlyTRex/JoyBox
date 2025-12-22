@@ -65,7 +65,7 @@ class Manifest:
     # Load
     def load(self, verbose = False, pretend_run = False, exit_on_failure = False):
         self.manifest = serialization.read_yaml_file(
-            src = programs.GetToolPathConfigValue("LudusaviManifest", "yaml"),
+            src = programs.get_tool_path_config_value("LudusaviManifest", "yaml"),
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)

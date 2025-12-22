@@ -51,8 +51,8 @@ def create_chrome_web_driver(
 
     # Get tool
     webdriver_tool = None
-    if programs.IsToolInstalled("ChromeDriver"):
-        webdriver_tool = programs.GetToolProgram("ChromeDriver")
+    if programs.is_tool_installed("ChromeDriver"):
+        webdriver_tool = programs.get_tool_program("ChromeDriver")
     if not webdriver_tool:
         logger.log_error("ChromeDriver was not found")
         return None
@@ -102,8 +102,8 @@ def create_firefox_web_driver(
 
     # Get tool
     webdriver_tool = None
-    if programs.IsToolInstalled("GeckoDriver"):
-        webdriver_tool = programs.GetToolProgram("GeckoDriver")
+    if programs.is_tool_installed("GeckoDriver"):
+        webdriver_tool = programs.get_tool_program("GeckoDriver")
     if not webdriver_tool:
         logger.log_error("GeckoDriver was not found")
         return None
@@ -156,7 +156,7 @@ def create_web_driver(
         return create_firefox_web_driver(
             download_dir = download_dir,
             profile_dir = profile_dir,
-            binary_location = programs.GetToolProgram("Firefox"),
+            binary_location = programs.get_tool_program("Firefox"),
             make_headless = make_headless,
             verbose = verbose,
             pretend_run = pretend_run,
@@ -165,7 +165,7 @@ def create_web_driver(
         return create_chrome_web_driver(
             download_dir = download_dir,
             profile_dir = profile_dir,
-            binary_location = programs.GetToolProgram("Chrome"),
+            binary_location = programs.get_tool_program("Chrome"),
             make_headless = make_headless,
             verbose = verbose,
             pretend_run = pretend_run,
@@ -174,7 +174,7 @@ def create_web_driver(
         return create_chrome_web_driver(
             download_dir = download_dir,
             profile_dir = profile_dir,
-            binary_location = programs.GetToolProgram("Brave"),
+            binary_location = programs.get_tool_program("Brave"),
             make_headless = make_headless,
             verbose = verbose,
             pretend_run = pretend_run,

@@ -77,7 +77,7 @@ def FindSteamAppIDMatches(
 
     # Load appid list
     appid_list = serialization.read_csv_file(
-        src = programs.GetToolPathConfigValue("SteamAppIDList", "csv"),
+        src = programs.get_tool_path_config_value("SteamAppIDList", "csv"),
         headers = [config.search_result_key_id, config.search_result_key_title],
         verbose = verbose,
         pretend_run = pretend_run,
@@ -167,8 +167,8 @@ def FindSteamGridDBCovers(
 
     # Import steamgrid
     steamgrid = modules.import_python_module_package(
-        module_path = programs.GetToolPathConfigValue("PySteamGridDB", "package_dir"),
-        module_name = programs.GetToolConfigValue("PySteamGridDB", "package_name"))
+        module_path = programs.get_tool_path_config_value("PySteamGridDB", "package_dir"),
+        module_name = programs.get_tool_config_value("PySteamGridDB", "package_name"))
 
     # Initialize client
     sgdb = steamgrid.SteamGridDB(steamgriddb_api_key)
@@ -375,8 +375,8 @@ class Steam(storebase.StoreBase):
 
         # Get tool
         steam_tool = None
-        if programs.IsToolInstalled("SteamCMD"):
-            steam_tool = programs.GetToolProgram("SteamCMD")
+        if programs.is_tool_installed("SteamCMD"):
+            steam_tool = programs.get_tool_program("SteamCMD")
         if not steam_tool:
             logger.log_error("SteamCMD was not found")
             return False
@@ -389,9 +389,9 @@ class Steam(storebase.StoreBase):
         ]
 
         # Run login command
-        code = command.RunInteractiveCommand(
+        code = command.run_interactive_command(
             cmd = login_cmd,
-            options = command.CreateCommandOptions(
+            options = command.create_command_options(
                 blocking_processes = [steam_tool]),
             verbose = verbose,
             pretend_run = pretend_run,
@@ -597,8 +597,8 @@ class Steam(storebase.StoreBase):
 
         # Get tool
         steamcmd_tool = None
-        if programs.IsToolInstalled("SteamCMD"):
-            steamcmd_tool = programs.GetToolProgram("SteamCMD")
+        if programs.is_tool_installed("SteamCMD"):
+            steamcmd_tool = programs.get_tool_program("SteamCMD")
         if not steamcmd_tool:
             logger.log_error("SteamCMD was not found")
             return None
@@ -612,9 +612,9 @@ class Steam(storebase.StoreBase):
         ]
 
         # Run info command
-        info_output = command.RunOutputCommand(
+        info_output = command.run_output_command(
             cmd = info_cmd,
-            options = command.CreateCommandOptions(
+            options = command.create_command_options(
                 blocking_processes = [steamcmd_tool]),
             verbose = verbose,
             pretend_run = pretend_run,
@@ -917,8 +917,8 @@ class Steam(storebase.StoreBase):
 
         # Get tool
         steam_tool = None
-        if programs.IsToolInstalled("SteamCMD"):
-            steam_tool = programs.GetToolProgram("SteamCMD")
+        if programs.is_tool_installed("SteamCMD"):
+            steam_tool = programs.get_tool_program("SteamCMD")
         if not steam_tool:
             logger.log_error("SteamCMD was not found", quit_program = True)
             return False
@@ -934,9 +934,9 @@ class Steam(storebase.StoreBase):
         ]
 
         # Run install command
-        code = command.RunReturncodeCommand(
+        code = command.run_returncode_command(
             cmd = install_cmd,
-            options = command.CreateCommandOptions(
+            options = command.create_command_options(
                 blocking_processes = [steam_tool]),
             verbose = verbose,
             pretend_run = pretend_run,
@@ -962,8 +962,8 @@ class Steam(storebase.StoreBase):
 
         # Get tool
         steam_tool = None
-        if programs.IsToolInstalled("Steam"):
-            steam_tool = programs.GetToolProgram("Steam")
+        if programs.is_tool_installed("Steam"):
+            steam_tool = programs.get_tool_program("Steam")
         if not steam_tool:
             logger.log_error("Steam was not found", quit_program = True)
             return False
@@ -975,9 +975,9 @@ class Steam(storebase.StoreBase):
         ]
 
         # Run launch command
-        code = command.RunReturncodeCommand(
+        code = command.run_returncode_command(
             cmd = launch_cmd,
-            options = command.CreateCommandOptions(
+            options = command.create_command_options(
                 blocking_processes = [steam_tool]),
             verbose = verbose,
             pretend_run = pretend_run,
@@ -1010,8 +1010,8 @@ class Steam(storebase.StoreBase):
 
         # Get tool
         steamdepot_tool = None
-        if programs.IsToolInstalled("SteamDepotDownloader"):
-            steamdepot_tool = programs.GetToolProgram("SteamDepotDownloader")
+        if programs.is_tool_installed("SteamDepotDownloader"):
+            steamdepot_tool = programs.get_tool_program("SteamDepotDownloader")
         if not steamdepot_tool:
             logger.log_error("SteamDepotDownloader was not found", quit_program = True)
             return False
@@ -1040,9 +1040,9 @@ class Steam(storebase.StoreBase):
             ]
 
         # Run download command
-        code = command.RunReturncodeCommand(
+        code = command.run_returncode_command(
             cmd = download_cmd,
-            options = command.CreateCommandOptions(
+            options = command.create_command_options(
                 blocking_processes = [steamdepot_tool]),
             verbose = verbose,
             pretend_run = pretend_run,

@@ -41,7 +41,7 @@ class CDecrypt(toolbase.ToolBase):
             setup_params = config.SetupParams()
 
         # Download windows program
-        if programs.ShouldProgramBeInstalled("CDecrypt", "windows"):
+        if programs.should_program_be_installed("CDecrypt", "windows"):
             success = release.DownloadGithubRelease(
                 github_user = "VitaSmith",
                 github_repo = "cdecrypt",
@@ -49,8 +49,8 @@ class CDecrypt(toolbase.ToolBase):
                 ends_with = ".zip",
                 search_file = "cdecrypt.exe",
                 install_name = "CDecrypt",
-                install_dir = programs.GetProgramInstallDir("CDecrypt", "windows"),
-                backups_dir = programs.GetProgramBackupDir("CDecrypt", "windows"),
+                install_dir = programs.get_program_install_dir("CDecrypt", "windows"),
+                backups_dir = programs.get_program_backup_dir("CDecrypt", "windows"),
                 install_files = ["cdecrypt.exe"],
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
@@ -60,13 +60,13 @@ class CDecrypt(toolbase.ToolBase):
                 return False
 
         # Build linux program
-        if programs.ShouldProgramBeInstalled("CDecrypt", "linux"):
+        if programs.should_program_be_installed("CDecrypt", "linux"):
             success = release.BuildAppImageFromSource(
                 release_url = "https://github.com/NearlyTRex/CDecrypt.git",
                 output_file = "App-x86_64.AppImage",
                 install_name = "CDecrypt",
-                install_dir = programs.GetProgramInstallDir("CDecrypt", "linux"),
-                backups_dir = programs.GetProgramBackupDir("CDecrypt", "linux"),
+                install_dir = programs.get_program_install_dir("CDecrypt", "linux"),
+                backups_dir = programs.get_program_backup_dir("CDecrypt", "linux"),
                 build_cmd = [
                     "make", "-j", "4"
                 ],
@@ -93,11 +93,11 @@ class CDecrypt(toolbase.ToolBase):
             setup_params = config.SetupParams()
 
         # Setup windows program
-        if programs.ShouldProgramBeInstalled("CDecrypt", "windows"):
+        if programs.should_program_be_installed("CDecrypt", "windows"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetProgramBackupDir("CDecrypt", "windows"),
+                archive_dir = programs.get_program_backup_dir("CDecrypt", "windows"),
                 install_name = "CDecrypt",
-                install_dir = programs.GetProgramInstallDir("CDecrypt", "windows"),
+                install_dir = programs.get_program_install_dir("CDecrypt", "windows"),
                 search_file = "cdecrypt.exe",
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
@@ -107,11 +107,11 @@ class CDecrypt(toolbase.ToolBase):
                 return False
 
         # Setup linux program
-        if programs.ShouldProgramBeInstalled("CDecrypt", "linux"):
+        if programs.should_program_be_installed("CDecrypt", "linux"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetProgramBackupDir("CDecrypt", "linux"),
+                archive_dir = programs.get_program_backup_dir("CDecrypt", "linux"),
                 install_name = "CDecrypt",
-                install_dir = programs.GetProgramInstallDir("CDecrypt", "linux"),
+                install_dir = programs.get_program_install_dir("CDecrypt", "linux"),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)

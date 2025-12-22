@@ -34,8 +34,8 @@ def main():
 
     # Get tool
     dupes_tool = None
-    if programs.IsToolInstalled("JDupes"):
-        dupes_tool = programs.GetToolProgram("JDupes")
+    if programs.is_tool_installed("JDupes"):
+        dupes_tool = programs.get_tool_program("JDupes")
     if not dupes_tool:
         logger.log_error("JDupes was not found", quit_program = True)
 
@@ -49,7 +49,7 @@ def main():
     ]
 
     # Run list command
-    code = command.RunReturncodeCommand(
+    code = command.run_returncode_command(
         cmd = list_cmd,
         verbose = args.verbose,
         pretend_run = args.pretend_run,

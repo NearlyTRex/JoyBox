@@ -66,7 +66,7 @@ class Atari800(emulatorbase.EmulatorBase):
             setup_params = config.SetupParams()
 
         # Download windows program
-        if programs.ShouldProgramBeInstalled("Atari800", "windows"):
+        if programs.should_program_be_installed("Atari800", "windows"):
             success = release.DownloadGithubRelease(
                 github_user = "atari800",
                 github_repo = "atari800",
@@ -74,8 +74,8 @@ class Atari800(emulatorbase.EmulatorBase):
                 ends_with = "win32-sdl.zip",
                 search_file = "atari800.exe",
                 install_name = "Atari800",
-                install_dir = programs.GetProgramInstallDir("Atari800", "windows"),
-                backups_dir = programs.GetProgramBackupDir("Atari800", "windows"),
+                install_dir = programs.get_program_install_dir("Atari800", "windows"),
+                backups_dir = programs.get_program_backup_dir("Atari800", "windows"),
                 get_latest = True,
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
@@ -85,13 +85,13 @@ class Atari800(emulatorbase.EmulatorBase):
                 return False
 
         # Build linux program
-        if programs.ShouldProgramBeInstalled("Atari800", "linux"):
+        if programs.should_program_be_installed("Atari800", "linux"):
             success = release.BuildAppImageFromSource(
                 release_url = "https://github.com/NearlyTRex/Atari800.git",
                 output_file = "Atari800-x86_64.AppImage",
                 install_name = "Atari800",
-                install_dir = programs.GetProgramInstallDir("Atari800", "linux"),
-                backups_dir = programs.GetProgramBackupDir("Atari800", "linux"),
+                install_dir = programs.get_program_install_dir("Atari800", "linux"),
+                backups_dir = programs.get_program_backup_dir("Atari800", "linux"),
                 build_cmd = [
                     "./autogen.sh",
                     "&&",
@@ -123,11 +123,11 @@ class Atari800(emulatorbase.EmulatorBase):
             setup_params = config.SetupParams()
 
         # Setup windows program
-        if programs.ShouldProgramBeInstalled("Atari800", "windows"):
+        if programs.should_program_be_installed("Atari800", "windows"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetProgramBackupDir("Atari800", "windows"),
+                archive_dir = programs.get_program_backup_dir("Atari800", "windows"),
                 install_name = "Atari800",
-                install_dir = programs.GetProgramInstallDir("Atari800", "windows"),
+                install_dir = programs.get_program_install_dir("Atari800", "windows"),
                 search_file = "atari800.exe",
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
@@ -137,11 +137,11 @@ class Atari800(emulatorbase.EmulatorBase):
                 return False
 
         # Setup linux program
-        if programs.ShouldProgramBeInstalled("Atari800", "linux"):
+        if programs.should_program_be_installed("Atari800", "linux"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetProgramBackupDir("Atari800", "linux"),
+                archive_dir = programs.get_program_backup_dir("Atari800", "linux"),
                 install_name = "Atari800",
-                install_dir = programs.GetProgramInstallDir("Atari800", "linux"),
+                install_dir = programs.get_program_install_dir("Atari800", "linux"),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
@@ -181,7 +181,7 @@ class Atari800(emulatorbase.EmulatorBase):
 
         # Get launch command
         launch_cmd = [
-            programs.GetEmulatorProgram("Atari800"),
+            programs.get_emulator_program("Atari800"),
             config.token_game_file
         ]
 

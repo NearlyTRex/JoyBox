@@ -169,16 +169,16 @@ class HumbleBundle(storebase.StoreBase):
 
         # Get tool
         python_tool = None
-        if programs.IsToolInstalled("PythonVenvPython"):
-            python_tool = programs.GetToolProgram("PythonVenvPython")
+        if programs.is_tool_installed("PythonVenvPython"):
+            python_tool = programs.get_tool_program("PythonVenvPython")
         if not python_tool:
             logger.log_error("PythonVenvPython was not found")
             return False
 
         # Get script
         humble_script = None
-        if programs.IsToolInstalled("HumbleBundleManager"):
-            humble_script = programs.GetToolProgram("HumbleBundleManager")
+        if programs.is_tool_installed("HumbleBundleManager"):
+            humble_script = programs.get_tool_program("HumbleBundleManager")
         if not humble_script:
             logger.log_error("HumbleBundleManager was not found")
             return False
@@ -194,7 +194,7 @@ class HumbleBundle(storebase.StoreBase):
         ]
 
         # Run list command
-        list_output = command.RunOutputCommand(
+        list_output = command.run_output_command(
             cmd = list_cmd,
             verbose = verbose,
             pretend_run = pretend_run,
@@ -225,7 +225,7 @@ class HumbleBundle(storebase.StoreBase):
             ]
 
             # Run info command
-            info_output = command.RunOutputCommand(
+            info_output = command.run_output_command(
                 cmd = info_cmd,
                 verbose = verbose,
                 pretend_run = pretend_run,
@@ -296,16 +296,16 @@ class HumbleBundle(storebase.StoreBase):
 
         # Get tool
         python_tool = None
-        if programs.IsToolInstalled("PythonVenvPython"):
-            python_tool = programs.GetToolProgram("PythonVenvPython")
+        if programs.is_tool_installed("PythonVenvPython"):
+            python_tool = programs.get_tool_program("PythonVenvPython")
         if not python_tool:
             logger.log_error("PythonVenvPython was not found")
             return False
 
         # Get script
         humble_script = None
-        if programs.IsToolInstalled("HumbleBundleManager"):
-            humble_script = programs.GetToolProgram("HumbleBundleManager")
+        if programs.is_tool_installed("HumbleBundleManager"):
+            humble_script = programs.get_tool_program("HumbleBundleManager")
         if not humble_script:
             logger.log_error("HumbleBundleManager was not found")
             return False
@@ -321,7 +321,7 @@ class HumbleBundle(storebase.StoreBase):
         ]
 
         # Run info command
-        info_output = command.RunOutputCommand(
+        info_output = command.run_output_command(
             cmd = info_cmd,
             verbose = verbose,
             pretend_run = pretend_run,

@@ -89,7 +89,7 @@ class MGBA(emulatorbase.EmulatorBase):
             setup_params = config.SetupParams()
 
         # Download windows program
-        if programs.ShouldProgramBeInstalled("mGBA", "windows"):
+        if programs.should_program_be_installed("mGBA", "windows"):
             success = release.DownloadGithubRelease(
                 github_user = "mgba-emu",
                 github_repo = "mgba",
@@ -97,8 +97,8 @@ class MGBA(emulatorbase.EmulatorBase):
                 ends_with = "win64.7z",
                 search_file = "mGBA.exe",
                 install_name = "mGBA",
-                install_dir = programs.GetProgramInstallDir("mGBA", "windows"),
-                backups_dir = programs.GetProgramBackupDir("mGBA", "windows"),
+                install_dir = programs.get_program_install_dir("mGBA", "windows"),
+                backups_dir = programs.get_program_backup_dir("mGBA", "windows"),
                 get_latest = True,
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
@@ -108,15 +108,15 @@ class MGBA(emulatorbase.EmulatorBase):
                 return False
 
         # Download linux program
-        if programs.ShouldProgramBeInstalled("mGBA", "linux"):
+        if programs.should_program_be_installed("mGBA", "linux"):
             success = release.DownloadGithubRelease(
                 github_user = "mgba-emu",
                 github_repo = "mgba",
                 starts_with = "mGBA",
                 ends_with = ".appimage",
                 install_name = "mGBA",
-                install_dir = programs.GetProgramInstallDir("mGBA", "linux"),
-                backups_dir = programs.GetProgramBackupDir("mGBA", "linux"),
+                install_dir = programs.get_program_install_dir("mGBA", "linux"),
+                backups_dir = programs.get_program_backup_dir("mGBA", "linux"),
                 get_latest = True,
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
@@ -132,11 +132,11 @@ class MGBA(emulatorbase.EmulatorBase):
             setup_params = config.SetupParams()
 
         # Setup windows program
-        if programs.ShouldProgramBeInstalled("mGBA", "windows"):
+        if programs.should_program_be_installed("mGBA", "windows"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetProgramBackupDir("mGBA", "windows"),
+                archive_dir = programs.get_program_backup_dir("mGBA", "windows"),
                 install_name = "mGBA",
-                install_dir = programs.GetProgramInstallDir("mGBA", "windows"),
+                install_dir = programs.get_program_install_dir("mGBA", "windows"),
                 search_file = "mGBA.exe",
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
@@ -146,11 +146,11 @@ class MGBA(emulatorbase.EmulatorBase):
                 return False
 
         # Setup linux program
-        if programs.ShouldProgramBeInstalled("mGBA", "linux"):
+        if programs.should_program_be_installed("mGBA", "linux"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetProgramBackupDir("mGBA", "linux"),
+                archive_dir = programs.get_program_backup_dir("mGBA", "linux"),
                 install_name = "mGBA",
-                install_dir = programs.GetProgramInstallDir("mGBA", "linux"),
+                install_dir = programs.get_program_install_dir("mGBA", "linux"),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
@@ -193,7 +193,7 @@ class MGBA(emulatorbase.EmulatorBase):
             for platform in ["windows", "linux"]:
                 success = fileops.smart_copy(
                     src = paths.join_paths(environment.get_locker_gaming_emulator_setup_dir("mGBA"), filename),
-                    dest = paths.join_paths(programs.GetEmulatorPathConfigValue("mGBA", "setup_dir", platform), filename),
+                    dest = paths.join_paths(programs.get_emulator_path_config_value("mGBA", "setup_dir", platform), filename),
                     verbose = setup_params.verbose,
                     pretend_run = setup_params.pretend_run,
                     exit_on_failure = setup_params.exit_on_failure)
@@ -215,7 +215,7 @@ class MGBA(emulatorbase.EmulatorBase):
 
         # Get launch command
         launch_cmd = [
-            programs.GetEmulatorProgram("mGBA"),
+            programs.get_emulator_program("mGBA"),
             config.token_game_file
         ]
         if fullscreen:

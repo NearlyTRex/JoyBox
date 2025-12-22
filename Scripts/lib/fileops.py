@@ -1005,7 +1005,7 @@ def get_link_info(lnk_path, lnk_base_path):
 
     # Import pylnk
     pylnk = modules.import_python_module_file(
-        module_path = programs.GetToolProgram("PyLnk"),
+        module_path = programs.get_tool_program("PyLnk"),
         module_name = "pylnk")
 
     # Link info

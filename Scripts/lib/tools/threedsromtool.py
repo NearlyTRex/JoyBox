@@ -41,7 +41,7 @@ class ThreeDSRomTool(toolbase.ToolBase):
             setup_params = config.SetupParams()
 
         # Download windows program
-        if programs.ShouldProgramBeInstalled("3DSRomTool", "windows"):
+        if programs.should_program_be_installed("3DSRomTool", "windows"):
             success = release.DownloadGithubRelease(
                 github_user = "NearlyTRex",
                 github_repo = "3DSRomTool",
@@ -49,8 +49,8 @@ class ThreeDSRomTool(toolbase.ToolBase):
                 ends_with = ".zip",
                 search_file = "rom_tool.exe",
                 install_name = "3DSRomTool",
-                install_dir = programs.GetProgramInstallDir("3DSRomTool", "windows"),
-                backups_dir = programs.GetProgramBackupDir("3DSRomTool", "windows"),
+                install_dir = programs.get_program_install_dir("3DSRomTool", "windows"),
+                backups_dir = programs.get_program_backup_dir("3DSRomTool", "windows"),
                 install_files = ["rom_tool.exe"],
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
@@ -60,13 +60,13 @@ class ThreeDSRomTool(toolbase.ToolBase):
                 return False
 
         # Build linux program
-        if programs.ShouldProgramBeInstalled("3DSRomTool", "linux"):
+        if programs.should_program_be_installed("3DSRomTool", "linux"):
             success = release.BuildAppImageFromSource(
                 release_url = "https://github.com/NearlyTRex/3DSRomTool.git",
                 output_file = "App-x86_64.AppImage",
                 install_name = "3DSRomTool",
-                install_dir = programs.GetProgramInstallDir("3DSRomTool", "linux"),
-                backups_dir = programs.GetProgramBackupDir("3DSRomTool", "linux"),
+                install_dir = programs.get_program_install_dir("3DSRomTool", "linux"),
+                backups_dir = programs.get_program_backup_dir("3DSRomTool", "linux"),
                 build_cmd = [
                     "cd", "rom_tool",
                     "&&",
@@ -95,11 +95,11 @@ class ThreeDSRomTool(toolbase.ToolBase):
             setup_params = config.SetupParams()
 
         # Setup windows program
-        if programs.ShouldProgramBeInstalled("3DSRomTool", "windows"):
+        if programs.should_program_be_installed("3DSRomTool", "windows"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetProgramBackupDir("3DSRomTool", "windows"),
+                archive_dir = programs.get_program_backup_dir("3DSRomTool", "windows"),
                 install_name = "3DSRomTool",
-                install_dir = programs.GetProgramInstallDir("3DSRomTool", "windows"),
+                install_dir = programs.get_program_install_dir("3DSRomTool", "windows"),
                 search_file = "rom_tool.exe",
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
@@ -109,11 +109,11 @@ class ThreeDSRomTool(toolbase.ToolBase):
                 return False
 
         # Setup linux program
-        if programs.ShouldProgramBeInstalled("3DSRomTool", "linux"):
+        if programs.should_program_be_installed("3DSRomTool", "linux"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetProgramBackupDir("3DSRomTool", "linux"),
+                archive_dir = programs.get_program_backup_dir("3DSRomTool", "linux"),
                 install_name = "3DSRomTool",
-                install_dir = programs.GetProgramInstallDir("3DSRomTool", "linux"),
+                install_dir = programs.get_program_install_dir("3DSRomTool", "linux"),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)

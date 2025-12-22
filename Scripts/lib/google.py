@@ -100,8 +100,8 @@ def FindVideos(
 
     # Get tool
     youtube_tool = None
-    if programs.IsToolInstalled("YtDlp"):
-        youtube_tool = programs.GetToolProgram("YtDlp")
+    if programs.is_tool_installed("YtDlp"):
+        youtube_tool = programs.get_tool_program("YtDlp")
     if not youtube_tool:
         logger.log_error("YtDlp was not found")
         return False
@@ -122,9 +122,9 @@ def FindVideos(
     ]
 
     # Run search command
-    search_output = command.RunOutputCommand(
+    search_output = command.run_output_command(
         cmd = search_cmd,
-        options = command.CreateCommandOptions(
+        options = command.create_command_options(
             shell = True,
             blocking_processes = [youtube_tool]),
         verbose = verbose,
@@ -177,8 +177,8 @@ def DownloadVideo(
 
     # Get tool
     youtube_tool = None
-    if programs.IsToolInstalled("YtDlp"):
-        youtube_tool = programs.GetToolProgram("YtDlp")
+    if programs.is_tool_installed("YtDlp"):
+        youtube_tool = programs.get_tool_program("YtDlp")
     if not youtube_tool:
         logger.log_error("YtDlp was not found")
         return False
@@ -224,9 +224,9 @@ def DownloadVideo(
 
     # Run download command
     logger.log_info(f"Executing download command: {' '.join(download_cmd[:5])}...")
-    code = command.RunReturncodeCommand(
+    code = command.run_returncode_command(
         cmd = download_cmd,
-        options = command.CreateCommandOptions(
+        options = command.create_command_options(
             blocking_processes = [youtube_tool]),
         verbose = verbose,
         pretend_run = pretend_run,

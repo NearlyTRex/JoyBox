@@ -615,13 +615,13 @@ def BuildFromSource(
                     return None
 
                 # Apply patch with git apply
-                code = command.RunReturncodeCommand(
+                code = command.run_returncode_command(
                     cmd = [
-                        programs.GetToolProgram("Git"),
+                        programs.get_tool_program("Git"),
                         "apply",
                         patch_temp_file
                     ],
-                    options = command.CreateCommandOptions(
+                    options = command.create_command_options(
                         cwd = source_dir),
                     verbose = verbose,
                     pretend_run = pretend_run,
@@ -641,9 +641,9 @@ def BuildFromSource(
         return None
 
     # Build release
-    code = command.RunReturncodeCommand(
+    code = command.run_returncode_command(
         cmd = build_cmd,
-        options = command.CreateCommandOptions(
+        options = command.create_command_options(
             cwd = source_build_dir,
             is_shell = True),
         verbose = verbose,
@@ -902,9 +902,9 @@ def BuildAppImageFromSource(
             return False
 
     # Build AppImage
-    code = command.RunReturncodeCommand(
-        cmd = [programs.GetToolProgram("AppImageTool"), appimage_dir],
-        options = command.CreateCommandOptions(
+    code = command.run_returncode_command(
+        cmd = [programs.get_tool_program("AppImageTool"), appimage_dir],
+        options = command.create_command_options(
             cwd = tmp_dir),
         verbose = verbose,
         pretend_run = pretend_run,

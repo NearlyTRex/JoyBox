@@ -49,13 +49,13 @@ class BGB(emulatorbase.EmulatorBase):
             setup_params = config.SetupParams()
 
         # Download windows program
-        if programs.ShouldProgramBeInstalled("BGB", "windows"):
+        if programs.should_program_be_installed("BGB", "windows"):
             success = release.DownloadGeneralRelease(
                 archive_url = "https://bgb.bircd.org/bgb.zip",
                 search_file = "bgb.exe",
                 install_name = "BGB",
-                install_dir = programs.GetProgramInstallDir("BGB", "windows"),
-                backups_dir = programs.GetProgramBackupDir("BGB", "windows"),
+                install_dir = programs.get_program_install_dir("BGB", "windows"),
+                backups_dir = programs.get_program_backup_dir("BGB", "windows"),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
@@ -70,11 +70,11 @@ class BGB(emulatorbase.EmulatorBase):
             setup_params = config.SetupParams()
 
         # Setup windows program
-        if programs.ShouldProgramBeInstalled("BGB", "windows"):
+        if programs.should_program_be_installed("BGB", "windows"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetProgramBackupDir("BGB", "windows"),
+                archive_dir = programs.get_program_backup_dir("BGB", "windows"),
                 install_name = "BGB",
-                install_dir = programs.GetProgramInstallDir("BGB", "windows"),
+                install_dir = programs.get_program_install_dir("BGB", "windows"),
                 search_file = "bgb.exe",
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,

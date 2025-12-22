@@ -22,8 +22,8 @@ def SetScreenResolution(width, height, colors, verbose = False, pretend_run = Fa
 
     # Get tool
     nircmd_tool = None
-    if programs.IsToolInstalled("NirCmd"):
-        nircmd_tool = programs.GetToolProgram("NirCmd")
+    if programs.is_tool_installed("NirCmd"):
+        nircmd_tool = programs.get_tool_program("NirCmd")
     if not nircmd_tool:
         logger.log_error("NirCmd was not found")
         return False
@@ -38,9 +38,9 @@ def SetScreenResolution(width, height, colors, verbose = False, pretend_run = Fa
     ]
 
     # Set resolution
-    command.RunReturncodeCommand(
+    command.run_returncode_command(
         cmd = resolution_cmd,
-        options = command.CreateCommandOptions(
+        options = command.create_command_options(
             shell = True),
         verbose = verbose,
         pretend_run = pretend_run,

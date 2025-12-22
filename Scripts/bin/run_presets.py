@@ -103,7 +103,7 @@ def main():
 
     # Run commands
     for preset_cmd in preset_cmds:
-        code = command.RunReturncodeCommand(
+        code = command.run_returncode_command(
             cmd = preset_cmd,
             verbose = args.verbose,
             pretend_run = args.pretend_run,

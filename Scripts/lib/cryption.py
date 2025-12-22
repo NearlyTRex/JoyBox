@@ -51,8 +51,8 @@ def GetEmbeddedFilename(
 
     # Get tool
     gpg_tool = None
-    if programs.IsToolInstalled("Gpg"):
-        gpg_tool = programs.GetToolProgram("Gpg")
+    if programs.is_tool_installed("Gpg"):
+        gpg_tool = programs.get_tool_program("Gpg")
     if not gpg_tool:
         logger.log_error("Gpg was not found")
         return None
@@ -68,7 +68,7 @@ def GetEmbeddedFilename(
     ]
 
     # Run info command
-    info_output = command.RunOutputCommand(
+    info_output = command.run_output_command(
         cmd = info_cmd,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -228,8 +228,8 @@ def EncryptFile(
 
     # Get tool
     gpg_tool = None
-    if programs.IsToolInstalled("Gpg"):
-        gpg_tool = programs.GetToolProgram("Gpg")
+    if programs.is_tool_installed("Gpg"):
+        gpg_tool = programs.get_tool_program("Gpg")
     if not gpg_tool:
         logger.log_error("Gpg was not found")
         return False
@@ -248,9 +248,9 @@ def EncryptFile(
     ]
 
     # Run encrypt command
-    code = command.RunReturncodeCommand(
+    code = command.run_returncode_command(
         cmd = encrypt_cmd,
-        options = command.CreateCommandOptions(
+        options = command.create_command_options(
             blocking_processes = [gpg_tool]),
         verbose = verbose,
         pretend_run = pretend_run,
@@ -313,8 +313,8 @@ def DecryptFile(
 
     # Get tool
     gpg_tool = None
-    if programs.IsToolInstalled("Gpg"):
-        gpg_tool = programs.GetToolProgram("Gpg")
+    if programs.is_tool_installed("Gpg"):
+        gpg_tool = programs.get_tool_program("Gpg")
     if not gpg_tool:
         logger.log_error("Gpg was not found")
         return False
@@ -332,9 +332,9 @@ def DecryptFile(
     ]
 
     # Run decrypt command
-    code = command.RunReturncodeCommand(
+    code = command.run_returncode_command(
         cmd = decrypt_cmd,
-        options = command.CreateCommandOptions(
+        options = command.create_command_options(
             blocking_processes = [gpg_tool]),
         verbose = verbose,
         pretend_run = pretend_run,

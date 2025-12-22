@@ -41,7 +41,7 @@ class PS3Dec(toolbase.ToolBase):
             setup_params = config.SetupParams()
 
         # Download windows program
-        if programs.ShouldProgramBeInstalled("PS3Dec", "windows"):
+        if programs.should_program_be_installed("PS3Dec", "windows"):
             success = release.DownloadGithubRelease(
                 github_user = "NearlyTRex",
                 github_repo = "PS3Dec",
@@ -49,8 +49,8 @@ class PS3Dec(toolbase.ToolBase):
                 ends_with = ".zip",
                 search_file = "PS3Dec.exe",
                 install_name = "PS3Dec",
-                install_dir = programs.GetProgramInstallDir("PS3Dec", "windows"),
-                backups_dir = programs.GetProgramBackupDir("PS3Dec", "windows"),
+                install_dir = programs.get_program_install_dir("PS3Dec", "windows"),
+                backups_dir = programs.get_program_backup_dir("PS3Dec", "windows"),
                 install_files = ["PS3Dec.exe"],
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
@@ -60,13 +60,13 @@ class PS3Dec(toolbase.ToolBase):
                 return False
 
         # Build linux program
-        if programs.ShouldProgramBeInstalled("PS3Dec", "linux"):
+        if programs.should_program_be_installed("PS3Dec", "linux"):
             success = release.BuildAppImageFromSource(
                 release_url = "https://github.com/NearlyTRex/PS3Dec.git",
                 output_file = "App-x86_64.AppImage",
                 install_name = "PS3Dec",
-                install_dir = programs.GetProgramInstallDir("PS3Dec", "linux"),
-                backups_dir = programs.GetProgramBackupDir("PS3Dec", "linux"),
+                install_dir = programs.get_program_install_dir("PS3Dec", "linux"),
+                backups_dir = programs.get_program_backup_dir("PS3Dec", "linux"),
                 build_cmd = [
                     "cmake", "-G", "Ninja", "..",
                     "&&",
@@ -96,11 +96,11 @@ class PS3Dec(toolbase.ToolBase):
             setup_params = config.SetupParams()
 
         # Setup windows program
-        if programs.ShouldProgramBeInstalled("PS3Dec", "windows"):
+        if programs.should_program_be_installed("PS3Dec", "windows"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetProgramBackupDir("PS3Dec", "windows"),
+                archive_dir = programs.get_program_backup_dir("PS3Dec", "windows"),
                 install_name = "PS3Dec",
-                install_dir = programs.GetProgramInstallDir("PS3Dec", "windows"),
+                install_dir = programs.get_program_install_dir("PS3Dec", "windows"),
                 search_file = "PS3Dec.exe",
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
@@ -110,11 +110,11 @@ class PS3Dec(toolbase.ToolBase):
                 return False
 
         # Setup linux program
-        if programs.ShouldProgramBeInstalled("PS3Dec", "linux"):
+        if programs.should_program_be_installed("PS3Dec", "linux"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetProgramBackupDir("PS3Dec", "linux"),
+                archive_dir = programs.get_program_backup_dir("PS3Dec", "linux"),
                 install_name = "PS3Dec",
-                install_dir = programs.GetProgramInstallDir("PS3Dec", "linux"),
+                install_dir = programs.get_program_install_dir("PS3Dec", "linux"),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)

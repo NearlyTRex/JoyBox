@@ -51,7 +51,7 @@ class AppImageTool(toolbase.ToolBase):
             setup_params = config.SetupParams()
 
         # Download linux program
-        if programs.ShouldProgramBeInstalled("AppImageTool", "linux"):
+        if programs.should_program_be_installed("AppImageTool", "linux"):
             success = release.DownloadGithubRelease(
                 github_user = "AppImage",
                 github_repo = "AppImageKit",
@@ -59,8 +59,8 @@ class AppImageTool(toolbase.ToolBase):
                 ends_with = ".AppImage",
                 search_file = "AppImageTool.AppImage",
                 install_name = "AppImageTool",
-                install_dir = programs.GetProgramInstallDir("AppImageTool", "linux"),
-                backups_dir = programs.GetProgramBackupDir("AppImageTool", "linux"),
+                install_dir = programs.get_program_install_dir("AppImageTool", "linux"),
+                backups_dir = programs.get_program_backup_dir("AppImageTool", "linux"),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
@@ -75,11 +75,11 @@ class AppImageTool(toolbase.ToolBase):
             setup_params = config.SetupParams()
 
         # Setup linux program
-        if programs.ShouldProgramBeInstalled("AppImageTool", "linux"):
+        if programs.should_program_be_installed("AppImageTool", "linux"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetProgramBackupDir("AppImageTool", "linux"),
+                archive_dir = programs.get_program_backup_dir("AppImageTool", "linux"),
                 install_name = "AppImageTool",
-                install_dir = programs.GetProgramInstallDir("AppImageTool", "linux"),
+                install_dir = programs.get_program_install_dir("AppImageTool", "linux"),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
@@ -97,7 +97,7 @@ class AppImageTool(toolbase.ToolBase):
         if environment.is_linux_platform():
             success = fileops.copy_file_or_directory(
                 src = paths.join_paths(environment.get_scripts_icons_dir(), "BostonIcons", "128", "mimes", "application-x-executable-script.svg"),
-                dest = paths.join_paths(programs.GetProgramInstallDir("AppImageTool", "linux"), "icon.svg"),
+                dest = paths.join_paths(programs.get_program_install_dir("AppImageTool", "linux"), "icon.svg"),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)

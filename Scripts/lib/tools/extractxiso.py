@@ -41,7 +41,7 @@ class ExtractXIso(toolbase.ToolBase):
             setup_params = config.SetupParams()
 
         # Download windows program
-        if programs.ShouldProgramBeInstalled("ExtractXIso", "windows"):
+        if programs.should_program_be_installed("ExtractXIso", "windows"):
             success = release.DownloadGithubRelease(
                 github_user = "XboxDev",
                 github_repo = "extract-xiso",
@@ -49,8 +49,8 @@ class ExtractXIso(toolbase.ToolBase):
                 ends_with = "win32-release.zip",
                 search_file = "extract-xiso.exe",
                 install_name = "ExtractXIso",
-                install_dir = programs.GetProgramInstallDir("ExtractXIso", "windows"),
-                backups_dir = programs.GetProgramBackupDir("ExtractXIso", "windows"),
+                install_dir = programs.get_program_install_dir("ExtractXIso", "windows"),
+                backups_dir = programs.get_program_backup_dir("ExtractXIso", "windows"),
                 install_files = ["extract-xiso.exe"],
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
@@ -60,13 +60,13 @@ class ExtractXIso(toolbase.ToolBase):
                 return False
 
         # Build linux program
-        if programs.ShouldProgramBeInstalled("ExtractXIso", "linux"):
+        if programs.should_program_be_installed("ExtractXIso", "linux"):
             success = release.BuildAppImageFromSource(
                 release_url = "https://github.com/NearlyTRex/ExtractXIso.git",
                 output_file = "App-x86_64.AppImage",
                 install_name = "ExtractXIso",
-                install_dir = programs.GetProgramInstallDir("ExtractXIso", "linux"),
-                backups_dir = programs.GetProgramBackupDir("ExtractXIso", "linux"),
+                install_dir = programs.get_program_install_dir("ExtractXIso", "linux"),
+                backups_dir = programs.get_program_backup_dir("ExtractXIso", "linux"),
                 build_cmd = [
                     "cmake", "..",
                     "&&",
@@ -96,11 +96,11 @@ class ExtractXIso(toolbase.ToolBase):
             setup_params = config.SetupParams()
 
         # Setup windows program
-        if programs.ShouldProgramBeInstalled("ExtractXIso", "windows"):
+        if programs.should_program_be_installed("ExtractXIso", "windows"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetProgramBackupDir("ExtractXIso", "windows"),
+                archive_dir = programs.get_program_backup_dir("ExtractXIso", "windows"),
                 install_name = "ExtractXIso",
-                install_dir = programs.GetProgramInstallDir("ExtractXIso", "windows"),
+                install_dir = programs.get_program_install_dir("ExtractXIso", "windows"),
                 search_file = "extract-xiso.exe",
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
@@ -110,11 +110,11 @@ class ExtractXIso(toolbase.ToolBase):
                 return False
 
         # Setup linux program
-        if programs.ShouldProgramBeInstalled("ExtractXIso", "linux"):
+        if programs.should_program_be_installed("ExtractXIso", "linux"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetProgramBackupDir("ExtractXIso", "linux"),
+                archive_dir = programs.get_program_backup_dir("ExtractXIso", "linux"),
                 install_name = "ExtractXIso",
-                install_dir = programs.GetProgramInstallDir("ExtractXIso", "linux"),
+                install_dir = programs.get_program_install_dir("ExtractXIso", "linux"),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)

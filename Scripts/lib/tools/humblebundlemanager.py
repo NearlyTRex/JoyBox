@@ -35,11 +35,11 @@ class HumbleBundleManager(toolbase.ToolBase):
             setup_params = config.SetupParams()
 
         # Download library
-        if programs.ShouldLibraryBeInstalled("HumbleBundleManager"):
+        if programs.should_library_be_installed("HumbleBundleManager"):
             success = network.DownloadGithubRepository(
                 github_user = "NearlyTRex",
                 github_repo = "HumbleBundleManager",
-                output_dir = programs.GetLibraryInstallDir("HumbleBundleManager", "lib"),
+                output_dir = programs.get_library_install_dir("HumbleBundleManager", "lib"),
                 clean = True,
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
@@ -50,7 +50,7 @@ class HumbleBundleManager(toolbase.ToolBase):
             success = network.ArchiveGithubRepository(
                 github_user = "NearlyTRex",
                 github_repo = "HumbleBundleManager",
-                output_dir = programs.GetLibraryBackupDir("HumbleBundleManager", "lib"),
+                output_dir = programs.get_library_backup_dir("HumbleBundleManager", "lib"),
                 recursive = True,
                 clean = True,
                 verbose = setup_params.verbose,
@@ -67,11 +67,11 @@ class HumbleBundleManager(toolbase.ToolBase):
             setup_params = config.SetupParams()
 
         # Setup library
-        if programs.ShouldLibraryBeInstalled("HumbleBundleManager"):
+        if programs.should_library_be_installed("HumbleBundleManager"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetLibraryBackupDir("HumbleBundleManager", "lib"),
+                archive_dir = programs.get_library_backup_dir("HumbleBundleManager", "lib"),
                 install_name = "HumbleBundleManager",
-                install_dir = programs.GetLibraryInstallDir("HumbleBundleManager", "lib"),
+                install_dir = programs.get_library_install_dir("HumbleBundleManager", "lib"),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)

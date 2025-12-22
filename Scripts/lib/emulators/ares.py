@@ -189,7 +189,7 @@ class Ares(emulatorbase.EmulatorBase):
             setup_params = config.SetupParams()
 
         # Download windows program
-        if programs.ShouldProgramBeInstalled("Ares", "windows"):
+        if programs.should_program_be_installed("Ares", "windows"):
             success = release.DownloadGithubRelease(
                 github_user = "ares-emulator",
                 github_repo = "ares",
@@ -197,8 +197,8 @@ class Ares(emulatorbase.EmulatorBase):
                 ends_with = "windows.zip",
                 search_file = "ares.exe",
                 install_name = "Ares",
-                install_dir = programs.GetProgramInstallDir("Ares", "windows"),
-                backups_dir = programs.GetProgramBackupDir("Ares", "windows"),
+                install_dir = programs.get_program_install_dir("Ares", "windows"),
+                backups_dir = programs.get_program_backup_dir("Ares", "windows"),
                 get_latest = True,
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
@@ -208,13 +208,13 @@ class Ares(emulatorbase.EmulatorBase):
                 return False
 
         # Download linux program
-        if programs.ShouldProgramBeInstalled("Ares", "linux"):
+        if programs.should_program_be_installed("Ares", "linux"):
             success = release.BuildAppImageFromSource(
                 release_url = "https://github.com/NearlyTRex/Ares.git",
                 output_file = "ares-x86_64.AppImage",
                 install_name = "Ares",
-                install_dir = programs.GetProgramInstallDir("Ares", "linux"),
-                backups_dir = programs.GetProgramBackupDir("Ares", "linux"),
+                install_dir = programs.get_program_install_dir("Ares", "linux"),
+                backups_dir = programs.get_program_backup_dir("Ares", "linux"),
                 build_cmd = [
                     "make", "-j4", "build=release"
                 ],
@@ -245,11 +245,11 @@ class Ares(emulatorbase.EmulatorBase):
             setup_params = config.SetupParams()
 
         # Setup windows program
-        if programs.ShouldProgramBeInstalled("Ares", "windows"):
+        if programs.should_program_be_installed("Ares", "windows"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetProgramBackupDir("Ares", "windows"),
+                archive_dir = programs.get_program_backup_dir("Ares", "windows"),
                 install_name = "Ares",
-                install_dir = programs.GetProgramInstallDir("Ares", "windows"),
+                install_dir = programs.get_program_install_dir("Ares", "windows"),
                 search_file = "ares.exe",
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
@@ -259,11 +259,11 @@ class Ares(emulatorbase.EmulatorBase):
                 return False
 
         # Setup linux program
-        if programs.ShouldProgramBeInstalled("Ares", "linux"):
+        if programs.should_program_be_installed("Ares", "linux"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetProgramBackupDir("Ares", "linux"),
+                archive_dir = programs.get_program_backup_dir("Ares", "linux"),
                 install_name = "Ares",
-                install_dir = programs.GetProgramInstallDir("Ares", "linux"),
+                install_dir = programs.get_program_install_dir("Ares", "linux"),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
@@ -306,7 +306,7 @@ class Ares(emulatorbase.EmulatorBase):
             for platform in ["windows", "linux"]:
                 success = fileops.smart_copy(
                     src = paths.join_paths(environment.get_locker_gaming_emulator_setup_dir("Ares"), filename),
-                    dest = paths.join_paths(programs.GetEmulatorPathConfigValue("Ares", "setup_dir", platform), filename),
+                    dest = paths.join_paths(programs.get_emulator_path_config_value("Ares", "setup_dir", platform), filename),
                     verbose = setup_params.verbose,
                     pretend_run = setup_params.pretend_run,
                     exit_on_failure = setup_params.exit_on_failure)
@@ -330,7 +330,7 @@ class Ares(emulatorbase.EmulatorBase):
         game_platform = game_info.get_platform()
 
         # Get system types
-        system_types = programs.GetEmulatorConfigValue("Ares", "save_sub_dirs")
+        system_types = programs.get_emulator_config_value("Ares", "save_sub_dirs")
 
         # Check if this platform is valid
         if not game_platform in system_types:
@@ -340,7 +340,7 @@ class Ares(emulatorbase.EmulatorBase):
 
         # Get launch command
         launch_cmd = [
-            programs.GetEmulatorProgram("Ares"),
+            programs.get_emulator_program("Ares"),
             "--system",
             system_types[game_platform],
             config.token_game_file

@@ -17,8 +17,8 @@ import environment
 import fileops
 
 # Check if tool is installed
-def IsToolInstalled():
-    return programs.IsToolInstalled("RClone")
+def is_tool_installed():
+    return programs.is_tool_installed("RClone")
 
 # Get unencrypted remote name
 def GetUnencryptedRemoteName(remote_name):
@@ -87,8 +87,8 @@ def GetConfiguredRemotes(
 
     # Get tool
     rclone_tool = None
-    if programs.IsToolInstalled("RClone"):
-        rclone_tool = programs.GetToolProgram("RClone")
+    if programs.is_tool_installed("RClone"):
+        rclone_tool = programs.get_tool_program("RClone")
     if not rclone_tool:
         logger.log_error("RClone was not found")
         return []
@@ -100,7 +100,7 @@ def GetConfiguredRemotes(
     ]
 
     # Run list command
-    list_output = command.RunOutputCommand(
+    list_output = command.run_output_command(
         cmd = list_cmd,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -130,8 +130,8 @@ def IsRemoteConfigured(
 
     # Get tool
     rclone_tool = None
-    if programs.IsToolInstalled("RClone"):
-        rclone_tool = programs.GetToolProgram("RClone")
+    if programs.is_tool_installed("RClone"):
+        rclone_tool = programs.get_tool_program("RClone")
     if not rclone_tool:
         logger.log_error("RClone was not found")
         return False
@@ -144,7 +144,7 @@ def IsRemoteConfigured(
     ]
 
     # Run show command
-    show_output = command.RunOutputCommand(
+    show_output = command.run_output_command(
         cmd = show_cmd,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -174,8 +174,8 @@ def SetupAutoconnectRemote(
 
     # Get tool
     rclone_tool = None
-    if programs.IsToolInstalled("RClone"):
-        rclone_tool = programs.GetToolProgram("RClone")
+    if programs.is_tool_installed("RClone"):
+        rclone_tool = programs.get_tool_program("RClone")
     if not rclone_tool:
         logger.log_error("RClone was not found")
         return False
@@ -192,7 +192,7 @@ def SetupAutoconnectRemote(
         create_cmd += ["--verbose"]
 
     # Run create command
-    code = command.RunReturncodeCommand(
+    code = command.run_returncode_command(
         cmd = create_cmd,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -210,7 +210,7 @@ def SetupAutoconnectRemote(
         authorize_cmd += ["--verbose"]
 
     # Run authorize command
-    code = command.RunReturncodeCommand(
+    code = command.run_returncode_command(
         cmd = authorize_cmd,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -229,8 +229,8 @@ def SetupManualRemote(
 
     # Get tool
     rclone_tool = None
-    if programs.IsToolInstalled("RClone"):
-        rclone_tool = programs.GetToolProgram("RClone")
+    if programs.is_tool_installed("RClone"):
+        rclone_tool = programs.get_tool_program("RClone")
     if not rclone_tool:
         logger.log_error("RClone was not found")
         return False
@@ -249,7 +249,7 @@ def SetupManualRemote(
         create_cmd += ["--verbose"]
 
     # Run create command
-    code = command.RunReturncodeCommand(
+    code = command.run_returncode_command(
         cmd = create_cmd,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -267,8 +267,8 @@ def SetupEncryptedRemote(
 
     # Get tool
     rclone_tool = None
-    if programs.IsToolInstalled("RClone"):
-        rclone_tool = programs.GetToolProgram("RClone")
+    if programs.is_tool_installed("RClone"):
+        rclone_tool = programs.get_tool_program("RClone")
     if not rclone_tool:
         logger.log_error("RClone was not found")
         return False
@@ -284,7 +284,7 @@ def SetupEncryptedRemote(
     ]
 
     # Run create command
-    code = command.RunReturncodeCommand(
+    code = command.run_returncode_command(
         cmd = create_cmd,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -334,8 +334,8 @@ def GetPathMD5(
 
     # Get rclone tool
     rclone_tool = None
-    if programs.IsToolInstalled("RClone"):
-        rclone_tool = programs.GetToolProgram("RClone")
+    if programs.is_tool_installed("RClone"):
+        rclone_tool = programs.get_tool_program("RClone")
     if not rclone_tool:
         logger.log_error("RClone was not found")
         return None
@@ -348,7 +348,7 @@ def GetPathMD5(
     ]
 
     # Run md5sum command
-    md5sum_output = command.RunOutputCommand(
+    md5sum_output = command.run_output_command(
         cmd = md5sum_cmd,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -376,8 +376,8 @@ def GetPathModTime(
 
     # Get rclone tool
     rclone_tool = None
-    if programs.IsToolInstalled("RClone"):
-        rclone_tool = programs.GetToolProgram("RClone")
+    if programs.is_tool_installed("RClone"):
+        rclone_tool = programs.get_tool_program("RClone")
     if not rclone_tool:
         logger.log_error("RClone was not found")
         return None
@@ -390,7 +390,7 @@ def GetPathModTime(
     ]
 
     # Run lsl command
-    lsl_output = command.RunOutputCommand(
+    lsl_output = command.run_output_command(
         cmd = lsl_cmd,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -448,8 +448,8 @@ def DoesPathExist(
 
     # Get tool
     rclone_tool = None
-    if programs.IsToolInstalled("RClone"):
-        rclone_tool = programs.GetToolProgram("RClone")
+    if programs.is_tool_installed("RClone"):
+        rclone_tool = programs.get_tool_program("RClone")
     if not rclone_tool:
         logger.log_error("RClone was not found")
         return False
@@ -462,7 +462,7 @@ def DoesPathExist(
     ]
 
     # Run list command
-    list_output = command.RunOutputCommand(
+    list_output = command.run_output_command(
         cmd = list_cmd,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -491,8 +491,8 @@ def DoesPathContainFiles(
 
     # Get tool
     rclone_tool = None
-    if programs.IsToolInstalled("RClone"):
-        rclone_tool = programs.GetToolProgram("RClone")
+    if programs.is_tool_installed("RClone"):
+        rclone_tool = programs.get_tool_program("RClone")
     if not rclone_tool:
         logger.log_error("RClone was not found")
         return False
@@ -506,7 +506,7 @@ def DoesPathContainFiles(
     ]
 
     # Run list command
-    list_output = command.RunOutputCommand(
+    list_output = command.run_output_command(
         cmd = list_cmd,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -533,8 +533,8 @@ def DownloadFilesFromRemote(
 
     # Get tool
     rclone_tool = None
-    if programs.IsToolInstalled("RClone"):
-        rclone_tool = programs.GetToolProgram("RClone")
+    if programs.is_tool_installed("RClone"):
+        rclone_tool = programs.get_tool_program("RClone")
     if not rclone_tool:
         logger.log_error("RClone was not found")
         return False
@@ -564,7 +564,7 @@ def DownloadFilesFromRemote(
         ]
 
     # Run copy command
-    code = command.RunReturncodeCommand(
+    code = command.run_returncode_command(
         cmd = copy_cmd,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -586,8 +586,8 @@ def UploadFilesToRemote(
 
     # Get tool
     rclone_tool = None
-    if programs.IsToolInstalled("RClone"):
-        rclone_tool = programs.GetToolProgram("RClone")
+    if programs.is_tool_installed("RClone"):
+        rclone_tool = programs.get_tool_program("RClone")
     if not rclone_tool:
         logger.log_error("RClone was not found")
         return False
@@ -617,7 +617,7 @@ def UploadFilesToRemote(
         ]
 
     # Run copy command
-    code = command.RunReturncodeCommand(
+    code = command.run_returncode_command(
         cmd = copy_cmd,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -637,8 +637,8 @@ def MoveFilesOnRemote(
 
     # Get tool
     rclone_tool = None
-    if programs.IsToolInstalled("RClone"):
-        rclone_tool = programs.GetToolProgram("RClone")
+    if programs.is_tool_installed("RClone"):
+        rclone_tool = programs.get_tool_program("RClone")
     if not rclone_tool:
         logger.log_error("RClone was not found")
         return False
@@ -665,7 +665,7 @@ def MoveFilesOnRemote(
         ]
 
     # Run move command
-    code = command.RunReturncodeCommand(
+    code = command.run_returncode_command(
         cmd = move_cmd,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -683,8 +683,8 @@ def PurgePathOnRemote(
 
     # Get tool
     rclone_tool = None
-    if programs.IsToolInstalled("RClone"):
-        rclone_tool = programs.GetToolProgram("RClone")
+    if programs.is_tool_installed("RClone"):
+        rclone_tool = programs.get_tool_program("RClone")
     if not rclone_tool:
         logger.log_error("RClone was not found")
         return False
@@ -707,7 +707,7 @@ def PurgePathOnRemote(
         ]
 
     # Run purge command
-    code = command.RunReturncodeCommand(
+    code = command.run_returncode_command(
         cmd = purge_cmd,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -775,8 +775,8 @@ def PullFilesFromRemote(
 
     # Get tool
     rclone_tool = None
-    if programs.IsToolInstalled("RClone"):
-        rclone_tool = programs.GetToolProgram("RClone")
+    if programs.is_tool_installed("RClone"):
+        rclone_tool = programs.get_tool_program("RClone")
     if not rclone_tool:
         logger.log_error("RClone was not found")
         return False
@@ -804,7 +804,7 @@ def PullFilesFromRemote(
         ]
 
     # Run sync command
-    code = command.RunReturncodeCommand(
+    code = command.run_returncode_command(
         cmd = sync_cmd,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -825,8 +825,8 @@ def PushFilesToRemote(
 
     # Get tool
     rclone_tool = None
-    if programs.IsToolInstalled("RClone"):
-        rclone_tool = programs.GetToolProgram("RClone")
+    if programs.is_tool_installed("RClone"):
+        rclone_tool = programs.get_tool_program("RClone")
     if not rclone_tool:
         logger.log_error("RClone was not found")
         return False
@@ -854,7 +854,7 @@ def PushFilesToRemote(
         ]
 
     # Run sync command
-    code = command.RunReturncodeCommand(
+    code = command.run_returncode_command(
         cmd = sync_cmd,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -876,8 +876,8 @@ def MergeFilesBothWays(
 
     # Get tool
     rclone_tool = None
-    if programs.IsToolInstalled("RClone"):
-        rclone_tool = programs.GetToolProgram("RClone")
+    if programs.is_tool_installed("RClone"):
+        rclone_tool = programs.get_tool_program("RClone")
     if not rclone_tool:
         logger.log_error("RClone was not found")
         return False
@@ -908,7 +908,7 @@ def MergeFilesBothWays(
         ]
 
     # Run bisync command
-    code = command.RunReturncodeCommand(
+    code = command.run_returncode_command(
         cmd = bisync_cmd,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -944,8 +944,8 @@ def DiffFiles(
 
     # Get tool
     rclone_tool = None
-    if programs.IsToolInstalled("RClone"):
-        rclone_tool = programs.GetToolProgram("RClone")
+    if programs.is_tool_installed("RClone"):
+        rclone_tool = programs.get_tool_program("RClone")
     if not rclone_tool:
         logger.log_error("RClone was not found")
         return False
@@ -981,7 +981,7 @@ def DiffFiles(
         ]
 
     # Run check command
-    command.RunReturncodeCommand(
+    command.run_returncode_command(
         cmd = check_cmd,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -1222,8 +1222,8 @@ def ListFiles(
 
     # Get tool
     rclone_tool = None
-    if programs.IsToolInstalled("RClone"):
-        rclone_tool = programs.GetToolProgram("RClone")
+    if programs.is_tool_installed("RClone"):
+        rclone_tool = programs.get_tool_program("RClone")
     if not rclone_tool:
         logger.log_error("RClone was not found")
         return False
@@ -1245,7 +1245,7 @@ def ListFiles(
     ]
 
     # Run list command
-    code = command.RunReturncodeCommand(
+    code = command.run_returncode_command(
         cmd = list_cmd,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -1283,8 +1283,8 @@ def MountFiles(
 
     # Get tool
     rclone_tool = None
-    if programs.IsToolInstalled("RClone"):
-        rclone_tool = programs.GetToolProgram("RClone")
+    if programs.is_tool_installed("RClone"):
+        rclone_tool = programs.get_tool_program("RClone")
     if not rclone_tool:
         logger.log_error("RClone was not found")
         return False
@@ -1323,9 +1323,9 @@ def MountFiles(
         ]
 
     # Run mount command
-    code = command.RunReturncodeCommand(
+    code = command.run_returncode_command(
         cmd = mount_cmd,
-        options = command.CreateCommandOptions(
+        options = command.create_command_options(
             is_daemon = environment.is_unix_platform()),
         verbose = verbose,
         pretend_run = pretend_run,

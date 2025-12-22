@@ -42,11 +42,11 @@ class XorrISO(toolbase.ToolBase):
             setup_params = config.SetupParams()
 
         # Download windows program
-        if programs.ShouldProgramBeInstalled("XorrISO", "windows"):
+        if programs.should_program_be_installed("XorrISO", "windows"):
             success = network.DownloadGithubRepository(
                 github_user = "NearlyTRex",
                 github_repo = "XorrISOWindows",
-                output_dir = programs.GetProgramInstallDir("XorrISO", "windows"),
+                output_dir = programs.get_program_install_dir("XorrISO", "windows"),
                 recursive = True,
                 clean = True,
                 verbose = setup_params.verbose,
@@ -58,7 +58,7 @@ class XorrISO(toolbase.ToolBase):
             success = network.ArchiveGithubRepository(
                 github_user = "NearlyTRex",
                 github_repo = "XorrISOWindows",
-                output_dir = programs.GetProgramBackupDir("XorrISO", "windows"),
+                output_dir = programs.get_program_backup_dir("XorrISO", "windows"),
                 recursive = True,
                 clean = True,
                 verbose = setup_params.verbose,
@@ -69,13 +69,13 @@ class XorrISO(toolbase.ToolBase):
                 return False
 
         # Build linux program
-        if programs.ShouldProgramBeInstalled("XorrISO", "linux"):
+        if programs.should_program_be_installed("XorrISO", "linux"):
             success = release.BuildAppImageFromSource(
                 release_url = "https://ftp.gnu.org/gnu/xorriso/xorriso-1.5.2.tar.gz",
                 output_file = "App-x86_64.AppImage",
                 install_name = "XorrISO",
-                install_dir = programs.GetProgramInstallDir("XorrISO", "linux"),
-                backups_dir = programs.GetProgramBackupDir("XorrISO", "linux"),
+                install_dir = programs.get_program_install_dir("XorrISO", "linux"),
+                backups_dir = programs.get_program_backup_dir("XorrISO", "linux"),
                 build_cmd = [
                     "cd", "xorriso-1.5.2",
                     "./bootstrap",
@@ -107,11 +107,11 @@ class XorrISO(toolbase.ToolBase):
             setup_params = config.SetupParams()
 
         # Setup windows program
-        if programs.ShouldProgramBeInstalled("XorrISO", "windows"):
+        if programs.should_program_be_installed("XorrISO", "windows"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetProgramBackupDir("XorrISO", "windows"),
+                archive_dir = programs.get_program_backup_dir("XorrISO", "windows"),
                 install_name = "XorrISO",
-                install_dir = programs.GetProgramInstallDir("XorrISO", "windows"),
+                install_dir = programs.get_program_install_dir("XorrISO", "windows"),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
@@ -120,11 +120,11 @@ class XorrISO(toolbase.ToolBase):
                 return False
 
         # Setup linux program
-        if programs.ShouldProgramBeInstalled("XorrISO", "linux"):
+        if programs.should_program_be_installed("XorrISO", "linux"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetProgramBackupDir("XorrISO", "linux"),
+                archive_dir = programs.get_program_backup_dir("XorrISO", "linux"),
                 install_name = "XorrISO",
-                install_dir = programs.GetProgramInstallDir("XorrISO", "linux"),
+                install_dir = programs.get_program_install_dir("XorrISO", "linux"),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)

@@ -41,7 +41,7 @@ class NDecrypt(toolbase.ToolBase):
             setup_params = config.SetupParams()
 
         # Download windows program
-        if programs.ShouldProgramBeInstalled("NDecrypt", "windows"):
+        if programs.should_program_be_installed("NDecrypt", "windows"):
             success = release.DownloadGithubRelease(
                 github_user = "SabreTools",
                 github_repo = "NDecrypt",
@@ -49,8 +49,8 @@ class NDecrypt(toolbase.ToolBase):
                 ends_with = "win-x64.zip",
                 search_file = "NDecrypt.exe",
                 install_name = "NDecrypt",
-                install_dir = programs.GetProgramInstallDir("NDecrypt", "windows"),
-                backups_dir = programs.GetProgramBackupDir("NDecrypt", "windows"),
+                install_dir = programs.get_program_install_dir("NDecrypt", "windows"),
+                backups_dir = programs.get_program_backup_dir("NDecrypt", "windows"),
                 install_files = ["NDecrypt.exe"],
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
@@ -60,7 +60,7 @@ class NDecrypt(toolbase.ToolBase):
                 return False
 
         # Download linux program
-        if programs.ShouldProgramBeInstalled("NDecrypt", "linux"):
+        if programs.should_program_be_installed("NDecrypt", "linux"):
             success = release.DownloadGithubRelease(
                 github_user = "SabreTools",
                 github_repo = "NDecrypt",
@@ -68,8 +68,8 @@ class NDecrypt(toolbase.ToolBase):
                 ends_with = "linux-x64.zip",
                 search_file = "NDecrypt",
                 install_name = "NDecrypt",
-                install_dir = programs.GetProgramInstallDir("NDecrypt", "linux"),
-                backups_dir = programs.GetProgramBackupDir("NDecrypt", "linux"),
+                install_dir = programs.get_program_install_dir("NDecrypt", "linux"),
+                backups_dir = programs.get_program_backup_dir("NDecrypt", "linux"),
                 install_files = ["NDecrypt"],
                 chmod_files = [
                     {
@@ -91,11 +91,11 @@ class NDecrypt(toolbase.ToolBase):
             setup_params = config.SetupParams()
 
         # Setup windows program
-        if programs.ShouldProgramBeInstalled("NDecrypt", "windows"):
+        if programs.should_program_be_installed("NDecrypt", "windows"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetProgramBackupDir("NDecrypt", "windows"),
+                archive_dir = programs.get_program_backup_dir("NDecrypt", "windows"),
                 install_name = "NDecrypt",
-                install_dir = programs.GetProgramInstallDir("NDecrypt", "windows"),
+                install_dir = programs.get_program_install_dir("NDecrypt", "windows"),
                 search_file = "NDecrypt.exe",
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
@@ -105,11 +105,11 @@ class NDecrypt(toolbase.ToolBase):
                 return False
 
         # Setup linux program
-        if programs.ShouldProgramBeInstalled("NDecrypt", "linux"):
+        if programs.should_program_be_installed("NDecrypt", "linux"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetProgramBackupDir("NDecrypt", "linux"),
+                archive_dir = programs.get_program_backup_dir("NDecrypt", "linux"),
                 install_name = "NDecrypt",
-                install_dir = programs.GetProgramInstallDir("NDecrypt", "linux"),
+                install_dir = programs.get_program_install_dir("NDecrypt", "linux"),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)

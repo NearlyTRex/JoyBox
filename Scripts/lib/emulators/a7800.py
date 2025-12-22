@@ -49,7 +49,7 @@ class A7800(emulatorbase.EmulatorBase):
             setup_params = config.SetupParams()
 
         # Download windows program
-        if programs.ShouldProgramBeInstalled("A7800", "windows"):
+        if programs.should_program_be_installed("A7800", "windows"):
             success = release.DownloadGithubRelease(
                 github_user = "7800-devtools",
                 github_repo = "a7800",
@@ -57,8 +57,8 @@ class A7800(emulatorbase.EmulatorBase):
                 ends_with = ".zip",
                 search_file = "a7800.exe",
                 install_name = "A7800",
-                install_dir = programs.GetProgramInstallDir("A7800", "windows"),
-                backups_dir = programs.GetProgramBackupDir("A7800", "windows"),
+                install_dir = programs.get_program_install_dir("A7800", "windows"),
+                backups_dir = programs.get_program_backup_dir("A7800", "windows"),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
@@ -73,11 +73,11 @@ class A7800(emulatorbase.EmulatorBase):
             setup_params = config.SetupParams()
 
         # Setup windows program
-        if programs.ShouldProgramBeInstalled("A7800", "windows"):
+        if programs.should_program_be_installed("A7800", "windows"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetProgramBackupDir("A7800", "windows"),
+                archive_dir = programs.get_program_backup_dir("A7800", "windows"),
                 install_name = "A7800",
-                install_dir = programs.GetProgramInstallDir("A7800", "windows"),
+                install_dir = programs.get_program_install_dir("A7800", "windows"),
                 search_file = "a7800.exe",
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,

@@ -104,16 +104,16 @@ class Amazon(storebase.StoreBase):
 
         # Get tool
         python_tool = None
-        if programs.IsToolInstalled("PythonVenvPython"):
-            python_tool = programs.GetToolProgram("PythonVenvPython")
+        if programs.is_tool_installed("PythonVenvPython"):
+            python_tool = programs.get_tool_program("PythonVenvPython")
         if not python_tool:
             logger.log_error("PythonVenvPython was not found")
             return False
 
         # Get script
         nile_script = None
-        if programs.IsToolInstalled("Nile"):
-            nile_script = programs.GetToolProgram("Nile")
+        if programs.is_tool_installed("Nile"):
+            nile_script = programs.get_tool_program("Nile")
         if not nile_script:
             logger.log_error("Nile was not found")
             return False
@@ -128,7 +128,7 @@ class Amazon(storebase.StoreBase):
         ]
 
         # Run login command
-        code = command.RunInteractiveCommand(
+        code = command.run_interactive_command(
             cmd = login_cmd,
             verbose = verbose,
             pretend_run = pretend_run,
@@ -146,7 +146,7 @@ class Amazon(storebase.StoreBase):
         ]
 
         # Run refresh command
-        code = command.RunInteractiveCommand(
+        code = command.run_interactive_command(
             cmd = refresh_cmd,
             verbose = verbose,
             pretend_run = pretend_run,
@@ -204,16 +204,16 @@ class Amazon(storebase.StoreBase):
 
         # Get tool
         python_tool = None
-        if programs.IsToolInstalled("PythonVenvPython"):
-            python_tool = programs.GetToolProgram("PythonVenvPython")
+        if programs.is_tool_installed("PythonVenvPython"):
+            python_tool = programs.get_tool_program("PythonVenvPython")
         if not python_tool:
             logger.log_error("PythonVenvPython was not found")
             return None
 
         # Get script
         nile_script = None
-        if programs.IsToolInstalled("Nile"):
-            nile_script = programs.GetToolProgram("Nile")
+        if programs.is_tool_installed("Nile"):
+            nile_script = programs.get_tool_program("Nile")
         if not nile_script:
             logger.log_error("Nile was not found")
             return None
@@ -228,7 +228,7 @@ class Amazon(storebase.StoreBase):
         ]
 
         # Run refresh command
-        code = command.RunReturncodeCommand(
+        code = command.run_returncode_command(
             cmd = refresh_cmd,
             verbose = verbose,
             pretend_run = pretend_run,
@@ -246,7 +246,7 @@ class Amazon(storebase.StoreBase):
         ]
 
         # Run sync command
-        code = command.RunReturncodeCommand(
+        code = command.run_returncode_command(
             cmd = sync_cmd,
             verbose = verbose,
             pretend_run = pretend_run,
@@ -263,7 +263,7 @@ class Amazon(storebase.StoreBase):
         ]
 
         # Run list command
-        list_output = command.RunOutputCommand(
+        list_output = command.run_output_command(
             cmd = list_cmd,
             verbose = verbose,
             pretend_run = pretend_run,
@@ -338,16 +338,16 @@ class Amazon(storebase.StoreBase):
 
         # Get tool
         python_tool = None
-        if programs.IsToolInstalled("PythonVenvPython"):
-            python_tool = programs.GetToolProgram("PythonVenvPython")
+        if programs.is_tool_installed("PythonVenvPython"):
+            python_tool = programs.get_tool_program("PythonVenvPython")
         if not python_tool:
             logger.log_error("PythonVenvPython was not found")
             return None
 
         # Get script
         nile_script = None
-        if programs.IsToolInstalled("Nile"):
-            nile_script = programs.GetToolProgram("Nile")
+        if programs.is_tool_installed("Nile"):
+            nile_script = programs.get_tool_program("Nile")
         if not nile_script:
             logger.log_error("Nile was not found")
             return None
@@ -362,7 +362,7 @@ class Amazon(storebase.StoreBase):
         ]
 
         # Run info command
-        info_output = command.RunOutputCommand(
+        info_output = command.run_output_command(
             cmd = info_cmd,
             verbose = verbose,
             pretend_run = pretend_run,
@@ -419,16 +419,16 @@ class Amazon(storebase.StoreBase):
 
         # Get tool
         python_tool = None
-        if programs.IsToolInstalled("PythonVenvPython"):
-            python_tool = programs.GetToolProgram("PythonVenvPython")
+        if programs.is_tool_installed("PythonVenvPython"):
+            python_tool = programs.get_tool_program("PythonVenvPython")
         if not python_tool:
             logger.log_error("PythonVenvPython was not found")
             return False
 
         # Get script
         nile_script = None
-        if programs.IsToolInstalled("Nile"):
-            nile_script = programs.GetToolProgram("Nile")
+        if programs.is_tool_installed("Nile"):
+            nile_script = programs.get_tool_program("Nile")
         if not nile_script:
             logger.log_error("Nile was not found")
             return False
@@ -450,7 +450,7 @@ class Amazon(storebase.StoreBase):
         ]
 
         # Run download command
-        code = command.RunReturncodeCommand(
+        code = command.run_returncode_command(
             cmd = download_cmd,
             verbose = verbose,
             pretend_run = pretend_run,

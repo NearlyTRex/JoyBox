@@ -45,7 +45,7 @@ class Moonlight(toolbase.ToolBase):
             setup_params = config.SetupParams()
 
         # Download windows program
-        if programs.ShouldProgramBeInstalled("Moonlight", "windows"):
+        if programs.should_program_be_installed("Moonlight", "windows"):
             success = release.DownloadGithubRelease(
                 github_user = "moonlight-stream",
                 github_repo = "moonlight-qt",
@@ -53,8 +53,8 @@ class Moonlight(toolbase.ToolBase):
                 ends_with = ".zip",
                 search_file = "Moonlight.exe",
                 install_name = "Moonlight",
-                install_dir = programs.GetProgramInstallDir("Moonlight", "windows"),
-                backups_dir = programs.GetProgramBackupDir("Moonlight", "windows"),
+                install_dir = programs.get_program_install_dir("Moonlight", "windows"),
+                backups_dir = programs.get_program_backup_dir("Moonlight", "windows"),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
@@ -63,15 +63,15 @@ class Moonlight(toolbase.ToolBase):
                 return False
 
         # Download linux program
-        if programs.ShouldProgramBeInstalled("Moonlight", "linux"):
+        if programs.should_program_be_installed("Moonlight", "linux"):
             success = release.DownloadGithubRelease(
                 github_user = "moonlight-stream",
                 github_repo = "moonlight-qt",
                 starts_with = "Moonlight",
                 ends_with = "x86_64.AppImage",
                 install_name = "Moonlight",
-                install_dir = programs.GetProgramInstallDir("Moonlight", "linux"),
-                backups_dir = programs.GetProgramBackupDir("Moonlight", "linux"),
+                install_dir = programs.get_program_install_dir("Moonlight", "linux"),
+                backups_dir = programs.get_program_backup_dir("Moonlight", "linux"),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
@@ -86,11 +86,11 @@ class Moonlight(toolbase.ToolBase):
             setup_params = config.SetupParams()
 
         # Setup windows program
-        if programs.ShouldProgramBeInstalled("Moonlight", "windows"):
+        if programs.should_program_be_installed("Moonlight", "windows"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetProgramBackupDir("Moonlight", "windows"),
+                archive_dir = programs.get_program_backup_dir("Moonlight", "windows"),
                 install_name = "Moonlight",
-                install_dir = programs.GetProgramInstallDir("Moonlight", "windows"),
+                install_dir = programs.get_program_install_dir("Moonlight", "windows"),
                 search_file = "Moonlight.exe",
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
@@ -100,11 +100,11 @@ class Moonlight(toolbase.ToolBase):
                 return False
 
         # Setup linux program
-        if programs.ShouldProgramBeInstalled("Moonlight", "linux"):
+        if programs.should_program_be_installed("Moonlight", "linux"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetProgramBackupDir("Moonlight", "linux"),
+                archive_dir = programs.get_program_backup_dir("Moonlight", "linux"),
                 install_name = "Moonlight",
-                install_dir = programs.GetProgramInstallDir("Moonlight", "linux"),
+                install_dir = programs.get_program_install_dir("Moonlight", "linux"),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)

@@ -41,7 +41,7 @@ class GeckoDriver(toolbase.ToolBase):
             setup_params = config.SetupParams()
 
         # Download windows program
-        if programs.ShouldProgramBeInstalled("GeckoDriver", "windows"):
+        if programs.should_program_be_installed("GeckoDriver", "windows"):
             success = release.DownloadGithubRelease(
                 github_user = "mozilla",
                 github_repo = "geckodriver",
@@ -49,8 +49,8 @@ class GeckoDriver(toolbase.ToolBase):
                 ends_with = "win32.zip",
                 search_file = "geckodriver.exe",
                 install_name = "GeckoDriver",
-                install_dir = programs.GetProgramInstallDir("GeckoDriver", "windows"),
-                backups_dir = programs.GetProgramBackupDir("GeckoDriver", "windows"),
+                install_dir = programs.get_program_install_dir("GeckoDriver", "windows"),
+                backups_dir = programs.get_program_backup_dir("GeckoDriver", "windows"),
                 install_files = ["geckodriver.exe"],
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
@@ -60,7 +60,7 @@ class GeckoDriver(toolbase.ToolBase):
                 return False
 
         # Download linux program
-        if programs.ShouldProgramBeInstalled("GeckoDriver", "linux"):
+        if programs.should_program_be_installed("GeckoDriver", "linux"):
             success = release.DownloadGithubRelease(
                 github_user = "mozilla",
                 github_repo = "geckodriver",
@@ -68,8 +68,8 @@ class GeckoDriver(toolbase.ToolBase):
                 ends_with = "linux64.tar.gz",
                 search_file = "geckodriver",
                 install_name = "GeckoDriver",
-                install_dir = programs.GetProgramInstallDir("GeckoDriver", "linux"),
-                backups_dir = programs.GetProgramBackupDir("GeckoDriver", "linux"),
+                install_dir = programs.get_program_install_dir("GeckoDriver", "linux"),
+                backups_dir = programs.get_program_backup_dir("GeckoDriver", "linux"),
                 install_files = ["geckodriver"],
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
@@ -85,11 +85,11 @@ class GeckoDriver(toolbase.ToolBase):
             setup_params = config.SetupParams()
 
         # Setup windows program
-        if programs.ShouldProgramBeInstalled("GeckoDriver", "windows"):
+        if programs.should_program_be_installed("GeckoDriver", "windows"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetProgramBackupDir("GeckoDriver", "windows"),
+                archive_dir = programs.get_program_backup_dir("GeckoDriver", "windows"),
                 install_name = "GeckoDriver",
-                install_dir = programs.GetProgramInstallDir("GeckoDriver", "windows"),
+                install_dir = programs.get_program_install_dir("GeckoDriver", "windows"),
                 search_file = "geckodriver.exe",
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
@@ -99,11 +99,11 @@ class GeckoDriver(toolbase.ToolBase):
                 return False
 
         # Setup linux program
-        if programs.ShouldProgramBeInstalled("GeckoDriver", "linux"):
+        if programs.should_program_be_installed("GeckoDriver", "linux"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetProgramBackupDir("GeckoDriver", "linux"),
+                archive_dir = programs.get_program_backup_dir("GeckoDriver", "linux"),
                 install_name = "GeckoDriver",
-                install_dir = programs.GetProgramInstallDir("GeckoDriver", "linux"),
+                install_dir = programs.get_program_install_dir("GeckoDriver", "linux"),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)

@@ -25,17 +25,17 @@ class AudioMetadata:
 
         # Import mutagen modules
         self.mutagen = modules.import_python_module_package(
-            module_path = programs.GetToolPathConfigValue("Mutagen", "package_dir"),
-            module_name = programs.GetToolConfigValue("Mutagen", "package_name"))
+            module_path = programs.get_tool_path_config_value("Mutagen", "package_dir"),
+            module_name = programs.get_tool_config_value("Mutagen", "package_name"))
         self.mutagen_mp3 = modules.import_python_module_package(
-            module_path = programs.GetToolPathConfigValue("MutagenMP3", "package_dir"),
-            module_name = programs.GetToolConfigValue("MutagenMP3", "package_name"))
+            module_path = programs.get_tool_path_config_value("MutagenMP3", "package_dir"),
+            module_name = programs.get_tool_config_value("MutagenMP3", "package_name"))
         self.mutagen_id3 = modules.import_python_module_package(
-            module_path = programs.GetToolPathConfigValue("MutagenID3", "package_dir"),
-            module_name = programs.GetToolConfigValue("MutagenID3", "package_name"))
+            module_path = programs.get_tool_path_config_value("MutagenID3", "package_dir"),
+            module_name = programs.get_tool_config_value("MutagenID3", "package_name"))
         self.mutagen_mp4 = modules.import_python_module_package(
-            module_path = programs.GetToolPathConfigValue("MutagenMP4", "package_dir"),
-            module_name = programs.GetToolConfigValue("MutagenMP4", "package_name"))
+            module_path = programs.get_tool_path_config_value("MutagenMP4", "package_dir"),
+            module_name = programs.get_tool_config_value("MutagenMP4", "package_name"))
         if self.mutagen is None or self.mutagen_mp3 is None or self.mutagen_id3 is None or self.mutagen_mp4 is None:
             raise ImportError("Failed to import mutagen modules")
 

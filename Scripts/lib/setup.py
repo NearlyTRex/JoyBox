@@ -71,7 +71,7 @@ def setup_packages(
 
         # Force reinstall by cleaning the install directory
         if force:
-            install_dir = programs.GetLibraryInstallDir(package_name)
+            install_dir = programs.get_library_install_dir(package_name)
             if paths.does_path_exist(install_dir):
                 logger.log_info("Forcing rebuild of %s (removing %s) ..." % (package_name, install_dir))
                 fileops.remove_directory(
@@ -104,7 +104,7 @@ def setup_tools(
     packages = None,
     setup_params = None):
     return setup_packages(
-        package_list = programs.GetTools(),
+        package_list = programs.get_tools(),
         package_type = "tool",
         root_dir = environment.get_tools_root_dir(),
         offline = offline,
@@ -123,7 +123,7 @@ def setup_emulators(
     packages = None,
     setup_params = None):
     return setup_packages(
-        package_list = programs.GetEmulators(),
+        package_list = programs.get_emulators(),
         package_type = "emulator",
         root_dir = environment.get_emulators_root_dir(),
         offline = offline,

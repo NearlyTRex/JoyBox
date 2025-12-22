@@ -33,8 +33,8 @@ def main():
 
     # Get tool
     pegasus_tool = None
-    if programs.IsToolInstalled("Pegasus"):
-        pegasus_tool = programs.GetToolProgram("Pegasus")
+    if programs.is_tool_installed("Pegasus"):
+        pegasus_tool = programs.get_tool_program("Pegasus")
     if not pegasus_tool:
         logger.log_error("Pegasus was not found", quit_program = True)
 
@@ -44,13 +44,13 @@ def main():
     ]
 
     # Get launch options
-    launch_options = command.CreateCommandOptions()
+    launch_options = command.create_command_options()
     launch_options.set_cwd(paths.get_filename_directory(pegasus_tool))
     launch_options.set_env(os.environ)
     launch_options.set_env_var("JOYBOX_LAUNCH_JSON", paths.join_paths(environment.get_scripts_bin_dir(), "launch_json" + environment.get_scripts_command_extension()))
 
     # Run launch command
-    code = command.RunReturncodeCommand(
+    code = command.run_returncode_command(
         cmd = launch_cmd,
         options = launch_options,
         verbose = args.verbose,

@@ -131,7 +131,7 @@ class Mame(emulatorbase.EmulatorBase):
             setup_params = config.SetupParams()
 
         # Download windows program
-        if programs.ShouldProgramBeInstalled("Mame", "windows"):
+        if programs.should_program_be_installed("Mame", "windows"):
             success = release.DownloadGithubRelease(
                 github_user = "mamedev",
                 github_repo = "mame",
@@ -139,8 +139,8 @@ class Mame(emulatorbase.EmulatorBase):
                 ends_with = "64bit.exe",
                 search_file = "mame.exe",
                 install_name = "Mame",
-                install_dir = programs.GetProgramInstallDir("Mame", "windows"),
-                backups_dir = programs.GetProgramBackupDir("Mame", "windows"),
+                install_dir = programs.get_program_install_dir("Mame", "windows"),
+                backups_dir = programs.get_program_backup_dir("Mame", "windows"),
                 installer_type = config.InstallerType.SEVENZIP,
                 release_type = config.ReleaseType.ARCHIVE,
                 get_latest = True,
@@ -152,13 +152,13 @@ class Mame(emulatorbase.EmulatorBase):
                 return False
 
         # Build linux program
-        if programs.ShouldProgramBeInstalled("Mame", "linux"):
+        if programs.should_program_be_installed("Mame", "linux"):
             success = release.BuildAppImageFromSource(
                 release_url = "https://github.com/NearlyTRex/Mame.git",
                 output_file = "App-x86_64.AppImage",
                 install_name = "Mame",
-                install_dir = programs.GetProgramInstallDir("Mame", "linux"),
-                backups_dir = programs.GetProgramBackupDir("Mame", "linux"),
+                install_dir = programs.get_program_install_dir("Mame", "linux"),
+                backups_dir = programs.get_program_backup_dir("Mame", "linux"),
                 build_cmd = [
                     "make", "-j", "8"
                 ],
@@ -201,11 +201,11 @@ class Mame(emulatorbase.EmulatorBase):
             setup_params = config.SetupParams()
 
         # Setup windows program
-        if programs.ShouldProgramBeInstalled("Mame", "windows"):
+        if programs.should_program_be_installed("Mame", "windows"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetProgramBackupDir("Mame", "windows"),
+                archive_dir = programs.get_program_backup_dir("Mame", "windows"),
                 install_name = "Mame",
-                install_dir = programs.GetProgramInstallDir("Mame", "windows"),
+                install_dir = programs.get_program_install_dir("Mame", "windows"),
                 search_file = "mame.exe",
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
@@ -215,11 +215,11 @@ class Mame(emulatorbase.EmulatorBase):
                 return False
 
         # Setup linux program
-        if programs.ShouldProgramBeInstalled("Mame", "linux"):
+        if programs.should_program_be_installed("Mame", "linux"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetProgramBackupDir("Mame", "linux"),
+                archive_dir = programs.get_program_backup_dir("Mame", "linux"),
                 install_name = "Mame",
-                install_dir = programs.GetProgramInstallDir("Mame", "linux"),
+                install_dir = programs.get_program_install_dir("Mame", "linux"),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
@@ -264,7 +264,7 @@ class Mame(emulatorbase.EmulatorBase):
             for platform in ["windows", "linux"]:
                 success = fileops.smart_copy(
                     src = paths.join_paths(environment.get_locker_gaming_emulator_setup_dir("Mame"), filename),
-                    dest = paths.join_paths(programs.GetEmulatorPathConfigValue("Mame", "setup_dir", platform), filename),
+                    dest = paths.join_paths(programs.get_emulator_path_config_value("Mame", "setup_dir", platform), filename),
                     verbose = setup_params.verbose,
                     pretend_run = setup_params.pretend_run,
                     exit_on_failure = setup_params.exit_on_failure)
@@ -288,11 +288,11 @@ class Mame(emulatorbase.EmulatorBase):
         game_platform = game_info.get_platform()
 
         # Get launch command
-        launch_cmd = [programs.GetEmulatorProgram("Mame")]
+        launch_cmd = [programs.get_emulator_program("Mame")]
 
         # Add ini path
         launch_cmd += [
-            "-inipath", programs.GetEmulatorPathConfigValue("Mame", "config_dir")
+            "-inipath", programs.get_emulator_path_config_value("Mame", "config_dir")
         ]
 
         # Add rom path
@@ -302,7 +302,7 @@ class Mame(emulatorbase.EmulatorBase):
             ]
         else:
             launch_cmd += [
-                "-rompath", programs.GetEmulatorPathConfigValue("Mame", "roms_dir")
+                "-rompath", programs.get_emulator_path_config_value("Mame", "roms_dir")
             ]
 
         # Add launch file

@@ -88,8 +88,8 @@ def LaunchProgram(verbose = False, pretend_run = False, exit_on_failure = False)
 
     # Get tool
     ghidra_tool = None
-    if programs.IsToolInstalled("Ghidra"):
-        ghidra_tool = programs.GetToolProgram("Ghidra")
+    if programs.is_tool_installed("Ghidra"):
+        ghidra_tool = programs.get_tool_program("Ghidra")
     if not ghidra_tool:
         logger.log_error("Ghidra was not found")
         return False
@@ -100,7 +100,7 @@ def LaunchProgram(verbose = False, pretend_run = False, exit_on_failure = False)
     ]
 
     # Run launch command
-    code = command.RunReturncodeCommand(
+    code = command.run_returncode_command(
         cmd = launch_cmd,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -120,14 +120,14 @@ def RunScript(
 
     # Get tool
     python_tool = None
-    if programs.IsToolInstalled("PythonVenvPython"):
-        python_tool = programs.GetToolProgram("PythonVenvPython")
+    if programs.is_tool_installed("PythonVenvPython"):
+        python_tool = programs.get_tool_program("PythonVenvPython")
     if not python_tool:
         logger.log_error("PythonVenvPython was not found")
         return False
 
     # Get Ghidra install directory for pyghidra
-    ghidra_install_dir = programs.GetLibraryInstallDir("Ghidra", "lib")
+    ghidra_install_dir = programs.get_library_install_dir("Ghidra", "lib")
     if not ghidra_install_dir or not os.path.isdir(ghidra_install_dir):
         logger.log_error("Ghidra installation not found at: %s" % ghidra_install_dir)
         return False
@@ -172,11 +172,11 @@ def RunScript(
             logger.log_info("  Args: %s" % script_args)
 
     # Create command options with Ghidra install dir environment variable
-    cmd_options = command.CreateCommandOptions()
+    cmd_options = command.create_command_options()
     cmd_options.set_env_var("GHIDRA_INSTALL_DIR", ghidra_install_dir)
 
     # Run command
-    code = command.RunReturncodeCommand(
+    code = command.run_returncode_command(
         cmd = cmd,
         options = cmd_options,
         verbose = verbose,

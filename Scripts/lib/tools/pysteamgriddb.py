@@ -36,11 +36,11 @@ class PySteamGridDB(toolbase.ToolBase):
             setup_params = config.SetupParams()
 
         # Download library
-        if programs.ShouldLibraryBeInstalled("PySteamGridDB"):
+        if programs.should_library_be_installed("PySteamGridDB"):
             success = network.DownloadGithubRepository(
                 github_user = "NearlyTRex",
                 github_repo = "PySteamGridDB",
-                output_dir = programs.GetLibraryInstallDir("PySteamGridDB", "lib"),
+                output_dir = programs.get_library_install_dir("PySteamGridDB", "lib"),
                 clean = True,
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
@@ -51,7 +51,7 @@ class PySteamGridDB(toolbase.ToolBase):
             success = network.ArchiveGithubRepository(
                 github_user = "NearlyTRex",
                 github_repo = "PySteamGridDB",
-                output_dir = programs.GetLibraryBackupDir("PySteamGridDB", "lib"),
+                output_dir = programs.get_library_backup_dir("PySteamGridDB", "lib"),
                 recursive = True,
                 clean = True,
                 verbose = setup_params.verbose,
@@ -68,11 +68,11 @@ class PySteamGridDB(toolbase.ToolBase):
             setup_params = config.SetupParams()
 
         # Setup library
-        if programs.ShouldLibraryBeInstalled("PySteamGridDB"):
+        if programs.should_library_be_installed("PySteamGridDB"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetLibraryBackupDir("PySteamGridDB", "lib"),
+                archive_dir = programs.get_library_backup_dir("PySteamGridDB", "lib"),
                 install_name = "PySteamGridDB",
-                install_dir = programs.GetLibraryInstallDir("PySteamGridDB", "lib"),
+                install_dir = programs.get_library_install_dir("PySteamGridDB", "lib"),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)

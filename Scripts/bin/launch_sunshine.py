@@ -30,8 +30,8 @@ def main():
 
     # Get tool
     sunshine_tool = None
-    if programs.IsToolInstalled("Sunshine"):
-        sunshine_tool = programs.GetToolProgram("Sunshine")
+    if programs.is_tool_installed("Sunshine"):
+        sunshine_tool = programs.get_tool_program("Sunshine")
     if not sunshine_tool:
         logger.log_error("Sunshine was not found", quit_program = True)
 
@@ -41,7 +41,7 @@ def main():
     ]
 
     # Run launch command
-    code = command.RunReturncodeCommand(
+    code = command.run_returncode_command(
         cmd = launch_cmd,
         verbose = args.verbose,
         pretend_run = args.pretend_run,

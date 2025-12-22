@@ -49,13 +49,13 @@ class Mesen(emulatorbase.EmulatorBase):
             setup_params = config.SetupParams()
 
         # Download windows program
-        if programs.ShouldProgramBeInstalled("Mesen", "windows"):
+        if programs.should_program_be_installed("Mesen", "windows"):
             success = release.DownloadGeneralRelease(
                 archive_url = "https://nightly.link/SourMesen/Mesen2/workflows/build/master/Mesen%20%28Windows%20-%20net8.0%29.zip",
                 search_file = "Mesen.exe",
                 install_name = "Mesen",
-                install_dir = programs.GetProgramInstallDir("Mesen", "windows"),
-                backups_dir = programs.GetProgramBackupDir("Mesen", "windows"),
+                install_dir = programs.get_program_install_dir("Mesen", "windows"),
+                backups_dir = programs.get_program_backup_dir("Mesen", "windows"),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
@@ -64,13 +64,13 @@ class Mesen(emulatorbase.EmulatorBase):
                 return False
 
         # Download linux program
-        if programs.ShouldProgramBeInstalled("Mesen", "linux"):
+        if programs.should_program_be_installed("Mesen", "linux"):
             success = release.DownloadGeneralRelease(
                 archive_url = "https://nightly.link/SourMesen/Mesen2/workflows/build/master/Mesen%20(Linux%20x64%20-%20AppImage).zip",
                 search_file = "Mesen.AppImage",
                 install_name = "Mesen",
-                install_dir = programs.GetProgramInstallDir("Mesen", "linux"),
-                backups_dir = programs.GetProgramBackupDir("Mesen", "linux"),
+                install_dir = programs.get_program_install_dir("Mesen", "linux"),
+                backups_dir = programs.get_program_backup_dir("Mesen", "linux"),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
@@ -85,11 +85,11 @@ class Mesen(emulatorbase.EmulatorBase):
             setup_params = config.SetupParams()
 
         # Setup windows program
-        if programs.ShouldProgramBeInstalled("Mesen", "windows"):
+        if programs.should_program_be_installed("Mesen", "windows"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetProgramBackupDir("Mesen", "windows"),
+                archive_dir = programs.get_program_backup_dir("Mesen", "windows"),
                 install_name = "Mesen",
-                install_dir = programs.GetProgramInstallDir("Mesen", "windows"),
+                install_dir = programs.get_program_install_dir("Mesen", "windows"),
                 search_file = "Mesen.exe",
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
@@ -99,11 +99,11 @@ class Mesen(emulatorbase.EmulatorBase):
                 return False
 
         # Setup linux program
-        if programs.ShouldProgramBeInstalled("Mesen", "linux"):
+        if programs.should_program_be_installed("Mesen", "linux"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetProgramBackupDir("Mesen", "linux"),
+                archive_dir = programs.get_program_backup_dir("Mesen", "linux"),
                 install_name = "Mesen",
-                install_dir = programs.GetProgramInstallDir("Mesen", "linux"),
+                install_dir = programs.get_program_install_dir("Mesen", "linux"),
                 search_file = "Mesen.AppImage",
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,

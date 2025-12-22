@@ -53,7 +53,7 @@ class Ryujinx(emulatorbase.EmulatorBase):
             setup_params = config.SetupParams()
 
         # Download windows program
-        if programs.ShouldProgramBeInstalled("Ryujinx", "windows"):
+        if programs.should_program_be_installed("Ryujinx", "windows"):
             success = release.DownloadGithubRelease(
                 github_user = "Ryujinx",
                 github_repo = "release-channel-master",
@@ -61,8 +61,8 @@ class Ryujinx(emulatorbase.EmulatorBase):
                 ends_with = "win_x64.zip",
                 search_file = "Ryujinx.exe",
                 install_name = "Ryujinx",
-                install_dir = programs.GetProgramInstallDir("Ryujinx", "windows"),
-                backups_dir = programs.GetProgramBackupDir("Ryujinx", "windows"),
+                install_dir = programs.get_program_install_dir("Ryujinx", "windows"),
+                backups_dir = programs.get_program_backup_dir("Ryujinx", "windows"),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
@@ -71,7 +71,7 @@ class Ryujinx(emulatorbase.EmulatorBase):
                 return False
 
         # Download linux program
-        if programs.ShouldProgramBeInstalled("Ryujinx", "linux"):
+        if programs.should_program_be_installed("Ryujinx", "linux"):
             success = release.DownloadGithubRelease(
                 github_user = "Ryujinx",
                 github_repo = "release-channel-master",
@@ -79,8 +79,8 @@ class Ryujinx(emulatorbase.EmulatorBase):
                 ends_with = "linux_x64.tar.gz",
                 search_file = "Ryujinx.sh",
                 install_name = "Ryujinx",
-                install_dir = programs.GetProgramInstallDir("Ryujinx", "linux"),
-                backups_dir = programs.GetProgramBackupDir("Ryujinx", "linux"),
+                install_dir = programs.get_program_install_dir("Ryujinx", "linux"),
+                backups_dir = programs.get_program_backup_dir("Ryujinx", "linux"),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
@@ -95,11 +95,11 @@ class Ryujinx(emulatorbase.EmulatorBase):
             setup_params = config.SetupParams()
 
         # Setup windows program
-        if programs.ShouldProgramBeInstalled("Ryujinx", "windows"):
+        if programs.should_program_be_installed("Ryujinx", "windows"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetProgramBackupDir("Ryujinx", "windows"),
+                archive_dir = programs.get_program_backup_dir("Ryujinx", "windows"),
                 install_name = "Ryujinx",
-                install_dir = programs.GetProgramInstallDir("Ryujinx", "windows"),
+                install_dir = programs.get_program_install_dir("Ryujinx", "windows"),
                 search_file = "Ryujinx.exe",
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
@@ -109,11 +109,11 @@ class Ryujinx(emulatorbase.EmulatorBase):
                 return False
 
         # Setup linux program
-        if programs.ShouldProgramBeInstalled("Ryujinx", "linux"):
+        if programs.should_program_be_installed("Ryujinx", "linux"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetProgramBackupDir("Ryujinx", "linux"),
+                archive_dir = programs.get_program_backup_dir("Ryujinx", "linux"),
                 install_name = "Ryujinx",
-                install_dir = programs.GetProgramInstallDir("Ryujinx", "linux"),
+                install_dir = programs.get_program_install_dir("Ryujinx", "linux"),
                 search_file = "Ryujinx.sh",
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,

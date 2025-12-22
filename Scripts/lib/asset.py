@@ -22,8 +22,8 @@ def CleanExifData(
 
     # Get tool
     exif_tool = None
-    if programs.IsToolInstalled("ExifTool"):
-        exif_tool = programs.GetToolProgram("ExifTool")
+    if programs.is_tool_installed("ExifTool"):
+        exif_tool = programs.get_tool_program("ExifTool")
     if not exif_tool:
         logger.log_error("ExifTool was not found")
         return False
@@ -38,9 +38,9 @@ def CleanExifData(
     ]
 
     # Run clean command
-    code = command.RunReturncodeCommand(
+    code = command.run_returncode_command(
         cmd = clean_cmd,
-        options = command.CreateCommandOptions(
+        options = command.create_command_options(
             blocking_processes = [exif_tool]),
         verbose = verbose,
         pretend_run = pretend_run,

@@ -49,7 +49,7 @@ class CxBxReloaded(emulatorbase.EmulatorBase):
             setup_params = config.SetupParams()
 
         # Download windows program
-        if programs.ShouldProgramBeInstalled("CxBxReloaded", "windows"):
+        if programs.should_program_be_installed("CxBxReloaded", "windows"):
             success = release.DownloadGithubRelease(
                 github_user = "Cxbx-Reloaded",
                 github_repo = "Cxbx-Reloaded",
@@ -57,8 +57,8 @@ class CxBxReloaded(emulatorbase.EmulatorBase):
                 ends_with = ".zip",
                 search_file = "cxbx.exe",
                 install_name = "CxBxReloaded",
-                install_dir = programs.GetProgramInstallDir("CxBxReloaded", "windows"),
-                backups_dir = programs.GetProgramBackupDir("CxBxReloaded", "windows"),
+                install_dir = programs.get_program_install_dir("CxBxReloaded", "windows"),
+                backups_dir = programs.get_program_backup_dir("CxBxReloaded", "windows"),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
@@ -73,11 +73,11 @@ class CxBxReloaded(emulatorbase.EmulatorBase):
             setup_params = config.SetupParams()
 
         # Setup windows program
-        if programs.ShouldProgramBeInstalled("CxBxReloaded", "windows"):
+        if programs.should_program_be_installed("CxBxReloaded", "windows"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetProgramBackupDir("CxBxReloaded", "windows"),
+                archive_dir = programs.get_program_backup_dir("CxBxReloaded", "windows"),
                 install_name = "CxBxReloaded",
-                install_dir = programs.GetProgramInstallDir("CxBxReloaded", "windows"),
+                install_dir = programs.get_program_install_dir("CxBxReloaded", "windows"),
                 search_file = "cxbx.exe",
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,

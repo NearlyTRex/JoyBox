@@ -35,11 +35,11 @@ class PSNGetPkgInfo(toolbase.ToolBase):
             setup_params = config.SetupParams()
 
         # Download library
-        if programs.ShouldLibraryBeInstalled("PSNGetPkgInfo"):
+        if programs.should_library_be_installed("PSNGetPkgInfo"):
             success = network.DownloadGithubRepository(
                 github_user = "NearlyTRex",
                 github_repo = "PSNGetPkgInfo",
-                output_dir = programs.GetLibraryInstallDir("PSNGetPkgInfo", "lib"),
+                output_dir = programs.get_library_install_dir("PSNGetPkgInfo", "lib"),
                 clean = True,
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
@@ -50,7 +50,7 @@ class PSNGetPkgInfo(toolbase.ToolBase):
             success = network.ArchiveGithubRepository(
                 github_user = "NearlyTRex",
                 github_repo = "PSNGetPkgInfo",
-                output_dir = programs.GetLibraryBackupDir("PSNGetPkgInfo", "lib"),
+                output_dir = programs.get_library_backup_dir("PSNGetPkgInfo", "lib"),
                 recursive = True,
                 clean = True,
                 verbose = setup_params.verbose,
@@ -67,11 +67,11 @@ class PSNGetPkgInfo(toolbase.ToolBase):
             setup_params = config.SetupParams()
 
         # Setup library
-        if programs.ShouldLibraryBeInstalled("PSNGetPkgInfo"):
+        if programs.should_library_be_installed("PSNGetPkgInfo"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetLibraryBackupDir("PSNGetPkgInfo", "lib"),
+                archive_dir = programs.get_library_backup_dir("PSNGetPkgInfo", "lib"),
                 install_name = "PSNGetPkgInfo",
-                install_dir = programs.GetLibraryInstallDir("PSNGetPkgInfo", "lib"),
+                install_dir = programs.get_library_install_dir("PSNGetPkgInfo", "lib"),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)

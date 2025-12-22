@@ -73,13 +73,13 @@ class RClone(toolbase.ToolBase):
             setup_params = config.SetupParams()
 
         # Download windows program
-        if programs.ShouldProgramBeInstalled("RClone", "windows"):
+        if programs.should_program_be_installed("RClone", "windows"):
             success = release.DownloadGeneralRelease(
                 archive_url = "https://downloads.rclone.org/rclone-current-windows-amd64.zip",
                 search_file = "rclone.exe",
                 install_name = "RClone",
-                install_dir = programs.GetProgramInstallDir("RClone", "windows"),
-                backups_dir = programs.GetProgramBackupDir("RClone", "windows"),
+                install_dir = programs.get_program_install_dir("RClone", "windows"),
+                backups_dir = programs.get_program_backup_dir("RClone", "windows"),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
@@ -88,13 +88,13 @@ class RClone(toolbase.ToolBase):
                 return False
 
         # Download linux program
-        if programs.ShouldProgramBeInstalled("RClone", "linux"):
+        if programs.should_program_be_installed("RClone", "linux"):
             success = release.DownloadGeneralRelease(
                 archive_url = "https://downloads.rclone.org/rclone-current-linux-amd64.zip",
                 search_file = "rclone",
                 install_name = "RClone",
-                install_dir = programs.GetProgramInstallDir("RClone", "linux"),
-                backups_dir = programs.GetProgramBackupDir("RClone", "linux"),
+                install_dir = programs.get_program_install_dir("RClone", "linux"),
+                backups_dir = programs.get_program_backup_dir("RClone", "linux"),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
@@ -109,11 +109,11 @@ class RClone(toolbase.ToolBase):
             setup_params = config.SetupParams()
 
         # Setup windows program
-        if programs.ShouldProgramBeInstalled("RClone", "windows"):
+        if programs.should_program_be_installed("RClone", "windows"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetProgramBackupDir("RClone", "windows"),
+                archive_dir = programs.get_program_backup_dir("RClone", "windows"),
                 install_name = "RClone",
-                install_dir = programs.GetProgramInstallDir("RClone", "windows"),
+                install_dir = programs.get_program_install_dir("RClone", "windows"),
                 search_file = "rclone.exe",
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
@@ -123,11 +123,11 @@ class RClone(toolbase.ToolBase):
                 return False
 
         # Setup linux program
-        if programs.ShouldProgramBeInstalled("RClone", "linux"):
+        if programs.should_program_be_installed("RClone", "linux"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetProgramBackupDir("RClone", "linux"),
+                archive_dir = programs.get_program_backup_dir("RClone", "linux"),
                 install_name = "RClone",
-                install_dir = programs.GetProgramInstallDir("RClone", "linux"),
+                install_dir = programs.get_program_install_dir("RClone", "linux"),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)

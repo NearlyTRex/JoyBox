@@ -41,7 +41,7 @@ class PSVStrip(toolbase.ToolBase):
             setup_params = config.SetupParams()
 
         # Download windows program
-        if programs.ShouldProgramBeInstalled("PSVStrip", "windows"):
+        if programs.should_program_be_installed("PSVStrip", "windows"):
             success = release.DownloadGithubRelease(
                 github_user = "Kippykip",
                 github_repo = "PSVStrip",
@@ -49,8 +49,8 @@ class PSVStrip(toolbase.ToolBase):
                 ends_with = ".zip",
                 search_file = "psvstrip.exe",
                 install_name = "PSVStrip",
-                install_dir = programs.GetProgramInstallDir("PSVStrip", "windows"),
-                backups_dir = programs.GetProgramBackupDir("PSVStrip", "windows"),
+                install_dir = programs.get_program_install_dir("PSVStrip", "windows"),
+                backups_dir = programs.get_program_backup_dir("PSVStrip", "windows"),
                 install_files = ["psvstrip.exe"],
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
@@ -66,11 +66,11 @@ class PSVStrip(toolbase.ToolBase):
             setup_params = config.SetupParams()
 
         # Setup windows program
-        if programs.ShouldProgramBeInstalled("PSVStrip", "windows"):
+        if programs.should_program_be_installed("PSVStrip", "windows"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetProgramBackupDir("PSVStrip", "windows"),
+                archive_dir = programs.get_program_backup_dir("PSVStrip", "windows"),
                 install_name = "PSVStrip",
-                install_dir = programs.GetProgramInstallDir("PSVStrip", "windows"),
+                install_dir = programs.get_program_install_dir("PSVStrip", "windows"),
                 search_file = "psvstrip.exe",
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,

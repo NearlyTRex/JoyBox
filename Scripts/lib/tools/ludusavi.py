@@ -94,7 +94,7 @@ class Ludusavi(toolbase.ToolBase):
             setup_params = config.SetupParams()
 
         # Download windows program
-        if programs.ShouldProgramBeInstalled("Ludusavi", "windows"):
+        if programs.should_program_be_installed("Ludusavi", "windows"):
             success = release.DownloadGithubRelease(
                 github_user = "mtkennerly",
                 github_repo = "ludusavi",
@@ -102,8 +102,8 @@ class Ludusavi(toolbase.ToolBase):
                 ends_with = "win64.zip",
                 search_file = "ludusavi.exe",
                 install_name = "Ludusavi",
-                install_dir = programs.GetProgramInstallDir("Ludusavi", "windows"),
-                backups_dir = programs.GetProgramBackupDir("Ludusavi", "windows"),
+                install_dir = programs.get_program_install_dir("Ludusavi", "windows"),
+                backups_dir = programs.get_program_backup_dir("Ludusavi", "windows"),
                 install_files = ["ludusavi.exe"],
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
@@ -113,7 +113,7 @@ class Ludusavi(toolbase.ToolBase):
                 return False
 
         # Download linux program
-        if programs.ShouldProgramBeInstalled("Ludusavi", "linux"):
+        if programs.should_program_be_installed("Ludusavi", "linux"):
             success = release.DownloadGithubRelease(
                 github_user = "mtkennerly",
                 github_repo = "ludusavi",
@@ -121,8 +121,8 @@ class Ludusavi(toolbase.ToolBase):
                 ends_with = "linux.zip",
                 search_file = "ludusavi",
                 install_name = "Ludusavi",
-                install_dir = programs.GetProgramInstallDir("Ludusavi", "linux"),
-                backups_dir = programs.GetProgramBackupDir("Ludusavi", "linux"),
+                install_dir = programs.get_program_install_dir("Ludusavi", "linux"),
+                backups_dir = programs.get_program_backup_dir("Ludusavi", "linux"),
                 install_files = ["ludusavi"],
                 chmod_files = [
                     {
@@ -144,11 +144,11 @@ class Ludusavi(toolbase.ToolBase):
             setup_params = config.SetupParams()
 
         # Setup windows program
-        if programs.ShouldProgramBeInstalled("Ludusavi", "windows"):
+        if programs.should_program_be_installed("Ludusavi", "windows"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetProgramBackupDir("Ludusavi", "windows"),
+                archive_dir = programs.get_program_backup_dir("Ludusavi", "windows"),
                 install_name = "Ludusavi",
-                install_dir = programs.GetProgramInstallDir("Ludusavi", "windows"),
+                install_dir = programs.get_program_install_dir("Ludusavi", "windows"),
                 search_file = "ludusavi.exe",
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
@@ -158,11 +158,11 @@ class Ludusavi(toolbase.ToolBase):
                 return False
 
         # Setup linux program
-        if programs.ShouldProgramBeInstalled("Ludusavi", "linux"):
+        if programs.should_program_be_installed("Ludusavi", "linux"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetProgramBackupDir("Ludusavi", "linux"),
+                archive_dir = programs.get_program_backup_dir("Ludusavi", "linux"),
                 install_name = "Ludusavi",
-                install_dir = programs.GetProgramInstallDir("Ludusavi", "linux"),
+                install_dir = programs.get_program_install_dir("Ludusavi", "linux"),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)

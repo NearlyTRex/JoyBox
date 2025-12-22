@@ -79,7 +79,7 @@ class FSUAE(emulatorbase.EmulatorBase):
             setup_params = config.SetupParams()
 
         # Download windows program
-        if programs.ShouldProgramBeInstalled("FS-UAE", "windows"):
+        if programs.should_program_be_installed("FS-UAE", "windows"):
             success = release.DownloadGithubRelease(
                 github_user = "FrodeSolheim",
                 github_repo = "fs-uae",
@@ -87,8 +87,8 @@ class FSUAE(emulatorbase.EmulatorBase):
                 ends_with = "Windows_x86-64.zip",
                 search_file = "Plugin.ini",
                 install_name = "FS-UAE",
-                install_dir = programs.GetProgramInstallDir("FS-UAE", "windows"),
-                backups_dir = programs.GetProgramBackupDir("FS-UAE", "windows"),
+                install_dir = programs.get_program_install_dir("FS-UAE", "windows"),
+                backups_dir = programs.get_program_backup_dir("FS-UAE", "windows"),
                 get_latest = True,
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
@@ -98,13 +98,13 @@ class FSUAE(emulatorbase.EmulatorBase):
                 return False
 
         # Build linux program
-        if programs.ShouldProgramBeInstalled("FS-UAE", "linux"):
+        if programs.should_program_be_installed("FS-UAE", "linux"):
             success = release.BuildAppImageFromSource(
                 release_url = "https://github.com/FrodeSolheim/fs-uae/releases/download/v3.1.66/fs-uae-3.1.66.tar.xz",
                 output_file = "FS-UAE-x86_64.AppImage",
                 install_name = "FS-UAE",
-                install_dir = programs.GetProgramInstallDir("FS-UAE", "linux"),
-                backups_dir = programs.GetProgramBackupDir("FS-UAE", "linux"),
+                install_dir = programs.get_program_install_dir("FS-UAE", "linux"),
+                backups_dir = programs.get_program_backup_dir("FS-UAE", "linux"),
                 build_cmd = [
                     "cd", "fs-uae-3.1.66",
                     "&&",
@@ -138,11 +138,11 @@ class FSUAE(emulatorbase.EmulatorBase):
             setup_params = config.SetupParams()
 
         # Setup windows program
-        if programs.ShouldProgramBeInstalled("FS-UAE", "windows"):
+        if programs.should_program_be_installed("FS-UAE", "windows"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetProgramBackupDir("FS-UAE", "windows"),
+                archive_dir = programs.get_program_backup_dir("FS-UAE", "windows"),
                 install_name = "FS-UAE",
-                install_dir = programs.GetProgramInstallDir("FS-UAE", "windows"),
+                install_dir = programs.get_program_install_dir("FS-UAE", "windows"),
                 search_file = "Plugin.ini",
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
@@ -152,11 +152,11 @@ class FSUAE(emulatorbase.EmulatorBase):
                 return False
 
         # Setup linux program
-        if programs.ShouldProgramBeInstalled("FS-UAE", "linux"):
+        if programs.should_program_be_installed("FS-UAE", "linux"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetProgramBackupDir("FS-UAE", "linux"),
+                archive_dir = programs.get_program_backup_dir("FS-UAE", "linux"),
                 install_name = "FS-UAE",
-                install_dir = programs.GetProgramInstallDir("FS-UAE", "linux"),
+                install_dir = programs.get_program_install_dir("FS-UAE", "linux"),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
@@ -199,7 +199,7 @@ class FSUAE(emulatorbase.EmulatorBase):
             for platform in ["windows", "linux"]:
                 success = fileops.smart_copy(
                     src = paths.join_paths(environment.get_locker_gaming_emulator_setup_dir("FS-UAE"), filename),
-                    dest = paths.join_paths(programs.GetEmulatorPathConfigValue("FS-UAE", "setup_dir", platform), filename),
+                    dest = paths.join_paths(programs.get_emulator_path_config_value("FS-UAE", "setup_dir", platform), filename),
                     verbose = setup_params.verbose,
                     pretend_run = setup_params.pretend_run,
                     exit_on_failure = setup_params.exit_on_failure)
@@ -221,7 +221,7 @@ class FSUAE(emulatorbase.EmulatorBase):
 
         # Get launch command
         launch_cmd = [
-            programs.GetEmulatorProgram("FS-UAE"),
+            programs.get_emulator_program("FS-UAE"),
             config.token_game_file
         ]
         if fullscreen:

@@ -35,11 +35,11 @@ class Heirloom(toolbase.ToolBase):
             setup_params = config.SetupParams()
 
         # Download library
-        if programs.ShouldLibraryBeInstalled("Heirloom"):
+        if programs.should_library_be_installed("Heirloom"):
             success = network.DownloadGithubRepository(
                 github_user = "NearlyTRex",
                 github_repo = "Heirloom",
-                output_dir = programs.GetLibraryInstallDir("Heirloom", "lib"),
+                output_dir = programs.get_library_install_dir("Heirloom", "lib"),
                 clean = True,
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
@@ -50,7 +50,7 @@ class Heirloom(toolbase.ToolBase):
             success = network.ArchiveGithubRepository(
                 github_user = "NearlyTRex",
                 github_repo = "Heirloom",
-                output_dir = programs.GetLibraryBackupDir("Heirloom", "lib"),
+                output_dir = programs.get_library_backup_dir("Heirloom", "lib"),
                 recursive = True,
                 clean = True,
                 verbose = setup_params.verbose,
@@ -67,11 +67,11 @@ class Heirloom(toolbase.ToolBase):
             setup_params = config.SetupParams()
 
         # Setup library
-        if programs.ShouldLibraryBeInstalled("Heirloom"):
+        if programs.should_library_be_installed("Heirloom"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetLibraryBackupDir("Heirloom", "lib"),
+                archive_dir = programs.get_library_backup_dir("Heirloom", "lib"),
                 install_name = "Heirloom",
-                install_dir = programs.GetLibraryInstallDir("Heirloom", "lib"),
+                install_dir = programs.get_library_install_dir("Heirloom", "lib"),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)

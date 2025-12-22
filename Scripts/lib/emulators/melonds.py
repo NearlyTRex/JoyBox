@@ -92,7 +92,7 @@ class MelonDS(emulatorbase.EmulatorBase):
             setup_params = config.SetupParams()
 
         # Download windows program
-        if programs.ShouldProgramBeInstalled("melonDS", "windows"):
+        if programs.should_program_be_installed("melonDS", "windows"):
             success = release.DownloadGithubRelease(
                 github_user = "melonDS-emu",
                 github_repo = "melonDS",
@@ -100,8 +100,8 @@ class MelonDS(emulatorbase.EmulatorBase):
                 ends_with = "windows-x86_64.zip",
                 search_file = "melonDS.exe",
                 install_name = "melonDS",
-                install_dir = programs.GetProgramInstallDir("melonDS", "windows"),
-                backups_dir = programs.GetProgramBackupDir("melonDS", "windows"),
+                install_dir = programs.get_program_install_dir("melonDS", "windows"),
+                backups_dir = programs.get_program_backup_dir("melonDS", "windows"),
                 get_latest = True,
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
@@ -111,13 +111,13 @@ class MelonDS(emulatorbase.EmulatorBase):
                 return False
 
         # Build linux program
-        if programs.ShouldProgramBeInstalled("melonDS", "linux"):
+        if programs.should_program_be_installed("melonDS", "linux"):
             success = release.BuildAppImageFromSource(
                 release_url = "https://github.com/NearlyTRex/melonDS.git",
                 output_file = "melonDS-x86_64.AppImage",
                 install_name = "melonDS",
-                install_dir = programs.GetProgramInstallDir("melonDS", "linux"),
-                backups_dir = programs.GetProgramBackupDir("melonDS", "linux"),
+                install_dir = programs.get_program_install_dir("melonDS", "linux"),
+                backups_dir = programs.get_program_backup_dir("melonDS", "linux"),
                 build_cmd = [
                     "cmake", "..", "-DCMAKE_BUILD_TYPE=Release",
                     "&&",
@@ -149,11 +149,11 @@ class MelonDS(emulatorbase.EmulatorBase):
             setup_params = config.SetupParams()
 
         # Setup windows program
-        if programs.ShouldProgramBeInstalled("melonDS", "windows"):
+        if programs.should_program_be_installed("melonDS", "windows"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetProgramBackupDir("melonDS", "windows"),
+                archive_dir = programs.get_program_backup_dir("melonDS", "windows"),
                 install_name = "melonDS",
-                install_dir = programs.GetProgramInstallDir("melonDS", "windows"),
+                install_dir = programs.get_program_install_dir("melonDS", "windows"),
                 search_file = "melonDS.exe",
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
@@ -163,11 +163,11 @@ class MelonDS(emulatorbase.EmulatorBase):
                 return False
 
         # Setup linux program
-        if programs.ShouldProgramBeInstalled("melonDS", "linux"):
+        if programs.should_program_be_installed("melonDS", "linux"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetProgramBackupDir("melonDS", "linux"),
+                archive_dir = programs.get_program_backup_dir("melonDS", "linux"),
                 install_name = "melonDS",
-                install_dir = programs.GetProgramInstallDir("melonDS", "linux"),
+                install_dir = programs.get_program_install_dir("melonDS", "linux"),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
@@ -212,7 +212,7 @@ class MelonDS(emulatorbase.EmulatorBase):
             for platform in ["windows", "linux"]:
                 success = fileops.smart_copy(
                     src = paths.join_paths(environment.get_locker_gaming_emulator_setup_dir("melonDS"), filename),
-                    dest = paths.join_paths(programs.GetEmulatorPathConfigValue("melonDS", "setup_dir", platform), filename),
+                    dest = paths.join_paths(programs.get_emulator_path_config_value("melonDS", "setup_dir", platform), filename),
                     verbose = setup_params.verbose,
                     pretend_run = setup_params.pretend_run,
                     exit_on_failure = setup_params.exit_on_failure)
@@ -234,7 +234,7 @@ class MelonDS(emulatorbase.EmulatorBase):
 
         # Get launch command
         launch_cmd = [
-            programs.GetEmulatorProgram("melonDS"),
+            programs.get_emulator_program("melonDS"),
             config.token_game_file
         ]
         if fullscreen:

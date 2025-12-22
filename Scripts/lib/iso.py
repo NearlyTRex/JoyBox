@@ -36,8 +36,8 @@ def CreateISO(
 
     # Get tool
     iso_tool = None
-    if programs.IsToolInstalled("XorrISO"):
-        iso_tool = programs.GetToolProgram("XorrISO")
+    if programs.is_tool_installed("XorrISO"):
+        iso_tool = programs.get_tool_program("XorrISO")
     if not iso_tool:
         logger.log_error("XorrISO was not found")
         return False
@@ -60,9 +60,9 @@ def CreateISO(
         create_command += [source_dir]
 
     # Run create command
-    code = command.RunReturncodeCommand(
+    code = command.run_returncode_command(
         cmd = create_command,
-        options = command.CreateCommandOptions(
+        options = command.create_command_options(
             output_paths = [iso_file],
             blocking_processes = [iso_tool]),
         verbose = verbose,
@@ -104,8 +104,8 @@ def ExtractISO(
 
     # Get tool
     iso_tool = None
-    if programs.IsToolInstalled("XorrISO"):
-        iso_tool = programs.GetToolProgram("XorrISO")
+    if programs.is_tool_installed("XorrISO"):
+        iso_tool = programs.get_tool_program("XorrISO")
     if not iso_tool:
         logger.log_error("XorrISO was not found")
         return False
@@ -120,9 +120,9 @@ def ExtractISO(
     ]
 
     # Run extract command
-    code = command.RunReturncodeCommand(
+    code = command.run_returncode_command(
         cmd = extract_cmd,
-        options = command.CreateCommandOptions(
+        options = command.create_command_options(
             output_paths = [extract_dir],
             blocking_processes = [iso_tool]),
         verbose = verbose,
@@ -172,9 +172,9 @@ def GetActualMountPoint(
         ]
 
         # Run drive command
-        drive_output = command.RunOutputCommand(
+        drive_output = command.run_output_command(
             cmd = drive_cmd,
-            options = command.CreateCommandOptions(
+            options = command.create_command_options(
                 is_shell=True),
             verbose = verbose,
             pretend_run = pretend_run,
@@ -222,7 +222,7 @@ def MountISO(
         ]
 
         # Run mount command
-        code = command.RunReturncodeCommand(
+        code = command.run_returncode_command(
             cmd = mount_cmd,
             verbose = verbose,
             pretend_run = pretend_run,
@@ -235,8 +235,8 @@ def MountISO(
 
         # Get tool
         iso_tool = None
-        if programs.IsToolInstalled("FuseISO"):
-            iso_tool = programs.GetToolProgram("FuseISO")
+        if programs.is_tool_installed("FuseISO"):
+            iso_tool = programs.get_tool_program("FuseISO")
         if not iso_tool:
             logger.log_error("FuseISO was not found")
             return False
@@ -249,7 +249,7 @@ def MountISO(
         ]
 
         # Run mount command
-        code = command.RunReturncodeCommand(
+        code = command.run_returncode_command(
             cmd = mount_cmd,
             verbose = verbose,
             pretend_run = pretend_run,
@@ -283,7 +283,7 @@ def UnmountISO(
         ]
 
         # Run unmount command
-        code = command.RunReturncodeCommand(
+        code = command.run_returncode_command(
             cmd = unmount_cmd,
             verbose = verbose,
             pretend_run = pretend_run,
@@ -296,8 +296,8 @@ def UnmountISO(
 
         # Get tool
         iso_tool = None
-        if programs.IsToolInstalled("FUserMount"):
-            iso_tool = programs.GetToolProgram("FUserMount")
+        if programs.is_tool_installed("FUserMount"):
+            iso_tool = programs.get_tool_program("FUserMount")
         if not iso_tool:
             logger.log_error("FUserMount was not found")
             return False
@@ -309,9 +309,9 @@ def UnmountISO(
         ]
 
         # Run unmount command
-        code = command.RunReturncodeCommand(
+        code = command.run_returncode_command(
             cmd = unmount_cmd,
-            options = command.CreateCommandOptions(
+            options = command.create_command_options(
                 blocking_processes = [iso_tool]),
             verbose = verbose,
             pretend_run = pretend_run,

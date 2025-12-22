@@ -41,7 +41,7 @@ class Sigtop(toolbase.ToolBase):
             setup_params = config.SetupParams()
 
         # Download windows program
-        if programs.ShouldProgramBeInstalled("Sigtop", "windows"):
+        if programs.should_program_be_installed("Sigtop", "windows"):
             success = release.DownloadGithubRelease(
                 github_user = "tbvdm",
                 github_repo = "sigtop",
@@ -49,8 +49,8 @@ class Sigtop(toolbase.ToolBase):
                 ends_with = ".exe",
                 search_file = "sigtop.exe",
                 install_name = "Sigtop",
-                install_dir = programs.GetProgramInstallDir("Sigtop", "windows"),
-                backups_dir = programs.GetProgramBackupDir("Sigtop", "windows"),
+                install_dir = programs.get_program_install_dir("Sigtop", "windows"),
+                backups_dir = programs.get_program_backup_dir("Sigtop", "windows"),
                 install_files = ["sigtop.exe"],
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
@@ -66,11 +66,11 @@ class Sigtop(toolbase.ToolBase):
             setup_params = config.SetupParams()
 
         # Setup windows program
-        if programs.ShouldProgramBeInstalled("Sigtop", "windows"):
+        if programs.should_program_be_installed("Sigtop", "windows"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetProgramBackupDir("Sigtop", "windows"),
+                archive_dir = programs.get_program_backup_dir("Sigtop", "windows"),
                 install_name = "Sigtop",
-                install_dir = programs.GetProgramInstallDir("Sigtop", "windows"),
+                install_dir = programs.get_program_install_dir("Sigtop", "windows"),
                 search_file = "sigtop.exe",
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,

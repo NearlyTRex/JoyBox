@@ -85,7 +85,7 @@ class Vita3K(emulatorbase.EmulatorBase):
             setup_params = config.SetupParams()
 
         # Download windows program
-        if programs.ShouldProgramBeInstalled("Vita3K", "windows"):
+        if programs.should_program_be_installed("Vita3K", "windows"):
             success = release.DownloadGithubRelease(
                 github_user = "Vita3K",
                 github_repo = "Vita3K",
@@ -93,8 +93,8 @@ class Vita3K(emulatorbase.EmulatorBase):
                 ends_with = ".zip",
                 search_file = "Vita3K.exe",
                 install_name = "Vita3K",
-                install_dir = programs.GetProgramInstallDir("Vita3K", "windows"),
-                backups_dir = programs.GetProgramBackupDir("Vita3K", "windows"),
+                install_dir = programs.get_program_install_dir("Vita3K", "windows"),
+                backups_dir = programs.get_program_backup_dir("Vita3K", "windows"),
                 get_latest = True,
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
@@ -104,15 +104,15 @@ class Vita3K(emulatorbase.EmulatorBase):
                 return False
 
         # Download linux program
-        if programs.ShouldProgramBeInstalled("Vita3K", "linux"):
+        if programs.should_program_be_installed("Vita3K", "linux"):
             success = release.DownloadGithubRelease(
                 github_user = "Vita3K",
                 github_repo = "Vita3K",
                 starts_with = "Vita3K-x86_64",
                 ends_with = ".AppImage",
                 install_name = "Vita3K",
-                install_dir = programs.GetProgramInstallDir("Vita3K", "linux"),
-                backups_dir = programs.GetProgramBackupDir("Vita3K", "linux"),
+                install_dir = programs.get_program_install_dir("Vita3K", "linux"),
+                backups_dir = programs.get_program_backup_dir("Vita3K", "linux"),
                 get_latest = True,
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
@@ -128,11 +128,11 @@ class Vita3K(emulatorbase.EmulatorBase):
             setup_params = config.SetupParams()
 
         # Setup windows program
-        if programs.ShouldProgramBeInstalled("Vita3K", "windows"):
+        if programs.should_program_be_installed("Vita3K", "windows"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetProgramBackupDir("Vita3K", "windows"),
+                archive_dir = programs.get_program_backup_dir("Vita3K", "windows"),
                 install_name = "Vita3K",
-                install_dir = programs.GetProgramInstallDir("Vita3K", "windows"),
+                install_dir = programs.get_program_install_dir("Vita3K", "windows"),
                 search_file = "Vita3K.exe",
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
@@ -142,11 +142,11 @@ class Vita3K(emulatorbase.EmulatorBase):
                 return False
 
         # Setup linux program
-        if programs.ShouldProgramBeInstalled("Vita3K", "linux"):
+        if programs.should_program_be_installed("Vita3K", "linux"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetProgramBackupDir("Vita3K", "linux"),
+                archive_dir = programs.get_program_backup_dir("Vita3K", "linux"),
                 install_name = "Vita3K",
-                install_dir = programs.GetProgramInstallDir("Vita3K", "linux"),
+                install_dir = programs.get_program_install_dir("Vita3K", "linux"),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
@@ -190,7 +190,7 @@ class Vita3K(emulatorbase.EmulatorBase):
                 if os.path.exists(paths.join_paths(environment.get_locker_gaming_emulator_setup_dir("Vita3K"), obj + config.ArchiveFileType.ZIP.cval())):
                     success = archive.ExtractArchive(
                         archive_file = paths.join_paths(environment.get_locker_gaming_emulator_setup_dir("Vita3K"), obj + config.ArchiveFileType.ZIP.cval()),
-                        extract_dir = paths.join_paths(programs.GetEmulatorPathConfigValue("Vita3K", "setup_dir", platform), obj),
+                        extract_dir = paths.join_paths(programs.get_emulator_path_config_value("Vita3K", "setup_dir", platform), obj),
                         skip_existing = True,
                         verbose = setup_params.verbose,
                         pretend_run = setup_params.pretend_run,
@@ -213,7 +213,7 @@ class Vita3K(emulatorbase.EmulatorBase):
 
         # Get launch command
         launch_cmd = [
-            programs.GetEmulatorProgram("Vita3K")
+            programs.get_emulator_program("Vita3K")
         ]
 
         # Launch game

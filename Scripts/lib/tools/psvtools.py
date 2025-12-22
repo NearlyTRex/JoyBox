@@ -35,11 +35,11 @@ class PSVTools(toolbase.ToolBase):
             setup_params = config.SetupParams()
 
         # Download library
-        if programs.ShouldLibraryBeInstalled("PSVTools"):
+        if programs.should_library_be_installed("PSVTools"):
             success = network.DownloadGithubRepository(
                 github_user = "NearlyTRex",
                 github_repo = "PSVTools",
-                output_dir = programs.GetLibraryInstallDir("PSVTools", "lib"),
+                output_dir = programs.get_library_install_dir("PSVTools", "lib"),
                 clean = True,
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
@@ -50,7 +50,7 @@ class PSVTools(toolbase.ToolBase):
             success = network.ArchiveGithubRepository(
                 github_user = "NearlyTRex",
                 github_repo = "PSVTools",
-                output_dir = programs.GetLibraryBackupDir("PSVTools", "lib"),
+                output_dir = programs.get_library_backup_dir("PSVTools", "lib"),
                 recursive = True,
                 clean = True,
                 verbose = setup_params.verbose,
@@ -67,11 +67,11 @@ class PSVTools(toolbase.ToolBase):
             setup_params = config.SetupParams()
 
         # Setup library
-        if programs.ShouldLibraryBeInstalled("PSVTools"):
+        if programs.should_library_be_installed("PSVTools"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetLibraryBackupDir("PSVTools", "lib"),
+                archive_dir = programs.get_library_backup_dir("PSVTools", "lib"),
                 install_name = "PSVTools",
-                install_dir = programs.GetLibraryInstallDir("PSVTools", "lib"),
+                install_dir = programs.get_library_install_dir("PSVTools", "lib"),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)

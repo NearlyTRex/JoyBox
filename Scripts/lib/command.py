@@ -24,11 +24,11 @@ import process
 ###########################################################
 
 # Create command options
-def CreateCommandOptions(*args, **kwargs):
+def create_command_options(*args, **kwargs):
     return commandoptions.CommandOptions(*args, **kwargs)
 
 # Create command string
-def CreateCommandString(cmd):
+def create_command_string(cmd):
     if not cmd:
         return ""
     if len(cmd) == 0:
@@ -47,7 +47,7 @@ def CreateCommandString(cmd):
     return ""
 
 # Create command list
-def CreateCommandList(cmd):
+def create_command_list(cmd):
     if not cmd:
         return []
     if len(cmd) == 0:
@@ -64,7 +64,7 @@ def CreateCommandList(cmd):
 ###########################################################
 
 # Clean command output
-def CleanCommandOutput(output):
+def clean_command_output(output):
     try:
         return output.decode("utf-8", "ignore")
     except:
@@ -73,21 +73,21 @@ def CleanCommandOutput(output):
 ###########################################################
 
 # Get starter command
-def GetStarterCommand(cmd):
-    cmd_list = CreateCommandList(cmd)
+def get_starter_command(cmd):
+    cmd_list = create_command_list(cmd)
     if len(cmd_list) == 0:
         return ""
     return cmd_list[0]
 
 # Check if only starter command
-def IsOnlyStarterCommand(cmd):
-    cmd_list = CreateCommandList(cmd)
+def is_only_starter_command(cmd):
+    cmd_list = create_command_list(cmd)
     return len(cmd_list) == 1
 
 ###########################################################
 
 # Get runnable command path
-def GetRunnableCommandPath(cmd, search_dirs = []):
+def get_runnable_command_path(cmd, search_dirs = []):
     for search_dir in search_dirs:
         potential_paths = [paths.join_paths(search_dir, cmd)]
         for cmd_ext in config.WindowsProgramFileType.cvalues():
@@ -99,8 +99,8 @@ def GetRunnableCommandPath(cmd, search_dirs = []):
     return shutil.which(cmd)
 
 # Check if runnable command
-def IsRunnableCommand(cmd, search_dirs = []):
-    cmd_path = GetRunnableCommandPath(cmd, search_dirs)
+def is_runnable_command(cmd, search_dirs = []):
+    cmd_path = get_runnable_command_path(cmd, search_dirs)
     if not cmd_path:
         return False
     return True
@@ -108,8 +108,8 @@ def IsRunnableCommand(cmd, search_dirs = []):
 ###########################################################
 
 # Check if command type is found
-def IsCommandTypeFound(cmd, cmd_exts = [], search_start = 0, search_len = -1):
-    cmd_list = CreateCommandList(cmd)
+def is_command_type_found(cmd, cmd_exts = [], search_start = 0, search_len = -1):
+    cmd_list = create_command_list(cmd)
     for cmd_index in range(len(cmd_list)):
         cmd_segment = cmd_list[cmd_index]
         is_found = False
@@ -127,40 +127,40 @@ def IsCommandTypeFound(cmd, cmd_exts = [], search_start = 0, search_len = -1):
 ###########################################################
 
 # Check if cached game command
-def IsCachedGameCommand(cmd):
-    starter_cmd = os.path.normpath(GetStarterCommand(cmd)).lower()
+def is_cached_game_command(cmd):
+    starter_cmd = os.path.normpath(get_starter_command(cmd)).lower()
     cached_dir = os.path.normpath(environment.get_cache_gaming_root_dir()).lower()
     return starter_cmd.startswith(cached_dir)
 
 # Check if local script command
-def IsLocalScriptCommand(cmd):
-    starter_cmd = os.path.normpath(GetStarterCommand(cmd)).lower()
+def is_local_script_command(cmd):
+    starter_cmd = os.path.normpath(get_starter_command(cmd)).lower()
     scripts_dir = os.path.normpath(environment.get_scripts_bin_dir()).lower()
     return starter_cmd.startswith(scripts_dir)
 
 # Check if local program command
-def IsLocalProgramCommand(cmd):
-    starter_cmd = GetStarterCommand(cmd)
-    is_tool = programs.IsProgramPathTool(starter_cmd)
-    is_emulator = programs.IsProgramPathEmulator(starter_cmd)
+def is_local_program_command(cmd):
+    starter_cmd = get_starter_command(cmd)
+    is_tool = programs.is_program_path_tool(starter_cmd)
+    is_emulator = programs.is_program_path_emulator(starter_cmd)
     return is_tool or is_emulator
 
 # Check if local sandboxed program command
-def IsLocalSandboxedProgramCommand(cmd):
-    starter_cmd = GetStarterCommand(cmd)
-    is_sandboxed_tool = programs.IsProgramPathSandboxedTool(starter_cmd)
-    is_sandboxed_emulator = programs.IsProgramPathSandboxedEmulator(starter_cmd)
+def is_local_sandboxed_program_command(cmd):
+    starter_cmd = get_starter_command(cmd)
+    is_sandboxed_tool = programs.is_program_path_sandboxed_tool(starter_cmd)
+    is_sandboxed_emulator = programs.is_program_path_sandboxed_emulator(starter_cmd)
     return is_sandboxed_tool or is_sandboxed_emulator
 
 # Check if windows executable command
-def IsWindowsExecutableCommand(cmd):
-    return IsCommandTypeFound(
-        cmd = GetStarterCommand(cmd),
+def is_windows_executable_command(cmd):
+    return is_command_type_found(
+        cmd = get_starter_command(cmd),
         cmd_exts = config.WindowsProgramFileType.cvalues())
 
 # Check if powershell command
-def IsPowershellCommand(cmd):
-    starter_cmd = os.path.normpath(GetStarterCommand(cmd)).lower()
+def is_powershell_command(cmd):
+    starter_cmd = os.path.normpath(get_starter_command(cmd)).lower()
     return (
         starter_cmd.startswith("powershell") or
         starter_cmd.endswith("powershell") or
@@ -168,12 +168,12 @@ def IsPowershellCommand(cmd):
     )
 
 # Check if appimage command
-def IsAppImageCommand(cmd):
-    starter_cmd = os.path.normpath(GetStarterCommand(cmd)).lower()
+def is_appimage_command(cmd):
+    starter_cmd = os.path.normpath(get_starter_command(cmd)).lower()
     return starter_cmd.endswith("appimage")
 
 # Check if prefix command
-def IsPrefixCommand(cmd):
+def is_prefix_command(cmd):
     return (
         sandbox.should_be_run_via_wine(cmd) or
         sandbox.should_be_run_via_sandboxie(cmd)
@@ -182,9 +182,9 @@ def IsPrefixCommand(cmd):
 ###########################################################
 
 # Setup powershell command
-def SetupPowershellCommand(
+def setup_powershell_command(
     cmd,
-    options = CreateCommandOptions(),
+    options = create_command_options(),
     verbose = False,
     exit_on_failure = False):
 
@@ -194,15 +194,15 @@ def SetupPowershellCommand(
 
     # Setup powershell command
     new_cmd = []
-    if not IsPowershellCommand(cmd):
+    if not is_powershell_command(cmd):
         new_cmd += ["powershell", "-NoProfile", "-Command"]
-    new_cmd += CreateCommandList(cmd)
+    new_cmd += create_command_list(cmd)
     return (new_cmd, new_options)
 
 # Setup appimage command
-def SetupAppImageCommand(
+def setup_appimage_command(
     cmd,
-    options = CreateCommandOptions(),
+    options = create_command_options(),
     verbose = False,
     exit_on_failure = False):
 
@@ -211,7 +211,7 @@ def SetupAppImageCommand(
     new_options = options.copy()
 
     # Setup appimage command
-    for cmd_segment in CreateCommandList(cmd):
+    for cmd_segment in create_command_list(cmd):
         if cmd_segment.lower().endswith(".appimage"):
             appimage_home_dir = os.path.realpath(cmd_segment + ".home")
             if os.path.exists(appimage_home_dir):
@@ -225,7 +225,7 @@ def SetupAppImageCommand(
 # Setup prefix command
 def setup_prefix_command(
     cmd,
-    options = CreateCommandOptions(),
+    options = create_command_options(),
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -260,30 +260,30 @@ def setup_prefix_command(
 ###########################################################
 
 # Pre-process command
-def PreprocessCommand(
+def preprocess_command(
     cmd,
-    options = CreateCommandOptions(),
+    options = create_command_options(),
     verbose = False,
     exit_on_failure = False):
 
     # Preprocess for powershell
-    if IsPowershellCommand(cmd) or options.force_powershell():
-        cmd, options = SetupPowershellCommand(
+    if is_powershell_command(cmd) or options.force_powershell():
+        cmd, options = setup_powershell_command(
             cmd = cmd,
             options = options,
             verbose = verbose,
             exit_on_failure = exit_on_failure)
 
     # Preprocess for appimages
-    if IsAppImageCommand(cmd) or options.force_appimage():
-        cmd, options = SetupAppImageCommand(
+    if is_appimage_command(cmd) or options.force_appimage():
+        cmd, options = setup_appimage_command(
             cmd = cmd,
             options = options,
             verbose = verbose,
             exit_on_failure = exit_on_failure)
 
     # Preprocess for prefix
-    if IsPrefixCommand(cmd) or options.force_prefix():
+    if is_prefix_command(cmd) or options.force_prefix():
         cmd, options = setup_prefix_command(
             cmd = cmd,
             options = options,
@@ -294,9 +294,9 @@ def PreprocessCommand(
     return (cmd, options)
 
 # Post-process command
-def PostprocessCommand(
+def postprocess_command(
     cmd,
-    options = CreateCommandOptions(),
+    options = create_command_options(),
     verbose = False,
     exit_on_failure = False):
 
@@ -328,7 +328,7 @@ def PostprocessCommand(
 ###########################################################
 
 # Print command
-def PrintCommand(cmd):
+def print_command(cmd):
     if isinstance(cmd, str):
         logger.log_info(cmd)
     if isinstance(cmd, list):
@@ -337,21 +337,21 @@ def PrintCommand(cmd):
 ###########################################################
 
 # Run output command
-def RunOutputCommand(
+def run_output_command(
     cmd,
-    options = CreateCommandOptions(),
+    options = create_command_options(),
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
     try:
-        cmd = CreateCommandList(cmd)
+        cmd = create_command_list(cmd)
         if not options:
-            options = CreateCommandOptions()
+            options = create_command_options()
         if not pretend_run:
 
             # Pre-process command
             if options.allow_processing():
-                cmd, options = PreprocessCommand(
+                cmd, options = preprocess_command(
                     cmd = cmd,
                     options = options,
                     verbose = verbose,
@@ -359,11 +359,11 @@ def RunOutputCommand(
 
             # Log command
             if verbose:
-                PrintCommand(cmd)
+                print_command(cmd)
 
             # Handle shell commands
             if options.is_shell():
-                cmd = CreateCommandString(cmd)
+                cmd = create_command_string(cmd)
 
             # Run process
             output = ""
@@ -391,12 +391,12 @@ def RunOutputCommand(
 
             # Post-process command
             if options.allow_processing():
-                PostprocessCommand(
+                postprocess_command(
                     cmd = cmd,
                     options = options,
                     verbose = verbose,
                     exit_on_failure = exit_on_failure)
-            return CleanCommandOutput(output.strip())
+            return clean_command_output(output.strip())
         return ""
     except subprocess.CalledProcessError as e:
         if verbose:
@@ -414,21 +414,21 @@ def RunOutputCommand(
         return ""
 
 # Run returncode command
-def RunReturncodeCommand(
+def run_returncode_command(
     cmd,
-    options = CreateCommandOptions(),
+    options = create_command_options(),
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
     try:
-        cmd = CreateCommandList(cmd)
+        cmd = create_command_list(cmd)
         if not options:
-            options = CreateCommandOptions()
+            options = create_command_options()
         if not pretend_run:
 
             # Pre-process command
             if options.allow_processing():
-                cmd, options = PreprocessCommand(
+                cmd, options = preprocess_command(
                     cmd = cmd,
                     options = options,
                     verbose = verbose,
@@ -436,11 +436,11 @@ def RunReturncodeCommand(
 
             # Log command
             if verbose:
-                PrintCommand(cmd)
+                print_command(cmd)
 
             # Handle shell commands
             if options.is_shell():
-                cmd = CreateCommandString(cmd)
+                cmd = create_command_string(cmd)
 
             # Determine output file handling
             stdout_target = None
@@ -520,7 +520,7 @@ def RunReturncodeCommand(
 
             # Post-process command
             if options.allow_processing():
-                PostprocessCommand(
+                postprocess_command(
                     cmd = cmd,
                     options = options,
                     verbose = verbose,
@@ -541,21 +541,21 @@ def RunReturncodeCommand(
         return 1
 
 # Run interactive command
-def RunInteractiveCommand(
+def run_interactive_command(
     cmd,
-    options = CreateCommandOptions(),
+    options = create_command_options(),
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
     try:
-        cmd = CreateCommandList(cmd)
+        cmd = create_command_list(cmd)
         if not options:
-            options = CreateCommandOptions()
+            options = create_command_options()
         if not pretend_run:
 
             # Pre-process command
             if options.allow_processing():
-                cmd, options = PreprocessCommand(
+                cmd, options = preprocess_command(
                     cmd = cmd,
                     options = options,
                     verbose = verbose,
@@ -563,11 +563,11 @@ def RunInteractiveCommand(
 
             # Log command
             if verbose:
-                PrintCommand(cmd)
+                print_command(cmd)
 
             # Handle shell commands
             if options.is_shell():
-                cmd = CreateCommandString(cmd)
+                cmd = create_command_string(cmd)
 
             # Create return code
             returncode = 0
@@ -657,7 +657,7 @@ def RunInteractiveCommand(
 
             # Post-process command
             if options.allow_processing():
-                PostprocessCommand(
+                postprocess_command(
                     cmd = cmd,
                     options = options,
                     verbose = verbose,
@@ -678,9 +678,9 @@ def RunInteractiveCommand(
         return 1
 
 # Run capture command
-def RunCaptureCommand(
+def run_capture_command(
     cmd,
-    options = CreateCommandOptions(),
+    options = create_command_options(),
     capture_type = None,
     capture_file = None,
     verbose = False,
@@ -689,7 +689,7 @@ def RunCaptureCommand(
 
     # Blocking start method
     def run_start():
-        code = RunReturncodeCommand(
+        code = run_returncode_command(
             cmd = cmd,
             options = options,
             verbose = verbose,
@@ -751,7 +751,7 @@ def RunCaptureCommand(
 ###########################################################
 
 # Get installer type
-def GetInstallerType(installer_file):
+def get_installer_type(installer_file):
     with open(installer_file, "r", encoding="utf8", errors="ignore") as file:
         while True:
             file_contents = file.read(2048)
@@ -770,7 +770,7 @@ def GetInstallerType(installer_file):
     return config.InstallerType.UNKNOWN
 
 # Get installer setup command
-def GetInstallerSetupCommand(
+def get_installer_setup_command(
     installer_file,
     installer_type,
     install_dir = None,
@@ -793,7 +793,7 @@ def GetInstallerSetupCommand(
 ###########################################################
 
 # Get dos launch command
-def GetDosLaunchCommand(
+def get_dos_launch_command(
     options,
     start_program = None,
     start_args = [],
@@ -805,12 +805,12 @@ def GetDosLaunchCommand(
     disc_images = paths.build_file_list_by_extensions(options.get_prefix_dos_d_drive(), extensions = [".chd"])
 
     # Create launch command
-    launch_cmd = [programs.GetEmulatorProgram("DosBoxX")]
+    launch_cmd = [programs.get_emulator_program("DosBoxX")]
 
     # Add config file
     launch_cmd += [
         "-conf",
-        programs.GetEmulatorPathConfigValue("DosBoxX", "config_file")
+        programs.get_emulator_path_config_value("DosBoxX", "config_file")
     ]
 
     # Add c drive mount
@@ -846,7 +846,7 @@ def GetDosLaunchCommand(
     return launch_cmd
 
 # Get win31 launch command
-def GetWin31LaunchCommand(
+def get_win31_launch_command(
     options,
     start_program = None,
     start_args = [],
@@ -858,12 +858,12 @@ def GetWin31LaunchCommand(
     disc_images = paths.build_file_list_by_extensions(options.get_prefix_dos_d_drive(), extensions = [".chd"])
 
     # Create launch command
-    launch_cmd = [programs.GetEmulatorProgram("DosBoxX")]
+    launch_cmd = [programs.get_emulator_program("DosBoxX")]
 
     # Add config file
     launch_cmd += [
         "-conf",
-        programs.GetEmulatorPathConfigValue("DosBoxX", "config_file_win31")
+        programs.get_emulator_path_config_value("DosBoxX", "config_file_win31")
     ]
 
     # Add c drive mount
@@ -902,12 +902,12 @@ def GetWin31LaunchCommand(
     return launch_cmd
 
 # Get scumm launch command
-def GetScummLaunchCommand(
+def get_scumm_launch_command(
     options,
     fullscreen = False):
 
     # Create launch command
-    launch_cmd = [programs.GetEmulatorProgram("ScummVM")]
+    launch_cmd = [programs.get_emulator_program("ScummVM")]
     launch_cmd += [
         "--path=%s" % options.get_prefix_scumm_dir()
     ]

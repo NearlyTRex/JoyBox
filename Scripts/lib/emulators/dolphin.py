@@ -155,7 +155,7 @@ class Dolphin(emulatorbase.EmulatorBase):
             setup_params = config.SetupParams()
 
         # Download windows program
-        if programs.ShouldProgramBeInstalled("Dolphin", "windows"):
+        if programs.should_program_be_installed("Dolphin", "windows"):
             success = release.DownloadWebpageRelease(
                 webpage_url = "https://dolphin-emu.org/download",
                 webpage_base_url = "https://dolphin-emu.org",
@@ -163,8 +163,8 @@ class Dolphin(emulatorbase.EmulatorBase):
                 ends_with = "x64.7z",
                 search_file = "Dolphin.exe",
                 install_name = "Dolphin",
-                install_dir = programs.GetProgramInstallDir("Dolphin", "windows"),
-                backups_dir = programs.GetProgramBackupDir("Dolphin", "windows"),
+                install_dir = programs.get_program_install_dir("Dolphin", "windows"),
+                backups_dir = programs.get_program_backup_dir("Dolphin", "windows"),
                 get_latest = True,
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
@@ -174,13 +174,13 @@ class Dolphin(emulatorbase.EmulatorBase):
                 return False
 
         # Build linux program
-        if programs.ShouldProgramBeInstalled("Dolphin", "linux"):
+        if programs.should_program_be_installed("Dolphin", "linux"):
             success = release.BuildAppImageFromSource(
                 release_url = "https://github.com/NearlyTRex/Dolphin.git",
                 output_file = "Dolphin_Emulator-x86_64.AppImage",
                 install_name = "Dolphin",
-                install_dir = programs.GetProgramInstallDir("Dolphin", "linux"),
-                backups_dir = programs.GetProgramBackupDir("Dolphin", "linux"),
+                install_dir = programs.get_program_install_dir("Dolphin", "linux"),
+                backups_dir = programs.get_program_backup_dir("Dolphin", "linux"),
                 build_cmd = [
                     "cmake", "..", "-DLINUX_LOCAL_DEV=true", "-DCMAKE_BUILD_TYPE=Release",
                     "&&",
@@ -212,11 +212,11 @@ class Dolphin(emulatorbase.EmulatorBase):
             setup_params = config.SetupParams()
 
         # Setup windows program
-        if programs.ShouldProgramBeInstalled("Dolphin", "windows"):
+        if programs.should_program_be_installed("Dolphin", "windows"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetProgramBackupDir("Dolphin", "windows"),
+                archive_dir = programs.get_program_backup_dir("Dolphin", "windows"),
                 install_name = "Dolphin",
-                install_dir = programs.GetProgramInstallDir("Dolphin", "windows"),
+                install_dir = programs.get_program_install_dir("Dolphin", "windows"),
                 search_file = "Dolphin.exe",
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
@@ -226,11 +226,11 @@ class Dolphin(emulatorbase.EmulatorBase):
                 return False
 
         # Setup linux program
-        if programs.ShouldProgramBeInstalled("Dolphin", "linux"):
+        if programs.should_program_be_installed("Dolphin", "linux"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetProgramBackupDir("Dolphin", "linux"),
+                archive_dir = programs.get_program_backup_dir("Dolphin", "linux"),
                 install_name = "Dolphin",
-                install_dir = programs.GetProgramInstallDir("Dolphin", "linux"),
+                install_dir = programs.get_program_install_dir("Dolphin", "linux"),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
@@ -274,7 +274,7 @@ class Dolphin(emulatorbase.EmulatorBase):
                 if os.path.exists(paths.join_paths(environment.get_locker_gaming_emulator_setup_dir("Dolphin"), obj + config.ArchiveFileType.ZIP.cval())):
                     success = archive.ExtractArchive(
                         archive_file = paths.join_paths(environment.get_locker_gaming_emulator_setup_dir("Dolphin"), obj + config.ArchiveFileType.ZIP.cval()),
-                        extract_dir = paths.join_paths(programs.GetEmulatorPathConfigValue("Dolphin", "setup_dir", platform), obj),
+                        extract_dir = paths.join_paths(programs.get_emulator_path_config_value("Dolphin", "setup_dir", platform), obj),
                         skip_existing = True,
                         verbose = setup_params.verbose,
                         pretend_run = setup_params.pretend_run,
@@ -297,7 +297,7 @@ class Dolphin(emulatorbase.EmulatorBase):
 
         # Get launch command
         launch_cmd = [
-            programs.GetEmulatorProgram("Dolphin"),
+            programs.get_emulator_program("Dolphin"),
             config.token_game_file
         ]
         if fullscreen:

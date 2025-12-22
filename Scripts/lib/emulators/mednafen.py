@@ -77,7 +77,7 @@ class Mednafen(emulatorbase.EmulatorBase):
             setup_params = config.SetupParams()
 
         # Download windows program
-        if programs.ShouldProgramBeInstalled("Mednafen", "windows"):
+        if programs.should_program_be_installed("Mednafen", "windows"):
             success = release.DownloadWebpageRelease(
                 webpage_url = "https://mednafen.github.io",
                 webpage_base_url = "https://mednafen.github.io",
@@ -85,8 +85,8 @@ class Mednafen(emulatorbase.EmulatorBase):
                 ends_with = "UNSTABLE-win64.zip",
                 search_file = "mednafen.exe",
                 install_name = "Mednafen",
-                install_dir = programs.GetProgramInstallDir("Mednafen", "windows"),
-                backups_dir = programs.GetProgramBackupDir("Mednafen", "windows"),
+                install_dir = programs.get_program_install_dir("Mednafen", "windows"),
+                backups_dir = programs.get_program_backup_dir("Mednafen", "windows"),
                 get_latest = True,
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
@@ -96,7 +96,7 @@ class Mednafen(emulatorbase.EmulatorBase):
                 return False
 
         # Build linux program
-        if programs.ShouldProgramBeInstalled("Mednafen", "linux"):
+        if programs.should_program_be_installed("Mednafen", "linux"):
             success = release.BuildAppImageFromSource(
                 webpage_url = "https://mednafen.github.io",
                 webpage_base_url = "https://mednafen.github.io",
@@ -104,8 +104,8 @@ class Mednafen(emulatorbase.EmulatorBase):
                 ends_with = "UNSTABLE.tar.xz",
                 output_file = "App-x86_64.AppImage",
                 install_name = "Mednafen",
-                install_dir = programs.GetProgramInstallDir("Mednafen", "linux"),
-                backups_dir = programs.GetProgramBackupDir("Mednafen", "linux"),
+                install_dir = programs.get_program_install_dir("Mednafen", "linux"),
+                backups_dir = programs.get_program_backup_dir("Mednafen", "linux"),
                 build_cmd = [
                     "cd", "mednafen",
                     "&&",
@@ -136,11 +136,11 @@ class Mednafen(emulatorbase.EmulatorBase):
             setup_params = config.SetupParams()
 
         # Setup windows program
-        if programs.ShouldProgramBeInstalled("Mednafen", "windows"):
+        if programs.should_program_be_installed("Mednafen", "windows"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetProgramBackupDir("Mednafen", "windows"),
+                archive_dir = programs.get_program_backup_dir("Mednafen", "windows"),
                 install_name = "Mednafen",
-                install_dir = programs.GetProgramInstallDir("Mednafen", "windows"),
+                install_dir = programs.get_program_install_dir("Mednafen", "windows"),
                 search_file = "mednafen.exe",
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
@@ -150,11 +150,11 @@ class Mednafen(emulatorbase.EmulatorBase):
                 return False
 
         # Setup linux program
-        if programs.ShouldProgramBeInstalled("Mednafen", "linux"):
+        if programs.should_program_be_installed("Mednafen", "linux"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetProgramBackupDir("Mednafen", "linux"),
+                archive_dir = programs.get_program_backup_dir("Mednafen", "linux"),
                 install_name = "Mednafen",
-                install_dir = programs.GetProgramInstallDir("Mednafen", "linux"),
+                install_dir = programs.get_program_install_dir("Mednafen", "linux"),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
@@ -197,7 +197,7 @@ class Mednafen(emulatorbase.EmulatorBase):
             for platform in ["windows", "linux"]:
                 success = fileops.smart_copy(
                     src = paths.join_paths(environment.get_locker_gaming_emulator_setup_dir("Mednafen"), filename),
-                    dest = paths.join_paths(programs.GetEmulatorPathConfigValue("Mednafen", "setup_dir", platform), filename),
+                    dest = paths.join_paths(programs.get_emulator_path_config_value("Mednafen", "setup_dir", platform), filename),
                     verbose = setup_params.verbose,
                     pretend_run = setup_params.pretend_run,
                     exit_on_failure = setup_params.exit_on_failure)
@@ -219,7 +219,7 @@ class Mednafen(emulatorbase.EmulatorBase):
 
         # Get launch command
         launch_cmd = [
-            programs.GetEmulatorProgram("Mednafen"),
+            programs.get_emulator_program("Mednafen"),
             config.token_game_file
         ]
 

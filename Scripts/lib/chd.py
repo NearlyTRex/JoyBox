@@ -37,8 +37,8 @@ def CreateDiscCHD(
 
     # Get tool
     chd_tool = None
-    if programs.IsToolInstalled("MameChdman"):
-        chd_tool = programs.GetToolProgram("MameChdman")
+    if programs.is_tool_installed("MameChdman"):
+        chd_tool = programs.get_tool_program("MameChdman")
     if not chd_tool:
         logger.log_error("MameChdman was not found")
         return False
@@ -52,9 +52,9 @@ def CreateDiscCHD(
     ]
 
     # Run create command
-    code = command.RunReturncodeCommand(
+    code = command.run_returncode_command(
         cmd = create_command,
-        options = command.CreateCommandOptions(
+        options = command.create_command_options(
             output_paths = [chd_file],
             blocking_processes = [chd_tool]),
         verbose = verbose,
@@ -87,8 +87,8 @@ def ExtractDiscCHD(
 
     # Get tool
     chd_tool = None
-    if programs.IsToolInstalled("MameChdman"):
-        chd_tool = programs.GetToolProgram("MameChdman")
+    if programs.is_tool_installed("MameChdman"):
+        chd_tool = programs.get_tool_program("MameChdman")
     if not chd_tool:
         logger.log_error("MameChdman was not found")
         return False
@@ -105,9 +105,9 @@ def ExtractDiscCHD(
         extract_cmd += ["--force"]
 
     # Run extract command
-    code = command.RunReturncodeCommand(
+    code = command.run_returncode_command(
         cmd = extract_cmd,
-        options = command.CreateCommandOptions(
+        options = command.create_command_options(
             output_paths = [toc_file, binary_file],
             blocking_processes = [chd_tool]),
         verbose = verbose,
@@ -187,8 +187,8 @@ def VerifyDiscCHD(
 
     # Get tool
     chd_tool = None
-    if programs.IsToolInstalled("MameChdman"):
-        chd_tool = programs.GetToolProgram("MameChdman")
+    if programs.is_tool_installed("MameChdman"):
+        chd_tool = programs.get_tool_program("MameChdman")
     if not chd_tool:
         logger.log_error("MameChdman was not found")
         return False
@@ -201,7 +201,7 @@ def VerifyDiscCHD(
     ]
 
     # Run verify command
-    verify_output = command.RunOutputCommand(
+    verify_output = command.run_output_command(
         cmd = verify_cmd,
         verbose = verbose,
         pretend_run = pretend_run,

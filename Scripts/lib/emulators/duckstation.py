@@ -138,7 +138,7 @@ class DuckStation(emulatorbase.EmulatorBase):
             setup_params = config.SetupParams()
 
         # Download windows program
-        if programs.ShouldProgramBeInstalled("DuckStation", "windows"):
+        if programs.should_program_be_installed("DuckStation", "windows"):
             success = release.DownloadGithubRelease(
                 github_user = "stenzek",
                 github_repo = "duckstation",
@@ -146,8 +146,8 @@ class DuckStation(emulatorbase.EmulatorBase):
                 ends_with = "windows-x64-release.zip",
                 search_file = "duckstation-qt-x64-ReleaseLTCG.exe",
                 install_name = "DuckStation",
-                install_dir = programs.GetProgramInstallDir("DuckStation", "windows"),
-                backups_dir = programs.GetProgramBackupDir("DuckStation", "windows"),
+                install_dir = programs.get_program_install_dir("DuckStation", "windows"),
+                backups_dir = programs.get_program_backup_dir("DuckStation", "windows"),
                 get_latest = True,
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
@@ -157,15 +157,15 @@ class DuckStation(emulatorbase.EmulatorBase):
                 return False
 
         # Download linux program
-        if programs.ShouldProgramBeInstalled("DuckStation", "linux"):
+        if programs.should_program_be_installed("DuckStation", "linux"):
             success = release.DownloadGithubRelease(
                 github_user = "stenzek",
                 github_repo = "duckstation",
                 starts_with = "DuckStation",
                 ends_with = ".AppImage",
                 install_name = "DuckStation",
-                install_dir = programs.GetProgramInstallDir("DuckStation", "linux"),
-                backups_dir = programs.GetProgramBackupDir("DuckStation", "linux"),
+                install_dir = programs.get_program_install_dir("DuckStation", "linux"),
+                backups_dir = programs.get_program_backup_dir("DuckStation", "linux"),
                 get_latest = True,
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
@@ -181,11 +181,11 @@ class DuckStation(emulatorbase.EmulatorBase):
             setup_params = config.SetupParams()
 
         # Setup windows program
-        if programs.ShouldProgramBeInstalled("DuckStation", "windows"):
+        if programs.should_program_be_installed("DuckStation", "windows"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetProgramBackupDir("DuckStation", "windows"),
+                archive_dir = programs.get_program_backup_dir("DuckStation", "windows"),
                 install_name = "DuckStation",
-                install_dir = programs.GetProgramInstallDir("DuckStation", "windows"),
+                install_dir = programs.get_program_install_dir("DuckStation", "windows"),
                 search_file = "duckstation-qt-x64-ReleaseLTCG.exe",
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
@@ -195,11 +195,11 @@ class DuckStation(emulatorbase.EmulatorBase):
                 return False
 
         # Setup linux program
-        if programs.ShouldProgramBeInstalled("DuckStation", "linux"):
+        if programs.should_program_be_installed("DuckStation", "linux"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetProgramBackupDir("DuckStation", "linux"),
+                archive_dir = programs.get_program_backup_dir("DuckStation", "linux"),
                 install_name = "DuckStation",
-                install_dir = programs.GetProgramInstallDir("DuckStation", "linux"),
+                install_dir = programs.get_program_install_dir("DuckStation", "linux"),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
@@ -242,7 +242,7 @@ class DuckStation(emulatorbase.EmulatorBase):
             for platform in ["windows", "linux"]:
                 success = fileops.smart_copy(
                     src = paths.join_paths(environment.get_locker_gaming_emulator_setup_dir("DuckStation"), filename),
-                    dest = paths.join_paths(programs.GetEmulatorPathConfigValue("DuckStation", "setup_dir", platform), filename),
+                    dest = paths.join_paths(programs.get_emulator_path_config_value("DuckStation", "setup_dir", platform), filename),
                     verbose = setup_params.verbose,
                     pretend_run = setup_params.pretend_run,
                     exit_on_failure = setup_params.exit_on_failure)
@@ -264,7 +264,7 @@ class DuckStation(emulatorbase.EmulatorBase):
 
         # Get launch command
         launch_cmd = [
-            programs.GetEmulatorProgram("DuckStation"),
+            programs.get_emulator_program("DuckStation"),
             config.token_game_file
         ]
         if fullscreen:

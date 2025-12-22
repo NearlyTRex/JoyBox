@@ -66,7 +66,7 @@ class ViceC64(emulatorbase.EmulatorBase):
             setup_params = config.SetupParams()
 
         # Download windows program
-        if programs.ShouldProgramBeInstalled("VICE-C64", "windows"):
+        if programs.should_program_be_installed("VICE-C64", "windows"):
             success = release.DownloadGithubRelease(
                 github_user = "VICE-Team",
                 github_repo = "svn-mirror",
@@ -74,8 +74,8 @@ class ViceC64(emulatorbase.EmulatorBase):
                 ends_with = "win64.zip",
                 search_file = "x64sc.exe",
                 install_name = "VICE-C64",
-                install_dir = programs.GetProgramInstallDir("VICE-C64", "windows"),
-                backups_dir = programs.GetProgramBackupDir("VICE-C64", "windows"),
+                install_dir = programs.get_program_install_dir("VICE-C64", "windows"),
+                backups_dir = programs.get_program_backup_dir("VICE-C64", "windows"),
                 get_latest = True,
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
@@ -85,13 +85,13 @@ class ViceC64(emulatorbase.EmulatorBase):
                 return False
 
         # Download linux program
-        if programs.ShouldProgramBeInstalled("VICE-C64", "linux"):
+        if programs.should_program_be_installed("VICE-C64", "linux"):
             success = release.BuildAppImageFromSource(
                 release_url = "https://github.com/NearlyTRex/ViceC64.git",
                 output_file = "App-x86_64.AppImage",
                 install_name = "VICE-C64",
-                install_dir = programs.GetProgramInstallDir("VICE-C64", "linux"),
-                backups_dir = programs.GetProgramBackupDir("VICE-C64", "linux"),
+                install_dir = programs.get_program_install_dir("VICE-C64", "linux"),
+                backups_dir = programs.get_program_backup_dir("VICE-C64", "linux"),
                 build_cmd = [
                     "cd", "vice",
                     "&&",
@@ -125,11 +125,11 @@ class ViceC64(emulatorbase.EmulatorBase):
             setup_params = config.SetupParams()
 
         # Setup windows program
-        if programs.ShouldProgramBeInstalled("VICE-C64", "windows"):
+        if programs.should_program_be_installed("VICE-C64", "windows"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetProgramBackupDir("VICE-C64", "windows"),
+                archive_dir = programs.get_program_backup_dir("VICE-C64", "windows"),
                 install_name = "VICE-C64",
-                install_dir = programs.GetProgramInstallDir("VICE-C64", "windows"),
+                install_dir = programs.get_program_install_dir("VICE-C64", "windows"),
                 search_file = "x64sc.exe",
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
@@ -139,11 +139,11 @@ class ViceC64(emulatorbase.EmulatorBase):
                 return False
 
         # Setup linux program
-        if programs.ShouldProgramBeInstalled("VICE-C64", "linux"):
+        if programs.should_program_be_installed("VICE-C64", "linux"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetProgramBackupDir("VICE-C64", "linux"),
+                archive_dir = programs.get_program_backup_dir("VICE-C64", "linux"),
                 install_name = "VICE-C64",
-                install_dir = programs.GetProgramInstallDir("VICE-C64", "linux"),
+                install_dir = programs.get_program_install_dir("VICE-C64", "linux"),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
@@ -183,7 +183,7 @@ class ViceC64(emulatorbase.EmulatorBase):
 
         # Get launch command
         launch_cmd = [
-            programs.GetEmulatorProgram("VICE-C64"),
+            programs.get_emulator_program("VICE-C64"),
             config.token_game_file
         ]
 

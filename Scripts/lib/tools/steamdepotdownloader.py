@@ -41,7 +41,7 @@ class SteamDepotDownloader(toolbase.ToolBase):
             setup_params = config.SetupParams()
 
         # Download windows program
-        if programs.ShouldProgramBeInstalled("SteamDepotDownloader", "windows"):
+        if programs.should_program_be_installed("SteamDepotDownloader", "windows"):
             success = release.DownloadGithubRelease(
                 github_user = "SteamRE",
                 github_repo = "DepotDownloader",
@@ -49,8 +49,8 @@ class SteamDepotDownloader(toolbase.ToolBase):
                 ends_with = ".zip",
                 search_file = "DepotDownloader.exe",
                 install_name = "SteamDepotDownloader",
-                install_dir = programs.GetProgramInstallDir("SteamDepotDownloader", "windows"),
-                backups_dir = programs.GetProgramBackupDir("SteamDepotDownloader", "windows"),
+                install_dir = programs.get_program_install_dir("SteamDepotDownloader", "windows"),
+                backups_dir = programs.get_program_backup_dir("SteamDepotDownloader", "windows"),
                 install_files = ["DepotDownloader.exe"],
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
@@ -60,7 +60,7 @@ class SteamDepotDownloader(toolbase.ToolBase):
                 return False
 
         # Download linux program
-        if programs.ShouldProgramBeInstalled("SteamDepotDownloader", "linux"):
+        if programs.should_program_be_installed("SteamDepotDownloader", "linux"):
             success = release.DownloadGithubRelease(
                 github_user = "SteamRE",
                 github_repo = "DepotDownloader",
@@ -68,8 +68,8 @@ class SteamDepotDownloader(toolbase.ToolBase):
                 ends_with = ".zip",
                 search_file = "DepotDownloader",
                 install_name = "SteamDepotDownloader",
-                install_dir = programs.GetProgramInstallDir("SteamDepotDownloader", "linux"),
-                backups_dir = programs.GetProgramBackupDir("SteamDepotDownloader", "linux"),
+                install_dir = programs.get_program_install_dir("SteamDepotDownloader", "linux"),
+                backups_dir = programs.get_program_backup_dir("SteamDepotDownloader", "linux"),
                 install_files = ["DepotDownloader"],
                 chmod_files = [
                     {
@@ -92,11 +92,11 @@ class SteamDepotDownloader(toolbase.ToolBase):
             setup_params = config.SetupParams()
 
         # Setup windows program
-        if programs.ShouldProgramBeInstalled("SteamDepotDownloader", "windows"):
+        if programs.should_program_be_installed("SteamDepotDownloader", "windows"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetProgramBackupDir("SteamDepotDownloader", "windows"),
+                archive_dir = programs.get_program_backup_dir("SteamDepotDownloader", "windows"),
                 install_name = "SteamDepotDownloader",
-                install_dir = programs.GetProgramInstallDir("SteamDepotDownloader", "windows"),
+                install_dir = programs.get_program_install_dir("SteamDepotDownloader", "windows"),
                 search_file = "DepotDownloader.exe",
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
@@ -106,11 +106,11 @@ class SteamDepotDownloader(toolbase.ToolBase):
                 return False
 
         # Setup linux program
-        if programs.ShouldProgramBeInstalled("SteamDepotDownloader", "linux"):
+        if programs.should_program_be_installed("SteamDepotDownloader", "linux"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetProgramBackupDir("SteamDepotDownloader", "linux"),
+                archive_dir = programs.get_program_backup_dir("SteamDepotDownloader", "linux"),
                 install_name = "SteamDepotDownloader",
-                install_dir = programs.GetProgramInstallDir("SteamDepotDownloader", "linux"),
+                install_dir = programs.get_program_install_dir("SteamDepotDownloader", "linux"),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)

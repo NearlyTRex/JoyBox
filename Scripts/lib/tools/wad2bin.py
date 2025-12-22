@@ -41,7 +41,7 @@ class Wad2Bin(toolbase.ToolBase):
             setup_params = config.SetupParams()
 
         # Download windows program
-        if programs.ShouldProgramBeInstalled("Wad2Bin", "windows"):
+        if programs.should_program_be_installed("Wad2Bin", "windows"):
             success = release.DownloadGithubRelease(
                 github_user = "DarkMatterCore",
                 github_repo = "wad2bin",
@@ -49,8 +49,8 @@ class Wad2Bin(toolbase.ToolBase):
                 ends_with = ".exe",
                 search_file = "wad2bin-windows-x64.exe",
                 install_name = "Wad2Bin",
-                install_dir = programs.GetProgramInstallDir("Wad2Bin", "windows"),
-                backups_dir = programs.GetProgramBackupDir("Wad2Bin", "windows"),
+                install_dir = programs.get_program_install_dir("Wad2Bin", "windows"),
+                backups_dir = programs.get_program_backup_dir("Wad2Bin", "windows"),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
@@ -59,7 +59,7 @@ class Wad2Bin(toolbase.ToolBase):
                 return False
 
         # Download linux program
-        if programs.ShouldProgramBeInstalled("Wad2Bin", "linux"):
+        if programs.should_program_be_installed("Wad2Bin", "linux"):
             success = release.DownloadGithubRelease(
                 github_user = "DarkMatterCore",
                 github_repo = "wad2bin",
@@ -67,8 +67,8 @@ class Wad2Bin(toolbase.ToolBase):
                 ends_with = ".tar.gz",
                 search_file = "wad2bin",
                 install_name = "Wad2Bin",
-                install_dir = programs.GetProgramInstallDir("Wad2Bin", "linux"),
-                backups_dir = programs.GetProgramBackupDir("Wad2Bin", "linux"),
+                install_dir = programs.get_program_install_dir("Wad2Bin", "linux"),
+                backups_dir = programs.get_program_backup_dir("Wad2Bin", "linux"),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
@@ -83,11 +83,11 @@ class Wad2Bin(toolbase.ToolBase):
             setup_params = config.SetupParams()
 
         # Setup windows program
-        if programs.ShouldProgramBeInstalled("Wad2Bin", "windows"):
+        if programs.should_program_be_installed("Wad2Bin", "windows"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetProgramBackupDir("Wad2Bin", "windows"),
+                archive_dir = programs.get_program_backup_dir("Wad2Bin", "windows"),
                 install_name = "Wad2Bin",
-                install_dir = programs.GetProgramInstallDir("Wad2Bin", "windows"),
+                install_dir = programs.get_program_install_dir("Wad2Bin", "windows"),
                 search_file = "wad2bin-windows-x64.exe",
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
@@ -97,11 +97,11 @@ class Wad2Bin(toolbase.ToolBase):
                 return False
 
         # Setup linux program
-        if programs.ShouldProgramBeInstalled("Wad2Bin", "linux"):
+        if programs.should_program_be_installed("Wad2Bin", "linux"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetProgramBackupDir("Wad2Bin", "linux"),
+                archive_dir = programs.get_program_backup_dir("Wad2Bin", "linux"),
                 install_name = "Wad2Bin",
-                install_dir = programs.GetProgramInstallDir("Wad2Bin", "linux"),
+                install_dir = programs.get_program_install_dir("Wad2Bin", "linux"),
                 search_file = "wad2bin",
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,

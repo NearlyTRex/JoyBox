@@ -31,16 +31,16 @@ def should_be_run_via_wine(cmd):
         return False
 
     # Already using wine
-    if command.GetStarterCommand(cmd) == get_wine_command():
+    if command.get_starter_command(cmd) == get_wine_command():
         return False
 
     # Wine runs windows executable formats only
-    if not command.IsWindowsExecutableCommand(cmd):
+    if not command.is_windows_executable_command(cmd):
         return False
 
     # Cached game commands or sandboxed local programs should use wine
-    is_cached_game_cmd = command.IsCachedGameCommand(cmd)
-    is_sandboxed_program_cmd = command.IsLocalSandboxedProgramCommand(cmd)
+    is_cached_game_cmd = command.is_cached_game_command(cmd)
+    is_sandboxed_program_cmd = command.is_local_sandboxed_program_command(cmd)
     return (
         is_cached_game_cmd or
         is_sandboxed_program_cmd
@@ -54,16 +54,16 @@ def should_be_run_via_sandboxie(cmd):
         return False
 
     # Already using sandboxie
-    if command.GetStarterCommand(cmd) == get_sandboxie_command():
+    if command.get_starter_command(cmd) == get_sandboxie_command():
         return False
 
     # Sandboxie runs windows executable formats only
-    if not command.IsWindowsExecutableCommand(cmd):
+    if not command.is_windows_executable_command(cmd):
         return False
 
     # Cached game commands or sandboxed local programs should use sandboxie
-    is_cached_game_cmd = command.IsCachedGameCommand(cmd)
-    is_sandboxed_program_cmd = command.IsLocalSandboxedProgramCommand(cmd)
+    is_cached_game_cmd = command.is_cached_game_command(cmd)
+    is_sandboxed_program_cmd = command.is_local_sandboxed_program_command(cmd)
     return (
         is_cached_game_cmd or
         is_sandboxed_program_cmd
@@ -73,27 +73,27 @@ def should_be_run_via_sandboxie(cmd):
 
 # Get wine command
 def get_wine_command():
-    return programs.GetToolProgram("Wine")
+    return programs.get_tool_program("Wine")
 
 # Get sandboxie command
 def get_sandboxie_command():
-    return programs.GetToolProgram("Sandboxie")
+    return programs.get_tool_program("Sandboxie")
 
 ###########################################################
 
 # Get wine blocking processes
 def get_wine_blocking_processes():
     return [
-        programs.GetToolProgram("WineServer")
+        programs.get_tool_program("WineServer")
     ]
 
 # Get sandboxie blocking processes
 def get_sandboxie_blocking_processes():
     return [
-        programs.GetToolProgram("Sandboxie"),
-        programs.GetToolProgram("SandboxieIni"),
-        programs.GetToolProgram("SandboxieRpcss"),
-        programs.GetToolProgram("SandboxieDcomlaunch")
+        programs.get_tool_program("Sandboxie"),
+        programs.get_tool_program("SandboxieIni"),
+        programs.get_tool_program("SandboxieRpcss"),
+        programs.get_tool_program("SandboxieDcomlaunch")
     ]
 
 # Get blocking processes
@@ -109,11 +109,11 @@ def get_blocking_processes(options, initial_processes = []):
 
 # Get wine prefix
 def get_wine_prefix(options):
-    return paths.join_paths(programs.GetToolPathConfigValue("Wine", "sandbox_dir"), options.get_prefix_name())
+    return paths.join_paths(programs.get_tool_path_config_value("Wine", "sandbox_dir"), options.get_prefix_name())
 
 # Get sandboxie prefix
 def get_sandboxie_prefix(options):
-    return paths.join_paths(programs.GetToolPathConfigValue("Sandboxie", "sandbox_dir"), options.get_prefix_name())
+    return paths.join_paths(programs.get_tool_path_config_value("Sandboxie", "sandbox_dir"), options.get_prefix_name())
 
 # Get prefix
 def get_prefix(options):
@@ -763,7 +763,7 @@ def setup_prefix_environment(
 
     # Check options
     if not options:
-        options = command.CreateCommandOptions()
+        options = command.create_command_options()
 
     # Ignore non-prefix environments
     if not options.is_prefix():
@@ -830,15 +830,15 @@ def setup_prefix_command(
 
     # Check options
     if not options:
-        options = command.CreateCommandOptions()
+        options = command.create_command_options()
 
     # Ignore non-prefix commands
     if not options.is_prefix():
         return (cmd, options)
 
     # Get original command info
-    orig_cmd_starter = command.GetStarterCommand(cmd)
-    orig_cmd_list = command.CreateCommandList(cmd)
+    orig_cmd_starter = command.get_starter_command(cmd)
+    orig_cmd_list = command.create_command_list(cmd)
     if len(orig_cmd_list) == 0:
         return (cmd, options)
 
@@ -892,12 +892,12 @@ def setup_prefix_command(
 def cleanup_wine(cmd, options, verbose = False, pretend_run = False, exit_on_failure = False):
 
     # Get wine server tool
-    wine_server_tool = programs.GetToolProgram("WineServer")
+    wine_server_tool = programs.get_tool_program("WineServer")
 
     # Kill processes running under wine
-    command.RunReturncodeCommand(
+    command.run_returncode_command(
         cmd = [wine_server_tool, "-k"],
-        options = command.CreateCommandOptions(
+        options = command.create_command_options(
             shell = True),
         verbose = verbose,
         pretend_run = pretend_run,
@@ -927,10 +927,10 @@ def create_wine_prefix(
         exit_on_failure = exit_on_failure)
 
     # Get wine boot tool
-    wine_boot_tool = programs.GetToolProgram("WineBoot")
+    wine_boot_tool = programs.get_tool_program("WineBoot")
 
     # Get wine tricks tool
-    wine_tricks_tool = programs.GetToolProgram("WineTricks")
+    wine_tricks_tool = programs.get_tool_program("WineTricks")
 
     # Copy params
     new_options = options.copy()
@@ -942,14 +942,14 @@ def create_wine_prefix(
     if len(new_options.get_tricks()) > 0:
         cmds_to_run.append(["winetricks " + trick for trick in new_options.get_tricks()])
     for cmd in cmds_to_run:
-        new_options.set_blocking_processes([command.GetStarterCommand(cmd)])
+        new_options.set_blocking_processes([command.get_starter_command(cmd)])
         new_cmd, new_options = setup_prefix_environment(
             cmd = cmd,
             options = new_options,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-        code = command.RunReturncodeCommand(
+        code = command.run_returncode_command(
             cmd = new_cmd,
             options = new_options,
             verbose = verbose,
@@ -986,7 +986,7 @@ def create_sandboxie_prefix(
         exit_on_failure = exit_on_failure)
 
     # Get sandboxie ini tool
-    sandboxie_ini_tool = programs.GetToolProgram("SandboxieIni")
+    sandboxie_ini_tool = programs.get_tool_program("SandboxieIni")
 
     # Copy params
     new_options = options.copy()
@@ -1003,7 +1003,7 @@ def create_sandboxie_prefix(
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-        command.RunReturncodeCommand(
+        command.run_returncode_command(
             cmd = new_cmd,
             options = new_options,
             verbose = verbose,
@@ -1174,7 +1174,7 @@ def translate_path_if_necessary(path, program_exe, program_name):
         return path
 
     # Get prefix options
-    options = command.CreateCommandOptions(
+    options = command.create_command_options(
         prefix_dir = programs.GetProgramPrefixDir(program_name),
         prefix_name = programs.GetProgramPrefixName(program_name),
         is_wine_prefix = should_run_via_wine,

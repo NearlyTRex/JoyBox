@@ -68,7 +68,7 @@ class PPSSPP(emulatorbase.EmulatorBase):
             setup_params = config.SetupParams()
 
         # Download windows program
-        if programs.ShouldProgramBeInstalled("PPSSPP", "windows"):
+        if programs.should_program_be_installed("PPSSPP", "windows"):
             success = release.DownloadWebpageRelease(
                 webpage_url = "https://www.ppsspp.org/download",
                 webpage_base_url = "https://www.ppsspp.org",
@@ -76,8 +76,8 @@ class PPSSPP(emulatorbase.EmulatorBase):
                 ends_with = "ppsspp_win.zip",
                 search_file = "PPSSPPWindows64.exe",
                 install_name = "PPSSPP",
-                install_dir = programs.GetProgramInstallDir("PPSSPP", "windows"),
-                backups_dir = programs.GetProgramBackupDir("PPSSPP", "windows"),
+                install_dir = programs.get_program_install_dir("PPSSPP", "windows"),
+                backups_dir = programs.get_program_backup_dir("PPSSPP", "windows"),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
@@ -86,13 +86,13 @@ class PPSSPP(emulatorbase.EmulatorBase):
                 return False
 
         # Download linux program
-        if programs.ShouldProgramBeInstalled("PPSSPP", "linux"):
+        if programs.should_program_be_installed("PPSSPP", "linux"):
             success = release.BuildAppImageFromSource(
                 release_url = "https://github.com/NearlyTRex/PPSSPP.git",
                 output_file = "PPSSPPSDL-x86_64.AppImage",
                 install_name = "PPSSPP",
-                install_dir = programs.GetProgramInstallDir("PPSSPP", "linux"),
-                backups_dir = programs.GetProgramBackupDir("PPSSPP", "linux"),
+                install_dir = programs.get_program_install_dir("PPSSPP", "linux"),
+                backups_dir = programs.get_program_backup_dir("PPSSPP", "linux"),
                 build_cmd = [
                     "cmake", "..", "-DLINUX_LOCAL_DEV=true", "-DCMAKE_BUILD_TYPE=Release",
                     "&&",
@@ -123,11 +123,11 @@ class PPSSPP(emulatorbase.EmulatorBase):
             setup_params = config.SetupParams()
 
         # Setup windows program
-        if programs.ShouldProgramBeInstalled("PPSSPP", "windows"):
+        if programs.should_program_be_installed("PPSSPP", "windows"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetProgramBackupDir("PPSSPP", "windows"),
+                archive_dir = programs.get_program_backup_dir("PPSSPP", "windows"),
                 install_name = "PPSSPP",
-                install_dir = programs.GetProgramInstallDir("PPSSPP", "windows"),
+                install_dir = programs.get_program_install_dir("PPSSPP", "windows"),
                 search_file = "PPSSPPWindows64.exe",
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
@@ -137,11 +137,11 @@ class PPSSPP(emulatorbase.EmulatorBase):
                 return False
 
         # Setup linux program
-        if programs.ShouldProgramBeInstalled("PPSSPP", "linux"):
+        if programs.should_program_be_installed("PPSSPP", "linux"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetProgramBackupDir("PPSSPP", "linux"),
+                archive_dir = programs.get_program_backup_dir("PPSSPP", "linux"),
                 install_name = "PPSSPP",
-                install_dir = programs.GetProgramInstallDir("PPSSPP", "linux"),
+                install_dir = programs.get_program_install_dir("PPSSPP", "linux"),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
@@ -181,7 +181,7 @@ class PPSSPP(emulatorbase.EmulatorBase):
 
         # Get launch command
         launch_cmd = [
-            programs.GetEmulatorProgram("PPSSPP"),
+            programs.get_emulator_program("PPSSPP"),
             config.token_game_file
         ]
 

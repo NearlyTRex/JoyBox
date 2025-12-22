@@ -72,7 +72,7 @@ class Xenia(emulatorbase.EmulatorBase):
             setup_params = config.SetupParams()
 
         # Download windows program
-        if programs.ShouldProgramBeInstalled("Xenia", "windows"):
+        if programs.should_program_be_installed("Xenia", "windows"):
             success = release.DownloadGithubRelease(
                 github_user = "xenia-project",
                 github_repo = "release-builds-windows",
@@ -80,8 +80,8 @@ class Xenia(emulatorbase.EmulatorBase):
                 ends_with = "master.zip",
                 search_file = "xenia.exe",
                 install_name = "Xenia",
-                install_dir = programs.GetProgramInstallDir("Xenia", "windows"),
-                backups_dir = programs.GetProgramBackupDir("Xenia", "windows"),
+                install_dir = programs.get_program_install_dir("Xenia", "windows"),
+                backups_dir = programs.get_program_backup_dir("Xenia", "windows"),
                 get_latest = True,
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
@@ -97,11 +97,11 @@ class Xenia(emulatorbase.EmulatorBase):
             setup_params = config.SetupParams()
 
         # Setup windows program
-        if programs.ShouldProgramBeInstalled("Xenia", "windows"):
+        if programs.should_program_be_installed("Xenia", "windows"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetProgramBackupDir("Xenia", "windows"),
+                archive_dir = programs.get_program_backup_dir("Xenia", "windows"),
                 install_name = "Xenia",
-                install_dir = programs.GetProgramInstallDir("Xenia", "windows"),
+                install_dir = programs.get_program_install_dir("Xenia", "windows"),
                 search_file = "xenia.exe",
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
@@ -142,7 +142,7 @@ class Xenia(emulatorbase.EmulatorBase):
 
         # Get launch command
         launch_cmd = [
-            programs.GetEmulatorProgram("Xenia"),
+            programs.get_emulator_program("Xenia"),
             config.token_game_file
         ]
         if fullscreen:

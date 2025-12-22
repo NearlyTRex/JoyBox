@@ -45,13 +45,13 @@ class LGOGDownloader(toolbase.ToolBase):
             setup_params = config.SetupParams()
 
         # Build linux program
-        if programs.ShouldProgramBeInstalled("LGOGDownloader", "linux"):
+        if programs.should_program_be_installed("LGOGDownloader", "linux"):
             success = release.BuildAppImageFromSource(
                 release_url = "https://github.com/NearlyTRex/LGOGDownloader.git",
                 output_file = "App-x86_64.AppImage",
                 install_name = "LGOGDownloader",
-                install_dir = programs.GetProgramInstallDir("LGOGDownloader", "linux"),
-                backups_dir = programs.GetProgramBackupDir("LGOGDownloader", "linux"),
+                install_dir = programs.get_program_install_dir("LGOGDownloader", "linux"),
+                backups_dir = programs.get_program_backup_dir("LGOGDownloader", "linux"),
                 build_cmd = [
                     "cmake", "..",
                     "&&",
@@ -81,11 +81,11 @@ class LGOGDownloader(toolbase.ToolBase):
             setup_params = config.SetupParams()
 
         # Setup linux program
-        if programs.ShouldProgramBeInstalled("LGOGDownloader", "linux"):
+        if programs.should_program_be_installed("LGOGDownloader", "linux"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetProgramBackupDir("LGOGDownloader", "linux"),
+                archive_dir = programs.get_program_backup_dir("LGOGDownloader", "linux"),
                 install_name = "LGOGDownloader",
-                install_dir = programs.GetProgramInstallDir("LGOGDownloader", "linux"),
+                install_dir = programs.get_program_install_dir("LGOGDownloader", "linux"),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)

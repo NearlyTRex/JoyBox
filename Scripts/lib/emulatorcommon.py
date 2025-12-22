@@ -83,7 +83,7 @@ def SimpleLaunch(
         real_launch_cmd += [cmd_segment]
 
     # Launch game
-    return command.RunCaptureCommand(
+    return command.run_capture_command(
         cmd = real_launch_cmd,
         options = launch_options,
         capture_type = capture_type,

@@ -67,7 +67,7 @@ class Flycast(emulatorbase.EmulatorBase):
             setup_params = config.SetupParams()
 
         # Download windows program
-        if programs.ShouldProgramBeInstalled("Flycast", "windows"):
+        if programs.should_program_be_installed("Flycast", "windows"):
             success = release.DownloadGithubRelease(
                 github_user = "flyinghead",
                 github_repo = "flycast",
@@ -75,8 +75,8 @@ class Flycast(emulatorbase.EmulatorBase):
                 ends_with = ".zip",
                 search_file = "flycast.exe",
                 install_name = "Flycast",
-                install_dir = programs.GetProgramInstallDir("Flycast", "windows"),
-                backups_dir = programs.GetProgramBackupDir("Flycast", "windows"),
+                install_dir = programs.get_program_install_dir("Flycast", "windows"),
+                backups_dir = programs.get_program_backup_dir("Flycast", "windows"),
                 get_latest = True,
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
@@ -86,13 +86,13 @@ class Flycast(emulatorbase.EmulatorBase):
                 return False
 
         # Build linux program
-        if programs.ShouldProgramBeInstalled("Flycast", "linux"):
+        if programs.should_program_be_installed("Flycast", "linux"):
             success = release.BuildAppImageFromSource(
                 release_url = "https://github.com/NearlyTRex/Flycast.git",
                 output_file = "App-x86_64.AppImage",
                 install_name = "Flycast",
-                install_dir = programs.GetProgramInstallDir("Flycast", "linux"),
-                backups_dir = programs.GetProgramBackupDir("Flycast", "linux"),
+                install_dir = programs.get_program_install_dir("Flycast", "linux"),
+                backups_dir = programs.get_program_backup_dir("Flycast", "linux"),
                 build_cmd = [
                     "cmake", "..", "-DCMAKE_BUILD_TYPE=Release",
                     "&&",
@@ -124,11 +124,11 @@ class Flycast(emulatorbase.EmulatorBase):
             setup_params = config.SetupParams()
 
         # Setup windows program
-        if programs.ShouldProgramBeInstalled("Flycast", "windows"):
+        if programs.should_program_be_installed("Flycast", "windows"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetProgramBackupDir("Flycast", "windows"),
+                archive_dir = programs.get_program_backup_dir("Flycast", "windows"),
                 install_name = "Flycast",
-                install_dir = programs.GetProgramInstallDir("Flycast", "windows"),
+                install_dir = programs.get_program_install_dir("Flycast", "windows"),
                 search_file = "flycast.exe",
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
@@ -138,11 +138,11 @@ class Flycast(emulatorbase.EmulatorBase):
                 return False
 
         # Setup linux program
-        if programs.ShouldProgramBeInstalled("Flycast", "linux"):
+        if programs.should_program_be_installed("Flycast", "linux"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetProgramBackupDir("Flycast", "linux"),
+                archive_dir = programs.get_program_backup_dir("Flycast", "linux"),
                 install_name = "Flycast",
-                install_dir = programs.GetProgramInstallDir("Flycast", "linux"),
+                install_dir = programs.get_program_install_dir("Flycast", "linux"),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
@@ -184,7 +184,7 @@ class Flycast(emulatorbase.EmulatorBase):
 
         # Get launch command
         launch_cmd = [
-            programs.GetEmulatorProgram("Flycast"),
+            programs.get_emulator_program("Flycast"),
             config.token_game_file
         ]
         if fullscreen:

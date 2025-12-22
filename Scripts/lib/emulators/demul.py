@@ -49,7 +49,7 @@ class Demul(emulatorbase.EmulatorBase):
             setup_params = config.SetupParams()
 
         # Download windows program
-        if programs.ShouldProgramBeInstalled("Demul", "windows"):
+        if programs.should_program_be_installed("Demul", "windows"):
             success = release.DownloadWebpageRelease(
                 webpage_url = "http://demul.emulation64.com/downloads/",
                 webpage_base_url = "http://demul.emulation64.com",
@@ -57,8 +57,8 @@ class Demul(emulatorbase.EmulatorBase):
                 ends_with = ".7z",
                 search_file = "demul.exe",
                 install_name = "Demul",
-                install_dir = programs.GetProgramInstallDir("Demul", "windows"),
-                backups_dir = programs.GetProgramBackupDir("Demul", "windows"),
+                install_dir = programs.get_program_install_dir("Demul", "windows"),
+                backups_dir = programs.get_program_backup_dir("Demul", "windows"),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
@@ -73,11 +73,11 @@ class Demul(emulatorbase.EmulatorBase):
             setup_params = config.SetupParams()
 
         # Setup windows program
-        if programs.ShouldProgramBeInstalled("Demul", "windows"):
+        if programs.should_program_be_installed("Demul", "windows"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetProgramBackupDir("Demul", "windows"),
+                archive_dir = programs.get_program_backup_dir("Demul", "windows"),
                 install_name = "Demul",
-                install_dir = programs.GetProgramInstallDir("Demul", "windows"),
+                install_dir = programs.get_program_install_dir("Demul", "windows"),
                 search_file = "demul.exe",
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,

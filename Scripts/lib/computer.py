@@ -164,10 +164,10 @@ class Program(jsondata.JsonData):
         if program_is_dos:
 
             # Update program options
-            program_options.set_blocking_processes([programs.GetEmulatorProgram("DosBoxX")])
+            program_options.set_blocking_processes([programs.get_emulator_program("DosBoxX")])
 
             # Get program command
-            program_cmd = command.GetDosLaunchCommand(
+            program_cmd = command.get_dos_launch_command(
                 options = program_options,
                 start_program = program_file,
                 start_args = program_args,
@@ -181,10 +181,10 @@ class Program(jsondata.JsonData):
         elif program_is_win31:
 
             # Update program options
-            program_options.set_blocking_processes([programs.GetEmulatorProgram("DosBoxX")])
+            program_options.set_blocking_processes([programs.get_emulator_program("DosBoxX")])
 
             # Get program command
-            program_cmd = command.GetWin31LaunchCommand(
+            program_cmd = command.get_win31_launch_command(
                 options = program_options,
                 start_program = program_file,
                 start_letter = program_drive,
@@ -197,7 +197,7 @@ class Program(jsondata.JsonData):
         elif program_is_scumm:
 
             # Get program command
-            program_cmd = command.GetScummLaunchCommand(
+            program_cmd = command.get_scumm_launch_command(
                 options = program_options,
                 fullscreen = fullscreen)
 
@@ -216,7 +216,7 @@ class Program(jsondata.JsonData):
             program_cmd = [program_path] + program_args
 
         # Launch game
-        success = command.RunCaptureCommand(
+        success = command.run_capture_command(
             cmd = program_cmd,
             options = program_options,
             capture_type = capture_type,
@@ -369,7 +369,7 @@ def SetupComputerGame(
         return False
 
     # Get setup options
-    game_setup_options = command.CreateCommandOptions()
+    game_setup_options = command.create_command_options()
 
     # Create prefix
     success = game_setup_options.create_prefix(
@@ -539,7 +539,7 @@ def LaunchComputerGame(
     exit_on_failure = False):
 
     # Get launch options
-    game_launch_options = command.CreateCommandOptions()
+    game_launch_options = command.create_command_options()
 
     # Get mount links
     game_mount_links = []

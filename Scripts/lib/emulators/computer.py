@@ -166,7 +166,7 @@ class Computer(emulatorbase.EmulatorBase):
             setup_params = config.SetupParams()
 
         # Download windows programs
-        if programs.ShouldProgramBeInstalled("DosBoxX", "windows"):
+        if programs.should_program_be_installed("DosBoxX", "windows"):
             success = release.DownloadGithubRelease(
                 github_user = "joncampbell123",
                 github_repo = "dosbox-x",
@@ -174,8 +174,8 @@ class Computer(emulatorbase.EmulatorBase):
                 ends_with = ".zip",
                 search_file = "dosbox-x.exe",
                 install_name = "DosBoxX",
-                install_dir = programs.GetProgramInstallDir("DosBoxX", "windows"),
-                backups_dir = programs.GetProgramBackupDir("DosBoxX", "windows"),
+                install_dir = programs.get_program_install_dir("DosBoxX", "windows"),
+                backups_dir = programs.get_program_backup_dir("DosBoxX", "windows"),
                 get_latest = True,
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
@@ -183,7 +183,7 @@ class Computer(emulatorbase.EmulatorBase):
             if not success:
                 logger.log_error("Could not setup DosBoxX")
                 return False
-        if programs.ShouldProgramBeInstalled("ScummVM", "windows"):
+        if programs.should_program_be_installed("ScummVM", "windows"):
             success = release.DownloadWebpageRelease(
                 webpage_url = "https://www.scummvm.org/downloads",
                 webpage_base_url = "https://www.scummvm.org",
@@ -191,8 +191,8 @@ class Computer(emulatorbase.EmulatorBase):
                 ends_with = "win32-x86_64.zip",
                 search_file = "SDL2.dll",
                 install_name = "ScummVM",
-                install_dir = programs.GetProgramInstallDir("ScummVM", "windows"),
-                backups_dir = programs.GetProgramBackupDir("ScummVM", "windows"),
+                install_dir = programs.get_program_install_dir("ScummVM", "windows"),
+                backups_dir = programs.get_program_backup_dir("ScummVM", "windows"),
                 rename_files = [
                     {"from": "scummvm-*.exe", "to": "scummvm.exe", "ratio": 75}
                 ],
@@ -205,13 +205,13 @@ class Computer(emulatorbase.EmulatorBase):
                 return False
 
         # Build linux programs
-        if programs.ShouldProgramBeInstalled("DosBoxX", "linux"):
+        if programs.should_program_be_installed("DosBoxX", "linux"):
             success = release.BuildAppImageFromSource(
                 release_url = "https://github.com/NearlyTRex/DosboxX.git",
                 output_file = "DOSBox-X-x86_64.AppImage",
                 install_name = "DosBoxX",
-                install_dir = programs.GetProgramInstallDir("DosBoxX", "linux"),
-                backups_dir = programs.GetProgramBackupDir("DosBoxX", "linux"),
+                install_dir = programs.get_program_install_dir("DosBoxX", "linux"),
+                backups_dir = programs.get_program_backup_dir("DosBoxX", "linux"),
                 build_cmd = [
                     "./build-sdl2"
                 ],
@@ -251,13 +251,13 @@ class Computer(emulatorbase.EmulatorBase):
             if not success:
                 logger.log_error("Could not setup DosBoxX")
                 return False
-        if programs.ShouldProgramBeInstalled("ScummVM", "linux"):
+        if programs.should_program_be_installed("ScummVM", "linux"):
             success = release.BuildAppImageFromSource(
                 release_url = "https://github.com/NearlyTRex/ScummVM.git",
                 output_file = "ScummVM-x86_64.AppImage",
                 install_name = "ScummVM",
-                install_dir = programs.GetProgramInstallDir("ScummVM", "linux"),
-                backups_dir = programs.GetProgramBackupDir("ScummVM", "linux"),
+                install_dir = programs.get_program_install_dir("ScummVM", "linux"),
+                backups_dir = programs.get_program_backup_dir("ScummVM", "linux"),
                 build_cmd = [
                     "./configure",
                     "&&",
@@ -303,11 +303,11 @@ class Computer(emulatorbase.EmulatorBase):
             setup_params = config.SetupParams()
 
         # Setup windows program
-        if programs.ShouldProgramBeInstalled("DosBoxX", "windows"):
+        if programs.should_program_be_installed("DosBoxX", "windows"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetProgramBackupDir("DosBoxX", "windows"),
+                archive_dir = programs.get_program_backup_dir("DosBoxX", "windows"),
                 install_name = "DosBoxX",
-                install_dir = programs.GetProgramInstallDir("DosBoxX", "windows"),
+                install_dir = programs.get_program_install_dir("DosBoxX", "windows"),
                 search_file = "dosbox-x.exe",
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
@@ -315,11 +315,11 @@ class Computer(emulatorbase.EmulatorBase):
             if not success:
                 logger.log_error("Could not setup DosBoxX")
                 return False
-        if programs.ShouldProgramBeInstalled("ScummVM", "windows"):
+        if programs.should_program_be_installed("ScummVM", "windows"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetProgramBackupDir("ScummVM", "windows"),
+                archive_dir = programs.get_program_backup_dir("ScummVM", "windows"),
                 install_name = "ScummVM",
-                install_dir = programs.GetProgramInstallDir("ScummVM", "windows"),
+                install_dir = programs.get_program_install_dir("ScummVM", "windows"),
                 search_file = "scummvm.exe",
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
@@ -329,22 +329,22 @@ class Computer(emulatorbase.EmulatorBase):
                 return False
 
         # Setup linux program
-        if programs.ShouldProgramBeInstalled("DosBoxX", "linux"):
+        if programs.should_program_be_installed("DosBoxX", "linux"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetProgramBackupDir("DosBoxX", "linux"),
+                archive_dir = programs.get_program_backup_dir("DosBoxX", "linux"),
                 install_name = "DosBoxX",
-                install_dir = programs.GetProgramInstallDir("DosBoxX", "linux"),
+                install_dir = programs.get_program_install_dir("DosBoxX", "linux"),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
             if not success:
                 logger.log_error("Could not setup DosBoxX")
                 return False
-        if programs.ShouldProgramBeInstalled("ScummVM", "linux"):
+        if programs.should_program_be_installed("ScummVM", "linux"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetProgramBackupDir("ScummVM", "linux"),
+                archive_dir = programs.get_program_backup_dir("ScummVM", "linux"),
                 install_name = "ScummVM",
-                install_dir = programs.GetProgramInstallDir("ScummVM", "linux"),
+                install_dir = programs.get_program_install_dir("ScummVM", "linux"),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)

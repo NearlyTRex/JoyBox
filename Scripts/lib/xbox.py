@@ -22,8 +22,8 @@ def ExtractXboxISO(
 
     # Get tool
     extract_tool = None
-    if programs.IsToolInstalled("ExtractXIso"):
-        extract_tool = programs.GetToolProgram("ExtractXIso")
+    if programs.is_tool_installed("ExtractXIso"):
+        extract_tool = programs.get_tool_program("ExtractXIso")
     if not extract_tool:
         logger.log_error("ExtractXIso was not found")
         return False
@@ -37,9 +37,9 @@ def ExtractXboxISO(
     ]
 
     # Run extract command
-    code = command.RunReturncodeCommand(
+    code = command.run_returncode_command(
         cmd = extract_cmd,
-        options = command.CreateCommandOptions(
+        options = command.create_command_options(
             blocking_processes = [extract_tool]),
         verbose = verbose,
         pretend_run = pretend_run,
@@ -69,8 +69,8 @@ def RewriteXboxISO(
 
     # Get tool
     extract_tool = None
-    if programs.IsToolInstalled("ExtractXIso"):
-        extract_tool = programs.GetToolProgram("ExtractXIso")
+    if programs.is_tool_installed("ExtractXIso"):
+        extract_tool = programs.get_tool_program("ExtractXIso")
     if not extract_tool:
         logger.log_error("ExtractXIso was not found")
         return False
@@ -86,9 +86,9 @@ def RewriteXboxISO(
     rewrite_cmd += [iso_file]
 
     # Run rewrite command
-    code = command.RunReturncodeCommand(
+    code = command.run_returncode_command(
         cmd = rewrite_cmd,
-        options = command.CreateCommandOptions(
+        options = command.create_command_options(
             blocking_processes = [extract_tool]),
         verbose = verbose,
         pretend_run = pretend_run,

@@ -90,8 +90,8 @@ def CaptureVideo(
 
     # Get tool
     ffmpeg_tool = None
-    if programs.IsToolInstalled("FFMpeg"):
-        ffmpeg_tool = programs.GetToolProgram("FFMpeg")
+    if programs.is_tool_installed("FFMpeg"):
+        ffmpeg_tool = programs.get_tool_program("FFMpeg")
     if not ffmpeg_tool:
         logger.log_error("FFMpeg was not found")
         return False
@@ -116,7 +116,7 @@ def CaptureVideo(
 
         # Audio
         audio_device = None
-        audio_sources = command.RunOutputCommand(
+        audio_sources = command.run_output_command(
             cmd = ["pactl", "list", "sources", "short"],
             verbose = False,
             pretend_run = pretend_run,
@@ -145,9 +145,9 @@ def CaptureVideo(
     ]
 
     # Run capture command
-    command.RunReturncodeCommand(
+    command.run_returncode_command(
         cmd = capture_cmd,
-        options = command.CreateCommandOptions(
+        options = command.create_command_options(
             prefix_dir = prefix_dir,
             prefix_name = prefix_name,
             is_wine_prefix = sandbox.should_be_run_via_wine(ffmpeg_tool),
@@ -178,8 +178,8 @@ def CaptureVideoWhileRunning(
 
     # Get tool
     ffmpeg_tool = None
-    if programs.IsToolInstalled("FFMpeg"):
-        ffmpeg_tool = programs.GetToolProgram("FFMpeg")
+    if programs.is_tool_installed("FFMpeg"):
+        ffmpeg_tool = programs.get_tool_program("FFMpeg")
     if not ffmpeg_tool:
         logger.log_error("FFMpeg was not found")
         return False

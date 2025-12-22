@@ -39,8 +39,8 @@ def EncryptPS3ISO(
 
     # Get tool
     encrypt_tool = None
-    if programs.IsToolInstalled("PS3Dec"):
-        encrypt_tool = programs.GetToolProgram("PS3Dec")
+    if programs.is_tool_installed("PS3Dec"):
+        encrypt_tool = programs.get_tool_program("PS3Dec")
     if not encrypt_tool:
         logger.log_error("PS3Dec was not found")
         return False
@@ -62,7 +62,7 @@ def EncryptPS3ISO(
     ]
 
     # Run encrypt command
-    code = command.RunReturncodeCommand(
+    code = command.run_returncode_command(
         cmd = encrypt_cmd,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -86,8 +86,8 @@ def DecryptPS3ISO(
 
     # Get tool
     decrypt_tool = None
-    if programs.IsToolInstalled("PS3Dec"):
-        decrypt_tool = programs.GetToolProgram("PS3Dec")
+    if programs.is_tool_installed("PS3Dec"):
+        decrypt_tool = programs.get_tool_program("PS3Dec")
     if not decrypt_tool:
         logger.log_error("PS3Dec was not found")
         return False
@@ -109,7 +109,7 @@ def DecryptPS3ISO(
     ]
 
     # Run decrypt command
-    code = command.RunReturncodeCommand(
+    code = command.run_returncode_command(
         cmd = decrypt_cmd,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -270,16 +270,16 @@ def ExtractPSNPKG(
 
     # Get tool
     python_tool = None
-    if programs.IsToolInstalled("PythonVenvPython"):
-        python_tool = programs.GetToolProgram("PythonVenvPython")
+    if programs.is_tool_installed("PythonVenvPython"):
+        python_tool = programs.get_tool_program("PythonVenvPython")
     if not python_tool:
         logger.log_error("PythonVenvPython was not found")
         return False
 
     # Get script
     extract_script = None
-    if programs.IsToolInstalled("PSNGetPkgInfo"):
-        extract_script = programs.GetToolProgram("PSNGetPkgInfo")
+    if programs.is_tool_installed("PSNGetPkgInfo"):
+        extract_script = programs.get_tool_program("PSNGetPkgInfo")
     if not extract_script:
         logger.log_error("PSNGetPkgInfo was not found")
         return False
@@ -293,7 +293,7 @@ def ExtractPSNPKG(
     ]
 
     # Run extract command
-    code = command.RunReturncodeCommand(
+    code = command.run_returncode_command(
         cmd = extract_cmd,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -328,8 +328,8 @@ def StripPSV(
 
     # Get tool
     strip_tool = None
-    if programs.IsToolInstalled("PSVStrip"):
-        strip_tool = programs.GetToolProgram("PSVStrip")
+    if programs.is_tool_installed("PSVStrip"):
+        strip_tool = programs.get_tool_program("PSVStrip")
     if not strip_tool:
         logger.log_error("PSVStrip was not found")
         return False
@@ -343,7 +343,7 @@ def StripPSV(
     ]
 
     # Run strip command
-    code = command.RunReturncodeCommand(
+    code = command.run_returncode_command(
         cmd = strip_cmd,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -376,8 +376,8 @@ def UnstripPSV(
 
     # Get tool
     unstrip_tool = None
-    if programs.IsToolInstalled("PSVStrip"):
-        unstrip_tool = programs.GetToolProgram("PSVStrip")
+    if programs.is_tool_installed("PSVStrip"):
+        unstrip_tool = programs.get_tool_program("PSVStrip")
     if not unstrip_tool:
         logger.log_error("PSVStrip was not found")
         return False
@@ -392,7 +392,7 @@ def UnstripPSV(
     ]
 
     # Run unstrip command
-    code = command.RunReturncodeCommand(
+    code = command.run_returncode_command(
         cmd = unstrip_cmd,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -424,16 +424,16 @@ def TrimPSV(
 
     # Get tool
     python_tool = None
-    if programs.IsToolInstalled("PythonVenvPython"):
-        python_tool = programs.GetToolProgram("PythonVenvPython")
+    if programs.is_tool_installed("PythonVenvPython"):
+        python_tool = programs.get_tool_program("PythonVenvPython")
     if not python_tool:
         logger.log_error("PythonVenvPython was not found")
         return False
 
     # Get script
     trim_script = None
-    if programs.IsToolInstalled("PSVTools"):
-        trim_script = programs.GetToolProgram("PSVTools")
+    if programs.is_tool_installed("PSVTools"):
+        trim_script = programs.get_tool_program("PSVTools")
     if not trim_script:
         logger.log_error("PSVTools was not found")
         return False
@@ -448,7 +448,7 @@ def TrimPSV(
     ]
 
     # Run trim command
-    code = command.RunReturncodeCommand(
+    code = command.run_returncode_command(
         cmd = trim_cmd,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -480,16 +480,16 @@ def UntrimPSV(
 
     # Get tool
     python_tool = None
-    if programs.IsToolInstalled("PythonVenvPython"):
-        python_tool = programs.GetToolProgram("PythonVenvPython")
+    if programs.is_tool_installed("PythonVenvPython"):
+        python_tool = programs.get_tool_program("PythonVenvPython")
     if not python_tool:
         logger.log_error("PythonVenvPython was not found")
         return False
 
     # Get script
     untrim_script = None
-    if programs.IsToolInstalled("PSVTools"):
-        untrim_script = programs.GetToolProgram("PSVTools")
+    if programs.is_tool_installed("PSVTools"):
+        untrim_script = programs.get_tool_program("PSVTools")
     if not untrim_script:
         logger.log_error("PSVTools was not found")
         return False
@@ -504,7 +504,7 @@ def UntrimPSV(
     ]
 
     # Run untrim command
-    code = command.RunReturncodeCommand(
+    code = command.run_returncode_command(
         cmd = untrim_cmd,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -534,16 +534,16 @@ def VerifyPSV(
 
     # Get tool
     python_tool = None
-    if programs.IsToolInstalled("PythonVenvPython"):
-        python_tool = programs.GetToolProgram("PythonVenvPython")
+    if programs.is_tool_installed("PythonVenvPython"):
+        python_tool = programs.get_tool_program("PythonVenvPython")
     if not python_tool:
         logger.log_error("PythonVenvPython was not found")
         return False
 
     # Get script
     verify_script = None
-    if programs.IsToolInstalled("PSVTools"):
-        verify_script = programs.GetToolProgram("PSVTools")
+    if programs.is_tool_installed("PSVTools"):
+        verify_script = programs.get_tool_program("PSVTools")
     if not verify_script:
         logger.log_error("PSVTools was not found")
         return False
@@ -557,7 +557,7 @@ def VerifyPSV(
     ]
 
     # Run verify command
-    code = command.RunReturncodeCommand(
+    code = command.run_returncode_command(
         cmd = verify_cmd,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -627,16 +627,16 @@ def GetPSNPackageInfo(
 
     # Get tool
     python_tool = None
-    if programs.IsToolInstalled("PythonVenvPython"):
-        python_tool = programs.GetToolProgram("PythonVenvPython")
+    if programs.is_tool_installed("PythonVenvPython"):
+        python_tool = programs.get_tool_program("PythonVenvPython")
     if not python_tool:
         logger.log_error("PythonVenvPython was not found")
         return None
 
     # Get script
     extract_script = None
-    if programs.IsToolInstalled("PSNGetPkgInfo"):
-        extract_script = programs.GetToolProgram("PSNGetPkgInfo")
+    if programs.is_tool_installed("PSNGetPkgInfo"):
+        extract_script = programs.get_tool_program("PSNGetPkgInfo")
     if not extract_script:
         logger.log_error("PSNGetPkgInfo was not found")
         return None
@@ -649,7 +649,7 @@ def GetPSNPackageInfo(
     ]
 
     # Run info command
-    info_output = command.RunOutputCommand(
+    info_output = command.run_output_command(
         cmd = info_cmd,
         verbose = verbose,
         pretend_run = pretend_run,

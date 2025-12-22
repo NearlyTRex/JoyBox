@@ -41,7 +41,7 @@ class HacTool(toolbase.ToolBase):
             setup_params = config.SetupParams()
 
         # Download windows program
-        if programs.ShouldProgramBeInstalled("HacTool", "windows"):
+        if programs.should_program_be_installed("HacTool", "windows"):
             success = release.DownloadGithubRelease(
                 github_user = "SciresM",
                 github_repo = "hactool",
@@ -49,8 +49,8 @@ class HacTool(toolbase.ToolBase):
                 ends_with = "win.zip",
                 search_file = "hactool.exe",
                 install_name = "HacTool",
-                install_dir = programs.GetProgramInstallDir("HacTool", "windows"),
-                backups_dir = programs.GetProgramBackupDir("HacTool", "windows"),
+                install_dir = programs.get_program_install_dir("HacTool", "windows"),
+                backups_dir = programs.get_program_backup_dir("HacTool", "windows"),
                 install_files = ["hactool.exe"],
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
@@ -60,13 +60,13 @@ class HacTool(toolbase.ToolBase):
                 return False
 
         # Build linux program
-        if programs.ShouldProgramBeInstalled("HacTool", "linux"):
+        if programs.should_program_be_installed("HacTool", "linux"):
             success = release.BuildAppImageFromSource(
                 release_url = "https://github.com/NearlyTRex/HacTool.git",
                 output_file = "App-x86_64.AppImage",
                 install_name = "HacTool",
-                install_dir = programs.GetProgramInstallDir("HacTool", "linux"),
-                backups_dir = programs.GetProgramBackupDir("HacTool", "linux"),
+                install_dir = programs.get_program_install_dir("HacTool", "linux"),
+                backups_dir = programs.get_program_backup_dir("HacTool", "linux"),
                 build_cmd = [
                     "cp", "config.mk.template", "config.mk",
                     "&&",
@@ -95,11 +95,11 @@ class HacTool(toolbase.ToolBase):
             setup_params = config.SetupParams()
 
         # Setup windows program
-        if programs.ShouldProgramBeInstalled("HacTool", "windows"):
+        if programs.should_program_be_installed("HacTool", "windows"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetProgramBackupDir("HacTool", "windows"),
+                archive_dir = programs.get_program_backup_dir("HacTool", "windows"),
                 install_name = "HacTool",
-                install_dir = programs.GetProgramInstallDir("HacTool", "windows"),
+                install_dir = programs.get_program_install_dir("HacTool", "windows"),
                 search_file = "hactool.exe",
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
@@ -109,11 +109,11 @@ class HacTool(toolbase.ToolBase):
                 return False
 
         # Setup linux program
-        if programs.ShouldProgramBeInstalled("HacTool", "linux"):
+        if programs.should_program_be_installed("HacTool", "linux"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetProgramBackupDir("HacTool", "linux"),
+                archive_dir = programs.get_program_backup_dir("HacTool", "linux"),
                 install_name = "HacTool",
-                install_dir = programs.GetProgramInstallDir("HacTool", "linux"),
+                install_dir = programs.get_program_install_dir("HacTool", "linux"),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)

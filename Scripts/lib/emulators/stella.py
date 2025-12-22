@@ -49,7 +49,7 @@ class Stella(emulatorbase.EmulatorBase):
             setup_params = config.SetupParams()
 
         # Download windows program
-        if programs.ShouldProgramBeInstalled("Stella", "windows"):
+        if programs.should_program_be_installed("Stella", "windows"):
             success = release.DownloadGithubRelease(
                 github_user = "stella-emu",
                 github_repo = "stella",
@@ -57,8 +57,8 @@ class Stella(emulatorbase.EmulatorBase):
                 ends_with = "windows.zip",
                 search_file = "64-bit/Stella.exe",
                 install_name = "Stella",
-                install_dir = programs.GetProgramInstallDir("Stella", "windows"),
-                backups_dir = programs.GetProgramBackupDir("Stella", "windows"),
+                install_dir = programs.get_program_install_dir("Stella", "windows"),
+                backups_dir = programs.get_program_backup_dir("Stella", "windows"),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
@@ -73,11 +73,11 @@ class Stella(emulatorbase.EmulatorBase):
             setup_params = config.SetupParams()
 
         # Setup windows program
-        if programs.ShouldProgramBeInstalled("Stella", "windows"):
+        if programs.should_program_be_installed("Stella", "windows"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetProgramBackupDir("Stella", "windows"),
+                archive_dir = programs.get_program_backup_dir("Stella", "windows"),
                 install_name = "Stella",
-                install_dir = programs.GetProgramInstallDir("Stella", "windows"),
+                install_dir = programs.get_program_install_dir("Stella", "windows"),
                 search_file = "64-bit/Stella.exe",
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,

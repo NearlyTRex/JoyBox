@@ -49,7 +49,7 @@ class BlastEm(emulatorbase.EmulatorBase):
             setup_params = config.SetupParams()
 
         # Download windows program
-        if programs.ShouldProgramBeInstalled("BlastEm", "windows"):
+        if programs.should_program_be_installed("BlastEm", "windows"):
             success = release.DownloadWebpageRelease(
                 webpage_url = "https://www.retrodev.com/blastem",
                 webpage_base_url = "https://www.retrodev.com/blastem",
@@ -57,8 +57,8 @@ class BlastEm(emulatorbase.EmulatorBase):
                 ends_with = ".zip",
                 search_file = "blastem.exe",
                 install_name = "BlastEm",
-                install_dir = programs.GetProgramInstallDir("BlastEm", "windows"),
-                backups_dir = programs.GetProgramBackupDir("BlastEm", "windows"),
+                install_dir = programs.get_program_install_dir("BlastEm", "windows"),
+                backups_dir = programs.get_program_backup_dir("BlastEm", "windows"),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
@@ -73,11 +73,11 @@ class BlastEm(emulatorbase.EmulatorBase):
             setup_params = config.SetupParams()
 
         # Setup windows program
-        if programs.ShouldProgramBeInstalled("BlastEm", "windows"):
+        if programs.should_program_be_installed("BlastEm", "windows"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetProgramBackupDir("BlastEm", "windows"),
+                archive_dir = programs.get_program_backup_dir("BlastEm", "windows"),
                 install_name = "BlastEm",
-                install_dir = programs.GetProgramInstallDir("BlastEm", "windows"),
+                install_dir = programs.get_program_install_dir("BlastEm", "windows"),
                 search_file = "blastem.exe",
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,

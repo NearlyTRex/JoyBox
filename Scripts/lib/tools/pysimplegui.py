@@ -35,11 +35,11 @@ class PySimpleGUI(toolbase.ToolBase):
             setup_params = config.SetupParams()
 
         # Download library
-        if programs.ShouldLibraryBeInstalled("PySimpleGUI"):
+        if programs.should_library_be_installed("PySimpleGUI"):
             success = network.DownloadGithubRepository(
                 github_user = "NearlyTRex",
                 github_repo = "PySimpleGUI",
-                output_dir = programs.GetLibraryInstallDir("PySimpleGUI", "lib"),
+                output_dir = programs.get_library_install_dir("PySimpleGUI", "lib"),
                 clean = True,
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
@@ -50,7 +50,7 @@ class PySimpleGUI(toolbase.ToolBase):
             success = network.ArchiveGithubRepository(
                 github_user = "NearlyTRex",
                 github_repo = "PySimpleGUI",
-                output_dir = programs.GetLibraryBackupDir("PySimpleGUI", "lib"),
+                output_dir = programs.get_library_backup_dir("PySimpleGUI", "lib"),
                 recursive = True,
                 clean = True,
                 verbose = setup_params.verbose,
@@ -67,11 +67,11 @@ class PySimpleGUI(toolbase.ToolBase):
             setup_params = config.SetupParams()
 
         # Setup library
-        if programs.ShouldLibraryBeInstalled("PySimpleGUI"):
+        if programs.should_library_be_installed("PySimpleGUI"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetLibraryBackupDir("PySimpleGUI", "lib"),
+                archive_dir = programs.get_library_backup_dir("PySimpleGUI", "lib"),
                 install_name = "PySimpleGUI",
-                install_dir = programs.GetLibraryInstallDir("PySimpleGUI", "lib"),
+                install_dir = programs.get_library_install_dir("PySimpleGUI", "lib"),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)

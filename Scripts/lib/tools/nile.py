@@ -34,11 +34,11 @@ class Nile(toolbase.ToolBase):
             setup_params = config.SetupParams()
 
         # Download library
-        if programs.ShouldLibraryBeInstalled("Nile"):
+        if programs.should_library_be_installed("Nile"):
             success = network.DownloadGithubRepository(
                 github_user = "NearlyTRex",
                 github_repo = "Nile",
-                output_dir = programs.GetLibraryInstallDir("Nile", "lib"),
+                output_dir = programs.get_library_install_dir("Nile", "lib"),
                 clean = True,
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
@@ -49,7 +49,7 @@ class Nile(toolbase.ToolBase):
             success = network.ArchiveGithubRepository(
                 github_user = "NearlyTRex",
                 github_repo = "Nile",
-                output_dir = programs.GetLibraryBackupDir("Nile", "lib"),
+                output_dir = programs.get_library_backup_dir("Nile", "lib"),
                 recursive = True,
                 clean = True,
                 verbose = setup_params.verbose,
@@ -66,11 +66,11 @@ class Nile(toolbase.ToolBase):
             setup_params = config.SetupParams()
 
         # Setup library
-        if programs.ShouldLibraryBeInstalled("Nile"):
+        if programs.should_library_be_installed("Nile"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetLibraryBackupDir("Nile", "lib"),
+                archive_dir = programs.get_library_backup_dir("Nile", "lib"),
                 install_name = "Nile",
-                install_dir = programs.GetLibraryInstallDir("Nile", "lib"),
+                install_dir = programs.get_library_install_dir("Nile", "lib"),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)

@@ -49,7 +49,7 @@ class SameBoy(emulatorbase.EmulatorBase):
             setup_params = config.SetupParams()
 
         # Download windows program
-        if programs.ShouldProgramBeInstalled("SameBoy", "windows"):
+        if programs.should_program_be_installed("SameBoy", "windows"):
             success = release.DownloadGithubRelease(
                 github_user = "LIJI32",
                 github_repo = "SameBoy",
@@ -57,8 +57,8 @@ class SameBoy(emulatorbase.EmulatorBase):
                 ends_with = ".zip",
                 search_file = "sameboy.exe",
                 install_name = "SameBoy",
-                install_dir = programs.GetProgramInstallDir("SameBoy", "windows"),
-                backups_dir = programs.GetProgramBackupDir("SameBoy", "windows"),
+                install_dir = programs.get_program_install_dir("SameBoy", "windows"),
+                backups_dir = programs.get_program_backup_dir("SameBoy", "windows"),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
@@ -73,11 +73,11 @@ class SameBoy(emulatorbase.EmulatorBase):
             setup_params = config.SetupParams()
 
         # Setup windows program
-        if programs.ShouldProgramBeInstalled("SameBoy", "windows"):
+        if programs.should_program_be_installed("SameBoy", "windows"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetProgramBackupDir("SameBoy", "windows"),
+                archive_dir = programs.get_program_backup_dir("SameBoy", "windows"),
                 install_name = "SameBoy",
-                install_dir = programs.GetProgramInstallDir("SameBoy", "windows"),
+                install_dir = programs.get_program_install_dir("SameBoy", "windows"),
                 search_file = "sameboy.exe",
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,

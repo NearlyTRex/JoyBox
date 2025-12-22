@@ -41,13 +41,13 @@ class NirCmd(toolbase.ToolBase):
             setup_params = config.SetupParams()
 
         # Download windows program
-        if programs.ShouldProgramBeInstalled("NirCmd", "windows"):
+        if programs.should_program_be_installed("NirCmd", "windows"):
             success = release.DownloadGeneralRelease(
                 archive_url = "https://www.nirsoft.net/utils/nircmd-x64.zip",
                 search_file = "nircmdc.exe",
                 install_name = "NirCmd",
-                install_dir = programs.GetProgramInstallDir("NirCmd", "windows"),
-                backups_dir = programs.GetProgramBackupDir("NirCmd", "windows"),
+                install_dir = programs.get_program_install_dir("NirCmd", "windows"),
+                backups_dir = programs.get_program_backup_dir("NirCmd", "windows"),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
@@ -62,11 +62,11 @@ class NirCmd(toolbase.ToolBase):
             setup_params = config.SetupParams()
 
         # Setup windows program
-        if programs.ShouldProgramBeInstalled("NirCmd", "windows"):
+        if programs.should_program_be_installed("NirCmd", "windows"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetProgramBackupDir("NirCmd", "windows"),
+                archive_dir = programs.get_program_backup_dir("NirCmd", "windows"),
                 install_name = "NirCmd",
-                install_dir = programs.GetProgramInstallDir("NirCmd", "windows"),
+                install_dir = programs.get_program_install_dir("NirCmd", "windows"),
                 search_file = "nircmdc.exe",
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,

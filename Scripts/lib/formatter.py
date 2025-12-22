@@ -33,7 +33,7 @@ def FormatCppFile(
     ]
 
     # Run format command
-    code = command.RunReturncodeCommand(
+    code = command.run_returncode_command(
         cmd = format_cmd,
         verbose = verbose,
         pretend_run = pretend_run,

@@ -49,7 +49,7 @@ class BSnes(emulatorbase.EmulatorBase):
             setup_params = config.SetupParams()
 
         # Download windows program
-        if programs.ShouldProgramBeInstalled("BSnes", "windows"):
+        if programs.should_program_be_installed("BSnes", "windows"):
             success = release.DownloadGithubRelease(
                 github_user = "bsnes-emu",
                 github_repo = "bsnes",
@@ -57,8 +57,8 @@ class BSnes(emulatorbase.EmulatorBase):
                 ends_with = ".zip",
                 search_file = "bsnes.exe",
                 install_name = "BSnes",
-                install_dir = programs.GetProgramInstallDir("BSnes", "windows"),
-                backups_dir = programs.GetProgramBackupDir("BSnes", "windows"),
+                install_dir = programs.get_program_install_dir("BSnes", "windows"),
+                backups_dir = programs.get_program_backup_dir("BSnes", "windows"),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
@@ -73,11 +73,11 @@ class BSnes(emulatorbase.EmulatorBase):
             setup_params = config.SetupParams()
 
         # Setup windows program
-        if programs.ShouldProgramBeInstalled("BSnes", "windows"):
+        if programs.should_program_be_installed("BSnes", "windows"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetProgramBackupDir("BSnes", "windows"),
+                archive_dir = programs.get_program_backup_dir("BSnes", "windows"),
                 install_name = "BSnes",
-                install_dir = programs.GetProgramInstallDir("BSnes", "windows"),
+                install_dir = programs.get_program_install_dir("BSnes", "windows"),
                 search_file = "bsnes.exe",
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,

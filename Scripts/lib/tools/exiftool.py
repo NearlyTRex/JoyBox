@@ -35,11 +35,11 @@ class ExifTool(toolbase.ToolBase):
             setup_params = config.SetupParams()
 
         # Download library
-        if programs.ShouldLibraryBeInstalled("ExifTool"):
+        if programs.should_library_be_installed("ExifTool"):
             success = network.DownloadGithubRepository(
                 github_user = "NearlyTRex",
                 github_repo = "ExifTool",
-                output_dir = programs.GetLibraryInstallDir("ExifTool", "lib"),
+                output_dir = programs.get_library_install_dir("ExifTool", "lib"),
                 clean = True,
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
@@ -50,7 +50,7 @@ class ExifTool(toolbase.ToolBase):
             success = network.ArchiveGithubRepository(
                 github_user = "NearlyTRex",
                 github_repo = "ExifTool",
-                output_dir = programs.GetLibraryBackupDir("ExifTool", "lib"),
+                output_dir = programs.get_library_backup_dir("ExifTool", "lib"),
                 recursive = True,
                 clean = True,
                 verbose = setup_params.verbose,
@@ -67,11 +67,11 @@ class ExifTool(toolbase.ToolBase):
             setup_params = config.SetupParams()
 
         # Setup library
-        if programs.ShouldLibraryBeInstalled("ExifTool"):
+        if programs.should_library_be_installed("ExifTool"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetLibraryBackupDir("ExifTool", "lib"),
+                archive_dir = programs.get_library_backup_dir("ExifTool", "lib"),
                 install_name = "ExifTool",
-                install_dir = programs.GetLibraryInstallDir("ExifTool", "lib"),
+                install_dir = programs.get_library_install_dir("ExifTool", "lib"),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)

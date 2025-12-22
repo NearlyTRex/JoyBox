@@ -48,11 +48,11 @@ class Mutagen(toolbase.ToolBase):
             setup_params = config.SetupParams()
 
         # Download library
-        if programs.ShouldLibraryBeInstalled("Mutagen"):
+        if programs.should_library_be_installed("Mutagen"):
             success = network.DownloadGithubRepository(
                 github_user = "NearlyTRex",
                 github_repo = "Mutagen",
-                output_dir = programs.GetLibraryInstallDir("Mutagen", "lib"),
+                output_dir = programs.get_library_install_dir("Mutagen", "lib"),
                 clean = True,
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
@@ -63,7 +63,7 @@ class Mutagen(toolbase.ToolBase):
             success = network.ArchiveGithubRepository(
                 github_user = "NearlyTRex",
                 github_repo = "Mutagen",
-                output_dir = programs.GetLibraryBackupDir("Mutagen", "lib"),
+                output_dir = programs.get_library_backup_dir("Mutagen", "lib"),
                 recursive = True,
                 clean = True,
                 verbose = setup_params.verbose,
@@ -80,11 +80,11 @@ class Mutagen(toolbase.ToolBase):
             setup_params = config.SetupParams()
 
         # Setup library
-        if programs.ShouldLibraryBeInstalled("Mutagen"):
+        if programs.should_library_be_installed("Mutagen"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetLibraryBackupDir("Mutagen", "lib"),
+                archive_dir = programs.get_library_backup_dir("Mutagen", "lib"),
                 install_name = "Mutagen",
-                install_dir = programs.GetLibraryInstallDir("Mutagen", "lib"),
+                install_dir = programs.get_library_install_dir("Mutagen", "lib"),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)

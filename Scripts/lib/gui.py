@@ -39,7 +39,7 @@ def DisplayPopup(
 
     # Import PySimpleGUI
     psg = modules.import_python_module_file(
-        module_path = programs.GetToolProgram("PySimpleGUI"),
+        module_path = programs.get_tool_program("PySimpleGUI"),
         module_name = "psg")
 
     # Check parameters
@@ -220,7 +220,7 @@ def DisplayLoadingWindow(
 
     # Import PySimpleGUI
     psg = modules.import_python_module_file(
-        module_path = programs.GetToolProgram("PySimpleGUI"),
+        module_path = programs.get_tool_program("PySimpleGUI"),
         module_name = "psg")
 
     # Check parameters
@@ -349,7 +349,7 @@ def DisplayChoicesWindow(
 
     # Import PySimpleGUI
     psg = modules.import_python_module_file(
-        module_path = programs.GetToolProgram("PySimpleGUI"),
+        module_path = programs.get_tool_program("PySimpleGUI"),
         module_name = "psg")
 
     # Check parameters

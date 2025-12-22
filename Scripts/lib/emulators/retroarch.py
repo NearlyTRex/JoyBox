@@ -109,13 +109,13 @@ class RetroArch(emulatorbase.EmulatorBase):
             setup_params = config.SetupParams()
 
         # Download windows program
-        if programs.ShouldProgramBeInstalled("RetroArch", "windows"):
+        if programs.should_program_be_installed("RetroArch", "windows"):
             success = release.DownloadGeneralRelease(
                 archive_url = "https://buildbot.libretro.com/nightly/windows/x86_64/RetroArch.7z",
                 search_file = "retroarch.exe",
                 install_name = "RetroArch",
-                install_dir = programs.GetProgramInstallDir("RetroArch", "windows"),
-                backups_dir = programs.GetProgramBackupDir("RetroArch", "windows"),
+                install_dir = programs.get_program_install_dir("RetroArch", "windows"),
+                backups_dir = programs.get_program_backup_dir("RetroArch", "windows"),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
@@ -126,8 +126,8 @@ class RetroArch(emulatorbase.EmulatorBase):
                 archive_url = "https://buildbot.libretro.com/nightly/windows/x86_64/RetroArch_cores.7z",
                 search_file = "snes9x_libretro.dll",
                 install_name = "RetroArch",
-                install_dir = programs.GetEmulatorPathConfigValue("RetroArch", "cores_dir", "windows"),
-                backups_dir = programs.GetProgramBackupDir("RetroArch", "windows"),
+                install_dir = programs.get_emulator_path_config_value("RetroArch", "cores_dir", "windows"),
+                backups_dir = programs.get_program_backup_dir("RetroArch", "windows"),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
@@ -136,13 +136,13 @@ class RetroArch(emulatorbase.EmulatorBase):
                 return False
 
         # Download linux program
-        if programs.ShouldProgramBeInstalled("RetroArch", "linux"):
+        if programs.should_program_be_installed("RetroArch", "linux"):
             success = release.DownloadGeneralRelease(
                 archive_url = "https://buildbot.libretro.com/nightly/linux/x86_64/RetroArch.7z",
                 search_file = "RetroArch-Linux-x86_64.AppImage",
                 install_name = "RetroArch",
-                install_dir = programs.GetProgramInstallDir("RetroArch", "linux"),
-                backups_dir = programs.GetProgramBackupDir("RetroArch", "linux"),
+                install_dir = programs.get_program_install_dir("RetroArch", "linux"),
+                backups_dir = programs.get_program_backup_dir("RetroArch", "linux"),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
@@ -153,8 +153,8 @@ class RetroArch(emulatorbase.EmulatorBase):
                 archive_url = "https://buildbot.libretro.com/nightly/linux/x86_64/RetroArch_cores.7z",
                 search_file = "snes9x_libretro.so",
                 install_name = "RetroArch",
-                install_dir = programs.GetEmulatorPathConfigValue("RetroArch", "cores_dir", "linux"),
-                backups_dir = programs.GetProgramBackupDir("RetroArch", "linux"),
+                install_dir = programs.get_emulator_path_config_value("RetroArch", "cores_dir", "linux"),
+                backups_dir = programs.get_program_backup_dir("RetroArch", "linux"),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
@@ -169,11 +169,11 @@ class RetroArch(emulatorbase.EmulatorBase):
             setup_params = config.SetupParams()
 
         # Setup windows program
-        if programs.ShouldProgramBeInstalled("RetroArch", "windows"):
+        if programs.should_program_be_installed("RetroArch", "windows"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetProgramBackupDir("RetroArch", "windows"),
+                archive_dir = programs.get_program_backup_dir("RetroArch", "windows"),
                 install_name = "RetroArch",
-                install_dir = programs.GetProgramInstallDir("RetroArch", "windows"),
+                install_dir = programs.get_program_install_dir("RetroArch", "windows"),
                 preferred_archive = "RetroArch.7z",
                 search_file = "retroarch.exe",
                 verbose = setup_params.verbose,
@@ -183,9 +183,9 @@ class RetroArch(emulatorbase.EmulatorBase):
                 logger.log_error("Could not setup RetroArch")
                 return False
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetProgramBackupDir("RetroArch", "windows"),
+                archive_dir = programs.get_program_backup_dir("RetroArch", "windows"),
                 install_name = "RetroArch",
-                install_dir = programs.GetEmulatorPathConfigValue("RetroArch", "cores_dir", "windows"),
+                install_dir = programs.get_emulator_path_config_value("RetroArch", "cores_dir", "windows"),
                 preferred_archive = "RetroArch_cores.7z",
                 search_file = "snes9x_libretro.dll",
                 verbose = setup_params.verbose,
@@ -196,11 +196,11 @@ class RetroArch(emulatorbase.EmulatorBase):
                 return False
 
         # Setup linux program
-        if programs.ShouldProgramBeInstalled("RetroArch", "linux"):
+        if programs.should_program_be_installed("RetroArch", "linux"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetProgramBackupDir("RetroArch", "linux"),
+                archive_dir = programs.get_program_backup_dir("RetroArch", "linux"),
                 install_name = "RetroArch",
-                install_dir = programs.GetProgramInstallDir("RetroArch", "linux"),
+                install_dir = programs.get_program_install_dir("RetroArch", "linux"),
                 preferred_archive = "RetroArch.7z",
                 search_file = "RetroArch-Linux-x86_64.AppImage",
                 verbose = setup_params.verbose,
@@ -210,9 +210,9 @@ class RetroArch(emulatorbase.EmulatorBase):
                 logger.log_error("Could not setup RetroArch")
                 return False
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetProgramBackupDir("RetroArch", "linux"),
+                archive_dir = programs.get_program_backup_dir("RetroArch", "linux"),
                 install_name = "RetroArch",
-                install_dir = programs.GetEmulatorPathConfigValue("RetroArch", "cores_dir", "linux"),
+                install_dir = programs.get_emulator_path_config_value("RetroArch", "cores_dir", "linux"),
                 preferred_archive = "RetroArch_cores.7z",
                 search_file = "snes9x_libretro.so",
                 verbose = setup_params.verbose,
@@ -257,7 +257,7 @@ class RetroArch(emulatorbase.EmulatorBase):
             for platform in ["windows", "linux"]:
                 success = fileops.smart_copy(
                     src = paths.join_paths(environment.get_locker_gaming_emulator_setup_dir("RetroArch"), filename),
-                    dest = paths.join_paths(programs.GetEmulatorPathConfigValue("RetroArch", "setup_dir", platform), filename),
+                    dest = paths.join_paths(programs.get_emulator_path_config_value("RetroArch", "setup_dir", platform), filename),
                     verbose = setup_params.verbose,
                     pretend_run = setup_params.pretend_run,
                     exit_on_failure = setup_params.exit_on_failure)
@@ -281,9 +281,9 @@ class RetroArch(emulatorbase.EmulatorBase):
         game_platform = game_info.get_platform()
 
         # Get core info
-        cores_dir = programs.GetEmulatorPathConfigValue("RetroArch", "cores_dir")
-        cores_ext = programs.GetEmulatorConfigValue("RetroArch", "cores_ext")
-        cores_mapping = programs.GetEmulatorConfigValue("RetroArch", "cores_mapping")
+        cores_dir = programs.get_emulator_path_config_value("RetroArch", "cores_dir")
+        cores_ext = programs.get_emulator_config_value("RetroArch", "cores_ext")
+        cores_mapping = programs.get_emulator_config_value("RetroArch", "cores_mapping")
 
         # Check if this platform is valid
         if not game_platform in cores_mapping:
@@ -300,7 +300,7 @@ class RetroArch(emulatorbase.EmulatorBase):
 
         # Get launch command
         launch_cmd = [
-            programs.GetEmulatorProgram("RetroArch"),
+            programs.get_emulator_program("RetroArch"),
             "-L", paths.join_paths(cores_dir, cores_mapping[game_platform] + cores_ext),
             config.token_game_file
         ]

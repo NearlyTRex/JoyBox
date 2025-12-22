@@ -49,13 +49,13 @@ class KegaFusion(emulatorbase.EmulatorBase):
             setup_params = config.SetupParams()
 
         # Download windows program
-        if programs.ShouldProgramBeInstalled("KegaFusion", "windows"):
+        if programs.should_program_be_installed("KegaFusion", "windows"):
             success = release.DownloadGeneralRelease(
                 archive_url = "https://retrocdn.net/images/6/6c/Fusion364.7z",
                 search_file = "Fusion.exe",
                 install_name = "KegaFusion",
-                install_dir = programs.GetProgramInstallDir("KegaFusion", "windows"),
-                backups_dir = programs.GetProgramBackupDir("KegaFusion", "windows"),
+                install_dir = programs.get_program_install_dir("KegaFusion", "windows"),
+                backups_dir = programs.get_program_backup_dir("KegaFusion", "windows"),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
@@ -70,11 +70,11 @@ class KegaFusion(emulatorbase.EmulatorBase):
             setup_params = config.SetupParams()
 
         # Setup windows program
-        if programs.ShouldProgramBeInstalled("KegaFusion", "windows"):
+        if programs.should_program_be_installed("KegaFusion", "windows"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetProgramBackupDir("KegaFusion", "windows"),
+                archive_dir = programs.get_program_backup_dir("KegaFusion", "windows"),
                 install_name = "KegaFusion",
-                install_dir = programs.GetProgramInstallDir("KegaFusion", "windows"),
+                install_dir = programs.get_program_install_dir("KegaFusion", "windows"),
                 search_file = "Fusion.exe",
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,

@@ -46,7 +46,7 @@ class Sunshine(toolbase.ToolBase):
             setup_params = config.SetupParams()
 
         # Download windows program
-        if programs.ShouldProgramBeInstalled("Sunshine", "windows"):
+        if programs.should_program_be_installed("Sunshine", "windows"):
             success = release.DownloadGithubRelease(
                 github_user = "LizardByte",
                 github_repo = "Sunshine",
@@ -54,8 +54,8 @@ class Sunshine(toolbase.ToolBase):
                 ends_with = "windows.zip",
                 search_file = "sunshine.exe",
                 install_name = "Sunshine",
-                install_dir = programs.GetProgramInstallDir("Sunshine", "windows"),
-                backups_dir = programs.GetProgramBackupDir("Sunshine", "windows"),
+                install_dir = programs.get_program_install_dir("Sunshine", "windows"),
+                backups_dir = programs.get_program_backup_dir("Sunshine", "windows"),
                 install_files = ["sunshine.exe", "assets", "scripts", "tools"],
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
@@ -65,7 +65,7 @@ class Sunshine(toolbase.ToolBase):
                 return False
 
         # Download linux program
-        if programs.ShouldProgramBeInstalled("Sunshine", "linux"):
+        if programs.should_program_be_installed("Sunshine", "linux"):
             success = release.DownloadGithubRelease(
                 github_user = "LizardByte",
                 github_repo = "Sunshine",
@@ -73,8 +73,8 @@ class Sunshine(toolbase.ToolBase):
                 ends_with = ".AppImage",
                 search_file = "Sunshine.AppImage",
                 install_name = "Sunshine",
-                install_dir = programs.GetProgramInstallDir("Sunshine", "linux"),
-                backups_dir = programs.GetProgramBackupDir("Sunshine", "linux"),
+                install_dir = programs.get_program_install_dir("Sunshine", "linux"),
+                backups_dir = programs.get_program_backup_dir("Sunshine", "linux"),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
@@ -89,11 +89,11 @@ class Sunshine(toolbase.ToolBase):
             setup_params = config.SetupParams()
 
         # Setup windows program
-        if programs.ShouldProgramBeInstalled("Sunshine", "windows"):
+        if programs.should_program_be_installed("Sunshine", "windows"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetProgramBackupDir("Sunshine", "windows"),
+                archive_dir = programs.get_program_backup_dir("Sunshine", "windows"),
                 install_name = "Sunshine",
-                install_dir = programs.GetProgramInstallDir("Sunshine", "windows"),
+                install_dir = programs.get_program_install_dir("Sunshine", "windows"),
                 search_file = "sunshine.exe",
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
@@ -103,11 +103,11 @@ class Sunshine(toolbase.ToolBase):
                 return False
 
         # Setup linux program
-        if programs.ShouldProgramBeInstalled("Sunshine", "linux"):
+        if programs.should_program_be_installed("Sunshine", "linux"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetProgramBackupDir("Sunshine", "linux"),
+                archive_dir = programs.get_program_backup_dir("Sunshine", "linux"),
                 install_name = "Sunshine",
-                install_dir = programs.GetProgramInstallDir("Sunshine", "linux"),
+                install_dir = programs.get_program_install_dir("Sunshine", "linux"),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)

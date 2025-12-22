@@ -25,7 +25,7 @@ class EmulatorBase:
 
     # Get config file
     def get_config_file(self, emulator_platform = None):
-        return programs.GetPathConfigValue(
+        return programs.get_path_config_value(
             program_config = self.get_config(),
             base_dir = environment.get_emulators_root_dir(),
             program_name = self.get_name(),
@@ -34,7 +34,7 @@ class EmulatorBase:
 
     # Get setup dir
     def get_setup_dir(self, emulator_platform = None):
-        return programs.GetPathConfigValue(
+        return programs.get_path_config_value(
             program_config = self.get_config(),
             base_dir = environment.get_emulators_root_dir(),
             program_name = self.get_name(),
@@ -47,7 +47,7 @@ class EmulatorBase:
 
     # Get save base dir
     def get_save_base_dir(self, emulator_platform = None):
-        return programs.GetPathConfigValue(
+        return programs.get_path_config_value(
             program_config = self.get_config(),
             base_dir = environment.get_emulators_root_dir(),
             program_name = self.get_name(),
@@ -56,7 +56,7 @@ class EmulatorBase:
 
     # Get save sub dirs
     def get_save_sub_dirs(self, emulator_platform = None):
-        return programs.GetConfigValue(
+        return programs.get_config_value(
             program_config = self.get_config(),
             program_name = self.get_name(),
             program_key = "save_sub_dirs",
@@ -70,7 +70,7 @@ class EmulatorBase:
             emulator_platform = environment.get_current_platform()
 
         # Get basic saves dir
-        saves_dir = programs.GetPathConfigValue(
+        saves_dir = programs.get_path_config_value(
             program_config = self.get_config(),
             base_dir = environment.get_emulators_root_dir(),
             program_name = self.get_name(),

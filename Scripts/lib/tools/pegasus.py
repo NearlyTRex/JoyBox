@@ -76,7 +76,7 @@ class Pegasus(toolbase.ToolBase):
             setup_params = config.SetupParams()
 
         # Download windows program
-        if programs.ShouldProgramBeInstalled("Pegasus", "windows"):
+        if programs.should_program_be_installed("Pegasus", "windows"):
             success = release.DownloadGithubRelease(
                 github_user = "mmatyas",
                 github_repo = "pegasus-frontend",
@@ -84,8 +84,8 @@ class Pegasus(toolbase.ToolBase):
                 ends_with = "win-mingw-static.zip",
                 search_file = "pegasus-fe.exe",
                 install_name = "Pegasus",
-                install_dir = programs.GetProgramInstallDir("Pegasus", "windows"),
-                backups_dir = programs.GetProgramBackupDir("Pegasus", "windows"),
+                install_dir = programs.get_program_install_dir("Pegasus", "windows"),
+                backups_dir = programs.get_program_backup_dir("Pegasus", "windows"),
                 install_files = ["pegasus-fe.exe"],
                 get_latest = True,
                 verbose = setup_params.verbose,
@@ -97,7 +97,7 @@ class Pegasus(toolbase.ToolBase):
             success = network.DownloadGithubRepository(
                 github_user = "NearlyTRex",
                 github_repo = "PegasusThemeGrid",
-                output_dir = paths.join_paths(programs.GetToolPathConfigValue("Pegasus", "themes_dir", "windows"), "PegasusThemeGrid"),
+                output_dir = paths.join_paths(programs.get_tool_path_config_value("Pegasus", "themes_dir", "windows"), "PegasusThemeGrid"),
                 clean = True,
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
@@ -107,13 +107,13 @@ class Pegasus(toolbase.ToolBase):
                 return False
 
         # Build linux program
-        if programs.ShouldProgramBeInstalled("Pegasus", "linux"):
+        if programs.should_program_be_installed("Pegasus", "linux"):
             success = release.BuildAppImageFromSource(
                 release_url = "https://github.com/NearlyTRex/Pegasus.git",
                 output_file = "App-x86_64.AppImage",
                 install_name = "Pegasus",
-                install_dir = programs.GetProgramInstallDir("Pegasus", "linux"),
-                backups_dir = programs.GetProgramBackupDir("Pegasus", "linux"),
+                install_dir = programs.get_program_install_dir("Pegasus", "linux"),
+                backups_dir = programs.get_program_backup_dir("Pegasus", "linux"),
                 build_cmd = [
                     "qmake", "..", "CONFIG+=release", "USE_SDL_GAMEPAD=1",
                     "&&",
@@ -138,7 +138,7 @@ class Pegasus(toolbase.ToolBase):
             success = network.DownloadGithubRepository(
                 github_user = "NearlyTRex",
                 github_repo = "PegasusThemeGrid",
-                output_dir = paths.join_paths(programs.GetToolPathConfigValue("Pegasus", "themes_dir", "linux"), "PegasusThemeGrid"),
+                output_dir = paths.join_paths(programs.get_tool_path_config_value("Pegasus", "themes_dir", "linux"), "PegasusThemeGrid"),
                 clean = True,
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
@@ -154,11 +154,11 @@ class Pegasus(toolbase.ToolBase):
             setup_params = config.SetupParams()
 
         # Setup windows program
-        if programs.ShouldProgramBeInstalled("Pegasus", "windows"):
+        if programs.should_program_be_installed("Pegasus", "windows"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetProgramBackupDir("Pegasus", "windows"),
+                archive_dir = programs.get_program_backup_dir("Pegasus", "windows"),
                 install_name = "Pegasus",
-                install_dir = programs.GetProgramInstallDir("Pegasus", "windows"),
+                install_dir = programs.get_program_install_dir("Pegasus", "windows"),
                 search_file = "pegasus-fe.exe",
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
@@ -168,11 +168,11 @@ class Pegasus(toolbase.ToolBase):
                 return False
 
         # Setup linux program
-        if programs.ShouldProgramBeInstalled("Pegasus", "linux"):
+        if programs.should_program_be_installed("Pegasus", "linux"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetProgramBackupDir("Pegasus", "linux"),
+                archive_dir = programs.get_program_backup_dir("Pegasus", "linux"),
                 install_name = "Pegasus",
-                install_dir = programs.GetProgramInstallDir("Pegasus", "linux"),
+                install_dir = programs.get_program_install_dir("Pegasus", "linux"),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)

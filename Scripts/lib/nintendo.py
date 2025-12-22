@@ -28,8 +28,8 @@ def EncryptNDSRom(
 
     # Get tool
     encrypt_tool = None
-    if programs.IsToolInstalled("NDecrypt"):
-        encrypt_tool = programs.GetToolProgram("NDecrypt")
+    if programs.is_tool_installed("NDecrypt"):
+        encrypt_tool = programs.get_tool_program("NDecrypt")
     if not encrypt_tool:
         logger.log_error("NDecrypt was not found")
         return False
@@ -42,9 +42,9 @@ def EncryptNDSRom(
     encrypt_cmd += [nds_file]
 
     # Run encrypt command
-    code = command.RunReturncodeCommand(
+    code = command.run_returncode_command(
         cmd = encrypt_cmd,
-        options = command.CreateCommandOptions(
+        options = command.create_command_options(
             blocking_processes = [encrypt_tool]),
         verbose = verbose,
         pretend_run = pretend_run,
@@ -61,8 +61,8 @@ def DecryptNDSRom(
 
     # Get tool
     decrypt_tool = None
-    if programs.IsToolInstalled("NDecrypt"):
-        decrypt_tool = programs.GetToolProgram("NDecrypt")
+    if programs.is_tool_installed("NDecrypt"):
+        decrypt_tool = programs.get_tool_program("NDecrypt")
     if not decrypt_tool:
         logger.log_error("NDecrypt was not found")
         return False
@@ -75,9 +75,9 @@ def DecryptNDSRom(
     decrypt_cmd += [nds_file]
 
     # Run decrypt command
-    code = command.RunReturncodeCommand(
+    code = command.run_returncode_command(
         cmd = decrypt_cmd,
-        options = command.CreateCommandOptions(
+        options = command.create_command_options(
             blocking_processes = [decrypt_tool]),
         verbose = verbose,
         pretend_run = pretend_run,
@@ -98,8 +98,8 @@ def Convert3DSCIAtoCCI(
 
     # Get tool
     convert_tool = None
-    if programs.IsToolInstalled("CtrMakeRom"):
-        convert_tool = programs.GetToolProgram("CtrMakeRom")
+    if programs.is_tool_installed("CtrMakeRom"):
+        convert_tool = programs.get_tool_program("CtrMakeRom")
     if not convert_tool:
         logger.log_error("CtrMakeRom was not found")
         return False
@@ -113,9 +113,9 @@ def Convert3DSCIAtoCCI(
     ]
 
     # Run convert command
-    code = command.RunReturncodeCommand(
+    code = command.run_returncode_command(
         cmd = convert_cmd,
-        options = command.CreateCommandOptions(
+        options = command.create_command_options(
             blocking_processes = [convert_tool]),
         verbose = verbose,
         pretend_run = pretend_run,
@@ -136,8 +136,8 @@ def Convert3DSCCItoCIA(
 
     # Get tool
     convert_tool = None
-    if programs.IsToolInstalled("CtrMakeRom"):
-        convert_tool = programs.GetToolProgram("CtrMakeRom")
+    if programs.is_tool_installed("CtrMakeRom"):
+        convert_tool = programs.get_tool_program("CtrMakeRom")
     if not convert_tool:
         logger.log_error("CtrMakeRom was not found")
         return False
@@ -151,9 +151,9 @@ def Convert3DSCCItoCIA(
     ]
 
     # Run convert command
-    code = command.RunReturncodeCommand(
+    code = command.run_returncode_command(
         cmd = convert_cmd,
-        options = command.CreateCommandOptions(
+        options = command.create_command_options(
             blocking_processes = [convert_tool]),
         verbose = verbose,
         pretend_run = pretend_run,
@@ -174,8 +174,8 @@ def Trim3DSCCI(
 
     # Get tool
     trim_tool = None
-    if programs.IsToolInstalled("3DSRomTool"):
-        trim_tool = programs.GetToolProgram("3DSRomTool")
+    if programs.is_tool_installed("3DSRomTool"):
+        trim_tool = programs.get_tool_program("3DSRomTool")
     if not trim_tool:
         logger.log_error("3DSRomTool was not found")
         return False
@@ -204,9 +204,9 @@ def Trim3DSCCI(
     ]
 
     # Run trim command
-    code = command.RunReturncodeCommand(
+    code = command.run_returncode_command(
         cmd = trim_cmd,
-        options = command.CreateCommandOptions(
+        options = command.create_command_options(
             blocking_processes = [trim_tool]),
         verbose = verbose,
         pretend_run = pretend_run,
@@ -242,8 +242,8 @@ def Untrim3DSCCI(
 
     # Get tool
     trim_tool = None
-    if programs.IsToolInstalled("3DSRomTool"):
-        trim_tool = programs.GetToolProgram("3DSRomTool")
+    if programs.is_tool_installed("3DSRomTool"):
+        trim_tool = programs.get_tool_program("3DSRomTool")
     if not trim_tool:
         logger.log_error("3DSRomTool was not found")
         return False
@@ -274,9 +274,9 @@ def Untrim3DSCCI(
     ]
 
     # Run trim command
-    code = command.RunReturncodeCommand(
+    code = command.run_returncode_command(
         cmd = trim_cmd,
-        options = command.CreateCommandOptions(
+        options = command.create_command_options(
             blocking_processes = [trim_tool]),
         verbose = verbose,
         pretend_run = pretend_run,
@@ -312,8 +312,8 @@ def Extract3DSCIA(
 
     # Get tool
     extract_tool = None
-    if programs.IsToolInstalled("CtrTool"):
-        extract_tool = programs.GetToolProgram("CtrTool")
+    if programs.is_tool_installed("CtrTool"):
+        extract_tool = programs.get_tool_program("CtrTool")
     if not extract_tool:
         logger.log_error("CtrTool was not found")
         return False
@@ -342,9 +342,9 @@ def Extract3DSCIA(
     ]
 
     # Run extract command
-    code = command.RunReturncodeCommand(
+    code = command.run_returncode_command(
         cmd = extract_cmd,
-        options = command.CreateCommandOptions(
+        options = command.create_command_options(
             blocking_processes = [extract_tool]),
         verbose = verbose,
         pretend_run = pretend_run,
@@ -391,8 +391,8 @@ def Get3DSFileInfo(
 
     # Get tool
     print_tool = None
-    if programs.IsToolInstalled("CtrTool"):
-        print_tool = programs.GetToolProgram("CtrTool")
+    if programs.is_tool_installed("CtrTool"):
+        print_tool = programs.get_tool_program("CtrTool")
     if not print_tool:
         logger.log_error("CtrTool was not found")
         return ""
@@ -404,9 +404,9 @@ def Get3DSFileInfo(
     ]
 
     # Run print command
-    output = command.RunOutputCommand(
+    output = command.run_output_command(
         cmd = print_cmd,
-        options = command.CreateCommandOptions(
+        options = command.create_command_options(
             blocking_processes = [print_tool]),
         verbose = verbose,
         pretend_run = pretend_run,
@@ -474,8 +474,8 @@ def DecryptWiiUNUSPackage(
 
     # Get tool
     decrypt_tool = None
-    if programs.IsToolInstalled("CDecrypt"):
-        decrypt_tool = programs.GetToolProgram("CDecrypt")
+    if programs.is_tool_installed("CDecrypt"):
+        decrypt_tool = programs.get_tool_program("CDecrypt")
     if not decrypt_tool:
         logger.log_error("CDecrypt was not found")
         return False
@@ -494,9 +494,9 @@ def DecryptWiiUNUSPackage(
     ]
 
     # Run decrypt command
-    code = command.RunReturncodeCommand(
+    code = command.run_returncode_command(
         cmd = decrypt_cmd,
-        options = command.CreateCommandOptions(
+        options = command.create_command_options(
             cwd = nus_package_dir,
             output_paths = [nus_package_dir],
             blocking_processes = [decrypt_tool]),
@@ -760,16 +760,16 @@ def TrimSwitchXCI(
 
     # Get tool
     python_tool = None
-    if programs.IsToolInstalled("PythonVenvPython"):
-        python_tool = programs.GetToolProgram("PythonVenvPython")
+    if programs.is_tool_installed("PythonVenvPython"):
+        python_tool = programs.get_tool_program("PythonVenvPython")
     if not python_tool:
         logger.log_error("PythonVenvPython was not found")
         return False
 
     # Get script
     trim_script = None
-    if programs.IsToolInstalled("XCITrimmer"):
-        trim_script = programs.GetToolProgram("XCITrimmer")
+    if programs.is_tool_installed("XCITrimmer"):
+        trim_script = programs.get_tool_program("XCITrimmer")
     if not trim_script:
         logger.log_error("XCITrimmer was not found")
         return False
@@ -802,7 +802,7 @@ def TrimSwitchXCI(
     ]
 
     # Run trim command
-    code = command.RunReturncodeCommand(
+    code = command.run_returncode_command(
         cmd = trim_cmd,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -845,16 +845,16 @@ def UntrimSwitchXCI(
 
     # Get tool
     python_tool = None
-    if programs.IsToolInstalled("PythonVenvPython"):
-        python_tool = programs.GetToolProgram("PythonVenvPython")
+    if programs.is_tool_installed("PythonVenvPython"):
+        python_tool = programs.get_tool_program("PythonVenvPython")
     if not python_tool:
         logger.log_error("PythonVenvPython was not found")
         return False
 
     # Get script
     untrim_script = None
-    if programs.IsToolInstalled("XCITrimmer"):
-        untrim_script = programs.GetToolProgram("XCITrimmer")
+    if programs.is_tool_installed("XCITrimmer"):
+        untrim_script = programs.get_tool_program("XCITrimmer")
     if not untrim_script:
         logger.log_error("XCITrimmer was not found")
         return False
@@ -887,7 +887,7 @@ def UntrimSwitchXCI(
     ]
 
     # Run untrim command
-    code = command.RunReturncodeCommand(
+    code = command.run_returncode_command(
         cmd = untrim_cmd,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -929,8 +929,8 @@ def ExtractSwitchNSP(
 
     # Get tool
     extract_tool = None
-    if programs.IsToolInstalled("HacTool"):
-        extract_tool = programs.GetToolProgram("HacTool")
+    if programs.is_tool_installed("HacTool"):
+        extract_tool = programs.get_tool_program("HacTool")
     if not extract_tool:
         logger.log_error("HacTool was not found")
         return False
@@ -945,9 +945,9 @@ def ExtractSwitchNSP(
     ]
 
     # Run extract command
-    code = command.RunReturncodeCommand(
+    code = command.run_returncode_command(
         cmd = extract_cmd,
-        options = command.CreateCommandOptions(
+        options = command.create_command_options(
             output_paths = [extract_dir],
             blocking_processes = [extract_tool]),
         verbose = verbose,

@@ -37,11 +37,11 @@ class HeroicGogDL(toolbase.ToolBase):
             setup_params = config.SetupParams()
 
         # Download library
-        if programs.ShouldLibraryBeInstalled("HeroicGogDL"):
+        if programs.should_library_be_installed("HeroicGogDL"):
             success = network.DownloadGithubRepository(
                 github_user = "NearlyTRex",
                 github_repo = "HeroicGogDL",
-                output_dir = programs.GetLibraryInstallDir("HeroicGogDL", "lib"),
+                output_dir = programs.get_library_install_dir("HeroicGogDL", "lib"),
                 clean = True,
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
@@ -52,7 +52,7 @@ class HeroicGogDL(toolbase.ToolBase):
             success = network.ArchiveGithubRepository(
                 github_user = "NearlyTRex",
                 github_repo = "HeroicGogDL",
-                output_dir = programs.GetLibraryBackupDir("HeroicGogDL", "lib"),
+                output_dir = programs.get_library_backup_dir("HeroicGogDL", "lib"),
                 recursive = True,
                 clean = True,
                 verbose = setup_params.verbose,
@@ -69,11 +69,11 @@ class HeroicGogDL(toolbase.ToolBase):
             setup_params = config.SetupParams()
 
         # Setup library
-        if programs.ShouldLibraryBeInstalled("HeroicGogDL"):
+        if programs.should_library_be_installed("HeroicGogDL"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetLibraryBackupDir("HeroicGogDL", "lib"),
+                archive_dir = programs.get_library_backup_dir("HeroicGogDL", "lib"),
                 install_name = "HeroicGogDL",
-                install_dir = programs.GetLibraryInstallDir("HeroicGogDL", "lib"),
+                install_dir = programs.get_library_install_dir("HeroicGogDL", "lib"),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)

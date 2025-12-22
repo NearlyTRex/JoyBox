@@ -35,11 +35,11 @@ class LudusaviManifest(toolbase.ToolBase):
             setup_params = config.SetupParams()
 
         # Download library
-        if programs.ShouldLibraryBeInstalled("LudusaviManifest"):
+        if programs.should_library_be_installed("LudusaviManifest"):
             success = network.DownloadGithubRepository(
                 github_user = "NearlyTRex",
                 github_repo = "LudusaviManifest",
-                output_dir = programs.GetLibraryInstallDir("LudusaviManifest", "lib"),
+                output_dir = programs.get_library_install_dir("LudusaviManifest", "lib"),
                 clean = True,
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
@@ -50,7 +50,7 @@ class LudusaviManifest(toolbase.ToolBase):
             success = network.ArchiveGithubRepository(
                 github_user = "NearlyTRex",
                 github_repo = "LudusaviManifest",
-                output_dir = programs.GetLibraryBackupDir("LudusaviManifest", "lib"),
+                output_dir = programs.get_library_backup_dir("LudusaviManifest", "lib"),
                 recursive = True,
                 clean = True,
                 verbose = setup_params.verbose,
@@ -67,11 +67,11 @@ class LudusaviManifest(toolbase.ToolBase):
             setup_params = config.SetupParams()
 
         # Setup library
-        if programs.ShouldLibraryBeInstalled("LudusaviManifest"):
+        if programs.should_library_be_installed("LudusaviManifest"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetLibraryBackupDir("LudusaviManifest", "lib"),
+                archive_dir = programs.get_library_backup_dir("LudusaviManifest", "lib"),
                 install_name = "LudusaviManifest",
-                install_dir = programs.GetLibraryInstallDir("LudusaviManifest", "lib"),
+                install_dir = programs.get_library_install_dir("LudusaviManifest", "lib"),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)

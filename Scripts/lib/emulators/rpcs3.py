@@ -74,7 +74,7 @@ class RPCS3(emulatorbase.EmulatorBase):
             setup_params = config.SetupParams()
 
         # Download windows program
-        if programs.ShouldProgramBeInstalled("RPCS3", "windows"):
+        if programs.should_program_be_installed("RPCS3", "windows"):
             success = release.DownloadGithubRelease(
                 github_user = "RPCS3",
                 github_repo = "rpcs3-binaries-win",
@@ -82,8 +82,8 @@ class RPCS3(emulatorbase.EmulatorBase):
                 ends_with = "win64.7z",
                 search_file = "rpcs3.exe",
                 install_name = "RPCS3",
-                install_dir = programs.GetProgramInstallDir("RPCS3", "windows"),
-                backups_dir = programs.GetProgramBackupDir("RPCS3", "windows"),
+                install_dir = programs.get_program_install_dir("RPCS3", "windows"),
+                backups_dir = programs.get_program_backup_dir("RPCS3", "windows"),
                 get_latest = True,
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
@@ -93,15 +93,15 @@ class RPCS3(emulatorbase.EmulatorBase):
                 return False
 
         # Download linux program
-        if programs.ShouldProgramBeInstalled("RPCS3", "linux"):
+        if programs.should_program_be_installed("RPCS3", "linux"):
             success = release.DownloadGithubRelease(
                 github_user = "RPCS3",
                 github_repo = "rpcs3-binaries-linux",
                 starts_with = "rpcs3",
                 ends_with = ".AppImage",
                 install_name = "RPCS3",
-                install_dir = programs.GetProgramInstallDir("RPCS3", "linux"),
-                backups_dir = programs.GetProgramBackupDir("RPCS3", "linux"),
+                install_dir = programs.get_program_install_dir("RPCS3", "linux"),
+                backups_dir = programs.get_program_backup_dir("RPCS3", "linux"),
                 get_latest = True,
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
@@ -117,11 +117,11 @@ class RPCS3(emulatorbase.EmulatorBase):
             setup_params = config.SetupParams()
 
         # Setup windows program
-        if programs.ShouldProgramBeInstalled("RPCS3", "windows"):
+        if programs.should_program_be_installed("RPCS3", "windows"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetProgramBackupDir("RPCS3", "windows"),
+                archive_dir = programs.get_program_backup_dir("RPCS3", "windows"),
                 install_name = "RPCS3",
-                install_dir = programs.GetProgramInstallDir("RPCS3", "windows"),
+                install_dir = programs.get_program_install_dir("RPCS3", "windows"),
                 search_file = "rpcs3.exe",
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
@@ -131,11 +131,11 @@ class RPCS3(emulatorbase.EmulatorBase):
                 return False
 
         # Setup linux program
-        if programs.ShouldProgramBeInstalled("RPCS3", "linux"):
+        if programs.should_program_be_installed("RPCS3", "linux"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetProgramBackupDir("RPCS3", "linux"),
+                archive_dir = programs.get_program_backup_dir("RPCS3", "linux"),
                 install_name = "RPCS3",
-                install_dir = programs.GetProgramInstallDir("RPCS3", "linux"),
+                install_dir = programs.get_program_install_dir("RPCS3", "linux"),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
@@ -179,7 +179,7 @@ class RPCS3(emulatorbase.EmulatorBase):
                 if os.path.exists(paths.join_paths(environment.get_locker_gaming_emulator_setup_dir("RPCS3"), obj + config.ArchiveFileType.ZIP.cval())):
                     success = archive.ExtractArchive(
                         archive_file = paths.join_paths(environment.get_locker_gaming_emulator_setup_dir("RPCS3"), obj + config.ArchiveFileType.ZIP.cval()),
-                        extract_dir = paths.join_paths(programs.GetEmulatorPathConfigValue("RPCS3", "setup_dir", platform), obj),
+                        extract_dir = paths.join_paths(programs.get_emulator_path_config_value("RPCS3", "setup_dir", platform), obj),
                         skip_existing = True,
                         verbose = setup_params.verbose,
                         pretend_run = setup_params.pretend_run,
@@ -217,7 +217,7 @@ class RPCS3(emulatorbase.EmulatorBase):
 
         # Get launch command
         launch_cmd = [
-            programs.GetEmulatorProgram("RPCS3"),
+            programs.get_emulator_program("RPCS3"),
             config.token_game_file
         ]
         if fullscreen:

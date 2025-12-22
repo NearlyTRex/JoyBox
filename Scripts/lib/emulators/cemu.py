@@ -80,7 +80,7 @@ class Cemu(emulatorbase.EmulatorBase):
                         tik_dir = paths.get_filename_directory(tik_file)
                         success = nintendo.InstallWiiUNusPackage(
                             nus_package_dir = tik_dir,
-                            nand_dir = paths.join_paths(programs.GetEmulatorPathConfigValue("Cemu", "setup_dir"), "mlc01"),
+                            nand_dir = paths.join_paths(programs.get_emulator_path_config_value("Cemu", "setup_dir"), "mlc01"),
                             verbose = verbose,
                             pretend_run = pretend_run,
                             exit_on_failure = exit_on_failure)
@@ -94,7 +94,7 @@ class Cemu(emulatorbase.EmulatorBase):
             setup_params = config.SetupParams()
 
         # Download windows program
-        if programs.ShouldProgramBeInstalled("Cemu", "windows"):
+        if programs.should_program_be_installed("Cemu", "windows"):
             success = release.DownloadGithubRelease(
                 github_user = "cemu-project",
                 github_repo = "Cemu",
@@ -102,8 +102,8 @@ class Cemu(emulatorbase.EmulatorBase):
                 ends_with = "windows-x64.zip",
                 search_file = "Cemu.exe",
                 install_name = "Cemu",
-                install_dir = programs.GetProgramInstallDir("Cemu", "windows"),
-                backups_dir = programs.GetProgramBackupDir("Cemu", "windows"),
+                install_dir = programs.get_program_install_dir("Cemu", "windows"),
+                backups_dir = programs.get_program_backup_dir("Cemu", "windows"),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
@@ -112,15 +112,15 @@ class Cemu(emulatorbase.EmulatorBase):
                 return False
 
         # Download linux program
-        if programs.ShouldProgramBeInstalled("Cemu", "linux"):
+        if programs.should_program_be_installed("Cemu", "linux"):
             success = release.DownloadGithubRelease(
                 github_user = "cemu-project",
                 github_repo = "Cemu",
                 starts_with = "Cemu",
                 ends_with = ".AppImage",
                 install_name = "Cemu",
-                install_dir = programs.GetProgramInstallDir("Cemu", "linux"),
-                backups_dir = programs.GetProgramBackupDir("Cemu", "linux"),
+                install_dir = programs.get_program_install_dir("Cemu", "linux"),
+                backups_dir = programs.get_program_backup_dir("Cemu", "linux"),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
@@ -135,11 +135,11 @@ class Cemu(emulatorbase.EmulatorBase):
             setup_params = config.SetupParams()
 
         # Setup windows program
-        if programs.ShouldProgramBeInstalled("Cemu", "windows"):
+        if programs.should_program_be_installed("Cemu", "windows"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetProgramBackupDir("Cemu", "windows"),
+                archive_dir = programs.get_program_backup_dir("Cemu", "windows"),
                 install_name = "Cemu",
-                install_dir = programs.GetProgramInstallDir("Cemu", "windows"),
+                install_dir = programs.get_program_install_dir("Cemu", "windows"),
                 search_file = "Cemu.exe",
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
@@ -149,11 +149,11 @@ class Cemu(emulatorbase.EmulatorBase):
                 return False
 
         # Setup linux program
-        if programs.ShouldProgramBeInstalled("Cemu", "linux"):
+        if programs.should_program_be_installed("Cemu", "linux"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetProgramBackupDir("Cemu", "linux"),
+                archive_dir = programs.get_program_backup_dir("Cemu", "linux"),
                 install_name = "Cemu",
-                install_dir = programs.GetProgramInstallDir("Cemu", "linux"),
+                install_dir = programs.get_program_install_dir("Cemu", "linux"),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
@@ -200,14 +200,14 @@ class Cemu(emulatorbase.EmulatorBase):
                 for platform in ["windows", "linux"]:
                     nintendo.UpdateWiiUKeys(
                         src_key_file = key_file,
-                        dest_key_file = programs.GetEmulatorPathConfigValue("Cemu", "keys_file", platform),
+                        dest_key_file = programs.get_emulator_path_config_value("Cemu", "keys_file", platform),
                         verbose = verbose,
                         pretend_run = pretend_run,
                         exit_on_failure = exit_on_failure)
 
         # Get launch command
         launch_cmd = [
-            programs.GetEmulatorProgram("Cemu"),
+            programs.get_emulator_program("Cemu"),
             "-g", config.token_game_file
         ]
         if fullscreen:

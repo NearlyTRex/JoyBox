@@ -222,8 +222,8 @@ def CreateArchiveFromFile(
 
     # Get tool
     archive_tool = None
-    if programs.IsToolInstalled("7-Zip"):
-        archive_tool = programs.GetToolProgram("7-Zip")
+    if programs.is_tool_installed("7-Zip"):
+        archive_tool = programs.get_tool_program("7-Zip")
     if not archive_tool:
         logger.log_error("7-Zip was not found")
         return False
@@ -260,9 +260,9 @@ def CreateArchiveFromFile(
     ]
 
     # Run create command
-    code = command.RunReturncodeCommand(
+    code = command.run_returncode_command(
         cmd = create_command,
-        options = command.CreateCommandOptions(
+        options = command.create_command_options(
             cwd = paths.get_filename_directory(source_file),
             output_paths = [archive_file],
             blocking_processes = [archive_tool]),
@@ -303,8 +303,8 @@ def CreateArchiveFromFolder(
 
     # Get tool
     archive_tool = None
-    if programs.IsToolInstalled("7-Zip"):
-        archive_tool = programs.GetToolProgram("7-Zip")
+    if programs.is_tool_installed("7-Zip"):
+        archive_tool = programs.get_tool_program("7-Zip")
     if not archive_tool:
         logger.log_error("7-Zip was not found")
         return False
@@ -346,9 +346,9 @@ def CreateArchiveFromFolder(
     create_command += objs_to_add
 
     # Run create command
-    code = command.RunReturncodeCommand(
+    code = command.run_returncode_command(
         cmd = create_command,
-        options = command.CreateCommandOptions(
+        options = command.create_command_options(
             cwd = source_dir,
             output_paths = [archive_file],
             blocking_processes = [archive_tool]),
@@ -389,14 +389,14 @@ def ExtractArchive(
     # Get tool
     archive_tool = None
     if IsTarballArchive(archive_file):
-        if programs.IsToolInstalled("Tar"):
-            archive_tool = programs.GetToolProgram("Tar")
+        if programs.is_tool_installed("Tar"):
+            archive_tool = programs.get_tool_program("Tar")
         if not archive_tool:
             logger.log_error("Tar was not found")
             return False
     else:
-        if programs.IsToolInstalled("7-Zip"):
-            archive_tool = programs.GetToolProgram("7-Zip")
+        if programs.is_tool_installed("7-Zip"):
+            archive_tool = programs.get_tool_program("7-Zip")
         if not archive_tool:
             logger.log_error("7-Zip was not found")
             return False
@@ -439,9 +439,9 @@ def ExtractArchive(
             extract_cmd += ["-aoa"]
 
     # Run extract command
-    code = command.RunReturncodeCommand(
+    code = command.run_returncode_command(
         cmd = extract_cmd,
-        options = command.CreateCommandOptions(
+        options = command.create_command_options(
             output_paths = [extract_dir],
             blocking_processes = [archive_tool]),
         verbose = verbose,
@@ -470,8 +470,8 @@ def TestArchive(
 
     # Get tool
     archive_tool = None
-    if programs.IsToolInstalled("7-Zip"):
-        archive_tool = programs.GetToolProgram("7-Zip")
+    if programs.is_tool_installed("7-Zip"):
+        archive_tool = programs.get_tool_program("7-Zip")
     if not archive_tool:
         logger.log_error("7-Zip was not found")
         return False
@@ -484,9 +484,9 @@ def TestArchive(
     ]
 
     # Run test command
-    code = command.RunReturncodeCommand(
+    code = command.run_returncode_command(
         cmd = test_cmd,
-        options = command.CreateCommandOptions(
+        options = command.create_command_options(
             blocking_processes = [archive_tool]),
         verbose = verbose,
         pretend_run = pretend_run,
@@ -502,8 +502,8 @@ def ListArchive(
 
     # Get tool
     archive_tool = None
-    if programs.IsToolInstalled("7-Zip"):
-        archive_tool = programs.GetToolProgram("7-Zip")
+    if programs.is_tool_installed("7-Zip"):
+        archive_tool = programs.get_tool_program("7-Zip")
     if not archive_tool:
         logger.log_error("7-Zip was not found")
         return []
@@ -515,9 +515,9 @@ def ListArchive(
     ]
 
     # Run list command
-    list_output = command.RunOutputCommand(
+    list_output = command.run_output_command(
         cmd = list_command,
-        options = command.CreateCommandOptions(
+        options = command.create_command_options(
             blocking_processes=[archive_tool]),
         verbose = verbose,
         pretend_run = pretend_run,

@@ -65,7 +65,7 @@ class BigPEmu(emulatorbase.EmulatorBase):
             setup_params = config.SetupParams()
 
         # Download windows program
-        if programs.ShouldProgramBeInstalled("BigPEmu", "windows"):
+        if programs.should_program_be_installed("BigPEmu", "windows"):
             success = release.DownloadWebpageRelease(
                 webpage_url = "https://www.richwhitehouse.com/jaguar/index.php?content=download",
                 webpage_base_url = "https://www.richwhitehouse.com",
@@ -73,8 +73,8 @@ class BigPEmu(emulatorbase.EmulatorBase):
                 ends_with = ".zip",
                 search_file = "BigPEmu.exe",
                 install_name = "BigPEmu",
-                install_dir = programs.GetProgramInstallDir("BigPEmu", "windows"),
-                backups_dir = programs.GetProgramBackupDir("BigPEmu", "windows"),
+                install_dir = programs.get_program_install_dir("BigPEmu", "windows"),
+                backups_dir = programs.get_program_backup_dir("BigPEmu", "windows"),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
@@ -89,11 +89,11 @@ class BigPEmu(emulatorbase.EmulatorBase):
             setup_params = config.SetupParams()
 
         # Setup windows program
-        if programs.ShouldProgramBeInstalled("BigPEmu", "windows"):
+        if programs.should_program_be_installed("BigPEmu", "windows"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetProgramBackupDir("BigPEmu", "windows"),
+                archive_dir = programs.get_program_backup_dir("BigPEmu", "windows"),
                 install_name = "BigPEmu",
-                install_dir = programs.GetProgramInstallDir("BigPEmu", "windows"),
+                install_dir = programs.get_program_install_dir("BigPEmu", "windows"),
                 search_file = "BigPEmu.exe",
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
@@ -134,7 +134,7 @@ class BigPEmu(emulatorbase.EmulatorBase):
 
         # Get launch command
         launch_cmd = [
-            programs.GetEmulatorProgram("BigPEmu"),
+            programs.get_emulator_program("BigPEmu"),
             config.token_game_file,
             "-localdata"
         ]

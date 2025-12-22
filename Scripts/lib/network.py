@@ -123,8 +123,8 @@ def DownloadUrl(
 
     # Get tool
     download_tool = None
-    if programs.IsToolInstalled("Curl"):
-        download_tool = programs.GetToolProgram("Curl")
+    if programs.is_tool_installed("Curl"):
+        download_tool = programs.get_tool_program("Curl")
     if not download_tool:
         logger.log_error("Curl was not found")
         return False
@@ -154,9 +154,9 @@ def DownloadUrl(
             exit_on_failure = exit_on_failure)
 
     # Run download command
-    code = command.RunReturncodeCommand(
+    code = command.run_returncode_command(
         cmd = download_cmd,
-        options = command.CreateCommandOptions(
+        options = command.create_command_options(
             blocking_processes = [download_tool]),
         verbose = verbose,
         pretend_run = pretend_run,
@@ -205,8 +205,8 @@ def DownloadGitUrl(
 
     # Get tool
     download_tool = None
-    if programs.IsToolInstalled("Git"):
-        download_tool = programs.GetToolProgram("Git")
+    if programs.is_tool_installed("Git"):
+        download_tool = programs.get_tool_program("Git")
     if not download_tool:
         logger.log_error("Git was not found")
         return False
@@ -224,9 +224,9 @@ def DownloadGitUrl(
     ]
 
     # Run download command
-    code = command.RunReturncodeCommand(
+    code = command.run_returncode_command(
         cmd = download_cmd,
-        options = command.CreateCommandOptions(
+        options = command.create_command_options(
             cwd = os.path.expanduser("~"),
             blocking_processes = [download_tool]),
         verbose = verbose,
@@ -252,7 +252,7 @@ def IsNetworkShareMounted(mount_dir, base_location, network_share):
 
     # Linux
     elif environment.is_linux_platform():
-        mount_lines = command.RunOutputCommand(
+        mount_lines = command.run_output_command(
             cmd = ["mount"])
         for line in mount_lines.split("\n"):
             if line.startswith("//%s/%s" % (base_location, network_share)):
@@ -292,7 +292,7 @@ def MountNetworkShare(
         ]
 
         # Run mount command
-        code = command.RunReturncodeCommand(
+        code = command.run_returncode_command(
             cmd = mount_cmd,
             verbose = verbose,
             pretend_run = pretend_run,
@@ -311,7 +311,7 @@ def MountNetworkShare(
         ]
 
         # Run mkdir command
-        code = command.RunReturncodeCommand(
+        code = command.run_returncode_command(
             cmd = mkdir_cmd,
             verbose = verbose,
             pretend_run = pretend_run,
@@ -334,7 +334,7 @@ def MountNetworkShare(
         ]
 
         # Run mount command
-        code = command.RunReturncodeCommand(
+        code = command.run_returncode_command(
             cmd = mount_cmd,
             verbose = verbose,
             pretend_run = pretend_run,

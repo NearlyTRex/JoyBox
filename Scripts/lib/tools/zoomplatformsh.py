@@ -34,7 +34,7 @@ class ZoomPlatformSH(toolbase.ToolBase):
             setup_params = config.SetupParams()
 
         # Download library
-        if programs.ShouldLibraryBeInstalled("ZoomPlatformSH"):
+        if programs.should_library_be_installed("ZoomPlatformSH"):
             success = release.DownloadGithubRelease(
                 github_user = "ZOOM-Platform",
                 github_repo = "zoom-platform.sh",
@@ -42,8 +42,8 @@ class ZoomPlatformSH(toolbase.ToolBase):
                 ends_with = ".sh",
                 search_file = "zoom-platform.sh",
                 install_name = "ZoomPlatformSH",
-                install_dir = programs.GetLibraryInstallDir("ZoomPlatformSH", "lib"),
-                backups_dir = programs.GetLibraryBackupDir("ZoomPlatformSH", "lib"),
+                install_dir = programs.get_library_install_dir("ZoomPlatformSH", "lib"),
+                backups_dir = programs.get_library_backup_dir("ZoomPlatformSH", "lib"),
                 install_files = ["zoom-platform.sh"],
                 release_type = config.ReleaseType.PROGRAM,
                 chmod_files = [
@@ -67,11 +67,11 @@ class ZoomPlatformSH(toolbase.ToolBase):
             setup_params = config.SetupParams()
 
         # Setup library
-        if programs.ShouldLibraryBeInstalled("ZoomPlatformSH"):
+        if programs.should_library_be_installed("ZoomPlatformSH"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetLibraryBackupDir("ZoomPlatformSH", "lib"),
+                archive_dir = programs.get_library_backup_dir("ZoomPlatformSH", "lib"),
                 install_name = "ZoomPlatformSH",
-                install_dir = programs.GetLibraryInstallDir("ZoomPlatformSH", "lib"),
+                install_dir = programs.get_library_install_dir("ZoomPlatformSH", "lib"),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)

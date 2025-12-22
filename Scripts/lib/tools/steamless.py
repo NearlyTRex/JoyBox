@@ -41,7 +41,7 @@ class Steamless(toolbase.ToolBase):
             setup_params = config.SetupParams()
 
         # Download windows program
-        if programs.ShouldProgramBeInstalled("Steamless", "windows"):
+        if programs.should_program_be_installed("Steamless", "windows"):
             success = release.DownloadGithubRelease(
                 github_user = "atom0s",
                 github_repo = "Steamless",
@@ -49,8 +49,8 @@ class Steamless(toolbase.ToolBase):
                 ends_with = ".zip",
                 search_file = "Steamless.CLI.exe",
                 install_name = "Steamless",
-                install_dir = programs.GetProgramInstallDir("Steamless", "windows"),
-                backups_dir = programs.GetProgramBackupDir("Steamless", "windows"),
+                install_dir = programs.get_program_install_dir("Steamless", "windows"),
+                backups_dir = programs.get_program_backup_dir("Steamless", "windows"),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
@@ -65,11 +65,11 @@ class Steamless(toolbase.ToolBase):
             setup_params = config.SetupParams()
 
         # Setup windows program
-        if programs.ShouldProgramBeInstalled("Steamless", "windows"):
+        if programs.should_program_be_installed("Steamless", "windows"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetProgramBackupDir("Steamless", "windows"),
+                archive_dir = programs.get_program_backup_dir("Steamless", "windows"),
                 install_name = "Steamless",
-                install_dir = programs.GetProgramInstallDir("Steamless", "windows"),
+                install_dir = programs.get_program_install_dir("Steamless", "windows"),
                 search_file = "Steamless.CLI.exe",
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,

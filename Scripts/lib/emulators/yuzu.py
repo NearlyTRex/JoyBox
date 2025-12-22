@@ -112,7 +112,7 @@ class Yuzu(emulatorbase.EmulatorBase):
                 for nsp_file in paths.build_file_list_by_extensions(package_dir, extensions = [".nsp"]):
                     success = nintendo.InstallSwitchNSP(
                         nsp_file = nsp_file,
-                        nand_dir = paths.join_paths(programs.GetEmulatorPathConfigValue("Yuzu", "setup_dir"), "nand"),
+                        nand_dir = paths.join_paths(programs.get_emulator_path_config_value("Yuzu", "setup_dir"), "nand"),
                         verbose = verbose,
                         pretend_run = pretend_run,
                         exit_on_failure = exit_on_failure)
@@ -126,11 +126,11 @@ class Yuzu(emulatorbase.EmulatorBase):
             setup_params = config.SetupParams()
 
         # Setup windows program
-        if programs.ShouldProgramBeInstalled("Yuzu", "windows"):
+        if programs.should_program_be_installed("Yuzu", "windows"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetProgramBackupDir("Yuzu", "windows"),
+                archive_dir = programs.get_program_backup_dir("Yuzu", "windows"),
                 install_name = "Yuzu",
-                install_dir = programs.GetProgramInstallDir("Yuzu", "windows"),
+                install_dir = programs.get_program_install_dir("Yuzu", "windows"),
                 preferred_archive = "Windows-Yuzu-EA-4176",
                 search_file = "yuzu.exe",
                 verbose = setup_params.verbose,
@@ -141,11 +141,11 @@ class Yuzu(emulatorbase.EmulatorBase):
                 return False
 
         # Setup linux program
-        if programs.ShouldProgramBeInstalled("Yuzu", "linux"):
+        if programs.should_program_be_installed("Yuzu", "linux"):
             success = release.SetupStoredRelease(
-                archive_dir = programs.GetProgramBackupDir("Yuzu", "linux"),
+                archive_dir = programs.get_program_backup_dir("Yuzu", "linux"),
                 install_name = "Yuzu",
-                install_dir = programs.GetProgramInstallDir("Yuzu", "linux"),
+                install_dir = programs.get_program_install_dir("Yuzu", "linux"),
                 preferred_archive = "Linux-Yuzu-EA-4176",
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
@@ -181,9 +181,9 @@ class Yuzu(emulatorbase.EmulatorBase):
         # Create profiles
         for platform in ["windows", "linux"]:
             success = nintendo.CreateSwitchProfilesDat(
-                profiles_file = programs.GetEmulatorPathConfigValue("Yuzu", "profiles_file", platform),
-                user_id = programs.GetEmulatorConfigValue("Yuzu", "profile_user_id"),
-                account_name = programs.GetEmulatorConfigValue("Yuzu", "profile_account_name"),
+                profiles_file = programs.get_emulator_path_config_value("Yuzu", "profiles_file", platform),
+                user_id = programs.get_emulator_config_value("Yuzu", "profile_user_id"),
+                account_name = programs.get_emulator_config_value("Yuzu", "profile_account_name"),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
@@ -208,7 +208,7 @@ class Yuzu(emulatorbase.EmulatorBase):
             for platform in ["windows", "linux"]:
                 success = fileops.smart_copy(
                     src = paths.join_paths(environment.get_locker_gaming_emulator_setup_dir("Yuzu"), filename),
-                    dest = paths.join_paths(programs.GetEmulatorPathConfigValue("Yuzu", "setup_dir", platform), filename),
+                    dest = paths.join_paths(programs.get_emulator_path_config_value("Yuzu", "setup_dir", platform), filename),
                     verbose = setup_params.verbose,
                     pretend_run = setup_params.pretend_run,
                     exit_on_failure = setup_params.exit_on_failure)
@@ -230,7 +230,7 @@ class Yuzu(emulatorbase.EmulatorBase):
 
         # Get launch command
         launch_cmd = [
-            programs.GetEmulatorProgram("Yuzu"),
+            programs.get_emulator_program("Yuzu"),
             "-g", config.token_game_file
         ]
         if fullscreen:
