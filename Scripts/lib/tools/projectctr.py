@@ -17,11 +17,11 @@ config_files = {}
 class ProjectCTR(toolbase.ToolBase):
 
     # Get name
-    def GetName(self):
+    def get_name(self):
         return "ProjectCTR"
 
     # Get config
-    def GetConfig(self):
+    def get_config(self):
         return {
 
             # CtrMakeRom
@@ -50,7 +50,7 @@ class ProjectCTR(toolbase.ToolBase):
         }
 
     # Setup
-    def Setup(self, setup_params = None):
+    def setup(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
 
@@ -146,7 +146,7 @@ class ProjectCTR(toolbase.ToolBase):
         return True
 
     # Setup offline
-    def SetupOffline(self, setup_params = None):
+    def setup_offline(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
 

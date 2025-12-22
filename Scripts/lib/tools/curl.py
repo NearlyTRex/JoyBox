@@ -15,11 +15,11 @@ config_files = {}
 class Curl(toolbase.ToolBase):
 
     # Get name
-    def GetName(self):
+    def get_name(self):
         return "Curl"
 
     # Get config
-    def GetConfig(self):
+    def get_config(self):
 
         # Get curl info
         curl_exe = ini.GetIniValue("Tools.Curl", "curl_exe")

@@ -17,11 +17,11 @@ config_files = {}
 class ExtractXIso(toolbase.ToolBase):
 
     # Get name
-    def GetName(self):
+    def get_name(self):
         return "ExtractXIso"
 
     # Get config
-    def GetConfig(self):
+    def get_config(self):
         return {
             "ExtractXIso": {
                 "program": {
@@ -36,7 +36,7 @@ class ExtractXIso(toolbase.ToolBase):
         }
 
     # Setup
-    def Setup(self, setup_params = None):
+    def setup(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
 
@@ -91,7 +91,7 @@ class ExtractXIso(toolbase.ToolBase):
         return True
 
     # Setup offline
-    def SetupOffline(self, setup_params = None):
+    def setup_offline(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
 

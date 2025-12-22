@@ -30,11 +30,11 @@ exec PYTHON_BIN "$0.py" "$@"
 class Python(toolbase.ToolBase):
 
     # Get name
-    def GetName(self):
+    def get_name(self):
         return "Python"
 
     # Get config
-    def GetConfig(self):
+    def get_config(self):
 
         # Get python info
         python_exe = ini.GetIniValue("Tools.Python", "python_exe")
@@ -69,7 +69,7 @@ class Python(toolbase.ToolBase):
         }
 
     # Configure
-    def Configure(self, setup_params = None):
+    def configure(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
 

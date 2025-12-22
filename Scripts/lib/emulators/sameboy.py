@@ -21,15 +21,15 @@ system_files = {}
 class SameBoy(emulatorbase.EmulatorBase):
 
     # Get name
-    def GetName(self):
+    def get_name(self):
         return "SameBoy"
 
     # Get platforms
-    def GetPlatforms(self):
+    def get_platforms(self):
         return []
 
     # Get config
-    def GetConfig(self):
+    def get_config(self):
         return {
             "SameBoy": {
                 "program": {
@@ -44,7 +44,7 @@ class SameBoy(emulatorbase.EmulatorBase):
         }
 
     # Setup
-    def Setup(self, setup_params = None):
+    def setup(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
 
@@ -68,7 +68,7 @@ class SameBoy(emulatorbase.EmulatorBase):
         return True
 
     # Setup offline
-    def SetupOffline(self, setup_params = None):
+    def setup_offline(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
 

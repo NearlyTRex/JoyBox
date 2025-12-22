@@ -15,11 +15,11 @@ config_files = {}
 class Steam(toolbase.ToolBase):
 
     # Get name
-    def GetName(self):
+    def get_name(self):
         return "Steam"
 
     # Get config
-    def GetConfig(self):
+    def get_config(self):
 
         # Get steam info
         steam_exe = ini.GetIniValue("Tools.Steam", "steam_exe")

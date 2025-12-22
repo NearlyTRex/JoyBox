@@ -22,11 +22,11 @@ config_files["Sunshine/linux/Sunshine.AppImage.home/.config/sunshine/sunshine.co
 class Sunshine(toolbase.ToolBase):
 
     # Get name
-    def GetName(self):
+    def get_name(self):
         return "Sunshine"
 
     # Get config
-    def GetConfig(self):
+    def get_config(self):
         return {
             "Sunshine": {
                 "program": {
@@ -41,7 +41,7 @@ class Sunshine(toolbase.ToolBase):
         }
 
     # Setup
-    def Setup(self, setup_params = None):
+    def setup(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
 
@@ -84,7 +84,7 @@ class Sunshine(toolbase.ToolBase):
         return True
 
     # Setup offline
-    def SetupOffline(self, setup_params = None):
+    def setup_offline(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
 
@@ -117,7 +117,7 @@ class Sunshine(toolbase.ToolBase):
         return True
 
     # Configure
-    def Configure(self, setup_params = None):
+    def configure(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
 

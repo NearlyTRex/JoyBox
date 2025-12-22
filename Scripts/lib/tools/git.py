@@ -15,11 +15,11 @@ config_files = {}
 class Git(toolbase.ToolBase):
 
     # Get name
-    def GetName(self):
+    def get_name(self):
         return "Git"
 
     # Get config
-    def GetConfig(self):
+    def get_config(self):
 
         # Get git info
         git_exe = ini.GetIniValue("Tools.Git", "git_exe")

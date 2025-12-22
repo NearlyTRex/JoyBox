@@ -41,35 +41,35 @@ class Itchio(storebase.StoreBase):
     ############################################################
 
     # Get name
-    def GetName(self):
+    def get_name(self):
         return config.StoreType.ITCHIO.val()
 
     # Get type
-    def GetType(self):
+    def get_type(self):
         return config.StoreType.ITCHIO
 
     # Get platform
-    def GetPlatform(self):
+    def get_platform(self):
         return config.Platform.COMPUTER_ITCHIO
 
     # Get supercategory
-    def GetSupercategory(self):
+    def get_supercategory(self):
         return config.Supercategory.ROMS
 
     # Get category
-    def GetCategory(self):
+    def get_category(self):
         return config.Category.COMPUTER
 
     # Get subcategory
-    def GetSubcategory(self):
+    def get_subcategory(self):
         return config.Subcategory.COMPUTER_ITCHIO
 
     # Get key
-    def GetKey(self):
+    def get_key(self):
         return config.json_key_itchio
 
     # Get identifier keys
-    def GetIdentifierKeys(self):
+    def get_identifier_keys(self):
         return {
             config.StoreIdentifierType.INFO: config.json_key_store_appurl,
             config.StoreIdentifierType.INSTALL: config.json_key_store_appurl,
@@ -81,15 +81,15 @@ class Itchio(storebase.StoreBase):
         }
 
     # Get install dir
-    def GetInstallDir(self):
+    def get_install_dir(self):
         return self.install_dir
 
     # Check if purchases can be imported
-    def CanImportPurchases(self):
+    def can_import_purchases(self):
         return True
 
     # Check if purchases can be downloaded
-    def CanDownloadPurchases(self):
+    def can_download_purchases(self):
         return True
 
     ############################################################
@@ -97,18 +97,18 @@ class Itchio(storebase.StoreBase):
     ############################################################
 
     # Login
-    def Login(
+    def login(
         self,
         verbose = False,
         pretend_run = False,
         exit_on_failure = False):
 
         # Check if already logged in
-        if self.IsLoggedIn():
+        if self.is_logged_in():
             return True
 
         # Connect to web
-        web_driver = self.WebConnect(
+        web_driver = self.web_connect(
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
@@ -119,14 +119,14 @@ class Itchio(storebase.StoreBase):
         success = webpage.LoginCookieWebsite(
             driver = web_driver,
             url = "https://itch.io/login",
-            cookie = self.GetCookieFile(),
+            cookie = self.get_cookie_file(),
             locator = webpage.ElementLocator({"link_text": "My feed"}),
             verbose = verbose)
         if not success:
             return None
 
         # Disconnect from web
-        success = self.WebDisconnect(
+        success = self.web_disconnect(
             web_driver = web_driver,
             verbose = verbose,
             exit_on_failure = exit_on_failure)
@@ -134,7 +134,7 @@ class Itchio(storebase.StoreBase):
             return False
 
         # Should be successful
-        self.SetLoggedIn(True)
+        self.set_logged_in(True)
         return True
 
     ############################################################
@@ -142,7 +142,7 @@ class Itchio(storebase.StoreBase):
     ############################################################
 
     # Get purchases
-    def GetLatestPurchases(
+    def get_latest_purchases(
         self,
         verbose = False,
         pretend_run = False,
@@ -173,7 +173,7 @@ class Itchio(storebase.StoreBase):
                 for purchase_data in cached_data:
                     purchase = jsondata.JsonData(
                         json_data = purchase_data,
-                        json_platform = self.GetPlatform())
+                        json_platform = self.get_platform())
                     cached_purchases.append(purchase)
                 return cached_purchases
             else:
@@ -182,7 +182,7 @@ class Itchio(storebase.StoreBase):
                 use_cache = False
 
         # Connect to web
-        web_driver = self.WebConnect(
+        web_driver = self.web_connect(
             headless = True,
             verbose = verbose,
             pretend_run = pretend_run,
@@ -194,7 +194,7 @@ class Itchio(storebase.StoreBase):
         success = webpage.LoadCookieWebsite(
             driver = web_driver,
             url = "https://itch.io/my-purchases",
-            cookie = self.GetCookieFile(),
+            cookie = self.get_cookie_file(),
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
@@ -238,7 +238,7 @@ class Itchio(storebase.StoreBase):
                 # Create purchase
                 purchase = jsondata.JsonData(
                     json_data = {},
-                    json_platform = self.GetPlatform())
+                    json_platform = self.get_platform())
                 purchase.set_value(config.json_key_store_appid, line_appid)
                 purchase.set_value(config.json_key_store_appurl, line_appurl)
                 purchase.set_value(config.json_key_store_name, line_title)
@@ -252,7 +252,7 @@ class Itchio(storebase.StoreBase):
                 })
 
         # Disconnect from web
-        success = self.WebDisconnect(
+        success = self.web_disconnect(
             web_driver = web_driver,
             verbose = verbose,
             exit_on_failure = exit_on_failure)
@@ -280,7 +280,7 @@ class Itchio(storebase.StoreBase):
     ############################################################
 
     # Get latest metadata
-    def GetLatestMetadata(
+    def get_latest_metadata(
         self,
         identifier,
         verbose = False,
@@ -288,7 +288,7 @@ class Itchio(storebase.StoreBase):
         exit_on_failure = False):
 
         # Check identifier
-        if not self.IsValidMetadataIdentifier(identifier):
+        if not self.is_valid_metadata_identifier(identifier):
             logger.log_warning("Metadata identifier '%s' was not valid" % identifier)
             return None
 
@@ -298,7 +298,7 @@ class Itchio(storebase.StoreBase):
         # Cleanup function
         def cleanup_driver():
             if web_driver:
-                self.WebDisconnect(
+                self.web_disconnect(
                     web_driver = web_driver,
                     verbose = verbose,
                     pretend_run = pretend_run,
@@ -309,7 +309,7 @@ class Itchio(storebase.StoreBase):
             nonlocal web_driver
 
             # Connect to web
-            web_driver = self.WebConnect(
+            web_driver = self.web_connect(
                 headless = True,
                 verbose = verbose,
                 pretend_run = pretend_run,
@@ -321,7 +321,7 @@ class Itchio(storebase.StoreBase):
             success = webpage.LoadCookieWebsite(
                 driver = web_driver,
                 url = identifier,
-                cookie = self.GetCookieFile(),
+                cookie = self.get_cookie_file(),
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = False)
@@ -413,7 +413,7 @@ class Itchio(storebase.StoreBase):
     ############################################################
 
     # Get latest asset url
-    def GetLatestAssetUrl(
+    def get_latest_asset_url(
         self,
         identifier,
         asset_type,
@@ -423,7 +423,7 @@ class Itchio(storebase.StoreBase):
         exit_on_failure = False):
 
         # Check identifier
-        if not self.IsValidAssetIdentifier(identifier):
+        if not self.is_valid_asset_identifier(identifier):
             logger.log_warning("Asset identifier '%s' was not valid" % identifier)
             return None
 
@@ -434,7 +434,7 @@ class Itchio(storebase.StoreBase):
         if asset_type == config.AssetType.BOXFRONT:
 
             # Connect to web
-            web_driver = self.WebConnect(
+            web_driver = self.web_connect(
                 headless = True,
                 verbose = verbose,
                 pretend_run = pretend_run,
@@ -449,7 +449,7 @@ class Itchio(storebase.StoreBase):
             success = webpage.LoadCookieWebsite(
                 driver = web_driver,
                 url = "https://itch.io/search?q=" + search_terms,
-                cookie = self.GetCookieFile(),
+                cookie = self.get_cookie_file(),
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
@@ -490,7 +490,7 @@ class Itchio(storebase.StoreBase):
                         break
 
             # Disconnect from web
-            success = self.WebDisconnect(
+            success = self.web_disconnect(
                 web_driver = web_driver,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)

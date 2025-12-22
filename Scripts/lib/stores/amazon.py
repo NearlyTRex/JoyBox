@@ -36,35 +36,35 @@ class Amazon(storebase.StoreBase):
     ############################################################
 
     # Get name
-    def GetName(self):
+    def get_name(self):
         return config.StoreType.AMAZON.val()
 
     # Get type
-    def GetType(self):
+    def get_type(self):
         return config.StoreType.AMAZON
 
     # Get platform
-    def GetPlatform(self):
+    def get_platform(self):
         return config.Platform.COMPUTER_AMAZON_GAMES
 
     # Get supercategory
-    def GetSupercategory(self):
+    def get_supercategory(self):
         return config.Supercategory.ROMS
 
     # Get category
-    def GetCategory(self):
+    def get_category(self):
         return config.Category.COMPUTER
 
     # Get subcategory
-    def GetSubcategory(self):
+    def get_subcategory(self):
         return config.Subcategory.COMPUTER_AMAZON_GAMES
 
     # Get key
-    def GetKey(self):
+    def get_key(self):
         return config.json_key_amazon
 
     # Get identifier keys
-    def GetIdentifierKeys(self):
+    def get_identifier_keys(self):
         return {
             config.StoreIdentifierType.INFO: config.json_key_store_appid,
             config.StoreIdentifierType.INSTALL: config.json_key_store_appid,
@@ -76,15 +76,15 @@ class Amazon(storebase.StoreBase):
         }
 
     # Get install dir
-    def GetInstallDir(self):
+    def get_install_dir(self):
         return self.install_dir
 
     # Check if purchases can be imported
-    def CanImportPurchases(self):
+    def can_import_purchases(self):
         return True
 
     # Check if purchases can be downloaded
-    def CanDownloadPurchases(self):
+    def can_download_purchases(self):
         return True
 
     ############################################################
@@ -92,14 +92,14 @@ class Amazon(storebase.StoreBase):
     ############################################################
 
     # Login
-    def Login(
+    def login(
         self,
         verbose = False,
         pretend_run = False,
         exit_on_failure = False):
 
         # Check if already logged in
-        if self.IsLoggedIn():
+        if self.is_logged_in():
             return True
 
         # Get tool
@@ -155,7 +155,7 @@ class Amazon(storebase.StoreBase):
             return False
 
         # Should be successful
-        self.SetLoggedIn(True)
+        self.set_logged_in(True)
         return True
 
     ############################################################
@@ -163,7 +163,7 @@ class Amazon(storebase.StoreBase):
     ############################################################
 
     # Get purchases
-    def GetLatestPurchases(
+    def get_latest_purchases(
         self,
         verbose = False,
         pretend_run = False,
@@ -194,7 +194,7 @@ class Amazon(storebase.StoreBase):
                 for purchase_data in cached_data:
                     purchase = jsondata.JsonData(
                         json_data = purchase_data,
-                        json_platform = self.GetPlatform())
+                        json_platform = self.get_platform())
                     cached_purchases.append(purchase)
                 return cached_purchases
             else:
@@ -293,7 +293,7 @@ class Amazon(storebase.StoreBase):
             # Create purchase
             purchase = jsondata.JsonData(
                 json_data = {},
-                json_platform = self.GetPlatform())
+                json_platform = self.get_platform())
             purchase.set_value(config.json_key_store_appid, line_appid)
             purchase.set_value(config.json_key_store_name, line_title)
             purchases.append(purchase)
@@ -323,7 +323,7 @@ class Amazon(storebase.StoreBase):
     ############################################################
 
     # Get latest jsondata
-    def GetLatestJsondata(
+    def get_latest_jsondata(
         self,
         identifier,
         branch = None,
@@ -332,7 +332,7 @@ class Amazon(storebase.StoreBase):
         exit_on_failure = False):
 
         # Check identifier
-        if not self.IsValidInfoIdentifier(identifier):
+        if not self.is_valid_info_identifier(identifier):
             logger.log_warning("Info identifier '%s' was not valid" % identifier)
             return None
 
@@ -382,11 +382,11 @@ class Amazon(storebase.StoreBase):
             return None
 
         # Build jsondata
-        json_data = self.CreateDefaultJsondata()
+        json_data = self.create_default_jsondata()
         json_data.set_value(config.json_key_store_appid, identifier)
         json_data.set_value(config.json_key_store_buildid, amazon_json.get("version", config.default_buildid).strip())
         json_data.set_value(config.json_key_store_name, amazon_json.get("product", {}).get("title", "").strip())
-        return self.AugmentJsondata(
+        return self.augment_jsondata(
             json_data = json_data,
             identifier = identifier,
             verbose = verbose,
@@ -398,7 +398,7 @@ class Amazon(storebase.StoreBase):
     ############################################################
 
     # Download
-    def Download(
+    def download(
         self,
         identifier,
         output_dir,
@@ -413,7 +413,7 @@ class Amazon(storebase.StoreBase):
         exit_on_failure = False):
 
         # Check identifier
-        if not self.IsValidDownloadIdentifier(identifier):
+        if not self.is_valid_download_identifier(identifier):
             logger.log_warning("Download identifier '%s' was not valid" % identifier)
             return False
 

@@ -15,11 +15,11 @@ config_files = {}
 class Gpg(toolbase.ToolBase):
 
     # Get name
-    def GetName(self):
+    def get_name(self):
         return "Gpg"
 
     # Get config
-    def GetConfig(self):
+    def get_config(self):
 
         # Get gpg info
         gpg_exe = ini.GetIniValue("Tools.Gpg", "gpg_exe")

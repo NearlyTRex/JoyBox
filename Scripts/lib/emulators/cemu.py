@@ -30,18 +30,18 @@ system_files = {}
 class Cemu(emulatorbase.EmulatorBase):
 
     # Get name
-    def GetName(self):
+    def get_name(self):
         return "Cemu"
 
     # Get platforms
-    def GetPlatforms(self):
+    def get_platforms(self):
         return [
             config.Platform.NINTENDO_WII_U,
             config.Platform.NINTENDO_WII_U_ESHOP
         ]
 
     # Get config
-    def GetConfig(self):
+    def get_config(self):
         return {
             "Cemu": {
                 "program": {
@@ -72,7 +72,7 @@ class Cemu(emulatorbase.EmulatorBase):
         }
 
     # Install add-ons
-    def InstallAddons(self, dlc_dirs = [], update_dirs = [], verbose = False, pretend_run = False, exit_on_failure = False):
+    def install_addons(self, dlc_dirs = [], update_dirs = [], verbose = False, pretend_run = False, exit_on_failure = False):
         for package_dirset in [dlc_dirs, update_dirs]:
             for package_dir in package_dirset:
                 for tik_file in paths.build_file_list_by_extensions(package_dir, extensions = [".tik"]):
@@ -89,7 +89,7 @@ class Cemu(emulatorbase.EmulatorBase):
         return True
 
     # Setup
-    def Setup(self, setup_params = None):
+    def setup(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
 
@@ -130,7 +130,7 @@ class Cemu(emulatorbase.EmulatorBase):
         return True
 
     # Setup offline
-    def SetupOffline(self, setup_params = None):
+    def setup_offline(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
 
@@ -163,7 +163,7 @@ class Cemu(emulatorbase.EmulatorBase):
         return True
 
     # Configure
-    def Configure(self, setup_params = None):
+    def configure(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
 
@@ -181,7 +181,7 @@ class Cemu(emulatorbase.EmulatorBase):
         return True
 
     # Launch
-    def Launch(
+    def launch(
         self,
         game_info,
         capture_type = None,

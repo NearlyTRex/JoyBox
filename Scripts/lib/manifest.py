@@ -35,7 +35,7 @@ class ManifestEntry:
                         elif when_os == "" and when_store == "steam":
                             is_windows_path = True
                         if is_windows_path:
-                            paths.append(storebase.CreateTokenizedPath(path_location, base_path))
+                            paths.append(storebase.create_tokenized_path(path_location, base_path))
         return paths
 
     # Get keys

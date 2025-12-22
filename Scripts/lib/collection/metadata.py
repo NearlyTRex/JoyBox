@@ -169,8 +169,8 @@ def UpdateGameMetadataEntry(
     # Get latest metadata
     latest_metadata = None
     if store_obj:
-        latest_metadata = store_obj.GetLatestMetadata(
-            identifier = json_obj.get_subvalue(store_obj.GetKey(), store_obj.GetMetadataIdentifierKey()),
+        latest_metadata = store_obj.get_latest_metadata(
+            identifier = json_obj.get_subvalue(store_obj.get_key(), store_obj.get_metadata_identifier_key()),
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)

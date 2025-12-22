@@ -43,35 +43,35 @@ class Legacy(storebase.StoreBase):
     ############################################################
 
     # Get name
-    def GetName(self):
+    def get_name(self):
         return config.StoreType.LEGACY.val()
 
     # Get type
-    def GetType(self):
+    def get_type(self):
         return config.StoreType.LEGACY
 
     # Get platform
-    def GetPlatform(self):
+    def get_platform(self):
         return config.Platform.COMPUTER_LEGACY_GAMES
 
     # Get supercategory
-    def GetSupercategory(self):
+    def get_supercategory(self):
         return config.Supercategory.ROMS
 
     # Get category
-    def GetCategory(self):
+    def get_category(self):
         return config.Category.COMPUTER
 
     # Get subcategory
-    def GetSubcategory(self):
+    def get_subcategory(self):
         return config.Subcategory.COMPUTER_LEGACY_GAMES
 
     # Get key
-    def GetKey(self):
+    def get_key(self):
         return config.json_key_legacy
 
     # Get identifier keys
-    def GetIdentifierKeys(self):
+    def get_identifier_keys(self):
         return {
             config.StoreIdentifierType.INFO: config.json_key_store_appid,
             config.StoreIdentifierType.INSTALL: config.json_key_store_appid,
@@ -83,19 +83,19 @@ class Legacy(storebase.StoreBase):
         }
 
     # Get user name
-    def GetUserName(self):
+    def get_user_name(self):
         return self.username
 
     # Get install dir
-    def GetInstallDir(self):
+    def get_install_dir(self):
         return self.install_dir
 
     # Check if purchases can be imported
-    def CanImportPurchases(self):
+    def can_import_purchases(self):
         return True
 
     # Check if purchases can be downloaded
-    def CanDownloadPurchases(self):
+    def can_download_purchases(self):
         return True
 
     ############################################################
@@ -103,14 +103,14 @@ class Legacy(storebase.StoreBase):
     ############################################################
 
     # Login
-    def Login(
+    def login(
         self,
         verbose = False,
         pretend_run = False,
         exit_on_failure = False):
 
         # Check if already logged in
-        if self.IsLoggedIn():
+        if self.is_logged_in():
             return True
 
         # Get tool
@@ -162,7 +162,7 @@ class Legacy(storebase.StoreBase):
             return False
 
         # Should be successful
-        self.SetLoggedIn(True)
+        self.set_logged_in(True)
         return True
 
     ############################################################
@@ -170,7 +170,7 @@ class Legacy(storebase.StoreBase):
     ############################################################
 
     # Get latest url
-    def GetLatestUrl(
+    def get_latest_url(
         self,
         identifier,
         verbose = False,
@@ -178,7 +178,7 @@ class Legacy(storebase.StoreBase):
         exit_on_failure = False):
 
         # Check identifier
-        if not self.IsValidPageIdentifier(identifier):
+        if not self.is_valid_page_identifier(identifier):
             logger.log_warning("Page identifier '%s' was not valid" % identifier)
             return None
 
@@ -188,7 +188,7 @@ class Legacy(storebase.StoreBase):
         # Cleanup function
         def cleanup_driver():
             if web_driver:
-                self.WebDisconnect(
+                self.web_disconnect(
                     web_driver = web_driver,
                     verbose = verbose,
                     pretend_run = pretend_run,
@@ -199,7 +199,7 @@ class Legacy(storebase.StoreBase):
             nonlocal web_driver
 
             # Connect to web
-            web_driver = self.WebConnect(
+            web_driver = self.web_connect(
                 headless = True,
                 verbose = verbose,
                 pretend_run = pretend_run,
@@ -288,7 +288,7 @@ class Legacy(storebase.StoreBase):
     ############################################################
 
     # Get purchases
-    def GetLatestPurchases(
+    def get_latest_purchases(
         self,
         verbose = False,
         pretend_run = False,
@@ -345,7 +345,7 @@ class Legacy(storebase.StoreBase):
             # Create purchase
             purchase = jsondata.JsonData(
                 json_data = {},
-                json_platform = self.GetPlatform())
+                json_platform = self.get_platform())
             purchase.set_value(config.json_key_store_appid, entry.get("installer_uuid", "").strip())
             purchase.set_value(config.json_key_store_name, entry.get("game_name", "").strip())
             purchases.append(purchase)
@@ -356,7 +356,7 @@ class Legacy(storebase.StoreBase):
     ############################################################
 
     # Get latest jsondata
-    def GetLatestJsondata(
+    def get_latest_jsondata(
         self,
         identifier,
         branch = None,
@@ -365,7 +365,7 @@ class Legacy(storebase.StoreBase):
         exit_on_failure = False):
 
         # Check identifier
-        if not self.IsValidInfoIdentifier(identifier):
+        if not self.is_valid_info_identifier(identifier):
             logger.log_warning("Info identifier '%s' was not valid" % identifier)
             return None
 
@@ -414,10 +414,10 @@ class Legacy(storebase.StoreBase):
             return None
 
         # Build jsondata
-        json_data = self.CreateDefaultJsondata()
+        json_data = self.create_default_jsondata()
         json_data.set_value(config.json_key_store_appid, identifier)
         json_data.set_value(config.json_key_store_name, legacy_json.get("game_name", "").strip())
-        return self.AugmentJsondata(
+        return self.augment_jsondata(
             json_data = json_data,
             identifier = identifier,
             verbose = verbose,
@@ -429,7 +429,7 @@ class Legacy(storebase.StoreBase):
     ############################################################
 
     # Get latest asset url
-    def GetLatestAssetUrl(
+    def get_latest_asset_url(
         self,
         identifier,
         asset_type,
@@ -439,7 +439,7 @@ class Legacy(storebase.StoreBase):
         exit_on_failure = False):
 
         # Check identifier
-        if not self.IsValidAssetIdentifier(identifier):
+        if not self.is_valid_asset_identifier(identifier):
             logger.log_warning("Asset identifier '%s' was not valid" % identifier)
             return None
 
@@ -449,7 +449,7 @@ class Legacy(storebase.StoreBase):
         # BoxFront
         if asset_type == config.AssetType.BOXFRONT:
             latest_asset_url = metadataassetcollector.FindMetadataAsset(
-                game_platform = self.GetPlatform(),
+                game_platform = self.get_platform(),
                 game_name = game_name if game_name else identifier,
                 asset_type = asset_type,
                 verbose = verbose,

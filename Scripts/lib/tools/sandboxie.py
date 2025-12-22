@@ -16,11 +16,11 @@ config_files = {}
 class Sandboxie(toolbase.ToolBase):
 
     # Get name
-    def GetName(self):
+    def get_name(self):
         return "Sandboxie"
 
     # Get config
-    def GetConfig(self):
+    def get_config(self):
 
         # Check platform
         if not environment.is_sandboxie_platform():

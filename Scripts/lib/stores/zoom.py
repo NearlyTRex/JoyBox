@@ -28,35 +28,35 @@ class Zoom(storebase.StoreBase):
     ############################################################
 
     # Get name
-    def GetName(self):
+    def get_name(self):
         return config.StoreType.ZOOM.val()
 
     # Get type
-    def GetType(self):
+    def get_type(self):
         return config.StoreType.ZOOM
 
     # Get platform
-    def GetPlatform(self):
+    def get_platform(self):
         return config.Platform.COMPUTER_ZOOM
 
     # Get supercategory
-    def GetSupercategory(self):
+    def get_supercategory(self):
         return config.Supercategory.ROMS
 
     # Get category
-    def GetCategory(self):
+    def get_category(self):
         return config.Category.COMPUTER
 
     # Get subcategory
-    def GetSubcategory(self):
+    def get_subcategory(self):
         return config.Subcategory.COMPUTER_ZOOM
 
     # Get key
-    def GetKey(self):
+    def get_key(self):
         return config.json_key_zoom
 
     # Get identifier keys
-    def GetIdentifierKeys(self):
+    def get_identifier_keys(self):
         return {
             config.StoreIdentifierType.INFO: config.json_key_store_name,
             config.StoreIdentifierType.INSTALL: config.json_key_store_name,
@@ -68,7 +68,7 @@ class Zoom(storebase.StoreBase):
         }
 
     # Get install dir
-    def GetInstallDir(self):
+    def get_install_dir(self):
         return self.install_dir
 
     ############################################################

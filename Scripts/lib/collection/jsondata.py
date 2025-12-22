@@ -240,11 +240,11 @@ def UpdateGameJsonFile(
         # Set computer keys
         if game_category == config.Category.COMPUTER:
             if store_obj:
-                json_obj.fill_value(store_obj.GetKey(), {})
+                json_obj.fill_value(store_obj.get_key(), {})
                 if game_platform in config.manual_import_platforms:
-                    json_obj.fill_subvalue(store_obj.GetKey(), config.json_key_store_appid, strings.generate_unique_id())
-                    json_obj.fill_subvalue(store_obj.GetKey(), config.json_key_store_appname, strings.get_slug_string(game_regular_name))
-                    json_obj.fill_subvalue(store_obj.GetKey(), config.json_key_store_name, game_regular_name)
+                    json_obj.fill_subvalue(store_obj.get_key(), config.json_key_store_appid, strings.generate_unique_id())
+                    json_obj.fill_subvalue(store_obj.get_key(), config.json_key_store_appname, strings.get_slug_string(game_regular_name))
+                    json_obj.fill_subvalue(store_obj.get_key(), config.json_key_store_name, game_regular_name)
 
         # Set other platform keys
         else:
@@ -254,9 +254,9 @@ def UpdateGameJsonFile(
         # Get latest jsondata
         latest_jsondata = None
         if store_obj:
-            latest_jsondata = store_obj.GetLatestJsondata(
-                identifier = json_obj.get_subvalue(store_obj.GetKey(), store_obj.GetInfoIdentifierKey()),
-                branch = json_obj.get_subvalue(store_obj.GetKey(), config.json_key_store_branchid),
+            latest_jsondata = store_obj.get_latest_jsondata(
+                identifier = json_obj.get_subvalue(store_obj.get_key(), store_obj.get_info_identifier_key()),
+                branch = json_obj.get_subvalue(store_obj.get_key(), config.json_key_store_branchid),
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
@@ -266,15 +266,15 @@ def UpdateGameJsonFile(
             for store_subdata_key in config.json_keys_store_subdata:
                 if latest_jsondata.has_key(store_subdata_key):
                     if store_subdata_key == config.json_key_store_buildid:
-                        existing_buildid = json_obj.get_subvalue(store_obj.GetKey(), config.json_key_store_buildid)
+                        existing_buildid = json_obj.get_subvalue(store_obj.get_key(), config.json_key_store_buildid)
                         new_buildid = latest_jsondata.get_value(store_subdata_key)
                         if existing_buildid and existing_buildid != config.default_buildid and new_buildid == config.default_buildid:
                             continue
-                    json_obj.fill_subvalue(store_obj.GetKey(), store_subdata_key, latest_jsondata.get_value(store_subdata_key))
+                    json_obj.fill_subvalue(store_obj.get_key(), store_subdata_key, latest_jsondata.get_value(store_subdata_key))
                     if store_subdata_key == config.json_key_store_paths:
-                        paths = json_obj.get_subvalue(store_obj.GetKey(), store_subdata_key, [])
+                        paths = json_obj.get_subvalue(store_obj.get_key(), store_subdata_key, [])
                         paths = paths.prune_child_paths(paths)
-                        json_obj.set_subvalue(store_obj.GetKey(), store_subdata_key, paths)
+                        json_obj.set_subvalue(store_obj.get_key(), store_subdata_key, paths)
 
     # Write json file
     success = serialization.write_json_file(

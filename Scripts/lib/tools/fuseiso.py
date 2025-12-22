@@ -16,11 +16,11 @@ config_files = {}
 class FuseISO(toolbase.ToolBase):
 
     # Get name
-    def GetName(self):
+    def get_name(self):
         return "FuseISO"
 
     # Get config
-    def GetConfig(self):
+    def get_config(self):
 
         # Get python info
         fuseiso_exe = ini.GetIniValue("Tools.FuseISO", "fuseiso_exe")

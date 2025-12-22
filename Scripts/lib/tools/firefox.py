@@ -15,11 +15,11 @@ config_files = {}
 class Firefox(toolbase.ToolBase):
 
     # Get name
-    def GetName(self):
+    def get_name(self):
         return "Firefox"
 
     # Get config
-    def GetConfig(self):
+    def get_config(self):
 
         # Get firefox info
         firefox_exe = ini.GetIniValue("Tools.Firefox", "firefox_exe")

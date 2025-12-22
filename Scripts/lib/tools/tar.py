@@ -15,11 +15,11 @@ config_files = {}
 class Tar(toolbase.ToolBase):
 
     # Get name
-    def GetName(self):
+    def get_name(self):
         return "Tar"
 
     # Get config
-    def GetConfig(self):
+    def get_config(self):
 
         # Get tar info
         tar_exe = ini.GetIniValue("Tools.Tar", "tar_exe")

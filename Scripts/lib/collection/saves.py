@@ -311,10 +311,10 @@ def GetStorePathEntries(
 
     # Get paths
     paths = game_info.get_store_paths()
-    paths = store_obj.AddPathVariants(paths)
+    paths = store_obj.add_path_variants(paths)
 
     # Get translation map
-    translation_map = store_obj.BuildPathTranslationMap(
+    translation_map = store_obj.build_path_translation_map(
         appid = game_info.get_store_appid(),
         appname = game_info.get_store_name())
 
@@ -325,7 +325,7 @@ def GetStorePathEntries(
             for key_replacement in translation_map[base_key]:
                 entry = {}
                 entry["full"] = path.replace(base_key, key_replacement)
-                entry["relative"] = storebase.ConvertFromTokenizedPath(path, store_type = store_obj.GetType())
+                entry["relative"] = storebase.convert_from_tokenized_path(path, store_type = store_obj.get_type())
                 translated_paths.append(entry)
     return translated_paths
 
@@ -348,7 +348,7 @@ def ImportStoreGameSavePaths(
             exit_on_failure = exit_on_failure)
         new_paths = []
         for archive_path in archive_paths:
-            new_path = storebase.ConvertToTokenizedPath(
+            new_path = storebase.convert_to_tokenized_path(
                 path = archive_path,
                 store_type = game_info.get_main_store_type())
             new_paths.append(new_path)

@@ -49,12 +49,12 @@ def LaunchStoreGame(
         return False
 
     # Check if store handles launching
-    if not store_obj.CanHandleLaunching():
+    if not store_obj.can_handle_launching():
         return False
 
     # Get store info
     store_key = game_info.get_main_store_key()
-    store_identifier_key = store_obj.GetInstallIdentifierKey()
+    store_identifier_key = store_obj.get_install_identifier_key()
     store_identifier = game_info.get_subvalue(store_key, store_identifier_key)
 
     # Import save
@@ -67,7 +67,7 @@ def LaunchStoreGame(
         return False
 
     # Launch game
-    success = store_obj.Launch(
+    success = store_obj.launch(
         identifier = store_identifier,
         verbose = verbose,
         pretend_run = pretend_run,

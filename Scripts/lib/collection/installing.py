@@ -31,14 +31,14 @@ def IsStoreGameInstalled(game_info):
         return False
 
     # Check if store handles installing
-    if not store_obj.CanHandleInstalling():
+    if not store_obj.can_handle_installing():
         return False
 
     # Check store install
     store_key = game_info.get_main_store_key()
-    store_identifier_key = store_obj.GetInstallIdentifierKey()
+    store_identifier_key = store_obj.get_install_identifier_key()
     store_identifier = game_info.get_subvalue(store_key, store_identifier_key)
-    return store_obj.IsInstalled(store_identifier)
+    return store_obj.is_installed(store_identifier)
 
 # Install store game
 def InstallStoreGame(
@@ -59,14 +59,14 @@ def InstallStoreGame(
         return False
 
     # Check if store handles installing
-    if not store_obj.CanHandleInstalling():
+    if not store_obj.can_handle_installing():
         return False
 
     # Install game
     store_key = game_info.get_main_store_key()
-    store_identifier_key = store_obj.GetInstallIdentifierKey()
+    store_identifier_key = store_obj.get_install_identifier_key()
     store_identifier = game_info.get_subvalue(store_key, store_identifier_key)
-    return store_obj.Install(
+    return store_obj.install(
         identifier = store_identifier,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -100,14 +100,14 @@ def UninstallStoreGame(
         return False
 
     # Check if store handles installing
-    if not store_obj.CanHandleInstalling():
+    if not store_obj.can_handle_installing():
         return False
 
     # Uninstall game
     store_key = game_info.get_main_store_key()
-    store_identifier_key = store_obj.GetInstallIdentifierKey()
+    store_identifier_key = store_obj.get_install_identifier_key()
     store_identifier = game_info.get_subvalue(store_key, store_identifier_key)
-    return store_obj.Uninstall(
+    return store_obj.uninstall(
         identifier = store_identifier,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -307,8 +307,8 @@ def InstallLocalGameAddons(
 
     # Install add-ons
     for emulator in programs.GetEmulators():
-        if game_platform in emulator.GetPlatforms():
-            success = emulator.InstallAddons(
+        if game_platform in emulator.get_platforms():
+            success = emulator.install_addons(
                 dlc_dirs = source_dlc_dirs,
                 update_dirs = source_update_dirs,
                 verbose = verbose,

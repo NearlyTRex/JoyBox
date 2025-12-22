@@ -123,7 +123,7 @@ def GetEmulators():
 # Get emulator by platform
 def GetEmulatorByPlatform(emulator_platform):
     for emulator in GetEmulators():
-        if emulator_platform in emulator.GetPlatforms():
+        if emulator_platform in emulator.get_platforms():
             return emulator
     return None
 
@@ -138,7 +138,7 @@ def GetToolConfig():
 def GetEmulatorConfig():
     merged_config = {}
     for emulator in emulators.GetEmulatorList():
-        merged_config.update(emulator.GetConfig())
+        merged_config.update(emulator.get_config())
     return merged_config
 
 ###########################################################

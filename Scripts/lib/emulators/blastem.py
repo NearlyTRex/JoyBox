@@ -21,15 +21,15 @@ system_files = {}
 class BlastEm(emulatorbase.EmulatorBase):
 
     # Get name
-    def GetName(self):
+    def get_name(self):
         return "BlastEm"
 
     # Get platforms
-    def GetPlatforms(self):
+    def get_platforms(self):
         return []
 
     # Get config
-    def GetConfig(self):
+    def get_config(self):
         return {
             "BlastEm": {
                 "program": {
@@ -44,7 +44,7 @@ class BlastEm(emulatorbase.EmulatorBase):
         }
 
     # Setup
-    def Setup(self, setup_params = None):
+    def setup(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
 
@@ -68,7 +68,7 @@ class BlastEm(emulatorbase.EmulatorBase):
         return True
 
     # Setup offline
-    def SetupOffline(self, setup_params = None):
+    def setup_offline(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
 

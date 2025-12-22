@@ -74,12 +74,12 @@ def ImportGameStorePurchases(
         return True
 
     # Check if purchases can be imported
-    if not store_obj.CanImportPurchases():
+    if not store_obj.can_import_purchases():
         return True
 
     # Get all purchases
-    logger.log_info("Retrieving purchases for %s" % store_obj.GetType())
-    purchases = store_obj.GetLatestPurchases(
+    logger.log_info("Retrieving purchases for %s" % store_obj.get_type())
+    purchases = store_obj.get_latest_purchases(
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -87,17 +87,17 @@ def ImportGameStorePurchases(
         return True
 
     # Get all ignores
-    logger.log_info("Fetching ignore entries for %s" % store_obj.GetType())
+    logger.log_info("Fetching ignore entries for %s" % store_obj.get_type())
     ignores = GetGameJsonIgnoreEntries(
-        game_supercategory = store_obj.GetSupercategory(),
-        game_category = store_obj.GetCategory(),
-        game_subcategory = store_obj.GetSubcategory(),
+        game_supercategory = store_obj.get_supercategory(),
+        game_category = store_obj.get_category(),
+        game_subcategory = store_obj.get_subcategory(),
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
     # Import each purchase
-    logger.log_info("Starting to import purchases for %s" % store_obj.GetType())
+    logger.log_info("Starting to import purchases for %s" % store_obj.get_type())
     for purchase in purchases:
         purchase_appid = purchase.get_value(config.json_key_store_appid)
         purchase_appname = purchase.get_value(config.json_key_store_appname)
@@ -110,7 +110,7 @@ def ImportGameStorePurchases(
         ]
 
         # Get info identifier
-        info_identifier = purchase.get_value(store_obj.GetInfoIdentifierKey())
+        info_identifier = purchase.get_value(store_obj.get_info_identifier_key())
         if not info_identifier:
             continue
         if info_identifier in ignores.keys():
@@ -119,9 +119,9 @@ def ImportGameStorePurchases(
         # Skip if json file already exists
         json_matches = serialization.search_json_files(
             src = environment.get_json_metadata_dir(
-                game_supercategory = store_obj.GetSupercategory(),
-                game_category = store_obj.GetCategory(),
-                game_subcategory = store_obj.GetSubcategory()),
+                game_supercategory = store_obj.get_supercategory(),
+                game_category = store_obj.get_category(),
+                game_subcategory = store_obj.get_subcategory()),
             search_values = purchase_identifiers,
             search_keys = config.json_keys_store_appdata,
             pretend_run = pretend_run,
@@ -146,9 +146,9 @@ def ImportGameStorePurchases(
         # Add to ignore
         if should_import.lower() == "i":
             AddGameJsonIgnoreEntry(
-                game_supercategory = store_obj.GetSupercategory(),
-                game_category = store_obj.GetCategory(),
-                game_subcategory = store_obj.GetSubcategory(),
+                game_supercategory = store_obj.get_supercategory(),
+                game_category = store_obj.get_category(),
+                game_subcategory = store_obj.get_subcategory(),
                 game_identifier = info_identifier,
                 game_name = purchase_name,
                 verbose = verbose,
@@ -162,7 +162,7 @@ def ImportGameStorePurchases(
 
         # Get appurl if possible
         if not purchase_appurl and purchase_name:
-            purchase_appurl = store_obj.GetLatestUrl(
+            purchase_appurl = store_obj.get_latest_url(
                 identifier = purchase_name,
                 verbose = verbose,
                 pretend_run = pretend_run,
@@ -172,11 +172,11 @@ def ImportGameStorePurchases(
 
         # Create json file
         success = CreateGameJsonFile(
-            game_supercategory = store_obj.GetSupercategory(),
-            game_category = store_obj.GetCategory(),
-            game_subcategory = store_obj.GetSubcategory(),
+            game_supercategory = store_obj.get_supercategory(),
+            game_category = store_obj.get_category(),
+            game_subcategory = store_obj.get_subcategory(),
             game_name = entry_name,
-            initial_data = {store_obj.GetKey(): purchase.get_data_copy()},
+            initial_data = {store_obj.get_key(): purchase.get_data_copy()},
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
@@ -186,9 +186,9 @@ def ImportGameStorePurchases(
 
         # Create metadata entry
         success = CreateGameMetadataEntry(
-            game_supercategory = store_obj.GetSupercategory(),
-            game_category = store_obj.GetCategory(),
-            game_subcategory = store_obj.GetSubcategory(),
+            game_supercategory = store_obj.get_supercategory(),
+            game_category = store_obj.get_category(),
+            game_subcategory = store_obj.get_subcategory(),
             game_name = entry_name,
             game_url = purchase_appurl,
             verbose = verbose,
@@ -222,12 +222,12 @@ def UpdateGameStorePurchases(
         return True
 
     # Check if purchases can be imported
-    if not store_obj.CanImportPurchases():
+    if not store_obj.can_import_purchases():
         return True
 
     # Get all purchases
-    logger.log_info("Retrieving purchases for %s" % store_obj.GetType())
-    purchases = store_obj.GetLatestPurchases(
+    logger.log_info("Retrieving purchases for %s" % store_obj.get_type())
+    purchases = store_obj.get_latest_purchases(
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -235,17 +235,17 @@ def UpdateGameStorePurchases(
         return True
 
     # Get all ignores
-    logger.log_info("Fetching ignore entries for %s" % store_obj.GetType())
+    logger.log_info("Fetching ignore entries for %s" % store_obj.get_type())
     ignores = GetGameJsonIgnoreEntries(
-        game_supercategory = store_obj.GetSupercategory(),
-        game_category = store_obj.GetCategory(),
-        game_subcategory = store_obj.GetSubcategory(),
+        game_supercategory = store_obj.get_supercategory(),
+        game_category = store_obj.get_category(),
+        game_subcategory = store_obj.get_subcategory(),
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
     # Update each purchase
-    logger.log_info("Starting to update purchases for %s" % store_obj.GetType())
+    logger.log_info("Starting to update purchases for %s" % store_obj.get_type())
     for purchase in purchases:
         purchase_appid = purchase.get_value(config.json_key_store_appid)
         purchase_appname = purchase.get_value(config.json_key_store_appname)
@@ -258,7 +258,7 @@ def UpdateGameStorePurchases(
         ]
 
         # Get info identifier
-        info_identifier = purchase.get_value(store_obj.GetInfoIdentifierKey())
+        info_identifier = purchase.get_value(store_obj.get_info_identifier_key())
         if not info_identifier:
             continue
         if info_identifier in ignores.keys():
@@ -267,9 +267,9 @@ def UpdateGameStorePurchases(
         # Find matching json file
         json_matches = serialization.search_json_files(
             src = environment.get_json_metadata_dir(
-                game_supercategory = store_obj.GetSupercategory(),
-                game_category = store_obj.GetCategory(),
-                game_subcategory = store_obj.GetSubcategory()),
+                game_supercategory = store_obj.get_supercategory(),
+                game_category = store_obj.get_category(),
+                game_subcategory = store_obj.get_subcategory()),
             search_values = purchase_identifiers,
             search_keys = config.json_keys_store_appdata,
             pretend_run = pretend_run,
@@ -422,7 +422,7 @@ def DownloadGameStorePurchase(
         return False
 
     # Check if downloads supported
-    if not store_obj.CanDownloadPurchases():
+    if not store_obj.can_download_purchases():
         return True
 
     # Get output dir
@@ -448,7 +448,7 @@ def DownloadGameStorePurchase(
     store_branchid = game_info.get_store_branchid()
 
     # Get latest version
-    latest_version = store_obj.GetLatestVersion(
+    latest_version = store_obj.get_latest_version(
         identifier = store_info_identifier,
         branch = store_branchid,
         verbose = verbose,
@@ -456,7 +456,7 @@ def DownloadGameStorePurchase(
         exit_on_failure = exit_on_failure)
 
     # Download files
-    success = store_obj.Download(
+    success = store_obj.download(
         identifier = store_download_identifier,
         branch = store_branchid,
         output_dir = output_dir,

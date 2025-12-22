@@ -17,11 +17,11 @@ config_files = {}
 class Wad2Bin(toolbase.ToolBase):
 
     # Get name
-    def GetName(self):
+    def get_name(self):
         return "Wad2Bin"
 
     # Get config
-    def GetConfig(self):
+    def get_config(self):
         return {
             "Wad2Bin": {
                 "program": {
@@ -36,7 +36,7 @@ class Wad2Bin(toolbase.ToolBase):
         }
 
     # Setup
-    def Setup(self, setup_params = None):
+    def setup(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
 
@@ -78,7 +78,7 @@ class Wad2Bin(toolbase.ToolBase):
         return True
 
     # Setup offline
-    def SetupOffline(self, setup_params = None):
+    def setup_offline(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
 

@@ -15,11 +15,11 @@ config_files = {}
 class Perl(toolbase.ToolBase):
 
     # Get name
-    def GetName(self):
+    def get_name(self):
         return "Perl"
 
     # Get config
-    def GetConfig(self):
+    def get_config(self):
 
         # Get perl info
         perl_exe = ini.GetIniValue("Tools.Perl", "perl_exe")

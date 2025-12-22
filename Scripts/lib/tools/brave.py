@@ -15,11 +15,11 @@ config_files = {}
 class Brave(toolbase.ToolBase):
 
     # Get name
-    def GetName(self):
+    def get_name(self):
         return "Brave"
 
     # Get config
-    def GetConfig(self):
+    def get_config(self):
 
         # Get brave info
         brave_exe = ini.GetIniValue("Tools.Brave", "brave_exe")

@@ -21,11 +21,11 @@ config_files["Moonlight/linux/Moonlight.AppImage.home/.config/Moonlight Game Str
 class Moonlight(toolbase.ToolBase):
 
     # Get name
-    def GetName(self):
+    def get_name(self):
         return "Moonlight"
 
     # Get config
-    def GetConfig(self):
+    def get_config(self):
         return {
             "Moonlight": {
                 "program": {
@@ -40,7 +40,7 @@ class Moonlight(toolbase.ToolBase):
         }
 
     # Setup
-    def Setup(self, setup_params = None):
+    def setup(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
 
@@ -81,7 +81,7 @@ class Moonlight(toolbase.ToolBase):
         return True
 
     # Setup offline
-    def SetupOffline(self, setup_params = None):
+    def setup_offline(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
 
@@ -114,7 +114,7 @@ class Moonlight(toolbase.ToolBase):
         return True
 
     # Configure
-    def Configure(self, setup_params = None):
+    def configure(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
 

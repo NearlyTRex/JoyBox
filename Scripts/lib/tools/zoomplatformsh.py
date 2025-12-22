@@ -17,11 +17,11 @@ config_files = {}
 class ZoomPlatformSH(toolbase.ToolBase):
 
     # Get name
-    def GetName(self):
+    def get_name(self):
         return "ZoomPlatformSH"
 
     # Get config
-    def GetConfig(self):
+    def get_config(self):
         return {
             "ZoomPlatformSH": {
                 "program": "ZoomPlatformSH/lib/zoom-platform.sh"
@@ -29,7 +29,7 @@ class ZoomPlatformSH(toolbase.ToolBase):
         }
 
     # Setup
-    def Setup(self, setup_params = None):
+    def setup(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
 
@@ -62,7 +62,7 @@ class ZoomPlatformSH(toolbase.ToolBase):
         return True
 
     # Setup offline
-    def SetupOffline(self, setup_params = None):
+    def setup_offline(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
 

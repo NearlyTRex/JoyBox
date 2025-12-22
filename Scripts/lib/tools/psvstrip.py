@@ -17,11 +17,11 @@ config_files = {}
 class PSVStrip(toolbase.ToolBase):
 
     # Get name
-    def GetName(self):
+    def get_name(self):
         return "PSVStrip"
 
     # Get config
-    def GetConfig(self):
+    def get_config(self):
         return {
             "PSVStrip": {
                 "program": {
@@ -36,7 +36,7 @@ class PSVStrip(toolbase.ToolBase):
         }
 
     # Setup
-    def Setup(self, setup_params = None):
+    def setup(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
 
@@ -61,7 +61,7 @@ class PSVStrip(toolbase.ToolBase):
         return True
 
     # Setup offline
-    def SetupOffline(self, setup_params = None):
+    def setup_offline(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
 

@@ -21,15 +21,15 @@ system_files = {}
 class Snes9x(emulatorbase.EmulatorBase):
 
     # Get name
-    def GetName(self):
+    def get_name(self):
         return "Snes9x"
 
     # Get platforms
-    def GetPlatforms(self):
+    def get_platforms(self):
         return []
 
     # Get config
-    def GetConfig(self):
+    def get_config(self):
         return {
             "Snes9x": {
                 "program": {
@@ -44,7 +44,7 @@ class Snes9x(emulatorbase.EmulatorBase):
         }
 
     # Setup
-    def Setup(self, setup_params = None):
+    def setup(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
 
@@ -85,7 +85,7 @@ class Snes9x(emulatorbase.EmulatorBase):
         return True
 
     # Setup offline
-    def SetupOffline(self, setup_params = None):
+    def setup_offline(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
 

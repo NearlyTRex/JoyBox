@@ -30,17 +30,17 @@ system_files["data.zip"] = "e4c10430ddc600cdffff1fb348a6b0c3"
 class EKA2L1(emulatorbase.EmulatorBase):
 
     # Get name
-    def GetName(self):
+    def get_name(self):
         return "EKA2L1"
 
     # Get platforms
-    def GetPlatforms(self):
+    def get_platforms(self):
         return [
             config.Platform.OTHER_NOKIA_NGAGE
         ]
 
     # Get config
-    def GetConfig(self):
+    def get_config(self):
         return {
             "EKA2L1": {
                 "program": {
@@ -67,7 +67,7 @@ class EKA2L1(emulatorbase.EmulatorBase):
         }
 
     # Setup
-    def Setup(self, setup_params = None):
+    def setup(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
 
@@ -110,7 +110,7 @@ class EKA2L1(emulatorbase.EmulatorBase):
         return True
 
     # Setup offline
-    def SetupOffline(self, setup_params = None):
+    def setup_offline(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
 
@@ -143,7 +143,7 @@ class EKA2L1(emulatorbase.EmulatorBase):
         return True
 
     # Configure
-    def Configure(self, setup_params = None):
+    def configure(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
 
@@ -188,7 +188,7 @@ class EKA2L1(emulatorbase.EmulatorBase):
         return True
 
     # Launch
-    def Launch(
+    def launch(
         self,
         game_info,
         capture_type = None,

@@ -82,11 +82,11 @@ system_files["Bios/syscard3u.pce"] = "0754f903b52e3b3342202bdafb13efa5"
 class Ares(emulatorbase.EmulatorBase):
 
     # Get name
-    def GetName(self):
+    def get_name(self):
         return "Ares"
 
     # Get platforms
-    def GetPlatforms(self):
+    def get_platforms(self):
         return [
 
             # Microsoft
@@ -121,7 +121,7 @@ class Ares(emulatorbase.EmulatorBase):
         ]
 
     # Get config
-    def GetConfig(self):
+    def get_config(self):
         return {
             "Ares": {
                 "program": {
@@ -184,7 +184,7 @@ class Ares(emulatorbase.EmulatorBase):
         }
 
     # Setup
-    def Setup(self, setup_params = None):
+    def setup(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
 
@@ -240,7 +240,7 @@ class Ares(emulatorbase.EmulatorBase):
         return True
 
     # Setup offline
-    def SetupOffline(self, setup_params = None):
+    def setup_offline(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
 
@@ -273,7 +273,7 @@ class Ares(emulatorbase.EmulatorBase):
         return True
 
     # Configure
-    def Configure(self, setup_params = None):
+    def configure(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
 
@@ -316,7 +316,7 @@ class Ares(emulatorbase.EmulatorBase):
         return True
 
     # Launch
-    def Launch(
+    def launch(
         self,
         game_info,
         capture_type = None,

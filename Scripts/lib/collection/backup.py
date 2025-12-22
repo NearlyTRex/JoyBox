@@ -27,7 +27,7 @@ def ShouldBackupStoreGameFiles(
         return False
 
     # Check if downloadable
-    if not store_obj.CanDownloadPurchases():
+    if not store_obj.can_download_purchases():
         return False
 
     # Get store info
@@ -36,7 +36,7 @@ def ShouldBackupStoreGameFiles(
     store_buildid = game_info.get_store_buildid()
 
     # Get latest version
-    latest_version = store_obj.GetLatestVersion(
+    latest_version = store_obj.get_latest_version(
         identifier = store_info_identifier,
         branch = store_branchid,
         verbose = verbose,

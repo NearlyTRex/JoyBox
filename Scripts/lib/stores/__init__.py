@@ -115,28 +115,28 @@ def IsStorePlatform(store_platform):
     return GetStoreByPlatform(store_platform) is not None
 
 # Check if store can handle installing
-def CanHandleInstalling(store_platform):
+def can_handle_installing(store_platform):
     instance = GetStoreByPlatform(store_platform)
     if instance:
         return instance.CanHandleInstalling()
     return False
 
 # Check if store can handle launching
-def CanHandleLaunching(store_platform):
+def can_handle_launching(store_platform):
     instance = GetStoreByPlatform(store_platform)
     if instance:
         return instance.CanHandleLaunching()
     return False
 
 # Check if purchases can be imported
-def CanImportPurchases(store_platform):
+def can_import_purchases(store_platform):
     instance = GetStoreByPlatform(store_platform)
     if instance:
         return instance.CanImportPurchases()
     return False
 
 # Check if purchases can be downloaded
-def CanDownloadPurchases(store_platform):
+def can_download_purchases(store_platform):
     instance = GetStoreByPlatform(store_platform)
     if instance:
         return instance.CanDownloadPurchases()

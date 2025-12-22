@@ -258,35 +258,35 @@ class Steam(storebase.StoreBase):
     ############################################################
 
     # Get name
-    def GetName(self):
+    def get_name(self):
         return config.StoreType.STEAM.val()
 
     # Get type
-    def GetType(self):
+    def get_type(self):
         return config.StoreType.STEAM
 
     # Get platform
-    def GetPlatform(self):
+    def get_platform(self):
         return config.Platform.COMPUTER_STEAM
 
     # Get supercategory
-    def GetSupercategory(self):
+    def get_supercategory(self):
         return config.Supercategory.ROMS
 
     # Get category
-    def GetCategory(self):
+    def get_category(self):
         return config.Category.COMPUTER
 
     # Get subcategory
-    def GetSubcategory(self):
+    def get_subcategory(self):
         return config.Subcategory.COMPUTER_STEAM
 
     # Get key
-    def GetKey(self):
+    def get_key(self):
         return config.json_key_steam
 
     # Get identifier keys
-    def GetIdentifierKeys(self):
+    def get_identifier_keys(self):
         return {
             config.StoreIdentifierType.INFO: config.json_key_store_appid,
             config.StoreIdentifierType.INSTALL: config.json_key_store_appid,
@@ -298,19 +298,19 @@ class Steam(storebase.StoreBase):
         }
 
     # Get preferred platform
-    def GetPreferredPlatform(self):
+    def get_preferred_platform(self):
         return self.platform
 
     # Get preferred architecture
-    def GetPreferredArchitecture(self):
+    def get_preferred_architecture(self):
         return self.arch
 
     # Get account name
-    def GetAccountName(self):
+    def get_account_name(self):
         return self.accountname
 
     # Get user name
-    def GetUserName(self):
+    def get_user_name(self):
         return self.username
 
     # Get user id
@@ -339,23 +339,23 @@ class Steam(storebase.StoreBase):
         return self.web_api_key
 
     # Get install dir
-    def GetInstallDir(self):
+    def get_install_dir(self):
         return self.install_dir
 
     # Check if store can handle installing
-    def CanHandleInstalling(self):
+    def can_handle_installing(self):
         return True
 
     # Check if store can handle launching
-    def CanHandleLaunching(self):
+    def can_handle_launching(self):
         return True
 
     # Check if purchases can be imported
-    def CanImportPurchases(self):
+    def can_import_purchases(self):
         return True
 
     # Check if purchases can be downloaded
-    def CanDownloadPurchases(self):
+    def can_download_purchases(self):
         return True
 
     ############################################################
@@ -363,14 +363,14 @@ class Steam(storebase.StoreBase):
     ############################################################
 
     # Login
-    def Login(
+    def login(
         self,
         verbose = False,
         pretend_run = False,
         exit_on_failure = False):
 
         # Check if already logged in
-        if self.IsLoggedIn():
+        if self.is_logged_in():
             return True
 
         # Get tool
@@ -384,7 +384,7 @@ class Steam(storebase.StoreBase):
         # Get login command
         login_cmd = [
             steam_tool,
-            "+login", self.GetAccountName(),
+            "+login", self.get_account_name(),
             "+quit"
         ]
 
@@ -400,7 +400,7 @@ class Steam(storebase.StoreBase):
             return False
 
         # Should be successful
-        self.SetLoggedIn(True)
+        self.set_logged_in(True)
         return True
 
     ############################################################
@@ -408,7 +408,7 @@ class Steam(storebase.StoreBase):
     ############################################################
 
     # Get latest url
-    def GetLatestUrl(
+    def get_latest_url(
         self,
         identifier,
         verbose = False,
@@ -416,7 +416,7 @@ class Steam(storebase.StoreBase):
         exit_on_failure = False):
 
         # Check identifier
-        if not self.IsValidPageIdentifier(identifier):
+        if not self.is_valid_page_identifier(identifier):
             logger.log_warning("Page identifier '%s' was not valid" % identifier)
             return None
 
@@ -428,7 +428,7 @@ class Steam(storebase.StoreBase):
     ############################################################
 
     # Get purchases
-    def GetLatestPurchases(
+    def get_latest_purchases(
         self,
         verbose = False,
         pretend_run = False,
@@ -459,7 +459,7 @@ class Steam(storebase.StoreBase):
                 for purchase_data in cached_data:
                     purchase = jsondata.JsonData(
                         json_data = purchase_data,
-                        json_platform = self.GetPlatform())
+                        json_platform = self.get_platform())
                     cached_purchases.append(purchase)
                 return cached_purchases
             else:
@@ -503,9 +503,9 @@ class Steam(storebase.StoreBase):
             # Create purchase
             purchase = jsondata.JsonData(
                 json_data = {},
-                json_platform = self.GetPlatform())
+                json_platform = self.get_platform())
             purchase.set_value(config.json_key_store_appid, line_appid)
-            purchase.set_value(config.json_key_store_appurl, self.GetLatestUrl(line_appid))
+            purchase.set_value(config.json_key_store_appurl, self.get_latest_url(line_appid))
             purchase.set_value(config.json_key_store_name, line_title.strip())
             purchase.set_value(config.json_key_store_branchid, config.SteamBranchType.PUBLIC.lower())
             purchase.set_value(config.json_key_store_keys, line_keys)
@@ -515,7 +515,7 @@ class Steam(storebase.StoreBase):
             # Store data for caching
             purchases_data.append({
                 config.json_key_store_appid: line_appid,
-                config.json_key_store_appurl: self.GetLatestUrl(line_appid),
+                config.json_key_store_appurl: self.get_latest_url(line_appid),
                 config.json_key_store_name: line_title.strip(),
                 config.json_key_store_branchid: config.SteamBranchType.PUBLIC.lower(),
                 config.json_key_store_keys: line_keys,
@@ -541,7 +541,7 @@ class Steam(storebase.StoreBase):
     ############################################################
 
     # Augment jsondata
-    def AugmentJsondata(
+    def augment_jsondata(
         self,
         json_data,
         identifier,
@@ -582,7 +582,7 @@ class Steam(storebase.StoreBase):
             exit_on_failure = exit_on_failure)
 
     # Get latest jsondata
-    def GetLatestJsondata(
+    def get_latest_jsondata(
         self,
         identifier,
         branch = None,
@@ -591,7 +591,7 @@ class Steam(storebase.StoreBase):
         exit_on_failure = False):
 
         # Check identifier
-        if not self.IsValidInfoIdentifier(identifier):
+        if not self.is_valid_info_identifier(identifier):
             logger.log_warning("Info identifier '%s' was not valid" % identifier)
             return None
 
@@ -651,9 +651,9 @@ class Steam(storebase.StoreBase):
             return None
 
         # Build jsondata
-        json_data = self.CreateDefaultJsondata()
+        json_data = self.create_default_jsondata()
         json_data.set_value(config.json_key_store_appid, identifier)
-        json_data.set_value(config.json_key_store_appurl, self.GetLatestUrl(identifier))
+        json_data.set_value(config.json_key_store_appurl, self.get_latest_url(identifier))
         if isinstance(branch, str) and len(branch):
             json_data.set_value(config.json_key_store_branchid, branch)
         else:
@@ -675,7 +675,7 @@ class Steam(storebase.StoreBase):
                 )
             json_data.set_value(config.json_key_store_buildid, str(appdepots.get("buildid", config.default_buildid)))
             json_data.set_value(config.json_key_store_builddate, str(appdepots.get("timeupdated", "unknown")))
-        return self.AugmentJsondata(
+        return self.augment_jsondata(
             json_data = json_data,
             identifier = identifier,
             verbose = verbose,
@@ -687,7 +687,7 @@ class Steam(storebase.StoreBase):
     ############################################################
 
     # Get latest metadata
-    def GetLatestMetadata(
+    def get_latest_metadata(
         self,
         identifier,
         verbose = False,
@@ -695,7 +695,7 @@ class Steam(storebase.StoreBase):
         exit_on_failure = False):
 
         # Check identifier
-        if not self.IsValidMetadataIdentifier(identifier):
+        if not self.is_valid_metadata_identifier(identifier):
             logger.log_warning("Metadata identifier '%s' was not valid" % identifier)
             return None
 
@@ -705,7 +705,7 @@ class Steam(storebase.StoreBase):
         # Cleanup function
         def cleanup_driver():
             if web_driver:
-                self.WebDisconnect(
+                self.web_disconnect(
                     web_driver = web_driver,
                     verbose = verbose,
                     pretend_run = pretend_run,
@@ -716,7 +716,7 @@ class Steam(storebase.StoreBase):
             nonlocal web_driver
 
             # Connect to web
-            web_driver = self.WebConnect(
+            web_driver = self.web_connect(
                 headless = True,
                 verbose = verbose,
                 pretend_run = pretend_run,
@@ -850,7 +850,7 @@ class Steam(storebase.StoreBase):
     ############################################################
 
     # Get latest asset url
-    def GetLatestAssetUrl(
+    def get_latest_asset_url(
         self,
         identifier,
         asset_type,
@@ -860,7 +860,7 @@ class Steam(storebase.StoreBase):
         exit_on_failure = False):
 
         # Check identifier
-        if not self.IsValidAssetIdentifier(identifier):
+        if not self.is_valid_asset_identifier(identifier):
             logger.log_warning("Asset identifier '%s' was not valid" % identifier)
             return None
 
@@ -887,7 +887,7 @@ class Steam(storebase.StoreBase):
     ############################################################
 
     # Check if installed
-    def IsInstalled(
+    def is_installed(
         self,
         identifier,
         verbose = False,
@@ -895,15 +895,15 @@ class Steam(storebase.StoreBase):
         exit_on_failure = False):
 
         # Check identifier
-        if not self.IsValidInstallIdentifier(identifier):
+        if not self.is_valid_install_identifier(identifier):
             logger.log_warning("Install identifier '%s' was not valid" % identifier)
             return False
 
         # Check for manifest
-        return paths.is_path_file(GetSteamManifestFile(self.GetInstallDir(), identifier))
+        return paths.is_path_file(GetSteamManifestFile(self.get_install_dir(), identifier))
 
     # Install
-    def Install(
+    def install(
         self,
         identifier,
         verbose = False,
@@ -911,7 +911,7 @@ class Steam(storebase.StoreBase):
         exit_on_failure = False):
 
         # Check identifier
-        if not self.IsValidInstallIdentifier(identifier):
+        if not self.is_valid_install_identifier(identifier):
             logger.log_warning("Install identifier '%s' was not valid" % identifier)
             return False
 
@@ -926,8 +926,8 @@ class Steam(storebase.StoreBase):
         # Get install command
         install_cmd = [
             steam_tool,
-            "@sSteamCmdForcePlatformType", self.GetPreferredPlatform(),
-            "+login", self.GetAccountName(),
+            "@sSteamCmdForcePlatformType", self.get_preferred_platform(),
+            "+login", self.get_account_name(),
             "app_update", identifier,
             "validate",
             "+quit"
@@ -948,7 +948,7 @@ class Steam(storebase.StoreBase):
     ############################################################
 
     # Launch
-    def Launch(
+    def launch(
         self,
         identifier,
         verbose = False,
@@ -956,7 +956,7 @@ class Steam(storebase.StoreBase):
         exit_on_failure = False):
 
         # Check identifier
-        if not self.IsValidInstallIdentifier(identifier):
+        if not self.is_valid_install_identifier(identifier):
             logger.log_warning("Launch identifier '%s' was not valid" % identifier)
             return False
 
@@ -989,7 +989,7 @@ class Steam(storebase.StoreBase):
     ############################################################
 
     # Download
-    def Download(
+    def download(
         self,
         identifier,
         output_dir,
@@ -1004,7 +1004,7 @@ class Steam(storebase.StoreBase):
         exit_on_failure = False):
 
         # Check identifier
-        if not self.IsValidDownloadIdentifier(identifier):
+        if not self.is_valid_download_identifier(identifier):
             logger.log_warning("Download identifier '%s' was not valid" % identifier)
             return False
 
@@ -1025,7 +1025,7 @@ class Steam(storebase.StoreBase):
         download_cmd = [
             steamdepot_tool,
             "-app", identifier,
-            "-os", self.GetPreferredPlatform(),
+            "-os", self.get_preferred_platform(),
             "-osarch", self.GetArchitecture(),
             "-dir", tmp_dir_result
         ]
@@ -1033,9 +1033,9 @@ class Steam(storebase.StoreBase):
             download_cmd += [
                 "-beta", branch
             ]
-        if isinstance(self.GetAccountName(), str) and len(self.GetAccountName()):
+        if isinstance(self.get_account_name(), str) and len(self.get_account_name()):
             download_cmd += [
-                "-username", self.GetAccountName(),
+                "-username", self.get_account_name(),
                 "-remember-password"
             ]
 
@@ -1081,19 +1081,19 @@ class Steam(storebase.StoreBase):
     ############################################################
 
     # Build path translation map
-    def BuildPathTranslationMap(self, appid = None, appname = None):
+    def build_path_translation_map(self, appid = None, appname = None):
 
         # Build translation map
         translation_map = super().BuildPathTranslationMap()
         if appid:
-            prefix_path = GetSteamPrefixDir(self.GetInstallDir(), appid)
+            prefix_path = GetSteamPrefixDir(self.get_install_dir(), appid)
             translation_map[config.token_user_registry_dir].append(prefix_path)
             translation_map[config.token_user_public_dir].append(paths.join_paths(prefix_path, "drive_c", "users", "Public"))
             translation_map[config.token_user_profile_dir].append(paths.join_paths(prefix_path, "drive_c", "users", "steamuser"))
         return translation_map
 
     # Get registered paths
-    def AddPathVariants(self, paths = []):
+    def add_path_variants(self, paths = []):
 
         # Add parent variants
         paths = super().AddPathVariants(paths)

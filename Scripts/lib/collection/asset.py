@@ -75,7 +75,7 @@ def DownloadMetadataAsset(
     # Get latest asset url
     latest_asset_url = None
     if store_obj:
-        latest_asset_url = store_obj.GetLatestAssetUrl(
+        latest_asset_url = store_obj.get_latest_asset_url(
             identifier = game_info.get_store_asset_identifier(),
             asset_type = asset_type,
             game_name = game_info.get_name(),

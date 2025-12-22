@@ -15,11 +15,11 @@ config_files = {}
 class SevenZip(toolbase.ToolBase):
 
     # Get name
-    def GetName(self):
+    def get_name(self):
         return "7-Zip"
 
     # Get config
-    def GetConfig(self):
+    def get_config(self):
 
         # Get sevenzip info
         sevenzip_exe = ini.GetIniValue("Tools.7Zip", "7z_exe")

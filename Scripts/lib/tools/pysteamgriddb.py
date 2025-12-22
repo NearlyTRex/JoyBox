@@ -18,11 +18,11 @@ config_files = {}
 class PySteamGridDB(toolbase.ToolBase):
 
     # Get name
-    def GetName(self):
+    def get_name(self):
         return "PySteamGridDB"
 
     # Get config
-    def GetConfig(self):
+    def get_config(self):
         return {
             "PySteamGridDB": {
                 "package_dir": "PySteamGridDB/lib",
@@ -31,7 +31,7 @@ class PySteamGridDB(toolbase.ToolBase):
         }
 
     # Setup
-    def Setup(self, setup_params = None):
+    def setup(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
 
@@ -63,7 +63,7 @@ class PySteamGridDB(toolbase.ToolBase):
         return True
 
     # Setup offline
-    def SetupOffline(self, setup_params = None):
+    def setup_offline(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
 

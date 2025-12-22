@@ -47,18 +47,18 @@ system_files["nand/dsi_nand_usa.bin"] = "d9c875ded95daed312016f5c77f84db1"
 class MelonDS(emulatorbase.EmulatorBase):
 
     # Get name
-    def GetName(self):
+    def get_name(self):
         return "melonDS"
 
     # Get platforms
-    def GetPlatforms(self):
+    def get_platforms(self):
         return [
             config.Platform.NINTENDO_DS,
             config.Platform.NINTENDO_DSI
         ]
 
     # Get config
-    def GetConfig(self):
+    def get_config(self):
         return {
             "melonDS": {
                 "program": {
@@ -85,7 +85,7 @@ class MelonDS(emulatorbase.EmulatorBase):
         }
 
     # Setup
-    def Setup(self, setup_params = None):
+    def setup(self, setup_params = None):
 
         # Use default params if not provided
         if not setup_params:
@@ -142,7 +142,7 @@ class MelonDS(emulatorbase.EmulatorBase):
         return True
 
     # Setup offline
-    def SetupOffline(self, setup_params = None):
+    def setup_offline(self, setup_params = None):
 
         # Use default params if not provided
         if not setup_params:
@@ -177,7 +177,7 @@ class MelonDS(emulatorbase.EmulatorBase):
         return True
 
     # Configure
-    def Configure(self, setup_params = None):
+    def configure(self, setup_params = None):
 
         # Use default params if not provided
         if not setup_params:
@@ -222,7 +222,7 @@ class MelonDS(emulatorbase.EmulatorBase):
         return True
 
     # Launch
-    def Launch(
+    def launch(
         self,
         game_info,
         capture_type = None,

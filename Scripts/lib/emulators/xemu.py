@@ -45,17 +45,17 @@ system_files["bios/complex_4627_v1.03.bin"] = "21445c6f28fca7285b0f167ea770d1e5"
 class Xemu(emulatorbase.EmulatorBase):
 
     # Get name
-    def GetName(self):
+    def get_name(self):
         return "Xemu"
 
     # Get platforms
-    def GetPlatforms(self):
+    def get_platforms(self):
         return [
             config.Platform.MICROSOFT_XBOX
         ]
 
     # Get config
-    def GetConfig(self):
+    def get_config(self):
         return {
             "Xemu": {
                 "program": {
@@ -82,7 +82,7 @@ class Xemu(emulatorbase.EmulatorBase):
         }
 
     # Setup
-    def Setup(self, setup_params = None):
+    def setup(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
 
@@ -134,7 +134,7 @@ class Xemu(emulatorbase.EmulatorBase):
         return True
 
     # Setup offline
-    def SetupOffline(self, setup_params = None):
+    def setup_offline(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
 
@@ -167,7 +167,7 @@ class Xemu(emulatorbase.EmulatorBase):
         return True
 
     # Configure
-    def Configure(self, setup_params = None):
+    def configure(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
 
@@ -210,7 +210,7 @@ class Xemu(emulatorbase.EmulatorBase):
         return True
 
     # Launch
-    def Launch(
+    def launch(
         self,
         game_info,
         capture_type = None,

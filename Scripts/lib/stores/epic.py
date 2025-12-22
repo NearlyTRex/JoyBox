@@ -44,35 +44,35 @@ class Epic(storebase.StoreBase):
     ############################################################
 
     # Get name
-    def GetName(self):
+    def get_name(self):
         return config.StoreType.EPIC.val()
 
     # Get type
-    def GetType(self):
+    def get_type(self):
         return config.StoreType.EPIC
 
     # Get platform
-    def GetPlatform(self):
+    def get_platform(self):
         return config.Platform.COMPUTER_EPIC_GAMES
 
     # Get supercategory
-    def GetSupercategory(self):
+    def get_supercategory(self):
         return config.Supercategory.ROMS
 
     # Get category
-    def GetCategory(self):
+    def get_category(self):
         return config.Category.COMPUTER
 
     # Get subcategory
-    def GetSubcategory(self):
+    def get_subcategory(self):
         return config.Subcategory.COMPUTER_EPIC_GAMES
 
     # Get key
-    def GetKey(self):
+    def get_key(self):
         return config.json_key_epic
 
     # Get identifier keys
-    def GetIdentifierKeys(self):
+    def get_identifier_keys(self):
         return {
             config.StoreIdentifierType.INFO: config.json_key_store_appname,
             config.StoreIdentifierType.INSTALL: config.json_key_store_appname,
@@ -84,27 +84,27 @@ class Epic(storebase.StoreBase):
         }
 
     # Get user name
-    def GetUserName(self):
+    def get_user_name(self):
         return self.username
 
     # Get install dir
-    def GetInstallDir(self):
+    def get_install_dir(self):
         return self.install_dir
 
     # Check if store can handle installing
-    def CanHandleInstalling(self):
+    def can_handle_installing(self):
         return True
 
     # Check if store can handle launching
-    def CanHandleLaunching(self):
+    def can_handle_launching(self):
         return True
 
     # Check if purchases can be imported
-    def CanImportPurchases(self):
+    def can_import_purchases(self):
         return True
 
     # Check if purchases can be downloaded
-    def CanDownloadPurchases(self):
+    def can_download_purchases(self):
         return True
 
     ############################################################
@@ -112,14 +112,14 @@ class Epic(storebase.StoreBase):
     ############################################################
 
     # Login
-    def Login(
+    def login(
         self,
         verbose = False,
         pretend_run = False,
         exit_on_failure = False):
 
         # Check if already logged in
-        if self.IsLoggedIn():
+        if self.is_logged_in():
             return True
 
         # Get tool
@@ -155,7 +155,7 @@ class Epic(storebase.StoreBase):
             return False
 
         # Should be successful
-        self.SetLoggedIn(True)
+        self.set_logged_in(True)
         return True
 
     ############################################################
@@ -163,7 +163,7 @@ class Epic(storebase.StoreBase):
     ############################################################
 
     # Get latest url
-    def GetLatestUrl(
+    def get_latest_url(
         self,
         identifier,
         verbose = False,
@@ -171,12 +171,12 @@ class Epic(storebase.StoreBase):
         exit_on_failure = False):
 
         # Check identifier
-        if not self.IsValidPageIdentifier(identifier):
+        if not self.is_valid_page_identifier(identifier):
             logger.log_warning("Page identifier '%s' was not valid" % identifier)
             return None
 
         # Connect to web
-        web_driver = self.WebConnect(
+        web_driver = self.web_connect(
             headless = True,
             verbose = verbose,
             pretend_run = pretend_run,
@@ -237,7 +237,7 @@ class Epic(storebase.StoreBase):
                 break
 
         # Disconnect from web
-        success = self.WebDisconnect(
+        success = self.web_disconnect(
             web_driver = web_driver,
             verbose = verbose,
             exit_on_failure = exit_on_failure)
@@ -252,7 +252,7 @@ class Epic(storebase.StoreBase):
     ############################################################
 
     # Get purchases
-    def GetLatestPurchases(
+    def get_latest_purchases(
         self,
         verbose = False,
         pretend_run = False,
@@ -283,7 +283,7 @@ class Epic(storebase.StoreBase):
                 for purchase_data in cached_data:
                     purchase = jsondata.JsonData(
                         json_data = purchase_data,
-                        json_platform = self.GetPlatform())
+                        json_platform = self.get_platform())
                     cached_purchases.append(purchase)
                 return cached_purchases
             else:
@@ -347,7 +347,7 @@ class Epic(storebase.StoreBase):
             # Create purchase
             purchase = jsondata.JsonData(
                 json_data = {},
-                json_platform = self.GetPlatform())
+                json_platform = self.get_platform())
             purchase.set_value(config.json_key_store_appname, line_appname)
             purchase.set_value(config.json_key_store_appurl, "")
             purchase.set_value(config.json_key_store_name, line_title)
@@ -381,7 +381,7 @@ class Epic(storebase.StoreBase):
     ############################################################
 
     # Get latest jsondata
-    def GetLatestJsondata(
+    def get_latest_jsondata(
         self,
         identifier,
         branch = None,
@@ -390,7 +390,7 @@ class Epic(storebase.StoreBase):
         exit_on_failure = False):
 
         # Check identifier
-        if not self.IsValidInfoIdentifier(identifier):
+        if not self.is_valid_info_identifier(identifier):
             logger.log_warning("Info identifier '%s' was not valid" % identifier)
             return None
 
@@ -438,7 +438,7 @@ class Epic(storebase.StoreBase):
             return None
 
         # Build jsondata
-        json_data = self.CreateDefaultJsondata()
+        json_data = self.create_default_jsondata()
         json_data.set_value(config.json_key_store_appname, identifier)
         json_data.set_value(config.json_key_store_name, epic_json.get("game", {}).get("title", "").strip())
         json_data.set_value(config.json_key_store_buildid, epic_json.get("game", {}).get("version", config.default_buildid).strip())
@@ -451,9 +451,9 @@ class Epic(storebase.StoreBase):
                     json_data.get_value(config.json_key_store_installdir)
                 )
             json_data.set_value(config.json_key_store_paths, [
-                storebase.CreateTokenizedPath(cloud_save_folder.strip(), base_path)
+                storebase.create_tokenized_path(cloud_save_folder.strip(), base_path)
             ])
-        return self.AugmentJsondata(
+        return self.augment_jsondata(
             json_data = json_data,
             identifier = identifier,
             verbose = verbose,
@@ -465,7 +465,7 @@ class Epic(storebase.StoreBase):
     ############################################################
 
     # Get latest metadata
-    def GetLatestMetadata(
+    def get_latest_metadata(
         self,
         identifier,
         verbose = False,
@@ -473,7 +473,7 @@ class Epic(storebase.StoreBase):
         exit_on_failure = False):
 
         # Check identifier
-        if not self.IsValidMetadataIdentifier(identifier):
+        if not self.is_valid_metadata_identifier(identifier):
             logger.log_warning("Metadata identifier '%s' was not valid" % identifier)
             return None
 
@@ -483,7 +483,7 @@ class Epic(storebase.StoreBase):
         # Cleanup function
         def cleanup_driver():
             if web_driver:
-                self.WebDisconnect(
+                self.web_disconnect(
                     web_driver = web_driver,
                     verbose = verbose,
                     pretend_run = pretend_run,
@@ -494,7 +494,7 @@ class Epic(storebase.StoreBase):
             nonlocal web_driver
 
             # Connect to web
-            web_driver = self.WebConnect(
+            web_driver = self.web_connect(
                 headless = True,
                 verbose = verbose,
                 pretend_run = pretend_run,

@@ -96,17 +96,17 @@ system_files["bios/scph7502.bin"] = "b9d9a0286c33dc6b7237bb13cd46fdee"
 class DuckStation(emulatorbase.EmulatorBase):
 
     # Get name
-    def GetName(self):
+    def get_name(self):
         return "DuckStation"
 
     # Get platforms
-    def GetPlatforms(self):
+    def get_platforms(self):
         return [
             config.Platform.SONY_PLAYSTATION
         ]
 
     # Get config
-    def GetConfig(self):
+    def get_config(self):
         return {
             "DuckStation": {
                 "program": {
@@ -133,7 +133,7 @@ class DuckStation(emulatorbase.EmulatorBase):
         }
 
     # Setup
-    def Setup(self, setup_params = None):
+    def setup(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
 
@@ -176,7 +176,7 @@ class DuckStation(emulatorbase.EmulatorBase):
         return True
 
     # Setup offline
-    def SetupOffline(self, setup_params = None):
+    def setup_offline(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
 
@@ -209,7 +209,7 @@ class DuckStation(emulatorbase.EmulatorBase):
         return True
 
     # Configure
-    def Configure(self, setup_params = None):
+    def configure(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
 
@@ -252,7 +252,7 @@ class DuckStation(emulatorbase.EmulatorBase):
         return True
 
     # Launch
-    def Launch(
+    def launch(
         self,
         game_info,
         capture_type = None,

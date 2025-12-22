@@ -60,11 +60,11 @@ system_files = {}
 class Computer(emulatorbase.EmulatorBase):
 
     # Get name
-    def GetName(self):
+    def get_name(self):
         return "Computer"
 
     # Get platforms
-    def GetPlatforms(self):
+    def get_platforms(self):
         return [
             config.Platform.COMPUTER_AMAZON_GAMES,
             config.Platform.COMPUTER_DISC,
@@ -81,7 +81,7 @@ class Computer(emulatorbase.EmulatorBase):
         ]
 
     # Get config
-    def GetConfig(self):
+    def get_config(self):
         return {
 
             # DosBoxX
@@ -138,30 +138,30 @@ class Computer(emulatorbase.EmulatorBase):
         }
 
     # Get save type
-    def GetSaveType(self):
+    def get_save_type(self):
         if environment.is_windows_platform():
             return config.SaveType.SANDBOXIE
         else:
             return config.SaveType.WINE
 
     # Get config file
-    def GetConfigFile(self, emulator_platform = None):
+    def get_config_file(self, emulator_platform = None):
         return None
 
     # Get save base dir
-    def GetSaveBaseDir(self, emulator_platform = None):
+    def get_save_base_dir(self, emulator_platform = None):
         return None
 
     # Get save sub dirs
-    def GetSaveSubDirs(self, emulator_platform = None):
+    def get_save_sub_dirs(self, emulator_platform = None):
         return None
 
     # Get save dir
-    def GetSaveDir(self, emulator_platform = None):
+    def get_save_dir(self, emulator_platform = None):
         return None
 
     # Setup
-    def Setup(self, setup_params = None):
+    def setup(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
 
@@ -298,7 +298,7 @@ class Computer(emulatorbase.EmulatorBase):
         return True
 
     # Setup offline
-    def SetupOffline(self, setup_params = None):
+    def setup_offline(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
 
@@ -354,7 +354,7 @@ class Computer(emulatorbase.EmulatorBase):
         return True
 
     # Configure
-    def Configure(self, setup_params = None):
+    def configure(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
 
@@ -372,7 +372,7 @@ class Computer(emulatorbase.EmulatorBase):
         return True
 
     # Launch
-    def Launch(
+    def launch(
         self,
         game_info,
         capture_type = None,

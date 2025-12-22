@@ -15,11 +15,11 @@ config_files = {}
 class Chrome(toolbase.ToolBase):
 
     # Get name
-    def GetName(self):
+    def get_name(self):
         return "Chrome"
 
     # Get config
-    def GetConfig(self):
+    def get_config(self):
 
         # Get chrome info
         chrome_exe = ini.GetIniValue("Tools.Chrome", "chrome_exe")

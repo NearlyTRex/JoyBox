@@ -18,11 +18,11 @@ config_files = {}
 class Mutagen(toolbase.ToolBase):
 
     # Get name
-    def GetName(self):
+    def get_name(self):
         return "Mutagen"
 
     # Get config
-    def GetConfig(self):
+    def get_config(self):
         return {
             "Mutagen": {
                 "package_dir": "Mutagen/lib",
@@ -43,7 +43,7 @@ class Mutagen(toolbase.ToolBase):
         }
 
     # Setup
-    def Setup(self, setup_params = None):
+    def setup(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
 
@@ -75,7 +75,7 @@ class Mutagen(toolbase.ToolBase):
         return True
 
     # Setup offline
-    def SetupOffline(self, setup_params = None):
+    def setup_offline(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
 

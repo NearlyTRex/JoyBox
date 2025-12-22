@@ -4,7 +4,6 @@ import sys
 
 # Local imports
 import config
-import system
 import logger
 import jsondata
 import webpage
@@ -15,7 +14,7 @@ import metadataassetcollector
 import manifest
 
 # Create tokenized path
-def CreateTokenizedPath(path, base_path = None):
+def create_tokenized_path(path, base_path = None):
 
     # Replace tokens
     new_path = path
@@ -51,7 +50,7 @@ def CreateTokenizedPath(path, base_path = None):
     return paths.normalize_file_path(new_path)
 
 # Convert to tokenized path
-def ConvertToTokenizedPath(
+def convert_to_tokenized_path(
     path,
     store_type = None,
     store_user_id = None):
@@ -70,7 +69,7 @@ def ConvertToTokenizedPath(
     return paths.normalize_file_path(path)
 
 # Convert from tokenized path
-def ConvertFromTokenizedPath(
+def convert_from_tokenized_path(
     path,
     store_type = None,
     store_user_id = None):
@@ -100,75 +99,75 @@ class StoreBase:
     ############################################################
 
     # Get name
-    def GetName(self):
+    def get_name(self):
         return ""
 
     # Get type
-    def GetType(self):
+    def get_type(self):
         return None
 
     # Get platform
-    def GetPlatform(self):
+    def get_platform(self):
         return ""
 
     # Get supercategory
-    def GetSupercategory(self):
+    def get_supercategory(self):
         return ""
 
     # Get category
-    def GetCategory(self):
+    def get_category(self):
         return ""
 
     # Get subcategory
-    def GetSubcategory(self):
+    def get_subcategory(self):
         return ""
 
     # Get key
-    def GetKey(self):
+    def get_key(self):
         return ""
 
     # Get identifier keys
-    def GetIdentifierKeys(self):
+    def get_identifier_keys(self):
         return {}
 
     # Get preferred platform
-    def GetPreferredPlatform(self):
+    def get_preferred_platform(self):
         return None
 
     # Get preferred architecture
-    def GetPreferredArchitecture(self):
+    def get_preferred_architecture(self):
         return None
 
     # Get account name
-    def GetAccountName(self):
+    def get_account_name(self):
         return None
 
     # Get user name
-    def GetUserName(self):
+    def get_user_name(self):
         return None
 
     # Get email
-    def GetEmail(self):
+    def get_email(self):
         return None
 
     # Get install dir
-    def GetInstallDir(self):
+    def get_install_dir(self):
         return None
 
     # Check if store can handle installing
-    def CanHandleInstalling(self):
+    def can_handle_installing(self):
         return False
 
     # Check if store can handle launching
-    def CanHandleLaunching(self):
+    def can_handle_launching(self):
         return False
 
     # Check if purchases can be imported
-    def CanImportPurchases(self):
+    def can_import_purchases(self):
         return False
 
     # Check if purchases can be downloaded
-    def CanDownloadPurchases(self):
+    def can_download_purchases(self):
         return False
 
     ############################################################
@@ -176,83 +175,83 @@ class StoreBase:
     ############################################################
 
     # Get identifier key
-    def GetIdentifierKey(self, identifier_type):
-        return self.GetIdentifierKeys().get(identifier_type)
+    def get_identifier_key(self, identifier_type):
+        return self.get_identifier_keys().get(identifier_type)
 
     # Get info identifier key
-    def GetInfoIdentifierKey(self):
-        return self.GetIdentifierKey(config.StoreIdentifierType.INFO)
+    def get_info_identifier_key(self):
+        return self.get_identifier_key(config.StoreIdentifierType.INFO)
 
     # Get install identifier key
-    def GetInstallIdentifierKey(self):
-        return self.GetIdentifierKey(config.StoreIdentifierType.INSTALL)
+    def get_install_identifier_key(self):
+        return self.get_identifier_key(config.StoreIdentifierType.INSTALL)
 
     # Get launch identifier key
-    def GetLaunchIdentifierKey(self):
-        return self.GetIdentifierKey(config.StoreIdentifierType.LAUNCH)
+    def get_launch_identifier_key(self):
+        return self.get_identifier_key(config.StoreIdentifierType.LAUNCH)
 
     # Get download identifier key
-    def GetDownloadIdentifierKey(self):
-        return self.GetIdentifierKey(config.StoreIdentifierType.DOWNLOAD)
+    def get_download_identifier_key(self):
+        return self.get_identifier_key(config.StoreIdentifierType.DOWNLOAD)
 
     # Get asset identifier key
-    def GetAssetIdentifierKey(self):
-        return self.GetIdentifierKey(config.StoreIdentifierType.ASSET)
+    def get_asset_identifier_key(self):
+        return self.get_identifier_key(config.StoreIdentifierType.ASSET)
 
     # Get metadata identifier key
-    def GetMetadataIdentifierKey(self):
-        return self.GetIdentifierKey(config.StoreIdentifierType.METADATA)
+    def get_metadata_identifier_key(self):
+        return self.get_identifier_key(config.StoreIdentifierType.METADATA)
 
     # Get page identifier key
-    def GetPageIdentifierKey(self):
-        return self.GetIdentifierKey(config.StoreIdentifierType.PAGE)
+    def get_page_identifier_key(self):
+        return self.get_identifier_key(config.StoreIdentifierType.PAGE)
 
     # Is valid identifier
-    def IsValidIdentifier(self, identifier):
+    def is_valid_identifier(self, identifier):
         return isinstance(identifier, str) and len(identifier)
 
     # Is valid info identifier
-    def IsValidInfoIdentifier(self, identifier):
-        return self.IsValidIdentifier(identifier)
+    def is_valid_info_identifier(self, identifier):
+        return self.is_valid_identifier(identifier)
 
     # Is valid install identifier
-    def IsValidInstallIdentifier(self, identifier):
-        return self.IsValidIdentifier(identifier)
+    def is_valid_install_identifier(self, identifier):
+        return self.is_valid_identifier(identifier)
 
     # Is valid launch identifier
-    def IsValidLaunchIdentifier(self, identifier):
-        return self.IsValidIdentifier(identifier)
+    def is_valid_launch_identifier(self, identifier):
+        return self.is_valid_identifier(identifier)
 
     # Is valid download identifier
-    def IsValidDownloadIdentifier(self, identifier):
-        return self.IsValidIdentifier(identifier)
+    def is_valid_download_identifier(self, identifier):
+        return self.is_valid_identifier(identifier)
 
     # Is valid asset identifier
-    def IsValidAssetIdentifier(self, identifier):
-        return self.IsValidIdentifier(identifier)
+    def is_valid_asset_identifier(self, identifier):
+        return self.is_valid_identifier(identifier)
 
     # Is valid metadata identifier
-    def IsValidMetadataIdentifier(self, identifier):
-        return self.IsValidIdentifier(identifier)
+    def is_valid_metadata_identifier(self, identifier):
+        return self.is_valid_identifier(identifier)
 
     # Is valid page identifier
-    def IsValidPageIdentifier(self, identifier):
-        return self.IsValidIdentifier(identifier)
+    def is_valid_page_identifier(self, identifier):
+        return self.is_valid_identifier(identifier)
 
     ############################################################
     # Connection
     ############################################################
 
     # Check if logged in
-    def IsLoggedIn(self):
+    def is_logged_in(self):
         return self.is_logged_in
 
     # Set logged in
-    def SetLoggedIn(self, value):
+    def set_logged_in(self, value):
         self.is_logged_in = value
 
     # Login
-    def Login(
+    def login(
         self,
         verbose = False,
         pretend_run = False,
@@ -260,7 +259,7 @@ class StoreBase:
         return False
 
     # Web connect
-    def WebConnect(
+    def web_connect(
         self,
         headless = False,
         verbose = False,
@@ -275,7 +274,7 @@ class StoreBase:
             exit_on_failure = exit_on_failure)
 
     # Web disconnect
-    def WebDisconnect(
+    def web_disconnect(
         self,
         web_driver,
         verbose = False,
@@ -290,15 +289,15 @@ class StoreBase:
             exit_on_failure = exit_on_failure)
 
     # Get cookie file
-    def GetCookieFile(self):
-        return webpage.GetCookieFile(self.GetName().lower())
+    def get_cookie_file(self):
+        return webpage.GetCookieFile(self.get_name().lower())
 
     ############################################################
     # Versions
     ############################################################
 
     # Get latest version
-    def GetLatestVersion(
+    def get_latest_version(
         self,
         identifier,
         branch = None,
@@ -307,7 +306,7 @@ class StoreBase:
         exit_on_failure = False):
 
         # Get latest jsondata
-        latest_jsondata = self.GetLatestJsondata(
+        latest_jsondata = self.get_latest_jsondata(
             identifier = identifier,
             branch = branch,
             verbose = verbose,
@@ -324,7 +323,7 @@ class StoreBase:
     ############################################################
 
     # Get latest url
-    def GetLatestUrl(
+    def get_latest_url(
         self,
         identifier,
         verbose = False,
@@ -337,7 +336,7 @@ class StoreBase:
     ############################################################
 
     # Get purchases
-    def GetLatestPurchases(
+    def get_latest_purchases(
         self,
         verbose = False,
         pretend_run = False,
@@ -349,15 +348,15 @@ class StoreBase:
     ############################################################
 
     # Create default jsondata
-    def CreateDefaultJsondata(self):
-        json_data = jsondata.JsonData({}, self.GetPlatform())
+    def create_default_jsondata(self):
+        json_data = jsondata.JsonData({}, self.get_platform())
         json_data.set_value(config.json_key_store_paths, [])
         json_data.set_value(config.json_key_store_keys, [])
         json_data.set_value(config.json_key_store_buildid, config.default_buildid)
         return json_data
 
     # Augment jsondata
-    def AugmentJsondata(
+    def augment_jsondata(
         self,
         json_data,
         identifier,
@@ -418,7 +417,7 @@ class StoreBase:
         return json_data
 
     # Get latest jsondata
-    def GetLatestJsondata(
+    def get_latest_jsondata(
         self,
         identifier,
         branch = None,
@@ -427,13 +426,13 @@ class StoreBase:
         exit_on_failure = False):
 
         # Check identifier
-        if not self.IsValidInfoIdentifier(identifier):
+        if not self.is_valid_info_identifier(identifier):
             logger.log_warning("Info identifier '%s' was not valid" % identifier)
             return None
 
         # Build jsondata
-        return self.AugmentJsondata(
-            json_data = self.CreateDefaultJsondata(),
+        return self.augment_jsondata(
+            json_data = self.create_default_jsondata(),
             identifier = identifier,
             verbose = verbose,
             pretend_run = pretend_run,
@@ -444,7 +443,7 @@ class StoreBase:
     ############################################################
 
     # Get latest metadata
-    def GetLatestMetadata(
+    def get_latest_metadata(
         self,
         identifier,
         verbose = False,
@@ -452,13 +451,13 @@ class StoreBase:
         exit_on_failure = False):
 
         # Check identifier
-        if not self.IsValidMetadataIdentifier(identifier):
+        if not self.is_valid_metadata_identifier(identifier):
             logger.log_warning("Metadata identifier '%s' was not valid" % identifier)
             return None
 
         # Collect metadata entry
         return metadatacollector.CollectMetadataFromAll(
-            game_platform = self.GetPlatform(),
+            game_platform = self.get_platform(),
             game_name = identifier,
             keys_to_check = config.metadata_keys_downloadable,
             verbose = verbose,
@@ -470,7 +469,7 @@ class StoreBase:
     ############################################################
 
     # Get latest asset url
-    def GetLatestAssetUrl(
+    def get_latest_asset_url(
         self,
         identifier,
         asset_type,
@@ -480,13 +479,13 @@ class StoreBase:
         exit_on_failure = False):
 
         # Check identifier
-        if not self.IsValidAssetIdentifier(identifier):
+        if not self.is_valid_asset_identifier(identifier):
             logger.log_warning("Asset identifier '%s' was not valid" % identifier)
             return None
 
         # Collect asset url
         return metadataassetcollector.FindMetadataAsset(
-            game_platform = self.GetPlatform(),
+            game_platform = self.get_platform(),
             game_name = game_name if game_name else identifier,
             asset_type = asset_type,
             verbose = verbose,
@@ -498,7 +497,7 @@ class StoreBase:
     ############################################################
 
     # Check if installed
-    def IsInstalled(
+    def is_installed(
         self,
         identifier,
         verbose = False,
@@ -507,7 +506,7 @@ class StoreBase:
         return False
 
     # Install
-    def Install(
+    def install(
         self,
         identifier,
         verbose = False,
@@ -516,7 +515,7 @@ class StoreBase:
         return False
 
     # Uninstall
-    def Uninstall(
+    def uninstall(
         self,
         identifier,
         verbose = False,
@@ -529,7 +528,7 @@ class StoreBase:
     ############################################################
 
     # Launch
-    def Launch(
+    def launch(
         self,
         identifier,
         verbose = False,
@@ -542,7 +541,7 @@ class StoreBase:
     ############################################################
 
     # Download
-    def Download(
+    def download(
         self,
         identifier,
         output_dir,
@@ -562,7 +561,7 @@ class StoreBase:
     ############################################################
 
     # Build path translation map
-    def BuildPathTranslationMap(self, appid = None, appname = None):
+    def build_path_translation_map(self, appid = None, appname = None):
 
         # Build translation map
         translation_map = {}
@@ -581,13 +580,13 @@ class StoreBase:
 
         # Add store install dir
         translation_map[config.token_store_install_dir] = []
-        translation_map[config.token_store_install_dir].append(self.GetInstallDir())
+        translation_map[config.token_store_install_dir].append(self.get_install_dir())
 
         # Return translation map
         return translation_map
 
     # Add path variants
-    def AddPathVariants(self, paths = []):
+    def add_path_variants(self, paths = []):
 
         # Add AppData variants
         for path in sorted(paths):
