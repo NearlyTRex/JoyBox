@@ -5,12 +5,16 @@ import shutil
 import tempfile
 import errno
 import glob
+import ntpath
 
 # Local imports
 import config
 import hashing
 import logger
+import modules
 import paths
+import programs
+import strings
 import system
 
 ###########################################################
@@ -118,7 +122,7 @@ def sort_file_contents(src, verbose = False, pretend_run = False, exit_on_failur
 
 # Remove empty directories
 def remove_empty_directories(src, verbose = False, pretend_run = False, exit_on_failure = False):
-    for empty_dir in system.BuildEmptyDirectoryList(src):
+    for empty_dir in paths.build_empty_directory_list(src):
         success = remove_directory(
             src = empty_dir,
             verbose = verbose,
@@ -130,7 +134,7 @@ def remove_empty_directories(src, verbose = False, pretend_run = False, exit_on_
 
 # Replace symlinked directories
 def replace_symlinked_directories(src, verbose = False, pretend_run = False, exit_on_failure = False):
-    for symlink_dir in system.BuildSymlinkDirectoryList(src):
+    for symlink_dir in paths.build_symlink_directory_list(src):
         success = remove_symlink(
             src = symlink_dir,
             verbose = verbose,
@@ -172,14 +176,14 @@ def lowercase_all_paths(src, verbose = False, pretend_run = False, exit_on_failu
 
 # Sanitize filenames
 def sanitize_filenames(path, extension = None, verbose = False, pretend_run = False, exit_on_failure = False):
-    for obj in system.GetDirectoryContents(path):
-        obj_path = system.JoinPaths(path, obj)
+    for obj in paths.get_directory_contents(path):
+        obj_path = paths.join_paths(path, obj)
         if paths.is_path_file(obj_path):
             if extension and not obj.endswith(extension):
                 continue
             success = move_file_or_directory(
                 src = obj_path,
-                dest = system.JoinPaths(path, paths.replace_invalid_path_characters(obj)),
+                dest = paths.join_paths(path, paths.replace_invalid_path_characters(obj)),
                 skip_existing = True,
                 verbose = verbose,
                 pretend_run = pretend_run,
@@ -198,7 +202,7 @@ def touch_file(src, contents = "", contents_mode = "w", encoding = None, verbose
         if verbose:
             logger.log_info("Touching file %s" % src)
         if not pretend_run:
-            os.makedirs(system.GetFilenameDirectory(src), exist_ok = True)
+            os.makedirs(paths.get_filename_directory(src), exist_ok = True)
             if len(contents):
                 if encoding:
                     with open(src, contents_mode, encoding) as f:
@@ -437,7 +441,7 @@ def transfer_file(
         if verbose:
             logger.log_info("Transferring %s to %s" % (src, dest))
         if not pretend_run:
-            total_size = system.GetFileSize(src)
+            total_size = paths.get_file_size(src)
             progress_bar = None
             progress_callback = None
             if show_progress:
@@ -584,7 +588,7 @@ def copy_contents(
         if exit_on_failure:
             logger.log_error("Source %s does not exist, cannot copy" % src)
             system.QuitProgram()
-    file_list = system.BuildFileList(
+    file_list = paths.build_file_list(
         root = src,
         use_relative_paths = True,
         ignore_symlinks = ignore_symlinks,
@@ -631,7 +635,7 @@ def move_contents(
         if exit_on_failure:
             logger.log_error("Source %s does not exist, cannot move" % src)
             system.QuitProgram()
-    file_list = system.BuildFileList(
+    file_list = paths.build_file_list(
         root = src,
         use_relative_paths = True,
         ignore_symlinks = ignore_symlinks,
@@ -673,13 +677,13 @@ def copy_globbed_files(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    glob_source_dir = system.GetFilenameDirectory(glob_pattern)
-    glob_files = system.ConvertFileListToRelativePaths(
+    glob_source_dir = paths.get_filename_directory(glob_pattern)
+    glob_files = paths.convert_file_list_to_relative_paths(
         file_list = glob.glob(glob_pattern),
         base_dir = glob_source_dir)
     for glob_file in glob_files:
         success = make_directory(
-            src = os.path.join(dest_dir, system.GetFilenameDirectory(glob_file)),
+            src = os.path.join(dest_dir, paths.get_filename_directory(glob_file)),
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
@@ -710,13 +714,13 @@ def move_globbed_files(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    glob_source_dir = system.GetFilenameDirectory(glob_pattern)
-    glob_files = system.ConvertFileListToRelativePaths(
+    glob_source_dir = paths.get_filename_directory(glob_pattern)
+    glob_files = paths.convert_file_list_to_relative_paths(
         file_list = glob.glob(glob_pattern),
         base_dir = glob_source_dir)
     for glob_file in glob_files:
         success = make_directory(
-            src = os.path.join(dest_dir, system.GetFilenameDirectory(glob_file)),
+            src = os.path.join(dest_dir, paths.get_filename_directory(glob_file)),
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
@@ -755,13 +759,13 @@ def smart_copy(
     pretend_run = False,
     exit_on_failure = False):
     success = make_directory(
-        src = system.GetFilenameDirectory(dest),
+        src = paths.get_filename_directory(dest),
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if not success:
         return False
-    if config.token_glob in system.GetFilenameBasename(src):
+    if config.token_glob in paths.get_filename_basename(src):
         return copy_globbed_files(
             glob_pattern = src,
             dest_dir = dest,
@@ -813,13 +817,13 @@ def smart_move(
     pretend_run = False,
     exit_on_failure = False):
     success = make_directory(
-        src = system.GetFilenameDirectory(dest),
+        src = paths.get_filename_directory(dest),
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if not success:
         return False
-    if config.token_glob in system.GetFilenameBasename(src):
+    if config.token_glob in paths.get_filename_basename(src):
         return move_globbed_files(
             glob_pattern = src,
             dest_dir = dest,
@@ -941,8 +945,8 @@ def sync_contents(
 
 # Sync data
 def sync_data(data_src, data_dest, verbose = False, pretend_run = False, exit_on_failure = False):
-    is_glob_src = (config.token_glob in system.GetFilenameBasename(data_src))
-    is_glob_dest = (config.token_glob in system.GetFilenameBasename(data_dest))
+    is_glob_src = (config.token_glob in paths.get_filename_basename(data_src))
+    is_glob_dest = (config.token_glob in paths.get_filename_basename(data_dest))
     if is_glob_src and is_glob_dest:
         return copy_globbed_files(
             glob_pattern = data_src,
@@ -991,3 +995,78 @@ def remove_object(obj, verbose = False, pretend_run = False, exit_on_failure = F
             exit_on_failure = exit_on_failure)
         return success_contents and success_dir
     return False
+
+###########################################################
+# Link info utilities
+###########################################################
+
+# Get link info
+def get_link_info(lnk_path, lnk_base_path):
+
+    # Import pylnk
+    pylnk = modules.import_python_module_file(
+        module_path = programs.GetToolProgram("PyLnk"),
+        module_name = "pylnk")
+
+    # Link info
+    info = {}
+    info["target"] = ""
+    info["cwd"] = ""
+    info["args"] = []
+
+    # Check params
+    if not paths.is_path_valid(lnk_path) or not os.path.isfile(lnk_path) or not lnk_path.endswith(".lnk"):
+        return info
+    if not paths.is_path_valid(lnk_base_path) or not os.path.isdir(lnk_base_path):
+        return info
+
+    # Parse link file
+    try:
+        lnk = pylnk.Lnk(lnk_path)
+        has_full_path = lnk._link_info
+        has_relative_path = lnk.link_flags.HasRelativePath
+        has_working_dir = lnk.link_flags.HasWorkingDir
+        has_arguments = lnk.link_flags.HasArguments
+        if has_full_path:
+
+            # Get start path
+            lnk_start_path = paths.normalize_file_path(paths.get_filename_directory(lnk_path))
+
+            # Get full path
+            lnk_full_path = paths.normalize_file_path(lnk._link_info.path)
+            lnk_offset_path = paths.get_filename_drive_offset(lnk_full_path)
+
+            # Get relative path
+            lnk_relative_path = ""
+            if has_relative_path:
+                lnk_relative_path = paths.normalize_file_path(lnk.relative_path)
+            else:
+                lnk_relative_path = paths.get_filename_file(lnk_full_path)
+
+            # Get working dir
+            lnk_working_dir = "."
+            if has_working_dir:
+                lnk_working_dir = paths.normalize_file_path(lnk.work_dir)
+
+            # Get arguments
+            lnk_arguments = []
+            if has_arguments:
+                lnk_arguments = strings.split_by_enclosed_substrings(lnk.arguments.strip("\x00"), "\"", "\"")
+
+            # Get target
+            lnk_target = paths.normalize_file_path(os.path.join(lnk_base_path, lnk_offset_path))
+
+            # Get cwd
+            lnk_cwd = ""
+            if ntpath.isabs(lnk_working_dir):
+                lnk_cwd = paths.normalize_file_path(os.path.join(lnk_base_path, paths.get_directory_drive_offset(lnk_working_dir)))
+            else:
+                lnk_cwd = paths.normalize_file_path(os.path.join(paths.get_filename_directory(lnk_target), lnk_working_dir))
+
+            # Get info
+            info["target"] = lnk_target
+            info["cwd"] = lnk_cwd
+            info["args"] = lnk_arguments
+    except Exception as e:
+        logger.log_error(e)
+    return info

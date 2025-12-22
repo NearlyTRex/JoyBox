@@ -3,6 +3,7 @@ import textwrap
 
 # Local imports
 import config
+import logger
 
 ###########################################################
 # Text processing utilities
@@ -66,3 +67,23 @@ def extract_web_text(text):
         return html_text.extract_text(text)
     except:
         return None
+
+###########################################################
+# Display utilities
+###########################################################
+
+# Display table
+def display_table(table_data):
+    try:
+        import texttable
+        table = texttable.Texttable()
+        table.set_max_width(0)
+        for index, entry in enumerate(table_data):
+            if index == 0:
+                table.header(entry.keys())
+            table.add_row(entry.values())
+        print(table.draw())
+        return True
+    except Exception as e:
+        logger.log_error(e)
+        return False

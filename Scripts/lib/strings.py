@@ -1,9 +1,18 @@
 # Imports
 import re
+import uuid
 import urllib.parse
 from datetime import datetime, timedelta
 from dateutil import parser as date_parser
 from dateutil.relativedelta import relativedelta
+
+###########################################################
+# ID generation utilities
+###########################################################
+
+# Generate unique ID
+def generate_unique_id():
+    return str(uuid.uuid4())
 
 ###########################################################
 # String manipulation utilities
