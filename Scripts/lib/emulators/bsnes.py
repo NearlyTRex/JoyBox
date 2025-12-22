@@ -50,7 +50,7 @@ class BSnes(emulatorbase.EmulatorBase):
 
         # Download windows program
         if programs.should_program_be_installed("BSnes", "windows"):
-            success = release.DownloadGithubRelease(
+            success = release.download_github_release(
                 github_user = "bsnes-emu",
                 github_repo = "bsnes",
                 starts_with = "bsnes-windows",
@@ -74,7 +74,7 @@ class BSnes(emulatorbase.EmulatorBase):
 
         # Setup windows program
         if programs.should_program_be_installed("BSnes", "windows"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_program_backup_dir("BSnes", "windows"),
                 install_name = "BSnes",
                 install_dir = programs.get_program_install_dir("BSnes", "windows"),

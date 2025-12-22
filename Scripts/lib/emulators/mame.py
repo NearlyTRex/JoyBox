@@ -132,7 +132,7 @@ class Mame(emulatorbase.EmulatorBase):
 
         # Download windows program
         if programs.should_program_be_installed("Mame", "windows"):
-            success = release.DownloadGithubRelease(
+            success = release.download_github_release(
                 github_user = "mamedev",
                 github_repo = "mame",
                 starts_with = "mame",
@@ -153,7 +153,7 @@ class Mame(emulatorbase.EmulatorBase):
 
         # Build linux program
         if programs.should_program_be_installed("Mame", "linux"):
-            success = release.BuildAppImageFromSource(
+            success = release.build_appimage_from_source(
                 release_url = "https://github.com/NearlyTRex/Mame.git",
                 output_file = "App-x86_64.AppImage",
                 install_name = "Mame",
@@ -202,7 +202,7 @@ class Mame(emulatorbase.EmulatorBase):
 
         # Setup windows program
         if programs.should_program_be_installed("Mame", "windows"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_program_backup_dir("Mame", "windows"),
                 install_name = "Mame",
                 install_dir = programs.get_program_install_dir("Mame", "windows"),
@@ -216,7 +216,7 @@ class Mame(emulatorbase.EmulatorBase):
 
         # Setup linux program
         if programs.should_program_be_installed("Mame", "linux"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_program_backup_dir("Mame", "linux"),
                 install_name = "Mame",
                 install_dir = programs.get_program_install_dir("Mame", "linux"),

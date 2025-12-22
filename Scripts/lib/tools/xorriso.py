@@ -43,7 +43,7 @@ class XorrISO(toolbase.ToolBase):
 
         # Download windows program
         if programs.should_program_be_installed("XorrISO", "windows"):
-            success = network.DownloadGithubRepository(
+            success = network.download_github_repository(
                 github_user = "NearlyTRex",
                 github_repo = "XorrISOWindows",
                 output_dir = programs.get_program_install_dir("XorrISO", "windows"),
@@ -55,7 +55,7 @@ class XorrISO(toolbase.ToolBase):
             if not success:
                 logger.log_error("Could not setup XorrISO")
                 return False
-            success = network.ArchiveGithubRepository(
+            success = network.archive_github_repository(
                 github_user = "NearlyTRex",
                 github_repo = "XorrISOWindows",
                 output_dir = programs.get_program_backup_dir("XorrISO", "windows"),
@@ -70,7 +70,7 @@ class XorrISO(toolbase.ToolBase):
 
         # Build linux program
         if programs.should_program_be_installed("XorrISO", "linux"):
-            success = release.BuildAppImageFromSource(
+            success = release.build_appimage_from_source(
                 release_url = "https://ftp.gnu.org/gnu/xorriso/xorriso-1.5.2.tar.gz",
                 output_file = "App-x86_64.AppImage",
                 install_name = "XorrISO",
@@ -108,7 +108,7 @@ class XorrISO(toolbase.ToolBase):
 
         # Setup windows program
         if programs.should_program_be_installed("XorrISO", "windows"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_program_backup_dir("XorrISO", "windows"),
                 install_name = "XorrISO",
                 install_dir = programs.get_program_install_dir("XorrISO", "windows"),
@@ -121,7 +121,7 @@ class XorrISO(toolbase.ToolBase):
 
         # Setup linux program
         if programs.should_program_be_installed("XorrISO", "linux"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_program_backup_dir("XorrISO", "linux"),
                 install_name = "XorrISO",
                 install_dir = programs.get_program_install_dir("XorrISO", "linux"),

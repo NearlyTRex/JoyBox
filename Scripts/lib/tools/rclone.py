@@ -74,7 +74,7 @@ class RClone(toolbase.ToolBase):
 
         # Download windows program
         if programs.should_program_be_installed("RClone", "windows"):
-            success = release.DownloadGeneralRelease(
+            success = release.download_general_release(
                 archive_url = "https://downloads.rclone.org/rclone-current-windows-amd64.zip",
                 search_file = "rclone.exe",
                 install_name = "RClone",
@@ -89,7 +89,7 @@ class RClone(toolbase.ToolBase):
 
         # Download linux program
         if programs.should_program_be_installed("RClone", "linux"):
-            success = release.DownloadGeneralRelease(
+            success = release.download_general_release(
                 archive_url = "https://downloads.rclone.org/rclone-current-linux-amd64.zip",
                 search_file = "rclone",
                 install_name = "RClone",
@@ -110,7 +110,7 @@ class RClone(toolbase.ToolBase):
 
         # Setup windows program
         if programs.should_program_be_installed("RClone", "windows"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_program_backup_dir("RClone", "windows"),
                 install_name = "RClone",
                 install_dir = programs.get_program_install_dir("RClone", "windows"),
@@ -124,7 +124,7 @@ class RClone(toolbase.ToolBase):
 
         # Setup linux program
         if programs.should_program_be_installed("RClone", "linux"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_program_backup_dir("RClone", "linux"),
                 install_name = "RClone",
                 install_dir = programs.get_program_install_dir("RClone", "linux"),

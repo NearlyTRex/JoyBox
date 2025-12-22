@@ -44,7 +44,7 @@ class MameTools(toolbase.ToolBase):
 
         # Download windows program
         if programs.should_program_be_installed("MameChdman", "windows"):
-            success = release.DownloadGithubRelease(
+            success = release.download_github_release(
                 github_user = "mamedev",
                 github_repo = "mame",
                 starts_with = "mame",
@@ -66,7 +66,7 @@ class MameTools(toolbase.ToolBase):
 
         # Build linux program
         if programs.should_program_be_installed("MameChdman", "linux"):
-            success = release.BuildAppImageFromSource(
+            success = release.build_appimage_from_source(
                 release_url = "https://github.com/NearlyTRex/Mame.git",
                 output_file = "App-x86_64.AppImage",
                 install_name = "MameChdman",
@@ -99,7 +99,7 @@ class MameTools(toolbase.ToolBase):
 
         # Setup windows program
         if programs.should_program_be_installed("MameChdman", "windows"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_program_backup_dir("MameChdman", "windows"),
                 install_name = "MameChdman",
                 install_dir = programs.get_program_install_dir("MameChdman", "windows"),
@@ -113,7 +113,7 @@ class MameTools(toolbase.ToolBase):
 
         # Setup linux program
         if programs.should_program_be_installed("MameChdman", "linux"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_program_backup_dir("MameChdman", "linux"),
                 install_name = "MameChdman",
                 install_dir = programs.get_program_install_dir("MameChdman", "linux"),

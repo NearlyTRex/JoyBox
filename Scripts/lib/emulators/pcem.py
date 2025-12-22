@@ -50,7 +50,7 @@ class PCEm(emulatorbase.EmulatorBase):
 
         # Download windows program
         if programs.should_program_be_installed("PCEm", "windows"):
-            success = release.DownloadGithubRelease(
+            success = release.download_github_release(
                 github_user = "sarah-walker-pcem",
                 github_repo = "pcem",
                 starts_with = "PCem",
@@ -74,7 +74,7 @@ class PCEm(emulatorbase.EmulatorBase):
 
         # Setup windows program
         if programs.should_program_be_installed("PCEm", "windows"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_program_backup_dir("PCEm", "windows"),
                 install_name = "PCEm",
                 install_dir = programs.get_program_install_dir("PCEm", "windows"),

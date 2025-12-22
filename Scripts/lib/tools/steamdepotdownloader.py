@@ -42,7 +42,7 @@ class SteamDepotDownloader(toolbase.ToolBase):
 
         # Download windows program
         if programs.should_program_be_installed("SteamDepotDownloader", "windows"):
-            success = release.DownloadGithubRelease(
+            success = release.download_github_release(
                 github_user = "SteamRE",
                 github_repo = "DepotDownloader",
                 starts_with = "DepotDownloader-windows-x64",
@@ -61,7 +61,7 @@ class SteamDepotDownloader(toolbase.ToolBase):
 
         # Download linux program
         if programs.should_program_be_installed("SteamDepotDownloader", "linux"):
-            success = release.DownloadGithubRelease(
+            success = release.download_github_release(
                 github_user = "SteamRE",
                 github_repo = "DepotDownloader",
                 starts_with = "DepotDownloader-linux-x64",
@@ -93,7 +93,7 @@ class SteamDepotDownloader(toolbase.ToolBase):
 
         # Setup windows program
         if programs.should_program_be_installed("SteamDepotDownloader", "windows"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_program_backup_dir("SteamDepotDownloader", "windows"),
                 install_name = "SteamDepotDownloader",
                 install_dir = programs.get_program_install_dir("SteamDepotDownloader", "windows"),
@@ -107,7 +107,7 @@ class SteamDepotDownloader(toolbase.ToolBase):
 
         # Setup linux program
         if programs.should_program_be_installed("SteamDepotDownloader", "linux"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_program_backup_dir("SteamDepotDownloader", "linux"),
                 install_name = "SteamDepotDownloader",
                 install_dir = programs.get_program_install_dir("SteamDepotDownloader", "linux"),

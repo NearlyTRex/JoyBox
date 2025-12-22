@@ -42,7 +42,7 @@ class Sigtop(toolbase.ToolBase):
 
         # Download windows program
         if programs.should_program_be_installed("Sigtop", "windows"):
-            success = release.DownloadGithubRelease(
+            success = release.download_github_release(
                 github_user = "tbvdm",
                 github_repo = "sigtop",
                 starts_with = "sigtop",
@@ -67,7 +67,7 @@ class Sigtop(toolbase.ToolBase):
 
         # Setup windows program
         if programs.should_program_be_installed("Sigtop", "windows"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_program_backup_dir("Sigtop", "windows"),
                 install_name = "Sigtop",
                 install_dir = programs.get_program_install_dir("Sigtop", "windows"),

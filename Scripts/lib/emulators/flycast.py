@@ -68,7 +68,7 @@ class Flycast(emulatorbase.EmulatorBase):
 
         # Download windows program
         if programs.should_program_be_installed("Flycast", "windows"):
-            success = release.DownloadGithubRelease(
+            success = release.download_github_release(
                 github_user = "flyinghead",
                 github_repo = "flycast",
                 starts_with = "flycast-win64",
@@ -87,7 +87,7 @@ class Flycast(emulatorbase.EmulatorBase):
 
         # Build linux program
         if programs.should_program_be_installed("Flycast", "linux"):
-            success = release.BuildAppImageFromSource(
+            success = release.build_appimage_from_source(
                 release_url = "https://github.com/NearlyTRex/Flycast.git",
                 output_file = "App-x86_64.AppImage",
                 install_name = "Flycast",
@@ -125,7 +125,7 @@ class Flycast(emulatorbase.EmulatorBase):
 
         # Setup windows program
         if programs.should_program_be_installed("Flycast", "windows"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_program_backup_dir("Flycast", "windows"),
                 install_name = "Flycast",
                 install_dir = programs.get_program_install_dir("Flycast", "windows"),
@@ -139,7 +139,7 @@ class Flycast(emulatorbase.EmulatorBase):
 
         # Setup linux program
         if programs.should_program_be_installed("Flycast", "linux"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_program_backup_dir("Flycast", "linux"),
                 install_name = "Flycast",
                 install_dir = programs.get_program_install_dir("Flycast", "linux"),

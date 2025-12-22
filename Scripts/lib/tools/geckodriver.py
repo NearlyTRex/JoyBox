@@ -42,7 +42,7 @@ class GeckoDriver(toolbase.ToolBase):
 
         # Download windows program
         if programs.should_program_be_installed("GeckoDriver", "windows"):
-            success = release.DownloadGithubRelease(
+            success = release.download_github_release(
                 github_user = "mozilla",
                 github_repo = "geckodriver",
                 starts_with = "geckodriver",
@@ -61,7 +61,7 @@ class GeckoDriver(toolbase.ToolBase):
 
         # Download linux program
         if programs.should_program_be_installed("GeckoDriver", "linux"):
-            success = release.DownloadGithubRelease(
+            success = release.download_github_release(
                 github_user = "mozilla",
                 github_repo = "geckodriver",
                 starts_with = "geckodriver",
@@ -86,7 +86,7 @@ class GeckoDriver(toolbase.ToolBase):
 
         # Setup windows program
         if programs.should_program_be_installed("GeckoDriver", "windows"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_program_backup_dir("GeckoDriver", "windows"),
                 install_name = "GeckoDriver",
                 install_dir = programs.get_program_install_dir("GeckoDriver", "windows"),
@@ -100,7 +100,7 @@ class GeckoDriver(toolbase.ToolBase):
 
         # Setup linux program
         if programs.should_program_be_installed("GeckoDriver", "linux"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_program_backup_dir("GeckoDriver", "linux"),
                 install_name = "GeckoDriver",
                 install_dir = programs.get_program_install_dir("GeckoDriver", "linux"),

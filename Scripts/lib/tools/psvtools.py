@@ -36,7 +36,7 @@ class PSVTools(toolbase.ToolBase):
 
         # Download library
         if programs.should_library_be_installed("PSVTools"):
-            success = network.DownloadGithubRepository(
+            success = network.download_github_repository(
                 github_user = "NearlyTRex",
                 github_repo = "PSVTools",
                 output_dir = programs.get_library_install_dir("PSVTools", "lib"),
@@ -47,7 +47,7 @@ class PSVTools(toolbase.ToolBase):
             if not success:
                 logger.log_error("Could not setup PSVTools")
                 return False
-            success = network.ArchiveGithubRepository(
+            success = network.archive_github_repository(
                 github_user = "NearlyTRex",
                 github_repo = "PSVTools",
                 output_dir = programs.get_library_backup_dir("PSVTools", "lib"),
@@ -68,7 +68,7 @@ class PSVTools(toolbase.ToolBase):
 
         # Setup library
         if programs.should_library_be_installed("PSVTools"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_library_backup_dir("PSVTools", "lib"),
                 install_name = "PSVTools",
                 install_dir = programs.get_library_install_dir("PSVTools", "lib"),

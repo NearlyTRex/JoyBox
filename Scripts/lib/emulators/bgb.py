@@ -50,7 +50,7 @@ class BGB(emulatorbase.EmulatorBase):
 
         # Download windows program
         if programs.should_program_be_installed("BGB", "windows"):
-            success = release.DownloadGeneralRelease(
+            success = release.download_general_release(
                 archive_url = "https://bgb.bircd.org/bgb.zip",
                 search_file = "bgb.exe",
                 install_name = "BGB",
@@ -71,7 +71,7 @@ class BGB(emulatorbase.EmulatorBase):
 
         # Setup windows program
         if programs.should_program_be_installed("BGB", "windows"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_program_backup_dir("BGB", "windows"),
                 install_name = "BGB",
                 install_dir = programs.get_program_install_dir("BGB", "windows"),

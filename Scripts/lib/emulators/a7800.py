@@ -50,7 +50,7 @@ class A7800(emulatorbase.EmulatorBase):
 
         # Download windows program
         if programs.should_program_be_installed("A7800", "windows"):
-            success = release.DownloadGithubRelease(
+            success = release.download_github_release(
                 github_user = "7800-devtools",
                 github_repo = "a7800",
                 starts_with = "a7800-win",
@@ -74,7 +74,7 @@ class A7800(emulatorbase.EmulatorBase):
 
         # Setup windows program
         if programs.should_program_be_installed("A7800", "windows"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_program_backup_dir("A7800", "windows"),
                 install_name = "A7800",
                 install_dir = programs.get_program_install_dir("A7800", "windows"),

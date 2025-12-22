@@ -50,7 +50,7 @@ class Snes9x(emulatorbase.EmulatorBase):
 
         # Download windows program
         if programs.should_program_be_installed("Snes9x", "windows"):
-            success = release.DownloadGithubRelease(
+            success = release.download_github_release(
                 github_user = "snes9xgit",
                 github_repo = "snes9x",
                 starts_with = "snes9x",
@@ -68,7 +68,7 @@ class Snes9x(emulatorbase.EmulatorBase):
 
         # Download linux program
         if programs.should_program_be_installed("Snes9x", "linux"):
-            success = release.DownloadGithubRelease(
+            success = release.download_github_release(
                 github_user = "snes9xgit",
                 github_repo = "snes9x",
                 starts_with = "Snes9x",
@@ -91,7 +91,7 @@ class Snes9x(emulatorbase.EmulatorBase):
 
         # Setup windows program
         if programs.should_program_be_installed("Snes9x", "windows"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_program_backup_dir("Snes9x", "windows"),
                 install_name = "Snes9x",
                 install_dir = programs.get_program_install_dir("Snes9x", "windows"),
@@ -105,7 +105,7 @@ class Snes9x(emulatorbase.EmulatorBase):
 
         # Setup linux program
         if programs.should_program_be_installed("Snes9x", "linux"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_program_backup_dir("Snes9x", "linux"),
                 install_name = "Snes9x",
                 install_dir = programs.get_program_install_dir("Snes9x", "linux"),

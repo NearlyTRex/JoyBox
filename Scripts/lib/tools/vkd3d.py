@@ -62,7 +62,7 @@ class VKD3D(toolbase.ToolBase):
 
         # Download library
         if programs.should_library_be_installed("VKD3D"):
-            success = release.DownloadGithubRelease(
+            success = release.download_github_release(
                 github_user = "HansKristian-Work",
                 github_repo = "vkd3d-proton",
                 starts_with = "vkd3d-proton",
@@ -85,7 +85,7 @@ class VKD3D(toolbase.ToolBase):
 
         # Setup library
         if programs.should_library_be_installed("VKD3D"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_library_backup_dir("VKD3D", "lib"),
                 install_name = "VKD3D",
                 install_dir = programs.get_library_install_dir("VKD3D", "lib"),

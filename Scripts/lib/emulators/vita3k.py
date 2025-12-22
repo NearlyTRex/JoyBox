@@ -86,7 +86,7 @@ class Vita3K(emulatorbase.EmulatorBase):
 
         # Download windows program
         if programs.should_program_be_installed("Vita3K", "windows"):
-            success = release.DownloadGithubRelease(
+            success = release.download_github_release(
                 github_user = "Vita3K",
                 github_repo = "Vita3K",
                 starts_with = "windows-latest",
@@ -105,7 +105,7 @@ class Vita3K(emulatorbase.EmulatorBase):
 
         # Download linux program
         if programs.should_program_be_installed("Vita3K", "linux"):
-            success = release.DownloadGithubRelease(
+            success = release.download_github_release(
                 github_user = "Vita3K",
                 github_repo = "Vita3K",
                 starts_with = "Vita3K-x86_64",
@@ -129,7 +129,7 @@ class Vita3K(emulatorbase.EmulatorBase):
 
         # Setup windows program
         if programs.should_program_be_installed("Vita3K", "windows"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_program_backup_dir("Vita3K", "windows"),
                 install_name = "Vita3K",
                 install_dir = programs.get_program_install_dir("Vita3K", "windows"),
@@ -143,7 +143,7 @@ class Vita3K(emulatorbase.EmulatorBase):
 
         # Setup linux program
         if programs.should_program_be_installed("Vita3K", "linux"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_program_backup_dir("Vita3K", "linux"),
                 install_name = "Vita3K",
                 install_dir = programs.get_program_install_dir("Vita3K", "linux"),

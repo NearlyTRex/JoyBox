@@ -80,7 +80,7 @@ class FSUAE(emulatorbase.EmulatorBase):
 
         # Download windows program
         if programs.should_program_be_installed("FS-UAE", "windows"):
-            success = release.DownloadGithubRelease(
+            success = release.download_github_release(
                 github_user = "FrodeSolheim",
                 github_repo = "fs-uae",
                 starts_with = "FS-UAE",
@@ -99,7 +99,7 @@ class FSUAE(emulatorbase.EmulatorBase):
 
         # Build linux program
         if programs.should_program_be_installed("FS-UAE", "linux"):
-            success = release.BuildAppImageFromSource(
+            success = release.build_appimage_from_source(
                 release_url = "https://github.com/FrodeSolheim/fs-uae/releases/download/v3.1.66/fs-uae-3.1.66.tar.xz",
                 output_file = "FS-UAE-x86_64.AppImage",
                 install_name = "FS-UAE",
@@ -139,7 +139,7 @@ class FSUAE(emulatorbase.EmulatorBase):
 
         # Setup windows program
         if programs.should_program_be_installed("FS-UAE", "windows"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_program_backup_dir("FS-UAE", "windows"),
                 install_name = "FS-UAE",
                 install_dir = programs.get_program_install_dir("FS-UAE", "windows"),
@@ -153,7 +153,7 @@ class FSUAE(emulatorbase.EmulatorBase):
 
         # Setup linux program
         if programs.should_program_be_installed("FS-UAE", "linux"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_program_backup_dir("FS-UAE", "linux"),
                 install_name = "FS-UAE",
                 install_dir = programs.get_program_install_dir("FS-UAE", "linux"),

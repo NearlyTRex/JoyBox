@@ -52,7 +52,7 @@ class AppImageTool(toolbase.ToolBase):
 
         # Download linux program
         if programs.should_program_be_installed("AppImageTool", "linux"):
-            success = release.DownloadGithubRelease(
+            success = release.download_github_release(
                 github_user = "AppImage",
                 github_repo = "AppImageKit",
                 starts_with = "appimagetool-x86_64",
@@ -76,7 +76,7 @@ class AppImageTool(toolbase.ToolBase):
 
         # Setup linux program
         if programs.should_program_be_installed("AppImageTool", "linux"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_program_backup_dir("AppImageTool", "linux"),
                 install_name = "AppImageTool",
                 install_dir = programs.get_program_install_dir("AppImageTool", "linux"),

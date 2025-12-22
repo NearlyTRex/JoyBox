@@ -50,7 +50,7 @@ class WinUAE(emulatorbase.EmulatorBase):
 
         # Download windows program
         if programs.should_program_be_installed("WinUAE", "windows"):
-            success = release.DownloadWebpageRelease(
+            success = release.download_webpage_release(
                 webpage_url = "https://www.winuae.net/download",
                 webpage_base_url = "https://www.winuae.net",
                 starts_with = "https://download.abime.net/winuae/releases/WinUAE",
@@ -74,7 +74,7 @@ class WinUAE(emulatorbase.EmulatorBase):
 
         # Setup windows program
         if programs.should_program_be_installed("WinUAE", "windows"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_program_backup_dir("WinUAE", "windows"),
                 install_name = "WinUAE",
                 install_dir = programs.get_program_install_dir("WinUAE", "windows"),

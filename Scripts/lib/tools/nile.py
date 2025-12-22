@@ -35,7 +35,7 @@ class Nile(toolbase.ToolBase):
 
         # Download library
         if programs.should_library_be_installed("Nile"):
-            success = network.DownloadGithubRepository(
+            success = network.download_github_repository(
                 github_user = "NearlyTRex",
                 github_repo = "Nile",
                 output_dir = programs.get_library_install_dir("Nile", "lib"),
@@ -46,7 +46,7 @@ class Nile(toolbase.ToolBase):
             if not success:
                 logger.log_error("Could not setup Nile")
                 return False
-            success = network.ArchiveGithubRepository(
+            success = network.archive_github_repository(
                 github_user = "NearlyTRex",
                 github_repo = "Nile",
                 output_dir = programs.get_library_backup_dir("Nile", "lib"),
@@ -67,7 +67,7 @@ class Nile(toolbase.ToolBase):
 
         # Setup library
         if programs.should_library_be_installed("Nile"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_library_backup_dir("Nile", "lib"),
                 install_name = "Nile",
                 install_dir = programs.get_library_install_dir("Nile", "lib"),

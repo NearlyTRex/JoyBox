@@ -42,7 +42,7 @@ class PSVStrip(toolbase.ToolBase):
 
         # Download windows program
         if programs.should_program_be_installed("PSVStrip", "windows"):
-            success = release.DownloadGithubRelease(
+            success = release.download_github_release(
                 github_user = "Kippykip",
                 github_repo = "PSVStrip",
                 starts_with = "PSVStrip",
@@ -67,7 +67,7 @@ class PSVStrip(toolbase.ToolBase):
 
         # Setup windows program
         if programs.should_program_be_installed("PSVStrip", "windows"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_program_backup_dir("PSVStrip", "windows"),
                 install_name = "PSVStrip",
                 install_dir = programs.get_program_install_dir("PSVStrip", "windows"),

@@ -42,7 +42,7 @@ class NirCmd(toolbase.ToolBase):
 
         # Download windows program
         if programs.should_program_be_installed("NirCmd", "windows"):
-            success = release.DownloadGeneralRelease(
+            success = release.download_general_release(
                 archive_url = "https://www.nirsoft.net/utils/nircmd-x64.zip",
                 search_file = "nircmdc.exe",
                 install_name = "NirCmd",
@@ -63,7 +63,7 @@ class NirCmd(toolbase.ToolBase):
 
         # Setup windows program
         if programs.should_program_be_installed("NirCmd", "windows"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_program_backup_dir("NirCmd", "windows"),
                 install_name = "NirCmd",
                 install_dir = programs.get_program_install_dir("NirCmd", "windows"),

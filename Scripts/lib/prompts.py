@@ -29,7 +29,7 @@ def prompt_for_integer_value(description, default_value = None):
 def prompt_for_url(description, default_value = None):
     while True:
         value = prompt_for_value(description, default_value)
-        if network.IsUrlReachable(value):
+        if network.is_url_reachable(value):
             return value
         logger.log_warning("That was not a valid url, please try again")
 

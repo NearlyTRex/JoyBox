@@ -18,7 +18,7 @@ import paths
 import locker
 
 # Setup stored release
-def SetupStoredRelease(
+def setup_stored_release(
     archive_dir,
     install_name,
     install_dir,
@@ -57,7 +57,7 @@ def SetupStoredRelease(
         return False
 
     # Setup selected archive
-    return SetupGeneralRelease(
+    return setup_general_release(
         archive_file = selected_archive,
         install_name = install_name,
         install_dir = install_dir,
@@ -72,7 +72,7 @@ def SetupStoredRelease(
         exit_on_failure = exit_on_failure)
 
 # Setup general release
-def SetupGeneralRelease(
+def setup_general_release(
     archive_file,
     install_name,
     install_dir,
@@ -289,7 +289,7 @@ def SetupGeneralRelease(
     return paths.does_directory_contain_files(install_dir)
 
 # Download general release
-def DownloadGeneralRelease(
+def download_general_release(
     archive_url,
     install_name,
     install_dir,
@@ -319,7 +319,7 @@ def DownloadGeneralRelease(
     archive_file = paths.join_paths(tmp_dir_result, archive_filename)
 
     # Download release
-    success = network.DownloadUrl(
+    success = network.download_url(
         url = archive_url,
         output_dir = tmp_dir_result,
         output_file = archive_file,
@@ -331,7 +331,7 @@ def DownloadGeneralRelease(
         return False
 
     # Setup release
-    success = SetupGeneralRelease(
+    success = setup_general_release(
         archive_file = archive_file,
         install_name = install_name,
         install_dir = install_dir,
@@ -353,7 +353,7 @@ def DownloadGeneralRelease(
     return success
 
 # Download github release
-def DownloadGithubRelease(
+def download_github_release(
     github_user,
     github_repo,
     starts_with,
@@ -378,7 +378,7 @@ def DownloadGithubRelease(
         github_url = "https://api.github.com/repos/%s/%s/releases/latest" % (github_user, github_repo)
 
     # Get release json list
-    release_json_list = network.GetRemoteJson(
+    release_json_list = network.get_remote_json(
         url = github_url,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -415,7 +415,7 @@ def DownloadGithubRelease(
         return False
 
     # Download release
-    return DownloadGeneralRelease(
+    return download_general_release(
         archive_url = archive_url,
         install_name = install_name,
         install_dir = install_dir,
@@ -431,7 +431,7 @@ def DownloadGithubRelease(
         exit_on_failure = exit_on_failure)
 
 # Download webpage release
-def DownloadWebpageRelease(
+def download_webpage_release(
     webpage_url,
     webpage_base_url,
     starts_with,
@@ -465,7 +465,7 @@ def DownloadWebpageRelease(
         return False
 
     # Download release
-    return DownloadGeneralRelease(
+    return download_general_release(
         archive_url = archive_url,
         install_name = install_name,
         install_dir = install_dir,
@@ -481,7 +481,7 @@ def DownloadWebpageRelease(
         exit_on_failure = exit_on_failure)
 
 # Build from source
-def BuildFromSource(
+def build_from_source(
     release_url = "",
     webpage_url = "",
     webpage_base_url = "",
@@ -541,7 +541,7 @@ def BuildFromSource(
         source_dir = paths.join_paths(source_base_dir, repo_name)
 
         # Download git release
-        success = network.DownloadGitUrl(
+        success = network.download_git_url(
             url = release_url,
             output_dir = source_dir,
             clean = True,
@@ -560,7 +560,7 @@ def BuildFromSource(
         source_dir = paths.join_paths(source_base_dir, archive_basename)
 
         # Download source archive
-        success = network.DownloadUrl(
+        success = network.download_url(
             url = release_url,
             output_file = archive_file,
             verbose = verbose,
@@ -661,7 +661,7 @@ def BuildFromSource(
     }
 
 # Build binary from source
-def BuildBinaryFromSource(
+def build_binary_from_source(
     release_url = "",
     webpage_url = "",
     webpage_base_url = "",
@@ -683,7 +683,7 @@ def BuildBinaryFromSource(
     exit_on_failure = False):
 
     # Build from source
-    build_info = BuildFromSource(
+    build_info = build_from_source(
         release_url = release_url,
         webpage_url = webpage_url,
         webpage_base_url = webpage_base_url,
@@ -817,7 +817,7 @@ def BuildBinaryFromSource(
     return paths.does_directory_contain_files(install_dir)
 
 # Build AppImage from source
-def BuildAppImageFromSource(
+def build_appimage_from_source(
     release_url = "",
     webpage_url = "",
     webpage_base_url = "",
@@ -839,7 +839,7 @@ def BuildAppImageFromSource(
     exit_on_failure = False):
 
     # Build from source
-    build_info = BuildFromSource(
+    build_info = build_from_source(
         release_url = release_url,
         webpage_url = webpage_url,
         webpage_base_url = webpage_base_url,

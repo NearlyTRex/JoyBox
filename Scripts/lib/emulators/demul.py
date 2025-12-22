@@ -50,7 +50,7 @@ class Demul(emulatorbase.EmulatorBase):
 
         # Download windows program
         if programs.should_program_be_installed("Demul", "windows"):
-            success = release.DownloadWebpageRelease(
+            success = release.download_webpage_release(
                 webpage_url = "http://demul.emulation64.com/downloads/",
                 webpage_base_url = "http://demul.emulation64.com",
                 starts_with = "http://demul.emulation64.com/files/demul",
@@ -74,7 +74,7 @@ class Demul(emulatorbase.EmulatorBase):
 
         # Setup windows program
         if programs.should_program_be_installed("Demul", "windows"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_program_backup_dir("Demul", "windows"),
                 install_name = "Demul",
                 install_dir = programs.get_program_install_dir("Demul", "windows"),

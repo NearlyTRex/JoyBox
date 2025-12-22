@@ -42,7 +42,7 @@ class ThreeDSRomTool(toolbase.ToolBase):
 
         # Download windows program
         if programs.should_program_be_installed("3DSRomTool", "windows"):
-            success = release.DownloadGithubRelease(
+            success = release.download_github_release(
                 github_user = "NearlyTRex",
                 github_repo = "3DSRomTool",
                 starts_with = "rom_tool",
@@ -61,7 +61,7 @@ class ThreeDSRomTool(toolbase.ToolBase):
 
         # Build linux program
         if programs.should_program_be_installed("3DSRomTool", "linux"):
-            success = release.BuildAppImageFromSource(
+            success = release.build_appimage_from_source(
                 release_url = "https://github.com/NearlyTRex/3DSRomTool.git",
                 output_file = "App-x86_64.AppImage",
                 install_name = "3DSRomTool",
@@ -96,7 +96,7 @@ class ThreeDSRomTool(toolbase.ToolBase):
 
         # Setup windows program
         if programs.should_program_be_installed("3DSRomTool", "windows"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_program_backup_dir("3DSRomTool", "windows"),
                 install_name = "3DSRomTool",
                 install_dir = programs.get_program_install_dir("3DSRomTool", "windows"),
@@ -110,7 +110,7 @@ class ThreeDSRomTool(toolbase.ToolBase):
 
         # Setup linux program
         if programs.should_program_be_installed("3DSRomTool", "linux"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_program_backup_dir("3DSRomTool", "linux"),
                 install_name = "3DSRomTool",
                 install_dir = programs.get_program_install_dir("3DSRomTool", "linux"),

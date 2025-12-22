@@ -38,7 +38,7 @@ class HeroicGogDL(toolbase.ToolBase):
 
         # Download library
         if programs.should_library_be_installed("HeroicGogDL"):
-            success = network.DownloadGithubRepository(
+            success = network.download_github_repository(
                 github_user = "NearlyTRex",
                 github_repo = "HeroicGogDL",
                 output_dir = programs.get_library_install_dir("HeroicGogDL", "lib"),
@@ -49,7 +49,7 @@ class HeroicGogDL(toolbase.ToolBase):
             if not success:
                 logger.log_error("Could not setup HeroicGogDL")
                 return False
-            success = network.ArchiveGithubRepository(
+            success = network.archive_github_repository(
                 github_user = "NearlyTRex",
                 github_repo = "HeroicGogDL",
                 output_dir = programs.get_library_backup_dir("HeroicGogDL", "lib"),
@@ -70,7 +70,7 @@ class HeroicGogDL(toolbase.ToolBase):
 
         # Setup library
         if programs.should_library_be_installed("HeroicGogDL"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_library_backup_dir("HeroicGogDL", "lib"),
                 install_name = "HeroicGogDL",
                 install_dir = programs.get_library_install_dir("HeroicGogDL", "lib"),

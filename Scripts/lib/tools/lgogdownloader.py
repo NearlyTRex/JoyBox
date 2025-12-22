@@ -46,7 +46,7 @@ class LGOGDownloader(toolbase.ToolBase):
 
         # Build linux program
         if programs.should_program_be_installed("LGOGDownloader", "linux"):
-            success = release.BuildAppImageFromSource(
+            success = release.build_appimage_from_source(
                 release_url = "https://github.com/NearlyTRex/LGOGDownloader.git",
                 output_file = "App-x86_64.AppImage",
                 install_name = "LGOGDownloader",
@@ -82,7 +82,7 @@ class LGOGDownloader(toolbase.ToolBase):
 
         # Setup linux program
         if programs.should_program_be_installed("LGOGDownloader", "linux"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_program_backup_dir("LGOGDownloader", "linux"),
                 install_name = "LGOGDownloader",
                 install_dir = programs.get_program_install_dir("LGOGDownloader", "linux"),

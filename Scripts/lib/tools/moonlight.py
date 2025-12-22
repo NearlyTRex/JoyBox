@@ -46,7 +46,7 @@ class Moonlight(toolbase.ToolBase):
 
         # Download windows program
         if programs.should_program_be_installed("Moonlight", "windows"):
-            success = release.DownloadGithubRelease(
+            success = release.download_github_release(
                 github_user = "moonlight-stream",
                 github_repo = "moonlight-qt",
                 starts_with = "MoonlightPortable-x64",
@@ -64,7 +64,7 @@ class Moonlight(toolbase.ToolBase):
 
         # Download linux program
         if programs.should_program_be_installed("Moonlight", "linux"):
-            success = release.DownloadGithubRelease(
+            success = release.download_github_release(
                 github_user = "moonlight-stream",
                 github_repo = "moonlight-qt",
                 starts_with = "Moonlight",
@@ -87,7 +87,7 @@ class Moonlight(toolbase.ToolBase):
 
         # Setup windows program
         if programs.should_program_be_installed("Moonlight", "windows"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_program_backup_dir("Moonlight", "windows"),
                 install_name = "Moonlight",
                 install_dir = programs.get_program_install_dir("Moonlight", "windows"),
@@ -101,7 +101,7 @@ class Moonlight(toolbase.ToolBase):
 
         # Setup linux program
         if programs.should_program_be_installed("Moonlight", "linux"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_program_backup_dir("Moonlight", "linux"),
                 install_name = "Moonlight",
                 install_dir = programs.get_program_install_dir("Moonlight", "linux"),

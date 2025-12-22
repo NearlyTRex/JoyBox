@@ -110,7 +110,7 @@ class RetroArch(emulatorbase.EmulatorBase):
 
         # Download windows program
         if programs.should_program_be_installed("RetroArch", "windows"):
-            success = release.DownloadGeneralRelease(
+            success = release.download_general_release(
                 archive_url = "https://buildbot.libretro.com/nightly/windows/x86_64/RetroArch.7z",
                 search_file = "retroarch.exe",
                 install_name = "RetroArch",
@@ -122,7 +122,7 @@ class RetroArch(emulatorbase.EmulatorBase):
             if not success:
                 logger.log_error("Could not setup RetroArch")
                 return False
-            success = release.DownloadGeneralRelease(
+            success = release.download_general_release(
                 archive_url = "https://buildbot.libretro.com/nightly/windows/x86_64/RetroArch_cores.7z",
                 search_file = "snes9x_libretro.dll",
                 install_name = "RetroArch",
@@ -137,7 +137,7 @@ class RetroArch(emulatorbase.EmulatorBase):
 
         # Download linux program
         if programs.should_program_be_installed("RetroArch", "linux"):
-            success = release.DownloadGeneralRelease(
+            success = release.download_general_release(
                 archive_url = "https://buildbot.libretro.com/nightly/linux/x86_64/RetroArch.7z",
                 search_file = "RetroArch-Linux-x86_64.AppImage",
                 install_name = "RetroArch",
@@ -149,7 +149,7 @@ class RetroArch(emulatorbase.EmulatorBase):
             if not success:
                 logger.log_error("Could not setup RetroArch")
                 return False
-            success = release.DownloadGeneralRelease(
+            success = release.download_general_release(
                 archive_url = "https://buildbot.libretro.com/nightly/linux/x86_64/RetroArch_cores.7z",
                 search_file = "snes9x_libretro.so",
                 install_name = "RetroArch",
@@ -170,7 +170,7 @@ class RetroArch(emulatorbase.EmulatorBase):
 
         # Setup windows program
         if programs.should_program_be_installed("RetroArch", "windows"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_program_backup_dir("RetroArch", "windows"),
                 install_name = "RetroArch",
                 install_dir = programs.get_program_install_dir("RetroArch", "windows"),
@@ -182,7 +182,7 @@ class RetroArch(emulatorbase.EmulatorBase):
             if not success:
                 logger.log_error("Could not setup RetroArch")
                 return False
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_program_backup_dir("RetroArch", "windows"),
                 install_name = "RetroArch",
                 install_dir = programs.get_emulator_path_config_value("RetroArch", "cores_dir", "windows"),
@@ -197,7 +197,7 @@ class RetroArch(emulatorbase.EmulatorBase):
 
         # Setup linux program
         if programs.should_program_be_installed("RetroArch", "linux"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_program_backup_dir("RetroArch", "linux"),
                 install_name = "RetroArch",
                 install_dir = programs.get_program_install_dir("RetroArch", "linux"),
@@ -209,7 +209,7 @@ class RetroArch(emulatorbase.EmulatorBase):
             if not success:
                 logger.log_error("Could not setup RetroArch")
                 return False
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_program_backup_dir("RetroArch", "linux"),
                 install_name = "RetroArch",
                 install_dir = programs.get_emulator_path_config_value("RetroArch", "cores_dir", "linux"),

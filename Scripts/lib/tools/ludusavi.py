@@ -95,7 +95,7 @@ class Ludusavi(toolbase.ToolBase):
 
         # Download windows program
         if programs.should_program_be_installed("Ludusavi", "windows"):
-            success = release.DownloadGithubRelease(
+            success = release.download_github_release(
                 github_user = "mtkennerly",
                 github_repo = "ludusavi",
                 starts_with = "ludusavi",
@@ -114,7 +114,7 @@ class Ludusavi(toolbase.ToolBase):
 
         # Download linux program
         if programs.should_program_be_installed("Ludusavi", "linux"):
-            success = release.DownloadGithubRelease(
+            success = release.download_github_release(
                 github_user = "mtkennerly",
                 github_repo = "ludusavi",
                 starts_with = "ludusavi",
@@ -145,7 +145,7 @@ class Ludusavi(toolbase.ToolBase):
 
         # Setup windows program
         if programs.should_program_be_installed("Ludusavi", "windows"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_program_backup_dir("Ludusavi", "windows"),
                 install_name = "Ludusavi",
                 install_dir = programs.get_program_install_dir("Ludusavi", "windows"),
@@ -159,7 +159,7 @@ class Ludusavi(toolbase.ToolBase):
 
         # Setup linux program
         if programs.should_program_be_installed("Ludusavi", "linux"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_program_backup_dir("Ludusavi", "linux"),
                 install_name = "Ludusavi",
                 install_dir = programs.get_program_install_dir("Ludusavi", "linux"),

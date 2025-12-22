@@ -90,7 +90,7 @@ class MGBA(emulatorbase.EmulatorBase):
 
         # Download windows program
         if programs.should_program_be_installed("mGBA", "windows"):
-            success = release.DownloadGithubRelease(
+            success = release.download_github_release(
                 github_user = "mgba-emu",
                 github_repo = "mgba",
                 starts_with = "mGBA",
@@ -109,7 +109,7 @@ class MGBA(emulatorbase.EmulatorBase):
 
         # Download linux program
         if programs.should_program_be_installed("mGBA", "linux"):
-            success = release.DownloadGithubRelease(
+            success = release.download_github_release(
                 github_user = "mgba-emu",
                 github_repo = "mgba",
                 starts_with = "mGBA",
@@ -133,7 +133,7 @@ class MGBA(emulatorbase.EmulatorBase):
 
         # Setup windows program
         if programs.should_program_be_installed("mGBA", "windows"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_program_backup_dir("mGBA", "windows"),
                 install_name = "mGBA",
                 install_dir = programs.get_program_install_dir("mGBA", "windows"),
@@ -147,7 +147,7 @@ class MGBA(emulatorbase.EmulatorBase):
 
         # Setup linux program
         if programs.should_program_be_installed("mGBA", "linux"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_program_backup_dir("mGBA", "linux"),
                 install_name = "mGBA",
                 install_dir = programs.get_program_install_dir("mGBA", "linux"),

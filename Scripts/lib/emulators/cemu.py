@@ -95,7 +95,7 @@ class Cemu(emulatorbase.EmulatorBase):
 
         # Download windows program
         if programs.should_program_be_installed("Cemu", "windows"):
-            success = release.DownloadGithubRelease(
+            success = release.download_github_release(
                 github_user = "cemu-project",
                 github_repo = "Cemu",
                 starts_with = "cemu",
@@ -113,7 +113,7 @@ class Cemu(emulatorbase.EmulatorBase):
 
         # Download linux program
         if programs.should_program_be_installed("Cemu", "linux"):
-            success = release.DownloadGithubRelease(
+            success = release.download_github_release(
                 github_user = "cemu-project",
                 github_repo = "Cemu",
                 starts_with = "Cemu",
@@ -136,7 +136,7 @@ class Cemu(emulatorbase.EmulatorBase):
 
         # Setup windows program
         if programs.should_program_be_installed("Cemu", "windows"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_program_backup_dir("Cemu", "windows"),
                 install_name = "Cemu",
                 install_dir = programs.get_program_install_dir("Cemu", "windows"),
@@ -150,7 +150,7 @@ class Cemu(emulatorbase.EmulatorBase):
 
         # Setup linux program
         if programs.should_program_be_installed("Cemu", "linux"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_program_backup_dir("Cemu", "linux"),
                 install_name = "Cemu",
                 install_dir = programs.get_program_install_dir("Cemu", "linux"),

@@ -88,7 +88,7 @@ class Xemu(emulatorbase.EmulatorBase):
 
         # Download windows program
         if programs.should_program_be_installed("Xemu", "windows"):
-            success = release.DownloadGithubRelease(
+            success = release.download_github_release(
                 github_user = "mborgerson",
                 github_repo = "xemu",
                 starts_with = "xemu",
@@ -107,7 +107,7 @@ class Xemu(emulatorbase.EmulatorBase):
 
         # Build linux program
         if programs.should_program_be_installed("Xemu", "linux"):
-            success = release.BuildAppImageFromSource(
+            success = release.build_appimage_from_source(
                 release_url = "https://github.com/NearlyTRex/Xemu.git",
                 output_file = "xemu-x86_64.AppImage",
                 install_name = "Xemu",
@@ -140,7 +140,7 @@ class Xemu(emulatorbase.EmulatorBase):
 
         # Setup windows program
         if programs.should_program_be_installed("Xemu", "windows"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_program_backup_dir("Xemu", "windows"),
                 install_name = "Xemu",
                 install_dir = programs.get_program_install_dir("Xemu", "windows"),
@@ -154,7 +154,7 @@ class Xemu(emulatorbase.EmulatorBase):
 
         # Setup linux program
         if programs.should_program_be_installed("Xemu", "linux"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_program_backup_dir("Xemu", "linux"),
                 install_name = "Xemu",
                 install_dir = programs.get_program_install_dir("Xemu", "linux"),

@@ -29,7 +29,7 @@ import modules
 # Get steam page
 def GetSteamPage(appid):
     url = "https://store.steampowered.com/app/%s" % appid
-    if network.IsUrlReachable(url):
+    if network.is_url_reachable(url):
         return url
     return None
 
@@ -37,7 +37,7 @@ def GetSteamPage(appid):
 def GetSteamCover(appid):
     for cdn_type in config.ContentDeliveryNetworkType.members():
         url = "https://cdn.%s.steamstatic.com/steam/apps/%s/library_600x900_2x.jpg" % (cdn_type.lower(), appid)
-        if network.IsUrlReachable(url):
+        if network.is_url_reachable(url):
             return url
     return None
 
@@ -474,11 +474,11 @@ class Steam(storebase.StoreBase):
         steam_url += "&include_appinfo=true"
         steam_url += "&include_played_free_games=true"
         steam_url += "&format=json"
-        if not network.IsUrlReachable(steam_url):
+        if not network.is_url_reachable(steam_url):
             return None
 
         # Get steam json
-        steam_json = network.GetRemoteJson(
+        steam_json = network.get_remote_json(
             url = steam_url,
             verbose = verbose,
             pretend_run = pretend_run,

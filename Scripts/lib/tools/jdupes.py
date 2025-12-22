@@ -42,7 +42,7 @@ class JDupes(toolbase.ToolBase):
 
         # Download windows program
         if programs.should_program_be_installed("JDupes", "windows"):
-            success = release.DownloadGithubRelease(
+            success = release.download_github_release(
                 github_user = "NearlyTRex",
                 github_repo = "JDupes",
                 starts_with = "jdupes",
@@ -60,7 +60,7 @@ class JDupes(toolbase.ToolBase):
 
         # Download linux program
         if programs.should_program_be_installed("JDupes", "linux"):
-            success = release.DownloadGithubRelease(
+            success = release.download_github_release(
                 github_user = "NearlyTRex",
                 github_repo = "JDupes",
                 starts_with = "jdupes",
@@ -84,7 +84,7 @@ class JDupes(toolbase.ToolBase):
 
         # Setup windows program
         if programs.should_program_be_installed("JDupes", "windows"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_program_backup_dir("JDupes", "windows"),
                 install_name = "JDupes",
                 install_dir = programs.get_program_install_dir("JDupes", "windows"),
@@ -98,7 +98,7 @@ class JDupes(toolbase.ToolBase):
 
         # Setup linux program
         if programs.should_program_be_installed("JDupes", "linux"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_program_backup_dir("JDupes", "linux"),
                 install_name = "JDupes",
                 install_dir = programs.get_program_install_dir("JDupes", "linux"),

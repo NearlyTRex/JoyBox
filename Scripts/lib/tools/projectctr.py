@@ -56,7 +56,7 @@ class ProjectCTR(toolbase.ToolBase):
 
         # Download windows program
         if programs.should_program_be_installed("CtrMakeRom", "windows"):
-            success = release.DownloadGithubRelease(
+            success = release.download_github_release(
                 github_user = "3DSGuy",
                 github_repo = "Project_CTR",
                 starts_with = "makerom",
@@ -75,7 +75,7 @@ class ProjectCTR(toolbase.ToolBase):
 
         # Download windows program
         if programs.should_program_be_installed("CtrTool", "windows"):
-            success = release.DownloadGithubRelease(
+            success = release.download_github_release(
                 github_user = "3DSGuy",
                 github_repo = "Project_CTR",
                 starts_with = "ctrtool",
@@ -94,7 +94,7 @@ class ProjectCTR(toolbase.ToolBase):
 
         # Download linux program
         if programs.should_program_be_installed("CtrMakeRom", "linux"):
-            success = release.DownloadGithubRelease(
+            success = release.download_github_release(
                 github_user = "3DSGuy",
                 github_repo = "Project_CTR",
                 starts_with = "makerom",
@@ -120,7 +120,7 @@ class ProjectCTR(toolbase.ToolBase):
 
         # Download linux program
         if programs.should_program_be_installed("CtrTool", "linux"):
-            success = release.DownloadGithubRelease(
+            success = release.download_github_release(
                 github_user = "3DSGuy",
                 github_repo = "Project_CTR",
                 starts_with = "ctrtool",
@@ -152,7 +152,7 @@ class ProjectCTR(toolbase.ToolBase):
 
         # Setup windows program
         if programs.should_program_be_installed("CtrMakeRom", "windows"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_program_backup_dir("CtrMakeRom", "windows"),
                 install_name = "CtrMakeRom",
                 install_dir = programs.get_program_install_dir("CtrMakeRom", "windows"),
@@ -166,7 +166,7 @@ class ProjectCTR(toolbase.ToolBase):
 
         # Setup windows program
         if programs.should_program_be_installed("CtrTool", "windows"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_program_backup_dir("CtrTool", "windows"),
                 install_name = "CtrTool",
                 install_dir = programs.get_program_install_dir("CtrTool", "windows"),
@@ -180,7 +180,7 @@ class ProjectCTR(toolbase.ToolBase):
 
         # Setup linux program
         if programs.should_program_be_installed("CtrMakeRom", "linux"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_program_backup_dir("CtrMakeRom", "linux"),
                 install_name = "CtrMakeRom",
                 install_dir = programs.get_program_install_dir("CtrMakeRom", "linux"),
@@ -193,7 +193,7 @@ class ProjectCTR(toolbase.ToolBase):
 
         # Setup linux program
         if programs.should_program_be_installed("CtrTool", "linux"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_program_backup_dir("CtrTool", "linux"),
                 install_name = "CtrTool",
                 install_dir = programs.get_program_install_dir("CtrTool", "linux"),

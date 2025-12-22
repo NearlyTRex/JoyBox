@@ -43,7 +43,7 @@ class BalenaEtcher(toolbase.ToolBase):
 
         # Download windows program
         if programs.should_program_be_installed("BalenaEtcher", "windows"):
-            success = release.DownloadGithubRelease(
+            success = release.download_github_release(
                 github_user = "balena-io",
                 github_repo = "etcher",
                 starts_with = "balenaEtcher-win32-x64",
@@ -61,7 +61,7 @@ class BalenaEtcher(toolbase.ToolBase):
 
         # Download linux program
         if programs.should_program_be_installed("BalenaEtcher", "linux"):
-            success = release.DownloadGithubRelease(
+            success = release.download_github_release(
                 github_user = "balena-io",
                 github_repo = "etcher",
                 starts_with = "balenaEtcher",
@@ -84,7 +84,7 @@ class BalenaEtcher(toolbase.ToolBase):
 
         # Setup windows program
         if programs.should_program_be_installed("BalenaEtcher", "windows"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_program_backup_dir("BalenaEtcher", "windows"),
                 install_name = "BalenaEtcher",
                 install_dir = programs.get_program_install_dir("BalenaEtcher", "windows"),
@@ -98,7 +98,7 @@ class BalenaEtcher(toolbase.ToolBase):
 
         # Setup linux program
         if programs.should_program_be_installed("BalenaEtcher", "linux"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_program_backup_dir("BalenaEtcher", "linux"),
                 install_name = "BalenaEtcher",
                 install_dir = programs.get_program_install_dir("BalenaEtcher", "linux"),

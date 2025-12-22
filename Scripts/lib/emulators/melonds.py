@@ -93,7 +93,7 @@ class MelonDS(emulatorbase.EmulatorBase):
 
         # Download windows program
         if programs.should_program_be_installed("melonDS", "windows"):
-            success = release.DownloadGithubRelease(
+            success = release.download_github_release(
                 github_user = "melonDS-emu",
                 github_repo = "melonDS",
                 starts_with = "melonDS",
@@ -112,7 +112,7 @@ class MelonDS(emulatorbase.EmulatorBase):
 
         # Build linux program
         if programs.should_program_be_installed("melonDS", "linux"):
-            success = release.BuildAppImageFromSource(
+            success = release.build_appimage_from_source(
                 release_url = "https://github.com/NearlyTRex/melonDS.git",
                 output_file = "melonDS-x86_64.AppImage",
                 install_name = "melonDS",
@@ -150,7 +150,7 @@ class MelonDS(emulatorbase.EmulatorBase):
 
         # Setup windows program
         if programs.should_program_be_installed("melonDS", "windows"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_program_backup_dir("melonDS", "windows"),
                 install_name = "melonDS",
                 install_dir = programs.get_program_install_dir("melonDS", "windows"),
@@ -164,7 +164,7 @@ class MelonDS(emulatorbase.EmulatorBase):
 
         # Setup linux program
         if programs.should_program_be_installed("melonDS", "linux"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_program_backup_dir("melonDS", "linux"),
                 install_name = "melonDS",
                 install_dir = programs.get_program_install_dir("melonDS", "linux"),

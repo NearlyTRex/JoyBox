@@ -50,7 +50,7 @@ class SheepShaver(emulatorbase.EmulatorBase):
 
         # Download windows program
         if programs.should_program_be_installed("SheepShaver", "windows"):
-            success = release.DownloadGeneralRelease(
+            success = release.download_general_release(
                 archive_url = "https://surfdrive.surf.nl/files/index.php/s/kyhQQWmmTB89QrK/download",
                 search_file = "SheepShaver.exe",
                 install_name = "SheepShaver",
@@ -65,7 +65,7 @@ class SheepShaver(emulatorbase.EmulatorBase):
 
         # Download linux program
         if programs.should_program_be_installed("SheepShaver", "linux"):
-            success = release.DownloadGithubRelease(
+            success = release.download_github_release(
                 github_user = "Korkman",
                 github_repo = "macemu-appimage-builder",
                 starts_with = "SheepShaver-x86_64",
@@ -89,7 +89,7 @@ class SheepShaver(emulatorbase.EmulatorBase):
 
         # Setup windows program
         if programs.should_program_be_installed("SheepShaver", "windows"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_program_backup_dir("SheepShaver", "windows"),
                 install_name = "SheepShaver",
                 install_dir = programs.get_program_install_dir("SheepShaver", "windows"),
@@ -103,7 +103,7 @@ class SheepShaver(emulatorbase.EmulatorBase):
 
         # Setup linux program
         if programs.should_program_be_installed("SheepShaver", "linux"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_program_backup_dir("SheepShaver", "linux"),
                 install_name = "SheepShaver",
                 install_dir = programs.get_program_install_dir("SheepShaver", "linux"),

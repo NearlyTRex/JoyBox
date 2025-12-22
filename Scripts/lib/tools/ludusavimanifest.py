@@ -36,7 +36,7 @@ class LudusaviManifest(toolbase.ToolBase):
 
         # Download library
         if programs.should_library_be_installed("LudusaviManifest"):
-            success = network.DownloadGithubRepository(
+            success = network.download_github_repository(
                 github_user = "NearlyTRex",
                 github_repo = "LudusaviManifest",
                 output_dir = programs.get_library_install_dir("LudusaviManifest", "lib"),
@@ -47,7 +47,7 @@ class LudusaviManifest(toolbase.ToolBase):
             if not success:
                 logger.log_error("Could not setup LudusaviManifest")
                 return False
-            success = network.ArchiveGithubRepository(
+            success = network.archive_github_repository(
                 github_user = "NearlyTRex",
                 github_repo = "LudusaviManifest",
                 output_dir = programs.get_library_backup_dir("LudusaviManifest", "lib"),
@@ -68,7 +68,7 @@ class LudusaviManifest(toolbase.ToolBase):
 
         # Setup library
         if programs.should_library_be_installed("LudusaviManifest"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_library_backup_dir("LudusaviManifest", "lib"),
                 install_name = "LudusaviManifest",
                 install_dir = programs.get_library_install_dir("LudusaviManifest", "lib"),

@@ -36,7 +36,7 @@ class SteamAppIDList(toolbase.ToolBase):
 
         # Download library
         if programs.should_library_be_installed("SteamAppIDList"):
-            success = network.DownloadGithubRepository(
+            success = network.download_github_repository(
                 github_user = "NearlyTRex",
                 github_repo = "SteamAppIDList",
                 output_dir = programs.get_library_install_dir("SteamAppIDList", "lib"),
@@ -47,7 +47,7 @@ class SteamAppIDList(toolbase.ToolBase):
             if not success:
                 logger.log_error("Could not setup SteamAppIDList")
                 return False
-            success = network.ArchiveGithubRepository(
+            success = network.archive_github_repository(
                 github_user = "NearlyTRex",
                 github_repo = "SteamAppIDList",
                 output_dir = programs.get_library_backup_dir("SteamAppIDList", "lib"),
@@ -68,7 +68,7 @@ class SteamAppIDList(toolbase.ToolBase):
 
         # Setup library
         if programs.should_library_be_installed("SteamAppIDList"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_library_backup_dir("SteamAppIDList", "lib"),
                 install_name = "SteamAppIDList",
                 install_dir = programs.get_library_install_dir("SteamAppIDList", "lib"),

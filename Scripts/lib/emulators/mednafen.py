@@ -78,7 +78,7 @@ class Mednafen(emulatorbase.EmulatorBase):
 
         # Download windows program
         if programs.should_program_be_installed("Mednafen", "windows"):
-            success = release.DownloadWebpageRelease(
+            success = release.download_webpage_release(
                 webpage_url = "https://mednafen.github.io",
                 webpage_base_url = "https://mednafen.github.io",
                 starts_with = "https://mednafen.github.io/releases/files/mednafen",
@@ -97,7 +97,7 @@ class Mednafen(emulatorbase.EmulatorBase):
 
         # Build linux program
         if programs.should_program_be_installed("Mednafen", "linux"):
-            success = release.BuildAppImageFromSource(
+            success = release.build_appimage_from_source(
                 webpage_url = "https://mednafen.github.io",
                 webpage_base_url = "https://mednafen.github.io",
                 starts_with = "https://mednafen.github.io/releases/files/mednafen",
@@ -137,7 +137,7 @@ class Mednafen(emulatorbase.EmulatorBase):
 
         # Setup windows program
         if programs.should_program_be_installed("Mednafen", "windows"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_program_backup_dir("Mednafen", "windows"),
                 install_name = "Mednafen",
                 install_dir = programs.get_program_install_dir("Mednafen", "windows"),
@@ -151,7 +151,7 @@ class Mednafen(emulatorbase.EmulatorBase):
 
         # Setup linux program
         if programs.should_program_be_installed("Mednafen", "linux"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_program_backup_dir("Mednafen", "linux"),
                 install_name = "Mednafen",
                 install_dir = programs.get_program_install_dir("Mednafen", "linux"),

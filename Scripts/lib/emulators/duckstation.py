@@ -139,7 +139,7 @@ class DuckStation(emulatorbase.EmulatorBase):
 
         # Download windows program
         if programs.should_program_be_installed("DuckStation", "windows"):
-            success = release.DownloadGithubRelease(
+            success = release.download_github_release(
                 github_user = "stenzek",
                 github_repo = "duckstation",
                 starts_with = "duckstation",
@@ -158,7 +158,7 @@ class DuckStation(emulatorbase.EmulatorBase):
 
         # Download linux program
         if programs.should_program_be_installed("DuckStation", "linux"):
-            success = release.DownloadGithubRelease(
+            success = release.download_github_release(
                 github_user = "stenzek",
                 github_repo = "duckstation",
                 starts_with = "DuckStation",
@@ -182,7 +182,7 @@ class DuckStation(emulatorbase.EmulatorBase):
 
         # Setup windows program
         if programs.should_program_be_installed("DuckStation", "windows"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_program_backup_dir("DuckStation", "windows"),
                 install_name = "DuckStation",
                 install_dir = programs.get_program_install_dir("DuckStation", "windows"),
@@ -196,7 +196,7 @@ class DuckStation(emulatorbase.EmulatorBase):
 
         # Setup linux program
         if programs.should_program_be_installed("DuckStation", "linux"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_program_backup_dir("DuckStation", "linux"),
                 install_name = "DuckStation",
                 install_dir = programs.get_program_install_dir("DuckStation", "linux"),

@@ -36,7 +36,7 @@ class XCITrimmer(toolbase.ToolBase):
 
         # Download library
         if programs.should_library_be_installed("XCITrimmer"):
-            success = network.DownloadGithubRepository(
+            success = network.download_github_repository(
                 github_user = "NearlyTRex",
                 github_repo = "XCITrimmer",
                 output_dir = programs.get_library_install_dir("XCITrimmer", "lib"),
@@ -47,7 +47,7 @@ class XCITrimmer(toolbase.ToolBase):
             if not success:
                 logger.log_error("Could not setup XCITrimmer")
                 return False
-            success = network.ArchiveGithubRepository(
+            success = network.archive_github_repository(
                 github_user = "NearlyTRex",
                 github_repo = "XCITrimmer",
                 output_dir = programs.get_library_backup_dir("XCITrimmer", "lib"),
@@ -68,7 +68,7 @@ class XCITrimmer(toolbase.ToolBase):
 
         # Setup library
         if programs.should_library_be_installed("XCITrimmer"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_library_backup_dir("XCITrimmer", "lib"),
                 install_name = "XCITrimmer",
                 install_dir = programs.get_library_install_dir("XCITrimmer", "lib"),

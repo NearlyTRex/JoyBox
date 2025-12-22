@@ -42,7 +42,7 @@ class HacTool(toolbase.ToolBase):
 
         # Download windows program
         if programs.should_program_be_installed("HacTool", "windows"):
-            success = release.DownloadGithubRelease(
+            success = release.download_github_release(
                 github_user = "SciresM",
                 github_repo = "hactool",
                 starts_with = "hactool",
@@ -61,7 +61,7 @@ class HacTool(toolbase.ToolBase):
 
         # Build linux program
         if programs.should_program_be_installed("HacTool", "linux"):
-            success = release.BuildAppImageFromSource(
+            success = release.build_appimage_from_source(
                 release_url = "https://github.com/NearlyTRex/HacTool.git",
                 output_file = "App-x86_64.AppImage",
                 install_name = "HacTool",
@@ -96,7 +96,7 @@ class HacTool(toolbase.ToolBase):
 
         # Setup windows program
         if programs.should_program_be_installed("HacTool", "windows"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_program_backup_dir("HacTool", "windows"),
                 install_name = "HacTool",
                 install_dir = programs.get_program_install_dir("HacTool", "windows"),
@@ -110,7 +110,7 @@ class HacTool(toolbase.ToolBase):
 
         # Setup linux program
         if programs.should_program_be_installed("HacTool", "linux"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_program_backup_dir("HacTool", "linux"),
                 install_name = "HacTool",
                 install_dir = programs.get_program_install_dir("HacTool", "linux"),

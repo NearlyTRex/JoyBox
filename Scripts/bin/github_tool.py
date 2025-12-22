@@ -77,7 +77,7 @@ def main():
         exclude_repos = args.exclude_repos.split(",")
 
     # Get github repositories
-    github_repositories = network.GetGithubRepositories(
+    github_repositories = network.get_github_repositories(
         github_user = github_username,
         github_token = github_access_token,
         include_repos = include_repos,
@@ -102,7 +102,7 @@ def main():
     # Archive repositories
     if args.action == config.GithubActionType.ARCHIVE:
         for github_repository in github_repositories:
-            success = network.ArchiveGithubRepository(
+            success = network.archive_github_repository(
                 github_user = github_username,
                 github_repo = github_repository.name,
                 github_token = github_access_token,
@@ -120,7 +120,7 @@ def main():
     elif args.action == config.GithubActionType.UPDATE:
         for github_repository in github_repositories:
             if github_repository.fork:
-                success = network.UpdateGithubRepository(
+                success = network.update_github_repository(
                     github_user = github_username,
                     github_repo = github_repository.name,
                     github_branch = github_repository.default_branch,

@@ -54,7 +54,7 @@ class Ryujinx(emulatorbase.EmulatorBase):
 
         # Download windows program
         if programs.should_program_be_installed("Ryujinx", "windows"):
-            success = release.DownloadGithubRelease(
+            success = release.download_github_release(
                 github_user = "Ryujinx",
                 github_repo = "release-channel-master",
                 starts_with = "ryujinx",
@@ -72,7 +72,7 @@ class Ryujinx(emulatorbase.EmulatorBase):
 
         # Download linux program
         if programs.should_program_be_installed("Ryujinx", "linux"):
-            success = release.DownloadGithubRelease(
+            success = release.download_github_release(
                 github_user = "Ryujinx",
                 github_repo = "release-channel-master",
                 starts_with = "ryujinx",
@@ -96,7 +96,7 @@ class Ryujinx(emulatorbase.EmulatorBase):
 
         # Setup windows program
         if programs.should_program_be_installed("Ryujinx", "windows"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_program_backup_dir("Ryujinx", "windows"),
                 install_name = "Ryujinx",
                 install_dir = programs.get_program_install_dir("Ryujinx", "windows"),
@@ -110,7 +110,7 @@ class Ryujinx(emulatorbase.EmulatorBase):
 
         # Setup linux program
         if programs.should_program_be_installed("Ryujinx", "linux"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_program_backup_dir("Ryujinx", "linux"),
                 install_name = "Ryujinx",
                 install_dir = programs.get_program_install_dir("Ryujinx", "linux"),

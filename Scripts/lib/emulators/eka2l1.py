@@ -73,7 +73,7 @@ class EKA2L1(emulatorbase.EmulatorBase):
 
         # Download windows program
         if programs.should_program_be_installed("EKA2L1", "windows"):
-            success = release.DownloadGithubRelease(
+            success = release.download_github_release(
                 github_user = "EKA2L1",
                 github_repo = "EKA2L1",
                 starts_with = "EKA2L1-Windows-x86_64",
@@ -92,7 +92,7 @@ class EKA2L1(emulatorbase.EmulatorBase):
 
         # Download linux program
         if programs.should_program_be_installed("EKA2L1", "linux"):
-            success = release.DownloadGithubRelease(
+            success = release.download_github_release(
                 github_user = "EKA2L1",
                 github_repo = "EKA2L1",
                 starts_with = "EKA2L1-Linux-x86_64",
@@ -116,7 +116,7 @@ class EKA2L1(emulatorbase.EmulatorBase):
 
         # Setup windows program
         if programs.should_program_be_installed("EKA2L1", "windows"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_program_backup_dir("EKA2L1", "windows"),
                 install_name = "EKA2L1",
                 install_dir = programs.get_program_install_dir("EKA2L1", "windows"),
@@ -130,7 +130,7 @@ class EKA2L1(emulatorbase.EmulatorBase):
 
         # Setup linux program
         if programs.should_program_be_installed("EKA2L1", "linux"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_program_backup_dir("EKA2L1", "linux"),
                 install_name = "EKA2L1",
                 install_dir = programs.get_program_install_dir("EKA2L1", "linux"),

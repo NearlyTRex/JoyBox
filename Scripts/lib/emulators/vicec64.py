@@ -67,7 +67,7 @@ class ViceC64(emulatorbase.EmulatorBase):
 
         # Download windows program
         if programs.should_program_be_installed("VICE-C64", "windows"):
-            success = release.DownloadGithubRelease(
+            success = release.download_github_release(
                 github_user = "VICE-Team",
                 github_repo = "svn-mirror",
                 starts_with = "SDL2VICE",
@@ -86,7 +86,7 @@ class ViceC64(emulatorbase.EmulatorBase):
 
         # Download linux program
         if programs.should_program_be_installed("VICE-C64", "linux"):
-            success = release.BuildAppImageFromSource(
+            success = release.build_appimage_from_source(
                 release_url = "https://github.com/NearlyTRex/ViceC64.git",
                 output_file = "App-x86_64.AppImage",
                 install_name = "VICE-C64",
@@ -126,7 +126,7 @@ class ViceC64(emulatorbase.EmulatorBase):
 
         # Setup windows program
         if programs.should_program_be_installed("VICE-C64", "windows"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_program_backup_dir("VICE-C64", "windows"),
                 install_name = "VICE-C64",
                 install_dir = programs.get_program_install_dir("VICE-C64", "windows"),
@@ -140,7 +140,7 @@ class ViceC64(emulatorbase.EmulatorBase):
 
         # Setup linux program
         if programs.should_program_be_installed("VICE-C64", "linux"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_program_backup_dir("VICE-C64", "linux"),
                 install_name = "VICE-C64",
                 install_dir = programs.get_program_install_dir("VICE-C64", "linux"),

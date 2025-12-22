@@ -35,7 +35,7 @@ class ZoomPlatformSH(toolbase.ToolBase):
 
         # Download library
         if programs.should_library_be_installed("ZoomPlatformSH"):
-            success = release.DownloadGithubRelease(
+            success = release.download_github_release(
                 github_user = "ZOOM-Platform",
                 github_repo = "zoom-platform.sh",
                 starts_with = "zoom-platform",
@@ -68,7 +68,7 @@ class ZoomPlatformSH(toolbase.ToolBase):
 
         # Setup library
         if programs.should_library_be_installed("ZoomPlatformSH"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_library_backup_dir("ZoomPlatformSH", "lib"),
                 install_name = "ZoomPlatformSH",
                 install_dir = programs.get_library_install_dir("ZoomPlatformSH", "lib"),

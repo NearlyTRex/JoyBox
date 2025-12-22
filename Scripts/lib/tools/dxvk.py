@@ -65,7 +65,7 @@ class DXVK(toolbase.ToolBase):
 
         # Download library
         if programs.should_library_be_installed("DXVK"):
-            success = release.DownloadGithubRelease(
+            success = release.download_github_release(
                 github_user = "doitsujin",
                 github_repo = "dxvk",
                 starts_with = "dxvk-2.2",
@@ -88,7 +88,7 @@ class DXVK(toolbase.ToolBase):
 
         # Setup library
         if programs.should_library_be_installed("DXVK"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_library_backup_dir("DXVK", "lib"),
                 install_name = "DXVK",
                 install_dir = programs.get_library_install_dir("DXVK", "lib"),

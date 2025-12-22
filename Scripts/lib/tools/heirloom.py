@@ -36,7 +36,7 @@ class Heirloom(toolbase.ToolBase):
 
         # Download library
         if programs.should_library_be_installed("Heirloom"):
-            success = network.DownloadGithubRepository(
+            success = network.download_github_repository(
                 github_user = "NearlyTRex",
                 github_repo = "Heirloom",
                 output_dir = programs.get_library_install_dir("Heirloom", "lib"),
@@ -47,7 +47,7 @@ class Heirloom(toolbase.ToolBase):
             if not success:
                 logger.log_error("Could not setup Heirloom")
                 return False
-            success = network.ArchiveGithubRepository(
+            success = network.archive_github_repository(
                 github_user = "NearlyTRex",
                 github_repo = "Heirloom",
                 output_dir = programs.get_library_backup_dir("Heirloom", "lib"),
@@ -68,7 +68,7 @@ class Heirloom(toolbase.ToolBase):
 
         # Setup library
         if programs.should_library_be_installed("Heirloom"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_library_backup_dir("Heirloom", "lib"),
                 install_name = "Heirloom",
                 install_dir = programs.get_library_install_dir("Heirloom", "lib"),

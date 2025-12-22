@@ -43,7 +43,7 @@ class YtDlp(toolbase.ToolBase):
 
         # Download windows program
         if programs.should_program_be_installed("YtDlp", "windows"):
-            success = release.DownloadGithubRelease(
+            success = release.download_github_release(
                 github_user = "yt-dlp",
                 github_repo = "yt-dlp",
                 starts_with = "yt-dlp",
@@ -63,7 +63,7 @@ class YtDlp(toolbase.ToolBase):
 
         # Download linux program
         if programs.should_program_be_installed("YtDlp", "linux"):
-            success = release.DownloadGithubRelease(
+            success = release.download_github_release(
                 github_user = "yt-dlp",
                 github_repo = "yt-dlp",
                 starts_with = "yt-dlp",
@@ -96,7 +96,7 @@ class YtDlp(toolbase.ToolBase):
 
         # Setup windows program
         if programs.should_program_be_installed("YtDlp", "windows"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_program_backup_dir("YtDlp", "windows"),
                 install_name = "YtDlp",
                 install_dir = programs.get_program_install_dir("YtDlp", "windows"),
@@ -110,7 +110,7 @@ class YtDlp(toolbase.ToolBase):
 
         # Setup linux program
         if programs.should_program_be_installed("YtDlp", "linux"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_program_backup_dir("YtDlp", "linux"),
                 install_name = "YtDlp",
                 install_dir = programs.get_program_install_dir("YtDlp", "linux"),

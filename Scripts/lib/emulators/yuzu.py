@@ -127,7 +127,7 @@ class Yuzu(emulatorbase.EmulatorBase):
 
         # Setup windows program
         if programs.should_program_be_installed("Yuzu", "windows"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_program_backup_dir("Yuzu", "windows"),
                 install_name = "Yuzu",
                 install_dir = programs.get_program_install_dir("Yuzu", "windows"),
@@ -142,7 +142,7 @@ class Yuzu(emulatorbase.EmulatorBase):
 
         # Setup linux program
         if programs.should_program_be_installed("Yuzu", "linux"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_program_backup_dir("Yuzu", "linux"),
                 install_name = "Yuzu",
                 install_dir = programs.get_program_install_dir("Yuzu", "linux"),

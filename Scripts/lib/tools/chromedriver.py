@@ -42,7 +42,7 @@ class ChromeDriver(toolbase.ToolBase):
 
         # Download windows program
         if programs.should_program_be_installed("ChromeDriver", "windows"):
-            success = release.DownloadWebpageRelease(
+            success = release.download_webpage_release(
                 webpage_url = "https://googlechromelabs.github.io/chrome-for-testing/",
                 webpage_base_url = "https://storage.googleapis.com/chrome-for-testing-public",
                 starts_with = "https://storage.googleapis.com/chrome-for-testing-public",
@@ -60,7 +60,7 @@ class ChromeDriver(toolbase.ToolBase):
 
         # Download linux program
         if programs.should_program_be_installed("ChromeDriver", "linux"):
-            success = release.DownloadWebpageRelease(
+            success = release.download_webpage_release(
                 webpage_url = "https://googlechromelabs.github.io/chrome-for-testing/",
                 webpage_base_url = "https://storage.googleapis.com/chrome-for-testing-public",
                 starts_with = "https://storage.googleapis.com/chrome-for-testing-public",
@@ -84,7 +84,7 @@ class ChromeDriver(toolbase.ToolBase):
 
         # Setup windows program
         if programs.should_program_be_installed("ChromeDriver", "windows"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_program_backup_dir("ChromeDriver", "windows"),
                 install_name = "ChromeDriver",
                 install_dir = programs.get_program_install_dir("ChromeDriver", "windows"),
@@ -98,7 +98,7 @@ class ChromeDriver(toolbase.ToolBase):
 
         # Setup linux program
         if programs.should_program_be_installed("ChromeDriver", "linux"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_program_backup_dir("ChromeDriver", "linux"),
                 install_name = "ChromeDriver",
                 install_dir = programs.get_program_install_dir("ChromeDriver", "linux"),

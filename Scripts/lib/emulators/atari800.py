@@ -67,7 +67,7 @@ class Atari800(emulatorbase.EmulatorBase):
 
         # Download windows program
         if programs.should_program_be_installed("Atari800", "windows"):
-            success = release.DownloadGithubRelease(
+            success = release.download_github_release(
                 github_user = "atari800",
                 github_repo = "atari800",
                 starts_with = "atari800",
@@ -86,7 +86,7 @@ class Atari800(emulatorbase.EmulatorBase):
 
         # Build linux program
         if programs.should_program_be_installed("Atari800", "linux"):
-            success = release.BuildAppImageFromSource(
+            success = release.build_appimage_from_source(
                 release_url = "https://github.com/NearlyTRex/Atari800.git",
                 output_file = "Atari800-x86_64.AppImage",
                 install_name = "Atari800",
@@ -124,7 +124,7 @@ class Atari800(emulatorbase.EmulatorBase):
 
         # Setup windows program
         if programs.should_program_be_installed("Atari800", "windows"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_program_backup_dir("Atari800", "windows"),
                 install_name = "Atari800",
                 install_dir = programs.get_program_install_dir("Atari800", "windows"),
@@ -138,7 +138,7 @@ class Atari800(emulatorbase.EmulatorBase):
 
         # Setup linux program
         if programs.should_program_be_installed("Atari800", "linux"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_program_backup_dir("Atari800", "linux"),
                 install_name = "Atari800",
                 install_dir = programs.get_program_install_dir("Atari800", "linux"),

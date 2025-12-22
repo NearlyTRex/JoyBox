@@ -90,7 +90,7 @@ def DownloadMetadataAsset(
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-    if not network.IsUrlReachable(latest_asset_url):
+    if not network.is_url_reachable(latest_asset_url):
         return False
 
     # Get temp asset

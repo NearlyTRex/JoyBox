@@ -50,7 +50,7 @@ class CxBxReloaded(emulatorbase.EmulatorBase):
 
         # Download windows program
         if programs.should_program_be_installed("CxBxReloaded", "windows"):
-            success = release.DownloadGithubRelease(
+            success = release.download_github_release(
                 github_user = "Cxbx-Reloaded",
                 github_repo = "Cxbx-Reloaded",
                 starts_with = "CxbxReloaded-Release-VS2022",
@@ -74,7 +74,7 @@ class CxBxReloaded(emulatorbase.EmulatorBase):
 
         # Setup windows program
         if programs.should_program_be_installed("CxBxReloaded", "windows"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_program_backup_dir("CxBxReloaded", "windows"),
                 install_name = "CxBxReloaded",
                 install_dir = programs.get_program_install_dir("CxBxReloaded", "windows"),

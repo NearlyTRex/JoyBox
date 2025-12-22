@@ -167,7 +167,7 @@ class Computer(emulatorbase.EmulatorBase):
 
         # Download windows programs
         if programs.should_program_be_installed("DosBoxX", "windows"):
-            success = release.DownloadGithubRelease(
+            success = release.download_github_release(
                 github_user = "joncampbell123",
                 github_repo = "dosbox-x",
                 starts_with = "dosbox-x-vsbuild-win64",
@@ -184,7 +184,7 @@ class Computer(emulatorbase.EmulatorBase):
                 logger.log_error("Could not setup DosBoxX")
                 return False
         if programs.should_program_be_installed("ScummVM", "windows"):
-            success = release.DownloadWebpageRelease(
+            success = release.download_webpage_release(
                 webpage_url = "https://www.scummvm.org/downloads",
                 webpage_base_url = "https://www.scummvm.org",
                 starts_with = "https://downloads.scummvm.org/frs/scummvm/",
@@ -206,7 +206,7 @@ class Computer(emulatorbase.EmulatorBase):
 
         # Build linux programs
         if programs.should_program_be_installed("DosBoxX", "linux"):
-            success = release.BuildAppImageFromSource(
+            success = release.build_appimage_from_source(
                 release_url = "https://github.com/NearlyTRex/DosboxX.git",
                 output_file = "DOSBox-X-x86_64.AppImage",
                 install_name = "DosBoxX",
@@ -252,7 +252,7 @@ class Computer(emulatorbase.EmulatorBase):
                 logger.log_error("Could not setup DosBoxX")
                 return False
         if programs.should_program_be_installed("ScummVM", "linux"):
-            success = release.BuildAppImageFromSource(
+            success = release.build_appimage_from_source(
                 release_url = "https://github.com/NearlyTRex/ScummVM.git",
                 output_file = "ScummVM-x86_64.AppImage",
                 install_name = "ScummVM",
@@ -304,7 +304,7 @@ class Computer(emulatorbase.EmulatorBase):
 
         # Setup windows program
         if programs.should_program_be_installed("DosBoxX", "windows"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_program_backup_dir("DosBoxX", "windows"),
                 install_name = "DosBoxX",
                 install_dir = programs.get_program_install_dir("DosBoxX", "windows"),
@@ -316,7 +316,7 @@ class Computer(emulatorbase.EmulatorBase):
                 logger.log_error("Could not setup DosBoxX")
                 return False
         if programs.should_program_be_installed("ScummVM", "windows"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_program_backup_dir("ScummVM", "windows"),
                 install_name = "ScummVM",
                 install_dir = programs.get_program_install_dir("ScummVM", "windows"),
@@ -330,7 +330,7 @@ class Computer(emulatorbase.EmulatorBase):
 
         # Setup linux program
         if programs.should_program_be_installed("DosBoxX", "linux"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_program_backup_dir("DosBoxX", "linux"),
                 install_name = "DosBoxX",
                 install_dir = programs.get_program_install_dir("DosBoxX", "linux"),
@@ -341,7 +341,7 @@ class Computer(emulatorbase.EmulatorBase):
                 logger.log_error("Could not setup DosBoxX")
                 return False
         if programs.should_program_be_installed("ScummVM", "linux"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_program_backup_dir("ScummVM", "linux"),
                 install_name = "ScummVM",
                 install_dir = programs.get_program_install_dir("ScummVM", "linux"),

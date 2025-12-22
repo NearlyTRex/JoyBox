@@ -36,7 +36,7 @@ class PyLnk(toolbase.ToolBase):
 
         # Download library
         if programs.should_library_be_installed("PyLnk"):
-            success = network.DownloadGithubRepository(
+            success = network.download_github_repository(
                 github_user = "NearlyTRex",
                 github_repo = "PyLnk",
                 output_dir = programs.get_library_install_dir("PyLnk", "lib"),
@@ -47,7 +47,7 @@ class PyLnk(toolbase.ToolBase):
             if not success:
                 logger.log_error("Could not setup PyLnk")
                 return False
-            success = network.ArchiveGithubRepository(
+            success = network.archive_github_repository(
                 github_user = "NearlyTRex",
                 github_repo = "PyLnk",
                 output_dir = programs.get_library_backup_dir("PyLnk", "lib"),
@@ -68,7 +68,7 @@ class PyLnk(toolbase.ToolBase):
 
         # Setup library
         if programs.should_library_be_installed("PyLnk"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_library_backup_dir("PyLnk", "lib"),
                 install_name = "PyLnk",
                 install_dir = programs.get_library_install_dir("PyLnk", "lib"),

@@ -190,7 +190,7 @@ class Ares(emulatorbase.EmulatorBase):
 
         # Download windows program
         if programs.should_program_be_installed("Ares", "windows"):
-            success = release.DownloadGithubRelease(
+            success = release.download_github_release(
                 github_user = "ares-emulator",
                 github_repo = "ares",
                 starts_with = "ares",
@@ -209,7 +209,7 @@ class Ares(emulatorbase.EmulatorBase):
 
         # Download linux program
         if programs.should_program_be_installed("Ares", "linux"):
-            success = release.BuildAppImageFromSource(
+            success = release.build_appimage_from_source(
                 release_url = "https://github.com/NearlyTRex/Ares.git",
                 output_file = "ares-x86_64.AppImage",
                 install_name = "Ares",
@@ -246,7 +246,7 @@ class Ares(emulatorbase.EmulatorBase):
 
         # Setup windows program
         if programs.should_program_be_installed("Ares", "windows"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_program_backup_dir("Ares", "windows"),
                 install_name = "Ares",
                 install_dir = programs.get_program_install_dir("Ares", "windows"),
@@ -260,7 +260,7 @@ class Ares(emulatorbase.EmulatorBase):
 
         # Setup linux program
         if programs.should_program_be_installed("Ares", "linux"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_program_backup_dir("Ares", "linux"),
                 install_name = "Ares",
                 install_dir = programs.get_program_install_dir("Ares", "linux"),

@@ -50,7 +50,7 @@ class Mesen(emulatorbase.EmulatorBase):
 
         # Download windows program
         if programs.should_program_be_installed("Mesen", "windows"):
-            success = release.DownloadGeneralRelease(
+            success = release.download_general_release(
                 archive_url = "https://nightly.link/SourMesen/Mesen2/workflows/build/master/Mesen%20%28Windows%20-%20net8.0%29.zip",
                 search_file = "Mesen.exe",
                 install_name = "Mesen",
@@ -65,7 +65,7 @@ class Mesen(emulatorbase.EmulatorBase):
 
         # Download linux program
         if programs.should_program_be_installed("Mesen", "linux"):
-            success = release.DownloadGeneralRelease(
+            success = release.download_general_release(
                 archive_url = "https://nightly.link/SourMesen/Mesen2/workflows/build/master/Mesen%20(Linux%20x64%20-%20AppImage).zip",
                 search_file = "Mesen.AppImage",
                 install_name = "Mesen",
@@ -86,7 +86,7 @@ class Mesen(emulatorbase.EmulatorBase):
 
         # Setup windows program
         if programs.should_program_be_installed("Mesen", "windows"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_program_backup_dir("Mesen", "windows"),
                 install_name = "Mesen",
                 install_dir = programs.get_program_install_dir("Mesen", "windows"),
@@ -100,7 +100,7 @@ class Mesen(emulatorbase.EmulatorBase):
 
         # Setup linux program
         if programs.should_program_be_installed("Mesen", "linux"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_program_backup_dir("Mesen", "linux"),
                 install_name = "Mesen",
                 install_dir = programs.get_program_install_dir("Mesen", "linux"),

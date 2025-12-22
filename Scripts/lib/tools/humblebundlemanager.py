@@ -36,7 +36,7 @@ class HumbleBundleManager(toolbase.ToolBase):
 
         # Download library
         if programs.should_library_be_installed("HumbleBundleManager"):
-            success = network.DownloadGithubRepository(
+            success = network.download_github_repository(
                 github_user = "NearlyTRex",
                 github_repo = "HumbleBundleManager",
                 output_dir = programs.get_library_install_dir("HumbleBundleManager", "lib"),
@@ -47,7 +47,7 @@ class HumbleBundleManager(toolbase.ToolBase):
             if not success:
                 logger.log_error("Could not setup HumbleBundleManager")
                 return False
-            success = network.ArchiveGithubRepository(
+            success = network.archive_github_repository(
                 github_user = "NearlyTRex",
                 github_repo = "HumbleBundleManager",
                 output_dir = programs.get_library_backup_dir("HumbleBundleManager", "lib"),
@@ -68,7 +68,7 @@ class HumbleBundleManager(toolbase.ToolBase):
 
         # Setup library
         if programs.should_library_be_installed("HumbleBundleManager"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_library_backup_dir("HumbleBundleManager", "lib"),
                 install_name = "HumbleBundleManager",
                 install_dir = programs.get_library_install_dir("HumbleBundleManager", "lib"),

@@ -37,7 +37,7 @@ class PySteamGridDB(toolbase.ToolBase):
 
         # Download library
         if programs.should_library_be_installed("PySteamGridDB"):
-            success = network.DownloadGithubRepository(
+            success = network.download_github_repository(
                 github_user = "NearlyTRex",
                 github_repo = "PySteamGridDB",
                 output_dir = programs.get_library_install_dir("PySteamGridDB", "lib"),
@@ -48,7 +48,7 @@ class PySteamGridDB(toolbase.ToolBase):
             if not success:
                 logger.log_error("Could not setup PySteamGridDB")
                 return False
-            success = network.ArchiveGithubRepository(
+            success = network.archive_github_repository(
                 github_user = "NearlyTRex",
                 github_repo = "PySteamGridDB",
                 output_dir = programs.get_library_backup_dir("PySteamGridDB", "lib"),
@@ -69,7 +69,7 @@ class PySteamGridDB(toolbase.ToolBase):
 
         # Setup library
         if programs.should_library_be_installed("PySteamGridDB"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_library_backup_dir("PySteamGridDB", "lib"),
                 install_name = "PySteamGridDB",
                 install_dir = programs.get_library_install_dir("PySteamGridDB", "lib"),

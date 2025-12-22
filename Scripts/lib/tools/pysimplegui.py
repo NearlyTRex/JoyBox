@@ -36,7 +36,7 @@ class PySimpleGUI(toolbase.ToolBase):
 
         # Download library
         if programs.should_library_be_installed("PySimpleGUI"):
-            success = network.DownloadGithubRepository(
+            success = network.download_github_repository(
                 github_user = "NearlyTRex",
                 github_repo = "PySimpleGUI",
                 output_dir = programs.get_library_install_dir("PySimpleGUI", "lib"),
@@ -47,7 +47,7 @@ class PySimpleGUI(toolbase.ToolBase):
             if not success:
                 logger.log_error("Could not setup PySimpleGUI")
                 return False
-            success = network.ArchiveGithubRepository(
+            success = network.archive_github_repository(
                 github_user = "NearlyTRex",
                 github_repo = "PySimpleGUI",
                 output_dir = programs.get_library_backup_dir("PySimpleGUI", "lib"),
@@ -68,7 +68,7 @@ class PySimpleGUI(toolbase.ToolBase):
 
         # Setup library
         if programs.should_library_be_installed("PySimpleGUI"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_library_backup_dir("PySimpleGUI", "lib"),
                 install_name = "PySimpleGUI",
                 install_dir = programs.get_library_install_dir("PySimpleGUI", "lib"),

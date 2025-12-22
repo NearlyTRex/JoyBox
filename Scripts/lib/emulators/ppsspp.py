@@ -69,7 +69,7 @@ class PPSSPP(emulatorbase.EmulatorBase):
 
         # Download windows program
         if programs.should_program_be_installed("PPSSPP", "windows"):
-            success = release.DownloadWebpageRelease(
+            success = release.download_webpage_release(
                 webpage_url = "https://www.ppsspp.org/download",
                 webpage_base_url = "https://www.ppsspp.org",
                 starts_with = "https://www.ppsspp.org/files/",
@@ -87,7 +87,7 @@ class PPSSPP(emulatorbase.EmulatorBase):
 
         # Download linux program
         if programs.should_program_be_installed("PPSSPP", "linux"):
-            success = release.BuildAppImageFromSource(
+            success = release.build_appimage_from_source(
                 release_url = "https://github.com/NearlyTRex/PPSSPP.git",
                 output_file = "PPSSPPSDL-x86_64.AppImage",
                 install_name = "PPSSPP",
@@ -124,7 +124,7 @@ class PPSSPP(emulatorbase.EmulatorBase):
 
         # Setup windows program
         if programs.should_program_be_installed("PPSSPP", "windows"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_program_backup_dir("PPSSPP", "windows"),
                 install_name = "PPSSPP",
                 install_dir = programs.get_program_install_dir("PPSSPP", "windows"),
@@ -138,7 +138,7 @@ class PPSSPP(emulatorbase.EmulatorBase):
 
         # Setup linux program
         if programs.should_program_be_installed("PPSSPP", "linux"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_program_backup_dir("PPSSPP", "linux"),
                 install_name = "PPSSPP",
                 install_dir = programs.get_program_install_dir("PPSSPP", "linux"),

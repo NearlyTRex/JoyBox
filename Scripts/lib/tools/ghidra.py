@@ -98,7 +98,7 @@ class Ghidra(toolbase.ToolBase):
                 })
 
             # Build Ghidra from source
-            success = release.BuildBinaryFromSource(
+            success = release.build_binary_from_source(
                 release_url = "https://github.com/NearlyTRex/Ghidra.git",
                 output_file = ".zip",
                 output_dir = "build/dist",
@@ -124,7 +124,7 @@ class Ghidra(toolbase.ToolBase):
 
         # Setup library
         if programs.should_library_be_installed("Ghidra/lib"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_library_backup_dir("Ghidra", "lib"),
                 install_name = "Ghidra",
                 install_dir = programs.get_library_install_dir("Ghidra", "lib"),

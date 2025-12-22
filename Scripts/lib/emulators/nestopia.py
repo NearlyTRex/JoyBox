@@ -50,7 +50,7 @@ class Nestopia(emulatorbase.EmulatorBase):
 
         # Download windows program
         if programs.should_program_be_installed("Nestopia", "windows"):
-            success = release.DownloadGithubRelease(
+            success = release.download_github_release(
                 github_user = "0ldsk00l",
                 github_repo = "nestopia",
                 starts_with = "nestopia",
@@ -75,7 +75,7 @@ class Nestopia(emulatorbase.EmulatorBase):
 
         # Setup windows program
         if programs.should_program_be_installed("Nestopia", "windows"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_program_backup_dir("Nestopia", "windows"),
                 install_name = "Nestopia",
                 install_dir = programs.get_program_install_dir("Nestopia", "windows"),

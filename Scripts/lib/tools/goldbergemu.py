@@ -171,7 +171,7 @@ class GoldbergEmu(toolbase.ToolBase):
 
         # Download library
         if programs.should_library_be_installed("GoldbergEmu"):
-            success = release.DownloadGeneralRelease(
+            success = release.download_general_release(
                 archive_url = "https://gitlab.com/Mr_Goldberg/goldberg_emulator/-/jobs/4247811310/artifacts/download",
                 install_name = "GoldbergEmu",
                 install_dir = programs.get_library_install_dir("GoldbergEmu", "lib"),
@@ -191,7 +191,7 @@ class GoldbergEmu(toolbase.ToolBase):
 
         # Setup library
         if programs.should_library_be_installed("GoldbergEmu"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_library_backup_dir("GoldbergEmu", "lib"),
                 install_name = "GoldbergEmu",
                 install_dir = programs.get_library_install_dir("GoldbergEmu", "lib"),

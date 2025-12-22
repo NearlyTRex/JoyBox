@@ -23,7 +23,7 @@ import locker
 ###########################################################
 
 # Check if url is reachable
-def IsUrlReachable(url):
+def is_url_reachable(url):
     try:
         import requests
         get = requests.get(url)
@@ -32,7 +32,7 @@ def IsUrlReachable(url):
         return False
 
 # Get remote json
-def GetRemoteJson(
+def get_remote_json(
     url,
     headers = None,
     verbose = False,
@@ -57,7 +57,7 @@ def GetRemoteJson(
         return None
 
 # Post remote json
-def PostRemoteJson(
+def post_remote_json(
     url,
     headers = None,
     data = None,
@@ -83,7 +83,7 @@ def PostRemoteJson(
         return None
 
 # Get remote xml
-def GetRemoteXml(
+def get_remote_xml(
     url,
     headers = None,
     verbose = False,
@@ -113,7 +113,7 @@ def GetRemoteXml(
 ###########################################################
 
 # Download url to local dir
-def DownloadUrl(
+def download_url(
     url,
     output_dir = None,
     output_file = None,
@@ -176,7 +176,7 @@ def DownloadUrl(
     return False
 
 # Download git url
-def DownloadGitUrl(
+def download_git_url(
     url,
     output_dir,
     recursive = True,
@@ -244,7 +244,7 @@ def DownloadGitUrl(
 ###########################################################
 
 # Determine if network share is mounted
-def IsNetworkShareMounted(mount_dir, base_location, network_share):
+def is_network_share_mounted(mount_dir, base_location, network_share):
 
     # Windows
     if environment.is_windows_platform():
@@ -264,7 +264,7 @@ def IsNetworkShareMounted(mount_dir, base_location, network_share):
     return False
 
 # Mount network share
-def MountNetworkShare(
+def mount_network_share(
     mount_dir,
     base_location,
     network_share,
@@ -349,7 +349,7 @@ def MountNetworkShare(
 ###########################################################
 
 # Get github repository
-def GetGithubRepository(
+def get_github_repository(
     github_user,
     github_repo,
     github_token = None,
@@ -370,7 +370,7 @@ def GetGithubRepository(
         return None
 
 # Get github repositories
-def GetGithubRepositories(
+def get_github_repositories(
     github_user,
     github_token = None,
     include_repos = [],
@@ -408,7 +408,7 @@ def GetGithubRepositories(
         return []
 
 # Download github repository
-def DownloadGithubRepository(
+def download_github_repository(
     github_user,
     github_repo,
     github_token = None,
@@ -421,7 +421,7 @@ def DownloadGithubRepository(
     github_url = "https://github.com/%s/%s.git" % (github_user, github_repo)
     if github_token and isinstance(github_token, str) and len(github_token):
         github_url = "https://%s@github.com/%s/%s.git" % (github_token, github_user, github_repo)
-    return DownloadGitUrl(
+    return download_git_url(
         url = github_url,
         output_dir = output_dir,
         recursive = recursive,
@@ -431,7 +431,7 @@ def DownloadGithubRepository(
         exit_on_failure = exit_on_failure)
 
 # Update github repository
-def UpdateGithubRepository(
+def update_github_repository(
     github_user,
     github_repo,
     github_branch,
@@ -444,7 +444,7 @@ def UpdateGithubRepository(
     update_url = "https://api.github.com/repos/%s/%s/merge-upstream" % (github_user, github_repo)
 
     # Post update json
-    update_response = PostRemoteJson(
+    update_response = post_remote_json(
         url = update_url,
         headers = {
             "Accept": "application/vnd.github+json",
@@ -472,7 +472,7 @@ def UpdateGithubRepository(
     return True
 
 # Archive github repository
-def ArchiveGithubRepository(
+def archive_github_repository(
     github_user,
     github_repo,
     github_token = None,
@@ -508,7 +508,7 @@ def ArchiveGithubRepository(
         exit_on_failure = exit_on_failure)
 
     # Download repository
-    success = DownloadGithubRepository(
+    success = download_github_repository(
         github_user = github_user,
         github_repo = github_repo,
         github_token = github_token,

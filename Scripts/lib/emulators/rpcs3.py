@@ -75,7 +75,7 @@ class RPCS3(emulatorbase.EmulatorBase):
 
         # Download windows program
         if programs.should_program_be_installed("RPCS3", "windows"):
-            success = release.DownloadGithubRelease(
+            success = release.download_github_release(
                 github_user = "RPCS3",
                 github_repo = "rpcs3-binaries-win",
                 starts_with = "rpcs3",
@@ -94,7 +94,7 @@ class RPCS3(emulatorbase.EmulatorBase):
 
         # Download linux program
         if programs.should_program_be_installed("RPCS3", "linux"):
-            success = release.DownloadGithubRelease(
+            success = release.download_github_release(
                 github_user = "RPCS3",
                 github_repo = "rpcs3-binaries-linux",
                 starts_with = "rpcs3",
@@ -118,7 +118,7 @@ class RPCS3(emulatorbase.EmulatorBase):
 
         # Setup windows program
         if programs.should_program_be_installed("RPCS3", "windows"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_program_backup_dir("RPCS3", "windows"),
                 install_name = "RPCS3",
                 install_dir = programs.get_program_install_dir("RPCS3", "windows"),
@@ -132,7 +132,7 @@ class RPCS3(emulatorbase.EmulatorBase):
 
         # Setup linux program
         if programs.should_program_be_installed("RPCS3", "linux"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_program_backup_dir("RPCS3", "linux"),
                 install_name = "RPCS3",
                 install_dir = programs.get_program_install_dir("RPCS3", "linux"),

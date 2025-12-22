@@ -42,7 +42,7 @@ class NDecrypt(toolbase.ToolBase):
 
         # Download windows program
         if programs.should_program_be_installed("NDecrypt", "windows"):
-            success = release.DownloadGithubRelease(
+            success = release.download_github_release(
                 github_user = "SabreTools",
                 github_repo = "NDecrypt",
                 starts_with = "NDecrypt",
@@ -61,7 +61,7 @@ class NDecrypt(toolbase.ToolBase):
 
         # Download linux program
         if programs.should_program_be_installed("NDecrypt", "linux"):
-            success = release.DownloadGithubRelease(
+            success = release.download_github_release(
                 github_user = "SabreTools",
                 github_repo = "NDecrypt",
                 starts_with = "NDecrypt",
@@ -92,7 +92,7 @@ class NDecrypt(toolbase.ToolBase):
 
         # Setup windows program
         if programs.should_program_be_installed("NDecrypt", "windows"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_program_backup_dir("NDecrypt", "windows"),
                 install_name = "NDecrypt",
                 install_dir = programs.get_program_install_dir("NDecrypt", "windows"),
@@ -106,7 +106,7 @@ class NDecrypt(toolbase.ToolBase):
 
         # Setup linux program
         if programs.should_program_be_installed("NDecrypt", "linux"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_program_backup_dir("NDecrypt", "linux"),
                 install_name = "NDecrypt",
                 install_dir = programs.get_program_install_dir("NDecrypt", "linux"),

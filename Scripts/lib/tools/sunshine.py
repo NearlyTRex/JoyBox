@@ -47,7 +47,7 @@ class Sunshine(toolbase.ToolBase):
 
         # Download windows program
         if programs.should_program_be_installed("Sunshine", "windows"):
-            success = release.DownloadGithubRelease(
+            success = release.download_github_release(
                 github_user = "LizardByte",
                 github_repo = "Sunshine",
                 starts_with = "sunshine",
@@ -66,7 +66,7 @@ class Sunshine(toolbase.ToolBase):
 
         # Download linux program
         if programs.should_program_be_installed("Sunshine", "linux"):
-            success = release.DownloadGithubRelease(
+            success = release.download_github_release(
                 github_user = "LizardByte",
                 github_repo = "Sunshine",
                 starts_with = "sunshine",
@@ -90,7 +90,7 @@ class Sunshine(toolbase.ToolBase):
 
         # Setup windows program
         if programs.should_program_be_installed("Sunshine", "windows"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_program_backup_dir("Sunshine", "windows"),
                 install_name = "Sunshine",
                 install_dir = programs.get_program_install_dir("Sunshine", "windows"),
@@ -104,7 +104,7 @@ class Sunshine(toolbase.ToolBase):
 
         # Setup linux program
         if programs.should_program_be_installed("Sunshine", "linux"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_program_backup_dir("Sunshine", "linux"),
                 install_name = "Sunshine",
                 install_dir = programs.get_program_install_dir("Sunshine", "linux"),

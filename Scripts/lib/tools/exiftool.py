@@ -36,7 +36,7 @@ class ExifTool(toolbase.ToolBase):
 
         # Download library
         if programs.should_library_be_installed("ExifTool"):
-            success = network.DownloadGithubRepository(
+            success = network.download_github_repository(
                 github_user = "NearlyTRex",
                 github_repo = "ExifTool",
                 output_dir = programs.get_library_install_dir("ExifTool", "lib"),
@@ -47,7 +47,7 @@ class ExifTool(toolbase.ToolBase):
             if not success:
                 logger.log_error("Could not setup ExifTool")
                 return False
-            success = network.ArchiveGithubRepository(
+            success = network.archive_github_repository(
                 github_user = "NearlyTRex",
                 github_repo = "ExifTool",
                 output_dir = programs.get_library_backup_dir("ExifTool", "lib"),
@@ -68,7 +68,7 @@ class ExifTool(toolbase.ToolBase):
 
         # Setup library
         if programs.should_library_be_installed("ExifTool"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_library_backup_dir("ExifTool", "lib"),
                 install_name = "ExifTool",
                 install_dir = programs.get_library_install_dir("ExifTool", "lib"),

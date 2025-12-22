@@ -50,7 +50,7 @@ class BlastEm(emulatorbase.EmulatorBase):
 
         # Download windows program
         if programs.should_program_be_installed("BlastEm", "windows"):
-            success = release.DownloadWebpageRelease(
+            success = release.download_webpage_release(
                 webpage_url = "https://www.retrodev.com/blastem",
                 webpage_base_url = "https://www.retrodev.com/blastem",
                 starts_with = "https://www.retrodev.com/blastem/blastem-win32",
@@ -74,7 +74,7 @@ class BlastEm(emulatorbase.EmulatorBase):
 
         # Setup windows program
         if programs.should_program_be_installed("BlastEm", "windows"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_program_backup_dir("BlastEm", "windows"),
                 install_name = "BlastEm",
                 install_dir = programs.get_program_install_dir("BlastEm", "windows"),

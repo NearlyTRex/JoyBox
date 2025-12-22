@@ -100,7 +100,7 @@ class Citra(emulatorbase.EmulatorBase):
 
         # Setup windows program
         if programs.should_program_be_installed("Citra", "windows"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_program_backup_dir("Citra", "windows"),
                 install_name = "Citra",
                 install_dir = programs.get_program_install_dir("Citra", "windows"),
@@ -114,7 +114,7 @@ class Citra(emulatorbase.EmulatorBase):
 
         # Setup linux program
         if programs.should_program_be_installed("Citra", "linux"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_program_backup_dir("Citra", "linux"),
                 install_name = "Citra",
                 install_dir = programs.get_program_install_dir("Citra", "linux"),

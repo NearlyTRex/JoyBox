@@ -156,7 +156,7 @@ class Dolphin(emulatorbase.EmulatorBase):
 
         # Download windows program
         if programs.should_program_be_installed("Dolphin", "windows"):
-            success = release.DownloadWebpageRelease(
+            success = release.download_webpage_release(
                 webpage_url = "https://dolphin-emu.org/download",
                 webpage_base_url = "https://dolphin-emu.org",
                 starts_with = "https://dl.dolphin-emu.org/builds",
@@ -175,7 +175,7 @@ class Dolphin(emulatorbase.EmulatorBase):
 
         # Build linux program
         if programs.should_program_be_installed("Dolphin", "linux"):
-            success = release.BuildAppImageFromSource(
+            success = release.build_appimage_from_source(
                 release_url = "https://github.com/NearlyTRex/Dolphin.git",
                 output_file = "Dolphin_Emulator-x86_64.AppImage",
                 install_name = "Dolphin",
@@ -213,7 +213,7 @@ class Dolphin(emulatorbase.EmulatorBase):
 
         # Setup windows program
         if programs.should_program_be_installed("Dolphin", "windows"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_program_backup_dir("Dolphin", "windows"),
                 install_name = "Dolphin",
                 install_dir = programs.get_program_install_dir("Dolphin", "windows"),
@@ -227,7 +227,7 @@ class Dolphin(emulatorbase.EmulatorBase):
 
         # Setup linux program
         if programs.should_program_be_installed("Dolphin", "linux"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_program_backup_dir("Dolphin", "linux"),
                 install_name = "Dolphin",
                 install_dir = programs.get_program_install_dir("Dolphin", "linux"),

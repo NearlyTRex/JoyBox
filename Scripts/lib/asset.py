@@ -69,7 +69,7 @@ def DownloadAsset(
             return success
 
     # Download file by default
-    success = network.DownloadUrl(
+    success = network.download_url(
         url = asset_url,
         output_file = asset_file,
         verbose = verbose,

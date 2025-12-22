@@ -44,7 +44,7 @@ def FindImages(
     search_url += "&key=%s" % google_search_engine_api_key
 
     # Get search results
-    image_json = network.GetRemoteJson(
+    image_json = network.get_remote_json(
         url = search_url,
         verbose = verbose,
         pretend_run = pretend_run,

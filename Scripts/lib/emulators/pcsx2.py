@@ -147,7 +147,7 @@ class PCSX2(emulatorbase.EmulatorBase):
 
         # Download windows program
         if programs.should_program_be_installed("PCSX2", "windows"):
-            success = release.DownloadGithubRelease(
+            success = release.download_github_release(
                 github_user = "PCSX2",
                 github_repo = "pcsx2",
                 starts_with = "pcsx2",
@@ -165,7 +165,7 @@ class PCSX2(emulatorbase.EmulatorBase):
 
         # Download linux program
         if programs.should_program_be_installed("PCSX2", "linux"):
-            success = release.DownloadGithubRelease(
+            success = release.download_github_release(
                 github_user = "PCSX2",
                 github_repo = "pcsx2",
                 starts_with = "pcsx2",
@@ -188,7 +188,7 @@ class PCSX2(emulatorbase.EmulatorBase):
 
         # Setup windows program
         if programs.should_program_be_installed("PCSX2", "windows"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_program_backup_dir("PCSX2", "windows"),
                 install_name = "PCSX2",
                 install_dir = programs.get_program_install_dir("PCSX2", "windows"),
@@ -202,7 +202,7 @@ class PCSX2(emulatorbase.EmulatorBase):
 
         # Setup linux program
         if programs.should_program_be_installed("PCSX2", "linux"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_program_backup_dir("PCSX2", "linux"),
                 install_name = "PCSX2",
                 install_dir = programs.get_program_install_dir("PCSX2", "linux"),

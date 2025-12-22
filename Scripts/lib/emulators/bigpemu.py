@@ -66,7 +66,7 @@ class BigPEmu(emulatorbase.EmulatorBase):
 
         # Download windows program
         if programs.should_program_be_installed("BigPEmu", "windows"):
-            success = release.DownloadWebpageRelease(
+            success = release.download_webpage_release(
                 webpage_url = "https://www.richwhitehouse.com/jaguar/index.php?content=download",
                 webpage_base_url = "https://www.richwhitehouse.com",
                 starts_with = "https://www.richwhitehouse.com/jaguar/builds/BigPEmu",
@@ -90,7 +90,7 @@ class BigPEmu(emulatorbase.EmulatorBase):
 
         # Setup windows program
         if programs.should_program_be_installed("BigPEmu", "windows"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_program_backup_dir("BigPEmu", "windows"),
                 install_name = "BigPEmu",
                 install_dir = programs.get_program_install_dir("BigPEmu", "windows"),

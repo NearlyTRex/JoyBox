@@ -120,7 +120,7 @@ class BasiliskII(emulatorbase.EmulatorBase):
 
         # Download windows program
         if programs.should_program_be_installed("BasiliskII", "windows"):
-            success = release.DownloadGeneralRelease(
+            success = release.download_general_release(
                 archive_url = "https://surfdrive.surf.nl/files/index.php/s/IVkakW3BztSohqH/download",
                 search_file = "BasiliskII.exe",
                 install_name = "BasiliskII",
@@ -135,7 +135,7 @@ class BasiliskII(emulatorbase.EmulatorBase):
 
         # Download linux program
         if programs.should_program_be_installed("BasiliskII", "linux"):
-            success = release.DownloadGithubRelease(
+            success = release.download_github_release(
                 github_user = "Korkman",
                 github_repo = "macemu-appimage-builder",
                 starts_with = "BasiliskII-x86_64",
@@ -159,7 +159,7 @@ class BasiliskII(emulatorbase.EmulatorBase):
 
         # Setup windows program
         if programs.should_program_be_installed("BasiliskII", "windows"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_program_backup_dir("BasiliskII", "windows"),
                 install_name = "BasiliskII",
                 install_dir = programs.get_program_install_dir("BasiliskII", "windows"),
@@ -173,7 +173,7 @@ class BasiliskII(emulatorbase.EmulatorBase):
 
         # Setup linux program
         if programs.should_program_be_installed("BasiliskII", "linux"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_program_backup_dir("BasiliskII", "linux"),
                 install_name = "BasiliskII",
                 install_dir = programs.get_program_install_dir("BasiliskII", "linux"),

@@ -428,11 +428,11 @@ class GOG(storebase.StoreBase):
 
         # Get gog url
         gog_url = "https://api.gog.com/products/%s?expand=downloads" % identifier
-        if not network.IsUrlReachable(gog_url):
+        if not network.is_url_reachable(gog_url):
             return None
 
         # Get gog json
-        gog_json = network.GetRemoteJson(
+        gog_json = network.get_remote_json(
             url = gog_url,
             verbose = verbose,
             pretend_run = pretend_run,
@@ -454,9 +454,9 @@ class GOG(storebase.StoreBase):
                 json_data.set_value(config.json_key_store_buildid, installer_version)
                 break
         appurl = gog_json.get("links", {}).get("product_card", "")
-        if not network.IsUrlReachable(appurl):
+        if not network.is_url_reachable(appurl):
             appurl = self.get_latest_url(str(gog_json.get("slug", "")))
-        if network.IsUrlReachable(appurl):
+        if network.is_url_reachable(appurl):
             json_data.set_value(config.json_key_store_appurl, appurl)
         return self.augment_jsondata(
             json_data = json_data,

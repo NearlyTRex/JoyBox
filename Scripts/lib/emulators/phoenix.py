@@ -50,7 +50,7 @@ class Phoenix(emulatorbase.EmulatorBase):
 
         # Download windows program
         if programs.should_program_be_installed("Phoenix", "windows"):
-            success = release.DownloadGeneralRelease(
+            success = release.download_general_release(
                 archive_url = "https://archive.org/download/PHX_EMU/ph28jag-win64.zip",
                 search_file = "PhoenixEmuProject.exe",
                 install_name = "Phoenix",
@@ -71,7 +71,7 @@ class Phoenix(emulatorbase.EmulatorBase):
 
         # Setup windows program
         if programs.should_program_be_installed("Phoenix", "windows"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_program_backup_dir("Phoenix", "windows"),
                 install_name = "Phoenix",
                 install_dir = programs.get_program_install_dir("Phoenix", "windows"),

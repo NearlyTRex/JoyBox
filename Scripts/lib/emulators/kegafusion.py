@@ -50,7 +50,7 @@ class KegaFusion(emulatorbase.EmulatorBase):
 
         # Download windows program
         if programs.should_program_be_installed("KegaFusion", "windows"):
-            success = release.DownloadGeneralRelease(
+            success = release.download_general_release(
                 archive_url = "https://retrocdn.net/images/6/6c/Fusion364.7z",
                 search_file = "Fusion.exe",
                 install_name = "KegaFusion",
@@ -71,7 +71,7 @@ class KegaFusion(emulatorbase.EmulatorBase):
 
         # Setup windows program
         if programs.should_program_be_installed("KegaFusion", "windows"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_program_backup_dir("KegaFusion", "windows"),
                 install_name = "KegaFusion",
                 install_dir = programs.get_program_install_dir("KegaFusion", "windows"),

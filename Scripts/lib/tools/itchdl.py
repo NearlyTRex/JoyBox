@@ -36,7 +36,7 @@ class ItchDL(toolbase.ToolBase):
 
         # Download library
         if programs.should_library_be_installed("ItchDL"):
-            success = network.DownloadGithubRepository(
+            success = network.download_github_repository(
                 github_user = "NearlyTRex",
                 github_repo = "ItchDL",
                 output_dir = programs.get_library_install_dir("ItchDL", "lib"),
@@ -47,7 +47,7 @@ class ItchDL(toolbase.ToolBase):
             if not success:
                 logger.log_error("Could not setup ItchDL")
                 return False
-            success = network.ArchiveGithubRepository(
+            success = network.archive_github_repository(
                 github_user = "NearlyTRex",
                 github_repo = "ItchDL",
                 output_dir = programs.get_library_backup_dir("ItchDL", "lib"),
@@ -68,7 +68,7 @@ class ItchDL(toolbase.ToolBase):
 
         # Setup library
         if programs.should_library_be_installed("ItchDL"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_library_backup_dir("ItchDL", "lib"),
                 install_name = "ItchDL",
                 install_dir = programs.get_library_install_dir("ItchDL", "lib"),

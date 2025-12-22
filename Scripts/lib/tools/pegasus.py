@@ -77,7 +77,7 @@ class Pegasus(toolbase.ToolBase):
 
         # Download windows program
         if programs.should_program_be_installed("Pegasus", "windows"):
-            success = release.DownloadGithubRelease(
+            success = release.download_github_release(
                 github_user = "mmatyas",
                 github_repo = "pegasus-frontend",
                 starts_with = "pegasus-fe",
@@ -94,7 +94,7 @@ class Pegasus(toolbase.ToolBase):
             if not success:
                 logger.log_error("Could not setup Pegasus")
                 return False
-            success = network.DownloadGithubRepository(
+            success = network.download_github_repository(
                 github_user = "NearlyTRex",
                 github_repo = "PegasusThemeGrid",
                 output_dir = paths.join_paths(programs.get_tool_path_config_value("Pegasus", "themes_dir", "windows"), "PegasusThemeGrid"),
@@ -108,7 +108,7 @@ class Pegasus(toolbase.ToolBase):
 
         # Build linux program
         if programs.should_program_be_installed("Pegasus", "linux"):
-            success = release.BuildAppImageFromSource(
+            success = release.build_appimage_from_source(
                 release_url = "https://github.com/NearlyTRex/Pegasus.git",
                 output_file = "App-x86_64.AppImage",
                 install_name = "Pegasus",
@@ -135,7 +135,7 @@ class Pegasus(toolbase.ToolBase):
             if not success:
                 logger.log_error("Could not setup Pegasus")
                 return False
-            success = network.DownloadGithubRepository(
+            success = network.download_github_repository(
                 github_user = "NearlyTRex",
                 github_repo = "PegasusThemeGrid",
                 output_dir = paths.join_paths(programs.get_tool_path_config_value("Pegasus", "themes_dir", "linux"), "PegasusThemeGrid"),
@@ -155,7 +155,7 @@ class Pegasus(toolbase.ToolBase):
 
         # Setup windows program
         if programs.should_program_be_installed("Pegasus", "windows"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_program_backup_dir("Pegasus", "windows"),
                 install_name = "Pegasus",
                 install_dir = programs.get_program_install_dir("Pegasus", "windows"),
@@ -169,7 +169,7 @@ class Pegasus(toolbase.ToolBase):
 
         # Setup linux program
         if programs.should_program_be_installed("Pegasus", "linux"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_program_backup_dir("Pegasus", "linux"),
                 install_name = "Pegasus",
                 install_dir = programs.get_program_install_dir("Pegasus", "linux"),

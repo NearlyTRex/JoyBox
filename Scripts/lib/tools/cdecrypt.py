@@ -42,7 +42,7 @@ class CDecrypt(toolbase.ToolBase):
 
         # Download windows program
         if programs.should_program_be_installed("CDecrypt", "windows"):
-            success = release.DownloadGithubRelease(
+            success = release.download_github_release(
                 github_user = "VitaSmith",
                 github_repo = "cdecrypt",
                 starts_with = "cdecrypt",
@@ -61,7 +61,7 @@ class CDecrypt(toolbase.ToolBase):
 
         # Build linux program
         if programs.should_program_be_installed("CDecrypt", "linux"):
-            success = release.BuildAppImageFromSource(
+            success = release.build_appimage_from_source(
                 release_url = "https://github.com/NearlyTRex/CDecrypt.git",
                 output_file = "App-x86_64.AppImage",
                 install_name = "CDecrypt",
@@ -94,7 +94,7 @@ class CDecrypt(toolbase.ToolBase):
 
         # Setup windows program
         if programs.should_program_be_installed("CDecrypt", "windows"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_program_backup_dir("CDecrypt", "windows"),
                 install_name = "CDecrypt",
                 install_dir = programs.get_program_install_dir("CDecrypt", "windows"),
@@ -108,7 +108,7 @@ class CDecrypt(toolbase.ToolBase):
 
         # Setup linux program
         if programs.should_program_be_installed("CDecrypt", "linux"):
-            success = release.SetupStoredRelease(
+            success = release.setup_stored_release(
                 archive_dir = programs.get_program_backup_dir("CDecrypt", "linux"),
                 install_name = "CDecrypt",
                 install_dir = programs.get_program_install_dir("CDecrypt", "linux"),
