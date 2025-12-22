@@ -264,7 +264,7 @@ def SetupGeneralRelease(
 
     # Backup files
     if paths.is_path_valid(backups_dir):
-        success = locker.BackupFiles(
+        success = locker.backup_files(
             src = archive_file,
             dest = paths.join_paths(backups_dir, archive_filename),
             locker_type = locker_type,
@@ -792,7 +792,7 @@ def BuildBinaryFromSource(
 
     # Backup files
     if paths.is_path_valid(backups_dir):
-        success = locker.BackupFiles(
+        success = locker.backup_files(
             src = built_file,
             dest = paths.join_paths(backups_dir, final_file),
             locker_type = locker_type,
@@ -952,7 +952,7 @@ def BuildAppImageFromSource(
 
     # Backup files
     if paths.is_path_valid(backups_dir):
-        success = locker.BackupFiles(
+        success = locker.backup_files(
             src = built_file,
             dest = paths.join_paths(backups_dir, final_file),
             locker_type = locker_type,

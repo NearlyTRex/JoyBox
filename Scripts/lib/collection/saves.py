@@ -136,7 +136,7 @@ def PackSave(
 
     # Backup archive
     logger.log_info(f"Backing up save to {output_save_dir}")
-    success = locker.BackupFiles(
+    success = locker.backup_files(
         src = tmp_save_archive_file,
         dest = out_save_archive_file,
         locker_type = locker_type,

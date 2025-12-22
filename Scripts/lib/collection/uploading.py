@@ -65,7 +65,7 @@ def UploadGameFiles(
         return False
 
     # Upload all files
-    success = locker.UploadPath(
+    success = locker.upload_path(
         src = game_root,
         verbose = verbose,
         locker_type = locker_type,

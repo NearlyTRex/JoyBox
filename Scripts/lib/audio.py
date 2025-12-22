@@ -142,7 +142,7 @@ def DownloadChannelAudioFiles(channels, genre_type, cookie_source = None, locker
                             exit_on_failure = exit_on_failure)
 
         # Backup audio files
-        backup_success = locker.BackupFiles(
+        backup_success = locker.backup_files(
             src = audio_only_dir,
             dest = channel_music_dir,
             locker_type = locker_type,

@@ -554,7 +554,7 @@ def ArchiveGithubRepository(
         return False
 
     # Backup archive
-    success = locker.BackupFiles(
+    success = locker.backup_files(
         src = tmp_file_archive,
         dest = out_file_archive,
         locker_type = locker_type,

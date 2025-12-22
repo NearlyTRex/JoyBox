@@ -82,7 +82,7 @@ def main():
 
     # Init sync
     if args.action == config.RemoteActionType.INIT:
-        sync.SetupRemote(
+        sync.setup_remote(
             remote_name = remote_name,
             remote_type = remote_type,
             remote_token = remote_token,
@@ -93,7 +93,7 @@ def main():
 
     # Download files
     elif args.action == config.RemoteActionType.DOWNLOAD:
-        sync.DownloadFilesFromRemote(
+        sync.download_files_from_remote(
             remote_name = remote_name,
             remote_type = remote_type,
             remote_path = remote_path,
@@ -106,7 +106,7 @@ def main():
 
     # Upload files
     elif args.action == config.RemoteActionType.UPLOAD:
-        sync.UploadFilesToRemote(
+        sync.upload_files_to_remote(
             remote_name = remote_name,
             remote_type = remote_type,
             remote_path = remote_path,
@@ -119,7 +119,7 @@ def main():
 
     # Pull files
     elif args.action == config.RemoteActionType.PULL:
-        sync.PullFilesFromRemote(
+        sync.pull_files_from_remote(
             remote_name = remote_name,
             remote_type = remote_type,
             remote_path = remote_path,
@@ -132,7 +132,7 @@ def main():
 
     # Push files
     elif args.action == config.RemoteActionType.PUSH:
-        sync.PushFilesToRemote(
+        sync.push_files_to_remote(
             remote_name = remote_name,
             remote_type = remote_type,
             remote_path = remote_path,
@@ -145,7 +145,7 @@ def main():
 
     # Merge files
     elif args.action == config.RemoteActionType.MERGE:
-        sync.MergeFilesBothWays(
+        sync.merge_files_both_ways(
             remote_name = remote_name,
             remote_type = remote_type,
             remote_path = remote_path,
@@ -162,7 +162,7 @@ def main():
         diff_excludes = args.excludes.split(",")
         if args.recycle_folder:
             diff_excludes.append(args.recycle_folder + "/**")
-        sync.DiffFiles(
+        sync.diff_files(
             remote_name = remote_name,
             remote_type = remote_type,
             remote_path = remote_path,
@@ -183,7 +183,7 @@ def main():
         diffsync_excludes = args.excludes.split(",")
         if args.recycle_folder:
             diffsync_excludes.append(args.recycle_folder + "/**")
-        sync.DiffSyncFiles(
+        sync.diff_sync_files(
             remote_name = remote_name,
             remote_type = remote_type,
             remote_path = remote_path,
@@ -204,7 +204,7 @@ def main():
 
     # Empty recycle bin
     elif args.action == config.RemoteActionType.EMPTYRECYCLE:
-        sync.EmptyRecycleBin(
+        sync.empty_recycle_bin(
             remote_name = remote_name,
             remote_type = remote_type,
             remote_path = remote_path,
@@ -215,7 +215,7 @@ def main():
 
     # List files
     elif args.action == config.RemoteActionType.LIST:
-        sync.ListFiles(
+        sync.list_files(
             remote_name = remote_name,
             remote_type = remote_type,
             remote_path = remote_path,
@@ -227,7 +227,7 @@ def main():
 
     # Mount files
     elif args.action == config.RemoteActionType.MOUNT:
-        sync.MountFiles(
+        sync.mount_files(
             remote_name = remote_name,
             remote_type = remote_type,
             remote_path = remote_path,

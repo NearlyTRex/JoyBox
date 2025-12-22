@@ -15,7 +15,7 @@ import cryption
 import lockerinfo
 
 # Check if path is local
-def IsLocalPath(path):
+def is_local_path(path):
     if path.startswith(environment.get_locker_root_dir(config.SourceType.LOCAL) + config.os_pathsep):
         return True
     if paths.does_path_exist(path):
@@ -23,13 +23,13 @@ def IsLocalPath(path):
     return False
 
 # Check if path is remote
-def IsRemotePath(path):
-    not IsLocalPath(path)
+def is_remote_path(path):
+    not is_local_path(path)
 
 # Convert to remote path
-def ConvertToRemotePath(path):
+def convert_to_remote_path(path):
     old_base_path = environment.get_locker_root_dir(config.SourceType.REMOTE)
-    if IsLocalPath(path):
+    if is_local_path(path):
         old_base_path = environment.get_locker_root_dir(config.SourceType.LOCAL)
     return paths.rebase_file_path(
         path = path,
@@ -37,8 +37,8 @@ def ConvertToRemotePath(path):
         new_base_path = "")
 
 # Convert to local path
-def ConvertToLocalPath(path):
-    if IsLocalPath(path):
+def convert_to_local_path(path):
+    if is_local_path(path):
         return path
     return paths.rebase_file_path(
         path = path,
@@ -46,7 +46,7 @@ def ConvertToLocalPath(path):
         new_base_path = environment.get_locker_root_dir(config.SourceType.LOCAL))
 
 # Check if path exists
-def DoesRemotePathExist(path, locker_type = None):
+def does_remote_path_exist(path, locker_type = None):
 
     # Get locker info
     locker_info = lockerinfo.LockerInfo(locker_type)
@@ -55,14 +55,14 @@ def DoesRemotePathExist(path, locker_type = None):
         return False
 
     # Check if path exists
-    success = sync.DoesPathExist(
+    success = sync.does_path_exist(
         remote_name = locker_info.get_remote_name(),
         remote_type = locker_info.get_remote_type(),
-        remote_path = ConvertToRemotePath(path))
+        remote_path = convert_to_remote_path(path))
     return success
 
 # Check if path contains files
-def DoesRemotePathContainFiles(path, locker_type = None):
+def does_remote_path_contain_files(path, locker_type = None):
 
     # Get locker info
     locker_info = lockerinfo.LockerInfo(locker_type)
@@ -71,14 +71,14 @@ def DoesRemotePathContainFiles(path, locker_type = None):
         return False
 
     # Check if path contains files
-    success = sync.DoesPathContainFiles(
+    success = sync.does_path_contain_files(
         remote_name = locker_info.get_remote_name(),
         remote_type = locker_info.get_remote_type(),
-        remote_path = ConvertToRemotePath(path))
+        remote_path = convert_to_remote_path(path))
     return success
 
 # Download path
-def DownloadPath(
+def download_path(
     src,
     dest = None,
     locker_type = None,
@@ -93,13 +93,13 @@ def DownloadPath(
         return (False, "")
 
     # Get paths
-    remote_path = ConvertToRemotePath(src)
+    remote_path = convert_to_remote_path(src)
     local_path = dest
     if not local_path:
-        local_path = ConvertToLocalPath(remote_path)
+        local_path = convert_to_local_path(remote_path)
 
     # Download files
-    success = sync.DownloadFilesFromRemote(
+    success = sync.download_files_from_remote(
         remote_name = locker_info.get_remote_name(),
         remote_type = locker_info.get_remote_type(),
         remote_path = remote_path,
@@ -114,7 +114,7 @@ def DownloadPath(
     return (True, local_path)
 
 # Upload path
-def UploadPath(
+def upload_path(
     src,
     dest = None,
     locker_type = None,
@@ -138,12 +138,12 @@ def UploadPath(
     remote_path = dest
     if not remote_path:
         if paths.is_path_directory(src):
-            remote_path = ConvertToRemotePath(src)
+            remote_path = convert_to_remote_path(src)
         else:
-            remote_path = ConvertToRemotePath(paths.get_filename_directory(src))
+            remote_path = convert_to_remote_path(paths.get_filename_directory(src))
 
     # Upload files
-    success = sync.UploadFilesToRemote(
+    success = sync.upload_files_to_remote(
         remote_name = locker_info.get_remote_name(),
         remote_type = locker_info.get_remote_type(),
         remote_path = remote_path,
@@ -154,7 +154,7 @@ def UploadPath(
     return success
 
 # Download and decrypt path
-def DownloadAndDecryptPath(
+def download_and_decrypt_path(
     src,
     dest = None,
     locker_type = None,
@@ -169,7 +169,7 @@ def DownloadAndDecryptPath(
         return (False, "")
 
     # Download files
-    success, result = DownloadPath(
+    success, result = download_path(
         src = src,
         dest = dest,
         verbose = verbose,
@@ -195,7 +195,7 @@ def DownloadAndDecryptPath(
     return (True, result)
 
 # Upload and encrypt path
-def UploadAndEncryptPath(
+def upload_and_encrypt_path(
     src,
     dest = None,
     locker_type = None,
@@ -221,7 +221,7 @@ def UploadAndEncryptPath(
         return False
 
     # Upload files
-    success = UploadPath(
+    success = upload_path(
         src = src,
         dest = dest,
         verbose = verbose,
@@ -230,21 +230,21 @@ def UploadAndEncryptPath(
     return success
 
 # Get all configured lockers
-def GetConfiguredLockers():
+def get_configured_lockers():
     configured = []
     for locker_type in config.LockerType.members():
         if locker_type == config.LockerType.ALL:
             continue
         locker_info = lockerinfo.LockerInfo(locker_type)
         if locker_info and locker_info.get_remote_name():
-            if sync.IsRemoteConfigured(
+            if sync.is_remote_configured(
                 remote_name = locker_info.get_remote_name(),
                 remote_type = locker_info.get_remote_type()):
                 configured.append(locker_type)
     return configured
 
 # Upload to single locker
-def UploadToLocker(
+def upload_to_locker(
     dest,
     locker_type,
     upload_encrypted = False,
@@ -262,7 +262,7 @@ def UploadToLocker(
     logger.log_info("Uploading to locker %s..." % locker_type)
     if upload_encrypted:
         logger.log_info("Uploading encrypted files to %s..." % locker_type)
-        success = UploadAndEncryptPath(
+        success = upload_and_encrypt_path(
             src = dest,
             locker_type = locker_type,
             verbose = verbose,
@@ -276,7 +276,7 @@ def UploadToLocker(
     # Upload plain files
     else:
         logger.log_info("Uploading plain files to %s..." % locker_type)
-        success = UploadPath(
+        success = upload_path(
             src = dest,
             locker_type = locker_type,
             verbose = verbose,
@@ -289,7 +289,7 @@ def UploadToLocker(
     return True
 
 # Backup files
-def BackupFiles(
+def backup_files(
     src,
     dest,
     locker_type = None,
@@ -326,13 +326,13 @@ def BackupFiles(
 
     # Upload files
     logger.log_info("Checking if sync tool is installed...")
-    if not sync.IsToolInstalled():
+    if not sync.is_tool_installed():
         logger.log_info("Sync tool not installed, skipping upload")
         return True
 
     # Determine which lockers to upload to
     if locker_type == config.LockerType.ALL:
-        lockers_to_upload = GetConfiguredLockers()
+        lockers_to_upload = get_configured_lockers()
         if not lockers_to_upload:
             logger.log_info("No configured lockers found, skipping upload")
             return True
@@ -342,7 +342,7 @@ def BackupFiles(
         if not locker_info:
             logger.log_error("Locker %s not found" % locker_type)
             return False
-        if not sync.IsRemoteConfigured(
+        if not sync.is_remote_configured(
             remote_name = locker_info.get_remote_name(),
             remote_type = locker_info.get_remote_type()):
             logger.log_info("Remote not configured for locker %s, skipping upload" % locker_type)
@@ -351,7 +351,7 @@ def BackupFiles(
 
     # Upload to each locker
     for locker in lockers_to_upload:
-        success = UploadToLocker(
+        success = upload_to_locker(
             dest = dest,
             locker_type = locker,
             upload_encrypted = upload_encrypted,

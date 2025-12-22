@@ -21,30 +21,30 @@ def is_tool_installed():
     return programs.is_tool_installed("RClone")
 
 # Get unencrypted remote name
-def GetUnencryptedRemoteName(remote_name):
+def get_unencrypted_remote_name(remote_name):
     if remote_name.endswith("Enc"):
         return remote_name[:-len("Enc")]
     return remote_name
 
 # Get encrypted remote name
-def GetEncryptedRemoteName(remote_name):
+def get_encrypted_remote_name(remote_name):
     if remote_name.endswith("Enc"):
         return remote_name
     return "%sEnc" % (remote_name)
 
 # Get remote raw type
-def GetRemoteRawType(remote_type):
+def get_remote_raw_type(remote_type):
     return config.RemoteType.to_lower_string(remote_type)
 
 # Get remote connection path
-def GetRemoteConnectionPath(remote_name, remote_type, remote_path):
+def get_remote_connection_path(remote_name, remote_type, remote_path):
     if remote_type == config.RemoteType.B2:
-        return "%s:%s%s" % (remote_name, GetUnencryptedRemoteName(remote_name), remote_path)
+        return "%s:%s%s" % (remote_name, get_unencrypted_remote_name(remote_name), remote_path)
     else:
         return "%s:%s" % (remote_name, remote_path)
 
 # Get common remote flags
-def GetCommonRemoteFlags(remote_name, remote_type, remote_action_type):
+def get_common_remote_flags(remote_name, remote_type, remote_action_type):
     flags = [
         "--fast-list",
         "--tpslimit", "10",
@@ -69,7 +69,7 @@ def GetCommonRemoteFlags(remote_name, remote_type, remote_action_type):
     return flags
 
 # Get exclude flags
-def GetExcludeFlags(excludes):
+def get_exclude_flags(excludes):
     flags = []
     if isinstance(excludes, list):
         for exclude in excludes:
@@ -80,7 +80,7 @@ def GetExcludeFlags(excludes):
     return flags
 
 # Get configured remotes
-def GetConfiguredRemotes(
+def get_configured_remotes(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -113,7 +113,7 @@ def GetConfiguredRemotes(
     return list_text.splitlines()
 
 # Check if remote is configured
-def IsRemoteConfigured(
+def is_remote_configured(
     remote_name,
     remote_type,
     verbose = False,
@@ -122,7 +122,7 @@ def IsRemoteConfigured(
 
     # Check if the remote name exists in the list of remotes
     logger.log_info("Checking if remote '%s' exists..." % remote_name)
-    configured_remotes = GetConfiguredRemotes()
+    configured_remotes = get_configured_remotes()
     logger.log_info("Found %d configured remotes" % len(configured_remotes))
     if not any(remote.startswith(remote_name) for remote in configured_remotes):
         logger.log_info("Remote '%s' not in configured remotes" % remote_name)
@@ -160,12 +160,12 @@ def IsRemoteConfigured(
 
     # Check if the remote type matches
     match = re.search(r"type\s*=\s*(\S+)", show_text)
-    result = match and (match.group(1) == GetRemoteRawType(remote_type))
+    result = match and (match.group(1) == get_remote_raw_type(remote_type))
     logger.log_info("Remote type match result: %s" % result)
     return result
 
 # Setup autoconnect remote
-def SetupAutoconnectRemote(
+def setup_autoconnect_remote(
     remote_name,
     remote_type,
     verbose = False,
@@ -185,7 +185,7 @@ def SetupAutoconnectRemote(
         rclone_tool,
         "config",
         "create", remote_name,
-        GetRemoteRawType(remote_type),
+        get_remote_raw_type(remote_type),
         "config_is_local=false"
     ]
     if verbose:
@@ -218,7 +218,7 @@ def SetupAutoconnectRemote(
     return code == 0
 
 # Setup manual remote
-def SetupManualRemote(
+def setup_manual_remote(
     remote_name,
     remote_type,
     remote_token = None,
@@ -240,7 +240,7 @@ def SetupManualRemote(
         rclone_tool,
         "config",
         "create", remote_name,
-        GetRemoteRawType(remote_type)
+        get_remote_raw_type(remote_type)
     ]
     if isinstance(remote_config, dict):
         for config_key, config_value in remote_config.items():
@@ -257,7 +257,7 @@ def SetupManualRemote(
     return code == 0
 
 # Setup encrypted remote
-def SetupEncryptedRemote(
+def setup_encrypted_remote(
     remote_name,
     remote_path,
     remote_encryption_key,
@@ -277,7 +277,7 @@ def SetupEncryptedRemote(
     create_cmd = [
         rclone_tool,
         "config",
-        "create", GetEncryptedRemoteName(remote_name),
+        "create", get_encrypted_remote_name(remote_name),
         "crypt",
         "remote=%s:" % remote_name,
         "password=%s" % remote_encryption_key
@@ -292,7 +292,7 @@ def SetupEncryptedRemote(
     return code == 0
 
 # Setup remote
-def SetupRemote(
+def setup_remote(
     remote_name,
     remote_type,
     remote_token = None,
@@ -303,7 +303,7 @@ def SetupRemote(
 
     # Drive can use automatic setting
     if remote_type == config.RemoteType.DRIVE:
-        return SetupAutoconnectRemote(
+        return setup_autoconnect_remote(
             remote_type = remote_type,
             remote_name = remote_name,
             verbose = verbose,
@@ -314,7 +314,7 @@ def SetupRemote(
     else:
         if isinstance(remote_config, str):
             remote_config = serialization.parse_json_string(remote_config)
-        return SetupManualRemote(
+        return setup_manual_remote(
             remote_type = remote_type,
             remote_name = remote_name,
             remote_token = remote_token,
@@ -324,7 +324,7 @@ def SetupRemote(
             exit_on_failure = exit_on_failure)
 
 # Get path MD5
-def GetPathMD5(
+def get_path_md5(
     remote_name,
     remote_type,
     remote_path,
@@ -344,7 +344,7 @@ def GetPathMD5(
     md5sum_cmd = [
         rclone_tool,
         "md5sum",
-        GetRemoteConnectionPath(remote_name, remote_type, remote_path)
+        get_remote_connection_path(remote_name, remote_type, remote_path)
     ]
 
     # Run md5sum command
@@ -366,7 +366,7 @@ def GetPathMD5(
     return None
 
 # Get path modification time as timestamp
-def GetPathModTime(
+def get_path_mod_time(
     remote_name,
     remote_type,
     remote_path,
@@ -386,7 +386,7 @@ def GetPathModTime(
     lsl_cmd = [
         rclone_tool,
         "lsl",
-        GetRemoteConnectionPath(remote_name, remote_type, remote_path)
+        get_remote_connection_path(remote_name, remote_type, remote_path)
     ]
 
     # Run lsl command
@@ -414,7 +414,7 @@ def GetPathModTime(
     return None
 
 # Check if path matches md5
-def DoesPathMatchMD5(
+def does_path_match_md5(
     remote_name,
     remote_type,
     remote_path,
@@ -438,7 +438,7 @@ def DoesPathMatchMD5(
     return False
 
 # Check if path exists
-def DoesPathExist(
+def does_path_exist(
     remote_name,
     remote_type,
     remote_path,
@@ -458,7 +458,7 @@ def DoesPathExist(
     list_cmd = [
         rclone_tool,
         "lsf",
-        GetRemoteConnectionPath(remote_name, remote_type, remote_path)
+        get_remote_connection_path(remote_name, remote_type, remote_path)
     ]
 
     # Run list command
@@ -481,7 +481,7 @@ def DoesPathExist(
     return True
 
 # Check if path contains files
-def DoesPathContainFiles(
+def does_path_contain_files(
     remote_name,
     remote_type,
     remote_path,
@@ -502,7 +502,7 @@ def DoesPathContainFiles(
         rclone_tool,
         "lsf",
         "--files-only",
-        GetRemoteConnectionPath(remote_name, remote_type, remote_path)
+        get_remote_connection_path(remote_name, remote_type, remote_path)
     ]
 
     # Run list command
@@ -519,7 +519,7 @@ def DoesPathContainFiles(
     return len(list_text.strip()) > 0
 
 # Download files from remote
-def DownloadFilesFromRemote(
+def download_files_from_remote(
     remote_name,
     remote_type,
     remote_path,
@@ -543,14 +543,14 @@ def DownloadFilesFromRemote(
     copy_cmd = [
         rclone_tool,
         "copy",
-        GetRemoteConnectionPath(remote_name, remote_type, remote_path),
+        get_remote_connection_path(remote_name, remote_type, remote_path),
         local_path
     ]
-    copy_cmd += GetCommonRemoteFlags(
+    copy_cmd += get_common_remote_flags(
         remote_name = remote_name,
         remote_type = remote_type,
         remote_action_type = config.RemoteActionType.DOWNLOAD)
-    copy_cmd += GetExcludeFlags(excludes)
+    copy_cmd += get_exclude_flags(excludes)
     if files_from and paths.is_path_file(files_from):
         copy_cmd += ["--files-from", files_from]
     if pretend_run:
@@ -572,7 +572,7 @@ def DownloadFilesFromRemote(
     return code == 0
 
 # Upload files to remote
-def UploadFilesToRemote(
+def upload_files_to_remote(
     remote_name,
     remote_type,
     remote_path,
@@ -597,13 +597,13 @@ def UploadFilesToRemote(
         rclone_tool,
         "copy",
         local_path,
-        GetRemoteConnectionPath(remote_name, remote_type, remote_path)
+        get_remote_connection_path(remote_name, remote_type, remote_path)
     ]
-    copy_cmd += GetCommonRemoteFlags(
+    copy_cmd += get_common_remote_flags(
         remote_name = remote_name,
         remote_type = remote_type,
         remote_action_type = config.RemoteActionType.UPLOAD)
-    copy_cmd += GetExcludeFlags(excludes)
+    copy_cmd += get_exclude_flags(excludes)
     if files_from and paths.is_path_file(files_from):
         copy_cmd += ["--files-from", files_from]
     if pretend_run:
@@ -625,7 +625,7 @@ def UploadFilesToRemote(
     return code == 0
 
 # Move files on remote
-def MoveFilesOnRemote(
+def move_files_on_remote(
     remote_name,
     remote_type,
     src_path,
@@ -644,8 +644,8 @@ def MoveFilesOnRemote(
         return False
 
     # Build full remote paths
-    src_full = GetRemoteConnectionPath(remote_name, remote_type, src_path)
-    dest_full = GetRemoteConnectionPath(remote_name, remote_type, dest_path)
+    src_full = get_remote_connection_path(remote_name, remote_type, src_path)
+    dest_full = get_remote_connection_path(remote_name, remote_type, dest_path)
 
     # Build move command
     move_cmd = [
@@ -673,7 +673,7 @@ def MoveFilesOnRemote(
     return code == 0
 
 # Purge path on remote
-def PurgePathOnRemote(
+def purge_path_on_remote(
     remote_name,
     remote_type,
     remote_path,
@@ -690,7 +690,7 @@ def PurgePathOnRemote(
         return False
 
     # Build full remote path
-    remote_full = GetRemoteConnectionPath(remote_name, remote_type, remote_path)
+    remote_full = get_remote_connection_path(remote_name, remote_type, remote_path)
 
     # Build purge command
     purge_cmd = [
@@ -715,7 +715,7 @@ def PurgePathOnRemote(
     return code == 0
 
 # Move files to recycle bin on remote
-def RecycleFilesOnRemote(
+def recycle_files_on_remote(
     remote_name,
     remote_type,
     remote_path,
@@ -729,7 +729,7 @@ def RecycleFilesOnRemote(
     recycle_bin_path = os.path.join(remote_path, recycle_folder).replace("\\", "/")
 
     # Move files to recycle bin
-    return MoveFilesOnRemote(
+    return move_files_on_remote(
         remote_name = remote_name,
         remote_type = remote_type,
         src_path = remote_path,
@@ -740,7 +740,7 @@ def RecycleFilesOnRemote(
         exit_on_failure = exit_on_failure)
 
 # Empty recycle bin on remote
-def EmptyRecycleBin(
+def empty_recycle_bin(
     remote_name,
     remote_type,
     remote_path,
@@ -753,7 +753,7 @@ def EmptyRecycleBin(
     recycle_bin_path = os.path.join(remote_path, recycle_folder).replace("\\", "/")
 
     # Purge recycle bin
-    return PurgePathOnRemote(
+    return purge_path_on_remote(
         remote_name = remote_name,
         remote_type = remote_type,
         remote_path = recycle_bin_path,
@@ -762,7 +762,7 @@ def EmptyRecycleBin(
         exit_on_failure = exit_on_failure)
 
 # Pull files from remote
-def PullFilesFromRemote(
+def pull_files_from_remote(
     remote_name,
     remote_type,
     remote_path,
@@ -785,14 +785,14 @@ def PullFilesFromRemote(
     sync_cmd = [
         rclone_tool,
         "sync",
-        GetRemoteConnectionPath(remote_name, remote_type, remote_path),
+        get_remote_connection_path(remote_name, remote_type, remote_path),
         local_path
     ]
-    sync_cmd += GetCommonRemoteFlags(
+    sync_cmd += get_common_remote_flags(
         remote_name = remote_name,
         remote_type = remote_type,
         remote_action_type = config.RemoteActionType.PULL)
-    sync_cmd += GetExcludeFlags(excludes)
+    sync_cmd += get_exclude_flags(excludes)
     if pretend_run:
         sync_cmd += ["--dry-run"]
     if interactive:
@@ -812,7 +812,7 @@ def PullFilesFromRemote(
     return code == 0
 
 # Push files to remote
-def PushFilesToRemote(
+def push_files_to_remote(
     remote_name,
     remote_type,
     remote_path,
@@ -836,13 +836,13 @@ def PushFilesToRemote(
         rclone_tool,
         "sync",
         local_path,
-        GetRemoteConnectionPath(remote_name, remote_type, remote_path)
+        get_remote_connection_path(remote_name, remote_type, remote_path)
     ]
-    sync_cmd += GetCommonRemoteFlags(
+    sync_cmd += get_common_remote_flags(
         remote_name = remote_name,
         remote_type = remote_type,
         remote_action_type = config.RemoteActionType.PUSH)
-    sync_cmd += GetExcludeFlags(excludes)
+    sync_cmd += get_exclude_flags(excludes)
     if pretend_run:
         sync_cmd += ["--dry-run"]
     if interactive:
@@ -862,7 +862,7 @@ def PushFilesToRemote(
     return code == 0
 
 # Merge files both ways
-def MergeFilesBothWays(
+def merge_files_both_ways(
     remote_name,
     remote_type,
     remote_path,
@@ -887,14 +887,14 @@ def MergeFilesBothWays(
         rclone_tool,
         "bisync",
         local_path,
-        GetRemoteConnectionPath(remote_name, remote_type, remote_path),
+        get_remote_connection_path(remote_name, remote_type, remote_path),
         "--check-access"
     ]
-    bisync_cmd += GetCommonRemoteFlags(
+    bisync_cmd += get_common_remote_flags(
         remote_name = remote_name,
         remote_type = remote_type,
         remote_action_type = config.RemoteActionType.MERGE)
-    bisync_cmd += GetExcludeFlags(excludes)
+    bisync_cmd += get_exclude_flags(excludes)
     if resync:
         bisync_cmd += ["--resync"]
     if pretend_run:
@@ -916,7 +916,7 @@ def MergeFilesBothWays(
     return code == 0
 
 # Diff files
-def DiffFiles(
+def diff_files(
     remote_name,
     remote_type,
     remote_path,
@@ -955,13 +955,13 @@ def DiffFiles(
         rclone_tool,
         "check",
         local_path,
-        GetRemoteConnectionPath(remote_name, remote_type, remote_path)
+        get_remote_connection_path(remote_name, remote_type, remote_path)
     ]
-    check_cmd += GetCommonRemoteFlags(
+    check_cmd += get_common_remote_flags(
         remote_name = remote_name,
         remote_type = remote_type,
         remote_action_type = config.RemoteActionType.DIFF)
-    check_cmd += GetExcludeFlags(excludes)
+    check_cmd += get_exclude_flags(excludes)
     if paths.is_path_valid(diff_combined_path):
         check_cmd += ["--combined", diff_combined_path]
     if paths.is_path_valid(diff_intersected_path):
@@ -1008,7 +1008,7 @@ def DiffFiles(
                     count_error += 1
         logger.log_info("Number of unchanged files: %d" % count_unchanged)
         logger.log_info("Number of changed files: %d" % count_changed)
-        logger.log_info("Number of files only on %s%s: %d" % (GetRemoteRawType(remote_type), remote_path, count_only_dest))
+        logger.log_info("Number of files only on %s%s: %d" % (get_remote_raw_type(remote_type), remote_path, count_only_dest))
         logger.log_info("Number of files only on %s: %d" % (local_path, count_only_src))
         logger.log_info("Number of error files: %d" % count_error)
 
@@ -1022,7 +1022,7 @@ def DiffFiles(
                 exit_on_failure = exit_on_failure)
 
 # Diff sync files
-def DiffSyncFiles(
+def diff_sync_files(
     remote_name,
     remote_type,
     remote_path,
@@ -1077,7 +1077,7 @@ def DiffSyncFiles(
     # Diff files if necessary
     if generate_diffs:
         logger.log_info("Running diff to identify file differences...")
-        DiffFiles(
+        diff_files(
             remote_name = remote_name,
             remote_type = remote_type,
             remote_path = remote_path,
@@ -1128,7 +1128,7 @@ def DiffSyncFiles(
             local_mtime = paths.get_file_mod_time(local_file)
 
             # Get remote modtime
-            remote_mtime = GetPathModTime(
+            remote_mtime = get_path_mod_time(
                 remote_name = remote_name,
                 remote_type = remote_type,
                 remote_path = remote_file_path,
@@ -1161,7 +1161,7 @@ def DiffSyncFiles(
         final_upload_path = fileops.create_temporary_file(suffix = ".txt")
         serialization.write_text_file(final_upload_path, "\n".join(files_to_upload))
         logger.log_info("Uploading %d files to remote..." % len(files_to_upload))
-        if not UploadFilesToRemote(
+        if not upload_files_to_remote(
             remote_name = remote_name,
             remote_type = remote_type,
             remote_path = remote_path,
@@ -1179,7 +1179,7 @@ def DiffSyncFiles(
             final_recycle_path = fileops.create_temporary_file(suffix = ".txt")
             serialization.write_text_file(final_recycle_path, "\n".join(files_to_download))
             logger.log_info("Recycling %d files on remote (moving to %s)..." % (len(files_to_download), recycle_folder))
-            if not RecycleFilesOnRemote(
+            if not recycle_files_on_remote(
                 remote_name = remote_name,
                 remote_type = remote_type,
                 remote_path = remote_path,
@@ -1193,7 +1193,7 @@ def DiffSyncFiles(
             final_download_path = fileops.create_temporary_file(suffix = ".txt")
             serialization.write_text_file(final_download_path, "\n".join(files_to_download))
             logger.log_info("Downloading %d files from remote..." % len(files_to_download))
-            if not DownloadFilesFromRemote(
+            if not download_files_from_remote(
                 remote_name = remote_name,
                 remote_type = remote_type,
                 remote_path = remote_path,
@@ -1210,7 +1210,7 @@ def DiffSyncFiles(
     return True
 
 # List files
-def ListFiles(
+def list_files(
     remote_name,
     remote_type,
     remote_path,
@@ -1241,7 +1241,7 @@ def ListFiles(
         else:
             list_cmd += ["ls", "--max-depth", 1]
     list_cmd += [
-        GetRemoteConnectionPath(remote_name, remote_type, remote_path)
+        get_remote_connection_path(remote_name, remote_type, remote_path)
     ]
 
     # Run list command
@@ -1253,7 +1253,7 @@ def ListFiles(
     return code == 0
 
 # Mount files
-def MountFiles(
+def mount_files(
     remote_name,
     remote_type,
     remote_path,
@@ -1303,7 +1303,7 @@ def MountFiles(
             "--vfs-cache-mode", "full"
         ]
     mount_cmd += [
-        GetRemoteConnectionPath(remote_name, remote_type, remote_path),
+        get_remote_connection_path(remote_name, remote_type, remote_path),
         mount_path
     ]
     if environment.is_unix_platform():

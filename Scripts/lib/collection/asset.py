@@ -150,7 +150,7 @@ def DownloadMetadataAsset(
         return False
 
     # Backup asset
-    success = locker.BackupFiles(
+    success = locker.backup_files(
         src = tmp_asset_file_converted,
         dest = output_asset_file,
         locker_type = locker_type,

@@ -140,7 +140,7 @@ def InstallLocalGame(
         return True
 
     # Check if source files are available
-    if not locker.DoesRemotePathContainFiles(game_remote_rom_dir):
+    if not locker.does_remote_path_contain_files(game_remote_rom_dir):
         gui.DisplayErrorPopup(
             title_text = "Source files unavailable",
             message_text = "Source files are not available\n%s\n%s" % (game_name, game_platform))
@@ -154,7 +154,7 @@ def InstallLocalGame(
         return False
 
     # Download files
-    success = locker.DownloadAndDecryptPath(
+    success = locker.download_and_decrypt_path(
         src = game_remote_rom_dir,
         dest = tmp_dir_result,
         verbose = verbose,
