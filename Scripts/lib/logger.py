@@ -47,9 +47,12 @@ class ColoredFormatter(logging.Formatter):
 
     def format(self, record):
         if self.use_colors:
+            original_levelname = record.levelname
             color = self.LEVEL_COLORS.get(record.levelno, Colors.RESET)
-            record.levelname = f"{color}{record.levelname}{Colors.RESET}"
-            record.msg = f"{color}{record.msg}{Colors.RESET}"
+            record.levelname = f"{color}{original_levelname}{Colors.RESET}"
+            result = super().format(record)
+            record.levelname = original_levelname
+            return result
         return super().format(record)
 
 # Format game context prefix
