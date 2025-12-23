@@ -75,6 +75,12 @@ def does_path_exist(path, case_sensitive_paths = True, partial_paths = False):
                 return True
     return False
 
+# Check if two paths point to the same location
+def are_paths_equal(path1, path2):
+    if not path1 or not path2:
+        return False
+    return os.path.realpath(path1) == os.path.realpath(path2)
+
 # Check if path is a file
 def is_path_file(path):
     if not is_path_valid(path):

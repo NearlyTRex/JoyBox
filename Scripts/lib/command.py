@@ -1,6 +1,7 @@
 # Imports
 import os
 import sys
+import re
 import subprocess
 import getpass
 import shutil
@@ -327,12 +328,41 @@ def postprocess_command(
 
 ###########################################################
 
+# Mask sensitive arguments in command
+def mask_sensitive_args(cmd):
+    sensitive_flags = [
+        "--passphrase",
+        "--password",
+        "--token",
+        "--secret"
+    ]
+    if isinstance(cmd, str):
+        for flag in sensitive_flags:
+            if flag in cmd:
+                cmd = re.sub(f"{flag}\\s+\\S+", f"{flag} ****", cmd)
+        return cmd
+    if isinstance(cmd, list):
+        masked = []
+        skip_next = False
+        for arg in cmd:
+            if skip_next:
+                masked.append("****")
+                skip_next = False
+            elif arg in sensitive_flags:
+                masked.append(arg)
+                skip_next = True
+            else:
+                masked.append(arg)
+        return masked
+    return cmd
+
 # Print command
 def print_command(cmd):
-    if isinstance(cmd, str):
-        logger.log_info(cmd)
-    if isinstance(cmd, list):
-        logger.log_info(" ".join(cmd))
+    masked_cmd = mask_sensitive_args(cmd)
+    if isinstance(masked_cmd, str):
+        logger.log_info(masked_cmd)
+    if isinstance(masked_cmd, list):
+        logger.log_info(" ".join(masked_cmd))
 
 ###########################################################
 

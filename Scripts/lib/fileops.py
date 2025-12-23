@@ -358,6 +358,8 @@ def copy_file_or_directory(
     exit_on_failure = False):
     try:
         if skip_existing and paths.does_path_exist(dest, case_sensitive_paths):
+            if verbose:
+                logger.log_info("Skipping (exists): '%s'" % dest)
             return True
         if skip_identical:
             if hashing.are_files_identical(
@@ -366,9 +368,11 @@ def copy_file_or_directory(
                 case_sensitive_paths = case_sensitive_paths,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure):
+                if verbose:
+                    logger.log_info("Skipping (identical): '%s'" % dest)
                 return True
         if verbose:
-            logger.log_info("Copying %s to %s" % (src, dest))
+            logger.log_info("Copying: '%s' -> '%s'" % (src, dest))
         if not pretend_run:
             if os.path.isdir(src):
                 shutil.copytree(src, dest, dirs_exist_ok=True)

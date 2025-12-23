@@ -112,6 +112,7 @@ def copy_and_encrypt_files(
 
         # Skip if already exists
         if skip_existing and paths.does_path_exist(dest_path):
+            logger.log_info("Skipping (exists): '%s'" % dest_path)
             continue
 
         # Skip if destination decrypts to identical content
@@ -138,6 +139,7 @@ def copy_and_encrypt_files(
                         verbose = verbose,
                         pretend_run = pretend_run,
                         exit_on_failure = False)
+                    logger.log_info("Skipping (identical): '%s'" % dest_path)
                     continue
                 fileops.remove_directory(
                     src = tmp_dir_result,
@@ -153,6 +155,7 @@ def copy_and_encrypt_files(
             exit_on_failure = exit_on_failure)
 
         # Encrypt the file
+        logger.log_info("Encrypting: '%s' -> '%s'" % (src_path, dest_path))
         success = cryption.encrypt_file(
             src = src_path,
             passphrase = passphrase,
@@ -211,6 +214,7 @@ def copy_and_decrypt_files(
 
         # Skip if already exists
         if skip_existing and paths.does_path_exist(dest_path):
+            logger.log_info("Skipping (exists): '%s'" % dest_path)
             continue
 
         # Skip if decrypted content would be identical to destination
@@ -237,9 +241,11 @@ def copy_and_decrypt_files(
                         verbose = verbose,
                         pretend_run = pretend_run,
                         exit_on_failure = False)
+                    logger.log_info("Skipping (identical): '%s'" % dest_path)
                     continue
 
                 # Files are different - move decrypted temp to destination
+                logger.log_info("Updating: '%s'" % dest_path)
                 fileops.make_directory(
                     src = dest_dir,
                     verbose = verbose,
@@ -272,6 +278,7 @@ def copy_and_decrypt_files(
             exit_on_failure = exit_on_failure)
 
         # Decrypt the file
+        logger.log_info("Decrypting: '%s' -> '%s'" % (src_path, dest_path))
         success = cryption.decrypt_file(
             src = src_path,
             passphrase = passphrase,

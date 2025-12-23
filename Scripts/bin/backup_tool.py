@@ -94,6 +94,10 @@ def main():
         else:
             logger.log_error("Could not resolve destination path", quit_program = True)
 
+    # Prevent source == destination
+    if paths.are_paths_equal(source_file_root, dest_file_root):
+        logger.log_error("Source and destination paths cannot be the same", quit_program = True)
+
     # Show preview
     if not args.no_preview:
         details = [
