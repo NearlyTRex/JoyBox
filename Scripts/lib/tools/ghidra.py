@@ -27,6 +27,7 @@ config_files = {
 
 # Patch files
 patch_files = [
+    "fix_stack_alignment_tracking.patch",
     "pcode_patching.patch",
 ]
 

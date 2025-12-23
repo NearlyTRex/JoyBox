@@ -1,5 +1,5 @@
 diff --git a/Ghidra/Features/Decompiler/src/main/java/ghidra/app/decompiler/DecompileCallback.java b/Ghidra/Features/Decompiler/src/main/java/ghidra/app/decompiler/DecompileCallback.java
-index d43fa7e..feddfea 100644
+index d43fa7e..beff8dd 100644
 --- a/Ghidra/Features/Decompiler/src/main/java/ghidra/app/decompiler/DecompileCallback.java
 +++ b/Ghidra/Features/Decompiler/src/main/java/ghidra/app/decompiler/DecompileCallback.java
 @@ -21,6 +21,7 @@ import static ghidra.program.model.pcode.ElementId.*;
@@ -123,7 +123,7 @@ index d43fa7e..feddfea 100644
 +			PcodeOp op = new PcodeOp(seq, opcode, inputs.toArray(new Varnode[0]), output);
 +			return op;
 +		} catch (Exception e) {
-+			Msg.warn(DecompileCallback.class, "Error parsing pcode op: " + opStr + " - " + e.getMessage());
++			Msg.warn(DecompileCallback.class, "P-code override: Error parsing pcode op: " + opStr + " - " + e.getMessage());
 +			return null;
 +		}
 +	}
@@ -175,7 +175,7 @@ index d43fa7e..feddfea 100644
 +				}
 +			}
 +			if (space == null) {
-+				Msg.warn(DecompileCallback.class, "Unknown address space: " + spaceName);
++				Msg.warn(DecompileCallback.class, "P-code override: Unknown address space: " + spaceName);
 +				return null;
 +			}
 +
@@ -183,7 +183,7 @@ index d43fa7e..feddfea 100644
 +			Address address = space.getAddress(offset);
 +			return new Varnode(address, size);
 +		} catch (NumberFormatException e) {
-+			Msg.warn(DecompileCallback.class, "Error parsing varnode numbers: " + str);
++			Msg.warn(DecompileCallback.class, "P-code override: Error parsing varnode numbers: " + str);
 +			return null;
 +		}
 +	}
@@ -265,7 +265,7 @@ index d43fa7e..feddfea 100644
 +			case "LZCOUNT": return PcodeOp.LZCOUNT;
 +			case "UNIMPLEMENTED": return PcodeOp.UNIMPLEMENTED;
 +			default:
-+				Msg.warn(DecompileCallback.class, "Unknown pcode opcode: " + name);
++				Msg.warn(DecompileCallback.class, "P-code override: Unknown pcode opcode: " + name);
 +				return -1;
 +		}
 +	}
@@ -273,7 +273,7 @@ index d43fa7e..feddfea 100644
  	/**
  	 * Data returned for a query about strings
  	 */
-@@ -227,6 +484,16 @@ public class DecompileCallback {
+@@ -227,6 +484,51 @@ public class DecompileCallback {
  				}
  			}
  
@@ -282,7 +282,42 @@ index d43fa7e..feddfea 100644
 +				PcodeOp[] patchedOps = getPatchedPcode(addr, instr);
 +				if (patchedOps != null) {
 +					int fallthruOffset = instr.getDefaultFallThroughOffset();
-+					encodeInstruction(resultEncoder, addr, patchedOps, fallthruOffset, 0, addrfactory);
++					try {
++						// First, capture what the original encoding would produce for comparison
++						PatchPackedEncode origEncoder = new PatchPackedEncode();
++						origEncoder.clear();
++						instr.getPrototype().getPcodePacked(origEncoder, instr.getInstructionContext(),
++							new InstructionPcodeOverride(instr));
++						int origSize = origEncoder.size();
++
++						// Now encode our override
++						encodeInstruction(resultEncoder, addr, patchedOps, fallthruOffset, 0, addrfactory);
++						int overrideSize = resultEncoder.size();
++						Msg.debug(this, "P-code override: Encoded override for " + addr + " successfully");
++						Msg.debug(this, "P-code override:   Original encoding size: " + origSize + " bytes");
++						Msg.debug(this, "P-code override:   Override encoding size: " + overrideSize + " bytes");
++
++						// Dump the pcode ops we're encoding for verification
++						Msg.debug(this, "P-code override:   Patched ops:");
++						for (int i = 0; i < patchedOps.length; i++) {
++							PcodeOp op = patchedOps[i];
++							StringBuilder sb = new StringBuilder();
++							sb.append("     [").append(i).append("] ");
++							sb.append(op.getMnemonic()).append(" (opcode=").append(op.getOpcode()).append(")");
++							if (op.getOutput() != null) {
++								sb.append(" out=").append(op.getOutput());
++							}
++							sb.append(" inputs=[");
++							for (int j = 0; j < op.getNumInputs(); j++) {
++								if (j > 0) sb.append(", ");
++								sb.append(op.getInput(j));
++							}
++							sb.append("]");
++							Msg.debug(this, "P-code override:" + sb);
++						}
++					} catch (Exception e) {
++						Msg.error(this, "P-code override: ENCODING FAILED for " + addr + ": " + e.getMessage(), e);
++					}
 +					return;
 +				}
 +			}
@@ -290,7 +325,7 @@ index d43fa7e..feddfea 100644
  			instr.getPrototype()
  					.getPcodePacked(resultEncoder, instr.getInstructionContext(),
  						new InstructionPcodeOverride(instr));
-@@ -245,6 +512,44 @@ public class DecompileCallback {
+@@ -245,6 +547,55 @@ public class DecompileCallback {
  	}
  
  	/**
@@ -300,6 +335,7 @@ index d43fa7e..feddfea 100644
 +	 * @return overridden PcodeOp array, or null if no override exists
 +	 */
 +	private PcodeOp[] getPatchedPcode(Address addr, Instruction instr) {
++
 +		// Look up override for this function
 +		long funcOffset = funcEntry.getOffset();
 +		Map<Long, List<String>> funcOverrides = pcodeOverrides.get(funcOffset);
@@ -311,6 +347,8 @@ index d43fa7e..feddfea 100644
 +		long addrOffset = addr.getOffset();
 +		List<String> pcodeLines = funcOverrides.get(addrOffset);
 +		if (pcodeLines == null || pcodeLines.isEmpty()) {
++			// Log once per function that we found it but this instruction has no override
++			Msg.trace(this, "P-code override: func=0x" + Long.toHexString(funcOffset) + " found, instr=0x" + Long.toHexString(addrOffset) + " no override (have: " + funcOverrides.keySet() + ")");
 +			return null;
 +		}
 +
@@ -327,7 +365,15 @@ index d43fa7e..feddfea 100644
 +			return null;
 +		}
 +
-+		Msg.info(this, "Using P-code override for " + addr + " (" + ops.size() + " ops)");
++		// Print each parsed op
++		Msg.info(this, "P-code override: Using override for " + addr + " (" + ops.size() + " ops)");
++		for (int i = 0; i < ops.size(); i++) {
++			PcodeOp op = ops.get(i);
++			Msg.debug(this, "P-code override:   op[" + i + "] opcode=" + op.getOpcode() +
++				" mnemonic=" + op.getMnemonic() +
++				" output=" + (op.getOutput() != null ? op.getOutput().toString() : "null") +
++				" inputs=" + op.getNumInputs());
++		}
 +		return ops.toArray(new PcodeOp[0]);
 +	}
 +
