@@ -451,7 +451,7 @@ def run_returncode_command(
                 stderr_target = open(options.get_stderr(), "w")
 
             # Open process
-            process = subprocess.Popen(
+            proc = subprocess.Popen(
                 cmd,
                 shell = options.is_shell(),
                 cwd = options.get_cwd(),
@@ -473,7 +473,7 @@ def run_returncode_command(
                 def handle_output(pipe, log_func, file_target):
                     while True:
                         line = pipe.readline()
-                        if not line and process.poll() is not None:
+                        if not line and proc.poll() is not None:
                             break
                         if line:
                             log_func(line.strip())
@@ -483,23 +483,23 @@ def run_returncode_command(
 
                 # Reads user input and forwards it to the subprocess
                 def handle_input():
-                    while process.poll() is None:
+                    while proc.poll() is None:
                         try:
                             user_input = sys.stdin.readline()
                             if user_input:
-                                process.stdin.write(user_input)
-                                process.stdin.flush()
+                                proc.stdin.write(user_input)
+                                proc.stdin.flush()
                         except EOFError:
                             break
 
                 # Create threads to handle real-time I/O
-                stdout_thread = threading.Thread(target = handle_output, args = (process.stdout, logger.log_info, stdout_target))
-                stderr_thread = threading.Thread(target = handle_output, args = (process.stderr, logger.log_info, stderr_target))
+                stdout_thread = threading.Thread(target = handle_output, args = (proc.stdout, logger.log_info, stdout_target))
+                stderr_thread = threading.Thread(target = handle_output, args = (proc.stderr, logger.log_info, stderr_target))
                 stdout_thread.start()
                 stderr_thread.start()
 
                 # Wait for process to complete
-                process.wait()
+                proc.wait()
                 stdout_thread.join()
                 stderr_thread.join()
 
@@ -525,7 +525,7 @@ def run_returncode_command(
                     options = options,
                     verbose = verbose,
                     exit_on_failure = exit_on_failure)
-            return 0 if options.is_daemon() else process.returncode
+            return 0 if options.is_daemon() else proc.returncode
         return 0
     except subprocess.CalledProcessError as e:
         if verbose:
@@ -610,7 +610,7 @@ def run_interactive_command(
                 import pty
                 import select
                 master_fd, slave_fd = pty.openpty()
-                process = subprocess.Popen(
+                proc = subprocess.Popen(
                     cmd,
                     stdin = slave_fd,
                     stdout = slave_fd,
@@ -640,16 +640,16 @@ def run_interactive_command(
 
                 # Wait for process to complete
                 try:
-                    while process.poll() is None:
+                    while proc.poll() is None:
                         rlist, _, _ = select.select([sys.stdin], [], [], 0.1)
                         if rlist and sys.stdin in rlist:
                             user_input = sys.stdin.readline()
                             if user_input:
                                 os.write(master_fd, user_input.encode())
                 except KeyboardInterrupt:
-                    process.terminate()
+                    proc.terminate()
                 output_thread.join()
-                returncode = process.returncode
+                returncode = proc.returncode
 
             # Wait for any other blocking processes
             if isinstance(options.get_blocking_processes(), list) and len(options.get_blocking_processes()) > 0:

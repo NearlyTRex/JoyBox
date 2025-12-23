@@ -90,7 +90,7 @@ def setup_packages(
         if not success:
             return False
         if configure:
-            success = package.Configure(setup_params = setup_params)
+            success = package.configure(setup_params = setup_params)
             if not success:
                 return False
     return True
