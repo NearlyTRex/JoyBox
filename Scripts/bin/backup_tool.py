@@ -20,6 +20,8 @@ import prompts
 parser = arguments.ArgumentParser(description = "Backup tool.")
 parser.add_input_path_argument()
 parser.add_output_path_argument()
+parser.add_string_argument(args = ("--input_locker_base",), default = None, description = "Alternate locker base for source (game paths will be resolved under this)")
+parser.add_string_argument(args = ("--output_locker_base",), default = None, description = "Alternate locker base for destination (game paths will be mirrored under this)")
 parser.add_game_supercategory_argument()
 parser.add_game_category_argument()
 parser.add_game_subcategory_argument()
@@ -69,6 +71,7 @@ def main():
     source_file_root = backup.resolve_path(
         path = args.input_path,
         source_type = args.source_type,
+        base_path = args.input_locker_base,
         game_supercategory = args.game_supercategory,
         game_category = args.game_category,
         game_subcategory = args.game_subcategory,
@@ -80,12 +83,16 @@ def main():
     dest_file_root = backup.resolve_path(
         path = args.output_path,
         source_type = args.destination_type,
+        base_path = args.output_locker_base,
         game_supercategory = args.game_supercategory,
         game_category = args.game_category,
         game_subcategory = args.game_subcategory,
         game_offset = args.game_offset)
     if not paths.is_path_directory(dest_file_root):
-        logger.log_error("Could not resolve destination path", quit_program = True)
+        if args.output_locker_base and paths.is_path_directory(args.output_locker_base):
+            paths.make_dir(dest_file_root)
+        else:
+            logger.log_error("Could not resolve destination path", quit_program = True)
 
     # Show preview
     if not args.no_preview:

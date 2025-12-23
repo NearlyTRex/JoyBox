@@ -18,17 +18,21 @@ import lockerinfo
 def resolve_path(
     path = None,
     source_type = None,
+    base_path = None,
     game_supercategory = None,
     game_category = None,
     game_subcategory = None,
     game_offset = None):
 
-    # Use existing path if it exists
-    if paths.does_path_exist(path):
+    # Use existing path if it exists (and no base_path override)
+    if paths.does_path_exist(path) and not base_path:
         return path
 
-    # Start building resolved path
-    resolved_path = environment.get_locker_root_dir(source_type)
+    # Start building resolved path from base_path override or locker root
+    if base_path and paths.does_path_exist(base_path):
+        resolved_path = base_path
+    else:
+        resolved_path = environment.get_locker_root_dir(source_type)
 
     # Augment with gaming categories
     if game_supercategory:

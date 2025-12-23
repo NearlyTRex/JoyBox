@@ -336,7 +336,7 @@ def join_paths(*paths):
             processed_paths.append(path)
         else:
             raise TypeError(f"Path {path} must be a string or an Enum, not {type(path)}.")
-    return os.path.join(*processed_paths)
+    return os.path.normpath(os.path.join(*processed_paths))
 
 ###########################################################
 # Directory info utilities

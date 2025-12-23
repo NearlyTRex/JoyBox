@@ -67,11 +67,11 @@ def get_embedded_filename(
         src
     ]
 
-    # Run info command
+    # Run info command (always run, even in pretend mode - this is read-only)
     info_output = command.run_output_command(
         cmd = info_cmd,
         verbose = verbose,
-        pretend_run = pretend_run,
+        pretend_run = False,
         exit_on_failure = exit_on_failure)
 
     # Get embedded name
@@ -241,6 +241,7 @@ def encrypt_file(
         "--cipher-algo", "AES256",
         "--passphrase", passphrase,
         "--compress-algo", "none",
+        "--set-filename", paths.get_filename_file(src),
         "--quiet",
         "--batch",
         "--output", output_file,
@@ -258,6 +259,11 @@ def encrypt_file(
     if code != 0:
         logger.log_error("Unable to encrypt file '%s'" % src)
         return False
+
+    # In pretend mode, assume success
+    if pretend_run:
+        logger.log_info("Would encrypt '%s' -> '%s'" % (src, output_file))
+        return True
 
     # Delete original
     if delete_original and os.path.exists(output_file):
@@ -342,6 +348,11 @@ def decrypt_file(
     if code != 0:
         logger.log_error("Unable to decrypt file '%s'" % src)
         return False
+
+    # In pretend mode, assume success
+    if pretend_run:
+        logger.log_info("Would decrypt '%s' -> '%s'" % (src, output_file))
+        return True
 
     # Delete original
     if delete_original and os.path.exists(output_file):

@@ -57,8 +57,12 @@ These options build paths relative to the locker root directory. When no explici
 | `-g, --game_offset` | Additional path offset |
 | `-l, --source_type` | Source location: `Local` (default) or `Remote` (mounted) |
 | `-q, --destination_type` | Destination location: `Local` (default) or `Remote` (mounted) |
+| `--input_locker_base` | Alternate locker base for source (game paths will be resolved under this) |
+| `--output_locker_base` | Alternate locker base for destination (game paths will be mirrored under this) |
 
 **Note:** The `Remote` source/destination type requires the remote locker to be mounted first using `sync_tool -a Mount`. This allows copying between local and mounted remote storage.
+
+**Note:** Use `--input_locker_base` and `--output_locker_base` to specify alternate locker roots (e.g., external drives) while still using game path resolution. The game path structure will be resolved/mirrored under the specified bases.
 
 ### Common Options
 
@@ -149,6 +153,32 @@ sync_tool -a Mount -t Hetzner
 
 # Copy from local to remote (mounted), encrypting in the process
 backup_tool -l Local -q Remote -u Roms -c Nintendo -s "Nintendo Switch" -r Encrypt
+```
+
+### Mirror to an external drive
+
+Decrypt files from local locker to an external drive, mirroring the directory structure:
+
+```bash
+# Decrypt Xbox updates to external drive, maintaining the same path structure
+backup_tool -l Local --output_locker_base /media/user/External -u Updates -c Microsoft -s "Microsoft Xbox" -g "Halo 2 (USA)" -r Decrypt -k Hetzner
+
+# Source: ~/Locker/Gaming/Updates/Microsoft/Microsoft Xbox/Halo 2 (USA)
+# Destination: /media/user/External/Gaming/Updates/Microsoft/Microsoft Xbox/Halo 2 (USA)
+```
+
+Use `-a` to skip files that are identical (useful for incremental backups):
+
+```bash
+backup_tool -l Local --output_locker_base /media/user/External -u Roms -c Nintendo -s "Nintendo Switch" -r Decrypt -a
+```
+
+### Copy between two external drives
+
+Copy from one external drive to another, using both locker base parameters:
+
+```bash
+backup_tool --input_locker_base /media/user/Drive1 --output_locker_base /media/user/Drive2 -u Roms -c Nintendo -s "Nintendo Switch" -a
 ```
 
 ## Notes
