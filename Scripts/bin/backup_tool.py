@@ -14,6 +14,7 @@ import arguments
 import setup
 import logger
 import paths
+import fileops
 import prompts
 
 # Setup argument parser
@@ -90,7 +91,7 @@ def main():
         game_offset = args.game_offset)
     if not paths.is_path_directory(dest_file_root):
         if args.output_locker_base and paths.is_path_directory(args.output_locker_base):
-            paths.make_dir(dest_file_root)
+            fileops.make_directory(dest_file_root, verbose = args.verbose, pretend_run = args.pretend_run)
         else:
             logger.log_error("Could not resolve destination path", quit_program = True)
 
