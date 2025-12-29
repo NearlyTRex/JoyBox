@@ -30,7 +30,7 @@ def load_existing_hash_map(
         if paths.get_filename_file(hash_file) == "hashes.json":
             if verbose:
                 logger.log_info("Loading hash file: %s" % hash_file)
-            hash_contents = hashing.read_hash_file(
+            hash_contents = hashing.read_hash_file_json(
                 src = hash_file,
                 verbose = verbose,
                 pretend_run = pretend_run,
@@ -76,7 +76,7 @@ def build_authoritative_hash_map(
         # Load existing hashes if available
         hash_contents = {}
         if paths.is_path_file(hash_file):
-            hash_contents = hashing.read_hash_file(
+            hash_contents = hashing.read_hash_file_json(
                 src = hash_file,
                 verbose = verbose,
                 pretend_run = pretend_run,
@@ -115,7 +115,7 @@ def build_authoritative_hash_map(
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-            hashing.write_hash_file(
+            hashing.write_hash_file_json(
                 src = hash_file,
                 hash_contents = hash_contents,
                 verbose = verbose,

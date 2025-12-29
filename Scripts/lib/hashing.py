@@ -1,6 +1,9 @@
 # Imports
 import os, os.path
 import sys
+import csv
+import zlib
+import hashlib
 
 # Local imports
 import config
@@ -18,28 +21,24 @@ import datautils
 
 # Calculate string crc32
 def calculate_string_crc32(string):
-    import zlib
     if isinstance(string, str):
         string = string.encode("utf8")
     return "%x" % zlib.crc32(string)
 
 # Calculate string md5
 def calculate_string_md5(string):
-    import hashlib
     if isinstance(string, str):
         string = string.encode("utf8")
     return hashlib.md5(string).hexdigest()
 
 # Calculate string sha1
 def calculate_string_sha1(string):
-    import hashlib
     if isinstance(string, str):
         string = string.encode("utf8")
     return hashlib.sha1(string).hexdigest()
 
 # Calculate string sha256
 def calculate_string_sha256(string):
-    import hashlib
     if isinstance(string, str):
         string = string.encode("utf8")
     return hashlib.sha256(string).hexdigest()
@@ -59,25 +58,26 @@ def calculate_file_crc32(
     pretend_run = False,
     exit_on_failure = False):
     try:
+        if pretend_run:
+            if verbose:
+                logger.log_info("[pretend] Would calculate crc32 for %s" % src)
+            return ""
         if verbose:
             logger.log_info("Calculating crc32 for %s" % src)
-        if not pretend_run:
-            import zlib
-            with open(src, "rb") as file:
-                read_size = 0
-                total_size = os.path.getsize(src)
-                percent_done = 0
-                checksum = 0
+        with open(src, "rb") as file:
+            read_size = 0
+            total_size = os.path.getsize(src)
+            percent_done = 0
+            checksum = 0
+            if verbose:
+                logger.log_percent_complete(percent_done)
+            while (chunk := file.read(chunksize)):
+                checksum = zlib.crc32(chunk, checksum)
                 if verbose:
+                    read_size += len(chunk)
+                    percent_done = int(round(100 * read_size / total_size))
                     logger.log_percent_complete(percent_done)
-                while (chunk := file.read(chunksize)):
-                    checksum = zlib.crc32(chunk, checksum)
-                    if verbose:
-                        read_size += len(chunk)
-                        percent_done = int(round(100 * read_size / total_size))
-                        logger.log_percent_complete(percent_done)
-                return "%x" % checksum
-        return ""
+            return "%x" % checksum
     except Exception as e:
         if exit_on_failure:
             logger.log_error("Unable to calculate crc32 for %s" % src)
@@ -92,25 +92,26 @@ def calculate_file_md5(
     pretend_run = False,
     exit_on_failure = False):
     try:
+        if pretend_run:
+            if verbose:
+                logger.log_info("[pretend] Would calculate md5 for %s" % src)
+            return ""
         if verbose:
             logger.log_info("Calculating md5 for %s" % src)
-        if not pretend_run:
-            import hashlib
-            with open(src, "rb") as file:
-                read_size = 0
-                total_size = os.path.getsize(src)
-                percent_done = 0
-                md5_hash = hashlib.md5()
+        with open(src, "rb") as file:
+            read_size = 0
+            total_size = os.path.getsize(src)
+            percent_done = 0
+            md5_hash = hashlib.md5()
+            if verbose:
+                logger.log_percent_complete(percent_done)
+            for chunk in iter(lambda: file.read(chunksize),b""):
+                md5_hash.update(chunk)
                 if verbose:
+                    read_size += len(chunk)
+                    percent_done = int(round(100 * read_size / total_size))
                     logger.log_percent_complete(percent_done)
-                for chunk in iter(lambda: file.read(chunksize),b""):
-                    md5_hash.update(chunk)
-                    if verbose:
-                        read_size += len(chunk)
-                        percent_done = int(round(100 * read_size / total_size))
-                        logger.log_percent_complete(percent_done)
-                return md5_hash.hexdigest()
-        return ""
+            return md5_hash.hexdigest()
     except Exception as e:
         if exit_on_failure:
             logger.log_error("Unable to calculate md5 for %s" % src)
@@ -125,25 +126,26 @@ def calculate_file_sha1(
     pretend_run = False,
     exit_on_failure = False):
     try:
+        if pretend_run:
+            if verbose:
+                logger.log_info("[pretend] Would calculate sha1 for %s" % src)
+            return ""
         if verbose:
             logger.log_info("Calculating sha1 for %s" % src)
-        if not pretend_run:
-            import hashlib
-            with open(src, "rb") as file:
-                read_size = 0
-                total_size = os.path.getsize(src)
-                percent_done = 0
-                sha1_hash = hashlib.sha1()
+        with open(src, "rb") as file:
+            read_size = 0
+            total_size = os.path.getsize(src)
+            percent_done = 0
+            sha1_hash = hashlib.sha1()
+            if verbose:
+                logger.log_percent_complete(percent_done)
+            for chunk in iter(lambda: file.read(chunksize),b""):
+                sha1_hash.update(chunk)
                 if verbose:
+                    read_size += len(chunk)
+                    percent_done = int(round(100 * read_size / total_size))
                     logger.log_percent_complete(percent_done)
-                for chunk in iter(lambda: file.read(chunksize),b""):
-                    sha1_hash.update(chunk)
-                    if verbose:
-                        read_size += len(chunk)
-                        percent_done = int(round(100 * read_size / total_size))
-                        logger.log_percent_complete(percent_done)
-                return sha1_hash.hexdigest()
-        return ""
+            return sha1_hash.hexdigest()
     except Exception as e:
         if exit_on_failure:
             logger.log_error("Unable to calculate sha1 for %s" % src)
@@ -158,25 +160,26 @@ def calculate_file_sha256(
     pretend_run = False,
     exit_on_failure = False):
     try:
+        if pretend_run:
+            if verbose:
+                logger.log_info("[pretend] Would calculate sha256 for %s" % src)
+            return ""
         if verbose:
             logger.log_info("Calculating sha256 for %s" % src)
-        if not pretend_run:
-            import hashlib
-            with open(src, "rb") as file:
-                read_size = 0
-                total_size = os.path.getsize(src)
-                percent_done = 0
-                sha256_hash = hashlib.sha256()
+        with open(src, "rb") as file:
+            read_size = 0
+            total_size = os.path.getsize(src)
+            percent_done = 0
+            sha256_hash = hashlib.sha256()
+            if verbose:
+                logger.log_percent_complete(percent_done)
+            for chunk in iter(lambda: file.read(chunksize),b""):
+                sha256_hash.update(chunk)
                 if verbose:
+                    read_size += len(chunk)
+                    percent_done = int(round(100 * read_size / total_size))
                     logger.log_percent_complete(percent_done)
-                for chunk in iter(lambda: file.read(chunksize),b""):
-                    sha256_hash.update(chunk)
-                    if verbose:
-                        read_size += len(chunk)
-                        percent_done = int(round(100 * read_size / total_size))
-                        logger.log_percent_complete(percent_done)
-                return sha256_hash.hexdigest()
-        return ""
+            return sha256_hash.hexdigest()
     except Exception as e:
         if exit_on_failure:
             logger.log_error("Unable to calculate sha256 for %s" % src)
@@ -191,25 +194,27 @@ def calculate_file_xxh3(
     pretend_run = False,
     exit_on_failure = False):
     try:
+        if pretend_run:
+            if verbose:
+                logger.log_info("[pretend] Would calculate xxh3 for %s" % src)
+            return ""
         if verbose:
             logger.log_info("Calculating xxh3 for %s" % src)
-        if not pretend_run:
-            import xxhash
-            with open(src, "rb") as file:
-                read_size = 0
-                total_size = os.path.getsize(src)
-                percent_done = 0
-                xxh3_hash = xxhash.xxh3_64()
+        import xxhash
+        with open(src, "rb") as file:
+            read_size = 0
+            total_size = os.path.getsize(src)
+            percent_done = 0
+            xxh3_hash = xxhash.xxh3_64()
+            if verbose:
+                logger.log_percent_complete(percent_done)
+            for chunk in iter(lambda: file.read(chunksize),b""):
+                xxh3_hash.update(chunk)
                 if verbose:
+                    read_size += len(chunk)
+                    percent_done = int(round(100 * read_size / total_size))
                     logger.log_percent_complete(percent_done)
-                for chunk in iter(lambda: file.read(chunksize),b""):
-                    xxh3_hash.update(chunk)
-                    if verbose:
-                        read_size += len(chunk)
-                        percent_done = int(round(100 * read_size / total_size))
-                        logger.log_percent_complete(percent_done)
-                return xxh3_hash.hexdigest()
-        return ""
+            return xxh3_hash.hexdigest()
     except Exception as e:
         if exit_on_failure:
             logger.log_error("Unable to calculate xxh3 for %s" % src)
@@ -341,7 +346,7 @@ def get_file_groupings(filenames, max_group_size):
     # Aggregate similar files together into sets
     hash_sets = {}
     for hash_filename in sorted(filenames):
-        hash_contents = read_hash_file(hash_filename)
+        hash_contents = read_hash_file_json(hash_filename)
         for hash_key in sorted(hash_contents.keys()):
             file_location = hash_key
             file_directory = paths.get_filename_directory(file_location)
@@ -373,8 +378,8 @@ def get_file_groupings(filenames, max_group_size):
 
 ###########################################################
 
-# Read hash file
-def read_hash_file(
+# Read json hash file
+def read_hash_file_json(
     src,
     verbose = False,
     pretend_run = False,
@@ -397,8 +402,8 @@ def read_hash_file(
             hash_contents[file_location] = json_hash
     return hash_contents
 
-# Write hash file
-def write_hash_file(
+# Write json hash file
+def write_hash_file_json(
     src,
     hash_contents,
     verbose = False,
@@ -416,6 +421,71 @@ def write_hash_file(
         exit_on_failure = exit_on_failure)
     return success
 
+# Read csv hash file
+def read_hash_file_csv(
+    src,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+    hash_contents = {}
+    try:
+        if verbose:
+            logger.log_info("Reading CSV hash file: %s" % src)
+        if not paths.does_path_exist(src):
+            return hash_contents
+        with open(src, "r", newline="", encoding="utf-8") as f:
+            reader = csv.DictReader(f)
+            for row in reader:
+                file_location = paths.join_paths(row["dir"], row["filename"])
+                hash_contents[file_location] = {
+                    "dir": row["dir"],
+                    "filename": row["filename"],
+                    "hash": row["hash"],
+                    "size": int(row["size"]),
+                    "mtime": int(row["mtime"])
+                }
+    except Exception as e:
+        if exit_on_failure:
+            logger.log_error("Unable to read CSV hash file: %s" % src)
+            logger.log_error(e, quit_program = True)
+    return hash_contents
+
+# Write csv hash file
+def write_hash_file_csv(
+    src,
+    hash_contents,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+    try:
+        if verbose:
+            logger.log_info("Writing CSV hash file: %s" % src)
+        if pretend_run:
+            return True
+        fileops.make_directory(
+            src = paths.get_filename_directory(src),
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        with open(src, "w", newline="", encoding="utf-8") as f:
+            writer = csv.DictWriter(f, fieldnames=["dir", "filename", "hash", "size", "mtime"])
+            writer.writeheader()
+            for hash_key in sorted(hash_contents.keys()):
+                data = hash_contents[hash_key]
+                writer.writerow({
+                    "dir": data["dir"],
+                    "filename": data["filename"],
+                    "hash": data["hash"],
+                    "size": data["size"],
+                    "mtime": data["mtime"]
+                })
+        return True
+    except Exception as e:
+        if exit_on_failure:
+            logger.log_error("Unable to write CSV hash file: %s" % src)
+            logger.log_error(e, quit_program = True)
+        return False
+
 # Sort hash file
 def sort_hash_file(
     src,
@@ -424,30 +494,85 @@ def sort_hash_file(
     exit_on_failure = False):
     if verbose:
         logger.log_info("Sorting hash file %s" % src)
-    hash_contents = read_hash_file(
+    hash_contents = read_hash_file_json(
         src = src,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
-    return write_hash_file(
+    return write_hash_file_json(
         src = src,
         hash_contents = hash_contents,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
-# Check if file needs to be hashed
+# Normalize hash entry to ensure all fields exist with correct types
+def normalize_hash_entry(data):
+    normalized = dict(data)
+
+    # Ensure string fields exist
+    if "dir" not in normalized:
+        normalized["dir"] = ""
+    if "filename" not in normalized:
+        normalized["filename"] = ""
+    if "filename_enc" not in normalized:
+        normalized["filename_enc"] = ""
+    if "hash" not in normalized:
+        normalized["hash"] = ""
+    if "hash_enc" not in normalized:
+        normalized["hash_enc"] = ""
+
+    # Ensure size fields are int
+    if "size" not in normalized:
+        normalized["size"] = 0
+    elif isinstance(normalized["size"], str):
+        try:
+            normalized["size"] = int(normalized["size"])
+        except ValueError:
+            normalized["size"] = 0
+    if "size_enc" not in normalized:
+        normalized["size_enc"] = 0
+    elif isinstance(normalized["size_enc"], str):
+        try:
+            normalized["size_enc"] = int(normalized["size_enc"])
+        except ValueError:
+            normalized["size_enc"] = 0
+
+    # Ensure mtime is int
+    if "mtime" not in normalized:
+        normalized["mtime"] = 0
+    elif isinstance(normalized["mtime"], str):
+        try:
+            normalized["mtime"] = int(normalized["mtime"])
+        except ValueError:
+            normalized["mtime"] = 0
+    return normalized
+
+# Normalize all entries in a hash contents dictionary
+def normalize_hash_contents(hash_contents):
+    normalized = {}
+    for key, data in hash_contents.items():
+        normalized[key] = normalize_hash_entry(data)
+    return normalized
+
+# Check if file needs to be hashed (based on mtime/size comparison)
 def does_file_need_to_be_hashed(src, base_path, hash_contents = {}):
-    if src not in hash_contents.keys():
+    if src not in hash_contents:
         return True
-    input_file_fullpath = paths.join_paths(base_path, src)
-    input_file_size = str(os.path.getsize(input_file_fullpath))
-    input_file_mtime = str(int(os.path.getmtime(input_file_fullpath)))
-    if input_file_size != hash_contents[src]["size"]:
+    try:
+        input_file_fullpath = paths.join_paths(base_path, src)
+        current_size = os.path.getsize(input_file_fullpath)
+        current_mtime = int(os.path.getmtime(input_file_fullpath))
+        existing = hash_contents[src]
+        existing_size = int(existing.get("size", 0))
+        existing_mtime = int(existing.get("mtime", 0))
+        if current_size != existing_size:
+            return True
+        if current_mtime != existing_mtime:
+            return True
+        return False
+    except (OSError, ValueError, TypeError):
         return True
-    if input_file_mtime != hash_contents[src]["mtime"]:
-        return True
-    return False
 
 ###########################################################
 
@@ -464,7 +589,25 @@ def calculate_hash(
     path_file = paths.get_filename_file(src)
     path_dir = paths.get_filename_directory(src)
     path_full = paths.join_paths(base_path, path_dir, path_file)
-    logger.log_info("Hashing file %s ..." % path_full)
+
+    # Log action
+    if pretend_run:
+        logger.log_info("[pretend] Would hash file %s" % path_full)
+    else:
+        logger.log_info("Hashing file %s ..." % path_full)
+
+    # Handle pretend run
+    if pretend_run:
+        return {
+            "dir": path_dir,
+            "filename": path_file,
+            "filename_enc": "",
+            "hash": "",
+            "hash_enc": "",
+            "size": 0,
+            "size_enc": 0,
+            "mtime": 0
+        }
 
     # Create hash data
     hash_data = {}
@@ -506,6 +649,61 @@ def calculate_hash(
     # Return hash data
     return hash_data
 
+# Calculate hash simple
+def calculate_hash_simple(
+    src,
+    base_path = None,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Determine full path
+    if base_path:
+        path_file = paths.get_filename_file(src)
+        path_dir = paths.get_filename_directory(src)
+        path_full = paths.join_paths(base_path, src)
+    else:
+        path_file = paths.get_filename_file(src)
+        path_dir = paths.get_filename_directory(src)
+        path_full = src
+
+    # Log action
+    if pretend_run:
+        logger.log_info("[pretend] Would hash file %s" % path_full)
+    else:
+        logger.log_info("Hashing file %s ..." % path_full)
+
+    # Handle pretend run
+    if pretend_run:
+        return {
+            "dir": path_dir,
+            "filename": path_file,
+            "hash": "",
+            "size": 0,
+            "mtime": 0
+        }
+
+    # Calculate hash data
+    try:
+        hash_data = {
+            "dir": path_dir,
+            "filename": path_file,
+            "hash": calculate_file_xxh3(
+                src = path_full,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure),
+            "size": os.path.getsize(path_full),
+            "mtime": int(os.path.getmtime(path_full))
+        }
+        return hash_data
+    except OSError as e:
+        if exit_on_failure:
+            logger.log_error("Failed to hash file %s: %s" % (path_full, e), quit_program = True)
+        else:
+            logger.log_error("Failed to hash file %s: %s" % (path_full, e))
+        return None
+
 # Hash files
 def hash_files(
     src,
@@ -526,7 +724,7 @@ def hash_files(
     # Get hash contents
     hash_contents = {}
     if paths.is_path_file(output_file):
-        hash_contents = read_hash_file(
+        hash_contents = read_hash_file_json(
             src = output_file,
             verbose = verbose,
             pretend_run = pretend_run,
@@ -572,7 +770,7 @@ def hash_files(
                 hash_contents[hash_entry_key] = hash_data
 
             # Write hash file
-            success = write_hash_file(
+            success = write_hash_file_json(
                 src = output_file,
                 hash_contents = hash_contents,
                 verbose = verbose,
@@ -582,7 +780,7 @@ def hash_files(
                 return False
 
     # Write hash file
-    return write_hash_file(
+    return write_hash_file_json(
         src = output_file,
         hash_contents = hash_contents,
         verbose = verbose,

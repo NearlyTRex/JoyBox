@@ -122,7 +122,7 @@ def main():
 
                 # Read hash file
                 logger.log_info("Checking hash file '%s' ..." % hash_file_path)
-                hash_file_data = hashing.read_hash_file(hash_file_path)
+                hash_file_data = hashing.read_hash_file_json(hash_file_path)
                 for hash_reference_file in hash_file_data.keys():
 
                     # Check if file exists
