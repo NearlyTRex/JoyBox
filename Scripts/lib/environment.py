@@ -66,6 +66,27 @@ def get_cookie_directory():
 def get_log_directory():
     return paths.join_paths(get_home_directory(), "Logs")
 
+# Get editor command
+def get_editor():
+
+    # First check ini config
+    editor = ini.get_ini_value("Tools.System", "editor")
+    if editor:
+        return editor
+
+    # Fall back to environment variables
+    editor = os.environ.get('EDITOR')
+    if editor:
+        return editor
+    editor = os.environ.get('VISUAL')
+    if editor:
+        return editor
+
+    # Final fallback
+    if is_windows_platform():
+        return "notepad.exe"
+    return "nano"
+
 # Determine if symlinks are supported
 def are_symlinks_supported():
     if is_unix_platform():
