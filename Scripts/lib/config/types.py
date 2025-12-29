@@ -243,6 +243,14 @@ class CryptionType(EnumType):
     ENCRYPT                 = ("Encrypt")
     DECRYPT                 = ("Decrypt")
 
+# Sync action types
+class SyncActionType(EnumType):
+    COPY                    = ("Copy")
+    COPY_DECRYPT            = ("Decrypt")
+    UPDATE                  = ("Update")
+    UPDATE_DECRYPT          = ("UpdateDecrypt")
+    DELETE                  = ("Delete")
+
 # Decompiler action type
 class DecompilerActionType(EnumType):
     LAUNCH_PROGRAM          = ("LaunchProgram")

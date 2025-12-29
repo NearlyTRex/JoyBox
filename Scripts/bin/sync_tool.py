@@ -28,7 +28,7 @@ parser.add_enum_argument(
     args = ("-t", "--locker_type"),
     arg_type = config.LockerType,
     description = "Locker type")
-parser.add_string_argument(args = ("--excludes"), default = ",".join(config.excluded_sync_paths), description = "Excludes (comma delimited)")
+parser.add_string_argument(args = ("--excludes"), default = "", description = "Excludes (comma delimited, defaults to locker config)")
 parser.add_string_argument(args = ("--diff_combined_path"), default = "diff_combined.txt", description = "Diff path (combined)")
 parser.add_string_argument(args = ("--diff_intersected_path"), default = "diff_intersected.txt", description = "Diff path (intersection)")
 parser.add_string_argument(args = ("--diff_missing_src_path"), default = "diff_missing_src.txt", description = "Diff path (missing src)")
@@ -67,6 +67,12 @@ def main():
     mount_path = locker_info.get_remote_mount_path()
     mount_flags = locker_info.get_remote_mount_flags()
 
+    # Get excludes from CLI or locker config
+    if args.excludes:
+        excludes = [e.strip() for e in args.excludes.split(",") if e.strip()]
+    else:
+        excludes = locker_info.get_excluded_sync_paths()
+
     # Show preview
     if not args.no_preview:
         details = []
@@ -98,7 +104,7 @@ def main():
             remote_type = remote_type,
             remote_path = remote_path,
             local_path = local_path,
-            excludes = args.excludes.split(","),
+            excludes = excludes,
             interactive = args.interactive,
             verbose = args.verbose,
             pretend_run = args.pretend_run,
@@ -111,7 +117,7 @@ def main():
             remote_type = remote_type,
             remote_path = remote_path,
             local_path = local_path,
-            excludes = args.excludes.split(","),
+            excludes = excludes,
             interactive = args.interactive,
             verbose = args.verbose,
             pretend_run = args.pretend_run,
@@ -124,7 +130,7 @@ def main():
             remote_type = remote_type,
             remote_path = remote_path,
             local_path = local_path,
-            excludes = args.excludes.split(","),
+            excludes = excludes,
             interactive = args.interactive,
             verbose = args.verbose,
             pretend_run = args.pretend_run,
@@ -137,7 +143,7 @@ def main():
             remote_type = remote_type,
             remote_path = remote_path,
             local_path = local_path,
-            excludes = args.excludes.split(","),
+            excludes = excludes,
             interactive = args.interactive,
             verbose = args.verbose,
             pretend_run = args.pretend_run,
@@ -150,7 +156,7 @@ def main():
             remote_type = remote_type,
             remote_path = remote_path,
             local_path = local_path,
-            excludes = args.excludes.split(","),
+            excludes = excludes,
             resync = args.resync,
             interactive = args.interactive,
             verbose = args.verbose,
@@ -159,7 +165,7 @@ def main():
 
     # Diff files
     elif args.action == config.RemoteActionType.DIFF:
-        diff_excludes = args.excludes.split(",")
+        diff_excludes = list(excludes)
         if args.recycle_folder:
             diff_excludes.append(args.recycle_folder + "/**")
         sync.diff_files(
@@ -180,7 +186,7 @@ def main():
 
     # Diff sync files
     elif args.action == config.RemoteActionType.DIFFSYNC:
-        diffsync_excludes = args.excludes.split(",")
+        diffsync_excludes = list(excludes)
         if args.recycle_folder:
             diffsync_excludes.append(args.recycle_folder + "/**")
         sync.diff_sync_files(
