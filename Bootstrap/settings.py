@@ -54,6 +54,10 @@ for share_type in ["gdrive", "hetzner"]:
         ini_defaults["UserData.Share"][f"locker_{share_type}_remote_mount_path"] = "$HOME/LockerRemote"
         ini_defaults["UserData.Share"][f"locker_{share_type}_local_path"] = "$HOME/Locker"
     ini_defaults["UserData.Share"][f"locker_{share_type}_passphrase"] = ""
+if util.is_windows_platform():
+    ini_defaults["UserData.Share"]["locker_external_local_path"] = "E:\\"
+else:
+    ini_defaults["UserData.Share"]["locker_external_local_path"] = "/mnt/external"
 
 # UserData.Cockpit
 ini_defaults["UserData.Cockpit"] = {}
@@ -431,7 +435,10 @@ else:
 
 # Tools.System
 ini_defaults["Tools.System"] = {}
-if util.is_linux_platform():
+if util.is_windows_platform():
+    ini_defaults["Tools.System"]["editor"] = "notepad.exe"
+else:
+    ini_defaults["Tools.System"]["editor"] = "/bin/nano"
     ini_defaults["Tools.System"]["cp"] = "/bin/cp"
     ini_defaults["Tools.System"]["mv"] = "/bin/mv"
     ini_defaults["Tools.System"]["rm"] = "/bin/rm"
