@@ -275,12 +275,12 @@ def create_temporary_directory(verbose = False, pretend_run = False):
     return (True, temp_dir)
 
 # Create temporary file
-def create_temporary_file(suffix = "", verbose = False, pretend_run = False):
+def create_temporary_file(suffix = "", prefix = "tmp", verbose = False, pretend_run = False):
     if verbose:
         logger.log_info("Creating temporary file")
     temp_file = ""
     if not pretend_run:
-        with tempfile.NamedTemporaryFile(suffix=suffix, delete=False) as tf:
+        with tempfile.NamedTemporaryFile(suffix=suffix, prefix=prefix, delete=False) as tf:
             temp_file = tf.name
         if verbose:
             logger.log_info("Created temporary file %s" % temp_file)
