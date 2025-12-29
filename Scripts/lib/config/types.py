@@ -213,6 +213,7 @@ class LockerType(EnumType):
     ALL                     = ("All")
     HETZNER                 = ("Hetzner")
     GDRIVE                  = ("Gdrive")
+    EXTERNAL                = ("External")
 
 # Locker folder types
 class LockerFolderType(EnumType):
