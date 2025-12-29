@@ -53,11 +53,20 @@ for share_type in ["gdrive", "hetzner"]:
     else:
         ini_defaults["UserData.Share"][f"locker_{share_type}_remote_mount_path"] = "$HOME/LockerRemote"
         ini_defaults["UserData.Share"][f"locker_{share_type}_local_path"] = "$HOME/Locker"
+    if share_type == "gdrive":
+        ini_defaults["UserData.Share"][f"locker_{share_type}_excluded_sync_paths"] = "Gaming/Roms/**,Gaming/DLC/**,Gaming/Updates/**"
+    else:
+        ini_defaults["UserData.Share"][f"locker_{share_type}_excluded_sync_paths"] = ""
+    ini_defaults["UserData.Share"][f"locker_{share_type}_decrypt_on_sync"] = "False"
     ini_defaults["UserData.Share"][f"locker_{share_type}_passphrase"] = ""
-if util.is_windows_platform():
-    ini_defaults["UserData.Share"]["locker_external_local_path"] = "E:\\"
-else:
-    ini_defaults["UserData.Share"]["locker_external_local_path"] = "/mnt/external"
+for share_type in ["external"]:
+    if util.is_windows_platform():
+        ini_defaults["UserData.Share"][f"locker_{share_type}_local_path"] = "E:\\"
+    else:
+        ini_defaults["UserData.Share"][f"locker_{share_type}_local_path"] = "/mnt/mount"
+    ini_defaults["UserData.Share"][f"locker_{share_type}_excluded_sync_paths"] = ""
+    ini_defaults["UserData.Share"][f"locker_{share_type}_decrypt_on_sync"] = "True"
+    ini_defaults["UserData.Share"][f"locker_{share_type}_passphrase"] = ""
 
 # UserData.Cockpit
 ini_defaults["UserData.Cockpit"] = {}
