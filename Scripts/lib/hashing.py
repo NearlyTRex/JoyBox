@@ -472,7 +472,7 @@ def calculate_hash(
         file_info = cryption.get_embedded_file_info(
             src = path_full,
             passphrase = passphrase,
-            hasher = CalculateFileXXH3,
+            hasher = calculate_file_xxh3,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
