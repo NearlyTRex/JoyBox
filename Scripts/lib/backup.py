@@ -116,7 +116,7 @@ def copy_and_encrypt_files(
             continue
 
         # Skip if destination decrypts to identical content
-        if skip_identical and paths.does_path_exist(dest_path):
+        if skip_identical and paths.does_path_exist(dest_path) and not pretend_run:
             tmp_dir_success, tmp_dir_result = fileops.create_temporary_directory(
                 verbose = verbose,
                 pretend_run = pretend_run)
@@ -155,7 +155,8 @@ def copy_and_encrypt_files(
             exit_on_failure = exit_on_failure)
 
         # Encrypt the file
-        logger.log_info("Encrypting: '%s' -> '%s'" % (src_path, dest_path))
+        if not pretend_run:
+            logger.log_info("Encrypting: '%s' -> '%s'" % (src_path, dest_path))
         success = cryption.encrypt_file(
             src = src_path,
             passphrase = passphrase,
@@ -218,7 +219,7 @@ def copy_and_decrypt_files(
             continue
 
         # Skip if decrypted content would be identical to destination
-        if skip_identical and paths.does_path_exist(dest_path):
+        if skip_identical and paths.does_path_exist(dest_path) and not pretend_run:
             tmp_dir_success, tmp_dir_result = fileops.create_temporary_directory(
                 verbose = verbose,
                 pretend_run = pretend_run)
@@ -278,7 +279,8 @@ def copy_and_decrypt_files(
             exit_on_failure = exit_on_failure)
 
         # Decrypt the file
-        logger.log_info("Decrypting: '%s' -> '%s'" % (src_path, dest_path))
+        if not pretend_run:
+            logger.log_info("Decrypting: '%s' -> '%s'" % (src_path, dest_path))
         success = cryption.decrypt_file(
             src = src_path,
             passphrase = passphrase,
