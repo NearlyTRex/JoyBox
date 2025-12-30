@@ -587,11 +587,12 @@ def does_file_need_to_be_hashed(src, base_path, hash_contents = {}):
 
 ###########################################################
 
-# Calculate hash
+# Calculate hash for a file
 def calculate_hash(
     src,
-    base_path,
+    base_path = None,
     passphrase = None,
+    include_enc_fields = True,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -599,30 +600,38 @@ def calculate_hash(
     # Get path info
     path_file = paths.get_filename_file(src)
     path_dir = paths.get_filename_directory(src)
-    path_full = paths.join_paths(base_path, path_dir, path_file)
+    if base_path:
+        path_full = paths.join_paths(base_path, src)
+    else:
+        path_full = src
 
     # Log action
-    if pretend_run:
-        logger.log_info("[pretend] Would hash file %s" % path_full)
-    else:
-        logger.log_info("Hashing file %s ..." % path_full)
+    if verbose:
+        if pretend_run:
+            logger.log_info("[pretend] Would hash file %s" % path_full)
+        else:
+            logger.log_info("Hashing file %s ..." % path_full)
 
     # Handle pretend run
     if pretend_run:
-        return {
+        hash_data = {
             "dir": path_dir,
             "filename": path_file,
-            "filename_enc": "",
             "hash": "",
-            "hash_enc": "",
             "size": 0,
-            "size_enc": 0,
             "mtime": 0
         }
+        if include_enc_fields:
+            hash_data["filename_enc"] = ""
+            hash_data["hash_enc"] = ""
+            hash_data["size_enc"] = 0
+        return hash_data
 
-    # Create hash data
+    # Calculate hash data
     hash_data = {}
-    if cryption.is_file_encrypted(path_full) and cryption.is_passphrase_valid(passphrase):
+
+    # Handle encrypted files
+    if include_enc_fields and cryption.is_file_encrypted(path_full) and cryption.is_passphrase_valid(passphrase):
         file_info = cryption.get_embedded_file_info(
             src = path_full,
             passphrase = passphrase,
@@ -644,158 +653,132 @@ def calculate_hash(
             hash_data["size_enc"] = os.path.getsize(path_full)
             hash_data["mtime"] = file_info["mtime"]
     else:
+        # Handle unencrypted files
         hash_data["dir"] = path_dir
         hash_data["filename"] = path_file
-        hash_data["filename_enc"] = cryption.generate_encrypted_filename(path_file)
         hash_data["hash"] = calculate_file_xxh3(
             src = path_full,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-        hash_data["hash_enc"] = ""
         hash_data["size"] = os.path.getsize(path_full)
-        hash_data["size_enc"] = 0
         hash_data["mtime"] = int(os.path.getmtime(path_full))
 
-    # Return hash data
+        # Add enc fields if requested
+        if include_enc_fields:
+            hash_data["filename_enc"] = cryption.generate_encrypted_filename(path_file)
+            hash_data["hash_enc"] = ""
+            hash_data["size_enc"] = 0
+
     return hash_data
 
-# Calculate hash simple
-def calculate_hash_simple(
-    src,
-    base_path = None,
-    verbose = False,
-    pretend_run = False,
-    exit_on_failure = False):
-
-    # Determine full path
-    if base_path:
-        path_file = paths.get_filename_file(src)
-        path_dir = paths.get_filename_directory(src)
-        path_full = paths.join_paths(base_path, src)
-    else:
-        path_file = paths.get_filename_file(src)
-        path_dir = paths.get_filename_directory(src)
-        path_full = src
-
-    # Log action
-    if pretend_run:
-        logger.log_info("[pretend] Would hash file %s" % path_full)
-    else:
-        logger.log_info("Hashing file %s ..." % path_full)
-
-    # Handle pretend run
-    if pretend_run:
-        return {
-            "dir": path_dir,
-            "filename": path_file,
-            "hash": "",
-            "size": 0,
-            "mtime": 0
-        }
-
-    # Calculate hash data
-    try:
-        hash_data = {
-            "dir": path_dir,
-            "filename": path_file,
-            "hash": calculate_file_xxh3(
-                src = path_full,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure),
-            "size": os.path.getsize(path_full),
-            "mtime": int(os.path.getmtime(path_full))
-        }
-        return hash_data
-    except OSError as e:
-        if exit_on_failure:
-            logger.log_error("Failed to hash file %s: %s" % (path_full, e), quit_program = True)
-        else:
-            logger.log_error("Failed to hash file %s: %s" % (path_full, e))
-        return None
-
-# Hash files
+# Hash files in a directory and write to output file
 def hash_files(
     src,
-    offset,
     output_file,
+    base_path = None,
+    offset = None,
     passphrase = None,
+    hash_format = None,
+    include_enc_fields = True,
+    delete_missing = False,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
 
-    # Make sure directory exists
+    # Default to JSON format
+    if hash_format is None:
+        hash_format = config.HashFormatType.JSON
+
+    # Determine read/write functions
+    read_func = read_hash_file_json if hash_format == config.HashFormatType.JSON else read_hash_file_csv
+    write_func = write_hash_file_json if hash_format == config.HashFormatType.JSON else write_hash_file_csv
+
+    # Determine base path and file list
+    if isinstance(src, list):
+        file_list = src
+        if not base_path:
+            logger.log_error("base_path required when src is a file list")
+            return False
+    else:
+        file_list = paths.build_file_list(src, use_relative_paths = True)
+        if not base_path:
+            base_path = src
+
+    # Make sure output directory exists
     fileops.make_directory(
         src = paths.get_filename_directory(output_file),
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
-    # Get hash contents
+    # Load existing hash contents
     hash_contents = {}
     if paths.is_path_file(output_file):
-        hash_contents = read_hash_file_json(
+        hash_contents = read_func(
             src = output_file,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
-    # Hash each file in the input path
-    for file in paths.build_file_list(src):
-        if os.path.realpath(file) == os.path.realpath(output_file):
+    # Track files seen
+    seen_files = set()
+
+    # Hash each file
+    for file_path in file_list:
+        full_path = paths.join_paths(base_path, file_path)
+
+        # Skip the output file itself
+        if paths.is_path_file(output_file) and os.path.realpath(full_path) == os.path.realpath(output_file):
             continue
 
-        # Split by base path
-        file_parts = paths.split_file_path(file, offset)
-        if len(file_parts) != 2:
-            continue
+        # Determine hash entry key (with offset prefix if provided)
+        if offset:
+            hash_key = paths.join_paths(offset, file_path)
+        else:
+            hash_key = file_path
+        seen_files.add(hash_key)
 
         # Check if file needs to be hashed
-        relative_base = file_parts[0]
-        relative_file = paths.join_paths(offset, file_parts[1])
-        if does_file_need_to_be_hashed(relative_file, relative_base, hash_contents):
+        if not does_file_need_to_be_hashed(hash_key, base_path, hash_contents):
+            if verbose:
+                logger.log_info("Skipping (unchanged): %s" % file_path)
+            continue
 
-            # Calculate hash
-            hash_data = calculate_hash(
-                src = relative_file,
-                base_path = relative_base,
-                passphrase = passphrase,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
-            hash_entry_key = paths.join_paths(hash_data["dir"], hash_data["filename"])
+        # Calculate hash
+        hash_data = calculate_hash(
+            src = file_path,
+            base_path = base_path,
+            passphrase = passphrase,
+            include_enc_fields = include_enc_fields,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
 
-            # Merge hash
-            if hash_entry_key in hash_contents:
-                different_hash = hash_contents[hash_entry_key]["hash"] == hash_data["hash"]
-                different_size = int(hash_contents[hash_entry_key]["size"]) == int(hash_data["size"])
-                different_hash_enc = hash_contents[hash_entry_key]["hash_enc"] == hash_data["hash_enc"]
-                different_size_enc = int(hash_contents[hash_entry_key]["size_enc"]) == int(hash_data["size_enc"])
-                if different_hash or different_size or different_hash_enc or different_size_enc:
-                    hash_contents[hash_entry_key] = datautils.merge_dictionaries(
-                        dict1 = hash_contents[hash_entry_key],
-                        dict2 = hash_data,
-                        merge_type = config.MergeType.REPLACE)
-            else:
-                hash_contents[hash_entry_key] = hash_data
+        # Update dir field to include offset
+        if hash_data and offset:
+            hash_data["dir"] = paths.join_paths(offset, hash_data["dir"])
 
-            # Write hash file
-            success = write_hash_file_json(
-                src = output_file,
-                hash_contents = hash_contents,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
-            if not success:
-                return False
+        # Store hash data
+        if hash_data:
+            hash_contents[hash_key] = hash_data
+
+    # Delete entries for files that no longer exist
+    if delete_missing:
+        keys_to_remove = [key for key in hash_contents.keys() if key not in seen_files]
+        for key in keys_to_remove:
+            if verbose:
+                logger.log_info("Removing (missing): %s" % key)
+            del hash_contents[key]
 
     # Write hash file
-    return write_hash_file_json(
-        src = output_file,
-        hash_contents = hash_contents,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
+    if not pretend_run and hash_contents:
+        return write_func(
+            src = output_file,
+            hash_contents = hash_contents,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+    return True
 
 ###########################################################

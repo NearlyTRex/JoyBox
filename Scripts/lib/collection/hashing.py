@@ -47,9 +47,11 @@ def build_hash_files(
     # Hash files
     success = hashing.hash_files(
         src = game_root,
-        offset = hash_offset,
         output_file = hash_file,
+        offset = hash_offset,
         passphrase = locker_info.get_passphrase(),
+        hash_format = config.HashFormatType.JSON,
+        include_enc_fields = True,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)

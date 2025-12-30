@@ -243,6 +243,11 @@ class CryptionType(EnumType):
     ENCRYPT                 = ("Encrypt")
     DECRYPT                 = ("Decrypt")
 
+# Hash format types
+class HashFormatType(EnumType):
+    JSON                    = ("Json")
+    CSV                     = ("Csv")
+
 # Sync action types
 class SyncActionType(EnumType):
     COPY                    = ("Copy")
