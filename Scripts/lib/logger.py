@@ -9,6 +9,7 @@ import config
 import system
 import environment
 import fileops
+import paths
 
 # ANSI color codes for terminal output
 class Colors:
@@ -172,8 +173,15 @@ def get_logger(name = "output"):
         _global_logger = Logger(name)
     return _global_logger
 
-def setup_logging(name = "output", log_dir = None, level = logging.DEBUG, use_colors = True):
+def get_script_name():
+    if sys.argv and sys.argv[0]:
+        return paths.get_filename_basename(sys.argv[0]) or "output"
+    return "output"
+
+def setup_logging(name = None, log_dir = None, level = logging.DEBUG, use_colors = True):
     global _global_logger
+    if name is None:
+        name = get_script_name()
     _global_logger = Logger(
         name = name,
         log_dir = log_dir,
