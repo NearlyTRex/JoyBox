@@ -109,17 +109,6 @@ def main():
                     logger.log_info("  Skipping (unchanged): %s" % file_path)
                 continue
 
-            # Log progress
-            if args.pretend_run:
-                if args.verbose:
-                    logger.log_info("  [pretend] Would hash: %s" % file_path)
-                else:
-                    logger.log_progress_dot()
-            elif args.verbose:
-                logger.log_info("  Hashing: %s" % file_path)
-            else:
-                logger.log_progress_dot()
-
             # Calculate hash
             hash_data = hashing.calculate_hash_simple(
                 src = file_path,
