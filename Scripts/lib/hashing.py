@@ -555,6 +555,17 @@ def normalize_hash_contents(hash_contents):
         normalized[key] = normalize_hash_entry(data)
     return normalized
 
+# Convert simple hash data to full format (add enc fields)
+def convert_to_full_hash_entry(hash_data):
+    full_data = dict(hash_data)
+    if "filename_enc" not in full_data:
+        full_data["filename_enc"] = ""
+    if "hash_enc" not in full_data:
+        full_data["hash_enc"] = ""
+    if "size_enc" not in full_data:
+        full_data["size_enc"] = 0
+    return full_data
+
 # Check if file needs to be hashed (based on mtime/size comparison)
 def does_file_need_to_be_hashed(src, base_path, hash_contents = {}):
     if src not in hash_contents:

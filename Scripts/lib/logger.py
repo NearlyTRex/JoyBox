@@ -197,3 +197,9 @@ def log_debug(message, game_supercategory = None, game_category = None, game_sub
 
 def log_percent_complete(percent_complete):
     print(">>> Percent complete: %s%% " % percent_complete, end='\r', flush=True)
+
+def log_progress_dot():
+    print(".", end="", flush=True)
+
+def log_progress_newline():
+    print(flush=True)
