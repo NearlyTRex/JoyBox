@@ -42,6 +42,9 @@ parser.add_string_argument(
     args = ("-b", "--locker_base_dir"),
     default = None,
     description = "Locker base directory (overrides default locker path)")
+parser.add_boolean_argument(
+    args = ("-d", "--delete_missing"),
+    description = "Delete hash entries for files that no longer exist")
 parser.add_common_arguments()
 args, unknown = parser.parse_known_args()
 
@@ -110,6 +113,31 @@ def main():
                 game_subcategory = game_info.get_subcategory(),
                 game_name = game_info.get_name(),
                 quit_program = True)
+
+    # Clean missing hash entries
+    if args.delete_missing:
+        locker_root = paths.join_paths(locker_base_dir, config.LockerFolderType.GAMING) if locker_base_dir else environment.get_locker_gaming_root_dir(args.source_type)
+        subcategories_cleaned = set()
+        for game_info, _ in games_to_process:
+            subcategory_key = (game_info.get_supercategory(), game_info.get_category(), game_info.get_subcategory())
+            if subcategory_key in subcategories_cleaned:
+                continue
+            subcategories_cleaned.add(subcategory_key)
+            success = collection.clean_missing_hash_entries(
+                game_supercategory = game_info.get_supercategory(),
+                game_category = game_info.get_category(),
+                game_subcategory = game_info.get_subcategory(),
+                locker_root = locker_root,
+                verbose = args.verbose,
+                pretend_run = args.pretend_run,
+                exit_on_failure = args.exit_on_failure)
+            if not success:
+                logger.log_error(
+                    message = "Clean of missing hash entries failed!",
+                    game_supercategory = game_info.get_supercategory(),
+                    game_category = game_info.get_category(),
+                    game_subcategory = game_info.get_subcategory(),
+                    quit_program = True)
 
 # Start
 if __name__ == "__main__":

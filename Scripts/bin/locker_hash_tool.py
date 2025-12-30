@@ -92,11 +92,13 @@ def main():
     files_by_hash_file = paths.group_files_by_path_depth(file_list, depth = args.depth)
 
     # Process each group
+    hash_files_processed = []
     for group_key, files in files_by_hash_file.items():
         logger.log_info("Processing: %s (%d files)" % (group_key, len(files)))
 
         # Determine hash file path
         hash_file = environment.get_file_locker_hashes_file(group_key, depth = args.depth)
+        hash_files_processed.append(hash_file)
 
         # Hash files in this group
         hashing.hash_files(
@@ -105,10 +107,19 @@ def main():
             base_path = base_dir,
             hash_format = config.HashFormatType.CSV,
             include_enc_fields = False,
-            delete_missing = True,
             verbose = args.verbose,
             pretend_run = args.pretend_run)
         logger.log_info("  Wrote: %s" % hash_file)
+
+    # Clean missing entries from all processed hash files
+    logger.log_info("Cleaning missing entries...")
+    for hash_file in hash_files_processed:
+        hashing.clean_missing_hash_entries(
+            hash_file = hash_file,
+            locker_root = base_dir,
+            hash_format = config.HashFormatType.CSV,
+            verbose = args.verbose,
+            pretend_run = args.pretend_run)
     logger.log_info("Done!")
 
 # Entry point

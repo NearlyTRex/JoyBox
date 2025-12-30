@@ -680,7 +680,6 @@ def hash_files(
     passphrase = None,
     hash_format = None,
     include_enc_fields = True,
-    delete_missing = False,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -720,9 +719,6 @@ def hash_files(
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
-    # Track files seen
-    seen_files = set()
-
     # Hash each file
     for file_path in file_list:
         full_path = paths.join_paths(base_path, file_path)
@@ -736,7 +732,6 @@ def hash_files(
             hash_key = paths.join_paths(offset, file_path)
         else:
             hash_key = file_path
-        seen_files.add(hash_key)
 
         # Check if file needs to be hashed
         if not does_file_need_to_be_hashed(hash_key, base_path, hash_contents):
@@ -774,18 +769,57 @@ def hash_files(
                         hash_data["mtime"] = existing_mtime
             hash_contents[hash_key] = hash_data
 
-    # Delete entries for files that no longer exist
-    if delete_missing:
-        keys_to_remove = [key for key in hash_contents.keys() if key not in seen_files]
-        for key in keys_to_remove:
-            if verbose:
-                logger.log_info("Removing (missing): %s" % key)
-            del hash_contents[key]
-
     # Write hash file
     if not pretend_run and hash_contents:
         return write_func(
             src = output_file,
+            hash_contents = hash_contents,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+    return True
+
+# Clean hash entries for files that no longer exist on disk
+def clean_missing_hash_entries(
+    hash_file,
+    locker_root,
+    hash_format = None,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Default to JSON format
+    if hash_format is None:
+        hash_format = config.HashFormatType.JSON
+
+    # Determine read/write functions
+    read_func = read_hash_file_json if hash_format == config.HashFormatType.JSON else read_hash_file_csv
+    write_func = write_hash_file_json if hash_format == config.HashFormatType.JSON else write_hash_file_csv
+
+    # Read hash file
+    if not paths.is_path_file(hash_file):
+        return True
+    hash_contents = read_func(
+        src = hash_file,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+
+    # Check each entry and remove if file doesn't exist
+    modified = False
+    for key in list(hash_contents.keys()):
+        entry = hash_contents[key]
+        file_path = paths.join_paths(locker_root, entry["dir"], entry["filename"])
+        if not paths.is_path_file(file_path):
+            if verbose:
+                logger.log_info("Removing (missing): %s" % key)
+            del hash_contents[key]
+            modified = True
+
+    # Write hash file if modified
+    if modified and not pretend_run:
+        return write_func(
+            src = hash_file,
             hash_contents = hash_contents,
             verbose = verbose,
             pretend_run = pretend_run,

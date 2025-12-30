@@ -10,6 +10,7 @@ import paths
 import environment
 import hashing
 import lockerinfo
+import gameinfo
 
 ###########################################################
 
@@ -36,7 +37,8 @@ def build_hash_files(
 
     # Get hash info
     hash_file = environment.get_game_hashes_metadata_file(game_info.get_supercategory(), game_info.get_category(), game_info.get_subcategory())
-    hash_offset = paths.join_paths(game_info.get_supercategory(), game_info.get_category(), game_info.get_subcategory(), game_info.get_name())
+    game_name_path = gameinfo.derive_game_name_path_from_name(game_info.get_name(), game_info.get_platform())
+    hash_offset = paths.join_paths(game_info.get_supercategory(), game_info.get_category(), game_info.get_subcategory(), game_name_path)
 
     # Get locker info
     locker_info = lockerinfo.LockerInfo(locker_type)
@@ -56,6 +58,30 @@ def build_hash_files(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     return success
+
+# Clean missing hash entries
+def clean_missing_hash_entries(
+    game_supercategory,
+    game_category,
+    game_subcategory,
+    locker_root,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Get hash file
+    hash_file = environment.get_game_hashes_metadata_file(game_supercategory, game_category, game_subcategory)
+    if not paths.is_path_file(hash_file):
+        return True
+
+    # Clean missing entries
+    return hashing.clean_missing_hash_entries(
+        hash_file = hash_file,
+        locker_root = locker_root,
+        hash_format = config.HashFormatType.JSON,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
 
 # Build all hash files
 def build_all_hash_files(
