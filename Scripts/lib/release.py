@@ -603,7 +603,7 @@ def build_from_source(
             if len(patch_file) and len(patch_content):
 
                 # Write patch to temp file
-                patch_temp_file = paths.join_paths(tmp_dir_result, paths.get_filename_file(patch_file) + ".patch")
+                patch_temp_file = paths.join_paths(tmp_dir_result, patch_file if patch_file.endswith(".patch") else patch_file + ".patch")
                 success = fileops.touch_file(
                     src = patch_temp_file,
                     contents = patch_content.strip() + "\n",
