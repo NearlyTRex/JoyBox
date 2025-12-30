@@ -99,6 +99,30 @@ class ArgumentParser:
                 type = str,
                 help = description)
 
+    # Add integer argument
+    def add_integer_argument(
+        self,
+        args,
+        default = None,
+        required = False,
+        description = None):
+        arg_names = args if isinstance(args, tuple) else (args,)
+        is_positional = not arg_names[0].startswith("-")
+        if is_positional:
+            self.parser.add_argument(
+                *arg_names,
+                default = default,
+                nargs = "?" if default is not None else None,
+                type = int,
+                help = description)
+        else:
+            self.parser.add_argument(
+                *arg_names,
+                default = default,
+                required = required,
+                type = int,
+                help = description)
+
     # Add boolean argument
     def add_boolean_argument(
         self,
