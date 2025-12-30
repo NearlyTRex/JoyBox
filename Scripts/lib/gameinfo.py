@@ -877,8 +877,11 @@ def find_json_game_names(game_supercategory, game_category, game_subcategory):
     return find_all_game_names(base_dir, game_supercategory, game_category, game_subcategory)
 
 # Find locker game names
-def find_locker_game_names(game_supercategory, game_category, game_subcategory, source_type = None):
-    base_dir = environment.get_locker_gaming_root_dir(source_type)
+def find_locker_game_names(game_supercategory, game_category, game_subcategory, source_type = None, locker_base_dir = None):
+    if locker_base_dir:
+        base_dir = paths.join_paths(locker_base_dir, config.LockerFolderType.GAMING)
+    else:
+        base_dir = environment.get_locker_gaming_root_dir(source_type)
     return find_all_game_names(base_dir, game_supercategory, game_category, game_subcategory)
 
 ###########################################################
@@ -1070,6 +1073,7 @@ def iterate_selected_game_infos(
     parser,
     generation_mode = None,
     source_type = None,
+    locker_base_dir = None,
     game_supercategories = None,
     game_subcategory_map = None,
     game_name_filter = None,
@@ -1108,12 +1112,13 @@ def iterate_selected_game_infos(
         generation_mode = generation_mode,
         game_supercategories = game_supercategories,
         game_subcategory_map = game_subcategory_map):
-        if source_type is not None:
+        if source_type is not None or locker_base_dir is not None:
             game_names = find_locker_game_names(
                 game_supercategory,
                 game_category,
                 game_subcategory,
-                source_type)
+                source_type,
+                locker_base_dir)
         else:
             game_names = find_json_game_names(
                 game_supercategory,

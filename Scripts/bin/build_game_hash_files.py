@@ -16,6 +16,7 @@ import arguments
 import setup
 import logger
 import prompts
+import paths
 
 # Parse arguments
 parser = arguments.ArgumentParser(description = "Build file hashes.")
@@ -37,6 +38,10 @@ parser.add_enum_argument(
     args = ("-t", "--locker_type"),
     arg_type = config.LockerType,
     description = "Locker type")
+parser.add_string_argument(
+    args = ("-b", "--locker_base_dir"),
+    default = None,
+    description = "Locker base directory (overrides default locker path)")
 parser.add_common_arguments()
 args, unknown = parser.parse_known_args()
 
@@ -49,21 +54,35 @@ def main():
     # Setup logging
     logger.setup_logging()
 
+    # Get locker base dir
+    locker_base_dir = paths.expand_path(args.locker_base_dir) if args.locker_base_dir else None
+
     # Collect games to process
     games_to_process = []
     for game_info in gameinfo.iterate_selected_game_infos(
         parser = parser,
         generation_mode = args.generation_mode,
         source_type = args.source_type,
+        locker_base_dir = locker_base_dir,
         verbose = args.verbose,
         pretend_run = args.pretend_run,
         exit_on_failure = args.exit_on_failure):
-        game_root = parser.get_input_path() or environment.get_locker_gaming_files_dir(
-            game_info.get_supercategory(),
-            game_info.get_category(),
-            game_info.get_subcategory(),
-            game_info.get_name(),
-            args.source_type)
+        if parser.get_input_path(check_exists = False):
+            game_root = parser.get_input_path(check_exists = False)
+        elif locker_base_dir:
+            game_offset = environment.get_locker_gaming_files_offset(
+                game_info.get_supercategory(),
+                game_info.get_category(),
+                game_info.get_subcategory(),
+                game_info.get_name())
+            game_root = paths.join_paths(locker_base_dir, config.LockerFolderType.GAMING, game_offset)
+        else:
+            game_root = environment.get_locker_gaming_files_dir(
+                game_info.get_supercategory(),
+                game_info.get_category(),
+                game_info.get_subcategory(),
+                game_info.get_name(),
+                args.source_type)
         games_to_process.append((game_info, game_root))
 
     # Show preview

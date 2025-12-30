@@ -669,7 +669,6 @@ def calculate_hash(
             hash_data["filename_enc"] = cryption.generate_encrypted_filename(path_file)
             hash_data["hash_enc"] = ""
             hash_data["size_enc"] = 0
-
     return hash_data
 
 # Hash files in a directory and write to output file
@@ -759,8 +758,20 @@ def hash_files(
         if hash_data and offset:
             hash_data["dir"] = paths.join_paths(offset, hash_data["dir"])
 
-        # Store hash data
+        # Store hash data (preserve existing _enc fields if new ones are empty, keep oldest mtime if hash matches)
         if hash_data:
+            if hash_key in hash_contents:
+                existing = hash_contents[hash_key]
+                for enc_field in ["filename_enc", "hash_enc", "size_enc"]:
+                    new_value = hash_data.get(enc_field)
+                    existing_value = existing.get(enc_field)
+                    if not new_value and existing_value:
+                        hash_data[enc_field] = existing_value
+                if hash_data.get("hash") == existing.get("hash"):
+                    new_mtime = hash_data.get("mtime", 0)
+                    existing_mtime = existing.get("mtime", 0)
+                    if existing_mtime and (not new_mtime or existing_mtime < new_mtime):
+                        hash_data["mtime"] = existing_mtime
             hash_contents[hash_key] = hash_data
 
     # Delete entries for files that no longer exist

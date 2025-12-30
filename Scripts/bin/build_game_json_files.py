@@ -16,6 +16,7 @@ import arguments
 import setup
 import logger
 import prompts
+import paths
 
 # Parse arguments
 parser = arguments.ArgumentParser(description = "Build json files.")
@@ -38,6 +39,10 @@ parser.add_enum_argument(
     args = ("-t", "--locker_type"),
     arg_type = config.LockerType,
     description = "Locker type")
+parser.add_string_argument(
+    args = ("-b", "--locker_base_dir"),
+    default = None,
+    description = "Locker base directory (overrides default locker path)")
 parser.add_common_arguments()
 args, unknown = parser.parse_known_args()
 
@@ -50,6 +55,9 @@ def main():
     # Setup logging
     logger.setup_logging()
 
+    # Get locker base dir
+    locker_base_dir = paths.expand_path(args.locker_base_dir) if args.locker_base_dir else None
+
     # Collect games to process
     games_to_process = []
     for game_supercategory, game_category, game_subcategory in gameinfo.iterate_selected_game_categories(
@@ -59,11 +67,22 @@ def main():
             game_supercategory,
             game_category,
             game_subcategory,
-            args.source_type)
+            args.source_type,
+            locker_base_dir)
         if args.game_name:
             game_names = [g for g in game_names if g == args.game_name]
         for game_name in game_names:
-            game_root = parser.get_input_path(check_exists = False)
+            if parser.get_input_path(check_exists = False):
+                game_root = parser.get_input_path(check_exists = False)
+            elif locker_base_dir:
+                game_offset = environment.get_locker_gaming_files_offset(
+                    game_supercategory,
+                    game_category,
+                    game_subcategory,
+                    game_name)
+                game_root = paths.join_paths(locker_base_dir, config.LockerFolderType.GAMING, game_offset)
+            else:
+                game_root = None
             json_file = environment.get_game_json_metadata_file(game_supercategory, game_category, game_subcategory, game_name)
             games_to_process.append((game_supercategory, game_category, game_subcategory, game_name, game_root, json_file))
 

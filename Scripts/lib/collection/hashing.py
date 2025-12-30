@@ -36,7 +36,7 @@ def build_hash_files(
 
     # Get hash info
     hash_file = environment.get_game_hashes_metadata_file(game_info.get_supercategory(), game_info.get_category(), game_info.get_subcategory())
-    hash_offset = paths.join_paths(game_info.get_supercategory(), game_info.get_category(), game_info.get_subcategory())
+    hash_offset = paths.join_paths(game_info.get_supercategory(), game_info.get_category(), game_info.get_subcategory(), game_info.get_name())
 
     # Get locker info
     locker_info = lockerinfo.LockerInfo(locker_type)
