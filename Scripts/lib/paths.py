@@ -15,6 +15,10 @@ import strings
 # Path checking and validation utilities
 ###########################################################
 
+# Expand path (environment variables and ~)
+def expand_path(path):
+    return os.path.expandvars(os.path.expanduser(path))
+
 # Check if path is valid
 # https://stackoverflow.com/questions/9532499/check-whether-a-path-is-valid-in-python-without-creating-a-file-at-the-paths-ta
 # https://gist.github.com/mo-han/240b3ef008d96215e352203b88be40db
@@ -492,9 +496,10 @@ def get_filename_split(path):
 
 # Get filename basename
 def get_filename_basename(path):
+    filename = pathlib.Path(path).name
     for tarball_ext in config.ArchiveTarballFileType.cvalues():
-        if path.endswith(tarball_ext):
-            return path[:-len(tarball_ext)]
+        if filename.endswith(tarball_ext):
+            return filename[:-len(tarball_ext)]
     return str(pathlib.Path(path).stem)
 
 # Get filename extension
