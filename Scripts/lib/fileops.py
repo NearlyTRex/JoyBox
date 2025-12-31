@@ -1,6 +1,7 @@
 # Imports
 import os
 import stat
+import time
 import shutil
 import tempfile
 import errno
@@ -999,6 +1000,86 @@ def remove_object(obj, verbose = False, pretend_run = False, exit_on_failure = F
             exit_on_failure = exit_on_failure)
         return success_contents and success_dir
     return False
+
+###########################################################
+# Recycle bin utilities
+###########################################################
+
+# Move file to recycle bin instead of deleting
+def recycle_file(
+    src,
+    recycle_root,
+    recycle_folder = ".recycle_bin",
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Check file exists
+    if not paths.does_path_exist(src):
+        if verbose:
+            logger.log_info("File does not exist: %s" % src)
+        return True
+
+    # Get relative path from recycle root
+    if src.startswith(recycle_root):
+        rel_path = os.path.relpath(src, recycle_root)
+    else:
+        rel_path = paths.get_filename_file(src)
+
+    # Skip if already in recycle bin
+    if rel_path.startswith(recycle_folder):
+        if verbose:
+            logger.log_info("File already in recycle bin: %s" % src)
+        return True
+
+    # Build destination path in recycle bin
+    recycle_bin_path = paths.join_paths(recycle_root, recycle_folder)
+    dest_path = paths.join_paths(recycle_bin_path, rel_path)
+
+    # Handle existing file in recycle bin by adding timestamp
+    if paths.does_path_exist(dest_path):
+        timestamp = int(time.time())
+        base, ext = os.path.splitext(dest_path)
+        dest_path = "%s_%d%s" % (base, timestamp, ext)
+
+    # Create destination directory and move file
+    if verbose:
+        logger.log_info("Recycling: %s -> %s" % (src, dest_path))
+    make_directory(
+        src = paths.get_filename_directory(dest_path),
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    return move_file_or_directory(
+        src = src,
+        dest = dest_path,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+
+# Empty recycle bin
+def empty_recycle_bin(
+    recycle_root,
+    recycle_folder = ".recycle_bin",
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Get recycle bin path
+    recycle_bin_path = os.path.join(recycle_root, recycle_folder)
+    if not paths.does_path_exist(recycle_bin_path):
+        if verbose:
+            logger.log_info("Recycle bin does not exist: %s" % recycle_bin_path)
+        return True
+
+    # Empty recycle bin contents
+    if verbose:
+        logger.log_info("Emptying recycle bin: %s" % recycle_bin_path)
+    return remove_directory_contents(
+        src = recycle_bin_path,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
 
 ###########################################################
 # Link info utilities
