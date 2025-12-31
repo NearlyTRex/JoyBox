@@ -755,6 +755,7 @@ def hash_files(
 
         # Store hash data (preserve existing _enc fields if new ones are empty, keep oldest mtime if hash matches)
         if hash_data:
+            hash_key = paths.join_paths(hash_data["dir"], hash_data["filename"])
             if hash_key in hash_contents:
                 existing = hash_contents[hash_key]
                 for enc_field in ["filename_enc", "hash_enc", "size_enc"]:
@@ -763,8 +764,8 @@ def hash_files(
                     if not new_value and existing_value:
                         hash_data[enc_field] = existing_value
                 if hash_data.get("hash") == existing.get("hash"):
-                    new_mtime = hash_data.get("mtime", 0)
-                    existing_mtime = existing.get("mtime", 0)
+                    new_mtime = int(hash_data.get("mtime", 0) or 0)
+                    existing_mtime = int(existing.get("mtime", 0) or 0)
                     if existing_mtime and (not new_mtime or existing_mtime < new_mtime):
                         hash_data["mtime"] = existing_mtime
             hash_contents[hash_key] = hash_data
