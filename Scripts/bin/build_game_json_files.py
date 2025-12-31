@@ -28,17 +28,12 @@ parser.add_game_name_argument()
 parser.add_enum_argument(
     args = ("-l", "--source_locker"),
     arg_type = config.LockerType,
-    default = config.LockerType.HETZNER,
     description = "Source locker type")
 parser.add_enum_argument(
     args = ("-m", "--generation_mode"),
     arg_type = config.GenerationModeType,
     default = config.GenerationModeType.STANDARD,
     description = "Generation mode")
-parser.add_enum_argument(
-    args = ("-t", "--locker_type"),
-    arg_type = config.LockerType,
-    description = "Locker type")
 parser.add_string_argument(
     args = ("-b", "--locker_base_dir"),
     default = None,
@@ -101,7 +96,6 @@ def main():
             game_subcategory = game_subcategory,
             game_name = game_name,
             game_root = game_root,
-            locker_type = args.locker_type,
             locker_type = args.source_locker,
             verbose = args.verbose,
             pretend_run = args.pretend_run,

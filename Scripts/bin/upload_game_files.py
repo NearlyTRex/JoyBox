@@ -35,9 +35,9 @@ parser.add_enum_argument(
     default = config.GenerationModeType.STANDARD,
     description = "Generation mode")
 parser.add_enum_argument(
-    args = ("-t", "--locker_type"),
+    args = ("-d", "--dest_locker"),
     arg_type = config.LockerType,
-    description = "Locker type")
+    description = "Destination locker type")
 parser.add_common_arguments()
 args, unknown = parser.parse_known_args()
 
@@ -73,7 +73,7 @@ def main():
     # Show preview
     if not args.no_preview:
         details = [game_root for _, game_root in games_to_process]
-        if not prompts.prompt_for_preview("Upload game files (encrypt and upload to %s)" % args.locker_type, details):
+        if not prompts.prompt_for_preview("Upload game files (encrypt and upload to %s)" % args.dest_locker, details):
             logger.log_warning("Operation cancelled by user")
             return
 
@@ -82,7 +82,7 @@ def main():
         success = collection.upload_game_files(
             game_info = game_info,
             game_root = game_root,
-            locker_type = args.locker_type,
+            locker_type = args.dest_locker,
             verbose = args.verbose,
             pretend_run = args.pretend_run,
             exit_on_failure = args.exit_on_failure)

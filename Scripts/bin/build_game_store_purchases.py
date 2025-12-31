@@ -23,10 +23,6 @@ parser.add_game_supercategory_argument()
 parser.add_game_category_argument()
 parser.add_game_subcategory_argument()
 parser.add_enum_argument(
-    args = ("-l", "--source_locker"),
-    arg_type = config.LockerType,
-    description = "Source locker type")
-parser.add_enum_argument(
     args = ("-m", "--generation_mode"),
     arg_type = config.GenerationModeType,
     default = config.GenerationModeType.STANDARD,
@@ -53,7 +49,7 @@ def main():
     # Show preview
     if not args.no_preview:
         details = ["%s/%s/%s" % (sc, c, sub) for sc, c, sub in categories_to_process]
-        if not prompts.prompt_for_preview("Build game store purchases (source: %s)" % args.source_locker, details):
+        if not prompts.prompt_for_preview("Build game store purchases", details):
             logger.log_warning("Operation cancelled by user")
             return
 
@@ -63,7 +59,6 @@ def main():
             game_supercategory = game_supercategory,
             game_category = game_category,
             game_subcategory = game_subcategory,
-            locker_type = args.source_locker,
             verbose = args.verbose,
             pretend_run = args.pretend_run,
             exit_on_failure = args.exit_on_failure)

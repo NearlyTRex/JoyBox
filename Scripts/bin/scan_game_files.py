@@ -25,12 +25,7 @@ parser = arguments.ArgumentParser(description = "Scan roms files.")
 parser.add_enum_argument(
     args = ("-l", "--source_locker"),
     arg_type = config.LockerType,
-    default = config.LockerType.HETZNER,
     description = "Source locker type")
-parser.add_enum_argument(
-    args = ("-t", "--locker_type"),
-    arg_type = config.LockerType,
-    description = "Locker type")
 parser.add_string_argument(args = ("-k", "--keys"), description = "Keys to use (comma delimited)")
 parser.add_enum_list_argument(args = ("-c", "--categories"), arg_type = config.Category, description = "Categories to process")
 parser.add_enum_list_argument(args = ("-s", "--subcategories"), arg_type = config.Subcategory, description = "Subcategories to process")
@@ -77,8 +72,6 @@ def main():
     # Build game store purchases
     logger.log_info("Building store purchases ...")
     success = collection.build_all_game_store_purchases(
-        locker_type = args.locker_type,
-        locker_type = args.source_locker,
         categories = args.categories,
         subcategories = args.subcategories,
         verbose = args.verbose,
@@ -90,7 +83,6 @@ def main():
     # Build game json files
     logger.log_info("Building json files ...")
     success = collection.build_all_game_json_files(
-        locker_type = args.locker_type,
         locker_type = args.source_locker,
         categories = args.categories,
         subcategories = args.subcategories,

@@ -208,7 +208,6 @@ def update_game_store_purchases(
     game_supercategory,
     game_category,
     game_subcategory,
-    locker_type = None,
     keys = [],
     force = False,
     verbose = False,
@@ -282,22 +281,13 @@ def update_game_store_purchases(
         # Get game name
         game_name = paths.get_filename_basename(json_file)
 
-        # Get game root
-        game_root = environment.get_locker_gaming_files_dir(
-            game_supercategory = game_supercategory,
-            game_category = game_category,
-            game_subcategory = game_subcategory,
-            game_name = game_name,
-            locker_type = locker_type)
-
         # Update json file
         success = update_game_json_file(
             game_supercategory = game_supercategory,
             game_category = game_category,
             game_subcategory = game_subcategory,
             game_name = game_name,
-            game_root = game_root,
-            locker_type = locker_type,
+            game_root = None,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
@@ -330,7 +320,6 @@ def build_game_store_purchases(
     game_supercategory,
     game_category,
     game_subcategory,
-    locker_type = None,
     keys = [],
     force = False,
     verbose = False,
@@ -357,7 +346,6 @@ def build_game_store_purchases(
         game_supercategory = game_supercategory,
         game_category = game_category,
         game_subcategory = game_subcategory,
-        locker_type = locker_type,
         keys = keys,
         force = force,
         verbose = verbose,
@@ -367,7 +355,6 @@ def build_game_store_purchases(
 
 # Build all game store purchases
 def build_all_game_store_purchases(
-    locker_type = None,
     keys = [],
     categories = None,
     subcategories = None,
@@ -387,7 +374,6 @@ def build_all_game_store_purchases(
                     game_supercategory = game_supercategory,
                     game_category = game_category,
                     game_subcategory = game_subcategory,
-                    locker_type = locker_type,
                     keys = keys,
                     force = force,
                     verbose = verbose,
