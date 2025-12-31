@@ -13,8 +13,6 @@ import lockersync
 import arguments
 import setup
 import logger
-import paths
-import environment
 
 # Setup argument parser
 parser = arguments.ArgumentParser(description = "Locker sync tool - sync between primary and secondary lockers.")
@@ -27,13 +25,12 @@ parser.add_string_argument(
     args = ("-s", "--secondary_lockers"),
     default = "Gdrive,External",
     description = "Secondary locker types (comma-separated)")
-parser.add_string_argument(
-    args = ("-o", "--hash_output_dir"),
-    default = None,
-    description = "Output directory for hash files (in FileMetadata repo)")
 parser.add_boolean_argument(
-    args = ("--skip_hash_update",),
-    description = "Skip rebuilding authoritative hash map (use existing)")
+    args = ("--skip_cache",),
+    description = "Skip using cached hash maps (rebuild fresh)")
+parser.add_boolean_argument(
+    args = ("--clear_cache",),
+    description = "Clear all cached hash maps before running")
 parser.add_common_arguments()
 args, unknownargs = parser.parse_known_args()
 
@@ -59,26 +56,20 @@ def main():
     if not secondary_locker_types:
         logger.log_error("No valid secondary locker types specified", quit_program = True)
 
-    # Determine hash output directory
-    hash_output_dir = args.hash_output_dir
-    if not hash_output_dir:
-        filemetadata_dir = environment.get_file_metadata_root_dir()
-        if filemetadata_dir:
-            hash_output_dir = paths.join_paths(filemetadata_dir, "Locker", "Hashes")
-        else:
-            logger.log_error("Could not determine FileMetadata directory. Please specify --hash_output_dir", quit_program = True)
+    # Clear cache if requested
+    if args.clear_cache:
+        logger.log_info("Clearing hash map cache...")
+        lockersync.clear_cache()
 
     # Log configuration
     logger.log_info("Primary locker: %s" % args.primary_locker)
     logger.log_info("Secondary lockers: %s" % ", ".join([lt.val() for lt in secondary_locker_types]))
-    logger.log_info("Hash output directory: %s" % hash_output_dir)
 
     # Run sync
     success = lockersync.sync_lockers(
         primary_locker_type = args.primary_locker,
         secondary_locker_types = secondary_locker_types,
-        hash_output_dir = hash_output_dir,
-        skip_hash_update = args.skip_hash_update,
+        skip_cache = args.skip_cache,
         verbose = args.verbose,
         pretend_run = args.pretend_run,
         exit_on_failure = args.exit_on_failure)
