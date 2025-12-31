@@ -78,11 +78,11 @@ class LockerInfo:
 
     def get_backend_type(self):
         if self.locker_type == config.LockerType.EXTERNAL:
-            return "external"
+            return config.BackendType.EXTERNAL
         elif self.remote_type is None:
-            return "local"
+            return config.BackendType.LOCAL
         else:
-            return "remote"
+            return config.BackendType.REMOTE
 
     def get_locker_root_path(self):
         if self.is_local_only():

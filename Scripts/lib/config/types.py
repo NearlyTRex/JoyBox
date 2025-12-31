@@ -280,6 +280,12 @@ class SourceType(EnumType):
     LOCAL                   = ("Local")
     REMOTE                  = ("Remote")
 
+# Backend types
+class BackendType(EnumType):
+    LOCAL                   = ("Local")
+    REMOTE                  = ("Remote")
+    EXTERNAL                = ("External")
+
 # Generation mode type
 class GenerationModeType(EnumType):
     CUSTOM                  = ("Custom")
