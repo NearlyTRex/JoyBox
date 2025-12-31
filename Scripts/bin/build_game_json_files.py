@@ -26,10 +26,10 @@ parser.add_game_category_argument()
 parser.add_game_subcategory_argument()
 parser.add_game_name_argument()
 parser.add_enum_argument(
-    args = ("-l", "--source_type"),
-    arg_type = config.SourceType,
-    default = config.SourceType.REMOTE,
-    description = "Source type")
+    args = ("-l", "--source_locker"),
+    arg_type = config.LockerType,
+    default = config.LockerType.HETZNER,
+    description = "Source locker type")
 parser.add_enum_argument(
     args = ("-m", "--generation_mode"),
     arg_type = config.GenerationModeType,
@@ -67,7 +67,7 @@ def main():
             game_supercategory,
             game_category,
             game_subcategory,
-            args.source_type,
+            args.source_locker,
             locker_base_dir)
         if args.game_name:
             game_names = [g for g in game_names if g == args.game_name]
@@ -89,7 +89,7 @@ def main():
     # Show preview
     if not args.no_preview:
         details = [json_file for _, _, _, _, _, json_file in games_to_process]
-        if not prompts.prompt_for_preview("Build game JSON files (source: %s)" % args.source_type, details):
+        if not prompts.prompt_for_preview("Build game JSON files (source: %s)" % args.source_locker, details):
             logger.log_warning("Operation cancelled by user")
             return
 
@@ -102,7 +102,7 @@ def main():
             game_name = game_name,
             game_root = game_root,
             locker_type = args.locker_type,
-            source_type = args.source_type,
+            locker_type = args.source_locker,
             verbose = args.verbose,
             pretend_run = args.pretend_run,
             exit_on_failure = args.exit_on_failure)

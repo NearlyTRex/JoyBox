@@ -20,7 +20,6 @@ def upload_game_files(
     game_info,
     game_root = None,
     locker_type = None,
-    source_type = None,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -32,7 +31,7 @@ def upload_game_files(
             game_category = game_info.get_category(),
             game_subcategory = game_info.get_subcategory(),
             game_name = game_info.get_name(),
-            source_type = source_type)
+            locker_type = locker_type)
     if not paths.is_path_directory(game_root):
         return False
 
@@ -76,7 +75,6 @@ def upload_game_files(
 # Upload all game files
 def upload_all_game_files(
     locker_type = None,
-    source_type = None,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -99,7 +97,6 @@ def upload_all_game_files(
                     success = upload_game_files(
                         game_info = game_info,
                         locker_type = locker_type,
-                        source_type = source_type,
                         verbose = verbose,
                         pretend_run = pretend_run,
                         exit_on_failure = exit_on_failure)

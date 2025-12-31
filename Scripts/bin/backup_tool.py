@@ -33,15 +33,15 @@ parser.add_enum_argument(
     default = config.BackupType.COPY,
     description = "Backup type")
 parser.add_enum_argument(
-    args = ("-l", "--source_type"),
-    arg_type = config.SourceType,
-    default = config.SourceType.LOCAL,
-    description = "Source type")
+    args = ("-l", "--source_locker"),
+    arg_type = config.LockerType,
+    default = config.LockerType.LOCAL,
+    description = "Source locker type")
 parser.add_enum_argument(
-    args = ("-q", "--destination_type"),
-    arg_type = config.SourceType,
-    default = config.SourceType.LOCAL,
-    description = "Destination type")
+    args = ("-q", "--dest_locker"),
+    arg_type = config.LockerType,
+    default = config.LockerType.LOCAL,
+    description = "Destination locker type")
 parser.add_string_argument(args = ("-w", "--exclude_paths"), default = "", description = "Excluded paths (comma separated list)")
 parser.add_boolean_argument(args = ("-e", "--skip_existing"), description = "Skip existing files")
 parser.add_boolean_argument(args = ("-a", "--skip_identical"), description = "Skip identical files")
@@ -71,7 +71,7 @@ def main():
     # Get source file root
     source_file_root = backup.resolve_path(
         path = args.input_path,
-        source_type = args.source_type,
+        locker_type = args.source_locker,
         base_path = args.input_locker_base,
         game_supercategory = args.game_supercategory,
         game_category = args.game_category,
@@ -83,7 +83,7 @@ def main():
     # Get destination file root
     dest_file_root = backup.resolve_path(
         path = args.output_path,
-        source_type = args.destination_type,
+        locker_type = args.dest_locker,
         base_path = args.output_locker_base,
         game_supercategory = args.game_supercategory,
         game_category = args.game_category,

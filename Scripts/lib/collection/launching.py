@@ -22,7 +22,7 @@ from .saves import export_local_game_save
 # Launch store game
 def launch_store_game(
     game_info,
-    source_type,
+    locker_type = None,
     capture_type = None,
     fullscreen = False,
     verbose = False,
@@ -36,7 +36,7 @@ def launch_store_game(
     # Install store game
     success = install_store_game(
         game_info = game_info,
-        source_type = source_type,
+        locker_type = locker_type,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -88,7 +88,7 @@ def launch_store_game(
 # Launch local game
 def launch_local_game(
     game_info,
-    source_type,
+    locker_type = None,
     capture_type = None,
     fullscreen = False,
     verbose = False,
@@ -102,7 +102,7 @@ def launch_local_game(
     # Install local game
     success = install_local_game(
         game_info = game_info,
-        source_type = source_type,
+        locker_type = locker_type,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -207,7 +207,7 @@ def launch_local_game(
 # Launch game
 def launch_game(
     game_info,
-    source_type,
+    locker_type = None,
     capture_type = None,
     fullscreen = False,
     verbose = False,
@@ -216,7 +216,7 @@ def launch_game(
     if stores.is_store_platform(game_info.get_platform()):
         return launch_store_game(
             game_info = game_info,
-            source_type = source_type,
+            locker_type = locker_type,
             capture_type = capture_type,
             fullscreen = fullscreen,
             verbose = verbose,
@@ -225,7 +225,7 @@ def launch_game(
     else:
         return launch_local_game(
             game_info = game_info,
-            source_type = source_type,
+            locker_type = locker_type,
             capture_type = capture_type,
             fullscreen = fullscreen,
             verbose = verbose,

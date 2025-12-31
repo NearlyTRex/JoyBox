@@ -25,10 +25,10 @@ parser.add_game_supercategory_argument()
 parser.add_game_category_argument()
 parser.add_game_subcategory_argument()
 parser.add_enum_argument(
-    args = ("-l", "--source_type"),
-    arg_type = config.SourceType,
-    default = config.SourceType.REMOTE,
-    description = "Source type")
+    args = ("-l", "--source_locker"),
+    arg_type = config.LockerType,
+    default = config.LockerType.HETZNER,
+    description = "Source locker type")
 parser.add_enum_argument(
     args = ("-m", "--generation_mode"),
     arg_type = config.GenerationModeType,
@@ -65,7 +65,7 @@ def main():
     for game_info in gameinfo.iterate_selected_game_infos(
         parser = parser,
         generation_mode = args.generation_mode,
-        source_type = args.source_type,
+        locker_type = args.source_locker,
         locker_base_dir = locker_base_dir,
         verbose = args.verbose,
         pretend_run = args.pretend_run,
@@ -85,7 +85,7 @@ def main():
                 game_info.get_category(),
                 game_info.get_subcategory(),
                 game_info.get_name(),
-                args.source_type)
+                args.source_locker)
         games_to_process.append((game_info, game_root))
 
     # Show preview
@@ -101,7 +101,7 @@ def main():
             game_info = game_info,
             game_root = game_root,
             locker_type = args.locker_type,
-            source_type = args.source_type,
+            locker_type = args.source_locker,
             verbose = args.verbose,
             pretend_run = args.pretend_run,
             exit_on_failure = args.exit_on_failure)
@@ -116,7 +116,7 @@ def main():
 
     # Clean missing hash entries
     if args.delete_missing:
-        locker_root = paths.join_paths(locker_base_dir, config.LockerFolderType.GAMING) if locker_base_dir else environment.get_locker_gaming_root_dir(args.source_type)
+        locker_root = paths.join_paths(locker_base_dir, config.LockerFolderType.GAMING) if locker_base_dir else environment.get_locker_gaming_root_dir(args.source_locker)
         subcategories_cleaned = set()
         for game_info, _ in games_to_process:
             subcategory_key = (game_info.get_supercategory(), game_info.get_category(), game_info.get_subcategory())

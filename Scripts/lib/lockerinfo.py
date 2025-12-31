@@ -11,9 +11,9 @@ import ini
 class LockerInfo:
     def __init__(self, locker_type = None):
         if not locker_type:
-            locker_type = config.LockerType.HETZNER
+            locker_type = config.LockerType.LOCAL
         self.locker_type = locker_type
-        if self.locker_type == config.LockerType.EXTERNAL:
+        if self.locker_type in (config.LockerType.LOCAL, config.LockerType.EXTERNAL):
             self.remote_type = None
             self.remote_name = None
             self.remote_path = None
@@ -36,9 +36,9 @@ class LockerInfo:
         excluded_str = ini.get_ini_value("UserData.Share", f"locker_{self.locker_type.lower()}_excluded_sync_paths")
         self.excluded_sync_paths = [p.strip() for p in excluded_str.split(",") if p.strip()] if excluded_str else []
 
-        # Parse decrypt on sync into bool
-        decrypt_str = ini.get_ini_value("UserData.Share", f"locker_{self.locker_type.lower()}_decrypt_on_sync")
-        self.decrypt_on_sync = decrypt_str.lower() == "true" if decrypt_str else False
+        # Parse encrypted flag (defaults to false)
+        encrypted_str = ini.get_ini_value("UserData.Share", f"locker_{self.locker_type.lower()}_encrypted")
+        self.encrypted = encrypted_str.lower() == "true" if encrypted_str else False
 
     def get_remote_type(self):
         return self.remote_type
@@ -70,8 +70,8 @@ class LockerInfo:
     def get_excluded_sync_paths(self):
         return self.excluded_sync_paths
 
-    def get_decrypt_on_sync(self):
-        return self.decrypt_on_sync
+    def is_encrypted(self):
+        return self.encrypted
 
     def is_local_only(self):
         return self.remote_type is None
@@ -94,3 +94,12 @@ class LockerInfo:
 
     def get_locker_name(self):
         return self.locker_type.val() if hasattr(self.locker_type, 'val') else str(self.locker_type)
+
+# Get the primary remote locker type
+def get_primary_remote_locker_type():
+    primary_remote = ini.get_ini_value("UserData.Share", "primary_remote_locker")
+    if primary_remote:
+        for locker_type in config.LockerType.members():
+            if locker_type.val().lower() == primary_remote.lower():
+                return locker_type
+    return config.LockerType.HETZNER

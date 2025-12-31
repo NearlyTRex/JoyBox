@@ -97,9 +97,34 @@ def matches_exclude_pattern(file_path, exclude_patterns):
                 return True
     return False
 
+def get_sync_action_type(base_action, primary_encrypted, secondary_encrypted):
+
+    # Determine the correct action type based on encryption states
+    if primary_encrypted and not secondary_encrypted:
+
+        # Encrypted -> Unencrypted: DECRYPT
+        if base_action == "COPY":
+            return config.SyncActionType.COPY_DECRYPT
+        elif base_action == "UPDATE":
+            return config.SyncActionType.UPDATE_DECRYPT
+    elif not primary_encrypted and secondary_encrypted:
+
+        # Unencrypted -> Encrypted: ENCRYPT
+        if base_action == "COPY":
+            return config.SyncActionType.COPY_ENCRYPT
+        elif base_action == "UPDATE":
+            return config.SyncActionType.UPDATE_ENCRYPT
+
+    # Same encryption state: plain copy/update
+    if base_action == "COPY":
+        return config.SyncActionType.COPY
+    return config.SyncActionType.UPDATE
+
 def build_sync_actions(
     primary_hashes,
     secondary_hashes,
+    primary_encrypted = False,
+    secondary_encrypted = False,
     exclude_write_paths = [],
     verbose = False):
 
@@ -118,8 +143,9 @@ def build_sync_actions(
             # File exists on both - check if hash matches
             secondary_data = secondary_hashes[rel_path]
             if primary_data.get("hash") != secondary_data.get("hash"):
+                action_type = get_sync_action_type("UPDATE", primary_encrypted, secondary_encrypted)
                 actions.append({
-                    "type": config.SyncActionType.UPDATE,
+                    "type": action_type,
                     "src": rel_path,
                     "dest": rel_path,
                     "src_data": primary_data
@@ -128,8 +154,9 @@ def build_sync_actions(
         else:
 
             # File missing on secondary - needs copy
+            action_type = get_sync_action_type("COPY", primary_encrypted, secondary_encrypted)
             actions.append({
-                "type": config.SyncActionType.COPY,
+                "type": action_type,
                 "src": rel_path,
                 "dest": rel_path,
                 "src_data": primary_data
@@ -155,8 +182,10 @@ def build_sync_actions(
 def generate_action_file_content(actions, target_name, include_orphans = True):
 
     # Group actions by type
-    copy_actions = [a for a in actions if a["type"] == config.SyncActionType.COPY]
-    update_actions = [a for a in actions if a["type"] == config.SyncActionType.UPDATE]
+    copy_types = (config.SyncActionType.COPY, config.SyncActionType.COPY_DECRYPT, config.SyncActionType.COPY_ENCRYPT)
+    update_types = (config.SyncActionType.UPDATE, config.SyncActionType.UPDATE_DECRYPT, config.SyncActionType.UPDATE_ENCRYPT)
+    copy_actions = [a for a in actions if a["type"] in copy_types]
+    update_actions = [a for a in actions if a["type"] in update_types]
     recycle_actions = [a for a in actions if a["type"] == config.SyncActionType.RECYCLE]
 
     # Build sections
@@ -167,7 +196,8 @@ def generate_action_file_content(actions, target_name, include_orphans = True):
         items = []
         for action in copy_actions:
             path = action.get("dest", action.get("src", ""))
-            items.append("%s %s" % (config.SyncActionType.COPY.upper(), path))
+            action_type = action["type"]
+            items.append("%s %s" % (action_type.upper(), path))
         sections.append({
             "title": "NEW FILES (%d)" % len(copy_actions),
             "items": items
@@ -178,7 +208,8 @@ def generate_action_file_content(actions, target_name, include_orphans = True):
         items = []
         for action in update_actions:
             path = action.get("dest", action.get("src", ""))
-            items.append("%s %s" % (config.SyncActionType.UPDATE.upper(), path))
+            action_type = action["type"]
+            items.append("%s %s" % (action_type.upper(), path))
         sections.append({
             "title": "UPDATED FILES (%d)" % len(update_actions),
             "items": items
@@ -235,6 +266,12 @@ def execute_sync_actions(
     pretend_run = False,
     exit_on_failure = False):
 
+    # Define action type groups
+    copy_types = (config.SyncActionType.COPY, config.SyncActionType.COPY_DECRYPT, config.SyncActionType.COPY_ENCRYPT)
+    update_types = (config.SyncActionType.UPDATE, config.SyncActionType.UPDATE_DECRYPT, config.SyncActionType.UPDATE_ENCRYPT)
+    decrypt_types = (config.SyncActionType.COPY_DECRYPT, config.SyncActionType.UPDATE_DECRYPT)
+    encrypt_types = (config.SyncActionType.COPY_ENCRYPT, config.SyncActionType.UPDATE_ENCRYPT)
+
     # Run sync actions
     success_count = 0
     fail_count = 0
@@ -247,35 +284,31 @@ def execute_sync_actions(
         else:
             action_type = raw_type
 
-        # Handle COPY action
-        if action_type == config.SyncActionType.COPY:
+        # Handle COPY and UPDATE actions (including encrypt/decrypt variants)
+        if action_type in copy_types or action_type in update_types:
             src_path = action.get("src", "")
             dest_path = action.get("dest", src_path)
+            action_label = "Copying" if action_type in copy_types else "Updating"
+            if action_type in decrypt_types:
+                action_label += " (decrypt)"
+            elif action_type in encrypt_types:
+                action_label += " (encrypt)"
             if verbose:
-                logger.log_info("Copying: %s -> %s" % (src_path, dest_path))
-            success = secondary_backend.copy_file_from(
-                src_backend = primary_backend,
-                src_rel_path = src_path,
-                dest_rel_path = dest_path,
-                show_progress = show_progress,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
-            if success:
-                success_count += 1
-            else:
-                fail_count += 1
+                logger.log_info("%s: %s -> %s" % (action_label, src_path, dest_path))
 
-        # Handle UPDATE action
-        elif action_type == config.SyncActionType.UPDATE:
-            src_path = action.get("src", "")
-            dest_path = action.get("dest", src_path)
-            if verbose:
-                logger.log_info("Updating: %s -> %s" % (src_path, dest_path))
+            # Determine cryption type
+            cryption_type = config.CryptionType.NONE
+            if action_type in decrypt_types:
+                cryption_type = config.CryptionType.DECRYPT
+            elif action_type in encrypt_types:
+                cryption_type = config.CryptionType.ENCRYPT
+
             success = secondary_backend.copy_file_from(
                 src_backend = primary_backend,
                 src_rel_path = src_path,
                 dest_rel_path = dest_path,
+                cryption_type = cryption_type,
+                passphrase = passphrase,
                 show_progress = show_progress,
                 verbose = verbose,
                 pretend_run = pretend_run,
@@ -357,9 +390,6 @@ def sync_lockers(
     if not verify_prerequisites(primary_backend, secondary_backends, verbose):
         return False
 
-    # Get passphrase from primary (for potential decryption)
-    passphrase = primary_info.get_passphrase()
-
     # Build primary hash map
     primary_name = primary_info.get_locker_name()
     logger.log_info("Building primary hash map from %s..." % primary_name)
@@ -403,6 +433,8 @@ def sync_lockers(
         actions = build_sync_actions(
             primary_hashes = primary_hashes,
             secondary_hashes = secondary_hashes,
+            primary_encrypted = primary_info.is_encrypted(),
+            secondary_encrypted = sec_info.is_encrypted(),
             exclude_write_paths = exclude_patterns,
             verbose = verbose)
         if not actions:
@@ -423,6 +455,15 @@ def sync_lockers(
         if not approved_actions:
             logger.log_info("No actions approved for %s" % sec_name)
             continue
+
+        # Determine passphrase based on encryption direction
+        # Decrypt: use primary's passphrase, Encrypt: use secondary's passphrase
+        if primary_info.is_encrypted() and not sec_info.is_encrypted():
+            passphrase = primary_info.get_passphrase()
+        elif not primary_info.is_encrypted() and sec_info.is_encrypted():
+            passphrase = sec_info.get_passphrase()
+        else:
+            passphrase = None
 
         # Execute approved actions
         logger.log_info("Executing %d approved actions for %s" % (len(approved_actions), sec_name))

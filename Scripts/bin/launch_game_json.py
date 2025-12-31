@@ -25,10 +25,10 @@ import paths
 parser = arguments.ArgumentParser(description = "Launch json files.")
 parser.add_input_path_argument()
 parser.add_enum_argument(
-    args = ("-l", "--source_type"),
-    arg_type = config.SourceType,
-    default = config.SourceType.REMOTE,
-    description = "Source type")
+    args = ("-l", "--source_locker"),
+    arg_type = config.LockerType,
+    default = config.LockerType.HETZNER,
+    description = "Source locker type")
 parser.add_game_category_argument()
 parser.add_game_subcategory_argument()
 parser.add_game_name_argument()
@@ -127,7 +127,7 @@ def main():
     # Launch game
     success = collection.launch_game(
         game_info = game_info,
-        source_type = args.source_type,
+        locker_type = args.source_locker,
         capture_type = args.capture_type,
         fullscreen = args.fullscreen,
         verbose = args.verbose,

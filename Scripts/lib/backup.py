@@ -17,7 +17,7 @@ import lockerinfo
 # Resolve path
 def resolve_path(
     path = None,
-    source_type = None,
+    locker_type = None,
     base_path = None,
     game_supercategory = None,
     game_category = None,
@@ -32,7 +32,7 @@ def resolve_path(
     if base_path and paths.does_path_exist(base_path):
         resolved_path = base_path
     else:
-        resolved_path = environment.get_locker_root_dir(source_type)
+        resolved_path = environment.get_locker_root_dir(locker_type)
 
     # Augment with gaming categories
     if game_supercategory:

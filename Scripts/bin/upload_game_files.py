@@ -25,10 +25,10 @@ parser.add_game_category_argument()
 parser.add_game_subcategory_argument()
 parser.add_game_name_argument()
 parser.add_enum_argument(
-    args = ("-l", "--source_type"),
-    arg_type = config.SourceType,
-    default = config.SourceType.LOCAL,
-    description = "Source type")
+    args = ("-l", "--source_locker"),
+    arg_type = config.LockerType,
+    default = config.LockerType.LOCAL,
+    description = "Source locker type")
 parser.add_enum_argument(
     args = ("-m", "--generation_mode"),
     arg_type = config.GenerationModeType,
@@ -58,7 +58,7 @@ def main():
     for game_info in gameinfo.iterate_selected_game_infos(
         parser = parser,
         generation_mode = args.generation_mode,
-        source_type = args.source_type,
+        locker_type = args.source_locker,
         verbose = args.verbose,
         pretend_run = args.pretend_run,
         exit_on_failure = args.exit_on_failure):
@@ -67,7 +67,7 @@ def main():
             game_info.get_category(),
             game_info.get_subcategory(),
             game_info.get_name(),
-            args.source_type)
+            args.source_locker)
         games_to_process.append((game_info, game_root))
 
     # Show preview

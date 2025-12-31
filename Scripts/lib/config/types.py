@@ -211,6 +211,7 @@ class SetupParams:
 # Locker types
 class LockerType(EnumType):
     ALL                     = ("All")
+    LOCAL                   = ("Local")
     HETZNER                 = ("Hetzner")
     GDRIVE                  = ("Gdrive")
     EXTERNAL                = ("External")
@@ -259,9 +260,11 @@ class HashFormatType(EnumType):
 # Sync action types
 class SyncActionType(EnumType):
     COPY                    = ("Copy")
-    COPY_DECRYPT            = ("Decrypt")
+    COPY_DECRYPT            = ("CopyDecrypt")
+    COPY_ENCRYPT            = ("CopyEncrypt")
     UPDATE                  = ("Update")
     UPDATE_DECRYPT          = ("UpdateDecrypt")
+    UPDATE_ENCRYPT          = ("UpdateEncrypt")
     DELETE                  = ("Delete")
     RECYCLE                 = ("Recycle")
 
@@ -274,11 +277,6 @@ class DecompilerActionType(EnumType):
 class GithubActionType(EnumType):
     ARCHIVE                 = ("Archive")
     UPDATE                  = ("Update")
-
-# Source types
-class SourceType(EnumType):
-    LOCAL                   = ("Local")
-    REMOTE                  = ("Remote")
 
 # Backend types
 class BackendType(EnumType):

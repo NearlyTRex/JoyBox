@@ -13,10 +13,16 @@ import environment
 import fileops
 import cryption
 import lockerinfo
+import lockerbackend
 
-# Check if path is local
+# Get the default remote locker type (uses primary remote locker)
+def get_default_remote_locker():
+    return lockerinfo.get_primary_remote_locker_type()
+
+# Check if path is local (exists on local filesystem)
 def is_local_path(path):
-    if path.startswith(environment.get_locker_root_dir(config.SourceType.LOCAL) + config.os_pathsep):
+    local_locker_root = environment.get_locker_root_dir(config.LockerType.LOCAL)
+    if local_locker_root and path.startswith(local_locker_root + config.os_pathsep):
         return True
     if paths.does_path_exist(path):
         return True
@@ -24,60 +30,68 @@ def is_local_path(path):
 
 # Check if path is remote
 def is_remote_path(path):
-    not is_local_path(path)
+    return not is_local_path(path)
 
-# Convert to remote path
-def convert_to_remote_path(path):
-    old_base_path = environment.get_locker_root_dir(config.SourceType.REMOTE)
-    if is_local_path(path):
-        old_base_path = environment.get_locker_root_dir(config.SourceType.LOCAL)
+# Convert to relative path (strips locker root prefix)
+def convert_to_relative_path(path, locker_type = None):
+    if locker_type is None:
+        locker_type = config.LockerType.LOCAL
+    locker_root = environment.get_locker_root_dir(locker_type)
     return paths.rebase_file_path(
         path = path,
-        old_base_path = old_base_path,
+        old_base_path = locker_root,
         new_base_path = "")
 
 # Convert to local path
-def convert_to_local_path(path):
+def convert_to_local_path(path, source_locker_type = None):
     if is_local_path(path):
         return path
+    if source_locker_type is None:
+        source_locker_type = get_default_remote_locker()
+    source_root = environment.get_locker_root_dir(source_locker_type)
+    local_root = environment.get_locker_root_dir(config.LockerType.LOCAL)
     return paths.rebase_file_path(
         path = path,
-        old_base_path = environment.get_locker_root_dir(config.SourceType.REMOTE),
-        new_base_path = environment.get_locker_root_dir(config.SourceType.LOCAL))
+        old_base_path = source_root,
+        new_base_path = local_root)
 
-# Check if path exists
-def does_remote_path_exist(path, locker_type = None):
+# Check if path exists on locker
+def does_path_exist(path, locker_type = None):
 
-    # Get locker info
+    # Get locker type
+    if locker_type is None:
+        locker_type = get_default_remote_locker()
+
+    # Get backend
     locker_info = lockerinfo.LockerInfo(locker_type)
     if not locker_info:
         logger.log_error("Locker %s not found" % locker_type)
         return False
 
-    # Check if path exists
-    success = sync.does_path_exist(
-        remote_name = locker_info.get_remote_name(),
-        remote_type = locker_info.get_remote_type(),
-        remote_path = convert_to_remote_path(path))
-    return success
+    # Check if path exists on backend
+    backend = lockerbackend.get_backend_for_locker(locker_info)
+    rel_path = convert_to_relative_path(path, locker_type)
+    return backend.path_exists(rel_path)
 
-# Check if path contains files
-def does_remote_path_contain_files(path, locker_type = None):
+# Check if path contains files on locker
+def does_path_contain_files(path, locker_type = None):
 
-    # Get locker info
+    # Get locker type
+    if locker_type is None:
+        locker_type = get_default_remote_locker()
+
+    # Get backend
     locker_info = lockerinfo.LockerInfo(locker_type)
     if not locker_info:
         logger.log_error("Locker %s not found" % locker_type)
         return False
 
     # Check if path contains files
-    success = sync.does_path_contain_files(
-        remote_name = locker_info.get_remote_name(),
-        remote_type = locker_info.get_remote_type(),
-        remote_path = convert_to_remote_path(path))
-    return success
+    backend = lockerbackend.get_backend_for_locker(locker_info)
+    rel_path = convert_to_relative_path(path, locker_type)
+    return backend.path_contains_files(rel_path)
 
-# Download path
+# Download path from locker to local
 def download_path(
     src,
     dest = None,
@@ -86,34 +100,46 @@ def download_path(
     pretend_run = False,
     exit_on_failure = False):
 
-    # Get locker info
+    # Get locker type
+    if locker_type is None:
+        locker_type = get_default_remote_locker()
+
+    # Get locker info and backend
     locker_info = lockerinfo.LockerInfo(locker_type)
     if not locker_info:
         logger.log_error("Locker %s not found" % locker_type)
         return (False, "")
 
-    # Get paths
-    remote_path = convert_to_remote_path(src)
-    local_path = dest
-    if not local_path:
-        local_path = convert_to_local_path(remote_path)
+    # Get source backend
+    src_backend = lockerbackend.get_backend_for_locker(locker_info)
+    rel_path = convert_to_relative_path(src, locker_type)
 
-    # Download files
-    success = sync.download_files_from_remote(
-        remote_name = locker_info.get_remote_name(),
-        remote_type = locker_info.get_remote_type(),
-        remote_path = remote_path,
-        local_path = local_path,
+    # Get destination backend (local locker)
+    local_info = lockerinfo.LockerInfo(config.LockerType.LOCAL)
+    dest_backend = lockerbackend.get_backend_for_locker(local_info)
+
+    # Determine destination path
+    if dest:
+        dest_rel_path = dest_backend.get_relative_path(dest)
+    else:
+        dest_rel_path = rel_path
+
+    # Copy from source to local
+    success = dest_backend.copy_file_from(
+        src_backend = src_backend,
+        src_rel_path = rel_path,
+        dest_rel_path = dest_rel_path,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if not success:
         return (False, "")
 
-    # Return result
+    # Return full local path
+    local_path = paths.join_paths(dest_backend.get_root_path(), dest_rel_path)
     return (True, local_path)
 
-# Upload path
+# Upload path from local to locker
 def upload_path(
     src,
     dest = None,
@@ -122,38 +148,46 @@ def upload_path(
     pretend_run = False,
     exit_on_failure = False):
 
-    # Check path
-    if not paths.does_path_exist(src, locker_type):
+    # Check source path exists locally
+    if not paths.does_path_exist(src):
         logger.log_error("Path '%s' does not exist" % src)
         return False
 
-    # Get locker info
+    # Get locker type
+    if locker_type is None:
+        locker_type = get_default_remote_locker()
+
+    # Get locker info and backend
     locker_info = lockerinfo.LockerInfo(locker_type)
     if not locker_info:
         logger.log_error("Locker %s not found" % locker_type)
         return False
 
-    # Get paths
-    local_path = src
-    remote_path = dest
-    if not remote_path:
-        if paths.is_path_directory(src):
-            remote_path = convert_to_remote_path(src)
-        else:
-            remote_path = convert_to_remote_path(paths.get_filename_directory(src))
+    # Get source backend (local)
+    local_info = lockerinfo.LockerInfo(config.LockerType.LOCAL)
+    src_backend = lockerbackend.get_backend_for_locker(local_info)
 
-    # Upload files
-    success = sync.upload_files_to_remote(
-        remote_name = locker_info.get_remote_name(),
-        remote_type = locker_info.get_remote_type(),
-        remote_path = remote_path,
-        local_path = local_path,
+    # Get destination backend
+    dest_backend = lockerbackend.get_backend_for_locker(locker_info)
+
+    # Determine relative paths
+    src_rel_path = src_backend.get_relative_path(src)
+    if dest:
+        dest_rel_path = dest_backend.get_relative_path(dest)
+    else:
+        dest_rel_path = src_rel_path
+
+    # Copy from local to destination locker
+    success = dest_backend.copy_file_from(
+        src_backend = src_backend,
+        src_rel_path = src_rel_path,
+        dest_rel_path = dest_rel_path,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     return success
 
-# Download and decrypt path
+# Download and decrypt path from encrypted locker to local
 def download_and_decrypt_path(
     src,
     dest = None,
@@ -162,39 +196,48 @@ def download_and_decrypt_path(
     pretend_run = False,
     exit_on_failure = False):
 
+    # Get locker type
+    if locker_type is None:
+        locker_type = get_default_remote_locker()
+
     # Get locker info
     locker_info = lockerinfo.LockerInfo(locker_type)
     if not locker_info:
         logger.log_error("Locker %s not found" % locker_type)
         return (False, "")
 
-    # Download files
-    success, result = download_path(
-        src = src,
-        dest = dest,
+    # Get source backend
+    src_backend = lockerbackend.get_backend_for_locker(locker_info)
+    rel_path = convert_to_relative_path(src, locker_type)
+
+    # Get destination backend (local locker)
+    local_info = lockerinfo.LockerInfo(config.LockerType.LOCAL)
+    dest_backend = lockerbackend.get_backend_for_locker(local_info)
+
+    # Determine destination path
+    if dest:
+        dest_rel_path = dest_backend.get_relative_path(dest)
+    else:
+        dest_rel_path = rel_path
+
+    # Copy from source to local with decryption
+    success = dest_backend.copy_file_from(
+        src_backend = src_backend,
+        src_rel_path = rel_path,
+        dest_rel_path = dest_rel_path,
+        cryption_type = config.CryptionType.DECRYPT,
+        passphrase = locker_info.get_passphrase(),
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if not success:
         return (False, "")
 
-    # Decrypt files
-    output_files = cryption.decrypt_files(
-        src = result,
-        passphrase = locker_info.get_passphrase(),
-        delete_original = True,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    if len(output_files) == 0:
-        return (False, "")
+    # Return full local path
+    local_path = paths.join_paths(dest_backend.get_root_path(), dest_rel_path)
+    return (True, local_path)
 
-    # Return result
-    if paths.is_path_file(result) or len(output_files) == 1:
-        return (True, output_files[0])
-    return (True, result)
-
-# Upload and encrypt path
+# Upload and encrypt path from local to encrypted locker
 def upload_and_encrypt_path(
     src,
     dest = None,
@@ -203,27 +246,37 @@ def upload_and_encrypt_path(
     pretend_run = False,
     exit_on_failure = False):
 
+    # Get locker type
+    if locker_type is None:
+        locker_type = get_default_remote_locker()
+
     # Get locker info
     locker_info = lockerinfo.LockerInfo(locker_type)
     if not locker_info:
         logger.log_error("Locker %s not found" % locker_type)
         return False
 
-    # Encrypt files
-    output_files = cryption.encrypt_files(
-        src = src,
-        passphrase = locker_info.get_passphrase(),
-        delete_original = True,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    if len(output_files) == 0:
-        return False
+    # Get source backend (local)
+    local_info = lockerinfo.LockerInfo(config.LockerType.LOCAL)
+    src_backend = lockerbackend.get_backend_for_locker(local_info)
 
-    # Upload files
-    success = upload_path(
-        src = src,
-        dest = dest,
+    # Get destination backend
+    dest_backend = lockerbackend.get_backend_for_locker(locker_info)
+
+    # Determine relative paths
+    src_rel_path = src_backend.get_relative_path(src)
+    if dest:
+        dest_rel_path = dest_backend.get_relative_path(dest)
+    else:
+        dest_rel_path = src_rel_path
+
+    # Copy from local to destination with encryption
+    success = dest_backend.copy_file_from(
+        src_backend = src_backend,
+        src_rel_path = src_rel_path,
+        dest_rel_path = dest_rel_path,
+        cryption_type = config.CryptionType.ENCRYPT,
+        passphrase = locker_info.get_passphrase(),
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -235,11 +288,18 @@ def get_configured_lockers():
     for locker_type in config.LockerType.members():
         if locker_type == config.LockerType.ALL:
             continue
+        if locker_type == config.LockerType.LOCAL:
+            continue
         locker_info = lockerinfo.LockerInfo(locker_type)
-        if locker_info and locker_info.get_remote_name():
+        if not locker_info:
+            continue
+        if locker_info.get_remote_name():
             if sync.is_remote_configured(
                 remote_name = locker_info.get_remote_name(),
                 remote_type = locker_info.get_remote_type()):
+                configured.append(locker_type)
+        elif locker_type == config.LockerType.EXTERNAL:
+            if locker_info.get_local_path() and paths.does_path_exist(locker_info.get_local_path()):
                 configured.append(locker_type)
     return configured
 

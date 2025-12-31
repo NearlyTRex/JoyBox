@@ -21,6 +21,7 @@ import computer
 import stores
 import strings
 import gui
+import lockerinfo
 
 ###########################################################
 
@@ -35,6 +36,7 @@ class GameInfo:
         game_category = None,
         game_subcategory = None,
         game_name = None,
+        remote_locker_type = None,
         verbose = False,
         pretend_run = False,
         exit_on_failure = False):
@@ -64,6 +66,7 @@ class GameInfo:
         # Parse json file
         self.parse_json_file(
             json_file = self.json_file,
+            remote_locker_type = remote_locker_type,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
@@ -72,6 +75,7 @@ class GameInfo:
     def parse_json_file(
         self,
         json_file,
+        remote_locker_type = None,
         verbose = False,
         pretend_run = False,
         exit_on_failure = False):
@@ -115,6 +119,10 @@ class GameInfo:
         # Fill path info
         ##############################
 
+        # Get locker types
+        if remote_locker_type is None:
+            remote_locker_type = lockerinfo.get_primary_remote_locker_type()
+
         # Get paths
         save_dir = environment.get_cache_gaming_save_dir(self.game_category, self.game_subcategory, self.game_name)
         if self.game_category == config.Category.COMPUTER:
@@ -136,25 +144,25 @@ class GameInfo:
             self.game_category,
             self.game_subcategory,
             self.game_name,
-            config.SourceType.LOCAL)
+            config.LockerType.LOCAL)
         remote_rom_dir = environment.get_locker_gaming_files_dir(
             self.game_supercategory,
             self.game_category,
             self.game_subcategory,
             self.game_name,
-            config.SourceType.REMOTE)
+            remote_locker_type)
         local_save_dir = environment.get_locker_gaming_save_dir(
             self.game_supercategory,
             self.game_category,
             self.game_subcategory,
             self.game_name,
-            config.SourceType.LOCAL)
+            config.LockerType.LOCAL)
         remote_save_dir = environment.get_locker_gaming_save_dir(
             self.game_supercategory,
             self.game_category,
             self.game_subcategory,
             self.game_name,
-            config.SourceType.REMOTE)
+            remote_locker_type)
 
         # Set paths
         self.set_value(config.json_key_save_dir, save_dir)
@@ -509,13 +517,12 @@ class GameInfo:
     def get_remote_save_dir(self):
         return self.get_value(config.json_key_remote_save_dir)
 
-    # Get rom dir
-    def get_rom_dir(self, source_type):
-        if source_type == config.SourceType.LOCAL:
+    # Get rom dir by locker type
+    def get_rom_dir(self, locker_type):
+        if locker_type == config.LockerType.LOCAL:
             return self.get_local_rom_dir()
-        elif source_type == config.SourceType.REMOTE:
+        else:
             return self.get_remote_rom_dir()
-        return None
 
     ##############################
 
@@ -877,11 +884,11 @@ def find_json_game_names(game_supercategory, game_category, game_subcategory):
     return find_all_game_names(base_dir, game_supercategory, game_category, game_subcategory)
 
 # Find locker game names
-def find_locker_game_names(game_supercategory, game_category, game_subcategory, source_type = None, locker_base_dir = None):
+def find_locker_game_names(game_supercategory, game_category, game_subcategory, locker_type = None, locker_base_dir = None):
     if locker_base_dir:
         base_dir = paths.join_paths(locker_base_dir, config.LockerFolderType.GAMING)
     else:
-        base_dir = environment.get_locker_gaming_root_dir(source_type)
+        base_dir = environment.get_locker_gaming_root_dir(locker_type)
     return find_all_game_names(base_dir, game_supercategory, game_category, game_subcategory)
 
 ###########################################################
@@ -1072,7 +1079,7 @@ def iterate_selected_game_categories(
 def iterate_selected_game_infos(
     parser,
     generation_mode = None,
-    source_type = None,
+    locker_type = None,
     locker_base_dir = None,
     game_supercategories = None,
     game_subcategory_map = None,
@@ -1112,12 +1119,12 @@ def iterate_selected_game_infos(
         generation_mode = generation_mode,
         game_supercategories = game_supercategories,
         game_subcategory_map = game_subcategory_map):
-        if source_type is not None or locker_base_dir is not None:
+        if locker_type is not None or locker_base_dir is not None:
             game_names = find_locker_game_names(
                 game_supercategory,
                 game_category,
                 game_subcategory,
-                source_type,
+                locker_type,
                 locker_base_dir)
         else:
             game_names = find_json_game_names(

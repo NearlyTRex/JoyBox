@@ -29,7 +29,7 @@ def get_album_directories(genre_type = None, album_name = None, artist_name = No
         album_path = environment.get_locker_music_album_dir(
             album_name = album_name,
             artist_name = artist_name,
-            source_type = config.SourceType.LOCAL,
+            locker_type = config.LockerType.LOCAL,
             genre_type = genre_type.value if genre_type else None)
         if paths.is_path_directory(album_path):
             album_dirs.append(album_path)
@@ -76,7 +76,7 @@ def download_channel_audio_files(channels, genre_type, cookie_source = None, loc
         channel_archive_file = environment.get_file_audio_metadata_archive_file(genre_type, channel_name)
         channel_music_dir = environment.get_locker_music_album_dir(
             album_name = channel_name,
-            source_type = config.SourceType.LOCAL,
+            locker_type = config.LockerType.LOCAL,
             genre_type = genre_type)
         logger.log_info(f"Archive file: {channel_archive_file}")
         logger.log_info(f"Target music directory: {channel_music_dir}")

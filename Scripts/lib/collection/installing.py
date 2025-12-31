@@ -43,7 +43,7 @@ def is_store_game_installed(game_info):
 # Install store game
 def install_store_game(
     game_info,
-    source_type,
+    locker_type = None,
     keep_setup_files = False,
     verbose = False,
     pretend_run = False,
@@ -85,7 +85,7 @@ def install_store_game_addons(
 # Uninstall store game
 def uninstall_store_game(
     game_info,
-    source_type,
+    locker_type = None,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -123,7 +123,7 @@ def is_local_game_installed(game_info):
 # Install local game
 def install_local_game(
     game_info,
-    source_type,
+    locker_type = None,
     keep_setup_files = False,
     verbose = False,
     pretend_run = False,
@@ -140,7 +140,7 @@ def install_local_game(
         return True
 
     # Check if source files are available
-    if not locker.does_remote_path_contain_files(game_remote_rom_dir):
+    if not locker.does_path_contain_files(game_remote_rom_dir):
         gui.display_error_popup(
             title_text = "Source files unavailable",
             message_text = "Source files are not available\n%s\n%s" % (game_name, game_platform))
@@ -323,7 +323,7 @@ def install_local_game_addons(
 # Uninstall local game
 def uninstall_local_game(
     game_info,
-    source_type,
+    locker_type = None,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -361,7 +361,7 @@ def is_game_installed(game_info):
 # Install game
 def install_game(
     game_info,
-    source_type,
+    locker_type = None,
     keep_setup_files = False,
     verbose = False,
     pretend_run = False,
@@ -369,7 +369,7 @@ def install_game(
     if stores.is_store_platform(game_info.get_platform()):
         return install_store_game(
             game_info = game_info,
-            source_type = source_type,
+            locker_type = locker_type,
             keep_setup_files = keep_setup_files,
             verbose = verbose,
             pretend_run = pretend_run,
@@ -377,7 +377,7 @@ def install_game(
     else:
         return install_local_game(
             game_info = game_info,
-            source_type = source_type,
+            locker_type = locker_type,
             keep_setup_files = keep_setup_files,
             verbose = verbose,
             pretend_run = pretend_run,
@@ -405,21 +405,21 @@ def install_game_addons(
 # Uninstall game
 def uninstall_game(
     game_info,
-    source_type,
+    locker_type = None,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
     if stores.is_store_platform(game_info.get_platform()):
         return uninstall_store_game(
             game_info = game_info,
-            source_type = source_type,
+            locker_type = locker_type,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
     else:
         return uninstall_local_game(
             game_info = game_info,
-            source_type = source_type,
+            locker_type = locker_type,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)

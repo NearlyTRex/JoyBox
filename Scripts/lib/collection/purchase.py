@@ -209,7 +209,6 @@ def update_game_store_purchases(
     game_category,
     game_subcategory,
     locker_type = None,
-    source_type = None,
     keys = [],
     force = False,
     verbose = False,
@@ -289,7 +288,7 @@ def update_game_store_purchases(
             game_category = game_category,
             game_subcategory = game_subcategory,
             game_name = game_name,
-            source_type = source_type)
+            locker_type = locker_type)
 
         # Update json file
         success = update_game_json_file(
@@ -332,7 +331,6 @@ def build_game_store_purchases(
     game_category,
     game_subcategory,
     locker_type = None,
-    source_type = None,
     keys = [],
     force = False,
     verbose = False,
@@ -360,7 +358,6 @@ def build_game_store_purchases(
         game_category = game_category,
         game_subcategory = game_subcategory,
         locker_type = locker_type,
-        source_type = source_type,
         keys = keys,
         force = force,
         verbose = verbose,
@@ -371,7 +368,6 @@ def build_game_store_purchases(
 # Build all game store purchases
 def build_all_game_store_purchases(
     locker_type = None,
-    source_type = None,
     keys = [],
     categories = None,
     subcategories = None,
@@ -392,7 +388,6 @@ def build_all_game_store_purchases(
                     game_category = game_category,
                     game_subcategory = game_subcategory,
                     locker_type = locker_type,
-                    source_type = source_type,
                     keys = keys,
                     force = force,
                     verbose = verbose,

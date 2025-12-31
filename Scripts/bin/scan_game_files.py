@@ -23,10 +23,10 @@ import prompts
 # Parse arguments
 parser = arguments.ArgumentParser(description = "Scan roms files.")
 parser.add_enum_argument(
-    args = ("-l", "--source_type"),
-    arg_type = config.SourceType,
-    default = config.SourceType.REMOTE,
-    description = "Source type")
+    args = ("-l", "--source_locker"),
+    arg_type = config.LockerType,
+    default = config.LockerType.HETZNER,
+    description = "Source locker type")
 parser.add_enum_argument(
     args = ("-t", "--locker_type"),
     arg_type = config.LockerType,
@@ -78,7 +78,7 @@ def main():
     logger.log_info("Building store purchases ...")
     success = collection.build_all_game_store_purchases(
         locker_type = args.locker_type,
-        source_type = args.source_type,
+        locker_type = args.source_locker,
         categories = args.categories,
         subcategories = args.subcategories,
         verbose = args.verbose,
@@ -91,7 +91,7 @@ def main():
     logger.log_info("Building json files ...")
     success = collection.build_all_game_json_files(
         locker_type = args.locker_type,
-        source_type = args.source_type,
+        locker_type = args.source_locker,
         categories = args.categories,
         subcategories = args.subcategories,
         verbose = args.verbose,

@@ -15,8 +15,6 @@ ini_defaults["UserData.Dirs"] = {}
 if util.is_windows_platform():
     ini_defaults["UserData.Dirs"]["tools_dir"] = "%USERPROFILE%\\Tools"
     ini_defaults["UserData.Dirs"]["emulators_dir"] = "%USERPROFILE%\\Emulators"
-    ini_defaults["UserData.Dirs"]["local_locker_dir"] = "%USERPROFILE%\\Locker"
-    ini_defaults["UserData.Dirs"]["remote_locker_dir"] = "%USERPROFILE%\\LockerRemote"
     ini_defaults["UserData.Dirs"]["cache_dir"] = "%USERPROFILE%\\Cache"
     ini_defaults["UserData.Dirs"]["repositories_dir"] = "C:\\Repositories"
     ini_defaults["UserData.Dirs"]["game_metadata_dir"] = "C:\\Repositories\\GameMetadata"
@@ -25,8 +23,6 @@ if util.is_windows_platform():
 else:
     ini_defaults["UserData.Dirs"]["tools_dir"] = "$HOME/Tools"
     ini_defaults["UserData.Dirs"]["emulators_dir"] = "$HOME/Emulators"
-    ini_defaults["UserData.Dirs"]["local_locker_dir"] = "$HOME/Locker"
-    ini_defaults["UserData.Dirs"]["remote_locker_dir"] = "$HOME/LockerRemote"
     ini_defaults["UserData.Dirs"]["cache_dir"] = "$HOME/Cache"
     ini_defaults["UserData.Dirs"]["repositories_dir"] = "$HOME/Repositories"
     ini_defaults["UserData.Dirs"]["game_metadata_dir"] = "$HOME/Repositories/GameMetadata"
@@ -40,6 +36,14 @@ ini_defaults["UserData.Protection"]["locker_passphrase"] = ""
 
 # UserData.Share
 ini_defaults["UserData.Share"] = {}
+ini_defaults["UserData.Share"]["primary_remote_locker"] = "hetzner"
+if util.is_windows_platform():
+    ini_defaults["UserData.Share"]["locker_local_local_path"] = "%USERPROFILE%\\Locker"
+else:
+    ini_defaults["UserData.Share"]["locker_local_local_path"] = "$HOME/Locker"
+ini_defaults["UserData.Share"]["locker_local_encrypted"] = "False"
+ini_defaults["UserData.Share"]["locker_local_excluded_sync_paths"] = ""
+ini_defaults["UserData.Share"]["locker_local_passphrase"] = ""
 for share_type in ["gdrive", "hetzner"]:
     ini_defaults["UserData.Share"][f"locker_{share_type}_remote_type"] = ""
     ini_defaults["UserData.Share"][f"locker_{share_type}_remote_name"] = ""
@@ -55,9 +59,10 @@ for share_type in ["gdrive", "hetzner"]:
         ini_defaults["UserData.Share"][f"locker_{share_type}_local_path"] = "$HOME/Locker"
     if share_type == "gdrive":
         ini_defaults["UserData.Share"][f"locker_{share_type}_excluded_sync_paths"] = "Gaming/Roms/**,Gaming/DLC/**,Gaming/Updates/**"
+        ini_defaults["UserData.Share"][f"locker_{share_type}_encrypted"] = "False"
     else:
         ini_defaults["UserData.Share"][f"locker_{share_type}_excluded_sync_paths"] = ""
-    ini_defaults["UserData.Share"][f"locker_{share_type}_decrypt_on_sync"] = "False"
+        ini_defaults["UserData.Share"][f"locker_{share_type}_encrypted"] = "True"
     ini_defaults["UserData.Share"][f"locker_{share_type}_passphrase"] = ""
 for share_type in ["external"]:
     if util.is_windows_platform():
@@ -65,7 +70,7 @@ for share_type in ["external"]:
     else:
         ini_defaults["UserData.Share"][f"locker_{share_type}_local_path"] = "/mnt/mount"
     ini_defaults["UserData.Share"][f"locker_{share_type}_excluded_sync_paths"] = ""
-    ini_defaults["UserData.Share"][f"locker_{share_type}_decrypt_on_sync"] = "True"
+    ini_defaults["UserData.Share"][f"locker_{share_type}_encrypted"] = "False"
     ini_defaults["UserData.Share"][f"locker_{share_type}_passphrase"] = ""
 
 # UserData.Cockpit

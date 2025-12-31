@@ -306,7 +306,6 @@ def build_game_json_file(
     game_name,
     game_root = None,
     locker_type = None,
-    source_type = None,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -318,7 +317,7 @@ def build_game_json_file(
             game_category = game_category,
             game_subcategory = game_subcategory,
             game_name = game_name,
-            source_type = source_type)
+            locker_type = locker_type)
     if not paths.is_path_directory(game_root):
         return False
 
@@ -354,7 +353,6 @@ def build_game_json_file(
 # Build all game json files
 def build_all_game_json_files(
     locker_type = None,
-    source_type = None,
     categories = None,
     subcategories = None,
     verbose = False,
@@ -373,7 +371,7 @@ def build_all_game_json_files(
                     game_supercategory,
                     game_category,
                     game_subcategory,
-                    source_type)
+                    locker_type)
                 for game_name in game_names:
                     success = build_game_json_file(
                         game_supercategory = game_supercategory,
@@ -381,7 +379,6 @@ def build_all_game_json_files(
                         game_subcategory = game_subcategory,
                         game_name = game_name,
                         locker_type = locker_type,
-                        source_type = source_type,
                         verbose = verbose,
                         pretend_run = pretend_run,
                         exit_on_failure = exit_on_failure)
