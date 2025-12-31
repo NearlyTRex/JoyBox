@@ -3,13 +3,13 @@ import os
 import os.path
 import sys
 import re
-import datetime
 
 # Local imports
 import config
 import command
 import programs
 import serialization
+import strings
 import system
 import logger
 import paths
@@ -380,7 +380,7 @@ def get_path_mod_time(
         rclone_tool = programs.get_tool_program("RClone")
     if not rclone_tool:
         logger.log_error("RClone was not found")
-        return None
+        return 0
 
     # Get lsl command (outputs: size modtime filename)
     lsl_cmd = [
@@ -401,17 +401,13 @@ def get_path_mod_time(
     if isinstance(lsl_output, bytes):
         lsl_text = lsl_output.decode()
     if "error" in lsl_text.lower() or "not found" in lsl_text.lower():
-        return None
+        return 0
 
     # Extract timestamp from lsl output
     match = re.search(r'(\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}:\d{2})', lsl_text)
     if match:
-        try:
-            dt = datetime.datetime.strptime(match.group(1), "%Y-%m-%d %H:%M:%S")
-            return dt.timestamp()
-        except:
-            return None
-    return None
+        return strings.parse_timestamp(match.group(1))
+    return 0
 
 # Check if path matches md5
 def does_path_match_md5(
@@ -1135,7 +1131,7 @@ def diff_sync_files(
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-            if local_mtime is None or remote_mtime is None:
+            if not local_mtime or not remote_mtime:
                 if verbose:
                     logger.log_warning("Could not get modtime for: %s" % file_path)
                 continue
@@ -1327,6 +1323,137 @@ def mount_files(
         cmd = mount_cmd,
         options = command.create_command_options(
             is_daemon = environment.is_unix_platform()),
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    return code == 0
+
+# List files with hashes
+def list_files_with_hashes(
+    remote_name,
+    remote_type,
+    remote_path,
+    hash_type = None,
+    excludes = [],
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Use default hash type
+    if hash_type is None:
+        hash_type = config.HashType.MD5
+
+    # Get tool
+    rclone_tool = None
+    if programs.is_tool_installed("RClone"):
+        rclone_tool = programs.get_tool_program("RClone")
+    if not rclone_tool:
+        logger.log_error("RClone was not found")
+        return {}
+
+    # Build lsjson command
+    lsjson_cmd = [
+        rclone_tool,
+        "lsjson",
+        "--recursive",
+        "--hash",
+        "--files-only",
+        get_remote_connection_path(remote_name, remote_type, remote_path)
+    ]
+
+    # Add exclude flags
+    lsjson_cmd += get_exclude_flags(excludes)
+    if verbose:
+        logger.log_info("Listing files with hashes from remote: %s" % remote_name)
+
+    # Run lsjson command
+    lsjson_output = command.run_output_command(
+        cmd = lsjson_cmd,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+
+    # Parse JSON output
+    hash_map = {}
+    lsjson_text = lsjson_output
+    if isinstance(lsjson_output, bytes):
+        lsjson_text = lsjson_output.decode()
+    if not lsjson_text or lsjson_text.strip() == "":
+        return hash_map
+    files_list = serialization.parse_json_string(lsjson_text)
+    if not files_list:
+        return hash_map
+
+    # Build map
+    for file_info in files_list:
+        if file_info.get("IsDir", False):
+            continue
+        rel_path = file_info.get("Path", "")
+        if not rel_path:
+            continue
+
+        # Get hash from Hashes dict
+        hashes = file_info.get("Hashes", {})
+        file_hash = ""
+        if hash_type == config.HashType.MD5:
+            file_hash = hashes.get("MD5", hashes.get("md5", ""))
+        elif hash_type == config.HashType.SHA1:
+            file_hash = hashes.get("SHA-1", hashes.get("sha1", ""))
+        elif hash_type == config.HashType.SHA256:
+            file_hash = hashes.get("SHA-256", hashes.get("sha256", ""))
+
+        # Parse modification time
+        mtime = strings.parse_timestamp(file_info.get("ModTime", ""))
+
+        # Add to map
+        hash_map[rel_path] = {
+            "filename": paths.get_filename_file(rel_path),
+            "dir": paths.get_filename_directory(rel_path),
+            "hash": file_hash,
+            "size": file_info.get("Size", 0),
+            "mtime": mtime
+        }
+    return hash_map
+
+# Copy file from one remote to another
+def copy_remote_to_remote(
+    src_remote_name,
+    src_remote_type,
+    src_remote_path,
+    dest_remote_name,
+    dest_remote_type,
+    dest_remote_path,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Get tool
+    rclone_tool = None
+    if programs.is_tool_installed("RClone"):
+        rclone_tool = programs.get_tool_program("RClone")
+    if not rclone_tool:
+        logger.log_error("RClone was not found")
+        return False
+
+    # Build source and dest paths
+    src_full = get_remote_connection_path(src_remote_name, src_remote_type, src_remote_path)
+    dest_full = get_remote_connection_path(dest_remote_name, dest_remote_type, dest_remote_path)
+
+    # Build copyto command
+    copyto_cmd = [
+        rclone_tool,
+        "copyto",
+        src_full,
+        dest_full
+    ]
+    if pretend_run:
+        copyto_cmd += ["--dry-run"]
+    if verbose:
+        copyto_cmd += ["--verbose", "--progress"]
+
+    # Run copyto command
+    code = command.run_returncode_command(
+        cmd = copyto_cmd,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)

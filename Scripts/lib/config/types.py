@@ -243,6 +243,14 @@ class CryptionType(EnumType):
     ENCRYPT                 = ("Encrypt")
     DECRYPT                 = ("Decrypt")
 
+# Hash algorithm types
+class HashType(EnumType):
+    MD5                     = ("MD5")
+    SHA1                    = ("SHA1")
+    XXH3                    = ("XXH3")
+    SHA256                  = ("SHA256")
+    CRC32                   = ("CRC32")
+
 # Hash format types
 class HashFormatType(EnumType):
     JSON                    = ("Json")
@@ -255,6 +263,7 @@ class SyncActionType(EnumType):
     UPDATE                  = ("Update")
     UPDATE_DECRYPT          = ("UpdateDecrypt")
     DELETE                  = ("Delete")
+    RECYCLE                 = ("Recycle")
 
 # Decompiler action type
 class DecompilerActionType(EnumType):

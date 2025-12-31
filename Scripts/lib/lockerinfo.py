@@ -75,3 +75,22 @@ class LockerInfo:
 
     def is_local_only(self):
         return self.remote_type is None
+
+    def get_backend_type(self):
+        if self.locker_type == config.LockerType.EXTERNAL:
+            return "external"
+        elif self.remote_type is None:
+            return "local"
+        else:
+            return "remote"
+
+    def get_locker_root_path(self):
+        if self.is_local_only():
+            return self.local_path
+        else:
+            if self.remote_mount_path:
+                return self.remote_mount_path
+            return self.remote_path
+
+    def get_locker_name(self):
+        return self.locker_type.val() if hasattr(self.locker_type, 'val') else str(self.locker_type)

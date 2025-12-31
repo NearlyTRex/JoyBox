@@ -137,8 +137,8 @@ def get_embedded_file_info(
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-    file_info["size"] = os.path.getsize(tmp_file)
-    file_info["mtime"] = int(os.path.getmtime(src))
+    file_info["size"] = paths.get_file_size(tmp_file)
+    file_info["mtime"] = paths.get_file_mod_time(src)
 
     # Clean up
     fileops.remove_directory(

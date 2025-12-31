@@ -572,9 +572,9 @@ def get_file_age_in_hours(path):
 # Get file modification time as timestamp
 def get_file_mod_time(path):
     try:
-        return os.path.getmtime(path)
+        return int(os.path.getmtime(path))
     except:
-        return None
+        return 0
 
 # Get filename info
 def get_filename_info(path):

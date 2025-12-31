@@ -160,6 +160,22 @@ def convert_unknown_date_string(string, new_format_code):
         return get_string_from_datetime(date_time, new_format_code)
     return None
 
+# Parse timestamp string to unix timestamp
+def parse_timestamp(timestamp_string):
+    if not timestamp_string:
+        return 0
+    try:
+        if "T" in timestamp_string:
+            if "." in timestamp_string:
+                timestamp_string = timestamp_string.split(".")[0] + "Z"
+            dt = datetime.strptime(timestamp_string.replace("Z", "+0000"), "%Y-%m-%dT%H:%M:%S%z")
+            return int(dt.timestamp())
+        else:
+            dt = datetime.strptime(timestamp_string.strip(), "%Y-%m-%d %H:%M:%S")
+            return int(dt.timestamp())
+    except:
+        return 0
+
 # Get url scheme
 def get_url_scheme(string):
     return urllib.parse.urlparse(string).scheme

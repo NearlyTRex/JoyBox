@@ -4,6 +4,7 @@ import sys
 import csv
 import zlib
 import hashlib
+import fnmatch
 
 # Local imports
 import config
@@ -572,8 +573,8 @@ def does_file_need_to_be_hashed(src, base_path, hash_contents = {}):
         return True
     try:
         input_file_fullpath = paths.join_paths(base_path, src)
-        current_size = os.path.getsize(input_file_fullpath)
-        current_mtime = int(os.path.getmtime(input_file_fullpath))
+        current_size = paths.get_file_size(input_file_fullpath)
+        current_mtime = paths.get_file_mod_time(input_file_fullpath)
         existing = hash_contents[src]
         existing_size = int(existing.get("size", 0))
         existing_mtime = int(existing.get("mtime", 0))
@@ -661,8 +662,8 @@ def calculate_hash(
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-        hash_data["size"] = os.path.getsize(path_full)
-        hash_data["mtime"] = int(os.path.getmtime(path_full))
+        hash_data["size"] = paths.get_file_size(path_full)
+        hash_data["mtime"] = paths.get_file_mod_time(path_full)
 
         # Add enc fields if requested
         if include_enc_fields:
@@ -826,5 +827,92 @@ def clean_missing_hash_entries(
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
     return True
+
+# Build hash map
+def build_hash_map(
+    src_path,
+    hash_type = None,
+    excludes = [],
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Default to MD5
+    if hash_type is None:
+        hash_type = config.HashType.MD5
+
+    # Check source path
+    hash_map = {}
+    if not paths.does_path_exist(src_path):
+        logger.log_warning("Path does not exist: %s" % src_path)
+        return hash_map
+
+    # Determine hash function
+    if hash_type == config.HashType.MD5:
+        hash_func = calculate_file_md5
+    elif hash_type == config.HashType.XXH3:
+        hash_func = calculate_file_xxh3
+    elif hash_type == config.HashType.SHA256:
+        hash_func = calculate_file_sha256
+    elif hash_type == config.HashType.CRC32:
+        hash_func = calculate_file_crc32
+    else:
+        hash_func = calculate_file_md5
+
+    # Build file list
+    file_list = paths.build_file_list(src_path, use_relative_paths = True)
+    total_files = len(file_list)
+
+    # Build hash map
+    if verbose:
+        logger.log_info("Building hash map for: %s" % src_path)
+    for idx, rel_path in enumerate(file_list):
+
+        # Check exclusions
+        skip = False
+        for pattern in excludes:
+            if fnmatch.fnmatch(rel_path, pattern):
+                skip = True
+                break
+            parts = rel_path.split(os.sep)
+            for i in range(len(parts)):
+                partial = os.sep.join(parts[:i+1])
+                if fnmatch.fnmatch(partial, pattern.rstrip("/**")):
+                    skip = True
+                    break
+            if skip:
+                break
+        if skip:
+            continue
+
+        # Skip if not a file
+        full_path = paths.join_paths(src_path, rel_path)
+        if not paths.is_path_file(full_path):
+            continue
+
+        # Get file info
+        file_size = paths.get_file_size(full_path)
+        file_mtime = paths.get_file_mod_time(full_path)
+        file_name = paths.get_filename_file(rel_path)
+        file_dir = paths.get_filename_directory(rel_path)
+
+        # Calculate hash
+        file_hash = hash_func(
+            src = full_path,
+            verbose = False,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        hash_map[rel_path] = {
+            "filename": file_name,
+            "dir": file_dir,
+            "hash": file_hash,
+            "size": file_size,
+            "mtime": file_mtime
+        }
+        if verbose and (idx + 1) % 100 == 0:
+            logger.log_info("Processed %d/%d files" % (idx + 1, total_files))
+    if verbose:
+        logger.log_info("Hash map complete: %d files" % len(hash_map))
+    return hash_map
 
 ###########################################################
