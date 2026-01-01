@@ -152,7 +152,7 @@ class ArgumentParser:
             self.parser.add_argument(
                 *args if isinstance(args, tuple) else (args,),
                 default = default,
-                type = ParseEnumValue,
+                type = parse_enum_value,
                 choices = arg_type.values(),
                 help = f"{description}.\nAllowed values are [{', '.join(quoted_enum_values)}]",
                 nargs = "+",

@@ -272,9 +272,9 @@ def update_game_json_file(
                             continue
                     json_obj.fill_subvalue(store_obj.get_key(), store_subdata_key, latest_jsondata.get_value(store_subdata_key))
                     if store_subdata_key == config.json_key_store_paths:
-                        paths = json_obj.get_subvalue(store_obj.get_key(), store_subdata_key, [])
-                        paths = paths.prune_child_paths(paths)
-                        json_obj.set_subvalue(store_obj.get_key(), store_subdata_key, paths)
+                        store_paths = json_obj.get_subvalue(store_obj.get_key(), store_subdata_key, [])
+                        store_paths = paths.prune_child_paths(store_paths)
+                        json_obj.set_subvalue(store_obj.get_key(), store_subdata_key, store_paths)
 
     # Write json file
     success = serialization.write_json_file(

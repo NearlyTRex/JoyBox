@@ -30,7 +30,7 @@ class LockerInfo:
             self.remote_mount_path = ini.get_ini_path_value("UserData.Share", f"locker_{self.locker_type.lower()}_remote_mount_path")
             self.remote_mount_flags = ini.get_ini_value("UserData.Share", f"locker_{self.locker_type.lower()}_remote_mount_flags").split(",")
         self.local_path = ini.get_ini_path_value("UserData.Share", f"locker_{self.locker_type.lower()}_local_path")
-        self.passphrase = ini.get_ini_value("UserData.Share", f"locker_{self.locker_type.lower()}_passphrase")
+        self.passphrase = ini.get_ini_value("UserData.Share", f"locker_{self.locker_type.lower()}_passphrase") or ini.get_ini_value("UserData.Protection", "locker_passphrase")
 
         # Parse excluded sync paths into list
         excluded_str = ini.get_ini_value("UserData.Share", f"locker_{self.locker_type.lower()}_excluded_sync_paths")
