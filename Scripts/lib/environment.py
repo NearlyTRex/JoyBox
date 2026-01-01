@@ -127,12 +127,7 @@ def get_locker_root_dir(locker_type = None):
     if locker_type is None:
         locker_type = config.LockerType.LOCAL
     locker_info = lockerinfo.LockerInfo(locker_type)
-    if locker_info.is_local_only():
-        return locker_info.get_local_path()
-    mount_path = locker_info.get_remote_mount_path()
-    if mount_path:
-        return mount_path
-    return locker_info.get_local_path()
+    return locker_info.get_mount_path()
 
 ###########################################################
 # Locker - Development

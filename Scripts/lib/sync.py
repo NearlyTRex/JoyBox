@@ -15,6 +15,10 @@ import logger
 import paths
 import environment
 import fileops
+import hashing
+
+# Constants
+HASH_SIDECAR_FOLDER = ".locker_hashes"
 
 # Check if tool is installed
 def is_tool_installed():
@@ -536,23 +540,25 @@ def download_files_from_remote(
         return False
 
     # Get copy command
+    is_directory_dest = local_path.endswith("/") or paths.is_path_directory(local_path)
     copy_cmd = [
         rclone_tool,
-        "copy",
+        "copy" if is_directory_dest else "copyto",
         get_remote_connection_path(remote_name, remote_type, remote_path),
         local_path
     ]
-    copy_cmd += get_common_remote_flags(
-        remote_name = remote_name,
-        remote_type = remote_type,
-        remote_action_type = config.RemoteActionType.DOWNLOAD)
-    copy_cmd += get_exclude_flags(excludes)
-    if files_from and paths.is_path_file(files_from):
-        copy_cmd += ["--files-from", files_from]
+    if is_directory_dest:
+        copy_cmd += get_common_remote_flags(
+            remote_name = remote_name,
+            remote_type = remote_type,
+            remote_action_type = config.RemoteActionType.DOWNLOAD)
+        copy_cmd += get_exclude_flags(excludes)
+        if files_from and paths.is_path_file(files_from):
+            copy_cmd += ["--files-from", files_from]
+        if interactive:
+            copy_cmd += ["--interactive"]
     if pretend_run:
         copy_cmd += ["--dry-run"]
-    if interactive:
-        copy_cmd += ["--interactive"]
     if verbose:
         copy_cmd += [
             "--verbose",
@@ -588,37 +594,58 @@ def upload_files_to_remote(
         logger.log_error("RClone was not found")
         return False
 
-    # Get copy command
-    copy_cmd = [
-        rclone_tool,
-        "copy",
-        local_path,
-        get_remote_connection_path(remote_name, remote_type, remote_path)
-    ]
-    copy_cmd += get_common_remote_flags(
-        remote_name = remote_name,
-        remote_type = remote_type,
-        remote_action_type = config.RemoteActionType.UPLOAD)
-    copy_cmd += get_exclude_flags(excludes)
-    if files_from and paths.is_path_file(files_from):
-        copy_cmd += ["--files-from", files_from]
-    if pretend_run:
-        copy_cmd += ["--dry-run"]
-    if interactive:
-        copy_cmd += ["--interactive"]
-    if verbose:
-        copy_cmd += [
-            "--verbose",
-            "--progress"
-        ]
-
-    # Run copy command
-    code = command.run_returncode_command(
-        cmd = copy_cmd,
+    # Build staging directory with symlinks and hash sidecars
+    staging_dir = fileops.create_temporary_directory()
+    success = build_upload_staging(
+        local_path = local_path,
+        staging_dir = staging_dir,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
-    return code == 0
+    if not success:
+        fileops.remove_directory(staging_dir)
+        return False
+
+    # Upload staging dir
+    try:
+
+        # Get copy command
+        copy_cmd = [
+            rclone_tool,
+            "copy",
+            staging_dir,
+            get_remote_connection_path(remote_name, remote_type, remote_path),
+            "--copy-links"
+        ]
+        copy_cmd += get_common_remote_flags(
+            remote_name = remote_name,
+            remote_type = remote_type,
+            remote_action_type = config.RemoteActionType.UPLOAD)
+        copy_cmd += get_exclude_flags(excludes)
+        if files_from and paths.is_path_file(files_from):
+            copy_cmd += ["--files-from", files_from]
+        if pretend_run:
+            copy_cmd += ["--dry-run"]
+        if interactive:
+            copy_cmd += ["--interactive"]
+        if verbose:
+            copy_cmd += [
+                "--verbose",
+                "--progress"
+            ]
+
+        # Run copy command
+        code = command.run_returncode_command(
+            cmd = copy_cmd,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        return code == 0
+
+    finally:
+
+        # Clean up staging dir
+        fileops.remove_directory(staging_dir)
 
 # Move files on remote
 def move_files_on_remote(
@@ -1328,6 +1355,50 @@ def mount_files(
         exit_on_failure = exit_on_failure)
     return code == 0
 
+# Copy file from one remote to another
+def copy_remote_to_remote(
+    src_remote_name,
+    src_remote_type,
+    src_remote_path,
+    dest_remote_name,
+    dest_remote_type,
+    dest_remote_path,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Get tool
+    rclone_tool = None
+    if programs.is_tool_installed("RClone"):
+        rclone_tool = programs.get_tool_program("RClone")
+    if not rclone_tool:
+        logger.log_error("RClone was not found")
+        return False
+
+    # Build source and dest paths
+    src_full = get_remote_connection_path(src_remote_name, src_remote_type, src_remote_path)
+    dest_full = get_remote_connection_path(dest_remote_name, dest_remote_type, dest_remote_path)
+
+    # Build copyto command
+    copyto_cmd = [
+        rclone_tool,
+        "copyto",
+        src_full,
+        dest_full
+    ]
+    if pretend_run:
+        copyto_cmd += ["--dry-run"]
+    if verbose:
+        copyto_cmd += ["--verbose", "--progress"]
+
+    # Run copyto command
+    code = command.run_returncode_command(
+        cmd = copyto_cmd,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    return code == 0
+
 # List files with hashes
 def list_files_with_hashes(
     remote_name,
@@ -1413,16 +1484,17 @@ def list_files_with_hashes(
             "size": file_info.get("Size", 0),
             "mtime": mtime
         }
+
+    # All done
+    if verbose:
+        logger.log_info("Loaded %d file hashes" % len(hash_map))
     return hash_map
 
-# Copy file from one remote to another
-def copy_remote_to_remote(
-    src_remote_name,
-    src_remote_type,
-    src_remote_path,
-    dest_remote_name,
-    dest_remote_type,
-    dest_remote_path,
+# List files with hashes from sidecar files
+def list_files_with_hashes_from_sidecar(
+    remote_name,
+    remote_type,
+    remote_path,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -1433,28 +1505,184 @@ def copy_remote_to_remote(
         rclone_tool = programs.get_tool_program("RClone")
     if not rclone_tool:
         logger.log_error("RClone was not found")
-        return False
+        return {}
 
-    # Build source and dest paths
-    src_full = get_remote_connection_path(src_remote_name, src_remote_type, src_remote_path)
-    dest_full = get_remote_connection_path(dest_remote_name, dest_remote_type, dest_remote_path)
+    # Build sidecar folder path
+    sidecar_path = paths.join_paths(remote_path, HASH_SIDECAR_FOLDER).replace("\\", "/")
+    sidecar_connection = get_remote_connection_path(remote_name, remote_type, sidecar_path)
 
-    # Build copyto command
-    copyto_cmd = [
+    # List all .hash files in sidecar folder
+    lsjson_cmd = [
         rclone_tool,
-        "copyto",
-        src_full,
-        dest_full
+        "lsjson",
+        "--recursive",
+        "--files-only",
+        sidecar_connection
     ]
-    if pretend_run:
-        copyto_cmd += ["--dry-run"]
     if verbose:
-        copyto_cmd += ["--verbose", "--progress"]
+        logger.log_info("Listing hash sidecar files from: %s" % sidecar_path)
 
-    # Run copyto command
-    code = command.run_returncode_command(
-        cmd = copyto_cmd,
+    # Run lsjson command
+    lsjson_output = command.run_output_command(
+        cmd = lsjson_cmd,
         verbose = verbose,
         pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    return code == 0
+        exit_on_failure = False)  # Don't fail if folder doesn't exist
+
+    # Parse JSON output
+    lsjson_text = lsjson_output
+    if isinstance(lsjson_output, bytes):
+        lsjson_text = lsjson_output.decode()
+    if not lsjson_text or lsjson_text.strip() == "" or "error" in lsjson_text.lower():
+        if verbose:
+            logger.log_info("No hash sidecar files found")
+        return {}
+
+    # Parse file list
+    files_list = serialization.parse_json_string(lsjson_text)
+    if not files_list:
+        return {}
+
+    # Filter to only .hash files
+    hash_files = [f for f in files_list if f.get("Path", "").endswith(".hash") and not f.get("IsDir", False)]
+    if not hash_files:
+        if verbose:
+            logger.log_info("No .hash files found in sidecar folder")
+        return {}
+    if verbose:
+        logger.log_info("Found %d hash sidecar files" % len(hash_files))
+
+    # Create temp directory for downloads
+    temp_dir = fileops.create_temporary_directory()
+    hash_map = {}
+
+    # Build hash map
+    try:
+        # Download and parse each hash file
+        for hash_file_info in hash_files:
+            hash_file_path = hash_file_info.get("Path", "")
+            if not hash_file_path:
+                continue
+
+            # Download hash file to temp
+            remote_hash_path = paths.join_paths(sidecar_path, hash_file_path).replace("\\", "/")
+            temp_hash_file = paths.join_paths(temp_dir, paths.get_filename_file(hash_file_path))
+            success = download_files_from_remote(
+                remote_name = remote_name,
+                remote_type = remote_type,
+                remote_path = remote_hash_path,
+                local_path = temp_hash_file,
+                verbose = False,
+                pretend_run = pretend_run,
+                exit_on_failure = False)
+            if not success:
+                continue
+
+            # Parse hash file
+            hash_data = serialization.read_json_file(src = temp_hash_file)
+            if not hash_data:
+                continue
+
+            # Add each entry to the hash map
+            base_path = hash_file_path[:-5]
+            for rel_file, file_data in hash_data.items():
+                full_rel_path = paths.join_paths(base_path, rel_file).replace("\\", "/")
+                hash_map[full_rel_path] = {
+                    "filename": paths.get_filename_file(rel_file),
+                    "dir": paths.get_filename_directory(full_rel_path),
+                    "hash": file_data.get("hash", ""),
+                    "size": file_data.get("size", 0),
+                    "mtime": file_data.get("mtime", 0)
+                }
+
+            # Clean up temp hash file
+            fileops.remove_file(temp_hash_file)
+
+    finally:
+
+        # Clean up temp dir
+        fileops.remove_directory(temp_dir)
+
+    # All done
+    if verbose:
+        logger.log_info("Loaded %d file hashes from sidecar files" % len(hash_map))
+    return hash_map
+
+# Stage an upload file
+def stage_upload_file(src_path, dest_path, pretend_run = False):
+    filename = paths.get_filename_file(src_path)
+    if not fileops.create_symlink(src = src_path, dest = dest_path):
+        logger.log_error("Failed to create symlink: %s" % dest_path)
+        return None
+    file_hash = hashing.calculate_file_md5(src = src_path, verbose = False, pretend_run = pretend_run)
+    if not file_hash:
+        logger.log_error("Failed to calculate hash: %s" % src_path)
+        return None
+    return {
+        filename: {
+            "hash": file_hash,
+            "size": paths.get_file_size(src_path),
+            "mtime": paths.get_file_mod_time(src_path)
+        }
+    }
+
+# Write hash sidecar file
+def write_sidecar_file(staging_dir, rel_dir, hash_data, verbose = False):
+    sidecar_name = (rel_dir + ".hash") if rel_dir else "root.hash"
+    sidecar_path = paths.join_paths(staging_dir, HASH_SIDECAR_FOLDER, sidecar_name)
+    if not fileops.make_directory(paths.get_filename_directory(sidecar_path)):
+        logger.log_error("Failed to create sidecar directory")
+        return False
+    if not serialization.write_json_file(src = sidecar_path, json_data = hash_data, verbose = verbose):
+        logger.log_error("Failed to write sidecar file: %s" % sidecar_path)
+        return False
+    if verbose:
+        logger.log_info("Staged %d files with sidecar for: %s" % (len(hash_data), rel_dir or "root"))
+    return True
+
+# Build upload staging directory with symlinks to files and hash sidecars
+def build_upload_staging(
+    local_path,
+    staging_dir,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Check local path exists
+    if not paths.does_path_exist(local_path):
+        logger.log_error("Local path does not exist: %s" % local_path)
+        return False
+
+    # Single file case
+    if paths.is_path_file(local_path):
+        filename = paths.get_filename_file(local_path)
+        hash_entry = stage_upload_file(local_path, paths.join_paths(staging_dir, filename), pretend_run)
+        if not hash_entry:
+            return False
+        return write_sidecar_file(staging_dir, "", hash_entry, verbose)
+
+    # Directory case: group files by subdirectory
+    file_list = paths.build_file_list(local_path, use_relative_paths = True)
+    if not file_list:
+        logger.log_warning("No files found in: %s" % local_path)
+        return True
+
+    # Process each directory group
+    for rel_dir, rel_files in paths.group_files_by_directory(file_list).items():
+        hash_data = {}
+        for rel_file in rel_files:
+            full_file = paths.join_paths(local_path, rel_file)
+            if not paths.is_path_file(full_file):
+                continue
+            symlink_path = paths.join_paths(staging_dir, rel_file)
+            entry = stage_upload_file(full_file, symlink_path, pretend_run)
+            if not entry:
+                if exit_on_failure:
+                    return False
+                continue
+            hash_data.update(entry)
+        if hash_data:
+            if not write_sidecar_file(staging_dir, rel_dir, hash_data, verbose):
+                if exit_on_failure:
+                    return False
+    return True

@@ -99,7 +99,7 @@ class LockerBackend(ABC):
 class LocalBackend(LockerBackend):
     def __init__(self, locker_info):
         super().__init__(locker_info)
-        self.root_path = locker_info.get_local_path() or locker_info.get_remote_mount_path()
+        self.root_path = locker_info.get_mount_path()
 
     def get_root_path(self):
         return self.root_path
@@ -313,8 +313,8 @@ class LocalBackend(LockerBackend):
 class RemoteBackend(LockerBackend):
     def __init__(self, locker_info):
         super().__init__(locker_info)
-        self.remote_name = locker_info.get_remote_name()
-        self.remote_type = locker_info.get_remote_type()
+        self.remote_name = locker_info.get_name()
+        self.remote_type = locker_info.get_type()
         self.remote_path = locker_info.get_remote_path() or ""
 
     def get_root_path(self):
@@ -335,6 +335,19 @@ class RemoteBackend(LockerBackend):
             remote_path = self.remote_path,
             hash_type = config.HashType.MD5,
             excludes = excludes,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+
+    def list_files_with_hashes_from_sidecar(
+        self,
+        verbose = False,
+        pretend_run = False,
+        exit_on_failure = False):
+        return sync.list_files_with_hashes_from_sidecar(
+            remote_name = self.remote_name,
+            remote_type = self.remote_type,
+            remote_path = self.remote_path,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
@@ -541,8 +554,8 @@ def get_backend_for_locker(locker_info):
     if locker_info.is_local_only():
         return LocalBackend(locker_info)
     else:
-        remote_name = locker_info.get_remote_name()
-        remote_type = locker_info.get_remote_type()
+        remote_name = locker_info.get_name()
+        remote_type = locker_info.get_type()
         if remote_name and remote_type and sync.is_remote_configured(remote_name, remote_type):
             return RemoteBackend(locker_info)
         else:

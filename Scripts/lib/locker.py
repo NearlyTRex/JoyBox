@@ -293,13 +293,13 @@ def get_configured_lockers():
         locker_info = lockerinfo.LockerInfo(locker_type)
         if not locker_info:
             continue
-        if locker_info.get_remote_name():
+        if locker_info.get_name():
             if sync.is_remote_configured(
-                remote_name = locker_info.get_remote_name(),
-                remote_type = locker_info.get_remote_type()):
+                remote_name = locker_info.get_name(),
+                remote_type = locker_info.get_type()):
                 configured.append(locker_type)
         elif locker_type == config.LockerType.EXTERNAL:
-            if locker_info.get_local_path() and paths.does_path_exist(locker_info.get_local_path()):
+            if locker_info.get_mount_path() and paths.does_path_exist(locker_info.get_mount_path()):
                 configured.append(locker_type)
     return configured
 
@@ -403,8 +403,8 @@ def backup_files(
             logger.log_error("Locker %s not found" % locker_type)
             return False
         if not sync.is_remote_configured(
-            remote_name = locker_info.get_remote_name(),
-            remote_type = locker_info.get_remote_type()):
+            remote_name = locker_info.get_name(),
+            remote_type = locker_info.get_type()):
             logger.log_info("Remote not configured for locker %s, skipping upload" % locker_type)
             return True
         lockers_to_upload = [locker_type]

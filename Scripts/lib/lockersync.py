@@ -72,6 +72,20 @@ def build_locker_hash_map(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
+    # Check if we got hashes - if not and backend is remote, try sidecar fallback
+    has_hashes = hash_map and any(entry.get("hash") for entry in hash_map.values())
+    if not has_hashes and isinstance(backend, lockerbackend.RemoteBackend):
+        if verbose:
+            logger.log_info("No hashes from server, trying sidecar files for %s..." % locker_name)
+        sidecar_map = backend.list_files_with_hashes_from_sidecar(
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if sidecar_map:
+            if verbose:
+                logger.log_info("Using sidecar hashes for %s (%d files)" % (locker_name, len(sidecar_map)))
+            hash_map = sidecar_map
+
     # Save to cache
     if hash_map and not pretend_run:
         serialization.write_json_file(

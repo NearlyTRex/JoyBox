@@ -256,6 +256,16 @@ def build_symlink_directory_list(root, excludes = [], new_relative_path = "", us
             directories.append(potential_dir)
     return directories
 
+# Group files by their parent directory
+def group_files_by_directory(files):
+    groups = {}
+    for file_path in files:
+        dir_path = get_filename_directory(file_path) or ""
+        if dir_path not in groups:
+            groups[dir_path] = []
+        groups[dir_path].append(file_path)
+    return groups
+
 # Group files by first N path components
 def group_files_by_path_depth(files, depth = 2, fallback_key = "Other"):
     groups = {}
