@@ -724,7 +724,10 @@ def build_binary_from_source(
         return False
 
     # Get final file for backup
-    final_file = install_name + paths.get_filename_extension(output_file)
+    if output_file.startswith("."):
+        final_file = install_name + output_file
+    else:
+        final_file = install_name + paths.get_filename_extension(output_file)
 
     # Check if output is an archive that needs extraction
     is_archive = archive.is_archive(built_file)

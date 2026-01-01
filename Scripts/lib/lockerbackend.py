@@ -389,10 +389,14 @@ class RemoteBackend(LockerBackend):
 
             # If no cryption needed, upload directly
             if cryption_type == config.CryptionType.NONE:
+                if paths.is_path_directory(src_full_path):
+                    upload_remote_path = dest_remote_path
+                else:
+                    upload_remote_path = paths.get_filename_directory(dest_remote_path)
                 return sync.upload_files_to_remote(
                     remote_name = self.remote_name,
                     remote_type = self.remote_type,
-                    remote_path = paths.get_filename_directory(dest_remote_path),
+                    remote_path = upload_remote_path,
                     local_path = src_full_path,
                     verbose = verbose,
                     pretend_run = pretend_run,
