@@ -58,14 +58,14 @@ def main():
         logger.log_error("Invalid locker", quit_program = True)
 
     # Sync options
-    remote_type = locker_info.get_remote_type()
-    remote_name = locker_info.get_remote_name()
+    remote_type = locker_info.get_type()
+    remote_name = locker_info.get_name()
     remote_path = locker_info.get_remote_path()
-    remote_token = locker_info.get_remote_token()
-    remote_config = locker_info.get_remote_config()
-    local_path = locker_info.get_local_path()
-    mount_path = locker_info.get_remote_mount_path()
-    mount_flags = locker_info.get_remote_mount_flags()
+    remote_token = locker_info.get_token()
+    remote_config = locker_info.get_config()
+    local_path = locker_info.get_mount_path()
+    mount_path = locker_info.get_mount_path()
+    mount_flags = locker_info.get_mount_flags()
 
     # Get excludes from CLI or locker config
     if args.excludes:

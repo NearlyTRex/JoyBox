@@ -27,6 +27,9 @@ parser.add_string_argument(
     args = ("--path",),
     default = "",
     description = "Specific subpath to rebuild (e.g., 'Gaming/Roms'). Leave empty for root.")
+parser.add_boolean_argument(
+    args = ("-c", "--clear"),
+    description = "Clear existing sidecars before rebuilding")
 parser.add_common_arguments()
 args, unknownargs = parser.parse_known_args()
 
@@ -53,13 +56,14 @@ def main():
     local_root = local_info.get_mount_path()
     remote_name = remote_info.get_name()
     remote_type = remote_info.get_type()
-    remote_path = remote_info.get_remote_path() or ""
+    locker_root = remote_info.get_remote_path() or ""
+    remote_path = locker_root
 
     # Apply subpath if specified
     local_path = local_root
     if args.path:
         local_path = paths.join_paths(local_root, args.path)
-        remote_path = paths.join_paths(remote_path, args.path).replace("\\", "/")
+        remote_path = paths.join_paths(locker_root, args.path).replace("\\", "/")
 
     # Validate
     if not paths.does_path_exist(local_path):
@@ -71,13 +75,28 @@ def main():
     logger.log_info("Rebuilding hash sidecars for %s" % args.locker)
     logger.log_info("Local source: %s" % local_path)
     logger.log_info("Remote target: %s:%s" % (remote_name, remote_path))
+    logger.log_info("Locker root: %s:%s" % (remote_name, locker_root))
+
+    # Clear existing sidecars if requested (always clear at locker root)
+    if args.clear:
+        logger.log_info("Clearing existing sidecars...")
+        if not sync.clear_hash_sidecars(
+            remote_name = remote_name,
+            remote_type = remote_type,
+            remote_path = locker_root,
+            verbose = args.verbose,
+            pretend_run = args.pretend_run,
+            exit_on_failure = args.exit_on_failure):
+            logger.log_error("Failed to clear sidecars")
+            sys.exit(1)
 
     # Rebuild
-    success = sync.rebuild_hash_sidecars(
+    success = sync.upload_hash_sidecar(
         remote_name = remote_name,
         remote_type = remote_type,
         remote_path = remote_path,
         local_path = local_path,
+        local_root = locker_root,
         verbose = args.verbose,
         pretend_run = args.pretend_run,
         exit_on_failure = args.exit_on_failure)

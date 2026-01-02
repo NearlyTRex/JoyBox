@@ -411,6 +411,7 @@ class RemoteBackend(LockerBackend):
                     remote_type = self.remote_type,
                     remote_path = upload_remote_path,
                     local_path = src_full_path,
+                    local_root = self.remote_path,
                     verbose = verbose,
                     pretend_run = pretend_run,
                     exit_on_failure = exit_on_failure)
@@ -447,6 +448,7 @@ class RemoteBackend(LockerBackend):
                     remote_type = self.remote_type,
                     remote_path = paths.get_filename_directory(dest_remote_path),
                     local_path = temp_file,
+                    local_root = self.remote_path,
                     verbose = verbose,
                     pretend_run = pretend_run,
                     exit_on_failure = exit_on_failure)
@@ -517,6 +519,7 @@ class RemoteBackend(LockerBackend):
                     remote_type = self.remote_type,
                     remote_path = paths.get_filename_directory(dest_remote_path),
                     local_path = temp_processed,
+                    local_root = self.remote_path,
                     verbose = verbose,
                     pretend_run = pretend_run,
                     exit_on_failure = exit_on_failure)
