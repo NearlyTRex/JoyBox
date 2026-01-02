@@ -15,14 +15,20 @@ import paths
 import arguments
 import setup
 import logger
+import prompts
 
 # Setup argument parser
 parser = arguments.ArgumentParser(description = "Rebuild hash sidecar files on a remote from local content.")
 parser.add_enum_argument(
-    args = ("-l", "--locker_type"),
+    args = ("-l", "--source_locker"),
+    arg_type = config.LockerType,
+    default = config.LockerType.LOCAL,
+    description = "Source locker type")
+parser.add_enum_argument(
+    args = ("-d", "--dest_locker"),
     arg_type = config.LockerType,
     default = config.LockerType.HETZNER,
-    description = "Remote locker to rebuild hashes for")
+    description = "Destination locker for hash sidecars")
 parser.add_string_argument(
     args = ("--path",),
     default = "",
@@ -42,48 +48,54 @@ def main():
     # Setup logging
     logger.setup_logging()
 
-    # Get remote locker info
-    remote_info = lockerinfo.LockerInfo(args.locker_type)
-    if not remote_info:
-        logger.log_error("Could not get locker info for %s" % args.locker_type, quit_program = True)
+    # Get source locker info
+    source_info = lockerinfo.LockerInfo(args.source_locker)
+    if not source_info:
+        logger.log_error("Could not get locker info for %s" % args.source_locker, quit_program = True)
 
-    # Get local locker info
-    local_info = lockerinfo.LockerInfo(config.LockerType.LOCAL)
-    if not local_info:
-        logger.log_error("Could not get local locker info", quit_program = True)
+    # Get dest locker info
+    dest_info = lockerinfo.LockerInfo(args.dest_locker)
+    if not dest_info:
+        logger.log_error("Could not get locker info for %s" % args.dest_locker, quit_program = True)
 
     # Get paths
-    local_root = local_info.get_mount_path()
-    remote_name = remote_info.get_name()
-    remote_type = remote_info.get_type()
-    locker_root = remote_info.get_remote_path() or ""
-    remote_path = locker_root
+    source_root = source_info.get_mount_path()
+    dest_name = dest_info.get_name()
+    dest_type = dest_info.get_type()
+    dest_root = dest_info.get_remote_path() or ""
+    dest_path = dest_root
 
     # Apply subpath if specified
-    local_path = local_root
+    source_path = source_root
     if args.path:
-        local_path = paths.join_paths(local_root, args.path)
-        remote_path = paths.join_paths(locker_root, args.path).replace("\\", "/")
+        source_path = paths.join_paths(source_root, args.path)
+        dest_path = paths.join_paths(dest_root, args.path).replace("\\", "/")
 
     # Validate
-    if not paths.does_path_exist(local_path):
-        logger.log_error("Local path not accessible: %s" % local_path, quit_program = True)
-    if not sync.is_remote_configured(remote_name, remote_type):
-        logger.log_error("Remote '%s' is not configured" % remote_name, quit_program = True)
+    if not paths.does_path_exist(source_path):
+        logger.log_error("Source path not accessible: %s" % source_path, quit_program = True)
+    if not sync.is_remote_configured(dest_name, dest_type):
+        logger.log_error("Remote '%s' is not configured" % dest_name, quit_program = True)
 
-    # Log action
-    logger.log_info("Rebuilding hash sidecars for %s" % args.locker_type)
-    logger.log_info("Local source: %s" % local_path)
-    logger.log_info("Remote target: %s:%s" % (remote_name, remote_path))
-    logger.log_info("Locker root: %s:%s" % (remote_name, locker_root))
+    # Show preview
+    if not args.no_preview:
+        details = [
+            "Source: %s" % source_path,
+            "Destination: %s:%s" % (dest_name, dest_path)
+        ]
+        if args.clear:
+            details.append("Clear existing sidecars: Yes")
+        if not prompts.prompt_for_preview("Rebuild hash sidecars", details):
+            logger.log_warning("Operation cancelled by user")
+            return
 
-    # Clear existing sidecars if requested (always clear at locker root)
+    # Clear existing sidecars if requested (always clear at dest root)
     if args.clear:
         logger.log_info("Clearing existing sidecars...")
         if not sync.clear_hash_sidecar_files(
-            remote_name = remote_name,
-            remote_type = remote_type,
-            remote_path = locker_root,
+            remote_name = dest_name,
+            remote_type = dest_type,
+            remote_path = dest_root,
             verbose = args.verbose,
             pretend_run = args.pretend_run,
             exit_on_failure = args.exit_on_failure):
@@ -92,11 +104,11 @@ def main():
 
     # Rebuild
     success = sync.upload_hash_sidecar_files(
-        remote_name = remote_name,
-        remote_type = remote_type,
-        remote_path = remote_path,
-        local_path = local_path,
-        local_root = locker_root,
+        remote_name = dest_name,
+        remote_type = dest_type,
+        remote_path = dest_path,
+        local_path = source_path,
+        local_root = dest_root,
         verbose = args.verbose,
         pretend_run = args.pretend_run,
         exit_on_failure = args.exit_on_failure)
