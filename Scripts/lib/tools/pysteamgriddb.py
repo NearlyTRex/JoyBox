@@ -54,6 +54,7 @@ class PySteamGridDB(toolbase.ToolBase):
                 output_dir = programs.get_library_backup_dir("PySteamGridDB", "lib"),
                 recursive = True,
                 clean = True,
+                locker_type = setup_params.locker_type,
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)

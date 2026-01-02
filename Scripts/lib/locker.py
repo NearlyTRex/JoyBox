@@ -391,7 +391,10 @@ def backup_files(
         return True
 
     # Determine which lockers to upload to
-    if locker_type == config.LockerType.ALL:
+    if locker_type is None:
+        logger.log_info("No locker type specified, skipping upload")
+        return True
+    elif locker_type == config.LockerType.ALL:
         lockers_to_upload = get_configured_lockers()
         if not lockers_to_upload:
             logger.log_info("No configured lockers found, skipping upload")

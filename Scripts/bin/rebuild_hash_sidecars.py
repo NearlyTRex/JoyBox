@@ -79,9 +79,10 @@ def main():
 
     # Show preview
     if not args.no_preview:
+        sidecar_path = sync.get_hash_sidecar_folder_path(dest_root)
         details = [
             "Source: %s" % source_path,
-            "Destination: %s:%s" % (dest_name, dest_path)
+            "Destination: %s:%s" % (dest_name, sidecar_path)
         ]
         if args.clear:
             details.append("Clear existing sidecars: Yes")

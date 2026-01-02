@@ -3,6 +3,7 @@ import os
 import os.path
 import sys
 import re
+import concurrent.futures
 
 # Local imports
 import config
@@ -1505,7 +1506,7 @@ def list_files_with_hashes_from_sidecar(
         return {}
 
     # Build sidecar folder path
-    sidecar_path = paths.join_paths(remote_path, HASH_SIDECAR_FOLDER).replace("\\", "/")
+    sidecar_path = get_hash_sidecar_folder_path(remote_path)
     sidecar_connection = get_remote_connection_path(remote_name, remote_type, sidecar_path)
 
     # List all .json files in sidecar folder
@@ -1608,8 +1609,15 @@ def list_files_with_hashes_from_sidecar(
         logger.log_info("Loaded %d file hashes from sidecar files" % len(hash_map))
     return hash_map
 
-# Get sidecar relative path from remote path and local root
-def get_sidecar_rel_path(local_root, remote_path):
+# Get hash sidecar folder path
+def get_hash_sidecar_folder_path(remote_path = "", rel_path = ""):
+    sidecar_path = paths.join_paths(remote_path, HASH_SIDECAR_FOLDER)
+    if rel_path:
+        sidecar_path = paths.join_paths(sidecar_path, rel_path)
+    return sidecar_path.replace("\\", "/")
+
+# Get hash sidecar relative path
+def get_hash_sidecar_relative_path(local_root, remote_path):
     if local_root and remote_path.startswith(local_root):
         rel_path = remote_path[len(local_root):].lstrip("/")
     else:
@@ -1617,9 +1625,13 @@ def get_sidecar_rel_path(local_root, remote_path):
     return (rel_path + ".json") if rel_path else "root.json"
 
 # Build hash sidecar data
-def build_hash_sidecar_data(local_path, pretend_run = False):
+def build_hash_sidecar_data(local_path, pretend_run = False, verbose = False):
     hash_data = {}
+
+    # Process files to add
     if paths.is_path_file(local_path):
+
+        # Single file
         filename = paths.get_filename_file(local_path)
         file_hash = hashing.calculate_file_md5(src = local_path, verbose = False, pretend_run = pretend_run)
         if file_hash:
@@ -1629,17 +1641,38 @@ def build_hash_sidecar_data(local_path, pretend_run = False):
                 "mtime": paths.get_file_mod_time(local_path)
             }
     elif paths.is_path_directory(local_path):
-        for rel_file in paths.build_file_list(local_path, use_relative_paths = True):
+
+        # Build file list
+        file_list = [f for f in paths.build_file_list(local_path, use_relative_paths = True)]
+        total_files = len(file_list)
+        if verbose and total_files > 0:
+            logger.log_info("  Hashing %d files..." % total_files)
+
+        # Hash files in parallel using thread pool
+        completed = [0]
+        def hash_file(rel_file):
             full_file = paths.join_paths(local_path, rel_file)
             if not paths.is_path_file(full_file):
-                continue
+                return None
             file_hash = hashing.calculate_file_md5(src = full_file, verbose = False, pretend_run = pretend_run)
             if file_hash:
-                hash_data[rel_file] = {
+                return (rel_file, {
                     "hash": file_hash,
                     "size": paths.get_file_size(full_file),
                     "mtime": paths.get_file_mod_time(full_file)
-                }
+                })
+            return None
+
+        # Hash files in parallel
+        with concurrent.futures.ThreadPoolExecutor(max_workers = 8) as executor:
+            futures = {executor.submit(hash_file, rel_file): rel_file for rel_file in file_list}
+            for future in concurrent.futures.as_completed(futures):
+                completed[0] += 1
+                if verbose and total_files > 100 and completed[0] % 100 == 0:
+                    logger.log_info("  Hashed %d/%d files..." % (completed[0], total_files))
+                result = future.result()
+                if result:
+                    hash_data[result[0]] = result[1]
     return hash_data
 
 # Read hash sidecar data
@@ -1652,7 +1685,7 @@ def read_hash_sidecar_data(
     pretend_run = False):
 
     # Build remote sidecar path
-    sidecar_remote = paths.join_paths(local_root, HASH_SIDECAR_FOLDER, sidecar_rel).replace("\\", "/")
+    sidecar_remote = get_hash_sidecar_folder_path(local_root, sidecar_rel)
 
     # Create temp file for download
     temp_file = fileops.create_temporary_file(suffix = ".json")
@@ -1711,7 +1744,7 @@ def write_hash_sidecar_data(
             return False
 
         # Get sidecar path
-        sidecar_remote = paths.join_paths(local_root, HASH_SIDECAR_FOLDER).replace("\\", "/")
+        sidecar_remote = get_hash_sidecar_folder_path(local_root)
         if verbose:
             logger.log_info("Uploading sidecar to: %s:%s/%s" % (remote_name, sidecar_remote, sidecar_rel))
 
@@ -1750,7 +1783,7 @@ def clear_hash_sidecar_files(
     exit_on_failure = False):
 
     # Build sidecar folder path
-    sidecar_path = paths.join_paths(remote_path, HASH_SIDECAR_FOLDER).replace("\\", "/")
+    sidecar_path = get_hash_sidecar_folder_path(remote_path)
 
     # Purge the sidecar folder
     return purge_path_on_remote(
@@ -1772,45 +1805,45 @@ def upload_hash_sidecar_files(
     pretend_run = False,
     exit_on_failure = False):
 
-    # If local_path is a directory with subdirectories, process each subdirectory separately
-    if paths.is_path_directory(local_path):
+    # Use iterative approach with work queue to avoid recursion limits
+    work_queue = [(local_path, remote_path)]
+    all_success = True
+    while work_queue:
+
+        # Check for subdirectories
+        current_local, current_remote = work_queue.pop(0)
         subdirs = []
-        for entry in os.listdir(local_path):
-            entry_path = paths.join_paths(local_path, entry)
-            if paths.is_path_directory(entry_path) and not entry.startswith("."):
-                subdirs.append(entry)
+        if paths.is_path_directory(current_local):
+            for entry in os.listdir(current_local):
+                entry_path = paths.join_paths(current_local, entry)
+                if paths.is_path_directory(entry_path) and not entry.startswith("."):
+                    subdirs.append(entry)
 
-        # Process each subdirectory separately to create per-subdir sidecar files
+        # Add subdirectories to work queue
         if subdirs:
-            all_success = True
-            for subdir in subdirs:
-                subdir_local = paths.join_paths(local_path, subdir)
-                subdir_remote = paths.join_paths(remote_path, subdir).replace("\\", "/")
-                success = upload_hash_sidecar_file(
-                    remote_name = remote_name,
-                    remote_type = remote_type,
-                    remote_path = subdir_remote,
-                    local_path = subdir_local,
-                    local_root = local_root,
-                    verbose = verbose,
-                    pretend_run = pretend_run,
-                    exit_on_failure = exit_on_failure)
-                if not success:
-                    all_success = False
-                    if exit_on_failure:
-                        return False
-            return all_success
+            for subdir in sorted(subdirs):
+                subdir_local = paths.join_paths(current_local, subdir)
+                subdir_remote = paths.join_paths(current_remote, subdir).replace("\\", "/")
+                work_queue.append((subdir_local, subdir_remote))
+        else:
 
-    # No subdirectories or is a file - process directly
-    return upload_hash_sidecar_file(
-        remote_name = remote_name,
-        remote_type = remote_type,
-        remote_path = remote_path,
-        local_path = local_path,
-        local_root = local_root,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
+            # Leaf directory - process it
+            dir_name = paths.get_filename_file(current_local)
+            logger.log_info("Processing: %s" % dir_name)
+            success = upload_hash_sidecar_file(
+                remote_name = remote_name,
+                remote_type = remote_type,
+                remote_path = current_remote,
+                local_path = current_local,
+                local_root = local_root,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
+            if not success:
+                all_success = False
+                if exit_on_failure:
+                    return False
+    return all_success
 
 # Upload hash sidecar file
 def upload_hash_sidecar_file(
@@ -1824,10 +1857,10 @@ def upload_hash_sidecar_file(
     exit_on_failure = False):
 
     # Get sidecar relative path
-    sidecar_rel = get_sidecar_rel_path(local_root, remote_path)
+    sidecar_rel = get_hash_sidecar_relative_path(local_root, remote_path)
 
     # Build hash data from local files
-    new_hash_data = build_hash_sidecar_data(local_path, pretend_run)
+    new_hash_data = build_hash_sidecar_data(local_path, pretend_run, verbose)
     if not new_hash_data:
         return True
 
