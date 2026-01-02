@@ -1608,31 +1608,16 @@ def list_files_with_hashes_from_sidecar(
         logger.log_info("Loaded %d file hashes from sidecar files" % len(hash_map))
     return hash_map
 
-# Upload hash sidecar
-def upload_hash_sidecar(
-    remote_name,
-    remote_type,
-    remote_path,
-    local_path,
-    local_root,
-    verbose = False,
-    pretend_run = False,
-    exit_on_failure = False):
-
-    # Get tool
-    rclone_tool = None
-    if programs.is_tool_installed("RClone"):
-        rclone_tool = programs.get_tool_program("RClone")
-    if not rclone_tool:
-        return False
-
-    # Calculate relative path from local root
+# Get sidecar relative path from remote path and local root
+def get_sidecar_rel_path(local_root, remote_path):
     if local_root and remote_path.startswith(local_root):
         rel_path = remote_path[len(local_root):].lstrip("/")
     else:
         rel_path = remote_path.lstrip("/")
+    return (rel_path + ".json") if rel_path else "root.json"
 
-    # Build hash data for local files
+# Build hash sidecar data
+def build_hash_sidecar_data(local_path, pretend_run = False):
     hash_data = {}
     if paths.is_path_file(local_path):
         filename = paths.get_filename_file(local_path)
@@ -1643,7 +1628,7 @@ def upload_hash_sidecar(
                 "size": paths.get_file_size(local_path),
                 "mtime": paths.get_file_mod_time(local_path)
             }
-    else:
+    elif paths.is_path_directory(local_path):
         for rel_file in paths.build_file_list(local_path, use_relative_paths = True):
             full_file = paths.join_paths(local_path, rel_file)
             if not paths.is_path_file(full_file):
@@ -1655,17 +1640,71 @@ def upload_hash_sidecar(
                     "size": paths.get_file_size(full_file),
                     "mtime": paths.get_file_mod_time(full_file)
                 }
-    if not hash_data:
-        return True
+    return hash_data
 
-    # Create temp sidecar file
+# Read hash sidecar data
+def read_hash_sidecar_data(
+    remote_name,
+    remote_type,
+    local_root,
+    sidecar_rel,
+    verbose = False,
+    pretend_run = False):
+
+    # Build remote sidecar path
+    sidecar_remote = paths.join_paths(local_root, HASH_SIDECAR_FOLDER, sidecar_rel).replace("\\", "/")
+
+    # Create temp file for download
+    temp_file = fileops.create_temporary_file(suffix = ".json")
+    if not temp_file:
+        return {}
+
+    try:
+        # Download sidecar
+        success = download_files_from_remote(
+            remote_name = remote_name,
+            remote_type = remote_type,
+            remote_path = sidecar_remote,
+            local_path = temp_file,
+            verbose = False,
+            pretend_run = pretend_run,
+            exit_on_failure = False)
+        if not success:
+            return {}
+
+        # Parse sidecar
+        return serialization.read_json_file(src = temp_file) or {}
+
+    finally:
+
+        # Clean up temp file
+        fileops.remove_file(temp_file)
+
+# Write hash sidecar data
+def write_hash_sidecar_data(
+    remote_name,
+    remote_type,
+    local_root,
+    sidecar_rel,
+    hash_data,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Get tool
+    rclone_tool = None
+    if programs.is_tool_installed("RClone"):
+        rclone_tool = programs.get_tool_program("RClone")
+    if not rclone_tool:
+        return False
+
+    # Create temp directory with sidecar
     success, temp_dir = fileops.create_temporary_directory()
     if not success:
         return False
 
     try:
         # Write sidecar JSON with mirrored directory structure
-        sidecar_rel = (rel_path + ".json") if rel_path else "root.json"
         temp_sidecar = paths.join_paths(temp_dir, sidecar_rel)
         fileops.make_directory(paths.get_filename_directory(temp_sidecar))
         if not serialization.write_json_file(src = temp_sidecar, json_data = hash_data, verbose = verbose):
@@ -1700,3 +1739,45 @@ def upload_hash_sidecar(
 
         # Clean up temp dir
         fileops.remove_directory(temp_dir)
+
+# Upload hash sidecar (builds, merges with existing, and uploads)
+def upload_hash_sidecar(
+    remote_name,
+    remote_type,
+    remote_path,
+    local_path,
+    local_root,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Get sidecar relative path
+    sidecar_rel = get_sidecar_rel_path(local_root, remote_path)
+
+    # Build hash data from local files
+    new_hash_data = build_hash_sidecar_data(local_path, pretend_run)
+    if not new_hash_data:
+        return True
+
+    # Download existing sidecar data
+    existing_data = read_hash_sidecar_data(
+        remote_name = remote_name,
+        remote_type = remote_type,
+        local_root = local_root,
+        sidecar_rel = sidecar_rel,
+        verbose = verbose,
+        pretend_run = pretend_run)
+
+    # Merge sidecar data
+    existing_data.update(new_hash_data)
+
+    # Write merged sidecar data
+    return write_hash_sidecar_data(
+        remote_name = remote_name,
+        remote_type = remote_type,
+        local_root = local_root,
+        sidecar_rel = sidecar_rel,
+        hash_data = existing_data,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
