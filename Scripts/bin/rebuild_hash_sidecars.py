@@ -19,7 +19,7 @@ import logger
 # Setup argument parser
 parser = arguments.ArgumentParser(description = "Rebuild hash sidecar files on a remote from local content.")
 parser.add_enum_argument(
-    args = ("-l", "--locker"),
+    args = ("-l", "--locker_type"),
     arg_type = config.LockerType,
     default = config.LockerType.HETZNER,
     description = "Remote locker to rebuild hashes for")
@@ -43,9 +43,9 @@ def main():
     logger.setup_logging()
 
     # Get remote locker info
-    remote_info = lockerinfo.LockerInfo(args.locker)
+    remote_info = lockerinfo.LockerInfo(args.locker_type)
     if not remote_info:
-        logger.log_error("Could not get locker info for %s" % args.locker, quit_program = True)
+        logger.log_error("Could not get locker info for %s" % args.locker_type, quit_program = True)
 
     # Get local locker info
     local_info = lockerinfo.LockerInfo(config.LockerType.LOCAL)
@@ -72,7 +72,7 @@ def main():
         logger.log_error("Remote '%s' is not configured" % remote_name, quit_program = True)
 
     # Log action
-    logger.log_info("Rebuilding hash sidecars for %s" % args.locker)
+    logger.log_info("Rebuilding hash sidecars for %s" % args.locker_type)
     logger.log_info("Local source: %s" % local_path)
     logger.log_info("Remote target: %s:%s" % (remote_name, remote_path))
     logger.log_info("Locker root: %s:%s" % (remote_name, locker_root))
@@ -80,7 +80,7 @@ def main():
     # Clear existing sidecars if requested (always clear at locker root)
     if args.clear:
         logger.log_info("Clearing existing sidecars...")
-        if not sync.clear_hash_sidecars(
+        if not sync.clear_hash_sidecar_files(
             remote_name = remote_name,
             remote_type = remote_type,
             remote_path = locker_root,
@@ -91,7 +91,7 @@ def main():
             sys.exit(1)
 
     # Rebuild
-    success = sync.upload_hash_sidecar(
+    success = sync.upload_hash_sidecar_files(
         remote_name = remote_name,
         remote_type = remote_type,
         remote_path = remote_path,

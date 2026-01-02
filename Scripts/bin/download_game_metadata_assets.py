@@ -34,7 +34,7 @@ parser.add_enum_argument(
     description = "Generation mode")
 parser.add_boolean_argument(args = ("-e", "--skip_existing"), description = "Skip existing files")
 parser.add_enum_argument(
-    args = ("-k", "--locker_type"),
+    args = ("-l", "--locker_type"),
     arg_type = config.LockerType,
     default = config.LockerType.ALL,
     description = "Locker type for backup upload")

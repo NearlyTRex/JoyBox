@@ -23,9 +23,9 @@ import prompts
 # Parse arguments
 parser = arguments.ArgumentParser(description = "Scan roms files.")
 parser.add_enum_argument(
-    args = ("-l", "--source_locker"),
+    args = ("-l", "--locker_type"),
     arg_type = config.LockerType,
-    description = "Source locker type")
+    description = "Locker type")
 parser.add_string_argument(args = ("-k", "--keys"), description = "Keys to use (comma delimited)")
 parser.add_enum_list_argument(args = ("-c", "--categories"), arg_type = config.Category, description = "Categories to process")
 parser.add_enum_list_argument(args = ("-s", "--subcategories"), arg_type = config.Subcategory, description = "Subcategories to process")
@@ -83,7 +83,7 @@ def main():
     # Build game json files
     logger.log_info("Building json files ...")
     success = collection.build_all_game_json_files(
-        locker_type = args.source_locker,
+        locker_type = args.locker_type,
         categories = args.categories,
         subcategories = args.subcategories,
         verbose = args.verbose,

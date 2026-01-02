@@ -28,7 +28,7 @@ parser.add_game_category_argument()
 parser.add_game_subcategory_argument()
 parser.add_game_name_argument()
 parser.add_enum_argument(
-    args = ("-k", "--locker_type"),
+    args = ("-l", "--locker_type"),
     arg_type = config.LockerType,
     default = config.LockerType.ALL,
     description = "Locker type for backup upload")

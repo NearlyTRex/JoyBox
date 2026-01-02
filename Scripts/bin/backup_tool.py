@@ -38,7 +38,7 @@ parser.add_enum_argument(
     default = config.LockerType.LOCAL,
     description = "Source locker type")
 parser.add_enum_argument(
-    args = ("-q", "--dest_locker"),
+    args = ("-d", "--dest_locker"),
     arg_type = config.LockerType,
     default = config.LockerType.LOCAL,
     description = "Destination locker type")
@@ -50,12 +50,7 @@ parser.add_enum_argument(
     arg_type = config.CryptionType,
     default = config.CryptionType.NONE,
     description = "Cryption type (encrypt or decrypt files during copy)")
-parser.add_enum_argument(
-    args = ("-k", "--locker_type"),
-    arg_type = config.LockerType,
-    default = config.LockerType.HETZNER,
-    description = "Locker type (for encryption passphrase)")
-parser.add_boolean_argument(args = ("-d", "--delete_original"), description = "Delete original files after encrypt/decrypt")
+parser.add_boolean_argument(args = ("--delete_original",), description = "Delete original files after encrypt/decrypt")
 parser.add_common_arguments()
 args, unknownargs = parser.parse_known_args()
 
@@ -117,11 +112,17 @@ def main():
 
     # Copy files
     if args.backup_type == config.BackupType.COPY:
+        if args.cryption_type == config.CryptionType.ENCRYPT:
+            passphrase_locker = args.dest_locker
+        elif args.cryption_type == config.CryptionType.DECRYPT:
+            passphrase_locker = args.source_locker
+        else:
+            passphrase_locker = None
         backup.copy_files(
             input_base_path = source_file_root,
             output_base_path = dest_file_root,
             cryption_type = args.cryption_type,
-            locker_type = args.locker_type,
+            locker_type = passphrase_locker,
             exclude_paths = exclude_paths,
             delete_original = args.delete_original,
             show_progress = True,

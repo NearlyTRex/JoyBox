@@ -628,9 +628,9 @@ def upload_files_to_remote(
     if code != 0:
         return False
 
-    # Upload hash sidecar to local root if specified
+    # Upload hash sidecars to local root if specified
     if local_root is not None:
-        upload_hash_sidecar(
+        upload_hash_sidecar_files(
             remote_name = remote_name,
             remote_type = remote_type,
             remote_path = remote_path,
@@ -1740,8 +1740,80 @@ def write_hash_sidecar_data(
         # Clean up temp dir
         fileops.remove_directory(temp_dir)
 
-# Upload hash sidecar (builds, merges with existing, and uploads)
-def upload_hash_sidecar(
+# Clear hash sidecar files
+def clear_hash_sidecar_files(
+    remote_name,
+    remote_type,
+    remote_path,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Build sidecar folder path
+    sidecar_path = paths.join_paths(remote_path, HASH_SIDECAR_FOLDER).replace("\\", "/")
+
+    # Purge the sidecar folder
+    return purge_path_on_remote(
+        remote_name = remote_name,
+        remote_type = remote_type,
+        remote_path = sidecar_path,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+
+# Upload hash sidecar files
+def upload_hash_sidecar_files(
+    remote_name,
+    remote_type,
+    remote_path,
+    local_path,
+    local_root,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # If local_path is a directory with subdirectories, process each subdirectory separately
+    if paths.is_path_directory(local_path):
+        subdirs = []
+        for entry in os.listdir(local_path):
+            entry_path = paths.join_paths(local_path, entry)
+            if paths.is_path_directory(entry_path) and not entry.startswith("."):
+                subdirs.append(entry)
+
+        # Process each subdirectory separately to create per-subdir sidecar files
+        if subdirs:
+            all_success = True
+            for subdir in subdirs:
+                subdir_local = paths.join_paths(local_path, subdir)
+                subdir_remote = paths.join_paths(remote_path, subdir).replace("\\", "/")
+                success = upload_hash_sidecar_file(
+                    remote_name = remote_name,
+                    remote_type = remote_type,
+                    remote_path = subdir_remote,
+                    local_path = subdir_local,
+                    local_root = local_root,
+                    verbose = verbose,
+                    pretend_run = pretend_run,
+                    exit_on_failure = exit_on_failure)
+                if not success:
+                    all_success = False
+                    if exit_on_failure:
+                        return False
+            return all_success
+
+    # No subdirectories or is a file - process directly
+    return upload_hash_sidecar_file(
+        remote_name = remote_name,
+        remote_type = remote_type,
+        remote_path = remote_path,
+        local_path = local_path,
+        local_root = local_root,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+
+# Upload hash sidecar file
+def upload_hash_sidecar_file(
     remote_name,
     remote_type,
     remote_path,

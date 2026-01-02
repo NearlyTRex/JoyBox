@@ -37,7 +37,7 @@ parser.add_boolean_argument(args = ("-f", "--force"), description = "Force actio
 parser.add_boolean_argument(args = ("-r", "--recursive"), description = "Use recursion")
 parser.add_boolean_argument(args = ("-c", "--clean"), description = "Use cleaning first")
 parser.add_enum_argument(
-    args = ("-k", "--locker_type"),
+    args = ("-l", "--locker_type"),
     arg_type = config.LockerType,
     default = config.LockerType.ALL,
     description = "Locker type for backup upload")

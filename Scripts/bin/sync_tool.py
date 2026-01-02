@@ -25,7 +25,7 @@ parser.add_enum_argument(
     default = config.RemoteActionType.INIT,
     description = "Remote action type")
 parser.add_enum_argument(
-    args = ("-t", "--locker_type"),
+    args = ("-l", "--locker_type"),
     arg_type = config.LockerType,
     description = "Locker type")
 parser.add_string_argument(args = ("--excludes"), default = "", description = "Excludes (comma delimited, defaults to locker config)")

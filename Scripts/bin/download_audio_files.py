@@ -22,7 +22,7 @@ parser.add_enum_argument(
     description = "Genre type")
 parser.add_string_argument(args = ("-c", "--cookie_source"), default = "firefox", description = "Cookie source")
 parser.add_enum_argument(
-    args = ("-k", "--locker_type"),
+    args = ("-l", "--locker_type"),
     arg_type = config.LockerType,
     default = config.LockerType.ALL,
     description = "Locker type for backup upload")
