@@ -576,6 +576,50 @@ def does_path_contain_files(
         list_text = list_output.decode()
     return len(list_text.strip()) > 0
 
+# Create directory on remote
+def create_remote_directory(
+    remote_name,
+    remote_type,
+    remote_path,
+    verbose = False,
+    pretend_run = False):
+
+    # Get tool
+    rclone_tool = None
+    if programs.is_tool_installed("RClone"):
+        rclone_tool = programs.get_tool_program("RClone")
+    if not rclone_tool:
+        return False
+
+    # Build mkdir command
+    mkdir_cmd = [
+        rclone_tool,
+        "mkdir",
+        get_remote_connection_path(remote_name, remote_type, remote_path)
+    ]
+    if verbose:
+        mkdir_cmd += ["--verbose"]
+
+    # Run command
+    code = command.run_returncode_command(
+        cmd = mkdir_cmd,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = False)
+    if code == 0:
+        return True
+
+    # Check if failure was due to directory already existing
+    output = command.run_output_command(
+        cmd = mkdir_cmd,
+        options = command.create_command_options(include_stderr = True),
+        verbose = False,
+        pretend_run = pretend_run,
+        exit_on_failure = False)
+    if "already exist" in output.lower():
+        return True
+    return False
+
 # Download files from remote
 def download_files_from_remote(
     remote_name,
@@ -1756,7 +1800,7 @@ def build_hash_sidecar_data(local_path, pretend_run = False, verbose = False):
             return None
 
         # Hash files in parallel
-        with concurrent.futures.ThreadPoolExecutor(max_workers = 8) as executor:
+        with concurrent.futures.ThreadPoolExecutor(max_workers = 16) as executor:
             futures = {executor.submit(hash_file, rel_file): rel_file for rel_file in file_list}
             for future in concurrent.futures.as_completed(futures):
                 completed[0] += 1
@@ -1894,17 +1938,18 @@ def upload_hash_sidecar_files(
     local_path,
     local_root,
     skip_existing = False,
+    parallel_dirs = 4,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
 
-    # Use iterative approach with work queue to avoid recursion limits
+    # Collect all leaf directories
+    leaf_dirs = []
     work_queue = [(local_path, remote_path)]
-    all_success = True
     while work_queue:
 
         # Check for subdirectories
-        current_local, current_remote = work_queue.pop(0)
+        current_local, current_remote = work_queue.pop()
         subdirs = []
         if paths.is_path_directory(current_local):
             for entry in os.listdir(current_local):
@@ -1912,30 +1957,65 @@ def upload_hash_sidecar_files(
                 if paths.is_path_directory(entry_path) and not entry.startswith("."):
                     subdirs.append(entry)
 
-        # Add subdirectories to work queue
+        # Add subdirectories to work queue (reverse sort so alphabetically first is processed first)
         if subdirs:
-            for subdir in sorted(subdirs):
+            for subdir in sorted(subdirs, reverse=True):
                 subdir_local = paths.join_paths(current_local, subdir)
                 subdir_remote = paths.join_paths(current_remote, subdir).replace("\\", "/")
                 work_queue.append((subdir_local, subdir_remote))
         else:
+            leaf_dirs.append((current_local, current_remote))
 
-            # Leaf directory - process it
-            dir_name = paths.get_filename_file(current_local)
-            logger.log_info("Processing: %s" % dir_name)
-            success = upload_hash_sidecar_file(
+    # Process leaf directories in parallel
+    if not leaf_dirs:
+        return True
+
+    # Directory thread worker
+    def process_dir(dir_info):
+        current_local, current_remote = dir_info
+        dir_name = paths.get_filename_file(current_local)
+        logger.log_info("Processing: %s" % dir_name)
+        return upload_hash_sidecar_file(
+            remote_name = remote_name,
+            remote_type = remote_type,
+            remote_path = current_remote,
+            local_path = current_local,
+            local_root = local_root,
+            skip_existing = skip_existing,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = False)
+
+    # Pre-create sidecar directories to avoid race conditions
+    logger.log_info("Found %d directories to process" % len(leaf_dirs))
+    sidecar_parent_dirs = set()
+    for _, current_remote in leaf_dirs:
+        sidecar_rel = get_hash_sidecar_relative_path(local_root, current_remote)
+        parent_dir = paths.get_filename_directory(sidecar_rel)
+        if parent_dir:
+            sidecar_parent_dirs.add(parent_dir)
+    if sidecar_parent_dirs:
+        logger.log_info("Creating %d sidecar directories..." % len(sidecar_parent_dirs))
+        sidecar_root = get_hash_sidecar_folder_path(local_root)
+        def create_dir(parent_dir):
+            create_remote_directory(
                 remote_name = remote_name,
                 remote_type = remote_type,
-                remote_path = current_remote,
-                local_path = current_local,
-                local_root = local_root,
-                skip_existing = skip_existing,
+                remote_path = paths.join_paths(sidecar_root, parent_dir).replace("\\", "/"),
                 verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
-            if not success:
+                pretend_run = pretend_run)
+        with concurrent.futures.ThreadPoolExecutor(max_workers = parallel_dirs) as executor:
+            list(executor.map(create_dir, sidecar_parent_dirs))
+
+    # Process directories
+    all_success = True
+    with concurrent.futures.ThreadPoolExecutor(max_workers = parallel_dirs) as executor:
+        futures = {executor.submit(process_dir, dir_info): dir_info for dir_info in leaf_dirs}
+        for future in concurrent.futures.as_completed(futures):
+            if not future.result():
                 all_success = False
                 if exit_on_failure:
+                    executor.shutdown(wait=False, cancel_futures=True)
                     return False
     return all_success
 

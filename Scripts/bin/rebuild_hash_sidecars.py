@@ -39,6 +39,10 @@ parser.add_boolean_argument(
 parser.add_boolean_argument(
     args = ("-s", "--skip_existing"),
     description = "Skip directories that already have sidecars")
+parser.add_integer_argument(
+    args = ("-r", "--parallel_dirs"),
+    default = 4,
+    description = "Number of directories to process in parallel")
 parser.add_common_arguments()
 args, unknownargs = parser.parse_known_args()
 
@@ -116,6 +120,7 @@ def main():
         local_path = source_path,
         local_root = dest_root,
         skip_existing = args.skip_existing,
+        parallel_dirs = args.parallel_dirs,
         verbose = args.verbose,
         pretend_run = args.pretend_run,
         exit_on_failure = args.exit_on_failure)
