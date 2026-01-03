@@ -438,8 +438,8 @@ def does_path_match_md5(
         return True
     return False
 
-# Check if path exists
-def does_path_exist(
+# Check if directory exists on remote
+def does_directory_exist(
     remote_name,
     remote_type,
     remote_path,
@@ -480,6 +480,63 @@ def does_path_exist(
     elif "directory not found" in list_text:
         return False
     return True
+
+# Check if file exists on remote
+def does_file_exist(
+    remote_name,
+    remote_type,
+    remote_path,
+    verbose = False):
+
+    # Get tool
+    rclone_tool = None
+    if programs.is_tool_installed("RClone"):
+        rclone_tool = programs.get_tool_program("RClone")
+    if not rclone_tool:
+        logger.log_error("RClone was not found")
+        return False
+
+    # Use rclone lsjson to check if specific file exists
+    lsjson_cmd = [
+        rclone_tool,
+        "lsjson",
+        get_remote_connection_path(remote_name, remote_type, remote_path)
+    ]
+
+    # Run lsjson command - returns 0 if file exists, non-zero if not
+    options = command.create_command_options()
+    options.set_suppress_output(True)
+    code = command.run_returncode_command(
+        cmd = lsjson_cmd,
+        options = options,
+        verbose = verbose)
+    return code == 0
+
+# Check if path (file or directory) exists on remote
+def does_path_exist(
+    remote_name,
+    remote_type,
+    remote_path,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Check if file exists
+    if does_file_exist(
+        remote_name = remote_name,
+        remote_type = remote_type,
+        remote_path = remote_path,
+        verbose = verbose):
+        return True
+
+    # Check if directory exists
+    return does_directory_exist(
+        remote_name = remote_name,
+        remote_type = remote_type,
+        remote_path = remote_path,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
 
 # Check if path contains files
 def does_path_contain_files(
@@ -1624,6 +1681,41 @@ def get_hash_sidecar_relative_path(local_root, remote_path):
         rel_path = remote_path.lstrip("/")
     return (rel_path + ".json") if rel_path else "root.json"
 
+# Check if hash sidecar exists on remote
+def does_hash_sidecar_exist(
+    remote_name,
+    remote_type,
+    local_root,
+    sidecar_rel,
+    verbose = False):
+
+    # Build remote sidecar path
+    sidecar_remote = get_hash_sidecar_folder_path(local_root, sidecar_rel)
+
+    # Use general file exist check
+    return does_file_exist(
+        remote_name = remote_name,
+        remote_type = remote_type,
+        remote_path = sidecar_remote,
+        verbose = verbose)
+
+# Check if hash sidecar data is valid
+def is_hash_sidecar_data_valid(sidecar_data):
+
+    # Check if we got valid data (non-empty dict)
+    if not sidecar_data or not isinstance(sidecar_data, dict):
+        return False
+
+    # Validate structure - should have file paths as keys with hash info dicts as values
+    for key, value in sidecar_data.items():
+        if not isinstance(key, str):
+            return False
+        if not isinstance(value, dict):
+            return False
+        if "hash" not in value or not isinstance(value.get("hash"), str):
+            return False
+    return True
+
 # Build hash sidecar data
 def build_hash_sidecar_data(local_path, pretend_run = False, verbose = False):
     hash_data = {}
@@ -1801,6 +1893,7 @@ def upload_hash_sidecar_files(
     remote_path,
     local_path,
     local_root,
+    skip_existing = False,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -1836,6 +1929,7 @@ def upload_hash_sidecar_files(
                 remote_path = current_remote,
                 local_path = current_local,
                 local_root = local_root,
+                skip_existing = skip_existing,
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
@@ -1852,6 +1946,7 @@ def upload_hash_sidecar_file(
     remote_path,
     local_path,
     local_root,
+    skip_existing = False,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -1859,19 +1954,34 @@ def upload_hash_sidecar_file(
     # Get sidecar relative path
     sidecar_rel = get_hash_sidecar_relative_path(local_root, remote_path)
 
-    # Build hash data from local files
-    new_hash_data = build_hash_sidecar_data(local_path, pretend_run, verbose)
-    if not new_hash_data:
-        return True
-
-    # Download existing sidecar data
-    existing_data = read_hash_sidecar_data(
+    # Check if sidecar already exists
+    existing_data = {}
+    sidecar_exists = does_hash_sidecar_exist(
         remote_name = remote_name,
         remote_type = remote_type,
         local_root = local_root,
         sidecar_rel = sidecar_rel,
-        verbose = verbose,
-        pretend_run = pretend_run)
+        verbose = verbose)
+
+    # If exists, read the data
+    if sidecar_exists:
+        existing_data = read_hash_sidecar_data(
+            remote_name = remote_name,
+            remote_type = remote_type,
+            local_root = local_root,
+            sidecar_rel = sidecar_rel,
+            verbose = verbose,
+            pretend_run = pretend_run)
+
+        # If skip_existing and data is valid, skip this sidecar
+        if skip_existing and is_hash_sidecar_data_valid(existing_data):
+            logger.log_info("Skipping (valid sidecar exists): %s" % sidecar_rel)
+            return True
+
+    # Build hash data from local files
+    new_hash_data = build_hash_sidecar_data(local_path, pretend_run, verbose)
+    if not new_hash_data:
+        return True
 
     # Merge sidecar data
     existing_data.update(new_hash_data)

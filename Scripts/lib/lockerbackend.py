@@ -525,7 +525,6 @@ class RemoteBackend(LockerBackend):
                     exit_on_failure = exit_on_failure)
             finally:
                 fileops.remove_directory(temp_dir)
-
         return False
 
     def file_exists(self, rel_path):

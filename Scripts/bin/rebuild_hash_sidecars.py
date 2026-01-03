@@ -36,6 +36,9 @@ parser.add_string_argument(
 parser.add_boolean_argument(
     args = ("-c", "--clear"),
     description = "Clear existing sidecars before rebuilding")
+parser.add_boolean_argument(
+    args = ("-s", "--skip_existing"),
+    description = "Skip directories that already have sidecars")
 parser.add_common_arguments()
 args, unknownargs = parser.parse_known_args()
 
@@ -86,6 +89,8 @@ def main():
         ]
         if args.clear:
             details.append("Clear existing sidecars: Yes")
+        if args.skip_existing:
+            details.append("Skip existing sidecars: Yes")
         if not prompts.prompt_for_preview("Rebuild hash sidecars", details):
             logger.log_warning("Operation cancelled by user")
             return
@@ -110,6 +115,7 @@ def main():
         remote_path = dest_path,
         local_path = source_path,
         local_root = dest_root,
+        skip_existing = args.skip_existing,
         verbose = args.verbose,
         pretend_run = args.pretend_run,
         exit_on_failure = args.exit_on_failure)
