@@ -27,8 +27,7 @@ config_files = {
 
 # Patch files
 patch_files = [
-    "pcode_patching.patch",
-    "stack_alignment_tracking.patch",
+    "ghidra.patch"
 ]
 
 # Ghidra tool
