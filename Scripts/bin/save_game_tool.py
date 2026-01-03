@@ -46,11 +46,11 @@ def main():
 
     # Action handlers
     action_handlers = {
-        config.SaveActionType.PACK: (collection.PackSave, "Packing of save failed!"),
-        config.SaveActionType.UNPACK: (collection.UnpackSave, "Unpacking of save failed!"),
-        config.SaveActionType.IMPORT: (collection.ImportGameSave, "Import of save failed!"),
-        config.SaveActionType.EXPORT: (collection.ExportGameSave, "Export of save failed!"),
-        config.SaveActionType.IMPORT_SAVE_PATHS: (collection.ImportGameSavePaths, "Import of save paths failed!"),
+        config.SaveActionType.PACK: (collection.pack_save, "Packing of save failed!"),
+        config.SaveActionType.UNPACK: (collection.unpack_save, "Unpacking of save failed!"),
+        config.SaveActionType.IMPORT: (collection.import_game_save, "Import of save failed!"),
+        config.SaveActionType.EXPORT: (collection.export_game_save, "Export of save failed!"),
+        config.SaveActionType.IMPORT_SAVE_PATHS: (collection.import_game_save_paths, "Import of save paths failed!"),
     }
 
     # Get handler for action
@@ -82,7 +82,7 @@ def main():
             "pretend_run": args.pretend_run,
             "exit_on_failure": args.exit_on_failure
         }
-        if args.action == config.SaveActionType.PACK:
+        if args.action in (config.SaveActionType.PACK, config.SaveActionType.EXPORT):
             handler_kwargs["locker_type"] = args.locker_type
         success = handler(**handler_kwargs)
         if not success:

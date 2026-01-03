@@ -1084,7 +1084,7 @@ class Steam(storebase.StoreBase):
     def build_path_translation_map(self, appid = None, appname = None):
 
         # Build translation map
-        translation_map = super().BuildPathTranslationMap()
+        translation_map = super().build_path_translation_map()
         if appid:
             prefix_path = get_steam_prefix_dir(self.get_install_dir(), appid)
             translation_map[config.token_user_registry_dir].append(prefix_path)
@@ -1096,7 +1096,7 @@ class Steam(storebase.StoreBase):
     def add_path_variants(self, paths = []):
 
         # Add parent variants
-        paths = super().AddPathVariants(paths)
+        paths = super().add_path_variants(paths)
 
         # Get user info
         userid_64 = self.get_user_id(config.SteamIDFormatType.STEAMID_64)

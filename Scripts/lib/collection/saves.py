@@ -169,6 +169,7 @@ def pack_save(
 
 # Pack all saves
 def pack_all_saves(
+    locker_type = None,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -190,6 +191,7 @@ def pack_all_saves(
                         exit_on_failure = exit_on_failure)
                     success = pack_save(
                         game_info = game_info,
+                        locker_type = locker_type,
                         verbose = verbose,
                         pretend_run = pretend_run,
                         exit_on_failure = exit_on_failure)
@@ -377,6 +379,7 @@ def import_store_game_save(
 # Export store game save
 def export_store_game_save(
     game_info,
+    locker_type = None,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -424,6 +427,7 @@ def export_store_game_save(
     success = pack_save(
         game_info = game_info,
         save_dir = tmp_dir_result,
+        locker_type = locker_type,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -473,6 +477,7 @@ def import_local_game_save(
 # Export local game save
 def export_local_game_save(
     game_info,
+    locker_type = None,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -480,6 +485,7 @@ def export_local_game_save(
     # Pack save
     success = pack_save(
         game_info = game_info,
+        locker_type = locker_type,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -592,24 +598,28 @@ def import_all_game_saves(
 # Export game save
 def export_game_save(
     game_info,
+    locker_type = None,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
     if stores.is_store_platform(game_info.get_platform()):
         return export_store_game_save(
             game_info = game_info,
+            locker_type = locker_type,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
     else:
         return export_local_game_save(
             game_info = game_info,
+            locker_type = locker_type,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
 # Export all game save
 def export_all_game_save(
+    locker_type = None,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -631,6 +641,7 @@ def export_all_game_save(
                         exit_on_failure = exit_on_failure)
                     success = export_game_save(
                         game_info = game_info,
+                        locker_type = locker_type,
                         verbose = verbose,
                         pretend_run = pretend_run,
                         exit_on_failure = exit_on_failure)
