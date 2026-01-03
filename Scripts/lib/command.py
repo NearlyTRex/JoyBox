@@ -489,15 +489,15 @@ def run_returncode_command(
                 creationflags = options.get_creationflags() if not options.is_daemon() else (
                     subprocess.DETACHED_PROCESS if os.name == 'nt' else 0
                 ),
-                stdout = subprocess.DEVNULL if options.is_daemon() else subprocess.PIPE,
-                stderr = subprocess.DEVNULL if options.is_daemon() else subprocess.PIPE,
+                stdout = subprocess.DEVNULL if (options.is_daemon() or options.is_output_suppressed()) else subprocess.PIPE,
+                stderr = subprocess.DEVNULL if (options.is_daemon() or options.is_output_suppressed()) else subprocess.PIPE,
                 stdin = subprocess.DEVNULL if options.is_daemon() else None,
                 preexec_fn = os.setsid if options.is_daemon() and os.name != 'nt' else None,
                 text = True,
                 bufsize = 1)
 
-            # Skip I/O threads if running as daemon
-            if not options.is_daemon():
+            # Skip I/O threads if running as daemon or output is suppressed
+            if not options.is_daemon() and not options.is_output_suppressed():
 
                 # Reads from process output and logs it while writing to a file if needed
                 def handle_output(pipe, log_func, file_target):
@@ -535,8 +535,12 @@ def run_returncode_command(
 
             else:
 
-                # Sleep a tiny bit to allow startup before moving on
-                system.sleep_program(0.5)
+                # For suppressed output, still wait for process to complete
+                # For daemon, just sleep a tiny bit to allow startup before moving on
+                if options.is_output_suppressed():
+                    proc.wait()
+                else:
+                    system.sleep_program(0.5)
 
             # Close file handles if used
             if stdout_target:

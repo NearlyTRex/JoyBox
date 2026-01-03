@@ -122,6 +122,12 @@ class CommandOptions:
     def set_is_daemon(self, value):
         self.options.set_value(config.program_key_is_daemon, value)
 
+    # Suppress output
+    def is_output_suppressed(self):
+        return self.options.get_value(config.program_key_suppress_output, False)
+    def set_suppress_output(self, value):
+        self.options.set_value(config.program_key_suppress_output, value)
+
     # 32-bit execution
     def is_32_bit(self):
         return self.options.get_value(config.program_key_is_32_bit, False)
