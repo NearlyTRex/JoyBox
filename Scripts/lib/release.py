@@ -606,7 +606,7 @@ def build_from_source(
                 patch_temp_file = paths.join_paths(tmp_dir_result, patch_file if patch_file.endswith(".patch") else patch_file + ".patch")
                 success = fileops.touch_file(
                     src = patch_temp_file,
-                    contents = patch_content.strip() + "\n",
+                    contents = patch_content,
                     verbose = verbose,
                     pretend_run = pretend_run,
                     exit_on_failure = exit_on_failure)
