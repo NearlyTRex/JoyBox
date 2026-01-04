@@ -203,6 +203,11 @@ def log_error(message, game_supercategory = None, game_category = None, game_sub
 def log_debug(message, game_supercategory = None, game_category = None, game_subcategory = None, game_name = None):
     get_logger().debug(message, game_supercategory, game_category, game_subcategory, game_name)
 
+def log_header(message, width = 60):
+    log_info("=" * width)
+    log_info(message)
+    log_info("=" * width)
+
 def log_percent_complete(percent_complete):
     print(">>> Percent complete: %s%% " % percent_complete, end='\r', flush=True)
 
