@@ -93,8 +93,8 @@ class MetadataEntry:
         if isinstance(value, list):
             self.set_value(config.metadata_key_description, value)
         elif isinstance(value, str):
-            text = text.clean_web_text(value)
-            lines = text.wrap_text_to_lines(text)
+            cleaned_text = text.clean_web_text(value)
+            lines = text.wrap_text_to_lines(cleaned_text)
             lines = datautils.deduplicate_adjacent_lines(lines)
             self.set_value(config.metadata_key_description, lines)
 

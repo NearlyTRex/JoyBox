@@ -180,7 +180,7 @@ def update_game_json_file(
             exit_on_failure = exit_on_failure)
 
     # Get rebased files
-    rebased_files = paths.convert_file_list_to_relative_paths(all_files, game_root)
+    rebased_files = paths.convert_file_list_to_relative_paths(all_files, game_root) if game_root else []
 
     # Build path lists
     all_main = []
