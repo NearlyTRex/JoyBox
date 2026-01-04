@@ -39,6 +39,9 @@ parser.add_boolean_argument(
 parser.add_boolean_argument(
     args = ("-s", "--skip_existing"),
     description = "Skip directories that already have sidecars")
+parser.add_boolean_argument(
+    args = ("--no_precreate_dirs",),
+    description = "Skip pre-creating sidecar directories")
 parser.add_integer_argument(
     args = ("-r", "--parallel_dirs"),
     default = 4,
@@ -120,6 +123,7 @@ def main():
         local_path = source_path,
         local_root = dest_root,
         skip_existing = args.skip_existing,
+        precreate_dirs = not args.no_precreate_dirs,
         parallel_dirs = args.parallel_dirs,
         verbose = args.verbose,
         pretend_run = args.pretend_run,

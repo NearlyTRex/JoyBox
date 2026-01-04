@@ -1938,6 +1938,7 @@ def upload_hash_sidecar_files(
     local_path,
     local_root,
     skip_existing = False,
+    precreate_dirs = True,
     parallel_dirs = 4,
     verbose = False,
     pretend_run = False,
@@ -1988,24 +1989,25 @@ def upload_hash_sidecar_files(
 
     # Pre-create sidecar directories to avoid race conditions
     logger.log_info("Found %d directories to process" % len(leaf_dirs))
-    sidecar_parent_dirs = set()
-    for _, current_remote in leaf_dirs:
-        sidecar_rel = get_hash_sidecar_relative_path(local_root, current_remote)
-        parent_dir = paths.get_filename_directory(sidecar_rel)
-        if parent_dir:
-            sidecar_parent_dirs.add(parent_dir)
-    if sidecar_parent_dirs:
-        logger.log_info("Creating %d sidecar directories..." % len(sidecar_parent_dirs))
-        sidecar_root = get_hash_sidecar_folder_path(local_root)
-        def create_dir(parent_dir):
-            create_remote_directory(
-                remote_name = remote_name,
-                remote_type = remote_type,
-                remote_path = paths.join_paths(sidecar_root, parent_dir).replace("\\", "/"),
-                verbose = verbose,
-                pretend_run = pretend_run)
-        with concurrent.futures.ThreadPoolExecutor(max_workers = parallel_dirs) as executor:
-            list(executor.map(create_dir, sidecar_parent_dirs))
+    if precreate_dirs:
+        sidecar_parent_dirs = set()
+        for _, current_remote in leaf_dirs:
+            sidecar_rel = get_hash_sidecar_relative_path(local_root, current_remote)
+            parent_dir = paths.get_filename_directory(sidecar_rel)
+            if parent_dir:
+                sidecar_parent_dirs.add(parent_dir)
+        if sidecar_parent_dirs:
+            logger.log_info("Creating %d sidecar directories..." % len(sidecar_parent_dirs))
+            sidecar_root = get_hash_sidecar_folder_path(local_root)
+            def create_dir(parent_dir):
+                create_remote_directory(
+                    remote_name = remote_name,
+                    remote_type = remote_type,
+                    remote_path = paths.join_paths(sidecar_root, parent_dir).replace("\\", "/"),
+                    verbose = verbose,
+                    pretend_run = pretend_run)
+            with concurrent.futures.ThreadPoolExecutor(max_workers = parallel_dirs) as executor:
+                list(executor.map(create_dir, sidecar_parent_dirs))
 
     # Process directories
     all_success = True
