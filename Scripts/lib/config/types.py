@@ -295,6 +295,12 @@ class AnalyzeModeType(EnumType):
     MISSING_GAME_FILES      = ("MissingGameFiles")
     UNPLAYABLE_GAMES        = ("UnplayableGames")
 
+# Metadata key type
+class MetadataKeyType(EnumType):
+    MINIMUM                 = ("Minimum")
+    DOWNLOADABLE            = ("Downloadable")
+    ALL                     = ("All")
+
 # Steam id formats
 class SteamIDFormatType(EnumType):
     STEAMID_64              = ("SteamID64")

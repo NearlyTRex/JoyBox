@@ -17,6 +17,7 @@ import setup
 import logger
 import paths
 import prompts
+import reports
 
 # Parse arguments
 parser = arguments.ArgumentParser(description = "Find missing game assets.")
@@ -42,7 +43,7 @@ def main():
             "Assets dir: %s" % assets_dir,
             "Metadata dir: %s" % metadata_dir
         ]
-        if not prompts.prompt_for_preview("Find missing game assets (writes Missing_*.txt and Extras.txt)", details):
+        if not prompts.prompt_for_preview("Find missing game assets", details):
             logger.log_warning("Operation cancelled by user")
             return
 
@@ -79,12 +80,16 @@ def main():
                                 missing_assets[asset_type] = set()
                             missing_assets[asset_type].add(asset_file)
 
-    # Write missing assets
+    # Report and write missing assets
     for asset_type in config.AssetType.members():
-        with open("Missing_" + asset_type.val() + ".txt", "w", encoding="utf8") as file:
-            if asset_type in missing_assets:
-                for missing_asset in sorted(missing_assets[asset_type]):
-                    file.write("%s\n" % missing_asset)
+        missing_items = sorted(missing_assets.get(asset_type, set()))
+        reports.write_list_report(
+            items = missing_items,
+            title = "\nMissing '%s':" % asset_type.val(),
+            max_display = 10 if args.verbose else 0,
+            report_file = "Missing_%s.txt" % asset_type.val(),
+            verbose = args.verbose,
+            pretend_run = args.pretend_run)
 
     # Gather extra assets
     extra_assets = all_assets - found_assets
@@ -92,10 +97,14 @@ def main():
         if asset_type in missing_assets:
             extra_assets = extra_assets - missing_assets[asset_type]
 
-    # Write extra assets
-    with open("Extras.txt", "w", encoding="utf8") as file:
-        for extra_asset in sorted(extra_assets):
-            file.write("%s\n" % extra_asset)
+    # Report and write extra assets
+    reports.write_list_report(
+        items = sorted(extra_assets),
+        title = "\nExtra assets:",
+        max_display = 10 if args.verbose else 0,
+        report_file = "Extras.txt",
+        verbose = args.verbose,
+        pretend_run = args.pretend_run)
 
 # Start
 if __name__ == "__main__":
