@@ -256,6 +256,75 @@ def build_symlink_directory_list(root, excludes = [], new_relative_path = "", us
             directories.append(potential_dir)
     return directories
 
+# Build leaf directory list (directories with no subdirectories)
+# Returns list of dicts with path, file_count, and total_size
+# Can separate into large/small based on thresholds
+def build_leaf_directory_list(
+    root,
+    excludes = [],
+    ignore_hidden = True,
+    large_file_count = None,
+    large_total_size = None):
+
+    # Build leaf dirs
+    leaf_dirs = []
+    large_dirs = []
+    work_queue = [root]
+    while work_queue:
+        current_path = work_queue.pop()
+
+        # Skip invalid directories
+        if not is_path_directory(current_path):
+            continue
+
+        # Check for subdirectories
+        subdirs = []
+        for entry in os.listdir(current_path):
+            if ignore_hidden and entry.startswith("."):
+                continue
+            entry_path = join_paths(current_path, entry)
+            if is_path_directory(entry_path):
+                subdirs.append(entry_path)
+
+        # If has subdirectories, add them to queue
+        if subdirs:
+            work_queue.extend(subdirs)
+            continue
+
+        # This is a leaf directory - calculate file count and size
+        file_count = 0
+        total_size = 0
+        for entry in os.listdir(current_path):
+            if ignore_hidden and entry.startswith("."):
+                continue
+            entry_path = join_paths(current_path, entry)
+            if is_path_file(entry_path):
+                file_count += 1
+                total_size += get_file_size(entry_path)
+
+        # Build directory info
+        dir_info = {
+            "path": current_path,
+            "file_count": file_count,
+            "total_size": total_size
+        }
+
+        # Separate large directories if thresholds are specified
+        is_large = False
+        if large_file_count is not None and file_count > large_file_count:
+            is_large = True
+        if large_total_size is not None and total_size > large_total_size:
+            is_large = True
+        if is_large:
+            large_dirs.append(dir_info)
+        else:
+            leaf_dirs.append(dir_info)
+
+    # Return based on whether thresholds were specified
+    if large_file_count is not None or large_total_size is not None:
+        return leaf_dirs, large_dirs
+    return leaf_dirs
+
 # Group files by their parent directory
 def group_files_by_directory(files):
     groups = {}

@@ -3,6 +3,7 @@ import os
 import os.path
 import sys
 import re
+import threading
 import concurrent.futures
 
 # Local imports
@@ -17,9 +18,10 @@ import paths
 import environment
 import fileops
 import hashing
+import sqlitedb
 
 # Constants
-HASH_SIDECAR_FOLDER = ".locker_hashes"
+HASH_DATABASE_FILE = ".locker_hashes.db"
 
 # Check if tool is installed
 def is_tool_installed():
@@ -743,6 +745,51 @@ def upload_files_to_remote(
             exit_on_failure = False)
     return True
 
+# Sync files to remote
+def sync_files_to_remote(
+    remote_name,
+    remote_type,
+    remote_path,
+    local_path,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Get tool
+    rclone_tool = None
+    if programs.is_tool_installed("RClone"):
+        rclone_tool = programs.get_tool_program("RClone")
+    if not rclone_tool:
+        logger.log_error("RClone was not found")
+        return False
+
+    # Get sync command
+    sync_cmd = [
+        rclone_tool,
+        "sync",
+        local_path,
+        get_remote_connection_path(remote_name, remote_type, remote_path)
+    ]
+    sync_cmd += get_common_remote_flags(
+        remote_name = remote_name,
+        remote_type = remote_type,
+        remote_action_type = config.RemoteActionType.UPLOAD)
+    if pretend_run:
+        sync_cmd += ["--dry-run"]
+    if verbose:
+        sync_cmd += [
+            "--verbose",
+            "--progress"
+        ]
+
+    # Run sync command
+    code = command.run_returncode_command(
+        cmd = sync_cmd,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    return code == 0
+
 # Move files on remote
 def move_files_on_remote(
     remote_name,
@@ -828,6 +875,45 @@ def purge_path_on_remote(
     # Run purge command
     code = command.run_returncode_command(
         cmd = purge_cmd,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    return code == 0
+
+# Delete single file on remote
+def delete_file_on_remote(
+    remote_name,
+    remote_type,
+    remote_path,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Get tool
+    rclone_tool = None
+    if programs.is_tool_installed("RClone"):
+        rclone_tool = programs.get_tool_program("RClone")
+    if not rclone_tool:
+        logger.log_error("RClone was not found")
+        return False
+
+    # Build full remote path
+    remote_full = get_remote_connection_path(remote_name, remote_type, remote_path)
+
+    # Build deletefile command
+    delete_cmd = [
+        rclone_tool,
+        "deletefile",
+        remote_full
+    ]
+    if pretend_run:
+        delete_cmd += ["--dry-run"]
+    if verbose:
+        delete_cmd += ["--verbose"]
+
+    # Run delete command
+    code = command.run_returncode_command(
+        cmd = delete_cmd,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -1589,7 +1675,7 @@ def list_files_with_hashes(
         logger.log_info("Loaded %d file hashes" % len(hash_map))
     return hash_map
 
-# List files with hashes from sidecar files
+# List files with hashes from hash database
 def list_files_with_hashes_from_sidecar(
     remote_name,
     remote_type,
@@ -1598,107 +1684,52 @@ def list_files_with_hashes_from_sidecar(
     pretend_run = False,
     exit_on_failure = False):
 
-    # Get tool
-    rclone_tool = None
-    if programs.is_tool_installed("RClone"):
-        rclone_tool = programs.get_tool_program("RClone")
-    if not rclone_tool:
-        logger.log_error("RClone was not found")
-        return {}
-
-    # Build sidecar folder path
-    sidecar_path = get_hash_sidecar_folder_path(remote_path)
-    sidecar_connection = get_remote_connection_path(remote_name, remote_type, sidecar_path)
-
-    # List all .json files in sidecar folder
-    lsjson_cmd = [
-        rclone_tool,
-        "lsjson",
-        "--recursive",
-        "--files-only",
-        sidecar_connection
-    ]
-    if verbose:
-        logger.log_info("Listing hash sidecar files from: %s" % sidecar_path)
-
-    # Run lsjson command
-    lsjson_output = command.run_output_command(
-        cmd = lsjson_cmd,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = False)  # Don't fail if folder doesn't exist
-
-    # Parse JSON output
-    lsjson_text = lsjson_output
-    if isinstance(lsjson_output, bytes):
-        lsjson_text = lsjson_output.decode()
-    if not lsjson_text or lsjson_text.strip() == "" or "error" in lsjson_text.lower():
-        if verbose:
-            logger.log_info("No hash sidecar files found")
-        return {}
-
-    # Parse file list
-    files_list = serialization.parse_json_string(lsjson_text)
-    if not files_list:
-        return {}
-
-    # Filter to only .json files
-    hash_files = [f for f in files_list if f.get("Path", "").endswith(".json") and not f.get("IsDir", False)]
-    if not hash_files:
-        if verbose:
-            logger.log_info("No .json files found in sidecar folder")
-        return {}
-    if verbose:
-        logger.log_info("Found %d hash sidecar files" % len(hash_files))
-
-    # Create temp directory for downloads
+    # Create temp directory for database download
     success, temp_dir = fileops.create_temporary_directory()
     if not success:
         logger.log_error("Failed to create temp directory")
         return {}
-    hash_map = {}
 
     # Build hash map
+    hash_map = {}
     try:
-        # Download and parse each hash file
-        for hash_file_info in hash_files:
-            hash_file_path = hash_file_info.get("Path", "")
-            if not hash_file_path:
+        # Build paths
+        remote_db_path = get_hash_database_path(remote_path)
+        temp_db_path = paths.join_paths(temp_dir, HASH_DATABASE_FILE)
+
+        # Download database from remote
+        if verbose:
+            logger.log_info("Downloading hash database from: %s" % remote_db_path)
+        download_files_from_remote(
+            remote_name = remote_name,
+            remote_type = remote_type,
+            remote_path = remote_db_path,
+            local_path = temp_db_path,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = False)
+
+        # Check if database exists
+        if not paths.does_path_exist(temp_db_path):
+            if verbose:
+                logger.log_info("No hash database found")
+            return {}
+
+        # Open database and read all hashes
+        hash_db = sqlitedb.HashDatabase(temp_db_path)
+        hash_db.open()
+        for entry in hash_db.get_all_hashes():
+            file_path = entry.get("file_path", "")
+            if not file_path:
                 continue
-
-            # Download hash file to temp
-            remote_hash_path = paths.join_paths(sidecar_path, hash_file_path).replace("\\", "/")
-            temp_hash_file = paths.join_paths(temp_dir, paths.get_filename_file(hash_file_path))
-            success = download_files_from_remote(
-                remote_name = remote_name,
-                remote_type = remote_type,
-                remote_path = remote_hash_path,
-                local_path = temp_hash_file,
-                verbose = False,
-                pretend_run = pretend_run,
-                exit_on_failure = False)
-            if not success:
-                continue
-
-            # Parse hash file
-            hash_data = serialization.read_json_file(src = temp_hash_file)
-            if not hash_data:
-                continue
-
-            # Add each entry to the hash map
-            base_path = hash_file_path[:-5]
-            for rel_file, file_data in hash_data.items():
-                full_rel_path = paths.join_paths(base_path, rel_file).replace("\\", "/")
-                hash_map[full_rel_path] = {
-                    "filename": paths.get_filename_file(rel_file),
-                    "dir": paths.get_filename_directory(full_rel_path),
-                    "hash": file_data.get("hash", ""),
-                    "size": file_data.get("size", 0),
-                    "mtime": file_data.get("mtime", 0)
-                }
-
-            # Clean up temp hash file
-            fileops.remove_file(temp_hash_file)
+            hash_map[file_path] = {
+                "filename": paths.get_filename_file(file_path),
+                "dir": paths.get_filename_directory(file_path),
+                "hash": entry.get("hash", ""),
+                "size": entry.get("size", 0),
+                "mtime": entry.get("mtime", 0)
+            }
+        hash_db.close()
 
     finally:
 
@@ -1707,61 +1738,15 @@ def list_files_with_hashes_from_sidecar(
 
     # All done
     if verbose:
-        logger.log_info("Loaded %d file hashes from sidecar files" % len(hash_map))
+        logger.log_info("Loaded %d file hashes from database" % len(hash_map))
     return hash_map
 
-# Get hash sidecar folder path
-def get_hash_sidecar_folder_path(remote_path = "", rel_path = ""):
-    sidecar_path = paths.join_paths(remote_path, HASH_SIDECAR_FOLDER)
-    if rel_path:
-        sidecar_path = paths.join_paths(sidecar_path, rel_path)
-    return sidecar_path.replace("\\", "/")
+# Get hash database path
+def get_hash_database_path(remote_path = ""):
+    return paths.join_paths(remote_path, HASH_DATABASE_FILE).replace("\\", "/")
 
-# Get hash sidecar relative path
-def get_hash_sidecar_relative_path(local_root, remote_path):
-    if local_root and remote_path.startswith(local_root):
-        rel_path = remote_path[len(local_root):].lstrip("/")
-    else:
-        rel_path = remote_path.lstrip("/")
-    return (rel_path + ".json") if rel_path else "root.json"
-
-# Check if hash sidecar exists on remote
-def does_hash_sidecar_exist(
-    remote_name,
-    remote_type,
-    local_root,
-    sidecar_rel,
-    verbose = False):
-
-    # Build remote sidecar path
-    sidecar_remote = get_hash_sidecar_folder_path(local_root, sidecar_rel)
-
-    # Use general file exist check
-    return does_file_exist(
-        remote_name = remote_name,
-        remote_type = remote_type,
-        remote_path = sidecar_remote,
-        verbose = verbose)
-
-# Check if hash sidecar data is valid
-def is_hash_sidecar_data_valid(sidecar_data):
-
-    # Check if we got valid data (non-empty dict)
-    if not sidecar_data or not isinstance(sidecar_data, dict):
-        return False
-
-    # Validate structure - should have file paths as keys with hash info dicts as values
-    for key, value in sidecar_data.items():
-        if not isinstance(key, str):
-            return False
-        if not isinstance(value, dict):
-            return False
-        if "hash" not in value or not isinstance(value.get("hash"), str):
-            return False
-    return True
-
-# Build hash sidecar data
-def build_hash_sidecar_data(local_path, pretend_run = False, verbose = False):
+# Build hash data for files in a directory
+def build_hash_sidecar_data(local_path, parallel_files = 4, pretend_run = False, verbose = False):
     hash_data = {}
 
     # Process files to add
@@ -1800,7 +1785,7 @@ def build_hash_sidecar_data(local_path, pretend_run = False, verbose = False):
             return None
 
         # Hash files in parallel
-        with concurrent.futures.ThreadPoolExecutor(max_workers = 16) as executor:
+        with concurrent.futures.ThreadPoolExecutor(max_workers = parallel_files) as executor:
             futures = {executor.submit(hash_file, rel_file): rel_file for rel_file in file_list}
             for future in concurrent.futures.as_completed(futures):
                 completed[0] += 1
@@ -1811,104 +1796,6 @@ def build_hash_sidecar_data(local_path, pretend_run = False, verbose = False):
                     hash_data[result[0]] = result[1]
     return hash_data
 
-# Read hash sidecar data
-def read_hash_sidecar_data(
-    remote_name,
-    remote_type,
-    local_root,
-    sidecar_rel,
-    verbose = False,
-    pretend_run = False):
-
-    # Build remote sidecar path
-    sidecar_remote = get_hash_sidecar_folder_path(local_root, sidecar_rel)
-
-    # Create temp file for download
-    temp_file = fileops.create_temporary_file(suffix = ".json")
-    if not temp_file:
-        return {}
-
-    try:
-        # Download sidecar
-        success = download_files_from_remote(
-            remote_name = remote_name,
-            remote_type = remote_type,
-            remote_path = sidecar_remote,
-            local_path = temp_file,
-            verbose = False,
-            pretend_run = pretend_run,
-            exit_on_failure = False)
-        if not success:
-            return {}
-
-        # Parse sidecar
-        return serialization.read_json_file(src = temp_file) or {}
-
-    finally:
-
-        # Clean up temp file
-        fileops.remove_file(temp_file)
-
-# Write hash sidecar data
-def write_hash_sidecar_data(
-    remote_name,
-    remote_type,
-    local_root,
-    sidecar_rel,
-    hash_data,
-    verbose = False,
-    pretend_run = False,
-    exit_on_failure = False):
-
-    # Get tool
-    rclone_tool = None
-    if programs.is_tool_installed("RClone"):
-        rclone_tool = programs.get_tool_program("RClone")
-    if not rclone_tool:
-        return False
-
-    # Create temp directory with sidecar
-    success, temp_dir = fileops.create_temporary_directory()
-    if not success:
-        return False
-
-    try:
-        # Write sidecar JSON with mirrored directory structure
-        temp_sidecar = paths.join_paths(temp_dir, sidecar_rel)
-        fileops.make_directory(paths.get_filename_directory(temp_sidecar))
-        if not serialization.write_json_file(src = temp_sidecar, json_data = hash_data, verbose = verbose):
-            return False
-
-        # Get sidecar path
-        sidecar_remote = get_hash_sidecar_folder_path(local_root)
-        if verbose:
-            logger.log_info("Uploading sidecar to: %s:%s/%s" % (remote_name, sidecar_remote, sidecar_rel))
-
-        # Get upload command
-        copy_cmd = [
-            rclone_tool,
-            "copy",
-            temp_dir,
-            get_remote_connection_path(remote_name, remote_type, sidecar_remote)
-        ]
-        if pretend_run:
-            copy_cmd += ["--dry-run"]
-        if verbose:
-            copy_cmd += ["--verbose"]
-
-        # Run upload command
-        code = command.run_returncode_command(
-            cmd = copy_cmd,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        return code == 0
-
-    finally:
-
-        # Clean up temp dir
-        fileops.remove_directory(temp_dir)
-
 # Clear hash sidecar files
 def clear_hash_sidecar_files(
     remote_name,
@@ -1918,14 +1805,12 @@ def clear_hash_sidecar_files(
     pretend_run = False,
     exit_on_failure = False):
 
-    # Build sidecar folder path
-    sidecar_path = get_hash_sidecar_folder_path(remote_path)
-
-    # Purge the sidecar folder
-    return purge_path_on_remote(
+    # Delete the hash database file
+    db_path = get_hash_database_path(remote_path)
+    return delete_file_on_remote(
         remote_name = remote_name,
         remote_type = remote_type,
-        remote_path = sidecar_path,
+        remote_path = db_path,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -1938,143 +1823,172 @@ def upload_hash_sidecar_files(
     local_path,
     local_root,
     skip_existing = False,
-    precreate_dirs = True,
     parallel_dirs = 4,
+    parallel_files = 4,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
 
-    # Collect all leaf directories
-    leaf_dirs = []
-    work_queue = [(local_path, remote_path)]
-    while work_queue:
+    # Create temp directory for database work
+    tmp_dir_success, tmp_dir_result = fileops.create_temporary_directory(verbose = verbose)
+    if not tmp_dir_success:
+        logger.log_error("Failed to create temp directory for hash database")
+        return False
 
-        # Check for subdirectories
-        current_local, current_remote = work_queue.pop()
-        subdirs = []
-        if paths.is_path_directory(current_local):
-            for entry in os.listdir(current_local):
-                entry_path = paths.join_paths(current_local, entry)
-                if paths.is_path_directory(entry_path) and not entry.startswith("."):
-                    subdirs.append(entry)
+    # Hash files
+    try:
+        # Build paths
+        remote_db_path = get_hash_database_path(local_root)
+        temp_db_path = paths.join_paths(tmp_dir_result, HASH_DATABASE_FILE)
 
-        # Add subdirectories to work queue (reverse sort so alphabetically first is processed first)
-        if subdirs:
-            for subdir in sorted(subdirs, reverse=True):
-                subdir_local = paths.join_paths(current_local, subdir)
-                subdir_remote = paths.join_paths(current_remote, subdir).replace("\\", "/")
-                work_queue.append((subdir_local, subdir_remote))
+        # Download existing database from remote if it exists
+        if does_file_exist(remote_name, remote_type, remote_db_path, verbose = verbose):
+            logger.log_info("Downloading hash database from remote...")
+            download_files_from_remote(
+                remote_name = remote_name,
+                remote_type = remote_type,
+                remote_path = remote_db_path,
+                local_path = temp_db_path,
+                verbose = verbose,
+                pretend_run = pretend_run)
         else:
-            leaf_dirs.append((current_local, current_remote))
+            logger.log_info("No existing hash database found, creating new one...")
 
-    # Process leaf directories in parallel
-    if not leaf_dirs:
-        return True
+        # Open database
+        hash_db = sqlitedb.HashDatabase(temp_db_path)
+        hash_db.open()
+        hash_db.initialize()
 
-    # Directory thread worker
-    def process_dir(dir_info):
-        current_local, current_remote = dir_info
-        dir_name = paths.get_filename_file(current_local)
-        logger.log_info("Processing: %s" % dir_name)
-        return upload_hash_sidecar_file(
-            remote_name = remote_name,
-            remote_type = remote_type,
-            remote_path = current_remote,
-            local_path = current_local,
-            local_root = local_root,
-            skip_existing = skip_existing,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = False)
+        # Get existing file paths for skip_existing check
+        existing_paths = set()
+        if skip_existing:
+            for entry in hash_db.get_all_hashes():
+                existing_paths.add(entry["file_path"])
 
-    # Pre-create sidecar directories to avoid race conditions
-    logger.log_info("Found %d directories to process" % len(leaf_dirs))
-    if precreate_dirs:
-        sidecar_parent_dirs = set()
-        for _, current_remote in leaf_dirs:
-            sidecar_rel = get_hash_sidecar_relative_path(local_root, current_remote)
-            parent_dir = paths.get_filename_directory(sidecar_rel)
-            if parent_dir:
-                sidecar_parent_dirs.add(parent_dir)
-        if sidecar_parent_dirs:
-            logger.log_info("Creating %d sidecar directories..." % len(sidecar_parent_dirs))
-            sidecar_root = get_hash_sidecar_folder_path(local_root)
-            def create_dir(parent_dir):
-                create_remote_directory(
-                    remote_name = remote_name,
-                    remote_type = remote_type,
-                    remote_path = paths.join_paths(sidecar_root, parent_dir).replace("\\", "/"),
-                    verbose = verbose,
-                    pretend_run = pretend_run)
-            with concurrent.futures.ThreadPoolExecutor(max_workers = parallel_dirs) as executor:
-                list(executor.map(create_dir, sidecar_parent_dirs))
+        # Collect leaf directories separated by size
+        large_file_count_threshold = 500
+        large_size_threshold = 10 * 1024 * 1024 * 1024  # 10 GB
+        small_dir_infos, large_dir_infos = paths.build_leaf_directory_list(
+            root = local_path,
+            ignore_hidden = True,
+            large_file_count = large_file_count_threshold,
+            large_total_size = large_size_threshold)
 
-    # Process directories
-    all_success = True
-    with concurrent.futures.ThreadPoolExecutor(max_workers = parallel_dirs) as executor:
-        futures = {executor.submit(process_dir, dir_info): dir_info for dir_info in leaf_dirs}
-        for future in concurrent.futures.as_completed(futures):
-            if not future.result():
-                all_success = False
-                if exit_on_failure:
-                    executor.shutdown(wait=False, cancel_futures=True)
-                    return False
-    return all_success
+        # Convert to (local_path, remote_path) tuples
+        def to_local_remote_tuple(dir_info):
+            dir_local = dir_info["path"]
+            if dir_local.startswith(local_path):
+                dir_rel = dir_local[len(local_path):].lstrip(os.sep)
+                dir_remote = paths.join_paths(remote_path, dir_rel).replace("\\", "/")
+            else:
+                dir_remote = remote_path
+            return (dir_local, dir_remote)
 
-# Upload hash sidecar file
-def upload_hash_sidecar_file(
-    remote_name,
-    remote_type,
-    remote_path,
-    local_path,
-    local_root,
-    skip_existing = False,
-    verbose = False,
-    pretend_run = False,
-    exit_on_failure = False):
+        # Get leaf/large dirs
+        leaf_dirs = [to_local_remote_tuple(d) for d in small_dir_infos]
+        large_dirs = [to_local_remote_tuple(d) for d in large_dir_infos]
 
-    # Get sidecar relative path
-    sidecar_rel = get_hash_sidecar_relative_path(local_root, remote_path)
-
-    # Check if sidecar already exists
-    existing_data = {}
-    sidecar_exists = does_hash_sidecar_exist(
-        remote_name = remote_name,
-        remote_type = remote_type,
-        local_root = local_root,
-        sidecar_rel = sidecar_rel,
-        verbose = verbose)
-
-    # If exists, read the data
-    if sidecar_exists:
-        existing_data = read_hash_sidecar_data(
-            remote_name = remote_name,
-            remote_type = remote_type,
-            local_root = local_root,
-            sidecar_rel = sidecar_rel,
-            verbose = verbose,
-            pretend_run = pretend_run)
-
-        # If skip_existing and data is valid, skip this sidecar
-        if skip_existing and is_hash_sidecar_data_valid(existing_data):
-            logger.log_info("Skipping (valid sidecar exists): %s" % sidecar_rel)
+        # Process directories
+        if not leaf_dirs and not large_dirs:
+            hash_db.close()
             return True
 
-    # Build hash data from local files
-    new_hash_data = build_hash_sidecar_data(local_path, pretend_run, verbose)
-    if not new_hash_data:
-        return True
+        # Thread-safe list for collecting hash entries
+        all_hash_entries = []
+        entries_lock = threading.Lock()
 
-    # Merge sidecar data
-    existing_data.update(new_hash_data)
+        # Directory thread worker
+        def process_dir_locally(dir_info):
+            current_local, current_remote = dir_info
+            dir_name = paths.get_filename_file(current_local)
+            logger.log_info("Processing: %s" % dir_name)
 
-    # Write merged sidecar data
-    return write_hash_sidecar_data(
-        remote_name = remote_name,
-        remote_type = remote_type,
-        local_root = local_root,
-        sidecar_rel = sidecar_rel,
-        hash_data = existing_data,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
+            # Build hash data from local files
+            hash_data = build_hash_sidecar_data(
+                local_path = current_local,
+                parallel_files = parallel_files,
+                pretend_run = pretend_run,
+                verbose = verbose)
+            if not hash_data:
+                return True
+
+            # Convert to database entries
+            entries = []
+            for rel_file, file_info in hash_data.items():
+
+                # Build full relative path from local_root
+                if current_remote.startswith(local_root):
+                    dir_rel = current_remote[len(local_root):].lstrip("/")
+                else:
+                    dir_rel = current_remote.lstrip("/")
+                file_path = paths.join_paths(dir_rel, rel_file).replace("\\", "/")
+
+                # Skip if already exists and skip_existing is True
+                if skip_existing and file_path in existing_paths:
+                    continue
+
+                # Add entry
+                entries.append({
+                    "file_path": file_path,
+                    "hash": file_info.get("hash"),
+                    "size": file_info.get("size"),
+                    "mtime": file_info.get("mtime")
+                })
+
+            # Add to collection
+            if entries:
+                with entries_lock:
+                    all_hash_entries.extend(entries)
+            return True
+
+        # Process large directories sequentially first
+        all_success = True
+        if large_dirs:
+            logger.log_info("Processing %d large directories sequentially..." % len(large_dirs))
+            for dir_info in large_dirs:
+                if not process_dir_locally(dir_info):
+                    all_success = False
+                    if exit_on_failure:
+                        hash_db.close()
+                        return False
+
+        # Process smaller directories in parallel
+        if leaf_dirs:
+            logger.log_info("Processing %d directories in parallel..." % len(leaf_dirs))
+            with concurrent.futures.ThreadPoolExecutor(max_workers = parallel_dirs) as executor:
+                futures = {executor.submit(process_dir_locally, dir_info): dir_info for dir_info in leaf_dirs}
+                for future in concurrent.futures.as_completed(futures):
+                    if not future.result():
+                        all_success = False
+                        if exit_on_failure:
+                            executor.shutdown(wait=False, cancel_futures=True)
+                            hash_db.close()
+                            return False
+
+        # Batch insert all hash entries
+        if all_hash_entries and not pretend_run:
+            logger.log_info("Inserting %d hash entries into database..." % len(all_hash_entries))
+            hash_db.set_hashes(all_hash_entries)
+
+        # Close database
+        hash_db.close()
+
+        # Upload database back to remote
+        logger.log_info("Uploading hash database to remote...")
+        upload_success = upload_files_to_remote(
+            remote_name = remote_name,
+            remote_type = remote_type,
+            remote_path = paths.get_filename_directory(remote_db_path),
+            local_path = temp_db_path,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        return all_success and upload_success
+
+    finally:
+
+        # Clean up temp directory
+        fileops.remove_directory(
+            src = tmp_dir_result,
+            verbose = verbose,
+            pretend_run = pretend_run)

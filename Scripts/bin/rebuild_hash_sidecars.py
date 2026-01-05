@@ -38,14 +38,15 @@ parser.add_boolean_argument(
     description = "Clear existing sidecars before rebuilding")
 parser.add_boolean_argument(
     args = ("-s", "--skip_existing"),
-    description = "Skip directories that already have sidecars")
-parser.add_boolean_argument(
-    args = ("--no_precreate_dirs",),
-    description = "Skip pre-creating sidecar directories")
+    description = "Skip files that already have hashes in database")
 parser.add_integer_argument(
     args = ("-r", "--parallel_dirs"),
     default = 4,
     description = "Number of directories to process in parallel")
+parser.add_integer_argument(
+    args = ("-f", "--parallel_files"),
+    default = 4,
+    description = "Number of files to hash in parallel per directory")
 parser.add_common_arguments()
 args, unknownargs = parser.parse_known_args()
 
@@ -89,10 +90,10 @@ def main():
 
     # Show preview
     if not args.no_preview:
-        sidecar_path = sync.get_hash_sidecar_folder_path(dest_root)
+        db_path = sync.get_hash_database_path(dest_root)
         details = [
             "Source: %s" % source_path,
-            "Destination: %s:%s" % (dest_name, sidecar_path)
+            "Destination: %s:%s" % (dest_name, db_path)
         ]
         if args.clear:
             details.append("Clear existing sidecars: Yes")
@@ -123,8 +124,8 @@ def main():
         local_path = source_path,
         local_root = dest_root,
         skip_existing = args.skip_existing,
-        precreate_dirs = not args.no_precreate_dirs,
         parallel_dirs = args.parallel_dirs,
+        parallel_files = args.parallel_files,
         verbose = args.verbose,
         pretend_run = args.pretend_run,
         exit_on_failure = args.exit_on_failure)

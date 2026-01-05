@@ -75,7 +75,7 @@ def main():
         remote_name = remote_name,
         remote_type = remote_type,
         remote_path = remote_path,
-        excludes = [sync.HASH_SIDECAR_FOLDER + "/**"],
+        excludes = [sync.HASH_DATABASE_FILE],
         verbose = args.verbose,
         pretend_run = args.pretend_run,
         exit_on_failure = args.exit_on_failure)
