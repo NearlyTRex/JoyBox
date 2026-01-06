@@ -91,9 +91,15 @@ def main():
     # Show preview
     if not args.no_preview:
         db_path = sync.get_hash_database_path(dest_root)
+        max_memory_bytes = args.parallel_dirs * args.parallel_files * config.hash_chunk_size
+        max_memory_mb = max_memory_bytes / (1024 * 1024)
         details = [
             "Source: %s" % source_path,
-            "Destination: %s:%s" % (dest_name, db_path)
+            "Destination: %s:%s" % (dest_name, db_path),
+            "Parallel dirs: %d, Parallel files: %d" % (args.parallel_dirs, args.parallel_files),
+            "Max memory usage: %.0f MB (%d × %d × %d MB chunk)" % (
+                max_memory_mb, args.parallel_dirs, args.parallel_files,
+                config.hash_chunk_size // (1024 * 1024))
         ]
         if args.clear:
             details.append("Clear existing sidecars: Yes")

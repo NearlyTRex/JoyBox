@@ -173,7 +173,7 @@ max_disc_data_size_50gb = 44 * bytes_per_gigabyte
 max_disc_data_size_100gb = 88 * bytes_per_gigabyte
 
 # Buffer sizes
-hash_chunk_size = 2 ** 32
+hash_chunk_size = 64 * 1024 * 1024
 transfer_chunk_size = 4096 * 1024
 
 # Asset sizes
