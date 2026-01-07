@@ -76,6 +76,9 @@ def main():
     dest_root = dest_info.get_remote_path() or ""
     dest_path = dest_root
 
+    # Get excludes from destination locker config
+    excludes = dest_info.get_excluded_dirs()
+
     # Apply subpath if specified
     source_path = source_root
     if args.path:
@@ -101,6 +104,8 @@ def main():
                 max_memory_mb, args.parallel_dirs, args.parallel_files,
                 config.hash_chunk_size // (1024 * 1024))
         ]
+        if excludes:
+            details.append("Excluded dirs: %s" % ", ".join(excludes))
         if args.clear:
             details.append("Clear existing sidecars: Yes")
         if args.skip_existing:
@@ -129,6 +134,7 @@ def main():
         remote_path = dest_path,
         local_path = source_path,
         local_root = dest_root,
+        excludes = excludes,
         skip_existing = args.skip_existing,
         parallel_dirs = args.parallel_dirs,
         parallel_files = args.parallel_files,

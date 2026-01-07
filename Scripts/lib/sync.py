@@ -1822,6 +1822,7 @@ def upload_hash_sidecar_files(
     remote_path,
     local_path,
     local_root,
+    excludes = [],
     skip_existing = False,
     parallel_dirs = 4,
     parallel_files = 4,
@@ -1870,6 +1871,7 @@ def upload_hash_sidecar_files(
         large_size_threshold = 10 * 1024 * 1024 * 1024  # 10 GB
         small_dir_infos, large_dir_infos = paths.build_leaf_directory_list(
             root = local_path,
+            excludes = excludes,
             ignore_hidden = True,
             large_file_count = large_file_count_threshold,
             large_total_size = large_size_threshold)

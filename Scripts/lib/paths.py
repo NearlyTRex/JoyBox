@@ -1,6 +1,7 @@
 # Imports
 import os
 import errno
+import fnmatch
 import pathlib
 import posixpath
 import ntpath
@@ -257,6 +258,18 @@ def build_symlink_directory_list(root, excludes = [], new_relative_path = "", us
     return directories
 
 # Build leaf directory list (directories with no subdirectories)
+# Check if path matches any exclude pattern
+def matches_exclude_pattern(rel_path, excludes):
+    for pattern in excludes:
+        if fnmatch.fnmatch(rel_path, pattern):
+            return True
+        parts = rel_path.split(os.sep)
+        for i in range(len(parts)):
+            partial = os.sep.join(parts[:i+1])
+            if fnmatch.fnmatch(partial, pattern.rstrip("/**")):
+                return True
+    return False
+
 # Returns list of dicts with path, file_count, and total_size
 # Can separate into large/small based on thresholds
 def build_leaf_directory_list(
@@ -275,6 +288,16 @@ def build_leaf_directory_list(
 
         # Skip invalid directories
         if not is_path_directory(current_path):
+            continue
+
+        # Get relative path for exclude checking
+        if current_path.startswith(root):
+            rel_path = current_path[len(root):].lstrip(os.sep)
+        else:
+            rel_path = current_path
+
+        # Skip excluded directories
+        if rel_path and matches_exclude_pattern(rel_path, excludes):
             continue
 
         # Check for subdirectories

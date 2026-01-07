@@ -2,7 +2,6 @@
 import os
 import os.path
 import sys
-import fnmatch
 
 # Local imports
 import config
@@ -41,6 +40,11 @@ def clear_cache():
 # Hash Map Building
 ###########################################################
 
+# Remote types that don't support server-side hashing (must use sidecar)
+SIDECAR_ONLY_REMOTE_TYPES = [
+    config.RemoteType.SFTP,
+]
+
 def build_locker_hash_map(
     backend,
     locker_name,
@@ -63,28 +67,50 @@ def build_locker_hash_map(
         except:
             pass
 
-    # Build hash map from backend
-    if verbose:
-        logger.log_info("Building hash map for %s..." % locker_name)
-    hash_map = backend.list_files_with_hashes(
-        excludes = excludes,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
+    # Check if this is a remote that requires sidecar hashes (e.g., SFTP)
+    use_sidecar_only = False
+    if isinstance(backend, lockerbackend.RemoteBackend):
+        remote_type = config.RemoteType.from_string(backend.remote_type)
+        if remote_type in SIDECAR_ONLY_REMOTE_TYPES:
+            use_sidecar_only = True
+            if verbose:
+                logger.log_info("Remote type '%s' doesn't support server-side hashing, using sidecar" % remote_type)
 
-    # Check if we got hashes - if not and backend is remote, try sidecar fallback
-    has_hashes = hash_map and any(entry.get("hash") for entry in hash_map.values())
-    if not has_hashes and isinstance(backend, lockerbackend.RemoteBackend):
+    # Build hash map from backend
+    hash_map = {}
+    if use_sidecar_only:
+
+        # Go directly to sidecar for remotes that don't support server-side hashing
         if verbose:
-            logger.log_info("No hashes from server, trying sidecar files for %s..." % locker_name)
-        sidecar_map = backend.list_files_with_hashes_from_sidecar(
+            logger.log_info("Building hash map from sidecar for %s..." % locker_name)
+        hash_map = backend.list_files_with_hashes_from_sidecar(
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-        if sidecar_map:
+    else:
+
+        # Use normal hash listing
+        if verbose:
+            logger.log_info("Building hash map for %s..." % locker_name)
+        hash_map = backend.list_files_with_hashes(
+            excludes = excludes,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+
+        # Check if we got hashes - if not and backend is remote, try sidecar fallback
+        has_hashes = hash_map and any(entry.get("hash") for entry in hash_map.values())
+        if not has_hashes and isinstance(backend, lockerbackend.RemoteBackend):
             if verbose:
-                logger.log_info("Using sidecar hashes for %s (%d files)" % (locker_name, len(sidecar_map)))
-            hash_map = sidecar_map
+                logger.log_info("No hashes from server, trying sidecar files for %s..." % locker_name)
+            sidecar_map = backend.list_files_with_hashes_from_sidecar(
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
+            if sidecar_map:
+                if verbose:
+                    logger.log_info("Using sidecar hashes for %s (%d files)" % (locker_name, len(sidecar_map)))
+                hash_map = sidecar_map
 
     # Save to cache
     if hash_map and not pretend_run:
@@ -99,17 +125,6 @@ def build_locker_hash_map(
 ###########################################################
 # Sync Actions
 ###########################################################
-
-def matches_exclude_pattern(file_path, exclude_patterns):
-    for pattern in exclude_patterns:
-        if fnmatch.fnmatch(file_path, pattern):
-            return True
-        parts = file_path.split(os.sep)
-        for i in range(len(parts)):
-            partial = os.sep.join(parts[:i+1])
-            if fnmatch.fnmatch(partial, pattern.rstrip("/**")):
-                return True
-    return False
 
 def get_sync_action_type(base_action, primary_encrypted, secondary_encrypted):
 
@@ -148,7 +163,7 @@ def build_sync_actions(
     for rel_path, primary_data in primary_hashes.items():
 
         # Skip excluded paths
-        if matches_exclude_pattern(rel_path, exclude_write_paths):
+        if paths.matches_exclude_pattern(rel_path, exclude_write_paths):
             continue
 
         # Add action
@@ -178,7 +193,7 @@ def build_sync_actions(
 
     # Remaining files in secondary are orphans (not in primary)
     for orphan_path in secondary_paths:
-        if matches_exclude_pattern(orphan_path, exclude_write_paths):
+        if paths.matches_exclude_pattern(orphan_path, exclude_write_paths):
             continue
         if orphan_path.startswith(".recycle_bin"):
             continue
@@ -424,7 +439,7 @@ def sync_lockers(
     # Process each secondary
     for sec_info, sec_backend in zip(secondary_infos, secondary_backends):
         sec_name = sec_info.get_locker_name()
-        exclude_patterns = sec_info.get_excluded_sync_paths()
+        exclude_patterns = sec_info.get_excluded_dirs()
         logger.log_info("Processing secondary: %s (excludes=%d patterns)" % (
             sec_name, len(exclude_patterns)))
 

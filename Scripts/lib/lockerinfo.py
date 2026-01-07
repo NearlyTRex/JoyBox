@@ -30,9 +30,9 @@ class LockerInfo:
         self.mount_path = ini.get_ini_path_value("UserData.Share", f"locker_{self.locker_type.lower()}_mount_path")
         self.passphrase = ini.get_ini_value("UserData.Share", f"locker_{self.locker_type.lower()}_passphrase") or ini.get_ini_value("UserData.Protection", "locker_passphrase")
 
-        # Parse excluded sync paths into list
-        excluded_str = ini.get_ini_value("UserData.Share", f"locker_{self.locker_type.lower()}_excluded_sync_paths")
-        self.excluded_sync_paths = [p.strip() for p in excluded_str.split(",") if p.strip()] if excluded_str else []
+        # Parse excluded dirs into list
+        excluded_str = ini.get_ini_value("UserData.Share", f"locker_{self.locker_type.lower()}_excluded_dirs")
+        self.excluded_dirs = [p.strip() for p in excluded_str.split(",") if p.strip()] if excluded_str else []
 
         # Parse encrypted flag (defaults to false)
         encrypted_str = ini.get_ini_value("UserData.Share", f"locker_{self.locker_type.lower()}_encrypted")
@@ -62,8 +62,8 @@ class LockerInfo:
     def get_passphrase(self):
         return self.passphrase
 
-    def get_excluded_sync_paths(self):
-        return self.excluded_sync_paths
+    def get_excluded_dirs(self):
+        return self.excluded_dirs
 
     def is_encrypted(self):
         return self.encrypted

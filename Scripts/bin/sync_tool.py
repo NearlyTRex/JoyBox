@@ -16,6 +16,7 @@ import arguments
 import setup
 import logger
 import prompts
+import paths
 
 # Parse arguments
 parser = arguments.ArgumentParser(description = "Sync tool.")
@@ -67,11 +68,31 @@ def main():
     mount_path = locker_info.get_mount_path()
     mount_flags = locker_info.get_mount_flags()
 
+    # Actions that require local/mount path to exist
+    actions_requiring_local_path = [
+        config.RemoteActionType.DOWNLOAD,
+        config.RemoteActionType.UPLOAD,
+        config.RemoteActionType.PULL,
+        config.RemoteActionType.PUSH,
+        config.RemoteActionType.MERGE,
+        config.RemoteActionType.DIFF,
+        config.RemoteActionType.DIFFSYNC,
+    ]
+
+    # Validate local path exists for actions that need it
+    if args.action in actions_requiring_local_path:
+        if not local_path:
+            logger.log_error("Action '%s' requires a mount path, but none is configured for locker '%s'" % (
+                args.action, args.locker_type), quit_program = True)
+        if not paths.does_path_exist(local_path):
+            logger.log_error("Action '%s' requires mount path to exist: %s\nTry mounting first with: sync_tool -a Mount -l %s" % (
+                args.action, local_path, args.locker_type), quit_program = True)
+
     # Get excludes from CLI or locker config
     if args.excludes:
         excludes = [e.strip() for e in args.excludes.split(",") if e.strip()]
     else:
-        excludes = locker_info.get_excluded_sync_paths()
+        excludes = locker_info.get_excluded_dirs()
 
     # Show preview
     if not args.no_preview:
