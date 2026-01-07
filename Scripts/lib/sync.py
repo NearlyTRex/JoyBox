@@ -686,6 +686,7 @@ def upload_files_to_remote(
     local_root = None,
     excludes = None,
     files_from = None,
+    skip_existing = False,
     interactive = False,
     verbose = False,
     pretend_run = False,
@@ -713,6 +714,8 @@ def upload_files_to_remote(
     copy_cmd += get_exclude_flags(excludes)
     if files_from and paths.is_path_file(files_from):
         copy_cmd += ["--files-from", files_from]
+    if skip_existing:
+        copy_cmd += ["--ignore-existing"]
     if pretend_run:
         copy_cmd += ["--dry-run"]
     if interactive:
