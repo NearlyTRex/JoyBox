@@ -554,9 +554,10 @@ def archive_github_repository(
         return False
 
     # Backup archive
-    success = locker.backup_files(
+    dest_rel_path = locker.convert_to_relative_path(out_file_archive)
+    success = locker.backup(
         src = tmp_file_archive,
-        dest = out_file_archive,
+        dest_rel_path = dest_rel_path,
         locker_type = locker_type,
         show_progress = True,
         skip_existing = True,

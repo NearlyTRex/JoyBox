@@ -142,9 +142,10 @@ def download_channel_audio_files(channels, genre_type, cookie_source = None, loc
                             exit_on_failure = exit_on_failure)
 
         # Backup audio files
-        backup_success = locker.backup_files(
+        dest_rel_path = locker.convert_to_relative_path(channel_music_dir)
+        backup_success = locker.backup(
             src = audio_only_dir,
-            dest = channel_music_dir,
+            dest_rel_path = dest_rel_path,
             locker_type = locker_type,
             show_progress = True,
             skip_existing = True,

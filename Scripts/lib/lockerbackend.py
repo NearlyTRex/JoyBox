@@ -53,7 +53,7 @@ class LockerBackend(ABC):
         pass
 
     @abstractmethod
-    def copy_file_from(
+    def sync_from(
         self,
         src_backend,
         src_rel_path,
@@ -64,7 +64,21 @@ class LockerBackend(ABC):
         verbose = False,
         pretend_run = False,
         exit_on_failure = False):
-        """Copy a file from another backend to this one, optionally encrypting/decrypting"""
+        """Sync a file from another backend to this one, optionally encrypting/decrypting"""
+        pass
+
+    @abstractmethod
+    def copy_from(
+        self,
+        src_abs_path,
+        dest_rel_path,
+        skip_existing = False,
+        skip_identical = False,
+        show_progress = False,
+        verbose = False,
+        pretend_run = False,
+        exit_on_failure = False):
+        """Copy from an absolute source path to this backend"""
         pass
 
     @abstractmethod
@@ -177,7 +191,7 @@ class LocalBackend(LockerBackend):
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
-    def copy_file_from(
+    def sync_from(
         self,
         src_backend,
         src_rel_path,
@@ -280,6 +294,27 @@ class LocalBackend(LockerBackend):
                 exit_on_failure = exit_on_failure)
         return False
 
+    def copy_from(
+        self,
+        src_abs_path,
+        dest_rel_path,
+        skip_existing = False,
+        skip_identical = False,
+        show_progress = False,
+        verbose = False,
+        pretend_run = False,
+        exit_on_failure = False):
+        dest_full_path = paths.join_paths(self.root_path, dest_rel_path)
+        return fileops.smart_copy(
+            src = src_abs_path,
+            dest = dest_full_path,
+            skip_existing = skip_existing,
+            skip_identical = skip_identical,
+            show_progress = show_progress,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+
     def file_exists(self, rel_path):
         return paths.is_path_file(paths.join_paths(self.root_path, rel_path))
 
@@ -379,7 +414,7 @@ class RemoteBackend(LockerBackend):
         fileops.remove_file(temp_file)
         return result
 
-    def copy_file_from(
+    def sync_from(
         self,
         src_backend,
         src_rel_path,
@@ -526,6 +561,27 @@ class RemoteBackend(LockerBackend):
             finally:
                 fileops.remove_directory(temp_dir)
         return False
+
+    def copy_from(
+        self,
+        src_abs_path,
+        dest_rel_path,
+        skip_existing = False,
+        skip_identical = False,
+        show_progress = False,
+        verbose = False,
+        pretend_run = False,
+        exit_on_failure = False):
+        dest_remote_path = paths.join_paths(self.remote_path, dest_rel_path)
+        return sync.upload_files_to_remote(
+            remote_name = self.remote_name,
+            remote_type = self.remote_type,
+            local_path = src_abs_path,
+            remote_path = paths.get_filename_directory(dest_remote_path),
+            skip_existing = skip_existing,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
 
     def file_exists(self, rel_path):
         full_path = paths.join_paths(self.remote_path, rel_path)

@@ -136,9 +136,10 @@ def pack_save(
 
     # Backup archive
     logger.log_info(f"Backing up save to {output_save_dir}")
-    success = locker.backup_files(
+    dest_rel_path = locker.convert_to_relative_path(out_save_archive_file)
+    success = locker.backup(
         src = tmp_save_archive_file,
-        dest = out_save_archive_file,
+        dest_rel_path = dest_rel_path,
         locker_type = locker_type,
         show_progress = True,
         skip_existing = True,

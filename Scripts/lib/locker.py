@@ -15,6 +15,10 @@ import cryption
 import lockerinfo
 import lockerbackend
 
+###########################################################
+# Helpers
+###########################################################
+
 # Get the default remote locker type (uses primary remote locker)
 def get_default_remote_locker():
     return lockerinfo.get_primary_remote_locker_type()
@@ -91,8 +95,12 @@ def does_path_contain_files(path, locker_type = None):
     rel_path = convert_to_relative_path(path, locker_type)
     return backend.path_contains_files(rel_path)
 
-# Download path from locker to local
-def download_path(
+###########################################################
+# Syncing (LOCAL <-> remote, preserves relative paths)
+###########################################################
+
+# Sync from remote locker to LOCAL
+def sync_from_remote(
     src,
     dest = None,
     locker_type = None,
@@ -125,7 +133,7 @@ def download_path(
         dest_rel_path = rel_path
 
     # Copy from source to local
-    success = dest_backend.copy_file_from(
+    success = dest_backend.sync_from(
         src_backend = src_backend,
         src_rel_path = rel_path,
         dest_rel_path = dest_rel_path,
@@ -139,8 +147,8 @@ def download_path(
     local_path = paths.join_paths(dest_backend.get_root_path(), dest_rel_path)
     return (True, local_path)
 
-# Upload path from local to locker
-def upload_path(
+# Sync from LOCAL to remote locker
+def sync_to_remote(
     src,
     dest = None,
     locker_type = None,
@@ -178,7 +186,7 @@ def upload_path(
         dest_rel_path = src_rel_path
 
     # Copy from local to destination locker
-    success = dest_backend.copy_file_from(
+    success = dest_backend.sync_from(
         src_backend = src_backend,
         src_rel_path = src_rel_path,
         dest_rel_path = dest_rel_path,
@@ -187,8 +195,8 @@ def upload_path(
         exit_on_failure = exit_on_failure)
     return success
 
-# Download and decrypt path from encrypted locker to local
-def download_and_decrypt_path(
+# Sync from encrypted remote locker to LOCAL (with decryption)
+def sync_from_remote_decrypted(
     src,
     dest = None,
     locker_type = None,
@@ -221,7 +229,7 @@ def download_and_decrypt_path(
         dest_rel_path = rel_path
 
     # Copy from source to local with decryption
-    success = dest_backend.copy_file_from(
+    success = dest_backend.sync_from(
         src_backend = src_backend,
         src_rel_path = rel_path,
         dest_rel_path = dest_rel_path,
@@ -237,14 +245,19 @@ def download_and_decrypt_path(
     local_path = paths.join_paths(dest_backend.get_root_path(), dest_rel_path)
     return (True, local_path)
 
-# Upload and encrypt path from local to encrypted locker
-def upload_and_encrypt_path(
+# Sync from LOCAL to remote locker (with encryption)
+def sync_to_remote_encrypted(
     src,
     dest = None,
     locker_type = None,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
+
+    # Check source path exists locally
+    if not paths.does_path_exist(src):
+        logger.log_error("Path '%s' does not exist" % src)
+        return False
 
     # Get locker type
     if locker_type is None:
@@ -270,8 +283,8 @@ def upload_and_encrypt_path(
     else:
         dest_rel_path = src_rel_path
 
-    # Copy from local to destination with encryption
-    success = dest_backend.copy_file_from(
+    # Copy from local to destination locker with encryption
+    success = dest_backend.sync_from(
         src_backend = src_backend,
         src_rel_path = src_rel_path,
         dest_rel_path = dest_rel_path,
@@ -282,76 +295,158 @@ def upload_and_encrypt_path(
         exit_on_failure = exit_on_failure)
     return success
 
+###########################################################
+# Copying (arbitrary source to locker)
+###########################################################
+
+# Copy from arbitrary source path to a locker
+def copy_to_locker(
+    src,
+    dest_rel_path,
+    locker_type,
+    skip_existing = False,
+    skip_identical = False,
+    show_progress = False,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Check source exists
+    if not paths.does_path_exist(src):
+        logger.log_error("Source path '%s' does not exist" % src)
+        return False
+
+    # Get destination locker info and backend
+    locker_info = lockerinfo.LockerInfo(locker_type)
+    if not locker_info:
+        logger.log_error("Locker %s not found" % locker_type)
+        return False
+
+    # Copy to destination
+    dest_backend = lockerbackend.get_backend_for_locker(locker_info)
+    return dest_backend.copy_from(
+        src_abs_path = src,
+        dest_rel_path = dest_rel_path,
+        skip_existing = skip_existing,
+        skip_identical = skip_identical,
+        show_progress = show_progress,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+
+# Copy from arbitrary source path to a locker (with encryption)
+def copy_to_locker_encrypted(
+    src,
+    dest_rel_path,
+    locker_type,
+    skip_existing = False,
+    skip_identical = False,
+    show_progress = False,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Check source exists
+    if not paths.does_path_exist(src):
+        logger.log_error("Source path '%s' does not exist" % src)
+        return False
+
+    # Get destination locker info
+    locker_info = lockerinfo.LockerInfo(locker_type)
+    if not locker_info:
+        logger.log_error("Locker %s not found" % locker_type)
+        return False
+
+    # For local-only lockers, skip encryption (just do a plain copy)
+    if locker_info.is_local_only():
+        return copy_to_locker(
+            src = src,
+            dest_rel_path = dest_rel_path,
+            locker_type = locker_type,
+            skip_existing = skip_existing,
+            skip_identical = skip_identical,
+            show_progress = show_progress,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+
+    # Encrypt source to temp file then upload
+    passphrase = locker_info.get_passphrase()
+    if not passphrase:
+        logger.log_warning("No passphrase configured for locker %s, uploading unencrypted" % locker_type)
+        return copy_to_locker(
+            src = src,
+            dest_rel_path = dest_rel_path,
+            locker_type = locker_type,
+            skip_existing = skip_existing,
+            skip_identical = skip_identical,
+            show_progress = show_progress,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+
+    # Create temp directory for encrypted file
+    temp_dir = fileops.create_temporary_directory()
+    try:
+        encrypted_file = paths.join_paths(temp_dir, paths.get_filename_file(src) + ".enc")
+        success = cryption.encrypt_file(
+            src = src,
+            passphrase = passphrase,
+            output_file = encrypted_file,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if not success:
+            logger.log_error("Failed to encrypt file %s" % src)
+            return False
+
+        # Upload encrypted file
+        encrypted_dest_rel_path = dest_rel_path + ".enc"
+        return copy_to_locker(
+            src = encrypted_file,
+            dest_rel_path = encrypted_dest_rel_path,
+            locker_type = locker_type,
+            skip_existing = skip_existing,
+            skip_identical = skip_identical,
+            show_progress = show_progress,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+    finally:
+        fileops.remove_directory(temp_dir)
+
+###########################################################
+# Backup (copy source to all configured lockers)
+###########################################################
+
 # Get all configured lockers
 def get_configured_lockers():
     configured = []
     for locker_type in config.LockerType.members():
         if locker_type == config.LockerType.ALL:
             continue
-        if locker_type == config.LockerType.LOCAL:
-            continue
         locker_info = lockerinfo.LockerInfo(locker_type)
         if not locker_info:
+            continue
+        if locker_type == config.LockerType.LOCAL:
+            if locker_info.get_mount_path() and paths.does_path_exist(locker_info.get_mount_path()):
+                configured.append(locker_type)
+            continue
+        if locker_type == config.LockerType.EXTERNAL:
+            if locker_info.get_mount_path() and paths.does_path_exist(locker_info.get_mount_path()):
+                configured.append(locker_type)
             continue
         if locker_info.get_name():
             if sync.is_remote_configured(
                 remote_name = locker_info.get_name(),
                 remote_type = locker_info.get_type()):
                 configured.append(locker_type)
-        elif locker_type == config.LockerType.EXTERNAL:
-            if locker_info.get_mount_path() and paths.does_path_exist(locker_info.get_mount_path()):
-                configured.append(locker_type)
     return configured
 
-# Upload to single locker
-def upload_to_locker(
-    dest,
-    locker_type,
-    upload_encrypted = False,
-    verbose = False,
-    pretend_run = False,
-    exit_on_failure = False):
-
-    # Get locker info
-    locker_info = lockerinfo.LockerInfo(locker_type)
-    if not locker_info:
-        logger.log_error("Locker %s not found" % locker_type)
-        return False
-
-    # Upload encrypted files
-    logger.log_info("Uploading to locker %s..." % locker_type)
-    if upload_encrypted:
-        logger.log_info("Uploading encrypted files to %s..." % locker_type)
-        success = upload_and_encrypt_path(
-            src = dest,
-            locker_type = locker_type,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        if not success:
-            logger.log_error("Encrypted upload to %s failed" % locker_type)
-            return False
-        logger.log_info("Encrypted upload to %s completed" % locker_type)
-
-    # Upload plain files
-    else:
-        logger.log_info("Uploading plain files to %s..." % locker_type)
-        success = upload_path(
-            src = dest,
-            locker_type = locker_type,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        if not success:
-            logger.log_error("Plain upload to %s failed" % locker_type)
-            return False
-        logger.log_info("Plain upload to %s completed" % locker_type)
-    return True
-
-# Backup files
-def backup_files(
+# Backup source to configured lockers
+def backup(
     src,
-    dest,
+    dest_rel_path,
     locker_type = None,
     delete_afterwards = False,
     show_progress = False,
@@ -363,67 +458,62 @@ def backup_files(
     pretend_run = False,
     exit_on_failure = False):
 
-    # Transfer files
-    logger.log_info(f"Starting file transfer from {src} to {dest}")
-    if paths.is_path_directory(src):
-        src_files = paths.get_directory_contents(src)
-        logger.log_info(f"Source directory contains {len(src_files)} items")
-    success = fileops.smart_transfer(
-        src = src,
-        dest = dest,
-        delete_afterwards = delete_afterwards,
-        show_progress = show_progress,
-        skip_existing = skip_existing,
-        skip_identical = skip_identical,
-        case_sensitive_paths = case_sensitive_paths,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    if not success:
-        logger.log_error(f"File transfer failed from {src} to {dest}")
+    # Check source exists
+    if not paths.does_path_exist(src):
+        logger.log_error("Source path '%s' does not exist" % src)
         return False
-    logger.log_info("File transfer completed successfully")
-
-    # Upload files
-    logger.log_info("Checking if sync tool is installed...")
-    if not sync.is_tool_installed():
-        logger.log_info("Sync tool not installed, skipping upload")
-        return True
 
     # Determine which lockers to upload to
     if locker_type is None:
-        logger.log_info("No locker type specified, skipping upload")
+        logger.log_info("No locker type specified, skipping backup")
         return True
     elif locker_type == config.LockerType.ALL:
         lockers_to_upload = get_configured_lockers()
         if not lockers_to_upload:
-            logger.log_info("No configured lockers found, skipping upload")
+            logger.log_info("No configured lockers found, skipping backup")
             return True
-        logger.log_info("Uploading to all configured lockers: %s" % ", ".join(str(l) for l in lockers_to_upload))
+        logger.log_info("Backing up to all configured lockers: %s" % ", ".join(str(l) for l in lockers_to_upload))
     else:
-        locker_info = lockerinfo.LockerInfo(locker_type)
-        if not locker_info:
-            logger.log_error("Locker %s not found" % locker_type)
-            return False
-        if not sync.is_remote_configured(
-            remote_name = locker_info.get_name(),
-            remote_type = locker_info.get_type()):
-            logger.log_info("Remote not configured for locker %s, skipping upload" % locker_type)
-            return True
         lockers_to_upload = [locker_type]
 
-    # Upload to each locker
+    # Upload to each locker directly from source
+    all_success = True
     for locker in lockers_to_upload:
-        success = upload_to_locker(
-            dest = dest,
-            locker_type = locker,
-            upload_encrypted = upload_encrypted,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        if not success and exit_on_failure:
-            return False
+        logger.log_info("Backing up to locker %s..." % locker)
+        if upload_encrypted:
+            success = copy_to_locker_encrypted(
+                src = src,
+                dest_rel_path = dest_rel_path,
+                locker_type = locker,
+                skip_existing = skip_existing,
+                skip_identical = skip_identical,
+                show_progress = show_progress,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
+        else:
+            success = copy_to_locker(
+                src = src,
+                dest_rel_path = dest_rel_path,
+                locker_type = locker,
+                skip_existing = skip_existing,
+                skip_identical = skip_identical,
+                show_progress = show_progress,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
+        if not success:
+            logger.log_error("Backup to %s failed" % locker)
+            if exit_on_failure:
+                return False
+            all_success = False
+        else:
+            logger.log_info("Backup to %s completed" % locker)
+
+    # Delete source afterwards if requested
+    if delete_afterwards and all_success:
+        fileops.remove_path(src, verbose=verbose, pretend_run=pretend_run)
 
     # Should be successful
-    logger.log_info("BackupFiles completed successfully")
-    return True
+    logger.log_info("Backup completed successfully")
+    return all_success

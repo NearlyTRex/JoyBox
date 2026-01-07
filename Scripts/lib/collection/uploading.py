@@ -64,7 +64,7 @@ def upload_game_files(
         return False
 
     # Upload all files
-    success = locker.upload_path(
+    success = locker.sync_to_remote(
         src = game_root,
         verbose = verbose,
         locker_type = locker_type,

@@ -264,9 +264,11 @@ def setup_general_release(
 
     # Backup files
     if paths.is_path_valid(backups_dir):
-        success = locker.backup_files(
+        backup_dest = paths.join_paths(backups_dir, archive_filename)
+        dest_rel_path = locker.convert_to_relative_path(backup_dest)
+        success = locker.backup(
             src = archive_file,
-            dest = paths.join_paths(backups_dir, archive_filename),
+            dest_rel_path = dest_rel_path,
             locker_type = locker_type,
             show_progress = True,
             skip_existing = True,
@@ -795,9 +797,11 @@ def build_binary_from_source(
 
     # Backup files
     if paths.is_path_valid(backups_dir):
-        success = locker.backup_files(
+        backup_dest = paths.join_paths(backups_dir, final_file)
+        dest_rel_path = locker.convert_to_relative_path(backup_dest)
+        success = locker.backup(
             src = built_file,
-            dest = paths.join_paths(backups_dir, final_file),
+            dest_rel_path = dest_rel_path,
             locker_type = locker_type,
             show_progress = True,
             skip_existing = True,
@@ -955,9 +959,11 @@ def build_appimage_from_source(
 
     # Backup files
     if paths.is_path_valid(backups_dir):
-        success = locker.backup_files(
+        backup_dest = paths.join_paths(backups_dir, final_file)
+        dest_rel_path = locker.convert_to_relative_path(backup_dest)
+        success = locker.backup(
             src = built_file,
-            dest = paths.join_paths(backups_dir, final_file),
+            dest_rel_path = dest_rel_path,
             locker_type = locker_type,
             show_progress = True,
             skip_existing = True,

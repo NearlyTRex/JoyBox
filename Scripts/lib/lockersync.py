@@ -317,7 +317,8 @@ def execute_sync_actions(
             elif action_type in encrypt_types:
                 cryption_type = config.CryptionType.ENCRYPT
 
-            success = secondary_backend.copy_file_from(
+            # Run sync
+            success = secondary_backend.sync_from(
                 src_backend = primary_backend,
                 src_rel_path = src_path,
                 dest_rel_path = dest_path,

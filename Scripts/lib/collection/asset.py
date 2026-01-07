@@ -150,9 +150,10 @@ def download_metadata_asset(
         return False
 
     # Backup asset
-    success = locker.backup_files(
+    dest_rel_path = locker.convert_to_relative_path(output_asset_file)
+    success = locker.backup(
         src = tmp_asset_file_converted,
-        dest = output_asset_file,
+        dest_rel_path = dest_rel_path,
         locker_type = locker_type,
         show_progress = True,
         skip_existing = skip_existing,

@@ -154,7 +154,7 @@ def install_local_game(
         return False
 
     # Download files
-    success = locker.download_and_decrypt_path(
+    success = locker.sync_from_remote_decrypted(
         src = game_remote_rom_dir,
         dest = tmp_dir_result,
         verbose = verbose,
