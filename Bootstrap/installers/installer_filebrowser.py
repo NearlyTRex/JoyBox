@@ -4,6 +4,7 @@ import sys
 
 # Local imports
 import util
+import constants
 from . import installer
 
 # Nginx config template
@@ -144,6 +145,11 @@ class FileBrowser(installer.Installer):
             "admin_user": self.config.get_value("UserData.FileBrowser", "filebrowser_admin_user"),
             "admin_pass": self.config.get_value("UserData.FileBrowser", "filebrowser_admin_pass")
         }
+
+    def get_supported_environments(self):
+        return [
+            constants.EnvironmentType.REMOTE_UBUNTU,
+        ]
 
     def is_installed(self):
         containers = self.connection.run_output("docker ps -a --format '{{.Names}}'")

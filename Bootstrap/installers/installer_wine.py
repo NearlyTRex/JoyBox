@@ -4,6 +4,7 @@ import sys
 
 # Local imports
 import util
+import constants
 from . import installer
 
 # Wine
@@ -21,6 +22,11 @@ class Wine(installer.Installer):
         self.sources_list = f"winehq-{self.codename}.sources"
         self.archive_key_path = f"/etc/apt/keyrings/{self.archive_key}"
         self.sources_list_path = f"/etc/apt/sources.list.d/{self.sources_list}"
+
+    def get_supported_environments(self):
+        return [
+            constants.EnvironmentType.LOCAL_UBUNTU,
+        ]
 
     def is_installed(self):
         return self.connection.does_file_or_directory_exist("/usr/bin/wine")

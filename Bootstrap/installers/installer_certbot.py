@@ -4,6 +4,7 @@ import sys
 
 # Local imports
 import util
+import constants
 from . import installer
 
 # Nginx config template
@@ -70,6 +71,11 @@ class Certbot(installer.Installer):
         self.nginx_config_values = {
             "domain": self.domain_name
         }
+
+    def get_supported_environments(self):
+        return [
+            constants.EnvironmentType.REMOTE_UBUNTU,
+        ]
 
     def is_installed(self):
         return self.connection.does_file_or_directory_exist("/usr/bin/certbot")

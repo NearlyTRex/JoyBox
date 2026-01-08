@@ -4,6 +4,7 @@ import sys
 
 # Local imports
 import util
+import constants
 import packages
 from . import installer
 
@@ -17,39 +18,44 @@ class WinGet(installer.Installer):
         options = util.RunOptions()):
         super().__init__(config, connection, flags, options)
 
-    def GetPackages(self):
+    def get_supported_environments(self):
+        return [
+            constants.EnvironmentType.LOCAL_WINDOWS,
+        ]
+
+    def get_packages(self):
         return packages.winget.get(self.get_environment_type(), [])
 
     def is_installed(self):
-        for pkg in self.GetPackages():
-            if not self.IsPackageInstalled(pkg):
+        for pkg in self.get_packages():
+            if not self.is_package_installed(pkg):
                 return False
         return True
 
     def install(self):
         util.log_info("Installing WinGet packages")
-        for pkg in self.GetPackages():
-            if not self.InstallPackage(pkg):
+        for pkg in self.get_packages():
+            if not self.install_package(pkg):
                 util.log_error(f"Unable to install package {pkg}")
                 return False
         return True
 
     def uninstall(self):
         util.log_info("Uninstalling WinGet packages")
-        for pkg in self.GetPackages():
-            if not self.UninstallPackage(pkg):
+        for pkg in self.get_packages():
+            if not self.uninstall_package(pkg):
                 util.log_error(f"Unable to uninstall package {pkg}")
                 return False
         return True
 
-    def IsPackageInstalled(self, package):
+    def is_package_installed(self, package):
         code = self.connection.run_blocking([self.winget_tool, "list", "--name", package])
         return code == 0
 
-    def InstallPackage(self, package):
+    def install_package(self, package):
         code = self.connection.run_blocking([self.winget_tool, "install", "--accept-package-agreements", "--accept-source-agreements", "--id", package, "-e", "-h"])
         return code == 0
 
-    def UninstallPackage(self, package):
+    def uninstall_package(self, package):
         code = self.connection.run_blocking([self.winget_tool, "uninstall", "--id", package, "-e", "-h"])
         return code == 0

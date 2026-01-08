@@ -4,6 +4,7 @@ import sys
 
 # Local imports
 import util
+import constants
 from . import installer
 
 # Nginx config template
@@ -76,6 +77,11 @@ class Jenkins(installer.Installer):
             "port_agent": self.config.get_value("UserData.Jenkins", "jenkins_port_agent"),
             "home_dir": self.config.get_value("UserData.Jenkins", "jenkins_home_dir")
         }
+
+    def get_supported_environments(self):
+        return [
+            constants.EnvironmentType.REMOTE_UBUNTU,
+        ]
 
     def is_installed(self):
         containers = self.connection.run_output("docker ps -a --format '{{.Names}}'")

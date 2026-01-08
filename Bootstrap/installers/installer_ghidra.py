@@ -6,6 +6,7 @@ import string
 
 # Local imports
 import util
+import constants
 from . import installer
 
 # Nginx stream config template
@@ -414,6 +415,11 @@ class Ghidra(installer.Installer):
             "port_ssl": self.config.get_value("UserData.Ghidra", "ghidra_port_ssl"),
             "port_stream": self.config.get_value("UserData.Ghidra", "ghidra_port_stream")
         }
+
+    def get_supported_environments(self):
+        return [
+            constants.EnvironmentType.REMOTE_UBUNTU,
+        ]
 
     def is_installed(self):
         containers = self.connection.run_output("docker ps -a --format '{{.Names}}'")

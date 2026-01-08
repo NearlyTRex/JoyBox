@@ -4,6 +4,7 @@ import sys
 
 # Local imports
 import util
+import constants
 from . import installer
 
 # OnePassword
@@ -23,6 +24,11 @@ class OnePassword(installer.Installer):
         self.sources_list_path = f"/etc/apt/sources.list.d/{self.sources_list}"
         self.policy_path = f"/etc/debsig/policies/{self.policy}/"
         self.policy_keyring_path = f"/usr/share/debsig/keyrings/{self.policy}"
+
+    def get_supported_environments(self):
+        return [
+            constants.EnvironmentType.LOCAL_UBUNTU,
+        ]
 
     def is_installed(self):
         return self.connection.does_file_or_directory_exist("/usr/bin/1password")

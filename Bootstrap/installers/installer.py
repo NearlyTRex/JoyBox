@@ -7,6 +7,7 @@ import copy
 import util
 import tools
 import connection
+import constants
 
 # Installer
 class Installer:
@@ -45,6 +46,19 @@ class Installer:
 
     def get_environment_type(self):
         return self.config.get_value("UserData.General", "environment_type")
+
+    def get_supported_environments(self):
+        return [
+            constants.EnvironmentType.LOCAL_UBUNTU,
+            constants.EnvironmentType.LOCAL_WINDOWS,
+            constants.EnvironmentType.REMOTE_UBUNTU,
+            constants.EnvironmentType.REMOTE_WINDOWS,
+        ]
+
+    def supports_environment(self, env_type=None):
+        if env_type is None:
+            env_type = self.get_environment_type()
+        return env_type in self.get_supported_environments()
 
     def is_installed(self):
         return False

@@ -4,6 +4,7 @@ import sys
 
 # Local imports
 import util
+import constants
 from . import installer
 
 # Nginx config template
@@ -103,6 +104,11 @@ class Wordpress(installer.Installer):
             "db_root_password": self.config.get_value("UserData.Wordpress", "wordpress_db_root_pass"),
             "port_http": self.config.get_value("UserData.Wordpress", "wordpress_port_http")
         }
+
+    def get_supported_environments(self):
+        return [
+            constants.EnvironmentType.REMOTE_UBUNTU,
+        ]
 
     def is_installed(self):
         containers = self.connection.run_output("docker ps -a --format '{{.Names}}'")

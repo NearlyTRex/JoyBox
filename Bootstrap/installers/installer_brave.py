@@ -4,6 +4,7 @@ import sys
 
 # Local imports
 import util
+import constants
 from . import installer
 
 # Brave
@@ -20,6 +21,11 @@ class Brave(installer.Installer):
         self.sources_list = "brave-browser-release.list"
         self.archive_key_path = f"/usr/share/keyrings/{self.archive_key}"
         self.sources_list_path = f"/etc/apt/sources.list.d/{self.sources_list}"
+
+    def get_supported_environments(self):
+        return [
+            constants.EnvironmentType.LOCAL_UBUNTU,
+        ]
 
     def is_installed(self):
         return self.connection.does_file_or_directory_exist("/usr/bin/brave-browser")

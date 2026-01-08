@@ -4,6 +4,7 @@ import sys
 
 # Local imports
 import util
+import constants
 from . import installer
 
 # Nginx config template
@@ -51,6 +52,11 @@ class Cockpit(installer.Installer):
             "subdomain": self.config.get_value("UserData.Cockpit", "cockpit_subdomain"),
             "port_http": self.config.get_value("UserData.Cockpit", "cockpit_port_http")
         }
+
+    def get_supported_environments(self):
+        return [
+            constants.EnvironmentType.REMOTE_UBUNTU,
+        ]
 
     def is_installed(self):
         output = self.connection.run_output("systemctl is-enabled cockpit.socket")

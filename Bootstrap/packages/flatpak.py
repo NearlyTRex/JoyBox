@@ -21,20 +21,20 @@ flatpak[constants.EnvironmentType.REMOTE_WINDOWS] = []
 flatpak[constants.EnvironmentType.LOCAL_UBUNTU] += [
 
     # Admin
-    {"repository": "flathub", "name": "com.github.tchx84.Flatseal"},
+    {"id": "com.github.tchx84.Flatseal", "name": "Flatseal", "description": "Manage Flatpak permissions", "category": "Admin"},
 
     # Devel
-    {"repository": "flathub", "name": "com.jetbrains.IntelliJ-IDEA-Community"},
-    {"repository": "flathub", "name": "org.mapeditor.Tiled"},
+    {"id": "com.jetbrains.IntelliJ-IDEA-Community", "name": "IntelliJ IDEA", "description": "Java IDE", "category": "Devel"},
+    {"id": "org.mapeditor.Tiled", "name": "Tiled", "description": "2D map editor for games", "category": "Devel"},
 
     # Games
-    {"repository": "flathub", "name": "com.heroicgameslauncher.hgl"},
+    {"id": "com.heroicgameslauncher.hgl", "name": "Heroic Games Launcher", "description": "Epic/GOG/Amazon game launcher", "category": "Games"},
 
     # Utils
-    {"repository": "flathub", "name": "org.cryptomator.Cryptomator"},
+    {"id": "org.cryptomator.Cryptomator", "name": "Cryptomator", "description": "Cloud storage encryption", "category": "Utils"},
 
     # Web
-    {"repository": "flathub", "name": "com.discordapp.Discord"},
-    {"repository": "flathub", "name": "org.signal.Signal"},
-    {"repository": "flathub", "name": "org.telegram.desktop"},
+    {"id": "com.discordapp.Discord", "name": "Discord", "description": "Voice and text chat", "category": "Web"},
+    {"id": "org.signal.Signal", "name": "Signal", "description": "Private messenger", "category": "Web"},
+    {"id": "org.telegram.desktop", "name": "Telegram", "description": "Cloud-based messenger", "category": "Web"},
 ]

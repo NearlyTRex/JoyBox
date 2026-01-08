@@ -4,6 +4,7 @@ import sys
 
 # Local imports
 import util
+import constants
 from . import installer
 
 # Nginx config template
@@ -80,6 +81,11 @@ class Navidrome(installer.Installer):
             "port_http": self.config.get_value("UserData.Navidrome", "navidrome_port_http"),
             "music_dir": self.config.get_value("UserData.Navidrome", "navidrome_music_dir")
         }
+
+    def get_supported_environments(self):
+        return [
+            constants.EnvironmentType.REMOTE_UBUNTU,
+        ]
 
     def is_installed(self):
         containers = self.connection.run_output("docker ps -a --format '{{.Names}}'")

@@ -60,14 +60,14 @@ class LocalUbuntu(env.Environment):
         # Update package lists
         if self.should_process_component("aptget"):
             util.log_info("Updating package lists for AptGet")
-            self.installer_aptget.UpdatePackageLists()
+            self.installer_aptget.update_package_lists()
 
         # Process all components
         success = self.process_components("install")
 
         # Autoremove packages
         if self.should_process_component("aptget") and success:
-            if not self.installer_aptget.AutoRemovePackages():
+            if not self.installer_aptget.auto_remove_packages():
                 return False
         return success
 
@@ -78,6 +78,6 @@ class LocalUbuntu(env.Environment):
 
         # Autoremove packages
         if self.should_process_component("aptget") and success:
-            if not self.installer_aptget.AutoRemovePackages():
+            if not self.installer_aptget.auto_remove_packages():
                 return False
         return success
