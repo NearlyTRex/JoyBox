@@ -32,6 +32,16 @@ class WinGet(installer.Installer):
                 return False
         return True
 
+    def get_package_status(self):
+        installed = []
+        missing = []
+        for pkg in self.get_packages():
+            if self.is_package_installed(pkg):
+                installed.append(pkg)
+            else:
+                missing.append(pkg)
+        return {"installed": installed, "missing": missing}
+
     def install(self):
         util.log_info("Installing WinGet packages")
         for pkg in self.get_packages():

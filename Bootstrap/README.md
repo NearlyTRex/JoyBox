@@ -104,6 +104,12 @@ cockpit_port = 9090
 ## Common Commands
 
 ```bash
+# Check what's installed
+python3 bootstrap.py -a status -t local_ubuntu
+
+# Check specific components
+python3 bootstrap.py -a status -t local_ubuntu --components chrome brave vscodium
+
 # Dry run - see what would happen
 python3 bootstrap.py -a setup -t local_ubuntu -p -v
 

@@ -63,6 +63,9 @@ class Installer:
     def is_installed(self):
         return False
 
+    def get_package_status(self):
+        return None
+
     def install(self):
         return False
 

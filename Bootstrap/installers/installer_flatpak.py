@@ -49,6 +49,19 @@ class Flatpak(installer.Installer):
                 return False
         return True
 
+    def get_package_status(self):
+        installed = []
+        missing = []
+        for pkg in self.get_packages():
+            pkg_info = get_package_info(pkg)
+            pkg_id = pkg_info["id"]
+            display_name = pkg_info["name"]
+            if self.is_package_installed(pkg_id):
+                installed.append(display_name)
+            else:
+                missing.append(display_name)
+        return {"installed": installed, "missing": missing}
+
     def install(self):
         util.log_info("Installing Flatpak packages")
         for pkg in self.get_packages():

@@ -51,6 +51,19 @@ class AptGet(installer.Installer):
                 return False
         return True
 
+    def get_package_status(self):
+        installed = []
+        missing = []
+        for pkg in self.get_packages():
+            pkg_id = get_package_id(pkg)
+            pkg_info = get_package_info(pkg)
+            display_name = pkg_info["name"] if pkg_info["name"] != pkg_id else pkg_id
+            if self.is_package_installed(pkg_id):
+                installed.append(display_name)
+            else:
+                missing.append(display_name)
+        return {"installed": installed, "missing": missing}
+
     def install(self):
         util.log_info("Installing AptGet packages")
         for pkg in self.get_packages():
@@ -86,7 +99,13 @@ class AptGet(installer.Installer):
         return code == 0
 
     def install_package(self, package):
-        code = self.connection.run_blocking([self.aptget_tool, "install", "-y", package], sudo = True)
+        code = self.connection.run_blocking([
+            "env", "DEBIAN_FRONTEND=noninteractive",
+            self.aptget_tool, "install", "-y",
+            "-o", "Dpkg::Options::=--force-confdef",
+            "-o", "Dpkg::Options::=--force-confold",
+            package
+        ], sudo = True)
         return code == 0
 
     def uninstall_package(self, package):

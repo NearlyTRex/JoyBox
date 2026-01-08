@@ -80,8 +80,9 @@ class Configuration:
             self.config[section] = {}
 
     def set_value(self, section, key, value):
-        if self.has_section(section):
-            self.config[section][key] = value
+        if not self.has_section(section):
+            self.config[section] = {}
+        self.config[section][key] = value
 
     def get_value(self, section, key, default_value = None):
         return self.config.get(section, {}).get(key, default_value)

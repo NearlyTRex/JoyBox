@@ -2,13 +2,10 @@
 import os
 import sys
 import shlex
-import paramiko
 import stat
 import traceback
 import threading
 import select
-import termios
-import tty
 import time
 import concurrent.futures
 from io import StringIO
@@ -16,6 +13,15 @@ from io import StringIO
 # Local imports
 import util
 from . import connection
+
+# Lazy import for paramiko (only needed for SSH connections)
+paramiko = None
+
+def _ensure_paramiko():
+    global paramiko
+    if paramiko is None:
+        import paramiko as _paramiko
+        paramiko = _paramiko
 
 class ConnectionSSH(connection.Connection):
     ssh_client = None
@@ -40,6 +46,7 @@ class ConnectionSSH(connection.Connection):
         self.ssh_password = ssh_password
 
     def setup(self):
+        _ensure_paramiko()
         try:
             if not ConnectionSSH.ssh_client:
                 ConnectionSSH.ssh_client = paramiko.SSHClient()

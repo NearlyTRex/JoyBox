@@ -19,7 +19,7 @@ import util
 parser = argparse.ArgumentParser(description="Environment bootstrap script.")
 parser.add_argument(
     "-a", "--action",
-    choices = ["setup", "teardown"],
+    choices = ["setup", "teardown", "status"],
     required = True,
     help = "Action to perform")
 parser.add_argument(
@@ -120,6 +120,35 @@ def main():
         environment_runner.setup()
     elif args.action == "teardown":
         environment_runner.teardown()
+    elif args.action == "status":
+        results = environment_runner.status()
+        installed = [r for r in results if r["installed"]]
+        not_installed = [r for r in results if not r["installed"]]
+        util.log_info(f"Component status for {args.type}:")
+        util.log_info("")
+        if installed:
+            util.log_info(f"Installed ({len(installed)}):")
+            for r in sorted(installed, key=lambda x: x["name"]):
+                pkg_status = r.get("package_status")
+                if pkg_status:
+                    total = len(pkg_status["installed"]) + len(pkg_status["missing"])
+                    util.log_info(f"  [x] {r['name']} ({len(pkg_status['installed'])}/{total} packages)")
+                else:
+                    util.log_info(f"  [x] {r['name']}")
+        if not_installed:
+            util.log_info(f"Not installed ({len(not_installed)}):")
+            for r in sorted(not_installed, key=lambda x: x["name"]):
+                pkg_status = r.get("package_status")
+                if pkg_status and pkg_status["missing"]:
+                    total = len(pkg_status["installed"]) + len(pkg_status["missing"])
+                    util.log_info(f"  [ ] {r['name']} ({len(pkg_status['installed'])}/{total} packages)")
+                    util.log_info(f"      Missing:")
+                    for pkg in pkg_status["missing"][:10]:
+                        util.log_info(f"        - {pkg}")
+                    if len(pkg_status["missing"]) > 10:
+                        util.log_info(f"        ... and {len(pkg_status['missing']) - 10} more")
+                else:
+                    util.log_info(f"  [ ] {r['name']}")
 
 # Start
 if __name__ == "__main__":

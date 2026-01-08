@@ -57,10 +57,12 @@ class LocalUbuntu(env.Environment):
 
     def setup(self):
 
-        # Update package lists
+        # Update package lists and autoremove
         if self.should_process_component("aptget"):
             util.log_info("Updating package lists for AptGet")
             self.installer_aptget.update_package_lists()
+            util.log_info("Auto-removing unused packages")
+            self.installer_aptget.auto_remove_packages()
 
         # Process all components
         success = self.process_components("install")

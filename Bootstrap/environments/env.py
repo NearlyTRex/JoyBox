@@ -75,6 +75,19 @@ class Environment:
             util.log_info(f"Processed {processed_count} components, skipped {skipped_count} components")
         return True
 
+    def status(self):
+        results = []
+        for component_name, installer in self.available_components.items():
+            if self.should_process_component(component_name):
+                is_installed = installer.is_installed()
+                package_status = installer.get_package_status()
+                results.append({
+                    "name": component_name,
+                    "installed": is_installed,
+                    "package_status": package_status
+                })
+        return results
+
     def setup(self):
         return False
 
