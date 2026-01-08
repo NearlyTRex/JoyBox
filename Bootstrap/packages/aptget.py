@@ -23,6 +23,7 @@ aptget[constants.EnvironmentType.LOCAL_UBUNTU] += [
     # Admin
     "7zip",
     "apt-file",
+    "baobab",
     "blueman",
     "clamav",
     "file-roller",
@@ -36,6 +37,7 @@ aptget[constants.EnvironmentType.LOCAL_UBUNTU] += [
     "zsh",
 
     # Devel
+    "astyle",
     "autoconf",
     "automake",
     "awscli",
@@ -57,6 +59,7 @@ aptget[constants.EnvironmentType.LOCAL_UBUNTU] += [
     "gitg",
     "glslang-tools",
     "golang",
+    "graphviz",
     "help2man",
     "jq",
     "libtool-bin",
@@ -89,11 +92,16 @@ aptget[constants.EnvironmentType.LOCAL_UBUNTU] += [
 
     # Gnome
     "brasero",
+    "eog",
+    "evince",
+    "geary",
     "gedit",
     "ghex",
     "gnome-screenshot",
 
     # Graphics
+    "bchunk",
+    "cdrdao",
     "gimp",
     "ffmpeg",
     "handbrake",
@@ -226,8 +234,11 @@ aptget[constants.EnvironmentType.LOCAL_UBUNTU] += [
     "qmmp",
 
     # Utils
+    "dolphin",
     "gsmartcontrol",
+    "gwenview",
     "hardinfo",
+    "joystick",
     "jstest-gtk",
     "kdeconnect",
     "kdiff3",
@@ -243,6 +254,8 @@ aptget[constants.EnvironmentType.LOCAL_UBUNTU] += [
 
     # Virtualization
     "flatpak",
+    "guestfish",
+    "guestfs-tools",
     "ovmf",
     "qemu-kvm",
     "qemu-utils",
@@ -254,6 +267,7 @@ aptget[constants.EnvironmentType.LOCAL_UBUNTU] += [
     "xdg-desktop-portal",
 
     # Web
+    "apache2",
     "firefox",
     "uget",
 
