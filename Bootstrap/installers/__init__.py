@@ -5,6 +5,8 @@ from installers.installer_brave import *
 from installers.installer_certbot import *
 from installers.installer_cockpit import *
 from installers.installer_chrome import *
+from installers.installer_config import *
+from installers.installer_dotfiles import *
 from installers.installer_ghidra import *
 from installers.installer_filebrowser import *
 from installers.installer_flatpak import *
@@ -19,4 +21,5 @@ from installers.installer_vscodium import *
 from installers.installer_wine import *
 from installers.installer_winget import *
 from installers.installer_wordpress import *
+from installers.installer_wrappers import *
 from installers.installer import *

@@ -22,7 +22,7 @@ import emulatorbase
 
 # Config files
 config_files = {}
-config_file_general = """
+config_file_general = r"""
 [Data%20Storage]
 dump_directory="EMULATOR_SETUP_ROOT/dump"
 load_directory="EMULATOR_SETUP_ROOT/load"

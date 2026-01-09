@@ -39,9 +39,9 @@ class OnePassword(installer.Installer):
         self.connection.make_directory(self.policy_keyring_path, sudo = True)
         self.connection.download_file(f"{self.url}/linux/keys/1password.asc", "/tmp/1password.asc")
         self.connection.download_file(f"{self.url}/linux/debian/debsig/1password.pol", f"{self.policy_path}/1password.pol", sudo = True)
-        self.connection.run_checked([self.gpg_tool, "--dearmor", "-o", self.archive_key_path, "/tmp/1password.asc"], sudo = True)
-        self.connection.run_checked([self.gpg_tool, "--dearmor", "-o", f"{self.policy_keyring_path}/debsig.gpg", "/tmp/1password.asc"], sudo = True)
-        self.connection.write_file(self.sources_list_path, f"deb [arch=amd64 signed-by={self.archive_key_path}] {self.url}/linux/debian/amd64 stable main\n")
+        self.connection.run_checked([self.gpg_tool, "--yes", "--dearmor", "-o", self.archive_key_path, "/tmp/1password.asc"], sudo = True)
+        self.connection.run_checked([self.gpg_tool, "--yes", "--dearmor", "-o", f"{self.policy_keyring_path}/debsig.gpg", "/tmp/1password.asc"], sudo = True)
+        self.connection.write_file(self.sources_list_path, f"deb [arch=amd64 signed-by={self.archive_key_path}] {self.url}/linux/debian/amd64 stable main\n", sudo = True)
         self.connection.run_checked([self.aptget_tool, "update"], sudo = True)
         self.connection.run_checked([self.aptget_tool, "install", "-y", "1password"], sudo = True)
         return True

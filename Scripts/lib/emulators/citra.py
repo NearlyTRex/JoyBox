@@ -20,7 +20,7 @@ import emulatorbase
 
 # Config files
 config_files = {}
-config_file_general = """
+config_file_general = r"""
 [Data%20Storage]
 nand_directory=EMULATOR_SETUP_ROOT/nand/
 sdmc_directory=EMULATOR_SETUP_ROOT/sdmc/

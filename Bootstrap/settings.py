@@ -241,7 +241,7 @@ else:
 # UserData.RedCandle
 ini_defaults["UserData.RedCandle"] = {}
 if util.is_windows_platform():
-    ini_defaults["UserData.RedCandle"]["redcandle_install_dir"] = "C:\Program Files (x86)\Red Candle Games"
+    ini_defaults["UserData.RedCandle"]["redcandle_install_dir"] = r"C:\Program Files (x86)\Red Candle Games"
 else:
     ini_defaults["UserData.RedCandle"]["redcandle_install_dir"] = "$HOME/Games/RedCandle"
 

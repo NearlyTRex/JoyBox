@@ -62,8 +62,19 @@ class Flatpak(installer.Installer):
                 missing.append(display_name)
         return {"installed": installed, "missing": missing}
 
+    def ensure_flathub_remote(self):
+        util.log_info("Ensuring flathub remote is configured")
+        code = self.connection.run_blocking([
+            self.flatpak_tool, "remote-add", "--user", "--if-not-exists",
+            "flathub", "https://dl.flathub.org/repo/flathub.flatpakrepo"
+        ])
+        return code == 0
+
     def install(self):
         util.log_info("Installing Flatpak packages")
+        if not self.ensure_flathub_remote():
+            util.log_error("Failed to configure flathub remote")
+            return False
         for pkg in self.get_packages():
             pkg_info = get_package_info(pkg)
             pkg_id = pkg_info["id"]

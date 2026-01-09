@@ -8,7 +8,7 @@ import constants
 from . import installer
 
 # Nginx config template
-nginx_config_template = """
+nginx_config_template = r"""
 server {{
     listen 80;
     server_name {subdomain}.{domain};

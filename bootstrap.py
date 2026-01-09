@@ -30,7 +30,7 @@ parser.add_argument(
     help = "Environment type")
 parser.add_argument(
     "-c", "--config_file",
-    default = os.path.join(".", constants.DEFAULT_CONFIG_FILE),
+    default = os.path.join(os.path.expanduser("~"), constants.DEFAULT_CONFIG_FILE),
     help = "Path to config file")
 parser.add_argument(
     "-s", "--server_index",
@@ -104,9 +104,9 @@ def main():
     # Handle list components request
     if args.list_components:
         components = environment_runner.get_available_components()
-        util.LogInfo(f"Available components for {args.type}:")
+        util.log_info(f"Available components for {args.type}:")
         for component in sorted(components):
-            util.LogInfo(f"  - {component}")
+            util.log_info(f"  - {component}")
         return
 
     # Set components to process

@@ -59,6 +59,22 @@ class Python(installer.Installer):
 
     def install(self):
         util.log_info("Installing Python packages")
+
+        # Get venv directory from config
+        venv_dir = self.config.get_value("Tools.Python", "python_venv_dir")
+        if not venv_dir:
+            venv_dir = os.path.expandvars("$HOME/.venv")
+        else:
+            venv_dir = os.path.expandvars(venv_dir)
+
+        # Create venv if it doesn't exist
+        if not self.connection.does_file_or_directory_exist(venv_dir):
+            util.log_info(f"Creating Python virtual environment at {venv_dir}")
+            if not self.create_virtual_environment(venv_dir):
+                util.log_error(f"Unable to create virtual environment at {venv_dir}")
+                return False
+
+        # Install packages
         for pkg in self.get_packages():
             pkg_id = get_package_id(pkg)
             pkg_info = get_package_info(pkg)

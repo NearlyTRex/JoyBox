@@ -150,7 +150,7 @@ GHIDRA_DOMAIN={domain}
 """
 
 # Entrypoint script
-entrypoint_script = """#!/bin/bash
+entrypoint_script = r"""#!/bin/bash
 set -euo pipefail
 
 configure_ssl_keystore() {

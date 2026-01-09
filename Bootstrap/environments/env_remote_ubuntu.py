@@ -46,6 +46,10 @@ class RemoteUbuntu(env.Environment):
 
         # Create components
         self.available_components = {
+            "config": installers.Config(**self.installer_options),
+            "dotfiles": installers.Dotfiles(**self.installer_options),
+            "python": installers.Python(**self.installer_options),
+            "wrappers": installers.Wrappers(**self.installer_options),
             "aptget": installers.AptGet(**self.installer_options),
             "flatpak": installers.Flatpak(**self.installer_options),
             "nginx": installers.Nginx(**self.installer_options),
@@ -61,6 +65,10 @@ class RemoteUbuntu(env.Environment):
         }
 
         # Get individual installers
+        self.installer_config = self.available_components["config"]
+        self.installer_dotfiles = self.available_components["dotfiles"]
+        self.installer_python = self.available_components["python"]
+        self.installer_wrappers = self.available_components["wrappers"]
         self.installer_aptget = self.available_components["aptget"]
         self.installer_audiobookshelf = self.available_components["audiobookshelf"]
         self.installer_flatpak = self.available_components["flatpak"]
@@ -84,7 +92,7 @@ class RemoteUbuntu(env.Environment):
             self.installer_aptget.auto_remove_packages()
 
         # Process all components
-        success = self.process_components("install")
+        success = self.process_components("install", force=self.flags.force)
 
         # Autoremove packages
         if self.should_process_component("aptget") and success:
@@ -95,7 +103,7 @@ class RemoteUbuntu(env.Environment):
     def teardown(self):
 
         # Process components in reverse order
-        success = self.process_components("uninstall", reverse_order = True)
+        success = self.process_components("uninstall", reverse_order=True, force=self.flags.force)
 
         # Autoremove packages
         if self.should_process_component("aptget") and success:

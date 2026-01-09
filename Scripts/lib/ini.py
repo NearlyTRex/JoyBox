@@ -3,9 +3,10 @@ import os, os.path
 import sys
 import configparser
 
-# Ini file location
-ini_folder = os.path.realpath(os.path.join(os.path.dirname(__file__), "..", ".."))
-ini_file = os.path.join(ini_folder, "JoyBox.ini")
+# Ini file location - check home directory first, then repo root
+ini_home = os.path.join(os.path.expanduser("~"), "JoyBox.ini")
+ini_repo = os.path.realpath(os.path.join(os.path.dirname(__file__), "..", "..", "JoyBox.ini"))
+ini_file = ini_home if os.path.exists(ini_home) else ini_repo
 
 # Ini file parser
 ini_parser = configparser.ConfigParser(interpolation=None)

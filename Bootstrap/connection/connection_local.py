@@ -235,14 +235,20 @@ class ConnectionLocal(connection.Connection):
                 util.quit_program()
             return None
 
-    def write_file(self, src, contents):
+    def write_file(self, src, contents, sudo = False):
         try:
             if self.flags.verbose:
                 util.log_info(f"Writing file to {src}")
             if not self.flags.pretend_run:
-                os.makedirs(os.path.dirname(src), exist_ok = True)
-                with open(src, "w") as f:
-                    f.write(contents)
+                if sudo:
+                    with tempfile.NamedTemporaryFile(mode = "w", delete = False) as f:
+                        f.write(contents)
+                        temp_path = f.name
+                    self.run_blocking(["mv", temp_path, src], sudo = True)
+                else:
+                    os.makedirs(os.path.dirname(src), exist_ok = True)
+                    with open(src, "w") as f:
+                        f.write(contents)
                 return True
             return True
         except Exception as e:

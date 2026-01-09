@@ -916,8 +916,8 @@ def get_win31_launch_command(
             disc_index += 1
 
     # Add initial launch params
-    launch_cmd += ["-c", "SET PATH=%PATH%;C:\WINDOWS;"]
-    launch_cmd += ["-c", "SET TEMP=C:\WINDOWS\TEMP"]
+    launch_cmd += ["-c", r"SET PATH=%PATH%;C:\WINDOWS;"]
+    launch_cmd += ["-c", r"SET TEMP=C:\WINDOWS\TEMP"]
     launch_cmd += ["-c", "%s:" % start_letter]
     if paths.is_path_valid(start_offset):
         launch_cmd += ["-c", "cd %s" % start_offset]
