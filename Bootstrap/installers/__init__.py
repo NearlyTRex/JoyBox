@@ -17,6 +17,8 @@ from installers.installer_navidrome import *
 from installers.installer_nginx import *
 from installers.installer_onepassword import *
 from installers.installer_python import *
+from installers.installer_steam import *
+from installers.installer_udev import *
 from installers.installer_vscodium import *
 from installers.installer_wine import *
 from installers.installer_winget import *

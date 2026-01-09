@@ -45,6 +45,8 @@ class LocalUbuntu(env.Environment):
             "brave": installers.Brave(**self.installer_options),
             "gitkraken": installers.GitKraken(**self.installer_options),
             "onepassword": installers.OnePassword(**self.installer_options),
+            "steam": installers.Steam(**self.installer_options),
+            "udev": installers.Udev(**self.installer_options),
             "vscodium": installers.VSCodium(**self.installer_options),
             "wine": installers.Wine(**self.installer_options)
         }
@@ -60,6 +62,8 @@ class LocalUbuntu(env.Environment):
         self.installer_brave = self.available_components["brave"]
         self.installer_gitkraken = self.available_components["gitkraken"]
         self.installer_onepassword = self.available_components["onepassword"]
+        self.installer_steam = self.available_components["steam"]
+        self.installer_udev = self.available_components["udev"]
         self.installer_vscodium = self.available_components["vscodium"]
         self.installer_wine = self.available_components["wine"]
 
