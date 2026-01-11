@@ -55,6 +55,7 @@ class RemoteUbuntu(env.Environment):
             "flatpak": installers.Flatpak(**self.installer_options),
             "nginx": installers.Nginx(**self.installer_options),
             "certbot": installers.Certbot(**self.installer_options),
+            "claude": installers.Claude(**self.installer_options),
             "cockpit": installers.Cockpit(**self.installer_options),
             "wordpress": installers.Wordpress(**self.installer_options),
             "audiobookshelf": installers.Audiobookshelf(**self.installer_options),
@@ -76,6 +77,7 @@ class RemoteUbuntu(env.Environment):
         self.installer_flatpak = self.available_components["flatpak"]
         self.installer_nginx = self.available_components["nginx"]
         self.installer_certbot = self.available_components["certbot"]
+        self.installer_claude = self.available_components["claude"]
         self.installer_cockpit = self.available_components["cockpit"]
         self.installer_wordpress = self.available_components["wordpress"]
         self.installer_filebrowser = self.available_components["filebrowser"]

@@ -22,6 +22,7 @@ aptget[constants.EnvironmentType.LOCAL_UBUNTU] += [
 
     # Admin
     {"id": "7zip", "name": "7-Zip", "description": "High compression file archiver", "category": "Admin"},
+    {"id": "7zip-standalone", "name": "7-Zip Standalone", "description": "Standalone 7-Zip binary", "category": "Admin"},
     {"id": "apt-file", "name": "apt-file", "description": "Search for files in apt packages", "category": "Admin"},
     {"id": "baobab", "name": "Disk Usage Analyzer", "description": "Graphical disk usage analyzer", "category": "Admin"},
     {"id": "blueman", "name": "Blueman", "description": "Bluetooth manager", "category": "Admin"},
@@ -70,8 +71,10 @@ aptget[constants.EnvironmentType.LOCAL_UBUNTU] += [
     {"id": "ninja-build", "name": "Ninja", "description": "Fast build system", "category": "Devel"},
     {"id": "nodejs", "name": "Node.js", "description": "JavaScript runtime", "category": "Devel"},
     {"id": "npm", "name": "npm", "description": "Node package manager", "category": "Devel"},
+    {"id": "openjdk-21-jdk", "name": "OpenJDK 21", "description": "Java Development Kit 21", "category": "Devel"},
     {"id": "perl-base", "name": "Perl", "description": "Perl interpreter", "category": "Devel"},
     {"id": "pkg-config", "name": "pkg-config", "description": "Library compile flags helper", "category": "Devel"},
+    {"id": "python3-pip", "name": "pip", "description": "Python package installer", "category": "Devel"},
     {"id": "python3-tk", "name": "Python Tkinter", "description": "Python GUI toolkit", "category": "Devel"},
     {"id": "python3-venv", "name": "Python venv", "description": "Python virtual environments", "category": "Devel"},
     {"id": "qbs", "name": "Qbs", "description": "Qt build suite", "category": "Devel"},

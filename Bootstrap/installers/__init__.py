@@ -6,6 +6,7 @@ from installers.installer_brave import *
 from installers.installer_certbot import *
 from installers.installer_cockpit import *
 from installers.installer_chrome import *
+from installers.installer_claude import *
 from installers.installer_config import *
 from installers.installer_dotfiles import *
 from installers.installer_ghidra import *
