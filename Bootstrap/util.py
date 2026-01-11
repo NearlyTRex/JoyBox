@@ -97,7 +97,10 @@ def get_current_time():
 ###########################################################
 # Logging
 ###########################################################
-def setup_logging(log_file = "output.log", log_format = "%(asctime)s - %(levelname)s - %(message)s", log_level = logging.DEBUG):
+def setup_logging(log_file = None, log_format = "%(asctime)s - %(levelname)s - %(message)s", log_level = logging.DEBUG):
+    if log_file is None:
+        timestamp = time.strftime("%Y-%m-%d_%H-%M-%S")
+        log_file = os.path.join(os.path.expanduser("~"), f"joybox_bootstrap_{timestamp}.log")
     logger = logging.getLogger(__name__)
     logger.setLevel(log_level)
     formatter = logging.Formatter(log_format)
