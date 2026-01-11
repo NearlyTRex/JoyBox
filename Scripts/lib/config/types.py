@@ -184,10 +184,12 @@ class SetupParams:
     def __init__(
         self,
         locker_type = None,
+        skip_autobackup = False,
         verbose = False,
         pretend_run = False,
         exit_on_failure = False):
         self.locker_type = locker_type
+        self.skip_autobackup = skip_autobackup
         self.verbose = verbose
         self.pretend_run = pretend_run
         self.exit_on_failure = exit_on_failure
@@ -196,6 +198,7 @@ class SetupParams:
     def from_args(cls, args):
         return cls(
             locker_type = getattr(args, 'locker_type', None),
+            skip_autobackup = getattr(args, 'skip_autobackup', False),
             verbose = getattr(args, 'verbose', False),
             pretend_run = getattr(args, 'pretend_run', False),
             exit_on_failure = getattr(args, 'exit_on_failure', False))
@@ -203,6 +206,7 @@ class SetupParams:
     def to_dict(self):
         return {
             'locker_type': self.locker_type,
+            'skip_autobackup': self.skip_autobackup,
             'verbose': self.verbose,
             'pretend_run': self.pretend_run,
             'exit_on_failure': self.exit_on_failure

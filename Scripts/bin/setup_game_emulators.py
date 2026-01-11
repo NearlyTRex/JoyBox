@@ -25,6 +25,7 @@ parser.add_enum_argument(
     arg_type = config.LockerType,
     default = config.LockerType.ALL,
     description = "Locker type for backup upload")
+parser.add_boolean_argument(args = ("-s", "--skip_autobackup"), description = "Skip automatic backup of downloaded files")
 parser.add_common_arguments()
 args, unknown = parser.parse_known_args()
 

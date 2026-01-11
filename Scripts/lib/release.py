@@ -84,6 +84,7 @@ def setup_general_release(
     installer_type = None,
     release_type = None,
     locker_type = None,
+    skip_autobackup = False,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -263,7 +264,7 @@ def setup_general_release(
                         return False
 
     # Backup files
-    if paths.is_path_valid(backups_dir):
+    if not skip_autobackup and paths.is_path_valid(backups_dir):
         backup_dest = paths.join_paths(backups_dir, archive_filename)
         dest_rel_path = locker.convert_to_relative_path(backup_dest)
         success = locker.backup(
@@ -302,6 +303,7 @@ def download_general_release(
     rename_files = [],
     installer_type = None,
     release_type = None,
+    skip_autobackup = False,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -344,6 +346,7 @@ def download_general_release(
         rename_files = rename_files,
         installer_type = installer_type,
         release_type = release_type,
+        skip_autobackup = skip_autobackup,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -370,6 +373,7 @@ def download_github_release(
     installer_type = None,
     release_type = None,
     get_latest = False,
+    skip_autobackup = False,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -428,6 +432,7 @@ def download_github_release(
         rename_files = rename_files,
         installer_type = installer_type,
         release_type = release_type,
+        skip_autobackup = skip_autobackup,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -448,6 +453,7 @@ def download_webpage_release(
     installer_type = None,
     release_type = None,
     get_latest = False,
+    skip_autobackup = False,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -478,6 +484,7 @@ def download_webpage_release(
         rename_files = rename_files,
         installer_type = installer_type,
         release_type = release_type,
+        skip_autobackup = skip_autobackup,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -680,6 +687,7 @@ def build_binary_from_source(
     external_copies = [],
     source_patches = [],
     locker_type = None,
+    skip_autobackup = False,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -796,7 +804,7 @@ def build_binary_from_source(
             return False
 
     # Backup files
-    if paths.is_path_valid(backups_dir):
+    if not skip_autobackup and paths.is_path_valid(backups_dir):
         backup_dest = paths.join_paths(backups_dir, final_file)
         dest_rel_path = locker.convert_to_relative_path(backup_dest)
         success = locker.backup(
@@ -841,6 +849,7 @@ def build_appimage_from_source(
     external_copies = [],
     source_patches = [],
     locker_type = None,
+    skip_autobackup = False,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -958,7 +967,7 @@ def build_appimage_from_source(
             return False
 
     # Backup files
-    if paths.is_path_valid(backups_dir):
+    if not skip_autobackup and paths.is_path_valid(backups_dir):
         backup_dest = paths.join_paths(backups_dir, final_file)
         dest_rel_path = locker.convert_to_relative_path(backup_dest)
         success = locker.backup(

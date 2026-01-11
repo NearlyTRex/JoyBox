@@ -109,6 +109,7 @@ class Ghidra(toolbase.ToolBase):
                 build_cmd = build_cmd,
                 source_patches = source_patches,
                 locker_type = setup_params.locker_type,
+                skip_autobackup = setup_params.skip_autobackup,
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
