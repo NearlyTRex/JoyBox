@@ -51,6 +51,7 @@ class RemoteUbuntu(env.Environment):
             "python": installers.Python(**self.installer_options),
             "wrappers": installers.Wrappers(**self.installer_options),
             "aptget": installers.AptGet(**self.installer_options),
+            "awscli": installers.AwsCli(**self.installer_options),
             "flatpak": installers.Flatpak(**self.installer_options),
             "nginx": installers.Nginx(**self.installer_options),
             "certbot": installers.Certbot(**self.installer_options),
@@ -70,6 +71,7 @@ class RemoteUbuntu(env.Environment):
         self.installer_python = self.available_components["python"]
         self.installer_wrappers = self.available_components["wrappers"]
         self.installer_aptget = self.available_components["aptget"]
+        self.installer_awscli = self.available_components["awscli"]
         self.installer_audiobookshelf = self.available_components["audiobookshelf"]
         self.installer_flatpak = self.available_components["flatpak"]
         self.installer_nginx = self.available_components["nginx"]

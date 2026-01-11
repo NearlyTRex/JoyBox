@@ -40,6 +40,7 @@ class LocalUbuntu(env.Environment):
             "python": installers.Python(**self.installer_options),
             "wrappers": installers.Wrappers(**self.installer_options),
             "aptget": installers.AptGet(**self.installer_options),
+            "awscli": installers.AwsCli(**self.installer_options),
             "flatpak": installers.Flatpak(**self.installer_options),
             "chrome": installers.Chrome(**self.installer_options),
             "brave": installers.Brave(**self.installer_options),
@@ -57,6 +58,7 @@ class LocalUbuntu(env.Environment):
         self.installer_python = self.available_components["python"]
         self.installer_wrappers = self.available_components["wrappers"]
         self.installer_aptget = self.available_components["aptget"]
+        self.installer_awscli = self.available_components["awscli"]
         self.installer_flatpak = self.available_components["flatpak"]
         self.installer_chrome = self.available_components["chrome"]
         self.installer_brave = self.available_components["brave"]

@@ -40,9 +40,9 @@ aptget[constants.EnvironmentType.LOCAL_UBUNTU] += [
     {"id": "astyle", "name": "Artistic Style", "description": "Source code formatter", "category": "Devel"},
     {"id": "autoconf", "name": "Autoconf", "description": "Configure script generator", "category": "Devel"},
     {"id": "automake", "name": "Automake", "description": "Makefile generator", "category": "Devel"},
-    {"id": "awscli", "name": "AWS CLI", "description": "Amazon Web Services CLI", "category": "Devel"},
     {"id": "bison", "name": "Bison", "description": "Parser generator", "category": "Devel"},
     {"id": "build-essential", "name": "Build Essential", "description": "C/C++ compiler and tools", "category": "Devel"},
+    {"id": "ccache", "name": "ccache", "description": "Compiler cache for faster rebuilds", "category": "Devel"},
     {"id": "clang", "name": "Clang", "description": "LLVM C/C++ compiler", "category": "Devel"},
     {"id": "clang-format", "name": "clang-format", "description": "C/C++ code formatter", "category": "Devel"},
     {"id": "cmake", "name": "CMake", "description": "Cross-platform build system", "category": "Devel"},
@@ -84,11 +84,6 @@ aptget[constants.EnvironmentType.LOCAL_UBUNTU] += [
     {"id": "qttools5-dev-tools", "name": "Qt5 Tools", "description": "Qt5 additional tools", "category": "Devel"},
     {"id": "ruby-full", "name": "Ruby", "description": "Ruby programming language", "category": "Devel"},
     {"id": "xa65", "name": "xa65", "description": "6502 cross-assembler", "category": "Devel"},
-
-    # Games
-    {"id": "dxvk", "name": "DXVK", "description": "DirectX to Vulkan translation", "category": "Games"},
-    {"id": "steam", "name": "Steam", "description": "Steam gaming platform", "category": "Games"},
-    {"id": "steamcmd", "name": "SteamCMD", "description": "Steam command line client", "category": "Games"},
 
     # Gnome
     {"id": "brasero", "name": "Brasero", "description": "CD/DVD burning", "category": "Gnome"},

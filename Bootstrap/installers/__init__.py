@@ -1,5 +1,6 @@
 # Imports
 from installers.installer_aptget import *
+from installers.installer_awscli import *
 from installers.installer_audiobookshelf import *
 from installers.installer_brave import *
 from installers.installer_certbot import *
