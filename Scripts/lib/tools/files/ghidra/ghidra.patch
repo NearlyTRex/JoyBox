@@ -1,21 +1,23 @@
 diff --git a/Ghidra/Features/Decompiler/buildNatives.gradle b/Ghidra/Features/Decompiler/buildNatives.gradle
-index e0dfb2fa3f..ae3996a4a9 100644
+index e0dfb2fa3f..a2bd5dea5f 100644
 --- a/Ghidra/Features/Decompiler/buildNatives.gradle
 +++ b/Ghidra/Features/Decompiler/buildNatives.gradle
-@@ -96,6 +96,7 @@ model {
+@@ -96,6 +96,9 @@ model {
  		                include "funcdata_op.cc"
  		                include "pcodeinject.cc"
  		                include "heritage.cc"
 +		                include "multiequal_trace.cc"
++		                include "decompiler_fixes.cc"
++		                include "decompiler_fixes_cmd.cc"
  		                include "prefersplit.cc"
  		                include "rangeutil.cc"
  		                include "ruleaction.cc"
 diff --git a/Ghidra/Features/Decompiler/src/decompile/cpp/decomp_dbg.hh b/Ghidra/Features/Decompiler/src/decompile/cpp/decomp_dbg.hh
 new file mode 100644
-index 0000000000..a532a5ef79
+index 0000000000..3dcb930f3e
 --- /dev/null
 +++ b/Ghidra/Features/Decompiler/src/decompile/cpp/decomp_dbg.hh
-@@ -0,0 +1,90 @@
+@@ -0,0 +1,52 @@
 +/* ###
 + * IP: GHIDRA
 + *
@@ -35,35 +37,13 @@ index 0000000000..a532a5ef79
 +/// \brief Simple unbuffered file logging for decompiler debugging
 +///
 +/// This header provides debug logging macros for the decompiler.
-+/// Enable by defining DECOMP_DEBUG_ENABLED before including this header.
-+///
-+/// Environment variables:
-+///   DECOMP_TARGET_FUNC - Hex address to filter logging (e.g., "0x447f20")
-+///                        Set to 0 or unset to apply to all functions
-+///
-+/// Log output is written to /tmp/decomp_debug.log
++/// Define DECOMP_DEBUG_ENABLED to enable logging to /tmp/decomp_debug.log
 +
 +#ifndef __DECOMP_DBG_HH__
 +#define __DECOMP_DBG_HH__
 +
-+#define DECOMP_DEBUG_ENABLED
-+
-+#include <cstdlib>
-+#include <cstdint>
-+
-+/// Get target function address from environment variable
-+inline uint64_t getDecompTargetFunc() {
-+  static uint64_t target = 0;
-+  static bool initialized = false;
-+  if (!initialized) {
-+    const char* env = std::getenv("DECOMP_TARGET_FUNC");
-+    if (env) {
-+      target = std::strtoull(env, nullptr, 16);
-+    }
-+    initialized = true;
-+  }
-+  return target;
-+}
++// Uncomment to enable debug logging
++// #define DECOMP_DEBUG_ENABLED
 +
 +#ifdef DECOMP_DEBUG_ENABLED
 +
@@ -83,53 +63,369 @@ index 0000000000..a532a5ef79
 +  getDecompLog() << _oss.str() << "\n"; \
 +} while(0)
 +
-+/// Check if function address matches target (or target is 0 for all functions)
-+#define DECOMP_IS_TARGET_FUNC(addr) \
-+  (getDecompTargetFunc() == 0 || (addr) == getDecompTargetFunc())
-+
-+/// Thread-local flag for current function target status
-+inline bool& decompIsCurrentTarget() {
-+  static thread_local bool isTarget = false;
-+  return isTarget;
-+}
-+
-+#define DECOMP_SET_TARGET(addr) (decompIsCurrentTarget() = DECOMP_IS_TARGET_FUNC(addr))
-+#define DECOMP_IS_CURRENT_TARGET() (decompIsCurrentTarget())
-+
 +#else
 +
 +#define DECOMP_LOG(msg) ((void)0)
-+#define DECOMP_IS_TARGET_FUNC(addr) (getDecompTargetFunc() == 0 || (addr) == getDecompTargetFunc())
-+#define DECOMP_SET_TARGET(addr) ((void)0)
-+#define DECOMP_IS_CURRENT_TARGET() (getDecompTargetFunc() == 0)
 +
 +#endif
 +
 +#endif
+diff --git a/Ghidra/Features/Decompiler/src/decompile/cpp/decompiler_fixes.cc b/Ghidra/Features/Decompiler/src/decompile/cpp/decompiler_fixes.cc
+new file mode 100644
+index 0000000000..f95aad9faf
+--- /dev/null
++++ b/Ghidra/Features/Decompiler/src/decompile/cpp/decompiler_fixes.cc
+@@ -0,0 +1,66 @@
++/* ###
++ * IP: GHIDRA
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *      http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++/// \file decompiler_fixes.cc
++/// \brief Implementation of per-function decompiler fixes registry
++
++#include "decompiler_fixes.hh"
++#include <map>
++
++namespace ghidra {
++
++/// Static map of function addresses to their enabled fix flags
++static std::map<uint8, uint4> fixRegistry;
++
++void DecompilerFixes::registerFixes(uint8 addr, uint4 flags)
++{
++  fixRegistry[addr] = flags;
++}
++
++void DecompilerFixes::addFixes(uint8 addr, uint4 flags)
++{
++  fixRegistry[addr] |= flags;
++}
++
++void DecompilerFixes::clearAll()
++{
++  fixRegistry.clear();
++}
++
++void DecompilerFixes::clearAddress(uint8 addr)
++{
++  fixRegistry.erase(addr);
++}
++
++uint4 DecompilerFixes::getFixes(uint8 addr)
++{
++  auto it = fixRegistry.find(addr);
++  if (it != fixRegistry.end()) {
++    return it->second;
++  }
++  return DFIX_NONE;
++}
++
++bool DecompilerFixes::hasFix(uint8 addr, DecompilerFixFlags flag)
++{
++  return (getFixes(addr) & flag) != 0;
++}
++
++bool DecompilerFixes::hasRegisteredAddresses()
++{
++  return !fixRegistry.empty();
++}
++
++}
+diff --git a/Ghidra/Features/Decompiler/src/decompile/cpp/decompiler_fixes.hh b/Ghidra/Features/Decompiler/src/decompile/cpp/decompiler_fixes.hh
+new file mode 100644
+index 0000000000..3c06db25ac
+--- /dev/null
++++ b/Ghidra/Features/Decompiler/src/decompile/cpp/decompiler_fixes.hh
+@@ -0,0 +1,77 @@
++/* ###
++ * IP: GHIDRA
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *      http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++/// \file decompiler_fixes.hh
++/// \brief Registry for enabling per-function decompiler fixes
++
++#ifndef __DECOMPILER_FIXES_HH__
++#define __DECOMPILER_FIXES_HH__
++
++#include "types.h"
++
++namespace ghidra {
++
++/// \brief Flags for different decompiler fixes that can be enabled per-function
++enum DecompilerFixFlags {
++  DFIX_NONE = 0,
++  DFIX_MULTIEQUAL_STACK_TRACE = 1 << 0,  ///< Trace MULTIEQUAL inputs for precise stack offsets
++  // Future fixes can be added here:
++  // DFIX_FUTURE_FIX_1 = 1 << 1,
++  // DFIX_FUTURE_FIX_2 = 1 << 2,
++};
++
++/// \brief Registry for per-function decompiler fixes
++///
++/// This provides per-function control over various decompiler fixes and enhancements.
++/// Functions can be registered with specific fix flags before decompilation, and
++/// the decompiler checks this registry to decide which fixes to apply.
++class DecompilerFixes {
++public:
++  /// Register a function address with specific fix flags
++  /// \param addr is the function entry address
++  /// \param flags is the bitmask of fixes to enable
++  static void registerFixes(uint8 addr, uint4 flags);
++
++  /// Add fix flags to an already registered address (or register if new)
++  /// \param addr is the function entry address
++  /// \param flags is the bitmask of fixes to add
++  static void addFixes(uint8 addr, uint4 flags);
++
++  /// Clear all registered addresses
++  static void clearAll();
++
++  /// Clear fixes for a specific address
++  /// \param addr is the function entry address
++  static void clearAddress(uint8 addr);
++
++  /// Get the fix flags for a function
++  /// \param addr is the function entry address
++  /// \return the bitmask of enabled fixes (0 if not registered)
++  static uint4 getFixes(uint8 addr);
++
++  /// Check if a specific fix is enabled for a function
++  /// \param addr is the function entry address
++  /// \param flag is the fix flag to check
++  /// \return true if the fix is enabled
++  static bool hasFix(uint8 addr, DecompilerFixFlags flag);
++
++  /// Check if any addresses are registered
++  /// \return true if at least one address is registered
++  static bool hasRegisteredAddresses();
++};
++
++}
++
++#endif
+diff --git a/Ghidra/Features/Decompiler/src/decompile/cpp/decompiler_fixes_cmd.cc b/Ghidra/Features/Decompiler/src/decompile/cpp/decompiler_fixes_cmd.cc
+new file mode 100644
+index 0000000000..af2ebfc487
+--- /dev/null
++++ b/Ghidra/Features/Decompiler/src/decompile/cpp/decompiler_fixes_cmd.cc
+@@ -0,0 +1,128 @@
++/* ###
++ * IP: GHIDRA
++ *
++ * Licensed under the Apache License, Version 2.0 (the "License");
++ * you may not use this file except in compliance with the License.
++ * You may obtain a copy of the License at
++ *
++ *      http://www.apache.org/licenses/LICENSE-2.0
++ *
++ * Unless required by applicable law or agreed to in writing, software
++ * distributed under the License is distributed on an "AS IS" BASIS,
++ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
++ * See the License for the specific language governing permissions and
++ * limitations under the License.
++ */
++/// \file decompiler_fixes_cmd.cc
++/// \brief Implementation of GhidraCommands for per-function decompiler fixes
++
++#include "ghidra_process.hh"
++#include "decompiler_fixes.hh"
++
++namespace ghidra {
++
++/// Load parameters for SetDecompilerFixes - reads flags and address list
++/// Does not require an Architecture - operates on global registry
++void SetDecompilerFixes::loadParameters(void)
++
++{
++  // Read and ignore arch id (for protocol compatibility)
++  int4 type = ArchitectureGhidra::readToAnyBurst(sin);
++  if (type != 14)
++    throw JavaError("alignment", "Expecting arch id start");
++  int4 ignoredId;
++  sin >> dec >> ignoredId;
++  type = ArchitectureGhidra::readToAnyBurst(sin);
++  if (type != 15)
++    throw JavaError("alignment", "Expecting arch id end");
++
++  // Read flags value
++  type = ArchitectureGhidra::readToAnyBurst(sin);
++  if (type != 14)
++    throw JavaError("alignment", "Expecting flags start");
++  sin >> dec >> flags;
++  type = ArchitectureGhidra::readToAnyBurst(sin);
++  if (type != 15)
++    throw JavaError("alignment", "Expecting flags end");
++
++  // Read address count
++  type = ArchitectureGhidra::readToAnyBurst(sin);
++  if (type != 14)
++    throw JavaError("alignment", "Expecting address count start");
++  int4 count;
++  sin >> dec >> count;
++  type = ArchitectureGhidra::readToAnyBurst(sin);
++  if (type != 15)
++    throw JavaError("alignment", "Expecting address count end");
++
++  // Read addresses
++  addresses.resize(count);
++  for (int4 i = 0; i < count; ++i) {
++    type = ArchitectureGhidra::readToAnyBurst(sin);
++    if (type != 14)
++      throw JavaError("alignment", "Expecting address start");
++    sin >> hex >> addresses[i];
++    type = ArchitectureGhidra::readToAnyBurst(sin);
++    if (type != 15)
++      throw JavaError("alignment", "Expecting address end");
++  }
++}
++
++void SetDecompilerFixes::rawAction(void)
++
++{
++  for (size_t i = 0; i < addresses.size(); ++i) {
++    DecompilerFixes::addFixes(addresses[i], flags);
++  }
++  res = true;
++}
++
++void SetDecompilerFixes::sendResult(void)
++
++{
++  sout.write("\000\000\001\016", 4);
++  if (res)
++    sout << 't';
++  else
++    sout << 'f';
++  sout.write("\000\000\001\017", 4);
++  sout.write("\000\000\001\007", 4);  // End of command response
++  sout.flush();
++}
++
++/// Load parameters for ClearDecompilerFixes - reads and ignores arch id
++void ClearDecompilerFixes::loadParameters(void)
++
++{
++  // Read and ignore arch id (for protocol compatibility)
++  int4 type = ArchitectureGhidra::readToAnyBurst(sin);
++  if (type != 14)
++    throw JavaError("alignment", "Expecting arch id start");
++  int4 ignoredId;
++  sin >> dec >> ignoredId;
++  type = ArchitectureGhidra::readToAnyBurst(sin);
++  if (type != 15)
++    throw JavaError("alignment", "Expecting arch id end");
++}
++
++void ClearDecompilerFixes::rawAction(void)
++
++{
++  DecompilerFixes::clearAll();
++  res = true;
++}
++
++void ClearDecompilerFixes::sendResult(void)
++
++{
++  sout.write("\000\000\001\016", 4);
++  if (res)
++    sout << 't';
++  else
++    sout << 'f';
++  sout.write("\000\000\001\017", 4);
++  sout.write("\000\000\001\007", 4);  // End of command response
++  sout.flush();
++}
++
++}
+diff --git a/Ghidra/Features/Decompiler/src/decompile/cpp/ghidra_process.cc b/Ghidra/Features/Decompiler/src/decompile/cpp/ghidra_process.cc
+index 9ec6788370..0501089936 100644
+--- a/Ghidra/Features/Decompiler/src/decompile/cpp/ghidra_process.cc
++++ b/Ghidra/Features/Decompiler/src/decompile/cpp/ghidra_process.cc
+@@ -503,6 +503,8 @@ void GhidraDecompCapability::initialize(void)
+   commandmap["structureGraph"] = new StructureGraph();
+   commandmap["setAction"] = new SetAction();
+   commandmap["setOptions"] = new SetOptions();
++  commandmap["setDecompilerFixes"] = new SetDecompilerFixes();
++  commandmap["clearDecompilerFixes"] = new ClearDecompilerFixes();
+ }
+ 
+ } // End namespace ghidra
+diff --git a/Ghidra/Features/Decompiler/src/decompile/cpp/ghidra_process.hh b/Ghidra/Features/Decompiler/src/decompile/cpp/ghidra_process.hh
+index db72be59bd..ad3213e081 100644
+--- a/Ghidra/Features/Decompiler/src/decompile/cpp/ghidra_process.hh
++++ b/Ghidra/Features/Decompiler/src/decompile/cpp/ghidra_process.hh
+@@ -237,6 +237,36 @@ public:
+   virtual void rawAction(void);
+ };
+ 
++/// \brief Command to \b register per-function decompiler fixes
++///
++/// This command registers a set of function addresses to receive specific decompiler fixes.
++/// The fixes are identified by flag values (see DecompilerFixFlags).
++/// The command does not require an Architecture - it operates on a global registry.
++/// It expects 2 parameters: a flags value and a list of addresses.
++class SetDecompilerFixes : public GhidraCommand {
++  uint4 flags;				///< The fix flags to apply
++  vector<uint8> addresses;		///< The function addresses to register
++  virtual void loadParameters(void);
++  virtual void sendResult(void);
++public:
++  bool res;				///< Set to \b true if the registration succeeded
++  SetDecompilerFixes(void) : flags(0), res(false) {}	///< Constructor
++  virtual void rawAction(void);
++};
++
++/// \brief Command to \b clear all registered decompiler fixes
++///
++/// This command clears all function addresses from the decompiler fixes registry.
++/// The command does not require an Architecture - it operates on a global registry.
++class ClearDecompilerFixes : public GhidraCommand {
++  virtual void loadParameters(void);
++  virtual void sendResult(void);
++public:
++  bool res;				///< Set to \b true if the clear succeeded
++  ClearDecompilerFixes(void) : res(false) {}	///< Constructor
++  virtual void rawAction(void);
++};
++
+ #ifdef __REMOTE_SOCKET__
+ extern void connect_to_console(Funcdata *fd);
+ #endif
 diff --git a/Ghidra/Features/Decompiler/src/decompile/cpp/heritage.cc b/Ghidra/Features/Decompiler/src/decompile/cpp/heritage.cc
-index 0f73153c06..ec081321ba 100644
+index 0f73153c06..ec705cc4fa 100644
 --- a/Ghidra/Features/Decompiler/src/decompile/cpp/heritage.cc
 +++ b/Ghidra/Features/Decompiler/src/decompile/cpp/heritage.cc
-@@ -16,6 +16,8 @@
+@@ -16,6 +16,7 @@
  #include "heritage.hh"
  #include "funcdata.hh"
  #include "prefersplit.hh"
 +#include "multiequal_trace.hh"
-+#include "decomp_dbg.hh"
  
  namespace ghidra {
  
-@@ -986,6 +988,9 @@ bool Heritage::protectFreeStores(AddrSpace *spc,vector<PcodeOp *> &freeStores)
- bool Heritage::discoverIndexedStackPointers(AddrSpace *spc,vector<PcodeOp *> &freeStores,bool checkFreeStores)
- 
- {
-+  // Set target flag for debug logging in helper functions
-+  DECOMP_SET_TARGET(fd->getAddress().getOffset());
-+
-   // We need to be careful of exponential ladders, so we mark Varnodes independently of
-   // the depth first path we are traversing.
-   vector<Varnode *> markedVn;
-@@ -1053,7 +1058,21 @@ bool Heritage::discoverIndexedStackPointers(AddrSpace *spc,vector<PcodeOp *> &fr
+@@ -1053,7 +1054,21 @@ bool Heritage::discoverIndexedStackPointers(AddrSpace *spc,vector<PcodeOp *> &fr
  	}
  	case CPUI_MULTIEQUAL:
  	{
@@ -140,7 +436,7 @@ index 0f73153c06..ec081321ba 100644
 +	  uint4 newTraversals = curNode.traversals;
 +	  uintb newOffset = curNode.offset;
 +
-+	  if (checkMultiequalStackOffsets(op, spc, spInput, commonOffset)) {
++	  if (checkMultiequalStackOffsets(op, spc, spInput, fd->getAddress().getOffset(), commonOffset)) {
 +	    // All inputs have same offset - use the verified offset, don't set multiequal flag
 +	    newOffset = commonOffset;
 +	  } else {
@@ -154,10 +450,10 @@ index 0f73153c06..ec081321ba 100644
  	    path.push_back(nextNode);
 diff --git a/Ghidra/Features/Decompiler/src/decompile/cpp/multiequal_trace.cc b/Ghidra/Features/Decompiler/src/decompile/cpp/multiequal_trace.cc
 new file mode 100644
-index 0000000000..1442605dd6
+index 0000000000..1b013e6986
 --- /dev/null
 +++ b/Ghidra/Features/Decompiler/src/decompile/cpp/multiequal_trace.cc
-@@ -0,0 +1,209 @@
+@@ -0,0 +1,210 @@
 +/* ###
 + * IP: GHIDRA
 + *
@@ -177,6 +473,7 @@ index 0000000000..1442605dd6
 +/// \brief MULTIEQUAL stack offset tracing implementation
 +
 +#include "multiequal_trace.hh"
++#include "decompiler_fixes.hh"
 +#include "decomp_dbg.hh"
 +#include <set>
 +
@@ -323,11 +620,11 @@ index 0000000000..1442605dd6
 +  }
 +}
 +
-+bool checkMultiequalStackOffsets(PcodeOp *op, AddrSpace *spc, Varnode *spInput, uintb &commonOffset)
++bool checkMultiequalStackOffsets(PcodeOp *op, AddrSpace *spc, Varnode *spInput, uint8 funcAddr, uintb &commonOffset)
 +{
-+  if (!DECOMP_IS_CURRENT_TARGET()) {
-+    // For non-target functions, use simpler/faster check
-+    return false;  // Conservative: assume uncertain
++  // Check if the fix is enabled for this function
++  if (!DecompilerFixes::hasFix(funcAddr, DFIX_MULTIEQUAL_STACK_TRACE)) {
++    return false;  // Fix not enabled, use default behavior
 +  }
 +
 +  DECOMP_LOG("checkMultiequalStackOffsets: checking MULTIEQUAL with " << op->numInput() << " inputs");
@@ -369,10 +666,10 @@ index 0000000000..1442605dd6
 +}
 diff --git a/Ghidra/Features/Decompiler/src/decompile/cpp/multiequal_trace.hh b/Ghidra/Features/Decompiler/src/decompile/cpp/multiequal_trace.hh
 new file mode 100644
-index 0000000000..9317a69803
+index 0000000000..843e4ca0f4
 --- /dev/null
 +++ b/Ghidra/Features/Decompiler/src/decompile/cpp/multiequal_trace.hh
-@@ -0,0 +1,43 @@
+@@ -0,0 +1,47 @@
 +/* ###
 + * IP: GHIDRA
 + *
@@ -406,29 +703,109 @@ index 0000000000..9317a69803
 +/// if they all derive from ESP with the same constant offset. If so, the MULTIEQUAL
 +/// output has a definite stack offset and doesn't need to be marked as uncertain.
 +///
++/// This function first checks if the DFIX_MULTIEQUAL_STACK_TRACE fix is enabled
++/// for the given function address via the DecompilerFixes registry.
++///
 +/// \param op is the MULTIEQUAL operation
 +/// \param spc is the stack address space
 +/// \param spInput is the stack pointer input varnode
++/// \param funcAddr is the function entry address (for fix registry lookup)
 +/// \param commonOffset will receive the common offset if all inputs match
 +/// \return true if all inputs have the same definite offset from ESP
-+extern bool checkMultiequalStackOffsets(PcodeOp *op, AddrSpace *spc, Varnode *spInput, uintb &commonOffset);
++extern bool checkMultiequalStackOffsets(PcodeOp *op, AddrSpace *spc, Varnode *spInput, uint8 funcAddr, uintb &commonOffset);
 +
 +}
 +
 +#endif
+diff --git a/Ghidra/Features/Decompiler/src/main/java/ghidra/app/decompiler/DecompInterface.java b/Ghidra/Features/Decompiler/src/main/java/ghidra/app/decompiler/DecompInterface.java
+index 25622a2c93..f63d4b5f7a 100644
+--- a/Ghidra/Features/Decompiler/src/main/java/ghidra/app/decompiler/DecompInterface.java
++++ b/Ghidra/Features/Decompiler/src/main/java/ghidra/app/decompiler/DecompInterface.java
+@@ -82,6 +82,14 @@ import ghidra.util.task.TaskMonitor;
+  */
+ public class DecompInterface {
+ 
++	/**
++	 * Decompiler fix flags - used with setDecompilerFixes() to enable per-function fixes.
++	 * These must match DecompilerFixFlags in decompiler_fixes.hh
++	 */
++	public static final int DFIX_NONE = 0;
++	/** Trace MULTIEQUAL inputs for precise stack offsets in heritage analysis */
++	public static final int DFIX_MULTIEQUAL_STACK_TRACE = 1 << 0;
++
+ 	public static class EncodeDecodeSet {
+ 		public OverlayAddressSpace overlay;		// Active overlay space or null
+ 		public CachedEncoder mainQuery;		// Encoder for main query to decompiler process
+@@ -1121,4 +1129,45 @@ public class DecompInterface {
+ 		}
+ 		return null;
+ 	}
++
++	/**
++	 * Register per-function decompiler fixes for a set of function addresses.
++	 * The fixes will be applied during subsequent decompilation of these functions.
++	 * @param flags the fix flags to apply (use DFIX_* constants)
++	 * @param addresses array of function entry addresses
++	 * @return true if the command succeeded
++	 */
++	public synchronized boolean setDecompilerFixes(int flags, long[] addresses) {
++		if (decompProcess == null) {
++			return false;
++		}
++		try {
++			StringIngest response = new StringIngest();
++			decompProcess.sendSetDecompilerFixes(flags, addresses, response);
++			return response.toString().equals("t");
++		}
++		catch (Exception e) {
++			Msg.error(this, "Exception setting decompiler fixes: " + e.getMessage());
++			return false;
++		}
++	}
++
++	/**
++	 * Clear all registered per-function decompiler fixes.
++	 * @return true if the command succeeded
++	 */
++	public synchronized boolean clearDecompilerFixes() {
++		if (decompProcess == null) {
++			return false;
++		}
++		try {
++			StringIngest response = new StringIngest();
++			decompProcess.sendClearDecompilerFixes(response);
++			return response.toString().equals("t");
++		}
++		catch (Exception e) {
++			Msg.error(this, "Exception clearing decompiler fixes: " + e.getMessage());
++			return false;
++		}
++	}
+ }
 diff --git a/Ghidra/Features/Decompiler/src/main/java/ghidra/app/decompiler/DecompileCallback.java b/Ghidra/Features/Decompiler/src/main/java/ghidra/app/decompiler/DecompileCallback.java
-index d43fa7e46e..066a06bd56 100644
+index d43fa7e46e..4d5b123167 100644
 --- a/Ghidra/Features/Decompiler/src/main/java/ghidra/app/decompiler/DecompileCallback.java
 +++ b/Ghidra/Features/Decompiler/src/main/java/ghidra/app/decompiler/DecompileCallback.java
-@@ -21,6 +21,7 @@ import static ghidra.program.model.pcode.ElementId.*;
+@@ -21,8 +21,10 @@ import static ghidra.program.model.pcode.ElementId.*;
  import java.io.IOException;
  import java.math.BigInteger;
  import java.nio.charset.StandardCharsets;
 +import java.util.*;
  
  import ghidra.app.cmd.function.CallDepthChangeInfo;
++import ghidra.app.plugin.processors.sleigh.SleighLanguage;
  import ghidra.docking.settings.SettingsImpl;
-@@ -50,6 +51,328 @@ public class DecompileCallback {
+ import ghidra.program.disassemble.Disassembler;
+ import ghidra.program.model.address.*;
+@@ -33,6 +35,7 @@ import ghidra.program.model.listing.*;
+ import ghidra.program.model.mem.MemoryAccessException;
+ import ghidra.program.model.mem.MemoryBufferImpl;
+ import ghidra.program.model.pcode.*;
++import ghidra.program.model.pcode.PcodeOverride;
+ import ghidra.program.model.symbol.*;
+ import ghidra.util.Msg;
+ import ghidra.util.UndefinedFunction;
+@@ -50,6 +53,476 @@ public class DecompileCallback {
  
  	public final static int MAX_SYMBOL_COUNT = 16;
  
@@ -460,70 +837,218 @@ index d43fa7e46e..066a06bd56 100644
 +		return !pcodeOverrides.isEmpty();
 +	}
 +
-+	// Callfixup support - replace calls to specific functions with custom pcode
-+	// Exact name matches
-+	private static Map<String, List<String>> callFixups = new HashMap<>();
-+	// Pattern matches (function name contains pattern)
-+	private static Map<String, List<String>> callFixupPatterns = new HashMap<>();
++	// Callfixup support - register callfixups with Ghidra's native PcodeInjectLibrary
++	// Uses SLEIGH syntax in the body, matching cspec format
 +
 +	/**
-+	 * Register a callfixup for a specific function name.
-+	 * When a CALL to a function with this exact name is encountered during decompilation,
-+	 * the call will be replaced with the specified pcode.
-+	 * @param targetFuncName the exact function name to match
-+	 * @param pcodeLines the P-code operation strings to replace the call with
++	 * Definition of a callfixup to be registered with PcodeInjectLibrary.
 +	 */
-+	public static void registerCallFixup(String targetFuncName, List<String> pcodeLines) {
-+		callFixups.put(targetFuncName, pcodeLines);
-+		Msg.info(DecompileCallback.class, "Callfixup: Registered fixup for '" + targetFuncName + "' with " + pcodeLines.size() + " pcode ops");
++	private static class CallFixupDefinition {
++		final String name;
++		final List<String> targets;
++		final List<String> body;  // SLEIGH statements
++		final int paramshift;
++
++		CallFixupDefinition(String name, List<String> targets, List<String> body, int paramshift) {
++			this.name = name;
++			this.targets = targets;
++			this.body = body;
++			this.paramshift = paramshift;
++		}
 +	}
 +
++	// Pending callfixups to be installed when DecompileCallback is instantiated
++	private static List<CallFixupDefinition> pendingCallFixups = new ArrayList<>();
++	// Track which callfixups were installed (for cleanup)
++	private static Set<String> installedCallFixupNames = new HashSet<>();
++	// Map target function names to callfixup names (for lookup override)
++	private static Map<String, String> targetToCallFixupName = new HashMap<>();
++
 +	/**
-+	 * Register a callfixup pattern. When a CALL to a function whose name contains
-+	 * the pattern is encountered, the call will be replaced with the specified pcode.
-+	 * @param pattern the pattern to match (case-sensitive substring match)
-+	 * @param pcodeLines the P-code operation strings to replace the call with
++	 * Register a callfixup for multiple exact target names.
++	 * The callfixup will be installed to Ghidra's native PcodeInjectLibrary when
++	 * decompilation starts, using SLEIGH syntax for the body.
++	 * @param name the callfixup name (used in warnings/logging)
++	 * @param targetNames list of exact function names to match
++	 * @param sleighBody list of SLEIGH statements (e.g., "ESP = ESP - EAX;")
++	 * @param paramshift number of parameters to shift (remove from front of param list)
 +	 */
-+	public static void registerCallFixupPattern(String pattern, List<String> pcodeLines) {
-+		callFixupPatterns.put(pattern, pcodeLines);
-+		Msg.info(DecompileCallback.class, "Callfixup: Registered pattern fixup for '*" + pattern + "*' with " + pcodeLines.size() + " pcode ops");
++	public static void registerCallFixupTargets(String name, List<String> targetNames, List<String> sleighBody, int paramshift) {
++		if (targetNames == null || targetNames.isEmpty()) {
++			return;
++		}
++		if (name == null || name.isEmpty()) {
++			// Fallback: generate name from first target
++			name = "annot_" + targetNames.get(0).replaceAll("[^a-zA-Z0-9_]", "_");
++		}
++		pendingCallFixups.add(new CallFixupDefinition(name, new ArrayList<>(targetNames),
++			new ArrayList<>(sleighBody), paramshift));
 +	}
 +
 +	/**
 +	 * Clear all registered callfixups.
++	 * Note: Callfixups already installed to PcodeInjectLibrary cannot be removed
++	 * without program restart.
 +	 */
 +	public static void clearCallFixups() {
-+		callFixups.clear();
-+		callFixupPatterns.clear();
++		pendingCallFixups.clear();
++		// Note: installedCallFixupNames is not cleared - those are in the library
 +	}
 +
 +	/**
-+	 * Check if any callfixups are registered.
++	 * Check if any callfixups are registered or pending.
 +	 * @return true if callfixups exist
 +	 */
 +	public static boolean hasCallFixups() {
-+		return !callFixups.isEmpty() || !callFixupPatterns.isEmpty();
++		return !pendingCallFixups.isEmpty() || !installedCallFixupNames.isEmpty();
 +	}
 +
 +	/**
-+	 * Find a matching callfixup for the given function name.
-+	 * First checks exact matches, then pattern matches.
-+	 * @param funcName the function name to look up
-+	 * @return the pcode lines for the fixup, or null if no match
++	 * Install pending callfixups to the given PcodeInjectLibrary.
++	 * Builds XML matching cspec format and uses restoreXmlInject.
++	 * @param library the PcodeInjectLibrary to register with
++	 * @param language the SleighLanguage for parsing
 +	 */
-+	private static List<String> findCallFixup(String funcName) {
-+		// Check exact match first
-+		List<String> fixup = callFixups.get(funcName);
-+		if (fixup != null) {
-+			return fixup;
++	private static void installPendingCallFixups(PcodeInjectLibrary library, SleighLanguage language) {
++		if (pendingCallFixups.isEmpty()) {
++			return;
 +		}
-+		// Check pattern matches
-+		for (Map.Entry<String, List<String>> entry : callFixupPatterns.entrySet()) {
-+			if (funcName.contains(entry.getKey())) {
-+				return entry.getValue();
++
++		for (CallFixupDefinition def : pendingCallFixups) {
++			// Skip if already installed
++			if (installedCallFixupNames.contains(def.name)) {
++				continue;
++			}
++
++			// Check if a callfixup with this name already exists in the library
++			if (library.getPayload(InjectPayload.CALLFIXUP_TYPE, def.name) != null) {
++				continue;
++			}
++
++			try {
++				// Build XML string matching cspec format
++				StringBuilder xml = new StringBuilder();
++				xml.append("<callfixup name=\"").append(escapeXml(def.name)).append("\">\n");
++				for (String target : def.targets) {
++					xml.append("  <target name=\"").append(escapeXml(target)).append("\"/>\n");
++				}
++				xml.append("  <pcode");
++				if (def.paramshift > 0) {
++					xml.append(" paramshift=\"").append(def.paramshift).append("\"");
++				}
++				xml.append(">\n");
++				xml.append("    <body><![CDATA[\n");
++				for (String stmt : def.body) {
++					xml.append("      ").append(stmt).append("\n");
++				}
++				xml.append("    ]]></body>\n");
++				xml.append("  </pcode>\n");
++				xml.append("</callfixup>\n");
++
++				String xmlStr = xml.toString();
++
++				// Parse XML and register
++				ghidra.xml.XmlPullParser parser = new ghidra.xml.NonThreadedXmlPullParserImpl(
++					xmlStr, "callfixup:" + def.name, null, false);
++				library.restoreXmlInject("annotation", def.name, InjectPayload.CALLFIXUP_TYPE, parser);
++
++				installedCallFixupNames.add(def.name);
++				// Map each target to this callfixup name for lookup override
++				for (String target : def.targets) {
++					targetToCallFixupName.put(target, def.name);
++				}
++			}
++			catch (Exception e) {
++				Msg.error(DecompileCallback.class, "Failed to install callfixup '" + def.name + "': " + e.getMessage());
 +			}
 +		}
-+		return null;
++
++		// Clear pending list after installation
++		pendingCallFixups.clear();
++	}
++
++	/**
++	 * Escape special XML characters in a string.
++	 */
++	private static String escapeXml(String s) {
++		return s.replace("&", "&amp;")
++				.replace("<", "&lt;")
++				.replace(">", "&gt;")
++				.replace("\"", "&quot;")
++				.replace("'", "&apos;");
++	}
++
++	/**
++	 * Get the callfixup name for a target function, if one is registered.
++	 * @param funcName the target function name
++	 * @return the callfixup name, or null if no mapping exists
++	 */
++	public static String getCallFixupForTarget(String funcName) {
++		return targetToCallFixupName.get(funcName);
++	}
++
++	/**
++	 * Apply an annotation-based callfixup to a function if one is registered.
++	 * This sets the inject name on the function prototype so it will be sent to the decompiler.
++	 * @param func the function to check
++	 * @param hfunc the HighFunction whose prototype to update
++	 */
++	private static void applyAnnotationCallfixup(Function func, HighFunction hfunc) {
++		// Only apply if no callfixup already set (don't override database callfixups)
++		if (func.getCallFixup() != null) {
++			return;
++		}
++		String fixupName = getCallFixupForTarget(func.getName());
++		if (fixupName != null) {
++			hfunc.getFunctionPrototype().setInjectName(fixupName);
++		}
++	}
++
++	/**
++	 * Custom PcodeOverride wrapper that checks our target-to-callfixup mapping
++	 * before falling back to the database-stored callfixup.
++	 */
++	private static class AnnotationPcodeOverride extends InstructionPcodeOverride {
++		private final CompilerSpec compilerSpec;
++
++		public AnnotationPcodeOverride(Instruction instr, CompilerSpec compilerSpec) {
++			super(instr);
++			this.compilerSpec = compilerSpec;
++		}
++
++		@Override
++		public boolean hasCallFixup(Address callDestAddr) {
++			// First check our annotation-based mapping
++			Program program = instr.getProgram();
++			Function func = program.getFunctionManager().getFunctionAt(callDestAddr);
++			if (func != null) {
++				String fixupName = getCallFixupForTarget(func.getName());
++				if (fixupName != null) {
++					return true;
++				}
++			}
++			// Fall back to database-stored callfixup
++			return super.hasCallFixup(callDestAddr);
++		}
++
++		@Override
++		public InjectPayload getCallFixup(Address callDestAddr) {
++			// First check our annotation-based mapping
++			Program program = instr.getProgram();
++			Function func = program.getFunctionManager().getFunctionAt(callDestAddr);
++			if (func != null) {
++				String fixupName = getCallFixupForTarget(func.getName());
++				if (fixupName != null) {
++					InjectPayload payload = compilerSpec.getPcodeInjectLibrary()
++						.getPayload(InjectPayload.CALLFIXUP_TYPE, fixupName);
++					if (payload != null) {
++						return payload;
++					}
++				}
++			}
++			// Fall back to database-stored callfixup
++			return super.getCallFixup(callDestAddr);
++		}
 +	}
 +
 +	/**
@@ -757,7 +1282,20 @@ index d43fa7e46e..066a06bd56 100644
  	/**
  	 * Data returned for a query about strings
  	 */
-@@ -227,6 +550,100 @@ public class DecompileCallback {
+@@ -96,6 +569,12 @@ public class DecompileCallback {
+ 		cpool = null;
+ 		nativeMessage = null;
+ 		debug = null;
++
++		// Install any pending callfixups to the native PcodeInjectLibrary
++		if (!pendingCallFixups.isEmpty() && language instanceof SleighLanguage) {
++			PcodeInjectLibrary library = compilerSpec.getPcodeInjectLibrary();
++			installPendingCallFixups(library, (SleighLanguage) language);
++		}
+ 	}
+ 
+ 	/**
+@@ -227,9 +706,54 @@ public class DecompileCallback {
  				}
  			}
  
@@ -771,7 +1309,7 @@ index d43fa7e46e..066a06bd56 100644
 +						PatchPackedEncode origEncoder = new PatchPackedEncode();
 +						origEncoder.clear();
 +						instr.getPrototype().getPcodePacked(origEncoder, instr.getInstructionContext(),
-+							new InstructionPcodeOverride(instr));
++							new AnnotationPcodeOverride(instr, pcodecompilerspec));
 +						int origSize = origEncoder.size();
 +
 +						// Now encode our override
@@ -806,59 +1344,14 @@ index d43fa7e46e..066a06bd56 100644
 +				}
 +			}
 +
-+			// Check for callfixup - INJECT pcode after original call (like cspec callfixups)
-+			if (hasCallFixups()) {
-+				FlowType flowType = instr.getFlowType();
-+				if (flowType.isCall() && !flowType.isComputed()) {
-+					// This is a direct call - get the target
-+					Address[] flows = instr.getFlows();
-+					if (flows != null && flows.length > 0) {
-+						Address targetAddr = flows[0];
-+						Function targetFunc = listing.getFunctionAt(targetAddr);
-+						if (targetFunc != null) {
-+							String targetName = targetFunc.getName();
-+							List<String> fixupPcode = findCallFixup(targetName);
-+							if (fixupPcode != null) {
-+								Msg.info(this, "Callfixup: Injecting fixup for call to '" + targetName + "' at " + addr);
-+								try {
-+									// Get original pcode from the instruction
-+									PcodeOp[] originalOps = instr.getPcode();
-+
-+									// Parse the fixup pcode to inject
-+									List<PcodeOp> injectedOps = new ArrayList<>();
-+									int seqNum = originalOps.length;  // Continue sequence numbering
-+									for (String line : fixupPcode) {
-+										PcodeOp op = parsePcodeOp(line, addr, seqNum++, addrfactory);
-+										if (op != null) {
-+											injectedOps.add(op);
-+										}
-+									}
-+
-+									// Combine original + injected pcode
-+									PcodeOp[] combinedOps = new PcodeOp[originalOps.length + injectedOps.size()];
-+									System.arraycopy(originalOps, 0, combinedOps, 0, originalOps.length);
-+									for (int i = 0; i < injectedOps.size(); i++) {
-+										combinedOps[originalOps.length + i] = injectedOps.get(i);
-+									}
-+
-+									int fallthruOffset = instr.getDefaultFallThroughOffset();
-+									encodeInstruction(resultEncoder, addr, combinedOps, fallthruOffset, 0, addrfactory);
-+									Msg.debug(this, "Callfixup: Encoded " + originalOps.length + " original + " +
-+										injectedOps.size() + " injected ops for " + addr);
-+									return;
-+								} catch (Exception e) {
-+									Msg.error(this, "Callfixup: INJECTION FAILED for " + addr + ": " + e.getMessage(), e);
-+								}
-+							}
-+						}
-+					}
-+				}
-+			}
-+
  			instr.getPrototype()
  					.getPcodePacked(resultEncoder, instr.getInstructionContext(),
- 						new InstructionPcodeOverride(instr));
-@@ -244,6 +661,55 @@ public class DecompileCallback {
+-						new InstructionPcodeOverride(instr));
++						new AnnotationPcodeOverride(instr, pcodecompilerspec));
+ 			return;
+ 		}
+ 		catch (UsrException e) {
+@@ -244,6 +768,55 @@ public class DecompileCallback {
  		resultEncoder.clear();	// Make sure the result is empty
  	}
  
@@ -914,3 +1407,246 @@ index d43fa7e46e..066a06bd56 100644
  	/**
  	 * Encode a list of pcode, representing an entire Instruction, to the stream
  	 * 
+@@ -720,6 +1293,9 @@ public class DecompileCallback {
+ 		int extrapop = getExtraPopOverride(func, addr);
+ 		hfunc.grabFromFunction(extrapop, false, (extrapop != default_extrapop));
+ 
++		// Check if we have an annotation-based callfixup for this function
++		applyAnnotationCallfixup(func, hfunc);
++
+ 		HighSymbol funcSymbol = new HighFunctionSymbol(addr, 2, hfunc);
+ 		Namespace namespc = funcSymbol.getNamespace();
+ 		if (debug != null) {
+@@ -903,6 +1479,9 @@ public class DecompileCallback {
+ 				hfunc.grabFromFunction(extrapop, includeDefaultNames,
+ 					(extrapop != default_extrapop));
+ 
++				// Check if we have an annotation-based callfixup for this function
++				applyAnnotationCallfixup(func, hfunc);
++
+ 				HighSymbol functionSymbol = new HighFunctionSymbol(entry, (int) (diff + 1), hfunc);
+ 				Namespace namespc = functionSymbol.getNamespace();
+ 				if (debug != null) {
+diff --git a/Ghidra/Features/Decompiler/src/main/java/ghidra/app/decompiler/DecompileProcess.java b/Ghidra/Features/Decompiler/src/main/java/ghidra/app/decompiler/DecompileProcess.java
+index 57a1818454..6cd5198c53 100644
+--- a/Ghidra/Features/Decompiler/src/main/java/ghidra/app/decompiler/DecompileProcess.java
++++ b/Ghidra/Features/Decompiler/src/main/java/ghidra/app/decompiler/DecompileProcess.java
+@@ -699,6 +699,65 @@ public class DecompileProcess {
+ 		}
+ 	}
+ 
++	/**
++	 * Register per-function decompiler fixes.
++	 * @param flags the fix flags to apply (see DecompilerFixFlags in C++)
++	 * @param addresses array of function entry addresses to register
++	 * @param response container for the result
++	 * @throws IOException for problems with the pipe
++	 * @throws DecompileException for problems executing the command
++	 */
++	public synchronized void sendSetDecompilerFixes(int flags, long[] addresses, ByteIngest response)
++			throws IOException, DecompileException {
++		if (!statusGood) {
++			throw new IOException("setDecompilerFixes called on bad process");
++		}
++		paramDecoder = null;
++		resultEncoder = null;
++		try {
++			write(command_start);
++			writeString("setDecompilerFixes");
++			writeString(Integer.toString(archId));  // Sent for protocol compatibility
++			writeString(Integer.toString(flags));
++			writeString(Integer.toString(addresses.length));
++			for (long addr : addresses) {
++				writeString(Long.toHexString(addr));
++			}
++			write(command_end);
++			readResponse(response);
++		}
++		catch (IOException e) {
++			statusGood = false;
++			throw e;
++		}
++	}
++
++	/**
++	 * Clear all registered decompiler fixes.
++	 * @param response container for the result
++	 * @throws IOException for problems with the pipe
++	 * @throws DecompileException for problems executing the command
++	 */
++	public synchronized void sendClearDecompilerFixes(ByteIngest response)
++			throws IOException, DecompileException {
++		if (!statusGood) {
++			throw new IOException("clearDecompilerFixes called on bad process");
++		}
++		paramDecoder = null;
++		resultEncoder = null;
++		try {
++			write(command_start);
++			writeString("clearDecompilerFixes");
++			writeString(Integer.toString(archId));  // Sent for protocol compatibility
++			write(command_end);
++			readResponse(response);
++		}
++		catch (IOException e) {
++			statusGood = false;
++			throw e;
++		}
++	}
++
+ 	// Calls from the decompiler
+ 
+ 	private void getRegister() throws IOException, DecoderException {
+diff --git a/Ghidra/Framework/SoftwareModeling/src/main/java/ghidra/program/model/pcode/FunctionPrototype.java b/Ghidra/Framework/SoftwareModeling/src/main/java/ghidra/program/model/pcode/FunctionPrototype.java
+index e7c84c2e7b..fc2812b8a4 100644
+--- a/Ghidra/Framework/SoftwareModeling/src/main/java/ghidra/program/model/pcode/FunctionPrototype.java
++++ b/Ghidra/Framework/SoftwareModeling/src/main/java/ghidra/program/model/pcode/FunctionPrototype.java
+@@ -37,6 +37,15 @@ public class FunctionPrototype {
+ 	private LocalSymbolMap localsyms; // Prototype backed by symbol map
+ 	private String modelname; // Name of prototype model
+ 	private String injectname; // Name of pcode inject associated with this prototype
++
++	/**
++	 * Set the callfixup (inject) name for this prototype.
++	 * This can be used to override or set the callfixup after grabFromFunction().
++	 * @param name the callfixup name, or null to clear
++	 */
++	public void setInjectName(String name) {
++		this.injectname = name;
++	}
+ 	private DataType returntype; // Output parameter
+ 	private VariableStorage returnstorage;	// Where the output value is stored
+ 	private ParameterDefinition[] params; // Internally backed prototype. Only non-null if localsyms is null
+diff --git a/Ghidra/Framework/SoftwareModeling/src/main/java/ghidra/program/model/pcode/HighFunction.java b/Ghidra/Framework/SoftwareModeling/src/main/java/ghidra/program/model/pcode/HighFunction.java
+index 5f614b6ad8..002b163929 100644
+--- a/Ghidra/Framework/SoftwareModeling/src/main/java/ghidra/program/model/pcode/HighFunction.java
++++ b/Ghidra/Framework/SoftwareModeling/src/main/java/ghidra/program/model/pcode/HighFunction.java
+@@ -20,7 +20,9 @@ import static ghidra.program.model.pcode.ElementId.*;
+ 
+ import java.io.IOException;
+ import java.util.ArrayList;
++import java.util.HashMap;
+ import java.util.List;
++import java.util.Map;
+ 
+ import ghidra.program.database.function.FunctionDB;
+ import ghidra.program.database.symbol.CodeSymbol;
+@@ -42,6 +44,64 @@ public class HighFunction extends PcodeSyntaxTree {
+ 	public final static String DECOMPILER_TAG_MAP = "decompiler_tags";
+ 	public final static String OVERRIDE_NAMESPACE_NAME = "override";
+ 
++	// ========== PROTO OVERRIDE REGISTRATION ==========
++	// Static registry for prototype overrides: call site address offset -> FunctionSignature
++	// This allows injecting proto overrides without modifying the database,
++	// similar to how callfixups work in DecompileCallback.
++	private static Map<Long, FunctionSignature> registeredProtoOverrides = new HashMap<>();
++
++	/**
++	 * Register a prototype override for a specific call site address.
++	 * The override will be applied during decompilation without modifying the database.
++	 * @param callAddr the address of the call instruction (as long offset)
++	 * @param signature the FunctionSignature to use at this call site
++	 */
++	public static void registerProtoOverride(long callAddr, FunctionSignature signature) {
++		registeredProtoOverrides.put(callAddr, signature);
++	}
++
++	/**
++	 * Register a prototype override using an Address object.
++	 * @param callAddr the address of the call instruction
++	 * @param signature the FunctionSignature to use at this call site
++	 */
++	public static void registerProtoOverride(Address callAddr, FunctionSignature signature) {
++		registeredProtoOverrides.put(callAddr.getOffset(), signature);
++	}
++
++	/**
++	 * Clear all registered prototype overrides.
++	 */
++	public static void clearProtoOverrides() {
++		registeredProtoOverrides.clear();
++	}
++
++	/**
++	 * Get the number of registered prototype overrides.
++	 * @return count of registered overrides
++	 */
++	public static int getRegisteredProtoOverrideCount() {
++		return registeredProtoOverrides.size();
++	}
++
++	/**
++	 * Check if any prototype overrides are registered.
++	 * @return true if overrides are registered
++	 */
++	public static boolean hasRegisteredProtoOverrides() {
++		return !registeredProtoOverrides.isEmpty();
++	}
++
++	/**
++	 * Get all registered prototype overrides.
++	 * @return map of call address offsets to FunctionSignature overrides
++	 */
++	public static Map<Long, FunctionSignature> getRegisteredProtoOverrides() {
++		return registeredProtoOverrides;
++	}
++
++	// ========== END PROTO OVERRIDE REGISTRATION ==========
++
+ 	private Function func; // The traditional function object
+ 	private Language language;
+ 	private CompilerSpec compilerSpec;
+@@ -462,20 +522,43 @@ public class HighFunction extends PcodeSyntaxTree {
+ 			}
+ 			encoder.closeElement(ELEM_JUMPTABLELIST);
+ 		}
+-		boolean hasOverrideTag = ((protoOverrides != null) && (protoOverrides.size() > 0));
++		// Check for both DB overrides and registered overrides
++		boolean hasDbOverrides = (protoOverrides != null) && (protoOverrides.size() > 0);
++		boolean hasRegisteredOverrides = hasRegisteredProtoOverrides();
++		boolean hasOverrideTag = hasDbOverrides || hasRegisteredOverrides;
+ 		if (hasOverrideTag) {
+ 			encoder.openElement(ELEM_OVERRIDE);
+ 			PcodeDataTypeManager dtmanage = getDataTypeManager();
+ 			Program prog = func.getProgram();
+-			for (DataTypeSymbol sym : protoOverrides) {
+-				Address addr = sym.getAddress();
+-				int firstVarArg = HighFunctionDBUtil.getFirstVarArg(prog, addr);
+-				FunctionPrototype fproto = new FunctionPrototype(
+-					(FunctionSignature) sym.getDataType(), compilerSpec, false);
+-				encoder.openElement(ELEM_PROTOOVERRIDE);
+-				AddressXML.encode(encoder, addr);
+-				fproto.encodePrototype(encoder, dtmanage, firstVarArg);
+-				encoder.closeElement(ELEM_PROTOOVERRIDE);
++			AddressFactory addrFactory = prog.getAddressFactory();
++
++			// Encode DB overrides first
++			if (hasDbOverrides) {
++				for (DataTypeSymbol sym : protoOverrides) {
++					Address addr = sym.getAddress();
++					int firstVarArg = HighFunctionDBUtil.getFirstVarArg(prog, addr);
++					FunctionPrototype fproto = new FunctionPrototype(
++						(FunctionSignature) sym.getDataType(), compilerSpec, false);
++					encoder.openElement(ELEM_PROTOOVERRIDE);
++					AddressXML.encode(encoder, addr);
++					fproto.encodePrototype(encoder, dtmanage, firstVarArg);
++					encoder.closeElement(ELEM_PROTOOVERRIDE);
++				}
++			}
++
++			// Encode registered overrides (injected without DB modification)
++			if (hasRegisteredOverrides) {
++				for (Map.Entry<Long, FunctionSignature> entry : registeredProtoOverrides.entrySet()) {
++					long addrOffset = entry.getKey();
++					FunctionSignature sig = entry.getValue();
++					Address addr = addrFactory.getDefaultAddressSpace().getAddress(addrOffset);
++					int firstVarArg = HighFunctionDBUtil.getFirstVarArg(prog, addr);
++					FunctionPrototype fproto = new FunctionPrototype(sig, compilerSpec, false);
++					encoder.openElement(ELEM_PROTOOVERRIDE);
++					AddressXML.encode(encoder, addr);
++					fproto.encodePrototype(encoder, dtmanage, firstVarArg);
++					encoder.closeElement(ELEM_PROTOOVERRIDE);
++				}
+ 			}
+ 			encoder.closeElement(ELEM_OVERRIDE);
+ 		}
