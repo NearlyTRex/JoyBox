@@ -25,11 +25,6 @@ config_files = {
     "Ghidra/lib/Ghidra/Processors/x86/data/patterns/x86watcomcpp_patterns.xml": "x86watcomcpp_patterns.xml",
 }
 
-# Patch files
-patch_files = [
-    "ghidra.patch"
-]
-
 # Ghidra tool
 class Ghidra(toolbase.ToolBase):
 
@@ -84,22 +79,10 @@ class Ghidra(toolbase.ToolBase):
                     "./gradlew", "buildGhidra", "-x", "createJavadocs", "-x", "createJsondocs", "-x", "test"
                 ]
 
-            # Load patch files
-            source_patches = []
-            for patch_filename in patch_files:
-                patch_path = os.path.join(extra_files_dir, patch_filename)
-                patch_content = serialization.read_text_file(patch_path, exit_on_failure = setup_params.exit_on_failure)
-                if patch_content is None:
-                    logger.log_error("Could not read Ghidra patch file: %s" % patch_filename)
-                    return False
-                source_patches.append({
-                    "file": patch_filename,
-                    "content": patch_content,
-                })
-
             # Build Ghidra from source
             success = release.build_binary_from_source(
                 release_url = "https://github.com/NearlyTRex/Ghidra.git",
+                release_branch = "dev-testing",
                 output_file = ".zip",
                 output_dir = "build/dist",
                 search_file = "ghidraRun",
@@ -107,7 +90,6 @@ class Ghidra(toolbase.ToolBase):
                 install_dir = programs.get_library_install_dir("Ghidra", "lib"),
                 backups_dir = programs.get_library_backup_dir("Ghidra", "lib"),
                 build_cmd = build_cmd,
-                source_patches = source_patches,
                 locker_type = setup_params.locker_type,
                 skip_autobackup = setup_params.skip_autobackup,
                 verbose = setup_params.verbose,

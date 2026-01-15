@@ -492,6 +492,7 @@ def download_webpage_release(
 # Build from source
 def build_from_source(
     release_url = "",
+    release_branch = "",
     webpage_url = "",
     webpage_base_url = "",
     starts_with = "",
@@ -553,6 +554,7 @@ def build_from_source(
         success = network.download_git_url(
             url = release_url,
             output_dir = source_dir,
+            branch = release_branch if release_branch else None,
             clean = True,
             verbose = verbose,
             pretend_run = pretend_run,
@@ -672,6 +674,7 @@ def build_from_source(
 # Build binary from source
 def build_binary_from_source(
     release_url = "",
+    release_branch = "",
     webpage_url = "",
     webpage_base_url = "",
     starts_with = "",
@@ -695,6 +698,7 @@ def build_binary_from_source(
     # Build from source
     build_info = build_from_source(
         release_url = release_url,
+        release_branch = release_branch,
         webpage_url = webpage_url,
         webpage_base_url = webpage_base_url,
         starts_with = starts_with,

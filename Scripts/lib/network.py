@@ -179,6 +179,7 @@ def download_url(
 def download_git_url(
     url,
     output_dir,
+    branch = None,
     recursive = True,
     clean = False,
     verbose = False,
@@ -216,6 +217,8 @@ def download_git_url(
         download_tool,
         "clone"
     ]
+    if branch:
+        download_cmd += ["--branch", branch]
     if recursive:
         download_cmd += ["--recursive"]
     download_cmd += [
