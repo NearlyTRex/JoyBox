@@ -86,22 +86,42 @@ def list_preset_scripts(preset_name):
 
 def launch_program(verbose = False, pretend_run = False, exit_on_failure = False):
 
-    # Get tool
-    ghidra_tool = None
-    if programs.is_tool_installed("Ghidra"):
-        ghidra_tool = programs.get_tool_program("Ghidra")
-    if not ghidra_tool:
-        logger.log_error("Ghidra was not found")
+    # Get Python tool
+    python_tool = None
+    if programs.is_tool_installed("PythonVenvPython"):
+        python_tool = programs.get_tool_program("PythonVenvPython")
+    if not python_tool:
+        logger.log_error("PythonVenvPython was not found")
         return False
 
-    # Get launch command
+    # Get Ghidra install directory for pyghidra
+    ghidra_install_dir = programs.get_library_install_dir("Ghidra", "lib")
+    if not ghidra_install_dir or not os.path.isdir(ghidra_install_dir):
+        logger.log_error("Ghidra installation not found at: %s" % ghidra_install_dir)
+        return False
+
+    # Get launch command - use pyghidra -g to launch Ghidra GUI with Python support
     launch_cmd = [
-        ghidra_tool
+        python_tool,
+        "-m",
+        "pyghidra",
+        "-g"
     ]
+
+    # Log what we're doing
+    if verbose:
+        logger.log_info("Launching Ghidra with PyGhidra:")
+        logger.log_info("  Python: %s" % python_tool)
+        logger.log_info("  Ghidra: %s" % ghidra_install_dir)
+
+    # Create command options with Ghidra install dir environment variable
+    cmd_options = command.create_command_options()
+    cmd_options.set_env_var("GHIDRA_INSTALL_DIR", ghidra_install_dir)
 
     # Run launch command
     code = command.run_returncode_command(
         cmd = launch_cmd,
+        options = cmd_options,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)

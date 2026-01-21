@@ -25,6 +25,12 @@ decompiler_presets = {
                 "script_name": "export_annotations.py",
                 "default_args": ["annotations/nocedit.exe", "pseudocode"]
             },
+            "export_pseudocode_strict": {
+                "description": "Export pseudocode with strict mode (fail on compile errors)",
+                "script_path": "scripts/Python",
+                "script_name": "export_annotations.py",
+                "default_args": ["annotations/nocedit.exe", "pseudocode", "--strict"]
+            },
             "export_data_types": {
                 "description": "Export data type definitions only",
                 "script_path": "scripts/Python",
