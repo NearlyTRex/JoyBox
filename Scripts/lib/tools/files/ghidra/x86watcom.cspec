@@ -29,18 +29,15 @@
         <varnode space="stack" offset="0" size="4" />
     </returnaddress>
     <default_proto>
-        <prototype name="__watcallRegister" extrapop="unknown" stackshift="4">
+        <prototype name="__cdecl" extrapop="unknown" stackshift="4">
             <input>
-                <pentry minsize="1" maxsize="4"><register name="EAX" /></pentry>
-                <pentry minsize="1" maxsize="4"><register name="EDX" /></pentry>
-                <pentry minsize="1" maxsize="4"><register name="EBX" /></pentry>
-                <pentry minsize="1" maxsize="4"><register name="ECX" /></pentry>
                 <pentry minsize="1" maxsize="500" align="4"><addr offset="4" space="stack" /></pentry>
             </input>
             <output killedbycall="true">
-                <pentry minsize="4" maxsize="10" metatype="float" extension="float"><register name="ST0" /></pentry>
                 <pentry minsize="1" maxsize="4"><register name="EAX" /></pentry>
-                <pentry minsize="5" maxsize="8"><addr space="join" piece1="EDX" piece2="EAX" /></pentry>
+                <pentry minsize="5" maxsize="8">
+                    <addr space="join" piece1="EDX" piece2="EAX" />
+                </pentry>
             </output>
             <unaffected>
                 <register name="ESP" />
@@ -49,8 +46,34 @@
                 <register name="EDI" />
                 <register name="EBP" />
             </unaffected>
+            <killedbycall>
+                <register name="EAX" />
+                <register name="ECX" />
+                <register name="EDX" />
+            </killedbycall>
         </prototype>
     </default_proto>
+    <prototype name="__watcallRegister" extrapop="unknown" stackshift="4">
+        <input>
+            <pentry minsize="1" maxsize="4"><register name="EAX" /></pentry>
+            <pentry minsize="1" maxsize="4"><register name="EDX" /></pentry>
+            <pentry minsize="1" maxsize="4"><register name="EBX" /></pentry>
+            <pentry minsize="1" maxsize="4"><register name="ECX" /></pentry>
+            <pentry minsize="1" maxsize="500" align="4"><addr offset="4" space="stack" /></pentry>
+        </input>
+        <output killedbycall="true">
+            <pentry minsize="4" maxsize="10" metatype="float" extension="float"><register name="ST0" /></pentry>
+            <pentry minsize="1" maxsize="4"><register name="EAX" /></pentry>
+            <pentry minsize="5" maxsize="8"><addr space="join" piece1="EDX" piece2="EAX" /></pentry>
+        </output>
+        <unaffected>
+            <register name="ESP" />
+            <register name="EBX" />
+            <register name="ESI" />
+            <register name="EDI" />
+            <register name="EBP" />
+        </unaffected>
+    </prototype>
     <prototype name="__watcallStack" extrapop="4" stackshift="4">
         <input>
             <pentry minsize="1" maxsize="500" align="4"><addr offset="4" space="stack" /></pentry>
@@ -74,26 +97,6 @@
         </input>
         <output killedbycall="true">
             <pentry minsize="4" maxsize="10" metatype="float" extension="float"><register name="ST0" /></pentry>
-            <pentry minsize="1" maxsize="4"><register name="EAX" /></pentry>
-        </output>
-        <unaffected>
-            <register name="ESP" />
-            <register name="EBX" />
-            <register name="ESI" />
-            <register name="EDI" />
-            <register name="EBP" />
-        </unaffected>
-        <killedbycall>
-            <register name="EAX" />
-            <register name="ECX" />
-            <register name="EDX" />
-        </killedbycall>
-    </prototype>
-    <prototype name="__cdecl" extrapop="unknown" stackshift="4">
-        <input>
-            <pentry minsize="1" maxsize="500" align="4"><addr offset="4" space="stack" /></pentry>
-        </input>
-        <output killedbycall="true">
             <pentry minsize="1" maxsize="4"><register name="EAX" /></pentry>
         </output>
         <unaffected>
@@ -361,6 +364,28 @@
             <register name="EDX" />
         </killedbycall>
     </prototype>
+    <!-- __stackdbl_esi: Hybrid convention - 1 stack ptr + 1 stack double + ESI param, returns EAX -->
+    <prototype name="__stackdbl_esi" extrapop="4" stackshift="4">
+        <input>
+            <pentry minsize="1" maxsize="4" align="4"><addr offset="4" space="stack" /></pentry>
+            <pentry minsize="1" maxsize="8" align="4"><addr offset="8" space="stack" /></pentry>
+            <pentry minsize="1" maxsize="4"><register name="ESI" /></pentry>
+        </input>
+        <output killedbycall="true">
+            <pentry minsize="1" maxsize="4"><register name="EAX" /></pentry>
+        </output>
+        <unaffected>
+            <register name="ESP" />
+            <register name="EBX" />
+            <register name="EDI" />
+            <register name="EBP" />
+        </unaffected>
+        <killedbycall>
+            <register name="EAX" />
+            <register name="ECX" />
+            <register name="EDX" />
+        </killedbycall>
+    </prototype>
     <!-- __stack2_esi: Hybrid convention - 2 stack params + ESI input, returns EAX -->
     <prototype name="__stack2_esi" extrapop="4" stackshift="4">
         <input>
@@ -472,6 +497,30 @@
             <register name="EDI" />
         </killedbycall>
     </prototype>
+    <!-- __fastcall: CRT memory intrinsics convention - params in ECX, EDX, then stack.
+         Used by Watcom's built-in memset/memcpy/strcpy helpers. EBX is preserved. -->
+    <prototype name="__fastcall" extrapop="unknown" stackshift="4">
+        <input>
+            <pentry minsize="1" maxsize="4"><register name="ECX" /></pentry>
+            <pentry minsize="1" maxsize="4"><register name="EDX" /></pentry>
+            <pentry minsize="1" maxsize="500" align="4"><addr offset="4" space="stack" /></pentry>
+        </input>
+        <output killedbycall="true">
+            <pentry minsize="1" maxsize="4"><register name="EAX" /></pentry>
+        </output>
+        <unaffected>
+            <register name="ESP" />
+            <register name="EBX" />
+            <register name="ESI" />
+            <register name="EDI" />
+            <register name="EBP" />
+        </unaffected>
+        <killedbycall>
+            <register name="EAX" />
+            <register name="ECX" />
+            <register name="EDX" />
+        </killedbycall>
+    </prototype>
     <prototype name="__syscall" extrapop="4" stackshift="4">
         <input>
             <pentry minsize="1" maxsize="500" align="4"><addr offset="4" space="stack" /></pentry>
@@ -493,12 +542,13 @@
             <register name="EDX" />
         </killedbycall>
     </prototype>
-    <!-- __fpustack: For complex FPU functions (atan2, pow, asin, acos, etc.) that use many FPU registers.
-         All ST registers are killed. Callers should use FNSAVE/FRSTOR if they have values in ST1-ST7. -->
-    <prototype name="__fpustack" extrapop="4" stackshift="0">
+    <!-- __fpustack: For complex FPU functions (atan2, pow, etc.) that take params via FPU registers.
+         All ST registers are killed. Callers should use FNSAVE/FRSTOR if they have values in ST1-ST7.
+         ECX and EDX are preserved (unlike __fpureg which kills them). -->
+    <prototype name="__fpustack" extrapop="0" stackshift="0">
         <input>
-            <pentry minsize="10" maxsize="10" metatype="float"><addr offset="4" space="stack" /></pentry>
-            <pentry minsize="10" maxsize="10" metatype="float"><addr offset="14" space="stack" /></pentry>
+            <pentry minsize="4" maxsize="10" metatype="float"><register name="ST0" /></pentry>
+            <pentry minsize="4" maxsize="10" metatype="float"><register name="ST1" /></pentry>
         </input>
         <output killedbycall="true">
             <pentry minsize="10" maxsize="10" metatype="float" extension="float"><register name="ST0" /></pentry>
@@ -522,13 +572,14 @@
             <register name="ST7" />
         </killedbycall>
     </prototype>
-    <!-- __fpustack_safe: For simple FPU functions (fdiv, fmul, etc.) that preserve caller's FPU stack.
+    <!-- __fpustack_safe: For simple FPU functions (fdiv, fmul, etc.) that take params via FPU registers.
          Only ST0 is killed (return value). ST1-ST7 are preserved (shifted during call, restored after).
-         Use this when callers do FXCH STn after the call, indicating they expect STn to be valid. -->
-    <prototype name="__fpustack_safe" extrapop="4" stackshift="0">
+         Use this when callers do FXCH STn after the call, indicating they expect STn to be valid.
+         ECX and EDX are preserved (unlike __fpureg which kills them). -->
+    <prototype name="__fpustack_safe" extrapop="0" stackshift="0">
         <input>
-            <pentry minsize="10" maxsize="10" metatype="float"><addr offset="4" space="stack" /></pentry>
-            <pentry minsize="10" maxsize="10" metatype="float"><addr offset="14" space="stack" /></pentry>
+            <pentry minsize="4" maxsize="10" metatype="float"><register name="ST0" /></pentry>
+            <pentry minsize="4" maxsize="10" metatype="float"><register name="ST1" /></pentry>
         </input>
         <output killedbycall="true">
             <pentry minsize="10" maxsize="10" metatype="float" extension="float"><register name="ST0" /></pentry>
@@ -545,7 +596,7 @@
             <register name="ST0" />
         </killedbycall>
     </prototype>
-    <!-- ECX and EDX are preserved by both __fpustack variants -->
+    <!-- __mathinternal: For internal CRT math support functions -->
     <prototype name="__mathinternal" extrapop="0" stackshift="4">
         <input>
             <!-- No parameters -->
@@ -617,9 +668,9 @@
         </killedbycall>
     </prototype>
     <prototype name="__fpureg_safe" extrapop="0" stackshift="0">
-        <!-- FPU register convention preserving EAX and ST1: for round/floor/ceil called in loops -->
-        <!-- Input: ST0 (value to process), ST1 preserved across call -->
-        <!-- Output: ST0 (result), EAX/ECX/EDX preserved -->
+        <!-- FPU register convention for round (FRNDINT wrapper): only modifies ST0.
+             All GPRs and ST1-ST7 are preserved. Used when callers park values on FPU stack
+             across the call (e.g., FXCH STn after return). -->
         <input>
             <pentry minsize="4" maxsize="10" metatype="float"><register name="ST0" /></pentry>
         </input>
@@ -636,10 +687,19 @@
             <register name="EDI" />
             <register name="EBP" />
             <register name="ST1" />
+            <register name="ST2" />
+            <register name="ST3" />
+            <register name="ST4" />
+            <register name="ST5" />
+            <register name="ST6" />
+            <register name="ST7" />
         </unaffected>
     </prototype>
     <prototype name="__softfp_double" extrapop="0" stackshift="0">
-        <!-- Software FP: Two doubles as split uints in EAX:EDX and EBX:ECX, returns EDX:EAX -->
+        <!-- Software FP: Two doubles as split uints in EAX:EDX and EBX:ECX, returns EDX:EAX.
+             WARNING: This kills EBX! Only use for Watcom software FP intrinsics (__FDA, __FDS, etc.)
+             that pass doubles in register pairs. Do NOT use for CRT functions like floor/ceil/modf
+             that take stack params - use __crtmath instead. -->
         <input>
             <pentry minsize="4" maxsize="4"><register name="EAX" /></pentry>
             <pentry minsize="4" maxsize="4"><register name="EDX" /></pentry>
@@ -688,5 +748,49 @@
             <register name="ECX" />
             <register name="EDX" />
         </killedbycall>
+    </prototype>
+    <!-- __stk_probe: Watcom stack probe (__STK). Takes requested size in EAX,
+         probes stack pages. Preserves ALL registers including EAX, ECX, EDX. -->
+    <prototype name="__stk_probe" extrapop="4" stackshift="4">
+        <input>
+        </input>
+        <output>
+        </output>
+        <unaffected>
+            <register name="ESP" />
+            <register name="EAX" />
+            <register name="EBX" />
+            <register name="ECX" />
+            <register name="EDX" />
+            <register name="ESI" />
+            <register name="EDI" />
+            <register name="EBP" />
+        </unaffected>
+    </prototype>
+    <!-- __mmx_save: Takes all 8 MMX registers as input, preserves everything.
+         Used by saveMMXRegisters which stores MM0-MM7 to globals. -->
+    <prototype name="__mmx_save" extrapop="4" stackshift="4">
+        <input>
+            <pentry minsize="8" maxsize="8"><register name="MM0" /></pentry>
+            <pentry minsize="8" maxsize="8"><register name="MM1" /></pentry>
+            <pentry minsize="8" maxsize="8"><register name="MM2" /></pentry>
+            <pentry minsize="8" maxsize="8"><register name="MM3" /></pentry>
+            <pentry minsize="8" maxsize="8"><register name="MM4" /></pentry>
+            <pentry minsize="8" maxsize="8"><register name="MM5" /></pentry>
+            <pentry minsize="8" maxsize="8"><register name="MM6" /></pentry>
+            <pentry minsize="8" maxsize="8"><register name="MM7" /></pentry>
+        </input>
+        <output>
+        </output>
+        <unaffected>
+            <register name="ESP" />
+            <register name="EAX" />
+            <register name="EBX" />
+            <register name="ECX" />
+            <register name="EDX" />
+            <register name="ESI" />
+            <register name="EDI" />
+            <register name="EBP" />
+        </unaffected>
     </prototype>
 </compiler_spec>
