@@ -128,6 +128,12 @@ class CommandOptions:
     def set_suppress_output(self, value):
         self.options.set_value(config.program_key_suppress_output, value)
 
+    # Passthrough (inherit stdin/stdout/stderr directly for TUI apps)
+    def is_passthrough(self):
+        return self.options.get_value(config.program_key_passthrough, False)
+    def set_passthrough(self, value):
+        self.options.set_value(config.program_key_passthrough, value)
+
     # 32-bit execution
     def is_32_bit(self):
         return self.options.get_value(config.program_key_is_32_bit, False)

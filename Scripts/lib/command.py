@@ -472,6 +472,21 @@ def run_returncode_command(
             if options.is_shell():
                 cmd = create_command_string(cmd)
 
+            # Passthrough mode - inherit stdin/stdout/stderr directly (for TUI apps)
+            if options.is_passthrough():
+                returncode = subprocess.call(
+                    cmd,
+                    shell = options.is_shell(),
+                    cwd = options.get_cwd(),
+                    env = options.get_env())
+                if options.allow_processing():
+                    postprocess_command(
+                        cmd = cmd,
+                        options = options,
+                        verbose = verbose,
+                        exit_on_failure = exit_on_failure)
+                return returncode
+
             # Determine output file handling
             stdout_target = None
             stderr_target = None
