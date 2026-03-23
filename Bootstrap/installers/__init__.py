@@ -3,12 +3,14 @@ from installers.installer_aptget import *
 from installers.installer_awscli import *
 from installers.installer_audiobookshelf import *
 from installers.installer_brave import *
+from installers.installer_ccusage import *
 from installers.installer_certbot import *
 from installers.installer_cockpit import *
 from installers.installer_chrome import *
 from installers.installer_claude import *
 from installers.installer_config import *
 from installers.installer_dotfiles import *
+from installers.installer_gh import *
 from installers.installer_ghidra import *
 from installers.installer_filebrowser import *
 from installers.installer_flatpak import *
@@ -17,10 +19,12 @@ from installers.installer_jenkins import *
 from installers.installer_kanboard import *
 from installers.installer_navidrome import *
 from installers.installer_nginx import *
+from installers.installer_ollama import *
 from installers.installer_onepassword import *
 from installers.installer_python import *
 from installers.installer_steam import *
 from installers.installer_udev import *
+from installers.installer_virtualbox import *
 from installers.installer_vscodium import *
 from installers.installer_wine import *
 from installers.installer_winget import *

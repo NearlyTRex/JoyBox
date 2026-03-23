@@ -85,6 +85,7 @@ aptget[constants.EnvironmentType.LOCAL_UBUNTU] += [
     {"id": "qt6-tools-dev-tools", "name": "Qt6 Tools", "description": "Qt6 additional tools", "category": "Devel"},
     {"id": "qtbase5-dev-tools", "name": "Qt5 Dev Tools", "description": "Qt5 development tools", "category": "Devel"},
     {"id": "qttools5-dev-tools", "name": "Qt5 Tools", "description": "Qt5 additional tools", "category": "Devel"},
+    {"id": "ripgrep", "name": "ripgrep", "description": "Fast recursive grep alternative", "category": "Devel"},
     {"id": "ruby-full", "name": "Ruby", "description": "Ruby programming language", "category": "Devel"},
     {"id": "xa65", "name": "xa65", "description": "6502 cross-assembler", "category": "Devel"},
 
@@ -258,10 +259,6 @@ aptget[constants.EnvironmentType.LOCAL_UBUNTU] += [
     {"id": "qemu-kvm", "name": "QEMU/KVM", "description": "Hardware virtualization", "category": "Virtualization"},
     {"id": "qemu-utils", "name": "QEMU Utils", "description": "QEMU disk utilities", "category": "Virtualization"},
     {"id": "virt-manager", "name": "Virt-Manager", "description": "VM management GUI", "category": "Virtualization"},
-    {"id": "virtualbox-guest-additions-iso", "name": "VBox Guest Additions ISO", "description": "VirtualBox guest tools", "category": "Virtualization"},
-    {"id": "virtualbox-guest-utils", "name": "VBox Guest Utils", "description": "VirtualBox guest utilities", "category": "Virtualization"},
-    {"id": "virtualbox-guest-x11", "name": "VBox Guest X11", "description": "VirtualBox X11 drivers", "category": "Virtualization"},
-    {"id": "virtualbox", "name": "VirtualBox", "description": "Desktop virtualization", "category": "Virtualization"},
     {"id": "xdg-desktop-portal", "name": "XDG Desktop Portal", "description": "Sandboxed app integration", "category": "Virtualization"},
 
     # Web
@@ -288,6 +285,9 @@ aptget[constants.EnvironmentType.REMOTE_UBUNTU] += [
     {"id": "default-jdk", "name": "OpenJDK", "description": "Java Development Kit", "category": "Devel"},
     {"id": "git", "name": "Git", "description": "Version control system", "category": "Devel"},
     {"id": "jq", "name": "jq", "description": "JSON processor", "category": "Devel"},
+    {"id": "nodejs", "name": "Node.js", "description": "JavaScript runtime", "category": "Devel"},
+    {"id": "npm", "name": "npm", "description": "Node package manager", "category": "Devel"},
+    {"id": "ripgrep", "name": "ripgrep", "description": "Fast recursive grep alternative", "category": "Devel"},
 
     # Server
     {"id": "certbot", "name": "Certbot", "description": "Let's Encrypt client", "category": "Server"},

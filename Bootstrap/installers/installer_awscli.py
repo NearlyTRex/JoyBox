@@ -54,19 +54,17 @@ class AwsCli(installer.Installer):
 
         # Create temp directory for download
         temp_dir = "/tmp/awscli-install"
-        self.connection.run_blocking(["rm", "-rf", temp_dir])
-        self.connection.run_blocking(["mkdir", "-p", temp_dir])
+        self.connection.remove_file_or_directory(temp_dir)
+        self.connection.make_directory(temp_dir)
 
         # Download AWS CLI installer
         util.log_info("Downloading AWS CLI installer")
         download_url = "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip"
         zip_path = os.path.join(temp_dir, "awscliv2.zip")
-        code = self.connection.run_blocking(
-            ["curl", "-fsSL", "-o", zip_path, download_url]
-        )
-        if code != 0:
+        self.connection.download_file(download_url, zip_path)
+        if not self.connection.does_file_or_directory_exist(zip_path):
             util.log_error("Failed to download AWS CLI installer")
-            self.connection.run_blocking(["rm", "-rf", temp_dir])
+            self.connection.remove_file_or_directory(temp_dir)
             return False
 
         # Unzip the installer
@@ -76,7 +74,7 @@ class AwsCli(installer.Installer):
         )
         if code != 0:
             util.log_error("Failed to extract AWS CLI installer")
-            self.connection.run_blocking(["rm", "-rf", temp_dir])
+            self.connection.remove_file_or_directory(temp_dir)
             return False
 
         # Run the installer
@@ -94,12 +92,12 @@ class AwsCli(installer.Installer):
             )
         if code != 0:
             util.log_error("Failed to run AWS CLI installer")
-            self.connection.run_blocking(["rm", "-rf", temp_dir])
+            self.connection.remove_file_or_directory(temp_dir)
             return False
 
         # Cleanup
         util.log_info("Cleaning up")
-        self.connection.run_blocking(["rm", "-rf", temp_dir])
+        self.connection.remove_file_or_directory(temp_dir)
 
         # Verify installation
         util.log_info("Verifying installation")
@@ -120,12 +118,12 @@ class AwsCli(installer.Installer):
         # Remove the installation directory
         if self.connection.does_file_or_directory_exist(self.install_dir):
             util.log_info("Removing AWS CLI installation directory")
-            self.connection.run_blocking(["rm", "-rf", self.install_dir], sudo=True)
+            self.connection.remove_file_or_directory(self.install_dir, sudo=True)
 
         # Remove symlinks
         util.log_info("Removing AWS CLI symlinks")
-        self.connection.run_blocking(["rm", "-f", "/usr/local/bin/aws"], sudo=True)
-        self.connection.run_blocking(["rm", "-f", "/usr/local/bin/aws_completer"], sudo=True)
+        self.connection.remove_file_or_directory("/usr/local/bin/aws", sudo=True)
+        self.connection.remove_file_or_directory("/usr/local/bin/aws_completer", sudo=True)
 
         # All done
         util.log_info("AWS CLI uninstalled")

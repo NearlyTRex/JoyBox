@@ -20,7 +20,6 @@ parser = argparse.ArgumentParser(description="Environment bootstrap script.")
 parser.add_argument(
     "-a", "--action",
     choices = ["setup", "teardown", "status"],
-    required = True,
     help = "Action to perform")
 parser.add_argument(
     "-t", "--type",
@@ -49,6 +48,10 @@ parser.add_argument("-p", "--pretend_run", action = "store_true", help = "Enable
 parser.add_argument("-x", "--exit_on_failure", action = "store_true", help = "Enable exit on failure mode")
 parser.add_argument("-f", "--force", action = "store_true", help = "Force operations even if component is already installed/uninstalled")
 args, unknown = parser.parse_known_args()
+
+# Require action unless listing components
+if not args.list_components and not args.action:
+    parser.error("the following arguments are required: -a/--action")
 
 # Check arguments
 is_local_ubuntu = args.type == constants.EnvironmentType.LOCAL_UBUNTU

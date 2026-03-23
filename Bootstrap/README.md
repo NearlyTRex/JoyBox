@@ -14,7 +14,8 @@ python3 bootstrap.py -a setup -t local_ubuntu
 ```
 
 This installs:
-- **Dev tools**: build-essential, cmake, git, golang, nodejs, dotnet, python tools, Qt dev packages
+- **Dev tools**: build-essential, cmake, git, golang, nodejs, dotnet, python tools, Qt dev packages, ripgrep, GitHub CLI
+- **AI/LLM**: Claude Code CLI, Ollama, ccusage (usage monitoring)
 - **Editors/IDEs**: VSCodium, GitKraken
 - **Browsers**: Chrome, Brave, Firefox
 - **Apps**: 1Password, GIMP, VLC, Handbrake, Audacity, OBS alternatives
@@ -38,12 +39,24 @@ python3 bootstrap.py -t local_ubuntu --list-components
 
 | Component | What it does |
 |-----------|--------------|
+| `config` | Configuration setup |
+| `dotfiles` | Dot files installation |
+| `python` | Python venv + pip packages |
+| `wrappers` | Script wrappers in ~/.local/bin |
 | `aptget` | All APT packages (dev tools, libs, apps) |
+| `awscli` | AWS CLI |
 | `flatpak` | Flatpak apps (Discord, Signal, etc.) |
+| `ccusage` | Claude Code usage monitoring |
 | `chrome` | Google Chrome (adds repo) |
+| `claude` | Claude Code CLI |
 | `brave` | Brave Browser (adds repo) |
+| `gh` | GitHub CLI (adds repo) |
 | `gitkraken` | GitKraken (downloads latest .deb) |
+| `ollama` | Ollama local LLM runtime |
 | `onepassword` | 1Password (adds repo) |
+| `steam` | Steam gaming platform |
+| `udev` | USB/controller device rules |
+| `virtualbox` | VirtualBox (Oracle repo) |
 | `vscodium` | VSCodium (adds repo) |
 | `wine` | Wine + dependencies |
 
@@ -70,8 +83,17 @@ python3 bootstrap.py -a setup -t remote_ubuntu -s 0 --components wordpress
 
 | Component | What it does |
 |-----------|--------------|
+| `config` | Configuration setup |
+| `dotfiles` | Dot files installation |
+| `python` | Python venv + pip packages |
+| `wrappers` | Script wrappers |
+| `aptget` | System packages |
+| `awscli` | AWS CLI |
+| `flatpak` | Flatpak apps |
 | `nginx` | Nginx with config templates |
 | `certbot` | Let's Encrypt SSL certs |
+| `ccusage` | Claude Code usage monitoring |
+| `claude` | Claude Code CLI |
 | `cockpit` | Server management web UI |
 | `wordpress` | WordPress via Docker |
 | `audiobookshelf` | Audiobook streaming |
@@ -79,7 +101,9 @@ python3 bootstrap.py -a setup -t remote_ubuntu -s 0 --components wordpress
 | `filebrowser` | Web file manager |
 | `jenkins` | CI/CD server |
 | `kanboard` | Project management |
+| `gh` | GitHub CLI (adds repo) |
 | `ghidra` | Reverse engineering tools |
+| `ollama` | Ollama local LLM runtime |
 
 ## Configuration
 

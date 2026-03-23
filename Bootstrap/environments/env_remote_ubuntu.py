@@ -55,6 +55,7 @@ class RemoteUbuntu(env.Environment):
             "flatpak": installers.Flatpak(**self.installer_options),
             "nginx": installers.Nginx(**self.installer_options),
             "certbot": installers.Certbot(**self.installer_options),
+            "ccusage": installers.Ccusage(**self.installer_options),
             "claude": installers.Claude(**self.installer_options),
             "cockpit": installers.Cockpit(**self.installer_options),
             "wordpress": installers.Wordpress(**self.installer_options),
@@ -63,10 +64,13 @@ class RemoteUbuntu(env.Environment):
             "filebrowser": installers.FileBrowser(**self.installer_options),
             "jenkins": installers.Jenkins(**self.installer_options),
             "kanboard": installers.Kanboard(**self.installer_options),
-            "ghidra": installers.Ghidra(**self.installer_options)
+            "gh": installers.Gh(**self.installer_options),
+            "ghidra": installers.Ghidra(**self.installer_options),
+            "ollama": installers.Ollama(**self.installer_options)
         }
 
         # Get individual installers
+        self.installer_ccusage = self.available_components["ccusage"]
         self.installer_config = self.available_components["config"]
         self.installer_dotfiles = self.available_components["dotfiles"]
         self.installer_python = self.available_components["python"]
@@ -84,7 +88,9 @@ class RemoteUbuntu(env.Environment):
         self.installer_jenkins = self.available_components["jenkins"]
         self.installer_navidrome = self.available_components["navidrome"]
         self.installer_kanboard = self.available_components["kanboard"]
+        self.installer_gh = self.available_components["gh"]
         self.installer_ghidra = self.available_components["ghidra"]
+        self.installer_ollama = self.available_components["ollama"]
 
     def setup(self):
 
