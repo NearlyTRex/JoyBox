@@ -56,6 +56,31 @@ def get_remote_json(
             logger.log_error(e, quit_program = True)
         return None
 
+# Get remote html
+def get_remote_html(
+    url,
+    headers = None,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+    try:
+        if verbose:
+            logger.log_info("Processing GET request to '%s'" % url)
+        import requests
+        if not headers:
+            headers = {}
+        get = requests.get(url, headers=headers, timeout=10)
+        if verbose:
+            logger.log_info("Got response: %s" % str(get.status_code))
+        if get.status_code == 200:
+            return get.text
+        return None
+    except Exception as e:
+        if exit_on_failure:
+            logger.log_error("Unable to process GET request to '%s'" % url)
+            logger.log_error(e, quit_program = True)
+        return None
+
 # Post remote json
 def post_remote_json(
     url,
