@@ -30,6 +30,7 @@ aptget[constants.EnvironmentType.LOCAL_UBUNTU] += [
     {"id": "file-roller", "name": "File Roller", "description": "Archive manager", "category": "Admin"},
     {"id": "fuseiso", "name": "FuseISO", "description": "Mount ISO images", "category": "Admin"},
     {"id": "jackd", "name": "JACK", "description": "Low-latency audio server", "category": "Admin"},
+    {"id": "pavucontrol", "name": "PulseAudio Volume Control", "description": "Audio volume control", "category": "Admin"},
     {"id": "pulseaudio-utils", "name": "PulseAudio Utils", "description": "PulseAudio command line tools", "category": "Admin"},
     {"id": "qdirstat", "name": "QDirStat", "description": "Disk usage statistics", "category": "Admin"},
     {"id": "thunar", "name": "Thunar", "description": "XFCE file manager", "category": "Admin"},
@@ -46,7 +47,10 @@ aptget[constants.EnvironmentType.LOCAL_UBUNTU] += [
     {"id": "ccache", "name": "ccache", "description": "Compiler cache for faster rebuilds", "category": "Devel"},
     {"id": "clang", "name": "Clang", "description": "LLVM C/C++ compiler", "category": "Devel"},
     {"id": "clang-format", "name": "clang-format", "description": "C/C++ code formatter", "category": "Devel"},
+    {"id": "clang-tidy", "name": "clang-tidy", "description": "C/C++ linter and static analysis", "category": "Devel"},
+    {"id": "clang-tools-18", "name": "Clang Tools 18", "description": "Clang 18 extra tools (scan-build, etc.)", "category": "Devel"},
     {"id": "cmake", "name": "CMake", "description": "Cross-platform build system", "category": "Devel"},
+    {"id": "cppcheck", "name": "Cppcheck", "description": "C/C++ static analysis tool", "category": "Devel"},
     {"id": "dkms", "name": "DKMS", "description": "Dynamic kernel module support", "category": "Devel"},
     {"id": "dos2unix", "name": "dos2unix", "description": "Line ending converter", "category": "Devel"},
     {"id": "dotnet-sdk-8.0", "name": ".NET SDK 8.0", "description": "Microsoft .NET SDK", "category": "Devel"},
@@ -97,6 +101,7 @@ aptget[constants.EnvironmentType.LOCAL_UBUNTU] += [
     {"id": "gedit", "name": "gedit", "description": "Text editor", "category": "Gnome"},
     {"id": "ghex", "name": "GHex", "description": "Hex editor", "category": "Gnome"},
     {"id": "gnome-screenshot", "name": "GNOME Screenshot", "description": "Screenshot tool", "category": "Gnome"},
+    {"id": "gnome-sound-recorder", "name": "GNOME Sound Recorder", "description": "Sound recorder", "category": "Gnome"},
 
     # Graphics
     {"id": "bchunk", "name": "bchunk", "description": "CD image converter", "category": "Graphics"},
