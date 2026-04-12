@@ -38,8 +38,8 @@ This command is useful when:
 | Option | Description |
 |--------|-------------|
 | `-i, --input_path` | Custom input path (only used with `-n` for a specific game) |
-| `-l, --source_type` | Source locker: `Remote` (default) or `Local` |
-| `-t, --locker_type` | Locker type: `Hetzner` or `Gdrive` (for remote sources) |
+| `-l, --locker_type` | Source locker: `Local`, `Hetzner`, `Gdrive`, `External`, or `All` |
+| `-b, --locker_base_dir` | Alternate locker base directory (overrides default locker path) |
 
 ### Generation Mode
 
@@ -71,7 +71,7 @@ build_game_json_files -u Updates -c Nintendo -s "Nintendo Switch" -n "Pokemon Le
 Build JSON files for all Nintendo Switch ROMs from the remote locker:
 
 ```bash
-build_game_json_files -c Nintendo -s "Nintendo Switch" -l Remote -t Hetzner
+build_game_json_files -c Nintendo -s "Nintendo Switch" -l Hetzner
 ```
 
 ### Build JSON for all DLC
@@ -133,8 +133,7 @@ build_game_json_files -c Nintendo -s "Nintendo Switch" -l Local
 
 - The source locker must contain the game files for the JSON to be built
 - Existing JSON files are updated, not overwritten
-- Use `-l Local` when building from your local locker, `-l Remote` for cloud storage
-- The `-t` locker type is only needed when using `-l Remote`
+- Use `-l Local` when building from your local locker, or `-l Hetzner` / `-l Gdrive` for cloud storage
 
 ## See Also
 

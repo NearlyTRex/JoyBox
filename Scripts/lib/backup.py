@@ -55,9 +55,15 @@ def copy_files_normally(
     show_progress = False,
     skip_existing = False,
     skip_identical = False,
+    skip_on_error = False,
+    error_log_path = None,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
+
+    # Init error count
+    per_file_exit = exit_on_failure and not skip_on_error
+    failed_count = 0
 
     # Look at non-excluded files in the input base path
     for src_file in paths.build_file_list(input_base_path, excludes = exclude_paths, use_relative_paths = True):
@@ -71,12 +77,24 @@ def copy_files_normally(
             show_progress = show_progress,
             skip_existing = skip_existing,
             skip_identical = skip_identical,
+            skip_on_error = skip_on_error,
+            error_log_path = error_log_path,
             verbose = verbose,
             pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
+            exit_on_failure = per_file_exit)
         if not success:
+            if skip_on_error:
+                failed_count += 1
+                fileops.report_fileio_error(src_path, dest_path, error_log_path, verbose, pretend_run)
+                continue
             logger.log_error("Unable to copy file '%s'" % src_path)
             return False
+
+    # Check errors
+    if skip_on_error and failed_count > 0:
+        logger.log_warning("copy_files_normally: %d file(s) skipped due to errors%s" % (
+            failed_count,
+            (" (logged to %s)" % error_log_path) if error_log_path else ""))
 
     # Should be successful
     return True
@@ -307,6 +325,8 @@ def copy_files(
     show_progress = False,
     skip_existing = False,
     skip_identical = False,
+    skip_on_error = False,
+    error_log_path = None,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -324,6 +344,8 @@ def copy_files(
             show_progress = show_progress,
             skip_existing = skip_existing,
             skip_identical = skip_identical,
+            skip_on_error = skip_on_error,
+            error_log_path = error_log_path,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)

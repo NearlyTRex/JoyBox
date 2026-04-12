@@ -118,6 +118,8 @@ def main():
             passphrase_locker = args.source_locker
         else:
             passphrase_locker = None
+        skip_on_error = not args.exit_on_failure
+        error_log_path = paths.join_paths(dest_file_root, "copy_errors.txt") if skip_on_error else None
         backup.copy_files(
             input_base_path = source_file_root,
             output_base_path = dest_file_root,
@@ -128,6 +130,8 @@ def main():
             show_progress = True,
             skip_existing = args.skip_existing,
             skip_identical = args.skip_identical,
+            skip_on_error = skip_on_error,
+            error_log_path = error_log_path,
             verbose = args.verbose,
             pretend_run = args.pretend_run,
             exit_on_failure = args.exit_on_failure)

@@ -19,6 +19,30 @@ import strings
 import system
 
 ###########################################################
+# Error handlers
+###########################################################
+
+# Report a per-file I/O failure during a bulk copy/move.
+# Removes any partial destination (so a half-written file doesn't masquerade as a success)
+# and appends the source path to an optional error log. Used by the bulk copy/move helpers
+# when skip_on_error is enabled so transient I/O failures (e.g. a failing USB disk) don't
+# abort the whole run.
+def report_fileio_error(src_path, dest_path = None, error_log_path = None, verbose = False, pretend_run = False):
+    logger.log_warning("Skipping file after I/O error: '%s'" % src_path)
+    if not pretend_run and dest_path and paths.does_path_exist(dest_path):
+        remove_file(
+            src = dest_path,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = False)
+    if error_log_path:
+        try:
+            with open(error_log_path, "a", encoding = "utf-8") as f:
+                f.write("%s\n" % src_path)
+        except OSError as e:
+            logger.log_warning("Unable to write error log '%s': %s" % (error_log_path, e))
+
+###########################################################
 # File checking utilities
 ###########################################################
 
@@ -353,6 +377,8 @@ def copy_file_or_directory(
     dest,
     skip_existing = False,
     skip_identical = False,
+    skip_on_error = False,
+    error_log_path = None,
     case_sensitive_paths = True,
     verbose = False,
     pretend_run = False,
@@ -368,7 +394,7 @@ def copy_file_or_directory(
                 second = dest,
                 case_sensitive_paths = case_sensitive_paths,
                 verbose = verbose,
-                exit_on_failure = exit_on_failure):
+                exit_on_failure = exit_on_failure and not skip_on_error):
                 if verbose:
                     logger.log_info("Skipping (identical): '%s'" % dest)
                 return True
@@ -381,6 +407,9 @@ def copy_file_or_directory(
                 shutil.copy(src, dest)
         return True
     except Exception as e:
+        if skip_on_error:
+            report_fileio_error(src, dest, error_log_path, verbose, pretend_run)
+            return False
         if exit_on_failure:
             logger.log_error("Unable to copy %s to %s" % (src, dest))
             logger.log_error(e)
@@ -393,6 +422,8 @@ def move_file_or_directory(
     dest,
     skip_existing = False,
     skip_identical = False,
+    skip_on_error = False,
+    error_log_path = None,
     case_sensitive_paths = True,
     verbose = False,
     pretend_run = False,
@@ -406,7 +437,7 @@ def move_file_or_directory(
                 second = dest,
                 case_sensitive_paths = case_sensitive_paths,
                 verbose = verbose,
-                exit_on_failure = exit_on_failure):
+                exit_on_failure = exit_on_failure and not skip_on_error):
                 return True
         if verbose:
             logger.log_info("Moving %s to %s" % (src, dest))
@@ -414,6 +445,9 @@ def move_file_or_directory(
             shutil.move(src, dest)
         return True
     except Exception as e:
+        if skip_on_error:
+            report_fileio_error(src, dest, error_log_path, verbose, pretend_run)
+            return False
         if exit_on_failure:
             logger.log_error("Unable to move %s to %s" % (src, dest))
             logger.log_error(e)
@@ -428,6 +462,8 @@ def transfer_file(
     show_progress = False,
     skip_existing = False,
     skip_identical = False,
+    skip_on_error = False,
+    error_log_path = None,
     case_sensitive_paths = True,
     verbose = False,
     pretend_run = False,
@@ -441,7 +477,7 @@ def transfer_file(
                 second = dest,
                 case_sensitive_paths = case_sensitive_paths,
                 verbose = verbose,
-                exit_on_failure = exit_on_failure):
+                exit_on_failure = exit_on_failure and not skip_on_error):
                 return True
         if verbose:
             logger.log_info("Transferring %s to %s" % (src, dest))
@@ -469,6 +505,9 @@ def transfer_file(
                 os.remove(src)
         return True
     except Exception as e:
+        if skip_on_error:
+            report_fileio_error(src, dest, error_log_path, verbose, pretend_run)
+            return False
         if exit_on_failure:
             logger.log_error("Unable to transfer %s to %s" % (src, dest))
             logger.log_error(e)
@@ -583,6 +622,8 @@ def copy_contents(
     show_progress = False,
     skip_existing = False,
     skip_identical = False,
+    skip_on_error = False,
+    error_log_path = None,
     case_sensitive_paths = True,
     ignore_symlinks = False,
     follow_symlink_dirs = False,
@@ -598,6 +639,8 @@ def copy_contents(
         use_relative_paths = True,
         ignore_symlinks = ignore_symlinks,
         follow_symlink_dirs = follow_symlink_dirs)
+    per_file_exit = exit_on_failure and not skip_on_error
+    failed_count = 0
     for file in file_list:
         input_file = os.path.join(src, file)
         output_file = os.path.join(dest, file)
@@ -606,8 +649,12 @@ def copy_contents(
             src = output_dir,
             verbose = verbose,
             pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
+            exit_on_failure = per_file_exit)
         if not success:
+            if skip_on_error:
+                failed_count += 1
+                report_fileio_error(input_file, None, error_log_path, verbose, pretend_run)
+                continue
             return False
         success = transfer_file(
             src = input_file,
@@ -618,9 +665,17 @@ def copy_contents(
             case_sensitive_paths = case_sensitive_paths,
             verbose = verbose,
             pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
+            exit_on_failure = per_file_exit)
         if not success:
+            if skip_on_error:
+                failed_count += 1
+                report_fileio_error(input_file, output_file, error_log_path, verbose, pretend_run)
+                continue
             return False
+    if skip_on_error and failed_count > 0:
+        logger.log_warning("copy_contents: %d file(s) skipped due to errors%s" % (
+            failed_count,
+            (" (logged to %s)" % error_log_path) if error_log_path else ""))
     return True
 
 # Move contents
@@ -630,6 +685,8 @@ def move_contents(
     show_progress = False,
     skip_existing = False,
     skip_identical = False,
+    skip_on_error = False,
+    error_log_path = None,
     case_sensitive_paths = True,
     ignore_symlinks = False,
     follow_symlink_dirs = False,
@@ -645,6 +702,8 @@ def move_contents(
         use_relative_paths = True,
         ignore_symlinks = ignore_symlinks,
         follow_symlink_dirs = follow_symlink_dirs)
+    per_file_exit = exit_on_failure and not skip_on_error
+    failed_count = 0
     for file in file_list:
         input_file = os.path.join(src, file)
         output_file = os.path.join(dest, file)
@@ -653,8 +712,12 @@ def move_contents(
             src = output_dir,
             verbose = verbose,
             pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
+            exit_on_failure = per_file_exit)
         if not success:
+            if skip_on_error:
+                failed_count += 1
+                report_fileio_error(input_file, None, error_log_path, verbose, pretend_run)
+                continue
             return False
         success = transfer_file(
             src = input_file,
@@ -666,9 +729,17 @@ def move_contents(
             case_sensitive_paths = case_sensitive_paths,
             verbose = verbose,
             pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
+            exit_on_failure = per_file_exit)
         if not success:
+            if skip_on_error:
+                failed_count += 1
+                report_fileio_error(input_file, output_file, error_log_path, verbose, pretend_run)
+                continue
             return False
+    if skip_on_error and failed_count > 0:
+        logger.log_warning("move_contents: %d file(s) skipped due to errors%s" % (
+            failed_count,
+            (" (logged to %s)" % error_log_path) if error_log_path else ""))
     return True
 
 # Copy globbed files
@@ -678,6 +749,8 @@ def copy_globbed_files(
     show_progress = False,
     skip_existing = False,
     skip_identical = False,
+    skip_on_error = False,
+    error_log_path = None,
     case_sensitive_paths = True,
     verbose = False,
     pretend_run = False,
@@ -686,26 +759,42 @@ def copy_globbed_files(
     glob_files = paths.convert_file_list_to_relative_paths(
         file_list = glob.glob(glob_pattern),
         base_dir = glob_source_dir)
+    per_file_exit = exit_on_failure and not skip_on_error
+    failed_count = 0
     for glob_file in glob_files:
+        src_path = os.path.join(glob_source_dir, glob_file)
+        dest_path = os.path.join(dest_dir, glob_file)
         success = make_directory(
             src = os.path.join(dest_dir, paths.get_filename_directory(glob_file)),
             verbose = verbose,
             pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
+            exit_on_failure = per_file_exit)
         if not success:
+            if skip_on_error:
+                failed_count += 1
+                report_fileio_error(src_path, None, error_log_path, verbose, pretend_run)
+                continue
             return False
         success = transfer_file(
-            src = os.path.join(glob_source_dir, glob_file),
-            dest = os.path.join(dest_dir, glob_file),
+            src = src_path,
+            dest = dest_path,
             show_progress = show_progress,
             skip_existing = skip_existing,
             skip_identical = skip_identical,
             case_sensitive_paths = case_sensitive_paths,
             verbose = verbose,
             pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
+            exit_on_failure = per_file_exit)
         if not success:
+            if skip_on_error:
+                failed_count += 1
+                report_fileio_error(src_path, dest_path, error_log_path, verbose, pretend_run)
+                continue
             return False
+    if skip_on_error and failed_count > 0:
+        logger.log_warning("copy_globbed_files: %d file(s) skipped due to errors%s" % (
+            failed_count,
+            (" (logged to %s)" % error_log_path) if error_log_path else ""))
     return True
 
 # Move globbed files
@@ -715,6 +804,8 @@ def move_globbed_files(
     show_progress = False,
     skip_existing = False,
     skip_identical = False,
+    skip_on_error = False,
+    error_log_path = None,
     case_sensitive_paths = True,
     verbose = False,
     pretend_run = False,
@@ -723,17 +814,25 @@ def move_globbed_files(
     glob_files = paths.convert_file_list_to_relative_paths(
         file_list = glob.glob(glob_pattern),
         base_dir = glob_source_dir)
+    per_file_exit = exit_on_failure and not skip_on_error
+    failed_count = 0
     for glob_file in glob_files:
+        src_path = os.path.join(glob_source_dir, glob_file)
+        dest_path = os.path.join(dest_dir, glob_file)
         success = make_directory(
             src = os.path.join(dest_dir, paths.get_filename_directory(glob_file)),
             verbose = verbose,
             pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
+            exit_on_failure = per_file_exit)
         if not success:
+            if skip_on_error:
+                failed_count += 1
+                report_fileio_error(src_path, None, error_log_path, verbose, pretend_run)
+                continue
             return False
         success = transfer_file(
-            src = os.path.join(glob_source_dir, glob_file),
-            dest = os.path.join(dest_dir, glob_file),
+            src = src_path,
+            dest = dest_path,
             delete_afterwards = True,
             show_progress = show_progress,
             skip_existing = skip_existing,
@@ -741,9 +840,17 @@ def move_globbed_files(
             case_sensitive_paths = case_sensitive_paths,
             verbose = verbose,
             pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
+            exit_on_failure = per_file_exit)
         if not success:
+            if skip_on_error:
+                failed_count += 1
+                report_fileio_error(src_path, dest_path, error_log_path, verbose, pretend_run)
+                continue
             return False
+    if skip_on_error and failed_count > 0:
+        logger.log_warning("move_globbed_files: %d file(s) skipped due to errors%s" % (
+            failed_count,
+            (" (logged to %s)" % error_log_path) if error_log_path else ""))
     return True
 
 ###########################################################
@@ -757,6 +864,8 @@ def smart_copy(
     show_progress = False,
     skip_existing = False,
     skip_identical = False,
+    skip_on_error = False,
+    error_log_path = None,
     case_sensitive_paths = True,
     ignore_symlinks = False,
     follow_symlink_dirs = False,
@@ -777,6 +886,8 @@ def smart_copy(
             show_progress = show_progress,
             skip_existing = skip_existing,
             skip_identical = skip_identical,
+            skip_on_error = skip_on_error,
+            error_log_path = error_log_path,
             case_sensitive_paths = case_sensitive_paths,
             verbose = verbose,
             pretend_run = pretend_run,
@@ -789,6 +900,8 @@ def smart_copy(
                 show_progress = show_progress,
                 skip_existing = skip_existing,
                 skip_identical = skip_identical,
+                skip_on_error = skip_on_error,
+                error_log_path = error_log_path,
                 case_sensitive_paths = case_sensitive_paths,
                 ignore_symlinks = ignore_symlinks,
                 follow_symlink_dirs = follow_symlink_dirs,
@@ -802,6 +915,8 @@ def smart_copy(
                 show_progress = show_progress,
                 skip_existing = skip_existing,
                 skip_identical = skip_identical,
+                skip_on_error = skip_on_error,
+                error_log_path = error_log_path,
                 case_sensitive_paths = case_sensitive_paths,
                 verbose = verbose,
                 pretend_run = pretend_run,
@@ -815,6 +930,8 @@ def smart_move(
     show_progress = False,
     skip_existing = False,
     skip_identical = False,
+    skip_on_error = False,
+    error_log_path = None,
     case_sensitive_paths = True,
     ignore_symlinks = False,
     follow_symlink_dirs = False,
@@ -835,6 +952,8 @@ def smart_move(
             show_progress = show_progress,
             skip_existing = skip_existing,
             skip_identical = skip_identical,
+            skip_on_error = skip_on_error,
+            error_log_path = error_log_path,
             case_sensitive_paths = case_sensitive_paths,
             verbose = verbose,
             pretend_run = pretend_run,
@@ -847,6 +966,8 @@ def smart_move(
                 show_progress = show_progress,
                 skip_existing = skip_existing,
                 skip_identical = skip_identical,
+                skip_on_error = skip_on_error,
+                error_log_path = error_log_path,
                 case_sensitive_paths = case_sensitive_paths,
                 ignore_symlinks = ignore_symlinks,
                 follow_symlink_dirs = follow_symlink_dirs,
@@ -861,6 +982,8 @@ def smart_move(
                 show_progress = show_progress,
                 skip_existing = skip_existing,
                 skip_identical = skip_identical,
+                skip_on_error = skip_on_error,
+                error_log_path = error_log_path,
                 case_sensitive_paths = case_sensitive_paths,
                 verbose = verbose,
                 pretend_run = pretend_run,
@@ -875,6 +998,8 @@ def smart_transfer(
     show_progress = False,
     skip_existing = False,
     skip_identical = False,
+    skip_on_error = False,
+    error_log_path = None,
     case_sensitive_paths = True,
     ignore_symlinks = False,
     follow_symlink_dirs = False,
@@ -888,6 +1013,8 @@ def smart_transfer(
             show_progress = show_progress,
             skip_existing = skip_existing,
             skip_identical = skip_identical,
+            skip_on_error = skip_on_error,
+            error_log_path = error_log_path,
             case_sensitive_paths = case_sensitive_paths,
             ignore_symlinks = ignore_symlinks,
             follow_symlink_dirs = follow_symlink_dirs,
@@ -901,6 +1028,8 @@ def smart_transfer(
             show_progress = show_progress,
             skip_existing = skip_existing,
             skip_identical = skip_identical,
+            skip_on_error = skip_on_error,
+            error_log_path = error_log_path,
             case_sensitive_paths = case_sensitive_paths,
             ignore_symlinks = ignore_symlinks,
             follow_symlink_dirs = follow_symlink_dirs,

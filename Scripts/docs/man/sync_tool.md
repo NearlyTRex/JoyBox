@@ -5,7 +5,7 @@ Synchronize files between local storage and remote lockers (cloud storage).
 ## Synopsis
 
 ```
-sync_tool -a <action> -t <locker_type> [options]
+sync_tool -a <action> -l <locker_type> [options]
 ```
 
 ## Description
@@ -37,7 +37,7 @@ The tool reads locker configuration (remote name, paths, credentials) from user 
 | Option | Description |
 |--------|-------------|
 | `-a, --action` | Sync action to perform (see Actions above) |
-| `-t, --locker_type` | Locker to sync with: `Hetzner` or `Gdrive` |
+| `-l, --locker_type` | Locker to sync with: `Local`, `Hetzner`, `Gdrive`, `External`, or `All` |
 
 ### Sync Behavior
 
@@ -82,7 +82,7 @@ The tool reads locker configuration (remote name, paths, credentials) from user 
 Set up the remote connection for the first time:
 
 ```bash
-sync_tool -a Init -t Hetzner
+sync_tool -a Init -l Hetzner
 ```
 
 ### Download all files from remote
@@ -90,7 +90,7 @@ sync_tool -a Init -t Hetzner
 Download everything from remote to local (excluding ROMs/DLC/Updates):
 
 ```bash
-sync_tool -a Download -t Hetzner
+sync_tool -a Download -l Hetzner
 ```
 
 ### Upload local changes to remote
@@ -98,7 +98,7 @@ sync_tool -a Download -t Hetzner
 Upload local files to remote:
 
 ```bash
-sync_tool -a Upload -t Hetzner
+sync_tool -a Upload -l Hetzner
 ```
 
 ### Pull only newer files
@@ -106,7 +106,7 @@ sync_tool -a Upload -t Hetzner
 Download only files that are newer on remote:
 
 ```bash
-sync_tool -a Pull -t Hetzner
+sync_tool -a Pull -l Hetzner
 ```
 
 ### Push only newer files
@@ -114,7 +114,7 @@ sync_tool -a Pull -t Hetzner
 Upload only files that are newer locally:
 
 ```bash
-sync_tool -a Push -t Hetzner
+sync_tool -a Push -l Hetzner
 ```
 
 ### Bidirectional merge
@@ -122,7 +122,7 @@ sync_tool -a Push -t Hetzner
 Sync changes both ways (newest wins):
 
 ```bash
-sync_tool -a Merge -t Hetzner
+sync_tool -a Merge -l Hetzner
 ```
 
 ### Force full resync
@@ -130,7 +130,7 @@ sync_tool -a Merge -t Hetzner
 Force a complete bidirectional resync:
 
 ```bash
-sync_tool -a Merge -t Hetzner -e
+sync_tool -a Merge -l Hetzner -e
 ```
 
 ### Compare local and remote
@@ -138,7 +138,7 @@ sync_tool -a Merge -t Hetzner -e
 Generate diff files showing what's different:
 
 ```bash
-sync_tool -a Diff -t Hetzner
+sync_tool -a Diff -l Hetzner
 ```
 
 This creates files like `diff_missing_src.txt` (files only on remote) and `diff_missing_dest.txt` (files only locally).
@@ -148,7 +148,7 @@ This creates files like `diff_missing_src.txt` (files only on remote) and `diff_
 Compare using only file size and modification time:
 
 ```bash
-sync_tool -a Diff -t Hetzner -q
+sync_tool -a Diff -l Hetzner -q
 ```
 
 ### Sync based on diff files
@@ -156,7 +156,7 @@ sync_tool -a Diff -t Hetzner -q
 After reviewing diff files, sync the differences:
 
 ```bash
-sync_tool -a DiffSync -t Hetzner --diff_dir /path/to/diff/files
+sync_tool -a DiffSync -l Hetzner --diff_dir /path/to/diff/files
 ```
 
 ### Move remote-only files to recycle
@@ -164,7 +164,7 @@ sync_tool -a DiffSync -t Hetzner --diff_dir /path/to/diff/files
 Instead of downloading files that only exist on remote, move them to a recycle bin:
 
 ```bash
-sync_tool -a DiffSync -t Hetzner -r
+sync_tool -a DiffSync -l Hetzner -r
 ```
 
 ### Empty the remote recycle bin
@@ -172,7 +172,7 @@ sync_tool -a DiffSync -t Hetzner -r
 Permanently delete files in the remote recycle bin:
 
 ```bash
-sync_tool -a EmptyRecycle -t Hetzner
+sync_tool -a EmptyRecycle -l Hetzner
 ```
 
 ### List remote files
@@ -180,7 +180,7 @@ sync_tool -a EmptyRecycle -t Hetzner
 List all files on the remote:
 
 ```bash
-sync_tool -a List -t Hetzner
+sync_tool -a List -l Hetzner
 ```
 
 ### Mount remote as filesystem
@@ -188,7 +188,7 @@ sync_tool -a List -t Hetzner
 Mount the remote storage as a local directory:
 
 ```bash
-sync_tool -a Mount -t Hetzner
+sync_tool -a Mount -l Hetzner
 ```
 
 ### Dry run
@@ -196,7 +196,7 @@ sync_tool -a Mount -t Hetzner
 Preview what would happen without making changes:
 
 ```bash
-sync_tool -a Upload -t Hetzner -p -v
+sync_tool -a Upload -l Hetzner -p -v
 ```
 
 ### Include ROMs in sync
@@ -204,7 +204,7 @@ sync_tool -a Upload -t Hetzner -p -v
 Override the default excludes to include ROMs:
 
 ```bash
-sync_tool -a Download -t Hetzner --excludes ""
+sync_tool -a Download -l Hetzner --excludes ""
 ```
 
 ## Default Excludes

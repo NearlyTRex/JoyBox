@@ -5,7 +5,7 @@ Encrypt and upload game files to a remote locker.
 ## Synopsis
 
 ```
-upload_game_files -c <category> -s <subcategory> -n <game_name> -t <locker_type> [options]
+upload_game_files -c <category> -s <subcategory> -n <game_name> -d <dest_locker> [options]
 ```
 
 ## Description
@@ -35,8 +35,8 @@ Encrypted files use MD5-hashed filenames with the `.enc` extension. The original
 | Option | Description |
 |--------|-------------|
 | `-i, --input_path` | Custom input path (overrides default game directory) |
-| `-l, --source_type` | Source location: `Local` (default) or `Remote` |
-| `-t, --locker_type` | Target locker: `Hetzner` or `Gdrive` |
+| `-l, --source_locker` | Source locker: `Local` (default), `Hetzner`, `Gdrive`, `External` |
+| `-d, --dest_locker` | Destination locker: `Hetzner`, `Gdrive`, etc. |
 
 ### Generation Mode
 
@@ -60,7 +60,7 @@ Encrypted files use MD5-hashed filenames with the `.enc` extension. The original
 Upload a Nintendo Switch game to Hetzner:
 
 ```bash
-upload_game_files -c Nintendo -s "Nintendo Switch" -n "Game Name" -t Hetzner
+upload_game_files -c Nintendo -s "Nintendo Switch" -n "Game Name" -d Hetzner
 ```
 
 ### Upload a Steam game
@@ -68,7 +68,7 @@ upload_game_files -c Nintendo -s "Nintendo Switch" -n "Game Name" -t Hetzner
 Upload a PC game from the Steam subcategory:
 
 ```bash
-upload_game_files -c Computer -s Steam -n "Game Name" -t Hetzner
+upload_game_files -c Computer -s Steam -n "Game Name" -d Hetzner
 ```
 
 ### Upload DLC
@@ -76,7 +76,7 @@ upload_game_files -c Computer -s Steam -n "Game Name" -t Hetzner
 Upload DLC files for a game:
 
 ```bash
-upload_game_files -u DLC -c Nintendo -s "Nintendo Switch" -n "Game Name" -t Hetzner
+upload_game_files -u DLC -c Nintendo -s "Nintendo Switch" -n "Game Name" -d Hetzner
 ```
 
 ### Upload from custom path
@@ -84,7 +84,7 @@ upload_game_files -u DLC -c Nintendo -s "Nintendo Switch" -n "Game Name" -t Hetz
 Upload files from a specific directory:
 
 ```bash
-upload_game_files -i /path/to/game/files -c Nintendo -s "Nintendo Switch" -n "Game Name" -t Hetzner
+upload_game_files -i /path/to/game/files -c Nintendo -s "Nintendo Switch" -n "Game Name" -d Hetzner
 ```
 
 ### Dry run
@@ -92,7 +92,7 @@ upload_game_files -i /path/to/game/files -c Nintendo -s "Nintendo Switch" -n "Ga
 Preview what would be uploaded without making changes:
 
 ```bash
-upload_game_files -c Nintendo -s "Nintendo Switch" -n "Game Name" -t Hetzner -p -v
+upload_game_files -c Nintendo -s "Nintendo Switch" -n "Game Name" -d Hetzner -p -v
 ```
 
 ## File Structure

@@ -34,8 +34,9 @@ When using encryption or decryption, the passphrase is retrieved from the config
 | Option | Description |
 |--------|-------------|
 | `-r, --cryption_type` | `None` (default), `Encrypt`, or `Decrypt` |
-| `-k, --locker_type` | Locker for passphrase: `Hetzner` (default) or `Gdrive` |
-| `-d, --delete_original` | Delete source files after encrypt/decrypt |
+| `--delete_original` | Delete source files after encrypt/decrypt |
+
+The encryption passphrase is looked up from the source or destination locker's configuration (the non-`Local` one, if any), not a separate flag.
 
 ### File Handling
 
@@ -55,12 +56,12 @@ These options build paths relative to the locker root directory. When no explici
 | `-c, --game_category` | Category (e.g., `Nintendo`, `Sony`, `Computer`) |
 | `-s, --game_subcategory` | Subcategory (e.g., `Nintendo Switch`, `Steam`) |
 | `-g, --game_offset` | Additional path offset |
-| `-l, --source_type` | Source location: `Local` (default) or `Remote` (mounted) |
-| `-q, --destination_type` | Destination location: `Local` (default) or `Remote` (mounted) |
+| `-l, --source_locker` | Source locker: `Local` (default), `Hetzner`, `Gdrive`, `External` |
+| `-d, --dest_locker` | Destination locker: `Local` (default), `Hetzner`, `Gdrive`, `External` |
 | `--input_locker_base` | Alternate locker base for source (game paths will be resolved under this) |
 | `--output_locker_base` | Alternate locker base for destination (game paths will be mirrored under this) |
 
-**Note:** The `Remote` source/destination type requires the remote locker to be mounted first using `sync_tool -a Mount`. This allows copying between local and mounted remote storage.
+**Note:** Non-`Local` source/destination lockers require the remote locker to be mounted first using `sync_tool -a Mount -l <locker>`. This allows copying between local and mounted remote storage.
 
 **Note:** Use `--input_locker_base` and `--output_locker_base` to specify alternate locker roots (e.g., external drives) while still using game path resolution. The game path structure will be resolved/mirrored under the specified bases.
 
@@ -70,7 +71,7 @@ These options build paths relative to the locker root directory. When no explici
 |--------|-------------|
 | `-v, --verbose` | Enable verbose output |
 | `-p, --pretend_run` | Dry run without making changes |
-| `-x, --exit_on_failure` | Exit immediately on any error |
+| `-x, --exit_on_failure` | Exit immediately on any error. When unset (the default), per-file I/O errors during a `Copy` are skipped — the partial destination is removed, the source path is appended to `<dest>/copy_errors.txt`, and the run continues. |
 | `--no-preview` | Skip the confirmation prompt |
 
 ## Examples
@@ -128,7 +129,7 @@ backup_tool -i /source -o /destination -p -v
 Decrypt files and remove the encrypted originals after successful decryption:
 
 ```bash
-backup_tool -i /encrypted -o /decrypted -r Decrypt -d
+backup_tool -i /encrypted -o /decrypted -r Decrypt --delete_original
 ```
 
 ### Copy from mounted remote to local
@@ -137,10 +138,10 @@ First mount the remote locker, then copy and decrypt files:
 
 ```bash
 # Mount the remote locker
-sync_tool -a Mount -t Hetzner
+sync_tool -a Mount -l Hetzner
 
 # Copy from remote (mounted) to local, decrypting in the process
-backup_tool -l Remote -q Local -u Roms -c Nintendo -s "Nintendo Switch" -r Decrypt
+backup_tool -l Hetzner -d Local -u Roms -c Nintendo -s "Nintendo Switch" -r Decrypt
 ```
 
 ### Copy from local to mounted remote
@@ -149,10 +150,10 @@ Encrypt and copy local files to the mounted remote:
 
 ```bash
 # Mount the remote locker
-sync_tool -a Mount -t Hetzner
+sync_tool -a Mount -l Hetzner
 
 # Copy from local to remote (mounted), encrypting in the process
-backup_tool -l Local -q Remote -u Roms -c Nintendo -s "Nintendo Switch" -r Encrypt
+backup_tool -l Local -d Hetzner -u Roms -c Nintendo -s "Nintendo Switch" -r Encrypt
 ```
 
 ### Mirror to an external drive
@@ -161,7 +162,7 @@ Decrypt files from local locker to an external drive, mirroring the directory st
 
 ```bash
 # Decrypt Xbox updates to external drive, maintaining the same path structure
-backup_tool -l Local --output_locker_base /media/user/External -u Updates -c Microsoft -s "Microsoft Xbox" -g "Halo 2 (USA)" -r Decrypt -k Hetzner
+backup_tool -l Hetzner --output_locker_base /media/user/External -u Updates -c Microsoft -s "Microsoft Xbox" -g "Halo 2 (USA)" -r Decrypt
 
 # Source: ~/Locker/Gaming/Updates/Microsoft/Microsoft Xbox/Halo 2 (USA)
 # Destination: /media/user/External/Gaming/Updates/Microsoft/Microsoft Xbox/Halo 2 (USA)
