@@ -33,8 +33,8 @@ host = HETZNER_HOST
 user = HETZNER_USER
 pass = HETZNER_PASS
 shell_type = unix
-md5sum_command = none
-sha1sum_command = none
+md5sum_command = md5sum
+sha1sum_command = sha1sum
 """
 
 # RClone tool
