@@ -64,7 +64,7 @@ def main():
     remote_path = locker_info.get_remote_path()
     remote_token = locker_info.get_token()
     remote_config = locker_info.get_config()
-    local_path = locker_info.get_mount_path()
+    local_path = lockerinfo.LockerInfo(config.LockerType.LOCAL).get_mount_path()
     mount_path = locker_info.get_mount_path()
     mount_flags = locker_info.get_mount_flags()
 
@@ -82,11 +82,11 @@ def main():
     # Validate local path exists for actions that need it
     if args.action in actions_requiring_local_path:
         if not local_path:
-            logger.log_error("Action '%s' requires a mount path, but none is configured for locker '%s'" % (
-                args.action, args.locker_type), quit_program = True)
+            logger.log_error("Action '%s' requires a local path, but none is configured for the Local locker" % (
+                args.action), quit_program = True)
         if not paths.does_path_exist(local_path):
-            logger.log_error("Action '%s' requires mount path to exist: %s\nTry mounting first with: sync_tool -a Mount -l %s" % (
-                args.action, local_path, args.locker_type), quit_program = True)
+            logger.log_error("Action '%s' requires the local locker path to exist: %s" % (
+                args.action, local_path), quit_program = True)
 
     # Get excludes from CLI or locker config
     if args.excludes:
