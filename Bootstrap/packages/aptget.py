@@ -34,6 +34,7 @@ aptget[constants.EnvironmentType.LOCAL_UBUNTU] += [
     {"id": "pulseaudio-utils", "name": "PulseAudio Utils", "description": "PulseAudio command line tools", "category": "Admin"},
     {"id": "qdirstat", "name": "QDirStat", "description": "Disk usage statistics", "category": "Admin"},
     {"id": "thunar", "name": "Thunar", "description": "XFCE file manager", "category": "Admin"},
+    {"id": "unrar", "name": "unrar", "description": "Extract RAR archives", "category": "Admin"},
     {"id": "unzip", "name": "unzip", "description": "Extract ZIP archives", "category": "Admin"},
     {"id": "zip", "name": "zip", "description": "Create ZIP archives", "category": "Admin"},
     {"id": "zsh", "name": "Zsh", "description": "Z shell", "category": "Admin"},
@@ -283,6 +284,7 @@ aptget[constants.EnvironmentType.REMOTE_UBUNTU] += [
     # Admin
     {"id": "7zip", "name": "7-Zip", "description": "High compression file archiver", "category": "Admin"},
     {"id": "apt-file", "name": "apt-file", "description": "Search for files in apt packages", "category": "Admin"},
+    {"id": "unrar", "name": "unrar", "description": "Extract RAR archives", "category": "Admin"},
     {"id": "unzip", "name": "unzip", "description": "Extract ZIP archives", "category": "Admin"},
     {"id": "zip", "name": "zip", "description": "Create ZIP archives", "category": "Admin"},
 

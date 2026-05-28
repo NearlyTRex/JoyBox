@@ -59,6 +59,7 @@ from .steamless import Steamless
 from .sunshine import Sunshine
 from .tar import Tar
 from .threedsromtool import ThreeDSRomTool
+from .unrar import Unrar
 from .vkd3d import VKD3D
 from .vkd3d import get_libs32 as get_vkd3d_libs32
 from .vkd3d import get_libs64 as get_vkd3d_libs64
@@ -133,6 +134,7 @@ def get_tool_map():
     add_instance(Sunshine)
     add_instance(Tar)
     add_instance(ThreeDSRomTool)
+    add_instance(Unrar)
     add_instance(VKD3D)
     add_instance(Wad2Bin)
     add_instance(Wine)

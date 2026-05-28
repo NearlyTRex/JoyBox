@@ -400,6 +400,15 @@ else:
     ini_defaults["Tools.7Zip"]["7z_exe"] = "7zz"
     ini_defaults["Tools.7Zip"]["7z_install_dir"] = "/usr/bin"
 
+# Tools.Unrar
+ini_defaults["Tools.Unrar"] = {}
+if util.is_windows_platform():
+    ini_defaults["Tools.Unrar"]["unrar_exe"] = "UnRAR.exe"
+    ini_defaults["Tools.Unrar"]["unrar_install_dir"] = "%ProgramFiles%\\WinRAR"
+else:
+    ini_defaults["Tools.Unrar"]["unrar_exe"] = "unrar"
+    ini_defaults["Tools.Unrar"]["unrar_install_dir"] = "/usr/bin"
+
 # Tools.Docker
 ini_defaults["Tools.Docker"] = {}
 if util.is_windows_platform():

@@ -116,6 +116,8 @@ def is_extractable_archive_type(archive_type):
         return True
     if archive_type in config.Archive7zFileType.members():
         return True
+    if archive_type in config.ArchiveRarFileType.members():
+        return True
     if archive_type in config.ArchiveTarballFileType.members():
         return True
     if archive_type in config.ArchiveDiscFileType.members():
@@ -394,6 +396,12 @@ def extract_archive(
         if not archive_tool:
             logger.log_error("Tar was not found")
             return False
+    elif is_rar_archive(archive_file):
+        if programs.is_tool_installed("Unrar"):
+            archive_tool = programs.get_tool_program("Unrar")
+        if not archive_tool:
+            logger.log_error("Unrar was not found")
+            return False
     else:
         if programs.is_tool_installed("7-Zip"):
             archive_tool = programs.get_tool_program("7-Zip")
@@ -412,6 +420,14 @@ def extract_archive(
         logger.log_error("Unable to extract archives of type %s" % archive_type.val())
         return False
 
+    # Create destination directory
+    if is_rar_archive(archive_file):
+        fileops.make_directory(
+            src = extract_dir,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+
     # Get extract command
     extract_cmd = []
     if is_tarball_archive(archive_file):
@@ -420,6 +436,24 @@ def extract_archive(
             "xvf",
             archive_file,
             "-C", extract_dir
+        ]
+    elif is_rar_archive(archive_file):
+        extract_cmd = [
+            archive_tool,
+            "x",
+            "-y"
+        ]
+        if isinstance(password, str) and len(password) > 0:
+            extract_cmd += ["-p%s" % password]
+        else:
+            extract_cmd += ["-p-"]
+        if skip_existing:
+            extract_cmd += ["-o-"]
+        else:
+            extract_cmd += ["-o+"]
+        extract_cmd += [
+            archive_file,
+            extract_dir + os.sep
         ]
     else:
         extract_cmd = [
