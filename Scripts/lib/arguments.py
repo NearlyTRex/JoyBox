@@ -26,8 +26,11 @@ class EnumArgparseAction(argparse.Action):
         super().__init__(option_strings, dest, type=str, **kwargs)
 
     def __call__(self, parser, namespace, values, option_string=None):
-        enum_value = parse_enum_value(self.enum_type, values)
-        setattr(namespace, self.dest, enum_value)
+        if isinstance(values, list):
+            result = [parse_enum_value(self.enum_type, v) for v in values]
+        else:
+            result = parse_enum_value(self.enum_type, values)
+        setattr(namespace, self.dest, result)
 
 # Argument parser
 class ArgumentParser:
@@ -152,7 +155,8 @@ class ArgumentParser:
             self.parser.add_argument(
                 *args if isinstance(args, tuple) else (args,),
                 default = default,
-                type = parse_enum_value,
+                type = arg_type,
+                action = EnumArgparseAction,
                 choices = arg_type.values(),
                 help = f"{description}.\nAllowed values are [{', '.join(quoted_enum_values)}]",
                 nargs = "+",
