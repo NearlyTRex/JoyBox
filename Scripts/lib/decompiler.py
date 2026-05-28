@@ -195,6 +195,18 @@ def run_script(
     cmd_options = command.create_command_options()
     cmd_options.set_env_var("GHIDRA_INSTALL_DIR", ghidra_install_dir)
 
+    # Force headless AWT for the PyGhidra JVM. Running scripts is a headless batch
+    # job, so Ghidra must never open an X11 display. Without this,
+    # PyGhidraProjectManager init connects to $DISPLAY and dies when the X server
+    # is unreachable or out of client slots ("Maximum number of clients reached").
+    # The interactive GUI path is intentionally not touched since it needs a display.
+    existing_java_opts = cmd_options.get_env_var("JAVA_TOOL_OPTIONS") or ""
+    headless_opt = "-Djava.awt.headless=true"
+    if headless_opt not in existing_java_opts:
+        cmd_options.set_env_var(
+            "JAVA_TOOL_OPTIONS",
+            (existing_java_opts + " " + headless_opt).strip())
+
     # Run command
     code = command.run_returncode_command(
         cmd = cmd,
