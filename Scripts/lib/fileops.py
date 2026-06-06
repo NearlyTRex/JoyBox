@@ -287,12 +287,16 @@ def mark_as_executable(src, verbose = False, pretend_run = False, exit_on_failur
         return False
 
 # Create temporary directory
-def create_temporary_directory(verbose = False, pretend_run = False):
+def create_temporary_directory(directory = None, verbose = False, pretend_run = False):
     if verbose:
         logger.log_info("Creating temporary directory")
     temp_dir = ""
     if not pretend_run:
-        temp_dir = os.path.realpath(tempfile.mkdtemp())
+        if directory:
+            make_directory(src = directory)
+            temp_dir = os.path.realpath(tempfile.mkdtemp(dir = directory))
+        else:
+            temp_dir = os.path.realpath(tempfile.mkdtemp())
         if verbose:
             logger.log_info("Created temporary directory %s" % temp_dir)
     if not os.path.isdir(temp_dir):

@@ -688,6 +688,7 @@ def upload_files_to_remote(
     files_from = None,
     skip_existing = False,
     interactive = False,
+    update_sidecar = True,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -736,7 +737,7 @@ def upload_files_to_remote(
         return False
 
     # Upload hash sidecars to local root if specified
-    if local_root is not None:
+    if local_root is not None and update_sidecar:
         upload_hash_sidecar_files(
             remote_name = remote_name,
             remote_type = remote_type,
@@ -1700,7 +1701,9 @@ def list_files_with_hashes_from_sidecar(
         remote_db_path = get_hash_database_path(remote_path)
         temp_db_path = paths.join_paths(temp_dir, HASH_DATABASE_FILE)
 
-        # Download database from remote
+        # Download database from remote. This is a read into a temp dir (cleaned up
+        # below), so run it even under pretend_run - otherwise a dry run would see no
+        # sidecar and report the whole remote as empty.
         if verbose:
             logger.log_info("Downloading hash database from: %s" % remote_db_path)
         download_files_from_remote(
@@ -1709,7 +1712,7 @@ def list_files_with_hashes_from_sidecar(
             remote_path = remote_db_path,
             local_path = temp_db_path,
             verbose = verbose,
-            pretend_run = pretend_run,
+            pretend_run = False,
             exit_on_failure = False)
 
         # Check if database exists

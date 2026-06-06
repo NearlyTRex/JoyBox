@@ -112,8 +112,10 @@ def build_locker_hash_map(
                     logger.log_info("Using sidecar hashes for %s (%d files)" % (locker_name, len(sidecar_map)))
                 hash_map = sidecar_map
 
-    # Save to cache
-    if hash_map and not pretend_run:
+    # Save to cache. Cache even on pretend runs: the hashes are computed for real
+    # (hashing is read-only), so a dry run can prime the cache for the subsequent real
+    # run instead of throwing the work away.
+    if hash_map:
         serialization.write_json_file(
             src = cache_file,
             json_data = hash_map,
@@ -367,6 +369,69 @@ def execute_sync_actions(
     logger.log_info("Sync complete: %d succeeded, %d failed" % (success_count, fail_count))
     return fail_count == 0
 
+def normalize_action_type(action):
+    raw_type = action.get("type", "")
+    if isinstance(raw_type, str):
+        return config.SyncActionType.from_string(raw_type)
+    return raw_type
+
+def execute_sync_actions_batched(
+    actions,
+    primary_backend,
+    secondary_backend,
+    passphrase = None,
+    show_progress = False,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Group copy/update actions by their cryption type so each group is one transfer
+    none_types = (config.SyncActionType.COPY, config.SyncActionType.UPDATE)
+    encrypt_types = (config.SyncActionType.COPY_ENCRYPT, config.SyncActionType.UPDATE_ENCRYPT)
+    decrypt_types = (config.SyncActionType.COPY_DECRYPT, config.SyncActionType.UPDATE_DECRYPT)
+    groups = [
+        (config.CryptionType.NONE, [a for a in actions if normalize_action_type(a) in none_types]),
+        (config.CryptionType.ENCRYPT, [a for a in actions if normalize_action_type(a) in encrypt_types]),
+        (config.CryptionType.DECRYPT, [a for a in actions if normalize_action_type(a) in decrypt_types]),
+    ]
+
+    # Run each non-empty group as a single batched transfer
+    succeeded_paths = []
+    failed_paths = []
+    for cryption_type, group in groups:
+        if not group:
+            continue
+        ok_paths, fail_paths = secondary_backend.sync_batch_from(
+            src_backend = primary_backend,
+            actions = group,
+            cryption_type = cryption_type,
+            passphrase = passphrase,
+            show_progress = show_progress,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        succeeded_paths.extend(ok_paths)
+        failed_paths.extend(fail_paths)
+
+    # Handle recycle actions individually (rare; additive backups skip these)
+    for action in actions:
+        if normalize_action_type(action) == config.SyncActionType.RECYCLE:
+            path = action.get("path", "")
+            if verbose:
+                logger.log_info("Recycling: %s" % path)
+            if secondary_backend.recycle_file(
+                rel_path = path,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure):
+                succeeded_paths.append(path)
+            else:
+                failed_paths.append(path)
+
+    # All done
+    logger.log_info("Sync complete: %d succeeded, %d failed" % (len(succeeded_paths), len(failed_paths)))
+    return (len(failed_paths) == 0, succeeded_paths)
+
 ###########################################################
 # Main Sync Orchestrator
 ###########################################################
@@ -404,6 +469,9 @@ def sync_lockers(
     primary_locker_type,
     secondary_locker_types,
     skip_cache = False,
+    interactive = True,
+    recycle_orphans = False,
+    rebuild_sidecars = True,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -472,16 +540,24 @@ def sync_lockers(
             continue
         logger.log_info("Found %d sync actions for %s" % (len(actions), sec_name))
 
-        # Open editor for user review
-        approved_actions = open_editor_for_sync_actions(
-            actions = actions,
-            target_name = sec_name,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        if approved_actions is None:
-            logger.log_warning("Editor cancelled for %s" % sec_name)
-            continue
+        # Approve actions: interactive editor, or auto-approve (additive unless recycling)
+        if interactive:
+            approved_actions = open_editor_for_sync_actions(
+                actions = actions,
+                target_name = sec_name,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
+            if approved_actions is None:
+                logger.log_warning("Editor cancelled for %s" % sec_name)
+                continue
+        else:
+            copy_update_types = (
+                config.SyncActionType.COPY, config.SyncActionType.COPY_DECRYPT, config.SyncActionType.COPY_ENCRYPT,
+                config.SyncActionType.UPDATE, config.SyncActionType.UPDATE_DECRYPT, config.SyncActionType.UPDATE_ENCRYPT)
+            approved_actions = [a for a in actions if a["type"] in copy_update_types]
+            if recycle_orphans:
+                approved_actions += [a for a in actions if a["type"] == config.SyncActionType.RECYCLE]
         if not approved_actions:
             logger.log_info("No actions approved for %s" % sec_name)
             continue
@@ -495,9 +571,9 @@ def sync_lockers(
         else:
             passphrase = None
 
-        # Execute approved actions
+        # Execute approved actions (batched - one transfer per cryption group)
         logger.log_info("Executing %d approved actions for %s" % (len(approved_actions), sec_name))
-        success = execute_sync_actions(
+        success, _succeeded = execute_sync_actions_batched(
             actions = approved_actions,
             primary_backend = primary_backend,
             secondary_backend = sec_backend,
@@ -510,4 +586,22 @@ def sync_lockers(
             logger.log_error("Sync failed for %s" % sec_name)
             if exit_on_failure:
                 return False
+
+        # Refresh the hash sidecar once, from authoritative local content.
+        # Only when the source is local (correct plaintext) and the destination is a
+        # remote that relies on a sidecar (e.g. SFTP). Skipped on partial failure so the
+        # next run re-detects and retries the missing files.
+        if rebuild_sidecars and success and isinstance(primary_backend, lockerbackend.LocalBackend):
+            sec_remote_type = None
+            if isinstance(sec_backend, lockerbackend.RemoteBackend):
+                sec_remote_type = config.RemoteType.from_string(sec_backend.remote_type)
+            if sec_remote_type in SIDECAR_ONLY_REMOTE_TYPES:
+                logger.log_info("Refreshing hash sidecar for %s..." % sec_name)
+                if not sec_backend.update_sidecar_from_local(
+                    local_root_path = primary_backend.get_root_path(),
+                    excludes = exclude_patterns,
+                    verbose = verbose,
+                    pretend_run = pretend_run,
+                    exit_on_failure = exit_on_failure):
+                    logger.log_warning("Failed to refresh hash sidecar for %s" % sec_name)
     return True
