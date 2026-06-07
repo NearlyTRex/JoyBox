@@ -23,8 +23,7 @@ import serialization
 ###########################################################
 
 def get_cache_dir():
-    cache_root = environment.get_cache_root_dir()
-    cache_dir = paths.join_paths(cache_root, "lockersync")
+    cache_dir = environment.get_cache_sync_dir()
     fileops.make_directory(src = cache_dir)
     return cache_dir
 

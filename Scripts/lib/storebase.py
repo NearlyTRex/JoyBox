@@ -12,6 +12,8 @@ import paths
 import strings
 import metadataassetcollector
 import manifest
+import environment
+import fileops
 
 # Create tokenized path
 def create_tokenized_path(path, base_path = None):
@@ -334,6 +336,12 @@ class StoreBase:
     ############################################################
     # Purchases
     ############################################################
+
+    # Get purchases cache directory
+    def get_purchases_cache_dir(self):
+        cache_dir = environment.get_cache_purchases_dir()
+        fileops.make_directory(src = cache_dir)
+        return cache_dir
 
     # Get purchases
     def get_latest_purchases(

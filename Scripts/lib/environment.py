@@ -523,6 +523,18 @@ def get_repositories_root_dir():
 def get_cache_root_dir():
     return ini.get_ini_path_value("UserData.Dirs", "cache_dir")
 
+# Get cache sync dir
+def get_cache_sync_dir():
+    return paths.join_paths(
+        get_cache_root_dir(),
+        "Sync")
+
+# Get cache purchases dir
+def get_cache_purchases_dir():
+    return paths.join_paths(
+        get_cache_root_dir(),
+        "Purchases")
+
 # Get cache gaming root dir
 def get_cache_gaming_root_dir():
     return paths.join_paths(
