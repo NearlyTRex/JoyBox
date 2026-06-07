@@ -38,6 +38,28 @@ class ArgumentParser:
         self.parser = argparse.ArgumentParser(
             description = description,
             formatter_class = argparse.ArgumentDefaultsHelpFormatter)
+        self._warned_unknown = set()
+
+    #################################################
+
+    # Expand long-option names so hyphen and underscore forms are interchangeable
+    # (e.g. --pretend_run also accepts --pretend-run, and vice versa). This avoids
+    # silently dropping a mistyped safety flag like --pretend-run.
+    def _expand_arg_aliases(self, args):
+        arg_names = list(args if isinstance(args, tuple) else (args,))
+        aliases = []
+        for name in arg_names:
+            if not name.startswith("--"):
+                continue
+            if "_" in name:
+                alt = name.replace("_", "-")
+            elif "-" in name[2:]:
+                alt = "--" + name[2:].replace("-", "_")
+            else:
+                continue
+            if alt not in arg_names and alt not in aliases:
+                aliases.append(alt)
+        return tuple(arg_names) + tuple(aliases)
 
     #################################################
 
@@ -47,7 +69,13 @@ class ArgumentParser:
 
     # Parse known arguments
     def parse_known_args(self):
-        return self.parser.parse_known_args()
+        args, unknown = self.parser.parse_known_args()
+        flagged = [u for u in unknown if u.startswith("-") and u not in self._warned_unknown]
+        for u in flagged:
+            self._warned_unknown.add(u)
+        if flagged:
+            logger.log_warning("Ignoring unrecognized argument(s): %s" % " ".join(flagged))
+        return args, unknown
 
     # Check if the given name is a known argument
     def is_known_argument(self, name):
@@ -85,7 +113,7 @@ class ArgumentParser:
         default = None,
         required = False,
         description = None):
-        arg_names = args if isinstance(args, tuple) else (args,)
+        arg_names = self._expand_arg_aliases(args)
         is_positional = not arg_names[0].startswith("-")
         if is_positional:
             self.parser.add_argument(
@@ -109,7 +137,7 @@ class ArgumentParser:
         default = None,
         required = False,
         description = None):
-        arg_names = args if isinstance(args, tuple) else (args,)
+        arg_names = self._expand_arg_aliases(args)
         is_positional = not arg_names[0].startswith("-")
         if is_positional:
             self.parser.add_argument(
@@ -132,7 +160,7 @@ class ArgumentParser:
         args,
         description = None):
         self.parser.add_argument(
-            *args if isinstance(args, tuple) else (args,),
+            *self._expand_arg_aliases(args),
             action = "store_true",
             help = description)
 
@@ -153,7 +181,7 @@ class ArgumentParser:
             else:
                 default = []
             self.parser.add_argument(
-                *args if isinstance(args, tuple) else (args,),
+                *self._expand_arg_aliases(args),
                 default = default,
                 type = arg_type,
                 action = EnumArgparseAction,
@@ -163,7 +191,7 @@ class ArgumentParser:
                 metavar = "")
         else:
             self.parser.add_argument(
-                *args if isinstance(args, tuple) else (args,),
+                *self._expand_arg_aliases(args),
                 default = default,
                 type = arg_type,
                 action = EnumArgparseAction,
@@ -180,7 +208,7 @@ class ArgumentParser:
         enum_values = arg_type.values()
         quoted_enum_values = [f"'{value}'" for value in enum_values]
         self.parser.add_argument(
-            *args if isinstance(args, tuple) else (args,),
+            *self._expand_arg_aliases(args),
             default = None,
             type = str,
             help = f"{description} (comma delimited).\nAllowed values are [{', '.join(quoted_enum_values)}]")

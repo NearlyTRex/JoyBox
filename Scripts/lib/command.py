@@ -366,10 +366,13 @@ def print_command(cmd):
 
 ###########################################################
 
-# Run output command
-def run_output_command(
+# Run command
+def run_command(
     cmd,
     options = create_command_options(),
+    capture_output = True,
+    log_stdout = False,
+    log_stderr = False,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -377,71 +380,185 @@ def run_output_command(
         cmd = create_command_list(cmd)
         if not options:
             options = create_command_options()
-        if not pretend_run:
+        if pretend_run:
+            return ("", 0)
 
-            # Pre-process command
-            if options.allow_processing():
-                cmd, options = preprocess_command(
-                    cmd = cmd,
-                    options = options,
-                    verbose = verbose,
-                    exit_on_failure = exit_on_failure)
+        # Pre-process command
+        if options.allow_processing():
+            cmd, options = preprocess_command(
+                cmd = cmd,
+                options = options,
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
 
-            # Log command
-            if verbose:
-                print_command(cmd)
+        # Log command
+        if verbose:
+            print_command(cmd)
 
-            # Handle shell commands
-            if options.is_shell():
-                cmd = create_command_string(cmd)
+        # Handle shell commands
+        if options.is_shell():
+            cmd = create_command_string(cmd)
 
-            # Run process
-            output = ""
-            if options.include_stderr():
-                output = subprocess.run(
-                    cmd,
-                    shell = options.is_shell(),
-                    cwd = options.get_cwd(),
-                    env = options.get_env(),
-                    creationflags = options.get_creationflags(),
-                    stdout = subprocess.PIPE,
-                    stderr = subprocess.STDOUT).stdout
-            else:
-                output = subprocess.run(
-                    cmd,
-                    shell = options.is_shell(),
-                    cwd = options.get_cwd(),
-                    env = options.get_env(),
-                    creationflags = options.get_creationflags(),
-                    stdout = subprocess.PIPE).stdout
-
-            # Wait for any other blocking processes
-            if isinstance(options.get_blocking_processes(), list) and len(options.get_blocking_processes()) > 0:
-                process.wait_for_named_processes(options.get_blocking_processes())
-
-            # Post-process command
+        # Passthrough mode - inherit stdin/stdout/stderr directly (for TUI apps)
+        if options.is_passthrough():
+            returncode = subprocess.call(
+                cmd,
+                shell = options.is_shell(),
+                cwd = options.get_cwd(),
+                env = options.get_env())
             if options.allow_processing():
                 postprocess_command(
-                    cmd = cmd,
-                    options = options,
-                    verbose = verbose,
-                    exit_on_failure = exit_on_failure)
-            return clean_command_output(output.strip())
-        return ""
-    except subprocess.CalledProcessError as e:
-        if verbose:
-            logger.log_error(e)
-        elif exit_on_failure:
-            logger.log_error(e, quit_program = True)
-        if options.include_stderr():
-            return e.output
-        return ""
+                    cmd = cmd, options = options, verbose = verbose, exit_on_failure = exit_on_failure)
+            return ("", returncode)
+
+        # Daemon mode - detach and return without waiting
+        if options.is_daemon():
+            subprocess.Popen(
+                cmd,
+                shell = options.is_shell(),
+                cwd = options.get_cwd(),
+                env = options.get_env(),
+                creationflags = subprocess.DETACHED_PROCESS if os.name == 'nt' else 0,
+                stdout = subprocess.DEVNULL,
+                stderr = subprocess.DEVNULL,
+                stdin = subprocess.DEVNULL,
+                preexec_fn = os.setsid if os.name != 'nt' else None)
+            system.sleep_program(0.5)
+            if options.allow_processing():
+                postprocess_command(
+                    cmd = cmd, options = options, verbose = verbose, exit_on_failure = exit_on_failure)
+            return ("", 0)
+
+        # Suppressed output - discard streams, just wait
+        if options.is_output_suppressed():
+            proc = subprocess.Popen(
+                cmd,
+                shell = options.is_shell(),
+                cwd = options.get_cwd(),
+                env = options.get_env(),
+                creationflags = options.get_creationflags(),
+                stdout = subprocess.DEVNULL,
+                stderr = subprocess.DEVNULL)
+            proc.wait()
+            if isinstance(options.get_blocking_processes(), list) and len(options.get_blocking_processes()) > 0:
+                process.wait_for_named_processes(options.get_blocking_processes())
+            if options.allow_processing():
+                postprocess_command(
+                    cmd = cmd, options = options, verbose = verbose, exit_on_failure = exit_on_failure)
+            return ("", proc.returncode)
+
+        # Determine output file handling
+        stdout_target = open(options.get_stdout(), "w") if paths.is_path_valid(options.get_stdout()) else None
+        stderr_target = open(options.get_stderr(), "w") if paths.is_path_valid(options.get_stderr()) else None
+
+        # Determine stderr disposition:
+        # - merge into stdout (OS-level, order-preserving) for include_stderr capture,
+        # - pipe separately when streaming it live or writing it to a file,
+        # - otherwise inherit the terminal (so it still shows up by default).
+        merge_stderr = options.include_stderr() and not log_stderr and stderr_target is None
+        pipe_stderr = log_stderr or stderr_target is not None
+        if merge_stderr:
+            stderr_arg = subprocess.STDOUT
+        elif pipe_stderr:
+            stderr_arg = subprocess.PIPE
+        else:
+            stderr_arg = None
+
+        # Open process
+        proc = subprocess.Popen(
+            cmd,
+            shell = options.is_shell(),
+            cwd = options.get_cwd(),
+            env = options.get_env(),
+            creationflags = options.get_creationflags(),
+            stdout = subprocess.PIPE,
+            stderr = stderr_arg,
+            stdin = None,
+            text = True,
+            errors = "ignore",
+            bufsize = 1)
+
+        # Pump stdout (capture and/or log and/or write to file). Use readline() rather
+        # than "for line in pipe" - the latter read-ahead-buffers and would defeat
+        # real-time streaming.
+        stdout_lines = []
+        def pump_stdout():
+            while True:
+                line = proc.stdout.readline()
+                if not line and proc.poll() is not None:
+                    break
+                if line:
+                    if capture_output:
+                        stdout_lines.append(line)
+                    if log_stdout:
+                        logger.log_info(line.strip())
+                    if stdout_target:
+                        stdout_target.write(line)
+                        stdout_target.flush()
+
+        # Pump stderr (log live and/or write to file) when piped separately
+        def pump_stderr():
+            while True:
+                line = proc.stderr.readline()
+                if not line and proc.poll() is not None:
+                    break
+                if line:
+                    if log_stderr:
+                        logger.log_info(line.strip())
+                    if stderr_target:
+                        stderr_target.write(line)
+                        stderr_target.flush()
+
+        # Run real-time I/O threads
+        threads = [threading.Thread(target = pump_stdout)]
+        if pipe_stderr:
+            threads.append(threading.Thread(target = pump_stderr))
+        for t in threads:
+            t.start()
+        proc.wait()
+        for t in threads:
+            t.join()
+
+        # Close file handles if used
+        if stdout_target:
+            stdout_target.close()
+        if stderr_target:
+            stderr_target.close()
+
+        # Wait for any other blocking processes
+        if isinstance(options.get_blocking_processes(), list) and len(options.get_blocking_processes()) > 0:
+            process.wait_for_named_processes(options.get_blocking_processes())
+
+        # Post-process command
+        if options.allow_processing():
+            postprocess_command(
+                cmd = cmd, options = options, verbose = verbose, exit_on_failure = exit_on_failure)
+
+        return (clean_command_output("".join(stdout_lines).strip()), proc.returncode)
     except Exception as e:
         if verbose:
             logger.log_error(e)
         elif exit_on_failure:
             logger.log_error(e, quit_program = True)
-        return ""
+        return ("", 1)
+
+# Run output command
+def run_output_command(
+    cmd,
+    options = create_command_options(),
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+    output, returncode = run_command(
+        cmd = cmd,
+        options = options,
+        capture_output = True,
+        log_stdout = False,
+        log_stderr = False,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    return output
 
 # Run returncode command
 def run_returncode_command(
@@ -450,144 +567,16 @@ def run_returncode_command(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    try:
-        cmd = create_command_list(cmd)
-        if not options:
-            options = create_command_options()
-        if not pretend_run:
-
-            # Pre-process command
-            if options.allow_processing():
-                cmd, options = preprocess_command(
-                    cmd = cmd,
-                    options = options,
-                    verbose = verbose,
-                    exit_on_failure = exit_on_failure)
-
-            # Log command
-            if verbose:
-                print_command(cmd)
-
-            # Handle shell commands
-            if options.is_shell():
-                cmd = create_command_string(cmd)
-
-            # Passthrough mode - inherit stdin/stdout/stderr directly (for TUI apps)
-            if options.is_passthrough():
-                returncode = subprocess.call(
-                    cmd,
-                    shell = options.is_shell(),
-                    cwd = options.get_cwd(),
-                    env = options.get_env())
-                if options.allow_processing():
-                    postprocess_command(
-                        cmd = cmd,
-                        options = options,
-                        verbose = verbose,
-                        exit_on_failure = exit_on_failure)
-                return returncode
-
-            # Determine output file handling
-            stdout_target = None
-            stderr_target = None
-            if paths.is_path_valid(options.get_stdout()):
-                stdout_target = open(options.get_stdout(), "w")
-            if paths.is_path_valid(options.get_stderr()):
-                stderr_target = open(options.get_stderr(), "w")
-
-            # Open process
-            proc = subprocess.Popen(
-                cmd,
-                shell = options.is_shell(),
-                cwd = options.get_cwd(),
-                env = options.get_env(),
-                creationflags = options.get_creationflags() if not options.is_daemon() else (
-                    subprocess.DETACHED_PROCESS if os.name == 'nt' else 0
-                ),
-                stdout = subprocess.DEVNULL if (options.is_daemon() or options.is_output_suppressed()) else subprocess.PIPE,
-                stderr = subprocess.DEVNULL if (options.is_daemon() or options.is_output_suppressed()) else subprocess.PIPE,
-                stdin = subprocess.DEVNULL if options.is_daemon() else None,
-                preexec_fn = os.setsid if options.is_daemon() and os.name != 'nt' else None,
-                text = True,
-                bufsize = 1)
-
-            # Skip I/O threads if running as daemon or output is suppressed
-            if not options.is_daemon() and not options.is_output_suppressed():
-
-                # Reads from process output and logs it while writing to a file if needed
-                def handle_output(pipe, log_func, file_target):
-                    while True:
-                        line = pipe.readline()
-                        if not line and proc.poll() is not None:
-                            break
-                        if line:
-                            log_func(line.strip())
-                            if file_target:
-                                file_target.write(line)
-                                file_target.flush()
-
-                # Reads user input and forwards it to the subprocess
-                def handle_input():
-                    while proc.poll() is None:
-                        try:
-                            user_input = sys.stdin.readline()
-                            if user_input:
-                                proc.stdin.write(user_input)
-                                proc.stdin.flush()
-                        except EOFError:
-                            break
-
-                # Create threads to handle real-time I/O
-                stdout_thread = threading.Thread(target = handle_output, args = (proc.stdout, logger.log_info, stdout_target))
-                stderr_thread = threading.Thread(target = handle_output, args = (proc.stderr, logger.log_info, stderr_target))
-                stdout_thread.start()
-                stderr_thread.start()
-
-                # Wait for process to complete
-                proc.wait()
-                stdout_thread.join()
-                stderr_thread.join()
-
-            else:
-
-                # For suppressed output, still wait for process to complete
-                # For daemon, just sleep a tiny bit to allow startup before moving on
-                if options.is_output_suppressed():
-                    proc.wait()
-                else:
-                    system.sleep_program(0.5)
-
-            # Close file handles if used
-            if stdout_target:
-                stdout_target.close()
-            if stderr_target:
-                stderr_target.close()
-
-            # Wait for any other blocking processes
-            if isinstance(options.get_blocking_processes(), list) and len(options.get_blocking_processes()) > 0:
-                process.wait_for_named_processes(options.get_blocking_processes())
-
-            # Post-process command
-            if options.allow_processing():
-                postprocess_command(
-                    cmd = cmd,
-                    options = options,
-                    verbose = verbose,
-                    exit_on_failure = exit_on_failure)
-            return 0 if options.is_daemon() else proc.returncode
-        return 0
-    except subprocess.CalledProcessError as e:
-        if verbose:
-            logger.log_error(e)
-        elif exit_on_failure:
-            logger.log_error(e, quit_program = True)
-        return e.returncode
-    except Exception as e:
-        if verbose:
-            logger.log_error(e)
-        elif exit_on_failure:
-            logger.log_error(e, quit_program = True)
-        return 1
+    output, returncode = run_command(
+        cmd = cmd,
+        options = options,
+        capture_output = False,
+        log_stdout = True,
+        log_stderr = True,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    return returncode
 
 # Run interactive command
 def run_interactive_command(

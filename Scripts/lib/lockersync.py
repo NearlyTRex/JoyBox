@@ -573,7 +573,7 @@ def sync_lockers(
 
         # Execute approved actions (batched - one transfer per cryption group)
         logger.log_info("Executing %d approved actions for %s" % (len(approved_actions), sec_name))
-        success, _succeeded = execute_sync_actions_batched(
+        success, succeeded = execute_sync_actions_batched(
             actions = approved_actions,
             primary_backend = primary_backend,
             secondary_backend = sec_backend,
@@ -586,6 +586,22 @@ def sync_lockers(
             logger.log_error("Sync failed for %s" % sec_name)
             if exit_on_failure:
                 return False
+
+        # Update the secondary's cached hash map to reflect what was just uploaded, so a
+        # re-run within the cache window does not re-detect and re-upload the same files.
+        # (The secondary now matches the primary for every succeeded path.) Only update
+        # entries that exist in the primary (skips recycled orphans).
+        if succeeded and not pretend_run:
+            updated = 0
+            for rel in succeeded:
+                if rel in primary_hashes:
+                    secondary_hashes[rel] = primary_hashes[rel]
+                    updated += 1
+            if updated:
+                serialization.write_json_file(
+                    src = get_cache_file(sec_name),
+                    json_data = secondary_hashes,
+                    verbose = verbose)
 
         # Refresh the hash sidecar once, from authoritative local content.
         # Only when the source is local (correct plaintext) and the destination is a

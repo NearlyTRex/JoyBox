@@ -1611,13 +1611,18 @@ def list_files_with_hashes(
         logger.log_error("RClone was not found")
         return {}
 
-    # Build lsjson command
+    # Build lsjson command. --fast-list uses a single recursive listing where the backend
+    # supports it (e.g. Google Drive), instead of one API call per directory - a large
+    # speedup for deep trees (and ignored by backends that don't support it).
     lsjson_cmd = [
         rclone_tool,
         "lsjson",
         "--recursive",
+        "--fast-list",
         "--hash",
         "--files-only",
+        "-v",
+        "--stats", "5s",
         get_remote_connection_path(remote_name, remote_type, remote_path)
     ]
 
@@ -1626,9 +1631,12 @@ def list_files_with_hashes(
     if verbose:
         logger.log_info("Listing files with hashes from remote: %s" % remote_name)
 
-    # Run lsjson command
-    lsjson_output = command.run_output_command(
+    # Run lsjson command. Capture the JSON on stdout while streaming rclone's progress
+    # (stats heartbeat) from stderr to the logger, so a long listing shows it is alive.
+    lsjson_output, lsjson_code = command.run_command(
         cmd = lsjson_cmd,
+        capture_output = True,
+        log_stderr = True,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
