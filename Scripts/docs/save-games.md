@@ -50,4 +50,4 @@ it won't pull fresh files from the store. So for "grab from Steam → archive �
 
 ## Reference
 
-- [`save_game_tool`](../Scripts/docs/man/save_game_tool.md) — full breakdown of every action and flag
+- [`save_game_tool`](man/save_game_tool.md) — full breakdown of every action and flag

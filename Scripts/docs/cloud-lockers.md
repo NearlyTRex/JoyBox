@@ -80,7 +80,7 @@ If the source and destinations resolve, you're configured. Continue to [Backups]
 
 ## Reference
 
-- [`master_backup`](../Scripts/docs/man/master_backup.md) — back up Local → remotes
-- [`locker_sync_tool`](../Scripts/docs/man/locker_sync_tool.md) — sync a primary locker to secondaries
-- [`rebuild_hash_sidecars`](../Scripts/docs/man/rebuild_hash_sidecars.md) — rebuild a remote's hash sidecar
-- [`find_missing_hash_sidecars`](../Scripts/docs/man/find_missing_hash_sidecars.md) — find files missing from the sidecar
+- [`master_backup`](man/master_backup.md) — back up Local → remotes
+- [`locker_sync_tool`](man/locker_sync_tool.md) — sync a primary locker to secondaries
+- [`rebuild_hash_sidecars`](man/rebuild_hash_sidecars.md) — rebuild a remote's hash sidecar
+- [`find_missing_hash_sidecars`](man/find_missing_hash_sidecars.md) — find files missing from the sidecar

@@ -24,8 +24,8 @@ download_game_metadata_assets -c Computer -s Steam -e -v   # -e skips assets alr
 
 Process every store at once by dropping `-s` (and `-c`).
 
-References: [`login_game_stores`](../Scripts/docs/man/login_game_stores.md) ·
-[`build_game_store_purchases`](../Scripts/docs/man/build_game_store_purchases.md).
+References: [`login_game_stores`](man/login_game_stores.md) ·
+[`build_game_store_purchases`](man/build_game_store_purchases.md).
 
 ## B. Files moved manually into the locker (ROMs, disc images, …)
 
@@ -42,7 +42,7 @@ scan_game_files -c Nintendo -s "Nintendo 64" -a -m -v
 > **Note:** `scan_game_files` takes **comma-separated lists** —
 > `-c`/`--categories` and `-s`/`--subcategories` (e.g. `-c Nintendo,Sony
 > -s "Nintendo 64,Sony PlayStation 2"`). This differs from the single-value `-c`/`-s` used by
-> the individual tools below. See [`scan_game_files`](../Scripts/docs/man/scan_game_files.md).
+> the individual tools below. See [`scan_game_files`](man/scan_game_files.md).
 
 ### Or the individual steps (more control)
 
@@ -69,19 +69,19 @@ sort_game_metadata -v
 publish_game_metadata_files -v
 ```
 
-References: [`sort_game_metadata`](../Scripts/docs/man/sort_game_metadata.md) ·
-[`publish_game_metadata_files`](../Scripts/docs/man/publish_game_metadata_files.md).
+References: [`sort_game_metadata`](man/sort_game_metadata.md) ·
+[`publish_game_metadata_files`](man/publish_game_metadata_files.md).
 
 ## Reference
 
 | Command | Purpose |
 |---------|---------|
-| [`login_game_stores`](../Scripts/docs/man/login_game_stores.md) | Authenticate with a game store |
-| [`build_game_store_purchases`](../Scripts/docs/man/build_game_store_purchases.md) | Import a store's purchase list into JSON entries |
-| [`build_game_json_files`](../Scripts/docs/man/build_game_json_files.md) | Build JSON entries from files in a locker |
-| [`build_game_metadata_files`](../Scripts/docs/man/build_game_metadata_files.md) | Build metadata entries from JSON |
-| [`build_game_hash_files`](../Scripts/docs/man/build_game_hash_files.md) | Record file hashes for game files |
-| [`download_game_metadata_assets`](../Scripts/docs/man/download_game_metadata_assets.md) | Download artwork / video assets |
-| [`scan_game_files`](../Scripts/docs/man/scan_game_files.md) | Run the whole pipeline end to end |
-| [`sort_game_metadata`](../Scripts/docs/man/sort_game_metadata.md) | Normalize metadata files |
-| [`publish_game_metadata_files`](../Scripts/docs/man/publish_game_metadata_files.md) | Render metadata to HTML |
+| [`login_game_stores`](man/login_game_stores.md) | Authenticate with a game store |
+| [`build_game_store_purchases`](man/build_game_store_purchases.md) | Import a store's purchase list into JSON entries |
+| [`build_game_json_files`](man/build_game_json_files.md) | Build JSON entries from files in a locker |
+| [`build_game_metadata_files`](man/build_game_metadata_files.md) | Build metadata entries from JSON |
+| [`build_game_hash_files`](man/build_game_hash_files.md) | Record file hashes for game files |
+| [`download_game_metadata_assets`](man/download_game_metadata_assets.md) | Download artwork / video assets |
+| [`scan_game_files`](man/scan_game_files.md) | Run the whole pipeline end to end |
+| [`sort_game_metadata`](man/sort_game_metadata.md) | Normalize metadata files |
+| [`publish_game_metadata_files`](man/publish_game_metadata_files.md) | Render metadata to HTML |

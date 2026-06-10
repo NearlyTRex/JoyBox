@@ -42,7 +42,7 @@ Most game tools take the same selection flags. Values are the display strings fr
 | `-n`, `--game_name` | A single game (omit = all in the subcategory) | `"Hollow Knight"` |
 
 Omitting a selector means "all matching games". A few tools (notably
-[`scan_game_files`](../Scripts/docs/man/scan_game_files.md)) instead take **comma-separated
+[`scan_game_files`](man/scan_game_files.md)) instead take **comma-separated
 lists** via `-c/--categories` and `-s/--subcategories` — the guide and manpage call that out.
 
 ### Store subcategories (under `Computer`)

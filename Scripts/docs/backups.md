@@ -33,7 +33,7 @@ master_backup -r "Hetzner,Gdrive,External"
 | `--skip_cache` | off | Rebuild hash maps fresh, ignoring the 24h cache |
 | `--no_rebuild_sidecars` | off | Skip refreshing the remote hash sidecar afterwards |
 
-Full breakdown: [`master_backup`](../Scripts/docs/man/master_backup.md).
+Full breakdown: [`master_backup`](man/master_backup.md).
 
 ## Hash sidecars
 
@@ -49,24 +49,24 @@ rebuild_hash_sidecars -l Local -d Hetzner -v
 find_missing_hash_sidecars -l Hetzner -v
 ```
 
-References: [`rebuild_hash_sidecars`](../Scripts/docs/man/rebuild_hash_sidecars.md) ·
-[`find_missing_hash_sidecars`](../Scripts/docs/man/find_missing_hash_sidecars.md).
+References: [`rebuild_hash_sidecars`](man/rebuild_hash_sidecars.md) ·
+[`find_missing_hash_sidecars`](man/find_missing_hash_sidecars.md).
 
 ## Remote-to-remote and lower-level sync
 
-- [`locker_sync_tool`](../Scripts/docs/man/locker_sync_tool.md) — interactively sync a primary
+- [`locker_sync_tool`](man/locker_sync_tool.md) — interactively sync a primary
   locker to one or more secondaries (e.g. Hetzner → Gdrive + External), with editor-driven
   approval.
-- [`sync_tool`](../Scripts/docs/man/sync_tool.md) — lower-level synchronize between local
+- [`sync_tool`](man/sync_tool.md) — lower-level synchronize between local
   storage and a remote locker.
-- [`backup_tool`](../Scripts/docs/man/backup_tool.md) — copy/archive files between paths with
+- [`backup_tool`](man/backup_tool.md) — copy/archive files between paths with
   optional encryption.
 
 ## Reference
 
-- [`master_backup`](../Scripts/docs/man/master_backup.md)
-- [`locker_sync_tool`](../Scripts/docs/man/locker_sync_tool.md)
-- [`rebuild_hash_sidecars`](../Scripts/docs/man/rebuild_hash_sidecars.md)
-- [`find_missing_hash_sidecars`](../Scripts/docs/man/find_missing_hash_sidecars.md)
-- [`sync_tool`](../Scripts/docs/man/sync_tool.md)
-- [`backup_tool`](../Scripts/docs/man/backup_tool.md)
+- [`master_backup`](man/master_backup.md)
+- [`locker_sync_tool`](man/locker_sync_tool.md)
+- [`rebuild_hash_sidecars`](man/rebuild_hash_sidecars.md)
+- [`find_missing_hash_sidecars`](man/find_missing_hash_sidecars.md)
+- [`sync_tool`](man/sync_tool.md)
+- [`backup_tool`](man/backup_tool.md)

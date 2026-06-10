@@ -1,7 +1,7 @@
 # Man Pages
 
 Full per-command reference for JoyBox Scripts tools. For task-oriented walkthroughs ("how do I
-back up my saves?"), see the [documentation guides](../../../docs/README.md).
+back up my saves?"), see the [documentation guides](../README.md).
 
 ## Backups & Lockers
 

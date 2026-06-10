@@ -2,7 +2,7 @@
 
 Task-oriented guides for the everyday JoyBox workflows. Each guide explains *how to do a
 thing*; for the full breakdown of any individual command, follow the **manpage** link in the
-guide (manpages live in [`../Scripts/docs/man/`](../Scripts/docs/man/README.md)).
+guide (manpages live in [`man/`](man/README.md)).
 
 New to the tools? Start with **[Getting Started](getting-started.md)**.
 
@@ -20,7 +20,7 @@ New to the tools? Start with **[Getting Started](getting-started.md)**.
 
 ## Reference
 
-- **[Manpage index](../Scripts/docs/man/README.md)** — full per-command reference for every documented tool.
+- **[Manpage index](man/README.md)** — full per-command reference for every documented tool.
 
 ## Conventions used in these guides
 

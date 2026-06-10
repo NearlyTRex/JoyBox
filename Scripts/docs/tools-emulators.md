@@ -8,9 +8,9 @@ commands depend on. Both are managed the same way, with one command each:
 
 | Command | Manages | Installs into |
 |---------|---------|---------------|
-| [`setup_tools`](../Scripts/docs/man/setup_tools.md) | CLI helper programs | `[UserData.Dirs] tools_dir` |
-| [`setup_game_emulators`](../Scripts/docs/man/setup_game_emulators.md) | Game emulators | `[UserData.Dirs] emulators_dir` |
-| [`setup_game_assets`](../Scripts/docs/man/setup_game_assets.md) | Pegasus asset symlinks | (links under the metadata tree) |
+| [`setup_tools`](man/setup_tools.md) | CLI helper programs | `[UserData.Dirs] tools_dir` |
+| [`setup_game_emulators`](man/setup_game_emulators.md) | Game emulators | `[UserData.Dirs] emulators_dir` |
+| [`setup_game_assets`](man/setup_game_assets.md) | Pegasus asset symlinks | (links under the metadata tree) |
 
 > The shims in `~/.local/bin` (`master_backup`, `save_game_tool`, …) are the *JoyBox* commands
 > themselves and are installed by the project bootstrap, **not** by `setup_tools`. `setup_tools`
@@ -105,6 +105,6 @@ Add `--pretend_run --verbose` to preview what would be installed or removed.
 
 ## Reference
 
-- [`setup_tools`](../Scripts/docs/man/setup_tools.md) — install/update third-party tools
-- [`setup_game_emulators`](../Scripts/docs/man/setup_game_emulators.md) — install/update emulators
-- [`setup_game_assets`](../Scripts/docs/man/setup_game_assets.md) — create Pegasus asset symlinks
+- [`setup_tools`](man/setup_tools.md) — install/update third-party tools
+- [`setup_game_emulators`](man/setup_game_emulators.md) — install/update emulators
+- [`setup_game_assets`](man/setup_game_assets.md) — create Pegasus asset symlinks

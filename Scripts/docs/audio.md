@@ -25,7 +25,7 @@ download_audio_files --genre_type Story --cookie_source firefox --locker_type Lo
 | `-c`, `--cookie_source` | `firefox` | Browser to pull YouTube cookies from |
 | `-l`, `--locker_type` | `All` | Where to back up (`All`/`Local`/`Hetzner`/`Gdrive`/`External`) |
 
-Reference: [`download_audio_files`](../Scripts/docs/man/download_audio_files.md).
+Reference: [`download_audio_files`](man/download_audio_files.md).
 
 ## Tag the downloads
 
@@ -37,7 +37,7 @@ audio_metadata_tool --action Apply --genre ASMR -v
 
 Actions are `Tag` (extract → JSON), `Apply` (JSON → file tags), and `Clear` (strip tags; add
 `--preserve_artwork` to keep cover art). Narrow with `-b`/`--album` or `-r`/`--artist`.
-Reference: [`audio_metadata_tool`](../Scripts/docs/man/audio_metadata_tool.md).
+Reference: [`audio_metadata_tool`](man/audio_metadata_tool.md).
 
 ## Convert Audible audiobooks
 
@@ -48,7 +48,7 @@ audio_conversion_tool --action AaxToM4a -i ~/audiobooks/book.aax -k 1a2b3c4d
 
 Activation bytes resolve from `-k`/`--activation_bytes`, `-f`/`--authcode_file`, the
 `AUDIBLE_ACTIVATION_BYTES` env var, or `~/.audible_authcode`. Reference:
-[`audio_conversion_tool`](../Scripts/docs/man/audio_conversion_tool.md).
+[`audio_conversion_tool`](man/audio_conversion_tool.md).
 
 ## Build playlists
 
@@ -57,13 +57,13 @@ Activation bytes resolve from `-k`/`--activation_bytes`, `-f`/`--authcode_file`,
 generate_playlist -i ~/Locker/Music/ASMR -f .mp3
 ```
 
-Reference: [`generate_playlist`](../Scripts/docs/man/generate_playlist.md).
+Reference: [`generate_playlist`](man/generate_playlist.md).
 
 ## Reference
 
 | Command | Purpose |
 |---------|---------|
-| [`download_audio_files`](../Scripts/docs/man/download_audio_files.md) | Download audio from curated channels by genre |
-| [`audio_metadata_tool`](../Scripts/docs/man/audio_metadata_tool.md) | Tag / apply / clear audio metadata |
-| [`audio_conversion_tool`](../Scripts/docs/man/audio_conversion_tool.md) | Convert Audible AAX/AA → M4A |
-| [`generate_playlist`](../Scripts/docs/man/generate_playlist.md) | Generate `.m3u` playlists from a tree |
+| [`download_audio_files`](man/download_audio_files.md) | Download audio from curated channels by genre |
+| [`audio_metadata_tool`](man/audio_metadata_tool.md) | Tag / apply / clear audio metadata |
+| [`audio_conversion_tool`](man/audio_conversion_tool.md) | Convert Audible AAX/AA → M4A |
+| [`generate_playlist`](man/generate_playlist.md) | Generate `.m3u` playlists from a tree |
