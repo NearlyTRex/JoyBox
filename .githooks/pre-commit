@@ -1,0 +1,136 @@
+#!/usr/bin/env python3
+"""JoyBox pre-commit secret scanner.
+
+Blocks a commit that stages a sensitive file or adds a line that looks like a
+secret. Self-contained (needs only python3); also runs `gitleaks` if installed.
+
+Bypass (use deliberately):   git commit --no-verify
+Mark a false positive:       append  "# pragma: allowlist secret"  to the line
+"""
+
+import re
+import shutil
+import subprocess
+import sys
+
+ALLOW_INLINE = ("pragma: allowlist secret", "gitleaks:allow")
+
+# Filenames that should essentially never be committed
+SENSITIVE_FILE_RES = [
+    r"(^|/)JoyBox\.ini$",
+    r"(^|/)\.env(\..+)?$",
+    r"(^|/)\.npmrc$",
+    r"(^|/)\.netrc$",
+    r"(^|/)\.audible_authcode$",
+    r"(^|/)id_(rsa|dsa|ecdsa|ed25519)$",
+    r"(^|/)credentials$",
+    r"(^|/)\.aws/credentials$",
+    r"\.(pem|key|p12|pfx|keystore|jks|ppk)$",
+    r"service[-_]?account.*\.json$",
+]
+
+SECRET_RES = [
+    ("Private key block", re.compile(
+        r"-----BEGIN (?:RSA |EC |DSA |OPENSSH |PGP )?PRIVATE KEY-----")),
+    ("AWS access key id", re.compile(
+        r"\b(?:A3T[A-Z0-9]|AKIA|AGPA|AIDA|AROA|AIPA|ANPA|ANVA|ASIA)[A-Z0-9]{16}\b")),
+    ("GitHub token", re.compile(r"\bgh[pousr]_[A-Za-z0-9]{36,}\b")),
+    ("Slack token", re.compile(r"\bxox[baprs]-[A-Za-z0-9-]{10,}\b")),
+    ("Google API key", re.compile(r"\bAIza[0-9A-Za-z\-_]{35}\b")),
+    ("Private key in URL", re.compile(r"://[^/\s:@]+:[^/\s:@]+@")),
+    ("Assigned secret", re.compile(
+        r"(?i)\b(pass(?:word|phrase)?|secret|token|api[_-]?key|access[_-]?key|"
+        r"client[_-]?secret|auth[_-]?token|activation[_-]?bytes)\b"
+        r"\s*[:=]\s*['\"]([^'\"]{6,})['\"]")),
+]
+
+# Values that are obviously not real secrets
+PLACEHOLDER_RE = re.compile(
+    r"(?i)^(\$\{?\w+\}?|<[^>]*>|\.\.\.|x{3,}|change[_-]?me|your[_-].*|example|"
+    r"dummy|placeholder|none|null|true|false|\d+)$")
+
+
+def _git(args):
+    return subprocess.run(["git"] + args, capture_output=True, text=True).stdout
+
+
+def staged_files():
+    out = _git(["diff", "--cached", "--name-only", "--diff-filter=ACM"])
+    return [f for f in out.splitlines() if f.strip()]
+
+
+def is_binary(path):
+    return _git(["diff", "--cached", "--numstat", "--", path]).startswith("-\t-\t")
+
+
+def added_lines(path):
+    out = _git(["diff", "--cached", "--unified=0", "--", path])
+    for line in out.splitlines():
+        if line.startswith("+") and not line.startswith("+++"):
+            yield line[1:]
+
+
+def scan():
+    findings = []
+    files = staged_files()
+
+    # 1) sensitive filenames
+    for f in files:
+        if any(re.search(p, f) for p in SENSITIVE_FILE_RES):
+            findings.append(f"  [file]   {f}  (sensitive filename)")
+
+    # 2) content of added lines
+    for f in files:
+        if is_binary(f):
+            continue
+        for text in added_lines(f):
+            if any(a in text for a in ALLOW_INLINE):
+                continue
+            for name, rgx in SECRET_RES:
+                m = rgx.search(text)
+                if not m:
+                    continue
+                if name == "Assigned secret" and PLACEHOLDER_RE.match(m.group(2).strip()):
+                    continue
+                snippet = text.strip()
+                if len(snippet) > 100:
+                    snippet = snippet[:100] + "…"
+                findings.append(f"  [secret] {f}: {name} -> {snippet}")
+                break
+
+    # 3) gitleaks if available
+    gl_failed = False
+    if shutil.which("gitleaks"):
+        r = subprocess.run(
+            ["gitleaks", "protect", "--staged", "--redact", "--no-banner"],
+            capture_output=True, text=True)
+        gl_failed = r.returncode != 0
+
+    return findings, gl_failed
+
+
+def main():
+    try:
+        findings, gl_failed = scan()
+    except Exception as e:  # never silently pass on a scanner error
+        sys.stderr.write(f"\n\033[1;31m✖ secret scan errored: {e}\033[0m\n"
+                         "Fix the hook or bypass with: git commit --no-verify\n\n")
+        return 1
+
+    if not findings and not gl_failed:
+        return 0
+
+    sys.stderr.write("\n\033[1;31m✖ Commit blocked by JoyBox secret scan\033[0m\n\n")
+    for f in findings:
+        sys.stderr.write(f + "\n")
+    if gl_failed:
+        sys.stderr.write("  [gitleaks] reported potential secrets "
+                         "(details: gitleaks protect --staged -v)\n")
+    sys.stderr.write(
+        "\nIf this is a false positive, append '# pragma: allowlist secret' to the line,\n"
+        "or bypass with: git commit --no-verify\n\n")
+    return 1
+
+
+if __name__ == "__main__":
+    sys.exit(main())
