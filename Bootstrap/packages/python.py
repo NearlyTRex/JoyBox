@@ -23,6 +23,7 @@ python[constants.EnvironmentType.LOCAL_UBUNTU] += [
     # API/Services
     {"id": "anthropic", "name": "Anthropic", "description": "Claude AI API client", "category": "API"},
     {"id": "PyGithub", "name": "PyGithub", "description": "GitHub API wrapper", "category": "API"},
+    {"id": "PySocks", "name": "PySocks", "description": "SOCKS proxy client", "category": "API"},
     {"id": "requests", "name": "Requests", "description": "HTTP library", "category": "API"},
 
     # Audio
@@ -56,7 +57,9 @@ python[constants.EnvironmentType.LOCAL_UBUNTU] += [
     {"id": "xmltodict", "name": "XMLtoDict", "description": "XML to dict converter", "category": "Data"},
 
     # Dev
+    {"id": "capstone", "name": "Capstone", "description": "Disassembly framework", "category": "Dev"},
     {"id": "GitPython", "name": "GitPython", "description": "Git repository interface", "category": "Dev"},
+    {"id": "keystone-engine", "name": "Keystone", "description": "Assembler framework", "category": "Dev"},
     {"id": "pip", "name": "pip", "description": "Python package installer", "category": "Dev"},
     {"id": "pipenv", "name": "Pipenv", "description": "Python dev workflow tool", "category": "Dev"},
     {"id": "pyghidra", "name": "PyGhidra", "description": "Ghidra Python bindings", "category": "Dev"},
@@ -101,6 +104,7 @@ python[constants.EnvironmentType.LOCAL_UBUNTU] += [
     {"id": "pathlib", "name": "Pathlib", "description": "Object-oriented filesystem paths", "category": "Utils"},
     {"id": "python-dateutil", "name": "Python-Dateutil", "description": "Date/time utilities", "category": "Utils"},
     {"id": "xxhash", "name": "xxHash", "description": "Fast non-cryptographic hash", "category": "Utils"},
+    {"id": "yt-dlp-ejs", "name": "yt-dlp-ejs", "description": "yt-dlp YouTube JS challenge solver scripts", "category": "Utils"},
 ]
 
 ###########################################################

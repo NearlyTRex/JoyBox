@@ -34,6 +34,7 @@ aptget[constants.EnvironmentType.LOCAL_UBUNTU] += [
     {"id": "pulseaudio-utils", "name": "PulseAudio Utils", "description": "PulseAudio command line tools", "category": "Admin"},
     {"id": "qdirstat", "name": "QDirStat", "description": "Disk usage statistics", "category": "Admin"},
     {"id": "thunar", "name": "Thunar", "description": "XFCE file manager", "category": "Admin"},
+    {"id": "tmux", "name": "tmux", "description": "Terminal multiplexer", "category": "Admin"},
     {"id": "unrar", "name": "unrar", "description": "Extract RAR archives", "category": "Admin"},
     {"id": "unzip", "name": "unzip", "description": "Extract ZIP archives", "category": "Admin"},
     {"id": "zip", "name": "zip", "description": "Create ZIP archives", "category": "Admin"},
@@ -70,6 +71,7 @@ aptget[constants.EnvironmentType.LOCAL_UBUNTU] += [
     {"id": "jq", "name": "jq", "description": "JSON processor", "category": "Devel"},
     {"id": "libtool-bin", "name": "Libtool", "description": "Library build tool", "category": "Devel"},
     {"id": "lld", "name": "LLD", "description": "LLVM linker", "category": "Devel"},
+    {"id": "llvm", "name": "LLVM", "description": "LLVM compiler toolchain", "category": "Devel"},
     {"id": "make", "name": "Make", "description": "Build automation tool", "category": "Devel"},
     {"id": "maven", "name": "Maven", "description": "Java build tool", "category": "Devel"},
     {"id": "nasm", "name": "NASM", "description": "Netwide assembler", "category": "Devel"},
@@ -230,6 +232,7 @@ aptget[constants.EnvironmentType.LOCAL_UBUNTU] += [
     {"id": "net-tools", "name": "net-tools", "description": "Network utilities (ifconfig, etc.)", "category": "Net"},
     {"id": "openssh-server", "name": "OpenSSH Server", "description": "SSH server", "category": "Net"},
     {"id": "openssl", "name": "OpenSSL", "description": "SSL/TLS toolkit", "category": "Net"},
+    {"id": "socat", "name": "socat", "description": "Multipurpose socket relay", "category": "Net"},
     {"id": "winbind", "name": "Winbind", "description": "Windows domain integration", "category": "Net"},
 
     # Sound
