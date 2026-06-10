@@ -71,3 +71,18 @@ class Installer:
 
     def uninstall(self):
         return False
+
+    def backup(self):
+        return True
+
+    def install_from_script(self, url, tmp_name, runner = "sh"):
+        tmp_path = f"/tmp/{tmp_name}"
+        util.log_info(f"Downloading installer from {url}")
+        self.connection.download_file(url, tmp_path)
+        util.log_info("Running installer script")
+        code = self.connection.run_blocking([runner, tmp_path])
+        self.connection.remove_file_or_directory(tmp_path)
+        if code != 0:
+            util.log_error(f"Installer script failed (exit {code}): {url}")
+            return False
+        return True

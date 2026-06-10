@@ -208,6 +208,14 @@ def prompt_for_file(description, default_value = None):
             log_warning("Entered value '%s' was not a valid file, please try again" % value)
 
 ###########################################################
+# Repo
+###########################################################
+def get_repo_root(config, expand = False):
+    scripts_dir = config.get_value("UserData.Dirs", "scripts_dir") if config else None
+    root = scripts_dir.replace("/Scripts", "") if scripts_dir else "$HOME/Repositories/JoyBox"
+    return os.path.expandvars(root) if expand else root
+
+###########################################################
 # Distro
 ###########################################################
 def get_linux_distro_value(field):

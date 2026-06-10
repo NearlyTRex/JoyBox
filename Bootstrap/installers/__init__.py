@@ -9,9 +9,11 @@ from installers.installer_cockpit import *
 from installers.installer_chrome import *
 from installers.installer_claude import *
 from installers.installer_config import *
+from installers.installer_deno import *
 from installers.installer_dotfiles import *
 from installers.installer_gh import *
 from installers.installer_ghidra import *
+from installers.installer_githooks import *
 from installers.installer_filebrowser import *
 from installers.installer_flatpak import *
 from installers.installer_gitkraken import *

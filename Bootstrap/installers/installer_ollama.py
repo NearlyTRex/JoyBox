@@ -41,19 +41,9 @@ class Ollama(installer.Installer):
         # Start install
         util.log_info("Installing Ollama")
 
-        # Download installer script
-        util.log_info("Downloading Ollama installer")
-        installer_path = "/tmp/ollama_install.sh"
-        self.connection.download_file("https://ollama.com/install.sh", installer_path)
-
-        # Run installer
-        util.log_info("Running Ollama installer")
-        code = self.connection.run_blocking(["bash", installer_path])
-        if code != 0:
-            self.connection.remove_file_or_directory(installer_path)
-            util.log_error("Failed to run Ollama installer")
+        # Download + run the official installer
+        if not self.install_from_script("https://ollama.com/install.sh", "ollama_install.sh", runner = "bash"):
             return False
-        self.connection.remove_file_or_directory(installer_path)
 
         # Verify installation
         util.log_info("Verifying installation")
