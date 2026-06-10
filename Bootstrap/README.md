@@ -41,6 +41,7 @@ python3 bootstrap.py -t local_ubuntu --list-components
 |-----------|--------------|
 | `config` | Configuration setup |
 | `dotfiles` | Dot files installation |
+| `githooks` | Activate the repo's git hooks (secret-scanning pre-commit) |
 | `python` | Python venv + pip packages |
 | `wrappers` | Script wrappers in ~/.local/bin |
 | `aptget` | All APT packages (dev tools, libs, apps) |
@@ -49,6 +50,7 @@ python3 bootstrap.py -t local_ubuntu --list-components
 | `ccusage` | Claude Code usage monitoring |
 | `chrome` | Google Chrome (adds repo) |
 | `claude` | Claude Code CLI |
+| `deno` | Deno JS runtime (yt-dlp's YouTube challenge solver needs it) |
 | `brave` | Brave Browser (adds repo) |
 | `gh` | GitHub CLI (adds repo) |
 | `gitkraken` | GitKraken (downloads latest .deb) |
@@ -85,6 +87,7 @@ python3 bootstrap.py -a setup -t remote_ubuntu -s 0 --components wordpress
 |-----------|--------------|
 | `config` | Configuration setup |
 | `dotfiles` | Dot files installation |
+| `githooks` | Activate the repo's git hooks (secret-scanning pre-commit) |
 | `python` | Python venv + pip packages |
 | `wrappers` | Script wrappers |
 | `aptget` | System packages |
@@ -143,9 +146,43 @@ python3 bootstrap.py -a setup -t local_ubuntu --components brave -f
 # Uninstall everything
 python3 bootstrap.py -a teardown -t local_ubuntu
 
+# Capture current dotfiles into the repo (version-controlled snapshot)
+python3 bootstrap.py -a backup -t local_ubuntu --components dotfiles
+
 # Verbose output
 python3 bootstrap.py -a setup -t local_ubuntu -v
 ```
+
+## Dotfiles
+
+The `dotfiles` component manages your shell config **non-destructively**:
+
+- It installs the JoyBox shell config into `~/.joybox/` (`shell.sh`, `aliases.sh`,
+  `functions.sh`, `completions.sh`).
+- It injects a single marker-delimited block into `~/.bashrc` / `~/.bash_profile` that
+  sources those files. Everything outside the block (your own edits, things added by other
+  installers such as the `deno` line) is left untouched:
+
+  ```bash
+  # >>> JOYBOX MANAGED BLOCK >>>
+  export JOYBOX_ROOT="..."
+  case $- in *i*) ... source ~/.joybox/*.sh ... esac
+  # <<< JOYBOX MANAGED BLOCK <<<
+  ```
+
+  The first time it touches an existing `~/.bashrc`/`~/.bash_profile` it keeps a one-shot
+  copy at `*.joybox.backup`.
+
+### Backup / capture
+
+`-a backup` snapshots your managed top-level dotfiles (`.gitconfig`, `.tmux.conf`, `.vimrc`,
+`.inputrc`) into `Bootstrap/dotfiles/captured/`. Review and commit that directory to version
+them. The shell files (`.bashrc`/`.bash_profile`) are **not** captured — they're managed by
+the block plus `~/.joybox/shell.sh`, so a whole-file copy would just duplicate them.
+
+On `setup`, any file present in `captured/` is restored to your home directory (existing
+files are backed up to `*.joybox.backup` first). To manage additional dotfiles, add them to
+`self.managed_dotfiles` in `installers/installer_dotfiles.py`.
 
 ## Adding New Software
 
