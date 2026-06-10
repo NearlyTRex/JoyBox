@@ -162,6 +162,50 @@ def find_videos(
     # Return search results
     return sorted(search_results, key=lambda d: d.get_duration())
 
+# Get playlist video ids
+def get_playlist_video_ids(
+    video_url,
+    cookie_source = None,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Get tool
+    youtube_tool = None
+    if programs.is_tool_installed("YtDlp"):
+        youtube_tool = programs.get_tool_program("YtDlp")
+    if not youtube_tool:
+        logger.log_error("YtDlp was not found")
+        return []
+
+    # Enumerate ids without downloading (lightweight, tab-agnostic)
+    list_cmd = [
+        youtube_tool,
+        "--flat-playlist",
+        "--print", "%(id)s"
+    ]
+    if isinstance(cookie_source, str) and len(cookie_source) > 0:
+        if paths.does_path_exist(cookie_source):
+            list_cmd += ["--cookies", cookie_source]
+        else:
+            list_cmd += ["--cookies-from-browser", cookie_source]
+    list_cmd += [video_url]
+
+    # Run and parse unique ids (preserving order)
+    output = command.run_output_command(
+        cmd = list_cmd,
+        options = command.create_command_options(blocking_processes = [youtube_tool]),
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    ids = []
+    if output:
+        for line in output.splitlines():
+            vid = line.strip()
+            if vid and vid not in ids:
+                ids.append(vid)
+    return ids
+
 # Download video
 def download_video(
     video_url,
@@ -220,7 +264,10 @@ def download_video(
             download_cmd += ["--cookies", cookie_source]
         else:
             download_cmd += ["--cookies-from-browser", cookie_source]
-    download_cmd += [video_url]
+    if isinstance(video_url, (list, tuple)):
+        download_cmd += list(video_url)
+    else:
+        download_cmd += [video_url]
 
     # Run download command
     logger.log_info(f"Executing download command: {' '.join(download_cmd[:5])}...")

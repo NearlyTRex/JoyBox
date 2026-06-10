@@ -27,3 +27,7 @@ story_channels = [
 asmr_channels = [
     { "name": "Gentle Whispering ASMR", "url": "https://www.youtube.com/@GentleWhisperingASMR/videos" }
 ]
+
+# Number of videos to download, archive, and upload per batch (incremental, so a
+# channel's audio is uploaded in chunks instead of all at the end). 0 = no batching.
+audio_download_batch_size = 25

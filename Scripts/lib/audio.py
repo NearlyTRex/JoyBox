@@ -50,8 +50,71 @@ def get_album_directories(genre_type = None, album_name = None, artist_name = No
                     album_dirs.append(item_path)
     return album_dirs
 
+# Get archived video ids
+def get_archived_video_ids(archive_file):
+    ids = set()
+    if archive_file and paths.is_path_file(archive_file):
+        try:
+            with open(archive_file, "r", encoding = "utf-8") as f:
+                for line in f:
+                    tokens = line.split()
+                    if tokens:
+                        ids.add(tokens[-1])
+        except Exception:
+            pass
+    return ids
+
+# Collect audio files in a directory and upload them to the channel's music dir
+def collect_and_upload_audio(work_dir, channel_music_dir, locker_type = None, verbose = False, pretend_run = False, exit_on_failure = False):
+
+    # Nothing to do without a directory
+    if not paths.is_path_directory(work_dir):
+        return True
+
+    # Move audio files into an audio-only subdirectory (filter out thumbnails, etc.)
+    audio_only_dir = paths.join_paths(work_dir, "audio_only")
+    moved_count = 0
+    for file_name in paths.get_directory_contents(work_dir):
+        if file_name.lower().endswith(('.mp3', '.m4a', '.wav', '.flac', '.ogg')):
+            src_file = paths.join_paths(work_dir, file_name)
+            if paths.is_path_file(src_file):
+                if moved_count == 0:
+                    fileops.make_directory(src = audio_only_dir, verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure)
+                fileops.move_file_or_directory(
+                    src = src_file,
+                    dest = paths.join_paths(audio_only_dir, file_name),
+                    verbose = verbose,
+                    pretend_run = pretend_run,
+                    exit_on_failure = exit_on_failure)
+                moved_count += 1
+
+    # Nothing collected
+    if moved_count == 0:
+        return True
+
+    # Upload the collected audio
+    logger.log_info(f"Backing up {moved_count} audio file(s) to {channel_music_dir}")
+    dest_rel_path = locker.convert_to_relative_path(channel_music_dir)
+    backup_success = locker.backup(
+        src = audio_only_dir,
+        dest_rel_path = dest_rel_path,
+        locker_type = locker_type,
+        show_progress = True,
+        skip_existing = True,
+        skip_identical = True,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    if not backup_success:
+        logger.log_error("Backup process failed")
+        return False
+
+    # Remove just the uploaded copies; the working dir itself is left for the caller
+    fileops.remove_directory(src = audio_only_dir, verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure)
+    return True
+
 # Download channel audio files
-def download_channel_audio_files(channels, genre_type, cookie_source = None, locker_type = None, verbose = False, pretend_run = False, exit_on_failure = False):
+def download_channel_audio_files(channels, genre_type, cookie_source = None, locker_type = None, output_path = None, verbose = False, pretend_run = False, exit_on_failure = False):
 
     # Download channels
     logger.log_info(f"Starting audio download process for genre: {genre_type}")
@@ -62,17 +125,7 @@ def download_channel_audio_files(channels, genre_type, cookie_source = None, loc
         logger.log_info(f"[{i}/{len(channels)}] Processing channel: {channel_name}")
         logger.log_info(f"Channel URL: {channel_url}")
 
-        # Create temporary directory
-        logger.log_info("Creating temporary directory...")
-        tmp_dir_success, tmp_dir_result = fileops.create_temporary_directory(
-            verbose = verbose,
-            pretend_run = pretend_run)
-        if not tmp_dir_success:
-            logger.log_error(f"Failed to create temporary directory for channel: {channel_name}")
-            return False
-        logger.log_info(f"Created temporary directory: {tmp_dir_result}")
-
-        # Get channel info
+        # Channel paths
         channel_archive_file = environment.get_file_audio_metadata_archive_file(genre_type, channel_name)
         channel_music_dir = environment.get_locker_music_album_dir(
             album_name = channel_name,
@@ -81,117 +134,115 @@ def download_channel_audio_files(channels, genre_type, cookie_source = None, loc
         logger.log_info(f"Archive file: {channel_archive_file}")
         logger.log_info(f"Target music directory: {channel_music_dir}")
 
-        # Download channel
-        logger.log_info("Starting video download...")
-        success = google.download_video(
-            video_url = channel_url,
-            audio_only = True,
-            output_dir = tmp_dir_result,
-            download_archive = channel_archive_file,
-            cookie_source = cookie_source,
-            sanitize_filenames = True,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        if not success:
-            logger.log_error(f"Failed to download videos for channel: {channel_name}")
-            return False
-
-        # Check what was downloaded
-        if paths.is_path_directory(tmp_dir_result):
-            downloaded_files = paths.get_directory_contents(tmp_dir_result)
-            audio_files = [f for f in downloaded_files if f.endswith('.mp3')]
-            logger.log_info(f"Downloaded {len(audio_files)} audio files")
-            if len(audio_files) > 0:
-                logger.log_info(f"First few files: {audio_files[:3]}")
-        else:
-            logger.log_warning(f"Temporary directory doesn't exist after download: {tmp_dir_result}")
-
-        # Make music dir
-        logger.log_info(f"Creating target music directory: {channel_music_dir}")
+        # Make target music dir
         fileops.make_directory(
             src = channel_music_dir,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
-        # Backup audio files only (filter out thumbnails and other non-audio files)
-        logger.log_info(f"Starting backup from {tmp_dir_result} to {channel_music_dir}")
+        # Resolve the working directory. With an output path it is persistent and
+        # resumable (per channel); otherwise each batch uses a throwaway temp dir.
+        persistent_dir = None
+        if output_path:
+            persistent_dir = paths.join_paths(output_path, channel_name)
+            fileops.make_directory(src = persistent_dir, verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure)
+            # Recover/upload any audio left here by a previous interrupted run
+            logger.log_info(f"Resuming from persistent directory: {persistent_dir}")
+            if not collect_and_upload_audio(persistent_dir, channel_music_dir, locker_type = locker_type, verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure):
+                return False
 
-        # Create a subdirectory for audio files only
-        audio_only_dir = paths.join_paths(tmp_dir_result, "audio_only")
-        fileops.make_directory(
-            src = audio_only_dir,
+        # Enumerate channel videos and skip the ones already downloaded (per the archive)
+        all_video_ids = google.get_playlist_video_ids(
+            video_url = channel_url,
+            cookie_source = cookie_source,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
+        archived_ids = get_archived_video_ids(channel_archive_file)
+        new_video_ids = [vid for vid in all_video_ids if vid not in archived_ids]
 
-        # Move only audio files to the audio-only subdirectory
-        if paths.is_path_directory(tmp_dir_result):
-            downloaded_files = paths.get_directory_contents(tmp_dir_result)
-            for file_name in downloaded_files:
-                if file_name.lower().endswith(('.mp3', '.m4a', '.wav', '.flac', '.ogg')):
-                    src_file = paths.join_paths(tmp_dir_result, file_name)
-                    dest_file = paths.join_paths(audio_only_dir, file_name)
-                    if paths.is_path_file(src_file):
-                        fileops.move_file_or_directory(
-                            src = src_file,
-                            dest = dest_file,
-                            verbose = verbose,
-                            pretend_run = pretend_run,
-                            exit_on_failure = exit_on_failure)
-
-        # Backup audio files
-        dest_rel_path = locker.convert_to_relative_path(channel_music_dir)
-        backup_success = locker.backup(
-            src = audio_only_dir,
-            dest_rel_path = dest_rel_path,
-            locker_type = locker_type,
-            show_progress = True,
-            skip_existing = True,
-            skip_identical = True,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        if backup_success:
-            logger.log_info("Backup completed successfully")
+        # Build batch targets (each target is downloaded + uploaded in turn)
+        batch_size = getattr(config, "audio_download_batch_size", 0) or 0
+        batch_targets = []
+        if not all_video_ids:
+            logger.log_warning("Could not enumerate channel videos; downloading whole channel in one pass")
+            batch_targets = [channel_url]
+        elif new_video_ids:
+            logger.log_info(f"Channel has {len(all_video_ids)} videos, {len(new_video_ids)} new")
+            if batch_size > 0:
+                for j in range(0, len(new_video_ids), batch_size):
+                    chunk = new_video_ids[j:j + batch_size]
+                    batch_targets.append([f"https://www.youtube.com/watch?v={vid}" for vid in chunk])
+            else:
+                batch_targets = [[f"https://www.youtube.com/watch?v={vid}" for vid in new_video_ids]]
         else:
-            logger.log_error("Backup process failed")
-            return False
+            logger.log_info(f"Channel up to date ({len(all_video_ids)} videos already archived)")
 
-        # Delete temporary directory
-        logger.log_info(f"Cleaning up temporary directory: {tmp_dir_result}")
-        cleanup_success = fileops.remove_directory(
-            src = tmp_dir_result,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        if cleanup_success:
-            logger.log_info("Temporary directory cleanup completed")
-        else:
-            logger.log_warning("Failed to clean up temporary directory")
+        # Process each batch: download -> collect audio -> upload -> clean
+        for b_index, target in enumerate(batch_targets, 1):
+            if len(batch_targets) > 1:
+                logger.log_info(f"[{channel_name}] Batch {b_index}/{len(batch_targets)}")
+
+            # Working dir for this batch (persistent dir is reused and kept)
+            if persistent_dir:
+                work_dir = persistent_dir
+            else:
+                tmp_dir_success, work_dir = fileops.create_temporary_directory(verbose = verbose, pretend_run = pretend_run)
+                if not tmp_dir_success:
+                    logger.log_error("Failed to create temporary directory for batch")
+                    return False
+
+            # Download the batch
+            success = google.download_video(
+                video_url = target,
+                audio_only = True,
+                output_dir = work_dir,
+                download_archive = channel_archive_file,
+                cookie_source = cookie_source,
+                sanitize_filenames = True,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
+            if not success:
+                logger.log_error("Failed to download batch")
+                if not persistent_dir:
+                    fileops.remove_directory(src = work_dir, verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure)
+                return False
+
+            # Collect + upload this batch right away
+            if not collect_and_upload_audio(work_dir, channel_music_dir, locker_type = locker_type, verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure):
+                if not persistent_dir:
+                    fileops.remove_directory(src = work_dir, verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure)
+                return False
+
+            # Clean up throwaway working dir (a persistent dir is kept for resume)
+            if not persistent_dir:
+                fileops.remove_directory(src = work_dir, verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure)
         logger.log_info(f"[{i}/{len(channels)}] Completed processing channel: {channel_name}")
     logger.log_info("Audio download process completed successfully")
     return True
 
 # Download story audio files
-def download_story_audio_files(cookie_source = None, locker_type = None, verbose = False, pretend_run = False, exit_on_failure = False):
+def download_story_audio_files(cookie_source = None, locker_type = None, output_path = None, verbose = False, pretend_run = False, exit_on_failure = False):
     return download_channel_audio_files(
         channels = config.story_channels,
         genre_type = config.AudioGenreType.STORY,
         cookie_source = cookie_source,
         locker_type = locker_type,
+        output_path = output_path,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
 # Download asmr audio files
-def download_asmr_audio_files(cookie_source = None, locker_type = None, verbose = False, pretend_run = False, exit_on_failure = False):
+def download_asmr_audio_files(cookie_source = None, locker_type = None, output_path = None, verbose = False, pretend_run = False, exit_on_failure = False):
     return download_channel_audio_files(
         channels = config.asmr_channels,
         genre_type = config.AudioGenreType.ASMR,
         cookie_source = cookie_source,
         locker_type = locker_type,
+        output_path = output_path,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)

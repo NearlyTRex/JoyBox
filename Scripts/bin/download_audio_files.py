@@ -26,6 +26,7 @@ parser.add_enum_argument(
     arg_type = config.LockerType,
     default = config.LockerType.ALL,
     description = "Locker type for backup upload")
+parser.add_output_path_argument(description = "Persistent output folder (resumable; downloads are kept here per channel instead of a temp dir)")
 parser.add_common_arguments()
 args, unknown = parser.parse_known_args()
 
@@ -43,6 +44,7 @@ def main():
         success = audio.download_story_audio_files(
             cookie_source = args.cookie_source,
             locker_type = args.locker_type,
+            output_path = args.output_path,
             verbose = args.verbose,
             pretend_run = args.pretend_run,
             exit_on_failure = args.exit_on_failure)
@@ -55,6 +57,7 @@ def main():
         success = audio.download_asmr_audio_files(
             cookie_source = args.cookie_source,
             locker_type = args.locker_type,
+            output_path = args.output_path,
             verbose = args.verbose,
             pretend_run = args.pretend_run,
             exit_on_failure = args.exit_on_failure)
