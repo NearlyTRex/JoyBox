@@ -48,6 +48,7 @@ class RemoteUbuntu(env.Environment):
         self.available_components = {
             "config": installers.Config(**self.installer_options),
             "dotfiles": installers.Dotfiles(**self.installer_options),
+            "githooks": installers.GitHooks(**self.installer_options),
             "python": installers.Python(**self.installer_options),
             "wrappers": installers.Wrappers(**self.installer_options),
             "aptget": installers.AptGet(**self.installer_options),
@@ -73,6 +74,7 @@ class RemoteUbuntu(env.Environment):
         self.installer_ccusage = self.available_components["ccusage"]
         self.installer_config = self.available_components["config"]
         self.installer_dotfiles = self.available_components["dotfiles"]
+        self.installer_githooks = self.available_components["githooks"]
         self.installer_python = self.available_components["python"]
         self.installer_wrappers = self.available_components["wrappers"]
         self.installer_aptget = self.available_components["aptget"]

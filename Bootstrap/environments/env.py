@@ -93,3 +93,6 @@ class Environment:
 
     def teardown(self):
         return False
+
+    def backup(self):
+        return self.process_components("backup")

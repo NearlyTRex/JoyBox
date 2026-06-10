@@ -19,7 +19,7 @@ import util
 parser = argparse.ArgumentParser(description="Environment bootstrap script.")
 parser.add_argument(
     "-a", "--action",
-    choices = ["setup", "teardown", "status"],
+    choices = ["setup", "teardown", "status", "backup"],
     help = "Action to perform")
 parser.add_argument(
     "-t", "--type",
@@ -123,6 +123,8 @@ def main():
         environment_runner.setup()
     elif args.action == "teardown":
         environment_runner.teardown()
+    elif args.action == "backup":
+        environment_runner.backup()
     elif args.action == "status":
         results = environment_runner.status()
         installed = [r for r in results if r["installed"]]
