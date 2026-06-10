@@ -8,8 +8,9 @@ playlists.
 ## Download audio
 
 `download_audio_files` is **config-driven**, not URL-driven: for the chosen genre it iterates a
-channel list baked into `Scripts/lib/config/audio.py`, downloads each channel's videos as audio,
-and backs the results up to the locker.
+channel list baked into `Scripts/lib/config/audio.py`, and for each channel downloads videos as
+audio in **batches** (default 25), uploading each batch to the locker before the next — so a long
+channel uploads incrementally instead of all at the end.
 
 ```bash
 # Download all ASMR-channel audio and back it up everywhere
@@ -24,6 +25,25 @@ download_audio_files --genre_type Story --cookie_source firefox --locker_type Lo
 | `-g`, `--genre_type` | — | Genre to pull. **Only `ASMR` and `Story` are wired to download logic.** The enum also defines `Audiobook`, `Classical`, `Game`, `Radio`, `Regular`, `Soundtrack`, `Therapy`, but those branches do nothing yet. |
 | `-c`, `--cookie_source` | `firefox` | Browser to pull YouTube cookies from |
 | `-l`, `--locker_type` | `All` | Where to back up (`All`/`Local`/`Hetzner`/`Gdrive`/`External`) |
+| `-o`, `--output_path` | temp dir | Persistent per-channel folder. Makes runs **resumable** — keeps downloads on disk and re-uploads anything an interrupted run left behind. |
+
+### Resuming & large backlogs
+
+Pass `-o` to keep downloads in a persistent folder so an interrupted run can be picked up where
+it left off:
+
+```bash
+download_audio_files --genre_type Story -o ~/audio_resume
+```
+
+For a big first-time pull, stage to **Local** only and push to the remotes separately —
+`master_backup` batches and encrypts far more efficiently than the tool's per-file inline upload
+(which is also silent without `-v`):
+
+```bash
+download_audio_files --genre_type Story -o ~/audio_resume -l Local
+master_backup -r Hetzner -v
+```
 
 Reference: [`download_audio_files`](man/download_audio_files.md).
 

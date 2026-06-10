@@ -71,14 +71,15 @@ def collect_and_upload_audio(work_dir, channel_music_dir, locker_type = None, ve
     if not paths.is_path_directory(work_dir):
         return True
 
-    # Move audio files into an audio-only subdirectory (filter out thumbnails, etc.)
+    # Move top-level audio into an audio-only subdirectory (filter out thumbnails,
+    # etc.). The subdir may already hold files from a previous interrupted upload,
+    # so we merge into it rather than treating an empty top level as "nothing to do".
     audio_only_dir = paths.join_paths(work_dir, "audio_only")
-    moved_count = 0
     for file_name in paths.get_directory_contents(work_dir):
         if file_name.lower().endswith(('.mp3', '.m4a', '.wav', '.flac', '.ogg')):
             src_file = paths.join_paths(work_dir, file_name)
             if paths.is_path_file(src_file):
-                if moved_count == 0:
+                if not paths.is_path_directory(audio_only_dir):
                     fileops.make_directory(src = audio_only_dir, verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure)
                 fileops.move_file_or_directory(
                     src = src_file,
@@ -86,14 +87,17 @@ def collect_and_upload_audio(work_dir, channel_music_dir, locker_type = None, ve
                     verbose = verbose,
                     pretend_run = pretend_run,
                     exit_on_failure = exit_on_failure)
-                moved_count += 1
 
-    # Nothing collected
-    if moved_count == 0:
+    # Upload anything pending (just-moved or left by a previous interrupted run)
+    if not paths.is_path_directory(audio_only_dir):
+        return True
+    pending = [f for f in paths.get_directory_contents(audio_only_dir)
+               if f.lower().endswith(('.mp3', '.m4a', '.wav', '.flac', '.ogg'))]
+    if not pending:
         return True
 
     # Upload the collected audio
-    logger.log_info(f"Backing up {moved_count} audio file(s) to {channel_music_dir}")
+    logger.log_info(f"Backing up {len(pending)} audio file(s) to {channel_music_dir}")
     dest_rel_path = locker.convert_to_relative_path(channel_music_dir)
     backup_success = locker.backup(
         src = audio_only_dir,
