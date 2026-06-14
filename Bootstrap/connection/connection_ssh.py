@@ -260,7 +260,7 @@ class ConnectionSSH(connection.Connection):
             # Gather all files and ensure remote dirs
             file_tasks = []
             for dirpath, dirnames, filenames in os.walk(src):
-                if is_exclude_path(os.path.relpath(dirpath, src), excludes = excludes):
+                if util.is_exclude_path(os.path.relpath(dirpath, src), excludes = excludes):
                     continue
 
                 # Get remote directory
@@ -321,18 +321,27 @@ class ConnectionSSH(connection.Connection):
                 util.quit_program()
             return None
 
-    def write_file(self, src, contents):
+    def write_file(self, src, contents, sudo = False):
         try:
             if self.flags.verbose:
                 util.log_info(f"Writing remote file {src}")
             if not self.flags.pretend_run:
-                sftp = ConnectionSSH.ssh_client.open_sftp()
-                with sftp.file(src, "w") as remote_file:
-                    remote_file.write(contents)
-                    remote_file.flush()
-                sftp.close()
+                if sudo:
+                    temp_path = "/tmp/tmp_write_file_" + str(int(time.time()))
+                    sftp = ConnectionSSH.ssh_client.open_sftp()
+                    with sftp.file(temp_path, "w") as remote_file:
+                        remote_file.write(contents)
+                        remote_file.flush()
+                    sftp.close()
+                    self.run_blocking(["mv", temp_path, src], sudo = True)
+                else:
+                    sftp = ConnectionSSH.ssh_client.open_sftp()
+                    with sftp.file(src, "w") as remote_file:
+                        remote_file.write(contents)
+                        remote_file.flush()
+                    sftp.close()
                 return True
-            return False
+            return True
         except Exception as e:
             if self.flags.exit_on_failure:
                 util.log_error(f"Failed to write file {src}")

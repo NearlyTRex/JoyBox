@@ -42,7 +42,7 @@ class Wrappers(installer.Installer):
         super().__init__(config, connection, flags, options)
 
         # Paths
-        self.local_bin_dir = os.path.expandvars("$HOME/.local/bin")
+        self.local_bin_dir = os.path.expandvars("$HOME/.joybox/bin")
         self.marker_path = f"{self.local_bin_dir}/{MARKER_FILE}"
 
         # Get scripts directory from config
@@ -101,8 +101,8 @@ class Wrappers(installer.Installer):
         # Start install
         util.log_info("Installing JoyBox script wrappers")
 
-        # Create ~/.local/bin directory
-        util.log_info("Creating ~/.local/bin directory")
+        # Create ~/.joybox/bin directory
+        util.log_info("Creating ~/.joybox/bin directory")
         self.connection.make_directory(self.local_bin_dir)
 
         # Discover scripts
@@ -153,8 +153,8 @@ class Wrappers(installer.Installer):
         self.connection.write_file(self.marker_path, marker_content)
 
         # All done
-        util.log_info(f"Installed {len(installed_wrappers)} wrappers to ~/.local/bin/")
-        util.log_info("Ensure PATH includes ~/.local/bin (handled by dotfiles component)")
+        util.log_info(f"Installed {len(installed_wrappers)} wrappers to ~/.joybox/bin/")
+        util.log_info("Ensure PATH includes ~/.joybox/bin (handled by dotfiles component)")
         return True
 
     def uninstall(self):

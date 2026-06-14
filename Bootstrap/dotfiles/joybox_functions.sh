@@ -6,11 +6,11 @@
 jbrun() {
     local script_name="$1"
     shift
-    if [ -x "$HOME/.local/bin/$script_name" ]; then
-        "$HOME/.local/bin/$script_name" "$@"
+    if [ -x "$HOME/.joybox/bin/$script_name" ]; then
+        "$HOME/.joybox/bin/$script_name" "$@"
     else
         echo "Script not found: $script_name"
-        echo "Available scripts in ~/.local/bin/"
+        echo "Available scripts in ~/.joybox/bin/"
         return 1
     fi
 }
@@ -30,8 +30,8 @@ jbedit() {
 # Show help for a JoyBox script
 jbhelp() {
     local script_name="$1"
-    if [ -x "$HOME/.local/bin/$script_name" ]; then
-        "$HOME/.local/bin/$script_name" --help
+    if [ -x "$HOME/.joybox/bin/$script_name" ]; then
+        "$HOME/.joybox/bin/$script_name" --help
     else
         echo "Script not found: $script_name"
         return 1
@@ -41,5 +41,5 @@ jbhelp() {
 # List all available JoyBox scripts
 jblist() {
     echo "Available JoyBox scripts:"
-    ls -1 "$HOME/.local/bin" 2>/dev/null | grep -v '^\.' | sort
+    ls -1 "$HOME/.joybox/bin" 2>/dev/null | grep -v '^\.' | sort
 }

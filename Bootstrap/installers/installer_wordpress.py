@@ -143,7 +143,7 @@ class Wordpress(installer.Installer):
 
         # Start docker
         util.log_info("Starting docker")
-        self.connection.get_options().set_current_working_directory(self.app_dir)
+        self.connection.set_current_working_directory(self.app_dir)
         self.connection.run_checked([self.docker_compose_tool, "--env-file", f"{self.app_dir}/.env", "up", "-d", "--build"])
         return True
 
@@ -151,9 +151,9 @@ class Wordpress(installer.Installer):
 
         # Stop docker
         util.log_info("Stopping docker")
-        self.connection.get_options().set_current_working_directory(self.app_dir)
+        self.connection.set_current_working_directory(self.app_dir)
         self.connection.run_checked([self.docker_compose_tool, "--env-file", f"{self.app_dir}/.env", "down", "-v"])
-        self.connection.get_options().set_current_working_directory(None)
+        self.connection.set_current_working_directory(None)
 
         # Remove directory
         util.log_info("Removing directory")

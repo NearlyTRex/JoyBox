@@ -63,17 +63,20 @@ class Udev(installer.Installer):
 
             # Write rule file
             util.log_info(f"Installing {rule['filename']}: {rule['description']}")
-            cmd = f"echo '{rule['content']}' | sudo tee {rule_path}"
-            result = self.connection.run_command(cmd)
-            if result.return_code != 0:
+            success = self.connection.write_file(rule_path, rule['content'] + '\n', sudo=True)
+            if not success:
                 util.log_error(f"Failed to install {rule['filename']}")
                 return False
 
         # Reload udev rules
         util.log_info("Reloading udev rules")
-        result = self.connection.run_command("sudo udevadm control --reload-rules && sudo udevadm trigger")
-        if result.return_code != 0:
+        code = self.connection.run_blocking(["udevadm", "control", "--reload-rules"], sudo=True)
+        if code != 0:
             util.log_error("Failed to reload udev rules")
+            return False
+        code = self.connection.run_blocking(["udevadm", "trigger"], sudo=True)
+        if code != 0:
+            util.log_error("Failed to trigger udev rules")
             return False
 
         # All done
@@ -91,13 +94,12 @@ class Udev(installer.Installer):
 
             if self.connection.does_file_or_directory_exist(rule_path):
                 util.log_info(f"Removing {rule['filename']}")
-                result = self.connection.run_command(f"sudo rm -f {rule_path}")
-                if result.return_code != 0:
-                    util.log_error(f"Failed to remove {rule['filename']}")
+                self.connection.remove_file_or_directory(rule_path, sudo=True)
 
         # Reload udev rules
         util.log_info("Reloading udev rules")
-        self.connection.run_command("sudo udevadm control --reload-rules && sudo udevadm trigger")
+        self.connection.run_blocking(["udevadm", "control", "--reload-rules"], sudo=True)
+        self.connection.run_blocking(["udevadm", "trigger"], sudo=True)
 
         # All done
         util.log_info("Udev rules uninstalled")

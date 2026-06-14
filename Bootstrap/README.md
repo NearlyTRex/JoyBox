@@ -43,7 +43,7 @@ python3 bootstrap.py -t local_ubuntu --list-components
 | `dotfiles` | Dot files installation |
 | `githooks` | Activate the repo's git hooks (secret-scanning pre-commit) |
 | `python` | Python venv + pip packages |
-| `wrappers` | Script wrappers in ~/.local/bin |
+| `wrappers` | Script wrappers in ~/.joybox/bin |
 | `aptget` | All APT packages (dev tools, libs, apps) |
 | `awscli` | AWS CLI |
 | `flatpak` | Flatpak apps (Discord, Signal, etc.) |

@@ -5,7 +5,7 @@
 # Completion for jbrun function
 _jbrun_completions() {
     local cur="${COMP_WORDS[COMP_CWORD]}"
-    local scripts=$(ls "$HOME/.local/bin" 2>/dev/null | grep -v '^\.')
+    local scripts=$(ls "$HOME/.joybox/bin" 2>/dev/null | grep -v '^\.')
     COMPREPLY=($(compgen -W "$scripts" -- "$cur"))
 }
 complete -F _jbrun_completions jbrun

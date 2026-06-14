@@ -59,7 +59,7 @@ alias diff='diff --color=auto'
 # ============================================================
 # PATH Configuration
 # ============================================================
-export PATH="$HOME/.local/bin:$PATH"
+export PATH="$HOME/.joybox/bin:$PATH"
 
 # ============================================================
 # Common Aliases
