@@ -161,13 +161,13 @@ class Connection:
     def does_file_or_directory_exist(self, src):
         return False
 
-    def transfer_files(self, src, dest, excludes = []):
+    def transfer_files(self, src, dest, excludes = [], sudo = False):
         return False
 
-    def read_file(self, src):
+    def read_file(self, src, sudo = False):
         return None
 
-    def write_file(self, src, contents):
+    def write_file(self, src, contents, sudo = False):
         return False
 
     def download_file(self, url, dest, sudo = False):

@@ -252,10 +252,16 @@ class ConnectionSSH(connection.Connection):
                 util.quit_program()
             return False
 
-    def transfer_files(self, src, dest, excludes = []):
+    def transfer_files(self, src, dest, excludes = [], sudo = False):
         try:
             sftp = ConnectionSSH.ssh_client.open_sftp()
             sftp_lock = threading.Lock()
+
+            # For sudo transfers, upload to temp dir first then move
+            if sudo:
+                temp_dest = f"/tmp/transfer_{int(time.time())}"
+                actual_dest = dest
+                dest = temp_dest
 
             # Gather all files and ensure remote dirs
             file_tasks = []
@@ -290,12 +296,16 @@ class ConnectionSSH(connection.Connection):
                         util.log_info(f"Transferring file: {local_file} to {remote_file}")
                         sftp.put(local_file, remote_file)
                 except Exception as e:
-                    util.log_error(f"Failed to transer file {local_file} to {remote_file}: {e}")
+                    util.log_error(f"Failed to transfer file {local_file} to {remote_file}: {e}")
 
             # Start uploads
             with concurrent.futures.ThreadPoolExecutor(max_workers = 8) as executor:
                 executor.map(upload_file, file_tasks)
             sftp.close()
+
+            # For sudo transfers, move from temp to actual destination
+            if sudo:
+                self.run_blocking(["mv", temp_dest, actual_dest], sudo = True)
             return True
         except Exception as e:
             util.log_error(f"Failed to transfer {src} to {dest}")
@@ -303,16 +313,19 @@ class ConnectionSSH(connection.Connection):
             util.log_error(traceback.format_exc())
             return False
 
-    def read_file(self, src):
+    def read_file(self, src, sudo = False):
         try:
             if self.flags.verbose:
                 util.log_info(f"Reading remote file {src}")
             if not self.flags.pretend_run:
-                sftp = ConnectionSSH.ssh_client.open_sftp()
-                with sftp.file(src, "r") as f:
-                    contents = f.read().decode()
-                sftp.close()
-                return contents
+                if sudo:
+                    return self.run_output(["cat", src], sudo = True)
+                else:
+                    sftp = ConnectionSSH.ssh_client.open_sftp()
+                    with sftp.file(src, "r") as f:
+                        contents = f.read().decode()
+                    sftp.close()
+                    return contents
             return None
         except Exception as e:
             if self.flags.exit_on_failure:

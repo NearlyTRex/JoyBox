@@ -193,23 +193,31 @@ class ConnectionLocal(connection.Connection):
                 util.quit_program()
             return False
 
-    def transfer_files(self, src, dest, excludes = []):
+    def transfer_files(self, src, dest, excludes = [], sudo = False):
         try:
             if self.flags.verbose:
                 util.log_info("Transferring files from %s to %s" % (src, dest))
             if self.flags.skip_existing and os.path.exists(dest):
                 return True
             if not self.flags.pretend_run:
-                if os.path.isdir(src):
-                    def ignore_patterns(_, names):
-                        ignored = set()
-                        for pattern in excludes:
-                            ignored.update(fnmatch.filter(names, pattern))
-                        return ignored
-                    shutil.copytree(src, dest, ignore = ignore_patterns if excludes else None, dirs_exist_ok=True)
+                if sudo:
+                    if os.path.isdir(src):
+                        cmd = ["cp", "-r", src, dest]
+                    else:
+                        cmd = ["cp", src, dest]
+                    code = self.run_return_code(cmd, sudo = True)
+                    return code == 0
                 else:
-                    if not any(fnmatch.fnmatch(os.path.basename(src), pattern) for pattern in excludes):
-                        shutil.copy(src, dest)
+                    if os.path.isdir(src):
+                        def ignore_patterns(_, names):
+                            ignored = set()
+                            for pattern in excludes:
+                                ignored.update(fnmatch.filter(names, pattern))
+                            return ignored
+                        shutil.copytree(src, dest, ignore = ignore_patterns if excludes else None, dirs_exist_ok=True)
+                    else:
+                        if not any(fnmatch.fnmatch(os.path.basename(src), pattern) for pattern in excludes):
+                            shutil.copy(src, dest)
             return True
         except Exception as e:
             if self.flags.exit_on_failure:
@@ -218,19 +226,22 @@ class ConnectionLocal(connection.Connection):
                 util.quit_program()
             return False
 
-    def read_file(self, src):
+    def read_file(self, src, sudo = False):
         try:
             if self.flags.verbose:
                 util.log_info(f"Reading file {src}")
             if not self.flags.pretend_run:
-                contents = ""
-                with open(src, "r") as f:
-                    contents = f.read()
-                return contents
+                if sudo:
+                    return self.run_output(["cat", src], sudo = True)
+                else:
+                    contents = ""
+                    with open(src, "r") as f:
+                        contents = f.read()
+                    return contents
             return None
         except Exception as e:
             if self.flags.exit_on_failure:
-                util.log_error(f"Unable to write file to {src}")
+                util.log_error(f"Unable to read file {src}")
                 util.log_error(e)
                 util.quit_program()
             return None
