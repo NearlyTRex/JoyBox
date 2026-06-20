@@ -54,7 +54,7 @@ def create_chrome_web_driver(
     if programs.is_tool_installed("ChromeDriver"):
         webdriver_tool = programs.get_tool_program("ChromeDriver")
     if not webdriver_tool:
-        logger.log_error("ChromeDriver was not found")
+        logger.log_warning("ChromeDriver was not found; callers may fall back to another fetch method")
         return None
 
     # Create web driver
@@ -105,7 +105,7 @@ def create_firefox_web_driver(
     if programs.is_tool_installed("GeckoDriver"):
         webdriver_tool = programs.get_tool_program("GeckoDriver")
     if not webdriver_tool:
-        logger.log_error("GeckoDriver was not found")
+        logger.log_warning("GeckoDriver was not found; callers may fall back to another fetch method")
         return None
 
     # Create web driver
