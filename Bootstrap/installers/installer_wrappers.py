@@ -65,8 +65,12 @@ class Wrappers(installer.Installer):
         else:
             self.venv_pip = os.path.expandvars("$HOME/.venv/bin/pip3")
 
-        # Check if venv exists
-        self.venv_exists = os.path.exists(self.venv_python)
+        # Venv state is resolved at install time, not here
+        self.venv_exists = False
+        self.python_path = "/usr/bin/python3"
+
+    def _refresh_venv_state(self):
+        self.venv_exists = self.connection.does_file_or_directory_exist(self.venv_python)
         self.python_path = self.venv_python if self.venv_exists else "/usr/bin/python3"
 
     def get_supported_environments(self):
@@ -100,6 +104,9 @@ class Wrappers(installer.Installer):
 
         # Start install
         util.log_info("Installing JoyBox script wrappers")
+
+        # Resolve the venv now
+        self._refresh_venv_state()
 
         # Create ~/.joybox/bin directory
         util.log_info("Creating ~/.joybox/bin directory")
