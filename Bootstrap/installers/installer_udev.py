@@ -40,7 +40,6 @@ class Udev(installer.Installer):
         return os.path.join(self.rules_dir, rule["filename"])
 
     def is_installed(self):
-        # Check if all rules are installed
         for rule in UDEV_RULES:
             rule_path = self._get_rule_path(rule)
             if not self.connection.does_file_or_directory_exist(rule_path):

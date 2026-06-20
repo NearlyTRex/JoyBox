@@ -276,6 +276,7 @@ aptget[constants.EnvironmentType.LOCAL_UBUNTU] += [
     {"id": "uget", "name": "uGet", "description": "Download manager", "category": "Web"},
 
     # X11
+    {"id": "libinput-tools", "name": "libinput tools", "description": "libinput CLI", "category": "X11"},
     {"id": "wmctrl", "name": "wmctrl", "description": "Window manager control", "category": "X11"},
 ]
 

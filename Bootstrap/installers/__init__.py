@@ -9,6 +9,7 @@ from installers.installer_cockpit import *
 from installers.installer_chrome import *
 from installers.installer_claude import *
 from installers.installer_config import *
+from installers.installer_dconf import *
 from installers.installer_deno import *
 from installers.installer_dotfiles import *
 from installers.installer_gh import *
@@ -25,6 +26,7 @@ from installers.installer_ollama import *
 from installers.installer_onepassword import *
 from installers.installer_python import *
 from installers.installer_steam import *
+from installers.installer_sysctl import *
 from installers.installer_udev import *
 from installers.installer_virtualbox import *
 from installers.installer_vscodium import *
@@ -32,4 +34,5 @@ from installers.installer_wine import *
 from installers.installer_winget import *
 from installers.installer_wordpress import *
 from installers.installer_wrappers import *
+from installers.installer_xorg import *
 from installers.installer import *

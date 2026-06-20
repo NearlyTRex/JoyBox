@@ -54,27 +54,30 @@ python3 bootstrap.py -t local_ubuntu --list-components
 | Component | What it does |
 |-----------|--------------|
 | `config` | Configuration setup |
+| `dconf` | Desktop dconf/gsettings settings |
 | `dotfiles` | Dot files installation |
-| `githooks` | Activate the repo's git hooks (secret-scanning pre-commit) |
+| `githooks` | Activate the repo's git hooks |
 | `python` | Python venv + pip packages |
 | `wrappers` | Script wrappers in ~/.joybox/bin |
-| `aptget` | All APT packages (dev tools, libs, apps) |
+| `aptget` | All APT packages |
 | `awscli` | AWS CLI |
-| `flatpak` | Flatpak apps (Discord, Signal, etc.) |
+| `flatpak` | Flatpak apps |
 | `ccusage` | Claude Code usage monitoring |
-| `chrome` | Google Chrome (adds repo) |
+| `chrome` | Google Chrome |
 | `claude` | Claude Code CLI |
-| `deno` | Deno JS runtime (yt-dlp's YouTube challenge solver needs it) |
-| `brave` | Brave Browser (adds repo) |
-| `gh` | GitHub CLI (adds repo) |
-| `gitkraken` | GitKraken (downloads latest .deb) |
+| `deno` | Deno JS runtime |
+| `brave` | Brave Browser |
+| `gh` | GitHub CLI |
+| `gitkraken` | GitKraken |
 | `ollama` | Ollama local LLM runtime |
-| `onepassword` | 1Password (adds repo) |
+| `onepassword` | 1Password |
 | `steam` | Steam gaming platform |
-| `udev` | USB/controller device rules |
-| `virtualbox` | VirtualBox (Oracle repo) |
-| `vscodium` | VSCodium (adds repo) |
+| `sysctl` | Kernel sysctl tweaks |
+| `udev` | USB device rules |
+| `virtualbox` | VirtualBox |
+| `vscodium` | VSCodium |
 | `wine` | Wine + dependencies |
+| `xorg` | Xorg input tweaks (remaps Magic Trackpad middle-click to left) |
 
 ## Where to go next
 

@@ -37,6 +37,7 @@ class LocalUbuntu(env.Environment):
         self.available_components = {
             "config": installers.Config(**self.installer_options),
             "aptget": installers.AptGet(**self.installer_options),
+            "dconf": installers.Dconf(**self.installer_options),
             "dotfiles": installers.Dotfiles(**self.installer_options),
             "githooks": installers.GitHooks(**self.installer_options),
             "python": installers.Python(**self.installer_options),
@@ -53,14 +54,17 @@ class LocalUbuntu(env.Environment):
             "ollama": installers.Ollama(**self.installer_options),
             "onepassword": installers.OnePassword(**self.installer_options),
             "steam": installers.Steam(**self.installer_options),
+            "sysctl": installers.Sysctl(**self.installer_options),
             "udev": installers.Udev(**self.installer_options),
             "virtualbox": installers.VirtualBox(**self.installer_options),
             "vscodium": installers.VSCodium(**self.installer_options),
-            "wine": installers.Wine(**self.installer_options)
+            "wine": installers.Wine(**self.installer_options),
+            "xorg": installers.Xorg(**self.installer_options)
         }
 
         # Get individual installers
         self.installer_config = self.available_components["config"]
+        self.installer_dconf = self.available_components["dconf"]
         self.installer_dotfiles = self.available_components["dotfiles"]
         self.installer_githooks = self.available_components["githooks"]
         self.installer_python = self.available_components["python"]
@@ -78,10 +82,12 @@ class LocalUbuntu(env.Environment):
         self.installer_ollama = self.available_components["ollama"]
         self.installer_onepassword = self.available_components["onepassword"]
         self.installer_steam = self.available_components["steam"]
+        self.installer_sysctl = self.available_components["sysctl"]
         self.installer_udev = self.available_components["udev"]
         self.installer_virtualbox = self.available_components["virtualbox"]
         self.installer_vscodium = self.available_components["vscodium"]
         self.installer_wine = self.available_components["wine"]
+        self.installer_xorg = self.available_components["xorg"]
 
     def setup(self):
 
