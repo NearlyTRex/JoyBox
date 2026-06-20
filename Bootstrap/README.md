@@ -24,7 +24,7 @@ Already have the repo cloned? Run it directly from the repo root:
 ```bash
 cd /path/to/JoyBox
 
-# First run - creates JoyBox.ini config, prompts for any needed values
+# First run - creates ~/JoyBox.ini from defaults if it doesn't exist yet
 python3 bootstrap.py -a setup -t local_ubuntu
 ```
 

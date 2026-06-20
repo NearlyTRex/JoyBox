@@ -69,7 +69,12 @@ def main():
     # Get config file
     config_file = os.path.realpath(args.config_file)
     if not os.path.exists(config_file) and not args.list_components:
-        util.log_error_and_quit(f"Config file '{config_file}' does not exist")
+        if args.action == "setup":
+            util.log_info(f"Config file '{config_file}' not found; creating it with defaults")
+            configuration.create_default_config_file(config_file)
+            util.log_info(f"Created '{config_file}' — edit it to change any values, then re-run if needed")
+        else:
+            util.log_error_and_quit(f"Config file '{config_file}' does not exist")
 
     # Get configuration
     config = configuration.Configuration(src = config_file) if os.path.exists(config_file) else None

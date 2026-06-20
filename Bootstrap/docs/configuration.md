@@ -2,8 +2,8 @@
 
 [← Docs index](README.md)
 
-The first run creates `JoyBox.ini` in your home directory and prompts for any values it needs.
-After that you can edit it directly. Key settings:
+The first `setup` run creates `~/JoyBox.ini` from the platform defaults if it doesn't exist yet.
+After that you edit it directly. Key settings:
 
 ```ini
 [UserData.Servers]
