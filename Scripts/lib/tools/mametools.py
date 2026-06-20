@@ -48,7 +48,7 @@ class MameTools(toolbase.ToolBase):
                 github_user = "mamedev",
                 github_repo = "mame",
                 starts_with = "mame",
-                ends_with = "64bit.exe",
+                ends_with = "x64.exe",
                 search_file = "chdman.exe",
                 install_name = "MameChdman",
                 install_dir = programs.get_program_install_dir("MameChdman", "windows"),

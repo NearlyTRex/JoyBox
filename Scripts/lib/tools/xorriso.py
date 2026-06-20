@@ -79,14 +79,13 @@ class XorrISO(toolbase.ToolBase):
                 backups_dir = programs.get_program_backup_dir("XorrISO", "linux"),
                 build_cmd = [
                     "cd", "xorriso-1.5.2",
-                    "./bootstrap",
                     "&&",
                     "./configure",
                     "&&",
                     "make", "-j", "4"
                 ],
                 internal_copies = [
-                    {"from": "Source/xorriso-1.5.2/xorriso/xorriso", "to": "AppImage/usr/bin/xorriso"},
+                    {"from": "Source/xorriso-1.5.2/xorriso-1.5.2/xorriso/xorriso", "to": "AppImage/usr/bin/xorriso"},
                     {"from": "AppImageTool/linux/app.desktop", "to": "AppImage/app.desktop"},
                     {"from": "AppImageTool/linux/icon.svg", "to": "AppImage/icon.svg"}
                 ],

@@ -133,6 +133,8 @@ def is_extractable_archive_type(archive_type):
         return True
     if archive_type in config.ArchiveDiscFileType.members():
         return True
+    if archive_type == config.ArchiveFileType.EXE:
+        return True
     return False
 
 # Check archive checksums
@@ -432,12 +434,11 @@ def extract_archive(
         return False
 
     # Create destination directory
-    if is_rar_archive(archive_file):
-        fileops.make_directory(
-            src = extract_dir,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
+    fileops.make_directory(
+        src = extract_dir,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
 
     # Get extract command
     extract_cmd = []
