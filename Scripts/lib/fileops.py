@@ -325,11 +325,16 @@ def create_symlink(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
+    prev_cwd = None
     try:
         if verbose:
             logger.log_info("Creating symlink from %s to %s" % (src, dest))
         if not pretend_run:
             if cwd:
+                try:
+                    prev_cwd = os.getcwd()
+                except OSError:
+                    prev_cwd = None
                 os.chdir(cwd)
             if make_parent:
                 parent_dir = os.path.dirname(dest)
@@ -354,6 +359,9 @@ def create_symlink(
             logger.log_error(e)
             system.quit_program()
         return False
+    finally:
+        if prev_cwd is not None:
+            os.chdir(prev_cwd)
 
 # Resolve symlink
 def resolve_symlink(src, verbose = False, pretend_run = False, exit_on_failure = False):
