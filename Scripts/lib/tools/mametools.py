@@ -76,7 +76,7 @@ class MameTools(toolbase.ToolBase):
                     "make", "TOOLS=1", "EMULATOR=0", "-j5"
                 ],
                 internal_copies = [
-                    {"from": "Source/chdman", "to": "AppImage/usr/bin/chdman"},
+                    {"from": "Source/Mame/chdman", "to": "AppImage/usr/bin/chdman"},
                     {"from": "AppImageTool/linux/app.desktop", "to": "AppImage/app.desktop"},
                     {"from": "AppImageTool/linux/icon.svg", "to": "AppImage/icon.svg"}
                 ],

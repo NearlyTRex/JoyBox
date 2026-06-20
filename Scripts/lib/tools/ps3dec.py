@@ -74,7 +74,7 @@ class PS3Dec(toolbase.ToolBase):
                 ],
                 build_dir = "Build",
                 internal_copies = [
-                    {"from": "Source/Build/Release/PS3Dec", "to": "AppImage/usr/bin/PS3Dec"},
+                    {"from": "Source/PS3Dec/Build/Release/PS3Dec", "to": "AppImage/usr/bin/PS3Dec"},
                     {"from": "AppImageTool/linux/app.desktop", "to": "AppImage/app.desktop"},
                     {"from": "AppImageTool/linux/icon.svg", "to": "AppImage/icon.svg"}
                 ],

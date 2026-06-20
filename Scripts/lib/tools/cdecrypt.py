@@ -71,7 +71,7 @@ class CDecrypt(toolbase.ToolBase):
                     "make", "-j", "4"
                 ],
                 internal_copies = [
-                    {"from": "Source/cdecrypt", "to": "AppImage/usr/bin/cdecrypt"},
+                    {"from": "Source/CDecrypt/cdecrypt", "to": "AppImage/usr/bin/cdecrypt"},
                     {"from": "AppImageTool/linux/app.desktop", "to": "AppImage/app.desktop"},
                     {"from": "AppImageTool/linux/icon.svg", "to": "AppImage/icon.svg"}
                 ],

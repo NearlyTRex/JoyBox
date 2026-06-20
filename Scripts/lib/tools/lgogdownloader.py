@@ -59,7 +59,7 @@ class LGOGDownloader(toolbase.ToolBase):
                 ],
                 build_dir = "Build",
                 internal_copies = [
-                    {"from": "Source/Build/lgogdownloader", "to": "AppImage/usr/bin/lgogdownloader"},
+                    {"from": "Source/LGOGDownloader/Build/lgogdownloader", "to": "AppImage/usr/bin/lgogdownloader"},
                     {"from": "AppImageTool/linux/app.desktop", "to": "AppImage/app.desktop"},
                     {"from": "AppImageTool/linux/icon.svg", "to": "AppImage/icon.svg"}
                 ],

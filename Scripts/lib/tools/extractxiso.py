@@ -74,7 +74,7 @@ class ExtractXIso(toolbase.ToolBase):
                 ],
                 build_dir = "Build",
                 internal_copies = [
-                    {"from": "Source/Build/extract-xiso", "to": "AppImage/usr/bin/extract-xiso"},
+                    {"from": "Source/ExtractXIso/Build/extract-xiso", "to": "AppImage/usr/bin/extract-xiso"},
                     {"from": "AppImageTool/linux/app.desktop", "to": "AppImage/app.desktop"},
                     {"from": "AppImageTool/linux/icon.svg", "to": "AppImage/icon.svg"}
                 ],

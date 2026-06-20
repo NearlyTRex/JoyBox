@@ -73,7 +73,7 @@ class ThreeDSRomTool(toolbase.ToolBase):
                     "make", "-j", "4"
                 ],
                 internal_copies = [
-                    {"from": "Source/rom_tool/rom_tool", "to": "AppImage/usr/bin/rom_tool"},
+                    {"from": "Source/3DSRomTool/rom_tool/rom_tool", "to": "AppImage/usr/bin/rom_tool"},
                     {"from": "AppImageTool/linux/app.desktop", "to": "AppImage/app.desktop"},
                     {"from": "AppImageTool/linux/icon.svg", "to": "AppImage/icon.svg"}
                 ],

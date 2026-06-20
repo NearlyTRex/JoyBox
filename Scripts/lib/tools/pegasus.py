@@ -121,7 +121,7 @@ class Pegasus(toolbase.ToolBase):
                 ],
                 build_dir = "Build",
                 internal_copies = [
-                    {"from": "Source/Build/src/app/pegasus-fe", "to": "AppImage/usr/bin/pegasus-fe"},
+                    {"from": "Source/Pegasus/Build/src/app/pegasus-fe", "to": "AppImage/usr/bin/pegasus-fe"},
                     {"from": "AppImageTool/linux/app.desktop", "to": "AppImage/app.desktop"},
                     {"from": "AppImageTool/linux/icon.svg", "to": "AppImage/icon.svg"}
                 ],

@@ -73,7 +73,7 @@ class HacTool(toolbase.ToolBase):
                     "make", "-j", "4"
                 ],
                 internal_copies = [
-                    {"from": "Source/hactool", "to": "AppImage/usr/bin/hactool"},
+                    {"from": "Source/HacTool/hactool", "to": "AppImage/usr/bin/hactool"},
                     {"from": "AppImageTool/linux/app.desktop", "to": "AppImage/app.desktop"},
                     {"from": "AppImageTool/linux/icon.svg", "to": "AppImage/icon.svg"}
                 ],
