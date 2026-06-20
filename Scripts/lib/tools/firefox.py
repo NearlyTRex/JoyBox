@@ -25,7 +25,7 @@ class Firefox(toolbase.ToolBase):
         firefox_exe = ini.get_ini_value("Tools.Firefox", "firefox_exe")
         firefox_install_dir = ini.get_ini_path_value("Tools.Firefox", "firefox_install_dir")
         firefox_download_dir = ini.get_ini_path_value("Tools.Firefox", "firefox_download_dir")
-        firefox_profile_dir = ini.get_ini_path_value("Tools.Firefox", "firefox_profile_dir")
+        firefox_profile_dir = ini.get_ini_path_value("Tools.Firefox", "firefox_profile_dir", default_value = "", throw_exception = False)
 
         # Return config
         return {

@@ -78,7 +78,9 @@ def get_ini_bool_value(section, field, default_value = None, throw_exception = T
 # Get ini path value
 def get_ini_path_value(section, field, default_value = None, throw_exception = True):
     try:
-        value = get_ini_value(section, field)
+        value = get_ini_value(section, field, default_value = default_value, throw_exception = throw_exception)
+        if value is None:
+            return default_value
         return os.path.expandvars(value)
     except:
         if throw_exception:
@@ -88,7 +90,9 @@ def get_ini_path_value(section, field, default_value = None, throw_exception = T
 # Get ini list value
 def get_ini_list_value(section, field, delimiter = ",", default_value = None, throw_exception = True):
     try:
-        value = get_ini_value(section, field)
+        value = get_ini_value(section, field, default_value = default_value, throw_exception = throw_exception)
+        if value is None:
+            return default_value
         return value.split(delimiter)
     except:
         if throw_exception:
