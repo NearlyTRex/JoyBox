@@ -88,10 +88,21 @@ ensure_prerequisites() {
 sync_repo() {
     if [ -d "$JOYBOX_DIR/.git" ]; then
         log "Updating existing checkout at $JOYBOX_DIR"
-        git -C "$JOYBOX_DIR" fetch --quiet origin "$JOYBOX_REF"
-        git -C "$JOYBOX_DIR" checkout --quiet "$JOYBOX_REF"
-        if ! git -C "$JOYBOX_DIR" pull --ff-only --quiet origin "$JOYBOX_REF"; then
-            warn "Could not fast-forward $JOYBOX_DIR; leaving your local checkout as-is."
+        local before after
+        before=$(git -C "$JOYBOX_DIR" rev-parse --short HEAD 2>/dev/null || echo "?")
+        git -C "$JOYBOX_DIR" fetch --quiet origin "$JOYBOX_REF" \
+            || warn "git fetch failed; using the local checkout as-is."
+        git -C "$JOYBOX_DIR" checkout --quiet "$JOYBOX_REF" 2>/dev/null \
+            || warn "Could not switch to '$JOYBOX_REF'; staying on the current branch."
+        if git -C "$JOYBOX_DIR" pull --ff-only --quiet origin "$JOYBOX_REF" 2>/dev/null; then
+            after=$(git -C "$JOYBOX_DIR" rev-parse --short HEAD 2>/dev/null || echo "?")
+            if [ "$before" = "$after" ]; then
+                ok "Already up to date ($after)"
+            else
+                ok "Updated $before -> $after"
+            fi
+        else
+            warn "Could not fast-forward (local commits or diverged from origin/$JOYBOX_REF); leaving your checkout as-is."
         fi
     elif [ -e "$JOYBOX_DIR" ] && [ -n "$(ls -A "$JOYBOX_DIR" 2>/dev/null)" ]; then
         die "$JOYBOX_DIR exists and is not a git checkout. Move it aside or set JOYBOX_DIR to a different path."
