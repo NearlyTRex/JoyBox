@@ -5,7 +5,21 @@ installing all my software, this handles everything in one command.
 
 ## Quickstart
 
-Fresh **Ubuntu / Pop!_OS / Linux Mint** desktop? From the repo root:
+Fresh **Ubuntu / Pop!_OS / Linux Mint** desktop with nothing installed yet? One line installs
+the prerequisites, clones the repo, and runs the setup:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/NearlyTRex/JoyBox/main/install.sh | bash
+```
+
+It's idempotent — re-running updates the checkout and skips anything already installed. Pass
+arguments straight through to `bootstrap.py`:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/NearlyTRex/JoyBox/main/install.sh | bash -s -- -a setup -t local_ubuntu --components aptget chrome
+```
+
+Already have the repo cloned? Run it directly from the repo root:
 
 ```bash
 cd /path/to/JoyBox

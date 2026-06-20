@@ -5,6 +5,21 @@
 Set up a fresh **Ubuntu / Pop!_OS / Linux Mint** (or any Ubuntu-based) desktop in one command.
 All of these distros share the same APT base, so they all use the `local_ubuntu` target.
 
+### From a bare machine
+
+If JoyBox isn't even cloned yet, the installer script handles prerequisites, the clone, and the
+setup in one go:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/NearlyTRex/JoyBox/main/install.sh | bash
+```
+
+It installs `git` + `python3` if missing, clones to `$HOME/Repositories/JoyBox`, then runs the
+setup below. Override the destination or branch with `JOYBOX_DIR` / `JOYBOX_REF` env vars, and
+pass extra `bootstrap.py` arguments after `bash -s --`.
+
+### From a cloned repo
+
 ```bash
 cd /path/to/JoyBox
 
