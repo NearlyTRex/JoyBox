@@ -6,4 +6,4 @@ This is simply a jumble of the various scripts and tools I wrote for my various 
 ## Documentation
 
 - [System setup](Bootstrap/README.md) — bootstrap a fresh machine
-- [Usage guides](Scripts/docs/README.md) — common-task guides and the full command reference
+- [Usage guides](Scripts/README.md) — common-task guides and the full command reference
