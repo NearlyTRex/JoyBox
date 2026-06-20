@@ -100,6 +100,17 @@ def get_archive_type(archive_file):
     for archive_type in config.ArchiveFileType.members():
         if archive_ext == archive_type.cval():
             return archive_type
+    if paths.is_path_file(archive_file):
+        if is_zip_archive(archive_file):
+            return config.ArchiveFileType.ZIP
+        if is_7z_archive(archive_file):
+            return config.ArchiveFileType.SEVENZIP
+        if is_rar_archive(archive_file):
+            return config.ArchiveFileType.RAR
+        if is_tarball_archive(archive_file):
+            return config.ArchiveFileType.TAR_GZ
+        if is_disc_archive(archive_file):
+            return config.ArchiveFileType.ISO
     return None
 
 # Determine if creatable archive type
