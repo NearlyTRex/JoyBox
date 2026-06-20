@@ -129,16 +129,9 @@ class ConnectionLocal(connection.Connection):
                     creationflags = self.options.creationflags,
                     stdout = subprocess.PIPE,
                     stderr = subprocess.STDOUT,
-                    bufsize = 1,
-                    text = True)
-                while True:
-                    output = self.clean_command_output(process.stdout.readline().rstrip())
-                    if output == "" and process.poll() is not None:
-                        break
-                    if output:
-                        util.log_info(output.strip())
-                code = process.poll()
-                return code
+                    bufsize = 0)
+                self.stream_command_output(iter(lambda: process.stdout.read(4096), b""))
+                return process.wait()
             return 0
         except subprocess.CalledProcessError as e:
             if self.flags.exit_on_failure:

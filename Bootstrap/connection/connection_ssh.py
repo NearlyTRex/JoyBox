@@ -169,12 +169,9 @@ class ConnectionSSH(connection.Connection):
                 stdin, stdout, stderr = ConnectionSSH.ssh_client.exec_command(
                     command = cmd,
                     get_pty = self.options.shell)
-                while True:
-                    output = stdout.readline()
-                    if not output:
-                        break
-                    util.log_info(self.clean_command_output(output.strip()))
-                exit_code = stdout.channel.recv_exit_status()
+                channel = stdout.channel
+                self.stream_command_output(iter(lambda: channel.recv(4096), b""))
+                exit_code = channel.recv_exit_status()
                 return exit_code
             return 0
         except Exception as e:

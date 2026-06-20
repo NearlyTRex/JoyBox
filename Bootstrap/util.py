@@ -100,6 +100,9 @@ def get_current_time():
 def get_log_directory():
     return os.path.join(os.path.expanduser("~"), "Logs")
 
+# Bootstrap logger
+OUTPUT_LOGGER_NAME = "joybox.output"
+
 def setup_logging(log_file = None, log_format = "%(asctime)s - %(levelname)s - %(message)s", log_level = logging.DEBUG):
     log_dir = get_log_directory()
     os.makedirs(log_dir, exist_ok = True)
@@ -117,10 +120,24 @@ def setup_logging(log_file = None, log_format = "%(asctime)s - %(levelname)s - %
     console_logger.setFormatter(formatter)
     logger.addHandler(file_logger)
     logger.addHandler(console_logger)
+    output_logger = logging.getLogger(OUTPUT_LOGGER_NAME)
+    output_logger.setLevel(log_level)
+    output_logger.propagate = False
+    output_file_logger = logging.FileHandler(log_file)
+    output_file_logger.setLevel(log_level)
+    output_file_logger.setFormatter(logging.Formatter("%(message)s"))
+    output_logger.addHandler(output_file_logger)
 
 def log_info(message):
     logger = logging.getLogger(__name__)
     logger.info(message)
+
+def log_output(text):
+    sys.stdout.write(text)
+    sys.stdout.flush()
+
+def record_output(line):
+    logging.getLogger(OUTPUT_LOGGER_NAME).info(line)
 
 def log_warning(message):
     logger = logging.getLogger(__name__)

@@ -2,6 +2,7 @@
 import os
 import sys
 import copy
+import codecs
 
 # Local imports
 import util
@@ -90,6 +91,26 @@ class Connection:
             return output.decode("utf-8", "ignore")
         except:
             return output
+
+    def stream_command_output(self, chunks):
+        decoder = codecs.getincrementaldecoder("utf-8")(errors = "ignore")
+        line = ""
+        for chunk in chunks:
+            if not chunk:
+                continue
+            text = decoder.decode(chunk)
+            if not text:
+                continue
+            util.log_output(text)
+            for char in text:
+                if char == "\n" or char == "\r":
+                    if line.strip():
+                        util.record_output(line.strip())
+                    line = ""
+                else:
+                    line += char
+        if line.strip():
+            util.record_output(line.strip())
 
     def mark_command_as_sudo(self, cmd):
         if util.is_linux_platform():
