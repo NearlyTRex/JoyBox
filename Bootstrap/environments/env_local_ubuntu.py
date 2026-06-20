@@ -36,11 +36,11 @@ class LocalUbuntu(env.Environment):
         # Create components
         self.available_components = {
             "config": installers.Config(**self.installer_options),
+            "aptget": installers.AptGet(**self.installer_options),
             "dotfiles": installers.Dotfiles(**self.installer_options),
             "githooks": installers.GitHooks(**self.installer_options),
             "python": installers.Python(**self.installer_options),
             "wrappers": installers.Wrappers(**self.installer_options),
-            "aptget": installers.AptGet(**self.installer_options),
             "awscli": installers.AwsCli(**self.installer_options),
             "flatpak": installers.Flatpak(**self.installer_options),
             "ccusage": installers.Ccusage(**self.installer_options),

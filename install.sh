@@ -67,13 +67,16 @@ set_sudo() {
 # ---------------------------------------------------------------------------
 # Steps
 # ---------------------------------------------------------------------------
+has_pkg() { dpkg -s "$1" >/dev/null 2>&1; }
+
 ensure_prerequisites() {
     local missing=()
-    has_cmd git     || missing+=(git)
-    has_cmd python3 || missing+=(python3)
+    has_cmd git          || missing+=(git)
+    has_cmd python3      || missing+=(python3)
+    has_pkg python3-venv || missing+=(python3-venv)
 
     if [ "${#missing[@]}" -eq 0 ]; then
-        ok "Prerequisites already present (git, python3)"
+        ok "Prerequisites already present (git, python3, python3-venv)"
         return
     fi
 
