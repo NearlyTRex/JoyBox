@@ -284,7 +284,7 @@ if util.is_windows_platform():
     ini_defaults["Tools.WinGet"]["winget_install_dir"] = "%USERPROFILE%\\AppData\\Local\\Microsoft\\WindowsApps"
 else:
     ini_defaults["Tools.Apt"] = {}
-    ini_defaults["Tools.Apt"]["apt_exe"] = "apt"
+    ini_defaults["Tools.Apt"]["apt_exe"] = "apt-get"
     ini_defaults["Tools.Apt"]["dpkg_exe"] = "dpkg"
     ini_defaults["Tools.Apt"]["apt_install_dir"] = "/usr/bin"
     ini_defaults["Tools.Snap"] = {}
