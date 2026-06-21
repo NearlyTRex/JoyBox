@@ -6,20 +6,20 @@ import sys
 import random
 
 # Custom imports
-lib_folder = os.path.realpath(os.path.join(os.path.dirname(__file__), "..", "lib"))
-sys.path.append(lib_folder)
-import config
-import system
-import environment
-import platforms
-import collection
-import metadata
-import gameinfo
-import arguments
-import gui
-import setup
-import logger
-import paths
+shared_folder = os.path.realpath(os.path.join(os.path.dirname(__file__), "..", "..", "Shared"))
+sys.path.append(shared_folder)
+import joybox.config as config
+import joybox.system as system
+import joybox.environment as environment
+import joybox.platforms as platforms
+import joybox.collection as collection
+import joybox.metadata as metadata
+import joybox.gameinfo as gameinfo
+import joybox.arguments as arguments
+import joybox.gui as gui
+import joybox.setup as setup
+import joybox.logger as logger
+import joybox.paths as paths
 
 # Setup argument parser
 parser = arguments.ArgumentParser(description = "Launch json files.")

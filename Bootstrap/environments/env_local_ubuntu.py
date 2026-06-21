@@ -3,31 +3,30 @@ import os
 import sys
 
 # Local imports
-import util
 import constants
-import connection
+from joybox import connection
 import installers
 from . import env
+from joybox import runoptions
+from joybox import logger
 
 # Local Ubuntu
 class LocalUbuntu(env.Environment):
     def __init__(
         self,
-        config,
-        flags = util.RunFlags(),
-        options = util.RunOptions()):
-        super().__init__(config, flags, options)
+        flags = runoptions.RunFlags(),
+        options = runoptions.RunOptions()):
+        super().__init__(flags, options)
 
         # Set environment type
         self.set_environment_type(constants.EnvironmentType.LOCAL_UBUNTU)
 
         # Create connection
-        self.connection = connection.ConnectionLocal(self.config, self.flags, self.options)
+        self.connection = connection.ConnectionLocal(self.flags, self.options)
         self.connection.setup()
 
         # Create installer options
         self.installer_options = {
-            "config": self.config,
             "connection": self.connection,
             "flags": self.flags,
             "options": self.options
@@ -95,9 +94,9 @@ class LocalUbuntu(env.Environment):
 
         # Update package lists and autoremove
         if self.should_process_component("aptget"):
-            util.log_info("Updating package lists for AptGet")
+            logger.log_info("Updating package lists for AptGet")
             self.installer_aptget.update_package_lists()
-            util.log_info("Auto-removing unused packages")
+            logger.log_info("Auto-removing unused packages")
             self.installer_aptget.auto_remove_packages()
 
         # Process all components

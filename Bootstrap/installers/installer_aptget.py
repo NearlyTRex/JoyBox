@@ -3,10 +3,11 @@ import os
 import sys
 
 # Local imports
-import util
 import constants
 import packages
 from . import installer
+from joybox import runoptions
+from joybox import logger
 
 # Extract package identifier from string or dict
 def get_package_id(pkg):
@@ -29,11 +30,10 @@ def get_package_info(pkg):
 class AptGet(installer.Installer):
     def __init__(
         self,
-        config,
         connection,
-        flags = util.RunFlags(),
-        options = util.RunOptions()):
-        super().__init__(config, connection, flags, options)
+        flags = runoptions.RunFlags(),
+        options = runoptions.RunOptions()):
+        super().__init__(connection, flags, options)
 
     def get_supported_environments(self):
         return [
@@ -65,24 +65,24 @@ class AptGet(installer.Installer):
         return {"installed": installed, "missing": missing}
 
     def install(self):
-        util.log_info("Installing AptGet packages")
+        logger.log_info("Installing AptGet packages")
         for pkg in self.get_packages():
             pkg_id = get_package_id(pkg)
             pkg_info = get_package_info(pkg)
             display_name = pkg_info["name"] if pkg_info["name"] != pkg_id else pkg_id
             if not self.install_package(pkg_id):
-                util.log_error(f"Unable to install package {display_name}")
+                logger.log_error(f"Unable to install package {display_name}")
                 return False
         return True
 
     def uninstall(self):
-        util.log_info("Uninstalling AptGet packages")
+        logger.log_info("Uninstalling AptGet packages")
         for pkg in self.get_packages():
             pkg_id = get_package_id(pkg)
             pkg_info = get_package_info(pkg)
             display_name = pkg_info["name"] if pkg_info["name"] != pkg_id else pkg_id
             if not self.uninstall_package(pkg_id):
-                util.log_error(f"Unable to uninstall package {display_name}")
+                logger.log_error(f"Unable to uninstall package {display_name}")
                 return False
         return True
 

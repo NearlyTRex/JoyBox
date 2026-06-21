@@ -4,7 +4,6 @@ import sys
 
 # Local imports
 import constants
-import util
 
 ###########################################################
 # Flatpak

@@ -1,0 +1,363 @@
+# Imports
+import os, os.path
+import sys
+
+# Local imports
+import joybox.config as config
+import joybox.environment as environment
+import joybox.fileops as fileops
+import joybox.system as system
+import joybox.logger as logger
+import joybox.paths as paths
+import joybox.release as release
+import joybox.programs as programs
+import joybox.hashing as hashing
+import joybox.gui as gui
+import joybox.emulatorcommon as emulatorcommon
+import joybox.emulatorbase as emulatorbase
+
+# Config files
+config_files = {}
+config_file_general = """
+Paths
+  Home
+  Saves: EMULATOR_SETUP_ROOT/Saves/
+  Screenshots: EMULATOR_SETUP_ROOT/Screenshots/
+ColecoVision
+  Path
+  Firmware
+    BIOS.World: EMULATOR_SETUP_ROOT/Bios/colecovision.rom
+PCEngineCD
+  Path
+  Firmware
+    BIOS.US: EMULATOR_SETUP_ROOT/Bios/syscard3u.pce
+    BIOS.Japan: EMULATOR_SETUP_ROOT/Bios/syscard3j.pce
+MegaCD
+  Path
+  Firmware
+    BIOS.US: EMULATOR_SETUP_ROOT/Bios/bios_CD_U.bin
+    BIOS.Japan: EMULATOR_SETUP_ROOT/Bios/bios_CD_J.bin
+    BIOS.Europe: EMULATOR_SETUP_ROOT/Bios/bios_CD_E.bin
+Hotkey
+  ToggleFullscreen: 0x1/0/0;;
+VirtualPad1
+  Pad.Up: 0x3/1/1/Lo;;
+  Pad.Down: 0x3/1/1/Hi;;
+  Pad.Left: 0x3/1/0/Lo;;
+  Pad.Right: 0x3/1/0/Hi;;
+  Select: 0x3/3/6;;
+  Start: 0x3/3/7;;
+  A..South: 0x3/3/0;;
+  B..East: 0x3/3/1;;
+  X..West: 0x3/3/2;;
+  Y..North: 0x3/3/3;;
+  L-Bumper: 0x3/3/4;;
+  R-Bumper: 0x3/3/5;;
+  L-Trigger: 0x3/0/2/Hi;;
+  R-Trigger: 0x3/0/5/Hi;;
+  L-Stick..Click: 0x3/3/9;;
+  R-Stick..Click: 0x3/3/10;;
+  L-Up: 0x3/0/1/Lo;;
+  L-Down: 0x3/0/1/Hi;;
+  L-Left: 0x3/0/0/Lo;;
+  L-Right: 0x3/0/0/Hi;;
+  R-Up: 0x3/0/4/Lo;;
+  R-Down: 0x3/0/4/Hi;;
+  R-Left: 0x3/0/3/Lo;;
+  R-Right: 0x3/0/3/Hi;;
+"""
+config_files["Ares/windows/settings.bml"] = config_file_general
+config_files["Ares/linux/Ares.AppImage.home/.local/share/ares/settings.bml"] = config_file_general
+
+# System files
+system_files = {}
+system_files["Bios/bios_CD_E.bin"] = "e66fa1dc5820d254611fdcdba0662372"
+system_files["Bios/bios_CD_J.bin"] = "278a9397d192149e84e820ac621a8edd"
+system_files["Bios/bios_CD_U.bin"] = "2efd74e3232ff260e371b99f84024f7f"
+system_files["Bios/colecovision.rom"] = "2c66f5911e5b42b8ebe113403548eee7"
+system_files["Bios/syscard3j.pce"] = "38179df8f4ac870017db21ebcbf53114"
+system_files["Bios/syscard3u.pce"] = "0754f903b52e3b3342202bdafb13efa5"
+
+# Ares emulator
+class Ares(emulatorbase.EmulatorBase):
+
+    # Get name
+    def get_name(self):
+        return "Ares"
+
+    # Get platforms
+    def get_platforms(self):
+        return [
+
+            # Microsoft
+            config.Platform.MICROSOFT_MSX,
+
+            # Nintendo
+            config.Platform.NINTENDO_64,
+            config.Platform.NINTENDO_FAMICOM,
+            config.Platform.NINTENDO_NES,
+            config.Platform.NINTENDO_SNES,
+            config.Platform.NINTENDO_SNES_MSU1,
+            config.Platform.NINTENDO_SUPER_FAMICOM,
+
+            # Other
+            config.Platform.OTHER_ATARI_2600,
+            config.Platform.OTHER_BANDAI_WONDERSWAN_COLOR,
+            config.Platform.OTHER_BANDAI_WONDERSWAN,
+            config.Platform.OTHER_COLECO_COLECOVISION,
+            config.Platform.OTHER_NEC_PCENGINE,
+            config.Platform.OTHER_NEC_PCENGINE_CD,
+            config.Platform.OTHER_NEC_SUPERGRAFX,
+            config.Platform.OTHER_NEC_TURBOGRAFX_16,
+            config.Platform.OTHER_NEC_TURBOGRAFX_CD,
+            config.Platform.OTHER_SEGA_32X,
+            config.Platform.OTHER_SEGA_CD_32X,
+            config.Platform.OTHER_SEGA_CD,
+            config.Platform.OTHER_SEGA_GAME_GEAR,
+            config.Platform.OTHER_SEGA_GENESIS,
+            config.Platform.OTHER_SEGA_MASTER_SYSTEM,
+            config.Platform.OTHER_SINCLAIR_ZX_SPECTRUM,
+            config.Platform.OTHER_SNK_NEOGEO_POCKET_COLOR
+        ]
+
+    # Get config
+    def get_config(self):
+        return {
+            "Ares": {
+                "program": {
+                    "windows": "Ares/windows/ares.exe",
+                    "linux": "Ares/linux/Ares.AppImage"
+                },
+                "save_dir": {
+                    "windows": None,
+                    "linux": None
+                },
+                "save_base_dir": {
+                    "windows": "Ares/windows/Saves",
+                    "linux": "Ares/linux/Ares.AppImage.home/.local/share/ares/Saves"
+                },
+                "save_sub_dirs": {
+
+                    # Microsoft
+                    config.Platform.MICROSOFT_MSX: "MSX",
+
+                    # Nintendo
+                    config.Platform.NINTENDO_64: "Nintendo 64",
+                    config.Platform.NINTENDO_FAMICOM: "Famicom",
+                    config.Platform.NINTENDO_NES: "Famicom",
+                    config.Platform.NINTENDO_SNES: "Super Famicom",
+                    config.Platform.NINTENDO_SNES_MSU1: "Super Famicom",
+                    config.Platform.NINTENDO_SUPER_FAMICOM: "Super Famicom",
+
+                    # Other
+                    config.Platform.OTHER_ATARI_2600: "Atari 2600",
+                    config.Platform.OTHER_BANDAI_WONDERSWAN: "WonderSwan",
+                    config.Platform.OTHER_BANDAI_WONDERSWAN_COLOR: "WonderSwan Color",
+                    config.Platform.OTHER_COLECO_COLECOVISION: "ColecoVision",
+                    config.Platform.OTHER_NEC_PCENGINE: "PC Engine",
+                    config.Platform.OTHER_NEC_PCENGINE_CD: "PC Engine CD",
+                    config.Platform.OTHER_NEC_SUPERGRAFX: "SuperGrafx",
+                    config.Platform.OTHER_NEC_TURBOGRAFX_16: "PC Engine",
+                    config.Platform.OTHER_NEC_TURBOGRAFX_CD: "PC Engine CD",
+                    config.Platform.OTHER_SEGA_32X: "Mega 32X",
+                    config.Platform.OTHER_SEGA_CD: "Mega CD",
+                    config.Platform.OTHER_SEGA_CD_32X: "Mega CD 32X",
+                    config.Platform.OTHER_SEGA_GAME_GEAR: "Game Gear",
+                    config.Platform.OTHER_SEGA_GENESIS: "Mega Drive",
+                    config.Platform.OTHER_SEGA_MASTER_SYSTEM: "Master System",
+                    config.Platform.OTHER_SINCLAIR_ZX_SPECTRUM: "ZX Spectrum",
+                    config.Platform.OTHER_SNK_NEOGEO_POCKET_COLOR: "Neo Geo Pocket Color"
+                },
+                "setup_dir": {
+                    "windows": "Ares/windows",
+                    "linux": "Ares/linux/Ares.AppImage.home/.local/share/ares"
+                },
+                "config_file": {
+                    "windows": "Ares/windows/settings.bml",
+                    "linux": "Ares/linux/Ares.AppImage.home/.local/share/ares/settings.bml"
+                },
+                "run_sandboxed": {
+                    "windows": False,
+                    "linux": False
+                }
+            }
+        }
+
+    # Setup
+    def setup(self, setup_params = None):
+        if not setup_params:
+            setup_params = config.SetupParams()
+
+        # Download windows program
+        if programs.should_program_be_installed("Ares", "windows"):
+            success = release.download_github_release(
+                github_user = "ares-emulator",
+                github_repo = "ares",
+                starts_with = "ares",
+                ends_with = "windows-x64.zip",
+                search_file = "ares.exe",
+                install_name = "Ares",
+                install_dir = programs.get_program_install_dir("Ares", "windows"),
+                backups_dir = programs.get_program_backup_dir("Ares", "windows"),
+                get_latest = True,
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
+            if not success:
+                logger.log_error("Could not setup Ares")
+                return False
+
+        # Download linux program
+        if programs.should_program_be_installed("Ares", "linux"):
+            success = release.build_appimage_from_source(
+                release_url = "https://github.com/NearlyTRex/Ares.git",
+                output_file = "ares-x86_64.AppImage",
+                install_name = "Ares",
+                install_dir = programs.get_program_install_dir("Ares", "linux"),
+                backups_dir = programs.get_program_backup_dir("Ares", "linux"),
+                build_cmd = [
+                    "cmake", "-B", "build", "-G", "Ninja", "-DCMAKE_BUILD_TYPE=Release",
+                    "&&",
+                    "cmake", "--build", "build"
+                ],
+                internal_copies = [
+                    {"from": "Source/Ares/build/rundir/bin/ares", "to": "AppImage/usr/bin/ares"},
+                    {"from": "Source/Ares/desktop-ui/resource/ares.desktop", "to": "AppImage/ares.desktop"},
+                    {"from": "Source/Ares/desktop-ui/resource/ares.png", "to": "AppImage/ares.png"}
+                ],
+                internal_symlinks = [
+                    {"from": "usr/bin/ares", "to": "AppRun"}
+                ],
+                external_copies = [
+                    {"from": "Source/Ares/mia/Database", "to": "Ares.AppImage.home/.local/share/ares/Database"},
+                    {"from": "Source/Ares/mia/Firmware", "to": "Ares.AppImage.home/.local/share/ares/Firmware"}
+                ],
+                locker_type = setup_params.locker_type,
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
+            if not success:
+                logger.log_error("Could not setup Ares")
+                return False
+        return True
+
+    # Setup offline
+    def setup_offline(self, setup_params = None):
+        if not setup_params:
+            setup_params = config.SetupParams()
+
+        # Setup windows program
+        if programs.should_program_be_installed("Ares", "windows"):
+            success = release.setup_stored_release(
+                archive_dir = programs.get_program_backup_dir("Ares", "windows"),
+                install_name = "Ares",
+                install_dir = programs.get_program_install_dir("Ares", "windows"),
+                search_file = "ares.exe",
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
+            if not success:
+                logger.log_error("Could not setup Ares")
+                return False
+
+        # Setup linux program
+        if programs.should_program_be_installed("Ares", "linux"):
+            success = release.setup_stored_release(
+                archive_dir = programs.get_program_backup_dir("Ares", "linux"),
+                install_name = "Ares",
+                install_dir = programs.get_program_install_dir("Ares", "linux"),
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
+            if not success:
+                logger.log_error("Could not setup Ares")
+                return False
+        return True
+
+    # Configure
+    def configure(self, setup_params = None):
+        if not setup_params:
+            setup_params = config.SetupParams()
+
+        # Create config files
+        for config_filename, config_contents in config_files.items():
+            success = fileops.touch_file(
+                src = paths.join_paths(environment.get_emulators_root_dir(), config_filename),
+                contents = config_contents.strip(),
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
+            if not success:
+                logger.log_error("Could not setup Ares config files")
+                return False
+
+        # Verify system files
+        for filename, expected_md5 in system_files.items():
+            actual_md5 = hashing.calculate_file_md5(
+                src = paths.join_paths(environment.get_locker_gaming_emulator_setup_dir("Ares"), filename),
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
+            success = (expected_md5 == actual_md5)
+            if not success:
+                logger.log_error("Could not verify Ares system file %s" % filename)
+                return False
+
+        # Copy system files
+        for filename in system_files.keys():
+            for platform in ["windows", "linux"]:
+                success = fileops.smart_copy(
+                    src = paths.join_paths(environment.get_locker_gaming_emulator_setup_dir("Ares"), filename),
+                    dest = paths.join_paths(programs.get_emulator_path_config_value("Ares", "setup_dir", platform), filename),
+                    verbose = setup_params.verbose,
+                    pretend_run = setup_params.pretend_run,
+                    exit_on_failure = setup_params.exit_on_failure)
+                if not success:
+                    logger.log_error("Could not setup Ares system files")
+                    return False
+        return True
+
+    # Launch
+    def launch(
+        self,
+        game_info,
+        capture_type = None,
+        capture_file = None,
+        fullscreen = False,
+        verbose = False,
+        pretend_run = False,
+        exit_on_failure = False):
+
+        # Get game info
+        game_platform = game_info.get_platform()
+
+        # Get system types
+        system_types = programs.get_emulator_config_value("Ares", "save_sub_dirs")
+
+        # Check if this platform is valid
+        if not game_platform in system_types:
+            gui.display_error_popup(
+                title_text = "Launch platform not defined",
+                message_text = "Launch platform %s not defined in Ares config" % game_platform)
+
+        # Get launch command
+        launch_cmd = [
+            programs.get_emulator_program("Ares"),
+            "--system",
+            system_types[game_platform],
+            config.token_game_file
+        ]
+        if fullscreen:
+            launch_cmd += [
+                "--fullscreen"
+            ]
+
+        # Launch game
+        return emulatorcommon.simple_launch(
+            game_info = game_info,
+            launch_cmd = launch_cmd,
+            capture_type = capture_type,
+            capture_file = capture_file,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)

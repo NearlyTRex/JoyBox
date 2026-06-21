@@ -1,0 +1,35 @@
+# Imports
+import os, os.path
+import sys
+
+# Local imports
+import joybox.system as system
+import joybox.toolbase as toolbase
+import joybox.settings as ini
+import joybox.paths as paths
+
+# Config files
+config_files = {}
+
+# Perl tool
+class Perl(toolbase.ToolBase):
+
+    # Get name
+    def get_name(self):
+        return "Perl"
+
+    # Get config
+    def get_config(self):
+
+        # Get perl info
+        perl_exe = ini.get_ini_value("Tools.Perl", "perl_exe")
+        perl_install_dir = ini.get_ini_path_value("Tools.Perl", "perl_install_dir")
+
+        # Return config
+        return {
+
+            # Perl
+            "Perl": {
+                "program": paths.join_paths(perl_install_dir, perl_exe)
+            }
+        }

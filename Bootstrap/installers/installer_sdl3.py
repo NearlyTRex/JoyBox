@@ -3,9 +3,10 @@ import os
 import sys
 
 # Local imports
-import util
 import constants
 from . import installer
+from joybox import runoptions
+from joybox import logger
 
 # SDL3
 # Built from source because SDL3 (and SDL3_ttf) are not yet available in the
@@ -16,11 +17,10 @@ from . import installer
 class Sdl3(installer.Installer):
     def __init__(
         self,
-        config,
         connection,
-        flags = util.RunFlags(),
-        options = util.RunOptions()):
-        super().__init__(config, connection, flags, options)
+        flags = runoptions.RunFlags(),
+        options = runoptions.RunOptions()):
+        super().__init__(connection, flags, options)
 
         # SDL3 core library
         self.sdl_repo = "https://github.com/libsdl-org/SDL"
@@ -58,33 +58,33 @@ class Sdl3(installer.Installer):
     def install(self):
 
         # Start install
-        util.log_info("Installing SDL3")
+        logger.log_info("Installing SDL3")
 
         # Build SDL3
-        util.log_info("Building SDL3")
+        logger.log_info("Building SDL3")
         self._build_and_install(
             self.sdl_repo, self.sdl_tag, self.sdl_src, self.sdl_build,
             ["-DSDL_SHARED=ON", "-DSDL_STATIC=OFF", "-DSDL_TEST_LIBRARY=OFF"])
 
         # Build SDL3_ttf
-        util.log_info("Building SDL3_ttf")
+        logger.log_info("Building SDL3_ttf")
         self._build_and_install(
             self.sdl_ttf_repo, self.sdl_ttf_tag, self.sdl_ttf_src, self.sdl_ttf_build,
             ["-DSDLTTF_VENDORED=OFF", "-DSDLTTF_HARFBUZZ=OFF",
              "-DSDLTTF_PLUTOSVG=OFF", "-DSDLTTF_SAMPLES=OFF"])
 
         # Refresh the shared library cache
-        util.log_info("Refreshing shared library cache")
+        logger.log_info("Refreshing shared library cache")
         self.connection.run_checked(["ldconfig"], sudo = True)
 
         # All done
-        util.log_info("SDL3 installed successfully")
+        logger.log_info("SDL3 installed successfully")
         return True
 
     def uninstall(self):
 
         # Start uninstall
-        util.log_info("Uninstalling SDL3")
+        logger.log_info("Uninstalling SDL3")
 
         # Remove files
         for path in [
@@ -98,9 +98,9 @@ class Sdl3(installer.Installer):
             self.connection.remove_file_or_directory(path, sudo = True)
 
         # Refresh the shared library cache
-        util.log_info("Refreshing shared library cache")
+        logger.log_info("Refreshing shared library cache")
         self.connection.run_checked(["ldconfig"], sudo = True)
 
         # All done
-        util.log_info("SDL3 uninstalled")
+        logger.log_info("SDL3 uninstalled")
         return True

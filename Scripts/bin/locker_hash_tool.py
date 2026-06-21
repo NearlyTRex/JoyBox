@@ -7,16 +7,16 @@ import os.path
 import sys
 
 # Custom imports
-lib_folder = os.path.realpath(os.path.join(os.path.dirname(__file__), "..", "lib"))
-sys.path.append(lib_folder)
-import config
-import environment
-import paths
-import hashing
-import arguments
-import setup
-import system
-import logger
+shared_folder = os.path.realpath(os.path.join(os.path.dirname(__file__), "..", "..", "Shared"))
+sys.path.append(shared_folder)
+import joybox.config as config
+import joybox.environment as environment
+import joybox.paths as paths
+import joybox.hashing as hashing
+import joybox.arguments as arguments
+import joybox.setup as setup
+import joybox.system as system
+import joybox.logger as logger
 
 # Parse arguments
 parser = arguments.ArgumentParser(description = "Hash files from a locker directory.")

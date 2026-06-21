@@ -1,0 +1,112 @@
+# Imports
+import os, os.path
+import sys
+
+# Local imports
+import joybox.config as config
+import joybox.system as system
+import joybox.logger as logger
+import joybox.release as release
+import joybox.programs as programs
+import joybox.toolbase as toolbase
+
+# Config files
+config_files = {}
+
+# Wad2Bin tool
+class Wad2Bin(toolbase.ToolBase):
+
+    # Get name
+    def get_name(self):
+        return "Wad2Bin"
+
+    # Get config
+    def get_config(self):
+        return {
+            "Wad2Bin": {
+                "program": {
+                    "windows": "Wad2Bin/windows/wad2bin-windows-x64.exe",
+                    "linux": "Wad2Bin/linux/wad2bin"
+                },
+                "run_sandboxed": {
+                    "windows": False,
+                    "linux": False
+                }
+            }
+        }
+
+    # Setup
+    def setup(self, setup_params = None):
+        if not setup_params:
+            setup_params = config.SetupParams()
+
+        # Download windows program
+        if programs.should_program_be_installed("Wad2Bin", "windows"):
+            success = release.download_github_release(
+                github_user = "DarkMatterCore",
+                github_repo = "wad2bin",
+                starts_with = "wad2bin-windows-x64",
+                ends_with = ".exe",
+                search_file = "wad2bin-windows-x64.exe",
+                install_name = "Wad2Bin",
+                install_dir = programs.get_program_install_dir("Wad2Bin", "windows"),
+                backups_dir = programs.get_program_backup_dir("Wad2Bin", "windows"),
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
+            if not success:
+                logger.log_error("Could not setup Wad2Bin")
+                return False
+
+        # Download linux program
+        if programs.should_program_be_installed("Wad2Bin", "linux"):
+            success = release.download_github_release(
+                github_user = "DarkMatterCore",
+                github_repo = "wad2bin",
+                starts_with = "wad2bin-linux-x86_64",
+                ends_with = ".tar.gz",
+                search_file = "wad2bin",
+                install_name = "Wad2Bin",
+                install_dir = programs.get_program_install_dir("Wad2Bin", "linux"),
+                backups_dir = programs.get_program_backup_dir("Wad2Bin", "linux"),
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
+            if not success:
+                logger.log_error("Could not setup Wad2Bin")
+                return False
+        return True
+
+    # Setup offline
+    def setup_offline(self, setup_params = None):
+        if not setup_params:
+            setup_params = config.SetupParams()
+
+        # Setup windows program
+        if programs.should_program_be_installed("Wad2Bin", "windows"):
+            success = release.setup_stored_release(
+                archive_dir = programs.get_program_backup_dir("Wad2Bin", "windows"),
+                install_name = "Wad2Bin",
+                install_dir = programs.get_program_install_dir("Wad2Bin", "windows"),
+                search_file = "wad2bin-windows-x64.exe",
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
+            if not success:
+                logger.log_error("Could not setup Wad2Bin")
+                return False
+
+        # Setup linux program
+        if programs.should_program_be_installed("Wad2Bin", "linux"):
+            success = release.setup_stored_release(
+                archive_dir = programs.get_program_backup_dir("Wad2Bin", "linux"),
+                install_name = "Wad2Bin",
+                install_dir = programs.get_program_install_dir("Wad2Bin", "linux"),
+                search_file = "wad2bin",
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
+            if not success:
+                logger.log_error("Could not setup Wad2Bin")
+                return False
+        return True

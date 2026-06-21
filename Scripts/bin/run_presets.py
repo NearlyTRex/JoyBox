@@ -5,16 +5,16 @@ import os, os.path
 import sys
 
 # Custom imports
-lib_folder = os.path.realpath(os.path.join(os.path.dirname(__file__), "..", "lib"))
-sys.path.append(lib_folder)
-import config
-import command
-import environment
-import system
-import arguments
-import setup
-import logger
-import paths
+shared_folder = os.path.realpath(os.path.join(os.path.dirname(__file__), "..", "..", "Shared"))
+sys.path.append(shared_folder)
+import joybox.config as config
+import joybox.command as command
+import joybox.environment as environment
+import joybox.system as system
+import joybox.arguments as arguments
+import joybox.setup as setup
+import joybox.logger as logger
+import joybox.paths as paths
 
 # Parse arguments
 parser = arguments.ArgumentParser(description = "Run tool presets.")

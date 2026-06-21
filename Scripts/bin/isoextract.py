@@ -5,16 +5,16 @@ import os, os.path
 import sys
 
 # Custom imports
-lib_folder = os.path.realpath(os.path.join(os.path.dirname(__file__), "..", "lib"))
-sys.path.append(lib_folder)
-import config
-import system
-import iso
-import arguments
-import archive
-import setup
-import logger
-import paths
+shared_folder = os.path.realpath(os.path.join(os.path.dirname(__file__), "..", "..", "Shared"))
+sys.path.append(shared_folder)
+import joybox.config as config
+import joybox.system as system
+import joybox.iso as iso
+import joybox.arguments as arguments
+import joybox.archive as archive
+import joybox.setup as setup
+import joybox.logger as logger
+import joybox.paths as paths
 
 # Parse arguments
 parser = arguments.ArgumentParser(description = "Extract data from ISO files.")

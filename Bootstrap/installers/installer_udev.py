@@ -3,9 +3,10 @@ import os
 import sys
 
 # Local imports
-import util
 import constants
 from . import installer
+from joybox import runoptions
+from joybox import logger
 
 # Udev rules to install
 # Each rule has: filename, description, content
@@ -21,11 +22,10 @@ UDEV_RULES = [
 class Udev(installer.Installer):
     def __init__(
         self,
-        config,
         connection,
-        flags = util.RunFlags(),
-        options = util.RunOptions()):
-        super().__init__(config, connection, flags, options)
+        flags = runoptions.RunFlags(),
+        options = runoptions.RunOptions()):
+        super().__init__(connection, flags, options)
 
         # Path to udev rules directory
         self.rules_dir = "/etc/udev/rules.d"
@@ -49,7 +49,7 @@ class Udev(installer.Installer):
     def install(self):
 
         # Start install
-        util.log_info("Installing udev rules")
+        logger.log_info("Installing udev rules")
 
         # Install each rule
         for rule in UDEV_RULES:
@@ -57,49 +57,49 @@ class Udev(installer.Installer):
 
             # Check if rule already exists
             if self.connection.does_file_or_directory_exist(rule_path):
-                util.log_info(f"Rule {rule['filename']} already exists, skipping")
+                logger.log_info(f"Rule {rule['filename']} already exists, skipping")
                 continue
 
             # Write rule file
-            util.log_info(f"Installing {rule['filename']}: {rule['description']}")
+            logger.log_info(f"Installing {rule['filename']}: {rule['description']}")
             success = self.connection.write_file(rule_path, rule['content'] + '\n', sudo=True)
             if not success:
-                util.log_error(f"Failed to install {rule['filename']}")
+                logger.log_error(f"Failed to install {rule['filename']}")
                 return False
 
         # Reload udev rules
-        util.log_info("Reloading udev rules")
+        logger.log_info("Reloading udev rules")
         code = self.connection.run_blocking(["udevadm", "control", "--reload-rules"], sudo=True)
         if code != 0:
-            util.log_error("Failed to reload udev rules")
+            logger.log_error("Failed to reload udev rules")
             return False
         code = self.connection.run_blocking(["udevadm", "trigger"], sudo=True)
         if code != 0:
-            util.log_error("Failed to trigger udev rules")
+            logger.log_error("Failed to trigger udev rules")
             return False
 
         # All done
-        util.log_info("Udev rules installed successfully")
+        logger.log_info("Udev rules installed successfully")
         return True
 
     def uninstall(self):
 
         # Start uninstall
-        util.log_info("Uninstalling udev rules")
+        logger.log_info("Uninstalling udev rules")
 
         # Remove each rule
         for rule in UDEV_RULES:
             rule_path = self._get_rule_path(rule)
 
             if self.connection.does_file_or_directory_exist(rule_path):
-                util.log_info(f"Removing {rule['filename']}")
+                logger.log_info(f"Removing {rule['filename']}")
                 self.connection.remove_file_or_directory(rule_path, sudo=True)
 
         # Reload udev rules
-        util.log_info("Reloading udev rules")
+        logger.log_info("Reloading udev rules")
         self.connection.run_blocking(["udevadm", "control", "--reload-rules"], sudo=True)
         self.connection.run_blocking(["udevadm", "trigger"], sudo=True)
 
         # All done
-        util.log_info("Udev rules uninstalled")
+        logger.log_info("Udev rules uninstalled")
         return True

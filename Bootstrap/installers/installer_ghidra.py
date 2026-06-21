@@ -5,9 +5,11 @@ import secrets
 import string
 
 # Local imports
-import util
 import constants
+from joybox import settings
 from . import installer
+from joybox import runoptions
+from joybox import logger
 
 # Nginx stream config template
 nginx_stream_config_template = """
@@ -392,28 +394,27 @@ public class ListAndExportRepository extends GhidraScript {
 class Ghidra(installer.Installer):
     def __init__(
         self,
-        config,
         connection,
-        flags = util.RunFlags(),
-        options = util.RunOptions()):
-        super().__init__(config, connection, flags, options)
+        flags = runoptions.RunFlags(),
+        options = runoptions.RunOptions()):
+        super().__init__(connection, flags, options)
         self.app_name = "ghidra_server"
         self.app_dir = f"$HOME/apps/{self.app_name}"
-        self.app_domain = self.config.get_value("UserData.Servers", "domain_name")
-        self.app_admin_user = self.config.get_value("UserData.Ghidra", "ghidra_admin_user")
-        self.app_admin_pass = self.config.get_value("UserData.Ghidra", "ghidra_admin_pass")
+        self.app_domain = settings.get_value("UserData.Servers", "domain_name")
+        self.app_admin_user = settings.get_value("UserData.Ghidra", "ghidra_admin_user")
+        self.app_admin_pass = settings.get_value("UserData.Ghidra", "ghidra_admin_pass")
         self.nginx_stream_config_values = {
-            "domain": self.config.get_value("UserData.Servers", "domain_name"),
-            "subdomain": self.config.get_value("UserData.Ghidra", "ghidra_subdomain"),
-            "port_rmi": self.config.get_value("UserData.Ghidra", "ghidra_port_rmi"),
-            "port_ssl": self.config.get_value("UserData.Ghidra", "ghidra_port_ssl"),
-            "port_stream": self.config.get_value("UserData.Ghidra", "ghidra_port_stream")
+            "domain": settings.get_value("UserData.Servers", "domain_name"),
+            "subdomain": settings.get_value("UserData.Ghidra", "ghidra_subdomain"),
+            "port_rmi": settings.get_value("UserData.Ghidra", "ghidra_port_rmi"),
+            "port_ssl": settings.get_value("UserData.Ghidra", "ghidra_port_ssl"),
+            "port_stream": settings.get_value("UserData.Ghidra", "ghidra_port_stream")
         }
         self.env_values = {
-            "domain": self.config.get_value("UserData.Servers", "domain_name"),
-            "port_rmi": self.config.get_value("UserData.Ghidra", "ghidra_port_rmi"),
-            "port_ssl": self.config.get_value("UserData.Ghidra", "ghidra_port_ssl"),
-            "port_stream": self.config.get_value("UserData.Ghidra", "ghidra_port_stream")
+            "domain": settings.get_value("UserData.Servers", "domain_name"),
+            "port_rmi": settings.get_value("UserData.Ghidra", "ghidra_port_rmi"),
+            "port_ssl": settings.get_value("UserData.Ghidra", "ghidra_port_ssl"),
+            "port_stream": settings.get_value("UserData.Ghidra", "ghidra_port_stream")
         }
 
     def get_supported_environments(self):
@@ -428,12 +429,12 @@ class Ghidra(installer.Installer):
     def install(self):
 
         # Create directories
-        util.log_info("Creating directories")
+        logger.log_info("Creating directories")
         self.connection.make_directory(self.app_dir)
         self.connection.make_directory(f"{self.app_dir}/certs")
 
         # Generate keystore password
-        util.log_info("Generate keystore password")
+        logger.log_info("Generate keystore password")
         keystore_password = ''.join(secrets.choice(string.ascii_letters + string.digits) for _ in range(32))
         keystore_password_file = f"{self.app_dir}/certs/keystore_password.txt"
         if self.connection.write_file("/tmp/keystore_password.txt", keystore_password):
@@ -441,7 +442,7 @@ class Ghidra(installer.Installer):
             self.connection.change_permission(keystore_password_file, "644")
 
         # Export SSL keystore from certbot
-        util.log_info("Exporting SSL keystore from certbot")
+        logger.log_info("Exporting SSL keystore from certbot")
         self.connection.run_checked([
             self.cert_manager_tool,
             "export_keystore",
@@ -454,81 +455,81 @@ class Ghidra(installer.Installer):
         ], sudo = True)
 
         # Write entrypoint script
-        util.log_info("Writing entrypoint script")
+        logger.log_info("Writing entrypoint script")
         if self.connection.write_file("/tmp/entrypoint.sh", entrypoint_script):
             self.connection.move_file_or_directory("/tmp/entrypoint.sh", f"{self.app_dir}/entrypoint.sh")
 
         # Write Ghidra scripts
-        util.log_info("Writing Ghidra scripts")
+        logger.log_info("Writing Ghidra scripts")
         if self.connection.write_file("/tmp/ExportToGzf.java", export_to_gzf_script):
             self.connection.move_file_or_directory("/tmp/ExportToGzf.java", f"{self.app_dir}/ExportToGzf.java")
         if self.connection.write_file("/tmp/ListAndExportRepository.java", list_and_export_script):
             self.connection.move_file_or_directory("/tmp/ListAndExportRepository.java", f"{self.app_dir}/ListAndExportRepository.java")
 
         # Write Dockerfile
-        util.log_info("Writing Dockerfile")
+        logger.log_info("Writing Dockerfile")
         if self.connection.write_file("/tmp/Dockerfile", dockerfile_template):
             self.connection.move_file_or_directory("/tmp/Dockerfile", f"{self.app_dir}/Dockerfile")
 
         # Write docker compose
-        util.log_info("Writing docker compose")
+        logger.log_info("Writing docker compose")
         if self.connection.write_file("/tmp/docker-compose.yml", docker_compose_template):
             self.connection.move_file_or_directory("/tmp/docker-compose.yml", f"{self.app_dir}/docker-compose.yml")
 
         # Write docker env
-        util.log_info("Writing docker env")
+        logger.log_info("Writing docker env")
         if self.connection.write_file("/tmp/.env", env_template.format(**self.env_values)):
             self.connection.move_file_or_directory("/tmp/.env", f"{self.app_dir}/.env")
 
         # Create nginx stream entry
-        util.log_info("Creating nginx stream entry")
+        logger.log_info("Creating nginx stream entry")
         if self.connection.write_file(f"/tmp/{self.app_name}.conf", nginx_stream_config_template.format(**self.nginx_stream_config_values)):
             self.connection.run_checked([self.nginx_manager_tool, "install_stream_conf", f"/tmp/{self.app_name}.conf"], sudo = True)
             self.connection.run_checked([self.nginx_manager_tool, "link_stream_conf", f"{self.app_name}.conf"], sudo = True)
             self.connection.remove_file_or_directory(f"/tmp/{self.app_name}.conf")
 
         # Open all three firewall ports
-        util.log_info("Opening firewall ports for Ghidra")
+        logger.log_info("Opening firewall ports for Ghidra")
         for port in ["13100", "13101", "13102"]:
             self.connection.run_checked([self.nginx_manager_tool, "open_port", port], sudo = True)
 
         # Start docker
-        util.log_info("Starting docker")
+        logger.log_info("Starting docker")
         self.connection.set_current_working_directory(self.app_dir)
         self.connection.set_environmentVar("DOCKER_BUILDKIT", "1")
         self.connection.set_environmentVar("COMPOSE_DOCKER_CLI_BUILD", "1")
         self.connection.run_checked([self.docker_compose_tool, "--env-file", f"{self.app_dir}/.env", "up", "-d", "--build"])
 
         # Wait for server to be ready for admin commands
-        util.log_info("Waiting for server readiness...")
+        logger.log_info("Waiting for server readiness...")
         readiness_code = self.connection.run_return_code([self.ghidra_manager_tool, "check_server_readiness", self.app_name], sudo = True)
         if readiness_code != 0:
-            util.log_error("Server failed to become ready")
+            logger.log_error("Server failed to become ready")
             return False
 
         # Adding admin user to server
-        util.log_info("Adding admin user to server")
+        logger.log_info("Adding admin user to server")
         self.connection.run_checked([self.ghidra_manager_tool, "add_user", self.app_name, self.app_admin_user, self.app_admin_pass], sudo = True)
         return True
 
     def uninstall(self):
 
         # Stop docker
-        util.log_info("Stopping docker")
+        logger.log_info("Stopping docker")
         self.connection.set_current_working_directory(self.app_dir)
         self.connection.run_checked([self.docker_compose_tool, "--env-file", f"{self.app_dir}/.env", "down", "-v"])
         self.connection.set_current_working_directory(None)
 
         # Remove directory
-        util.log_info("Removing directory")
+        logger.log_info("Removing directory")
         self.connection.remove_file_or_directory(self.app_dir)
 
         # Remove nginx stream entry
-        util.log_info("Removing nginx stream entry")
+        logger.log_info("Removing nginx stream entry")
         self.connection.run_checked([self.nginx_manager_tool, "remove_stream_conf", f"{self.app_name}.conf"], sudo = True)
 
         # Close all firewall ports
-        util.log_info("Closing firewall ports")
+        logger.log_info("Closing firewall ports")
         for port in ["13100", "13101", "13102"]:
             self.connection.run_checked([self.nginx_manager_tool, "close_port", port], sudo = True)
         return True

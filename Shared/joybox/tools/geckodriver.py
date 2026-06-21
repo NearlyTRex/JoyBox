@@ -1,0 +1,113 @@
+# Imports
+import os, os.path
+import sys
+
+# Local imports
+import joybox.config as config
+import joybox.system as system
+import joybox.logger as logger
+import joybox.release as release
+import joybox.programs as programs
+import joybox.toolbase as toolbase
+
+# Config files
+config_files = {}
+
+# GeckoDriver tool
+class GeckoDriver(toolbase.ToolBase):
+
+    # Get name
+    def get_name(self):
+        return "GeckoDriver"
+
+    # Get config
+    def get_config(self):
+        return {
+            "GeckoDriver": {
+                "program": {
+                    "windows": "GeckoDriver/windows/geckodriver.exe",
+                    "linux": "GeckoDriver/linux/geckodriver"
+                },
+                "run_sandboxed": {
+                    "windows": False,
+                    "linux": False
+                }
+            }
+        }
+
+    # Setup
+    def setup(self, setup_params = None):
+        if not setup_params:
+            setup_params = config.SetupParams()
+
+        # Download windows program
+        if programs.should_program_be_installed("GeckoDriver", "windows"):
+            success = release.download_github_release(
+                github_user = "mozilla",
+                github_repo = "geckodriver",
+                starts_with = "geckodriver",
+                ends_with = "win32.zip",
+                search_file = "geckodriver.exe",
+                install_name = "GeckoDriver",
+                install_dir = programs.get_program_install_dir("GeckoDriver", "windows"),
+                backups_dir = programs.get_program_backup_dir("GeckoDriver", "windows"),
+                install_files = ["geckodriver.exe"],
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
+            if not success:
+                logger.log_error("Could not setup GeckoDriver")
+                return False
+
+        # Download linux program
+        if programs.should_program_be_installed("GeckoDriver", "linux"):
+            success = release.download_github_release(
+                github_user = "mozilla",
+                github_repo = "geckodriver",
+                starts_with = "geckodriver",
+                ends_with = "linux64.tar.gz",
+                search_file = "geckodriver",
+                install_name = "GeckoDriver",
+                install_dir = programs.get_program_install_dir("GeckoDriver", "linux"),
+                backups_dir = programs.get_program_backup_dir("GeckoDriver", "linux"),
+                install_files = ["geckodriver"],
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
+            if not success:
+                logger.log_error("Could not setup GeckoDriver")
+                return False
+        return True
+
+    # Setup offline
+    def setup_offline(self, setup_params = None):
+        if not setup_params:
+            setup_params = config.SetupParams()
+
+        # Setup windows program
+        if programs.should_program_be_installed("GeckoDriver", "windows"):
+            success = release.setup_stored_release(
+                archive_dir = programs.get_program_backup_dir("GeckoDriver", "windows"),
+                install_name = "GeckoDriver",
+                install_dir = programs.get_program_install_dir("GeckoDriver", "windows"),
+                search_file = "geckodriver.exe",
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
+            if not success:
+                logger.log_error("Could not setup GeckoDriver")
+                return False
+
+        # Setup linux program
+        if programs.should_program_be_installed("GeckoDriver", "linux"):
+            success = release.setup_stored_release(
+                archive_dir = programs.get_program_backup_dir("GeckoDriver", "linux"),
+                install_name = "GeckoDriver",
+                install_dir = programs.get_program_install_dir("GeckoDriver", "linux"),
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
+            if not success:
+                logger.log_error("Could not setup GeckoDriver")
+                return False
+        return True

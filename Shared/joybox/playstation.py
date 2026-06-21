@@ -1,0 +1,762 @@
+# Imports
+import os, os.path
+import sys
+import zlib
+import base64
+
+# Local imports
+import joybox.config as config
+import joybox.command as command
+import joybox.programs as programs
+import joybox.system as system
+import joybox.logger as logger
+import joybox.paths as paths
+import joybox.environment as environment
+import joybox.fileops as fileops
+import joybox.iso as iso
+import joybox.chd as chd
+from joybox import runtime
+
+######################################################
+# Sony PlayStation 3
+######################################################
+
+# Get decryption key
+def get_ps3_decryption_key(dkey_file):
+    dkey_contents = ""
+    if os.path.exists(dkey_file):
+        with open(dkey_file, "r", encoding="utf-8") as f:
+            dkey_contents = f.read().strip()
+    return dkey_contents
+
+# Encrypt ps3 iso
+def encrypt_ps3_iso(
+    iso_file_dec,
+    iso_file_enc,
+    dkey_file,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Get tool
+    encrypt_tool = None
+    if programs.is_tool_installed("PS3Dec"):
+        encrypt_tool = programs.get_tool_program("PS3Dec")
+    if not encrypt_tool:
+        logger.log_error("PS3Dec was not found")
+        return False
+
+    # Get encryption key
+    encryption_key = get_ps3_decryption_key(dkey_file)
+    if len(encryption_key) == 0:
+        if exit_on_failure:
+            logger.log_error("PS3 key file '%s' is invalid" % dkey_file, quit_program = True)
+        return False
+
+    # Get encrypt command
+    encrypt_cmd = [
+        encrypt_tool,
+        "e",
+        "key", encryption_key,
+        iso_file_dec,
+        iso_file_enc
+    ]
+
+    # Run encrypt command
+    code = command.run_returncode_command(
+        cmd = encrypt_cmd,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    if (code != 0):
+        if exit_on_failure:
+            logger.log_error("Unable to encrypt ps3 iso '%s' to '%s'" % (iso_file_dec, iso_file_enc), quit_program = True)
+        return False
+
+    # Check result
+    return os.path.exists(iso_file_enc)
+
+# Decrypt ps3 iso
+def decrypt_ps3_iso(
+    iso_file_enc,
+    iso_file_dec,
+    dkey_file,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Get tool
+    decrypt_tool = None
+    if programs.is_tool_installed("PS3Dec"):
+        decrypt_tool = programs.get_tool_program("PS3Dec")
+    if not decrypt_tool:
+        logger.log_error("PS3Dec was not found")
+        return False
+
+    # Get decryption key
+    decryption_key = get_ps3_decryption_key(dkey_file)
+    if len(decryption_key) == 0:
+        if exit_on_failure:
+            logger.log_error("PS3 key file '%s' is invalid" % dkey_file, quit_program = True)
+        return False
+
+    # Get decrypt command
+    decrypt_cmd = [
+        decrypt_tool,
+        "d",
+        "key", decryption_key,
+        iso_file_enc,
+        iso_file_dec
+    ]
+
+    # Run decrypt command
+    code = command.run_returncode_command(
+        cmd = decrypt_cmd,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    if (code != 0):
+        if exit_on_failure:
+            logger.log_error("Unable to decrypt ps3 iso '%s' to '%s'" % (iso_file_enc, iso_file_dec), quit_program = True)
+        return False
+
+    # Check result
+    return os.path.exists(iso_file_dec)
+
+# Extract ps3 iso
+def extract_ps3_iso(
+    iso_file,
+    dkey_file,
+    extract_dir,
+    delete_original = False,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Get file info
+    iso_file_basename = paths.get_filename_basename(iso_file)
+    iso_file_directory = paths.get_filename_directory(iso_file)
+    iso_file_enc = iso_file
+    iso_file_dec = paths.join_paths(iso_file_directory, iso_file_basename + ".dec.iso")
+
+    # Decrypt iso
+    success = decrypt_ps3_iso(
+        iso_file_enc = iso_file_enc,
+        iso_file_dec = iso_file_dec,
+        dkey_file = dkey_file,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    if not success:
+        return False
+
+    # Extract decrypted iso
+    success = iso.extract_iso(
+        iso_file = iso_file_dec,
+        extract_dir = extract_dir,
+        delete_original = delete_original,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    if not success:
+        return False
+
+    # Check license file
+    license_file = paths.join_paths(extract_dir, "PS3_GAME", "LICDIR", "LIC.DAT")
+    if os.path.exists(license_file):
+        if not fileops.is_file_correctly_headered(license_file, "PS3LICDA"):
+            if exit_on_failure:
+                logger.log_error("Decryption failure, LIC.DAT '%s' has the wrong header (expected PS3LICDA)." % license_file)
+                logger.log_error("It seems likely that the decryption key file '%s' is not compatible with '%s'" % (dkey_file, iso_file_enc))
+                runtime.quit_program()
+            return False
+
+    # Check eboot file
+    eboot_file = paths.join_paths(extract_dir, "PS3_GAME", "USRDIR", "EBOOT.BIN")
+    if os.path.exists(eboot_file):
+        if not fileops.is_file_correctly_headered(eboot_file, "SCE"):
+            if exit_on_failure:
+                logger.log_error("Decryption failure, EBOOT.BIN '%s' has the wrong header (expected SCE)." % eboot_file)
+                logger.log_error("It seems likely that the decryption key file '%s' is not compatible with '%s'" % (dkey_file, iso_file_enc))
+                runtime.quit_program()
+            return False
+
+    # Clean up
+    if delete_original:
+        fileops.remove_file(
+            src = iso_file_dec,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+
+    # Check result
+    return os.path.exists(extract_dir)
+
+# Verify ps3 chd
+def verify_ps3_chd(
+    chd_file,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Create temporary directory
+    tmp_dir_success, tmp_dir_result = fileops.create_temporary_directory(
+        verbose = verbose,
+        pretend_run = pretend_run)
+    if not tmp_dir_success:
+        return False
+
+    # Get rom file info
+    iso_tmp_dir = paths.join_paths(tmp_dir_result, "iso")
+    raw_tmp_dir = paths.join_paths(tmp_dir_result, "raw")
+    input_chd_file = chd_file
+    input_chd_dir = paths.get_filename_directory(input_chd_file)
+    input_chd_basename = paths.get_filename_basename(input_chd_file)
+    input_dkey_file = paths.join_paths(input_chd_dir, input_chd_basename + ".dkey")
+    output_iso_bin_file = paths.join_paths(iso_tmp_dir, input_chd_basename + config.DiscImageFileType.ISO.cval())
+    output_iso_toc_file = paths.join_paths(iso_tmp_dir, input_chd_basename + ".toc")
+
+    # Make directories
+    fileops.make_directory(
+        src = iso_tmp_dir,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    fileops.make_directory(
+        src = raw_tmp_dir,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+
+    # Extract chd
+    success = chd.extract_disc_chd(
+        chd_file = input_chd_file,
+        binary_file = output_iso_bin_file,
+        toc_file = output_iso_toc_file,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    if not success:
+        return False
+
+    # Extract ps3 iso
+    success = extract_ps3_iso(
+        iso_file = output_iso_bin_file,
+        dkey_file = input_dkey_file,
+        extract_dir = raw_tmp_dir,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    if not success:
+        return False
+
+    # Delete temporary directory
+    fileops.remove_directory(
+        src = tmp_dir_result,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+
+    # Should be verified now
+    return True
+
+# Extract psn pkg
+def extract_psn_pkg(
+    pkg_file,
+    extract_dir,
+    delete_original = False,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Get tool
+    python_tool = None
+    if programs.is_tool_installed("PythonVenvPython"):
+        python_tool = programs.get_tool_program("PythonVenvPython")
+    if not python_tool:
+        logger.log_error("PythonVenvPython was not found")
+        return False
+
+    # Get script
+    extract_script = None
+    if programs.is_tool_installed("PSNGetPkgInfo"):
+        extract_script = programs.get_tool_program("PSNGetPkgInfo")
+    if not extract_script:
+        logger.log_error("PSNGetPkgInfo was not found")
+        return False
+
+    # Get extract command
+    extract_cmd = [
+        python_tool,
+        extract_script,
+        "--content", extract_dir,
+        pkg_file
+    ]
+
+    # Run extract command
+    code = command.run_returncode_command(
+        cmd = extract_cmd,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    if code != 0:
+        logger.log_error("Unable to extract psn pkg '%s' to '%s'" % (pkg_file, extract_dir), quit_program = True)
+        return False
+
+    # Clean up
+    if delete_original:
+        fileops.remove_file(
+            src = pkg_file,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+
+    # Check result
+    return os.path.exists(extract_dir)
+
+######################################################
+# Sony PlayStation Vita
+######################################################
+
+# Strip psv file
+def strip_psv(
+    src_psv_file,
+    dest_psv_file,
+    delete_original = False,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Get tool
+    strip_tool = None
+    if programs.is_tool_installed("PSVStrip"):
+        strip_tool = programs.get_tool_program("PSVStrip")
+    if not strip_tool:
+        logger.log_error("PSVStrip was not found")
+        return False
+
+    # Get strip command
+    strip_cmd = [
+        strip_tool,
+        "-psvstrip",
+        src_psv_file,
+        dest_psv_file
+    ]
+
+    # Run strip command
+    code = command.run_returncode_command(
+        cmd = strip_cmd,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    if (code != 0):
+        if exit_on_failure:
+            logger.log_error("Unable to strip psv file '%s'" % src_psv_file, quit_program = True)
+        return False
+
+    # Clean up
+    if delete_original:
+        fileops.remove_file(
+            src = src_psv_file,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+
+    # Check result
+    return os.path.exists(dest_psv_file)
+
+# Unstrip psv file
+def unstrip_psv(
+    src_psv_file,
+    src_psve_file,
+    dest_psv_file,
+    delete_original = False,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Get tool
+    unstrip_tool = None
+    if programs.is_tool_installed("PSVStrip"):
+        unstrip_tool = programs.get_tool_program("PSVStrip")
+    if not unstrip_tool:
+        logger.log_error("PSVStrip was not found")
+        return False
+
+    # Get unstrip command
+    unstrip_cmd = [
+        unstrip_tool,
+        "-applypsve",
+        src_psv_file,
+        dest_psv_file,
+        src_psve_file
+    ]
+
+    # Run unstrip command
+    code = command.run_returncode_command(
+        cmd = unstrip_cmd,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    if (code != 0):
+        if exit_on_failure:
+            logger.log_error("Unable to unstrip psv file '%s'" % src_psv_file, quit_program = True)
+        return False
+
+    # Clean up
+    if delete_original:
+        fileops.remove_file(
+            src = src_psv_file,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+
+    # Check result
+    return os.path.exists(dest_psv_file)
+
+# Trim psv file
+def trim_psv(
+    src_psv_file,
+    dest_psv_file,
+    delete_original = False,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Get tool
+    python_tool = None
+    if programs.is_tool_installed("PythonVenvPython"):
+        python_tool = programs.get_tool_program("PythonVenvPython")
+    if not python_tool:
+        logger.log_error("PythonVenvPython was not found")
+        return False
+
+    # Get script
+    trim_script = None
+    if programs.is_tool_installed("PSVTools"):
+        trim_script = programs.get_tool_program("PSVTools")
+    if not trim_script:
+        logger.log_error("PSVTools was not found")
+        return False
+
+    # Get trim command
+    trim_cmd = [
+        python_tool,
+        trim_script,
+        "--trim",
+        "-o", dest_psv_file,
+        src_psv_file
+    ]
+
+    # Run trim command
+    code = command.run_returncode_command(
+        cmd = trim_cmd,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    if (code != 0):
+        if exit_on_failure:
+            logger.log_error("Unable to trim psv file '%s'" % src_psv_file, quit_program = True)
+        return False
+
+    # Clean up
+    if delete_original:
+        fileops.remove_file(
+            src = src_psv_file,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+
+    # Check result
+    return os.path.exists(dest_psv_file)
+
+# Untrim psv file
+def untrim_psv(
+    src_psv_file,
+    dest_psv_file,
+    delete_original = False,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Get tool
+    python_tool = None
+    if programs.is_tool_installed("PythonVenvPython"):
+        python_tool = programs.get_tool_program("PythonVenvPython")
+    if not python_tool:
+        logger.log_error("PythonVenvPython was not found")
+        return False
+
+    # Get script
+    untrim_script = None
+    if programs.is_tool_installed("PSVTools"):
+        untrim_script = programs.get_tool_program("PSVTools")
+    if not untrim_script:
+        logger.log_error("PSVTools was not found")
+        return False
+
+    # Get untrim command
+    untrim_cmd = [
+        python_tool,
+        untrim_script,
+        "--expand",
+        "-o", dest_psv_file,
+        src_psv_file
+    ]
+
+    # Run untrim command
+    code = command.run_returncode_command(
+        cmd = untrim_cmd,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    if (code != 0):
+        if exit_on_failure:
+            logger.log_error("Unable to untrim psv file '%s'" % src_psv_file, quit_program = True)
+        return False
+
+    # Clean up
+    if delete_original:
+        fileops.remove_file(
+            src = src_psv_file,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+
+    # Check result
+    return os.path.exists(dest_psv_file)
+
+# Verify psv file
+def verify_psv(
+    psv_file,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Get tool
+    python_tool = None
+    if programs.is_tool_installed("PythonVenvPython"):
+        python_tool = programs.get_tool_program("PythonVenvPython")
+    if not python_tool:
+        logger.log_error("PythonVenvPython was not found")
+        return False
+
+    # Get script
+    verify_script = None
+    if programs.is_tool_installed("PSVTools"):
+        verify_script = programs.get_tool_program("PSVTools")
+    if not verify_script:
+        logger.log_error("PSVTools was not found")
+        return False
+
+    # Get verify command
+    verify_cmd = [
+        python_tool,
+        verify_script,
+        "--verify",
+        psv_file
+    ]
+
+    # Run verify command
+    code = command.run_returncode_command(
+        cmd = verify_cmd,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    if (code != 0):
+        if exit_on_failure:
+            logger.log_error("Unable to verify psv file '%s'" % psv_file, quit_program = True)
+        return False
+
+    # Must be good
+    return True
+
+######################################################
+# Sony PlayStation Network
+######################################################
+
+# Get psn work.bin bytes from zrif string
+def get_psn_workbin_bytes_from_zrif_string(zrif_str):
+    try:
+        zrif_base64 = b"eNpjYBgFo2AU0AsYAIElGt8MRJiDCAsw3xhEmIAIU4N4AwNdRxcXZ3+/EJCAkW6Ac7C7ARwYgviuQAaIdoPSzlDaBUo7QmknIM3ACIZM78+u7kx3VWYEAGJ9HV0="
+        zrif_dict = list(zlib.decompress(base64.b64decode(zrif_base64)))
+        zrif_str_bytes = base64.b64decode(zrif_str.encode("ascii"))
+        zrif_decompressor = zlib.decompressobj(wbits=10, zdict=bytes(zrif_dict))
+        workbin_bytes = zrif_decompressor.decompress(zrif_str_bytes)
+        workbin_bytes += zrif_decompressor.flush()
+        return workbin_bytes
+    except:
+        pass
+    return None
+
+# Get psn package content id
+def get_psn_package_content_id(pkg_file):
+    try:
+        with open(pkg_file, "rb") as f:
+            f.seek(0x30)
+            return f.read(0x24).decode("utf-8")
+    except:
+        pass
+    return None
+
+# Get psn work.bin content id
+def get_psn_workbin_content_id(workbin_file):
+    try:
+        with open(workbin_file, "rb") as f:
+            f.seek(0x10)
+            return f.read(0x24).decode("utf-8")
+    except:
+        pass
+    return None
+
+# Get psn fake.rif content id
+def get_psn_fakerif_content_id(fakerif_file):
+    try:
+        with open(workbin_file, "rb") as f:
+            f.seek(0x50)
+            return f.read(0x24).decode("utf-8")
+    except:
+        pass
+    return None
+
+# Get psn package info
+def get_psn_package_info(
+    pkg_file,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Get tool
+    python_tool = None
+    if programs.is_tool_installed("PythonVenvPython"):
+        python_tool = programs.get_tool_program("PythonVenvPython")
+    if not python_tool:
+        logger.log_error("PythonVenvPython was not found")
+        return None
+
+    # Get script
+    extract_script = None
+    if programs.is_tool_installed("PSNGetPkgInfo"):
+        extract_script = programs.get_tool_program("PSNGetPkgInfo")
+    if not extract_script:
+        logger.log_error("PSNGetPkgInfo was not found")
+        return None
+
+    # Get info command
+    info_cmd = [
+        python_tool,
+        extract_script,
+        pkg_file
+    ]
+
+    # Run info command
+    info_output = command.run_output_command(
+        cmd = info_cmd,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    if not info_output or len(info_output) == 0:
+        return None
+
+    # Parse info
+    info = {}
+    for line in info_output.split("\n"):
+        line_tokens = line.split(":")
+        if len(len_tokens) < 2:
+            continue
+        line_field = line_tokens[0].strip()
+        line_value = line_tokens[1].strip()
+        if line_field == "NPS Type":
+            info["nps_type"] = line_value
+        elif line_field == "Title ID":
+            info["title_id"] = line_value
+        elif line_field == "Title":
+            info["title"] = line_value
+        elif line_field == "Region":
+            info["region"] = line_value
+        elif line_field == "Content ID":
+            info["content_id"] = line_value
+        elif line_field == "Content Type":
+            info["content_type"] = line_value
+        elif line_field == "DRM Type":
+            info["drm_type"] = line_value
+        elif line_field == "Min FW":
+            info["min_fw"] = line_value
+        elif line_field == "Version":
+            info["version"] = line_value
+        elif line_field == "App Ver":
+            info["app_ver"] = line_value
+        elif line_field == "Size":
+            info["size"] = line_value
+    return info
+
+# Rename psn package file
+def rename_psn_package_file(
+    pkg_file,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+    content_id = get_psn_package_content_id(pkg_file)
+    if not content_id:
+        return False
+    return fileops.move_file_or_directory(
+        src = pkg_file,
+        dest = paths.join_paths(paths.get_filename_directory(pkg_file), content_id + ".pkg"),
+        skip_existing = True,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+
+# Rename psn rap file
+def rename_psn_rap_file(
+    rap_file,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+    pkg_file = paths.join_paths(paths.get_filename_directory(rap_file), paths.get_filename_basename(rap_file) + ".pkg")
+    if not paths.is_path_file(pkg_file):
+        return False
+    content_id = get_psn_package_content_id(pkg_file)
+    if not content_id:
+        return False
+    return fileops.move_file_or_directory(
+        src = rap_file,
+        dest = paths.join_paths(paths.get_filename_directory(rap_file), content_id + ".rap"),
+        skip_existing = True,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+
+# Rename psn work.bin file
+def rename_psn_workbin_file(
+    workbin_file,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+    content_id = get_psn_workbin_content_id(workbin_file)
+    if not content_id:
+        return False
+    return fileops.move_file_or_directory(
+        src = workbin_file,
+        dest = paths.join_paths(paths.get_filename_directory(workbin_file), content_id + ".work.bin"),
+        skip_existing = True,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+
+# Rename psn fake.rif file
+def rename_psn_fakerif_file(
+    fakerif_file,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+    content_id = get_psn_fakerif_content_id(fakerif_file)
+    if not content_id:
+        return False
+    return fileops.move_file_or_directory(
+        src = fakerif_file,
+        dest = paths.join_paths(paths.get_filename_directory(fakerif_file), content_id + ".fake.rif"),
+        skip_existing = True,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)

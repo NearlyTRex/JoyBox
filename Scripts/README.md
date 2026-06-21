@@ -2,7 +2,7 @@
 
 A collection of CLI tools for managing a game/media locker and backing it up to local and cloud
 storage. The tools install as thin shims in `~/.local/bin`; the behaviour lives in
-`Scripts/lib`, and each `Scripts/bin/*.py` file is just a wrapper.
+`Shared/joybox`, and each `Scripts/bin/*.py` file is just a wrapper.
 
 ## Quickstart
 

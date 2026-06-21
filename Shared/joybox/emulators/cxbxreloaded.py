@@ -1,0 +1,88 @@
+# Imports
+import os, os.path
+import sys
+
+# Local imports
+import joybox.config as config
+import joybox.environment as environment
+import joybox.system as system
+import joybox.logger as logger
+import joybox.release as release
+import joybox.programs as programs
+import joybox.emulatorbase as emulatorbase
+
+# Config files
+config_files = {}
+
+# System files
+system_files = {}
+
+# CxBxReloaded emulator
+class CxBxReloaded(emulatorbase.EmulatorBase):
+
+    # Get name
+    def get_name(self):
+        return "CxBxReloaded"
+
+    # Get platforms
+    def get_platforms(self):
+        return []
+
+    # Get config
+    def get_config(self):
+        return {
+            "CxBxReloaded": {
+                "program": {
+                    "windows": "CxBxReloaded/windows/cxbx.exe",
+                    "linux": "CxBxReloaded/windows/cxbx.exe"
+                },
+                "run_sandboxed": {
+                    "windows": False,
+                    "linux": True
+                }
+            }
+        }
+
+    # Setup
+    def setup(self, setup_params = None):
+        if not setup_params:
+            setup_params = config.SetupParams()
+
+        # Download windows program
+        if programs.should_program_be_installed("CxBxReloaded", "windows"):
+            success = release.download_github_release(
+                github_user = "Cxbx-Reloaded",
+                github_repo = "Cxbx-Reloaded",
+                starts_with = "CxbxReloaded-Release",
+                ends_with = ".zip",
+                search_file = "cxbx.exe",
+                install_name = "CxBxReloaded",
+                install_dir = programs.get_program_install_dir("CxBxReloaded", "windows"),
+                backups_dir = programs.get_program_backup_dir("CxBxReloaded", "windows"),
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
+            if not success:
+                logger.log_error("Could not setup CxBxReloaded")
+                return False
+        return True
+
+    # Setup offline
+    def setup_offline(self, setup_params = None):
+        if not setup_params:
+            setup_params = config.SetupParams()
+
+        # Setup windows program
+        if programs.should_program_be_installed("CxBxReloaded", "windows"):
+            success = release.setup_stored_release(
+                archive_dir = programs.get_program_backup_dir("CxBxReloaded", "windows"),
+                install_name = "CxBxReloaded",
+                install_dir = programs.get_program_install_dir("CxBxReloaded", "windows"),
+                search_file = "cxbx.exe",
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
+            if not success:
+                logger.log_error("Could not setup CxBxReloaded")
+                return False
+        return True

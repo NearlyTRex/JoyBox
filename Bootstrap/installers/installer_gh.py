@@ -3,19 +3,19 @@ import os
 import sys
 
 # Local imports
-import util
 import constants
 from . import installer
+from joybox import runoptions
+from joybox import logger
 
 # GitHub CLI
 class Gh(installer.Installer):
     def __init__(
         self,
-        config,
         connection,
-        flags = util.RunFlags(),
-        options = util.RunOptions()):
-        super().__init__(config, connection, flags, options)
+        flags = runoptions.RunFlags(),
+        options = runoptions.RunOptions()):
+        super().__init__(connection, flags, options)
         self.url = "https://cli.github.com/packages"
         self.archive_key = "githubcli-archive-keyring.gpg"
         self.sources_list = "github-cli.list"
@@ -43,14 +43,14 @@ class Gh(installer.Installer):
     def install(self):
 
         # Start install
-        util.log_info("Installing GitHub CLI")
+        logger.log_info("Installing GitHub CLI")
 
         # Download GPG key
-        util.log_info("Adding GitHub CLI GPG key")
+        logger.log_info("Adding GitHub CLI GPG key")
         self.connection.download_file(f"{self.url}/{self.archive_key}", self.archive_key_path, sudo=True)
 
         # Add apt repository
-        util.log_info("Adding GitHub CLI apt repository")
+        logger.log_info("Adding GitHub CLI apt repository")
         self.connection.write_file(
             f"/tmp/{self.sources_list}",
             f"deb [arch=amd64 signed-by={self.archive_key_path}] {self.url} stable main\n"
@@ -58,23 +58,23 @@ class Gh(installer.Installer):
         self.connection.move_file_or_directory(f"/tmp/{self.sources_list}", self.sources_list_path, sudo=True)
 
         # Update and install
-        util.log_info("Installing gh package")
+        logger.log_info("Installing gh package")
         self.connection.run_checked([self.aptget_tool, "update"], sudo=True)
         self.connection.run_checked([self.aptget_tool, "install", "-y", "gh"], sudo=True)
 
         # Verify installation
         if not self.is_installed():
-            util.log_error("GitHub CLI installation verification failed")
+            logger.log_error("GitHub CLI installation verification failed")
             return False
 
         # All done
-        util.log_info("GitHub CLI installed successfully")
+        logger.log_info("GitHub CLI installed successfully")
         return True
 
     def uninstall(self):
 
         # Start uninstall
-        util.log_info("Uninstalling GitHub CLI")
+        logger.log_info("Uninstalling GitHub CLI")
 
         # Remove package
         self.connection.run_checked([self.aptget_tool, "remove", "-y", "gh"], sudo=True)
@@ -84,5 +84,5 @@ class Gh(installer.Installer):
         self.connection.remove_file_or_directory(self.archive_key_path, sudo=True)
 
         # All done
-        util.log_info("GitHub CLI uninstalled")
+        logger.log_info("GitHub CLI uninstalled")
         return True

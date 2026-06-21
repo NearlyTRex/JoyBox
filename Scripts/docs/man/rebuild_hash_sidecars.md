@@ -100,7 +100,7 @@ disable_hashcheck = true
 ```
 
 and remove any `md5sum_command` / `sha1sum_command` entries. This is wired into the
-Hetzner config template in `Scripts/lib/tools/rclone.py`; the live config at
+Hetzner config template in `Shared/joybox/tools/rclone.py`; the live config at
 `RClone/<platform>/rclone.conf` is regenerated from that template by the RClone setup
 step. With `disable_hashcheck` on, transfers verify by size instead and the
 `corrupted on transfer` errors stop.

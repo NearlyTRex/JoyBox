@@ -4,50 +4,51 @@ import sys
 import copy
 
 # Local imports
-import util
-import tools
-import connection
+from joybox import systemtools as tools
+from joybox import connection
 import constants
 import joyboxshared
+from joybox import runoptions
+from joybox import logger
 from joybox import platform_info
+from joybox import programs
+from joybox import settings
 
 # Installer
 class Installer:
     def __init__(
         self,
-        config,
         connection,
-        flags = util.RunFlags(),
-        options = util.RunOptions()):
+        flags = runoptions.RunFlags(),
+        options = runoptions.RunOptions()):
 
         # Copy inputs
-        self.config = config.copy()
         self.connection = connection.copy()
         self.flags = flags.copy()
         self.options = options.copy()
 
         # Setup tools
         if platform_info.is_windows_platform():
-            self.winget_tool = tools.get_winget_tool(self.config)
+            self.winget_tool = tools.get_winget_tool()
         else:
-            self.aptget_tool = tools.get_aptget_tool(self.config)
-            self.aptgetinstall_tool = tools.get_aptget_install_tool(self.config)
-            self.flatpak_tool = tools.get_flatpak_tool(self.config)
-        self.python_tool = tools.get_python_tool(self.config)
-        self.python_venv_pip_tool = tools.get_python_venv_pip_tool(self.config)
-        self.gpg_tool = tools.get_gpg_tool(self.config)
-        self.docker_tool = tools.get_docker_tool(self.config)
-        self.docker_compose_tool = tools.get_docker_compose_tool(self.config)
+            self.aptget_tool = tools.get_aptget_tool()
+            self.aptgetinstall_tool = tools.get_aptget_install_tool()
+            self.flatpak_tool = tools.get_flatpak_tool()
+        self.python_tool = tools.get_python_tool()
+        self.python_venv_pip_tool = tools.get_python_venv_pip_tool()
+        self.gpg_tool = programs.get_tool_program("Gpg")
+        self.docker_tool = tools.get_docker_tool()
+        self.docker_compose_tool = tools.get_docker_compose_tool()
         self.nginx_manager_tool = "/usr/local/bin/manager_nginx.sh"
         self.cert_manager_tool = "/usr/local/bin/manager_certbot.sh"
         self.cockpit_manager_tool = "/usr/local/bin/manager_cockpit.sh"
         self.ghidra_manager_tool = "/usr/local/bin/manager_ghidra.sh"
 
     def set_environment_type(self, environment_type):
-        self.config.set_value("UserData.General", "environment_type", environment_type)
+        settings.set_value("UserData.General", "environment_type", environment_type)
 
     def get_environment_type(self):
-        return self.config.get_value("UserData.General", "environment_type")
+        return settings.get_value("UserData.General", "environment_type")
 
     def get_supported_environments(self):
         return [
@@ -79,12 +80,12 @@ class Installer:
 
     def install_from_script(self, url, tmp_name, runner = "sh"):
         tmp_path = f"/tmp/{tmp_name}"
-        util.log_info(f"Downloading installer from {url}")
+        logger.log_info(f"Downloading installer from {url}")
         self.connection.download_file(url, tmp_path)
-        util.log_info("Running installer script")
+        logger.log_info("Running installer script")
         code = self.connection.run_blocking([runner, tmp_path])
         self.connection.remove_file_or_directory(tmp_path)
         if code != 0:
-            util.log_error(f"Installer script failed (exit {code}): {url}")
+            logger.log_error(f"Installer script failed (exit {code}): {url}")
             return False
         return True

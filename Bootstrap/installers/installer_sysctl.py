@@ -3,9 +3,10 @@ import os
 import sys
 
 # Local imports
-import util
 import constants
 from . import installer
+from joybox import runoptions
+from joybox import logger
 
 # Sysctl settings to install
 # Each setting has: key, value, description
@@ -21,11 +22,10 @@ SYSCTL_SETTINGS = [
 class Sysctl(installer.Installer):
     def __init__(
         self,
-        config,
         connection,
-        flags = util.RunFlags(),
-        options = util.RunOptions()):
-        super().__init__(config, connection, flags, options)
+        flags = runoptions.RunFlags(),
+        options = runoptions.RunOptions()):
+        super().__init__(connection, flags, options)
 
         # Path to the sysctl drop-in file
         self.conf_path = "/etc/sysctl.d/99-joybox.conf"
@@ -52,41 +52,41 @@ class Sysctl(installer.Installer):
     def install(self):
 
         # Start install
-        util.log_info("Installing sysctl settings")
+        logger.log_info("Installing sysctl settings")
 
         # Write the drop-in file
         for setting in SYSCTL_SETTINGS:
-            util.log_info(f"Setting {setting['key']} = {setting['value']}: {setting['description']}")
+            logger.log_info(f"Setting {setting['key']} = {setting['value']}: {setting['description']}")
         success = self.connection.write_file(self.conf_path, self._build_contents(), sudo=True)
         if not success:
-            util.log_error(f"Failed to write {self.conf_path}")
+            logger.log_error(f"Failed to write {self.conf_path}")
             return False
 
         # Apply the settings
-        util.log_info("Applying sysctl settings")
+        logger.log_info("Applying sysctl settings")
         code = self.connection.run_blocking(["sysctl", "--system"], sudo=True)
         if code != 0:
-            util.log_error("Failed to apply sysctl settings")
+            logger.log_error("Failed to apply sysctl settings")
             return False
 
         # All done
-        util.log_info("Sysctl settings installed successfully")
+        logger.log_info("Sysctl settings installed successfully")
         return True
 
     def uninstall(self):
 
         # Start uninstall
-        util.log_info("Uninstalling sysctl settings")
+        logger.log_info("Uninstalling sysctl settings")
 
         # Remove the drop-in file
         if self.connection.does_file_or_directory_exist(self.conf_path):
-            util.log_info(f"Removing {self.conf_path}")
+            logger.log_info(f"Removing {self.conf_path}")
             self.connection.remove_file_or_directory(self.conf_path, sudo=True)
 
             # Reload remaining settings (removed values revert on next reboot)
-            util.log_info("Reloading sysctl settings")
+            logger.log_info("Reloading sysctl settings")
             self.connection.run_blocking(["sysctl", "--system"], sudo=True)
 
         # All done
-        util.log_info("Sysctl settings uninstalled")
+        logger.log_info("Sysctl settings uninstalled")
         return True

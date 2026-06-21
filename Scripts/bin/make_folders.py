@@ -5,14 +5,14 @@ import os, os.path
 import sys
 
 # Custom imports
-lib_folder = os.path.realpath(os.path.join(os.path.dirname(__file__), "..", "lib"))
-sys.path.append(lib_folder)
-import system
-import arguments
-import setup
-import logger
-import fileops
-import paths
+shared_folder = os.path.realpath(os.path.join(os.path.dirname(__file__), "..", "..", "Shared"))
+sys.path.append(shared_folder)
+import joybox.system as system
+import joybox.arguments as arguments
+import joybox.setup as setup
+import joybox.logger as logger
+import joybox.fileops as fileops
+import joybox.paths as paths
 
 # Parse arguments
 parser = arguments.ArgumentParser(description = "Create folders from certain file types.")

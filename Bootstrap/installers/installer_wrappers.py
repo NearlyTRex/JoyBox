@@ -3,9 +3,11 @@ import os
 import sys
 
 # Local imports
-import util
 import constants
+from joybox import settings
 from . import installer
+from joybox import runoptions
+from joybox import logger
 
 # Wrapper template
 WRAPPER_TEMPLATE = '''#!/bin/bash
@@ -35,25 +37,24 @@ MARKER_FILE = ".joybox_wrappers_installed"
 class Wrappers(installer.Installer):
     def __init__(
         self,
-        config,
         connection,
-        flags = util.RunFlags(),
-        options = util.RunOptions()):
-        super().__init__(config, connection, flags, options)
+        flags = runoptions.RunFlags(),
+        options = runoptions.RunOptions()):
+        super().__init__(connection, flags, options)
 
         # Paths
         self.local_bin_dir = os.path.expandvars("$HOME/.joybox/bin")
         self.marker_path = f"{self.local_bin_dir}/{MARKER_FILE}"
 
         # Get scripts directory from config
-        scripts_dir = self.config.get_value("UserData.Dirs", "scripts_dir")
+        scripts_dir = settings.get_value("UserData.Dirs", "scripts_dir")
         if scripts_dir:
             self.scripts_bin_dir = os.path.join(scripts_dir, "bin")
         else:
             self.scripts_bin_dir = os.path.expandvars("$HOME/Repositories/JoyBox/Scripts/bin")
 
         # Get Python path - prefer venv if it exists, otherwise use system python
-        python_venv_dir = self.config.get_value("Tools.Python", "python_venv_dir")
+        python_venv_dir = settings.get_value("Tools.Python", "python_venv_dir")
         if python_venv_dir:
             self.venv_python = os.path.expandvars(os.path.join(python_venv_dir, "bin", "python3"))
         else:
@@ -103,28 +104,28 @@ class Wrappers(installer.Installer):
     def install(self):
 
         # Start install
-        util.log_info("Installing JoyBox script wrappers")
+        logger.log_info("Installing JoyBox script wrappers")
 
         # Resolve the venv now
         self._refresh_venv_state()
 
         # Create ~/.joybox/bin directory
-        util.log_info("Creating ~/.joybox/bin directory")
+        logger.log_info("Creating ~/.joybox/bin directory")
         self.connection.make_directory(self.local_bin_dir)
 
         # Discover scripts
         scripts = self._discover_scripts()
         if not scripts:
-            util.log_warning("No scripts found in Scripts/bin/")
+            logger.log_warning("No scripts found in Scripts/bin/")
             return False
-        util.log_info(f"Found {len(scripts)} scripts to wrap")
+        logger.log_info(f"Found {len(scripts)} scripts to wrap")
 
         # Generate and install wrappers
         installed_wrappers = []
         for script_name, script_path in scripts:
             wrapper_content = self._generate_wrapper(script_name, script_path)
             wrapper_path = f"{self.local_bin_dir}/{script_name}"
-            util.log_info(f"Creating wrapper: {script_name}")
+            logger.log_info(f"Creating wrapper: {script_name}")
 
             # Write wrapper to temp location first
             temp_path = f"/tmp/{script_name}_wrapper"
@@ -135,7 +136,7 @@ class Wrappers(installer.Installer):
 
         # Create python3 wrapper if venv exists
         if self.venv_exists:
-            util.log_info("Creating python3 wrapper pointing to venv")
+            logger.log_info("Creating python3 wrapper pointing to venv")
             python_wrapper_content = PYTHON_WRAPPER_TEMPLATE.format(venv_python=self.venv_python)
             python_wrapper_path = f"{self.local_bin_dir}/python3"
             temp_path = "/tmp/python3_wrapper"
@@ -146,7 +147,7 @@ class Wrappers(installer.Installer):
 
         # Create pip3 wrapper if venv exists
         if self.venv_exists:
-            util.log_info("Creating pip3 wrapper pointing to venv")
+            logger.log_info("Creating pip3 wrapper pointing to venv")
             pip_wrapper_content = PIP_WRAPPER_TEMPLATE.format(venv_pip=self.venv_pip)
             pip_wrapper_path = f"{self.local_bin_dir}/pip3"
             temp_path = "/tmp/pip3_wrapper"
@@ -160,14 +161,14 @@ class Wrappers(installer.Installer):
         self.connection.write_file(self.marker_path, marker_content)
 
         # All done
-        util.log_info(f"Installed {len(installed_wrappers)} wrappers to ~/.joybox/bin/")
-        util.log_info("Ensure PATH includes ~/.joybox/bin (handled by dotfiles component)")
+        logger.log_info(f"Installed {len(installed_wrappers)} wrappers to ~/.joybox/bin/")
+        logger.log_info("Ensure PATH includes ~/.joybox/bin (handled by dotfiles component)")
         return True
 
     def uninstall(self):
 
         # Start uninstall
-        util.log_info("Uninstalling JoyBox script wrappers")
+        logger.log_info("Uninstalling JoyBox script wrappers")
 
         # Read marker file to get list of installed wrappers
         if self.connection.does_file_or_directory_exist(self.marker_path):
@@ -176,14 +177,14 @@ class Wrappers(installer.Installer):
                 wrappers = marker_content.strip().split("\n")
                 for wrapper_name in wrappers:
                     wrapper_path = f"{self.local_bin_dir}/{wrapper_name}"
-                    util.log_info(f"Removing wrapper: {wrapper_name}")
+                    logger.log_info(f"Removing wrapper: {wrapper_name}")
                     self.connection.remove_file_or_directory(wrapper_path)
 
         # Remove marker file
         self.connection.remove_file_or_directory(self.marker_path)
 
         # All done
-        util.log_info("Wrapper uninstallation complete")
+        logger.log_info("Wrapper uninstallation complete")
         return True
 
     def get_package_status(self):

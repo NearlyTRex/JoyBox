@@ -4,7 +4,7 @@
 
 JoyBox is a collection of CLI tools for managing a game/media locker and backing it up to local
 and cloud storage. The tools are installed as thin shims in `~/.local/bin`; the behaviour lives
-in `Scripts/lib`, and each `Scripts/bin/*.py` file is just a wrapper.
+in `Shared/joybox`, and each `Scripts/bin/*.py` file is just a wrapper.
 
 ## Installing / updating the tools
 
@@ -32,7 +32,7 @@ Make sure `~/.local/bin` is on your `PATH`.
 ## Selecting games
 
 Most game tools take the same selection flags. Values are the display strings from
-`Scripts/lib/config/categories.py` — quote any with spaces.
+`Shared/joybox/config/categories.py` — quote any with spaces.
 
 | Flag | Meaning | Examples |
 |------|---------|----------|

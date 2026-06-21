@@ -47,8 +47,8 @@ setup_tools -k "7-Zip,RClone,Wine"
 setup_game_emulators -k "Dolphin,PCSX2,Citra"
 ```
 
-Package names are the display names defined in `Scripts/lib/tools/*.py` and
-`Scripts/lib/emulators/*.py` — e.g. tools `7-Zip`, `FFMpeg`, `RClone`, `Wine`, `Pegasus`,
+Package names are the display names defined in `Shared/joybox/tools/*.py` and
+`Shared/joybox/emulators/*.py` — e.g. tools `7-Zip`, `FFMpeg`, `RClone`, `Wine`, `Pegasus`,
 `Legendary`, `Nile`, `YtDlp`; emulators `RetroArch`, `Dolphin`, `PCSX2`, `Citra`,
 `mGBA`, `melonDS`, `DuckStation`, `Yuzu`, `Cemu`.
 

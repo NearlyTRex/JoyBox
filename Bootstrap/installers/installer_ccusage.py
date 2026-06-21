@@ -3,19 +3,19 @@ import os
 import sys
 
 # Local imports
-import util
 import constants
 from . import installer
+from joybox import runoptions
+from joybox import logger
 
 # ccusage - Claude Code usage monitoring
 class Ccusage(installer.Installer):
     def __init__(
         self,
-        config,
         connection,
-        flags = util.RunFlags(),
-        options = util.RunOptions()):
-        super().__init__(config, connection, flags, options)
+        flags = runoptions.RunFlags(),
+        options = runoptions.RunOptions()):
+        super().__init__(connection, flags, options)
 
     def get_supported_environments(self):
         return [
@@ -39,32 +39,32 @@ class Ccusage(installer.Installer):
     def install(self):
 
         # Start install
-        util.log_info("Installing ccusage")
+        logger.log_info("Installing ccusage")
 
         # Install via npm globally
-        util.log_info("Installing ccusage via npm")
+        logger.log_info("Installing ccusage via npm")
         code = self.connection.run_blocking(
             ["npm", "install", "-g", "ccusage"],
             sudo=True
         )
         if code != 0:
-            util.log_error("Failed to install ccusage")
+            logger.log_error("Failed to install ccusage")
             return False
 
         # Verify installation
-        util.log_info("Verifying installation")
+        logger.log_info("Verifying installation")
         if not self.is_installed():
-            util.log_error("ccusage installation verification failed")
+            logger.log_error("ccusage installation verification failed")
             return False
 
         # All done
-        util.log_info("ccusage installed successfully")
+        logger.log_info("ccusage installed successfully")
         return True
 
     def uninstall(self):
 
         # Start uninstall
-        util.log_info("Uninstalling ccusage")
+        logger.log_info("Uninstalling ccusage")
 
         # Remove via npm
         code = self.connection.run_blocking(
@@ -72,9 +72,9 @@ class Ccusage(installer.Installer):
             sudo=True
         )
         if code != 0:
-            util.log_error("Failed to uninstall ccusage")
+            logger.log_error("Failed to uninstall ccusage")
             return False
 
         # All done
-        util.log_info("ccusage uninstalled")
+        logger.log_info("ccusage uninstalled")
         return True

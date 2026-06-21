@@ -1,0 +1,88 @@
+# Imports
+import os, os.path
+import sys
+
+# Local imports
+import joybox.config as config
+import joybox.environment as environment
+import joybox.system as system
+import joybox.logger as logger
+import joybox.release as release
+import joybox.programs as programs
+import joybox.emulatorbase as emulatorbase
+
+# Config files
+config_files = {}
+
+# System files
+system_files = {}
+
+# PCEm emulator
+class PCEm(emulatorbase.EmulatorBase):
+
+    # Get name
+    def get_name(self):
+        return "PCEm"
+
+    # Get platforms
+    def get_platforms(self):
+        return []
+
+    # Get config
+    def get_config(self):
+        return {
+            "PCEm": {
+                "program": {
+                    "windows": "PCEm/windows/PCem.exe",
+                    "linux": "PCEm/windows/PCem.exe"
+                },
+                "run_sandboxed": {
+                    "windows": False,
+                    "linux": True
+                }
+            }
+        }
+
+    # Setup
+    def setup(self, setup_params = None):
+        if not setup_params:
+            setup_params = config.SetupParams()
+
+        # Download windows program
+        if programs.should_program_be_installed("PCEm", "windows"):
+            success = release.download_github_release(
+                github_user = "sarah-walker-pcem",
+                github_repo = "pcem",
+                starts_with = "PCem",
+                ends_with = "Win.zip",
+                search_file = "PCem.exe",
+                install_name = "PCEm",
+                install_dir = programs.get_program_install_dir("PCEm", "windows"),
+                backups_dir = programs.get_program_backup_dir("PCEm", "windows"),
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
+            if not success:
+                logger.log_error("Could not setup PCEm")
+                return False
+        return True
+
+    # Setup offline
+    def setup_offline(self, setup_params = None):
+        if not setup_params:
+            setup_params = config.SetupParams()
+
+        # Setup windows program
+        if programs.should_program_be_installed("PCEm", "windows"):
+            success = release.setup_stored_release(
+                archive_dir = programs.get_program_backup_dir("PCEm", "windows"),
+                install_name = "PCEm",
+                install_dir = programs.get_program_install_dir("PCEm", "windows"),
+                search_file = "PCem.exe",
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
+            if not success:
+                logger.log_error("Could not setup PCEm")
+                return False
+        return True

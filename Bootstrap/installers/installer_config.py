@@ -3,20 +3,20 @@ import os
 import sys
 
 # Local imports
-import util
 import constants
-import configuration
+from joybox import default_settings
 from . import installer
+from joybox import runoptions
+from joybox import logger
 
 # Config
 class Config(installer.Installer):
     def __init__(
         self,
-        config,
         connection,
-        flags = util.RunFlags(),
-        options = util.RunOptions()):
-        super().__init__(config, connection, flags, options)
+        flags = runoptions.RunFlags(),
+        options = runoptions.RunOptions()):
+        super().__init__(connection, flags, options)
 
         # Path to config file
         self.config_path = os.path.expandvars("$HOME/JoyBox.ini")
@@ -31,7 +31,7 @@ class Config(installer.Installer):
 
     def generate_config_content(self, sections=None, full=False):
         target_sections = None if full else (sections if sections else self.minimal_sections)
-        return configuration.generate_default_config_content(sections=target_sections)
+        return default_settings.generate_default_config_content(sections=target_sections)
 
     def get_supported_environments(self):
         return [
@@ -47,60 +47,60 @@ class Config(installer.Installer):
     def install(self):
 
         # Start install
-        util.log_info("Installing JoyBox configuration file")
+        logger.log_info("Installing JoyBox configuration file")
 
         # Check if config already exists
         if self.connection.does_file_or_directory_exist(self.config_path):
-            util.log_info("JoyBox.ini already exists, skipping (will not overwrite)")
+            logger.log_info("JoyBox.ini already exists, skipping (will not overwrite)")
             return True
 
         # Generate config content (minimal by default)
-        util.log_info("Generating minimal JoyBox.ini template")
+        logger.log_info("Generating minimal JoyBox.ini template")
         config_content = self.generate_config_content(full=False)
 
         # Write config file
-        util.log_info(f"Writing {self.config_path}")
+        logger.log_info(f"Writing {self.config_path}")
         if self.connection.write_file(self.config_path, config_content):
-            util.log_info("JoyBox.ini created successfully")
-            util.log_info("Edit ~/JoyBox.ini to configure your installation")
+            logger.log_info("JoyBox.ini created successfully")
+            logger.log_info("Edit ~/JoyBox.ini to configure your installation")
             return True
 
         # Configuration failed
-        util.log_info("Configuration file installation failed")
+        logger.log_info("Configuration file installation failed")
         return False
 
     def install_full(self):
 
         # Start install
-        util.log_info("Installing full JoyBox configuration file")
+        logger.log_info("Installing full JoyBox configuration file")
 
         # Check if config already exists
         if self.connection.does_file_or_directory_exist(self.config_path):
-            util.log_info("JoyBox.ini already exists, skipping")
+            logger.log_info("JoyBox.ini already exists, skipping")
             return True
 
         # Generate config content
         config_content = self.generate_config_content(full=True)
         if self.connection.write_file(self.config_path, config_content):
-            util.log_info("Full JoyBox.ini created successfully")
+            logger.log_info("Full JoyBox.ini created successfully")
             return True
 
         # Configuration failed
-        util.log_info("Configuration file installation failed")
+        logger.log_info("Configuration file installation failed")
         return False
 
     def uninstall(self):
 
         # Start uninstall
-        util.log_info("Uninstalling JoyBox configuration file")
+        logger.log_info("Uninstalling JoyBox configuration file")
 
         # Backup before removing
         if self.connection.does_file_or_directory_exist(self.config_path):
             backup_path = os.path.expandvars("$HOME/JoyBox.ini.backup")
-            util.log_info(f"Backing up to {backup_path}")
+            logger.log_info(f"Backing up to {backup_path}")
             self.connection.copy_file_or_directory(self.config_path, backup_path)
             self.connection.remove_file_or_directory(self.config_path)
 
         # All done
-        util.log_info("Configuration file uninstallation complete")
+        logger.log_info("Configuration file uninstallation complete")
         return True

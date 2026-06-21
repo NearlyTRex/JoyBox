@@ -8,12 +8,14 @@ import argparse
 # Custom imports
 bootstrap_folder = os.path.realpath(os.path.join(os.path.dirname(__file__), "Bootstrap"))
 sys.path.append(bootstrap_folder)
-import connection
+import joyboxshared
+from joybox import connection
+from joybox import runoptions
+from joybox import logger
+from joybox import settings
+from joybox import default_settings
 import constants
-import configuration
-import settings
 import environments
-import util
 
 # Set up arguments
 parser = argparse.ArgumentParser(description="Environment bootstrap script.")
@@ -58,45 +60,42 @@ is_local_ubuntu = args.type == constants.EnvironmentType.LOCAL_UBUNTU
 is_remote_ubuntu = args.type == constants.EnvironmentType.REMOTE_UBUNTU
 is_server_index = isinstance(args.server_index, int) and args.server_index >= 0
 if is_remote_ubuntu and not is_server_index and not args.list_components:
-    util.log_error_and_quit("No server specified for remote machine")
+    logger.log_error_and_quit("No server specified for remote machine")
 
 # Main
 def main():
 
     # Setup logging
-    util.setup_logging()
+    logger.setup_logging()
 
     # Get config file
     config_file = os.path.realpath(args.config_file)
+    settings.set_settings_file(config_file)
     if not os.path.exists(config_file) and not args.list_components:
         if args.action == "setup":
-            util.log_info(f"Config file '{config_file}' not found; creating it with defaults")
-            configuration.create_default_config_file(config_file)
-            util.log_info(f"Created '{config_file}' — edit it to change any values, then re-run if needed")
+            logger.log_info(f"Config file '{config_file}' not found; creating it with defaults")
+            default_settings.create_default_config_file(config_file)
+            logger.log_info(f"Created '{config_file}' — edit it to change any values, then re-run if needed")
         else:
-            util.log_error_and_quit(f"Config file '{config_file}' does not exist")
-
-    # Get configuration
-    config = configuration.Configuration(src = config_file) if os.path.exists(config_file) else None
+            logger.log_error_and_quit(f"Config file '{config_file}' does not exist")
 
     # Create environment options
     environment_options = {
-        "config": config,
-        "flags": util.RunFlags(
+        "flags": runoptions.RunFlags(
             verbose = args.verbose,
             pretend_run = args.pretend_run,
             exit_on_failure = args.exit_on_failure),
-        "options": util.RunOptions()
+        "options": runoptions.RunOptions()
     }
 
     # Update environment options
     if is_remote_ubuntu:
         environment_options["options"].set(shell = True)
         if is_server_index:
-            environment_options["ssh_host"] = config.get_value("UserData.Servers", f"server_{args.server_index}_host")
-            environment_options["ssh_port"] = config.get_value("UserData.Servers", f"server_{args.server_index}_port")
-            environment_options["ssh_user"] = config.get_value("UserData.Servers", f"server_{args.server_index}_user")
-            environment_options["ssh_password"] = config.get_value("UserData.Servers", f"server_{args.server_index}_pass")
+            environment_options["ssh_host"] = settings.get_value("UserData.Servers", f"server_{args.server_index}_host")
+            environment_options["ssh_port"] = settings.get_value("UserData.Servers", f"server_{args.server_index}_port")
+            environment_options["ssh_user"] = settings.get_value("UserData.Servers", f"server_{args.server_index}_user")
+            environment_options["ssh_password"] = settings.get_value("UserData.Servers", f"server_{args.server_index}_pass")
     if args.force:
         environment_options["flags"].set(force = args.force)
 
@@ -112,15 +111,15 @@ def main():
     # Handle list components request
     if args.list_components:
         components = environment_runner.get_available_components()
-        util.log_info(f"Available components for {args.type}:")
+        logger.log_info(f"Available components for {args.type}:")
         for component in sorted(components):
-            util.log_info(f"  - {component}")
+            logger.log_info(f"  - {component}")
         return
 
     # Set components to process
     if args.components is not None:
         if len(args.components) == 0:
-            util.log_error_and_quit("--components specified but no components listed. Use --list-components to see available components.")
+            logger.log_error_and_quit("--components specified but no components listed. Use --list-components to see available components.")
         environment_runner.set_components_to_process(args.components)
 
     # Dispatch action
@@ -134,31 +133,31 @@ def main():
         results = environment_runner.status()
         installed = [r for r in results if r["installed"]]
         not_installed = [r for r in results if not r["installed"]]
-        util.log_info(f"Component status for {args.type}:")
-        util.log_info("")
+        logger.log_info(f"Component status for {args.type}:")
+        logger.log_info("")
         if installed:
-            util.log_info(f"Installed ({len(installed)}):")
+            logger.log_info(f"Installed ({len(installed)}):")
             for r in sorted(installed, key=lambda x: x["name"]):
                 pkg_status = r.get("package_status")
                 if pkg_status:
                     total = len(pkg_status["installed"]) + len(pkg_status["missing"])
-                    util.log_info(f"  [x] {r['name']} ({len(pkg_status['installed'])}/{total} packages)")
+                    logger.log_info(f"  [x] {r['name']} ({len(pkg_status['installed'])}/{total} packages)")
                 else:
-                    util.log_info(f"  [x] {r['name']}")
+                    logger.log_info(f"  [x] {r['name']}")
         if not_installed:
-            util.log_info(f"Not installed ({len(not_installed)}):")
+            logger.log_info(f"Not installed ({len(not_installed)}):")
             for r in sorted(not_installed, key=lambda x: x["name"]):
                 pkg_status = r.get("package_status")
                 if pkg_status and pkg_status["missing"]:
                     total = len(pkg_status["installed"]) + len(pkg_status["missing"])
-                    util.log_info(f"  [ ] {r['name']} ({len(pkg_status['installed'])}/{total} packages)")
-                    util.log_info(f"      Missing:")
+                    logger.log_info(f"  [ ] {r['name']} ({len(pkg_status['installed'])}/{total} packages)")
+                    logger.log_info(f"      Missing:")
                     for pkg in pkg_status["missing"][:10]:
-                        util.log_info(f"        - {pkg}")
+                        logger.log_info(f"        - {pkg}")
                     if len(pkg_status["missing"]) > 10:
-                        util.log_info(f"        ... and {len(pkg_status['missing']) - 10} more")
+                        logger.log_info(f"        ... and {len(pkg_status['missing']) - 10} more")
                 else:
-                    util.log_info(f"  [ ] {r['name']}")
+                    logger.log_info(f"  [ ] {r['name']}")
 
 # Start
 if __name__ == "__main__":

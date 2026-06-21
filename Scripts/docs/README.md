@@ -27,4 +27,4 @@ New to the tools? Start with **[Getting Started](getting-started.md)**.
 - Commands are the installed shims in `~/.local/bin` (run `setup_tools` to install/update them).
 - Every example is copy-pasteable. Add `--pretend_run --verbose` the first time you run anything.
 - Enum values (categories, lockers, actions) are the display strings from
-  `Scripts/lib/config/`; quote any value containing a space (e.g. `"Nintendo 64"`).
+  `Shared/joybox/config/`; quote any value containing a space (e.g. `"Nintendo 64"`).

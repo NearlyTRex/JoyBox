@@ -3,19 +3,19 @@ import os
 import sys
 
 # Local imports
-import util
 import constants
 from . import installer
+from joybox import runoptions
+from joybox import logger
 
 # Ollama
 class Ollama(installer.Installer):
     def __init__(
         self,
-        config,
         connection,
-        flags = util.RunFlags(),
-        options = util.RunOptions()):
-        super().__init__(config, connection, flags, options)
+        flags = runoptions.RunFlags(),
+        options = runoptions.RunOptions()):
+        super().__init__(connection, flags, options)
         self.ollama_binary_path = "/usr/local/bin/ollama"
 
     def get_supported_environments(self):
@@ -39,26 +39,26 @@ class Ollama(installer.Installer):
     def install(self):
 
         # Start install
-        util.log_info("Installing Ollama")
+        logger.log_info("Installing Ollama")
 
         # Download + run the official installer
         if not self.install_from_script("https://ollama.com/install.sh", "ollama_install.sh", runner = "bash"):
             return False
 
         # Verify installation
-        util.log_info("Verifying installation")
+        logger.log_info("Verifying installation")
         if not self.is_installed():
-            util.log_error("Ollama installation verification failed")
+            logger.log_error("Ollama installation verification failed")
             return False
 
         # All done
-        util.log_info("Ollama installed successfully")
+        logger.log_info("Ollama installed successfully")
         return True
 
     def uninstall(self):
 
         # Start uninstall
-        util.log_info("Uninstalling Ollama")
+        logger.log_info("Uninstalling Ollama")
 
         # Stop ollama service if running
         self.connection.run_blocking(["systemctl", "stop", "ollama"], sudo=True)
@@ -66,13 +66,13 @@ class Ollama(installer.Installer):
 
         # Remove binary
         if self.connection.does_file_or_directory_exist(self.ollama_binary_path):
-            util.log_info("Removing Ollama binary")
+            logger.log_info("Removing Ollama binary")
             self.connection.remove_file_or_directory(self.ollama_binary_path, sudo=True)
 
         # Remove service file
         service_path = "/etc/systemd/system/ollama.service"
         if self.connection.does_file_or_directory_exist(service_path):
-            util.log_info("Removing Ollama service")
+            logger.log_info("Removing Ollama service")
             self.connection.remove_file_or_directory(service_path, sudo=True)
             self.connection.run_blocking(["systemctl", "daemon-reload"], sudo=True)
 
@@ -81,5 +81,5 @@ class Ollama(installer.Installer):
         self.connection.run_blocking(["groupdel", "ollama"], sudo=True)
 
         # All done
-        util.log_info("Ollama uninstalled")
+        logger.log_info("Ollama uninstalled")
         return True

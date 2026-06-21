@@ -3,19 +3,19 @@ import os
 import sys
 
 # Local imports
-import util
 import constants
 from . import installer
+from joybox import runoptions
+from joybox import logger
 
 # VSCodium
 class VSCodium(installer.Installer):
     def __init__(
         self,
-        config,
         connection,
-        flags = util.RunFlags(),
-        options = util.RunOptions()):
-        super().__init__(config, connection, flags, options)
+        flags = runoptions.RunFlags(),
+        options = runoptions.RunOptions()):
+        super().__init__(connection, flags, options)
         self.gpg_url = "https://gitlab.com/paulcarroty/vscodium-deb-rpm-repo/-/raw/master/pub.gpg"
         self.repo_url = "https://paulcarroty.gitlab.io/vscodium-deb-rpm-repo/debs"
         self.archive_key = "vscodium-archive-keyring.gpg"
@@ -32,7 +32,7 @@ class VSCodium(installer.Installer):
         return self.connection.does_file_or_directory_exist("/usr/bin/codium")
 
     def install(self):
-        util.log_info("Installing VSCodium")
+        logger.log_info("Installing VSCodium")
         self.connection.download_file(self.gpg_url, "/tmp/vscodium.gpg")
         self.connection.run_checked([self.gpg_tool, "--dearmor", "-o", self.archive_key_path, "/tmp/vscodium.gpg"], sudo = True)
         self.connection.remove_file_or_directory("/tmp/vscodium.gpg")
@@ -43,7 +43,7 @@ class VSCodium(installer.Installer):
         return True
 
     def uninstall(self):
-        util.log_info("Uninstalling VSCodium")
+        logger.log_info("Uninstalling VSCodium")
         self.connection.run_checked([self.aptget_tool, "remove", "-y", "codium"], sudo = True)
         self.connection.remove_file_or_directory(self.sources_list_path, sudo = True)
         self.connection.remove_file_or_directory(self.archive_key_path, sudo = True)

@@ -3,9 +3,11 @@ import os
 import sys
 
 # Local imports
-import util
 import packages
+from joybox import settings
 from . import installer
+from joybox import runoptions
+from joybox import logger
 
 # Extract package identifier from string or dict
 def get_package_id(pkg):
@@ -28,11 +30,10 @@ def get_package_info(pkg):
 class Python(installer.Installer):
     def __init__(
         self,
-        config,
         connection,
-        flags = util.RunFlags(),
-        options = util.RunOptions()):
-        super().__init__(config, connection, flags, options)
+        flags = runoptions.RunFlags(),
+        options = runoptions.RunOptions()):
+        super().__init__(connection, flags, options)
 
     def get_packages(self):
         return packages.python.get(self.get_environment_type(), [])
@@ -58,10 +59,10 @@ class Python(installer.Installer):
         return {"installed": installed, "missing": missing}
 
     def install(self):
-        util.log_info("Installing Python packages")
+        logger.log_info("Installing Python packages")
 
         # Get venv directory from config
-        venv_dir = self.config.get_value("Tools.Python", "python_venv_dir")
+        venv_dir = settings.get_value("Tools.Python", "python_venv_dir")
         if not venv_dir:
             venv_dir = os.path.expandvars("$HOME/.venv")
         else:
@@ -69,9 +70,9 @@ class Python(installer.Installer):
 
         # Create venv if it doesn't exist
         if not self.connection.does_file_or_directory_exist(venv_dir):
-            util.log_info(f"Creating Python virtual environment at {venv_dir}")
+            logger.log_info(f"Creating Python virtual environment at {venv_dir}")
             if not self.create_virtual_environment(venv_dir):
-                util.log_error(f"Unable to create virtual environment at {venv_dir}")
+                logger.log_error(f"Unable to create virtual environment at {venv_dir}")
                 return False
 
         # Install packages
@@ -80,18 +81,18 @@ class Python(installer.Installer):
             pkg_info = get_package_info(pkg)
             display_name = pkg_info["name"] if pkg_info["name"] != pkg_id else pkg_id
             if not self.install_package(pkg_id):
-                util.log_error(f"Unable to install package {display_name}")
+                logger.log_error(f"Unable to install package {display_name}")
                 return False
         return True
 
     def uninstall(self):
-        util.log_info("Uninstalling Python packages")
+        logger.log_info("Uninstalling Python packages")
         for pkg in self.get_packages():
             pkg_id = get_package_id(pkg)
             pkg_info = get_package_info(pkg)
             display_name = pkg_info["name"] if pkg_info["name"] != pkg_id else pkg_id
             if not self.uninstall_package(pkg_id):
-                util.log_error(f"Unable to uninstall package {display_name}")
+                logger.log_error(f"Unable to uninstall package {display_name}")
                 return False
         return True
 

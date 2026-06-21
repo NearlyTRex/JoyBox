@@ -5,14 +5,14 @@ import os, os.path
 import sys
 
 # Custom imports
-lib_folder = os.path.realpath(os.path.join(os.path.dirname(__file__), "..", "lib"))
-sys.path.append(lib_folder)
-import system
-import command
-import programs
-import arguments
-import setup
-import logger
+shared_folder = os.path.realpath(os.path.join(os.path.dirname(__file__), "..", "..", "Shared"))
+sys.path.append(shared_folder)
+import joybox.system as system
+import joybox.command as command
+import joybox.programs as programs
+import joybox.arguments as arguments
+import joybox.setup as setup
+import joybox.logger as logger
 
 # Parse arguments
 parser = arguments.ArgumentParser(description = "Launch sunshine.")

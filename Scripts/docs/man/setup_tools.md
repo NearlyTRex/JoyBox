@@ -13,7 +13,7 @@ setup_tools [-k <packages>] [-f] [--clean] [-e] [-c] [options]
 `setup_tools` installs the external helper programs that other JoyBox commands call —
 e.g. `7-Zip`, `FFMpeg`, `RClone`, `Wine`, `Pegasus`, the store downloaders
 (`Legendary`, `Nile`, `LGOGDownloader`, …), and more. Packages are defined in
-`Scripts/lib/tools/*.py`; each knows how to download, install, and (optionally) configure
+`Shared/joybox/tools/*.py`; each knows how to download, install, and (optionally) configure
 itself.
 
 The process for each selected package:

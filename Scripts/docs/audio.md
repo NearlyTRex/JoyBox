@@ -8,7 +8,7 @@ playlists.
 ## Download audio
 
 `download_audio_files` is **config-driven**, not URL-driven: for the chosen genre it iterates a
-channel list baked into `Scripts/lib/config/audio.py`, and for each channel downloads videos as
+channel list baked into `Shared/joybox/config/audio.py`, and for each channel downloads videos as
 audio in **batches** (default 25), uploading each batch to the locker before the next — so a long
 channel uploads incrementally instead of all at the end.
 

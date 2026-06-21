@@ -12,7 +12,7 @@ setup_game_emulators [-k <packages>] [-f] [--clean] [-e] [-c] [options]
 
 `setup_game_emulators` installs the emulators used to run the collection —
 e.g. `RetroArch`, `Dolphin`, `PCSX2`, `Citra`, `mGBA`, `melonDS`, `DuckStation`, `Yuzu`,
-`Cemu`, and more. Emulators are defined in `Scripts/lib/emulators/*.py`; each knows how to
+`Cemu`, and more. Emulators are defined in `Shared/joybox/emulators/*.py`; each knows how to
 download, install, and (optionally) configure itself.
 
 The process for each selected emulator:

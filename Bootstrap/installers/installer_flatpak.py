@@ -3,10 +3,11 @@ import os
 import sys
 
 # Local imports
-import util
 import constants
 import packages
 from . import installer
+from joybox import runoptions
+from joybox import logger
 
 # Extract package identifier from dict
 def get_package_id(pkg):
@@ -27,11 +28,10 @@ def get_package_info(pkg):
 class Flatpak(installer.Installer):
     def __init__(
         self,
-        config,
         connection,
-        flags = util.RunFlags(),
-        options = util.RunOptions()):
-        super().__init__(config, connection, flags, options)
+        flags = runoptions.RunFlags(),
+        options = runoptions.RunOptions()):
+        super().__init__(connection, flags, options)
 
     def get_supported_environments(self):
         return [
@@ -63,7 +63,7 @@ class Flatpak(installer.Installer):
         return {"installed": installed, "missing": missing}
 
     def ensure_flathub_remote(self):
-        util.log_info("Ensuring flathub remote is configured")
+        logger.log_info("Ensuring flathub remote is configured")
         code = self.connection.run_blocking([
             self.flatpak_tool, "remote-add", "--user", "--if-not-exists",
             "flathub", "https://dl.flathub.org/repo/flathub.flatpakrepo"
@@ -71,9 +71,9 @@ class Flatpak(installer.Installer):
         return code == 0
 
     def install(self):
-        util.log_info("Installing Flatpak packages")
+        logger.log_info("Installing Flatpak packages")
         if not self.ensure_flathub_remote():
-            util.log_error("Failed to configure flathub remote")
+            logger.log_error("Failed to configure flathub remote")
             return False
         for pkg in self.get_packages():
             pkg_info = get_package_info(pkg)
@@ -81,18 +81,18 @@ class Flatpak(installer.Installer):
             pkg_repo = pkg_info["repository"]
             display_name = pkg_info["name"]
             if not self.install_package(pkg_repo, pkg_id):
-                util.log_error(f"Unable to install package {display_name}")
+                logger.log_error(f"Unable to install package {display_name}")
                 return False
         return True
 
     def uninstall(self):
-        util.log_info("Uninstalling Flatpak packages")
+        logger.log_info("Uninstalling Flatpak packages")
         for pkg in self.get_packages():
             pkg_info = get_package_info(pkg)
             pkg_id = pkg_info["id"]
             display_name = pkg_info["name"]
             if not self.uninstall_package(pkg_id):
-                util.log_error(f"Unable to uninstall package {display_name}")
+                logger.log_error(f"Unable to uninstall package {display_name}")
                 return False
         return True
 

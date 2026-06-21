@@ -4,28 +4,28 @@ import sys
 import copy
 
 # Local imports
-import util
 import joyboxshared
+from joybox import runoptions
+from joybox import logger
 from joybox import runtime
+from joybox import settings
 
 # Environment
 class Environment:
     def __init__(
         self,
-        config,
-        flags = util.RunFlags(),
-        options = util.RunOptions()):
-        self.config = config.copy()
+        flags = runoptions.RunFlags(),
+        options = runoptions.RunOptions()):
         self.flags = flags.copy()
         self.options = options.copy()
         self.components_to_process = None
         self.available_components = {}
 
     def set_environment_type(self, environment_type):
-        self.config.set_value("UserData.General", "environment_type", environment_type)
+        settings.set_value("UserData.General", "environment_type", environment_type)
 
     def get_environment_type(self):
-        return self.config.get_value("UserData.General", "environment_type")
+        return settings.get_value("UserData.General", "environment_type")
 
     def set_components_to_process(self, components):
         if components is not None:
@@ -33,8 +33,8 @@ class Environment:
             specified = set(components)
             invalid = specified - available
             if invalid:
-                util.log_error(f"Invalid components specified: {', '.join(sorted(invalid))}.")
-                util.log_error(f"Available components: {', '.join(sorted(available))}")
+                logger.log_error(f"Invalid components specified: {', '.join(sorted(invalid))}.")
+                logger.log_error(f"Available components: {', '.join(sorted(available))}")
                 runtime.quit_program()
         self.components_to_process = components
 
@@ -58,23 +58,23 @@ class Environment:
                 if not force:
                     is_installed = installer.is_installed()
                     if action_method_name.lower() == "install" and is_installed:
-                        util.log_info(f"Skipping {component_name} - already installed")
+                        logger.log_info(f"Skipping {component_name} - already installed")
                         should_skip = True
                         skipped_count += 1
                     elif action_method_name.lower() == "uninstall" and not is_installed:
-                        util.log_info(f"Skipping {component_name} - not installed")
+                        logger.log_info(f"Skipping {component_name} - not installed")
                         should_skip = True
                         skipped_count += 1
                 if not should_skip:
-                    util.log_info(f"Starting {action_method_name.title()} of {component_name}")
+                    logger.log_info(f"Starting {action_method_name.title()} of {component_name}")
                     method = getattr(installer, action_method_name)
                     if not method():
                         return False
                     processed_count += 1
         if processed_count == 0 and skipped_count == 0 and self.components_to_process is not None:
-            util.log_warning("No components were processed. Check component names.")
+            logger.log_warning("No components were processed. Check component names.")
         elif skipped_count > 0:
-            util.log_info(f"Processed {processed_count} components, skipped {skipped_count} components")
+            logger.log_info(f"Processed {processed_count} components, skipped {skipped_count} components")
         return True
 
     def status(self):

@@ -16,7 +16,7 @@ URL on the command line. Instead it iterates a hardcoded list of channels for th
 selected genre, downloads each channel's videos as audio (mp3) via `yt-dlp`, and
 backs the resulting files up to the chosen locker.
 
-The channel lists live in `Scripts/lib/config/audio.py` as `story_channels` and
+The channel lists live in `Shared/joybox/config/audio.py` as `story_channels` and
 `asmr_channels` (each entry is a `{ "name", "url" }` pair). Per channel, the tool:
 
 1. Enumerates the channel's video IDs (`yt-dlp --flat-playlist`) and skips any
@@ -114,7 +114,7 @@ download_audio_files -g Story -p -v
 ## Resuming
 
 Downloads are **batched** (`audio_download_batch_size` in
-`Scripts/lib/config/audio.py`, default 25): each batch is downloaded, uploaded,
+`Shared/joybox/config/audio.py`, default 25): each batch is downloaded, uploaded,
 and cleaned up before the next, so a long channel uploads incrementally rather
 than holding everything until the end.
 
