@@ -54,11 +54,6 @@ class Sysctl(installer.Installer):
         # Start install
         util.log_info("Installing sysctl settings")
 
-        # Skip if already up to date
-        if self.is_installed():
-            util.log_info(f"{self.conf_path} already up to date, skipping")
-            return True
-
         # Write the drop-in file
         for setting in SYSCTL_SETTINGS:
             util.log_info(f"Setting {setting['key']} = {setting['value']}: {setting['description']}")

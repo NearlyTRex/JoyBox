@@ -62,11 +62,6 @@ class Xorg(installer.Installer):
         # Start install
         util.log_info("Installing Xorg input configuration")
 
-        # Skip if already up to date
-        if self.is_installed():
-            util.log_info(f"{self.conf_path} already up to date, skipping")
-            return True
-
         # Ensure the directory exists
         code = self.connection.run_blocking(
             ["install", "-d", "-m", "0755", os.path.dirname(self.conf_path)], sudo=True)
