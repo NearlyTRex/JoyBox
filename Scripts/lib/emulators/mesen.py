@@ -38,7 +38,7 @@ class Mesen(emulatorbase.EmulatorBase):
                 },
                 "run_sandboxed": {
                     "windows": False,
-                    "linux": True
+                    "linux": False
                 }
             }
         }
@@ -50,12 +50,16 @@ class Mesen(emulatorbase.EmulatorBase):
 
         # Download windows program
         if programs.should_program_be_installed("Mesen", "windows"):
-            success = release.download_general_release(
-                archive_url = "https://nightly.link/SourMesen/Mesen2/workflows/build/master/Mesen%20%28Windows%20-%20net8.0%29.zip",
+            success = release.download_github_release(
+                github_user = "nesdev-org",
+                github_repo = "MesenCE",
+                starts_with = "Mesen",
+                ends_with = "_Windows.zip",
                 search_file = "Mesen.exe",
                 install_name = "Mesen",
                 install_dir = programs.get_program_install_dir("Mesen", "windows"),
                 backups_dir = programs.get_program_backup_dir("Mesen", "windows"),
+                get_latest = True,
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
@@ -63,14 +67,28 @@ class Mesen(emulatorbase.EmulatorBase):
                 logger.log_error("Could not setup Mesen")
                 return False
 
-        # Download linux program
+        # Build linux program
         if programs.should_program_be_installed("Mesen", "linux"):
-            success = release.download_general_release(
-                archive_url = "https://nightly.link/SourMesen/Mesen2/workflows/build/master/Mesen%20(Linux%20x64%20-%20AppImage).zip",
-                search_file = "Mesen.AppImage",
+            success = release.build_appimage_from_source(
+                release_url = "https://github.com/NearlyTRex/Mesen.git",
+                output_file = "Mesen-x86_64.AppImage",
                 install_name = "Mesen",
                 install_dir = programs.get_program_install_dir("Mesen", "linux"),
                 backups_dir = programs.get_program_backup_dir("Mesen", "linux"),
+                build_cmd = [
+                    "export", "PUBLISHFLAGS=-r linux-x64 --no-self-contained false -p:PublishSingleFile=true -p:PublishReadyToRun=true",
+                    "&&",
+                    "make", "-j", "4", "-O", "LTO=true", "STATICLINK=true", "SYSTEM_LIBEVDEV=false"
+                ],
+                internal_copies = [
+                    {"from": "Source/Mesen/bin/linux-x64/Release/linux-x64/publish/Mesen", "to": "AppImage/usr/bin/Mesen"},
+                    {"from": "Source/Mesen/Linux/appimage/Mesen.desktop", "to": "AppImage/Mesen.desktop"},
+                    {"from": "Source/Mesen/Linux/appimage/Mesen.48x48.png", "to": "AppImage/Mesen.png"}
+                ],
+                internal_symlinks = [
+                    {"from": "usr/bin/Mesen", "to": "AppRun"}
+                ],
+                locker_type = setup_params.locker_type,
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)

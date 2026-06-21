@@ -189,13 +189,10 @@ class Computer(emulatorbase.EmulatorBase):
                 webpage_base_url = "https://www.scummvm.org",
                 starts_with = "https://downloads.scummvm.org/frs/scummvm/",
                 ends_with = "win32-x86_64.zip",
-                search_file = "SDL2.dll",
+                search_file = "scummvm.exe",
                 install_name = "ScummVM",
                 install_dir = programs.get_program_install_dir("ScummVM", "windows"),
                 backups_dir = programs.get_program_backup_dir("ScummVM", "windows"),
-                rename_files = [
-                    {"from": "scummvm-*.exe", "to": "scummvm.exe", "ratio": 75}
-                ],
                 get_latest = True,
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,

@@ -98,23 +98,18 @@ class Mednafen(emulatorbase.EmulatorBase):
         # Build linux program
         if programs.should_program_be_installed("Mednafen", "linux"):
             success = release.build_appimage_from_source(
-                webpage_url = "https://mednafen.github.io",
-                webpage_base_url = "https://mednafen.github.io",
-                starts_with = "https://mednafen.github.io/releases/files/mednafen",
-                ends_with = "UNSTABLE.tar.xz",
+                release_url = "https://github.com/NearlyTRex/Mednafen.git",
                 output_file = "App-x86_64.AppImage",
                 install_name = "Mednafen",
                 install_dir = programs.get_program_install_dir("Mednafen", "linux"),
                 backups_dir = programs.get_program_backup_dir("Mednafen", "linux"),
                 build_cmd = [
-                    "cd", "mednafen",
-                    "&&",
                     "./configure",
                     "&&",
                     "make", "-j", "4"
                 ],
                 internal_copies = [
-                    {"from": "Source/mednafen/src/mednafen", "to": "AppImage/usr/bin/mednafen"},
+                    {"from": "Source/Mednafen/src/mednafen", "to": "AppImage/usr/bin/mednafen"},
                     {"from": "AppImageTool/linux/app.desktop", "to": "AppImage/app.desktop"},
                     {"from": "AppImageTool/linux/icon.svg", "to": "AppImage/icon.svg"}
                 ],
