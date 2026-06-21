@@ -119,6 +119,10 @@ class Logger:
         return "%s_%s.log" % (self.name, timestamp)
 
     def add_console_handler(self):
+        try:
+            sys.stdout.reconfigure(errors="backslashreplace")
+        except (AttributeError, ValueError):
+            pass
         handler = logging.StreamHandler(sys.stdout)
         handler.setLevel(self.level)
         formatter = ColoredFormatter(
@@ -131,7 +135,7 @@ class Logger:
 
     def add_file_handler(self):
         log_file = os.path.join(self.log_dir, self.get_timestamped_filename())
-        handler = logging.FileHandler(log_file, mode="w", encoding="utf-8")
+        handler = logging.FileHandler(log_file, mode="w", encoding="utf-8", errors="backslashreplace")
         handler.setLevel(self.level)
         formatter = logging.Formatter(self.DEFAULT_FORMAT, self.DEFAULT_DATE_FORMAT)
         handler.setFormatter(formatter)
