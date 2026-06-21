@@ -10,6 +10,8 @@ import jsondata
 import paths
 import ini
 import sandbox
+import joyboxshared
+from joybox import pathutil
 
 # Command options
 class CommandOptions:
@@ -34,7 +36,7 @@ class CommandOptions:
     def set_cwd(self, value):
         self.options.set_value(config.program_key_cwd, value)
     def has_valid_cwd(self):
-        return paths.is_path_valid(self.options.get_value(config.program_key_cwd))
+        return pathutil.is_path_valid(self.options.get_value(config.program_key_cwd))
 
     # Environment variables
     def get_env(self):
@@ -220,7 +222,7 @@ class CommandOptions:
     def set_prefix_dir(self, value):
         self.options.set_value(config.program_key_prefix_dir, value)
     def has_valid_prefix_dir(self):
-        return paths.is_path_valid(self.options.get_value(config.program_key_prefix_dir))
+        return pathutil.is_path_valid(self.options.get_value(config.program_key_prefix_dir))
     def has_existing_prefix_dir(self):
         return paths.does_path_exist(self.options.get_value(config.program_key_prefix_dir))
 
@@ -230,7 +232,7 @@ class CommandOptions:
     def set_general_prefix_dir(self, value):
         self.options.set_value(config.program_key_general_prefix_dir, value)
     def has_valid_general_prefix_dir(self):
-        return paths.is_path_valid(self.options.get_value(config.program_key_general_prefix_dir))
+        return pathutil.is_path_valid(self.options.get_value(config.program_key_general_prefix_dir))
     def has_existing_general_prefix_dir(self):
         return paths.does_path_exist(self.options.get_value(config.program_key_general_prefix_dir))
 
@@ -240,7 +242,7 @@ class CommandOptions:
     def set_prefix_user_profile_dir(self, value):
         self.options.set_value(config.program_key_prefix_user_profile_dir, value)
     def has_valid_prefix_user_profile_dir(self):
-        return paths.is_path_valid(self.options.get_value(config.program_key_prefix_user_profile_dir))
+        return pathutil.is_path_valid(self.options.get_value(config.program_key_prefix_user_profile_dir))
     def has_existing_prefix_user_profile_dir(self):
         return paths.does_path_exist(self.options.get_value(config.program_key_prefix_user_profile_dir))
 
@@ -262,7 +264,7 @@ class CommandOptions:
     def set_prefix_c_drive_virtual(self, value):
         self.options.set_value(config.program_key_prefix_c_drive_virtual, value)
     def has_valid_prefix_c_drive_virtual(self):
-        return paths.is_path_valid(self.options.get_value(config.program_key_prefix_c_drive_virtual))
+        return pathutil.is_path_valid(self.options.get_value(config.program_key_prefix_c_drive_virtual))
 
     # Prefix c drive real
     def get_prefix_c_drive_real(self):
@@ -270,7 +272,7 @@ class CommandOptions:
     def set_prefix_c_drive_real(self, value):
         self.options.set_value(config.program_key_prefix_c_drive_real, value)
     def has_valid_prefix_c_drive_real(self):
-        return paths.is_path_valid(self.options.get_value(config.program_key_prefix_c_drive_real))
+        return pathutil.is_path_valid(self.options.get_value(config.program_key_prefix_c_drive_real))
     def has_existing_prefix_c_drive_real(self):
         return paths.does_path_exist(self.options.get_value(config.program_key_prefix_c_drive_real))
 
@@ -280,7 +282,7 @@ class CommandOptions:
             return paths.join_paths(self.get_prefix_c_drive_real(), config.computer_folder_dos, "C")
         return None
     def has_valid_prefix_dos_c_drive(self):
-        return paths.is_path_valid(self.get_prefix_dos_c_drive())
+        return pathutil.is_path_valid(self.get_prefix_dos_c_drive())
 
     # Prefix dos d drive
     def get_prefix_dos_d_drive(self):
@@ -288,7 +290,7 @@ class CommandOptions:
             return paths.join_paths(self.get_prefix_c_drive_real(), config.computer_folder_dos, "D")
         return None
     def has_valid_prefix_dos_d_drive(self):
-        return paths.is_path_valid(self.get_prefix_dos_d_drive())
+        return pathutil.is_path_valid(self.get_prefix_dos_d_drive())
 
     # Prefix scumm directory
     def get_prefix_scumm_dir(self):
@@ -296,7 +298,7 @@ class CommandOptions:
             return paths.join_paths(self.get_prefix_c_drive_real(), config.computer_folder_scumm)
         return None
     def has_valid_prefix_scumm_dir(self):
-        return paths.is_path_valid(self.get_prefix_scumm_dir())
+        return pathutil.is_path_valid(self.get_prefix_scumm_dir())
 
     # Prefix name
     def get_prefix_name(self):
@@ -312,7 +314,7 @@ class CommandOptions:
     def set_prefix_cwd(self, value):
         self.options.set_value(config.program_key_prefix_cwd, value)
     def has_valid_prefix_cwd(self):
-        return paths.is_path_valid(self.get_prefix_cwd())
+        return pathutil.is_path_valid(self.get_prefix_cwd())
     def sync_cwd_to_prefix_cwd(self):
         if self.has_existing_prefix_c_drive_real() and self.has_valid_prefix_cwd():
             self.set_cwd(os.path.realpath(paths.join_paths(self.get_prefix_c_drive_real(), self.get_prefix_cwd)))
@@ -342,13 +344,13 @@ class CommandOptions:
         self.set_prefix_name(prefix_name)
 
         # Prefix dir
-        if not paths.is_path_valid(prefix_dir):
+        if not pathutil.is_path_valid(prefix_dir):
             prefix_dir = sandbox.get_prefix(self)
-        if paths.is_path_valid(prefix_dir):
+        if pathutil.is_path_valid(prefix_dir):
             self.set_prefix_dir(prefix_dir)
 
         # General prefix dir
-        if paths.is_path_valid(general_prefix_dir):
+        if pathutil.is_path_valid(general_prefix_dir):
             self.set_general_prefix_dir(general_prefix_dir)
 
     # Create prefix

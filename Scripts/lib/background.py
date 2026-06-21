@@ -7,6 +7,8 @@ import threading
 import config
 import system
 import validation
+import joyboxshared
+from joybox import runtime
 
 # Background job
 class BackgroundJob:
@@ -42,7 +44,7 @@ class BackgroundJob:
                 while not self.should_stop.is_set():
                     self.job_scheduler.run_pending()
                     if isinstance(self.sleep_interval, int) and self.sleep_interval > 0:
-                        system.sleep_program(self.sleep_interval)
+                        runtime.sleep_program(self.sleep_interval)
 
         # Create scheduler
         import schedule

@@ -14,6 +14,8 @@ import validation
 import logger
 import paths
 import hashing
+import joyboxshared
+from joybox import pathutil, texttools
 
 # Determine if file is encrypted
 def is_file_encrypted(src):
@@ -77,7 +79,7 @@ def get_embedded_filename(
     # Get embedded name
     if isinstance(info_output, bytes):
         info_output = info_output.decode()
-    for possible_name in strings.find_enclosed_substrings(info_output, "\"", "\""):
+    for possible_name in texttools.find_enclosed_substrings(info_output, "\"", "\""):
         return text.clean_rich_text(possible_name)
     return None
 
@@ -204,13 +206,13 @@ def encrypt_file(
     validation.assert_is_non_empty_string(passphrase, "passphrase")
 
     # Check source file
-    if not paths.is_path_valid(src):
+    if not pathutil.is_path_valid(src):
         return False
 
     # Check output file
     if not output_file:
         output_file = generate_encrypted_path(src)
-    if not paths.is_path_valid(output_file):
+    if not pathutil.is_path_valid(output_file):
         return False
     if paths.does_path_exist(output_file):
         return True
@@ -290,7 +292,7 @@ def decrypt_file(
     validation.assert_is_non_empty_string(passphrase, "passphrase")
 
     # Check source file
-    if not paths.is_path_valid(src):
+    if not pathutil.is_path_valid(src):
         return False
 
     # Check output file
@@ -301,7 +303,7 @@ def decrypt_file(
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-    if not paths.is_path_valid(output_file):
+    if not pathutil.is_path_valid(output_file):
         return False
     if paths.does_path_exist(output_file):
         return True

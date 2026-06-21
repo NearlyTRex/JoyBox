@@ -17,6 +17,8 @@ import sync
 import editorprompt
 import environment
 import serialization
+import joyboxshared
+from joybox import runtime
 
 ###########################################################
 # Cache Management
@@ -58,7 +60,7 @@ def build_locker_hash_map(
     if use_cache and paths.is_path_file(cache_file):
         try:
             cache_mtime = paths.get_file_mod_time(cache_file)
-            cache_age_hours = (environment.get_current_timestamp() - cache_mtime) / 3600
+            cache_age_hours = (runtime.get_current_timestamp() - cache_mtime) / 3600
             if cache_age_hours < 24:  # Use cache if less than 24 hours old
                 if verbose:
                     logger.log_info("Using cached hash map for %s (%.1f hours old)" % (locker_name, cache_age_hours))

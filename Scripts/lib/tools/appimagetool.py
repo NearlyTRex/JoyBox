@@ -12,6 +12,8 @@ import programs
 import environment
 import fileops
 import toolbase
+import joyboxshared
+from joybox import platform_info
 
 # Config files
 config_files = {}
@@ -94,7 +96,7 @@ class AppImageTool(toolbase.ToolBase):
             setup_params = config.SetupParams()
 
         # Copy icon
-        if environment.is_linux_platform():
+        if platform_info.is_linux_platform():
             success = fileops.copy_file_or_directory(
                 src = paths.join_paths(environment.get_scripts_icons_dir(), "BostonIcons", "128", "mimes", "application-x-executable-script.svg"),
                 dest = paths.join_paths(programs.get_program_install_dir("AppImageTool", "linux"), "icon.svg"),
@@ -106,7 +108,7 @@ class AppImageTool(toolbase.ToolBase):
                 return False
 
         # Create config files
-        if environment.is_linux_platform():
+        if platform_info.is_linux_platform():
             for config_filename, config_contents in config_files.items():
                 success = fileops.touch_file(
                     src = paths.join_paths(environment.get_tools_root_dir(), config_filename),

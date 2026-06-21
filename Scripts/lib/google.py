@@ -16,6 +16,8 @@ import containers
 import datautils
 import fileops
 import ini
+import joyboxshared
+from joybox import pathutil
 
 # Find images
 def find_images(
@@ -251,13 +253,13 @@ def download_video(
         download_cmd += ["--progress"]
     if pretend_run:
         download_cmd += ["--simulate"]
-    if paths.is_path_valid(output_dir):
+    if pathutil.is_path_valid(output_dir):
         download_cmd += ["-P", output_dir]
-    if paths.is_path_valid(output_file):
+    if pathutil.is_path_valid(output_file):
         download_cmd += ["-o", output_file]
     else:
         download_cmd += ["-o", "%(upload_date)s - %(title).200s.%(ext)s"]
-    if paths.is_path_valid(download_archive):
+    if pathutil.is_path_valid(download_archive):
         download_cmd += ["--download-archive", download_archive]
     if isinstance(cookie_source, str) and len(cookie_source) > 0:
         if paths.does_path_exist(cookie_source):

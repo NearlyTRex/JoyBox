@@ -16,6 +16,8 @@ from .saves import import_store_game_save
 from .saves import export_store_game_save
 from .saves import import_local_game_save
 from .saves import export_local_game_save
+import joyboxshared
+from joybox import pathutil
 
 ###########################################################
 
@@ -132,7 +134,7 @@ def launch_local_game(
         return False
 
     # Setup launcher save directory
-    if paths.is_path_valid(game_launcher_save_dir):
+    if pathutil.is_path_valid(game_launcher_save_dir):
         success = fileops.create_symlink(
             src = game_info.get_save_dir(),
             dest = game_launcher_save_dir,
@@ -178,7 +180,7 @@ def launch_local_game(
             exit_on_failure = exit_on_failure)
 
     # Revert launcher save directory
-    if paths.is_path_valid(game_launcher_save_dir):
+    if pathutil.is_path_valid(game_launcher_save_dir):
         success = fileops.remove_object(
             obj = game_launcher_save_dir,
             verbose = verbose,

@@ -9,6 +9,8 @@ import fileops
 import system
 import logger
 import paths
+import joyboxshared
+from joybox import runtime
 
 # Get image format
 def get_image_format(image_file):
@@ -74,7 +76,7 @@ def convert_image(
         if exit_on_failure:
             logger.log_error("Unable to convert %s to %s" % (image_src, image_dest))
             logger.log_error(e)
-            system.quit_program()
+            runtime.quit_program()
         return False
 
 # Convert image to jpeg

@@ -11,6 +11,8 @@ import display
 import programs
 import modules
 import paths
+import joyboxshared
+from joybox import platform_info, runtime, pathutil
 
 # Display popup
 def display_popup(
@@ -171,7 +173,7 @@ def display_warning_popup(title_text, message_text):
         message_type = config.MessageType.YES_NO,
         keep_on_top = True)
     if response == "No":
-        system.quit_program()
+        runtime.quit_program()
 
 # Display error popup
 def display_error_popup(title_text, message_text):
@@ -180,7 +182,7 @@ def display_error_popup(title_text, message_text):
         message_text = message_text,
         message_type = config.MessageType.ERROR,
         keep_on_top = True)
-    system.quit_program()
+    runtime.quit_program()
 
 # Display text input popup
 def display_text_input_popup(title_text, message_text):
@@ -266,7 +268,7 @@ def display_loading_window(
     ]
 
     # Add image
-    if paths.is_path_valid(image_file) and os.path.exists(image_file):
+    if pathutil.is_path_valid(image_file) and os.path.exists(image_file):
         window_layout += [
             [
                 psg.Image(
@@ -283,11 +285,11 @@ def display_loading_window(
         size = window_size,
         resizable = True,
         finalize = True)
-    if environment.is_windows_platform():
+    if platform_info.is_windows_platform():
         window.maximize()
     window.bind("<Escape>", "KEYPRESS_ESCAPE")
     window["progress"].Widget.config(mode = "indeterminate")
-    if paths.is_path_valid(image_file) and os.path.exists(image_file):
+    if pathutil.is_path_valid(image_file) and os.path.exists(image_file):
         try:
             from PIL import Image, ImageTk
             window_width, window_height = window.size
@@ -412,7 +414,7 @@ def display_choices_window(
         size = window_size,
         resizable = True,
         finalize = True)
-    if environment.is_windows_platform():
+    if platform_info.is_windows_platform():
         window.maximize()
     window.bind("<Escape>", "ESCAPE_PRESSED")
 

@@ -7,6 +7,8 @@ import config
 import programs
 import environment
 import paths
+import joyboxshared
+from joybox import platform_info
 
 # Base emulator
 class EmulatorBase:
@@ -67,7 +69,7 @@ class EmulatorBase:
 
         # Use current platform if none specified
         if not emulator_platform:
-            emulator_platform = environment.get_current_platform()
+            emulator_platform = platform_info.get_current_platform()
 
         # Get basic saves dir
         saves_dir = programs.get_path_config_value(

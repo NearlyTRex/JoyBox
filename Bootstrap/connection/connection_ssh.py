@@ -11,6 +11,8 @@ import concurrent.futures
 from io import StringIO
 
 # Local imports
+import joyboxshared
+from joybox import runtime, pathutil, commands
 import util
 import tools
 from . import connection
@@ -109,7 +111,7 @@ class ConnectionSSH(connection.Connection):
         try:
             if not ConnectionSSH.ssh_client:
                 raise RuntimeError("SSH client not initialized")
-            cmd = self.create_command_string(cmd)
+            cmd = commands.create_command_string(cmd, style = "posix")
             if sudo:
                 cmd = self.mark_command_as_sudo(cmd)
             if self.flags.verbose:
@@ -121,8 +123,8 @@ class ConnectionSSH(connection.Connection):
                     get_pty = self.options.shell)
                 output = stdout.read()
                 error = stderr.read()
-                output = self.clean_command_output(output.strip())
-                error = self.clean_command_output(error.strip())
+                output = commands.clean_command_output(output.strip())
+                error = commands.clean_command_output(error.strip())
                 if self.options.include_stderr and error:
                     return output + "\n" + error
                 return output
@@ -130,14 +132,14 @@ class ConnectionSSH(connection.Connection):
         except Exception as e:
             if self.flags.exit_on_failure:
                 util.log_error(e)
-                util.quit_program()
+                runtime.quit_program()
             return ""
 
     def run_return_code(self, cmd, sudo = False):
         try:
             if not ConnectionSSH.ssh_client:
                 raise RuntimeError("SSH client not initialized")
-            cmd = self.create_command_string(cmd)
+            cmd = commands.create_command_string(cmd, style = "posix")
             if sudo:
                 cmd = self.mark_command_as_sudo(cmd)
             if self.flags.verbose:
@@ -153,14 +155,14 @@ class ConnectionSSH(connection.Connection):
         except Exception as e:
             if self.flags.exit_on_failure:
                 util.log_error(e)
-                util.quit_program()
+                runtime.quit_program()
             return 1
 
     def run_blocking(self, cmd, sudo = False):
         try:
             if not ConnectionSSH.ssh_client:
                 raise RuntimeError("SSH client not initialized")
-            cmd = self.create_command_string(cmd)
+            cmd = commands.create_command_string(cmd, style = "posix")
             if sudo:
                 cmd = self.mark_command_as_sudo(cmd)
             if self.flags.verbose:
@@ -178,14 +180,14 @@ class ConnectionSSH(connection.Connection):
         except Exception as e:
             if self.flags.exit_on_failure:
                 util.log_error(e)
-                util.quit_program()
+                runtime.quit_program()
             return 1
 
     def run_interactive(self, cmd, sudo = False):
         try:
             if not ConnectionSSH.ssh_client:
                 raise RuntimeError("SSH client not initialized")
-            cmd = self.create_command_string(cmd)
+            cmd = commands.create_command_string(cmd, style = "posix")
             if sudo:
                 cmd = self.mark_command_as_sudo(cmd)
             if self.flags.verbose:
@@ -210,7 +212,7 @@ class ConnectionSSH(connection.Connection):
         except Exception as e:
             if self.flags.exit_on_failure:
                 util.log_error(e)
-                util.quit_program()
+                runtime.quit_program()
             return 1
 
     def run_checked(self, cmd, sudo = False, throw_exception = False):
@@ -219,7 +221,7 @@ class ConnectionSSH(connection.Connection):
             if throw_exception:
                 raise ValueError("Unable to run command: %s" % cmd)
             else:
-                util.quit_program(code)
+                runtime.quit_program(code)
 
     def make_temporary_directory(self):
         try:
@@ -258,7 +260,7 @@ class ConnectionSSH(connection.Connection):
             # Gather all files and ensure remote dirs
             file_tasks = []
             for dirpath, dirnames, filenames in os.walk(src):
-                if util.is_exclude_path(os.path.relpath(dirpath, src), excludes = excludes):
+                if pathutil.is_exclude_path(os.path.relpath(dirpath, src), excludes = excludes):
                     continue
 
                 # Get remote directory

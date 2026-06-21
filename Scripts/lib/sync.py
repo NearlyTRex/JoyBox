@@ -19,6 +19,8 @@ import environment
 import fileops
 import hashing
 import sqlitedb
+import joyboxshared
+from joybox import platform_info, pathutil
 
 # Constants
 HASH_DATABASE_FILE = ".locker_hashes.db"
@@ -1171,15 +1173,15 @@ def diff_files(
         remote_type = remote_type,
         remote_action_type = config.RemoteActionType.DIFF)
     check_cmd += get_exclude_flags(excludes)
-    if paths.is_path_valid(diff_combined_path):
+    if pathutil.is_path_valid(diff_combined_path):
         check_cmd += ["--combined", diff_combined_path]
-    if paths.is_path_valid(diff_intersected_path):
+    if pathutil.is_path_valid(diff_intersected_path):
         check_cmd += ["--differ", diff_intersected_path]
-    if paths.is_path_valid(diff_missing_src_path):
+    if pathutil.is_path_valid(diff_missing_src_path):
         check_cmd += ["--missing-on-src", diff_missing_src_path]
-    if paths.is_path_valid(diff_missing_dest_path):
+    if pathutil.is_path_valid(diff_missing_dest_path):
         check_cmd += ["--missing-on-dst", diff_missing_dest_path]
-    if paths.is_path_valid(diff_error_path):
+    if pathutil.is_path_valid(diff_error_path):
         check_cmd += ["--error", diff_error_path]
     if quick:
         check_cmd += ["--size-only"]
@@ -1484,7 +1486,7 @@ def mount_files(
         return True
 
     # Create mount point
-    if environment.is_unix_platform():
+    if platform_info.is_unix_platform():
         fileops.make_directory(
             src = mount_path,
             verbose = verbose,
@@ -1518,7 +1520,7 @@ def mount_files(
         get_remote_connection_path(remote_name, remote_type, remote_path),
         mount_path
     ]
-    if environment.is_unix_platform():
+    if platform_info.is_unix_platform():
         mount_cmd += ["--daemon"]
     if no_checksum:
         mount_cmd += ["--no-checksum"]
@@ -1538,7 +1540,7 @@ def mount_files(
     code = command.run_returncode_command(
         cmd = mount_cmd,
         options = command.create_command_options(
-            is_daemon = environment.is_unix_platform()),
+            is_daemon = platform_info.is_unix_platform()),
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)

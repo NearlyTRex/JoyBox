@@ -12,6 +12,8 @@ import fileops
 import release
 import programs
 import toolbase
+import joyboxshared
+from joybox import platform_info
 
 # Config files
 config_files = {}
@@ -100,7 +102,7 @@ class LGOGDownloader(toolbase.ToolBase):
             setup_params = config.SetupParams()
 
         # Create config files
-        if environment.is_linux_platform():
+        if platform_info.is_linux_platform():
             for config_filename, config_contents in config_files.items():
                 success = fileops.touch_file(
                     src = paths.join_paths(environment.get_tools_root_dir(), config_filename),

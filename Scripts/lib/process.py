@@ -6,6 +6,8 @@ import ntpath
 # Local imports
 import system
 import logger
+import joyboxshared
+from joybox import runtime
 
 ###########################################################
 # Process management
@@ -62,7 +64,7 @@ def wait_for_named_processes(process_names = [], timeout = 1200):
                 if timeout and elapsed > timeout:
                     logger.log_warning("Timeout after %d seconds waiting for %s (pid=%d)" % (timeout, proc.name(), proc.pid))
                     break
-                system.sleep_program(1)
+                runtime.sleep_program(1)
     except (psutil.NoSuchProcess, psutil.ZombieProcess):
         pass  # Process already finished, which is fine
     except psutil.AccessDenied as e:

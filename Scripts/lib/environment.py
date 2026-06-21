@@ -1,9 +1,9 @@
 # Imports
 import os, os.path
-import sys
-import time
 
 # Local imports
+import joyboxshared
+from joybox import platform_info, runtime
 import config
 import fileops
 import system
@@ -17,43 +17,13 @@ import lockerinfo
 # System capabilities
 ###########################################################
 
-# Determine if windows platform
-def is_windows_platform():
-    return sys.platform.startswith("win32")
-
-# Determine if linux platform
-def is_linux_platform():
-    return sys.platform.startswith("linux")
-
-# Determine if mac platform
-def is_mac_platform():
-    return sys.platform.startswith("darwin")
-
-# Determine if unix platform
-def is_unix_platform():
-    return is_mac_platform() or is_linux_platform()
-
 # Determine if wine platform
 def is_wine_platform():
-    return is_linux_platform()
+    return platform_info.is_linux_platform()
 
 # Determine if sandboxie platform
 def is_sandboxie_platform():
-    return is_windows_platform()
-
-# Get current platform
-def get_current_platform():
-    if is_windows_platform():
-        return "windows"
-    elif is_linux_platform():
-        return "linux"
-    elif is_mac_platform():
-        return "macos"
-    return None
-
-# Get current timestamp
-def get_current_timestamp():
-    return int(time.time())
+    return platform_info.is_windows_platform()
 
 # Get home directory
 def get_home_directory():
@@ -62,10 +32,6 @@ def get_home_directory():
 # Get cookie directory
 def get_cookie_directory():
     return paths.join_paths(get_home_directory(), "Cookies")
-
-# Get log directory
-def get_log_directory():
-    return paths.join_paths(get_home_directory(), "Logs")
 
 # Get editor command
 def get_editor():
@@ -84,13 +50,13 @@ def get_editor():
         return editor
 
     # Final fallback
-    if is_windows_platform():
+    if platform_info.is_windows_platform():
         return "notepad.exe"
     return "nano"
 
 # Determine if symlinks are supported
 def are_symlinks_supported():
-    if is_unix_platform():
+    if platform_info.is_unix_platform():
         return True
     else:
         test_file_src = paths.join_paths(os.path.expanduser("~"), ".symsrc")
@@ -495,14 +461,14 @@ def get_scripts_lib_dir():
 
 # Get scripts command extension
 def get_scripts_command_extension():
-    if is_windows_platform():
+    if platform_info.is_windows_platform():
         return ".bat"
     else:
         return ""
 
 # Get scripts executable extension
 def get_scripts_executable_extension():
-    if is_windows_platform():
+    if platform_info.is_windows_platform():
         return ".exe"
     else:
         return ""

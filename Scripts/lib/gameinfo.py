@@ -22,6 +22,8 @@ import stores
 import strings
 import gui
 import lockerinfo
+import joyboxshared
+from joybox import platform_info, pathutil
 
 ###########################################################
 
@@ -126,7 +128,7 @@ class GameInfo:
         # Get paths
         save_dir = environment.get_cache_gaming_save_dir(self.game_category, self.game_subcategory, self.game_name)
         if self.game_category == config.Category.COMPUTER:
-            if environment.is_windows_platform():
+            if platform_info.is_windows_platform():
                 save_dir = environment.get_cache_gaming_save_dir(self.game_category, self.game_subcategory, self.game_name, config.SaveType.SANDBOXIE)
             else:
                 save_dir = environment.get_cache_gaming_save_dir(self.game_category, self.game_subcategory, self.game_name, config.SaveType.WINE)
@@ -991,7 +993,7 @@ def derive_game_platform_from_categories(game_category, game_subcategory):
 def derive_game_categories_from_file(game_file):
 
     # Check file
-    if not paths.is_path_valid(game_file):
+    if not pathutil.is_path_valid(game_file):
         return (None, None, None)
 
     # Get source directory and basename

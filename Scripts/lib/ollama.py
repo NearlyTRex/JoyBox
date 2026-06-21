@@ -7,6 +7,8 @@ import logger
 import network
 import hardware
 import system
+import joyboxshared
+from joybox import runtime
 
 ###########################################################
 # Ollama API
@@ -28,7 +30,7 @@ def start_serve():
     options.set_is_daemon(True)
     command.run_returncode_command(["ollama", "serve"], options = options)
     for _ in range(10):
-        system.sleep_program(1)
+        runtime.sleep_program(1)
         if is_running():
             logger.log_info("Ollama server started")
             return True

@@ -17,6 +17,8 @@ import programs
 import webpage
 import registry
 import locker
+import joyboxshared
+from joybox import platform_info, runtime
 
 ###########################################################
 # Info
@@ -275,11 +277,11 @@ def download_git_url(
 def is_network_share_mounted(mount_dir, base_location, network_share):
 
     # Windows
-    if environment.is_windows_platform():
+    if platform_info.is_windows_platform():
         return paths.is_path_directory(mount_dir) and not paths.is_directory_empty(mount_dir)
 
     # Linux
-    elif environment.is_linux_platform():
+    elif platform_info.is_linux_platform():
         mount_lines = command.run_output_command(
             cmd = ["mount"])
         for line in mount_lines.split("\n"):
@@ -303,7 +305,7 @@ def mount_network_share(
     exit_on_failure = False):
 
     # Windows
-    if environment.is_windows_platform():
+    if platform_info.is_windows_platform():
 
         # Check if already mounted
         if paths.is_path_directory(mount_dir):
@@ -328,7 +330,7 @@ def mount_network_share(
         return (code == 0)
 
     # Linux
-    elif environment.is_linux_platform():
+    elif platform_info.is_linux_platform():
 
         # Get mkdir command
         mkdir_cmd = [
@@ -523,7 +525,7 @@ def archive_github_repository(
     tmp_dir_download = paths.join_paths(tmp_dir_result, "download")
     tmp_dir_archive = paths.join_paths(tmp_dir_result, "archive")
     tmp_file_archive = paths.join_paths(tmp_dir_archive, "tmp.zip")
-    out_file_archive = paths.join_paths(output_dir, github_repo + "_" + str(environment.get_current_timestamp()) + config.ArchiveFileType.ZIP.cval())
+    out_file_archive = paths.join_paths(output_dir, github_repo + "_" + str(runtime.get_current_timestamp()) + config.ArchiveFileType.ZIP.cval())
     fileops.make_directory(
         src = tmp_dir_download,
         verbose = verbose,

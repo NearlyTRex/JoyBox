@@ -10,13 +10,15 @@ import paths
 import system
 import tools
 import emulators
+import joyboxshared
+from joybox import platform_info
 
 ###########################################################
 
 # Get config value
 def get_config_value(program_config, program_name, program_key, program_platform = None):
     if not program_platform:
-        program_platform = environment.get_current_platform()
+        program_platform = platform_info.get_current_platform()
     program_value = None
     try:
         program_value = program_config[program_name][program_key]
@@ -80,7 +82,7 @@ def should_program_be_installed(program_name, program_platform = None):
 
     # Get default platform if none specified
     if not program_platform:
-        program_platform = environment.get_current_platform()
+        program_platform = platform_info.get_current_platform()
 
     # Get program path
     program_path = None
@@ -92,7 +94,7 @@ def should_program_be_installed(program_name, program_platform = None):
     # Check program path
     if not program_path:
         return False
-    if program_platform == "linux" and not environment.is_linux_platform():
+    if program_platform == "linux" and not platform_info.is_linux_platform():
         return False
     if os.path.exists(program_path):
         return False

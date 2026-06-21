@@ -3,9 +3,10 @@ import os
 import sys
 import copy
 import codecs
-import shlex
 
 # Local imports
+import joyboxshared
+from joybox import platform_info, runtime, commands
 import util
 
 class Connection:
@@ -57,34 +58,6 @@ class Connection:
     def get_options(self):
         return self.options
 
-    def create_command_string(self, cmd):
-        if not cmd:
-            return ""
-        if len(cmd) == 0:
-            return ""
-        if isinstance(cmd, str):
-            return copy.deepcopy(cmd)
-        if isinstance(cmd, list):
-            return " ".join(shlex.quote(cmd_segment) for cmd_segment in cmd)
-        return ""
-
-    def create_command_list(self, cmd):
-        if not cmd:
-            return []
-        if len(cmd) == 0:
-            return []
-        if isinstance(cmd, list):
-            return copy.deepcopy(cmd)
-        if isinstance(cmd, str):
-            return cmd.split(" ")
-        return []
-
-    def clean_command_output(self, output):
-        try:
-            return output.decode("utf-8", "ignore")
-        except:
-            return output
-
     def stream_command_output(self, chunks):
         decoder = codecs.getincrementaldecoder("utf-8")(errors = "ignore")
         line = ""
@@ -113,10 +86,11 @@ class Connection:
         return cmd
 
     def print_command(self, cmd):
-        if isinstance(cmd, str):
-            util.log_info("Running \"%s\"" % cmd)
-        if isinstance(cmd, list):
-            util.log_info("Running \"%s\"" % " ".join(cmd))
+        masked = commands.mask_sensitive_args(cmd)
+        if isinstance(masked, str):
+            util.log_info("Running \"%s\"" % masked)
+        if isinstance(masked, list):
+            util.log_info("Running \"%s\"" % " ".join(masked))
 
     def run_output(self, cmd, sudo = False):
         return ""
@@ -137,7 +111,7 @@ class Connection:
         if self.flags.exit_on_failure:
             util.log_error(message)
             util.log_error(error)
-            util.quit_program()
+            runtime.quit_program()
         return return_value
 
     def make_temporary_directory(self):
@@ -226,7 +200,7 @@ class Connection:
             return self.handle_error(f"Unable to remove from crontab: {pattern}", e, return_value = False)
 
     def add_to_path(self, src):
-        if util.is_windows_platform():
+        if platform_info.is_windows_platform():
             return self.add_to_windows_path(src)
         else:
             return self.add_to_unix_path(src)

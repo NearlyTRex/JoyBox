@@ -18,6 +18,8 @@ import emulatorbase
 import computer
 import gui
 import ini
+import joyboxshared
+from joybox import platform_info
 
 # Config files
 config_files = {}
@@ -139,7 +141,7 @@ class Computer(emulatorbase.EmulatorBase):
 
     # Get save type
     def get_save_type(self):
-        if environment.is_windows_platform():
+        if platform_info.is_windows_platform():
             return config.SaveType.SANDBOXIE
         else:
             return config.SaveType.WINE

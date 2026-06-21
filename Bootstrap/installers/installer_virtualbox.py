@@ -6,6 +6,8 @@ import sys
 import util
 import constants
 from . import installer
+import joyboxshared
+from joybox import platform_info
 
 # VirtualBox (Oracle repo)
 class VirtualBox(installer.Installer):
@@ -57,7 +59,7 @@ class VirtualBox(installer.Installer):
         self.connection.remove_file_or_directory(tmp_key)
 
         # Get Ubuntu codename (uses UBUNTU_CODENAME to handle Mint/derivatives)
-        codename = util.get_ubuntu_codename()
+        codename = platform_info.get_ubuntu_codename()
         util.log_info(f"Detected Ubuntu codename: {codename}")
 
         # Add apt repository

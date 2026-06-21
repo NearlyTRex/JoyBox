@@ -17,6 +17,8 @@ import archive
 import display
 import install
 import gui
+import joyboxshared
+from joybox import platform_info
 
 # Program
 class Program(jsondata.JsonData):
@@ -553,8 +555,8 @@ def launch_computer_game(
     def create_game_prefix():
         nonlocal game_launch_options
         return game_launch_options.create_prefix(
-            is_wine_prefix = environment.is_linux_platform(),
-            is_sandboxie_prefix = environment.is_windows_platform(),
+            is_wine_prefix = platform_info.is_linux_platform(),
+            is_sandboxie_prefix = platform_info.is_windows_platform(),
             prefix_name = config.PrefixType.GAME,
             prefix_dir = game_info.get_save_dir(),
             general_prefix_dir = game_info.get_general_save_dir(),

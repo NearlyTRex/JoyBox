@@ -13,6 +13,8 @@ import programs
 import environment
 import fileops
 import toolbase
+import joyboxshared
+from joybox import platform_info
 
 # Extra files directory
 extra_files_dir = os.path.join(os.path.dirname(__file__), "files", "ghidra")
@@ -66,7 +68,7 @@ class Ghidra(toolbase.ToolBase):
         if programs.should_library_be_installed("Ghidra/lib"):
 
             # Get build command
-            if environment.is_windows_platform():
+            if platform_info.is_windows_platform():
                 build_cmd = [
                     "gradlew.bat", "-I", "gradle/support/fetchDependencies.gradle",
                     "&&",

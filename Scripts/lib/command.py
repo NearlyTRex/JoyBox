@@ -1,23 +1,21 @@
 # Imports
 import os
 import sys
-import re
 import subprocess
 import getpass
 import shutil
-import copy
 import threading
 
 # Local imports
+import joyboxshared
+from joybox import platform_info, runtime, pathutil, commands
 import config
-import system
 import logger
 import paths
 import environment
 import commandoptions
 import programs
 import sandbox
-import strings
 import capture
 import ini
 import process
@@ -28,61 +26,18 @@ import process
 def create_command_options(*args, **kwargs):
     return commandoptions.CommandOptions(*args, **kwargs)
 
-# Create command string
-def create_command_string(cmd):
-    if not cmd:
-        return ""
-    if len(cmd) == 0:
-        return ""
-    if isinstance(cmd, str):
-        return copy.deepcopy(cmd)
-    if isinstance(cmd, list):
-        cmd_str = ""
-        for cmd_segment in cmd:
-            if " " in cmd_segment:
-                cmd_str += " " + "\"" + cmd_segment + "\""
-            else:
-                cmd_str += " " + cmd_segment
-        cmd_str = cmd_str.strip()
-        return cmd_str
-    return ""
-
-# Create command list
-def create_command_list(cmd):
-    if not cmd:
-        return []
-    if len(cmd) == 0:
-        return []
-    if isinstance(cmd, list):
-        return copy.deepcopy(cmd)
-    if isinstance(cmd, str):
-        cmd = cmd.replace(" ", config.token_command_split)
-        for quoted_substring in strings.split_by_enclosed_substrings(cmd, "\"", "\""):
-            cmd = cmd.replace(quoted_substring, quoted_substring.replace(config.token_command_split, " "))
-        return cmd.split(config.token_command_split)
-    return []
-
-###########################################################
-
-# Clean command output
-def clean_command_output(output):
-    try:
-        return output.decode("utf-8", "ignore")
-    except:
-        return output
-
 ###########################################################
 
 # Get starter command
 def get_starter_command(cmd):
-    cmd_list = create_command_list(cmd)
+    cmd_list = commands.create_command_list(cmd)
     if len(cmd_list) == 0:
         return ""
     return cmd_list[0]
 
 # Check if only starter command
 def is_only_starter_command(cmd):
-    cmd_list = create_command_list(cmd)
+    cmd_list = commands.create_command_list(cmd)
     return len(cmd_list) == 1
 
 ###########################################################
@@ -110,7 +65,7 @@ def is_runnable_command(cmd, search_dirs = []):
 
 # Check if command type is found
 def is_command_type_found(cmd, cmd_exts = [], search_start = 0, search_len = -1):
-    cmd_list = create_command_list(cmd)
+    cmd_list = commands.create_command_list(cmd)
     for cmd_index in range(len(cmd_list)):
         cmd_segment = cmd_list[cmd_index]
         is_found = False
@@ -197,7 +152,7 @@ def setup_powershell_command(
     new_cmd = []
     if not is_powershell_command(cmd):
         new_cmd += ["powershell", "-NoProfile", "-Command"]
-    new_cmd += create_command_list(cmd)
+    new_cmd += commands.create_command_list(cmd)
     return (new_cmd, new_options)
 
 # Setup appimage command
@@ -212,7 +167,7 @@ def setup_appimage_command(
     new_options = options.copy()
 
     # Setup appimage command
-    for cmd_segment in create_command_list(cmd):
+    for cmd_segment in commands.create_command_list(cmd):
         if cmd_segment.lower().endswith(".appimage"):
             appimage_home_dir = os.path.realpath(cmd_segment + ".home")
             if os.path.exists(appimage_home_dir):
@@ -328,37 +283,9 @@ def postprocess_command(
 
 ###########################################################
 
-# Mask sensitive arguments in command
-def mask_sensitive_args(cmd):
-    sensitive_flags = [
-        "--passphrase",
-        "--password",
-        "--token",
-        "--secret"
-    ]
-    if isinstance(cmd, str):
-        for flag in sensitive_flags:
-            if flag in cmd:
-                cmd = re.sub(f"{flag}\\s+\\S+", f"{flag} ****", cmd)
-        return cmd
-    if isinstance(cmd, list):
-        masked = []
-        skip_next = False
-        for arg in cmd:
-            if skip_next:
-                masked.append("****")
-                skip_next = False
-            elif arg in sensitive_flags:
-                masked.append(arg)
-                skip_next = True
-            else:
-                masked.append(arg)
-        return masked
-    return cmd
-
 # Print command
 def print_command(cmd):
-    masked_cmd = mask_sensitive_args(cmd)
+    masked_cmd = commands.mask_sensitive_args(cmd)
     if isinstance(masked_cmd, str):
         logger.log_info(masked_cmd)
     if isinstance(masked_cmd, list):
@@ -377,7 +304,7 @@ def run_command(
     pretend_run = False,
     exit_on_failure = False):
     try:
-        cmd = create_command_list(cmd)
+        cmd = commands.create_command_list(cmd)
         if not options:
             options = create_command_options()
         if pretend_run:
@@ -397,7 +324,7 @@ def run_command(
 
         # Handle shell commands
         if options.is_shell():
-            cmd = create_command_string(cmd)
+            cmd = commands.create_command_string(cmd)
 
         # Passthrough mode - inherit stdin/stdout/stderr directly (for TUI apps)
         if options.is_passthrough():
@@ -423,7 +350,7 @@ def run_command(
                 stderr = subprocess.DEVNULL,
                 stdin = subprocess.DEVNULL,
                 preexec_fn = os.setsid if os.name != 'nt' else None)
-            system.sleep_program(0.5)
+            runtime.sleep_program(0.5)
             if options.allow_processing():
                 postprocess_command(
                     cmd = cmd, options = options, verbose = verbose, exit_on_failure = exit_on_failure)
@@ -448,8 +375,8 @@ def run_command(
             return ("", proc.returncode)
 
         # Determine output file handling
-        stdout_target = open(options.get_stdout(), "w") if paths.is_path_valid(options.get_stdout()) else None
-        stderr_target = open(options.get_stderr(), "w") if paths.is_path_valid(options.get_stderr()) else None
+        stdout_target = open(options.get_stdout(), "w") if pathutil.is_path_valid(options.get_stdout()) else None
+        stderr_target = open(options.get_stderr(), "w") if pathutil.is_path_valid(options.get_stderr()) else None
 
         # Determine stderr disposition:
         # - merge into stdout (OS-level, order-preserving) for include_stderr capture,
@@ -534,7 +461,7 @@ def run_command(
             postprocess_command(
                 cmd = cmd, options = options, verbose = verbose, exit_on_failure = exit_on_failure)
 
-        return (clean_command_output("".join(stdout_lines).strip()), proc.returncode)
+        return (commands.clean_command_output("".join(stdout_lines).strip()), proc.returncode)
     except Exception as e:
         if verbose:
             logger.log_error(e)
@@ -586,7 +513,7 @@ def run_interactive_command(
     pretend_run = False,
     exit_on_failure = False):
     try:
-        cmd = create_command_list(cmd)
+        cmd = commands.create_command_list(cmd)
         if not options:
             options = create_command_options()
         if not pretend_run:
@@ -605,13 +532,13 @@ def run_interactive_command(
 
             # Handle shell commands
             if options.is_shell():
-                cmd = create_command_string(cmd)
+                cmd = commands.create_command_string(cmd)
 
             # Create return code
             returncode = 0
 
             # Windows
-            if environment.is_windows_platform():
+            if platform_info.is_windows_platform():
 
                 # Open psuedo-terminal
                 import pywinpty
@@ -868,9 +795,9 @@ def get_dos_launch_command(
 
     # Add initial launch params
     launch_cmd += ["-c", "%s:" % start_letter]
-    if paths.is_path_valid(start_offset):
+    if pathutil.is_path_valid(start_offset):
         launch_cmd += ["-c", "cd %s" % start_offset]
-    if paths.is_path_valid(start_program):
+    if pathutil.is_path_valid(start_program):
         if isinstance(start_args, list) and len(start_args) > 0:
             launch_cmd += ["-c", "%s %s" % (paths.get_filename_file(start_program), " ".join(start_args))]
         else:
@@ -923,9 +850,9 @@ def get_win31_launch_command(
     launch_cmd += ["-c", r"SET PATH=%PATH%;C:\WINDOWS;"]
     launch_cmd += ["-c", r"SET TEMP=C:\WINDOWS\TEMP"]
     launch_cmd += ["-c", "%s:" % start_letter]
-    if paths.is_path_valid(start_offset):
+    if pathutil.is_path_valid(start_offset):
         launch_cmd += ["-c", "cd %s" % start_offset]
-    if paths.is_path_valid(start_program):
+    if pathutil.is_path_valid(start_program):
         if isinstance(start_args, list) and len(start_args) > 0:
             launch_cmd += ["-c", "WIN RUNEXIT %s %s" % (paths.get_filename_file(start_program), " ".join(start_args))]
         else:

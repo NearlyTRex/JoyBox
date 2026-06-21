@@ -6,6 +6,8 @@ import sys
 import util
 import constants
 from . import installer
+import joyboxshared
+from joybox import platform_info
 
 # Wine
 class Wine(installer.Installer):
@@ -16,7 +18,7 @@ class Wine(installer.Installer):
         flags = util.RunFlags(),
         options = util.RunOptions()):
         super().__init__(config, connection, flags, options)
-        self.codename = util.get_ubuntu_codename()
+        self.codename = platform_info.get_ubuntu_codename()
         self.url = "https://dl.winehq.org/wine-builds"
         self.archive_key = "winehq-archive.key"
         self.sources_list = f"winehq-{self.codename}.sources"

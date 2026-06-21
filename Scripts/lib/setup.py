@@ -11,6 +11,8 @@ import logger
 import paths
 import programs
 import ini
+import joyboxshared
+from joybox import platform_info, runtime
 
 # Check requirements
 def check_requirements():
@@ -19,11 +21,11 @@ def check_requirements():
     if sys.version_info < config.minimum_python_version:
         logger.log_error("Minimum required python version is %s.%s.%s" % config.minimum_python_version)
         logger.log_error("Please upgrade your python version")
-        system.quit_program()
+        runtime.quit_program()
 
     # Check operating system
-    is_windows = environment.is_windows_platform()
-    is_linux = environment.is_linux_platform()
+    is_windows = platform_info.is_windows_platform()
+    is_linux = platform_info.is_linux_platform()
     if is_windows == False and is_linux == False:
         logger.log_error("Only windows and linux are supported right now", quit_program = True)
 

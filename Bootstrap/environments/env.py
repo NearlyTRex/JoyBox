@@ -5,6 +5,8 @@ import copy
 
 # Local imports
 import util
+import joyboxshared
+from joybox import runtime
 
 # Environment
 class Environment:
@@ -33,7 +35,7 @@ class Environment:
             if invalid:
                 util.log_error(f"Invalid components specified: {', '.join(sorted(invalid))}.")
                 util.log_error(f"Available components: {', '.join(sorted(available))}")
-                util.quit_program()
+                runtime.quit_program()
         self.components_to_process = components
 
     def get_available_components(self):

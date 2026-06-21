@@ -14,6 +14,8 @@ import programs
 import sandbox
 import registry
 import archive
+import joyboxshared
+from joybox import platform_info, pathutil
 
 # Check if iso is mounted
 def is_iso_mounted(iso_file, mount_dir):
@@ -56,7 +58,7 @@ def create_iso(
 
     if volume_name:
         create_command += ["-volid", volume_name]
-    if paths.is_path_valid(source_dir):
+    if pathutil.is_path_valid(source_dir):
         create_command += [source_dir]
 
     # Run create command
@@ -160,7 +162,7 @@ def get_actual_mount_point(
     exit_on_failure = False):
 
     # Windows
-    if environment.is_windows_platform():
+    if platform_info.is_windows_platform():
 
         # Get drive command
         drive_cmd = [
@@ -212,7 +214,7 @@ def mount_iso(
         exit_on_failure = exit_on_failure)
 
     # Windows
-    if environment.is_windows_platform():
+    if platform_info.is_windows_platform():
 
         # Get mount command
         mount_cmd = [
@@ -231,7 +233,7 @@ def mount_iso(
             return False
 
     # Linux
-    elif environment.is_linux_platform():
+    elif platform_info.is_linux_platform():
 
         # Get tool
         iso_tool = None
@@ -273,7 +275,7 @@ def unmount_iso(
         return True
 
     # Windows
-    if environment.is_windows_platform():
+    if platform_info.is_windows_platform():
 
         # Get unmount command
         unmount_cmd = [
@@ -292,7 +294,7 @@ def unmount_iso(
             return False
 
     # Linux
-    elif environment.is_linux_platform():
+    elif platform_info.is_linux_platform():
 
         # Get tool
         iso_tool = None

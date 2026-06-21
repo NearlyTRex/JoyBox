@@ -9,14 +9,6 @@ import logger
 # Program control
 ###########################################################
 
-# Quit program
-def quit_program(exit_code = -1):
-    sys.exit(exit_code)
-
-# Sleep program
-def sleep_program(seconds):
-    time.sleep(seconds)
-
 # Run main function
 def run_main(main_func):
     try:

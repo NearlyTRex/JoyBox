@@ -11,6 +11,8 @@ import urllib.request
 import tarfile
 
 # Local imports
+import joyboxshared
+from joybox import platform_info, runtime, pathutil, commands
 import util
 from . import connection
 
@@ -25,20 +27,20 @@ class ConnectionLocal(connection.Connection):
         super().__init__(config, flags, options)
 
     def mark_command_as_sudo(self, cmd):
-        if util.is_linux_platform():
+        if platform_info.is_linux_platform():
             return super().mark_command_as_sudo(cmd)
         return cmd
 
     def run_output(self, cmd, sudo = False):
         try:
-            cmd = self.create_command_list(cmd)
+            cmd = commands.create_command_list(cmd, style = "split")
             if sudo:
                 cmd = self.mark_command_as_sudo(cmd)
             if self.flags.verbose:
                 self.print_command(cmd)
             if not self.flags.pretend_run:
                 if self.options.shell:
-                    cmd = self.create_command_string(cmd)
+                    cmd = commands.create_command_string(cmd, style = "posix")
                 output = ""
                 if self.options.include_stderr:
                     output = subprocess.run(
@@ -57,36 +59,36 @@ class ConnectionLocal(connection.Connection):
                         env = self.options.env,
                         creationflags = self.options.creationflags,
                         stdout = subprocess.PIPE).stdout
-                return self.clean_command_output(output.strip())
+                return commands.clean_command_output(output.strip())
             return ""
         except subprocess.CalledProcessError as e:
             if self.flags.exit_on_failure:
                 util.log_error(e)
-                util.quit_program()
+                runtime.quit_program()
             if self.options.include_stderr:
                 return e.output
             return ""
         except Exception as e:
             if self.flags.exit_on_failure:
                 util.log_error(e)
-                util.quit_program()
+                runtime.quit_program()
             return ""
 
     def run_return_code(self, cmd, sudo = False):
         try:
-            cmd = self.create_command_list(cmd)
+            cmd = commands.create_command_list(cmd, style = "split")
             if sudo:
                 cmd = self.mark_command_as_sudo(cmd)
             if self.flags.verbose:
                 self.print_command(cmd)
             if not self.flags.pretend_run:
                 if self.options.shell:
-                    cmd = self.create_command_string(cmd)
+                    cmd = commands.create_command_string(cmd, style = "posix")
                 stdout = self.options.stdout
                 stderr = self.options.stderr
-                if util.is_path_valid(self.options.stdout):
+                if pathutil.is_path_valid(self.options.stdout):
                     stdout = open(self.options.stdout, "w")
-                if util.is_path_valid(self.options.stderr):
+                if pathutil.is_path_valid(self.options.stderr):
                     stderr = open(self.options.stderr, "w")
                 code = subprocess.call(
                     cmd,
@@ -96,33 +98,33 @@ class ConnectionLocal(connection.Connection):
                     creationflags = self.options.creationflags,
                     stdout = stdout,
                     stderr = stderr)
-                if util.is_path_valid(self.options.stdout):
+                if pathutil.is_path_valid(self.options.stdout):
                     stdout.close()
-                if util.is_path_valid(self.options.stderr):
+                if pathutil.is_path_valid(self.options.stderr):
                     stderr.close()
                 return code
             return 0
         except subprocess.CalledProcessError as e:
             if self.flags.exit_on_failure:
                 util.log_error(e)
-                util.quit_program()
+                runtime.quit_program()
             return e.returncode
         except Exception as e:
             if self.flags.exit_on_failure:
                 util.log_error(e)
-                util.quit_program()
+                runtime.quit_program()
             return 1
 
     def run_blocking(self, cmd, sudo = False):
         try:
-            cmd = self.create_command_list(cmd)
+            cmd = commands.create_command_list(cmd, style = "split")
             if sudo:
                 cmd = self.mark_command_as_sudo(cmd)
             if self.flags.verbose:
                 self.print_command(cmd)
             if not self.flags.pretend_run:
                 if self.options.shell:
-                    cmd = self.create_command_string(cmd)
+                    cmd = commands.create_command_string(cmd, style = "posix")
                 process = subprocess.Popen(
                     cmd,
                     shell = self.options.shell,
@@ -138,12 +140,12 @@ class ConnectionLocal(connection.Connection):
         except subprocess.CalledProcessError as e:
             if self.flags.exit_on_failure:
                 util.log_error(e)
-                util.quit_program()
+                runtime.quit_program()
             return e.returncode
         except Exception as e:
             if self.flags.exit_on_failure:
                 util.log_error(e)
-                util.quit_program()
+                runtime.quit_program()
             return 1
 
     def run_interactive(self, cmd, sudo = False):
@@ -155,7 +157,7 @@ class ConnectionLocal(connection.Connection):
             if throw_exception:
                 raise ValueError("Unable to run command: %s" % cmd)
             else:
-                util.quit_program(code)
+                runtime.quit_program(code)
 
     def make_temporary_directory(self):
         try:
@@ -352,7 +354,7 @@ class ConnectionLocal(connection.Connection):
             return self.handle_error(f"Unable to extract {src} to {dest}", e)
 
     def change_owner(self, src, owner, sudo = False):
-        if not util.is_linux_platform():
+        if not platform_info.is_linux_platform():
             return True
         try:
             if self.flags.verbose:
@@ -364,7 +366,7 @@ class ConnectionLocal(connection.Connection):
             return self.handle_error(f"Unable to change owner of {src}", e)
 
     def change_permission(self, src, permission, sudo = False):
-        if not util.is_linux_platform():
+        if not platform_info.is_linux_platform():
             return True
         try:
             if self.flags.verbose:

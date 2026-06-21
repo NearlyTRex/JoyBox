@@ -8,6 +8,8 @@ import util
 import tools
 import connection
 import constants
+import joyboxshared
+from joybox import platform_info
 
 # Installer
 class Installer:
@@ -25,7 +27,7 @@ class Installer:
         self.options = options.copy()
 
         # Setup tools
-        if util.is_windows_platform():
+        if platform_info.is_windows_platform():
             self.winget_tool = tools.get_winget_tool(self.config)
         else:
             self.aptget_tool = tools.get_aptget_tool(self.config)

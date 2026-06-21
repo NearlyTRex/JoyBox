@@ -18,6 +18,8 @@ import text
 import logger
 import paths
 import ini
+import joyboxshared
+from joybox import runtime, pathutil
 
 ###########################################################
 
@@ -78,7 +80,7 @@ def create_chrome_web_driver(
             if make_headless:
                 options.add_argument("--headless")
                 options.add_argument("--window-size=1920,1080")
-            if paths.is_path_valid(binary_location) and paths.does_path_exist(binary_location):
+            if pathutil.is_path_valid(binary_location) and paths.does_path_exist(binary_location):
                 options.binary_location = binary_location
             web_driver = Chrome(service=service, options=options)
             return web_driver
@@ -87,7 +89,7 @@ def create_chrome_web_driver(
         if exit_on_failure:
             logger.log_error("Unable to create chrome web driver")
             logger.log_error(e)
-            system.quit_program()
+            runtime.quit_program()
     return None
 
 # Create firefox web driver
@@ -120,14 +122,14 @@ def create_firefox_web_driver(
             from webdriver_manager.firefox import GeckoDriverManager
             service = FirefoxService(executable_path=GeckoDriverManager().install())
             options = FirefoxOptions()
-            if paths.is_path_valid(download_dir) and paths.does_path_exist(download_dir):
+            if pathutil.is_path_valid(download_dir) and paths.does_path_exist(download_dir):
                 options.set_preference("browser.download.folderList", 2)
                 options.set_preference("browser.download.dir", download_dir)
-            if paths.is_path_valid(profile_dir) and paths.does_path_exist(profile_dir):
+            if pathutil.is_path_valid(profile_dir) and paths.does_path_exist(profile_dir):
                 options.set_preference('profile', profile_dir)
             if make_headless:
                 options.add_argument("--headless")
-            if paths.is_path_valid(binary_location) and paths.does_path_exist(binary_location):
+            if pathutil.is_path_valid(binary_location) and paths.does_path_exist(binary_location):
                 options.binary_location = binary_location
             web_driver = Firefox(service=service, options=options)
             return web_driver
@@ -136,7 +138,7 @@ def create_firefox_web_driver(
         if exit_on_failure:
             logger.log_error("Unable to create firefox web driver")
             logger.log_error(e)
-            system.quit_program()
+            runtime.quit_program()
     return None
 
 # Create web driver
@@ -199,7 +201,7 @@ def destroy_web_driver(
         if exit_on_failure:
             logger.log_error("Unable to destroy web driver")
             logger.log_error(e)
-            system.quit_program()
+            runtime.quit_program()
     return False
 
 # Load url
@@ -226,7 +228,7 @@ def load_url(
         if exit_on_failure:
             logger.log_error("Unable to load url %s" % url)
             logger.log_error(e)
-            system.quit_program()
+            runtime.quit_program()
     return False
 
 # Get current page url
@@ -319,7 +321,7 @@ def wait_for_all_elements(
             logger.log_warning("WaitForAllElements: Failed to find all elements: %s" % str(e))
         if exit_on_failure:
             logger.log_error(e)
-            system.quit_program()
+            runtime.quit_program()
     return None
 
 # Wait for any element
@@ -349,7 +351,7 @@ def wait_for_any_element(
             logger.log_warning("WaitForAnyElement: Failed to find any elements: %s" % str(e))
         if exit_on_failure:
             logger.log_error(e)
-            system.quit_program()
+            runtime.quit_program()
     return None
 
 # Check if session is valid for driver or element
@@ -404,7 +406,7 @@ def wait_for_element(
             logger.log_warning("WaitForElement: Unexpected error: %s" % str(e))
         if exit_on_failure:
             logger.log_error(e)
-            system.quit_program()
+            runtime.quit_program()
         return None
 
 # Get element
@@ -446,7 +448,7 @@ def get_element(
             logger.log_warning("GetElement: Unexpected error: %s" % str(e))
         if exit_on_failure:
             logger.log_error(e)
-            system.quit_program()
+            runtime.quit_program()
         return None
 
 # Get element text
@@ -535,7 +537,7 @@ def click_element(
         if exit_on_failure:
             logger.log_error("Unable to click element")
             logger.log_error(e)
-            system.quit_program()
+            runtime.quit_program()
         return False
 
 # Send keys to element
@@ -567,7 +569,7 @@ def send_keys_to_element(
         if exit_on_failure:
             logger.log_error("Unable to send keys to element")
             logger.log_error(e)
-            system.quit_program()
+            runtime.quit_program()
         return False
 
 # Scroll to end of page
@@ -590,7 +592,7 @@ def scroll_to_end_of_page(
         if exit_on_failure:
             logger.log_error("Unable to scroll to end of page")
             logger.log_error(e)
-            system.quit_program()
+            runtime.quit_program()
         return False
 
 # Get page source
@@ -622,7 +624,7 @@ def get_page_source(
         if exit_on_failure:
             logger.log_error("Unable to get page source")
             logger.log_error(e)
-            system.quit_program()
+            runtime.quit_program()
         return None
 
 ###########################################################
@@ -637,7 +639,7 @@ def save_cookie(
     try:
         if not is_session_valid(driver, verbose):
             return False
-        if not paths.is_path_valid(path):
+        if not pathutil.is_path_valid(path):
             if verbose:
                 logger.log_warning("SaveCookie: Invalid path provided")
             return False
@@ -672,7 +674,7 @@ def save_cookie(
         if exit_on_failure:
             logger.log_error("Unable to save cookies")
             logger.log_error(e)
-            system.quit_program()
+            runtime.quit_program()
         return False
 
 # Load cookie
@@ -718,7 +720,7 @@ def load_cookie(
         if exit_on_failure:
             logger.log_error("Unable to load cookies")
             logger.log_error(e)
-            system.quit_program()
+            runtime.quit_program()
         return False
 
 # Get cookie file

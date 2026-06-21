@@ -14,6 +14,8 @@ import programs
 import sandbox
 import background
 import process
+import joyboxshared
+from joybox import platform_info
 
 # Capture screenshot
 def capture_screenshot(
@@ -105,7 +107,7 @@ def capture_video(
     ]
 
     # Add linux video/audio sources
-    if environment.is_linux_platform():
+    if platform_info.is_linux_platform():
 
         # Video
         capture_cmd += [

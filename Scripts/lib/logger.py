@@ -10,6 +10,8 @@ import system
 import environment
 import fileops
 import paths
+import joyboxshared
+from joybox import runtime
 
 # ANSI color codes for terminal output
 class Colors:
@@ -112,7 +114,7 @@ class Logger:
             self.add_file_handler()
 
     def get_default_log_dir(self):
-        return environment.get_log_directory()
+        return runtime.get_log_directory()
 
     def get_timestamped_filename(self):
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
@@ -202,7 +204,7 @@ def log_warning(message, game_supercategory = None, game_category = None, game_s
 def log_error(message, game_supercategory = None, game_category = None, game_subcategory = None, game_name = None, quit_program = False):
     get_logger().error(message, game_supercategory, game_category, game_subcategory, game_name)
     if quit_program:
-        system.quit_program()
+        runtime.quit_program()
 
 def log_debug(message, game_supercategory = None, game_category = None, game_subcategory = None, game_name = None):
     get_logger().debug(message, game_supercategory, game_category, game_subcategory, game_name)

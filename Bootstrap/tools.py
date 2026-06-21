@@ -4,6 +4,8 @@ import sys
 
 # Local imports
 import util
+import joyboxshared
+from joybox import platform_info
 
 ###########################################################
 ## AptGet
@@ -51,13 +53,13 @@ def get_python_venv_dir(config):
 
 def get_python_venv_python_tool(config):
     python_exe = config.get_value("Tools.Python", "python_exe")
-    if util.is_windows_platform():
+    if platform_info.is_windows_platform():
         return os.path.join(get_python_venv_dir(config), "Scripts", python_exe)
     return os.path.join(get_python_venv_dir(config), "bin", python_exe)
 
 def get_python_venv_pip_tool(config):
     python_pip_exe = config.get_value("Tools.Python", "python_pip_exe")
-    if util.is_windows_platform():
+    if platform_info.is_windows_platform():
         return os.path.join(get_python_venv_dir(config), "Scripts", python_pip_exe)
     return os.path.join(get_python_venv_dir(config), "bin", python_pip_exe)
 

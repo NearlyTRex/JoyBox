@@ -3,6 +3,8 @@ import os
 
 # Local imports
 import environment
+import joyboxshared
+from joybox import platform_info
 
 ###########################################################
 # Root access
@@ -10,7 +12,7 @@ import environment
 
 # Determine if user is root
 def is_user_root():
-    if environment.is_windows_platform():
+    if platform_info.is_windows_platform():
         try:
             import pyuac
             return pyuac.isUserAdmin()
@@ -23,7 +25,7 @@ def is_user_root():
 def run_as_root(func):
     if not callable(func):
         return
-    if environment.is_windows_platform():
+    if platform_info.is_windows_platform():
         try:
             import pyuac
             if not pyuac.isUserAdmin():

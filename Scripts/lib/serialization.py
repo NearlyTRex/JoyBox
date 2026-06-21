@@ -8,6 +8,8 @@ import logger
 import paths
 import system
 import datautils
+import joyboxshared
+from joybox import runtime
 
 ###########################################################
 # Text file I/O utilities
@@ -24,7 +26,7 @@ def read_text_file(src, verbose = False, exit_on_failure = False):
         if exit_on_failure:
             logger.log_error("Unable to read %s" % src)
             logger.log_error(e)
-            system.quit_program()
+            runtime.quit_program()
         return None
 
 # Write text file
@@ -43,7 +45,7 @@ def write_text_file(src, contents, verbose = False, pretend_run = False, exit_on
         if exit_on_failure:
             logger.log_error("Unable to write %s" % src)
             logger.log_error(e)
-            system.quit_program()
+            runtime.quit_program()
         return False
 
 ###########################################################
@@ -61,7 +63,7 @@ def parse_json_string(string, verbose = False, pretend_run = False, exit_on_fail
         if exit_on_failure:
             logger.log_error("Unable to read %s" % string)
             logger.log_error(e)
-            system.quit_program()
+            runtime.quit_program()
         return {}
 
 # Read json file
@@ -80,7 +82,7 @@ def read_json_file(src, verbose = False, pretend_run = False, exit_on_failure = 
         if exit_on_failure:
             logger.log_error("Unable to read %s" % src)
             logger.log_error(e)
-            system.quit_program()
+            runtime.quit_program()
         return {}
 
 # Write json file
@@ -102,7 +104,7 @@ def write_json_file(src, json_data, sort_keys = False, verbose = False, pretend_
         if exit_on_failure:
             logger.log_error("Unable to write %s" % src)
             logger.log_error(e)
-            system.quit_program()
+            runtime.quit_program()
         return False
 
 # Clean json file
@@ -140,7 +142,7 @@ def clean_json_file(src, sort_keys = False, remove_empty_values = False, verbose
         if exit_on_failure:
             logger.log_error("Unable to clean %s" % src)
             logger.log_error(e)
-            system.quit_program()
+            runtime.quit_program()
         return False
 
 # Search json files
@@ -185,7 +187,7 @@ def read_yaml_file(src, verbose = False, pretend_run = False, exit_on_failure = 
         if exit_on_failure:
             logger.log_error("Unable to read %s" % src)
             logger.log_error(e)
-            system.quit_program()
+            runtime.quit_program()
         return {}
 
 ###########################################################
@@ -212,5 +214,5 @@ def read_csv_file(src, headers, verbose = False, pretend_run = False, exit_on_fa
         if exit_on_failure:
             logger.log_error("Unable to read %s" % src)
             logger.log_error(e)
-            system.quit_program()
+            runtime.quit_program()
         return []

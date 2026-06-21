@@ -7,6 +7,8 @@ import configparser
 # Local imports
 import util
 import settings
+import joyboxshared
+from joybox import userinput
 
 # Config file header
 CONFIG_HEADER = """; ============================================================
@@ -57,7 +59,7 @@ class Configuration:
                 self.add_section(section)
             for key, default_value in defaults.items():
                 if key not in self.config[section]:
-                    self.config[section][key] = util.prompt_for_value(key, default_value)
+                    self.config[section][key] = userinput.prompt_for_value(key, default_value)
                     updated = True
                 self.set_value(section, key, str(self.config[section][key]))
 

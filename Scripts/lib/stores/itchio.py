@@ -23,6 +23,8 @@ import strings
 import metadataentry
 import paths
 import ini
+import joyboxshared
+from joybox import runtime, pathutil
 
 # Itchio store
 class Itchio(storebase.StoreBase):
@@ -33,7 +35,7 @@ class Itchio(storebase.StoreBase):
 
         # Get install dir
         self.install_dir = ini.get_ini_path_value("UserData.Itchio", "itchio_install_dir")
-        if not paths.is_path_valid(self.install_dir):
+        if not pathutil.is_path_valid(self.install_dir):
             raise RuntimeError("Ini file does not have a valid install dir")
 
     ############################################################
@@ -341,7 +343,7 @@ class Itchio(storebase.StoreBase):
                 exit_on_failure = False)
             if element_more_information:
                 webpage.click_element(element_more_information)
-                system.sleep_program(3)
+                runtime.sleep_program(3)
 
             # Look for game description
             element_game_description = webpage.wait_for_element(

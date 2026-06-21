@@ -1,6 +1,5 @@
 # Imports
 import os
-import errno
 import fnmatch
 import pathlib
 import posixpath
@@ -8,6 +7,8 @@ import ntpath
 import time
 
 # Local imports
+import joyboxshared
+from joybox import pathutil
 import config
 import text
 import strings
@@ -19,36 +20,6 @@ import strings
 # Expand path (environment variables and ~)
 def expand_path(path):
     return os.path.expandvars(os.path.expanduser(path))
-
-# Check if path is valid
-# https://stackoverflow.com/questions/9532499/check-whether-a-path-is-valid-in-python-without-creating-a-file-at-the-paths-ta
-# https://gist.github.com/mo-han/240b3ef008d96215e352203b88be40db
-def is_path_valid(path):
-    try:
-        if not isinstance(path, str) or not path or len(path) == 0:
-            return False
-        if os.name == "nt":
-            drive, path = os.path.splitdrive(path)
-            if not os.path.isdir(drive):
-                drive = os.environ.get("SystemDrive", "C:")
-            if not os.path.isdir(drive):
-                drive = ""
-        else:
-            drive = ""
-        parts = pathlib.Path(path).parts
-        check_list = [os.path.join(*parts), *parts]
-        for x in check_list:
-            try:
-                os.lstat(drive + x)
-            except OSError as e:
-                if hasattr(e, "winerror") and e.winerror == 123:
-                    return False
-                elif e.errno in {errno.ENAMETOOLONG, errno.ERANGE}:
-                    return False
-    except TypeError:
-        return False
-    else:
-        return True
 
 # Check if path is the parent of another
 def is_parent_path(parent_path, child_path):
@@ -88,7 +59,7 @@ def are_paths_equal(path1, path2):
 
 # Check if path is a file
 def is_path_file(path):
-    if not is_path_valid(path):
+    if not pathutil.is_path_valid(path):
         return False
     if not does_path_exist(path):
         return False
@@ -96,7 +67,7 @@ def is_path_file(path):
 
 # Check if path is a directory
 def is_path_directory(path):
-    if not is_path_valid(path):
+    if not pathutil.is_path_valid(path):
         return False
     if not does_path_exist(path):
         return False
@@ -104,7 +75,7 @@ def is_path_directory(path):
 
 # Check if path is a symlink
 def is_path_symlink(path):
-    if not is_path_valid(path):
+    if not pathutil.is_path_valid(path):
         return False
     if not does_path_exist(path):
         return False
@@ -112,7 +83,7 @@ def is_path_symlink(path):
 
 # Check if path is file or directory
 def is_path_file_or_directory(path):
-    if not is_path_valid(path):
+    if not pathutil.is_path_valid(path):
         return False
     if not does_path_exist(path):
         return False
@@ -182,7 +153,7 @@ def prune_child_paths(paths):
 # Build file list
 def build_file_list(root, excludes = [], new_relative_path = "", use_relative_paths = False, ignore_symlinks = False, follow_symlink_dirs = False):
     files = []
-    if not is_path_valid(root):
+    if not pathutil.is_path_valid(root):
         return files
     absolute_root = os.path.abspath(root)
     if os.path.isdir(root):
@@ -223,7 +194,7 @@ def build_file_list_by_extensions(root, excludes = [], extensions = [], new_rela
 # Build directory list
 def build_directory_list(root, excludes = [], new_relative_path = "", use_relative_paths = False, ignore_symlinks = False, follow_symlink_dirs = False):
     directories = []
-    if not is_path_valid(root):
+    if not pathutil.is_path_valid(root):
         return directories
     absolute_root = os.path.abspath(root)
     if os.path.isdir(absolute_root):
@@ -385,7 +356,7 @@ def convert_to_top_level_paths(path_list, path_root = None, only_files = False, 
         path_offset = get_filename_drive_offset(path)
         path_front = get_filename_front(path_offset)
         should_save_path = False
-        if is_path_valid(path_root):
+        if pathutil.is_path_valid(path_root):
             path_full = os.path.join(path_root, path_front)
             if only_files and os.path.isfile(path_full):
                 should_save_path = True

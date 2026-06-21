@@ -20,6 +20,8 @@ import gui
 import ini
 import paths
 import process
+import joyboxshared
+from joybox import pathutil, commands
 
 ###########################################################
 
@@ -459,7 +461,7 @@ def mount_directory(
 
     # Get first available drive path
     drive_path = find_first_available_real_drive_path(options)
-    if not paths.is_path_valid(drive_path):
+    if not pathutil.is_path_valid(drive_path):
         return False
 
     # Create symlink
@@ -484,7 +486,7 @@ def unmount_directory(
 
     # Get first taken drive path
     drive_path = find_first_taken_real_drive_path(src, options)
-    if not paths.is_path_valid(drive_path):
+    if not pathutil.is_path_valid(drive_path):
         return False
 
     # Create symlink
@@ -601,7 +603,7 @@ def get_prefix_path_info(
     is_real_path = False):
 
     # Check path
-    if not paths.is_path_valid(path):
+    if not pathutil.is_path_valid(path):
         return None
 
     # Check prefix
@@ -803,7 +805,7 @@ def setup_prefix_environment(
             cwd_drive = get_real_drive_path(
                 options = new_options,
                 drive = config.drive_prefix_cwd)
-            if paths.is_path_valid(cwd_drive):
+            if pathutil.is_path_valid(cwd_drive):
                 fileops.create_symlink(
                     src = new_options.get_cwd(),
                     dest = cwd_drive,
@@ -838,7 +840,7 @@ def setup_prefix_command(
 
     # Get original command info
     orig_cmd_starter = command.get_starter_command(cmd)
-    orig_cmd_list = command.create_command_list(cmd)
+    orig_cmd_list = commands.create_command_list(cmd)
     if len(orig_cmd_list) == 0:
         return (cmd, options)
 
