@@ -1,17 +1,11 @@
 # Imports
 import os
-import sys
 import base64
-import re
-import tempfile
 
 # Local imports
 import joybox.config as config
-import joybox.command as command
 import joybox.programs as programs
-import joybox.system as system
 import joybox.logger as logger
-import joybox.environment as environment
 import joybox.hashing as hashing
 import joybox.image as image
 import joybox.modules as modules

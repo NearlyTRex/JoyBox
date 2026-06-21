@@ -1,6 +1,4 @@
 # Imports
-import os
-import sys
 import copy
 import codecs
 

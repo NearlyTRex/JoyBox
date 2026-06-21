@@ -1,12 +1,6 @@
-# Imports
-import os
-import os.path
-import sys
-
 # Local imports
 import joybox.config as config
 import joybox.sync as sync
-import joybox.system as system
 import joybox.logger as logger
 import joybox.paths as paths
 import joybox.environment as environment

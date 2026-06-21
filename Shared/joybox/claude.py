@@ -1,11 +1,9 @@
 # Imports
 import os, os.path
-import sys
 
 # Local imports
 import joybox.fileops as fileops
 import joybox.settings as ini
-import joybox.system as system
 import joybox.logger as logger
 import joybox.paths as paths
 import joybox.serialization as serialization

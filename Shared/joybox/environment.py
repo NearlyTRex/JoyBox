@@ -2,12 +2,9 @@
 import os, os.path
 
 # Local imports
-from joybox import platform_info, runtime
+from joybox import platform_info
 import joybox.config as config
-import joybox.fileops as fileops
-import joybox.system as system
-import joybox.gameinfo as gameinfo
-import joybox.platforms as platforms
+import joybox.gamenaming as gamenaming
 import joybox.settings as ini
 import joybox.paths as paths
 import joybox.lockerinfo as lockerinfo
@@ -58,6 +55,7 @@ def are_symlinks_supported():
     if platform_info.is_unix_platform():
         return True
     else:
+        import joybox.fileops as fileops
         test_file_src = paths.join_paths(os.path.expanduser("~"), ".symsrc")
         test_file_dest = paths.join_paths(os.path.expanduser("~"), ".symdest")
         if os.path.islink(test_file_dest):
@@ -150,8 +148,8 @@ def get_locker_gaming_tags_root_dir(locker_type = None):
 
 # Get locker gaming files offset
 def get_locker_gaming_files_offset(game_supercategory, game_category, game_subcategory, game_name):
-    game_platform = gameinfo.derive_game_platform_from_categories(game_category, game_subcategory)
-    game_name_path = gameinfo.derive_game_name_path_from_name(game_name, game_platform)
+    game_platform = gamenaming.derive_game_platform_from_categories(game_category, game_subcategory)
+    game_name_path = gamenaming.derive_game_name_path_from_name(game_name, game_platform)
     return paths.join_paths(
         game_supercategory,
         game_category,
@@ -176,8 +174,8 @@ def get_locker_gaming_saves_root_dir(locker_type = None):
 
 # Get locker gaming save dir
 def get_locker_gaming_save_dir(game_supercategory, game_category, game_subcategory, game_name, locker_type = None):
-    game_platform = gameinfo.derive_game_platform_from_categories(game_category, game_subcategory)
-    game_name_path = gameinfo.derive_game_name_path_from_name(game_name, game_platform)
+    game_platform = gamenaming.derive_game_platform_from_categories(game_category, game_subcategory)
+    game_name_path = gamenaming.derive_game_name_path_from_name(game_name, game_platform)
     return paths.join_paths(
         get_locker_gaming_saves_root_dir(locker_type),
         game_category,
@@ -372,8 +370,8 @@ def get_json_metadata_dir(game_supercategory, game_category, game_subcategory):
 
 # Get json metadata file
 def get_game_json_metadata_file(game_supercategory, game_category, game_subcategory, game_name):
-    game_platform = gameinfo.derive_game_platform_from_categories(game_category, game_subcategory)
-    game_name_path = gameinfo.derive_game_name_path_from_name(game_name, game_platform)
+    game_platform = gamenaming.derive_game_platform_from_categories(game_category, game_subcategory)
+    game_name_path = gamenaming.derive_game_name_path_from_name(game_name, game_platform)
     return paths.join_paths(
         get_json_metadata_dir(game_supercategory, game_category, game_subcategory),
         game_name_path,
@@ -530,8 +528,8 @@ def get_cache_gaming_installs_root_dir():
 
 # Get cache gaming install dir
 def get_cache_gaming_install_dir(game_category, game_subcategory, game_name):
-    game_platform = gameinfo.derive_game_platform_from_categories(game_category, game_subcategory)
-    game_name_path = gameinfo.derive_game_name_path_from_name(game_name, game_platform)
+    game_platform = gamenaming.derive_game_platform_from_categories(game_category, game_subcategory)
+    game_name_path = gamenaming.derive_game_name_path_from_name(game_name, game_platform)
     return paths.join_paths(
         get_cache_gaming_installs_root_dir(),
         game_category,

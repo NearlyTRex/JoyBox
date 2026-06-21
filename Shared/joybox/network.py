@@ -1,21 +1,14 @@
 # Imports
 import os, os.path
-import sys
-import getpass
 
 # Local imports
 import joybox.config as config
 import joybox.command as command
-import joybox.sandbox as sandbox
-import joybox.system as system
 import joybox.logger as logger
 import joybox.paths as paths
-import joybox.environment as environment
 import joybox.fileops as fileops
 import joybox.archive as archive
 import joybox.programs as programs
-import joybox.webpage as webpage
-import joybox.registry as registry
 import joybox.locker as locker
 from joybox import platform_info, runtime
 

@@ -6,7 +6,6 @@ import csv
 # Local imports
 import joybox.logger as logger
 import joybox.paths as paths
-import joybox.system as system
 import joybox.datautils as datautils
 from joybox import runtime
 

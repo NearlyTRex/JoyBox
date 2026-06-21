@@ -28,7 +28,6 @@ def assert_is_string_of_specific_length(var_value, var_len, var_name):
 
 # Assert that variable is valid path
 def assert_is_valid_path(var_value, var_name):
-    import joybox.paths as paths
     assert pathutil.is_path_valid(var_value), "%s should be a valid path" % var_name
 
 # Assert that variable is integer

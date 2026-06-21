@@ -1,11 +1,8 @@
 # Imports
-import os, os.path
-import sys
 import threading
 
 # Local imports
 import joybox.config as config
-import joybox.system as system
 import joybox.validation as validation
 from joybox import runtime
 

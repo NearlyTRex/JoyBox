@@ -1,19 +1,16 @@
 # Imports
 import os, os.path
-import sys
 
 # Local imports
 import joybox.config as config
 import joybox.fileops as fileops
 import joybox.command as command
 import joybox.programs as programs
-import joybox.strings as strings
-import joybox.system as system
 import joybox.text as text
 import joybox.validation as validation
 import joybox.logger as logger
 import joybox.paths as paths
-import joybox.hashing as hashing
+import joybox.hashutil as hashutil
 from joybox import pathutil, texttools
 
 # Determine if file is encrypted
@@ -31,7 +28,7 @@ def is_passphrase_valid(passphrase):
 def generate_encrypted_filename(src):
     if is_file_encrypted(src):
         return src
-    return hashing.calculate_string_md5(src) + config.EncryptedFileType.ENC.cval()
+    return hashutil.calculate_string_md5(src) + config.EncryptedFileType.ENC.cval()
 
 # Generate encrypted path
 def generate_encrypted_path(source_path):

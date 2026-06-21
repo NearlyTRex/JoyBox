@@ -1,8 +1,3 @@
-# Imports
-import os
-import sys
-import copy
-
 # Platform keys
 platform_key_supercategory = "supercategory"
 platform_key_category = "category"

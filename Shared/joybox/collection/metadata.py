@@ -1,15 +1,9 @@
-# Imports
-import os, os.path
-import sys
-
 # Local imports
 import joybox.config as config
-import joybox.system as system
 import joybox.logger as logger
 import joybox.environment as environment
 import joybox.fileops as fileops
 import joybox.gameinfo as gameinfo
-import joybox.platforms as platforms
 import joybox.metadata as metadata
 import joybox.metadataentry as metadataentry
 import joybox.paths as paths

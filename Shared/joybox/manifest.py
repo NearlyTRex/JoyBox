@@ -1,16 +1,8 @@
-# Imports
-import os
-import os.path
-import sys
-
 # Local imports
-import joybox.config as config
-import joybox.system as system
-import joybox.environment as environment
 import joybox.containers as containers
 import joybox.programs as programs
 import joybox.serialization as serialization
-import joybox.storebase as storebase
+import joybox.storepaths as storepaths
 import joybox.strings as strings
 
 # Manifest entry
@@ -35,7 +27,7 @@ class ManifestEntry:
                         elif when_os == "" and when_store == "steam":
                             is_windows_path = True
                         if is_windows_path:
-                            paths.append(storebase.create_tokenized_path(path_location, base_path))
+                            paths.append(storepaths.create_tokenized_path(path_location, base_path))
         return paths
 
     # Get keys

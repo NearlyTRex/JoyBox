@@ -1,13 +1,10 @@
 # Imports
-import os, os.path
-import sys
 import copy
 
 # Local imports
 import joybox.config as config
 import joybox.datautils as datautils
 import joybox.platforms as platforms
-import joybox.system as system
 
 # General json data class
 class JsonData:

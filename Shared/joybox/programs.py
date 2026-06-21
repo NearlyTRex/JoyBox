@@ -1,13 +1,9 @@
 # Imports
 import os, os.path
-import sys
 
 # Local imports
-import joybox.config as config
-import joybox.command as command
 import joybox.environment as environment
 import joybox.paths as paths
-import joybox.system as system
 import joybox.tools as tools
 import joybox.emulators as emulators
 from joybox import platform_info
@@ -105,6 +101,7 @@ def should_library_be_installed(library_name):
 
 # Determine if program is installed
 def is_program_installed(program_name, program_platform = None):
+    import joybox.command as command
     if is_program_name_tool(program_name, program_platform):
         return command.is_runnable_command(get_tool_program(program_name, program_platform))
     elif is_program_name_emulator(program_name, program_platform):

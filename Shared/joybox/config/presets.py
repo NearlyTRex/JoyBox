@@ -1,7 +1,3 @@
-# Imports
-import os
-import sys
-
 # Local imports
 from . import categories
 from . import types

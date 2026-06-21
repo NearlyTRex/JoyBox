@@ -1,9 +1,4 @@
-# Imports
-import os, os.path
-import sys
-
 # Local imports
-import joybox.config as config
 import joybox.programs as programs
 import joybox.environment as environment
 import joybox.paths as paths

@@ -11,13 +11,9 @@ import ntpath
 
 # Local imports
 import joybox.config as config
-import joybox.hashing as hashing
 import joybox.logger as logger
 import joybox.modules as modules
 import joybox.paths as paths
-import joybox.programs as programs
-import joybox.strings as strings
-import joybox.system as system
 from joybox import runtime, pathutil, texttools
 
 ###########################################################
@@ -400,6 +396,7 @@ def copy_file_or_directory(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
+    import joybox.hashing as hashing
     try:
         if skip_existing and paths.does_path_exist(dest, case_sensitive_paths):
             if verbose:
@@ -454,6 +451,7 @@ def move_file_or_directory(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
+    import joybox.hashing as hashing
     try:
         if skip_existing and paths.does_path_exist(dest, case_sensitive_paths):
             return True
@@ -494,6 +492,7 @@ def transfer_file(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
+    import joybox.hashing as hashing
     try:
         if skip_existing and paths.does_path_exist(dest, case_sensitive_paths):
             return True
@@ -1265,6 +1264,9 @@ def empty_recycle_bin(
 
 # Get link info
 def get_link_info(lnk_path, lnk_base_path):
+
+    # Imports
+    import joybox.programs as programs
 
     # Import pylnk
     pylnk = modules.import_python_module_file(

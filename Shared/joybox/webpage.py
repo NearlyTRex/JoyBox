@@ -1,19 +1,15 @@
 # Imports
 import os, os.path
-import sys
-import pickle
 import json
 import re
 
 # Local imports
 import joybox.config as config
-import joybox.command as command
 import joybox.programs as programs
 import joybox.serialization as serialization
 import joybox.strings as strings
 import joybox.environment as environment
 import joybox.fileops as fileops
-import joybox.system as system
 import joybox.text as text
 import joybox.logger as logger
 import joybox.paths as paths
@@ -116,7 +112,6 @@ def create_firefox_web_driver(
         if not pretend_run:
             from selenium.webdriver.firefox.service import Service as FirefoxService
             from selenium.webdriver.firefox.options import Options as FirefoxOptions
-            from selenium.webdriver.firefox.firefox_profile import FirefoxProfile
             from selenium.webdriver import Firefox
             from webdriver_manager.firefox import GeckoDriverManager
             service = FirefoxService(executable_path=GeckoDriverManager().install())

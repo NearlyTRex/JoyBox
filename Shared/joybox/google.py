@@ -1,11 +1,8 @@
 # Imports
-import os, os.path
-import sys
 import json
 
 # Local imports
 import joybox.config as config
-import joybox.system as system
 import joybox.logger as logger
 import joybox.command as command
 import joybox.programs as programs

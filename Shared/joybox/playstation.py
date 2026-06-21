@@ -1,6 +1,5 @@
 # Imports
 import os, os.path
-import sys
 import zlib
 import base64
 
@@ -8,10 +7,8 @@ import base64
 import joybox.config as config
 import joybox.command as command
 import joybox.programs as programs
-import joybox.system as system
 import joybox.logger as logger
 import joybox.paths as paths
-import joybox.environment as environment
 import joybox.fileops as fileops
 import joybox.iso as iso
 import joybox.chd as chd

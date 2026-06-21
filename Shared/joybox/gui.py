@@ -1,16 +1,12 @@
 # Imports
 import os, os.path
-import sys
 
 # Local imports
 import joybox.config as config
-import joybox.environment as environment
-import joybox.system as system
 import joybox.validation as validation
 import joybox.display as display
 import joybox.programs as programs
 import joybox.modules as modules
-import joybox.paths as paths
 from joybox import platform_info, runtime, pathutil
 
 # Display popup

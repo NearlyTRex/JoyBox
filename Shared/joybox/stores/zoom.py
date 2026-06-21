@@ -1,15 +1,7 @@
-# Imports
-import os, os.path
-import sys
-import json
-
 # Local imports
 import joybox.config as config
-import joybox.system as system
 import joybox.settings as ini
 import joybox.storebase as storebase
-import joybox.metadatacollector as metadatacollector
-import joybox.paths as paths
 from joybox import pathutil
 
 # Zoom store

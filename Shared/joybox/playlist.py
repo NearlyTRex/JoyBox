@@ -1,17 +1,7 @@
-# Imports
-import os, os.path
-import sys
-import functools
-
 # Local imports
-import joybox.config as config
-import joybox.command as command
-import joybox.programs as programs
 import joybox.strings as strings
-import joybox.system as system
 import joybox.logger as logger
 import joybox.paths as paths
-import joybox.environment as environment
 
 # Read playlist file
 def read_playlist(

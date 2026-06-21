@@ -1,6 +1,5 @@
 # Imports
 import os, os.path
-import sys
 import csv
 import zlib
 import hashlib
@@ -8,46 +7,22 @@ import fnmatch
 
 # Local imports
 import joybox.config as config
-import joybox.environment as environment
 import joybox.fileops as fileops
-import joybox.system as system
 import joybox.logger as logger
 import joybox.paths as paths
 import joybox.serialization as serialization
 import joybox.archive as archive
 import joybox.cryption as cryption
-import joybox.datautils as datautils
 
 ###########################################################
 
-# Calculate string crc32
-def calculate_string_crc32(string):
-    if isinstance(string, str):
-        string = string.encode("utf8")
-    return "%x" % zlib.crc32(string)
-
-# Calculate string md5
-def calculate_string_md5(string):
-    if isinstance(string, str):
-        string = string.encode("utf8")
-    return hashlib.md5(string).hexdigest()
-
-# Calculate string sha1
-def calculate_string_sha1(string):
-    if isinstance(string, str):
-        string = string.encode("utf8")
-    return hashlib.sha1(string).hexdigest()
-
-# Calculate string sha256
-def calculate_string_sha256(string):
-    if isinstance(string, str):
-        string = string.encode("utf8")
-    return hashlib.sha256(string).hexdigest()
-
-# Calculate string XXH3
-def calculate_string_xxh3(string):
-    import xxhash
-    return xxhash.xxh3_64(string).hexdigest()
+# String-hash primitives
+from joybox.hashutil import (
+    calculate_string_crc32,
+    calculate_string_md5,
+    calculate_string_sha1,
+    calculate_string_sha256,
+    calculate_string_xxh3)
 
 ###########################################################
 

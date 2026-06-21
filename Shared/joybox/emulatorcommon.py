@@ -1,16 +1,8 @@
-# Imports
-import os, os.path
-import sys
-
 # Local imports
 import joybox.config as config
 import joybox.command as command
-import joybox.system as system
 import joybox.logger as logger
-import joybox.metadata as metadata
 import joybox.paths as paths
-import joybox.environment as environment
-import joybox.gameinfo as gameinfo
 import joybox.gui as gui
 
 # Simple generic launcher

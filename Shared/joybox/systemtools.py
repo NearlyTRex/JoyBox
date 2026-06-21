@@ -1,6 +1,5 @@
 # Imports
 import os
-import sys
 
 # Local imports
 from joybox import platform_info

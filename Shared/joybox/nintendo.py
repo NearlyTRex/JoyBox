@@ -1,6 +1,5 @@
 # Imports
 import os, os.path
-import sys
 import textwrap
 
 # Local imports
@@ -8,7 +7,6 @@ import joybox.config as config
 import joybox.fileops as fileops
 import joybox.command as command
 import joybox.programs as programs
-import joybox.system as system
 import joybox.logger as logger
 import joybox.paths as paths
 import joybox.hashing as hashing

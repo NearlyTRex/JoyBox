@@ -1,10 +1,3 @@
-# Imports
-import os, os.path
-import sys
-
-# Local imports
-import joybox.config as config
-
 # Base tool
 class ToolBase:
 

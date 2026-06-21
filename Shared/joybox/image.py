@@ -1,12 +1,9 @@
 # Imports
-import os
-import sys
 import base64
 
 # Local imports
 import joybox.config as config
 import joybox.fileops as fileops
-import joybox.system as system
 import joybox.logger as logger
 import joybox.paths as paths
 from joybox import runtime

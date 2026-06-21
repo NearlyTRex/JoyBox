@@ -1,14 +1,10 @@
 # Imports
 import os, os.path
-import sys
-import json
 
 # Local imports
 import joybox.config as config
-import joybox.environment as environment
 import joybox.fileops as fileops
 import joybox.paths as paths
-import joybox.system as system
 import joybox.archive as archive
 
 # Check if install image is mounted

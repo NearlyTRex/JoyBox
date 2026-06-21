@@ -5,11 +5,6 @@ import logging
 from datetime import datetime
 
 # Local imports
-import joybox.config as config
-import joybox.system as system
-import joybox.environment as environment
-import joybox.fileops as fileops
-import joybox.paths as paths
 from joybox import runtime
 
 # ANSI color codes for terminal output
@@ -96,7 +91,7 @@ class Logger:
         self._current_log_file = None
 
         # Ensure log directory exists
-        fileops.make_directory(self.log_dir)
+        os.makedirs(self.log_dir, exist_ok = True)
 
         # Create the underlying logger
         self._logger = logging.getLogger("logs.%s" % name)
@@ -180,7 +175,7 @@ def get_logger(name = "output"):
 
 def get_script_name():
     if sys.argv and sys.argv[0]:
-        return paths.get_filename_basename(sys.argv[0]) or "output"
+        return os.path.splitext(os.path.basename(sys.argv[0]))[0] or "output"
     return "output"
 
 def setup_logging(name = None, log_dir = None, level = logging.DEBUG, use_colors = True):

@@ -1,18 +1,9 @@
-# Imports
-import os, os.path
-import sys
-
 # Local imports
 import joybox.config as config
 import joybox.datautils as datautils
-import joybox.system as system
-import joybox.environment as environment
-import joybox.platforms as platforms
 import joybox.strings as strings
 import joybox.gameinfo as gameinfo
 import joybox.webpage as webpage
-import joybox.google as google
-import joybox.metadata as metadata
 import joybox.metadataentry as metadataentry
 
 ############################################################

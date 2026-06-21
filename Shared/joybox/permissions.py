@@ -2,7 +2,6 @@
 import os
 
 # Local imports
-import joybox.environment as environment
 from joybox import platform_info
 
 ###########################################################

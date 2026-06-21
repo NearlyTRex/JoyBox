@@ -1,15 +1,11 @@
 # Imports
 import os, os.path
-import sys
 import threading
 
 # Local imports
-import joybox.config as config
-import joybox.command as command
-import joybox.system as system
+import joybox.commandbase as commandbase
 import joybox.validation as validation
 import joybox.logger as logger
-import joybox.environment as environment
 import joybox.programs as programs
 import joybox.sandbox as sandbox
 import joybox.background as background
@@ -27,7 +23,6 @@ def capture_screenshot(
     validation.assert_is_valid_path(output_file, "output_file")
 
     # Capture screenshot
-    import PIL.ImageGrab
     screenshot = Pil.ImageGrab.grab()
     screenshot.save(output_file)
 
@@ -81,6 +76,9 @@ def capture_video(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
+
+    # Imports
+    import joybox.command as command
 
     # Check params
     validation.assert_is_valid_path(output_file, "output_file")
@@ -148,7 +146,7 @@ def capture_video(
     # Run capture command
     command.run_returncode_command(
         cmd = capture_cmd,
-        options = command.create_command_options(
+        options = commandbase.create_command_options(
             prefix_dir = prefix_dir,
             prefix_name = prefix_name,
             is_wine_prefix = sandbox.should_be_run_via_wine(ffmpeg_tool),

@@ -3,7 +3,6 @@ import sys
 
 # Local imports
 import joybox.paths as paths
-import joybox.system as system
 
 ###########################################################
 # Python module importing

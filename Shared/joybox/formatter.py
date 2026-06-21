@@ -1,12 +1,8 @@
 # Imports
 import os
-import sys
 
 # Local imports
-import joybox.config as config
-import joybox.system as system
 import joybox.command as command
-import joybox.programs as programs
 
 # Format C/C++ file
 def format_cpp_file(

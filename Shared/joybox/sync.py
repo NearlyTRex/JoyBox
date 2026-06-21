@@ -1,7 +1,6 @@
 # Imports
 import os
 import os.path
-import sys
 import re
 import threading
 import concurrent.futures
@@ -12,10 +11,8 @@ import joybox.command as command
 import joybox.programs as programs
 import joybox.serialization as serialization
 import joybox.strings as strings
-import joybox.system as system
 import joybox.logger as logger
 import joybox.paths as paths
-import joybox.environment as environment
 import joybox.fileops as fileops
 import joybox.hashing as hashing
 import joybox.sqlitedb as sqlitedb

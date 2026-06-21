@@ -1,9 +1,4 @@
-# Imports
-import os, os.path
-import sys
-
 # Local imports
-import joybox.system as system
 import joybox.environment as environment
 import joybox.toolbase as toolbase
 import joybox.settings as ini

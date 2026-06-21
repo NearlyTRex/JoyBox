@@ -1,13 +1,9 @@
 # Imports
-import os, os.path
-import sys
 import json
 
 # Local imports
 import joybox.config as config
-import joybox.system as system
 import joybox.logger as logger
-import joybox.environment as environment
 import joybox.fileops as fileops
 import joybox.programs as programs
 import joybox.serialization as serialization
@@ -15,7 +11,6 @@ import joybox.command as command
 import joybox.jsondata as jsondata
 import joybox.storebase as storebase
 import joybox.strings as strings
-import joybox.metadatacollector as metadatacollector
 import joybox.paths as paths
 import joybox.settings as ini
 from joybox import pathutil

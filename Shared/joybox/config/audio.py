@@ -1,8 +1,3 @@
-# Imports
-import os
-import sys
-import copy
-
 # Story channels
 story_channels = [
     { "name": "Being Scared", "url": "https://www.youtube.com/channel/UCrggft5vtcVpzLVCfQ0FBhg" },

@@ -1,14 +1,9 @@
-# Imports
-import os, os.path
-import sys
-
 # Local imports
 import joybox.config as config
 import joybox.datautils as datautils
-import joybox.system as system
 import joybox.text as text
 import joybox.environment as environment
-import joybox.gameinfo as gameinfo
+import joybox.gamenaming as gamenaming
 import joybox.paths as paths
 
 # Metadata entry class
@@ -194,7 +189,7 @@ class MetadataEntry:
     # Sync assets
     def sync_assets(self):
         for asset_type in config.AssetType.members():
-            game_asset_string = gameinfo.derive_game_asset_path_from_name(
+            game_asset_string = gamenaming.derive_game_asset_path_from_name(
                 game_name = self.get_game(),
                 asset_type = asset_type)
             game_asset_file = environment.get_locker_gaming_asset_file(

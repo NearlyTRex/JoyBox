@@ -1,11 +1,8 @@
 # Imports
 import os, os.path
-import sys
-import ntpath
 
 # Local imports
 import joybox.config as config
-import joybox.system as system
 import joybox.environment as environment
 import joybox.fileops as fileops
 import joybox.jsondata as jsondata

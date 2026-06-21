@@ -1,11 +1,9 @@
 # Imports
-import os
 import sqlite3
 import threading
 import time
 
 # Local imports
-import joybox.logger as logger
 import joybox.paths as paths
 import joybox.fileops as fileops
 

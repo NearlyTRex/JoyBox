@@ -1,19 +1,15 @@
 # Imports
 import os, os.path
-import sys
 
 # Local imports
 import joybox.config as config
-import joybox.system as system
 import joybox.environment as environment
 import joybox.fileops as fileops
-import joybox.platforms as platforms
 import joybox.gameinfo as gameinfo
 import joybox.install as install
 import joybox.computer as computer
 import joybox.archive as archive
 import joybox.playlist as playlist
-import joybox.iso as iso
 import joybox.paths as paths
 import joybox.chd as chd
 import joybox.playstation as playstation

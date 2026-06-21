@@ -1,7 +1,6 @@
 # Imports
 import os
 import os.path
-import sys
 import zipfile
 import re
 
@@ -9,10 +8,8 @@ import re
 import joybox.config as config
 import joybox.command as command
 import joybox.programs as programs
-import joybox.system as system
 import joybox.logger as logger
 import joybox.paths as paths
-import joybox.environment as environment
 import joybox.fileops as fileops
 import joybox.sandbox as sandbox
 

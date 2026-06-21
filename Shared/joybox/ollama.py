@@ -6,7 +6,6 @@ import joybox.command as command
 import joybox.logger as logger
 import joybox.network as network
 import joybox.hardware as hardware
-import joybox.system as system
 from joybox import runtime
 
 ###########################################################

@@ -1,23 +1,15 @@
 # Imports
 import os, os.path
-import ntpath
-import sys
 import getpass
 import copy
 
 # Local imports
 import joybox.config as config
-import joybox.system as system
 import joybox.validation as validation
 import joybox.environment as environment
 import joybox.fileops as fileops
-import joybox.command as command
+import joybox.commandbase as commandbase
 import joybox.programs as programs
-import joybox.registry as registry
-import joybox.archive as archive
-import joybox.chd as chd
-import joybox.gui as gui
-import joybox.settings as ini
 import joybox.paths as paths
 import joybox.process as process
 from joybox import pathutil, cmdline
@@ -32,16 +24,16 @@ def should_be_run_via_wine(cmd):
         return False
 
     # Already using wine
-    if command.get_starter_command(cmd) == get_wine_command():
+    if commandbase.get_starter_command(cmd) == get_wine_command():
         return False
 
     # Wine runs windows executable formats only
-    if not command.is_windows_executable_command(cmd):
+    if not commandbase.is_windows_executable_command(cmd):
         return False
 
     # Cached game commands or sandboxed local programs should use wine
-    is_cached_game_cmd = command.is_cached_game_command(cmd)
-    is_sandboxed_program_cmd = command.is_local_sandboxed_program_command(cmd)
+    is_cached_game_cmd = commandbase.is_cached_game_command(cmd)
+    is_sandboxed_program_cmd = commandbase.is_local_sandboxed_program_command(cmd)
     return (
         is_cached_game_cmd or
         is_sandboxed_program_cmd
@@ -55,16 +47,16 @@ def should_be_run_via_sandboxie(cmd):
         return False
 
     # Already using sandboxie
-    if command.get_starter_command(cmd) == get_sandboxie_command():
+    if commandbase.get_starter_command(cmd) == get_sandboxie_command():
         return False
 
     # Sandboxie runs windows executable formats only
-    if not command.is_windows_executable_command(cmd):
+    if not commandbase.is_windows_executable_command(cmd):
         return False
 
     # Cached game commands or sandboxed local programs should use sandboxie
-    is_cached_game_cmd = command.is_cached_game_command(cmd)
-    is_sandboxed_program_cmd = command.is_local_sandboxed_program_command(cmd)
+    is_cached_game_cmd = commandbase.is_cached_game_command(cmd)
+    is_sandboxed_program_cmd = commandbase.is_local_sandboxed_program_command(cmd)
     return (
         is_cached_game_cmd or
         is_sandboxed_program_cmd
@@ -271,6 +263,9 @@ def restore_registry(
     pretend_run = False,
     exit_on_failure = False):
 
+    # Imports
+    import joybox.registry as registry
+
     # Get registry dir
     registry_dir = options.get_prefix_user_profile_registry_dir()
     if not registry_dir:
@@ -300,6 +295,9 @@ def backup_registry(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
+
+    # Imports
+    import joybox.registry as registry
 
     # Ignore empty keys
     if len(registry_keys) == 0:
@@ -393,6 +391,9 @@ def mount_disc_image(
     pretend_run = False,
     exit_on_failure = False):
 
+    # Imports
+    import joybox.chd as chd
+
     # Check params
     validation.assert_path_exists(src, "src")
 
@@ -423,6 +424,9 @@ def unmount_disc_image(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
+
+    # Imports
+    import joybox.chd as chd
 
     # Check params
     validation.assert_path_exists(src, "src")
@@ -764,7 +768,7 @@ def setup_prefix_environment(
 
     # Check options
     if not options:
-        options = command.create_command_options()
+        options = commandbase.create_command_options()
 
     # Ignore non-prefix environments
     if not options.is_prefix():
@@ -829,16 +833,19 @@ def setup_prefix_command(
     pretend_run = False,
     exit_on_failure = False):
 
+    # Imports
+    import joybox.gui as gui
+
     # Check options
     if not options:
-        options = command.create_command_options()
+        options = commandbase.create_command_options()
 
     # Ignore non-prefix commands
     if not options.is_prefix():
         return (cmd, options)
 
     # Get original command info
-    orig_cmd_starter = command.get_starter_command(cmd)
+    orig_cmd_starter = commandbase.get_starter_command(cmd)
     orig_cmd_list = cmdline.create_command_list(cmd)
     if len(orig_cmd_list) == 0:
         return (cmd, options)
@@ -892,13 +899,16 @@ def setup_prefix_command(
 # Cleanup wine
 def cleanup_wine(cmd, options, verbose = False, pretend_run = False, exit_on_failure = False):
 
+    # Imports
+    import joybox.command as command
+
     # Get wine server tool
     wine_server_tool = programs.get_tool_program("WineServer")
 
     # Kill processes running under wine
     command.run_returncode_command(
         cmd = [wine_server_tool, "-k"],
-        options = command.create_command_options(
+        options = commandbase.create_command_options(
             shell = True),
         verbose = verbose,
         pretend_run = pretend_run,
@@ -919,6 +929,9 @@ def create_wine_prefix(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
+
+    # Imports
+    import joybox.command as command
 
     # Make directory
     fileops.make_directory(
@@ -943,7 +956,7 @@ def create_wine_prefix(
     if len(new_options.get_tricks()) > 0:
         cmds_to_run.append(["winetricks " + trick for trick in new_options.get_tricks()])
     for cmd in cmds_to_run:
-        new_options.set_blocking_processes([command.get_starter_command(cmd)])
+        new_options.set_blocking_processes([commandbase.get_starter_command(cmd)])
         new_cmd, new_options = setup_prefix_environment(
             cmd = cmd,
             options = new_options,
@@ -968,6 +981,9 @@ def create_sandboxie_prefix(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
+
+    # Imports
+    import joybox.command as command
 
     # Make directories
     fileops.make_directory(
@@ -1175,7 +1191,7 @@ def translate_path_if_necessary(path, program_exe, program_name):
         return path
 
     # Get prefix options
-    options = command.create_command_options(
+    options = commandbase.create_command_options(
         prefix_dir = programs.get_program_prefix_dir(program_name),
         prefix_name = programs.get_program_prefix_name(program_name),
         is_wine_prefix = should_run_via_wine,

@@ -1,17 +1,13 @@
 # Imports
-import os, os.path
-import sys
 import random
 
 # Local imports
 import joybox.config as config
 import joybox.datautils as datautils
-import joybox.system as system
 import joybox.logger as logger
 import joybox.environment as environment
 import joybox.fileops as fileops
-import joybox.platforms as platforms
-import joybox.gameinfo as gameinfo
+import joybox.gamenaming as gamenaming
 import joybox.metadataentry as metadataentry
 import joybox.paths as paths
 
@@ -34,7 +30,7 @@ class Metadata:
         game_name = game_entry.get_game()
 
         # Inject categories
-        game_supercategory, game_category, game_subcategory = gameinfo.derive_game_categories_from_platform(game_platform)
+        game_supercategory, game_category, game_subcategory = gamenaming.derive_game_categories_from_platform(game_platform)
         game_entry.set_supercategory(game_supercategory)
         game_entry.set_category(game_category)
         game_entry.set_subcategory(game_subcategory)
@@ -314,7 +310,7 @@ class Metadata:
                 exit_on_failure = exit_on_failure)
         with open(pegasus_file, file_mode, encoding="utf8", newline="\n") as file:
             for game_platform in self.get_sorted_platforms():
-                game_supercategory, game_category, game_subcategory = gameinfo.derive_game_categories_from_platform(game_platform)
+                game_supercategory, game_category, game_subcategory = gamenaming.derive_game_categories_from_platform(game_platform)
 
                 # Get launch command
                 launch_cmd = [

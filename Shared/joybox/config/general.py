@@ -1,10 +1,8 @@
 # Imports
 import os
-import sys
 import getpass
 
 # Local imports
-from . import types
 
 # Project
 project_name = "JoyBox"

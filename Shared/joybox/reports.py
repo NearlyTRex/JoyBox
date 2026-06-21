@@ -1,7 +1,3 @@
-# Imports
-import os
-import sys
-
 # Local imports
 import joybox.logger as logger
 import joybox.serialization as serialization

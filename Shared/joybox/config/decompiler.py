@@ -1,7 +1,3 @@
-# Imports
-import os
-import sys
-
 # Decompiler presets
 decompiler_presets = {
     "NocturneDecomp": {

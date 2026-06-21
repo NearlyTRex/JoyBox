@@ -1,8 +1,3 @@
-# Imports
-import os
-import os.path
-import sys
-
 # Local imports
 import joybox.config as config
 import joybox.settings as ini

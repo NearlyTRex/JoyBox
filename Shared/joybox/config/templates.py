@@ -1,7 +1,3 @@
-# Imports
-import os
-import sys
-
 # Publish templates
 publish_html_header = """
 <html>

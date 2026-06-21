@@ -1,6 +1,5 @@
 # Imports
 import sys
-import time
 
 # Local imports
 import joybox.logger as logger

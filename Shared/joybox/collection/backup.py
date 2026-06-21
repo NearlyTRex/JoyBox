@@ -1,11 +1,5 @@
-# Imports
-import os
-import sys
-
 # Local imports
 import joybox.config as config
-import joybox.system as system
-import joybox.environment as environment
 import joybox.fileops as fileops
 import joybox.gameinfo as gameinfo
 import joybox.stores as stores

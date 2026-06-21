@@ -1,16 +1,8 @@
-# Imports
-import os
-import os.path
-import sys
-
 # Local imports
 import joybox.config as config
-import joybox.system as system
 import joybox.logger as logger
 import joybox.paths as paths
 import joybox.fileops as fileops
-import joybox.hashing as hashing
-import joybox.cryption as cryption
 import joybox.lockerinfo as lockerinfo
 import joybox.lockerbackend as lockerbackend
 import joybox.sync as sync

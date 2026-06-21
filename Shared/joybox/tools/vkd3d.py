@@ -1,15 +1,9 @@
-# Imports
-import os, os.path
-import sys
-
 # Local imports
 import joybox.config as config
 import joybox.release as release
-import joybox.system as system
 import joybox.logger as logger
 import joybox.paths as paths
 import joybox.programs as programs
-import joybox.environment as environment
 import joybox.toolbase as toolbase
 
 # Config files

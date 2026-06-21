@@ -1,15 +1,12 @@
 # Imports
 import os, os.path
-import sys
 import copy
 
 # Local imports
 import joybox.config as config
-import joybox.system as system
 import joybox.jsondata as jsondata
 import joybox.paths as paths
 import joybox.settings as ini
-import joybox.sandbox as sandbox
 from joybox import pathutil
 
 # Command options
@@ -337,6 +334,9 @@ class CommandOptions:
         prefix_dir = None,
         general_prefix_dir = None):
 
+        # Imports
+        import joybox.sandbox as sandbox
+
         # Basic prefix info
         self.set_is_wine_prefix(is_wine_prefix)
         self.set_is_sandboxie_prefix(is_sandboxie_prefix)
@@ -366,6 +366,9 @@ class CommandOptions:
         verbose = False,
         pretend_run = False,
         exit_on_failure = False):
+
+        # Imports
+        import joybox.sandbox as sandbox
 
         # Setup prefix
         self.setup_prefix(
