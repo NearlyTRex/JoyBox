@@ -52,7 +52,7 @@ class BlastEm(emulatorbase.EmulatorBase):
         if programs.should_program_be_installed("BlastEm", "windows"):
             success = release.download_webpage_release(
                 webpage_url = "https://www.retrodev.com/blastem",
-                webpage_base_url = "https://www.retrodev.com/blastem",
+                webpage_base_url = "https://www.retrodev.com/blastem/",
                 starts_with = "https://www.retrodev.com/blastem/blastem-win32",
                 ends_with = ".zip",
                 search_file = "blastem.exe",

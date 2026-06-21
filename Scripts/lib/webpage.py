@@ -948,8 +948,12 @@ def get_matching_urls(
         # Filter URLs that match the starts_with and ends_with patterns
         if verbose:
             logger.log_info("GetMatchingUrls: Found %d potential URLs, filtering by pattern" % len(potential_urls))
+        seen_urls = set()
         for potential_url in potential_urls:
+            if potential_url in seen_urls:
+                continue
             if re.match("^%s.*%s$" % (starts_with, ends_with), potential_url):
+                seen_urls.add(potential_url)
                 matching_urls.append(potential_url)
                 if verbose:
                     logger.log_info("  Matched: %s" % potential_url)

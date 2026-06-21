@@ -102,8 +102,8 @@ class ViceC64(emulatorbase.EmulatorBase):
                     "make", "-j", "4"
                 ],
                 internal_copies = [
-                    {"from": "Source/vice/data", "to": "AppImage/usr/bin"},
-                    {"from": "Source/vice/src/x64sc", "to": "AppImage/usr/bin/x64sc"},
+                    {"from": "Source/ViceC64/vice/data", "to": "AppImage/usr/bin"},
+                    {"from": "Source/ViceC64/vice/src/x64sc", "to": "AppImage/usr/bin/x64sc"},
                     {"from": "AppImageTool/linux/app.desktop", "to": "AppImage/app.desktop"},
                     {"from": "AppImageTool/linux/icon.svg", "to": "AppImage/icon.svg"}
                 ],

@@ -76,7 +76,7 @@ class Atari800(emulatorbase.EmulatorBase):
                 install_name = "Atari800",
                 install_dir = programs.get_program_install_dir("Atari800", "windows"),
                 backups_dir = programs.get_program_backup_dir("Atari800", "windows"),
-                get_latest = True,
+                get_latest = False,
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
@@ -100,10 +100,10 @@ class Atari800(emulatorbase.EmulatorBase):
                     "make", "-j", "4"
                 ],
                 internal_copies = [
-                    {"from": "Source/act", "to": "AppImage/usr/bin"},
-                    {"from": "Source/src/atari800", "to": "AppImage/usr/bin/atari800"},
-                    {"from": "Source/debian/atari800.desktop", "to": "AppImage/atari800.desktop"},
-                    {"from": "Source/data/atari1.png", "to": "AppImage/atari800.png"}
+                    {"from": "Source/Atari800/act", "to": "AppImage/usr/bin"},
+                    {"from": "Source/Atari800/src/atari800", "to": "AppImage/usr/bin/atari800"},
+                    {"from": "Source/Atari800/debian/atari800.desktop", "to": "AppImage/atari800.desktop"},
+                    {"from": "Source/Atari800/data/atari1.png", "to": "AppImage/atari800.png"}
                 ],
                 internal_symlinks = [
                     {"from": "usr/bin/atari800", "to": "AppRun"}

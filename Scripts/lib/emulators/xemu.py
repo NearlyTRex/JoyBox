@@ -117,9 +117,9 @@ class Xemu(emulatorbase.EmulatorBase):
                     "./build.sh"
                 ],
                 internal_copies = [
-                    {"from": "Source/dist/xemu", "to": "AppImage/usr/bin/xemu"},
-                    {"from": "Source/ui/xemu.desktop", "to": "AppImage/xemu.desktop"},
-                    {"from": "Source/ui/icons/xemu.svg", "to": "AppImage/xemu.svg"}
+                    {"from": "Source/Xemu/dist/xemu", "to": "AppImage/usr/bin/xemu"},
+                    {"from": "Source/Xemu/ui/xemu.desktop", "to": "AppImage/xemu.desktop"},
+                    {"from": "Source/Xemu/ui/icons/xemu.svg", "to": "AppImage/xemu.svg"}
                 ],
                 internal_symlinks = [
                     {"from": "usr/bin/xemu", "to": "AppRun"}

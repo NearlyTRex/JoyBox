@@ -31,12 +31,22 @@ def setup_stored_release(
     rename_files = [],
     installer_type = None,
     release_type = None,
+    skip_if_missing = False,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
 
     # Get list of potential archives
     potential_archives = paths.build_file_list(archive_dir)
+
+    # Optionally skip when no usable archive is present (e.g. locker not downloaded).
+    # This treats a missing directory, an empty directory, or a directory holding
+    # only non-archive files all as "nothing to install" so setup can continue.
+    if skip_if_missing and not any(archive.is_archive(potential_archive) for potential_archive in potential_archives):
+        logger.log_warning("Skipping %s: no stored archives available in '%s' (locker not downloaded?)" % (install_name, archive_dir))
+        return True
+
+    # No archives found
     if len(potential_archives) == 0:
         logger.log_error("No available archives found in '%s'" % archive_dir)
         return False

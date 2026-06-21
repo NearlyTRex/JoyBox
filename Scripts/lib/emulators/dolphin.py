@@ -188,11 +188,11 @@ class Dolphin(emulatorbase.EmulatorBase):
                 ],
                 build_dir = "Build",
                 internal_copies = [
-                    {"from": "Source/Build/Binaries/dolphin-emu", "to": "AppImage/usr/bin/dolphin-emu"},
-                    {"from": "Source/Build/Binaries/dolphin-tool", "to": "AppImage/usr/bin/dolphin-tool"},
-                    {"from": "Source/Data/Sys", "to": "AppImage/usr/bin/Sys"},
-                    {"from": "Source/Data/dolphin-emu.desktop", "to": "AppImage/dolphin-emu.desktop"},
-                    {"from": "Source/Data/dolphin-emu.png", "to": "AppImage/dolphin-emu.png"}
+                    {"from": "Source/Dolphin/Build/Binaries/dolphin-emu", "to": "AppImage/usr/bin/dolphin-emu"},
+                    {"from": "Source/Dolphin/Build/Binaries/dolphin-tool", "to": "AppImage/usr/bin/dolphin-tool"},
+                    {"from": "Source/Dolphin/Data/Sys", "to": "AppImage/usr/bin/Sys"},
+                    {"from": "Source/Dolphin/Data/dolphin-emu.desktop", "to": "AppImage/dolphin-emu.desktop"},
+                    {"from": "Source/Dolphin/Data/dolphin-emu.png", "to": "AppImage/dolphin-emu.png"}
                 ],
                 internal_symlinks = [
                     {"from": "usr/bin/dolphin-emu", "to": "AppRun"}

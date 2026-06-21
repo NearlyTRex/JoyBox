@@ -100,7 +100,7 @@ class Flycast(emulatorbase.EmulatorBase):
                 ],
                 build_dir = "Build",
                 internal_copies = [
-                    {"from": "Source/Build/flycast", "to": "AppImage/usr/bin/flycast"},
+                    {"from": "Source/Flycast/Build/flycast", "to": "AppImage/usr/bin/flycast"},
                     {"from": "AppImageTool/linux/app.desktop", "to": "AppImage/app.desktop"},
                     {"from": "AppImageTool/linux/icon.svg", "to": "AppImage/icon.svg"}
                 ],

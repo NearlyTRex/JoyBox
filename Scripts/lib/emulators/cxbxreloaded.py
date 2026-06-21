@@ -53,7 +53,7 @@ class CxBxReloaded(emulatorbase.EmulatorBase):
             success = release.download_github_release(
                 github_user = "Cxbx-Reloaded",
                 github_repo = "Cxbx-Reloaded",
-                starts_with = "CxbxReloaded-Release-VS2022",
+                starts_with = "CxbxReloaded-Release",
                 ends_with = ".zip",
                 search_file = "cxbx.exe",
                 install_name = "CxBxReloaded",

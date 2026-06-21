@@ -69,12 +69,13 @@ class BigPEmu(emulatorbase.EmulatorBase):
             success = release.download_webpage_release(
                 webpage_url = "https://www.richwhitehouse.com/jaguar/index.php?content=download",
                 webpage_base_url = "https://www.richwhitehouse.com",
-                starts_with = "https://www.richwhitehouse.com/jaguar/builds/BigPEmu",
-                ends_with = ".zip",
+                starts_with = "https://www.richwhitehouse.com/jaguar/builds/BigPEmu_v",
+                ends_with = "[0-9].zip",
                 search_file = "BigPEmu.exe",
                 install_name = "BigPEmu",
                 install_dir = programs.get_program_install_dir("BigPEmu", "windows"),
                 backups_dir = programs.get_program_backup_dir("BigPEmu", "windows"),
+                get_latest = True,
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)

@@ -194,7 +194,7 @@ class Ares(emulatorbase.EmulatorBase):
                 github_user = "ares-emulator",
                 github_repo = "ares",
                 starts_with = "ares",
-                ends_with = "windows.zip",
+                ends_with = "windows-x64.zip",
                 search_file = "ares.exe",
                 install_name = "Ares",
                 install_dir = programs.get_program_install_dir("Ares", "windows"),
@@ -216,19 +216,21 @@ class Ares(emulatorbase.EmulatorBase):
                 install_dir = programs.get_program_install_dir("Ares", "linux"),
                 backups_dir = programs.get_program_backup_dir("Ares", "linux"),
                 build_cmd = [
-                    "make", "-j4", "build=release"
+                    "cmake", "-B", "build", "-G", "Ninja", "-DCMAKE_BUILD_TYPE=Release",
+                    "&&",
+                    "cmake", "--build", "build"
                 ],
                 internal_copies = [
-                    {"from": "Source/desktop-ui/out/ares", "to": "AppImage/usr/bin/ares"},
-                    {"from": "Source/desktop-ui/resource/ares.desktop", "to": "AppImage/ares.desktop"},
-                    {"from": "Source/desktop-ui/resource/ares.png", "to": "AppImage/ares.png"}
+                    {"from": "Source/Ares/build/rundir/bin/ares", "to": "AppImage/usr/bin/ares"},
+                    {"from": "Source/Ares/desktop-ui/resource/ares.desktop", "to": "AppImage/ares.desktop"},
+                    {"from": "Source/Ares/desktop-ui/resource/ares.png", "to": "AppImage/ares.png"}
                 ],
                 internal_symlinks = [
                     {"from": "usr/bin/ares", "to": "AppRun"}
                 ],
                 external_copies = [
-                    {"from": "Source/mia/Database", "to": "Ares.AppImage.home/.local/share/ares/Database"},
-                    {"from": "Source/mia/Firmware", "to": "Ares.AppImage.home/.local/share/ares/Firmware"}
+                    {"from": "Source/Ares/mia/Database", "to": "Ares.AppImage.home/.local/share/ares/Database"},
+                    {"from": "Source/Ares/mia/Firmware", "to": "Ares.AppImage.home/.local/share/ares/Firmware"}
                 ],
                 locker_type = setup_params.locker_type,
                 verbose = setup_params.verbose,

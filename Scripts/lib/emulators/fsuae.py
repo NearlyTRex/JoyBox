@@ -113,15 +113,15 @@ class FSUAE(emulatorbase.EmulatorBase):
                     "make", "-j", "8"
                 ],
                 internal_copies = [
-                    {"from": "Source/fs-uae-3.1.66/fs-uae", "to": "AppImage/usr/bin/fs-uae"},
-                    {"from": "Source/fs-uae-3.1.66/share/applications/fs-uae.desktop", "to": "AppImage/app.desktop"},
-                    {"from": "Source/fs-uae-3.1.66/share/icons/hicolor/256x256/apps/fs-uae.png", "to": "AppImage/fs-uae.png"}
+                    {"from": "Source/fs-uae-3.1.66/fs-uae-3.1.66/fs-uae", "to": "AppImage/usr/bin/fs-uae"},
+                    {"from": "Source/fs-uae-3.1.66/fs-uae-3.1.66/share/applications/fs-uae.desktop", "to": "AppImage/app.desktop"},
+                    {"from": "Source/fs-uae-3.1.66/fs-uae-3.1.66/share/icons/hicolor/256x256/apps/fs-uae.png", "to": "AppImage/fs-uae.png"}
                 ],
                 internal_symlinks = [
                     {"from": "usr/bin/fs-uae", "to": "AppRun"}
                 ],
                 external_copies = [
-                    {"from": "Source/fs-uae-3.1.66/fs-uae.dat", "to": "fs-uae.dat"}
+                    {"from": "Source/fs-uae-3.1.66/fs-uae-3.1.66/fs-uae.dat", "to": "fs-uae.dat"}
                 ],
                 locker_type = setup_params.locker_type,
                 verbose = setup_params.verbose,

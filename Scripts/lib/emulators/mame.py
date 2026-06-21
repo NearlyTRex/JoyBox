@@ -136,7 +136,7 @@ class Mame(emulatorbase.EmulatorBase):
                 github_user = "mamedev",
                 github_repo = "mame",
                 starts_with = "mame",
-                ends_with = "64bit.exe",
+                ends_with = "x64.exe",
                 search_file = "mame.exe",
                 install_name = "Mame",
                 install_dir = programs.get_program_install_dir("Mame", "windows"),
@@ -163,7 +163,7 @@ class Mame(emulatorbase.EmulatorBase):
                     "make", "-j", "8"
                 ],
                 internal_copies = [
-                    {"from": "Source/mame", "to": "AppImage/usr/bin/mame"},
+                    {"from": "Source/Mame/mame", "to": "AppImage/usr/bin/mame"},
                     {"from": "AppImageTool/linux/app.desktop", "to": "AppImage/app.desktop"},
                     {"from": "AppImageTool/linux/icon.svg", "to": "AppImage/icon.svg"}
                 ],
@@ -171,18 +171,18 @@ class Mame(emulatorbase.EmulatorBase):
                     {"from": "usr/bin/mame", "to": "AppRun"}
                 ],
                 external_copies = [
-                    {"from": "Source/uismall.bdf", "to": "Mame.AppImage.home/.mame/uismall.bdf"},
-                    {"from": "Source/artwork", "to": "Mame.AppImage.home/.mame/artwork"},
-                    {"from": "Source/bgfx", "to": "Mame.AppImage.home/.mame/bgfx"},
-                    {"from": "Source/ctrlr", "to": "Mame.AppImage.home/.mame/ctrlr"},
-                    {"from": "Source/docs", "to": "Mame.AppImage.home/.mame/docs"},
-                    {"from": "Source/hash", "to": "Mame.AppImage.home/.mame/hash"},
-                    {"from": "Source/hlsl", "to": "Mame.AppImage.home/.mame/hlsl"},
-                    {"from": "Source/ini", "to": "Mame.AppImage.home/.mame/ini"},
-                    {"from": "Source/language", "to": "Mame.AppImage.home/.mame/language"},
-                    {"from": "Source/plugins", "to": "Mame.AppImage.home/.mame/plugins"},
-                    {"from": "Source/roms", "to": "Mame.AppImage.home/.mame/roms"},
-                    {"from": "Source/samples", "to": "Mame.AppImage.home/.mame/samples"}
+                    {"from": "Source/Mame/uismall.bdf", "to": "Mame.AppImage.home/.mame/uismall.bdf"},
+                    {"from": "Source/Mame/artwork", "to": "Mame.AppImage.home/.mame/artwork"},
+                    {"from": "Source/Mame/bgfx", "to": "Mame.AppImage.home/.mame/bgfx"},
+                    {"from": "Source/Mame/ctrlr", "to": "Mame.AppImage.home/.mame/ctrlr"},
+                    {"from": "Source/Mame/docs", "to": "Mame.AppImage.home/.mame/docs"},
+                    {"from": "Source/Mame/hash", "to": "Mame.AppImage.home/.mame/hash"},
+                    {"from": "Source/Mame/hlsl", "to": "Mame.AppImage.home/.mame/hlsl"},
+                    {"from": "Source/Mame/ini", "to": "Mame.AppImage.home/.mame/ini"},
+                    {"from": "Source/Mame/language", "to": "Mame.AppImage.home/.mame/language"},
+                    {"from": "Source/Mame/plugins", "to": "Mame.AppImage.home/.mame/plugins"},
+                    {"from": "Source/Mame/roms", "to": "Mame.AppImage.home/.mame/roms"},
+                    {"from": "Source/Mame/samples", "to": "Mame.AppImage.home/.mame/samples"}
                 ],
                 locker_type = setup_params.locker_type,
                 verbose = setup_params.verbose,

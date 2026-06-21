@@ -133,6 +133,7 @@ class Yuzu(emulatorbase.EmulatorBase):
                 install_dir = programs.get_program_install_dir("Yuzu", "windows"),
                 preferred_archive = "Windows-Yuzu-EA-4176",
                 search_file = "yuzu.exe",
+                skip_if_missing = True,
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
@@ -147,6 +148,7 @@ class Yuzu(emulatorbase.EmulatorBase):
                 install_name = "Yuzu",
                 install_dir = programs.get_program_install_dir("Yuzu", "linux"),
                 preferred_archive = "Linux-Yuzu-EA-4176",
+                skip_if_missing = True,
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)

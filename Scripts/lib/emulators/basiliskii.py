@@ -120,12 +120,16 @@ class BasiliskII(emulatorbase.EmulatorBase):
 
         # Download windows program
         if programs.should_program_be_installed("BasiliskII", "windows"):
-            success = release.download_general_release(
-                archive_url = "https://surfdrive.surf.nl/files/index.php/s/IVkakW3BztSohqH/download",
+            success = release.download_github_release(
+                github_user = "NearlyTRex",
+                github_repo = "MacEmu",
+                starts_with = "BasiliskII-Windows",
+                ends_with = ".zip",
                 search_file = "BasiliskII.exe",
                 install_name = "BasiliskII",
                 install_dir = programs.get_program_install_dir("BasiliskII", "windows"),
                 backups_dir = programs.get_program_backup_dir("BasiliskII", "windows"),
+                get_latest = True,
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)

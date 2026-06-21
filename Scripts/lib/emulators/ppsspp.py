@@ -100,10 +100,10 @@ class PPSSPP(emulatorbase.EmulatorBase):
                 ],
                 build_dir = "Build",
                 internal_copies = [
-                    {"from": "Source/Build/PPSSPPSDL", "to": "AppImage/usr/bin/PPSSPPSDL"},
-                    {"from": "Source/Build/assets", "to": "AppImage/usr/bin/assets"},
-                    {"from": "Source/Build/ppsspp.desktop", "to": "AppImage/ppsspp.desktop"},
-                    {"from": "Source/icons/icon-512.svg", "to": "AppImage/ppsspp.svg"}
+                    {"from": "Source/PPSSPP/Build/PPSSPPSDL", "to": "AppImage/usr/bin/PPSSPPSDL"},
+                    {"from": "Source/PPSSPP/Build/assets", "to": "AppImage/usr/bin/assets"},
+                    {"from": "Source/PPSSPP/Build/ppsspp.desktop", "to": "AppImage/ppsspp.desktop"},
+                    {"from": "Source/PPSSPP/icons/icon-512.svg", "to": "AppImage/ppsspp.svg"}
                 ],
                 internal_symlinks = [
                     {"from": "usr/bin/PPSSPPSDL", "to": "AppRun"}

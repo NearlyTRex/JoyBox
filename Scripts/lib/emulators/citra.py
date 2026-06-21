@@ -105,6 +105,7 @@ class Citra(emulatorbase.EmulatorBase):
                 install_name = "Citra",
                 install_dir = programs.get_program_install_dir("Citra", "windows"),
                 search_file = "citra-qt.exe",
+                skip_if_missing = True,
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
@@ -119,6 +120,7 @@ class Citra(emulatorbase.EmulatorBase):
                 install_name = "Citra",
                 install_dir = programs.get_program_install_dir("Citra", "linux"),
                 search_file = "citra-qt.AppImage",
+                skip_if_missing = True,
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)

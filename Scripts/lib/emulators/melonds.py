@@ -125,9 +125,9 @@ class MelonDS(emulatorbase.EmulatorBase):
                 ],
                 build_dir = "Build",
                 internal_copies = [
-                    {"from": "Source/Build/melonDS", "to": "AppImage/usr/bin/melonDS"},
-                    {"from": "Source/res/net.kuribo64.melonDS.desktop", "to": "AppImage/net.kuribo64.melonDS.desktop"},
-                    {"from": "Source/res/icon/melon_256x256.png", "to": "AppImage/net.kuribo64.melonDS.png"}
+                    {"from": "Source/melonDS/Build/melonDS", "to": "AppImage/usr/bin/melonDS"},
+                    {"from": "Source/melonDS/res/net.kuribo64.melonDS.desktop", "to": "AppImage/net.kuribo64.melonDS.desktop"},
+                    {"from": "Source/melonDS/res/icon/melon_256x256.png", "to": "AppImage/net.kuribo64.melonDS.png"}
                 ],
                 internal_symlinks = [
                     {"from": "usr/bin/melonDS", "to": "AppRun"}
