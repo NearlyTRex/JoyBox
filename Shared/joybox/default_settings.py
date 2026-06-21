@@ -1,6 +1,3 @@
-# JoyBox default settings: the ini_defaults schema plus default-file generation.
-# Consumed by bootstrap.py (first-run template) and installer_config.
-
 # Imports
 import os
 

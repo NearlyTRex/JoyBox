@@ -1,5 +1,3 @@
-# Command construction and output helpers.
-
 # Imports
 import re
 import copy

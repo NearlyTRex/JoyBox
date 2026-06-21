@@ -1,8 +1,8 @@
 # Local imports
-import joybox.environment as environment
 import joybox.toolbase as toolbase
 import joybox.settings as settings
 import joybox.paths as paths
+from joybox import platform_info
 
 # Config files
 config_files = {}
@@ -18,7 +18,7 @@ class Wine(toolbase.ToolBase):
     def get_config(self):
 
         # Check platform
-        if not environment.is_wine_platform():
+        if not platform_info.is_wine_platform():
             return {}
 
         # Get wine info

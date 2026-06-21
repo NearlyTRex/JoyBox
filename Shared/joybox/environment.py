@@ -13,14 +13,6 @@ import joybox.lockerinfo as lockerinfo
 # System capabilities
 ###########################################################
 
-# Determine if wine platform
-def is_wine_platform():
-    return platform_info.is_linux_platform()
-
-# Determine if sandboxie platform
-def is_sandboxie_platform():
-    return platform_info.is_windows_platform()
-
 # Get home directory
 def get_home_directory():
     return os.path.expanduser("~")

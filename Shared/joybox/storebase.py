@@ -6,10 +6,8 @@ import joybox.config as config
 import joybox.logger as logger
 import joybox.jsondata as jsondata
 import joybox.webpage as webpage
-import joybox.metadatacollector as metadatacollector
 import joybox.paths as paths
 import joybox.strings as strings
-import joybox.metadataassetcollector as metadataassetcollector
 import joybox.manifest as manifest
 import joybox.environment as environment
 import joybox.fileops as fileops
@@ -428,6 +426,7 @@ class StoreBase:
             return None
 
         # Collect metadata entry
+        import joybox.metadatacollector as metadatacollector
         return metadatacollector.collect_metadata_from_all(
             game_platform = self.get_platform(),
             game_name = identifier,
@@ -456,6 +455,7 @@ class StoreBase:
             return None
 
         # Collect asset url
+        import joybox.metadataassetcollector as metadataassetcollector
         return metadataassetcollector.find_metadata_asset(
             game_platform = self.get_platform(),
             game_name = game_name if game_name else identifier,

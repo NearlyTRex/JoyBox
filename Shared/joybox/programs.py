@@ -4,8 +4,6 @@ import os, os.path
 # Local imports
 import joybox.environment as environment
 import joybox.paths as paths
-import joybox.tools as tools
-import joybox.emulators as emulators
 from joybox import platform_info
 
 ###########################################################
@@ -112,10 +110,12 @@ def is_program_installed(program_name, program_platform = None):
 
 # Get tools
 def get_tools():
+    import joybox.tools as tools
     return tools.get_tool_list()
 
 # Get emulators
 def get_emulators():
+    import joybox.emulators as emulators
     return emulators.get_emulator_list()
 
 # Get emulator by platform
@@ -127,6 +127,7 @@ def get_emulator_by_platform(emulator_platform):
 
 # Get tool config
 def get_tool_config():
+    import joybox.tools as tools
     merged_config = {}
     for tool in tools.get_tool_list():
         merged_config.update(tool.get_config())
@@ -134,6 +135,7 @@ def get_tool_config():
 
 # Get emulator config
 def get_emulator_config():
+    import joybox.emulators as emulators
     merged_config = {}
     for emulator in emulators.get_emulator_list():
         merged_config.update(emulator.get_config())

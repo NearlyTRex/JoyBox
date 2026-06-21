@@ -24,6 +24,14 @@ def is_mac_platform():
 def is_unix_platform():
     return is_mac_platform() or is_linux_platform()
 
+# Determine if wine platform
+def is_wine_platform():
+    return is_linux_platform()
+
+# Determine if sandboxie platform
+def is_sandboxie_platform():
+    return is_windows_platform()
+
 # Get current platform
 def get_current_platform():
     if is_windows_platform():

@@ -371,8 +371,8 @@ def setup_computer_game(
 
     # Create prefix
     success = game_setup_options.create_prefix(
-        is_wine_prefix = environment.is_wine_platform(),
-        is_sandboxie_prefix = environment.is_sandboxie_platform(),
+        is_wine_prefix = platform_info.is_wine_platform(),
+        is_sandboxie_prefix = platform_info.is_sandboxie_platform(),
         prefix_name = config.PrefixType.SETUP,
         verbose = verbose,
         pretend_run = pretend_run,

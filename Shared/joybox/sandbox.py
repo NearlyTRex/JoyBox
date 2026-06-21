@@ -6,13 +6,13 @@ import copy
 # Local imports
 import joybox.config as config
 import joybox.validation as validation
-import joybox.environment as environment
 import joybox.fileops as fileops
 import joybox.commandbase as commandbase
 import joybox.programs as programs
 import joybox.paths as paths
 import joybox.process as process
 from joybox import cmdline
+from joybox import platform_info
 
 ###########################################################
 
@@ -20,7 +20,7 @@ from joybox import cmdline
 def should_be_run_via_wine(cmd):
 
     # Check platform
-    if not environment.is_wine_platform():
+    if not platform_info.is_wine_platform():
         return False
 
     # Already using wine
@@ -43,7 +43,7 @@ def should_be_run_via_wine(cmd):
 def should_be_run_via_sandboxie(cmd):
 
     # Check platform
-    if not environment.is_sandboxie_platform():
+    if not platform_info.is_sandboxie_platform():
         return False
 
     # Already using sandboxie
@@ -708,7 +708,7 @@ def get_prefix_path_info(
         else:
             path_drive_offset = new_path[len(paths.get_directory_anchor(new_path)):]
             path_drive_base = paths.get_directory_drive(new_path)
-            if environment.is_wine_platform():
+            if platform_info.is_wine_platform():
                 path_drive_letter = "z"
             else:
                 path_drive_letter = paths.get_directory_drive(new_path)
