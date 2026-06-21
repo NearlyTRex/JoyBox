@@ -1,21 +1,80 @@
+# Interactive user input prompts.
+
 # Imports
 import os
-import sys
 
 # Local imports
-from joybox import userinput
 import joybox.network as network
 import joybox.logger as logger
 import joybox.reports as reports
 
 ###########################################################
-# User input and prompt utilities
+# Basic prompts
+###########################################################
+
+# Prompt for a value, returning the default when nothing is entered
+def prompt_for_value(description, default_value = None):
+    prompt = ">>> %s: " % (description)
+    if default_value:
+        prompt = ">>> %s [default: %s]: " % (description, default_value)
+    value = input(prompt)
+    if len(value) == 0:
+        return default_value
+    return value
+
+# Prompt for an integer value
+def prompt_for_int(description, default_value = None):
+    while True:
+        value = prompt_for_value(description, default_value)
+        try:
+            return int(value)
+        except (TypeError, ValueError):
+            logger.log_warning("Entered value '%s' was not a valid integer, please try again" % value)
+
+# Alias matching the older naming
+prompt_for_integer_value = prompt_for_int
+
+# Prompt for a value constrained to a set of choices
+def prompt_for_choice(description, choices = [], default_value = None):
+    while True:
+        value = prompt_for_value(description, default_value)
+        if not isinstance(value, str):
+            continue
+        if value.strip().lower() in choices:
+            return value
+        logger.log_warning("Entered value '%s' was not a valid choice, please try again" % value)
+
+# Prompt for an existing file path
+def prompt_for_file(description, default_value = None):
+    while True:
+        value = prompt_for_value(description, default_value)
+        if not isinstance(value, str):
+            continue
+        if os.path.exists(os.path.realpath(value)):
+            return value
+        logger.log_warning("Entered value '%s' was not a valid file, please try again" % value)
+
+# Prompt for a yes/no confirmation
+def prompt_for_confirmation(description, default_yes = False):
+    prompt_suffix = "[Y/n]" if default_yes else "[y/N]"
+    while True:
+        value = input(">>> %s %s: " % (description, prompt_suffix)).strip().lower()
+        if value == "":
+            return default_yes
+        if value in ("y", "yes"):
+            return True
+        if value in ("n", "no"):
+            return False
+        logger.log_warning("Please enter 'y' or 'n'")
+
+###########################################################
+# Rich prompts
 ###########################################################
 
 # Prompt for url
 def prompt_for_url(description, default_value = None):
     while True:
-        value = userinput.prompt_for_value(description, default_value)
+        value = prompt_for_value(description, default_value)
         if network.is_url_reachable(value):
             return value
         logger.log_warning("That was not a valid url, please try again")
@@ -32,7 +91,7 @@ def prompt_for_preview(operation, details = [], default_yes = True, max_details 
         logger.log_info("-" * 60)
         logger.log_info("Total items: %d" % total_count)
     logger.log_info("=" * 60)
-    return userinput.prompt_for_confirmation("Proceed?", default_yes = default_yes)
+    return prompt_for_confirmation("Proceed?", default_yes = default_yes)
 
 # Prompt for selection from a numbered list
 def prompt_for_selection(description, options, display_func = None, allow_cancel = True):
@@ -48,7 +107,7 @@ def prompt_for_selection(description, options, display_func = None, allow_cancel
     if allow_cancel:
         logger.log_info("  0) Cancel")
     while True:
-        value = userinput.prompt_for_value("Enter selection")
+        value = prompt_for_value("Enter selection")
         try:
             index = int(value)
             if allow_cancel and index == 0:

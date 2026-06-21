@@ -10,7 +10,6 @@ import joybox.prompts as prompts
 import joybox.gameinfo as gameinfo
 import joybox.google as google
 import joybox.stores as stores
-from joybox import userinput
 
 ############################################################
 
@@ -170,7 +169,7 @@ def find_metadata_asset(
     logger.log_info("")
 
     # Ask them which one they want to use
-    value = userinput.prompt_for_value("Enter the index number (0-%d) of the asset to use, or paste a custom URL (or press Enter to skip)" % (len(search_results) - 1))
+    value = prompts.prompt_for_value("Enter the index number (0-%d) of the asset to use, or paste a custom URL (or press Enter to skip)" % (len(search_results) - 1))
     if not value:
         return None
 

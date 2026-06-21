@@ -18,7 +18,6 @@ from .jsondata import get_game_json_ignore_entries
 from .jsondata import add_game_json_ignore_entry
 from .jsondata import create_game_json_file
 from .jsondata import update_game_json_file
-from joybox import userinput
 
 ############################################################
 
@@ -140,7 +139,7 @@ def import_game_store_purchases(
             logger.log_info(" - Appurl:\t" + purchase_appurl)
         if purchase_name:
             logger.log_info(" - Name:\t" + purchase_name)
-        should_import = userinput.prompt_for_value("Import this? (n to skip, i to ignore)", default_value = "y")
+        should_import = prompts.prompt_for_value("Import this? (n to skip, i to ignore)", default_value = "y")
         if should_import.lower() == "n":
             continue
 
@@ -159,7 +158,7 @@ def import_game_store_purchases(
 
         # Prompt for entry name
         default_name = gameinfo.derive_game_name_from_regular_name(purchase_name)
-        entry_name = userinput.prompt_for_value("Choose entry name", default_value = default_name)
+        entry_name = prompts.prompt_for_value("Choose entry name", default_value = default_name)
 
         # Get appurl if possible
         if not purchase_appurl and purchase_name:

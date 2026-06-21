@@ -6,7 +6,7 @@ import subprocess
 import tempfile
 
 # Local imports
-from joybox import platform_info, runtime, pathutil, commands, fileops
+from joybox import platform_info, runtime, pathutil, cmdline, fileops
 from joybox import network, archive
 from joybox import logger, runoptions
 from . import connection
@@ -36,14 +36,14 @@ class ConnectionLocal(connection.Connection):
 
     def run_output(self, cmd, sudo = False):
         try:
-            cmd = commands.create_command_list(cmd, style = "split")
+            cmd = cmdline.create_command_list(cmd, style = "split")
             if sudo:
                 cmd = self.mark_command_as_sudo(cmd)
             if self.flags.verbose:
                 self.print_command(cmd)
             if not self.flags.pretend_run:
                 if self.options.shell:
-                    cmd = commands.create_command_string(cmd, style = "posix")
+                    cmd = cmdline.create_command_string(cmd, style = "posix")
                 output = ""
                 if self.options.include_stderr:
                     output = subprocess.run(
@@ -62,7 +62,7 @@ class ConnectionLocal(connection.Connection):
                         env = self.options.env,
                         creationflags = self.options.creationflags,
                         stdout = subprocess.PIPE).stdout
-                return commands.clean_command_output(output.strip())
+                return cmdline.clean_command_output(output.strip())
             return ""
         except subprocess.CalledProcessError as e:
             if self.flags.exit_on_failure:
@@ -79,14 +79,14 @@ class ConnectionLocal(connection.Connection):
 
     def run_return_code(self, cmd, sudo = False):
         try:
-            cmd = commands.create_command_list(cmd, style = "split")
+            cmd = cmdline.create_command_list(cmd, style = "split")
             if sudo:
                 cmd = self.mark_command_as_sudo(cmd)
             if self.flags.verbose:
                 self.print_command(cmd)
             if not self.flags.pretend_run:
                 if self.options.shell:
-                    cmd = commands.create_command_string(cmd, style = "posix")
+                    cmd = cmdline.create_command_string(cmd, style = "posix")
                 stdout = self.options.stdout
                 stderr = self.options.stderr
                 if pathutil.is_path_valid(self.options.stdout):
@@ -120,14 +120,14 @@ class ConnectionLocal(connection.Connection):
 
     def run_blocking(self, cmd, sudo = False):
         try:
-            cmd = commands.create_command_list(cmd, style = "split")
+            cmd = cmdline.create_command_list(cmd, style = "split")
             if sudo:
                 cmd = self.mark_command_as_sudo(cmd)
             if self.flags.verbose:
                 self.print_command(cmd)
             if not self.flags.pretend_run:
                 if self.options.shell:
-                    cmd = commands.create_command_string(cmd, style = "posix")
+                    cmd = cmdline.create_command_string(cmd, style = "posix")
                 process = subprocess.Popen(
                     cmd,
                     shell = self.options.shell,

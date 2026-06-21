@@ -5,7 +5,7 @@ import copy
 import codecs
 
 # Local imports
-from joybox import platform_info, runtime, commands
+from joybox import platform_info, runtime, cmdline
 from joybox import logger, runoptions
 
 class Connection:
@@ -77,7 +77,7 @@ class Connection:
         return cmd
 
     def print_command(self, cmd):
-        masked = commands.mask_sensitive_args(cmd)
+        masked = cmdline.mask_sensitive_args(cmd)
         if isinstance(masked, str):
             logger.log_info("Running \"%s\"" % masked)
         if isinstance(masked, list):

@@ -20,7 +20,7 @@ import joybox.gui as gui
 import joybox.settings as ini
 import joybox.paths as paths
 import joybox.process as process
-from joybox import pathutil, commands
+from joybox import pathutil, cmdline
 
 ###########################################################
 
@@ -839,7 +839,7 @@ def setup_prefix_command(
 
     # Get original command info
     orig_cmd_starter = command.get_starter_command(cmd)
-    orig_cmd_list = commands.create_command_list(cmd)
+    orig_cmd_list = cmdline.create_command_list(cmd)
     if len(orig_cmd_list) == 0:
         return (cmd, options)
 

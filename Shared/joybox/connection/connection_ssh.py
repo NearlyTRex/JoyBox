@@ -11,7 +11,7 @@ import concurrent.futures
 from io import StringIO
 
 # Local imports
-from joybox import runtime, pathutil, commands
+from joybox import runtime, pathutil, cmdline
 from joybox import logger, runoptions
 from joybox import systemtools as tools
 from joybox import programs
@@ -110,7 +110,7 @@ class ConnectionSSH(connection.Connection):
         try:
             if not ConnectionSSH.ssh_client:
                 raise RuntimeError("SSH client not initialized")
-            cmd = commands.create_command_string(cmd, style = "posix")
+            cmd = cmdline.create_command_string(cmd, style = "posix")
             if sudo:
                 cmd = self.mark_command_as_sudo(cmd)
             if self.flags.verbose:
@@ -122,8 +122,8 @@ class ConnectionSSH(connection.Connection):
                     get_pty = self.options.shell)
                 output = stdout.read()
                 error = stderr.read()
-                output = commands.clean_command_output(output.strip())
-                error = commands.clean_command_output(error.strip())
+                output = cmdline.clean_command_output(output.strip())
+                error = cmdline.clean_command_output(error.strip())
                 if self.options.include_stderr and error:
                     return output + "\n" + error
                 return output
@@ -138,7 +138,7 @@ class ConnectionSSH(connection.Connection):
         try:
             if not ConnectionSSH.ssh_client:
                 raise RuntimeError("SSH client not initialized")
-            cmd = commands.create_command_string(cmd, style = "posix")
+            cmd = cmdline.create_command_string(cmd, style = "posix")
             if sudo:
                 cmd = self.mark_command_as_sudo(cmd)
             if self.flags.verbose:
@@ -161,7 +161,7 @@ class ConnectionSSH(connection.Connection):
         try:
             if not ConnectionSSH.ssh_client:
                 raise RuntimeError("SSH client not initialized")
-            cmd = commands.create_command_string(cmd, style = "posix")
+            cmd = cmdline.create_command_string(cmd, style = "posix")
             if sudo:
                 cmd = self.mark_command_as_sudo(cmd)
             if self.flags.verbose:
@@ -186,7 +186,7 @@ class ConnectionSSH(connection.Connection):
         try:
             if not ConnectionSSH.ssh_client:
                 raise RuntimeError("SSH client not initialized")
-            cmd = commands.create_command_string(cmd, style = "posix")
+            cmd = cmdline.create_command_string(cmd, style = "posix")
             if sudo:
                 cmd = self.mark_command_as_sudo(cmd)
             if self.flags.verbose:

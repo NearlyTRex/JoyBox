@@ -7,7 +7,7 @@ import shutil
 import threading
 
 # Local imports
-from joybox import platform_info, runtime, pathutil, commands
+from joybox import platform_info, runtime, pathutil, cmdline
 import joybox.config as config
 import joybox.logger as logger
 import joybox.paths as paths
@@ -29,14 +29,14 @@ def create_command_options(*args, **kwargs):
 
 # Get starter command
 def get_starter_command(cmd):
-    cmd_list = commands.create_command_list(cmd)
+    cmd_list = cmdline.create_command_list(cmd)
     if len(cmd_list) == 0:
         return ""
     return cmd_list[0]
 
 # Check if only starter command
 def is_only_starter_command(cmd):
-    cmd_list = commands.create_command_list(cmd)
+    cmd_list = cmdline.create_command_list(cmd)
     return len(cmd_list) == 1
 
 ###########################################################
@@ -64,7 +64,7 @@ def is_runnable_command(cmd, search_dirs = []):
 
 # Check if command type is found
 def is_command_type_found(cmd, cmd_exts = [], search_start = 0, search_len = -1):
-    cmd_list = commands.create_command_list(cmd)
+    cmd_list = cmdline.create_command_list(cmd)
     for cmd_index in range(len(cmd_list)):
         cmd_segment = cmd_list[cmd_index]
         is_found = False
@@ -151,7 +151,7 @@ def setup_powershell_command(
     new_cmd = []
     if not is_powershell_command(cmd):
         new_cmd += ["powershell", "-NoProfile", "-Command"]
-    new_cmd += commands.create_command_list(cmd)
+    new_cmd += cmdline.create_command_list(cmd)
     return (new_cmd, new_options)
 
 # Setup appimage command
@@ -166,7 +166,7 @@ def setup_appimage_command(
     new_options = options.copy()
 
     # Setup appimage command
-    for cmd_segment in commands.create_command_list(cmd):
+    for cmd_segment in cmdline.create_command_list(cmd):
         if cmd_segment.lower().endswith(".appimage"):
             appimage_home_dir = os.path.realpath(cmd_segment + ".home")
             if os.path.exists(appimage_home_dir):
@@ -284,7 +284,7 @@ def postprocess_command(
 
 # Print command
 def print_command(cmd):
-    masked_cmd = commands.mask_sensitive_args(cmd)
+    masked_cmd = cmdline.mask_sensitive_args(cmd)
     if isinstance(masked_cmd, str):
         logger.log_info(masked_cmd)
     if isinstance(masked_cmd, list):
@@ -303,7 +303,7 @@ def run_command(
     pretend_run = False,
     exit_on_failure = False):
     try:
-        cmd = commands.create_command_list(cmd)
+        cmd = cmdline.create_command_list(cmd)
         if not options:
             options = create_command_options()
         if pretend_run:
@@ -323,7 +323,7 @@ def run_command(
 
         # Handle shell commands
         if options.is_shell():
-            cmd = commands.create_command_string(cmd)
+            cmd = cmdline.create_command_string(cmd)
 
         # Passthrough mode - inherit stdin/stdout/stderr directly (for TUI apps)
         if options.is_passthrough():
@@ -460,7 +460,7 @@ def run_command(
             postprocess_command(
                 cmd = cmd, options = options, verbose = verbose, exit_on_failure = exit_on_failure)
 
-        return (commands.clean_command_output("".join(stdout_lines).strip()), proc.returncode)
+        return (cmdline.clean_command_output("".join(stdout_lines).strip()), proc.returncode)
     except Exception as e:
         if verbose:
             logger.log_error(e)
@@ -512,7 +512,7 @@ def run_interactive_command(
     pretend_run = False,
     exit_on_failure = False):
     try:
-        cmd = commands.create_command_list(cmd)
+        cmd = cmdline.create_command_list(cmd)
         if not options:
             options = create_command_options()
         if not pretend_run:
@@ -531,7 +531,7 @@ def run_interactive_command(
 
             # Handle shell commands
             if options.is_shell():
-                cmd = commands.create_command_string(cmd)
+                cmd = cmdline.create_command_string(cmd)
 
             # Create return code
             returncode = 0
