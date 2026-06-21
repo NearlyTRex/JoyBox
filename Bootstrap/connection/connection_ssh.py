@@ -12,6 +12,7 @@ from io import StringIO
 
 # Local imports
 import util
+import tools
 from . import connection
 
 # Lazy import for paramiko (only needed for SSH connections)
@@ -97,9 +98,9 @@ class ConnectionSSH(connection.Connection):
             env_vars = " ".join([f"export {key}={shlex.quote(value)}" for key, value in self.options.env.items()])
             parts.append(env_vars)
         if self.options.cwd:
-            cwd = shlex.quote(self.options.cwd)
-            cwd = cwd.replace("~", f"/home/{self.ssh_user}")
-            cwd = cwd.replace("$HOME", f"/home/{self.ssh_user}")
+            cwd = self.options.cwd
+            if cwd.startswith("~"):
+                cwd = "$HOME" + cwd[1:]
             parts.append(f"cd {cwd}")
         parts.append(cmd)
         return " && ".join(parts)
@@ -227,9 +228,7 @@ class ConnectionSSH(connection.Connection):
                 util.log_info(f"Created temporary directory: {temp_dir}")
             return temp_dir
         except Exception as e:
-            util.log_error("Failed to create temporary directory")
-            util.log_error(e)
-            return None
+            return self.handle_error("Failed to create temporary directory", e, return_value = None)
 
     def does_file_or_directory_exist(self, src):
         try:
@@ -243,11 +242,7 @@ class ConnectionSSH(connection.Connection):
         except FileNotFoundError:
             return False
         except Exception as e:
-            if self.flags.exit_on_failure:
-                util.log_error(f"Error checking existence of {src}")
-                util.log_error(e)
-                util.quit_program()
-            return False
+            return self.handle_error(f"Error checking existence of {src}", e)
 
     def transfer_files(self, src, dest, excludes = [], sudo = False):
         try:
@@ -305,10 +300,7 @@ class ConnectionSSH(connection.Connection):
                 self.run_blocking(["mv", temp_dest, actual_dest], sudo = True)
             return True
         except Exception as e:
-            util.log_error(f"Failed to transfer {src} to {dest}")
-            util.log_error(e)
-            util.log_error(traceback.format_exc())
-            return False
+            return self.handle_error(f"Failed to transfer {src} to {dest}", e, return_value = False)
 
     def read_file(self, src, sudo = False):
         try:
@@ -325,11 +317,7 @@ class ConnectionSSH(connection.Connection):
                     return contents
             return None
         except Exception as e:
-            if self.flags.exit_on_failure:
-                util.log_error(f"Unable to read file from {src}")
-                util.log_error(e)
-                util.quit_program()
-            return None
+            return self.handle_error(f"Unable to read file from {src}", e, return_value = None)
 
     def write_file(self, src, contents, sudo = False):
         try:
@@ -353,8 +341,50 @@ class ConnectionSSH(connection.Connection):
                 return True
             return True
         except Exception as e:
-            if self.flags.exit_on_failure:
-                util.log_error(f"Failed to write file {src}")
-                util.log_error(e)
-                util.quit_program()
-            return False
+            return self.handle_error(f"Failed to write file {src}", e)
+
+    def make_directory(self, src, sudo = False):
+        self.run_checked([
+            tools.get_make_dir_tool(self.config), "-p", src], sudo = sudo)
+        return True
+
+    def remove_file_or_directory(self, src, sudo = False):
+        remove_tool = tools.get_remove_tool(self.config)
+        self.run_checked([
+            "sh", "-c", "%s -rf -- %s" % (remove_tool, src)], sudo = sudo)
+        return True
+
+    def copy_file_or_directory(self, src, dest, sudo = False):
+        self.run_checked([
+            tools.get_copy_tool(self.config), "-r", src, dest], sudo = sudo)
+        return True
+
+    def move_file_or_directory(self, src, dest, sudo = False):
+        self.run_checked([
+            tools.get_move_tool(self.config), src, dest], sudo = sudo)
+        return True
+
+    def link_file_or_directory(self, src, dest, sudo = False):
+        self.run_checked([
+            tools.get_link_tool(self.config), "-sf", src, dest], sudo = sudo)
+        return True
+
+    def download_file(self, url, dest, sudo = False):
+        self.run_checked([
+            tools.get_curl_tool(self.config), "-L", "-o", dest, url], sudo = sudo)
+        return True
+
+    def extract_tar_archive(self, src, dest, sudo = False):
+        self.run_checked([
+            tools.get_tar_tool(self.config), "-xf", src, "-C", dest], sudo = sudo)
+        return True
+
+    def change_owner(self, src, owner, sudo = False):
+        self.run_checked([
+            tools.get_change_owner_tool(self.config), "-R", owner, src], sudo = sudo)
+        return True
+
+    def change_permission(self, src, permission, sudo = False):
+        self.run_checked([
+            tools.get_change_permission_tool(self.config), "-R", permission, src], sudo = sudo)
+        return True

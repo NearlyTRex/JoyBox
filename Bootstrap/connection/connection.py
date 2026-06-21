@@ -3,10 +3,10 @@ import os
 import sys
 import copy
 import codecs
+import shlex
 
 # Local imports
 import util
-import tools
 
 class Connection:
     def __init__(
@@ -65,14 +65,7 @@ class Connection:
         if isinstance(cmd, str):
             return copy.deepcopy(cmd)
         if isinstance(cmd, list):
-            cmd_str = ""
-            for cmd_segment in cmd:
-                if " " in cmd_segment:
-                    cmd_str += " " + "\"" + cmd_segment + "\""
-                else:
-                    cmd_str += " " + cmd_segment
-            cmd_str = cmd_str.strip()
-            return cmd_str
+            return " ".join(shlex.quote(cmd_segment) for cmd_segment in cmd)
         return ""
 
     def create_command_list(self, cmd):
@@ -113,11 +106,10 @@ class Connection:
             util.record_output(line.strip())
 
     def mark_command_as_sudo(self, cmd):
-        if util.is_linux_platform():
-            if isinstance(cmd, str):
-                return f"sudo {cmd}"
-            elif isinstance(cmd, list):
-                return ["sudo"] + cmd
+        if isinstance(cmd, str):
+            return f"sudo {cmd}"
+        elif isinstance(cmd, list):
+            return ["sudo"] + cmd
         return cmd
 
     def print_command(self, cmd):
@@ -141,43 +133,30 @@ class Connection:
     def run_checked(self, cmd, sudo = False, throw_exception = False):
         return None
 
+    def handle_error(self, message, error, return_value = False):
+        if self.flags.exit_on_failure:
+            util.log_error(message)
+            util.log_error(error)
+            util.quit_program()
+        return return_value
+
     def make_temporary_directory(self):
         return None
 
     def make_directory(self, src, sudo = False):
-        self.run_checked([
-            tools.get_make_dir_tool(self.config),
-            "-p",
-            src
-        ], sudo = sudo)
+        return False
 
     def remove_file_or_directory(self, src, sudo = False):
-        self.run_checked([
-            tools.get_remove_tool(self.config),
-            "-rf",
-            src
-        ], sudo = sudo)
+        return False
 
     def copy_file_or_directory(self, src, dest, sudo = False):
-        self.run_checked([
-            tools.get_copy_tool(self.config),
-            src,
-            dest
-        ], sudo = sudo)
+        return False
 
     def move_file_or_directory(self, src, dest, sudo = False):
-        self.run_checked([
-            tools.get_move_tool(self.config),
-            src,
-            dest
-        ], sudo = sudo)
+        return False
 
     def link_file_or_directory(self, src, dest, sudo = False):
-        self.run_checked([
-            tools.get_link_tool(self.config),
-            "-sf", src,
-            dest
-        ], sudo = sudo)
+        return False
 
     def does_file_or_directory_exist(self, src):
         return False
@@ -192,35 +171,16 @@ class Connection:
         return False
 
     def download_file(self, url, dest, sudo = False):
-        self.run_checked([
-            tools.get_curl_tool(self.config),
-            "-L",
-            "-o", dest,
-            url
-        ], sudo = sudo)
+        return False
 
     def extract_tar_archive(self, src, dest, sudo = False):
-        self.run_checked([
-            tools.get_tar_tool(self.config),
-            "-xf", src,
-            "-C", dest
-        ], sudo = sudo)
+        return False
 
     def change_owner(self, src, owner, sudo = False):
-        self.run_checked([
-            tools.get_change_owner_tool(self.config),
-            "-R",
-            owner,
-            src
-        ], sudo = sudo)
+        return False
 
     def change_permission(self, src, permission, sudo = False):
-        self.run_checked([
-            tools.get_change_permission_tool(self.config),
-            "-R",
-            permission,
-            src
-        ], sudo = sudo)
+        return False
 
     def add_to_crontab(self, pattern):
         try:
@@ -241,11 +201,7 @@ class Connection:
                     self.remove_file_or_directory(tmp_crontab)
             return True
         except Exception as e:
-            if self.flags.exit_on_failure:
-                util.log_error(f"Unable to add to crontab: {pattern}")
-                util.log_error(e)
-                util.quit_program()
-            return False
+            return self.handle_error(f"Unable to add to crontab: {pattern}", e, return_value = False)
 
     def remove_from_crontab(self, pattern):
         try:
@@ -267,11 +223,7 @@ class Connection:
                 self.remove_file_or_directory(tmp_crontab)
             return True
         except Exception as e:
-            if self.flags.exit_on_failure:
-                util.log_error(f"Unable to remove from crontab: {pattern}")
-                util.log_error(e)
-                util.quit_program()
-            return False
+            return self.handle_error(f"Unable to remove from crontab: {pattern}", e, return_value = False)
 
     def add_to_path(self, src):
         if util.is_windows_platform():
@@ -307,11 +259,7 @@ class Connection:
                 return code == 0
             return True
         except Exception as e:
-            if self.flags.exit_on_failure:
-                util.log_error(f"Unable to add {src} to path")
-                util.log_error(e)
-                util.quit_program()
-            return False
+            return self.handle_error(f"Unable to add {src} to path", e, return_value = False)
 
     def add_to_unix_path(self, src):
         try:
@@ -346,8 +294,4 @@ class Connection:
                     return self.write_file(profile_file, new_content)
             return True
         except Exception as e:
-            if self.flags.exit_on_failure:
-                util.log_error(f"Unable to add {src} to path")
-                util.log_error(e)
-                util.quit_program()
-            return False
+            return self.handle_error(f"Unable to add {src} to path", e, return_value = False)

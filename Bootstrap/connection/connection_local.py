@@ -2,16 +2,13 @@
 import os
 import sys
 import copy
-import pwd
-import grp
+import glob
 import subprocess
 import shutil
 import tempfile
 import fnmatch
 import urllib.request
-import zipfile
 import tarfile
-import json
 
 # Local imports
 import util
@@ -26,6 +23,11 @@ class ConnectionLocal(connection.Connection):
         if options and not options.env:
             options.env = copy.deepcopy(os.environ)
         super().__init__(config, flags, options)
+
+    def mark_command_as_sudo(self, cmd):
+        if util.is_linux_platform():
+            return super().mark_command_as_sudo(cmd)
+        return cmd
 
     def run_output(self, cmd, sudo = False):
         try:
@@ -166,11 +168,7 @@ class ConnectionLocal(connection.Connection):
                 return temp_dir
             return None
         except Exception as e:
-            if self.flags.exit_on_failure:
-                util.log_error("Unable to make temporary directory")
-                util.log_error(e)
-                util.quit_program()
-            return None
+            return self.handle_error("Unable to make temporary directory", e, return_value = None)
 
     def does_file_or_directory_exist(self, src):
         try:
@@ -180,11 +178,7 @@ class ConnectionLocal(connection.Connection):
                 return os.path.exists(src)
             return True
         except Exception as e:
-            if self.flags.exit_on_failure:
-                util.log_error("Error checking existence of %s" % src)
-                util.log_error(e)
-                util.quit_program()
-            return False
+            return self.handle_error("Error checking existence of %s" % src, e)
 
     def transfer_files(self, src, dest, excludes = [], sudo = False):
         try:
@@ -213,11 +207,7 @@ class ConnectionLocal(connection.Connection):
                             shutil.copy(src, dest)
             return True
         except Exception as e:
-            if self.flags.exit_on_failure:
-                util.log_error(f"Unable to transfer files from {src} to {dest}")
-                util.log_error(e)
-                util.quit_program()
-            return False
+            return self.handle_error(f"Unable to transfer files from {src} to {dest}", e)
 
     def read_file(self, src, sudo = False):
         try:
@@ -233,11 +223,7 @@ class ConnectionLocal(connection.Connection):
                     return contents
             return None
         except Exception as e:
-            if self.flags.exit_on_failure:
-                util.log_error(f"Unable to read file {src}")
-                util.log_error(e)
-                util.quit_program()
-            return None
+            return self.handle_error(f"Unable to read file {src}", e, return_value = None)
 
     def write_file(self, src, contents, sudo = False):
         try:
@@ -250,14 +236,141 @@ class ConnectionLocal(connection.Connection):
                         temp_path = f.name
                     self.run_blocking(["mv", temp_path, src], sudo = True)
                 else:
-                    os.makedirs(os.path.dirname(src), exist_ok = True)
+                    parent_dir = os.path.dirname(src)
+                    if parent_dir:
+                        os.makedirs(parent_dir, exist_ok = True)
                     with open(src, "w") as f:
                         f.write(contents)
                 return True
             return True
         except Exception as e:
-            if self.flags.exit_on_failure:
-                util.log_error(f"Unable to write file to {src}")
-                util.log_error(e)
-                util.quit_program()
-            return False
+            return self.handle_error(f"Unable to write file to {src}", e)
+
+    def make_directory(self, src, sudo = False):
+        try:
+            if self.flags.verbose:
+                util.log_info(f"Making directory {src}")
+            if not self.flags.pretend_run:
+                if sudo:
+                    self.run_checked(["mkdir", "-p", src], sudo = True)
+                else:
+                    os.makedirs(src, exist_ok = True)
+            return True
+        except Exception as e:
+            return self.handle_error(f"Unable to make directory {src}", e)
+
+    def remove_file_or_directory(self, src, sudo = False):
+        try:
+            if self.flags.verbose:
+                util.log_info(f"Removing {src}")
+            if not self.flags.pretend_run:
+                if sudo:
+                    self.run_checked(["sh", "-c", "rm -rf -- %s" % src], sudo = True)
+                else:
+                    for match in glob.glob(src):
+                        if os.path.isdir(match) and not os.path.islink(match):
+                            shutil.rmtree(match)
+                        else:
+                            os.remove(match)
+            return True
+        except Exception as e:
+            return self.handle_error(f"Unable to remove {src}", e)
+
+    def copy_file_or_directory(self, src, dest, sudo = False):
+        try:
+            if self.flags.verbose:
+                util.log_info(f"Copying {src} to {dest}")
+            if not self.flags.pretend_run:
+                if sudo:
+                    cmd = ["cp", "-r", src, dest] if os.path.isdir(src) else ["cp", src, dest]
+                    self.run_checked(cmd, sudo = True)
+                else:
+                    if os.path.isdir(src):
+                        shutil.copytree(src, dest, dirs_exist_ok = True)
+                    else:
+                        shutil.copy2(src, dest)
+            return True
+        except Exception as e:
+            return self.handle_error(f"Unable to copy {src} to {dest}", e)
+
+    def move_file_or_directory(self, src, dest, sudo = False):
+        try:
+            if self.flags.verbose:
+                util.log_info(f"Moving {src} to {dest}")
+            if not self.flags.pretend_run:
+                if sudo:
+                    self.run_checked(["mv", src, dest], sudo = True)
+                else:
+                    shutil.move(src, dest)
+            return True
+        except Exception as e:
+            return self.handle_error(f"Unable to move {src} to {dest}", e)
+
+    def link_file_or_directory(self, src, dest, sudo = False):
+        try:
+            if self.flags.verbose:
+                util.log_info(f"Linking {src} to {dest}")
+            if not self.flags.pretend_run:
+                if sudo:
+                    self.run_checked(["ln", "-sf", src, dest], sudo = True)
+                else:
+                    if os.path.lexists(dest):
+                        os.remove(dest)
+                    os.symlink(src, dest)
+            return True
+        except Exception as e:
+            return self.handle_error(f"Unable to link {src} to {dest}", e)
+
+    def download_file(self, url, dest, sudo = False):
+        try:
+            if self.flags.verbose:
+                util.log_info(f"Downloading {url} to {dest}")
+            if not self.flags.pretend_run:
+                if sudo:
+                    with tempfile.NamedTemporaryFile(delete = False) as f:
+                        temp_path = f.name
+                    urllib.request.urlretrieve(url, temp_path)
+                    self.run_checked(["mv", temp_path, dest], sudo = True)
+                else:
+                    urllib.request.urlretrieve(url, dest)
+            return True
+        except Exception as e:
+            return self.handle_error(f"Unable to download {url} to {dest}", e)
+
+    def extract_tar_archive(self, src, dest, sudo = False):
+        try:
+            if self.flags.verbose:
+                util.log_info(f"Extracting {src} to {dest}")
+            if not self.flags.pretend_run:
+                if sudo:
+                    self.run_checked(["tar", "-xf", src, "-C", dest], sudo = True)
+                else:
+                    with tarfile.open(src) as tar:
+                        tar.extractall(path = dest)
+            return True
+        except Exception as e:
+            return self.handle_error(f"Unable to extract {src} to {dest}", e)
+
+    def change_owner(self, src, owner, sudo = False):
+        if not util.is_linux_platform():
+            return True
+        try:
+            if self.flags.verbose:
+                util.log_info(f"Changing owner of {src} to {owner}")
+            if not self.flags.pretend_run:
+                self.run_checked(["chown", "-R", owner, src], sudo = sudo)
+            return True
+        except Exception as e:
+            return self.handle_error(f"Unable to change owner of {src}", e)
+
+    def change_permission(self, src, permission, sudo = False):
+        if not util.is_linux_platform():
+            return True
+        try:
+            if self.flags.verbose:
+                util.log_info(f"Changing permissions of {src} to {permission}")
+            if not self.flags.pretend_run:
+                self.run_checked(["chmod", "-R", permission, src], sudo = sudo)
+            return True
+        except Exception as e:
+            return self.handle_error(f"Unable to change permissions of {src}", e)
