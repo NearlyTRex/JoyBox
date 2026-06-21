@@ -13,14 +13,6 @@ import joybox.lockerinfo as lockerinfo
 # System capabilities
 ###########################################################
 
-# Get home directory
-def get_home_directory():
-    return os.path.expanduser("~")
-
-# Get cookie directory
-def get_cookie_directory():
-    return paths.join_paths(get_home_directory(), "Cookies")
-
 # Get editor command
 def get_editor():
 

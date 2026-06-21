@@ -33,6 +33,14 @@ def get_current_timestamp():
 # Directories
 ###########################################################
 
+# Get home directory
+def get_home_directory():
+    return os.path.expanduser("~")
+
+# Get cookie directory
+def get_cookie_directory():
+    return os.path.join(get_home_directory(), "Cookies")
+
 # Get log directory
 def get_log_directory():
-    return os.path.join(os.path.expanduser("~"), "Logs")
+    return os.path.join(get_home_directory(), "Logs")

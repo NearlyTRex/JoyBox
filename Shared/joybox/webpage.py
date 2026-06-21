@@ -8,7 +8,6 @@ import joybox.config as config
 import joybox.programs as programs
 import joybox.serialization as serialization
 import joybox.strings as strings
-import joybox.environment as environment
 import joybox.fileops as fileops
 import joybox.text as text
 import joybox.logger as logger
@@ -720,7 +719,7 @@ def load_cookie(
 # Get cookie file
 def get_cookie_file(base_name):
     cookie_file = base_name + config.cookie_suffix_path
-    cookie_dir = environment.get_cookie_directory()
+    cookie_dir = runtime.get_cookie_directory()
     return paths.join_paths(cookie_dir, cookie_file)
 
 ###########################################################
