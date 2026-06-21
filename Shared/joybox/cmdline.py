@@ -6,7 +6,7 @@ import copy
 import shlex
 
 # Local imports
-from . import texttools
+import joybox.text as text
 
 # Token used to temporarily mark argument boundaries while splitting a command
 # string, so that spaces inside quoted substrings are preserved.
@@ -79,7 +79,7 @@ def create_command_list_enclosed(cmd):
         return copy.deepcopy(cmd)
     if isinstance(cmd, str):
         cmd = cmd.replace(" ", TOKEN_COMMAND_SPLIT)
-        for quoted_substring in texttools.split_by_enclosed_substrings(cmd, "\"", "\""):
+        for quoted_substring in text.split_by_enclosed_substrings(cmd, "\"", "\""):
             cmd = cmd.replace(quoted_substring, quoted_substring.replace(TOKEN_COMMAND_SPLIT, " "))
         return cmd.split(TOKEN_COMMAND_SPLIT)
     return []

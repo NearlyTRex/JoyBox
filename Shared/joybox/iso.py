@@ -8,7 +8,7 @@ import joybox.paths as paths
 import joybox.fileops as fileops
 import joybox.programs as programs
 import joybox.archive as archive
-from joybox import platform_info, pathutil
+from joybox import platform_info
 
 # Check if iso is mounted
 def is_iso_mounted(iso_file, mount_dir):
@@ -51,7 +51,7 @@ def create_iso(
 
     if volume_name:
         create_command += ["-volid", volume_name]
-    if pathutil.is_path_valid(source_dir):
+    if paths.is_path_valid(source_dir):
         create_command += [source_dir]
 
     # Run create command

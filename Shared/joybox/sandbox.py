@@ -12,7 +12,7 @@ import joybox.commandbase as commandbase
 import joybox.programs as programs
 import joybox.paths as paths
 import joybox.process as process
-from joybox import pathutil, cmdline
+from joybox import cmdline
 
 ###########################################################
 
@@ -464,7 +464,7 @@ def mount_directory(
 
     # Get first available drive path
     drive_path = find_first_available_real_drive_path(options)
-    if not pathutil.is_path_valid(drive_path):
+    if not paths.is_path_valid(drive_path):
         return False
 
     # Create symlink
@@ -489,7 +489,7 @@ def unmount_directory(
 
     # Get first taken drive path
     drive_path = find_first_taken_real_drive_path(src, options)
-    if not pathutil.is_path_valid(drive_path):
+    if not paths.is_path_valid(drive_path):
         return False
 
     # Create symlink
@@ -606,7 +606,7 @@ def get_prefix_path_info(
     is_real_path = False):
 
     # Check path
-    if not pathutil.is_path_valid(path):
+    if not paths.is_path_valid(path):
         return None
 
     # Check prefix
@@ -808,7 +808,7 @@ def setup_prefix_environment(
             cwd_drive = get_real_drive_path(
                 options = new_options,
                 drive = config.drive_prefix_cwd)
-            if pathutil.is_path_valid(cwd_drive):
+            if paths.is_path_valid(cwd_drive):
                 fileops.create_symlink(
                     src = new_options.get_cwd(),
                     dest = cwd_drive,

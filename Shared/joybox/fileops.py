@@ -14,7 +14,8 @@ import joybox.config as config
 import joybox.logger as logger
 import joybox.modules as modules
 import joybox.paths as paths
-from joybox import runtime, pathutil, texttools
+from joybox import runtime
+import joybox.text as text
 
 ###########################################################
 # Error handlers
@@ -1280,9 +1281,9 @@ def get_link_info(lnk_path, lnk_base_path):
     info["args"] = []
 
     # Check params
-    if not pathutil.is_path_valid(lnk_path) or not os.path.isfile(lnk_path) or not lnk_path.endswith(".lnk"):
+    if not paths.is_path_valid(lnk_path) or not os.path.isfile(lnk_path) or not lnk_path.endswith(".lnk"):
         return info
-    if not pathutil.is_path_valid(lnk_base_path) or not os.path.isdir(lnk_base_path):
+    if not paths.is_path_valid(lnk_base_path) or not os.path.isdir(lnk_base_path):
         return info
 
     # Parse link file
@@ -1316,7 +1317,7 @@ def get_link_info(lnk_path, lnk_base_path):
             # Get arguments
             lnk_arguments = []
             if has_arguments:
-                lnk_arguments = texttools.split_by_enclosed_substrings(lnk.arguments.strip("\x00"), "\"", "\"")
+                lnk_arguments = text.split_by_enclosed_substrings(lnk.arguments.strip("\x00"), "\"", "\"")
 
             # Get target
             lnk_target = paths.normalize_file_path(os.path.join(lnk_base_path, lnk_offset_path))

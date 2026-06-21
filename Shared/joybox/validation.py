@@ -1,6 +1,8 @@
 # Imports
 import os
-from joybox import pathutil
+
+# Local imports
+import joybox.paths as paths
 
 ###########################################################
 # Assertion and validation utilities
@@ -28,7 +30,7 @@ def assert_is_string_of_specific_length(var_value, var_len, var_name):
 
 # Assert that variable is valid path
 def assert_is_valid_path(var_value, var_name):
-    assert pathutil.is_path_valid(var_value), "%s should be a valid path" % var_name
+    assert paths.is_path_valid(var_value), "%s should be a valid path" % var_name
 
 # Assert that variable is integer
 def assert_is_int(var_value, var_name):

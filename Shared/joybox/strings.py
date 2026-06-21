@@ -7,7 +7,7 @@ from dateutil import parser as date_parser
 from dateutil.relativedelta import relativedelta
 
 # Local imports
-from joybox import texttools
+import joybox.text as text
 
 ###########################################################
 # ID generation utilities
@@ -23,7 +23,7 @@ def generate_unique_id():
 
 # Remove enclosed substrings
 def remove_enclosed_substrings(string, opening_delim = "\"", closing_delim = "\""):
-    for substring in texttools.find_enclosed_substrings(string, opening_delim, closing_delim):
+    for substring in text.find_enclosed_substrings(string, opening_delim, closing_delim):
         full_braced_substring = f"{opening_delim}{substring}{closing_delim}"
         string = string.replace(f" {full_braced_substring} ", " ")
         string = string.replace(f" {full_braced_substring}", " ")

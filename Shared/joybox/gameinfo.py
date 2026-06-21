@@ -19,7 +19,7 @@ import joybox.stores as stores
 import joybox.strings as strings
 import joybox.gui as gui
 import joybox.lockerinfo as lockerinfo
-from joybox import platform_info, pathutil
+from joybox import platform_info
 from joybox.gamenaming import (
     derive_game_letter_from_name,
     derive_game_name_path_from_name,
@@ -953,7 +953,7 @@ def derive_game_search_terms_from_name(game_name, game_platform, custom_prefix =
 def derive_game_categories_from_file(game_file):
 
     # Check file
-    if not pathutil.is_path_valid(game_file):
+    if not paths.is_path_valid(game_file):
         return (None, None, None)
 
     # Get source directory and basename

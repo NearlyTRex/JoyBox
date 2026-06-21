@@ -14,7 +14,6 @@ import joybox.webpage as webpage
 import joybox.network as network
 import joybox.paths as paths
 import joybox.locker as locker
-from joybox import pathutil
 
 # Setup stored release
 def setup_stored_release(
@@ -273,7 +272,7 @@ def setup_general_release(
                         return False
 
     # Backup files
-    if not skip_autobackup and pathutil.is_path_valid(backups_dir):
+    if not skip_autobackup and paths.is_path_valid(backups_dir):
         backup_dest = paths.join_paths(backups_dir, archive_filename)
         dest_rel_path = locker.convert_to_relative_path(backup_dest)
         success = locker.backup(
@@ -817,7 +816,7 @@ def build_binary_from_source(
             return False
 
     # Backup files
-    if not skip_autobackup and pathutil.is_path_valid(backups_dir):
+    if not skip_autobackup and paths.is_path_valid(backups_dir):
         backup_dest = paths.join_paths(backups_dir, final_file)
         dest_rel_path = locker.convert_to_relative_path(backup_dest)
         success = locker.backup(
@@ -980,7 +979,7 @@ def build_appimage_from_source(
             return False
 
     # Backup files
-    if not skip_autobackup and pathutil.is_path_valid(backups_dir):
+    if not skip_autobackup and paths.is_path_valid(backups_dir):
         backup_dest = paths.join_paths(backups_dir, final_file)
         dest_rel_path = locker.convert_to_relative_path(backup_dest)
         success = locker.backup(

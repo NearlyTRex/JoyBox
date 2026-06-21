@@ -5,7 +5,7 @@ import subprocess
 import threading
 
 # Local imports
-from joybox import platform_info, runtime, pathutil, cmdline
+from joybox import platform_info, runtime, cmdline
 import joybox.config as config
 import joybox.logger as logger
 import joybox.paths as paths
@@ -269,8 +269,8 @@ def run_command(
             return ("", proc.returncode)
 
         # Determine output file handling
-        stdout_target = open(options.get_stdout(), "w") if pathutil.is_path_valid(options.get_stdout()) else None
-        stderr_target = open(options.get_stderr(), "w") if pathutil.is_path_valid(options.get_stderr()) else None
+        stdout_target = open(options.get_stdout(), "w") if paths.is_path_valid(options.get_stdout()) else None
+        stderr_target = open(options.get_stderr(), "w") if paths.is_path_valid(options.get_stderr()) else None
 
         # Determine stderr disposition:
         # - merge into stdout (OS-level, order-preserving) for include_stderr capture,
@@ -689,9 +689,9 @@ def get_dos_launch_command(
 
     # Add initial launch params
     launch_cmd += ["-c", "%s:" % start_letter]
-    if pathutil.is_path_valid(start_offset):
+    if paths.is_path_valid(start_offset):
         launch_cmd += ["-c", "cd %s" % start_offset]
-    if pathutil.is_path_valid(start_program):
+    if paths.is_path_valid(start_program):
         if isinstance(start_args, list) and len(start_args) > 0:
             launch_cmd += ["-c", "%s %s" % (paths.get_filename_file(start_program), " ".join(start_args))]
         else:
@@ -744,9 +744,9 @@ def get_win31_launch_command(
     launch_cmd += ["-c", r"SET PATH=%PATH%;C:\WINDOWS;"]
     launch_cmd += ["-c", r"SET TEMP=C:\WINDOWS\TEMP"]
     launch_cmd += ["-c", "%s:" % start_letter]
-    if pathutil.is_path_valid(start_offset):
+    if paths.is_path_valid(start_offset):
         launch_cmd += ["-c", "cd %s" % start_offset]
-    if pathutil.is_path_valid(start_program):
+    if paths.is_path_valid(start_program):
         if isinstance(start_args, list) and len(start_args) > 0:
             launch_cmd += ["-c", "WIN RUNEXIT %s %s" % (paths.get_filename_file(start_program), " ".join(start_args))]
         else:

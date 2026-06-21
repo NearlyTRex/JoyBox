@@ -5,10 +5,11 @@ import subprocess
 import tempfile
 
 # Local imports
-from joybox import platform_info, runtime, pathutil, cmdline, fileops
+from joybox import platform_info, runtime, cmdline, fileops
 from joybox import network, archive
 from joybox import logger, runoptions
 from . import connection
+import joybox.paths as paths
 
 class ConnectionLocal(connection.Connection):
     def __init__(
@@ -88,9 +89,9 @@ class ConnectionLocal(connection.Connection):
                     cmd = cmdline.create_command_string(cmd, style = "posix")
                 stdout = self.options.stdout
                 stderr = self.options.stderr
-                if pathutil.is_path_valid(self.options.stdout):
+                if paths.is_path_valid(self.options.stdout):
                     stdout = open(self.options.stdout, "w")
-                if pathutil.is_path_valid(self.options.stderr):
+                if paths.is_path_valid(self.options.stderr):
                     stderr = open(self.options.stderr, "w")
                 code = subprocess.call(
                     cmd,
@@ -100,9 +101,9 @@ class ConnectionLocal(connection.Connection):
                     creationflags = self.options.creationflags,
                     stdout = stdout,
                     stderr = stderr)
-                if pathutil.is_path_valid(self.options.stdout):
+                if paths.is_path_valid(self.options.stdout):
                     stdout.close()
-                if pathutil.is_path_valid(self.options.stderr):
+                if paths.is_path_valid(self.options.stderr):
                     stderr.close()
                 return code
             return 0

@@ -14,7 +14,7 @@ import joybox.text as text
 import joybox.logger as logger
 import joybox.paths as paths
 import joybox.settings as ini
-from joybox import runtime, pathutil
+from joybox import runtime
 
 ###########################################################
 
@@ -75,7 +75,7 @@ def create_chrome_web_driver(
             if make_headless:
                 options.add_argument("--headless")
                 options.add_argument("--window-size=1920,1080")
-            if pathutil.is_path_valid(binary_location) and paths.does_path_exist(binary_location):
+            if paths.is_path_valid(binary_location) and paths.does_path_exist(binary_location):
                 options.binary_location = binary_location
             web_driver = Chrome(service=service, options=options)
             return web_driver
@@ -116,14 +116,14 @@ def create_firefox_web_driver(
             from webdriver_manager.firefox import GeckoDriverManager
             service = FirefoxService(executable_path=GeckoDriverManager().install())
             options = FirefoxOptions()
-            if pathutil.is_path_valid(download_dir) and paths.does_path_exist(download_dir):
+            if paths.is_path_valid(download_dir) and paths.does_path_exist(download_dir):
                 options.set_preference("browser.download.folderList", 2)
                 options.set_preference("browser.download.dir", download_dir)
-            if pathutil.is_path_valid(profile_dir) and paths.does_path_exist(profile_dir):
+            if paths.is_path_valid(profile_dir) and paths.does_path_exist(profile_dir):
                 options.set_preference('profile', profile_dir)
             if make_headless:
                 options.add_argument("--headless")
-            if pathutil.is_path_valid(binary_location) and paths.does_path_exist(binary_location):
+            if paths.is_path_valid(binary_location) and paths.does_path_exist(binary_location):
                 options.binary_location = binary_location
             web_driver = Firefox(service=service, options=options)
             return web_driver
@@ -633,7 +633,7 @@ def save_cookie(
     try:
         if not is_session_valid(driver, verbose):
             return False
-        if not pathutil.is_path_valid(path):
+        if not paths.is_path_valid(path):
             if verbose:
                 logger.log_warning("SaveCookie: Invalid path provided")
             return False

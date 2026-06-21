@@ -7,11 +7,12 @@ import concurrent.futures
 from io import StringIO
 
 # Local imports
-from joybox import runtime, pathutil, cmdline
+from joybox import runtime, cmdline
 from joybox import logger, runoptions
 from joybox import systemtools as tools
 from joybox import programs
 from . import connection
+import joybox.paths as paths
 
 # Lazy import for paramiko (only needed for SSH connections)
 paramiko = None
@@ -255,7 +256,7 @@ class ConnectionSSH(connection.Connection):
             # Gather all files and ensure remote dirs
             file_tasks = []
             for dirpath, dirnames, filenames in os.walk(src):
-                if pathutil.is_exclude_path(os.path.relpath(dirpath, src), excludes = excludes):
+                if paths.is_exclude_path(os.path.relpath(dirpath, src), excludes = excludes):
                     continue
 
                 # Get remote directory

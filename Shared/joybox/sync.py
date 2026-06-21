@@ -16,7 +16,7 @@ import joybox.paths as paths
 import joybox.fileops as fileops
 import joybox.hashing as hashing
 import joybox.sqlitedb as sqlitedb
-from joybox import platform_info, pathutil
+from joybox import platform_info
 
 # Constants
 HASH_DATABASE_FILE = ".locker_hashes.db"
@@ -1169,15 +1169,15 @@ def diff_files(
         remote_type = remote_type,
         remote_action_type = config.RemoteActionType.DIFF)
     check_cmd += get_exclude_flags(excludes)
-    if pathutil.is_path_valid(diff_combined_path):
+    if paths.is_path_valid(diff_combined_path):
         check_cmd += ["--combined", diff_combined_path]
-    if pathutil.is_path_valid(diff_intersected_path):
+    if paths.is_path_valid(diff_intersected_path):
         check_cmd += ["--differ", diff_intersected_path]
-    if pathutil.is_path_valid(diff_missing_src_path):
+    if paths.is_path_valid(diff_missing_src_path):
         check_cmd += ["--missing-on-src", diff_missing_src_path]
-    if pathutil.is_path_valid(diff_missing_dest_path):
+    if paths.is_path_valid(diff_missing_dest_path):
         check_cmd += ["--missing-on-dst", diff_missing_dest_path]
-    if pathutil.is_path_valid(diff_error_path):
+    if paths.is_path_valid(diff_error_path):
         check_cmd += ["--error", diff_error_path]
     if quick:
         check_cmd += ["--size-only"]

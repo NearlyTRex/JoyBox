@@ -1,7 +1,6 @@
 # Local imports
 import joybox.config as config
 import joybox.paths as paths
-from joybox import pathutil
 
 # Create tokenized path
 def create_tokenized_path(path, base_path = None):
@@ -31,7 +30,7 @@ def create_tokenized_path(path, base_path = None):
     new_path = new_path.replace("<winDocuments>", config.token_user_profile_dir + "/Documents")
     new_path = new_path.replace("<home>", config.token_user_profile_dir)
     new_path = new_path.replace("<root>", config.token_store_install_dir)
-    if pathutil.is_path_valid(base_path):
+    if paths.is_path_valid(base_path):
         new_path = new_path.replace("<base>", base_path)
     else:
         new_path = new_path.replace("<base>", config.token_game_install_dir)

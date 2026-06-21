@@ -13,7 +13,7 @@ import joybox.webpage as webpage
 import joybox.storebase as storebase
 import joybox.strings as strings
 import joybox.metadataassetcollector as metadataassetcollector
-from joybox import pathutil
+import joybox.paths as paths
 
 # Legacy store
 class Legacy(storebase.StoreBase):
@@ -29,7 +29,7 @@ class Legacy(storebase.StoreBase):
 
         # Get install dir
         self.install_dir = ini.get_ini_path_value("UserData.Legacy", "legacy_install_dir")
-        if not pathutil.is_path_valid(self.install_dir):
+        if not paths.is_path_valid(self.install_dir):
             raise RuntimeError("Ini file does not have a valid install dir")
 
     ############################################################

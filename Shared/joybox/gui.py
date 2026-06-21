@@ -7,7 +7,8 @@ import joybox.validation as validation
 import joybox.display as display
 import joybox.programs as programs
 import joybox.modules as modules
-from joybox import platform_info, runtime, pathutil
+from joybox import platform_info, runtime
+import joybox.paths as paths
 
 # Display popup
 def display_popup(
@@ -263,7 +264,7 @@ def display_loading_window(
     ]
 
     # Add image
-    if pathutil.is_path_valid(image_file) and os.path.exists(image_file):
+    if paths.is_path_valid(image_file) and os.path.exists(image_file):
         window_layout += [
             [
                 psg.Image(
@@ -284,7 +285,7 @@ def display_loading_window(
         window.maximize()
     window.bind("<Escape>", "KEYPRESS_ESCAPE")
     window["progress"].Widget.config(mode = "indeterminate")
-    if pathutil.is_path_valid(image_file) and os.path.exists(image_file):
+    if paths.is_path_valid(image_file) and os.path.exists(image_file):
         try:
             from PIL import Image, ImageTk
             window_width, window_height = window.size
