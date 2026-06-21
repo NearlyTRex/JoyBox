@@ -1,7 +1,7 @@
 # Local imports
 import joybox.paths as paths
 import joybox.toolbase as toolbase
-import joybox.settings as ini
+import joybox.settings as settings
 
 # Config files
 config_files = {}
@@ -17,10 +17,10 @@ class Python(toolbase.ToolBase):
     def get_config(self):
 
         # Get python info
-        python_exe = ini.get_ini_value("Tools.Python", "python_exe")
-        python_pip_exe = ini.get_ini_value("Tools.Python", "python_pip_exe")
-        python_install_dir = ini.get_ini_path_value("Tools.Python", "python_install_dir")
-        python_venv_dir = ini.get_ini_path_value("Tools.Python", "python_venv_dir")
+        python_exe = settings.get_value("Tools.Python", "python_exe")
+        python_pip_exe = settings.get_value("Tools.Python", "python_pip_exe")
+        python_install_dir = settings.get_path_value("Tools.Python", "python_install_dir")
+        python_venv_dir = settings.get_path_value("Tools.Python", "python_venv_dir")
 
         # Return config
         return {
@@ -47,4 +47,3 @@ class Python(toolbase.ToolBase):
                 }
             }
         }
-

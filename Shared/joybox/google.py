@@ -12,7 +12,7 @@ import joybox.paths as paths
 import joybox.containers as containers
 import joybox.datautils as datautils
 import joybox.fileops as fileops
-import joybox.settings as ini
+import joybox.settings as settings
 
 # Find images
 def find_images(
@@ -26,8 +26,8 @@ def find_images(
     exit_on_failure = False):
 
     # Get authorization info
-    google_search_engine_id = ini.get_ini_value("UserData.Scraping", "google_search_engine_id")
-    google_search_engine_api_key = ini.get_ini_value("UserData.Scraping", "google_search_engine_api_key")
+    google_search_engine_id = settings.get_value("UserData.Scraping", "google_search_engine_id")
+    google_search_engine_api_key = settings.get_value("UserData.Scraping", "google_search_engine_api_key")
 
     # Get search url
     search_url = "https://www.googleapis.com/customsearch/v1"

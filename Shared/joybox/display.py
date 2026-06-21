@@ -2,7 +2,7 @@
 import joybox.command as command
 import joybox.programs as programs
 import joybox.logger as logger
-import joybox.settings as ini
+import joybox.settings as settings
 
 # Get current screen resolution
 def get_current_screen_resolution():
@@ -46,9 +46,9 @@ def set_screen_resolution(width, height, colors, verbose = False, pretend_run = 
 def restore_default_screen_resolution(verbose = False, pretend_run = False, exit_on_failure = False):
 
     # Get resolution info
-    screen_resolution_w = ini.get_ini_integer_value("UserData.Resolution", "screen_resolution_w")
-    screen_resolution_h = ini.get_ini_integer_value("UserData.Resolution", "screen_resolution_h")
-    screen_resolution_c = ini.get_ini_integer_value("UserData.Resolution", "screen_resolution_c")
+    screen_resolution_w = settings.get_integer_value("UserData.Resolution", "screen_resolution_w")
+    screen_resolution_h = settings.get_integer_value("UserData.Resolution", "screen_resolution_h")
+    screen_resolution_c = settings.get_integer_value("UserData.Resolution", "screen_resolution_c")
 
     # Ignore if already at the default resolution
     current_w, current_h = get_current_screen_resolution()

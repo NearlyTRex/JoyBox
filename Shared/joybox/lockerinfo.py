@@ -1,6 +1,6 @@
 # Local imports
 import joybox.config as config
-import joybox.settings as ini
+import joybox.settings as settings
 
 # Locker info
 class LockerInfo:
@@ -16,21 +16,21 @@ class LockerInfo:
             self.token = None
             self.mount_flags = []
         else:
-            self.type = ini.get_ini_value("UserData.Share", f"locker_{self.locker_type.lower()}_type")
-            self.name = ini.get_ini_value("UserData.Share", f"locker_{self.locker_type.lower()}_name")
-            self.remote_path = ini.get_ini_value("UserData.Share", f"locker_{self.locker_type.lower()}_remote_path")
-            self.config = ini.get_ini_value("UserData.Share", f"locker_{self.locker_type.lower()}_config")
-            self.token = ini.get_ini_value("UserData.Share", f"locker_{self.locker_type.lower()}_token")
-            self.mount_flags = ini.get_ini_value("UserData.Share", f"locker_{self.locker_type.lower()}_mount_flags").split(",")
-        self.mount_path = ini.get_ini_path_value("UserData.Share", f"locker_{self.locker_type.lower()}_mount_path")
-        self.passphrase = ini.get_ini_value("UserData.Share", f"locker_{self.locker_type.lower()}_passphrase") or ini.get_ini_value("UserData.Protection", "locker_passphrase")
+            self.type = settings.get_value("UserData.Share", f"locker_{self.locker_type.lower()}_type")
+            self.name = settings.get_value("UserData.Share", f"locker_{self.locker_type.lower()}_name")
+            self.remote_path = settings.get_value("UserData.Share", f"locker_{self.locker_type.lower()}_remote_path")
+            self.config = settings.get_value("UserData.Share", f"locker_{self.locker_type.lower()}_config")
+            self.token = settings.get_value("UserData.Share", f"locker_{self.locker_type.lower()}_token")
+            self.mount_flags = settings.get_value("UserData.Share", f"locker_{self.locker_type.lower()}_mount_flags").split(",")
+        self.mount_path = settings.get_path_value("UserData.Share", f"locker_{self.locker_type.lower()}_mount_path")
+        self.passphrase = settings.get_value("UserData.Share", f"locker_{self.locker_type.lower()}_passphrase") or settings.get_value("UserData.Protection", "locker_passphrase")
 
         # Parse excluded dirs into list
-        excluded_str = ini.get_ini_value("UserData.Share", f"locker_{self.locker_type.lower()}_excluded_dirs")
+        excluded_str = settings.get_value("UserData.Share", f"locker_{self.locker_type.lower()}_excluded_dirs")
         self.excluded_dirs = [p.strip() for p in excluded_str.split(",") if p.strip()] if excluded_str else []
 
         # Parse encrypted flag (defaults to false)
-        encrypted_str = ini.get_ini_value("UserData.Share", f"locker_{self.locker_type.lower()}_encrypted")
+        encrypted_str = settings.get_value("UserData.Share", f"locker_{self.locker_type.lower()}_encrypted")
         self.encrypted = encrypted_str.lower() == "true" if encrypted_str else False
 
     def get_type(self):
@@ -84,7 +84,7 @@ class LockerInfo:
 
 # Get the primary remote locker type
 def get_primary_remote_locker_type():
-    primary_remote = ini.get_ini_value("UserData.Share", "primary_remote_locker")
+    primary_remote = settings.get_value("UserData.Share", "primary_remote_locker")
     if primary_remote:
         for locker_type in config.LockerType.members():
             if locker_type.val().lower() == primary_remote.lower():

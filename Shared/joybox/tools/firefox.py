@@ -1,6 +1,6 @@
 # Local imports
 import joybox.toolbase as toolbase
-import joybox.settings as ini
+import joybox.settings as settings
 import joybox.paths as paths
 
 # Config files
@@ -17,10 +17,10 @@ class Firefox(toolbase.ToolBase):
     def get_config(self):
 
         # Get firefox info
-        firefox_exe = ini.get_ini_value("Tools.Firefox", "firefox_exe")
-        firefox_install_dir = ini.get_ini_path_value("Tools.Firefox", "firefox_install_dir")
-        firefox_download_dir = ini.get_ini_path_value("Tools.Firefox", "firefox_download_dir")
-        firefox_profile_dir = ini.get_ini_path_value("Tools.Firefox", "firefox_profile_dir", default_value = "", throw_exception = False)
+        firefox_exe = settings.get_value("Tools.Firefox", "firefox_exe")
+        firefox_install_dir = settings.get_path_value("Tools.Firefox", "firefox_install_dir")
+        firefox_download_dir = settings.get_path_value("Tools.Firefox", "firefox_download_dir")
+        firefox_profile_dir = settings.get_path_value("Tools.Firefox", "firefox_profile_dir", default_value = "", throw_exception = False)
 
         # Return config
         return {

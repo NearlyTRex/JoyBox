@@ -10,7 +10,7 @@ import joybox.fileops as fileops
 import joybox.release as release
 import joybox.programs as programs
 import joybox.toolbase as toolbase
-import joybox.settings as ini
+import joybox.settings as settings
 
 # Config file templates
 config_template_gdrive = """
@@ -138,14 +138,14 @@ class RClone(toolbase.ToolBase):
             setup_params = config.SetupParams()
 
         # Get gdrive options
-        gdrive_remote_name = ini.get_ini_value("UserData.Share", "locker_gdrive_name", throw_exception = False)
-        gdrive_remote_type = ini.get_ini_value("UserData.Share", "locker_gdrive_type", throw_exception = False)
-        gdrive_remote_token = ini.get_ini_value("UserData.Share", "locker_gdrive_token", throw_exception = False)
+        gdrive_remote_name = settings.get_value("UserData.Share", "locker_gdrive_name", throw_exception = False)
+        gdrive_remote_type = settings.get_value("UserData.Share", "locker_gdrive_type", throw_exception = False)
+        gdrive_remote_token = settings.get_value("UserData.Share", "locker_gdrive_token", throw_exception = False)
 
         # Get hetzner options
-        hetzner_remote_name = ini.get_ini_value("UserData.Share", "locker_hetzner_name", throw_exception = False)
-        hetzner_remote_type = ini.get_ini_value("UserData.Share", "locker_hetzner_type", throw_exception = False)
-        hetzner_remote_config_str = ini.get_ini_value("UserData.Share", "locker_hetzner_config", throw_exception = False)
+        hetzner_remote_name = settings.get_value("UserData.Share", "locker_hetzner_name", throw_exception = False)
+        hetzner_remote_type = settings.get_value("UserData.Share", "locker_hetzner_type", throw_exception = False)
+        hetzner_remote_config_str = settings.get_value("UserData.Share", "locker_hetzner_config", throw_exception = False)
         hetzner_remote_config = {}
         if hetzner_remote_config_str:
             try:

@@ -1,6 +1,6 @@
 # Local imports
 import joybox.toolbase as toolbase
-import joybox.settings as ini
+import joybox.settings as settings
 import joybox.paths as paths
 
 # Config files
@@ -17,8 +17,8 @@ class Git(toolbase.ToolBase):
     def get_config(self):
 
         # Get git info
-        git_exe = ini.get_ini_value("Tools.Git", "git_exe")
-        git_install_dir = ini.get_ini_path_value("Tools.Git", "git_install_dir")
+        git_exe = settings.get_value("Tools.Git", "git_exe")
+        git_install_dir = settings.get_path_value("Tools.Git", "git_install_dir")
 
         # Return config
         return {

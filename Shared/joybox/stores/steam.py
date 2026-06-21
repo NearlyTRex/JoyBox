@@ -7,7 +7,7 @@ import joybox.logger as logger
 import joybox.fileops as fileops
 import joybox.network as network
 import joybox.paths as paths
-import joybox.settings as ini
+import joybox.settings as settings
 import joybox.image as image
 import joybox.jsondata as jsondata
 import joybox.containers as containers
@@ -156,7 +156,7 @@ def find_steam_griddb_covers(
     exit_on_failure = False):
 
     # Get authorization info
-    steamgriddb_api_key = ini.get_ini_value("UserData.Scraping", "steamgriddb_api_key")
+    steamgriddb_api_key = settings.get_value("UserData.Scraping", "steamgriddb_api_key")
 
     # Import steamgrid
     steamgrid = modules.import_python_module_package(
@@ -220,29 +220,29 @@ class Steam(storebase.StoreBase):
         super().__init__()
 
         # Get platform / architecture
-        self.platform = ini.get_ini_path_value("UserData.Steam", "steam_platform")
-        self.arch = ini.get_ini_path_value("UserData.Steam", "steam_arch")
+        self.platform = settings.get_path_value("UserData.Steam", "steam_platform")
+        self.arch = settings.get_path_value("UserData.Steam", "steam_arch")
         if not self.platform or not self.arch:
             raise RuntimeError("Ini file does not have a valid platform/arch")
 
         # Get account name
-        self.accountname = ini.get_ini_value("UserData.Steam", "steam_accountname")
+        self.accountname = settings.get_value("UserData.Steam", "steam_accountname")
         if not self.accountname:
             raise RuntimeError("Ini file does not have a valid account name")
 
         # Get user details
-        self.username = ini.get_ini_value("UserData.Steam", "steam_username")
-        self.userid = ini.get_ini_value("UserData.Steam", "steam_userid")
+        self.username = settings.get_value("UserData.Steam", "steam_username")
+        self.userid = settings.get_value("UserData.Steam", "steam_userid")
         if not self.username or not self.userid:
             raise RuntimeError("Ini file does not have a valid username")
 
         # Get web api key
-        self.web_api_key = ini.get_ini_value("UserData.Steam", "steam_web_api_key")
+        self.web_api_key = settings.get_value("UserData.Steam", "steam_web_api_key")
         if not self.web_api_key:
             raise RuntimeError("Ini file does not have a valid web api key")
 
         # Get install dir
-        self.install_dir = ini.get_ini_path_value("UserData.Steam", "steam_install_dir")
+        self.install_dir = settings.get_path_value("UserData.Steam", "steam_install_dir")
         if not paths.is_path_valid(self.install_dir):
             raise RuntimeError("Ini file does not have a valid install dir")
 

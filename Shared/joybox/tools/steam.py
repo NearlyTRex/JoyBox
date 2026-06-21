@@ -1,6 +1,6 @@
 # Local imports
 import joybox.toolbase as toolbase
-import joybox.settings as ini
+import joybox.settings as settings
 import joybox.paths as paths
 
 # Config files
@@ -17,8 +17,8 @@ class Steam(toolbase.ToolBase):
     def get_config(self):
 
         # Get steam info
-        steam_exe = ini.get_ini_value("Tools.Steam", "steam_exe")
-        steam_install_dir = ini.get_ini_path_value("Tools.Steam", "steam_install_dir")
+        steam_exe = settings.get_value("Tools.Steam", "steam_exe")
+        steam_install_dir = settings.get_path_value("Tools.Steam", "steam_install_dir")
 
         # Return config
         return {

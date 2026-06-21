@@ -7,7 +7,7 @@ import joybox.datautils as datautils
 import joybox.command as command
 import joybox.programs as programs
 import joybox.logger as logger
-import joybox.settings as ini
+import joybox.settings as settings
 import joybox.jsondata as jsondata
 import joybox.webpage as webpage
 import joybox.storebase as storebase
@@ -23,12 +23,12 @@ class Legacy(storebase.StoreBase):
         super().__init__()
 
         # Get user details
-        self.username = ini.get_ini_value("UserData.Legacy", "legacy_username")
+        self.username = settings.get_value("UserData.Legacy", "legacy_username")
         if not self.username:
             raise RuntimeError("Ini file does not have a valid username")
 
         # Get install dir
-        self.install_dir = ini.get_ini_path_value("UserData.Legacy", "legacy_install_dir")
+        self.install_dir = settings.get_path_value("UserData.Legacy", "legacy_install_dir")
         if not paths.is_path_valid(self.install_dir):
             raise RuntimeError("Ini file does not have a valid install dir")
 

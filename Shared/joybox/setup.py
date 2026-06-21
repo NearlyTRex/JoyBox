@@ -8,7 +8,7 @@ import joybox.fileops as fileops
 import joybox.logger as logger
 import joybox.paths as paths
 import joybox.programs as programs
-import joybox.settings as ini
+import joybox.settings as settings
 from joybox import platform_info, runtime
 
 # Check requirements
@@ -31,7 +31,7 @@ def check_requirements():
         logger.log_error("Symlinks are required, please enable them for your system", quit_program = True)
 
     # Check ini file
-    if not ini.is_ini_present():
+    if not settings.is_present():
         logger.log_error("Ini file not found, please run setup first", quit_program = True)
 
 # Setup packages

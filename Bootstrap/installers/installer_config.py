@@ -1,13 +1,10 @@
-# Imports
-import os
-import sys
-
 # Local imports
 import constants
 from joybox import default_settings
 from . import installer
 from joybox import runoptions
 from joybox import logger
+from joybox import settings
 
 # Config
 class Config(installer.Installer):
@@ -19,7 +16,7 @@ class Config(installer.Installer):
         super().__init__(connection, flags, options)
 
         # Path to config file
-        self.config_path = os.path.expandvars("$HOME/JoyBox.ini")
+        self.config_path = settings.get_home_settings_file()
 
         # Minimal sections to include by default
         self.minimal_sections = [
@@ -96,7 +93,7 @@ class Config(installer.Installer):
 
         # Backup before removing
         if self.connection.does_file_or_directory_exist(self.config_path):
-            backup_path = os.path.expandvars("$HOME/JoyBox.ini.backup")
+            backup_path = self.config_path + ".backup"
             logger.log_info(f"Backing up to {backup_path}")
             self.connection.copy_file_or_directory(self.config_path, backup_path)
             self.connection.remove_file_or_directory(self.config_path)

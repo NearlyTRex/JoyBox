@@ -11,7 +11,7 @@ import joybox.logger as logger
 import joybox.fileops as fileops
 import joybox.network as network
 import joybox.paths as paths
-import joybox.settings as ini
+import joybox.settings as settings
 import joybox.jsondata as jsondata
 import joybox.webpage as webpage
 import joybox.storebase as storebase
@@ -28,28 +28,28 @@ class GOG(storebase.StoreBase):
         super().__init__()
 
         # Get username
-        self.username = ini.get_ini_value("UserData.GOG", "gog_username")
+        self.username = settings.get_value("UserData.GOG", "gog_username")
         if not self.username:
             raise RuntimeError("Ini file does not have a valid username")
 
         # Get email
-        self.email = ini.get_ini_value("UserData.GOG", "gog_email")
+        self.email = settings.get_value("UserData.GOG", "gog_email")
         if not self.email:
             raise RuntimeError("Ini file does not have a valid email")
 
         # Get platform
-        self.platform = ini.get_ini_value("UserData.GOG", "gog_platform")
+        self.platform = settings.get_value("UserData.GOG", "gog_platform")
         if not self.platform:
             raise RuntimeError("Ini file does not have a valid platform")
 
         # Get includes
-        self.includes = ini.get_ini_value("UserData.GOG", "gog_includes")
+        self.includes = settings.get_value("UserData.GOG", "gog_includes")
 
         # Get excludes
-        self.excludes = ini.get_ini_value("UserData.GOG", "gog_excludes")
+        self.excludes = settings.get_value("UserData.GOG", "gog_excludes")
 
         # Get install dir
-        self.install_dir = ini.get_ini_path_value("UserData.GOG", "gog_install_dir")
+        self.install_dir = settings.get_path_value("UserData.GOG", "gog_install_dir")
         if not paths.is_path_valid(self.install_dir):
             raise RuntimeError("Ini file does not have a valid install dir")
 

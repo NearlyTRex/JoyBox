@@ -1,6 +1,6 @@
 # Local imports
 import joybox.toolbase as toolbase
-import joybox.settings as ini
+import joybox.settings as settings
 import joybox.paths as paths
 
 # Config files
@@ -17,8 +17,8 @@ class Unrar(toolbase.ToolBase):
     def get_config(self):
 
         # Get unrar info
-        unrar_exe = ini.get_ini_value("Tools.Unrar", "unrar_exe")
-        unrar_install_dir = ini.get_ini_path_value("Tools.Unrar", "unrar_install_dir")
+        unrar_exe = settings.get_value("Tools.Unrar", "unrar_exe")
+        unrar_install_dir = settings.get_path_value("Tools.Unrar", "unrar_install_dir")
 
         # Return config
         return {

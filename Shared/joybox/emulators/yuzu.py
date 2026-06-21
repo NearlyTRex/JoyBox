@@ -8,7 +8,7 @@ import joybox.programs as programs
 import joybox.hashing as hashing
 import joybox.nintendo as nintendo
 import joybox.paths as paths
-import joybox.settings as ini
+import joybox.settings as settings
 import joybox.emulatorcommon as emulatorcommon
 import joybox.emulatorbase as emulatorbase
 
@@ -58,8 +58,8 @@ class Yuzu(emulatorbase.EmulatorBase):
     def get_config(self):
 
         # Get switch info
-        profile_user_id = ini.get_ini_value("UserData.Switch", "profile_user_id")
-        profile_account_name = ini.get_ini_value("UserData.Switch", "profile_account_name")
+        profile_user_id = settings.get_value("UserData.Switch", "profile_user_id")
+        profile_account_name = settings.get_value("UserData.Switch", "profile_account_name")
         if not nintendo.is_valid_switch_profile_info(profile_user_id, profile_account_name):
             logger.log_warning("No Switch profile found in ini, using default")
             profile_user_id = "F6F389D41D6BC0BDD6BD928C526AE556"

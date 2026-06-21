@@ -1,6 +1,6 @@
 # Local imports
 import joybox.toolbase as toolbase
-import joybox.settings as ini
+import joybox.settings as settings
 import joybox.paths as paths
 
 # Config files
@@ -17,8 +17,8 @@ class SevenZip(toolbase.ToolBase):
     def get_config(self):
 
         # Get sevenzip info
-        sevenzip_exe = ini.get_ini_value("Tools.7Zip", "7z_exe")
-        sevenzip_install_dir = ini.get_ini_path_value("Tools.7Zip", "7z_install_dir")
+        sevenzip_exe = settings.get_value("Tools.7Zip", "7z_exe")
+        sevenzip_install_dir = settings.get_path_value("Tools.7Zip", "7z_install_dir")
 
         # Return config
         return {

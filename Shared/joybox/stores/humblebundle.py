@@ -12,7 +12,7 @@ import joybox.jsondata as jsondata
 import joybox.storebase as storebase
 import joybox.strings as strings
 import joybox.paths as paths
-import joybox.settings as ini
+import joybox.settings as settings
 
 # HumbleBundle store
 class HumbleBundle(storebase.StoreBase):
@@ -22,27 +22,27 @@ class HumbleBundle(storebase.StoreBase):
         super().__init__()
 
         # Get username
-        self.username = ini.get_ini_value("UserData.HumbleBundle", "humblebundle_username")
+        self.username = settings.get_value("UserData.HumbleBundle", "humblebundle_username")
         if not self.username:
             raise RuntimeError("Ini file does not have a valid username")
 
         # Get email
-        self.email = ini.get_ini_value("UserData.HumbleBundle", "humblebundle_email")
+        self.email = settings.get_value("UserData.HumbleBundle", "humblebundle_email")
         if not self.email:
             raise RuntimeError("Ini file does not have a valid email")
 
         # Get platform
-        self.platform = ini.get_ini_value("UserData.HumbleBundle", "humblebundle_platform")
+        self.platform = settings.get_value("UserData.HumbleBundle", "humblebundle_platform")
         if not self.platform:
             raise RuntimeError("Ini file does not have a valid platform")
 
         # Get auth token
-        self.auth_token = ini.get_ini_value("UserData.HumbleBundle", "humblebundle_auth_token")
+        self.auth_token = settings.get_value("UserData.HumbleBundle", "humblebundle_auth_token")
         if not self.auth_token:
             raise RuntimeError("Ini file does not have a valid auth token")
 
         # Get install dir
-        self.install_dir = ini.get_ini_path_value("UserData.HumbleBundle", "humblebundle_install_dir")
+        self.install_dir = settings.get_path_value("UserData.HumbleBundle", "humblebundle_install_dir")
         if not paths.is_path_valid(self.install_dir):
             raise RuntimeError("Ini file does not have a valid install dir")
 

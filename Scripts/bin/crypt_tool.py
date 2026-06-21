@@ -10,7 +10,7 @@ sys.path.append(shared_folder)
 import joybox.config as config
 import joybox.system as system
 import joybox.cryption as cryption
-import joybox.settings as ini
+import joybox.settings as settings
 import joybox.arguments as arguments
 import joybox.setup as setup
 import joybox.logger as logger
@@ -45,9 +45,9 @@ def main():
     # Get passphrase
     passphrase = None
     if args.passphrase_type == config.PassphraseType.GENERAL:
-        passphrase = ini.get_ini_value("UserData.Protection", "general_passphrase")
+        passphrase = settings.get_value("UserData.Protection", "general_passphrase")
     elif args.passphrase_type == config.PassphraseType.LOCKER:
-        passphrase = ini.get_ini_value("UserData.Protection", "locker_passphrase")
+        passphrase = settings.get_value("UserData.Protection", "locker_passphrase")
     if not passphrase:
         logger.log_error("No passphrase set", quit_program = True)
 

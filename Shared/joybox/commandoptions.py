@@ -6,7 +6,7 @@ import copy
 import joybox.config as config
 import joybox.jsondata as jsondata
 import joybox.paths as paths
-import joybox.settings as ini
+import joybox.settings as settings
 
 # Command options
 class CommandOptions:
@@ -75,14 +75,14 @@ class CommandOptions:
 
     # Desktop width
     def get_desktop_width(self):
-        ini_default = ini.get_ini_value("UserData.Resolution", "screen_resolution_w")
+        ini_default = settings.get_value("UserData.Resolution", "screen_resolution_w")
         return self.options.get_value(config.program_key_desktop_width) or ini_default
     def set_desktop_width(self, value):
         self.options.set_value(config.program_key_desktop_width, value)
 
     # Desktop height
     def get_desktop_height(self):
-        ini_default = ini.get_ini_value("UserData.Resolution", "screen_resolution_h")
+        ini_default = settings.get_value("UserData.Resolution", "screen_resolution_h")
         return self.options.get_value(config.program_key_desktop_height) or ini_default
     def set_desktop_height(self, value):
         self.options.set_value(config.program_key_desktop_height, value)

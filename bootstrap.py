@@ -31,7 +31,7 @@ parser.add_argument(
     help = "Environment type")
 parser.add_argument(
     "-c", "--config_file",
-    default = os.path.join(os.path.expanduser("~"), constants.DEFAULT_CONFIG_FILE),
+    default = settings.get_home_settings_file(),
     help = "Path to config file")
 parser.add_argument(
     "-s", "--server_index",

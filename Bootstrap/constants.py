@@ -3,9 +3,6 @@ import os
 import sys
 from enum import Enum
 
-# Default config file
-DEFAULT_CONFIG_FILE = "JoyBox.ini"
-
 # Environment type
 class EnvironmentType(Enum):
     LOCAL_UBUNTU = "local_ubuntu"

@@ -13,7 +13,7 @@ import joybox.fileops as fileops
 import joybox.text as text
 import joybox.logger as logger
 import joybox.paths as paths
-import joybox.settings as ini
+import joybox.settings as settings
 from joybox import runtime
 
 ###########################################################
@@ -145,7 +145,7 @@ def create_web_driver(
     pretend_run = False,
     exit_on_failure = False):
     if not driver_type:
-        driver_type = config.WebDriverType.from_string(ini.get_ini_value("UserData.Scraping", "web_driver_type"))
+        driver_type = config.WebDriverType.from_string(settings.get_value("UserData.Scraping", "web_driver_type"))
     if not driver_type:
         driver_type = config.WebDriverType.FIREFOX
     if driver_type == config.WebDriverType.FIREFOX:

@@ -11,7 +11,7 @@ import joybox.config as config
 import joybox.environment as environment
 import joybox.system as system
 import joybox.network as network
-import joybox.settings as ini
+import joybox.settings as settings
 import joybox.arguments as arguments
 import joybox.setup as setup
 import joybox.logger as logger
@@ -61,12 +61,12 @@ def main():
     # Get github username
     github_username = args.github_username
     if not github_username:
-        github_username = ini.get_ini_value("UserData.GitHub", "github_username")
+        github_username = settings.get_value("UserData.GitHub", "github_username")
 
     # Get github access token
     github_access_token = args.github_access_token
     if not github_access_token:
-        github_access_token = ini.get_ini_value("UserData.GitHub", "github_access_token")
+        github_access_token = settings.get_value("UserData.GitHub", "github_access_token")
 
     # Get include/exclude lists
     include_repos = []

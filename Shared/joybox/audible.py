@@ -11,7 +11,7 @@ import joybox.fileops as fileops
 import joybox.command as command
 import joybox.programs as programs
 import joybox.serialization as serialization
-import joybox.settings as ini
+import joybox.settings as settings
 from joybox import runtime
 
 # Extract activation bytes from text (finds 8 hex character sequence)
@@ -27,7 +27,7 @@ def extract_activation_bytes(text):
 def get_activation_bytes(authcode_file = None, verbose = False, exit_on_failure = False):
 
     # Check ini file first
-    authcode = ini.get_ini_value("UserData.Audible", "audible_activation_bytes")
+    authcode = settings.get_value("UserData.Audible", "audible_activation_bytes")
     if authcode:
         extracted = extract_activation_bytes(authcode)
         if extracted:

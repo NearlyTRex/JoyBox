@@ -1,7 +1,7 @@
 # Local imports
 import joybox.environment as environment
 import joybox.toolbase as toolbase
-import joybox.settings as ini
+import joybox.settings as settings
 import joybox.paths as paths
 
 # Config files
@@ -22,12 +22,12 @@ class Sandboxie(toolbase.ToolBase):
             return {}
 
         # Get sandboxie info
-        sandboxie_exe = ini.get_ini_value("Tools.Sandboxie", "sandboxie_exe")
-        sandboxie_ini_exe = ini.get_ini_value("Tools.Sandboxie", "sandboxie_ini_exe")
-        sandboxie_rpcss_exe = ini.get_ini_value("Tools.Sandboxie", "sandboxie_rpcss_exe")
-        sandboxie_dcomlaunch_exe = ini.get_ini_value("Tools.Sandboxie", "sandboxie_dcomlaunch_exe")
-        sandboxie_install_dir = ini.get_ini_path_value("Tools.Sandboxie", "sandboxie_install_dir")
-        sandboxie_sandbox_dir = ini.get_ini_path_value("Tools.Sandboxie", "sandboxie_sandbox_dir")
+        sandboxie_exe = settings.get_value("Tools.Sandboxie", "sandboxie_exe")
+        sandboxie_ini_exe = settings.get_value("Tools.Sandboxie", "sandboxie_ini_exe")
+        sandboxie_rpcss_exe = settings.get_value("Tools.Sandboxie", "sandboxie_rpcss_exe")
+        sandboxie_dcomlaunch_exe = settings.get_value("Tools.Sandboxie", "sandboxie_dcomlaunch_exe")
+        sandboxie_install_dir = settings.get_path_value("Tools.Sandboxie", "sandboxie_install_dir")
+        sandboxie_sandbox_dir = settings.get_path_value("Tools.Sandboxie", "sandboxie_sandbox_dir")
 
         # Return config
         return {

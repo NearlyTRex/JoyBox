@@ -1,6 +1,6 @@
 # Local imports
 import joybox.toolbase as toolbase
-import joybox.settings as ini
+import joybox.settings as settings
 import joybox.paths as paths
 
 # Config files
@@ -17,8 +17,8 @@ class Perl(toolbase.ToolBase):
     def get_config(self):
 
         # Get perl info
-        perl_exe = ini.get_ini_value("Tools.Perl", "perl_exe")
-        perl_install_dir = ini.get_ini_path_value("Tools.Perl", "perl_install_dir")
+        perl_exe = settings.get_value("Tools.Perl", "perl_exe")
+        perl_install_dir = settings.get_path_value("Tools.Perl", "perl_install_dir")
 
         # Return config
         return {

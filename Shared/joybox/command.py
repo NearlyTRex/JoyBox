@@ -12,7 +12,7 @@ import joybox.paths as paths
 import joybox.programs as programs
 import joybox.sandbox as sandbox
 import joybox.capture as capture
-import joybox.settings as ini
+import joybox.settings as settings
 import joybox.process as process
 from joybox.commandbase import (
     create_command_options,
@@ -557,15 +557,15 @@ def run_capture_command(
         return (code == 0)
 
     # Get capture info
-    capture_duration = ini.get_ini_integer_value("UserData.Capture", "capture_duration")
-    capture_interval = ini.get_ini_integer_value("UserData.Capture", "capture_interval")
-    capture_origin_x = ini.get_ini_integer_value("UserData.Capture", "capture_origin_x")
-    capture_origin_y = ini.get_ini_integer_value("UserData.Capture", "capture_origin_y")
-    capture_resolution_w = ini.get_ini_integer_value("UserData.Capture", "capture_resolution_w")
-    capture_resolution_h = ini.get_ini_integer_value("UserData.Capture", "capture_resolution_h")
-    capture_framerate = ini.get_ini_integer_value("UserData.Capture", "capture_framerate")
-    overwrite_screenshots = ini.get_ini_bool_value("UserData.Capture", "overwrite_screenshots")
-    overwrite_videos = ini.get_ini_bool_value("UserData.Capture", "overwrite_videos")
+    capture_duration = settings.get_integer_value("UserData.Capture", "capture_duration")
+    capture_interval = settings.get_integer_value("UserData.Capture", "capture_interval")
+    capture_origin_x = settings.get_integer_value("UserData.Capture", "capture_origin_x")
+    capture_origin_y = settings.get_integer_value("UserData.Capture", "capture_origin_y")
+    capture_resolution_w = settings.get_integer_value("UserData.Capture", "capture_resolution_w")
+    capture_resolution_h = settings.get_integer_value("UserData.Capture", "capture_resolution_h")
+    capture_framerate = settings.get_integer_value("UserData.Capture", "capture_framerate")
+    overwrite_screenshots = settings.get_bool_value("UserData.Capture", "overwrite_screenshots")
+    overwrite_videos = settings.get_bool_value("UserData.Capture", "overwrite_videos")
 
     # Screenshot capturing
     if capture_type == config.CaptureType.SCREENSHOT:

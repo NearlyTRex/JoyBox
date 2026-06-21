@@ -1,23 +1,18 @@
-# Unified user configuration.
-#
-# Reads ~/JoyBox.ini (repo-root JoyBox.ini fallback), the single settings file
-# shared by both the Scripts and Bootstrap halves of the repo. Replaces the
-# former Scripts `ini` singleton and the Bootstrap `Configuration` object.
-#
-# Access is via module-level functions (a process-global singleton). Reads are
-# cached after first load. `set_value` records an in-memory overlay that is NOT
-# persisted unless `save()` is called explicitly — this preserves Bootstrap's
-# only runtime mutation (UserData.General.environment_type), which was always
-# ephemeral.
-
 # Imports
 import os
 import configparser
 
-# Default settings-file resolution (home preferred, repo-root fallback)
-_home_file = os.path.join(os.path.expanduser("~"), "JoyBox.ini")
-_repo_file = os.path.realpath(os.path.join(os.path.dirname(__file__), "..", "..", "JoyBox.ini"))
+# Settings file name and default locations (home preferred, repo-root fallback)
+CONFIG_FILENAME = "JoyBox.ini"
 
+def get_home_settings_file():
+    return os.path.join(os.path.expanduser("~"), CONFIG_FILENAME)
+
+def get_repo_settings_file():
+    return os.path.realpath(os.path.join(os.path.dirname(__file__), "..", "..", CONFIG_FILENAME))
+
+_home_file = get_home_settings_file()
+_repo_file = get_repo_settings_file()
 _settings_file = _home_file if os.path.exists(_home_file) else _repo_file
 _parser = configparser.ConfigParser(interpolation = None)
 _loaded_path = None
@@ -152,17 +147,3 @@ def save():
         _parser.set(section, field, str(value))
     with open(_settings_file, "w") as f:
         _parser.write(f)
-
-###########################################################
-# Backwards-compatible aliases (former Scripts `ini` API)
-###########################################################
-
-get_ini_value = get_value
-get_ini_integer_value = get_integer_value
-get_ini_bool_value = get_bool_value
-get_ini_path_value = get_path_value
-get_ini_list_value = get_list_value
-has_ini_section = has_section
-has_ini_field = has_field
-get_ini_sections = get_sections
-is_ini_present = is_present

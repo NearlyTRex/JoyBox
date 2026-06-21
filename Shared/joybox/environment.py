@@ -5,7 +5,7 @@ import os, os.path
 from joybox import platform_info
 import joybox.config as config
 import joybox.gamenaming as gamenaming
-import joybox.settings as ini
+import joybox.settings as settings
 import joybox.paths as paths
 import joybox.lockerinfo as lockerinfo
 
@@ -33,7 +33,7 @@ def get_cookie_directory():
 def get_editor():
 
     # First check ini config
-    editor = ini.get_ini_value("Tools.System", "editor")
+    editor = settings.get_value("Tools.System", "editor")
     if editor:
         return editor
 
@@ -71,7 +71,7 @@ def are_symlinks_supported():
 
 # Get tools root dir
 def get_tools_root_dir():
-    return ini.get_ini_path_value("UserData.Dirs", "tools_dir")
+    return settings.get_path_value("UserData.Dirs", "tools_dir")
 
 ###########################################################
 # Emulators
@@ -79,7 +79,7 @@ def get_tools_root_dir():
 
 # Get emulators root dir
 def get_emulators_root_dir():
-    return ini.get_ini_path_value("UserData.Dirs", "emulators_dir")
+    return settings.get_path_value("UserData.Dirs", "emulators_dir")
 
 ###########################################################
 # Locker
@@ -302,7 +302,7 @@ def get_locker_program_tool_dir(tool_name, tool_platform = None, locker_type = N
 
 # Get game metadata root dir
 def get_game_metadata_root_dir():
-    return ini.get_ini_path_value("UserData.Dirs", "game_metadata_dir")
+    return settings.get_path_value("UserData.Dirs", "game_metadata_dir")
 
 # Get pegasus metadata root dir
 def get_game_pegasus_metadata_root_dir():
@@ -389,7 +389,7 @@ def get_game_json_metadata_ignore_file(game_supercategory, game_category, game_s
 
 # Get file metadata root dir
 def get_file_metadata_root_dir():
-    return ini.get_ini_path_value("UserData.Dirs", "file_metadata_dir")
+    return settings.get_path_value("UserData.Dirs", "file_metadata_dir")
 
 # Get audio metadata root dir
 def get_file_audio_metadata_root_dir(metadata_type, genre_type):
@@ -448,7 +448,7 @@ def get_repo_root(expand = False):
 
 # Get scripts root dir
 def get_scripts_root_dir():
-    return ini.get_ini_path_value("UserData.Dirs", "scripts_dir")
+    return settings.get_path_value("UserData.Dirs", "scripts_dir")
 
 # Get scripts bin dir
 def get_scripts_bin_dir():
@@ -478,7 +478,7 @@ def get_scripts_executable_extension():
 
 # Get repositories root dir
 def get_repositories_root_dir():
-    return ini.get_ini_path_value("UserData.Dirs", "repositories_dir")
+    return settings.get_path_value("UserData.Dirs", "repositories_dir")
 
 ###########################################################
 # Cache
@@ -486,7 +486,7 @@ def get_repositories_root_dir():
 
 # Get cache root dir
 def get_cache_root_dir():
-    return ini.get_ini_path_value("UserData.Dirs", "cache_dir")
+    return settings.get_path_value("UserData.Dirs", "cache_dir")
 
 # Get cache sync dir
 def get_cache_sync_dir():

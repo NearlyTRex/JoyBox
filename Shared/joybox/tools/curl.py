@@ -1,6 +1,6 @@
 # Local imports
 import joybox.toolbase as toolbase
-import joybox.settings as ini
+import joybox.settings as settings
 import joybox.paths as paths
 
 # Config files
@@ -17,8 +17,8 @@ class Curl(toolbase.ToolBase):
     def get_config(self):
 
         # Get curl info
-        curl_exe = ini.get_ini_value("Tools.Curl", "curl_exe")
-        curl_install_dir = ini.get_ini_path_value("Tools.Curl", "curl_install_dir")
+        curl_exe = settings.get_value("Tools.Curl", "curl_exe")
+        curl_install_dir = settings.get_path_value("Tools.Curl", "curl_install_dir")
 
         # Return config
         return {

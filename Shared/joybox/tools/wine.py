@@ -1,7 +1,7 @@
 # Local imports
 import joybox.environment as environment
 import joybox.toolbase as toolbase
-import joybox.settings as ini
+import joybox.settings as settings
 import joybox.paths as paths
 
 # Config files
@@ -22,12 +22,12 @@ class Wine(toolbase.ToolBase):
             return {}
 
         # Get wine info
-        wine_exe = ini.get_ini_value("Tools.Wine", "wine_exe")
-        wine_boot_exe = ini.get_ini_value("Tools.Wine", "wine_boot_exe")
-        wine_server_exe = ini.get_ini_value("Tools.Wine", "wine_server_exe")
-        wine_tricks_exe = ini.get_ini_value("Tools.Wine", "wine_tricks_exe")
-        wine_install_dir = ini.get_ini_path_value("Tools.Wine", "wine_install_dir")
-        wine_sandbox_dir = ini.get_ini_path_value("Tools.Wine", "wine_sandbox_dir")
+        wine_exe = settings.get_value("Tools.Wine", "wine_exe")
+        wine_boot_exe = settings.get_value("Tools.Wine", "wine_boot_exe")
+        wine_server_exe = settings.get_value("Tools.Wine", "wine_server_exe")
+        wine_tricks_exe = settings.get_value("Tools.Wine", "wine_tricks_exe")
+        wine_install_dir = settings.get_path_value("Tools.Wine", "wine_install_dir")
+        wine_sandbox_dir = settings.get_path_value("Tools.Wine", "wine_sandbox_dir")
 
         # Return config
         return {

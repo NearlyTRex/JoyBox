@@ -3,7 +3,7 @@ import os, os.path
 
 # Local imports
 import joybox.fileops as fileops
-import joybox.settings as ini
+import joybox.settings as settings
 import joybox.logger as logger
 import joybox.paths as paths
 import joybox.serialization as serialization
@@ -14,7 +14,7 @@ DEFAULT_MAX_TOKENS = 8192
 
 # Get API key from ini
 def get_api_key():
-    api_key = ini.get_ini_value("UserData.Anthropic", "anthropic_api_key", throw_exception=False)
+    api_key = settings.get_value("UserData.Anthropic", "anthropic_api_key", throw_exception=False)
     if not api_key:
         return None
     return api_key

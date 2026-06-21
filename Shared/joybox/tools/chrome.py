@@ -1,6 +1,6 @@
 # Local imports
 import joybox.toolbase as toolbase
-import joybox.settings as ini
+import joybox.settings as settings
 import joybox.paths as paths
 
 # Config files
@@ -17,9 +17,9 @@ class Chrome(toolbase.ToolBase):
     def get_config(self):
 
         # Get chrome info
-        chrome_exe = ini.get_ini_value("Tools.Chrome", "chrome_exe")
-        chrome_install_dir = ini.get_ini_path_value("Tools.Chrome", "chrome_install_dir")
-        chrome_download_dir = ini.get_ini_path_value("Tools.Chrome", "chrome_download_dir")
+        chrome_exe = settings.get_value("Tools.Chrome", "chrome_exe")
+        chrome_install_dir = settings.get_path_value("Tools.Chrome", "chrome_install_dir")
+        chrome_download_dir = settings.get_path_value("Tools.Chrome", "chrome_download_dir")
 
         # Return config
         return {

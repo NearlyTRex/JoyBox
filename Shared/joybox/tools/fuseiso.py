@@ -1,6 +1,6 @@
 # Local imports
 import joybox.toolbase as toolbase
-import joybox.settings as ini
+import joybox.settings as settings
 import joybox.paths as paths
 
 # Config files
@@ -17,10 +17,10 @@ class FuseISO(toolbase.ToolBase):
     def get_config(self):
 
         # Get python info
-        fuseiso_exe = ini.get_ini_value("Tools.FuseISO", "fuseiso_exe")
-        fusermount_exe = ini.get_ini_value("Tools.FuseISO", "fusermount_exe")
-        fuseiso_install_dir = ini.get_ini_value("Tools.FuseISO", "fuseiso_install_dir")
-        fusermount_install_dir = ini.get_ini_value("Tools.FuseISO", "fusermount_install_dir")
+        fuseiso_exe = settings.get_value("Tools.FuseISO", "fuseiso_exe")
+        fusermount_exe = settings.get_value("Tools.FuseISO", "fusermount_exe")
+        fuseiso_install_dir = settings.get_value("Tools.FuseISO", "fuseiso_install_dir")
+        fusermount_install_dir = settings.get_value("Tools.FuseISO", "fusermount_install_dir")
 
         # Return config
         return {
