@@ -483,6 +483,8 @@ def transfer_file(
     try:
         if skip_existing and paths.does_path_exist(dest, case_sensitive_paths):
             return True
+        if os.path.abspath(src) == os.path.abspath(dest):
+            return True
         if skip_identical:
             if hashing.are_files_identical(
                 first = src,
