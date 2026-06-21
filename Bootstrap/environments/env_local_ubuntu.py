@@ -37,6 +37,7 @@ class LocalUbuntu(env.Environment):
         self.available_components = {
             "config": installers.Config(**self.installer_options),
             "aptget": installers.AptGet(**self.installer_options),
+            "sdl3": installers.Sdl3(**self.installer_options),
             "dconf": installers.Dconf(**self.installer_options),
             "dotfiles": installers.Dotfiles(**self.installer_options),
             "githooks": installers.GitHooks(**self.installer_options),
@@ -70,6 +71,7 @@ class LocalUbuntu(env.Environment):
         self.installer_python = self.available_components["python"]
         self.installer_wrappers = self.available_components["wrappers"]
         self.installer_aptget = self.available_components["aptget"]
+        self.installer_sdl3 = self.available_components["sdl3"]
         self.installer_awscli = self.available_components["awscli"]
         self.installer_flatpak = self.available_components["flatpak"]
         self.installer_ccusage = self.available_components["ccusage"]

@@ -25,6 +25,7 @@ from installers.installer_nginx import *
 from installers.installer_ollama import *
 from installers.installer_onepassword import *
 from installers.installer_python import *
+from installers.installer_sdl3 import *
 from installers.installer_steam import *
 from installers.installer_sysctl import *
 from installers.installer_udev import *
