@@ -141,6 +141,7 @@ aptget[constants.EnvironmentType.LOCAL_UBUNTU] += [
     {"id": "libenet-dev", "category": "Libs"},
     {"id": "libepoxy-dev", "category": "Libs"},
     {"id": "libevdev-dev", "category": "Libs"},
+    {"id": "libfaad-dev", "category": "Libs"},
     {"id": "libfdk-aac-dev", "category": "Libs"},
     {"id": "libflac-dev", "category": "Libs"},
     {"id": "libfontconfig-dev", "category": "Libs"},
