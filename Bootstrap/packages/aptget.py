@@ -58,6 +58,7 @@ aptget[constants.EnvironmentType.LOCAL_UBUNTU] += [
     {"id": "fd-find", "name": "fd", "description": "Fast file finder", "category": "Devel"},
     {"id": "flex", "name": "Flex", "description": "Lexical analyzer generator", "category": "Devel"},
     {"id": "g++", "name": "G++", "description": "GNU C++ compiler", "category": "Devel"},
+    {"id": "g++-multilib", "name": "G++ Multilib", "description": "GNU C++ compiler 32-bit support", "category": "Devel"},
     {"id": "gcc", "name": "GCC", "description": "GNU C compiler", "category": "Devel"},
     {"id": "gdb", "name": "GDB", "description": "GNU debugger", "category": "Devel"},
     {"id": "gettext", "name": "gettext", "description": "Internationalization tools", "category": "Devel"},

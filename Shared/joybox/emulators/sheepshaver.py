@@ -44,12 +44,16 @@ class SheepShaver(emulatorbase.EmulatorBase):
 
         # Download windows program
         if programs.should_program_be_installed("SheepShaver", "windows"):
-            success = release.download_general_release(
-                archive_url = "https://surfdrive.surf.nl/files/index.php/s/kyhQQWmmTB89QrK/download",
+            success = release.download_github_release(
+                github_user = "NearlyTRex",
+                github_repo = "MacEmu",
+                starts_with = "SheepShaver-Windows",
+                ends_with = ".zip",
                 search_file = "SheepShaver.exe",
                 install_name = "SheepShaver",
                 install_dir = programs.get_program_install_dir("SheepShaver", "windows"),
                 backups_dir = programs.get_program_backup_dir("SheepShaver", "windows"),
+                get_latest = True,
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)

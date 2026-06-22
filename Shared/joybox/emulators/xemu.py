@@ -85,7 +85,7 @@ class Xemu(emulatorbase.EmulatorBase):
                 github_user = "mborgerson",
                 github_repo = "xemu",
                 starts_with = "xemu",
-                ends_with = "win-release.zip",
+                ends_with = "win-x86_64-release.zip",
                 search_file = "xemu.exe",
                 install_name = "Xemu",
                 install_dir = programs.get_program_install_dir("Xemu", "windows"),

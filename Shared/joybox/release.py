@@ -846,6 +846,7 @@ def build_binary_from_source(
 # Build AppImage from source
 def build_appimage_from_source(
     release_url = "",
+    release_branch = "",
     webpage_url = "",
     webpage_base_url = "",
     starts_with = "",
@@ -869,6 +870,7 @@ def build_appimage_from_source(
     # Build from source
     build_info = build_from_source(
         release_url = release_url,
+        release_branch = release_branch,
         webpage_url = webpage_url,
         webpage_base_url = webpage_base_url,
         starts_with = starts_with,

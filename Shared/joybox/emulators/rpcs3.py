@@ -76,7 +76,7 @@ class RPCS3(emulatorbase.EmulatorBase):
                 github_user = "RPCS3",
                 github_repo = "rpcs3-binaries-win",
                 starts_with = "rpcs3",
-                ends_with = "win64.7z",
+                ends_with = "win64_msvc.7z",
                 search_file = "rpcs3.exe",
                 install_name = "RPCS3",
                 install_dir = programs.get_program_install_dir("RPCS3", "windows"),
