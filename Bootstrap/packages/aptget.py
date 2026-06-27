@@ -245,6 +245,8 @@ aptget[constants.EnvironmentType.LOCAL_UBUNTU] += [
     {"id": "ca-certificates", "name": "CA Certificates", "description": "SSL certificate authorities", "category": "Net"},
     {"id": "cifs-utils", "name": "CIFS Utils", "description": "SMB/CIFS mount utilities", "category": "Net"},
     {"id": "curl", "name": "cURL", "description": "URL transfer tool", "category": "Net"},
+    {"id": "filezilla", "name": "FileZilla", "description": "FTP/SFTP client", "category": "Net"},
+    {"id": "gftp", "name": "gFTP", "description": "Multithreaded FTP client", "category": "Net"},
     {"id": "keyutils", "name": "keyutils", "description": "Kernel key management", "category": "Net"},
     {"id": "net-tools", "name": "net-tools", "description": "Network utilities (ifconfig, etc.)", "category": "Net"},
     {"id": "openssh-server", "name": "OpenSSH Server", "description": "SSH server", "category": "Net"},
@@ -259,6 +261,7 @@ aptget[constants.EnvironmentType.LOCAL_UBUNTU] += [
     {"id": "qmmp", "name": "Qmmp", "description": "Audio player (Winamp-like)", "category": "Sound"},
 
     # Utils
+    {"id": "cpu-x", "name": "CPU-X", "description": "System and hardware information (CPU-Z-like)", "category": "Utils"},
     {"id": "dolphin", "name": "Dolphin", "description": "KDE file manager", "category": "Utils"},
     {"id": "gsmartcontrol", "name": "GSmartControl", "description": "Disk health monitor", "category": "Utils"},
     {"id": "gwenview", "name": "Gwenview", "description": "KDE image viewer", "category": "Utils"},
