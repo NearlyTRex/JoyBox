@@ -10,6 +10,7 @@ sys.path.append(shared_folder)
 import joybox.config as config
 import joybox.system as system
 import joybox.audio as audio
+import joybox.audiometadata as audiometadata
 import joybox.arguments as arguments
 import joybox.setup as setup
 import joybox.logger as logger
@@ -44,8 +45,26 @@ parser.add_boolean_argument(
 parser.add_boolean_argument(
     args = ("--use_index_for_track_number",),
     description = "Override track numbers with file index")
+parser.add_string_list_argument(
+    args = ("--set",),
+    description = "Force a curated tag on every track, as field=value (repeatable), e.g. --set genre=Regular --set album_artist=\"Various Artists\"")
 parser.add_common_arguments()
 args, unknown = parser.parse_known_args()
+
+# Parse forced tag overrides
+def parse_force_tags(set_values):
+    force_tags = {}
+    for entry in set_values or []:
+        if "=" not in entry:
+            logger.log_error(f"Invalid --set value (expected field=value): {entry}")
+            return None
+        field, value = entry.split("=", 1)
+        field = field.strip()
+        if field not in audiometadata.curated_tag_fields:
+            logger.log_error(f"Unknown tag field '{field}'. Allowed fields: {', '.join(audiometadata.curated_tag_fields)}")
+            return None
+        force_tags[field] = value
+    return force_tags
 
 # Main
 def main():
@@ -58,12 +77,16 @@ def main():
 
     # Execute action
     if args.action == config.AudioMetadataAction.TAG:
+        force_tags = parse_force_tags(args.set)
+        if force_tags is None:
+            return False
         return audio.build_audio_metadata_files(
             genre_type = args.genre,
             album_name = args.album,
             artist_name = args.artist,
             exclude_comments = args.exclude_comments,
             use_index_for_track_number = args.use_index_for_track_number,
+            force_tags = force_tags,
             verbose = args.verbose,
             pretend_run = args.pretend_run,
             exit_on_failure = args.exit_on_failure)

@@ -56,7 +56,9 @@ audio_metadata_tool --action Apply --genre ASMR -v
 ```
 
 Actions are `Tag` (extract → JSON), `Apply` (JSON → file tags), and `Clear` (strip tags; add
-`--preserve_artwork` to keep cover art). Narrow with `-b`/`--album` or `-r`/`--artist`.
+`--preserve_artwork` to keep cover art). Narrow with `-b`/`--album` or `-r`/`--artist`. When
+extracting, `--set <field>=<value>` (repeatable) forces a curated tag to a fixed value on every
+track — e.g. `--set genre=ASMR` to normalize genre regardless of what the files carry.
 Reference: [`audio_metadata_tool`](man/audio_metadata_tool.md).
 
 ## Convert Audible audiobooks

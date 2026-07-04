@@ -46,6 +46,7 @@ as the artist when it differs from the genre name.
 | `--clear_existing` | When applying tags (`Apply`), clear existing tags before writing the new ones |
 | `--exclude_comments` | When extracting tags (`Tag`), exclude comment frames from the JSON |
 | `--use_index_for_track_number` | When extracting tags (`Tag`), override track numbers with the file's index in the album |
+| `--set <field>=<value>` | When extracting tags (`Tag`), force a curated tag to a fixed value on every track. Repeatable; overrides whatever is read from the files. |
 
 ### Common Options
 
@@ -74,6 +75,13 @@ audio_metadata_tool -a Tag -g Regular -b "Some Album" --exclude_comments
 
 ```bash
 audio_metadata_tool -a Tag -g Audiobook -b "Some Book" --use_index_for_track_number
+```
+
+### Force fields to fixed values while extracting
+
+```bash
+audio_metadata_tool -a Tag -g Regular -b "Some Album" \
+  --set genre=Regular --set album_artist="Various Artists"
 ```
 
 ### Apply the JSON tags back into the files
@@ -108,6 +116,13 @@ audio_metadata_tool -a Tag -g Regular -r "Some Artist" -b "Some Album"
   first to create it. If the JSON is missing, the apply step fails.
 - The JSON metadata file is written one per album, keyed by genre, album, and
   (when present) detected artist.
+- `--set` applies to `Tag` only. Each override is written to every track and to
+  the album-level info, winning over the value read from the file (and over
+  `--use_index_for_track_number` when forcing `track_number`). It can be given
+  more than once to force multiple fields. The field must be one of the curated
+  tags: `title`, `artist`, `album`, `year`, `genre`, `album_artist`,
+  `track_number`, `disc_number`, `bpm`, `key`, `conductor`; an unknown field or a
+  value missing the `=` separator is rejected before any album is scanned.
 
 ## See Also
 

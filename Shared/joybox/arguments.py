@@ -128,6 +128,21 @@ class ArgumentParser:
                 type = str,
                 help = description)
 
+    # Add string list argument
+    def add_string_list_argument(
+        self,
+        args,
+        default = None,
+        required = False,
+        description = None):
+        self.parser.add_argument(
+            *self._expand_arg_aliases(args),
+            action = "append",
+            default = default,
+            required = required,
+            type = str,
+            help = description)
+
     # Add integer argument
     def add_integer_argument(
         self,

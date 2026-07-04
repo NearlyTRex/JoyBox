@@ -253,6 +253,7 @@ def build_audio_metadata_files(
     store_individual_artwork = False,
     exclude_comments = False,
     use_index_for_track_number = False,
+    force_tags = None,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -284,6 +285,7 @@ def build_audio_metadata_files(
             store_individual_artwork = store_individual_artwork,
             exclude_comments = exclude_comments,
             use_index_for_track_number = use_index_for_track_number,
+            force_tags = force_tags,
             verbose = verbose,
             exit_on_failure = exit_on_failure)
         if not album_data:

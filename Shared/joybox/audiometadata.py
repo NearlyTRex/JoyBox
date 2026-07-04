@@ -11,6 +11,22 @@ import joybox.image as image
 import joybox.modules as modules
 import joybox.paths as paths
 
+# Curated tag fields that can be read, written, and force-overridden.
+# Mirrors the values of AudioMetadata.text_mappings / mp4_tag_mappings.
+curated_tag_fields = [
+    "title",
+    "artist",
+    "album",
+    "year",
+    "genre",
+    "album_artist",
+    "track_number",
+    "disc_number",
+    "bpm",
+    "key",
+    "conductor"
+]
+
 # Audio metadata class
 class AudioMetadata:
 
@@ -675,6 +691,7 @@ class AudioMetadata:
         store_individual_artwork = False,
         exclude_comments = False,
         use_index_for_track_number = False,
+        force_tags = None,
         verbose = False,
         exit_on_failure = False):
 
@@ -732,6 +749,10 @@ class AudioMetadata:
                 elif "track_number" not in track_tags or not track_tags["track_number"]:
                     track_tags["track_number"] = str(track_index)
 
+                # Force overridden tags (win over anything read from the file)
+                if force_tags:
+                    track_tags.update(force_tags)
+
                 # Store track info
                 track_info = {
                     "filename": paths.get_filename_file(audio_file),
@@ -752,6 +773,12 @@ class AudioMetadata:
                         "year": tags.get("year", ""),
                         "genre": tags.get("genre", genre_type.value if genre_type else "")
                     }
+
+                    # Force overridden tags at the album level as well
+                    if force_tags:
+                        for field in album_info:
+                            if field in force_tags:
+                                album_info[field] = force_tags[field]
 
         # Build result
         result = {
