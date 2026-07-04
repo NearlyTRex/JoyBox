@@ -27,6 +27,10 @@ Album directories are discovered under the genre's music directory. If no
 detects a two-level `artist/album` structure and treats the parent folder name
 as the artist when it differs from the genre name.
 
+If no `--genre` is given, the action is run for **every** genre in turn (each
+genre that actually has albums; empty genres are skipped). This makes it easy to
+apply, tag, or clear the whole library in one command.
+
 ## Options
 
 ### Action and Selection
@@ -34,7 +38,7 @@ as the artist when it differs from the genre name.
 | Option | Description |
 |--------|-------------|
 | `-a, --action` | Action to perform (default: `Tag`). Allowed: `Tag`, `Clear`, `Apply`. |
-| `-g, --genre` | Music genre directory (default: `Regular`). Allowed: `ASMR`, `Audiobook`, `Classical`, `Game`, `Radio`, `Regular`, `Soundtrack`, `Story`, `Therapy`. |
+| `-g, --genre` | Music genre directory. Allowed: `ASMR`, `Audiobook`, `Classical`, `Game`, `Radio`, `Regular`, `Soundtrack`, `Story`, `Therapy`. **If omitted, every genre is processed** (each genre that has albums, in turn). |
 | `-b, --album` | Specific album name to process (if omitted, all albums under the genre are processed) |
 | `-r, --artist` | Specific artist name, for albums stored under an `artist/album` structure |
 
@@ -63,6 +67,13 @@ as the artist when it differs from the genre name.
 
 ```bash
 audio_metadata_tool -a Tag -g Soundtrack
+```
+
+### Apply JSON tags across every genre in the library
+
+```bash
+# No -g: runs the action for all genres. --no-preview skips the per-album prompt.
+audio_metadata_tool -a Apply --clear_existing --no-preview
 ```
 
 ### Extract tags for one album, ignoring comments

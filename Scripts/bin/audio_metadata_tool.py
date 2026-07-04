@@ -25,8 +25,8 @@ parser.add_enum_argument(
 parser.add_enum_argument(
     args = ("-g", "--genre"),
     arg_type = config.AudioGenreType,
-    default = config.AudioGenreType.REGULAR,
-    description = "Music genre directory")
+    default = None,
+    description = "Music genre directory (if omitted, all genres are processed)")
 parser.add_string_argument(
     args = ("-b", "--album"),
     description = "Specific album name to process")
@@ -66,22 +66,11 @@ def parse_force_tags(set_values):
         force_tags[field] = value
     return force_tags
 
-# Main
-def main():
-
-    # Check requirements
-    setup.check_requirements()
-
-    # Setup logging
-    logger.setup_logging()
-
-    # Execute action
+# Run the selected action for a single genre
+def run_for_genre(genre_type, force_tags):
     if args.action == config.AudioMetadataAction.TAG:
-        force_tags = parse_force_tags(args.set)
-        if force_tags is None:
-            return False
         return audio.build_audio_metadata_files(
-            genre_type = args.genre,
+            genre_type = genre_type,
             album_name = args.album,
             artist_name = args.artist,
             exclude_comments = args.exclude_comments,
@@ -92,7 +81,7 @@ def main():
             exit_on_failure = args.exit_on_failure)
     elif args.action == config.AudioMetadataAction.CLEAR:
         return audio.clear_audio_metadata_tags(
-            genre_type = args.genre,
+            genre_type = genre_type,
             album_name = args.album,
             artist_name = args.artist,
             preserve_artwork = args.preserve_artwork,
@@ -101,7 +90,7 @@ def main():
             exit_on_failure = args.exit_on_failure)
     elif args.action == config.AudioMetadataAction.APPLY:
         return audio.apply_audio_metadata_tags(
-            genre_type = args.genre,
+            genre_type = genre_type,
             album_name = args.album,
             artist_name = args.artist,
             clear_existing = args.clear_existing,
@@ -111,6 +100,41 @@ def main():
     else:
         logger.log_error(f"Unknown action: {args.action}")
         return False
+
+# Main
+def main():
+
+    # Check requirements
+    setup.check_requirements()
+
+    # Setup logging
+    logger.setup_logging()
+
+    # Resolve forced tag overrides (TAG only)
+    force_tags = None
+    if args.action == config.AudioMetadataAction.TAG:
+        force_tags = parse_force_tags(args.set)
+        if force_tags is None:
+            return False
+
+    # Single genre
+    if args.genre is not None:
+        return run_for_genre(args.genre, force_tags)
+
+    # All genres (genre omitted): process each genre that has albums
+    overall = True
+    processed = 0
+    for genre_type in config.AudioGenreType.members():
+        if not audio.get_album_directories(genre_type, args.album, args.artist):
+            continue
+        processed += 1
+        logger.log_info(f"Processing genre: {genre_type.value}")
+        if not run_for_genre(genre_type, force_tags):
+            overall = False
+    if processed == 0:
+        logger.log_error("No albums found in any genre")
+        return False
+    return overall
 
 # Main
 if __name__ == "__main__":
