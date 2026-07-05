@@ -42,6 +42,7 @@ back up my saves?"), see the [documentation guides](../README.md).
 |------|-------------|
 | [download_audio_files](download_audio_files.md) | Download audio from a curated list of channels for a given genre and back the results up to a locker |
 | [audio_metadata_tool](audio_metadata_tool.md) | Scan, clear, and apply ID3 tags for albums in a locker's music tree, using JSON sidecar files as the source of truth |
+| [tag_audio_files](tag_audio_files.md) | Tag audio files with the right per-genre defaults and apply them in a single run |
 | [audio_conversion_tool](audio_conversion_tool.md) | Convert Audible AAX/AA audiobooks to M4A by decrypting them with activation bytes via FFMpeg |
 | [generate_playlist](generate_playlist.md) | Generate `.m3u` playlists from a directory tree of media files |
 
@@ -58,3 +59,4 @@ back up my saves?"), see the [documentation guides](../README.md).
 | Tool | Description |
 |------|-------------|
 | [claude_tool](claude_tool.md) | Process files in bulk using Claude AI |
+| [ollama_tool](ollama_tool.md) | Discover, pull, and manage Ollama models sized to your hardware, and launch Claude Code against a local model |

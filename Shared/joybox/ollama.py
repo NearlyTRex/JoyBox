@@ -6,18 +6,23 @@ import joybox.command as command
 import joybox.logger as logger
 import joybox.network as network
 import joybox.hardware as hardware
+import joybox.settings as settings
 from joybox import runtime
 
 ###########################################################
 # Ollama API
 ###########################################################
 
-# Default Ollama API base URL
-OLLAMA_API_BASE = "http://localhost:11434"
+# Default Ollama API base URL (used when the setting is unset)
+OLLAMA_API_BASE_DEFAULT = "http://localhost:11434"
+
+# Get the configured Ollama API base URL (falls back to the local default)
+def get_api_base():
+    return settings.get_value("Tools.Ollama", "ollama_api_base", OLLAMA_API_BASE_DEFAULT, throw_exception = False)
 
 # Check if Ollama is running
 def is_running():
-    return network.is_url_reachable(OLLAMA_API_BASE)
+    return network.is_url_reachable(get_api_base())
 
 # Start Ollama serve in the background
 def start_serve():
@@ -43,7 +48,7 @@ def ensure_running():
 
 # List installed models
 def list_installed_models():
-    result = network.get_remote_json(OLLAMA_API_BASE + "/api/tags")
+    result = network.get_remote_json(get_api_base() + "/api/tags")
     if not result or "models" not in result:
         return []
     models = []
@@ -60,10 +65,14 @@ def list_installed_models():
         })
     return sorted(models, key = lambda x: x["name"])
 
-# Pull (download) a model
+# Pull (download) a model. Runs in passthrough mode so ollama's native progress
+# bar streams live to the terminal during multi-GB downloads.
 def pull_model(model_name):
+    options = command.create_command_options()
+    options.set_passthrough(True)
     code = command.run_returncode_command(
-        ["ollama", "pull", model_name])
+        ["ollama", "pull", model_name],
+        options = options)
     return code == 0
 
 # Delete a model
@@ -142,8 +151,36 @@ def estimate_vram_mb(param_str):
         return int(value / 1000 * VRAM_MB_PER_BILLION_PARAMS)
     return int(value * VRAM_MB_PER_BILLION_PARAMS)
 
-# Parse model entries from Ollama search HTML
-def parse_search_html(html):
+# Parse a compact parameter-count string (e.g. "14B", "400M") into billions,
+# for ranking models by size. Returns 0.0 if unparseable (e.g. "?").
+def parse_param_count(param_str):
+    match = re.match(r'^([\d.]+)([bm]?)$', str(param_str).lower().strip())
+    if not match:
+        return 0.0
+    value = float(match.group(1))
+    if match.group(2) == "m":
+        return value / 1000
+    return value
+
+# Parse a context-window string (e.g. "128K", "8192") into a token count
+def parse_context_tokens(context_str):
+    match = re.match(r'^([\d.]+)([km]?)$', str(context_str).lower().strip())
+    if not match:
+        return 0
+    value = float(match.group(1))
+    unit = match.group(2)
+    if unit == "k":
+        return int(value * 1024)
+    if unit == "m":
+        return int(value * 1024 * 1024)
+    return int(value)
+
+# Parse model entries from Ollama search HTML. When filter_purpose is set (a
+# server-side ?c=<purpose> filter was applied), every entry is assigned that
+# purpose — needed for filters like "cloud" that aren't model-level capability
+# tags (cloud models still advertise tools/thinking/vision). Otherwise the
+# purpose is inferred from capability tags.
+def parse_search_html(html, filter_purpose = None):
     models = []
     blocks = re.split(r'<a href="/library/', html)
     for block in blocks[1:]:
@@ -161,13 +198,16 @@ def parse_search_html(html):
         pulls_match = re.search(r'x-test-pull-count[^>]*>([^<]+)</span>', block)
         pulls = pulls_match.group(1).strip() if pulls_match else ""
 
-        # Determine primary purpose from capabilities
-        purpose = PURPOSE_CHAT
-        for cap in caps:
-            cap = cap.strip().lower()
-            if cap in CAPABILITY_TO_PURPOSE:
-                purpose = CAPABILITY_TO_PURPOSE[cap]
-                break
+        # Determine purpose: honor a server-side ?c= filter, else infer from caps
+        if filter_purpose:
+            purpose = filter_purpose
+        else:
+            purpose = PURPOSE_CHAT
+            for cap in caps:
+                cap = cap.strip().lower()
+                if cap in CAPABILITY_TO_PURPOSE:
+                    purpose = CAPABILITY_TO_PURPOSE[cap]
+                    break
 
         # Create an entry for each available size
         if sizes:
@@ -184,13 +224,15 @@ def parse_search_html(html):
                     "pulls": pulls,
                 })
         else:
-            # Cloud or no-size models
+            # No downloadable size variants = cloud-only model. Flag it so the fit
+            # logic renders it as cloud instead of "too large for hardware".
             models.append({
                 "name": base_name,
                 "display": base_name,
                 "purpose": purpose,
                 "params": "?",
                 "vram_mb": 0,
+                "cloud_only": True,
                 "description": description,
                 "pulls": pulls,
             })
@@ -204,7 +246,7 @@ def fetch_remote_models(purpose = None):
         url += "?c=%s" % search_cat
     html = network.get_remote_html(url, headers = {"HX-Request": "true"})
     if html:
-        return parse_search_html(html)
+        return parse_search_html(html, filter_purpose = purpose if search_cat else None)
     return []
 
 # Cache for remote catalog
@@ -342,12 +384,43 @@ def format_quantization_display(option, vram_mb = 0, ram_mb = 0):
 # Minimum context window recommended for Claude Code
 CLAUDE_CODE_MIN_CONTEXT = 64000
 
+# Registered client context requirements. Add entries when supporting new
+# clients (Cline, Continue, etc.).
+CONTEXT_REQUIREMENTS = {
+    "claude_code": {"name": "Claude Code", "min_tokens": CLAUDE_CODE_MIN_CONTEXT},
+}
+
+# Verify a model's reported context window meets a registered minimum. The
+# requirement is either a key into CONTEXT_REQUIREMENTS (e.g. "claude_code") or a
+# dict with "name" and "min_tokens". Returns True if the model meets the minimum
+# or the context info is unavailable (so callers don't abort on missing data);
+# False (with a warning) if it falls short.
+def check_context_window(model_name, requirement):
+    req = CONTEXT_REQUIREMENTS[requirement] if isinstance(requirement, str) else requirement
+    name = req["name"]
+    min_tokens = req["min_tokens"]
+    quant_options = get_quantization_options(model_name)
+    if not quant_options:
+        logger.log_info("Context info unavailable, proceeding.")
+        return True
+    context_str = quant_options[0].get("context", "")
+    context_tokens = parse_context_tokens(context_str)
+    if context_tokens <= 0:
+        logger.log_info("Context info unavailable, proceeding.")
+        return True
+    if context_tokens < min_tokens:
+        logger.log_warning("%s reports a %s context window (%d tokens). %s recommends at least %d tokens - responses may be truncated." % (
+            model_name, context_str, context_tokens, name, min_tokens))
+        return False
+    logger.log_info("Context window: %s (%d tokens) - OK." % (context_str, context_tokens))
+    return True
+
 # Launch Claude Code with an Ollama model
 def launch_claude_code(model_name):
     options = command.create_command_options()
     options.set_env_var("ANTHROPIC_AUTH_TOKEN", "")
     options.set_env_var("ANTHROPIC_API_KEY", "ollama")
-    options.set_env_var("ANTHROPIC_BASE_URL", OLLAMA_API_BASE)
+    options.set_env_var("ANTHROPIC_BASE_URL", get_api_base())
     options.set_passthrough(True)
     code = command.run_returncode_command(
         ["claude", "--model", model_name, "--bare"],
@@ -362,9 +435,18 @@ def launch_claude_code(model_name):
 FIT_GPU = "gpu"           # Fits entirely in VRAM
 FIT_OFFLOAD = "offload"   # Exceeds VRAM but fits in system RAM (CPU offload)
 FIT_NONE = "none"         # Exceeds both VRAM and RAM
+FIT_CLOUD = "cloud"       # Cloud-hosted (no local download; hardware fit N/A)
 
-# Get models with fit classification based on VRAM and RAM
-def get_recommended_models(purpose = None, vram_mb = None, ram_mb = None):
+# Display/sort order (best fit first)
+FIT_ORDER = [FIT_GPU, FIT_OFFLOAD, FIT_CLOUD, FIT_NONE]
+
+# Get models with fit classification based on VRAM and RAM. By default, models
+# too large for the hardware (FIT_NONE) and cloud-hosted models (FIT_CLOUD) are
+# excluded, since neither is runnable on local hardware; set include_unfit /
+# include_cloud to include them. A PURPOSE_CLOUD query forces include_cloud on.
+def get_recommended_models(purpose = None, vram_mb = None, ram_mb = None, include_unfit = False, include_cloud = False):
+    if purpose == PURPOSE_CLOUD:
+        include_cloud = True
     if vram_mb is None:
         vram_mb = hardware.get_gpu_vram_total_mb()
     if ram_mb is None:
@@ -375,7 +457,9 @@ def get_recommended_models(purpose = None, vram_mb = None, ram_mb = None):
         if purpose and model["purpose"] != purpose:
             continue
         model_entry = model.copy()
-        if model["vram_mb"] <= 0:
+        if model.get("cloud_only"):
+            model_entry["fit"] = FIT_CLOUD
+        elif model["vram_mb"] <= 0:
             model_entry["fit"] = FIT_NONE
         elif vram_mb > 0 and model["vram_mb"] <= vram_mb:
             model_entry["fit"] = FIT_GPU
@@ -383,9 +467,28 @@ def get_recommended_models(purpose = None, vram_mb = None, ram_mb = None):
             model_entry["fit"] = FIT_OFFLOAD
         else:
             model_entry["fit"] = FIT_NONE
-        model_entry["fits_vram"] = model_entry["fit"] != FIT_NONE
+        model_entry["fits_vram"] = model_entry["fit"] == FIT_GPU
+        if not include_unfit and model_entry["fit"] == FIT_NONE:
+            continue
+        if not include_cloud and model_entry["fit"] == FIT_CLOUD:
+            continue
         models.append(model_entry)
+    fit_rank = {fit: i for i, fit in enumerate(FIT_ORDER)}
+    models.sort(key = lambda m: fit_rank.get(m["fit"], len(FIT_ORDER)))
     return models
+
+# Auto-pick the best locally-runnable model for a purpose: highest fit tier
+# (GPU before offload), then largest parameter count within that tier. Returns
+# None if nothing fits the available hardware (caller can then widen the search).
+def get_best_model(purpose = PURPOSE_TOOLS, vram_mb = None, ram_mb = None):
+    local = get_recommended_models(purpose = purpose, vram_mb = vram_mb, ram_mb = ram_mb)
+    if not local:
+        return None
+    for fit_tier in (FIT_GPU, FIT_OFFLOAD):
+        tier = [m for m in local if m["fit"] == fit_tier]
+        if tier:
+            return max(tier, key = lambda m: parse_param_count(m["params"]))
+    return None
 
 # Format model for display in selection list
 def format_model_display(model):
