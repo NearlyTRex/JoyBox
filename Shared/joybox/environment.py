@@ -426,7 +426,7 @@ def get_file_locker_hashes_file(base_path, depth = 4):
 
 # Get repo root dir (the parent of the Scripts directory)
 def get_repo_root(expand = False):
-    scripts_dir = ini.get_value("UserData.Dirs", "scripts_dir")
+    scripts_dir = settings.get_value("UserData.Dirs", "scripts_dir")
     root = scripts_dir.replace("/Scripts", "") if scripts_dir else "$HOME/Repositories/JoyBox"
     return os.path.expandvars(root) if expand else root
 
