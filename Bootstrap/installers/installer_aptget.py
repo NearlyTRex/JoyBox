@@ -137,7 +137,28 @@ class AptGet(installer.Installer):
                     removed.append(parts[1])
         return removed
 
+    def is_package_available(self, package):
+        apt_cache_tool = self.aptget_tool.replace("apt-get", "apt-cache")
+        output = self.connection.run_output([apt_cache_tool, "policy", package]) or ""
+        for line in output.splitlines():
+            line = line.strip()
+            if line.startswith("Candidate:"):
+                candidate = line.split(":", 1)[1].strip()
+                return candidate not in ("", "(none)")
+        return False
+
     def install_package(self, package):
+
+        # Skip packages the repos no longer offer
+        if not self.is_package_available(package):
+            logger.log_warning(
+                f"Skipping '{package}': no install candidate in the configured "
+                f"repositories (renamed or removed?). Update the package list if "
+                f"you still need it."
+            )
+            return True
+
+        # Skip packages that can only be installed by removing others
         removed = self.packages_removed_by_install(package)
         if removed:
             logger.log_warning(
