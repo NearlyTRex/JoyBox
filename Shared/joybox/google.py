@@ -9,6 +9,7 @@ import joybox.command as command
 import joybox.programs as programs
 import joybox.strings as strings
 import joybox.network as network
+import joybox.rumble as rumble
 import joybox.paths as paths
 import joybox.containers as containers
 import joybox.datautils as datautils
@@ -187,6 +188,16 @@ def get_playlist_video_ids(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
+
+    # Rumble channel pages need bespoke enumeration: yt-dlp's RumbleChannel
+    # extractor no longer parses the current markup (it returns 0 items), so
+    # scrape the video urls from the channel page and let yt-dlp download each.
+    if rumble.is_rumble_channel_url(video_url):
+        return rumble.get_channel_video_urls(
+            video_url,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
 
     # Get tool
     youtube_tool = None

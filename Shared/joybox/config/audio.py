@@ -10,6 +10,7 @@ story_channels = [
     { "name": "Mr. Night Scares", "url": "https://www.youtube.com/@Mr.Nightscares/videos" },
     { "name": "Mr.Spooky", "url": "https://www.youtube.com/@MrSpookyStories/videos" },
     { "name": "Night Time Spooks", "url": "https://www.youtube.com/@nighttimespooks/videos" },
+    { "name": "Phantom Librarian", "url": "https://rumble.com/c/c-2666954" },
     { "name": "Ripshy", "url": "https://www.youtube.com/@heyshyily" },
     { "name": "Scarystuff Ding", "url": "https://www.youtube.com/@scarystuffscarystuffscarys3780/videos" },
     { "name": "Southern Cannibal", "url": "https://www.youtube.com/@SouthernCannibal/videos" },
