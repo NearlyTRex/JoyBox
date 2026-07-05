@@ -13,12 +13,14 @@ class RunFlags:
         force = False,
         pretend_run = False,
         exit_on_failure = True,
-        skip_existing = False):
+        skip_existing = False,
+        autoremove = False):
         self.verbose = verbose
         self.force = force
         self.pretend_run = pretend_run
         self.exit_on_failure = exit_on_failure
         self.skip_existing = skip_existing
+        self.autoremove = autoremove
 
     def copy(self):
         return copy.deepcopy(self)
