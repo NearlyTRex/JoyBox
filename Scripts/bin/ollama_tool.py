@@ -19,13 +19,17 @@ import joybox.ollama as ollama
 parser = arguments.ArgumentParser(description = "Manage Ollama models based on your system hardware.")
 parser.add_string_argument(
     args = ("action",),
-    description = "Action to perform: list, available, best, pull, delete, info, claude")
+    description = "Action to perform: list, available, best, pull, delete, info, harness")
 parser.add_string_argument(
     args = ("-p", "--purpose"),
     description = "Filter by purpose: chat, tools, reasoning, vision, embedding, cloud")
 parser.add_string_argument(
     args = ("-m", "--model"),
-    description = "Model name for pull/delete/info actions")
+    description = "Model name for pull/delete/info/harness actions")
+parser.add_string_argument(
+    args = ("-H", "--harness"),
+    default = None,
+    description = "Coding-agent harness for the 'harness' action: claude_code, aider, codex, opencode (default: claude_code)")
 parser.add_boolean_argument(
     args = ("--all",),
     description = "Show all models including those that exceed VRAM")
@@ -241,10 +245,17 @@ def action_info():
         logger.log_error("Could not get info for %s (is it installed?)" % model_name)
         return False
 
-# Launch Claude Code with an Ollama model
-def action_claude():
+# Launch a coding-agent harness with an Ollama model as the backend
+def action_harness():
     if not ollama.ensure_running():
         return False
+
+    # Resolve the harness
+    harness = args.harness or ollama.DEFAULT_HARNESS
+    if harness not in ollama.HARNESSES:
+        logger.log_error("Unknown harness '%s'. Available: %s" % (harness, ", ".join(ollama.get_harness_keys())))
+        return False
+    harness_name = ollama.HARNESSES[harness]["name"]
 
     # Get installed models
     models = ollama.list_installed_models()
@@ -257,7 +268,7 @@ def action_claude():
 
         # Let user select from installed models
         selected = prompts.prompt_for_selection(
-            "Select a model for Claude Code:",
+            "Select a model for %s:" % harness_name,
             models,
             display_func = ollama.format_installed_model_display
         )
@@ -273,15 +284,14 @@ def action_claude():
         else:
             return False
 
-    # Warn if the model's context window is too small for Claude Code
-    if not ollama.check_context_window(model_name, "claude_code"):
+    # Warn if the model's context window is too small for this harness
+    if not ollama.check_context_window(model_name, harness):
         if not prompts.prompt_for_confirmation("Launch anyway?", default_yes = False):
             return True
 
-    # Launch model
-    logger.log_info("Launching Claude Code with model: %s" % model_name)
-    logger.log_info("(ANTHROPIC_BASE_URL=%s)" % ollama.get_api_base())
-    return ollama.launch_claude_code(model_name)
+    # Launch the harness against the model
+    logger.log_info("Launching %s with model: %s" % (harness_name, model_name))
+    return ollama.launch_harness(model_name, harness)
 
 # Recommend the best model for the current hardware and purpose
 def action_best():
@@ -317,7 +327,7 @@ ACTIONS = {
     "pull": action_pull,
     "delete": action_delete,
     "info": action_info,
-    "claude": action_claude,
+    "harness": action_harness,
 }
 
 # Main

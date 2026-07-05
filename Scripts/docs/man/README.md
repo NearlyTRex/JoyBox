@@ -59,4 +59,4 @@ back up my saves?"), see the [documentation guides](../README.md).
 | Tool | Description |
 |------|-------------|
 | [claude_tool](claude_tool.md) | Process files in bulk using Claude AI |
-| [ollama_tool](ollama_tool.md) | Discover, pull, and manage Ollama models sized to your hardware, and launch Claude Code against a local model |
+| [ollama_tool](ollama_tool.md) | Discover, pull, and manage Ollama models sized to your hardware, and launch a coding-agent harness against a local model |

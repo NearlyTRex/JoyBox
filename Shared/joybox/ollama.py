@@ -1,5 +1,6 @@
 # Imports
 import re
+import shutil
 
 # Local imports
 import joybox.command as command
@@ -378,25 +379,68 @@ def format_quantization_display(option, vram_mb = 0, ram_mb = 0):
     )
 
 ###########################################################
-# Claude Code integration
+# Coding-agent harness integration
 ###########################################################
 
-# Minimum context window recommended for Claude Code
-CLAUDE_CODE_MIN_CONTEXT = 64000
-
-# Registered client context requirements. Add entries when supporting new
-# clients (Cline, Continue, etc.).
-CONTEXT_REQUIREMENTS = {
-    "claude_code": {"name": "Claude Code", "min_tokens": CLAUDE_CODE_MIN_CONTEXT},
+# Coding-agent harnesses that can run against a local Ollama model. Each entry
+# defines the client's display name, its recommended minimum context window (for
+# check_context_window), the command to launch it, and the environment that
+# points it at the Ollama server. In command/env, "{model}" is replaced with the
+# model name and "{api_base}" with the configured Ollama base URL.
+#
+# Backends: claude_code talks to Ollama's Anthropic-compatible endpoint; aider
+# uses Ollama natively; codex/opencode use Ollama's OpenAI-compatible /v1
+# endpoint. The OpenAI-compatible entries are best-effort — those tools may also
+# need their own provider config, and their exact launch flags vary by version.
+HARNESSES = {
+    "claude_code": {
+        "name": "Claude Code",
+        "min_tokens": 64000,
+        "command": ["claude", "--model", "{model}", "--bare"],
+        "env": {
+            "ANTHROPIC_BASE_URL": "{api_base}",
+            "ANTHROPIC_API_KEY": "ollama",
+            "ANTHROPIC_AUTH_TOKEN": "",
+        },
+        "install_hint": "https://docs.claude.com/claude-code",
+    },
+    "aider": {
+        "name": "Aider",
+        "min_tokens": 8000,
+        "command": ["aider", "--model", "ollama_chat/{model}"],
+        "env": {"OLLAMA_API_BASE": "{api_base}"},
+        "install_hint": "pip install aider-chat",
+    },
+    "codex": {
+        "name": "Codex CLI",
+        "min_tokens": 8000,
+        "command": ["codex", "-m", "{model}"],
+        "env": {"OPENAI_BASE_URL": "{api_base}/v1", "OPENAI_API_KEY": "ollama"},
+        "install_hint": "https://github.com/openai/codex",
+    },
+    "opencode": {
+        "name": "OpenCode",
+        "min_tokens": 8000,
+        "command": ["opencode", "--model", "{model}"],
+        "env": {"OPENAI_BASE_URL": "{api_base}/v1", "OPENAI_API_KEY": "ollama"},
+        "install_hint": "https://opencode.ai",
+    },
 }
 
-# Verify a model's reported context window meets a registered minimum. The
-# requirement is either a key into CONTEXT_REQUIREMENTS (e.g. "claude_code") or a
-# dict with "name" and "min_tokens". Returns True if the model meets the minimum
-# or the context info is unavailable (so callers don't abort on missing data);
-# False (with a warning) if it falls short.
+# Default harness when none is specified
+DEFAULT_HARNESS = "claude_code"
+
+# List available harness keys
+def get_harness_keys():
+    return sorted(HARNESSES.keys())
+
+# Verify a model's reported context window meets a harness's recommended minimum.
+# The requirement is either a harness key (e.g. "claude_code") or a dict with
+# "name" and "min_tokens". Returns True if the model meets the minimum or the
+# context info is unavailable (so callers don't abort on missing data); False
+# (with a warning) if it falls short.
 def check_context_window(model_name, requirement):
-    req = CONTEXT_REQUIREMENTS[requirement] if isinstance(requirement, str) else requirement
+    req = HARNESSES[requirement] if isinstance(requirement, str) else requirement
     name = req["name"]
     min_tokens = req["min_tokens"]
     quant_options = get_quantization_options(model_name)
@@ -415,17 +459,33 @@ def check_context_window(model_name, requirement):
     logger.log_info("Context window: %s (%d tokens) - OK." % (context_str, context_tokens))
     return True
 
-# Launch Claude Code with an Ollama model
-def launch_claude_code(model_name):
+# Launch a coding-agent harness against an Ollama model. harness is a key into
+# HARNESSES (defaults to DEFAULT_HARNESS). Fills the command/env templates,
+# points the harness at the Ollama server, and runs it in passthrough mode.
+def launch_harness(model_name, harness = DEFAULT_HARNESS):
+    spec = HARNESSES.get(harness)
+    if not spec:
+        logger.log_error("Unknown harness '%s'. Available: %s" % (harness, ", ".join(get_harness_keys())))
+        return False
+
+    # Fill templates ({api_base} without trailing slash so "{api_base}/v1" is clean)
+    api_base = get_api_base().rstrip("/")
+    def fill(value):
+        return value.replace("{api_base}", api_base).replace("{model}", model_name)
+    cmd = [fill(part) for part in spec["command"]]
+
+    # Require the harness binary to be installed
+    if not shutil.which(cmd[0]):
+        logger.log_error("%s is not installed (command '%s' not found)" % (spec["name"], cmd[0]))
+        if spec.get("install_hint"):
+            logger.log_info("Install: %s" % spec["install_hint"])
+        return False
+
     options = command.create_command_options()
-    options.set_env_var("ANTHROPIC_AUTH_TOKEN", "")
-    options.set_env_var("ANTHROPIC_API_KEY", "ollama")
-    options.set_env_var("ANTHROPIC_BASE_URL", get_api_base())
+    for key, value in spec.get("env", {}).items():
+        options.set_env_var(key, fill(value))
     options.set_passthrough(True)
-    code = command.run_returncode_command(
-        ["claude", "--model", model_name, "--bare"],
-        options = options)
-    return code == 0
+    return command.run_returncode_command(cmd, options = options) == 0
 
 ###########################################################
 # Recommendation logic
