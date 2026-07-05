@@ -306,6 +306,10 @@ else:
     ini_defaults["Tools.Python"]["python_install_dir"] = "/usr/bin"
     ini_defaults["Tools.Python"]["python_venv_dir"] = "$HOME/.venv"
 
+# Tools.Ollama
+ini_defaults["Tools.Ollama"] = {}
+ini_defaults["Tools.Ollama"]["ollama_api_base"] = "http://localhost:11434"
+
 # Tools.Perl
 ini_defaults["Tools.Perl"] = {}
 if platform_info.is_windows_platform():
