@@ -1,5 +1,6 @@
 # Imports
 import json
+import shutil
 
 # Local imports
 import joybox.config as config
@@ -13,6 +14,26 @@ import joybox.containers as containers
 import joybox.datautils as datautils
 import joybox.fileops as fileops
 import joybox.settings as settings
+
+# Hard safety cap on concurrent fragment downloads. yt-dlp's -N runs multiple
+# fragment downloads per video in parallel; too many parallel connections gets
+# the client rate-limited or IP-banned by YouTube, so requested values are
+# clamped to this ceiling regardless of config.
+MAX_CONCURRENT_FRAGMENTS = 8
+
+# Locate a JavaScript runtime for yt-dlp's YouTube nsig "n challenge" solver.
+# Recent yt-dlp needs an external JS runtime (Deno preferred) to compute the nsig
+# value; without one YouTube returns only storyboard images and downloads fail with
+# "Requested format is not available". Deno is installed by the JoyBox Bootstrap
+# layer at ~/.deno/bin, which is NOT on the download subprocess PATH, so we locate
+# it explicitly and hand yt-dlp "--js-runtimes deno:<path>".
+def get_javascript_runtime_args():
+    candidates = [paths.expand_path("~/.deno/bin/deno"), shutil.which("deno")]
+    for deno_path in candidates:
+        if deno_path and paths.is_path_file(deno_path):
+            return ["--js-runtimes", f"deno:{deno_path}"]
+    logger.log_warning("No Deno JavaScript runtime found; YouTube downloads may fail the nsig 'n challenge' (see yt-dlp EJS wiki).")
+    return []
 
 # Find images
 def find_images(
@@ -175,11 +196,12 @@ def get_playlist_video_ids(
         logger.log_error("YtDlp was not found")
         return []
 
-    # Enumerate ids without downloading (lightweight, tab-agnostic)
+    # Enumerate id + canonical url without downloading (site-agnostic: the url is
+    # used verbatim so non-YouTube sites work; the id is used for archive matching)
     list_cmd = [
         youtube_tool,
         "--flat-playlist",
-        "--print", "%(id)s"
+        "--print", "%(id)s\t%(url)s"
     ]
     if isinstance(cookie_source, str) and len(cookie_source) > 0:
         if paths.does_path_exist(cookie_source):
@@ -195,13 +217,17 @@ def get_playlist_video_ids(
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
-    ids = []
+    videos = []
+    seen = set()
     if output:
         for line in output.splitlines():
-            vid = line.strip()
-            if vid and vid not in ids:
-                ids.append(vid)
-    return ids
+            parts = line.split("\t")
+            vid = parts[0].strip()
+            url = parts[1].strip() if len(parts) > 1 else ""
+            if vid and vid not in seen:
+                seen.add(vid)
+                videos.append((vid, url))
+    return videos
 
 # Download video
 def download_video(
@@ -211,6 +237,7 @@ def download_video(
     output_dir = None,
     download_archive = None,
     cookie_source = None,
+    concurrent_fragments = 1,
     sanitize_filenames = False,
     verbose = False,
     pretend_run = False,
@@ -224,14 +251,29 @@ def download_video(
         logger.log_error("YtDlp was not found")
         return False
 
+    # Clamp concurrency to a safe range (>= 1, <= MAX_CONCURRENT_FRAGMENTS)
+    try:
+        concurrent_fragments = int(concurrent_fragments)
+    except (TypeError, ValueError):
+        concurrent_fragments = 1
+    if concurrent_fragments < 1:
+        concurrent_fragments = 1
+    if concurrent_fragments > MAX_CONCURRENT_FRAGMENTS:
+        logger.log_warning(f"Requested {concurrent_fragments} concurrent fragments; clamping to safe maximum of {MAX_CONCURRENT_FRAGMENTS}")
+        concurrent_fragments = MAX_CONCURRENT_FRAGMENTS
+
     # Get download command
     download_cmd = [
         youtube_tool,
         "--windows-filenames",
+        "--continue",
         "--format-sort", "res,ext:mp4:m4a",
         "--sleep-interval", "3",
         "--max-sleep-interval", "5"
     ]
+    if concurrent_fragments > 1:
+        download_cmd += ["--concurrent-fragments", str(concurrent_fragments)]
+    download_cmd += get_javascript_runtime_args()
     if audio_only:
         download_cmd += [
             "--extract-audio",

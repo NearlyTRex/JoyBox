@@ -21,6 +21,9 @@ parser.add_enum_argument(
     arg_type = config.AudioGenreType,
     description = "Genre type")
 parser.add_string_argument(args = ("-c", "--cookie_source"), default = "firefox", description = "Cookie source")
+parser.add_string_argument(args = ("-n", "--channel_name"), default = None, description = "Only download this channel (name; case-insensitive, substring allowed). Omit to download all channels for the genre.")
+parser.add_boolean_argument(args = ("--oldest_first",), description = "Download each channel's videos oldest-first (overrides the config default)")
+parser.add_boolean_argument(args = ("--newest_first",), description = "Download each channel's videos newest-first (overrides the config default; wins if both order flags are given)")
 parser.add_enum_argument(
     args = ("-l", "--locker_type"),
     arg_type = config.LockerType,
@@ -39,9 +42,19 @@ def main():
     # Setup logging
     logger.setup_logging()
 
+    # Resolve download order: explicit flags override the config default (newest
+    # wins if both are given); None means "use the config default".
+    order_oldest_first = None
+    if args.newest_first:
+        order_oldest_first = False
+    elif args.oldest_first:
+        order_oldest_first = True
+
     # Story
     if args.genre_type == config.AudioGenreType.STORY:
         success = audio.download_story_audio_files(
+            channel_name = args.channel_name,
+            oldest_first = order_oldest_first,
             cookie_source = args.cookie_source,
             locker_type = args.locker_type,
             output_path = args.output_path,
@@ -55,6 +68,8 @@ def main():
     # ASMR
     elif args.genre_type == config.AudioGenreType.ASMR:
         success = audio.download_asmr_audio_files(
+            channel_name = args.channel_name,
+            oldest_first = order_oldest_first,
             cookie_source = args.cookie_source,
             locker_type = args.locker_type,
             output_path = args.output_path,

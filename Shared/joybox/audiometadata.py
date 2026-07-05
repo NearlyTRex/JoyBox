@@ -709,6 +709,9 @@ class AudioMetadata:
         # Sort files by name
         audio_files.sort()
 
+        # Album-level defaults (folder name is the album; artist folder is the album artist)
+        default_album = paths.get_filename_file(album_dir)
+
         # Extract tags from all tracks
         tracks = []
         album_info = {}
@@ -748,6 +751,14 @@ class AudioMetadata:
                     track_tags["track_number"] = str(track_index)
                 elif "track_number" not in track_tags or not track_tags["track_number"]:
                     track_tags["track_number"] = str(track_index)
+
+                # Fill album-level tags so they get written on apply (yt-dlp does not embed these)
+                if not track_tags.get("album"):
+                    track_tags["album"] = default_album
+                if not track_tags.get("album_artist"):
+                    album_artist = track_tags.get("artist", "")
+                    if album_artist:
+                        track_tags["album_artist"] = album_artist
 
                 # Force overridden tags (win over anything read from the file)
                 if force_tags:

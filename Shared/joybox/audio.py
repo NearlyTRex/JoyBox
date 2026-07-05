@@ -112,7 +112,25 @@ def collect_and_upload_audio(work_dir, channel_music_dir, locker_type = None, ve
     return True
 
 # Download channel audio files
-def download_channel_audio_files(channels, genre_type, cookie_source = None, locker_type = None, output_path = None, verbose = False, pretend_run = False, exit_on_failure = False):
+def download_channel_audio_files(channels, genre_type, channel_name = None, oldest_first = None, cookie_source = None, locker_type = None, output_path = None, verbose = False, pretend_run = False, exit_on_failure = False):
+
+    # Resolve download order. oldest_first is tri-state: True/False force the order,
+    # None falls back to the config default (audio_download_oldest_first).
+    if oldest_first is None:
+        oldest_first = getattr(config, "audio_download_oldest_first", False)
+
+    # Optionally filter to a single channel (case-insensitive; matches exact name
+    # first, then falls back to a substring match)
+    if channel_name:
+        query = channel_name.strip().lower()
+        matches = [c for c in channels if c.get("name", "").lower() == query]
+        if not matches:
+            matches = [c for c in channels if query in c.get("name", "").lower()]
+        if not matches:
+            available = ", ".join(c.get("name", "") for c in channels)
+            logger.log_error(f"No channel matching '{channel_name}' for genre {genre_type}. Available: {available}")
+            return False
+        channels = matches
 
     # Download channels
     logger.log_info(f"Starting audio download process for genre: {genre_type}")
@@ -150,32 +168,44 @@ def download_channel_audio_files(channels, genre_type, cookie_source = None, loc
             if not collect_and_upload_audio(persistent_dir, channel_music_dir, locker_type = locker_type, verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure):
                 return False
 
-        # Enumerate channel videos and skip the ones already downloaded (per the archive)
-        all_video_ids = google.get_playlist_video_ids(
+        # Enumerate channel videos (as (id, url) pairs) and skip the ones already
+        # downloaded (per the archive). The id is used for archive matching; the url
+        # is used verbatim to build download targets so non-YouTube sites work too.
+        all_videos = google.get_playlist_video_ids(
             video_url = channel_url,
             cookie_source = cookie_source,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         archived_ids = get_archived_video_ids(channel_archive_file)
-        new_video_ids = [vid for vid in all_video_ids if vid not in archived_ids]
+        new_videos = [(vid, url) for (vid, url) in all_videos if vid not in archived_ids]
+
+        # Channels enumerate newest-first; reverse so the oldest new videos download first
+        if oldest_first:
+            new_videos = list(reversed(new_videos))
+            logger.log_info("Downloading oldest videos first")
+
+        # Resolve a video's download url; fall back to reconstructing a YouTube watch
+        # url only if the enumeration did not yield one (keeps prior behavior)
+        def video_target_url(vid, url):
+            return url or f"https://www.youtube.com/watch?v={vid}"
 
         # Build batch targets (each target is downloaded + uploaded in turn)
         batch_size = getattr(config, "audio_download_batch_size", 0) or 0
         batch_targets = []
-        if not all_video_ids:
+        if not all_videos:
             logger.log_warning("Could not enumerate channel videos; downloading whole channel in one pass")
             batch_targets = [channel_url]
-        elif new_video_ids:
-            logger.log_info(f"Channel has {len(all_video_ids)} videos, {len(new_video_ids)} new")
+        elif new_videos:
+            logger.log_info(f"Channel has {len(all_videos)} videos, {len(new_videos)} new")
             if batch_size > 0:
-                for j in range(0, len(new_video_ids), batch_size):
-                    chunk = new_video_ids[j:j + batch_size]
-                    batch_targets.append([f"https://www.youtube.com/watch?v={vid}" for vid in chunk])
+                for j in range(0, len(new_videos), batch_size):
+                    chunk = new_videos[j:j + batch_size]
+                    batch_targets.append([video_target_url(vid, url) for (vid, url) in chunk])
             else:
-                batch_targets = [[f"https://www.youtube.com/watch?v={vid}" for vid in new_video_ids]]
+                batch_targets = [[video_target_url(vid, url) for (vid, url) in new_videos]]
         else:
-            logger.log_info(f"Channel up to date ({len(all_video_ids)} videos already archived)")
+            logger.log_info(f"Channel up to date ({len(all_videos)} videos already archived)")
 
         # Process each batch: download -> collect audio -> upload -> clean
         for b_index, target in enumerate(batch_targets, 1):
@@ -198,6 +228,7 @@ def download_channel_audio_files(channels, genre_type, cookie_source = None, loc
                 output_dir = work_dir,
                 download_archive = channel_archive_file,
                 cookie_source = cookie_source,
+                concurrent_fragments = getattr(config, "audio_download_concurrent_fragments", 1),
                 sanitize_filenames = True,
                 verbose = verbose,
                 pretend_run = pretend_run,
@@ -222,10 +253,12 @@ def download_channel_audio_files(channels, genre_type, cookie_source = None, loc
     return True
 
 # Download story audio files
-def download_story_audio_files(cookie_source = None, locker_type = None, output_path = None, verbose = False, pretend_run = False, exit_on_failure = False):
+def download_story_audio_files(channel_name = None, oldest_first = None, cookie_source = None, locker_type = None, output_path = None, verbose = False, pretend_run = False, exit_on_failure = False):
     return download_channel_audio_files(
         channels = config.story_channels,
         genre_type = config.AudioGenreType.STORY,
+        channel_name = channel_name,
+        oldest_first = oldest_first,
         cookie_source = cookie_source,
         locker_type = locker_type,
         output_path = output_path,
@@ -234,10 +267,12 @@ def download_story_audio_files(cookie_source = None, locker_type = None, output_
         exit_on_failure = exit_on_failure)
 
 # Download asmr audio files
-def download_asmr_audio_files(cookie_source = None, locker_type = None, output_path = None, verbose = False, pretend_run = False, exit_on_failure = False):
+def download_asmr_audio_files(channel_name = None, oldest_first = None, cookie_source = None, locker_type = None, output_path = None, verbose = False, pretend_run = False, exit_on_failure = False):
     return download_channel_audio_files(
         channels = config.asmr_channels,
         genre_type = config.AudioGenreType.ASMR,
+        channel_name = channel_name,
+        oldest_first = oldest_first,
         cookie_source = cookie_source,
         locker_type = locker_type,
         output_path = output_path,
