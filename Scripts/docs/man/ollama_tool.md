@@ -14,7 +14,7 @@ ollama_tool <action> [-p <purpose>] [-m <model>] [-H <harness>] [--all] [options
 `ollama_tool` wraps a running [Ollama](https://ollama.com) server. It detects your GPU
 VRAM and system RAM, classifies each model by how it *fits* that hardware, and helps you
 find, download, and run models — including using one as the backend for a coding-agent
-harness such as Claude Code or Aider.
+harness such as Claude Code.
 
 Hardware is detected automatically: NVIDIA (via `nvidia-smi`), then AMD / Intel Arc (via
 the Linux DRM sysfs interface, with `rocm-smi` as a fallback). The primary GPU is the card
@@ -54,7 +54,7 @@ The first positional argument selects the action:
 |--------|-------------|
 | `-p, --purpose` | Filter/target a purpose category. Allowed: `chat`, `tools`, `reasoning`, `vision`, `embedding`, `cloud`. If omitted where relevant, you're prompted to pick one. |
 | `-m, --model` | Model name for `pull` / `delete` / `info` / `harness`. A base name (e.g. `qwen2.5-coder:7b`) lists quantizations; a full tag (e.g. `qwen2.5-coder:7b-instruct-q4_K_M`) targets one exactly. |
-| `-H, --harness` | Coding-agent harness for the `harness` action: `claude_code`, `aider`, `codex`, `opencode` (default: `claude_code`) |
+| `-H, --harness` | Coding-agent harness for the `harness` action: `claude_code`, `codex`, `opencode` (default: `claude_code`) |
 | `--all` | In `available`, also show models too large for your system (`[-]`) instead of hiding them |
 
 ### Common Options
@@ -75,7 +75,6 @@ it to Ollama and runs its CLI against the chosen model:
 | Harness (`-H`) | Backend | Env → Ollama | Command | Min ctx |
 |----------------|---------|--------------|---------|---------|
 | `claude_code` | Anthropic `/v1/messages` | `ANTHROPIC_BASE_URL`, `ANTHROPIC_API_KEY=ollama` | `claude --model <m> --bare` | 64K |
-| `aider` | Ollama native | `OLLAMA_API_BASE` | `aider --model ollama_chat/<m>` | 8K |
 | `codex` | OpenAI `/v1` | `OPENAI_BASE_URL=<base>/v1`, `OPENAI_API_KEY=ollama` | `codex -m <m>` | 8K |
 | `opencode` | OpenAI `/v1` | `OPENAI_BASE_URL=<base>/v1`, `OPENAI_API_KEY=ollama` | `opencode --model <m>` | 8K |
 
@@ -84,9 +83,9 @@ compatible endpoints, so these harnesses talk to it directly.
 
 Before launching, the model's advertised context window is checked against the chosen
 harness's recommended minimum. If it falls short, you're warned and asked whether to launch
-anyway — this is expected, not an error. **Aider is the best pick for small-context or
-weaker local models** (it uses a repo-map + diff edits instead of large context dumps);
-Claude Code assumes a large window and strong tool-calling.
+anyway — this is expected, not an error. Claude Code assumes a large context window and
+strong tool-calling, so it needs a capable model; the OpenAI-compatible harnesses have a
+lower context floor.
 
 If the harness's CLI isn't installed, the tool reports it with an install hint. The
 `codex` / `opencode` entries are **best-effort**: they point those tools at Ollama's
@@ -132,10 +131,10 @@ ollama_tool pull -m qwen2.5-coder:7b-instruct-q4_K_M
 ollama_tool harness -m qwen2.5-coder:7b            # default harness = claude_code
 ```
 
-### Run a different harness (Aider suits small-context models)
+### Run a different harness (OpenAI-compatible)
 
 ```bash
-ollama_tool harness -H aider -m qwen2.5-coder:7b
+ollama_tool harness -H codex -m qwen2.5-coder:7b
 ```
 
 ### Delete or inspect a model

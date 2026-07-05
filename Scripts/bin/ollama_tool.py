@@ -29,7 +29,7 @@ parser.add_string_argument(
 parser.add_string_argument(
     args = ("-H", "--harness"),
     default = None,
-    description = "Coding-agent harness for the 'harness' action: claude_code, aider, codex, opencode (default: claude_code)")
+    description = "Coding-agent harness for the 'harness' action: claude_code, codex, opencode (default: claude_code)")
 parser.add_boolean_argument(
     args = ("--all",),
     description = "Show all models including those that exceed VRAM")

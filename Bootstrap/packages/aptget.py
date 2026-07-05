@@ -146,7 +146,7 @@ aptget[constants.EnvironmentType.LOCAL_UBUNTU] += [
     {"id": "libflac-dev", "category": "Libs"},
     {"id": "libfontconfig-dev", "category": "Libs"},
     {"id": "libfreetype-dev", "category": "Libs"},
-    {"id": "libfreetype6-dev", "category": "Libs"},
+    {"id": "libfreetype-dev", "category": "Libs"},
     {"id": "libgl-dev", "category": "Libs"},
     {"id": "libgl1-mesa-dev", "category": "Libs"},
     {"id": "libglew-dev", "category": "Libs"},
@@ -173,10 +173,8 @@ aptget[constants.EnvironmentType.LOCAL_UBUNTU] += [
     {"id": "libpython3-dev", "category": "Libs"},
     {"id": "libqt5gamepad5-dev", "category": "Libs"},
     {"id": "libqt5multimedia5-plugins", "category": "Libs"},
-    {"id": "libqt5opengl5-dev", "category": "Libs"},
     {"id": "libqt5svg5-dev", "category": "Libs"},
-    {"id": "libqt6opengl6-dev", "category": "Libs"},
-    {"id": "libqt6svg6-dev", "category": "Libs"},
+    {"id": "qt6-svg-dev", "category": "Libs"},
     {"id": "librhash-dev", "category": "Libs"},
     {"id": "libsamplerate0-dev", "category": "Libs"},
     {"id": "libsdl-net1.2-dev", "category": "Libs"},
@@ -204,7 +202,7 @@ aptget[constants.EnvironmentType.LOCAL_UBUNTU] += [
     {"id": "libwayland-egl1:i386", "category": "Libs"},
     {"id": "libwayland-cursor0:i386", "category": "Libs"},
     {"id": "libpulse0:i386", "category": "Libs"},
-    {"id": "libasound2:i386", "category": "Libs"},
+    {"id": "libasound2t64:i386", "category": "Libs"},
     {"id": "libtheora-dev", "category": "Libs"},
     {"id": "libtidy-dev", "category": "Libs"},
     {"id": "libtinyxml2-dev", "category": "Libs"},
@@ -232,12 +230,7 @@ aptget[constants.EnvironmentType.LOCAL_UBUNTU] += [
     {"id": "qt6-declarative-dev-tools", "category": "Libs"},
     {"id": "qt6-multimedia-dev", "category": "Libs"},
     {"id": "qt6-tools-dev", "category": "Libs"},
-    {"id": "qtbase5-dev", "category": "Libs"},
-    {"id": "qtbase5-private-dev", "category": "Libs"},
     {"id": "qtchooser", "category": "Libs"},
-    {"id": "qtdeclarative5-dev", "category": "Libs"},
-    {"id": "qtmultimedia5-dev", "category": "Libs"},
-    {"id": "qtwebengine5-dev", "category": "Libs"},
     {"id": "zlib1g-dev", "category": "Libs"},
 
     # Net
@@ -277,7 +270,6 @@ aptget[constants.EnvironmentType.LOCAL_UBUNTU] += [
     {"id": "wireshark", "name": "Wireshark", "description": "Network packet analyzer", "category": "Utils"},
 
     # Video
-    {"id": "shotcut", "name": "Shotcut", "description": "Video editor", "category": "Video"},
     {"id": "vlc", "name": "VLC", "description": "Media player", "category": "Video"},
 
     # Virtualization
@@ -285,7 +277,7 @@ aptget[constants.EnvironmentType.LOCAL_UBUNTU] += [
     {"id": "guestfish", "name": "guestfish", "description": "VM disk shell", "category": "Virtualization"},
     {"id": "guestfs-tools", "name": "guestfs-tools", "description": "VM disk utilities", "category": "Virtualization"},
     {"id": "ovmf", "name": "OVMF", "description": "UEFI firmware for VMs", "category": "Virtualization"},
-    {"id": "qemu-kvm", "name": "QEMU/KVM", "description": "Hardware virtualization", "category": "Virtualization"},
+    {"id": "qemu-system-x86", "name": "QEMU/KVM", "description": "Hardware virtualization", "category": "Virtualization"},
     {"id": "qemu-utils", "name": "QEMU Utils", "description": "QEMU disk utilities", "category": "Virtualization"},
     {"id": "virt-manager", "name": "Virt-Manager", "description": "VM management GUI", "category": "Virtualization"},
     {"id": "xdg-desktop-portal", "name": "XDG Desktop Portal", "description": "Sandboxed app integration", "category": "Virtualization"},

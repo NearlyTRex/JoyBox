@@ -62,8 +62,8 @@ alias diff='diff --color=auto'
 export PATH="$HOME/.joybox/bin:$PATH"
 
 # Add the JoyBox Python virtualenv's bin so venv-installed console scripts
-# (e.g. aider) are runnable. Appended so system tools keep precedence and the
-# ~/.joybox/bin wrappers still win.
+# (e.g. audible, flake8) are runnable. Appended so system tools keep precedence
+# and the ~/.joybox/bin wrappers still win.
 if [ -d "$HOME/.venv/bin" ]; then
     export PATH="$PATH:$HOME/.venv/bin"
 fi

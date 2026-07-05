@@ -140,13 +140,13 @@ class AptGet(installer.Installer):
     def install_package(self, package):
         removed = self.packages_removed_by_install(package)
         if removed:
-            logger.log_error(
-                f"Refusing to install '{package}': apt would REMOVE "
+            logger.log_warning(
+                f"Skipping '{package}': installing it would REMOVE "
                 f"{len(removed)} package(s): {', '.join(removed)}. "
-                f"Resolve the conflict manually (see the package's notes) "
-                f"and re-run."
+                f"Left uninstalled to avoid removing them; resolve the conflict "
+                f"manually if you need it."
             )
-            return False
+            return True
         code = self.connection.run_blocking([
             "env", "DEBIAN_FRONTEND=noninteractive",
             self.aptget_tool, "install", "-y",

@@ -388,10 +388,10 @@ def format_quantization_display(option, vram_mb = 0, ram_mb = 0):
 # points it at the Ollama server. In command/env, "{model}" is replaced with the
 # model name and "{api_base}" with the configured Ollama base URL.
 #
-# Backends: claude_code talks to Ollama's Anthropic-compatible endpoint; aider
-# uses Ollama natively; codex/opencode use Ollama's OpenAI-compatible /v1
-# endpoint. The OpenAI-compatible entries are best-effort — those tools may also
-# need their own provider config, and their exact launch flags vary by version.
+# Backends: claude_code talks to Ollama's Anthropic-compatible endpoint;
+# codex/opencode use Ollama's OpenAI-compatible /v1 endpoint. The OpenAI-
+# compatible entries are best-effort — those tools may also need their own
+# provider config, and their exact launch flags vary by version.
 HARNESSES = {
     "claude_code": {
         "name": "Claude Code",
@@ -403,13 +403,6 @@ HARNESSES = {
             "ANTHROPIC_AUTH_TOKEN": "",
         },
         "install_hint": "https://docs.claude.com/claude-code",
-    },
-    "aider": {
-        "name": "Aider",
-        "min_tokens": 8000,
-        "command": ["aider", "--model", "ollama_chat/{model}"],
-        "env": {"OLLAMA_API_BASE": "{api_base}"},
-        "install_hint": "pip install aider-chat",
     },
     "codex": {
         "name": "Codex CLI",

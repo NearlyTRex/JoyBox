@@ -56,7 +56,6 @@ python[constants.EnvironmentType.LOCAL_UBUNTU] += [
     {"id": "xmltodict", "name": "XMLtoDict", "description": "XML to dict converter", "category": "Data"},
 
     # Dev
-    {"id": "aider-chat", "name": "Aider", "description": "AI pair-programming CLI (coding-agent harness)", "category": "Dev"},
     {"id": "capstone", "name": "Capstone", "description": "Disassembly framework", "category": "Dev"},
     {"id": "GitPython", "name": "GitPython", "description": "Git repository interface", "category": "Dev"},
     {"id": "keystone-engine", "name": "Keystone", "description": "Assembler framework", "category": "Dev"},
