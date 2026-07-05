@@ -54,7 +54,7 @@ class RemoteUbuntu(env.Environment):
             "flatpak": installers.Flatpak(**self.installer_options),
             "nginx": installers.Nginx(**self.installer_options),
             "certbot": installers.Certbot(**self.installer_options),
-            "ccusage": installers.Ccusage(**self.installer_options),
+            "node": installers.Node(**self.installer_options),
             "claude": installers.Claude(**self.installer_options),
             "cockpit": installers.Cockpit(**self.installer_options),
             "wordpress": installers.Wordpress(**self.installer_options),
@@ -69,7 +69,7 @@ class RemoteUbuntu(env.Environment):
         }
 
         # Get individual installers
-        self.installer_ccusage = self.available_components["ccusage"]
+        self.installer_node = self.available_components["node"]
         self.installer_config = self.available_components["config"]
         self.installer_dotfiles = self.available_components["dotfiles"]
         self.installer_githooks = self.available_components["githooks"]
@@ -94,18 +94,17 @@ class RemoteUbuntu(env.Environment):
 
     def setup(self):
 
-        # Update package lists and autoremove
+        # Update package lists
         if self.should_process_component("aptget"):
             logger.log_info("Updating package lists for AptGet")
             self.installer_aptget.update_package_lists()
-            logger.log_info("Auto-removing unused packages")
-            self.installer_aptget.auto_remove_packages()
 
         # Process all components
         success = self.process_components("install", force=self.flags.force)
 
-        # Autoremove packages
-        if self.should_process_component("aptget") and success:
+        # Autoremove packages (opt-in: --autoremove, off by default)
+        if self.flags.autoremove and self.should_process_component("aptget") and success:
+            logger.log_info("Auto-removing unused packages")
             if not self.installer_aptget.auto_remove_packages():
                 return False
         return success
@@ -115,8 +114,9 @@ class RemoteUbuntu(env.Environment):
         # Process components in reverse order
         success = self.process_components("uninstall", reverse_order=True, force=self.flags.force)
 
-        # Autoremove packages
-        if self.should_process_component("aptget") and success:
+        # Autoremove packages (opt-in: --autoremove, off by default)
+        if self.flags.autoremove and self.should_process_component("aptget") and success:
+            logger.log_info("Auto-removing unused packages")
             if not self.installer_aptget.auto_remove_packages():
                 return False
         return success

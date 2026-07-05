@@ -34,7 +34,7 @@ python3 bootstrap.py -a setup -t remote_ubuntu -s 0 --components wordpress
 | `flatpak` | Flatpak apps |
 | `nginx` | Nginx with config templates |
 | `certbot` | Let's Encrypt SSL certs |
-| `ccusage` | Claude Code usage monitoring |
+| `node` | Global npm packages (ccusage) |
 | `claude` | Claude Code CLI |
 | `cockpit` | Server management web UI |
 | `wordpress` | WordPress via Docker |

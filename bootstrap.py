@@ -49,6 +49,7 @@ parser.add_argument("-v", "--verbose", action = "store_true", help = "Enable ver
 parser.add_argument("-p", "--pretend_run", action = "store_true", help = "Enable pretend run mode")
 parser.add_argument("-x", "--exit_on_failure", action = "store_true", help = "Enable exit on failure mode")
 parser.add_argument("-f", "--force", action = "store_true", help = "Force operations even if component is already installed/uninstalled")
+parser.add_argument("--autoremove", action = "store_true", help = "Run 'apt-get autoremove' during setup/teardown (off by default; removes system-wide orphaned packages)")
 args, unknown = parser.parse_known_args()
 
 # Require action unless listing components
@@ -98,6 +99,8 @@ def main():
             environment_options["ssh_password"] = settings.get_value("UserData.Servers", f"server_{args.server_index}_pass")
     if args.force:
         environment_options["flags"].set(force = args.force)
+    if args.autoremove:
+        environment_options["flags"].set(autoremove = args.autoremove)
 
     # Create environment runner
     environment_runner = None

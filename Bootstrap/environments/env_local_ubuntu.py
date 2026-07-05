@@ -44,7 +44,7 @@ class LocalUbuntu(env.Environment):
             "wrappers": installers.Wrappers(**self.installer_options),
             "awscli": installers.AwsCli(**self.installer_options),
             "flatpak": installers.Flatpak(**self.installer_options),
-            "ccusage": installers.Ccusage(**self.installer_options),
+            "node": installers.Node(**self.installer_options),
             "chrome": installers.Chrome(**self.installer_options),
             "claude": installers.Claude(**self.installer_options),
             "deno": installers.Deno(**self.installer_options),
@@ -73,7 +73,7 @@ class LocalUbuntu(env.Environment):
         self.installer_sdl3 = self.available_components["sdl3"]
         self.installer_awscli = self.available_components["awscli"]
         self.installer_flatpak = self.available_components["flatpak"]
-        self.installer_ccusage = self.available_components["ccusage"]
+        self.installer_node = self.available_components["node"]
         self.installer_chrome = self.available_components["chrome"]
         self.installer_claude = self.available_components["claude"]
         self.installer_deno = self.available_components["deno"]
@@ -92,18 +92,17 @@ class LocalUbuntu(env.Environment):
 
     def setup(self):
 
-        # Update package lists and autoremove
+        # Update package lists
         if self.should_process_component("aptget"):
             logger.log_info("Updating package lists for AptGet")
             self.installer_aptget.update_package_lists()
-            logger.log_info("Auto-removing unused packages")
-            self.installer_aptget.auto_remove_packages()
 
         # Process all components
         success = self.process_components("install", force=self.flags.force)
 
-        # Autoremove packages
-        if self.should_process_component("aptget") and success:
+        # Autoremove packages (opt-in: --autoremove, off by default)
+        if self.flags.autoremove and self.should_process_component("aptget") and success:
+            logger.log_info("Auto-removing unused packages")
             if not self.installer_aptget.auto_remove_packages():
                 return False
         return success
@@ -113,8 +112,9 @@ class LocalUbuntu(env.Environment):
         # Process components in reverse order
         success = self.process_components("uninstall", reverse_order=True, force=self.flags.force)
 
-        # Autoremove packages
-        if self.should_process_component("aptget") and success:
+        # Autoremove packages (opt-in: --autoremove, off by default)
+        if self.flags.autoremove and self.should_process_component("aptget") and success:
+            logger.log_info("Auto-removing unused packages")
             if not self.installer_aptget.auto_remove_packages():
                 return False
         return success

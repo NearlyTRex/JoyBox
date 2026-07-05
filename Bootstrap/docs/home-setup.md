@@ -29,7 +29,7 @@ python3 bootstrap.py -a setup -t local_ubuntu
 
 This installs:
 - **Dev tools**: build-essential, cmake, git, golang, nodejs, dotnet, python tools, Qt dev packages, ripgrep, GitHub CLI
-- **AI/LLM**: Claude Code CLI, Ollama, ccusage (usage monitoring)
+- **AI/LLM**: Claude Code CLI, Ollama, npm coding tools (ccusage, Codex, OpenCode)
 - **Editors/IDEs**: VSCodium, GitKraken
 - **Browsers**: Chrome, Brave, Firefox
 - **Apps**: 1Password, GIMP, VLC, Handbrake, Audacity, OBS alternatives
@@ -62,7 +62,7 @@ python3 bootstrap.py -t local_ubuntu --list-components
 | `aptget` | All APT packages |
 | `awscli` | AWS CLI |
 | `flatpak` | Flatpak apps |
-| `ccusage` | Claude Code usage monitoring |
+| `node` | Global npm packages (ccusage, Codex, OpenCode) |
 | `chrome` | Google Chrome |
 | `claude` | Claude Code CLI |
 | `deno` | Deno JS runtime |
