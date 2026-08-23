@@ -20,6 +20,7 @@ python[constants.EnvironmentType.REMOTE_WINDOWS] = []
 python[constants.EnvironmentType.LOCAL_UBUNTU] += [
 
     # AI
+    {"id": "promptc", "spec": "git+https://github.com/NearlyTRex/Assay.git", "name": "Assay", "description": "Prompt compiler: assemble, validate, measure prompts", "category": "AI"},
     {"id": "tiktoken", "name": "Tiktoken", "description": "OpenAI tokenizer, exact token counts", "category": "AI"},
     {"id": "tokenizers", "name": "Tokenizers", "description": "HuggingFace tokenizers, exact token counts", "category": "AI"},
 

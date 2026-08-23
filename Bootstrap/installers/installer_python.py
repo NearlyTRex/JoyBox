@@ -10,10 +10,25 @@ from joybox import runoptions
 from joybox import logger
 
 # Extract package identifier from string or dict
+# This is the distribution name, used to query install state with pip show
 def get_package_id(pkg):
     if isinstance(pkg, str):
         return pkg
     return pkg.get("id", "")
+
+# Extract the arguments pip install should receive for a package
+# Defaults to the id, which is right for anything on PyPI. A package with a
+# "spec" installs from that instead, so a git URL or a local checkout can be
+# used while pip show still queries by the plain distribution name.
+def get_package_spec(pkg):
+    if isinstance(pkg, str):
+        return [pkg]
+    spec = pkg.get("spec")
+    if not spec:
+        return [pkg.get("id", "")]
+    if isinstance(spec, str):
+        return [spec]
+    return [str(part) for part in spec]
 
 # Get display info for a package
 def get_package_info(pkg):
@@ -80,7 +95,7 @@ class Python(installer.Installer):
             pkg_id = get_package_id(pkg)
             pkg_info = get_package_info(pkg)
             display_name = pkg_info["name"] if pkg_info["name"] != pkg_id else pkg_id
-            if not self.install_package(pkg_id):
+            if not self.install_package(get_package_spec(pkg)):
                 logger.log_error(f"Unable to install package {display_name}")
                 return False
         return True
@@ -105,7 +120,8 @@ class Python(installer.Installer):
         return code == 0
 
     def install_package(self, package):
-        code = self.connection.run_blocking([self.python_venv_pip_tool, "install", "--upgrade", package])
+        spec = package if isinstance(package, list) else [package]
+        code = self.connection.run_blocking([self.python_venv_pip_tool, "install", "--upgrade"] + spec)
         return code == 0
 
     def uninstall_package(self, package):
