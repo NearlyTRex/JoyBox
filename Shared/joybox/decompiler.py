@@ -240,11 +240,12 @@ def run_script_from_preset(
     if script_args is None:
         script_args = script_config.get("default_args_abs", script_config.get("default_args"))
 
-    # Run the script
+    # Run the script. A script config may override the preset-level program_name
+    # (e.g. per-program export targets); otherwise the preset default is used.
     return run_script(
         project_dir = preset["project_dir_abs"],
         project_name = preset["project_name"],
-        program_name = preset["program_name"],
+        program_name = script_config.get("program_name", preset["program_name"]),
         script_path = script_config["script_path_abs"],
         script_name = script_config["script_name"],
         script_args = script_args,

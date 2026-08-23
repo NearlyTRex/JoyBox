@@ -10,52 +10,31 @@ decompiler_presets = {
         "project_cspec": "watcomcpp",
         "scripts": {
             "export_all": {
-                "description": "Export all annotations to JSON files",
+                "description": "Export all annotations for every program in the project to annotations/<program_name>",
                 "script_path": "scripts/Python",
                 "script_name": "export_annotations.py",
+                "default_args": ["annotations/", "--all-programs"]
+            },
+            "export_nocedit": {
+                "description": "Export all annotations for nocedit.exe only",
+                "script_path": "scripts/Python",
+                "script_name": "export_annotations.py",
+                "program_name": "nocedit.exe",
                 "default_args": ["annotations/nocedit.exe"]
             },
-            "export_pseudocode": {
-                "description": "Export decompiled pseudocode only",
+            "export_nocturne": {
+                "description": "Export all annotations for nocturne.exe only",
                 "script_path": "scripts/Python",
                 "script_name": "export_annotations.py",
-                "default_args": ["annotations/nocedit.exe", "pseudocode"]
+                "program_name": "nocturne.exe",
+                "default_args": ["annotations/nocturne.exe"]
             },
-            "export_pseudocode_strict": {
-                "description": "Export pseudocode with strict mode (fail on compile errors)",
+            "export_tridx7": {
+                "description": "Export all annotations for tridx7.dll only",
                 "script_path": "scripts/Python",
                 "script_name": "export_annotations.py",
-                "default_args": ["annotations/nocedit.exe", "pseudocode", "--strict"]
-            },
-            "export_data_types": {
-                "description": "Export data type definitions only",
-                "script_path": "scripts/Python",
-                "script_name": "export_annotations.py",
-                "default_args": ["annotations/nocedit.exe", "data_types"]
-            },
-            "export_functions": {
-                "description": "Export function signatures only",
-                "script_path": "scripts/Python",
-                "script_name": "export_annotations.py",
-                "default_args": ["annotations/nocedit.exe", "functions"]
-            },
-            "export_symbols": {
-                "description": "Export all symbol types",
-                "script_path": "scripts/Python",
-                "script_name": "export_annotations.py",
-                "default_args": ["annotations/nocedit.exe", "symbols_class,symbols_label,symbols_namespace"]
-            },
-            "export_applied": {
-                "description": "Export all applied type annotations",
-                "script_path": "scripts/Python",
-                "script_name": "export_annotations.py",
-                "default_args": ["annotations/nocedit.exe", "applied_arrays,applied_basic_types,applied_enums,applied_pointers,applied_strings,applied_structs,applied_unions"]
-            },
-            "export_metadata": {
-                "description": "Export metadata, memory layout, and entry points",
-                "script_path": "scripts/Python",
-                "script_name": "export_annotations.py",
-                "default_args": ["annotations/nocedit.exe", "metadata,memory_layout,entry_points"]
+                "program_name": "tridx7.dll",
+                "default_args": ["annotations/tridx7.dll"]
             },
             "import_annotations": {
                 "description": "Import annotations from JSON files",
