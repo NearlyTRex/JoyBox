@@ -19,6 +19,7 @@ from installers.installer_flatpak import *
 from installers.installer_gitkraken import *
 from installers.installer_jenkins import *
 from installers.installer_kanboard import *
+from installers.installer_llamacpp import *
 from installers.installer_navidrome import *
 from installers.installer_nginx import *
 from installers.installer_node import *
@@ -29,6 +30,7 @@ from installers.installer_sdl3 import *
 from installers.installer_steam import *
 from installers.installer_sysctl import *
 from installers.installer_udev import *
+from installers.installer_vale import *
 from installers.installer_virtualbox import *
 from installers.installer_vscodium import *
 from installers.installer_wine import *

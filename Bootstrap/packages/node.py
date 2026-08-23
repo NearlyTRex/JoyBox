@@ -23,6 +23,7 @@ node[constants.EnvironmentType.LOCAL_UBUNTU] += [
     {"id": "@openai/codex", "name": "Codex CLI", "description": "OpenAI coding-agent harness", "category": "AI"},
     {"id": "ccusage", "name": "ccusage", "description": "Claude Code usage monitoring", "category": "AI"},
     {"id": "opencode-ai", "name": "OpenCode", "description": "Open-source coding-agent harness", "category": "AI"},
+    {"id": "promptfoo", "name": "Promptfoo", "description": "Prompt eval harness with deterministic assertions", "category": "AI"},
 ]
 
 ###########################################################

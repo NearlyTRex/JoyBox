@@ -19,6 +19,10 @@ python[constants.EnvironmentType.REMOTE_WINDOWS] = []
 ###########################################################
 python[constants.EnvironmentType.LOCAL_UBUNTU] += [
 
+    # AI
+    {"id": "tiktoken", "name": "Tiktoken", "description": "OpenAI tokenizer, exact token counts", "category": "AI"},
+    {"id": "tokenizers", "name": "Tokenizers", "description": "HuggingFace tokenizers, exact token counts", "category": "AI"},
+
     # API/Services
     {"id": "anthropic", "name": "Anthropic", "description": "Claude AI API client", "category": "API"},
     {"id": "PyGithub", "name": "PyGithub", "description": "GitHub API wrapper", "category": "API"},
@@ -74,7 +78,9 @@ python[constants.EnvironmentType.LOCAL_UBUNTU] += [
     # Parsing
     {"id": "bs4", "name": "BeautifulSoup", "description": "HTML/XML parser", "category": "Parsing"},
     {"id": "html-text", "name": "HTML-Text", "description": "Extract text from HTML", "category": "Parsing"},
+    {"id": "jsonschema", "name": "JSON Schema", "description": "JSON Schema validation", "category": "Parsing"},
     {"id": "lxml", "name": "lxml", "description": "XML/HTML processing library", "category": "Parsing"},
+    {"id": "PyYAML", "name": "PyYAML", "description": "YAML parser and emitter", "category": "Parsing"},
 
     # PDF
     {"id": "pikepdf", "name": "pikepdf", "description": "PDF reading and writing", "category": "PDF"},
@@ -88,11 +94,13 @@ python[constants.EnvironmentType.LOCAL_UBUNTU] += [
     {"id": "schedule", "name": "Schedule", "description": "Job scheduling", "category": "System"},
 
     # Testing
+    {"id": "pytest", "name": "pytest", "description": "Test framework", "category": "Testing"},
     {"id": "selenium", "name": "Selenium", "description": "Browser automation", "category": "Testing"},
     {"id": "webdriver_manager", "name": "Webdriver Manager", "description": "Manage browser drivers", "category": "Testing"},
 
     # Text
     {"id": "python-Levenshtein", "name": "Python-Levenshtein", "description": "Fast string matching", "category": "Text"},
+    {"id": "textstat", "name": "Textstat", "description": "Readability and complexity metrics", "category": "Text"},
     {"id": "thefuzz", "name": "TheFuzz", "description": "Fuzzy string matching", "category": "Text"},
     {"id": "Unidecode", "name": "Unidecode", "description": "Unicode to ASCII transliteration", "category": "Text"},
 
