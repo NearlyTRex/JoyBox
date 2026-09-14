@@ -35,16 +35,12 @@ server {{
     ssl_certificate /etc/letsencrypt/live/{domain}/fullchain.pem;
     ssl_certificate_key /etc/letsencrypt/live/{domain}/privkey.pem;
 
-    ssl_protocols TLSv1.2 TLSv1.3;
-    ssl_prefer_server_ciphers on;
-    ssl_ciphers HIGH:!aNULL:!MD5;
+    # Shared TLS policy and security headers
+    include /etc/nginx/snippets/ssl-params.conf;
 
-    root /var/www/html;
-    index index.html;
-
-    location / {{
-        try_files $uri $uri/ =404;
-    }}
+    # Whatever serves the apex owns this snippet: nginx installs a static
+    # fallback, wordpress replaces it with a proxy block.
+    include /etc/nginx/snippets/apex-root.conf;
 }}
 """
 

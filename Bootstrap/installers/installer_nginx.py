@@ -9,6 +9,26 @@ from . import installer
 from joybox import runoptions
 from joybox import logger
 
+# Apex fallback page
+#
+# Served at the apex only when no application owns it. Seeing this in
+# production means the apex-root.conf snippet was reverted to the fallback.
+apex_fallback_page = "<!doctype html><title>JoyBox</title><h1>JoyBox</h1><p>No site is configured for this domain yet.</p>"
+
+# Apex root snippet template
+#
+# Included by the certbot-managed apex 443 server block. This static version is
+# the fallback; the wordpress component replaces it with a proxy block and
+# restores this one on teardown.
+apex_root_snippet_template = """
+root /var/www/html;
+index index.html;
+
+location / {
+    try_files $uri $uri/ =404;
+}
+"""
+
 # Nginx config template
 nginx_config_template = """
 server {{
@@ -58,9 +78,13 @@ class Nginx(installer.Installer):
             self.connection.run_checked([self.nginx_manager_tool, "link_conf", "default"], sudo = True)
             self.connection.remove_file_or_directory("/tmp/default")
 
+        # Create apex root snippet
+        logger.log_info("Creating apex root snippet")
+        self.install_nginx_snippet("apex-root.conf", apex_root_snippet_template)
+
         # Create default page
         logger.log_info("Creating default page")
-        if self.connection.write_file("/tmp/index.html", "Welcome to nginx"):
+        if self.connection.write_file("/tmp/index.html", apex_fallback_page):
             self.connection.run_checked([self.nginx_manager_tool, "copy_html", "/tmp/index.html"], sudo = True)
             self.connection.remove_file_or_directory("/tmp/index.html")
 

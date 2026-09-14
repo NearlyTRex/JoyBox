@@ -32,6 +32,92 @@ python[constants.EnvironmentType.LOCAL_UBUNTU] += [
 ]
 ```
 
+## Docker Compose Apps
+
+Server apps that run as containers subclass `DockerAppInstaller`
+(`installers/installer_dockerapp.py`), which owns the whole lifecycle: directories, staging the
+compose and env files, nginx wiring, the compose lifecycle, backup and restore. A subclass
+declares data, not steps.
+
+```python
+from joybox import settings
+from joybox import runoptions
+from . import installer_dockerapp
+
+# Docker compose template
+docker_compose_template = """
+services:
+  myapp:
+    image: ${MYAPP_IMAGE}
+    container_name: myapp
+    restart: always
+    ports:
+      - "${MYAPP_PORT_HTTP}:80"
+    volumes:
+      - config_data:/config
+
+volumes:
+  config_data:
+"""
+
+# .env template
+env_template = """
+MYAPP_PORT_HTTP={port_http}
+"""
+
+# MyApp Installer
+class MyApp(installer_dockerapp.DockerAppInstaller):
+    def __init__(
+        self,
+        connection,
+        flags = runoptions.RunFlags(),
+        options = runoptions.RunOptions()):
+        super().__init__(connection, flags, options)
+        self.app_name = "myapp"
+        self.nginx_config_values = {
+            "domain": settings.get_value("UserData.Servers", "domain_name"),
+            "subdomain": settings.get_value("UserData.MyApp", "myapp_subdomain"),
+            "port_http": settings.get_value("UserData.MyApp", "myapp_port_http")
+        }
+        self.env_values = {
+            "port_http": settings.get_value("UserData.MyApp", "myapp_port_http")
+        }
+
+        # Templates
+        self.docker_compose_template = docker_compose_template
+        self.env_template = env_template
+
+        # Behavior
+        self.required_settings = ["domain", "subdomain", "port_http"]
+
+        # Backup
+        self.backup_label = "MyApp"
+        self.backup_volumes = ["config_data"]
+```
+
+Things worth knowing:
+
+- **Never write an image tag into the compose template.** Add the pin to
+  `packages/images.py` under the app name and reference it as `${MYAPP_IMAGE}`; the base class
+  appends it to the app's `.env`. The compose template is written verbatim, so the only
+  substitution mechanism is the env file.
+- **`required_settings`** names the keys that must be present. A key missing from `JoyBox.ini`
+  resolves to `None` and would otherwise be formatted into your config as the string `"None"`.
+- **Paths**: use `self.get_app_dir()`, never a literal `"$HOME/..."` string — command arguments
+  are shell-quoted, so `$HOME` in a list argument is not expanded.
+- **Backup**: declare `backup_database` (a compose service name), `backup_volumes` (compose-local
+  volume names) and/or `backup_dirs` (subdirectories of the app dir). Declaring nothing means the
+  app is skipped by `-a backup`.
+- **Override points**: `post_install()` runs after the containers are up;
+  `install_nginx_config()` / `uninstall_nginx_config()` replace the default vhost wiring
+  (WordPress uses these to own the apex domain).
+- For a websocket app set
+  `self.nginx_config_template = installer_dockerapp.nginx_http_websocket_config_template`.
+
+Then register it in `installers/__init__.py` and in the environment's component dict
+(`environments/env_remote_ubuntu.py`), and add its subdomain to the certbot SAN list in
+`installers/installer_certbot.py`.
+
 ## Custom Installers (for non-trivial installs)
 
 For apps that need external repos, GPG keys, or special setup (not just `apt install`), create a custom installer.
@@ -39,17 +125,17 @@ For apps that need external repos, GPG keys, or special setup (not just `apt ins
 1. Create `installers/installer_myapp.py`:
 
 ```python
-import util
+from joybox import runoptions
+from joybox import logger
 from . import installer
 
 class MyApp(installer.Installer):
     def __init__(
         self,
-        config,
         connection,
-        flags = util.RunFlags(),
-        options = util.RunOptions()):
-        super().__init__(config, connection, flags, options)
+        flags = runoptions.RunFlags(),
+        options = runoptions.RunOptions()):
+        super().__init__(connection, flags, options)
         # Setup URLs, paths, etc.
         self.gpg_url = "https://example.com/key.gpg"
         self.repo_url = "https://example.com/repo"
@@ -62,7 +148,7 @@ class MyApp(installer.Installer):
         return self.connection.does_file_or_directory_exist("/usr/bin/myapp")
 
     def install(self):
-        util.log_info("Installing MyApp")
+        logger.log_info("Installing MyApp")
         # Download and install GPG key
         self.connection.download_file(self.gpg_url, "/tmp/myapp.gpg")
         self.connection.run_checked(
@@ -81,7 +167,7 @@ class MyApp(installer.Installer):
         return True
 
     def uninstall(self):
-        util.log_info("Uninstalling MyApp")
+        logger.log_info("Uninstalling MyApp")
         self.connection.run_checked([self.aptget_tool, "remove", "-y", "myapp"], sudo = True)
         self.connection.remove_file_or_directory(self.sources_list_path, sudo = True)
         self.connection.remove_file_or_directory(self.archive_key_path, sudo = True)
@@ -92,8 +178,8 @@ For apps that just download a .deb directly (no repo):
 
 ```python
 class MyApp(installer.Installer):
-    def __init__(self, config, connection, flags = util.RunFlags(), options = util.RunOptions()):
-        super().__init__(config, connection, flags, options)
+    def __init__(self, connection, flags = runoptions.RunFlags(), options = runoptions.RunOptions()):
+        super().__init__(connection, flags, options)
         self.download_url = "https://example.com/myapp-amd64.deb"
         self.deb_path = "/tmp/myapp-amd64.deb"
 
@@ -101,14 +187,14 @@ class MyApp(installer.Installer):
         return self.connection.does_file_or_directory_exist("/usr/bin/myapp")
 
     def install(self):
-        util.log_info("Installing MyApp")
+        logger.log_info("Installing MyApp")
         self.connection.download_file(self.download_url, self.deb_path)
         self.connection.run_checked([self.aptget_tool, "install", "-y", self.deb_path], sudo = True)
         self.connection.remove_file_or_directory(self.deb_path)
         return True
 
     def uninstall(self):
-        util.log_info("Uninstalling MyApp")
+        logger.log_info("Uninstalling MyApp")
         self.connection.run_checked([self.aptget_tool, "remove", "-y", "myapp"], sudo = True)
         return True
 ```

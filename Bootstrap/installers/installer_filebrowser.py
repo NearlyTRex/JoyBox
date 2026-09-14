@@ -5,7 +5,7 @@ import sys
 # Local imports
 import constants
 from joybox import settings
-from . import installer
+from . import installer_dockerapp
 from joybox import runoptions
 from joybox import logger
 
@@ -27,7 +27,7 @@ server {{
 }}
 
 server {{
-    listen 443 ssl http2;
+    listen 443 ssl;
     server_name {subdomain}.{domain};
 
     # SSL Configuration
@@ -94,10 +94,9 @@ server {{
 
 # Docker compose template
 docker_compose_template = """
-version: '3.8'
 services:
   filebrowser:
-    image: filebrowser/filebrowser
+    image: ${FILEBROWSER_IMAGE}
     container_name: filebrowser
     restart: always
     ports:
@@ -126,7 +125,7 @@ FILEBROWSER_ADMIN_PASS={admin_pass}
 """
 
 # FileBrowser Installer
-class FileBrowser(installer.Installer):
+class FileBrowser(installer_dockerapp.DockerAppInstaller):
     def __init__(
         self,
         connection,
@@ -134,7 +133,6 @@ class FileBrowser(installer.Installer):
         options = runoptions.RunOptions()):
         super().__init__(connection, flags, options)
         self.app_name = "filebrowser"
-        self.app_dir = f"$HOME/apps/{self.app_name}"
         self.nginx_config_values = {
             "domain": settings.get_value("UserData.Servers", "domain_name"),
             "subdomain": settings.get_value("UserData.FileBrowser", "filebrowser_subdomain"),
@@ -147,65 +145,14 @@ class FileBrowser(installer.Installer):
             "admin_pass": settings.get_value("UserData.FileBrowser", "filebrowser_admin_pass")
         }
 
-    def get_supported_environments(self):
-        return [
-            constants.EnvironmentType.REMOTE_UBUNTU,
-        ]
+        # Templates
+        self.docker_compose_template = docker_compose_template
+        self.env_template = env_template
+        self.nginx_config_template = nginx_config_template
 
-    def is_installed(self):
-        containers = self.connection.run_output("docker ps -a --format '{{.Names}}'")
-        return any(self.app_name in name for name in containers.splitlines())
+        # Behavior
+        self.required_settings = ["domain", "subdomain", "port_http", "user_root", "admin_user", "admin_pass"]
 
-    def install(self):
-
-        # Create directories
-        logger.log_info("Creating directories")
-        self.connection.make_directory(self.app_dir)
-
-        # Write docker compose
-        logger.log_info("Writing docker compose")
-        if self.connection.write_file("/tmp/docker-compose.yml", docker_compose_template):
-            self.connection.move_file_or_directory("/tmp/docker-compose.yml", f"{self.app_dir}/docker-compose.yml")
-
-        # Write docker env
-        logger.log_info("Writing docker env")
-        if self.connection.write_file("/tmp/.env", env_template.format(**self.env_values)):
-            self.connection.move_file_or_directory("/tmp/.env", f"{self.app_dir}/.env")
-
-        # Create Nginx entry
-        logger.log_info("Creating Nginx entry")
-        if self.connection.write_file(f"/tmp/{self.app_name}.conf", nginx_config_template.format(**self.nginx_config_values)):
-            self.connection.run_checked([self.nginx_manager_tool, "install_conf", f"/tmp/{self.app_name}.conf"], sudo = True)
-            self.connection.run_checked([self.nginx_manager_tool, "link_conf", f"{self.app_name}.conf"], sudo = True)
-            self.connection.remove_file_or_directory(f"/tmp/{self.app_name}.conf")
-
-        # Restart Nginx
-        logger.log_info("Restarting Nginx")
-        self.connection.run_checked([self.nginx_manager_tool, "systemctl", "restart"], sudo = True)
-
-        # Start docker
-        logger.log_info("Starting docker")
-        self.connection.set_current_working_directory(self.app_dir)
-        self.connection.run_checked([self.docker_compose_tool, "--env-file", f"{self.app_dir}/.env", "up", "-d", "--build"])
-        return True
-
-    def uninstall(self):
-
-        # Stop docker
-        logger.log_info("Stopping docker")
-        self.connection.set_current_working_directory(self.app_dir)
-        self.connection.run_checked([self.docker_compose_tool, "--env-file", f"{self.app_dir}/.env", "down", "-v"])
-        self.connection.set_current_working_directory(None)
-
-        # Remove directory
-        logger.log_info("Removing directory")
-        self.connection.remove_file_or_directory(self.app_dir)
-
-        # Remove Nginx entry
-        logger.log_info("Removing Nginx entry")
-        self.connection.run_checked([self.nginx_manager_tool, "remove_conf", f"{self.app_name}.conf"], sudo = True)
-
-        # Restart Nginx
-        logger.log_info("Restarting Nginx")
-        self.connection.run_checked([self.nginx_manager_tool, "systemctl", "restart"], sudo = True)
-        return True
+        # Backup
+        self.backup_label = "FileBrowser"
+        self.backup_volumes = ["config_data"]

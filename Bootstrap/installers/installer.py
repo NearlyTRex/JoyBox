@@ -2,6 +2,7 @@
 import os
 import sys
 import copy
+import datetime
 
 # Local imports
 from joybox import systemtools as tools
@@ -39,6 +40,13 @@ class Installer:
         self.gpg_tool = programs.get_tool_program("Gpg")
         self.docker_tool = tools.get_docker_tool()
         self.docker_compose_tool = tools.get_docker_compose_tool()
+
+        # Compose v2 is invoked as "docker compose" (two words). The v1
+        # "docker-compose" binary that get_docker_compose_tool() resolves has
+        # been end-of-life since July 2023; docker-compose-v2 is already
+        # installed by serverpackages.txt.
+        self.docker_compose_command = [self.docker_tool, "compose"]
+        self.remote_home = None
         self.nginx_manager_tool = "/usr/local/bin/manager_nginx.sh"
         self.cert_manager_tool = "/usr/local/bin/manager_certbot.sh"
         self.cockpit_manager_tool = "/usr/local/bin/manager_cockpit.sh"
@@ -63,6 +71,63 @@ class Installer:
             env_type = self.get_environment_type()
         return env_type in self.get_supported_environments()
 
+    def get_remote_home(self):
+
+        # Resolve the remote home directory once and cache it.
+        # Command lists are shlex-quoted, so a literal "$HOME" in a path
+        # argument is never expanded by the remote shell.
+        if not self.remote_home:
+            resolved = self.connection.run_output('printf %s "$HOME"').strip()
+            if not resolved:
+                logger.log_warning("Unable to resolve remote home, falling back to $HOME")
+                resolved = "$HOME"
+            self.remote_home = resolved
+        return self.remote_home
+
+    def get_app_dir(self):
+        return "%s/apps/%s" % (self.get_remote_home(), self.app_name)
+
+    def install_nginx_snippet(self, snippet_name, contents):
+
+        # Snippets are included by server blocks owned by other components,
+        # so ownership of the included file can change hands without two
+        # server blocks ever claiming the same server_name.
+        snippet_tmp_path = f"/tmp/{snippet_name}"
+        if self.connection.write_file(snippet_tmp_path, contents):
+            self.connection.run_checked([self.nginx_manager_tool, "install_snippet", snippet_tmp_path], sudo = True)
+            self.connection.remove_file_or_directory(snippet_tmp_path)
+        return True
+
+    def compose_down(self):
+
+        # Stop the compose project. Volumes are preserved unless --purge-data
+        # was passed; "down -v" destroys databases and app data.
+        app_dir = self.get_app_dir()
+        down_command = self.docker_compose_command + ["--env-file", f"{app_dir}/.env", "down"]
+        if self.flags.purge_data:
+            logger.log_warning(f"Purging data: deleting container volumes for {self.app_name}")
+            down_command += ["-v"]
+        else:
+            logger.log_info(f"Keeping container volumes for {self.app_name} (use --purge-data to delete)")
+        self.connection.set_current_working_directory(app_dir)
+        self.connection.run_checked(down_command)
+        self.connection.set_current_working_directory(None)
+        return True
+
+    def retire_app_dir(self):
+
+        # Bind-mounted app data lives inside the app directory, so removing it
+        # destroys that data even when the volumes were kept. Rename instead.
+        app_dir = self.get_app_dir()
+        if self.flags.purge_data:
+            logger.log_warning(f"Purging data: removing {app_dir}")
+            self.connection.remove_file_or_directory(app_dir)
+            return True
+        retired_dir = "%s.removed-%s" % (app_dir, datetime.datetime.now().strftime("%Y%m%d_%H%M%S"))
+        logger.log_info(f"Preserving app directory, moving to {retired_dir}")
+        self.connection.move_file_or_directory(app_dir, retired_dir)
+        return True
+
     def is_installed(self):
         return False
 
@@ -75,7 +140,11 @@ class Installer:
     def uninstall(self):
         return False
 
-    def backup(self):
+    def backup(self, tag = ""):
+        return True
+
+    def restore(self):
+        logger.log_info(f"No restore implemented for {self.__class__.__name__}")
         return True
 
     def install_from_script(self, url, tmp_name, runner = "sh"):

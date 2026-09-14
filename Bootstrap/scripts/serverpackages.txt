@@ -23,7 +23,6 @@ wget
 
 # Virtualization
 docker-buildx
-docker-compose
 docker-compose-v2
 docker.io
 flatpak

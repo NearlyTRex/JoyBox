@@ -6,6 +6,7 @@ NGINX_SITES_AVAILABLE="/etc/nginx/sites-available"
 NGINX_SITES_ENABLED="/etc/nginx/sites-enabled"
 NGINX_STREAMS_AVAILABLE="/etc/nginx/streams-available"
 NGINX_STREAMS_ENABLED="/etc/nginx/streams-enabled"
+NGINX_SNIPPETS="/etc/nginx/snippets"
 HTML_DIR="/var/www/html"
 ACME_CHALLENGE_DIR="/var/www/html/.well-known/acme-challenge"
 
@@ -19,6 +20,8 @@ print_usage() {
     echo "  $0 remove_stream_conf <conf_filename>"
     echo "  $0 open_port <port_number>"
     echo "  $0 close_port <port_number>"
+    echo "  $0 install_snippet <absolute_path_to_conf>"
+    echo "  $0 remove_snippet <conf_filename>"
     echo "  $0 copy_html <absolute_path_to_html_files>"
     echo "  $0 systemctl <reload|restart|status>"
     exit 1
@@ -32,19 +35,30 @@ check_path() {
     fi
 }
 
+# Source files are staged by the installers under /tmp before being copied
+# into place. Anything else is rejected: this script runs as root with
+# unrestricted arguments, so the allowlist is the only containment.
+ALLOWED_SOURCE_PREFIXES=("/tmp/" "/var/tmp/")
+
 sanitize_path() {
     local path="$1"
     if [[ "$path" != /* ]]; then
-        echo "Error: Path must be absolute or under \$HOME."
+        echo "Error: Path must be absolute."
         exit 1
     fi
 
     local abs_path
     abs_path=$(realpath -m "$path")
-    if [[ "$abs_path" != "$HOME/"* && "$abs_path" != "$HOME" && "$abs_path" != /* ]]; then
-        echo "Error: Path is outside allowed directories."
-        exit 1
-    fi
+
+    local prefix
+    for prefix in "${ALLOWED_SOURCE_PREFIXES[@]}"; do
+        if [[ "$abs_path" == "$prefix"* ]]; then
+            return 0
+        fi
+    done
+
+    echo "Error: Path '$abs_path' is outside the allowed source directories (${ALLOWED_SOURCE_PREFIXES[*]})."
+    exit 1
 }
 
 check_directory_traversal() {
@@ -179,6 +193,26 @@ case "$1" in
             fi
         else
             echo "UFW is not active or not installed. Skipping firewall configuration."
+        fi
+        ;;
+
+    install_snippet)
+        sanitize_path "$2"
+        check_path "$2"
+
+        mkdir -p "$NGINX_SNIPPETS"
+        cp -R "$2" "$NGINX_SNIPPETS/"
+        echo "Snippet installed to $NGINX_SNIPPETS."
+        ;;
+
+    remove_snippet)
+        check_directory_traversal "$2"
+
+        if [ -e "$NGINX_SNIPPETS/$2" ]; then
+            rm -f "$NGINX_SNIPPETS/$2"
+            echo "Snippet $2 removed."
+        else
+            echo "Snippet $2 not found, nothing to remove."
         fi
         ;;
 

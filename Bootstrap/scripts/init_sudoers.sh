@@ -59,7 +59,7 @@ SUDOERS_FILE="/etc/sudoers.d/99-${USERNAME}-joybox"
 if [[ "$ACTION" == "setup" ]]; then
     load_packages "$BASE_DIR/serverpackages.txt"
     load_managers "$BASE_DIR/servermanagers.txt"
-    install_managers
+    install_managers "$BASE_DIR/../managers"
     setup_sudoers "$USERNAME" "$SUDOERS_FILE"
 elif [[ "$ACTION" == "cleanup" ]]; then
     cleanup_sudoers "$SUDOERS_FILE"

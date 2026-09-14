@@ -55,7 +55,6 @@ server {{
 
 # Docker compose template
 docker_compose_template = """
-version: '3.8'
 services:
   ghidra_server:
     build:
@@ -399,7 +398,6 @@ class Ghidra(installer.Installer):
         options = runoptions.RunOptions()):
         super().__init__(connection, flags, options)
         self.app_name = "ghidra_server"
-        self.app_dir = f"$HOME/apps/{self.app_name}"
         self.app_domain = settings.get_value("UserData.Servers", "domain_name")
         self.app_admin_user = settings.get_value("UserData.Ghidra", "ghidra_admin_user")
         self.app_admin_pass = settings.get_value("UserData.Ghidra", "ghidra_admin_pass")
@@ -430,13 +428,13 @@ class Ghidra(installer.Installer):
 
         # Create directories
         logger.log_info("Creating directories")
-        self.connection.make_directory(self.app_dir)
-        self.connection.make_directory(f"{self.app_dir}/certs")
+        self.connection.make_directory(self.get_app_dir())
+        self.connection.make_directory(f"{self.get_app_dir()}/certs")
 
         # Generate keystore password
         logger.log_info("Generate keystore password")
         keystore_password = ''.join(secrets.choice(string.ascii_letters + string.digits) for _ in range(32))
-        keystore_password_file = f"{self.app_dir}/certs/keystore_password.txt"
+        keystore_password_file = f"{self.get_app_dir()}/certs/keystore_password.txt"
         if self.connection.write_file("/tmp/keystore_password.txt", keystore_password):
             self.connection.move_file_or_directory("/tmp/keystore_password.txt", keystore_password_file)
             self.connection.change_permission(keystore_password_file, "644")
@@ -447,7 +445,7 @@ class Ghidra(installer.Installer):
             self.cert_manager_tool,
             "export_keystore",
             self.app_domain,
-            f"{self.app_dir}/certs/ghidra-keystore.p12",
+            f"{self.get_app_dir()}/certs/ghidra-keystore.p12",
             keystore_password,
             "ghidra",
             "p12",
@@ -457,29 +455,29 @@ class Ghidra(installer.Installer):
         # Write entrypoint script
         logger.log_info("Writing entrypoint script")
         if self.connection.write_file("/tmp/entrypoint.sh", entrypoint_script):
-            self.connection.move_file_or_directory("/tmp/entrypoint.sh", f"{self.app_dir}/entrypoint.sh")
+            self.connection.move_file_or_directory("/tmp/entrypoint.sh", f"{self.get_app_dir()}/entrypoint.sh")
 
         # Write Ghidra scripts
         logger.log_info("Writing Ghidra scripts")
         if self.connection.write_file("/tmp/ExportToGzf.java", export_to_gzf_script):
-            self.connection.move_file_or_directory("/tmp/ExportToGzf.java", f"{self.app_dir}/ExportToGzf.java")
+            self.connection.move_file_or_directory("/tmp/ExportToGzf.java", f"{self.get_app_dir()}/ExportToGzf.java")
         if self.connection.write_file("/tmp/ListAndExportRepository.java", list_and_export_script):
-            self.connection.move_file_or_directory("/tmp/ListAndExportRepository.java", f"{self.app_dir}/ListAndExportRepository.java")
+            self.connection.move_file_or_directory("/tmp/ListAndExportRepository.java", f"{self.get_app_dir()}/ListAndExportRepository.java")
 
         # Write Dockerfile
         logger.log_info("Writing Dockerfile")
         if self.connection.write_file("/tmp/Dockerfile", dockerfile_template):
-            self.connection.move_file_or_directory("/tmp/Dockerfile", f"{self.app_dir}/Dockerfile")
+            self.connection.move_file_or_directory("/tmp/Dockerfile", f"{self.get_app_dir()}/Dockerfile")
 
         # Write docker compose
         logger.log_info("Writing docker compose")
         if self.connection.write_file("/tmp/docker-compose.yml", docker_compose_template):
-            self.connection.move_file_or_directory("/tmp/docker-compose.yml", f"{self.app_dir}/docker-compose.yml")
+            self.connection.move_file_or_directory("/tmp/docker-compose.yml", f"{self.get_app_dir()}/docker-compose.yml")
 
         # Write docker env
         logger.log_info("Writing docker env")
         if self.connection.write_file("/tmp/.env", env_template.format(**self.env_values)):
-            self.connection.move_file_or_directory("/tmp/.env", f"{self.app_dir}/.env")
+            self.connection.move_file_or_directory("/tmp/.env", f"{self.get_app_dir()}/.env")
 
         # Create nginx stream entry
         logger.log_info("Creating nginx stream entry")
@@ -495,10 +493,10 @@ class Ghidra(installer.Installer):
 
         # Start docker
         logger.log_info("Starting docker")
-        self.connection.set_current_working_directory(self.app_dir)
+        self.connection.set_current_working_directory(self.get_app_dir())
         self.connection.set_environmentVar("DOCKER_BUILDKIT", "1")
         self.connection.set_environmentVar("COMPOSE_DOCKER_CLI_BUILD", "1")
-        self.connection.run_checked([self.docker_compose_tool, "--env-file", f"{self.app_dir}/.env", "up", "-d", "--build"])
+        self.connection.run_checked(self.docker_compose_command + ["--env-file", f"{self.get_app_dir()}/.env", "up", "-d", "--build"])
 
         # Wait for server to be ready for admin commands
         logger.log_info("Waiting for server readiness...")
@@ -516,13 +514,11 @@ class Ghidra(installer.Installer):
 
         # Stop docker
         logger.log_info("Stopping docker")
-        self.connection.set_current_working_directory(self.app_dir)
-        self.connection.run_checked([self.docker_compose_tool, "--env-file", f"{self.app_dir}/.env", "down", "-v"])
-        self.connection.set_current_working_directory(None)
+        self.compose_down()
 
-        # Remove directory
-        logger.log_info("Removing directory")
-        self.connection.remove_file_or_directory(self.app_dir)
+        # Retire directory
+        logger.log_info("Retiring directory")
+        self.retire_app_dir()
 
         # Remove nginx stream entry
         logger.log_info("Removing nginx stream entry")

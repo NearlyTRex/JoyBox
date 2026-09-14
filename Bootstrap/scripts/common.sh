@@ -62,18 +62,33 @@ load_managers() {
 }
 
 install_managers() {
+    local managers_dir="${1:-}"
     echo "Installing manager scripts..."
     mkdir -p /usr/local/bin
 
     for script in "${MANAGERS[@]}"; do
-        local url="https://raw.githubusercontent.com/NearlyTRex/JoyBox/main/Bootstrap/managers/$script"
         local script_path="/usr/local/bin/$script"
+
+        # Prefer the checkout this script is running from, so a manager change
+        # takes effect without first being pushed to the remote branch. The
+        # package and manager lists are already read locally, so downloading
+        # the managers themselves from a branch was the odd one out.
+        if [[ -n "$managers_dir" && -r "$managers_dir/$script" ]]; then
+            echo "Installing $script from $managers_dir..."
+            cp "$managers_dir/$script" "$script_path"
+            chmod +x "$script_path"
+            echo "Installed $script to $script_path"
+            continue
+        fi
+
+        local url="https://raw.githubusercontent.com/NearlyTRex/JoyBox/main/Bootstrap/managers/$script"
         echo "Downloading $script from $url..."
         if curl -fsSL -o "$script_path" "$url"; then
             chmod +x "$script_path"
             echo "Installed $script to $script_path"
         else
             echo "Error: Failed to download $url"
+            echo "Hint: run this from a JoyBox checkout so the local copy is used instead."
             exit 1
         fi
     done
@@ -225,6 +240,20 @@ add_header Referrer-Policy "strict-origin-when-cross-origin";
 add_header Permissions-Policy "geolocation=(), microphone=()";
 add_header Strict-Transport-Security "max-age=63072000; includeSubDomains; preload" always;
 EOF
+
+    # HTTP/2 is enabled here rather than on each "listen" line: the
+    # "listen ... http2" form is deprecated from nginx 1.25.1, and setting it on
+    # some 443 blocks but not others triggers "protocol options redefined". The
+    # directive form does not exist before 1.25.1, so only add it when supported.
+    local nginx_version
+    nginx_version=$(nginx -v 2>&1 | grep -oE '[0-9]+\.[0-9]+\.[0-9]+' | head -1)
+    if [ -n "$nginx_version" ] && [ "$(printf '%s\n1.25.1\n' "$nginx_version" | sort -V | head -1)" = "1.25.1" ]; then
+        echo "http2 on;" >> /etc/nginx/snippets/ssl-params.conf
+        echo "Enabled HTTP/2 for nginx $nginx_version"
+    else
+        echo "nginx ${nginx_version:-unknown} predates the http2 directive, leaving HTTP/2 off"
+    fi
+
     echo "NGINX security headers configuration complete."
 }
 

@@ -324,7 +324,6 @@ aptget[constants.EnvironmentType.REMOTE_UBUNTU] += [
 
     # Virtualization
     {"id": "docker-buildx", "name": "Docker Buildx", "description": "Docker build extensions", "category": "Virtualization"},
-    {"id": "docker-compose", "name": "Docker Compose", "description": "Multi-container orchestration", "category": "Virtualization"},
     {"id": "docker-compose-v2", "name": "Docker Compose v2", "description": "Docker Compose plugin", "category": "Virtualization"},
     {"id": "docker.io", "name": "Docker", "description": "Container runtime", "category": "Virtualization"},
     {"id": "flatpak", "name": "Flatpak", "description": "Application sandboxing", "category": "Virtualization"},

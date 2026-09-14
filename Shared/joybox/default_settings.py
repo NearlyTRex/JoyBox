@@ -83,6 +83,12 @@ ini_defaults["UserData.Wordpress"]["wordpress_db_user"] = "wpuser"
 ini_defaults["UserData.Wordpress"]["wordpress_db_pass"] = ""
 ini_defaults["UserData.Wordpress"]["wordpress_db_name"] = "wpdatabase"
 ini_defaults["UserData.Wordpress"]["wordpress_db_root_pass"] = ""
+ini_defaults["UserData.Wordpress"]["wordpress_site_title"] = "JoyBox"
+ini_defaults["UserData.Wordpress"]["wordpress_site_tagline"] = ""
+ini_defaults["UserData.Wordpress"]["wordpress_admin_user"] = "admin"
+ini_defaults["UserData.Wordpress"]["wordpress_admin_pass"] = ""
+ini_defaults["UserData.Wordpress"]["wordpress_admin_email"] = ""
+ini_defaults["UserData.Wordpress"]["wordpress_seed_enabled"] = "True"
 
 # UserData.Audiobookshelf
 ini_defaults["UserData.Audiobookshelf"] = {}
@@ -124,6 +130,24 @@ ini_defaults["UserData.Ghidra"]["ghidra_port_ssl"] = "13104"
 ini_defaults["UserData.Ghidra"]["ghidra_port_stream"] = "13105"
 ini_defaults["UserData.Ghidra"]["ghidra_admin_user"] = "admin"
 ini_defaults["UserData.Ghidra"]["ghidra_admin_pass"] = ""
+
+# UserData.Backup
+ini_defaults["UserData.Backup"] = {}
+ini_defaults["UserData.Backup"]["backup_root"] = "/mnt/storage/Backups"
+ini_defaults["UserData.Backup"]["backup_keep"] = "7"
+
+# UserData.Images
+# Per-server overrides for the container image pins in packages/images.py.
+# Leave commented out to track the pinned version.
+ini_defaults["UserData.Images"] = {}
+ini_defaults["UserData.Images"]["audiobookshelf_image"] = ""
+ini_defaults["UserData.Images"]["filebrowser_image"] = ""
+ini_defaults["UserData.Images"]["jenkins_image"] = ""
+ini_defaults["UserData.Images"]["kanboard_image"] = ""
+ini_defaults["UserData.Images"]["navidrome_image"] = ""
+ini_defaults["UserData.Images"]["wordpress_image"] = ""
+ini_defaults["UserData.Images"]["wordpress_cli_image"] = ""
+ini_defaults["UserData.Images"]["wordpress_db_image"] = ""
 
 # UserData.Servers
 ini_defaults["UserData.Servers"] = {}

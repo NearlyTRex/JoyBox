@@ -10,6 +10,7 @@ from installers.installer_claude import *
 from installers.installer_config import *
 from installers.installer_dconf import *
 from installers.installer_deno import *
+from installers.installer_dockerapp import *
 from installers.installer_dotfiles import *
 from installers.installer_gh import *
 from installers.installer_ghidra import *

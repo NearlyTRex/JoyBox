@@ -46,12 +46,13 @@ class Environment:
             return True
         return component_name in self.components_to_process
 
-    def process_components(self, action_method_name, reverse_order = False, force = False):
+    def process_components(self, action_method_name, reverse_order = False, force = False, continue_on_failure = False):
         component_items = list(self.available_components.items())
         if reverse_order:
             component_items = reversed(component_items)
         processed_count = 0
         skipped_count = 0
+        failed_count = 0
         for component_name, installer in component_items:
             if self.should_process_component(component_name):
                 should_skip = False
@@ -69,12 +70,19 @@ class Environment:
                     logger.log_info(f"Starting {action_method_name.title()} of {component_name}")
                     method = getattr(installer, action_method_name)
                     if not method():
-                        return False
-                    processed_count += 1
+                        if not continue_on_failure:
+                            return False
+                        logger.log_error(f"{action_method_name.title()} of {component_name} failed, continuing")
+                        failed_count += 1
+                    else:
+                        processed_count += 1
         if processed_count == 0 and skipped_count == 0 and self.components_to_process is not None:
             logger.log_warning("No components were processed. Check component names.")
         elif skipped_count > 0:
             logger.log_info(f"Processed {processed_count} components, skipped {skipped_count} components")
+        if failed_count > 0:
+            logger.log_error(f"{failed_count} component(s) failed")
+            return False
         return True
 
     def status(self):
@@ -97,4 +105,7 @@ class Environment:
         return False
 
     def backup(self):
-        return self.process_components("backup")
+        return self.process_components("backup", continue_on_failure = True)
+
+    def restore(self):
+        return self.process_components("restore")

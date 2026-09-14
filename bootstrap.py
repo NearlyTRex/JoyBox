@@ -16,12 +16,13 @@ from joybox import settings
 from joybox import default_settings
 import constants
 import environments
+import packages
 
 # Set up arguments
 parser = argparse.ArgumentParser(description="Environment bootstrap script.")
 parser.add_argument(
     "-a", "--action",
-    choices = ["setup", "teardown", "status", "backup"],
+    choices = ["setup", "teardown", "status", "backup", "restore"],
     help = "Action to perform")
 parser.add_argument(
     "-t", "--type",
@@ -50,17 +51,22 @@ parser.add_argument("-p", "--pretend_run", action = "store_true", help = "Enable
 parser.add_argument("-x", "--exit_on_failure", action = "store_true", help = "Enable exit on failure mode")
 parser.add_argument("-f", "--force", action = "store_true", help = "Force operations even if component is already installed/uninstalled")
 parser.add_argument("--autoremove", action = "store_true", help = "Run 'apt-get autoremove' during setup/teardown (off by default; removes system-wide orphaned packages)")
+parser.add_argument("--purge-data", dest = "purge_data", action = "store_true", help = "Delete container volumes during teardown (off by default; this destroys databases and app data)")
+parser.add_argument("--list-images", dest = "list_images", action = "store_true", help = "List the pinned container image for each docker component and exit")
+parser.add_argument("--backup-id", dest = "backup_id", help = "Backup timestamp to restore, or 'latest'")
+parser.add_argument("--confirm", dest = "confirm", help = "Type 'restore' to confirm a destructive restore")
 args, unknown = parser.parse_known_args()
 
 # Require action unless listing components
-if not args.list_components and not args.action:
+is_info_only = args.list_components or args.list_images
+if not is_info_only and not args.action:
     parser.error("the following arguments are required: -a/--action")
 
 # Check arguments
 is_local_ubuntu = args.type == constants.EnvironmentType.LOCAL_UBUNTU
 is_remote_ubuntu = args.type == constants.EnvironmentType.REMOTE_UBUNTU
 is_server_index = isinstance(args.server_index, int) and args.server_index >= 0
-if is_remote_ubuntu and not is_server_index and not args.list_components:
+if is_remote_ubuntu and not is_server_index and not is_info_only:
     logger.log_error_and_quit("No server specified for remote machine")
 
 # Main
@@ -72,13 +78,28 @@ def main():
     # Get config file
     config_file = os.path.realpath(args.config_file)
     settings.set_settings_file(config_file)
-    if not os.path.exists(config_file) and not args.list_components:
+    if not os.path.exists(config_file) and not is_info_only:
         if args.action == "setup":
             logger.log_info(f"Config file '{config_file}' not found; creating it with defaults")
             default_settings.create_default_config_file(config_file)
             logger.log_info(f"Created '{config_file}' — edit it to change any values, then re-run if needed")
         else:
             logger.log_error_and_quit(f"Config file '{config_file}' does not exist")
+
+    # Handle list images request
+    if args.list_images:
+        logger.log_info("Pinned container images:")
+        for app_name in sorted(packages.docker_images.keys()):
+            logger.log_info(f"  {app_name}:")
+            for env_name, pinned_image in sorted(packages.docker_images[app_name].items()):
+                override = settings.get_value("UserData.Images", env_name.lower(),
+                    default_value = "", throw_exception = False)
+                if override and override.strip():
+                    logger.log_info(f"    {env_name} = {override.strip()} (override; pin is {pinned_image})")
+                else:
+                    logger.log_info(f"    {env_name} = {pinned_image}")
+        logger.log_info("Edit Bootstrap/packages/images.py to change a pin.")
+        return
 
     # Create environment options
     environment_options = {
@@ -101,6 +122,12 @@ def main():
         environment_options["flags"].set(force = args.force)
     if args.autoremove:
         environment_options["flags"].set(autoremove = args.autoremove)
+    if args.purge_data:
+        environment_options["flags"].set(purge_data = args.purge_data)
+    if args.backup_id:
+        environment_options["flags"].set(backup_id = args.backup_id)
+    if args.confirm:
+        environment_options["flags"].set(confirm = args.confirm)
 
     # Create environment runner
     environment_runner = None
@@ -125,6 +152,15 @@ def main():
             logger.log_error_and_quit("--components specified but no components listed. Use --list-components to see available components.")
         environment_runner.set_components_to_process(args.components)
 
+    # Gate destructive restores
+    if args.action == "restore":
+        if not args.components:
+            logger.log_error_and_quit("restore requires an explicit --components list; it will not restore everything at once")
+        if not args.backup_id:
+            logger.log_error_and_quit("restore requires --backup-id <timestamp|latest>")
+        if args.confirm != "restore" and not args.pretend_run:
+            logger.log_error_and_quit("restore overwrites live data; re-run with --confirm restore (or -p to dry-run)")
+
     # Dispatch action
     if args.action == "setup":
         environment_runner.setup()
@@ -132,6 +168,8 @@ def main():
         environment_runner.teardown()
     elif args.action == "backup":
         environment_runner.backup()
+    elif args.action == "restore":
+        environment_runner.restore()
     elif args.action == "status":
         results = environment_runner.status()
         installed = [r for r in results if r["installed"]]
