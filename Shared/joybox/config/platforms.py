@@ -547,6 +547,20 @@ nintendo_64[keys.platform_key_merge_json] = []
 platforms[Platform.NINTENDO_64] = nintendo_64
 
 ###########################################################
+# Nintendo Amiibo
+###########################################################
+nintendo_amiibo = {}
+nintendo_amiibo[keys.platform_key_supercategory] = categories.Supercategory.ROMS
+nintendo_amiibo[keys.platform_key_category] = categories.Category.NINTENDO
+nintendo_amiibo[keys.platform_key_subcategory] = categories.Subcategory.NINTENDO_AMIIBO
+nintendo_amiibo[keys.platform_key_addons] = [types.AddonType.DLC]
+nintendo_amiibo[keys.platform_key_launcher] = [types.LaunchType.NO_LAUNCHER]
+nintendo_amiibo[keys.platform_key_autofill_json] = [keys.json_key_files]
+nintendo_amiibo[keys.platform_key_fillonce_json] = []
+nintendo_amiibo[keys.platform_key_merge_json] = []
+platforms[Platform.NINTENDO_AMIIBO] = nintendo_amiibo
+
+###########################################################
 # Nintendo DS
 ###########################################################
 nintendo_ds = {}

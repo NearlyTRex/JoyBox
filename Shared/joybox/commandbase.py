@@ -62,7 +62,7 @@ def is_command_type_found(cmd, cmd_exts = [], search_start = 0, search_len = -1)
                 is_found = True
                 break
         is_in_range = True
-        if search_start >= 0 and search_start < len(cmd_segment) and search_len > 0:
+        if search_start >= 0 and search_start < len(cmd_list) and search_len > 0:
             is_in_range = (cmd_index >= search_start) and (cmd_index < search_start + search_len)
         if is_found and is_in_range:
             return True
