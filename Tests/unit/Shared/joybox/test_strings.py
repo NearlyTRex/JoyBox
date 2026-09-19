@@ -35,11 +35,7 @@ def test_trimming_something_absent_leaves_the_string_alone():
 
 
 def test_trimming_an_empty_substring_is_a_no_op():
-
-    # Regression: the end variant sliced with string[:-len(substring)], and
-    # len("") is 0 - so string[:-0] is string[:0] and the whole string was
-    # returned empty. The start variant was always correct, which made the pair
-    # silently asymmetric.
+    # string[:-0] would return an empty string.
     assert strings.trim_substring_from_end("hello", "") == "hello"
     assert strings.trim_substring_from_start("hello", "") == "hello"
 
@@ -57,9 +53,7 @@ def test_strings_sort_alphabetically():
 
 
 def test_sorting_accepts_a_set():
-
-    # prune_paths passes a set straight in, so this has to be order-stable
-    # rather than depending on set iteration order.
+    # prune_paths passes a set straight in.
     assert strings.sort_strings({"c", "a", "b"}) == ["a", "b", "c"]
 
 
@@ -76,9 +70,7 @@ def test_length_sorting_breaks_ties_alphabetically():
 ###########################################################
 
 def test_ansi_escape_sequences_are_removed():
-
-    # Command output is captured and logged, so colour codes would otherwise be
-    # written verbatim into the log file.
+    # Command output is logged, so colour codes must not reach the log file.
     assert strings.remove_string_escape_sequences("\x1b[31mred\x1b[0m") == "red"
 
 
@@ -97,9 +89,7 @@ def test_text_without_tags_survives():
 ###########################################################
 # Slugs
 #
-# Slugs are persisted - gameinfo derives one per game and collection/jsondata
-# writes it as the store appname - so the output shape is a data format, not
-# just a display detail.
+# Slugs are persisted as the store appname, so the shape is a data format.
 ###########################################################
 
 def test_a_slug_is_lowercase_and_underscored():
@@ -111,9 +101,6 @@ def test_punctuation_is_dropped_from_a_slug():
 
 
 def test_runs_of_separators_collapse():
-
-    # Regression: a single replace("__", "_") only removes one underscore per
-    # pair, so a name with consecutive separators kept doubled underscores.
     assert strings.get_slug_string("a  -  b") == "a_b"
     assert strings.get_slug_string("a - b") == "a_b"
 
@@ -131,9 +118,7 @@ def test_a_slug_contains_only_safe_characters():
 
 
 def test_slugging_is_idempotent():
-
-    # Re-deriving a slug from an existing slug must not change it, or a second
-    # pass over stored data would rewrite every identifier.
+    # A second pass over stored data must not rewrite identifiers.
     for name in ["Hello World", "Game: The Sequel!", "a  -  b"]:
         once = strings.get_slug_string(name)
         assert strings.get_slug_string(once) == once

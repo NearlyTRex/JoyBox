@@ -10,7 +10,6 @@ from packages.aptget import aptget
 
 
 def parse_package_text_file(path):
-
     # serverpackages.txt is a plain list with # comments
     entries = []
     with open(path, "r") as package_file:
@@ -36,18 +35,14 @@ def test_every_package_has_an_id_and_category():
 
 
 def test_the_ubuntu_environments_are_populated():
-
-    # The Windows environments are empty on purpose - they install through
-    # winget, not apt.
+    # The Windows environments install through winget, not apt.
     for environment in [constants.EnvironmentType.LOCAL_UBUNTU,
                         constants.EnvironmentType.REMOTE_UBUNTU]:
         assert aptget[environment], f"{environment} has no packages"
 
 
 def test_serverpackages_matches_the_remote_list(bootstrap_dir):
-
-    # serverpackages.txt carries "Keep this in sync with packages/aptget.py" as
-    # its first line. Nothing enforced that, and the two had already drifted.
+    # serverpackages.txt says to keep this in sync with packages/aptget.py.
     declared = {package["id"] for package in aptget[constants.EnvironmentType.REMOTE_UBUNTU]}
     listed = set(parse_package_text_file(os.path.join(bootstrap_dir, "scripts", "serverpackages.txt")))
 

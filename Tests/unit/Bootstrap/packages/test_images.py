@@ -6,9 +6,7 @@ import packages
 
 
 def test_no_pin_uses_latest():
-
-    # images.py states the policy explicitly: never "latest", because a rebuild
-    # months later must not silently cross a major version.
+    # Never "latest": a later rebuild must not cross a major version.
     offenders = []
     for app, pins in packages.docker_images.items():
         for name, tag in pins.items():
@@ -18,9 +16,7 @@ def test_no_pin_uses_latest():
 
 
 def test_every_pin_is_versioned():
-
-    # An image reference with no tag resolves to latest at pull time, which is
-    # the same failure wearing a different hat.
+    # An untagged reference resolves to latest at pull time.
     offenders = []
     for app, pins in packages.docker_images.items():
         for name, tag in pins.items():
@@ -33,7 +29,5 @@ def test_every_pin_is_versioned():
 
 
 def test_the_backup_helper_is_pinned():
-
-    # Backup and restore run archiving inside this container, so an unpinned
-    # helper would change the tar behaviour under an unrelated rebuild.
+    # Archiving runs inside this container.
     assert packages.docker_images["_backup"]["BACKUP_HELPER_IMAGE"]

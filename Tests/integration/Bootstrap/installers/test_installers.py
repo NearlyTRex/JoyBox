@@ -15,10 +15,8 @@ import installers
 ###########################################################
 # Generated artifacts, validated by the real tools
 #
-# The installers emit compose files, nginx vhosts and shell scripts as formatted
-# strings. Unit tests assert on their content; these hand the output to docker
-# and bash and let them judge, which catches the class of mistake that reads
-# fine and parses badly.
+# Unit tests assert on the content of these; here the output is handed to docker
+# and bash, which catches what reads fine and parses badly.
 ###########################################################
 
 DOCKER_APPS = [
@@ -57,15 +55,12 @@ def build_installer(app_name, connection):
 
 
 def render_env(installer):
-
-    # Mirrors what DockerAppInstaller actually writes to .env. The image pins
-    # are appended separately from packages/images.py, so rendering only the
-    # template leaves every ${..._IMAGE} reference unset.
+    # Image pins are appended separately from packages/images.py, so rendering
+    # only the template leaves every ${..._IMAGE} reference unset.
     return installer.env_template.format(**installer.env_values) + installer.get_image_env_lines()
 
 
 def nginx_template_for(app_name, installer):
-
     # Cockpit and Certbot format the module-level template directly rather than
     # assigning it to the instance, so fall back to the module.
     template = getattr(installer, "nginx_config_template", "")
@@ -107,9 +102,7 @@ def test_compose_template_is_valid(app_name, populated_settings, recording_conne
 @pytest.mark.requires_docker
 @pytest.mark.slow
 def test_compose_publishes_only_on_loopback(app_name, populated_settings, recording_connection, tmp_path):
-
-    # Asserted against docker's own resolved view rather than the template text,
-    # so an env var that expands to a bare port cannot slip past.
+    # Docker's resolved view, so an env var expanding to a bare port cannot pass.
     installer = build_installer(app_name, recording_connection)
 
     app_dir = tmp_path / app_name
@@ -166,9 +159,7 @@ def test_restore_script_parses(app_name, populated_settings, recording_connectio
 
 @pytest.mark.parametrize("app_name", DOCKER_APPS)
 def test_encrypted_backup_script_parses(app_name, populated_settings, recording_connection, tmp_path):
-
-    # The age pipeline inserts into the middle of a docker exec pipe, which is
-    # the most quoting-sensitive line in the generated output.
+    # The age step sits inside a docker exec pipe, the most quoting-sensitive line.
     populated_settings.set_value("UserData.Backup", "backup_age_recipient", "age1example")
     installer = build_installer(app_name, recording_connection)
     if not installer.has_backup_items():
@@ -187,9 +178,7 @@ def test_encrypted_backup_script_parses(app_name, populated_settings, recording_
 
 @pytest.mark.parametrize("app_name", DOCKER_APPS + ["Cockpit", "Certbot"])
 def test_nginx_template_renders_and_is_balanced(app_name, populated_settings, recording_connection):
-
-    # A template that renders with an unbalanced brace produces an nginx config
-    # that fails to load, taking every other site on the box down with it.
+    # An unbalanced brace produces a config that takes every site down.
     installer = build_installer(app_name, recording_connection)
     template = nginx_template_for(app_name, installer)
     if not template:
@@ -201,7 +190,6 @@ def test_nginx_template_renders_and_is_balanced(app_name, populated_settings, re
         f"{app_name} vhost has unbalanced braces"
     assert "server_name" in rendered
 
-    # A placeholder that survived formatting means a value was never supplied,
-    # and nginx would reject the literal "{domain}" at load time.
+    # nginx would reject a literal "{domain}" at load time.
     leftovers = re.findall(r"\{[a-z_]+\}", rendered)
     assert not leftovers, f"{app_name} vhost has unrendered placeholders: {set(leftovers)}"

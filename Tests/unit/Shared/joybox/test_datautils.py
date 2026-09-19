@@ -63,7 +63,6 @@ def test_adjacent_duplicates_collapse():
 
 
 def test_non_adjacent_duplicates_are_kept():
-
     # "adjacent" is the whole contract - this is for collapsing repeated log
     # lines, not for uniquing a list.
     assert datautils.deduplicate_adjacent_lines(["a", "b", "a"]) == ["a", "b", "a"]
@@ -83,7 +82,6 @@ def test_containers_are_iterable_non_strings(value):
 
 
 def test_a_string_is_iterable_but_not_an_iterable_non_string():
-
     # The distinction that matters: iterating a string yields characters, which
     # is almost never what a caller walking a container wants.
     assert datautils.is_iterable_container("abc") is True
@@ -113,10 +111,7 @@ def test_a_nested_match_is_found():
 
 
 def test_a_match_after_a_nested_dictionary_is_found():
-
-    # Regression: the recursive call used to return unconditionally, so the
-    # first nested dict ended the whole search and every later sibling was
-    # abandoned - whether or not the recursion found anything.
+    # The recursion must not abandon later siblings.
     data = {"a": "no", "b": {"deep": "nope"}, "c": "FINDME here"}
     assert datautils.search_dictionary(data, "FINDME") == [("c", "FINDME here")]
 
@@ -149,10 +144,9 @@ def test_non_dictionary_input_returns_empty():
 ###########################################################
 # Retry with backoff
 #
-# The None handling is subtle and deliberate. Callers are web scrapes whose
-# "no results found" path returns None and is annotated "not an error", so a
-# None on the first attempt must NOT be retried. A None after an exception is
-# different - something is already broken - and does keep retrying.
+# Callers are web scrapes whose "no results found" path returns None, so a None
+# on the first attempt is not retried. A None after an exception is, since
+# something is already broken.
 ###########################################################
 
 def test_a_successful_call_is_not_retried():
@@ -167,7 +161,6 @@ def test_a_successful_call_is_not_retried():
 
 
 def test_a_first_attempt_returning_none_is_accepted():
-
     # "Nothing found" is a legitimate answer, not a failure to retry through.
     calls = []
 
@@ -204,9 +197,7 @@ def test_retries_give_up_and_return_none():
 
 
 def test_none_after_an_exception_keeps_retrying():
-
-    # The distinction that makes "or attempt == 0" load-bearing: once something
-    # has already thrown, a None result means still-broken rather than empty.
+    # Once something has thrown, None means still-broken rather than empty.
     attempts = []
 
     def raise_then_none():
@@ -247,9 +238,7 @@ def test_cleanup_does_not_run_when_the_call_succeeds():
 
 
 def test_a_failing_cleanup_does_not_mask_the_retry():
-
-    # Cleanup here tears down a selenium driver; if that throws, the retry loop
-    # still has to keep going rather than propagating a secondary error.
+    # Cleanup tears down a selenium driver; a failure there must not propagate.
     attempts = []
 
     def flaky():

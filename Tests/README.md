@@ -94,8 +94,9 @@ double needs to do the same.
 
 - Test names state the behaviour, not the function: `test_selfsigned_never_contacts_lets_encrypt`,
   not `test_install_2`.
-- A comment above a test says *why it matters* when that is not obvious from the
-  name — what breaks in production if the assertion fails.
+- Comments are short and factual — one line, stating an invariant or a
+  consequence. No narration of when or how something was changed; git history
+  covers that.
 - Mark anything involving a subprocess or container `@pytest.mark.slow`, and
   anything needing a binary with `requires_docker` / `requires_nginx` plus a
   `skipif`, so the suite still runs on a machine without them.

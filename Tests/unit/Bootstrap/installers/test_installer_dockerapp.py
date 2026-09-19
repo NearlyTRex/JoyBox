@@ -11,10 +11,8 @@ import installers
 ###########################################################
 # Backup and restore script generation
 #
-# These are shell scripts built by string concatenation and then handed to a
-# remote bash. Nothing else type-checks them, so the generation is worth
-# pinning: an unbalanced quote here is a failed backup discovered at restore
-# time.
+# Shell built by string concatenation and handed to a remote bash. An unbalanced
+# quote here is a failed backup discovered at restore time.
 ###########################################################
 
 @pytest.fixture
@@ -49,8 +47,7 @@ def test_backup_is_plain_gzip_without_a_recipient(wordpress, isolated_settings):
     assert "gzip -9" in script
     assert "age -r" not in script
 
-    # The checksum step names *.age in both modes by design, so assert on the
-    # archive names rather than on the extension appearing anywhere.
+    # The checksum step names *.age in both modes, so assert on archive names.
     assert ".gz.age" not in script
     assert '> "$DEST/db.sql.gz"' in script
 
@@ -65,9 +62,7 @@ def test_backup_encrypts_when_a_recipient_is_set(wordpress, isolated_settings):
 
 
 def test_backup_fails_loudly_when_age_is_missing(wordpress, isolated_settings):
-
-    # Silently writing plaintext because the binary is absent would be the worst
-    # possible outcome - the operator would believe the backups were encrypted.
+    # Writing plaintext because the binary is absent would be worse than failing.
     isolated_settings.set_value("UserData.Backup", "backup_age_recipient", "age1example")
     script = wordpress.build_backup_script()
 
@@ -76,10 +71,7 @@ def test_backup_fails_loudly_when_age_is_missing(wordpress, isolated_settings):
 
 
 def test_checksums_cover_encrypted_artifacts(wordpress, isolated_settings):
-
-    # Checksums are taken over whatever landed on disk. If they only matched
-    # *.gz, an encrypted backup would produce an empty SHA256SUMS and restore
-    # would verify nothing.
+    # Matching only *.gz would leave an encrypted backup with empty checksums.
     isolated_settings.set_value("UserData.Backup", "backup_age_recipient", "age1example")
     script = wordpress.build_backup_script()
 
@@ -88,7 +80,6 @@ def test_checksums_cover_encrypted_artifacts(wordpress, isolated_settings):
 
 
 def test_backup_publishes_atomically(wordpress):
-
     # A half-written backup must never be mistaken for a finished one.
     script = wordpress.build_backup_script()
     assert ".partial" in script
@@ -98,8 +89,7 @@ def test_backup_publishes_atomically(wordpress):
 def test_restore_reads_plain_archives_when_unencrypted(wordpress):
     script = wordpress.build_restore_script("latest")
 
-    # The helper falls back to plain gzip, so backups taken before encryption
-    # was enabled still restore.
+    # Plain gzip fallback keeps pre-encryption backups restorable.
     assert "archive_stream" in script
     assert 'gzip -dc "$SRC/$1"' in script
 
@@ -120,7 +110,7 @@ def test_restore_uses_the_identity_when_given(wordpress):
 def test_restore_verifies_checksums_before_touching_data(wordpress):
     script = wordpress.build_restore_script("latest")
 
-    # Match the call form, not the function definition, which is emitted first.
+    # Match the call form, not the definition emitted above it.
     checksum_index = script.index("sha256sum -c SHA256SUMS")
     extract_index = script.index('archive_stream "')
     assert checksum_index < extract_index, \
@@ -128,7 +118,6 @@ def test_restore_verifies_checksums_before_touching_data(wordpress):
 
 
 def test_components_without_backup_data_do_nothing(isolated_settings, recording_connection):
-
     # Jenkins deliberately declares no backup items: jenkins_home_dir points at
     # /mnt/repositories, which holds every git repo on the box.
     isolated_settings.set_value("UserData.Jenkins", "jenkins_home_dir", "/mnt/repositories")

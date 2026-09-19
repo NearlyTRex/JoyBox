@@ -8,9 +8,8 @@ import installers
 ###########################################################
 # Certificate issuance modes
 #
-# All three modes must land the certificate at the same path, because every
-# app's nginx template hardcodes /etc/letsencrypt/live/<apex>/. That invariant
-# is what keeps the local modes from needing template changes.
+# Every app's nginx template hardcodes /etc/letsencrypt/live/<apex>/, so all
+# three modes must land the certificate at that same path.
 ###########################################################
 
 def build_certbot(settings, connection, tls_mode):
@@ -32,9 +31,7 @@ def test_san_list_covers_apex_and_every_subdomain(isolated_settings, recording_c
 
 
 def test_san_list_has_no_empty_entries(isolated_settings, recording_connection):
-
-    # A removed component that left its settings lookup behind would produce a
-    # bare ".joybox.test", which certbot rejects for the whole batch.
+    # A bare ".joybox.test" makes certbot reject the whole batch.
     certbot = build_certbot(isolated_settings, recording_connection, "letsencrypt")
     for name in certbot.fully_qualified_domains:
         assert name and not name.startswith("."), f"malformed SAN: {name!r}"
@@ -79,7 +76,7 @@ def test_selfsigned_covers_every_name_in_the_san_list(isolated_settings, recordi
     certbot = build_certbot(isolated_settings, recording_connection, "selfsigned")
     certbot.install()
 
-    # A cert covering only the apex would make every subdomain warn separately
+    # A cert covering only the apex makes every subdomain warn.
     assert recording_connection.ran("subjectAltName", "DNS:joybox.test", "DNS:music.joybox.test")
 
 
@@ -92,8 +89,7 @@ def test_unknown_mode_fails_rather_than_guessing(isolated_settings, recording_co
 
 
 def test_mode_defaults_to_letsencrypt(isolated_settings, recording_connection):
-
-    # An existing config predating tls_mode must keep behaving exactly as before.
+    # A config predating tls_mode keeps its old behaviour.
     isolated_settings.reset()
     isolated_settings.set_settings_file(isolated_settings.get_settings_file())
     isolated_settings.set_value("UserData.Servers", "domain_name", "example.com")

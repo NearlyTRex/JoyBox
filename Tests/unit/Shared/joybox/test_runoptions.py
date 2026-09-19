@@ -8,11 +8,8 @@ from joybox import runoptions
 ###########################################################
 # RunFlags / RunOptions
 #
-# These are passed as default arguments throughout the tree - the signature
-# "flags = runoptions.RunFlags()" evaluates once at import, so every caller that
-# omits the argument shares one instance. That is only safe because every
-# consumer stores flags.copy() rather than the object it was handed, so these
-# tests protect the copy semantics rather than the classes themselves.
+# Passed as default arguments throughout the tree, so every caller that omits
+# the argument shares one instance. Safe only because consumers store a copy.
 ###########################################################
 
 def test_flag_defaults():
@@ -35,10 +32,7 @@ def test_option_defaults():
 
 
 def test_each_options_instance_gets_its_own_env():
-
-    # env defaults to None and is replaced with a fresh dict, rather than being
-    # a literal {} in the signature - otherwise every instance in the process
-    # would share one environment.
+    # A literal {} in the signature would be shared by every instance.
     first = runoptions.RunOptions()
     second = runoptions.RunOptions()
     first.env["JOYBOX"] = "1"
@@ -60,9 +54,7 @@ def test_copying_flags_detaches_them():
 
 
 def test_copying_options_detaches_nested_state():
-
-    # A shallow copy would share the env dict, so a per-connection environment
-    # change would leak into every other consumer of the same defaults.
+    # A shallow copy would share the env dict between consumers.
     original = runoptions.RunOptions(env = {"PATH": "/usr/bin"})
     duplicate = original.copy()
     duplicate.env["PATH"] = "/somewhere/else"
@@ -98,10 +90,7 @@ def test_set_accepts_several_fields():
 
 
 def test_setting_an_unknown_flag_raises():
-
-    # bootstrap.py forwards CLI arguments through set(), so a typo here would
-    # otherwise create a silently ignored attribute and the flag would appear
-    # to do nothing.
+    # bootstrap.py forwards CLI arguments through set(); a typo must not pass.
     with pytest.raises(AttributeError):
         runoptions.RunFlags().set(nonexistent = True)
 

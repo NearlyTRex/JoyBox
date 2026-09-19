@@ -11,9 +11,8 @@ from joybox import fileops
 ###########################################################
 # fileops against a real filesystem
 #
-# 82 modules import this, and most of it deletes, moves or overwrites things.
-# The pretend_run guarantee matters most: -p is offered throughout the docs as
-# a safe dry run, so every destructive path has to honour it.
+# Most of this deletes, moves or overwrites. -p is documented as a safe dry
+# run, so every destructive path has to honour it.
 ###########################################################
 
 def write(path, contents = "content"):
@@ -54,10 +53,7 @@ def test_touch_creates_missing_parent_directories(tmp_path):
 
 
 def test_touch_honours_an_explicit_encoding(tmp_path):
-
-    # Regression: encoding was passed as open()'s third positional argument,
-    # which is buffering - so this raised TypeError, the except swallowed it,
-    # and the call returned False having written nothing.
+    # open()'s third positional argument is buffering, not encoding.
     target = str(tmp_path / "encoded.txt")
 
     assert fileops.touch_file(target, contents = "café", encoding = "utf-8") is True
@@ -236,10 +232,8 @@ def test_removing_a_symlink_leaves_the_target(tmp_path):
 ###########################################################
 
 def test_permissions_are_applied(tmp_path):
-
-    # Permissions are given as an octal string, not an int - the installers all
-    # call change_permission(path, "600"). An int is parsed with
-    # int(str(perms), base=8), so 0o600 becomes the string "384" and fails.
+    # Permissions are an octal string, not an int: perms is parsed with
+    # int(str(perms), base=8), so 0o600 becomes "384" and fails.
     target = write(str(tmp_path / "secret.env"))
 
     assert fileops.chmod_file_or_directory(target, "600") is True
@@ -275,9 +269,7 @@ def test_a_file_is_marked_executable(tmp_path):
 ###########################################################
 # Pretend run
 #
-# Every one of these is destructive. -p is documented as a safe dry run, so a
-# path that forgets the guard silently destroys data on what the user believed
-# was a rehearsal.
+# A path that forgets the guard destroys data during what looked like a rehearsal.
 ###########################################################
 
 def test_pretend_run_does_not_create(tmp_path):

@@ -8,16 +8,12 @@ from joybox import ollama
 ###########################################################
 # Action dispatch
 #
-# The action layer moved here out of ollama_tool.py, which reached into a
-# module-global args object. Every action now takes the same keyword signature
-# so the CLI can dispatch without knowing which options each one reads - and so
-# the dispatch is testable without a running Ollama.
+# Every action takes the same keyword signature so the CLI can dispatch without
+# knowing which options each one reads.
 ###########################################################
 
 def test_the_documented_actions_exist():
-
-    # These names are the tool's positional argument, so dropping one silently
-    # breaks a documented command line.
+    # These names are the tool's positional argument.
     for action in ["list", "available", "best", "pull", "delete", "info", "harness"]:
         assert action in ollama.get_action_keys()
 
@@ -28,9 +24,7 @@ def test_every_action_is_callable():
 
 
 def test_every_action_accepts_the_shared_signature():
-
-    # Dispatch passes all four keywords to whichever action was chosen, so an
-    # action missing one raises TypeError at call time rather than at import.
+    # Dispatch passes all four keywords, so a missing one raises at call time.
     import inspect
     for action, handler in ollama.ACTIONS.items():
         parameters = inspect.signature(handler).parameters
@@ -39,8 +33,6 @@ def test_every_action_accepts_the_shared_signature():
 
 
 def test_an_unknown_action_fails_rather_than_raising():
-
-    # main() returns this straight to run_main, which turns False into exit 1.
     assert ollama.run_action("nonsense") is False
 
 

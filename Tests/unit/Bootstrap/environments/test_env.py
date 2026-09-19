@@ -9,9 +9,8 @@ from fakes import RecordingInstaller
 ###########################################################
 # Component processing
 #
-# Environment.process_components is the orchestration every setup, teardown,
-# backup and restore runs through. The ordering and skip rules are the part
-# that decides whether a deploy leaves a half-configured box behind.
+# process_components is the orchestration every setup, teardown, backup and
+# restore runs through.
 ###########################################################
 
 def build_environment(components):
@@ -43,9 +42,7 @@ def build_ordered_components(installed = False):
 
 
 def test_components_install_in_declaration_order():
-
-    # Order is load-bearing: nginx and certbot have to finish before any app
-    # formats a vhost pointing at the certificate they produced.
+    # nginx and certbot must finish before any app formats a vhost.
     components, call_log = build_ordered_components()
     environment = build_environment(components)
 
@@ -54,9 +51,7 @@ def test_components_install_in_declaration_order():
 
 
 def test_components_uninstall_in_reverse_order():
-
-    # Teardown has to unwind the dependency order, or nginx goes before the
-    # apps whose vhosts it is still serving.
+    # Teardown unwinds the dependency order.
     components, call_log = build_ordered_components(installed = True)
     environment = build_environment(components)
 
@@ -125,9 +120,7 @@ def test_a_selection_limits_what_runs(three_components):
 
 
 def test_an_unknown_component_name_aborts(three_components):
-
-    # Quitting beats silently doing nothing: a typo in --components would
-    # otherwise look like a successful run that installed none of what was asked.
+    # A typo in --components must not look like a successful empty run.
     environment = build_environment(three_components)
 
     with pytest.raises(SystemExit):
@@ -149,9 +142,7 @@ def test_an_empty_selection_processes_nothing(three_components):
 ###########################################################
 
 def test_a_failure_stops_the_run_by_default(three_components):
-
-    # Continuing past a failed nginx would install apps whose vhosts cannot
-    # load, so the default is to stop where the problem is.
+    # Continuing past a failed nginx would install apps with unloadable vhosts.
     three_components["first"].results = {"install": False}
     environment = build_environment(three_components)
 
@@ -180,9 +171,7 @@ def test_a_clean_run_reports_success(three_components):
 ###########################################################
 
 def test_backup_attempts_every_component(three_components):
-
-    # docs/backup.md states this explicitly: one broken service must not
-    # silently skip the rest of the sweep.
+    # One broken service must not skip the rest of the sweep.
     three_components["first"].results = {"backup": False}
     environment = build_environment(three_components)
 
@@ -192,9 +181,7 @@ def test_backup_attempts_every_component(three_components):
 
 
 def test_restore_stops_at_the_first_failure(three_components):
-
-    # Restore overwrites live data, so pressing on after a failure risks
-    # leaving a half-restored system.
+    # Restore overwrites live data; pressing on risks a half-restored system.
     three_components["first"].results = {"restore": False}
     environment = build_environment(three_components)
 
@@ -235,9 +222,7 @@ def test_available_components_are_listed(three_components):
 
 
 def test_the_base_environment_does_not_claim_success():
-
-    # Environment is abstract - a subclass that forgets to override setup must
-    # not report a successful provision.
+    # A subclass that forgets to override must not report success.
     environment = env.Environment()
 
     assert environment.setup() is False

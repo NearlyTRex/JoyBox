@@ -12,17 +12,15 @@ import installers
 ###########################################################
 # Compose templates
 #
-# The highest-value invariant in the tree: Docker publishes ports by inserting
-# DNAT rules ahead of ufw's chains, so a port published on 0.0.0.0 is reachable
-# from the internet whatever the firewall reports - and reachable without nginx
-# means without TLS, .htpasswd, ModSecurity or rate limiting.
+# Docker inserts DNAT rules ahead of ufw's chains, so a port published on
+# 0.0.0.0 is reachable without nginx - and so without TLS, .htpasswd,
+# ModSecurity or rate limiting.
 ###########################################################
 
 PUBLISHED_PORT_RE = re.compile(r'^\s*-\s*"(?P<spec>[^"]+)"\s*$')
 
 
 def compose_port_specs(compose_template):
-
     # Port entries inside a compose "ports:" block, as raw "host:container" specs
     specs = []
     in_ports_block = False
@@ -42,7 +40,6 @@ def compose_port_specs(compose_template):
 
 
 def installer_classes():
-
     # Every installer class that carries a compose template
     found = []
     for name in dir(installers):
@@ -65,7 +62,6 @@ def installer_classes():
     "wordpress",
 ])
 def test_published_ports_bind_loopback(app_name, bootstrap_dir):
-
     # Read the module text rather than instantiating: construction needs a
     # populated config, and the binding is a property of the template itself.
     path = os.path.join(bootstrap_dir, "installers", f"installer_{app_name}.py")
@@ -83,9 +79,7 @@ def test_published_ports_bind_loopback(app_name, bootstrap_dir):
 
 
 def test_every_compose_template_is_covered_by_the_port_test(bootstrap_dir):
-
-    # Guards the parametrize list above: a new Docker app must be added to it,
-    # rather than silently skipping the loopback check.
+    # A new Docker app must be added to the list above, not silently skipped.
     covered = {
         "audiobookshelf", "filebrowser", "jenkins",
         "kanboard", "navidrome", "oscar", "wordpress",
@@ -117,10 +111,8 @@ def nginx_template_sources(bootstrap_dir):
 
 
 def test_tls_vhosts_include_shared_params(bootstrap_dir):
-
-    # ssl-params.conf carries the TLS policy, HSTS, the security headers and the
-    # limit_req directive. A 443 block that skips it silently opts out of all of
-    # them - which is how cockpit ended up unprotected.
+    # ssl-params.conf carries the TLS policy, HSTS, security headers and
+    # limit_req. A 443 block that skips it opts out of all of them.
     offenders = []
     for filename, source in nginx_template_sources(bootstrap_dir):
         if "listen 443" in source and "ssl-params.conf" not in source:
@@ -129,7 +121,6 @@ def test_tls_vhosts_include_shared_params(bootstrap_dir):
 
 
 def test_tls_vhosts_reference_the_apex_cert_path(bootstrap_dir):
-
     # Every mode of the certbot installer writes to
     # /etc/letsencrypt/live/<apex>/, so templates must interpolate the apex
     # domain, never the subdomain.

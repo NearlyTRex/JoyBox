@@ -8,9 +8,7 @@ from joybox import audiometadata
 ###########################################################
 # Forced tag overrides
 #
-# Moved here out of audio_metadata_tool.py and tag_audio_files.py, which each
-# carried a byte-identical copy. It parses user input straight off the command
-# line, so it is worth testing directly now that it can be.
+# Parses --set field=value pairs straight off the command line.
 ###########################################################
 
 def test_a_single_override_is_parsed():
@@ -24,7 +22,6 @@ def test_several_overrides_are_parsed():
 
 
 def test_a_value_may_contain_an_equals_sign():
-
     # Split on the first separator only, or a value like a URL loses its tail.
     assert audiometadata.parse_force_tags(["title=a=b=c"]) == {"title": "a=b=c"}
 
@@ -34,9 +31,6 @@ def test_whitespace_around_the_field_is_ignored():
 
 
 def test_a_value_keeps_its_spacing():
-
-    # Track titles and artist names legitimately start or end with spacing the
-    # user typed deliberately.
     assert audiometadata.parse_force_tags(["title= Intro "]) == {"title": " Intro "}
 
 
@@ -46,8 +40,7 @@ def test_no_overrides_gives_an_empty_mapping(empty):
 
 
 def test_an_entry_without_a_separator_is_rejected():
-
-    # None, not {} - the callers check for None to abort before touching files.
+    # None, not {} - callers check for None to abort before touching files.
     assert audiometadata.parse_force_tags(["genre"]) is None
 
 

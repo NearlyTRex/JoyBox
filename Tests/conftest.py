@@ -45,7 +45,6 @@ def scripts_bin_dir():
 
 @pytest.fixture(scope = "session")
 def installer_files(bootstrap_dir):
-
     # Every installer module, as (name, path) pairs
     installers_dir = os.path.join(bootstrap_dir, "installers")
     found = []
@@ -56,7 +55,6 @@ def installer_files(bootstrap_dir):
 
 @pytest.fixture(scope = "session")
 def script_files(scripts_bin_dir):
-
     # Every CLI entry point under Scripts/bin, as (name, path) pairs
     found = []
     for filename in sorted(os.listdir(scripts_bin_dir)):

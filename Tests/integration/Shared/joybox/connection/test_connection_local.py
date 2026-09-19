@@ -13,8 +13,7 @@ from joybox.connection import connection_local
 # ConnectionLocal against a real filesystem
 #
 # Unit tests use a recording double for this interface, so something has to
-# confirm the real implementation honours the same contract - otherwise the
-# double drifts and the unit tests quietly stop meaning anything.
+# confirm the real implementation honours the same contract.
 ###########################################################
 
 @pytest.fixture
@@ -159,9 +158,6 @@ def test_run_checked_reflects_the_exit_status(local_connection):
 ###########################################################
 
 def test_pretend_run_touches_nothing(tmp_path):
-
-    # -p is offered throughout the docs as a safe dry run, so it has to
-    # genuinely not write.
     pretending = connection_local.ConnectionLocal(
         runoptions.RunFlags(verbose = False, pretend_run = True),
         runoptions.RunOptions())

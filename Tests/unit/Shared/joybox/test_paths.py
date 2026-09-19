@@ -11,8 +11,7 @@ from joybox import paths
 ###########################################################
 # Filename decomposition
 #
-# paths is imported by 125 other modules, and the filename helpers decide where
-# every ROM, asset and backup artifact lands. A change here moves files.
+# The filename helpers decide where every ROM, asset and backup lands.
 ###########################################################
 
 @pytest.mark.parametrize("path,expected", [
@@ -39,9 +38,7 @@ def test_extension_is_extracted(path, expected):
     ("a/archive.tar.bz2", "archive", ".tar.bz2"),
 ])
 def test_tarball_extensions_are_treated_as_one_unit(path, base, extension):
-
-    # pathlib would call these ".gz" and ".bz2", splitting "archive.tar" off as
-    # the stem. Archive handling depends on seeing the whole compound suffix.
+    # pathlib alone would split these as ".gz" on stem "archive.tar".
     assert paths.get_filename_basename(path) == base
     assert paths.get_filename_extension(path) == extension
 
@@ -53,10 +50,7 @@ def test_tarball_extensions_are_treated_as_one_unit(path, base, extension):
     ("file.", ["file.", ""]),
 ])
 def test_split_keeps_the_remainder(path, expected):
-
-    # Regression: the remainder was computed as path[:-len(ext)], and for an
-    # extensionless name len(ext) is 0 - so path[:-0] is path[:0], and the whole
-    # filename was silently dropped.
+    # path[:-0] would return an empty remainder.
     assert paths.get_filename_split(path) == expected
 
 
@@ -89,9 +83,7 @@ def test_extension_is_replaced_not_appended(path, extension, expected):
 
 
 def test_replacing_the_extension_of_a_tarball_drops_the_whole_suffix():
-
-    # ".tar.gz" -> ".zip", not "archive.tar.zip". Getting this wrong produces a
-    # file whose name claims two incompatible formats.
+    # ".tar.gz" -> ".zip", not "archive.tar.zip".
     assert paths.change_filename_extension("archive.tar.gz", ".zip") == "archive.zip"
 
 
@@ -104,9 +96,6 @@ def test_join_normalizes():
 
 
 def test_join_rejects_types_it_cannot_resolve():
-
-    # Raising beats silently stringifying: a path built from an unexpected type
-    # would point somewhere plausible but wrong.
     with pytest.raises(TypeError):
         paths.join_paths("a", 5)
 
@@ -207,9 +196,7 @@ def test_a_sibling_is_not_a_parent():
 
 
 def test_a_path_is_its_own_parent():
-
-    # is_relative_to is reflexive, and prune_child_paths relies on that to
-    # collapse an exact duplicate.
+    # prune_child_paths relies on this to collapse exact duplicates.
     assert paths.is_parent_path("/a", "/a") is True
 
 
@@ -237,9 +224,7 @@ def test_control_characters_are_stripped():
 
 
 def test_trailing_dots_and_spaces_are_trimmed():
-
-    # Windows silently rejects these, so a name that survives here would fail
-    # only once the collection is synced to a Windows machine.
+    # Windows rejects trailing dots and spaces.
     assert paths.replace_invalid_path_characters("name. ") == "name"
 
 

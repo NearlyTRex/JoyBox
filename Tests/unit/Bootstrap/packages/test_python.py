@@ -6,9 +6,7 @@ from packages.python import python as python_packages
 
 
 def test_no_duplicate_ids():
-
-    # LOCAL_WINDOWS is built by extending the LOCAL_UBUNTU list, so a duplicate
-    # introduced in one place shows up twice over.
+    # LOCAL_WINDOWS extends LOCAL_UBUNTU, so one duplicate shows up twice.
     for environment, package_list in python_packages.items():
         ids = [package["id"] for package in package_list]
         duplicates = sorted({package_id for package_id in ids if ids.count(package_id) > 1})
@@ -23,9 +21,7 @@ def test_every_package_has_an_id_and_category():
 
 
 def test_paramiko_is_declared():
-
-    # The whole remote_ubuntu path imports it lazily, so a missing declaration
-    # only surfaces as an ImportError partway through a deploy.
+    # Imported lazily, so a missing declaration surfaces partway through a deploy.
     for environment, package_list in python_packages.items():
         ids = {package["id"] for package in package_list}
         if "pytest" in ids:

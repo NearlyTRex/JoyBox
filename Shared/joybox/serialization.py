@@ -116,21 +116,22 @@ def clean_json_file(src, sort_keys = False, remove_empty_values = False, verbose
             json_data = None
             with open(src, "r") as input_file:
                 json_data = json.loads(input_file.read())
-                json_keys_to_remove = []
-                for key in json_data.keys():
-                    json_value = json_data[key]
-                    if json_value is None:
-                        json_keys_to_remove.append(key)
-                    if isinstance(json_value, str) and len(json_value) == 0:
-                        json_keys_to_remove.append(key)
-                    if isinstance(json_value, dict) and len(json_value.keys()) == 0:
-                        json_keys_to_remove.append(key)
-                    if isinstance(json_value, list) and len(json_value) == 0:
-                        json_keys_to_remove.append(key)
-                    if isinstance(json_value, bool) and json_value == False:
-                        json_keys_to_remove.append(key)
-                for key in json_keys_to_remove:
-                    json_data.pop(key)
+                if remove_empty_values:
+                    json_keys_to_remove = []
+                    for key in json_data.keys():
+                        json_value = json_data[key]
+                        if json_value is None:
+                            json_keys_to_remove.append(key)
+                        if isinstance(json_value, str) and len(json_value) == 0:
+                            json_keys_to_remove.append(key)
+                        if isinstance(json_value, dict) and len(json_value.keys()) == 0:
+                            json_keys_to_remove.append(key)
+                        if isinstance(json_value, list) and len(json_value) == 0:
+                            json_keys_to_remove.append(key)
+                        if isinstance(json_value, bool) and json_value == False:
+                            json_keys_to_remove.append(key)
+                    for key in json_keys_to_remove:
+                        json_data.pop(key)
             if json_data is not None:
                 with open(src, "w", newline='\n') as output_file:
                     json_string = json.dumps(json_data, indent = 4, sort_keys = sort_keys)

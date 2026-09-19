@@ -36,7 +36,6 @@ def script_ids(script_files):
 
 
 def test_scripts_were_discovered(script_files):
-
     # Guards the fixture: an empty list would make every test below vacuous.
     assert len(script_files) > 50, f"only found {len(script_files)} scripts"
 
@@ -52,10 +51,7 @@ def test_every_script_defines_main(script_files):
 
 
 def test_every_script_guards_its_entry_point(script_files):
-
-    # Without the guard, importing the module runs it. That breaks any tooling
-    # that imports scripts to inspect them, and it is how llm_chat.py used to
-    # execute itself on import.
+    # Without the guard, importing the module runs it.
     offenders = []
     for name, path in script_files:
         with open(path, "r") as script_file:
@@ -66,7 +62,6 @@ def test_every_script_guards_its_entry_point(script_files):
 
 
 def test_run_main_is_only_called_under_the_guard(script_files):
-
     # The guard has to actually wrap the call, not merely exist somewhere in
     # the file.
     offenders = []
@@ -83,7 +78,6 @@ def test_run_main_is_only_called_under_the_guard(script_files):
 
 
 def test_no_script_defines_a_class(script_files):
-
     # A class in a CLI wrapper is a strong signal that modelling has leaked out
     # of Shared and into the entry point.
     offenders = []
@@ -97,7 +91,6 @@ def test_no_script_defines_a_class(script_files):
 
 
 def test_every_script_imports_from_shared(script_files):
-
     # A wrapper that never reaches into joybox is either dead or is carrying
     # logic it should be delegating.
     offenders = []
@@ -110,14 +103,9 @@ def test_every_script_imports_from_shared(script_files):
 
 
 def test_no_script_carries_logic_beyond_main(script_files):
-
     # Scripts/bin are thin CLI wrappers: parse arguments, dispatch into
-    # Shared/joybox, return. A helper defined here is logic that belongs in
-    # Shared, where it can be reused and tested directly - which is how
-    # parse_force_tags ended up byte-identical in two scripts, and how the
-    # ollama action layer ended up unreachable from anywhere else.
-    #
-    # Closures inside main() are fine; this only looks at module level.
+    # Shared/joybox, return. A module-level helper is logic that belongs in
+    # Shared. Closures inside main() are fine.
     offenders = []
     for name, path in script_files:
         with open(path, "r") as script_file:

@@ -15,7 +15,6 @@ def test_posix_style_quotes_segments_with_spaces():
 
 
 def test_posix_style_escapes_shell_metacharacters():
-
     # This is the style used for SSH, so a segment that reaches a remote shell
     # unquoted is a command injection, not a formatting problem.
     built = cmdline.create_command_string(["echo", "a; rm -rf /"], style = "posix")
@@ -57,15 +56,12 @@ def test_enclosed_style_splits_unquoted_commands():
 
 
 def test_enclosed_style_leaves_backslashes_alone():
-
     # Windows paths must not be treated as escape sequences.
     assert cmdline.create_command_list(r"C:\tools\app.exe -x") == [r"C:\tools\app.exe", "-x"]
 
 
 def test_enclosed_style_degrades_on_unbalanced_quotes():
-
-    # This sits in the path of every command execution, so a malformed string
-    # falls back to a plain split rather than raising and killing the run.
+    # Falls back to a plain split rather than raising.
     assert cmdline.create_command_list('echo "unterminated') == ["echo", '"unterminated']
 
 
@@ -97,7 +93,6 @@ def test_output_is_decoded_to_text():
 
 
 def test_undecodable_bytes_are_ignored_rather_than_raising():
-
     # Command output is arbitrary bytes; a decode error here would take down a
     # provision run over a stray byte in a log line.
     assert cmdline.clean_command_output(b"ok\xff\xfetail") == "oktail"
@@ -138,9 +133,6 @@ def test_a_trailing_sensitive_flag_does_not_crash():
 
 @pytest.mark.parametrize("flag", cmdline.SENSITIVE_FLAGS)
 def test_joined_flag_values_are_masked_in_a_list(flag):
-
-    # --password=hunter2 used to pass straight through: the list branch only
-    # compared whole arguments against SENSITIVE_FLAGS.
     masked = cmdline.mask_sensitive_args(["tool", f"{flag}=hunter2", "--other"])
 
     assert "hunter2" not in " ".join(masked)
@@ -163,7 +155,6 @@ def test_several_secrets_in_one_command_are_all_masked():
 
 
 def test_a_flag_prefix_is_not_masked_by_accident():
-
     # --password-file names a path, not a secret, and masking it would hide
     # useful detail from the log for no gain.
     masked = cmdline.mask_sensitive_args(["tool", "--password-file", "/etc/creds"])

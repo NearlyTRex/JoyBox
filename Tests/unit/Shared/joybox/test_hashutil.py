@@ -46,7 +46,6 @@ def test_empty_string_vectors(algorithm, expected):
 
 @pytest.mark.parametrize("algorithm", sorted(HELLO_VECTORS))
 def test_bytes_and_text_agree(algorithm):
-
     # The functions encode str themselves, so passing bytes in must land on the
     # same digest rather than double-encoding.
     assert hasher(algorithm)("hello") == hasher(algorithm)(b"hello")
@@ -61,7 +60,6 @@ def test_output_is_lowercase_hex(algorithm):
 
 
 def test_non_ascii_is_encoded_as_utf8():
-
     # Pins the encoding explicitly: a latin-1 or utf-16 fallback would produce a
     # different digest for the same file name.
     assert hashutil.calculate_string_md5("café") == "07117fe4a1ebd544965dc19573183da2"

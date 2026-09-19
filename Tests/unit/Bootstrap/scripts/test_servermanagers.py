@@ -16,9 +16,8 @@ def parse_package_text_file(path):
 
 
 def test_every_listed_manager_exists(bootstrap_dir):
-
-    # install_managers copies each name in this list onto the target and grants
-    # it passwordless sudo. A name with no file fails partway through a provision.
+    # install_managers copies each name onto the target and grants it
+    # passwordless sudo.
     listed = parse_package_text_file(os.path.join(bootstrap_dir, "scripts", "servermanagers.txt"))
     managers_dir = os.path.join(bootstrap_dir, "managers")
     on_disk = {name for name in os.listdir(managers_dir) if name.endswith(".sh")}

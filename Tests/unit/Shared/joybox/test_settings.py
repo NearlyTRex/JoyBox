@@ -12,11 +12,7 @@ from joybox import settings
 # Settings
 #
 # Process-global: a configparser plus an in-memory overlay that set_value writes
-# to. 42 modules read through it, and bootstrap.py writes to it at runtime, so
-# the overlay/file interaction is load-bearing.
-#
-# Every test here points the module at a temp file and resets afterwards, or it
-# would leak into the rest of the suite.
+# to. Every test points the module at a temp file and resets afterwards.
 ###########################################################
 
 @pytest.fixture
@@ -54,13 +50,9 @@ def test_a_missing_section_returns_the_default(config_file):
 
 
 def test_a_missing_value_returns_none_rather_than_raising(config_file):
-
     # configparser's fallback covers a missing section as well as a missing
-    # option, so passing default_value (even None) means get_value never raises
-    # for absence - throw_exception only covers a genuinely unreadable file.
-    # DockerAppInstaller.validate_settings depends on this: it collects the
-    # missing keys by checking for None/empty and reports them together, rather
-    # than dying on the first one.
+    # option, so absence never raises. DockerAppInstaller.validate_settings
+    # depends on this to collect and report all missing keys at once.
     config_file("[S]\nname = joybox\n")
 
     assert settings.get_value("Absent", "name") is None
@@ -68,9 +60,7 @@ def test_a_missing_value_returns_none_rather_than_raising(config_file):
 
 
 def test_values_keep_their_interpolation_characters(config_file):
-
-    # The parser is built with interpolation=None on purpose: a password or a
-    # path containing % must survive verbatim.
+    # interpolation=None, so a password or path containing % survives verbatim.
     config_file("[S]\npassword = abc%def\n")
     assert settings.get_value("S", "password") == "abc%def"
 
@@ -131,9 +121,7 @@ def test_set_value_works_for_a_section_the_file_lacks(config_file):
 
 
 def test_overlay_integers_are_typed_like_file_integers(config_file):
-
-    # Regression: the overlay branch returned the raw value, so the same key
-    # came back as int from the file and str from the overlay.
+    # The overlay must coerce the same way the file does.
     config_file("[S]\nport = 8080\n")
     settings.set_value("S", "port", "9090")
 
@@ -141,9 +129,7 @@ def test_overlay_integers_are_typed_like_file_integers(config_file):
 
 
 def test_overlay_booleans_are_typed_like_file_booleans(config_file):
-
-    # Regression, and the dangerous half: the string "False" is truthy, so a
-    # caller branching on this got the wrong answer with no error.
+    # The string "False" is truthy, so an uncoerced overlay value misbranches.
     config_file("[S]\nflag = True\n")
     settings.set_value("S", "flag", "False")
 
@@ -214,9 +200,7 @@ def test_a_saved_value_reads_back_after_a_reset(config_file):
 
 
 def test_saving_a_bool_reads_back_as_a_bool(config_file):
-
-    # save() stringifies, so this only works because "False" is one of the
-    # tokens configparser recognises on the way back in.
+    # save() stringifies, and configparser recognises "False" on the way back.
     path = config_file("[S]\nflag = True\n")
     settings.set_value("S", "flag", False)
     settings.save()
@@ -237,9 +221,7 @@ def test_the_settings_file_can_be_pointed_elsewhere(config_file):
 
 
 def test_switching_files_switches_the_values(tmp_path):
-
-    # bootstrap.py -c relies on this: a second config gives a fully independent
-    # set of values with no other plumbing.
+    # bootstrap.py -c relies on this for a fully independent config.
     first = os.path.join(str(tmp_path), "first.ini")
     second = os.path.join(str(tmp_path), "second.ini")
     with open(first, "w") as config:

@@ -10,10 +10,8 @@ import pytest
 ###########################################################
 # CLI smoke
 #
-# Every entry point is launched as a real subprocess with --help. For a thin
-# wrapper this is the test that matters: it proves the imports resolve, the
-# argument parser is well formed, and the joybox modules it reaches for still
-# exist. Those are the realistic ways a wrapper breaks.
+# Launching each entry point with --help proves the imports resolve, the parser
+# is well formed, and the joybox modules it reaches for still exist.
 ###########################################################
 
 HELP_TIMEOUT_SECONDS = 60
@@ -36,13 +34,9 @@ def script_parameters(scripts_bin_dir):
 
 
 def pytest_generate_tests(metafunc):
-
-    # Parametrized from the directory rather than a session fixture, so a new
-    # script is picked up without touching this file.
-    #
-    # The paths come from conftest rather than being recomputed here: Tests/
-    # mirrors the repo layout, so walking up looking for a "Scripts" directory
-    # finds Tests/integration/Scripts instead of the real one.
+    # Parametrized from the directory so a new script is picked up automatically.
+    # Paths come from conftest: Tests/ mirrors the repo layout, so walking up
+    # for a "Scripts" directory would find Tests/integration/Scripts.
     if "script_name" in metafunc.fixturenames:
         from conftest import SCRIPTS_BIN_DIR
         parameters = script_parameters(SCRIPTS_BIN_DIR)
@@ -73,9 +67,7 @@ def test_help_does_not_traceback(script_name, script_path, repo_root):
 
 @pytest.mark.slow
 def test_help_describes_the_script(script_name, script_path, repo_root):
-
-    # argparse always emits a usage line. Its absence means the parser was
-    # never reached, which usually means an import failed silently.
+    # A missing usage line means the parser was never reached.
     result = run_help(script_path, repo_root)
     combined = result.stdout + result.stderr
 
