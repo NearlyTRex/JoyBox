@@ -149,6 +149,14 @@ ini_defaults["UserData.Images"]["wordpress_image"] = ""
 ini_defaults["UserData.Images"]["wordpress_cli_image"] = ""
 ini_defaults["UserData.Images"]["wordpress_db_image"] = ""
 
+# UserData.Oscar
+ini_defaults["UserData.Oscar"] = {}
+ini_defaults["UserData.Oscar"]["oscar_subdomain"] = "aim"
+ini_defaults["UserData.Oscar"]["oscar_port_public"] = "5190"
+ini_defaults["UserData.Oscar"]["oscar_port_bos"] = "15190"
+ini_defaults["UserData.Oscar"]["oscar_port_api"] = "18080"
+ini_defaults["UserData.Oscar"]["oscar_log_level"] = "info"
+
 # UserData.Servers
 ini_defaults["UserData.Servers"] = {}
 ini_defaults["UserData.Servers"]["domain_name"] = ""

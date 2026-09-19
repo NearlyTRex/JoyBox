@@ -61,7 +61,8 @@ cockpit_port_http = 9090
 ```
 
 The same shape applies to `UserData.Kanboard`, `UserData.Navidrome`, `UserData.Audiobookshelf`,
-`UserData.FileBrowser`, `UserData.Jenkins` and `UserData.Ghidra`.
+`UserData.FileBrowser`, `UserData.Jenkins` and `UserData.Ghidra`. `UserData.Oscar` is
+documented in [Web Server Setup](server-setup.md#aim--oscar-server) since it has extra ports.
 
 ## Backups
 

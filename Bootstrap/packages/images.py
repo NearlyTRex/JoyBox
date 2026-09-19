@@ -53,6 +53,15 @@ docker_images["kanboard"] = {
     "KANBOARD_IMAGE": "kanboard/kanboard:v1.2.54"
 }
 
+# Open OSCAR Server
+# Built from source: upstream publishes no container image. OSCAR_VERSION is the
+# git tag to build, so it is the pin that actually matters here.
+docker_images["oscar"] = {
+    "OSCAR_VERSION": "v0.24.0",
+    "OSCAR_BUILDER_IMAGE": "golang:1.26.2-alpine",
+    "OSCAR_RUNTIME_IMAGE": "alpine:3.22"
+}
+
 # Navidrome
 docker_images["navidrome"] = {
     "NAVIDROME_IMAGE": "deluan/navidrome:0.64.0"

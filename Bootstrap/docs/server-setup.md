@@ -46,6 +46,7 @@ python3 bootstrap.py -a setup -t remote_ubuntu -s 0 --components wordpress
 | `gh` | GitHub CLI (adds repo) |
 | `ghidra` | Reverse engineering tools |
 | `ollama` | Ollama local LLM runtime |
+| `oscar` | Open OSCAR Server — self-hosted AIM/ICQ |
 
 ## The website
 
@@ -70,6 +71,70 @@ repo unless you run with `SEED_OVERWRITE=1`.
 
 To add content, drop a fragment in `content/` and add a `seed_page` line to `seed.sh`. Set
 `wordpress_seed_enabled = False` to turn seeding off entirely.
+
+## AIM / OSCAR server
+
+The `oscar` component builds [Open OSCAR Server](https://github.com/mk6i/open-oscar-server) from
+a pinned git tag — upstream publishes no container image — and serves classic AIM and ICQ
+clients.
+
+Clients connect to `<oscar_subdomain>.<domain>` on port **5190**.
+
+```ini
+[UserData.Oscar]
+oscar_subdomain = aim
+oscar_port_public = 5190
+oscar_port_bos = 15190
+oscar_port_api = 18080
+oscar_log_level = info
+```
+
+`oscar_port_public` is the port clients dial. `oscar_port_bos` and `oscar_port_api` are
+host-side loopback ports that nginx proxies to — you rarely need to change them.
+
+### Why nginx fronts a raw TCP port
+
+The container binds to `127.0.0.1` only, and nginx's `stream` module publishes 5190.
+**Docker's published ports bypass ufw**, so binding the container to `0.0.0.0` would put the
+port on the internet whatever the firewall says. Routing through nginx is what makes
+`ufw` actually govern it. The stream config uses a one-hour `proxy_timeout`: an OSCAR session
+stays open as long as the user is signed in, so a short timeout would silently drop clients.
+
+### Creating screen names
+
+Accounts are **not** auto-created. `DISABLE_AUTH` is off, so an unknown screen name is rejected
+rather than claimed — otherwise anyone reaching port 5190 could take any name, including yours.
+
+Create accounts through the management API, which is proxied over HTTPS on the same subdomain
+behind the shared `.htpasswd`:
+
+```bash
+curl -u <htpasswd-user> -X POST https://aim.example.com/user \
+    -H 'Content-Type: application/json' \
+    -d '{"screen_name":"myname","password":"..."}'
+
+# List accounts
+curl -u <htpasswd-user> https://aim.example.com/user
+```
+
+Set up the htpasswd user first with `Bootstrap/scripts/init_htpasswd.sh` if you have not
+already.
+
+### Connecting a client
+
+Point the client's server setting at `aim.example.com` port `5190`. The server advertises that
+hostname to clients after login, so it must resolve and be reachable from wherever the client
+runs — a client that signs in and then hangs is almost always a wrong advertised host.
+
+TOC, WebAPI and legacy ICQ are disabled: TOC is bound to container loopback (the server requires
+the setting), the others are switched off.
+
+### Data
+
+Everything — accounts, buddy lists, offline messages — lives in a single SQLite file on the
+`oscar_data` volume, captured by `-a backup --components oscar`. The archive is taken from the
+live file, so a write in flight could in principle produce a torn copy; for a server this size
+the window is negligible, but a backup taken while the service is stopped is strictly safer.
 
 ## Backups
 

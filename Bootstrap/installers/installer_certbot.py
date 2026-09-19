@@ -63,6 +63,7 @@ class Certbot(installer.Installer):
             settings.get_value("UserData.Navidrome", "navidrome_subdomain"),
             settings.get_value("UserData.Kanboard", "kanboard_subdomain"),
             settings.get_value("UserData.Ghidra", "ghidra_subdomain"),
+            settings.get_value("UserData.Oscar", "oscar_subdomain"),
         ]
         self.fully_qualified_domains = [self.domain_name] + [f"{sub}.{self.domain_name}" for sub in self.subdomains]
         self.nginx_config_values = {

@@ -25,6 +25,7 @@ from installers.installer_navidrome import *
 from installers.installer_nginx import *
 from installers.installer_node import *
 from installers.installer_ollama import *
+from installers.installer_oscar import *
 from installers.installer_onepassword import *
 from installers.installer_python import *
 from installers.installer_sdl3 import *

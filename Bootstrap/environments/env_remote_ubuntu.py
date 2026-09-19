@@ -65,7 +65,8 @@ class RemoteUbuntu(env.Environment):
             "kanboard": installers.Kanboard(**self.installer_options),
             "gh": installers.Gh(**self.installer_options),
             "ghidra": installers.Ghidra(**self.installer_options),
-            "ollama": installers.Ollama(**self.installer_options)
+            "ollama": installers.Ollama(**self.installer_options),
+            "oscar": installers.Oscar(**self.installer_options)
         }
 
         # Get individual installers
@@ -91,6 +92,7 @@ class RemoteUbuntu(env.Environment):
         self.installer_gh = self.available_components["gh"]
         self.installer_ghidra = self.available_components["ghidra"]
         self.installer_ollama = self.available_components["ollama"]
+        self.installer_oscar = self.available_components["oscar"]
 
     def setup(self):
 
