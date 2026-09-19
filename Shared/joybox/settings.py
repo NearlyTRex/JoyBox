@@ -88,10 +88,25 @@ def get_value(section, field, default_value = None, throw_exception = True):
             raise RuntimeError("Unable to get settings value [file=%s][section=%s][field=%s]" % (_settings_file, section, field))
         return default_value
 
+def _coerce_integer(value):
+    if isinstance(value, bool):
+        return int(value)
+    if isinstance(value, int):
+        return value
+    return int(str(value).strip())
+
+def _coerce_bool(value):
+    if isinstance(value, bool):
+        return value
+    text = str(value).strip().lower()
+    if text not in configparser.ConfigParser.BOOLEAN_STATES:
+        raise ValueError("Not a boolean: %s" % value)
+    return configparser.ConfigParser.BOOLEAN_STATES[text]
+
 def get_integer_value(section, field, default_value = None, throw_exception = True):
-    if (section, field) in _overlay:
-        return _overlay[(section, field)]
     try:
+        if (section, field) in _overlay:
+            return _coerce_integer(_overlay[(section, field)])
         _ensure_loaded()
         return _parser.getint(section, field, fallback = default_value)
     except:
@@ -100,9 +115,9 @@ def get_integer_value(section, field, default_value = None, throw_exception = Tr
         return default_value
 
 def get_bool_value(section, field, default_value = None, throw_exception = True):
-    if (section, field) in _overlay:
-        return _overlay[(section, field)]
     try:
+        if (section, field) in _overlay:
+            return _coerce_bool(_overlay[(section, field)])
         _ensure_loaded()
         return _parser.getboolean(section, field, fallback = default_value)
     except:

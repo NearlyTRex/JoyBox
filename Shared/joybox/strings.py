@@ -82,6 +82,8 @@ def trim_substring_from_start(string, substring, case_sensitive = False):
 
 # Trim substring from end
 def trim_substring_from_end(string, substring, case_sensitive = False):
+    if not substring:
+        return string
     if does_string_end_with_substring(string, substring, case_sensitive):
         return string[:-len(substring)]
     return string
@@ -216,5 +218,5 @@ def get_slug_string(string):
     string = string.strip().lower()
     string = string.replace(" ", "_")
     string = re.sub(r'[^a-z0-9_]', '', string)
-    string = string.replace("__", "_")
-    return string
+    string = re.sub(r'_+', '_', string)
+    return string.strip("_")

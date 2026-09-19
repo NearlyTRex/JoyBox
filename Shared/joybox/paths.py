@@ -563,7 +563,9 @@ def get_filename_front(path):
 # Get filename split
 def get_filename_split(path):
     filename_ext = get_filename_extension(path)
-    filename_remainder = path[:-(len(filename_ext))]
+    if not filename_ext:
+        return [path, ""]
+    filename_remainder = path[:-len(filename_ext)]
     return [filename_remainder, filename_ext]
 
 # Get filename basename

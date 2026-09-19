@@ -144,3 +144,125 @@ def test_search_keys_restrict_which_keys_match():
 def test_non_dictionary_input_returns_empty():
     assert datautils.search_dictionary(["not", "a", "dict"], "not") == []
     assert datautils.search_dictionary(None, "anything") == []
+
+
+###########################################################
+# Retry with backoff
+#
+# The None handling is subtle and deliberate. Callers are web scrapes whose
+# "no results found" path returns None and is annotated "not an error", so a
+# None on the first attempt must NOT be retried. A None after an exception is
+# different - something is already broken - and does keep retrying.
+###########################################################
+
+def test_a_successful_call_is_not_retried():
+    calls = []
+
+    def succeed():
+        calls.append(1)
+        return "value"
+
+    assert datautils.retry_with_backoff(succeed, max_retries = 3, initial_delay = 0) == "value"
+    assert len(calls) == 1
+
+
+def test_a_first_attempt_returning_none_is_accepted():
+
+    # "Nothing found" is a legitimate answer, not a failure to retry through.
+    calls = []
+
+    def find_nothing():
+        calls.append(1)
+        return None
+
+    assert datautils.retry_with_backoff(find_nothing, max_retries = 3, initial_delay = 0) is None
+    assert len(calls) == 1, "a clean empty result must not trigger a retry storm"
+
+
+def test_an_exception_is_retried_until_it_succeeds():
+    attempts = []
+
+    def flaky():
+        attempts.append(1)
+        if len(attempts) < 3:
+            raise RuntimeError("boom")
+        return "recovered"
+
+    assert datautils.retry_with_backoff(flaky, max_retries = 5, initial_delay = 0) == "recovered"
+    assert len(attempts) == 3
+
+
+def test_retries_give_up_and_return_none():
+    attempts = []
+
+    def always_raise():
+        attempts.append(1)
+        raise RuntimeError("boom")
+
+    assert datautils.retry_with_backoff(always_raise, max_retries = 3, initial_delay = 0) is None
+    assert len(attempts) == 3
+
+
+def test_none_after_an_exception_keeps_retrying():
+
+    # The distinction that makes "or attempt == 0" load-bearing: once something
+    # has already thrown, a None result means still-broken rather than empty.
+    attempts = []
+
+    def raise_then_none():
+        attempts.append(1)
+        if len(attempts) == 1:
+            raise RuntimeError("boom")
+        return None
+
+    assert datautils.retry_with_backoff(raise_then_none, max_retries = 4, initial_delay = 0) is None
+    assert len(attempts) > 2, "a None after a failure should not end the run early"
+
+
+def test_cleanup_runs_after_a_failed_attempt():
+    cleanups = []
+
+    def always_raise():
+        raise RuntimeError("boom")
+
+    datautils.retry_with_backoff(
+        always_raise,
+        cleanup_func = lambda: cleanups.append(1),
+        max_retries = 3,
+        initial_delay = 0)
+
+    assert len(cleanups) == 3
+
+
+def test_cleanup_does_not_run_when_the_call_succeeds():
+    cleanups = []
+
+    datautils.retry_with_backoff(
+        lambda: "value",
+        cleanup_func = lambda: cleanups.append(1),
+        max_retries = 3,
+        initial_delay = 0)
+
+    assert cleanups == []
+
+
+def test_a_failing_cleanup_does_not_mask_the_retry():
+
+    # Cleanup here tears down a selenium driver; if that throws, the retry loop
+    # still has to keep going rather than propagating a secondary error.
+    attempts = []
+
+    def flaky():
+        attempts.append(1)
+        if len(attempts) < 2:
+            raise RuntimeError("boom")
+        return "recovered"
+
+    def bad_cleanup():
+        raise RuntimeError("cleanup exploded")
+
+    assert datautils.retry_with_backoff(
+        flaky,
+        cleanup_func = bad_cleanup,
+        max_retries = 3,
+        initial_delay = 0) == "recovered"

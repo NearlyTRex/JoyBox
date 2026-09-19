@@ -229,7 +229,7 @@ def touch_file(src, contents = "", contents_mode = "w", encoding = None, verbose
             os.makedirs(paths.get_filename_directory(src), exist_ok = True)
             if len(contents):
                 if encoding:
-                    with open(src, contents_mode, encoding) as f:
+                    with open(src, contents_mode, encoding = encoding) as f:
                         f.write(contents)
                 else:
                     with open(src, contents_mode) as f:

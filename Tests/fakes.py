@@ -231,3 +231,49 @@ class RecordingConnection(connection.Connection):
         self._record("remove_from_crontab", pattern)
         self.crontab_removed.append(pattern)
         return True
+
+
+###########################################################
+# Recording installer
+#
+# Stands in for an installer inside Environment.process_components, which is
+# pure orchestration - ordering, skip rules, failure handling - and needs no
+# real installer to exercise.
+###########################################################
+
+class RecordingInstaller:
+    def __init__(self, name, installed = False, results = None, call_log = None):
+        self.name = name
+        self.installed = installed
+
+        # Per-action return values, e.g. {"install": False}
+        self.results = dict(results or {})
+        self.calls = []
+
+        # Optional list shared between installers, so a test can assert the
+        # order components ran in rather than only that each one ran.
+        self.call_log = call_log
+
+    def _record(self, action):
+        self.calls.append(action)
+        if self.call_log is not None:
+            self.call_log.append((self.name, action))
+        return self.results.get(action, True)
+
+    def is_installed(self):
+        return self.installed
+
+    def get_package_status(self):
+        return {"name": self.name, "installed": self.installed}
+
+    def install(self):
+        return self._record("install")
+
+    def uninstall(self):
+        return self._record("uninstall")
+
+    def backup(self, tag = ""):
+        return self._record("backup")
+
+    def restore(self):
+        return self._record("restore")
