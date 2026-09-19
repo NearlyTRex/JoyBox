@@ -516,9 +516,8 @@ def does_directory_contain_files_by_extensions(path, extensions = [], recursive 
         for obj in get_directory_contents(path):
             obj_path = os.path.join(path, obj)
             if os.path.isfile(obj_path):
-                for file_type in extensions:
-                    if obj_path.endswith(file_type):
-                        files.append(obj)
+                if does_filename_match_extensions(obj_path, extensions):
+                    files.append(obj)
         return len(files)
 
 # Check if directory contains symlink dirs
@@ -607,6 +606,16 @@ def get_filename_drive_offset(path):
 # Get filename front slice
 def get_filename_front_slice(path):
     return rebase_file_path(path, get_filename_front(path) + config.os_pathsep, "")
+
+# Check if filename matches extensions
+def does_filename_match_extensions(path, extensions = []):
+    if not isinstance(extensions, list):
+        return False
+    lowered = path.lower()
+    for extension in extensions:
+        if lowered.endswith(extension.lower()):
+            return True
+    return False
 
 # Get filename file
 def get_filename_file(path):

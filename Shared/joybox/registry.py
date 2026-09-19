@@ -221,11 +221,14 @@ def backup_user_registry(
     if not tmp_dir_success:
         return False
 
-    # Temporary files
-    temp_reg_file = paths.join_paths(tmp_dir_result, "temp.reg")
+    # Export each key to its own file and collect the entries
+    registry_data = {}
+    registry_data["header"] = ""
+    registry_data["entries"] = []
+    for key_index, base_key in enumerate(export_keys):
 
-    # Export current user registry
-    for base_key in export_keys:
+        # Export registry key
+        temp_reg_file = paths.join_paths(tmp_dir_result, "temp%d.reg" % key_index)
         success = export_registry_file(
             registry_file = temp_reg_file,
             registry_key = base_key,
@@ -236,14 +239,19 @@ def backup_user_registry(
         if not success:
             return False
 
-    # Read registry file
-    registry_data = read_registry_file(
-        registry_file = temp_reg_file,
-        ignore_keys = ignore_keys,
-        keep_keys = keep_keys,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
+        # Read registry file
+        key_data = read_registry_file(
+            registry_file = temp_reg_file,
+            ignore_keys = ignore_keys,
+            keep_keys = keep_keys,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+
+        # Collect entries
+        if not registry_data["header"]:
+            registry_data["header"] = key_data.get("header", "")
+        registry_data["entries"] += key_data.get("entries", [])
 
     # Write new pruned registry file
     return write_registry_file(

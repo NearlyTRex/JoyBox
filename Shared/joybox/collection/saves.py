@@ -14,7 +14,7 @@ from joybox import runtime
 ############################################################
 
 # Check if save dir is packable
-def is_save_dir_packable(input_save_dir, output_save_dir):
+def is_save_dir_packable(input_save_dir, output_save_dir = None):
     return paths.does_directory_contain_files(input_save_dir)
 
 # Check if save dir is unpackable

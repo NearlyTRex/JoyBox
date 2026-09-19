@@ -230,3 +230,39 @@ def test_trailing_dots_and_spaces_are_trimmed():
 
 def test_runs_of_spaces_collapse():
     assert paths.replace_invalid_path_characters("a    b") == "a b"
+
+
+###########################################################
+# Extension matching
+###########################################################
+
+@pytest.mark.parametrize("path,extensions,expected", [
+    ("Disc 1.cue", [".cue"], True),
+    ("Disc 1.CUE", [".cue"], True),
+    ("Disc 1.cue", [".CUE"], True),
+    ("Disc 1.Cue", [".cUe"], True),
+    ("Disc 1.bin", [".cue"], False),
+    ("Disc 1.cue", [".chd", ".cue"], True),
+    ("Disc 1.cue", [".chd", ".iso"], False),
+    ("/games/psx/Disc 1.cue", [".cue"], True),
+    ("Disc 1.cue", [], False),
+    ("Disc 1.cue", None, False),
+    ("cue", [".cue"], False),
+    ("rescue", [".cue"], False),
+    ("archive.tar.gz", [".tar.gz"], True),
+    ("", [".cue"], False),
+])
+def test_extension_matching(path, extensions, expected):
+    assert paths.does_filename_match_extensions(path, extensions) is expected
+
+
+def test_a_dotless_extension_still_matches():
+    # Callers split a comma separated --file_types list, which may omit dots.
+    assert paths.does_filename_match_extensions("Disc 1.cue", ["cue"]) is True
+
+
+def test_extension_matching_does_not_mutate_the_list():
+    extensions = [".cue"]
+    paths.does_filename_match_extensions("Disc 1.CUE", extensions)
+
+    assert extensions == [".cue"]

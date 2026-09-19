@@ -72,12 +72,11 @@ def generate_playlist(
         for obj in paths.get_directory_contents(source_dir):
             obj_path = paths.join_paths(source_dir, obj)
             if paths.is_path_file(obj_path):
-                for extension in extensions:
-                    if obj_path.endswith(extension):
-                        if only_keep_ends:
-                            playlist_contents.append(obj)
-                        else:
-                            playlist_contents.append(obj_path)
+                if paths.does_filename_match_extensions(obj_path, extensions):
+                    if only_keep_ends:
+                        playlist_contents.append(obj)
+                    else:
+                        playlist_contents.append(obj_path)
 
     # Check length
     if allow_empty_lists == False and len(playlist_contents) == 0:
