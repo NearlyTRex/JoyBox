@@ -23,6 +23,24 @@ def _ensure_paramiko():
         import paramiko as _paramiko
         paramiko = _paramiko
 
+# Load a private key without assuming its type. RSAKey.from_private_key* accepts
+# only RSA, so an ed25519 key - what ssh-keygen produces by default - is rejected
+# outright. Newer paramiko exposes PKey.from_path, which sniffs the type; fall back
+# to trying each class in turn when it is unavailable.
+def _load_private_key(filepath = None, key_str = None):
+    _ensure_paramiko()
+    if filepath and hasattr(paramiko.PKey, "from_path"):
+        return paramiko.PKey.from_path(filepath)
+    attempts = []
+    for key_class in [paramiko.Ed25519Key, paramiko.ECDSAKey, paramiko.RSAKey]:
+        try:
+            if filepath:
+                return key_class.from_private_key_file(filepath)
+            return key_class.from_private_key(StringIO(key_str))
+        except Exception as e:
+            attempts.append("%s: %s" % (key_class.__name__, e))
+    raise ValueError("Could not load SSH private key (%s)" % "; ".join(attempts))
+
 class ConnectionSSH(connection.Connection):
     ssh_client = None
 
@@ -51,16 +69,10 @@ class ConnectionSSH(connection.Connection):
                 ConnectionSSH.ssh_client = paramiko.SSHClient()
                 ConnectionSSH.ssh_client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
             if not ConnectionSSH.ssh_client.get_transport() or not ConnectionSSH.ssh_client.get_transport().is_active():
-                if self.ssh_key_str:
-                    private_key = paramiko.RSAKey.from_private_key(StringIO(self.ssh_key_str))
-                    ConnectionSSH.ssh_client.connect(
-                        self.ssh_host,
-                        port = self.ssh_port,
-                        username = self.ssh_user,
-                        pkey = private_key
-                    )
-                elif self.ssh_key_filepath:
-                    private_key = paramiko.RSAKey.from_private_key_file(self.ssh_key_filepath)
+                if self.ssh_key_str or self.ssh_key_filepath:
+                    private_key = _load_private_key(
+                        filepath = self.ssh_key_filepath if not self.ssh_key_str else None,
+                        key_str = self.ssh_key_str)
                     ConnectionSSH.ssh_client.connect(
                         self.ssh_host,
                         port = self.ssh_port,

@@ -179,6 +179,14 @@ class DockerAppInstaller(installer.Installer):
         except ValueError:
             return 7
 
+    def get_backup_age_recipient(self):
+        return settings.get_value("UserData.Backup", "backup_age_recipient",
+            default_value = "", throw_exception = False).strip()
+
+    def get_backup_age_identity(self):
+        return settings.get_value("UserData.Backup", "backup_age_identity",
+            default_value = "", throw_exception = False).strip()
+
     def get_backup_label(self):
         return self.backup_label if self.backup_label else self.app_name
 
@@ -221,7 +229,18 @@ fi
         # Everything is redirected server-side; archive bytes never travel
         # back through the SSH channel.
         suffix = ("_" + tag) if tag else ""
+        recipient = self.get_backup_age_recipient()
+
+        # Archives carry downstream secrets - database dumps, password hashes,
+        # account stores - and land on third-party storage. Encrypting to a public
+        # key means the server cannot read back what it wrote.
+        enc = ('| age -r %s ' % recipient) if recipient else ""
+        ext = ".age" if recipient else ""
+
         script = self.get_backup_preamble()
+        if recipient:
+            script += ('command -v age >/dev/null 2>&1 || '
+                       '{ echo "Error: backup_age_recipient is set but age is not installed"; exit 1; }\n')
         script += 'STAMP="$(date -u +%Y%m%d_%H%M%S)' + suffix + '"\n'
         script += 'DEST="$BACKUP_BASE/$STAMP.partial"\n'
         script += 'mkdir -p "$DEST"\n'
@@ -238,23 +257,24 @@ fi
             script += ('docker exec "$CID" sh -c \'command -v mariadb-dump >/dev/null 2>&1 && D=mariadb-dump || D=mysqldump; '
                        'exec "$D" --single-transaction --quick --routines --triggers --default-character-set=utf8mb4 '
                        '-u root -p"${MYSQL_ROOT_PASSWORD:-$MARIADB_ROOT_PASSWORD}" '
-                       '"${MYSQL_DATABASE:-$MARIADB_DATABASE}"\' | gzip -9 > "$DEST/db.sql.gz"\n')
-            script += 'echo "db.sql.gz\tdatabase\t%s" >> "$DEST/backup_manifest.txt"\n' % self.backup_database
+                       '"${MYSQL_DATABASE:-$MARIADB_DATABASE}"\' | gzip -9 %s> "$DEST/db.sql.gz%s"\n') % (enc, ext)
+            script += 'echo "db.sql.gz%s\tdatabase\t%s" >> "$DEST/backup_manifest.txt"\n' % (ext, self.backup_database)
         excludes = " ".join(['--exclude=%s' % e for e in self.backup_excludes])
         for volume in self.backup_volumes:
             full_volume = "%s_%s" % (self.app_name, volume)
             script += ('docker run --rm -v %s:/src:ro %s tar -C /src %s -cf - . '
-                       '| gzip -9 > "$DEST/%s.tar.gz"\n') % (full_volume, self.get_helper_image(), excludes, volume)
-            script += 'echo "%s.tar.gz\tvolume\t%s" >> "$DEST/backup_manifest.txt"\n' % (volume, full_volume)
+                       '| gzip -9 %s> "$DEST/%s.tar.gz%s"\n') % (full_volume, self.get_helper_image(), excludes, enc, volume, ext)
+            script += 'echo "%s.tar.gz%s\tvolume\t%s" >> "$DEST/backup_manifest.txt"\n' % (volume, ext, full_volume)
         for directory in self.backup_dirs:
             host_path = "%s/%s" % (self.get_app_dir(), directory)
             script += ('docker run --rm -v %s:/src:ro %s tar -C /src %s -cf - . '
-                       '| gzip -9 > "$DEST/%s.tar.gz"\n') % (host_path, self.get_helper_image(), excludes, directory)
-            script += 'echo "%s.tar.gz\tdirectory\t%s" >> "$DEST/backup_manifest.txt"\n' % (directory, host_path)
+                       '| gzip -9 %s> "$DEST/%s.tar.gz%s"\n') % (host_path, self.get_helper_image(), excludes, enc, directory, ext)
+            script += 'echo "%s.tar.gz%s\tdirectory\t%s" >> "$DEST/backup_manifest.txt"\n' % (directory, ext, host_path)
 
         # Checksums, then publish atomically so a partial write is never
         # mistaken for a finished backup.
-        script += 'cd "$DEST" && sha256sum *.gz > SHA256SUMS\n'
+        script += ('cd "$DEST" && find . -maxdepth 1 -type f \\( -name "*.gz" -o -name "*.age" \\) '
+                   '-printf "%P\\n" | sort | xargs -r sha256sum > SHA256SUMS\n')
         script += 'mv "$DEST" "$BACKUP_BASE/$STAMP"\n'
         script += 'ln -sfn "$BACKUP_BASE/$STAMP" "$BACKUP_BASE/latest" || echo "Warning: could not update latest symlink"\n'
         script += 'echo "Backup complete: $BACKUP_BASE/$STAMP"\n'
@@ -282,26 +302,45 @@ fi
             return False
         return True
 
-    def build_restore_script(self, backup_id):
+    def build_restore_script(self, backup_id, identity_path = ""):
         script = self.get_backup_preamble()
+        if identity_path:
+            script += 'AGE_IDENTITY=%s\n' % identity_path
+        script += """archive_stream() {
+    # $1 is the plain archive name; prefer its encrypted sibling when present so
+    # backups taken before encryption was enabled still restore unchanged.
+    if [ -f "$SRC/$1.age" ]; then
+        if [ -z "${AGE_IDENTITY:-}" ]; then
+            echo "Error: $1.age is encrypted but backup_age_identity is not set" >&2
+            exit 1
+        fi
+        age -d -i "$AGE_IDENTITY" "$SRC/$1.age" | gzip -dc
+    elif [ -f "$SRC/$1" ]; then
+        gzip -dc "$SRC/$1"
+    else
+        echo "Error: neither $1 nor $1.age found in $SRC" >&2
+        exit 1
+    fi
+}
+"""
         script += 'SRC="$BACKUP_BASE/%s"\n' % backup_id
         script += 'if [ ! -d "$SRC" ]; then echo "Error: no backup at $SRC"; exit 1; fi\n'
         script += 'echo "Restoring from $SRC"\n'
         script += 'cd "$SRC" && sha256sum -c SHA256SUMS\n'
         for volume in self.backup_volumes:
             full_volume = "%s_%s" % (self.app_name, volume)
-            script += ('gzip -dc "$SRC/%s.tar.gz" | docker run --rm -i -v %s:/dst %s '
+            script += ('archive_stream "%s.tar.gz" | docker run --rm -i -v %s:/dst %s '
                        'sh -c \'rm -rf /dst/..?* /dst/.[!.]* /dst/* 2>/dev/null; exec tar -C /dst -xf -\'\n') % (
                        volume, full_volume, self.get_helper_image())
         for directory in self.backup_dirs:
             host_path = "%s/%s" % (self.get_app_dir(), directory)
-            script += ('gzip -dc "$SRC/%s.tar.gz" | docker run --rm -i -v %s:/dst %s '
+            script += ('archive_stream "%s.tar.gz" | docker run --rm -i -v %s:/dst %s '
                        'sh -c \'rm -rf /dst/..?* /dst/.[!.]* /dst/* 2>/dev/null; exec tar -C /dst -xf -\'\n') % (
                        directory, host_path, self.get_helper_image())
         if self.backup_database:
             script += 'CID="$(%s)"\n' % self.get_container_lookup(self.backup_database)
             script += 'if [ -z "$CID" ]; then echo "Error: database container for %s is not running"; exit 1; fi\n' % self.app_name
-            script += ('gzip -dc "$SRC/db.sql.gz" | docker exec -i "$CID" sh -c '
+            script += ('archive_stream "db.sql.gz" | docker exec -i "$CID" sh -c '
                        '\'command -v mariadb >/dev/null 2>&1 && M=mariadb || M=mysql; '
                        'exec "$M" -u root -p"${MYSQL_ROOT_PASSWORD:-$MARIADB_ROOT_PASSWORD}" '
                        '"${MYSQL_DATABASE:-$MARIADB_DATABASE}"\'\n')
@@ -326,9 +365,29 @@ fi
             logger.log_error("Pre-restore snapshot failed; aborting restore")
             return False
 
+        # Stage the decryption key on tmpfs, never on disk
+        identity_local = self.get_backup_age_identity()
+        identity_remote = ""
+        if identity_local:
+            if not os.path.exists(identity_local):
+                logger.log_error(f"backup_age_identity points at a missing file: {identity_local}")
+                return False
+            with open(identity_local, "r") as identity_file:
+                identity_contents = identity_file.read()
+            identity_remote = f"/dev/shm/joybox_age_{self.app_name}.key"
+            if not self.connection.write_file(identity_remote, identity_contents):
+                logger.log_error("Could not stage the age identity on the server")
+                return False
+            self.connection.change_permission(identity_remote, "600")
+
         # Run restore
         logger.log_warning(f"Restoring {self.app_name} from {self.get_backup_dir()}/{backup_id}")
-        code = self.connection.run_blocking(["bash", "-c", self.build_restore_script(backup_id)])
+        try:
+            code = self.connection.run_blocking(
+                ["bash", "-c", self.build_restore_script(backup_id, identity_remote)])
+        finally:
+            if identity_remote:
+                self.connection.remove_file_or_directory(identity_remote)
         if code != 0:
             logger.log_error(f"Restore of {self.app_name} failed (exit {code})")
             return False
@@ -357,6 +416,7 @@ fi
         logger.log_info("Creating directories")
         app_dir = self.get_app_dir()
         self.connection.make_directory(app_dir)
+        self.connection.change_permission(app_dir, "700")
         for subdir in self.app_subdirs:
             self.connection.make_directory(f"{app_dir}/{subdir}")
 

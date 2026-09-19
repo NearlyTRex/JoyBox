@@ -122,19 +122,18 @@ ini_defaults["UserData.Kanboard"] = {}
 ini_defaults["UserData.Kanboard"]["kanboard_subdomain"] = "tasks"
 ini_defaults["UserData.Kanboard"]["kanboard_port_http"] = "8086"
 
-# UserData.Ghidra
-ini_defaults["UserData.Ghidra"] = {}
-ini_defaults["UserData.Ghidra"]["ghidra_subdomain"] = "ghidra"
-ini_defaults["UserData.Ghidra"]["ghidra_port_rmi"] = "13103"
-ini_defaults["UserData.Ghidra"]["ghidra_port_ssl"] = "13104"
-ini_defaults["UserData.Ghidra"]["ghidra_port_stream"] = "13105"
-ini_defaults["UserData.Ghidra"]["ghidra_admin_user"] = "admin"
-ini_defaults["UserData.Ghidra"]["ghidra_admin_pass"] = ""
-
 # UserData.Backup
 ini_defaults["UserData.Backup"] = {}
 ini_defaults["UserData.Backup"]["backup_root"] = "/mnt/storage/Backups"
 ini_defaults["UserData.Backup"]["backup_keep"] = "7"
+# Public key (age1...) that backup archives are encrypted to. Leave empty to write
+# plain gzip. The server only ever holds the public half, so a compromised box
+# cannot read its own backup history.
+ini_defaults["UserData.Backup"]["backup_age_recipient"] = ""
+# Local path to the matching private key, used only during restore. Never written
+# to the server's disk - restore stages it on tmpfs and removes it afterwards.
+# Lose this and every encrypted backup is unrecoverable.
+ini_defaults["UserData.Backup"]["backup_age_identity"] = ""
 
 # UserData.Images
 # Per-server overrides for the container image pins in packages/images.py.
@@ -160,10 +159,17 @@ ini_defaults["UserData.Oscar"]["oscar_log_level"] = "info"
 # UserData.Servers
 ini_defaults["UserData.Servers"] = {}
 ini_defaults["UserData.Servers"]["domain_name"] = ""
+# How the TLS certificate is obtained:
+#   letsencrypt - real cert via certbot (the only option for a public server)
+#   mkcert      - locally trusted cert, signed on the workstation (local testing)
+#   selfsigned  - openssl cert generated on the target (local testing, browsers warn)
+# All three land the cert at /etc/letsencrypt/live/<domain>/, so nothing downstream changes.
+ini_defaults["UserData.Servers"]["tls_mode"] = "letsencrypt"
 ini_defaults["UserData.Servers"]["server_0_host"] = ""
 ini_defaults["UserData.Servers"]["server_0_port"] = ""
 ini_defaults["UserData.Servers"]["server_0_user"] = ""
 ini_defaults["UserData.Servers"]["server_0_pass"] = ""
+ini_defaults["UserData.Servers"]["server_0_key_filepath"] = ""
 
 # UserData.Scraping
 ini_defaults["UserData.Scraping"] = {}

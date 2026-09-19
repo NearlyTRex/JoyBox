@@ -100,7 +100,7 @@ services:
     container_name: filebrowser
     restart: always
     ports:
-      - "${FILEBROWSER_PORT_HTTP}:80"
+      - "127.0.0.1:${FILEBROWSER_PORT_HTTP}:80"
     volumes:
       - ${FILEBROWSER_ROOT}:/srv
       - config_data:/config

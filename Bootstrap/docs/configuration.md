@@ -61,8 +61,50 @@ cockpit_port_http = 9090
 ```
 
 The same shape applies to `UserData.Kanboard`, `UserData.Navidrome`, `UserData.Audiobookshelf`,
-`UserData.FileBrowser`, `UserData.Jenkins` and `UserData.Ghidra`. `UserData.Oscar` is
+`UserData.FileBrowser` and `UserData.Jenkins`. `UserData.Oscar` is
 documented in [Web Server Setup](server-setup.md#aim--oscar-server) since it has extra ports.
+
+## SSH authentication
+
+```ini
+[UserData.Servers]
+server_0_host = 203.0.113.10
+server_0_port = 22
+server_0_user = deploy
+server_0_key_filepath = /home/you/.ssh/id_ed25519
+```
+
+`server_N_key_filepath` takes precedence over `server_N_pass`. Set it and confirm a
+deploy connects **before** running `init_sshd.sh`, which disables password auth.
+Any key type works — ed25519, ECDSA or RSA. `-k` overrides it for a single run.
+
+## TLS mode
+
+```ini
+[UserData.Servers]
+tls_mode = letsencrypt
+```
+
+`letsencrypt` (the default) issues a real certificate with certbot. `mkcert` and
+`selfsigned` exist for [local testing](local-testing.md#tls) against a domain
+Let's Encrypt cannot validate. All three write to `/etc/letsencrypt/live/<domain>/`,
+so nothing downstream changes.
+
+## Backup encryption
+
+```ini
+[UserData.Backup]
+backup_age_recipient = age1...
+backup_age_identity = /home/you/.joybox-age.key
+```
+
+With a recipient set, every archive is encrypted with `age` before it lands on the
+Storage Box. The server only ever holds the public key. `backup_age_identity` is a
+path on *your* machine, read only during restore and staged on the server's tmpfs
+for the duration.
+
+**Losing the private key makes every encrypted backup unrecoverable.** Store it
+somewhere off-server that you will not lose.
 
 ## Backups
 

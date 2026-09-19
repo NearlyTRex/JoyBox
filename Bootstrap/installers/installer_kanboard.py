@@ -17,7 +17,7 @@ services:
     container_name: kanboard
     restart: always
     ports:
-      - "${KANBOARD_PORT_HTTP}:80"
+      - "127.0.0.1:${KANBOARD_PORT_HTTP}:80"
     volumes:
       - ./data:/var/www/app/data
       - ./plugins:/var/www/app/plugins

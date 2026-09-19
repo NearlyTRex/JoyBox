@@ -81,9 +81,23 @@ install_managers() {
             continue
         fi
 
+        # Downloading is opt-in. setup_sudoers grants this user passwordless root
+        # on every script in /usr/local/bin/manager_*.sh, so installing one from an
+        # unverified fetch hands root to whoever can answer for that host.
+        if [[ "${JOYBOX_ALLOW_MANAGER_DOWNLOAD:-}" != "1" ]]; then
+            echo "Error: $script was not found in a local checkout."
+            echo "Run this from a JoyBox checkout, or pass the directory explicitly:"
+            echo "  install_managers /path/to/JoyBox/Bootstrap/managers"
+            echo
+            echo "To fetch from GitHub instead - these scripts get passwordless sudo,"
+            echo "so only do this on a host you trust - re-run with:"
+            echo "  JOYBOX_ALLOW_MANAGER_DOWNLOAD=1 $0"
+            exit 1
+        fi
+
         local url="https://raw.githubusercontent.com/NearlyTRex/JoyBox/main/Bootstrap/managers/$script"
         echo "Downloading $script from $url..."
-        if curl -fsSL -o "$script_path" "$url"; then
+        if curl -fsSL --proto '=https' --tlsv1.2 -o "$script_path" "$url"; then
             chmod +x "$script_path"
             echo "Installed $script to $script_path"
         else
@@ -167,12 +181,15 @@ add_htpasswd_user() {
     if [ ! -f "$htpasswd_file" ]; then
         echo "Creating new htpasswd file at $htpasswd_file"
         htpasswd -cbB "$htpasswd_file" "$username" "$password"
-        chmod 640 "$htpasswd_file"
-        chown root:www-data "$htpasswd_file"
     else
         echo "Updating user '$username' in htpasswd file..."
         htpasswd -bB "$htpasswd_file" "$username" "$password"
     fi
+
+    # Asserted on both paths, not just creation: if anything upstream ever reset
+    # the file to default permissions, an update would otherwise leave it readable.
+    chmod 640 "$htpasswd_file"
+    chown root:www-data "$htpasswd_file"
 }
 
 remove_htpasswd() {
@@ -190,7 +207,21 @@ configure_unattended_upgrades() {
     echo "Configuring unattended-upgrades..."
     apt-get update
     apt-get install -y unattended-upgrades
-    dpkg-reconfigure -f noninteractive unattended-upgrades
+
+    # Pin the schedule explicitly rather than inheriting whatever debconf defaults
+    # ship. Without Automatic-Reboot the box installs kernel and libc updates but
+    # keeps running the old ones, so it reports patched while still vulnerable.
+    cat > /etc/apt/apt.conf.d/52-joybox-unattended <<EOF
+APT::Periodic::Update-Package-Lists "1";
+APT::Periodic::Unattended-Upgrade "1";
+APT::Periodic::AutocleanInterval "7";
+Unattended-Upgrade::Automatic-Reboot "true";
+Unattended-Upgrade::Automatic-Reboot-WithUsers "true";
+Unattended-Upgrade::Automatic-Reboot-Time "04:00";
+Unattended-Upgrade::Remove-Unused-Kernel-Packages "true";
+EOF
+
+    systemctl enable --now unattended-upgrades 2>/dev/null || true
     echo "Unattended-upgrades configuration complete."
 }
 
@@ -220,6 +251,22 @@ maxretry = 3
 bantime  = 3600
 EOF
 
+    # SSH jail. The distro default watches /var/log/auth.log, which does not exist
+    # on Ubuntu 24.04+ because sshd logs only to journald and rsyslog is no longer
+    # installed - so the packaged jail silently matches nothing. Force the systemd
+    # backend and assert the jail here rather than relying on the default.
+    echo "Creating Fail2Ban jail configuration for SSH..."
+    cat > /etc/fail2ban/jail.d/sshd.conf <<EOF
+[sshd]
+enabled  = true
+port     = ssh
+filter   = sshd
+backend  = systemd
+maxretry = 3
+findtime = 600
+bantime  = 3600
+EOF
+
     echo "Restarting Fail2Ban..."
     systemctl restart fail2ban
     echo "Fail2Ban configuration complete."
@@ -228,6 +275,14 @@ EOF
 configure_security_headers() {
     echo "Configuring NGINX security headers..."
     cat > /etc/nginx/snippets/ssl-params.conf <<EOF
+# The version banner is free reconnaissance; turn it off everywhere.
+server_tokens off;
+
+# Apply the zone defined in rate-limit.conf. Defining limit_req_zone alone does
+# nothing - without a limit_req directive consuming it, no request is ever limited.
+# Included per-server, so it covers every vhost that includes this snippet.
+limit_req zone=mylimit burst=20 nodelay;
+
 ssl_protocols TLSv1.2 TLSv1.3;
 ssl_prefer_server_ciphers on;
 ssl_ciphers 'EECDH+AESGCM:EDH+AESGCM:AES256+EECDH:AES256+EDH';
@@ -299,22 +354,28 @@ configure_modsecurity() {
     echo "Enabling ModSecurity..."
     sed -i 's/SecRuleEngine DetectionOnly/SecRuleEngine On/' "$modsec_dir/modsecurity.conf"
 
-    echo "Setting up Core Rule Set (CRS)..."
-    if [ ! -d "$modsec_dir/crs" ]; then
-        echo "Cloning Core Rule Set..."
-        git clone --depth 1 https://github.com/coreruleset/coreruleset "$modsec_dir/crs"
-        echo "CRS cloned successfully"
-    elif [ ! -d "$modsec_dir/crs/.git" ]; then
-        echo "CRS directory exists but is not a git repository. Removing and re-cloning..."
+    # Pinned rather than tracking a branch, matching the "never latest" policy the
+    # container image pins follow. A rule set that changes under you can start
+    # blocking legitimate traffic on an unrelated rerun. Bump deliberately.
+    local crs_version="v4.29.0"
+
+    echo "Setting up Core Rule Set (CRS) $crs_version..."
+    if [ -d "$modsec_dir/crs" ] && [ ! -d "$modsec_dir/crs/.git" ]; then
+        echo "CRS directory exists but is not a git repository. Removing..."
         rm -rf "$modsec_dir/crs"
-        git clone --depth 1 https://github.com/coreruleset/coreruleset "$modsec_dir/crs"
-        echo "CRS re-cloned successfully"
+    fi
+
+    if [ ! -d "$modsec_dir/crs" ]; then
+        echo "Cloning Core Rule Set at $crs_version..."
+        git clone --depth 1 --branch "$crs_version" \
+            https://github.com/coreruleset/coreruleset "$modsec_dir/crs"
+        echo "CRS cloned successfully"
     else
-        echo "CRS directory already exists and appears to be a git repository"
-        echo "Updating existing CRS..."
-        cd "$modsec_dir/crs"
-        git pull origin v4.0/dev 2>/dev/null || git pull origin main 2>/dev/null || echo "Could not update CRS, using existing version"
-        cd - > /dev/null
+        echo "Checking out CRS $crs_version..."
+        git -C "$modsec_dir/crs" fetch --depth 1 origin "refs/tags/$crs_version:refs/tags/$crs_version" 2>/dev/null || true
+        if ! git -C "$modsec_dir/crs" checkout -q "$crs_version" 2>/dev/null; then
+            echo "Warning: could not check out $crs_version, using existing version"
+        fi
     fi
 
     echo "Setting up CRS configuration..."
@@ -398,6 +459,61 @@ configure_nginx_stream_module() {
         fi
         exit 1
     fi
+}
+
+configure_sshd_hardening() {
+    local username="$1"
+    echo "Hardening sshd for user $username..."
+
+    # Refuse to lock the box out of itself: without an authorized key for this
+    # user, disabling password auth leaves no way back in but the provider console.
+    local auth_keys="/home/$username/.ssh/authorized_keys"
+    if [[ ! -s "$auth_keys" ]]; then
+        echo "Error: $auth_keys is missing or empty."
+        echo "Install a public key for $username and verify key login works before running this."
+        exit 1
+    fi
+
+    # A drop-in rather than edits to sshd_config: re-running is idempotent, and
+    # the packaged config keeps receiving distro updates untouched.
+    mkdir -p /etc/ssh/sshd_config.d
+    cat > /etc/ssh/sshd_config.d/99-joybox.conf <<EOF
+# Managed by JoyBox - see Bootstrap/scripts/init_sshd.sh
+PermitRootLogin no
+PasswordAuthentication no
+KbdInteractiveAuthentication no
+ChallengeResponseAuthentication no
+PubkeyAuthentication yes
+PermitEmptyPasswords no
+AllowUsers $username
+MaxAuthTries 3
+LoginGraceTime 30
+X11Forwarding no
+AllowAgentForwarding no
+AllowTcpForwarding no
+ClientAliveInterval 300
+ClientAliveCountMax 2
+EOF
+    chmod 644 /etc/ssh/sshd_config.d/99-joybox.conf
+
+    # Older releases do not Include the drop-in directory. Adding the config
+    # without that line would be a silent no-op.
+    if ! grep -qE '^\s*Include\s+/etc/ssh/sshd_config\.d/\*\.conf' /etc/ssh/sshd_config; then
+        echo "Adding Include directive to /etc/ssh/sshd_config..."
+        sed -i '1i Include /etc/ssh/sshd_config.d/*.conf' /etc/ssh/sshd_config
+    fi
+
+    # Validate before touching the running daemon; a bad config here is a lockout.
+    if ! sshd -t; then
+        echo "Error: sshd configuration is invalid. Reverting."
+        rm -f /etc/ssh/sshd_config.d/99-joybox.conf
+        exit 1
+    fi
+
+    # Reload, not restart: existing sessions survive, so a mistake is recoverable
+    # from the shell you already have open.
+    systemctl reload ssh 2>/dev/null || systemctl reload sshd
+    echo "sshd hardening complete. Keep this session open and verify key login from a second terminal."
 }
 
 configure_docker_group() {

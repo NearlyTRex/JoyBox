@@ -268,7 +268,7 @@ print_usage() {
     echo "  $0 check <domain>"
     echo ""
     echo "Examples:"
-    echo "  $0 copy_certs squaredbinary.com /home/user/apps/ghidra_server/certs"
+    echo "  $0 copy_certs squaredbinary.com /home/user/apps/myapp/certs"
     echo "  $0 export_keystore squaredbinary.com /opt/app/keystore.p12 mypassword squaredbinary.com p12"
     echo "  $0 export_keystore squaredbinary.com /opt/app/keystore.jks mypassword myapp jks 600 100000:100000"
     echo "  $0 export_keystore squaredbinary.com /opt/app/keystore.p12 mypassword myapp p12 644 www-data:www-data"

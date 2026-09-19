@@ -17,8 +17,10 @@ services:
     container_name: jenkins
     restart: always
     ports:
-      - "${JENKINS_PORT_HTTP}:8080"
-      - "${JENKINS_PORT_AGENT}:50000"
+      - "127.0.0.1:${JENKINS_PORT_HTTP}:8080"
+      # Agent port stays on loopback: all builds run on this server. Remote
+      # agents would need this republished plus an explicit firewall rule.
+      - "127.0.0.1:${JENKINS_PORT_AGENT}:50000"
     volumes:
       - ${JENKINS_HOME_DIR}:/var/jenkins_home
 """

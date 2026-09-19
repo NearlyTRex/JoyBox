@@ -26,6 +26,7 @@ python[constants.EnvironmentType.LOCAL_UBUNTU] += [
 
     # API/Services
     {"id": "anthropic", "name": "Anthropic", "description": "Claude AI API client", "category": "API"},
+    {"id": "paramiko", "name": "Paramiko", "description": "SSH client, used by the remote_ubuntu deploy path", "category": "API"},
     {"id": "PyGithub", "name": "PyGithub", "description": "GitHub API wrapper", "category": "API"},
     {"id": "PySocks", "name": "PySocks", "description": "SOCKS proxy client", "category": "API"},
     {"id": "requests", "name": "Requests", "description": "HTTP library", "category": "API"},

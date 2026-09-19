@@ -27,7 +27,8 @@ Actions:
 
 Options:
   --user USERNAME      Required for setup action
-  --password PASSWORD  Required for setup action
+  --password PASSWORD  Optional for setup; prompted for if omitted, which keeps
+                       it out of ps output and shell history
 EOF
     exit 1
 }
@@ -68,9 +69,26 @@ fi
 
 # Validate arguments for action
 if [[ "$ACTION" == "setup" ]]; then
-    if [[ -z "$USERNAME" || -z "$PASSWORD" ]]; then
-        echo "Error: --user and --password are required for setup."
+    if [[ -z "$USERNAME" ]]; then
+        echo "Error: --user is required for setup."
         print_usage
+    fi
+
+    # Prefer prompting over --password: an argument is visible in ps for the
+    # lifetime of the process and is written to the invoking shell's history.
+    if [[ -z "$PASSWORD" ]]; then
+        read -r -s -p "Password for $USERNAME: " PASSWORD
+        echo
+        read -r -s -p "Confirm password: " PASSWORD_CONFIRM
+        echo
+        if [[ "$PASSWORD" != "$PASSWORD_CONFIRM" ]]; then
+            echo "Error: passwords do not match."
+            exit 1
+        fi
+        if [[ -z "$PASSWORD" ]]; then
+            echo "Error: password cannot be empty."
+            exit 1
+        fi
     fi
 else
     echo "Error: Invalid action '$ACTION'. Use 'setup' or 'cleanup'."

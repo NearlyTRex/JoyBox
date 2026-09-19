@@ -17,7 +17,7 @@ services:
     container_name: audiobookshelf
     restart: always
     ports:
-      - "${AUDIOBOOKSHELF_PORT_HTTP}:80"
+      - "127.0.0.1:${AUDIOBOOKSHELF_PORT_HTTP}:80"
     volumes:
       - ${AUDIOBOOKSHELF_AUDIO_DIR}:/audiobooks:ro
       - config_data:/config

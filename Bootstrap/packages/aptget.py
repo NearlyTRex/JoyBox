@@ -22,6 +22,7 @@ aptget[constants.EnvironmentType.LOCAL_UBUNTU] += [
     # Admin
     {"id": "7zip", "name": "7-Zip", "description": "High compression file archiver", "category": "Admin"},
     {"id": "7zip-standalone", "name": "7-Zip Standalone", "description": "Standalone 7-Zip binary", "category": "Admin"},
+    {"id": "age", "name": "age", "description": "File encryption, used for backup keys", "category": "Admin"},
     {"id": "apt-file", "name": "apt-file", "description": "Search for files in apt packages", "category": "Admin"},
     {"id": "baobab", "name": "Disk Usage Analyzer", "description": "Graphical disk usage analyzer", "category": "Admin"},
     {"id": "blueman", "name": "Blueman", "description": "Bluetooth manager", "category": "Admin"},
@@ -29,6 +30,7 @@ aptget[constants.EnvironmentType.LOCAL_UBUNTU] += [
     {"id": "file-roller", "name": "File Roller", "description": "Archive manager", "category": "Admin"},
     {"id": "fuseiso", "name": "FuseISO", "description": "Mount ISO images", "category": "Admin"},
     {"id": "jackd", "name": "JACK", "description": "Low-latency audio server", "category": "Admin"},
+    {"id": "mkcert", "name": "mkcert", "description": "Locally trusted dev certificates", "category": "Admin"},
     {"id": "pavucontrol", "name": "PulseAudio Volume Control", "description": "Audio volume control", "category": "Admin"},
     {"id": "pulseaudio-utils", "name": "PulseAudio Utils", "description": "PulseAudio command line tools", "category": "Admin"},
     {"id": "qdirstat", "name": "QDirStat", "description": "Disk usage statistics", "category": "Admin"},
@@ -274,12 +276,14 @@ aptget[constants.EnvironmentType.LOCAL_UBUNTU] += [
 
     # Virtualization
     {"id": "flatpak", "name": "Flatpak", "description": "Application sandboxing", "category": "Virtualization"},
+    {"id": "cloud-image-utils", "name": "Cloud Image Utils", "description": "cloud-localds, builds cloud-init seed images", "category": "Virtualization"},
     {"id": "guestfish", "name": "guestfish", "description": "VM disk shell", "category": "Virtualization"},
     {"id": "guestfs-tools", "name": "guestfs-tools", "description": "VM disk utilities", "category": "Virtualization"},
     {"id": "ovmf", "name": "OVMF", "description": "UEFI firmware for VMs", "category": "Virtualization"},
     {"id": "qemu-system-x86", "name": "QEMU/KVM", "description": "Hardware virtualization", "category": "Virtualization"},
     {"id": "qemu-utils", "name": "QEMU Utils", "description": "QEMU disk utilities", "category": "Virtualization"},
     {"id": "virt-manager", "name": "Virt-Manager", "description": "VM management GUI", "category": "Virtualization"},
+    {"id": "virtinst", "name": "virtinst", "description": "virt-install, provisions VMs from the CLI", "category": "Virtualization"},
     {"id": "xdg-desktop-portal", "name": "XDG Desktop Portal", "description": "Sandboxed app integration", "category": "Virtualization"},
 
     # Web
@@ -299,6 +303,7 @@ aptget[constants.EnvironmentType.REMOTE_UBUNTU] += [
 
     # Admin
     {"id": "7zip", "name": "7-Zip", "description": "High compression file archiver", "category": "Admin"},
+    {"id": "age", "name": "age", "description": "File encryption, used to encrypt backups at rest", "category": "Admin"},
     {"id": "apt-file", "name": "apt-file", "description": "Search for files in apt packages", "category": "Admin"},
     {"id": "unrar", "name": "unrar", "description": "Extract RAR archives", "category": "Admin"},
     {"id": "unzip", "name": "unzip", "description": "Extract ZIP archives", "category": "Admin"},

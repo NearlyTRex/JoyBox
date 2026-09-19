@@ -39,6 +39,9 @@ parser.add_argument(
     type = int,
     help = "Server index to use")
 parser.add_argument(
+    "-k", "--ssh_key_filepath",
+    help = "SSH private key to authenticate with (overrides the server entry's key and password)")
+parser.add_argument(
     "--components",
     nargs = "*",
     help = "Specific components to setup/teardown (default: all)")
@@ -118,6 +121,12 @@ def main():
             environment_options["ssh_port"] = settings.get_value("UserData.Servers", f"server_{args.server_index}_port")
             environment_options["ssh_user"] = settings.get_value("UserData.Servers", f"server_{args.server_index}_user")
             environment_options["ssh_password"] = settings.get_value("UserData.Servers", f"server_{args.server_index}_pass")
+            # Optional: configs written before key auth existed have no such key
+            environment_options["ssh_key_filepath"] = settings.get_value("UserData.Servers",
+                f"server_{args.server_index}_key_filepath", default_value = "", throw_exception = False)
+        # An explicit -k wins over whatever the server entry carries
+        if args.ssh_key_filepath:
+            environment_options["ssh_key_filepath"] = args.ssh_key_filepath
     if args.force:
         environment_options["flags"].set(force = args.force)
     if args.autoremove:

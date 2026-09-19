@@ -17,7 +17,7 @@ services:
     container_name: navidrome
     restart: always
     ports:
-      - "${NAVIDROME_PORT_HTTP}:4533"
+      - "127.0.0.1:${NAVIDROME_PORT_HTTP}:4533"
     volumes:
       - ${NAVIDROME_MUSIC_DIR}:/music:ro
       - config_data:/data

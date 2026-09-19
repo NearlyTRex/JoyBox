@@ -18,6 +18,7 @@ class RemoteUbuntu(env.Environment):
         ssh_port = None,
         ssh_user = None,
         ssh_password = None,
+        ssh_key_filepath = None,
         flags = runoptions.RunFlags(),
         options = runoptions.RunOptions()):
         super().__init__(flags, options)
@@ -31,6 +32,7 @@ class RemoteUbuntu(env.Environment):
             ssh_port = ssh_port,
             ssh_user = ssh_user,
             ssh_password = ssh_password,
+            ssh_key_filepath = ssh_key_filepath,
             flags = self.flags,
             options = self.options)
         self.connection.setup()
@@ -64,7 +66,6 @@ class RemoteUbuntu(env.Environment):
             "jenkins": installers.Jenkins(**self.installer_options),
             "kanboard": installers.Kanboard(**self.installer_options),
             "gh": installers.Gh(**self.installer_options),
-            "ghidra": installers.Ghidra(**self.installer_options),
             "ollama": installers.Ollama(**self.installer_options),
             "oscar": installers.Oscar(**self.installer_options)
         }
@@ -90,7 +91,6 @@ class RemoteUbuntu(env.Environment):
         self.installer_navidrome = self.available_components["navidrome"]
         self.installer_kanboard = self.available_components["kanboard"]
         self.installer_gh = self.available_components["gh"]
-        self.installer_ghidra = self.available_components["ghidra"]
         self.installer_ollama = self.available_components["ollama"]
         self.installer_oscar = self.available_components["oscar"]
 

@@ -12,6 +12,7 @@ quickstart; these guides cover each area in full.
 | [Configuration](configuration.md) | The `JoyBox.ini` config file and its key settings. |
 | [Commands](commands.md) | Everyday `bootstrap.py` commands — status, dry runs, force reinstall, teardown, backup. |
 | [Backup and Restore](backup.md) | Backing up and restoring the server's databases and app data to the Storage Box, and what teardown does to your data. |
+| [Local Testing](local-testing.md) | Rehearsing the whole server stack on a throwaway local VM before deploying to a real box. |
 | [Dotfiles](dotfiles.md) | How the `dotfiles` component manages your shell config non-destructively, plus backup / capture. |
 | [Adding Software](adding-software.md) | Adding APT / Flatpak / Python packages and writing custom installers, with the file-structure reference. |
 

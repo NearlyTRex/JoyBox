@@ -27,6 +27,10 @@ server {{
     ssl_certificate /etc/letsencrypt/live/{domain}/fullchain.pem;
     ssl_certificate_key /etc/letsencrypt/live/{domain}/privkey.pem;
 
+    # Shared TLS policy, security headers and rate limiting. Cockpit is the
+    # server management UI, so it wants these at least as much as the apps do.
+    include /etc/nginx/snippets/ssl-params.conf;
+
     location / {{
         proxy_pass https://localhost:{port_http};
         proxy_ssl_verify off;

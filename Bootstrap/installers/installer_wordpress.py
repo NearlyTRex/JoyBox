@@ -54,7 +54,7 @@ services:
     image: ${WORDPRESS_IMAGE}
     restart: always
     ports:
-      - "${WORDPRESS_PORT_HTTP}:80"
+      - "127.0.0.1:${WORDPRESS_PORT_HTTP}:80"
     volumes:
       - wp_data:/var/www/html
     environment:

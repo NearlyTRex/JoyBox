@@ -55,6 +55,40 @@ Backups are checksummed, and `restore` verifies `SHA256SUMS` before touching any
 `.env` files are **not** archived — they contain database passwords and the Storage Box is
 third-party. They are regenerated from `JoyBox.ini` on the next setup.
 
+## Encryption
+
+Excluding `.env` keeps raw `JoyBox.ini` passwords out of the archives, but the dumps
+themselves still carry secrets: WordPress's `wp_options` and user password hashes,
+FileBrowser's bcrypt admin hash, OSCAR's account database. Those leave the server
+and land on storage you do not control.
+
+Set a recipient to encrypt them:
+
+```ini
+[UserData.Backup]
+backup_age_recipient = age1...
+backup_age_identity = /home/you/.joybox-age.key
+```
+
+Generate a pair with `age-keygen -o ~/.joybox-age.key`; it prints the public line
+that goes in `backup_age_recipient`.
+
+Archives are then written as `db.sql.gz.age` and `<volume>.tar.gz.age`, encrypted
+per-file so one corrupt archive does not cost the set. Checksums cover the encrypted
+artifacts. Because this is public-key encryption, the server holds only the public
+half — **a compromised box cannot decrypt its own backup history.**
+
+During restore the private key is read from your machine, staged on the server's
+`/dev/shm` (RAM, never disk) and removed afterwards, whether the restore succeeds
+or fails.
+
+Leaving `backup_age_recipient` empty keeps the old plain-gzip behaviour, and restore
+detects `.age` by extension — so archives taken before encryption was enabled keep
+restoring unchanged.
+
+> **Store the private key somewhere off-server that you will not lose.** Without it
+> every encrypted backup is unrecoverable. There is no recovery path by design.
+
 ## Restoring
 
 Restore overwrites live data, so it is deliberately awkward:
