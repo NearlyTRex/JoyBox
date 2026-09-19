@@ -5,32 +5,26 @@ set -euo pipefail
 # Points the test domain and its subdomains at the rehearsal VM by writing a
 # marker-bracketed block into the workstation's /etc/hosts.
 #
-# /etc/hosts rather than sslip.io or dnsmasq: the subdomain list is fixed and
-# short, this needs no internet access, and it survives the VM's address changing
-# across a snapshot revert with one re-run.
+# Runs on the workstation, not on the VM - it is this machine's resolver that
+# needs to find joybox.test.
 
 # Check common functions
 BASE_DIR="$(dirname "$0")"
-COMMON="$BASE_DIR/../common.sh"
-if [[ ! -r "$COMMON" ]]; then
-    echo "Error: Cannot find or read $COMMON"
+if [[ ! -r "$BASE_DIR/common.sh" ]]; then
+    echo "Error: Cannot find or read $BASE_DIR/common.sh"
     exit 1
 fi
 
 # Load common functions
-source "$COMMON"
+source "$BASE_DIR/common.sh"
 ensure_bash_shell
 ensure_root_user
 
-# Defaults - keep the subdomain list in step with default_settings.py
+# Defaults
 DOMAIN="joybox.test"
 VM_NAME="joybox-test"
 VM_IP=""
 REMOVE="false"
-SUBDOMAINS=(www admin cloud tools tasks audio music aim)
-
-MARKER_BEGIN="# BEGIN JoyBox local testing"
-MARKER_END="# END JoyBox local testing"
 
 # Print usage
 print_usage() {
@@ -56,24 +50,20 @@ while [[ $# -gt 0 ]]; do
     esac
 done
 
-# Drop any previous block; the rewrite path adds a fresh one below
-if grep -qF "$MARKER_BEGIN" /etc/hosts; then
-    echo "Removing the existing JoyBox block from /etc/hosts..."
-    sed -i "/^${MARKER_BEGIN}$/,/^${MARKER_END}$/d" /etc/hosts
-fi
-
+# Remove and stop
 if [[ "$REMOVE" == "true" ]]; then
+    remove_test_hosts
     echo "Removed. $DOMAIN no longer resolves locally."
     exit 0
 fi
 
 # Resolve the address from libvirt when it was not given
 if [[ -z "$VM_IP" ]]; then
-    if ! command -v virsh >/dev/null 2>&1; then
+    if ! command -v virsh &>/dev/null; then
         echo "Error: --ip was not given and virsh is unavailable."
         exit 1
     fi
-    VM_IP="$(virsh domifaddr "$VM_NAME" 2>/dev/null | awk '/ipv4/ {print $4}' | cut -d/ -f1 | head -n1)"
+    VM_IP="$(get_test_vm_ip "$VM_NAME")"
 fi
 
 if [[ -z "$VM_IP" ]]; then
@@ -82,18 +72,4 @@ if [[ -z "$VM_IP" ]]; then
 fi
 
 # Write the block
-echo "Pointing $DOMAIN at $VM_IP..."
-{
-    echo "$MARKER_BEGIN"
-    echo "$VM_IP $DOMAIN"
-    for sub in "${SUBDOMAINS[@]}"; do
-        echo "$VM_IP $sub.$DOMAIN"
-    done
-    echo "$MARKER_END"
-} >> /etc/hosts
-
-echo "Done. Entries added:"
-echo "  $DOMAIN"
-for sub in "${SUBDOMAINS[@]}"; do
-    echo "  $sub.$DOMAIN"
-done
+configure_test_hosts "$VM_IP" "$DOMAIN"

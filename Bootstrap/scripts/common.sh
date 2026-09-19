@@ -627,3 +627,532 @@ setup_joybox_repo() {
         echo "JoyBox repository already exists at $repo_joybox_dir"
     fi
 }
+
+###########################################################
+# Local test VM
+#
+# Workstation-side helpers for the rehearsal VM described in
+# docs/local-testing.md. A real KVM guest rather than a container because the
+# things being rehearsed - ufw, a Docker daemon with userns-remap, and sshd
+# itself - all need their own kernel-facing stack to mean anything.
+#
+# These run on the workstation. setup_local_storage and the verify_* functions
+# below run on the VM itself.
+###########################################################
+
+TESTVM_IMAGE_DIR="/var/lib/libvirt/images"
+
+require_test_vm_tools() {
+    local tool
+    for tool in virt-install virsh qemu-img cloud-localds; do
+        if ! command -v "$tool" &>/dev/null; then
+            echo "Error: $tool is not installed."
+            echo "Install the workstation prerequisites with:"
+            echo "  python3 bootstrap.py -a setup -t local_ubuntu --components aptget"
+            return 1
+        fi
+    done
+}
+
+test_vm_exists() {
+    virsh dominfo "$1" &>/dev/null
+}
+
+get_test_vm_ip() {
+    local vm_name="$1"
+    virsh domifaddr "$vm_name" 2>/dev/null | awk '/ipv4/ {print $4}' | cut -d/ -f1 | head -n1
+}
+
+resolve_ssh_public_key() {
+    local username="$1"
+    local explicit="${2:-}"
+
+    if [[ -n "$explicit" ]]; then
+        if [[ ! -r "$explicit" ]]; then
+            echo "Error: cannot read SSH public key at $explicit" >&2
+            return 1
+        fi
+        echo "$explicit"
+        return 0
+    fi
+
+    local candidate
+    for candidate in "/home/$username/.ssh/id_ed25519.pub" "/home/$username/.ssh/id_rsa.pub"; do
+        if [[ -r "$candidate" ]]; then
+            echo "$candidate"
+            return 0
+        fi
+    done
+
+    echo "Error: no SSH public key found for $username. Generate one with:" >&2
+    echo "  ssh-keygen -t ed25519" >&2
+    return 1
+}
+
+create_test_vm() {
+    local vm_name="${1:-joybox-test}"
+    local username="${2:-${SUDO_USER:-$USER}}"
+    local ssh_key="${3:-}"
+    local memory="${4:-4096}"
+    local vcpus="${5:-2}"
+    local disk_size="${6:-20}"
+    local release="${7:-noble}"
+    local console_password="${8:-joybox}"
+
+    require_test_vm_tools || return 1
+
+    if test_vm_exists "$vm_name"; then
+        echo "Error: a VM named '$vm_name' already exists."
+        echo "Remove it first:  sudo $0 destroy --name $vm_name"
+        return 1
+    fi
+
+    local ssh_key_path
+    ssh_key_path="$(resolve_ssh_public_key "$username" "$ssh_key")" || return 1
+    local ssh_key_contents
+    ssh_key_contents="$(cat "$ssh_key_path")"
+
+    # Fetch the base cloud image once and reuse it across VMs
+    local base_image="$TESTVM_IMAGE_DIR/${release}-server-cloudimg-amd64.img"
+    if [[ ! -f "$base_image" ]]; then
+        echo "Downloading the $release cloud image..."
+        mkdir -p "$TESTVM_IMAGE_DIR"
+        curl -fL --proto '=https' --tlsv1.2 -o "$base_image" \
+            "https://cloud-images.ubuntu.com/${release}/current/${release}-server-cloudimg-amd64.img"
+    fi
+
+    local vm_disk="$TESTVM_IMAGE_DIR/${vm_name}.qcow2"
+    echo "Creating a ${disk_size}G disk at $vm_disk..."
+    qemu-img create -f qcow2 -F qcow2 -b "$base_image" "$vm_disk" "${disk_size}G"
+
+    # cloud-init seeds BOTH a key and a console password on purpose: init_sshd.sh
+    # disables password SSH, so "virsh console" is the only way back in if the key
+    # ever stops working.
+    local seed_dir
+    seed_dir="$(mktemp -d)"
+
+    cat > "$seed_dir/user-data" <<CLOUDINIT
+#cloud-config
+hostname: $vm_name
+users:
+  - name: $username
+    groups: [sudo]
+    shell: /bin/bash
+    sudo: "ALL=(ALL) NOPASSWD:ALL"
+    lock_passwd: false
+    ssh_authorized_keys:
+      - $ssh_key_contents
+chpasswd:
+  list: |
+    $username:$console_password
+  expire: false
+ssh_pwauth: true
+package_update: true
+packages:
+  - openssh-server
+runcmd:
+  - [ systemctl, enable, --now, ssh ]
+CLOUDINIT
+
+    cat > "$seed_dir/meta-data" <<CLOUDINIT
+instance-id: $vm_name
+local-hostname: $vm_name
+CLOUDINIT
+
+    local seed_image="$TESTVM_IMAGE_DIR/${vm_name}-seed.iso"
+    cloud-localds "$seed_image" "$seed_dir/user-data" "$seed_dir/meta-data"
+    rm -rf "$seed_dir"
+
+    if ! virsh net-info default 2>/dev/null | grep -q "Active:.*yes"; then
+        echo "Starting the default libvirt network..."
+        virsh net-start default 2>/dev/null || true
+        virsh net-autostart default 2>/dev/null || true
+    fi
+
+    echo "Creating VM '$vm_name'..."
+    virt-install \
+        --name "$vm_name" \
+        --memory "$memory" \
+        --vcpus "$vcpus" \
+        --disk "path=$vm_disk,device=disk,bus=virtio" \
+        --disk "path=$seed_image,device=cdrom" \
+        --os-variant "ubuntu22.04" \
+        --network network=default,model=virtio \
+        --graphics none \
+        --console pty,target_type=serial \
+        --import \
+        --noautoconsole
+
+    echo "Waiting for the VM to get an address..."
+    local vm_ip=""
+    local attempt
+    for attempt in $(seq 1 60); do
+        vm_ip="$(get_test_vm_ip "$vm_name")"
+        if [[ -n "$vm_ip" ]]; then
+            break
+        fi
+        sleep 5
+    done
+
+    if [[ -z "$vm_ip" ]]; then
+        echo "Warning: could not determine the VM's address yet."
+        echo "Check with: sudo virsh domifaddr $vm_name"
+        return 0
+    fi
+
+    echo
+    echo "VM '$vm_name' is up at $vm_ip"
+    echo
+    echo "Next:"
+    echo "  1. sudo Bootstrap/scripts/init_testhosts.sh --ip $vm_ip"
+    echo "  2. In JoyBox.ini, point a server entry at it and switch to local values:"
+    echo "       [UserData.Servers]"
+    echo "       domain_name = joybox.test"
+    echo "       tls_mode = mkcert"
+    echo "       server_0_host = $vm_ip"
+    echo "       server_0_port = 22"
+    echo "       server_0_user = $username"
+    echo "       server_0_key_filepath = ${ssh_key_path%.pub}"
+    echo "  3. ssh $username@$vm_ip     (console fallback: sudo virsh console $vm_name)"
+}
+
+snapshot_test_vm() {
+    local vm_name="$1"
+    local label="$2"
+    echo "Taking snapshot '$label' of $vm_name..."
+    virsh snapshot-create-as "$vm_name" "$label" --atomic
+    echo "Revert with: sudo Bootstrap/scripts/testvm.sh revert $label"
+}
+
+revert_test_vm() {
+    local vm_name="$1"
+    local label="$2"
+    echo "Reverting $vm_name to '$label'..."
+    virsh snapshot-revert "$vm_name" "$label" --running
+    echo "Reverted. The address may have changed - check with: sudo Bootstrap/scripts/testvm.sh ip"
+}
+
+destroy_test_vm() {
+    local vm_name="$1"
+    virsh destroy "$vm_name" 2>/dev/null || true
+    virsh undefine "$vm_name" --remove-all-storage --snapshots-metadata 2>/dev/null || \
+        virsh undefine "$vm_name" --remove-all-storage 2>/dev/null || true
+    rm -f "$TESTVM_IMAGE_DIR/${vm_name}-seed.iso"
+    echo "Destroyed $vm_name."
+}
+
+###########################################################
+# Test domain resolution
+#
+# /etc/hosts rather than sslip.io or dnsmasq: the subdomain list is fixed and
+# short, it needs no internet access, and it survives the VM's address changing
+# across a snapshot revert with one re-run.
+###########################################################
+
+TESTHOSTS_MARKER_BEGIN="# BEGIN JoyBox local testing"
+TESTHOSTS_MARKER_END="# END JoyBox local testing"
+
+# Keep in step with the *_subdomain defaults in Shared/joybox/default_settings.py
+TESTHOSTS_SUBDOMAINS=(www admin cloud tools tasks audio music aim)
+
+remove_test_hosts() {
+    if grep -qF "$TESTHOSTS_MARKER_BEGIN" /etc/hosts; then
+        echo "Removing the existing JoyBox block from /etc/hosts..."
+        sed -i "/^${TESTHOSTS_MARKER_BEGIN}$/,/^${TESTHOSTS_MARKER_END}$/d" /etc/hosts
+    fi
+}
+
+configure_test_hosts() {
+    local vm_ip="$1"
+    local domain="${2:-joybox.test}"
+
+    remove_test_hosts
+
+    echo "Pointing $domain at $vm_ip..."
+    {
+        echo "$TESTHOSTS_MARKER_BEGIN"
+        echo "$vm_ip $domain"
+        local sub
+        for sub in "${TESTHOSTS_SUBDOMAINS[@]}"; do
+            echo "$vm_ip $sub.$domain"
+        done
+        echo "$TESTHOSTS_MARKER_END"
+    } >> /etc/hosts
+
+    echo "Done. Entries added:"
+    echo "  $domain"
+    local sub
+    for sub in "${TESTHOSTS_SUBDOMAINS[@]}"; do
+        echo "  $sub.$domain"
+    done
+}
+
+###########################################################
+# Local storage substitute
+#
+# Stands in for the Hetzner Storage Box on the rehearsal VM. Everything
+# downstream just wants a path with files under it, so a plain directory is
+# enough and a loopback image would add ceremony for no extra coverage.
+#
+# Known gap, stated rather than faked: this does not exercise sshfs itself -
+# mount flags, idmap, _netdev ordering, or off-box durability.
+###########################################################
+
+setup_local_storage() {
+    local username="$1"
+    local mount_path="${2:-/mnt/storage}"
+
+    echo "Creating local storage at $mount_path..."
+    mkdir -p "$mount_path/Music/Audiobook"
+    mkdir -p "$mount_path/Backups"
+    chown -R "$username":"$username" "$mount_path"
+
+    # Seed placeholder media so library scans have something to find. Silence is
+    # fine - the point is that the scanners see a real file, not that it plays.
+    if command -v ffmpeg &>/dev/null; then
+        if [[ ! -f "$mount_path/Music/placeholder.mp3" ]]; then
+            echo "Generating placeholder media with ffmpeg..."
+            ffmpeg -loglevel error -f lavfi -i anullsrc=r=44100:cl=mono -t 2 \
+                -metadata title="JoyBox Test Track" \
+                -metadata artist="JoyBox" \
+                -metadata album="Local Testing" \
+                "$mount_path/Music/placeholder.mp3"
+            cp "$mount_path/Music/placeholder.mp3" "$mount_path/Music/Audiobook/placeholder.mp3"
+            chown -R "$username":"$username" "$mount_path/Music"
+        fi
+    else
+        echo "Note: ffmpeg is not installed, so no placeholder media was created."
+        echo "The directories exist, but the library scanners will find them empty."
+    fi
+
+    echo
+    echo "Local storage ready:"
+    find "$mount_path" -maxdepth 2 | sed 's/^/  /'
+}
+
+###########################################################
+# Hardening verification
+#
+# Every check asserts an effect rather than a configuration: a limit_req
+# directive in "nginx -T" proves nothing if no request is ever refused, and a
+# 127.0.0.1 line in a compose file proves nothing if the container published on
+# 0.0.0.0 anyway.
+#
+# Runs on the target. Each check is callable on its own; verify_hardening runs
+# the lot and leaves the failure count in VERIFY_FAILURES.
+###########################################################
+
+VERIFY_FAILURES=0
+
+verify_pass() { echo "  PASS  $1"; }
+verify_fail() { echo "  FAIL  $1"; VERIFY_FAILURES=$((VERIFY_FAILURES + 1)); }
+verify_skip() { echo "  SKIP  $1"; }
+verify_section() { echo; echo "== $1"; }
+
+verify_container_ports() {
+    verify_section "Container port bindings"
+
+    if ! command -v docker &>/dev/null; then
+        verify_skip "docker is not installed"
+    else
+        local exposed
+        exposed="$(docker ps --format '{{.Names}} {{.Ports}}' 2>/dev/null | grep -E '0\.0\.0\.0|\[::\]' || true)"
+        if [[ -z "$exposed" ]]; then
+            verify_pass "no container publishes on 0.0.0.0"
+        else
+            verify_fail "containers published on all interfaces:"
+            echo "$exposed" | sed 's/^/          /'
+        fi
+    fi
+
+    # ss is the second opinion: it sees the actual listening socket, not
+    # docker's view of what it asked for.
+    if command -v ss &>/dev/null; then
+        local wildcard
+        wildcard="$(ss -tlnH 2>/dev/null | awk '{print $4}' \
+            | grep -E '^(0\.0\.0\.0|\*|\[::\]):' | grep -vE ':(22|80|443)$' || true)"
+        if [[ -z "$wildcard" ]]; then
+            verify_pass "no unexpected wildcard listeners (only 22/80/443)"
+        else
+            verify_fail "unexpected wildcard listeners:"
+            echo "$wildcard" | sed 's/^/          /'
+        fi
+    fi
+}
+
+verify_firewall() {
+    verify_section "Firewall"
+
+    if ! command -v ufw &>/dev/null; then
+        verify_skip "ufw is not installed"
+    elif ! ufw status 2>/dev/null | grep -q "Status: active"; then
+        verify_fail "ufw is installed but not active"
+    else
+        verify_pass "ufw is active"
+        echo "        allowed:"
+        ufw status | awk '/ALLOW/ {print "          " $0}'
+    fi
+}
+
+verify_sshd() {
+    verify_section "sshd"
+
+    if ! command -v sshd &>/dev/null; then
+        verify_skip "sshd is not installed"
+        return
+    fi
+
+    local effective
+    effective="$(sshd -T 2>/dev/null || true)"
+    if [[ -z "$effective" ]]; then
+        verify_fail "could not read the effective sshd config"
+        return
+    fi
+
+    if echo "$effective" | grep -qi "^passwordauthentication no"; then
+        verify_pass "password authentication is disabled"
+    else
+        verify_fail "password authentication is still enabled"
+    fi
+
+    if echo "$effective" | grep -qiE "^permitrootlogin (no|prohibit-password)"; then
+        verify_pass "root login is restricted"
+    else
+        verify_fail "root login is not restricted"
+    fi
+}
+
+verify_fail2ban() {
+    verify_section "fail2ban"
+
+    if ! command -v fail2ban-client &>/dev/null; then
+        verify_skip "fail2ban is not installed"
+        return
+    fi
+
+    # The sshd jail silently matches nothing on Ubuntu 24.04+ unless it is told
+    # to read journald, so assert it is actually running rather than configured.
+    local jail
+    for jail in sshd nginx-http-auth; do
+        if fail2ban-client status "$jail" &>/dev/null; then
+            verify_pass "jail '$jail' is running"
+        else
+            verify_fail "jail '$jail' is not running"
+        fi
+    done
+}
+
+verify_docker_hardening() {
+    verify_section "Docker daemon"
+
+    if [[ ! -f /etc/docker/daemon.json ]]; then
+        verify_skip "no /etc/docker/daemon.json"
+        return
+    fi
+
+    local key
+    for key in userns-remap no-new-privileges; do
+        if grep -q "$key" /etc/docker/daemon.json; then
+            verify_pass "$key is configured"
+        else
+            verify_fail "$key is missing"
+        fi
+    done
+
+    # Configured is not active: under userns-remap the daemon stores containers
+    # under a root dir suffixed with the remapped uid.gid pair.
+    if command -v docker &>/dev/null; then
+        local remap
+        remap="$(docker info --format '{{.DockerRootDir}}' 2>/dev/null | grep -oE '[0-9]+\.[0-9]+$' || true)"
+        if [[ -n "$remap" ]]; then
+            verify_pass "userns-remap is active (root dir suffix $remap)"
+        else
+            verify_fail "userns-remap does not appear active - DockerRootDir has no uid suffix"
+        fi
+    fi
+}
+
+verify_rate_limiting() {
+    local domain="${1:-joybox.test}"
+    verify_section "Rate limiting and headers"
+
+    if ! command -v nginx &>/dev/null; then
+        verify_skip "nginx is not installed"
+        return
+    fi
+
+    local config
+    config="$(nginx -T 2>/dev/null || true)"
+
+    if echo "$config" | grep -q "limit_req_zone"; then
+        verify_pass "limit_req_zone is defined"
+    else
+        verify_fail "limit_req_zone is missing"
+    fi
+
+    if echo "$config" | grep -qE "^\s*limit_req\s+zone="; then
+        verify_pass "limit_req consumes the zone"
+    else
+        verify_fail "limit_req is missing - the zone is defined but never applied"
+    fi
+
+    if echo "$config" | grep -q "server_tokens off"; then
+        verify_pass "server_tokens is off"
+    else
+        verify_fail "server_tokens is not off"
+    fi
+
+    # Burst past the configured rate and expect nginx to start refusing
+    if command -v curl &>/dev/null; then
+        local refused=0
+        local attempt code
+        for attempt in $(seq 1 40); do
+            code="$(curl -s -o /dev/null -w '%{http_code}' --max-time 5 "https://$domain/" 2>/dev/null || echo 000)"
+            if [[ "$code" == "503" ]]; then
+                refused=$((refused + 1))
+            fi
+        done
+        if [[ "$refused" -gt 0 ]]; then
+            verify_pass "a 40-request burst was rate limited ($refused refused)"
+        else
+            verify_fail "a 40-request burst was never rate limited"
+        fi
+    fi
+}
+
+verify_unattended_upgrades() {
+    verify_section "Unattended upgrades"
+
+    if [[ ! -f /etc/apt/apt.conf.d/52-joybox-unattended ]]; then
+        verify_fail "no /etc/apt/apt.conf.d/52-joybox-unattended"
+        return
+    fi
+
+    verify_pass "JoyBox unattended-upgrades config is present"
+    if grep -q 'Automatic-Reboot "true"' /etc/apt/apt.conf.d/52-joybox-unattended; then
+        verify_pass "automatic reboot is enabled"
+    else
+        verify_fail "automatic reboot is not enabled - kernel updates install but never activate"
+    fi
+}
+
+verify_hardening() {
+    local domain="${1:-joybox.test}"
+    VERIFY_FAILURES=0
+
+    verify_container_ports
+    verify_firewall
+    verify_sshd
+    verify_fail2ban
+    verify_docker_hardening
+    verify_rate_limiting "$domain"
+    verify_unattended_upgrades
+
+    echo
+    if [[ "$VERIFY_FAILURES" -eq 0 ]]; then
+        echo "All checks passed."
+    else
+        echo "$VERIFY_FAILURES check(s) failed."
+    fi
+    return "$VERIFY_FAILURES"
+}

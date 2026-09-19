@@ -20,11 +20,11 @@ Two independent ways back into the VM, neither of which depends on sshd:
 ```bash
 # Serial console - works even with sshd completely broken.
 # cloud-init set a console password (default: joybox) for exactly this case.
-sudo Bootstrap/scripts/local/vm_snapshot.sh console
+sudo Bootstrap/scripts/testvm.sh console
 
 # Roll back to a snapshot - seconds, rather than a rebuild.
-sudo Bootstrap/scripts/local/vm_snapshot.sh snapshot pre-sshd
-sudo Bootstrap/scripts/local/vm_snapshot.sh revert pre-sshd
+sudo Bootstrap/scripts/testvm.sh snapshot pre-sshd
+sudo Bootstrap/scripts/testvm.sh revert pre-sshd
 ```
 
 Take a snapshot before anything you would not want to repeat by hand.
@@ -55,55 +55,63 @@ ssh-keygen -t ed25519
 ### 1. Create the VM
 
 ```bash
-sudo Bootstrap/scripts/local/vm_create.sh --user "$USER"
+sudo Bootstrap/scripts/testvm.sh create --user "$USER"
 ```
 
 Builds an Ubuntu Server guest on libvirt's default NAT network and prints its
-address. Defaults to 2 vCPU / 4 GB / 20 GB, matching a CX22 closely enough for
-the stack to behave the same way.
+address. Defaults to 2 vCPU / 4 GB / 20 GB, matching a CX22 closely enough for the
+stack to behave the same way.
 
 ### 2. Point the test domain at it
 
 ```bash
-sudo Bootstrap/scripts/local/hosts_sync.sh
+sudo Bootstrap/scripts/init_testhosts.sh
 ```
 
 Writes a marker-bracketed block into `/etc/hosts` mapping `joybox.test` and its
 subdomains to the VM. Re-run it after a snapshot revert if the address changed;
 `--remove` takes the block out again.
 
-### 3. Write the config
+### 3. Point JoyBox.ini at the VM
 
-```bash
-cp Bootstrap/scripts/local/JoyBox.local.ini.example ~/JoyBox.local.ini
+Only **two** settings actually have to change, because the VM mirrors the real
+layout everywhere else — `init_localstorage.sh` creates the same `/mnt/storage`
+tree, so `navidrome_music_dir`, `audiobookshelf_audio_dir` and `backup_root` are
+already correct:
+
+```ini
+[UserData.Servers]
+domain_name = joybox.test
+tls_mode = mkcert
+
+server_0_host = <address from step 1>
+server_0_port = 22
+server_0_user = <you>
+server_0_key_filepath = /home/<you>/.ssh/id_ed25519
 ```
 
-Fill in `server_0_host`, `server_0_user` and `server_0_key_filepath` from what
-`vm_create.sh` printed.
-
-A separate file is what isolates the rehearsal. `bootstrap.py -c` points the
-settings module at it wholesale, so the VM gets its own domain, TLS mode and
-credentials, and no local value can leak into a production run.
+Switch `domain_name` and `tls_mode` back when you are done. Everything else —
+app passwords, subdomains, ports — can stay as it is.
 
 ### 4. Prepare the VM
 
-These are the same day-0 scripts a real server gets. Copy the `Bootstrap/scripts`
-directory over and run them as root on the VM:
+These are the same day-0 scripts a real server gets. Copy `Bootstrap/scripts`
+over and run them as root on the VM:
 
 ```bash
 sudo ./init_sudoers.sh --user <you>
 sudo ./init_docker.sh --user <you>
 sudo ./init_nginx.sh
-sudo ./local/init_local_storage.sh --user <you>
+sudo ./init_localstorage.sh --user <you>
 ```
 
-`init_local_storage.sh` stands in for the Storage Box — see
+`init_localstorage.sh` stands in for the Storage Box — see
 [Fidelity gaps](#fidelity-gaps).
 
 ### 5. Deploy
 
 ```bash
-python3 bootstrap.py -a setup -t remote_ubuntu -s 0 -c ~/JoyBox.local.ini \
+python3 bootstrap.py -a setup -t remote_ubuntu -s 0 \
     --components nginx certbot cockpit wordpress navidrome oscar
 ```
 
@@ -116,13 +124,22 @@ that already bound to loopback correctly before any of this work. Add
 ### 6. Verify
 
 ```bash
-sudo ./local/verify_hardening.sh
+sudo ./verify_hardening.sh --domain joybox.test
 ```
 
 Exits with the number of failed checks, so it works as a gate. Every check tests
 the effect rather than the configuration — it bursts requests to confirm rate
 limiting actually refuses, and reads live socket state to confirm nothing is
 listening on `0.0.0.0`.
+
+Each check is also a `verify_*` function in `common.sh` if you want to run just
+one:
+
+```bash
+source Bootstrap/scripts/common.sh
+verify_sshd
+verify_container_ports
+```
 
 ## TLS
 
@@ -146,11 +163,11 @@ The riskiest change in the stack, so rehearse it here first.
 
 ```bash
 # 1. Snapshot
-sudo Bootstrap/scripts/local/vm_snapshot.sh snapshot pre-sshd
+sudo Bootstrap/scripts/testvm.sh snapshot pre-sshd
 
 # 2. Confirm key auth already works - bootstrap.py must be on keys before
 #    passwords are disabled, or the next deploy cannot connect
-python3 bootstrap.py -t remote_ubuntu -s 0 -c ~/JoyBox.local.ini --list-components
+python3 bootstrap.py -t remote_ubuntu -s 0 --list-components
 
 # 3. On the VM, as root
 sudo ./init_sshd.sh --user <you>
@@ -160,7 +177,7 @@ ssh <you>@<vm-ip>
 ssh -o PreferredAuthentications=password -o PubkeyAuthentication=no <you>@<vm-ip>
 
 # 5. If it went wrong
-sudo Bootstrap/scripts/local/vm_snapshot.sh revert pre-sshd
+sudo Bootstrap/scripts/testvm.sh revert pre-sshd
 ```
 
 `init_sshd.sh` refuses to run if the user has no `authorized_keys`, validates with
@@ -179,12 +196,14 @@ Put the printed public key in `backup_age_recipient` and the file path in
 `backup_age_identity`, then round-trip it:
 
 ```bash
-python3 bootstrap.py -a backup  -t remote_ubuntu -s 0 -c ~/JoyBox.local.ini --components wordpress
-python3 bootstrap.py -a restore -t remote_ubuntu -s 0 -c ~/JoyBox.local.ini --components wordpress --confirm restore
+python3 bootstrap.py -a backup  -t remote_ubuntu -s 0 --components wordpress
+python3 bootstrap.py -a restore -t remote_ubuntu -s 0 --components wordpress --confirm restore
 ```
 
 Archives land as `.age` files. During restore the private key is staged on
 `/dev/shm` (RAM) and removed afterwards, so it never reaches the server's disk.
+
+Use a throwaway key here, not the one guarding real backups.
 
 ## Fidelity gaps
 
@@ -202,6 +221,8 @@ Stated rather than papered over:
 ## Teardown
 
 ```bash
-sudo Bootstrap/scripts/local/hosts_sync.sh --remove
-sudo Bootstrap/scripts/local/vm_snapshot.sh destroy
+sudo Bootstrap/scripts/init_testhosts.sh --remove
+sudo Bootstrap/scripts/testvm.sh destroy
 ```
+
+Then put `domain_name` and `tls_mode` back to their real values in `JoyBox.ini`.
