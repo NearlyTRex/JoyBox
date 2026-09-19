@@ -55,7 +55,7 @@ def convert_image(
         if not pretend_run:
             from PIL import Image
             src_image = Image.open(image_src)
-            if src_image.is_animated:
+            if getattr(src_image, "is_animated", False):
                 src_image.seek(0)
             rgb_image = src_image.convert("RGB")
             if not image_format:

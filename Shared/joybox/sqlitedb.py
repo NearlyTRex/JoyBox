@@ -10,6 +10,21 @@ import joybox.fileops as fileops
 # Thread-local storage for connections
 _thread_local = threading.local()
 
+# Escape character for LIKE patterns
+LIKE_ESCAPE_CHAR = "\\"
+
+# Escape a literal string for use in a LIKE pattern
+def escape_like_pattern(pattern):
+    escaped = pattern.replace(LIKE_ESCAPE_CHAR, LIKE_ESCAPE_CHAR * 2)
+    escaped = escaped.replace("%", LIKE_ESCAPE_CHAR + "%")
+    escaped = escaped.replace("_", LIKE_ESCAPE_CHAR + "_")
+    return escaped
+
+# Build a LIKE clause and parameter matching a literal path prefix
+def build_prefix_clause(column, prefix):
+    clause = "%s LIKE ? ESCAPE '%s'" % (column, LIKE_ESCAPE_CHAR)
+    return clause, escape_like_pattern(prefix) + "%"
+
 # Database class for managing SQLite connections
 class Database:
 
@@ -211,6 +226,7 @@ class HashDatabase(Database):
             "updated_at": time.time()
         }
         self.insert(self.TABLE_NAME, data, or_replace = True)
+        self.commit()
 
     # Set multiple file hashes (batch insert)
     def set_hashes(self, hash_entries):
@@ -241,9 +257,10 @@ class HashDatabase(Database):
 
     # Get hashes by path prefix
     def get_hashes_by_prefix(self, prefix):
+        clause, param = build_prefix_clause("file_path", prefix)
         results = self.fetch_all(
-            "SELECT * FROM %s WHERE file_path LIKE ?" % self.TABLE_NAME,
-            (prefix + "%",))
+            "SELECT * FROM %s WHERE %s" % (self.TABLE_NAME, clause),
+            (param,))
         return [dict(row) for row in results]
 
     # Get all hashes
@@ -254,10 +271,13 @@ class HashDatabase(Database):
     # Delete hash
     def delete_hash(self, file_path):
         self.delete(self.TABLE_NAME, "file_path = ?", (file_path,))
+        self.commit()
 
     # Delete hashes by prefix
     def delete_hashes_by_prefix(self, prefix):
-        self.delete(self.TABLE_NAME, "file_path LIKE ?", (prefix + "%",))
+        clause, param = build_prefix_clause("file_path", prefix)
+        self.delete(self.TABLE_NAME, clause, (param,))
+        self.commit()
 
     # Clear all hashes
     def clear_all(self):
@@ -274,7 +294,8 @@ class HashDatabase(Database):
 
     # Get hash count by prefix
     def get_count_by_prefix(self, prefix):
-        return self.count(self.TABLE_NAME, "file_path LIKE ?", (prefix + "%",))
+        clause, param = build_prefix_clause("file_path", prefix)
+        return self.count(self.TABLE_NAME, clause, (param,))
 
     # Export to dictionary (for compatibility)
     def export_to_dict(self, prefix = None):
