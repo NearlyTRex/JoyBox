@@ -1,3 +1,6 @@
+# Imports
+import copy
+
 # Local imports
 import joybox.config as config
 import joybox.datautils as datautils
@@ -41,7 +44,7 @@ class MetadataEntry:
         if not merge_type:
             merge_type = config.MergeType.REPLACE
         self.game_entry = datautils.merge_dictionaries(
-            dict1 = other.game_entry,
+            dict1 = copy.deepcopy(other.game_entry),
             dict2 = self.game_entry,
             merge_type = merge_type)
 

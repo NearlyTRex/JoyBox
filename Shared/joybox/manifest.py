@@ -41,7 +41,7 @@ class ManifestEntry:
     # Get install dir
     def get_install_dir(self):
         if "installDir" in self.manifest_data:
-            for key, value in self.manifest_data["installDir"]:
+            for key in self.manifest_data["installDir"]:
                 return key
         return None
 

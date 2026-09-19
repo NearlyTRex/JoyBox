@@ -154,3 +154,69 @@ def test_launchable_platforms_have_an_emulator():
         if platform not in covered and platform_helpers.is_launched_by_file(platform))
 
     assert uncovered == [], f"launchable platforms with no emulator: {uncovered}"
+
+
+###########################################################
+# Save directories
+#
+# get_save_dir falls back to the "save_dir" key when a platform has no
+# save_sub_dirs entry, and a None result means JoyBox does not manage saves
+# for that emulator at all. Both are deliberate; a mix inside one emulator
+# that has no fallback is not.
+###########################################################
+
+def emulator_save_config(emulator):
+    return emulator.get_config().get(emulator.get_name(), {})
+
+
+def has_save_fallback(emulator):
+    save_dir = emulator_save_config(emulator).get("save_dir")
+    if not isinstance(save_dir, dict):
+        return bool(save_dir)
+    return all(value is not None for value in save_dir.values())
+
+
+@pytest.mark.parametrize("emulator", EMULATORS, ids = EMULATOR_IDS)
+def test_save_coverage_is_all_or_nothing(emulator):
+    # Without a fallback, an uncovered platform silently resolves to no save
+    # directory while its siblings resolve correctly.
+    if has_save_fallback(emulator):
+        pytest.skip(f"{emulator.get_name()} has a save_dir fallback")
+
+    sub_dirs = emulator_save_config(emulator).get("save_sub_dirs") or {}
+    claimed = emulator.get_platforms() or []
+    if not claimed or not sub_dirs:
+        pytest.skip(f"{emulator.get_name()} does not manage saves")
+
+    uncovered = [str(platform) for platform in claimed if platform not in sub_dirs]
+
+    assert not uncovered, \
+        f"{emulator.get_name()} manages saves for some platforms but not {uncovered}"
+
+
+@pytest.mark.parametrize("emulator", EMULATORS, ids = EMULATOR_IDS)
+def test_save_directories_are_only_declared_for_claimed_platforms(emulator):
+    # A sub dir for a platform the emulator does not claim is unreachable.
+    sub_dirs = emulator_save_config(emulator).get("save_sub_dirs") or {}
+    claimed = set(emulator.get_platforms() or [])
+
+    stray = [
+        str(platform) for platform in sub_dirs
+        if platform in config.Platform.members() and platform not in claimed
+    ]
+
+    assert not stray, f"{emulator.get_name()} declares save dirs for unclaimed {stray}"
+
+
+@pytest.mark.parametrize("emulator", EMULATORS, ids = EMULATOR_IDS)
+def test_core_mappings_only_name_claimed_platforms(emulator):
+    # A core mapped for an unclaimed platform never runs.
+    cores = emulator_save_config(emulator).get("cores_mapping") or {}
+    claimed = set(emulator.get_platforms() or [])
+
+    stray = [
+        str(platform) for platform in cores
+        if platform in config.Platform.members() and platform not in claimed
+    ]
+
+    assert not stray, f"{emulator.get_name()} maps cores for unclaimed {stray}"

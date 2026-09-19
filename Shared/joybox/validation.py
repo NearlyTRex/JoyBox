@@ -1,5 +1,6 @@
 # Imports
 import os
+import configparser
 
 # Local imports
 import joybox.paths as paths
@@ -52,13 +53,15 @@ def assert_is_bool(var_value, var_name):
 # Assert that variable is castable to boolean
 def assert_is_castable_to_bool(var_value, var_name):
     test_value = None
-    try:
-        if var_value == "True":
-            test_value = True
-        elif var_value == "False":
-            test_value = False
-    except:
-        pass
+    if isinstance(var_value, bool):
+        test_value = var_value
+    else:
+        try:
+            text_value = str(var_value).strip().lower()
+            if text_value in configparser.ConfigParser.BOOLEAN_STATES:
+                test_value = configparser.ConfigParser.BOOLEAN_STATES[text_value]
+        except:
+            pass
     assert type(test_value) == bool, "%s should be castable to boolean" % var_name
 
 # Assert that variable is list

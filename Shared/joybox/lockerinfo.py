@@ -30,8 +30,11 @@ class LockerInfo:
         self.excluded_dirs = [p.strip() for p in excluded_str.split(",") if p.strip()] if excluded_str else []
 
         # Parse encrypted flag (defaults to false)
-        encrypted_str = settings.get_value("UserData.Share", f"locker_{self.locker_type.lower()}_encrypted")
-        self.encrypted = encrypted_str.lower() == "true" if encrypted_str else False
+        self.encrypted = settings.get_bool_value(
+            "UserData.Share",
+            f"locker_{self.locker_type.lower()}_encrypted",
+            default_value = False,
+            throw_exception = False)
 
     def get_type(self):
         return self.type
