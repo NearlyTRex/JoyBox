@@ -32,6 +32,8 @@ def is_archive(archive_file):
         return True
     elif is_7z_archive(archive_file):
         return True
+    elif is_rar_archive(archive_file):
+        return True
     elif is_tarball_archive(archive_file):
         return True
     elif is_disc_archive(archive_file):

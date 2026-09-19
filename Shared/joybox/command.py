@@ -611,21 +611,25 @@ def run_capture_command(
 
 # Get installer type
 def get_installer_type(installer_file):
+    installer_markers = [
+        ("Inno Setup", config.InstallerType.INNO),
+        ("Nullsoft.NSIS.exehead", config.InstallerType.NSIS),
+        ("InstallShieldSetup", config.InstallerType.INS),
+        ("7-Zip", config.InstallerType.SEVENZIP),
+        ("WinRAR SFX", config.InstallerType.WINRAR),
+    ]
+    overlap = max(len(marker) for marker, _ in installer_markers) - 1
+    carried = ""
     with open(installer_file, "r", encoding="utf8", errors="ignore") as file:
         while True:
             file_contents = file.read(2048)
             if not file_contents:
                 break
-            if "Inno Setup" in file_contents:
-                return config.InstallerType.INNO
-            if "Nullsoft.NSIS.exehead" in file_contents:
-                return config.InstallerType.NSIS
-            if "InstallShieldSetup" in file_contents:
-                return config.InstallerType.INS
-            if "7-Zip" in file_contents:
-                return config.InstallerType.SEVENZIP
-            if "WinRAR SFX" in file_contents:
-                return config.InstallerType.WINRAR
+            window = carried + file_contents
+            for marker, installer_type in installer_markers:
+                if marker in window:
+                    return installer_type
+            carried = window[-overlap:]
     return config.InstallerType.UNKNOWN
 
 # Get installer setup command
