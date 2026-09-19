@@ -51,56 +51,6 @@ parser.add_string_list_argument(
 parser.add_common_arguments()
 args, unknown = parser.parse_known_args()
 
-# Parse forced tag overrides
-def parse_force_tags(set_values):
-    force_tags = {}
-    for entry in set_values or []:
-        if "=" not in entry:
-            logger.log_error(f"Invalid --set value (expected field=value): {entry}")
-            return None
-        field, value = entry.split("=", 1)
-        field = field.strip()
-        if field not in audiometadata.curated_tag_fields:
-            logger.log_error(f"Unknown tag field '{field}'. Allowed fields: {', '.join(audiometadata.curated_tag_fields)}")
-            return None
-        force_tags[field] = value
-    return force_tags
-
-# Run the selected action for a single genre
-def run_for_genre(genre_type, force_tags):
-    if args.action == config.AudioMetadataAction.TAG:
-        return audio.build_audio_metadata_files(
-            genre_type = genre_type,
-            album_name = args.album,
-            artist_name = args.artist,
-            exclude_comments = args.exclude_comments,
-            use_index_for_track_number = args.use_index_for_track_number,
-            force_tags = force_tags,
-            verbose = args.verbose,
-            pretend_run = args.pretend_run,
-            exit_on_failure = args.exit_on_failure)
-    elif args.action == config.AudioMetadataAction.CLEAR:
-        return audio.clear_audio_metadata_tags(
-            genre_type = genre_type,
-            album_name = args.album,
-            artist_name = args.artist,
-            preserve_artwork = args.preserve_artwork,
-            verbose = args.verbose,
-            pretend_run = args.pretend_run,
-            exit_on_failure = args.exit_on_failure)
-    elif args.action == config.AudioMetadataAction.APPLY:
-        return audio.apply_audio_metadata_tags(
-            genre_type = genre_type,
-            album_name = args.album,
-            artist_name = args.artist,
-            clear_existing = args.clear_existing,
-            verbose = args.verbose,
-            pretend_run = args.pretend_run,
-            exit_on_failure = args.exit_on_failure)
-    else:
-        logger.log_error(f"Unknown action: {args.action}")
-        return False
-
 # Main
 def main():
 
@@ -113,28 +63,32 @@ def main():
     # Resolve forced tag overrides (TAG only)
     force_tags = None
     if args.action == config.AudioMetadataAction.TAG:
-        force_tags = parse_force_tags(args.set)
+        force_tags = audiometadata.parse_force_tags(args.set)
         if force_tags is None:
             return False
 
+    # Run the selected action for one genre
+    def run_for_genre(genre_type):
+        return audio.run_metadata_action(
+            action = args.action,
+            genre_type = genre_type,
+            album_name = args.album,
+            artist_name = args.artist,
+            exclude_comments = args.exclude_comments,
+            use_index_for_track_number = args.use_index_for_track_number,
+            preserve_artwork = args.preserve_artwork,
+            clear_existing = args.clear_existing,
+            force_tags = force_tags,
+            verbose = args.verbose,
+            pretend_run = args.pretend_run,
+            exit_on_failure = args.exit_on_failure)
+
     # Single genre
     if args.genre is not None:
-        return run_for_genre(args.genre, force_tags)
+        return run_for_genre(args.genre)
 
-    # All genres (genre omitted): process each genre that has albums
-    overall = True
-    processed = 0
-    for genre_type in config.AudioGenreType.members():
-        if not audio.get_album_directories(genre_type, args.album, args.artist):
-            continue
-        processed += 1
-        logger.log_info(f"Processing genre: {genre_type.value}")
-        if not run_for_genre(genre_type, force_tags):
-            overall = False
-    if processed == 0:
-        logger.log_error("No albums found in any genre")
-        return False
-    return overall
+    # All genres (genre omitted)
+    return audio.process_all_genres(run_for_genre, args.album, args.artist)
 
 # Main
 if __name__ == "__main__":

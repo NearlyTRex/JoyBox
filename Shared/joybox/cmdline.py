@@ -3,13 +3,6 @@ import re
 import copy
 import shlex
 
-# Local imports
-import joybox.text as text
-
-# Token used to temporarily mark argument boundaries while splitting a command
-# string, so that spaces inside quoted substrings are preserved.
-TOKEN_COMMAND_SPLIT = "@=^=@"
-
 # Flags whose following value should be masked when a command is logged.
 SENSITIVE_FLAGS = [
     "--passphrase",
@@ -76,10 +69,10 @@ def create_command_list_enclosed(cmd):
     if isinstance(cmd, list):
         return copy.deepcopy(cmd)
     if isinstance(cmd, str):
-        cmd = cmd.replace(" ", TOKEN_COMMAND_SPLIT)
-        for quoted_substring in text.split_by_enclosed_substrings(cmd, "\"", "\""):
-            cmd = cmd.replace(quoted_substring, quoted_substring.replace(TOKEN_COMMAND_SPLIT, " "))
-        return cmd.split(TOKEN_COMMAND_SPLIT)
+        try:
+            return shlex.split(cmd, posix = False)
+        except ValueError:
+            return cmd.split(" ")
     return []
 
 # Split a command string into a list of arguments on spaces, without any
@@ -123,7 +116,7 @@ def mask_sensitive_args(cmd):
     if isinstance(cmd, str):
         for flag in SENSITIVE_FLAGS:
             if flag in cmd:
-                cmd = re.sub(f"{flag}\\s+\\S+", f"{flag} ****", cmd)
+                cmd = re.sub(f"{re.escape(flag)}(\\s+|=)\\S+", f"{flag}\\g<1>****", cmd)
         return cmd
     if isinstance(cmd, list):
         masked = []
@@ -136,6 +129,11 @@ def mask_sensitive_args(cmd):
                 masked.append(arg)
                 skip_next = True
             else:
-                masked.append(arg)
+                joined_flag = None
+                for flag in SENSITIVE_FLAGS:
+                    if isinstance(arg, str) and arg.startswith(flag + "="):
+                        joined_flag = flag
+                        break
+                masked.append(f"{joined_flag}=****" if joined_flag else arg)
         return masked
     return cmd

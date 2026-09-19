@@ -451,3 +451,123 @@ def apply_audio_metadata_tags(
             logger.log_error(f"Failed to apply tags to album: {album_name}")
             return False
     return True
+
+###########################################################
+# Metadata actions
+###########################################################
+
+# Run a single metadata action for one genre
+def run_metadata_action(
+    action,
+    genre_type,
+    album_name = None,
+    artist_name = None,
+    exclude_comments = False,
+    use_index_for_track_number = False,
+    preserve_artwork = False,
+    clear_existing = False,
+    force_tags = None,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+    if action == config.AudioMetadataAction.TAG:
+        return build_audio_metadata_files(
+            genre_type = genre_type,
+            album_name = album_name,
+            artist_name = artist_name,
+            exclude_comments = exclude_comments,
+            use_index_for_track_number = use_index_for_track_number,
+            force_tags = force_tags,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+    elif action == config.AudioMetadataAction.CLEAR:
+        return clear_audio_metadata_tags(
+            genre_type = genre_type,
+            album_name = album_name,
+            artist_name = artist_name,
+            preserve_artwork = preserve_artwork,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+    elif action == config.AudioMetadataAction.APPLY:
+        return apply_audio_metadata_tags(
+            genre_type = genre_type,
+            album_name = album_name,
+            artist_name = artist_name,
+            clear_existing = clear_existing,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+    else:
+        logger.log_error(f"Unknown action: {action}")
+        return False
+
+# Tag one genre using the universal and per-genre policies
+def tag_genre_with_policy(
+    genre_type,
+    album_name = None,
+    artist_name = None,
+    extra_force_tags = None,
+    apply_tags = True,
+    clear_existing = False,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Nothing to do for a genre with no albums (not a failure)
+    if not get_album_directories(genre_type, album_name, artist_name):
+        logger.log_warning(f"No albums found for genre: {genre_type.value}")
+        return True
+
+    # Universal policy: comments excluded, genre forced to the genre folder
+    force_tags = { "genre": genre_type.value }
+    force_tags.update(extra_force_tags or {})
+
+    # Per-genre policy: renumber tracks by index for YouTube-sourced genres
+    use_index_for_track_number = genre_type.value in config.audio_track_index_genres
+
+    logger.log_info(
+        f"Tagging genre: {genre_type.value}"
+        + (" (renumbering tracks by index)" if use_index_for_track_number else ""))
+
+    # Build the metadata files (reads existing tags, writes JSON sidecars)
+    if not build_audio_metadata_files(
+        genre_type = genre_type,
+        album_name = album_name,
+        artist_name = artist_name,
+        exclude_comments = True,
+        use_index_for_track_number = use_index_for_track_number,
+        force_tags = force_tags,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure):
+        return False
+
+    # Apply the metadata files back to the audio files
+    if not apply_tags:
+        return True
+    return apply_audio_metadata_tags(
+        genre_type = genre_type,
+        album_name = album_name,
+        artist_name = artist_name,
+        clear_existing = clear_existing,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+
+# Run a per-genre handler across every genre that has albums
+def process_all_genres(handler, album_name = None, artist_name = None):
+    overall = True
+    processed = 0
+    for genre_type in config.AudioGenreType.members():
+        if not get_album_directories(genre_type, album_name, artist_name):
+            continue
+        processed += 1
+        logger.log_info(f"Processing genre: {genre_type.value}")
+        if not handler(genre_type):
+            overall = False
+    if processed == 0:
+        logger.log_error("No albums found in any genre")
+        return False
+    return overall

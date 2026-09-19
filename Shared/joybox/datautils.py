@@ -94,7 +94,9 @@ def search_dictionary(data, search_value, search_keys = []):
             if isinstance(value, str) and search_value in value:
                 return [(key, value)]
         if isinstance(value, dict):
-            return search_dictionary(value, search_value, search_keys)
+            nested_match = search_dictionary(value, search_value, search_keys)
+            if nested_match:
+                return nested_match
     return []
 
 ###########################################################

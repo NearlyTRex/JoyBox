@@ -40,65 +40,6 @@ parser.add_boolean_argument(
 parser.add_common_arguments()
 args, unknown = parser.parse_known_args()
 
-# Parse extra forced tag overrides
-def parse_force_tags(set_values):
-    force_tags = {}
-    for entry in set_values or []:
-        if "=" not in entry:
-            logger.log_error(f"Invalid --set value (expected field=value): {entry}")
-            return None
-        field, value = entry.split("=", 1)
-        field = field.strip()
-        if field not in audiometadata.curated_tag_fields:
-            logger.log_error(f"Unknown tag field '{field}'. Allowed fields: {', '.join(audiometadata.curated_tag_fields)}")
-            return None
-        force_tags[field] = value
-    return force_tags
-
-# Tag (and optionally apply) a single genre using its policy
-def run_for_genre(genre_type, extra_force_tags):
-
-    # Nothing to do for a genre with no albums (not a failure)
-    if not audio.get_album_directories(genre_type, args.album, args.artist):
-        logger.log_warning(f"No albums found for genre: {genre_type.value}")
-        return True
-
-    # Universal policy: comments excluded, genre forced to the genre folder
-    force_tags = { "genre": genre_type.value }
-    force_tags.update(extra_force_tags)
-
-    # Per-genre policy: renumber tracks by index for YouTube-sourced genres
-    use_index_for_track_number = genre_type.value in config.audio_track_index_genres
-
-    logger.log_info(
-        f"Tagging genre: {genre_type.value}"
-        + (" (renumbering tracks by index)" if use_index_for_track_number else ""))
-
-    # Build the metadata files (reads existing tags, writes JSON sidecars)
-    if not audio.build_audio_metadata_files(
-        genre_type = genre_type,
-        album_name = args.album,
-        artist_name = args.artist,
-        exclude_comments = True,
-        use_index_for_track_number = use_index_for_track_number,
-        force_tags = force_tags,
-        verbose = args.verbose,
-        pretend_run = args.pretend_run,
-        exit_on_failure = args.exit_on_failure):
-        return False
-
-    # Apply the metadata files back to the audio files
-    if args.no_apply:
-        return True
-    return audio.apply_audio_metadata_tags(
-        genre_type = genre_type,
-        album_name = args.album,
-        artist_name = args.artist,
-        clear_existing = args.clear_existing,
-        verbose = args.verbose,
-        pretend_run = args.pretend_run,
-        exit_on_failure = args.exit_on_failure)
-
 # Main
 def main():
 
@@ -109,28 +50,29 @@ def main():
     logger.setup_logging()
 
     # Resolve extra forced tag overrides
-    extra_force_tags = parse_force_tags(args.set)
+    extra_force_tags = audiometadata.parse_force_tags(args.set)
     if extra_force_tags is None:
         return False
 
+    # Tag one genre using its policy
+    def run_for_genre(genre_type):
+        return audio.tag_genre_with_policy(
+            genre_type = genre_type,
+            album_name = args.album,
+            artist_name = args.artist,
+            extra_force_tags = extra_force_tags,
+            apply_tags = not args.no_apply,
+            clear_existing = args.clear_existing,
+            verbose = args.verbose,
+            pretend_run = args.pretend_run,
+            exit_on_failure = args.exit_on_failure)
+
     # Single genre
     if args.genre is not None:
-        return run_for_genre(args.genre, extra_force_tags)
+        return run_for_genre(args.genre)
 
-    # All genres (genre omitted): process each genre that has albums
-    overall = True
-    processed = 0
-    for genre_type in config.AudioGenreType.members():
-        if not audio.get_album_directories(genre_type, args.album, args.artist):
-            continue
-        processed += 1
-        logger.log_info(f"Processing genre: {genre_type.value}")
-        if not run_for_genre(genre_type, extra_force_tags):
-            overall = False
-    if processed == 0:
-        logger.log_error("No albums found in any genre")
-        return False
-    return overall
+    # All genres (genre omitted)
+    return audio.process_all_genres(run_for_genre, args.album, args.artist)
 
 # Main
 if __name__ == "__main__":

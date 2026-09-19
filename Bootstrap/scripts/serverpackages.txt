@@ -4,6 +4,7 @@
 7zip
 age
 apt-file
+unrar
 unzip
 zip
 
@@ -11,6 +12,9 @@ zip
 default-jdk
 git
 jq
+nodejs
+npm
+ripgrep
 
 # Server
 certbot

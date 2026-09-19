@@ -1,0 +1,10 @@
+[project]
+name = "joybox"
+version = "0.1.0"
+description = "Game collection management, media tooling, and machine provisioning"
+requires-python = ">=3.12"
+license = { file = "LICENSE" }
+
+# The trees are consumed directly off disk via sys.path rather than installed,
+# so there is no [build-system] here on purpose - adding one would change how
+# install.sh and the bootstrap flow see the repo.

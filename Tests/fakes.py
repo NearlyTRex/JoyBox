@@ -1,0 +1,233 @@
+# Imports
+import os
+import sys
+
+# Local imports
+from joybox import runoptions
+from joybox.connection import connection
+from joybox import cmdline
+
+###########################################################
+# Recording connection
+#
+# Installers never shell out directly - every side effect goes through
+# self.connection, which is an abstract ~30-method interface. That makes the
+# Connection the one seam worth faking: a recording double lets an installer be
+# driven end to end and then asserted on, with nothing installed and no machine
+# touched.
+#
+# Only the methods installers actually use are overridden. Anything else falls
+# through to the base class, which is a no-op - so a test that starts exercising
+# a new method will surface as a missing recording rather than a silent pass.
+###########################################################
+
+class RecordingConnection(connection.Connection):
+    def __init__(
+        self,
+        flags = None,
+        options = None,
+        existing_paths = None,
+        file_contents = None,
+        return_codes = None,
+        command_output = None):
+        super().__init__(
+            flags if flags is not None else runoptions.RunFlags(verbose = False),
+            options if options is not None else runoptions.RunOptions())
+
+        # What the test declares about the world
+        self.existing_paths = set(existing_paths or [])
+        self.file_contents = dict(file_contents or {})
+        self.return_codes = dict(return_codes or {})
+        self.command_output = dict(command_output or {})
+
+        # What the installer did
+        self.calls = []
+        self.commands = []
+        self.written_files = {}
+        self.removed_paths = []
+        self.made_directories = []
+        self.permissions = []
+        self.owners = []
+        self.moved = []
+        self.copied = []
+        self.downloads = []
+        self.crontab_added = []
+        self.crontab_removed = []
+
+    def copy(self):
+
+        # Installer.__init__ does self.connection = connection.copy(), and the
+        # base copy() is a deepcopy - so an installer would otherwise record
+        # into a clone the test has no handle on. Returning self is the whole
+        # point of the double: production keeps its isolated copy semantics,
+        # and the recorder stays observable.
+        return self
+
+    ###########################################################
+    # Recording
+    ###########################################################
+
+    def _record(self, method, *args, **kwargs):
+        self.calls.append((method, args, kwargs))
+
+    def _record_command(self, method, cmd, sudo):
+        self._record(method, cmd, sudo = sudo)
+        self.commands.append(cmd)
+        return cmdline.create_command_string(cmd)
+
+    def _lookup(self, table, cmd, default):
+        command_string = cmdline.create_command_string(cmd)
+        for fragment, value in table.items():
+            if fragment in command_string:
+                return value
+        return default
+
+    ###########################################################
+    # Assertion helpers
+    ###########################################################
+
+    def command_strings(self):
+        return [cmdline.create_command_string(cmd) for cmd in self.commands]
+
+    def ran(self, *fragments):
+
+        # True when a single command contains every fragment
+        for command_string in self.command_strings():
+            if all(fragment in command_string for fragment in fragments):
+                return True
+        return False
+
+    def ran_any(self, *fragments):
+        return any(self.ran(fragment) for fragment in fragments)
+
+    def called(self, method):
+        return [call for call in self.calls if call[0] == method]
+
+    def written(self, path_fragment):
+
+        # Contents of the first written file whose path contains the fragment
+        for path, contents in self.written_files.items():
+            if path_fragment in path:
+                return contents
+        return None
+
+    ###########################################################
+    # Command execution
+    ###########################################################
+
+    def run_output(self, cmd, sudo = False):
+        self._record_command("run_output", cmd, sudo)
+        return self._lookup(self.command_output, cmd, "")
+
+    def run_return_code(self, cmd, sudo = False):
+        self._record_command("run_return_code", cmd, sudo)
+        return self._lookup(self.return_codes, cmd, 0)
+
+    def run_blocking(self, cmd, sudo = False):
+        self._record_command("run_blocking", cmd, sudo)
+        return self._lookup(self.return_codes, cmd, 0)
+
+    def run_interactive(self, cmd, sudo = False):
+        self._record_command("run_interactive", cmd, sudo)
+        return self._lookup(self.return_codes, cmd, 0)
+
+    def run_checked(self, cmd, sudo = False, throw_exception = False):
+        self._record_command("run_checked", cmd, sudo)
+        return self._lookup(self.return_codes, cmd, 0) == 0
+
+    ###########################################################
+    # Filesystem
+    ###########################################################
+
+    def make_temporary_directory(self):
+        self._record("make_temporary_directory")
+        return "/tmp/joybox-test"
+
+    def make_directory(self, src, sudo = False):
+        self._record("make_directory", src, sudo = sudo)
+        self.made_directories.append(src)
+        self.existing_paths.add(src)
+        return True
+
+    def remove_file_or_directory(self, src, sudo = False):
+        self._record("remove_file_or_directory", src, sudo = sudo)
+        self.removed_paths.append(src)
+        self.existing_paths.discard(src)
+        self.written_files.pop(src, None)
+        return True
+
+    def copy_file_or_directory(self, src, dest, sudo = False):
+        self._record("copy_file_or_directory", src, dest, sudo = sudo)
+        self.copied.append((src, dest))
+        return True
+
+    def move_file_or_directory(self, src, dest, sudo = False):
+        self._record("move_file_or_directory", src, dest, sudo = sudo)
+        self.moved.append((src, dest))
+        if src in self.written_files:
+            self.written_files[dest] = self.written_files.pop(src)
+        self.existing_paths.discard(src)
+        self.existing_paths.add(dest)
+        return True
+
+    def link_file_or_directory(self, src, dest, sudo = False):
+        self._record("link_file_or_directory", src, dest, sudo = sudo)
+        return True
+
+    def does_file_or_directory_exist(self, src):
+        self._record("does_file_or_directory_exist", src)
+        return src in self.existing_paths
+
+    def transfer_files(self, src, dest, excludes = [], sudo = False):
+        self._record("transfer_files", src, dest, excludes = excludes, sudo = sudo)
+        return True
+
+    def read_file(self, src, sudo = False):
+        self._record("read_file", src, sudo = sudo)
+        if src in self.written_files:
+            return self.written_files[src]
+        return self.file_contents.get(src, "")
+
+    def write_file(self, src, contents, sudo = False):
+        self._record("write_file", src, contents, sudo = sudo)
+        self.written_files[src] = contents
+        self.existing_paths.add(src)
+        return True
+
+    def download_file(self, url, dest, sudo = False):
+        self._record("download_file", url, dest, sudo = sudo)
+        self.downloads.append((url, dest))
+        self.existing_paths.add(dest)
+        return True
+
+    def extract_tar_archive(self, src, dest, sudo = False):
+        self._record("extract_tar_archive", src, dest, sudo = sudo)
+        return True
+
+    def change_owner(self, src, owner, sudo = False):
+        self._record("change_owner", src, owner, sudo = sudo)
+        self.owners.append((src, owner))
+        return True
+
+    def change_permission(self, src, permission, sudo = False):
+        self._record("change_permission", src, permission, sudo = sudo)
+        self.permissions.append((src, permission))
+        return True
+
+    ###########################################################
+    # Environment
+    ###########################################################
+
+    def set_current_working_directory(self, cwd):
+        self._record("set_current_working_directory", cwd)
+        return True
+
+    def add_to_crontab(self, pattern):
+        self._record("add_to_crontab", pattern)
+        self.crontab_added.append(pattern)
+        return True
+
+    def remove_from_crontab(self, pattern):
+        self._record("remove_from_crontab", pattern)
+        self.crontab_removed.append(pattern)
+        return True

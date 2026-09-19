@@ -1,5 +1,7 @@
 JoyBox.ini
 *.pyc
+__pycache__/
+.pytest_cache/
 
 # Secrets / credentials (defense-in-depth; the pre-commit hook also blocks these)
 *.pem

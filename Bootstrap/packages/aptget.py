@@ -148,7 +148,6 @@ aptget[constants.EnvironmentType.LOCAL_UBUNTU] += [
     {"id": "libflac-dev", "category": "Libs"},
     {"id": "libfontconfig-dev", "category": "Libs"},
     {"id": "libfreetype-dev", "category": "Libs"},
-    {"id": "libfreetype-dev", "category": "Libs"},
     {"id": "libgl-dev", "category": "Libs"},
     {"id": "libgl1-mesa-dev", "category": "Libs"},
     {"id": "libglew-dev", "category": "Libs"},
