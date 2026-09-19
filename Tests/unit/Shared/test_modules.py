@@ -136,3 +136,33 @@ def test_no_module_level_name_shadows_a_builtin(module_name, path):
                 offenders.append(node.name)
 
     assert not offenders, f"{module_name} shadows builtins at module level: {offenders}"
+
+
+###########################################################
+# Reachability
+###########################################################
+
+def unreachable_offenders(tree):
+    offenders = []
+    for node in ast.walk(tree):
+        body = getattr(node, "body", None)
+        if not isinstance(body, list):
+            continue
+        for index, statement in enumerate(body[:-1]):
+            if isinstance(statement, (ast.Return, ast.Raise, ast.Continue, ast.Break)):
+                offenders.append(
+                    "line %d after %s" % (body[index + 1].lineno, type(statement).__name__))
+                break
+    return offenders
+
+
+@pytest.mark.parametrize("module_name,path", MODULES, ids = MODULE_IDS)
+def test_no_statement_is_unreachable(module_name, path):
+    # An early return above further logic silently drops it, and any names that
+    # logic reads are never bound.
+    with open(path, "r", encoding = "utf-8") as handle:
+        tree = ast.parse(handle.read())
+
+    offenders = unreachable_offenders(tree)
+
+    assert not offenders, f"{module_name} has unreachable statements: {offenders}"

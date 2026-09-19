@@ -27,7 +27,7 @@ class Program(jsondata.JsonData):
     def set_exe(self, value):
         self.set_value(config.program_key_exe, value)
     def get_exe(self, token_map = None):
-        return self.get_value(config.program_key_exe)
+        path = self.get_value(config.program_key_exe)
         if path and token_map:
             return sandbox.resolve_path(path, token_map)
         return path

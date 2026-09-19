@@ -12,10 +12,11 @@ def get_summarized_list(items, max_display = 20):
     if total_count <= max_display:
         return list(items), total_count, False
     show_count = max_display // 2
-    hidden_count = total_count - max_display
+    hidden_count = total_count - (show_count * 2)
     summarized = list(items[:show_count])
     summarized.append("... (%d more items) ..." % hidden_count)
-    summarized.extend(items[-show_count:])
+    if show_count:
+        summarized.extend(items[-show_count:])
     return summarized, total_count, True
 
 # Write list report
