@@ -340,7 +340,7 @@ def get_file_groupings(filenames, max_group_size):
         hash_set_files = hash_sets[hash_set_key]["files"]
 
         # Check if we need to start a new group
-        if hash_set_size + results[group_name]["size"] > max_group_size:
+        if results[group_name]["files"] and hash_set_size + results[group_name]["size"] > max_group_size:
             group_counter += 1
             group_name = "Group" + str(group_counter)
             add_empty_group(group_name)

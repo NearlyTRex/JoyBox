@@ -43,7 +43,10 @@ class RecordingConnection(connection.Connection):
         # What the installer did
         self.calls = []
         self.commands = []
+
+        # Live contents, and an append-only history that removal does not clear
         self.written_files = {}
+        self.write_log = []
         self.removed_paths = []
         self.made_directories = []
         self.permissions = []
@@ -105,8 +108,9 @@ class RecordingConnection(connection.Connection):
 
     def written(self, path_fragment):
 
-        # Contents of the first written file whose path contains the fragment
-        for path, contents in self.written_files.items():
+        # Contents of the first file written at a matching path, whether or not
+        # it was cleaned up afterwards
+        for path, contents in self.write_log:
             if path_fragment in path:
                 return contents
         return None
@@ -191,6 +195,7 @@ class RecordingConnection(connection.Connection):
     def write_file(self, src, contents, sudo = False):
         self._record("write_file", src, contents, sudo = sudo)
         self.written_files[src] = contents
+        self.write_log.append((src, contents))
         self.existing_paths.add(src)
         return True
 
