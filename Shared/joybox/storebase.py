@@ -558,14 +558,17 @@ class StoreBase:
         return translation_map
 
     # Add path variants
-    def add_path_variants(self, paths = []):
+    def add_path_variants(self, paths = None):
+
+        # Copy the input
+        new_paths = list(paths) if paths else []
 
         # Add AppData variants
-        for path in sorted(paths):
+        for path in sorted(new_paths):
             for appdata_base in config.appdata_variants.keys():
                 if appdata_base in path:
                     for appdata_variant in config.appdata_variants[appdata_base]:
-                        paths.append(path.replace(appdata_base, appdata_variant))
-        return paths
+                        new_paths.append(path.replace(appdata_base, appdata_variant))
+        return new_paths
 
     ############################################################

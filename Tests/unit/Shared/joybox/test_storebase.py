@@ -168,3 +168,68 @@ def test_no_token_survives_expansion():
     for token in [config.token_game_install_dir, config.token_user_profile_dir,
                   config.token_user_public_dir, config.token_user_registry_dir]:
         assert token not in expanded
+
+
+###########################################################
+# Path variants
+#
+# Callers pass the live list out of a game's json, so appending in place would
+# grow the stored paths on every run.
+###########################################################
+
+class _Store(storebase.StoreBase):
+    def __init__(self):
+        pass
+
+
+def test_variants_are_added_for_each_appdata_form():
+    base = next(iter(config.appdata_variants.keys()))
+    variants = _Store().add_path_variants([f"USER_PROFILE_DIR{base}Game"])
+
+    assert len(variants) == 1 + len(config.appdata_variants[base])
+
+
+def test_the_original_path_is_kept():
+    base = next(iter(config.appdata_variants.keys()))
+    original = f"USER_PROFILE_DIR{base}Game"
+
+    assert original in _Store().add_path_variants([original])
+
+
+def test_the_caller_list_is_not_modified():
+    base = next(iter(config.appdata_variants.keys()))
+    original = [f"USER_PROFILE_DIR{base}Game"]
+    before = list(original)
+
+    _Store().add_path_variants(original)
+
+    assert original == before
+
+
+def test_a_games_stored_paths_are_not_modified():
+    from joybox import jsondata
+
+    base = next(iter(config.appdata_variants.keys()))
+    data = jsondata.JsonData({"store": {"paths": [f"USER_PROFILE_DIR{base}Game"]}})
+    live = data.get_subvalue("store", "paths")
+
+    _Store().add_path_variants(live)
+
+    assert data.get_subvalue("store", "paths") == [f"USER_PROFILE_DIR{base}Game"]
+
+
+def test_no_variants_are_added_for_an_unrelated_path():
+    assert _Store().add_path_variants(["somewhere/else"]) == ["somewhere/else"]
+
+
+def test_no_paths_yields_nothing():
+    assert _Store().add_path_variants([]) == []
+    assert _Store().add_path_variants() == []
+
+
+def test_repeated_calls_do_not_accumulate():
+    # A shared default would carry results from one call into the next.
+    first = _Store().add_path_variants()
+    second = _Store().add_path_variants()
+
+    assert first == [] and second == []
