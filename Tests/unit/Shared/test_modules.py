@@ -254,3 +254,88 @@ def test_every_name_resolves(module_name, path):
     offenders = unresolved_names(tree)
 
     assert not offenders, f"{module_name} reads names that are never bound: {offenders}"
+
+
+###########################################################
+# Attribute shadowing
+###########################################################
+
+def shadowing_offenders(tree):
+    offenders = []
+    for node in ast.walk(tree):
+        if not isinstance(node, ast.ClassDef):
+            continue
+        methods = {sub.name: sub.lineno for sub in node.body
+                   if isinstance(sub, (ast.FunctionDef, ast.AsyncFunctionDef))}
+        for sub in ast.walk(node):
+            if not isinstance(sub, ast.Assign):
+                continue
+            for target in sub.targets:
+                if (isinstance(target, ast.Attribute)
+                        and isinstance(target.value, ast.Name)
+                        and target.value.id == "self"
+                        and target.attr in methods):
+                    offenders.append(
+                        "line %d: %s.%s shadows the method at line %d"
+                        % (sub.lineno, node.name, target.attr, methods[target.attr]))
+    return offenders
+
+
+@pytest.mark.parametrize("module_name,path", MODULES, ids = MODULE_IDS)
+def test_no_attribute_shadows_a_method(module_name, path):
+    # An instance attribute wins over a method of the same name, so the method
+    # becomes uncallable and every caller gets a TypeError.
+    with open(path, "r", encoding = "utf-8") as handle:
+        tree = ast.parse(handle.read())
+
+    offenders = shadowing_offenders(tree)
+
+    assert not offenders, f"{module_name}: {offenders}"
+
+
+###########################################################
+# Predicate return types
+###########################################################
+
+PREDICATE_PREFIXES = (
+    "is_", "has_", "can_", "should_", "are_", "does_", "was_",
+    "allow_", "use_", "force_", "include_",
+)
+
+
+def non_boolean_predicate_returns(tree):
+    def shape(node):
+        if (isinstance(node, ast.Call) and isinstance(node.func, ast.Name)
+                and node.func.id == "len"):
+            return "len()"
+        if isinstance(node, ast.BoolOp) and node.values:
+            last = node.values[-1]
+            if (isinstance(last, ast.Call) and isinstance(last.func, ast.Name)
+                    and last.func.id == "len"):
+                return "and len()"
+        return None
+
+    offenders = []
+    for node in ast.walk(tree):
+        if not isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+            continue
+        if not node.name.startswith(PREDICATE_PREFIXES):
+            continue
+        for sub in ast.walk(node):
+            if isinstance(sub, ast.Return) and sub.value is not None:
+                found = shape(sub.value)
+                if found:
+                    offenders.append("line %d: %s returns %s" % (sub.lineno, node.name, found))
+    return offenders
+
+
+@pytest.mark.parametrize("module_name,path", MODULES, ids = MODULE_IDS)
+def test_every_predicate_returns_a_boolean(module_name, path):
+    # A count is truthy in the same places a boolean is, until a caller
+    # compares against True or serializes the result.
+    with open(path, "r", encoding = "utf-8") as handle:
+        tree = ast.parse(handle.read())
+
+    offenders = non_boolean_predicate_returns(tree)
+
+    assert not offenders, f"{module_name}: {offenders}"

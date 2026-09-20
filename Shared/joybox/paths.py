@@ -505,7 +505,7 @@ def does_directory_contain_files(path, recursive = True):
             obj_path = os.path.join(path, obj)
             if os.path.isfile(obj_path):
                 files.append(obj)
-        return len(files)
+        return len(files) > 0
 
 # Check if directory contains files by extensions
 def does_directory_contain_files_by_extensions(path, extensions = [], recursive = True):
@@ -518,7 +518,7 @@ def does_directory_contain_files_by_extensions(path, extensions = [], recursive 
             if os.path.isfile(obj_path):
                 if does_filename_match_extensions(obj_path, extensions):
                     files.append(obj)
-        return len(files)
+        return len(files) > 0
 
 # Check if directory contains symlink dirs
 def does_directory_contain_symlink_dirs(path):

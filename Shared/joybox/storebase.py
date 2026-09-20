@@ -56,7 +56,7 @@ class StoreBase:
 
     # Constructor
     def __init__(self):
-        self.is_logged_in = False
+        self.logged_in = False
 
     ############################################################
     # Store
@@ -172,7 +172,7 @@ class StoreBase:
 
     # Is valid identifier
     def is_valid_identifier(self, identifier):
-        return isinstance(identifier, str) and len(identifier)
+        return isinstance(identifier, str) and len(identifier) > 0
 
     # Is valid info identifier
     def is_valid_info_identifier(self, identifier):
@@ -208,11 +208,11 @@ class StoreBase:
 
     # Check if logged in
     def is_logged_in(self):
-        return self.is_logged_in
+        return self.logged_in
 
     # Set logged in
     def set_logged_in(self, value):
-        self.is_logged_in = value
+        self.logged_in = value
 
     # Login
     def login(
