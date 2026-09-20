@@ -168,7 +168,11 @@ class AudioMetadata:
 
         # Read tags from audio file
         logger.log_info(f"Reading ID3 tags from {audio_file}")
-        audio = self.mp3_class(audio_file, ID3 = self.id3_class)
+        try:
+            audio = self.mp3_class(audio_file, ID3 = self.id3_class)
+        except Exception as e:
+            logger.log_error(f"Failed to load MP3 file: {e}")
+            return None
         if audio.tags is None:
             logger.log_error(f"Failed to load audio file")
             return {}
@@ -249,7 +253,11 @@ class AudioMetadata:
 
         # Load audio file
         logger.log_info(f"Setting ID3 tags on {audio_file}")
-        audio = self.mp3_class(audio_file, ID3 = self.id3_class)
+        try:
+            audio = self.mp3_class(audio_file, ID3 = self.id3_class)
+        except Exception as e:
+            logger.log_error(f"Failed to load MP3 file: {e}")
+            return False
 
         # Add ID3 tags if they don"t exist
         if audio.tags is None:
@@ -303,7 +311,11 @@ class AudioMetadata:
 
         # Load audio file
         logger.log_info(f"Removing ID3 tags from {audio_file}")
-        audio = self.mp3_class(audio_file, ID3 = self.id3_class)
+        try:
+            audio = self.mp3_class(audio_file, ID3 = self.id3_class)
+        except Exception as e:
+            logger.log_error(f"Failed to load MP3 file: {e}")
+            return False
 
         # No tags to remove
         if audio.tags is None:
@@ -321,7 +333,8 @@ class AudioMetadata:
 
         # Restore artwork if preserved
         if preserve_artwork and preserved_artwork:
-            audio.add_tags()
+            if audio.tags is None:
+                audio.add_tags()
             for artwork in preserved_artwork:
                 audio.tags[f"APIC:{artwork.desc}"] = artwork
 
@@ -336,8 +349,11 @@ class AudioMetadata:
             return False
 
         # Load and check tags
-        audio = self.mp3_class(audio_file, ID3 = self.id3_class)
-        return audio.tags is not None and len(audio.tags) > 0
+        try:
+            audio = self.mp3_class(audio_file, ID3 = self.id3_class)
+            return audio.tags is not None and len(audio.tags) > 0
+        except Exception:
+            return False
 
     ###########################################################
     # MP4/M4A Tag Methods
@@ -500,7 +516,8 @@ class AudioMetadata:
 
         # Restore artwork if preserved
         if preserve_artwork and preserved_covers:
-            audio.add_tags()
+            if audio.tags is None:
+                audio.add_tags()
             audio.tags["covr"] = preserved_covers
 
         # Save changes
