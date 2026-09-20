@@ -159,7 +159,7 @@ reachable from the internet whatever `ufw status` claims. A container reachable
 directly is a container reached *without* nginx, which means without TLS, without
 the shared `.htpasswd`, without ModSecurity and without rate limiting.
 
-Any new installer must follow this. `verify_hardening.sh` checks it.
+Any new installer must follow this. `Scripts/bin/verify_server.py` checks it.
 
 ### SSH is key-only
 

@@ -114,7 +114,7 @@ double needs to do the same.
 - The audio and ollama logic moved out of `Scripts/bin` has dispatch and parsing
   tests, but nothing exercises the parts that touch real media files or a
   running Ollama.
-- Nothing exercises a real remote deploy. `Bootstrap/scripts/verify_hardening.sh`
+- Nothing exercises a real remote deploy. `Scripts/bin/verify_server.py`
   covers that against the rehearsal VM — see
   [local testing](../Bootstrap/docs/local-testing.md).
 

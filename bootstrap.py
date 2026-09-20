@@ -12,6 +12,7 @@ import joyboxshared
 from joybox import connection
 from joybox import runoptions
 from joybox import logger
+from joybox import serverinfo
 from joybox import settings
 from joybox import default_settings
 import constants
@@ -117,13 +118,10 @@ def main():
     if is_remote_ubuntu:
         environment_options["options"].set(shell = True)
         if is_server_index:
-            environment_options["ssh_host"] = settings.get_value("UserData.Servers", f"server_{args.server_index}_host")
-            environment_options["ssh_port"] = settings.get_value("UserData.Servers", f"server_{args.server_index}_port")
-            environment_options["ssh_user"] = settings.get_value("UserData.Servers", f"server_{args.server_index}_user")
-            environment_options["ssh_password"] = settings.get_value("UserData.Servers", f"server_{args.server_index}_pass")
-            # Optional: configs written before key auth existed have no such key
-            environment_options["ssh_key_filepath"] = settings.get_value("UserData.Servers",
-                f"server_{args.server_index}_key_filepath", default_value = "", throw_exception = False)
+            server = serverinfo.ServerInfo(args.server_index)
+            if not server.is_configured():
+                logger.log_error(f"No host configured for server {args.server_index}", quit_program = True)
+            environment_options.update(server.get_connection_options())
         # An explicit -k wins over whatever the server entry carries
         if args.ssh_key_filepath:
             environment_options["ssh_key_filepath"] = args.ssh_key_filepath

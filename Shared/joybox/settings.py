@@ -59,6 +59,17 @@ def get_sections(throw_exception = True):
             raise RuntimeError("Unable to read settings sections [file=%s]" % _settings_file)
         return []
 
+def get_fields(section, throw_exception = True):
+    try:
+        _ensure_loaded()
+        if section not in _parser:
+            return []
+        return list(_parser[section].keys())
+    except:
+        if throw_exception:
+            raise RuntimeError("Unable to read settings fields [file=%s][section=%s]" % (_settings_file, section))
+        return []
+
 def has_section(section, throw_exception = True):
     try:
         _ensure_loaded()

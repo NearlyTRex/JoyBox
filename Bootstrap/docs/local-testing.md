@@ -20,11 +20,11 @@ Two independent ways back into the VM, neither of which depends on sshd:
 ```bash
 # Serial console - works even with sshd completely broken.
 # cloud-init set a console password (default: joybox) for exactly this case.
-sudo Bootstrap/scripts/testvm.sh console
+sudo python3 Scripts/bin/testvm.py console
 
 # Roll back to a snapshot - seconds, rather than a rebuild.
-sudo Bootstrap/scripts/testvm.sh snapshot pre-sshd
-sudo Bootstrap/scripts/testvm.sh revert pre-sshd
+sudo python3 Scripts/bin/testvm.py snapshot --snapshot pre-sshd
+sudo python3 Scripts/bin/testvm.py revert --snapshot pre-sshd
 ```
 
 Take a snapshot before anything you would not want to repeat by hand.
@@ -55,7 +55,7 @@ ssh-keygen -t ed25519
 ### 1. Create the VM
 
 ```bash
-sudo Bootstrap/scripts/testvm.sh create --user "$USER"
+sudo python3 Scripts/bin/testvm.py create --username "$USER"
 ```
 
 Builds an Ubuntu Server guest on libvirt's default NAT network and prints its
@@ -65,7 +65,7 @@ stack to behave the same way.
 ### 2. Point the test domain at it
 
 ```bash
-sudo Bootstrap/scripts/init_testhosts.sh
+sudo python3 Scripts/bin/testvm.py hosts
 ```
 
 Writes a marker-bracketed block into `/etc/hosts` mapping `joybox.test` and its
@@ -124,21 +124,25 @@ that already bound to loopback correctly before any of this work. Add
 ### 6. Verify
 
 ```bash
-sudo ./verify_hardening.sh --domain joybox.test
+python3 Scripts/bin/verify_server.py --server 0 --domain joybox.test
 ```
 
-Exits with the number of failed checks, so it works as a gate. Every check tests
-the effect rather than the configuration — it bursts requests to confirm rate
-limiting actually refuses, and reads live socket state to confirm nothing is
-listening on `0.0.0.0`.
+This runs from the workstation and reads the VM's state over the same SSH
+connection `bootstrap.py` uses, so nothing has to be installed on the target.
+It exits with the number of failed checks, so it works as a gate. Every check
+tests the effect rather than the configuration — it bursts requests to confirm
+rate limiting actually refuses, and reads live socket state to confirm nothing
+is listening on `0.0.0.0`.
 
-Each check is also a `verify_*` function in `common.sh` if you want to run just
-one:
+Each check is a function in `Shared/joybox/hardening.py` if you want to run
+just one:
 
-```bash
-source Bootstrap/scripts/common.sh
-verify_sshd
-verify_container_ports
+```python
+from joybox import hardening
+from joybox.connection import ConnectionLocal
+
+connection = ConnectionLocal()
+print(hardening.format_results(hardening.check_sshd(connection)))
 ```
 
 ## TLS
@@ -163,7 +167,7 @@ The riskiest change in the stack, so rehearse it here first.
 
 ```bash
 # 1. Snapshot
-sudo Bootstrap/scripts/testvm.sh snapshot pre-sshd
+sudo python3 Scripts/bin/testvm.py snapshot --snapshot pre-sshd
 
 # 2. Confirm key auth already works - bootstrap.py must be on keys before
 #    passwords are disabled, or the next deploy cannot connect
@@ -177,7 +181,7 @@ ssh <you>@<vm-ip>
 ssh -o PreferredAuthentications=password -o PubkeyAuthentication=no <you>@<vm-ip>
 
 # 5. If it went wrong
-sudo Bootstrap/scripts/testvm.sh revert pre-sshd
+sudo python3 Scripts/bin/testvm.py revert --snapshot pre-sshd
 ```
 
 `init_sshd.sh` refuses to run if the user has no `authorized_keys`, validates with
@@ -221,8 +225,8 @@ Stated rather than papered over:
 ## Teardown
 
 ```bash
-sudo Bootstrap/scripts/init_testhosts.sh --remove
-sudo Bootstrap/scripts/testvm.sh destroy
+sudo python3 Scripts/bin/testvm.py hosts --remove
+sudo python3 Scripts/bin/testvm.py destroy
 ```
 
 Then put `domain_name` and `tls_mode` back to their real values in `JoyBox.ini`.
