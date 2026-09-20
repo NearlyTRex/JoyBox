@@ -609,7 +609,7 @@ def get_psn_workbin_content_id(workbin_file):
 # Get psn fake.rif content id
 def get_psn_fakerif_content_id(fakerif_file):
     try:
-        with open(workbin_file, "rb") as f:
+        with open(fakerif_file, "rb") as f:
             f.seek(0x50)
             return f.read(0x24).decode("utf-8")
     except:
