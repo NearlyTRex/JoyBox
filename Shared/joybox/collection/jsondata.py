@@ -102,15 +102,6 @@ def create_game_json_file(
     if not success:
         return False
 
-    # Create json directory
-    success = fileops.make_directory(
-        src = paths.get_filename_directory(json_file_path),
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    if not success:
-        return False
-
     # Write json file
     success = serialization.write_json_file(
         src = json_file_path,

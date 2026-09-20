@@ -1368,7 +1368,10 @@ def diff_sync_files(
 
     # Upload files
     if files_to_upload:
-        final_upload_path = fileops.create_temporary_file(suffix = ".txt")
+        upload_path_ok, final_upload_path = fileops.create_temporary_file(suffix = ".txt")
+        if not upload_path_ok:
+            logger.log_error("Failed to create temporary file")
+            return False
         serialization.write_text_file(final_upload_path, "\n".join(files_to_upload))
         logger.log_info("Uploading %d files to remote..." % len(files_to_upload))
         if not upload_files_to_remote(
@@ -1386,7 +1389,10 @@ def diff_sync_files(
     # Download or recycle files
     if files_to_download:
         if recycle_missing:
-            final_recycle_path = fileops.create_temporary_file(suffix = ".txt")
+            recycle_path_ok, final_recycle_path = fileops.create_temporary_file(suffix = ".txt")
+            if not recycle_path_ok:
+                logger.log_error("Failed to create temporary file")
+                return False
             serialization.write_text_file(final_recycle_path, "\n".join(files_to_download))
             logger.log_info("Recycling %d files on remote (moving to %s)..." % (len(files_to_download), recycle_folder))
             if not recycle_files_on_remote(
@@ -1400,7 +1406,10 @@ def diff_sync_files(
                 exit_on_failure = exit_on_failure):
                 return False
         else:
-            final_download_path = fileops.create_temporary_file(suffix = ".txt")
+            download_path_ok, final_download_path = fileops.create_temporary_file(suffix = ".txt")
+            if not download_path_ok:
+                logger.log_error("Failed to create temporary file")
+                return False
             serialization.write_text_file(final_download_path, "\n".join(files_to_download))
             logger.log_info("Downloading %d files from remote..." % len(files_to_download))
             if not download_files_from_remote(

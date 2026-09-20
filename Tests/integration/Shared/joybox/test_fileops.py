@@ -78,6 +78,51 @@ def test_a_temporary_directory_is_created_and_usable():
     fileops.remove_directory(temp_dir)
 
 
+def test_a_temporary_file_is_created_and_usable():
+    created, temp_file = fileops.create_temporary_file(suffix = ".txt")
+
+    assert created is True
+    assert os.path.isfile(temp_file)
+    assert temp_file.endswith(".txt")
+
+    fileops.remove_file(temp_file)
+
+
+def test_the_temporary_helpers_report_the_same_way():
+    # Both are unpacked as a pair by their callers, and one of them returning
+    # a bare path would be read as a two character path.
+    file_result = fileops.create_temporary_file()
+    dir_result = fileops.create_temporary_directory()
+
+    assert isinstance(file_result, tuple) and len(file_result) == 2
+    assert isinstance(dir_result, tuple) and len(dir_result) == 2
+    assert file_result[0] is True and dir_result[0] is True
+
+    fileops.remove_file(file_result[1])
+    fileops.remove_directory(dir_result[1])
+
+
+def test_two_temporary_files_do_not_collide():
+    first_ok, first = fileops.create_temporary_file()
+    second_ok, second = fileops.create_temporary_file()
+
+    assert first != second
+
+    fileops.remove_file(first)
+    fileops.remove_file(second)
+
+
+@pytest.mark.parametrize("creator", [
+    fileops.create_temporary_file,
+    fileops.create_temporary_directory,
+])
+def test_pretending_creates_nothing_temporary(creator):
+    created, result = creator(pretend_run = True)
+
+    assert created is False
+    assert not os.path.exists(result)
+
+
 ###########################################################
 # Editing
 ###########################################################

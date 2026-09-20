@@ -472,7 +472,10 @@ class RemoteBackend(LockerBackend):
                 for rel in src_rels:
                     logger.log_info("Would upload: %s" % rel)
                 return (dest_rels, [])
-            files_from = fileops.create_temporary_file(suffix = ".txt")
+            files_from_ok, files_from = fileops.create_temporary_file(suffix = ".txt")
+            if not files_from_ok:
+                logger.log_error("Failed to create temporary file")
+                return ([], dest_rels)
             try:
                 serialization.write_text_file(files_from, "\n".join(src_rels))
                 ok = sync.upload_files_to_remote(
@@ -624,7 +627,10 @@ class RemoteBackend(LockerBackend):
             target_rel = (paths.join_paths(dir_rel, enc_name) if dir_rel else enc_name).replace("\\", "/")
 
         # Create a temporary file list for the recycle operation
-        temp_file = fileops.create_temporary_file(suffix = ".txt")
+        temp_file_ok, temp_file = fileops.create_temporary_file(suffix = ".txt")
+        if not temp_file_ok:
+            logger.log_error("Failed to create temporary file")
+            return False
         serialization.write_text_file(temp_file, target_rel)
 
         # Recycle files

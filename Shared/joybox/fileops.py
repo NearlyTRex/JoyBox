@@ -313,7 +313,9 @@ def create_temporary_file(suffix = "", prefix = "tmp", verbose = False, pretend_
             temp_file = tf.name
         if verbose:
             logger.log_info("Created temporary file %s" % temp_file)
-    return temp_file
+    if not os.path.isfile(temp_file):
+        return (False, "Unable to create temporary file")
+    return (True, temp_file)
 
 # Create symlink
 def create_symlink(

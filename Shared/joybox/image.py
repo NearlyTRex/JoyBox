@@ -130,8 +130,11 @@ def convert_image_data_to_format(
     exit_on_failure = False):
 
     # Create temporary files for conversion
-    temp_input = fileops.create_temporary_file(suffix=".tmp")
-    temp_output = fileops.create_temporary_file(suffix=target_format.cval())
+    temp_input_ok, temp_input = fileops.create_temporary_file(suffix=".tmp")
+    temp_output_ok, temp_output = fileops.create_temporary_file(suffix=target_format.cval())
+    if not temp_input_ok or not temp_output_ok:
+        logger.log_error("Failed to create temporary file")
+        return None
 
     # Write original image data to temp file
     with open(temp_input, "wb") as f:

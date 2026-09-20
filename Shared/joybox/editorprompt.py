@@ -20,12 +20,12 @@ def open_editor(
         editor = environment.get_editor()
 
     # Create temp file
-    temp_path = fileops.create_temporary_file(
+    temp_path_ok, temp_path = fileops.create_temporary_file(
         suffix = suffix,
         prefix = prefix,
         verbose = verbose,
         pretend_run = pretend_run)
-    if not temp_path:
+    if not temp_path_ok:
         logger.log_error("Failed to create temporary file")
         return None
 
