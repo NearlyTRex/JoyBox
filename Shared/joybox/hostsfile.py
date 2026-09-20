@@ -9,6 +9,7 @@ import os
 
 # Local imports
 import joybox.logger as logger
+import joybox.serialization as serialization
 import joybox.settings as settings
 import joybox.textblock as textblock
 from joybox import platform_info
@@ -50,32 +51,20 @@ def build_entries(address, domain, subdomains = None):
 
 # Read the hosts file
 def read_hosts(hosts_file = None, verbose = False, exit_on_failure = False):
-    hosts_file = hosts_file or get_hosts_file()
-    try:
-        with open(hosts_file, "r", encoding = "utf-8") as handle:
-            return handle.read()
-    except Exception as e:
-        if exit_on_failure:
-            logger.log_error("Unable to read %s" % hosts_file)
-            logger.log_error(e, quit_program = True)
-        return None
+    return serialization.read_text_file(
+        hosts_file or get_hosts_file(),
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
 
 # Write the hosts file
 def write_hosts(contents, hosts_file = None, verbose = False, pretend_run = False,
                 exit_on_failure = False):
-    hosts_file = hosts_file or get_hosts_file()
-    try:
-        if verbose:
-            logger.log_info("Writing %s" % hosts_file)
-        if not pretend_run:
-            with open(hosts_file, "w", encoding = "utf-8") as handle:
-                handle.write(contents)
-        return True
-    except Exception as e:
-        if exit_on_failure:
-            logger.log_error("Unable to write %s" % hosts_file)
-            logger.log_error(e, quit_program = True)
-        return False
+    return serialization.write_text_file(
+        hosts_file or get_hosts_file(),
+        contents,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
 
 # Check if the managed entries are present
 def has_entries(hosts_file = None):

@@ -1,7 +1,5 @@
-# Imports
-import os
-
 # Local imports
+import joybox.serialization as serialization
 from joybox import platform_info
 
 ###########################################################
@@ -535,9 +533,10 @@ def generate_default_config_content(sections = None):
         content += "\n"
     return content
 
-def create_default_config_file(path, sections = None):
-    config_dir = os.path.dirname(path)
-    if config_dir:
-        os.makedirs(config_dir, exist_ok = True)
-    with open(path, "w") as f:
-        f.write(generate_default_config_content(sections))
+def create_default_config_file(path, sections = None, verbose = False, pretend_run = False, exit_on_failure = False):
+    return serialization.write_text_file(
+        src = path,
+        contents = generate_default_config_content(sections),
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)

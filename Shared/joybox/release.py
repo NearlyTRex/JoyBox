@@ -9,6 +9,7 @@ import joybox.environment as environment
 import joybox.fileops as fileops
 import joybox.archive as archive
 import joybox.programs as programs
+import joybox.serialization as serialization
 import joybox.strings as strings
 import joybox.webpage as webpage
 import joybox.network as network
@@ -497,6 +498,22 @@ def download_webpage_release(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
+# Resolve a source patch entry to its filename and contents
+def resolve_patch_entry(patch_entry, verbose = False, exit_on_failure = False):
+    patch_file = patch_entry.get("file", "")
+    patch_content = patch_entry.get("content", "")
+    patch_path = patch_entry.get("path", "")
+    if len(patch_path) and os.path.isfile(patch_path):
+        patch_content = serialization.read_text_file(
+            src = patch_path,
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)
+        if patch_content is None:
+            return None, None
+        if not patch_file:
+            patch_file = os.path.basename(patch_path)
+    return patch_file, patch_content
+
 # Build from source
 def build_from_source(
     release_url = "",
@@ -608,16 +625,13 @@ def build_from_source(
     # Apply source patches
     if isinstance(source_patches, list) and len(source_patches):
         for patch_entry in source_patches:
-            patch_file = patch_entry.get("file", "")
-            patch_content = patch_entry.get("content", "")
-            patch_path = patch_entry.get("path", "")
-
-            # Load patch content from file if path is provided
-            if len(patch_path) and os.path.isfile(patch_path):
-                with open(patch_path, "r") as f:
-                    patch_content = f.read()
-                if not patch_file:
-                    patch_file = os.path.basename(patch_path)
+            patch_file, patch_content = resolve_patch_entry(
+                patch_entry = patch_entry,
+                verbose = verbose,
+                exit_on_failure = exit_on_failure)
+            if patch_file is None:
+                logger.log_error("Unable to read patch file '%s'" % patch_entry.get("path", ""))
+                return None
 
             if len(patch_file) and len(patch_content):
 

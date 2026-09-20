@@ -259,3 +259,76 @@ def test_webpage_install_options_are_passed_through(webpage_url, downloads):
 
     assert downloads[0]["install_files"] == ["tool"]
     assert downloads[0]["installer_type"] == "inno"
+
+
+###########################################################
+# Source patches
+#
+# A patch entry either carries its content inline or names a file to read it
+# from. An unreadable named file has to stop the build rather than silently
+# apply nothing.
+###########################################################
+
+PATCH_BODY = "--- a/main.c\n+++ b/main.c\n"
+
+
+def test_an_inline_patch_is_used_as_it_stands():
+    entry = {"file": "fix.patch", "content": PATCH_BODY}
+
+    assert release.resolve_patch_entry(entry) == ("fix.patch", PATCH_BODY)
+
+
+def test_a_named_patch_file_is_read(tmp_path):
+    patch_path = tmp_path / "fix.patch"
+    patch_path.write_text(PATCH_BODY)
+
+    name, content = release.resolve_patch_entry({"path": str(patch_path)})
+
+    assert content == PATCH_BODY
+
+
+def test_a_named_patch_file_supplies_the_filename(tmp_path):
+    patch_path = tmp_path / "fix.patch"
+    patch_path.write_text(PATCH_BODY)
+
+    name, content = release.resolve_patch_entry({"path": str(patch_path)})
+
+    assert name == "fix.patch"
+
+
+def test_an_explicit_filename_wins_over_the_path(tmp_path):
+    patch_path = tmp_path / "fix.patch"
+    patch_path.write_text(PATCH_BODY)
+
+    name, content = release.resolve_patch_entry(
+        {"path": str(patch_path), "file": "renamed.patch"})
+
+    assert name == "renamed.patch"
+
+
+def test_a_named_patch_file_overrides_inline_content(tmp_path):
+    patch_path = tmp_path / "fix.patch"
+    patch_path.write_text(PATCH_BODY)
+
+    name, content = release.resolve_patch_entry(
+        {"path": str(patch_path), "content": "inline"})
+
+    assert content == PATCH_BODY
+
+
+def test_a_missing_patch_file_falls_back_to_inline_content(tmp_path):
+    entry = {"path": str(tmp_path / "absent.patch"), "content": "inline", "file": "a.patch"}
+
+    assert release.resolve_patch_entry(entry) == ("a.patch", "inline")
+
+
+def test_an_unreadable_patch_file_resolves_to_nothing(tmp_path, monkeypatch):
+    patch_path = tmp_path / "fix.patch"
+    patch_path.write_text(PATCH_BODY)
+    monkeypatch.setattr(release.serialization, "read_text_file", lambda *a, **k: None)
+
+    assert release.resolve_patch_entry({"path": str(patch_path)}) == (None, None)
+
+
+def test_an_empty_entry_resolves_to_empty_strings():
+    assert release.resolve_patch_entry({}) == ("", "")

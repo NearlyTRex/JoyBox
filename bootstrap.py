@@ -85,7 +85,8 @@ def main():
     if not os.path.exists(config_file) and not is_info_only:
         if args.action == "setup":
             logger.log_info(f"Config file '{config_file}' not found; creating it with defaults")
-            default_settings.create_default_config_file(config_file)
+            if not default_settings.create_default_config_file(config_file):
+                logger.log_error_and_quit(f"Unable to create config file '{config_file}'")
             logger.log_info(f"Created '{config_file}' — edit it to change any values, then re-run if needed")
         else:
             logger.log_error_and_quit(f"Config file '{config_file}' does not exist")
