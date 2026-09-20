@@ -33,7 +33,29 @@ for _path in (TESTS_DIR, SHARED_DIR, BOOTSTRAP_DIR):
 ###########################################################
 
 @pytest.fixture(scope = "session", autouse = True)
-def session_settings_file(tmp_path_factory):
+def session_home(tmp_path_factory):
+    # Anything resolved from the home directory - the output log the logger
+    # opens on first use, the cookie jar, the installed tool paths - otherwise
+    # comes from the developer's own home, so the suite both reads and writes
+    # the machine it runs on. A test that cares about the home sets its own;
+    # this is only the floor.
+    #
+    # Tools are found under the home too, so this makes the requires_tool
+    # integration tests skip exactly as they do on a clean checkout. Set
+    # JOYBOX_TESTS_REAL_HOME=1 to run those against the real installation.
+    if os.environ.get("JOYBOX_TESTS_REAL_HOME"):
+        yield os.path.expanduser("~")
+        return
+    home = str(tmp_path_factory.mktemp("session_home"))
+    patcher = pytest.MonkeyPatch()
+    patcher.setenv("HOME", home)
+    patcher.setenv("USERPROFILE", home)
+    yield home
+    patcher.undo()
+
+
+@pytest.fixture(scope = "session", autouse = True)
+def session_settings_file(tmp_path_factory, session_home):
     from joybox import settings, default_settings
 
     config_path = os.path.join(str(tmp_path_factory.mktemp("settings")), "JoyBox.ini")
