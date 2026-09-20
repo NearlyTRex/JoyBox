@@ -341,6 +341,8 @@ HELP = """
 # Handle one slash command. Returns False when the session should end.
 def handle_command(line, session, say, warn, window_override = 0):
     parts = line.strip().split(maxsplit = 1)
+    if not parts:
+        return True
     command = parts[0]
     argument = parts[1].strip() if len(parts) > 1 else ""
 
@@ -427,9 +429,13 @@ def handle_command(line, session, say, warn, window_override = 0):
     # Save transcript
     elif command == "/save":
         target = argument or "transcript.md"
-        with open(target, "w", encoding = "utf-8") as handle:
-            handle.write(session.transcript())
-        say(f"  wrote {target}")
+        try:
+            with open(target, "w", encoding = "utf-8") as handle:
+                handle.write(session.transcript())
+        except OSError as error:
+            warn(f"  could not write {target}: {error}")
+        else:
+            say(f"  wrote {target}")
 
     # List tokens
     elif command == "/tokens":
