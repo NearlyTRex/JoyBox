@@ -29,7 +29,7 @@ class Connection:
     def set_environment(self, env):
         self.options.env = env
 
-    def set_environmentVar(self, var, value):
+    def set_environment_var(self, var, value):
         self.options.env[var] = value
 
     def unset_environment_var(self, var):
@@ -238,7 +238,7 @@ class Connection:
                 code = self.run_return_code([
                     "powershell",
                     "-Command",
-                    f'[Environment]::set_environmentVariable("PATH", "{new_paths_escaped}", "User")'
+                    f'[Environment]::SetEnvironmentVariable("PATH", "{new_paths_escaped}", "User")'
                 ])
                 return code == 0
             return True

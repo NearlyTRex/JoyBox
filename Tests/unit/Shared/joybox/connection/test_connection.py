@@ -145,14 +145,14 @@ def test_the_working_directory_is_set():
 
 def test_an_environment_variable_is_set():
     conn = Connection()
-    conn.set_environmentVar("DEBIAN_FRONTEND", "noninteractive")
+    conn.set_environment_var("DEBIAN_FRONTEND", "noninteractive")
 
     assert conn.get_options().env["DEBIAN_FRONTEND"] == "noninteractive"
 
 
 def test_an_environment_variable_is_unset():
     conn = Connection()
-    conn.set_environmentVar("TOKEN", "secret")
+    conn.set_environment_var("TOKEN", "secret")
     conn.unset_environment_var("TOKEN")
 
     assert "TOKEN" not in conn.get_options().env
@@ -166,7 +166,7 @@ def test_unsetting_a_missing_variable_raises():
 
 def test_the_whole_environment_is_replaced():
     conn = Connection()
-    conn.set_environmentVar("OLD", "1")
+    conn.set_environment_var("OLD", "1")
     conn.set_environment({"NEW": "2"})
 
     assert conn.get_options().env == {"NEW": "2"}
@@ -175,7 +175,7 @@ def test_the_whole_environment_is_replaced():
 def test_two_connections_do_not_share_an_environment():
     first = Connection()
     second = Connection()
-    first.set_environmentVar("TOKEN", "secret")
+    first.set_environment_var("TOKEN", "secret")
 
     assert "TOKEN" not in second.get_options().env
 

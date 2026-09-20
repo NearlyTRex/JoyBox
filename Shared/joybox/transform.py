@@ -235,7 +235,7 @@ def transform_xbox_disc_image(
 ###########################################################
 
 # Transform PS3 disc image
-def TransformPS3DiscImage(
+def transform_ps3_disc_image(
     source_file,
     source_file_dkey,
     output_dir,
@@ -310,7 +310,7 @@ def TransformPS3DiscImage(
 ###########################################################
 
 # Transform PS3 network package
-def TransformPS3NetworkPackage(
+def transform_ps3_network_package(
     source_file,
     output_dir,
     verbose = False,
@@ -493,7 +493,7 @@ def transform_game_file(
             exit_on_failure = exit_on_failure)
         if not iso_success:
             return (False, iso_result)
-        transform_success, transform_result = TransformPS3DiscImage(
+        transform_success, transform_result = transform_ps3_disc_image(
             source_file = iso_result,
             source_file_dkey = paths.join_paths(source_dir, game_info.get_key_file()),
             output_dir = paths.join_paths(tmp_dir_result, "output"),
@@ -505,7 +505,7 @@ def transform_game_file(
 
     # Sony PlayStation Network - PlayStation 3
     elif game_subcategory == config.Subcategory.SONY_PLAYSTATION_NETWORK_PS3:
-        transform_success, transform_result = TransformPS3NetworkPackage(
+        transform_success, transform_result = transform_ps3_network_package(
             source_file = paths.join_paths(source_dir, game_info.get_transform_file()),
             output_dir = tmp_dir_result,
             verbose = verbose,

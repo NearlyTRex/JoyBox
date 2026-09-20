@@ -1,5 +1,6 @@
 # Imports
 import ast
+import re
 import importlib
 import inspect
 import os
@@ -166,3 +167,34 @@ def test_no_statement_is_unreachable(module_name, path):
     offenders = unreachable_offenders(tree)
 
     assert not offenders, f"{module_name} has unreachable statements: {offenders}"
+
+
+###########################################################
+# Naming
+###########################################################
+
+SNAKE_CASE = re.compile(r"^_?[a-z][a-z0-9_]*$")
+
+
+def non_snake_case_functions(tree):
+    offenders = []
+    for node in ast.walk(tree):
+        if not isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
+            continue
+        if node.name.startswith("__") and node.name.endswith("__"):
+            continue
+        if not SNAKE_CASE.match(node.name):
+            offenders.append("line %d: %s" % (node.lineno, node.name))
+    return offenders
+
+
+@pytest.mark.parametrize("module_name,path", MODULES, ids = MODULE_IDS)
+def test_every_function_is_snake_case(module_name, path):
+    # The tree is snake_case throughout. A stray camelCase name is usually a
+    # partly applied rename, and one of those reached into a string literal.
+    with open(path, "r", encoding = "utf-8") as handle:
+        tree = ast.parse(handle.read())
+
+    offenders = non_snake_case_functions(tree)
+
+    assert not offenders, f"{module_name} has non snake_case functions: {offenders}"

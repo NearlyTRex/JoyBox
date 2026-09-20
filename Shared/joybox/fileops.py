@@ -180,7 +180,7 @@ def lowercase_all_paths(src, verbose = False, pretend_run = False, exit_on_failu
     try:
         if verbose:
             logger.log_info("Lowercasing all paths in directory %s" % src)
-        def onFoundItems(root, items):
+        def on_found_items(root, items):
             for name in items:
                 if not pretend_run:
                     before = os.path.join(root, name)
@@ -188,8 +188,8 @@ def lowercase_all_paths(src, verbose = False, pretend_run = False, exit_on_failu
                     if before != after:
                         os.rename(before, after)
         for root, dirs, files in os.walk(src, topdown = False):
-            onFoundItems(root, dirs)
-            onFoundItems(root, files)
+            on_found_items(root, dirs)
+            on_found_items(root, files)
         return True
     except Exception as e:
         if exit_on_failure:
@@ -622,7 +622,7 @@ def remove_directory_contents(src, verbose = False, pretend_run = False, exit_on
                 for f in files:
                     os.unlink(os.path.join(root, f))
                 for d in dirs:
-                    def onError(func, path, exc):
+                    def on_error(func, path, exc):
                         excvalue = exc[1]
                         if func in (os.rmdir, os.remove) and excvalue.errno == errno.EACCES:
                             os.chmod(path, stat.S_IRWXU | stat.S_IRWXG | stat.S_IRWXO)
@@ -630,7 +630,7 @@ def remove_directory_contents(src, verbose = False, pretend_run = False, exit_on
                         else:
                             raise
                     if not os.path.islink(os.path.join(root, d)):
-                        shutil.rmtree(os.path.join(root, d), ignore_errors=False, onerror=onError)
+                        shutil.rmtree(os.path.join(root, d), ignore_errors=False, onerror=on_error)
         return True
     except Exception as e:
         if exit_on_failure:

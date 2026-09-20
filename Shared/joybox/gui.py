@@ -296,7 +296,7 @@ def display_loading_window(
             pass
 
     # Task that will keep the window open until it is done
-    def doTask():
+    def do_task():
         if callable(run_func):
             if run_func_args:
                 return run_func(run_func_args)
@@ -304,7 +304,7 @@ def display_loading_window(
                 return run_func()
 
     # Run task in the background and wait for it to be completed
-    window.perform_long_operation(doTask, "TASK_COMPLETE")
+    window.perform_long_operation(do_task, "TASK_COMPLETE")
 
     # Handle events
     while True:

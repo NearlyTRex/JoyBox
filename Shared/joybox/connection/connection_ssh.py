@@ -118,7 +118,7 @@ class ConnectionSSH(connection.Connection):
             return self.handle_error("Unable to resolve remote home directory", e, return_value = None)
         return self.remote_home_directory
 
-    def ProcessCommand(self, cmd):
+    def process_command(self, cmd):
         parts = []
         if self.options.env:
             env_vars = " ".join([f"export {key}={shlex.quote(value)}" for key, value in self.options.env.items()])
@@ -141,7 +141,7 @@ class ConnectionSSH(connection.Connection):
             if self.flags.verbose:
                 self.print_command(cmd)
             if not self.flags.pretend_run:
-                cmd = self.ProcessCommand(cmd)
+                cmd = self.process_command(cmd)
                 stdin, stdout, stderr = ConnectionSSH.ssh_client.exec_command(
                     command = cmd,
                     get_pty = self.options.shell)
@@ -169,7 +169,7 @@ class ConnectionSSH(connection.Connection):
             if self.flags.verbose:
                 self.print_command(cmd)
             if not self.flags.pretend_run:
-                cmd = self.ProcessCommand(cmd)
+                cmd = self.process_command(cmd)
                 stdin, stdout, stderr = ConnectionSSH.ssh_client.exec_command(
                     command = cmd,
                     get_pty = self.options.shell)
@@ -192,7 +192,7 @@ class ConnectionSSH(connection.Connection):
             if self.flags.verbose:
                 self.print_command(cmd)
             if not self.flags.pretend_run:
-                cmd = self.ProcessCommand(cmd)
+                cmd = self.process_command(cmd)
                 stdin, stdout, stderr = ConnectionSSH.ssh_client.exec_command(
                     command = cmd,
                     get_pty = self.options.shell)
@@ -217,7 +217,7 @@ class ConnectionSSH(connection.Connection):
             if self.flags.verbose:
                 self.print_command(cmd)
             if not self.flags.pretend_run:
-                cmd = self.ProcessCommand(cmd)
+                cmd = self.process_command(cmd)
                 channel = ConnectionSSH.ssh_client.invoke_shell()
                 channel.settimeout(5.0)
                 channel.send(cmd + "\n")
