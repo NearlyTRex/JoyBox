@@ -53,6 +53,9 @@ def create_iso(
         create_command += ["-volid", volume_name]
     if paths.is_path_valid(source_dir):
         create_command += [source_dir]
+    for extra_source_dir in source_dirs:
+        if paths.is_path_valid(extra_source_dir):
+            create_command += [extra_source_dir]
 
     # Run create command
     code = command.run_returncode_command(
@@ -85,6 +88,11 @@ def extract_iso(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
+
+    # Check source
+    if not paths.is_path_file(iso_file):
+        logger.log_error("Iso file '%s' was not found" % iso_file)
+        return False
 
     # Try extracting as an archive first
     success = archive.extract_archive(
@@ -144,7 +152,7 @@ def extract_iso(
             exit_on_failure = exit_on_failure)
 
     # Check result
-    return os.path.exists(extract_dir)
+    return paths.does_directory_contain_files(extract_dir)
 
 # Get actual mount point
 def get_actual_mount_point(

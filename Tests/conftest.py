@@ -96,3 +96,33 @@ def isolated_settings(tmp_path):
 def recording_connection():
     from fakes import RecordingConnection
     return RecordingConnection()
+
+
+###########################################################
+# External tools
+###########################################################
+
+@pytest.fixture
+def recording_command(monkeypatch):
+    # Records what a wrapper would run instead of running it. Every disc image
+    # wrapper goes through joybox.command, so this is the one seam.
+    from fakes import RecordingCommand
+    return RecordingCommand(monkeypatch)
+
+
+def tool_path(name):
+    from joybox import programs
+    try:
+        if not programs.is_tool_installed(name):
+            return None
+        return programs.get_tool_program(name)
+    except Exception:
+        return None
+
+
+@pytest.fixture
+def requires_tool(request):
+    for marker in request.node.iter_markers("requires_tool"):
+        for name in marker.args:
+            if not tool_path(name):
+                pytest.skip("%s is not installed" % name)

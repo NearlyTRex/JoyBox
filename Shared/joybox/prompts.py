@@ -40,8 +40,9 @@ def prompt_for_choice(description, choices = [], default_value = None):
         value = prompt_for_value(description, default_value)
         if not isinstance(value, str):
             continue
-        if value.strip().lower() in choices:
-            return value
+        normalized = value.strip().lower()
+        if normalized in choices:
+            return normalized
         logger.log_warning("Entered value '%s' was not a valid choice, please try again" % value)
 
 # Prompt for an existing file path

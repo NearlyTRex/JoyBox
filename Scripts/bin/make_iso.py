@@ -103,7 +103,6 @@ def main():
             iso.create_iso(
                 iso_file = output_file,
                 source_dir = extracted_dir,
-                work_dir = extracted_dir,
                 volume_name = volume_name,
                 delete_original = args.delete_originals,
                 verbose = args.verbose,

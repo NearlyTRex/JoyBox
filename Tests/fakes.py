@@ -282,3 +282,61 @@ class RecordingInstaller:
 
     def restore(self):
         return self._record("restore")
+
+
+###########################################################
+# Command recorder
+#
+# External tool wrappers build an argument list and hand it to joybox.command.
+# Recording that list pins the whole invocation without running anything.
+###########################################################
+
+class RecordingCommand:
+
+    def __init__(self, monkeypatch, returncode = 0, output = ""):
+        from joybox import command
+
+        self.calls = []
+        self.returncode = returncode
+        self.output = output
+
+        def run_returncode_command(cmd, options = None, **kwargs):
+            self.calls.append({"cmd": list(cmd), "options": options, "kwargs": kwargs})
+            return self.returncode
+
+        def run_output_command(cmd, options = None, **kwargs):
+            self.calls.append({"cmd": list(cmd), "options": options, "kwargs": kwargs})
+            return self.output
+
+        def run_checked_command(cmd, options = None, **kwargs):
+            self.calls.append({"cmd": list(cmd), "options": options, "kwargs": kwargs})
+            return self.returncode == 0
+
+        for name, replacement in [
+            ("run_returncode_command", run_returncode_command),
+            ("run_output_command", run_output_command),
+            ("run_checked_command", run_checked_command),
+        ]:
+            if hasattr(command, name):
+                monkeypatch.setattr(command, name, replacement)
+
+    # The single recorded command, failing loudly when there was not exactly one
+    def only(self):
+        assert len(self.calls) == 1, "expected one command, recorded %d" % len(self.calls)
+        return self.calls[0]["cmd"]
+
+    # The recorded command as one string, for substring checks
+    def text(self, index = 0):
+        return " ".join(str(part) for part in self.calls[index]["cmd"])
+
+    # The value following a flag, so order changes are caught but position is not asserted
+    def value_after(self, flag, index = 0):
+        cmd = self.calls[index]["cmd"]
+        position = cmd.index(flag)
+        return cmd[position + 1]
+
+    def options(self, index = 0):
+        return self.calls[index]["options"]
+
+    def ran(self):
+        return len(self.calls) > 0
