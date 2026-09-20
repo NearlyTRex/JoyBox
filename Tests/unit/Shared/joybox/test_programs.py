@@ -160,3 +160,246 @@ def test_the_merged_emulator_config_covers_every_emulator():
 
     assert isinstance(merged, dict)
     assert len(merged) > 0
+
+
+###########################################################
+# Config lookup
+#
+# Program configs are nested by name, then key, then optionally platform.
+# A lookup that misses returns None rather than raising, because most keys are
+# declared by only some programs.
+###########################################################
+
+SAMPLE_CONFIG = {
+    "SampleTool": {
+        "program": {"linux": "SampleTool/linux/tool", "windows": "SampleTool\\tool.exe"},
+        "config_file": "SampleTool/config.ini",
+        "run_sandboxed": {"linux": False, "windows": True},
+        "lib32": ["a.dll", "b.dll"],
+    },
+}
+
+
+def test_a_platform_value_is_selected():
+    assert programs.get_config_value(SAMPLE_CONFIG, "SampleTool", "program", "linux") == \
+        "SampleTool/linux/tool"
+
+
+def test_another_platform_selects_its_own_value():
+    assert programs.get_config_value(SAMPLE_CONFIG, "SampleTool", "program", "windows") == \
+        "SampleTool\\tool.exe"
+
+
+def test_a_flat_value_is_returned_as_is():
+    assert programs.get_config_value(SAMPLE_CONFIG, "SampleTool", "config_file", "linux") == \
+        "SampleTool/config.ini"
+
+
+def test_a_list_value_is_returned_whole():
+    assert programs.get_config_value(SAMPLE_CONFIG, "SampleTool", "lib32", "linux") == \
+        ["a.dll", "b.dll"]
+
+
+def test_an_unlisted_platform_returns_the_whole_mapping():
+    # Callers that understand the shape can still pick from it.
+    built = programs.get_config_value(SAMPLE_CONFIG, "SampleTool", "program", "beos")
+
+    assert built == SAMPLE_CONFIG["SampleTool"]["program"]
+
+
+def test_an_unknown_program_has_no_value():
+    assert programs.get_config_value(SAMPLE_CONFIG, "Absent", "program", "linux") is None
+
+
+def test_an_unknown_key_has_no_value():
+    assert programs.get_config_value(SAMPLE_CONFIG, "SampleTool", "absent", "linux") is None
+
+
+def test_a_false_value_is_preserved():
+    # run_sandboxed is explicitly false on native builds, which is not the
+    # same as being unset.
+    assert programs.get_config_value(SAMPLE_CONFIG, "SampleTool", "run_sandboxed", "linux") is False
+
+
+###########################################################
+# Path composition
+###########################################################
+
+def test_a_relative_path_is_placed_under_the_base():
+    built = programs.get_path_config_value(
+        SAMPLE_CONFIG, "/tools", "SampleTool", "config_file", "linux")
+
+    assert built == "/tools/SampleTool/config.ini"
+
+
+def test_an_absolute_existing_path_is_left_alone(tmp_path):
+    target = tmp_path / "tool"
+    target.write_text("x")
+    config_with_absolute = {"SampleTool": {"program": str(target)}}
+    built = programs.get_path_config_value(
+        config_with_absolute, "/tools", "SampleTool", "program", "linux")
+
+    assert built == str(target)
+
+
+def test_a_missing_key_composes_no_path():
+    assert programs.get_path_config_value(
+        SAMPLE_CONFIG, "/tools", "SampleTool", "absent", "linux") is None
+
+
+def test_a_program_is_the_program_key():
+    built = programs.get_program(SAMPLE_CONFIG, "/tools", "SampleTool", "linux")
+
+    assert built == "/tools/SampleTool/linux/tool"
+
+
+###########################################################
+# Classifying a program path
+#
+# These decide whether a command being run is one of JoyBox's own programs,
+# which in turn decides whether it is wrapped for a prefix.
+###########################################################
+
+@pytest.fixture
+def known_tool():
+    for tool in programs.get_tools():
+        path = programs.get_tool_program(tool.get_name())
+        if path and os.path.exists(path):
+            return tool.get_name(), path
+    pytest.skip("no installed tool to classify")
+
+
+def test_a_tool_path_is_recognised_as_a_tool(known_tool):
+    # Returning the negation here made every path look like a tool, and no
+    # tool look like one.
+    name, path = known_tool
+
+    assert programs.is_program_path_tool(path) is True
+
+
+def test_a_tool_path_is_not_an_emulator(known_tool):
+    name, path = known_tool
+
+    assert programs.is_program_path_emulator(path) is False
+
+
+def test_an_unrelated_path_is_neither():
+    assert programs.is_program_path_tool("/usr/bin/ls") is False
+    assert programs.is_program_path_emulator("/usr/bin/ls") is False
+
+
+def test_a_missing_path_is_neither(tmp_path):
+    absent = str(tmp_path / "absent")
+
+    assert programs.is_program_path_tool(absent) is False
+    assert programs.is_program_path_emulator(absent) is False
+
+
+@pytest.mark.parametrize("value", [None, ""])
+def test_an_empty_path_is_neither(value):
+    assert programs.is_program_path_tool(value) is False
+    assert programs.is_program_path_emulator(value) is False
+
+
+def test_a_tool_name_is_derived_from_its_path(known_tool):
+    name, path = known_tool
+
+    assert programs.derive_tool_name_from_program_path(path) == name
+
+
+def test_an_unrelated_path_derives_no_tool_name():
+    assert programs.derive_tool_name_from_program_path("/usr/bin/ls") is None
+
+
+def test_a_missing_path_derives_no_tool_name(tmp_path):
+    assert programs.derive_tool_name_from_program_path(str(tmp_path / "absent")) is None
+
+
+###########################################################
+# Sandboxing
+#
+# run_sandboxed is declared per platform, and native linux builds set it to
+# false. Asking whether the key exists is not the same as asking what it says.
+###########################################################
+
+def test_a_tool_sandboxed_on_this_platform_is_reported(monkeypatch):
+    monkeypatch.setattr(
+        programs, "get_tool_config_value", lambda name, key, platform = None: True)
+
+    assert programs.is_program_name_sandboxed_tool("SampleTool") is True
+
+
+def test_a_tool_not_sandboxed_on_this_platform_is_not(monkeypatch):
+    monkeypatch.setattr(
+        programs, "get_tool_config_value", lambda name, key, platform = None: False)
+
+    assert programs.is_program_name_sandboxed_tool("SampleTool") is False
+
+
+def test_a_tool_that_never_declares_sandboxing_is_not(monkeypatch):
+    monkeypatch.setattr(
+        programs, "get_tool_config_value", lambda name, key, platform = None: None)
+
+    assert programs.is_program_name_sandboxed_tool("SampleTool") is False
+
+
+def test_an_emulator_not_sandboxed_on_this_platform_is_not(monkeypatch):
+    monkeypatch.setattr(
+        programs, "get_emulator_config_value", lambda name, key, platform = None: False)
+
+    assert programs.is_program_name_sandboxed_emulator("SampleEmulator") is False
+
+
+def test_the_name_and_path_forms_agree(monkeypatch, known_tool):
+    name, path = known_tool
+
+    assert programs.is_program_name_sandboxed_tool(name) == \
+        programs.is_program_path_sandboxed_tool(path)
+
+
+def test_an_unrelated_path_is_not_a_sandboxed_program():
+    assert programs.is_program_path_sandboxed_tool("/usr/bin/ls") is False
+    assert programs.is_program_path_sandboxed_emulator("/usr/bin/ls") is False
+
+
+###########################################################
+# Install state
+###########################################################
+
+def test_an_installed_tool_is_reported_installed(known_tool):
+    name, path = known_tool
+
+    assert programs.is_tool_installed(name) is True
+
+
+def test_an_unknown_tool_is_not_installed():
+    assert programs.is_tool_installed("NotARealTool") is False
+
+
+def test_an_unknown_emulator_is_not_installed():
+    assert programs.is_emulator_installed("NotARealEmulator") is False
+
+
+###########################################################
+# Library directories
+###########################################################
+
+def test_a_library_install_dir_sits_under_the_tools_root(monkeypatch):
+    monkeypatch.setattr(programs.environment, "get_tools_root_dir", lambda: "/tools")
+
+    assert programs.get_library_install_dir("DXVK") == "/tools/DXVK"
+
+
+def test_a_library_install_dir_can_be_platform_specific(monkeypatch):
+    monkeypatch.setattr(programs.environment, "get_tools_root_dir", lambda: "/tools")
+
+    assert programs.get_library_install_dir("DXVK", "linux") == "/tools/DXVK/linux"
+
+
+def test_a_library_backup_dir_is_separate_from_its_install_dir(monkeypatch):
+    monkeypatch.setattr(programs.environment, "get_tools_root_dir", lambda: "/tools")
+    monkeypatch.setattr(
+        programs.environment, "get_locker_program_tool_dir",
+        lambda name, platform = None: "/locker/Programs/Tools/" + name)
+
+    assert programs.get_library_install_dir("DXVK") != programs.get_library_backup_dir("DXVK")

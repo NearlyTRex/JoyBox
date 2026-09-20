@@ -224,22 +224,26 @@ def is_emulator_installed(emulator_name, emulator_platform = None):
 # Determine if program path is a tool
 def is_program_path_tool(program_path, program_platform = None):
     tool_name = derive_tool_name_from_program_path(program_path, program_platform)
-    return tool_name is None
+    return tool_name is not None
 
 # Determine if program path is an emulator
 def is_program_path_emulator(program_path, program_platform = None):
     emulator_name = derive_emulator_name_from_program_path(program_path, program_platform)
-    return emulator_name is None
+    return emulator_name is not None
 
 # Determine if program name is a sandboxed tool
 def is_program_name_sandboxed_tool(program_name, program_platform = None):
     tool_config = get_tool_config_value(program_name, "run_sandboxed", program_platform)
-    return tool_config is not None
+    if tool_config:
+        return tool_config
+    return False
 
 # Determine if program name is a sandboxed emulator
 def is_program_name_sandboxed_emulator(program_name, program_platform = None):
     emulator_config = get_emulator_config_value(program_name, "run_sandboxed", program_platform)
-    return emulator_config is not None
+    if emulator_config:
+        return emulator_config
+    return False
 
 # Determine if program path is a sandboxed tool
 def is_program_path_sandboxed_tool(program_path, program_platform = None):
