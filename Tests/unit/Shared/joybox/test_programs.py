@@ -200,7 +200,7 @@ def test_a_list_value_is_returned_whole():
         ["a.dll", "b.dll"]
 
 
-def test_an_unlisted_platform_returns_the_whole_mapping():
+def test_an_unlisted_platform_returns_the_mapping_itself():
     # Callers that understand the shape can still pick from it.
     built = programs.get_config_value(SAMPLE_CONFIG, "SampleTool", "program", "beos")
 

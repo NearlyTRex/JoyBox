@@ -253,6 +253,7 @@ def chmod_file_or_directory(src, perms, dperms = None, verbose = False, pretend_
             if os.path.isfile(src):
                 os.chmod(src, int(str(perms), base=8))
             elif os.path.isdir(src):
+                os.chmod(src, int(str(dperms if dperms else perms), base=8))
                 for root, dirs, files in os.walk(src):
                     for f in files:
                         os.chmod(os.path.join(root, f), int(str(perms), base=8))

@@ -117,3 +117,33 @@ double needs to do the same.
 - Nothing exercises a real remote deploy. `Bootstrap/scripts/verify_hardening.sh`
   covers that against the rehearsal VM — see
   [local testing](../Bootstrap/docs/local-testing.md).
+
+## Large test files
+
+A test file that outgrows roughly 900 lines becomes a place where a second
+definition of the same name goes unnoticed, and the second one silently wins.
+When that happens, split the file into a directory of the same name:
+
+```
+unit/Shared/joybox/test_sync.py
+```
+
+becomes
+
+```
+unit/Shared/joybox/test_sync/
+    conftest.py        fixtures shared by the files beside it
+    sync_helpers.py    constants and plain helpers, imported by name
+    test_naming.py
+    test_flags.py
+    test_transfers.py
+    ...
+```
+
+One file per area of the module under test. Fixtures go in `conftest.py`,
+where pytest finds them automatically. Constants and plain functions go in a
+helpers module beside it, imported by name — `conftest.py` adds its own
+directory to `sys.path` so that import resolves.
+
+`unit/test_suite.py` enforces this: it fails on a file over the size limit, on
+any name defined twice in one file, and on a repeated module level constant.

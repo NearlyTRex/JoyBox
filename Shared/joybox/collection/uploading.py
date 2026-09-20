@@ -96,6 +96,8 @@ def upload_all_game_files(
                         verbose = verbose,
                         pretend_run = pretend_run,
                         exit_on_failure = exit_on_failure)
+                    if not success:
+                        return False
 
     # Should be successful
     return True

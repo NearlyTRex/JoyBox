@@ -339,3 +339,42 @@ def test_every_predicate_returns_a_boolean(module_name, path):
     offenders = non_boolean_predicate_returns(tree)
 
     assert not offenders, f"{module_name}: {offenders}"
+
+
+###########################################################
+# Unchecked results
+###########################################################
+
+RESULT_NAMES = {"success", "code", "result", "ok"}
+
+
+def unchecked_result_assignments(tree):
+    offenders = []
+    for func in ast.walk(tree):
+        if not isinstance(func, (ast.FunctionDef, ast.AsyncFunctionDef)):
+            continue
+        assigns = {}
+        for node in ast.walk(func):
+            if isinstance(node, ast.Assign) and isinstance(node.value, ast.Call):
+                for target in node.targets:
+                    if isinstance(target, ast.Name) and target.id in RESULT_NAMES:
+                        assigns.setdefault(target.id, node.lineno)
+        reads = {node.id for node in ast.walk(func)
+                 if isinstance(node, ast.Name) and isinstance(node.ctx, ast.Load)}
+        for name, line in assigns.items():
+            if name not in reads:
+                offenders.append("line %d: %s() assigns %s and never reads it"
+                                 % (line, func.name, name))
+    return offenders
+
+
+@pytest.mark.parametrize("module_name,path", MODULES, ids = MODULE_IDS)
+def test_no_result_is_assigned_and_ignored(module_name, path):
+    # A batch that captures each step's result and then returns True anyway
+    # reports success for a run that failed partway through.
+    with open(path, "r", encoding = "utf-8") as handle:
+        tree = ast.parse(handle.read())
+
+    offenders = unchecked_result_assignments(tree)
+
+    assert not offenders, f"{module_name}: {offenders}"
