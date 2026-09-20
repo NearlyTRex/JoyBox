@@ -147,7 +147,7 @@ def get_archive_checksums(archive_file):
                         continue
                     entry = {}
                     entry["path"] = info.filename
-                    entry["crc"] = hex(info.CRC)
+                    entry["crc"] = "%08x" % info.CRC
                     checksums.append(entry)
     return checksums
 

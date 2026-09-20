@@ -2,11 +2,13 @@
 import zlib
 import hashlib
 
-# Calculate string crc32
+# Calculate string crc32.
+# Rendered the way a dat file stores one - eight lowercase hex digits, zero
+# padded, no prefix - so a value can be compared against one without reformatting.
 def calculate_string_crc32(string):
     if isinstance(string, str):
         string = string.encode("utf8")
-    return "%x" % zlib.crc32(string)
+    return "%08x" % zlib.crc32(string)
 
 # Calculate string md5
 def calculate_string_md5(string):

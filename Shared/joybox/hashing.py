@@ -53,7 +53,7 @@ def calculate_file_crc32(
                     read_size += len(chunk)
                     percent_done = int(round(100 * read_size / total_size))
                     logger.log_percent_complete(percent_done)
-            return "%x" % checksum
+            return "%08x" % checksum
     except Exception as e:
         if exit_on_failure:
             logger.log_error("Unable to calculate crc32 for %s" % src)
@@ -542,12 +542,14 @@ def convert_to_full_hash_entry(hash_data):
         full_data["size_enc"] = 0
     return full_data
 
-# Check if file needs to be hashed (based on mtime/size comparison)
-def does_file_need_to_be_hashed(src, base_path, hash_contents = {}):
+# Check if file needs to be hashed (based on mtime/size comparison).
+# The manifest key and the path on disk differ when an offset is in play, so
+# file_path overrides what is joined to base_path.
+def does_file_need_to_be_hashed(src, base_path, hash_contents = {}, file_path = None):
     if src not in hash_contents:
         return True
     try:
-        input_file_fullpath = paths.join_paths(base_path, src)
+        input_file_fullpath = paths.join_paths(base_path, src if file_path is None else file_path)
         current_size = paths.get_file_size(input_file_fullpath)
         current_mtime = paths.get_file_mod_time(input_file_fullpath)
         existing = hash_contents[src]
@@ -710,7 +712,7 @@ def hash_files(
             hash_key = file_path
 
         # Check if file needs to be hashed
-        if not does_file_need_to_be_hashed(hash_key, base_path, hash_contents):
+        if not does_file_need_to_be_hashed(hash_key, base_path, hash_contents, file_path = file_path):
             if verbose:
                 logger.log_info("Skipping (unchanged): %s" % file_path)
             continue
