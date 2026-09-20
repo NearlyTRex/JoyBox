@@ -697,7 +697,10 @@ def is_path_valid(path):
         else:
             drive = ""
         parts = pathlib.Path(path).parts
-        check_list = [os.path.join(*parts), *parts]
+        if not parts:
+            check_list = [path]
+        else:
+            check_list = [os.path.join(*parts), *parts]
         for x in check_list:
             try:
                 os.lstat(drive + x)
