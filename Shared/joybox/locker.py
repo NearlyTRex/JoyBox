@@ -380,7 +380,12 @@ def copy_to_locker_encrypted(
             exit_on_failure = exit_on_failure)
 
     # Create temp directory for encrypted file
-    temp_dir = fileops.create_temporary_directory()
+    temp_dir_success, temp_dir = fileops.create_temporary_directory(
+        verbose = verbose,
+        pretend_run = pretend_run)
+    if not temp_dir_success:
+        logger.log_error("Unable to create temporary directory")
+        return False
     try:
         encrypted_file = paths.join_paths(temp_dir, paths.get_filename_file(src) + ".enc")
         success = cryption.encrypt_file(
@@ -407,7 +412,7 @@ def copy_to_locker_encrypted(
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
     finally:
-        fileops.remove_directory(temp_dir)
+        fileops.remove_directory(temp_dir, verbose = verbose, pretend_run = pretend_run)
 
 ###########################################################
 # Backup (copy source to all configured lockers)
@@ -506,7 +511,7 @@ def backup(
 
     # Delete source afterwards if requested
     if delete_afterwards and all_success:
-        fileops.remove_path(src, verbose=verbose, pretend_run=pretend_run)
+        fileops.remove_file_or_directory(src, verbose = verbose, pretend_run = pretend_run)
 
     # Should be successful
     logger.log_info("Backup completed successfully")

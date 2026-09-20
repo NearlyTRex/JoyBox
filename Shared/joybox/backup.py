@@ -413,7 +413,7 @@ def archive_folder(
 
     # Get paths
     tmp_archive_file = paths.join_paths(tmp_dir_result, archive_basename + archive_ext)
-    out_archive_file = paths.join_paths(output_base_path, base_obj, archive_basename + archive_ext)
+    out_archive_file = paths.join_paths(output_path, archive_basename + archive_ext)
 
     # Archive files
     success = archive.create_archive_from_folder(
@@ -501,8 +501,8 @@ def archive_sub_folders(
                 archive_ext = archive_type.cval()
 
                 # Get paths
-                tmp_archive_file = paths.join_paths(tmp_dir_result, archive_basename + "." + archive_ext)
-                out_archive_file = paths.join_paths(output_base_path, base_obj, archive_basename + "." + archive_ext)
+                tmp_archive_file = paths.join_paths(tmp_dir_result, archive_basename + archive_ext)
+                out_archive_file = paths.join_paths(output_base_path, base_obj, archive_basename + archive_ext)
 
                 # Archive subdirectory
                 success = archive.create_archive_from_folder(

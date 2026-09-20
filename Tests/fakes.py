@@ -346,3 +346,154 @@ class RecordingCommand:
 
     def ran(self):
         return len(self.calls) > 0
+
+
+###########################################################
+# SSH client double
+#
+# ConnectionSSH talks to a remote machine through paramiko: commands over
+# exec_command, files over sftp. Faking the client is the only way to drive
+# the transport without a server, and the command it would have sent is the
+# thing worth asserting on.
+###########################################################
+
+class FakeSFTP:
+
+    def __init__(self, files = None, home = "/home/deploy"):
+        self.files = dict(files or {})
+        self.home = home
+        self.written = {}
+        self.made_directories = []
+        self.uploaded = []
+        self.closed = False
+
+    def normalize(self, path):
+        return self.home
+
+    def stat(self, path):
+        if path not in self.files and path not in self.written:
+            raise FileNotFoundError(path)
+        return object()
+
+    def mkdir(self, path):
+        self.made_directories.append(path)
+        self.files[path] = ""
+
+    def put(self, local, remote):
+        self.uploaded.append((local, remote))
+
+    def file(self, path, mode = "r"):
+        return FakeRemoteFile(self, path, mode)
+
+    def close(self):
+        self.closed = True
+
+
+class FakeRemoteFile:
+
+    def __init__(self, sftp, path, mode):
+        self.sftp = sftp
+        self.path = path
+        self.mode = mode
+        self.buffer = ""
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *args):
+        if "w" in self.mode:
+            self.sftp.written[self.path] = self.buffer
+            self.sftp.files[self.path] = self.buffer
+        return False
+
+    def read(self):
+        if self.path not in self.sftp.files:
+            raise FileNotFoundError(self.path)
+        return self.sftp.files[self.path].encode("utf-8")
+
+    def write(self, contents):
+        self.buffer += contents
+
+    def flush(self):
+        pass
+
+
+class FakeChannel:
+
+    def __init__(self, exit_code = 0, output = b""):
+        self.exit_code = exit_code
+        self.chunks = [output] if output else []
+
+    def recv_exit_status(self):
+        return self.exit_code
+
+    def recv(self, size):
+        if self.chunks:
+            return self.chunks.pop(0)
+        return b""
+
+    def recv_ready(self):
+        return bool(self.chunks)
+
+    def exit_status_ready(self):
+        return not self.chunks
+
+    def settimeout(self, seconds):
+        pass
+
+    def send(self, data):
+        pass
+
+
+class FakeStream:
+
+    def __init__(self, contents = b"", channel = None):
+        self.contents = contents
+        self.channel = channel
+
+    def read(self):
+        return self.contents
+
+
+class FakeTransport:
+
+    def __init__(self, active = True):
+        self.active = active
+
+    def is_active(self):
+        return self.active
+
+
+class FakeSSHClient:
+
+    def __init__(self, output = b"", error = b"", exit_code = 0, sftp = None):
+        self.output = output
+        self.error = error
+        self.exit_code = exit_code
+        self.sftp = sftp if sftp is not None else FakeSFTP()
+        self.commands = []
+        self.ptys = []
+        self.closed = False
+
+    def exec_command(self, command, get_pty = False):
+        self.commands.append(command)
+        self.ptys.append(get_pty)
+        channel = FakeChannel(exit_code = self.exit_code, output = self.output)
+        return (None, FakeStream(self.output, channel), FakeStream(self.error))
+
+    def invoke_shell(self):
+        return FakeChannel(exit_code = self.exit_code, output = self.output)
+
+    def open_sftp(self):
+        return self.sftp
+
+    def get_transport(self):
+        return FakeTransport()
+
+    def close(self):
+        self.closed = True
+
+    # The single command sent, failing loudly when there was not exactly one
+    def only(self):
+        assert len(self.commands) == 1, "expected one command, sent %d" % len(self.commands)
+        return self.commands[0]

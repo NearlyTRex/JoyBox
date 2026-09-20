@@ -323,7 +323,7 @@ class ConnectionSSH(connection.Connection):
 
             # For sudo transfers, move from temp to actual destination
             if sudo:
-                self.run_blocking(["mv", temp_dest, actual_dest], sudo = True)
+                self.run_blocking([tools.get_move_tool(), temp_dest, actual_dest], sudo = True)
             return True
         except Exception as e:
             return self.handle_error(f"Failed to transfer {src} to {dest}", e, return_value = False)
@@ -357,7 +357,7 @@ class ConnectionSSH(connection.Connection):
                         remote_file.write(contents)
                         remote_file.flush()
                     sftp.close()
-                    self.run_blocking(["mv", temp_path, src], sudo = True)
+                    self.run_blocking([tools.get_move_tool(), temp_path, src], sudo = True)
                 else:
                     sftp = ConnectionSSH.ssh_client.open_sftp()
                     with sftp.file(src, "w") as remote_file:
