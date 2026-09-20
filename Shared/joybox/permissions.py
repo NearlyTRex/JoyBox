@@ -14,7 +14,7 @@ def is_user_root():
         try:
             import pyuac
             return pyuac.isUserAdmin()
-        except:
+        except Exception:
             return False
     else:
         return os.getuid() == 0
@@ -32,5 +32,5 @@ def run_as_root(func):
                 func()
         except ModuleNotFoundError as e:
             func()
-        except:
+        except Exception:
             raise

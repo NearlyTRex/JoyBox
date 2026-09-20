@@ -47,7 +47,7 @@ def clean_rich_text(text):
     try:
         import unidecode
         new_text = unidecode.unidecode(new_text)
-    except:
+    except Exception:
         pass
     for old, new in config.rich_text_replacements.items():
         new_text = new_text.replace(old, new)
@@ -66,7 +66,7 @@ def extract_web_text(text):
     try:
         import html_text
         return html_text.extract_text(text)
-    except:
+    except Exception:
         return None
 
 ###########################################################

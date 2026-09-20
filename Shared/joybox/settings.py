@@ -54,7 +54,7 @@ def get_sections(throw_exception = True):
     try:
         _ensure_loaded()
         return _parser.sections()
-    except:
+    except Exception:
         if throw_exception:
             raise RuntimeError("Unable to read settings sections [file=%s]" % _settings_file)
         return []
@@ -65,7 +65,7 @@ def get_fields(section, throw_exception = True):
         if section not in _parser:
             return []
         return list(_parser[section].keys())
-    except:
+    except Exception:
         if throw_exception:
             raise RuntimeError("Unable to read settings fields [file=%s][section=%s]" % (_settings_file, section))
         return []
@@ -74,7 +74,7 @@ def has_section(section, throw_exception = True):
     try:
         _ensure_loaded()
         return section in _parser
-    except:
+    except Exception:
         if throw_exception:
             raise RuntimeError("Unable to check settings section [file=%s][section=%s]" % (_settings_file, section))
         return False
@@ -83,7 +83,7 @@ def has_field(section, field, throw_exception = True):
     try:
         _ensure_loaded()
         return (section in _parser) and (field in _parser[section])
-    except:
+    except Exception:
         if throw_exception:
             raise RuntimeError("Unable to check settings field [file=%s][section=%s][field=%s]" % (_settings_file, section, field))
         return False
@@ -94,7 +94,7 @@ def get_value(section, field, default_value = None, throw_exception = True):
     try:
         _ensure_loaded()
         return _parser.get(section, field, fallback = default_value)
-    except:
+    except Exception:
         if throw_exception:
             raise RuntimeError("Unable to get settings value [file=%s][section=%s][field=%s]" % (_settings_file, section, field))
         return default_value
@@ -120,7 +120,7 @@ def get_integer_value(section, field, default_value = None, throw_exception = Tr
             return _coerce_integer(_overlay[(section, field)])
         _ensure_loaded()
         return _parser.getint(section, field, fallback = default_value)
-    except:
+    except Exception:
         if throw_exception:
             raise RuntimeError("Unable to get settings integer value [file=%s][section=%s][field=%s]" % (_settings_file, section, field))
         return default_value
@@ -131,7 +131,7 @@ def get_bool_value(section, field, default_value = None, throw_exception = True)
             return _coerce_bool(_overlay[(section, field)])
         _ensure_loaded()
         return _parser.getboolean(section, field, fallback = default_value)
-    except:
+    except Exception:
         if throw_exception:
             raise RuntimeError("Unable to get settings boolean value [file=%s][section=%s][field=%s]" % (_settings_file, section, field))
         return default_value
@@ -142,7 +142,7 @@ def get_path_value(section, field, default_value = None, throw_exception = True)
         if value is None:
             return default_value
         return os.path.expandvars(value)
-    except:
+    except Exception:
         if throw_exception:
             raise RuntimeError("Unable to get settings path value [file=%s][section=%s][field=%s]" % (_settings_file, section, field))
         return default_value
@@ -153,7 +153,7 @@ def get_list_value(section, field, delimiter = ",", default_value = None, throw_
         if value is None:
             return default_value
         return value.split(delimiter)
-    except:
+    except Exception:
         if throw_exception:
             raise RuntimeError("Unable to get settings list value [file=%s][section=%s][field=%s][delimiter=%s]" % (_settings_file, section, field, delimiter))
         return default_value

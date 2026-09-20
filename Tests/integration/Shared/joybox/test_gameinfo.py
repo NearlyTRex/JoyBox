@@ -218,11 +218,18 @@ def test_a_subvalue_is_written(tree):
     assert built.get_subvalue("steam", "appid") == "12345"
 
 
-def test_a_subvalue_needs_its_parent_key_to_exist(game):
-    # The parent is not created for you; callers such as set_env_var make it
-    # first, and set_default_subvalue checks for it.
+def test_a_subvalue_brings_its_parent_key_with_it(game):
+    # A write that landed nowhere read back exactly like one that worked.
     game.set_subvalue("steam", "appid", "12345")
 
+    assert game.has_key("steam") is True
+    assert game.get_subvalue("steam", "appid") == "12345"
+
+
+def test_a_default_subvalue_still_needs_its_parent(game):
+    # A default only makes sense for a store the game already has; callers
+    # such as set_env_var seed the parent themselves first.
+    assert game.set_default_subvalue("steam", "appid", "12345") is False
     assert game.has_key("steam") is False
 
 

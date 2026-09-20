@@ -175,7 +175,7 @@ def find_metadata_asset(
     elif value.isdigit():
         try:
             asset_link = search_results[int(value)].get_url()
-        except:
+        except Exception:
             pass
 
     # Return metadata

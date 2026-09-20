@@ -518,7 +518,7 @@ class AudioMetadata:
         try:
             audio = self.mp4_class(audio_file)
             return audio.tags is not None and len(audio.tags) > 0
-        except:
+        except Exception:
             return False
 
     def get_mp4_file_info(self, audio_file, verbose = False, exit_on_failure = False):

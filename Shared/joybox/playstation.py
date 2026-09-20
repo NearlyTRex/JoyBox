@@ -583,7 +583,7 @@ def get_psn_workbin_bytes_from_zrif_string(zrif_str):
         workbin_bytes = zrif_decompressor.decompress(zrif_str_bytes)
         workbin_bytes += zrif_decompressor.flush()
         return workbin_bytes
-    except:
+    except Exception:
         pass
     return None
 
@@ -593,7 +593,7 @@ def get_psn_package_content_id(pkg_file):
         with open(pkg_file, "rb") as f:
             f.seek(0x30)
             return f.read(0x24).decode("utf-8")
-    except:
+    except Exception:
         pass
     return None
 
@@ -603,7 +603,7 @@ def get_psn_workbin_content_id(workbin_file):
         with open(workbin_file, "rb") as f:
             f.seek(0x10)
             return f.read(0x24).decode("utf-8")
-    except:
+    except Exception:
         pass
     return None
 
@@ -613,7 +613,7 @@ def get_psn_fakerif_content_id(fakerif_file):
         with open(fakerif_file, "rb") as f:
             f.seek(0x50)
             return f.read(0x24).decode("utf-8")
-    except:
+    except Exception:
         pass
     return None
 

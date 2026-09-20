@@ -56,7 +56,7 @@ def build_locker_hash_map(
                 if verbose:
                     logger.log_info("Using cached hash map for %s (%.1f hours old)" % (locker_name, cache_age_hours))
                 return serialization.read_json_file(src = cache_file)
-        except:
+        except Exception:
             pass
 
     # Check if this is a remote that requires sidecar hashes (e.g., SFTP)

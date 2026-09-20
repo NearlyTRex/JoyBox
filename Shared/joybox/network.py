@@ -22,7 +22,7 @@ def is_url_reachable(url):
         import requests
         get = requests.get(url)
         return (get.status_code == 200)
-    except:
+    except Exception:
         return False
 
 # Get remote json

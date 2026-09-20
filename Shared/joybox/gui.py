@@ -292,7 +292,7 @@ def display_loading_window(
             image_obj = Image.open(image_file)
             image_obj.thumbnail((window_width, window_height / 2))
             window["image"].update(data = ImageTk.PhotoImage(image_obj))
-        except:
+        except Exception:
             pass
 
     # Task that will keep the window open until it is done

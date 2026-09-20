@@ -104,7 +104,7 @@ def create_command_list(cmd, style = "enclosed"):
 def clean_command_output(output):
     try:
         return output.decode("utf-8", "ignore")
-    except:
+    except Exception:
         return output
 
 ###########################################################

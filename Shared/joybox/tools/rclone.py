@@ -150,7 +150,7 @@ class RClone(toolbase.ToolBase):
         if hetzner_remote_config_str:
             try:
                 hetzner_remote_config = json.loads(hetzner_remote_config_str)
-            except:
+            except Exception:
                 pass
         hetzner_remote_host = hetzner_remote_config.get("host")
         hetzner_remote_user = hetzner_remote_config.get("user")

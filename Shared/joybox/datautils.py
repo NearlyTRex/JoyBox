@@ -25,7 +25,7 @@ def merge_dictionaries(dict1, dict2, merge_type = None):
                 return mergedeep.merge(dict1, dict2, strategy=mergedeep.Strategy.TYPESAFE_ADDITIVE)
             else:
                 return mergedeep.merge(dict1, dict2)
-        except:
+        except Exception:
             return dict1
     elif isinstance(dict1, dict) and not isinstance(dict2, dict):
         return dict1

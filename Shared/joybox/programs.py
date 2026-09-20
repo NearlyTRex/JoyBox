@@ -15,7 +15,7 @@ def get_config_value(program_config, program_name, program_key, program_platform
     program_value = None
     try:
         program_value = program_config[program_name][program_key]
-    except:
+    except Exception:
         pass
     if isinstance(program_value, dict):
         if program_platform in program_value.keys():

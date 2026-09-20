@@ -46,43 +46,47 @@ class JsonData:
     def has_key(self, key):
         try:
             return key in self.json_data
-        except:
+        except (TypeError, AttributeError):
             return False
 
     # Check if subkey is present
     def has_subkey(self, key, subkey):
         try:
             return subkey in self.json_data[key]
-        except:
+        except (KeyError, IndexError, TypeError, AttributeError):
             return False
 
     # Get value
     def get_value(self, key, default_value = None):
         try:
             return self.json_data[key]
-        except:
+        except (KeyError, IndexError, TypeError):
             return default_value
 
     # Get subvalue
     def get_subvalue(self, key, subkey, default_value = None):
         try:
             return self.json_data[key][subkey]
-        except:
+        except (KeyError, IndexError, TypeError):
             return default_value
 
     # Set value
     def set_value(self, key, value):
         try:
             self.json_data[key] = value
-        except:
-            return
+            return True
+        except (TypeError, AttributeError):
+            return False
 
     # Set subvalue
     def set_subvalue(self, key, subkey, value):
         try:
+            if not self.has_key(key):
+                self.json_data[key] = {}
             self.json_data[key][subkey] = value
-        except:
-            return
+            return True
+        except (KeyError, IndexError, TypeError, AttributeError):
+            return False
 
     # Fill value
     def fill_value(self, key, value):

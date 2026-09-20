@@ -22,7 +22,7 @@ def parse_page_source(contents, features = "lxml"):
     try:
         import bs4
         return bs4.BeautifulSoup(contents, features=features)
-    except:
+    except Exception:
         return None
 
 # Parse html page source

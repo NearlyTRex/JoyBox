@@ -77,12 +77,55 @@ def test_a_subvalue_is_written_under_an_existing_key():
     assert data.get_subvalue("store", "appid") == "1"
 
 
-def test_writing_a_subvalue_without_a_parent_is_a_silent_no_op():
-    # The parent key has to be created first; the KeyError is swallowed.
+def test_writing_a_subvalue_creates_its_parent():
+    # A write that lands nowhere reads back exactly like one that worked, so
+    # the parent is created rather than the error being swallowed.
     data = build()
-    data.set_subvalue("missing", "sub", "value")
 
-    assert data.get_data() == {}
+    assert data.set_subvalue("store", "appid", "1") is True
+    assert data.get_subvalue("store", "appid") == "1"
+
+
+def test_writing_a_subvalue_keeps_what_the_parent_already_held():
+    data = build({"store": {"appid": "1"}})
+    data.set_subvalue("store", "appname", "half-life-2")
+
+    assert data.get_subvalue("store", "appid") == "1"
+    assert data.get_subvalue("store", "appname") == "half-life-2"
+
+
+def test_writing_a_subvalue_into_something_that_cannot_hold_one_is_refused():
+    # Replacing the value would lose it; the write is reported as failed.
+    data = build({"store": "not a mapping"})
+
+    assert data.set_subvalue("store", "appid", "1") is False
+    assert data.get_value("store") == "not a mapping"
+
+
+def test_a_written_value_reports_that_it_was_stored():
+    data = build()
+
+    assert data.set_value("files", ["one"]) is True
+
+
+def test_a_value_that_cannot_be_stored_is_reported():
+    data = build()
+    data.set_data(["not", "a", "mapping"])
+
+    assert data.set_value("files", ["one"]) is False
+
+
+@pytest.mark.parametrize("reader,args", [
+    ("has_key", ("store",)),
+    ("has_subkey", ("store", "appid")),
+    ("get_value", ("store",)),
+    ("get_subvalue", ("store", "appid")),
+])
+def test_a_reader_survives_data_that_is_not_a_mapping(reader, args):
+    data = build()
+    data.set_data(None)
+
+    assert not getattr(data, reader)(*args)
 
 
 ###########################################################

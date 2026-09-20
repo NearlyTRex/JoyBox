@@ -170,6 +170,28 @@ def test_no_statement_is_unreachable(module_name, path):
     assert not offenders, f"{module_name} has unreachable statements: {offenders}"
 
 
+def bare_except_handlers(tree):
+    offenders = []
+    for node in ast.walk(tree):
+        if not isinstance(node, ast.ExceptHandler):
+            continue
+        if node.type is None:
+            offenders.append("line %d" % node.lineno)
+    return offenders
+
+
+@pytest.mark.parametrize("module_name,path", MODULES, ids = MODULE_IDS)
+def test_no_handler_catches_everything(module_name, path):
+    # A bare except also swallows KeyboardInterrupt and SystemExit, so a run
+    # cannot be interrupted and a deliberate exit inside the block is eaten.
+    with open(path, "r", encoding = "utf-8") as handle:
+        tree = ast.parse(handle.read())
+
+    offenders = bare_except_handlers(tree)
+
+    assert not offenders, f"{module_name} catches everything at: {offenders}"
+
+
 ###########################################################
 # Naming
 ###########################################################

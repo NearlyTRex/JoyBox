@@ -42,7 +42,7 @@ def assert_is_castable_to_int(var_value, var_name):
     test_value = None
     try:
         test_value = int(var_value)
-    except:
+    except Exception:
         pass
     assert type(test_value) == int, "%s should be castable to an integer" % var_name
 
@@ -60,7 +60,7 @@ def assert_is_castable_to_bool(var_value, var_name):
             text_value = str(var_value).strip().lower()
             if text_value in configparser.ConfigParser.BOOLEAN_STATES:
                 test_value = configparser.ConfigParser.BOOLEAN_STATES[text_value]
-        except:
+        except Exception:
             pass
     assert type(test_value) == bool, "%s should be castable to boolean" % var_name
 

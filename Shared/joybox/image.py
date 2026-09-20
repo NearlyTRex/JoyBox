@@ -15,7 +15,7 @@ def get_image_format(image_file):
             from PIL import Image
             with Image.open(image_file) as img:
                 return config.ImageFileType.from_string(img.format)
-        except:
+        except Exception:
             return None
     else:
         image_ext = paths.get_filename_extension(image_file).lower()

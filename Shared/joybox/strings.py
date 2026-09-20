@@ -36,7 +36,7 @@ def get_string_similarity_ratio(string1, string2):
     try:
         from thefuzz import fuzz
         return fuzz.ratio(string1, string2)
-    except:
+    except Exception:
         return 0
 
 # Check if strings are highly similar
@@ -109,7 +109,7 @@ def get_datetime_from_unknown_string(string):
     string = string.strip().lower()
     try:
         return date_parser.parse(string, fuzzy = True)
-    except:
+    except Exception:
         pass
 
     # Handle other patterns
@@ -160,7 +160,7 @@ def parse_timestamp(timestamp_string):
         else:
             dt = datetime.strptime(timestamp_string.strip(), "%Y-%m-%d %H:%M:%S")
             return int(dt.timestamp())
-    except:
+    except Exception:
         return 0
 
 # Get url scheme
