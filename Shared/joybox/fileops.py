@@ -250,6 +250,12 @@ def chmod_file_or_directory(src, perms, dperms = None, verbose = False, pretend_
         if verbose:
             logger.log_info("Changing permissions of %s to %s" % (src, str(perms)))
         if not pretend_run:
+            if not os.path.exists(src):
+                if exit_on_failure:
+                    logger.log_error("Unable to change permissions of %s to %s" % (src, str(perms)))
+                    logger.log_error("Path does not exist")
+                    runtime.quit_program()
+                return False
             if os.path.isfile(src):
                 os.chmod(src, int(str(perms), base=8))
             elif os.path.isdir(src):

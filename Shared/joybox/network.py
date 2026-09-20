@@ -206,7 +206,7 @@ def download_git_url(
     exit_on_failure = False):
 
     # Clear output dir
-    if clean:
+    if clean and paths.is_path_directory(output_dir):
         fileops.chmod_file_or_directory(
             src = output_dir,
             perms = 777,

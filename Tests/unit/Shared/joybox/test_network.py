@@ -604,6 +604,21 @@ def test_a_clean_clone_empties_the_destination_first(installed, recording_comman
     assert emptied == [str(target)]
 
 
+def test_a_first_clean_clone_has_nothing_to_clear(installed, recording_command, monkeypatch, tmp_path):
+    # The destination does not exist yet on a first clone, and clearing it
+    # would ask for permissions on a path that is not there.
+    def fail(**kwargs):
+        raise AssertionError("there is nothing to clear before a first clone")
+
+    monkeypatch.setattr(network.fileops, "chmod_file_or_directory", fail)
+    monkeypatch.setattr(network.fileops, "remove_directory_contents", fail)
+
+    network.download_git_url(
+        "https://example.test/repo.git", str(tmp_path / "absent"), clean = True)
+
+    assert recording_command.ran() is True
+
+
 def test_a_clone_that_produced_nothing_reports_failure(installed, recording_command, tmp_path):
     target = tmp_path / "repo"
     target.mkdir()
