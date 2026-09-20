@@ -659,7 +659,7 @@ def get_psn_package_info(
     info = {}
     for line in info_output.split("\n"):
         line_tokens = line.split(":")
-        if len(len_tokens) < 2:
+        if len(line_tokens) < 2:
             continue
         line_field = line_tokens[0].strip()
         line_value = line_tokens[1].strip()

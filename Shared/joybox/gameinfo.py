@@ -285,7 +285,7 @@ class GameInfo:
 
     # Get wrapped sub-value
     def get_wrapped_subvalue(self, key, subkey, default_value = None):
-        return jsondData.JsonData(self.get_subvalue(key, subkey, default_value))
+        return jsondata.JsonData(self.get_subvalue(key, subkey, default_value))
 
     # Set value
     def set_value(self, key, value):
@@ -738,10 +738,10 @@ class GameInfo:
                 runnable_files_likely.append(path_to_add)
 
             # Add to launch programs
-            for runnable_file_likely in runnable_files_likey:
+            for runnable_file_likely in runnable_files_likely:
                 runnable_program = computer.Program()
-                runnable_program.set_exe(paths.get_filename_file(runnable_file))
-                runnable_program.set_cwd(paths.get_filename_directory(runnable_file))
+                runnable_program.set_exe(paths.get_filename_file(runnable_file_likely))
+                runnable_program.set_cwd(paths.get_filename_directory(runnable_file_likely))
                 launch_programs.append(runnable_program)
 
             # Try to record these for later
@@ -788,7 +788,7 @@ class GameInfo:
             title_text = "Select Program",
             message_text = "Select program to run",
             button_text = "Run program",
-            run_func = HandleGameSelection)
+            run_func = handle_game_selection)
 
         # Return launch info
         return launch_program

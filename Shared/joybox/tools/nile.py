@@ -3,6 +3,7 @@ import joybox.config as config
 import joybox.logger as logger
 import joybox.network as network
 import joybox.programs as programs
+import joybox.release as release
 import joybox.toolbase as toolbase
 
 # Config files

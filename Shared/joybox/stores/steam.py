@@ -18,6 +18,7 @@ import joybox.strings as strings
 import joybox.metadataentry as metadataentry
 import joybox.manifest as manifest
 import joybox.modules as modules
+import joybox.backup as backup
 
 # Get steam page
 def get_steam_page(appid):

@@ -104,7 +104,7 @@ def main():
             message_text = "Json file '%s' failed to install" % paths.get_filename_file(json_file))
 
     # Install game addons
-    if install_addon_files:
+    if args.install_addon_files:
         success = collection.install_game_addons(
             game_info = game_info,
             verbose = args.verbose,

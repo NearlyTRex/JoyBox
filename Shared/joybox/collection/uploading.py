@@ -6,6 +6,7 @@ import joybox.environment as environment
 import joybox.cryption as cryption
 import joybox.locker as locker
 import joybox.lockerinfo as lockerinfo
+import joybox.gameinfo as gameinfo
 from .hashing import build_hash_files
 
 ############################################################

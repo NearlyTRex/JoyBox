@@ -574,7 +574,7 @@ def launch_computer_game(
         message_text = "Creating game prefix\n%s\n%s" % (game_info.get_name(), game_info.get_platform()),
         failure_text = "Unable to create game prefix",
         image_file = game_info.get_boxfront_asset(),
-        run_func = CreateGamePrefix)
+        run_func = create_game_prefix)
 
     # Build token map
     game_token_map = sandbox.build_token_map(

@@ -1013,7 +1013,7 @@ def create_sandboxie_prefix(
 
     # Set sandboxie param
     def set_sandboxie_box_param(options, param, value):
-        cmd = [sandboxie_ini_tool, "set", sandbox_options.get_prefix_name().val(), param, value]
+        cmd = [sandboxie_ini_tool, "set", options.get_prefix_name().val(), param, value]
         new_cmd, new_options = setup_prefix_environment(
             cmd = cmd,
             options = options,

@@ -175,7 +175,7 @@ def install_local_game(
             message_text = "Transforming and adding game to cache\n%s\n%s" % (game_name, game_platform),
             failure_text = "Unable to install game to cache",
             image_file = game_artwork,
-            run_func = InstallTransformedGame)
+            run_func = install_transformed_game)
     else:
 
         # Install game
@@ -191,7 +191,7 @@ def install_local_game(
             message_text = "Adding game to cache\n%s\n%s" % (game_name, game_platform),
             failure_text = "Unable to install game to cache",
             image_file = game_artwork,
-            run_func = InstallGame)
+            run_func = install_game)
 
     # Delete temporary directory
     fileops.remove_directory(

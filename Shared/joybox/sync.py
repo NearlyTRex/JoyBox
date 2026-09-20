@@ -425,7 +425,7 @@ def does_path_match_md5(
     exit_on_failure = False):
 
     # Get MD5 checksum from remote path
-    remote_md5 = GetFileMD5Sum(
+    remote_md5 = get_path_md5(
         remote_name = remote_name,
         remote_type = remote_type,
         remote_path = remote_path,

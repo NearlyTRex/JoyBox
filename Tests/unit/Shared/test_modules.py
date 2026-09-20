@@ -1,5 +1,6 @@
 # Imports
 import ast
+import builtins
 import re
 import importlib
 import inspect
@@ -198,3 +199,58 @@ def test_every_function_is_snake_case(module_name, path):
     offenders = non_snake_case_functions(tree)
 
     assert not offenders, f"{module_name} has non snake_case functions: {offenders}"
+
+
+###########################################################
+# Name resolution
+#
+# A name that is read but never bound anywhere in its file raises NameError
+# the first time that line runs. A partly applied rename leaves exactly this
+# shape: the definition moves, the reference does not.
+###########################################################
+
+BUILTIN_NAMES = set(dir(builtins)) | {"__file__", "__name__", "__doc__", "__package__"}
+
+
+def bound_names(tree):
+    bound = set(BUILTIN_NAMES)
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Import):
+            for alias in node.names:
+                bound.add(alias.asname or alias.name.split(".")[0])
+        elif isinstance(node, ast.ImportFrom):
+            for alias in node.names:
+                bound.add(alias.asname or alias.name)
+        elif isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
+            bound.add(node.name)
+        elif isinstance(node, ast.Name) and isinstance(node.ctx, (ast.Store, ast.Del)):
+            bound.add(node.id)
+        elif isinstance(node, ast.arg):
+            bound.add(node.arg)
+        elif isinstance(node, ast.ExceptHandler) and node.name:
+            bound.add(node.name)
+        elif isinstance(node, (ast.Global, ast.Nonlocal)):
+            bound.update(node.names)
+    return bound
+
+
+def unresolved_names(tree):
+    bound = bound_names(tree)
+    offenders = []
+    for node in ast.walk(tree):
+        if isinstance(node, ast.Name) and isinstance(node.ctx, ast.Load):
+            if node.id not in bound:
+                offenders.append("line %d: %s" % (node.lineno, node.id))
+    return offenders
+
+
+@pytest.mark.parametrize("module_name,path", MODULES, ids = MODULE_IDS)
+def test_every_name_resolves(module_name, path):
+    # Deliberately generous: a name bound anywhere in the file counts, so this
+    # only catches names with no binding at all.
+    with open(path, "r", encoding = "utf-8") as handle:
+        tree = ast.parse(handle.read())
+
+    offenders = unresolved_names(tree)
+
+    assert not offenders, f"{module_name} reads names that are never bound: {offenders}"

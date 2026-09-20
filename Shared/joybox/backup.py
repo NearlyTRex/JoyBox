@@ -438,7 +438,7 @@ def archive_folder(
 
     # Move archive
     success = fileops.smart_move(
-        src = tmp_dir_archive,
+        src = tmp_archive_file,
         dest = out_archive_file,
         show_progress = show_progress,
         skip_existing = skip_existing,

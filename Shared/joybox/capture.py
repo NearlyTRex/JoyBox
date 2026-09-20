@@ -23,7 +23,8 @@ def capture_screenshot(
     validation.assert_is_valid_path(output_file, "output_file")
 
     # Capture screenshot
-    screenshot = Pil.ImageGrab.grab()
+    from PIL import ImageGrab
+    screenshot = ImageGrab.grab()
     screenshot.save(output_file)
 
     # Check result

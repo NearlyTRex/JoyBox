@@ -49,7 +49,7 @@ def simple_launch(
             title_text = "Select Game",
             message_text = "Select game to run",
             button_text = "Run game",
-            run_func = HandleGameSelection)
+            run_func = handle_game_selection)
 
     # Nothing to run
     if len(selected_launch_file) == 0 and not game_launch_name:
