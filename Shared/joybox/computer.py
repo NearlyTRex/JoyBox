@@ -14,6 +14,7 @@ import joybox.archive as archive
 import joybox.display as display
 import joybox.install as install
 import joybox.gui as gui
+import joybox.logger as logger
 from joybox import platform_info
 
 # Program
@@ -138,13 +139,19 @@ class Program(jsondata.JsonData):
         exit_on_failure = False):
 
         # Get program info
-        program_exe = sandbox.resolve_path(self.get_exe(), token_map)
-        program_cwd = sandbox.resolve_path(self.get_cwd(), token_map)
+        program_exe = sandbox.resolve_path(self.get_exe() or "", token_map)
+        program_cwd = sandbox.resolve_path(self.get_cwd() or "", token_map)
         program_args = self.get_args()
         program_is_dos = self.is_dos()
         program_is_win31 = self.is_win31()
         program_is_scumm = self.is_scumm()
         program_is_windows = program_exe and not program_is_dos and not program_is_win31 and not program_is_scumm
+
+        # An entry with no executable and no emulated launch type names nothing
+        # to run, and every branch below would be skipped
+        if not program_is_dos and not program_is_win31 and not program_is_scumm and not program_is_windows:
+            logger.log_error("Unable to launch program, no executable and no dos, win31 or scumm launch type")
+            return False
         program_path = paths.join_paths(program_cwd, program_exe)
         if program_is_dos or program_is_win31:
             program_path = paths.join_paths(options.get_prefix_dos_c_drive(), program_cwd, program_exe)

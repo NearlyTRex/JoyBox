@@ -96,6 +96,26 @@ class Connection:
     def run_checked(self, cmd, sudo = False, throw_exception = False):
         return None
 
+    def get_home_directory(self):
+        return None
+
+    def get_path_separator(self):
+        return "/"
+
+    def resolve_home_path(self, src):
+        if not isinstance(src, str) or not src.startswith("~"):
+            return src
+        if len(src) > 1 and src[1] not in ("/", "\\"):
+            return src
+        home = self.get_home_directory()
+        if not home:
+            return src
+        separator = self.get_path_separator()
+        remainder = src[1:].lstrip("/\\")
+        if not remainder:
+            return home
+        return home.rstrip("/\\") + separator + remainder.replace("/", separator)
+
     def handle_error(self, message, error, return_value = False):
         if self.flags.exit_on_failure:
             logger.log_error(message)
@@ -206,8 +226,9 @@ class Connection:
                     "-Command",
                     '[Environment]::GetEnvironmentVariable("PATH", "User")'
                 ])
-                current_paths = current_path.split(";") if current_path else []
-                current_paths = [p.strip() for p in current_path.split(";") if p.strip()]
+                current_paths = []
+                if current_path:
+                    current_paths = [p.strip() for p in current_path.split(";") if p.strip()]
                 if src.strip() in current_paths:
                     return True
 
@@ -239,6 +260,8 @@ class Connection:
                 ]
 
                 # Get profile
+                profile_candidates = [
+                    self.resolve_home_path(candidate) for candidate in profile_candidates]
                 profile_file = profile_candidates[0]
                 for candidate in profile_candidates:
                     if self.does_file_or_directory_exist(candidate):

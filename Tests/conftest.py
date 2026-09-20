@@ -24,6 +24,65 @@ for _path in (TESTS_DIR, SHARED_DIR, BOOTSTRAP_DIR):
         sys.path.insert(0, _path)
 
 ###########################################################
+# Hermetic baseline
+#
+# joybox.settings resolves its file at import time, preferring ~/JoyBox.ini.
+# Left alone, every test reads whatever the developer happens to have
+# configured, and the same test passes here and fails on a clean checkout.
+# Point the whole session at a generated default config instead.
+###########################################################
+
+@pytest.fixture(scope = "session", autouse = True)
+def session_settings_file(tmp_path_factory):
+    from joybox import settings, default_settings
+
+    config_path = os.path.join(str(tmp_path_factory.mktemp("settings")), "JoyBox.ini")
+    default_settings.create_default_config_file(config_path)
+    settings.reset()
+    settings.set_settings_file(config_path)
+    return config_path
+
+
+@pytest.fixture(autouse = True)
+def no_outbound_network(monkeypatch, request):
+    # A test that quietly reaches the internet passes on a connected machine
+    # and fails in CI, and its result depends on a third party. Subprocess
+    # based tests are unaffected; this only closes the in-process path.
+    import socket
+
+    if request.node.get_closest_marker("allow_network"):
+        return
+
+    def refuse(*args, **kwargs):
+        raise RuntimeError(
+            "outbound network access is not available to tests; "
+            "mark the test with @pytest.mark.allow_network if it truly needs it")
+
+    monkeypatch.setattr(socket.socket, "connect", refuse)
+    monkeypatch.setattr(socket.socket, "connect_ex", refuse)
+    monkeypatch.setattr(socket, "create_connection", refuse)
+
+
+@pytest.fixture(scope = "session")
+def hermetic_home(tmp_path_factory, session_settings_file):
+    # A home directory for subprocesses, holding the same generated config so a
+    # script started from the tests never reads the developer's own.
+    import shutil
+
+    home = tmp_path_factory.mktemp("home")
+    shutil.copy(session_settings_file, os.path.join(str(home), "JoyBox.ini"))
+    return str(home)
+
+
+@pytest.fixture(scope = "session")
+def hermetic_env(hermetic_home):
+    env = dict(os.environ)
+    env["HOME"] = hermetic_home
+    env["USERPROFILE"] = hermetic_home
+    return env
+
+
+###########################################################
 # Path fixtures
 ###########################################################
 
@@ -71,7 +130,7 @@ def script_files(scripts_bin_dir):
 ###########################################################
 
 @pytest.fixture
-def isolated_settings(tmp_path):
+def isolated_settings(tmp_path, session_settings_file):
     from joybox import settings, default_settings
 
     config_path = os.path.join(str(tmp_path), "JoyBox.ini")
@@ -86,7 +145,10 @@ def isolated_settings(tmp_path):
 
     yield settings
 
+    # Put the session baseline back, or the next test reads a tmp_path that
+    # pytest has already taken away.
     settings.reset()
+    settings.set_settings_file(session_settings_file)
 
 ###########################################################
 # Connection double

@@ -282,3 +282,90 @@ def test_a_program_and_a_step_do_not_share_keys():
     step_entry.set_skip_identical(True)
 
     assert not (set(entry.get_data()) & set(step_entry.get_data()))
+
+
+###########################################################
+# Launch guard
+#
+# run() builds its command in four mutually exclusive branches. An entry that
+# matches none of them named nothing to run, and the code below assumed one had
+# been taken.
+###########################################################
+
+class FakeOptions:
+
+    def __init__(self):
+        self.blocking = []
+        self.forced = False
+
+    def copy(self):
+        return self
+
+    def set_blocking_processes(self, value):
+        self.blocking = value
+
+    def add_blocking_processes(self, value):
+        self.blocking += value
+
+    def set_force_prefix(self, value):
+        self.forced = value
+
+    def set_is_prefix_mapped_cwd(self, value):
+        pass
+
+    def set_cwd(self, value):
+        pass
+
+    def get_prefix_dos_c_drive(self):
+        return "/prefix/dos"
+
+    def get_prefix_c_drive_real(self):
+        return "/prefix/drive_c"
+
+
+def test_a_program_with_nothing_to_run_is_refused():
+    assert computer.Program().run(FakeOptions(), {}) is False
+
+
+def test_a_program_with_only_a_working_directory_is_refused():
+    entry = program(cwd = "Game")
+
+    assert entry.run(FakeOptions(), {}) is False
+
+
+def test_a_program_with_an_empty_executable_is_refused():
+    entry = program(exe = "", cwd = "Game")
+
+    assert entry.run(FakeOptions(), {}) is False
+
+
+def test_a_refused_program_does_not_reach_the_launcher(monkeypatch):
+    def fail(*args, **kwargs):
+        raise AssertionError("nothing should be launched")
+
+    monkeypatch.setattr(computer.command, "run_capture_command", fail)
+
+    assert computer.Program().run(FakeOptions(), {}) is False
+
+
+@pytest.mark.parametrize("setter", ["set_is_dos", "set_is_win31", "set_is_scumm"])
+def test_an_emulated_program_needs_no_executable(setter, monkeypatch):
+    # dos, win31 and scumm entries are launched through an emulator, so the
+    # guard must not reject them for having no windows executable.
+    captured = []
+    monkeypatch.setattr(
+        computer.command, "run_capture_command",
+        lambda **kwargs: captured.append(kwargs) or True)
+    monkeypatch.setattr(
+        computer.display, "restore_default_screen_resolution", lambda **kwargs: True)
+    for name in ["get_dos_launch_command", "get_win31_launch_command",
+                 "get_scumm_launch_command"]:
+        monkeypatch.setattr(computer.command, name, lambda **kwargs: ["emulator"])
+    monkeypatch.setattr(
+        computer.programs, "get_emulator_program", lambda name: "/tools/dosboxx")
+
+    entry = computer.Program()
+    getattr(entry, setter)(True)
+
+    assert entry.run(FakeOptions(), {}) is True
+    assert captured

@@ -17,13 +17,16 @@ import pytest
 HELP_TIMEOUT_SECONDS = 60
 
 
-def run_help(path, repo_root):
+def run_help(path, repo_root, env):
+    # The scripts resolve JoyBox.ini from the home directory at import time, so
+    # a run without a hermetic home reads the developer's own configuration.
     return subprocess.run(
         [sys.executable, path, "--help"],
         capture_output = True,
         text = True,
         timeout = HELP_TIMEOUT_SECONDS,
-        cwd = repo_root)
+        cwd = repo_root,
+        env = env)
 
 
 def script_parameters(scripts_bin_dir):
@@ -47,8 +50,8 @@ def pytest_generate_tests(metafunc):
 
 
 @pytest.mark.slow
-def test_help_exits_cleanly(script_name, script_path, repo_root):
-    result = run_help(script_path, repo_root)
+def test_help_exits_cleanly(script_name, script_path, repo_root, hermetic_env):
+    result = run_help(script_path, repo_root, hermetic_env)
 
     assert result.returncode == 0, (
         f"{script_name} --help exited {result.returncode}\n"
@@ -57,8 +60,8 @@ def test_help_exits_cleanly(script_name, script_path, repo_root):
 
 
 @pytest.mark.slow
-def test_help_does_not_traceback(script_name, script_path, repo_root):
-    result = run_help(script_path, repo_root)
+def test_help_does_not_traceback(script_name, script_path, repo_root, hermetic_env):
+    result = run_help(script_path, repo_root, hermetic_env)
     combined = result.stdout + result.stderr
 
     assert "Traceback (most recent call last)" not in combined, (
@@ -66,9 +69,9 @@ def test_help_does_not_traceback(script_name, script_path, repo_root):
 
 
 @pytest.mark.slow
-def test_help_describes_the_script(script_name, script_path, repo_root):
+def test_help_describes_the_script(script_name, script_path, repo_root, hermetic_env):
     # A missing usage line means the parser was never reached.
-    result = run_help(script_path, repo_root)
+    result = run_help(script_path, repo_root, hermetic_env)
     combined = result.stdout + result.stderr
 
     assert "usage:" in combined.lower(), \

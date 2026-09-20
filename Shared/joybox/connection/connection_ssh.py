@@ -61,6 +61,7 @@ class ConnectionSSH(connection.Connection):
         self.ssh_key_filepath = ssh_key_filepath
         self.ssh_key_str = ssh_key_str
         self.ssh_password = ssh_password
+        self.remote_home_directory = None
 
     def setup(self):
         _ensure_paramiko()
@@ -101,6 +102,21 @@ class ConnectionSSH(connection.Connection):
         except Exception as e:
             logger.log_error("Failed to close SSH connection")
             logger.log_error(e)
+
+    def get_home_directory(self):
+        if self.remote_home_directory:
+            return self.remote_home_directory
+        try:
+            if not ConnectionSSH.ssh_client:
+                return None
+            sftp = ConnectionSSH.ssh_client.open_sftp()
+            try:
+                self.remote_home_directory = sftp.normalize(".")
+            finally:
+                sftp.close()
+        except Exception as e:
+            return self.handle_error("Unable to resolve remote home directory", e, return_value = None)
+        return self.remote_home_directory
 
     def ProcessCommand(self, cmd):
         parts = []

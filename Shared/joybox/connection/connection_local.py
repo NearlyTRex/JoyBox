@@ -29,6 +29,12 @@ class ConnectionLocal(connection.Connection):
             "exit_on_failure": self.flags.exit_on_failure,
         }
 
+    def get_home_directory(self):
+        return runtime.get_home_directory()
+
+    def get_path_separator(self):
+        return os.sep
+
     def mark_command_as_sudo(self, cmd):
         if platform_info.is_linux_platform():
             return super().mark_command_as_sudo(cmd)
