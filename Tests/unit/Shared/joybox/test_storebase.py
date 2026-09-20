@@ -243,9 +243,6 @@ def test_repeated_calls_do_not_accumulate():
 # "cannot", not as a crash.
 ###########################################################
 
-from joybox import config, storebase
-
-
 class SampleStore(storebase.StoreBase):
 
     def get_name(self):

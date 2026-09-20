@@ -545,7 +545,7 @@ def verify_wiiu_nus_package(
 
     # Test decryption
     decryption_result = decrypt_wiiu_nus_package(
-        nus_package_dir = nus_package_dir,
+        nus_package_dir = tmp_dir_result,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -987,6 +987,8 @@ def install_switch_nsp(
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
+    if not success:
+        return False
 
     # Look at all the extracted nca files
     for nca_file in paths.build_file_list_by_extensions(tmp_dir_result, extensions = [".nca"]):

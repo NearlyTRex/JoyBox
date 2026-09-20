@@ -5,6 +5,7 @@ import os
 import pytest
 
 # Local imports
+from joybox import config
 from joybox.collection import saves
 
 
@@ -117,11 +118,6 @@ def test_packing_and_unpacking_disagree_about_a_live_directory(tmp_path):
 # archiver, because the failure that matters is an archive that is written but
 # cannot be read back.
 ###########################################################
-
-import os
-
-from joybox import config
-
 
 class FakeGameInfo:
 

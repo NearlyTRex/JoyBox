@@ -1,4 +1,8 @@
 # Imports
+import json
+import os
+
+# Third-party imports
 import pytest
 
 # Local imports
@@ -247,10 +251,6 @@ def test_two_sites_get_distinct_cookie_files(monkeypatch):
 # A scrape runs against a browser that can die mid-run. Every helper has to
 # survive a dead session rather than raising out through the scraper.
 ###########################################################
-
-import json
-import os
-
 
 class FakeDriver:
 

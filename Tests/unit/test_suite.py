@@ -86,6 +86,24 @@ def test_no_constant_is_assigned_twice(path):
 
 
 @pytest.mark.parametrize("path", TEST_FILES, ids = TEST_IDS)
+def test_module_imports_stay_at_the_top(path):
+    # An import buried between sections reads as belonging to that section,
+    # and the next file to be split moves the section without it.
+    tree = parsed(path)
+    first_statement = None
+    late = []
+    for node in tree.body:
+        if isinstance(node, (ast.Import, ast.ImportFrom)):
+            if first_statement is not None:
+                late.append("line %d" % node.lineno)
+        elif not (isinstance(node, ast.Expr) and isinstance(node.value, ast.Constant)):
+            if first_statement is None:
+                first_statement = node.lineno
+
+    assert not late, f"imported below the header: {late}"
+
+
+@pytest.mark.parametrize("path", TEST_FILES, ids = TEST_IDS)
 def test_a_test_file_stays_a_readable_size(path):
     # Past this, split it into a directory of the same name with one file per
     # area and shared helpers beside them.

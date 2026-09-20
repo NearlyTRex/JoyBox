@@ -2,9 +2,7 @@
 import zlib
 import hashlib
 
-# Calculate string crc32.
-# Rendered the way a dat file stores one - eight lowercase hex digits, zero
-# padded, no prefix - so a value can be compared against one without reformatting.
+# Calculate string crc32
 def calculate_string_crc32(string):
     if isinstance(string, str):
         string = string.encode("utf8")

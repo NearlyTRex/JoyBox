@@ -297,7 +297,8 @@ def extract_psn_pkg(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if code != 0:
-        logger.log_error("Unable to extract psn pkg '%s' to '%s'" % (pkg_file, extract_dir), quit_program = True)
+        if exit_on_failure:
+            logger.log_error("Unable to extract psn pkg '%s' to '%s'" % (pkg_file, extract_dir), quit_program = True)
         return False
 
     # Clean up
@@ -658,7 +659,7 @@ def get_psn_package_info(
     # Parse info
     info = {}
     for line in info_output.split("\n"):
-        line_tokens = line.split(":")
+        line_tokens = line.split(":", 1)
         if len(line_tokens) < 2:
             continue
         line_field = line_tokens[0].strip()

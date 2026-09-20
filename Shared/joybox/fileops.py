@@ -1129,7 +1129,12 @@ def sync_data(data_src, data_dest, verbose = False, pretend_run = False, exit_on
             src = data_src,
             dest = data_dest,
             verbose = verbose,
-            pretend_run = pretend_run)
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+    if exit_on_failure:
+        logger.log_error("Source %s does not exist, cannot sync" % data_src)
+        runtime.quit_program()
+    return False
 
 # Remove object
 # Remove a file or directory, expanding shell glob patterns in the source path.

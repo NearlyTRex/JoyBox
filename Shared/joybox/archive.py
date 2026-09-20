@@ -218,6 +218,8 @@ def check_archive_compression_output_files(
         output_files.append(archive_file)
 
     # Check output files
+    if len(output_files) == 0:
+        return False
     for output_file in output_files:
         if not os.path.exists(output_file):
             return False

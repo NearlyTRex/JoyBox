@@ -492,9 +492,9 @@ def unmount_directory(
     if not paths.is_path_valid(drive_path):
         return False
 
-    # Create symlink
+    # Remove the drive symlink, not what it points at
     return fileops.remove_symlink(
-        src = src,
+        src = drive_path,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -691,7 +691,7 @@ def get_prefix_path_info(
             else:
                 path_drive_letter = "z"
             path_drive_offset = new_path[len(paths.get_directory_anchor(new_path)):]
-            path_drive_base = get_wine_real_drive_path(new_options.get_prefix_dir(), path_drive_letter)
+            path_drive_base = get_wine_real_drive_path(new_options, path_drive_letter)
 
         # Sandboxie
         elif new_options.is_sandboxie_prefix():
@@ -699,10 +699,10 @@ def get_prefix_path_info(
             path_drive_offset = new_path[len(paths.get_directory_anchor(new_path)):]
             path_drive_extra = paths.normalize_file_path(paths.join_paths("Users", getpass.getuser()), separator = config.os_pathsep)
             if path_drive_offset.startswith(path_drive_extra):
-                path_drive_base = get_sandboxie_user_profile_path(new_options.get_prefix_dir())
+                path_drive_base = get_sandboxie_user_profile_path(new_options)
                 path_drive_offset = path_drive_offset[len(path_drive_extra + config.os_pathsep):]
             else:
-                path_drive_base = get_sandboxie_real_drive_path(new_options.get_prefix_dir(), path_drive_letter)
+                path_drive_base = get_sandboxie_real_drive_path(new_options, path_drive_letter)
 
         # Neither
         else:
