@@ -84,7 +84,9 @@ autoinstall_signing_fingerprint = 843938DF228D22F7B3742BC0D94AA3F0EFE21092
 ```
 
 That fingerprint is the **Ubuntu CD Image Automatic Signing Key (2012)**, which still signs
-current releases. The keyring is the one the `ubuntu-keyring` package installs, so the key comes
+current releases — the test suite keeps a real signed listing for each release it claims to cover
+and checks the shipped fingerprint against every one of them, so a key rotation shows up as a
+failing test rather than as a build that stops working. The keyring is the one the `ubuntu-keyring` package installs, so the key comes
 from the distribution rather than from the same server as the image.
 
 A keyring holds every key its distribution trusts, so a valid signature alone is not enough — the
