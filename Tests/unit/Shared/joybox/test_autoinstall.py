@@ -369,3 +369,304 @@ def test_every_known_boot_configuration_is_looked_for():
     assert any(path.endswith("grub.cfg") for path in found)
     assert any(path.endswith("loopback.cfg") for path in found)
     assert any(path.endswith("txt.cfg") for path in found)
+
+
+###########################################################
+# Verifying the download
+#
+# The image arrives over the network and is then booted on a machine that
+# installs itself from it. A truncated or substituted image is only noticed
+# once it is already running, so it is checked first.
+###########################################################
+
+CHECKSUM = "9bc6028870aef3f74f4e16b900008179e78b130e6b0b9a522657b6d34a0c4e6c"
+
+
+def checksum_listing(*entries):
+    return "".join("%s *%s\n" % (checksum, name) for checksum, name in entries)
+
+
+def test_the_checksums_are_published_beside_the_images():
+    assert autoinstall.get_checksum_listing_url("24.04") == \
+        "https://releases.ubuntu.com/24.04/SHA256SUMS"
+
+
+def test_a_published_checksum_is_read():
+    listing = checksum_listing((CHECKSUM, image_named("24.04.1")))
+
+    assert autoinstall.parse_checksum_listing(listing) == {
+        image_named("24.04.1"): CHECKSUM}
+
+
+def test_a_checksum_is_matched_to_its_own_image():
+    # The listing covers every image published for the release.
+    listing = checksum_listing(
+        ("0" * 64, "ubuntu-24.04.1-desktop-amd64.iso"),
+        (CHECKSUM, image_named("24.04.1")))
+
+    checksums = autoinstall.parse_checksum_listing(listing)
+
+    assert checksums[image_named("24.04.1")] == CHECKSUM
+
+
+@pytest.mark.parametrize("listing", [
+    "",
+    None,
+    "not a checksum listing",
+    "tooshort *ubuntu-24.04.1-live-server-amd64.iso",
+])
+def test_an_unusable_checksum_listing_reads_as_nothing(listing):
+    assert autoinstall.parse_checksum_listing(listing) == {}
+
+
+@pytest.fixture
+def published_checksum(monkeypatch):
+    # The listing is fetched and its signature checked before any of it is
+    # believed, so this stands in for the whole of that.
+    state = {"checksums": {image_named("24.04.1"): CHECKSUM}}
+    monkeypatch.setattr(
+        autoinstall, "fetch_release_checksums", lambda **kwargs: state["checksums"])
+    return state
+
+
+def test_a_matching_image_verifies(published_checksum, monkeypatch, tmp_path):
+    target = tmp_path / "ubuntu.iso"
+    target.write_bytes(b"data")
+    monkeypatch.setattr(
+        autoinstall.hashing, "calculate_file_sha256", lambda **kwargs: CHECKSUM)
+
+    assert autoinstall.verify_image_checksum(
+        str(target), "24.04", image_named("24.04.1")) is True
+
+
+def test_a_checksum_comparison_ignores_case(published_checksum, monkeypatch, tmp_path):
+    target = tmp_path / "ubuntu.iso"
+    target.write_bytes(b"data")
+    monkeypatch.setattr(
+        autoinstall.hashing, "calculate_file_sha256", lambda **kwargs: CHECKSUM.upper())
+
+    assert autoinstall.verify_image_checksum(
+        str(target), "24.04", image_named("24.04.1")) is True
+
+
+def test_an_image_that_does_not_match_is_refused(published_checksum, monkeypatch, tmp_path):
+    target = tmp_path / "ubuntu.iso"
+    target.write_bytes(b"data")
+    monkeypatch.setattr(
+        autoinstall.hashing, "calculate_file_sha256", lambda **kwargs: "0" * 64)
+
+    assert autoinstall.verify_image_checksum(
+        str(target), "24.04", image_named("24.04.1")) is False
+
+
+def test_an_image_with_no_published_checksum_is_refused(published_checksum, tmp_path):
+    # Nothing to compare against is not the same as a match.
+    published_checksum["checksums"] = {"something-else.iso": CHECKSUM}
+    target = tmp_path / "ubuntu.iso"
+    target.write_bytes(b"data")
+
+    assert autoinstall.verify_image_checksum(
+        str(target), "24.04", image_named("24.04.1")) is False
+
+
+def test_an_unreadable_image_is_refused(published_checksum, monkeypatch, tmp_path):
+    target = tmp_path / "ubuntu.iso"
+    target.write_bytes(b"data")
+    monkeypatch.setattr(
+        autoinstall.hashing, "calculate_file_sha256", lambda **kwargs: None)
+
+    assert autoinstall.verify_image_checksum(
+        str(target), "24.04", image_named("24.04.1")) is False
+
+
+###########################################################
+# Who signed the checksums
+#
+# A checksum fetched over the same connection as the image proves only that
+# the two agree. The signature over it is what ties the image back to the
+# people who published it, so it is checked against a key obtained some other
+# way rather than one fetched alongside.
+###########################################################
+
+UBUNTU_FINGERPRINT = "843938DF228D22F7B3742BC0D94AA3F0EFE21092"
+
+
+def status_line(fingerprint = UBUNTU_FINGERPRINT):
+    return "[GNUPG:] NEWSIG\n[GNUPG:] VALIDSIG %s 2026-09-15 1789499472 0 4 0 1 10 00 %s\n" % (
+        fingerprint, fingerprint)
+
+
+@pytest.fixture
+def signature_check(monkeypatch, tmp_path):
+    # A keyring on disk, and whatever gpg would have reported
+    keyring = tmp_path / "keyring.gpg"
+    keyring.write_bytes(b"keyring")
+    state = {"status": status_line(), "commands": []}
+
+    def run_output_command(cmd, **kwargs):
+        state["commands"].append(cmd)
+        return state["status"]
+
+    monkeypatch.setattr(
+        autoinstall.programs, "is_tool_installed", lambda name: name == "Gpg")
+    monkeypatch.setattr(autoinstall.programs, "get_tool_program", lambda name: "/tools/gpg")
+    monkeypatch.setattr(autoinstall.command, "run_output_command", run_output_command)
+    state["keyring"] = str(keyring)
+    return state
+
+
+def check_signature(signature_check, tmp_path, **kwargs):
+    listing = tmp_path / "SHA256SUMS"
+    listing.write_text("")
+    signature = tmp_path / "SHA256SUMS.gpg"
+    signature.write_bytes(b"")
+    defaults = dict(
+        listing_file = str(listing),
+        signature_file = str(signature),
+        keyring_file = signature_check["keyring"],
+        fingerprint = UBUNTU_FINGERPRINT)
+    defaults.update(kwargs)
+    return autoinstall.verify_checksum_signature(**defaults)
+
+
+def test_the_signature_is_published_beside_the_checksums():
+    assert autoinstall.get_checksum_signature_url("24.04") == \
+        "https://releases.ubuntu.com/24.04/SHA256SUMS.gpg"
+
+
+def test_a_signature_from_the_expected_key_is_accepted(signature_check, tmp_path):
+    assert check_signature(signature_check, tmp_path) is True
+
+
+def test_the_signature_is_checked_against_the_given_keyring(signature_check, tmp_path):
+    # Checking against whatever keys happen to be on the machine would accept
+    # a signature from any of them.
+    check_signature(signature_check, tmp_path)
+    command = signature_check["commands"][0]
+
+    assert "--no-default-keyring" in command
+    assert signature_check["keyring"] in command
+
+
+def test_a_signature_that_does_not_check_out_is_refused(signature_check, tmp_path):
+    # gpg reports nothing valid when the listing was changed after signing.
+    signature_check["status"] = "[GNUPG:] BADSIG 843938DF228D22F7B3742BC0D94AA3F0EFE21092\n"
+
+    assert check_signature(signature_check, tmp_path) is False
+
+
+def test_a_signature_from_another_key_is_refused(signature_check, tmp_path):
+    # The keyring may hold many keys; only one publishes these images.
+    signature_check["status"] = status_line("0" * 40)
+
+    assert check_signature(signature_check, tmp_path) is False
+
+
+def test_a_fingerprint_is_compared_however_it_is_written(signature_check, tmp_path):
+    # gpg prints fingerprints in spaced groups.
+    spaced = "8439 38DF 228D 22F7 B374  2BC0 D94A A3F0 EFE2 1092"
+
+    assert check_signature(signature_check, tmp_path, fingerprint = spaced) is True
+
+
+def test_any_trusted_key_is_accepted_when_none_is_named(signature_check, tmp_path):
+    signature_check["status"] = status_line("0" * 40)
+
+    assert check_signature(signature_check, tmp_path, fingerprint = "") is True
+
+
+def test_a_missing_keyring_is_reported(signature_check, tmp_path):
+    assert check_signature(
+        signature_check, tmp_path, keyring_file = str(tmp_path / "absent.gpg")) is False
+
+
+def test_a_signature_cannot_be_checked_without_gpg(monkeypatch, tmp_path):
+    monkeypatch.setattr(autoinstall.programs, "is_tool_installed", lambda name: False)
+    monkeypatch.setattr(autoinstall.programs, "get_tool_program", lambda name: None)
+    listing = tmp_path / "SHA256SUMS"
+    listing.write_text("")
+
+    assert autoinstall.verify_checksum_signature(str(listing), str(listing)) is False
+
+
+@pytest.mark.parametrize("status", ["", None, "gpg: no valid OpenPGP data found"])
+def test_an_unreadable_verification_is_refused(signature_check, tmp_path, status):
+    signature_check["status"] = status
+
+    assert check_signature(signature_check, tmp_path) is False
+
+
+def test_the_reported_fingerprint_is_read_from_the_status():
+    assert autoinstall.get_verified_fingerprint(status_line()) == UBUNTU_FINGERPRINT
+
+
+def test_byte_status_output_is_decoded():
+    assert autoinstall.get_verified_fingerprint(status_line().encode()) == UBUNTU_FINGERPRINT
+
+
+def test_the_signing_key_is_configurable(isolated_settings, tmp_path):
+    # A release signed by a different key, or a machine that keeps its
+    # keyrings somewhere else.
+    isolated_settings.set_value(
+        "UserData.Autoinstall", "autoinstall_signing_fingerprint", "0" * 40)
+    isolated_settings.set_value(
+        "UserData.Autoinstall", "autoinstall_signing_keyring", str(tmp_path / "other.gpg"))
+
+    assert autoinstall.get_signing_fingerprint() == "0" * 40
+    assert autoinstall.get_signing_keyring() == str(tmp_path / "other.gpg")
+
+
+def test_the_ubuntu_signing_key_is_expected_by_default(isolated_settings):
+    assert autoinstall.get_signing_fingerprint() == UBUNTU_FINGERPRINT
+
+
+###########################################################
+# Fetching the checksums
+###########################################################
+
+@pytest.fixture
+def published_files(monkeypatch, tmp_path):
+    state = {
+        "listing": checksum_listing((CHECKSUM, image_named("24.04.1"))),
+        "downloaded": [],
+        "signature_ok": True,
+    }
+
+    def download_url(url, output_file, **kwargs):
+        state["downloaded"].append(url)
+        with open(output_file, "w") as handle:
+            handle.write(state["listing"] if url.endswith("SHA256SUMS") else "signature")
+        return True
+
+    monkeypatch.setattr(autoinstall.network, "download_url", download_url)
+    monkeypatch.setattr(
+        autoinstall, "verify_checksum_signature", lambda **kwargs: state["signature_ok"])
+    return state
+
+
+def test_the_checksums_and_their_signature_are_both_fetched(published_files, tmp_path):
+    checksums = autoinstall.fetch_release_checksums("24.04", str(tmp_path))
+
+    assert checksums[image_named("24.04.1")] == CHECKSUM
+    assert any(url.endswith("SHA256SUMS") for url in published_files["downloaded"])
+    assert any(url.endswith("SHA256SUMS.gpg") for url in published_files["downloaded"])
+
+
+def test_checksums_that_are_not_correctly_signed_are_not_used(published_files, tmp_path):
+    published_files["signature_ok"] = False
+
+    assert autoinstall.fetch_release_checksums("24.04", str(tmp_path)) is None
+
+
+def test_the_signature_check_can_be_turned_off(published_files, tmp_path):
+    checksums = autoinstall.fetch_release_checksums(
+        "24.04", str(tmp_path), verify_signature = False)
+
+    assert checksums[image_named("24.04.1")] == CHECKSUM
+    assert not any(url.endswith(".gpg") for url in published_files["downloaded"])
+
+
+def test_checksums_that_cannot_be_fetched_are_nothing(published_files, monkeypatch, tmp_path):
+    monkeypatch.setattr(autoinstall.network, "download_url", lambda **kwargs: False)
+
+    assert autoinstall.fetch_release_checksums("24.04", str(tmp_path)) is None

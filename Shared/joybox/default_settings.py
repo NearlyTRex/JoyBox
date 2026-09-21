@@ -178,7 +178,7 @@ ini_defaults["UserData.Scraping"]["google_search_engine_api_key"] = ""
 
 # UserData.Autoinstall
 ini_defaults["UserData.Autoinstall"] = {}
-ini_defaults["UserData.Autoinstall"]["autoinstall_version"] = "24.04"
+ini_defaults["UserData.Autoinstall"]["autoinstall_version"] = "26.04"
 ini_defaults["UserData.Autoinstall"]["autoinstall_username"] = ""
 ini_defaults["UserData.Autoinstall"]["autoinstall_realname"] = ""
 ini_defaults["UserData.Autoinstall"]["autoinstall_hostname"] = "ubuntu"
@@ -190,6 +190,8 @@ ini_defaults["UserData.Autoinstall"]["autoinstall_timezone"] = "Etc/UTC"
 ini_defaults["UserData.Autoinstall"]["autoinstall_packages"] = ""
 ini_defaults["UserData.Autoinstall"]["autoinstall_serial_console"] = "false"
 ini_defaults["UserData.Autoinstall"]["autoinstall_overlay_file"] = ""
+ini_defaults["UserData.Autoinstall"]["autoinstall_signing_keyring"] = "/usr/share/keyrings/ubuntu-archive-keyring.gpg"
+ini_defaults["UserData.Autoinstall"]["autoinstall_signing_fingerprint"] = "843938DF228D22F7B3742BC0D94AA3F0EFE21092"
 
 # UserData.Resolution
 ini_defaults["UserData.Resolution"] = {}

@@ -43,6 +43,9 @@ parser.add_string_argument(
 parser.add_boolean_argument(
     args = ("-k", "--skip_verify"),
     description = "Skip checking the downloaded image against its published checksum")
+parser.add_boolean_argument(
+    args = ("-g", "--skip_signature"),
+    description = "Skip checking who signed the published checksums")
 parser.add_common_arguments()
 args, unknown = parser.parse_known_args()
 
@@ -78,6 +81,7 @@ def main():
         overlay_file = args.overlay,
         user_data_file = args.user_data,
         verify = not args.skip_verify,
+        verify_signature = not args.skip_signature,
         verbose = args.verbose,
         pretend_run = args.pretend_run,
         exit_on_failure = args.exit_on_failure)

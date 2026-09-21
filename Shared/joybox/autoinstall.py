@@ -12,6 +12,7 @@ import joybox.iso as iso
 import joybox.logger as logger
 import joybox.network as network
 import joybox.paths as paths
+import joybox.programs as programs
 import joybox.serialization as serialization
 import joybox.settings as settings
 
@@ -34,6 +35,12 @@ seed_source = "/cdrom/%s/" % seed_directory
 # The stock ISO waits for a menu choice; this is how long it waits before
 # installing itself, in seconds
 boot_timeout = 2
+
+# The key the checksum listings are signed with, and where a distribution
+# keeps a copy of it. Both are settings, since a release may be signed by a
+# different key and a machine may keep its keyrings elsewhere.
+default_signing_fingerprint = "843938DF228D22F7B3742BC0D94AA3F0EFE21092"
+default_keyring_file = "/usr/share/keyrings/ubuntu-archive-keyring.gpg"
 
 # Where the stock image keeps the images it boots from
 bios_boot_image = "boot/grub/i386-pc/eltorito.img"
@@ -113,6 +120,146 @@ def get_volume_name(version):
 def get_checksum_listing_url(version):
     return "%s%s" % (get_release_listing_url(version), "SHA256SUMS")
 
+# Get the url of the signature over the checksum listing
+def get_checksum_signature_url(version):
+    return "%s%s" % (get_release_listing_url(version), "SHA256SUMS.gpg")
+
+# Get the keyring the signature is checked against
+# The checksums are only worth as much as the connection that fetched them
+# unless the signature over them is checked, and that needs a key obtained
+# some other way. Distributions ship one.
+def get_signing_keyring():
+    return settings.get_path_value(
+        "UserData.Autoinstall", "autoinstall_signing_keyring",
+        default_keyring_file, throw_exception = False)
+
+# Get the key the listing is expected to be signed by
+def get_signing_fingerprint():
+    return settings.get_value(
+        "UserData.Autoinstall", "autoinstall_signing_fingerprint",
+        default_signing_fingerprint, throw_exception = False)
+
+# Get the signature verification tool
+def get_signature_tool():
+    if programs.is_tool_installed("Gpg"):
+        return programs.get_tool_program("Gpg")
+    logger.log_error("Gpg was not found")
+    return None
+
+# Read the fingerprint a verification reported
+# A signature that checks out against a keyring only says it was made by one
+# of the keys in it, so the key itself is checked as well.
+def get_verified_fingerprint(status_output):
+    if not status_output:
+        return None
+    if isinstance(status_output, bytes):
+        status_output = status_output.decode(errors = "replace")
+    for line in status_output.splitlines():
+        parts = line.split()
+        if len(parts) >= 3 and parts[0] == "[GNUPG:]" and parts[1] == "VALIDSIG":
+            return parts[2].upper()
+    return None
+
+# Check the signature over a checksum listing
+def verify_checksum_signature(
+    listing_file,
+    signature_file,
+    keyring_file = None,
+    fingerprint = None,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Get tool
+    signature_tool = get_signature_tool()
+    if not signature_tool:
+        return False
+
+    # Get the key to check against
+    if keyring_file is None:
+        keyring_file = get_signing_keyring()
+    if fingerprint is None:
+        fingerprint = get_signing_fingerprint()
+    if not paths.is_path_file(keyring_file):
+        logger.log_error("Signing keyring not found: %s" % keyring_file)
+        return False
+
+    # Get verify command
+    verify_cmd = [
+        signature_tool,
+        "--no-default-keyring",
+        "--keyring", keyring_file,
+        "--status-fd", "1",
+        "--verify", signature_file, listing_file,
+    ]
+
+    # Run verify command
+    status_output = command.run_output_command(
+        cmd = verify_cmd,
+        verbose = verbose,
+        pretend_run = False,
+        exit_on_failure = exit_on_failure)
+    verified = get_verified_fingerprint(status_output)
+    if not verified:
+        logger.log_error("The checksums for this release are not correctly signed")
+        return False
+
+    # Check it was the expected key
+    if fingerprint and verified != fingerprint.replace(" ", "").upper():
+        logger.log_error("The checksums were signed by an unexpected key")
+        logger.log_error("  expected: %s" % fingerprint)
+        logger.log_error("  signed by: %s" % verified)
+        return False
+    return True
+
+# Fetch the published checksums for a release
+def fetch_release_checksums(
+    version,
+    work_dir,
+    verify_signature = True,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Get the listing itself
+    listing_file = paths.join_paths(work_dir, "SHA256SUMS")
+    success = network.download_url(
+        url = get_checksum_listing_url(version),
+        output_file = listing_file,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    if not success:
+        logger.log_error("Unable to download the checksums for Ubuntu %s" % version)
+        return None
+
+    # Check who signed it
+    if verify_signature:
+        signature_file = paths.join_paths(work_dir, "SHA256SUMS.gpg")
+        success = network.download_url(
+            url = get_checksum_signature_url(version),
+            output_file = signature_file,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if not success:
+            logger.log_error("Unable to download the signature for Ubuntu %s" % version)
+            return None
+        success = verify_checksum_signature(
+            listing_file = listing_file,
+            signature_file = signature_file,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if not success:
+            return None
+
+    # Read it
+    return parse_checksum_listing(serialization.read_text_file(
+        src = listing_file,
+        verbose = verbose,
+        exit_on_failure = exit_on_failure))
+
 # Read the published checksums for a release
 def find_release_checksums(version, verbose = False, pretend_run = False, exit_on_failure = False):
     listing = network.get_remote_html(
@@ -152,15 +299,33 @@ def verify_image_checksum(
     iso_file,
     version,
     image,
+    verify_signature = True,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    expected = find_image_checksum(
-        version = version,
-        image = image,
+
+    # Read the published checksums, having checked who signed them
+    work_dir_ok, work_dir = fileops.create_temporary_directory(
         verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
+        pretend_run = pretend_run)
+    if not work_dir_ok:
+        logger.log_error("Unable to create temporary directory")
+        return False
+    try:
+        checksums = fetch_release_checksums(
+            version = version,
+            work_dir = work_dir,
+            verify_signature = verify_signature,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+    finally:
+        fileops.remove_directory(
+            src = work_dir,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = False)
+    expected = (checksums or {}).get(image)
     if not expected:
         logger.log_error("No published checksum was found for %s" % image)
         return False
@@ -530,6 +695,7 @@ def obtain_source_image(
     version,
     source_file = None,
     verify = True,
+    verify_signature = True,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -552,6 +718,7 @@ def obtain_source_image(
             iso_file = output_file,
             version = version,
             image = image,
+            verify_signature = verify_signature,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure):
@@ -589,6 +756,7 @@ def obtain_source_image(
             iso_file = output_file,
             version = version,
             image = image,
+            verify_signature = verify_signature,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
@@ -613,6 +781,7 @@ def build_autoinstall_image(
     overlay_file = None,
     user_data_file = None,
     verify = True,
+    verify_signature = True,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -665,6 +834,7 @@ def build_autoinstall_image(
         version = version,
         source_file = source_file,
         verify = verify,
+        verify_signature = verify_signature,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)

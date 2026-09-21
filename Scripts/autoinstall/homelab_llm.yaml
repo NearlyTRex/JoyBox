@@ -1,0 +1,74 @@
+# GPU LLM server
+#
+# Merged into the generated autoinstall document:
+#   build_autoinstall_iso -y Scripts/autoinstall/homelab_llm.yaml -t llm
+#
+# Lists here are added to what the build already produced, so the account, the
+# disk layout and the packages from JoyBox.ini all survive the merge.
+
+autoinstall:
+
+  # Installs the third-party drivers subiquity detects, which on an NVIDIA
+  # machine is the signed -server driver and its kernel modules. Nothing is
+  # installed on a box without a card it recognises, so the same file is still
+  # usable on one that has none.
+  drivers:
+    install: true
+
+  packages:
+    - curl
+    - ca-certificates
+    - pciutils
+    - ufw
+    - build-essential
+    - python3-pip
+    - python3-venv
+    - git
+    - nvtop
+    - btop
+    - tmux
+    - unattended-upgrades
+
+  # ollama is installed on first boot rather than in a late command. Its
+  # installer talks to a running systemd, which the installer chroot does not
+  # have, so running it there leaves the service unstarted at best.
+  user-data:
+
+    write_files:
+
+      # The API listens on localhost until told otherwise, which is no use to
+      # anything else on the network. Everything that can reach the port can
+      # use the models, so keep the port off the open internet.
+      - path: /etc/systemd/system/ollama.service.d/override.conf
+        permissions: '0644'
+        content: |
+          [Service]
+          Environment="OLLAMA_HOST=0.0.0.0:11434"
+          Environment="OLLAMA_MODELS=/var/lib/ollama/models"
+          Environment="OLLAMA_KEEP_ALIVE=30m"
+          Environment="OLLAMA_NUM_PARALLEL=2"
+          Environment="OLLAMA_MAX_LOADED_MODELS=2"
+
+      # Reports what the card is actually doing, which is the first thing worth
+      # knowing when a model answers slower than it should.
+      - path: /usr/local/bin/gpu-status
+        permissions: '0755'
+        content: |
+          #!/bin/sh
+          nvidia-smi --query-gpu=name,driver_version,memory.used,memory.total,utilization.gpu \
+            --format=csv 2>/dev/null || echo "No NVIDIA GPU visible to the driver"
+          echo
+          systemctl --no-pager --lines=0 status ollama 2>/dev/null | head -n 3
+          ollama list 2>/dev/null
+
+    runcmd:
+      - [sh, -c, "curl -fsSL https://ollama.com/install.sh | sh"]
+      - [systemctl, daemon-reload]
+      - [systemctl, enable, --now, ollama]
+      - [ufw, allow, OpenSSH]
+      - [ufw, allow, 11434/tcp]
+      - [ufw, --force, enable]
+
+      # First model, so the machine is answering questions when it comes up.
+      # Drop this line to leave the choice for later.
+      - [sh, -c, "sleep 10; ollama pull llama3.1:8b"]

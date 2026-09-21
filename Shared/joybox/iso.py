@@ -25,6 +25,20 @@ def get_iso_tool():
     logger.log_error("XorrISO was not found")
     return None
 
+# Get the mount tool
+def get_mount_tool():
+    if programs.is_tool_installed("FuseISO"):
+        return programs.get_tool_program("FuseISO")
+    logger.log_error("FuseISO was not found")
+    return None
+
+# Get the unmount tool
+def get_unmount_tool():
+    if programs.is_tool_installed("FUserMount"):
+        return programs.get_tool_program("FUserMount")
+    logger.log_error("FUserMount was not found")
+    return None
+
 # Create iso
 def create_iso(
     iso_file,
@@ -423,11 +437,8 @@ def mount_iso(
     elif platform_info.is_linux_platform():
 
         # Get tool
-        iso_tool = None
-        if programs.is_tool_installed("FuseISO"):
-            iso_tool = programs.get_tool_program("FuseISO")
+        iso_tool = get_mount_tool()
         if not iso_tool:
-            logger.log_error("FuseISO was not found")
             return False
 
         # Get mount command
@@ -484,11 +495,8 @@ def unmount_iso(
     elif platform_info.is_linux_platform():
 
         # Get tool
-        iso_tool = None
-        if programs.is_tool_installed("FUserMount"):
-            iso_tool = programs.get_tool_program("FUserMount")
+        iso_tool = get_unmount_tool()
         if not iso_tool:
-            logger.log_error("FUserMount was not found")
             return False
 
         # Get unmount command

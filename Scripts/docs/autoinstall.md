@@ -47,9 +47,10 @@ build_autoinstall_iso -o ~/Images -n homelab.iso -t homelab
 build_autoinstall_iso -s ~/Downloads/ubuntu-24.04.1-live-server-amd64.iso
 ```
 
-The downloaded image is checked against the **SHA256SUMS published beside it** before anything is
-built from it. A mismatch deletes the download rather than leaving it to be picked up as "already
-here" by the next run. `--skip_verify` turns that off.
+The downloaded image is checked against the **SHA256SUMS published beside it**, and that listing
+is itself checked against **the signature Ubuntu publishes over it**, before anything is built. A
+mismatch deletes the download rather than leaving it to be picked up as "already here" by the
+next run.
 
 | Flag | Default | Meaning |
 |------|---------|---------|
@@ -62,12 +63,37 @@ here" by the next run. `--skip_verify` turns that off.
 | `-d`, `--user_data` | — | Use this seed verbatim instead of generating one |
 | `-l`, `--serial_console` | off | Also send installer output to `ttyS0` |
 | `-k`, `--skip_verify` | off | Do not check the download against its published checksum |
+| `-g`, `--skip_signature` | off | Do not check who signed the published checksums |
 
 Write it to a stick with:
 
 ```bash
 sudo dd if=ubuntu-autoinstall.iso of=/dev/sdX bs=4M status=progress conv=fsync
 ```
+
+## Who signed the checksums
+
+A checksum fetched over the same connection as the image proves only that the two agree — anyone
+able to serve you a different image can serve a matching checksum with it. Ubuntu signs the
+listing, so the build checks that signature against a key obtained some other way:
+
+```ini
+[UserData.Autoinstall]
+autoinstall_signing_keyring = /usr/share/keyrings/ubuntu-archive-keyring.gpg
+autoinstall_signing_fingerprint = 843938DF228D22F7B3742BC0D94AA3F0EFE21092
+```
+
+That fingerprint is the **Ubuntu CD Image Automatic Signing Key (2012)**, which still signs
+current releases. The keyring is the one the `ubuntu-keyring` package installs, so the key comes
+from the distribution rather than from the same server as the image.
+
+A keyring holds every key its distribution trusts, so a valid signature alone is not enough — the
+build also checks that the key which signed the listing is the one named above. Point both
+settings elsewhere for a release signed by a different key, or a machine that keeps its keyrings
+somewhere else.
+
+If gpg or the keyring is missing the build stops rather than carrying on unverified. Use
+`--skip_signature` to build anyway, or `--skip_verify` to skip both checks.
 
 ## Load the machine with software
 
@@ -104,18 +130,52 @@ Merging is additive where it matters: **lists under `packages`, `snaps`, `late-c
 the account or the disk layout the generated document established. Dictionaries merge key by
 key, and a plain value overrides.
 
-To install something that is not packaged — ollama's own installer, for instance — fetch and run
-it in a late command:
+Late commands run inside the installed system with the network already up, which is why anything
+that downloads belongs there rather than in `early-commands`. What they do **not** have is a
+running systemd — the installer has the target mounted, not booted — so an installer that starts
+or restarts a service belongs in `user-data`, whose `runcmd` runs on the first real boot.
 
-```yaml
-autoinstall:
-  late-commands:
-    - curtin in-target --target=/target -- sh -c "curl -fsSL https://ollama.com/install.sh | sh"
-    - curtin in-target --target=/target -- systemctl enable ollama
+## A GPU LLM server
+
+There is one of these in the tree, ready to build from:
+
+```bash
+build_autoinstall_iso -y Scripts/autoinstall/homelab_llm.yaml -t llm -n llm.iso
 ```
 
-Late commands run inside the installed system with the network already up, which is why anything
-that downloads belongs there rather than in `early-commands`.
+It asks subiquity to install the third-party drivers it detects, which on an NVIDIA machine is
+the signed `-server` driver, and adds the tools worth having on a box whose job is to feed a
+card: `nvtop`, `btop`, build tooling and a Python environment. On a machine with no card it
+recognises, nothing driver-shaped is installed and the rest still applies.
+
+ollama itself goes in on first boot, from its own installer, because that installer wants a
+systemd to talk to. A drop-in written beforehand settles how it runs:
+
+```
+OLLAMA_HOST=0.0.0.0:11434     listen on the network, not just on localhost
+OLLAMA_MODELS=/var/lib/ollama/models
+OLLAMA_KEEP_ALIVE=30m         hold a model in vram between questions
+OLLAMA_NUM_PARALLEL=2
+OLLAMA_MAX_LOADED_MODELS=2
+```
+
+The machine comes up with `llama3.1:8b` already pulled, `ufw` allowing only SSH and the API port,
+and a `gpu-status` command that prints what the card is doing. Change the model on the last line
+of the overlay, or drop the line to choose later.
+
+**The API has no authentication.** Anything that can reach port 11434 can use the models and read
+what is asked of them, so this belongs on a network you control — not on a machine with a public
+address and not behind a router forwarding the port. Put it behind something that authenticates
+if it needs to be reachable from elsewhere.
+
+**Secure Boot** and NVIDIA need a word. The drivers from Ubuntu's archive are signed by Canonical
+and load with Secure Boot on; drivers built by DKMS from NVIDIA's own installer are not, and
+enrolling a key for them is a blue screen at the console asking for a password — on a machine
+nobody is sitting at. The overlay stays on the archive drivers for that reason.
+
+Everything in the file is ordinary overlay syntax, so it is also a worked example of the merge:
+it adds `drivers`, extends `packages`, and reaches into `user-data` for `write_files` and
+`runcmd` without disturbing the account, the disk layout or the SSH hardening underneath.
 
 ## Write the whole seed yourself
 
@@ -129,7 +189,8 @@ build_autoinstall_iso --user_data ~/JoyBox/Autoinstall/user-data
 ## What the build does to the image
 
 1. Downloads the newest point release of the configured version (or reuses one you supply).
-2. Verifies it against the published `SHA256SUMS`.
+2. Verifies it against the published `SHA256SUMS`, having first checked the signature over that
+   listing against Ubuntu's CD signing key.
 3. Unpacks it, including the EFI boot image that lives in the El Torito catalogue rather than the
    filesystem — rebuilding without it produces an image no UEFI machine will boot.
 4. Writes `user-data` and `meta-data` into a `/nocloud` directory.

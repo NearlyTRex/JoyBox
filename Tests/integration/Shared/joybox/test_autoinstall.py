@@ -64,13 +64,16 @@ def xorriso():
 
 
 @pytest.fixture(autouse = True)
-def installed_tool(monkeypatch, xorriso):
-    # The image handling lives in the iso module, so that is where the tool
-    # is looked up.
+def installed_tools(monkeypatch, xorriso):
+    # The registry points at vendored builds a hermetic run has no copy of.
+    # Both modules look tools up through the same registry, so this is one
+    # substitution rather than one per module.
+    available = {"XorrISO": xorriso, "Gpg": shutil.which("gpg")}
     monkeypatch.setattr(
-        autoinstall.iso.programs, "is_tool_installed", lambda name: name == "XorrISO")
+        autoinstall.programs, "is_tool_installed",
+        lambda name: bool(available.get(name)))
     monkeypatch.setattr(
-        autoinstall.iso.programs, "get_tool_program", lambda name: xorriso)
+        autoinstall.programs, "get_tool_program", lambda name: available.get(name))
 
 
 @pytest.fixture
@@ -352,6 +355,26 @@ def test_extra_software_does_not_replace_what_the_install_needs(tmp_path, stock_
     assert "/boot/efi" in seed
 
 
+def test_the_shipped_gpu_overlay_reaches_the_image(tmp_path, stock_image, xorriso, repo_root):
+    # The overlay kept in the tree is the one a machine is actually built
+    # from, so a typo in it is a machine that comes up without a gpu stack.
+    overlay = os.path.join(repo_root, "Scripts", "autoinstall", "homelab_llm.yaml")
+    output_file = str(tmp_path / "ubuntu-autoinstall.iso")
+    assert autoinstall.build_autoinstall_image(
+        output_file = output_file,
+        source_file = stock_image,
+        profile = dict(PROFILE),
+        overlay_file = overlay) is True
+
+    seed = read_from_image(xorriso, output_file, "/nocloud/user-data", tmp_path)
+
+    assert "drivers" in seed
+    assert "ollama.com/install.sh" in seed
+    assert "OLLAMA_HOST=0.0.0.0:11434" in seed
+    assert "qemu-guest-agent" in seed
+    assert "operator" in seed
+
+
 def test_an_overlay_that_cannot_be_read_stops_the_build(tmp_path, stock_image):
     output_file = str(tmp_path / "ubuntu-autoinstall.iso")
 
@@ -420,8 +443,10 @@ def test_a_downloaded_image_is_checked_before_it_is_used(tmp_path, monkeypatch, 
         autoinstall.network, "download_url",
         lambda url, output_file, **kwargs: shutil.copy(stock_image, output_file) or True)
     monkeypatch.setattr(
-        autoinstall, "find_image_checksum",
-        lambda **kwargs: checked.append(kwargs) or hashing.calculate_file_sha256(src = stock_image))
+        autoinstall, "fetch_release_checksums",
+        lambda **kwargs: checked.append(kwargs) or {
+            "ubuntu-24.04.1-live-server-amd64.iso":
+                hashing.calculate_file_sha256(src = stock_image)})
 
     obtained = autoinstall.obtain_source_image(
         output_file = str(tmp_path / "downloaded.iso"),
@@ -441,7 +466,9 @@ def test_a_download_that_does_not_match_is_discarded(tmp_path, monkeypatch, stoc
     monkeypatch.setattr(
         autoinstall.network, "download_url",
         lambda url, output_file, **kwargs: shutil.copy(stock_image, output_file) or True)
-    monkeypatch.setattr(autoinstall, "find_image_checksum", lambda **kwargs: "0" * 64)
+    monkeypatch.setattr(
+        autoinstall, "fetch_release_checksums",
+        lambda **kwargs: {"ubuntu-24.04.1-live-server-amd64.iso": "0" * 64})
 
     obtained = autoinstall.obtain_source_image(
         output_file = download_file, version = "24.04")
@@ -461,7 +488,7 @@ def test_verification_can_be_turned_off(tmp_path, monkeypatch, stock_image):
     def fail(**kwargs):
         raise AssertionError("nothing should be verified when it was turned off")
 
-    monkeypatch.setattr(autoinstall, "find_image_checksum", fail)
+    monkeypatch.setattr(autoinstall, "fetch_release_checksums", fail)
 
     assert autoinstall.obtain_source_image(
         output_file = str(tmp_path / "downloaded.iso"),
@@ -475,9 +502,100 @@ def test_a_supplied_image_is_taken_as_given(tmp_path, monkeypatch, stock_image):
     def fail(**kwargs):
         raise AssertionError("a supplied image has no published checksum")
 
-    monkeypatch.setattr(autoinstall, "find_image_checksum", fail)
+    monkeypatch.setattr(autoinstall, "fetch_release_checksums", fail)
 
     assert autoinstall.obtain_source_image(
         output_file = str(tmp_path / "downloaded.iso"),
         version = "24.04",
         source_file = stock_image) == stock_image
+
+
+###########################################################
+# Checking Ubuntu's own signature
+#
+# The checksums are only worth as much as the connection that fetched them
+# unless the signature over them is checked. These run the real gpg against
+# a real listing and the key a distribution ships, rather than a stand-in for
+# either, because the point is that the two actually agree.
+###########################################################
+
+UBUNTU_FINGERPRINT = "843938DF228D22F7B3742BC0D94AA3F0EFE21092"
+
+# A listing published by Ubuntu and the detached signature over it
+SIGNED_LISTING = """faabcf33ae53976d2b8207a001ff32f4e5daae013505ac7188c9ea63988f8328 *ubuntu-24.04.3-desktop-amd64.iso
+c3514bf0056180d09376462a7a1b4f213c1d6e8ea67fae5c25099c6fd3d8274b *ubuntu-24.04.3-live-server-amd64.iso
+"""
+
+
+@pytest.fixture
+def ubuntu_keyring():
+    keyring = "/usr/share/keyrings/ubuntu-archive-keyring.gpg"
+    if not os.path.isfile(keyring):
+        pytest.skip("no ubuntu keyring on this machine")
+    if not shutil.which("gpg"):
+        pytest.skip("gpg is not installed")
+    return keyring
+
+
+@pytest.fixture
+def signed_files(tmp_path, ubuntu_keyring):
+    # Signing a listing here would need Ubuntu's private key, so a real
+    # listing and its real signature are kept beside the test instead.
+    listing = tmp_path / "SHA256SUMS"
+    signature = tmp_path / "SHA256SUMS.gpg"
+    fixture_dir = os.path.join(os.path.dirname(__file__), "autoinstall_files")
+    if not os.path.isfile(os.path.join(fixture_dir, "SHA256SUMS.gpg")):
+        pytest.skip("no signed listing kept for this test")
+    shutil.copy(os.path.join(fixture_dir, "SHA256SUMS"), str(listing))
+    shutil.copy(os.path.join(fixture_dir, "SHA256SUMS.gpg"), str(signature))
+    return str(listing), str(signature)
+
+
+def test_a_real_signature_is_accepted(signed_files, ubuntu_keyring):
+    listing, signature = signed_files
+
+    assert autoinstall.verify_checksum_signature(
+        listing_file = listing,
+        signature_file = signature,
+        keyring_file = ubuntu_keyring,
+        fingerprint = UBUNTU_FINGERPRINT) is True
+
+
+def test_a_listing_changed_after_signing_is_refused(signed_files, ubuntu_keyring, tmp_path):
+    # This is the case the signature exists for: a checksum swapped for one
+    # matching a substituted image.
+    listing, signature = signed_files
+    tampered = tmp_path / "tampered"
+    with open(listing) as handle:
+        contents = handle.read()
+    tampered.write_text(contents.replace("c3514bf", "0000000"))
+
+    assert autoinstall.verify_checksum_signature(
+        listing_file = str(tampered),
+        signature_file = signature,
+        keyring_file = ubuntu_keyring,
+        fingerprint = UBUNTU_FINGERPRINT) is False
+
+
+def test_a_signature_from_another_key_is_refused(signed_files, ubuntu_keyring):
+    # The keyring holds every key the distribution trusts; only one signs
+    # these images.
+    listing, signature = signed_files
+
+    assert autoinstall.verify_checksum_signature(
+        listing_file = listing,
+        signature_file = signature,
+        keyring_file = ubuntu_keyring,
+        fingerprint = "0" * 40) is False
+
+
+def test_an_empty_signature_is_refused(signed_files, ubuntu_keyring, tmp_path):
+    listing, _ = signed_files
+    empty = tmp_path / "empty.gpg"
+    empty.write_bytes(b"")
+
+    assert autoinstall.verify_checksum_signature(
+        listing_file = listing,
+        signature_file = str(empty),
+        keyring_file = ubuntu_keyring,
+        fingerprint = UBUNTU_FINGERPRINT) is False
