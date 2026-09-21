@@ -204,6 +204,61 @@ Everything in the file is ordinary overlay syntax, so it is also a worked exampl
 it adds `drivers`, extends `packages`, and reaches into `user-data` for `write_files` and
 `runcmd` without disturbing the account, the disk layout or the SSH hardening underneath.
 
+## Try it in a machine first
+
+Write the image to a stick only after it has installed something. `boot_vm_image` runs it in a
+throwaway machine set up the way the target is — UEFI firmware, a blank disk, the image in the
+drive:
+
+```bash
+# Install from the image onto a fresh disk
+boot_vm_image -n llm -i ~/Images/llm.iso
+
+# Boot what it installed, afterwards
+boot_vm_image -n llm
+```
+
+A window opens and you watch it. Qemu exits when the installer reboots, which is how you know
+it finished — the image is still in the drive, so a machine that carried on would boot it again
+and start the install over.
+
+The disk and the machine's own copy of the firmware variables are kept in `vm_dir`, named after
+`-n`, so several images can be tried side by side without touching each other:
+
+```ini
+[UserData.VM]
+vm_dir = $HOME/VirtualMachines
+vm_memory = 6144
+vm_vcpus = 4
+vm_disk_size = 60
+vm_ssh_port = 2222
+```
+
+| Flag | Meaning |
+|------|---------|
+| `-n`, `--name` | Machine name, which names its disk and firmware variables |
+| `-i`, `--iso` | Image to install from; leave it out to boot what was installed |
+| `-m`, `--memory` | Memory in MB — the server image unpacks into RAM, so 4096 is tight |
+| `-c`, `--vcpus` | Processor count |
+| `-z`, `--disk_size` | Disk size in GB, used when the disk is made |
+| `-t`, `--ssh_port` | Local port forwarded to the machine's SSH; `0` for no network at all |
+| `-e`, `--headless` | Open no window and put the console on this terminal |
+| `-l`, `--serial_file` | With `--headless`, write the console to a file |
+| `-r`, `--reset` | Throw the disk away and start from nothing |
+
+Reach the installed machine with `ssh -p 2222 <user>@localhost`.
+
+`--headless` is only worth using on an image built with `--serial_console`; without it the kernel
+logs to the screen and the terminal shows nothing after the boot menu.
+
+**What a machine cannot tell you**: there is no GPU passed through, so `drivers: install: true`
+finds nothing and ollama runs on the processor. That half is only exercised on real hardware.
+Everything else — the disk layout, the account, the key, the firewall, the services the overlay
+adds — behaves here exactly as it will there.
+
+Without `/dev/kvm` the machine still runs, slowly enough that an install is a wait rather than a
+test; the command says so when it starts.
+
 ## Write the whole seed yourself
 
 When the overlay is not enough, hand over a complete cloud-init file and it is used exactly as it

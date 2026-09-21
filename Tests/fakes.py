@@ -312,6 +312,10 @@ class RecordingCommand:
             self.calls.append({"cmd": list(cmd), "options": options, "kwargs": kwargs})
             return self.returncode == 0
 
+        def run_interactive_command(cmd, options = None, **kwargs):
+            self.calls.append({"cmd": list(cmd), "options": options, "kwargs": kwargs})
+            return self.returncode
+
         # Returns the pair some callers unpack rather than a bare value
         def run_command(cmd, options = None, **kwargs):
             self.calls.append({"cmd": list(cmd), "options": options, "kwargs": kwargs})
@@ -321,6 +325,7 @@ class RecordingCommand:
             ("run_returncode_command", run_returncode_command),
             ("run_output_command", run_output_command),
             ("run_checked_command", run_checked_command),
+            ("run_interactive_command", run_interactive_command),
             ("run_command", run_command),
         ]:
             if hasattr(command, name):

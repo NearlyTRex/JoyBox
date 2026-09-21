@@ -133,6 +133,18 @@ ini_defaults["UserData.Backup"]["backup_age_recipient"] = ""
 # Lose this and every encrypted backup is unrecoverable.
 ini_defaults["UserData.Backup"]["backup_age_identity"] = ""
 
+# UserData.VM
+# Local machines used to rehearse an install before it is run on hardware.
+ini_defaults["UserData.VM"] = {}
+if platform_info.is_windows_platform():
+    ini_defaults["UserData.VM"]["vm_dir"] = "%USERPROFILE%\\VirtualMachines"
+else:
+    ini_defaults["UserData.VM"]["vm_dir"] = "$HOME/VirtualMachines"
+ini_defaults["UserData.VM"]["vm_memory"] = "6144"
+ini_defaults["UserData.VM"]["vm_vcpus"] = "4"
+ini_defaults["UserData.VM"]["vm_disk_size"] = "60"
+ini_defaults["UserData.VM"]["vm_ssh_port"] = "2222"
+
 # UserData.Images
 # Per-server overrides for the container image pins in packages/images.py.
 # Leave commented out to track the pinned version.
