@@ -272,7 +272,8 @@ def bootable_command(**kwargs):
         source_dir = "/tree",
         volume_name = "A Volume",
         bios_boot_image = "boot/grub/i386-pc/eltorito.img",
-        efi_boot_image = "efi.img")
+        efi_boot_image = "/work/efi.img",
+        mbr_image = "/work/mbr.img")
     defaults.update(kwargs)
     return iso.get_bootable_iso_command(**defaults)
 
@@ -296,12 +297,45 @@ def test_a_bootable_image_keeps_its_uefi_entry():
     command = bootable_command()
 
     assert "-eltorito-alt-boot" in command
-    assert "efi.img" in command
+    assert "/work/efi.img" in command
 
 
 def test_a_bootable_image_can_be_written_to_a_usb_stick():
-    # Without the hybrid layout the file only works as an optical image.
-    assert "-isohybrid-gpt-basdat" in bootable_command()
+    # An el torito catalogue alone is an optical image. Firmware booting a
+    # stick looks for a partition table, so the efi image is appended as a
+    # partition of its own and the boot code goes back in the system area.
+    command = bootable_command()
+
+    assert "-append_partition" in command
+    assert iso.efi_partition_type in command
+    assert "-appended_part_as_gpt" in command
+    assert "--protective-msdos-label" in command
+    assert "--grub2-mbr" in command
+    assert "/work/mbr.img" in command
+
+
+def test_the_appended_partition_is_declared_before_it_is_referenced():
+    # xorriso reads the options in order, so a catalogue entry pointing at a
+    # partition that has not been appended yet is not resolved.
+    command = bootable_command()
+
+    assert command.index("-append_partition") < command.index("-eltorito-alt-boot")
+
+
+def test_the_uefi_entry_points_at_the_appended_partition():
+    # Pointing it at a file in the tree instead would pack the same five
+    # megabytes twice and leave the partition unreferenced.
+    command = bootable_command()
+
+    assert any(
+        entry.startswith("--interval:appended_partition_2") for entry in command)
+
+
+def test_an_image_with_no_boot_code_asks_for_none():
+    command = bootable_command(mbr_image = None)
+
+    assert "--grub2-mbr" not in command
+    assert "--protective-msdos-label" not in command
 
 
 def test_an_image_with_no_bios_entry_asks_for_none():
@@ -315,7 +349,7 @@ def test_an_image_with_no_uefi_entry_asks_for_none():
     command = bootable_command(efi_boot_image = None)
 
     assert "-eltorito-alt-boot" not in command
-    assert "-isohybrid-gpt-basdat" not in command
+    assert "-append_partition" not in command
 
 
 def test_a_bootable_image_is_named():
@@ -328,8 +362,12 @@ def test_a_bootable_image_needs_no_name():
     assert "-V" not in command
 
 
-def test_the_efi_boot_image_sits_at_the_top_of_the_tree():
-    assert iso.get_iso_efi_boot_image("/tree").endswith("efi.img")
+def test_the_extracted_boot_data_is_named_apart():
+    # Both are kept beside the tree rather than in it, since they are
+    # appended to the rebuilt image rather than packed as files.
+    assert iso.get_iso_efi_boot_image("/work").endswith("efi.img")
+    assert iso.get_iso_mbr_image("/work").endswith("mbr.img")
+    assert iso.get_iso_efi_boot_image("/work") != iso.get_iso_mbr_image("/work")
 
 
 ###########################################################
@@ -371,3 +409,82 @@ def test_the_three_tools_are_distinct(monkeypatch):
     found = [iso.get_iso_tool(), iso.get_mount_tool(), iso.get_unmount_tool()]
 
     assert len(set(found)) == len(found)
+
+
+###########################################################
+# Finding the efi boot image
+#
+# It is a hidden el torito entry rather than a file in the tree, so where it
+# sits has to be read out of the catalogue. Getting the extent wrong produces
+# a plausible looking image of the wrong length, which rebuilds into an iso
+# no uefi machine will boot.
+###########################################################
+
+# As xorriso prints it, including the colon in its own label
+BOOT_REPORT = """Drive current: -indev '/images/ubuntu.iso'
+Volume id    : 'Ubuntu-Server 26.04.1 LTS amd64'
+El Torito catalog  : 798  1
+El Torito cat path : /boot.catalog
+El Torito images   :   N  Pltf  B   Emul  Ld_seg  Hdpt  Ldsiz         LBA
+El Torito boot img :   1  BIOS  y   none  0x0000  0x00      4         799
+El Torito boot img :   2  UEFI  y   none  0x0000  0x00  10296     1426880
+El Torito img path :   1  /boot/grub/i386-pc/eltorito.img
+El Torito img opts :   1  boot-info-table grub2-boot-info
+El Torito img blks :   2  2574
+"""
+
+
+def test_the_efi_entry_is_found_in_a_real_report():
+    assert iso.get_efi_boot_image_extent(BOOT_REPORT) == (1426880, 2574)
+
+
+def test_the_bios_entry_is_not_mistaken_for_the_efi_one():
+    # The bios image is listed first and is a few kilobytes; rebuilding with
+    # it in place of the efi image produces an iso that boots on nothing.
+    block, blocks = iso.get_efi_boot_image_extent(BOOT_REPORT)
+
+    assert (block, blocks) != (799, 4)
+
+
+def test_the_block_count_is_taken_from_the_catalogue_not_the_row_number():
+    # The label carries its own colon, so counting columns from the start of
+    # the line reads the entry number as the length and copies two blocks.
+    _, blocks = iso.get_efi_boot_image_extent(BOOT_REPORT)
+
+    assert blocks * iso.iso_block_size == 5271552
+
+
+def test_a_load_size_is_used_when_no_block_count_is_given():
+    # 10296 sectors of 512 bytes is 2574 blocks of 2048.
+    report = "\n".join(
+        line for line in BOOT_REPORT.splitlines()
+        if not line.startswith("El Torito img blks"))
+
+    assert iso.get_efi_boot_image_extent(report) == (1426880, 2574)
+
+
+def test_a_load_size_that_does_not_divide_evenly_is_rounded_up():
+    # A short final block still has to be copied, or the image is truncated.
+    report = BOOT_REPORT.replace("  10296     1426880", "      5     1426880")
+    report = "\n".join(
+        line for line in report.splitlines()
+        if not line.startswith("El Torito img blks"))
+
+    assert iso.get_efi_boot_image_extent(report) == (1426880, 2)
+
+
+@pytest.mark.parametrize("report", [None, "", "not a report", b""])
+def test_a_report_without_an_efi_entry_yields_nothing(report):
+    assert iso.get_efi_boot_image_extent(report) is None
+
+
+def test_an_image_with_only_a_bios_entry_yields_nothing():
+    report = "\n".join(
+        line for line in BOOT_REPORT.splitlines()
+        if "UEFI" not in line)
+
+    assert iso.get_efi_boot_image_extent(report) is None
+
+
+def test_a_report_read_as_bytes_is_understood():
+    assert iso.get_efi_boot_image_extent(BOOT_REPORT.encode()) == (1426880, 2574)

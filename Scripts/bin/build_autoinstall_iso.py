@@ -41,6 +41,9 @@ parser.add_string_argument(
     args = ("-d", "--user_data"),
     description = "Use this cloud-init user-data file as it is, instead of generating one")
 parser.add_boolean_argument(
+    args = ("-w", "--show_seed"),
+    description = "Print the seed this configuration produces and stop, without downloading anything")
+parser.add_boolean_argument(
     args = ("-k", "--skip_verify"),
     description = "Skip checking the downloaded image against its published checksum")
 parser.add_boolean_argument(
@@ -66,6 +69,26 @@ def main():
         profile["hostname"] = args.hostname
     if args.serial_console:
         profile["serial_console"] = True
+
+    # Show what the configuration produces, without downloading an image
+    if args.show_seed:
+        problems = autoinstall.get_install_profile_problems(profile)
+        for problem in problems:
+            logger.log_error(problem)
+        overlay = None
+        overlay_file = args.overlay or profile.get("overlay_file")
+        if overlay_file:
+            overlay = autoinstall.read_overlay_file(
+                overlay_file = overlay_file,
+                verbose = args.verbose,
+                exit_on_failure = args.exit_on_failure)
+            if overlay is None:
+                return
+        print(autoinstall.build_user_data(profile, overlay))
+        print(autoinstall.build_meta_data(profile))
+        if problems:
+            logger.log_error("This configuration will not build until those are answered")
+        return
 
     # Get the output path, defaulting to where the command was run
     output_dir = parser.get_output_path(check_exists = False)

@@ -112,7 +112,7 @@ def test_an_image_version_is_read_as_numbers(image, expected):
 def complete_profile(**overrides):
     profile = {
         "version": "24.04",
-        "username": "operator",
+        "username": "homelab",
         "hostname": "testbox",
         "password_hash": "$6$rounds=656000$abc$def",
         "ssh_keys": [],
@@ -130,6 +130,35 @@ def test_a_profile_with_only_a_key_is_complete():
     profile = complete_profile(password_hash = "", ssh_keys = ["ssh-ed25519 AAAA"])
 
     assert autoinstall.is_install_profile_complete(profile) is True
+
+
+@pytest.mark.parametrize("name", ["operator", "admin", "root", "backup", "sudo"])
+def test_a_reserved_username_is_refused(name):
+    # The installer refuses these, but only once it is already running on the
+    # target machine, where it drops to a shell and waits.
+    profile = complete_profile(username = name)
+
+    assert autoinstall.is_install_profile_complete(profile) is False
+    assert any(
+        name in problem for problem in autoinstall.get_install_profile_problems(profile))
+
+
+@pytest.mark.parametrize("name", ["Homelab", "9llm", "has space", "UPPER"])
+def test_a_username_the_installer_will_not_accept_is_refused(name):
+    assert autoinstall.is_install_profile_complete(complete_profile(username = name)) is False
+
+
+@pytest.mark.parametrize("name", ["homelab", "llm-box", "gpu_server", "_svc"])
+def test_an_ordinary_username_is_accepted(name):
+    assert autoinstall.is_install_profile_complete(complete_profile(username = name)) is True
+
+
+def test_the_reserved_list_is_the_one_the_installer_uses():
+    # Sourced from usr/lib/user-setup/reserved-usernames in the installer
+    # squashfs; a short list here would let a refused name through.
+    assert "operator" in autoinstall.reserved_usernames
+    assert "admin" in autoinstall.reserved_usernames
+    assert len(autoinstall.reserved_usernames) > 100
 
 
 def test_a_profile_with_no_way_in_is_incomplete():
@@ -160,16 +189,39 @@ def test_a_complete_profile_has_nothing_to_report():
 
 
 def test_a_profile_is_read_from_settings(isolated_settings):
-    isolated_settings.set_value("UserData.Autoinstall", "autoinstall_username", "operator")
+    isolated_settings.set_value("UserData.Autoinstall", "autoinstall_username", "homelab")
     isolated_settings.set_value("UserData.Autoinstall", "autoinstall_hostname", "testbox")
     isolated_settings.set_value(
         "UserData.Autoinstall", "autoinstall_ssh_keys", "ssh-ed25519 AAAA,ssh-rsa BBBB")
 
     profile = autoinstall.get_install_profile()
 
-    assert profile["username"] == "operator"
+    assert profile["username"] == "homelab"
     assert profile["hostname"] == "testbox"
     assert profile["ssh_keys"] == ["ssh-ed25519 AAAA", "ssh-rsa BBBB"]
+
+
+def test_spaces_after_commas_are_not_part_of_the_value(isolated_settings):
+    # An ini is written by hand, so the space after a comma is expected.
+    # Carrying it through hands apt a package named " git" and puts a key with
+    # a leading space in authorized_keys, on a machine nobody is watching.
+    isolated_settings.set_value(
+        "UserData.Autoinstall", "autoinstall_packages", "curl, git, nvtop")
+    isolated_settings.set_value(
+        "UserData.Autoinstall", "autoinstall_ssh_keys", "ssh-ed25519 AAAA, ssh-rsa BBBB")
+
+    profile = autoinstall.get_install_profile()
+
+    assert profile["packages"] == ["curl", "git", "nvtop"]
+    assert profile["ssh_keys"] == ["ssh-ed25519 AAAA", "ssh-rsa BBBB"]
+
+
+def test_an_empty_entry_in_a_list_is_dropped(isolated_settings):
+    # A trailing comma is easy to leave behind, and an empty package name
+    # fails the whole apt-get install it lands in.
+    isolated_settings.set_value("UserData.Autoinstall", "autoinstall_packages", "curl,,git,")
+
+    assert autoinstall.get_install_profile()["packages"] == ["curl", "git"]
 
 
 def test_an_unconfigured_profile_is_incomplete(isolated_settings):
@@ -189,6 +241,21 @@ def seed_for(**overrides):
     return text, yaml.safe_load(text)
 
 
+def test_a_key_only_account_is_locked_rather_than_passwordless():
+    # An empty password field is not a login nobody can use, it is a login
+    # that takes no password at all, which is a console anyone in the room
+    # can walk up to.
+    _, seed = seed_for(password_hash = "", ssh_keys = ["ssh-ed25519 AAAA"])
+
+    assert seed["autoinstall"]["identity"]["password"] == autoinstall.locked_password
+
+
+def test_a_configured_password_hash_is_used_as_it_is():
+    _, seed = seed_for(password_hash = "$6$rounds=656000$abc$def")
+
+    assert seed["autoinstall"]["identity"]["password"] == "$6$rounds=656000$abc$def"
+
+
 def test_the_seed_is_a_cloud_config_document():
     # cloud-init ignores a file that does not start with this line.
     text, _ = seed_for()
@@ -203,10 +270,10 @@ def test_the_seed_declares_its_version():
 
 
 def test_the_identity_comes_from_the_profile():
-    _, data = seed_for(username = "operator", hostname = "testbox")
+    _, data = seed_for(username = "homelab", hostname = "testbox")
     identity = data["autoinstall"]["identity"]
 
-    assert identity["username"] == "operator"
+    assert identity["username"] == "homelab"
     assert identity["hostname"] == "testbox"
 
 
@@ -219,10 +286,10 @@ def test_the_password_hash_survives_unchanged():
 
 
 def test_an_ssh_key_reaches_the_account():
-    _, data = seed_for(ssh_keys = ["ssh-ed25519 AAAA operator@example.test"])
+    _, data = seed_for(ssh_keys = ["ssh-ed25519 AAAA homelab@example.test"])
     account = data["autoinstall"]["user-data"]["users"][1]
 
-    assert account["ssh_authorized_keys"] == ["ssh-ed25519 AAAA operator@example.test"]
+    assert account["ssh_authorized_keys"] == ["ssh-ed25519 AAAA homelab@example.test"]
 
 
 def test_an_account_without_a_key_declares_none():
@@ -363,8 +430,31 @@ def test_lines_that_are_not_boot_entries_are_untouched():
     assert autoinstall.patch_boot_config_contents(contents) == contents
 
 
+def test_grub_gets_the_seed_argument_escaped():
+    # Grub ends a command at an unescaped semicolon, so the kernel would be
+    # loaded with "ds=nocloud" and the seed path read as another command.
+    arguments = autoinstall.get_kernel_arguments(escape_semicolons = True)
+
+    assert "ds=nocloud\\;s=/cdrom/nocloud/" in arguments
+
+
+def test_isolinux_gets_the_seed_argument_as_written():
+    # It has no such rule, and an escape would become part of the argument.
+    arguments = autoinstall.get_kernel_arguments()
+
+    assert "ds=nocloud;s=/cdrom/nocloud/" in arguments
+
+
+def test_only_the_grub_configurations_are_escaped():
+    found = dict(autoinstall.get_boot_config_files("/iso"))
+
+    assert found["/iso/boot/grub/grub.cfg"] is True
+    assert found["/iso/boot/grub/loopback.cfg"] is True
+    assert found["/iso/isolinux/txt.cfg"] is False
+
+
 def test_every_known_boot_configuration_is_looked_for():
-    found = autoinstall.get_boot_config_files("/iso")
+    found = [config for config, _ in autoinstall.get_boot_config_files("/iso")]
 
     assert any(path.endswith("grub.cfg") for path in found)
     assert any(path.endswith("loopback.cfg") for path in found)

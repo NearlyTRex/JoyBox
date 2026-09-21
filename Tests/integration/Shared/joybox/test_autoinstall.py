@@ -8,6 +8,7 @@ import pytest
 
 # Local imports
 from joybox import autoinstall
+from joybox import iso
 
 pytestmark = pytest.mark.slow
 
@@ -39,11 +40,11 @@ menuentry "Boot from next volume" {
 
 PROFILE = {
     "version": "24.04",
-    "username": "operator",
-    "realname": "Operator",
+    "username": "homelab",
+    "realname": "Homelab",
     "hostname": "testbox",
     "password_hash": "$6$rounds=656000$abcdefgh$ijklmnop",
-    "ssh_keys": ["ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAItest operator@example.test"],
+    "ssh_keys": ["ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAItest homelab@example.test"],
     "locale": "en_GB.UTF-8",
     "keyboard": "gb",
     "timezone": "Europe/London",
@@ -76,18 +77,26 @@ def installed_tools(monkeypatch, xorriso):
         autoinstall.programs, "get_tool_program", lambda name: available.get(name))
 
 
+# Distinct enough that extracting the wrong extent is visible
+EFI_IMAGE_CONTENTS = (b"JOYBOXEFI" + b"\x00" * 1015) * 1024
+
+
 @pytest.fixture
 def stock_image(tmp_path, xorriso):
     # An image shaped like the Ubuntu one: a grub config to patch, a bios
-    # boot image and an efi image in the El Torito catalogue.
+    # boot image, and an efi image that is in the El Torito catalogue but
+    # hidden from the filesystem tree, so extracting the tree does not bring
+    # it along and it has to be read out of the catalogue.
     tree = tmp_path / "stock"
     (tree / "boot" / "grub" / "i386-pc").mkdir(parents = True)
     (tree / "casper").mkdir()
     (tree / "boot" / "grub" / "grub.cfg").write_text(GRUB_CONFIG)
     (tree / "boot" / "grub" / "loopback.cfg").write_text(GRUB_CONFIG)
-    (tree / "boot" / "grub" / "i386-pc" / "eltorito.img").write_bytes(b"\x00" * 2048)
+    # Large enough for the grub2 boot info patch, which a real one is; a
+    # smaller image makes the packer report a mishap and refuse to patch.
+    (tree / "boot" / "grub" / "i386-pc" / "eltorito.img").write_bytes(b"\x00" * 32768)
     (tree / "casper" / "vmlinuz").write_bytes(b"\x00" * 1024)
-    (tree / "efi.img").write_bytes(b"\x00" * 1024 * 1024)
+    (tree / "efi.img").write_bytes(EFI_IMAGE_CONTENTS)
 
     target = str(tmp_path / "ubuntu-server.iso")
     result = subprocess.run([
@@ -99,6 +108,7 @@ def stock_image(tmp_path, xorriso):
         "-eltorito-alt-boot",
         "-e", "efi.img",
         "-no-emul-boot",
+        "-hide", "efi.img", "-hide-joliet", "efi.img",
         "-o", target, str(tree),
     ], capture_output = True)
     assert result.returncode == 0, result.stderr.decode()
@@ -156,7 +166,7 @@ def test_the_seed_carries_the_profile(tmp_path, stock_image, xorriso):
 
     seed = read_from_image(xorriso, output_file, "/nocloud/user-data", tmp_path)
 
-    assert "operator" in seed
+    assert "homelab" in seed
     assert "testbox" in seed
     assert "Europe/London" in seed
 
@@ -178,7 +188,20 @@ def test_the_bootloader_points_at_the_seed(tmp_path, stock_image, xorriso):
     grub = read_from_image(xorriso, output_file, "/boot/grub/grub.cfg", tmp_path)
 
     assert "autoinstall" in grub
-    assert "ds=nocloud;s=/cdrom/nocloud/" in grub
+    assert "ds=nocloud\\;s=/cdrom/nocloud/" in grub
+
+
+def test_the_seed_argument_survives_grub_reading_the_line(tmp_path, stock_image, xorriso):
+    # Grub ends a command at an unescaped semicolon. Left as it is, the kernel
+    # is loaded with "ds=nocloud" and the rest is read as another command, so
+    # the installer comes up and waits for someone to answer it - on a machine
+    # nobody is sitting at.
+    output_file = build(tmp_path, stock_image)
+
+    grub = read_from_image(xorriso, output_file, "/boot/grub/grub.cfg", tmp_path)
+    entry = [line for line in grub.splitlines() if "autoinstall" in line][0]
+
+    assert ";" not in entry.replace("\\;", "")
 
 
 def test_the_bootloader_stops_waiting(tmp_path, stock_image, xorriso):
@@ -300,6 +323,85 @@ def test_a_key_alone_is_enough_to_build(tmp_path, stock_image):
 
 
 ###########################################################
+# The efi boot image
+#
+# It is in the El Torito catalogue but not in the filesystem tree, so taking
+# the tree apart does not bring it along. An image rebuilt without it boots
+# on nothing with uefi firmware, which is every machine this would be used
+# on, and the failure only shows up at the target.
+###########################################################
+
+def test_the_efi_image_is_not_in_the_filesystem_tree(tmp_path, stock_image):
+    # If it were, the extraction below would be doing nothing and a broken
+    # extractor would still produce a bootable image here.
+    tree = tmp_path / "tree"
+    assert iso.extract_buildable_iso_tree(
+        iso_file = stock_image,
+        extract_dir = str(tree)) is True
+
+    assert not os.path.exists(str(tree / "efi.img"))
+
+
+def test_the_efi_image_is_read_out_of_the_catalogue(tmp_path, stock_image):
+    tree = tmp_path / "tree"
+    tree.mkdir()
+
+    assert iso.extract_iso_boot_images(
+        iso_file = stock_image,
+        extract_dir = str(tree)) is True
+
+    extracted = (tree / "efi.img").read_bytes()
+    assert extracted[:len(EFI_IMAGE_CONTENTS)] == EFI_IMAGE_CONTENTS
+
+
+def test_a_built_image_carries_the_efi_image_forward(tmp_path, stock_image, xorriso):
+    # The whole point of extracting it: it has to end up in the rebuilt image
+    # or no uefi machine will boot what was written to the stick.
+    output_file = build(tmp_path, stock_image)
+    reported = subprocess.run(
+        [xorriso, "-indev", output_file, "-report_el_torito", "plain"],
+        capture_output = True, text = True).stdout
+
+    assert "UEFI" in reported
+
+
+def system_area_report(xorriso, iso_file):
+    return subprocess.run(
+        [xorriso, "-indev", iso_file, "-report_system_area", "plain"],
+        capture_output = True, text = True).stdout
+
+
+def test_a_built_image_has_a_partition_table(tmp_path, stock_image, xorriso):
+    # An el torito catalogue alone boots from a disc. Written to a usb stick
+    # with dd, which is what the image is for, the firmware looks for a
+    # partition table instead and an image without one boots on nothing.
+    output_file = build(tmp_path, stock_image)
+
+    reported = system_area_report(xorriso, output_file)
+
+    assert "protective-msdos-label" in reported
+    assert "GPT" in reported
+
+
+def test_the_efi_image_is_a_partition_of_its_own(tmp_path, stock_image, xorriso):
+    # Firmware boots the efi system partition, so the same bytes have to be
+    # reachable as a partition and not only through the catalogue.
+    output_file = build(tmp_path, stock_image)
+
+    reported = system_area_report(xorriso, output_file)
+
+    assert iso.efi_partition_type in reported
+
+
+def test_the_boot_code_is_carried_into_the_system_area(tmp_path, stock_image, xorriso):
+    output_file = build(tmp_path, stock_image)
+
+    reported = system_area_report(xorriso, output_file)
+
+    assert "grub2-mbr" in reported
+
+
+###########################################################
 # Loading a machine with extra software
 #
 # The point of the overlay is that a built image arrives with the software
@@ -351,7 +453,7 @@ def test_extra_software_does_not_replace_what_the_install_needs(tmp_path, stock_
     seed = read_from_image(xorriso, output_file, "/nocloud/user-data", tmp_path)
 
     assert "qemu-guest-agent" in seed
-    assert "operator" in seed
+    assert "homelab" in seed
     assert "/boot/efi" in seed
 
 
@@ -372,7 +474,21 @@ def test_the_shipped_gpu_overlay_reaches_the_image(tmp_path, stock_image, xorris
     assert "ollama.com/install.sh" in seed
     assert "OLLAMA_HOST=0.0.0.0:11434" in seed
     assert "qemu-guest-agent" in seed
-    assert "operator" in seed
+    assert "homelab" in seed
+
+
+def test_a_missing_output_directory_is_created(tmp_path, stock_image, xorriso):
+    # The download lands beside the image, so a directory that is not there
+    # yet otherwise shows up as a write failure partway through fetching a
+    # three gigabyte file.
+    output_dir = tmp_path / "Images" / "autoinstall"
+    output_file = str(output_dir / "ubuntu-autoinstall.iso")
+
+    assert autoinstall.build_autoinstall_image(
+        output_file = output_file,
+        source_file = stock_image,
+        profile = dict(PROFILE)) is True
+    assert os.path.isfile(output_file)
 
 
 def test_an_overlay_that_cannot_be_read_stops_the_build(tmp_path, stock_image):
@@ -400,7 +516,7 @@ def test_a_whole_seed_can_be_supplied_instead(tmp_path, stock_image, xorriso):
 
     seed = read_from_image(xorriso, output_file, "/nocloud/user-data", tmp_path)
     assert "hand-written" in seed
-    assert "operator" not in seed
+    assert "homelab" not in seed
 
 
 def test_a_supplied_seed_does_not_need_a_configured_profile(tmp_path, stock_image):

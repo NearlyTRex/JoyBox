@@ -36,6 +36,11 @@ seed_source = "/cdrom/%s/" % seed_directory
 # installing itself, in seconds
 boot_timeout = 2
 
+# What goes in the password field when a key is the only way in. An empty
+# field is not "no login", it is a login that takes no password, so the
+# account is locked instead and the key is left as the way in.
+locked_password = "!"
+
 # The key the checksum listings are signed with, and where a distribution
 # keeps a copy of it. Both are settings, since a release may be signed by a
 # different key and a machine may keep its keyrings elsewhere.
@@ -44,7 +49,9 @@ default_keyring_file = "/usr/share/keyrings/ubuntu-archive-keyring.gpg"
 
 # Where the stock image keeps the images it boots from
 bios_boot_image = "boot/grub/i386-pc/eltorito.img"
-efi_boot_image = "efi.img"
+# The efi image and the boot code are pulled out of the stock image and kept
+# beside the tree rather than inside it, since they are appended to the
+# rebuilt image as a partition and a system area rather than packed as files.
 
 ###########################################################
 # Releases
@@ -348,6 +355,39 @@ def verify_image_checksum(
 # Install profile
 ###########################################################
 
+# Read a comma separated setting as a list
+# Written by hand in an ini file, so a space after a comma is expected, and
+# carrying it through would hand apt a package named " git".
+def get_profile_list(field):
+    values = settings.get_list_value(
+        "UserData.Autoinstall", field, default_value = [], throw_exception = False)
+    if not values:
+        return []
+    return [value.strip() for value in values if value and value.strip()]
+
+# Usernames the installer refuses. Taken from the reserved-usernames list
+# that ships inside the installer image, at usr/lib/user-setup/reserved-usernames
+# in its squashfs. The installer only refuses one once it is already running
+# on the target machine, where nobody is watching, so it is checked here.
+reserved_usernames = {
+    "Debian-exim", "adm", "admin", "alias", "asterisk", "audio", "backup", "bin", "bind",
+    "cdrom", "ceph", "crontab", "cupsys", "daemon", "dcc", "dhcp", "dialout", "dictd", "dip",
+    "disk", "dnsmasq", "dovecot", "fax", "fetchmail", "firebird", "floppy", "ftn", "ftp",
+    "fuse", "games", "gdm", "gnats", "grsec-proc", "grsec-sock-all", "grsec-sock-clt",
+    "grsec-sock-srv", "grsec-tpe", "haclient", "hacluster", "haldaemon", "hplilp", "identd",
+    "input", "irc", "jwhois", "klog", "kmem", "kvm", "libvirt-qemu", "list", "lp", "lpadmin",
+    "maas", "mail", "man", "messagebus", "mysql", "mythtv", "netdev", "netplan", "news",
+    "nobody", "nogroup", "opensrf", "operator", "plugdev", "powerdev", "proxy", "qmail",
+    "qmaild", "qmaill", "qmailp", "qmailq", "qmailr", "qmails", "radvd", "render", "root",
+    "saned", "sasl", "sbuild", "scanner", "sgx", "shadow", "slocate", "slurm", "src", "ssh",
+    "sshd", "ssl-cert", "sslwrap", "staff", "statd", "sudo", "sync", "sys", "syslog",
+    "tac-plus", "tape", "telnetd", "tftpd", "tty", "users", "utmp", "uucp", "vchkpw", "video",
+    "voice", "vpopmail", "www-data"
+}
+
+# What the installer accepts as a username
+username_pattern = r"^[a-z_][a-z0-9_-]*[$]?$"
+
 # Get install profile
 # Everything the installer would have asked a person sitting at the machine.
 def get_install_profile():
@@ -362,16 +402,14 @@ def get_install_profile():
             "UserData.Autoinstall", "autoinstall_hostname", "ubuntu", throw_exception = False),
         "password_hash": settings.get_value(
             "UserData.Autoinstall", "autoinstall_password_hash", "", throw_exception = False),
-        "ssh_keys": settings.get_list_value(
-            "UserData.Autoinstall", "autoinstall_ssh_keys", default_value = [], throw_exception = False),
+        "ssh_keys": get_profile_list("autoinstall_ssh_keys"),
         "locale": settings.get_value(
             "UserData.Autoinstall", "autoinstall_locale", "en_US.UTF-8", throw_exception = False),
         "keyboard": settings.get_value(
             "UserData.Autoinstall", "autoinstall_keyboard", "us", throw_exception = False),
         "timezone": settings.get_value(
             "UserData.Autoinstall", "autoinstall_timezone", "Etc/UTC", throw_exception = False),
-        "packages": settings.get_list_value(
-            "UserData.Autoinstall", "autoinstall_packages", default_value = [], throw_exception = False),
+        "packages": get_profile_list("autoinstall_packages"),
         "serial_console": settings.get_bool_value(
             "UserData.Autoinstall", "autoinstall_serial_console", False, throw_exception = False),
         "overlay_file": settings.get_path_value(
@@ -382,23 +420,25 @@ def get_install_profile():
 # An incomplete profile produces an installer that stops and waits for the
 # answer it is missing, which is the one thing the image exists to avoid.
 def is_install_profile_complete(profile):
-    if not isinstance(profile, dict):
-        return False
-    if not profile.get("username"):
-        return False
-    if not profile.get("hostname"):
-        return False
-    if not profile.get("password_hash") and not profile.get("ssh_keys"):
-        return False
-    return True
+    return not get_install_profile_problems(profile)
 
 # Describe what an install profile is missing
 def get_install_profile_problems(profile):
     problems = []
     if not isinstance(profile, dict):
         return ["No profile was given"]
-    if not profile.get("username"):
+    username = profile.get("username")
+    if not username:
         problems.append("No username is set (autoinstall_username)")
+    elif username in reserved_usernames:
+        problems.append(
+            "Username %s is reserved by the system and the installer will "
+            "refuse it (autoinstall_username)" % username)
+    elif not re.match(username_pattern, username):
+        problems.append(
+            "Username %s is not one the installer accepts; use lower case "
+            "letters, digits, dashes and underscores (autoinstall_username)"
+            % username)
     if not profile.get("hostname"):
         problems.append("No hostname is set (autoinstall_hostname)")
     if not profile.get("password_hash") and not profile.get("ssh_keys"):
@@ -480,7 +520,7 @@ def build_autoinstall_config(profile):
             "realname": profile.get("realname") or profile.get("username"),
             "username": profile.get("username"),
             "hostname": profile.get("hostname"),
-            "password": profile.get("password_hash"),
+            "password": profile.get("password_hash") or locked_password,
         },
         "user-data": build_user_config(profile),
         "late-commands": [
@@ -605,15 +645,23 @@ def write_seed_files(
 ###########################################################
 
 # Get the kernel arguments that point the installer at the seed
-def get_kernel_arguments(profile = None):
-    arguments = ["autoinstall", "ds=nocloud;s=%s" % seed_source]
+# The seed argument carries a semicolon, which grub reads as the end of one
+# command and the start of the next. Left as it is, grub loads the kernel
+# with half the argument and never sees the rest, so the machine boots the
+# installer and waits for someone to answer it. Isolinux has no such rule and
+# takes the argument as written.
+def get_kernel_arguments(profile = None, escape_semicolons = False):
+    seed_argument = "ds=nocloud;s=%s" % seed_source
+    if escape_semicolons:
+        seed_argument = seed_argument.replace(";", "\\;")
+    arguments = ["autoinstall", seed_argument]
     if profile and profile.get("serial_console"):
         arguments.append("console=ttyS0")
     return arguments
 
 # Add the kernel arguments to one boot entry line
-def patch_boot_entry(line, profile = None):
-    arguments = get_kernel_arguments(profile)
+def patch_boot_entry(line, profile = None, escape_semicolons = False):
+    arguments = get_kernel_arguments(profile, escape_semicolons)
 
     # Already pointed at the seed
     if arguments[0] in line:
@@ -630,12 +678,12 @@ def patch_boot_entry(line, profile = None):
     return line.rstrip("\n") + addition + ("\n" if line.endswith("\n") else "")
 
 # Patch the contents of a boot configuration
-def patch_boot_config_contents(contents, profile = None):
+def patch_boot_config_contents(contents, profile = None, escape_semicolons = False):
     patched = []
     for line in contents.splitlines(keepends = True):
         stripped = line.strip()
         if stripped.startswith("linux") or stripped.startswith("append"):
-            patched.append(patch_boot_entry(line, profile))
+            patched.append(patch_boot_entry(line, profile, escape_semicolons))
         elif stripped.startswith("set timeout="):
             leading = line[:len(line) - len(line.lstrip())]
             patched.append("%sset timeout=%d\n" % (leading, boot_timeout))
@@ -646,12 +694,13 @@ def patch_boot_config_contents(contents, profile = None):
             patched.append(line)
     return "".join(patched)
 
-# Get the boot configurations an extracted image may carry
+# Get the boot configurations an extracted image may carry, and whether each
+# one is read by grub, which needs the seed argument escaped
 def get_boot_config_files(iso_dir):
     return [
-        paths.join_paths(iso_dir, "boot", "grub", "grub.cfg"),
-        paths.join_paths(iso_dir, "boot", "grub", "loopback.cfg"),
-        paths.join_paths(iso_dir, "isolinux", "txt.cfg"),
+        (paths.join_paths(iso_dir, "boot", "grub", "grub.cfg"), True),
+        (paths.join_paths(iso_dir, "boot", "grub", "loopback.cfg"), True),
+        (paths.join_paths(iso_dir, "isolinux", "txt.cfg"), False),
     ]
 
 # Patch every boot configuration present in an extracted image
@@ -662,7 +711,7 @@ def patch_boot_configs(
     pretend_run = False,
     exit_on_failure = False):
     patched_any = False
-    for config_file in get_boot_config_files(iso_dir):
+    for config_file, escape_semicolons in get_boot_config_files(iso_dir):
         if not paths.is_path_file(config_file):
             continue
         contents = serialization.read_text_file(
@@ -673,7 +722,7 @@ def patch_boot_configs(
             continue
         success = serialization.write_text_file(
             src = config_file,
-            contents = patch_boot_config_contents(contents, profile),
+            contents = patch_boot_config_contents(contents, profile, escape_semicolons),
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
@@ -824,6 +873,20 @@ def build_autoinstall_image(
         if overlay is None:
             return False
 
+    # Make sure there is somewhere to write to. The download lands beside the
+    # image, so a missing directory otherwise surfaces as a curl failure after
+    # it has already fetched some of a three gigabyte file.
+    output_dir = paths.get_filename_directory(output_file)
+    if output_dir:
+        success = fileops.make_directory(
+            src = output_dir,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if not success:
+            logger.log_error("Unable to create output directory: %s" % output_dir)
+            return False
+
     # Get the stock image
     version = profile.get("version")
     if not download_file:
@@ -863,7 +926,7 @@ def build_autoinstall_image(
             return False
         success = iso.extract_iso_boot_images(
             iso_file = stock_image,
-            extract_dir = iso_dir,
+            extract_dir = work_dir,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
@@ -896,7 +959,8 @@ def build_autoinstall_image(
             source_dir = iso_dir,
             volume_name = get_volume_name(version),
             bios_boot_image = bios_boot_image,
-            efi_boot_image = efi_boot_image,
+            efi_boot_image = iso.get_iso_efi_boot_image(work_dir),
+            mbr_image = iso.get_iso_mbr_image(work_dir),
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)

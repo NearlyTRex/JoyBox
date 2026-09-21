@@ -14,8 +14,8 @@ fresh checkout builds nothing until this is filled in.
 ```ini
 [UserData.Autoinstall]
 autoinstall_version = 24.04
-autoinstall_username = operator
-autoinstall_realname = Operator
+autoinstall_username = homelab
+autoinstall_realname = Homelab
 autoinstall_hostname = ubuntu
 autoinstall_ssh_keys = ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAA... you@example.com
 autoinstall_password_hash =
@@ -31,8 +31,32 @@ A build is refused unless there is a **username**, a **hostname**, and at least 
 hash or an SSH key — an installed machine with none of those is one nobody can log into, and
 nobody is at the keyboard to notice.
 
-Generate a password hash with `mkpasswd --method=SHA-512 --rounds=656000`. Password logins over
-SSH are disabled in the seed either way, so the hash is only for the console.
+The username is checked against the list the installer itself refuses, which includes ordinary
+looking names like `operator` and `admin` — they are group names Ubuntu already uses. The
+installer only refuses one after it has booted on the target machine, where it stops and waits
+at a shell, so the build refuses it here instead.
+
+Generate the key with `ssh-keygen -t ed25519 -C joybox-autoinstall -f ~/.ssh/joybox_autoinstall`
+and put the contents of the **`.pub`** file in `autoinstall_ssh_keys`. Several keys go on one
+line separated by commas.
+
+A password hash is optional and only matters at the console, since password logins over SSH are
+disabled in the seed. Make one with `mkpasswd --method=SHA-512 --rounds=656000` (from the
+`whois` package) or `openssl passwd -6`. Leave it empty and the account is **locked** rather than
+left with an empty password — an empty password field is a console login that takes no password,
+which is not the same thing as no login at all.
+
+## Check it before building
+
+The seed is what the installer obeys, so look at it before spending a download on it:
+
+```bash
+build_autoinstall_iso --show_seed
+build_autoinstall_iso --show_seed -y Scripts/autoinstall/homelab_llm.yaml
+```
+
+That renders exactly what would be written into the image, from the configuration and overlay as
+they stand, and says what is still missing. Nothing is fetched and nothing is written.
 
 ## Build
 
@@ -60,6 +84,7 @@ next run.
 | `-r`, `--release` | from settings | Ubuntu release to build from |
 | `-t`, `--hostname` | from settings | Hostname for the installed machine |
 | `-y`, `--overlay` | from settings | YAML merged into the generated config |
+| `-w`, `--show_seed` | off | Print the seed this configuration produces and stop |
 | `-d`, `--user_data` | — | Use this seed verbatim instead of generating one |
 | `-l`, `--serial_console` | off | Also send installer output to `ttyS0` |
 | `-k`, `--skip_verify` | off | Do not check the download against its published checksum |
@@ -118,7 +143,7 @@ autoinstall:
     - name: ollama
   late-commands:
     - curtin in-target --target=/target -- systemctl enable docker
-    - curtin in-target --target=/target -- usermod -aG docker operator
+    - curtin in-target --target=/target -- usermod -aG docker homelab
   user-data:
     write_files:
       - path: /etc/docker/daemon.json
@@ -193,12 +218,21 @@ build_autoinstall_iso --user_data ~/JoyBox/Autoinstall/user-data
 1. Downloads the newest point release of the configured version (or reuses one you supply).
 2. Verifies it against the published `SHA256SUMS`, having first checked the signature over that
    listing against Ubuntu's CD signing key.
-3. Unpacks it, including the EFI boot image that lives in the El Torito catalogue rather than the
-   filesystem — rebuilding without it produces an image no UEFI machine will boot.
+3. Unpacks it, including the two pieces that are not files in the filesystem: the EFI boot image,
+   which lives in the El Torito catalogue, and the boot code in the system area at the front of
+   the image. Both are read straight out of the image by offset, so no particular version of
+   xorriso is needed.
 4. Writes `user-data` and `meta-data` into a `/nocloud` directory.
 5. Points every boot configuration at that seed (`autoinstall ds=nocloud;s=/cdrom/nocloud/`) and
    drops the menu timeout to 2 seconds, leaving a moment to interrupt.
-6. Repacks it as a hybrid BIOS + UEFI image that boots from a USB stick.
+6. Repacks it as a hybrid BIOS + UEFI image: the boot code goes back into the system area, and
+   the EFI image is appended as a real EFI system partition under a GPT, with the El Torito entry
+   pointing at that same partition.
+
+That last step is what makes `dd` to a USB stick work. An image carrying only an El Torito
+catalogue boots from a disc; firmware booting a stick looks for a partition table instead, and
+finding none, boots nothing. The built image ends up with the same partition layout as the stock
+one, and the EFI partition is byte for byte the one Ubuntu shipped.
 
 The arguments are inserted **before** the `---` separator on the kernel line. Anything after that
 separator is passed to the installed system rather than the installer, so an image built the
