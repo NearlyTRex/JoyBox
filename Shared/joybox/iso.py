@@ -18,6 +18,13 @@ def is_iso_mounted(iso_file, mount_dir):
         not paths.is_directory_empty(mount_dir)
     )
 
+# Get the iso tool
+def get_iso_tool():
+    if programs.is_tool_installed("XorrISO"):
+        return programs.get_tool_program("XorrISO")
+    logger.log_error("XorrISO was not found")
+    return None
+
 # Create iso
 def create_iso(
     iso_file,
@@ -30,11 +37,8 @@ def create_iso(
     exit_on_failure = False):
 
     # Get tool
-    iso_tool = None
-    if programs.is_tool_installed("XorrISO"):
-        iso_tool = programs.get_tool_program("XorrISO")
+    iso_tool = get_iso_tool()
     if not iso_tool:
-        logger.log_error("XorrISO was not found")
         return False
 
     # Get create command
@@ -106,11 +110,8 @@ def extract_iso(
         return True
 
     # Get tool
-    iso_tool = None
-    if programs.is_tool_installed("XorrISO"):
-        iso_tool = programs.get_tool_program("XorrISO")
+    iso_tool = get_iso_tool()
     if not iso_tool:
-        logger.log_error("XorrISO was not found")
         return False
 
     # Get extract command
@@ -153,6 +154,191 @@ def extract_iso(
 
     # Check result
     return paths.does_directory_contain_files(extract_dir)
+
+# Extract an iso as a tree that can be built back into an iso
+def extract_buildable_iso_tree(
+    iso_file,
+    extract_dir,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Check source
+    if not paths.is_path_file(iso_file):
+        logger.log_error("Iso file '%s' was not found" % iso_file)
+        return False
+
+    # Get tool
+    iso_tool = get_iso_tool()
+    if not iso_tool:
+        return False
+
+    # Make the destination
+    success = fileops.make_directory(
+        src = extract_dir,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    if not success:
+        return False
+
+    # Get extract command
+    extract_cmd = [
+        iso_tool,
+        "-osirrox", "on",
+        "-indev", iso_file,
+        "-extract", "/",
+        extract_dir
+    ]
+
+    # Run extract command
+    code = command.run_returncode_command(
+        cmd = extract_cmd,
+        options = command.create_command_options(
+            output_paths = [extract_dir],
+            blocking_processes = [iso_tool]),
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    if code != 0:
+        logger.log_error("Unable to extract %s" % iso_file)
+        return False
+
+    # The extracted tree comes out read only
+    fileops.chmod_file_or_directory(
+        src = extract_dir,
+        perms = 644,
+        dperms = 755,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    return True
+
+# Get the efi boot image an extracted tree carries
+def get_iso_efi_boot_image(extract_dir):
+    return paths.join_paths(extract_dir, "efi.img")
+
+# Extract the boot images an extracted tree does not carry as ordinary files
+def extract_iso_boot_images(
+    iso_file,
+    extract_dir,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Already there
+    if paths.is_path_file(get_iso_efi_boot_image(extract_dir)):
+        return True
+
+    # Get tool
+    iso_tool = get_iso_tool()
+    if not iso_tool:
+        return False
+
+    # Get extract command
+    extract_cmd = [
+        iso_tool,
+        "-osirrox", "on",
+        "-indev", iso_file,
+        "-extract_boot_images", extract_dir
+    ]
+
+    # Run extract command
+    code = command.run_returncode_command(
+        cmd = extract_cmd,
+        options = command.create_command_options(
+            output_paths = [extract_dir],
+            blocking_processes = [iso_tool]),
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    if code != 0:
+        logger.log_error("Unable to extract boot images from %s" % iso_file)
+        return False
+    if pretend_run:
+        return True
+
+    # The tool names what it extracted after the catalogue entry
+    for candidate in sorted(paths.get_directory_contents(extract_dir)):
+        if candidate.startswith("eltorito_img") and candidate.endswith(".img"):
+            return fileops.move_file_or_directory(
+                src = paths.join_paths(extract_dir, candidate),
+                dest = get_iso_efi_boot_image(extract_dir),
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
+    logger.log_error("No efi boot image was found in %s" % extract_dir)
+    return False
+
+# Build the command that packs a tree as an iso that boots
+def get_bootable_iso_command(
+    iso_tool,
+    iso_file,
+    source_dir,
+    volume_name = None,
+    bios_boot_image = None,
+    efi_boot_image = None):
+    create_cmd = [
+        iso_tool,
+        "-as", "mkisofs",
+        "-r",
+        "-J", "-l",
+    ]
+    if volume_name:
+        create_cmd += ["-V", volume_name]
+    if bios_boot_image:
+        create_cmd += [
+            "-b", bios_boot_image,
+            "-c", "boot.catalog",
+            "-no-emul-boot", "-boot-load-size", "4", "-boot-info-table",
+        ]
+    if efi_boot_image:
+        create_cmd += [
+            "-eltorito-alt-boot",
+            "-e", efi_boot_image,
+            "-no-emul-boot",
+            "-isohybrid-gpt-basdat",
+        ]
+    create_cmd += ["-o", iso_file, source_dir]
+    return create_cmd
+
+# Pack a tree as an iso that boots
+def create_bootable_iso(
+    iso_file,
+    source_dir,
+    volume_name = None,
+    bios_boot_image = None,
+    efi_boot_image = None,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Get tool
+    iso_tool = get_iso_tool()
+    if not iso_tool:
+        return False
+
+    # Run create command
+    code = command.run_returncode_command(
+        cmd = get_bootable_iso_command(
+            iso_tool = iso_tool,
+            iso_file = iso_file,
+            source_dir = source_dir,
+            volume_name = volume_name,
+            bios_boot_image = bios_boot_image,
+            efi_boot_image = efi_boot_image),
+        options = command.create_command_options(
+            output_paths = [iso_file],
+            blocking_processes = [iso_tool]),
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    if code != 0:
+        logger.log_error("Unable to package %s" % iso_file)
+        return False
+    if pretend_run:
+        return True
+    return paths.is_path_file(iso_file)
 
 # Get actual mount point
 def get_actual_mount_point(

@@ -8,10 +8,10 @@ import joybox.config as config
 import joybox.command as command
 import joybox.fileops as fileops
 import joybox.hashing as hashing
+import joybox.iso as iso
 import joybox.logger as logger
 import joybox.network as network
 import joybox.paths as paths
-import joybox.programs as programs
 import joybox.serialization as serialization
 import joybox.settings as settings
 
@@ -34,6 +34,10 @@ seed_source = "/cdrom/%s/" % seed_directory
 # The stock ISO waits for a menu choice; this is how long it waits before
 # installing itself, in seconds
 boot_timeout = 2
+
+# Where the stock image keeps the images it boots from
+bios_boot_image = "boot/grub/i386-pc/eltorito.img"
+efi_boot_image = "efi.img"
 
 ###########################################################
 # Releases
@@ -91,6 +95,10 @@ def find_latest_release_url(version, verbose = False, pretend_run = False, exit_
     if not image:
         return None
     return get_release_listing_url(version) + image
+
+# Get the volume name for a release
+def get_volume_name(version):
+    return "Ubuntu-Server %s" % version
 
 ###########################################################
 # Verification
@@ -513,174 +521,6 @@ def patch_boot_configs(
     return True
 
 ###########################################################
-# Image handling
-###########################################################
-
-# Get the image tool
-def get_image_tool():
-    if programs.is_tool_installed("XorrISO"):
-        return programs.get_tool_program("XorrISO")
-    logger.log_error("XorrISO was not found")
-    return None
-
-# Extract an image so its contents can be changed
-def extract_image(
-    iso_file,
-    iso_dir,
-    verbose = False,
-    pretend_run = False,
-    exit_on_failure = False):
-    image_tool = get_image_tool()
-    if not image_tool:
-        return False
-    success = fileops.make_directory(
-        src = iso_dir,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    if not success:
-        return False
-    extract_cmd = [
-        image_tool,
-        "-osirrox", "on",
-        "-indev", iso_file,
-        "-extract", "/", iso_dir,
-    ]
-    code = command.run_returncode_command(
-        cmd = extract_cmd,
-        options = command.create_command_options(
-            output_paths = [iso_dir],
-            blocking_processes = [image_tool]),
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    if code != 0:
-        logger.log_error("Unable to extract %s" % iso_file)
-        return False
-
-    # The extracted tree comes out read only, and the seed has to be added
-    fileops.chmod_file_or_directory(
-        src = iso_dir,
-        perms = 644,
-        dperms = 755,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    return True
-
-# Extract the boot images an extracted tree does not carry as ordinary files
-# The efi image lives in the El Torito catalogue rather than the filesystem,
-# and rebuilding without it produces an image no UEFI machine will boot.
-def extract_boot_images(
-    iso_file,
-    iso_dir,
-    verbose = False,
-    pretend_run = False,
-    exit_on_failure = False):
-    image_tool = get_image_tool()
-    if not image_tool:
-        return False
-    if paths.is_path_file(get_efi_image_file(iso_dir)):
-        return True
-    extract_cmd = [
-        image_tool,
-        "-osirrox", "on",
-        "-indev", iso_file,
-        "-extract_boot_images", iso_dir,
-    ]
-    code = command.run_returncode_command(
-        cmd = extract_cmd,
-        options = command.create_command_options(
-            output_paths = [iso_dir],
-            blocking_processes = [image_tool]),
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    if code != 0:
-        logger.log_error("Unable to extract boot images from %s" % iso_file)
-        return False
-    return rename_extracted_boot_image(
-        iso_dir = iso_dir,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-
-# Get the efi image an extracted tree should carry
-def get_efi_image_file(iso_dir):
-    return paths.join_paths(iso_dir, "efi.img")
-
-# Put the extracted boot image where the rebuild expects it
-def rename_extracted_boot_image(
-    iso_dir,
-    verbose = False,
-    pretend_run = False,
-    exit_on_failure = False):
-    if pretend_run:
-        return True
-    for candidate in sorted(paths.get_directory_contents(iso_dir)):
-        if candidate.startswith("eltorito_img") and candidate.endswith(".img"):
-            return fileops.move_file_or_directory(
-                src = paths.join_paths(iso_dir, candidate),
-                dest = get_efi_image_file(iso_dir),
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
-    logger.log_error("No efi boot image was found in %s" % iso_dir)
-    return False
-
-# Build the command that repacks an extracted tree as a bootable image
-# The image has to boot both ways: the bios entry from the El Torito image
-# and the uefi entry from the efi image, with the hybrid layout that lets the
-# same file be written to a usb stick.
-def get_repack_command(image_tool, iso_file, iso_dir, volume_name):
-    return [
-        image_tool,
-        "-as", "mkisofs",
-        "-r",
-        "-V", volume_name,
-        "-J", "-l",
-        "-b", "boot/grub/i386-pc/eltorito.img",
-        "-c", "boot.catalog",
-        "-no-emul-boot", "-boot-load-size", "4", "-boot-info-table",
-        "-eltorito-alt-boot",
-        "-e", "efi.img",
-        "-no-emul-boot",
-        "-isohybrid-gpt-basdat",
-        "-o", iso_file,
-        iso_dir,
-    ]
-
-# Get the volume name for a release
-def get_volume_name(version):
-    return "Ubuntu-Server %s" % version
-
-# Repack an extracted tree as a bootable image
-def repack_image(
-    iso_file,
-    iso_dir,
-    volume_name,
-    verbose = False,
-    pretend_run = False,
-    exit_on_failure = False):
-    image_tool = get_image_tool()
-    if not image_tool:
-        return False
-    code = command.run_returncode_command(
-        cmd = get_repack_command(image_tool, iso_file, iso_dir, volume_name),
-        options = command.create_command_options(
-            output_paths = [iso_file],
-            blocking_processes = [image_tool]),
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    if code != 0:
-        logger.log_error("Unable to package %s" % iso_file)
-        return False
-    if pretend_run:
-        return True
-    return paths.is_path_file(iso_file)
-
-###########################################################
 # Building
 ###########################################################
 
@@ -843,17 +683,17 @@ def build_autoinstall_image(
     try:
 
         # Take the image apart
-        success = extract_image(
+        success = iso.extract_buildable_iso_tree(
             iso_file = stock_image,
-            iso_dir = iso_dir,
+            extract_dir = iso_dir,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if not success:
             return False
-        success = extract_boot_images(
+        success = iso.extract_iso_boot_images(
             iso_file = stock_image,
-            iso_dir = iso_dir,
+            extract_dir = iso_dir,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
@@ -880,11 +720,13 @@ def build_autoinstall_image(
         if not success:
             return False
 
-        # Put it back together
-        success = repack_image(
+        # Put it back together, still bootable both ways
+        success = iso.create_bootable_iso(
             iso_file = output_file,
-            iso_dir = iso_dir,
+            source_dir = iso_dir,
             volume_name = get_volume_name(version),
+            bios_boot_image = bios_boot_image,
+            efi_boot_image = efi_boot_image,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)

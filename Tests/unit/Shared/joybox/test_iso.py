@@ -254,3 +254,79 @@ def test_a_missing_mount_directory_is_not_mounted(tmp_path):
     image.write_bytes(b"x")
 
     assert iso.is_iso_mounted(str(image), str(tmp_path / "absent")) is False
+
+
+###########################################################
+# Packing an image that boots
+#
+# An installer image has to boot on an old machine through its bios entry and
+# on a new one through its uefi entry, from the same file written to a usb
+# stick. Dropping either entry makes a stick that works on one and not the
+# other, which is only found at the machine it was carried to.
+###########################################################
+
+def bootable_command(**kwargs):
+    defaults = dict(
+        iso_tool = "/tools/xorriso",
+        iso_file = "/out.iso",
+        source_dir = "/tree",
+        volume_name = "A Volume",
+        bios_boot_image = "boot/grub/i386-pc/eltorito.img",
+        efi_boot_image = "efi.img")
+    defaults.update(kwargs)
+    return iso.get_bootable_iso_command(**defaults)
+
+
+def test_a_bootable_image_is_packed_from_its_tree():
+    command = bootable_command()
+
+    assert command[0] == "/tools/xorriso"
+    assert command[-1] == "/tree"
+    assert "/out.iso" in command
+
+
+def test_a_bootable_image_keeps_its_bios_entry():
+    command = bootable_command()
+
+    assert "boot/grub/i386-pc/eltorito.img" in command
+    assert "-boot-info-table" in command
+
+
+def test_a_bootable_image_keeps_its_uefi_entry():
+    command = bootable_command()
+
+    assert "-eltorito-alt-boot" in command
+    assert "efi.img" in command
+
+
+def test_a_bootable_image_can_be_written_to_a_usb_stick():
+    # Without the hybrid layout the file only works as an optical image.
+    assert "-isohybrid-gpt-basdat" in bootable_command()
+
+
+def test_an_image_with_no_bios_entry_asks_for_none():
+    command = bootable_command(bios_boot_image = None)
+
+    assert "-boot-info-table" not in command
+    assert "-eltorito-alt-boot" in command
+
+
+def test_an_image_with_no_uefi_entry_asks_for_none():
+    command = bootable_command(efi_boot_image = None)
+
+    assert "-eltorito-alt-boot" not in command
+    assert "-isohybrid-gpt-basdat" not in command
+
+
+def test_a_bootable_image_is_named():
+    assert "A Volume" in bootable_command()
+
+
+def test_a_bootable_image_needs_no_name():
+    command = bootable_command(volume_name = None)
+
+    assert "-V" not in command
+
+
+def test_the_efi_boot_image_sits_at_the_top_of_the_tree():
+    assert iso.get_iso_efi_boot_image("/tree").endswith("efi.img")

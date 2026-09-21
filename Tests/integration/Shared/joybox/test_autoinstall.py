@@ -65,10 +65,12 @@ def xorriso():
 
 @pytest.fixture(autouse = True)
 def installed_tool(monkeypatch, xorriso):
+    # The image handling lives in the iso module, so that is where the tool
+    # is looked up.
     monkeypatch.setattr(
-        autoinstall.programs, "is_tool_installed", lambda name: name == "XorrISO")
+        autoinstall.iso.programs, "is_tool_installed", lambda name: name == "XorrISO")
     monkeypatch.setattr(
-        autoinstall.programs, "get_tool_program", lambda name: xorriso)
+        autoinstall.iso.programs, "get_tool_program", lambda name: xorriso)
 
 
 @pytest.fixture
