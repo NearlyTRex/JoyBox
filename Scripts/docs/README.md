@@ -17,6 +17,7 @@ New to the tools? Start with **[Getting Started](getting-started.md)**.
 | [Game Collection](game-collection.md) | Updating game JSON + metadata — for store purchases and for files moved manually into the locker. |
 | [Save Games](save-games.md) | Capturing and archiving game saves (Steam and other store games) to your backups. |
 | [Audio & Music](audio.md) | Downloading music / ASMR / stories, tagging, converting audiobooks, and building playlists. |
+| [Autoinstall Images](autoinstall.md) | Building an Ubuntu Server image that installs itself, and loading it with the software a machine is for. |
 
 ## Reference
 

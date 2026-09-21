@@ -176,6 +176,21 @@ ini_defaults["UserData.Scraping"]["steamgriddb_api_key"] = ""
 ini_defaults["UserData.Scraping"]["google_search_engine_id"] = ""
 ini_defaults["UserData.Scraping"]["google_search_engine_api_key"] = ""
 
+# UserData.Autoinstall
+ini_defaults["UserData.Autoinstall"] = {}
+ini_defaults["UserData.Autoinstall"]["autoinstall_version"] = "24.04"
+ini_defaults["UserData.Autoinstall"]["autoinstall_username"] = ""
+ini_defaults["UserData.Autoinstall"]["autoinstall_realname"] = ""
+ini_defaults["UserData.Autoinstall"]["autoinstall_hostname"] = "ubuntu"
+ini_defaults["UserData.Autoinstall"]["autoinstall_password_hash"] = ""
+ini_defaults["UserData.Autoinstall"]["autoinstall_ssh_keys"] = ""
+ini_defaults["UserData.Autoinstall"]["autoinstall_locale"] = "en_US.UTF-8"
+ini_defaults["UserData.Autoinstall"]["autoinstall_keyboard"] = "us"
+ini_defaults["UserData.Autoinstall"]["autoinstall_timezone"] = "Etc/UTC"
+ini_defaults["UserData.Autoinstall"]["autoinstall_packages"] = ""
+ini_defaults["UserData.Autoinstall"]["autoinstall_serial_console"] = "false"
+ini_defaults["UserData.Autoinstall"]["autoinstall_overlay_file"] = ""
+
 # UserData.Resolution
 ini_defaults["UserData.Resolution"] = {}
 ini_defaults["UserData.Resolution"]["screen_resolution_w"] = "1920"
