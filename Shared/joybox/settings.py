@@ -2,6 +2,9 @@
 import os
 import configparser
 
+# Local imports
+import joybox.secretstore as secretstore
+
 # Settings file name and default locations (home preferred, repo-root fallback)
 CONFIG_FILENAME = "JoyBox.ini"
 
@@ -34,6 +37,7 @@ def reset():
     global _loaded_path, _overlay
     _loaded_path = None
     _overlay = {}
+    secretstore.clear_resolved_secrets()
 
 def _ensure_loaded():
     global _parser, _loaded_path
@@ -90,10 +94,11 @@ def has_field(section, field, throw_exception = True):
 
 def get_value(section, field, default_value = None, throw_exception = True):
     if (section, field) in _overlay:
-        return _overlay[(section, field)]
+        return secretstore.resolve_value(_overlay[(section, field)])
     try:
         _ensure_loaded()
-        return _parser.get(section, field, fallback = default_value)
+        return secretstore.resolve_value(
+            _parser.get(section, field, fallback = default_value))
     except Exception:
         if throw_exception:
             raise RuntimeError("Unable to get settings value [file=%s][section=%s][field=%s]" % (_settings_file, section, field))

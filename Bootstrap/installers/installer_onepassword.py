@@ -24,6 +24,9 @@ class OnePassword(installer.Installer):
         self.sources_list_path = f"/etc/apt/sources.list.d/{self.sources_list}"
         self.policy_path = f"/etc/debsig/policies/{self.policy}/"
         self.policy_keyring_path = f"/usr/share/debsig/keyrings/{self.policy}"
+        self.packages = ["1password", "1password-cli"]
+        self.app_path = "/usr/bin/1password"
+        self.cli_path = "/usr/bin/op"
 
     def get_supported_environments(self):
         return [
@@ -31,7 +34,9 @@ class OnePassword(installer.Installer):
         ]
 
     def is_installed(self):
-        return self.connection.does_file_or_directory_exist("/usr/bin/1password")
+        return all(
+            self.connection.does_file_or_directory_exist(path)
+            for path in [self.app_path, self.cli_path])
 
     def install(self):
         logger.log_info("Installing 1Password")
@@ -43,12 +48,14 @@ class OnePassword(installer.Installer):
         self.connection.run_checked([self.gpg_tool, "--yes", "--dearmor", "-o", f"{self.policy_keyring_path}/debsig.gpg", "/tmp/1password.asc"], sudo = True)
         self.connection.write_file(self.sources_list_path, f"deb [arch=amd64 signed-by={self.archive_key_path}] {self.url}/linux/debian/amd64 stable main\n", sudo = True)
         self.connection.run_checked([self.aptget_tool, "update"], sudo = True)
-        self.connection.run_checked([self.aptget_tool, "install", "-y", "1password"], sudo = True)
+        self.connection.run_checked(
+            [self.aptget_tool, "install", "-y"] + self.packages, sudo = True)
         return True
 
     def uninstall(self):
         logger.log_info("Uninstalling 1Password")
-        self.connection.run_checked([self.aptget_tool, "remove", "-y", "1password"], sudo = True)
+        self.connection.run_checked(
+            [self.aptget_tool, "remove", "-y"] + self.packages, sudo = True)
         self.connection.remove_file_or_directory(self.sources_list_path, sudo = True)
         self.connection.remove_file_or_directory(self.archive_key_path, sudo = True)
         self.connection.remove_file_or_directory(self.policy_path, sudo = True)

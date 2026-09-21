@@ -269,3 +269,83 @@ def test_section_and_field_presence(config_file):
     assert settings.has_section("Z") is False
     assert settings.has_field("A", "x") is True
     assert settings.has_field("A", "z") is False
+
+
+###########################################################
+# Secrets kept out of the file
+#
+# A field may hold a reference instead of a secret, so that what is on disk
+# gives up nothing when it is read by accident. The resolution happens here,
+# at the one point every string setting passes through.
+###########################################################
+
+SECRET_REFERENCE = "op://Private/JoyBox/locker_passphrase"
+SECRET_VALUE = "correct-horse-battery-staple"
+
+
+@pytest.fixture
+def vault(monkeypatch):
+    from joybox import secretstore
+
+    asked = []
+
+    def resolve(reference, verbose = False):
+        asked.append(reference)
+        return SECRET_VALUE
+
+    secretstore.clear_resolved_secrets()
+    monkeypatch.setattr(secretstore, "resolve_secret_reference", resolve)
+    yield asked
+    secretstore.clear_resolved_secrets()
+
+
+def test_a_reference_in_the_file_reads_as_the_secret(config_file, vault):
+    config_file("[UserData.Protection]\nlocker_passphrase = %s\n" % SECRET_REFERENCE)
+
+    assert settings.get_value("UserData.Protection", "locker_passphrase") == SECRET_VALUE
+
+
+def test_an_ordinary_value_is_not_sent_to_the_vault(config_file, vault):
+    config_file("[S]\nname = joybox\n")
+
+    assert settings.get_value("S", "name") == "joybox"
+    assert vault == []
+
+
+def test_a_field_that_is_never_read_is_never_resolved(config_file, vault):
+    # Unlocking prompts, so reading one field must not fetch every secret in
+    # the file.
+    config_file(
+        "[S]\nfirst = %s\nsecond = op://Private/JoyBox/other\n" % SECRET_REFERENCE)
+
+    settings.get_value("S", "first")
+
+    assert vault == [SECRET_REFERENCE]
+
+
+def test_a_reference_resolves_through_a_path_value(config_file, vault):
+    config_file("[S]\nkey_file = %s\n" % SECRET_REFERENCE)
+
+    assert settings.get_path_value("S", "key_file") == SECRET_VALUE
+
+
+def test_a_reference_set_at_runtime_is_resolved(config_file, vault):
+    config_file("[S]\n")
+    settings.set_value("S", "locker_passphrase", SECRET_REFERENCE)
+
+    assert settings.get_value("S", "locker_passphrase") == SECRET_VALUE
+
+
+def test_saving_writes_the_reference_and_not_the_secret(config_file, vault):
+    # The whole point is that the file holds nothing worth stealing; a save
+    # that wrote back what was read would undo it on the first write.
+    path = config_file("[UserData.Protection]\nlocker_passphrase = %s\n" % SECRET_REFERENCE)
+    settings.get_value("UserData.Protection", "locker_passphrase")
+    settings.set_value("S", "other", "plain")
+
+    settings.save()
+
+    with open(path) as written:
+        contents = written.read()
+    assert SECRET_REFERENCE in contents
+    assert SECRET_VALUE not in contents
