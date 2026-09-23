@@ -19,28 +19,64 @@ import joybox.paths as paths
 import joybox.prompts as prompts
 
 # Parse arguments
-parser = arguments.ArgumentParser(description = "Github tool.")
+parser = arguments.ArgumentParser(
+    description = "Archive your GitHub repositories into the locker, or sync your forks with upstream.",
+    details = (
+        "Lists the repositories owned by the GitHub user, public and private, optionally\n"
+        "narrowed with `--include_repos` or `--exclude_repos`, and then runs one action on\n"
+        "each.\n"
+        "\n"
+        "`Archive` clones each repository with Git into a temporary directory, zips it, tests\n"
+        "the zip, and backs it up to the locker as\n"
+        "`<archive_base_dir>/<user>/<repo>/<repo>_<timestamp>.zip`. Each run adds a new\n"
+        "timestamped zip. With `--clean` the `.git` folder is left out, so the zip holds only\n"
+        "the working tree.\n"
+        "\n"
+        "`Update` asks GitHub to merge the upstream changes into the default branch of each of\n"
+        "your forks (the merge-upstream API). Repositories that are not forks are skipped.\n"
+        "\n"
+        "The username and access token come from `[UserData.GitHub] github_username` and\n"
+        "`github_access_token` in `~/JoyBox.ini` unless given on the command line."),
+    examples = [
+        ("Archive every repository to all lockers", "github_tool"),
+        ("Archive two repositories with their submodules", "github_tool -i \"JoyBox,Dotfiles\" -r"),
+        ("Archive everything but one repository, without the git history, to the local locker", "github_tool -e LargeRepo -c -l Local"),
+        ("Sync all forks with their upstream", "github_tool -a Update"),
+        ("Preview an archive run", "github_tool -p -v"),
+    ],
+    notes = [
+        "The token needs access to private repositories for them to be listed, and write access for `Update`.",
+        "Repository names in `--include_repos` and `--exclude_repos` must match exactly, including case.",
+        "A repository that fails to archive or update is reported and the rest still run.",
+        "For `Archive`, `--archive_base_dir` must already exist and Git must be installed with `setup_tools`.",
+    ],
+    see_also = ["setup_tools", "backup_tool", "master_backup"],
+    section = "Backups & Lockers")
+parser.add_group("GitHub")
 parser.add_enum_argument(
     args = ("-a", "--action"),
     arg_type = config.GithubActionType,
     default = config.GithubActionType.ARCHIVE,
-    description = "Github action type")
-parser.add_string_argument(args = ("-u", "--github_username"), description = "Github username")
-parser.add_string_argument(args = ("-t", "--github_access_token"), description = "Github access token")
+    description = "What to do with each repository: back it up as a zip, or merge upstream into a fork")
+parser.add_string_argument(args = ("-u", "--github_username"), description = "GitHub user whose repositories are used; `[UserData.GitHub] github_username` when omitted")
+parser.add_string_argument(args = ("-t", "--github_access_token"), description = "GitHub personal access token; `[UserData.GitHub] github_access_token` when omitted")
+parser.add_group("Output")
 parser.add_string_argument(
     args = ("-d", "--archive_base_dir"),
     default = environment.get_locker_development_archives_root_dir(),
-    description = "Archive base directory")
-parser.add_string_argument(args = ("-i", "--include_repos"), default = "", description = "Only include these repos (comma delimited)")
-parser.add_string_argument(args = ("-e", "--exclude_repos"), default = "", description = "Use all repos except these (comma delimited)")
-parser.add_boolean_argument(args = ("-f", "--force"), description = "Force action")
-parser.add_boolean_argument(args = ("-r", "--recursive"), description = "Use recursion")
-parser.add_boolean_argument(args = ("-c", "--clean"), description = "Use cleaning first")
+    description = "Locker directory the archives go under, as `<dir>/<user>/<repo>/`; used by `Archive` only")
+parser.add_group("Selection")
+parser.add_string_argument(args = ("-i", "--include_repos"), default = "", description = "Comma-separated repository names to use, ignoring all others")
+parser.add_string_argument(args = ("-e", "--exclude_repos"), default = "", description = "Comma-separated repository names to leave out")
+parser.add_group("Archive")
+parser.add_boolean_argument(args = ("-f", "--force"), description = "Not used by either action")
+parser.add_boolean_argument(args = ("-r", "--recursive"), description = "Clone submodules too (`git clone --recursive`)")
+parser.add_boolean_argument(args = ("-c", "--clean"), description = "Leave the `.git` folder out of the zip")
 parser.add_enum_argument(
     args = ("-l", "--locker_type"),
     arg_type = config.LockerType,
     default = config.LockerType.ALL,
-    description = "Locker type for backup upload")
+    description = "Locker to back the zips up to")
 parser.add_common_arguments()
 args, unknown = parser.parse_known_args()
 

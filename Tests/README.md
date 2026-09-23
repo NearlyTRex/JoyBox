@@ -116,7 +116,7 @@ double needs to do the same.
   running Ollama.
 - Nothing exercises a real remote deploy. `Scripts/bin/verify_server.py`
   covers that against the rehearsal VM — see
-  [local testing](../Bootstrap/docs/local-testing.md).
+  [Testing the Remote Server](../Docs/testing/remote-server.md).
 
 ## Large test files
 

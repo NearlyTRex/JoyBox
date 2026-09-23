@@ -18,7 +18,25 @@ import joybox.logger as logger
 import joybox.paths as paths
 
 # Parse arguments
-parser = arguments.ArgumentParser(description = "Launch pegasus.")
+parser = arguments.ArgumentParser(
+    description = "Start the Pegasus game frontend installed by setup_tools.",
+    details = (
+        "Runs the Pegasus program from the tools directory, with its own folder as the working\n"
+        "directory and the current environment passed through. It also sets\n"
+        "`JOYBOX_LAUNCH_JSON` to the JoyBox launcher command, which the `launch:` lines in the\n"
+        "Pegasus metadata files JoyBox writes call to start a game.\n"
+        "\n"
+        "It waits for Pegasus to exit and logs an error if it exits with a non-zero code. It\n"
+        "takes only the common options."),
+    examples = [
+        ("Start Pegasus", "launch_pegasus"),
+        ("Dry run without starting Pegasus", "launch_pegasus -p -v"),
+    ],
+    notes = [
+        "Pegasus must be installed first (`setup_tools -k Pegasus`); the command exits with an error if it is not found.",
+    ],
+    see_also = ["setup_tools", "setup_game_assets", "build_game_metadata_files", "launch_game_json"],
+    section = "Game Launching")
 parser.add_common_arguments()
 args, unknown = parser.parse_known_args()
 

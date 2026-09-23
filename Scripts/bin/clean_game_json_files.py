@@ -19,7 +19,25 @@ import joybox.prompts as prompts
 import joybox.serialization as serialization
 
 # Parse arguments
-parser = arguments.ArgumentParser(description = "Clean json files.")
+parser = arguments.ArgumentParser(
+    description = "Tidy every game JSON file: sort its keys and drop empty values.",
+    details = (
+        "Rewrites each game JSON file in the metadata repository, across all supercategories,\n"
+        "categories and subcategories, with keys sorted and four-space indentation.\n"
+        "\n"
+        "Top-level keys whose value is null, an empty string, an empty list or object, or\n"
+        "`false` are removed. Nested values are left as they are."),
+    examples = [
+        ("Clean every JSON file", "clean_game_json_files"),
+        ("Clean without the confirmation prompt", "clean_game_json_files --no-preview"),
+        ("Show which files would be cleaned", "clean_game_json_files -p -v"),
+    ],
+    notes = [
+        "There are no selection options; every JSON file is processed.",
+        "A key set to `false` is removed, so a false flag and a missing flag end up the same.",
+    ],
+    see_also = ["build_game_json_files", "analyze_game_json_files", "clean_game_hash_files", "clean_game_metadata_files"],
+    section = "Game Collection")
 parser.add_common_arguments()
 args, unknown = parser.parse_known_args()
 

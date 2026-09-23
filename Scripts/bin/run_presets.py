@@ -17,19 +17,43 @@ import joybox.logger as logger
 import joybox.paths as paths
 
 # Parse arguments
-parser = arguments.ArgumentParser(description = "Run tool presets.")
-parser.add_output_path_argument()
+parser = arguments.ArgumentParser(
+    description = "Run another JoyBox tool once per platform of a named preset group.",
+    details = (
+        "A preset group, defined in `Shared/joybox/config/presets.py`, names a game\n"
+        "supercategory, a category and optionally a list of subcategories, such as the Nintendo\n"
+        "handheld and console platforms in `Backup_NintendoGen`. This command runs the chosen\n"
+        "tool (only `backup_tool` so far) once per subcategory, or once for the whole category\n"
+        "when the group lists none, passing `-u`, `-c` and `-s` for each run along with `-o`,\n"
+        "`--skip_existing`, `--skip_identical`, `--verbose` and `--exit_on_failure` as given\n"
+        "here.\n"
+        "\n"
+        "Groups: `Backup_Microsoft` and `Backup_OtherGen` (a whole category each),\n"
+        "`Backup_NintendoGen`, `Backup_NintendoSwitch`, `Backup_SonyGen`, `Backup_SonyPS3`,\n"
+        "`Backup_SonyPS4` and `Backup_SonyPSN` (one run per platform)."),
+    examples = [
+        ("Back up every Nintendo generation platform to a drive", "run_presets -g Backup_NintendoGen -o /mnt/Backup"),
+        ("Back up the Sony PSN platforms, skipping files already there", "run_presets -g Backup_SonyPSN -o /mnt/Backup -e"),
+        ("Dry run without starting any backup", "run_presets -g Backup_SonyGen -o /mnt/Backup -p -v"),
+    ],
+    notes = [
+        "A failing run is logged and the remaining runs still go ahead.",
+        "`--pretend_run` is not passed on; it stops the runs from starting at all.",
+    ],
+    see_also = ["backup_tool"],
+    section = "Backups & Lockers")
+parser.add_output_path_argument(description = "Destination directory passed to each run as `-o`; it must exist")
 parser.add_enum_argument(
     args = ("-r", "--preset_tool_type"),
     arg_type = config.PresetToolType,
     default = config.PresetToolType.BACKUP_TOOL,
-    description = "Preset tool type")
+    description = "JoyBox tool to run for each platform")
 parser.add_enum_argument(
     args = ("-g", "--preset_option_group_type"),
     arg_type = config.PresetOptionGroupType,
-    description = "Preset option group type")
-parser.add_boolean_argument(args = ("-e", "--skip_existing"), description = "Skip existing files")
-parser.add_boolean_argument(args = ("-i", "--skip_identical"), description = "Skip identical files")
+    description = "Preset group naming the platforms to run over; required")
+parser.add_boolean_argument(args = ("-e", "--skip_existing"), description = "Pass `--skip_existing` on, so files already at the destination are skipped")
+parser.add_boolean_argument(args = ("-i", "--skip_identical"), description = "Pass `--skip_identical` on, so files already at the destination with the same content are skipped")
 parser.add_common_arguments()
 args, unknown = parser.parse_known_args()
 

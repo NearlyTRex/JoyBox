@@ -15,7 +15,21 @@ import joybox.setup as setup
 import joybox.logger as logger
 
 # Parse arguments
-parser = arguments.ArgumentParser(description = "Launch sunshine.")
+parser = arguments.ArgumentParser(
+    description = "Start the Sunshine game-streaming host installed by setup_tools.",
+    details = (
+        "Runs the Sunshine program from the tools directory so a Moonlight client can stream\n"
+        "games from this machine. It waits for Sunshine to exit and logs an error if it exits\n"
+        "with a non-zero code. It takes only the common options."),
+    examples = [
+        ("Start Sunshine", "launch_sunshine"),
+        ("Dry run without starting Sunshine", "launch_sunshine -p -v"),
+    ],
+    notes = [
+        "Sunshine must be installed first (`setup_tools -k Sunshine`); the command exits with an error if it is not found.",
+    ],
+    see_also = ["setup_tools", "launch_pegasus"],
+    section = "Game Launching")
 parser.add_common_arguments()
 args, unknown = parser.parse_known_args()
 

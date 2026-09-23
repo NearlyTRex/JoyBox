@@ -20,7 +20,33 @@ import joybox.paths as paths
 import joybox.prompts as prompts
 
 # Parse arguments
-parser = arguments.ArgumentParser(description = "Verify rom files.")
+parser = arguments.ArgumentParser(
+    description = "Check that game JSON, metadata and hash files agree with the files in the local locker.",
+    details = (
+        "Cross-checks the game metadata directory (`game_metadata_dir` in the ini) against the\n"
+        "`Gaming` folder of the local locker, in four passes:\n"
+        "\n"
+        "1. Every `.json` file under `Json` must have a matching game folder in the locker;\n"
+        "   one without is reported as extraneous.\n"
+        "2. Every game listed in a Pegasus metadata file must point to a JSON file that exists.\n"
+        "3. Every file a game's JSON lists under `files`, plus its `transform_file` (or its\n"
+        "   `launch_file` when there is no transform file), must exist in the game's locker\n"
+        "   folder.\n"
+        "4. Every file listed in a hash file under `Hashes` must exist under the locker's\n"
+        "   `Gaming` folder.\n"
+        "\n"
+        "The run stops with an error at the first problem found. Nothing is written or\n"
+        "changed."),
+    examples = [
+        ("Check the game metadata against the local locker", "verify_game_files"),
+        ("Check without the confirmation prompt", "verify_game_files --no-preview"),
+    ],
+    notes = [
+        "There is no path option: the directories come from the ini, and the preview shows which ones will be checked.",
+        "Only the local locker is checked, so its game files must be present locally.",
+    ],
+    see_also = ["build_game_json_files", "build_game_metadata_files", "build_game_hash_files", "scan_game_files"],
+    section = "Game Collection")
 parser.add_common_arguments()
 args, unknown = parser.parse_known_args()
 

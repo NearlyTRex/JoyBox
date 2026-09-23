@@ -22,22 +22,52 @@ import joybox.logger as logger
 import joybox.paths as paths
 
 # Setup argument parser
-parser = arguments.ArgumentParser(description = "Launch json files.")
-parser.add_input_path_argument()
+parser = arguments.ArgumentParser(
+    description = "Launch a game described by its JSON file, installing it and restoring its save first.",
+    details = (
+        "The game is given as a JSON file with `-i`, or by `-c`, `-s` and `-n`, which name the\n"
+        "JSON file under the `Roms` supercategory of the metadata repository; the `launch:` lines\n"
+        "in the Pegasus metadata files use this second form. With `-r`, whatever is not given\n"
+        "is picked at random, ending with a random game from that subcategory's metadata file.\n"
+        "\n"
+        "Games whose metadata does not mark them playable are refused. A store game is\n"
+        "installed and started through its store, with its save imported before and exported\n"
+        "after. Any other game is installed into the local cache if needed, its save is imported\n"
+        "and linked into the emulator's save folder, the emulator's config file has its path\n"
+        "placeholders filled in, and the emulator is run; afterwards the config is restored and\n"
+        "the save exported.\n"
+        "\n"
+        "Errors are shown as a popup and end the run."),
+    examples = [
+        ("Launch a game by name", "launch_game_json -c Nintendo -s \"Nintendo 64\" -n \"Game Name (USA)\""),
+        ("Launch a game from its JSON file, fullscreen", "launch_game_json -i \"/path/to/Game Name (USA).json\" -f"),
+        ("Launch a random Nintendo game", "launch_game_json -c Nintendo -r"),
+        ("Launch and record a video of the session", "launch_game_json -c Nintendo -s \"Nintendo 64\" -n \"Game Name (USA)\" -t Video"),
+        ("Dry run", "launch_game_json -c Nintendo -s \"Nintendo 64\" -n \"Game Name (USA)\" -p -v"),
+    ],
+    notes = [
+        "Capture length, interval, area and frame rate come from the `[UserData.Capture]` section of JoyBox.ini.",
+        "Random selection skips subcategories whose platform has no launcher.",
+    ],
+    see_also = ["install_game_json", "launch_pegasus", "save_game_tool"],
+    section = "Game Launching")
+parser.add_group("Game")
+parser.add_input_path_argument(description = "Game JSON file to launch; takes priority over `-c`, `-s` and `-n`")
 parser.add_enum_argument(
     args = ("-l", "--locker_type"),
     arg_type = config.LockerType,
     default = config.LockerType.HETZNER,
-    description = "Locker type")
-parser.add_game_category_argument()
-parser.add_game_subcategory_argument()
-parser.add_game_name_argument()
-parser.add_boolean_argument(args = ("-r", "--fill_with_random"), description = "Fill unspecified fields with random values")
+    description = "Locker type passed to the install step")
+parser.add_game_category_argument(description = "Category of the game, used with `-s` and `-n` to find its JSON file")
+parser.add_game_subcategory_argument(description = "Subcategory (platform) of the game, used with `-c` and `-n` to find its JSON file")
+parser.add_game_name_argument(description = "Name of the game, used with `-c` and `-s` to find its JSON file")
+parser.add_boolean_argument(args = ("-r", "--fill_with_random"), description = "When `-i` or the full `-c`/`-s`/`-n` set is not given, pick the missing category, subcategory and game at random")
+parser.add_group("Behavior")
 parser.add_enum_argument(
     args = ("-t", "--capture_type"),
     arg_type = config.CaptureType,
-    description = "Capture type")
-parser.add_boolean_argument(args = ("-f", "--fullscreen"), description = "Enable fullscreen mode")
+    description = "Capture screenshots or a video while an emulated game runs; no capture when omitted")
+parser.add_boolean_argument(args = ("-f", "--fullscreen"), description = "Ask the emulator to run fullscreen")
 parser.add_common_arguments()
 
 # Parse arguments

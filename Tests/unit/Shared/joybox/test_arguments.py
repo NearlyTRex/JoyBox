@@ -493,3 +493,111 @@ def test_common_short_flags_do_not_collide(argv):
     assert args.verbose is True
     assert args.pretend_run is True
     assert args.exit_on_failure is True
+
+
+###########################################################
+# Description
+#
+# The command reference is generated from describe(), so it has to report what
+# was declared: no aliases, the description without decoration, and each
+# option under the group it was added to.
+###########################################################
+
+def describe_options(parser):
+    return {option["dest"]: option for group in parser.describe()["groups"] for option in group["options"]}
+
+
+def test_describe_reports_the_declared_flags_only():
+    parser = build()
+    parser.add_boolean_argument(args = ("-p", "--pretend_run"), description = "Pretend")
+
+    assert describe_options(parser)["pretend_run"]["flags"] == ["-p", "--pretend_run"]
+
+
+def test_describe_reports_an_enum_description_without_its_value_list():
+    parser = build()
+    parser.add_enum_argument(args = ("-c", "--game_category"), arg_type = config.Category, description = "Category")
+
+    option = describe_options(parser)["game_category"]
+
+    assert option["description"] == "Category"
+    assert option["choices"] == config.Category.values()
+
+
+def test_describe_reports_an_enum_default_as_its_display_value():
+    parser = build()
+    parser.add_game_supercategory_argument()
+
+    assert describe_options(parser)["game_supercategory"]["default"] == str(config.Supercategory.ROMS)
+
+
+def test_describe_places_options_in_their_group():
+    parser = build()
+    parser.add_string_argument(args = ("-n", "--name"), description = "Name")
+    parser.add_group("Output")
+    parser.add_string_argument(args = ("-o", "--output_path"), description = "Output")
+
+    groups = parser.describe()["groups"]
+
+    assert [(group["title"], [option["dest"] for option in group["options"]]) for group in groups] == \
+        [(None, ["name"]), ("Output", ["output_path"])]
+
+
+def test_common_arguments_do_not_capture_later_options():
+    parser = build()
+    parser.add_common_arguments()
+    parser.add_string_argument(args = ("-n", "--name"), description = "Name")
+
+    groups = {group["title"]: [option["dest"] for option in group["options"]] for group in parser.describe()["groups"]}
+
+    assert groups[None] == ["name"]
+    assert "name" not in groups["Common options"]
+
+
+def test_describe_leaves_out_help():
+    assert "help" not in describe_options(build())
+
+
+def test_a_positional_without_a_default_is_required():
+    parser = build()
+    parser.add_string_argument(args = ("name",), description = "Name")
+
+    option = describe_options(parser)["name"]
+
+    assert option["positional"] and option["required"]
+
+
+def test_describe_carries_the_page_fields():
+    parser = arguments.ArgumentParser(
+        description = "Tool",
+        details = "More",
+        examples = [("Run it", "tool -x")],
+        notes = ["Careful"],
+        see_also = ["other"],
+        section = "Section")
+
+    described = parser.describe()
+
+    assert (described["details"], described["examples"], described["notes"], described["see_also"], described["section"]) == \
+        ("More", [["Run it", "tool -x"]], ["Careful"], ["other"], "Section")
+
+
+def test_help_shows_examples_on_their_own_lines(argv, capsys):
+    parser = arguments.ArgumentParser(description = "Tool", examples = [("Run it", "tool --flag value")])
+    argv("--help")
+
+    with pytest.raises(SystemExit):
+        parser.parse_args()
+
+    assert "\n  tool --flag value\n" in capsys.readouterr().out
+
+
+def test_help_leaves_out_an_empty_default(argv, capsys):
+    parser = build()
+    parser.add_string_argument(args = ("-n", "--name"), description = "Name")
+    argv("--help")
+
+    with pytest.raises(SystemExit):
+        parser.parse_args()
+
+    assert "default: None" not in capsys.readouterr().out

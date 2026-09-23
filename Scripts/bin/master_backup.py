@@ -17,25 +17,63 @@ import joybox.logger as logger
 import joybox.prompts as prompts
 
 # Setup argument parser
-parser = arguments.ArgumentParser(description = "Master backup - back up the local locker (authoritative source) to remote lockers.")
+parser = arguments.ArgumentParser(
+    description = "Back up the local locker to one or more remote lockers in one unattended run.",
+    details = (
+        "Treats the source locker (normally `Local`) as the authoritative copy and pushes new\n"
+        "and changed files to each destination locker, by default `Hetzner` and `Gdrive`. It\n"
+        "asks for one confirmation and then runs without prompting. It is additive by default:\n"
+        "files that exist only on a destination are kept unless `--recycle_orphans` is given.\n"
+        "\n"
+        "For each destination it:\n"
+        "\n"
+        "1. Builds an MD5 hash map of the source and of the destination and compares them by\n"
+        "   relative path. Local lockers are hashed on disk; remotes are listed with\n"
+        "   `rclone lsjson --hash`, and SFTP remotes such as Hetzner are read from their\n"
+        "   `.locker_hashes.db` sidecar instead.\n"
+        "2. Uploads files missing from the destination or whose hash differs. Plain files go up\n"
+        "   in one `rclone copy --files-from`. For a destination marked `encrypted` in its\n"
+        "   locker settings, files are encrypted into a staging tree in the cache directory and\n"
+        "   uploaded in batches of about 4 GiB.\n"
+        "3. Refreshes the destination's hash sidecar from the local content, once, when the\n"
+        "   source is a local locker and the destination is an SFTP remote.\n"
+        "\n"
+        "Each destination's configured `excluded_dirs` are left out of both the comparison and\n"
+        "the upload. This is the unattended form of `locker_sync_tool`."),
+    examples = [
+        ("Back up the local locker to Hetzner and Gdrive", "master_backup"),
+        ("Show what would be uploaded without uploading anything", "master_backup -p -v"),
+        ("Back up to Hetzner only", "master_backup -r Hetzner"),
+        ("Also move remote files that no longer exist locally into the recycle bin", "master_backup --recycle_orphans"),
+        ("Rehash everything instead of using the cached hash maps", "master_backup --skip_cache"),
+    ],
+    notes = [
+        "Hash maps are cached per locker for 24 hours, including the source's. Files changed locally since the cached map was built are not seen until it expires, so use `--skip_cache` after recent changes.",
+        "A pretend run still hashes local lockers and writes their cache, so the real run that follows can reuse it.",
+        "`--recycle_orphans` moves orphans into the destination's `.recycle_bin`; nothing is hard-deleted. The recycle bin itself is never compared.",
+        "The sidecar refresh is skipped for a destination when any of its uploads failed, so the next run finds and retries the missing files.",
+        "The Hetzner rclone remote needs `disable_hashcheck = true`, since SFTP cannot run `md5sum` to verify transfers; the rclone config JoyBox generates sets it.",
+    ],
+    see_also = ["locker_sync_tool", "rebuild_hash_sidecars", "find_missing_hash_sidecars", "sync_tool", "backup_tool"],
+    section = "Backups & Lockers")
 parser.add_enum_argument(
     args = ("-l", "--local_locker"),
     arg_type = config.LockerType,
     default = config.LockerType.LOCAL,
-    description = "Authoritative source locker")
+    description = "Locker to back up from; its content is treated as authoritative")
 parser.add_string_argument(
     args = ("-r", "--remote_lockers"),
     default = "Hetzner,Gdrive",
-    description = "Backup destination lockers (comma-separated)")
+    description = "Comma-separated locker names to back up to; unknown names are skipped with a warning")
 parser.add_boolean_argument(
     args = ("--no_rebuild_sidecars",),
-    description = "Skip refreshing remote hash sidecars after syncing")
+    description = "Do not refresh the SFTP destinations' hash sidecars after uploading")
 parser.add_boolean_argument(
     args = ("--recycle_orphans",),
-    description = "Recycle remote files missing from the source (default: keep, additive only)")
+    description = "Move destination files that are missing from the source into the destination's `.recycle_bin`; by default they are kept")
 parser.add_boolean_argument(
     args = ("--skip_cache",),
-    description = "Rebuild hash maps fresh (ignore the 24h cache)")
+    description = "Rebuild every hash map instead of reusing one cached within the last 24 hours")
 parser.add_common_arguments()
 args, unknownargs = parser.parse_known_args()
 

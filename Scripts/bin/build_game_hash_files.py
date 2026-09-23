@@ -19,27 +19,58 @@ import joybox.prompts as prompts
 import joybox.paths as paths
 
 # Parse arguments
-parser = arguments.ArgumentParser(description = "Build file hashes.")
-parser.add_input_path_argument()
-parser.add_game_supercategory_argument()
-parser.add_game_category_argument()
-parser.add_game_subcategory_argument()
+parser = arguments.ArgumentParser(
+    description = "Record hashes of each selected game's files in the per-subcategory hash file.",
+    details = (
+        "For each selected game, hashes every file under the game's directory and merges the\n"
+        "records into the subcategory's hash file in the game metadata repository\n"
+        "(`Hashes/<supercategory>/<category>/<subcategory>.json`). Files whose entries are\n"
+        "unchanged are skipped, so re-running only hashes what is new or modified.\n"
+        "\n"
+        "The game directory is taken from `-i` if given, otherwise from the game's place under\n"
+        "`-b`, otherwise from the gaming folder of the `-l` locker (the Local locker when `-l`\n"
+        "is omitted). Records include the encrypted name, hash and size computed with that\n"
+        "locker's passphrase, so they match what an encrypted remote locker holds.\n"
+        "\n"
+        "Games are listed from the locker when `-l` or `-b` is given, and from the JSON files\n"
+        "in the metadata repository otherwise. With `-d`, entries for files that no longer\n"
+        "exist under the locker's gaming folder are removed afterwards, once per subcategory."),
+    examples = [
+        ("Hash a platform from the local locker", "build_game_hash_files -c Nintendo -s \"Nintendo Switch\" -l Local"),
+        ("Hash and drop entries for deleted files", "build_game_hash_files -c Nintendo -s \"Nintendo Switch\" -l Local -d"),
+        ("Hash from a locker copy mounted elsewhere", "build_game_hash_files -c Nintendo -s \"Nintendo Switch\" -b /mnt/backup/locker"),
+        ("Show what would be hashed without writing", "build_game_hash_files -c Sony -s \"Sony PlayStation 2\" -l Local -p -v"),
+    ],
+    notes = [
+        "Choose the `-l` locker that matches the content being hashed; its passphrase determines the encrypted fields.",
+        "`-i` is used as the directory of every selected game.",
+        "The supercategory defaults to `Roms`; pass `-u` to hash DLC or updates.",
+    ],
+    see_also = ["clean_game_hash_files", "verify_game_files", "build_game_json_files"],
+    section = "Game Collection")
+parser.add_group("Input")
+parser.add_input_path_argument(description = "Directory to hash instead of the game's locker directory")
+parser.add_group("Selection")
+parser.add_game_supercategory_argument(description = "Supercategory of the games to hash")
+parser.add_game_category_argument(description = "Category of the games to hash; all categories when omitted")
+parser.add_game_subcategory_argument(description = "Subcategory (platform) of the games to hash; every subcategory of the selected categories when omitted")
 parser.add_enum_argument(
     args = ("-l", "--locker_type"),
     arg_type = config.LockerType,
-    description = "Locker type")
+    description = "Locker whose gaming folder holds the files and whose passphrase is used for the encrypted fields; Local when omitted. When given, games are listed from this locker")
 parser.add_enum_argument(
     args = ("-m", "--generation_mode"),
     arg_type = config.GenerationModeType,
     default = config.GenerationModeType.STANDARD,
-    description = "Generation mode")
+    description = "How games are selected: `Standard` walks the selected categories, `Custom` takes exactly the given category and subcategory")
 parser.add_string_argument(
     args = ("-b", "--locker_base_dir"),
     default = None,
-    description = "Locker base directory (overrides default locker path)")
+    description = "Locker root to list and read games from instead of the `-l` locker's mount path (its Gaming folder is used)")
+parser.add_group("Behavior")
 parser.add_boolean_argument(
     args = ("-d", "--delete_missing"),
-    description = "Delete hash entries for files that no longer exist")
+    description = "After hashing, remove entries for files that no longer exist in the locker")
 parser.add_common_arguments()
 args, unknown = parser.parse_known_args()
 

@@ -15,8 +15,21 @@ import joybox.setup as setup
 import joybox.logger as logger
 
 # Parse arguments
-parser = arguments.ArgumentParser(description = "List duplicate files.")
-parser.add_input_path_argument()
+parser = arguments.ArgumentParser(
+    description = "List duplicate files under a directory.",
+    details = (
+        "Runs jdupes over the directory and all its subdirectories and prints each set of\n"
+        "files with identical content, with their sizes, followed by a summary of how many\n"
+        "duplicates there are and how much space they take. Nothing is deleted or changed."),
+    examples = [
+        ("List duplicates in a directory tree", "list_dupes -i ~/Downloads"),
+    ],
+    notes = [
+        "jdupes must be installed with `setup_tools -k JDupes`; the command exits with an error if it is not found.",
+    ],
+    see_also = ["setup_tools", "sanitize_filenames"],
+    section = "Files & Archives")
+parser.add_input_path_argument(description = "Directory to search, including all subdirectories; it must exist")
 parser.add_common_arguments()
 args, unknown = parser.parse_known_args()
 

@@ -1,6 +1,7 @@
 # Imports
 import os, os.path
 import argparse
+import enum
 
 # Local imports
 import joybox.config as config
@@ -30,13 +31,64 @@ class EnumArgparseAction(argparse.Action):
             result = parse_enum_value(self.enum_type, values)
         setattr(namespace, self.dest, result)
 
+# Help formatter
+# Keeps the epilog's line breaks, since examples are commands, and shows a
+# default only when there is one worth reading
+class HelpFormatter(argparse.RawDescriptionHelpFormatter, argparse.ArgumentDefaultsHelpFormatter):
+    def _get_help_string(self, action):
+        if action.default in (None, False, [], "") or action.default is argparse.SUPPRESS:
+            return action.help
+        return super()._get_help_string(action)
+
 # Argument parser
 class ArgumentParser:
-    def __init__(self, description):
+    def __init__(
+        self,
+        description,
+        details = None,
+        examples = None,
+        notes = None,
+        see_also = None,
+        section = None):
+        self.description = description
+        self.details = details
+        self.examples = list(examples or [])
+        self.notes = list(notes or [])
+        self.see_also = list(see_also or [])
+        self.section = section
         self.parser = argparse.ArgumentParser(
             description = description,
-            formatter_class = argparse.ArgumentDefaultsHelpFormatter)
+            epilog = self._build_epilog(),
+            formatter_class = HelpFormatter)
+        self._target = self.parser
+        self._groups = []
         self._warned_unknown = set()
+
+    #################################################
+
+    # Build the text shown after the options in -h
+    def _build_epilog(self):
+        lines = []
+        if self.details:
+            lines += [self.details.strip(), ""]
+        if self.examples:
+            lines.append("examples:")
+            for title, command in self.examples:
+                lines += ["  # %s" % title, "  %s" % command, ""]
+        if self.notes:
+            lines.append("notes:")
+            lines += ["  - %s" % note for note in self.notes]
+            lines.append("")
+        if self.see_also:
+            lines.append("see also: %s" % ", ".join(self.see_also))
+        return "\n".join(lines).strip() or None
+
+    # Start a titled group; arguments added after this belong to it
+    def add_group(self, title):
+        group = self.parser.add_argument_group(title)
+        self._groups.append(group)
+        self._target = group
+        return group
 
     #################################################
 
@@ -59,6 +111,15 @@ class ArgumentParser:
                 aliases.append(alt)
         return tuple(arg_names) + tuple(aliases)
 
+    # Add an argument to the current group, remembering what was declared
+    # rather than the aliases, and the description before any decoration
+    def _add_argument(self, args, description, **kwargs):
+        declared = tuple(args if isinstance(args, tuple) else (args,))
+        action = self._target.add_argument(*self._expand_arg_aliases(declared), **kwargs)
+        action.joybox_flags = declared
+        action.joybox_description = description
+        return action
+
     #################################################
 
     # Parse arguments
@@ -78,6 +139,49 @@ class ArgumentParser:
     # Check if the given name is a known argument
     def is_known_argument(self, name):
         return any(action.dest == name for action in self.parser._actions)
+
+    #################################################
+
+    # Describe the parser as plain data, for generating documentation
+    def describe(self):
+        def describe_action(action):
+            flags = getattr(action, "joybox_flags", tuple(action.option_strings))
+            default = action.default
+            if isinstance(default, enum.Enum):
+                default = str(default)
+            elif isinstance(default, list):
+                default = [str(value) for value in default]
+            return {
+                "flags": list(flags),
+                "dest": action.dest,
+                "positional": not action.option_strings,
+                "takes_value": action.nargs != 0,
+                "required": bool(action.required) or (not action.option_strings and action.nargs != "?"),
+                "description": getattr(action, "joybox_description", action.help),
+                "default": default,
+                "choices": getattr(action, "joybox_choices", None) or ([str(choice) for choice in action.choices] if action.choices else None),
+            }
+        def is_documented(action):
+            return not isinstance(action, argparse._HelpAction)
+        groups = [{
+            "title": None,
+            "options": [describe_action(action) for action in self.parser._actions
+                if is_documented(action) and not any(action in group._group_actions for group in self._groups)],
+        }]
+        for group in self._groups:
+            groups.append({
+                "title": group.title,
+                "options": [describe_action(action) for action in group._group_actions if is_documented(action)],
+            })
+        return {
+            "description": self.description,
+            "details": self.details,
+            "examples": [list(example) for example in self.examples],
+            "notes": self.notes,
+            "see_also": self.see_also,
+            "section": self.section,
+            "groups": [group for group in groups if group["options"]],
+        }
 
     #################################################
 
@@ -111,22 +215,18 @@ class ArgumentParser:
         default = None,
         required = False,
         description = None):
-        arg_names = self._expand_arg_aliases(args)
-        is_positional = not arg_names[0].startswith("-")
+        is_positional = not args[0].startswith("-") if isinstance(args, tuple) else not args.startswith("-")
         if is_positional:
-            self.parser.add_argument(
-                *arg_names,
+            return self._add_argument(args, description,
                 default = default,
                 nargs = "?" if default is not None else None,
                 type = str,
                 help = description)
-        else:
-            self.parser.add_argument(
-                *arg_names,
-                default = default,
-                required = required,
-                type = str,
-                help = description)
+        return self._add_argument(args, description,
+            default = default,
+            required = required,
+            type = str,
+            help = description)
 
     # Add string list argument
     def add_string_list_argument(
@@ -135,8 +235,7 @@ class ArgumentParser:
         default = None,
         required = False,
         description = None):
-        self.parser.add_argument(
-            *self._expand_arg_aliases(args),
+        return self._add_argument(args, description,
             action = "append",
             default = default,
             required = required,
@@ -150,30 +249,25 @@ class ArgumentParser:
         default = None,
         required = False,
         description = None):
-        arg_names = self._expand_arg_aliases(args)
-        is_positional = not arg_names[0].startswith("-")
+        is_positional = not args[0].startswith("-") if isinstance(args, tuple) else not args.startswith("-")
         if is_positional:
-            self.parser.add_argument(
-                *arg_names,
+            return self._add_argument(args, description,
                 default = default,
                 nargs = "?" if default is not None else None,
                 type = int,
                 help = description)
-        else:
-            self.parser.add_argument(
-                *arg_names,
-                default = default,
-                required = required,
-                type = int,
-                help = description)
+        return self._add_argument(args, description,
+            default = default,
+            required = required,
+            type = int,
+            help = description)
 
     # Add boolean argument
     def add_boolean_argument(
         self,
         args,
         description = None):
-        self.parser.add_argument(
-            *self._expand_arg_aliases(args),
+        return self._add_argument(args, description,
             action = "store_true",
             help = description)
 
@@ -193,8 +287,7 @@ class ArgumentParser:
                     default = [default]
             else:
                 default = []
-            self.parser.add_argument(
-                *self._expand_arg_aliases(args),
+            return self._add_argument(args, description,
                 default = default,
                 type = arg_type,
                 action = EnumArgparseAction,
@@ -202,15 +295,13 @@ class ArgumentParser:
                 help = f"{description}.\nAllowed values are [{', '.join(quoted_enum_values)}]",
                 nargs = "+",
                 metavar = "")
-        else:
-            self.parser.add_argument(
-                *self._expand_arg_aliases(args),
-                default = default,
-                type = arg_type,
-                action = EnumArgparseAction,
-                choices = arg_type.values(),
-                help = f"{description}.\nAllowed values are [{', '.join(quoted_enum_values)}]",
-                metavar = "")
+        return self._add_argument(args, description,
+            default = default,
+            type = arg_type,
+            action = EnumArgparseAction,
+            choices = arg_type.values(),
+            help = f"{description}.\nAllowed values are [{', '.join(quoted_enum_values)}]",
+            metavar = "")
 
     # Add enum list argument
     def add_enum_list_argument(
@@ -220,11 +311,12 @@ class ArgumentParser:
         description = None):
         enum_values = arg_type.values()
         quoted_enum_values = [f"'{value}'" for value in enum_values]
-        self.parser.add_argument(
-            *self._expand_arg_aliases(args),
+        action = self._add_argument(args, description,
             default = None,
             type = str,
             help = f"{description} (comma delimited).\nAllowed values are [{', '.join(quoted_enum_values)}]")
+        action.joybox_choices = [str(value) for value in enum_values]
+        return action
 
     #################################################
 
@@ -335,6 +427,8 @@ class ArgumentParser:
 
     # Add common arguments
     def add_common_arguments(self):
+        previous_target = self._target
+        self.add_group("Common options")
         self.add_boolean_argument(
             args = ("-v", "--verbose"),
             description = "Enable verbose mode")
@@ -347,5 +441,6 @@ class ArgumentParser:
         self.add_boolean_argument(
             args = ("--no-preview",),
             description = "Skip the preview confirmation prompt")
+        self._target = previous_target
 
     #################################################

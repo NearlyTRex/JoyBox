@@ -16,14 +16,44 @@ import joybox.paths as paths
 import joybox.prompts as prompts
 
 # Parse arguments
-parser = arguments.ArgumentParser(description = "Sony PlayStation Vita rom tool.")
-parser.add_input_path_argument()
-parser.add_boolean_argument(args = ("-s", "--strip"), description = "Strip PSV files")
-parser.add_boolean_argument(args = ("-u", "--unstrip"), description = "Unstrip PSV files")
-parser.add_boolean_argument(args = ("-t", "--trim"), description = "Trim PSV files")
-parser.add_boolean_argument(args = ("-n", "--untrim"), description = "Untrim PSV files")
-parser.add_boolean_argument(args = ("-e", "--verify"), description = "Verify PSV files")
-parser.add_boolean_argument(args = ("-d", "--delete_originals"), description = "Delete original files")
+parser = arguments.ArgumentParser(
+    description = "Strip, unstrip, trim, untrim or verify PlayStation Vita cartridge dumps (.psv).",
+    details = (
+        "Finds every `.psv` file under the input path (or takes the one file given) and applies\n"
+        "one action to each. New files are written next to the source:\n"
+        "\n"
+        "- `-s` strips the dump with PSVStrip into `<name>_stripped.psv`.\n"
+        "- `-u` rebuilds a full dump from a stripped one and the `<name>.psve` file next to it\n"
+        "  with PSVStrip, into `<name>_unstripped.psv`.\n"
+        "- `-t` trims the unused space with PSVTools into `<name>_trimmed.psv`.\n"
+        "- `-n` expands a trimmed dump back to full size with PSVTools into\n"
+        "  `<name>_untrimmed.psv`.\n"
+        "- `-e` runs the PSVTools check on each dump and writes nothing.\n"
+        "\n"
+        "With `-d` the source `.psv` is deleted after each successful strip, unstrip, trim or\n"
+        "untrim."),
+    examples = [
+        ("Verify every dump in a folder", "psv_rom_tool -i /path/to/psv -e"),
+        ("Trim every dump and delete the untrimmed originals", "psv_rom_tool -i /path/to/psv -t -d"),
+        ("Preview the trim without changing anything", "psv_rom_tool -i /path/to/psv -t -d -p -v"),
+        ("Rebuild a full dump from a stripped one and its .psve", "psv_rom_tool -i \"/path/to/Game (USA).psv\" -u"),
+    ],
+    notes = [
+        "Give one action. When several are given, only the first in the order `-s`, `-u`, `-t`, `-n`, `-e` is used.",
+        "Output files are also `.psv`, so running the tool again on the same folder processes them too.",
+        "PSVStrip, and PSVTools with the JoyBox Python environment, must be installed as JoyBox tools.",
+    ],
+    see_also = ["psn_rom_tool"],
+    section = "Game ROMs & Images")
+parser.add_input_path_argument(description = "A `.psv` file, or a directory searched recursively for them; must exist")
+parser.add_group("Actions")
+parser.add_boolean_argument(args = ("-s", "--strip"), description = "Strip each dump into `<name>_stripped.psv`")
+parser.add_boolean_argument(args = ("-u", "--unstrip"), description = "Rebuild each stripped dump from it and `<name>.psve` into `<name>_unstripped.psv`")
+parser.add_boolean_argument(args = ("-t", "--trim"), description = "Trim each dump into `<name>_trimmed.psv`")
+parser.add_boolean_argument(args = ("-n", "--untrim"), description = "Expand each trimmed dump to full size into `<name>_untrimmed.psv`")
+parser.add_boolean_argument(args = ("-e", "--verify"), description = "Check each dump with PSVTools without writing anything")
+parser.add_group("Behavior")
+parser.add_boolean_argument(args = ("-d", "--delete_originals"), description = "Delete the source `.psv` after it is converted; ignored by `-e`")
 parser.add_common_arguments()
 args, unknown = parser.parse_known_args()
 

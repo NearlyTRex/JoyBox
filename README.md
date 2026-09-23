@@ -14,5 +14,9 @@ curl -fsSL https://raw.githubusercontent.com/NearlyTRex/JoyBox/main/install.sh |
 
 ## Documentation
 
-- [System setup](Bootstrap/README.md) — bootstrap a fresh machine
-- [Usage guides](Scripts/README.md) — common-task guides and the full command reference
+Everything is in **[Docs](Docs/README.md)**. The common paths:
+
+- [Local Computer Setup](Docs/setup/local-computer.md)
+- [Remote Server Setup](Docs/setup/remote-server.md) · [testing it](Docs/testing/remote-server.md)
+- [Homelab Server Setup](Docs/setup/homelab-server.md) · [testing it](Docs/testing/homelab-server.md)
+- [Command Reference](Docs/reference/man/README.md)

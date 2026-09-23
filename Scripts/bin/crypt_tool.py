@@ -18,15 +18,42 @@ import joybox.paths as paths
 import joybox.prompts as prompts
 
 # Parse arguments
-parser = arguments.ArgumentParser(description = "Encrypt/decrypt files.")
-parser.add_input_path_argument()
+parser = arguments.ArgumentParser(
+    description = "Encrypt or decrypt files in place with GPG.",
+    details = (
+        "Processes the given file, or every file under the given directory, and writes the\n"
+        "result next to the original. Encryption uses GPG symmetric AES-256. An encrypted file\n"
+        "is named after the MD5 of its original filename plus `.enc` (for example\n"
+        "`document.pdf` becomes `<md5>.enc`), and the original filename is stored inside it.\n"
+        "Decryption reads that stored name back and restores `document.pdf`.\n"
+        "\n"
+        "The passphrase is read from the `[UserData.Protection]` section of the configuration,\n"
+        "never from the command line: `general_passphrase` for `-t General`, `locker_passphrase`\n"
+        "for `-t Locker`. The originals are deleted after a successful run unless `-k` is given."),
+    examples = [
+        ("Encrypt every file in a directory with the locker passphrase", "crypt_tool -i /path/to/files -e -t Locker"),
+        ("Preview an encryption without changing anything", "crypt_tool -i /path/to/files -e -t Locker -p -v"),
+        ("Decrypt previously encrypted files", "crypt_tool -i /path/to/encrypted/files -d -t Locker"),
+        ("Encrypt files but keep the unencrypted originals", "crypt_tool -i /path/to/files -e -t Locker -k"),
+        ("Encrypt a single file with the general passphrase", "crypt_tool -i /path/to/file.txt -e -t General"),
+    ],
+    notes = [
+        "`-t` is effectively required: without it no passphrase is found and the tool stops.",
+        "Give exactly one of `-e` or `-d`; with neither, nothing is done. `-e` wins if both are given.",
+        "A file whose output already exists is skipped and its original is kept. Files already in the target form (`.enc` or `.menc` when encrypting, anything else when decrypting) are left alone.",
+        "Locker encryption normally uses `locker_passphrase`, but a locker with its own `locker_<name>_passphrase` setting encrypts with that instead, and those files need `backup_tool` to decrypt.",
+        "To encrypt or decrypt while copying to another location, use `backup_tool -r`.",
+    ],
+    see_also = ["backup_tool", "upload_game_files", "sync_tool"],
+    section = "Backups & Lockers")
+parser.add_input_path_argument(description = "File, or directory of files, to encrypt or decrypt; must exist")
 parser.add_enum_argument(
     args = ("-t", "--passphrase_type"),
     arg_type = config.PassphraseType,
-    description = "Passphrase type")
-parser.add_boolean_argument(args = ("-e", "--encrypt"), description = "Encrypt files")
-parser.add_boolean_argument(args = ("-d", "--decrypt"), description = "Decrypt files")
-parser.add_boolean_argument(args = ("-k", "--keep_originals"), description = "Keep original files")
+    description = "Which configured passphrase to use: `General` (`general_passphrase`) or `Locker` (`locker_passphrase`)")
+parser.add_boolean_argument(args = ("-e", "--encrypt"), description = "Encrypt each file to `<md5 of name>.enc` beside it")
+parser.add_boolean_argument(args = ("-d", "--decrypt"), description = "Decrypt each `.enc` file back to its stored original name beside it")
+parser.add_boolean_argument(args = ("-k", "--keep_originals"), description = "Keep the original files instead of deleting them after processing")
 parser.add_common_arguments()
 args, unknown = parser.parse_known_args()
 

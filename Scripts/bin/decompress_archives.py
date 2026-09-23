@@ -17,16 +17,37 @@ import joybox.paths as paths
 import joybox.prompts as prompts
 
 # Parse arguments
-parser = arguments.ArgumentParser(description = "Decompress archive files.")
-parser.add_input_path_argument()
+parser = arguments.ArgumentParser(
+    description = "Extract archive files into a folder beside each archive.",
+    details = (
+        "Finds every archive of the chosen types under the input path (or takes the one file\n"
+        "given) and extracts it into a `<name>` folder next to it, or with `-s` straight into\n"
+        "the directory the archive is in. Tarballs are extracted with tar, RAR archives with\n"
+        "unrar and everything else with 7-Zip.\n"
+        "\n"
+        "Existing files in the output folder are overwritten, and an archive is extracted again\n"
+        "even if its folder already exists."),
+    examples = [
+        ("Extract every zip in a folder", "decompress_archives -i /path/to/archives"),
+        ("Extract zip, 7z and RAR archives and delete them, previewing first", "decompress_archives -i /path/to/archives -a ZIP 7Z RAR -d -p -v"),
+        ("Extract a tarball next to itself", "decompress_archives -i /path/to/backup.tar.gz -a TAR_GZ -s"),
+    ],
+    notes = [
+        "Archives are matched by extension only, e.g. `ZIP` selects `.zip` files and `TAR_GZ` selects `.tar.gz` files.",
+        "`APPIMAGE` archives are refused with an error.",
+        "7-Zip must be installed as a JoyBox tool, plus tar and unrar for those formats.",
+    ],
+    see_also = ["compress_files", "compress_folders", "verify_archives", "isoextract"],
+    section = "Files & Archives")
+parser.add_input_path_argument(description = "An archive file, or a directory searched recursively for archives; must exist")
 parser.add_enum_argument(
     args = ("-a", "--archive_types"),
     arg_type = config.ArchiveFileType,
     default = [config.ArchiveFileType.ZIP],
-    description = "Archive types",
+    description = "Archive types to extract, space separated; each selects files by its extension",
     allow_multiple = True)
-parser.add_boolean_argument(args = ("-s", "--same_dir"), description = "Extract to same directory as original file")
-parser.add_boolean_argument(args = ("-d", "--delete_originals"), description = "Delete original files")
+parser.add_boolean_argument(args = ("-s", "--same_dir"), description = "Extract into the archive's own directory instead of a `<name>` folder")
+parser.add_boolean_argument(args = ("-d", "--delete_originals"), description = "Delete each archive after it is extracted")
 parser.add_common_arguments()
 args, unknown = parser.parse_known_args()
 

@@ -16,8 +16,30 @@ import joybox.paths as paths
 import joybox.prompts as prompts
 
 # Parse arguments
-parser = arguments.ArgumentParser(description = "Rezip files deterministically.")
-parser.add_input_path_argument()
+parser = arguments.ArgumentParser(
+    description = "Rebuild zip files in place with fixed, reproducible 7-Zip settings.",
+    details = (
+        "Finds every `.zip` file under the input path (or takes the one file given) and\n"
+        "rebuilds it with 7-Zip: the zip is extracted to a `<name>_extracted` folder beside it\n"
+        "and deleted, then the folder's contents are zipped back to the original path and the\n"
+        "folder is deleted.\n"
+        "\n"
+        "The new zip uses Deflate at level 7, leaves out NTFS timestamps, stores non-ASCII\n"
+        "names as UTF-8 and asks 7-Zip for a reproducible archive.\n"
+        "\n"
+        "The run stops with an error at the first zip that cannot be extracted or rebuilt."),
+    examples = [
+        ("Rebuild every zip in a folder", "rezip_files -i /path/to/zips"),
+        ("Rebuild one zip without the confirmation prompt", "rezip_files -i \"/path/to/Game (USA).zip\" --no-preview"),
+    ],
+    notes = [
+        "The original zip is deleted before the new one is written. If the rebuild fails, the files are still in the `<name>_extracted` folder.",
+        "Each zip is extracted in full next to itself, so that directory needs room for its uncompressed contents.",
+        "7-Zip must be installed as a JoyBox tool.",
+    ],
+    see_also = ["compress_folders", "verify_archives", "decompress_archives"],
+    section = "Files & Archives")
+parser.add_input_path_argument(description = "A `.zip` file, or a directory searched recursively for them; must exist")
 parser.add_common_arguments()
 args, unknown = parser.parse_known_args()
 

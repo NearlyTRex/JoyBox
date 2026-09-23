@@ -17,7 +17,26 @@ import joybox.logger as logger
 import joybox.prompts as prompts
 
 # Parse arguments
-parser = arguments.ArgumentParser(description = "Publish metadata files.")
+parser = arguments.ArgumentParser(
+    description = "Render the Pegasus metadata as one browsable HTML table per category.",
+    details = (
+        "For each category, reads the metadata file of every subcategory that has one and\n"
+        "writes `Published/<Category>.html` in the game metadata repository, for example\n"
+        "`Nintendo.html`. Each game gets a table row with a per-platform number, its platform,\n"
+        "name, player count and co-op flag, and search links to GameFAQs and MobyGames.\n"
+        "\n"
+        "Only `Roms` metadata is published. Existing pages are overwritten."),
+    examples = [
+        ("Publish every category", "publish_game_metadata_files"),
+        ("Publish without the confirmation prompt", "publish_game_metadata_files --no-preview"),
+        ("Dry run", "publish_game_metadata_files -p -v"),
+    ],
+    notes = [
+        "There are no selection options; every category is published.",
+        "`scan_game_files` runs this same step at the end of its pipeline.",
+    ],
+    see_also = ["build_game_metadata_files", "sort_game_metadata", "scan_game_files"],
+    section = "Game Collection")
 parser.add_common_arguments()
 args, unknown = parser.parse_known_args()
 

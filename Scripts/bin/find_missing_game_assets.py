@@ -20,7 +20,27 @@ import joybox.prompts as prompts
 import joybox.reports as reports
 
 # Parse arguments
-parser = arguments.ArgumentParser(description = "Find missing game assets.")
+parser = arguments.ArgumentParser(
+    description = "Compare the games in the Pegasus metadata with the asset files in the local locker.",
+    details = (
+        "For every entry in every Pegasus metadata file, checks whether each asset type\n"
+        "(Background, BoxBack, BoxFront, Label, Screenshot, Video) exists at its expected path\n"
+        "under the Local locker's `Gaming/Assets` folder. It then reports the missing assets per\n"
+        "type, and the extra files in the assets folder that no metadata entry accounts for.\n"
+        "\n"
+        "Each non-empty list is written in full to a file in the current directory:\n"
+        "`Missing_<AssetType>.txt` and `Extras.txt`. The log shows only the totals, or the first\n"
+        "and last few items with `-v`."),
+    examples = [
+        ("Report missing and extra assets", "find_missing_game_assets"),
+        ("Also show sample items in the log", "find_missing_game_assets -v"),
+        ("Report without writing the list files", "find_missing_game_assets -p -v"),
+    ],
+    notes = [
+        "Run it from a scratch directory; the report files land in whatever directory you run it from and overwrite earlier ones.",
+    ],
+    see_also = ["download_game_metadata_assets", "find_missing_game_metadata"],
+    section = "Game Collection")
 parser.add_common_arguments()
 args, unknown = parser.parse_known_args()
 

@@ -17,51 +17,94 @@ import joybox.terminal as terminal
 
 # Parse arguments
 parser = arguments.ArgumentParser(
-    description = "Interactive chat with a local or cloud LLM, seeded with a prompt and files.")
+    description = "Interactive chat with a local or cloud LLM, seeded with a prompt and files.",
+    details = (
+        "Opens a chat in the terminal against one of three backends: `ollama` (the native\n"
+        "Ollama chat route, at `[Tools.Ollama] ollama_api_base` in `~/JoyBox.ini` unless\n"
+        "`--endpoint` is given), `openai` (any OpenAI-compatible server such as llama.cpp's,\n"
+        "`http://localhost:8080` unless `--endpoint` is given), or `claude` (the Anthropic API,\n"
+        "using the key at `[UserData.Anthropic] anthropic_api_key`). Replies stream as they\n"
+        "arrive, except with `claude`, which returns each reply whole.\n"
+        "\n"
+        "The conversation can be seeded before the first question: a system prompt from\n"
+        "`--system_file` and `--system`, whole files with `--attach`, and outlines with\n"
+        "`--outline`. An outline is a map of a file's structure without its body (functions,\n"
+        "labels, headings or keys, depending on the file type), which keeps a large corpus\n"
+        "within the context window. `--list_chunkers` shows which file types get a structural\n"
+        "outline; anything else is outlined by line.\n"
+        "\n"
+        "With `--ask`, or with a question piped on standard input, it answers once and exits.\n"
+        "Otherwise it reads questions interactively. Commands in the chat: `/model [name]`\n"
+        "switches or lists models, `/attach <file>` and `/outline <file>` add a file,\n"
+        "`/read <file> [N-M]` adds a line range, `/region <file> <name>` adds one named region\n"
+        "and `/regions <file>` lists them, `/reset` clears everything but the seed,\n"
+        "`/save [file]` writes the transcript (`transcript.md` by default), `/tokens` shows\n"
+        "context use, `/help` lists the commands and `/quit` leaves."),
+    examples = [
+        ("Chat with the first model the local Ollama server offers", "llm_chat"),
+        ("Ask one question about a file and exit", "llm_chat -m qwen2.5-coder:7b -a main.c --ask \"What does parse_header do?\""),
+        ("Seed a system prompt, one whole file and the outline of a large one", "llm_chat --system_file review.md -a player.cpp -o game.asm"),
+        ("Answer a question piped in on standard input", "llm_chat -a notes.md < question.txt"),
+        ("Use a llama.cpp server, checking the seed against its 32K window", "llm_chat -b openai -e http://localhost:8080 --num_ctx 32768 -o engine.c"),
+        ("Chat with Claude", "llm_chat -b claude -m claude-sonnet-4-20250514"),
+        ("Show which file types get a structural outline", "llm_chat --list_chunkers"),
+    ],
+    notes = [
+        "If the system prompt and attached files plus `--max_tokens` do not fit the context window, it refuses to start rather than let the server truncate silently. Use `--outline` for the large files or raise `--num_ctx`.",
+        "Token counts are estimates (about 3.6 characters per token).",
+        "With `ollama` or `openai`, the model must be one the server lists. With `claude` any model id is accepted and no window check is made.",
+        "`--api_key` defaults to the `LLM_CHAT_API_KEY` environment variable.",
+        "`-o` is `--outline` here, not an output path.",
+    ],
+    see_also = ["ollama_tool", "claude_tool", "decompiler_tool"],
+    section = "AI")
+parser.add_group("Backend")
 parser.add_string_argument(
     args = ("-b", "--backend"),
     default = llmchat.BACKEND_OLLAMA,
-    description = f"Service to talk to ({', '.join(llmchat.get_backend_keys())})")
+    description = f"Service to talk to: {', '.join(llmchat.get_backend_keys())}")
 parser.add_string_argument(
     args = ("-m", "--model"),
-    description = "Model name (default: the first one offered)")
+    description = "Model name; the first one the backend offers when omitted")
 parser.add_string_argument(
     args = ("-e", "--endpoint"),
-    description = "Endpoint URL, for the ollama and openai backends")
+    description = "Server base URL for the `ollama` and `openai` backends, e.g. `http://localhost:11434`")
 parser.add_string_argument(
     args = ("--api_key",),
     default = os.environ.get("LLM_CHAT_API_KEY", ""),
-    description = "Bearer token, for the openai backend")
+    description = "Bearer token sent to the `openai` backend; taken from `LLM_CHAT_API_KEY` when omitted")
+parser.add_group("Context")
 parser.add_string_argument(
     args = ("--system_file",),
-    description = "File holding the system prompt")
+    description = "Text file whose contents become the system prompt")
 parser.add_string_argument(
     args = ("--system",),
-    description = "Extra system prompt text")
+    description = "System prompt text, appended after `--system_file` when both are given")
 parser.add_string_list_argument(
     args = ("-a", "--attach"),
-    description = "File to place in context whole; repeatable")
+    description = "File to place in the context whole; repeat for several files")
 parser.add_string_list_argument(
     args = ("-o", "--outline"),
-    description = "File to place in context as a map only; repeatable")
+    description = "File to place in the context as an outline of its structure only; repeat for several files")
+parser.add_group("Behavior")
 parser.add_string_argument(
     args = ("--ask",),
-    description = "Ask one question and exit")
+    description = "Ask this one question, print the reply and exit")
 parser.add_integer_argument(
     args = ("--max_tokens",),
     default = 2048,
-    description = "Maximum tokens in a reply")
+    description = "Maximum number of tokens in a reply")
 parser.add_integer_argument(
     args = ("--num_ctx",),
     default = 0,
-    description = "Context window to request (default: the model's maximum)")
+    description = "Context window in tokens: requested from Ollama, and used by every backend to check that the seed and replies fit; `0` takes the model's maximum from Ollama and skips the check elsewhere")
 parser.add_string_argument(
     args = ("-t", "--temperature"),
     default = "0.2",
-    description = "Sampling temperature")
+    description = "Sampling temperature, a decimal such as `0.7`; ignored by the `claude` backend")
 parser.add_boolean_argument(
     args = ("--list_chunkers",),
-    description = "Show which chunker handles which filetype and exit")
+    description = "Print which outline chunker handles which file extensions, then exit")
 parser.add_common_arguments()
 args, unknown = parser.parse_known_args()
 
