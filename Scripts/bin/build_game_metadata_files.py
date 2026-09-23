@@ -18,16 +18,41 @@ import joybox.logger as logger
 import joybox.prompts as prompts
 
 # Parse arguments
-parser = arguments.ArgumentParser(description = "Build metadata files.")
-parser.add_game_supercategory_argument()
-parser.add_game_category_argument()
-parser.add_game_subcategory_argument()
-parser.add_game_name_argument()
+parser = arguments.ArgumentParser(
+    description = "Add each game with a JSON file to its platform's Pegasus metadata file and fill in missing details.",
+    details = (
+        "For each selected game that has a JSON file, makes sure the subcategory's metadata file\n"
+        "(`Pegasus/Roms/<category>/<subcategory>/metadata.pegasus.txt` in the metadata\n"
+        "repository) has an entry for it. A new entry records the platform, categories and JSON\n"
+        "file path, with `players` 1, `coop` No and `playable` Yes.\n"
+        "\n"
+        "If the entry is then missing any downloadable field (description, genre, coop,\n"
+        "developer, publisher, players, release), the latest metadata is fetched and merged in:\n"
+        "from the store for store platforms, and from GameFAQs otherwise. Entries that already\n"
+        "have every downloadable field are left alone.\n"
+        "\n"
+        "Only the `Roms` supercategory has metadata files; other supercategories are skipped."),
+    examples = [
+        ("Build metadata for one game", "build_game_metadata_files -c Nintendo -s \"Nintendo Switch\" -n \"Pokemon Legends Z-A (World)\""),
+        ("Build metadata for a whole platform", "build_game_metadata_files -c Sony -s \"Sony PlayStation 2\""),
+        ("Build metadata for every game", "build_game_metadata_files"),
+        ("Show what would be built", "build_game_metadata_files -c Computer -s Steam -p -v"),
+    ],
+    notes = [
+        "Only games that already have a JSON file are processed; create it first with `build_game_json_files` or `build_game_store_purchases`.",
+        "An existing entry is never recreated, only filled in.",
+    ],
+    see_also = ["build_game_json_files", "build_game_store_purchases", "find_missing_game_metadata", "download_game_metadata_assets", "sort_game_metadata", "publish_game_metadata_files"],
+    section = "Game Collection")
+parser.add_game_supercategory_argument(description = "Supercategory of the games; only `Roms` produces metadata")
+parser.add_game_category_argument(description = "Category of the games to build; all categories when omitted")
+parser.add_game_subcategory_argument(description = "Subcategory (platform) of the games to build; every subcategory of the selected categories when omitted")
+parser.add_game_name_argument(description = "Build only the game with this exact name; every game with a JSON file when omitted")
 parser.add_enum_argument(
     args = ("-m", "--generation_mode"),
     arg_type = config.GenerationModeType,
     default = config.GenerationModeType.STANDARD,
-    description = "Generation mode")
+    description = "How categories are selected: `Standard` walks the selected categories, `Custom` takes exactly the given category and subcategory")
 parser.add_common_arguments()
 args, unknown = parser.parse_known_args()
 

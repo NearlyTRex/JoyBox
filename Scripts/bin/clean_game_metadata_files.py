@@ -18,7 +18,25 @@ import joybox.paths as paths
 import joybox.prompts as prompts
 
 # Parse arguments
-parser = arguments.ArgumentParser(description = "Clean metadata files.")
+parser = arguments.ArgumentParser(
+    description = "Rewrite every platform's Pegasus metadata file with its entries in sorted order.",
+    details = (
+        "For each category and subcategory, reads the metadata file\n"
+        "`Pegasus/Roms/<category>/<subcategory>/metadata.pegasus.txt` in the game metadata\n"
+        "repository, if it exists, and writes it back with entries sorted by name and the\n"
+        "collection header and launch command regenerated.\n"
+        "\n"
+        "`sort_game_metadata` does the same for every metadata file it finds under `Pegasus/`,\n"
+        "including ones outside the known subcategories."),
+    examples = [
+        ("Sort every metadata file", "clean_game_metadata_files"),
+        ("Sort without the confirmation prompt", "clean_game_metadata_files --no-preview"),
+    ],
+    notes = [
+        "There are no selection options; every known subcategory is processed.",
+    ],
+    see_also = ["sort_game_metadata", "build_game_metadata_files", "clean_game_json_files", "clean_game_hash_files"],
+    section = "Game Collection")
 parser.add_common_arguments()
 args, unknown = parser.parse_known_args()
 

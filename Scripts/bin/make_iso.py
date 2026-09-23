@@ -17,16 +17,42 @@ import joybox.logger as logger
 import joybox.paths as paths
 
 # Parse arguments
-parser = arguments.ArgumentParser(description = "Make ISO images out of all folders or zips in a path.")
-parser.add_input_path_argument()
+parser = arguments.ArgumentParser(
+    description = "Build an ISO image from each folder, or each zip file, in a directory.",
+    details = (
+        "With the default `-t Folder`, every folder directly inside the input directory becomes\n"
+        "`<folder>.iso` in the input directory. Subfolders further down are part of their\n"
+        "parent's image, not images of their own.\n"
+        "\n"
+        "With `-t Zip`, every `.zip` file under the input directory (searched recursively) is\n"
+        "extracted to a `<name>_extracted` folder beside it and that folder becomes `<name>.iso`\n"
+        "beside the zip. Without `-d` the `_extracted` folder is left in place.\n"
+        "\n"
+        "Images are made with xorriso in mkisofs mode: ISO level 3 with Joliet names. An image\n"
+        "whose `.iso` already exists is skipped. The volume name is `-n`, or the folder or zip\n"
+        "name with `-a`, or xorriso's default when neither is given.\n"
+        "\n"
+        "There is no confirmation prompt; the tool starts straight away."),
+    examples = [
+        ("Make an ISO from every folder in a directory, named after each folder", "make_iso -i /path/to/folders -a"),
+        ("Make ISOs from zip files and delete the zips and extracted folders, previewing first", "make_iso -i /path/to/zips -t Zip -a -d -p -v"),
+        ("Make ISOs with a fixed volume name", "make_iso -i /path/to/folders -n GAMEDISC"),
+    ],
+    notes = [
+        "With `-d`, `-t Folder` deletes each source folder once its image is made, and `-t Zip` deletes each zip after extracting it and the extracted folder once the image is made.",
+        "xorriso (XorrISO) and, for `-t Zip`, 7-Zip must be installed as JoyBox tools.",
+    ],
+    see_also = ["isoextract", "compress_folders", "chdconvert"],
+    section = "Game ROMs & Images")
+parser.add_input_path_argument(description = "Directory holding the folders or zip files to turn into images; must exist")
 parser.add_enum_argument(
     args = ("-t", "--disc_source_type"),
     arg_type = config.DiscSourceType,
     default = config.DiscSourceType.FOLDER,
-    description = "Disc source type")
-parser.add_string_argument(args = ("-n", "--volume_name"), default = "", description = "Volume name to use")
-parser.add_boolean_argument(args = ("-a", "--auto_volume_name"), description = "Choose volume name based automatically")
-parser.add_boolean_argument(args = ("-d", "--delete_originals"), description = "Delete original files")
+    description = "`Folder` images each top-level folder; `Zip` images the contents of each zip file")
+parser.add_string_argument(args = ("-n", "--volume_name"), default = "", description = "Volume name written into every image; ignored when `-a` is given")
+parser.add_boolean_argument(args = ("-a", "--auto_volume_name"), description = "Use each folder's name, or each zip's name without its extension, as its volume name")
+parser.add_boolean_argument(args = ("-d", "--delete_originals"), description = "Delete the source folders, or the zips and their extracted folders, once each image is made")
 parser.add_common_arguments()
 args, unknown = parser.parse_known_args()
 

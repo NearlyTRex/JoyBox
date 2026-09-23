@@ -20,18 +20,40 @@ import joybox.paths as paths
 import joybox.prompts as prompts
 
 # Parse arguments
-parser = arguments.ArgumentParser(description = "Install json files.")
-parser.add_input_path_argument()
+parser = arguments.ArgumentParser(
+    description = "Install a game described by its JSON file into the local game cache.",
+    details = (
+        "The game is given either as a JSON file with `-i`, or by `-c`, `-s` and `-n`, which\n"
+        "name the JSON file under the `Roms` supercategory of the metadata repository.\n"
+        "\n"
+        "A store game is installed with that store's own installer. Any other game is copied\n"
+        "from its remote ROM folder, decrypted, into its local cache folder, and first\n"
+        "transformed when its platform needs that (computer games, for example, are set up from\n"
+        "their installer files). A game that is already in the cache is left as it is.\n"
+        "\n"
+        "With `-a`, the game's DLC and updates are then installed into the emulators that\n"
+        "handle its platform. Errors are shown as a popup and end the run."),
+    examples = [
+        ("Install a game from its JSON file", "install_game_json -i \"/path/to/Game Name (USA).json\""),
+        ("Install a game with its DLC and updates", "install_game_json -i \"/path/to/Game Name (USA).json\" -a"),
+        ("Install a computer game and keep its setup folder", "install_game_json -i \"/path/to/Game Name (USA).json\" -k"),
+        ("Dry run", "install_game_json -i \"/path/to/Game Name (USA).json\" -p -v"),
+    ],
+    see_also = ["launch_game_json", "build_game_json_files"],
+    section = "Game Launching")
+parser.add_group("Game")
+parser.add_input_path_argument(description = "Game JSON file to install; takes priority over `-c`, `-s` and `-n`")
 parser.add_enum_argument(
     args = ("-l", "--locker_type"),
     arg_type = config.LockerType,
     default = config.LockerType.HETZNER,
-    description = "Locker type")
-parser.add_game_category_argument()
-parser.add_game_subcategory_argument()
-parser.add_game_name_argument()
-parser.add_boolean_argument(args = ("-k", "--keep_setup_files"), description = "Keep setup files")
-parser.add_boolean_argument(args = ("-a", "--install_addon_files"), description = "Install addon files")
+    description = "Source locker named in the preview")
+parser.add_game_category_argument(description = "Category of the game, used with `-s` and `-n` to find its JSON file")
+parser.add_game_subcategory_argument(description = "Subcategory (platform) of the game, used with `-c` and `-n` to find its JSON file")
+parser.add_game_name_argument(description = "Name of the game, used with `-c` and `-s` to find its JSON file")
+parser.add_group("Behavior")
+parser.add_boolean_argument(args = ("-k", "--keep_setup_files"), description = "Keep the setup folder after a computer game is set up from its installer files")
+parser.add_boolean_argument(args = ("-a", "--install_addon_files"), description = "Also install the game's DLC and updates into the emulators for its platform")
 parser.add_common_arguments()
 args, unknown = parser.parse_known_args()
 

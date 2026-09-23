@@ -16,12 +16,26 @@ import joybox.setup as setup
 import joybox.logger as logger
 
 # Parse arguments
-parser = arguments.ArgumentParser(description = "Analyze json files.")
+parser = arguments.ArgumentParser(
+    description = "List games whose JSON file has no files, or whose metadata marks them unplayable.",
+    details = (
+        "Goes through every game JSON file in the metadata repository, across all supercategories,\n"
+        "categories and subcategories, and logs two lists: games whose JSON file lists no\n"
+        "files, and games whose metadata entry does not have `playable` set to Yes.\n"
+        "\n"
+        "Nothing is changed; the lists are only written to the log."),
+    examples = [
+        ("Show both lists", "analyze_game_json_files"),
+        ("Show only games with no files", "analyze_game_json_files -m MissingGameFiles"),
+        ("Show only unplayable games", "analyze_game_json_files -m UnplayableGames"),
+    ],
+    see_also = ["build_game_json_files", "clean_game_json_files", "find_missing_game_metadata"],
+    section = "Game Collection")
 parser.add_enum_argument(
     args = ("-m", "--mode"),
     arg_type = config.AnalyzeModeType,
     default = config.AnalyzeModeType.ALL,
-    description = "Analyze mode type")
+    description = "Which list to show: games with no files, unplayable games, or both")
 parser.add_common_arguments()
 args, unknown = parser.parse_known_args()
 

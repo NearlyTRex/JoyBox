@@ -18,35 +18,74 @@ import joybox.logger as logger
 import joybox.prompts as prompts
 
 # Setup argument parser
-parser = arguments.ArgumentParser(description = "Rebuild hash sidecar files on a remote from local content.")
+parser = arguments.ArgumentParser(
+    description = "Rebuild a remote locker's hash sidecar database from local content.",
+    details = (
+        "The hash sidecar is a SQLite database, `.locker_hashes.db`, at the root of a remote\n"
+        "locker. It records the path, MD5, size and modification time of each file as it is on\n"
+        "the local side (before any encryption). Remotes that cannot hash files themselves,\n"
+        "such as the SFTP-based Hetzner locker, rely on it: `locker_sync_tool` and\n"
+        "`master_backup` read it instead of asking the remote, so it has to be current for\n"
+        "their comparisons to be right.\n"
+        "\n"
+        "The tool downloads the existing database if there is one, hashes the source locker's\n"
+        "files (or the `--path` subtree), writes the new entries over any existing ones for the\n"
+        "same paths, and uploads the database back to the destination locker's root. Hidden\n"
+        "directories and the destination locker's configured `excluded_dirs` are skipped.\n"
+        "Directories with more than 500 files or 10 GB are hashed one at a time first; the\n"
+        "rest are hashed `--parallel_dirs` at a time.\n"
+        "\n"
+        "`--skip_existing` is keyed on path, not content: a file that already has an entry\n"
+        "keeps its old row even if the file has changed. Every file is still hashed; only the\n"
+        "database write is skipped. Use it to add new files quickly, and run without it when\n"
+        "files may have changed. If the existing database cannot be downloaded, the run\n"
+        "starts from an empty one, so nothing is skipped."),
+    examples = [
+        ("Rebuild the Hetzner sidecar from the local locker", "rebuild_hash_sidecars -l Local -d Hetzner -v"),
+        ("Show what would be hashed without uploading anything", "rebuild_hash_sidecars -p -v"),
+        ("Add entries only for files not yet in the database", "rebuild_hash_sidecars -s -v"),
+        ("Rehash one subtree", "rebuild_hash_sidecars --path \"Gaming/Roms\" -v"),
+        ("Start from an empty database and rehash the whole locker", "rebuild_hash_sidecars -c -v"),
+    ],
+    notes = [
+        "Entries for files that were deleted locally stay in the database until it is rebuilt with `-c`.",
+        "`-c` deletes the whole database at the destination root, even when `--path` limits the rehash to a subtree, so combine them only when you mean to drop every other entry.",
+        "Peak memory is about `parallel_dirs` x `parallel_files` x the hashing chunk size; the preview shows the figure.",
+        "Hetzner's SFTP shell has no usable `md5sum`, so an rclone remote with `md5sum_command` set fails to verify the upload, reports `corrupted on transfer`, and deletes the uploaded database. Set `disable_hashcheck = true` on that remote and remove any `md5sum_command`/`sha1sum_command`; the Hetzner template in the rclone setup already does this.",
+        "`master_backup` refreshes the sidecar after each backup, so this tool is mainly for repairs and first-time setup.",
+    ],
+    see_also = ["find_missing_hash_sidecars", "master_backup", "locker_sync_tool", "sync_tool"],
+    section = "Backups & Lockers")
+parser.add_group("Lockers")
 parser.add_enum_argument(
     args = ("-l", "--source_locker"),
     arg_type = config.LockerType,
     default = config.LockerType.LOCAL,
-    description = "Source locker type")
+    description = "Locker whose mount path holds the files to hash")
 parser.add_enum_argument(
     args = ("-d", "--dest_locker"),
     arg_type = config.LockerType,
     default = config.LockerType.HETZNER,
-    description = "Destination locker for hash sidecars")
+    description = "Remote locker whose `.locker_hashes.db` is rebuilt; must be a configured rclone remote")
 parser.add_string_argument(
     args = ("--path",),
     default = "",
-    description = "Specific subpath to rebuild (e.g., 'Gaming/Roms'). Leave empty for root.")
+    description = "Subtree relative to the locker root to rehash, e.g. `Gaming/Roms`; the whole locker when empty")
+parser.add_group("Behavior")
 parser.add_boolean_argument(
     args = ("-c", "--clear"),
-    description = "Clear existing sidecars before rebuilding")
+    description = "Delete the existing database at the destination root before rebuilding")
 parser.add_boolean_argument(
     args = ("-s", "--skip_existing"),
-    description = "Skip files that already have hashes in database")
+    description = "Leave existing database entries untouched and add only paths that have none")
 parser.add_integer_argument(
     args = ("-r", "--parallel_dirs"),
     default = 4,
-    description = "Number of directories to process in parallel")
+    description = "Number of directories hashed at the same time")
 parser.add_integer_argument(
     args = ("-f", "--parallel_files"),
     default = 4,
-    description = "Number of files to hash in parallel per directory")
+    description = "Number of files hashed at the same time within each directory")
 parser.add_common_arguments()
 args, unknownargs = parser.parse_known_args()
 

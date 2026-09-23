@@ -15,9 +15,26 @@ import joybox.fileops as fileops
 import joybox.paths as paths
 
 # Parse arguments
-parser = arguments.ArgumentParser(description = "Create folders from certain file types.")
-parser.add_input_path_argument()
-parser.add_string_argument(args = ("-f", "--file_types"), default = ".iso,.chd,.rvz,.zip,.7z,.rar,.pkg", description = "List of file types (comma delimited)")
+parser = arguments.ArgumentParser(
+    description = "Move each matching file into a folder of its own, named after the file.",
+    details = (
+        "For every file directly inside the input directory whose name ends with one of the\n"
+        "given extensions, creates a folder named after the file without its extension and\n"
+        "moves the file into it. `Game (USA).iso` becomes `Game (USA)/Game (USA).iso`.\n"
+        "Subdirectories and files with other extensions are left alone."),
+    examples = [
+        ("Put each disc image and archive in its own folder", "make_folders -i ~/Roms/PS2"),
+        ("Only handle ISO and CHD files", "make_folders -i ~/Roms/PS2 -f .iso,.chd"),
+        ("Preview the moves", "make_folders -i ~/Roms/PS2 -p -v"),
+    ],
+    notes = [
+        "Extensions are matched case-sensitively and must not contain spaces, so `.iso` does not match `GAME.ISO`.",
+        "There is no confirmation prompt; use `-p -v` to see what would move first.",
+    ],
+    see_also = ["sanitize_filenames", "compress_folders"],
+    section = "Files & Archives")
+parser.add_input_path_argument(description = "Directory whose top-level files are sorted into folders; it must exist")
+parser.add_string_argument(args = ("-f", "--file_types"), default = ".iso,.chd,.rvz,.zip,.7z,.rar,.pkg", description = "Comma-separated filename endings to match, with the leading dot")
 parser.add_common_arguments()
 args, unknown = parser.parse_known_args()
 

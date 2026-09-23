@@ -19,28 +19,88 @@ import joybox.prompts as prompts
 import joybox.paths as paths
 
 # Parse arguments
-parser = arguments.ArgumentParser(description = "Sync tool.")
+parser = arguments.ArgumentParser(
+    description = "Run an rclone operation between the local locker and a remote locker.",
+    details = (
+        "Every action works between the local locker's directory and the remote named by the\n"
+        "`-l` locker's settings (`locker_<name>_name`, `_type`, `_remote_path` in\n"
+        "`[UserData.Share]`). Files are transferred as they are: this tool does not apply\n"
+        "JoyBox encryption, even for a locker marked `encrypted`.\n"
+        "\n"
+        "Actions:\n"
+        "\n"
+        "- `Init`: create the rclone remote. A Google Drive remote is created and then\n"
+        "  authorised with `rclone config reconnect`; other types are created from the JSON in\n"
+        "  the locker's `_config` setting.\n"
+        "- `Download` / `Upload`: `rclone copy` from remote to local, or local to remote. Files\n"
+        "  that differ are overwritten; nothing is deleted.\n"
+        "- `Pull` / `Push`: `rclone sync` from remote to local, or local to remote. The\n"
+        "  destination is made identical to the source, so files that exist only at the\n"
+        "  destination are deleted.\n"
+        "- `Merge`: `rclone bisync --check-access` in both directions.\n"
+        "- `Diff`: `rclone check` between local and remote, writing the result lists to the\n"
+        "  `--diff_*_path` files and logging a count of each kind of difference.\n"
+        "- `DiffSync`: uses a diff to upload local-only files, download remote-only files (or\n"
+        "  recycle them with `-r`), and copy each changed file in whichever direction has the\n"
+        "  newer modification time. Without `--diff_dir` it runs a fresh diff first.\n"
+        "- `EmptyRecycle`: permanently delete the remote's recycle folder.\n"
+        "- `List`: list every file on the remote with its size.\n"
+        "- `Mount`: mount the remote at the locker's `_mount_path` with `rclone mount`, in the\n"
+        "  background on Linux. The locker's `_mount_flags` may contain `no_cache`,\n"
+        "  `no_checksum`, `no_modtime`, `no_seek` and `read_only`.\n"
+        "\n"
+        "The locker's configured `excluded_dirs` are left out of every transfer and diff unless\n"
+        "`--excludes` replaces them. `Diff` and `DiffSync` also skip dot-directories and the\n"
+        "recycle folder."),
+    examples = [
+        ("Create the rclone remote for the Hetzner locker", "sync_tool -a Init -l Hetzner"),
+        ("Copy everything from the remote into the local locker", "sync_tool -a Download -l Hetzner"),
+        ("Show the paths an upload would use without running it", "sync_tool -a Upload -l Hetzner -p -v"),
+        ("Make the remote an exact copy of the local locker, deleting remote-only files", "sync_tool -a Push -l Gdrive"),
+        ("Make the local locker an exact copy of the remote, deleting local-only files", "sync_tool -a Pull -l Gdrive"),
+        ("Merge changes both ways, rebuilding bisync's state from scratch", "sync_tool -a Merge -l Gdrive -e"),
+        ("Write difference lists to the current directory, comparing sizes only", "sync_tool -a Diff -l Hetzner -q"),
+        ("Act on difference lists written by an earlier Diff", "sync_tool -a DiffSync -l Hetzner --diff_dir /path/to/diff/files"),
+        ("Diff, upload local-only files and recycle remote-only ones", "sync_tool -a DiffSync -l Hetzner -r"),
+        ("Permanently delete the remote recycle folder", "sync_tool -a EmptyRecycle -l Hetzner"),
+        ("List every file on the remote", "sync_tool -a List -l Hetzner"),
+        ("Mount the remote so other tools can read it", "sync_tool -a Mount -l Hetzner"),
+        ("Download without the locker's configured exclusions", "sync_tool -a Download -l Hetzner --excludes \"Testing/**\""),
+    ],
+    notes = [
+        "`-l` has no default and must name a remote locker; the default action is `Init`.",
+        "The local side is always the `Local` locker's directory, which must exist for the transfer and diff actions.",
+        "`Merge` needs an `RCLONE_TEST` file in both roots (`--check-access`), and the first run for a pair needs `-e`.",
+        "`--excludes` replaces the configured list rather than adding to it. An empty value means the configured list is used.",
+        "`Diff` writes its lists relative to the current directory unless the `--diff_*_path` options give full paths. For `DiffSync` those options are file names inside `--diff_dir`.",
+        "`Mount` does nothing when the mount path already has files in it, since it assumes the remote is mounted. With `-v` rclone logs to `/tmp/rclone.log`.",
+        "Under `-p` no rclone command is run at all, so a pretend run only shows the preview.",
+    ],
+    see_also = ["backup_tool", "upload_game_files", "master_backup", "locker_sync_tool"],
+    section = "Backups & Lockers")
 parser.add_enum_argument(
     args = ("-a", "--action"),
     arg_type = config.RemoteActionType,
     default = config.RemoteActionType.INIT,
-    description = "Remote action type")
+    description = "Operation to run; see the list above")
 parser.add_enum_argument(
     args = ("-l", "--locker_type"),
     arg_type = config.LockerType,
-    description = "Locker type")
-parser.add_string_argument(args = ("--excludes"), default = "", description = "Excludes (comma delimited, defaults to locker config)")
-parser.add_string_argument(args = ("--diff_combined_path"), default = "diff_combined.txt", description = "Diff path (combined)")
-parser.add_string_argument(args = ("--diff_intersected_path"), default = "diff_intersected.txt", description = "Diff path (intersection)")
-parser.add_string_argument(args = ("--diff_missing_src_path"), default = "diff_missing_src.txt", description = "Diff path (missing src)")
-parser.add_string_argument(args = ("--diff_missing_dest_path"), default = "diff_missing_dest.txt", description = "Diff path (missing dest)")
-parser.add_string_argument(args = ("--diff_error_path"), default = "diff_errors.txt", description = "Diff path (errors)")
-parser.add_string_argument(args = ("--diff_dir"), description = "Directory containing diff files")
-parser.add_boolean_argument(args = ("-e", "--resync"), description = "Enable resync mode")
-parser.add_boolean_argument(args = ("-i", "--interactive"), description = "Enable interactive mode")
-parser.add_boolean_argument(args = ("-q", "--quick"), description = "Enable quick mode")
-parser.add_boolean_argument(args = ("-r", "--recycle_missing"), description = "Move remote-only files to recycle bin instead of downloading")
-parser.add_string_argument(args = ("--recycle_folder"), default = ".recycle_bin", description = "Folder name for recycled files on remote")
+    description = "Remote locker to operate on")
+parser.add_string_argument(args = ("--excludes"), default = "", description = "Comma-separated rclone exclude patterns to use instead of the locker's configured `excluded_dirs`")
+parser.add_group("Diff files")
+parser.add_string_argument(args = ("--diff_combined_path"), default = "diff_combined.txt", description = "File listing every path with a marker: `=` same, `*` differs, `+` local only, `-` remote only, `!` error")
+parser.add_string_argument(args = ("--diff_intersected_path"), default = "diff_intersected.txt", description = "File listing paths present on both sides whose contents differ")
+parser.add_string_argument(args = ("--diff_missing_src_path"), default = "diff_missing_src.txt", description = "File listing paths only on the remote (missing locally)")
+parser.add_string_argument(args = ("--diff_missing_dest_path"), default = "diff_missing_dest.txt", description = "File listing paths only in the local locker (missing on the remote)")
+parser.add_string_argument(args = ("--diff_error_path"), default = "diff_errors.txt", description = "File listing paths that could not be compared; written by `Diff` only")
+parser.add_string_argument(args = ("--diff_dir"), description = "For `DiffSync`: directory holding the lists from an earlier `Diff`; when omitted a fresh diff is run into a temporary directory")
+parser.add_group("Behavior")
+parser.add_boolean_argument(args = ("-e", "--resync"), description = "For `Merge`: pass `--resync` to bisync, needed on the first run or after bisync's state is lost")
+parser.add_boolean_argument(args = ("-i", "--interactive"), description = "Pass `--interactive` to rclone so it asks before each change; applies to the transfer actions and `DiffSync`")
+parser.add_boolean_argument(args = ("-q", "--quick"), description = "For `Diff` and `DiffSync`: compare file sizes only instead of hashes")
+parser.add_boolean_argument(args = ("-r", "--recycle_missing"), description = "For `DiffSync`: move remote-only files into the remote recycle folder instead of downloading them")
+parser.add_string_argument(args = ("--recycle_folder"), default = ".recycle_bin", description = "Name of the recycle folder at the remote locker's root, used by `DiffSync`, `EmptyRecycle` and excluded from diffs")
 parser.add_common_arguments()
 args, unknown = parser.parse_known_args()
 

@@ -14,8 +14,21 @@ import joybox.logger as logger
 import joybox.paths as paths
 
 # Parse arguments
-parser = arguments.ArgumentParser(description = "Check computer archives.")
-parser.add_input_path_argument()
+parser = arguments.ArgumentParser(
+    description = "Find Windows executables that are larger than 4092 MB.",
+    details = (
+        "Finds every `.exe` file under the input path (or takes the one file given) and checks\n"
+        "its size. The run stops with an error at the first one larger than 4092 MB\n"
+        "(4,290,772,992 bytes), naming the file. 4092 MB is the volume size backup_tool uses\n"
+        "when it splits archives.\n"
+        "\n"
+        "Nothing is written or changed, and there is no confirmation prompt."),
+    examples = [
+        ("Check the installers in a folder of computer games", "check_computer_archives -i /path/to/computer/games"),
+    ],
+    see_also = ["backup_tool", "verify_archives"],
+    section = "Files & Archives")
+parser.add_input_path_argument(description = "An `.exe` file, or a directory searched recursively for them; must exist")
 parser.add_common_arguments()
 args, unknown = parser.parse_known_args()
 

@@ -19,12 +19,36 @@ import joybox.prompts as prompts
 import joybox.reports as reports
 
 # Parse arguments
-parser = arguments.ArgumentParser(description = "Find games with missing metadata fields.")
+parser = arguments.ArgumentParser(
+    description = "Find games whose Pegasus metadata entries are missing fields.",
+    details = (
+        "Reads every Pegasus metadata file in the game metadata repository and checks each\n"
+        "entry for the fields chosen with `-k`. A field counts as missing when it is absent or\n"
+        "empty.\n"
+        "\n"
+        "`Minimum` checks game, platform and file. `Downloadable` checks the fields that\n"
+        "`build_game_metadata_files` can fetch: description, genre, coop, developer, publisher,\n"
+        "players and release. `All` checks every metadata field.\n"
+        "\n"
+        "The log shows the entry count and, per field, how many entries lack it. Each non-empty\n"
+        "list is written in full to `Missing_<field>.txt` in the current directory, one\n"
+        "`<platform> - <game>` per line."),
+    examples = [
+        ("Check the downloadable fields", "find_missing_game_metadata"),
+        ("Check only the fields every entry needs", "find_missing_game_metadata -k Minimum"),
+        ("Check every field and show sample entries", "find_missing_game_metadata -k All -v"),
+        ("Report without writing the list files", "find_missing_game_metadata -p"),
+    ],
+    notes = [
+        "Run it from a scratch directory; the report files land in whatever directory you run it from and overwrite earlier ones.",
+    ],
+    see_also = ["build_game_metadata_files", "find_missing_game_assets", "analyze_game_json_files"],
+    section = "Game Collection")
 parser.add_enum_argument(
     args = ("-k", "--keys"),
     arg_type = config.MetadataKeyType,
     default = config.MetadataKeyType.DOWNLOADABLE,
-    description = "Which metadata keys to check")
+    description = "Which set of metadata fields to check")
 parser.add_common_arguments()
 args, unknown = parser.parse_known_args()
 

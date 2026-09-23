@@ -18,15 +18,43 @@ import joybox.logger as logger
 import joybox.prompts as prompts
 
 # Parse arguments
-parser = arguments.ArgumentParser(description = "Build store purchases.")
-parser.add_game_supercategory_argument()
-parser.add_game_category_argument()
-parser.add_game_subcategory_argument()
+parser = arguments.ArgumentParser(
+    description = "Import the games you own on a store as JSON and metadata entries, and refresh the existing ones.",
+    details = (
+        "Picks the store by category and subcategory (for example `-c Computer -s Steam`);\n"
+        "subcategories without a store that can list purchases are skipped. For each store it\n"
+        "fetches your current purchase list and runs two passes.\n"
+        "\n"
+        "Import: every purchase with no matching JSON file and not on the store's ignore list is\n"
+        "shown and you are asked whether to import it (`y`), skip it (`n`) or ignore it for good\n"
+        "(`i`). On import you choose the entry name, suggested from the store's title, and a\n"
+        "JSON file seeded with the purchase data is created along with a metadata entry that\n"
+        "carries the store URL when one is known.\n"
+        "\n"
+        "Update: every purchase that matches an existing JSON file has that file refreshed from\n"
+        "the store, and its metadata entry filled in if it is missing downloadable fields."),
+    examples = [
+        ("Import Steam purchases", "build_game_store_purchases -c Computer -s Steam"),
+        ("Import Epic Games purchases", "build_game_store_purchases -c Computer -s \"Epic Games\""),
+        ("Reconcile purchases across every store", "build_game_store_purchases"),
+        ("Dry run for the computer stores", "build_game_store_purchases -c Computer -p -v"),
+    ],
+    notes = [
+        "The import pass is interactive: expect a prompt per new purchase, then one for its entry name.",
+        "Ignored purchases are recorded in the subcategory's `ignores.json` next to its JSON files and are not offered again.",
+        "Stores sit under the `Roms` supercategory, which is the default, so `-u` is not needed.",
+        "Log in with `login_game_stores` first if the store session has expired.",
+    ],
+    see_also = ["login_game_stores", "build_game_json_files", "build_game_metadata_files", "scan_game_files"],
+    section = "Game Collection")
+parser.add_game_supercategory_argument(description = "Supercategory of the stores")
+parser.add_game_category_argument(description = "Category of the stores to process; all categories when omitted")
+parser.add_game_subcategory_argument(description = "Store subcategory, such as `Steam` or `GOG`; every subcategory of the selected categories when omitted")
 parser.add_enum_argument(
     args = ("-m", "--generation_mode"),
     arg_type = config.GenerationModeType,
     default = config.GenerationModeType.STANDARD,
-    description = "Generation mode")
+    description = "How categories are selected: `Standard` walks the selected categories, `Custom` takes exactly the given category and subcategory")
 parser.add_common_arguments()
 args, unknown = parser.parse_known_args()
 

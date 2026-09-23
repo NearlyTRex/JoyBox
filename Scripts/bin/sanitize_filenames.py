@@ -16,8 +16,26 @@ import joybox.fileops as fileops
 import joybox.prompts as prompts
 
 # Parse arguments
-parser = arguments.ArgumentParser(description = "Sanitize filenames.")
-parser.add_input_path_argument()
+parser = arguments.ArgumentParser(
+    description = "Rename files so their names are plain ASCII and safe on every filesystem.",
+    details = (
+        "Renames each file directly inside the input directory. Accented and other non-ASCII\n"
+        "characters are transliterated to ASCII (`Pokémon` becomes `Pokemon`) or dropped, the\n"
+        "characters `< > : \" / \\ | ? *` and control characters are removed, trailing spaces and\n"
+        "dots are stripped, and runs of spaces collapse to one.\n"
+        "\n"
+        "Subdirectories and the files inside them are not touched."),
+    examples = [
+        ("Sanitize the names of files in a directory", "sanitize_filenames -i ~/Downloads/Soundtrack"),
+        ("Preview the renames without the confirmation prompt", "sanitize_filenames -i ~/Downloads/Soundtrack -p -v --no-preview"),
+    ],
+    notes = [
+        "If the cleaned name is already taken, that file is left with its old name.",
+        "It stops at the first rename that fails.",
+    ],
+    see_also = ["make_folders", "list_dupes"],
+    section = "Files & Archives")
+parser.add_input_path_argument(description = "Directory whose top-level files are renamed; it must exist")
 parser.add_common_arguments()
 args, unknown = parser.parse_known_args()
 

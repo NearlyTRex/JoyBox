@@ -19,26 +19,52 @@ import joybox.system as system
 import joybox.logger as logger
 
 # Parse arguments
-parser = arguments.ArgumentParser(description = "Hash files from a locker directory.")
+parser = arguments.ArgumentParser(
+    description = "Record the XXH3 hash, size and modification time of every file in a locker directory.",
+    details = (
+        "Scans the locker directory, applies the hidden-file, include and exclude filters, and\n"
+        "writes one CSV per group of files under `Locker/Hashes` in the configured file\n"
+        "metadata directory (`file_metadata_dir` in `[UserData.Dirs]`). Files are grouped by\n"
+        "the first `--depth` components of their path relative to the locker: with the default\n"
+        "depth of 2, `Documents/Taxes/2024/return.pdf` is recorded in `Documents/Taxes.csv`.\n"
+        "Each row holds the file's directory, name, XXH3 hash, size and modification time.\n"
+        "\n"
+        "Existing CSVs are updated in place: a file whose size and modification time match its\n"
+        "row is not hashed again. Afterwards, rows for files that no longer exist are removed\n"
+        "from every CSV the run touched."),
+    examples = [
+        ("Hash the default locker with the default filters", "locker_hash_tool"),
+        ("Show which files would be hashed without writing anything", "locker_hash_tool -p -v"),
+        ("Hash only documents and photos", "locker_hash_tool -i \"Documents/**,Photos/**\""),
+        ("Hash everything, including hidden files and the default exclusions", "locker_hash_tool -e \"\" --include_hidden"),
+        ("Hash a locker on an external drive, one CSV per top-level folder", "locker_hash_tool -l /media/user/External -d 1"),
+    ],
+    notes = [
+        "Filters are `fnmatch` globs matched against the whole relative path, where `*` also matches `/`, so `Documents/*` covers every file below `Documents`.",
+        "The include filter is applied before the exclude filter, so an exclude always wins.",
+        "Files with fewer path components than `--depth` are all recorded in `root.csv`.",
+    ],
+    see_also = ["rebuild_hash_sidecars", "master_backup"],
+    section = "Backups & Lockers")
 parser.add_string_argument(
     args = ("-l", "--locker_base_directory"),
     default = "$HOME/Locker",
-    description = "Base directory of the locker")
+    description = "Locker directory to scan; environment variables and `~` are expanded")
 parser.add_string_argument(
     args = ("-i", "--include_filter"),
     default = None,
-    description = "Comma-delimited glob patterns to include (e.g., 'Documents/**,Photos/**')")
+    description = "Comma-separated glob patterns relative to the locker; when given, only matching files are hashed (e.g. `Documents/**,Photos/**`)")
 parser.add_string_argument(
     args = ("-e", "--exclude_filter"),
     default = "Gaming/Roms/**,Gaming/DLC/**,Gaming/Updates/**,Testing/**",
-    description = "Comma-delimited glob patterns to exclude (e.g., 'Gaming/Roms/**,Temp/**')")
+    description = "Comma-separated glob patterns relative to the locker; matching files are skipped. Pass an empty string to exclude nothing")
 parser.add_boolean_argument(
     args = ("--include_hidden",),
-    description = "Include hidden files and directories (excluded by default)")
+    description = "Also hash files whose path has a component starting with `.`; they are skipped by default")
 parser.add_integer_argument(
     args = ("-d", "--depth"),
     default = 2,
-    description = "Path depth for grouping files into hash files")
+    description = "Number of leading path components that name a file's CSV, e.g. 2 groups `Documents/Taxes/...` into `Documents/Taxes.csv`")
 parser.add_common_arguments()
 args, unknown = parser.parse_known_args()
 

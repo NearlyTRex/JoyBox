@@ -17,7 +17,25 @@ import joybox.logger as logger
 import joybox.prompts as prompts
 
 # Parse arguments
-parser = arguments.ArgumentParser(description = "Clean hash files.")
+parser = arguments.ArgumentParser(
+    description = "Rewrite every game hash file with its entries in sorted order.",
+    details = (
+        "Reads each per-subcategory hash file under `Hashes/` in the game metadata repository\n"
+        "and writes it back with entries sorted by path and keys sorted within each entry, so\n"
+        "the files stay stable under version control.\n"
+        "\n"
+        "Reading a file also adds any missing encrypted-field keys (`filename_enc`, `hash_enc`,\n"
+        "`size_enc`), and entries with the same directory and file name collapse into one."),
+    examples = [
+        ("Sort every hash file", "clean_game_hash_files"),
+        ("Sort without the confirmation prompt", "clean_game_hash_files --no-preview"),
+        ("Show which files would be sorted", "clean_game_hash_files -p -v"),
+    ],
+    notes = [
+        "There are no selection options; every hash file for every supercategory is processed.",
+    ],
+    see_also = ["build_game_hash_files", "verify_game_files", "clean_game_json_files", "clean_game_metadata_files"],
+    section = "Game Collection")
 parser.add_common_arguments()
 args, unknown = parser.parse_known_args()
 
