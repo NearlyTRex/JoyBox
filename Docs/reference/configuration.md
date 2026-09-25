@@ -62,7 +62,9 @@ cockpit_port_http = 9090
 
 The same shape applies to `UserData.Kanboard`, `UserData.Navidrome`, `UserData.Audiobookshelf`,
 `UserData.FileBrowser` and `UserData.Jenkins`. `UserData.Oscar` is
-documented in [Remote Server Services](../remote-server/services.md#aim--oscar-server) since it has extra ports.
+documented in [Remote Server Services](../remote-server/services.md#aim--oscar-server) since it has extra ports,
+and `UserData.FitLog` in [Remote Server Services](../remote-server/services.md#fitlog) since it has a timezone and
+catalog settings.
 
 ## SSH authentication
 

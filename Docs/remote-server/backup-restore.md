@@ -27,6 +27,7 @@ reports at the end, so one broken service cannot silently skip the rest.
 | `navidrome` | Config volume. The music library is mounted read-only from storage and is not copied |
 | `audiobookshelf` | Config volume. Cached metadata artwork is deliberately excluded — it is regenerable and large |
 | `filebrowser` | Config volume |
+| `fitlog` | `fitlog_state` volume — the SQLite database with the food log, workout plans and login. The catalog volume is a clone of the repo and is not copied |
 | `oscar` | `oscar_data` volume — the SQLite database holding accounts, buddy lists and offline messages |
 | `jenkins` | Nothing yet: `jenkins_home_dir` points at `/mnt/repositories`, which also holds every git repo on the box |
 

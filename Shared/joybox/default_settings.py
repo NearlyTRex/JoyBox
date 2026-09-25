@@ -120,6 +120,14 @@ ini_defaults["UserData.Kanboard"] = {}
 ini_defaults["UserData.Kanboard"]["kanboard_subdomain"] = "tasks"
 ini_defaults["UserData.Kanboard"]["kanboard_port_http"] = "8086"
 
+# UserData.FitLog
+ini_defaults["UserData.FitLog"] = {}
+ini_defaults["UserData.FitLog"]["fitlog_subdomain"] = "fit"
+ini_defaults["UserData.FitLog"]["fitlog_port_http"] = "8087"
+ini_defaults["UserData.FitLog"]["fitlog_timezone"] = "Etc/UTC"
+ini_defaults["UserData.FitLog"]["fitlog_pull_minutes"] = "10"
+ini_defaults["UserData.FitLog"]["fitlog_catalog_branch"] = "main"
+
 # UserData.Backup
 ini_defaults["UserData.Backup"] = {}
 ini_defaults["UserData.Backup"]["backup_root"] = "/mnt/storage/Backups"
@@ -151,6 +159,7 @@ ini_defaults["UserData.VM"]["vm_ssh_port"] = "2222"
 ini_defaults["UserData.Images"] = {}
 ini_defaults["UserData.Images"]["audiobookshelf_image"] = ""
 ini_defaults["UserData.Images"]["filebrowser_image"] = ""
+ini_defaults["UserData.Images"]["fitlog_version"] = ""
 ini_defaults["UserData.Images"]["jenkins_image"] = ""
 ini_defaults["UserData.Images"]["kanboard_image"] = ""
 ini_defaults["UserData.Images"]["navidrome_image"] = ""

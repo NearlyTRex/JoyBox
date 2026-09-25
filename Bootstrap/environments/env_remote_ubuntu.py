@@ -63,6 +63,7 @@ class RemoteUbuntu(env.Environment):
             "audiobookshelf": installers.Audiobookshelf(**self.installer_options),
             "navidrome": installers.Navidrome(**self.installer_options),
             "filebrowser": installers.FileBrowser(**self.installer_options),
+            "fitlog": installers.FitLog(**self.installer_options),
             "jenkins": installers.Jenkins(**self.installer_options),
             "kanboard": installers.Kanboard(**self.installer_options),
             "gh": installers.Gh(**self.installer_options),
@@ -87,6 +88,7 @@ class RemoteUbuntu(env.Environment):
         self.installer_cockpit = self.available_components["cockpit"]
         self.installer_wordpress = self.available_components["wordpress"]
         self.installer_filebrowser = self.available_components["filebrowser"]
+        self.installer_fitlog = self.available_components["fitlog"]
         self.installer_jenkins = self.available_components["jenkins"]
         self.installer_navidrome = self.available_components["navidrome"]
         self.installer_kanboard = self.available_components["kanboard"]

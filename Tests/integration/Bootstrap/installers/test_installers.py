@@ -22,6 +22,7 @@ import installers
 DOCKER_APPS = [
     "Audiobookshelf",
     "FileBrowser",
+    "FitLog",
     "Jenkins",
     "Kanboard",
     "Navidrome",
