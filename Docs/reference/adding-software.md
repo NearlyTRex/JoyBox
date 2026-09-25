@@ -41,6 +41,7 @@ declares data, not steps.
 
 ```python
 from joybox import settings
+from joybox import serverinfo
 from joybox import runoptions
 from . import installer_dockerapp
 
@@ -75,7 +76,7 @@ class MyApp(installer_dockerapp.DockerAppInstaller):
         super().__init__(connection, flags, options)
         self.app_name = "myapp"
         self.nginx_config_values = {
-            "domain": settings.get_value("UserData.Servers", "domain_name"),
+            "domain": serverinfo.get_domain_name(),
             "subdomain": settings.get_value("UserData.MyApp", "myapp_subdomain"),
             "port_http": settings.get_value("UserData.MyApp", "myapp_port_http")
         }

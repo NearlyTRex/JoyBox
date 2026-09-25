@@ -39,6 +39,7 @@ python3 bootstrap.py -a setup -t remote_ubuntu -s 0 --components wordpress
 | `filebrowser` | Web file manager |
 | `jenkins` | CI/CD server |
 | `kanboard` | Project management |
+| `fitlog` | FitLog — personal food and exercise tracker |
 | `gh` | GitHub CLI (adds repo) |
 | `ollama` | Ollama local LLM runtime |
 | `oscar` | Open OSCAR Server — self-hosted AIM/ICQ |
@@ -130,6 +131,42 @@ Everything — accounts, buddy lists, offline messages — lives in a single SQL
 `oscar_data` volume, captured by `-a backup --components oscar`. The archive is taken from the
 live file, so a write in flight could in principle produce a torn copy; for a server this size
 the window is negligible, but a backup taken while the service is stopped is strictly safer.
+
+## FitLog
+
+The `fitlog` component builds [FitLog](https://github.com/NearlyTRex/FitLog) at the tag pinned as
+`FITLOG_VERSION` in `Bootstrap/packages/images.py`, and serves it at `<fitlog_subdomain>.<domain>`.
+
+```ini
+[UserData.FitLog]
+fitlog_subdomain = fit
+fitlog_port_http = 8087
+fitlog_timezone = America/Los_Angeles
+fitlog_pull_minutes = 10
+fitlog_catalog_branch = main
+```
+
+`fitlog_timezone` decides when "today" rolls over, so set it to your own zone.
+
+The food and exercise catalog is a clone of the FitLog repo in the `fitlog_catalog` volume. The
+app clones it on first start and pulls `fitlog_catalog_branch` every `fitlog_pull_minutes`, so a
+catalog change reaches the server with a push and no redeploy. Code changes need a new FitLog
+release and a bump of `FITLOG_VERSION`.
+
+FitLog has one login and no sign-up page. Create it once after the first deploy. The command
+prompts for a password and shows the authenticator QR code:
+
+```bash
+cd ~/apps/fitlog && docker compose exec fitlog fitlog user create <name>
+```
+
+`reset-password` and `reset-totp` in place of `create` recover a lost password or authenticator.
+
+### Data
+
+The food log, workout plans, settings and login live in a single SQLite file on the
+`fitlog_state` volume, captured by `-a backup --components fitlog`. As with OSCAR, the archive
+is taken from the live file.
 
 ## Backups
 

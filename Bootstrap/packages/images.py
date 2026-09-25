@@ -43,6 +43,12 @@ docker_images["filebrowser"] = {
     "FILEBROWSER_IMAGE": "filebrowser/filebrowser:v2.63.23"
 }
 
+# FitLog
+# Built from source at this git tag; the tag's own Dockerfile pins the base image.
+docker_images["fitlog"] = {
+    "FITLOG_VERSION": "v0.2.1"
+}
+
 # Jenkins
 docker_images["jenkins"] = {
     "JENKINS_IMAGE": "jenkins/jenkins:lts-jdk21"

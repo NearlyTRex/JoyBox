@@ -5,6 +5,7 @@ import sys
 # Local imports
 import constants
 from joybox import settings
+from joybox import serverinfo
 from . import installer_dockerapp
 from . import installer_nginx
 from joybox import runoptions
@@ -142,11 +143,11 @@ class Wordpress(installer_dockerapp.DockerAppInstaller):
         super().__init__(connection, flags, options)
         self.app_name = "wordpress"
         self.nginx_config_values = {
-            "domain": settings.get_value("UserData.Servers", "domain_name"),
+            "domain": serverinfo.get_domain_name(),
             "subdomain": settings.get_value("UserData.Wordpress", "wordpress_subdomain"),
             "port_http": settings.get_value("UserData.Wordpress", "wordpress_port_http")
         }
-        self.domain_name = settings.get_value("UserData.Servers", "domain_name")
+        self.domain_name = serverinfo.get_domain_name()
         self.site_url = f"https://{self.domain_name}"
         self.env_values = {
             "db_user": settings.get_value("UserData.Wordpress", "wordpress_db_user"),

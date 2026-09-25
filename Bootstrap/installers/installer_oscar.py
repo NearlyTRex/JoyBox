@@ -5,6 +5,7 @@ import sys
 # Local imports
 import constants
 from joybox import settings
+from joybox import serverinfo
 from . import installer_dockerapp
 from joybox import runoptions
 from joybox import logger
@@ -170,7 +171,7 @@ class Oscar(installer_dockerapp.DockerAppInstaller):
         options = runoptions.RunOptions()):
         super().__init__(connection, flags, options)
         self.app_name = "oscar"
-        self.domain_name = settings.get_value("UserData.Servers", "domain_name")
+        self.domain_name = serverinfo.get_domain_name()
         self.subdomain = settings.get_value("UserData.Oscar", "oscar_subdomain",
             default_value = "aim", throw_exception = False)
         self.port_public = settings.get_value("UserData.Oscar", "oscar_port_public",

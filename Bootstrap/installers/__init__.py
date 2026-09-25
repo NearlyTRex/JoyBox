@@ -15,6 +15,7 @@ from installers.installer_dotfiles import *
 from installers.installer_gh import *
 from installers.installer_githooks import *
 from installers.installer_filebrowser import *
+from installers.installer_fitlog import *
 from installers.installer_flatpak import *
 from installers.installer_gitkraken import *
 from installers.installer_jenkins import *

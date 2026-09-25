@@ -55,6 +55,7 @@ def installer_classes():
 @pytest.mark.parametrize("app_name", [
     "audiobookshelf",
     "filebrowser",
+    "fitlog",
     "jenkins",
     "kanboard",
     "navidrome",
@@ -81,7 +82,7 @@ def test_published_ports_bind_loopback(app_name, bootstrap_dir):
 def test_every_compose_template_is_covered_by_the_port_test(bootstrap_dir):
     # A new Docker app must be added to the list above, not silently skipped.
     covered = {
-        "audiobookshelf", "filebrowser", "jenkins",
+        "audiobookshelf", "filebrowser", "fitlog", "jenkins",
         "kanboard", "navidrome", "oscar", "wordpress",
     }
     installers_dir = os.path.join(bootstrap_dir, "installers")

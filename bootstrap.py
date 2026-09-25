@@ -122,6 +122,9 @@ def main():
             server = serverinfo.ServerInfo(args.server_index)
             if not server.is_configured():
                 logger.log_error(f"No host configured for server {args.server_index}", quit_program = True)
+            if not server.get_domain_name() and not is_info_only:
+                logger.log_error(f"No domain configured for server {args.server_index} (server_{args.server_index}_domain_name)", quit_program = True)
+            serverinfo.select_server(args.server_index)
             environment_options.update(server.get_connection_options())
         # An explicit -k wins over whatever the server entry carries
         if args.ssh_key_filepath:

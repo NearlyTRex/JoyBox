@@ -56,7 +56,7 @@ def session_home(tmp_path_factory):
 
 @pytest.fixture(scope = "session", autouse = True)
 def session_settings_file(tmp_path_factory, session_home):
-    from joybox import settings, default_settings
+    from joybox import settings, default_settings, serverinfo
 
     config_path = os.path.join(str(tmp_path_factory.mktemp("settings")), "JoyBox.ini")
     default_settings.create_default_config_file(config_path)
@@ -153,7 +153,7 @@ def script_files(scripts_bin_dir):
 
 @pytest.fixture
 def isolated_settings(tmp_path, session_settings_file):
-    from joybox import settings, default_settings
+    from joybox import settings, default_settings, serverinfo
 
     config_path = os.path.join(str(tmp_path), "JoyBox.ini")
     default_settings.create_default_config_file(config_path)
@@ -162,8 +162,9 @@ def isolated_settings(tmp_path, session_settings_file):
     settings.set_settings_file(config_path)
 
     # Values every server component expects to be non-empty
-    settings.set_value("UserData.Servers", "domain_name", "joybox.test")
+    settings.set_value("UserData.Servers", "server_0_domain_name", "joybox.test")
     settings.set_value("UserData.Servers", "domain_contact", "nobody@joybox.test")
+    serverinfo.select_server(0)
 
     yield settings
 

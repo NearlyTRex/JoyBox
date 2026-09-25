@@ -17,9 +17,9 @@ testvm <action> [options]
 Builds and manages a throwaway Ubuntu Server guest under libvirt, so a server change
 such as the SSH lockout or a firewall rule can be proven before it touches a real
 server. The guest is treated as just another `[UserData.Servers]` entry: point
-`server_<n>_host` at its address, and `domain_name = joybox.test` with
-`tls_mode = mkcert`, and the same bootstrap installers run against it as against a
-real host.
+`server_<n>_host` at its address, with `server_<n>_domain_name` and
+`server_<n>_tls_mode = mkcert`, and the same bootstrap installers run against it as
+against a real host.
 
 Actions:
 
