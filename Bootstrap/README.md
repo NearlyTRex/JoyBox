@@ -9,6 +9,9 @@ python3 bootstrap.py -a setup -t remote_ubuntu -s 0
 python3 bootstrap.py -t local_ubuntu --list-components
 ```
 
+The code lives in `Shared/joybox/bootstrap`; this directory holds the data it ships: the
+day-0 `scripts/`, the sudoers-named `managers/`, `dotfiles/` and WordPress seed content.
+
 - [Local Computer Setup](../Docs/setup/local-computer.md)
 - [Remote Server Setup](../Docs/setup/remote-server.md)
 - [Bootstrap Commands](../Docs/reference/bootstrap-commands.md)

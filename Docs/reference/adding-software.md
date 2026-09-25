@@ -2,7 +2,8 @@
 
 [← Docs index](../README.md)
 
-How to add new packages and write custom installers.
+How to add new packages and write custom installers. The paths below are relative to
+`Shared/joybox/bootstrap/`, where the package lists, installers and environments live.
 
 ## APT Packages
 
@@ -202,7 +203,7 @@ class MyApp(installer.Installer):
 
 2. Add import to `installers/__init__.py`:
 ```python
-from installers.installer_myapp import *
+from joybox.bootstrap.installers.installer_myapp import *
 ```
 
 3. Register in `environments/env_local_ubuntu.py`:
@@ -224,22 +225,29 @@ See existing installers for more examples:
 ## File Structure
 
 ```
-Bootstrap/
-├── packages/           # What to install
-│   ├── aptget.py       # APT packages
-│   ├── flatpak.py      # Flatpak apps
-│   └── python.py       # Pip packages
-├── installers/         # How to install special apps
-│   ├── installer_brave.py
-│   ├── installer_chrome.py
-│   ├── installer_gitkraken.py
-│   ├── installer_vscodium.py
-│   ├── installer_wordpress.py
-│   └── ...
-├── environments/       # Local vs remote setup
-│   ├── env_local_ubuntu.py
-│   └── env_remote_ubuntu.py
-└── connection/         # Command execution (local/SSH)
+Shared/joybox/
+├── bootstrap/
+│   ├── constants.py        # Environment types
+│   ├── runner.py           # Builds the environment for this machine or a server entry
+│   ├── packages/           # What to install
+│   │   ├── aptget.py       # APT packages
+│   │   ├── flatpak.py      # Flatpak apps
+│   │   ├── images.py       # Pinned container images
+│   │   └── python.py       # Pip packages
+│   ├── installers/         # How to install special apps
+│   │   ├── installer_brave.py
+│   │   ├── installer_wordpress.py
+│   │   └── ...
+│   └── environments/       # Local vs remote setup
+│       ├── env_local_ubuntu.py
+│       └── env_remote_ubuntu.py
+└── connection/             # Command execution (local/SSH)
+
+Bootstrap/                  # Data the installers ship, not code
+├── scripts/                # Day-0 shell run on a fresh server
+├── managers/               # Scripts named in the sudoers grants
+├── dotfiles/
+└── wordpress/              # Seed content
 ```
 
 ## Notes

@@ -6,18 +6,15 @@ import sys
 import argparse
 
 # Custom imports
-bootstrap_folder = os.path.realpath(os.path.join(os.path.dirname(__file__), "Bootstrap"))
-sys.path.append(bootstrap_folder)
-import joyboxshared
-from joybox import connection
+shared_folder = os.path.realpath(os.path.join(os.path.dirname(__file__), "Shared"))
+sys.path.append(shared_folder)
 from joybox import runoptions
 from joybox import logger
-from joybox import serverinfo
 from joybox import settings
 from joybox import default_settings
-import constants
-import environments
-import packages
+import joybox.bootstrap.constants as constants
+import joybox.bootstrap.packages as packages
+import joybox.bootstrap.runner as runner
 
 # Set up arguments
 parser = argparse.ArgumentParser(description="Environment bootstrap script.")
@@ -103,51 +100,34 @@ def main():
                     logger.log_info(f"    {env_name} = {override.strip()} (override; pin is {pinned_image})")
                 else:
                     logger.log_info(f"    {env_name} = {pinned_image}")
-        logger.log_info("Edit Bootstrap/packages/images.py to change a pin.")
+        logger.log_info("Edit Shared/joybox/bootstrap/packages/images.py to change a pin.")
         return
 
-    # Create environment options
-    environment_options = {
-        "flags": runoptions.RunFlags(
-            verbose = args.verbose,
-            pretend_run = args.pretend_run,
-            exit_on_failure = args.exit_on_failure),
-        "options": runoptions.RunOptions()
-    }
-
-    # Update environment options
-    if is_remote_ubuntu:
-        environment_options["options"].set(shell = True)
-        if is_server_index:
-            server = serverinfo.ServerInfo(args.server_index)
-            if not server.is_configured():
-                logger.log_error(f"No host configured for server {args.server_index}", quit_program = True)
-            if not server.get_domain_name() and not is_info_only:
-                logger.log_error(f"No domain configured for server {args.server_index} (server_{args.server_index}_domain_name)", quit_program = True)
-            serverinfo.select_server(args.server_index)
-            environment_options.update(server.get_connection_options())
-        # An explicit -k wins over whatever the server entry carries
-        if args.ssh_key_filepath:
-            environment_options["ssh_key_filepath"] = args.ssh_key_filepath
+    # Create run flags
+    flags = runoptions.RunFlags(
+        verbose = args.verbose,
+        pretend_run = args.pretend_run,
+        exit_on_failure = args.exit_on_failure)
     if args.force:
-        environment_options["flags"].set(force = args.force)
+        flags.set(force = args.force)
     if args.autoremove:
-        environment_options["flags"].set(autoremove = args.autoremove)
+        flags.set(autoremove = args.autoremove)
     if args.purge_data:
-        environment_options["flags"].set(purge_data = args.purge_data)
+        flags.set(purge_data = args.purge_data)
     if args.backup_id:
-        environment_options["flags"].set(backup_id = args.backup_id)
+        flags.set(backup_id = args.backup_id)
     if args.confirm:
-        environment_options["flags"].set(confirm = args.confirm)
+        flags.set(confirm = args.confirm)
 
     # Create environment runner
-    environment_runner = None
-    if args.type == constants.EnvironmentType.LOCAL_UBUNTU:
-        environment_runner = environments.LocalUbuntu(**environment_options)
-    elif args.type == constants.EnvironmentType.REMOTE_UBUNTU:
-        environment_runner = environments.RemoteUbuntu(**environment_options)
+    environment_runner = runner.create_environment(
+        environment_type = args.type,
+        server_index = args.server_index if is_server_index else None,
+        flags = flags,
+        ssh_key_filepath = args.ssh_key_filepath,
+        require_domain = not is_info_only)
     if not environment_runner:
-        raise Exception("No environment runner could be found")
+        logger.log_error_and_quit("No environment runner could be created")
 
     # Handle list components request
     if args.list_components:

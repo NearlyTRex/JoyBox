@@ -29,4 +29,4 @@ the block plus `~/.joybox/shell.sh`, so a whole-file copy would just duplicate t
 
 On `setup`, any file present in `captured/` is restored to your home directory (existing
 files are backed up to `*.joybox.backup` first). To manage additional dotfiles, add them to
-`self.managed_dotfiles` in `installers/installer_dotfiles.py`.
+`self.managed_dotfiles` in `Shared/joybox/bootstrap/installers/installer_dotfiles.py`.

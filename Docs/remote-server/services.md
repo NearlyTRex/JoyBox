@@ -135,7 +135,7 @@ the window is negligible, but a backup taken while the service is stopped is str
 ## FitLog
 
 The `fitlog` component builds [FitLog](https://github.com/NearlyTRex/FitLog) at the tag pinned as
-`FITLOG_VERSION` in `Bootstrap/packages/images.py`, and serves it at `<fitlog_subdomain>.<domain>`.
+`FITLOG_VERSION` in `Shared/joybox/bootstrap/packages/images.py`, and serves it at `<fitlog_subdomain>.<domain>`.
 
 ```ini
 [UserData.FitLog]
@@ -182,7 +182,7 @@ than deleted. Pass `--purge-data` to actually destroy it.
 ## Notes
 
 - Server components use Docker Compose (v2) for isolation.
-- Container image versions are pinned in `Bootstrap/packages/images.py`; `--list-images` shows
+- Container image versions are pinned in `Shared/joybox/bootstrap/packages/images.py`; `--list-images` shows
   them. See [Configuration](../reference/configuration.md#container-image-pins).
 - See [Configuration](../reference/configuration.md) for the `[UserData.Servers]`, WordPress, and Cockpit
   keys these commands read.

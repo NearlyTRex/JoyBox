@@ -1,0 +1,63 @@
+# Imports
+import os
+import sys
+
+# Local imports
+import joybox.bootstrap.constants as constants
+from . import installer
+from joybox import runoptions
+from joybox import logger
+
+# OnePassword
+class OnePassword(installer.Installer):
+    def __init__(
+        self,
+        connection,
+        flags = runoptions.RunFlags(),
+        options = runoptions.RunOptions()):
+        super().__init__(connection, flags, options)
+        self.url = f"https://downloads.1password.com"
+        self.archive_key = "1password-archive-keyring.gpg"
+        self.sources_list = "1password.list"
+        self.policy = "AC2D62742012EA22"
+        self.archive_key_path = f"/usr/share/keyrings/{self.archive_key}"
+        self.sources_list_path = f"/etc/apt/sources.list.d/{self.sources_list}"
+        self.policy_path = f"/etc/debsig/policies/{self.policy}/"
+        self.policy_keyring_path = f"/usr/share/debsig/keyrings/{self.policy}"
+        self.packages = ["1password", "1password-cli"]
+        self.app_path = "/usr/bin/1password"
+        self.cli_path = "/usr/bin/op"
+
+    def get_supported_environments(self):
+        return [
+            constants.EnvironmentType.LOCAL_UBUNTU,
+        ]
+
+    def is_installed(self):
+        return all(
+            self.connection.does_file_or_directory_exist(path)
+            for path in [self.app_path, self.cli_path])
+
+    def install(self):
+        logger.log_info("Installing 1Password")
+        self.connection.make_directory(self.policy_path, sudo = True)
+        self.connection.make_directory(self.policy_keyring_path, sudo = True)
+        self.connection.download_file(f"{self.url}/linux/keys/1password.asc", "/tmp/1password.asc")
+        self.connection.download_file(f"{self.url}/linux/debian/debsig/1password.pol", f"{self.policy_path}/1password.pol", sudo = True)
+        self.connection.run_checked([self.gpg_tool, "--yes", "--dearmor", "-o", self.archive_key_path, "/tmp/1password.asc"], sudo = True)
+        self.connection.run_checked([self.gpg_tool, "--yes", "--dearmor", "-o", f"{self.policy_keyring_path}/debsig.gpg", "/tmp/1password.asc"], sudo = True)
+        self.connection.write_file(self.sources_list_path, f"deb [arch=amd64 signed-by={self.archive_key_path}] {self.url}/linux/debian/amd64 stable main\n", sudo = True)
+        self.connection.run_checked([self.aptget_tool, "update"], sudo = True)
+        self.connection.run_checked(
+            [self.aptget_tool, "install", "-y"] + self.packages, sudo = True)
+        return True
+
+    def uninstall(self):
+        logger.log_info("Uninstalling 1Password")
+        self.connection.run_checked(
+            [self.aptget_tool, "remove", "-y"] + self.packages, sudo = True)
+        self.connection.remove_file_or_directory(self.sources_list_path, sudo = True)
+        self.connection.remove_file_or_directory(self.archive_key_path, sudo = True)
+        self.connection.remove_file_or_directory(self.policy_path, sudo = True)
+        self.connection.remove_file_or_directory(self.policy_keyring_path, sudo = True)
+        return True

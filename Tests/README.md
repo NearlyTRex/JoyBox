@@ -11,7 +11,7 @@ pytest Tests
 
 # One area
 pytest Tests/unit/Shared
-pytest Tests/unit/Bootstrap/packages/test_aptget.py
+pytest Tests/unit/Shared/joybox/bootstrap/packages/test_aptget.py
 
 # Skip the slow subprocess and docker tests
 pytest Tests -m "not slow"
@@ -29,15 +29,17 @@ Test files mirror the path of the source they cover:
 
 ```
 Shared/joybox/cmdline.py            → Tests/unit/Shared/joybox/test_cmdline.py
-Bootstrap/packages/aptget.py        → Tests/unit/Bootstrap/packages/test_aptget.py
-Bootstrap/installers/installer_certbot.py
-                                    → Tests/unit/Bootstrap/installers/test_installer_certbot.py
+Shared/joybox/bootstrap/packages/aptget.py
+                                    → Tests/unit/Shared/joybox/bootstrap/packages/test_aptget.py
+Shared/joybox/bootstrap/installers/installer_certbot.py
+                                    → Tests/unit/Shared/joybox/bootstrap/installers/test_installer_certbot.py
+Bootstrap/scripts/common.sh         → Tests/unit/Bootstrap/scripts/test_hardening_contract.py
 Shared/joybox/connection/connection_local.py
                                     → Tests/integration/Shared/joybox/connection/test_connection_local.py
 ```
 
 An invariant that spans a whole directory rather than one module goes in a file
-named after the package — `Tests/unit/Bootstrap/installers/test_installers.py`
+named after the package — `Tests/unit/Shared/joybox/bootstrap/installers/test_installers.py`
 holds the checks that run across every installer.
 
 | Directory | What belongs there |
@@ -56,8 +58,8 @@ collides.
 
 ## How the fixtures work
 
-`conftest.py` puts `Shared/`, `Bootstrap/` and `Tests/` on `sys.path`, because
-both trees are consumed off disk rather than installed — the same thing
+`conftest.py` puts `Shared/` and `Tests/` on `sys.path`, because the shared
+package is consumed off disk rather than installed — the same thing
 `bootstrap.py` and every `Scripts/bin/*.py` does.
 
 **`isolated_settings`** — `joybox.settings` is process-global (a parser plus an
@@ -106,9 +108,9 @@ double needs to do the same.
 
 ## Known gaps
 
-- The shell under `Bootstrap/scripts/` has no tests. `common.sh` is the largest
-  single file in the tree and carries the firewall, sshd and verification logic.
-  Deferred deliberately — that logic is moving to Python.
+- The shell under `Bootstrap/scripts/` is covered only by contract tests on what
+  it writes and the order it runs in; nothing executes it. It stays shell because
+  it runs on a bare server before the repo or Python exists.
 - `Shared/joybox` is 58k lines across 242 files. The pure modules are covered;
   `collection/`, `config/`, `stores/`, `emulators/` and `tools/` are not.
 - The audio and ollama logic moved out of `Scripts/bin` has dispatch and parsing

@@ -17,9 +17,10 @@ TESTS_DIR = os.path.dirname(os.path.abspath(__file__))
 REPO_ROOT = os.path.dirname(TESTS_DIR)
 SHARED_DIR = os.path.join(REPO_ROOT, "Shared")
 BOOTSTRAP_DIR = os.path.join(REPO_ROOT, "Bootstrap")
+INSTALLERS_DIR = os.path.join(SHARED_DIR, "joybox", "bootstrap", "installers")
 SCRIPTS_BIN_DIR = os.path.join(REPO_ROOT, "Scripts", "bin")
 
-for _path in (TESTS_DIR, SHARED_DIR, BOOTSTRAP_DIR):
+for _path in (TESTS_DIR, SHARED_DIR):
     if _path not in sys.path:
         sys.path.insert(0, _path)
 
@@ -121,17 +122,20 @@ def bootstrap_dir():
     return BOOTSTRAP_DIR
 
 @pytest.fixture(scope = "session")
+def installers_dir():
+    return INSTALLERS_DIR
+
+@pytest.fixture(scope = "session")
 def scripts_bin_dir():
     return SCRIPTS_BIN_DIR
 
 @pytest.fixture(scope = "session")
-def installer_files(bootstrap_dir):
+def installer_files():
     # Every installer module, as (name, path) pairs
-    installers_dir = os.path.join(bootstrap_dir, "installers")
     found = []
-    for filename in sorted(os.listdir(installers_dir)):
+    for filename in sorted(os.listdir(INSTALLERS_DIR)):
         if filename.startswith("installer_") and filename.endswith(".py"):
-            found.append((filename[:-3], os.path.join(installers_dir, filename)))
+            found.append((filename[:-3], os.path.join(INSTALLERS_DIR, filename)))
     return found
 
 @pytest.fixture(scope = "session")

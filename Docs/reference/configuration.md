@@ -124,7 +124,7 @@ backups to retain per app; older ones are pruned. See [Backup and Restore](../re
 
 ## Container image pins
 
-Image versions are pinned centrally in `Bootstrap/packages/images.py` — that is the file to edit
+Image versions are pinned centrally in `Shared/joybox/bootstrap/packages/images.py` — that is the file to edit
 to move an app to a new version. `[UserData.Images]` exists only to override a pin on one
 server, for example while migrating:
 
