@@ -55,7 +55,7 @@ class Certbot(installer.Installer):
         options = runoptions.RunOptions()):
         super().__init__(connection, flags, options)
         self.domain_name = serverinfo.get_domain_name()
-        self.domain_contact = settings.get_value("UserData.Servers", "domain_contact")
+        self.domain_contact = serverinfo.get_domain_contact()
         self.tls_mode = serverinfo.get_tls_mode()
         self.subdomains = [
             settings.get_value("UserData.Cockpit", "cockpit_subdomain"),
@@ -163,6 +163,9 @@ class Certbot(installer.Installer):
         # resolves on this workstation, so the local modes substitute a cert at the
         # same path rather than changing what the app templates point at.
         if self.tls_mode == "letsencrypt":
+            if not self.domain_contact:
+                logger.log_error("Let's Encrypt needs a contact address (server_N_domain_contact)")
+                return False
             logger.log_info("Registering cert")
             self.connection.run_checked([self.cert_manager_tool, "register", self.domain_contact] + self.fully_qualified_domains, sudo = True)
 

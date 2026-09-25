@@ -39,6 +39,7 @@ class ServerInfo:
 
         # What the server serves, and how its certificate is obtained
         self.domain_name = self.read("%s_domain_name" % prefix)
+        self.domain_contact = self.read("%s_domain_contact" % prefix)
         self.tls_mode = (self.read("%s_tls_mode" % prefix) or DEFAULT_TLS_MODE).strip().lower()
 
     # Read one field of this entry
@@ -66,6 +67,9 @@ class ServerInfo:
 
     def get_domain_name(self):
         return self.domain_name
+
+    def get_domain_contact(self):
+        return self.domain_contact
 
     def get_tls_mode(self):
         return self.tls_mode
@@ -100,6 +104,11 @@ def get_selected_server():
 def get_domain_name():
     server = get_selected_server()
     return server.get_domain_name() if server else None
+
+# Get the certificate contact of the server this run targets
+def get_domain_contact():
+    server = get_selected_server()
+    return server.get_domain_contact() if server else None
 
 # Get the certificate mode of the server this run targets
 def get_tls_mode():

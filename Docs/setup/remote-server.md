@@ -23,12 +23,12 @@ It is the same steps against a throwaway machine.
 
 ```ini
 [UserData.Servers]
-domain_contact = you@example.com
 server_0_host = 203.0.113.10
 server_0_port = 22
 server_0_user = you
 server_0_key_filepath = /home/you/.ssh/id_ed25519
 server_0_domain_name = example.com
+server_0_domain_contact = you@example.com
 server_0_tls_mode = letsencrypt
 ```
 

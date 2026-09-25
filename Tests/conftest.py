@@ -163,7 +163,7 @@ def isolated_settings(tmp_path, session_settings_file):
 
     # Values every server component expects to be non-empty
     settings.set_value("UserData.Servers", "server_0_domain_name", "joybox.test")
-    settings.set_value("UserData.Servers", "domain_contact", "nobody@joybox.test")
+    settings.set_value("UserData.Servers", "server_0_domain_contact", "nobody@joybox.test")
     serverinfo.select_server(0)
 
     yield settings

@@ -183,6 +183,7 @@ ini_defaults["UserData.Servers"]["server_0_user"] = ""
 ini_defaults["UserData.Servers"]["server_0_pass"] = ""
 ini_defaults["UserData.Servers"]["server_0_key_filepath"] = ""
 ini_defaults["UserData.Servers"]["server_0_domain_name"] = ""
+ini_defaults["UserData.Servers"]["server_0_domain_contact"] = ""
 # How the TLS certificate is obtained:
 #   letsencrypt - real cert via certbot (the only option for a public server)
 #   mkcert      - locally trusted cert, signed on the workstation (local testing)

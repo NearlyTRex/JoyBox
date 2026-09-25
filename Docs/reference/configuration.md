@@ -15,19 +15,19 @@ To point at a config file somewhere other than `~/JoyBox.ini`, pass `-c /path/to
 
 ```ini
 [UserData.Servers]
-domain_contact = me@example.com
 server_0_host = myserver.com
 server_0_port = 22
 server_0_user = myuser
 server_0_pass = ...
 server_0_domain_name = example.com
+server_0_domain_contact = me@example.com
 server_0_tls_mode = letsencrypt
 ```
 
 Servers are numbered (`server_0_*`, `server_1_*`, …); the number is what you pass to `-s` when
-targeting `remote_ubuntu`. Each server has its own domain and [TLS mode](#tls-mode), so a test
-VM can sit alongside the real server without either one's settings leaking into the other.
-`domain_contact` is shared. See [Remote Server Services](../remote-server/services.md).
+targeting `remote_ubuntu`. Each server has its own domain, Let's Encrypt contact and
+[TLS mode](#tls-mode), so a test VM can sit alongside the real server without either one's
+settings leaking into the other. The contact is only needed with `letsencrypt`. See [Remote Server Services](../remote-server/services.md).
 
 ## The website
 
