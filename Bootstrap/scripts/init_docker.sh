@@ -48,5 +48,6 @@ fi
 check_user_exists "$USERNAME"
 
 # Setup docker
+install_docker
 configure_docker_group "$USERNAME"
 configure_docker_security

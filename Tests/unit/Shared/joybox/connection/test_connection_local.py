@@ -256,22 +256,63 @@ def test_a_privileged_read_goes_through_cat(connection, recorded):
 
 
 def test_a_privileged_write_lands_at_the_destination(connection, recorded):
-    # The file is written as the current user first and then moved into place,
-    # because the destination directory is not writable.
+    # The file is written as the current user first and then copied into
+    # place, because the destination directory is not writable.
     assert connection.write_file("/etc/app.conf", "contents", sudo = True) is True
 
     call = only(recorded)
-    assert call["cmd"][0] == "mv"
+    assert call["cmd"][0] == "cp"
     assert call["cmd"][2] == "/etc/app.conf"
+    assert call["sudo"] is True
 
 
-def test_a_privileged_write_puts_the_contents_in_the_staged_file(connection, recorded):
+def test_a_privileged_write_copies_rather_than_moves(connection, recorded):
+    # A move would hand an existing file like /etc/hosts the staged file's
+    # owner and 0600 mode; a copy keeps the destination's.
+    connection.write_file("/etc/hosts", "contents", sudo = True)
+
+    assert only(recorded)["cmd"][0] == "cp"
+
+
+def test_a_privileged_write_puts_the_contents_in_the_staged_file(connection, monkeypatch):
+    staged = []
+
+    def run(cmd, sudo = False):
+        with open(cmd[1]) as handle:
+            staged.append(handle.read())
+        return 0
+
+    monkeypatch.setattr(connection, "run_return_code", run)
     connection.write_file("/etc/app.conf", "contents", sudo = True)
 
-    staged = only(recorded)["cmd"][1]
-    with open(staged) as handle:
-        assert handle.read() == "contents"
-    os.remove(staged)
+    assert staged == ["contents"]
+
+
+def test_a_privileged_write_stages_a_world_readable_file(connection, monkeypatch):
+    # cp gives a new destination the staged file's mode, and a system config
+    # such as an xorg snippet has to be readable by more than root.
+    modes = []
+
+    def run(cmd, sudo = False):
+        modes.append(os.stat(cmd[1]).st_mode & 0o777)
+        return 0
+
+    monkeypatch.setattr(connection, "run_return_code", run)
+    connection.write_file("/etc/app.conf", "contents", sudo = True)
+
+    assert modes == [0o644]
+
+
+def test_a_privileged_write_cleans_up_the_staged_file(connection, recorded):
+    connection.write_file("/etc/app.conf", "contents", sudo = True)
+
+    assert not os.path.exists(only(recorded)["cmd"][1])
+
+
+def test_a_failed_privileged_write_is_reported(connection, monkeypatch):
+    monkeypatch.setattr(connection, "run_return_code", lambda cmd, sudo = False: 1)
+
+    assert connection.write_file("/etc/app.conf", "contents", sudo = True) is False
 
 
 def test_a_privileged_extract_names_the_destination(connection, recorded):
@@ -300,12 +341,52 @@ def test_a_failed_privileged_download_is_not_moved(connection, recorded, monkeyp
     assert recorded == []
 
 
-def test_a_privileged_transfer_copies_the_tree(connection, recorded, tmp_path):
+def test_a_privileged_transfer_merges_into_the_destination(connection, recorded, tmp_path):
+    # "cp -r src dest" nests src inside an existing dest; copying src/. does not.
     source = tmp_path / "tree"
     source.mkdir()
 
     assert connection.transfer_files(str(source), "/opt/app", sudo = True) is True
-    assert only(recorded)["cmd"] == ["cp", "-r", str(source), "/opt/app"]
+    commands = [call["cmd"] for call in recorded]
+    assert commands[0] == ["mkdir", "-p", "/opt/app"]
+    assert commands[1][:2] == ["cp", "-r"]
+    assert commands[1][2].endswith("/.")
+    assert commands[1][3] == "/opt/app"
+    assert all(call["sudo"] for call in recorded)
+
+
+def test_a_privileged_transfer_honours_the_excludes(connection, monkeypatch, tmp_path):
+    source = tmp_path / "tree"
+    (source / ".git").mkdir(parents = True)
+    (source / ".git" / "HEAD").write_text("ref")
+    (source / "run.sh").write_text("#!/bin/sh")
+    staged = []
+
+    def run(cmd, sudo = False):
+        if cmd[0] == "cp":
+            staged.extend(sorted(os.listdir(cmd[2][:-2])))
+        return 0
+
+    monkeypatch.setattr(connection, "run_return_code", run)
+    connection.transfer_files(str(source), "/opt/app", excludes = [".git"], sudo = True)
+
+    assert staged == ["run.sh"]
+
+
+def test_a_privileged_transfer_cleans_up_its_staging(connection, recorded, tmp_path):
+    source = tmp_path / "tree"
+    source.mkdir()
+    connection.transfer_files(str(source), "/opt/app", sudo = True)
+
+    assert not os.path.exists(recorded[1]["cmd"][2][:-2])
+
+
+def test_a_privileged_file_transfer_is_a_plain_copy(connection, recorded, tmp_path):
+    source = tmp_path / "app.conf"
+    source.write_text("KEY=value")
+
+    assert connection.transfer_files(str(source), "/etc/app.conf", sudo = True) is True
+    assert only(recorded)["cmd"] == ["cp", str(source), "/etc/app.conf"]
 
 
 def test_a_transfer_can_skip_an_existing_destination(connection, recorded, tmp_path):

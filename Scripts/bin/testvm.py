@@ -56,7 +56,7 @@ parser = arguments.ArgumentParser(
         ("Dry run of destroy, changing nothing", "testvm destroy -p -v"),
     ],
     notes = [
-        "It relaunches itself through sudo when not already root: it talks to the system libvirt, writes guest images under `/var/lib/libvirt/images`, and edits `/etc/hosts`.",
+        "Run it as yourself. It talks to the system libvirt, which needs membership of the `libvirt` group, and asks sudo for the root-only steps: writing guest images under `/var/lib/libvirt/images` and editing `/etc/hosts`.",
         "Needs `virt-install`, `virsh`, `qemu-img` and `cloud-localds`; `python3 bootstrap.py -a setup -t local_ubuntu --components aptget` installs them.",
         "Without `--ssh_key`, `create` uses `~/.ssh/id_ed25519.pub` or `~/.ssh/id_rsa.pub` of the account (under `/home`). Without `--username`, the account is the one that ran it.",
         "Take a snapshot before anything you would not want to repeat by hand; a revert takes seconds, a rebuild much longer.",
@@ -87,10 +87,6 @@ args, unknown = parser.parse_known_args()
 
 # Main
 def main():
-
-    # Relaunch as root with this interpreter; a plain `sudo python3` resets PATH and loses the venv
-    if os.geteuid() != 0:
-        os.execvp("sudo", ["sudo", sys.executable, os.path.realpath(__file__)] + sys.argv[1:])
 
     # Check requirements
     setup.check_requirements()
@@ -165,6 +161,7 @@ def main():
     elif args.action == "hosts":
         if args.remove:
             hostsfile.remove_entries(
+                sudo = True,
                 verbose = True,
                 pretend_run = args.pretend_run,
                 exit_on_failure = args.exit_on_failure)
@@ -175,6 +172,7 @@ def main():
             hostsfile.set_entries(
                 address = address,
                 domain = args.domain,
+                sudo = True,
                 verbose = True,
                 pretend_run = args.pretend_run,
                 exit_on_failure = args.exit_on_failure)

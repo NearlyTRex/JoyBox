@@ -516,6 +516,22 @@ EOF
     echo "sshd hardening complete. Keep this session open and verify key login from a second terminal."
 }
 
+install_docker() {
+    echo "Installing Docker..."
+    apt-get update
+    apt-get install -y docker.io
+    systemctl enable --now docker
+    echo "Docker installation complete."
+}
+
+install_nginx() {
+    echo "Installing NGINX..."
+    apt-get update
+    apt-get install -y nginx
+    systemctl enable --now nginx
+    echo "NGINX installation complete."
+}
+
 configure_docker_group() {
     local username="$1"
     echo "Configuring Docker group access for $username..."

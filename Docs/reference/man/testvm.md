@@ -140,7 +140,7 @@ testvm destroy -p -v
 
 ## Notes
 
-- It relaunches itself through sudo when not already root: it talks to the system libvirt, writes guest images under `/var/lib/libvirt/images`, and edits `/etc/hosts`.
+- Run it as yourself. It talks to the system libvirt, which needs membership of the `libvirt` group, and asks sudo for the root-only steps: writing guest images under `/var/lib/libvirt/images` and editing `/etc/hosts`.
 - Needs `virt-install`, `virsh`, `qemu-img` and `cloud-localds`; `python3 bootstrap.py -a setup -t local_ubuntu --components aptget` installs them.
 - Without `--ssh_key`, `create` uses `~/.ssh/id_ed25519.pub` or `~/.ssh/id_rsa.pub` of the account (under `/home`). Without `--username`, the account is the one that ran it.
 - Take a snapshot before anything you would not want to repeat by hand; a revert takes seconds, a rebuild much longer.

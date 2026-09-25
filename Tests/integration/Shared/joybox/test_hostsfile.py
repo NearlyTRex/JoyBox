@@ -140,6 +140,18 @@ def test_pretending_writes_nothing(hosts):
     assert hosts.read_text() == EXISTING
 
 
+def test_a_privileged_write_goes_through_sudo(hosts, monkeypatch):
+    # The system hosts file belongs to root; the script itself does not run as root.
+    written = []
+    monkeypatch.setattr(
+        hostsfile.ConnectionLocal, "write_file",
+        lambda self, src, contents, sudo = False: written.append((src, sudo)) or True)
+
+    assert hostsfile.set_entries(
+        ADDRESS, DOMAIN, SUBDOMAINS, hosts_file = str(hosts), sudo = True) is True
+    assert written == [(str(hosts), True)]
+
+
 def test_writing_to_a_missing_file_reports_failure(tmp_path):
     assert hostsfile.set_entries(
         ADDRESS, DOMAIN, SUBDOMAINS,

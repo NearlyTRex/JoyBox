@@ -370,6 +370,7 @@ class FakeSFTP:
         self.written = {}
         self.made_directories = []
         self.uploaded = []
+        self.removed = []
         self.closed = False
 
     def normalize(self, path):
@@ -386,6 +387,9 @@ class FakeSFTP:
 
     def put(self, local, remote):
         self.uploaded.append((local, remote))
+
+    def remove(self, path):
+        self.removed.append(path)
 
     def file(self, path, mode = "r"):
         return FakeRemoteFile(self, path, mode)

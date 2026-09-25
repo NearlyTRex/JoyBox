@@ -25,6 +25,13 @@ def record(monkeypatch, returncode = 0, output = ""):
     return RecordingCommand(monkeypatch, returncode = returncode, output = output)
 
 
+def fake_connection(monkeypatch, **kwargs):
+    from fakes import RecordingConnection
+    connection = RecordingConnection(**kwargs)
+    monkeypatch.setattr(virtualmachine, "get_local_connection", lambda *a, **k: connection)
+    return connection
+
+
 ###########################################################
 # Prerequisites
 ###########################################################
@@ -269,6 +276,22 @@ def test_an_existing_disk_is_imported_rather_than_installed():
     assert "--import" in install_command()
 
 
+def test_the_install_targets_the_system_libvirt():
+    # Run without root, virt-install would otherwise use the per-user session.
+    built = install_command()
+
+    assert built[built.index("--connect") + 1] == "qemu:///system"
+
+
+def test_virsh_targets_the_system_libvirt():
+    assert virtualmachine.get_virsh_command(["list"]) == [
+        "virsh", "--connect", "qemu:///system", "list"]
+
+
+def test_the_console_targets_the_system_libvirt():
+    assert virtualmachine.get_console_command(NAME)[1:3] == ["--connect", "qemu:///system"]
+
+
 def test_the_memory_and_processors_are_passed():
     built = install_command(memory = 8192, vcpus = 4)
 
@@ -284,7 +307,7 @@ def test_an_existing_guest_is_found(monkeypatch):
     recorder = record(monkeypatch, returncode = 0)
 
     assert virtualmachine.does_vm_exist(NAME) is True
-    assert recorder.only()[:2] == ["virsh", "dominfo"]
+    assert recorder.only()[:4] == ["virsh", "--connect", "qemu:///system", "dominfo"]
 
 
 def test_an_absent_guest_is_not_found(monkeypatch):
@@ -338,6 +361,26 @@ def test_an_ipv6_line_is_not_mistaken_for_an_address():
 
 
 ###########################################################
+# Base image
+###########################################################
+
+def test_the_base_image_is_downloaded_through_sudo(monkeypatch, tmp_path):
+    connection = fake_connection(monkeypatch)
+    virtualmachine.fetch_base_image(image_dir = str(tmp_path))
+
+    download = [call for call in connection.called("run_return_code") if "curl" in call[1][0]]
+    assert download and download[0][2]["sudo"] is True
+
+
+def test_an_existing_base_image_is_not_downloaded_again(monkeypatch, tmp_path):
+    connection = fake_connection(monkeypatch)
+    (tmp_path / "noble-server-cloudimg-amd64.img").write_text("")
+    virtualmachine.fetch_base_image(image_dir = str(tmp_path))
+
+    assert connection.calls == []
+
+
+###########################################################
 # Snapshots
 ###########################################################
 
@@ -345,7 +388,7 @@ def test_a_snapshot_is_taken(monkeypatch):
     recorder = record(monkeypatch)
 
     assert virtualmachine.snapshot_vm(NAME, "pre-sshd") is True
-    assert recorder.only()[:3] == ["virsh", "snapshot-create-as", NAME]
+    assert recorder.only()[:5] == ["virsh", "--connect", "qemu:///system", "snapshot-create-as", NAME]
     assert "pre-sshd" in recorder.only()
 
 
@@ -353,14 +396,14 @@ def test_a_snapshot_can_be_unnamed(monkeypatch):
     recorder = record(monkeypatch)
     virtualmachine.snapshot_vm(NAME)
 
-    assert recorder.only() == ["virsh", "snapshot-create-as", NAME]
+    assert recorder.only() == ["virsh", "--connect", "qemu:///system", "snapshot-create-as", NAME]
 
 
 def test_a_named_snapshot_is_reverted_to(monkeypatch):
     recorder = record(monkeypatch)
 
     assert virtualmachine.revert_vm(NAME, "pre-sshd") is True
-    assert recorder.only()[:3] == ["virsh", "snapshot-revert", NAME]
+    assert recorder.only()[:5] == ["virsh", "--connect", "qemu:///system", "snapshot-revert", NAME]
     assert "pre-sshd" in recorder.only()
 
 
@@ -396,7 +439,7 @@ def test_a_failed_snapshot_is_reported(monkeypatch):
 def test_destroying_removes_the_guest_and_its_storage(monkeypatch):
     recorder = record(monkeypatch)
     monkeypatch.setattr(virtualmachine, "does_vm_exist", lambda *a, **k: True)
-    monkeypatch.setattr(virtualmachine.fileops, "remove_file", lambda **kwargs: True)
+    fake_connection(monkeypatch)
 
     assert virtualmachine.destroy_vm(NAME) is True
     undefine = [call["cmd"] for call in recorder.calls if "undefine" in call["cmd"]][0]
@@ -407,7 +450,7 @@ def test_destroying_stops_the_guest_first(monkeypatch):
     # An undefine on a running guest leaves it defined.
     recorder = record(monkeypatch)
     monkeypatch.setattr(virtualmachine, "does_vm_exist", lambda *a, **k: True)
-    monkeypatch.setattr(virtualmachine.fileops, "remove_file", lambda **kwargs: True)
+    fake_connection(monkeypatch)
     virtualmachine.destroy_vm(NAME)
     ordered = [" ".join(call["cmd"]) for call in recorder.calls]
 
@@ -420,13 +463,20 @@ def test_destroying_removes_the_seed(monkeypatch):
     # The seed is not attached storage, so the undefine leaves it behind.
     record(monkeypatch)
     monkeypatch.setattr(virtualmachine, "does_vm_exist", lambda *a, **k: True)
-    removed = []
-    monkeypatch.setattr(
-        virtualmachine.fileops, "remove_file",
-        lambda src, **kwargs: removed.append(src) or True)
+    connection = fake_connection(monkeypatch)
     virtualmachine.destroy_vm(NAME)
 
-    assert removed and removed[0].endswith("-seed.iso")
+    assert connection.removed_paths and connection.removed_paths[0].endswith("-seed.iso")
+
+
+def test_the_seed_is_removed_through_sudo(monkeypatch):
+    # It sits in libvirt's image directory, which only root can write.
+    record(monkeypatch)
+    monkeypatch.setattr(virtualmachine, "does_vm_exist", lambda *a, **k: True)
+    connection = fake_connection(monkeypatch)
+    virtualmachine.destroy_vm(NAME)
+
+    assert connection.called("remove_file_or_directory")[0][2]["sudo"] is True
 
 
 def test_destroying_something_absent_is_success(monkeypatch):
@@ -449,7 +499,7 @@ def test_destroying_something_absent_removes_nothing(monkeypatch):
 ###########################################################
 
 def test_the_console_command_attaches_to_the_guest():
-    assert virtualmachine.get_console_command(NAME) == ["virsh", "console", NAME]
+    assert virtualmachine.get_console_command(NAME) == ["virsh", "--connect", "qemu:///system", "console", NAME]
 
 
 ###########################################################

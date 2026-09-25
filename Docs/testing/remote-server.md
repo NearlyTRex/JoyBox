@@ -73,6 +73,15 @@ One manual step remains, because it modifies your system trust store:
 mkcert -install
 ```
 
+`testvm` runs as you and asks sudo only for its root-only steps: writing guest
+images under `/var/lib/libvirt/images` and editing `/etc/hosts`. It talks to the
+system libvirt directly, which needs membership of the `libvirt` group (`groups`
+lists yours). If it is missing, add it and log in again:
+
+```bash
+sudo usermod -aG libvirt "$USER"
+```
+
 You also need an SSH keypair. If `~/.ssh/id_ed25519` does not exist:
 
 ```bash

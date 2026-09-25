@@ -1,6 +1,7 @@
 # Imports
 import os
 import copy
+import shutil
 import subprocess
 import tempfile
 
@@ -193,9 +194,20 @@ class ConnectionLocal(connection.Connection):
                     logger.log_info("Transferring files from %s to %s" % (src, dest))
                 if self.flags.skip_existing and os.path.exists(dest):
                     return True
-                if not self.flags.pretend_run:
-                    cmd = ["cp", "-r", src, dest] if os.path.isdir(src) else ["cp", src, dest]
-                    return self.run_return_code(cmd, sudo = True) == 0
+                if self.flags.pretend_run:
+                    return True
+                if not os.path.isdir(src):
+                    return self.run_return_code(["cp", src, dest], sudo = True) == 0
+                staged = tempfile.mkdtemp()
+                try:
+                    staged_tree = os.path.join(staged, "tree")
+                    if not fileops.copy_file_or_directory(src, staged_tree, excludes = excludes, **self._io_flags()):
+                        return self.handle_error(f"Unable to stage files from {src}", "copy failed")
+                    for cmd in [["mkdir", "-p", dest], ["cp", "-r", staged_tree + "/.", dest]]:
+                        if self.run_return_code(cmd, sudo = True) != 0:
+                            return self.handle_error(f"Unable to transfer files from {src} to {dest}", "copy failed")
+                finally:
+                    shutil.rmtree(staged, ignore_errors = True)
                 return True
             except Exception as e:
                 return self.handle_error(f"Unable to transfer files from {src} to {dest}", e)
@@ -230,7 +242,13 @@ class ConnectionLocal(connection.Connection):
                     with tempfile.NamedTemporaryFile(mode = "w", delete = False) as f:
                         f.write(contents)
                         temp_path = f.name
-                    self.run_blocking(["mv", temp_path, src], sudo = True)
+                    os.chmod(temp_path, 0o644)
+                    try:
+                        code = self.run_return_code(["cp", temp_path, src], sudo = True)
+                    finally:
+                        os.remove(temp_path)
+                    if code != 0:
+                        return self.handle_error(f"Unable to write file to {src}", "copy failed")
                 return True
             except Exception as e:
                 return self.handle_error(f"Unable to write file to {src}", e)

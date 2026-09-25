@@ -1,3 +1,6 @@
+# Imports
+import os
+
 # Third-party imports
 import pytest
 
@@ -345,9 +348,10 @@ def test_a_remote_file_is_written_over_sftp():
     assert sftp.written == {"/opt/app/.env": "KEY=value"}
 
 
-def test_a_privileged_write_is_staged_then_moved(monkeypatch):
+def test_a_privileged_write_is_staged_then_copied(monkeypatch):
     # The destination directory is not writable by the login user, so the
-    # file is written somewhere it can be and moved into place as root.
+    # file is written somewhere it can be and copied into place as root. A
+    # move would hand an existing file the staged file's owner and mode.
     sftp = FakeSFTP()
     client = FakeSSHClient(sftp = sftp)
     connection = build(client)
@@ -357,7 +361,30 @@ def test_a_privileged_write_is_staged_then_moved(monkeypatch):
     staged = list(sftp.written.keys())[0]
     assert staged.startswith("/tmp/")
     assert sftp.written[staged] == "contents"
-    assert client.only() == "sudo /bin/mv %s /etc/app.conf" % staged
+    assert client.only() == "sudo /bin/cp %s /etc/app.conf" % staged
+
+
+def test_a_privileged_write_removes_the_staged_file():
+    sftp = FakeSFTP()
+    connection = build(FakeSSHClient(sftp = sftp))
+    connection.write_file("/etc/app.conf", "contents", sudo = True)
+
+    assert sftp.removed == list(sftp.written.keys())
+
+
+def test_privileged_writes_do_not_share_a_staging_path():
+    sftp = FakeSFTP()
+    connection = build(FakeSSHClient(sftp = sftp))
+    connection.write_file("/etc/a.conf", "a", sudo = True)
+    connection.write_file("/etc/b.conf", "b", sudo = True)
+
+    assert len(sftp.written) == 2
+
+
+def test_a_failed_privileged_write_is_reported():
+    connection = build(FakeSSHClient(exit_code = 1))
+
+    assert connection.write_file("/etc/app.conf", "contents", sudo = True) is False
 
 
 def test_pretending_writes_nothing():
@@ -511,22 +538,40 @@ def test_an_excluded_directory_is_not_uploaded(tmp_path):
     assert [remote for _, remote in sftp.uploaded] == ["/opt/app/run.sh"]
 
 
-def test_a_privileged_upload_is_staged_then_moved(tmp_path):
-    # The login user cannot write into the destination, so the tree lands in
-    # a temporary directory and is moved as root.
+def privileged_upload(tmp_path, exit_code = 0):
     source = tmp_path / "app"
     source.mkdir()
     (source / "run.sh").write_text("#!/bin/sh")
     sftp = FakeSFTP()
-    client = FakeSSHClient(sftp = sftp)
-    connection = build(client)
+    client = FakeSSHClient(sftp = sftp, exit_code = exit_code)
+    result = build(client).transfer_files(str(source), "/opt/app", sudo = True)
+    staged = os.path.dirname(sftp.uploaded[0][1])
+    return result, staged, client.commands
 
-    connection.transfer_files(str(source), "/opt/app", sudo = True)
 
-    staged = sftp.uploaded[0][1]
+def test_a_privileged_upload_is_staged_then_merged(tmp_path):
+    # The login user cannot write into the destination, so the tree lands in
+    # a temporary directory and its contents are copied in as root. A move
+    # would nest the tree in an existing destination.
+    result, staged, commands = privileged_upload(tmp_path)
+
+    assert result is True
     assert staged.startswith("/tmp/transfer_")
-    assert client.only().startswith("sudo /bin/mv /tmp/transfer_")
-    assert client.only().endswith(" /opt/app")
+    assert commands[0] == "sudo /bin/mkdir -p /opt/app"
+    assert commands[1] == "sudo /bin/cp -r %s/. /opt/app" % staged
+
+
+def test_a_privileged_upload_removes_its_staging(tmp_path):
+    _, staged, commands = privileged_upload(tmp_path)
+
+    assert commands[-1] == "/bin/rm -rf %s" % staged
+
+
+def test_a_failed_privileged_upload_is_reported(tmp_path):
+    result, staged, commands = privileged_upload(tmp_path, exit_code = 1)
+
+    assert result is False
+    assert commands[-1] == "/bin/rm -rf %s" % staged
 
 
 def test_an_upload_without_a_connection_reports_failure(tmp_path):

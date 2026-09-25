@@ -3,6 +3,7 @@ import os
 import shlex
 import threading
 import time
+import uuid
 import concurrent.futures
 from io import StringIO
 
@@ -275,9 +276,9 @@ class ConnectionSSH(connection.Connection):
             sftp = ConnectionSSH.ssh_client.open_sftp()
             sftp_lock = threading.Lock()
 
-            # For sudo transfers, upload to temp dir first then move
+            # For sudo transfers, upload to temp dir first then copy into place
             if sudo:
-                temp_dest = f"/tmp/transfer_{int(time.time())}"
+                temp_dest = "/tmp/transfer_" + uuid.uuid4().hex
                 actual_dest = dest
                 dest = temp_dest
 
@@ -321,9 +322,16 @@ class ConnectionSSH(connection.Connection):
                 executor.map(upload_file, file_tasks)
             sftp.close()
 
-            # For sudo transfers, move from temp to actual destination
+            # For sudo transfers, merge the staged tree into the destination
             if sudo:
-                self.run_blocking([tools.get_move_tool(), temp_dest, actual_dest], sudo = True)
+                try:
+                    for cmd in [
+                        [tools.get_make_dir_tool(), "-p", actual_dest],
+                        [tools.get_copy_tool(), "-r", temp_dest + "/.", actual_dest]]:
+                        if self.run_blocking(cmd, sudo = True) != 0:
+                            return self.handle_error(f"Failed to transfer {src} to {actual_dest}", "copy failed")
+                finally:
+                    self.run_blocking([tools.get_remove_tool(), "-rf", temp_dest])
             return True
         except Exception as e:
             return self.handle_error(f"Failed to transfer {src} to {dest}", e, return_value = False)
@@ -351,13 +359,18 @@ class ConnectionSSH(connection.Connection):
                 logger.log_info(f"Writing remote file {src}")
             if not self.flags.pretend_run:
                 if sudo:
-                    temp_path = "/tmp/tmp_write_file_" + str(int(time.time()))
+                    temp_path = "/tmp/tmp_write_file_" + uuid.uuid4().hex
                     sftp = ConnectionSSH.ssh_client.open_sftp()
-                    with sftp.file(temp_path, "w") as remote_file:
-                        remote_file.write(contents)
-                        remote_file.flush()
-                    sftp.close()
-                    self.run_blocking([tools.get_move_tool(), temp_path, src], sudo = True)
+                    try:
+                        with sftp.file(temp_path, "w") as remote_file:
+                            remote_file.write(contents)
+                            remote_file.flush()
+                        code = self.run_blocking([tools.get_copy_tool(), temp_path, src], sudo = True)
+                    finally:
+                        sftp.remove(temp_path)
+                        sftp.close()
+                    if code != 0:
+                        return self.handle_error(f"Failed to write file {src}", "copy failed")
                 else:
                     sftp = ConnectionSSH.ssh_client.open_sftp()
                     with sftp.file(src, "w") as remote_file:

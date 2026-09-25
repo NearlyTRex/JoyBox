@@ -11,17 +11,23 @@ import os
 
 # Local imports
 import joybox.command as command
+import joybox.runoptions as runoptions
 import joybox.fileops as fileops
 import joybox.logger as logger
 import joybox.paths as paths
 import joybox.serialization as serialization
 import joybox.settings as settings
+from joybox.connection import ConnectionLocal
 
 # Tools this needs on the workstation
 REQUIRED_TOOLS = ["virt-install", "virsh", "qemu-img", "cloud-localds"]
 
-# Where libvirt keeps its images
+# Where libvirt keeps its images; only root can write here
 IMAGE_DIR = "/var/lib/libvirt/images"
+
+# The system libvirt, named explicitly since a non-root virsh defaults to the
+# per-user session; membership of the libvirt group grants access
+LIBVIRT_URI = "qemu:///system"
 
 # Defaults for a rehearsal guest
 DEFAULT_NAME = "joybox-test"
@@ -47,6 +53,17 @@ def get_missing_tools():
 # Check the workstation can manage a virtual machine
 def are_tools_installed():
     return len(get_missing_tools()) == 0
+
+# Build a virsh command against the system libvirt
+def get_virsh_command(arguments):
+    return ["virsh", "--connect", LIBVIRT_URI] + list(arguments)
+
+# Get a connection that runs root-only steps through sudo
+def get_local_connection(verbose = False, pretend_run = False, exit_on_failure = False):
+    return ConnectionLocal(flags = runoptions.RunFlags(
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure))
 
 # Find the public key to authorise on a new guest
 def resolve_ssh_public_key(username, key_file = None):
@@ -131,7 +148,7 @@ def build_meta_data(vm_name):
 # Check if a guest exists
 def does_vm_exist(vm_name = DEFAULT_NAME, verbose = False, pretend_run = False):
     code = command.run_returncode_command(
-        cmd = ["virsh", "dominfo", vm_name],
+        cmd = get_virsh_command(["dominfo", vm_name]),
         options = command.create_command_options(suppress_output = True),
         verbose = verbose,
         pretend_run = pretend_run)
@@ -140,7 +157,7 @@ def does_vm_exist(vm_name = DEFAULT_NAME, verbose = False, pretend_run = False):
 # Get a guest's address, once its lease is up
 def get_vm_ip(vm_name = DEFAULT_NAME, verbose = False, pretend_run = False):
     output = command.run_output_command(
-        cmd = ["virsh", "domifaddr", vm_name],
+        cmd = get_virsh_command(["domifaddr", vm_name]),
         verbose = verbose,
         pretend_run = pretend_run)
     if isinstance(output, bytes):
@@ -177,17 +194,13 @@ def fetch_base_image(
         return base_image
 
     # Create image dir
-    success = fileops.make_directory(
-        src = image_dir,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    if not success:
+    connection = get_local_connection(verbose, pretend_run, exit_on_failure)
+    if not connection.make_directory(image_dir, sudo = True):
         return None
 
     # Download image
     logger.log_info("Downloading the %s cloud image" % release)
-    code = command.run_returncode_command(
+    code = connection.run_return_code(
         cmd = [
             "curl", "-fL",
             "--proto", "=https",
@@ -195,9 +208,7 @@ def fetch_base_image(
             "-o", base_image,
             get_base_image_url(release)
         ],
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
+        sudo = True)
     if code != 0:
         return None
     return base_image
@@ -224,6 +235,7 @@ def get_install_command(
     network = DEFAULT_NETWORK):
     return [
         "virt-install",
+        "--connect", LIBVIRT_URI,
         "--name", vm_name,
         "--memory", str(memory),
         "--vcpus", str(vcpus),
@@ -239,7 +251,7 @@ def get_install_command(
 # Make sure libvirt's network is up, so a new guest gets a lease
 def start_network(network = DEFAULT_NETWORK, verbose = False, pretend_run = False):
     output = command.run_output_command(
-        cmd = ["virsh", "net-info", network],
+        cmd = get_virsh_command(["net-info", network]),
         verbose = verbose,
         pretend_run = pretend_run)
     if isinstance(output, bytes):
@@ -248,7 +260,7 @@ def start_network(network = DEFAULT_NETWORK, verbose = False, pretend_run = Fals
         return True
     for arguments in [["net-start", network], ["net-autostart", network]]:
         command.run_returncode_command(
-            cmd = ["virsh"] + arguments,
+            cmd = get_virsh_command(arguments),
             verbose = verbose,
             pretend_run = pretend_run)
     return True
@@ -285,7 +297,7 @@ def create_vm(
 
     # Find the key to authorise
     if not username:
-        username = os.environ.get("SUDO_USER") or os.environ.get("USER")
+        username = os.environ.get("USER")
     ssh_public_key_file = resolve_ssh_public_key(username, ssh_key_file)
     if not ssh_public_key_file:
         logger.log_error("No SSH public key found for %s" % username)
@@ -310,12 +322,11 @@ def create_vm(
         return False
 
     # Create the guest's own disk on top of it
+    connection = get_local_connection(verbose, pretend_run, exit_on_failure)
     disk_image = get_disk_image(vm_name, image_dir)
-    code = command.run_returncode_command(
+    code = connection.run_return_code(
         cmd = get_create_disk_command(base_image, disk_image, disk_size),
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
+        sudo = True)
     if code != 0:
         return False
 
@@ -342,11 +353,9 @@ def create_vm(
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-        code = command.run_returncode_command(
+        code = connection.run_return_code(
             cmd = ["cloud-localds", seed_image, user_data, meta_data],
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
+            sudo = True)
         if code != 0:
             return False
     finally:
@@ -377,7 +386,7 @@ def snapshot_vm(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    cmd = ["virsh", "snapshot-create-as", vm_name]
+    cmd = get_virsh_command(["snapshot-create-as", vm_name])
     if snapshot_name:
         cmd += [snapshot_name]
     code = command.run_returncode_command(
@@ -394,7 +403,7 @@ def revert_vm(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    cmd = ["virsh", "snapshot-revert", vm_name]
+    cmd = get_virsh_command(["snapshot-revert", vm_name])
     if snapshot_name:
         cmd += [snapshot_name]
     else:
@@ -409,7 +418,7 @@ def revert_vm(
 # List a guest's snapshots
 def list_snapshots(vm_name = DEFAULT_NAME, verbose = False, pretend_run = False):
     output = command.run_output_command(
-        cmd = ["virsh", "snapshot-list", vm_name, "--name"],
+        cmd = get_virsh_command(["snapshot-list", vm_name, "--name"]),
         verbose = verbose,
         pretend_run = pretend_run)
     if isinstance(output, bytes):
@@ -433,12 +442,12 @@ def destroy_vm(
 
     # Stop it first; a running guest cannot be undefined
     command.run_returncode_command(
-        cmd = ["virsh", "destroy", vm_name],
+        cmd = get_virsh_command(["destroy", vm_name]),
         options = command.create_command_options(suppress_output = True),
         verbose = verbose,
         pretend_run = pretend_run)
     code = command.run_returncode_command(
-        cmd = ["virsh", "undefine", vm_name, "--remove-all-storage", "--snapshots-metadata"],
+        cmd = get_virsh_command(["undefine", vm_name, "--remove-all-storage", "--snapshots-metadata"]),
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -446,15 +455,12 @@ def destroy_vm(
         return False
 
     # The seed is not attached storage, so it outlives the undefine
-    fileops.remove_file(
-        src = get_seed_image(vm_name, image_dir),
-        verbose = verbose,
-        pretend_run = pretend_run)
-    return True
+    connection = get_local_connection(verbose, pretend_run, exit_on_failure = False)
+    return connection.remove_file_or_directory(get_seed_image(vm_name, image_dir), sudo = True)
 
 # Attach to a guest's serial console, the way back in after an ssh lockout
 def get_console_command(vm_name = DEFAULT_NAME):
-    return ["virsh", "console", vm_name]
+    return get_virsh_command(["console", vm_name])
 
 ###########################################################
 # Booting an image directly

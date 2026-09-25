@@ -15,6 +15,7 @@ ensure_bash_shell
 ensure_root_user
 
 # Setup nginx
+install_nginx
 configure_unattended_upgrades
 configure_ufw_firewall
 configure_fail2ban

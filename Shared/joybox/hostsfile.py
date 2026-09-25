@@ -9,10 +9,12 @@ import os
 
 # Local imports
 import joybox.logger as logger
+import joybox.runoptions as runoptions
 import joybox.serialization as serialization
 import joybox.settings as settings
 import joybox.textblock as textblock
 from joybox import platform_info
+from joybox.connection import ConnectionLocal
 
 # Markers
 MARKER_BEGIN = "# BEGIN JoyBox local testing"
@@ -56,9 +58,15 @@ def read_hosts(hosts_file = None, verbose = False, exit_on_failure = False):
         verbose = verbose,
         exit_on_failure = exit_on_failure)
 
-# Write the hosts file
-def write_hosts(contents, hosts_file = None, verbose = False, pretend_run = False,
+# Write the hosts file, through sudo when it belongs to root
+def write_hosts(contents, hosts_file = None, sudo = False, verbose = False, pretend_run = False,
                 exit_on_failure = False):
+    if sudo:
+        connection = ConnectionLocal(flags = runoptions.RunFlags(
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure))
+        return connection.write_file(hosts_file or get_hosts_file(), contents, sudo = True)
     return serialization.write_text_file(
         hosts_file or get_hosts_file(),
         contents,
@@ -79,6 +87,7 @@ def set_entries(
     domain,
     subdomains = None,
     hosts_file = None,
+    sudo = False,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -94,6 +103,7 @@ def set_entries(
     return write_hosts(
         contents = textblock.set_block(contents, entries, MARKER_BEGIN, MARKER_END),
         hosts_file = hosts_file,
+        sudo = sudo,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -101,6 +111,7 @@ def set_entries(
 # Remove the managed entries
 def remove_entries(
     hosts_file = None,
+    sudo = False,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -117,6 +128,7 @@ def remove_entries(
     return write_hosts(
         contents = textblock.remove_block(contents, MARKER_BEGIN, MARKER_END),
         hosts_file = hosts_file,
+        sudo = sudo,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
