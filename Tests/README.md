@@ -72,7 +72,7 @@ installer can be driven end to end and then asserted on, with nothing installed.
 
 ```python
 def test_selfsigned_never_contacts_lets_encrypt(isolated_settings, recording_connection):
-    isolated_settings.set_value("UserData.Servers", "tls_mode", "selfsigned")
+    isolated_settings.set_value("UserData.Servers", "server_0_tls_mode", "selfsigned")
     certbot = installers.Certbot(recording_connection)
     certbot.install()
 

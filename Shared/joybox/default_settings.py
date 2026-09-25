@@ -177,18 +177,18 @@ ini_defaults["UserData.Oscar"]["oscar_log_level"] = "info"
 
 # UserData.Servers
 ini_defaults["UserData.Servers"] = {}
-ini_defaults["UserData.Servers"]["domain_name"] = ""
-# How the TLS certificate is obtained:
-#   letsencrypt - real cert via certbot (the only option for a public server)
-#   mkcert      - locally trusted cert, signed on the workstation (local testing)
-#   selfsigned  - openssl cert generated on the target (local testing, browsers warn)
-# All three land the cert at /etc/letsencrypt/live/<domain>/, so nothing downstream changes.
-ini_defaults["UserData.Servers"]["tls_mode"] = "letsencrypt"
 ini_defaults["UserData.Servers"]["server_0_host"] = ""
 ini_defaults["UserData.Servers"]["server_0_port"] = ""
 ini_defaults["UserData.Servers"]["server_0_user"] = ""
 ini_defaults["UserData.Servers"]["server_0_pass"] = ""
 ini_defaults["UserData.Servers"]["server_0_key_filepath"] = ""
+ini_defaults["UserData.Servers"]["server_0_domain_name"] = ""
+# How the TLS certificate is obtained:
+#   letsencrypt - real cert via certbot (the only option for a public server)
+#   mkcert      - locally trusted cert, signed on the workstation (local testing)
+#   selfsigned  - openssl cert generated on the target (local testing, browsers warn)
+# All three land the cert at /etc/letsencrypt/live/<domain>/, so nothing downstream changes.
+ini_defaults["UserData.Servers"]["server_0_tls_mode"] = "letsencrypt"
 
 # UserData.Scraping
 ini_defaults["UserData.Scraping"] = {}

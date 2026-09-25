@@ -5,6 +5,7 @@ import sys
 # Local imports
 import constants
 from joybox import settings
+from joybox import serverinfo
 from joybox import connection
 from . import installer
 from joybox import runoptions
@@ -53,10 +54,9 @@ class Certbot(installer.Installer):
         flags = runoptions.RunFlags(),
         options = runoptions.RunOptions()):
         super().__init__(connection, flags, options)
-        self.domain_name = settings.get_value("UserData.Servers", "domain_name")
+        self.domain_name = serverinfo.get_domain_name()
         self.domain_contact = settings.get_value("UserData.Servers", "domain_contact")
-        self.tls_mode = settings.get_value("UserData.Servers", "tls_mode",
-            default_value = "letsencrypt", throw_exception = False).strip().lower()
+        self.tls_mode = serverinfo.get_tls_mode()
         self.subdomains = [
             settings.get_value("UserData.Cockpit", "cockpit_subdomain"),
             settings.get_value("UserData.Wordpress", "wordpress_subdomain"),

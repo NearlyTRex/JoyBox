@@ -146,19 +146,59 @@ def test_connection_options_are_exactly_what_a_ssh_connection_takes(server):
 
 
 ###########################################################
-# The domain
+# Domain and certificate mode
 ###########################################################
 
-def test_the_domain_is_read_from_the_server_section(isolated_settings):
-    isolated_settings.set_value(SECTION, "domain_name", "example.test")
+def test_each_entry_has_its_own_domain_and_tls_mode(server):
+    server.set_value(SECTION, "server_0_domain_name", "example.com")
+    server.set_value(SECTION, "server_1_domain_name", "example.test")
+    server.set_value(SECTION, "server_1_tls_mode", "mkcert")
 
-    assert serverinfo.get_domain_name() == "example.test"
+    assert serverinfo.ServerInfo(0).get_domain_name() == "example.com"
+    assert serverinfo.ServerInfo(0).get_tls_mode() == "letsencrypt"
+    assert serverinfo.ServerInfo(1).get_domain_name() == "example.test"
+    assert serverinfo.ServerInfo(1).get_tls_mode() == "mkcert"
+
+
+def test_an_unset_tls_mode_means_letsencrypt(isolated_settings):
+    isolated_settings.set_value(SECTION, "server_2_domain_name", "example.com")
+
+    assert serverinfo.ServerInfo(2).get_tls_mode() == "letsencrypt"
+
+
+def test_tls_mode_is_normalised(isolated_settings):
+    isolated_settings.set_value(SECTION, "server_0_tls_mode", "  MkCert ")
+
+    assert serverinfo.ServerInfo(0).get_tls_mode() == "mkcert"
 
 
 def test_an_unset_domain_reads_back_as_none(isolated_settings):
-    isolated_settings.set_value(SECTION, "domain_name", "")
+    isolated_settings.set_value(SECTION, "server_0_domain_name", "")
 
+    assert serverinfo.ServerInfo(0).get_domain_name() is None
+
+
+###########################################################
+# The server a run targets
+###########################################################
+
+def test_the_selected_server_supplies_domain_and_tls_mode(server):
+    server.set_value(SECTION, "server_1_domain_name", "example.test")
+    server.set_value(SECTION, "server_1_tls_mode", "selfsigned")
+
+    serverinfo.select_server(1)
+
+    assert serverinfo.get_selected_server().get_index() == 1
+    assert serverinfo.get_domain_name() == "example.test"
+    assert serverinfo.get_tls_mode() == "selfsigned"
+
+
+def test_no_selection_means_no_domain(isolated_settings):
+    isolated_settings.reset()
+
+    assert serverinfo.get_selected_server() is None
     assert serverinfo.get_domain_name() is None
+    assert serverinfo.get_tls_mode() == "letsencrypt"
 
 
 ###########################################################

@@ -23,7 +23,7 @@ sudo python3 Scripts/bin/testvm.py create --username "$USER"
 sudo python3 Scripts/bin/testvm.py ip
 sudo python3 Scripts/bin/testvm.py hosts
 
-# Point server 0 at it in ~/JoyBox.ini (see step 3 below), then on the VM as root:
+# Add it as server 1 in ~/JoyBox.ini (see step 3 below), then on the VM as root:
 #   git clone https://github.com/NearlyTRex/JoyBox /root/JoyBox && cd /root/JoyBox/Bootstrap/scripts
 #   ./init_sudoers.sh --action setup --user <you>
 #   ./init_docker.sh --user <you>
@@ -32,8 +32,8 @@ sudo python3 Scripts/bin/testvm.py hosts
 
 # Deploy and verify, from your computer
 sudo python3 Scripts/bin/testvm.py snapshot --snapshot pre-deploy
-python3 bootstrap.py -a setup -t remote_ubuntu -s 0 --components nginx certbot cockpit wordpress navidrome oscar
-python3 Scripts/bin/verify_server.py --server 0 --domain joybox.test
+python3 bootstrap.py -a setup -t remote_ubuntu -s 1 --components nginx certbot cockpit wordpress navidrome oscar
+python3 Scripts/bin/verify_server.py --server 1 --domain joybox.test
 ```
 
 Each step is explained below.
@@ -103,24 +103,26 @@ subdomains to the VM. Re-run it after a snapshot revert if the address changed;
 
 ### 3. Point JoyBox.ini at the VM
 
-Only **two** settings actually have to change, because the VM mirrors the real
-layout everywhere else — `init_localstorage.sh` creates the same `/mnt/storage`
-tree, so `navidrome_music_dir`, `audiobookshelf_audio_dir` and `backup_root` are
-already correct:
+Add the VM as its own server entry next to the real one. Domain and TLS mode are
+per server, so the real entry is untouched and nothing has to be switched back.
+The VM mirrors the real layout everywhere else — `init_localstorage.sh` creates
+the same `/mnt/storage` tree, so `navidrome_music_dir`, `audiobookshelf_audio_dir`
+and `backup_root` are already correct:
 
 ```ini
 [UserData.Servers]
-domain_name = joybox.test
-tls_mode = mkcert
-
-server_0_host = <address from step 1>
-server_0_port = 22
-server_0_user = <you>
-server_0_key_filepath = /home/<you>/.ssh/id_ed25519
+server_1_host = <address from step 1>
+server_1_port = 22
+server_1_user = <you>
+server_1_key_filepath = /home/<you>/.ssh/id_ed25519
+server_1_domain_name = joybox.test
+server_1_tls_mode = mkcert
 ```
 
-Switch `domain_name` and `tls_mode` back when you are done. Everything else —
-app passwords, subdomains, ports — can stay as it is.
+The rest of this page uses `-s 1` and `--server 1` for it. The VM can also use
+the real domain with `mkcert`: pass that domain to `testvm hosts --domain`, and
+while the hosts block is in place this machine reaches the VM instead of the real
+server.
 
 ### 4. Prepare the VM
 
@@ -142,7 +144,7 @@ sudo ./init_localstorage.sh --user <you>
 ### 5. Deploy
 
 ```bash
-python3 bootstrap.py -a setup -t remote_ubuntu -s 0 \
+python3 bootstrap.py -a setup -t remote_ubuntu -s 1 \
     --components nginx certbot cockpit wordpress navidrome oscar
 ```
 
@@ -155,7 +157,7 @@ that already bound to loopback correctly before any of this work. Add
 ### 6. Verify
 
 ```bash
-python3 Scripts/bin/verify_server.py --server 0 --domain joybox.test
+python3 Scripts/bin/verify_server.py --server 1 --domain joybox.test
 ```
 
 This runs from the workstation and reads the VM's state over the same SSH
@@ -178,7 +180,7 @@ print(hardening.format_results(hardening.check_sshd(connection)))
 
 ## TLS
 
-`tls_mode` under `[UserData.Servers]` decides how the certificate is obtained.
+`server_N_tls_mode` under `[UserData.Servers]` decides how that server's certificate is obtained.
 All three modes write to `/etc/letsencrypt/live/<domain>/`, so nothing downstream
 changes — every app's nginx template points at that path regardless.
 
@@ -202,7 +204,7 @@ sudo python3 Scripts/bin/testvm.py snapshot --snapshot pre-sshd
 
 # 2. Confirm key auth already works - bootstrap.py must be on keys before
 #    passwords are disabled, or the next deploy cannot connect
-python3 bootstrap.py -t remote_ubuntu -s 0 --list-components
+python3 bootstrap.py -t remote_ubuntu -s 1 --list-components
 
 # 3. On the VM, as root
 sudo ./init_sshd.sh --user <you>
@@ -231,8 +233,8 @@ Put the printed public key in `backup_age_recipient` and the file path in
 `backup_age_identity`, then round-trip it:
 
 ```bash
-python3 bootstrap.py -a backup  -t remote_ubuntu -s 0 --components wordpress
-python3 bootstrap.py -a restore -t remote_ubuntu -s 0 --components wordpress --confirm restore
+python3 bootstrap.py -a backup  -t remote_ubuntu -s 1 --components wordpress
+python3 bootstrap.py -a restore -t remote_ubuntu -s 1 --components wordpress --confirm restore
 ```
 
 Archives land as `.age` files. During restore the private key is staged on
@@ -260,4 +262,4 @@ sudo python3 Scripts/bin/testvm.py hosts --remove
 sudo python3 Scripts/bin/testvm.py destroy
 ```
 
-Then put `domain_name` and `tls_mode` back to their real values in `JoyBox.ini`.
+Then remove the `server_1_*` entry from `JoyBox.ini`, or leave it for next time.

@@ -5,6 +5,7 @@ import sys
 # Local imports
 import constants
 from joybox import settings
+from joybox import serverinfo
 from . import installer_dockerapp
 from joybox import runoptions
 from joybox import logger
@@ -43,7 +44,7 @@ class Audiobookshelf(installer_dockerapp.DockerAppInstaller):
         super().__init__(connection, flags, options)
         self.app_name = "audiobookshelf"
         self.nginx_config_values = {
-            "domain": settings.get_value("UserData.Servers", "domain_name"),
+            "domain": serverinfo.get_domain_name(),
             "subdomain": settings.get_value("UserData.Audiobookshelf", "audiobookshelf_subdomain"),
             "port_http": settings.get_value("UserData.Audiobookshelf", "audiobookshelf_port_http")
         }

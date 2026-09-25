@@ -13,6 +13,13 @@ SECTION = "UserData.Servers"
 # Port assumed when an entry does not name one
 DEFAULT_PORT = 22
 
+# Certificate mode assumed when an entry does not name one
+DEFAULT_TLS_MODE = "letsencrypt"
+
+# Where the server chosen for this run is recorded
+SELECTION_SECTION = "UserData.General"
+SELECTION_FIELD = "server_index"
+
 # Server info
 class ServerInfo:
 
@@ -29,6 +36,10 @@ class ServerInfo:
 
         # Optional: entries written before key auth existed have no such key
         self.key_filepath = self.read("%s_key_filepath" % prefix)
+
+        # What the server serves, and how its certificate is obtained
+        self.domain_name = self.read("%s_domain_name" % prefix)
+        self.tls_mode = (self.read("%s_tls_mode" % prefix) or DEFAULT_TLS_MODE).strip().lower()
 
     # Read one field of this entry
     def read(self, field):
@@ -53,6 +64,12 @@ class ServerInfo:
     def get_key_filepath(self):
         return self.key_filepath
 
+    def get_domain_name(self):
+        return self.domain_name
+
+    def get_tls_mode(self):
+        return self.tls_mode
+
     # Check if this entry names a server at all
     def is_configured(self):
         return bool(self.host)
@@ -67,10 +84,27 @@ class ServerInfo:
             "ssh_key_filepath": self.key_filepath,
         }
 
-# Read the domain the server stack is configured for
+# Record the server this run targets, for the installers that configure it
+def select_server(server_index):
+    settings.set_value(SELECTION_SECTION, SELECTION_FIELD, server_index)
+
+# Get the server this run targets, or None when none was chosen
+def get_selected_server():
+    server_index = settings.get_value(
+        SELECTION_SECTION, SELECTION_FIELD, default_value = None, throw_exception = False)
+    if server_index is None:
+        return None
+    return ServerInfo(server_index)
+
+# Get the domain of the server this run targets
 def get_domain_name():
-    return settings.get_value(
-        SECTION, "domain_name", default_value = "", throw_exception = False) or None
+    server = get_selected_server()
+    return server.get_domain_name() if server else None
+
+# Get the certificate mode of the server this run targets
+def get_tls_mode():
+    server = get_selected_server()
+    return server.get_tls_mode() if server else DEFAULT_TLS_MODE
 
 # Build a connection to a server entry, or to this machine when none is named
 def get_connection(server_index = None, flags = None, options = None):
