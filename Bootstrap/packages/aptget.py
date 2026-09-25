@@ -30,6 +30,7 @@ aptget[constants.EnvironmentType.LOCAL_UBUNTU] += [
     {"id": "file-roller", "name": "File Roller", "description": "Archive manager", "category": "Admin"},
     {"id": "fuseiso", "name": "FuseISO", "description": "Mount ISO images", "category": "Admin"},
     {"id": "jackd", "name": "JACK", "description": "Low-latency audio server", "category": "Admin"},
+    {"id": "libnss3-tools", "name": "NSS Tools", "description": "certutil, lets mkcert trust its CA in Firefox and Chrome", "category": "Admin"},
     {"id": "mkcert", "name": "mkcert", "description": "Locally trusted dev certificates", "category": "Admin"},
     {"id": "pavucontrol", "name": "PulseAudio Volume Control", "description": "Audio volume control", "category": "Admin"},
     {"id": "pulseaudio-utils", "name": "PulseAudio Utils", "description": "PulseAudio command line tools", "category": "Admin"},

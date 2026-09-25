@@ -19,9 +19,9 @@ python3 bootstrap.py -a setup -t local_ubuntu --components aptget
 mkcert -install
 
 # Make the VM and point joybox.test at it
-sudo python3 Scripts/bin/testvm.py create --username "$USER"
-sudo python3 Scripts/bin/testvm.py ip
-sudo python3 Scripts/bin/testvm.py hosts
+testvm create --username "$USER"
+testvm ip
+testvm hosts
 
 # Add it as server 1 in ~/JoyBox.ini (see step 3 below), then on the VM as root:
 #   git clone https://github.com/NearlyTRex/JoyBox /root/JoyBox && cd /root/JoyBox/Bootstrap/scripts
@@ -31,9 +31,9 @@ sudo python3 Scripts/bin/testvm.py hosts
 #   ./init_localstorage.sh --user <you>
 
 # Deploy and verify, from your computer
-sudo python3 Scripts/bin/testvm.py snapshot --snapshot pre-deploy
+testvm snapshot --snapshot pre-deploy
 python3 bootstrap.py -a setup -t remote_ubuntu -s 1 --components nginx certbot cockpit wordpress navidrome oscar
-python3 Scripts/bin/verify_server.py --server 1 --domain joybox.test
+verify_server --server 1 --domain joybox.test
 ```
 
 Each step is explained below.
@@ -48,11 +48,11 @@ Two independent ways back into the VM, neither of which depends on sshd:
 ```bash
 # Serial console - works even with sshd completely broken.
 # cloud-init set a console password (default: joybox) for exactly this case.
-sudo python3 Scripts/bin/testvm.py console
+testvm console
 
 # Roll back to a snapshot - seconds, rather than a rebuild.
-sudo python3 Scripts/bin/testvm.py snapshot --snapshot pre-sshd
-sudo python3 Scripts/bin/testvm.py revert --snapshot pre-sshd
+testvm snapshot --snapshot pre-sshd
+testvm revert --snapshot pre-sshd
 ```
 
 Take a snapshot before anything you would not want to repeat by hand.
@@ -65,8 +65,9 @@ The workstation tooling is declared in the `local_ubuntu` package lists, so:
 python3 bootstrap.py -a setup -t local_ubuntu --components aptget
 ```
 
-That installs `virtinst`, `qemu-system-x86`, `cloud-image-utils`, `mkcert` and
-`age`. One manual step remains, because it modifies your system trust store:
+That installs `virtinst`, `qemu-system-x86`, `cloud-image-utils`, `mkcert`,
+`libnss3-tools` (so `mkcert` can add its CA to Firefox and Chrome) and `age`.
+One manual step remains, because it modifies your system trust store:
 
 ```bash
 mkcert -install
@@ -83,18 +84,18 @@ ssh-keygen -t ed25519
 ### 1. Create the VM
 
 ```bash
-sudo python3 Scripts/bin/testvm.py create --username "$USER"
+testvm create --username "$USER"
 ```
 
 Builds an Ubuntu Server guest on libvirt's default NAT network. It takes a
-minute to get an address; `sudo python3 Scripts/bin/testvm.py ip` prints it once it
+minute to get an address; `testvm ip` prints it once it
 has one. Defaults to 2 vCPU / 4 GB / 20 GB, matching a CX22 closely enough for the
 stack to behave the same way.
 
 ### 2. Point the test domain at it
 
 ```bash
-sudo python3 Scripts/bin/testvm.py hosts
+testvm hosts
 ```
 
 Writes a marker-bracketed block into `/etc/hosts` mapping `joybox.test` and its
@@ -157,7 +158,7 @@ that already bound to loopback correctly before any of this work. Add
 ### 6. Verify
 
 ```bash
-python3 Scripts/bin/verify_server.py --server 1 --domain joybox.test
+verify_server --server 1 --domain joybox.test
 ```
 
 This runs from the workstation and reads the VM's state over the same SSH
@@ -200,7 +201,7 @@ The riskiest change in the stack, so rehearse it here first.
 
 ```bash
 # 1. Snapshot
-sudo python3 Scripts/bin/testvm.py snapshot --snapshot pre-sshd
+testvm snapshot --snapshot pre-sshd
 
 # 2. Confirm key auth already works - bootstrap.py must be on keys before
 #    passwords are disabled, or the next deploy cannot connect
@@ -214,7 +215,7 @@ ssh <you>@<vm-ip>
 ssh -o PreferredAuthentications=password -o PubkeyAuthentication=no <you>@<vm-ip>
 
 # 5. If it went wrong
-sudo python3 Scripts/bin/testvm.py revert --snapshot pre-sshd
+testvm revert --snapshot pre-sshd
 ```
 
 `init_sshd.sh` refuses to run if the user has no `authorized_keys`, validates with
@@ -258,8 +259,8 @@ Stated rather than papered over:
 ## Teardown
 
 ```bash
-sudo python3 Scripts/bin/testvm.py hosts --remove
-sudo python3 Scripts/bin/testvm.py destroy
+testvm hosts --remove
+testvm destroy
 ```
 
 Then remove the `server_1_*` entry from `JoyBox.ini`, or leave it for next time.

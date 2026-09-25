@@ -58,7 +58,7 @@ Actions:
 
 | Option | Description |
 |--------|-------------|
-| `-u, --username <username>` | `create`: account to make in the guest; the user who ran sudo when omitted. |
+| `-u, --username <username>` | `create`: account to make in the guest; the user who ran it when omitted. |
 | `-k, --ssh_key <ssh_key>` | `create`: SSH public key file to authorise; the account's `~/.ssh/id_ed25519.pub` or `id_rsa.pub` when omitted. |
 | `-d, --domain <domain>` | `hosts`: domain whose name and configured subdomains point at the guest. Default: `joybox.test`. |
 | `--release <release>` | `create`: Ubuntu release codename of the cloud image, e.g. `noble`. Default: `noble`. |
@@ -140,9 +140,9 @@ testvm destroy -p -v
 
 ## Notes
 
-- Run it as root (with sudo): it talks to the system libvirt, writes guest images under `/var/lib/libvirt/images`, and edits `/etc/hosts`.
+- It relaunches itself through sudo when not already root: it talks to the system libvirt, writes guest images under `/var/lib/libvirt/images`, and edits `/etc/hosts`.
 - Needs `virt-install`, `virsh`, `qemu-img` and `cloud-localds`; `python3 bootstrap.py -a setup -t local_ubuntu --components aptget` installs them.
-- Without `--ssh_key`, `create` uses `~/.ssh/id_ed25519.pub` or `~/.ssh/id_rsa.pub` of the account (under `/home`). Without `--username`, the account is the one that ran sudo.
+- Without `--ssh_key`, `create` uses `~/.ssh/id_ed25519.pub` or `~/.ssh/id_rsa.pub` of the account (under `/home`). Without `--username`, the account is the one that ran it.
 - Take a snapshot before anything you would not want to repeat by hand; a revert takes seconds, a rebuild much longer.
 - The guest defaults to 2 processors, 4 GB and 20 GB, close to a Hetzner CX22. It has no sshfs Storage Box, no real DNS or ACME, and no public address.
 

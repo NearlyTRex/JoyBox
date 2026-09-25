@@ -56,9 +56,9 @@ parser = arguments.ArgumentParser(
         ("Dry run of destroy, changing nothing", "testvm destroy -p -v"),
     ],
     notes = [
-        "Run it as root (with sudo): it talks to the system libvirt, writes guest images under `/var/lib/libvirt/images`, and edits `/etc/hosts`.",
+        "It relaunches itself through sudo when not already root: it talks to the system libvirt, writes guest images under `/var/lib/libvirt/images`, and edits `/etc/hosts`.",
         "Needs `virt-install`, `virsh`, `qemu-img` and `cloud-localds`; `python3 bootstrap.py -a setup -t local_ubuntu --components aptget` installs them.",
-        "Without `--ssh_key`, `create` uses `~/.ssh/id_ed25519.pub` or `~/.ssh/id_rsa.pub` of the account (under `/home`). Without `--username`, the account is the one that ran sudo.",
+        "Without `--ssh_key`, `create` uses `~/.ssh/id_ed25519.pub` or `~/.ssh/id_rsa.pub` of the account (under `/home`). Without `--username`, the account is the one that ran it.",
         "Take a snapshot before anything you would not want to repeat by hand; a revert takes seconds, a rebuild much longer.",
         "The guest defaults to 2 processors, 4 GB and 20 GB, close to a Hetzner CX22. It has no sshfs Storage Box, no real DNS or ACME, and no public address.",
     ],
@@ -74,7 +74,7 @@ parser.add_string_argument(
     description = "Guest name, which also names its disk and seed image")
 parser.add_string_argument(args = ("-s", "--snapshot"), description = "Snapshot name for `snapshot` and `revert`; libvirt picks one, or `revert` uses the current snapshot, when omitted")
 parser.add_group("Action options")
-parser.add_string_argument(args = ("-u", "--username"), description = "`create`: account to make in the guest; the user who ran sudo when omitted")
+parser.add_string_argument(args = ("-u", "--username"), description = "`create`: account to make in the guest; the user who ran it when omitted")
 parser.add_string_argument(args = ("-k", "--ssh_key"), description = "`create`: SSH public key file to authorise; the account's `~/.ssh/id_ed25519.pub` or `id_rsa.pub` when omitted")
 parser.add_string_argument(args = ("-d", "--domain"), default = "joybox.test", description = "`hosts`: domain whose name and configured subdomains point at the guest")
 parser.add_string_argument(args = ("--release"), default = virtualmachine.DEFAULT_RELEASE, description = "`create`: Ubuntu release codename of the cloud image, e.g. `noble`")
@@ -87,6 +87,10 @@ args, unknown = parser.parse_known_args()
 
 # Main
 def main():
+
+    # Relaunch as root with this interpreter; a plain `sudo python3` resets PATH and loses the venv
+    if os.geteuid() != 0:
+        os.execvp("sudo", ["sudo", sys.executable, os.path.realpath(__file__)] + sys.argv[1:])
 
     # Check requirements
     setup.check_requirements()
@@ -109,7 +113,7 @@ def main():
             exit_on_failure = args.exit_on_failure)
         if not success:
             logger.log_error("Unable to create the virtual machine", quit_program = True)
-        logger.log_info("Waiting for an address; run 'testvm.py ip' once it has one")
+        logger.log_info("Waiting for an address; run 'testvm ip' once it has one")
 
     # Destroy the virtual machine
     elif args.action == "destroy":
