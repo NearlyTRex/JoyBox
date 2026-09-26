@@ -7,7 +7,7 @@ import pytest
 # Local imports
 from joybox import runoptions
 from joybox.connection import connection_ssh
-from fakes import FakeSSHClient, FakeSFTP
+from fakes import FakeSSHClient, FakeSFTP, FakeTransport
 
 
 ###########################################################
@@ -325,7 +325,7 @@ def test_a_privileged_read_goes_through_cat():
     connection = build(client)
 
     assert connection.read_file("/etc/shadow", sudo = True) == "contents"
-    assert client.only() == "sudo cat /etc/shadow"
+    assert client.only() == "sudo -n cat /etc/shadow"
 
 
 def test_a_remote_file_that_is_not_there_reads_as_nothing():
@@ -361,7 +361,7 @@ def test_a_privileged_write_is_staged_then_copied(monkeypatch):
     staged = list(sftp.written.keys())[0]
     assert staged.startswith("/tmp/")
     assert sftp.written[staged] == "contents"
-    assert client.only() == "sudo /bin/cp %s /etc/app.conf" % staged
+    assert client.only() == "sudo -n /bin/cp %s /etc/app.conf" % staged
 
 
 def test_a_privileged_write_removes_the_staged_file():
@@ -557,8 +557,8 @@ def test_a_privileged_upload_is_staged_then_merged(tmp_path):
 
     assert result is True
     assert staged.startswith("/tmp/transfer_")
-    assert commands[0] == "sudo /bin/mkdir -p /opt/app"
-    assert commands[1] == "sudo /bin/cp -r %s/. /opt/app" % staged
+    assert commands[0] == "sudo -n /bin/mkdir -p /opt/app"
+    assert commands[1] == "sudo -n /bin/cp -r %s/. /opt/app" % staged
 
 
 def test_a_privileged_upload_removes_its_staging(tmp_path):
@@ -579,3 +579,121 @@ def test_an_upload_without_a_connection_reports_failure(tmp_path):
     source.mkdir()
 
     assert build().transfer_files(str(source), "/opt/app") is False
+
+
+###########################################################
+# Connecting
+#
+# Provisioning asks whether a login works as a normal question - root on a
+# hardened server is refused by design - so probing must not raise or log.
+###########################################################
+
+class RefusingClient(FakeSSHClient):
+    def __init__(self):
+        super().__init__()
+        self.connects = []
+
+    def set_missing_host_key_policy(self, policy):
+        pass
+
+    def get_transport(self):
+        return None
+
+    def connect(self, host, **kwargs):
+        self.connects.append((host, kwargs))
+        raise PermissionError("Authentication failed.")
+
+
+class AcceptingClient(RefusingClient):
+    def __init__(self):
+        super().__init__()
+        self.connected = False
+
+    def get_transport(self):
+        return FakeTransport(active = self.connected)
+
+    def connect(self, host, **kwargs):
+        self.connects.append((host, kwargs))
+        self.connected = True
+
+
+def fake_paramiko(monkeypatch, client):
+    class Module:
+        class AutoAddPolicy:
+            pass
+
+        @staticmethod
+        def SSHClient():
+            return client
+
+    monkeypatch.setattr(connection_ssh, "paramiko", Module)
+    return client
+
+
+def test_a_refused_login_is_an_answer_not_an_error(monkeypatch):
+    client = fake_paramiko(monkeypatch, RefusingClient())
+    errors = []
+    monkeypatch.setattr(connection_ssh.logger, "log_error", lambda *a, **k: errors.append(a))
+
+    assert build().try_setup() is False
+    assert errors == []
+
+
+def test_a_refused_login_leaves_no_client_behind(monkeypatch):
+    fake_paramiko(monkeypatch, RefusingClient())
+    build().try_setup()
+
+    assert connection_ssh.ConnectionSSH.ssh_client is None
+
+
+def test_an_accepted_login_is_reported(monkeypatch):
+    client = fake_paramiko(monkeypatch, AcceptingClient())
+
+    assert build().try_setup() is True
+    assert client.connects[0][0] == "server.test"
+
+
+def test_probing_gives_up_rather_than_hanging(monkeypatch):
+    client = fake_paramiko(monkeypatch, AcceptingClient())
+    build().try_setup(timeout = 7)
+
+    assert client.connects[0][1]["timeout"] == 7
+
+
+def test_a_live_connection_is_reused(monkeypatch):
+    client = fake_paramiko(monkeypatch, AcceptingClient())
+    connection = build()
+    connection.connect()
+    connection.connect()
+
+    assert len(client.connects) == 1
+
+
+def test_teardown_without_a_transport_does_not_fail(monkeypatch):
+    errors = []
+    monkeypatch.setattr(connection_ssh.logger, "log_error", lambda *a, **k: errors.append(a))
+    build(RefusingClient()).teardown()
+
+    assert errors == []
+    assert connection_ssh.ConnectionSSH.ssh_client is None
+
+
+def test_a_failed_file_upload_fails_the_transfer(tmp_path):
+    source = tmp_path / "app"
+    source.mkdir()
+    (source / "run.sh").write_text("#!/bin/sh")
+
+    class FailingSFTP(FakeSFTP):
+        def put(self, local, remote):
+            raise IOError("disk full")
+
+    assert build(FakeSSHClient(sftp = FailingSFTP())).transfer_files(str(source), "/opt/app") is False
+
+
+def test_remote_sudo_never_waits_for_a_password():
+    # A prompt over this connection can never be answered, so an ungranted
+    # command has to fail rather than hang the deploy.
+    client = FakeSSHClient()
+    build(client).run_blocking(["systemctl", "restart", "nginx"], sudo = True)
+
+    assert client.only().startswith("sudo -n ")

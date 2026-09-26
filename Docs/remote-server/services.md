@@ -26,12 +26,9 @@ python3 bootstrap.py -a setup -t remote_ubuntu -s 0 --components wordpress
 | `python` | Python venv + pip packages |
 | `wrappers` | Script wrappers |
 | `aptget` | System packages |
-| `awscli` | AWS CLI |
 | `flatpak` | Flatpak apps |
 | `nginx` | Nginx with config templates |
 | `certbot` | Let's Encrypt SSL certs |
-| `node` | Global npm packages (ccusage) |
-| `claude` | Claude Code CLI |
 | `cockpit` | Server management web UI |
 | `wordpress` | WordPress — serves the apex domain |
 | `audiobookshelf` | Audiobook streaming |
@@ -40,8 +37,6 @@ python3 bootstrap.py -a setup -t remote_ubuntu -s 0 --components wordpress
 | `jenkins` | CI/CD server |
 | `kanboard` | Project management |
 | `fitlog` | FitLog — personal food and exercise tracker |
-| `gh` | GitHub CLI (adds repo) |
-| `ollama` | Ollama local LLM runtime |
 | `oscar` | Open OSCAR Server — self-hosted AIM/ICQ |
 
 ## The website

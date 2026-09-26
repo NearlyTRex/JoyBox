@@ -131,6 +131,16 @@ setup_sudoers() {
         done
         echo ""
 
+        # Read-only checks verify_server runs, so a hardened server can still
+        # be verified once root login is closed
+        echo "Cmnd_Alias JOYBOX_VERIFY = \\"
+        echo "    /usr/sbin/ufw status, \\"
+        echo "    /usr/sbin/sshd -T, \\"
+        echo "    /usr/bin/fail2ban-client status sshd, \\"
+        echo "    /usr/bin/fail2ban-client status nginx-http-auth, \\"
+        echo "    /usr/sbin/nginx -T"
+        echo ""
+
         local aliases=()
         for script in "${MANAGERS[@]}"; do
             local name="${script#manager_}"
@@ -140,7 +150,7 @@ setup_sudoers() {
             aliases+=("$alias_name")
         done
 
-        (IFS=', '; echo "$username ALL=(ALL) NOPASSWD: APT_MANAGE, ${aliases[*]}")
+        (IFS=', '; echo "$username ALL=(ALL) NOPASSWD: APT_MANAGE, JOYBOX_VERIFY, ${aliases[*]}")
     } > "$temp_file"
 
     if visudo -c -f "$temp_file"; then
@@ -579,6 +589,7 @@ setup_storage_box() {
     local storage_host="$3"
     local storage_remote_path="${4:-/home}"
     local storage_local_mount="${5:-/mnt/storage}"
+    local password_file="${6:-}"
 
     if ! command -v sshfs &>/dev/null; then
         echo "Installing sshfs..."
@@ -597,8 +608,20 @@ setup_storage_box() {
         sudo -u "$username" $ssh_keygen_bin -t rsa -b 4096 -N "" -f "$ssh_key"
     fi
 
+    # Unattended, the password comes from a file through sshpass, and the host
+    # key is accepted on first sight since no one is there to confirm it
     echo "Uploading SSH key to $storage_host..."
-    sudo -u "$username" "$ssh_copy_id_bin" -p 23 -s -i "$ssh_key.pub" "$storage_user@$storage_host"
+    if [ -n "$password_file" ]; then
+        if ! command -v sshpass &>/dev/null; then
+            echo "Installing sshpass..."
+            apt-get install -y sshpass
+        fi
+        chown "$username" "$password_file"
+        sudo -u "$username" sshpass -f "$password_file" "$ssh_copy_id_bin" \
+            -o StrictHostKeyChecking=accept-new -p 23 -s -i "$ssh_key.pub" "$storage_user@$storage_host"
+    else
+        sudo -u "$username" "$ssh_copy_id_bin" -p 23 -s -i "$ssh_key.pub" "$storage_user@$storage_host"
+    fi
 
     if [ ! -d "$storage_local_mount" ]; then
         echo "Creating local mount directory at $storage_local_mount..."

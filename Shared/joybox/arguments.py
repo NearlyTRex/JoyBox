@@ -229,14 +229,17 @@ class ArgumentParser:
             help = description)
 
     # Add string list argument
+    # With several_per_flag, "-c a b" and "-c a -c b" both give ["a", "b"]
     def add_string_list_argument(
         self,
         args,
         default = None,
         required = False,
-        description = None):
+        description = None,
+        several_per_flag = False):
         return self._add_argument(args, description,
-            action = "append",
+            action = "extend" if several_per_flag else "append",
+            nargs = "+" if several_per_flag else None,
             default = default,
             required = required,
             type = str,

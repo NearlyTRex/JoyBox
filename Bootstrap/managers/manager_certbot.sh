@@ -20,6 +20,83 @@ register_cert() {
     "${CMD[@]}"
 }
 
+# Hostnames only, so a name cannot walk out of /etc/letsencrypt/live
+is_valid_domain() {
+    [[ "$1" =~ ^[A-Za-z0-9]([A-Za-z0-9-]*[A-Za-z0-9])?(\.[A-Za-z0-9]([A-Za-z0-9-]*[A-Za-z0-9])?)+$ ]]
+}
+
+# A staged file has to be a regular file belonging to whoever ran sudo, so
+# this cannot be used to copy out a file only root can read
+is_callers_file() {
+    local path="$1"
+    [ -f "$path" ] && [ ! -L "$path" ] && [ "$(stat -c %u "$path")" = "${SUDO_UID:-0}" ]
+}
+
+install_pair() {
+    if [ "$#" -ne 3 ]; then
+        echo "Usage: install_pair <domain> <staged_fullchain> <staged_privkey>"
+        exit 1
+    fi
+
+    local DOMAIN="$1"
+    local FULLCHAIN="$2"
+    local PRIVKEY="$3"
+    local CERT_DIR="/etc/letsencrypt/live/$DOMAIN"
+
+    if ! is_valid_domain "$DOMAIN"; then
+        echo "Error: '$DOMAIN' is not a domain name"
+        exit 1
+    fi
+    for FILE in "$FULLCHAIN" "$PRIVKEY"; do
+        if ! is_callers_file "$FILE"; then
+            echo "Error: $FILE is not a regular file owned by the caller"
+            exit 1
+        fi
+    done
+    if ! openssl x509 -in "$FULLCHAIN" -noout; then
+        echo "Error: $FULLCHAIN is not a certificate"
+        exit 1
+    fi
+    if ! openssl pkey -in "$PRIVKEY" -noout; then
+        echo "Error: $PRIVKEY is not a private key"
+        exit 1
+    fi
+
+    mkdir -p "$CERT_DIR"
+    install -m 644 -o root -g root "$FULLCHAIN" "$CERT_DIR/fullchain.pem"
+    install -m 600 -o root -g root "$PRIVKEY" "$CERT_DIR/privkey.pem"
+    echo "Installed certificate to $CERT_DIR"
+}
+
+selfsign_cert() {
+    if [ "$#" -lt 1 ]; then
+        echo "Usage: selfsign <domain> [other_name ...]"
+        exit 1
+    fi
+
+    local DOMAIN="$1"
+    local CERT_DIR="/etc/letsencrypt/live/$DOMAIN"
+    local SANS=""
+    for NAME in "$@"; do
+        if ! is_valid_domain "$NAME"; then
+            echo "Error: '$NAME' is not a domain name"
+            exit 1
+        fi
+        SANS="${SANS:+$SANS,}DNS:$NAME"
+    done
+
+    mkdir -p "$CERT_DIR"
+    openssl req -x509 -newkey rsa:2048 -nodes \
+        -days 825 \
+        -subj "/CN=$DOMAIN" \
+        -addext "subjectAltName=$SANS" \
+        -keyout "$CERT_DIR/privkey.pem" \
+        -out "$CERT_DIR/fullchain.pem"
+    chmod 644 "$CERT_DIR/fullchain.pem"
+    chmod 600 "$CERT_DIR/privkey.pem"
+    echo "Generated a self-signed certificate in $CERT_DIR"
+}
+
 renew_certs() {
     echo "Renewing all SSL certificates..."
     certbot renew --non-interactive --quiet
@@ -262,6 +339,8 @@ print_usage() {
     echo "Usage:"
     echo "  $0 register <email> <domain1> [domain2 ...]"
     echo "  $0 renew"
+    echo "  $0 install_pair <domain> <staged_fullchain> <staged_privkey>"
+    echo "  $0 selfsign <domain> [other_name ...]"
     echo "  $0 copy_certs <domain> <destination_dir>"
     echo "  $0 export_keystore <domain> <dest_path> <password> <alias> [format] [permissions] [owner]"
     echo "  $0 list"
@@ -305,6 +384,20 @@ case "$1" in
         ;;
     renew)
         renew_certs
+        ;;
+    install_pair)
+        if [ $# -ne 4 ]; then
+            echo "Error: install_pair requires domain, certificate and key"
+            print_usage
+        fi
+        install_pair "$2" "$3" "$4"
+        ;;
+    selfsign)
+        if [ $# -lt 2 ]; then
+            echo "Error: selfsign requires at least one domain"
+            print_usage
+        fi
+        selfsign_cert "${@:2}"
         ;;
     copy_certs)
         if [ $# -ne 3 ]; then

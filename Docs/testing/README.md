@@ -7,10 +7,10 @@ hardware. They use different tools, because they test different things.
 
 | | [Remote server](remote-server.md) | [Homelab server](homelab-server.md) |
 |---|---|---|
-| What it proves | `bootstrap.py -t remote_ubuntu` deploys, hardens and backs up a server | The USB image installs itself and comes up usable |
-| Tool | `testvm` (libvirt, needs `sudo`) | `boot_vm_image` (plain QEMU, no root) |
-| Starts from | Ubuntu's cloud image, ready to SSH into | Your built installer ISO on a blank UEFI disk |
-| Reached at | Its own address on libvirt's NAT network, as `joybox.test` | `localhost:2222` |
+| What it proves | `provision_server` builds, deploys, hardens and verifies a server, and `bootstrap.py` backs it up | The USB image installs itself and comes up usable |
+| Tool | `provision_server` and `testvm` (libvirt; `sudo` only for images and `/etc/hosts`) | `boot_vm_image` (plain QEMU, no root) |
+| Starts from | Ubuntu's cloud image, with root reachable by your key | Your built installer ISO on a blank UEFI disk |
+| Reached at | A fixed address on libvirt's NAT network, `192.168.122.10`, as its server entry's domain | `localhost:2222` |
 | Kept in | `/var/lib/libvirt/images` | `vm_dir`, `~/VirtualMachines` by default |
 | Undo | Snapshots: `testvm snapshot` / `testvm revert` | `boot_vm_image -r` starts from a blank disk |
 

@@ -273,6 +273,17 @@ def test_no_domain_runs_no_burst(server):
     assert not any(cmd[0] == "curl" for cmd in server.ran)
 
 
+def test_the_burst_stays_on_the_machine_being_checked(server):
+    # A test guest using the real domain would otherwise burst production.
+    server.install("nginx", GOOD_NGINX)
+    server.install("curl", "503")
+    hardening.check_rate_limiting(server, domain = "example.com", burst_size = 1)
+
+    burst = [cmd for cmd in server.ran if cmd[0] == "curl"][0]
+    assert burst[burst.index("--resolve") + 1] == "example.com:443:127.0.0.1"
+    assert burst[-1] == "https://example.com/"
+
+
 def test_the_burst_size_is_honoured(server):
     server.install("nginx", GOOD_NGINX)
     server.install("curl", "200")

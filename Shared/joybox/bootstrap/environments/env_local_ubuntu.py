@@ -23,7 +23,6 @@ class LocalUbuntu(env.Environment):
 
         # Create connection
         self.connection = connection.ConnectionLocal(self.flags, self.options)
-        self.connection.setup()
 
         # Create installer options
         self.installer_options = {
@@ -93,6 +92,7 @@ class LocalUbuntu(env.Environment):
         self.installer_xorg = self.available_components["xorg"]
 
     def setup(self):
+        self.connect()
 
         # Update package lists
         if self.should_process_component("aptget"):

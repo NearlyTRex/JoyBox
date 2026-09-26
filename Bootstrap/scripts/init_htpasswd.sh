@@ -29,6 +29,8 @@ Options:
   --user USERNAME      Required for setup action
   --password PASSWORD  Optional for setup; prompted for if omitted, which keeps
                        it out of ps output and shell history
+  --password-file PATH Optional for setup; read the password from a file, for
+                       unattended runs
 EOF
     exit 1
 }
@@ -37,6 +39,7 @@ EOF
 ACTION=""
 USERNAME=""
 PASSWORD=""
+PASSWORD_FILE=""
 while [[ $# -gt 0 ]]; do
     case "$1" in
         --action)
@@ -49,6 +52,10 @@ while [[ $# -gt 0 ]]; do
             ;;
         --password)
             PASSWORD="$2"
+            shift 2
+            ;;
+        --password-file)
+            PASSWORD_FILE="$2"
             shift 2
             ;;
         -*|--*)
@@ -74,6 +81,18 @@ if [[ "$ACTION" == "setup" ]]; then
         print_usage
     fi
 
+    if [[ -n "$PASSWORD_FILE" ]]; then
+        if [[ ! -r "$PASSWORD_FILE" ]]; then
+            echo "Error: cannot read $PASSWORD_FILE."
+            exit 1
+        fi
+        PASSWORD="$(cat "$PASSWORD_FILE")"
+        if [[ -z "$PASSWORD" ]]; then
+            echo "Error: $PASSWORD_FILE is empty."
+            exit 1
+        fi
+    fi
+
     # Prefer prompting over --password: an argument is visible in ps for the
     # lifetime of the process and is written to the invoking shell's history.
     if [[ -z "$PASSWORD" ]]; then
@@ -94,9 +113,6 @@ else
     echo "Error: Invalid action '$ACTION'. Use 'setup' or 'cleanup'."
     print_usage
 fi
-
-# Check user
-check_user_exists "$USERNAME"
 
 # Run action
 if [[ "$ACTION" == "setup" ]]; then

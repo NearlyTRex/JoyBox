@@ -69,31 +69,73 @@ def test_selfsigned_mode_never_contacts_lets_encrypt(isolated_settings, recordin
         "selfsigned mode must not run the ACME registration"
     assert not recording_connection.crontab_added, \
         "there is nothing to renew, so no cron entry belongs here"
-    assert recording_connection.ran("openssl", "req", "-x509")
+    assert recording_connection.ran("selfsign", "joybox.test")
 
 
-def test_selfsigned_writes_to_the_shared_cert_path(isolated_settings, recording_connection):
+def selfsign_command(connection):
+    return [cmd for cmd in connection.commands if "selfsign" in cmd][0]
+
+
+def test_selfsigned_is_made_for_the_apex_directory(isolated_settings, recording_connection):
+    # The manager writes to /etc/letsencrypt/live/<first name>.
     certbot = build_certbot(isolated_settings, recording_connection, "selfsigned")
     certbot.install()
 
-    assert recording_connection.ran("/etc/letsencrypt/live/joybox.test/fullchain.pem")
-    assert recording_connection.ran("/etc/letsencrypt/live/joybox.test/privkey.pem")
-
-
-def test_selfsigned_locks_down_the_private_key(isolated_settings, recording_connection):
-    certbot = build_certbot(isolated_settings, recording_connection, "selfsigned")
-    certbot.install()
-
-    assert recording_connection.ran("chmod", "600", "privkey.pem")
-    assert recording_connection.ran("chmod", "644", "fullchain.pem")
+    command = selfsign_command(recording_connection)
+    assert command[command.index("selfsign") + 1] == "joybox.test"
 
 
 def test_selfsigned_covers_every_name_in_the_san_list(isolated_settings, recording_connection):
+    # A cert covering only the apex makes every subdomain warn.
     certbot = build_certbot(isolated_settings, recording_connection, "selfsigned")
     certbot.install()
 
-    # A cert covering only the apex makes every subdomain warn.
-    assert recording_connection.ran("subjectAltName", "DNS:joybox.test", "DNS:music.joybox.test")
+    command = selfsign_command(recording_connection)
+    assert set(certbot.fully_qualified_domains) <= set(command)
+
+
+def privileged_programs(connection):
+    return {call[1][0][0] for call in connection.calls
+            if call[0].startswith("run_") and call[2].get("sudo")}
+
+
+def test_selfsigned_needs_only_granted_sudo(isolated_settings, recording_connection):
+    # The account's sudo covers apt-get and the manager scripts, nothing else.
+    certbot = build_certbot(isolated_settings, recording_connection, "selfsigned")
+    certbot.install()
+
+    assert privileged_programs(recording_connection) <= {
+        certbot.aptget_tool, certbot.cert_manager_tool, certbot.nginx_manager_tool}
+
+
+###########################################################
+# Installing a certificate made elsewhere
+###########################################################
+
+def test_a_pair_is_installed_by_the_manager(isolated_settings, recording_connection):
+    certbot = build_certbot(isolated_settings, recording_connection, "mkcert")
+
+    assert certbot.write_cert_pair("CERT", "KEY") is True
+    install = [cmd for cmd in recording_connection.commands if "install_pair" in cmd][0]
+    assert install[install.index("install_pair") + 1] == "joybox.test"
+    assert privileged_programs(recording_connection) == {certbot.cert_manager_tool}
+
+
+def test_a_pair_is_staged_where_only_the_account_can_read_it(isolated_settings, recording_connection):
+    certbot = build_certbot(isolated_settings, recording_connection, "mkcert")
+    certbot.write_cert_pair("CERT", "KEY")
+
+    staging_dir = recording_connection.made_directories[0]
+    assert (staging_dir, "700") in recording_connection.permissions
+    assert recording_connection.written("privkey.pem") == "KEY"
+    assert all(path.startswith(staging_dir) for path, _ in recording_connection.write_log)
+
+
+def test_a_staged_pair_is_removed(isolated_settings, recording_connection):
+    certbot = build_certbot(isolated_settings, recording_connection, "mkcert")
+    certbot.write_cert_pair("CERT", "KEY")
+
+    assert recording_connection.made_directories[0] in recording_connection.removed_paths
 
 
 def test_unknown_mode_fails_rather_than_guessing(isolated_settings, recording_connection):
@@ -101,7 +143,7 @@ def test_unknown_mode_fails_rather_than_guessing(isolated_settings, recording_co
 
     assert certbot.install() is False
     assert not recording_connection.ran("register")
-    assert not recording_connection.ran("openssl")
+    assert not recording_connection.ran("selfsign")
 
 
 def test_mode_defaults_to_letsencrypt(isolated_settings, recording_connection):

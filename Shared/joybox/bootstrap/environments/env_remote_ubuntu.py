@@ -35,7 +35,6 @@ class RemoteUbuntu(env.Environment):
             ssh_key_filepath = ssh_key_filepath,
             flags = self.flags,
             options = self.options)
-        self.connection.setup()
 
         # Create installer options
         self.installer_options = {
@@ -52,12 +51,9 @@ class RemoteUbuntu(env.Environment):
             "githooks": installers.GitHooks(**self.installer_options),
             "python": installers.Python(**self.installer_options),
             "wrappers": installers.Wrappers(**self.installer_options),
-            "awscli": installers.AwsCli(**self.installer_options),
             "flatpak": installers.Flatpak(**self.installer_options),
             "nginx": installers.Nginx(**self.installer_options),
             "certbot": installers.Certbot(**self.installer_options),
-            "node": installers.Node(**self.installer_options),
-            "claude": installers.Claude(**self.installer_options),
             "cockpit": installers.Cockpit(**self.installer_options),
             "wordpress": installers.Wordpress(**self.installer_options),
             "audiobookshelf": installers.Audiobookshelf(**self.installer_options),
@@ -66,25 +62,20 @@ class RemoteUbuntu(env.Environment):
             "fitlog": installers.FitLog(**self.installer_options),
             "jenkins": installers.Jenkins(**self.installer_options),
             "kanboard": installers.Kanboard(**self.installer_options),
-            "gh": installers.Gh(**self.installer_options),
-            "ollama": installers.Ollama(**self.installer_options),
             "oscar": installers.Oscar(**self.installer_options)
         }
 
         # Get individual installers
-        self.installer_node = self.available_components["node"]
         self.installer_config = self.available_components["config"]
         self.installer_dotfiles = self.available_components["dotfiles"]
         self.installer_githooks = self.available_components["githooks"]
         self.installer_python = self.available_components["python"]
         self.installer_wrappers = self.available_components["wrappers"]
         self.installer_aptget = self.available_components["aptget"]
-        self.installer_awscli = self.available_components["awscli"]
         self.installer_audiobookshelf = self.available_components["audiobookshelf"]
         self.installer_flatpak = self.available_components["flatpak"]
         self.installer_nginx = self.available_components["nginx"]
         self.installer_certbot = self.available_components["certbot"]
-        self.installer_claude = self.available_components["claude"]
         self.installer_cockpit = self.available_components["cockpit"]
         self.installer_wordpress = self.available_components["wordpress"]
         self.installer_filebrowser = self.available_components["filebrowser"]
@@ -92,11 +83,10 @@ class RemoteUbuntu(env.Environment):
         self.installer_jenkins = self.available_components["jenkins"]
         self.installer_navidrome = self.available_components["navidrome"]
         self.installer_kanboard = self.available_components["kanboard"]
-        self.installer_gh = self.available_components["gh"]
-        self.installer_ollama = self.available_components["ollama"]
         self.installer_oscar = self.available_components["oscar"]
 
     def setup(self):
+        self.connect()
 
         # Update package lists
         if self.should_process_component("aptget"):

@@ -249,3 +249,45 @@ def test_a_local_connection_also_carries_flags(isolated_settings):
     connection = serverinfo.get_connection(flags = flags)
 
     assert connection.flags.pretend_run
+
+
+###########################################################
+# Provisioning fields
+###########################################################
+
+def test_an_entry_names_its_test_guest(isolated_settings):
+    isolated_settings.set_value(SECTION, "server_1_host", "192.168.122.10")
+    isolated_settings.set_value(SECTION, "server_1_vm", "joybox-test")
+    entry = serverinfo.ServerInfo(1)
+
+    assert entry.get_vm_name() == "joybox-test"
+    assert entry.is_local_vm() is True
+
+
+def test_a_real_host_is_not_a_test_guest(server):
+    assert serverinfo.ServerInfo(0).is_local_vm() is False
+
+
+def test_the_admin_login_is_read(isolated_settings):
+    isolated_settings.set_value(SECTION, "server_0_htpasswd_user", "admin")
+    isolated_settings.set_value(SECTION, "server_0_htpasswd_pass", "secret")
+    entry = serverinfo.ServerInfo(0)
+
+    assert entry.get_htpasswd_user() == "admin"
+    assert entry.get_htpasswd_password() == "secret"
+
+
+def test_a_storage_box_needs_both_user_and_host(isolated_settings):
+    isolated_settings.set_value(SECTION, "server_0_storage_user", "u123")
+    assert serverinfo.ServerInfo(0).has_storage_box() is False
+
+    isolated_settings.set_value(SECTION, "server_0_storage_host", "u123.your-storagebox.de")
+    isolated_settings.set_value(SECTION, "server_0_storage_pass", "boxpass")
+    entry = serverinfo.ServerInfo(0)
+
+    assert entry.has_storage_box() is True
+    assert entry.get_storage_password() == "boxpass"
+
+
+def test_no_storage_box_by_default(isolated_settings):
+    assert serverinfo.ServerInfo(0).has_storage_box() is False

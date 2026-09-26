@@ -7,7 +7,9 @@
 # mean anything.
 
 # Imports
+import hashlib
 import os
+import xml.etree.ElementTree as ElementTree
 
 # Local imports
 import joybox.command as command
@@ -38,6 +40,10 @@ DEFAULT_RELEASE = "noble"
 DEFAULT_OS_VARIANT = "ubuntu22.04"
 DEFAULT_NETWORK = "default"
 
+# The address the default guest is reserved, inside libvirt's default network,
+# so a server entry can name it once and keep it across rebuilds and reverts
+DEFAULT_ADDRESS = "192.168.122.10"
+
 # Public key names looked for when none is given
 SSH_KEY_NAMES = ["id_ed25519.pub", "id_rsa.pub"]
 
@@ -66,17 +72,22 @@ def get_local_connection(verbose = False, pretend_run = False, exit_on_failure =
         exit_on_failure = exit_on_failure))
 
 # Find the public key to authorise on a new guest
-def resolve_ssh_public_key(username, key_file = None):
+def resolve_ssh_public_key(key_file = None, home_dir = None):
     if key_file:
         if paths.is_path_file(key_file):
             return key_file
         return None
+    home_dir = home_dir or os.path.expanduser("~")
     for name in SSH_KEY_NAMES:
-        candidate = paths.join_paths(
-            paths.join_paths("/home", username), ".ssh", name)
+        candidate = paths.join_paths(home_dir, ".ssh", name)
         if paths.is_path_file(candidate):
             return candidate
     return None
+
+# Get a guest's MAC address, fixed per name so its address reservation holds
+def get_vm_mac(vm_name = DEFAULT_NAME):
+    digest = hashlib.sha256(vm_name.encode()).hexdigest()
+    return "52:54:00:%s:%s:%s" % (digest[0:2], digest[2:4], digest[4:6])
 
 ###########################################################
 # Paths
@@ -105,26 +116,27 @@ def get_seed_image(vm_name = DEFAULT_NAME, image_dir = IMAGE_DIR):
 ###########################################################
 
 # Build the cloud-init user data for a new guest.
-# A console password alongside the key is deliberate: the sshd hardening step
-# is one of the things being rehearsed, and locking the key out would
-# otherwise leave no way back in.
-def build_user_data(vm_name, username, ssh_public_key, console_password = "joybox"):
+# The guest starts the way a freshly ordered server does: root reachable with
+# the key and no account of your own, so provisioning creates the account and
+# its sudo grants exactly as it would on the real host. The root console
+# password is the way back in once the sshd hardening has closed root login.
+def build_user_data(vm_name, ssh_public_key, console_password = "joybox"):
     return "\n".join([
         "#cloud-config",
         "hostname: %s" % vm_name,
-        "users:",
-        "  - name: %s" % username,
-        "    groups: [sudo]",
-        "    shell: /bin/bash",
-        "    sudo: \"ALL=(ALL) NOPASSWD:ALL\"",
-        "    lock_passwd: false",
-        "    ssh_authorized_keys:",
-        "      - %s" % ssh_public_key,
+        "disable_root: false",
         "chpasswd:",
         "  list: |",
-        "    %s:%s" % (username, console_password),
+        "    root:%s" % console_password,
         "  expire: false",
         "ssh_pwauth: true",
+        "write_files:",
+        "  - path: /root/.ssh/authorized_keys",
+        "    owner: root:root",
+        "    permissions: '0600'",
+        "    defer: true",
+        "    content: |",
+        "      %s" % ssh_public_key,
         "package_update: true",
         "packages:",
         "  - openssh-server",
@@ -232,7 +244,11 @@ def get_install_command(
     memory = DEFAULT_MEMORY,
     vcpus = DEFAULT_VCPUS,
     os_variant = DEFAULT_OS_VARIANT,
-    network = DEFAULT_NETWORK):
+    network = DEFAULT_NETWORK,
+    mac = None):
+    network_option = "network=%s,model=virtio" % network
+    if mac:
+        network_option += ",mac=%s" % mac
     return [
         "virt-install",
         "--connect", LIBVIRT_URI,
@@ -242,7 +258,7 @@ def get_install_command(
         "--disk", "path=%s,device=disk,bus=virtio" % disk_image,
         "--disk", "path=%s,device=cdrom" % seed_image,
         "--os-variant", os_variant,
-        "--network", "network=%s,model=virtio" % network,
+        "--network", network_option,
         "--graphics", "none",
         "--import",
         "--noautoconsole"
@@ -265,11 +281,81 @@ def start_network(network = DEFAULT_NETWORK, verbose = False, pretend_run = Fals
             pretend_run = pretend_run)
     return True
 
+# Read the fixed-address entries of a network's DHCP config
+def parse_dhcp_hosts(network_xml):
+    if not network_xml:
+        return []
+    try:
+        root = ElementTree.fromstring(network_xml)
+    except ElementTree.ParseError:
+        return []
+    return [dict(host.attrib) for host in root.iter("host") if host.get("mac") or host.get("ip")]
+
+# Build the XML for one fixed-address entry
+def build_dhcp_host_xml(mac = None, name = None, ip = None):
+    attributes = [("mac", mac), ("name", name), ("ip", ip)]
+    return "<host %s/>" % " ".join(
+        "%s='%s'" % (key, value) for key, value in attributes if value)
+
+# Get the entries that would conflict with a reservation: the same guest, the
+# same MAC, or the same address held by something else
+def get_conflicting_dhcp_hosts(hosts, vm_name, mac, address):
+    return [host for host in hosts
+            if host.get("mac") == mac or host.get("ip") == address or host.get("name") == vm_name]
+
+# Build the command that changes a network's DHCP entries, live and persisted
+def get_dhcp_update_command(network, operation, host_xml):
+    return get_virsh_command([
+        "net-update", network, operation, "ip-dhcp-host", host_xml, "--live", "--config"])
+
+# Reserve an address for a guest's MAC, replacing whatever held either before
+def reserve_address(
+    vm_name,
+    address,
+    mac = None,
+    network = DEFAULT_NETWORK,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+    mac = mac or get_vm_mac(vm_name)
+    output = command.run_output_command(
+        cmd = get_virsh_command(["net-dumpxml", network]),
+        verbose = verbose,
+        pretend_run = pretend_run)
+    if isinstance(output, bytes):
+        output = output.decode()
+    hosts = parse_dhcp_hosts(output)
+    wanted = {"mac": mac, "name": vm_name, "ip": address}
+    if wanted in hosts:
+        return True
+    for host in get_conflicting_dhcp_hosts(hosts, vm_name, mac, address):
+        command.run_returncode_command(
+            cmd = get_dhcp_update_command(network, "delete", build_dhcp_host_xml(**host)),
+            verbose = verbose,
+            pretend_run = pretend_run)
+    code = command.run_returncode_command(
+        cmd = get_dhcp_update_command(network, "add-last", build_dhcp_host_xml(**wanted)),
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    if code != 0:
+        logger.log_error("Unable to reserve %s for %s" % (address, vm_name))
+        return False
+    return True
+
+# Forget a rebuilt guest's old host key, so ssh does not refuse the new one
+def forget_host_key(address, verbose = False, pretend_run = False):
+    command.run_returncode_command(
+        cmd = ["ssh-keygen", "-R", address],
+        options = command.create_command_options(suppress_output = True),
+        verbose = verbose,
+        pretend_run = pretend_run)
+
 # Create a guest
 def create_vm(
     vm_name = DEFAULT_NAME,
-    username = None,
     ssh_key_file = None,
+    address = DEFAULT_ADDRESS,
     memory = DEFAULT_MEMORY,
     vcpus = DEFAULT_VCPUS,
     disk_size = DEFAULT_DISK_SIZE,
@@ -296,11 +382,9 @@ def create_vm(
         return False
 
     # Find the key to authorise
-    if not username:
-        username = os.environ.get("USER")
-    ssh_public_key_file = resolve_ssh_public_key(username, ssh_key_file)
+    ssh_public_key_file = resolve_ssh_public_key(ssh_key_file)
     if not ssh_public_key_file:
-        logger.log_error("No SSH public key found for %s" % username)
+        logger.log_error("No SSH public key found")
         logger.log_error("Generate one with: ssh-keygen -t ed25519")
         return False
     ssh_public_key = serialization.read_text_file(
@@ -343,7 +427,7 @@ def create_vm(
         fileops.touch_file(
             src = user_data,
             contents = build_user_data(
-                vm_name, username, ssh_public_key, console_password),
+                vm_name, ssh_public_key, console_password),
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
@@ -364,8 +448,21 @@ def create_vm(
             verbose = verbose,
             pretend_run = pretend_run)
 
-    # Bring up the network and install
+    # Bring up the network, pin the guest's address, and install
     start_network(network, verbose = verbose, pretend_run = pretend_run)
+    mac = get_vm_mac(vm_name)
+    if address:
+        success = reserve_address(
+            vm_name = vm_name,
+            address = address,
+            mac = mac,
+            network = network,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if not success:
+            return False
+        forget_host_key(address, verbose = verbose, pretend_run = pretend_run)
     code = command.run_returncode_command(
         cmd = get_install_command(
             vm_name = vm_name,
@@ -373,10 +470,56 @@ def create_vm(
             seed_image = seed_image,
             memory = memory,
             vcpus = vcpus,
-            network = network),
+            network = network,
+            mac = mac),
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
+    return code == 0
+
+# Start a guest that exists but is shut off; a running one is left alone
+def start_vm(vm_name = DEFAULT_NAME, verbose = False, pretend_run = False):
+    output = command.run_output_command(
+        cmd = get_virsh_command(["domstate", vm_name]),
+        verbose = verbose,
+        pretend_run = pretend_run)
+    if isinstance(output, bytes):
+        output = output.decode()
+    if output and "running" in output:
+        return True
+    code = command.run_returncode_command(
+        cmd = get_virsh_command(["start", vm_name]),
+        verbose = verbose,
+        pretend_run = pretend_run)
+    return code == 0
+
+# Read the MAC a guest's network interface actually has
+def parse_interface_mac(output):
+    if not output:
+        return None
+    for line in output.splitlines():
+        for token in line.split():
+            if token.count(":") == 5:
+                return token.lower()
+    return None
+
+def get_vm_interface_mac(vm_name = DEFAULT_NAME, verbose = False, pretend_run = False):
+    output = command.run_output_command(
+        cmd = get_virsh_command(["domiflist", vm_name]),
+        verbose = verbose,
+        pretend_run = pretend_run)
+    if isinstance(output, bytes):
+        output = output.decode()
+    return parse_interface_mac(output)
+
+# Remove a snapshot, so one with the same name can be taken again
+def delete_snapshot(vm_name = DEFAULT_NAME, snapshot_name = None, verbose = False, pretend_run = False):
+    if snapshot_name not in list_snapshots(vm_name, verbose = verbose, pretend_run = pretend_run):
+        return True
+    code = command.run_returncode_command(
+        cmd = get_virsh_command(["snapshot-delete", vm_name, snapshot_name]),
+        verbose = verbose,
+        pretend_run = pretend_run)
     return code == 0
 
 # Take a snapshot, so a risky step can be undone

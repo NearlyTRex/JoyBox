@@ -227,3 +227,63 @@ def test_the_base_environment_does_not_claim_success():
 
     assert environment.setup() is False
     assert environment.teardown() is False
+
+
+###########################################################
+# Connecting
+###########################################################
+
+class CountingConnection:
+    def __init__(self):
+        self.setups = 0
+        self.teardowns = 0
+
+    def setup(self):
+        self.setups += 1
+
+    def teardown(self):
+        self.teardowns += 1
+
+
+def test_building_an_environment_does_not_connect():
+    # Listing components must work without a reachable target.
+    from joybox.bootstrap.environments import env_remote_ubuntu
+    from joybox.connection import connection_ssh
+
+    connected = []
+    original = connection_ssh.ConnectionSSH.setup
+    connection_ssh.ConnectionSSH.setup = lambda self: connected.append(self)
+    try:
+        environment = env_remote_ubuntu.RemoteUbuntu(ssh_host = None)
+        assert environment.get_available_components()
+    finally:
+        connection_ssh.ConnectionSSH.setup = original
+
+    assert connected == []
+
+
+def test_processing_components_connects_first(three_components):
+    environment = build_environment(three_components)
+    environment.connection = CountingConnection()
+
+    environment.process_components("install")
+
+    assert environment.connection.setups == 1
+
+
+def test_asking_for_status_connects_first(three_components):
+    environment = build_environment(three_components)
+    environment.connection = CountingConnection()
+
+    environment.status()
+
+    assert environment.connection.setups == 1
+
+
+def test_an_environment_disconnects_on_request():
+    environment = env.Environment()
+    environment.connection = CountingConnection()
+
+    environment.disconnect()
+
+    assert environment.connection.teardowns == 1

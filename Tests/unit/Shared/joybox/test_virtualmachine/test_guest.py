@@ -1,11 +1,9 @@
-# Imports
-import os
-
 # Third-party imports
 import pytest
 
 # Local imports
 from joybox import virtualmachine
+from vm_helpers import NAME, fake_connection, record
 
 
 ###########################################################
@@ -16,21 +14,6 @@ from joybox import virtualmachine
 # reachable after a step that locks ssh, and destroying one must not take
 # anything else with it.
 ###########################################################
-
-NAME = "joybox-test"
-
-
-def record(monkeypatch, returncode = 0, output = ""):
-    from fakes import RecordingCommand
-    return RecordingCommand(monkeypatch, returncode = returncode, output = output)
-
-
-def fake_connection(monkeypatch, **kwargs):
-    from fakes import RecordingConnection
-    connection = RecordingConnection(**kwargs)
-    monkeypatch.setattr(virtualmachine, "get_local_connection", lambda *a, **k: connection)
-    return connection
-
 
 ###########################################################
 # Prerequisites
@@ -65,35 +48,35 @@ def test_an_explicit_key_is_used(tmp_path):
     key = tmp_path / "custom.pub"
     key.write_text("ssh-ed25519 AAAA test\n")
 
-    assert virtualmachine.resolve_ssh_public_key("deploy", str(key)) == str(key)
+    assert virtualmachine.resolve_ssh_public_key(str(key)) == str(key)
 
 
 def test_an_explicit_key_that_is_missing_resolves_to_nothing(tmp_path):
     # Better than silently falling back to a different key than asked for.
     assert virtualmachine.resolve_ssh_public_key(
-        "deploy", str(tmp_path / "absent.pub")) is None
+        str(tmp_path / "absent.pub")) is None
 
 
 def test_an_ed25519_key_is_preferred(monkeypatch):
     # Both are present, and the modern one wins.
     monkeypatch.setattr(virtualmachine.paths, "is_path_file", lambda path: True)
 
-    assert virtualmachine.resolve_ssh_public_key("deploy").endswith("id_ed25519.pub")
+    assert virtualmachine.resolve_ssh_public_key().endswith("id_ed25519.pub")
 
 
 def test_an_rsa_key_is_used_when_it_is_the_only_one(monkeypatch):
     monkeypatch.setattr(
         virtualmachine.paths, "is_path_file", lambda path: path.endswith("id_rsa.pub"))
 
-    assert virtualmachine.resolve_ssh_public_key("deploy").endswith("id_rsa.pub")
+    assert virtualmachine.resolve_ssh_public_key().endswith("id_rsa.pub")
 
 
-def test_a_key_is_looked_for_under_the_users_home(monkeypatch):
+def test_a_key_is_looked_for_under_the_home_given(monkeypatch):
     seen = []
     monkeypatch.setattr(
         virtualmachine.paths, "is_path_file",
         lambda path: seen.append(path) or False)
-    virtualmachine.resolve_ssh_public_key("deploy")
+    virtualmachine.resolve_ssh_public_key(home_dir = "/home/deploy")
 
     assert all("/home/deploy/.ssh" in path.replace("\\", "/") for path in seen)
 
@@ -110,7 +93,7 @@ def test_no_key_at_all_resolves_to_nothing(monkeypatch):
 
 def user_data(**kwargs):
     defaults = dict(
-        vm_name = NAME, username = "deploy",
+        vm_name = NAME,
         ssh_public_key = "ssh-ed25519 AAAA deploy@host")
     defaults.update(kwargs)
     return virtualmachine.build_user_data(**defaults)
@@ -125,33 +108,42 @@ def test_the_guest_takes_the_given_name():
     assert "hostname: %s" % NAME in user_data()
 
 
-def test_the_public_key_is_authorised():
-    assert "ssh-ed25519 AAAA deploy@host" in user_data()
-
-
-def test_the_user_is_created_with_sudo():
+def test_the_public_key_is_authorised_for_root():
+    # Like a freshly ordered server: root with the key, nothing else.
     built = user_data()
 
-    assert "name: deploy" in built
-    assert "groups: [sudo]" in built
+    assert "path: /root/.ssh/authorized_keys" in built
+    assert "ssh-ed25519 AAAA deploy@host" in built
 
 
-def test_a_console_password_is_set():
-    # The ssh hardening step is one of the things being rehearsed, so locking
-    # the key out has to leave a way back in through the console.
-    assert "deploy:joybox" in user_data()
+def test_the_root_key_is_written_after_cloud_init_manages_keys():
+    # Written earlier, cloud-init's own key handling could replace it.
+    assert "defer: true" in user_data()
+
+
+def test_root_keeps_its_key_login():
+    assert "disable_root: false" in user_data()
+
+
+def test_no_account_is_created():
+    # Provisioning creates the account, with the grants a real server gets.
+    built = user_data()
+
+    assert "users:" not in built
+    assert "NOPASSWD" not in built
+
+
+def test_a_console_password_is_set_for_root():
+    # The ssh hardening closes root login, so the console is the way back in.
+    assert "root:joybox" in user_data()
 
 
 def test_the_console_password_can_be_chosen():
-    assert "deploy:hunter2" in user_data(console_password = "hunter2")
+    assert "root:hunter2" in user_data(console_password = "hunter2")
 
 
 def test_password_login_is_enabled_at_first_boot():
     assert "ssh_pwauth: true" in user_data()
-
-
-def test_the_account_is_not_locked():
-    assert "lock_passwd: false" in user_data()
 
 
 def test_ssh_is_installed_and_started():
@@ -290,6 +282,12 @@ def test_virsh_targets_the_system_libvirt():
 
 def test_the_console_targets_the_system_libvirt():
     assert virtualmachine.get_console_command(NAME)[1:3] == ["--connect", "qemu:///system"]
+
+
+def test_the_guest_gets_its_fixed_mac():
+    built = install_command(mac = "52:54:00:aa:bb:cc")
+
+    assert "network=default,model=virtio,mac=52:54:00:aa:bb:cc" in built
 
 
 def test_the_memory_and_processors_are_passed():
@@ -528,312 +526,132 @@ def test_creating_without_a_key_is_refused(monkeypatch):
     monkeypatch.setattr(virtualmachine, "resolve_ssh_public_key", lambda *a, **k: None)
     monkeypatch.setattr(virtualmachine.logger, "log_error", lambda *a, **k: None)
 
-    assert virtualmachine.create_vm(NAME, username = "deploy") is False
+    assert virtualmachine.create_vm(NAME) is False
 
 
 ###########################################################
-# Booting an image directly
+# Fixed address
 #
-# This is how an installer image is tried before a usb stick and a real
-# machine. What has to hold is that the machine boots the way the target will
-# - uefi firmware, the image in the drive, a blank disk to install onto - and
-# that it stops when the install is done rather than starting over.
+# The server entry names the guest's address once, so the reservation has to
+# hold across rebuilds and reverts and never double-book an address.
 ###########################################################
 
-BOOT_NAME = "llm"
+NETWORK_XML = """<network>
+  <name>default</name>
+  <ip address='192.168.122.1' netmask='255.255.255.0'>
+    <dhcp>
+      <range start='192.168.122.2' end='192.168.122.254'/>
+      <host mac='52:54:00:11:22:33' name='other' ip='192.168.122.20'/>
+    </dhcp>
+  </ip>
+</network>"""
 
 
-def boot_command(**kwargs):
-    defaults = dict(
-        disk_image = "/vms/llm.qcow2",
-        firmware_code = "/fw/code.fd",
-        firmware_vars = "/vms/llm-vars.fd")
-    defaults.update(kwargs)
-    return virtualmachine.get_boot_command(**defaults)
+def test_a_guest_keeps_the_same_mac():
+    assert virtualmachine.get_vm_mac(NAME) == virtualmachine.get_vm_mac(NAME)
 
 
-###########################################################
-# Firmware
-###########################################################
-
-def test_a_firmware_pair_is_found_where_a_distribution_puts_it(monkeypatch):
-    pairs = [("/absent/code.fd", "/absent/vars.fd"), ("/here/code.fd", "/here/vars.fd")]
-    monkeypatch.setattr(
-        virtualmachine.paths, "is_path_file", lambda path: path.startswith("/here/"))
-
-    assert virtualmachine.get_firmware_pair(pairs) == ("/here/code.fd", "/here/vars.fd")
+def test_two_guests_get_different_macs():
+    assert virtualmachine.get_vm_mac("one") != virtualmachine.get_vm_mac("two")
 
 
-def test_half_a_firmware_pair_is_not_enough(monkeypatch):
-    # The variables file is written to while the machine runs, so a code file
-    # on its own cannot be used.
-    pairs = [("/here/code.fd", "/here/vars.fd")]
-    monkeypatch.setattr(
-        virtualmachine.paths, "is_path_file", lambda path: path.endswith("code.fd"))
-
-    assert virtualmachine.get_firmware_pair(pairs) is None
+def test_a_guest_mac_is_in_the_qemu_range():
+    assert virtualmachine.get_vm_mac(NAME).startswith("52:54:00:")
 
 
-def test_no_firmware_at_all_is_reported(monkeypatch):
-    monkeypatch.setattr(virtualmachine.paths, "is_path_file", lambda path: False)
-
-    assert virtualmachine.get_firmware_pair() is None
-
-
-def test_the_firmware_variables_are_per_machine():
-    # The firmware writes its boot entries into them, so a shared copy would
-    # have one machine's entries pointing at another's disk.
-    first = virtualmachine.get_boot_firmware_vars("first")
-    second = virtualmachine.get_boot_firmware_vars("second")
-
-    assert first != second
+def test_reservations_are_read_from_the_network():
+    assert virtualmachine.parse_dhcp_hosts(NETWORK_XML) == [
+        {"mac": "52:54:00:11:22:33", "name": "other", "ip": "192.168.122.20"}]
 
 
-def test_a_machine_does_not_write_to_the_distribution_firmware():
-    assert not virtualmachine.get_boot_firmware_vars(BOOT_NAME).startswith("/usr/share")
+def test_unreadable_network_xml_has_no_reservations():
+    assert virtualmachine.parse_dhcp_hosts("not xml") == []
 
 
-###########################################################
-# Paths
-###########################################################
+def test_a_reservation_that_would_double_book_is_found():
+    hosts = virtualmachine.parse_dhcp_hosts(NETWORK_XML)
 
-def test_a_booted_machine_disk_is_named_after_it():
-    assert virtualmachine.get_boot_disk(BOOT_NAME).endswith("%s.qcow2" % BOOT_NAME)
-
-
-def test_two_booted_machines_do_not_share_a_disk():
-    assert virtualmachine.get_boot_disk("first") != virtualmachine.get_boot_disk("second")
+    assert virtualmachine.get_conflicting_dhcp_hosts(
+        hosts, NAME, "52:54:00:aa:bb:cc", "192.168.122.20") == hosts
+    assert virtualmachine.get_conflicting_dhcp_hosts(
+        hosts, NAME, "52:54:00:aa:bb:cc", "192.168.122.10") == []
 
 
-def test_a_booted_machine_is_kept_where_it_can_be_written():
-    # Not beside the libvirt guests, which are under a directory only root
-    # can write to.
-    assert not virtualmachine.get_boot_disk(BOOT_NAME).startswith(virtualmachine.IMAGE_DIR)
+def test_the_reservation_is_changed_live_and_persisted():
+    built = virtualmachine.get_dhcp_update_command(
+        "default", "add-last", "<host mac='m' name='n' ip='i'/>")
+
+    assert built[3:8] == ["net-update", "default", "add-last", "ip-dhcp-host", "<host mac='m' name='n' ip='i'/>"]
+    assert "--live" in built and "--config" in built
 
 
-def test_a_given_directory_is_used_as_it_is():
-    assert virtualmachine.get_boot_disk(BOOT_NAME, "/tmp/vms") == "/tmp/vms/llm.qcow2"
+def test_reserving_adds_the_guest(monkeypatch):
+    recorder = record(monkeypatch, output = NETWORK_XML)
+
+    assert virtualmachine.reserve_address(NAME, "192.168.122.10", mac = "52:54:00:aa:bb:cc") is True
+    added = [call["cmd"] for call in recorder.calls if "add-last" in call["cmd"]]
+    assert added and "ip='192.168.122.10'" in added[0][7]
+
+
+def test_reserving_replaces_what_held_the_address(monkeypatch):
+    recorder = record(monkeypatch, output = NETWORK_XML)
+    virtualmachine.reserve_address(NAME, "192.168.122.20", mac = "52:54:00:aa:bb:cc")
+
+    deleted = [call["cmd"] for call in recorder.calls if "delete" in call["cmd"]]
+    assert deleted and "name='other'" in deleted[0][7]
+
+
+def test_an_existing_reservation_is_left_alone(monkeypatch):
+    existing = NETWORK_XML.replace(
+        "<host mac='52:54:00:11:22:33' name='other' ip='192.168.122.20'/>",
+        "<host mac='52:54:00:aa:bb:cc' name='%s' ip='192.168.122.10'/>" % NAME)
+    recorder = record(monkeypatch, output = existing)
+
+    assert virtualmachine.reserve_address(NAME, "192.168.122.10", mac = "52:54:00:aa:bb:cc") is True
+    assert not [call for call in recorder.calls if "net-update" in call["cmd"]]
 
 
 ###########################################################
-# The boot command
+# Guest housekeeping
 ###########################################################
 
-def test_an_installer_image_goes_in_the_drive():
-    built = boot_command(iso_file = "/images/llm.iso")
+DOMIFLIST = """ Interface   Type      Source    Model    MAC
+------------------------------------------------------------
+ vnet0       network   default   virtio   52:54:00:CD:E9:CB
+"""
 
-    assert any("/images/llm.iso" in str(part) for part in built)
-    assert built[built.index("-boot") + 1] == "d"
 
+def test_the_interface_mac_is_read():
+    assert virtualmachine.parse_interface_mac(DOMIFLIST) == "52:54:00:cd:e9:cb"
 
-def test_an_install_stops_when_the_installer_reboots():
-    # The image is still in the drive, so firmware that boots it again starts
-    # the install over instead of showing what was installed.
-    assert "-no-reboot" in boot_command(iso_file = "/images/llm.iso")
 
+def test_no_interface_has_no_mac():
+    assert virtualmachine.parse_interface_mac("") is None
 
-def test_booting_the_disk_asks_for_no_image():
-    built = boot_command()
 
-    assert "-no-reboot" not in built
-    assert "-boot" not in built
-    assert "media=cdrom" not in " ".join(str(part) for part in built)
+def test_a_running_guest_is_not_started_again(monkeypatch):
+    recorder = record(monkeypatch, output = "running\n")
 
+    assert virtualmachine.start_vm(NAME) is True
+    assert not [call for call in recorder.calls if "start" in call["cmd"]]
 
-def test_a_machine_boots_the_way_the_target_will():
-    # The built in bios cannot boot an efi system partition, so an image that
-    # only works under uefi would look broken here for the wrong reason.
-    built = " ".join(str(part) for part in boot_command())
 
-    assert "if=pflash" in built
-    assert "/fw/code.fd" in built
-    assert "/vms/llm-vars.fd" in built
+def test_a_stopped_guest_is_started(monkeypatch):
+    recorder = record(monkeypatch, output = "shut off\n")
+    virtualmachine.start_vm(NAME)
 
+    assert [call for call in recorder.calls if call["cmd"][3:] == ["start", NAME]]
 
-def test_the_firmware_code_is_not_written_to():
-    built = boot_command()
-    code_drive = [part for part in built if "/fw/code.fd" in str(part)][0]
 
-    assert "readonly=on" in code_drive
+def test_a_missing_snapshot_needs_no_deleting(monkeypatch):
+    recorder = record(monkeypatch, output = "other\n")
 
+    assert virtualmachine.delete_snapshot(NAME, "pre-sshd") is True
+    assert not [call for call in recorder.calls if "snapshot-delete" in call["cmd"]]
 
-def test_a_machine_takes_its_memory_and_processors():
-    built = boot_command(memory = 8192, vcpus = 6)
 
-    assert built[built.index("-m") + 1] == "8192M"
-    assert built[built.index("-smp") + 1] == "6"
+def test_an_existing_snapshot_is_deleted(monkeypatch):
+    recorder = record(monkeypatch, output = "pre-sshd\n")
+    virtualmachine.delete_snapshot(NAME, "pre-sshd")
 
-
-def test_ssh_is_reachable_from_the_workstation():
-    built = " ".join(str(part) for part in boot_command(ssh_port = 2345))
-
-    assert "hostfwd=tcp::2345-:22" in built
-
-
-def test_a_machine_with_no_forwarded_port_gets_no_network():
-    built = boot_command(ssh_port = None)
-
-    assert "-net" in built
-    assert built[built.index("-net") + 1] == "none"
-
-
-def test_an_unaccelerated_machine_asks_for_no_acceleration():
-    # Asking for kvm without access to it fails to start at all, which is
-    # worse than running slowly.
-    built = boot_command(accelerated = False)
-
-    assert "accel=kvm" not in " ".join(str(part) for part in built)
-    assert "-cpu" not in built
-
-
-def test_an_accelerated_machine_hands_the_processor_through():
-    built = boot_command(accelerated = True)
-
-    assert "accel=kvm" in " ".join(str(part) for part in built)
-    assert built[built.index("-cpu") + 1] == "host"
-
-
-def test_a_headless_machine_opens_no_window():
-    built = boot_command(headless = True)
-
-    assert built[built.index("-display") + 1] == "none"
-
-
-def test_a_headless_machine_can_write_its_console_to_a_file():
-    built = boot_command(headless = True, serial_file = "/tmp/console.log")
-
-    assert "file:/tmp/console.log" in [str(part) for part in built]
-
-
-def test_a_windowed_machine_is_not_made_headless():
-    assert "-display" not in boot_command()
-
-
-###########################################################
-# Making a disk
-###########################################################
-
-def test_a_blank_disk_is_made_at_the_size_asked_for():
-    built = virtualmachine.get_create_boot_disk_command("/vms/llm.qcow2", 40)
-
-    assert "40G" in built
-    assert "/vms/llm.qcow2" in built
-
-
-def test_a_blank_disk_is_sparse():
-    # Sixty gigabytes of models has to fit, and a raw disk would cost that
-    # much on the workstation before anything was installed.
-    built = virtualmachine.get_create_boot_disk_command("/vms/llm.qcow2", 60)
-
-    assert built[built.index("-f") + 1] == "qcow2"
-
-
-def test_a_blank_disk_is_not_backed_by_anything():
-    # Unlike the rehearsal guests, which start from a cloud image; this one
-    # is what an installer writes to from nothing.
-    built = virtualmachine.get_create_boot_disk_command("/vms/llm.qcow2", 60)
-
-    assert "-b" not in built
-
-
-###########################################################
-# Booting one end to end
-#
-# What matters is what happens before qemu is reached: a workstation without
-# the tools or the firmware has to be told so, rather than finding out after
-# a disk has been made.
-###########################################################
-
-@pytest.fixture
-def bootable(monkeypatch, tmp_path):
-    # A workstation with everything a boot needs
-    monkeypatch.setattr(virtualmachine, "get_missing_boot_tools", lambda: [])
-    monkeypatch.setattr(
-        virtualmachine, "get_firmware_pair", lambda pairs = None: ("/fw/code.fd", "/fw/vars.fd"))
-    monkeypatch.setattr(virtualmachine, "is_acceleration_available", lambda: True)
-    monkeypatch.setattr(
-        virtualmachine.fileops, "copy_file_or_directory", lambda **kwargs: True)
-    return str(tmp_path / "vms")
-
-
-def test_a_workstation_without_the_tools_is_told_which(monkeypatch, bootable):
-    monkeypatch.setattr(virtualmachine, "get_missing_boot_tools", lambda: ["qemu-img"])
-
-    assert virtualmachine.boot_vm_image(vm_name = BOOT_NAME, boot_dir = bootable) is False
-
-
-def test_a_workstation_without_firmware_is_told_so(monkeypatch, bootable):
-    # Booting without it would fall back to bios and fail for a reason that
-    # has nothing to do with the image being tested.
-    monkeypatch.setattr(virtualmachine, "get_firmware_pair", lambda pairs = None: None)
-
-    assert virtualmachine.boot_vm_image(vm_name = BOOT_NAME, boot_dir = bootable) is False
-
-
-def test_an_image_that_is_not_there_stops_before_a_disk_is_made(monkeypatch, bootable):
-    recorder = record(monkeypatch)
-
-    assert virtualmachine.boot_vm_image(
-        vm_name = BOOT_NAME,
-        iso_file = "/images/absent.iso",
-        boot_dir = bootable) is False
-    assert recorder.calls == []
-    assert not os.path.exists(bootable)
-
-
-def test_a_disk_is_made_before_the_machine_runs(monkeypatch, bootable, tmp_path):
-    recorder = record(monkeypatch)
-    image = tmp_path / "llm.iso"
-    image.write_bytes(b"iso")
-
-    assert virtualmachine.boot_vm_image(
-        vm_name = BOOT_NAME, iso_file = str(image), boot_dir = bootable) is True
-
-    assert "qemu-img" in recorder.text(0)
-    assert "qemu-system-x86_64" in recorder.text(1)
-
-
-def test_an_existing_disk_is_not_made_again(monkeypatch, bootable, tmp_path):
-    recorder = record(monkeypatch)
-    os.makedirs(bootable)
-    open(virtualmachine.get_boot_disk(BOOT_NAME, bootable), "wb").close()
-
-    assert virtualmachine.boot_vm_image(vm_name = BOOT_NAME, boot_dir = bootable) is True
-
-    assert len(recorder.calls) == 1
-    assert "qemu-system-x86_64" in recorder.text(0)
-
-
-def test_a_reset_throws_the_disk_away(monkeypatch, bootable, tmp_path):
-    record(monkeypatch)
-    os.makedirs(bootable)
-    disk = virtualmachine.get_boot_disk(BOOT_NAME, bootable)
-    with open(disk, "wb") as handle:
-        handle.write(b"old")
-
-    virtualmachine.boot_vm_image(vm_name = BOOT_NAME, boot_dir = bootable, reset = True)
-
-    assert not os.path.exists(disk) or open(disk, "rb").read() != b"old"
-
-
-def test_a_machine_that_will_not_start_is_reported(monkeypatch, bootable):
-    record(monkeypatch, returncode = 1)
-
-    assert virtualmachine.boot_vm_image(vm_name = BOOT_NAME, boot_dir = bootable) is False
-
-
-def test_a_value_given_on_the_command_line_wins(isolated_settings):
-    isolated_settings.set_value("UserData.VM", "vm_memory", "2048")
-
-    assert virtualmachine.get_boot_setting("vm_memory", 6144, 8192) == 8192
-
-
-def test_a_value_not_given_comes_from_the_configuration(isolated_settings):
-    isolated_settings.set_value("UserData.VM", "vm_memory", "2048")
-
-    assert virtualmachine.get_boot_setting("vm_memory", 6144) == 2048
-
-
-def test_zero_is_an_answer_rather_than_an_absent_one(isolated_settings):
-    # No forwarded port means no network, which is a thing to ask for.
-    assert virtualmachine.get_boot_setting("vm_ssh_port", 2222, 0) == 0
+    assert [call for call in recorder.calls if call["cmd"][3:] == ["snapshot-delete", NAME, "pre-sshd"]]

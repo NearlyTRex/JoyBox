@@ -33,7 +33,6 @@ class Udev(installer.Installer):
     def get_supported_environments(self):
         return [
             constants.EnvironmentType.LOCAL_UBUNTU,
-            constants.EnvironmentType.REMOTE_UBUNTU,
         ]
 
     def _get_rule_path(self, rule):

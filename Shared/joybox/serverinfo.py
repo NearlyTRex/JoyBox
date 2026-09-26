@@ -42,6 +42,18 @@ class ServerInfo:
         self.domain_contact = self.read("%s_domain_contact" % prefix)
         self.tls_mode = (self.read("%s_tls_mode" % prefix) or DEFAULT_TLS_MODE).strip().lower()
 
+        # The local test guest this entry points at, when it is one
+        self.vm_name = self.read("%s_vm" % prefix)
+
+        # The login guarding the admin pages
+        self.htpasswd_user = self.read("%s_htpasswd_user" % prefix)
+        self.htpasswd_password = self.read("%s_htpasswd_pass" % prefix)
+
+        # The Storage Box mounted at /mnt/storage; without one, local storage stands in
+        self.storage_user = self.read("%s_storage_user" % prefix)
+        self.storage_host = self.read("%s_storage_host" % prefix)
+        self.storage_password = self.read("%s_storage_pass" % prefix)
+
     # Read one field of this entry
     def read(self, field):
         return settings.get_value(
@@ -73,6 +85,32 @@ class ServerInfo:
 
     def get_tls_mode(self):
         return self.tls_mode
+
+    def get_vm_name(self):
+        return self.vm_name
+
+    def get_htpasswd_user(self):
+        return self.htpasswd_user
+
+    def get_htpasswd_password(self):
+        return self.htpasswd_password
+
+    def get_storage_user(self):
+        return self.storage_user
+
+    def get_storage_host(self):
+        return self.storage_host
+
+    def get_storage_password(self):
+        return self.storage_password
+
+    # Check if this entry is a local test guest rather than a real host
+    def is_local_vm(self):
+        return bool(self.vm_name)
+
+    # Check if this entry mounts a Storage Box
+    def has_storage_box(self):
+        return bool(self.storage_user and self.storage_host)
 
     # Check if this entry names a server at all
     def is_configured(self):

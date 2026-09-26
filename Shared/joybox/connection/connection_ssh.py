@@ -64,45 +64,68 @@ class ConnectionSSH(connection.Connection):
         self.ssh_password = ssh_password
         self.remote_home_directory = None
 
-    def setup(self):
+    def connect(self, timeout = None):
         _ensure_paramiko()
+        if not ConnectionSSH.ssh_client:
+            ConnectionSSH.ssh_client = paramiko.SSHClient()
+            ConnectionSSH.ssh_client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+        if self.is_connected():
+            return
+        if self.ssh_key_str or self.ssh_key_filepath:
+            private_key = _load_private_key(
+                filepath = self.ssh_key_filepath if not self.ssh_key_str else None,
+                key_str = self.ssh_key_str)
+            ConnectionSSH.ssh_client.connect(
+                self.ssh_host,
+                port = self.ssh_port,
+                username = self.ssh_user,
+                pkey = private_key,
+                timeout = timeout,
+                allow_agent = False,
+                look_for_keys = False
+            )
+        elif self.ssh_password:
+            ConnectionSSH.ssh_client.connect(
+                self.ssh_host,
+                port = self.ssh_port,
+                username = self.ssh_user,
+                password = self.ssh_password,
+                timeout = timeout
+            )
+        else:
+            raise ValueError("Either ssh_key_str, ssh_key_filepath, or ssh_password must be provided.")
+
+    def setup(self):
         try:
-            if not ConnectionSSH.ssh_client:
-                ConnectionSSH.ssh_client = paramiko.SSHClient()
-                ConnectionSSH.ssh_client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
-            if not ConnectionSSH.ssh_client.get_transport() or not ConnectionSSH.ssh_client.get_transport().is_active():
-                if self.ssh_key_str or self.ssh_key_filepath:
-                    private_key = _load_private_key(
-                        filepath = self.ssh_key_filepath if not self.ssh_key_str else None,
-                        key_str = self.ssh_key_str)
-                    ConnectionSSH.ssh_client.connect(
-                        self.ssh_host,
-                        port = self.ssh_port,
-                        username = self.ssh_user,
-                        pkey = private_key
-                    )
-                elif self.ssh_password:
-                    ConnectionSSH.ssh_client.connect(
-                        self.ssh_host,
-                        port = self.ssh_port,
-                        username = self.ssh_user,
-                        password = self.ssh_password
-                    )
-                else:
-                    raise ValueError("Either ssh_key_str, ssh_key_filepath, or ssh_password must be provided.")
+            self.connect()
         except Exception as e:
             logger.log_error("SSH connection failed")
             logger.log_error(e)
             raise
 
+    # Try to log in, for when a refusal is an answer rather than an error
+    def try_setup(self, timeout = 15):
+        try:
+            self.connect(timeout = timeout)
+            return True
+        except Exception:
+            self.teardown()
+            return False
+
+    def is_connected(self):
+        if not ConnectionSSH.ssh_client:
+            return False
+        transport = ConnectionSSH.ssh_client.get_transport()
+        return bool(transport and transport.is_active())
+
     def teardown(self):
         try:
-            if ConnectionSSH.ssh_client and ConnectionSSH.ssh_client.get_transport().is_active():
+            if ConnectionSSH.ssh_client:
                 ConnectionSSH.ssh_client.close()
-                ConnectionSSH.ssh_client = None
         except Exception as e:
             logger.log_error("Failed to close SSH connection")
             logger.log_error(e)
+        ConnectionSSH.ssh_client = None
 
     def get_home_directory(self):
         if self.remote_home_directory:
@@ -118,6 +141,15 @@ class ConnectionSSH(connection.Connection):
         except Exception as e:
             return self.handle_error("Unable to resolve remote home directory", e, return_value = None)
         return self.remote_home_directory
+
+    # Nothing here can answer a password prompt, so a command outside the
+    # account's grants fails at once rather than waiting on one forever
+    def mark_command_as_sudo(self, cmd):
+        if isinstance(cmd, str):
+            return f"sudo -n {cmd}"
+        if isinstance(cmd, list):
+            return ["sudo", "-n"] + cmd
+        return cmd
 
     def process_command(self, cmd):
         parts = []
@@ -314,13 +346,19 @@ class ConnectionSSH(connection.Connection):
                     with sftp_lock:
                         logger.log_info(f"Transferring file: {local_file} to {remote_file}")
                         sftp.put(local_file, remote_file)
+                    return True
                 except Exception as e:
                     logger.log_error(f"Failed to transfer file {local_file} to {remote_file}: {e}")
+                    return False
 
             # Start uploads
             with concurrent.futures.ThreadPoolExecutor(max_workers = 8) as executor:
-                executor.map(upload_file, file_tasks)
+                uploaded = list(executor.map(upload_file, file_tasks))
             sftp.close()
+            if not all(uploaded):
+                if sudo:
+                    self.run_blocking([tools.get_remove_tool(), "-rf", temp_dest])
+                return self.handle_error(f"Failed to transfer {src} to {dest}", "%d file(s) failed" % uploaded.count(False))
 
             # For sudo transfers, merge the staged tree into the destination
             if sudo:

@@ -36,7 +36,6 @@ class Node(installer.Installer):
     def get_supported_environments(self):
         return [
             constants.EnvironmentType.LOCAL_UBUNTU,
-            constants.EnvironmentType.REMOTE_UBUNTU,
         ]
 
     def get_packages(self):

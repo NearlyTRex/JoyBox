@@ -62,6 +62,13 @@ collides.
 package is consumed off disk rather than installed — the same thing
 `bootstrap.py` and every `Scripts/bin/*.py` does.
 
+**`no_sealed_programs`** (autouse) — refuses real runs of `sudo`, `op`, `ssh`,
+`virsh`, `systemctl` and the other programs in `SEALED_PROGRAMS`, whether through
+`subprocess`, `os.system` or `os.exec*`. Together with the session `HOME`, the
+generated settings file and `no_outbound_network`, it keeps every test off the
+developer's machine, vault and servers. Replace the connection or command runner
+with a fake instead.
+
 **`isolated_settings`** — `joybox.settings` is process-global (a parser plus an
 in-memory overlay that `set_value` writes to). Any test that touches settings
 must use this fixture, or its values leak into whatever runs next in whatever

@@ -16,7 +16,9 @@ ensure_root_user
 
 # Print usage
 print_usage() {
-    echo "Usage: $0 --user USERNAME --storage-user STORAGE_USER --storage-host STORAGE_HOST [--remote-path PATH] [--mount-path PATH]"
+    echo "Usage: $0 --user USERNAME --storage-user STORAGE_USER --storage-host STORAGE_HOST [--remote-path PATH] [--mount-path PATH] [--password-file PATH]"
+    echo
+    echo "Without --password-file, ssh-copy-id prompts for the Storage Box password once."
     echo
     echo "Example:"
     echo "  $0 --user alice --storage-user sb123 --storage-host u123.your-storagebox.de"
@@ -29,6 +31,7 @@ STORAGE_USER=""
 STORAGE_HOST=""
 REMOTE_PATH="/home"
 MOUNT_PATH="/mnt/storage"
+PASSWORD_FILE=""
 while [[ $# -gt 0 ]]; do
     case "$1" in
         --user)
@@ -51,6 +54,10 @@ while [[ $# -gt 0 ]]; do
             MOUNT_PATH="$2"
             shift 2
             ;;
+        --password-file)
+            PASSWORD_FILE="$2"
+            shift 2
+            ;;
         -*|--*)
             echo "Unknown option: $1"
             print_usage
@@ -71,4 +78,4 @@ fi
 check_user_exists "$USERNAME"
 
 # Call storage box setup
-setup_storage_box "$USERNAME" "$STORAGE_USER" "$STORAGE_HOST" "$REMOTE_PATH" "$MOUNT_PATH"
+setup_storage_box "$USERNAME" "$STORAGE_USER" "$STORAGE_HOST" "$REMOTE_PATH" "$MOUNT_PATH" "$PASSWORD_FILE"

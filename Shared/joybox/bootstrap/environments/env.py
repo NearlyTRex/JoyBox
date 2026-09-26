@@ -19,6 +19,15 @@ class Environment:
         self.options = options.copy()
         self.components_to_process = None
         self.available_components = {}
+        self.connection = None
+
+    def connect(self):
+        if self.connection:
+            self.connection.setup()
+
+    def disconnect(self):
+        if self.connection:
+            self.connection.teardown()
 
     def set_environment_type(self, environment_type):
         settings.set_value("UserData.General", "environment_type", environment_type)
@@ -46,6 +55,7 @@ class Environment:
         return component_name in self.components_to_process
 
     def process_components(self, action_method_name, reverse_order = False, force = False, continue_on_failure = False):
+        self.connect()
         component_items = list(self.available_components.items())
         if reverse_order:
             component_items = reversed(component_items)
@@ -85,6 +95,7 @@ class Environment:
         return True
 
     def status(self):
+        self.connect()
         results = []
         for component_name, installer in self.available_components.items():
             if self.should_process_component(component_name):

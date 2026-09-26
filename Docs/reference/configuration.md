@@ -83,6 +83,32 @@ server_0_key_filepath = /home/you/.ssh/id_ed25519
 deploy connects **before** running `init_sshd.sh`, which disables password auth.
 Any key type works — ed25519, ECDSA or RSA. `-k` overrides it for a single run.
 
+## Provisioning
+
+```ini
+[UserData.Servers]
+server_0_pass = op://Personal/JoyBox/UserData.Servers/server_0_pass
+server_0_htpasswd_user = admin
+server_0_htpasswd_pass = op://Personal/JoyBox/UserData.Servers/server_0_htpasswd_pass
+server_0_storage_user = u123456
+server_0_storage_host = u123456.your-storagebox.de
+server_0_storage_pass = op://Personal/JoyBox/UserData.Servers/server_0_storage_pass
+server_1_vm = joybox-test
+```
+
+Read by [`provision_server`](man/provision_server.md):
+
+| Field | Used for |
+|-------|----------|
+| `server_N_pass` | The account's password, set when the account is created. Optional; key login never needs it |
+| `server_N_htpasswd_user` | The login for the admin pages; the account name when unset |
+| `server_N_htpasswd_pass` | Its password. Required for the `day0` stage |
+| `server_N_storage_user`, `_host`, `_pass` | The Storage Box mounted at `/mnt/storage`. Leave them unset and local storage stands in |
+| `server_N_vm` | The name of the local test guest this entry points at. Unset for a real host |
+
+The passwords can be `op://` references, resolved only when a stage needs them. See
+[Secrets](secrets.md).
+
 ## TLS mode
 
 ```ini

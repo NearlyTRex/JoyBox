@@ -19,15 +19,16 @@ such as the SSH lockout or a firewall rule can be proven before it touches a rea
 server. The guest is treated as just another `[UserData.Servers]` entry: point
 `server_<n>_host` at its address, with `server_<n>_domain_name` and
 `server_<n>_tls_mode = mkcert`, and the same bootstrap installers run against it as
-against a real host.
+against a real host. `provision_server` drives all of this in one command.
 
 Actions:
 
 - `create`: download the Ubuntu cloud image for `--release` into
-  `/var/lib/libvirt/images` (once), make the guest's own disk on top of it, and boot
-  it on libvirt's `default` NAT network. cloud-init creates the account with
-  passwordless sudo and your SSH public key, plus the console password `joybox`.
-  Refuses if a guest with that name already exists.
+  `/var/lib/libvirt/images` (once), make the guest's own disk on top of it, reserve
+  `--address` for it on libvirt's `default` NAT network, and boot it. Like a freshly
+  ordered server it has root reachable with your SSH public key and no account of
+  your own; the root console password is `joybox`. Refuses if a guest with that
+  name already exists.
 - `ip`: print the guest's address once it has a lease.
 - `hosts`: write a marked block into `/etc/hosts` pointing `--domain` and every
   subdomain configured in `~/JoyBox.ini` (each `*_subdomain` setting) at the guest.
@@ -58,8 +59,8 @@ Actions:
 
 | Option | Description |
 |--------|-------------|
-| `-u, --username <username>` | `create`: account to make in the guest; the user who ran it when omitted. |
-| `-k, --ssh_key <ssh_key>` | `create`: SSH public key file to authorise; the account's `~/.ssh/id_ed25519.pub` or `id_rsa.pub` when omitted. |
+| `-a, --address <address>` | `create`: address reserved for the guest on the libvirt network. Default: `192.168.122.10`. |
+| `-k, --ssh_key <ssh_key>` | `create`: SSH public key file to authorise for root; `~/.ssh/id_ed25519.pub` or `id_rsa.pub` when omitted. |
 | `-d, --domain <domain>` | `hosts`: domain whose name and configured subdomains point at the guest. Default: `joybox.test`. |
 | `--release <release>` | `create`: Ubuntu release codename of the cloud image, e.g. `noble`. Default: `noble`. |
 | `--memory <memory>` | `create`: memory in MB. Default: `4096`. |
@@ -78,16 +79,16 @@ Actions:
 
 ## Examples
 
-### Create the guest for your own account
+### Create the guest at its reserved address
 
 ```bash
-testvm create --username "$USER"
+testvm create
 ```
 
 ### Create a larger guest with a specific key
 
 ```bash
-testvm create -u alice -k ~/.ssh/id_ed25519.pub --memory 8192 --vcpus 4 --disk_size 40
+testvm create -k ~/.ssh/id_ed25519.pub --memory 8192 --vcpus 4 --disk_size 40
 ```
 
 ### Print its address
@@ -142,7 +143,8 @@ testvm destroy -p -v
 
 - Run it as yourself. It talks to the system libvirt, which needs membership of the `libvirt` group, and asks sudo for the root-only steps: writing guest images under `/var/lib/libvirt/images` and editing `/etc/hosts`.
 - Needs `virt-install`, `virsh`, `qemu-img` and `cloud-localds`; `python3 bootstrap.py -a setup -t local_ubuntu --components aptget` installs them.
-- Without `--ssh_key`, `create` uses `~/.ssh/id_ed25519.pub` or `~/.ssh/id_rsa.pub` of the account (under `/home`). Without `--username`, the account is the one that ran it.
+- Without `--ssh_key`, `create` authorises `~/.ssh/id_ed25519.pub` or `~/.ssh/id_rsa.pub`.
+- The address is a DHCP reservation for the guest's fixed MAC, so it survives rebuilds and reverts; `create` also drops the old host key for it from `~/.ssh/known_hosts`.
 - Take a snapshot before anything you would not want to repeat by hand; a revert takes seconds, a rebuild much longer.
 - The guest defaults to 2 processors, 4 GB and 20 GB, close to a Hetzner CX22. It has no sshfs Storage Box, no real DNS or ACME, and no public address.
 

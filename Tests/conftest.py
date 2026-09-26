@@ -25,6 +25,118 @@ for _path in (TESTS_DIR, SHARED_DIR):
         sys.path.insert(0, _path)
 
 ###########################################################
+# The seal
+#
+# Applied when the session starts, before any test module is imported, so it
+# covers collection as well as the tests: a module that builds something at
+# import time reads settings and may start programs before any fixture runs.
+# From here on HOME is a scratch directory, the settings file is a generated
+# default with no secret references, and the programs below are refused.
+###########################################################
+
+# Programs a test must never start for real: they raise privileges, read the
+# password manager, reach another machine, or change this one's services and VMs
+SEALED_PROGRAMS = {
+    "sudo", "su", "pkexec", "doas",
+    "op",
+    "ssh", "scp", "sftp", "sshfs", "ssh-copy-id", "sshpass",
+    "virsh", "virt-install", "qemu-system-x86_64",
+    "systemctl", "apt", "apt-get", "ufw", "iptables", "mkcert",
+    "useradd", "usermod", "groupadd", "adduser",
+}
+
+_unsealed = {}
+
+
+def get_program_name(args, shell = False):
+    import shlex
+    if isinstance(args, (str, bytes)):
+        text = args.decode() if isinstance(args, bytes) else args
+        tokens = shlex.split(text) if text.strip() else []
+    else:
+        tokens = [str(arg) for arg in args]
+    for token in tokens:
+        # Leading VAR=value assignments in a shell string are not the program
+        if shell and "=" in token and not token.startswith(("/", ".")):
+            continue
+        return os.path.basename(token)
+    return ""
+
+
+def check_sealed(args, shell = False):
+    program = get_program_name(args, shell = shell)
+    if program in SEALED_PROGRAMS:
+        raise RuntimeError(
+            "tests may not run %s for real; replace the connection or "
+            "command runner with a fake" % program)
+
+
+def seal_programs():
+    import subprocess
+
+    class SealedPopen(subprocess.Popen):
+        def __init__(self, args, *rest, **kwargs):
+            check_sealed(args, shell = kwargs.get("shell", False))
+            super().__init__(args, *rest, **kwargs)
+
+    _unsealed["Popen"] = subprocess.Popen
+    _unsealed["system"] = os.system
+    subprocess.Popen = SealedPopen
+
+    def sealed_system(command):
+        check_sealed(command, shell = True)
+        return _unsealed["system"](command)
+    os.system = sealed_system
+
+    for name in ["execv", "execve", "execvp", "execvpe", "execl", "execlp"]:
+        original = getattr(os, name)
+        _unsealed[name] = original
+        def sealed_exec(path, *rest, original = original):
+            check_sealed([path])
+            return original(path, *rest)
+        setattr(os, name, sealed_exec)
+
+
+def unseal_programs():
+    import subprocess
+    if "Popen" in _unsealed:
+        subprocess.Popen = _unsealed.pop("Popen")
+    for name, original in list(_unsealed.items()):
+        setattr(os, name, original)
+    _unsealed.clear()
+
+
+def pytest_configure(config):
+    import tempfile
+    seal_programs()
+    scratch = tempfile.mkdtemp(prefix = "joybox-tests-")
+    config.joybox_scratch = scratch
+    if not os.environ.get("JOYBOX_TESTS_REAL_HOME"):
+        config.joybox_home = (os.environ.get("HOME"), os.environ.get("USERPROFILE"))
+        os.environ["HOME"] = scratch
+        os.environ["USERPROFILE"] = scratch
+    from joybox import settings, default_settings
+    config_path = os.path.join(scratch, "JoyBox.ini")
+    default_settings.create_default_config_file(config_path)
+    settings.reset()
+    settings.set_settings_file(config_path)
+
+
+def pytest_unconfigure(config):
+    import shutil
+    unseal_programs()
+    home = getattr(config, "joybox_home", None)
+    if home:
+        for name, value in zip(["HOME", "USERPROFILE"], home):
+            if value is None:
+                os.environ.pop(name, None)
+            else:
+                os.environ[name] = value
+    scratch = getattr(config, "joybox_scratch", None)
+    if scratch:
+        shutil.rmtree(scratch, ignore_errors = True)
+
+###########################################################
 # Hermetic baseline
 #
 # joybox.settings resolves its file at import time, preferring ~/JoyBox.ini.

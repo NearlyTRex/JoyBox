@@ -190,6 +190,15 @@ ini_defaults["UserData.Servers"]["server_0_domain_contact"] = ""
 #   selfsigned  - openssl cert generated on the target (local testing, browsers warn)
 # All three land the cert at /etc/letsencrypt/live/<domain>/, so nothing downstream changes.
 ini_defaults["UserData.Servers"]["server_0_tls_mode"] = "letsencrypt"
+# Local test guest this entry points at (testvm's name, e.g. joybox-test); empty for a real host
+ini_defaults["UserData.Servers"]["server_0_vm"] = ""
+# Login for the admin pages, set up by provision_server
+ini_defaults["UserData.Servers"]["server_0_htpasswd_user"] = ""
+ini_defaults["UserData.Servers"]["server_0_htpasswd_pass"] = ""
+# Storage Box mounted at /mnt/storage; leave empty to use local storage instead
+ini_defaults["UserData.Servers"]["server_0_storage_user"] = ""
+ini_defaults["UserData.Servers"]["server_0_storage_host"] = ""
+ini_defaults["UserData.Servers"]["server_0_storage_pass"] = ""
 
 # UserData.Scraping
 ini_defaults["UserData.Scraping"] = {}

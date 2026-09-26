@@ -601,3 +601,33 @@ def test_help_leaves_out_an_empty_default(argv, capsys):
         parser.parse_args()
 
     assert "default: None" not in capsys.readouterr().out
+
+
+###########################################################
+# Several values per flag
+###########################################################
+
+def test_several_values_can_follow_one_flag(argv):
+    parser = build()
+    parser.add_string_list_argument(args = ("-c", "--components"), several_per_flag = True)
+    argv("-c", "nginx", "certbot")
+
+    assert parser.parse_args().components == ["nginx", "certbot"]
+
+
+def test_several_values_can_also_repeat_the_flag(argv):
+    parser = build()
+    parser.add_string_list_argument(args = ("-c", "--components"), several_per_flag = True)
+    argv("-c", "nginx", "-c", "certbot")
+
+    assert parser.parse_args().components == ["nginx", "certbot"]
+
+
+def test_a_list_takes_one_value_per_flag_by_default(argv):
+    parser = build()
+    parser.add_string_list_argument(args = ("-c", "--components"))
+    argv("-c", "nginx", "certbot")
+    parsed, unknown = parser.parse_known_args()
+
+    assert parsed.components == ["nginx"]
+    assert unknown == ["certbot"]

@@ -44,9 +44,10 @@ SECRET_RES = [
         r"\s*[:=]\s*['\"]([^'\"]{6,})['\"]")),
 ]
 
-# Values that are obviously not real secrets
+# Values that are obviously not real secrets. A shell variable or command
+# substitution is computed when the script runs, so it is never the secret.
 PLACEHOLDER_RE = re.compile(
-    r"(?i)^(\$\{?\w+\}?|<[^>]*>|\.\.\.|x{3,}|change[_-]?me|your[_-].*|example|"
+    r"(?i)^(\$\{?\w+\}?|\$\(.*|<[^>]*>|\.\.\.|x{3,}|change[_-]?me|your[_-].*|example|"
     r"dummy|placeholder|none|null|true|false|\d+)$")
 
 

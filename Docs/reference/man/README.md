@@ -126,6 +126,7 @@ available in the terminal as `<command> -h`.
 |---------|-------------|
 | [boot_vm_image](boot_vm_image.md) | Boot an installer image in a throwaway machine, the way the target will. |
 | [build_autoinstall_iso](build_autoinstall_iso.md) | Build an Ubuntu Server image that installs itself. |
+| [provision_server](provision_server.md) | Take a server entry from nothing to deployed, hardened and verified. |
 | [testvm](testvm.md) | Manage the local KVM virtual machine used to rehearse server changes. |
 | [verify_server](verify_server.md) | Check that a server's hardening actually took effect. |
 
