@@ -1,14 +1,14 @@
 #!/usr/bin/env python3
 
 # Imports
-import os, os.path
+import os
+import os.path
 import sys
 
 # Custom imports
 shared_folder = os.path.realpath(os.path.join(os.path.dirname(__file__), "..", "..", "Shared"))
 sys.path.append(shared_folder)
 import joybox.config as config
-import joybox.environment as environment
 import joybox.gameinfo as gameinfo
 import joybox.system as system
 import joybox.arguments as arguments
@@ -56,7 +56,6 @@ def main():
     for game_supercategory in config.Supercategory.members():
         for game_category in config.Category.members():
             for game_subcategory in config.subcategory_map[game_category]:
-                game_platform = gameinfo.derive_game_platform_from_categories(game_category, game_subcategory)
                 game_names = gameinfo.find_json_game_names(
                     game_supercategory,
                     game_category,
@@ -76,11 +75,11 @@ def main():
 
                     # No files
                     if isinstance(game_files, list) and len(game_files) == 0:
-                        json_files_no_files.append(json_file)
+                        json_files_no_files.append(game_info.get_json_file())
 
                     # Unplayable
-                    if game_info.is_playable() == False:
-                        json_files_unplayable.append(json_file)
+                    if not game_info.is_playable():
+                        json_files_unplayable.append(game_info.get_json_file())
 
     # List games with no files
     if args.mode == config.AnalyzeModeType.ALL or args.mode == config.AnalyzeModeType.MISSING_GAME_FILES:

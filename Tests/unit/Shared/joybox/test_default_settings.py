@@ -2,9 +2,6 @@
 import os
 import stat
 
-# Third-party imports
-import pytest
-
 # Local imports
 from joybox import default_settings
 

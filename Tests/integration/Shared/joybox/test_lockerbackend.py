@@ -4,7 +4,7 @@ import os
 import pytest
 
 # Local imports
-from joybox import config, lockerbackend
+from joybox import lockerbackend
 
 
 ###########################################################

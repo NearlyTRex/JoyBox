@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 
 # Imports
-import os, os.path
+import os
+import os.path
 import sys
 
 # Custom imports
@@ -97,7 +98,6 @@ def main():
         current_file = file
         current_file_dir = paths.get_filename_directory(current_file)
         current_file_basename = paths.get_filename_basename(current_file).replace(".trim", "")
-        current_file_ext = paths.get_filename_extension(current_file)
         output_file_cia = paths.join_paths(current_file_dir, current_file_basename + ".cia")
         output_file_3ds = paths.join_paths(current_file_dir, current_file_basename + ".3ds")
         output_file_trimmed_3ds = paths.join_paths(current_file_dir, current_file_basename + ".trim.3ds")
@@ -122,7 +122,7 @@ def main():
                 exit_on_failure = args.exit_on_failure)
 
         # Trim 3DS
-        elif args.trim_cci and current_file.endswith(".3ds") and not ".trim" in current_file:
+        elif args.trim_cci and current_file.endswith(".3ds") and ".trim" not in current_file:
             nintendo.trim_3ds_cci(
                 src_3ds_file = current_file,
                 dest_3ds_file = output_file_trimmed_3ds,

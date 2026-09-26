@@ -8,3 +8,14 @@ license = { file = "LICENSE" }
 # The trees are consumed directly off disk via sys.path rather than installed,
 # so there is no [build-system] here on purpose - adding one would change how
 # install.sh and the bootstrap flow see the repo.
+
+[tool.ruff.lint]
+# The Workflows library's default set; this config exists for the ignores below
+select = ["E4", "E7", "E9", "F"]
+
+[tool.ruff.lint.per-file-ignores]
+# Entry points put Shared on sys.path before importing from it (no install)
+"bootstrap.py" = ["E402"]
+"Scripts/bin/*.py" = ["E402"]
+# Packages assemble their public API by re-exporting their modules
+"__init__.py" = ["F401", "F403"]

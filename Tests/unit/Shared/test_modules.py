@@ -3,7 +3,6 @@ import ast
 import builtins
 import re
 import importlib
-import inspect
 import os
 import warnings
 
@@ -75,13 +74,11 @@ def mutable_default_offenders(tree):
         if not isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef)):
             continue
         arguments = node.args
-        defaults = list(arguments.defaults) + [
-            default for default in arguments.kw_defaults if default is not None
-        ]
         mutable_names = set()
         positional = arguments.posonlyargs + arguments.args
         paired = positional[len(positional) - len(arguments.defaults):] if arguments.defaults else []
-        for argument, default in zip(paired, arguments.defaults):
+        paired = list(zip(paired, arguments.defaults)) + list(zip(arguments.kwonlyargs, arguments.kw_defaults))
+        for argument, default in paired:
             if isinstance(default, (ast.List, ast.Dict, ast.Set)):
                 mutable_names.add(argument.arg)
         if not mutable_names:

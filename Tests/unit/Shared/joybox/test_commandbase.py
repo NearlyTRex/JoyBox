@@ -2,7 +2,7 @@
 import pytest
 
 # Local imports
-from joybox import commandbase, config
+from joybox import commandbase
 
 
 ###########################################################

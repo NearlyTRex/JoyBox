@@ -111,7 +111,6 @@ def convert_to_native_save(
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-            at_least_one_move = success
             if not success:
                 return False
 

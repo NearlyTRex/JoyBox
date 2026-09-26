@@ -19,15 +19,15 @@ def assert_is_not_none(var_value, var_name):
 
 # Assert that variable is string
 def assert_is_string(var_value, var_name):
-    assert type(var_value) == str, "%s should be a string" % var_name
+    assert type(var_value) is str, "%s should be a string" % var_name
 
 # Assert that variable is non-empty string
 def assert_is_non_empty_string(var_value, var_name):
-    assert (type(var_value) == str) and (len(var_value) > 0), "%s should be a non-empty string" % var_name
+    assert (type(var_value) is str) and (len(var_value) > 0), "%s should be a non-empty string" % var_name
 
 # Assert that variable is non-empty string of specific length
 def assert_is_string_of_specific_length(var_value, var_len, var_name):
-    assert (type(var_value) == str) and (len(var_value) == var_len), "%s should be a string of size %s" % (var_name, var_len)
+    assert (type(var_value) is str) and (len(var_value) == var_len), "%s should be a string of size %s" % (var_name, var_len)
 
 # Assert that variable is valid path
 def assert_is_valid_path(var_value, var_name):
@@ -35,7 +35,7 @@ def assert_is_valid_path(var_value, var_name):
 
 # Assert that variable is integer
 def assert_is_int(var_value, var_name):
-    assert type(var_value) == int, "%s should be an integer" % var_name
+    assert type(var_value) is int, "%s should be an integer" % var_name
 
 # Assert that variable is castable to integer
 def assert_is_castable_to_int(var_value, var_name):
@@ -44,11 +44,11 @@ def assert_is_castable_to_int(var_value, var_name):
         test_value = int(var_value)
     except Exception:
         pass
-    assert type(test_value) == int, "%s should be castable to an integer" % var_name
+    assert type(test_value) is int, "%s should be castable to an integer" % var_name
 
 # Assert that variable is boolean
 def assert_is_bool(var_value, var_name):
-    assert type(var_value) == bool, "%s should be a boolean" % var_name
+    assert type(var_value) is bool, "%s should be a boolean" % var_name
 
 # Assert that variable is castable to boolean
 def assert_is_castable_to_bool(var_value, var_name):
@@ -62,19 +62,19 @@ def assert_is_castable_to_bool(var_value, var_name):
                 test_value = configparser.ConfigParser.BOOLEAN_STATES[text_value]
         except Exception:
             pass
-    assert type(test_value) == bool, "%s should be castable to boolean" % var_name
+    assert type(test_value) is bool, "%s should be castable to boolean" % var_name
 
 # Assert that variable is list
 def assert_is_list(var_value, var_name):
-    assert type(var_value) == list, "%s should be an list" % var_name
+    assert type(var_value) is list, "%s should be an list" % var_name
 
 # Assert that variable is dictionary
 def assert_is_dictionary(var_value, var_name):
-    assert type(var_value) == dict, "%s should be an dict" % var_name
+    assert type(var_value) is dict, "%s should be an dict" % var_name
 
 # Assert that variable is dictionary and key exists
 def assert_dictionary_has_key(var_value, var_key):
-    assert type(var_value) == dict and var_key in var_value, "Key '%s' not found in dictionary" % var_key
+    assert type(var_value) is dict and var_key in var_value, "Key '%s' not found in dictionary" % var_key
 
 # Assert that variable is callable
 def assert_callable(var_value, var_name):

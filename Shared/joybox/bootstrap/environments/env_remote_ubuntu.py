@@ -1,7 +1,3 @@
-# Imports
-import os
-import sys
-
 # Local imports
 import joybox.bootstrap.constants as constants
 from joybox import connection
@@ -48,7 +44,6 @@ class RemoteUbuntu(env.Environment):
             "config": installers.Config(**self.installer_options),
             "aptget": installers.AptGet(**self.installer_options),
             "dotfiles": installers.Dotfiles(**self.installer_options),
-            "python": installers.Python(**self.installer_options),
             "flatpak": installers.Flatpak(**self.installer_options),
             "nginx": installers.Nginx(**self.installer_options),
             "certbot": installers.Certbot(**self.installer_options),
@@ -66,7 +61,6 @@ class RemoteUbuntu(env.Environment):
         # Get individual installers
         self.installer_config = self.available_components["config"]
         self.installer_dotfiles = self.available_components["dotfiles"]
-        self.installer_python = self.available_components["python"]
         self.installer_aptget = self.available_components["aptget"]
         self.installer_audiobookshelf = self.available_components["audiobookshelf"]
         self.installer_flatpak = self.available_components["flatpak"]

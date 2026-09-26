@@ -1,6 +1,5 @@
 # Imports
 import os
-import sys
 
 # Local imports
 import joybox.bootstrap.constants as constants

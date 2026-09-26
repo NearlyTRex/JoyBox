@@ -4,7 +4,7 @@ import time
 import pytest
 
 # Local imports
-from joybox import config, paths
+from joybox import paths
 
 
 ###########################################################

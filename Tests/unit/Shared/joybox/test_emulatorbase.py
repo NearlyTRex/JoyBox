@@ -2,7 +2,7 @@
 import pytest
 
 # Local imports
-from joybox import config, emulatorbase
+from joybox import emulatorbase
 
 
 ###########################################################

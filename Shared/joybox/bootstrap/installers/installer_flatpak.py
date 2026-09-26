@@ -1,7 +1,3 @@
-# Imports
-import os
-import sys
-
 # Local imports
 import joybox.bootstrap.constants as constants
 import joybox.bootstrap.packages as packages

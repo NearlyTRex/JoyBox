@@ -53,7 +53,7 @@ class Metadata:
 
     # Set game entry
     def set_game(self, game_platform, game_name, game_entry):
-        if not game_platform in self.game_database.keys():
+        if game_platform not in self.game_database.keys():
             self.game_database[game_platform] = {}
         if game_name in self.game_database[game_platform]:
             self.game_database[game_platform][game_name].merge(game_entry)
@@ -69,7 +69,7 @@ class Metadata:
 
     # Get sorted names within a platform
     def get_sorted_names(self, game_platform):
-        if not game_platform in self.game_database:
+        if game_platform not in self.game_database:
             return []
         potential_names = []
         for name in self.game_database[game_platform].keys():

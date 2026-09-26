@@ -1,9 +1,6 @@
 # Imports
 import os
 
-# Third-party imports
-import pytest
-
 # Local imports
 import joybox.bootstrap.constants as constants
 from joybox.bootstrap.packages.aptget import aptget

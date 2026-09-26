@@ -3,9 +3,6 @@ import hashlib
 import os
 import zlib
 
-# Local imports
-from joybox import hashing
-
 
 # Write a file and return its path
 def write_file(directory, name, contents = b"payload"):

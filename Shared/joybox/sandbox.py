@@ -1,5 +1,6 @@
 # Imports
-import os, os.path
+import os
+import os.path
 import getpass
 import copy
 
@@ -954,7 +955,7 @@ def create_wine_prefix(
     cmds_to_run = []
     cmds_to_run.append([wine_boot_tool])
     if len(new_options.get_tricks()) > 0:
-        cmds_to_run.append(["winetricks " + trick for trick in new_options.get_tricks()])
+        cmds_to_run.append([wine_tricks_tool] + new_options.get_tricks())
     for cmd in cmds_to_run:
         new_options.set_blocking_processes([commandbase.get_starter_command(cmd)])
         new_cmd, new_options = setup_prefix_environment(

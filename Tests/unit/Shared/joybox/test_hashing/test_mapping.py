@@ -7,7 +7,7 @@ import pytest
 
 # Local imports
 from joybox import config, hashing
-from hashing_helpers import entry, manifest, write_file
+from hashing_helpers import write_file
 
 
 ###########################################################

@@ -1,6 +1,3 @@
-# Imports
-import pytest
-
 # Local imports
 import joybox.bootstrap.constants as constants
 from joybox.bootstrap.installers import installer

@@ -169,7 +169,7 @@ def session_home(tmp_path_factory):
 
 @pytest.fixture(scope = "session", autouse = True)
 def session_settings_file(tmp_path_factory, session_home):
-    from joybox import settings, default_settings, serverinfo
+    from joybox import settings, default_settings
 
     config_path = os.path.join(str(tmp_path_factory.mktemp("settings")), "JoyBox.ini")
     default_settings.create_default_config_file(config_path)

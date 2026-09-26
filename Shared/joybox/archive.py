@@ -582,8 +582,6 @@ def list_archive(
         match = re.match(pattern, line)
         if match:
             attr = match.group(1)
-            size = match.group(2)
-            compressed = match.group(3)
             path = match.group(4)
             if not attr.startswith("D.."):
                 all_paths.append(path)

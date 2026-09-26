@@ -1,6 +1,3 @@
-# Imports
-import pytest
-
 # Local imports
 import joybox.bootstrap.packages as packages
 def test_no_pin_uses_latest():

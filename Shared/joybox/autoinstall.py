@@ -1,10 +1,8 @@
 # Imports
 import copy
-import os, os.path
 import re
 
 # Local imports
-import joybox.config as config
 import joybox.command as command
 import joybox.fileops as fileops
 import joybox.hashing as hashing

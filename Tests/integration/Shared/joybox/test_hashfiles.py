@@ -1,6 +1,5 @@
 # Imports
 import json
-import os
 
 # Third-party imports
 import pytest

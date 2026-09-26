@@ -79,9 +79,9 @@ def generate_playlist(
                         playlist_contents.append(obj_path)
 
     # Check length
-    if allow_empty_lists == False and len(playlist_contents) == 0:
+    if not allow_empty_lists and len(playlist_contents) == 0:
         return True
-    elif allow_single_lists == False and len(playlist_contents) == 1:
+    elif not allow_single_lists and len(playlist_contents) == 1:
         return True
 
     # Write playlist

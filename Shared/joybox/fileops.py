@@ -525,7 +525,8 @@ def transfer_file(
             if show_progress:
                 import tqdm
                 progress_bar = tqdm.tqdm(total = total_size)
-                progress_callback = lambda copied, total_copied, total: progress_bar.update(copied)
+                def progress_callback(copied, total_copied, total):
+                    progress_bar.update(copied)
             with open(src, "rb") as fsrc:
                 with open(dest, "wb") as fdest:
                     num_bytes_transferred = 0
@@ -1304,24 +1305,13 @@ def get_link_info(lnk_path, lnk_base_path):
     try:
         lnk = pylnk.Lnk(lnk_path)
         has_full_path = lnk._link_info
-        has_relative_path = lnk.link_flags.HasRelativePath
         has_working_dir = lnk.link_flags.HasWorkingDir
         has_arguments = lnk.link_flags.HasArguments
         if has_full_path:
 
-            # Get start path
-            lnk_start_path = paths.normalize_file_path(paths.get_filename_directory(lnk_path))
-
             # Get full path
             lnk_full_path = paths.normalize_file_path(lnk._link_info.path)
             lnk_offset_path = paths.get_filename_drive_offset(lnk_full_path)
-
-            # Get relative path
-            lnk_relative_path = ""
-            if has_relative_path:
-                lnk_relative_path = paths.normalize_file_path(lnk.relative_path)
-            else:
-                lnk_relative_path = paths.get_filename_file(lnk_full_path)
 
             # Get working dir
             lnk_working_dir = "."

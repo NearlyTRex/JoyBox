@@ -174,7 +174,7 @@ class AudioMetadata:
             logger.log_error(f"Failed to load MP3 file: {e}")
             return None
         if audio.tags is None:
-            logger.log_error(f"Failed to load audio file")
+            logger.log_error("Failed to load audio file")
             return {}
 
         # Extract text frames

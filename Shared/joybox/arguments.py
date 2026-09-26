@@ -1,5 +1,6 @@
 # Imports
-import os, os.path
+import os
+import os.path
 import argparse
 import enum
 
@@ -15,7 +16,7 @@ def parse_enum_value(enum_type, enum_value):
     else:
         try:
             return enum_type.from_string(enum_value)
-        except Exception as e:
+        except Exception:
             return None
 
 # Enum argparse action

@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 
 # Imports
-import os, os.path
+import os
+import os.path
 import sys
 
 # Custom imports
@@ -11,9 +12,6 @@ import joybox.config as config
 import joybox.system as system
 import joybox.environment as environment
 import joybox.collection as collection
-import joybox.gameinfo as gameinfo
-import joybox.metadata as metadata
-import joybox.stores as stores
 import joybox.manifest as manifest
 import joybox.arguments as arguments
 import joybox.setup as setup
@@ -74,7 +72,6 @@ def main():
 
     # Log filtering if specified
     if args.categories:
-        category_names = [c for c in args.categories.split(",")]
         logger.log_info(f"Filtering to categories: {args.categories}")
     if args.subcategories:
         logger.log_info(f"Filtering to subcategories: {args.subcategories}")

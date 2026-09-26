@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 
 # Imports
-import os, os.path
+import os
+import os.path
 import sys
 
 # Custom imports
@@ -81,7 +82,6 @@ def main():
         if file.endswith("title.tik"):
             current_file = file
             current_file_dir = paths.get_filename_directory(current_file)
-            current_file_basename = paths.get_filename_basename(current_file)
 
             # Decrypt NUS package
             if args.decrypt_nus:

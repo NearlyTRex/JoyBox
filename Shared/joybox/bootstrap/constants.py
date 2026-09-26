@@ -1,6 +1,4 @@
 # Imports
-import os
-import sys
 from enum import Enum
 
 # Environment type

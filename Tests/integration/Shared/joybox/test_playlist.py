@@ -1,6 +1,3 @@
-# Imports
-import pytest
-
 # Local imports
 from joybox import playlist
 

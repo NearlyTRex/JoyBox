@@ -1,10 +1,6 @@
 # Imports
 import os
 
-# Third-party imports
-import pytest
-
-
 def parse_package_text_file(path):
     entries = []
     with open(path, "r") as package_file:

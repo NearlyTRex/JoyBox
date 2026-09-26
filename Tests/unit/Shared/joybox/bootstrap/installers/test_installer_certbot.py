@@ -1,6 +1,3 @@
-# Imports
-import pytest
-
 # Local imports
 import joybox.bootstrap.installers as installers
 from joybox import serverinfo

@@ -1,6 +1,3 @@
-# Imports
-import pytest
-
 # Local imports
 import joybox.bootstrap.installers as installers
 from fakes import RecordingConnection

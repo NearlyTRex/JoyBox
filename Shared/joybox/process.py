@@ -22,7 +22,7 @@ def find_active_named_processes(process_names = []):
                     process_objs.append(proc)
                 elif ntpath.basename(process_name) == ntpath.basename(proc.name()):
                     process_objs.append(proc)
-    except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess) as e:
+    except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
         pass
     return process_objs
 

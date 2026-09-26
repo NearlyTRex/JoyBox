@@ -1,7 +1,5 @@
 # Imports
-import json
 import os
-import time
 
 # Third-party imports
 import pytest

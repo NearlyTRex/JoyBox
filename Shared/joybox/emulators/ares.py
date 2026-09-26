@@ -330,7 +330,7 @@ class Ares(emulatorbase.EmulatorBase):
         system_types = programs.get_emulator_config_value("Ares", "save_sub_dirs")
 
         # Check if this platform is valid
-        if not game_platform in system_types:
+        if game_platform not in system_types:
             gui.display_error_popup(
                 title_text = "Launch platform not defined",
                 message_text = "Launch platform %s not defined in Ares config" % game_platform)

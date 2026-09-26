@@ -1,7 +1,3 @@
-# Imports
-import os
-import sys
-
 # Local imports
 import joybox.bootstrap.constants as constants
 from . import installer
@@ -16,7 +12,7 @@ class OnePassword(installer.Installer):
         flags = runoptions.RunFlags(),
         options = runoptions.RunOptions()):
         super().__init__(connection, flags, options)
-        self.url = f"https://downloads.1password.com"
+        self.url = "https://downloads.1password.com"
         self.archive_key = "1password-archive-keyring.gpg"
         self.sources_list = "1password.list"
         self.policy = "AC2D62742012EA22"

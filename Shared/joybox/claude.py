@@ -1,5 +1,6 @@
 # Imports
-import os, os.path
+import os
+import os.path
 
 # Local imports
 import joybox.fileops as fileops

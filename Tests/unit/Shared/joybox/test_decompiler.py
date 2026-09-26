@@ -1,11 +1,8 @@
-# Imports
-import os
-
 # Third-party imports
 import pytest
 
 # Local imports
-from joybox import config, decompiler
+from joybox import decompiler
 
 
 ###########################################################

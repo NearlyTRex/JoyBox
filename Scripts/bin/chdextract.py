@@ -1,13 +1,13 @@
 #!/usr/bin/env python3
 
 # Imports
-import os, os.path
+import os
+import os.path
 import sys
 
 # Custom imports
 shared_folder = os.path.realpath(os.path.join(os.path.dirname(__file__), "..", "..", "Shared"))
 sys.path.append(shared_folder)
-import joybox.config as config
 import joybox.system as system
 import joybox.chd as chd
 import joybox.arguments as arguments

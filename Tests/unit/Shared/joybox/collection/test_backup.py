@@ -1,5 +1,4 @@
 # Imports
-import types
 import pytest
 
 # Local imports

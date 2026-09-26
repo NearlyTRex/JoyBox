@@ -183,7 +183,7 @@ def main():
                 if pkg_status and pkg_status["missing"]:
                     total = len(pkg_status["installed"]) + len(pkg_status["missing"])
                     logger.log_info(f"  [ ] {r['name']} ({len(pkg_status['installed'])}/{total} packages)")
-                    logger.log_info(f"      Missing:")
+                    logger.log_info("      Missing:")
                     for pkg in pkg_status["missing"][:10]:
                         logger.log_info(f"        - {pkg}")
                     if len(pkg_status["missing"]) > 10:

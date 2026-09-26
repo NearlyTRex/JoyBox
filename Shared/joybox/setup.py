@@ -23,7 +23,7 @@ def check_requirements():
     # Check operating system
     is_windows = platform_info.is_windows_platform()
     is_linux = platform_info.is_linux_platform()
-    if is_windows == False and is_linux == False:
+    if not is_windows and not is_linux:
         logger.log_error("Only windows and linux are supported right now", quit_program = True)
 
     # Check symlink support

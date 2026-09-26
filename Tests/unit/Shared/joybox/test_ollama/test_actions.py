@@ -3,7 +3,7 @@ import pytest
 
 # Local imports
 from joybox import ollama
-from ollama_helpers import catalog_of, installed, model
+from ollama_helpers import installed, model
 
 
 

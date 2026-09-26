@@ -1,5 +1,6 @@
 # Imports
-import os, os.path
+import os
+import os.path
 
 # Local imports
 import joybox.config as config
@@ -385,7 +386,6 @@ def transform_psv_network_package(
     # Copy work.bin files
     for obj in paths.get_directory_contents(paths.get_filename_directory(source_file)):
         if obj.endswith(".work.bin"):
-            work_bin_file = paths.join_paths(paths.get_filename_directory(source_file), obj)
             success = fileops.copy_file_or_directory(
                 src = paths.join_paths(paths.get_filename_directory(source_file), obj),
                 dest = paths.join_paths(output_dir, "work.bin"),

@@ -6,39 +6,40 @@ from . import platforms
 
 ######################################################################################
 
-# Game type weights
-gametype_counter = 0
-gametype_weights = collections.OrderedDict()
-gametype_weights[".m3u"] = gametype_counter; gametype_counter += 1          # Playlist
-gametype_weights[".json"] = gametype_counter; gametype_counter += 1         # Json
-gametype_weights[".exe"] = gametype_counter; gametype_counter += 1          # Windows executable
-gametype_weights[".msi"] = gametype_counter; gametype_counter += 1          # Windows installer
-gametype_weights[".apk"] = gametype_counter; gametype_counter += 1          # Google Android
-gametype_weights[".ipa"] = gametype_counter; gametype_counter += 1          # Apple iOS
-gametype_weights[".img"] = gametype_counter; gametype_counter += 1          # Apple MacOS 8
-gametype_weights[".adf"] = gametype_counter; gametype_counter += 1          # Commodore Amiga - Disk
-gametype_weights[".g64"] = gametype_counter; gametype_counter += 1          # Commodore 64 - G64
-gametype_weights[".crt"] = gametype_counter; gametype_counter += 1          # Commodore 64 - Cartridge
-gametype_weights[".tap"] = gametype_counter; gametype_counter += 1          # Commodore 64 - Tape
-gametype_weights[".ipf"] = gametype_counter; gametype_counter += 1          # Commodore 64 - Disk
-gametype_weights[".lnx"] = gametype_counter; gametype_counter += 1          # Atari Lynx
-gametype_weights[".nes"] = gametype_counter; gametype_counter += 1          # Nintendo NES
-gametype_weights[".sfc"] = gametype_counter; gametype_counter += 1          # Nintendo SNES
-gametype_weights[".gba"] = gametype_counter; gametype_counter += 1          # Nintendo GBA
-gametype_weights[".nds"] = gametype_counter; gametype_counter += 1          # Nintendo DS/i
-gametype_weights[".trim.3ds"] = gametype_counter; gametype_counter += 1     # Nintendo 3DS
-gametype_weights[".trim.xci"] = gametype_counter; gametype_counter += 1     # Nintendo Switch Cartridge
-gametype_weights[".nsp"] = gametype_counter; gametype_counter += 1          # Nintendo Swith eShop
-gametype_weights[".rvz"] = gametype_counter; gametype_counter += 1          # Nintendo Wii/Gamecube
-gametype_weights[".iso.wux"] = gametype_counter; gametype_counter += 1      # Nintendo Wii U Disc
-gametype_weights[".wua"] = gametype_counter; gametype_counter += 1          # Nintendo Wii U eShop
-gametype_weights[".cue"] = gametype_counter; gametype_counter += 1          # General disc - CUE
-gametype_weights[".chd"] = gametype_counter; gametype_counter += 1          # General disc - CHD
-gametype_weights[".ccd"] = gametype_counter; gametype_counter += 1          # General disc - CCD
-gametype_weights[".cdi"] = gametype_counter; gametype_counter += 1          # General disc - CDI
-gametype_weights[".pkg"] = gametype_counter; gametype_counter += 1          # Sony PSN Package
-gametype_weights[".zip"] = gametype_counter; gametype_counter += 1          # Zip archive
-gametype_weights[".txt"] = gametype_counter; gametype_counter += 1          # Text file
+# Game type weights, by position, lowest first
+gametype_weights = collections.OrderedDict(
+    (extension, weight) for weight, extension in enumerate([
+        ".m3u",         # Playlist
+        ".json",        # Json
+        ".exe",         # Windows executable
+        ".msi",         # Windows installer
+        ".apk",         # Google Android
+        ".ipa",         # Apple iOS
+        ".img",         # Apple MacOS 8
+        ".adf",         # Commodore Amiga - Disk
+        ".g64",         # Commodore 64 - G64
+        ".crt",         # Commodore 64 - Cartridge
+        ".tap",         # Commodore 64 - Tape
+        ".ipf",         # Commodore 64 - Disk
+        ".lnx",         # Atari Lynx
+        ".nes",         # Nintendo NES
+        ".sfc",         # Nintendo SNES
+        ".gba",         # Nintendo GBA
+        ".nds",         # Nintendo DS/i
+        ".trim.3ds",    # Nintendo 3DS
+        ".trim.xci",    # Nintendo Switch Cartridge
+        ".nsp",         # Nintendo Swith eShop
+        ".rvz",         # Nintendo Wii/Gamecube
+        ".iso.wux",     # Nintendo Wii U Disc
+        ".wua",         # Nintendo Wii U eShop
+        ".cue",         # General disc - CUE
+        ".chd",         # General disc - CHD
+        ".ccd",         # General disc - CCD
+        ".cdi",         # General disc - CDI
+        ".pkg",         # Sony PSN Package
+        ".zip",         # Zip archive
+        ".txt",         # Text file
+    ]))
 
 # Other game types
 gametype_weight_else = 100

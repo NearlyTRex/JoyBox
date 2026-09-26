@@ -1,5 +1,6 @@
 # Imports
-import os, os.path
+import os
+import os.path
 import csv
 import zlib
 import hashlib
@@ -18,11 +19,11 @@ import joybox.cryption as cryption
 
 # String-hash primitives
 from joybox.hashutil import (
-    calculate_string_crc32,
-    calculate_string_md5,
-    calculate_string_sha1,
-    calculate_string_sha256,
-    calculate_string_xxh3)
+    calculate_string_crc32 as calculate_string_crc32,
+    calculate_string_md5 as calculate_string_md5,
+    calculate_string_sha1 as calculate_string_sha1,
+    calculate_string_sha256 as calculate_string_sha256,
+    calculate_string_xxh3 as calculate_string_xxh3)
 
 ###########################################################
 
@@ -313,8 +314,6 @@ def get_file_groupings(filenames, max_group_size):
     # Groups info
     group_counter = 1
     group_name = "Group" + str(group_counter)
-    previous_basename = ""
-    current_basename = ""
 
     # Create initial group
     add_empty_group(group_name)
@@ -327,7 +326,7 @@ def get_file_groupings(filenames, max_group_size):
             file_location = hash_key
             file_directory = paths.get_filename_directory(file_location)
             file_size = int(hash_contents[hash_key]["size"])
-            if not file_directory in hash_sets:
+            if file_directory not in hash_sets:
                 hash_sets[file_directory] = {}
                 hash_sets[file_directory]["size"] = 0
                 hash_sets[file_directory]["files"] = []

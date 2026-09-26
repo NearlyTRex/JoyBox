@@ -67,7 +67,7 @@ def test_a_database_works_as_a_context_manager(tmp_path):
 
 def test_an_exception_inside_the_context_is_not_swallowed(tmp_path):
     with pytest.raises(ValueError):
-        with sqlitedb.Database(str(tmp_path / "test.db")) as db:
+        with sqlitedb.Database(str(tmp_path / "test.db")):
             raise ValueError("boom")
 
 

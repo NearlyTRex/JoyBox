@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 
 # Imports
-import os, os.path
+import os
+import os.path
 import sys
 
 # Custom imports
@@ -96,7 +97,7 @@ def main():
                         if os.path.exists(asset_file):
                             found_assets.add(asset_file)
                         else:
-                            if not asset_type in missing_assets:
+                            if asset_type not in missing_assets:
                                 missing_assets[asset_type] = set()
                             missing_assets[asset_type].add(asset_file)
 

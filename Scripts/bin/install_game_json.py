@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 
 # Imports
-import os, os.path
+import os
+import os.path
 import sys
 
 # Custom imports
@@ -65,9 +66,6 @@ def main():
 
     # Setup logging
     logger.setup_logging()
-
-    # Get input path
-    input_path = parser.get_input_path()
 
     # Json file to load
     json_file = None

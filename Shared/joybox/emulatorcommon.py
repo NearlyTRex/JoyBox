@@ -17,9 +17,6 @@ def simple_launch(
     exit_on_failure = False):
 
     # Get game info
-    game_name = game_info.get_name()
-    game_category = game_info.get_category()
-    game_subcategory = game_info.get_subcategory()
     game_launch_name = game_info.get_launch_name()
     game_launch_file = game_info.get_launch_file()
     game_cache_dir = game_info.get_local_cache_dir()

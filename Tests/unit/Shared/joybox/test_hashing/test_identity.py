@@ -2,9 +2,6 @@
 import os
 import zipfile
 
-# Third-party imports
-import pytest
-
 # Local imports
 from joybox import hashing
 from hashing_helpers import write_file

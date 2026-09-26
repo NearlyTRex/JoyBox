@@ -2,7 +2,7 @@
 import pytest
 
 # Local imports
-from joybox import chd, config
+from joybox import chd
 
 
 ###########################################################
@@ -107,7 +107,7 @@ def test_creating_without_the_tool_reports_failure(missing, recording_command):
 
 def test_a_failed_create_reports_failure(installed, monkeypatch):
     from fakes import RecordingCommand
-    recorder = RecordingCommand(monkeypatch, returncode = 1)
+    RecordingCommand(monkeypatch, returncode = 1)
 
     assert chd.create_disc_chd("/out/Game.chd", "/in/Game.iso") is False
 

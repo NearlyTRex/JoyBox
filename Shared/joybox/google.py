@@ -157,7 +157,6 @@ def find_videos(
 
             # Get line info
             line_json = json.loads(line)
-            line_id = line_json["id"] if "id" in line_json else ""
             line_title = line_json["title"] if "title" in line_json else ""
             line_channel = line_json["channel"] if "channel" in line_json else "Unknown"
             line_duration = line_json["duration"] if "duration" in line_json and line_json["duration"] else 0
@@ -175,7 +174,7 @@ def find_videos(
             search_result.set_duration(line_duration)
             search_result.set_url(line_url)
             search_results.append(search_result)
-        except Exception as e:
+        except Exception:
             pass
 
     # Return search results

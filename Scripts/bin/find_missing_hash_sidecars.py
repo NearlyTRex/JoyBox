@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 
 # Imports
-import os, os.path
+import os
+import os.path
 import sys
 
 # Custom imports
@@ -15,7 +16,6 @@ import joybox.paths as paths
 import joybox.arguments as arguments
 import joybox.setup as setup
 import joybox.logger as logger
-import joybox.prompts as prompts
 import joybox.reports as reports
 
 # Setup argument parser

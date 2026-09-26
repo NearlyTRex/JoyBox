@@ -1,6 +1,3 @@
-# Third-party imports
-import pytest
-
 # Local imports
 from joybox import ollama
 

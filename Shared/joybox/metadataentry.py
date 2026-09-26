@@ -19,7 +19,7 @@ class MetadataEntry:
     # Has minimum keys
     def has_minimum_keys(self):
         for key in config.metadata_keys_minimum:
-            if not key in self.game_entry.keys():
+            if key not in self.game_entry.keys():
                 return False
         return True
 

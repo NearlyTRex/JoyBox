@@ -1,5 +1,6 @@
 # Imports
-import os, os.path
+import os
+import os.path
 import re
 
 # Local imports
@@ -21,11 +22,11 @@ import joybox.gui as gui
 import joybox.lockerinfo as lockerinfo
 from joybox import platform_info
 from joybox.gamenaming import (
-    derive_game_letter_from_name,
-    derive_game_name_path_from_name,
-    derive_game_platform_from_categories,
-    derive_game_asset_path_from_name,
-    derive_game_categories_from_platform)
+    derive_game_letter_from_name as derive_game_letter_from_name,
+    derive_game_name_path_from_name as derive_game_name_path_from_name,
+    derive_game_platform_from_categories as derive_game_platform_from_categories,
+    derive_game_asset_path_from_name as derive_game_asset_path_from_name,
+    derive_game_categories_from_platform as derive_game_categories_from_platform)
 
 ###########################################################
 
@@ -958,7 +959,6 @@ def derive_game_categories_from_file(game_file):
 
     # Get source directory and basename
     source_dir = paths.get_filename_directory(paths.normalize_file_path(game_file))
-    base_name = paths.get_filename_basename(paths.normalize_file_path(game_file))
 
     # Get possible root dirs
     root_dirs = [

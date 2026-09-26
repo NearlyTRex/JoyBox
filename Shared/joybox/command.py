@@ -15,20 +15,20 @@ import joybox.capture as capture
 import joybox.settings as settings
 import joybox.process as process
 from joybox.commandbase import (
-    create_command_options,
-    get_starter_command,
-    is_only_starter_command,
-    get_runnable_command_path,
-    is_runnable_command,
-    is_command_type_found,
-    is_cached_game_command,
-    is_local_script_command,
-    is_local_program_command,
-    is_local_sandboxed_program_command,
-    is_windows_executable_command,
-    is_powershell_command,
-    is_appimage_command,
-    print_command)
+    create_command_options as create_command_options,
+    get_starter_command as get_starter_command,
+    is_only_starter_command as is_only_starter_command,
+    get_runnable_command_path as get_runnable_command_path,
+    is_runnable_command as is_runnable_command,
+    is_command_type_found as is_command_type_found,
+    is_cached_game_command as is_cached_game_command,
+    is_local_script_command as is_local_script_command,
+    is_local_program_command as is_local_program_command,
+    is_local_sandboxed_program_command as is_local_sandboxed_program_command,
+    is_windows_executable_command as is_windows_executable_command,
+    is_powershell_command as is_powershell_command,
+    is_appimage_command as is_appimage_command,
+    print_command as print_command)
 
 ###########################################################
 

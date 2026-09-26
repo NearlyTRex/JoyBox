@@ -1,7 +1,9 @@
 #!/usr/bin/env python3
 
 # Imports
-import os, os.path
+import importlib.util
+import os
+import os.path
 import sys
 
 # Custom imports
@@ -94,9 +96,7 @@ def main():
     missing = provision.get_missing_settings(server, stages)
     if missing:
         logger.log_error("Set these in ~/JoyBox.ini first: %s" % ", ".join(missing), quit_program = True)
-    try:
-        import paramiko
-    except ImportError:
+    if importlib.util.find_spec("paramiko") is None:
         logger.log_error(
             "paramiko is not installed; run: python3 bootstrap.py -a setup "
             "-t local_ubuntu --components python", quit_program = True)

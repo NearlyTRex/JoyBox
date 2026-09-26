@@ -1,11 +1,9 @@
 # Imports
-import getpass
 import os
-import pytest
 
 # Local imports
-from joybox import commandoptions, config, sandbox
-from sandbox_helpers import options, WINE, SANDBOXIE, NEITHER, PREFIX
+from joybox import sandbox
+from sandbox_helpers import options
 
 
 ###########################################################

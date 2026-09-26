@@ -65,7 +65,8 @@ def build_set_password_command(secret_path):
 def build_day0_commands(server, scripts_dir, secret_paths = None):
     secret_paths = secret_paths or {}
     user = server.get_user()
-    script = lambda name: "%s/%s" % (scripts_dir, name)
+    def script(name):
+        return "%s/%s" % (scripts_dir, name)
     commands = [
         ("sudoers", [script("init_sudoers.sh"), "--action", "setup", "--user", user]),
         ("docker", [script("init_docker.sh"), "--user", user]),

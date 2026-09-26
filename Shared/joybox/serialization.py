@@ -128,7 +128,7 @@ def clean_json_file(src, sort_keys = False, remove_empty_values = False, verbose
                             json_keys_to_remove.append(key)
                         if isinstance(json_value, list) and len(json_value) == 0:
                             json_keys_to_remove.append(key)
-                        if isinstance(json_value, bool) and json_value == False:
+                        if json_value is False:
                             json_keys_to_remove.append(key)
                     for key in json_keys_to_remove:
                         json_data.pop(key)

@@ -627,7 +627,7 @@ def fake_paramiko(monkeypatch, client):
 
 
 def test_a_refused_login_is_an_answer_not_an_error(monkeypatch):
-    client = fake_paramiko(monkeypatch, RefusingClient())
+    fake_paramiko(monkeypatch, RefusingClient())
     errors = []
     monkeypatch.setattr(connection_ssh.logger, "log_error", lambda *a, **k: errors.append(a))
 

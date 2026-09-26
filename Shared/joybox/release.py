@@ -1,5 +1,6 @@
 # Imports
-import os, os.path
+import os
+import os.path
 
 # Local imports
 import joybox.config as config
@@ -108,7 +109,6 @@ def setup_general_release(
 
     # Get archive info
     archive_dir = paths.get_filename_directory(archive_file)
-    archive_basename = paths.get_filename_basename(archive_file)
     archive_extension = paths.get_filename_extension(archive_file)
     archive_filename = paths.get_filename_file(archive_file)
     archive_is_zip = archive.is_zip_archive(archive_file)
@@ -205,7 +205,6 @@ def setup_general_release(
     if isinstance(search_file, str) and len(search_file):
         for file in paths.build_file_list(search_dir):
             current_dir = paths.get_filename_directory(file)
-            current_basefile = paths.get_filename_file(file)
             if file.endswith(search_file):
                 search_dir = current_dir
                 break
@@ -326,8 +325,6 @@ def download_general_release(
         return False
 
     # Get archive info
-    archive_basename = paths.get_filename_basename(archive_url)
-    archive_extension = paths.get_filename_extension(archive_url)
     archive_filename = paths.get_filename_file(archive_url)
     archive_file = paths.join_paths(tmp_dir_result, archive_filename)
 

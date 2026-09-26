@@ -1,6 +1,3 @@
-# Imports
-import pytest
-
 # Local imports
 from joybox.bootstrap.packages.python import python as python_packages
 

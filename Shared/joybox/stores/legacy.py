@@ -329,7 +329,7 @@ class Legacy(storebase.StoreBase):
         except Exception as e:
             logger.log_error(e)
             logger.log_error("Unable to parse legacy game list")
-            logger.log_error("Received output:\n%s" % info_output)
+            logger.log_error("Received output:\n%s" % list_output)
             return None
 
         # Parse output

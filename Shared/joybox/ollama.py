@@ -344,7 +344,6 @@ def get_quantization_options(base_name):
     parts = base_name.split(":")
     if len(parts) < 2:
         return []
-    model_family = parts[0]
     size_tag = parts[1].lower()
     all_tags = get_model_tags(base_name)
 

@@ -1,5 +1,6 @@
 # Imports
-import os, os.path
+import os
+import os.path
 
 # Local imports
 import joybox.config as config
@@ -408,7 +409,6 @@ def get_github_repositories(
             logger.log_info("Getting github repositories for '%s'" % github_user)
         gh = github.Github(github_token)
         user = gh.get_user()
-        login = user.login
         repositories = []
         for repo in user.get_repos(visibility = 'all'):
             if repo.owner.login != github_user:

@@ -284,7 +284,7 @@ class RetroArch(emulatorbase.EmulatorBase):
         cores_mapping = programs.get_emulator_config_value("RetroArch", "cores_mapping")
 
         # Check if this platform is valid
-        if not game_platform in cores_mapping:
+        if game_platform not in cores_mapping:
             gui.display_error_popup(
                 title_text = "Launch platform not defined",
                 message_text = "Launch platform %s not defined in RetroArch config" % game_platform)

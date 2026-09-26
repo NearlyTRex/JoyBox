@@ -1,7 +1,3 @@
-# Imports
-import os
-import sys
-
 # Local imports
 from joybox import runoptions
 from joybox.connection import connection

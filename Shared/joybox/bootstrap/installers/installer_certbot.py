@@ -1,6 +1,5 @@
 # Imports
 import os
-import sys
 import uuid
 
 # Local imports

@@ -1,6 +1,3 @@
-# Imports
-import os
-
 # Third-party imports
 import pytest
 

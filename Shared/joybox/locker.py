@@ -471,7 +471,7 @@ def backup(
         if not lockers_to_upload:
             logger.log_info("No configured lockers found, skipping backup")
             return True
-        logger.log_info("Backing up to all configured lockers: %s" % ", ".join(str(l) for l in lockers_to_upload))
+        logger.log_info("Backing up to all configured lockers: %s" % ", ".join(str(locker) for locker in lockers_to_upload))
     else:
         lockers_to_upload = [locker_type]
 

@@ -1,7 +1,3 @@
-# Imports
-import os
-import sys
-
 ###########################################################
 # Docker images
 #

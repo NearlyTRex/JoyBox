@@ -24,6 +24,13 @@ def options(wine = False, sandboxie = False, prefix_dir = PREFIX, prefix_name = 
     return entry
 
 
-WINE = lambda **kwargs: options(wine = True, **kwargs)
-SANDBOXIE = lambda **kwargs: options(sandboxie = True, **kwargs)
-NEITHER = lambda **kwargs: options(**kwargs)
+def WINE(**kwargs):
+    return options(wine = True, **kwargs)
+
+
+def SANDBOXIE(**kwargs):
+    return options(sandboxie = True, **kwargs)
+
+
+def NEITHER(**kwargs):
+    return options(**kwargs)

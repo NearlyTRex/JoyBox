@@ -246,7 +246,6 @@ def update_game_store_purchases(
         purchase_appid = purchase.get_value(config.json_key_store_appid)
         purchase_appname = purchase.get_value(config.json_key_store_appname)
         purchase_appurl = purchase.get_value(config.json_key_store_appurl)
-        purchase_name = purchase.get_value(config.json_key_store_name)
         purchase_identifiers = [
             purchase_appid,
             purchase_appname,

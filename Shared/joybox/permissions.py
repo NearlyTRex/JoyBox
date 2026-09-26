@@ -30,7 +30,7 @@ def run_as_root(func):
                 pyuac.runAsAdmin()
             else:
                 func()
-        except ModuleNotFoundError as e:
+        except ModuleNotFoundError:
             func()
         except Exception:
             raise

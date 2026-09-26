@@ -1,8 +1,8 @@
 # Imports
 import os
-import sys
 
 # Local imports
+import joybox.bootstrap.constants as constants
 import joybox.bootstrap.packages as packages
 from joybox import settings
 from . import installer
@@ -49,6 +49,12 @@ class Python(installer.Installer):
         flags = runoptions.RunFlags(),
         options = runoptions.RunOptions()):
         super().__init__(connection, flags, options)
+
+    def get_supported_environments(self):
+        return [
+            constants.EnvironmentType.LOCAL_UBUNTU,
+            constants.EnvironmentType.LOCAL_WINDOWS,
+        ]
 
     def get_packages(self):
         return packages.python.get(self.get_environment_type(), [])

@@ -1,14 +1,8 @@
-# Imports
-import os
-import sys
-
 # Local imports
-import joybox.bootstrap.constants as constants
 from joybox import settings
 from joybox import serverinfo
 from . import installer_dockerapp
 from joybox import runoptions
-from joybox import logger
 
 # Nginx config template
 nginx_config_template = r"""

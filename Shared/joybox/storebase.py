@@ -1,5 +1,6 @@
 # Imports
-import os, os.path
+import os
+import os.path
 
 # Local imports
 import joybox.config as config
@@ -11,7 +12,8 @@ import joybox.strings as strings
 import joybox.manifest as manifest
 import joybox.environment as environment
 import joybox.fileops as fileops
-from joybox.storepaths import create_tokenized_path
+from joybox.storepaths import (
+    create_tokenized_path as create_tokenized_path)
 
 # Convert to tokenized path
 def convert_to_tokenized_path(

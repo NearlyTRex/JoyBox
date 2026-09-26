@@ -1,7 +1,6 @@
 # Imports
 import base64
 import importlib
-import os
 import shutil
 import subprocess
 

@@ -1,10 +1,5 @@
 # Imports
 import ast
-import os
-
-# Third-party imports
-import pytest
-
 
 ###########################################################
 # Entry point conventions
