@@ -87,7 +87,7 @@ services:
     volumes:
       - db_data:/var/lib/mysql
     healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-p$$MYSQL_ROOT_PASSWORD"]
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
       interval: 10s
       timeout: 5s
       retries: 12
@@ -229,7 +229,12 @@ class Wordpress(installer_dockerapp.DockerAppInstaller):
         # Ship the seed script and its content from the repo
         logger.log_info("Transferring seed content")
         seed_source = os.path.join(bootstrap.get_data_dir(), "wordpress")
-        self.connection.transfer_files(seed_source, f"{self.get_app_dir()}/seed")
+        seed_dir = f"{self.get_app_dir()}/seed"
+        self.connection.transfer_files(seed_source, seed_dir)
+
+        # wpcli runs as www-data (33), not the account; the seed holds repo
+        # content only, so it can be world-readable
+        self.connection.change_permission(seed_dir, "a+rX")
 
         # Run the seed. The wordpress:cli entrypoint is wp itself, so the
         # shell has to be named explicitly.

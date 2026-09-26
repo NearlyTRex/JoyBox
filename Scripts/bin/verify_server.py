@@ -9,6 +9,7 @@ shared_folder = os.path.realpath(os.path.join(os.path.dirname(__file__), "..", "
 sys.path.append(shared_folder)
 import joybox.arguments as arguments
 import joybox.hardening as hardening
+import joybox.bootstrap.runner as runner
 import joybox.logger as logger
 import joybox.runtime as runtime
 import joybox.serverinfo as serverinfo
@@ -84,6 +85,7 @@ def main():
         results = hardening.verify_hardening(
             connection = connection,
             domain = args.domain,
+            public_ports = runner.get_public_ports(args.server),
             verbose = False)
     finally:
         connection.teardown()

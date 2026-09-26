@@ -121,9 +121,17 @@ class DockerAppInstaller(installer.Installer):
             constants.EnvironmentType.REMOTE_UBUNTU,
         ]
 
+    def get_install_marker(self):
+        return f"{self.get_app_dir()}/.joybox-installed"
+
     def is_installed(self):
-        containers = self.connection.run_output("docker ps -a --format '{{.Names}}'")
-        return any(self.app_name in name for name in containers.splitlines())
+        if not self.connection.does_file_or_directory_exist(self.get_install_marker()):
+            return False
+        containers = self.connection.run_output("docker ps -a --format '{{.Names}}\t{{.State}}\t{{.Status}}'")
+        mine = [line.split("\t") for line in containers.splitlines() if self.app_name in line.split("\t")[0]]
+        return bool(mine) and all(
+            len(fields) == 3 and fields[1] == "running" and "(unhealthy)" not in fields[2]
+            for fields in mine)
 
     def get_app_images(self):
 
@@ -417,6 +425,7 @@ fi
         app_dir = self.get_app_dir()
         self.connection.make_directory(app_dir)
         self.connection.change_permission(app_dir, "700")
+        self.connection.remove_file_or_directory(self.get_install_marker())
         for subdir in self.app_subdirs:
             self.connection.make_directory(f"{app_dir}/{subdir}")
 
@@ -463,7 +472,9 @@ fi
         self.connection.set_current_working_directory(None)
 
         # Post install
-        return self.post_install()
+        if not self.post_install():
+            return False
+        return self.connection.write_file(self.get_install_marker(), f"{self.app_name}\n")
 
     def post_install(self):
         return True

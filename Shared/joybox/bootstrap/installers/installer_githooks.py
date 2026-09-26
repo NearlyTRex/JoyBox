@@ -28,12 +28,11 @@ class GitHooks(installer.Installer):
     def get_supported_environments(self):
         return [
             constants.EnvironmentType.LOCAL_UBUNTU,
-            constants.EnvironmentType.REMOTE_UBUNTU,
         ]
 
     def _get_hooks_path(self):
         return (self.connection.run_output(
-            ["git", "-C", self.joybox_root, "config", "--local", "--get", "core.hooksPath"]
+            [self.git_tool, "-C", self.joybox_root, "config", "--local", "--get", "core.hooksPath"]
         ) or "").strip()
 
     def is_installed(self):
@@ -58,7 +57,7 @@ class GitHooks(installer.Installer):
 
         # Point git at the version-controlled hooks (lives in .git/config, not cloned)
         self.connection.run_checked(
-            ["git", "-C", self.joybox_root, "config", "core.hooksPath", self.hooks_path])
+            [self.git_tool, "-C", self.joybox_root, "config", "core.hooksPath", self.hooks_path])
 
         # Verify
         if not self.flags.pretend_run and not self.is_installed():
@@ -77,7 +76,7 @@ class GitHooks(installer.Installer):
         # Remove the setting if present
         if self._get_hooks_path():
             self.connection.run_blocking(
-                ["git", "-C", self.joybox_root, "config", "--unset", "core.hooksPath"])
+                [self.git_tool, "-C", self.joybox_root, "config", "--unset", "core.hooksPath"])
 
         # All done
         logger.log_info("git hooks deactivated")

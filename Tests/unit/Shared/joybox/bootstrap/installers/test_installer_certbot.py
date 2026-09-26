@@ -176,3 +176,28 @@ def test_uninstall_only_removes_renewal_in_letsencrypt_mode(isolated_settings, r
     certbot.uninstall()
 
     assert not recording_connection.crontab_removed
+
+
+###########################################################
+# Installed state
+#
+# The aptget component installs the certbot package as well, so the package
+# being present must not stand in for an issued certificate.
+###########################################################
+
+def test_the_package_alone_is_not_installed(isolated_settings):
+    from fakes import RecordingConnection
+    connection = RecordingConnection(
+        existing_paths = ["/usr/bin/certbot"],
+        return_codes = {"manager_certbot.sh check": 1})
+
+    assert not build_certbot(isolated_settings, connection, "mkcert").is_installed()
+
+
+def test_an_issued_certificate_is_installed(isolated_settings):
+    from fakes import RecordingConnection
+    connection = RecordingConnection(existing_paths = ["/usr/bin/certbot"])
+    certbot = build_certbot(isolated_settings, connection, "mkcert")
+
+    assert certbot.is_installed()
+    assert [certbot.cert_manager_tool, "check", "joybox.test"] in connection.commands

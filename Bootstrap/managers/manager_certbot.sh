@@ -301,8 +301,8 @@ list_certs() {
             if [ -d "$cert_dir" ] && [ "$(basename "$cert_dir")" != "README" ]; then
                 local domain=$(basename "$cert_dir")
                 echo "  Domain: $domain"
-                if [ -f "$cert_dir/cert.pem" ]; then
-                    local expiry=$(openssl x509 -in "$cert_dir/cert.pem" -noout -enddate | cut -d= -f2)
+                if [ -f "$cert_dir/fullchain.pem" ]; then
+                    local expiry=$(openssl x509 -in "$cert_dir/fullchain.pem" -noout -enddate | cut -d= -f2)
                     echo "    Expires: $expiry"
                 fi
             fi
@@ -321,18 +321,19 @@ check_cert() {
     local DOMAIN="$1"
     local CERT_DIR="/etc/letsencrypt/live/$DOMAIN"
 
-    if [ ! -d "$CERT_DIR" ]; then
+    if ! is_valid_domain "$DOMAIN"; then
+        echo "Error: '$DOMAIN' is not a domain name"
+        exit 1
+    fi
+
+    # The pair nginx loads; every TLS mode writes these, only certbot adds cert.pem
+    if [ ! -f "$CERT_DIR/fullchain.pem" ] || [ ! -f "$CERT_DIR/privkey.pem" ]; then
         echo "Certificate for domain '$DOMAIN' does not exist"
         exit 1
     fi
 
     echo "Certificate information for $DOMAIN:"
-    if [ -f "$CERT_DIR/cert.pem" ]; then
-        openssl x509 -in "$CERT_DIR/cert.pem" -noout -text | grep -E "(Subject:|Issuer:|Not Before|Not After)"
-    else
-        echo "Certificate file not found"
-        exit 1
-    fi
+    openssl x509 -in "$CERT_DIR/fullchain.pem" -noout -text | grep -E "(Subject:|Issuer:|Not Before|Not After)"
 }
 
 print_usage() {

@@ -27,6 +27,26 @@ print_usage() {
     exit 1
 }
 
+# Enable a configuration only if nginx still accepts the whole set; a link
+# it rejects would stop every later reload, not just this site
+link_and_test() {
+    local target="$1"
+    local link="$2"
+    local was_linked=false
+    [ -L "$link" ] && was_linked=true
+
+    ln -sf "$target" "$link"
+    if ! nginx -t; then
+        if [ "$was_linked" = false ]; then
+            rm -f "$link"
+            echo "Error: nginx rejected the configuration; $link was not enabled."
+        else
+            echo "Error: nginx rejects the configuration with $link enabled."
+        fi
+        exit 1
+    fi
+}
+
 check_path() {
     local path=$1
     if [ ! -e "$path" ]; then
@@ -99,7 +119,7 @@ case "$1" in
             exit 1
         fi
 
-        ln -sf "$local_path" "$NGINX_SITES_ENABLED/$2"
+        link_and_test "$local_path" "$NGINX_SITES_ENABLED/$2"
         echo "Configuration file linked from sites-available to sites-enabled."
         ;;
 
@@ -137,7 +157,7 @@ case "$1" in
 
         mkdir -p "$NGINX_STREAMS_ENABLED"
 
-        ln -sf "$stream_path" "$NGINX_STREAMS_ENABLED/$2"
+        link_and_test "$stream_path" "$NGINX_STREAMS_ENABLED/$2"
         echo "Stream configuration file linked from streams-available to streams-enabled."
         ;;
 

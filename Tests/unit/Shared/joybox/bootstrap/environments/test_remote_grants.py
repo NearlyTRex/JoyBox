@@ -65,3 +65,14 @@ def test_a_remote_component_needs_only_granted_sudo(isolated_settings, component
                             if not call[0].startswith("run_") and call[2].get("sudo")})
     assert privileged <= granted_programs(installer), sorted(privileged - granted_programs(installer))
     assert privileged_io == [], "sudo file operations are not granted: %s" % privileged_io
+
+
+###########################################################
+# Deliberately public ports
+###########################################################
+
+def test_public_ports_are_what_components_open(isolated_settings):
+    from joybox.bootstrap.environments import env_remote_ubuntu
+    environment = env_remote_ubuntu.RemoteUbuntu(ssh_host = "server.test")
+
+    assert environment.get_public_ports() == ["5190"]

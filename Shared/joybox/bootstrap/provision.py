@@ -419,7 +419,8 @@ class Provisioner:
                 return False
             results = hardening.verify_hardening(
                 connection = connection,
-                domain = self.server.get_domain_name())
+                domain = self.server.get_domain_name(),
+                public_ports = runner.get_public_ports(self.server.get_index()))
         print(hardening.format_results(results))
         self.verify_failures = hardening.count_failures(results)
         if self.verify_failures:

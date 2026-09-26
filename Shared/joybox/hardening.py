@@ -69,9 +69,11 @@ def format_results(results):
 # Ports a listening socket accepts from anywhere, from ss -tlnH.
 # Docker publishes past ufw, so this is the check that catches a container
 # bound to every interface.
+DEFAULT_PUBLIC_PORTS = ["22", "80", "443"]
+
 def parse_wildcard_listeners(output, allowed_ports = None):
     if allowed_ports is None:
-        allowed_ports = ["22", "80", "443"]
+        allowed_ports = DEFAULT_PUBLIC_PORTS
     wildcards = []
     for line in (output or "").splitlines():
         fields = line.split()
@@ -359,11 +361,13 @@ CHECKS = [
 ]
 
 # Run every check against a connection
-def verify_hardening(connection, domain = None, verbose = False):
+def verify_hardening(connection, domain = None, public_ports = None, verbose = False):
     results = []
     for check in CHECKS:
         if check is check_rate_limiting:
             results += check(connection, domain = domain)
+        elif check is check_container_ports:
+            results += check(connection, allowed_ports = DEFAULT_PUBLIC_PORTS + list(public_ports or []))
         else:
             results += check(connection)
     if verbose:

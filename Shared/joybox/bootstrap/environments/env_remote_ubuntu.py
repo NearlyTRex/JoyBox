@@ -48,9 +48,7 @@ class RemoteUbuntu(env.Environment):
             "config": installers.Config(**self.installer_options),
             "aptget": installers.AptGet(**self.installer_options),
             "dotfiles": installers.Dotfiles(**self.installer_options),
-            "githooks": installers.GitHooks(**self.installer_options),
             "python": installers.Python(**self.installer_options),
-            "wrappers": installers.Wrappers(**self.installer_options),
             "flatpak": installers.Flatpak(**self.installer_options),
             "nginx": installers.Nginx(**self.installer_options),
             "certbot": installers.Certbot(**self.installer_options),
@@ -68,9 +66,7 @@ class RemoteUbuntu(env.Environment):
         # Get individual installers
         self.installer_config = self.available_components["config"]
         self.installer_dotfiles = self.available_components["dotfiles"]
-        self.installer_githooks = self.available_components["githooks"]
         self.installer_python = self.available_components["python"]
-        self.installer_wrappers = self.available_components["wrappers"]
         self.installer_aptget = self.available_components["aptget"]
         self.installer_audiobookshelf = self.available_components["audiobookshelf"]
         self.installer_flatpak = self.available_components["flatpak"]
@@ -84,6 +80,12 @@ class RemoteUbuntu(env.Environment):
         self.installer_navidrome = self.available_components["navidrome"]
         self.installer_kanboard = self.available_components["kanboard"]
         self.installer_oscar = self.available_components["oscar"]
+
+    def get_public_ports(self):
+        ports = set()
+        for component in self.available_components.values():
+            ports.update(str(port) for port in getattr(component, "nginx_ports", []))
+        return sorted(ports)
 
     def setup(self):
         self.connect()

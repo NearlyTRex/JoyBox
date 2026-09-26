@@ -21,7 +21,7 @@ Any new installer must follow this. `verify_server` checks it.
 ## SSH is key-only
 
 `init_sshd.sh --user <name>` disables password and root login via a drop-in at
-`/etc/ssh/sshd_config.d/99-joybox.conf`.
+`/etc/ssh/sshd_config.d/00-joybox.conf`.
 
 It is a day-0 script rather than a `bootstrap.py` component on purpose: locking SSH
 from inside a run that is itself connected over SSH is the obvious way to lock

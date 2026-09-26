@@ -22,9 +22,7 @@ python3 bootstrap.py -a setup -t remote_ubuntu -s 0 --components wordpress
 |-----------|--------------|
 | `config` | Configuration setup |
 | `dotfiles` | Dot files installation |
-| `githooks` | Activate the repo's git hooks (secret-scanning pre-commit) |
 | `python` | Python venv + pip packages |
-| `wrappers` | Script wrappers |
 | `aptget` | System packages |
 | `flatpak` | Flatpak apps |
 | `nginx` | Nginx with config templates |

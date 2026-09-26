@@ -39,14 +39,21 @@ def read_heredoc(contents, path):
 ###########################################################
 
 def test_the_sshd_dropin_is_written(common_sh):
-    body = read_heredoc(common_sh, "/etc/ssh/sshd_config.d/99-joybox.conf")
+    body = read_heredoc(common_sh, "/etc/ssh/sshd_config.d/00-joybox.conf")
 
     assert body.strip()
 
 
+def test_the_sshd_dropin_is_read_before_cloud_inits(common_sh):
+    # sshd keeps the first value it reads, and cloud-init's 50-cloud-init.conf
+    # can turn password login back on
+    assert "00-joybox.conf" < "50-cloud-init.conf"
+    assert "/etc/ssh/sshd_config.d/99-joybox.conf <<" not in common_sh
+
+
 def test_the_sshd_dropin_satisfies_the_sshd_check(common_sh):
     # sshd -T reports one setting per line, the same shape as the drop-in
-    body = read_heredoc(common_sh, "/etc/ssh/sshd_config.d/99-joybox.conf")
+    body = read_heredoc(common_sh, "/etc/ssh/sshd_config.d/00-joybox.conf")
 
     settings = hardening.parse_sshd_settings(body)
 
@@ -56,7 +63,7 @@ def test_the_sshd_dropin_satisfies_the_sshd_check(common_sh):
 
 def test_the_sshd_dropin_keeps_key_auth_on(common_sh):
     # Turning password auth off without this is a lockout
-    body = read_heredoc(common_sh, "/etc/ssh/sshd_config.d/99-joybox.conf")
+    body = read_heredoc(common_sh, "/etc/ssh/sshd_config.d/00-joybox.conf")
 
     settings = hardening.parse_sshd_settings(body)
 

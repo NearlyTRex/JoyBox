@@ -80,7 +80,10 @@ class Certbot(installer.Installer):
         ]
 
     def is_installed(self):
-        return self.connection.does_file_or_directory_exist("/usr/bin/certbot")
+        if not self.connection.does_file_or_directory_exist("/usr/bin/certbot"):
+            return False
+        return self.connection.run_return_code(
+            [self.cert_manager_tool, "check", self.domain_name], sudo = True) == 0
 
     def get_cert_dir(self):
         return f"/etc/letsencrypt/live/{self.domain_name}"

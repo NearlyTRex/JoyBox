@@ -124,3 +124,63 @@ def test_components_without_backup_data_do_nothing(isolated_settings, recording_
     assert jenkins.has_backup_items() is False
     assert jenkins.backup() is True
     assert recording_connection.commands == []
+
+
+###########################################################
+# Installed state
+#
+# Installed means every install step finished (the marker) and the app is
+# still up (running, healthy containers); either alone is not enough.
+###########################################################
+
+HEALTHY = ("wordpress-db-1\trunning\tUp 5 minutes (healthy)\n"
+           "wordpress-wordpress-1\trunning\tUp 4 minutes (healthy)\n"
+           "navidrome-1\texited\tExited (1) 2 hours ago\n")
+
+
+def build_with_containers(isolated_settings, listing, marked = True):
+    from fakes import RecordingConnection
+    connection = RecordingConnection(command_output = {"docker ps -a": listing})
+    wordpress = installers.Wordpress(connection)
+    if marked:
+        connection.existing_paths.add(wordpress.get_install_marker())
+    return wordpress
+
+
+def test_no_containers_is_not_installed(isolated_settings):
+    assert not build_with_containers(isolated_settings, "").is_installed()
+
+
+def test_running_healthy_containers_are_installed(isolated_settings):
+    assert build_with_containers(isolated_settings, HEALTHY).is_installed()
+
+
+def test_healthy_containers_without_the_marker_are_not_installed(isolated_settings):
+    assert not build_with_containers(isolated_settings, HEALTHY, marked = False).is_installed()
+
+
+def test_an_unhealthy_container_is_not_installed(isolated_settings):
+    listing = ("wordpress-db-1\trunning\tUp 5 minutes (unhealthy)\n"
+               "wordpress-wordpress-1\tcreated\tCreated\n")
+    assert not build_with_containers(isolated_settings, listing).is_installed()
+
+
+def test_a_stopped_container_is_not_installed(isolated_settings):
+    listing = ("wordpress-db-1\trunning\tUp 5 minutes (healthy)\n"
+               "wordpress-wordpress-1\texited\tExited (0) 1 minute ago\n")
+    assert not build_with_containers(isolated_settings, listing).is_installed()
+
+
+def test_a_finished_install_writes_the_marker(wordpress, recording_connection, monkeypatch):
+    monkeypatch.setattr(wordpress, "post_install", lambda: True)
+
+    assert wordpress.install()
+    assert wordpress.get_install_marker() in recording_connection.written_files
+
+
+def test_a_failed_post_install_leaves_no_marker(wordpress, recording_connection, monkeypatch):
+    monkeypatch.setattr(wordpress, "post_install", lambda: False)
+
+    assert not wordpress.install()
+    assert wordpress.get_install_marker() not in recording_connection.written_files
+    assert wordpress.get_install_marker() in recording_connection.removed_paths

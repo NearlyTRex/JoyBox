@@ -13,19 +13,34 @@ install_cockpit() {
         exit 1
     fi
 
-    if ! systemctl enable --now cockpit.socket; then
+    # Reached only through nginx's admin subdomain, which carries the TLS
+    # policy and rate limiting; a public 9090 would bypass both
+    mkdir -p /etc/systemd/system/cockpit.socket.d
+    cat > /etc/systemd/system/cockpit.socket.d/joybox-listen.conf <<EOF
+[Socket]
+ListenStream=
+ListenStream=127.0.0.1:9090
+EOF
+    systemctl daemon-reload
+
+    if ! systemctl enable cockpit.socket || ! systemctl restart cockpit.socket; then
         echo "Error: Failed to enable and start cockpit.socket."
         exit 1
     fi
 
-    if command -v ufw >/dev/null && ufw status | grep -q active; then
-        ufw allow 9090/tcp
+    if command -v ufw >/dev/null && ufw status | grep -q "9090/tcp"; then
+        ufw --force delete allow 9090/tcp
     fi
 
     if grep -q '^ *renderer:' /etc/netplan/*.yaml 2>/dev/null; then
         sed -i 's/renderer: .*/renderer: NetworkManager/' /etc/netplan/*.yaml
     else
         echo -e "network:\n  version: 2\n  renderer: NetworkManager" > /etc/netplan/99-cockpit.yaml
+    fi
+
+    # netplan refuses to trust configuration others can read
+    if [ -f /etc/netplan/99-cockpit.yaml ]; then
+        chmod 600 /etc/netplan/99-cockpit.yaml
     fi
 
     if ! netplan apply; then
@@ -42,19 +57,14 @@ polkit.addRule(function(action, subject) {
     }
 });
 EOF
-
-    cat > "/etc/polkit-1/localauthority/50-local.d/45-allow-cockpit.pkla" <<EOF
-[Allow Admin Cockpit Access]
-Identity=unix-group:sudo
-Action=*
-ResultActive=yes
-EOF
 }
 
 uninstall_cockpit() {
 
     systemctl disable --now cockpit.socket || true
     systemctl disable --now NetworkManager || true
+    rm -rf /etc/systemd/system/cockpit.socket.d
+    systemctl daemon-reload
 
     apt-get remove --purge -y network-manager || true
     apt-get remove --purge -y cockpit cockpit-networkmanager cockpit-packagekit cockpit-storaged cockpit-system || true

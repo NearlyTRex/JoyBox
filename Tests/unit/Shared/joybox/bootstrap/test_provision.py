@@ -391,16 +391,18 @@ def test_a_test_guest_that_loses_its_login_is_reverted(entry, monkeypatch):
 def test_verification_runs_as_the_account(entry, monkeypatch):
     world = World({"deploy": True, "root": False})
     seen = []
+    monkeypatch.setattr(provision.runner, "get_public_ports", lambda server_index: ["5190"])
     monkeypatch.setattr(provision.hardening, "verify_hardening",
-                        lambda connection, domain: seen.append((connection.username, domain)) or [])
+                        lambda connection, domain, public_ports: seen.append((connection.username, domain, public_ports)) or [])
 
     assert build(world).run_verify() is True
-    assert seen == [("deploy", "example.com")]
+    assert seen == [("deploy", "example.com", ["5190"])]
 
 
 def test_failed_checks_are_counted(entry, monkeypatch):
     failure = provision.hardening.CheckResult("sshd", provision.hardening.FAIL, "password login is on")
-    monkeypatch.setattr(provision.hardening, "verify_hardening", lambda connection, domain: [failure])
+    monkeypatch.setattr(provision.runner, "get_public_ports", lambda server_index: [])
+    monkeypatch.setattr(provision.hardening, "verify_hardening", lambda connection, domain, public_ports: [failure])
     provisioner = build(World({"deploy": True}))
 
     assert provisioner.run_verify() is False

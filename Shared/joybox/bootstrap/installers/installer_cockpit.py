@@ -33,7 +33,7 @@ server {{
     include /etc/nginx/snippets/ssl-params.conf;
 
     location / {{
-        proxy_pass https://localhost:{port_http};
+        proxy_pass https://127.0.0.1:{port_http};
         proxy_ssl_verify off;
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
@@ -66,7 +66,9 @@ class Cockpit(installer.Installer):
 
     def is_installed(self):
         output = self.connection.run_output("systemctl is-enabled cockpit.socket")
-        return "enabled" in output
+        return ("enabled" in output
+            and self.connection.does_file_or_directory_exist("/etc/systemd/system/cockpit.socket.d/joybox-listen.conf")
+            and self.connection.does_file_or_directory_exist(f"/etc/nginx/sites-enabled/{self.app_name}.conf"))
 
     def install(self):
 

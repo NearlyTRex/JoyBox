@@ -445,10 +445,20 @@ configure_nginx_stream_module() {
     mkdir -p /etc/nginx/streams-available
     mkdir -p /etc/nginx/streams-enabled
 
+    # Backed up once, before the first change, and kept only for this run: a
+    # backup outliving its run would later "restore" over newer edits
+    local backup=""
+    backup_nginx_conf() {
+        if [ -z "$backup" ]; then
+            backup=$(mktemp)
+            cp /etc/nginx/nginx.conf "$backup"
+        fi
+    }
+
     echo "Ensuring stream module is loaded..."
     # Ubuntu's package loads it through modules-enabled
     if ! grep -qs "load_module.*ngx_stream_module" /etc/nginx/nginx.conf /etc/nginx/modules-enabled/*.conf; then
-        cp /etc/nginx/nginx.conf /etc/nginx/nginx.conf.backup
+        backup_nginx_conf
         sed -i '1i load_module modules/ngx_stream_module.so;' /etc/nginx/nginx.conf
         echo "Added stream module load directive"
     else
@@ -457,22 +467,25 @@ configure_nginx_stream_module() {
 
     echo "Updating nginx.conf to include stream configuration..."
     if ! grep -q "stream {" /etc/nginx/nginx.conf; then
-        [ ! -f /etc/nginx/nginx.conf.backup ] && cp /etc/nginx/nginx.conf /etc/nginx/nginx.conf.backup
+        backup_nginx_conf
         sed -i '/^http {/i\\n# Stream module configuration\nstream {\n\tinclude /etc/nginx/streams-enabled/*;\n}' /etc/nginx/nginx.conf
         echo "Stream block added to nginx.conf"
     else
         echo "Stream block already exists in nginx.conf"
     fi
 
+    if [ -z "$backup" ]; then
+        echo "NGINX stream module already configured"
+        return 0
+    fi
     if nginx -t; then
+        rm -f "$backup"
         echo "NGINX stream module configuration complete"
-        systemctl reload nginx
+        systemctl reload-or-restart nginx
     else
         echo "Error: NGINX configuration test failed"
-        if [ -f /etc/nginx/nginx.conf.backup ]; then
-            mv /etc/nginx/nginx.conf.backup /etc/nginx/nginx.conf
-            echo "Restored nginx.conf from backup"
-        fi
+        mv "$backup" /etc/nginx/nginx.conf
+        echo "Restored nginx.conf from before this run's changes"
         exit 1
     fi
 }
@@ -491,9 +504,13 @@ configure_sshd_hardening() {
     fi
 
     # A drop-in rather than edits to sshd_config: re-running is idempotent, and
-    # the packaged config keeps receiving distro updates untouched.
+    # the packaged config keeps receiving distro updates untouched. sshd keeps
+    # the first value it reads and reads drop-ins in name order, so this one
+    # sorts first; cloud-init's 50-cloud-init.conf can enable passwords.
+    local dropin=/etc/ssh/sshd_config.d/00-joybox.conf
     mkdir -p /etc/ssh/sshd_config.d
-    cat > /etc/ssh/sshd_config.d/99-joybox.conf <<EOF
+    rm -f /etc/ssh/sshd_config.d/99-joybox.conf
+    cat > /etc/ssh/sshd_config.d/00-joybox.conf <<EOF
 # Managed by JoyBox - see Bootstrap/scripts/init_sshd.sh
 PermitRootLogin no
 PasswordAuthentication no
@@ -510,7 +527,7 @@ AllowTcpForwarding no
 ClientAliveInterval 300
 ClientAliveCountMax 2
 EOF
-    chmod 644 /etc/ssh/sshd_config.d/99-joybox.conf
+    chmod 644 "$dropin"
 
     # Older releases do not Include the drop-in directory. Adding the config
     # without that line would be a silent no-op.
@@ -522,13 +539,23 @@ EOF
     # Validate before touching the running daemon; a bad config here is a lockout.
     if ! sshd -t; then
         echo "Error: sshd configuration is invalid. Reverting."
-        rm -f /etc/ssh/sshd_config.d/99-joybox.conf
+        rm -f "$dropin"
         exit 1
     fi
 
     # Reload, not restart: existing sessions survive, so a mistake is recoverable
     # from the shell you already have open.
     systemctl reload ssh 2>/dev/null || systemctl reload sshd
+
+    # What sshd will actually enforce, after every drop-in is merged
+    local effective
+    effective=$(sshd -T)
+    for setting in "permitrootlogin no" "passwordauthentication no" "kbdinteractiveauthentication no"; do
+        if ! grep -qx "$setting" <<< "$effective"; then
+            echo "Error: sshd does not enforce '$setting'; another file under /etc/ssh overrides it."
+            exit 1
+        fi
+    done
     echo "sshd hardening complete. Keep this session open and verify key login from a second terminal."
 }
 
