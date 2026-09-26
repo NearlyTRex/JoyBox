@@ -361,7 +361,7 @@ def test_a_privileged_write_is_staged_then_copied(monkeypatch):
     staged = list(sftp.written.keys())[0]
     assert staged.startswith("/tmp/")
     assert sftp.written[staged] == "contents"
-    assert client.only() == "sudo -n /bin/cp %s /etc/app.conf" % staged
+    assert client.only() == "sudo -n cp %s /etc/app.conf" % staged
 
 
 def test_a_privileged_write_removes_the_staged_file():
@@ -406,7 +406,7 @@ def test_a_remote_directory_is_made_with_its_parents():
     client = FakeSSHClient()
 
     assert build(client).make_directory("/opt/app/data") is True
-    assert client.only() == "/bin/mkdir -p /opt/app/data"
+    assert client.only() == "mkdir -p /opt/app/data"
 
 
 def test_a_remote_removal_takes_the_whole_tree():
@@ -415,7 +415,7 @@ def test_a_remote_removal_takes_the_whole_tree():
 
     build(client).remove_file_or_directory("/opt/app")
 
-    assert client.only() == "sh -c '/bin/rm -rf -- /opt/app'"
+    assert client.only() == "sh -c 'rm -rf -- /opt/app'"
 
 
 def test_a_remote_copy_is_recursive():
@@ -423,7 +423,7 @@ def test_a_remote_copy_is_recursive():
 
     build(client).copy_file_or_directory("/opt/a", "/opt/b")
 
-    assert client.only() == "/bin/cp -r /opt/a /opt/b"
+    assert client.only() == "cp -r /opt/a /opt/b"
 
 
 def test_a_remote_move_uses_the_move_tool():
@@ -431,7 +431,7 @@ def test_a_remote_move_uses_the_move_tool():
 
     build(client).move_file_or_directory("/opt/a", "/opt/b")
 
-    assert client.only() == "/bin/mv /opt/a /opt/b"
+    assert client.only() == "mv /opt/a /opt/b"
 
 
 def test_a_remote_link_is_forced_and_symbolic():
@@ -439,27 +439,23 @@ def test_a_remote_link_is_forced_and_symbolic():
 
     build(client).link_file_or_directory("/opt/app/current", "/usr/local/bin/app")
 
-    assert client.only() == "/bin/ln -sf /opt/app/current /usr/local/bin/app"
+    assert client.only() == "ln -sf /opt/app/current /usr/local/bin/app"
 
 
-def test_a_remote_download_follows_redirects(monkeypatch):
-    monkeypatch.setattr(
-        connection_ssh.programs, "get_tool_program", lambda name: "/usr/bin/curl")
+def test_a_remote_download_follows_redirects():
     client = FakeSSHClient()
 
     build(client).download_file("https://example.test/app.tar", "/opt/app.tar")
 
-    assert client.only() == "/usr/bin/curl -L -o /opt/app.tar https://example.test/app.tar"
+    assert client.only() == "curl -L -o /opt/app.tar https://example.test/app.tar"
 
 
-def test_a_remote_archive_is_extracted_into_its_destination(monkeypatch):
-    monkeypatch.setattr(
-        connection_ssh.programs, "get_tool_program", lambda name: "/usr/bin/tar")
+def test_a_remote_archive_is_extracted_into_its_destination():
     client = FakeSSHClient()
 
     build(client).extract_tar_archive("/tmp/app.tar", "/opt/app")
 
-    assert client.only() == "/usr/bin/tar -xf /tmp/app.tar -C /opt/app"
+    assert client.only() == "tar -xf /tmp/app.tar -C /opt/app"
 
 
 def test_remote_ownership_is_changed_recursively():
@@ -467,7 +463,7 @@ def test_remote_ownership_is_changed_recursively():
 
     build(client).change_owner("/opt/app", "app:app")
 
-    assert client.only() == "/bin/chown -R app:app /opt/app"
+    assert client.only() == "chown -R app:app /opt/app"
 
 
 def test_remote_permissions_are_changed_recursively():
@@ -475,7 +471,7 @@ def test_remote_permissions_are_changed_recursively():
 
     build(client).change_permission("/opt/app", "750")
 
-    assert client.only() == "/bin/chmod -R 750 /opt/app"
+    assert client.only() == "chmod -R 750 /opt/app"
 
 
 @pytest.mark.parametrize("method,args", [
@@ -557,21 +553,21 @@ def test_a_privileged_upload_is_staged_then_merged(tmp_path):
 
     assert result is True
     assert staged.startswith("/tmp/transfer_")
-    assert commands[0] == "sudo -n /bin/mkdir -p /opt/app"
-    assert commands[1] == "sudo -n /bin/cp -r %s/. /opt/app" % staged
+    assert commands[0] == "sudo -n mkdir -p /opt/app"
+    assert commands[1] == "sudo -n cp -r %s/. /opt/app" % staged
 
 
 def test_a_privileged_upload_removes_its_staging(tmp_path):
     _, staged, commands = privileged_upload(tmp_path)
 
-    assert commands[-1] == "/bin/rm -rf %s" % staged
+    assert commands[-1] == "rm -rf %s" % staged
 
 
 def test_a_failed_privileged_upload_is_reported(tmp_path):
     result, staged, commands = privileged_upload(tmp_path, exit_code = 1)
 
     assert result is False
-    assert commands[-1] == "/bin/rm -rf %s" % staged
+    assert commands[-1] == "rm -rf %s" % staged
 
 
 def test_an_upload_without_a_connection_reports_failure(tmp_path):

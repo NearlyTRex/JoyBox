@@ -87,12 +87,12 @@ class LlamaCpp(installer.Installer):
         # Fetch or update the source tree
         if self.connection.does_file_or_directory_exist(os.path.join(self.source_dir, ".git")):
             logger.log_info("Updating existing llama.cpp checkout")
-            code = self.connection.run_blocking(["git", "-C", self.source_dir, "pull", "--ff-only"])
+            code = self.connection.run_blocking([self.git_tool, "-C", self.source_dir, "pull", "--ff-only"])
         else:
             logger.log_info(f"Cloning llama.cpp into {self.source_dir}")
             self.connection.make_directory(os.path.dirname(self.source_dir))
             code = self.connection.run_blocking(
-                ["git", "clone", "--depth", "1", self.repository_url, self.source_dir])
+                [self.git_tool, "clone", "--depth", "1", self.repository_url, self.source_dir])
         if code != 0:
             logger.log_error("Failed to fetch llama.cpp source")
             return False
@@ -101,7 +101,7 @@ class LlamaCpp(installer.Installer):
         build_dir = os.path.join(self.source_dir, "build")
         logger.log_info("Configuring build")
         code = self.connection.run_blocking(
-            ["cmake", "-S", self.source_dir, "-B", build_dir] + self.get_cmake_flags())
+            [self.cmake_tool, "-S", self.source_dir, "-B", build_dir] + self.get_cmake_flags())
         if code != 0:
             logger.log_error("CMake configuration failed")
             return False
@@ -109,7 +109,7 @@ class LlamaCpp(installer.Installer):
         # Build
         logger.log_info("Building (this takes a while)")
         code = self.connection.run_blocking(
-            ["cmake", "--build", build_dir, "--config", "Release", "-j"])
+            [self.cmake_tool, "--build", build_dir, "--config", "Release", "-j"])
         if code != 0:
             logger.log_error("Build failed")
             return False
@@ -117,7 +117,7 @@ class LlamaCpp(installer.Installer):
         # Install
         logger.log_info("Installing binaries")
         code = self.connection.run_blocking(
-            ["cmake", "--install", build_dir], sudo = True)
+            [self.cmake_tool, "--install", build_dir], sudo = True)
         if code != 0:
             logger.log_error("Install step failed")
             return False

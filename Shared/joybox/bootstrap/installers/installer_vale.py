@@ -57,7 +57,7 @@ class Vale(installer.Installer):
         # Extract
         self.connection.make_directory(extract_dir)
         code = self.connection.run_blocking(
-            ["tar", "-xzf", archive_path, "-C", extract_dir])
+            [self.tar_tool, "-xzf", archive_path, "-C", extract_dir])
         if code != 0:
             logger.log_error("Failed to extract Vale archive")
             self.connection.remove_file_or_directory(archive_path)

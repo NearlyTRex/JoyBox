@@ -10,8 +10,6 @@ from io import StringIO
 # Local imports
 from joybox import runtime, cmdline
 from joybox import logger, runoptions
-from joybox import systemtools as tools
-from joybox import programs
 from . import connection
 import joybox.paths as paths
 
@@ -357,19 +355,19 @@ class ConnectionSSH(connection.Connection):
             sftp.close()
             if not all(uploaded):
                 if sudo:
-                    self.run_blocking([tools.get_remove_tool(), "-rf", temp_dest])
+                    self.run_blocking(["rm", "-rf", temp_dest])
                 return self.handle_error(f"Failed to transfer {src} to {dest}", "%d file(s) failed" % uploaded.count(False))
 
             # For sudo transfers, merge the staged tree into the destination
             if sudo:
                 try:
                     for cmd in [
-                        [tools.get_make_dir_tool(), "-p", actual_dest],
-                        [tools.get_copy_tool(), "-r", temp_dest + "/.", actual_dest]]:
+                        ["mkdir", "-p", actual_dest],
+                        ["cp", "-r", temp_dest + "/.", actual_dest]]:
                         if self.run_blocking(cmd, sudo = True) != 0:
                             return self.handle_error(f"Failed to transfer {src} to {actual_dest}", "copy failed")
                 finally:
-                    self.run_blocking([tools.get_remove_tool(), "-rf", temp_dest])
+                    self.run_blocking(["rm", "-rf", temp_dest])
             return True
         except Exception as e:
             return self.handle_error(f"Failed to transfer {src} to {dest}", e, return_value = False)
@@ -403,7 +401,7 @@ class ConnectionSSH(connection.Connection):
                         with sftp.file(temp_path, "w") as remote_file:
                             remote_file.write(contents)
                             remote_file.flush()
-                        code = self.run_blocking([tools.get_copy_tool(), temp_path, src], sudo = True)
+                        code = self.run_blocking(["cp", temp_path, src], sudo = True)
                     finally:
                         sftp.remove(temp_path)
                         sftp.close()
@@ -422,46 +420,46 @@ class ConnectionSSH(connection.Connection):
 
     def make_directory(self, src, sudo = False):
         self.run_checked([
-            tools.get_make_dir_tool(), "-p", src], sudo = sudo)
+            "mkdir", "-p", src], sudo = sudo)
         return True
 
     def remove_file_or_directory(self, src, sudo = False):
-        remove_tool = tools.get_remove_tool()
+        remove_tool = "rm"
         self.run_checked([
             "sh", "-c", "%s -rf -- %s" % (remove_tool, src)], sudo = sudo)
         return True
 
     def copy_file_or_directory(self, src, dest, sudo = False):
         self.run_checked([
-            tools.get_copy_tool(), "-r", src, dest], sudo = sudo)
+            "cp", "-r", src, dest], sudo = sudo)
         return True
 
     def move_file_or_directory(self, src, dest, sudo = False):
         self.run_checked([
-            tools.get_move_tool(), src, dest], sudo = sudo)
+            "mv", src, dest], sudo = sudo)
         return True
 
     def link_file_or_directory(self, src, dest, sudo = False):
         self.run_checked([
-            tools.get_link_tool(), "-sf", src, dest], sudo = sudo)
+            "ln", "-sf", src, dest], sudo = sudo)
         return True
 
     def download_file(self, url, dest, sudo = False):
         self.run_checked([
-            programs.get_tool_program("Curl"), "-L", "-o", dest, url], sudo = sudo)
+            "curl", "-L", "-o", dest, url], sudo = sudo)
         return True
 
     def extract_tar_archive(self, src, dest, sudo = False):
         self.run_checked([
-            programs.get_tool_program("Tar"), "-xf", src, "-C", dest], sudo = sudo)
+            "tar", "-xf", src, "-C", dest], sudo = sudo)
         return True
 
     def change_owner(self, src, owner, sudo = False):
         self.run_checked([
-            tools.get_change_owner_tool(), "-R", owner, src], sudo = sudo)
+            "chown", "-R", owner, src], sudo = sudo)
         return True
 
     def change_permission(self, src, permission, sudo = False):
         self.run_checked([
-            tools.get_change_permission_tool(), "-R", permission, src], sudo = sudo)
+            "chmod", "-R", permission, src], sudo = sudo)
         return True

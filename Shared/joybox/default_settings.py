@@ -460,6 +460,24 @@ else:
     ini_defaults["Tools.Tar"]["tar_exe"] = "tar"
     ini_defaults["Tools.Tar"]["tar_install_dir"] = "/usr/bin"
 
+# Tools.Cmake
+ini_defaults["Tools.Cmake"] = {}
+if platform_info.is_windows_platform():
+    ini_defaults["Tools.Cmake"]["cmake_exe"] = "cmake.exe"
+    ini_defaults["Tools.Cmake"]["cmake_install_dir"] = "%ProgramFiles%\\CMake\\bin"
+else:
+    ini_defaults["Tools.Cmake"]["cmake_exe"] = "cmake"
+    ini_defaults["Tools.Cmake"]["cmake_install_dir"] = "/usr/bin"
+
+# Tools.Unzip
+ini_defaults["Tools.Unzip"] = {}
+if platform_info.is_windows_platform():
+    ini_defaults["Tools.Unzip"]["unzip_exe"] = "unzip.exe"
+    ini_defaults["Tools.Unzip"]["unzip_install_dir"] = "%ProgramFiles%\\Git\\usr\\bin"
+else:
+    ini_defaults["Tools.Unzip"]["unzip_exe"] = "unzip"
+    ini_defaults["Tools.Unzip"]["unzip_install_dir"] = "/usr/bin"
+
 # Tools.Git
 ini_defaults["Tools.Git"] = {}
 if platform_info.is_windows_platform():

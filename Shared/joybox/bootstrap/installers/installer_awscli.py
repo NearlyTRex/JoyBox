@@ -69,7 +69,7 @@ class AwsCli(installer.Installer):
         # Unzip the installer
         logger.log_info("Extracting AWS CLI installer")
         code = self.connection.run_blocking(
-            ["unzip", "-q", zip_path, "-d", temp_dir]
+            [self.unzip_tool, "-q", zip_path, "-d", temp_dir]
         )
         if code != 0:
             logger.log_error("Failed to extract AWS CLI installer")

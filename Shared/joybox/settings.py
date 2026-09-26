@@ -92,13 +92,18 @@ def has_field(section, field, throw_exception = True):
             raise RuntimeError("Unable to check settings field [file=%s][section=%s][field=%s]" % (_settings_file, section, field))
         return False
 
+def _get_shipped_default(section, field):
+    from joybox import default_settings
+    return default_settings.ini_defaults.get(section, {}).get(field)
+
 def get_value(section, field, default_value = None, throw_exception = True):
     if (section, field) in _overlay:
         return secretstore.resolve_value(_overlay[(section, field)])
     try:
         _ensure_loaded()
         return secretstore.resolve_value(
-            _parser.get(section, field, fallback = default_value))
+            _parser.get(section, field, fallback = default_value
+                if default_value is not None else _get_shipped_default(section, field)))
     except Exception:
         if throw_exception:
             raise RuntimeError("Unable to get settings value [file=%s][section=%s][field=%s]" % (_settings_file, section, field))
@@ -124,6 +129,9 @@ def get_integer_value(section, field, default_value = None, throw_exception = Tr
         if (section, field) in _overlay:
             return _coerce_integer(_overlay[(section, field)])
         _ensure_loaded()
+        if default_value is None and not _parser.has_option(section, field):
+            shipped = _get_shipped_default(section, field)
+            return None if shipped is None else _coerce_integer(shipped)
         return _parser.getint(section, field, fallback = default_value)
     except Exception:
         if throw_exception:
@@ -135,6 +143,9 @@ def get_bool_value(section, field, default_value = None, throw_exception = True)
         if (section, field) in _overlay:
             return _coerce_bool(_overlay[(section, field)])
         _ensure_loaded()
+        if default_value is None and not _parser.has_option(section, field):
+            shipped = _get_shipped_default(section, field)
+            return None if shipped is None else _coerce_bool(shipped)
         return _parser.getboolean(section, field, fallback = default_value)
     except Exception:
         if throw_exception:

@@ -9,6 +9,8 @@ import tempfile
 from joybox import platform_info, runtime, cmdline, fileops
 from joybox import network, archive
 from joybox import logger, runoptions
+from joybox import systemtools as tools
+from joybox import programs
 from . import connection
 import joybox.paths as paths
 
@@ -197,13 +199,13 @@ class ConnectionLocal(connection.Connection):
                 if self.flags.pretend_run:
                     return True
                 if not os.path.isdir(src):
-                    return self.run_return_code(["cp", src, dest], sudo = True) == 0
+                    return self.run_return_code([tools.get_copy_tool(), src, dest], sudo = True) == 0
                 staged = tempfile.mkdtemp()
                 try:
                     staged_tree = os.path.join(staged, "tree")
                     if not fileops.copy_file_or_directory(src, staged_tree, excludes = excludes, **self._io_flags()):
                         return self.handle_error(f"Unable to stage files from {src}", "copy failed")
-                    for cmd in [["mkdir", "-p", dest], ["cp", "-r", staged_tree + "/.", dest]]:
+                    for cmd in [[tools.get_make_dir_tool(), "-p", dest], [tools.get_copy_tool(), "-r", staged_tree + "/.", dest]]:
                         if self.run_return_code(cmd, sudo = True) != 0:
                             return self.handle_error(f"Unable to transfer files from {src} to {dest}", "copy failed")
                 finally:
@@ -244,7 +246,7 @@ class ConnectionLocal(connection.Connection):
                         temp_path = f.name
                     os.chmod(temp_path, 0o644)
                     try:
-                        code = self.run_return_code(["cp", temp_path, src], sudo = True)
+                        code = self.run_return_code([tools.get_copy_tool(), temp_path, src], sudo = True)
                     finally:
                         os.remove(temp_path)
                     if code != 0:
@@ -260,7 +262,7 @@ class ConnectionLocal(connection.Connection):
                 if self.flags.verbose:
                     logger.log_info(f"Making directory {src}")
                 if not self.flags.pretend_run:
-                    self.run_checked(["mkdir", "-p", src], sudo = True)
+                    self.run_checked([tools.get_make_dir_tool(), "-p", src], sudo = True)
                 return True
             except Exception as e:
                 return self.handle_error(f"Unable to make directory {src}", e)
@@ -284,7 +286,7 @@ class ConnectionLocal(connection.Connection):
                 if self.flags.verbose:
                     logger.log_info(f"Copying {src} to {dest}")
                 if not self.flags.pretend_run:
-                    cmd = ["cp", "-r", src, dest] if os.path.isdir(src) else ["cp", src, dest]
+                    cmd = [tools.get_copy_tool(), "-r", src, dest] if os.path.isdir(src) else [tools.get_copy_tool(), src, dest]
                     self.run_checked(cmd, sudo = True)
                 return True
             except Exception as e:
@@ -297,7 +299,7 @@ class ConnectionLocal(connection.Connection):
                 if self.flags.verbose:
                     logger.log_info(f"Moving {src} to {dest}")
                 if not self.flags.pretend_run:
-                    self.run_checked(["mv", src, dest], sudo = True)
+                    self.run_checked([tools.get_move_tool(), src, dest], sudo = True)
                 return True
             except Exception as e:
                 return self.handle_error(f"Unable to move {src} to {dest}", e)
@@ -309,7 +311,7 @@ class ConnectionLocal(connection.Connection):
                 if self.flags.verbose:
                     logger.log_info(f"Linking {src} to {dest}")
                 if not self.flags.pretend_run:
-                    self.run_checked(["ln", "-sf", src, dest], sudo = True)
+                    self.run_checked([tools.get_link_tool(), "-sf", src, dest], sudo = True)
                 return True
             except Exception as e:
                 return self.handle_error(f"Unable to link {src} to {dest}", e)
@@ -325,7 +327,7 @@ class ConnectionLocal(connection.Connection):
                         temp_path = f.name
                     if not network.download_url(url, output_file = temp_path, **self._io_flags()):
                         return self.handle_error(f"Unable to download {url}", "download failed")
-                    self.run_checked(["mv", temp_path, dest], sudo = True)
+                    self.run_checked([tools.get_move_tool(), temp_path, dest], sudo = True)
                 return True
             except Exception as e:
                 return self.handle_error(f"Unable to download {url} to {dest}", e)
@@ -337,7 +339,7 @@ class ConnectionLocal(connection.Connection):
                 if self.flags.verbose:
                     logger.log_info(f"Extracting {src} to {dest}")
                 if not self.flags.pretend_run:
-                    self.run_checked(["tar", "-xf", src, "-C", dest], sudo = True)
+                    self.run_checked([programs.get_tool_program("Tar"), "-xf", src, "-C", dest], sudo = True)
                 return True
             except Exception as e:
                 return self.handle_error(f"Unable to extract {src} to {dest}", e)
@@ -350,7 +352,7 @@ class ConnectionLocal(connection.Connection):
             if self.flags.verbose:
                 logger.log_info(f"Changing owner of {src} to {owner}")
             if not self.flags.pretend_run:
-                self.run_checked(["chown", "-R", owner, src], sudo = sudo)
+                self.run_checked([tools.get_change_owner_tool(), "-R", owner, src], sudo = sudo)
             return True
         except Exception as e:
             return self.handle_error(f"Unable to change owner of {src}", e)
@@ -362,7 +364,7 @@ class ConnectionLocal(connection.Connection):
             if self.flags.verbose:
                 logger.log_info(f"Changing permissions of {src} to {permission}")
             if not self.flags.pretend_run:
-                self.run_checked(["chmod", "-R", permission, src], sudo = sudo)
+                self.run_checked([tools.get_change_permission_tool(), "-R", permission, src], sudo = sudo)
             return True
         except Exception as e:
             return self.handle_error(f"Unable to change permissions of {src}", e)

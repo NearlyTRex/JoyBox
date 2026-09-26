@@ -37,6 +37,10 @@ class Installer:
         self.python_tool = tools.get_python_tool()
         self.python_venv_pip_tool = tools.get_python_venv_pip_tool()
         self.gpg_tool = programs.get_tool_program("Gpg")
+        self.git_tool = programs.get_tool_program("Git")
+        self.tar_tool = programs.get_tool_program("Tar")
+        self.cmake_tool = programs.get_tool_program("Cmake")
+        self.unzip_tool = programs.get_tool_program("Unzip")
         self.docker_tool = tools.get_docker_tool()
         self.docker_compose_tool = tools.get_docker_compose_tool()
 

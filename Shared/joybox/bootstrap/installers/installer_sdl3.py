@@ -47,12 +47,12 @@ class Sdl3(installer.Installer):
     def _build_and_install(self, repo, tag, src, build, configure_args):
         self.connection.remove_file_or_directory(src)
         self.connection.run_checked([
-            "git", "clone", "--depth", "1", "--branch", tag, repo, src])
+            self.git_tool, "clone", "--depth", "1", "--branch", tag, repo, src])
         self.connection.run_checked([
-            "cmake", "-S", src, "-B", build,
+            self.cmake_tool, "-S", src, "-B", build,
             "-DCMAKE_BUILD_TYPE=Release"] + configure_args)
-        self.connection.run_checked(["cmake", "--build", build, "--parallel"])
-        self.connection.run_checked(["cmake", "--install", build], sudo = True)
+        self.connection.run_checked([self.cmake_tool, "--build", build, "--parallel"])
+        self.connection.run_checked([self.cmake_tool, "--install", build], sudo = True)
         self.connection.remove_file_or_directory(src)
 
     def install(self):

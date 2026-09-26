@@ -207,7 +207,7 @@ def test_sudo_is_not_used_off_linux(connection, monkeypatch):
 
 def test_a_privileged_directory_is_made_with_its_parents(connection, recorded):
     assert connection.make_directory("/opt/app/data", sudo = True) is True
-    assert only(recorded)["cmd"] == ["mkdir", "-p", "/opt/app/data"]
+    assert only(recorded)["cmd"] == ["/bin/mkdir", "-p", "/opt/app/data"]
 
 
 def test_a_privileged_removal_takes_the_whole_tree(connection, recorded):
@@ -224,7 +224,7 @@ def test_a_privileged_file_copy_is_not_recursive(connection, recorded, tmp_path)
 
     connection.copy_file_or_directory(str(source), "/opt/app/file.txt", sudo = True)
 
-    assert only(recorded)["cmd"] == ["cp", str(source), "/opt/app/file.txt"]
+    assert only(recorded)["cmd"] == ["/bin/cp", str(source), "/opt/app/file.txt"]
 
 
 def test_a_privileged_directory_copy_is_recursive(connection, recorded, tmp_path):
@@ -233,20 +233,20 @@ def test_a_privileged_directory_copy_is_recursive(connection, recorded, tmp_path
 
     connection.copy_file_or_directory(str(source), "/opt/app", sudo = True)
 
-    assert only(recorded)["cmd"] == ["cp", "-r", str(source), "/opt/app"]
+    assert only(recorded)["cmd"] == ["/bin/cp", "-r", str(source), "/opt/app"]
 
 
 def test_a_privileged_move_uses_mv(connection, recorded):
     connection.move_file_or_directory("/tmp/file", "/opt/app/file", sudo = True)
 
-    assert only(recorded)["cmd"] == ["mv", "/tmp/file", "/opt/app/file"]
+    assert only(recorded)["cmd"] == ["/bin/mv", "/tmp/file", "/opt/app/file"]
 
 
 def test_a_privileged_link_is_forced_and_symbolic(connection, recorded):
     # Without -f an existing link is left pointing at the old target.
     connection.link_file_or_directory("/opt/app/current", "/usr/local/bin/app", sudo = True)
 
-    assert only(recorded)["cmd"] == ["ln", "-sf", "/opt/app/current", "/usr/local/bin/app"]
+    assert only(recorded)["cmd"] == ["/bin/ln", "-sf", "/opt/app/current", "/usr/local/bin/app"]
 
 
 def test_a_privileged_read_goes_through_cat(connection, recorded):
@@ -261,7 +261,7 @@ def test_a_privileged_write_lands_at_the_destination(connection, recorded):
     assert connection.write_file("/etc/app.conf", "contents", sudo = True) is True
 
     call = only(recorded)
-    assert call["cmd"][0] == "cp"
+    assert call["cmd"][0] == "/bin/cp"
     assert call["cmd"][2] == "/etc/app.conf"
     assert call["sudo"] is True
 
@@ -271,7 +271,7 @@ def test_a_privileged_write_copies_rather_than_moves(connection, recorded):
     # owner and 0600 mode; a copy keeps the destination's.
     connection.write_file("/etc/hosts", "contents", sudo = True)
 
-    assert only(recorded)["cmd"][0] == "cp"
+    assert only(recorded)["cmd"][0] == "/bin/cp"
 
 
 def test_a_privileged_write_puts_the_contents_in_the_staged_file(connection, monkeypatch):
@@ -318,7 +318,7 @@ def test_a_failed_privileged_write_is_reported(connection, monkeypatch):
 def test_a_privileged_extract_names_the_destination(connection, recorded):
     connection.extract_tar_archive("/tmp/app.tar.gz", "/opt/app", sudo = True)
 
-    assert only(recorded)["cmd"] == ["tar", "-xf", "/tmp/app.tar.gz", "-C", "/opt/app"]
+    assert only(recorded)["cmd"] == ["/usr/bin/tar", "-xf", "/tmp/app.tar.gz", "-C", "/opt/app"]
 
 
 def test_a_privileged_download_is_fetched_before_it_is_moved(connection, recorded, monkeypatch):
@@ -330,7 +330,7 @@ def test_a_privileged_download_is_fetched_before_it_is_moved(connection, recorde
     assert connection.download_file("https://example.test/app.tar", "/opt/app.tar", sudo = True) is True
 
     assert downloaded[0][0] == "https://example.test/app.tar"
-    assert only(recorded)["cmd"] == ["mv", downloaded[0][1], "/opt/app.tar"]
+    assert only(recorded)["cmd"] == ["/bin/mv", downloaded[0][1], "/opt/app.tar"]
 
 
 def test_a_failed_privileged_download_is_not_moved(connection, recorded, monkeypatch):
@@ -348,8 +348,8 @@ def test_a_privileged_transfer_merges_into_the_destination(connection, recorded,
 
     assert connection.transfer_files(str(source), "/opt/app", sudo = True) is True
     commands = [call["cmd"] for call in recorded]
-    assert commands[0] == ["mkdir", "-p", "/opt/app"]
-    assert commands[1][:2] == ["cp", "-r"]
+    assert commands[0] == ["/bin/mkdir", "-p", "/opt/app"]
+    assert commands[1][:2] == ["/bin/cp", "-r"]
     assert commands[1][2].endswith("/.")
     assert commands[1][3] == "/opt/app"
     assert all(call["sudo"] for call in recorded)
@@ -363,7 +363,7 @@ def test_a_privileged_transfer_honours_the_excludes(connection, monkeypatch, tmp
     staged = []
 
     def run(cmd, sudo = False):
-        if cmd[0] == "cp":
+        if cmd[0] == "/bin/cp":
             staged.extend(sorted(os.listdir(cmd[2][:-2])))
         return 0
 
@@ -386,7 +386,7 @@ def test_a_privileged_file_transfer_is_a_plain_copy(connection, recorded, tmp_pa
     source.write_text("KEY=value")
 
     assert connection.transfer_files(str(source), "/etc/app.conf", sudo = True) is True
-    assert only(recorded)["cmd"] == ["cp", str(source), "/etc/app.conf"]
+    assert only(recorded)["cmd"] == ["/bin/cp", str(source), "/etc/app.conf"]
 
 
 def test_a_transfer_can_skip_an_existing_destination(connection, recorded, tmp_path):
@@ -404,14 +404,14 @@ def test_ownership_is_changed_recursively(connection, recorded, monkeypatch):
     monkeypatch.setattr(connection_local.platform_info, "is_linux_platform", lambda: True)
 
     assert connection.change_owner("/opt/app", "app:app", sudo = True) is True
-    assert only(recorded)["cmd"] == ["chown", "-R", "app:app", "/opt/app"]
+    assert only(recorded)["cmd"] == ["/bin/chown", "-R", "app:app", "/opt/app"]
 
 
 def test_permissions_are_changed_recursively(connection, recorded, monkeypatch):
     monkeypatch.setattr(connection_local.platform_info, "is_linux_platform", lambda: True)
 
     assert connection.change_permission("/opt/app", "750", sudo = True) is True
-    assert only(recorded)["cmd"] == ["chmod", "-R", "750", "/opt/app"]
+    assert only(recorded)["cmd"] == ["/bin/chmod", "-R", "750", "/opt/app"]
 
 
 @pytest.mark.parametrize("method,args", [

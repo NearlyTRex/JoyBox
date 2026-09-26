@@ -47,7 +47,7 @@ class Steam(installer.Installer):
 
         # Add i386 architecture for 32-bit support
         logger.log_info("Adding i386 architecture")
-        code = self.connection.run_blocking(["dpkg", "--add-architecture", "i386"], sudo=True)
+        code = self.connection.run_blocking([self.aptgetinstall_tool, "--add-architecture", "i386"], sudo=True)
         if code != 0:
             logger.log_error("Failed to add i386 architecture")
             return False

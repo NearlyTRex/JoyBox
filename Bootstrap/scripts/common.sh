@@ -115,18 +115,23 @@ setup_sudoers() {
 
     local temp_file=$(mktemp)
     {
+        # The aptget component's exact install command; ':' and '=' are
+        # escaped because sudoers treats them as syntax in arguments
+        local apt_noninteractive='/usr/bin/env DEBIAN_FRONTEND\=noninteractive /usr/bin/apt-get install -y -o Dpkg\:\:Options\:\:\=--force-confdef -o Dpkg\:\:Options\:\:\=--force-confold'
+        local apt_commands=("/usr/bin/apt-get update" "/usr/bin/apt-get autoremove -y")
+        for pkg in "${APT_PACKAGES[@]}"; do
+            apt_commands+=(
+                "/usr/bin/apt-get install -y $pkg"
+                "$apt_noninteractive $pkg"
+                "/usr/bin/apt-get remove -y $pkg")
+        done
         echo "Cmnd_Alias APT_MANAGE = \\"
-        echo "    /usr/bin/apt-get update, \\"
-        echo "    /usr/bin/apt-get autoremove -y, \\"
-        local last_index=$((${#APT_PACKAGES[@]} - 1))
-        for i in "${!APT_PACKAGES[@]}"; do
-            local pkg="${APT_PACKAGES[$i]}"
+        local last_index=$((${#apt_commands[@]} - 1))
+        for i in "${!apt_commands[@]}"; do
             if [[ "$i" -eq "$last_index" ]]; then
-                echo "    /usr/bin/apt-get install -y $pkg, \\"
-                echo "    /usr/bin/apt-get remove -y $pkg"
+                echo "    ${apt_commands[$i]}"
             else
-                echo "    /usr/bin/apt-get install -y $pkg, \\"
-                echo "    /usr/bin/apt-get remove -y $pkg, \\"
+                echo "    ${apt_commands[$i]}, \\"
             fi
         done
         echo ""
@@ -441,7 +446,8 @@ configure_nginx_stream_module() {
     mkdir -p /etc/nginx/streams-enabled
 
     echo "Ensuring stream module is loaded..."
-    if ! grep -q "load_module.*ngx_stream_module" /etc/nginx/nginx.conf; then
+    # Ubuntu's package loads it through modules-enabled
+    if ! grep -qs "load_module.*ngx_stream_module" /etc/nginx/nginx.conf /etc/nginx/modules-enabled/*.conf; then
         cp /etc/nginx/nginx.conf /etc/nginx/nginx.conf.backup
         sed -i '1i load_module modules/ngx_stream_module.so;' /etc/nginx/nginx.conf
         echo "Added stream module load directive"

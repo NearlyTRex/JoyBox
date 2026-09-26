@@ -5,6 +5,7 @@ from .brave import Brave
 from .cdecrypt import CDecrypt
 from .chrome import Chrome
 from .chromedriver import ChromeDriver
+from .cmake import Cmake
 from .curl import Curl
 from .dxvk import DXVK
 from .dxvk import get_libs32 as get_dxvk_libs32
@@ -60,6 +61,7 @@ from .sunshine import Sunshine
 from .tar import Tar
 from .threedsromtool import ThreeDSRomTool
 from .unrar import Unrar
+from .unzip import Unzip
 from .vkd3d import VKD3D
 from .vkd3d import get_libs32 as get_vkd3d_libs32
 from .vkd3d import get_libs64 as get_vkd3d_libs64
@@ -82,6 +84,7 @@ def get_tool_map():
     add_instance(CDecrypt)
     add_instance(Chrome)
     add_instance(ChromeDriver)
+    add_instance(Cmake)
     add_instance(Curl)
     add_instance(DXVK)
     add_instance(ExifTool)
@@ -135,6 +138,7 @@ def get_tool_map():
     add_instance(Tar)
     add_instance(ThreeDSRomTool)
     add_instance(Unrar)
+    add_instance(Unzip)
     add_instance(VKD3D)
     add_instance(Wad2Bin)
     add_instance(Wine)

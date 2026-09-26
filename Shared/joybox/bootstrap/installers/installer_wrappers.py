@@ -81,7 +81,9 @@ class Wrappers(installer.Installer):
         ]
 
     def is_installed(self):
-        return self.connection.does_file_or_directory_exist(self.marker_path)
+        if not self.connection.does_file_or_directory_exist(self.marker_path):
+            return False
+        return not self.get_package_status()["missing"]
 
     def _discover_scripts(self):
         expanded_dir = os.path.expandvars(self.scripts_bin_dir)

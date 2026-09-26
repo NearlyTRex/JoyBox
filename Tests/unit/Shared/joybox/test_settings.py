@@ -59,6 +59,33 @@ def test_a_missing_value_returns_none_rather_than_raising(config_file):
     assert settings.get_value("S", "absent") is None
 
 
+def test_a_section_the_file_predates_falls_back_to_its_shipped_default(config_file):
+    config_file("[S]\nname = joybox\n")
+
+    assert settings.get_value("Tools.Tar", "tar_exe") == "tar"
+    assert settings.get_integer_value("UserData.Cockpit", "cockpit_port_http") == 9090
+    assert settings.get_bool_value("UserData.Share", "locker_hetzner_encrypted") is True
+
+
+def test_a_field_the_file_predates_falls_back_to_its_shipped_default(config_file):
+    config_file("[Tools.Tar]\ntar_install_dir = /opt/tar\n")
+
+    assert settings.get_value("Tools.Tar", "tar_exe") == "tar"
+
+
+def test_the_file_overrides_the_shipped_default(config_file):
+    config_file("[Tools.Tar]\ntar_exe = gtar\n")
+
+    assert settings.get_value("Tools.Tar", "tar_exe") == "gtar"
+
+
+def test_the_callers_default_overrides_the_shipped_default(config_file):
+    config_file("[S]\nname = joybox\n")
+
+    assert settings.get_value("Tools.Tar", "tar_exe", default_value = "bsdtar") == "bsdtar"
+    assert settings.get_integer_value("UserData.Cockpit", "cockpit_port_http", default_value = 1) == 1
+
+
 def test_values_keep_their_interpolation_characters(config_file):
     # interpolation=None, so a password or path containing % survives verbatim.
     config_file("[S]\npassword = abc%def\n")
