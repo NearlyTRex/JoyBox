@@ -11,7 +11,7 @@ permissions: {}
 jobs:
   check:
     name: Check
-    uses: NearlyTRex/Workflows/.github/workflows/python-ci.yml@c2daac4d6f891b24edb680b073710f4dcd7c9467 # v0.2.2
+    uses: NearlyTRex/Workflows/.github/workflows/python-ci.yml@e5a738a8e2ec89214d1bad221a81d14732a26842 # v0.2.3
     permissions:
       contents: read
     # The same inputs as the python job in ci.yml
@@ -22,7 +22,7 @@ jobs:
   release:
     name: Release
     needs: check
-    uses: NearlyTRex/Workflows/.github/workflows/release.yml@c2daac4d6f891b24edb680b073710f4dcd7c9467 # v0.2.2
+    uses: NearlyTRex/Workflows/.github/workflows/release.yml@e5a738a8e2ec89214d1bad221a81d14732a26842 # v0.2.3
     permissions:
       contents: write
     with:
