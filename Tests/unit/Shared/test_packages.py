@@ -10,9 +10,9 @@ import pytest
 ###########################################################
 # Package namespaces
 #
-# Every package under joybox re-exports its contents with star imports. When a
-# submodule imports a same-named top level module, that module lands on the
-# package under the submodule's name, so joybox.collection.jsondata resolves to
+# Packages re-export their submodules' contents by name. When a submodule
+# imports a same-named top level module, that module lands on the package under
+# the submodule's name, so joybox.collection.jsondata resolves to
 # joybox.jsondata - a wrong module that imports cleanly and then fails on first
 # use.
 ###########################################################
@@ -108,9 +108,9 @@ def public_definitions(module):
 
 @pytest.mark.parametrize("package", PACKAGES)
 def test_a_name_defined_twice_is_not_exported_bare(package):
-    # Two submodules defining get_libs32 are exported as get_dxvk_libs32 and
-    # get_vkd3d_libs32. A bare export could only be one of them, and the other
-    # would be unreachable through the package.
+    # When two submodules define the same name (dxvk and vkd3d both define
+    # get_libs32), a bare export could only be one of them, and the other would
+    # be unreachable through the package.
     owners = {}
     for submodule in submodules_of(package):
         module = importlib.import_module("%s.%s" % (package, submodule))
@@ -148,3 +148,67 @@ def test_every_exported_definition_is_the_one_it_names(package):
             wrong.append(name)
 
     assert not wrong, f"{package} exports names missing from their own module: {wrong}"
+
+
+###########################################################
+# Complete namespaces
+#
+# These packages are namespaces over their submodules: callers reach a
+# submodule's functions and classes through the package alone. The re-exports
+# are listed by hand, so a definition added to a submodule and not to the
+# package's __init__ is caught here. config also carries its constants, which
+# are its whole API.
+###########################################################
+
+NAMESPACE_PACKAGES = [
+    "joybox.bootstrap.environments",
+    "joybox.bootstrap.installers",
+    "joybox.bootstrap.packages",
+    "joybox.collection",
+    "joybox.config",
+    "joybox.connection",
+]
+
+
+def defined_names(module):
+    import ast
+    import inspect
+    with open(inspect.getsourcefile(module), "r") as source:
+        tree = ast.parse(source.read())
+    names = []
+    for node in tree.body:
+        if isinstance(node, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
+            names.append(node.name)
+        elif isinstance(node, (ast.Assign, ast.AnnAssign)):
+            targets = node.targets if isinstance(node, ast.Assign) else [node.target]
+            names += [target.id for target in targets if isinstance(target, ast.Name)]
+    return [name for name in names if not name.startswith("_")]
+
+
+def unexported(package, include_data):
+    import inspect
+    module = importlib.import_module(package)
+    missing = []
+    for submodule in submodules_of(package):
+        child = importlib.import_module("%s.%s" % (package, submodule))
+        for name in defined_names(child):
+            value = getattr(child, name)
+            if not include_data and not (inspect.isfunction(value) or inspect.isclass(value)):
+                continue
+            if not hasattr(module, name):
+                missing.append("%s.%s" % (submodule, name))
+    return missing
+
+
+@pytest.mark.parametrize("package", NAMESPACE_PACKAGES)
+def test_every_function_and_class_is_re_exported(package):
+    missing = unexported(package, include_data = False)
+
+    assert not missing, f"{package}/__init__.py does not re-export: {missing}"
+
+
+def test_every_config_value_is_re_exported():
+    missing = unexported("joybox.config", include_data = True)
+
+    assert not missing, f"joybox/config/__init__.py does not re-export: {missing}"
+

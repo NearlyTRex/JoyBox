@@ -10,13 +10,13 @@ from .puppetcombo import PuppetCombo
 from .redcandle import RedCandle
 from .squareenix import SquareEnix
 from .steam import Steam
-from .steam import get_steam_page
-from .steam import get_steam_cover
-from .steam import get_steam_trailer
-from .steam import find_steam_appid_matches
-from .steam import find_steam_appid_match
-from .steam import find_steam_assets
-from .steam import find_steam_griddb_covers
+from .steam import get_steam_page as get_steam_page
+from .steam import get_steam_cover as get_steam_cover
+from .steam import get_steam_trailer as get_steam_trailer
+from .steam import find_steam_appid_matches as find_steam_appid_matches
+from .steam import find_steam_appid_match as find_steam_appid_match
+from .steam import find_steam_assets as find_steam_assets
+from .steam import find_steam_griddb_covers as find_steam_griddb_covers
 from .zoom import Zoom
 
 # Get store map

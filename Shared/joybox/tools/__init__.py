@@ -8,8 +8,6 @@ from .chromedriver import ChromeDriver
 from .cmake import Cmake
 from .curl import Curl
 from .dxvk import DXVK
-from .dxvk import get_libs32 as get_dxvk_libs32
-from .dxvk import get_libs64 as get_dxvk_libs64
 from .exiftool import ExifTool
 from .extractxiso import ExtractXIso
 from .ffmpeg import FFMpeg
@@ -63,8 +61,6 @@ from .threedsromtool import ThreeDSRomTool
 from .unrar import Unrar
 from .unzip import Unzip
 from .vkd3d import VKD3D
-from .vkd3d import get_libs32 as get_vkd3d_libs32
-from .vkd3d import get_libs64 as get_vkd3d_libs64
 from .wad2bin import Wad2Bin
 from .wine import Wine
 from .xcitrimmer import XCITrimmer

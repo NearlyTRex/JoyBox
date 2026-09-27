@@ -3,12 +3,6 @@
 # Imports
 import os
 import os.path
-import sys
-
-# Custom imports
-repo_folder = os.path.realpath(os.path.join(os.path.dirname(__file__), "..", ".."))
-shared_folder = os.path.join(repo_folder, "Shared")
-sys.path.append(shared_folder)
 import joybox.arguments as arguments
 import joybox.logger as logger
 import joybox.manpage as manpage
@@ -51,6 +45,8 @@ args, unknown = parser.parse_known_args()
 def main():
 
     # Resolve directories
+    repo_folder = os.path.realpath(os.path.join(os.path.dirname(__file__), "..", ".."))
+    shared_folder = os.path.join(repo_folder, "Shared")
     output_path = args.output_path or os.path.join(repo_folder, "Docs", "reference", "man")
     scripts_path = args.scripts_path or os.path.join(repo_folder, "Scripts", "bin")
 

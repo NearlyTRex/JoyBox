@@ -8,9 +8,9 @@ import pytest
 ###########################################################
 # Path wiring
 #
-# Both trees are consumed off disk via sys.path rather than installed, exactly
-# as Scripts/bin/*.py and bootstrap.py do it. Tests have to wire the same paths
-# or nothing imports.
+# Both trees are consumed off disk rather than installed. Scripts find Shared
+# through the venv's joybox.pth and bootstrap.py adds it itself; tests may run
+# under any interpreter, so they wire the paths here or nothing imports.
 ###########################################################
 
 TESTS_DIR = os.path.dirname(os.path.abspath(__file__))

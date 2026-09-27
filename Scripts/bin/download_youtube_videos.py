@@ -3,11 +3,6 @@
 # Imports
 import os
 import os.path
-import sys
-
-# Custom imports
-shared_folder = os.path.realpath(os.path.join(os.path.dirname(__file__), "..", "..", "Shared"))
-sys.path.append(shared_folder)
 import joybox.system as system
 import joybox.google as google
 import joybox.arguments as arguments

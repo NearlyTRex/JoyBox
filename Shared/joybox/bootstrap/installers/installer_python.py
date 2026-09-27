@@ -8,6 +8,8 @@ from joybox import settings
 from . import installer
 from joybox import runoptions
 from joybox import logger
+from joybox import environment
+from joybox import systemtools as tools
 
 # Extract package identifier from string or dict
 # This is the distribution name, used to query install state with pip show
@@ -59,7 +61,32 @@ class Python(installer.Installer):
     def get_packages(self):
         return packages.python.get(self.get_environment_type(), [])
 
+    def get_shared_dir(self):
+        return os.path.join(environment.get_repo_root(expand = True), "Shared")
+
+    def get_path_file(self):
+        site_packages = self.connection.run_output([
+            tools.get_python_venv_python_tool(), "-c",
+            "import sysconfig; print(sysconfig.get_path('purelib'))"]).strip()
+        return os.path.join(site_packages, "joybox.pth") if site_packages else None
+
+    def is_path_file_installed(self):
+        path_file = self.get_path_file()
+        if not path_file or not self.connection.does_file_or_directory_exist(path_file):
+            return False
+        return (self.connection.read_file(path_file) or "").strip() == self.get_shared_dir()
+
+    def install_path_file(self):
+        path_file = self.get_path_file()
+        if not path_file:
+            logger.log_error("Unable to find the virtual environment's site-packages")
+            return False
+        logger.log_info(f"Adding {self.get_shared_dir()} to the virtual environment's path")
+        return self.connection.write_file(path_file, self.get_shared_dir() + "\n")
+
     def is_installed(self):
+        if not self.is_path_file_installed():
+            return False
         for pkg in self.get_packages():
             pkg_id = get_python_package_id(pkg)
             if not self.is_package_installed(pkg_id):
@@ -95,6 +122,8 @@ class Python(installer.Installer):
             if not self.create_virtual_environment(venv_dir):
                 logger.log_error(f"Unable to create virtual environment at {venv_dir}")
                 return False
+        if not self.install_path_file():
+            return False
 
         # Install packages
         for pkg in self.get_packages():
@@ -115,6 +144,9 @@ class Python(installer.Installer):
             if not self.uninstall_package(pkg_id):
                 logger.log_error(f"Unable to uninstall package {display_name}")
                 return False
+        path_file = self.get_path_file()
+        if path_file:
+            self.connection.remove_file_or_directory(path_file)
         return True
 
     def create_virtual_environment(self, venv_dir):
