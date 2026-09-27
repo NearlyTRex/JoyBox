@@ -20,7 +20,8 @@ class PyLnk(toolbase.ToolBase):
     def get_config(self):
         return {
             "PyLnk": {
-                "program": "PyLnk/lib/pylnk3.py"
+                "program": "PyLnk/lib/pylnk3.py",
+                "github_branch": "dev"
             }
         }
 

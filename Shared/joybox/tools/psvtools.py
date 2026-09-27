@@ -21,7 +21,8 @@ class PSVTools(toolbase.ToolBase):
     def get_config(self):
         return {
             "PSVTools": {
-                "program": "PSVTools/lib/main.py"
+                "program": "PSVTools/lib/main.py",
+                "github_branch": "dev"
             }
         }
 
