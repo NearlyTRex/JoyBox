@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=69"]
+requires = ["setuptools>=77"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -7,40 +7,10 @@ name = "joybox"
 version = "0.1.0"
 description = "Game collection management, media tooling, and machine provisioning"
 requires-python = ">=3.12"
-license = { file = "LICENSE" }
-
-# What joybox itself uses. Every one of these is imported inside the function
-# that needs it, so bootstrap.py still runs on a bare system python on day 0;
-# lxml is the parser BeautifulSoup is asked for, and mutagen is loaded by name.
-# The machine's own wishlist of venv tools is in bootstrap/packages/python.py.
-dependencies = [
-    "anthropic",
-    "beautifulsoup4",
-    "html-text",
-    "lxml",
-    "mergedeep",
-    "mutagen",
-    "paramiko",
-    "pillow",
-    "psutil",
-    "PyGithub",
-    "python-dateutil",
-    "python-magic",
-    "PyYAML",
-    "pyuac; sys_platform == 'win32'",
-    "pywinpty; sys_platform == 'win32'",
-    "requests",
-    "schedule",
-    "screeninfo",
-    "selenium",
-    "thefuzz",
-    "tqdm",
-    "Unidecode",
-    "vdf",
-    "webdriver-manager",
-    "xmltodict",
-    "xxhash",
-]
+license = "Unlicense"
+license-files = ["LICENSE"]
+# Read from requirements.in, which requirements.txt is locked from
+dynamic = ["dependencies"]
 
 [project.scripts]
 3ds_rom_tool = "joybox.cli.threeds_rom_tool:run"
@@ -128,6 +98,9 @@ decompiler = [
 dev = [
     "pytest",
 ]
+
+[tool.setuptools.dynamic]
+dependencies = { file = ["requirements.in"] }
 
 [tool.setuptools.packages.find]
 where = ["Shared"]

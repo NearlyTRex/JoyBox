@@ -1,0 +1,6 @@
+# What CI installs to run the tests. Compile the lock after editing:
+#   pip-compile --generate-hashes --allow-unsafe --strip-extras -o requirements-dev.txt requirements-dev.in
+-r requirements.in
+pytest
+# Builds the editable install in CI
+setuptools>=77

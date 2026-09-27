@@ -20,6 +20,8 @@ jobs:
     uses: NearlyTRex/Workflows/.github/workflows/security.yml@e5a738a8e2ec89214d1bad221a81d14732a26842 # v0.2.3
     permissions:
       contents: read
+    with:
+      pip-audit-files: requirements.txt requirements-dev.txt
 
   codeql:
     name: CodeQL

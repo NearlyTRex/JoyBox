@@ -8,8 +8,9 @@ import pytest
 ###########################################################
 # Path wiring
 #
-# joybox is installed into the venv, but the suite may run under an interpreter
-# it was never installed into, so both trees are put on the path here.
+# joybox is imported from its install, the way users run it, so a module or data
+# file left out of the package fails here too. Only Tests/ goes on the path, for
+# the helpers the tests import by name.
 ###########################################################
 
 TESTS_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -20,9 +21,17 @@ INSTALLERS_DIR = os.path.join(SHARED_DIR, "joybox", "bootstrap", "installers")
 CLI_DIR = os.path.join(SHARED_DIR, "joybox", "cli")
 PYPROJECT_PATH = os.path.join(REPO_ROOT, "pyproject.toml")
 
-for _path in (TESTS_DIR, SHARED_DIR):
-    if _path not in sys.path:
-        sys.path.insert(0, _path)
+if TESTS_DIR not in sys.path:
+    sys.path.insert(0, TESTS_DIR)
+
+# An install of some other copy would be tested instead of this checkout
+try:
+    import joybox
+except ImportError:
+    pytest.exit("joybox is not installed; run: pip install -e \"%s[dev]\"" % REPO_ROOT, returncode = 2)
+if not os.path.realpath(joybox.__file__).startswith(os.path.realpath(SHARED_DIR) + os.sep):
+    pytest.exit("joybox is imported from %s, not this checkout; run: pip install -e \"%s[dev]\"" % (
+        os.path.dirname(joybox.__file__), REPO_ROOT), returncode = 2)
 
 ###########################################################
 # The seal
