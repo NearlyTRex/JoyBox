@@ -36,7 +36,7 @@ written by containers are owned by an offset uid the SSH user cannot read direct
 
 ## Layout
 
-```
+```text
 /mnt/storage/Backups/Wordpress/
 ├── 20260913_031500/
 │   ├── backup_manifest.txt

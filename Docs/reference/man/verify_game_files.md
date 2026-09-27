@@ -8,7 +8,7 @@ Check that game JSON, metadata and hash files agree with the files in the local 
 
 ## Synopsis
 
-```
+```text
 verify_game_files [options]
 ```
 
@@ -56,12 +56,17 @@ verify_game_files --no-preview
 
 ## Notes
 
-- There is no path option: the directories come from the ini, and the preview shows which ones will be checked.
+- There is no path option: the directories come from the ini, and the preview shows which ones will
+  be checked.
 - Only the local locker is checked, so its game files must be present locally.
 
 ## See also
 
-- [build_game_json_files](build_game_json_files.md) — Create or update the JSON file of each game found in a locker
-- [build_game_metadata_files](build_game_metadata_files.md) — Add each game with a JSON file to its platform's Pegasus metadata file and fill in missing details
-- [build_game_hash_files](build_game_hash_files.md) — Record hashes of each selected game's files in the per-subcategory hash file
-- [scan_game_files](scan_game_files.md) — Run the whole collection pipeline: store purchases, JSON files, metadata, optional assets, and HTML publishing
+- [build_game_json_files](build_game_json_files.md) — Create or update the JSON file of each game
+  found in a locker
+- [build_game_metadata_files](build_game_metadata_files.md) — Add each game with a JSON file to its
+  platform's Pegasus metadata file and fill in missing details
+- [build_game_hash_files](build_game_hash_files.md) — Record hashes of each selected game's files in
+  the per-subcategory hash file
+- [scan_game_files](scan_game_files.md) — Run the whole collection pipeline: store purchases, JSON
+  files, metadata, optional assets, and HTML publishing

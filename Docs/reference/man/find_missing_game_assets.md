@@ -8,7 +8,7 @@ Compare the games in the Pegasus metadata with the asset files in the local lock
 
 ## Synopsis
 
-```
+```text
 find_missing_game_assets [options]
 ```
 
@@ -56,9 +56,12 @@ find_missing_game_assets -p -v
 
 ## Notes
 
-- Run it from a scratch directory; the report files land in whatever directory you run it from and overwrite earlier ones.
+- Run it from a scratch directory; the report files land in whatever directory you run it from and
+  overwrite earlier ones.
 
 ## See also
 
-- [download_game_metadata_assets](download_game_metadata_assets.md) — Download one kind of artwork or video for each selected game and back it up to the lockers
-- [find_missing_game_metadata](find_missing_game_metadata.md) — Find games whose Pegasus metadata entries are missing fields
+- [download_game_metadata_assets](download_game_metadata_assets.md) — Download one kind of artwork
+  or video for each selected game and back it up to the lockers
+- [find_missing_game_metadata](find_missing_game_metadata.md) — Find games whose Pegasus metadata
+  entries are missing fields

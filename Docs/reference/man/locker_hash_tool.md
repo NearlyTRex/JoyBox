@@ -8,7 +8,7 @@ Record the XXH3 hash, size and modification time of every file in a locker direc
 
 ## Synopsis
 
-```
+```text
 locker_hash_tool [options]
 ```
 
@@ -80,11 +80,14 @@ locker_hash_tool -l /media/user/External -d 1
 
 ## Notes
 
-- Filters are `fnmatch` globs matched against the whole relative path, where `*` also matches `/`, so `Documents/*` covers every file below `Documents`.
+- Filters are `fnmatch` globs matched against the whole relative path, where `*` also matches `/`,
+  so `Documents/*` covers every file below `Documents`.
 - The include filter is applied before the exclude filter, so an exclude always wins.
 - Files with fewer path components than `--depth` are all recorded in `root.csv`.
 
 ## See also
 
-- [rebuild_hash_sidecars](rebuild_hash_sidecars.md) — Rebuild a remote locker's hash sidecar database from local content
-- [master_backup](master_backup.md) — Back up the local locker to one or more remote lockers in one unattended run
+- [rebuild_hash_sidecars](rebuild_hash_sidecars.md) — Rebuild a remote locker's hash sidecar
+  database from local content
+- [master_backup](master_backup.md) — Back up the local locker to one or more remote lockers in one
+  unattended run

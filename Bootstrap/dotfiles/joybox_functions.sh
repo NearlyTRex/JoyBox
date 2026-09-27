@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 # ============================================================
 # JoyBox Functions
 # ============================================================
@@ -27,7 +28,8 @@ jbrun() {
 
 # Edit the module behind a JoyBox command
 jbedit() {
-    local module_name=$(_jb_commands | awk -v name="$1" '$1 == name {print $2}')
+    local module_name
+    module_name=$(_jb_commands | awk -v name="$1" '$1 == name {print $2}')
     if [ -n "$module_name" ]; then
         ${EDITOR:-nano} "$JOYBOX_ROOT/Shared/${module_name//.//}.py"
     else

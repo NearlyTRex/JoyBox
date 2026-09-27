@@ -8,7 +8,7 @@ Repack the files on each CHD disc image into a zip archive.
 
 ## Synopsis
 
-```
+```text
 chdzip [options]
 ```
 
@@ -63,4 +63,5 @@ chdzip -i /path/to/chds -d -p -v
 
 - [chdextract](chdextract.md) — Extract CD disc images from CHD files with chdman
 - [isoextract](isoextract.md) — Extract the files from ISO images into a folder beside each image
-- [compress_folders](compress_folders.md) — Compress each folder in a directory into an archive of its own with 7-Zip
+- [compress_folders](compress_folders.md) — Compress each folder in a directory into an archive of
+  its own with 7-Zip

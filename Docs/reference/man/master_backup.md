@@ -8,7 +8,7 @@ Back up the local locker to one or more remote lockers in one unattended run.
 
 ## Synopsis
 
-```
+```text
 master_backup [options]
 ```
 
@@ -90,16 +90,26 @@ master_backup --skip_cache
 
 ## Notes
 
-- Hash maps are cached per locker for 24 hours, including the source's. Files changed locally since the cached map was built are not seen until it expires, so use `--skip_cache` after recent changes.
-- A pretend run still hashes local lockers and writes their cache, so the real run that follows can reuse it.
-- `--recycle_orphans` moves orphans into the destination's `.recycle_bin`; nothing is hard-deleted. The recycle bin itself is never compared.
-- The sidecar refresh is skipped for a destination when any of its uploads failed, so the next run finds and retries the missing files.
-- The Hetzner rclone remote needs `disable_hashcheck = true`, since SFTP cannot run `md5sum` to verify transfers; the rclone config JoyBox generates sets it.
+- Hash maps are cached per locker for 24 hours, including the source's. Files changed locally since
+  the cached map was built are not seen until it expires, so use `--skip_cache` after recent
+  changes.
+- A pretend run still hashes local lockers and writes their cache, so the real run that follows can
+  reuse it.
+- `--recycle_orphans` moves orphans into the destination's `.recycle_bin`; nothing is hard-deleted.
+  The recycle bin itself is never compared.
+- The sidecar refresh is skipped for a destination when any of its uploads failed, so the next run
+  finds and retries the missing files.
+- The Hetzner rclone remote needs `disable_hashcheck = true`, since SFTP cannot run `md5sum` to
+  verify transfers; the rclone config JoyBox generates sets it.
 
 ## See also
 
-- [locker_sync_tool](locker_sync_tool.md) — Sync a primary locker to one or more secondary lockers, reviewing each change in an editor
-- [rebuild_hash_sidecars](rebuild_hash_sidecars.md) — Rebuild a remote locker's hash sidecar database from local content
-- [find_missing_hash_sidecars](find_missing_hash_sidecars.md) — List files on a remote locker that have no entry in its hash sidecar database
+- [locker_sync_tool](locker_sync_tool.md) — Sync a primary locker to one or more secondary lockers,
+  reviewing each change in an editor
+- [rebuild_hash_sidecars](rebuild_hash_sidecars.md) — Rebuild a remote locker's hash sidecar
+  database from local content
+- [find_missing_hash_sidecars](find_missing_hash_sidecars.md) — List files on a remote locker that
+  have no entry in its hash sidecar database
 - [sync_tool](sync_tool.md) — Run an rclone operation between the local locker and a remote locker
-- [backup_tool](backup_tool.md) — Copy, encrypt, decrypt or archive a directory tree into another directory
+- [backup_tool](backup_tool.md) — Copy, encrypt, decrypt or archive a directory tree into another
+  directory

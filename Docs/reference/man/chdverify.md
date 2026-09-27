@@ -8,7 +8,7 @@ Check CHD files against their internal SHA-1 checksums with chdman.
 
 ## Synopsis
 
-```
+```text
 chdverify [options]
 ```
 
@@ -60,5 +60,6 @@ chdverify -i "/path/to/Game (USA).chd" --no-preview
 
 - [chdconvert](chdconvert.md) — Convert CD disc images (ISO, CUE, GDI) to CHD files with chdman
 - [chdextract](chdextract.md) — Extract CD disc images from CHD files with chdman
-- [ps3_rom_tool](ps3_rom_tool.md) — Check that PlayStation 3 disc CHDs decrypt and extract with their disc keys
+- [ps3_rom_tool](ps3_rom_tool.md) — Check that PlayStation 3 disc CHDs decrypt and extract with
+  their disc keys
 - [verify_archives](verify_archives.md) — Test archive files for corruption with 7-Zip

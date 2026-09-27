@@ -8,7 +8,7 @@ Run another JoyBox tool once per platform of a named preset group.
 
 ## Synopsis
 
-```
+```text
 run_presets [options]
 ```
 
@@ -74,4 +74,5 @@ run_presets -g Backup_SonyGen -o /mnt/Backup -p -v
 
 ## See also
 
-- [backup_tool](backup_tool.md) — Copy, encrypt, decrypt or archive a directory tree into another directory
+- [backup_tool](backup_tool.md) — Copy, encrypt, decrypt or archive a directory tree into another
+  directory

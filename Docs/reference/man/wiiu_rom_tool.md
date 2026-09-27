@@ -8,7 +8,7 @@ Decrypt or test-decrypt Nintendo Wii U NUS packages.
 
 ## Synopsis
 
-```
+```text
 wiiu_rom_tool [options]
 ```
 
@@ -69,10 +69,12 @@ wiiu_rom_tool -i /path/to/wiiu -r -d -p -v
 ## Notes
 
 - Without `-r` or `-e` nothing is done. If both are given, `-r` wins.
-- `-e` copies the whole package, so the temporary directory needs room for it plus the decrypted output.
+- `-e` copies the whole package, so the temporary directory needs room for it plus the decrypted
+  output.
 - CDecrypt must be installed as a JoyBox tool.
 
 ## See also
 
-- [3ds_rom_tool](3ds_rom_tool.md) — Convert, trim, untrim, extract or inspect Nintendo 3DS CIA and CCI (.3ds) files
+- [3ds_rom_tool](3ds_rom_tool.md) — Convert, trim, untrim, extract or inspect Nintendo 3DS CIA and
+  CCI (.3ds) files
 - [switch_rom_tool](switch_rom_tool.md) — Trim or untrim Nintendo Switch cartridge images (.xci)

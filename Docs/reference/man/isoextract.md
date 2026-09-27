@@ -8,7 +8,7 @@ Extract the files from ISO images into a folder beside each image.
 
 ## Synopsis
 
-```
+```text
 isoextract [options]
 ```
 
@@ -72,5 +72,6 @@ isoextract -i "/path/to/Game (USA).iso" -e Archive
 ## See also
 
 - [make_iso](make_iso.md) — Build an ISO image from each folder, or each zip file, in a directory
-- [decompress_archives](decompress_archives.md) — Extract archive files into a folder beside each archive
+- [decompress_archives](decompress_archives.md) — Extract archive files into a folder beside each
+  archive
 - [chdextract](chdextract.md) — Extract CD disc images from CHD files with chdman

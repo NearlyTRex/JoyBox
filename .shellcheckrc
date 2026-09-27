@@ -1,0 +1,4 @@
+# Follow `source ./common.sh` and the like relative to the script doing it, so
+# the scripts are checked together with the functions they call
+external-sources=true
+source-path=SCRIPTDIR

@@ -8,7 +8,7 @@ Tidy every game JSON file: sort its keys and drop empty values.
 
 ## Synopsis
 
-```
+```text
 clean_game_json_files [options]
 ```
 
@@ -58,7 +58,11 @@ clean_game_json_files -p -v
 
 ## See also
 
-- [build_game_json_files](build_game_json_files.md) — Create or update the JSON file of each game found in a locker
-- [analyze_game_json_files](analyze_game_json_files.md) — List games whose JSON file has no files, or whose metadata marks them unplayable
-- [clean_game_hash_files](clean_game_hash_files.md) — Rewrite every game hash file with its entries in sorted order
-- [clean_game_metadata_files](clean_game_metadata_files.md) — Rewrite every platform's Pegasus metadata file with its entries in sorted order
+- [build_game_json_files](build_game_json_files.md) — Create or update the JSON file of each game
+  found in a locker
+- [analyze_game_json_files](analyze_game_json_files.md) — List games whose JSON file has no files,
+  or whose metadata marks them unplayable
+- [clean_game_hash_files](clean_game_hash_files.md) — Rewrite every game hash file with its entries
+  in sorted order
+- [clean_game_metadata_files](clean_game_metadata_files.md) — Rewrite every platform's Pegasus
+  metadata file with its entries in sorted order

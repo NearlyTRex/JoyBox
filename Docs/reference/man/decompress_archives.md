@@ -8,7 +8,7 @@ Extract archive files into a folder beside each archive.
 
 ## Synopsis
 
-```
+```text
 decompress_archives [options]
 ```
 
@@ -64,13 +64,16 @@ decompress_archives -i /path/to/backup.tar.gz -a TAR_GZ -s
 
 ## Notes
 
-- Archives are matched by extension only, e.g. `ZIP` selects `.zip` files and `TAR_GZ` selects `.tar.gz` files.
+- Archives are matched by extension only, e.g. `ZIP` selects `.zip` files and `TAR_GZ` selects
+  `.tar.gz` files.
 - `APPIMAGE` archives are refused with an error.
 - 7-Zip must be installed as a JoyBox tool, plus tar and unrar for those formats.
 
 ## See also
 
-- [compress_files](compress_files.md) — Compress each file in a directory into an archive of its own with 7-Zip
-- [compress_folders](compress_folders.md) — Compress each folder in a directory into an archive of its own with 7-Zip
+- [compress_files](compress_files.md) — Compress each file in a directory into an archive of its own
+  with 7-Zip
+- [compress_folders](compress_folders.md) — Compress each folder in a directory into an archive of
+  its own with 7-Zip
 - [verify_archives](verify_archives.md) — Test archive files for corruption with 7-Zip
 - [isoextract](isoextract.md) — Extract the files from ISO images into a folder beside each image

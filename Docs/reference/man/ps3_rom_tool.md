@@ -8,7 +8,7 @@ Check that PlayStation 3 disc CHDs decrypt and extract with their disc keys.
 
 ## Synopsis
 
-```
+```text
 ps3_rom_tool [options]
 ```
 
@@ -57,11 +57,13 @@ ps3_rom_tool -i "/path/to/Game (USA).chd" -e -x
 
 ## Notes
 
-- Each disc is extracted, decrypted and unpacked in full, so the temporary directory needs room for about three times the disc's size.
+- Each disc is extracted, decrypted and unpacked in full, so the temporary directory needs room for
+  about three times the disc's size.
 - chdman (MameChdman) and PS3Dec must be installed as JoyBox tools.
 
 ## See also
 
 - [chdverify](chdverify.md) — Check CHD files against their internal SHA-1 checksums with chdman
 - [chdextract](chdextract.md) — Extract CD disc images from CHD files with chdman
-- [psn_rom_tool](psn_rom_tool.md) — Rename PlayStation Network packages and license files to their content IDs
+- [psn_rom_tool](psn_rom_tool.md) — Rename PlayStation Network packages and license files to their
+  content IDs

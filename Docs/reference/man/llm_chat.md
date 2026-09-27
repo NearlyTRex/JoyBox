@@ -8,7 +8,7 @@ Interactive chat with a local or cloud LLM, seeded with a prompt and files.
 
 ## Synopsis
 
-```
+```text
 llm_chat [options]
 ```
 
@@ -121,14 +121,20 @@ llm_chat --list_chunkers
 
 ## Notes
 
-- If the system prompt and attached files plus `--max_tokens` do not fit the context window, it refuses to start rather than let the server truncate silently. Use `--outline` for the large files or raise `--num_ctx`.
+- If the system prompt and attached files plus `--max_tokens` do not fit the context window, it
+  refuses to start rather than let the server truncate silently. Use `--outline` for the large files
+  or raise `--num_ctx`.
 - Token counts are estimates (about 3.6 characters per token).
-- With `ollama` or `openai`, the model must be one the server lists. With `claude` any model id is accepted and no window check is made.
+- With `ollama` or `openai`, the model must be one the server lists. With `claude` any model id is
+  accepted and no window check is made.
 - `--api_key` defaults to the `LLM_CHAT_API_KEY` environment variable.
 - `-o` is `--outline` here, not an output path.
 
 ## See also
 
-- [ollama_tool](ollama_tool.md) — Find, pull and manage Ollama models sized to this machine, and run a coding agent on one
-- [claude_tool](claude_tool.md) — Run every file in a directory through Claude with a prompt template
-- [decompiler_tool](decompiler_tool.md) — Open Ghidra with Python support, or run a PyGhidra script against a Ghidra project
+- [ollama_tool](ollama_tool.md) — Find, pull and manage Ollama models sized to this machine, and run
+  a coding agent on one
+- [claude_tool](claude_tool.md) — Run every file in a directory through Claude with a prompt
+  template
+- [decompiler_tool](decompiler_tool.md) — Open Ghidra with Python support, or run a PyGhidra script
+  against a Ghidra project

@@ -8,7 +8,7 @@ Record hashes of each selected game's files in the per-subcategory hash file.
 
 ## Synopsis
 
-```
+```text
 build_game_hash_files [options]
 ```
 
@@ -90,12 +90,16 @@ build_game_hash_files -c Sony -s "Sony PlayStation 2" -l Local -p -v
 
 ## Notes
 
-- Choose the `-l` locker that matches the content being hashed; its passphrase determines the encrypted fields.
+- Choose the `-l` locker that matches the content being hashed; its passphrase determines the
+  encrypted fields.
 - `-i` is used as the directory of every selected game.
 - The supercategory defaults to `Roms`; pass `-u` to hash DLC or updates.
 
 ## See also
 
-- [clean_game_hash_files](clean_game_hash_files.md) — Rewrite every game hash file with its entries in sorted order
-- [verify_game_files](verify_game_files.md) — Check that game JSON, metadata and hash files agree with the files in the local locker
-- [build_game_json_files](build_game_json_files.md) — Create or update the JSON file of each game found in a locker
+- [clean_game_hash_files](clean_game_hash_files.md) — Rewrite every game hash file with its entries
+  in sorted order
+- [verify_game_files](verify_game_files.md) — Check that game JSON, metadata and hash files agree
+  with the files in the local locker
+- [build_game_json_files](build_game_json_files.md) — Create or update the JSON file of each game
+  found in a locker

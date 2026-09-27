@@ -8,7 +8,7 @@ Link the Pegasus frontend's asset folders to the artwork in the locker.
 
 ## Synopsis
 
-```
+```text
 setup_game_assets [options]
 ```
 
@@ -55,7 +55,11 @@ setup_game_assets -p -v
 
 ## See also
 
-- [download_game_metadata_assets](download_game_metadata_assets.md) — Download one kind of artwork or video for each selected game and back it up to the lockers
-- [build_game_metadata_files](build_game_metadata_files.md) — Add each game with a JSON file to its platform's Pegasus metadata file and fill in missing details
-- [setup_tools](setup_tools.md) — Install, update, or rebuild the third-party tools JoyBox depends on
-- [setup_game_emulators](setup_game_emulators.md) — Install, update, or rebuild the game emulators JoyBox manages
+- [download_game_metadata_assets](download_game_metadata_assets.md) — Download one kind of artwork
+  or video for each selected game and back it up to the lockers
+- [build_game_metadata_files](build_game_metadata_files.md) — Add each game with a JSON file to its
+  platform's Pegasus metadata file and fill in missing details
+- [setup_tools](setup_tools.md) — Install, update, or rebuild the third-party tools JoyBox depends
+  on
+- [setup_game_emulators](setup_game_emulators.md) — Install, update, or rebuild the game emulators
+  JoyBox manages

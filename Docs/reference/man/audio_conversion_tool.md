@@ -8,7 +8,7 @@ Convert Audible AAX and AA audiobooks to M4A.
 
 ## Synopsis
 
-```
+```text
 audio_conversion_tool -i <input_path> [options]
 ```
 
@@ -106,6 +106,9 @@ audio_conversion_tool -i "/path/to/audiobooks" -r -p -v
 
 ## See also
 
-- [audio_metadata_tool](audio_metadata_tool.md) — Extract, clear or apply the tags of albums in the local locker's music tree
-- [tag_audio_files](tag_audio_files.md) — Tag audio files with the right per-genre defaults, then apply them in one run
-- [generate_playlist](generate_playlist.md) — Write `.m3u` playlists for the media files in a directory tree
+- [audio_metadata_tool](audio_metadata_tool.md) — Extract, clear or apply the tags of albums in the
+  local locker's music tree
+- [tag_audio_files](tag_audio_files.md) — Tag audio files with the right per-genre defaults, then
+  apply them in one run
+- [generate_playlist](generate_playlist.md) — Write `.m3u` playlists for the media files in a
+  directory tree

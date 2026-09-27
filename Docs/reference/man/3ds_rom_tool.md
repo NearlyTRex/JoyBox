@@ -8,7 +8,7 @@ Convert, trim, untrim, extract or inspect Nintendo 3DS CIA and CCI (.3ds) files.
 
 ## Synopsis
 
-```
+```text
 3ds_rom_tool [options]
 ```
 
@@ -93,7 +93,8 @@ files as `.app` files. `-n` prints CtrTool's description of every CIA and CCI.
 
 ## Notes
 
-- Give one action. When several are given, each file gets the first one in the order `-a`, `-b`, `-t`, `-u`, `-e`, `-n` that fits its type.
+- Give one action. When several are given, each file gets the first one in the order `-a`, `-b`,
+  `-t`, `-u`, `-e`, `-n` that fits its type.
 - Files already named `.trim.3ds` are not trimmed again by `-t`.
 - CtrMakeRom, 3DSRomTool and CtrTool must be installed as JoyBox tools.
 

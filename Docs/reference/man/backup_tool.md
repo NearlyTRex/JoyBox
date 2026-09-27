@@ -8,7 +8,7 @@ Copy, encrypt, decrypt or archive a directory tree into another directory.
 
 ## Synopsis
 
-```
+```text
 backup_tool [options]
 ```
 
@@ -147,15 +147,23 @@ backup_tool -i /path/to/source -o /path/to/archives -b Archive
 
 ## Notes
 
-- A remote locker (`Hetzner`, `Gdrive`) must be mounted first with `sync_tool -a Mount -l <locker>`; the tool only reads and writes its mount path.
-- `-u` defaults to `Roms`, so a source or destination that is not an existing `-i`/`-o` path always resolves under `Gaming/Roms` unless `-u` says otherwise.
-- The source and destination must differ. A missing destination is created only when `--output_locker_base` is given and exists.
-- Without `-x`, a plain copy that hits an I/O error on a file removes the partial copy, appends the source path to `copy_errors.txt` in the destination, and carries on. With `-x` the run stops instead.
-- `-a` with `-r` decrypts the existing destination file to a temporary directory and compares contents, so unchanged files are not encrypted or decrypted again.
+- A remote locker (`Hetzner`, `Gdrive`) must be mounted first with `sync_tool -a Mount -l <locker>`;
+  the tool only reads and writes its mount path.
+- `-u` defaults to `Roms`, so a source or destination that is not an existing `-i`/`-o` path always
+  resolves under `Gaming/Roms` unless `-u` says otherwise.
+- The source and destination must differ. A missing destination is created only when
+  `--output_locker_base` is given and exists.
+- Without `-x`, a plain copy that hits an I/O error on a file removes the partial copy, appends the
+  source path to `copy_errors.txt` in the destination, and carries on. With `-x` the run stops
+  instead.
+- `-a` with `-r` decrypts the existing destination file to a temporary directory and compares
+  contents, so unchanged files are not encrypted or decrypted again.
 
 ## See also
 
-- [upload_game_files](upload_game_files.md) — Encrypt game folders in place and upload them to a remote locker
+- [upload_game_files](upload_game_files.md) — Encrypt game folders in place and upload them to a
+  remote locker
 - [crypt_tool](crypt_tool.md) — Encrypt or decrypt files in place with GPG
 - [sync_tool](sync_tool.md) — Run an rclone operation between the local locker and a remote locker
-- [master_backup](master_backup.md) — Back up the local locker to one or more remote lockers in one unattended run
+- [master_backup](master_backup.md) — Back up the local locker to one or more remote lockers in one
+  unattended run

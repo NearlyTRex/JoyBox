@@ -8,7 +8,7 @@ Install, update, or rebuild the third-party tools JoyBox depends on.
 
 ## Synopsis
 
-```
+```text
 setup_tools [options]
 ```
 
@@ -104,12 +104,17 @@ setup_tools -p -v
 
 ## Notes
 
-- Package names are matched exactly and are case-sensitive (`FFMpeg`, `7-Zip`, `YtDlp`); an unknown name is silently skipped.
-- `--force` applies only to the selected packages; `--clean` wipes the whole tools directory. Use `--force` to update, `--clean` for a full rebuild.
+- Package names are matched exactly and are case-sensitive (`FFMpeg`, `7-Zip`, `YtDlp`); an unknown
+  name is silently skipped.
+- `--force` applies only to the selected packages; `--clean` wipes the whole tools directory. Use
+  `--force` to update, `--clean` for a full rebuild.
 - Installation stops at the first package that fails.
-- `~/JoyBox.ini` must exist and symlinks must be supported, or the command exits before doing anything.
+- `~/JoyBox.ini` must exist and symlinks must be supported, or the command exits before doing
+  anything.
 
 ## See also
 
-- [setup_game_emulators](setup_game_emulators.md) — Install, update, or rebuild the game emulators JoyBox manages
-- [setup_game_assets](setup_game_assets.md) — Link the Pegasus frontend's asset folders to the artwork in the locker
+- [setup_game_emulators](setup_game_emulators.md) — Install, update, or rebuild the game emulators
+  JoyBox manages
+- [setup_game_assets](setup_game_assets.md) — Link the Pegasus frontend's asset folders to the
+  artwork in the locker

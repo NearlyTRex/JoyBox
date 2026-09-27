@@ -8,7 +8,7 @@ Rename ROM files to the names a DAT file gives them, matching by MD5.
 
 ## Synopsis
 
-```
+```text
 dat_renamer [options]
 ```
 
@@ -79,5 +79,7 @@ dat_renamer -i ~/Roms/Unsorted -d ~/Dats -p -v
 
 ## See also
 
-- [sanitize_filenames](sanitize_filenames.md) — Rename files so their names are plain ASCII and safe on every filesystem
-- [verify_game_files](verify_game_files.md) — Check that game JSON, metadata and hash files agree with the files in the local locker
+- [sanitize_filenames](sanitize_filenames.md) — Rename files so their names are plain ASCII and safe
+  on every filesystem
+- [verify_game_files](verify_game_files.md) — Check that game JSON, metadata and hash files agree
+  with the files in the local locker

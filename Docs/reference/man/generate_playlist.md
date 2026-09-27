@@ -8,7 +8,7 @@ Write `.m3u` playlists for the media files in a directory tree.
 
 ## Synopsis
 
-```
+```text
 generate_playlist [options]
 ```
 
@@ -96,6 +96,9 @@ generate_playlist -t Local -i "/path/to/music" -f ".mp3" -p -v
 
 ## See also
 
-- [download_audio_files](download_audio_files.md) — Download new videos from a genre's configured channels as MP3 and back them up to a locker
-- [tag_audio_files](tag_audio_files.md) — Tag audio files with the right per-genre defaults, then apply them in one run
-- [audio_metadata_tool](audio_metadata_tool.md) — Extract, clear or apply the tags of albums in the local locker's music tree
+- [download_audio_files](download_audio_files.md) — Download new videos from a genre's configured
+  channels as MP3 and back them up to a locker
+- [tag_audio_files](tag_audio_files.md) — Tag audio files with the right per-genre defaults, then
+  apply them in one run
+- [audio_metadata_tool](audio_metadata_tool.md) — Extract, clear or apply the tags of albums in the
+  local locker's music tree

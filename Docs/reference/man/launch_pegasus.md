@@ -8,7 +8,7 @@ Start the Pegasus game frontend installed by setup_tools.
 
 ## Synopsis
 
-```
+```text
 launch_pegasus [options]
 ```
 
@@ -49,11 +49,16 @@ launch_pegasus -p -v
 
 ## Notes
 
-- Pegasus must be installed first (`setup_tools -k Pegasus`); the command exits with an error if it is not found.
+- Pegasus must be installed first (`setup_tools -k Pegasus`); the command exits with an error if it
+  is not found.
 
 ## See also
 
-- [setup_tools](setup_tools.md) — Install, update, or rebuild the third-party tools JoyBox depends on
-- [setup_game_assets](setup_game_assets.md) — Link the Pegasus frontend's asset folders to the artwork in the locker
-- [build_game_metadata_files](build_game_metadata_files.md) — Add each game with a JSON file to its platform's Pegasus metadata file and fill in missing details
-- [launch_game_json](launch_game_json.md) — Launch a game described by its JSON file, installing it and restoring its save first
+- [setup_tools](setup_tools.md) — Install, update, or rebuild the third-party tools JoyBox depends
+  on
+- [setup_game_assets](setup_game_assets.md) — Link the Pegasus frontend's asset folders to the
+  artwork in the locker
+- [build_game_metadata_files](build_game_metadata_files.md) — Add each game with a JSON file to its
+  platform's Pegasus metadata file and fill in missing details
+- [launch_game_json](launch_game_json.md) — Launch a game described by its JSON file, installing it
+  and restoring its save first

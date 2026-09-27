@@ -8,7 +8,7 @@ Extract, clear or apply the tags of albums in the local locker's music tree.
 
 ## Synopsis
 
-```
+```text
 audio_metadata_tool [options]
 ```
 
@@ -122,13 +122,21 @@ audio_metadata_tool -a Tag -g Regular -r "Some Artist" -b "Some Album"
 
 ## Notes
 
-- `Apply` needs the album's JSON file; run `Tag` first. It stops at the first track in the JSON whose file no longer exists, so run `Tag` again after renaming files.
-- `--set` is read by `Tag` only. It writes the value to every track and to the album information, overriding what was read from the files and `--use_index_for_track_number`. The field must be one of `title`, `artist`, `album`, `year`, `genre`, `album_artist`, `track_number`, `disc_number`, `bpm`, `key`, `conductor`; an unknown field or a value without `=` stops the tool before anything is read.
+- `Apply` needs the album's JSON file; run `Tag` first. It stops at the first track in the JSON
+  whose file no longer exists, so run `Tag` again after renaming files.
+- `--set` is read by `Tag` only. It writes the value to every track and to the album information,
+  overriding what was read from the files and `--use_index_for_track_number`. The field must be one
+  of `title`, `artist`, `album`, `year`, `genre`, `album_artist`, `track_number`, `disc_number`,
+  `bpm`, `key`, `conductor`; an unknown field or a value without `=` stops the tool before anything
+  is read.
 - A run over all genres fails if no genre has albums; a genre with no albums is otherwise skipped.
 
 ## See also
 
-- [tag_audio_files](tag_audio_files.md) — Tag audio files with the right per-genre defaults, then apply them in one run
-- [download_audio_files](download_audio_files.md) — Download new videos from a genre's configured channels as MP3 and back them up to a locker
+- [tag_audio_files](tag_audio_files.md) — Tag audio files with the right per-genre defaults, then
+  apply them in one run
+- [download_audio_files](download_audio_files.md) — Download new videos from a genre's configured
+  channels as MP3 and back them up to a locker
 - [audio_conversion_tool](audio_conversion_tool.md) — Convert Audible AAX and AA audiobooks to M4A
-- [generate_playlist](generate_playlist.md) — Write `.m3u` playlists for the media files in a directory tree
+- [generate_playlist](generate_playlist.md) — Write `.m3u` playlists for the media files in a
+  directory tree

@@ -8,7 +8,7 @@ Rebuild a remote locker's hash sidecar database from local content.
 
 ## Synopsis
 
-```
+```text
 rebuild_hash_sidecars [options]
 ```
 
@@ -97,14 +97,23 @@ rebuild_hash_sidecars -c -v
 ## Notes
 
 - Entries for files that were deleted locally stay in the database until it is rebuilt with `-c`.
-- `-c` deletes the whole database at the destination root, even when `--path` limits the rehash to a subtree, so combine them only when you mean to drop every other entry.
-- Peak memory is about `parallel_dirs` x `parallel_files` x the hashing chunk size; the preview shows the figure.
-- Hetzner's SFTP shell has no usable `md5sum`, so an rclone remote with `md5sum_command` set fails to verify the upload, reports `corrupted on transfer`, and deletes the uploaded database. Set `disable_hashcheck = true` on that remote and remove any `md5sum_command`/`sha1sum_command`; the Hetzner template in the rclone setup already does this.
-- `master_backup` refreshes the sidecar after each backup, so this tool is mainly for repairs and first-time setup.
+- `-c` deletes the whole database at the destination root, even when `--path` limits the rehash to a
+  subtree, so combine them only when you mean to drop every other entry.
+- Peak memory is about `parallel_dirs` x `parallel_files` x the hashing chunk size; the preview
+  shows the figure.
+- Hetzner's SFTP shell has no usable `md5sum`, so an rclone remote with `md5sum_command` set fails
+  to verify the upload, reports `corrupted on transfer`, and deletes the uploaded database. Set
+  `disable_hashcheck = true` on that remote and remove any `md5sum_command`/`sha1sum_command`; the
+  Hetzner template in the rclone setup already does this.
+- `master_backup` refreshes the sidecar after each backup, so this tool is mainly for repairs and
+  first-time setup.
 
 ## See also
 
-- [find_missing_hash_sidecars](find_missing_hash_sidecars.md) — List files on a remote locker that have no entry in its hash sidecar database
-- [master_backup](master_backup.md) — Back up the local locker to one or more remote lockers in one unattended run
-- [locker_sync_tool](locker_sync_tool.md) — Sync a primary locker to one or more secondary lockers, reviewing each change in an editor
+- [find_missing_hash_sidecars](find_missing_hash_sidecars.md) — List files on a remote locker that
+  have no entry in its hash sidecar database
+- [master_backup](master_backup.md) — Back up the local locker to one or more remote lockers in one
+  unattended run
+- [locker_sync_tool](locker_sync_tool.md) — Sync a primary locker to one or more secondary lockers,
+  reviewing each change in an editor
 - [sync_tool](sync_tool.md) — Run an rclone operation between the local locker and a remote locker

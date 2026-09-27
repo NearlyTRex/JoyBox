@@ -58,7 +58,7 @@ while [[ $# -gt 0 ]]; do
             PASSWORD_FILE="$2"
             shift 2
             ;;
-        -*|--*)
+        -*)
             echo "Unknown option: $1"
             print_usage
             ;;

@@ -8,7 +8,7 @@ Rewrite every platform's Pegasus metadata file with its entries in sorted order.
 
 ## Synopsis
 
-```
+```text
 clean_game_metadata_files [options]
 ```
 
@@ -53,7 +53,11 @@ clean_game_metadata_files --no-preview
 
 ## See also
 
-- [sort_game_metadata](sort_game_metadata.md) — Rewrite every Pegasus metadata file found under the metadata repository in sorted order
-- [build_game_metadata_files](build_game_metadata_files.md) — Add each game with a JSON file to its platform's Pegasus metadata file and fill in missing details
-- [clean_game_json_files](clean_game_json_files.md) — Tidy every game JSON file: sort its keys and drop empty values
-- [clean_game_hash_files](clean_game_hash_files.md) — Rewrite every game hash file with its entries in sorted order
+- [sort_game_metadata](sort_game_metadata.md) — Rewrite every Pegasus metadata file found under the
+  metadata repository in sorted order
+- [build_game_metadata_files](build_game_metadata_files.md) — Add each game with a JSON file to its
+  platform's Pegasus metadata file and fill in missing details
+- [clean_game_json_files](clean_game_json_files.md) — Tidy every game JSON file: sort its keys and
+  drop empty values
+- [clean_game_hash_files](clean_game_hash_files.md) — Rewrite every game hash file with its entries
+  in sorted order

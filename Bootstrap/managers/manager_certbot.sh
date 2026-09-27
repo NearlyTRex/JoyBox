@@ -2,6 +2,21 @@
 
 set -euo pipefail
 
+# The domains with a certificate, one per line; live/ also holds a README file,
+# which the directory glob leaves out
+print_available_domains() {
+    local found=false
+    for cert_dir in /etc/letsencrypt/live/*/; do
+        if [ -d "$cert_dir" ]; then
+            basename "$cert_dir"
+            found=true
+        fi
+    done
+    if [ "$found" = false ]; then
+        echo "  No certificates found"
+    fi
+}
+
 register_cert() {
     if [ "$#" -lt 2 ]; then
         echo "Usage: register_cert <contact_email> <domain1> [domain2 ... domainN]"
@@ -120,7 +135,7 @@ copy_certs() {
     if [ ! -d "$CERT_DIR" ]; then
         echo "Error: Certificate directory $CERT_DIR does not exist"
         echo "Available domains:"
-        ls -1 /etc/letsencrypt/live/ 2>/dev/null | grep -v README || echo "  No certificates found"
+        print_available_domains
         exit 1
     fi
 
@@ -136,8 +151,10 @@ copy_certs() {
             exit 1
         fi
 
-        local LATEST_FULLCHAIN=$(find "$ARCHIVE_DIR" -name "fullchain*.pem" | sort -V | tail -1)
-        local LATEST_PRIVKEY=$(find "$ARCHIVE_DIR" -name "privkey*.pem" | sort -V | tail -1)
+        local LATEST_FULLCHAIN
+        LATEST_FULLCHAIN=$(find "$ARCHIVE_DIR" -name "fullchain*.pem" | sort -V | tail -1)
+        local LATEST_PRIVKEY
+        LATEST_PRIVKEY=$(find "$ARCHIVE_DIR" -name "privkey*.pem" | sort -V | tail -1)
         if [ -z "$LATEST_FULLCHAIN" ] || [ -z "$LATEST_PRIVKEY" ]; then
             echo "Error: Could not find certificate files in $ARCHIVE_DIR"
             exit 1
@@ -194,7 +211,7 @@ export_keystore() {
     if [ ! -d "$CERT_DIR" ]; then
         echo "Error: Certificate directory $CERT_DIR does not exist"
         echo "Available domains:"
-        ls -1 /etc/letsencrypt/live/ 2>/dev/null | grep -v README || echo "  No certificates found"
+        print_available_domains
         exit 1
     fi
 
@@ -227,7 +244,8 @@ export_keystore() {
         exit 1
     fi
 
-    local DEST_DIR=$(dirname "$DEST_PATH")
+    local DEST_DIR
+    DEST_DIR=$(dirname "$DEST_PATH")
     mkdir -p "$DEST_DIR"
 
     local TEMP_P12=""
@@ -289,8 +307,8 @@ export_keystore() {
         fi
     fi
 
-    echo "File permissions: $(ls -la "$DEST_PATH" | awk '{print $1, $3, $4}')"
-    echo "File size: $(ls -lh "$DEST_PATH" | awk '{print $5}')"
+    echo "File permissions: $(stat -c '%A %U %G' "$DEST_PATH")"
+    echo "File size: $(numfmt --to=iec "$(stat -c '%s' "$DEST_PATH")")"
     echo "Remember to keep your keystore password secure!"
 }
 
@@ -299,11 +317,16 @@ list_certs() {
     if [ -d "/etc/letsencrypt/live" ]; then
         for cert_dir in /etc/letsencrypt/live/*/; do
             if [ -d "$cert_dir" ] && [ "$(basename "$cert_dir")" != "README" ]; then
-                local domain=$(basename "$cert_dir")
+                local domain
+                domain=$(basename "$cert_dir")
                 echo "  Domain: $domain"
                 if [ -f "$cert_dir/fullchain.pem" ]; then
-                    local expiry=$(openssl x509 -in "$cert_dir/fullchain.pem" -noout -enddate | cut -d= -f2)
-                    echo "    Expires: $expiry"
+                    local expiry
+                    if expiry=$(openssl x509 -in "$cert_dir/fullchain.pem" -noout -enddate | cut -d= -f2); then
+                        echo "    Expires: $expiry"
+                    else
+                        echo "    Expires: unreadable certificate"
+                    fi
                 fi
             fi
         done

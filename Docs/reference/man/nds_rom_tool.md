@@ -8,7 +8,7 @@ Decrypt or encrypt Nintendo DS ROMs in place with NDecrypt.
 
 ## Synopsis
 
-```
+```text
 nds_rom_tool [options]
 ```
 
@@ -66,4 +66,5 @@ nds_rom_tool -i "/path/to/Game (USA).nds" -e -g
 
 ## See also
 
-- [3ds_rom_tool](3ds_rom_tool.md) — Convert, trim, untrim, extract or inspect Nintendo 3DS CIA and CCI (.3ds) files
+- [3ds_rom_tool](3ds_rom_tool.md) — Convert, trim, untrim, extract or inspect Nintendo 3DS CIA and
+  CCI (.3ds) files

@@ -1,3 +1,4 @@
+#!/usr/bin/env bash
 # ============================================================
 # JoyBox Shell Configuration
 # Managed by JoyBox Bootstrap - sourced from ~/.joybox/shell.sh
@@ -86,7 +87,7 @@ alias mv='mv -i'
 # Common Functions
 # ============================================================
 mkcd() {
-    mkdir -p "$1" && cd "$1"
+    mkdir -p "$1" && cd "$1" || return
 }
 
 extract() {
@@ -111,13 +112,3 @@ extract() {
     fi
 }
 
-# ============================================================
-# Enable programmable completion
-# ============================================================
-if ! shopt -oq posix; then
-    if [ -f /usr/share/bash-completion/bash_completion ]; then
-        . /usr/share/bash-completion/bash_completion
-    elif [ -f /etc/bash_completion ]; then
-        . /etc/bash_completion
-    fi
-fi

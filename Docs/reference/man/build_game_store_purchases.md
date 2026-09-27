@@ -8,7 +8,7 @@ Import the games you own on a store as JSON and metadata entries, and refresh th
 
 ## Synopsis
 
-```
+```text
 build_game_store_purchases [options]
 ```
 
@@ -76,13 +76,18 @@ build_game_store_purchases -c Computer -p -v
 ## Notes
 
 - The import pass is interactive: expect a prompt per new purchase, then one for its entry name.
-- Ignored purchases are recorded in the subcategory's `ignores.json` next to its JSON files and are not offered again.
+- Ignored purchases are recorded in the subcategory's `ignores.json` next to its JSON files and are
+  not offered again.
 - Stores sit under the `Roms` supercategory, which is the default, so `-u` is not needed.
 - Log in with `login_game_stores` first if the store session has expired.
 
 ## See also
 
-- [login_game_stores](login_game_stores.md) — Log in to the selected game stores so their purchases, metadata and downloads can be fetched
-- [build_game_json_files](build_game_json_files.md) — Create or update the JSON file of each game found in a locker
-- [build_game_metadata_files](build_game_metadata_files.md) — Add each game with a JSON file to its platform's Pegasus metadata file and fill in missing details
-- [scan_game_files](scan_game_files.md) — Run the whole collection pipeline: store purchases, JSON files, metadata, optional assets, and HTML publishing
+- [login_game_stores](login_game_stores.md) — Log in to the selected game stores so their purchases,
+  metadata and downloads can be fetched
+- [build_game_json_files](build_game_json_files.md) — Create or update the JSON file of each game
+  found in a locker
+- [build_game_metadata_files](build_game_metadata_files.md) — Add each game with a JSON file to its
+  platform's Pegasus metadata file and fill in missing details
+- [scan_game_files](scan_game_files.md) — Run the whole collection pipeline: store purchases, JSON
+  files, metadata, optional assets, and HTML publishing

@@ -8,7 +8,7 @@ Start the Sunshine game-streaming host installed by setup_tools.
 
 ## Synopsis
 
-```
+```text
 launch_sunshine [options]
 ```
 
@@ -45,9 +45,11 @@ launch_sunshine -p -v
 
 ## Notes
 
-- Sunshine must be installed first (`setup_tools -k Sunshine`); the command exits with an error if it is not found.
+- Sunshine must be installed first (`setup_tools -k Sunshine`); the command exits with an error if
+  it is not found.
 
 ## See also
 
-- [setup_tools](setup_tools.md) — Install, update, or rebuild the third-party tools JoyBox depends on
+- [setup_tools](setup_tools.md) — Install, update, or rebuild the third-party tools JoyBox depends
+  on
 - [launch_pegasus](launch_pegasus.md) — Start the Pegasus game frontend installed by setup_tools

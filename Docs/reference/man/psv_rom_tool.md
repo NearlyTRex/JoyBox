@@ -8,7 +8,7 @@ Strip, unstrip, trim, untrim or verify PlayStation Vita cartridge dumps (.psv).
 
 ## Synopsis
 
-```
+```text
 psv_rom_tool [options]
 ```
 
@@ -89,10 +89,12 @@ psv_rom_tool -i "/path/to/Game (USA).psv" -u
 
 ## Notes
 
-- Give one action. When several are given, only the first in the order `-s`, `-u`, `-t`, `-n`, `-e` is used.
+- Give one action. When several are given, only the first in the order `-s`, `-u`, `-t`, `-n`, `-e`
+  is used.
 - Output files are also `.psv`, so running the tool again on the same folder processes them too.
 - PSVStrip, and PSVTools with the JoyBox Python environment, must be installed as JoyBox tools.
 
 ## See also
 
-- [psn_rom_tool](psn_rom_tool.md) — Rename PlayStation Network packages and license files to their content IDs
+- [psn_rom_tool](psn_rom_tool.md) — Rename PlayStation Network packages and license files to their
+  content IDs

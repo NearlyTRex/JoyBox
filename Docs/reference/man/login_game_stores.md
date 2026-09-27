@@ -8,7 +8,7 @@ Log in to the selected game stores so their purchases, metadata and downloads ca
 
 ## Synopsis
 
-```
+```text
 login_game_stores [options]
 ```
 
@@ -71,7 +71,11 @@ login_game_stores
 
 ## See also
 
-- [build_game_store_purchases](build_game_store_purchases.md) — Import the games you own on a store as JSON and metadata entries, and refresh the existing ones
-- [build_game_metadata_files](build_game_metadata_files.md) — Add each game with a JSON file to its platform's Pegasus metadata file and fill in missing details
-- [download_game_metadata_assets](download_game_metadata_assets.md) — Download one kind of artwork or video for each selected game and back it up to the lockers
-- [setup_tools](setup_tools.md) — Install, update, or rebuild the third-party tools JoyBox depends on
+- [build_game_store_purchases](build_game_store_purchases.md) — Import the games you own on a store
+  as JSON and metadata entries, and refresh the existing ones
+- [build_game_metadata_files](build_game_metadata_files.md) — Add each game with a JSON file to its
+  platform's Pegasus metadata file and fill in missing details
+- [download_game_metadata_assets](download_game_metadata_assets.md) — Download one kind of artwork
+  or video for each selected game and back it up to the lockers
+- [setup_tools](setup_tools.md) — Install, update, or rebuild the third-party tools JoyBox depends
+  on

@@ -30,6 +30,7 @@ class Dotfiles(installer.Installer):
         # Bash paths
         self.bashrc_path = os.path.expandvars("$HOME/.bashrc")
         self.bash_profile_path = os.path.expandvars("$HOME/.bash_profile")
+        self.skel_bashrc_path = "/etc/skel/.bashrc"
 
         # Template + capture directories
         self.template_dir = os.path.join(bootstrap.get_data_dir(), "dotfiles")
@@ -130,6 +131,14 @@ class Dotfiles(installer.Installer):
             if content is None:
                 return False
             if not self.connection.write_file(dest_path, content):
+                return False
+
+        # A home with no .bashrc gets the distribution's default, as useradd -m would
+        # have made; that default enables programmable completion
+        if (not self.connection.does_file_or_directory_exist(self.bashrc_path)
+                and self.connection.does_file_or_directory_exist(self.skel_bashrc_path)):
+            logger.log_info(f"Creating {self.bashrc_path} from {self.skel_bashrc_path}")
+            if not self.connection.copy_file_or_directory(self.skel_bashrc_path, self.bashrc_path):
                 return False
 
         # Inject the managed block into .bashrc (sources ~/.joybox/*.sh when interactive)

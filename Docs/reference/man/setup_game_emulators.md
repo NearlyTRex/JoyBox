@@ -8,7 +8,7 @@ Install, update, or rebuild the game emulators JoyBox manages.
 
 ## Synopsis
 
-```
+```text
 setup_game_emulators [options]
 ```
 
@@ -98,12 +98,16 @@ setup_game_emulators -p -v
 
 ## Notes
 
-- Emulator names are matched exactly and are case-sensitive (`FS-UAE`, `VICE-C64`, `mGBA`); an unknown name is silently skipped.
+- Emulator names are matched exactly and are case-sensitive (`FS-UAE`, `VICE-C64`, `mGBA`); an
+  unknown name is silently skipped.
 - `--force` applies only to the selected emulators; `--clean` wipes the whole emulators directory.
 - Installation stops at the first emulator that fails.
-- `~/JoyBox.ini` must exist and symlinks must be supported, or the command exits before doing anything.
+- `~/JoyBox.ini` must exist and symlinks must be supported, or the command exits before doing
+  anything.
 
 ## See also
 
-- [setup_tools](setup_tools.md) — Install, update, or rebuild the third-party tools JoyBox depends on
-- [setup_game_assets](setup_game_assets.md) — Link the Pegasus frontend's asset folders to the artwork in the locker
+- [setup_tools](setup_tools.md) — Install, update, or rebuild the third-party tools JoyBox depends
+  on
+- [setup_game_assets](setup_game_assets.md) — Link the Pegasus frontend's asset folders to the
+  artwork in the locker

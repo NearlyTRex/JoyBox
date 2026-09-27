@@ -8,7 +8,7 @@ Find, pull and manage Ollama models sized to this machine, and run a coding agen
 
 ## Synopsis
 
-```
+```text
 ollama_tool <action> [options]
 ```
 
@@ -125,13 +125,19 @@ ollama_tool delete -m qwen2.5-coder:7b
 
 ## Notes
 
-- This command has no common options: `-p` is `--purpose`, not a dry run, and every action that changes something asks first.
+- This command has no common options: `-p` is `--purpose`, not a dry run, and every action that
+  changes something asks first.
 - In the tag picker, enter the number of the variant, or `0` to cancel.
-- The context size shown for a tag is the model's advertised maximum. Ollama's runtime context (`num_ctx`) defaults much lower; for long agent sessions start the server with a larger one, e.g. `OLLAMA_CONTEXT_LENGTH=65536 ollama serve`.
-- The `codex` and `opencode` harnesses may need their own provider configuration, and their flags vary by version. The harness CLI must be on `PATH`; otherwise an install link is shown.
+- The context size shown for a tag is the model's advertised maximum. Ollama's runtime context
+  (`num_ctx`) defaults much lower; for long agent sessions start the server with a larger one, e.g.
+  `OLLAMA_CONTEXT_LENGTH=65536 ollama serve`.
+- The `codex` and `opencode` harnesses may need their own provider configuration, and their flags
+  vary by version. The harness CLI must be on `PATH`; otherwise an install link is shown.
 - Local models are much weaker at agentic tool use than hosted Claude.
 
 ## See also
 
-- [llm_chat](llm_chat.md) — Interactive chat with a local or cloud LLM, seeded with a prompt and files
-- [claude_tool](claude_tool.md) — Run every file in a directory through Claude with a prompt template
+- [llm_chat](llm_chat.md) — Interactive chat with a local or cloud LLM, seeded with a prompt and
+  files
+- [claude_tool](claude_tool.md) — Run every file in a directory through Claude with a prompt
+  template

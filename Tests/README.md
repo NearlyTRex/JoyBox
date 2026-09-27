@@ -27,7 +27,7 @@ The config lives in `Tests/pytest.ini`, so pytest needs the path — a bare
 
 Test files mirror the path of the source they cover:
 
-```
+```text
 Shared/joybox/cmdline.py            → Tests/unit/Shared/joybox/test_cmdline.py
 Shared/joybox/bootstrap/packages/aptget.py
                                     → Tests/unit/Shared/joybox/bootstrap/packages/test_aptget.py
@@ -132,13 +132,13 @@ A test file that outgrows roughly 900 lines becomes a place where a second
 definition of the same name goes unnoticed, and the second one silently wins.
 When that happens, split the file into a directory of the same name:
 
-```
+```text
 unit/Shared/joybox/test_sync.py
 ```
 
 becomes
 
-```
+```text
 unit/Shared/joybox/test_sync/
     conftest.py        fixtures shared by the files beside it
     sync_helpers.py    constants and plain helpers, imported by name

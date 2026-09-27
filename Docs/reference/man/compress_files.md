@@ -8,7 +8,7 @@ Compress each file in a directory into an archive of its own with 7-Zip.
 
 ## Synopsis
 
-```
+```text
 compress_files [options]
 ```
 
@@ -69,13 +69,17 @@ compress_files -i /path/to/files -a 7Z -w secret -s 4092m
 
 ## Notes
 
-- Use `ZIP` or `7Z`. Types that cannot be created, such as `RAR` or the tarball types, are refused for each file with an error.
-- `-t` matches the end of the file name, so `iso` would also match `game.xiso`; include the dot to be exact.
+- Use `ZIP` or `7Z`. Types that cannot be created, such as `RAR` or the tarball types, are refused
+  for each file with an error.
+- `-t` matches the end of the file name, so `iso` would also match `game.xiso`; include the dot to
+  be exact.
 - 7-Zip must be installed as a JoyBox tool.
 
 ## See also
 
-- [compress_folders](compress_folders.md) — Compress each folder in a directory into an archive of its own with 7-Zip
-- [decompress_archives](decompress_archives.md) — Extract archive files into a folder beside each archive
+- [compress_folders](compress_folders.md) — Compress each folder in a directory into an archive of
+  its own with 7-Zip
+- [decompress_archives](decompress_archives.md) — Extract archive files into a folder beside each
+  archive
 - [verify_archives](verify_archives.md) — Test archive files for corruption with 7-Zip
 - [rezip_files](rezip_files.md) — Rebuild zip files in place with fixed, reproducible 7-Zip settings

@@ -4,11 +4,12 @@
 
 [← Command index](README.md)
 
-Run the whole collection pipeline: store purchases, JSON files, metadata, optional assets, and HTML publishing.
+Run the whole collection pipeline: store purchases, JSON files, metadata, optional assets, and HTML
+publishing.
 
 ## Synopsis
 
-```
+```text
 scan_game_files [options]
 ```
 
@@ -87,14 +88,21 @@ scan_game_files -l Local -p -v
 
 ## Notes
 
-- The purchase step, and the asset step for non-store games, ask questions, so the run is interactive.
+- The purchase step, and the asset step for non-store games, ask questions, so the run is
+  interactive.
 - Publishing always writes whole categories; `-s` does not narrow it.
-- Unrecognised names in `-c` or `-s` are dropped silently, and if none are left every category or subcategory is processed.
+- Unrecognised names in `-c` or `-s` are dropped silently, and if none are left every category or
+  subcategory is processed.
 
 ## See also
 
-- [build_game_store_purchases](build_game_store_purchases.md) — Import the games you own on a store as JSON and metadata entries, and refresh the existing ones
-- [build_game_json_files](build_game_json_files.md) — Create or update the JSON file of each game found in a locker
-- [build_game_metadata_files](build_game_metadata_files.md) — Add each game with a JSON file to its platform's Pegasus metadata file and fill in missing details
-- [download_game_metadata_assets](download_game_metadata_assets.md) — Download one kind of artwork or video for each selected game and back it up to the lockers
-- [publish_game_metadata_files](publish_game_metadata_files.md) — Render the Pegasus metadata as one browsable HTML table per category
+- [build_game_store_purchases](build_game_store_purchases.md) — Import the games you own on a store
+  as JSON and metadata entries, and refresh the existing ones
+- [build_game_json_files](build_game_json_files.md) — Create or update the JSON file of each game
+  found in a locker
+- [build_game_metadata_files](build_game_metadata_files.md) — Add each game with a JSON file to its
+  platform's Pegasus metadata file and fill in missing details
+- [download_game_metadata_assets](download_game_metadata_assets.md) — Download one kind of artwork
+  or video for each selected game and back it up to the lockers
+- [publish_game_metadata_files](publish_game_metadata_files.md) — Render the Pegasus metadata as one
+  browsable HTML table per category

@@ -8,7 +8,7 @@ Rename files so their names are plain ASCII and safe on every filesystem.
 
 ## Synopsis
 
-```
+```text
 sanitize_filenames [options]
 ```
 
@@ -59,5 +59,6 @@ sanitize_filenames -i ~/Downloads/Soundtrack -p -v --no-preview
 
 ## See also
 
-- [make_folders](make_folders.md) — Move each matching file into a folder of its own, named after the file
+- [make_folders](make_folders.md) — Move each matching file into a folder of its own, named after
+  the file
 - [list_dupes](list_dupes.md) — List duplicate files under a directory

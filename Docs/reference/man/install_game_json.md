@@ -8,7 +8,7 @@ Install a game described by its JSON file into the local game cache.
 
 ## Synopsis
 
-```
+```text
 install_game_json [options]
 ```
 
@@ -81,5 +81,7 @@ install_game_json -i "/path/to/Game Name (USA).json" -p -v
 
 ## See also
 
-- [launch_game_json](launch_game_json.md) — Launch a game described by its JSON file, installing it and restoring its save first
-- [build_game_json_files](build_game_json_files.md) — Create or update the JSON file of each game found in a locker
+- [launch_game_json](launch_game_json.md) — Launch a game described by its JSON file, installing it
+  and restoring its save first
+- [build_game_json_files](build_game_json_files.md) — Create or update the JSON file of each game
+  found in a locker

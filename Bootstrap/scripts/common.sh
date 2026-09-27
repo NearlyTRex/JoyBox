@@ -113,7 +113,8 @@ setup_sudoers() {
     local sudoers_file="$2"
     echo "Configuring sudoers file at $sudoers_file for user $username..."
 
-    local temp_file=$(mktemp)
+    local temp_file
+    temp_file=$(mktemp)
     {
         # The aptget component's exact install command; ':' and '=' are
         # escaped because sudoers treats them as syntax in arguments
@@ -630,15 +631,20 @@ setup_storage_box() {
     fi
 
     local ssh_key="/home/$username/.ssh/id_rsa"
-    local ssh_keygen_bin=$(command -v ssh-keygen)
-    local ssh_copy_id_bin=$(command -v ssh-copy-id)
-    local sshfs_bin=$(command -v sshfs)
-    local user_uid=$(id -u "$username")
-    local user_gid=$(id -g "$username")
+    local ssh_keygen_bin
+    ssh_keygen_bin=$(command -v ssh-keygen)
+    local ssh_copy_id_bin
+    ssh_copy_id_bin=$(command -v ssh-copy-id)
+    local sshfs_bin
+    sshfs_bin=$(command -v sshfs)
+    local user_uid
+    user_uid=$(id -u "$username")
+    local user_gid
+    user_gid=$(id -g "$username")
 
     if [ ! -f "$ssh_key" ]; then
         echo "Generating SSH key for $username..."
-        sudo -u "$username" $ssh_keygen_bin -t rsa -b 4096 -N "" -f "$ssh_key"
+        sudo -u "$username" "$ssh_keygen_bin" -t rsa -b 4096 -N "" -f "$ssh_key"
     fi
 
     # Unattended, the password comes from a file through sshpass, and the host

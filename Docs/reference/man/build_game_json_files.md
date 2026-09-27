@@ -8,7 +8,7 @@ Create or update the JSON file of each game found in a locker.
 
 ## Synopsis
 
-```
+```text
 build_game_json_files [options]
 ```
 
@@ -91,15 +91,22 @@ build_game_json_files -c Nintendo -s "Nintendo Switch" -l Local -p -v
 
 ## Notes
 
-- Run this for a game newly added to a locker when `upload_game_files` reports that it cannot find the game's JSON file.
-- `-n` must name a game folder that exists in the locker; games are always listed from the locker, even with `-i`.
+- Run this for a game newly added to a locker when `upload_game_files` reports that it cannot find
+  the game's JSON file.
+- `-n` must name a game folder that exists in the locker; games are always listed from the locker,
+  even with `-i`.
 - `-i` is used as the directory of every selected game, so use it together with `-n`.
 - The supercategory defaults to `Roms`; pass `-u` for DLC or updates.
 
 ## See also
 
-- [upload_game_files](upload_game_files.md) — Encrypt game folders in place and upload them to a remote locker
-- [clean_game_json_files](clean_game_json_files.md) — Tidy every game JSON file: sort its keys and drop empty values
-- [analyze_game_json_files](analyze_game_json_files.md) — List games whose JSON file has no files, or whose metadata marks them unplayable
-- [build_game_metadata_files](build_game_metadata_files.md) — Add each game with a JSON file to its platform's Pegasus metadata file and fill in missing details
-- [build_game_hash_files](build_game_hash_files.md) — Record hashes of each selected game's files in the per-subcategory hash file
+- [upload_game_files](upload_game_files.md) — Encrypt game folders in place and upload them to a
+  remote locker
+- [clean_game_json_files](clean_game_json_files.md) — Tidy every game JSON file: sort its keys and
+  drop empty values
+- [analyze_game_json_files](analyze_game_json_files.md) — List games whose JSON file has no files,
+  or whose metadata marks them unplayable
+- [build_game_metadata_files](build_game_metadata_files.md) — Add each game with a JSON file to its
+  platform's Pegasus metadata file and fill in missing details
+- [build_game_hash_files](build_game_hash_files.md) — Record hashes of each selected game's files in
+  the per-subcategory hash file

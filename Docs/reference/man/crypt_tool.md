@@ -8,7 +8,7 @@ Encrypt or decrypt files in place with GPG.
 
 ## Synopsis
 
-```
+```text
 crypt_tool [options]
 ```
 
@@ -81,12 +81,17 @@ crypt_tool -i /path/to/file.txt -e -t General
 
 - `-t` is effectively required: without it no passphrase is found and the tool stops.
 - Give exactly one of `-e` or `-d`; with neither, nothing is done. `-e` wins if both are given.
-- A file whose output already exists is skipped and its original is kept. Files already in the target form (`.enc` or `.menc` when encrypting, anything else when decrypting) are left alone.
-- Locker encryption normally uses `locker_passphrase`, but a locker with its own `locker_<name>_passphrase` setting encrypts with that instead, and those files need `backup_tool` to decrypt.
+- A file whose output already exists is skipped and its original is kept. Files already in the
+  target form (`.enc` or `.menc` when encrypting, anything else when decrypting) are left alone.
+- Locker encryption normally uses `locker_passphrase`, but a locker with its own
+  `locker_<name>_passphrase` setting encrypts with that instead, and those files need `backup_tool`
+  to decrypt.
 - To encrypt or decrypt while copying to another location, use `backup_tool -r`.
 
 ## See also
 
-- [backup_tool](backup_tool.md) — Copy, encrypt, decrypt or archive a directory tree into another directory
-- [upload_game_files](upload_game_files.md) — Encrypt game folders in place and upload them to a remote locker
+- [backup_tool](backup_tool.md) — Copy, encrypt, decrypt or archive a directory tree into another
+  directory
+- [upload_game_files](upload_game_files.md) — Encrypt game folders in place and upload them to a
+  remote locker
 - [sync_tool](sync_tool.md) — Run an rclone operation between the local locker and a remote locker

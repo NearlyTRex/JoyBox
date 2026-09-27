@@ -8,7 +8,7 @@ Build an ISO image from each folder, or each zip file, in a directory.
 
 ## Synopsis
 
-```
+```text
 make_iso [options]
 ```
 
@@ -71,11 +71,13 @@ make_iso -i /path/to/folders -n GAMEDISC
 
 ## Notes
 
-- With `-d`, `-t Folder` deletes each source folder once its image is made, and `-t Zip` deletes each zip after extracting it and the extracted folder once the image is made.
+- With `-d`, `-t Folder` deletes each source folder once its image is made, and `-t Zip` deletes
+  each zip after extracting it and the extracted folder once the image is made.
 - xorriso (XorrISO) and, for `-t Zip`, 7-Zip must be installed as JoyBox tools.
 
 ## See also
 
 - [isoextract](isoextract.md) — Extract the files from ISO images into a folder beside each image
-- [compress_folders](compress_folders.md) — Compress each folder in a directory into an archive of its own with 7-Zip
+- [compress_folders](compress_folders.md) — Compress each folder in a directory into an archive of
+  its own with 7-Zip
 - [chdconvert](chdconvert.md) — Convert CD disc images (ISO, CUE, GDI) to CHD files with chdman

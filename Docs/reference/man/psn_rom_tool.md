@@ -8,7 +8,7 @@ Rename PlayStation Network packages and license files to their content IDs.
 
 ## Synopsis
 
-```
+```text
 psn_rom_tool [options]
 ```
 
@@ -66,5 +66,7 @@ psn_rom_tool -i /path/to/psn -r -p -v
 
 ## See also
 
-- [ps3_rom_tool](ps3_rom_tool.md) — Check that PlayStation 3 disc CHDs decrypt and extract with their disc keys
-- [psv_rom_tool](psv_rom_tool.md) — Strip, unstrip, trim, untrim or verify PlayStation Vita cartridge dumps (.psv)
+- [ps3_rom_tool](ps3_rom_tool.md) — Check that PlayStation 3 disc CHDs decrypt and extract with
+  their disc keys
+- [psv_rom_tool](psv_rom_tool.md) — Strip, unstrip, trim, untrim or verify PlayStation Vita
+  cartridge dumps (.psv)

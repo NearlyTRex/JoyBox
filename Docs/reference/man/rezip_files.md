@@ -8,7 +8,7 @@ Rebuild zip files in place with fixed, reproducible 7-Zip settings.
 
 ## Synopsis
 
-```
+```text
 rezip_files [options]
 ```
 
@@ -57,12 +57,16 @@ rezip_files -i "/path/to/Game (USA).zip" --no-preview
 
 ## Notes
 
-- The original zip is deleted before the new one is written. If the rebuild fails, the files are still in the `<name>_extracted` folder.
-- Each zip is extracted in full next to itself, so that directory needs room for its uncompressed contents.
+- The original zip is deleted before the new one is written. If the rebuild fails, the files are
+  still in the `<name>_extracted` folder.
+- Each zip is extracted in full next to itself, so that directory needs room for its uncompressed
+  contents.
 - 7-Zip must be installed as a JoyBox tool.
 
 ## See also
 
-- [compress_folders](compress_folders.md) — Compress each folder in a directory into an archive of its own with 7-Zip
+- [compress_folders](compress_folders.md) — Compress each folder in a directory into an archive of
+  its own with 7-Zip
 - [verify_archives](verify_archives.md) — Test archive files for corruption with 7-Zip
-- [decompress_archives](decompress_archives.md) — Extract archive files into a folder beside each archive
+- [decompress_archives](decompress_archives.md) — Extract archive files into a folder beside each
+  archive

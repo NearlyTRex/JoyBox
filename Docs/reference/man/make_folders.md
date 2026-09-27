@@ -8,7 +8,7 @@ Move each matching file into a folder of its own, named after the file.
 
 ## Synopsis
 
-```
+```text
 make_folders [options]
 ```
 
@@ -59,10 +59,13 @@ make_folders -i ~/Roms/PS2 -p -v
 
 ## Notes
 
-- Extensions are matched case-sensitively and must not contain spaces, so `.iso` does not match `GAME.ISO`.
+- Extensions are matched case-sensitively and must not contain spaces, so `.iso` does not match
+  `GAME.ISO`.
 - There is no confirmation prompt; use `-p -v` to see what would move first.
 
 ## See also
 
-- [sanitize_filenames](sanitize_filenames.md) — Rename files so their names are plain ASCII and safe on every filesystem
-- [compress_folders](compress_folders.md) — Compress each folder in a directory into an archive of its own with 7-Zip
+- [sanitize_filenames](sanitize_filenames.md) — Rename files so their names are plain ASCII and safe
+  on every filesystem
+- [compress_folders](compress_folders.md) — Compress each folder in a directory into an archive of
+  its own with 7-Zip

@@ -57,7 +57,7 @@ a single vault, and nowhere else.
 One item holding a concealed field per setting, rather than an item per secret. A **Secure Note**
 suits it better than a Password item, which has a password field you would leave unused.
 
-```
+```text
 Vault:  Private
 Item:   JoyBox
 Fields: general_passphrase, locker_passphrase, locker_hetzner_token, ...
@@ -69,7 +69,7 @@ the item to check a label. Name the fields after the ini keys and avoid spaces.
 
 A field inside a **named section** carries the section in its reference:
 
-```
+```text
 op://Private/JoyBox/Lockers/hetzner_token
 ```
 

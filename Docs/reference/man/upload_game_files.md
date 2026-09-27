@@ -8,7 +8,7 @@ Encrypt game folders in place and upload them to a remote locker.
 
 ## Synopsis
 
-```
+```text
 upload_game_files [options]
 ```
 
@@ -99,14 +99,18 @@ upload_game_files -m Custom -i /path/to/game/files -c Nintendo -s "Nintendo Swit
 
 ## Notes
 
-- The local copies are left encrypted: the unencrypted originals are deleted. Decrypt them with `crypt_tool -d -t Locker` or copy them out decrypted with `backup_tool -r Decrypt`.
+- The local copies are left encrypted: the unencrypted originals are deleted. Decrypt them with
+  `crypt_tool -d -t Locker` or copy them out decrypted with `backup_tool -r Decrypt`.
 - Files that are already `.enc` are left as they are, so an interrupted run can be repeated.
-- `-i` is used for every selected game, so give it only with `-m Custom` or a `-n` that matches one game.
+- `-i` is used for every selected game, so give it only with `-m Custom` or a `-n` that matches one
+  game.
 - The first game that fails stops the run.
 
 ## See also
 
-- [backup_tool](backup_tool.md) — Copy, encrypt, decrypt or archive a directory tree into another directory
+- [backup_tool](backup_tool.md) — Copy, encrypt, decrypt or archive a directory tree into another
+  directory
 - [crypt_tool](crypt_tool.md) — Encrypt or decrypt files in place with GPG
 - [sync_tool](sync_tool.md) — Run an rclone operation between the local locker and a remote locker
-- [backup_game_files](backup_game_files.md) — Download store purchases whose build has changed and upload them, encrypted, to a locker
+- [backup_game_files](backup_game_files.md) — Download store purchases whose build has changed and
+  upload them, encrypted, to a locker

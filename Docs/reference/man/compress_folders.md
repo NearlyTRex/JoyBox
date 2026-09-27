@@ -8,7 +8,7 @@ Compress each folder in a directory into an archive of its own with 7-Zip.
 
 ## Synopsis
 
-```
+```text
 compress_folders [options]
 ```
 
@@ -68,11 +68,14 @@ compress_folders -i /path/to/folders -a 7Z -w secret -s 4092m
 
 ## Notes
 
-- Use `ZIP` or `7Z`. Types that cannot be created, such as `RAR` or the tarball types, are refused for each folder with an error.
+- Use `ZIP` or `7Z`. Types that cannot be created, such as `RAR` or the tarball types, are refused
+  for each folder with an error.
 - 7-Zip must be installed as a JoyBox tool.
 
 ## See also
 
-- [compress_files](compress_files.md) — Compress each file in a directory into an archive of its own with 7-Zip
-- [decompress_archives](decompress_archives.md) — Extract archive files into a folder beside each archive
+- [compress_files](compress_files.md) — Compress each file in a directory into an archive of its own
+  with 7-Zip
+- [decompress_archives](decompress_archives.md) — Extract archive files into a folder beside each
+  archive
 - [make_iso](make_iso.md) — Build an ISO image from each folder, or each zip file, in a directory

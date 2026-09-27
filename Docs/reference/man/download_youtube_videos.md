@@ -8,7 +8,7 @@ Download a video, playlist or channel with yt-dlp as MP4 or MP3.
 
 ## Synopsis
 
-```
+```text
 download_youtube_videos <youtube_url> [options]
 ```
 
@@ -100,9 +100,11 @@ download_youtube_videos "https://www.youtube.com/watch?v=VIDEO_ID" -p -v
 
 ## Notes
 
-- `-s` renames every `.mp4` (or `.mp3` with `-a`) file in the output directory, not only the ones just downloaded.
+- `-s` renames every `.mp4` (or `.mp3` with `-a`) file in the output directory, not only the ones
+  just downloaded.
 - Under `-p` yt-dlp is not run at all.
 
 ## See also
 
-- [download_audio_files](download_audio_files.md) — Download new videos from a genre's configured channels as MP3 and back them up to a locker
+- [download_audio_files](download_audio_files.md) — Download new videos from a genre's configured
+  channels as MP3 and back them up to a locker

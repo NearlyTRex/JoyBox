@@ -8,7 +8,7 @@ Render the Pegasus metadata as one browsable HTML table per category.
 
 ## Synopsis
 
-```
+```text
 publish_game_metadata_files [options]
 ```
 
@@ -59,6 +59,9 @@ publish_game_metadata_files -p -v
 
 ## See also
 
-- [build_game_metadata_files](build_game_metadata_files.md) — Add each game with a JSON file to its platform's Pegasus metadata file and fill in missing details
-- [sort_game_metadata](sort_game_metadata.md) — Rewrite every Pegasus metadata file found under the metadata repository in sorted order
-- [scan_game_files](scan_game_files.md) — Run the whole collection pipeline: store purchases, JSON files, metadata, optional assets, and HTML publishing
+- [build_game_metadata_files](build_game_metadata_files.md) — Add each game with a JSON file to its
+  platform's Pegasus metadata file and fill in missing details
+- [sort_game_metadata](sort_game_metadata.md) — Rewrite every Pegasus metadata file found under the
+  metadata repository in sorted order
+- [scan_game_files](scan_game_files.md) — Run the whole collection pipeline: store purchases, JSON
+  files, metadata, optional assets, and HTML publishing

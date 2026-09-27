@@ -8,7 +8,7 @@ Build an Ubuntu Server image that installs itself.
 
 ## Synopsis
 
-```
+```text
 build_autoinstall_iso [options]
 ```
 
@@ -145,16 +145,26 @@ build_autoinstall_iso -o ~/Images -p -v
 
 ## Notes
 
-- Booting the image erases the target's largest disk without asking; there are 2 seconds at the boot menu to interrupt.
-- Write it to a stick with `sudo dd if=ubuntu-autoinstall.iso of=/dev/sdX bs=4M status=progress conv=fsync`.
-- The stock image is kept next to the output as `ubuntu-server-<version>.iso` and re-checked and reused by the next build. An image given with `--source_iso` is used as it is, without any check.
-- If gpg or the keyring is missing the build stops rather than going on unverified; `--skip_signature` builds anyway, `--skip_verify` skips both checks.
-- Make an SSH key with `ssh-keygen -t ed25519 -f ~/.ssh/joybox_autoinstall` and put the `.pub` contents in `autoinstall_ssh_keys`. Make a password hash with `mkpasswd --method=SHA-512` or `openssl passwd -6`; it only matters at the console.
-- With `--user_data` the file is used exactly as written: no account checks, and neither the overlay nor the profile's packages are applied. Only the hostname still goes into `meta-data`.
-- Needs Gpg and XorrISO from `setup_tools`. Try the image in `boot_vm_image` before writing it to a stick.
+- Booting the image erases the target's largest disk without asking; there are 2 seconds at the boot
+  menu to interrupt.
+- Write it to a stick with `sudo dd if=ubuntu-autoinstall.iso of=/dev/sdX bs=4M status=progress
+  conv=fsync`.
+- The stock image is kept next to the output as `ubuntu-server-<version>.iso` and re-checked and
+  reused by the next build. An image given with `--source_iso` is used as it is, without any check.
+- If gpg or the keyring is missing the build stops rather than going on unverified;
+  `--skip_signature` builds anyway, `--skip_verify` skips both checks.
+- Make an SSH key with `ssh-keygen -t ed25519 -f ~/.ssh/joybox_autoinstall` and put the `.pub`
+  contents in `autoinstall_ssh_keys`. Make a password hash with `mkpasswd --method=SHA-512` or
+  `openssl passwd -6`; it only matters at the console.
+- With `--user_data` the file is used exactly as written: no account checks, and neither the overlay
+  nor the profile's packages are applied. Only the hostname still goes into `meta-data`.
+- Needs Gpg and XorrISO from `setup_tools`. Try the image in `boot_vm_image` before writing it to a
+  stick.
 
 ## See also
 
-- [boot_vm_image](boot_vm_image.md) — Boot an installer image in a throwaway machine, the way the target will
-- [setup_tools](setup_tools.md) — Install, update, or rebuild the third-party tools JoyBox depends on
+- [boot_vm_image](boot_vm_image.md) — Boot an installer image in a throwaway machine, the way the
+  target will
+- [setup_tools](setup_tools.md) — Install, update, or rebuild the third-party tools JoyBox depends
+  on
 - [testvm](testvm.md) — Manage the local KVM virtual machine used to rehearse server changes

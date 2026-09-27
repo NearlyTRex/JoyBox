@@ -28,7 +28,7 @@ while [[ $# -gt 0 ]]; do
             USERNAME="$2"
             shift 2
             ;;
-        -*|--*)
+        -*)
             echo "Unknown option: $1"
             print_usage
             ;;

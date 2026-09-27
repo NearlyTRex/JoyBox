@@ -8,7 +8,7 @@ Generate the command reference in Docs from every command's help text.
 
 ## Synopsis
 
-```
+```text
 build_man_pages [options]
 ```
 
@@ -62,4 +62,5 @@ build_man_pages --check
 
 ## See also
 
-- [setup_tools](setup_tools.md) — Install, update, or rebuild the third-party tools JoyBox depends on
+- [setup_tools](setup_tools.md) — Install, update, or rebuild the third-party tools JoyBox depends
+  on

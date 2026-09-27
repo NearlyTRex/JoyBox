@@ -8,7 +8,7 @@ Archive, restore and back up game saves.
 
 ## Synopsis
 
-```
+```text
 save_game_tool [options]
 ```
 
@@ -103,12 +103,16 @@ save_game_tool -a ImportSavePaths -c Computer -s Steam
 
 ## Notes
 
-- `Pack` archives what is already in the live save directory; to capture fresh saves from an installed store game use `Export`.
-- Every pack or export writes a new timestamped archive rather than replacing an old one, unless an identical archive already exists.
+- `Pack` archives what is already in the live save directory; to capture fresh saves from an
+  installed store game use `Export`.
+- Every pack or export writes a new timestamped archive rather than replacing an old one, unless an
+  identical archive already exists.
 - Archives are copied to the lockers as plain zip files, without encryption.
 - The first game that fails stops the run.
 
 ## See also
 
-- [backup_tool](backup_tool.md) — Copy, encrypt, decrypt or archive a directory tree into another directory
-- [upload_game_files](upload_game_files.md) — Encrypt game folders in place and upload them to a remote locker
+- [backup_tool](backup_tool.md) — Copy, encrypt, decrypt or archive a directory tree into another
+  directory
+- [upload_game_files](upload_game_files.md) — Encrypt game folders in place and upload them to a
+  remote locker

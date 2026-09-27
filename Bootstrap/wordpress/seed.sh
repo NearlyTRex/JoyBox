@@ -22,6 +22,15 @@ SEED_VERSION=1
 
 log() { echo "[seed] $*"; }
 
+# Delete every post of a type with a slug, one id at a time
+delete_posts() {
+    wp post list --post_type="$1" --name="$2" --format=ids | tr ' ' '\n' | while read -r id; do
+        if [ -n "$id" ]; then
+            wp post delete "$id" --force < /dev/null
+        fi
+    done
+}
+
 # Install core if this is a fresh database
 if ! wp core is-installed 2>/dev/null; then
     log "Installing WordPress core at $WP_SITE_URL"
@@ -49,11 +58,11 @@ wp rewrite flush --hard || true
 # Drop the default sample content that ships with a fresh install
 if wp post list --post_type=post --name=hello-world --format=ids | grep -q .; then
     log "Removing default 'Hello world!' post"
-    wp post delete $(wp post list --post_type=post --name=hello-world --format=ids) --force
+    delete_posts post hello-world
 fi
 if wp post list --post_type=page --name=sample-page --format=ids | grep -q .; then
     log "Removing default 'Sample Page'"
-    wp post delete $(wp post list --post_type=page --name=sample-page --format=ids) --force
+    delete_posts page sample-page
 fi
 
 # Create or update a page, tracked by seed id

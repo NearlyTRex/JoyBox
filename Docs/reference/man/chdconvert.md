@@ -8,7 +8,7 @@ Convert CD disc images (ISO, CUE, GDI) to CHD files with chdman.
 
 ## Synopsis
 
-```
+```text
 chdconvert [options]
 ```
 

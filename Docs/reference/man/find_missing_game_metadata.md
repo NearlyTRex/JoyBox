@@ -8,7 +8,7 @@ Find games whose Pegasus metadata entries are missing fields.
 
 ## Synopsis
 
-```
+```text
 find_missing_game_metadata [options]
 ```
 
@@ -71,10 +71,14 @@ find_missing_game_metadata -p
 
 ## Notes
 
-- Run it from a scratch directory; the report files land in whatever directory you run it from and overwrite earlier ones.
+- Run it from a scratch directory; the report files land in whatever directory you run it from and
+  overwrite earlier ones.
 
 ## See also
 
-- [build_game_metadata_files](build_game_metadata_files.md) — Add each game with a JSON file to its platform's Pegasus metadata file and fill in missing details
-- [find_missing_game_assets](find_missing_game_assets.md) — Compare the games in the Pegasus metadata with the asset files in the local locker
-- [analyze_game_json_files](analyze_game_json_files.md) — List games whose JSON file has no files, or whose metadata marks them unplayable
+- [build_game_metadata_files](build_game_metadata_files.md) — Add each game with a JSON file to its
+  platform's Pegasus metadata file and fill in missing details
+- [find_missing_game_assets](find_missing_game_assets.md) — Compare the games in the Pegasus
+  metadata with the asset files in the local locker
+- [analyze_game_json_files](analyze_game_json_files.md) — List games whose JSON file has no files,
+  or whose metadata marks them unplayable

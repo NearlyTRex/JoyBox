@@ -43,7 +43,7 @@ while [[ $# -gt 0 ]]; do
             MOUNT_PATH="$2"
             shift 2
             ;;
-        -*|--*)
+        -*)
             echo "Unknown option: $1"
             print_usage
             ;;

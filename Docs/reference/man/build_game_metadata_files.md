@@ -8,7 +8,7 @@ Add each game with a JSON file to its platform's Pegasus metadata file and fill 
 
 ## Synopsis
 
-```
+```text
 build_game_metadata_files [options]
 ```
 
@@ -75,14 +75,21 @@ build_game_metadata_files -c Computer -s Steam -p -v
 
 ## Notes
 
-- Only games that already have a JSON file are processed; create it first with `build_game_json_files` or `build_game_store_purchases`.
+- Only games that already have a JSON file are processed; create it first with
+  `build_game_json_files` or `build_game_store_purchases`.
 - An existing entry is never recreated, only filled in.
 
 ## See also
 
-- [build_game_json_files](build_game_json_files.md) — Create or update the JSON file of each game found in a locker
-- [build_game_store_purchases](build_game_store_purchases.md) — Import the games you own on a store as JSON and metadata entries, and refresh the existing ones
-- [find_missing_game_metadata](find_missing_game_metadata.md) — Find games whose Pegasus metadata entries are missing fields
-- [download_game_metadata_assets](download_game_metadata_assets.md) — Download one kind of artwork or video for each selected game and back it up to the lockers
-- [sort_game_metadata](sort_game_metadata.md) — Rewrite every Pegasus metadata file found under the metadata repository in sorted order
-- [publish_game_metadata_files](publish_game_metadata_files.md) — Render the Pegasus metadata as one browsable HTML table per category
+- [build_game_json_files](build_game_json_files.md) — Create or update the JSON file of each game
+  found in a locker
+- [build_game_store_purchases](build_game_store_purchases.md) — Import the games you own on a store
+  as JSON and metadata entries, and refresh the existing ones
+- [find_missing_game_metadata](find_missing_game_metadata.md) — Find games whose Pegasus metadata
+  entries are missing fields
+- [download_game_metadata_assets](download_game_metadata_assets.md) — Download one kind of artwork
+  or video for each selected game and back it up to the lockers
+- [sort_game_metadata](sort_game_metadata.md) — Rewrite every Pegasus metadata file found under the
+  metadata repository in sorted order
+- [publish_game_metadata_files](publish_game_metadata_files.md) — Render the Pegasus metadata as one
+  browsable HTML table per category

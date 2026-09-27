@@ -8,7 +8,7 @@ Strip all EXIF and other embedded metadata from image files.
 
 ## Synopsis
 
-```
+```text
 clean_exif_data [options]
 ```
 
@@ -63,4 +63,5 @@ clean_exif_data -i ~/Pictures/ToShare -p -v
 
 ## See also
 
-- [setup_tools](setup_tools.md) — Install, update, or rebuild the third-party tools JoyBox depends on
+- [setup_tools](setup_tools.md) — Install, update, or rebuild the third-party tools JoyBox depends
+  on

@@ -8,7 +8,7 @@ Tag audio files with the right per-genre defaults, then apply them in one run.
 
 ## Synopsis
 
-```
+```text
 tag_audio_files [options]
 ```
 
@@ -97,12 +97,18 @@ tag_audio_files -g ASMR --no_apply
 
 ## Notes
 
-- `tag_audio_files -g Story` is the same as `audio_metadata_tool -a Tag -g Story --exclude_comments --set genre=Story --use_index_for_track_number` followed by `audio_metadata_tool -a Apply -g Story`.
-- `--set genre=...` replaces the automatic genre. Use `--set` for other fields; it accepts the same fields as `audio_metadata_tool --set`.
+- `tag_audio_files -g Story` is the same as `audio_metadata_tool -a Tag -g Story --exclude_comments
+  --set genre=Story --use_index_for_track_number` followed by `audio_metadata_tool -a Apply -g
+  Story`.
+- `--set genre=...` replaces the automatic genre. Use `--set` for other fields; it accepts the same
+  fields as `audio_metadata_tool --set`.
 - A genre with no albums is skipped with a warning.
 
 ## See also
 
-- [audio_metadata_tool](audio_metadata_tool.md) — Extract, clear or apply the tags of albums in the local locker's music tree
-- [download_audio_files](download_audio_files.md) — Download new videos from a genre's configured channels as MP3 and back them up to a locker
-- [generate_playlist](generate_playlist.md) — Write `.m3u` playlists for the media files in a directory tree
+- [audio_metadata_tool](audio_metadata_tool.md) — Extract, clear or apply the tags of albums in the
+  local locker's music tree
+- [download_audio_files](download_audio_files.md) — Download new videos from a genre's configured
+  channels as MP3 and back them up to a locker
+- [generate_playlist](generate_playlist.md) — Write `.m3u` playlists for the media files in a
+  directory tree

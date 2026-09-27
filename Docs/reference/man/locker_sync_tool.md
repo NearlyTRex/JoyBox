@@ -8,7 +8,7 @@ Sync a primary locker to one or more secondary lockers, reviewing each change in
 
 ## Synopsis
 
-```
+```text
 locker_sync_tool [options]
 ```
 
@@ -92,15 +92,22 @@ locker_sync_tool --clear_cache
 
 ## Notes
 
-- Hash maps are cached per locker for 24 hours, including the primary's, so recent changes are not seen until the cache expires unless `--skip_cache` or `--clear_cache` is given. Caches are written even on pretend runs.
-- After a sync the secondary's cached map is updated with the files just transferred, so a re-run within the cache window does not transfer them again.
+- Hash maps are cached per locker for 24 hours, including the primary's, so recent changes are not
+  seen until the cache expires unless `--skip_cache` or `--clear_cache` is given. Caches are written
+  even on pretend runs.
+- After a sync the secondary's cached map is updated with the files just transferred, so a re-run
+  within the cache window does not transfer them again.
 - Recycled orphans go to the secondary's `.recycle_bin`; nothing is hard-deleted.
-- For SFTP remotes the comparison is only as accurate as the sidecar. Keep it current with `master_backup` or `rebuild_hash_sidecars`.
+- For SFTP remotes the comparison is only as accurate as the sidecar. Keep it current with
+  `master_backup` or `rebuild_hash_sidecars`.
 - There is no preview prompt, so `--no-preview` has no effect; the editor is the review step.
 
 ## See also
 
-- [master_backup](master_backup.md) — Back up the local locker to one or more remote lockers in one unattended run
-- [rebuild_hash_sidecars](rebuild_hash_sidecars.md) — Rebuild a remote locker's hash sidecar database from local content
-- [find_missing_hash_sidecars](find_missing_hash_sidecars.md) — List files on a remote locker that have no entry in its hash sidecar database
+- [master_backup](master_backup.md) — Back up the local locker to one or more remote lockers in one
+  unattended run
+- [rebuild_hash_sidecars](rebuild_hash_sidecars.md) — Rebuild a remote locker's hash sidecar
+  database from local content
+- [find_missing_hash_sidecars](find_missing_hash_sidecars.md) — List files on a remote locker that
+  have no entry in its hash sidecar database
 - [sync_tool](sync_tool.md) — Run an rclone operation between the local locker and a remote locker

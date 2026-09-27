@@ -8,7 +8,7 @@ Test archive files for corruption with 7-Zip.
 
 ## Synopsis
 
-```
+```text
 verify_archives [options]
 ```
 
@@ -54,11 +54,13 @@ verify_archives -i /path/to/archives -a ZIP 7Z
 
 ## Notes
 
-- Archives are matched by extension only, e.g. `ZIP` selects `.zip` files and `TAR_GZ` selects `.tar.gz` files.
+- Archives are matched by extension only, e.g. `ZIP` selects `.zip` files and `TAR_GZ` selects
+  `.tar.gz` files.
 - 7-Zip must be installed as a JoyBox tool.
 
 ## See also
 
-- [decompress_archives](decompress_archives.md) — Extract archive files into a folder beside each archive
+- [decompress_archives](decompress_archives.md) — Extract archive files into a folder beside each
+  archive
 - [chdverify](chdverify.md) — Check CHD files against their internal SHA-1 checksums with chdman
 - [rezip_files](rezip_files.md) — Rebuild zip files in place with fixed, reproducible 7-Zip settings

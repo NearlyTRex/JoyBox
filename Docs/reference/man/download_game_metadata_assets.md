@@ -8,7 +8,7 @@ Download one kind of artwork or video for each selected game and back it up to t
 
 ## Synopsis
 
-```
+```text
 download_game_metadata_assets [options]
 ```
 
@@ -87,7 +87,11 @@ download_game_metadata_assets -c Nintendo -s "Nintendo Switch" -t BoxFront -p -v
 
 ## See also
 
-- [find_missing_game_assets](find_missing_game_assets.md) — Compare the games in the Pegasus metadata with the asset files in the local locker
-- [build_game_metadata_files](build_game_metadata_files.md) — Add each game with a JSON file to its platform's Pegasus metadata file and fill in missing details
-- [login_game_stores](login_game_stores.md) — Log in to the selected game stores so their purchases, metadata and downloads can be fetched
-- [scan_game_files](scan_game_files.md) — Run the whole collection pipeline: store purchases, JSON files, metadata, optional assets, and HTML publishing
+- [find_missing_game_assets](find_missing_game_assets.md) — Compare the games in the Pegasus
+  metadata with the asset files in the local locker
+- [build_game_metadata_files](build_game_metadata_files.md) — Add each game with a JSON file to its
+  platform's Pegasus metadata file and fill in missing details
+- [login_game_stores](login_game_stores.md) — Log in to the selected game stores so their purchases,
+  metadata and downloads can be fetched
+- [scan_game_files](scan_game_files.md) — Run the whole collection pipeline: store purchases, JSON
+  files, metadata, optional assets, and HTML publishing

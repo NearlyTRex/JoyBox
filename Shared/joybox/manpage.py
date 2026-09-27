@@ -5,6 +5,7 @@ import sys
 import json
 import subprocess
 import tempfile
+import textwrap
 import tomllib
 
 # Local imports
@@ -21,6 +22,9 @@ DEFAULT_GROUP_TITLE = "General"
 
 # Section for a tool that does not name one
 DEFAULT_SECTION = "Other"
+
+# Column prose is wrapped at, matching the repo's markdownlint line length
+PAGE_WIDTH = 100
 
 # The only environment a described script sees. Defaults can be read from the
 # environment, and a token set in the shell must not end up on a page.
@@ -165,6 +169,16 @@ def format_synopsis(tool_name, spec):
 
 #################################################
 
+# Format a list item, wrapped with its continuation lines under the text
+def format_bullet(text):
+    return textwrap.fill(
+        text,
+        width = PAGE_WIDTH,
+        initial_indent = "- ",
+        subsequent_indent = "  ",
+        break_long_words = False,
+        break_on_hyphens = False)
+
 # Render a tool's man page
 def render_page(tool_name, spec, descriptions = None):
     descriptions = descriptions or {}
@@ -175,11 +189,11 @@ def render_page(tool_name, spec, descriptions = None):
         "",
         "[← Command index](README.md)",
         "",
-        spec["description"].strip(),
+        textwrap.fill(spec["description"].strip(), width = PAGE_WIDTH, break_long_words = False, break_on_hyphens = False),
         "",
         "## Synopsis",
         "",
-        "```",
+        "```text",
         format_synopsis(tool_name, spec),
         "```",
         "",
@@ -203,13 +217,13 @@ def render_page(tool_name, spec, descriptions = None):
             lines += ["### %s" % title, "", "```bash", command, "```", ""]
     if spec.get("notes"):
         lines += ["## Notes", ""]
-        lines += ["- %s" % note for note in spec["notes"]]
+        lines += [format_bullet(note) for note in spec["notes"]]
         lines.append("")
     if spec.get("see_also"):
         lines += ["## See also", ""]
         for other in spec["see_also"]:
             summary = descriptions.get(other)
-            lines.append("- [%s](%s.md)%s" % (other, other, " — %s" % summary if summary else ""))
+            lines.append(format_bullet("[%s](%s.md)%s" % (other, other, " — %s" % summary if summary else "")))
         lines.append("")
     return "\n".join(lines)
 

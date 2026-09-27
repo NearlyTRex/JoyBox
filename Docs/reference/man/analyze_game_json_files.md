@@ -8,7 +8,7 @@ List games whose JSON file has no files, or whose metadata marks them unplayable
 
 ## Synopsis
 
-```
+```text
 analyze_game_json_files [options]
 ```
 
@@ -59,6 +59,9 @@ analyze_game_json_files -m UnplayableGames
 
 ## See also
 
-- [build_game_json_files](build_game_json_files.md) — Create or update the JSON file of each game found in a locker
-- [clean_game_json_files](clean_game_json_files.md) — Tidy every game JSON file: sort its keys and drop empty values
-- [find_missing_game_metadata](find_missing_game_metadata.md) — Find games whose Pegasus metadata entries are missing fields
+- [build_game_json_files](build_game_json_files.md) — Create or update the JSON file of each game
+  found in a locker
+- [clean_game_json_files](clean_game_json_files.md) — Tidy every game JSON file: sort its keys and
+  drop empty values
+- [find_missing_game_metadata](find_missing_game_metadata.md) — Find games whose Pegasus metadata
+  entries are missing fields

@@ -8,7 +8,7 @@ Archive your GitHub repositories into the locker, or sync your forks with upstre
 
 ## Synopsis
 
-```
+```text
 github_tool [options]
 ```
 
@@ -105,13 +105,18 @@ github_tool -p -v
 
 ## Notes
 
-- The token needs access to private repositories for them to be listed, and write access for `Update`.
+- The token needs access to private repositories for them to be listed, and write access for
+  `Update`.
 - Repository names in `--include_repos` and `--exclude_repos` must match exactly, including case.
 - A repository that fails to archive or update is reported and the rest still run.
-- For `Archive`, `--archive_base_dir` must already exist and Git must be installed with `setup_tools`.
+- For `Archive`, `--archive_base_dir` must already exist and Git must be installed with
+  `setup_tools`.
 
 ## See also
 
-- [setup_tools](setup_tools.md) — Install, update, or rebuild the third-party tools JoyBox depends on
-- [backup_tool](backup_tool.md) — Copy, encrypt, decrypt or archive a directory tree into another directory
-- [master_backup](master_backup.md) — Back up the local locker to one or more remote lockers in one unattended run
+- [setup_tools](setup_tools.md) — Install, update, or rebuild the third-party tools JoyBox depends
+  on
+- [backup_tool](backup_tool.md) — Copy, encrypt, decrypt or archive a directory tree into another
+  directory
+- [master_backup](master_backup.md) — Back up the local locker to one or more remote lockers in one
+  unattended run

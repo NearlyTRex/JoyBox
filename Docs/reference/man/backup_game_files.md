@@ -8,7 +8,7 @@ Download store purchases whose build has changed and upload them, encrypted, to 
 
 ## Synopsis
 
-```
+```text
 backup_game_files [options]
 ```
 
@@ -76,10 +76,13 @@ backup_game_files -c Computer -s GOG -n "Game Name" -l Hetzner
 
 ## Notes
 
-- Only `Computer` store subcategories do anything; the tool checks every selected game against its store, which can take a while without `-c` and `-s`.
+- Only `Computer` store subcategories do anything; the tool checks every selected game against its
+  store, which can take a while without `-c` and `-s`.
 - The first game that fails stops the run.
 
 ## See also
 
-- [upload_game_files](upload_game_files.md) — Encrypt game folders in place and upload them to a remote locker
-- [backup_tool](backup_tool.md) — Copy, encrypt, decrypt or archive a directory tree into another directory
+- [upload_game_files](upload_game_files.md) — Encrypt game folders in place and upload them to a
+  remote locker
+- [backup_tool](backup_tool.md) — Copy, encrypt, decrypt or archive a directory tree into another
+  directory

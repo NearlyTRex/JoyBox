@@ -8,7 +8,7 @@ Run an rclone operation between the local locker and a remote locker.
 
 ## Synopsis
 
-```
+```text
 sync_tool [options]
 ```
 
@@ -168,16 +168,25 @@ sync_tool -a Download -l Hetzner --excludes "Testing/**"
 ## Notes
 
 - `-l` has no default and must name a remote locker; the default action is `Init`.
-- The local side is always the `Local` locker's directory, which must exist for the transfer and diff actions.
-- `Merge` needs an `RCLONE_TEST` file in both roots (`--check-access`), and the first run for a pair needs `-e`.
-- `--excludes` replaces the configured list rather than adding to it. An empty value means the configured list is used.
-- `Diff` writes its lists relative to the current directory unless the `--diff_*_path` options give full paths. For `DiffSync` those options are file names inside `--diff_dir`.
-- `Mount` does nothing when the mount path already has files in it, since it assumes the remote is mounted. With `-v` rclone logs to `/tmp/rclone.log`.
+- The local side is always the `Local` locker's directory, which must exist for the transfer and
+  diff actions.
+- `Merge` needs an `RCLONE_TEST` file in both roots (`--check-access`), and the first run for a pair
+  needs `-e`.
+- `--excludes` replaces the configured list rather than adding to it. An empty value means the
+  configured list is used.
+- `Diff` writes its lists relative to the current directory unless the `--diff_*_path` options give
+  full paths. For `DiffSync` those options are file names inside `--diff_dir`.
+- `Mount` does nothing when the mount path already has files in it, since it assumes the remote is
+  mounted. With `-v` rclone logs to `/tmp/rclone.log`.
 - Under `-p` no rclone command is run at all, so a pretend run only shows the preview.
 
 ## See also
 
-- [backup_tool](backup_tool.md) — Copy, encrypt, decrypt or archive a directory tree into another directory
-- [upload_game_files](upload_game_files.md) — Encrypt game folders in place and upload them to a remote locker
-- [master_backup](master_backup.md) — Back up the local locker to one or more remote lockers in one unattended run
-- [locker_sync_tool](locker_sync_tool.md) — Sync a primary locker to one or more secondary lockers, reviewing each change in an editor
+- [backup_tool](backup_tool.md) — Copy, encrypt, decrypt or archive a directory tree into another
+  directory
+- [upload_game_files](upload_game_files.md) — Encrypt game folders in place and upload them to a
+  remote locker
+- [master_backup](master_backup.md) — Back up the local locker to one or more remote lockers in one
+  unattended run
+- [locker_sync_tool](locker_sync_tool.md) — Sync a primary locker to one or more secondary lockers,
+  reviewing each change in an editor

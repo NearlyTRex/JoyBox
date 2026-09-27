@@ -8,7 +8,7 @@ List files on a remote locker that have no entry in its hash sidecar database.
 
 ## Synopsis
 
-```
+```text
 find_missing_hash_sidecars [options]
 ```
 
@@ -73,11 +73,15 @@ find_missing_hash_sidecars -l Gdrive
 
 ## Notes
 
-- The sidecar is always read from the locker root, even when `--path` limits the listing to a subtree; listed paths are prefixed with `--path` before they are looked up.
+- The sidecar is always read from the locker root, even when `--path` limits the listing to a
+  subtree; listed paths are prefixed with `--path` before they are looked up.
 - The locker must be a configured rclone remote; the tool stops otherwise.
 
 ## See also
 
-- [rebuild_hash_sidecars](rebuild_hash_sidecars.md) — Rebuild a remote locker's hash sidecar database from local content
-- [master_backup](master_backup.md) — Back up the local locker to one or more remote lockers in one unattended run
-- [locker_sync_tool](locker_sync_tool.md) — Sync a primary locker to one or more secondary lockers, reviewing each change in an editor
+- [rebuild_hash_sidecars](rebuild_hash_sidecars.md) — Rebuild a remote locker's hash sidecar
+  database from local content
+- [master_backup](master_backup.md) — Back up the local locker to one or more remote lockers in one
+  unattended run
+- [locker_sync_tool](locker_sync_tool.md) — Sync a primary locker to one or more secondary lockers,
+  reviewing each change in an editor

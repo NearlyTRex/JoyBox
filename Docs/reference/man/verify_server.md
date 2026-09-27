@@ -8,7 +8,7 @@ Check that a server's hardening actually took effect.
 
 ## Synopsis
 
-```
+```text
 verify_server [options]
 ```
 

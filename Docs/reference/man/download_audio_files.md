@@ -8,7 +8,7 @@ Download new videos from a genre's configured channels as MP3 and back them up t
 
 ## Synopsis
 
-```
+```text
 download_audio_files [options]
 ```
 
@@ -123,16 +123,27 @@ download_audio_files -g Story -p -v
 ## Notes
 
 - Re-runs only fetch videos not in the download archive, so the tool is safe to run repeatedly.
-- YouTube needs the Deno JavaScript runtime to solve its download challenge; without it downloads fail with `Requested format is not available`. Deno is looked for at `~/.deno/bin/deno` and on `PATH`.
+- YouTube needs the Deno JavaScript runtime to solve its download challenge; without it downloads
+  fail with `Requested format is not available`. Deno is looked for at `~/.deno/bin/deno` and on
+  `PATH`.
 - If a channel's videos cannot be listed, the whole channel URL is handed to yt-dlp in one pass.
-- A yt-dlp exit code of 1 counts as success, since it is also what yt-dlp returns when some videos fail or everything was already archived; members-only videos fail this way unless the cookies belong to a member. Higher exit codes stop the run.
-- Copies to remote lockers happen file by file and print nothing without `-v`. For a large backlog, use `-l Local` and then `master_backup`, which uploads in batches.
-- Under `-p` no yt-dlp command is run: channels are not listed and nothing is downloaded, but the log still shows each channel's archive file and target folder.
+- A yt-dlp exit code of 1 counts as success, since it is also what yt-dlp returns when some videos
+  fail or everything was already archived; members-only videos fail this way unless the cookies
+  belong to a member. Higher exit codes stop the run.
+- Copies to remote lockers happen file by file and print nothing without `-v`. For a large backlog,
+  use `-l Local` and then `master_backup`, which uploads in batches.
+- Under `-p` no yt-dlp command is run: channels are not listed and nothing is downloaded, but the
+  log still shows each channel's archive file and target folder.
 
 ## See also
 
-- [tag_audio_files](tag_audio_files.md) — Tag audio files with the right per-genre defaults, then apply them in one run
-- [audio_metadata_tool](audio_metadata_tool.md) — Extract, clear or apply the tags of albums in the local locker's music tree
-- [generate_playlist](generate_playlist.md) — Write `.m3u` playlists for the media files in a directory tree
-- [master_backup](master_backup.md) — Back up the local locker to one or more remote lockers in one unattended run
-- [download_youtube_videos](download_youtube_videos.md) — Download a video, playlist or channel with yt-dlp as MP4 or MP3
+- [tag_audio_files](tag_audio_files.md) — Tag audio files with the right per-genre defaults, then
+  apply them in one run
+- [audio_metadata_tool](audio_metadata_tool.md) — Extract, clear or apply the tags of albums in the
+  local locker's music tree
+- [generate_playlist](generate_playlist.md) — Write `.m3u` playlists for the media files in a
+  directory tree
+- [master_backup](master_backup.md) — Back up the local locker to one or more remote lockers in one
+  unattended run
+- [download_youtube_videos](download_youtube_videos.md) — Download a video, playlist or channel with
+  yt-dlp as MP4 or MP3

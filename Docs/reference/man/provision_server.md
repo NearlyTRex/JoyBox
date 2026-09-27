@@ -8,7 +8,7 @@ Take a server entry from nothing to deployed, hardened and verified.
 
 ## Synopsis
 
-```
+```text
 provision_server [options]
 ```
 
@@ -91,10 +91,14 @@ provision_server -s 1 -p
 
 ## Notes
 
-- Needs paramiko on this machine; `python3 bootstrap.py -a setup -t local_ubuntu --components python` installs it.
-- A real host must accept root with the entry's key on first contact, as a freshly ordered server does when given that key.
-- Root login is closed by the `sshd` stage, so on a hardened server the `login` and `day0` stages only confirm the account and move on.
-- The exit code is 0 on success, the number of failed checks when only `verify` fails, and 1 when an earlier stage fails.
+- Needs paramiko on this machine; `python3 bootstrap.py -a setup -t local_ubuntu --components
+  python` installs it.
+- A real host must accept root with the entry's key on first contact, as a freshly ordered server
+  does when given that key.
+- Root login is closed by the `sshd` stage, so on a hardened server the `login` and `day0` stages
+  only confirm the account and move on.
+- The exit code is 0 on success, the number of failed checks when only `verify` fails, and 1 when an
+  earlier stage fails.
 
 ## See also
 

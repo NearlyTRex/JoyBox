@@ -8,7 +8,7 @@ Manage the local KVM virtual machine used to rehearse server changes.
 
 ## Synopsis
 
-```
+```text
 testvm <action> [options]
 ```
 
@@ -141,14 +141,21 @@ testvm destroy -p -v
 
 ## Notes
 
-- Run it as yourself. It talks to the system libvirt, which needs membership of the `libvirt` group, and asks sudo for the root-only steps: writing guest images under `/var/lib/libvirt/images` and editing `/etc/hosts`.
-- Needs `virt-install`, `virsh`, `qemu-img` and `cloud-localds`; `python3 bootstrap.py -a setup -t local_ubuntu --components aptget` installs them.
+- Run it as yourself. It talks to the system libvirt, which needs membership of the `libvirt` group,
+  and asks sudo for the root-only steps: writing guest images under `/var/lib/libvirt/images` and
+  editing `/etc/hosts`.
+- Needs `virt-install`, `virsh`, `qemu-img` and `cloud-localds`; `python3 bootstrap.py -a setup -t
+  local_ubuntu --components aptget` installs them.
 - Without `--ssh_key`, `create` authorises `~/.ssh/id_ed25519.pub` or `~/.ssh/id_rsa.pub`.
-- The address is a DHCP reservation for the guest's fixed MAC, so it survives rebuilds and reverts; `create` also drops the old host key for it from `~/.ssh/known_hosts`.
-- Take a snapshot before anything you would not want to repeat by hand; a revert takes seconds, a rebuild much longer.
-- The guest defaults to 2 processors, 4 GB and 20 GB, close to a Hetzner CX22. It has no sshfs Storage Box, no real DNS or ACME, and no public address.
+- The address is a DHCP reservation for the guest's fixed MAC, so it survives rebuilds and reverts;
+  `create` also drops the old host key for it from `~/.ssh/known_hosts`.
+- Take a snapshot before anything you would not want to repeat by hand; a revert takes seconds, a
+  rebuild much longer.
+- The guest defaults to 2 processors, 4 GB and 20 GB, close to a Hetzner CX22. It has no sshfs
+  Storage Box, no real DNS or ACME, and no public address.
 
 ## See also
 
 - [verify_server](verify_server.md) — Check that a server's hardening actually took effect
-- [boot_vm_image](boot_vm_image.md) — Boot an installer image in a throwaway machine, the way the target will
+- [boot_vm_image](boot_vm_image.md) — Boot an installer image in a throwaway machine, the way the
+  target will

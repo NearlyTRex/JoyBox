@@ -8,7 +8,7 @@ Extract CD disc images from CHD files with chdman.
 
 ## Synopsis
 
-```
+```text
 chdextract [options]
 ```
 

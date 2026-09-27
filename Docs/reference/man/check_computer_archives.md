@@ -8,7 +8,7 @@ Find Windows executables that are larger than 4092 MB.
 
 ## Synopsis
 
-```
+```text
 check_computer_archives [options]
 ```
 
@@ -48,5 +48,6 @@ check_computer_archives -i /path/to/computer/games
 
 ## See also
 
-- [backup_tool](backup_tool.md) — Copy, encrypt, decrypt or archive a directory tree into another directory
+- [backup_tool](backup_tool.md) — Copy, encrypt, decrypt or archive a directory tree into another
+  directory
 - [verify_archives](verify_archives.md) — Test archive files for corruption with 7-Zip

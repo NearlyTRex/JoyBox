@@ -8,7 +8,7 @@ Open Ghidra with Python support, or run a PyGhidra script against a Ghidra proje
 
 ## Synopsis
 
-```
+```text
 decompiler_tool [options]
 ```
 
@@ -126,12 +126,18 @@ decompiler_tool -a RunScript --preset NocturneDecomp --script export_all -p -v
 
 ## Notes
 
-- `--script_args` replaces the preset's default arguments, and is passed to the script as one argument, not split on spaces.
-- Ghidra must be installed with `setup_tools -k Ghidra`, or the command reports that the installation was not found.
-- `--list_presets` and `--list_scripts` exit without running anything; `--list_scripts` without `--preset` lists the scripts of every preset.
+- `--script_args` replaces the preset's default arguments, and is passed to the script as one
+  argument, not split on spaces.
+- Ghidra must be installed with `setup_tools -k Ghidra`, or the command reports that the
+  installation was not found.
+- `--list_presets` and `--list_scripts` exit without running anything; `--list_scripts` without
+  `--preset` lists the scripts of every preset.
 
 ## See also
 
-- [setup_tools](setup_tools.md) — Install, update, or rebuild the third-party tools JoyBox depends on
-- [claude_tool](claude_tool.md) — Run every file in a directory through Claude with a prompt template
-- [llm_chat](llm_chat.md) — Interactive chat with a local or cloud LLM, seeded with a prompt and files
+- [setup_tools](setup_tools.md) — Install, update, or rebuild the third-party tools JoyBox depends
+  on
+- [claude_tool](claude_tool.md) — Run every file in a directory through Claude with a prompt
+  template
+- [llm_chat](llm_chat.md) — Interactive chat with a local or cloud LLM, seeded with a prompt and
+  files

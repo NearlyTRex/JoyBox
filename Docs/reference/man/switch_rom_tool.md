@@ -8,7 +8,7 @@ Trim or untrim Nintendo Switch cartridge images (.xci).
 
 ## Synopsis
 
-```
+```text
 switch_rom_tool [options]
 ```
 
@@ -66,9 +66,11 @@ switch_rom_tool -i "/path/to/Game (USA).xci" -u
 
 - Without `-t` or `-u` nothing is done. If both are given, `-t` wins.
 - Output files are also `.xci`, so running the tool again on the same folder processes them too.
-- Each image is copied to the temporary directory first, which needs room for the image and its output.
+- Each image is copied to the temporary directory first, which needs room for the image and its
+  output.
 - XCI Trimmer and the JoyBox Python environment must be installed as JoyBox tools.
 
 ## See also
 
-- [3ds_rom_tool](3ds_rom_tool.md) — Convert, trim, untrim, extract or inspect Nintendo 3DS CIA and CCI (.3ds) files
+- [3ds_rom_tool](3ds_rom_tool.md) — Convert, trim, untrim, extract or inspect Nintendo 3DS CIA and
+  CCI (.3ds) files

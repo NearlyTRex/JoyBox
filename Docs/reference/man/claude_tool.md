@@ -8,7 +8,7 @@ Run every file in a directory through Claude with a prompt template.
 
 ## Synopsis
 
-```
+```text
 claude_tool [options]
 ```
 
@@ -92,13 +92,17 @@ claude_tool -i ./input -o ./output -f prompt.md -p -v
 ## Notes
 
 - API usage is billed per token; check the file count in the preview before confirming.
-- Replies are written as-is, so ask the prompt for output without explanations or markdown fences if the result should be a source file.
+- Replies are written as-is, so ask the prompt for output without explanations or markdown fences if
+  the result should be a source file.
 - Large files may need a higher `--max_tokens`, or the reply is cut off.
 - The `anthropic` Python package must be installed; the bootstrap's Python packages include it.
 - A dry run does not need an API key.
 
 ## See also
 
-- [decompiler_tool](decompiler_tool.md) — Open Ghidra with Python support, or run a PyGhidra script against a Ghidra project
-- [llm_chat](llm_chat.md) — Interactive chat with a local or cloud LLM, seeded with a prompt and files
-- [ollama_tool](ollama_tool.md) — Find, pull and manage Ollama models sized to this machine, and run a coding agent on one
+- [decompiler_tool](decompiler_tool.md) — Open Ghidra with Python support, or run a PyGhidra script
+  against a Ghidra project
+- [llm_chat](llm_chat.md) — Interactive chat with a local or cloud LLM, seeded with a prompt and
+  files
+- [ollama_tool](ollama_tool.md) — Find, pull and manage Ollama models sized to this machine, and run
+  a coding agent on one

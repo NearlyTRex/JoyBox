@@ -8,7 +8,7 @@ Launch a game described by its JSON file, installing it and restoring its save f
 
 ## Synopsis
 
-```
+```text
 launch_game_json [options]
 ```
 
@@ -91,11 +91,13 @@ launch_game_json -c Nintendo -s "Nintendo 64" -n "Game Name (USA)" -p -v
 
 ## Notes
 
-- Capture length, interval, area and frame rate come from the `[UserData.Capture]` section of JoyBox.ini.
+- Capture length, interval, area and frame rate come from the `[UserData.Capture]` section of
+  JoyBox.ini.
 - Random selection skips subcategories whose platform has no launcher.
 
 ## See also
 
-- [install_game_json](install_game_json.md) — Install a game described by its JSON file into the local game cache
+- [install_game_json](install_game_json.md) — Install a game described by its JSON file into the
+  local game cache
 - [launch_pegasus](launch_pegasus.md) — Start the Pegasus game frontend installed by setup_tools
 - [save_game_tool](save_game_tool.md) — Archive, restore and back up game saves

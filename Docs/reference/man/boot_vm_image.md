@@ -8,7 +8,7 @@ Boot an installer image in a throwaway machine, the way the target will.
 
 ## Synopsis
 
-```
+```text
 boot_vm_image [options]
 ```
 
@@ -103,13 +103,16 @@ boot_vm_image -n llm -i ~/Images/llm.iso -p -v
 ## Notes
 
 - Needs `qemu-system-x86_64`, `qemu-img` and OVMF firmware (the `ovmf` package) on this machine.
-- Without access to `/dev/kvm` the machine still runs, but an install takes hours; the command warns when it starts.
+- Without access to `/dev/kvm` the machine still runs, but an install takes hours; the command warns
+  when it starts.
 - Installing onto an existing disk without `--reset` installs over it, with a warning.
-- `--headless` is only useful with an image built with `--serial_console`; otherwise the terminal shows nothing after the boot menu.
+- `--headless` is only useful with an image built with `--serial_console`; otherwise the terminal
+  shows nothing after the boot menu.
 - The server image unpacks into memory, so 4096 MB is tight.
 - No GPU is passed through, so driver installs and GPU work are only exercised on real hardware.
 
 ## See also
 
-- [build_autoinstall_iso](build_autoinstall_iso.md) — Build an Ubuntu Server image that installs itself
+- [build_autoinstall_iso](build_autoinstall_iso.md) — Build an Ubuntu Server image that installs
+  itself
 - [testvm](testvm.md) — Manage the local KVM virtual machine used to rehearse server changes

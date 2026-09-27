@@ -8,7 +8,7 @@ List duplicate files under a directory.
 
 ## Synopsis
 
-```
+```text
 list_dupes [options]
 ```
 
@@ -45,9 +45,12 @@ list_dupes -i ~/Downloads
 
 ## Notes
 
-- jdupes must be installed with `setup_tools -k JDupes`; the command exits with an error if it is not found.
+- jdupes must be installed with `setup_tools -k JDupes`; the command exits with an error if it is
+  not found.
 
 ## See also
 
-- [setup_tools](setup_tools.md) — Install, update, or rebuild the third-party tools JoyBox depends on
-- [sanitize_filenames](sanitize_filenames.md) — Rename files so their names are plain ASCII and safe on every filesystem
+- [setup_tools](setup_tools.md) — Install, update, or rebuild the third-party tools JoyBox depends
+  on
+- [sanitize_filenames](sanitize_filenames.md) — Rename files so their names are plain ASCII and safe
+  on every filesystem

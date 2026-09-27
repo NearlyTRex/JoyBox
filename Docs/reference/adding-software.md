@@ -8,6 +8,7 @@ How to add new packages and write custom installers. The paths below are relativ
 ## APT Packages
 
 Edit `packages/aptget.py`:
+
 ```python
 aptget[constants.EnvironmentType.LOCAL_UBUNTU] += [
     ...
@@ -18,6 +19,7 @@ aptget[constants.EnvironmentType.LOCAL_UBUNTU] += [
 ## Flatpak Apps
 
 Edit `packages/flatpak.py`:
+
 ```python
 flatpak[constants.EnvironmentType.LOCAL_UBUNTU] += [
     {"repository": "flathub", "name": "com.example.App"},
@@ -27,6 +29,7 @@ flatpak[constants.EnvironmentType.LOCAL_UBUNTU] += [
 ## Python Packages
 
 Edit `packages/python.py`:
+
 ```python
 python[constants.EnvironmentType.LOCAL_UBUNTU] += [
     "new-pip-package",
@@ -122,7 +125,8 @@ Then register it in `installers/__init__.py` and in the environment's component 
 
 ## Custom Installers (for non-trivial installs)
 
-For apps that need external repos, GPG keys, or special setup (not just `apt install`), create a custom installer.
+For apps that need external repos, GPG keys, or special setup (not just `apt install`), create a
+custom installer.
 
 1. Create `installers/installer_myapp.py`:
 
@@ -201,12 +205,15 @@ class MyApp(installer.Installer):
         return True
 ```
 
-2. Add import to `installers/__init__.py`:
+2. Re-export the class from `installers/__init__.py` (a test fails if a class is missing there):
+
 ```python
-from joybox.bootstrap.installers.installer_myapp import *
+from joybox.bootstrap.installers.installer_myapp import (
+    MyApp as MyApp)
 ```
 
 3. Register in `environments/env_local_ubuntu.py`:
+
 ```python
 self.available_components = {
     ...
@@ -217,6 +224,7 @@ self.installer_myapp = self.available_components["myapp"]
 ```
 
 See existing installers for more examples:
+
 - `installer_brave.py` - APT repo with GPG key
 - `installer_gitkraken.py` - Direct .deb download
 - `installer_onepassword.py` - APT repo with debsig policy
@@ -224,7 +232,7 @@ See existing installers for more examples:
 
 ## File Structure
 
-```
+```text
 Shared/joybox/
 ├── bootstrap/
 │   ├── constants.py        # Environment types

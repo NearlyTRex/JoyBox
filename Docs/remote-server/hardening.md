@@ -29,7 +29,7 @@ yourself out. Before running it, set `server_N_key_filepath` in `JoyBox.ini` and
 confirm `bootstrap.py` connects with the key — otherwise the next deploy cannot
 reach the box.
 
-Rehearse it on a VM first: see [Testing the Remote Server](../testing/remote-server.md#the-ssh-lockout-drill).
+Rehearse it on a VM first: see [Testing the Remote Server](../testing/remote-server.md#recovery).
 
 ## Backups are encrypted at rest
 

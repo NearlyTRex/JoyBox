@@ -20,7 +20,7 @@ recognises, nothing driver-shaped is installed and the rest still applies.
 ollama itself goes in on first boot, from its own installer, because that installer wants a
 systemd to talk to. A drop-in written beforehand settles how it runs:
 
-```
+```text
 OLLAMA_HOST=0.0.0.0:11434     listen on the network, not just on localhost
 OLLAMA_MODELS=/var/lib/ollama/models
 OLLAMA_KEEP_ALIVE=30m         hold a model in vram between questions

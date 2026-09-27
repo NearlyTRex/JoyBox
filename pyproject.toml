@@ -129,6 +129,13 @@ include = ["joybox*"]
 [tool.setuptools.package-data]
 "joybox.tools" = ["files/**/*"]
 
+[tool.coverage.run]
+branch = true
+source = ["Shared"]
+
+[tool.coverage.report]
+skip_covered = true
+
 [tool.ruff.lint]
 # The Workflows library's default set, pinned here so a library change is a
 # deliberate change in this repo
