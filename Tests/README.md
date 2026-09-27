@@ -56,10 +56,12 @@ collides.
 
 ## How the fixtures work
 
-`conftest.py` puts `Shared/` and `Tests/` on `sys.path`, so the suite runs from
-the checkout under any interpreter, whether or not joybox is installed into it.
-`unit/Shared/joybox/cli` checks only the conventions that keep the command
-modules thin, not the commands themselves.
+The suite imports joybox from its install, the way the commands run, so run it
+from a venv with this checkout installed (`pip install -e ".[dev]"`; the `python`
+bootstrap component does this). `conftest.py` stops the run if joybox is missing
+or is some other copy, and puts only `Tests/` on `sys.path`, for the helpers the
+tests import by name. `unit/Shared/joybox/cli` checks only the conventions that
+keep the command modules thin, not the commands themselves.
 
 **`no_sealed_programs`** (autouse) — refuses real runs of `sudo`, `op`, `ssh`,
 `virsh`, `systemctl` and the other programs in `SEALED_PROGRAMS`, whether through

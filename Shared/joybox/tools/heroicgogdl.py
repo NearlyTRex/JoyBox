@@ -3,6 +3,7 @@ import joybox.config as config
 import joybox.logger as logger
 import joybox.network as network
 import joybox.release as release
+import joybox.requirements as requirements
 import joybox.programs as programs
 import joybox.toolbase as toolbase
 
@@ -22,7 +23,8 @@ class HeroicGogDL(toolbase.ToolBase):
             "HeroicGogDL": {
                 "program": "HeroicGogDL/lib/main.py",
                 "login_script": "HeroicGogDL/lib/login.py",
-                "auth_json": "HeroicGogDL/lib/auth.json"
+                "auth_json": "HeroicGogDL/lib/auth.json",
+                "github_branch": "dev"
             }
         }
 
@@ -36,8 +38,17 @@ class HeroicGogDL(toolbase.ToolBase):
             success = network.download_github_repository(
                 github_user = "NearlyTRex",
                 github_repo = "HeroicGogDL",
+                github_branch = programs.get_tool_config_value("HeroicGogDL", "github_branch"),
                 output_dir = programs.get_library_install_dir("HeroicGogDL", "lib"),
                 clean = True,
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
+            if not success:
+                logger.log_error("Could not setup HeroicGogDL")
+                return False
+            success = requirements.setup_tool_requirements(
+                tool_name = "HeroicGogDL",
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
@@ -47,6 +58,7 @@ class HeroicGogDL(toolbase.ToolBase):
             success = network.archive_github_repository(
                 github_user = "NearlyTRex",
                 github_repo = "HeroicGogDL",
+                github_branch = programs.get_tool_config_value("HeroicGogDL", "github_branch"),
                 output_dir = programs.get_library_backup_dir("HeroicGogDL", "lib"),
                 recursive = True,
                 clean = True,
@@ -70,6 +82,14 @@ class HeroicGogDL(toolbase.ToolBase):
                 archive_dir = programs.get_library_backup_dir("HeroicGogDL", "lib"),
                 install_name = "HeroicGogDL",
                 install_dir = programs.get_library_install_dir("HeroicGogDL", "lib"),
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
+            if not success:
+                logger.log_error("Could not setup HeroicGogDL")
+                return False
+            success = requirements.setup_tool_requirements_offline(
+                tool_name = "HeroicGogDL",
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)

@@ -569,6 +569,24 @@ def test_a_clone_can_name_a_branch(installed, recording_command, tmp_path):
     assert recording_command.value_after("--branch") == "stable"
 
 
+def test_a_fork_is_cloned_from_its_configured_branch(installed, recording_command, tmp_path):
+    target = tmp_path / "repo"
+    target.mkdir()
+
+    network.download_github_repository("NearlyTRex", "Nile", github_branch = "dev", output_dir = str(target))
+
+    assert recording_command.value_after("--branch") == "dev"
+
+
+def test_a_fork_without_a_branch_uses_its_default(installed, recording_command, tmp_path):
+    target = tmp_path / "repo"
+    target.mkdir()
+
+    network.download_github_repository("NearlyTRex", "Nile", output_dir = str(target))
+
+    assert "--branch" not in recording_command.only()
+
+
 def test_a_clone_names_the_url_and_destination_last(installed, recording_command, tmp_path):
     target = tmp_path / "repo"
     target.mkdir()

@@ -1,0 +1,34 @@
+# What joybox itself uses; pyproject.toml reads its dependencies from here.
+# Compile the lock after editing:
+#   pip-compile --generate-hashes --allow-unsafe --strip-extras -o requirements.txt requirements.in
+#
+# Every one of these is imported inside the function that needs it, so
+# bootstrap.py still runs on a bare system python on day 0. lxml is the parser
+# BeautifulSoup is asked for, and mutagen is loaded by name. The machine's own
+# wishlist of venv tools is in Shared/joybox/bootstrap/packages/python.py.
+anthropic
+beautifulsoup4
+html-text
+lxml
+mergedeep
+mutagen
+paramiko
+pillow
+psutil
+PyGithub
+python-dateutil
+python-magic
+PyYAML
+pyuac; sys_platform == 'win32'
+pywinpty; sys_platform == 'win32'
+requests
+schedule
+screeninfo
+selenium
+thefuzz
+tqdm
+Unidecode
+vdf
+webdriver-manager
+xmltodict
+xxhash

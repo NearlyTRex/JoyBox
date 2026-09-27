@@ -3,6 +3,7 @@ import joybox.config as config
 import joybox.logger as logger
 import joybox.network as network
 import joybox.release as release
+import joybox.requirements as requirements
 import joybox.programs as programs
 import joybox.toolbase as toolbase
 
@@ -34,8 +35,17 @@ class PSNGetPkgInfo(toolbase.ToolBase):
             success = network.download_github_repository(
                 github_user = "NearlyTRex",
                 github_repo = "PSNGetPkgInfo",
+                github_branch = programs.get_tool_config_value("PSNGetPkgInfo", "github_branch"),
                 output_dir = programs.get_library_install_dir("PSNGetPkgInfo", "lib"),
                 clean = True,
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
+            if not success:
+                logger.log_error("Could not setup PSNGetPkgInfo")
+                return False
+            success = requirements.setup_tool_requirements(
+                tool_name = "PSNGetPkgInfo",
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
@@ -45,6 +55,7 @@ class PSNGetPkgInfo(toolbase.ToolBase):
             success = network.archive_github_repository(
                 github_user = "NearlyTRex",
                 github_repo = "PSNGetPkgInfo",
+                github_branch = programs.get_tool_config_value("PSNGetPkgInfo", "github_branch"),
                 output_dir = programs.get_library_backup_dir("PSNGetPkgInfo", "lib"),
                 recursive = True,
                 clean = True,
@@ -68,6 +79,14 @@ class PSNGetPkgInfo(toolbase.ToolBase):
                 archive_dir = programs.get_library_backup_dir("PSNGetPkgInfo", "lib"),
                 install_name = "PSNGetPkgInfo",
                 install_dir = programs.get_library_install_dir("PSNGetPkgInfo", "lib"),
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
+            if not success:
+                logger.log_error("Could not setup PSNGetPkgInfo")
+                return False
+            success = requirements.setup_tool_requirements_offline(
+                tool_name = "PSNGetPkgInfo",
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)

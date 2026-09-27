@@ -41,6 +41,7 @@ class XorrISO(toolbase.ToolBase):
             success = network.download_github_repository(
                 github_user = "NearlyTRex",
                 github_repo = "XorrISOWindows",
+                github_branch = programs.get_tool_config_value("XorrISO", "github_branch"),
                 output_dir = programs.get_program_install_dir("XorrISO", "windows"),
                 recursive = True,
                 clean = True,
@@ -53,6 +54,7 @@ class XorrISO(toolbase.ToolBase):
             success = network.archive_github_repository(
                 github_user = "NearlyTRex",
                 github_repo = "XorrISOWindows",
+                github_branch = programs.get_tool_config_value("XorrISO", "github_branch"),
                 output_dir = programs.get_program_backup_dir("XorrISO", "windows"),
                 recursive = True,
                 clean = True,

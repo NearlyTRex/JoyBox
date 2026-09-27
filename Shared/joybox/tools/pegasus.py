@@ -61,7 +61,8 @@ class Pegasus(toolbase.ToolBase):
                 "run_sandboxed": {
                     "windows": False,
                     "linux": False
-                }
+                },
+                "theme_github_branch": "dev"
             }
         }
 
@@ -92,6 +93,7 @@ class Pegasus(toolbase.ToolBase):
             success = network.download_github_repository(
                 github_user = "NearlyTRex",
                 github_repo = "PegasusThemeGrid",
+                github_branch = programs.get_tool_config_value("Pegasus", "theme_github_branch"),
                 output_dir = paths.join_paths(programs.get_tool_path_config_value("Pegasus", "themes_dir", "windows"), "PegasusThemeGrid"),
                 clean = True,
                 verbose = setup_params.verbose,
@@ -133,6 +135,7 @@ class Pegasus(toolbase.ToolBase):
             success = network.download_github_repository(
                 github_user = "NearlyTRex",
                 github_repo = "PegasusThemeGrid",
+                github_branch = programs.get_tool_config_value("Pegasus", "theme_github_branch"),
                 output_dir = paths.join_paths(programs.get_tool_path_config_value("Pegasus", "themes_dir", "linux"), "PegasusThemeGrid"),
                 clean = True,
                 verbose = setup_params.verbose,

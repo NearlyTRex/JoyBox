@@ -136,6 +136,7 @@ aptget[constants.EnvironmentType.LOCAL_UBUNTU] += [
     {"id": "libbz2-dev", "category": "Libs"},
     {"id": "libcanberra-gtk-module", "category": "Libs"},
     {"id": "libcurl4-openssl-dev", "category": "Libs"},
+    {"id": "libdbus-1-dev", "category": "Libs"},
     {"id": "libenet-dev", "category": "Libs"},
     {"id": "libepoxy-dev", "category": "Libs"},
     {"id": "libevdev-dev", "category": "Libs"},

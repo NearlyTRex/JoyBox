@@ -3,6 +3,7 @@ import joybox.config as config
 import joybox.logger as logger
 import joybox.network as network
 import joybox.release as release
+import joybox.requirements as requirements
 import joybox.programs as programs
 import joybox.toolbase as toolbase
 
@@ -20,7 +21,8 @@ class PSVTools(toolbase.ToolBase):
     def get_config(self):
         return {
             "PSVTools": {
-                "program": "PSVTools/lib/main.py"
+                "program": "PSVTools/lib/main.py",
+                "github_branch": "dev"
             }
         }
 
@@ -34,8 +36,17 @@ class PSVTools(toolbase.ToolBase):
             success = network.download_github_repository(
                 github_user = "NearlyTRex",
                 github_repo = "PSVTools",
+                github_branch = programs.get_tool_config_value("PSVTools", "github_branch"),
                 output_dir = programs.get_library_install_dir("PSVTools", "lib"),
                 clean = True,
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
+            if not success:
+                logger.log_error("Could not setup PSVTools")
+                return False
+            success = requirements.setup_tool_requirements(
+                tool_name = "PSVTools",
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
@@ -45,6 +56,7 @@ class PSVTools(toolbase.ToolBase):
             success = network.archive_github_repository(
                 github_user = "NearlyTRex",
                 github_repo = "PSVTools",
+                github_branch = programs.get_tool_config_value("PSVTools", "github_branch"),
                 output_dir = programs.get_library_backup_dir("PSVTools", "lib"),
                 recursive = True,
                 clean = True,
@@ -68,6 +80,14 @@ class PSVTools(toolbase.ToolBase):
                 archive_dir = programs.get_library_backup_dir("PSVTools", "lib"),
                 install_name = "PSVTools",
                 install_dir = programs.get_library_install_dir("PSVTools", "lib"),
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
+            if not success:
+                logger.log_error("Could not setup PSVTools")
+                return False
+            success = requirements.setup_tool_requirements_offline(
+                tool_name = "PSVTools",
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)

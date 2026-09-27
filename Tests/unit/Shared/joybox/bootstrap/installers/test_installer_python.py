@@ -35,7 +35,7 @@ def test_install_installs_this_checkout_editable(isolated_settings):
     python.install()
 
     assert any(
-        command[1:] == ["install", "--editable", repo_dir() + "[dev]"]
+        command[1:] == ["install", "--editable", repo_dir() + "[dev,decompiler]"]
         for command in connection.commands)
 
 
