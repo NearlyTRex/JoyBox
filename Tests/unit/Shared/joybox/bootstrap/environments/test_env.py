@@ -287,3 +287,51 @@ def test_an_environment_disconnects_on_request():
     environment.disconnect()
 
     assert environment.connection.teardowns == 1
+
+
+###########################################################
+# Local setup
+#
+# Desktop components do not depend on each other the way server services do,
+# so one failure must not leave the rest of a fresh machine uninstalled.
+###########################################################
+
+def build_local_environment(components, exit_on_failure = False):
+    from joybox.bootstrap.environments import env_local_ubuntu
+    from joybox import runoptions
+
+    environment = env_local_ubuntu.LocalUbuntu(
+        flags = runoptions.RunFlags(verbose = False, exit_on_failure = exit_on_failure))
+    environment.connection = CountingConnection()
+    environment.available_components = components
+
+    # Naming the fakes keeps the real aptget list refresh out of the run
+    environment.set_components_to_process(list(components))
+    return environment
+
+
+def test_local_setup_installs_past_a_failed_component(three_components):
+    three_components["first"].results = {"install": False}
+    environment = build_local_environment(three_components)
+
+    assert environment.setup() is False, "the run still has to report failure"
+    assert three_components["second"].calls == ["install"]
+    assert three_components["third"].calls == ["install"]
+
+
+def test_local_teardown_uninstalls_past_a_failed_component(three_components):
+    for installer in three_components.values():
+        installer.installed = True
+    three_components["third"].results = {"uninstall": False}
+    environment = build_local_environment(three_components)
+
+    assert environment.teardown() is False
+    assert three_components["first"].calls == ["uninstall"]
+
+
+def test_local_setup_stops_at_the_first_failure_with_exit_on_failure(three_components):
+    three_components["first"].results = {"install": False}
+    environment = build_local_environment(three_components, exit_on_failure = True)
+
+    assert environment.setup() is False
+    assert three_components["second"].calls == []

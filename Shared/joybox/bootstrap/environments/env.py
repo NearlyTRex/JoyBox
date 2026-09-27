@@ -56,7 +56,7 @@ class Environment:
             component_items = reversed(component_items)
         processed_count = 0
         skipped_count = 0
-        failed_count = 0
+        failed = []
         for component_name, installer in component_items:
             if self.should_process_component(component_name):
                 should_skip = False
@@ -77,15 +77,15 @@ class Environment:
                         if not continue_on_failure:
                             return False
                         logger.log_error(f"{action_method_name.title()} of {component_name} failed, continuing")
-                        failed_count += 1
+                        failed.append(component_name)
                     else:
                         processed_count += 1
         if processed_count == 0 and skipped_count == 0 and self.components_to_process is not None:
             logger.log_warning("No components were processed. Check component names.")
         elif skipped_count > 0:
             logger.log_info(f"Processed {processed_count} components, skipped {skipped_count} components")
-        if failed_count > 0:
-            logger.log_error(f"{failed_count} component(s) failed")
+        if failed:
+            logger.log_error(f"{len(failed)} component(s) failed: {', '.join(failed)}")
             return False
         return True
 
