@@ -45,8 +45,8 @@ class Heirloom(toolbase.ToolBase):
             if not success:
                 logger.log_error("Could not setup Heirloom")
                 return False
-            success = requirements.install_declared_requirements(
-                tool_dir = programs.get_library_install_dir("Heirloom", "lib"),
+            success = requirements.setup_tool_requirements(
+                tool_name = "Heirloom",
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
@@ -80,6 +80,14 @@ class Heirloom(toolbase.ToolBase):
                 archive_dir = programs.get_library_backup_dir("Heirloom", "lib"),
                 install_name = "Heirloom",
                 install_dir = programs.get_library_install_dir("Heirloom", "lib"),
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
+            if not success:
+                logger.log_error("Could not setup Heirloom")
+                return False
+            success = requirements.setup_tool_requirements_offline(
+                tool_name = "Heirloom",
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)

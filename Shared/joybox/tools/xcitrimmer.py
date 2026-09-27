@@ -44,8 +44,8 @@ class XCITrimmer(toolbase.ToolBase):
             if not success:
                 logger.log_error("Could not setup XCITrimmer")
                 return False
-            success = requirements.install_declared_requirements(
-                tool_dir = programs.get_library_install_dir("XCITrimmer", "lib"),
+            success = requirements.setup_tool_requirements(
+                tool_name = "XCITrimmer",
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
@@ -79,6 +79,14 @@ class XCITrimmer(toolbase.ToolBase):
                 archive_dir = programs.get_library_backup_dir("XCITrimmer", "lib"),
                 install_name = "XCITrimmer",
                 install_dir = programs.get_library_install_dir("XCITrimmer", "lib"),
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
+            if not success:
+                logger.log_error("Could not setup XCITrimmer")
+                return False
+            success = requirements.setup_tool_requirements_offline(
+                tool_name = "XCITrimmer",
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)

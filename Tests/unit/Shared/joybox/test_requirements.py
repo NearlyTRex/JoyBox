@@ -55,35 +55,89 @@ def test_nothing_declared_is_nothing(tmp_path):
 
 
 ###########################################################
-# Installing
+# Setting up a tool's requirements
+#
+# Online setup installs them and keeps wheels beside the tool's backup; an
+# offline setup installs from those wheels and never reaches the network.
 ###########################################################
 
 @pytest.fixture
-def pip_runs(monkeypatch):
+def tool(monkeypatch, tmp_path):
+    lib_dir = tmp_path / "Tools" / "Nile" / "lib"
+    lib_dir.mkdir(parents = True)
+    wheels_dir = tmp_path / "Locker" / "Nile" / "wheels"
     runs = []
+    monkeypatch.setattr(requirements.programs, "get_library_install_dir", lambda name, platform: str(lib_dir))
+    monkeypatch.setattr(requirements.programs, "get_library_backup_dir", lambda name, platform: str(wheels_dir))
     monkeypatch.setattr(requirements.programs, "is_tool_installed", lambda name: True)
     monkeypatch.setattr(requirements.programs, "get_tool_program", lambda name: "/venv/bin/pip")
     monkeypatch.setattr(requirements.command, "run_returncode_command",
                         lambda cmd, **kwargs: runs.append(cmd) or 0)
-    return runs
+    return lib_dir, wheels_dir, runs
 
 
-def test_the_declared_requirements_go_into_the_venv(pip_runs, tmp_path):
-    (tmp_path / "setup.cfg").write_text("[options]\ninstall_requires =\n    keyring\n")
+def test_online_setup_installs_then_keeps_wheels(tool):
+    lib_dir, wheels_dir, runs = tool
+    (lib_dir / "requirements.txt").write_text("zstandard\n")
 
-    assert requirements.install_declared_requirements(str(tmp_path))
-    assert pip_runs == [["/venv/bin/pip", "install", "keyring"]]
-
-
-def test_shared_packages_are_not_upgraded(pip_runs, tmp_path):
-    # The venv is shared, so one tool's install only fills what is missing
-    (tmp_path / "requirements.txt").write_text("requests\n")
-
-    requirements.install_declared_requirements(str(tmp_path))
-
-    assert "--upgrade" not in pip_runs[0]
+    assert requirements.setup_tool_requirements("Nile")
+    assert runs == [
+        ["/venv/bin/pip", "install", "-r", str(lib_dir / "requirements.txt")],
+        ["/venv/bin/pip", "wheel", "--wheel-dir", str(wheels_dir), "-r", str(lib_dir / "requirements.txt")]]
 
 
-def test_nothing_declared_runs_nothing(pip_runs, tmp_path):
-    assert requirements.install_declared_requirements(str(tmp_path))
-    assert pip_runs == []
+def test_online_setup_does_not_upgrade_the_shared_venv(tool):
+    lib_dir, _, runs = tool
+    (lib_dir / "requirements.txt").write_text("requests\n")
+
+    requirements.setup_tool_requirements("Nile")
+
+    assert all("--upgrade" not in run for run in runs)
+
+
+def test_online_setup_replaces_the_kept_wheels(tool):
+    lib_dir, wheels_dir, _ = tool
+    (lib_dir / "requirements.txt").write_text("zstandard\n")
+    wheels_dir.mkdir(parents = True)
+    (wheels_dir / "stale-1.0-py3-none-any.whl").write_text("old")
+
+    requirements.setup_tool_requirements("Nile")
+
+    assert not (wheels_dir / "stale-1.0-py3-none-any.whl").exists()
+
+
+def test_offline_setup_installs_only_from_the_kept_wheels(tool):
+    lib_dir, wheels_dir, runs = tool
+    (lib_dir / "requirements.txt").write_text("zstandard\n")
+    wheels_dir.mkdir(parents = True)
+
+    assert requirements.setup_tool_requirements_offline("Nile")
+    assert runs == [["/venv/bin/pip", "install", "--no-index", "--find-links", str(wheels_dir),
+                     "-r", str(lib_dir / "requirements.txt")]]
+
+
+def test_offline_setup_without_wheels_still_stays_offline(tool):
+    # A backup made before wheels were kept only works if they are installed
+    lib_dir, _, runs = tool
+    (lib_dir / "requirements.txt").write_text("zstandard\n")
+
+    requirements.setup_tool_requirements_offline("Nile")
+
+    assert runs == [["/venv/bin/pip", "install", "--no-index", "-r", str(lib_dir / "requirements.txt")]]
+
+
+def test_a_tool_that_declares_nothing_runs_nothing(tool):
+    _, _, runs = tool
+
+    assert requirements.setup_tool_requirements("Nile")
+    assert requirements.setup_tool_requirements_offline("Nile")
+    assert runs == []
+
+
+def test_a_failed_install_fails_the_setup(tool, monkeypatch):
+    lib_dir, _, _ = tool
+    (lib_dir / "requirements.txt").write_text("zstandard\n")
+    monkeypatch.setattr(requirements.command, "run_returncode_command", lambda cmd, **kwargs: 1)
+
+    assert not requirements.setup_tool_requirements("Nile")
+    assert not requirements.setup_tool_requirements_offline("Nile")

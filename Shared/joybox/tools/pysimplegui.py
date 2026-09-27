@@ -3,6 +3,7 @@ import joybox.config as config
 import joybox.logger as logger
 import joybox.network as network
 import joybox.release as release
+import joybox.requirements as requirements
 import joybox.programs as programs
 import joybox.toolbase as toolbase
 
@@ -43,6 +44,14 @@ class PySimpleGUI(toolbase.ToolBase):
             if not success:
                 logger.log_error("Could not setup PySimpleGUI")
                 return False
+            success = requirements.setup_tool_requirements(
+                tool_name = "PySimpleGUI",
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
+            if not success:
+                logger.log_error("Could not setup PySimpleGUI")
+                return False
             success = network.archive_github_repository(
                 github_user = "NearlyTRex",
                 github_repo = "PySimpleGUI",
@@ -70,6 +79,14 @@ class PySimpleGUI(toolbase.ToolBase):
                 archive_dir = programs.get_library_backup_dir("PySimpleGUI", "lib"),
                 install_name = "PySimpleGUI",
                 install_dir = programs.get_library_install_dir("PySimpleGUI", "lib"),
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
+            if not success:
+                logger.log_error("Could not setup PySimpleGUI")
+                return False
+            success = requirements.setup_tool_requirements_offline(
+                tool_name = "PySimpleGUI",
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)

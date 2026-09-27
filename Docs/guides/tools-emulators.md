@@ -79,7 +79,12 @@ setup_game_emulators --configure  # install and then apply emulator configuratio
 ## Auto-backup of downloads
 
 Newly downloaded packages are automatically backed up to a locker so a later `--offline` install
-can reuse them. Control this with:
+can reuse them. The Python tools (Legendary, Nile, PySteamGridDB and the like) also keep the
+dependencies they declare as wheels in a `wheels` folder beside that backup, and `--offline`
+installs them into the venv from there. A backup made before that existed only restores offline
+if its dependencies are already installed; one online run of `setup_tools` fills it in.
+
+Control the backups with:
 
 | Flag | Default | Meaning |
 |------|---------|---------|

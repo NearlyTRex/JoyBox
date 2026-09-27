@@ -45,8 +45,8 @@ class Nile(toolbase.ToolBase):
             if not success:
                 logger.log_error("Could not setup Nile")
                 return False
-            success = requirements.install_declared_requirements(
-                tool_dir = programs.get_library_install_dir("Nile", "lib"),
+            success = requirements.setup_tool_requirements(
+                tool_name = "Nile",
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
@@ -80,6 +80,14 @@ class Nile(toolbase.ToolBase):
                 archive_dir = programs.get_library_backup_dir("Nile", "lib"),
                 install_name = "Nile",
                 install_dir = programs.get_library_install_dir("Nile", "lib"),
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
+            if not success:
+                logger.log_error("Could not setup Nile")
+                return False
+            success = requirements.setup_tool_requirements_offline(
+                tool_name = "Nile",
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)

@@ -5,16 +5,19 @@ import tomllib
 
 # Local imports
 import joybox.command as command
+import joybox.fileops as fileops
 import joybox.logger as logger
 import joybox.programs as programs
 
 ###########################################################
 # Declared requirements of a downloaded Python tool
 #
-# JoyBox runs these tools from their own directory with the venv's python, so
-# what they import has to be in the venv. The tool's own declaration is used,
-# not a copy kept here, so a change in the tool carries through. Only the
-# dependencies are installed; the tool itself stays where it was downloaded.
+# JoyBox runs these tools, or imports them, from their own directory with the
+# venv's python, so what they import has to be in the venv. The tool's own
+# declaration is used, not a copy kept here, so a change in the tool carries
+# through. Only the dependencies are installed; the tool itself stays where it
+# was downloaded. Online setup also keeps them as wheels beside the tool's
+# backup, which is what an offline setup installs from.
 ###########################################################
 
 # Get the requirements a tool directory declares, as pip arguments. The first
@@ -39,15 +42,16 @@ def get_declared_requirements(tool_dir):
             return dependencies
     return []
 
-# Install the requirements a tool directory declares into the venv
-def install_declared_requirements(
-    tool_dir,
+# Get where a tool's requirement wheels are kept, beside its backup
+def get_wheels_dir(tool_name):
+    return programs.get_library_backup_dir(tool_name, "wheels")
+
+# Run the venv's pip
+def run_pip(
+    pip_args,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    requirements = get_declared_requirements(tool_dir)
-    if not requirements:
-        return True
     pip_tool = None
     if programs.is_tool_installed("PythonVenvPip"):
         pip_tool = programs.get_tool_program("PythonVenvPip")
@@ -55,11 +59,48 @@ def install_declared_requirements(
         logger.log_error("PythonVenvPip was not found")
         return False
     code = command.run_returncode_command(
-        cmd = [pip_tool, "install"] + requirements,
+        cmd = [pip_tool] + pip_args,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
-    if code != 0:
-        logger.log_error("Unable to install the requirements of %s" % tool_dir)
+    return code == 0
+
+# Install a downloaded tool's requirements into the venv, without upgrading
+# anything the venv already has, and keep them as wheels for offline setup
+def setup_tool_requirements(
+    tool_name,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+    requirements = get_declared_requirements(programs.get_library_install_dir(tool_name, "lib"))
+    if not requirements:
+        return True
+    flags = {"verbose": verbose, "pretend_run": pretend_run, "exit_on_failure": exit_on_failure}
+    if not run_pip(["install"] + requirements, **flags):
+        logger.log_error("Unable to install the requirements of %s" % tool_name)
+        return False
+    wheels_dir = get_wheels_dir(tool_name)
+    fileops.remove_directory(src = wheels_dir, **flags)
+    if not run_pip(["wheel", "--wheel-dir", wheels_dir] + requirements, **flags):
+        logger.log_error("Unable to keep the requirements of %s for offline setup" % tool_name)
+        return False
+    return True
+
+# Install a restored tool's requirements from the wheels kept by online setup,
+# with no network access
+def setup_tool_requirements_offline(
+    tool_name,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+    requirements = get_declared_requirements(programs.get_library_install_dir(tool_name, "lib"))
+    if not requirements:
+        return True
+    pip_args = ["install", "--no-index"]
+    wheels_dir = get_wheels_dir(tool_name)
+    if os.path.isdir(wheels_dir):
+        pip_args += ["--find-links", wheels_dir]
+    if not run_pip(pip_args + requirements, verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure):
+        logger.log_error("Unable to install the requirements of %s offline" % tool_name)
         return False
     return True

@@ -45,8 +45,8 @@ class Legendary(toolbase.ToolBase):
             if not success:
                 logger.log_error("Could not setup Legendary")
                 return False
-            success = requirements.install_declared_requirements(
-                tool_dir = programs.get_library_install_dir("Legendary", "lib"),
+            success = requirements.setup_tool_requirements(
+                tool_name = "Legendary",
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
@@ -80,6 +80,14 @@ class Legendary(toolbase.ToolBase):
                 archive_dir = programs.get_library_backup_dir("Legendary", "lib"),
                 install_name = "Legendary",
                 install_dir = programs.get_library_install_dir("Legendary", "lib"),
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
+            if not success:
+                logger.log_error("Could not setup Legendary")
+                return False
+            success = requirements.setup_tool_requirements_offline(
+                tool_name = "Legendary",
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
