@@ -210,21 +210,25 @@ def test_an_empty_zrif_string_decodes_to_nothing_usable():
 # PS3 decryption keys
 ###########################################################
 
+# A disc key's shape, 32 hex digits, and plainly not a real one
+FAKE_DISC_KEY = "0" * 32
+
+
 def test_a_decryption_key_is_read(tmp_path):
     target = tmp_path / "game.dkey"
-    target.write_text("0123456789ABCDEF0123456789ABCDEF")
+    target.write_text(FAKE_DISC_KEY)
 
     assert playstation.get_ps3_decryption_key(str(target)) == \
-        "0123456789ABCDEF0123456789ABCDEF"
+        FAKE_DISC_KEY
 
 
 def test_a_decryption_key_is_stripped(tmp_path):
     # Redump dkey files carry a trailing newline, which ps3dec rejects.
     target = tmp_path / "game.dkey"
-    target.write_text("  0123456789ABCDEF0123456789ABCDEF \n")
+    target.write_text("  %s \n" % FAKE_DISC_KEY)
 
     assert playstation.get_ps3_decryption_key(str(target)) == \
-        "0123456789ABCDEF0123456789ABCDEF"
+        FAKE_DISC_KEY
 
 
 def test_a_missing_key_file_reads_as_empty(tmp_path):
@@ -276,7 +280,7 @@ def existing_output(monkeypatch):
 @pytest.fixture
 def key_file(tmp_path):
     target = tmp_path / "game.dkey"
-    target.write_text("0123456789ABCDEF0123456789ABCDEF")
+    target.write_text(FAKE_DISC_KEY)
     return str(target)
 
 
@@ -305,7 +309,7 @@ def test_decrypting_uses_the_decrypt_mode(installed, recording_command, existing
 def test_the_key_from_the_file_is_passed(installed, recording_command, existing_output, key_file, wrapper):
     wrapper("/in/Game.iso", "/out/Game.dec.iso", key_file)
 
-    assert recording_command.value_after("key") == "0123456789ABCDEF0123456789ABCDEF"
+    assert recording_command.value_after("key") == FAKE_DISC_KEY
 
 
 @pytest.mark.parametrize("wrapper", [
