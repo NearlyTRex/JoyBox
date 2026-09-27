@@ -74,7 +74,7 @@ class Python(installer.Installer):
     def install_joybox(self):
         logger.log_info(f"Installing joybox from {self.get_repo_dir()}")
         code = self.connection.run_blocking([
-            self.python_venv_pip_tool, "install", "--editable", self.get_repo_dir() + "[dev]"])
+            self.python_venv_pip_tool, "install", "--editable", self.get_repo_dir() + "[dev,decompiler]"])
         return code == 0
 
     def is_installed(self):

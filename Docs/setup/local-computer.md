@@ -54,10 +54,11 @@ puts on your `PATH`. Editable means changes to the code take effect immediately;
 to `[project.scripts]` since the last setup appears once the package is reinstalled:
 
 ```bash
-~/.venv/bin/pip install --editable ~/Repositories/JoyBox[dev]
-``` What
-each command does is in the [command reference](../reference/man/README.md), and the flags they
-all share are in [Using the tools](../guides/using-the-tools.md).
+~/.venv/bin/pip install --editable ~/Repositories/JoyBox[dev,decompiler]
+```
+
+What each command does is in the [command reference](../reference/man/README.md), and the flags
+they all share are in [Using the tools](../guides/using-the-tools.md).
 
 `setup_tools` is a different thing: it installs the *third-party* programs the commands use
 (7-Zip, rclone and the like). See [Tools & Emulators](../guides/tools-emulators.md).
@@ -65,7 +66,9 @@ all share are in [Using the tools](../guides/using-the-tools.md).
 ## What gets installed
 
 Everything, unless you pick components:
-- **Dev tools**: build-essential, cmake, git, golang, nodejs, dotnet, python tools, Qt dev packages, ripgrep, GitHub CLI
+
+- **Dev tools**: build-essential, cmake, git, golang, nodejs, dotnet, python tools, Qt dev
+  packages, ripgrep, GitHub CLI
 - **AI/LLM**: Claude Code CLI, Ollama, npm coding tools (ccusage, Codex, OpenCode)
 - **Editors/IDEs**: VSCodium, GitKraken
 - **Browsers**: Chrome, Brave, Firefox

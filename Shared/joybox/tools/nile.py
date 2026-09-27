@@ -4,6 +4,7 @@ import joybox.logger as logger
 import joybox.network as network
 import joybox.programs as programs
 import joybox.release as release
+import joybox.requirements as requirements
 import joybox.toolbase as toolbase
 
 # Config files
@@ -20,7 +21,8 @@ class Nile(toolbase.ToolBase):
     def get_config(self):
         return {
             "Nile": {
-                "program": "Nile/lib/main.py"
+                "program": "Nile/lib/main.py",
+                "github_branch": "dev"
             }
         }
 
@@ -34,8 +36,17 @@ class Nile(toolbase.ToolBase):
             success = network.download_github_repository(
                 github_user = "NearlyTRex",
                 github_repo = "Nile",
+                github_branch = programs.get_tool_config_value("Nile", "github_branch"),
                 output_dir = programs.get_library_install_dir("Nile", "lib"),
                 clean = True,
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
+            if not success:
+                logger.log_error("Could not setup Nile")
+                return False
+            success = requirements.install_declared_requirements(
+                tool_dir = programs.get_library_install_dir("Nile", "lib"),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
@@ -45,6 +56,7 @@ class Nile(toolbase.ToolBase):
             success = network.archive_github_repository(
                 github_user = "NearlyTRex",
                 github_repo = "Nile",
+                github_branch = programs.get_tool_config_value("Nile", "github_branch"),
                 output_dir = programs.get_library_backup_dir("Nile", "lib"),
                 recursive = True,
                 clean = True,

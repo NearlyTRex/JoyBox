@@ -47,6 +47,7 @@ class Mutagen(toolbase.ToolBase):
             success = network.download_github_repository(
                 github_user = "NearlyTRex",
                 github_repo = "Mutagen",
+                github_branch = programs.get_tool_config_value("Mutagen", "github_branch"),
                 output_dir = programs.get_library_install_dir("Mutagen", "lib"),
                 clean = True,
                 verbose = setup_params.verbose,
@@ -58,6 +59,7 @@ class Mutagen(toolbase.ToolBase):
             success = network.archive_github_repository(
                 github_user = "NearlyTRex",
                 github_repo = "Mutagen",
+                github_branch = programs.get_tool_config_value("Mutagen", "github_branch"),
                 output_dir = programs.get_library_backup_dir("Mutagen", "lib"),
                 recursive = True,
                 clean = True,

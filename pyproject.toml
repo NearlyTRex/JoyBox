@@ -9,14 +9,17 @@ description = "Game collection management, media tooling, and machine provisioni
 requires-python = ">=3.12"
 license = { file = "LICENSE" }
 
-# What joybox itself imports. Every one of these is imported inside the function
+# What joybox itself uses. Every one of these is imported inside the function
 # that needs it, so bootstrap.py still runs on a bare system python on day 0;
-# standalone tools that live in the same venv are in bootstrap/packages/python.py.
+# lxml is the parser BeautifulSoup is asked for, and mutagen is loaded by name.
+# The machine's own wishlist of venv tools is in bootstrap/packages/python.py.
 dependencies = [
     "anthropic",
     "beautifulsoup4",
     "html-text",
+    "lxml",
     "mergedeep",
+    "mutagen",
     "paramiko",
     "pillow",
     "psutil",
@@ -118,6 +121,10 @@ verify_server = "joybox.cli.verify_server:run"
 wiiu_rom_tool = "joybox.cli.wiiu_rom_tool:run"
 
 [project.optional-dependencies]
+# decompiler_tool runs Ghidra through `python -m pyghidra` in the venv
+decompiler = [
+    "pyghidra",
+]
 dev = [
     "pytest",
 ]

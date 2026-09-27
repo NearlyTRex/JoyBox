@@ -35,6 +35,7 @@ class PySteamGridDB(toolbase.ToolBase):
             success = network.download_github_repository(
                 github_user = "NearlyTRex",
                 github_repo = "PySteamGridDB",
+                github_branch = programs.get_tool_config_value("PySteamGridDB", "github_branch"),
                 output_dir = programs.get_library_install_dir("PySteamGridDB", "lib"),
                 clean = True,
                 verbose = setup_params.verbose,
@@ -46,6 +47,7 @@ class PySteamGridDB(toolbase.ToolBase):
             success = network.archive_github_repository(
                 github_user = "NearlyTRex",
                 github_repo = "PySteamGridDB",
+                github_branch = programs.get_tool_config_value("PySteamGridDB", "github_branch"),
                 output_dir = programs.get_library_backup_dir("PySteamGridDB", "lib"),
                 recursive = True,
                 clean = True,

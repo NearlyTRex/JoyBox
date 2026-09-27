@@ -3,6 +3,7 @@ import joybox.config as config
 import joybox.logger as logger
 import joybox.network as network
 import joybox.release as release
+import joybox.requirements as requirements
 import joybox.programs as programs
 import joybox.toolbase as toolbase
 
@@ -20,7 +21,8 @@ class HumbleBundleManager(toolbase.ToolBase):
     def get_config(self):
         return {
             "HumbleBundleManager": {
-                "program": "HumbleBundleManager/lib/humblebundle.py"
+                "program": "HumbleBundleManager/lib/humblebundle.py",
+                "github_branch": "dev"
             }
         }
 
@@ -34,8 +36,17 @@ class HumbleBundleManager(toolbase.ToolBase):
             success = network.download_github_repository(
                 github_user = "NearlyTRex",
                 github_repo = "HumbleBundleManager",
+                github_branch = programs.get_tool_config_value("HumbleBundleManager", "github_branch"),
                 output_dir = programs.get_library_install_dir("HumbleBundleManager", "lib"),
                 clean = True,
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
+            if not success:
+                logger.log_error("Could not setup HumbleBundleManager")
+                return False
+            success = requirements.install_declared_requirements(
+                tool_dir = programs.get_library_install_dir("HumbleBundleManager", "lib"),
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
@@ -45,6 +56,7 @@ class HumbleBundleManager(toolbase.ToolBase):
             success = network.archive_github_repository(
                 github_user = "NearlyTRex",
                 github_repo = "HumbleBundleManager",
+                github_branch = programs.get_tool_config_value("HumbleBundleManager", "github_branch"),
                 output_dir = programs.get_library_backup_dir("HumbleBundleManager", "lib"),
                 recursive = True,
                 clean = True,

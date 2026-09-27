@@ -34,6 +34,7 @@ class ItchDL(toolbase.ToolBase):
             success = network.download_github_repository(
                 github_user = "NearlyTRex",
                 github_repo = "ItchDL",
+                github_branch = programs.get_tool_config_value("ItchDL", "github_branch"),
                 output_dir = programs.get_library_install_dir("ItchDL", "lib"),
                 clean = True,
                 verbose = setup_params.verbose,
@@ -45,6 +46,7 @@ class ItchDL(toolbase.ToolBase):
             success = network.archive_github_repository(
                 github_user = "NearlyTRex",
                 github_repo = "ItchDL",
+                github_branch = programs.get_tool_config_value("ItchDL", "github_branch"),
                 output_dir = programs.get_library_backup_dir("ItchDL", "lib"),
                 recursive = True,
                 clean = True,

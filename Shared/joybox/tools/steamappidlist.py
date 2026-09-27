@@ -34,6 +34,7 @@ class SteamAppIDList(toolbase.ToolBase):
             success = network.download_github_repository(
                 github_user = "NearlyTRex",
                 github_repo = "SteamAppIDList",
+                github_branch = programs.get_tool_config_value("SteamAppIDList", "github_branch"),
                 output_dir = programs.get_library_install_dir("SteamAppIDList", "lib"),
                 clean = True,
                 verbose = setup_params.verbose,
@@ -45,6 +46,7 @@ class SteamAppIDList(toolbase.ToolBase):
             success = network.archive_github_repository(
                 github_user = "NearlyTRex",
                 github_repo = "SteamAppIDList",
+                github_branch = programs.get_tool_config_value("SteamAppIDList", "github_branch"),
                 output_dir = programs.get_library_backup_dir("SteamAppIDList", "lib"),
                 recursive = True,
                 clean = True,
