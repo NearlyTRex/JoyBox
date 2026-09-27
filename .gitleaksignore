@@ -1,0 +1,12 @@
+# Reviewed gitleaks findings that are not secrets. Each entry is one finding in
+# one past commit (commit:file:rule:line); anything else still fails the scan.
+
+# A made-up PS3 disc key in a test fixture; the tests now use FAKE_DISC_KEY
+7b865fe4c7e646480797101308821e6762c2bf0e:Tests/unit/Shared/joybox/test_transform.py:generic-api-key:211
+
+# A JSON field name constant, the win31 launch key, whose value is its own name
+3b5448529b4eebe1d34bfdc4b50726fe6e30b25f:Scripts/lib/config/keys.py:generic-api-key:117
+
+# RetroArch's own public Discord application id, from its stock retroarch.cfg
+366445db9bf8c87b5f8775036ca532ea9317112a:Emulators/RetroArch/linux/RetroArch-Linux-x86_64.AppImage.home/.config/retroarch/retroarch.cfg:discord-client-id:150
+366445db9bf8c87b5f8775036ca532ea9317112a:Emulators/RetroArch/windows/retroarch.cfg:discord-client-id:136

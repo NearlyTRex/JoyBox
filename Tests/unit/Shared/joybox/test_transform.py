@@ -34,6 +34,10 @@ class FakeGameInfo:
         return self.subcategory
 
 
+# A disc key's shape, 32 hex digits, and plainly not a real one
+FAKE_DISC_KEY = "0" * 32
+
+
 def write(path, contents = "data"):
     path = str(path)
     os.makedirs(os.path.dirname(path), exist_ok = True)
@@ -208,7 +212,7 @@ def ps3_tools(monkeypatch):
 
 def test_a_ps3_disc_is_decrypted_with_its_key(ps3_tools, tmp_path):
     source = write(tmp_path / "discs" / "Game.iso")
-    key = write(tmp_path / "discs" / "Game.dkey", "0123456789ABCDEF")
+    key = write(tmp_path / "discs" / "Game.dkey", FAKE_DISC_KEY)
     output = str(tmp_path / "out")
 
     success, result = transform.transform_ps3_disc_image(source, key, output)

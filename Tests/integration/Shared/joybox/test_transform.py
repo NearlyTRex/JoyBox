@@ -36,6 +36,10 @@ class FakeGameInfo:
         return self.key_file
 
 
+# A disc key's shape, 32 hex digits, and plainly not a real one
+FAKE_DISC_KEY = "0" * 32
+
+
 @pytest.fixture
 def chains(monkeypatch, tmp_path):
     # Every transform writes its output into the temporary directory and
@@ -67,7 +71,7 @@ def workspace(tmp_path):
     source.mkdir()
     output.mkdir()
     (source / "game.iso").write_text("disc image")
-    (source / "game.dkey").write_text("0123456789ABCDEF")
+    (source / "game.dkey").write_text(FAKE_DISC_KEY)
     return source, output
 
 

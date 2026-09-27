@@ -1,0 +1,29 @@
+name: Release
+
+# Tags and publishes the version in pyproject.toml once, after the checks pass.
+# Pushes that don't change the version find the tag already there and do nothing.
+on:
+  push:
+    branches: [main]
+
+permissions: {}
+
+jobs:
+  check:
+    name: Check
+    uses: NearlyTRex/Workflows/.github/workflows/python-ci.yml@c2daac4d6f891b24edb680b073710f4dcd7c9467 # v0.2.2
+    permissions:
+      contents: read
+    # The same inputs as the python job in ci.yml
+    with:
+      test-command: pytest -q -c Tests/pytest.ini Tests/unit
+      coverage-fail-under: "48"
+
+  release:
+    name: Release
+    needs: check
+    uses: NearlyTRex/Workflows/.github/workflows/release.yml@c2daac4d6f891b24edb680b073710f4dcd7c9467 # v0.2.2
+    permissions:
+      contents: write
+    with:
+      version-file: pyproject.toml
