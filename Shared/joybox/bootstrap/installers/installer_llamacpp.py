@@ -53,15 +53,14 @@ class LlamaCpp(installer.Installer):
         return {"installed": installed, "missing": missing}
 
     def get_build_dependencies(self):
-        packages = ["build-essential", "cmake", "git", "libcurl4-openssl-dev"]
+        packages = ["build-essential", "cmake", "git", "libssl-dev"]
         if self.backend == "vulkan":
-            packages += ["libvulkan-dev", "glslc", "vulkan-tools"]
+            packages += ["libvulkan-dev", "glslc", "spirv-headers", "vulkan-tools"]
         return packages
 
     def get_cmake_flags(self):
         flags = ["-DCMAKE_BUILD_TYPE=Release",
-                 f"-DCMAKE_INSTALL_PREFIX={self.install_prefix}",
-                 "-DLLAMA_CURL=ON"]
+                 f"-DCMAKE_INSTALL_PREFIX={self.install_prefix}"]
         if self.backend == "cuda":
             flags.append("-DGGML_CUDA=ON")
         elif self.backend == "vulkan":
