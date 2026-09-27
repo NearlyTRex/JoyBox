@@ -8,7 +8,8 @@ same APT base, so they all use the `local_ubuntu` target.
 ## Quick steps
 
 ```bash
-# 1. Install everything. Clones to ~/Repositories/JoyBox, creates ~/JoyBox.ini, then sets up
+# 1. Install. Clones to ~/Repositories/JoyBox, creates ~/JoyBox.ini, asks which components
+#    to set up (Enter takes all of them), then sets them up
 curl -fsSL https://raw.githubusercontent.com/NearlyTRex/JoyBox/main/install.sh | bash
 
 # 2. Open a new terminal so the shell config and PATH are picked up
@@ -35,7 +36,18 @@ changing anything.
 ## What the installer does
 
 It installs `git` and `python3` if they are missing, clones to `$HOME/Repositories/JoyBox`, and
-runs `bootstrap.py -a setup -t local_ubuntu`. Override the destination or branch with the
+runs `bootstrap.py -a setup -t local_ubuntu --interactive`, which lists the components and asks
+which to set up:
+
+```text
+Selection: 1-6 steam      # the first six, plus steam
+Selection: -virtualbox -wine   # everything except these two
+Selection:                # (Enter) everything
+```
+
+With no terminal to prompt on (cloud-init, CI) it sets up everything without asking. A component
+that fails does not stop the others; the failures are listed at the end and the installer exits
+non-zero. Override the destination or branch with the
 `JOYBOX_DIR` / `JOYBOX_REF` environment variables, and pass extra `bootstrap.py` arguments after
 `bash -s --`:
 
@@ -84,6 +96,9 @@ Everything, unless you pick components:
 ```bash
 # Just browsers and dev tools
 python3 bootstrap.py -a setup -t local_ubuntu --components aptget chrome brave vscodium gitkraken
+
+# Pick from a menu
+python3 bootstrap.py -a setup -t local_ubuntu --interactive
 
 # See what's available
 python3 bootstrap.py -t local_ubuntu --list-components

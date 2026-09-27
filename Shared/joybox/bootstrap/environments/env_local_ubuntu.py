@@ -95,8 +95,9 @@ class LocalUbuntu(env.Environment):
             logger.log_info("Updating package lists for AptGet")
             self.installer_aptget.update_package_lists()
 
-        # Process all components
-        success = self.process_components("install", force=self.flags.force)
+        # Desktop components are independent, so one failure does not skip the rest
+        success = self.process_components("install", force=self.flags.force,
+            continue_on_failure = not self.flags.exit_on_failure)
 
         # Autoremove packages (opt-in: --autoremove, off by default)
         if self.flags.autoremove and self.should_process_component("aptget") and success:
@@ -108,7 +109,8 @@ class LocalUbuntu(env.Environment):
     def teardown(self):
 
         # Process components in reverse order
-        success = self.process_components("uninstall", reverse_order=True, force=self.flags.force)
+        success = self.process_components("uninstall", reverse_order=True, force=self.flags.force,
+            continue_on_failure = not self.flags.exit_on_failure)
 
         # Autoremove packages (opt-in: --autoremove, off by default)
         if self.flags.autoremove and self.should_process_component("aptget") and success:

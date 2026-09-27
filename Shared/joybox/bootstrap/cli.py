@@ -1,15 +1,18 @@
 # Imports
 import os
+import sys
 import argparse
 
 # Local imports
 from joybox import runoptions
 from joybox import logger
+from joybox import runtime
 from joybox import settings
 from joybox import default_settings
 import joybox.bootstrap.constants as constants
 import joybox.bootstrap.packages as packages
 import joybox.bootstrap.runner as runner
+import joybox.bootstrap.picker as picker
 
 # Build the argument parser
 def build_parser():
@@ -43,6 +46,10 @@ def build_parser():
         "--list-components",
         action = "store_true",
         help = "List available components for the specified environment type and exit")
+    parser.add_argument(
+        "-i", "--interactive",
+        action = "store_true",
+        help = "Choose which components to setup/teardown from a menu")
     parser.add_argument("-v", "--verbose", action = "store_true", help = "Enable verbose mode")
     parser.add_argument("-p", "--pretend_run", action = "store_true", help = "Enable pretend run mode")
     parser.add_argument("-x", "--exit_on_failure", action = "store_true", help = "Enable exit on failure mode")
@@ -136,6 +143,20 @@ def main(argv = None):
             logger.log_info(f"  - {component}")
         return
 
+    # Pick components from a menu
+    if args.interactive:
+        if args.action not in ("setup", "teardown"):
+            logger.log_error_and_quit("--interactive only works with setup or teardown")
+        if args.components is not None:
+            logger.log_error_and_quit("--interactive and --components cannot be combined")
+        if not sys.stdin.isatty():
+            logger.log_error_and_quit("--interactive needs a terminal to prompt on")
+        chosen = picker.choose_components(environment_runner.get_available_components(), args.action)
+        if chosen is None:
+            logger.log_info("Nothing to do")
+            return
+        args.components = chosen
+
     # Set components to process
     if args.components is not None:
         if len(args.components) == 0:
@@ -153,14 +174,15 @@ def main(argv = None):
 
     # Dispatch action
     if args.action == "setup":
-        environment_runner.setup()
+        success = environment_runner.setup()
     elif args.action == "teardown":
-        environment_runner.teardown()
+        success = environment_runner.teardown()
     elif args.action == "backup":
-        environment_runner.backup()
+        success = environment_runner.backup()
     elif args.action == "restore":
-        environment_runner.restore()
+        success = environment_runner.restore()
     elif args.action == "status":
+        success = True
         results = environment_runner.status()
         installed = [r for r in results if r["installed"]]
         not_installed = [r for r in results if not r["installed"]]
@@ -189,3 +211,8 @@ def main(argv = None):
                         logger.log_info(f"        ... and {len(pkg_status['missing']) - 10} more")
                 else:
                     logger.log_info(f"  [ ] {r['name']}")
+
+    # A failed component must fail the run, so install.sh and CI notice
+    if not success:
+        logger.log_error(f"{args.action.title()} did not complete cleanly")
+        runtime.quit_program(1)

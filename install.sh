@@ -12,7 +12,9 @@
 # Pass arguments straight through to bootstrap.py:
 #   curl -fsSL .../install.sh | bash -s -- -a setup -t local_ubuntu --components aptget chrome
 #
-# With no arguments it defaults to:  bootstrap.py -a setup -t local_ubuntu
+# With no arguments it defaults to:  bootstrap.py -a setup -t local_ubuntu --interactive
+# which asks which components to install (Enter takes all of them). Without a terminal
+# to prompt on, it installs everything.
 #
 # Override behaviour with environment variables:
 #   JOYBOX_REPO   git URL to clone           (default: https://github.com/NearlyTRex/JoyBox.git)
@@ -43,6 +45,9 @@ warn() { printf '%swarning:%s %s\n' "$C_YELLOW" "$C_RESET" "$*" >&2; }
 die()  { printf '%serror:%s %s\n'   "$C_RED"    "$C_RESET" "$*" >&2; exit 1; }
 
 has_cmd() { command -v "$1" >/dev/null 2>&1; }
+
+# /dev/tty passes a -r test even with no controlling terminal; only opening it tells.
+has_tty() { (exec </dev/tty) 2>/dev/null; }
 
 # ---------------------------------------------------------------------------
 # Environment checks
@@ -120,13 +125,14 @@ run_bootstrap() {
     local args=("$@")
     if [ "${#args[@]}" -eq 0 ]; then
         args=(-a setup -t local_ubuntu)
+        has_tty && args+=(--interactive)
     fi
 
     log "Running: python3 bootstrap.py ${args[*]}"
 
     # When invoked via 'curl ... | bash', stdin is the script itself, so bootstrap.py's
     # first-run config prompts would hit EOF. Wire them to the terminal when we have one.
-    if [ -r /dev/tty ]; then
+    if has_tty; then
         python3 bootstrap.py "${args[@]}" < /dev/tty
     else
         warn "No controlling terminal detected; first-run config prompts may fail in this mode."

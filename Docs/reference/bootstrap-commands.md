@@ -15,6 +15,9 @@ python3 bootstrap.py -a status -t local_ubuntu --components chrome brave vscodiu
 # Dry run - see what would happen
 python3 bootstrap.py -a setup -t local_ubuntu -p -v
 
+# Choose what to install from a menu
+python3 bootstrap.py -a setup -t local_ubuntu --interactive
+
 # Force reinstall a component
 python3 bootstrap.py -a setup -t local_ubuntu --components brave -f
 
@@ -47,6 +50,7 @@ python3 bootstrap.py -a setup -t local_ubuntu -v
 | `-s`, `--server_index` | Server index from `JoyBox.ini` (required for `remote_ubuntu`) |
 | `-c`, `--config_file` | Path to the config file (default `~/JoyBox.ini`) |
 | `--components` | Specific components to act on (default: all) |
+| `-i`, `--interactive` | Choose the components for `setup` or `teardown` from a menu |
 | `--list-components` | List available components for the type and exit |
 | `--list-images` | List the pinned container image for each docker component and exit |
 | `--backup-id` | Which backup to restore — a timestamp, or `latest` |
@@ -55,4 +59,4 @@ python3 bootstrap.py -a setup -t local_ubuntu -v
 | `-p`, `--pretend_run` | Dry run — show what would happen, change nothing |
 | `-v`, `--verbose` | Verbose logging |
 | `-f`, `--force` | Act even if the component is already installed/uninstalled |
-| `-x`, `--exit_on_failure` | Stop on the first error instead of continuing |
+| `-x`, `--exit_on_failure` | Stop on the first error instead of continuing. Remote servers always stop at a failed component, since later services depend on earlier ones |
