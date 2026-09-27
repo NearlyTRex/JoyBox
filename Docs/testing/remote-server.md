@@ -15,7 +15,7 @@ the real path, not about a parallel one. The steps mirror
 
 ```bash
 # Once: tooling for the guest and for locally signed certificates
-python3 bootstrap.py -a setup -t local_ubuntu --components aptget python wrappers
+python3 bootstrap.py -a setup -t local_ubuntu --components aptget python
 
 # Add the guest as server 1 in ~/JoyBox.ini (see below), then:
 provision_server --server 1
@@ -85,7 +85,7 @@ testvm revert --snapshot provision-fresh
 The workstation tooling is declared in the `local_ubuntu` package lists:
 
 ```bash
-python3 bootstrap.py -a setup -t local_ubuntu --components aptget python wrappers
+python3 bootstrap.py -a setup -t local_ubuntu --components aptget python
 ```
 
 That installs `virtinst`, `qemu-system-x86`, `cloud-image-utils`, `mkcert`,

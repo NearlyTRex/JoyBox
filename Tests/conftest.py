@@ -8,9 +8,8 @@ import pytest
 ###########################################################
 # Path wiring
 #
-# Both trees are consumed off disk rather than installed. Scripts find Shared
-# through the venv's joybox.pth and bootstrap.py adds it itself; tests may run
-# under any interpreter, so they wire the paths here or nothing imports.
+# joybox is installed into the venv, but the suite may run under an interpreter
+# it was never installed into, so both trees are put on the path here.
 ###########################################################
 
 TESTS_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -18,7 +17,8 @@ REPO_ROOT = os.path.dirname(TESTS_DIR)
 SHARED_DIR = os.path.join(REPO_ROOT, "Shared")
 BOOTSTRAP_DIR = os.path.join(REPO_ROOT, "Bootstrap")
 INSTALLERS_DIR = os.path.join(SHARED_DIR, "joybox", "bootstrap", "installers")
-SCRIPTS_BIN_DIR = os.path.join(REPO_ROOT, "Scripts", "bin")
+CLI_DIR = os.path.join(SHARED_DIR, "joybox", "cli")
+PYPROJECT_PATH = os.path.join(REPO_ROOT, "pyproject.toml")
 
 for _path in (TESTS_DIR, SHARED_DIR):
     if _path not in sys.path:
@@ -238,8 +238,12 @@ def installers_dir():
     return INSTALLERS_DIR
 
 @pytest.fixture(scope = "session")
-def scripts_bin_dir():
-    return SCRIPTS_BIN_DIR
+def cli_dir():
+    return CLI_DIR
+
+@pytest.fixture(scope = "session")
+def pyproject_path():
+    return PYPROJECT_PATH
 
 @pytest.fixture(scope = "session")
 def installer_files():
@@ -250,14 +254,23 @@ def installer_files():
             found.append((filename[:-3], os.path.join(INSTALLERS_DIR, filename)))
     return found
 
-@pytest.fixture(scope = "session")
-def script_files(scripts_bin_dir):
-    # Every CLI entry point under Scripts/bin, as (name, path) pairs
+def find_cli_files():
+    # Every command module in joybox.cli, as (name, path) pairs
     found = []
-    for filename in sorted(os.listdir(scripts_bin_dir)):
+    for filename in sorted(os.listdir(CLI_DIR)):
         if filename.endswith(".py") and not filename.startswith("_"):
-            found.append((filename[:-3], os.path.join(scripts_bin_dir, filename)))
+            found.append((filename[:-3], os.path.join(CLI_DIR, filename)))
     return found
+
+@pytest.fixture(scope = "session")
+def cli_files():
+    return find_cli_files()
+
+@pytest.fixture(scope = "session")
+def cli_commands():
+    # Every [project.scripts] command, as (command, module) pairs
+    from joybox import manpage
+    return manpage.find_commands(PYPROJECT_PATH)
 
 ###########################################################
 # Settings isolation

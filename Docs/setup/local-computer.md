@@ -26,7 +26,7 @@ Already have the repo cloned? Skip step 1 and run step 4 from the checkout.
 
 ```bash
 python3 bootstrap.py -a status -t local_ubuntu   # every component installed
-which master_backup                              # ~/.joybox/bin/master_backup
+which master_backup                              # ~/.venv/bin/master_backup
 ```
 
 Add `-p -v` to any `bootstrap.py` command the first time to see what it would do without
@@ -47,16 +47,15 @@ Re-running is safe: the checkout is fast-forwarded and anything already installe
 
 ## The JoyBox commands
 
-Every script in `Scripts/bin` gets a shim of the same name in `~/.joybox/bin` (`master_backup`,
-`build_autoinstall_iso`, …), which the `dotfiles` component puts on your `PATH`. The shims are
-made by the `wrappers` component. A script added since the last setup has no shim until they are
-rebuilt:
+JoyBox is a Python package, and the `python` component installs this checkout into `~/.venv` in
+editable mode. pip creates one command per entry in `[project.scripts]` in `pyproject.toml`
+(`master_backup`, `build_autoinstall_iso`, …) in `~/.venv/bin`, which the `dotfiles` component
+puts on your `PATH`. Editable means changes to the code take effect immediately; a command added
+to `[project.scripts]` since the last setup appears once the package is reinstalled:
 
 ```bash
-python3 bootstrap.py -a setup -t local_ubuntu --components wrappers -f
-```
-
-`-f` is needed because the component is already installed and would otherwise be skipped. What
+~/.venv/bin/pip install --editable ~/Repositories/JoyBox[dev]
+``` What
 each command does is in the [command reference](../reference/man/README.md), and the flags they
 all share are in [Using the tools](../guides/using-the-tools.md).
 
@@ -95,8 +94,8 @@ python3 bootstrap.py -t local_ubuntu --list-components
 | `dconf` | Desktop dconf/gsettings settings |
 | `dotfiles` | Dot files installation |
 | `githooks` | Activate the repo's git hooks |
-| `python` | Python venv + pip packages |
-| `wrappers` | Script wrappers in ~/.joybox/bin |
+| `python` | Python venv, JoyBox itself (editable) and the other venv tools |
+| `wrappers` | `python3`/`pip3` in ~/.joybox/bin, pointing at the venv |
 | `aptget` | All APT packages |
 | `awscli` | AWS CLI |
 | `flatpak` | Flatpak apps |

@@ -43,7 +43,7 @@ Which VM tool is for which server: [Testing](testing/README.md).
 
 | Page | What it covers |
 |------|----------------|
-| [Command Reference](reference/man/README.md) | Every command in `Scripts/bin`, generated from its `--help` |
+| [Command Reference](reference/man/README.md) | Every JoyBox command, generated from its `--help` |
 | [Configuration](reference/configuration.md) | `~/JoyBox.ini` and its key settings |
 | [Secrets](reference/secrets.md) | Referencing passwords and keys in 1Password instead of the ini |
 | [Bootstrap Commands](reference/bootstrap-commands.md) | Everyday `bootstrap.py` commands and flags |

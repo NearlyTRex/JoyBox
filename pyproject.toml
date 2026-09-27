@@ -1,3 +1,7 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
 [project]
 name = "joybox"
 version = "0.1.0"
@@ -5,9 +9,125 @@ description = "Game collection management, media tooling, and machine provisioni
 requires-python = ">=3.12"
 license = { file = "LICENSE" }
 
-# The trees are consumed directly off disk via sys.path rather than installed,
-# so there is no [build-system] here on purpose - adding one would change how
-# install.sh and the bootstrap flow see the repo.
+# What joybox itself imports. Every one of these is imported inside the function
+# that needs it, so bootstrap.py still runs on a bare system python on day 0;
+# standalone tools that live in the same venv are in bootstrap/packages/python.py.
+dependencies = [
+    "anthropic",
+    "beautifulsoup4",
+    "html-text",
+    "mergedeep",
+    "paramiko",
+    "pillow",
+    "psutil",
+    "PyGithub",
+    "python-dateutil",
+    "python-magic",
+    "PyYAML",
+    "pyuac; sys_platform == 'win32'",
+    "pywinpty; sys_platform == 'win32'",
+    "requests",
+    "schedule",
+    "screeninfo",
+    "selenium",
+    "thefuzz",
+    "tqdm",
+    "Unidecode",
+    "vdf",
+    "webdriver-manager",
+    "xmltodict",
+    "xxhash",
+]
+
+[project.scripts]
+3ds_rom_tool = "joybox.cli.threeds_rom_tool:run"
+analyze_game_json_files = "joybox.cli.analyze_game_json_files:run"
+audio_conversion_tool = "joybox.cli.audio_conversion_tool:run"
+audio_metadata_tool = "joybox.cli.audio_metadata_tool:run"
+backup_game_files = "joybox.cli.backup_game_files:run"
+backup_tool = "joybox.cli.backup_tool:run"
+boot_vm_image = "joybox.cli.boot_vm_image:run"
+build_autoinstall_iso = "joybox.cli.build_autoinstall_iso:run"
+build_game_hash_files = "joybox.cli.build_game_hash_files:run"
+build_game_json_files = "joybox.cli.build_game_json_files:run"
+build_game_metadata_files = "joybox.cli.build_game_metadata_files:run"
+build_game_store_purchases = "joybox.cli.build_game_store_purchases:run"
+build_man_pages = "joybox.cli.build_man_pages:run"
+chdconvert = "joybox.cli.chdconvert:run"
+chdextract = "joybox.cli.chdextract:run"
+chdverify = "joybox.cli.chdverify:run"
+chdzip = "joybox.cli.chdzip:run"
+check_computer_archives = "joybox.cli.check_computer_archives:run"
+claude_tool = "joybox.cli.claude_tool:run"
+clean_exif_data = "joybox.cli.clean_exif_data:run"
+clean_game_hash_files = "joybox.cli.clean_game_hash_files:run"
+clean_game_json_files = "joybox.cli.clean_game_json_files:run"
+clean_game_metadata_files = "joybox.cli.clean_game_metadata_files:run"
+compress_files = "joybox.cli.compress_files:run"
+compress_folders = "joybox.cli.compress_folders:run"
+crypt_tool = "joybox.cli.crypt_tool:run"
+dat_renamer = "joybox.cli.dat_renamer:run"
+decompiler_tool = "joybox.cli.decompiler_tool:run"
+decompress_archives = "joybox.cli.decompress_archives:run"
+download_audio_files = "joybox.cli.download_audio_files:run"
+download_game_metadata_assets = "joybox.cli.download_game_metadata_assets:run"
+download_youtube_videos = "joybox.cli.download_youtube_videos:run"
+find_missing_game_assets = "joybox.cli.find_missing_game_assets:run"
+find_missing_game_metadata = "joybox.cli.find_missing_game_metadata:run"
+find_missing_hash_sidecars = "joybox.cli.find_missing_hash_sidecars:run"
+generate_playlist = "joybox.cli.generate_playlist:run"
+github_tool = "joybox.cli.github_tool:run"
+install_game_json = "joybox.cli.install_game_json:run"
+isoextract = "joybox.cli.isoextract:run"
+launch_game_json = "joybox.cli.launch_game_json:run"
+launch_pegasus = "joybox.cli.launch_pegasus:run"
+launch_sunshine = "joybox.cli.launch_sunshine:run"
+list_dupes = "joybox.cli.list_dupes:run"
+llm_chat = "joybox.cli.llm_chat:run"
+locker_hash_tool = "joybox.cli.locker_hash_tool:run"
+locker_sync_tool = "joybox.cli.locker_sync_tool:run"
+login_game_stores = "joybox.cli.login_game_stores:run"
+make_folders = "joybox.cli.make_folders:run"
+make_iso = "joybox.cli.make_iso:run"
+master_backup = "joybox.cli.master_backup:run"
+nds_rom_tool = "joybox.cli.nds_rom_tool:run"
+ollama_tool = "joybox.cli.ollama_tool:run"
+provision_server = "joybox.cli.provision_server:run"
+ps3_rom_tool = "joybox.cli.ps3_rom_tool:run"
+psn_rom_tool = "joybox.cli.psn_rom_tool:run"
+psv_rom_tool = "joybox.cli.psv_rom_tool:run"
+publish_game_metadata_files = "joybox.cli.publish_game_metadata_files:run"
+rebuild_hash_sidecars = "joybox.cli.rebuild_hash_sidecars:run"
+rezip_files = "joybox.cli.rezip_files:run"
+run_presets = "joybox.cli.run_presets:run"
+sanitize_filenames = "joybox.cli.sanitize_filenames:run"
+save_game_tool = "joybox.cli.save_game_tool:run"
+scan_game_files = "joybox.cli.scan_game_files:run"
+setup_game_assets = "joybox.cli.setup_game_assets:run"
+setup_game_emulators = "joybox.cli.setup_game_emulators:run"
+setup_tools = "joybox.cli.setup_tools:run"
+sort_game_metadata = "joybox.cli.sort_game_metadata:run"
+switch_rom_tool = "joybox.cli.switch_rom_tool:run"
+sync_tool = "joybox.cli.sync_tool:run"
+tag_audio_files = "joybox.cli.tag_audio_files:run"
+testvm = "joybox.cli.testvm:run"
+upload_game_files = "joybox.cli.upload_game_files:run"
+verify_archives = "joybox.cli.verify_archives:run"
+verify_game_files = "joybox.cli.verify_game_files:run"
+verify_server = "joybox.cli.verify_server:run"
+wiiu_rom_tool = "joybox.cli.wiiu_rom_tool:run"
+
+[project.optional-dependencies]
+dev = [
+    "pytest",
+]
+
+[tool.setuptools.packages.find]
+where = ["Shared"]
+include = ["joybox*"]
+
+[tool.setuptools.package-data]
+"joybox.tools" = ["files/**/*"]
 
 [tool.ruff.lint]
 # The Workflows library's default set, pinned here so a library change is a

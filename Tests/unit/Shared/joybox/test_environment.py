@@ -568,36 +568,28 @@ def test_two_albums_do_not_share_a_directory(roots):
 # Scripts
 ###########################################################
 
-def test_the_scripts_bin_dir_sits_under_the_scripts_root():
-    assert environment.get_scripts_bin_dir().startswith(environment.get_scripts_root_dir())
-
-
 def test_the_scripts_icons_dir_sits_under_the_scripts_root():
     assert environment.get_scripts_icons_dir().startswith(environment.get_scripts_root_dir())
 
 
-def test_the_bin_and_icon_directories_are_distinct():
-    assert environment.get_scripts_bin_dir() != environment.get_scripts_icons_dir()
+###########################################################
+# Commands
+#
+# pip installs each command into the venv, so that is where one is run from.
+###########################################################
 
-
-@pytest.mark.parametrize("accessor,windows,other", [
-    ("get_scripts_command_extension", ".bat", ""),
-    ("get_scripts_executable_extension", ".exe", ""),
-])
-def test_the_script_extensions_follow_the_platform(monkeypatch, accessor, windows, other):
-    # Unix has no extension for either, so both are empty there.
-    monkeypatch.setattr(environment.platform_info, "is_windows_platform", lambda: True)
-    assert getattr(environment, accessor)() == windows
-
+def test_commands_live_in_the_venv(monkeypatch):
     monkeypatch.setattr(environment.platform_info, "is_windows_platform", lambda: False)
-    assert getattr(environment, accessor)() == other
+    venv_dir = environment.settings.get_path_value("Tools.Python", "python_venv_dir")
+
+    assert environment.get_command_path("backup_tool") == os.path.join(venv_dir, "bin", "backup_tool")
 
 
-def test_the_windows_script_extensions_are_distinct(monkeypatch):
+def test_windows_commands_are_executables_in_scripts(monkeypatch):
     monkeypatch.setattr(environment.platform_info, "is_windows_platform", lambda: True)
+    venv_dir = environment.settings.get_path_value("Tools.Python", "python_venv_dir")
 
-    assert environment.get_scripts_command_extension() != \
-        environment.get_scripts_executable_extension()
+    assert environment.get_command_path("backup_tool") == os.path.join(venv_dir, "Scripts", "backup_tool.exe")
 
 
 ###########################################################

@@ -46,10 +46,8 @@ holds the checks that run across every installer.
 |---|---|
 | `unit/Shared` | The bulk of the value. `Shared/joybox` holds the logic, and most of it is pure functions with real contracts |
 | `unit/Bootstrap` | Installer behaviour via the fake connection, plus package-list and template invariants |
-| `unit/Scripts` | Only the conventions that keep `Scripts/bin` thin — not the wrappers themselves |
 | `integration/Bootstrap` | Generated compose files, vhosts and shell scripts handed to docker and bash for judgement |
-| `integration/Shared` | `ConnectionLocal` against a real filesystem |
-| `integration/Scripts` | Every CLI launched as a subprocess with `--help` |
+| `integration/Shared` | `ConnectionLocal` against a real filesystem, and every command launched as a subprocess with `--help` |
 
 Because the tree mirrors the source, `unit/` and `integration/` contain files
 with the same basename. `pytest.ini` sets `--import-mode=importlib` for that
@@ -58,9 +56,10 @@ collides.
 
 ## How the fixtures work
 
-`conftest.py` puts `Shared/` and `Tests/` on `sys.path`, because the shared
-package is consumed off disk rather than installed — the same thing
-`bootstrap.py` and every `Scripts/bin/*.py` does.
+`conftest.py` puts `Shared/` and `Tests/` on `sys.path`, so the suite runs from
+the checkout under any interpreter, whether or not joybox is installed into it.
+`unit/Shared/joybox/cli` checks only the conventions that keep the command
+modules thin, not the commands themselves.
 
 **`no_sealed_programs`** (autouse) — refuses real runs of `sudo`, `op`, `ssh`,
 `virsh`, `systemctl` and the other programs in `SEALED_PROGRAMS`, whether through
@@ -120,10 +119,10 @@ double needs to do the same.
   it runs on a bare server before the repo or Python exists.
 - `Shared/joybox` is 58k lines across 242 files. The pure modules are covered;
   `collection/`, `config/`, `stores/`, `emulators/` and `tools/` are not.
-- The audio and ollama logic moved out of `Scripts/bin` has dispatch and parsing
+- The audio and ollama logic moved out of the command modules has dispatch and parsing
   tests, but nothing exercises the parts that touch real media files or a
   running Ollama.
-- Nothing exercises a real remote deploy. `Scripts/bin/verify_server.py`
+- Nothing exercises a real remote deploy. `verify_server`
   covers that against the rehearsal VM — see
   [Testing the Remote Server](../Docs/testing/remote-server.md).
 

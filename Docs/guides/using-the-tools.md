@@ -3,8 +3,8 @@
 [← Docs index](../README.md)
 
 JoyBox's commands manage a game and media locker and back it up to local and cloud storage. Each
-one is a shim in `~/.joybox/bin` that runs the matching `Scripts/bin/*.py` wrapper; the behaviour
-lives in `Shared/joybox`. Installing and rebuilding the shims is covered in
+one is installed by pip from the package and runs a thin module in `Shared/joybox/cli`; the
+behaviour lives in the rest of `Shared/joybox`. Installing them is covered in
 [Local Computer Setup](../setup/local-computer.md#the-joybox-commands), and every command has a
 page in the [command reference](../reference/man/README.md) — the same text `<command> -h` prints.
 

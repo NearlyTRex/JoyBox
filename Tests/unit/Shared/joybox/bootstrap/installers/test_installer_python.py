@@ -8,59 +8,54 @@ from fakes import RecordingConnection
 
 
 ###########################################################
-# Shared on the venv's path
+# joybox in the venv
 #
-# Scripts import joybox without adjusting sys.path; the venv's joybox.pth is
-# what makes that work, so it has to exist and name this checkout's Shared.
+# The commands and every import come from an editable install of this checkout,
+# so installed means pip reports joybox as editable from exactly this checkout.
 ###########################################################
 
-SITE_PACKAGES = "/venv/lib/python3.12/site-packages"
-PATH_FILE = SITE_PACKAGES + "/joybox.pth"
+def repo_dir():
+    return os.path.normpath(environment.get_repo_root(expand = True))
 
 
-def build(existing = None, contents = None):
-    connection = RecordingConnection(
-        existing_paths = existing or [],
-        file_contents = contents or {},
-        command_output = {"sysconfig": SITE_PACKAGES + "\n"})
+def build(pip_show = ""):
+    connection = RecordingConnection(command_output = {"show joybox": pip_show})
     python = installers.Python(connection)
     python.get_packages = lambda: []
     return python, connection
 
 
-def shared_dir():
-    return os.path.join(environment.get_repo_root(expand = True), "Shared")
+def show_output(location):
+    return "Name: joybox\nVersion: 0.1.0\nEditable project location: %s\n" % location
 
 
-def test_the_path_file_lives_in_the_venvs_site_packages(isolated_settings):
-    python, _ = build()
-    assert python.get_path_file() == PATH_FILE
-
-
-def test_install_writes_the_shared_dir(isolated_settings):
-    python, connection = build(existing = ["/venv"])
+def test_install_installs_this_checkout_editable(isolated_settings):
+    python, connection = build()
+    connection.existing_paths.add(os.path.expandvars("$HOME/.venv"))
     python.install()
 
-    assert connection.written_files[PATH_FILE].strip() == shared_dir()
+    assert any(
+        command[1:] == ["install", "--editable", repo_dir() + "[dev]"]
+        for command in connection.commands)
 
 
-def test_a_missing_path_file_is_not_installed(isolated_settings):
+def test_not_installed_is_not_installed(isolated_settings):
     python, _ = build()
     assert not python.is_installed()
 
 
-def test_a_path_file_for_another_checkout_is_not_installed(isolated_settings):
-    python, _ = build(existing = [PATH_FILE], contents = {PATH_FILE: "/elsewhere/Shared\n"})
+def test_another_checkout_is_not_installed(isolated_settings):
+    python, _ = build(show_output("/elsewhere/JoyBox"))
     assert not python.is_installed()
 
 
-def test_a_current_path_file_is_installed(isolated_settings):
-    python, _ = build(existing = [PATH_FILE], contents = {PATH_FILE: shared_dir() + "\n"})
+def test_this_checkout_is_installed(isolated_settings):
+    python, _ = build(show_output(repo_dir()))
     assert python.is_installed()
 
 
-def test_uninstall_removes_the_path_file(isolated_settings):
-    python, connection = build(existing = [PATH_FILE])
+def test_uninstall_removes_joybox(isolated_settings):
+    python, connection = build()
     python.uninstall()
 
-    assert PATH_FILE in connection.removed_paths
+    assert any(command[1:] == ["uninstall", "-y", "joybox"] for command in connection.commands)

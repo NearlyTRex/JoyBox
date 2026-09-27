@@ -5,7 +5,7 @@
 # Completion for jbrun function
 _jbrun_completions() {
     local cur="${COMP_WORDS[COMP_CWORD]}"
-    local scripts=$(ls "$HOME/.joybox/bin" 2>/dev/null | grep -v '^\.')
+    local scripts=$(_jb_commands | cut -d' ' -f1)
     COMPREPLY=($(compgen -W "$scripts" -- "$cur"))
 }
 complete -F _jbrun_completions jbrun
@@ -13,7 +13,7 @@ complete -F _jbrun_completions jbrun
 # Completion for jbedit function
 _jbedit_completions() {
     local cur="${COMP_WORDS[COMP_CWORD]}"
-    local scripts=$(ls "$JOYBOX_ROOT/Scripts/bin"/*.py 2>/dev/null | xargs -n1 basename | sed 's/\.py$//')
+    local scripts=$(_jb_commands | cut -d' ' -f1)
     COMPREPLY=($(compgen -W "$scripts" -- "$cur"))
 }
 complete -F _jbedit_completions jbedit

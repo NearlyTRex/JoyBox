@@ -435,27 +435,21 @@ def get_repo_root(expand = False):
 def get_scripts_root_dir():
     return settings.get_path_value("UserData.Dirs", "scripts_dir")
 
-# Get scripts bin dir
-def get_scripts_bin_dir():
-    return paths.join_paths(get_scripts_root_dir(), "bin")
-
 # Get scripts icons dir
 def get_scripts_icons_dir():
     return paths.join_paths(get_scripts_root_dir(), "icons")
 
-# Get scripts command extension
-def get_scripts_command_extension():
+# Get the directory pip installs the JoyBox commands into, the venv's own
+def get_commands_dir():
+    venv_dir = settings.get_path_value("Tools.Python", "python_venv_dir")
     if platform_info.is_windows_platform():
-        return ".bat"
-    else:
-        return ""
+        return paths.join_paths(venv_dir, "Scripts")
+    return paths.join_paths(venv_dir, "bin")
 
-# Get scripts executable extension
-def get_scripts_executable_extension():
-    if platform_info.is_windows_platform():
-        return ".exe"
-    else:
-        return ""
+# Get an installed JoyBox command
+def get_command_path(command_name):
+    extension = ".exe" if platform_info.is_windows_platform() else ""
+    return paths.join_paths(get_commands_dir(), command_name + extension)
 
 ###########################################################
 # Repositories

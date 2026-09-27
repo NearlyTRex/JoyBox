@@ -79,8 +79,8 @@ def is_cached_game_command(cmd):
 # Check if local script command
 def is_local_script_command(cmd):
     starter_cmd = os.path.normpath(get_starter_command(cmd)).lower()
-    scripts_dir = os.path.normpath(environment.get_scripts_bin_dir()).lower()
-    return starter_cmd.startswith(scripts_dir)
+    commands_dir = os.path.normpath(environment.get_commands_dir()).lower()
+    return starter_cmd.startswith(commands_dir)
 
 # Check if local program command
 def is_local_program_command(cmd):

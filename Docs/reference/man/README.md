@@ -4,7 +4,7 @@
 
 [← Docs index](../../README.md)
 
-One page per command in `Scripts/bin`, generated from its `--help`. Every page is also
+One page per JoyBox command, generated from its `--help`. Every page is also
 available in the terminal as `<command> -h`.
 
 ## AI
@@ -47,7 +47,7 @@ available in the terminal as `<command> -h`.
 
 | Command | Description |
 |---------|-------------|
-| [build_man_pages](build_man_pages.md) | Generate the command reference in Docs from every script's help text. |
+| [build_man_pages](build_man_pages.md) | Generate the command reference in Docs from every command's help text. |
 | [decompiler_tool](decompiler_tool.md) | Open Ghidra with Python support, or run a PyGhidra script against a Ghidra project. |
 
 ## Files & Archives

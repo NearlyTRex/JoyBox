@@ -3,8 +3,6 @@ import re
 import uuid
 import urllib.parse
 from datetime import datetime, timedelta
-from dateutil import parser as date_parser
-from dateutil.relativedelta import relativedelta
 
 # Local imports
 import joybox.text as text
@@ -104,6 +102,10 @@ def get_datetime_from_string(string, format_code):
 
 # Get datetime from unknown string
 def get_datetime_from_unknown_string(string):
+
+    # Imports
+    from dateutil import parser as date_parser
+    from dateutil.relativedelta import relativedelta
 
     # Try using standard and fuzzy formats first
     string = string.strip().lower()

@@ -12,8 +12,9 @@ commands depend on. Both are managed the same way, with one command each:
 | [`setup_game_emulators`](../reference/man/setup_game_emulators.md) | Game emulators | `[UserData.Dirs] emulators_dir` |
 | [`setup_game_assets`](../reference/man/setup_game_assets.md) | Pegasus asset symlinks | (links under the metadata tree) |
 
-> The shims in `~/.joybox/bin` (`master_backup`, `save_game_tool`, …) are the *JoyBox* commands
-> themselves and are made by the bootstrap's `wrappers` component, **not** by `setup_tools` — see
+> The commands in `~/.venv/bin` (`master_backup`, `save_game_tool`, …) are the *JoyBox* commands
+> themselves and are installed with the package by the bootstrap's `python` component, **not** by
+> `setup_tools` — see
 > [Local Computer Setup](../setup/local-computer.md#the-joybox-commands). `setup_tools` installs
 > the external programs those commands call.
 

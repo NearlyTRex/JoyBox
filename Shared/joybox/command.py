@@ -435,8 +435,8 @@ def run_interactive_command(
             if platform_info.is_windows_platform():
 
                 # Open psuedo-terminal
-                import pywinpty
-                with pywinpty.PtyProcess.spawn(cmd) as process:
+                from winpty import PtyProcess
+                with PtyProcess.spawn(cmd) as process:
 
                     # Reads from pseudo-terminal and displays it in real-time
                     def read_output():
