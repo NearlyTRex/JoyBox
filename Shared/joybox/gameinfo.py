@@ -49,14 +49,14 @@ class GameInfo:
         # Json info
         self.json_data = jsondata.JsonData()
         self.json_file = json_file
-        if not paths.is_path_file(self.json_file):
+        if not paths.is_path_file(self.json_file) and game_name is not None:
             self.json_file = environment.get_game_json_metadata_file(
                 game_supercategory = game_supercategory,
                 game_category = game_category,
                 game_subcategory = game_subcategory,
                 game_name = game_name)
         if not paths.is_path_file(self.json_file):
-            raise Exception("Unable to find associated json file")
+            raise FileNotFoundError("Unable to find associated json file: %s" % self.json_file)
 
         # Metadata info
         self.metadata_file = None
@@ -102,6 +102,8 @@ class GameInfo:
         # Get basic info based on json location
         self.game_name = paths.get_filename_basename(json_file)
         self.game_supercategory, self.game_category, self.game_subcategory = derive_game_categories_from_file(json_file)
+        if None in (self.game_supercategory, self.game_category, self.game_subcategory):
+            raise ValueError("Unable to derive game categories from %s" % json_file)
         self.game_platform = derive_game_platform_from_categories(self.game_category, self.game_subcategory)
         validation.assert_is_not_none(self.game_supercategory, "game_supercategory")
         validation.assert_is_not_none(self.game_category, "game_category")

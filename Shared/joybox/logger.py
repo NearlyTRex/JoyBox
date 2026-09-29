@@ -2,6 +2,7 @@
 import os
 import sys
 import logging
+import types
 from datetime import datetime
 
 # Local imports
@@ -30,13 +31,13 @@ class Colors:
 
 # Formatter that adds colors to console output based on log level
 class ColoredFormatter(logging.Formatter):
-    LEVEL_COLORS = {
+    LEVEL_COLORS = types.MappingProxyType({
         logging.DEBUG: Colors.GRAY,
         logging.INFO: Colors.GREEN,
         logging.WARNING: Colors.YELLOW,
         logging.ERROR: Colors.RED,
         logging.CRITICAL: Colors.BRIGHT_RED + Colors.BOLD,
-    }
+    })
 
     def __init__(self, fmt, datefmt = None, use_colors = True):
         super().__init__(fmt, datefmt)

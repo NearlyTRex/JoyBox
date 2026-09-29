@@ -4,7 +4,6 @@ import stat
 import time
 import shutil
 import tempfile
-import errno
 import glob
 import fnmatch
 import ntpath
@@ -126,12 +125,10 @@ def sort_file_contents(src, verbose = False, pretend_run = False, exit_on_failur
         if verbose:
             logger.log_info("Sorting contents of file %s" % src)
         if not pretend_run:
-            sorted_contents = ""
             with open(src, "r", encoding="utf8") as f:
-                for line in sorted(f):
-                    sorted_contents += line
+                lines = f.read().splitlines()
             with open(src, "w", encoding="utf8") as f:
-                f.write(sorted_contents)
+                f.writelines(line + "\n" for line in sorted(lines))
         return True
     except Exception as e:
         if exit_on_failure:
@@ -296,15 +293,16 @@ def mark_as_executable(src, verbose = False, pretend_run = False, exit_on_failur
 def create_temporary_directory(directory = None, verbose = False, pretend_run = False):
     if verbose:
         logger.log_info("Creating temporary directory")
-    temp_dir = ""
-    if not pretend_run:
-        if directory:
-            make_directory(src = directory)
-            temp_dir = os.path.realpath(tempfile.mkdtemp(dir = directory))
-        else:
-            temp_dir = os.path.realpath(tempfile.mkdtemp())
-        if verbose:
-            logger.log_info("Created temporary directory %s" % temp_dir)
+    # A pretend run gets the path it would have used, so it can carry on
+    if pretend_run:
+        return (True, os.path.join(directory or tempfile.gettempdir(), "pretend"))
+    if directory:
+        make_directory(src = directory)
+        temp_dir = os.path.realpath(tempfile.mkdtemp(dir = directory))
+    else:
+        temp_dir = os.path.realpath(tempfile.mkdtemp())
+    if verbose:
+        logger.log_info("Created temporary directory %s" % temp_dir)
     if not os.path.isdir(temp_dir):
         return (False, "Unable to create temporary directory")
     return (True, temp_dir)
@@ -313,12 +311,12 @@ def create_temporary_directory(directory = None, verbose = False, pretend_run = 
 def create_temporary_file(suffix = "", prefix = "tmp", verbose = False, pretend_run = False):
     if verbose:
         logger.log_info("Creating temporary file")
-    temp_file = ""
-    if not pretend_run:
-        with tempfile.NamedTemporaryFile(suffix=suffix, prefix=prefix, delete=False) as tf:
-            temp_file = tf.name
-        if verbose:
-            logger.log_info("Created temporary file %s" % temp_file)
+    if pretend_run:
+        return (True, os.path.join(tempfile.gettempdir(), prefix + "pretend" + suffix))
+    with tempfile.NamedTemporaryFile(suffix=suffix, prefix=prefix, delete=False) as tf:
+        temp_file = tf.name
+    if verbose:
+        logger.log_info("Created temporary file %s" % temp_file)
     if not os.path.isfile(temp_file):
         return (False, "Unable to create temporary file")
     return (True, temp_file)
@@ -527,17 +525,21 @@ def transfer_file(
                 progress_bar = tqdm.tqdm(total = total_size)
                 def progress_callback(copied, total_copied, total):
                     progress_bar.update(copied)
-            with open(src, "rb") as fsrc:
-                with open(dest, "wb") as fdest:
-                    num_bytes_transferred = 0
-                    while True:
-                        buf = fsrc.read(config.transfer_chunk_size)
-                        if not buf:
-                            break
-                        fdest.write(buf)
-                        num_bytes_transferred += len(buf)
-                        if callable(progress_callback):
-                            progress_callback(len(buf), num_bytes_transferred, total_size)
+            try:
+                with open(src, "rb") as fsrc:
+                    with open(dest, "wb") as fdest:
+                        num_bytes_transferred = 0
+                        while True:
+                            buf = fsrc.read(config.transfer_chunk_size)
+                            if not buf:
+                                break
+                            fdest.write(buf)
+                            num_bytes_transferred += len(buf)
+                            if callable(progress_callback):
+                                progress_callback(len(buf), num_bytes_transferred, total_size)
+            finally:
+                if progress_bar:
+                    progress_bar.close()
             shutil.copymode(src, dest)
             if delete_afterwards:
                 os.remove(src)
@@ -632,15 +634,21 @@ def remove_directory_contents(src, verbose = False, pretend_run = False, exit_on
                 for f in files:
                     os.unlink(os.path.join(root, f))
                 for d in dirs:
-                    def on_error(func, path, exc):
-                        excvalue = exc[1]
-                        if func in (os.rmdir, os.remove) and excvalue.errno == errno.EACCES:
-                            os.chmod(path, stat.S_IRWXU | stat.S_IRWXG | stat.S_IRWXO)
-                            func(path)
-                        else:
-                            raise
-                    if not os.path.islink(os.path.join(root, d)):
-                        shutil.rmtree(os.path.join(root, d), ignore_errors=False, onerror=on_error)
+                    dir_path = os.path.join(root, d)
+                    if os.path.islink(dir_path):
+                        os.unlink(dir_path)
+                        continue
+                    try:
+                        shutil.rmtree(dir_path)
+                    except PermissionError:
+                        # Read-only directories block removal of what they hold
+                        os.chmod(dir_path, stat.S_IRWXU)
+                        for sub_root, sub_dirs, _ in os.walk(dir_path):
+                            for sub_dir in sub_dirs:
+                                sub_path = os.path.join(sub_root, sub_dir)
+                                if not os.path.islink(sub_path):
+                                    os.chmod(sub_path, stat.S_IRWXU)
+                        shutil.rmtree(dir_path)
         return True
     except Exception as e:
         if exit_on_failure:
@@ -1214,13 +1222,15 @@ def recycle_file(
         return True
 
     # Get relative path from recycle root
-    if src.startswith(recycle_root):
-        rel_path = os.path.relpath(src, recycle_root)
+    abs_src = os.path.abspath(src)
+    abs_root = os.path.abspath(recycle_root)
+    if os.path.commonpath([abs_src, abs_root]) == abs_root:
+        rel_path = os.path.relpath(abs_src, abs_root)
     else:
         rel_path = paths.get_filename_file(src)
 
     # Skip if already in recycle bin
-    if rel_path.startswith(recycle_folder):
+    if rel_path.split(os.sep)[0] == recycle_folder:
         if verbose:
             logger.log_info("File already in recycle bin: %s" % src)
         return True

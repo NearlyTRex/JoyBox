@@ -30,7 +30,7 @@ def test_every_module_imports_without_site_packages(shared_dir):
     # standard library, as on a machine that has never run the bootstrap
     result = subprocess.run(
         [sys.executable, "-S", "-I", "-c", IMPORT_EVERYTHING, shared_dir],
-        capture_output = True, text = True, timeout = 120)
+        capture_output = True, text = True, timeout = 120, check = False)
 
     assert result.returncode == 0, result.stderr[-2000:]
     assert result.stdout.strip() == "", "modules needing a third-party package at import:\n" + result.stdout

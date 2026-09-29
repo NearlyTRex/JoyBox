@@ -67,6 +67,7 @@ def describe_command(module_name, python_path, timeout = 60):
         env["PYTHONPATH"] = os.pathsep.join(python_path)
         result = subprocess.run(
             [sys.executable, "-c", PROBE_SOURCE, module_name, output_path],
+            check = False,
             capture_output = True,
             text = True,
             timeout = timeout,

@@ -28,7 +28,7 @@ def run_help(module_name, repo_root, env):
         text = True,
         timeout = HELP_TIMEOUT_SECONDS,
         cwd = repo_root,
-        env = env)
+        env = env, check = False)
 
 
 def pytest_generate_tests(metafunc):
@@ -97,7 +97,7 @@ def run_show_seed(repo_root, env, extra = None):
         text = True,
         timeout = SEED_TIMEOUT_SECONDS,
         cwd = repo_root,
-        env = env)
+        env = env, check = False)
 
 
 def env_with_home(hermetic_env, home):

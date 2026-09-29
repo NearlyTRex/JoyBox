@@ -97,10 +97,12 @@ def test_an_autoconnect_remote_without_rclone_reports_failure(no_rclone, recordi
 @pytest.fixture
 def routes(monkeypatch):
     calls = []
+
+    def recorder(name):
+        return lambda **kwargs: calls.append((name, kwargs)) or True
+
     for name in ["setup_autoconnect_remote", "setup_manual_remote"]:
-        monkeypatch.setattr(
-            sync, name,
-            (lambda name: lambda **kwargs: calls.append((name, kwargs)) or True)(name))
+        monkeypatch.setattr(sync, name, recorder(name))
     return calls
 
 

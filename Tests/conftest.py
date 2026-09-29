@@ -136,7 +136,7 @@ def pytest_unconfigure(config):
     unseal_programs()
     home = getattr(config, "joybox_home", None)
     if home:
-        for name, value in zip(["HOME", "USERPROFILE"], home):
+        for name, value in zip(["HOME", "USERPROFILE"], home, strict = True):
             if value is None:
                 os.environ.pop(name, None)
             else:

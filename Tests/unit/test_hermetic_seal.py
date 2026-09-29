@@ -31,12 +31,12 @@ COLLECTION_POPEN = subprocess.Popen.__name__
 ])
 def test_a_sealed_program_is_refused(args):
     with pytest.raises(RuntimeError, match = "may not run"):
-        subprocess.run(args)
+        subprocess.run(args, check = False)
 
 
 def test_a_sealed_program_in_a_shell_string_is_refused():
     with pytest.raises(RuntimeError, match = "may not run"):
-        subprocess.run("LANG=C sudo true", shell = True)
+        subprocess.run("LANG=C sudo true", shell = True, check = False)
 
 
 def test_os_system_is_sealed_too():
@@ -45,7 +45,7 @@ def test_os_system_is_sealed_too():
 
 
 def test_an_ordinary_program_still_runs():
-    assert subprocess.run(["true"]).returncode == 0
+    assert subprocess.run(["true"], check = False).returncode == 0
 
 
 def test_a_secret_reference_never_reaches_the_vault(monkeypatch):

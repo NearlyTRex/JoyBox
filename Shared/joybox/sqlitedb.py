@@ -2,6 +2,7 @@
 import sqlite3
 import threading
 import time
+import types
 
 # Local imports
 import joybox.paths as paths
@@ -198,13 +199,13 @@ class Database:
 # Hash database class for file hash storage
 class HashDatabase(Database):
     TABLE_NAME = "file_hashes"
-    COLUMNS = {
+    COLUMNS = types.MappingProxyType({
         "file_path": "TEXT PRIMARY KEY",
         "hash": "TEXT NOT NULL",
         "size": "INTEGER",
         "mtime": "REAL",
         "updated_at": "REAL"
-    }
+    })
 
     # Constructor
     def __init__(self, db_path, timeout = 30.0):

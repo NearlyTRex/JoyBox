@@ -93,7 +93,7 @@ def test_a_game_can_be_built_from_its_categories(tree):
 
 def test_a_missing_json_file_is_refused(tree):
     # Every command starts here, so failing loudly beats a half built object.
-    with pytest.raises(Exception):
+    with pytest.raises(FileNotFoundError):
         gameinfo.GameInfo(
             game_supercategory = SUPERCATEGORY,
             game_category = CATEGORY,

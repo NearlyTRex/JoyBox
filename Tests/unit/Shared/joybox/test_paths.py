@@ -177,6 +177,19 @@ def test_no_excludes_keeps_everything():
     assert paths.is_exclude_path(os.path.join("a", "b.js"), []) is False
 
 
+@pytest.mark.parametrize("rel_path,pattern,expected", [
+    (os.path.join("Gaming", "Roms"), "Gaming/Roms/**", True),
+    (os.path.join("Gaming", "Roms", "a.zip"), "Gaming/Roms/**", True),
+    (os.path.join("Gaming", "Saves"), "Gaming/Roms/**", False),
+    # The dotfile exclude every diff adds; the directory itself matches too
+    (".recycle_bin", ".*/**", True),
+    ("visible", ".*/**", False),
+    (os.path.join("Saves2", "slot.sav"), "Saves*/**", True),
+])
+def test_a_directory_glob_matches_the_directory_and_its_contents(rel_path, pattern, expected):
+    assert paths.matches_exclude_pattern(rel_path, [pattern]) is expected
+
+
 def test_prune_drops_paths_under_an_excluded_prefix():
     pruned = paths.prune_paths(["/keep/a", "/drop/b", "/keep/c"], ["/drop"])
 

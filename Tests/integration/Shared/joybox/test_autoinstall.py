@@ -110,7 +110,7 @@ def stock_image(tmp_path, xorriso):
         "-no-emul-boot",
         "-hide", "efi.img", "-hide-joliet", "efi.img",
         "-o", target, str(tree),
-    ], capture_output = True)
+    ], capture_output = True, check = False)
     assert result.returncode == 0, result.stderr.decode()
     return target
 
@@ -123,7 +123,7 @@ def read_from_image(xorriso, iso_file, path_in_image, tmp_path):
     result = subprocess.run([
         xorriso, "-osirrox", "on", "-indev", iso_file,
         "-extract", path_in_image, str(target),
-    ], capture_output = True)
+    ], capture_output = True, check = False)
     if result.returncode != 0 or not target.exists():
         return None
     return target.read_text(errors = "replace")
@@ -260,7 +260,7 @@ def test_the_image_still_boots_both_ways(tmp_path, stock_image, xorriso):
 
     result = subprocess.run(
         [xorriso, "-indev", output_file, "-report_el_torito", "plain"],
-        capture_output = True)
+        capture_output = True, check = True)
     report = result.stdout.decode(errors = "replace")
 
     assert "El Torito" in report or "boot" in report.lower()
@@ -360,7 +360,7 @@ def test_a_built_image_carries_the_efi_image_forward(tmp_path, stock_image, xorr
     output_file = build(tmp_path, stock_image)
     reported = subprocess.run(
         [xorriso, "-indev", output_file, "-report_el_torito", "plain"],
-        capture_output = True, text = True).stdout
+        capture_output = True, text = True, check = True).stdout
 
     assert "UEFI" in reported
 
@@ -368,7 +368,7 @@ def test_a_built_image_carries_the_efi_image_forward(tmp_path, stock_image, xorr
 def system_area_report(xorriso, iso_file):
     return subprocess.run(
         [xorriso, "-indev", iso_file, "-report_system_area", "plain"],
-        capture_output = True, text = True).stdout
+        capture_output = True, text = True, check = True).stdout
 
 
 def test_a_built_image_has_a_partition_table(tmp_path, stock_image, xorriso):

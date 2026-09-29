@@ -18,7 +18,7 @@ def run_manager(bootstrap_dir, *arguments):
     script = os.path.join(bootstrap_dir, "managers", "manager_certbot.sh")
     env = dict(os.environ, SUDO_UID = str(os.getuid()))
     return subprocess.run(["bash", script] + list(arguments),
-                          capture_output = True, text = True, env = env)
+                          capture_output = True, text = True, env = env, check = False)
 
 
 @pytest.mark.parametrize("domain", ["../../etc", "example.com/../../etc", "-rf", "localhost", ".example.com"])

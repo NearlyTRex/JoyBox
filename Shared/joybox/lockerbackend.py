@@ -1,7 +1,6 @@
 # Imports
 import os
 import os.path
-import fnmatch
 import threading
 import concurrent.futures
 from abc import ABC, abstractmethod
@@ -179,7 +178,7 @@ class LocalBackend(LockerBackend):
         # Build the list of actual files to hash (apply excludes, skip non-files)
         targets = []
         for rel_path in paths.build_file_list(self.root_path, use_relative_paths = True):
-            if self._matches_exclude(rel_path, excludes):
+            if paths.matches_exclude_pattern(rel_path, excludes):
                 continue
             full_path = paths.join_paths(self.root_path, rel_path)
             if not paths.is_path_file(full_path):
@@ -378,16 +377,6 @@ class LocalBackend(LockerBackend):
         file_list = paths.build_file_list(full_path)
         return len(file_list) > 0
 
-    def _matches_exclude(self, rel_path, excludes):
-        for pattern in excludes:
-            if fnmatch.fnmatch(rel_path, pattern):
-                return True
-            parts = rel_path.split(os.sep)
-            for i in range(len(parts)):
-                partial = os.sep.join(parts[:i+1])
-                if fnmatch.fnmatch(partial, pattern.rstrip("/**")):
-                    return True
-        return False
 
 ###########################################################
 # Remote Backend (rclone-based remotes: gdrive, hetzner, etc.)

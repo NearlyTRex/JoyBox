@@ -33,7 +33,7 @@ def built_iso(tmp_path, payload, requires_tool):
     target = tmp_path / "game.iso"
     result = subprocess.run(
         [tool, "-c", str(payload), str(target)],
-        cwd = str(tmp_path), capture_output = True)
+        cwd = str(tmp_path), capture_output = True, check = False)
     assert result.returncode == 0, result.stderr.decode()
     assert target.exists()
     return target

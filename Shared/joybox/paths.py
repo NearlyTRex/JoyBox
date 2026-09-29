@@ -156,9 +156,9 @@ def build_file_list(root, excludes = [], new_relative_path = "", use_relative_pa
         return files
     absolute_root = os.path.abspath(root)
     if os.path.isdir(root):
-        for root, dirnames, filenames in os.walk(root, followlinks = follow_symlink_dirs):
+        for base, dirnames, filenames in os.walk(root, followlinks = follow_symlink_dirs):
             for filename in filenames:
-                location = os.path.abspath(os.path.join(root, filename))
+                location = os.path.abspath(os.path.join(base, filename))
                 if ignore_symlinks and os.path.islink(location):
                     continue
                 if use_relative_paths:
@@ -198,9 +198,9 @@ def build_directory_list(root, excludes = [], new_relative_path = "", use_relati
     absolute_root = os.path.abspath(root)
     if os.path.isdir(absolute_root):
         directories.append(absolute_root)
-    for root, dirnames, filenames in os.walk(root, followlinks = follow_symlink_dirs):
+    for base, dirnames, filenames in os.walk(root, followlinks = follow_symlink_dirs):
         for dirname in dirnames:
-            location = os.path.abspath(os.path.join(root, dirname))
+            location = os.path.abspath(os.path.join(base, dirname))
             if ignore_symlinks and os.path.islink(location):
                 continue
             if use_relative_paths:
@@ -236,7 +236,7 @@ def matches_exclude_pattern(rel_path, excludes):
         parts = rel_path.split(os.sep)
         for i in range(len(parts)):
             partial = os.sep.join(parts[:i+1])
-            if fnmatch.fnmatch(partial, pattern.rstrip("/**")):
+            if fnmatch.fnmatch(partial, pattern.removesuffix("/**")):
                 return True
     return False
 
