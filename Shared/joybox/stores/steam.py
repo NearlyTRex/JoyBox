@@ -104,14 +104,13 @@ def find_steam_appid_match(
         return None
 
     # Return top search result
+    ranked_results = sorted(search_results, key = lambda x: x.get_relevance(), reverse = True)
     if only_active_pages:
-        for search_result in sorted(search_results, key=lambda x: x.get_relevance(), reverse=True):
-            steam_page = get_steam_page(search_result.get_id())
-            if steam_page:
+        for search_result in ranked_results:
+            if get_steam_page(search_result.get_id()):
                 return search_result
         return None
-    else:
-        return search_results[0]
+    return ranked_results[0]
 
 # Find Steam assets
 def find_steam_assets(
@@ -489,6 +488,7 @@ class Steam(storebase.StoreBase):
             # Gather info
             line_appid = str(entry.get("appid", ""))
             line_title = str(entry.get("name", ""))
+            line_url = self.get_latest_url(line_appid)
             line_keys = []
             line_paths = [
                 paths.join_paths(config.token_store_install_dir, "userdata", config.token_store_user_id, line_appid)
@@ -499,7 +499,7 @@ class Steam(storebase.StoreBase):
                 json_data = {},
                 json_platform = self.get_platform())
             purchase.set_value(config.json_key_store_appid, line_appid)
-            purchase.set_value(config.json_key_store_appurl, self.get_latest_url(line_appid))
+            purchase.set_value(config.json_key_store_appurl, line_url)
             purchase.set_value(config.json_key_store_name, line_title.strip())
             purchase.set_value(config.json_key_store_branchid, config.SteamBranchType.PUBLIC.lower())
             purchase.set_value(config.json_key_store_keys, line_keys)
@@ -509,7 +509,7 @@ class Steam(storebase.StoreBase):
             # Store data for caching
             purchases_data.append({
                 config.json_key_store_appid: line_appid,
-                config.json_key_store_appurl: self.get_latest_url(line_appid),
+                config.json_key_store_appurl: line_url,
                 config.json_key_store_name: line_title.strip(),
                 config.json_key_store_branchid: config.SteamBranchType.PUBLIC.lower(),
                 config.json_key_store_keys: line_keys,
@@ -645,13 +645,12 @@ class Steam(storebase.StoreBase):
             return None
 
         # Build jsondata
+        if not isinstance(branch, str) or not len(branch):
+            branch = config.SteamBranchType.PUBLIC.lower()
         json_data = self.create_default_jsondata()
         json_data.set_value(config.json_key_store_appid, identifier)
         json_data.set_value(config.json_key_store_appurl, self.get_latest_url(identifier))
-        if isinstance(branch, str) and len(branch):
-            json_data.set_value(config.json_key_store_branchid, branch)
-        else:
-            json_data.set_value(config.json_key_store_branchid, "public")
+        json_data.set_value(config.json_key_store_branchid, branch)
         json_data.set_value(config.json_key_store_paths, [
             paths.join_paths(config.token_store_install_dir, "userdata", config.token_store_user_id, identifier)
         ])
@@ -920,9 +919,9 @@ class Steam(storebase.StoreBase):
         # Get install command
         install_cmd = [
             steam_tool,
-            "@sSteamCmdForcePlatformType", self.get_preferred_platform(),
+            "+@sSteamCmdForcePlatformType", self.get_preferred_platform(),
             "+login", self.get_account_name(),
-            "app_update", identifier,
+            "+app_update", identifier,
             "validate",
             "+quit"
         ]
@@ -1020,7 +1019,7 @@ class Steam(storebase.StoreBase):
             steamdepot_tool,
             "-app", identifier,
             "-os", self.get_preferred_platform(),
-            "-osarch", self.get_architecture(),
+            "-osarch", self.get_preferred_architecture(),
             "-dir", tmp_dir_result
         ]
         if isinstance(branch, str) and len(branch) and branch != "public":
@@ -1033,39 +1032,42 @@ class Steam(storebase.StoreBase):
                 "-remember-password"
             ]
 
-        # Run download command
-        code = command.run_returncode_command(
-            cmd = download_cmd,
-            options = command.create_command_options(
-                blocking_processes = [steamdepot_tool]),
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        if code != 0:
-            return False
+        try:
 
-        # Archive downloaded files
-        success = backup.archive_folder(
-            input_path = tmp_dir_result,
-            output_path = output_dir,
-            output_name = output_name,
-            excludes = [".DepotDownloader"],
-            clean_output = clean_output,
-            show_progress = show_progress,
-            skip_existing = skip_existing,
-            skip_identical = skip_identical,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        if not success:
-            return False
+            # Run download command
+            code = command.run_returncode_command(
+                cmd = download_cmd,
+                options = command.create_command_options(
+                    blocking_processes = [steamdepot_tool]),
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
+            if code != 0:
+                return False
 
-        # Delete temporary directory
-        fileops.remove_directory(
-            src = tmp_dir_result,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
+            # Archive downloaded files
+            success = backup.archive_folder(
+                input_path = tmp_dir_result,
+                output_path = output_dir,
+                output_name = output_name,
+                excludes = [".DepotDownloader"],
+                clean_output = clean_output,
+                show_progress = show_progress,
+                skip_existing = skip_existing,
+                skip_identical = skip_identical,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
+            if not success:
+                return False
+        finally:
+
+            # Delete temporary directory
+            fileops.remove_directory(
+                src = tmp_dir_result,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = False)
 
         # Check results
         return paths.does_directory_contain_files(output_dir)
