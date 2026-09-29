@@ -117,9 +117,10 @@ def test_two_temporary_files_do_not_collide():
     fileops.create_temporary_directory,
 ])
 def test_pretending_creates_nothing_temporary(creator):
+    # The planned path comes back so a pretend run can carry on with it
     created, result = creator(pretend_run = True)
 
-    assert created is False
+    assert created is True
     assert not os.path.exists(result)
 
 

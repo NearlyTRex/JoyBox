@@ -45,9 +45,10 @@ def does_path_exist(path, case_sensitive_paths = True, partial_paths = False):
     else:
         path_parent = str(pathlib.Path(path).parent)
         path_name = str(pathlib.Path(path).name)
-        for obj in os.listdir(path_parent):
-            if path_name.lower() == obj.lower():
-                return True
+        if os.path.isdir(path_parent):
+            for obj in os.listdir(path_parent):
+                if path_name.lower() == obj.lower():
+                    return True
     return False
 
 # Check if two paths point to the same location
@@ -75,8 +76,6 @@ def is_path_directory(path):
 # Check if path is a symlink
 def is_path_symlink(path):
     if not is_path_valid(path):
-        return False
-    if not does_path_exist(path):
         return False
     return os.path.islink(path)
 
@@ -164,7 +163,7 @@ def build_file_list(root, excludes = [], new_relative_path = "", use_relative_pa
                 if use_relative_paths:
                     if len(new_relative_path) and not new_relative_path.endswith(config.os_pathsep):
                         new_relative_path += config.os_pathsep
-                    files.append(location.replace(absolute_root + os.sep, new_relative_path))
+                    files.append(new_relative_path + os.path.relpath(location, absolute_root))
                 else:
                     files.append(location)
     elif os.path.isfile(root):
@@ -206,7 +205,7 @@ def build_directory_list(root, excludes = [], new_relative_path = "", use_relati
             if use_relative_paths:
                 if len(new_relative_path) and not new_relative_path.endswith(config.os_pathsep):
                     new_relative_path += config.os_pathsep
-                directories.append(location.replace(absolute_root + os.sep, new_relative_path))
+                directories.append(new_relative_path + os.path.relpath(location, absolute_root))
             else:
                 directories.append(location)
     return prune_paths(directories, excludes)
@@ -355,7 +354,7 @@ def convert_to_top_level_paths(path_list, path_root = None, only_files = False, 
         path_offset = get_filename_drive_offset(path)
         path_front = get_filename_front(path_offset)
         should_save_path = False
-        if is_path_valid(path_root):
+        if is_path_valid(path_root) and (only_files or only_dirs):
             path_full = os.path.join(path_root, path_front)
             if only_files and os.path.isfile(path_full):
                 should_save_path = True
@@ -375,8 +374,7 @@ def convert_file_list_to_relative_paths(file_list, base_dir):
     relative_file_list = []
     for filename in file_list:
         normalized_filename = normalize_file_path(filename, separator = config.os_pathsep)
-        normalized_filename = normalized_filename.replace(replacement, "")
-        relative_file_list.append(normalized_filename)
+        relative_file_list.append(normalized_filename.removeprefix(replacement))
     return strings.sort_strings(relative_file_list)
 
 # Convert file list to absolute paths
@@ -414,8 +412,14 @@ def rebase_file_path(path, old_base_path, new_base_path):
     norm_path = normalize_file_path(path)
     norm_old_base_path = normalize_file_path(old_base_path)
     norm_new_base_path = normalize_file_path(new_base_path)
-    rebased_path = normalize_file_path(norm_path.replace(norm_old_base_path, norm_new_base_path))
-    return rebased_path
+    old_prefix = norm_old_base_path.rstrip(os.sep) + os.sep
+    if norm_path == norm_old_base_path:
+        remainder = ""
+    elif norm_path.startswith(old_prefix):
+        remainder = norm_path[len(old_prefix):]
+    else:
+        return norm_path
+    return normalize_file_path(os.path.join(norm_new_base_path, remainder))
 
 # Rebase file paths
 def rebase_file_paths(paths, old_base_path, new_base_path):
@@ -460,7 +464,7 @@ def get_directory_front(path):
 
 # Get directory size
 def get_directory_size(path):
-    return sum(p.stat().st_size for p in pathlib.Path(path).rglob('*'))
+    return sum(p.stat().st_size for p in pathlib.Path(path).rglob('*') if p.is_file())
 
 # Get directory contents
 def get_directory_contents(path, excludes = []):
@@ -709,7 +713,7 @@ def is_path_valid(path):
                     return False
                 elif e.errno in {errno.ENAMETOOLONG, errno.ERANGE}:
                     return False
-    except TypeError:
+    except (TypeError, ValueError):
         return False
     else:
         return True
