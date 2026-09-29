@@ -174,7 +174,6 @@ class AudioMetadata:
             logger.log_error(f"Failed to load MP3 file: {e}")
             return None
         if audio.tags is None:
-            logger.log_error("Failed to load audio file")
             return {}
 
         # Extract text frames
@@ -293,7 +292,8 @@ class AudioMetadata:
                     data = image_data)
 
         # Save changes
-        audio.save()
+        if not pretend_run:
+            audio.save()
         return True
 
     def remove_id3_tags(
@@ -318,7 +318,7 @@ class AudioMetadata:
             return False
 
         # No tags to remove
-        if audio.tags is None:
+        if audio.tags is None or pretend_run:
             return True
 
         # Preserve artwork if requested
@@ -451,16 +451,20 @@ class AudioMetadata:
         for tag_name, mp4_key in self.mp4_key_to_tag.items():
             if tag_name in tags:
                 value = tags[tag_name]
-                if tag_name in ["track_number", "disc_number"]:
-                    if "/" in str(value):
-                        num, total = str(value).split("/", 1)
-                        audio.tags[mp4_key] = [(int(num), int(total))]
+                try:
+                    if tag_name in ["track_number", "disc_number"]:
+                        if "/" in str(value):
+                            num, total = str(value).split("/", 1)
+                            audio.tags[mp4_key] = [(int(num), int(total))]
+                        else:
+                            audio.tags[mp4_key] = [(int(value), 0)]
+                    elif tag_name == "bpm":
+                        audio.tags[mp4_key] = [int(value)]
                     else:
-                        audio.tags[mp4_key] = [(int(value), 0)]
-                elif tag_name == "bpm":
-                    audio.tags[mp4_key] = [int(value)]
-                else:
-                    audio.tags[mp4_key] = [str(value)]
+                        audio.tags[mp4_key] = [str(value)]
+                except ValueError:
+                    logger.log_error(f"MP4 {tag_name} must be a number, not '{value}': {audio_file}")
+                    return False
 
         # Set artwork
         if "artwork" in tags:
@@ -503,7 +507,7 @@ class AudioMetadata:
             return False
 
         # No tags to remove
-        if audio.tags is None:
+        if audio.tags is None or pretend_run:
             return True
 
         # Preserve artwork if requested
@@ -521,8 +525,7 @@ class AudioMetadata:
             audio.tags["covr"] = preserved_covers
 
         # Save changes
-        if not pretend_run:
-            audio.save()
+        audio.save()
         return True
 
     def has_mp4_tags(self, audio_file):
@@ -704,7 +707,11 @@ class AudioMetadata:
             return None
 
         # Get audio info
-        audio = self.mp3_class(audio_file, ID3 = self.id3_class)
+        try:
+            audio = self.mp3_class(audio_file, ID3 = self.id3_class)
+        except Exception as e:
+            logger.log_error(f"Failed to get MP3 file info: {e}")
+            return None
         file_info = {
             "path": audio_file,
             "size": os.path.getsize(audio_file),
@@ -810,8 +817,8 @@ class AudioMetadata:
                 # Collect album-level info from first track
                 if not album_info:
                     album_info = {
-                        "album": tags.get("album", paths.get_filename_file(album_dir)),
-                        "album_artist": tags.get("album_artist", tags.get("artist", "")),
+                        "album": tags.get("album") or default_album,
+                        "album_artist": tags.get("album_artist") or tags.get("artist", ""),
                         "artist": tags.get("artist", ""),
                         "year": tags.get("year", ""),
                         "genre": tags.get("genre", genre_type.value if genre_type else "")
