@@ -47,7 +47,12 @@ holds the checks that run across every installer.
 | `unit/Shared` | The bulk of the value. `Shared/joybox` holds the logic, and most of it is pure functions with real contracts |
 | `unit/Bootstrap` | Installer behaviour via the fake connection, plus package-list and template invariants |
 | `integration/Bootstrap` | Generated compose files, vhosts and shell scripts handed to docker and bash for judgement |
-| `integration/Shared` | `ConnectionLocal` against a real filesystem, and every command launched as a subprocess with `--help` |
+| `integration/Shared` | `ConnectionLocal` running real commands, every command launched as a subprocess with `--help`, and wrappers run against the real tools they drive |
+
+What decides the directory is whether a test needs a program outside this
+process, not whether it touches real files: a test that works in `tmp_path`
+with joybox and its Python dependencies alone is a unit test. CI runs only
+`unit/`, so a test filed under `integration/` never counts toward coverage.
 
 Because the tree mirrors the source, `unit/` and `integration/` contain files
 with the same basename. `pytest.ini` sets `--import-mode=importlib` for that
