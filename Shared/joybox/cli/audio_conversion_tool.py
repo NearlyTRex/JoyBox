@@ -108,6 +108,8 @@ def main():
                 verbose = args.verbose,
                 pretend_run = args.pretend_run,
                 exit_on_failure = args.exit_on_failure)
+        logger.log_error(f"Input is not a file or directory: {input_path}")
+        return False
     else:
         logger.log_error(f"Unknown action: {args.action}")
         return False

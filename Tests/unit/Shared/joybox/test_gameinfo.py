@@ -343,7 +343,7 @@ def test_a_game_reads_its_json_contents(game):
 def test_a_game_without_a_json_file_cannot_be_built(game_tree, tmp_path):
     from joybox import gameinfo as gameinfo_module
 
-    with pytest.raises(Exception):
+    with pytest.raises(FileNotFoundError):
         gameinfo_module.GameInfo(json_file = str(tmp_path / "absent.json"))
 
 
@@ -355,7 +355,7 @@ def test_a_json_file_outside_the_collection_cannot_be_built(game_tree, tmp_path)
     stray = tmp_path / "stray.json"
     stray.write_text("{}")
 
-    with pytest.raises(Exception):
+    with pytest.raises(ValueError, match = "categories"):
         gameinfo_module.GameInfo(json_file = str(stray))
 
 

@@ -497,7 +497,7 @@ def sync_lockers(
     logger.log_info("Primary hash map: %d files" % len(primary_hashes))
 
     # Process each secondary
-    for sec_info, sec_backend in zip(secondary_infos, secondary_backends):
+    for sec_info, sec_backend in zip(secondary_infos, secondary_backends, strict = True):
         sec_name = sec_info.get_locker_name()
         exclude_patterns = sec_info.get_excluded_dirs()
         logger.log_info("Processing secondary: %s (excludes=%d patterns)" % (

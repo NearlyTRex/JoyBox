@@ -303,6 +303,7 @@ def display_loading_window(
                 return run_func(run_func_args)
             else:
                 return run_func()
+        return False
 
     # Run task in the background and wait for it to be completed
     window.perform_long_operation(do_task, "TASK_COMPLETE")

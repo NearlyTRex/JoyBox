@@ -65,7 +65,7 @@ def m4a_file(tmp_path):
         "ffmpeg", "-loglevel", "error", "-y",
         "-f", "lavfi", "-i", "anullsrc=r=44100:cl=mono",
         "-t", "0.2", "-c:a", "aac", target,
-    ], capture_output = True)
+    ], capture_output = True, check = False)
     assert result.returncode == 0, result.stderr.decode()
     return target
 

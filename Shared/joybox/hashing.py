@@ -4,7 +4,6 @@ import os.path
 import csv
 import zlib
 import hashlib
-import fnmatch
 
 # Local imports
 import joybox.config as config
@@ -845,20 +844,7 @@ def build_hash_map(
     for idx, rel_path in enumerate(file_list):
 
         # Check exclusions
-        skip = False
-        for pattern in excludes:
-            if fnmatch.fnmatch(rel_path, pattern):
-                skip = True
-                break
-            parts = rel_path.split(os.sep)
-            for i in range(len(parts)):
-                partial = os.sep.join(parts[:i+1])
-                if fnmatch.fnmatch(partial, pattern.rstrip("/**")):
-                    skip = True
-                    break
-            if skip:
-                break
-        if skip:
+        if paths.matches_exclude_pattern(rel_path, excludes):
             continue
 
         # Skip if not a file

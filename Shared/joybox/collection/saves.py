@@ -467,8 +467,7 @@ def import_local_game_save(
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
-    if not success:
-        return False
+    return success
 
 # Export local game save
 def export_local_game_save(

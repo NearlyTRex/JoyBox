@@ -357,8 +357,9 @@ def is_session_valid(
             if verbose:
                 logger.log_warning("Object session is None")
             return False
+        # Reading the URL raises once the browser session has gone away
         if hasattr(obj, 'current_url'):
-            obj.current_url
+            _ = obj.current_url
         return True
     except Exception:
         if verbose:

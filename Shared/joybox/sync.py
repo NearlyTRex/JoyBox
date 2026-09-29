@@ -1227,6 +1227,7 @@ def diff_files(
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
+    return True
 
 # Diff sync files
 def diff_sync_files(

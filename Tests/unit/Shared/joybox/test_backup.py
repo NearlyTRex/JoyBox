@@ -418,10 +418,12 @@ def test_an_invalid_passphrase_decrypts_nothing(cryption, tmp_path):
 @pytest.fixture
 def routes(monkeypatch):
     calls = []
+
+    def recorder(name):
+        return lambda **kwargs: calls.append((name, kwargs)) or True
+
     for name in ["copy_files_normally", "copy_and_encrypt_files", "copy_and_decrypt_files"]:
-        monkeypatch.setattr(
-            backup, name,
-            (lambda name: lambda **kwargs: calls.append((name, kwargs)) or True)(name))
+        monkeypatch.setattr(backup, name, recorder(name))
     monkeypatch.setattr(
         backup.lockerinfo.LockerInfo, "get_passphrase", lambda self: "from-locker")
     return calls

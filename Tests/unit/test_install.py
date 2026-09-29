@@ -49,7 +49,7 @@ def installer(tmp_path, repo_root):
             result = run_on_terminal(command, environment)
         else:
             result = subprocess.run(command, env = environment, stdin = subprocess.DEVNULL,
-                capture_output = True, start_new_session = True, timeout = 30)
+                capture_output = True, start_new_session = True, timeout = 30, check = False)
         passed = args_file.read_text().splitlines() if args_file.exists() else None
         on_tty = os.path.exists(str(args_file) + ".stdin")
         return result.returncode, passed, on_tty

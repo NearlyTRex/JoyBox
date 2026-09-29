@@ -85,6 +85,7 @@ def resolve_secret_reference(reference, verbose = False):
     try:
         result = subprocess.run(
             get_secret_command(tool, reference),
+            check = False,
             capture_output = True,
             text = True,
             timeout = secret_timeout_seconds)

@@ -77,7 +77,7 @@ def mutable_default_offenders(tree):
         mutable_names = set()
         positional = arguments.posonlyargs + arguments.args
         paired = positional[len(positional) - len(arguments.defaults):] if arguments.defaults else []
-        paired = list(zip(paired, arguments.defaults)) + list(zip(arguments.kwonlyargs, arguments.kw_defaults))
+        paired = list(zip(paired, arguments.defaults, strict = True)) + list(zip(arguments.kwonlyargs, arguments.kw_defaults, strict = True))
         for argument, default in paired:
             if isinstance(default, (ast.List, ast.Dict, ast.Set)):
                 mutable_names.add(argument.arg)

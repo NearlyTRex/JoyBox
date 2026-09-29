@@ -26,7 +26,7 @@ def wordpress(isolated_settings, recording_connection):
 def assert_valid_shell(script, tmp_path, label):
     path = tmp_path / f"{label}.sh"
     path.write_text(script)
-    result = subprocess.run(["bash", "-n", str(path)], capture_output = True, text = True)
+    result = subprocess.run(["bash", "-n", str(path)], capture_output = True, text = True, check = False)
     assert result.returncode == 0, f"{label} is not valid shell:\n{result.stderr}"
 
 

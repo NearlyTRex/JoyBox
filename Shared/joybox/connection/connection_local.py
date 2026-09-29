@@ -57,6 +57,7 @@ class ConnectionLocal(connection.Connection):
                 if self.options.include_stderr:
                     output = subprocess.run(
                         cmd,
+                        check = False,
                         shell = self.options.shell,
                         cwd = self.options.cwd,
                         env = self.options.env,
@@ -66,6 +67,7 @@ class ConnectionLocal(connection.Connection):
                 else:
                     output = subprocess.run(
                         cmd,
+                        check = False,
                         shell = self.options.shell,
                         cwd = self.options.cwd,
                         env = self.options.env,

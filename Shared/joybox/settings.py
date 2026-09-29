@@ -58,9 +58,9 @@ def get_sections(throw_exception = True):
     try:
         _ensure_loaded()
         return _parser.sections()
-    except Exception:
+    except Exception as e:
         if throw_exception:
-            raise RuntimeError("Unable to read settings sections [file=%s]" % _settings_file)
+            raise RuntimeError("Unable to read settings sections [file=%s]" % _settings_file) from e
         return []
 
 def get_fields(section, throw_exception = True):
@@ -69,27 +69,27 @@ def get_fields(section, throw_exception = True):
         if section not in _parser:
             return []
         return list(_parser[section].keys())
-    except Exception:
+    except Exception as e:
         if throw_exception:
-            raise RuntimeError("Unable to read settings fields [file=%s][section=%s]" % (_settings_file, section))
+            raise RuntimeError("Unable to read settings fields [file=%s][section=%s]" % (_settings_file, section)) from e
         return []
 
 def has_section(section, throw_exception = True):
     try:
         _ensure_loaded()
         return section in _parser
-    except Exception:
+    except Exception as e:
         if throw_exception:
-            raise RuntimeError("Unable to check settings section [file=%s][section=%s]" % (_settings_file, section))
+            raise RuntimeError("Unable to check settings section [file=%s][section=%s]" % (_settings_file, section)) from e
         return False
 
 def has_field(section, field, throw_exception = True):
     try:
         _ensure_loaded()
         return (section in _parser) and (field in _parser[section])
-    except Exception:
+    except Exception as e:
         if throw_exception:
-            raise RuntimeError("Unable to check settings field [file=%s][section=%s][field=%s]" % (_settings_file, section, field))
+            raise RuntimeError("Unable to check settings field [file=%s][section=%s][field=%s]" % (_settings_file, section, field)) from e
         return False
 
 def _get_shipped_default(section, field):
@@ -104,9 +104,9 @@ def get_value(section, field, default_value = None, throw_exception = True):
         return secretstore.resolve_value(
             _parser.get(section, field, fallback = default_value
                 if default_value is not None else _get_shipped_default(section, field)))
-    except Exception:
+    except Exception as e:
         if throw_exception:
-            raise RuntimeError("Unable to get settings value [file=%s][section=%s][field=%s]" % (_settings_file, section, field))
+            raise RuntimeError("Unable to get settings value [file=%s][section=%s][field=%s]" % (_settings_file, section, field)) from e
         return default_value
 
 def _coerce_integer(value):
@@ -133,9 +133,9 @@ def get_integer_value(section, field, default_value = None, throw_exception = Tr
             shipped = _get_shipped_default(section, field)
             return None if shipped is None else _coerce_integer(shipped)
         return _parser.getint(section, field, fallback = default_value)
-    except Exception:
+    except Exception as e:
         if throw_exception:
-            raise RuntimeError("Unable to get settings integer value [file=%s][section=%s][field=%s]" % (_settings_file, section, field))
+            raise RuntimeError("Unable to get settings integer value [file=%s][section=%s][field=%s]" % (_settings_file, section, field)) from e
         return default_value
 
 def get_bool_value(section, field, default_value = None, throw_exception = True):
@@ -147,9 +147,9 @@ def get_bool_value(section, field, default_value = None, throw_exception = True)
             shipped = _get_shipped_default(section, field)
             return None if shipped is None else _coerce_bool(shipped)
         return _parser.getboolean(section, field, fallback = default_value)
-    except Exception:
+    except Exception as e:
         if throw_exception:
-            raise RuntimeError("Unable to get settings boolean value [file=%s][section=%s][field=%s]" % (_settings_file, section, field))
+            raise RuntimeError("Unable to get settings boolean value [file=%s][section=%s][field=%s]" % (_settings_file, section, field)) from e
         return default_value
 
 def get_path_value(section, field, default_value = None, throw_exception = True):
@@ -158,9 +158,9 @@ def get_path_value(section, field, default_value = None, throw_exception = True)
         if value is None:
             return default_value
         return os.path.expandvars(value)
-    except Exception:
+    except Exception as e:
         if throw_exception:
-            raise RuntimeError("Unable to get settings path value [file=%s][section=%s][field=%s]" % (_settings_file, section, field))
+            raise RuntimeError("Unable to get settings path value [file=%s][section=%s][field=%s]" % (_settings_file, section, field)) from e
         return default_value
 
 def get_list_value(section, field, delimiter = ",", default_value = None, throw_exception = True):
@@ -169,9 +169,9 @@ def get_list_value(section, field, delimiter = ",", default_value = None, throw_
         if value is None:
             return default_value
         return value.split(delimiter)
-    except Exception:
+    except Exception as e:
         if throw_exception:
-            raise RuntimeError("Unable to get settings list value [file=%s][section=%s][field=%s][delimiter=%s]" % (_settings_file, section, field, delimiter))
+            raise RuntimeError("Unable to get settings list value [file=%s][section=%s][field=%s][delimiter=%s]" % (_settings_file, section, field, delimiter)) from e
         return default_value
 
 ###########################################################

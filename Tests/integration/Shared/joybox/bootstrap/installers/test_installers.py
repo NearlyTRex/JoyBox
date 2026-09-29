@@ -89,7 +89,7 @@ def test_compose_template_is_valid(app_name, populated_settings, recording_conne
         cwd = str(app_dir),
         capture_output = True,
         text = True,
-        timeout = 120)
+        timeout = 120, check = False)
 
     assert result.returncode == 0, (
         f"{app_name} compose file is invalid:\n{result.stderr[-2000:]}")
@@ -113,7 +113,7 @@ def test_compose_publishes_only_on_loopback(app_name, populated_settings, record
         cwd = str(app_dir),
         capture_output = True,
         text = True,
-        timeout = 120)
+        timeout = 120, check = False)
     assert result.returncode == 0, result.stderr[-2000:]
 
     for line in result.stdout.split("\n"):
@@ -138,7 +138,7 @@ def test_backup_script_parses(app_name, populated_settings, recording_connection
     script_path = tmp_path / f"{app_name}-backup.sh"
     script_path.write_text(installer.build_backup_script())
 
-    result = subprocess.run(["bash", "-n", str(script_path)], capture_output = True, text = True)
+    result = subprocess.run(["bash", "-n", str(script_path)], capture_output = True, text = True, check = False)
     assert result.returncode == 0, f"{app_name} backup script:\n{result.stderr}"
 
 
@@ -151,7 +151,7 @@ def test_restore_script_parses(app_name, populated_settings, recording_connectio
     script_path = tmp_path / f"{app_name}-restore.sh"
     script_path.write_text(installer.build_restore_script("latest", "/dev/shm/key"))
 
-    result = subprocess.run(["bash", "-n", str(script_path)], capture_output = True, text = True)
+    result = subprocess.run(["bash", "-n", str(script_path)], capture_output = True, text = True, check = False)
     assert result.returncode == 0, f"{app_name} restore script:\n{result.stderr}"
 
 
@@ -166,7 +166,7 @@ def test_encrypted_backup_script_parses(app_name, populated_settings, recording_
     script_path = tmp_path / f"{app_name}-backup-encrypted.sh"
     script_path.write_text(installer.build_backup_script())
 
-    result = subprocess.run(["bash", "-n", str(script_path)], capture_output = True, text = True)
+    result = subprocess.run(["bash", "-n", str(script_path)], capture_output = True, text = True, check = False)
     assert result.returncode == 0, f"{app_name} encrypted backup script:\n{result.stderr}"
 
 
