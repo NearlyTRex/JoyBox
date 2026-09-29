@@ -1,10 +1,10 @@
 # Imports
-import json
 import os
 import pytest
 
 # Local imports
 from joybox import config, environment, gameinfo, metadataentry
+from gameinfo_helpers import CATEGORY, GAME, SUBCATEGORY, SUPERCATEGORY, write_game
 
 
 ###########################################################
@@ -14,52 +14,6 @@ from joybox import config, environment, gameinfo, metadataentry
 # its json file sits, so a path parsed wrongly gives a game the wrong platform
 # and every derived path after that is wrong too.
 ###########################################################
-
-SUPERCATEGORY = config.Supercategory.ROMS
-CATEGORY = config.Category.NINTENDO
-SUBCATEGORY = config.Subcategory.NINTENDO_NES
-GAME = "Chrono Trigger (USA)"
-
-
-@pytest.fixture
-def tree(tmp_path, monkeypatch):
-    # A real metadata, locker and cache layout, since GameInfo reads its json
-    # off disk and derives everything else from that path.
-    roots = {
-        "json": tmp_path / "metadata" / "Json",
-        "locker": tmp_path / "locker",
-        "cache": tmp_path / "cache",
-        "metadata": tmp_path / "metadata",
-    }
-    for path in roots.values():
-        path.mkdir(parents = True, exist_ok = True)
-
-    monkeypatch.setattr(
-        environment, "get_game_json_metadata_root_dir", lambda: str(roots["json"]))
-    monkeypatch.setattr(
-        environment, "get_locker_root_dir", lambda locker_type = None: str(roots["locker"]))
-    monkeypatch.setattr(environment, "get_cache_root_dir", lambda: str(roots["cache"]))
-    monkeypatch.setattr(
-        environment, "get_game_metadata_root_dir", lambda: str(roots["metadata"]))
-    monkeypatch.setattr(
-        gameinfo.lockerinfo, "get_primary_remote_locker_type", lambda: config.LockerType.LOCAL)
-    return roots
-
-
-def write_game(tree, data = None, name = GAME,
-               supercategory = SUPERCATEGORY, category = CATEGORY, subcategory = SUBCATEGORY):
-    target = environment.get_game_json_metadata_file(
-        supercategory, category, subcategory, name)
-    os.makedirs(os.path.dirname(target), exist_ok = True)
-    with open(target, "w") as handle:
-        handle.write(json.dumps(data if data is not None else {}))
-    return target
-
-
-@pytest.fixture
-def game(tree):
-    return gameinfo.GameInfo(json_file = write_game(tree))
-
 
 ###########################################################
 # Construction
