@@ -454,7 +454,7 @@ def test_extra_software_does_not_replace_what_the_install_needs(tmp_path, stock_
 
     assert "qemu-guest-agent" in seed
     assert "homelab" in seed
-    assert "/boot/efi" in seed
+    assert "name: direct" in seed
 
 
 def test_the_shipped_gpu_overlay_reaches_the_image(tmp_path, stock_image, xorriso, repo_root):
