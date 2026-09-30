@@ -16,10 +16,10 @@ boot_vm_image [options]
 
 Runs qemu directly with UEFI firmware (OVMF), a blank qcow2 disk and the image in the
 drive, so an image from `build_autoinstall_iso` can be watched installing before it
-goes anywhere near real hardware. Qemu exits when the installer reboots, which is how
-you know it finished: the image is still in the drive, and a machine that carried on
-would boot it and start the install over. Run it again without `--iso` to boot what
-was installed.
+goes anywhere near real hardware. Qemu exits when the installer powers off or
+reboots, which is how you know it finished: the image is still in the drive, and a
+machine that carried on would boot it and start the install over. Run it again
+without `--iso` to boot what was installed.
 
 Each machine keeps `<name>.qcow2` and its own copy of the firmware variables,
 `<name>-vars.fd`, in `[UserData.VM] vm_dir` (`$HOME/VirtualMachines` by default), so

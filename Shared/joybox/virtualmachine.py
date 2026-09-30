@@ -861,7 +861,7 @@ def boot_vm_image(
             "acceleration and an install will take hours")
     if iso_file:
         logger.log_info("Installing from %s onto %s" % (iso_file, disk_image))
-        logger.log_info("Qemu stops when the installer reboots, which is how it finishes")
+        logger.log_info("Qemu stops when the installer powers off or reboots, which is how it finishes")
     else:
         logger.log_info("Booting %s" % disk_image)
     if ssh_port:

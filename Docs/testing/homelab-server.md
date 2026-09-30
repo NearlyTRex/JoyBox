@@ -18,7 +18,7 @@ blank disk, the image in the drive — and check the result before writing it to
 boot_vm_image -n llm -i ~/Images/llm.iso
 ```
 
-A window opens and you watch the install. QEMU exits when the installer reboots — that is how
+A window opens and you watch the install. QEMU exits when the installer powers off — that is how
 you know it finished. The image would otherwise boot again and start the install over.
 
 **2. Boot what it installed:**

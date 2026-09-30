@@ -34,7 +34,8 @@ def build_parser():
             "Every wired port (`en*`, `eth*`) gets DHCP, matched by name pattern so a port renamed\n"
             "by a card changing slots still comes up. It creates the account with passwordless\n"
             "sudo, installs and enables the SSH server with password logins disabled, and\n"
-            "installs `autoinstall_packages`.\n"
+            "installs `autoinstall_packages`. When it finishes the machine powers off rather than\n"
+            "rebooting, so a headless target signals it is done and does not boot the stick again.\n"
             "With no password hash the account's password is locked rather than empty.\n"
             "\n"
             "Anything else the machine is for goes in an overlay: a YAML file merged into the\n"
@@ -181,7 +182,7 @@ def main():
     logger.log_info("Write it to a usb stick with:")
     logger.log_info("  sudo dd if=%s of=/dev/sdX bs=4M status=progress conv=fsync" % output_file)
     logger.log_info(
-        "Booting from it installs %s without asking anything (%d seconds to interrupt)."
+        "Booting from it installs %s without asking anything (%d seconds to interrupt), then powers off."
         % (profile.get("hostname"), autoinstall.boot_timeout))
 
 # Run through the shared error handling

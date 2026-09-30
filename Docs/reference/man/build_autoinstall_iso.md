@@ -35,7 +35,8 @@ BIOS boot partition when booted legacy, so the stick works in either firmware mo
 Every wired port (`en*`, `eth*`) gets DHCP, matched by name pattern so a port renamed
 by a card changing slots still comes up. It creates the account with passwordless
 sudo, installs and enables the SSH server with password logins disabled, and
-installs `autoinstall_packages`.
+installs `autoinstall_packages`. When it finishes the machine powers off rather than
+rebooting, so a headless target signals it is done and does not boot the stick again.
 With no password hash the account's password is locked rather than empty.
 
 Anything else the machine is for goes in an overlay: a YAML file merged into the

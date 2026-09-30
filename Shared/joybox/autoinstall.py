@@ -522,6 +522,11 @@ def build_autoinstall_config(profile):
         "late-commands": [
             "curtin in-target --target=/target -- systemctl enable ssh",
         ],
+
+        # The target may have no display at all, and a reboot with the stick
+        # still ahead of the disk in the boot order installs over again. A
+        # machine that turns itself off is finished and safe to unplug.
+        "shutdown": "poweroff",
     }
     packages = [package for package in profile.get("packages", []) if package]
     if packages:

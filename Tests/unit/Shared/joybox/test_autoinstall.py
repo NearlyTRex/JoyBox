@@ -364,6 +364,13 @@ def test_an_unplugged_port_does_not_hold_up_the_boot():
     assert all(entry["optional"] for entry in data["autoinstall"]["network"]["ethernets"].values())
 
 
+def test_the_machine_powers_off_when_it_is_done():
+    # A reboot with the stick still in boots the installer and starts over.
+    _, data = seed_for()
+
+    assert data["autoinstall"]["shutdown"] == "poweroff"
+
+
 def test_the_largest_disk_is_the_one_installed_to():
     _, data = seed_for()
 
