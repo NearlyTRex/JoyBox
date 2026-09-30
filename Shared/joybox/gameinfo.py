@@ -753,11 +753,9 @@ class GameInfo:
 
         # Get launch info
         def get_launch_info(game_exe):
-            for launch_program in launch_programs:
-                launch_exe = launch_program.get_exe()
-                launch_cwd = launch_program.get_cwd()
-                if paths.join_paths(launch_cwd, launch_exe) in game_exe:
-                    return launch_program
+            for candidate in launch_programs:
+                if paths.join_paths(candidate.get_cwd(), candidate.get_exe()) == game_exe:
+                    return candidate
             return None
 
         # Check that we have something to run
@@ -765,6 +763,7 @@ class GameInfo:
             gui.display_error_popup(
                 title_text = "No runnable files",
                 message_text = "Computer install has no runnable files")
+            return None
 
         # If we have exactly one choice, use that
         if len(launch_programs) == 1:
@@ -780,10 +779,8 @@ class GameInfo:
 
         # Build runnable choices list
         runnable_choices = []
-        for launch_program in launch_programs:
-            launch_exe = launch_program.get_exe()
-            launch_cwd = launch_program.get_cwd()
-            runnable_choices.append(paths.join_paths(launch_cwd, launch_exe))
+        for candidate in launch_programs:
+            runnable_choices.append(paths.join_paths(candidate.get_cwd(), candidate.get_exe()))
 
         # Display list of runnable files and let user decide which to run
         gui.display_choices_window(
@@ -803,7 +800,7 @@ class GameInfo:
         potential_programs += self.get_store_setup_install_programs(store_key)
         matching_programs = []
         for program in potential_programs:
-            if program.has_subkey(store_key, store_subkey):
+            if program.get_value(store_subkey, False):
                 matching_programs.append(program)
         return matching_programs
 

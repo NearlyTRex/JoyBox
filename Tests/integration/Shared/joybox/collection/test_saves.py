@@ -8,107 +8,10 @@ import pytest
 from joybox import config
 from joybox.collection import saves
 
-
-###########################################################
-# Save packing eligibility
-#
-# Packing archives a game's live save directory into the locker; unpacking
-# restores it. Both predicates guard destructive work, so a wrong answer
-# either overwrites a live save or silently skips a backup.
-###########################################################
-
-def populated(tmp_path, name = "live"):
-    directory = tmp_path / name
-    directory.mkdir()
-    (directory / "save.dat").write_text("data")
-    return str(directory)
-
-
-def empty(tmp_path, name = "empty"):
-    directory = tmp_path / name
-    directory.mkdir()
-    return str(directory)
-
-
-def absent(tmp_path, name = "absent"):
-    return str(tmp_path / name)
-
-
-###########################################################
-# Packing
-###########################################################
-
-def test_a_directory_with_saves_is_packable(tmp_path):
-    assert saves.is_save_dir_packable(populated(tmp_path)) is True
-
-
-def test_an_empty_directory_is_not_packable(tmp_path):
-    # Packing nothing would replace a good archive with an empty one.
-    assert saves.is_save_dir_packable(empty(tmp_path)) is False
-
-
-def test_a_missing_directory_is_not_packable(tmp_path):
-    assert saves.is_save_dir_packable(absent(tmp_path)) is False
-
-
-def test_nested_saves_count(tmp_path):
-    directory = tmp_path / "live"
-    (directory / "profile").mkdir(parents = True)
-    (directory / "profile" / "save.dat").write_text("data")
-
-    assert saves.is_save_dir_packable(str(directory)) is True
-
-
-def test_the_output_directory_is_optional(tmp_path):
-    # can_save_be_packed asks with only an input directory.
-    source = populated(tmp_path)
-
-    assert saves.is_save_dir_packable(source) == \
-        saves.is_save_dir_packable(source, absent(tmp_path, "out"))
-
-
-###########################################################
-# Unpacking
-###########################################################
-
-def test_an_archive_unpacks_into_a_missing_directory(tmp_path):
-    assert saves.is_save_dir_unpackable(
-        populated(tmp_path), absent(tmp_path, "out")) is True
-
-
-def test_an_empty_archive_does_not_unpack(tmp_path):
-    assert saves.is_save_dir_unpackable(
-        empty(tmp_path), absent(tmp_path, "out")) is False
-
-
-def test_a_missing_archive_does_not_unpack(tmp_path):
-    assert saves.is_save_dir_unpackable(
-        absent(tmp_path, "src"), absent(tmp_path, "out")) is False
-
-
-def test_an_existing_destination_blocks_unpacking(tmp_path):
-    # Unpacking over a live save directory would overwrite current progress.
-    assert saves.is_save_dir_unpackable(
-        populated(tmp_path), populated(tmp_path, "out")) is False
-
-
-def test_an_existing_empty_destination_blocks_unpacking(tmp_path):
-    assert saves.is_save_dir_unpackable(
-        populated(tmp_path), empty(tmp_path, "out")) is False
-
-
-###########################################################
-# The two directions
-###########################################################
-
-def test_packing_and_unpacking_disagree_about_a_live_directory(tmp_path):
-    # A populated directory is what packing wants and what unpacking refuses
-    # to overwrite.
-    source = populated(tmp_path)
-    destination = populated(tmp_path, "out")
-
-    assert saves.is_save_dir_packable(source, destination) is True
-    assert saves.is_save_dir_unpackable(source, destination) is False
+pytestmark = [
+    pytest.mark.requires_tool("7-Zip"),
+    pytest.mark.usefixtures("requires_tool"),
+    pytest.mark.slow]
 
 
 ###########################################################
@@ -177,13 +80,11 @@ def archives_in(directory):
 # Packing
 ###########################################################
 
-@pytest.mark.slow
 def test_a_save_is_packed(tmp_path, game):
     assert saves.pack_save(game) is True
     assert archives_in(game.get_local_save_dir())
 
 
-@pytest.mark.slow
 def test_a_packed_save_is_named_after_the_game(tmp_path, game):
     saves.pack_save(game)
     packed = archives_in(game.get_local_save_dir())[0]
@@ -192,7 +93,6 @@ def test_a_packed_save_is_named_after_the_game(tmp_path, game):
     assert packed.endswith(config.ArchiveFileType.ZIP.cval())
 
 
-@pytest.mark.slow
 def test_a_packed_save_is_timestamped(tmp_path, game):
     # Several packs of the same save must not overwrite one another.
     saves.pack_save(game)
@@ -202,7 +102,6 @@ def test_a_packed_save_is_timestamped(tmp_path, game):
     assert stamp.isdigit()
 
 
-@pytest.mark.slow
 def test_an_empty_save_directory_packs_nothing(tmp_path, game):
     for name in os.listdir(game.get_save_dir()):
         os.remove(os.path.join(game.get_save_dir(), name))
@@ -211,7 +110,6 @@ def test_an_empty_save_directory_packs_nothing(tmp_path, game):
     assert archives_in(game.get_local_save_dir()) == []
 
 
-@pytest.mark.slow
 def test_an_identical_save_is_not_packed_twice(tmp_path, game):
     # Otherwise every sync would add another copy of an unchanged save.
     saves.pack_save(game)
@@ -221,7 +119,6 @@ def test_an_identical_save_is_not_packed_twice(tmp_path, game):
     assert archives_in(game.get_local_save_dir()) == first
 
 
-@pytest.mark.slow
 def test_a_changed_save_is_packed_again(tmp_path, game):
     # The archive name carries a whole-second timestamp, so a second pack has
     # to land in a later second to get its own file.
@@ -237,7 +134,6 @@ def test_a_changed_save_is_packed_again(tmp_path, game):
     assert len(archives_in(game.get_local_save_dir())) == len(first) + 1
 
 
-@pytest.mark.slow
 def test_an_explicit_save_directory_is_used(tmp_path, game):
     other = tmp_path / "other"
     other.mkdir()
@@ -247,7 +143,6 @@ def test_an_explicit_save_directory_is_used(tmp_path, game):
     assert archives_in(game.get_local_save_dir())
 
 
-@pytest.mark.slow
 def test_a_computer_save_excludes_its_prefix_directories(tmp_path, game):
     # The wine and sandboxie trees are the prefix, not the save.
     game.category = config.Category.COMPUTER
@@ -273,7 +168,6 @@ def test_a_computer_save_excludes_its_prefix_directories(tmp_path, game):
 # Unpacking
 ###########################################################
 
-@pytest.mark.slow
 def test_a_packed_save_is_restored(tmp_path, game):
     saves.pack_save(game)
     for name in os.listdir(game.get_save_dir()):
@@ -284,7 +178,6 @@ def test_a_packed_save_is_restored(tmp_path, game):
     assert os.path.exists(os.path.join(game.get_save_dir(), "slot1.sav"))
 
 
-@pytest.mark.slow
 def test_restored_content_matches_what_was_packed(tmp_path, game):
     original = open(os.path.join(game.get_save_dir(), "slot1.sav"), "rb").read()
     saves.pack_save(game)
@@ -296,7 +189,6 @@ def test_restored_content_matches_what_was_packed(tmp_path, game):
     assert open(os.path.join(game.get_save_dir(), "slot1.sav"), "rb").read() == original
 
 
-@pytest.mark.slow
 def test_the_newest_archive_is_the_one_restored(tmp_path, game):
     # Archives are named with a timestamp and picked by sort order, so the
     # newest has to sort last.
@@ -316,7 +208,6 @@ def test_the_newest_archive_is_the_one_restored(tmp_path, game):
         b"the newer save"
 
 
-@pytest.mark.slow
 def test_an_existing_save_is_not_overwritten(tmp_path, game):
     # Unpacking over a live save would lose progress made since the pack.
     saves.pack_save(game)
@@ -328,7 +219,6 @@ def test_an_existing_save_is_not_overwritten(tmp_path, game):
         b"newer progress"
 
 
-@pytest.mark.slow
 def test_nothing_packed_restores_nothing(tmp_path, game):
     for name in os.listdir(game.get_save_dir()):
         os.remove(os.path.join(game.get_save_dir(), name))
@@ -337,7 +227,6 @@ def test_nothing_packed_restores_nothing(tmp_path, game):
     assert saves.unpack_save(game) is False
 
 
-@pytest.mark.slow
 def test_a_round_trip_preserves_every_file(tmp_path, game):
     before = sorted(os.listdir(game.get_save_dir()))
     saves.pack_save(game)

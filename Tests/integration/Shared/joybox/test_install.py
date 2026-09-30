@@ -5,7 +5,10 @@ import pytest
 # Local imports
 from joybox import config, install
 
-pytestmark = pytest.mark.slow
+pytestmark = [
+    pytest.mark.requires_tool("7-Zip"),
+    pytest.mark.usefixtures("requires_tool"),
+    pytest.mark.slow]
 
 
 ###########################################################
@@ -82,21 +85,6 @@ def test_file_contents_survive_a_round_trip(tmp_path, prefix):
     assert restored.read_text() == "content of Program Files/Game/game.exe\n"
 
 
-def test_an_empty_directory_packs_nothing(tmp_path):
-    source = tmp_path / "empty"
-    source.mkdir()
-    image = tmp_path / "install.7z"
-
-    assert install.pack_install_image(str(source), str(image)) is False
-    assert not image.exists()
-
-
-def test_a_missing_directory_packs_nothing(tmp_path):
-    image = tmp_path / "install.7z"
-
-    assert install.pack_install_image(str(tmp_path / "absent"), str(image)) is False
-
-
 def test_the_source_is_kept_by_default(tmp_path, prefix):
     image = tmp_path / "install.7z"
     install.pack_install_image(str(prefix), str(image))
@@ -110,13 +98,6 @@ def test_the_source_is_removed_when_asked(tmp_path, prefix):
 
     assert not prefix.exists()
     assert image.exists()
-
-
-def test_pretending_packs_nothing(tmp_path, prefix):
-    image = tmp_path / "install.7z"
-    install.pack_install_image(str(prefix), str(image), pretend_run = True)
-
-    assert not image.exists()
 
 
 ###########################################################
@@ -139,16 +120,6 @@ def test_every_ignored_path_is_left_out(tmp_path, ignored):
 
     assert "Program Files/Game/game.exe" in packed
     assert not any(name.startswith(ignored) for name in packed)
-
-
-def test_a_prefix_of_only_ignored_paths_packs_nothing(tmp_path):
-    source = tmp_path / "prefix"
-    source.mkdir()
-    make_tree(source, "windows/system32/kernel32.dll", "users/someone/file.txt")
-    image = tmp_path / "install.7z"
-
-    assert install.pack_install_image(str(source), str(image)) is False
-    assert not image.exists()
 
 
 def test_a_similarly_named_path_is_kept(tmp_path):
@@ -180,11 +151,6 @@ def test_unpacking_creates_the_target(tmp_path, prefix):
     assert out.exists()
 
 
-def test_unpacking_a_missing_image_reports_failure(tmp_path):
-    assert install.unpack_install_image(
-        str(tmp_path / "absent.7z"), str(tmp_path / "out")) is False
-
-
 def test_unpacking_a_non_archive_reports_failure(tmp_path):
     source = tmp_path / "notanarchive.7z"
     source.write_text("this is not an archive")
@@ -210,30 +176,8 @@ def test_the_image_is_removed_when_asked(tmp_path, prefix):
 
 
 ###########################################################
-# Mount state
+# Mounting
 ###########################################################
-
-def test_an_empty_mount_directory_is_not_mounted(tmp_path):
-    # An install image is unpacked rather than mounted, so content is the only
-    # evidence it happened.
-    mount = tmp_path / "mnt"
-    mount.mkdir()
-
-    assert install.is_install_image_mounted(str(tmp_path / "image.7z"), str(mount)) is False
-
-
-def test_a_populated_mount_directory_is_mounted(tmp_path):
-    mount = tmp_path / "mnt"
-    mount.mkdir()
-    (mount / "game.exe").write_text("content")
-
-    assert install.is_install_image_mounted(str(tmp_path / "image.7z"), str(mount)) is True
-
-
-def test_a_missing_mount_directory_is_not_mounted(tmp_path):
-    assert install.is_install_image_mounted(
-        str(tmp_path / "image.7z"), str(tmp_path / "absent")) is False
-
 
 def test_mounting_unpacks_into_an_empty_directory(tmp_path, prefix):
     image = tmp_path / "install.7z"

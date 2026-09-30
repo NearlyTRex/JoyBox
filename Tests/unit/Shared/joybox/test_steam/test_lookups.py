@@ -7,6 +7,7 @@ import pytest
 # Local imports
 from joybox import config
 from joybox.stores import steam
+from steam_helpers import ACCOUNT, STEAMID64
 
 
 ###########################################################
@@ -85,21 +86,6 @@ def test_the_id_formats_are_distinct():
 # A probe that is skipped, or one whose result is not checked, leaves a game
 # without its artwork rather than failing loudly.
 ###########################################################
-
-@pytest.fixture
-def reachable(monkeypatch):
-    # Declares which urls answer, so the probing order is observable.
-    state = {"ok": set(), "all": False, "probed": []}
-
-    def is_url_reachable(url):
-        state["probed"].append(url)
-        if state["all"]:
-            return True
-        return url in state["ok"]
-
-    monkeypatch.setattr(steam.network, "is_url_reachable", is_url_reachable)
-    return state
-
 
 def test_a_store_page_is_the_app_page(reachable):
     reachable["all"] = True
@@ -243,6 +229,12 @@ def test_the_page_check_can_be_skipped(appid_list, reachable):
     assert reachable["probed"] == []
 
 
+def test_skipping_the_page_check_still_takes_the_closest(appid_list, reachable):
+    appid_list["rows"] = [row("219", "Half Life 2"), row("220", "Half-Life 2")]
+
+    assert steam.find_steam_appid_match("Half-Life 2", only_active_pages = False).get_id() == "220"
+
+
 def test_nothing_to_match_yields_nothing(appid_list, reachable):
     assert steam.find_steam_appid_match("Half-Life 2") is None
 
@@ -297,27 +289,6 @@ def test_an_asset_type_steam_does_not_serve_yields_nothing(appid_list, reachable
 # The same account is addressed four different ways depending on which file
 # is being read, and a wrong conversion points at another user's data.
 ###########################################################
-
-STEAMID64 = "76561197960287930"
-ACCOUNT = int(STEAMID64) - 76561197960265728
-
-
-@pytest.fixture
-def steam_store(isolated_settings, tmp_path):
-    install_dir = tmp_path / "steam"
-    install_dir.mkdir()
-    for key, value in [
-        ("steam_platform", "linux"),
-        ("steam_arch", "64"),
-        ("steam_accountname", "player"),
-        ("steam_username", "Player"),
-        ("steam_userid", STEAMID64),
-        ("steam_web_api_key", "apikey"),
-        ("steam_install_dir", str(install_dir)),
-    ]:
-        isolated_settings.set_value("UserData.Steam", key, value)
-    return steam.Steam()
-
 
 def test_the_default_id_is_the_64_bit_one(steam_store):
     assert steam_store.get_user_id() == STEAMID64
