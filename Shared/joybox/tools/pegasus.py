@@ -84,6 +84,7 @@ class Pegasus(toolbase.ToolBase):
                 backups_dir = programs.get_program_backup_dir("Pegasus", "windows"),
                 install_files = ["pegasus-fe.exe"],
                 get_latest = True,
+                locker_type = setup_params.locker_type,
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)

@@ -34,3 +34,24 @@ def no_rclone(monkeypatch):
 def quiet(monkeypatch):
     monkeypatch.setattr(sync.logger, "log_info", lambda *args, **kwargs: None)
     monkeypatch.setattr(sync.logger, "log_error", lambda *args, **kwargs: None)
+
+
+@pytest.fixture
+def remote(monkeypatch, tmp_path):
+    from sync_helpers import FakeRemote
+    return FakeRemote(monkeypatch, tmp_path / "remote.db")
+
+
+@pytest.fixture
+def temp_dirs(monkeypatch, tmp_path):
+    # Every temporary directory handed out, so cleanup can be checked
+    created = []
+    original = sync.fileops.create_temporary_directory
+
+    def create(**kwargs):
+        result = original(directory = str(tmp_path / "temps"))
+        created.append(result[1])
+        return result
+
+    monkeypatch.setattr(sync.fileops, "create_temporary_directory", create)
+    return created

@@ -46,6 +46,7 @@ class JDupes(toolbase.ToolBase):
                 install_name = "JDupes",
                 install_dir = programs.get_program_install_dir("JDupes", "windows"),
                 backups_dir = programs.get_program_backup_dir("JDupes", "windows"),
+                locker_type = setup_params.locker_type,
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
@@ -64,6 +65,7 @@ class JDupes(toolbase.ToolBase):
                 install_name = "JDupes",
                 install_dir = programs.get_program_install_dir("JDupes", "linux"),
                 backups_dir = programs.get_program_backup_dir("JDupes", "linux"),
+                locker_type = setup_params.locker_type,
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)

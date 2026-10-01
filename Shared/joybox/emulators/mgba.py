@@ -93,6 +93,7 @@ class MGBA(emulatorbase.EmulatorBase):
                 install_dir = programs.get_program_install_dir("mGBA", "windows"),
                 backups_dir = programs.get_program_backup_dir("mGBA", "windows"),
                 get_latest = True,
+                locker_type = setup_params.locker_type,
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
@@ -111,6 +112,7 @@ class MGBA(emulatorbase.EmulatorBase):
                 install_dir = programs.get_program_install_dir("mGBA", "linux"),
                 backups_dir = programs.get_program_backup_dir("mGBA", "linux"),
                 get_latest = True,
+                locker_type = setup_params.locker_type,
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)

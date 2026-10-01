@@ -1,9 +1,11 @@
 # Imports
 import os
+
+# Third-party imports
 import pytest
 
 # Local imports
-from joybox import commandoptions
+from joybox import commandoptions, config
 
 
 ###########################################################
@@ -126,6 +128,33 @@ def test_setting_an_environment_variable_populates_the_environment():
     assert options.get_env() is not None
 
 
+def test_setting_an_environment_variable_starts_from_the_process_environment(monkeypatch):
+    monkeypatch.setenv("JOYBOX_INHERITED", "kept")
+    options = build()
+    options.set_env_var("JOYBOX_ADDED", "1")
+
+    assert options.get_env()["JOYBOX_INHERITED"] == "kept"
+    assert options.get_env()["JOYBOX_ADDED"] == "1"
+
+
+def test_an_unset_environment_is_the_process_environment(monkeypatch):
+    monkeypatch.setenv("JOYBOX_INHERITED", "kept")
+
+    assert build().get_env()["JOYBOX_INHERITED"] == "kept"
+
+
+@pytest.mark.parametrize("seed", ["set_env_var", "get_env"])
+def test_an_options_environment_never_reaches_the_process_environment(seed):
+    # A copy of os.environ still calls putenv on every write, so a variable
+    # set for one command would be inherited by every later child process.
+    options = build()
+    if seed == "set_env_var":
+        options.set_env_var("JOYBOX_OPTIONS_ONLY", "kept")
+
+    assert not isinstance(options.get_env(), type(os.environ))
+    assert "JOYBOX_OPTIONS_ONLY" not in os.environ
+
+
 ###########################################################
 # Construction
 ###########################################################
@@ -212,9 +241,18 @@ def test_an_unset_prefix_name_is_reported_absent():
 
 def test_a_set_prefix_name_is_reported_present():
     options = build()
-    options.set_prefix_name("default")
+    options.set_prefix_name(config.PrefixType.DEFAULT)
 
     assert options.has_prefix_name() is True
+
+
+@pytest.mark.parametrize("name", ["Default", "", 0])
+def test_only_a_prefix_type_counts_as_a_prefix_name(name):
+    # sandbox reads the name back with .val(), so a bare string would crash it.
+    options = build()
+    options.set_prefix_name(name)
+
+    assert options.has_prefix_name() is False
 
 
 ###########################################################
@@ -570,3 +608,232 @@ def test_an_existing_path_is_both(field, valid, existing, tmp_path):
 
     assert getattr(options, valid)() is True
     assert getattr(options, existing)() is True
+
+
+def test_the_virtual_c_drive_is_valid_once_set():
+    options = build()
+    assert options.has_valid_prefix_c_drive_virtual() is False
+
+    options.set_prefix_c_drive_virtual("C:\\")
+    assert options.has_valid_prefix_c_drive_virtual() is True
+
+
+def test_an_unset_prefix_working_directory_is_not_valid():
+    assert build().has_valid_prefix_cwd() is False
+
+
+###########################################################
+# Prefix working directory
+#
+# A prefix command starts inside the prefix's C drive, so the host working
+# directory follows the prefix one once the drive exists.
+###########################################################
+
+def test_the_working_directory_follows_the_prefix_working_directory(tmp_path):
+    (tmp_path / "Games" / "Doom").mkdir(parents = True)
+    options = build(cwd = "/host/elsewhere")
+    options.set_prefix_c_drive_real(str(tmp_path))
+    options.set_prefix_cwd(os.path.join("Games", "Doom"))
+
+    options.sync_cwd_to_prefix_cwd()
+
+    assert options.get_cwd() == os.path.realpath(str(tmp_path / "Games" / "Doom"))
+
+
+def test_the_working_directory_stays_without_a_prefix_working_directory(tmp_path):
+    options = build(cwd = "/host/elsewhere")
+    options.set_prefix_c_drive_real(str(tmp_path))
+
+    options.sync_cwd_to_prefix_cwd()
+
+    assert options.get_cwd() == "/host/elsewhere"
+
+
+def test_the_working_directory_stays_until_the_c_drive_exists(tmp_path):
+    options = build(cwd = "/host/elsewhere")
+    options.set_prefix_c_drive_real(str(tmp_path / "not-created-yet"))
+    options.set_prefix_cwd("Games")
+
+    options.sync_cwd_to_prefix_cwd()
+
+    assert options.get_cwd() == "/host/elsewhere"
+
+
+###########################################################
+# Ready prefix
+###########################################################
+
+def ready_options(tmp_path):
+    return build(
+        is_wine_prefix = True,
+        prefix_name = config.PrefixType.GAME,
+        prefix_dir = str(tmp_path))
+
+
+def test_a_named_existing_wine_prefix_is_ready(tmp_path):
+    assert ready_options(tmp_path).has_ready_prefix() is True
+
+
+def test_a_native_command_has_no_ready_prefix(tmp_path):
+    options = ready_options(tmp_path)
+    options.set_is_wine_prefix(False)
+
+    assert options.has_ready_prefix() is False
+
+
+def test_an_unnamed_prefix_is_not_ready(tmp_path):
+    options = ready_options(tmp_path)
+    options.set_prefix_name(None)
+
+    assert options.has_ready_prefix() is False
+
+
+def test_a_prefix_that_does_not_exist_yet_is_not_ready(tmp_path):
+    options = ready_options(tmp_path)
+    options.set_prefix_dir(str(tmp_path / "not-created-yet"))
+
+    assert options.has_ready_prefix() is False
+
+
+###########################################################
+# Prefix setup
+###########################################################
+
+@pytest.fixture
+def sandbox_dirs(monkeypatch, tmp_path):
+    from joybox import programs
+    roots = {"Wine": str(tmp_path / "wine"), "Sandboxie": str(tmp_path / "sandboxie")}
+    monkeypatch.setattr(programs, "get_tool_path_config_value", lambda tool, key: roots[tool])
+    return roots
+
+
+def test_setting_up_a_wine_prefix_names_its_directory_after_the_prefix(sandbox_dirs):
+    options = build()
+
+    options.setup_prefix(
+        is_wine_prefix = True,
+        is_sandboxie_prefix = False,
+        prefix_name = config.PrefixType.TOOL)
+
+    assert options.is_wine_prefix() is True
+    assert options.is_sandboxie_prefix() is False
+    assert options.get_prefix_name() == config.PrefixType.TOOL
+    assert options.get_prefix_dir() == os.path.join(sandbox_dirs["Wine"], "Tool")
+
+
+def test_setting_up_a_sandboxie_prefix_uses_the_sandboxie_root(sandbox_dirs):
+    options = build()
+
+    options.setup_prefix(
+        is_wine_prefix = False,
+        is_sandboxie_prefix = True,
+        prefix_name = config.PrefixType.GAME)
+
+    assert options.get_prefix_dir() == os.path.join(sandbox_dirs["Sandboxie"], "Game")
+
+
+def test_an_explicit_prefix_directory_wins(sandbox_dirs):
+    options = build()
+
+    options.setup_prefix(
+        is_wine_prefix = True,
+        is_sandboxie_prefix = False,
+        prefix_name = config.PrefixType.TOOL,
+        prefix_dir = "/explicit/prefix",
+        general_prefix_dir = "/explicit/general")
+
+    assert options.get_prefix_dir() == "/explicit/prefix"
+    assert options.get_general_prefix_dir() == "/explicit/general"
+
+
+def test_a_native_setup_leaves_the_prefix_directory_unset(sandbox_dirs):
+    options = build()
+
+    options.setup_prefix(
+        is_wine_prefix = False,
+        is_sandboxie_prefix = False,
+        prefix_name = config.PrefixType.TOOL)
+
+    assert options.get_prefix_dir() is None
+    assert options.get_general_prefix_dir() is None
+
+
+###########################################################
+# Prefix creation
+###########################################################
+
+@pytest.fixture
+def fake_sandbox(monkeypatch, tmp_path):
+    from joybox import sandbox
+    state = {"calls": [], "result": True, "profile": tmp_path / "profile", "c_drive": tmp_path / "drive_c"}
+    state["profile"].mkdir()
+    state["c_drive"].mkdir()
+
+    def create(kind):
+        def run(options, **kwargs):
+            state["calls"].append((kind, kwargs))
+            return state["result"]
+        return run
+
+    monkeypatch.setattr(sandbox, "create_basic_prefix", create("basic"))
+    monkeypatch.setattr(sandbox, "create_linked_prefix", create("linked"))
+    monkeypatch.setattr(sandbox, "get_user_profile_path", lambda options: str(state["profile"]))
+    monkeypatch.setattr(sandbox, "get_real_c_drive_path", lambda options: str(state["c_drive"]))
+    return state
+
+
+def create(options, **kwargs):
+    return options.create_prefix(
+        is_wine_prefix = True,
+        is_sandboxie_prefix = False,
+        prefix_name = config.PrefixType.GAME,
+        prefix_dir = "/prefixes/game",
+        **kwargs)
+
+
+def test_creating_a_prefix_records_its_profile_and_drives(fake_sandbox):
+    options = build()
+
+    assert create(options) is True
+    assert options.get_prefix_user_profile_dir() == str(fake_sandbox["profile"])
+    assert options.get_prefix_c_drive_real() == str(fake_sandbox["c_drive"])
+    assert options.get_prefix_c_drive_virtual() == config.drive_root_windows
+
+
+def test_a_basic_prefix_is_created_unless_a_linked_one_is_asked_for(fake_sandbox):
+    create(build())
+    create(build(), linked_prefix = True, other_links = ["/shared"])
+
+    assert [kind for kind, _ in fake_sandbox["calls"]] == ["basic", "linked"]
+    assert fake_sandbox["calls"][1][1]["other_links"] == ["/shared"]
+
+
+@pytest.mark.parametrize("linked", [False, True])
+def test_prefix_creation_passes_the_run_flags_through(fake_sandbox, linked):
+    create(build(), linked_prefix = linked, clean_existing = False,
+        verbose = True, pretend_run = True, exit_on_failure = True)
+
+    _, kwargs = fake_sandbox["calls"][0]
+    assert kwargs["clean_existing"] is False
+    assert kwargs["verbose"] is True
+    assert kwargs["pretend_run"] is True
+    assert kwargs["exit_on_failure"] is True
+
+
+@pytest.mark.parametrize("linked", [False, True])
+def test_a_failed_creation_is_reported(fake_sandbox, linked):
+    fake_sandbox["result"] = False
+
+    assert create(build(), linked_prefix = linked) is False
+
+
+def test_a_prefix_without_a_profile_is_not_created(fake_sandbox):
+    fake_sandbox["profile"].rmdir()
+
+    assert create(build()) is False
+
+
+def test_a_prefix_without_a_c_drive_is_not_created(fake_sandbox):
+    fake_sandbox["c_drive"].rmdir()
+
+    assert create(build()) is False

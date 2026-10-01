@@ -50,7 +50,7 @@ def build_parser():
         args = ("-l", "--locker_type"),
         arg_type = config.LockerType,
         default = config.LockerType.HETZNER,
-        description = "Locker type passed to the install step")
+        description = "Locker the install step reads from, and where saves are backed up after the game exits (a local copy is always kept)")
     parser.add_game_category_argument(description = "Category of the game, used with `-s` and `-n` to find its JSON file")
     parser.add_game_subcategory_argument(description = "Subcategory (platform) of the game, used with `-c` and `-n` to find its JSON file")
     parser.add_game_name_argument(description = "Name of the game, used with `-c` and `-s` to find its JSON file")

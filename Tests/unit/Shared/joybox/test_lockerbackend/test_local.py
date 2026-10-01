@@ -135,10 +135,15 @@ def test_an_empty_locker_lists_nothing(locker):
     assert locker.list_files_with_hashes() == {}
 
 
-def test_a_missing_locker_lists_nothing(tmp_path):
+def test_a_missing_locker_fails_to_list(tmp_path):
+    # Read as empty, every file on the other side would look like an orphan.
     backend = lockerbackend.LocalBackend(FakeLockerInfo(str(tmp_path / "absent")))
 
-    assert backend.list_files_with_hashes() == {}
+    assert backend.list_files_with_hashes() is None
+
+
+def test_a_locker_without_a_mount_path_fails_to_list():
+    assert lockerbackend.LocalBackend(FakeLockerInfo(None)).list_files_with_hashes() is None
 
 
 def test_directories_are_not_listed(stocked):

@@ -68,6 +68,7 @@ class DXVK(toolbase.ToolBase):
                 install_name = "DXVK",
                 install_dir = programs.get_library_install_dir("DXVK", "lib"),
                 backups_dir = programs.get_library_backup_dir("DXVK", "lib"),
+                locker_type = setup_params.locker_type,
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)

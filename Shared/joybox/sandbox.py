@@ -301,7 +301,7 @@ def backup_registry(
     import joybox.registry as registry
 
     # Ignore empty keys
-    if len(registry_keys) == 0:
+    if not registry_keys:
         return True
 
     # Get registry dir
@@ -309,26 +309,17 @@ def backup_registry(
     if not registry_dir:
         return False
 
-    # Get registry file
-    registry_file = ""
+    # Get registry file, export keys, and ignore keys
     if options.get_prefix_name() == config.PrefixType.SETUP:
         registry_file = paths.join_paths(registry_dir, config.registry_filename_setup)
-    elif options.get_prefix_name() == config.PrefixType.GAME:
-        registry_file = paths.join_paths(registry_dir, config.registry_filename_game)
-
-    # Get registry export keys
-    registry_export_keys = []
-    if options.get_prefix_name() == config.PrefixType.SETUP:
         registry_export_keys = config.registry_export_keys_setup
-    elif options.get_prefix_name() == config.PrefixType.GAME:
-        registry_export_keys = config.registry_export_keys_game
-
-    # Get registry ignore keys
-    registry_ignore_keys = []
-    if options.get_prefix_name() == config.PrefixType.SETUP:
         registry_ignore_keys = config.ignored_registry_keys_setup
     elif options.get_prefix_name() == config.PrefixType.GAME:
+        registry_file = paths.join_paths(registry_dir, config.registry_filename_game)
+        registry_export_keys = config.registry_export_keys_game
         registry_ignore_keys = config.ignored_registry_keys_game
+    else:
+        return False
 
     # Backup registry
     return registry.backup_user_registry(
@@ -415,7 +406,15 @@ def mount_disc_image(
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
-    return success
+    if not success:
+        chd.unmount_disc_chd(
+            chd_file = src,
+            mount_dir = mount_dir,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = False)
+        return False
+    return True
 
 # Unmount disc image
 def unmount_disc_image(
@@ -432,24 +431,22 @@ def unmount_disc_image(
     # Check params
     validation.assert_path_exists(src, "src")
 
-    # Unmount disc
-    success = unmount_directory(
+    # Unmount directory
+    unmounted_directory = unmount_directory(
         src = mount_dir,
         options = options,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
-    if not success:
-        return False
 
-    # Unmount directory
-    success = chd.unmount_disc_chd(
+    # Unmount disc, even when no drive pointed at it
+    unmounted_disc = chd.unmount_disc_chd(
         chd_file = src,
         mount_dir = mount_dir,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
-    return success
+    return unmounted_directory and unmounted_disc
 
 # Mount directory
 def mount_directory(
@@ -511,6 +508,7 @@ def unmount_all_mounted_drives(
     validation.assert_path_exists(options.get_prefix_dir(), "prefix_dir")
 
     # Only go through potentially available drives
+    success = True
     for letter in config.drives_regular:
 
         # Get real drive path
@@ -519,14 +517,13 @@ def unmount_all_mounted_drives(
             drive = letter)
 
         # Remove symlink
-        fileops.remove_symlink(
+        if not fileops.remove_symlink(
             src = drive_path,
             verbose = verbose,
             pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-
-    # Should be successful
-    return True
+            exit_on_failure = exit_on_failure):
+            success = False
+    return success
 
 ###########################################################
 
@@ -567,23 +564,19 @@ def build_token_map(
         disc_file_basename = paths.get_filename_basename(disc_file)
 
         # Find which token to use
-        disc_token_to_use = None
+        disc_token_to_use = config.token_disc_main_root
         for disc_token, disc_name in config.token_disc_names.items():
             if disc_name in disc_file:
                 disc_token_to_use = disc_token
                 break
-        else:
-            disc_token_to_use = config.token_disc_main_root
 
         # Add entry
-        if disc_token_to_use:
-            if use_drive_letters:
-                token_map[disc_token_to_use] = "%s:/" % disc_letter_drive
-            else:
-                if disc_base_dir:
-                    token_map[disc_token_to_use] = paths.join_paths(disc_base_dir, disc_file_basename)
-                else:
-                    token_map[disc_token_to_use] = disc_file_basename
+        if use_drive_letters:
+            token_map[disc_token_to_use] = "%s:/" % disc_letter_drive
+        elif disc_base_dir:
+            token_map[disc_token_to_use] = paths.join_paths(disc_base_dir, disc_file_basename)
+        else:
+            token_map[disc_token_to_use] = disc_file_basename
 
     # Return token map
     return token_map
@@ -610,6 +603,10 @@ def get_prefix_path_info(
     if not paths.is_path_valid(path):
         return None
 
+    # Check path kind
+    if is_virtual_path == is_real_path:
+        return None
+
     # Check prefix
     if not options.has_valid_prefix_dir():
         return None
@@ -617,7 +614,8 @@ def get_prefix_path_info(
     # These are some potential types of paths
     # - /home/user/.wine/drive_c/foo/bar
     # - /home/user/.wine/dosdevices/c:/foo/bar
-    # - C:/Sandboxie/Sandbox/Default/drives/C/foo/bar
+    # - C:/Sandboxie/Sandbox/Default/drive/C/foo/bar
+    # - C:/Sandboxie/Sandbox/Default/user/current/foo/bar
     # - C:/foo/bar
 
     # Copy params
@@ -640,81 +638,67 @@ def get_prefix_path_info(
     path_drive_extra = ""
     path_drive_base = ""
 
-    # Path starts with prefix
-    if new_path.startswith(new_options.get_prefix_dir()):
-
-        # Find drive letter and offset
-        if is_virtual_path:
-            path_drive_letter = paths.get_directory_drive(new_path)
-            path_drive_offset = new_path[len(paths.get_directory_anchor(new_path)):]
-        elif is_real_path:
-            path_drive_start = new_path[len(new_options.get_prefix_dir() + config.os_pathsep):]
-            if new_options.is_wine_prefix():
-                if path_drive_start.startswith("drive_c"):
-                    path_drive_letter = "c"
-                    path_drive_offset = path_drive_start[len("drive_c" + config.os_pathsep):]
-                elif path_drive_start.startswith("dosdevices"):
-                    path_drive_start = path_drive_start[len("dosdevices" + config.os_pathsep):]
-                    path_drive_token = ""
-                    for path_token in path_drive_start.split(config.os_pathsep):
-                        path_drive_token = path_token
-                        break
-                    if len(path_drive_token) > 0:
-                        path_drive_letter = path_drive_token[0].lower()
-                        path_drive_offset = path_drive_start[len(path_drive_token + config.os_pathsep):]
-            elif new_options.is_sandboxie_prefix():
-                if path_drive_start.startswith("drives"):
-                    path_drive_start = path_drive_start[len("drives" + config.os_pathsep):]
-                    path_drive_token = ""
-                    for path_token in path_drive_start.split(config.os_pathsep):
-                        path_drive_token = path_token
-                        break
-                    if len(path_drive_token) > 0:
-                        path_drive_letter = path_drive_token.lower()
-                        path_drive_offset = path_drive_start[len(path_drive_token + config.os_pathsep):]
-
-        # Find drive base
-        if is_virtual_path:
-            if new_options.is_wine_prefix():
-                path_drive_base = paths.join_paths(new_options.get_prefix_dir(), "dosdevices", path_drive_letter.lower() + ":")
-            elif new_options.is_sandboxie_prefix():
-                path_drive_base = paths.join_paths(new_options.get_prefix_dir(), "drives", path_drive_letter.upper())
-        elif is_real_path:
-            path_drive_base = new_path[-len(path_drive_offset):]
-
-    # Prefix and path are not related
-    else:
-
-        # Wine
+    # Real path inside the prefix
+    prefix_dir = new_options.get_prefix_dir()
+    is_inside_prefix = (new_path == prefix_dir or new_path.startswith(prefix_dir + config.os_pathsep))
+    if is_real_path and is_inside_prefix and new_options.is_prefix():
+        path_parts = new_path[len(prefix_dir + config.os_pathsep):].split(config.os_pathsep)
+        path_rest = path_parts[1:]
         if new_options.is_wine_prefix():
-            if is_virtual_path:
-                path_drive_letter = paths.get_directory_drive(new_path)
-            else:
-                path_drive_letter = "z"
-            path_drive_offset = new_path[len(paths.get_directory_anchor(new_path)):]
-            path_drive_base = get_wine_real_drive_path(new_options, path_drive_letter)
-
-        # Sandboxie
-        elif new_options.is_sandboxie_prefix():
-            path_drive_letter = paths.get_directory_drive(new_path)
-            path_drive_offset = new_path[len(paths.get_directory_anchor(new_path)):]
-            path_drive_extra = paths.normalize_file_path(paths.join_paths("Users", getpass.getuser()), separator = config.os_pathsep)
-            if path_drive_offset.startswith(path_drive_extra):
-                path_drive_base = get_sandboxie_user_profile_path(new_options)
-                path_drive_offset = path_drive_offset[len(path_drive_extra + config.os_pathsep):]
-            else:
-                path_drive_base = get_sandboxie_real_drive_path(new_options, path_drive_letter)
-
-        # Neither
+            if path_parts[0] == "drive_c":
+                path_drive_letter = "c"
+                path_drive_base = paths.join_paths(prefix_dir, "drive_c")
+            elif path_parts[0] == "dosdevices" and len(path_parts) > 1 and path_parts[1]:
+                path_drive_letter = path_parts[1][0].lower()
+                path_drive_base = paths.join_paths(prefix_dir, "dosdevices", path_parts[1])
+                path_rest = path_parts[2:]
         else:
-            path_drive_offset = new_path[len(paths.get_directory_anchor(new_path)):]
-            path_drive_base = paths.get_directory_drive(new_path)
-            if platform_info.is_wine_platform():
-                path_drive_letter = "z"
-            else:
-                path_drive_letter = paths.get_directory_drive(new_path)
-            is_virtual_path = False
-            is_real_path = True
+            if path_parts[0] == "drive" and len(path_parts) > 1 and path_parts[1]:
+                path_drive_letter = path_parts[1].lower()
+                path_drive_base = get_sandboxie_real_drive_path(new_options, path_parts[1])
+                path_rest = path_parts[2:]
+            elif path_parts[:2] == ["user", "current"]:
+                path_drive_letter = "c"
+                path_drive_extra = paths.normalize_file_path(paths.join_paths("Users", getpass.getuser()), separator = config.os_pathsep)
+                path_drive_base = get_sandboxie_user_profile_path(new_options)
+                path_rest = path_parts[2:]
+        path_drive_offset = config.os_pathsep.join(path_rest)
+
+    # Wine
+    elif new_options.is_wine_prefix():
+        if is_virtual_path:
+            path_drive_letter = paths.get_directory_drive(new_path)
+        else:
+            path_drive_letter = "z"
+        path_drive_offset = new_path[len(paths.get_directory_anchor(new_path)):]
+        path_drive_base = get_wine_real_drive_path(new_options, path_drive_letter)
+
+    # Sandboxie
+    elif new_options.is_sandboxie_prefix():
+        path_drive_letter = paths.get_directory_drive(new_path)
+        path_drive_offset = new_path[len(paths.get_directory_anchor(new_path)):]
+        path_drive_extra = paths.normalize_file_path(paths.join_paths("Users", getpass.getuser()), separator = config.os_pathsep)
+        if path_drive_offset == path_drive_extra or path_drive_offset.startswith(path_drive_extra + config.os_pathsep):
+            path_drive_base = get_sandboxie_user_profile_path(new_options)
+            path_drive_offset = path_drive_offset[len(path_drive_extra + config.os_pathsep):]
+        else:
+            path_drive_extra = ""
+            path_drive_base = get_sandboxie_real_drive_path(new_options, path_drive_letter)
+
+    # Neither
+    else:
+        path_drive_offset = new_path[len(paths.get_directory_anchor(new_path)):]
+        path_drive_base = paths.get_directory_drive(new_path)
+        if platform_info.is_wine_platform():
+            path_drive_letter = "z"
+        else:
+            path_drive_letter = paths.get_directory_drive(new_path)
+        is_virtual_path = False
+        is_real_path = True
+
+    # Path has to land on a drive
+    if not path_drive_letter:
+        return None
 
     # Construct full virtual and real paths
     path_full_virtual = ""
@@ -722,7 +706,7 @@ def get_prefix_path_info(
     if is_virtual_path:
         path_full_virtual = new_path
         path_full_real = paths.join_paths(path_drive_base, path_drive_offset)
-    elif is_real_path:
+    else:
         path_full_virtual += path_drive_letter.upper() + ":" + config.os_pathsep
         path_full_virtual += path_drive_extra + config.os_pathsep
         path_full_virtual += path_drive_offset
@@ -733,7 +717,7 @@ def get_prefix_path_info(
         validation.assert_condition(
             condition = (new_path == path_full_virtual),
             description = "Original virtual path must match constructed virtual path")
-    elif is_real_path:
+    else:
         validation.assert_condition(
             condition = (new_path == path_full_real),
             description = "Original real path must match constructed real path")
@@ -805,20 +789,18 @@ def setup_prefix_environment(
         new_options.set_env_var("WINEDLLOVERRIDES", ";".join(wine_overrides))
 
         # Map the current working directory to the prefix
-        if new_options.is_prefix_mapped_cwd() and new_options.has_valid_cwd():
-            cwd_drive = get_real_drive_path(
-                options = new_options,
-                drive = config.drive_prefix_cwd)
-            if paths.is_path_valid(cwd_drive):
-                fileops.create_symlink(
-                    src = new_options.get_cwd(),
-                    dest = cwd_drive,
-                    verbose = verbose,
-                    pretend_run = pretend_run,
-                    exit_on_failure = exit_on_failure)
+        if new_options.is_prefix_mapped_cwd() and new_options.has_valid_cwd() and new_options.has_valid_prefix_dir():
+            fileops.create_symlink(
+                src = new_options.get_cwd(),
+                dest = get_real_drive_path(
+                    options = new_options,
+                    drive = config.drive_prefix_cwd),
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
 
     # Modify for sandboxie
-    elif new_options.is_sandboxie_prefix():
+    else:
 
         # Add blocking processes
         new_options.add_blocking_processes(get_sandboxie_blocking_processes())
@@ -860,7 +842,7 @@ def setup_prefix_command(
         new_cmd = [get_wine_command()]
         if new_options.use_virtual_desktop():
             new_cmd += ["explorer", "/desktop=" + new_options.get_desktop_dimensions()]
-    elif new_options.is_sandboxie_prefix():
+    else:
         new_cmd = [
             get_sandboxie_command(),
             "/box:%s" % options.get_prefix_name().val()
@@ -910,7 +892,7 @@ def cleanup_wine(cmd, options, verbose = False, pretend_run = False, exit_on_fai
     command.run_returncode_command(
         cmd = [wine_server_tool, "-k"],
         options = commandbase.create_command_options(
-            shell = True),
+            is_shell = True),
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -935,11 +917,13 @@ def create_wine_prefix(
     import joybox.command as command
 
     # Make directory
-    fileops.make_directory(
+    success = fileops.make_directory(
         src = options.get_prefix_dir(),
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
+    if not success:
+        return False
 
     # Get wine boot tool
     wine_boot_tool = programs.get_tool_program("WineBoot")
@@ -987,21 +971,17 @@ def create_sandboxie_prefix(
     import joybox.command as command
 
     # Make directories
-    fileops.make_directory(
-        src = options.get_prefix_dir(),
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    fileops.make_directory(
-        src = get_sandboxie_real_drive_path(options.get_prefix_dir(), "C"),
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    fileops.make_directory(
-        src = get_sandboxie_user_profile_path(options.get_prefix_dir()),
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
+    for prefix_subdir in [
+        options.get_prefix_dir(),
+        get_sandboxie_real_drive_path(options, "C"),
+        get_sandboxie_user_profile_path(options)]:
+        success = fileops.make_directory(
+            src = prefix_subdir,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if not success:
+            return False
 
     # Get sandboxie ini tool
     sandboxie_ini_tool = programs.get_tool_program("SandboxieIni")
@@ -1010,39 +990,55 @@ def create_sandboxie_prefix(
     new_options = options.copy()
     new_options.set_is_sandboxie_prefix(True)
     new_options.set_blocking_processes([sandboxie_ini_tool])
-    new_options.set_shell(True)
+    new_options.set_is_shell(True)
 
-    # Set sandboxie param
-    def set_sandboxie_box_param(options, param, value):
-        cmd = [sandboxie_ini_tool, "set", options.get_prefix_name().val(), param, value]
-        new_cmd, new_options = setup_prefix_environment(
+    # Initialize prefix
+    box_params = [
+        ("Enabled", "y"),
+        ("FileRootPath", new_options.get_prefix_dir()),
+        ("BlockNetParam", "n"),
+        ("BlockNetworkFiles", "y"),
+        ("RecoverFolder", "%Desktop%"),
+        ("BorderColor", "#00ffff,off,6"),
+        ("ConfigLevel", "10"),
+        ("BoxNameTitle", "-"),
+        ("CopyLimitKb", "-1"),
+        ("NoSecurityIsolation", "y"),
+        ("Template", "OpenBluetooth")
+    ]
+    for param, value in box_params:
+        cmd = [sandboxie_ini_tool, "set", new_options.get_prefix_name().val(), param, value]
+        new_cmd, param_options = setup_prefix_environment(
             cmd = cmd,
-            options = options,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        command.run_returncode_command(
-            cmd = new_cmd,
             options = new_options,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-
-    # Initialize prefix
-    set_sandboxie_box_param(new_options, "Enabled", "y")
-    set_sandboxie_box_param(new_options, "FileRootPath", new_options.get_prefix_dir())
-    set_sandboxie_box_param(new_options, "BlockNetParam", "n")
-    set_sandboxie_box_param(new_options, "BlockNetworkFiles", "y")
-    set_sandboxie_box_param(new_options, "RecoverFolder", "%Desktop%")
-    set_sandboxie_box_param(new_options, "BorderColor", "#00ffff,off,6")
-    set_sandboxie_box_param(new_options, "ConfigLevel", "10")
-    set_sandboxie_box_param(new_options, "BoxNameTitle", "-")
-    set_sandboxie_box_param(new_options, "CopyLimitKb", "-1")
-    set_sandboxie_box_param(new_options, "NoSecurityIsolation", "y")
-    set_sandboxie_box_param(new_options, "Template", "OpenBluetooth")
+        code = command.run_returncode_command(
+            cmd = new_cmd,
+            options = param_options,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if code != 0:
+            return False
 
     # Creation successful
     return True
+
+# Clean existing prefix
+def clean_existing_prefix(
+    options,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+    if not os.path.lexists(options.get_prefix_dir()):
+        return True
+    return fileops.remove_object(
+        obj = options.get_prefix_dir(),
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
 
 # Create basic prefix
 def create_basic_prefix(
@@ -1058,24 +1054,28 @@ def create_basic_prefix(
 
     # Clean prefix
     if clean_existing:
-        fileops.remove_object(
-            obj = options.get_prefix_dir(),
+        success = clean_existing_prefix(
+            options = options,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
+        if not success:
+            return False
 
     # Setup wine prefix
     if options.is_wine_prefix():
 
         # Create wine prefix
-        create_wine_prefix(
+        success = create_wine_prefix(
             options = options,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
+        if not success:
+            return False
 
         # Replace symlinked directories
-        fileops.replace_symlinked_directories(
+        return fileops.replace_symlinked_directories(
             src = get_wine_user_profile_path(options),
             verbose = verbose,
             pretend_run = pretend_run,
@@ -1085,14 +1085,14 @@ def create_basic_prefix(
     elif options.is_sandboxie_prefix():
 
         # Create sandboxie prefix
-        create_sandboxie_prefix(
+        return create_sandboxie_prefix(
             options = options,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
-    # Check result
-    return options.has_valid_prefix_dir()
+    # Not a prefix
+    return False
 
 # Create linked prefix
 def create_linked_prefix(
@@ -1106,6 +1106,8 @@ def create_linked_prefix(
     # Check prefix
     if not options.has_valid_prefix_dir():
         return False
+    if not options.is_prefix():
+        return False
 
     # Check general prefix
     if not options.has_valid_general_prefix_dir():
@@ -1113,19 +1115,23 @@ def create_linked_prefix(
 
     # Clean prefix
     if clean_existing:
-        fileops.remove_object(
-            obj = options.get_prefix_dir(),
+        success = clean_existing_prefix(
+            options = options,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = False)
+        if not success:
+            return False
 
     # Create general prefix subfolders
     for folder in config.computer_user_folders:
-        fileops.make_directory(
+        success = fileops.make_directory(
             src = paths.join_paths(options.get_general_prefix_dir(), folder),
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
+        if not success:
+            return False
 
     # Get prefix c drive
     prefix_c_drive = get_real_c_drive_path(options)
@@ -1134,29 +1140,35 @@ def create_linked_prefix(
     if options.is_wine_prefix():
 
         # Create wine prefix
-        create_wine_prefix(
+        success = create_wine_prefix(
             options = options,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
+        if not success:
+            return False
 
         # Link prefix
-        fileops.create_symlink(
+        success = fileops.create_symlink(
             src = options.get_general_prefix_dir(),
             dest = get_wine_user_profile_path(options),
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
+        if not success:
+            return False
 
     # Setup sandboxie prefix
-    elif options.is_sandboxie_prefix():
+    else:
 
         # Create sandboxie prefix
-        create_sandboxie_prefix(
+        success = create_sandboxie_prefix(
             options = options,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
+        if not success:
+            return False
 
     # Link other paths
     for other_link in other_links:
@@ -1164,18 +1176,28 @@ def create_linked_prefix(
         path_to = paths.join_paths(prefix_c_drive, other_link["to"])
         if not paths.does_path_exist(path_from):
             continue
-        fileops.create_symlink(
+        success = fileops.create_symlink(
             src = path_from,
             dest = path_to,
             cwd = prefix_c_drive,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
+        if not success:
+            return False
 
-    # Check result
-    return options.has_valid_prefix_dir()
+    # Creation successful
+    return True
 
 ###########################################################
+
+# Get program prefix name
+def get_program_prefix_name(program_name):
+    if programs.is_program_name_tool(program_name):
+        return config.PrefixType.TOOL
+    elif programs.is_program_name_emulator(program_name):
+        return config.PrefixType.EMULATOR
+    return None
 
 # Translate path if necessary
 def translate_path_if_necessary(path, program_exe, program_name):
@@ -1193,8 +1215,7 @@ def translate_path_if_necessary(path, program_exe, program_name):
 
     # Get prefix options
     options = commandbase.create_command_options(
-        prefix_dir = programs.get_program_prefix_dir(program_name),
-        prefix_name = programs.get_program_prefix_name(program_name),
+        prefix_name = get_program_prefix_name(program_name),
         is_wine_prefix = should_run_via_wine,
         is_sandboxie_prefix = should_run_via_sandboxie)
 
@@ -1217,6 +1238,7 @@ def translate_virtual_path_to_real_path(
 
     # Check prefix
     if not options.get_prefix_dir():
+        options = options.copy()
         options.set_prefix_dir(get_prefix(options))
     if not options.get_prefix_dir():
         return None
@@ -1247,6 +1269,7 @@ def translate_real_path_to_virtual_path(
 
     # Check prefix
     if not options.get_prefix_dir():
+        options = options.copy()
         options.set_prefix_dir(get_prefix(options))
     if not options.get_prefix_dir():
         return None

@@ -115,3 +115,39 @@ def test_a_pretend_run_does_not_need_the_file_to_exist(tmp_path):
 
 def test_a_directory_digests_to_nothing(tmp_path):
     assert hashing.calculate_file_md5(str(tmp_path)) == ""
+
+
+###########################################################
+# Verbose and exit-on-failure runs
+###########################################################
+
+ALL_FUNCTIONS = dict(FUNCTIONS, xxh3 = hashing.calculate_file_xxh3)
+
+
+def digest(name, *args, **kwargs):
+    if name == "xxh3":
+        pytest.importorskip("xxhash")
+    return ALL_FUNCTIONS[name](*args, **kwargs)
+
+
+@pytest.mark.parametrize("name", sorted(ALL_FUNCTIONS))
+def test_a_verbose_digest_reports_progress_to_completion(payload_file, name, capsys):
+    quiet = digest(name, payload_file)
+
+    assert digest(name, payload_file, chunksize = 8, verbose = True) == quiet
+    assert "100%" in capsys.readouterr().out
+
+
+@pytest.mark.parametrize("name", sorted(ALL_FUNCTIONS))
+def test_a_verbose_pretend_run_still_reads_nothing(tmp_path, name):
+    absent = os.path.join(str(tmp_path), "absent.bin")
+
+    assert digest(name, absent, verbose = True, pretend_run = True) == ""
+
+
+@pytest.mark.parametrize("name", sorted(ALL_FUNCTIONS))
+def test_a_missing_file_quits_when_failures_are_fatal(tmp_path, name):
+    absent = os.path.join(str(tmp_path), "absent.bin")
+
+    with pytest.raises(SystemExit):
+        digest(name, absent, exit_on_failure = True)

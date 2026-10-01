@@ -39,7 +39,7 @@ def get_remote_json(
         import requests
         if not headers:
             headers = {"Accept": "application/json"}
-        get = requests.get(url, headers=headers)
+        get = requests.get(url, headers=headers, timeout=10)
         if verbose:
             logger.log_info("Got response: %s" % str(get.status_code))
         if get.status_code == 200:
@@ -116,7 +116,7 @@ def get_remote_xml(
         import xmltodict
         if not headers:
             headers = {"Accept": "text/xml"}
-        get = requests.get(url, headers=headers)
+        get = requests.get(url, headers=headers, timeout=10)
         if verbose:
             logger.log_info("Got response: %s" % str(get.status_code))
         if get.status_code == 200:

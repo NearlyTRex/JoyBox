@@ -65,25 +65,6 @@ def test_an_unexpected_lookup_error_can_quit_the_program():
 # Waiting for elements
 ###########################################################
 
-@pytest.fixture
-def waits(monkeypatch):
-    # Replaces selenium's wait so the timeout is never actually spent.
-    import selenium.webdriver.support.ui as ui
-
-    state = {"result": FakeElement(text = "ready"), "error": None, "timeouts": []}
-
-    class FakeWait:
-        def __init__(self, driver, timeout):
-            state["timeouts"].append(timeout)
-
-        def until(self, condition):
-            if state["error"]:
-                raise state["error"]
-            return state["result"]
-
-    monkeypatch.setattr(ui, "WebDriverWait", FakeWait)
-    return state
-
 
 def test_a_wait_returns_the_element_it_found(waits):
     assert webpage.wait_for_element(FakeDriver(), LOCATOR) is waits["result"]
@@ -261,32 +242,6 @@ def test_pretending_reads_no_source():
 # javascript, and requests is the fallback for everything simpler.
 ###########################################################
 
-@pytest.fixture
-def fetches(monkeypatch):
-    import sys
-    import types
-
-    state = {"driver": FakeDriver(), "source": "<html>driver</html>",
-             "text": "<html>requests</html>", "error": None, "destroyed": []}
-
-    monkeypatch.setattr(webpage, "create_web_driver", lambda **kwargs: state["driver"])
-    monkeypatch.setattr(
-        webpage, "get_page_source", lambda **kwargs: state["source"])
-    monkeypatch.setattr(
-        webpage, "destroy_web_driver",
-        lambda driver, **kwargs: state["destroyed"].append(driver))
-
-    def get(url, params = None):
-        if state["error"]:
-            raise state["error"]
-        return types.SimpleNamespace(text = state["text"])
-
-    module = types.ModuleType("requests")
-    module.get = get
-    monkeypatch.setitem(sys.modules, "requests", module)
-    return state
-
-
 def test_a_page_is_fetched_with_the_driver(fetches):
     assert webpage.get_website_text("https://store.example") == "<html>driver</html>"
 
@@ -320,12 +275,6 @@ def test_a_page_nothing_can_fetch_is_empty(fetches):
 ###########################################################
 # Matching urls on a page
 ###########################################################
-
-@pytest.fixture
-def page(monkeypatch):
-    state = {"html": ""}
-    monkeypatch.setattr(webpage, "get_website_text", lambda **kwargs: state["html"])
-    return state
 
 
 def matching(page, html, **kwargs):
@@ -525,6 +474,14 @@ def test_a_cookie_session_loads_the_page_twice(session):
 
 def test_a_cookie_that_will_not_load_stops_the_session(session):
     session["cookie_loaded"] = False
+
+    assert webpage.load_cookie_website(
+        FakeDriver(), "https://store.example/library", "/cookies/store.pkl") is False
+    assert session["loaded"] == ["https://store.example/library"]
+
+
+def test_a_cookie_site_that_will_not_load_adds_no_cookie(session):
+    session["loads_ok"] = False
 
     assert webpage.load_cookie_website(
         FakeDriver(), "https://store.example/library", "/cookies/store.pkl") is False

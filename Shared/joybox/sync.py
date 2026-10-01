@@ -2,6 +2,7 @@
 import os
 import os.path
 import re
+import sqlite3
 import threading
 import concurrent.futures
 
@@ -84,6 +85,36 @@ def get_exclude_flags(excludes):
         flags += ["--exclude", excludes]
     return flags
 
+# Run an rclone query, returning its decoded output and exit code
+def run_query_command(
+    cmd,
+    options = None,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+    output, code = command.run_command(
+        cmd = cmd,
+        options = options,
+        capture_output = True,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    if isinstance(output, bytes):
+        output = output.decode()
+    return (output or "", code)
+
+# Get exclude list with a pattern added, leaving the caller's list untouched
+def get_excludes_with(excludes, pattern):
+    if excludes is None:
+        excludes = []
+    elif isinstance(excludes, str):
+        excludes = [excludes]
+    else:
+        excludes = list(excludes)
+    if pattern not in excludes:
+        excludes.append(pattern)
+    return excludes
+
 # Get configured remotes
 def get_configured_remotes(
     verbose = False,
@@ -105,17 +136,17 @@ def get_configured_remotes(
     ]
 
     # Run list command
-    list_output = command.run_output_command(
+    list_text, code = run_query_command(
         cmd = list_cmd,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
+    if code != 0:
+        logger.log_error("Unable to list configured remotes")
+        return []
 
     # Return remote list
-    list_text = list_output
-    if isinstance(list_output, bytes):
-        list_text = list_output.decode()
-    return list_text.splitlines()
+    return [line.strip() for line in list_text.splitlines() if line.strip()]
 
 # Check if remote is configured
 def is_remote_configured(
@@ -127,9 +158,12 @@ def is_remote_configured(
 
     # Check if the remote name exists in the list of remotes
     logger.log_info("Checking if remote '%s' exists..." % remote_name)
-    configured_remotes = get_configured_remotes()
+    configured_remotes = get_configured_remotes(
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
     logger.log_info("Found %d configured remotes" % len(configured_remotes))
-    if not any(remote.startswith(remote_name) for remote in configured_remotes):
+    if not any(remote.rstrip(":") == remote_name for remote in configured_remotes):
         logger.log_info("Remote '%s' not in configured remotes" % remote_name)
         return False
 
@@ -149,23 +183,20 @@ def is_remote_configured(
     ]
 
     # Run show command
-    show_output = command.run_output_command(
+    show_text, code = run_query_command(
         cmd = show_cmd,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
     # Check if the remote is configured
-    show_text = show_output
-    if isinstance(show_output, bytes):
-        show_text = show_output.decode()
-    if "couldn't find type of fs for" in show_text:
+    if code != 0 or "couldn't find type of fs for" in show_text:
         logger.log_info("Remote type not found")
         return False
 
     # Check if the remote type matches
     match = re.search(r"type\s*=\s*(\S+)", show_text)
-    result = match and (match.group(1) == get_remote_raw_type(remote_type))
+    result = bool(match) and (match.group(1) == get_remote_raw_type(remote_type))
     logger.log_info("Remote type match result: %s" % result)
     return result
 
@@ -250,6 +281,8 @@ def setup_manual_remote(
     if isinstance(remote_config, dict):
         for config_key, config_value in remote_config.items():
             create_cmd += ["%s=%s" % (config_key, config_value)]
+    if remote_token and not (isinstance(remote_config, dict) and "token" in remote_config):
+        create_cmd += ["token=%s" % remote_token]
     if verbose:
         create_cmd += ["--verbose"]
 
@@ -319,6 +352,9 @@ def setup_remote(
     else:
         if isinstance(remote_config, str):
             remote_config = serialization.parse_json_string(remote_config)
+            if not isinstance(remote_config, dict):
+                logger.log_error("Remote config must be a JSON object")
+                return False
         return setup_manual_remote(
             remote_type = remote_type,
             remote_name = remote_name,
@@ -353,21 +389,18 @@ def get_path_md5(
     ]
 
     # Run md5sum command
-    md5sum_output = command.run_output_command(
+    md5sum_text, code = run_query_command(
         cmd = md5sum_cmd,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
-
-    # Get md5
-    md5sum_text = md5sum_output
-    if isinstance(md5sum_output, bytes):
-        md5sum_text = md5sum_output.decode()
-    if "file does not exist" in md5sum_text or "error" in md5sum_text:
+    if code != 0:
         return None
-    md5sum_parts = md5sum_text.strip().split("  ", 1)
-    if len(md5sum_parts) > 1:
-        return md5sum_parts[0]
+
+    # Get md5 (format: "<32 hex digits>  filename")
+    match = re.match(r"\s*([0-9a-fA-F]{32})\s+\S", md5sum_text)
+    if match:
+        return match.group(1)
     return None
 
 # Get path modification time as timestamp
@@ -395,21 +428,16 @@ def get_path_mod_time(
     ]
 
     # Run lsl command
-    lsl_output = command.run_output_command(
+    lsl_text, code = run_query_command(
         cmd = lsl_cmd,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
-
-    # Parse output (format: "  size YYYY-MM-DD HH:MM:SS.nnnnnnnnn filename")
-    lsl_text = lsl_output
-    if isinstance(lsl_output, bytes):
-        lsl_text = lsl_output.decode()
-    if "error" in lsl_text.lower() or "not found" in lsl_text.lower():
+    if code != 0:
         return 0
 
-    # Extract timestamp from lsl output
-    match = re.search(r'(\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}:\d{2})', lsl_text)
+    # Extract timestamp (format: "  size YYYY-MM-DD HH:MM:SS.nnnnnnnnn filename")
+    match = re.match(r"\s*\d+\s+(\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}:\d{2})", lsl_text)
     if match:
         return strings.parse_timestamp(match.group(1))
     return 0
@@ -463,17 +491,16 @@ def does_directory_exist(
     ]
 
     # Run list command
-    list_output = command.run_output_command(
+    list_text, code = run_query_command(
         cmd = list_cmd,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
     # Check existence
-    list_text = list_output
-    if isinstance(list_output, bytes):
-        list_text = list_output.decode()
-    if "ERROR" in list_text:
+    if code != 0:
+        return False
+    elif "ERROR" in list_text:
         return False
     elif "error listing" in list_text:
         return False
@@ -564,16 +591,15 @@ def does_path_contain_files(
     ]
 
     # Run list command
-    list_output = command.run_output_command(
+    list_text, code = run_query_command(
         cmd = list_cmd,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
     # Check if there are any files in the directory
-    list_text = list_output
-    if isinstance(list_output, bytes):
-        list_text = list_output.decode()
+    if code != 0:
+        return False
     return len(list_text.strip()) > 0
 
 # Create directory on remote
@@ -600,25 +626,16 @@ def create_remote_directory(
     if verbose:
         mkdir_cmd += ["--verbose"]
 
-    # Run command
-    code = command.run_returncode_command(
+    # Run command, keeping stderr to tell an existing directory from a failure
+    output, code = run_query_command(
         cmd = mkdir_cmd,
+        options = command.create_command_options(include_stderr = True),
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = False)
     if code == 0:
         return True
-
-    # Check if failure was due to directory already existing
-    output = command.run_output_command(
-        cmd = mkdir_cmd,
-        options = command.create_command_options(include_stderr = True),
-        verbose = False,
-        pretend_run = pretend_run,
-        exit_on_failure = False)
-    if "already exist" in output.lower():
-        return True
-    return False
+    return "already exist" in output.lower()
 
 # Download files from remote
 def download_files_from_remote(
@@ -641,6 +658,11 @@ def download_files_from_remote(
         logger.log_error("RClone was not found")
         return False
 
+    # A file list that cannot be read must not widen the transfer to everything
+    if files_from and not paths.is_path_file(files_from):
+        logger.log_error("File list %s does not exist" % files_from)
+        return False
+
     # Get copy command
     is_directory_dest = local_path.endswith("/") or paths.is_path_directory(local_path)
     copy_cmd = [
@@ -655,7 +677,7 @@ def download_files_from_remote(
             remote_type = remote_type,
             remote_action_type = config.RemoteActionType.DOWNLOAD)
         copy_cmd += get_exclude_flags(excludes)
-        if files_from and paths.is_path_file(files_from):
+        if files_from:
             copy_cmd += ["--files-from", files_from]
         if interactive:
             copy_cmd += ["--interactive"]
@@ -699,6 +721,11 @@ def upload_files_to_remote(
         logger.log_error("RClone was not found")
         return False
 
+    # A file list that cannot be read must not widen the transfer to everything
+    if files_from and not paths.is_path_file(files_from):
+        logger.log_error("File list %s does not exist" % files_from)
+        return False
+
     # Get copy command
     copy_cmd = [
         rclone_tool,
@@ -711,7 +738,7 @@ def upload_files_to_remote(
         remote_type = remote_type,
         remote_action_type = config.RemoteActionType.UPLOAD)
     copy_cmd += get_exclude_flags(excludes)
-    if files_from and paths.is_path_file(files_from):
+    if files_from:
         copy_cmd += ["--files-from", files_from]
     if skip_existing:
         copy_cmd += ["--ignore-existing"]
@@ -736,7 +763,7 @@ def upload_files_to_remote(
 
     # Upload hash sidecars to local root if specified
     if local_root is not None and update_sidecar:
-        upload_hash_sidecar_files(
+        if not upload_hash_sidecar_files(
             remote_name = remote_name,
             remote_type = remote_type,
             remote_path = remote_path,
@@ -744,7 +771,8 @@ def upload_files_to_remote(
             local_root = local_root,
             verbose = verbose,
             pretend_run = pretend_run,
-            exit_on_failure = False)
+            exit_on_failure = False):
+            logger.log_warning("Uploaded %s but could not update its hash sidecar" % local_path)
     return True
 
 # Sync files to remote
@@ -811,6 +839,11 @@ def move_files_on_remote(
         logger.log_error("RClone was not found")
         return False
 
+    # A file list that cannot be read must not widen the transfer to everything
+    if files_from and not paths.is_path_file(files_from):
+        logger.log_error("File list %s does not exist" % files_from)
+        return False
+
     # Build full remote paths
     src_full = get_remote_connection_path(remote_name, remote_type, src_path)
     dest_full = get_remote_connection_path(remote_name, remote_type, dest_path)
@@ -822,7 +855,7 @@ def move_files_on_remote(
         src_full,
         dest_full
     ]
-    if files_from and paths.is_path_file(files_from):
+    if files_from:
         move_cmd += ["--files-from", files_from]
     if pretend_run:
         move_cmd += ["--dry-run"]
@@ -931,6 +964,11 @@ def recycle_files_on_remote(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
+
+    # Without a file list the move would take the whole path into the bin
+    if not files_from:
+        logger.log_error("Recycling needs a list of files")
+        return False
 
     # Get recycle bin path on remote
     recycle_bin_path = os.path.join(remote_path, recycle_folder).replace("\\", "/")
@@ -1140,14 +1178,7 @@ def diff_files(
     exit_on_failure = False):
 
     # Exclude hidden files/folders (starting with .) from diff operations
-    dotfile_exclude = ".*/**"
-    if excludes is None:
-        excludes = [dotfile_exclude]
-    elif isinstance(excludes, list):
-        if dotfile_exclude not in excludes:
-            excludes = excludes + [dotfile_exclude]
-    elif isinstance(excludes, str):
-        excludes = [excludes, dotfile_exclude]
+    excludes = get_excludes_with(excludes, ".*/**")
 
     # Get tool
     rclone_tool = None
@@ -1195,7 +1226,7 @@ def diff_files(
         exit_on_failure = exit_on_failure)
 
     # Analyze combined output
-    if os.path.exists(diff_combined_path):
+    if diff_combined_path and os.path.exists(diff_combined_path):
         count_unchanged = 0
         count_changed = 0
         count_only_dest = 0
@@ -1229,6 +1260,25 @@ def diff_files(
                 exit_on_failure = exit_on_failure)
     return True
 
+# Write a transfer list to a temporary file, tracking it for cleanup
+def write_transfer_list(entries, temp_files):
+    path_ok, list_path = fileops.create_temporary_file(suffix = ".txt")
+    if not path_ok:
+        logger.log_error("Failed to create temporary file")
+        return None
+    temp_files.append(list_path)
+    if not serialization.write_text_file(list_path, "\n".join(entries)):
+        logger.log_error("Failed to write transfer list %s" % list_path)
+        return None
+    return list_path
+
+# Read the non-blank lines of a diff file
+def read_diff_entries(diff_path):
+    if not os.path.exists(diff_path):
+        return []
+    with open(diff_path, "r", encoding="utf8") as f:
+        return [line.strip() for line in f.readlines() if line.strip()]
+
 # Diff sync files
 def diff_sync_files(
     remote_name,
@@ -1250,34 +1300,76 @@ def diff_sync_files(
     pretend_run = False,
     exit_on_failure = False):
 
-    # Determine if generating diffs
-    generate_diffs = diff_dir is None
-
-    # Get diff directory
-    if not diff_dir:
+    # Without a diff directory, generate the diffs into a temporary one
+    generate_diffs = not diff_dir
+    if generate_diffs:
         success, diff_dir = fileops.create_temporary_directory()
         if not success:
             logger.log_error("Failed to create diff directory")
             return False
+    temp_files = []
+    try:
+        return run_diff_sync(
+            remote_name = remote_name,
+            remote_type = remote_type,
+            remote_path = remote_path,
+            local_path = local_path,
+            excludes = excludes,
+            diff_dir = diff_dir,
+            generate_diffs = generate_diffs,
+            diff_combined_file = diff_combined_file,
+            diff_intersected_file = diff_intersected_file,
+            diff_missing_src_file = diff_missing_src_file,
+            diff_missing_dest_file = diff_missing_dest_file,
+            sync_changed = sync_changed,
+            recycle_missing = recycle_missing,
+            recycle_folder = recycle_folder,
+            quick = quick,
+            interactive = interactive,
+            temp_files = temp_files,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+    finally:
+        for temp_file in temp_files:
+            fileops.remove_file(temp_file, exit_on_failure = False)
+        if generate_diffs:
+            fileops.remove_directory(diff_dir, exit_on_failure = False)
+
+# Diff sync files within a prepared diff directory
+def run_diff_sync(
+    remote_name,
+    remote_type,
+    remote_path,
+    local_path,
+    excludes,
+    diff_dir,
+    generate_diffs,
+    diff_combined_file,
+    diff_intersected_file,
+    diff_missing_src_file,
+    diff_missing_dest_file,
+    sync_changed,
+    recycle_missing,
+    recycle_folder,
+    quick,
+    interactive,
+    temp_files,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Check diff directory
     if not paths.does_path_exist(diff_dir):
         logger.log_error("Diff directory was invalid")
         return False
 
     # Exclude hidden files/folders (starting with .) from diff operations
-    dotfile_exclude = ".*/**"
-    if excludes is None:
-        excludes = [dotfile_exclude]
-    elif isinstance(excludes, list):
-        if dotfile_exclude not in excludes:
-            excludes = excludes + [dotfile_exclude]
-    elif isinstance(excludes, str):
-        excludes = [excludes, dotfile_exclude]
+    excludes = get_excludes_with(excludes, ".*/**")
 
     # Exclude recycle folder from diff operations
     if recycle_folder:
-        recycle_bin_exclude = recycle_folder + "/**"
-        if recycle_bin_exclude not in excludes:
-            excludes = excludes + [recycle_bin_exclude]
+        excludes = get_excludes_with(excludes, recycle_folder + "/**")
 
     # Setup diff file paths
     diff_combined_path = os.path.join(diff_dir, diff_combined_file)
@@ -1303,23 +1395,10 @@ def diff_sync_files(
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
-    # Read files missing on dest (need to upload from local)
-    files_to_upload = []
-    if os.path.exists(diff_missing_dest_path):
-        with open(diff_missing_dest_path, "r", encoding="utf8") as f:
-            files_to_upload = [line.strip() for line in f.readlines() if line.strip()]
-
-    # Read files missing on src (need to download from remote)
-    files_to_download = []
-    if os.path.exists(diff_missing_src_path):
-        with open(diff_missing_src_path, "r", encoding="utf8") as f:
-            files_to_download = [line.strip() for line in f.readlines() if line.strip()]
-
-    # Read changed files (exist on both but differ)
-    changed_files = []
-    if sync_changed and os.path.exists(diff_intersected_path):
-        with open(diff_intersected_path, "r", encoding="utf8") as f:
-            changed_files = [line.strip() for line in f.readlines() if line.strip()]
+    # Read files missing on dest (upload), missing on src (download), and changed on both
+    files_to_upload = read_diff_entries(diff_missing_dest_path)
+    files_to_download = read_diff_entries(diff_missing_src_path)
+    changed_files = read_diff_entries(diff_intersected_path) if sync_changed else []
 
     # Log file change
     logger.log_info("Files to upload (missing on remote): %d" % len(files_to_upload))
@@ -1369,18 +1448,16 @@ def diff_sync_files(
 
     # Upload files
     if files_to_upload:
-        upload_path_ok, final_upload_path = fileops.create_temporary_file(suffix = ".txt")
-        if not upload_path_ok:
-            logger.log_error("Failed to create temporary file")
+        upload_list_path = write_transfer_list(files_to_upload, temp_files)
+        if not upload_list_path:
             return False
-        serialization.write_text_file(final_upload_path, "\n".join(files_to_upload))
         logger.log_info("Uploading %d files to remote..." % len(files_to_upload))
         if not upload_files_to_remote(
             remote_name = remote_name,
             remote_type = remote_type,
             remote_path = remote_path,
             local_path = local_path,
-            files_from = final_upload_path,
+            files_from = upload_list_path,
             interactive = interactive,
             verbose = verbose,
             pretend_run = pretend_run,
@@ -1389,36 +1466,29 @@ def diff_sync_files(
 
     # Download or recycle files
     if files_to_download:
+        transfer_list_path = write_transfer_list(files_to_download, temp_files)
+        if not transfer_list_path:
+            return False
         if recycle_missing:
-            recycle_path_ok, final_recycle_path = fileops.create_temporary_file(suffix = ".txt")
-            if not recycle_path_ok:
-                logger.log_error("Failed to create temporary file")
-                return False
-            serialization.write_text_file(final_recycle_path, "\n".join(files_to_download))
             logger.log_info("Recycling %d files on remote (moving to %s)..." % (len(files_to_download), recycle_folder))
             if not recycle_files_on_remote(
                 remote_name = remote_name,
                 remote_type = remote_type,
                 remote_path = remote_path,
-                files_from = final_recycle_path,
+                files_from = transfer_list_path,
                 recycle_folder = recycle_folder,
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure):
                 return False
         else:
-            download_path_ok, final_download_path = fileops.create_temporary_file(suffix = ".txt")
-            if not download_path_ok:
-                logger.log_error("Failed to create temporary file")
-                return False
-            serialization.write_text_file(final_download_path, "\n".join(files_to_download))
             logger.log_info("Downloading %d files from remote..." % len(files_to_download))
             if not download_files_from_remote(
                 remote_name = remote_name,
                 remote_type = remote_type,
                 remote_path = remote_path,
                 local_path = local_path,
-                files_from = final_download_path,
+                files_from = transfer_list_path,
                 interactive = interactive,
                 verbose = verbose,
                 pretend_run = pretend_run,
@@ -1496,8 +1566,9 @@ def mount_files(
         fileops.make_directory(
             src = mount_path,
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-        if not paths.does_path_exist(mount_path) or not paths.is_directory_empty(mount_path):
+        if not pretend_run and (not paths.does_path_exist(mount_path) or not paths.is_directory_empty(mount_path)):
             logger.log_error("Mount point %s needs to exist and be empty" % mount_path)
             return False
 
@@ -1617,7 +1688,7 @@ def list_files_with_hashes(
         rclone_tool = programs.get_tool_program("RClone")
     if not rclone_tool:
         logger.log_error("RClone was not found")
-        return {}
+        return None
 
     # Build lsjson command. --fast-list uses a single recursive listing where the backend
     # supports it (e.g. Google Drive), instead of one API call per directory - a large
@@ -1641,35 +1712,45 @@ def list_files_with_hashes(
 
     # Run lsjson command. Capture the JSON on stdout while streaming rclone's progress
     # (stats heartbeat) from stderr to the logger, so a long listing shows it is alive.
+    # Listing is read-only, so it runs for real on a pretend run too; otherwise a dry
+    # run would see an empty remote.
     lsjson_output, lsjson_code = command.run_command(
         cmd = lsjson_cmd,
         capture_output = True,
         log_stderr = True,
         verbose = verbose,
-        pretend_run = pretend_run,
+        pretend_run = False,
         exit_on_failure = exit_on_failure)
 
-    # Parse JSON output
-    hash_map = {}
+    # A failed listing may be partial, which would read as files missing from the remote
+    if lsjson_code != 0:
+        logger.log_error("Unable to list files with hashes from remote: %s" % remote_name)
+        return None
+
+    # Parse JSON output; rclone prints [] for an empty remote, so anything else is a failure
     lsjson_text = lsjson_output
     if isinstance(lsjson_output, bytes):
         lsjson_text = lsjson_output.decode()
-    if not lsjson_text or lsjson_text.strip() == "":
-        return hash_map
-    files_list = serialization.parse_json_string(lsjson_text)
-    if not files_list:
-        return hash_map
+    files_list = None
+    if lsjson_text and lsjson_text.strip():
+        files_list = serialization.parse_json_string(lsjson_text)
+    if not isinstance(files_list, list):
+        logger.log_error("Unreadable file listing from remote: %s" % remote_name)
+        return None
 
     # Build map
+    hash_map = {}
     for file_info in files_list:
-        if file_info.get("IsDir", False):
+        if not isinstance(file_info, dict) or file_info.get("IsDir", False):
             continue
-        rel_path = file_info.get("Path", "")
-        if not rel_path:
+        rel_path = file_info.get("Path")
+        if not rel_path or not isinstance(rel_path, str):
             continue
 
         # Get hash from Hashes dict
-        hashes = file_info.get("Hashes", {})
+        hashes = file_info.get("Hashes")
+        if not isinstance(hashes, dict):
+            hashes = {}
         file_hash = ""
         if hash_type == config.HashType.MD5:
             file_hash = hashes.get("MD5", hashes.get("md5", ""))
@@ -1679,14 +1760,14 @@ def list_files_with_hashes(
             file_hash = hashes.get("SHA-256", hashes.get("sha256", ""))
 
         # Parse modification time
-        mtime = strings.parse_timestamp(file_info.get("ModTime", ""))
+        mtime = strings.parse_timestamp(file_info.get("ModTime") or "")
 
         # Add to map
         hash_map[rel_path] = {
             "filename": paths.get_filename_file(rel_path),
             "dir": paths.get_filename_directory(rel_path),
-            "hash": file_hash,
-            "size": file_info.get("Size", 0),
+            "hash": file_hash or "",
+            "size": file_info.get("Size") or 0,
             "mtime": mtime
         }
 
@@ -1708,55 +1789,65 @@ def list_files_with_hashes_from_sidecar(
     success, temp_dir = fileops.create_temporary_directory()
     if not success:
         logger.log_error("Failed to create temp directory")
-        return {}
+        return None
 
     # Build hash map
     hash_map = {}
+    hash_db = None
     try:
         # Build paths
         remote_db_path = get_hash_database_path(remote_path)
         temp_db_path = paths.join_paths(temp_dir, HASH_DATABASE_FILE)
+
+        # A remote without a sidecar has no hashes, which is not a failure
+        if not does_file_exist(remote_name, remote_type, remote_db_path, verbose = verbose):
+            if verbose:
+                logger.log_info("No hash database found")
+            return {}
 
         # Download database from remote. This is a read into a temp dir (cleaned up
         # below), so run it even under pretend_run - otherwise a dry run would see no
         # sidecar and report the whole remote as empty.
         if verbose:
             logger.log_info("Downloading hash database from: %s" % remote_db_path)
-        download_files_from_remote(
+        downloaded = download_files_from_remote(
             remote_name = remote_name,
             remote_type = remote_type,
             remote_path = remote_db_path,
             local_path = temp_db_path,
             verbose = verbose,
             pretend_run = False,
-            exit_on_failure = False)
-
-        # Check if database exists
-        if not paths.does_path_exist(temp_db_path):
-            if verbose:
-                logger.log_info("No hash database found")
-            return {}
+            exit_on_failure = exit_on_failure)
+        if not downloaded or not paths.is_path_file(temp_db_path):
+            logger.log_error("Failed to download hash database from: %s" % remote_db_path)
+            return None
 
         # Open database and read all hashes
-        hash_db = sqlitedb.HashDatabase(temp_db_path)
-        hash_db.open()
-        for entry in hash_db.get_all_hashes():
-            file_path = entry.get("file_path", "")
+        try:
+            hash_db = sqlitedb.HashDatabase(temp_db_path)
+            hash_db.open()
+            entries = hash_db.get_all_hashes()
+        except sqlite3.Error as e:
+            logger.log_error("Unreadable hash database from %s: %s" % (remote_db_path, e))
+            return None
+        for entry in entries:
+            file_path = entry.get("file_path")
             if not file_path:
                 continue
             hash_map[file_path] = {
                 "filename": paths.get_filename_file(file_path),
                 "dir": paths.get_filename_directory(file_path),
-                "hash": entry.get("hash", ""),
-                "size": entry.get("size", 0),
-                "mtime": entry.get("mtime", 0)
+                "hash": entry.get("hash") or "",
+                "size": entry.get("size") or 0,
+                "mtime": entry.get("mtime") or 0
             }
-        hash_db.close()
 
     finally:
 
-        # Clean up temp dir
-        fileops.remove_directory(temp_dir)
+        # Close database and clean up temp dir
+        if hash_db:
+            hash_db.close()
+        fileops.remove_directory(temp_dir, exit_on_failure = False)
 
     # All done
     if verbose:
@@ -1767,8 +1858,8 @@ def list_files_with_hashes_from_sidecar(
 def get_hash_database_path(remote_path = ""):
     return paths.join_paths(remote_path, HASH_DATABASE_FILE).replace("\\", "/")
 
-# Build hash data for files in a directory
-def build_hash_sidecar_data(local_path, parallel_files = 4, pretend_run = False, verbose = False):
+# Build hash data for a file, or for the files in a directory
+def build_hash_sidecar_data(local_path, file_list = None, parallel_files = 4, pretend_run = False, verbose = False):
     hash_data = {}
 
     # Process files to add
@@ -1785,8 +1876,9 @@ def build_hash_sidecar_data(local_path, parallel_files = 4, pretend_run = False,
             }
     elif paths.is_path_directory(local_path):
 
-        # Build file list
-        file_list = [f for f in paths.build_file_list(local_path, use_relative_paths = True)]
+        # Build file list, every file below the directory unless one is given
+        if file_list is None:
+            file_list = paths.build_file_list(local_path, use_relative_paths = True)
         total_files = len(file_list)
         if verbose and total_files > 0:
             logger.log_info("  Hashing %d files..." % total_files)
@@ -1817,6 +1909,58 @@ def build_hash_sidecar_data(local_path, parallel_files = 4, pretend_run = False,
                 if result:
                     hash_data[result[0]] = result[1]
     return hash_data
+
+# Build the units a sidecar is hashed in: every directory holding files, with its direct files
+def build_hash_sidecar_directory_list(
+    local_path,
+    excludes = [],
+    large_file_count = None,
+    large_total_size = None):
+
+    # Collect directories, skipping hidden and excluded ones
+    small_dirs = []
+    large_dirs = []
+    for current_dir, dirnames, filenames in os.walk(local_path):
+        rel_dir = os.path.relpath(current_dir, local_path)
+        if rel_dir == os.curdir:
+            rel_dir = ""
+        dirnames[:] = sorted(
+            dirname for dirname in dirnames
+            if not dirname.startswith(".") and
+            not paths.matches_exclude_pattern(os.path.join(rel_dir, dirname), excludes or []))
+
+        # Gather direct files
+        files = sorted(
+            filename for filename in filenames
+            if paths.is_path_file(os.path.join(current_dir, filename)))
+        if not files:
+            continue
+        total_size = sum(paths.get_file_size(os.path.join(current_dir, filename)) for filename in files)
+        dir_info = {
+            "path": current_dir,
+            "files": files,
+            "file_count": len(files),
+            "total_size": total_size
+        }
+
+        # Separate large directories
+        is_large = (
+            (large_file_count is not None and len(files) > large_file_count) or
+            (large_total_size is not None and total_size > large_total_size))
+        if is_large:
+            large_dirs.append(dir_info)
+        else:
+            small_dirs.append(dir_info)
+    return small_dirs, large_dirs
+
+# Get a remote path relative to a remote root, or None when it is outside it
+def get_remote_relative_path(remote_path, remote_root):
+    root = remote_root.rstrip("/")
+    if remote_path == root or remote_path == remote_root:
+        return ""
+    if remote_path.startswith(root + "/"):
+        return remote_path[len(root) + 1:]
+    return None
 
 # Clear hash sidecar files
 def clear_hash_sidecar_files(
@@ -1859,21 +2003,27 @@ def upload_hash_sidecar_files(
         return False
 
     # Hash files
+    hash_db = None
     try:
         # Build paths
         remote_db_path = get_hash_database_path(local_root)
         temp_db_path = paths.join_paths(tmp_dir_result, HASH_DATABASE_FILE)
 
-        # Download existing database from remote if it exists
+        # Download existing database from remote if it exists. Carrying on without it
+        # would upload a database holding only these files over the full one.
         if does_file_exist(remote_name, remote_type, remote_db_path, verbose = verbose):
             logger.log_info("Downloading hash database from remote...")
-            download_files_from_remote(
+            downloaded = download_files_from_remote(
                 remote_name = remote_name,
                 remote_type = remote_type,
                 remote_path = remote_db_path,
                 local_path = temp_db_path,
                 verbose = verbose,
-                pretend_run = pretend_run)
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
+            if not downloaded or (not pretend_run and not paths.is_path_file(temp_db_path)):
+                logger.log_error("Failed to download existing hash database")
+                return False
         else:
             logger.log_info("No existing hash database found, creating new one...")
 
@@ -1888,33 +2038,33 @@ def upload_hash_sidecar_files(
             for entry in hash_db.get_all_hashes():
                 existing_paths.add(entry["file_path"])
 
-        # Collect leaf directories separated by size
+        # Collect (local path, remote path, files) units, separated by size
         large_file_count_threshold = 500
         large_size_threshold = 10 * 1024 * 1024 * 1024  # 10 GB
-        small_dir_infos, large_dir_infos = paths.build_leaf_directory_list(
-            root = local_path,
-            excludes = excludes,
-            ignore_hidden = True,
-            large_file_count = large_file_count_threshold,
-            large_total_size = large_size_threshold)
+        leaf_dirs = []
+        large_dirs = []
+        if paths.is_path_file(local_path):
+            leaf_dirs = [(local_path, remote_path, None)]
+        elif paths.is_path_directory(local_path):
+            small_dir_infos, large_dir_infos = build_hash_sidecar_directory_list(
+                local_path = local_path,
+                excludes = excludes,
+                large_file_count = large_file_count_threshold,
+                large_total_size = large_size_threshold)
 
-        # Convert to (local_path, remote_path) tuples
-        def to_local_remote_tuple(dir_info):
-            dir_local = dir_info["path"]
-            if dir_local.startswith(local_path):
-                dir_rel = dir_local[len(local_path):].lstrip(os.sep)
-                dir_remote = paths.join_paths(remote_path, dir_rel).replace("\\", "/")
-            else:
-                dir_remote = remote_path
-            return (dir_local, dir_remote)
+            # Convert to (local_path, remote_path, files) tuples
+            def to_local_remote_tuple(dir_info):
+                dir_rel = os.path.relpath(dir_info["path"], local_path)
+                if dir_rel == os.curdir:
+                    dir_remote = remote_path
+                else:
+                    dir_remote = paths.join_paths(remote_path, dir_rel).replace("\\", "/")
+                return (dir_info["path"], dir_remote, dir_info["files"])
+            leaf_dirs = [to_local_remote_tuple(d) for d in small_dir_infos]
+            large_dirs = [to_local_remote_tuple(d) for d in large_dir_infos]
 
-        # Get leaf/large dirs
-        leaf_dirs = [to_local_remote_tuple(d) for d in small_dir_infos]
-        large_dirs = [to_local_remote_tuple(d) for d in large_dir_infos]
-
-        # Process directories
+        # Nothing to hash
         if not leaf_dirs and not large_dirs:
-            hash_db.close()
             return True
 
         # Thread-safe list for collecting hash entries
@@ -1923,28 +2073,26 @@ def upload_hash_sidecar_files(
 
         # Directory thread worker
         def process_dir_locally(dir_info):
-            current_local, current_remote = dir_info
+            current_local, current_remote, current_files = dir_info
             dir_name = paths.get_filename_file(current_local)
             logger.log_info("Processing: %s" % dir_name)
 
             # Build hash data from local files
             hash_data = build_hash_sidecar_data(
                 local_path = current_local,
+                file_list = current_files,
                 parallel_files = parallel_files,
                 pretend_run = pretend_run,
                 verbose = verbose)
-            if not hash_data:
-                return True
+
+            # Build the path of this unit relative to the sidecar root
+            dir_rel = get_remote_relative_path(current_remote, local_root)
+            if dir_rel is None:
+                dir_rel = current_remote.lstrip("/")
 
             # Convert to database entries
             entries = []
             for rel_file, file_info in hash_data.items():
-
-                # Build full relative path from local_root
-                if current_remote.startswith(local_root):
-                    dir_rel = current_remote[len(local_root):].lstrip("/")
-                else:
-                    dir_rel = current_remote.lstrip("/")
                 file_path = paths.join_paths(dir_rel, rel_file).replace("\\", "/")
 
                 # Skip if already exists and skip_existing is True
@@ -1963,6 +2111,12 @@ def upload_hash_sidecar_files(
             if entries:
                 with entries_lock:
                     all_hash_entries.extend(entries)
+
+            # A file that could not be hashed is missing from the sidecar
+            expected_count = 1 if current_files is None else len(current_files)
+            if not pretend_run and len(hash_data) < expected_count:
+                logger.log_error("Failed to hash %d files in %s" % (expected_count - len(hash_data), current_local))
+                return False
             return True
 
         # Process large directories sequentially first
@@ -1973,7 +2127,6 @@ def upload_hash_sidecar_files(
                 if not process_dir_locally(dir_info):
                     all_success = False
                     if exit_on_failure:
-                        hash_db.close()
                         return False
 
         # Process smaller directories in parallel
@@ -1985,8 +2138,7 @@ def upload_hash_sidecar_files(
                     if not future.result():
                         all_success = False
                         if exit_on_failure:
-                            executor.shutdown(wait=False, cancel_futures=True)
-                            hash_db.close()
+                            executor.shutdown(wait = False, cancel_futures = True)
                             return False
 
         # Batch insert all hash entries
@@ -1994,8 +2146,9 @@ def upload_hash_sidecar_files(
             logger.log_info("Inserting %d hash entries into database..." % len(all_hash_entries))
             hash_db.set_hashes(all_hash_entries)
 
-        # Close database
+        # Close database before uploading it
         hash_db.close()
+        hash_db = None
 
         # Upload database back to remote
         logger.log_info("Uploading hash database to remote...")
@@ -2011,8 +2164,10 @@ def upload_hash_sidecar_files(
 
     finally:
 
-        # Clean up temp directory
+        # Close database and clean up the temp directory, which exists even on a pretend run
+        if hash_db:
+            hash_db.close()
         fileops.remove_directory(
             src = tmp_dir_result,
             verbose = verbose,
-            pretend_run = pretend_run)
+            exit_on_failure = False)

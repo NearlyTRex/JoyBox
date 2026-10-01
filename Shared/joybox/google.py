@@ -36,6 +36,56 @@ def get_javascript_runtime_args():
     logger.log_warning("No Deno JavaScript runtime found; YouTube downloads may fail the nsig 'n challenge' (see yt-dlp EJS wiki).")
     return []
 
+# Google custom search returns at most this many results per request
+MAX_IMAGE_SEARCH_RESULTS = 10
+
+# yt-dlp prints this for a field the extractor did not provide
+YTDLP_MISSING_FIELD = "NA"
+
+# Get yt-dlp program
+def get_youtube_tool():
+    if programs.is_tool_installed("YtDlp"):
+        return programs.get_tool_program("YtDlp")
+    return None
+
+# Get yt-dlp cookie args
+def get_cookie_args(cookie_source):
+    if not isinstance(cookie_source, str) or len(cookie_source) == 0:
+        return []
+    if paths.does_path_exist(cookie_source):
+        return ["--cookies", cookie_source]
+    return ["--cookies-from-browser", cookie_source]
+
+# Parse requested image dimensions
+def parse_image_dimensions(image_dimensions):
+    if not datautils.is_iterable_non_string(image_dimensions):
+        return None
+    image_dimensions = list(image_dimensions)
+    if len(image_dimensions) != 2:
+        return None
+    try:
+        return tuple(int(value) for value in image_dimensions)
+    except (TypeError, ValueError):
+        return None
+
+# Parse image search item
+def parse_image_search_item(image_json_item):
+    if not isinstance(image_json_item, dict):
+        return None
+    item_title = image_json_item.get("title")
+    item_url = image_json_item.get("link")
+    item_image = image_json_item.get("image")
+    if not isinstance(item_title, str) or not isinstance(item_url, str) or not item_url:
+        return None
+    if not isinstance(item_image, dict):
+        return None
+    try:
+        item_width = int(item_image.get("width"))
+        item_height = int(item_image.get("height"))
+    except (TypeError, ValueError):
+        return None
+    return (item_title, item_url, image_json_item.get("mime"), item_width, item_height)
+
 # Find images
 def find_images(
     search_name,
@@ -50,17 +100,28 @@ def find_images(
     # Get authorization info
     google_search_engine_id = settings.get_value("UserData.Scraping", "google_search_engine_id")
     google_search_engine_api_key = settings.get_value("UserData.Scraping", "google_search_engine_api_key")
+    if not google_search_engine_id or not google_search_engine_api_key:
+        logger.log_error("Google search engine id and api key must be set in UserData.Scraping")
+        return []
 
     # Get search url
+    try:
+        num_results = int(num_results)
+    except (TypeError, ValueError):
+        num_results = MAX_IMAGE_SEARCH_RESULTS
+    num_results = max(1, min(num_results, MAX_IMAGE_SEARCH_RESULTS))
     search_url = "https://www.googleapis.com/customsearch/v1"
     search_url += "?q=%s" % strings.encode_url_string(search_name)
     search_url += "&searchType=image"
-    if config.ImageFileType.is_member(image_type):
-        search_url += "&fileType=%s" % image_type.lower()
-    if config.SizeType.is_member(image_size):
-        search_url += "&imgSize=%s" % image_size.lower()
-    search_url += "&cx=%s" % google_search_engine_id
-    search_url += "&key=%s" % google_search_engine_api_key
+    search_url += "&num=%d" % num_results
+    image_type = config.ImageFileType.from_enum(image_type)
+    if image_type:
+        search_url += "&fileType=%s" % image_type.cvalue.lstrip(".").lower()
+    image_size = config.SizeType.from_enum(image_size)
+    if image_size:
+        search_url += "&imgSize=%s" % image_size.val().lower()
+    search_url += "&cx=%s" % strings.encode_url_string(google_search_engine_id)
+    search_url += "&key=%s" % strings.encode_url_string(google_search_engine_api_key)
 
     # Get search results
     image_json = network.get_remote_json(
@@ -68,46 +129,63 @@ def find_images(
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
-    if not image_json:
-        logger.log_error("Unable to find images from '%s'" % search_url)
-        return False
+    if not isinstance(image_json, dict):
+        logger.log_error("Unable to find images for '%s'" % search_name)
+        return []
 
     # Build search results
+    requested_dimensions = parse_image_dimensions(image_dimensions)
+    image_json_items = image_json.get("items")
+    if not isinstance(image_json_items, list):
+        return []
     search_results = []
-    if "items" in image_json:
-        image_json_items = image_json["items"]
-        if datautils.is_iterable_container(image_json_items):
-            for image_json_item in image_json_items:
+    for image_json_item in image_json_items:
 
-                # Get item info
-                item_title = image_json_item["title"]
-                item_url = image_json_item["link"]
-                item_mime = image_json_item["mime"]
-                item_width = int(image_json_item["image"]["width"])
-                item_height = int(image_json_item["image"]["height"])
+        # Get item info
+        item_info = parse_image_search_item(image_json_item)
+        if not item_info:
+            continue
+        item_title, item_url, item_mime, item_width, item_height = item_info
 
-                # Ignore dissimilar images
-                if not strings.are_strings_highly_similar(search_name, item_title):
-                    continue
+        # Ignore dissimilar images
+        if not strings.are_strings_highly_similar(search_name, item_title):
+            continue
 
-                # Ignore images that do not match requested dimensions
-                if datautils.is_iterable_non_string(image_dimensions) and len(image_dimensions) == 2:
-                    requested_width, requested_height = map(int, image_dimensions)
-                    if item_width != requested_width or item_height != requested_height:
-                        continue
+        # Ignore images that do not match requested dimensions
+        if requested_dimensions and (item_width, item_height) != requested_dimensions:
+            continue
 
-                # Add search result
-                search_result = containers.AssetSearchResult()
-                search_result.set_title(item_title)
-                search_result.set_url(item_url)
-                search_result.set_mime(item_mime)
-                search_result.set_width(item_width)
-                search_result.set_height(item_height)
-                search_result.set_relevance(strings.get_string_similarity_ratio(search_name, item_title))
-                search_results.append(search_result)
+        # Add search result
+        search_result = containers.AssetSearchResult()
+        search_result.set_title(item_title)
+        search_result.set_url(item_url)
+        search_result.set_mime(item_mime)
+        search_result.set_width(item_width)
+        search_result.set_height(item_height)
+        search_result.set_relevance(strings.get_string_similarity_ratio(search_name, item_title))
+        search_results.append(search_result)
 
     # Return search results
     return sorted(search_results, key=lambda x: x.get_relevance(), reverse = True)
+
+# Parse video search line
+def parse_video_search_line(line):
+    try:
+        line_json = json.loads(line)
+    except ValueError:
+        return None
+    if not isinstance(line_json, dict):
+        return None
+    line_title = line_json.get("title")
+    line_url = line_json.get("url")
+    if not isinstance(line_title, str) or not isinstance(line_url, str) or not line_url:
+        return None
+    line_channel = line_json.get("channel") or "Unknown"
+    line_duration = line_json.get("duration")
+    if isinstance(line_duration, bool) or not isinstance(line_duration, (int, float)):
+        line_duration = 0
+    line_duration_str = line_json.get("duration_string") or "Unknown"
+    return (line_title, line_channel, line_duration, line_duration_str, line_url)
 
 # Find videos
 def find_videos(
@@ -118,17 +196,19 @@ def find_videos(
     exit_on_failure = False):
 
     # Get tool
-    youtube_tool = None
-    if programs.is_tool_installed("YtDlp"):
-        youtube_tool = programs.get_tool_program("YtDlp")
+    youtube_tool = get_youtube_tool()
     if not youtube_tool:
         logger.log_error("YtDlp was not found")
-        return False
+        return []
 
     # Get search command
+    try:
+        num_results = max(1, int(num_results))
+    except (TypeError, ValueError):
+        num_results = 20
     search_cmd = [
         youtube_tool,
-        "ytsearch%d:\"%s\"" % (num_results, search_name),
+        "ytsearch%d:%s" % (num_results, search_name),
         "--dump-json",
         "--default-search", "ytsearch",
         "--no-playlist",
@@ -144,7 +224,6 @@ def find_videos(
     search_output = command.run_output_command(
         cmd = search_cmd,
         options = command.create_command_options(
-            shell = True,
             blocking_processes = [youtube_tool]),
         verbose = verbose,
         pretend_run = pretend_run,
@@ -152,30 +231,25 @@ def find_videos(
 
     # Build search results
     search_results = []
-    for line in search_output.split("\n"):
-        try:
+    for line in (search_output or "").splitlines():
 
-            # Get line info
-            line_json = json.loads(line)
-            line_title = line_json["title"] if "title" in line_json else ""
-            line_channel = line_json["channel"] if "channel" in line_json else "Unknown"
-            line_duration = line_json["duration"] if "duration" in line_json and line_json["duration"] else 0
-            line_duration_str = line_json["duration_string"] if "duration_string" in line_json and line_json["duration_string"] else "Unknown"
-            line_url = line_json["url"] if "url" in line_json else ""
+        # Get line info
+        line_info = parse_video_search_line(line)
+        if not line_info:
+            continue
+        line_title, line_channel, line_duration, line_duration_str, line_url = line_info
 
-            # Ignore dissimilar videos
-            if not strings.are_strings_moderately_similar(search_name, line_title):
-                continue
+        # Ignore dissimilar videos
+        if not strings.are_strings_moderately_similar(search_name, line_title):
+            continue
 
-            # Add search result
-            search_result = containers.AssetSearchResult()
-            search_result.set_title(line_title)
-            search_result.set_description(f"{line_title} ({line_channel}) [{line_duration_str}]")
-            search_result.set_duration(line_duration)
-            search_result.set_url(line_url)
-            search_results.append(search_result)
-        except Exception:
-            pass
+        # Add search result
+        search_result = containers.AssetSearchResult()
+        search_result.set_title(line_title)
+        search_result.set_description(f"{line_title} ({line_channel}) [{line_duration_str}]")
+        search_result.set_duration(line_duration)
+        search_result.set_url(line_url)
+        search_results.append(search_result)
 
     # Return search results
     return sorted(search_results, key=lambda d: d.get_duration())
@@ -199,9 +273,7 @@ def get_playlist_video_ids(
             exit_on_failure = exit_on_failure)
 
     # Get tool
-    youtube_tool = None
-    if programs.is_tool_installed("YtDlp"):
-        youtube_tool = programs.get_tool_program("YtDlp")
+    youtube_tool = get_youtube_tool()
     if not youtube_tool:
         logger.log_error("YtDlp was not found")
         return []
@@ -213,11 +285,7 @@ def get_playlist_video_ids(
         "--flat-playlist",
         "--print", "%(id)s\t%(url)s"
     ]
-    if isinstance(cookie_source, str) and len(cookie_source) > 0:
-        if paths.does_path_exist(cookie_source):
-            list_cmd += ["--cookies", cookie_source]
-        else:
-            list_cmd += ["--cookies-from-browser", cookie_source]
+    list_cmd += get_cookie_args(cookie_source)
     list_cmd += [video_url]
 
     # Run and parse unique ids (preserving order)
@@ -229,15 +297,22 @@ def get_playlist_video_ids(
         exit_on_failure = exit_on_failure)
     videos = []
     seen = set()
-    if output:
-        for line in output.splitlines():
-            parts = line.split("\t")
-            vid = parts[0].strip()
-            url = parts[1].strip() if len(parts) > 1 else ""
-            if vid and vid not in seen:
-                seen.add(vid)
-                videos.append((vid, url))
+    for line in (output or "").splitlines():
+        parts = line.split("\t")
+        vid = parts[0].strip()
+        url = parts[1].strip() if len(parts) > 1 else ""
+        if url == YTDLP_MISSING_FIELD:
+            url = ""
+        if vid and vid != YTDLP_MISSING_FIELD and vid not in seen:
+            seen.add(vid)
+            videos.append((vid, url))
     return videos
+
+# Get downloaded media files
+def get_media_files(output_dir):
+    if not paths.is_path_directory(output_dir):
+        return set()
+    return {f for f in paths.get_directory_contents(output_dir) if f.endswith((".mp3", ".mp4"))}
 
 # Download video
 def download_video(
@@ -254,11 +329,16 @@ def download_video(
     exit_on_failure = False):
 
     # Get tool
-    youtube_tool = None
-    if programs.is_tool_installed("YtDlp"):
-        youtube_tool = programs.get_tool_program("YtDlp")
+    youtube_tool = get_youtube_tool()
     if not youtube_tool:
         logger.log_error("YtDlp was not found")
+        return False
+
+    # Get targets
+    video_urls = list(video_url) if isinstance(video_url, (list, tuple)) else [video_url]
+    video_urls = [url for url in video_urls if isinstance(url, str) and url]
+    if not video_urls:
+        logger.log_error("No video url given to download")
         return False
 
     # Clamp concurrency to a safe range (>= 1, <= MAX_CONCURRENT_FRAGMENTS)
@@ -308,17 +388,11 @@ def download_video(
         download_cmd += ["-o", "%(upload_date)s - %(title).200s.%(ext)s"]
     if paths.is_path_valid(download_archive):
         download_cmd += ["--download-archive", download_archive]
-    if isinstance(cookie_source, str) and len(cookie_source) > 0:
-        if paths.does_path_exist(cookie_source):
-            download_cmd += ["--cookies", cookie_source]
-        else:
-            download_cmd += ["--cookies-from-browser", cookie_source]
-    if isinstance(video_url, (list, tuple)):
-        download_cmd += list(video_url)
-    else:
-        download_cmd += [video_url]
+    download_cmd += get_cookie_args(cookie_source)
+    download_cmd += video_urls
 
     # Run download command
+    media_files_before = get_media_files(output_dir)
     logger.log_info(f"Executing download command: {' '.join(download_cmd[:5])}...")
     code = command.run_returncode_command(
         cmd = download_cmd,
@@ -328,31 +402,17 @@ def download_video(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     logger.log_info(f"Download command completed with return code: {code}")
-    if code != 0:
-        logger.log_warning(f"Download completed with some failures (return code: {code})")
-    else:
-        logger.log_info("Download command completed successfully")
 
     # Check what was downloaded
-    download_success = True
     new_files_count = 0
     if paths.is_path_directory(output_dir):
-        downloaded_files = paths.get_directory_contents(output_dir)
-        media_files = [f for f in downloaded_files if f.endswith(('.mp3', '.mp4'))]
-        new_files_count = len(media_files)
+        new_files_count = len(get_media_files(output_dir) - media_files_before)
         logger.log_info(f"Found {new_files_count} new media files after download")
-    else:
+    elif paths.is_path_valid(output_dir):
         logger.log_warning(f"Output directory doesn't exist after download: {output_dir}")
 
-    # Determine if the operation was successful
-    # yt-dlp returns exit code 1 for partial failures, but this doesn't mean total failure
-    # Success cases:
-    # - Exit code 0 (complete success)
-    # - Exit code 1 but with new files downloaded (partial success)
-    # - Exit code 1 but all videos were already archived (nothing new to download)
-    # Failure case:
-    # - Exit code > 1 (serious error)
-    # - Exit code 1 with no progress and genuine failures (not just archives)
+    # yt-dlp exits 1 for partial failures (including videos already archived);
+    # anything above that is a serious error
     if code == 0:
         logger.log_info("Download completed without any issues")
     elif code == 1:
@@ -362,7 +422,8 @@ def download_video(
             logger.log_info("Download completed - no new files (likely all videos already archived)")
     else:
         logger.log_error(f"Download failed with serious error (exit code: {code})")
-        download_success = False
+        logger.log_error("Video download process failed")
+        return False
 
     # Sanitize filenames
     if sanitize_filenames:
@@ -391,10 +452,6 @@ def download_video(
         else:
             logger.log_warning("No sanitization directory found")
 
-    # Return success status based on our analysis
-    if download_success:
-        logger.log_info("Video download process completed successfully")
-        return True
-    else:
-        logger.log_error("Video download process failed")
-        return False
+    # Return success
+    logger.log_info("Video download process completed successfully")
+    return True

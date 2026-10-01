@@ -387,7 +387,7 @@ def copy_to_locker_encrypted(
         logger.log_error("Unable to create temporary directory")
         return False
     try:
-        encrypted_file = paths.join_paths(temp_dir, paths.get_filename_file(src) + ".enc")
+        encrypted_file = paths.join_paths(temp_dir, cryption.generate_encrypted_filename(paths.get_filename_file(dest_rel_path)))
         success = cryption.encrypt_file(
             src = src,
             passphrase = passphrase,
@@ -399,8 +399,8 @@ def copy_to_locker_encrypted(
             logger.log_error("Failed to encrypt file %s" % src)
             return False
 
-        # Upload encrypted file
-        encrypted_dest_rel_path = dest_rel_path + ".enc"
+        # Upload under the name the other locker paths look for
+        encrypted_dest_rel_path = cryption.generate_encrypted_path(dest_rel_path)
         return copy_to_locker(
             src = encrypted_file,
             dest_rel_path = encrypted_dest_rel_path,
@@ -457,8 +457,11 @@ def backup(
     pretend_run = False,
     exit_on_failure = False):
 
-    # Check source exists
+    # Check source exists; a pretend run never writes what it would back up
     if not paths.does_path_exist(src):
+        if pretend_run:
+            logger.log_info("Would back up '%s' to '%s'" % (src, dest_rel_path))
+            return True
         logger.log_error("Source path '%s' does not exist" % src)
         return False
 

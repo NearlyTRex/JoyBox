@@ -127,3 +127,31 @@ def test_blocking_processes_are_copied_not_shared():
 
 def test_a_non_prefix_blocks_only_what_it_was_given():
     assert sandbox.get_blocking_processes(NEITHER(), ["game.exe"]) == ["game.exe"]
+
+
+def test_a_named_prefix_sits_under_its_runners_sandbox_root(monkeypatch):
+    roots = {"Wine": "/sandboxes/wine", "Sandboxie": "C:/Sandbox"}
+    monkeypatch.setattr(
+        sandbox.programs, "get_tool_path_config_value", lambda tool, key: roots[tool])
+
+    assert sandbox.get_prefix(WINE(prefix_name = "Game")) == "/sandboxes/wine/Game"
+    assert sandbox.get_prefix(SANDBOXIE(prefix_name = "Game")) == "C:/Sandbox/Game"
+
+
+def test_each_runner_blocks_on_its_own_processes(monkeypatch):
+    monkeypatch.setattr(sandbox.programs, "get_tool_program", lambda name: name)
+
+    assert sandbox.get_blocking_processes(WINE(), ["game.exe"]) == ["game.exe", "WineServer"]
+    assert sandbox.get_blocking_processes(SANDBOXIE()) == \
+        ["Sandboxie", "SandboxieIni", "SandboxieRpcss", "SandboxieDcomlaunch"]
+
+
+def test_the_runners_are_the_configured_tools(monkeypatch):
+    monkeypatch.setattr(sandbox.programs, "get_tool_program", lambda name: "/tools/" + name)
+
+    assert sandbox.get_wine_command() == "/tools/Wine"
+    assert sandbox.get_sandboxie_command() == "/tools/Sandboxie"
+
+
+def test_sandboxie_needs_no_libraries_installed():
+    assert sandbox.install_sandboxie_dlls(SANDBOXIE(), dlls_32 = ["a.dll"]) is None

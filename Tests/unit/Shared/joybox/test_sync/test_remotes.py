@@ -43,8 +43,8 @@ def test_a_configured_remote_of_the_right_type_matches(rclone, quiet, monkeypatc
     monkeypatch.setattr(
         sync, "get_configured_remotes", lambda **kwargs: ["hetzner:"])
     monkeypatch.setattr(
-        sync.command, "run_output_command",
-        lambda **kwargs: "[hetzner]\ntype = %s\n" % raw)
+        sync.command, "run_command",
+        lambda **kwargs: ("[hetzner]\ntype = %s\n" % raw, 0))
 
     assert sync.is_remote_configured(REMOTE, REMOTE_TYPE)
 
@@ -54,8 +54,8 @@ def test_a_remote_of_another_type_does_not_match(rclone, quiet, monkeypatch):
     monkeypatch.setattr(
         sync, "get_configured_remotes", lambda **kwargs: ["hetzner:"])
     monkeypatch.setattr(
-        sync.command, "run_output_command",
-        lambda **kwargs: "[hetzner]\ntype = somethingelse\n")
+        sync.command, "run_command",
+        lambda **kwargs: ("[hetzner]\ntype = somethingelse\n", 0))
 
     assert not sync.is_remote_configured(REMOTE, REMOTE_TYPE)
 
@@ -71,8 +71,8 @@ def test_a_remote_without_a_type_is_not_configured(rclone, quiet, monkeypatch):
     monkeypatch.setattr(
         sync, "get_configured_remotes", lambda **kwargs: ["hetzner:"])
     monkeypatch.setattr(
-        sync.command, "run_output_command",
-        lambda **kwargs: "couldn't find type of fs for hetzner")
+        sync.command, "run_command",
+        lambda **kwargs: ("couldn't find type of fs for hetzner", 0))
 
     assert sync.is_remote_configured(REMOTE, REMOTE_TYPE) is False
 

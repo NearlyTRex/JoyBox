@@ -1,6 +1,7 @@
 # Imports
 import os
 import sys
+import contextlib
 import subprocess
 import threading
 
@@ -109,11 +110,13 @@ def setup_prefix_command(
         cmd = new_cmd,
         options = new_options,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     new_cmd, new_options = sandbox.setup_prefix_environment(
         cmd = new_cmd,
         options = new_options,
         verbose = verbose,
+        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     return (new_cmd, new_options)
 
@@ -124,6 +127,7 @@ def preprocess_command(
     cmd,
     options = create_command_options(),
     verbose = False,
+    pretend_run = False,
     exit_on_failure = False):
 
     # Preprocess for powershell
@@ -148,6 +152,7 @@ def preprocess_command(
             cmd = cmd,
             options = options,
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
     # Return any changes
@@ -158,6 +163,7 @@ def postprocess_command(
     cmd,
     options = create_command_options(),
     verbose = False,
+    pretend_run = False,
     exit_on_failure = False):
 
     # Postprocess for wine
@@ -166,6 +172,7 @@ def postprocess_command(
             cmd = cmd,
             options = options,
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
     # Postprocess for sandboxie
@@ -174,6 +181,7 @@ def postprocess_command(
             cmd = cmd,
             options = options,
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
     # Transfer files from sandbox if necessary
@@ -183,9 +191,99 @@ def postprocess_command(
                 path = output_path,
                 options = options,
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
 
 ###########################################################
+
+# Wait for blocking processes, then post-process
+def finish_command(
+    cmd,
+    options,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+    if isinstance(options.get_blocking_processes(), list) and len(options.get_blocking_processes()) > 0:
+        process.wait_for_named_processes(options.get_blocking_processes())
+    if options.allow_processing():
+        postprocess_command(
+            cmd = cmd,
+            options = options,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+
+# Run a command, pumping its output streams in real time
+def run_streamed_command(
+    cmd,
+    options,
+    capture_output = True,
+    log_stdout = False,
+    log_stderr = False):
+
+    # Determine output file handling
+    stdout_path = options.get_stdout() if paths.is_path_valid(options.get_stdout()) else None
+    stderr_path = options.get_stderr() if paths.is_path_valid(options.get_stderr()) else None
+
+    # Determine stderr disposition:
+    # - merge into stdout (OS-level, order-preserving) for include_stderr capture,
+    # - pipe separately when streaming it live or writing it to a file,
+    # - otherwise inherit the terminal (so it still shows up by default).
+    pipe_stderr = log_stderr or stderr_path is not None
+    capture_stderr = options.include_stderr() and capture_output
+    if options.include_stderr() and not pipe_stderr:
+        stderr_arg = subprocess.STDOUT
+    elif pipe_stderr:
+        stderr_arg = subprocess.PIPE
+    else:
+        stderr_arg = None
+
+    # Get context stack
+    with contextlib.ExitStack() as stack:
+        stdout_target = stack.enter_context(open(stdout_path, "w")) if stdout_path else None
+        stderr_target = stack.enter_context(open(stderr_path, "w")) if stderr_path else None
+
+        # Open process
+        proc = subprocess.Popen(
+            cmd,
+            shell = options.is_shell(),
+            cwd = options.get_cwd(),
+            env = options.get_env(),
+            creationflags = options.get_creationflags(),
+            stdout = subprocess.PIPE,
+            stderr = stderr_arg,
+            stdin = None,
+            text = True,
+            errors = "ignore",
+            bufsize = 1)
+
+        # readline() rather than "for line in pipe", which read-ahead-buffers
+        # and defeats real-time streaming; an empty line is end of stream
+        output_lines = []
+        def pump(stream, capture, log, target):
+            for line in iter(stream.readline, ""):
+                if capture:
+                    output_lines.append(line)
+                if log:
+                    logger.log_info(line.strip())
+                if target:
+                    target.write(line)
+                    target.flush()
+
+        # Run real-time I/O threads
+        threads = [threading.Thread(
+            target = pump,
+            args = (proc.stdout, capture_output, log_stdout, stdout_target))]
+        if pipe_stderr:
+            threads.append(threading.Thread(
+                target = pump,
+                args = (proc.stderr, capture_stderr, log_stderr, stderr_target)))
+        for t in threads:
+            t.start()
+        proc.wait()
+        for t in threads:
+            t.join()
+    return (cmdline.clean_command_output("".join(output_lines).strip()), proc.returncode)
 
 # Run command
 def run_command(
@@ -210,6 +308,7 @@ def run_command(
                 cmd = cmd,
                 options = options,
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
 
         # Log command
@@ -227,27 +326,27 @@ def run_command(
                 shell = options.is_shell(),
                 cwd = options.get_cwd(),
                 env = options.get_env())
-            if options.allow_processing():
-                postprocess_command(
-                    cmd = cmd, options = options, verbose = verbose, exit_on_failure = exit_on_failure)
+            finish_command(
+                cmd = cmd,
+                options = options,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
             return ("", returncode)
 
-        # Daemon mode - detach and return without waiting
+        # Daemon mode - detach and return without waiting or cleaning up after it
         if options.is_daemon():
             subprocess.Popen(
                 cmd,
                 shell = options.is_shell(),
                 cwd = options.get_cwd(),
                 env = options.get_env(),
-                creationflags = subprocess.DETACHED_PROCESS if os.name == 'nt' else 0,
+                creationflags = options.get_creationflags() | getattr(subprocess, "DETACHED_PROCESS", 0),
                 stdout = subprocess.DEVNULL,
                 stderr = subprocess.DEVNULL,
                 stdin = subprocess.DEVNULL,
-                preexec_fn = os.setsid if os.name != 'nt' else None)
+                start_new_session = os.name != "nt")
             runtime.sleep_program(0.5)
-            if options.allow_processing():
-                postprocess_command(
-                    cmd = cmd, options = options, verbose = verbose, exit_on_failure = exit_on_failure)
             return ("", 0)
 
         # Suppressed output - discard streams, just wait
@@ -261,106 +360,31 @@ def run_command(
                 stdout = subprocess.DEVNULL,
                 stderr = subprocess.DEVNULL)
             proc.wait()
-            if isinstance(options.get_blocking_processes(), list) and len(options.get_blocking_processes()) > 0:
-                process.wait_for_named_processes(options.get_blocking_processes())
-            if options.allow_processing():
-                postprocess_command(
-                    cmd = cmd, options = options, verbose = verbose, exit_on_failure = exit_on_failure)
+            finish_command(
+                cmd = cmd,
+                options = options,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
             return ("", proc.returncode)
 
-        # Determine output file handling
-        stdout_target = open(options.get_stdout(), "w") if paths.is_path_valid(options.get_stdout()) else None
-        stderr_target = open(options.get_stderr(), "w") if paths.is_path_valid(options.get_stderr()) else None
-
-        # Determine stderr disposition:
-        # - merge into stdout (OS-level, order-preserving) for include_stderr capture,
-        # - pipe separately when streaming it live or writing it to a file,
-        # - otherwise inherit the terminal (so it still shows up by default).
-        merge_stderr = options.include_stderr() and not log_stderr and stderr_target is None
-        pipe_stderr = log_stderr or stderr_target is not None
-        if merge_stderr:
-            stderr_arg = subprocess.STDOUT
-        elif pipe_stderr:
-            stderr_arg = subprocess.PIPE
-        else:
-            stderr_arg = None
-
-        # Open process
-        proc = subprocess.Popen(
-            cmd,
-            shell = options.is_shell(),
-            cwd = options.get_cwd(),
-            env = options.get_env(),
-            creationflags = options.get_creationflags(),
-            stdout = subprocess.PIPE,
-            stderr = stderr_arg,
-            stdin = None,
-            text = True,
-            errors = "ignore",
-            bufsize = 1)
-
-        # Pump stdout (capture and/or log and/or write to file). Use readline() rather
-        # than "for line in pipe" - the latter read-ahead-buffers and would defeat
-        # real-time streaming.
-        stdout_lines = []
-        def pump_stdout():
-            while True:
-                line = proc.stdout.readline()
-                if not line and proc.poll() is not None:
-                    break
-                if line:
-                    if capture_output:
-                        stdout_lines.append(line)
-                    if log_stdout:
-                        logger.log_info(line.strip())
-                    if stdout_target:
-                        stdout_target.write(line)
-                        stdout_target.flush()
-
-        # Pump stderr (log live and/or write to file) when piped separately
-        def pump_stderr():
-            while True:
-                line = proc.stderr.readline()
-                if not line and proc.poll() is not None:
-                    break
-                if line:
-                    if log_stderr:
-                        logger.log_info(line.strip())
-                    if stderr_target:
-                        stderr_target.write(line)
-                        stderr_target.flush()
-
-        # Run real-time I/O threads
-        threads = [threading.Thread(target = pump_stdout)]
-        if pipe_stderr:
-            threads.append(threading.Thread(target = pump_stderr))
-        for t in threads:
-            t.start()
-        proc.wait()
-        for t in threads:
-            t.join()
-
-        # Close file handles if used
-        if stdout_target:
-            stdout_target.close()
-        if stderr_target:
-            stderr_target.close()
-
-        # Wait for any other blocking processes
-        if isinstance(options.get_blocking_processes(), list) and len(options.get_blocking_processes()) > 0:
-            process.wait_for_named_processes(options.get_blocking_processes())
-
-        # Post-process command
-        if options.allow_processing():
-            postprocess_command(
-                cmd = cmd, options = options, verbose = verbose, exit_on_failure = exit_on_failure)
-
-        return (cmdline.clean_command_output("".join(stdout_lines).strip()), proc.returncode)
+        # Run with streamed output
+        output, returncode = run_streamed_command(
+            cmd = cmd,
+            options = options,
+            capture_output = capture_output,
+            log_stdout = log_stdout,
+            log_stderr = log_stderr)
+        finish_command(
+            cmd = cmd,
+            options = options,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        return (output, returncode)
     except Exception as e:
-        if verbose:
-            logger.log_error(e)
-        elif exit_on_failure:
-            logger.log_error(e, quit_program = True)
+        if verbose or exit_on_failure:
+            logger.log_error(e, quit_program = exit_on_failure)
         return ("", 1)
 
 # Run output command
@@ -418,6 +442,7 @@ def run_interactive_command(
                     cmd = cmd,
                     options = options,
                     verbose = verbose,
+                    pretend_run = pretend_run,
                     exit_on_failure = exit_on_failure)
 
             # Log command
@@ -436,13 +461,13 @@ def run_interactive_command(
 
                 # Open psuedo-terminal
                 from winpty import PtyProcess
-                with PtyProcess.spawn(cmd) as process:
+                with PtyProcess.spawn(cmd, cwd = options.get_cwd(), env = options.get_env()) as pty_process:
 
                     # Reads from pseudo-terminal and displays it in real-time
                     def read_output():
-                        while process.isalive():
+                        while pty_process.isalive():
                             try:
-                                output = process.read(1024)
+                                output = pty_process.read(1024)
                                 if output:
                                     sys.stdout.write(output)
                                     sys.stdout.flush()
@@ -455,29 +480,32 @@ def run_interactive_command(
 
                     # Wait for process to complete
                     try:
-                        while process.isalive():
+                        while pty_process.isalive():
                             user_input = sys.stdin.readline()
                             if user_input:
-                                process.write(user_input)
+                                pty_process.write(user_input)
                     except KeyboardInterrupt:
-                        process.terminate()
+                        pty_process.terminate()
                     output_thread.join()
-                    returncode = process.exitstatus
+                    returncode = pty_process.exitstatus
             else:
 
                 # Open pseudo-terminal
                 import pty
                 import select
                 master_fd, slave_fd = pty.openpty()
-                proc = subprocess.Popen(
-                    cmd,
-                    stdin = slave_fd,
-                    stdout = slave_fd,
-                    stderr = slave_fd,
-                    text = True,
-                    bufsize = 1,
-                    close_fds = True)
-                os.close(slave_fd)
+                try:
+                    proc = subprocess.Popen(
+                        cmd,
+                        shell = options.is_shell(),
+                        cwd = options.get_cwd(),
+                        env = options.get_env(),
+                        stdin = slave_fd,
+                        stdout = slave_fd,
+                        stderr = slave_fd,
+                        close_fds = True)
+                finally:
+                    os.close(slave_fd)
 
                 # Reads from pseudo-terminal and displays it in real-time
                 def read_output():
@@ -507,33 +535,27 @@ def run_interactive_command(
                                 os.write(master_fd, user_input.encode())
                 except KeyboardInterrupt:
                     proc.terminate()
+                    proc.wait()
                 output_thread.join()
+                os.close(master_fd)
                 returncode = proc.returncode
 
-            # Wait for any other blocking processes
-            if isinstance(options.get_blocking_processes(), list) and len(options.get_blocking_processes()) > 0:
-                process.wait_for_named_processes(options.get_blocking_processes())
-
-            # Post-process command
-            if options.allow_processing():
-                postprocess_command(
-                    cmd = cmd,
-                    options = options,
-                    verbose = verbose,
-                    exit_on_failure = exit_on_failure)
+            # Wait for blocking processes, then post-process
+            finish_command(
+                cmd = cmd,
+                options = options,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
             return returncode
         return 0
     except subprocess.CalledProcessError as e:
-        if verbose:
-            logger.log_error(e)
-        elif exit_on_failure:
-            logger.log_error(e, quit_program = True)
+        if verbose or exit_on_failure:
+            logger.log_error(e, quit_program = exit_on_failure)
         return e.returncode
     except Exception as e:
-        if verbose:
-            logger.log_error(e)
-        elif exit_on_failure:
-            logger.log_error(e, quit_program = True)
+        if verbose or exit_on_failure:
+            logger.log_error(e, quit_program = exit_on_failure)
         return 1
 
 # Run capture command
@@ -577,13 +599,13 @@ def run_capture_command(
             return capture.capture_screenshot_while_running(
                 run_func = run_start,
                 output_file = capture_file,
-                current_win = True,
-                capture_origin = (capture_origin_x, capture_origin_y),
-                capture_resolution = (capture_resolution_w, capture_resolution_h),
                 time_duration = capture_duration,
                 time_interval = capture_interval,
                 time_units_type = config.UnitType.SECONDS,
+                capture_origin = (capture_origin_x, capture_origin_y),
+                capture_resolution = (capture_resolution_w, capture_resolution_h),
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
 
     # Video capturing
@@ -601,6 +623,7 @@ def run_capture_command(
                 capture_framerate = capture_framerate,
                 capture_duration = capture_duration,
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
 
     # No capture

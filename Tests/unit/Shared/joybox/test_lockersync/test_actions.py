@@ -3,6 +3,7 @@ import pytest
 
 # Local imports
 from joybox import config, lockersync
+from lockersync_helpers import entry
 
 
 ###########################################################
@@ -49,10 +50,16 @@ def test_every_encryption_pairing_is_handled():
     assert resolved[(True, False)] != resolved[(False, True)]
 
 
-def test_an_unknown_base_action_falls_back_to_update():
-    # Only COPY is special-cased; anything else updates in place.
-    assert lockersync.get_sync_action_type("SOMETHING", False, False) == \
-        config.SyncActionType.UPDATE
+@pytest.mark.parametrize("primary_encrypted,secondary_encrypted,expected", [
+    (False, False, config.SyncActionType.UPDATE),
+    (True, True, config.SyncActionType.UPDATE),
+    (True, False, config.SyncActionType.UPDATE_DECRYPT),
+    (False, True, config.SyncActionType.UPDATE_ENCRYPT),
+])
+def test_an_unknown_base_action_falls_back_to_update(primary_encrypted, secondary_encrypted, expected):
+    # Only COPY is special-cased; anything else updates in place, still
+    # converting between encrypted and plain lockers.
+    assert lockersync.get_sync_action_type("SOMETHING", primary_encrypted, secondary_encrypted) == expected
 
 
 ###########################################################
@@ -176,10 +183,6 @@ def test_an_action_falls_back_to_its_source_path():
 # file wrongly marked an orphan is recycled out of the destination.
 ###########################################################
 
-def entry(hash_value = "aaaa", size = 1024):
-    return {"hash": hash_value, "size": size, "mtime": 1700000000}
-
-
 def actions_for(primary, secondary, **kwargs):
     return lockersync.build_sync_actions(primary, secondary, **kwargs)
 
@@ -272,245 +275,21 @@ def test_nothing_on_either_side_is_no_work():
 
 
 ###########################################################
-# Carrying out the plan
+# The recycle bin
+#
+# Only the recycle folder itself is left alone, matched on whole path parts:
+# a folder that merely starts with the same letters is ordinary content.
 ###########################################################
 
-class FakeBackend:
+@pytest.mark.parametrize("path", [".recycle_bin", ".recycle_bin/Old.zip", ".recycle_bin/deep/Old.zip"])
+def test_the_primary_recycle_bin_is_not_copied(path):
+    assert actions_for({path: entry()}, {}) == []
 
-    def __init__(self, result = True, root = "/locker"):
-        self.result = result
-        self.root = root
-        self.synced = []
-        self.batched = []
-        self.recycled = []
 
-    def get_root_path(self):
-        return self.root
+@pytest.mark.parametrize("path", [".recycle_binary/Old.zip", ".recycle_bin_old/Old.zip", "Games/.recycle_bin/Old.zip"])
+def test_a_folder_that_only_looks_like_the_recycle_bin_is_recycled(path):
+    assert types_of(actions_for({}, {path: entry()})) == [config.SyncActionType.RECYCLE]
 
-    def sync_from(self, src_backend, src_rel_path, dest_rel_path, **kwargs):
-        self.synced.append({
-            "src": src_rel_path,
-            "dest": dest_rel_path,
-            "cryption": kwargs.get("cryption_type"),
-            "passphrase": kwargs.get("passphrase"),
-        })
-        return self.result
 
-    def sync_batch_from(self, src_backend, actions, cryption_type, **kwargs):
-        self.batched.append({"actions": actions, "cryption": cryption_type})
-        paths = [action.get("src", "") for action in actions]
-        if self.result:
-            return (paths, [])
-        return ([], paths)
-
-    def recycle_file(self, rel_path, **kwargs):
-        self.recycled.append(rel_path)
-        return self.result
-
-
-def transfer_action(action_type = None, src = "Game.zip"):
-    return {
-        "type": action_type or config.SyncActionType.COPY,
-        "src": src,
-        "dest": src,
-        "src_data": entry(),
-    }
-
-
-def orphan_action(path = "Old.zip"):
-    return {"type": config.SyncActionType.RECYCLE, "path": path, "src_data": entry()}
-
-
-def test_a_copy_is_carried_out_against_the_destination():
-    primary = FakeBackend()
-    secondary = FakeBackend()
-
-    assert lockersync.execute_sync_actions([transfer_action()], primary, secondary) is True
-    assert secondary.synced[0]["src"] == "Game.zip"
-    assert primary.synced == []
-
-
-def test_an_orphan_is_recycled_on_the_destination():
-    primary = FakeBackend()
-    secondary = FakeBackend()
-
-    lockersync.execute_sync_actions([orphan_action()], primary, secondary)
-
-    assert secondary.recycled == ["Old.zip"]
-    assert primary.recycled == []
-
-
-@pytest.mark.parametrize("action_type,expected", [
-    (config.SyncActionType.COPY, config.CryptionType.NONE),
-    (config.SyncActionType.UPDATE, config.CryptionType.NONE),
-    (config.SyncActionType.COPY_ENCRYPT, config.CryptionType.ENCRYPT),
-    (config.SyncActionType.UPDATE_ENCRYPT, config.CryptionType.ENCRYPT),
-    (config.SyncActionType.COPY_DECRYPT, config.CryptionType.DECRYPT),
-    (config.SyncActionType.UPDATE_DECRYPT, config.CryptionType.DECRYPT),
-])
-def test_each_action_carries_its_own_cryption(action_type, expected):
-    secondary = FakeBackend()
-
-    lockersync.execute_sync_actions([transfer_action(action_type)], FakeBackend(), secondary)
-
-    assert secondary.synced[0]["cryption"] == expected
-
-
-def test_the_passphrase_reaches_the_transfer():
-    secondary = FakeBackend()
-
-    lockersync.execute_sync_actions(
-        [transfer_action(config.SyncActionType.COPY_ENCRYPT)],
-        FakeBackend(), secondary, passphrase = "example")
-
-    assert secondary.synced[0]["passphrase"] == "example"
-
-
-def test_an_action_type_stored_as_a_string_is_understood():
-    # The plan round trips through an editor as text.
-    secondary = FakeBackend()
-    action = transfer_action()
-    action["type"] = config.SyncActionType.COPY.val()
-
-    lockersync.execute_sync_actions([action], FakeBackend(), secondary)
-
-    assert len(secondary.synced) == 1
-
-
-def test_a_failed_transfer_fails_the_sync():
-    assert lockersync.execute_sync_actions(
-        [transfer_action()], FakeBackend(), FakeBackend(result = False)) is False
-
-
-def test_an_empty_plan_succeeds():
-    assert lockersync.execute_sync_actions([], FakeBackend(), FakeBackend()) is True
-
-
-def test_an_unknown_action_is_ignored():
-    secondary = FakeBackend()
-
-    assert lockersync.execute_sync_actions(
-        [{"type": "NotAnAction", "src": "Game.zip"}], FakeBackend(), secondary) is True
-    assert secondary.synced == []
-
-
-###########################################################
-# Carrying out the plan in batches
-###########################################################
-
-def test_files_of_one_cryption_go_out_as_a_single_transfer():
-    # One rclone run per group instead of one per file is the whole point.
-    secondary = FakeBackend()
-
-    lockersync.execute_sync_actions_batched(
-        [transfer_action(src = "One.zip"), transfer_action(src = "Two.zip")],
-        FakeBackend(), secondary)
-
-    assert len(secondary.batched) == 1
-    assert len(secondary.batched[0]["actions"]) == 2
-
-
-def test_each_cryption_gets_its_own_batch():
-    secondary = FakeBackend()
-
-    lockersync.execute_sync_actions_batched([
-        transfer_action(config.SyncActionType.COPY, "Plain.zip"),
-        transfer_action(config.SyncActionType.COPY_ENCRYPT, "Secret.zip"),
-        transfer_action(config.SyncActionType.COPY_DECRYPT, "Readable.zip"),
-    ], FakeBackend(), secondary)
-
-    assert [batch["cryption"] for batch in secondary.batched] == [
-        config.CryptionType.NONE,
-        config.CryptionType.ENCRYPT,
-        config.CryptionType.DECRYPT,
-    ]
-
-
-def test_an_empty_group_is_not_transferred():
-    secondary = FakeBackend()
-
-    lockersync.execute_sync_actions_batched([transfer_action()], FakeBackend(), secondary)
-
-    assert len(secondary.batched) == 1
-
-
-def test_a_batched_sync_reports_what_it_moved():
-    success, moved = lockersync.execute_sync_actions_batched(
-        [transfer_action(src = "One.zip")], FakeBackend(), FakeBackend())
-
-    assert success is True
-    assert moved == ["One.zip"]
-
-
-def test_a_failed_batch_reports_failure():
-    success, moved = lockersync.execute_sync_actions_batched(
-        [transfer_action()], FakeBackend(), FakeBackend(result = False))
-
-    assert success is False
-    assert moved == []
-
-
-def test_orphans_are_recycled_alongside_a_batch():
-    # Recycling cannot be batched, so it still happens one file at a time.
-    secondary = FakeBackend()
-
-    success, moved = lockersync.execute_sync_actions_batched(
-        [transfer_action(), orphan_action()], FakeBackend(), secondary)
-
-    assert success is True
-    assert secondary.recycled == ["Old.zip"]
-    assert "Old.zip" in moved
-
-
-def test_a_failed_recycle_fails_the_batched_sync():
-    success, _ = lockersync.execute_sync_actions_batched(
-        [orphan_action()], FakeBackend(), FakeBackend(result = False))
-
-    assert success is False
-
-
-def test_an_empty_batched_plan_succeeds():
-    success, moved = lockersync.execute_sync_actions_batched([], FakeBackend(), FakeBackend())
-
-    assert success is True
-    assert moved == []
-
-
-###########################################################
-# The hash map cache
-###########################################################
-
-@pytest.fixture
-def cache_dir(monkeypatch, tmp_path):
-    target = tmp_path / "cache"
-    monkeypatch.setattr(
-        lockersync.environment, "get_cache_sync_dir", lambda: str(target))
-    return target
-
-
-def test_the_cache_directory_is_created_on_demand(cache_dir):
-    assert lockersync.get_cache_dir() == str(cache_dir)
-    assert cache_dir.is_dir()
-
-
-def test_each_locker_caches_under_its_own_name(cache_dir):
-    first = lockersync.get_cache_file("hetzner")
-    second = lockersync.get_cache_file("backblaze")
-
-    assert first != second
-    assert first.endswith("hetzner_hashmap.json")
-
-
-def test_clearing_the_cache_empties_it(cache_dir):
-    lockersync.get_cache_dir()
-    (cache_dir / "hetzner_hashmap.json").write_text("{}")
-
-    lockersync.clear_cache()
-
-    assert list(cache_dir.iterdir()) == []
-
-
-def test_clearing_an_empty_cache_is_harmless(cache_dir):
-    lockersync.clear_cache()
-
-    assert cache_dir.is_dir()
+def test_a_folder_that_only_looks_like_the_recycle_bin_is_copied():
+    assert types_of(actions_for({".recycle_binary/Game.zip": entry()}, {})) == [config.SyncActionType.COPY]

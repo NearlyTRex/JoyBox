@@ -29,6 +29,7 @@ class BackgroundJob:
         self.units_type = units_type
         self.sleep_interval = sleep_interval
         self.should_stop = threading.Event()
+        self.thread = None
 
     # Start the job
     def start(self):
@@ -63,9 +64,11 @@ class BackgroundJob:
                 self.job.hours.do(self.job_func)
 
         # Start thread
-        continuous_thread = ScheduleThread()
-        continuous_thread.start()
+        self.thread = ScheduleThread()
+        self.thread.start()
 
-    # Stop the job
+    # Stop the job, waiting for a run in progress to finish
     def stop(self):
         self.should_stop.set()
+        if self.thread and self.thread is not threading.current_thread():
+            self.thread.join()

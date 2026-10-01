@@ -46,6 +46,7 @@ class Wad2Bin(toolbase.ToolBase):
                 install_name = "Wad2Bin",
                 install_dir = programs.get_program_install_dir("Wad2Bin", "windows"),
                 backups_dir = programs.get_program_backup_dir("Wad2Bin", "windows"),
+                locker_type = setup_params.locker_type,
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
@@ -64,6 +65,7 @@ class Wad2Bin(toolbase.ToolBase):
                 install_name = "Wad2Bin",
                 install_dir = programs.get_program_install_dir("Wad2Bin", "linux"),
                 backups_dir = programs.get_program_backup_dir("Wad2Bin", "linux"),
+                locker_type = setup_params.locker_type,
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)

@@ -163,9 +163,10 @@ def main():
             logger.log_warning("Operation cancelled by user")
             return
 
-    # Init sync
+    # Run the action; the outcome becomes the exit status
+    success = False
     if args.action == config.RemoteActionType.INIT:
-        sync.setup_remote(
+        success = sync.setup_remote(
             remote_name = remote_name,
             remote_type = remote_type,
             remote_token = remote_token,
@@ -176,7 +177,7 @@ def main():
 
     # Download files
     elif args.action == config.RemoteActionType.DOWNLOAD:
-        sync.download_files_from_remote(
+        success = sync.download_files_from_remote(
             remote_name = remote_name,
             remote_type = remote_type,
             remote_path = remote_path,
@@ -189,7 +190,7 @@ def main():
 
     # Upload files
     elif args.action == config.RemoteActionType.UPLOAD:
-        sync.upload_files_to_remote(
+        success = sync.upload_files_to_remote(
             remote_name = remote_name,
             remote_type = remote_type,
             remote_path = remote_path,
@@ -202,7 +203,7 @@ def main():
 
     # Pull files
     elif args.action == config.RemoteActionType.PULL:
-        sync.pull_files_from_remote(
+        success = sync.pull_files_from_remote(
             remote_name = remote_name,
             remote_type = remote_type,
             remote_path = remote_path,
@@ -215,7 +216,7 @@ def main():
 
     # Push files
     elif args.action == config.RemoteActionType.PUSH:
-        sync.push_files_to_remote(
+        success = sync.push_files_to_remote(
             remote_name = remote_name,
             remote_type = remote_type,
             remote_path = remote_path,
@@ -228,7 +229,7 @@ def main():
 
     # Merge files
     elif args.action == config.RemoteActionType.MERGE:
-        sync.merge_files_both_ways(
+        success = sync.merge_files_both_ways(
             remote_name = remote_name,
             remote_type = remote_type,
             remote_path = remote_path,
@@ -245,7 +246,7 @@ def main():
         diff_excludes = list(excludes)
         if args.recycle_folder:
             diff_excludes.append(args.recycle_folder + "/**")
-        sync.diff_files(
+        success = sync.diff_files(
             remote_name = remote_name,
             remote_type = remote_type,
             remote_path = remote_path,
@@ -266,7 +267,7 @@ def main():
         diffsync_excludes = list(excludes)
         if args.recycle_folder:
             diffsync_excludes.append(args.recycle_folder + "/**")
-        sync.diff_sync_files(
+        success = sync.diff_sync_files(
             remote_name = remote_name,
             remote_type = remote_type,
             remote_path = remote_path,
@@ -287,7 +288,7 @@ def main():
 
     # Empty recycle bin
     elif args.action == config.RemoteActionType.EMPTYRECYCLE:
-        sync.empty_recycle_bin(
+        success = sync.empty_recycle_bin(
             remote_name = remote_name,
             remote_type = remote_type,
             remote_path = remote_path,
@@ -298,7 +299,7 @@ def main():
 
     # List files
     elif args.action == config.RemoteActionType.LIST:
-        sync.list_files(
+        success = sync.list_files(
             remote_name = remote_name,
             remote_type = remote_type,
             remote_path = remote_path,
@@ -310,7 +311,7 @@ def main():
 
     # Mount files
     elif args.action == config.RemoteActionType.MOUNT:
-        sync.mount_files(
+        success = sync.mount_files(
             remote_name = remote_name,
             remote_type = remote_type,
             remote_path = remote_path,
@@ -323,6 +324,7 @@ def main():
             verbose = args.verbose,
             pretend_run = args.pretend_run,
             exit_on_failure = args.exit_on_failure)
+    return success
 
 # Run through the shared error handling
 def run():

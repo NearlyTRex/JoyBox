@@ -18,7 +18,7 @@ save_game_tool --action Export -c Computer -s Steam --pretend_run --verbose
 # Do it for real (backs up to all lockers by default)
 save_game_tool --action Export -c Computer -s Steam
 
-# A single game, to one locker only
+# A single game, to one locker (plus the local copy that is always kept)
 save_game_tool --action Export -c Computer -s Steam -n "Hollow Knight" -l Local
 ```
 
@@ -41,7 +41,7 @@ it won't pull fresh files from the store. So for "grab from Steam → archive �
 | Flag | Default | Meaning |
 |------|---------|---------|
 | `-a`, `--action` | `Pack` | `Export`, `Pack`, `Unpack`, `Import`, `ImportSavePaths` |
-| `-l`, `--locker_type` | `All` | Destination: `All`, `Local`, `Hetzner`, `Gdrive`, `External` (used by `Pack`/`Export`) |
+| `-l`, `--locker_type` | `All` | Destination besides the local copy that is always kept: `All`, `Local`, `Hetzner`, `Gdrive`, `External` (used by `Pack`/`Export`) |
 | `-c` / `-s` / `-n` | — | Standard game selection (see [Using the Tools](using-the-tools.md)) |
 
 > Packs are timestamped, so each export produces a new historical archive rather than

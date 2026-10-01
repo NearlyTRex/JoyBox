@@ -80,14 +80,14 @@ def test_a_download_can_be_limited_to_a_file_list(rclone, monkeypatch, tmp_path)
     assert recorder.value_after("--files-from") == str(listing)
 
 
-def test_a_missing_file_list_is_not_passed(rclone, monkeypatch, tmp_path):
-    # Passing one rclone cannot read would transfer everything instead.
+def test_a_download_with_an_unreadable_file_list_is_refused(rclone, monkeypatch, tmp_path):
+    # Dropping the list would transfer everything instead.
     recorder = record(monkeypatch)
-    sync.download_files_from_remote(
-        REMOTE, REMOTE_TYPE, REMOTE_PATH, str(tmp_path),
-        files_from = str(tmp_path / "absent.txt"))
 
-    assert "--files-from" not in recorder.only()
+    assert sync.download_files_from_remote(
+        REMOTE, REMOTE_TYPE, REMOTE_PATH, str(tmp_path),
+        files_from = str(tmp_path / "absent.txt")) is False
+    assert recorder.ran() is False
 
 
 def test_a_pretend_download_is_a_dry_run(rclone, monkeypatch, tmp_path):

@@ -47,6 +47,7 @@ class NDecrypt(toolbase.ToolBase):
                 install_dir = programs.get_program_install_dir("NDecrypt", "windows"),
                 backups_dir = programs.get_program_backup_dir("NDecrypt", "windows"),
                 install_files = ["NDecrypt.exe"],
+                locker_type = setup_params.locker_type,
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
@@ -72,6 +73,7 @@ class NDecrypt(toolbase.ToolBase):
                         "perms": 755
                     }
                 ],
+                locker_type = setup_params.locker_type,
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)

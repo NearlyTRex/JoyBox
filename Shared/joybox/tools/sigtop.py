@@ -47,6 +47,7 @@ class Sigtop(toolbase.ToolBase):
                 install_dir = programs.get_program_install_dir("Sigtop", "windows"),
                 backups_dir = programs.get_program_backup_dir("Sigtop", "windows"),
                 install_files = ["sigtop.exe"],
+                locker_type = setup_params.locker_type,
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)

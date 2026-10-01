@@ -76,6 +76,7 @@ class RClone(toolbase.ToolBase):
                 install_name = "RClone",
                 install_dir = programs.get_program_install_dir("RClone", "windows"),
                 backups_dir = programs.get_program_backup_dir("RClone", "windows"),
+                locker_type = setup_params.locker_type,
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
@@ -91,6 +92,7 @@ class RClone(toolbase.ToolBase):
                 install_name = "RClone",
                 install_dir = programs.get_program_install_dir("RClone", "linux"),
                 backups_dir = programs.get_program_backup_dir("RClone", "linux"),
+                locker_type = setup_params.locker_type,
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)

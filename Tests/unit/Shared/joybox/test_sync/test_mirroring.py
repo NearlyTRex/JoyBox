@@ -153,19 +153,19 @@ def test_files_are_listed_with_hashes(rclone, monkeypatch):
     assert built
 
 
-def test_a_listing_with_no_output_is_empty(rclone, monkeypatch):
+def test_a_listing_with_no_output_is_a_failure(rclone, quiet, monkeypatch):
     record(monkeypatch, output = "")
 
-    assert sync.list_files_with_hashes(REMOTE, REMOTE_TYPE, REMOTE_PATH) == {}
+    assert sync.list_files_with_hashes(REMOTE, REMOTE_TYPE, REMOTE_PATH) is None
 
 
-def test_a_malformed_listing_is_empty(rclone, monkeypatch):
+def test_a_malformed_listing_is_a_failure(rclone, quiet, monkeypatch):
     record(monkeypatch, output = "not json at all")
 
-    assert sync.list_files_with_hashes(REMOTE, REMOTE_TYPE, REMOTE_PATH) == {}
+    assert sync.list_files_with_hashes(REMOTE, REMOTE_TYPE, REMOTE_PATH) is None
 
 
-def test_a_listing_without_rclone_is_empty(no_rclone, recording_command):
-    assert sync.list_files_with_hashes(REMOTE, REMOTE_TYPE, REMOTE_PATH) == {}
+def test_a_listing_without_rclone_is_a_failure(no_rclone, quiet, recording_command):
+    assert sync.list_files_with_hashes(REMOTE, REMOTE_TYPE, REMOTE_PATH) is None
 
 

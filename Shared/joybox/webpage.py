@@ -1,8 +1,7 @@
 # Imports
-import os
-import os.path
 import json
 import re
+import subprocess
 
 # Local imports
 import joybox.config as config
@@ -15,6 +14,9 @@ import joybox.logger as logger
 import joybox.paths as paths
 import joybox.settings as settings
 from joybox import runtime
+
+# Seconds a plain request may take before it is abandoned
+request_timeout_seconds = 30
 
 ###########################################################
 
@@ -63,7 +65,7 @@ def create_chrome_web_driver(
             from selenium.webdriver.chrome.options import Options as ChromeOptions
             from selenium.webdriver import Chrome
             from webdriver_manager.chrome import ChromeDriverManager
-            service = ChromeService(executable_path=ChromeDriverManager().install(), log_path=os.path.devnull)
+            service = ChromeService(executable_path = ChromeDriverManager().install(), log_output = subprocess.DEVNULL)
             options = ChromeOptions()
             options.add_argument("--start-maximized")
             options.add_argument("--no-sandbox")
@@ -72,15 +74,24 @@ def create_chrome_web_driver(
             options.add_argument("--disable-extensions")
             options.add_argument("--disable-dev-shm-usage")
             options.add_argument("user-agent=Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/131.0.0.0 Safari/537.36")
+            if paths.is_path_valid(download_dir) and paths.does_path_exist(download_dir):
+                options.add_experimental_option("prefs", {
+                    "download.default_directory": download_dir,
+                    "download.prompt_for_download": False
+                })
+            if paths.is_path_valid(profile_dir) and paths.does_path_exist(profile_dir):
+                options.add_argument("--user-data-dir=%s" % profile_dir)
             if make_headless:
                 options.add_argument("--headless")
                 options.add_argument("--window-size=1920,1080")
             if paths.is_path_valid(binary_location) and paths.does_path_exist(binary_location):
                 options.binary_location = binary_location
-            web_driver = Chrome(service=service, options=options)
+            web_driver = Chrome(service = service, options = options)
             return web_driver
         return None
     except Exception as e:
+        if verbose:
+            logger.log_warning("CreateChromeWebDriver: Failed to create web driver: %s" % str(e))
         if exit_on_failure:
             logger.log_error("Unable to create chrome web driver")
             logger.log_error(e)
@@ -114,21 +125,23 @@ def create_firefox_web_driver(
             from selenium.webdriver.firefox.options import Options as FirefoxOptions
             from selenium.webdriver import Firefox
             from webdriver_manager.firefox import GeckoDriverManager
-            service = FirefoxService(executable_path=GeckoDriverManager().install())
+            service = FirefoxService(executable_path = GeckoDriverManager().install(), log_output = subprocess.DEVNULL)
             options = FirefoxOptions()
             if paths.is_path_valid(download_dir) and paths.does_path_exist(download_dir):
                 options.set_preference("browser.download.folderList", 2)
                 options.set_preference("browser.download.dir", download_dir)
             if paths.is_path_valid(profile_dir) and paths.does_path_exist(profile_dir):
-                options.set_preference('profile', profile_dir)
+                options.profile = profile_dir
             if make_headless:
                 options.add_argument("--headless")
             if paths.is_path_valid(binary_location) and paths.does_path_exist(binary_location):
                 options.binary_location = binary_location
-            web_driver = Firefox(service=service, options=options)
+            web_driver = Firefox(service = service, options = options)
             return web_driver
         return None
     except Exception as e:
+        if verbose:
+            logger.log_warning("CreateFirefoxWebDriver: Failed to create web driver: %s" % str(e))
         if exit_on_failure:
             logger.log_error("Unable to create firefox web driver")
             logger.log_error(e)
@@ -145,7 +158,9 @@ def create_web_driver(
     pretend_run = False,
     exit_on_failure = False):
     if not driver_type:
-        driver_type = config.WebDriverType.from_string(settings.get_value("UserData.Scraping", "web_driver_type"))
+        driver_type_name = settings.get_value("UserData.Scraping", "web_driver_type", throw_exception = False)
+        if isinstance(driver_type_name, str):
+            driver_type = config.WebDriverType.from_string(driver_type_name)
     if not driver_type:
         driver_type = config.WebDriverType.FIREFOX
     if driver_type == config.WebDriverType.FIREFOX:
@@ -188,10 +203,13 @@ def destroy_web_driver(
             logger.log_info("Destroying web driver")
         if not pretend_run:
             if driver:
-                driver.close()
+                # quit closes every window and stops the driver service, even
+                # when the browser session is already gone
                 driver.quit()
         return True
     except Exception as e:
+        if verbose:
+            logger.log_warning("DestroyWebDriver: Failed to destroy web driver: %s" % str(e))
         if exit_on_failure:
             logger.log_error("Unable to destroy web driver")
             logger.log_error(e)
@@ -291,7 +309,7 @@ class ElementLocator:
 # Wait for all elements
 def wait_for_all_elements(
     driver,
-    locators = [],
+    locators = None,
     wait_time = 1000,
     verbose = False,
     pretend_run = False,
@@ -299,6 +317,12 @@ def wait_for_all_elements(
     try:
         from selenium.webdriver.support.ui import WebDriverWait
         from selenium.webdriver.support import expected_conditions as EC
+        if not locators:
+            if verbose:
+                logger.log_warning("WaitForAllElements: No locators provided")
+            return None
+        if not is_session_valid(driver, verbose):
+            return None
         if verbose:
             logger.log_info("WaitForAllElements: Waiting for all %d element(s) (timeout: %d seconds)" % (len(locators), wait_time))
             for i, locator in enumerate(locators):
@@ -321,7 +345,7 @@ def wait_for_all_elements(
 # Wait for any element
 def wait_for_any_element(
     driver,
-    locators = [],
+    locators = None,
     wait_time = 1000,
     verbose = False,
     pretend_run = False,
@@ -329,6 +353,12 @@ def wait_for_any_element(
     try:
         from selenium.webdriver.support.ui import WebDriverWait
         from selenium.webdriver.support import expected_conditions as EC
+        if not locators:
+            if verbose:
+                logger.log_warning("WaitForAnyElement: No locators provided")
+            return None
+        if not is_session_valid(driver, verbose):
+            return None
         if verbose:
             logger.log_info("WaitForAnyElement: Waiting for any of %d element(s) (timeout: %d seconds)" % (len(locators), wait_time))
             for i, locator in enumerate(locators):
@@ -358,8 +388,7 @@ def is_session_valid(
                 logger.log_warning("Object session is None")
             return False
         # Reading the URL raises once the browser session has gone away
-        if hasattr(obj, 'current_url'):
-            _ = obj.current_url
+        getattr(obj, "current_url", None)
         return True
     except Exception:
         if verbose:
@@ -706,6 +735,10 @@ def load_cookie(
                 except Exception as cookie_error:
                     if verbose:
                         logger.log_warning("LoadCookie: Failed to add cookie: %s" % str(cookie_error))
+            if cookies_loaded == 0:
+                if verbose:
+                    logger.log_warning("LoadCookie: No cookies could be added")
+                return False
             if verbose:
                 logger.log_info("Successfully loaded %d cookies" % cookies_loaded)
         return True
@@ -810,7 +843,7 @@ def load_cookie_website(
 # Get website text
 def get_website_text(
     url,
-    params = {},
+    params = None,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -832,31 +865,32 @@ def get_website_text(
     if driver:
         if verbose:
             logger.log_info("GetWebsiteText: Web driver created successfully")
-        page_text = get_page_source(
-            driver = driver,
-            url = url,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        destroy_web_driver(
-            driver = driver,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
+        try:
+            page_text = get_page_source(
+                driver = driver,
+                url = url,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
+        finally:
+            destroy_web_driver(
+                driver = driver,
+                verbose = verbose,
+                pretend_run = pretend_run)
         if page_text:
             if verbose:
                 logger.log_info("GetWebsiteText: Successfully fetched content using web driver (%d chars)" % len(page_text))
             return page_text
-        else:
-            if verbose:
-                logger.log_warning("GetWebsiteText: Web driver returned empty content")
+        if verbose:
+            logger.log_warning("GetWebsiteText: Web driver returned empty content")
 
     # Next, try requests
     if verbose:
         logger.log_info("GetWebsiteText: Attempting to fetch using requests library")
     try:
         import requests
-        reqs = requests.get(url, params=params)
+        reqs = requests.get(url, params = params, timeout = request_timeout_seconds)
+        reqs.raise_for_status()
         if verbose:
             logger.log_info("GetWebsiteText: Successfully fetched content using requests (%d chars)" % len(reqs.text))
         return reqs.text
@@ -865,6 +899,9 @@ def get_website_text(
             logger.log_warning("GetWebsiteText: Requests library failed: %s" % str(e))
 
     # No results
+    if exit_on_failure:
+        logger.log_error("Unable to fetch website text from %s" % url)
+        runtime.quit_program()
     if verbose:
         logger.log_warning("GetWebsiteText: All fetch methods failed, returning empty string")
     return ""
@@ -873,7 +910,7 @@ def get_website_text(
 def get_matching_urls(
     url,
     base_url,
-    params = {},
+    params = None,
     starts_with = "",
     ends_with = "",
     verbose = False,
@@ -918,7 +955,7 @@ def get_matching_urls(
             if not value.startswith("http"):
                 if is_iframe and value.startswith("//"):
                     value = "https:" + value
-                elif not is_iframe:
+                else:
                     value = strings.join_strings_as_url(base_url, value)
             return [value, strings.strip_string_query_params(value)]
 
@@ -938,7 +975,8 @@ def get_matching_urls(
                     potential_urls.append(strings.strip_string_query_params(value))
 
         # Look through text nodes to find links
-        for value in parser.find_all(string=re.compile("^http")):
+        for value in parser.find_all(string=re.compile(r"^\s*https?://")):
+            value = str(value).strip()
             potential_urls.append(value)
             potential_urls.append(strings.strip_string_query_params(value))
 
@@ -962,11 +1000,15 @@ def get_matching_urls(
         logger.log_info("GetMatchingUrls: Returning %d matching URL(s)" % len(matching_urls))
     return matching_urls
 
+# Get natural sort key, so that numbered names order by value rather than by digit
+def get_natural_sort_key(value):
+    return [int(token) if token.isdigit() else token.lower() for token in re.split(r"(\d+)", value)]
+
 # Get matching url
 def get_matching_url(
     url,
     base_url,
-    params = {},
+    params = None,
     starts_with = "",
     ends_with = "",
     get_latest = False,
@@ -997,7 +1039,7 @@ def get_matching_url(
         exit_on_failure = exit_on_failure)
 
     # Did not find any matching release
-    if len(potential_urls) == 0:
+    if not potential_urls:
         if verbose:
             logger.log_warning("GetMatchingUrl: No matching URLs found")
         return None
@@ -1005,20 +1047,16 @@ def get_matching_url(
         logger.log_info("GetMatchingUrl: Found %d potential URL(s)" % len(potential_urls))
 
     # Select final url
-    matching_url = None
     if get_latest:
         potential_map = {}
         for potential_url in potential_urls:
-            url_tokens = potential_url.split("/")
-            if len(url_tokens) > 0:
-                potential_map[url_tokens[-1]] = potential_url
+            potential_map[potential_url.split("/")[-1]] = potential_url
         if verbose:
             logger.log_info("GetMatchingUrl: Sorting %d URLs to find latest" % len(potential_map))
-        for potential_key in sorted(potential_map.keys(), reverse = True):
-            matching_url = potential_map[potential_key]
-            if verbose:
-                logger.log_info("GetMatchingUrl: Selected latest URL key: %s" % potential_key)
-            break
+        latest_key = max(potential_map.keys(), key = get_natural_sort_key)
+        matching_url = potential_map[latest_key]
+        if verbose:
+            logger.log_info("GetMatchingUrl: Selected latest URL key: %s" % latest_key)
     else:
         matching_url = potential_urls[0]
         if verbose:

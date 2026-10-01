@@ -397,6 +397,12 @@ def test_html_is_returned_as_text(requests_module):
     assert network.get_remote_html("https://example.test") == "<html></html>"
 
 
+def test_a_json_request_does_not_wait_forever(requests_module):
+    network.get_remote_json("https://example.test/api")
+
+    assert only_call(requests_module)["timeout"] == 10
+
+
 def test_an_html_request_does_not_wait_forever(requests_module):
     # A scrape that hangs holds up the whole run with no way to interrupt it.
     network.get_remote_html("https://example.test")

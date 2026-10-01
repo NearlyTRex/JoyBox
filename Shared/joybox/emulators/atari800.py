@@ -70,6 +70,7 @@ class Atari800(emulatorbase.EmulatorBase):
                 install_dir = programs.get_program_install_dir("Atari800", "windows"),
                 backups_dir = programs.get_program_backup_dir("Atari800", "windows"),
                 get_latest = False,
+                locker_type = setup_params.locker_type,
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)

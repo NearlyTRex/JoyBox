@@ -64,6 +64,7 @@ class VKD3D(toolbase.ToolBase):
                 install_name = "VKD3D-Proton",
                 install_dir = programs.get_library_install_dir("VKD3D", "lib"),
                 backups_dir = programs.get_library_backup_dir("VKD3D", "lib"),
+                locker_type = setup_params.locker_type,
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)

@@ -186,6 +186,118 @@ def test_a_native_command_is_not_routed_through_the_sandbox(monkeypatch):
     command.preprocess_command(["/usr/bin/true"])
 
 
+def test_preprocessing_passes_the_run_flags_to_the_prefix_setup(monkeypatch):
+    seen = {}
+
+    def setup_prefix_command(cmd, options, **kwargs):
+        seen.update(kwargs)
+        return (cmd, options)
+
+    monkeypatch.setattr(command.sandbox, "should_be_run_via_wine", lambda cmd: True)
+    monkeypatch.setattr(command, "setup_prefix_command", setup_prefix_command)
+
+    command.preprocess_command(["/games/Game.exe"], verbose = True, pretend_run = True, exit_on_failure = True)
+
+    assert seen == {"verbose": True, "pretend_run": True, "exit_on_failure": True}
+
+
+def test_a_prefix_can_be_forced_onto_a_native_command(monkeypatch):
+    monkeypatch.setattr(command.sandbox, "should_be_run_via_wine", lambda cmd: False)
+    monkeypatch.setattr(command.sandbox, "should_be_run_via_sandboxie", lambda cmd: False)
+    monkeypatch.setattr(
+        command, "setup_prefix_command",
+        lambda cmd, options, **kwargs: (["sandboxed"] + cmd, options))
+    options = command.create_command_options(force_prefix = True)
+
+    new_cmd, _ = command.preprocess_command(["/usr/bin/tool"], options = options)
+
+    assert new_cmd == ["sandboxed", "/usr/bin/tool"]
+
+
+@pytest.mark.parametrize("wine,sandboxie,expected", [
+    (False, False, False),
+    (True, False, True),
+    (False, True, True),
+])
+def test_a_prefix_command_is_one_for_wine_or_sandboxie(monkeypatch, wine, sandboxie, expected):
+    monkeypatch.setattr(command.sandbox, "should_be_run_via_wine", lambda cmd: wine)
+    monkeypatch.setattr(command.sandbox, "should_be_run_via_sandboxie", lambda cmd: sandboxie)
+
+    assert command.is_prefix_command(["/games/Game.exe"]) is expected
+
+
+###########################################################
+# Prefix setup
+###########################################################
+
+@pytest.fixture
+def prefix_sandbox(monkeypatch):
+    state = {"created": [], "steps": []}
+
+    def create_prefix(self, **kwargs):
+        state["created"].append(kwargs)
+        self.set_prefix_name(kwargs["prefix_name"])
+        return True
+
+    def step(name):
+        def run(cmd, options, **kwargs):
+            state["steps"].append((name, kwargs))
+            return ([name] + cmd, options)
+        return run
+
+    monkeypatch.setattr(command.sandbox, "should_be_run_via_wine", lambda cmd: True)
+    monkeypatch.setattr(command.sandbox, "should_be_run_via_sandboxie", lambda cmd: False)
+    monkeypatch.setattr(type(command.create_command_options()), "create_prefix", create_prefix)
+    monkeypatch.setattr(command.sandbox, "setup_prefix_command", step("command"))
+    monkeypatch.setattr(command.sandbox, "setup_prefix_environment", step("environment"))
+    return state
+
+
+def test_a_missing_prefix_is_created_as_the_default_prefix(prefix_sandbox):
+    command.setup_prefix_command(["/games/Game.exe"])
+
+    created = prefix_sandbox["created"][0]
+    assert created["prefix_name"] == config.PrefixType.DEFAULT
+    assert created["is_wine_prefix"] is True
+    assert created["is_sandboxie_prefix"] is False
+
+
+def test_a_ready_prefix_is_not_created_again(prefix_sandbox, tmp_path):
+    options = command.create_command_options(
+        is_wine_prefix = True,
+        prefix_name = config.PrefixType.GAME,
+        prefix_dir = str(tmp_path))
+
+    command.setup_prefix_command(["/games/Game.exe"], options = options)
+
+    assert prefix_sandbox["created"] == []
+
+
+def test_the_command_is_wrapped_then_given_its_environment(prefix_sandbox):
+    new_cmd, _ = command.setup_prefix_command(["/games/Game.exe"])
+
+    assert new_cmd == ["environment", "command", "/games/Game.exe"]
+
+
+def test_prefix_setup_passes_the_run_flags_to_every_step(prefix_sandbox):
+    flags = {"verbose": True, "pretend_run": True, "exit_on_failure": True}
+
+    command.setup_prefix_command(["/games/Game.exe"], **flags)
+
+    created = prefix_sandbox["created"][0]
+    assert {key: created[key] for key in flags} == flags
+    assert [kwargs for _, kwargs in prefix_sandbox["steps"]] == [flags, flags]
+
+
+def test_prefix_setup_leaves_the_original_options_alone(prefix_sandbox):
+    options = command.create_command_options()
+
+    _, new_options = command.setup_prefix_command(["/games/Game.exe"], options = options)
+
+    assert new_options is not options
+    assert options.get_prefix_name() is None
+
+
 ###########################################################
 # Postprocessing
 ###########################################################
@@ -238,6 +350,37 @@ def test_every_output_path_is_transferred_out_of_the_sandbox(monkeypatch):
     command.postprocess_command(["/games/Game.exe"], options = options)
 
     assert transferred == ["/out/one", "/out/two"]
+
+
+def test_output_paths_that_are_not_a_list_are_ignored(monkeypatch):
+    def fail(**kwargs):
+        raise AssertionError("nothing to transfer")
+
+    monkeypatch.setattr(command.sandbox, "should_be_run_via_wine", lambda cmd: False)
+    monkeypatch.setattr(command.sandbox, "should_be_run_via_sandboxie", lambda cmd: False)
+    monkeypatch.setattr(command.sandbox, "transfer_from_sandbox", fail)
+    options = command.create_command_options(output_paths = "/out/one")
+
+    command.postprocess_command(["/games/Game.exe"], options = options)
+
+
+def test_postprocessing_passes_the_run_flags_to_every_step(monkeypatch):
+    flags = {"verbose": True, "pretend_run": True, "exit_on_failure": True}
+    seen = []
+
+    def record(**kwargs):
+        seen.append({key: kwargs[key] for key in flags})
+
+    monkeypatch.setattr(command.sandbox, "should_be_run_via_wine", lambda cmd: True)
+    monkeypatch.setattr(command.sandbox, "should_be_run_via_sandboxie", lambda cmd: True)
+    monkeypatch.setattr(command.sandbox, "cleanup_wine", record)
+    monkeypatch.setattr(command.sandbox, "cleanup_sandboxie", record)
+    monkeypatch.setattr(command.sandbox, "transfer_from_sandbox", record)
+    options = command.create_command_options(output_paths = ["/out/one"])
+
+    command.postprocess_command(["/games/Game.exe"], options = options, **flags)
+
+    assert seen == [flags, flags, flags]
 
 
 ###########################################################
@@ -351,6 +494,25 @@ def test_a_win31_launch_exits_when_the_program_does(dosbox, no_discs, tmp_path):
         options_with_prefix(tmp_path), start_program = "/host/games/GAME.EXE")
 
     assert "EXIT" in cmd
+
+
+def test_win31_program_arguments_follow_the_program(dosbox, no_discs, tmp_path):
+    cmd = command.get_win31_launch_command(
+        options_with_prefix(tmp_path),
+        start_program = "/host/games/GAME.EXE",
+        start_args = ["/fast"])
+
+    assert "WIN RUNEXIT GAME.EXE /fast" in cmd
+
+
+@pytest.mark.parametrize("builder", [
+    command.get_dos_launch_command,
+    command.get_win31_launch_command,
+])
+def test_no_c_drive_is_mounted_without_a_prefix(dosbox, no_discs, builder):
+    cmd = builder(command.create_command_options())
+
+    assert not any(part.startswith("mount c") for part in cmd)
 
 
 def test_a_win31_launch_without_a_program_does_not_exit(dosbox, no_discs, tmp_path):

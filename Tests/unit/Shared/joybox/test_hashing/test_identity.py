@@ -212,6 +212,75 @@ def test_an_archive_with_other_members_is_not_a_duplicate(tmp_path):
     assert hashing.find_duplicate_archives(source, str(search)) == []
 
 
+def test_an_archive_holding_more_members_is_not_a_duplicate(tmp_path):
+    # A save whose file was deleted must not look already packed.
+    source = build_zip(tmp_path, "source.zip", {"a.txt": "one"})
+    search = tmp_path / "search"
+    search.mkdir()
+    build_zip(search, "bigger.zip", {"a.txt": "one", "b.txt": "two"})
+
+    assert hashing.find_duplicate_archives(source, str(search)) == []
+
+
+def test_an_archive_holding_fewer_members_is_not_a_duplicate(tmp_path):
+    source = build_zip(tmp_path, "source.zip", {"a.txt": "one", "b.txt": "two"})
+    search = tmp_path / "search"
+    search.mkdir()
+    build_zip(search, "smaller.zip", {"a.txt": "one"})
+
+    assert hashing.find_duplicate_archives(source, str(search)) == []
+
+
+def test_member_order_does_not_matter_for_a_duplicate(tmp_path):
+    source = build_zip(tmp_path, "source.zip", {"a.txt": "one", "b.txt": "two"})
+    search = tmp_path / "search"
+    search.mkdir()
+    copy = os.path.join(str(search), "copy.zip")
+    with zipfile.ZipFile(copy, "w") as archive_file:
+        archive_file.writestr("b.txt", "two")
+        archive_file.writestr("a.txt", "one")
+
+    assert hashing.find_duplicate_archives(source, str(search)) == [copy]
+
+
+def test_a_changed_member_is_not_a_duplicate(tmp_path):
+    source = build_zip(tmp_path, "source.zip", {"a.txt": "one"})
+    search = tmp_path / "search"
+    search.mkdir()
+    build_zip(search, "older.zip", {"a.txt": "older"})
+
+    assert hashing.find_duplicate_archives(source, str(search)) == []
+
+
+def test_a_missing_archive_has_no_duplicates(tmp_path):
+    # A pretend run never writes the archive it would compare.
+    search = tmp_path / "search"
+    search.mkdir()
+    build_zip(search, "copy.zip", {"a.txt": "one"})
+    write_file(search, "notes.txt", b"plain")
+
+    assert hashing.find_duplicate_archives(str(tmp_path / "missing.zip"), str(search)) == []
+
+
+def test_a_file_that_is_not_a_zip_has_no_duplicates(tmp_path):
+    source = write_file(tmp_path, "source.bin", b"not a zip")
+    search = tmp_path / "search"
+    search.mkdir()
+    write_file(search, "other.bin", b"also not a zip")
+
+    assert hashing.find_duplicate_archives(source, str(search)) == []
+
+
+def test_files_beside_the_archives_are_never_duplicates(tmp_path):
+    source = build_zip(tmp_path, "source.zip", {"a.txt": "one"})
+    search = tmp_path / "search"
+    (search / "nested").mkdir(parents = True)
+    write_file(search, "notes.txt", b"plain")
+    build_zip(search / "nested", "copy.zip", {"a.txt": "one"})
+
+    assert hashing.find_duplicate_archives(source, str(search)) == []
+
+
 ###########################################################
 # How a member checksum is rendered
 ###########################################################

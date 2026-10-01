@@ -273,7 +273,7 @@ def test_a_driver_is_destroyed():
 
 
 def test_destroying_nothing_is_harmless():
-    assert webpage.destroy_web_driver(None) in (True, False)
+    assert webpage.destroy_web_driver(None) is True
 
 
 def test_a_driver_that_fails_to_quit_is_handled():

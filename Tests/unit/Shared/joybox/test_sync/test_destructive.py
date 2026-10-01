@@ -119,6 +119,13 @@ def test_recycling_needs_a_file_list():
     assert signature.parameters["files_from"].default is inspect.Parameter.empty
 
 
+@pytest.mark.parametrize("files_from", [None, ""])
+def test_recycling_without_a_file_list_is_refused(rclone, quiet, recorded_move, files_from):
+    assert sync.recycle_files_on_remote(
+        REMOTE, REMOTE_TYPE, "/Gaming/Roms", files_from) is False
+    assert recorded_move == []
+
+
 def test_recycling_moves_into_the_bin(rclone, recorded_move, file_list):
     sync.recycle_files_on_remote(
         REMOTE, REMOTE_TYPE, "/Gaming/Roms", file_list)
@@ -168,13 +175,19 @@ def test_the_bin_is_inside_the_path_being_recycled(rclone, recorded_move, file_l
     assert recorded_move[0]["dest_path"].startswith(recorded_move[0]["src_path"])
 
 
-def test_a_move_without_a_file_list_omits_the_flag(rclone, monkeypatch, tmp_path):
-    # rclone then moves everything under the source, which is why recycling
-    # requires the list.
+def test_a_move_with_an_unreadable_file_list_is_refused(rclone, quiet, monkeypatch, tmp_path):
+    # Dropping the list would move everything under the source.
     recorder = record(monkeypatch)
-    sync.move_files_on_remote(
+
+    assert sync.move_files_on_remote(
         REMOTE, REMOTE_TYPE, "/Gaming/Old", "/Gaming/New",
-        files_from = str(tmp_path / "absent.txt"))
+        files_from = str(tmp_path / "absent.txt")) is False
+    assert recorder.ran() is False
+
+
+def test_a_move_without_a_file_list_moves_the_whole_path(rclone, monkeypatch):
+    recorder = record(monkeypatch)
+    sync.move_files_on_remote(REMOTE, REMOTE_TYPE, "/Gaming/Old", "/Gaming/New")
 
     assert "--files-from" not in recorder.only()
 
