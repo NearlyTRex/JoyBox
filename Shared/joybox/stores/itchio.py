@@ -105,21 +105,21 @@ class Itchio(storebase.StoreBase):
             return False
 
         # Log into website
-        success = webpage.login_cookie_website(
-            driver = web_driver,
-            url = "https://itch.io/login",
-            cookie = self.get_cookie_file(),
-            locator = webpage.ElementLocator({"link_text": "My feed"}),
-            verbose = verbose)
-        if not success:
-            return None
-
-        # Disconnect from web
-        success = self.web_disconnect(
-            web_driver = web_driver,
-            verbose = verbose,
-            exit_on_failure = exit_on_failure)
-        if not success:
+        success = False
+        try:
+            success = webpage.login_cookie_website(
+                driver = web_driver,
+                url = "https://itch.io/login",
+                cookie = self.get_cookie_file(),
+                locator = webpage.ElementLocator({"link_text": "My feed"}),
+                verbose = verbose)
+        finally:
+            disconnected = self.web_disconnect(
+                web_driver = web_driver,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
+        if not success or not disconnected:
             return False
 
         # Should be successful
@@ -157,14 +157,8 @@ class Itchio(storebase.StoreBase):
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = False)
-            if cached_data and isinstance(cached_data, list):
-                cached_purchases = []
-                for purchase_data in cached_data:
-                    purchase = jsondata.JsonData(
-                        json_data = purchase_data,
-                        json_platform = self.get_platform())
-                    cached_purchases.append(purchase)
-                return cached_purchases
+            if isinstance(cached_data, list) and all(isinstance(entry, dict) for entry in cached_data):
+                return self.make_purchases(cached_data)
             else:
                 if verbose:
                     logger.log_warning("Failed to load itch.io cache, will fetch fresh data")
@@ -178,6 +172,56 @@ class Itchio(storebase.StoreBase):
             exit_on_failure = exit_on_failure)
         if not web_driver:
             return None
+
+        # Scrape purchases
+        purchases_data = None
+        try:
+            purchases_data = self.scrape_purchases(
+                web_driver = web_driver,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
+        finally:
+            disconnected = self.web_disconnect(
+                web_driver = web_driver,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
+        if purchases_data is None or not disconnected:
+            return None
+
+        # Save to cache
+        fileops.make_directory(cache_dir, verbose = verbose, pretend_run = pretend_run)
+        success = serialization.write_json_file(
+            src = cache_file_purchases,
+            json_data = purchases_data,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = False)
+        if success and verbose:
+            logger.log_info("Saved itch.io purchases data to cache")
+        elif not success and verbose:
+            logger.log_warning("Failed to save itch.io cache")
+
+        # Return purchases
+        return self.make_purchases(purchases_data)
+
+    # Make purchases
+    def make_purchases(self, purchases_data):
+        purchases = []
+        for purchase_data in purchases_data:
+            purchases.append(jsondata.JsonData(
+                json_data = purchase_data,
+                json_platform = self.get_platform()))
+        return purchases
+
+    # Scrape purchases
+    def scrape_purchases(
+        self,
+        web_driver,
+        verbose = False,
+        pretend_run = False,
+        exit_on_failure = False):
 
         # Load url
         success = webpage.load_cookie_website(
@@ -197,72 +241,35 @@ class Itchio(storebase.StoreBase):
                 parent = web_driver,
                 locator = webpage.ElementLocator({"class": "grid_loader"}))
             if grid_loader is None:
-               break
+                break
 
         # Parse game cells
-        purchases = []
         purchases_data = []
         game_cells = webpage.get_element(
             parent = web_driver,
             locator = webpage.ElementLocator({"class": "game_cell"}),
             all_elements = True)
-        if game_cells:
-            for game_cell in game_cells:
-                game_title = webpage.get_element(
-                    parent = game_cell,
-                    locator = webpage.ElementLocator({"class": "title"}))
-                game_cover = webpage.get_element(
-                    parent = game_cell,
-                    locator = webpage.ElementLocator({"class": "lazy_loaded"}))
-                if not game_title or not game_cover:
-                    continue
+        for game_cell in game_cells or []:
+            game_title = webpage.get_element(
+                parent = game_cell,
+                locator = webpage.ElementLocator({"class": "title"}))
+            if not game_title:
+                continue
 
-                # Gather info
-                line_appid = webpage.get_element_attribute(game_cell, "data-game_id")
-                line_appurl = webpage.get_element_attribute(game_title, "href")
-                if len(line_appurl.split("/download")) == 2:
-                    line_appurl = line_appurl.split("/download")[0]
-                line_title = webpage.get_element_text(game_title).rstrip(" \n")
-
-                # Create purchase
-                purchase = jsondata.JsonData(
-                    json_data = {},
-                    json_platform = self.get_platform())
-                purchase.set_value(config.json_key_store_appid, line_appid)
-                purchase.set_value(config.json_key_store_appurl, line_appurl)
-                purchase.set_value(config.json_key_store_name, line_title)
-                purchases.append(purchase)
-
-                # Store data for caching
-                purchases_data.append({
-                    config.json_key_store_appid: line_appid,
-                    config.json_key_store_appurl: line_appurl,
-                    config.json_key_store_name: line_title
-                })
-
-        # Disconnect from web
-        success = self.web_disconnect(
-            web_driver = web_driver,
-            verbose = verbose,
-            exit_on_failure = exit_on_failure)
-        if not success:
-            return None
-
-        # Save to cache
-        fileops.make_directory(cache_dir, verbose = verbose, pretend_run = pretend_run)
-        success = serialization.write_json_file(
-            src = cache_file_purchases,
-            json_data = purchases_data,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = False)
-        if success and verbose:
-            logger.log_info("Saved itch.io purchases data to cache")
-        elif not success and verbose:
-            logger.log_warning("Failed to save itch.io cache")
-
-        # Return purchases
-        return purchases
+            # Gather info
+            line_appid = webpage.get_element_attribute(game_cell, "data-game_id")
+            line_appurl = webpage.get_element_attribute(game_title, "href")
+            if not line_appurl:
+                continue
+            if len(line_appurl.split("/download")) == 2:
+                line_appurl = line_appurl.split("/download")[0]
+            line_title = (webpage.get_element_text(game_title) or "").rstrip(" \n")
+            purchases_data.append({
+                config.json_key_store_appid: line_appid,
+                config.json_key_store_appurl: line_appurl,
+                config.json_key_store_name: line_title
+            })
+        return purchases_data
 
     ############################################################
     # Metadata
@@ -286,12 +293,14 @@ class Itchio(storebase.StoreBase):
 
         # Cleanup function
         def cleanup_driver():
+            nonlocal web_driver
             if web_driver:
                 self.web_disconnect(
                     web_driver = web_driver,
                     verbose = verbose,
                     pretend_run = pretend_run,
                     exit_on_failure = False)
+                web_driver = None
 
         # Fetch function
         def attempt_metadata_fetch():
@@ -304,6 +313,8 @@ class Itchio(storebase.StoreBase):
                 pretend_run = pretend_run,
                 exit_on_failure = False)
             if not web_driver:
+                if pretend_run:
+                    return None
                 raise Exception("Failed to connect to web driver")
 
             # Load url with cookie
@@ -384,18 +395,19 @@ class Itchio(storebase.StoreBase):
             return metadata_entry
 
         # Use retry function with cleanup
-        result = datautils.retry_with_backoff(
-            func = attempt_metadata_fetch,
-            cleanup_func = cleanup_driver,
-            max_retries = 3,
-            initial_delay = 2,
-            backoff_factor = 2,
-            verbose = verbose,
-            operation_name = "Itch.io metadata fetch for '%s'" % identifier)
+        try:
+            return datautils.retry_with_backoff(
+                func = attempt_metadata_fetch,
+                cleanup_func = cleanup_driver,
+                max_retries = 3,
+                initial_delay = 2,
+                backoff_factor = 2,
+                verbose = verbose,
+                operation_name = "Itch.io metadata fetch for '%s'" % identifier)
+        finally:
 
-        # Final cleanup
-        cleanup_driver()
-        return result
+            # Final cleanup
+            cleanup_driver()
 
     ############################################################
     # Assets
@@ -431,59 +443,21 @@ class Itchio(storebase.StoreBase):
             if not web_driver:
                 return None
 
-            # Get search terms
-            search_terms = strings.get_url_path(identifier).strip("/")
-
-            # Load url
-            success = webpage.load_cookie_website(
-                driver = web_driver,
-                url = "https://itch.io/search?q=" + search_terms,
-                cookie = self.get_cookie_file(),
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
-            if not success:
-                return None
-
-            # Find the root container element
-            element_search_result = webpage.wait_for_element(
-                driver = web_driver,
-                locator = webpage.ElementLocator({"class": "browse_game_grid"}),
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
-            if not element_search_result:
-                return None
-
-            # Search through search results
-            game_cells = webpage.get_element(
-                parent = element_search_result,
-                locator = webpage.ElementLocator({"class": "game_cell"}),
-                all_elements = True)
-            if game_cells:
-                for game_cell in game_cells:
-                    game_title = webpage.get_element(
-                        parent = game_cell,
-                        locator = webpage.ElementLocator({"class": "title"}))
-                    game_cover = webpage.get_element(
-                        parent = game_cell,
-                        locator = webpage.ElementLocator({"class": "lazy_loaded"}))
-                    if not game_title or not game_cover:
-                        continue
-
-                    # Check for cover
-                    line_appurl = webpage.get_element_attribute(game_title, "href")
-                    line_cover = webpage.get_element_attribute(game_cover, "src")
-                    if line_appurl == identifier:
-                        latest_asset_url = line_cover
-                        break
-
-            # Disconnect from web
-            success = self.web_disconnect(
-                web_driver = web_driver,
-                verbose = verbose,
-                exit_on_failure = exit_on_failure)
-            if not success:
+            # Search for cover
+            try:
+                latest_asset_url = self.search_cover(
+                    web_driver = web_driver,
+                    identifier = identifier,
+                    verbose = verbose,
+                    pretend_run = pretend_run,
+                    exit_on_failure = exit_on_failure)
+            finally:
+                disconnected = self.web_disconnect(
+                    web_driver = web_driver,
+                    verbose = verbose,
+                    pretend_run = pretend_run,
+                    exit_on_failure = exit_on_failure)
+            if not disconnected:
                 return None
 
         # Video
@@ -498,5 +472,54 @@ class Itchio(storebase.StoreBase):
 
         # Return latest asset url
         return latest_asset_url
+
+    # Search cover
+    def search_cover(
+        self,
+        web_driver,
+        identifier,
+        verbose = False,
+        pretend_run = False,
+        exit_on_failure = False):
+
+        # Load search page
+        search_terms = strings.get_url_path(identifier).strip("/")
+        success = webpage.load_cookie_website(
+            driver = web_driver,
+            url = "https://itch.io/search?q=" + search_terms,
+            cookie = self.get_cookie_file(),
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if not success:
+            return None
+
+        # Find the root container element
+        element_search_result = webpage.wait_for_element(
+            driver = web_driver,
+            locator = webpage.ElementLocator({"class": "browse_game_grid"}),
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if not element_search_result:
+            return None
+
+        # Search through search results
+        game_cells = webpage.get_element(
+            parent = element_search_result,
+            locator = webpage.ElementLocator({"class": "game_cell"}),
+            all_elements = True)
+        for game_cell in game_cells or []:
+            game_title = webpage.get_element(
+                parent = game_cell,
+                locator = webpage.ElementLocator({"class": "title"}))
+            game_cover = webpage.get_element(
+                parent = game_cell,
+                locator = webpage.ElementLocator({"class": "lazy_loaded"}))
+            if not game_title or not game_cover:
+                continue
+            if webpage.get_element_attribute(game_title, "href") == identifier:
+                return webpage.get_element_attribute(game_cover, "src")
+        return None
 
     ############################################################

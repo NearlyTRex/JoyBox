@@ -1,7 +1,3 @@
-# Imports
-import os
-import os.path
-
 # Local imports
 import joybox.config as config
 import joybox.datautils as datautils
@@ -20,6 +16,11 @@ import joybox.strings as strings
 import joybox.metadataentry as metadataentry
 import joybox.metadataassetcollector as metadataassetcollector
 import joybox.manifest as manifest
+
+# GOG platform names as gogdl spells them
+gogdl_platforms = {
+    "mac": "osx"
+}
 
 # GOG store
 class GOG(storebase.StoreBase):
@@ -120,7 +121,7 @@ class GOG(storebase.StoreBase):
 
     # Check if store can handle launching
     def can_handle_launching(self):
-        return True
+        return False
 
     # Check if purchases can be imported
     def can_import_purchases(self):
@@ -147,7 +148,7 @@ class GOG(storebase.StoreBase):
             gog_tool = programs.get_tool_program("LGOGDownloader")
         if not gog_tool:
             logger.log_error("LGOGDownloader was not found")
-            return None
+            return False
 
         # Get login command
         login_cmd = [
@@ -182,10 +183,11 @@ class GOG(storebase.StoreBase):
 
         # Get script
         login_script = None
+        auth_json = None
         if programs.is_tool_installed("HeroicGogDL"):
             login_script = programs.get_tool_path_config_value("HeroicGogDL", "login_script")
             auth_json = programs.get_tool_path_config_value("HeroicGogDL", "auth_json")
-        if not login_script and not auth_json:
+        if not login_script or not auth_json:
             logger.log_error("HeroicGogDL was not found")
             return False
 
@@ -202,7 +204,7 @@ class GOG(storebase.StoreBase):
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-        return (code != 0)
+        return (code == 0)
 
     # Login
     def login(
@@ -287,7 +289,7 @@ class GOG(storebase.StoreBase):
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = False)
-            if not gog_json:
+            if not isinstance(gog_json, list) or not all(isinstance(entry, dict) for entry in gog_json):
                 if verbose:
                     logger.log_warning("Failed to load GOG cache, will fetch fresh data")
                 use_cache = False
@@ -316,27 +318,37 @@ class GOG(storebase.StoreBase):
                 "--list", "j"
             ]
 
-            # Run list command
-            code = command.run_returncode_command(
-                cmd = list_cmd,
-                options = command.create_command_options(
-                    stdout = tmp_file_manifest),
-                verbose = False,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
-            if code != 0:
-                logger.log_error("Unable to find gog purchases")
-                return False
+            try:
 
-            # Get gog json
-            gog_json = serialization.read_json_file(
-                src = tmp_file_manifest,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = False)
-            if not gog_json:
-                logger.log_error("Unable to parse gog game list")
-                return None
+                # Run list command
+                code = command.run_returncode_command(
+                    cmd = list_cmd,
+                    options = command.create_command_options(
+                        stdout = tmp_file_manifest),
+                    verbose = False,
+                    pretend_run = pretend_run,
+                    exit_on_failure = exit_on_failure)
+                if code != 0:
+                    logger.log_error("Unable to find gog purchases")
+                    return None
+
+                # Get gog json
+                gog_json = serialization.read_json_file(
+                    src = tmp_file_manifest,
+                    verbose = verbose,
+                    pretend_run = pretend_run,
+                    exit_on_failure = False)
+                if not isinstance(gog_json, list) or not all(isinstance(entry, dict) for entry in gog_json):
+                    logger.log_error("Unable to parse gog game list")
+                    return None
+            finally:
+
+                # Delete temporary directory
+                fileops.remove_directory(
+                    src = tmp_dir_result,
+                    verbose = verbose,
+                    pretend_run = pretend_run,
+                    exit_on_failure = False)
 
             # Save to cache
             fileops.make_directory(cache_dir, verbose = verbose, pretend_run = pretend_run)
@@ -484,12 +496,14 @@ class GOG(storebase.StoreBase):
 
         # Cleanup function
         def cleanup_driver():
+            nonlocal web_driver
             if web_driver:
                 self.web_disconnect(
                     web_driver = web_driver,
                     verbose = verbose,
                     pretend_run = pretend_run,
                     exit_on_failure = False)
+                web_driver = None
 
         # Fetch function
         def attempt_metadata_fetch():
@@ -502,6 +516,8 @@ class GOG(storebase.StoreBase):
                 pretend_run = pretend_run,
                 exit_on_failure = False)
             if not web_driver:
+                if pretend_run:
+                    return None
                 raise Exception("Failed to connect to web driver")
 
             # Load url
@@ -552,7 +568,8 @@ class GOG(storebase.StoreBase):
                         elif strings.does_string_start_with_substring(element_detail_text, "Release date:"):
                             release_text = strings.trim_substring_from_start(element_detail_text, "Release date:").strip()
                             release_text = strings.convert_date_string(release_text, "%B %d, %Y", "%Y-%m-%d")
-                            metadata_entry.set_release(release_text)
+                            if release_text:
+                                metadata_entry.set_release(release_text)
 
                         # Genre
                         elif strings.does_string_start_with_substring(element_detail_text, "Genre:"):
@@ -561,18 +578,19 @@ class GOG(storebase.StoreBase):
             return metadata_entry
 
         # Use retry function with cleanup
-        result = datautils.retry_with_backoff(
-            func = attempt_metadata_fetch,
-            cleanup_func = cleanup_driver,
-            max_retries = 3,
-            initial_delay = 2,
-            backoff_factor = 2,
-            verbose = verbose,
-            operation_name = "GOG metadata fetch for '%s'" % identifier)
+        try:
+            return datautils.retry_with_backoff(
+                func = attempt_metadata_fetch,
+                cleanup_func = cleanup_driver,
+                max_retries = 3,
+                initial_delay = 2,
+                backoff_factor = 2,
+                verbose = verbose,
+                operation_name = "GOG metadata fetch for '%s'" % identifier)
+        finally:
 
-        # Final cleanup
-        cleanup_driver()
-        return result
+            # Final cleanup
+            cleanup_driver()
 
     ############################################################
     # Assets
@@ -624,6 +642,21 @@ class GOG(storebase.StoreBase):
     # Install
     ############################################################
 
+    # Get install path
+    def get_install_path(self, identifier):
+        return paths.join_paths(self.get_install_dir(), identifier)
+
+    # Check if installed
+    def is_installed(
+        self,
+        identifier,
+        verbose = False,
+        pretend_run = False,
+        exit_on_failure = False):
+        if not self.is_valid_install_identifier(identifier):
+            return False
+        return paths.does_directory_contain_files(self.get_install_path(identifier))
+
     # Install
     def install(
         self,
@@ -647,10 +680,11 @@ class GOG(storebase.StoreBase):
 
         # Get script
         gogdl_script = None
+        auth_json = None
         if programs.is_tool_installed("HeroicGogDL"):
             gogdl_script = programs.get_tool_program("HeroicGogDL")
             auth_json = programs.get_tool_path_config_value("HeroicGogDL", "auth_json")
-        if not gogdl_script and not auth_json:
+        if not gogdl_script or not auth_json:
             logger.log_error("HeroicGogDL was not found")
             return False
 
@@ -662,29 +696,17 @@ class GOG(storebase.StoreBase):
             auth_json,
             "download",
             identifier,
-            "--platform", "windows",
-            "--path", os.path.join(self.get_install_dir(), identifier)
+            "--platform", gogdl_platforms.get(self.get_preferred_platform(), self.get_preferred_platform()),
+            "--path", self.get_install_path(identifier)
         ]
 
-        # Run login command
+        # Run install command
         code = command.run_returncode_command(
             cmd = install_cmd,
             verbose = verbose,
+            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-        return (code != 0)
-
-    ############################################################
-    # Launch
-    ############################################################
-
-    # Launch
-    def launch(
-        self,
-        identifier,
-        verbose = False,
-        pretend_run = False,
-        exit_on_failure = False):
-        return False
+        return (code == 0)
 
     ############################################################
     # Download
@@ -716,7 +738,7 @@ class GOG(storebase.StoreBase):
             gog_tool = programs.get_tool_program("LGOGDownloader")
         if not gog_tool:
             logger.log_error("LGOGDownloader was not found")
-            return None
+            return False
 
         # Create temporary directory
         tmp_dir_success, tmp_dir_result = fileops.create_temporary_directory(verbose = verbose)
@@ -750,64 +772,64 @@ class GOG(storebase.StoreBase):
                 "--exclude=%s" % self.excludes
             ]
 
-        # Run download command
-        code = command.run_returncode_command(
-            cmd = download_cmd,
-            options = command.create_command_options(
-                blocking_processes = [gog_tool]),
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        if code != 0:
-            return False
+        try:
 
-        # Move dlc extra into main extra
-        if paths.does_directory_contain_files(tmp_dir_dlc_extra):
-            fileops.move_contents(
-                src = tmp_dir_dlc_extra,
-                dest = tmp_dir_extra,
-                skip_existing = True,
+            # Run download command
+            code = command.run_returncode_command(
+                cmd = download_cmd,
+                options = command.create_command_options(
+                    blocking_processes = [gog_tool]),
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-            fileops.remove_directory(
-                src = tmp_dir_dlc_extra,
+            if code != 0:
+                return False
+
+            # Move dlc extra into main extra
+            if paths.does_directory_contain_files(tmp_dir_dlc_extra):
+                fileops.move_contents(
+                    src = tmp_dir_dlc_extra,
+                    dest = tmp_dir_extra,
+                    skip_existing = True,
+                    verbose = verbose,
+                    pretend_run = pretend_run,
+                    exit_on_failure = exit_on_failure)
+                fileops.remove_directory(
+                    src = tmp_dir_dlc_extra,
+                    verbose = verbose,
+                    pretend_run = pretend_run,
+                    exit_on_failure = exit_on_failure)
+
+            # Clean output
+            if clean_output:
+                fileops.remove_directory_contents(
+                    src = output_dir,
+                    verbose = verbose,
+                    pretend_run = pretend_run,
+                    exit_on_failure = exit_on_failure)
+
+            # Move downloaded files
+            success = fileops.move_contents(
+                src = tmp_dir_result,
+                dest = output_dir,
+                show_progress = show_progress,
+                skip_existing = skip_existing,
+                skip_identical = skip_identical,
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
+            if not success:
+                return False
+        finally:
 
-        # Clean output
-        if clean_output:
-            fileops.remove_directory_contents(
-                src = output_dir,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
-
-        # Move downloaded files
-        success = fileops.move_contents(
-            src = tmp_dir_result,
-            dest = output_dir,
-            show_progress = True,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        if not success:
+            # Delete temporary directory
             fileops.remove_directory(
                 src = tmp_dir_result,
                 verbose = verbose,
                 pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
-            return False
-
-        # Delete temporary directory
-        fileops.remove_directory(
-            src = tmp_dir_result,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
+                exit_on_failure = False)
 
         # Check result
-        return os.path.exists(output_dir)
+        return paths.does_directory_contain_files(output_dir)
 
     ############################################################

@@ -122,12 +122,23 @@ def test_a_bare_page_gives_an_empty_entry(steam_store, page):
     assert entry.get_developer() is None
 
 
+def test_an_interrupted_read_still_disconnects_its_browser_once(steam_store, page, monkeypatch):
+    def load_url(driver, url):
+        raise KeyboardInterrupt()
+    monkeypatch.setattr(steam.webpage, "load_url", load_url)
+
+    with pytest.raises(KeyboardInterrupt):
+        steam_store.get_latest_metadata(URL)
+    assert page.disconnects == 1
+
+
 def test_a_page_that_will_not_load_is_retried_then_given_up(steam_store, page):
     page.load_ok = False
 
     assert steam_store.get_latest_metadata(URL) is None
     assert len(page.loaded) == 3
     assert page.connects == 3
+    assert page.disconnects == 3
 
 
 def test_no_browser_gives_no_metadata(steam_store, page, monkeypatch):

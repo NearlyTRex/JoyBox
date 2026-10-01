@@ -17,7 +17,7 @@ jobs:
     # The same inputs as the python job in ci.yml
     with:
       test-command: pytest -q -c Tests/pytest.ini Tests/unit
-      coverage-fail-under: "57"
+      coverage-fail-under: "61"
 
   release:
     name: Release

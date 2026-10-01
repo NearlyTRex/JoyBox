@@ -15,6 +15,13 @@ import joybox.strings as strings
 import joybox.metadataassetcollector as metadataassetcollector
 import joybox.paths as paths
 
+# Get stripped string value from heirloom json, empty when missing or not a string
+def get_json_string(json_object, key):
+    value = json_object.get(key)
+    if not isinstance(value, str):
+        return ""
+    return value.strip()
+
 # Legacy store
 class Legacy(storebase.StoreBase):
 
@@ -181,12 +188,14 @@ class Legacy(storebase.StoreBase):
 
         # Cleanup function
         def cleanup_driver():
+            nonlocal web_driver
             if web_driver:
                 self.web_disconnect(
                     web_driver = web_driver,
                     verbose = verbose,
                     pretend_run = pretend_run,
                     exit_on_failure = False)
+                web_driver = None
 
         # Search function
         def attempt_url_search():
@@ -199,6 +208,8 @@ class Legacy(storebase.StoreBase):
                 pretend_run = pretend_run,
                 exit_on_failure = False)
             if not web_driver:
+                if pretend_run:
+                    return None
                 raise Exception("Failed to connect to web driver")
 
             # Get search terms
@@ -264,18 +275,17 @@ class Legacy(storebase.StoreBase):
             return appurl
 
         # Use retry function with cleanup
-        result = datautils.retry_with_backoff(
-            func = attempt_url_search,
-            cleanup_func = cleanup_driver,
-            max_retries = 3,
-            initial_delay = 2,
-            backoff_factor = 2,
-            verbose = verbose,
-            operation_name = "Legacy store URL search for '%s'" % identifier)
-
-        # Final cleanup
-        cleanup_driver()
-        return result
+        try:
+            return datautils.retry_with_backoff(
+                func = attempt_url_search,
+                cleanup_func = cleanup_driver,
+                max_retries = 3,
+                initial_delay = 2,
+                backoff_factor = 2,
+                verbose = verbose,
+                operation_name = "Legacy store URL search for '%s'" % identifier)
+        finally:
+            cleanup_driver()
 
     ############################################################
     # Purchases
@@ -318,16 +328,17 @@ class Legacy(storebase.StoreBase):
             cmd = list_cmd,
             verbose = verbose,
             exit_on_failure = exit_on_failure)
-        if len(list_output) == 0:
+        if not list_output:
             logger.log_error("Unable to find legacy purchases")
             return None
 
         # Get legacy json
-        legacy_json = []
+        legacy_json = None
         try:
             legacy_json = json.loads(list_output)
         except Exception as e:
             logger.log_error(e)
+        if not isinstance(legacy_json, list):
             logger.log_error("Unable to parse legacy game list")
             logger.log_error("Received output:\n%s" % list_output)
             return None
@@ -336,12 +347,20 @@ class Legacy(storebase.StoreBase):
         purchases = []
         for entry in legacy_json:
 
+            # Gather info
+            if not isinstance(entry, dict):
+                continue
+            line_appid = get_json_string(entry, "installer_uuid")
+            line_title = get_json_string(entry, "game_name")
+            if not line_appid:
+                continue
+
             # Create purchase
             purchase = jsondata.JsonData(
                 json_data = {},
                 json_platform = self.get_platform())
-            purchase.set_value(config.json_key_store_appid, entry.get("installer_uuid", "").strip())
-            purchase.set_value(config.json_key_store_name, entry.get("game_name", "").strip())
+            purchase.set_value(config.json_key_store_appid, line_appid)
+            purchase.set_value(config.json_key_store_name, line_title)
             purchases.append(purchase)
         return purchases
 
@@ -393,16 +412,17 @@ class Legacy(storebase.StoreBase):
             cmd = info_cmd,
             verbose = verbose,
             exit_on_failure = exit_on_failure)
-        if len(info_output) == 0 or "No game information available" in info_output:
+        if not info_output or "No game information available" in info_output:
             logger.log_error("Unable to find legacy information for '%s'" % identifier)
             return None
 
         # Get legacy json
-        legacy_json = {}
+        legacy_json = None
         try:
             legacy_json = json.loads(info_output)
         except Exception as e:
             logger.log_error(e)
+        if not isinstance(legacy_json, dict):
             logger.log_error("Unable to parse legacy game information for '%s'" % identifier)
             logger.log_error("Received output:\n%s" % info_output)
             return None
@@ -410,7 +430,7 @@ class Legacy(storebase.StoreBase):
         # Build jsondata
         json_data = self.create_default_jsondata()
         json_data.set_value(config.json_key_store_appid, identifier)
-        json_data.set_value(config.json_key_store_name, legacy_json.get("game_name", "").strip())
+        json_data.set_value(config.json_key_store_name, get_json_string(legacy_json, "game_name"))
         return self.augment_jsondata(
             json_data = json_data,
             identifier = identifier,

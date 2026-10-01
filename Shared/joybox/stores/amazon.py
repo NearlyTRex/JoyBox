@@ -1,5 +1,6 @@
 # Imports
 import json
+import re
 
 # Local imports
 import joybox.config as config
@@ -14,6 +15,9 @@ import joybox.jsondata as jsondata
 import joybox.storebase as storebase
 import joybox.strings as strings
 import joybox.settings as settings
+
+# Nile library list line: optional installed marker, title, id, optional genres
+nile_library_line = re.compile(r"^(?:\(INSTALLED\) )?(?P<title>.*) ID: (?P<appid>\S+)(?: GENRES: .*)?$")
 
 # Amazon store
 class Amazon(storebase.StoreBase):
@@ -185,7 +189,7 @@ class Amazon(storebase.StoreBase):
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = False)
-            if cached_data and isinstance(cached_data, list):
+            if isinstance(cached_data, list) and all(isinstance(entry, dict) for entry in cached_data):
                 cached_purchases = []
                 for purchase_data in cached_data:
                     purchase = jsondata.JsonData(
@@ -274,17 +278,12 @@ class Amazon(storebase.StoreBase):
         for line in list_output.split("\n"):
 
             # Gather info
-            line = strings.remove_string_escape_sequences(line)
-            line = line.replace("(INSTALLED) ", "")
-            tokens = line.split(" GENRES: ")
-            if len(tokens) != 2:
+            line = strings.remove_string_escape_sequences(line).strip()
+            match = nile_library_line.match(line)
+            if not match:
                 continue
-            line = tokens[0]
-            tokens = line.split(" ID: ")
-            if len(tokens) != 2:
-                continue
-            line_title = tokens[0].strip()
-            line_appid = tokens[1].strip()
+            line_title = match.group("title").strip()
+            line_appid = match.group("appid").strip()
 
             # Create purchase
             purchase = jsondata.JsonData(
@@ -368,20 +367,32 @@ class Amazon(storebase.StoreBase):
             return None
 
         # Get amazon json
-        amazon_json = {}
+        amazon_json = None
         try:
             amazon_json = json.loads(info_output)
         except Exception as e:
             logger.log_error(e)
+        if not isinstance(amazon_json, dict):
             logger.log_error("Unable to parse amazon information for '%s'" % identifier)
             logger.log_error("Received output:\n%s" % info_output)
             return None
 
+        # Get details
+        amazon_version = amazon_json.get("version")
+        if not isinstance(amazon_version, str) or not amazon_version.strip():
+            amazon_version = config.default_buildid
+        amazon_product = amazon_json.get("product")
+        if not isinstance(amazon_product, dict):
+            amazon_product = {}
+        amazon_title = amazon_product.get("title")
+        if not isinstance(amazon_title, str):
+            amazon_title = ""
+
         # Build jsondata
         json_data = self.create_default_jsondata()
         json_data.set_value(config.json_key_store_appid, identifier)
-        json_data.set_value(config.json_key_store_buildid, amazon_json.get("version", config.default_buildid).strip())
-        json_data.set_value(config.json_key_store_name, amazon_json.get("product", {}).get("title", "").strip())
+        json_data.set_value(config.json_key_store_buildid, amazon_version.strip())
+        json_data.set_value(config.json_key_store_name, amazon_title.strip())
         return self.augment_jsondata(
             json_data = json_data,
             identifier = identifier,
@@ -445,36 +456,39 @@ class Amazon(storebase.StoreBase):
             identifier
         ]
 
-        # Run download command
-        code = command.run_returncode_command(
-            cmd = download_cmd,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        if code != 0:
-            return False
+        try:
 
-        # Archive downloaded files
-        success = backup.archive_folder(
-            input_path = tmp_dir_result,
-            output_path = output_dir,
-            output_name = output_name,
-            clean_output = clean_output,
-            show_progress = show_progress,
-            skip_existing = skip_existing,
-            skip_identical = skip_identical,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        if not success:
-            return False
+            # Run download command
+            code = command.run_returncode_command(
+                cmd = download_cmd,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
+            if code != 0:
+                return False
 
-        # Delete temporary directory
-        fileops.remove_directory(
-            src = tmp_dir_result,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
+            # Archive downloaded files
+            success = backup.archive_folder(
+                input_path = tmp_dir_result,
+                output_path = output_dir,
+                output_name = output_name,
+                clean_output = clean_output,
+                show_progress = show_progress,
+                skip_existing = skip_existing,
+                skip_identical = skip_identical,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
+            if not success:
+                return False
+        finally:
+
+            # Delete temporary directory
+            fileops.remove_directory(
+                src = tmp_dir_result,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = False)
 
         # Check results
         return paths.does_directory_contain_files(output_dir)

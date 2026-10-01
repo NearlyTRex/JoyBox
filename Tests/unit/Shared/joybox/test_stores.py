@@ -9,31 +9,21 @@ from joybox import config
 # Store registry
 #
 # Stores read credentials at construction, so the whole registry is unbuildable
-# without them. These fill in placeholders to exercise the registry shape
-# rather than any real account.
+# without them. Placeholders exercise the registry shape rather than any real
+# account.
 ###########################################################
-
-STORE_CREDENTIALS = [
-    ("UserData.Epic", "epic_username", "testuser"),
-    ("UserData.GOG", "gog_username", "testuser"),
-    ("UserData.GOG", "gog_email", "test@example.com"),
-    ("UserData.GOG", "gog_platform", "windows"),
-    ("UserData.HumbleBundle", "humblebundle_username", "testuser"),
-    ("UserData.HumbleBundle", "humblebundle_email", "test@example.com"),
-    ("UserData.HumbleBundle", "humblebundle_auth_token", "token"),
-    ("UserData.HumbleBundle", "humblebundle_platform", "windows"),
-    ("UserData.Legacy", "legacy_username", "testuser"),
-    ("UserData.Steam", "steam_username", "testuser"),
-    ("UserData.Steam", "steam_accountname", "testaccount"),
-    ("UserData.Steam", "steam_userid", "1"),
-    ("UserData.Steam", "steam_web_api_key", "key"),
-]
-
 
 @pytest.fixture
 def store_list(isolated_settings):
-    for section, key, value in STORE_CREDENTIALS:
-        isolated_settings.set_value(section, key, value)
+    # Only keys the default config declares are filled, so a store reading a
+    # setting the defaults lack cannot be built.
+    from joybox import default_settings
+    for section, values in default_settings.ini_defaults.items():
+        if not section.startswith("UserData."):
+            continue
+        for key, value in values.items():
+            if value == "":
+                isolated_settings.set_value(section, key, "1")
 
     import joybox.stores as stores
     return list(stores.get_store_list())
@@ -293,3 +283,31 @@ def test_every_store_names_its_own_cookie_file(store_list, monkeypatch):
     cookie_files = [store.get_cookie_file() for store in store_list]
 
     assert len(set(cookie_files)) == len(cookie_files)
+
+
+###########################################################
+# Pretend runs
+###########################################################
+
+@pytest.mark.parametrize("store_class,method,identifier", [
+    ("Steam", "get_latest_metadata", "https://store.steampowered.com/app/220"),
+    ("GOG", "get_latest_metadata", "https://www.gog.com/en/game/the_witcher"),
+    ("Epic", "get_latest_metadata", "https://store.epicgames.com/en-US/p/hades"),
+    ("Itchio", "get_latest_metadata", "https://maker.itch.io/cool-game"),
+    ("Legacy", "get_latest_url", "Mystery Case Files"),
+])
+def test_a_pretend_scrape_opens_no_browser_and_does_not_retry(store_list, monkeypatch, store_class, method, identifier):
+    import joybox.datautils as datautils
+    store = next(store for store in store_list if type(store).__name__ == store_class)
+    connects = []
+    sleeps = []
+
+    def web_connect(**kwargs):
+        connects.append(kwargs.get("pretend_run"))
+        return None
+    monkeypatch.setattr(store, "web_connect", web_connect)
+    monkeypatch.setattr(datautils.time, "sleep", sleeps.append)
+
+    assert getattr(store, method)(identifier, pretend_run = True) is None
+    assert connects == [True]
+    assert sleeps == []

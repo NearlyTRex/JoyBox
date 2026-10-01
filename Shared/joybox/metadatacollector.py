@@ -8,6 +8,79 @@ import joybox.metadataentry as metadataentry
 
 ############################################################
 
+# Run a page fetch in a fresh headless browser, retrying with backoff
+def fetch_with_web_driver(
+    fetch_func,
+    operation_name,
+    verbose = False,
+    pretend_run = False):
+
+    # Store web driver for cleanup
+    web_driver = None
+
+    # Cleanup function
+    def cleanup_driver():
+        nonlocal web_driver
+        if web_driver:
+            webpage.destroy_web_driver(
+                driver = web_driver,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = False)
+            web_driver = None
+
+    # Fetch function
+    def attempt_fetch():
+        nonlocal web_driver
+        web_driver = webpage.create_web_driver(
+            make_headless = True,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = False)
+        if not web_driver:
+            if pretend_run:
+                return None
+            raise Exception("Failed to create web driver")
+        return fetch_func(web_driver)
+
+    # Use retry function with cleanup
+    try:
+        return datautils.retry_with_backoff(
+            func = attempt_fetch,
+            cleanup_func = cleanup_driver,
+            max_retries = 3,
+            initial_delay = 2,
+            backoff_factor = 2,
+            verbose = verbose,
+            operation_name = operation_name)
+    finally:
+
+        # Final cleanup
+        cleanup_driver()
+
+# Convert a release value to a date, None if unparsable
+def convert_release_date(release_text):
+    return strings.convert_unknown_date_string(release_text, "%Y-%m-%d")
+
+# Read "Label: value" detail lines into a metadata entry, skipping empty values
+def apply_detail_lines(metadata_result, detail_lines, detail_fields):
+    for detail_line in detail_lines:
+        if not isinstance(detail_line, str):
+            continue
+        detail_line = detail_line.strip()
+        for detail_label, detail_setters, detail_convert in detail_fields:
+            if not strings.does_string_start_with_substring(detail_line, detail_label):
+                continue
+            detail_value = strings.trim_substring_from_start(detail_line, detail_label).strip()
+            if detail_convert:
+                detail_value = detail_convert(detail_value)
+            if detail_value:
+                for detail_setter in detail_setters:
+                    detail_setter(metadata_result, detail_value)
+            break
+
+############################################################
+
 # Collect metadata from TheGamesDB
 def collect_metadata_from_tgdb(
     game_platform,
@@ -16,22 +89,8 @@ def collect_metadata_from_tgdb(
     pretend_run = False,
     exit_on_failure = False):
 
-    # Store web driver for cleanup
-    web_driver = None
-
-    # Cleanup function
-    def cleanup_driver():
-        if web_driver:
-            webpage.destroy_web_driver(web_driver)
-
     # Fetch function
-    def attempt_metadata_fetch():
-        nonlocal web_driver
-
-        # Create web driver
-        web_driver = webpage.create_web_driver(make_headless = True)
-        if not web_driver:
-            raise Exception("Failed to create web driver")
+    def attempt_metadata_fetch(web_driver):
 
         # Get search terms
         search_terms = gameinfo.derive_game_search_terms_from_name(game_name, game_platform)
@@ -74,9 +133,7 @@ def collect_metadata_from_tgdb(
                 game_cell_text = webpage.get_element_text(game_cell)
                 potential_title = ""
                 if game_cell_text:
-                    for game_cell_text_token in game_cell_text.split("\n"):
-                        potential_title = game_cell_text_token
-                        break
+                    potential_title = game_cell_text.split("\n")[0].strip()
 
                 # Add comparison score
                 if potential_title:
@@ -85,15 +142,16 @@ def collect_metadata_from_tgdb(
                     score_entry["ratio"] = strings.get_string_similarity_ratio(natural_name, potential_title)
                     scores_list.append(score_entry)
 
-        # Click on the highest score element
-        if scores_list:
-            for score_entry in sorted(scores_list, key=lambda d: d["ratio"], reverse=True):
-                webpage.click_element(score_entry["element"])
-                break
+        if not scores_list:
+            return None  # No titled results, not an error
 
-            # Check if the url has changed
-            if webpage.is_url_loaded(web_driver, "https://thegamesdb.net/search.php?name="):
-                return None  # Still on search page, no valid result found
+        # Click on the highest score element
+        best_entry = max(scores_list, key = lambda d: d["ratio"])
+        webpage.click_element(best_entry["element"])
+
+        # Check if the url has changed
+        if webpage.is_url_loaded(web_driver, "https://thegamesdb.net/search.php?name="):
+            return None  # Still on search page, no valid result found
 
         # Look for game description
         element_game_description = webpage.wait_for_element(
@@ -126,55 +184,24 @@ def collect_metadata_from_tgdb(
                     pretend_run = pretend_run,
                     exit_on_failure = False)
                 if element_paragraphs:
-                    for element_paragraph in element_paragraphs:
-                        element_text = webpage.get_element_text(element_paragraph)
-                        if not element_text:
-                            continue
-
-                        # Genre
-                        if strings.does_string_start_with_substring(element_text, "Genre(s):"):
-                            genre_text = strings.trim_substring_from_start(element_text, "Genre(s):").replace(" | ", ";").strip()
-                            metadata_result.set_genre(genre_text)
-
-                        # Co-op
-                        elif strings.does_string_start_with_substring(element_text, "Co-op:"):
-                            coop_text = strings.trim_substring_from_start(element_text, "Co-op:").strip()
-                            metadata_result.set_coop(coop_text)
-
-                        # Developer
-                        elif strings.does_string_start_with_substring(element_text, "Developer(s):"):
-                            developer_text = strings.trim_substring_from_start(element_text, "Developer(s):").strip()
-                            metadata_result.set_developer(developer_text)
-
-                        # Publisher
-                        elif strings.does_string_start_with_substring(element_text, "Publishers(s):"):
-                            publisher_text = strings.trim_substring_from_start(element_text, "Publishers(s):").strip()
-                            metadata_result.set_publisher(publisher_text)
-
-                        # Players
-                        elif strings.does_string_start_with_substring(element_text, "Players:"):
-                            players_text = strings.trim_substring_from_start(element_text, "Players:").strip()
-                            metadata_result.set_players(players_text)
-
-                        # Release
-                        elif strings.does_string_start_with_substring(element_text, "ReleaseDate:"):
-                            release_text = strings.trim_substring_from_start(element_text, "ReleaseDate:").strip()
-                            metadata_result.set_release(release_text)
+                    apply_detail_lines(
+                        metadata_result = metadata_result,
+                        detail_lines = [webpage.get_element_text(element_paragraph) for element_paragraph in element_paragraphs],
+                        detail_fields = [
+                            ("Genre(s):", [metadataentry.MetadataEntry.set_genre], lambda text: text.replace(" | ", ";")),
+                            ("Co-op:", [metadataentry.MetadataEntry.set_coop], None),
+                            ("Developer(s):", [metadataentry.MetadataEntry.set_developer], None),
+                            ("Publishers(s):", [metadataentry.MetadataEntry.set_publisher], None),
+                            ("Players:", [metadataentry.MetadataEntry.set_players], None),
+                            ("ReleaseDate:", [metadataentry.MetadataEntry.set_release], convert_release_date)])
         return metadata_result
 
-    # Use retry function with cleanup
-    result = datautils.retry_with_backoff(
-        func = attempt_metadata_fetch,
-        cleanup_func = cleanup_driver,
-        max_retries = 3,
-        initial_delay = 2,
-        backoff_factor = 2,
+    # Fetch with retries
+    return fetch_with_web_driver(
+        fetch_func = attempt_metadata_fetch,
+        operation_name = "TheGamesDB metadata fetch for '%s' (%s)" % (game_name, game_platform),
         verbose = verbose,
-        operation_name = "TheGamesDB metadata fetch for '%s' (%s)" % (game_name, game_platform))
-
-    # Final cleanup
-    cleanup_driver()
-    return result
+        pretend_run = pretend_run)
 
 ############################################################
 
@@ -186,22 +213,14 @@ def collect_metadata_from_gamefaqs(
     pretend_run = False,
     exit_on_failure = False):
 
-    # Store web driver for cleanup
-    web_driver = None
-
-    # Cleanup function
-    def cleanup_driver():
-        if web_driver:
-            webpage.destroy_web_driver(web_driver)
+    # Get GameFAQs platform name
+    gamefaqs_platform_info = config.gamefaqs_platforms.get(game_platform)
+    if not gamefaqs_platform_info:
+        return None
+    gamefaqs_platform = gamefaqs_platform_info[0]
 
     # Fetch function
-    def attempt_metadata_fetch():
-        nonlocal web_driver
-
-        # Create web driver
-        web_driver = webpage.create_web_driver(make_headless = True)
-        if not web_driver:
-            raise Exception("Failed to create web driver")
+    def attempt_metadata_fetch(web_driver):
 
         # Get search terms
         search_terms = gameinfo.derive_game_search_terms_from_name(game_name, game_platform)
@@ -242,6 +261,7 @@ def collect_metadata_from_gamefaqs(
             return None  # No search results found, not an error
 
         # Look for search table
+        elements_search_rows = None
         elements_search_table = webpage.get_element(
             parent = element_search_result,
             locator = webpage.ElementLocator({"tag": "tbody"}),
@@ -249,8 +269,6 @@ def collect_metadata_from_gamefaqs(
             pretend_run = pretend_run,
             exit_on_failure = False)
         if elements_search_table:
-
-            # Look for search rows
             elements_search_rows = webpage.get_element(
                 parent = elements_search_table,
                 locator = webpage.ElementLocator({"tag": "tr"}),
@@ -258,31 +276,31 @@ def collect_metadata_from_gamefaqs(
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = False)
-            if elements_search_rows:
-                for elements_search_row in elements_search_rows:
 
-                    # Examine columns
-                    elements_search_cols = webpage.get_element(
-                        parent = elements_search_row,
-                        locator = webpage.ElementLocator({"tag": "td"}),
-                        all_elements = True,
-                        verbose = verbose,
-                        pretend_run = pretend_run,
-                        exit_on_failure = False)
-                    if elements_search_cols and len(elements_search_cols) >= 4:
-                        search_platform = elements_search_cols[0]
-                        search_game = elements_search_cols[1]
-                        search_game_platform = webpage.get_element_children_text(search_platform)
-                        search_game_name = webpage.get_element_children_text(search_game)
-                        search_game_link = webpage.get_element_link_url(search_game)
-                        if not search_game_platform or not search_game_name or not search_game_link:
-                            continue
-
-                        # Navigate to the entry if this matches the search terms
-                        if search_game_platform == config.gamefaqs_platforms[game_platform][0]:
-                            success = webpage.load_url(web_driver, search_game_link)
-                            if success:
-                                break
+        # Navigate to the first result on this platform
+        game_page_loaded = False
+        for elements_search_row in elements_search_rows or []:
+            elements_search_cols = webpage.get_element(
+                parent = elements_search_row,
+                locator = webpage.ElementLocator({"tag": "td"}),
+                all_elements = True,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = False)
+            if not elements_search_cols or len(elements_search_cols) < 4:
+                continue
+            search_platform = elements_search_cols[0]
+            search_game = elements_search_cols[1]
+            search_game_platform = webpage.get_element_children_text(search_platform)
+            search_game_name = webpage.get_element_children_text(search_game)
+            search_game_link = webpage.get_element_link_url(search_game)
+            if not search_game_platform or not search_game_name or not search_game_link:
+                continue
+            if search_game_platform.strip() == gamefaqs_platform and webpage.load_url(web_driver, search_game_link):
+                game_page_loaded = True
+                break
+        if not game_page_loaded:
+            return None  # No result on this platform, not an error
 
         # Look for game description
         element_game_description = webpage.wait_for_element(
@@ -322,56 +340,24 @@ def collect_metadata_from_gamefaqs(
             pretend_run = pretend_run,
             exit_on_failure = False)
         if element_game_details_list:
-            for element_game_details in element_game_details_list:
-                element_text = webpage.get_element_text(element_game_details)
-                if not element_text:
-                    continue
-
-                # Genre
-                if strings.does_string_start_with_substring(element_text, "Genre:"):
-                    genre_text = strings.trim_substring_from_start(element_text, "Genre:").replace(" » ", ";").strip()
-                    metadata_result.set_genre(genre_text)
-
-                # Developer
-                elif strings.does_string_start_with_substring(element_text, "Developer:"):
-                    developer_text = strings.trim_substring_from_start(element_text, "Developer:").strip()
-                    metadata_result.set_developer(developer_text)
-
-                # Publisher
-                elif strings.does_string_start_with_substring(element_text, "Publisher:"):
-                    publisher_text = strings.trim_substring_from_start(element_text, "Publisher:").strip()
-                    metadata_result.set_publisher(publisher_text)
-
-                # Developer/Publisher
-                elif strings.does_string_start_with_substring(element_text, "Developer/Publisher:"):
-                    devpub_text = strings.trim_substring_from_start(element_text, "Developer/Publisher:").strip()
-                    metadata_result.set_developer(devpub_text)
-                    metadata_result.set_publisher(devpub_text)
-
-                # Release/First Released
-                elif strings.does_string_start_with_substring(element_text, "Release:") or strings.does_string_start_with_substring(element_text, "First Released:"):
-                    release_text = ""
-                    if strings.does_string_start_with_substring(element_text, "Release:"):
-                        release_text = strings.trim_substring_from_start(element_text, "Release:").strip()
-                    elif strings.does_string_start_with_substring(element_text, "First Released:"):
-                        release_text = strings.trim_substring_from_start(element_text, "First Released:").strip()
-                    release_text = strings.convert_unknown_date_string(release_text, "%Y-%m-%d")
-                    metadata_result.set_release(release_text)
+            apply_detail_lines(
+                metadata_result = metadata_result,
+                detail_lines = [webpage.get_element_text(element_game_details) for element_game_details in element_game_details_list],
+                detail_fields = [
+                    ("Genre:", [metadataentry.MetadataEntry.set_genre], lambda text: text.replace(" » ", ";")),
+                    ("Developer:", [metadataentry.MetadataEntry.set_developer], None),
+                    ("Publisher:", [metadataentry.MetadataEntry.set_publisher], None),
+                    ("Developer/Publisher:", [metadataentry.MetadataEntry.set_developer, metadataentry.MetadataEntry.set_publisher], None),
+                    ("Release:", [metadataentry.MetadataEntry.set_release], convert_release_date),
+                    ("First Released:", [metadataentry.MetadataEntry.set_release], convert_release_date)])
         return metadata_result
 
-    # Use retry function with cleanup
-    result = datautils.retry_with_backoff(
-        func = attempt_metadata_fetch,
-        cleanup_func = cleanup_driver,
-        max_retries = 3,
-        initial_delay = 2,
-        backoff_factor = 2,
+    # Fetch with retries
+    return fetch_with_web_driver(
+        fetch_func = attempt_metadata_fetch,
+        operation_name = "GameFAQs metadata fetch for '%s' (%s)" % (game_name, game_platform),
         verbose = verbose,
-        operation_name = "GameFAQs metadata fetch for '%s' (%s)" % (game_name, game_platform))
-
-    # Final cleanup
-    cleanup_driver()
-    return result
+        pretend_run = pretend_run)
 
 ############################################################
 
@@ -383,22 +369,8 @@ def collect_metadata_from_bigfishgames(
     pretend_run = False,
     exit_on_failure = False):
 
-    # Store web driver for cleanup
-    web_driver = None
-
-    # Cleanup function
-    def cleanup_driver():
-        if web_driver:
-            webpage.destroy_web_driver(web_driver)
-
     # Fetch function
-    def attempt_metadata_fetch():
-        nonlocal web_driver
-
-        # Create web driver
-        web_driver = webpage.create_web_driver(make_headless = True)
-        if not web_driver:
-            raise Exception("Failed to create web driver")
+    def attempt_metadata_fetch(web_driver):
 
         # Get search terms
         search_terms = gameinfo.derive_game_search_terms_from_name(game_name, game_platform)
@@ -449,19 +421,12 @@ def collect_metadata_from_bigfishgames(
             metadata_result.set_description("\n".join(description_parts))
         return metadata_result
 
-    # Use retry function with cleanup
-    result = datautils.retry_with_backoff(
-        func = attempt_metadata_fetch,
-        cleanup_func = cleanup_driver,
-        max_retries = 3,
-        initial_delay = 2,
-        backoff_factor = 2,
+    # Fetch with retries
+    return fetch_with_web_driver(
+        fetch_func = attempt_metadata_fetch,
+        operation_name = "BigFishGames metadata fetch for '%s' (%s)" % (game_name, game_platform),
         verbose = verbose,
-        operation_name = "BigFishGames metadata fetch for '%s' (%s)" % (game_name, game_platform))
-
-    # Final cleanup
-    cleanup_driver()
-    return result
+        pretend_run = pretend_run)
 
 ############################################################
 
