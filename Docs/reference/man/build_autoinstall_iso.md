@@ -29,9 +29,14 @@ installer accepts, a hostname, and at least one of a password hash or an SSH key
 Usernames the installer rejects only once it is running on the target, such as
 `admin` or `operator`, are refused here instead.
 
-The generated seed wipes the largest disk and lays it out as a 512 MB EFI partition
-plus an ext4 root, creates the account with passwordless sudo, installs and enables
-the SSH server with password logins disabled, and installs `autoinstall_packages`.
+The generated seed wipes the largest disk and lays it out with the installer's
+`direct` layout, an ext4 root with no LVM plus an EFI partition when booted UEFI or a
+BIOS boot partition when booted legacy, so the stick works in either firmware mode.
+Every wired port (`en*`, `eth*`) gets DHCP, matched by name pattern so a port renamed
+by a card changing slots still comes up. It creates the account with passwordless
+sudo, installs and enables the SSH server with password logins disabled, and
+installs `autoinstall_packages`. When it finishes the machine powers off rather than
+rebooting, so a headless target signals it is done and does not boot the stick again.
 With no password hash the account's password is locked rather than empty.
 
 Anything else the machine is for goes in an overlay: a YAML file merged into the

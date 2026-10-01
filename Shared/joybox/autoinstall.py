@@ -451,35 +451,32 @@ def get_install_profile_problems(profile):
 ###########################################################
 
 # Build the storage layout
-# One disk, gpt, an efi partition and the rest as root. The machine is being
-# installed from scratch, so the existing contents are replaced.
+# The whole largest disk, replaced, with an ext4 root and no LVM. The boot
+# partition depends on how the stick was booted, which is only known on the
+# target: an efi partition under UEFI, a bios_grub one under legacy BIOS.
+# A fixed partition list can only be right for one of them, and grub fails at
+# the very end of the install on the other, so the installer's own layout
+# picks it.
 def build_storage_config():
     return {
-        "config": [
-            {
-                "type": "disk",
-                "id": "disk0",
-                "match": {"size": "largest"},
-                "ptable": "gpt",
-                "wipe": "superblock-recursive",
-                "preserve": False,
-                "grub_device": True,
-            },
-            {
-                "type": "partition",
-                "id": "part_efi",
-                "device": "disk0",
-                "size": "512M",
-                "flag": "boot",
-                "grub_device": True,
-                "preserve": False,
-            },
-            {"type": "format", "id": "fmt_efi", "fstype": "fat32", "volume": "part_efi", "preserve": False},
-            {"type": "partition", "id": "part_root", "device": "disk0", "size": -1, "preserve": False},
-            {"type": "format", "id": "fmt_root", "fstype": "ext4", "volume": "part_root", "preserve": False},
-            {"type": "mount", "id": "mount_root", "device": "fmt_root", "path": "/"},
-            {"type": "mount", "id": "mount_efi", "device": "fmt_efi", "path": "/boot/efi"},
-        ]
+        "layout": {
+            "name": "direct",
+            "match": {"size": "largest"},
+        }
+    }
+
+# Build the network configuration
+# The installer otherwise writes the interface names it saw, and those follow
+# the pci slot, so moving or adding a card renames the port and the machine
+# comes up with no network. Optional, so a port with no cable does not hold
+# up the boot.
+def build_network_config():
+    return {
+        "version": 2,
+        "ethernets": {
+            "wired-en": {"match": {"name": "en*"}, "dhcp4": True, "optional": True},
+            "wired-eth": {"match": {"name": "eth*"}, "dhcp4": True, "optional": True},
+        },
     }
 
 # Build the accounts the installed machine will have
@@ -513,6 +510,7 @@ def build_autoinstall_config(profile):
         "keyboard": {"layout": profile.get("keyboard")},
         "timezone": profile.get("timezone"),
         "ssh": {"install-server": True, "allow-pw": False},
+        "network": build_network_config(),
         "storage": build_storage_config(),
         "identity": {
             "realname": profile.get("realname") or profile.get("username"),
@@ -524,6 +522,11 @@ def build_autoinstall_config(profile):
         "late-commands": [
             "curtin in-target --target=/target -- systemctl enable ssh",
         ],
+
+        # The target may have no display at all, and a reboot with the stick
+        # still ahead of the disk in the boot order installs over again. A
+        # machine that turns itself off is finished and safe to unplug.
+        "shutdown": "poweroff",
     }
     packages = [package for package in profile.get("packages", []) if package]
     if packages:

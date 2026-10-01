@@ -1,3 +1,6 @@
+# Imports
+import fnmatch
+
 # Third-party imports
 import pytest
 
@@ -335,20 +338,43 @@ def test_no_packages_declares_none():
 
 
 def test_the_disk_is_partitioned_for_uefi_and_bios():
-    # A root partition alone leaves a machine that installs and will not boot.
+    # A fixed efi-only partition list fails at grub on a machine booted in
+    # legacy BIOS mode; the installer's layout picks the boot partition itself.
     _, data = seed_for()
-    entries = data["autoinstall"]["storage"]["config"]
-    mounts = {entry["path"] for entry in entries if entry["type"] == "mount"}
+    storage = data["autoinstall"]["storage"]
 
-    assert mounts == {"/", "/boot/efi"}
+    assert "config" not in storage
+    assert storage["layout"]["name"] == "direct"
 
 
-def test_the_existing_contents_are_replaced():
+@pytest.mark.parametrize("port", ["enp3s0", "enp5s0", "eno1", "eth0"])
+def test_every_wired_port_gets_an_address(port):
+    # A port renamed by a card moving slots is still matched.
     _, data = seed_for()
-    disk = data["autoinstall"]["storage"]["config"][0]
+    ethernets = data["autoinstall"]["network"]["ethernets"].values()
 
-    assert disk["preserve"] is False
-    assert disk["ptable"] == "gpt"
+    assert any(
+        fnmatch.fnmatch(port, entry["match"]["name"]) and entry["dhcp4"]
+        for entry in ethernets)
+
+
+def test_an_unplugged_port_does_not_hold_up_the_boot():
+    _, data = seed_for()
+
+    assert all(entry["optional"] for entry in data["autoinstall"]["network"]["ethernets"].values())
+
+
+def test_the_machine_powers_off_when_it_is_done():
+    # A reboot with the stick still in boots the installer and starts over.
+    _, data = seed_for()
+
+    assert data["autoinstall"]["shutdown"] == "poweroff"
+
+
+def test_the_largest_disk_is_the_one_installed_to():
+    _, data = seed_for()
+
+    assert data["autoinstall"]["storage"]["layout"]["match"] == {"size": "largest"}
 
 
 def test_the_instance_metadata_names_the_host():

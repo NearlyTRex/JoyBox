@@ -178,7 +178,13 @@ build_autoinstall_iso --user_data ~/JoyBox/Autoinstall/user-data
    which lives in the El Torito catalogue, and the boot code in the system area at the front of
    the image. Both are read straight out of the image by offset, so no particular version of
    xorriso is needed.
-4. Writes `user-data` and `meta-data` into a `/nocloud` directory.
+4. Writes `user-data` and `meta-data` into a `/nocloud` directory. The seed uses the installer's
+   `direct` disk layout rather than a fixed partition list, so the boot partition matches how
+   the stick was booted — an EFI partition under UEFI, a BIOS boot partition under legacy/CSM.
+   Many desktop boards list a stick twice, once as `UEFI: <stick>` and once plain, and a
+   UEFI‑only layout booted the plain way fails at `install-grub`, at the very end of the install.
+   Wired ports get DHCP by name pattern (`en*`, `eth*`) so a NIC renamed by a card changing
+   slots still comes up.
 5. Points every boot configuration at that seed (`autoinstall ds=nocloud;s=/cdrom/nocloud/`) and
    drops the menu timeout to 2 seconds, leaving a moment to interrupt.
 6. Repacks it as a hybrid BIOS + UEFI image: the boot code goes back into the system area, and

@@ -68,8 +68,9 @@ sudo dd if=~/Images/llm.iso of=/dev/sdX bs=4M status=progress conv=fsync
 ```
 
 **6. Install.** Boot the target from the stick (the firmware's boot menu key is usually F11, F12
-or Esc). The menu waits two seconds, then the install runs on its own. When the machine
-reboots, **pull the stick out** so it boots the installed system instead of the installer.
+or Esc). The menu waits two seconds, then the install runs on its own. When it finishes the machine
+**powers itself off** — that is the signal on a box with no screen. Pull the stick out, then
+power it back on to boot the installed system.
 
 **7. Log in:**
 
