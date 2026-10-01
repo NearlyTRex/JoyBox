@@ -22,7 +22,7 @@ def build_parser():
             "\n"
             "- `Pack`: zip the live save directory, test the zip, and skip it if an identical\n"
             "  archive is already in the save archive directory. Otherwise copy it to that path,\n"
-            "  as `<game>_<timestamp>.zip`, in each locker selected by `-l`.\n"
+            "  as `<game>_<timestamp>.zip`, in the local locker and each locker selected by `-l`.\n"
             "- `Unpack`: extract the newest archive from the save archive directory into the live\n"
             "  save directory.\n"
             "- `Export`: for store games, copy the save files from the store's save paths on this\n"
@@ -46,6 +46,7 @@ def build_parser():
             "`Pack` archives what is already in the live save directory; to capture fresh saves from an installed store game use `Export`.",
             "Every pack or export writes a new timestamped archive rather than replacing an old one, unless an identical archive already exists.",
             "Archives are copied to the lockers as plain zip files, without encryption.",
+            "`Pack` skips games with an empty live save directory; `Unpack` skips games with no archive or a non-empty live save directory.",
             "The first game that fails stops the run.",
         ],
         see_also = ["backup_tool", "upload_game_files"],
@@ -66,7 +67,7 @@ def build_parser():
         args = ("-l", "--locker_type"),
         arg_type = config.LockerType,
         default = config.LockerType.ALL,
-        description = "Locker to copy new archives to for `Pack` and `Export`; `All` means every configured locker")
+        description = "Locker to copy new archives to for `Pack` and `Export`, besides the local locker; `All` means every configured locker")
     parser.add_common_arguments()
     return parser
 
@@ -97,6 +98,13 @@ def main():
     if not handler:
         logger.log_error("Unknown action", quit_program = True)
 
+    # Games with nothing to pack or unpack are skipped
+    readiness_checks = {
+        config.SaveActionType.PACK: collection.can_save_be_packed,
+        config.SaveActionType.UNPACK: collection.can_save_be_unpacked,
+    }
+    is_ready = readiness_checks.get(args.action)
+
     # Collect games to process
     games_to_process = []
     for game_info in gameinfo.iterate_selected_game_infos(
@@ -104,6 +112,10 @@ def main():
         verbose = args.verbose,
         pretend_run = args.pretend_run,
         exit_on_failure = args.exit_on_failure):
+        if is_ready and not is_ready(game_info):
+            if args.verbose:
+                logger.log_info("Nothing to %s for %s" % (str(args.action).lower(), game_info.get_name()))
+            continue
         games_to_process.append(game_info)
 
     # Show preview

@@ -50,6 +50,7 @@ class Moonlight(toolbase.ToolBase):
                 install_name = "Moonlight",
                 install_dir = programs.get_program_install_dir("Moonlight", "windows"),
                 backups_dir = programs.get_program_backup_dir("Moonlight", "windows"),
+                locker_type = setup_params.locker_type,
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
@@ -67,6 +68,7 @@ class Moonlight(toolbase.ToolBase):
                 install_name = "Moonlight",
                 install_dir = programs.get_program_install_dir("Moonlight", "linux"),
                 backups_dir = programs.get_program_backup_dir("Moonlight", "linux"),
+                locker_type = setup_params.locker_type,
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)

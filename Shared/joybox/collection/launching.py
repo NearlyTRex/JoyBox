@@ -73,6 +73,7 @@ def launch_store_game(
     # Export save
     success = export_store_game_save(
         game_info = game_info,
+        locker_type = locker_type,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -192,6 +193,7 @@ def launch_local_game(
     # Export save
     success = export_local_game_save(
         game_info = game_info,
+        locker_type = locker_type,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)

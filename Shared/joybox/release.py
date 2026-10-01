@@ -17,6 +17,14 @@ import joybox.network as network
 import joybox.paths as paths
 import joybox.locker as locker
 
+# Remove a temporary directory, tolerating failure
+def remove_temporary_directory(tmp_dir, verbose = False, pretend_run = False):
+    fileops.remove_directory(
+        src = tmp_dir,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = False)
+
 # Setup stored release
 def setup_stored_release(
     archive_dir,
@@ -81,17 +89,17 @@ def setup_stored_release(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
-# Setup general release
-def setup_general_release(
+# Install a release using an existing temporary directory
+def install_general_release(
     archive_file,
     install_name,
     install_dir,
+    tmp_dir_result,
     search_file = None,
     backups_dir = None,
     install_files = [],
     chmod_files = [],
     rename_files = [],
-    installer_type = None,
     release_type = None,
     locker_type = None,
     skip_autobackup = False,
@@ -99,20 +107,13 @@ def setup_general_release(
     pretend_run = False,
     exit_on_failure = False):
 
-    # Create temporary directory
-    tmp_dir_success, tmp_dir_result = fileops.create_temporary_directory(
-        verbose = verbose,
-        pretend_run = pretend_run)
-    if not tmp_dir_success:
-        logger.log_error("Unable to create temporary directory")
-        return False
-
     # Get archive info
     archive_dir = paths.get_filename_directory(archive_file)
     archive_extension = paths.get_filename_extension(archive_file)
     archive_filename = paths.get_filename_file(archive_file)
     archive_is_zip = archive.is_zip_archive(archive_file)
     archive_is_7z = archive.is_7z_archive(archive_file)
+    archive_is_rar = archive.is_rar_archive(archive_file)
     archive_is_tarball = archive.is_tarball_archive(archive_file)
     archive_is_exe = archive.is_exe_archive(archive_file)
     archive_is_appimage = archive.is_appimage_archive(archive_file)
@@ -132,7 +133,7 @@ def setup_general_release(
 
     # Guess the release type if none specified
     if not release_type:
-        if archive_is_zip or archive_is_7z or archive_is_tarball:
+        if archive_is_zip or archive_is_7z or archive_is_rar or archive_is_tarball:
             release_type = config.ReleaseType.ARCHIVE
         elif archive_is_exe or archive_is_appimage:
             release_type = config.ReleaseType.PROGRAM
@@ -270,6 +271,7 @@ def setup_general_release(
                     if not success:
                         logger.log_error("Unable to rename file %s" % filename)
                         return False
+                    break
 
     # Backup files
     if not skip_autobackup and paths.is_path_valid(backups_dir):
@@ -289,15 +291,57 @@ def setup_general_release(
             logger.log_error("Unable to backup files")
             return False
 
-    # Delete temporary directory
-    fileops.remove_directory(
-        src = tmp_dir_result,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-
     # Check result
+    if pretend_run:
+        return True
     return paths.does_directory_contain_files(install_dir)
+
+# Setup general release
+def setup_general_release(
+    archive_file,
+    install_name,
+    install_dir,
+    search_file = None,
+    backups_dir = None,
+    install_files = [],
+    chmod_files = [],
+    rename_files = [],
+    installer_type = None,
+    release_type = None,
+    locker_type = None,
+    skip_autobackup = False,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Create temporary directory
+    tmp_dir_success, tmp_dir_result = fileops.create_temporary_directory(
+        verbose = verbose,
+        pretend_run = pretend_run)
+    if not tmp_dir_success:
+        logger.log_error("Unable to create temporary directory")
+        return False
+
+    # Install release
+    try:
+        return install_general_release(
+            archive_file = archive_file,
+            install_name = install_name,
+            install_dir = install_dir,
+            tmp_dir_result = tmp_dir_result,
+            search_file = search_file,
+            backups_dir = backups_dir,
+            install_files = install_files,
+            chmod_files = chmod_files,
+            rename_files = rename_files,
+            release_type = release_type,
+            locker_type = locker_type,
+            skip_autobackup = skip_autobackup,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+    finally:
+        remove_temporary_directory(tmp_dir_result, verbose = verbose, pretend_run = pretend_run)
 
 # Download general release
 def download_general_release(
@@ -311,6 +355,7 @@ def download_general_release(
     rename_files = [],
     installer_type = None,
     release_type = None,
+    locker_type = None,
     skip_autobackup = False,
     verbose = False,
     pretend_run = False,
@@ -328,40 +373,61 @@ def download_general_release(
     archive_filename = paths.get_filename_file(archive_url)
     archive_file = paths.join_paths(tmp_dir_result, archive_filename)
 
-    # Download release
-    success = network.download_url(
-        url = archive_url,
-        output_dir = tmp_dir_result,
-        output_file = archive_file,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    if not success:
-        logger.log_error("Unable to download release from '%s'" % archive_url)
-        return False
+    try:
 
-    # Setup release
-    success = setup_general_release(
-        archive_file = archive_file,
-        install_name = install_name,
-        install_dir = install_dir,
-        search_file = search_file,
-        backups_dir = backups_dir,
-        install_files = install_files,
-        chmod_files = chmod_files,
-        rename_files = rename_files,
-        installer_type = installer_type,
-        release_type = release_type,
-        skip_autobackup = skip_autobackup,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    fileops.remove_directory(
-        src = tmp_dir_result,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    return success
+        # Download release
+        success = network.download_url(
+            url = archive_url,
+            output_file = archive_file,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if not success:
+            logger.log_error("Unable to download release from '%s'" % archive_url)
+            return False
+
+        # Setup release
+        return setup_general_release(
+            archive_file = archive_file,
+            install_name = install_name,
+            install_dir = install_dir,
+            search_file = search_file,
+            backups_dir = backups_dir,
+            install_files = install_files,
+            chmod_files = chmod_files,
+            rename_files = rename_files,
+            installer_type = installer_type,
+            release_type = release_type,
+            locker_type = locker_type,
+            skip_autobackup = skip_autobackup,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+    finally:
+        remove_temporary_directory(tmp_dir_result, verbose = verbose, pretend_run = pretend_run)
+
+# Find the first release asset whose name matches the given prefix and suffix
+def find_github_asset_url(release_json_list, starts_with, ends_with):
+    starts_with = starts_with or ""
+    ends_with = ends_with or ""
+    if not starts_with and not ends_with:
+        return ""
+    for release_json in release_json_list:
+        if not isinstance(release_json, dict):
+            continue
+        releases_assets = release_json.get("assets")
+        if not isinstance(releases_assets, list):
+            continue
+        for releases_asset in releases_assets:
+            if not isinstance(releases_asset, dict):
+                continue
+            browser_download_file = releases_asset.get("name")
+            browser_download_url = releases_asset.get("browser_download_url")
+            if not isinstance(browser_download_file, str) or not isinstance(browser_download_url, str) or not browser_download_url:
+                continue
+            if browser_download_file.startswith(starts_with) and browser_download_file.endswith(ends_with):
+                return browser_download_url
+    return ""
 
 # Download github release
 def download_github_release(
@@ -379,6 +445,7 @@ def download_github_release(
     installer_type = None,
     release_type = None,
     get_latest = False,
+    locker_type = None,
     skip_autobackup = False,
     verbose = False,
     pretend_run = False,
@@ -402,24 +469,7 @@ def download_github_release(
         release_json_list = [release_json_list]
 
     # Find matching archive url
-    archive_url = ""
-    for release_json in release_json_list:
-        if len(archive_url):
-            break
-        if "assets" in release_json:
-            for releases_asset in release_json["assets"]:
-                browser_download_file = releases_asset["name"]
-                browser_download_url = releases_asset["browser_download_url"]
-                match_found = False
-                if len(starts_with) and len(ends_with):
-                    match_found = browser_download_file.startswith(starts_with) and browser_download_file.endswith(ends_with)
-                elif len(starts_with):
-                    match_found = browser_download_file.startswith(starts_with)
-                elif len(ends_with):
-                    match_found = browser_download_file.endswith(ends_with)
-                if match_found:
-                    archive_url = browser_download_url
-                    break
+    archive_url = find_github_asset_url(release_json_list, starts_with, ends_with)
 
     # Did not find any matching release
     if not archive_url:
@@ -438,6 +488,7 @@ def download_github_release(
         rename_files = rename_files,
         installer_type = installer_type,
         release_type = release_type,
+        locker_type = locker_type,
         skip_autobackup = skip_autobackup,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -459,6 +510,7 @@ def download_webpage_release(
     installer_type = None,
     release_type = None,
     get_latest = False,
+    locker_type = None,
     skip_autobackup = False,
     verbose = False,
     pretend_run = False,
@@ -490,6 +542,7 @@ def download_webpage_release(
         rename_files = rename_files,
         installer_type = installer_type,
         release_type = release_type,
+        locker_type = locker_type,
         skip_autobackup = skip_autobackup,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -497,10 +550,10 @@ def download_webpage_release(
 
 # Resolve a source patch entry to its filename and contents
 def resolve_patch_entry(patch_entry, verbose = False, exit_on_failure = False):
-    patch_file = patch_entry.get("file", "")
-    patch_content = patch_entry.get("content", "")
-    patch_path = patch_entry.get("path", "")
-    if len(patch_path) and os.path.isfile(patch_path):
+    patch_file = patch_entry.get("file") or ""
+    patch_content = patch_entry.get("content") or ""
+    patch_path = patch_entry.get("path") or ""
+    if patch_path and os.path.isfile(patch_path):
         patch_content = serialization.read_text_file(
             src = patch_path,
             verbose = verbose,
@@ -510,6 +563,59 @@ def resolve_patch_entry(patch_entry, verbose = False, exit_on_failure = False):
         if not patch_file:
             patch_file = os.path.basename(patch_path)
     return patch_file, patch_content
+
+# Apply source patches with git apply
+def apply_source_patches(
+    source_patches,
+    source_dir,
+    patch_dir,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+    if not isinstance(source_patches, list):
+        return True
+    for patch_index, patch_entry in enumerate(source_patches):
+        patch_file, patch_content = resolve_patch_entry(
+            patch_entry = patch_entry,
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)
+        if patch_file is None:
+            logger.log_error("Unable to read patch file '%s'" % patch_entry.get("path"))
+            return False
+        if not patch_content:
+            logger.log_error("Patch entry %d has no content" % patch_index)
+            return False
+        if not patch_file:
+            patch_file = "source_patch_%d" % patch_index
+
+        # Write patch to temp file
+        patch_temp_file = paths.join_paths(patch_dir, patch_file if patch_file.endswith(".patch") else patch_file + ".patch")
+        success = fileops.touch_file(
+            src = patch_temp_file,
+            contents = patch_content,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if not success:
+            logger.log_error("Unable to write patch file '%s'" % patch_temp_file)
+            return False
+
+        # Apply patch with git apply
+        code = command.run_returncode_command(
+            cmd = [
+                programs.get_tool_program("Git"),
+                "apply",
+                patch_temp_file
+            ],
+            options = command.create_command_options(
+                cwd = source_dir),
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if code != 0:
+            logger.log_error("Unable to apply patch '%s'" % patch_file)
+            return False
+    return True
 
 # Build from source
 def build_from_source(
@@ -527,7 +633,7 @@ def build_from_source(
     exit_on_failure = False):
 
     # Find release url if necessary
-    if len(webpage_url):
+    if webpage_url:
         release_url = webpage.get_matching_url(
             url = webpage_url,
             base_url = webpage_base_url,
@@ -549,146 +655,125 @@ def build_from_source(
         logger.log_error("Unable to create temporary directory")
         return None
 
-    # Get directories
-    source_base_dir = paths.join_paths(tmp_dir_result, "Source")
-    download_dir = paths.join_paths(tmp_dir_result, "Download")
+    build_succeeded = False
+    try:
 
-    # Make folders
-    fileops.make_directory(
-        src = source_base_dir,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    fileops.make_directory(
-        src = download_dir,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
+        # Get directories
+        source_base_dir = paths.join_paths(tmp_dir_result, "Source")
+        download_dir = paths.join_paths(tmp_dir_result, "Download")
 
-    # Download sources
-    if release_url.endswith(".git"):
-
-        # Get repo name
-        repo_name = paths.get_filename_basename(release_url.rstrip("/"))
-        source_dir = paths.join_paths(source_base_dir, repo_name)
-
-        # Download git release
-        success = network.download_git_url(
-            url = release_url,
-            output_dir = source_dir,
-            branch = release_branch if release_branch else None,
-            clean = True,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        if not success:
-            logger.log_error("Unable to download release from '%s'" % release_url)
-            return None
-    else:
-
-        # Get archive info
-        archive_basename = paths.get_filename_basename(release_url)
-        archive_extension = paths.get_filename_extension(release_url)
-        archive_file = paths.join_paths(download_dir, archive_basename + archive_extension)
-        source_dir = paths.join_paths(source_base_dir, archive_basename)
-
-        # Download source archive
-        success = network.download_url(
-            url = release_url,
-            output_file = archive_file,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        if not success:
-            logger.log_error("Unable to download release from '%s'" % release_url)
-            return None
-
-        # Extract source archive
-        success = archive.extract_archive(
-            archive_file = archive_file,
-            extract_dir = source_dir,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        if not success:
-            logger.log_error("Unable to extract source archive")
-            return None
-
-    # Get build directory
-    source_build_dir = source_dir
-    if len(build_dir) > 0:
-        source_build_dir = os.path.abspath(paths.join_paths(source_dir, build_dir))
-
-    # Apply source patches
-    if isinstance(source_patches, list) and len(source_patches):
-        for patch_entry in source_patches:
-            patch_file, patch_content = resolve_patch_entry(
-                patch_entry = patch_entry,
+        # Make folders
+        for folder in [source_base_dir, download_dir]:
+            success = fileops.make_directory(
+                src = folder,
                 verbose = verbose,
+                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-            if patch_file is None:
-                logger.log_error("Unable to read patch file '%s'" % patch_entry.get("path", ""))
+            if not success:
+                logger.log_error("Unable to make folder '%s'" % folder)
                 return None
 
-            if len(patch_file) and len(patch_content):
+        # Download sources
+        if not release_url:
+            logger.log_error("No release url was given")
+            return None
+        if release_url.rstrip("/").endswith(".git"):
 
-                # Write patch to temp file
-                patch_temp_file = paths.join_paths(tmp_dir_result, patch_file if patch_file.endswith(".patch") else patch_file + ".patch")
-                success = fileops.touch_file(
-                    src = patch_temp_file,
-                    contents = patch_content,
-                    verbose = verbose,
-                    pretend_run = pretend_run,
-                    exit_on_failure = exit_on_failure)
-                if not success:
-                    logger.log_error("Unable to write patch file '%s'" % patch_temp_file)
-                    return None
+            # Get repo name
+            repo_name = paths.get_filename_basename(release_url.rstrip("/"))
+            source_dir = paths.join_paths(source_base_dir, repo_name)
 
-                # Apply patch with git apply
-                code = command.run_returncode_command(
-                    cmd = [
-                        programs.get_tool_program("Git"),
-                        "apply",
-                        patch_temp_file
-                    ],
-                    options = command.create_command_options(
-                        cwd = source_dir),
-                    verbose = verbose,
-                    pretend_run = pretend_run,
-                    exit_on_failure = exit_on_failure)
-                if code != 0:
-                    logger.log_error("Unable to apply patch '%s'" % patch_file)
-                    return None
+            # Download git release
+            success = network.download_git_url(
+                url = release_url,
+                output_dir = source_dir,
+                branch = release_branch if release_branch else None,
+                clean = True,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
+            if not success:
+                logger.log_error("Unable to download release from '%s'" % release_url)
+                return None
+        else:
 
-    # Make build folder
-    success = fileops.make_directory(
-        src = source_build_dir,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    if not success:
-        logger.log_error("Unable to make build folder '%s'" % source_build_dir)
-        return None
+            # Get archive info
+            archive_basename = paths.get_filename_basename(release_url)
+            archive_extension = paths.get_filename_extension(release_url)
+            archive_file = paths.join_paths(download_dir, archive_basename + archive_extension)
+            source_dir = paths.join_paths(source_base_dir, archive_basename)
 
-    # Build release
-    code = command.run_returncode_command(
-        cmd = build_cmd,
-        options = command.create_command_options(
-            cwd = source_build_dir,
-            is_shell = True),
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    if code != 0:
-        logger.log_error("Unable to build release")
-        return None
+            # Download source archive
+            success = network.download_url(
+                url = release_url,
+                output_file = archive_file,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
+            if not success:
+                logger.log_error("Unable to download release from '%s'" % release_url)
+                return None
 
-    # Return build info
-    return {
-        "tmp_dir": tmp_dir_result,
-        "source_dir": source_dir,
-        "build_dir": source_build_dir
-    }
+            # Extract source archive
+            success = archive.extract_archive(
+                archive_file = archive_file,
+                extract_dir = source_dir,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
+            if not success:
+                logger.log_error("Unable to extract source archive")
+                return None
+
+        # Get build directory
+        source_build_dir = source_dir
+        if build_dir:
+            source_build_dir = os.path.abspath(paths.join_paths(source_dir, build_dir))
+
+        # Apply source patches
+        success = apply_source_patches(
+            source_patches = source_patches,
+            source_dir = source_dir,
+            patch_dir = tmp_dir_result,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if not success:
+            return None
+
+        # Make build folder
+        success = fileops.make_directory(
+            src = source_build_dir,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if not success:
+            logger.log_error("Unable to make build folder '%s'" % source_build_dir)
+            return None
+
+        # Build release
+        code = command.run_returncode_command(
+            cmd = build_cmd,
+            options = command.create_command_options(
+                cwd = source_build_dir,
+                is_shell = True),
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if code != 0:
+            logger.log_error("Unable to build release")
+            return None
+
+        # Return build info
+        build_succeeded = True
+        return {
+            "tmp_dir": tmp_dir_result,
+            "source_dir": source_dir,
+            "build_dir": source_build_dir
+        }
+    finally:
+        if not build_succeeded:
+            remove_temporary_directory(tmp_dir_result, verbose = verbose, pretend_run = pretend_run)
 
 # Build binary from source
 def build_binary_from_source(
@@ -733,126 +818,124 @@ def build_binary_from_source(
 
     # Get build result
     tmp_dir = build_info["tmp_dir"]
-    source_dir = build_info["source_dir"]
+    try:
+        source_dir = build_info["source_dir"]
 
-    # Make install folder
-    fileops.make_directory(
-        src = install_dir,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-
-    # Determine search directory for built files
-    search_dir = tmp_dir
-    if len(output_dir) > 0:
-        search_dir = paths.join_paths(source_dir, output_dir)
-
-    # Find built release file
-    built_file = None
-    for path in paths.build_file_list(search_dir):
-        if path.endswith(output_file):
-            built_file = path
-    if not built_file:
-        logger.log_error("No built files could be found")
-        return False
-
-    # Get final file for backup
-    if output_file.startswith("."):
-        final_file = install_name + output_file
-    else:
-        final_file = install_name + paths.get_filename_extension(output_file)
-
-    # Check if output is an archive that needs extraction
-    is_archive = archive.is_archive(built_file)
-    if is_archive and len(search_file):
-
-        # Extract archive and install contents
-        extract_dir = paths.join_paths(tmp_dir, "Extract")
-        fileops.make_directory(
-            src = extract_dir,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        success = archive.extract_archive(
-            archive_file = built_file,
-            extract_dir = extract_dir,
+        # Make install folder
+        success = fileops.make_directory(
+            src = install_dir,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if not success:
-            logger.log_error("Unable to extract built archive")
+            logger.log_error("Unable to make install folder '%s'" % install_dir)
             return False
 
-        # Find directory containing search_file
-        search_dir = extract_dir
-        for file in paths.build_file_list(extract_dir):
-            if file.endswith(search_file):
-                search_dir = paths.get_filename_directory(file)
-                break
+        # Determine search directory for built files
+        search_dir = tmp_dir
+        if output_dir:
+            search_dir = paths.join_paths(source_dir, output_dir)
 
-        # Copy contents to install directory
-        success = fileops.copy_contents(
-            src = search_dir,
-            dest = install_dir,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        if not success:
-            logger.log_error("Unable to copy release files")
-            return False
-    else:
-        # Copy release file directly
-        success = fileops.smart_copy(
-            src = built_file,
-            dest = paths.join_paths(install_dir, final_file),
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        if not success:
-            logger.log_error("Unable to copy release files")
+        # Find built release file
+        built_file = None
+        for path in paths.build_file_list(search_dir):
+            if path.endswith(output_file):
+                built_file = path
+        if not built_file and pretend_run:
+            built_file = paths.join_paths(search_dir, output_file)
+        if not built_file:
+            logger.log_error("No built files could be found")
             return False
 
-    # Copy other objects
-    for obj in external_copies:
-        src_obj = paths.join_paths(tmp_dir, obj["from"])
-        dest_obj = paths.join_paths(install_dir, obj["to"])
-        success = fileops.smart_copy(
-            src = src_obj,
-            dest = dest_obj,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        if not success:
-            logger.log_error("Unable to copy other files")
-            return False
+        # Get final file for backup
+        if output_file.startswith("."):
+            final_file = install_name + output_file
+        else:
+            final_file = install_name + paths.get_filename_extension(output_file)
 
-    # Backup files
-    if not skip_autobackup and paths.is_path_valid(backups_dir):
-        backup_dest = paths.join_paths(backups_dir, final_file)
-        dest_rel_path = locker.convert_to_relative_path(backup_dest)
-        success = locker.backup(
-            src = built_file,
-            dest_rel_path = dest_rel_path,
-            locker_type = locker_type,
-            show_progress = True,
-            skip_existing = True,
-            skip_identical = True,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        if not success:
-            logger.log_error("Unable to backup files")
-            return False
+        # Check if output is an archive that needs extraction
+        is_archive = archive.is_archive(built_file)
+        if is_archive and search_file:
 
-    # Delete temporary directory
-    fileops.remove_directory(
-        src = tmp_dir,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
+            # Extract archive and install contents
+            extract_dir = paths.join_paths(tmp_dir, "Extract")
+            success = archive.extract_archive(
+                archive_file = built_file,
+                extract_dir = extract_dir,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
+            if not success:
+                logger.log_error("Unable to extract built archive")
+                return False
 
-    # Check result
-    return paths.does_directory_contain_files(install_dir)
+            # Find directory containing search_file
+            search_dir = extract_dir
+            for file in paths.build_file_list(extract_dir):
+                if file.endswith(search_file):
+                    search_dir = paths.get_filename_directory(file)
+                    break
+
+            # Copy contents to install directory
+            success = fileops.copy_contents(
+                src = search_dir,
+                dest = install_dir,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
+            if not success:
+                logger.log_error("Unable to copy release files")
+                return False
+        else:
+            # Copy release file directly
+            success = fileops.smart_copy(
+                src = built_file,
+                dest = paths.join_paths(install_dir, final_file),
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
+            if not success:
+                logger.log_error("Unable to copy release files")
+                return False
+
+        # Copy other objects
+        for obj in external_copies:
+            src_obj = paths.join_paths(tmp_dir, obj["from"])
+            dest_obj = paths.join_paths(install_dir, obj["to"])
+            success = fileops.smart_copy(
+                src = src_obj,
+                dest = dest_obj,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
+            if not success:
+                logger.log_error("Unable to copy other files")
+                return False
+
+        # Backup files
+        if not skip_autobackup and paths.is_path_valid(backups_dir):
+            backup_dest = paths.join_paths(backups_dir, final_file)
+            dest_rel_path = locker.convert_to_relative_path(backup_dest)
+            success = locker.backup(
+                src = built_file,
+                dest_rel_path = dest_rel_path,
+                locker_type = locker_type,
+                show_progress = True,
+                skip_existing = True,
+                skip_identical = True,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
+            if not success:
+                logger.log_error("Unable to backup files")
+                return False
+
+        # Check result
+        if pretend_run:
+            return True
+        return paths.does_directory_contain_files(install_dir)
+    finally:
+        remove_temporary_directory(tmp_dir, verbose = verbose, pretend_run = pretend_run)
 
 # Build AppImage from source
 def build_appimage_from_source(
@@ -897,124 +980,123 @@ def build_appimage_from_source(
 
     # Get build result
     tmp_dir = build_info["tmp_dir"]
-    appimage_dir = paths.join_paths(tmp_dir, "AppImage")
+    try:
+        appimage_dir = paths.join_paths(tmp_dir, "AppImage")
 
-    # Make folders
-    fileops.make_directory(
-        src = install_dir,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    fileops.make_directory(
-        src = appimage_dir,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
+        # Make folders
+        for folder in [install_dir, appimage_dir]:
+            success = fileops.make_directory(
+                src = folder,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
+            if not success:
+                logger.log_error("Unable to make folder '%s'" % folder)
+                return False
 
-    # Copy AppImage objects
-    for obj in internal_copies:
-        src_obj = paths.join_paths(tmp_dir, obj["from"])
-        dest_obj = paths.join_paths(tmp_dir, obj["to"])
-        if obj["from"].startswith("AppImageTool"):
-            src_obj = paths.join_paths(environment.get_tools_root_dir(), obj["from"])
+        # Copy AppImage objects
+        for obj in internal_copies:
+            src_obj = paths.join_paths(tmp_dir, obj["from"])
+            dest_obj = paths.join_paths(tmp_dir, obj["to"])
+            if obj["from"].startswith("AppImageTool"):
+                src_obj = paths.join_paths(environment.get_tools_root_dir(), obj["from"])
+            success = fileops.smart_copy(
+                src = src_obj,
+                dest = dest_obj,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
+            if not success:
+                logger.log_error("Unable to copy AppImage file '%s' to '%s'" % (src_obj, dest_obj))
+                return False
+
+        # Symlink AppImage objects
+        for obj in internal_symlinks:
+            src_obj = obj["from"]
+            dest_obj = obj["to"]
+            success = fileops.create_symlink(
+                src = src_obj,
+                dest = dest_obj,
+                cwd = appimage_dir,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
+            if not success:
+                logger.log_error("Unable to symlink AppImage object '%s' to '%s'" % (src_obj, dest_obj))
+                return False
+
+        # Build AppImage
+        code = command.run_returncode_command(
+            cmd = [programs.get_tool_program("AppImageTool"), appimage_dir],
+            options = command.create_command_options(
+                cwd = tmp_dir),
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if code != 0:
+            logger.log_error("Unable to create AppImage from built release")
+            return False
+
+        # Find built release file
+        built_file = None
+        for path in paths.build_file_list(tmp_dir):
+            if path.endswith(output_file):
+                built_file = path
+        if not built_file and pretend_run:
+            built_file = paths.join_paths(tmp_dir, output_file)
+        if not built_file:
+            logger.log_error("No built files could be found")
+            return False
+
+        # Get final file
+        final_file = install_name + ".AppImage"
+
+        # Copy release file
         success = fileops.smart_copy(
-            src = src_obj,
-            dest = dest_obj,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        if not success:
-            logger.log_error("Unable to copy AppImage file '%s' to '%s'" % (src_obj, dest_obj))
-            return False
-
-    # Symlink AppImage objects
-    for obj in internal_symlinks:
-        src_obj = obj["from"]
-        dest_obj = obj["to"]
-        success = fileops.create_symlink(
-            src = src_obj,
-            dest = dest_obj,
-            cwd = appimage_dir,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        if not success:
-            logger.log_error("Unable to symlink AppImage object '%s' to '%s'" % (src_obj, dest_obj))
-            return False
-
-    # Build AppImage
-    code = command.run_returncode_command(
-        cmd = [programs.get_tool_program("AppImageTool"), appimage_dir],
-        options = command.create_command_options(
-            cwd = tmp_dir),
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    if code != 0:
-        logger.log_error("Unable to create AppImage from built release")
-        return False
-
-    # Find built release file
-    built_file = None
-    for path in paths.build_file_list(tmp_dir):
-        if path.endswith(output_file):
-            built_file = path
-    if not built_file:
-        logger.log_error("No built files could be found")
-        return False
-
-    # Get final file
-    final_file = install_name + ".AppImage"
-
-    # Copy release file
-    success = fileops.smart_copy(
-        src = built_file,
-        dest = paths.join_paths(install_dir, final_file),
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    if not success:
-        logger.log_error("Unable to copy release files")
-        return False
-
-    # Copy other objects
-    for obj in external_copies:
-        src_obj = paths.join_paths(tmp_dir, obj["from"])
-        dest_obj = paths.join_paths(install_dir, obj["to"])
-        success = fileops.smart_copy(
-            src = src_obj,
-            dest = dest_obj,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        if not success:
-            logger.log_error("Unable to copy other files")
-            return False
-
-    # Backup files
-    if not skip_autobackup and paths.is_path_valid(backups_dir):
-        backup_dest = paths.join_paths(backups_dir, final_file)
-        dest_rel_path = locker.convert_to_relative_path(backup_dest)
-        success = locker.backup(
             src = built_file,
-            dest_rel_path = dest_rel_path,
-            locker_type = locker_type,
-            show_progress = True,
-            skip_existing = True,
-            skip_identical = True,
+            dest = paths.join_paths(install_dir, final_file),
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if not success:
-            logger.log_error("Unable to backup files")
+            logger.log_error("Unable to copy release files")
             return False
 
-    # Delete temporary directory
-    fileops.remove_directory(
-        src = tmp_dir,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
+        # Copy other objects
+        for obj in external_copies:
+            src_obj = paths.join_paths(tmp_dir, obj["from"])
+            dest_obj = paths.join_paths(install_dir, obj["to"])
+            success = fileops.smart_copy(
+                src = src_obj,
+                dest = dest_obj,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
+            if not success:
+                logger.log_error("Unable to copy other files")
+                return False
 
-    # Check result
-    return os.path.exists(paths.join_paths(install_dir, final_file))
+        # Backup files
+        if not skip_autobackup and paths.is_path_valid(backups_dir):
+            backup_dest = paths.join_paths(backups_dir, final_file)
+            dest_rel_path = locker.convert_to_relative_path(backup_dest)
+            success = locker.backup(
+                src = built_file,
+                dest_rel_path = dest_rel_path,
+                locker_type = locker_type,
+                show_progress = True,
+                skip_existing = True,
+                skip_identical = True,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
+            if not success:
+                logger.log_error("Unable to backup files")
+                return False
+
+        # Check result
+        if pretend_run:
+            return True
+        return os.path.exists(paths.join_paths(install_dir, final_file))
+    finally:
+        remove_temporary_directory(tmp_dir, verbose = verbose, pretend_run = pretend_run)

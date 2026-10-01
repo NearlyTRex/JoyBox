@@ -150,9 +150,18 @@ def test_a_stale_cache_is_refreshed(steam_store, owned):
     assert len(owned["fetched"]) == 2
 
 
-def test_an_unreadable_cache_is_refetched(steam_store, owned):
+def test_an_empty_library_is_served_from_the_cache(steam_store, owned):
+    owned["json"] = {"response": {"games": []}}
+    assert steam_store.get_latest_purchases() == []
+
+    assert steam_store.get_latest_purchases() == []
+    assert len(owned["fetched"]) == 1
+
+
+@pytest.mark.parametrize("cached", [{"not": "a list"}, ["not a dict"]])
+def test_an_unreadable_cache_is_refetched(steam_store, owned, cached):
     owned["cache"].parent.mkdir(parents = True)
-    owned["cache"].write_text(json.dumps({"not": "a list"}))
+    owned["cache"].write_text(json.dumps(cached))
 
     assert len(steam_store.get_latest_purchases(verbose = True)) == 2
     assert len(owned["fetched"]) == 1

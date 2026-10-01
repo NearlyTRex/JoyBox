@@ -179,6 +179,30 @@ class Epic(storebase.StoreBase):
         if not web_driver:
             return None
 
+        # Search, then disconnect whatever the outcome
+        try:
+            return self.find_best_store_url(
+                web_driver = web_driver,
+                identifier = identifier,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
+        finally:
+            self.web_disconnect(
+                web_driver = web_driver,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
+
+    # Find best store url
+    def find_best_store_url(
+        self,
+        web_driver,
+        identifier,
+        verbose = False,
+        pretend_run = False,
+        exit_on_failure = False):
+
         # Get search terms
         search_terms = strings.encode_url_string(identifier.strip(), use_plus = True)
 
@@ -220,7 +244,6 @@ class Epic(storebase.StoreBase):
                 scores_list.append(score_entry)
 
         # Get the best url match
-        appurl = None
         for score_entry in sorted(scores_list, key=lambda d: d["ratio"], reverse=True):
             game_cell = score_entry["element"]
             game_link_element = webpage.get_element(
@@ -228,19 +251,8 @@ class Epic(storebase.StoreBase):
                 locator = webpage.ElementLocator({"class": "css-1k3j1r9"}),
                 verbose = verbose)
             if game_link_element:
-                appurl = webpage.get_element_attribute(game_link_element, "href")
-                break
-
-        # Disconnect from web
-        success = self.web_disconnect(
-            web_driver = web_driver,
-            verbose = verbose,
-            exit_on_failure = exit_on_failure)
-        if not success:
-            return None
-
-        # Return appurl
-        return appurl
+                return webpage.get_element_attribute(game_link_element, "href")
+        return None
 
     ############################################################
     # Purchases
@@ -273,7 +285,7 @@ class Epic(storebase.StoreBase):
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = False)
-            if cached_data and isinstance(cached_data, list):
+            if isinstance(cached_data, list) and all(isinstance(entry, dict) for entry in cached_data):
                 cached_purchases = []
                 for purchase_data in cached_data:
                     purchase = jsondata.JsonData(
@@ -315,7 +327,7 @@ class Epic(storebase.StoreBase):
             cmd = list_cmd,
             verbose = verbose,
             exit_on_failure = exit_on_failure)
-        if len(list_output) == 0:
+        if not list_output:
             logger.log_error("Unable to find epic purchases")
             return None
 
@@ -328,6 +340,10 @@ class Epic(storebase.StoreBase):
             logger.log_error("Unable to parse epic game list")
             logger.log_error("Received output:\n%s" % list_output)
             return None
+        if not isinstance(epic_json, list):
+            logger.log_error("Unable to parse epic game list")
+            logger.log_error("Received output:\n%s" % list_output)
+            return None
 
         # Parse output
         purchases = []
@@ -335,9 +351,10 @@ class Epic(storebase.StoreBase):
         for entry in epic_json:
 
             # Gather info
-            line_appname = str(entry.get("app_name", ""))
-            line_title = str(entry.get("app_title", ""))
-            line_buildid = str(entry.get("asset_infos", {}).get("Windows", {}).get("build_version", config.default_buildid))
+            windows_asset = (entry.get("asset_infos") or {}).get("Windows") or {}
+            line_appname = str(entry.get("app_name") or "")
+            line_title = str(entry.get("app_title") or "")
+            line_buildid = str(windows_asset.get("build_version") or config.default_buildid)
 
             # Create purchase
             purchase = jsondata.JsonData(
@@ -418,7 +435,7 @@ class Epic(storebase.StoreBase):
             cmd = info_cmd,
             verbose = verbose,
             exit_on_failure = exit_on_failure)
-        if len(info_output) == 0 or "No game information available" in info_output:
+        if not info_output or "No game information available" in info_output:
             logger.log_error("Unable to find epic information for '%s'" % identifier)
             return None
 
@@ -431,22 +448,21 @@ class Epic(storebase.StoreBase):
             logger.log_error("Unable to parse epic game information for '%s'" % identifier)
             logger.log_error("Received output:\n%s" % info_output)
             return None
+        game_info = epic_json.get("game") if isinstance(epic_json, dict) else None
+        if not isinstance(game_info, dict):
+            logger.log_error("Unable to parse epic game information for '%s'" % identifier)
+            logger.log_error("Received output:\n%s" % info_output)
+            return None
 
         # Build jsondata
         json_data = self.create_default_jsondata()
         json_data.set_value(config.json_key_store_appname, identifier)
-        json_data.set_value(config.json_key_store_name, epic_json.get("game", {}).get("title", "").strip())
-        json_data.set_value(config.json_key_store_buildid, epic_json.get("game", {}).get("version", config.default_buildid).strip())
-        cloud_save_folder = epic_json.get("game", {}).get("cloud_save_folder")
+        json_data.set_value(config.json_key_store_name, str(game_info.get("title") or "").strip())
+        json_data.set_value(config.json_key_store_buildid, str(game_info.get("version") or config.default_buildid).strip())
+        cloud_save_folder = game_info.get("cloud_save_folder")
         if cloud_save_folder:
-            base_path = None
-            if json_data.has_key(config.json_key_store_installdir):
-                base_path = paths.join_paths(
-                    config.token_game_install_dir,
-                    json_data.get_value(config.json_key_store_installdir)
-                )
             json_data.set_value(config.json_key_store_paths, [
-                storebase.create_tokenized_path(cloud_save_folder.strip(), base_path)
+                storebase.create_tokenized_path(cloud_save_folder.strip())
             ])
         return self.augment_jsondata(
             json_data = json_data,
@@ -477,12 +493,14 @@ class Epic(storebase.StoreBase):
 
         # Cleanup function
         def cleanup_driver():
+            nonlocal web_driver
             if web_driver:
                 self.web_disconnect(
                     web_driver = web_driver,
                     verbose = verbose,
                     pretend_run = pretend_run,
                     exit_on_failure = False)
+                web_driver = None
 
         # Fetch function
         def attempt_metadata_fetch():
@@ -495,6 +513,8 @@ class Epic(storebase.StoreBase):
                 pretend_run = pretend_run,
                 exit_on_failure = False)
             if not web_driver:
+                if pretend_run:
+                    return None
                 raise Exception("Failed to connect to web driver")
 
             # Load url
@@ -573,21 +593,23 @@ class Epic(storebase.StoreBase):
                         elif strings.does_string_start_with_substring(element_detail_text, "Release Date"):
                             release_text = strings.trim_substring_from_start(element_detail_text, "Release Date").strip()
                             release_text = strings.convert_date_string(release_text, "%m/%d/%y", "%Y-%m-%d")
-                            metadata_entry.set_release(release_text)
+                            if release_text:
+                                metadata_entry.set_release(release_text)
             return metadata_entry
 
         # Use retry function with cleanup
-        result = datautils.retry_with_backoff(
-            func = attempt_metadata_fetch,
-            cleanup_func = cleanup_driver,
-            max_retries = 3,
-            initial_delay = 2,
-            backoff_factor = 2,
-            verbose = verbose,
-            operation_name = "Epic metadata fetch for '%s'" % identifier)
+        try:
+            return datautils.retry_with_backoff(
+                func = attempt_metadata_fetch,
+                cleanup_func = cleanup_driver,
+                max_retries = 3,
+                initial_delay = 2,
+                backoff_factor = 2,
+                verbose = verbose,
+                operation_name = "Epic metadata fetch for '%s'" % identifier)
+        finally:
 
-        # Final cleanup
-        cleanup_driver()
-        return result
+            # Final cleanup
+            cleanup_driver()
 
     ############################################################

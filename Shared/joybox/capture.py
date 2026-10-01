@@ -16,6 +16,8 @@ from joybox import platform_info
 # Capture screenshot
 def capture_screenshot(
     output_file,
+    capture_origin = None,
+    capture_resolution = None,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -23,10 +25,29 @@ def capture_screenshot(
     # Check params
     validation.assert_is_valid_path(output_file, "output_file")
 
+    # Get capture region
+    capture_region = None
+    if capture_origin and capture_resolution:
+        capture_region = (
+            capture_origin[0],
+            capture_origin[1],
+            capture_origin[0] + capture_resolution[0],
+            capture_origin[1] + capture_resolution[1])
+
     # Capture screenshot
-    from PIL import ImageGrab
-    screenshot = ImageGrab.grab()
-    screenshot.save(output_file)
+    if verbose:
+        logger.log_info("Capturing screenshot to %s" % output_file)
+    if pretend_run:
+        return True
+    try:
+        from PIL import ImageGrab
+        screenshot = ImageGrab.grab(bbox = capture_region)
+        screenshot.save(output_file)
+    except Exception as e:
+        if verbose or exit_on_failure:
+            logger.log_error("Unable to capture screenshot to %s" % output_file)
+            logger.log_error(e, quit_program = exit_on_failure)
+        return False
 
     # Check result
     return os.path.exists(output_file)
@@ -38,6 +59,8 @@ def capture_screenshot_while_running(
     time_duration,
     time_interval,
     time_units_type,
+    capture_origin = None,
+    capture_resolution = None,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -49,6 +72,8 @@ def capture_screenshot_while_running(
     def capture_func():
         capture_screenshot(
             output_file = output_file,
+            capture_origin = capture_origin,
+            capture_resolution = capture_resolution,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
@@ -62,10 +87,14 @@ def capture_screenshot_while_running(
 
     # Run given function while capturing
     background_job.start()
-    run_func()
-    background_job.stop()
+    try:
+        run_func()
+    finally:
+        background_job.stop()
 
     # Check result
+    if pretend_run:
+        return True
     return os.path.exists(output_file)
 
 # Capture video
@@ -84,10 +113,6 @@ def capture_video(
 
     # Check params
     validation.assert_is_valid_path(output_file, "output_file")
-
-    # Get prefix
-    prefix_dir = programs.get_program_prefix_dir("FFMpeg")
-    prefix_name = programs.get_program_prefix_name("FFMpeg")
 
     # Get tool
     ffmpeg_tool = None
@@ -127,15 +152,28 @@ def capture_video(
                 continue
             if ".monitor" not in audio_source:
                 continue
-            for audio_device_token in audio_source.split():
-                audio_device = audio_device_token
-                break
+            audio_device = audio_source.split()[0]
         if audio_device:
             capture_cmd += [
                 "-f", "pulse",
                 "-ac", "2",
                 "-i", str(audio_device)
             ]
+
+    # Add windows video source
+    elif platform_info.is_windows_platform():
+        capture_cmd += [
+            "-f", "gdigrab",
+            "-draw_mouse", "0",
+            "-offset_x", str(capture_origin[0]),
+            "-offset_y", str(capture_origin[1]),
+            "-i", "desktop",
+        ]
+
+    # No video source
+    else:
+        logger.log_error("Video capture is not supported on this platform")
+        return False
 
     # Add remaining options
     capture_cmd += [
@@ -145,21 +183,26 @@ def capture_video(
         output_file
     ]
 
+    # Get capture options
+    capture_options = commandbase.create_command_options(
+        output_paths = [output_file],
+        blocking_processes = [ffmpeg_tool])
+    capture_options.setup_prefix(
+        is_wine_prefix = sandbox.should_be_run_via_wine(ffmpeg_tool),
+        is_sandboxie_prefix = sandbox.should_be_run_via_sandboxie(ffmpeg_tool),
+        prefix_name = sandbox.get_program_prefix_name("FFMpeg"))
+
     # Run capture command
     command.run_returncode_command(
         cmd = capture_cmd,
-        options = commandbase.create_command_options(
-            prefix_dir = prefix_dir,
-            prefix_name = prefix_name,
-            is_wine_prefix = sandbox.should_be_run_via_wine(ffmpeg_tool),
-            is_sandboxie_prefix = sandbox.should_be_run_via_sandboxie(ffmpeg_tool),
-            output_paths = [output_file],
-            blocking_processes = [ffmpeg_tool]),
+        options = capture_options,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
     # Check result
+    if pretend_run:
+        return True
     return os.path.exists(output_file)
 
 # Capture video while running
@@ -202,10 +245,16 @@ def capture_video_while_running(
 
     # Run given function while capturing
     background_thread.start()
-    run_func()
+    try:
+        run_func()
+    finally:
 
-    # Stop capture
-    process.interrupt_active_named_processes([ffmpeg_tool])
+        # Stop capture
+        if not pretend_run:
+            process.interrupt_active_named_processes([ffmpeg_tool])
+        background_thread.join()
 
     # Check result
+    if pretend_run:
+        return True
     return os.path.exists(output_file)

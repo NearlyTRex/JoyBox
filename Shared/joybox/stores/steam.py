@@ -447,7 +447,7 @@ class Steam(storebase.StoreBase):
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = False)
-            if cached_data and isinstance(cached_data, list):
+            if isinstance(cached_data, list) and all(isinstance(entry, dict) for entry in cached_data):
                 cached_purchases = []
                 for purchase_data in cached_data:
                     purchase = jsondata.JsonData(
@@ -697,12 +697,14 @@ class Steam(storebase.StoreBase):
 
         # Cleanup function
         def cleanup_driver():
+            nonlocal web_driver
             if web_driver:
                 self.web_disconnect(
                     web_driver = web_driver,
                     verbose = verbose,
                     pretend_run = pretend_run,
                     exit_on_failure = False)
+                web_driver = None
 
         # Fetch function
         def attempt_metadata_fetch():
@@ -715,6 +717,8 @@ class Steam(storebase.StoreBase):
                 pretend_run = pretend_run,
                 exit_on_failure = False)
             if not web_driver:
+                if pretend_run:
+                    return None
                 raise Exception("Failed to connect to web driver")
 
             # Load url
@@ -825,18 +829,19 @@ class Steam(storebase.StoreBase):
             return metadata_entry
 
         # Use retry function with cleanup
-        result = datautils.retry_with_backoff(
-            func = attempt_metadata_fetch,
-            cleanup_func = cleanup_driver,
-            max_retries = 3,
-            initial_delay = 2,
-            backoff_factor = 2,
-            verbose = verbose,
-            operation_name = "Steam metadata fetch for '%s'" % identifier)
+        try:
+            return datautils.retry_with_backoff(
+                func = attempt_metadata_fetch,
+                cleanup_func = cleanup_driver,
+                max_retries = 3,
+                initial_delay = 2,
+                backoff_factor = 2,
+                verbose = verbose,
+                operation_name = "Steam metadata fetch for '%s'" % identifier)
+        finally:
 
-        # Final cleanup
-        cleanup_driver()
-        return result
+            # Final cleanup
+            cleanup_driver()
 
     ############################################################
     # Assets

@@ -47,6 +47,7 @@ class PS3Dec(toolbase.ToolBase):
                 install_dir = programs.get_program_install_dir("PS3Dec", "windows"),
                 backups_dir = programs.get_program_backup_dir("PS3Dec", "windows"),
                 install_files = ["PS3Dec.exe"],
+                locker_type = setup_params.locker_type,
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)

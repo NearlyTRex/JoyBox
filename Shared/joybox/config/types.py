@@ -116,6 +116,8 @@ class EnumType(enum.Enum):
 
     @classmethod
     def from_string(cls, value):
+        if not isinstance(value, str):
+            return None
         for member in cls:
             if member.value.lower() == value.lower():
                 return member

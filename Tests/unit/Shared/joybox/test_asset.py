@@ -146,6 +146,13 @@ def test_the_video_url_and_target_reach_the_video_downloader(downloads):
     assert kwargs["output_file"] == "/assets/video.mp4"
 
 
+@pytest.mark.parametrize("url", ["https://www.youtube.com/watch?v=abc123", "https://example.com/trailer.mp4"])
+def test_a_pretend_run_reaches_every_downloader(downloads, url):
+    asset.download_asset(url, "/assets/video.mp4", config.AssetType.VIDEO, pretend_run = True)
+
+    assert downloads[0][1]["pretend_run"] is True
+
+
 def test_a_failed_download_is_reported(monkeypatch):
     monkeypatch.setattr(asset.network, "download_url", lambda **kwargs: False)
 

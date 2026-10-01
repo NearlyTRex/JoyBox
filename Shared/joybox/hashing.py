@@ -224,12 +224,14 @@ def find_duplicate_archives(
     pretend_run = False,
     exit_on_failure = False):
     found_files = []
-    test_checksums = archive.get_archive_checksums(filename)
+    test_checksums = sorted(archive.get_archive_checksums(filename), key = lambda item: (item["path"], item["crc"]))
+    if not test_checksums:
+        return found_files
     for obj in paths.get_directory_contents(directory):
         obj_path = paths.join_paths(directory, obj)
         if paths.is_path_file(obj_path):
-            obj_checksums = archive.get_archive_checksums(obj_path)
-            if [i for i in test_checksums if i not in obj_checksums] == []:
+            obj_checksums = sorted(archive.get_archive_checksums(obj_path), key = lambda item: (item["path"], item["crc"]))
+            if obj_checksums == test_checksums:
                 found_files.append(obj_path)
     return found_files
 
@@ -825,6 +827,8 @@ def build_hash_map(
     # Determine hash function
     if hash_type == config.HashType.MD5:
         hash_func = calculate_file_md5
+    elif hash_type == config.HashType.SHA1:
+        hash_func = calculate_file_sha1
     elif hash_type == config.HashType.XXH3:
         hash_func = calculate_file_xxh3
     elif hash_type == config.HashType.SHA256:

@@ -323,12 +323,29 @@ def test_byte_output_is_decoded_for_a_hash_listing(rclone, monkeypatch):
 
 
 @pytest.mark.parametrize("output", ["", "   ", "not json at all"])
-def test_an_unusable_listing_yields_nothing(rclone, monkeypatch, output):
+def test_an_unusable_listing_is_a_failure(rclone, quiet, monkeypatch, output):
+    # rclone prints [] for an empty remote, so no output is not an empty remote.
     hash_listing(monkeypatch, output)
 
+    assert sync.list_files_with_hashes(REMOTE, REMOTE_TYPE, REMOTE_PATH) is None
+
+
+def test_an_empty_remote_lists_as_empty(rclone, monkeypatch):
+    hash_listing(monkeypatch, "[]")
+
     assert sync.list_files_with_hashes(REMOTE, REMOTE_TYPE, REMOTE_PATH) == {}
 
 
-def test_a_hash_listing_without_rclone_yields_nothing(no_rclone, recording_command):
-    assert sync.list_files_with_hashes(REMOTE, REMOTE_TYPE, REMOTE_PATH) == {}
+def test_a_hash_listing_runs_for_real_on_a_pretend_run(rclone, monkeypatch):
+    # Listing only reads; skipping it would make a dry run see an empty remote.
+    recorder = hash_listing(monkeypatch, LISTING)
+
+    listed = sync.list_files_with_hashes(REMOTE, REMOTE_TYPE, REMOTE_PATH, pretend_run = True)
+
+    assert "Games/Game.zip" in listed
+    assert recorder.calls[0]["kwargs"]["pretend_run"] is False
+
+
+def test_a_hash_listing_without_rclone_is_a_failure(no_rclone, quiet, recording_command):
+    assert sync.list_files_with_hashes(REMOTE, REMOTE_TYPE, REMOTE_PATH) is None
     assert recording_command.ran() is False

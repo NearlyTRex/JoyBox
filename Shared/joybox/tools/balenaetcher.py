@@ -46,6 +46,7 @@ class BalenaEtcher(toolbase.ToolBase):
                 install_name = "BalenaEtcher",
                 install_dir = programs.get_program_install_dir("BalenaEtcher", "windows"),
                 backups_dir = programs.get_program_backup_dir("BalenaEtcher", "windows"),
+                locker_type = setup_params.locker_type,
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
@@ -63,6 +64,7 @@ class BalenaEtcher(toolbase.ToolBase):
                 install_name = "BalenaEtcher",
                 install_dir = programs.get_program_install_dir("BalenaEtcher", "linux"),
                 backups_dir = programs.get_program_backup_dir("BalenaEtcher", "linux"),
+                locker_type = setup_params.locker_type,
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)

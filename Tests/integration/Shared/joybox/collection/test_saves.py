@@ -134,6 +134,19 @@ def test_a_changed_save_is_packed_again(tmp_path, game):
     assert len(archives_in(game.get_local_save_dir())) == len(first) + 1
 
 
+def test_a_save_with_a_deleted_file_is_packed_again(tmp_path, game):
+    # Its files are a subset of the last archive, which is not the same save.
+    import time
+
+    saves.pack_save(game)
+    first = archives_in(game.get_local_save_dir())
+    os.remove(os.path.join(game.get_save_dir(), "slot2.sav"))
+    time.sleep(1.1)
+
+    assert saves.pack_save(game) is True
+    assert len(archives_in(game.get_local_save_dir())) == len(first) + 1
+
+
 def test_an_explicit_save_directory_is_used(tmp_path, game):
     other = tmp_path / "other"
     other.mkdir()

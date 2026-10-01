@@ -47,6 +47,7 @@ class GeckoDriver(toolbase.ToolBase):
                 install_dir = programs.get_program_install_dir("GeckoDriver", "windows"),
                 backups_dir = programs.get_program_backup_dir("GeckoDriver", "windows"),
                 install_files = ["geckodriver.exe"],
+                locker_type = setup_params.locker_type,
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
@@ -66,6 +67,7 @@ class GeckoDriver(toolbase.ToolBase):
                 install_dir = programs.get_program_install_dir("GeckoDriver", "linux"),
                 backups_dir = programs.get_program_backup_dir("GeckoDriver", "linux"),
                 install_files = ["geckodriver"],
+                locker_type = setup_params.locker_type,
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)

@@ -23,7 +23,7 @@ Actions:
 
 - `Pack`: zip the live save directory, test the zip, and skip it if an identical
   archive is already in the save archive directory. Otherwise copy it to that path,
-  as `<game>_<timestamp>.zip`, in each locker selected by `-l`.
+  as `<game>_<timestamp>.zip`, in the local locker and each locker selected by `-l`.
 - `Unpack`: extract the newest archive from the save archive directory into the live
   save directory.
 - `Export`: for store games, copy the save files from the store's save paths on this
@@ -58,7 +58,7 @@ so with none of them the action runs over every game.
 
 | Option | Description |
 |--------|-------------|
-| `-l, --locker_type <locker_type>` | Locker to copy new archives to for `Pack` and `Export`; `All` means every configured locker. Default: `All`. Allowed: `All`, `Local`, `Hetzner`, `Gdrive`, `External`. |
+| `-l, --locker_type <locker_type>` | Locker to copy new archives to for `Pack` and `Export`, besides the local locker; `All` means every configured locker. Default: `All`. Allowed: `All`, `Local`, `Hetzner`, `Gdrive`, `External`. |
 
 ### Common options
 
@@ -108,6 +108,8 @@ save_game_tool -a ImportSavePaths -c Computer -s Steam
 - Every pack or export writes a new timestamped archive rather than replacing an old one, unless an
   identical archive already exists.
 - Archives are copied to the lockers as plain zip files, without encryption.
+- `Pack` skips games with an empty live save directory; `Unpack` skips games with no archive or a
+  non-empty live save directory.
 - The first game that fails stops the run.
 
 ## See also

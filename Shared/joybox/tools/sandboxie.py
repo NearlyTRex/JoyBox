@@ -29,27 +29,33 @@ class Sandboxie(toolbase.ToolBase):
         sandboxie_install_dir = settings.get_path_value("Tools.Sandboxie", "sandboxie_install_dir")
         sandboxie_sandbox_dir = settings.get_path_value("Tools.Sandboxie", "sandboxie_sandbox_dir")
 
+        # Programs are only known once the install dir is set
+        def get_program(exe):
+            if not sandboxie_install_dir or not exe:
+                return None
+            return paths.join_paths(sandboxie_install_dir, exe)
+
         # Return config
         return {
 
             # Sandboxie
             "Sandboxie": {
-                "program": paths.join_paths(sandboxie_install_dir, sandboxie_exe),
+                "program": get_program(sandboxie_exe),
                 "sandbox_dir": sandboxie_sandbox_dir
             },
 
             # SandboxieIni
             "SandboxieIni": {
-                "program": paths.join_paths(sandboxie_install_dir, sandboxie_ini_exe)
+                "program": get_program(sandboxie_ini_exe)
             },
 
             # SandboxieRpcss
             "SandboxieRpcss": {
-                "program": paths.join_paths(sandboxie_install_dir, sandboxie_rpcss_exe)
+                "program": get_program(sandboxie_rpcss_exe)
             },
 
             # SandboxieDcomlaunch
             "SandboxieDcomlaunch": {
-                "program": paths.join_paths(sandboxie_install_dir, sandboxie_dcomlaunch_exe)
+                "program": get_program(sandboxie_dcomlaunch_exe)
             }
         }

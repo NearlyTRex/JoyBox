@@ -134,3 +134,10 @@ def test_an_unhandled_type_gets_no_flags():
         "setup.exe", config.InstallerType.INNO, install_dir = "/opt/app")
 
     assert built == ["setup.exe"]
+
+
+def test_a_winrar_installer_without_silent_install_or_dir_gets_no_flags():
+    built = command.get_installer_setup_command(
+        "setup.exe", config.InstallerType.WINRAR, silent_install = False)
+
+    assert built == ["setup.exe"]

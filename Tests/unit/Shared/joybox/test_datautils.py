@@ -255,3 +255,26 @@ def test_a_failing_cleanup_does_not_mask_the_retry():
         cleanup_func = bad_cleanup,
         max_retries = 3,
         initial_delay = 0) == "recovered"
+
+
+def test_a_none_retry_cleans_up_and_backs_off(monkeypatch):
+    attempts = []
+    cleanups = []
+    delays = []
+    monkeypatch.setattr(datautils.time, "sleep", delays.append)
+
+    def raise_then_none():
+        attempts.append(1)
+        if len(attempts) == 1:
+            raise RuntimeError("boom")
+        return None
+
+    assert datautils.retry_with_backoff(
+        raise_then_none,
+        cleanup_func = lambda: cleanups.append(1),
+        max_retries = 3,
+        initial_delay = 1,
+        backoff_factor = 2) is None
+    assert len(attempts) == 3
+    assert len(cleanups) == 3
+    assert delays == [1, 2]

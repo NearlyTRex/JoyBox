@@ -6,6 +6,7 @@ import pytest
 
 # Local imports
 from joybox import config, lockerbackend
+from lockerbackend_helpers import REMOTE_NAME, REMOTE_PATH, FakeLockerInfo, FakeLocalBackend, backend, called, only
 
 
 ###########################################################
@@ -15,92 +16,6 @@ from joybox import config, lockerbackend
 # path is joined onto the remote root here, so a path that is sent whole, or
 # joined twice, addresses somewhere that does not exist.
 ###########################################################
-
-REMOTE_NAME = "hetzner"
-REMOTE_PATH = "/Locker"
-
-
-class FakeLockerInfo:
-
-    def __init__(self, encrypted = False, remote_path = REMOTE_PATH, passphrase = None):
-        self.encrypted = encrypted
-        self.remote_path = remote_path
-        self.passphrase = passphrase
-
-    def get_name(self):
-        return REMOTE_NAME
-
-    def get_type(self):
-        return config.RemoteType.SFTP
-
-    def get_remote_path(self):
-        return self.remote_path
-
-    def get_mount_path(self):
-        return None
-
-    def is_encrypted(self):
-        return self.encrypted
-
-    def is_local_only(self):
-        return False
-
-    def get_passphrase(self):
-        return self.passphrase
-
-
-class FakeLocalBackend(lockerbackend.LocalBackend):
-
-    def __init__(self, root):
-        self.root_path = root
-        self.locker_info = None
-
-
-@pytest.fixture
-def remote(monkeypatch):
-    # Records what would have been asked of rclone.
-    state = {"calls": [], "result": True, "exists": True, "contains": True,
-             "listing": {"Game.zip": {"hash": "aaaa"}}}
-
-    def record(name, result_key = "result"):
-        def run(**kwargs):
-            # The file list is a temporary file the caller deletes afterwards,
-            # so its contents are read while the call is still in progress.
-            if kwargs.get("files_from") and os.path.isfile(kwargs["files_from"]):
-                with open(kwargs["files_from"]) as handle:
-                    kwargs = dict(kwargs, files_listed = handle.read().strip())
-            state["calls"].append({"name": name, "kwargs": kwargs})
-            if result_key == "listing":
-                return state["listing"]
-            if result_key == "exists":
-                return state["exists"]
-            if result_key == "contains":
-                return state["contains"]
-            return state["result"]
-        return run
-
-    for name, key in [
-        ("upload_files_to_remote", "result"),
-        ("download_files_from_remote", "result"),
-        ("copy_remote_to_remote", "result"),
-        ("recycle_files_on_remote", "result"),
-        ("list_files_with_hashes", "listing"),
-        ("does_path_exist", "exists"),
-        ("does_path_contain_files", "contains"),
-    ]:
-        monkeypatch.setattr(lockerbackend.sync, name, record(name, key))
-    return state
-
-
-def only(state, name):
-    matching = [call for call in state["calls"] if call["name"] == name]
-    assert len(matching) == 1, "expected one %s call, recorded %d" % (name, len(matching))
-    return matching[0]["kwargs"]
-
-
-def backend(**kwargs):
-    return lockerbackend.RemoteBackend(FakeLockerInfo(**kwargs))
-
 
 ###########################################################
 # Addressing the remote
@@ -207,6 +122,46 @@ def test_copying_a_loose_file_in_targets_its_directory(remote):
     assert passed["remote_path"] == os.path.join(REMOTE_PATH, "Games")
 
 
+def test_copying_in_a_directory_makes_it_the_destination(remote, tmp_path):
+    # rclone copies a directory's contents, so it is aimed at the destination
+    # itself rather than its parent.
+    source = tmp_path / "Album"
+    source.mkdir()
+
+    backend().copy_from(str(source), "Music/Album")
+
+    assert only(remote, "upload_files_to_remote")["remote_path"] == os.path.join(REMOTE_PATH, "Music", "Album")
+
+
+def test_copying_in_under_a_new_name_keeps_the_new_name(remote, cryption, tmp_path):
+    # Callers back up a temporary file under its final name.
+    source = tmp_path / "tmp1234.zip"
+    source.write_text("data")
+
+    assert backend().copy_from(str(source), "Saves/Game.zip") is True
+
+    passed = only(remote, "upload_files_to_remote")
+    assert passed["local_path"] == os.path.join(cryption["scratch"], "Game.zip")
+    assert passed["remote_path"] == os.path.join(REMOTE_PATH, "Saves")
+    assert cryption["removed"] == [cryption["scratch"]]
+
+
+def test_copying_in_a_missing_file_under_a_new_name_fails(remote, cryption, tmp_path):
+    assert backend().copy_from(str(tmp_path / "absent.zip"), "Saves/Game.zip") is False
+    assert remote["calls"] == []
+    assert cryption["removed"] == [cryption["scratch"]]
+
+
+def test_copying_in_under_a_new_name_without_a_scratch_directory_fails(remote, monkeypatch, tmp_path):
+    monkeypatch.setattr(
+        lockerbackend.fileops, "create_temporary_directory", lambda **kwargs: (False, ""))
+    source = tmp_path / "tmp1234.zip"
+    source.write_text("data")
+
+    assert backend().copy_from(str(source), "Saves/Game.zip") is False
+    assert remote["calls"] == []
+
+
 def test_copying_in_can_skip_what_is_already_there(remote):
     backend().copy_from("/staging/Game.zip", "Games/Game.zip", skip_existing = True)
 
@@ -216,35 +171,6 @@ def test_copying_in_can_skip_what_is_already_there(remote):
 ###########################################################
 # Encrypted uploads
 ###########################################################
-
-@pytest.fixture
-def cryption(monkeypatch, tmp_path):
-    scratch = tmp_path / "scratch"
-    scratch.mkdir()
-    state = {"encrypted": [], "decrypted": [], "result": True, "scratch": str(scratch),
-             "removed": []}
-
-    monkeypatch.setattr(
-        lockerbackend.fileops, "create_temporary_directory",
-        lambda **kwargs: (True, str(scratch)))
-    monkeypatch.setattr(
-        lockerbackend.fileops, "remove_directory",
-        lambda src, **kwargs: state["removed"].append(src))
-    monkeypatch.setattr(
-        lockerbackend.cryption, "generate_encrypted_filename", lambda name: name + ".enc")
-
-    def encrypt_file(src, passphrase, output_file, **kwargs):
-        state["encrypted"].append({"src": src, "out": output_file})
-        return state["result"]
-
-    def decrypt_file(src, passphrase, output_file, **kwargs):
-        state["decrypted"].append({"src": src, "out": output_file})
-        return state["result"]
-
-    monkeypatch.setattr(lockerbackend.cryption, "encrypt_file", encrypt_file)
-    monkeypatch.setattr(lockerbackend.cryption, "decrypt_file", decrypt_file)
-    return state
-
 
 def test_an_encrypted_upload_encrypts_before_it_leaves(remote, cryption, tmp_path):
     # The plaintext must never be handed to rclone.
@@ -390,6 +316,83 @@ def test_an_encrypted_locker_recycles_a_top_level_file(remote, monkeypatch):
     backend(encrypted = True).recycle_file("Game.zip")
 
     assert only(remote, "recycle_files_on_remote")["files_listed"] == "abc123.enc"
+
+
+def test_a_recycle_without_a_file_list_fails(remote, monkeypatch):
+    monkeypatch.setattr(lockerbackend.fileops, "create_temporary_file", lambda **kwargs: (False, None))
+
+    assert backend().recycle_file("Game.zip") is False
+    assert remote["calls"] == []
+
+
+def test_a_file_list_that_cannot_be_written_recycles_nothing(remote, monkeypatch):
+    # An empty list would move nothing, or everything.
+    monkeypatch.setattr(lockerbackend.serialization, "write_text_file", lambda *args, **kwargs: False)
+    removed = []
+    monkeypatch.setattr(lockerbackend.fileops, "remove_file", lambda src, **kwargs: removed.append(src))
+
+    assert backend().recycle_file("Game.zip") is False
+    assert remote["calls"] == []
+    assert len(removed) == 1
+
+
+def test_the_recycle_file_list_is_removed_even_when_recycling_fails(remote):
+    remote["result"] = False
+
+    assert backend().recycle_file("Game.zip") is False
+    assert not os.path.exists(only(remote, "recycle_files_on_remote")["files_from"])
+
+
+def test_run_flags_reach_the_recycle(remote):
+    backend().recycle_file("Game.zip", verbose = True, pretend_run = True, exit_on_failure = True)
+
+    passed = only(remote, "recycle_files_on_remote")
+    assert (passed["verbose"], passed["pretend_run"], passed["exit_on_failure"]) == (True, True, True)
+
+
+###########################################################
+# Refreshing the sidecar
+###########################################################
+
+def test_the_sidecar_is_rebuilt_from_local_content(remote):
+    assert backend().update_sidecar_from_local("/locker", excludes = ["Cache/**"], pretend_run = True) is True
+
+    passed = only(remote, "upload_hash_sidecar_files")
+    assert passed["local_path"] == "/locker"
+    assert passed["remote_path"] == REMOTE_PATH
+    assert passed["local_root"] == REMOTE_PATH
+    assert passed["excludes"] == ["Cache/**"]
+    assert passed["pretend_run"] is True
+    assert called(remote, "clear_hash_sidecar_files") == []
+
+
+def test_a_failed_sidecar_rebuild_is_reported(remote):
+    remote["result"] = False
+
+    assert backend().update_sidecar_from_local("/locker") is False
+
+
+def test_a_sidecar_can_be_cleared_before_rebuilding(remote):
+    assert backend().update_sidecar_from_local("/locker", clear_first = True) is True
+
+    names = [call["name"] for call in remote["calls"]]
+    assert names.index("clear_hash_sidecar_files") < names.index("upload_hash_sidecar_files")
+
+
+def test_clearing_a_missing_sidecar_is_skipped(remote):
+    remote["exists"] = False
+
+    assert backend().update_sidecar_from_local("/locker", clear_first = True) is True
+    assert called(remote, "clear_hash_sidecar_files") == []
+    assert len(called(remote, "upload_hash_sidecar_files")) == 1
+
+
+def test_a_sidecar_that_cannot_be_cleared_is_not_rebuilt_on_top_of(remote):
+    # Rebuilding over it would keep the stale entries clearing was for.
+    remote["results"]["clear_hash_sidecar_files"] = False
+
+    assert backend().update_sidecar_from_local("/locker", clear_first = True) is False
+    assert called(remote, "upload_hash_sidecar_files") == []
 
 
 ###########################################################

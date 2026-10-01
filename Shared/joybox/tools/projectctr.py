@@ -61,6 +61,7 @@ class ProjectCTR(toolbase.ToolBase):
                 install_dir = programs.get_program_install_dir("CtrMakeRom", "windows"),
                 backups_dir = programs.get_program_backup_dir("CtrMakeRom", "windows"),
                 install_files = ["makerom.exe"],
+                locker_type = setup_params.locker_type,
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
@@ -80,6 +81,7 @@ class ProjectCTR(toolbase.ToolBase):
                 install_dir = programs.get_program_install_dir("CtrTool", "windows"),
                 backups_dir = programs.get_program_backup_dir("CtrTool", "windows"),
                 install_files = ["ctrtool.exe"],
+                locker_type = setup_params.locker_type,
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
@@ -106,6 +108,7 @@ class ProjectCTR(toolbase.ToolBase):
                         "perms": 755
                     }
                 ],
+                locker_type = setup_params.locker_type,
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
@@ -132,6 +135,7 @@ class ProjectCTR(toolbase.ToolBase):
                         "perms": 755
                     }
                 ],
+                locker_type = setup_params.locker_type,
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)

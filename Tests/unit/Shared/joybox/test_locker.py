@@ -5,7 +5,7 @@ import os
 import pytest
 
 # Local imports
-from joybox import config, locker
+from joybox import config, cryption, hashutil, locker
 
 
 ###########################################################
@@ -359,12 +359,16 @@ def test_an_encrypted_upload_encrypts_before_it_copies(backends, encryption, tmp
 
 
 def test_an_encrypted_upload_is_named_as_encrypted(backends, encryption, tmp_path):
+    # The same name the backends and hash sidecars derive, so the upload can
+    # be found, compared and recycled later.
     source = tmp_path / "Game.zip"
     source.write_text("data")
 
-    locker.copy_to_locker_encrypted(str(source), "Games/Game.zip", REMOTE)
+    locker.copy_to_locker_encrypted(str(source), "Games/Renamed.zip", REMOTE)
 
-    assert remote_backend(backends).copied[0]["dest"] == "Games/Game.zip.enc"
+    expected = "Games/%s.enc" % hashutil.calculate_string_md5("Renamed.zip")
+    assert remote_backend(backends).copied[0]["dest"] == expected
+    assert remote_backend(backends).copied[0]["dest"] == cryption.generate_encrypted_path("Games/Renamed.zip")
 
 
 def test_the_staged_encrypted_file_is_cleaned_up(backends, encryption, tmp_path):
@@ -420,6 +424,12 @@ def test_a_backup_copies_to_the_locker_it_was_given(backends, tmp_path):
 
 def test_a_backup_of_a_missing_source_is_refused(backends, tmp_path):
     assert locker.backup(str(tmp_path / "absent.zip"), "Games/Game.zip", locker_type = REMOTE) is False
+
+
+def test_a_pretend_backup_of_an_unwritten_source_succeeds(backends, tmp_path):
+    # A pretend run never writes the archive it would back up.
+    assert locker.backup(str(tmp_path / "absent.zip"), "Games/Game.zip", locker_type = REMOTE, pretend_run = True) is True
+    assert remote_backend(backends).copied == []
 
 
 def test_no_locker_means_no_backup(backends, tmp_path):
@@ -499,4 +509,4 @@ def test_a_backup_can_be_encrypted(backends, encryption, tmp_path):
     locker.backup(
         str(source), "Games/Game.zip", locker_type = REMOTE, upload_encrypted = True)
 
-    assert remote_backend(backends).copied[0]["dest"] == "Games/Game.zip.enc"
+    assert remote_backend(backends).copied[0]["dest"] == cryption.generate_encrypted_path("Games/Game.zip")

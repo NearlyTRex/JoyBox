@@ -36,14 +36,14 @@ class CommandOptions:
 
     # Environment variables
     def get_env(self):
-        return self.options.get_value(config.program_key_env, copy.deepcopy(os.environ))
+        return self.options.get_value(config.program_key_env, dict(os.environ))
     def set_env(self, value):
         self.options.set_value(config.program_key_env, value)
     def get_env_var(self, key):
         return self.options.get_subvalue(config.program_key_env, key)
     def set_env_var(self, key, value):
         if not self.options.has_key(config.program_key_env):
-            self.options.set_value(config.program_key_env, copy.deepcopy(os.environ))
+            self.options.set_value(config.program_key_env, dict(os.environ))
         self.options.set_subvalue(config.program_key_env, key, value)
 
     # Arguments
@@ -302,7 +302,7 @@ class CommandOptions:
     def set_prefix_name(self, value):
         self.options.set_value(config.program_key_prefix_name, value)
     def has_prefix_name(self):
-        return isinstance(self.get_prefix_name(), str) and len(self.get_prefix_name()) > 0
+        return isinstance(self.get_prefix_name(), config.PrefixType)
 
     # Prefix working directory
     def get_prefix_cwd(self):
@@ -313,7 +313,7 @@ class CommandOptions:
         return paths.is_path_valid(self.get_prefix_cwd())
     def sync_cwd_to_prefix_cwd(self):
         if self.has_existing_prefix_c_drive_real() and self.has_valid_prefix_cwd():
-            self.set_cwd(os.path.realpath(paths.join_paths(self.get_prefix_c_drive_real(), self.get_prefix_cwd)))
+            self.set_cwd(os.path.realpath(paths.join_paths(self.get_prefix_c_drive_real(), self.get_prefix_cwd())))
 
     # Ready prefix
     def has_ready_prefix(self):

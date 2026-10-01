@@ -114,6 +114,7 @@ class RetroArch(emulatorbase.EmulatorBase):
                 install_name = "RetroArch",
                 install_dir = programs.get_program_install_dir("RetroArch", "windows"),
                 backups_dir = programs.get_program_backup_dir("RetroArch", "windows"),
+                locker_type = setup_params.locker_type,
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
@@ -126,6 +127,7 @@ class RetroArch(emulatorbase.EmulatorBase):
                 install_name = "RetroArch",
                 install_dir = programs.get_emulator_path_config_value("RetroArch", "cores_dir", "windows"),
                 backups_dir = programs.get_program_backup_dir("RetroArch", "windows"),
+                locker_type = setup_params.locker_type,
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
@@ -141,6 +143,7 @@ class RetroArch(emulatorbase.EmulatorBase):
                 install_name = "RetroArch",
                 install_dir = programs.get_program_install_dir("RetroArch", "linux"),
                 backups_dir = programs.get_program_backup_dir("RetroArch", "linux"),
+                locker_type = setup_params.locker_type,
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
@@ -153,6 +156,7 @@ class RetroArch(emulatorbase.EmulatorBase):
                 install_name = "RetroArch",
                 install_dir = programs.get_emulator_path_config_value("RetroArch", "cores_dir", "linux"),
                 backups_dir = programs.get_program_backup_dir("RetroArch", "linux"),
+                locker_type = setup_params.locker_type,
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)

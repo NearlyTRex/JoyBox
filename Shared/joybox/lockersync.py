@@ -1,3 +1,6 @@
+# Imports
+import json
+
 # Local imports
 import joybox.config as config
 import joybox.logger as logger
@@ -9,7 +12,14 @@ import joybox.sync as sync
 import joybox.editorprompt as editorprompt
 import joybox.environment as environment
 import joybox.serialization as serialization
+import joybox.hashutil as hashutil
 from joybox import runtime
+
+# Recycle folder at a locker's root
+RECYCLE_FOLDER = ".recycle_bin"
+
+# Hours a cached hash map stays usable
+CACHE_MAX_AGE_HOURS = 24
 
 ###########################################################
 # Cache Management
@@ -20,8 +30,13 @@ def get_cache_dir():
     fileops.make_directory(src = cache_dir)
     return cache_dir
 
-def get_cache_file(locker_name):
-    return paths.join_paths(get_cache_dir(), "%s_hashmap.json" % locker_name)
+def get_cache_file(locker_name, excludes = []):
+
+    # A map built with excludes is missing files, so it is cached apart from the full one
+    if not excludes:
+        return paths.join_paths(get_cache_dir(), "%s_hashmap.json" % locker_name)
+    excludes_key = hashutil.calculate_string_md5("\n".join(sorted(excludes)))[:12]
+    return paths.join_paths(get_cache_dir(), "%s_%s_hashmap.json" % (locker_name, excludes_key))
 
 def clear_cache():
     cache_dir = get_cache_dir()
@@ -37,6 +52,29 @@ SIDECAR_ONLY_REMOTE_TYPES = [
     config.RemoteType.SFTP,
 ]
 
+def load_cached_hash_map(cache_file, locker_name, verbose = False):
+
+    # Only a recent cache is used
+    if not paths.is_path_file(cache_file):
+        return None
+    try:
+        cache_mtime = paths.get_file_mod_time(cache_file)
+        cache_age_hours = (runtime.get_current_timestamp() - cache_mtime) / 3600
+        if cache_age_hours < 0 or cache_age_hours >= CACHE_MAX_AGE_HOURS:
+            return None
+        with open(cache_file, "r") as cache_handle:
+            hash_map = json.load(cache_handle)
+    except (OSError, ValueError):
+        hash_map = None
+
+    # A cache that does not hold a map of entries is rebuilt rather than trusted
+    if not isinstance(hash_map, dict) or not all(isinstance(entry, dict) for entry in hash_map.values()):
+        logger.log_warning("Ignoring unreadable hash map cache for %s" % locker_name)
+        return None
+    if verbose:
+        logger.log_info("Using cached hash map for %s (%.1f hours old)" % (locker_name, cache_age_hours))
+    return hash_map
+
 def build_locker_hash_map(
     backend,
     locker_name,
@@ -46,18 +84,12 @@ def build_locker_hash_map(
     pretend_run = False,
     exit_on_failure = False):
 
-    # Check if cache exists and is recent
-    cache_file = get_cache_file(locker_name)
-    if use_cache and paths.is_path_file(cache_file):
-        try:
-            cache_mtime = paths.get_file_mod_time(cache_file)
-            cache_age_hours = (runtime.get_current_timestamp() - cache_mtime) / 3600
-            if cache_age_hours < 24:  # Use cache if less than 24 hours old
-                if verbose:
-                    logger.log_info("Using cached hash map for %s (%.1f hours old)" % (locker_name, cache_age_hours))
-                return serialization.read_json_file(src = cache_file)
-        except Exception:
-            pass
+    # Use a recent cache when there is one
+    cache_file = get_cache_file(locker_name, excludes)
+    if use_cache:
+        cached_map = load_cached_hash_map(cache_file, locker_name, verbose = verbose)
+        if cached_map is not None:
+            return cached_map
 
     # Check if this is a remote that requires sidecar hashes (e.g., SFTP)
     use_sidecar_only = False
@@ -69,7 +101,6 @@ def build_locker_hash_map(
                 logger.log_info("Remote type '%s' doesn't support server-side hashing, using sidecar" % remote_type)
 
     # Build hash map from backend
-    hash_map = {}
     if use_sidecar_only:
 
         # Go directly to sidecar for remotes that don't support server-side hashing
@@ -90,19 +121,24 @@ def build_locker_hash_map(
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
-        # Check if we got hashes - if not and backend is remote, try sidecar fallback
-        has_hashes = hash_map and any(entry.get("hash") for entry in hash_map.values())
-        if not has_hashes and isinstance(backend, lockerbackend.RemoteBackend):
+        # Files listed without hashes on a remote fall back to its sidecar
+        lacks_hashes = bool(hash_map) and not any(entry.get("hash") for entry in hash_map.values())
+        if lacks_hashes and isinstance(backend, lockerbackend.RemoteBackend):
             if verbose:
                 logger.log_info("No hashes from server, trying sidecar files for %s..." % locker_name)
             sidecar_map = backend.list_files_with_hashes_from_sidecar(
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-            if sidecar_map:
+            if sidecar_map is None:
+                hash_map = None
+            elif sidecar_map:
                 if verbose:
                     logger.log_info("Using sidecar hashes for %s (%d files)" % (locker_name, len(sidecar_map)))
                 hash_map = sidecar_map
+    if hash_map is None:
+        logger.log_error("Failed to build hash map for %s" % locker_name)
+        return None
 
     # Save to cache. Cache even on pretend runs: the hashes are computed for real
     # (hashing is read-only), so a dry run can prime the cache for the subsequent real
@@ -122,26 +158,23 @@ def build_locker_hash_map(
 
 def get_sync_action_type(base_action, primary_encrypted, secondary_encrypted):
 
-    # Determine the correct action type based on encryption states
+    # Only COPY is special-cased; anything else updates in place
+    is_copy = base_action == "COPY"
+
+    # Encrypted -> Unencrypted: DECRYPT
     if primary_encrypted and not secondary_encrypted:
+        return config.SyncActionType.COPY_DECRYPT if is_copy else config.SyncActionType.UPDATE_DECRYPT
 
-        # Encrypted -> Unencrypted: DECRYPT
-        if base_action == "COPY":
-            return config.SyncActionType.COPY_DECRYPT
-        elif base_action == "UPDATE":
-            return config.SyncActionType.UPDATE_DECRYPT
-    elif not primary_encrypted and secondary_encrypted:
-
-        # Unencrypted -> Encrypted: ENCRYPT
-        if base_action == "COPY":
-            return config.SyncActionType.COPY_ENCRYPT
-        elif base_action == "UPDATE":
-            return config.SyncActionType.UPDATE_ENCRYPT
+    # Unencrypted -> Encrypted: ENCRYPT
+    if not primary_encrypted and secondary_encrypted:
+        return config.SyncActionType.COPY_ENCRYPT if is_copy else config.SyncActionType.UPDATE_ENCRYPT
 
     # Same encryption state: plain copy/update
-    if base_action == "COPY":
-        return config.SyncActionType.COPY
-    return config.SyncActionType.UPDATE
+    return config.SyncActionType.COPY if is_copy else config.SyncActionType.UPDATE
+
+def is_in_recycle_bin(rel_path):
+    normalized = rel_path.replace("\\", "/")
+    return normalized == RECYCLE_FOLDER or normalized.startswith(RECYCLE_FOLDER + "/")
 
 def build_sync_actions(
     primary_hashes,
@@ -156,8 +189,10 @@ def build_sync_actions(
     secondary_paths = set(secondary_hashes.keys())
     for rel_path, primary_data in primary_hashes.items():
 
-        # Skip excluded paths
+        # Skip excluded paths, and the primary's own recycle bin
         if paths.matches_exclude_pattern(rel_path, exclude_write_paths):
+            continue
+        if is_in_recycle_bin(rel_path):
             continue
 
         # Add action
@@ -189,7 +224,7 @@ def build_sync_actions(
     for orphan_path in secondary_paths:
         if paths.matches_exclude_pattern(orphan_path, exclude_write_paths):
             continue
-        if orphan_path.startswith(".recycle_bin"):
+        if is_in_recycle_bin(orphan_path):
             continue
         actions.append({
             "type": config.SyncActionType.RECYCLE,
@@ -261,6 +296,33 @@ def generate_action_file_content(actions, target_name, include_orphans = True):
             "Save and close editor to proceed, or delete all lines to abort"
         ])
 
+def match_edited_actions(actions, edited_lines):
+
+    # Index the proposed actions by type and path
+    proposed = {}
+    for action in actions:
+        action_type = normalize_action_type(action)
+        if action_type == config.SyncActionType.RECYCLE:
+            path = action.get("path", "")
+        else:
+            path = action.get("src", "")
+        proposed[(action_type, path)] = action
+
+    # Keep the proposed actions the edited lines still name, taking any new destination
+    approved = []
+    for line in edited_lines:
+        action_type = normalize_action_type(line)
+        path = line.get("src", line.get("path", ""))
+        action = proposed.get((action_type, path))
+        if action is None:
+            logger.log_warning("Ignoring an action that was not proposed: %s %s" % (line.get("type", ""), path))
+            continue
+        approved_action = dict(action)
+        if "dest" in line and action_type != config.SyncActionType.RECYCLE:
+            approved_action["dest"] = line["dest"]
+        approved.append(approved_action)
+    return approved
+
 def open_editor_for_sync_actions(
     actions,
     target_name,
@@ -268,12 +330,15 @@ def open_editor_for_sync_actions(
     pretend_run = False,
     exit_on_failure = False):
     content = generate_action_file_content(actions, target_name)
-    return editorprompt.open_editor_for_actions(
+    edited_lines = editorprompt.open_editor_for_actions(
         content = content,
         prefix = "locker_sync_",
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
+    if edited_lines is None:
+        return None
+    return match_edited_actions(actions, edited_lines)
 
 ###########################################################
 # Action Execution
@@ -480,7 +545,8 @@ def sync_lockers(
     if not verify_prerequisites(primary_backend, secondary_backends, verbose):
         return False
 
-    # Build primary hash map
+    # Build primary hash map. An empty primary would make every secondary file an
+    # orphan, so it is refused rather than synced.
     primary_name = primary_info.get_locker_name()
     logger.log_info("Building primary hash map from %s..." % primary_name)
     primary_hashes = build_locker_hash_map(
@@ -491,15 +557,20 @@ def sync_lockers(
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
-    if not primary_hashes:
+    if primary_hashes is None:
         logger.log_error("Failed to build primary hash map")
+        return False
+    if not primary_hashes:
+        logger.log_error("Primary locker %s holds no files, refusing to sync from it" % primary_name)
         return False
     logger.log_info("Primary hash map: %d files" % len(primary_hashes))
 
     # Process each secondary
+    all_success = True
     for sec_info, sec_backend in zip(secondary_infos, secondary_backends, strict = True):
         sec_name = sec_info.get_locker_name()
         exclude_patterns = sec_info.get_excluded_dirs()
+        sec_excludes = exclude_patterns + [RECYCLE_FOLDER + "/**"]
         logger.log_info("Processing secondary: %s (excludes=%d patterns)" % (
             sec_name, len(exclude_patterns)))
 
@@ -507,13 +578,14 @@ def sync_lockers(
         secondary_hashes = build_locker_hash_map(
             backend = sec_backend,
             locker_name = sec_name,
-            excludes = exclude_patterns + [".recycle_bin/**"],  # Always exclude recycle bin
+            excludes = sec_excludes,
             use_cache = not skip_cache,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if secondary_hashes is None:
             logger.log_error("Failed to build secondary hash map for %s" % sec_name)
+            all_success = False
             if exit_on_failure:
                 return False
             continue
@@ -576,22 +648,28 @@ def sync_lockers(
             exit_on_failure = exit_on_failure)
         if not success:
             logger.log_error("Sync failed for %s" % sec_name)
+            all_success = False
             if exit_on_failure:
                 return False
 
-        # Update the secondary's cached hash map to reflect what was just uploaded, so a
-        # re-run within the cache window does not re-detect and re-upload the same files.
-        # (The secondary now matches the primary for every succeeded path.) Only update
-        # entries that exist in the primary (skips recycled orphans).
+        # Update the secondary's cached hash map to reflect what was just moved, so a
+        # re-run within the cache window does not re-detect the same files: uploaded
+        # files now match the primary, and recycled ones are gone.
         if succeeded and not pretend_run:
+            recycled_paths = set(
+                a.get("path", "") for a in approved_actions
+                if normalize_action_type(a) == config.SyncActionType.RECYCLE)
             updated = 0
             for rel in succeeded:
-                if rel in primary_hashes:
+                if rel in recycled_paths:
+                    if secondary_hashes.pop(rel, None) is not None:
+                        updated += 1
+                elif rel in primary_hashes:
                     secondary_hashes[rel] = primary_hashes[rel]
                     updated += 1
             if updated:
                 serialization.write_json_file(
-                    src = get_cache_file(sec_name),
+                    src = get_cache_file(sec_name, sec_excludes),
                     json_data = secondary_hashes,
                     verbose = verbose)
 
@@ -611,5 +689,8 @@ def sync_lockers(
                     verbose = verbose,
                     pretend_run = pretend_run,
                     exit_on_failure = exit_on_failure):
-                    logger.log_warning("Failed to refresh hash sidecar for %s" % sec_name)
-    return True
+                    logger.log_error("Failed to refresh hash sidecar for %s" % sec_name)
+                    all_success = False
+                    if exit_on_failure:
+                        return False
+    return all_success

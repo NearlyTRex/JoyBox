@@ -114,3 +114,48 @@ class ClickableElement:
         if self.error:
             raise self.error
         self.keys.append(keys)
+
+
+class FailingDriver(FakeDriver):
+
+    # A live session whose named operations raise, as a browser does when a
+    # page crashes or the network drops mid-command.
+    def __init__(self, failing = (), **kwargs):
+        super().__init__(**kwargs)
+        self.failing = set(failing)
+
+    def _check(self, name):
+        if name in self.failing:
+            raise RuntimeError("%s failed" % name)
+
+    def get(self, url):
+        self._check("get")
+        super().get(url)
+
+    def execute_script(self, script):
+        self._check("execute_script")
+        super().execute_script(script)
+
+    @property
+    def page_source(self):
+        self._check("page_source")
+        return self._page_source
+
+    @page_source.setter
+    def page_source(self, value):
+        self._page_source = value
+
+
+class DyingDriver(FakeDriver):
+
+    # Answers the session check, then dies before the next read.
+    def __init__(self, reads_before_death = 1, **kwargs):
+        super().__init__(**kwargs)
+        self.reads_left = reads_before_death
+
+    @property
+    def current_url(self):
+        if self.reads_left <= 0:
+            raise RuntimeError("session deleted")
+        self.reads_left -= 1
+        return self._url

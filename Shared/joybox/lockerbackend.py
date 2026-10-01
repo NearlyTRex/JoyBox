@@ -16,6 +16,19 @@ import joybox.sync as sync
 import joybox.serialization as serialization
 import joybox.environment as environment
 
+# Cryption types a transfer understands
+CRYPTION_TYPES = (
+    config.CryptionType.NONE,
+    config.CryptionType.ENCRYPT,
+    config.CryptionType.DECRYPT,
+)
+
+# The function that carries out an encrypt or decrypt
+def get_cryption_function(cryption_type):
+    if cryption_type == config.CryptionType.ENCRYPT:
+        return cryption.encrypt_file
+    return cryption.decrypt_file
+
 ###########################################################
 # Abstract Base Class
 ###########################################################
@@ -28,7 +41,6 @@ class LockerBackend(ABC):
     @abstractmethod
     def get_root_path(self):
         """Get the root path for this locker"""
-        pass
 
     @abstractmethod
     def list_files_with_hashes(
@@ -39,9 +51,9 @@ class LockerBackend(ABC):
         exit_on_failure = False):
         """
         List all files with their hashes.
-        Returns dict keyed by relative path: {filename, dir, hash, size, mtime}
+        Returns dict keyed by relative path: {filename, dir, hash, size, mtime},
+        or None when the listing failed
         """
-        pass
 
     @abstractmethod
     def recycle_file(
@@ -52,7 +64,6 @@ class LockerBackend(ABC):
         pretend_run = False,
         exit_on_failure = False):
         """Move file to recycle bin instead of deleting"""
-        pass
 
     @abstractmethod
     def sync_from(
@@ -67,7 +78,6 @@ class LockerBackend(ABC):
         pretend_run = False,
         exit_on_failure = False):
         """Sync a file from another backend to this one, optionally encrypting/decrypting"""
-        pass
 
     @abstractmethod
     def copy_from(
@@ -81,31 +91,29 @@ class LockerBackend(ABC):
         pretend_run = False,
         exit_on_failure = False):
         """Copy from an absolute source path to this backend"""
-        pass
 
     @abstractmethod
     def file_exists(self, rel_path):
         """Check if file exists at relative path"""
-        pass
 
     @abstractmethod
     def path_exists(self, rel_path):
         """Check if path (file or directory) exists at relative path"""
-        pass
 
     @abstractmethod
     def path_contains_files(self, rel_path):
         """Check if path contains any files"""
-        pass
 
     def get_relative_path(self, full_path):
         """Convert a full path to a relative path within this locker"""
         root = self.get_root_path()
-        if root and full_path.startswith(root):
-            rel = full_path[len(root):]
-            if rel.startswith(os.sep):
-                rel = rel[1:]
-            return rel
+        if not root:
+            return full_path
+        trimmed_root = root.rstrip(os.sep)
+        if full_path == root or full_path == trimmed_root:
+            return ""
+        if full_path.startswith(trimmed_root + os.sep):
+            return full_path[len(trimmed_root) + len(os.sep):]
         return full_path
 
     def sync_batch_from(
@@ -171,9 +179,9 @@ class LocalBackend(LockerBackend):
 
         # Check root path
         hash_map = {}
-        if not paths.does_path_exist(self.root_path):
-            logger.log_warning("Local path does not exist: %s" % self.root_path)
-            return hash_map
+        if not self.root_path or not paths.does_path_exist(self.root_path):
+            logger.log_error("Local path does not exist: %s" % self.root_path)
+            return None
 
         # Build the list of actual files to hash (apply excludes, skip non-files)
         targets = []
@@ -250,64 +258,58 @@ class LocalBackend(LockerBackend):
         # Default cryption type
         if cryption_type is None:
             cryption_type = config.CryptionType.NONE
+        if cryption_type not in CRYPTION_TYPES:
+            logger.log_error("Unknown cryption type: %s" % cryption_type)
+            return False
 
         # Get destination path
         dest_full_path = paths.join_paths(self.root_path, dest_rel_path)
 
         # Handle remote source
         if isinstance(src_backend, RemoteBackend):
-            src_remote_path = paths.join_paths(src_backend.remote_path, src_rel_path)
 
-            # If no cryption needed, download directly
+            # If no cryption needed, download straight to the destination path
             if cryption_type == config.CryptionType.NONE:
                 return sync.download_files_from_remote(
                     remote_name = src_backend.remote_name,
                     remote_type = src_backend.remote_type,
-                    remote_path = src_remote_path,
-                    local_path = paths.get_filename_directory(dest_full_path),
+                    remote_path = paths.join_paths(src_backend.remote_path, src_rel_path),
+                    local_path = dest_full_path,
                     verbose = verbose,
                     pretend_run = pretend_run,
                     exit_on_failure = exit_on_failure)
+
+            # A file being decrypted is stored under its encrypted name
+            stored_rel_path = src_rel_path
+            if cryption_type == config.CryptionType.DECRYPT:
+                stored_rel_path = src_backend.get_stored_rel_path(src_rel_path)
 
             # Download to temp, then encrypt/decrypt
             temp_dir_ok, temp_dir = fileops.create_temporary_directory(verbose = verbose)
             if not temp_dir_ok:
                 logger.log_error("Failed to create temp directory for sync")
                 return False
-            temp_file = paths.join_paths(temp_dir, paths.get_filename_file(src_rel_path))
+            temp_file = paths.join_paths(temp_dir, paths.get_filename_file(stored_rel_path))
             try:
-                # Download to temp
                 success = sync.download_files_from_remote(
                     remote_name = src_backend.remote_name,
                     remote_type = src_backend.remote_type,
-                    remote_path = src_remote_path,
+                    remote_path = paths.join_paths(src_backend.remote_path, stored_rel_path),
                     local_path = temp_dir,
                     verbose = verbose,
                     pretend_run = pretend_run,
                     exit_on_failure = exit_on_failure)
                 if not success:
                     return False
-
-                # Encrypt or decrypt
-                if cryption_type == config.CryptionType.DECRYPT:
-                    return cryption.decrypt_file(
-                        src = temp_file,
-                        passphrase = passphrase,
-                        output_file = dest_full_path,
-                        verbose = verbose,
-                        pretend_run = pretend_run,
-                        exit_on_failure = exit_on_failure)
-                elif cryption_type == config.CryptionType.ENCRYPT:
-                    return cryption.encrypt_file(
-                        src = temp_file,
-                        passphrase = passphrase,
-                        output_file = dest_full_path,
-                        verbose = verbose,
-                        pretend_run = pretend_run,
-                        exit_on_failure = exit_on_failure)
+                return get_cryption_function(cryption_type)(
+                    src = temp_file,
+                    passphrase = passphrase,
+                    output_file = dest_full_path,
+                    verbose = verbose,
+                    pretend_run = pretend_run,
+                    exit_on_failure = exit_on_failure)
             finally:
-                fileops.remove_directory(temp_dir)
-            return False
+                fileops.remove_directory(temp_dir, exit_on_failure = False)
 
         # Handle local source
         src_full_path = paths.join_paths(src_backend.get_root_path(), src_rel_path)
@@ -323,23 +325,13 @@ class LocalBackend(LockerBackend):
                 exit_on_failure = exit_on_failure)
 
         # Encrypt or decrypt
-        if cryption_type == config.CryptionType.DECRYPT:
-            return cryption.decrypt_file(
-                src = src_full_path,
-                passphrase = passphrase,
-                output_file = dest_full_path,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
-        elif cryption_type == config.CryptionType.ENCRYPT:
-            return cryption.encrypt_file(
-                src = src_full_path,
-                passphrase = passphrase,
-                output_file = dest_full_path,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
-        return False
+        return get_cryption_function(cryption_type)(
+            src = src_full_path,
+            passphrase = passphrase,
+            output_file = dest_full_path,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
 
     def copy_from(
         self,
@@ -395,6 +387,14 @@ class RemoteBackend(LockerBackend):
             self.remote_type,
             self.remote_path)
 
+    def get_stored_rel_path(self, rel_path):
+        """The relative path a file is stored under, which is its encrypted name on an encrypted locker"""
+        if not self.locker_info.is_encrypted():
+            return rel_path
+        dir_rel = paths.get_filename_directory(rel_path)
+        enc_name = cryption.generate_encrypted_filename(paths.get_filename_file(rel_path))
+        return (paths.join_paths(dir_rel, enc_name) if dir_rel else enc_name).replace("\\", "/")
+
     def list_files_with_hashes(
         self,
         excludes = [],
@@ -424,6 +424,53 @@ class RemoteBackend(LockerBackend):
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
+    def upload_local_path(
+        self,
+        src_full_path,
+        dest_rel_path,
+        local_root = None,
+        skip_existing = False,
+        verbose = False,
+        pretend_run = False,
+        exit_on_failure = False):
+
+        # A directory becomes the destination directory, and a file keeping its name
+        # goes into the destination's parent, since rclone copies into a directory
+        dest_remote_path = paths.join_paths(self.remote_path, dest_rel_path)
+        is_directory = paths.is_path_directory(src_full_path)
+        dest_name = paths.get_filename_file(dest_rel_path)
+        upload_path = src_full_path
+        temp_dir = None
+        if not is_directory and paths.get_filename_file(src_full_path) != dest_name:
+
+            # A renamed file is staged under its destination name first
+            temp_dir_ok, temp_dir = fileops.create_temporary_directory(verbose = verbose)
+            if not temp_dir_ok:
+                logger.log_error("Failed to create temp directory for upload to %s" % self.remote_name)
+                return False
+            upload_path = paths.join_paths(temp_dir, dest_name)
+        try:
+            if temp_dir and not fileops.smart_copy(
+                src = src_full_path,
+                dest = upload_path,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure):
+                return False
+            return sync.upload_files_to_remote(
+                remote_name = self.remote_name,
+                remote_type = self.remote_type,
+                remote_path = dest_remote_path if is_directory else paths.get_filename_directory(dest_remote_path),
+                local_path = upload_path,
+                local_root = local_root,
+                skip_existing = skip_existing,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
+        finally:
+            if temp_dir:
+                fileops.remove_directory(temp_dir, exit_on_failure = False)
+
     def sync_batch_from(
         self,
         src_backend,
@@ -452,34 +499,58 @@ class RemoteBackend(LockerBackend):
                 exit_on_failure = exit_on_failure)
         src_root = src_backend.get_root_path()
 
-        # Plain (unencrypted) batch upload via a single --files-from copy
+        # Plain (unencrypted) batch upload via a single --files-from copy. A --files-from
+        # copy keeps each file's source path, so renamed files go one at a time.
         if cryption_type == config.CryptionType.NONE:
-            src_rels = [a.get("src", "") for a in actions]
-            dest_rels = [a.get("dest", a.get("src", "")) for a in actions]
+            same_name = []
+            renamed = []
+            for action in actions:
+                src_rel = action.get("src", "")
+                if action.get("dest", src_rel) == src_rel:
+                    same_name.append(action)
+                else:
+                    renamed.append(action)
+            succeeded, failed = super().sync_batch_from(
+                src_backend = src_backend,
+                actions = renamed,
+                cryption_type = cryption_type,
+                passphrase = passphrase,
+                show_progress = show_progress,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
+            if not same_name:
+                return (succeeded, failed)
+            src_rels = [a.get("src", "") for a in same_name]
             logger.log_info("Uploading %d files to %s (batched)..." % (len(src_rels), self.remote_name))
             if pretend_run:
                 for rel in src_rels:
                     logger.log_info("Would upload: %s" % rel)
-                return (dest_rels, [])
+                return (succeeded + src_rels, failed)
             files_from_ok, files_from = fileops.create_temporary_file(suffix = ".txt")
             if not files_from_ok:
                 logger.log_error("Failed to create temporary file")
-                return ([], dest_rels)
+                return (succeeded, failed + src_rels)
             try:
-                serialization.write_text_file(files_from, "\n".join(src_rels))
-                ok = sync.upload_files_to_remote(
-                    remote_name = self.remote_name,
-                    remote_type = self.remote_type,
-                    remote_path = self.remote_path,
-                    local_path = src_root,
-                    files_from = files_from,
-                    update_sidecar = False,
-                    verbose = verbose,
-                    pretend_run = pretend_run,
-                    exit_on_failure = exit_on_failure)
+                ok = serialization.write_text_file(files_from, "\n".join(src_rels))
+                if not ok:
+                    logger.log_error("Failed to write file list %s" % files_from)
+                else:
+                    ok = sync.upload_files_to_remote(
+                        remote_name = self.remote_name,
+                        remote_type = self.remote_type,
+                        remote_path = self.remote_path,
+                        local_path = src_root,
+                        files_from = files_from,
+                        update_sidecar = False,
+                        verbose = verbose,
+                        pretend_run = pretend_run,
+                        exit_on_failure = exit_on_failure)
             finally:
-                fileops.remove_file(files_from)
-            return (dest_rels, []) if ok else ([], dest_rels)
+                fileops.remove_file(files_from, exit_on_failure = False)
+            if ok:
+                return (succeeded + src_rels, failed)
+            return (succeeded, failed + src_rels)
 
         # Encrypted batch upload. Encrypt into a staging tree and upload, but in
         # size-bounded batches so temp space never holds the whole delta at once, and
@@ -493,12 +564,20 @@ class RemoteBackend(LockerBackend):
             stage_parent = environment.get_cache_root_dir()
             max_batch_bytes = 4 * 1024 * 1024 * 1024  # ~4 GiB of staged files per upload
 
-            # Group actions into size-bounded batches by source file size
+            # Group actions into size-bounded batches by source file size; a source that
+            # is gone fails on its own rather than stopping the whole transfer
+            succeeded = []
+            failed = []
             batches = []
             current = []
             current_bytes = 0
             for action in actions:
-                size = paths.get_file_size(paths.join_paths(src_root, action.get("src", "")))
+                src_full = paths.join_paths(src_root, action.get("src", ""))
+                if not paths.is_path_file(src_full):
+                    logger.log_error("Missing source file: %s" % src_full)
+                    failed.append(action.get("dest", action.get("src", "")))
+                    continue
+                size = paths.get_file_size(src_full)
                 if current and current_bytes + size > max_batch_bytes:
                     batches.append(current)
                     current = []
@@ -509,8 +588,6 @@ class RemoteBackend(LockerBackend):
                 batches.append(current)
 
             # Process each batch: stage -> encrypt -> single upload -> clear staging
-            succeeded = []
-            failed = []
             for batch in batches:
                 staging_ok, staging = fileops.create_temporary_directory(directory = stage_parent, verbose = verbose)
                 if not staging_ok:
@@ -554,7 +631,7 @@ class RemoteBackend(LockerBackend):
                         else:
                             failed.extend(staged)
                 finally:
-                    fileops.remove_directory(staging)
+                    fileops.remove_directory(staging, exit_on_failure = False)
             return (succeeded, failed)
 
         # Other cryption types (e.g. decrypt): per-file fallback
@@ -577,15 +654,20 @@ class RemoteBackend(LockerBackend):
         pretend_run = False,
         exit_on_failure = False):
 
-        # Optionally clear the existing sidecar first (one-time purge of stale entries)
+        # Optionally clear the existing sidecar first (one-time purge of stale entries).
+        # Rebuilding on top of a sidecar that could not be cleared would keep the stale ones.
         if clear_first:
-            sync.clear_hash_sidecar_files(
-                remote_name = self.remote_name,
-                remote_type = self.remote_type,
-                remote_path = self.remote_path,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+            db_path = sync.get_hash_database_path(self.remote_path)
+            if sync.does_file_exist(self.remote_name, self.remote_type, db_path, verbose = verbose):
+                if not sync.clear_hash_sidecar_files(
+                    remote_name = self.remote_name,
+                    remote_type = self.remote_type,
+                    remote_path = self.remote_path,
+                    verbose = verbose,
+                    pretend_run = pretend_run,
+                    exit_on_failure = exit_on_failure):
+                    logger.log_error("Failed to clear the hash sidecar on %s" % self.remote_name)
+                    return False
 
         # Rebuild the sidecar from authoritative local (plaintext) content
         return sync.upload_hash_sidecar_files(
@@ -607,35 +689,26 @@ class RemoteBackend(LockerBackend):
         pretend_run = False,
         exit_on_failure = False):
 
-        # On encrypted lockers the file is stored under its encrypted name, so target
-        # that on the remote rather than the plaintext relative path.
-        target_rel = rel_path
-        if self.locker_info.is_encrypted():
-            dir_rel = paths.get_filename_directory(rel_path)
-            enc_name = cryption.generate_encrypted_filename(paths.get_filename_file(rel_path))
-            target_rel = (paths.join_paths(dir_rel, enc_name) if dir_rel else enc_name).replace("\\", "/")
-
         # Create a temporary file list for the recycle operation
         temp_file_ok, temp_file = fileops.create_temporary_file(suffix = ".txt")
         if not temp_file_ok:
             logger.log_error("Failed to create temporary file")
             return False
-        serialization.write_text_file(temp_file, target_rel)
-
-        # Recycle files
-        result = sync.recycle_files_on_remote(
-            remote_name = self.remote_name,
-            remote_type = self.remote_type,
-            remote_path = self.remote_path,
-            files_from = temp_file,
-            recycle_folder = recycle_folder,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-
-        # Clean up temp file
-        fileops.remove_file(temp_file)
-        return result
+        try:
+            if not serialization.write_text_file(temp_file, self.get_stored_rel_path(rel_path)):
+                logger.log_error("Failed to write file list %s" % temp_file)
+                return False
+            return sync.recycle_files_on_remote(
+                remote_name = self.remote_name,
+                remote_type = self.remote_type,
+                remote_path = self.remote_path,
+                files_from = temp_file,
+                recycle_folder = recycle_folder,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
+        finally:
+            fileops.remove_file(temp_file, exit_on_failure = False)
 
     def sync_from(
         self,
@@ -652,144 +725,93 @@ class RemoteBackend(LockerBackend):
         # Default cryption type
         if cryption_type is None:
             cryption_type = config.CryptionType.NONE
+        if cryption_type not in CRYPTION_TYPES:
+            logger.log_error("Unknown cryption type: %s" % cryption_type)
+            return False
+        if not isinstance(src_backend, (LocalBackend, RemoteBackend)):
+            logger.log_error("Unsupported source locker: %s" % type(src_backend).__name__)
+            return False
 
-        # Handle local source
+        # Plain remote to remote copy never lands locally
         dest_remote_path = paths.join_paths(self.remote_path, dest_rel_path)
+        if isinstance(src_backend, RemoteBackend) and cryption_type == config.CryptionType.NONE:
+            return sync.copy_remote_to_remote(
+                src_remote_name = src_backend.remote_name,
+                src_remote_type = src_backend.remote_type,
+                src_remote_path = paths.join_paths(src_backend.remote_path, src_rel_path),
+                dest_remote_name = self.remote_name,
+                dest_remote_type = self.remote_type,
+                dest_remote_path = dest_remote_path,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
+
+        # Plain local upload
         if isinstance(src_backend, LocalBackend):
             src_full_path = paths.join_paths(src_backend.get_root_path(), src_rel_path)
-
-            # If no cryption needed, upload directly
             if cryption_type == config.CryptionType.NONE:
-                if paths.is_path_directory(src_full_path):
-                    upload_remote_path = dest_remote_path
-                else:
-                    upload_remote_path = paths.get_filename_directory(dest_remote_path)
-                return sync.upload_files_to_remote(
-                    remote_name = self.remote_name,
-                    remote_type = self.remote_type,
-                    remote_path = upload_remote_path,
-                    local_path = src_full_path,
+                return self.upload_local_path(
+                    src_full_path = src_full_path,
+                    dest_rel_path = dest_rel_path,
                     local_root = self.remote_path,
                     verbose = verbose,
                     pretend_run = pretend_run,
                     exit_on_failure = exit_on_failure)
 
-            # Encrypt/decrypt to temp, then upload
-            temp_dir_ok, temp_dir = fileops.create_temporary_directory(verbose = verbose)
-            if not temp_dir_ok:
-                logger.log_error("Failed to create temp directory for encrypted upload")
-                return False
-            try:
-                if cryption_type == config.CryptionType.ENCRYPT:
-                    temp_file = paths.join_paths(temp_dir, cryption.generate_encrypted_filename(paths.get_filename_file(dest_rel_path)))
-                    success = cryption.encrypt_file(
-                        src = src_full_path,
-                        passphrase = passphrase,
-                        output_file = temp_file,
-                        verbose = verbose,
-                        pretend_run = pretend_run,
-                        exit_on_failure = exit_on_failure)
-                elif cryption_type == config.CryptionType.DECRYPT:
-                    temp_file = paths.join_paths(temp_dir, paths.get_filename_file(src_rel_path))
-                    success = cryption.decrypt_file(
-                        src = src_full_path,
-                        passphrase = passphrase,
-                        output_file = temp_file,
-                        verbose = verbose,
-                        pretend_run = pretend_run,
-                        exit_on_failure = exit_on_failure)
-                else:
-                    return False
-                if not success:
-                    return False
+        # Conversions are staged under the destination name, encrypted when encrypting
+        dest_name = paths.get_filename_file(dest_rel_path)
+        if cryption_type == config.CryptionType.ENCRYPT:
+            dest_name = cryption.generate_encrypted_filename(dest_name)
+        temp_dir_ok, temp_dir = fileops.create_temporary_directory(verbose = verbose)
+        if not temp_dir_ok:
+            logger.log_error("Failed to create temp directory for sync to %s" % self.remote_name)
+            return False
+        try:
+            staged_dir = paths.join_paths(temp_dir, "staged")
+            staged_file = paths.join_paths(staged_dir, dest_name)
+            fileops.make_directory(src = staged_dir, verbose = verbose, pretend_run = pretend_run)
 
-                # Upload the processed file
-                return sync.upload_files_to_remote(
-                    remote_name = self.remote_name,
-                    remote_type = self.remote_type,
-                    remote_path = paths.get_filename_directory(dest_remote_path),
-                    local_path = temp_file,
-                    local_root = self.remote_path,
-                    verbose = verbose,
-                    pretend_run = pretend_run,
-                    exit_on_failure = exit_on_failure)
-            finally:
-                fileops.remove_directory(temp_dir)
-
-        # Handle remote source (remote to remote copy)
-        if isinstance(src_backend, RemoteBackend):
-            src_remote_path = paths.join_paths(src_backend.remote_path, src_rel_path)
-
-            # If no cryption needed, copy directly
-            if cryption_type == config.CryptionType.NONE:
-                return sync.copy_remote_to_remote(
-                    src_remote_name = src_backend.remote_name,
-                    src_remote_type = src_backend.remote_type,
-                    src_remote_path = src_remote_path,
-                    dest_remote_name = self.remote_name,
-                    dest_remote_type = self.remote_type,
-                    dest_remote_path = dest_remote_path,
-                    verbose = verbose,
-                    pretend_run = pretend_run,
-                    exit_on_failure = exit_on_failure)
-
-            # Download, encrypt/decrypt, then upload
-            temp_dir_ok, temp_dir = fileops.create_temporary_directory(verbose = verbose)
-            if not temp_dir_ok:
-                logger.log_error("Failed to create temp directory for remote-to-remote sync")
-                return False
-            try:
-                temp_download = paths.join_paths(temp_dir, paths.get_filename_file(src_rel_path))
-
-                # Download from source remote
-                success = sync.download_files_from_remote(
+            # Get a local copy of the source
+            if isinstance(src_backend, LocalBackend):
+                source_file = src_full_path
+            else:
+                stored_rel_path = src_rel_path
+                if cryption_type == config.CryptionType.DECRYPT:
+                    stored_rel_path = src_backend.get_stored_rel_path(src_rel_path)
+                download_dir = paths.join_paths(temp_dir, "download")
+                source_file = paths.join_paths(download_dir, paths.get_filename_file(stored_rel_path))
+                if not sync.download_files_from_remote(
                     remote_name = src_backend.remote_name,
                     remote_type = src_backend.remote_type,
-                    remote_path = src_remote_path,
-                    local_path = temp_dir,
+                    remote_path = paths.join_paths(src_backend.remote_path, stored_rel_path),
+                    local_path = download_dir + os.sep,
                     verbose = verbose,
                     pretend_run = pretend_run,
-                    exit_on_failure = exit_on_failure)
-                if not success:
+                    exit_on_failure = exit_on_failure):
                     return False
 
-                # Encrypt or decrypt
-                if cryption_type == config.CryptionType.ENCRYPT:
-                    temp_processed = paths.join_paths(temp_dir, cryption.generate_encrypted_filename(temp_download))
-                    success = cryption.encrypt_file(
-                        src = temp_download,
-                        passphrase = passphrase,
-                        output_file = temp_processed,
-                        verbose = verbose,
-                        pretend_run = pretend_run,
-                        exit_on_failure = exit_on_failure)
-                elif cryption_type == config.CryptionType.DECRYPT:
-                    temp_processed = paths.join_paths(temp_dir, "decrypted_" + paths.get_filename_file(src_rel_path))
-                    success = cryption.decrypt_file(
-                        src = temp_download,
-                        passphrase = passphrase,
-                        output_file = temp_processed,
-                        verbose = verbose,
-                        pretend_run = pretend_run,
-                        exit_on_failure = exit_on_failure)
-                else:
-                    return False
-                if not success:
-                    return False
+            # Stage it under the destination name, converting it on the way
+            if not get_cryption_function(cryption_type)(
+                src = source_file,
+                passphrase = passphrase,
+                output_file = staged_file,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure):
+                return False
 
-                # Upload to destination remote
-                return sync.upload_files_to_remote(
-                    remote_name = self.remote_name,
-                    remote_type = self.remote_type,
-                    remote_path = paths.get_filename_directory(dest_remote_path),
-                    local_path = temp_processed,
-                    local_root = self.remote_path,
-                    verbose = verbose,
-                    pretend_run = pretend_run,
-                    exit_on_failure = exit_on_failure)
-            finally:
-                fileops.remove_directory(temp_dir)
-        return False
+            # Upload the staged file
+            return sync.upload_files_to_remote(
+                remote_name = self.remote_name,
+                remote_type = self.remote_type,
+                remote_path = paths.get_filename_directory(dest_remote_path),
+                local_path = staged_file,
+                local_root = self.remote_path,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
+        finally:
+            fileops.remove_directory(temp_dir, exit_on_failure = False)
 
     def copy_from(
         self,
@@ -801,12 +823,9 @@ class RemoteBackend(LockerBackend):
         verbose = False,
         pretend_run = False,
         exit_on_failure = False):
-        dest_remote_path = paths.join_paths(self.remote_path, dest_rel_path)
-        return sync.upload_files_to_remote(
-            remote_name = self.remote_name,
-            remote_type = self.remote_type,
-            local_path = src_abs_path,
-            remote_path = paths.get_filename_directory(dest_remote_path),
+        return self.upload_local_path(
+            src_full_path = src_abs_path,
+            dest_rel_path = dest_rel_path,
             skip_existing = skip_existing,
             verbose = verbose,
             pretend_run = pretend_run,

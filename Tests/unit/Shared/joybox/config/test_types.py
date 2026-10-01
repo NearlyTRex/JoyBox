@@ -97,6 +97,11 @@ def test_from_string_ignores_case(sample_enum):
     assert sample_enum.from_string(member.val().lower()) is member
 
 
+@pytest.mark.parametrize("value", [None, 1, ["a"]])
+def test_from_string_of_a_non_string_is_none(sample_enum, value):
+    assert sample_enum.from_string(value) is None
+
+
 def test_convertibility_is_reported(sample_enum):
     member = sample_enum.members()[0]
 

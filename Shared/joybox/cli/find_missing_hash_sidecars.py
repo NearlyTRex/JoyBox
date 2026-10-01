@@ -100,6 +100,8 @@ def main():
         verbose = args.verbose,
         pretend_run = args.pretend_run,
         exit_on_failure = args.exit_on_failure)
+    if remote_files is None:
+        logger.log_error("Could not list files on %s" % remote_name, quit_program = True)
     logger.log_info("Found %d files on remote" % len(remote_files))
 
     # Get files covered by sidecars (always read from locker root)
@@ -111,6 +113,8 @@ def main():
         verbose = args.verbose,
         pretend_run = args.pretend_run,
         exit_on_failure = args.exit_on_failure)
+    if sidecar_files is None:
+        logger.log_error("Could not read the hash sidecar on %s" % remote_name, quit_program = True)
     logger.log_info("Found %d files in sidecars" % len(sidecar_files))
 
     # Find missing - need to prefix remote_files paths with subpath for comparison

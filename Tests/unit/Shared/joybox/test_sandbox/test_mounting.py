@@ -210,3 +210,66 @@ def test_a_disc_image_is_detached_after_it_is_unmounted(wine_prefix, tmp_path, m
 
     assert sandbox.unmount_disc_image(str(image), str(mount_dir), wine_prefix) is True
     assert order == ["symlink", "detach"]
+
+
+def test_an_image_that_cannot_be_given_a_drive_is_detached_again(wine_prefix, tmp_path, monkeypatch):
+    # Leaving it attached holds the mount until the next reboot.
+    order = []
+    mount_dir = tmp_path / "mount"
+    mount_dir.mkdir()
+    image = tmp_path / "Game.chd"
+    image.write_text("")
+
+    import joybox.chd as chd
+    monkeypatch.setattr(chd, "mount_disc_chd", lambda **kwargs: order.append("attach") or True)
+    monkeypatch.setattr(sandbox, "mount_directory", lambda **kwargs: order.append("symlink") and False)
+    monkeypatch.setattr(chd, "unmount_disc_chd", lambda **kwargs: order.append("detach") or True)
+
+    assert sandbox.mount_disc_image(str(image), str(mount_dir), wine_prefix) is False
+    assert order == ["attach", "symlink", "detach"]
+
+
+def test_an_image_without_a_drive_is_still_detached(wine_prefix, tmp_path, monkeypatch):
+    detached = []
+    mount_dir = tmp_path / "mount"
+    mount_dir.mkdir()
+    image = tmp_path / "Game.chd"
+    image.write_text("")
+
+    import joybox.chd as chd
+    monkeypatch.setattr(chd, "unmount_disc_chd", lambda **kwargs: detached.append(kwargs) or True)
+
+    assert sandbox.unmount_disc_image(str(image), str(mount_dir), wine_prefix) is False
+    assert detached[0]["chd_file"] == str(image)
+
+
+def test_an_image_that_will_not_detach_is_reported(wine_prefix, tmp_path, monkeypatch):
+    mount_dir = tmp_path / "mount"
+    mount_dir.mkdir()
+    image = tmp_path / "Game.chd"
+    image.write_text("")
+
+    import joybox.chd as chd
+    monkeypatch.setattr(sandbox, "unmount_directory", lambda **kwargs: True)
+    monkeypatch.setattr(chd, "unmount_disc_chd", lambda **kwargs: False)
+
+    assert sandbox.unmount_disc_image(str(image), str(mount_dir), wine_prefix) is False
+
+
+def test_releasing_every_drive_reports_a_drive_that_would_not_release(wine_prefix, monkeypatch):
+    monkeypatch.setattr(sandbox.fileops, "remove_symlink", lambda src, **kwargs: not src.endswith("e:"))
+
+    assert sandbox.unmount_all_mounted_drives(wine_prefix) is False
+
+
+def test_a_mounted_directory_is_found_past_other_mounts(wine_prefix, tmp_path):
+    first = tmp_path / "first"
+    first.mkdir()
+    second = tmp_path / "second"
+    second.mkdir()
+    sandbox.mount_directory(str(first), wine_prefix)
+    sandbox.mount_directory(str(second), wine_prefix)
+
+    found = sandbox.find_first_taken_real_drive_path(str(second), wine_prefix)
+
+    assert found == drive(wine_prefix, config.drives_regular[1])

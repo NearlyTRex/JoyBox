@@ -291,6 +291,7 @@ else:
 
 # UserData.HumbleBundle
 ini_defaults["UserData.HumbleBundle"] = {}
+ini_defaults["UserData.HumbleBundle"]["humblebundle_username"] = ""
 ini_defaults["UserData.HumbleBundle"]["humblebundle_email"] = ""
 ini_defaults["UserData.HumbleBundle"]["humblebundle_platform"] = "windows"
 ini_defaults["UserData.HumbleBundle"]["humblebundle_auth_token"] = ""

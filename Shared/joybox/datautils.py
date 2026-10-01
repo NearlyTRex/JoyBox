@@ -117,25 +117,27 @@ def retry_with_backoff(
             result = func()
             if result is not None or attempt == 0:
                 return result
+            reason = "no result"
         except Exception as e:
+            reason = str(e)
+        if verbose and operation_name:
+            logger.log_warning("%s failed (attempt %d/%d): %s" % (operation_name, attempt + 1, max_retries, reason))
+        elif verbose:
+            logger.log_warning("Operation failed (attempt %d/%d): %s" % (attempt + 1, max_retries, reason))
+        if cleanup_func:
+            try:
+                cleanup_func()
+            except Exception as cleanup_error:
+                if verbose:
+                    logger.log_warning("Cleanup failed: %s" % str(cleanup_error))
+        if attempt == max_retries - 1:
             if verbose and operation_name:
-                logger.log_warning("%s failed (attempt %d/%d): %s" % (operation_name, attempt + 1, max_retries, str(e)))
+                logger.log_error("%s failed after %d attempts" % (operation_name, max_retries))
             elif verbose:
-                logger.log_warning("Operation failed (attempt %d/%d): %s" % (attempt + 1, max_retries, str(e)))
-            if cleanup_func:
-                try:
-                    cleanup_func()
-                except Exception as cleanup_error:
-                    if verbose:
-                        logger.log_warning("Cleanup failed: %s" % str(cleanup_error))
-            if attempt == max_retries - 1:
-                if verbose and operation_name:
-                    logger.log_error("%s failed after %d attempts" % (operation_name, max_retries))
-                elif verbose:
-                    logger.log_error("Operation failed after %d attempts" % max_retries)
-                return None
-            delay = initial_delay * (backoff_factor ** attempt)
-            if verbose:
-                logger.log_info("Retrying in %.1f seconds..." % delay)
-            time.sleep(delay)
+                logger.log_error("Operation failed after %d attempts" % max_retries)
+            return None
+        delay = initial_delay * (backoff_factor ** attempt)
+        if verbose:
+            logger.log_info("Retrying in %.1f seconds..." % delay)
+        time.sleep(delay)
     return None
