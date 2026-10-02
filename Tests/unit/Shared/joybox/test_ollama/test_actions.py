@@ -396,3 +396,110 @@ def test_an_empty_catalogue_is_not_a_failure(console, catalog):
 def test_every_action_can_be_dispatched_by_name(console, catalog):
     for action in ollama.get_action_keys():
         assert ollama.run_action(action) is not None
+
+
+###########################################################
+# Available model listing
+###########################################################
+
+@pytest.fixture
+def logged(monkeypatch):
+    lines = []
+    monkeypatch.setattr(ollama.logger, "log_info", lambda message: lines.append(message))
+    return lines
+
+
+def test_every_fit_is_marked_in_the_full_listing(console, catalog, logged):
+    catalog.extend([
+        model(name = "mine:8b", vram_mb = 4000),
+        model(name = "gpu:8b", vram_mb = 4000),
+        model(name = "slow:30b", vram_mb = 20000),
+        model(name = "remote", vram_mb = 0, cloud_only = True),
+        model(name = "huge:70b", vram_mb = 64000),
+    ])
+    console["installed"] = [installed("mine:8b")]
+
+    assert ollama.action_available(purpose = ollama.PURPOSE_CHAT, show_all = True) is True
+
+    text = "\n".join(logged)
+    assert "[*] mine:8b" in text
+    assert "[+] gpu:8b" in text
+    assert "[~] slow:30b" in text
+    assert "(CPU offload, slower)" in text
+    assert "[C] remote (cloud-hosted)" in text
+    assert "[-] huge:70b" in text
+    assert "ollama pull remote" not in text
+    assert "Use --all" not in text
+
+
+def test_nothing_is_marked_installed_without_a_server(console, catalog, logged):
+    catalog.append(model(name = "gpu:8b", vram_mb = 4000))
+    console["installed"] = [installed("gpu:8b")]
+    console["running"] = False
+
+    ollama.action_available(purpose = ollama.PURPOSE_CHAT)
+
+    assert any("[+] gpu:8b" in line for line in logged)
+
+
+def test_declining_the_model_to_pull_pulls_nothing(console, catalog):
+    catalog.append(model(name = "gpu:8b", vram_mb = 4000))
+    console["answers"] = [True]
+    console["selections"] = [None]
+
+    assert ollama.action_available(purpose = ollama.PURPOSE_CHAT) is True
+    assert console["pulled"] == []
+
+
+def test_a_failed_pull_from_the_listing_is_a_failure(console, catalog, monkeypatch):
+    catalog.append(model(name = "gpu:8b", vram_mb = 4000))
+    console["answers"] = [True]
+    console["selections"] = [0]
+    monkeypatch.setattr(ollama, "pull_with_quantization", lambda name: False)
+
+    assert ollama.action_available(purpose = ollama.PURPOSE_CHAT) is False
+
+
+###########################################################
+# Remaining action outcomes
+###########################################################
+
+def test_no_information_is_shown_without_a_server(console):
+    console["running"] = False
+
+    assert ollama.action_info(model_name = "qwen3:8b") is False
+
+
+def test_declining_the_model_to_inspect_is_not_a_failure(console, monkeypatch):
+    monkeypatch.setattr(ollama, "show_model", lambda name: pytest.fail("shown"))
+    console["installed"] = [installed()]
+    console["selections"] = [None]
+
+    assert ollama.action_info() is True
+
+
+def test_a_failed_pull_does_not_launch_the_harness(console, monkeypatch):
+    monkeypatch.setattr(ollama, "pull_with_quantization", lambda name: False)
+    console["installed"] = [installed("qwen3:8b")]
+    console["answers"] = [True]
+
+    assert ollama.action_harness(model_name = "gemma3:12b") is False
+    assert console["launched"] == []
+
+
+def test_the_best_model_is_offered_when_the_server_is_down(console, catalog):
+    catalog.append(model(name = "gpu:8b", vram_mb = 4000, purpose = ollama.PURPOSE_TOOLS))
+    console["installed"] = [installed("gpu:8b")]
+    console["running"] = False
+    console["answers"] = [True]
+
+    ollama.action_best()
+
+    assert console["pulled"] == ["gpu:8b"]
+
+
+def test_an_offloaded_best_model_is_reported_as_slower(console, catalog, logged):
+    catalog.append(model(name = "slow:30b", vram_mb = 20000, purpose = ollama.PURPOSE_TOOLS))
+
+    assert ollama.action_best() is True
+    assert any("CPU offload (slower)" in line for line in logged)

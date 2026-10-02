@@ -219,3 +219,19 @@ def test_an_unusable_response_lists_nothing(monkeypatch, response):
     monkeypatch.setattr(ollama.network, "get_remote_json", lambda url: response)
 
     assert ollama.list_installed_models() == []
+
+
+def test_a_missing_harness_binary_is_not_run(harness_command, monkeypatch):
+    monkeypatch.setattr(ollama.shutil, "which", lambda name: None)
+
+    assert ollama.launch_harness("qwen3:8b", "claude_code") is False
+    assert harness_command.ran() is False
+
+
+def test_a_missing_binary_without_an_install_hint_is_still_refused(harness_command, monkeypatch):
+    monkeypatch.setattr(ollama.shutil, "which", lambda name: None)
+    spec = dict(ollama.HARNESSES["codex"])
+    del spec["install_hint"]
+    monkeypatch.setitem(ollama.HARNESSES, "codex", spec)
+
+    assert ollama.launch_harness("qwen3:8b", "codex") is False

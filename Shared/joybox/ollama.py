@@ -304,9 +304,7 @@ def parse_size_to_mb(size_str):
         return int(value * 1024)
     if unit == "MB":
         return int(value)
-    if unit == "KB":
-        return max(1, int(value / 1024))
-    return 0
+    return max(1, int(value / 1024))
 
 # Fetch available tags (quantizations) for a model
 def get_model_tags(base_name):

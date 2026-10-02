@@ -195,3 +195,22 @@ def test_a_quantization_is_marked_by_where_it_would_run(vram_mb, ram_mb, marker)
     assert line.startswith("[%s]" % marker)
     assert "qwen3:8b-q4_K_M" in line
     assert "128K context" in line
+
+
+###########################################################
+# Hardware defaults
+###########################################################
+
+def test_the_machine_is_measured_when_no_sizes_are_given(monkeypatch):
+    catalog_of(monkeypatch, [model(vram_mb = 12000)])
+    monkeypatch.setattr(ollama.hardware, "get_gpu_vram_total_mb", lambda: 8000)
+    monkeypatch.setattr(ollama.hardware, "get_system_ram_mb", lambda: 32000)
+
+    assert ollama.get_recommended_models()[0]["fit"] == ollama.FIT_OFFLOAD
+
+
+def test_a_cloud_only_catalog_has_no_best_local_model(monkeypatch):
+    catalog_of(monkeypatch, [model(purpose = ollama.PURPOSE_CLOUD, cloud_only = True, vram_mb = 0)])
+
+    assert ollama.get_best_model(
+        purpose = ollama.PURPOSE_CLOUD, vram_mb = 8000, ram_mb = 32000) is None
