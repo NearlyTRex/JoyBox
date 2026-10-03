@@ -181,7 +181,9 @@ def main(argv = None):
         success = environment_runner.backup()
     elif args.action == "restore":
         success = environment_runner.restore()
-    elif args.action == "status":
+    else:
+
+        # Status reports, and never fails the run
         success = True
         results = environment_runner.status()
         installed = [r for r in results if r["installed"]]

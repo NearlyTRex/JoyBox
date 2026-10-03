@@ -99,6 +99,7 @@ class JDupes(toolbase.ToolBase):
                 archive_dir = programs.get_program_backup_dir("JDupes", "linux"),
                 install_name = "JDupes",
                 install_dir = programs.get_program_install_dir("JDupes", "linux"),
+                search_file = "jdupes",
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)

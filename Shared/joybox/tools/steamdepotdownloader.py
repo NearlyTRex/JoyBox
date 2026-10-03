@@ -95,6 +95,7 @@ class SteamDepotDownloader(toolbase.ToolBase):
                 install_name = "SteamDepotDownloader",
                 install_dir = programs.get_program_install_dir("SteamDepotDownloader", "windows"),
                 search_file = "DepotDownloader.exe",
+                install_files = ["DepotDownloader.exe"],
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
@@ -108,6 +109,14 @@ class SteamDepotDownloader(toolbase.ToolBase):
                 archive_dir = programs.get_program_backup_dir("SteamDepotDownloader", "linux"),
                 install_name = "SteamDepotDownloader",
                 install_dir = programs.get_program_install_dir("SteamDepotDownloader", "linux"),
+                search_file = "DepotDownloader",
+                install_files = ["DepotDownloader"],
+                chmod_files = [
+                    {
+                        "file": "DepotDownloader",
+                        "perms": 755
+                    }
+                ],
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)

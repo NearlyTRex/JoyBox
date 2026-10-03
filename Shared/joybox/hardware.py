@@ -37,6 +37,9 @@ def get_nvidia_gpu_info():
 # GPU detection (AMD / Intel Arc, Linux)
 ###########################################################
 
+# Where the DRM driver exposes each card's dedicated VRAM
+DRM_VRAM_TOTAL_GLOB = "/sys/class/drm/card*/device/mem_info_vram_total"
+
 # PCI vendor ids exposed at /sys/class/drm/card*/device/vendor
 DRM_VENDOR_NAMES = {
     "0x1002": "AMD GPU",
@@ -51,7 +54,7 @@ DRM_VENDOR_NAMES = {
 # shape (free = total - used).
 def get_drm_gpu_info():
     gpus = []
-    for total_path in sorted(glob.glob("/sys/class/drm/card*/device/mem_info_vram_total")):
+    for total_path in sorted(glob.glob(DRM_VRAM_TOTAL_GLOB)):
         try:
             with open(total_path, "r") as handle:
                 total_bytes = int(handle.read().strip())
@@ -97,10 +100,12 @@ def get_amd_rocm_gpu_info():
     total_idx = None
     used_idx = None
     for i, col in enumerate(header):
-        if "total" in col and "memory" in col:
-            total_idx = i
-        elif "used" in col and "memory" in col:
+        if "memory" not in col:
+            continue
+        if "used" in col:
             used_idx = i
+        elif "total" in col:
+            total_idx = i
     if total_idx is None:
         return []
     gpus = []
@@ -168,29 +173,27 @@ def get_gpu_vram_free_mb():
 # System RAM detection
 ###########################################################
 
-# Get total system RAM in MB
-def get_system_ram_mb():
+# Kernel memory statistics
+MEMINFO_PATH = "/proc/meminfo"
+
+# Get one /proc/meminfo field in MB, or 0 if it cannot be read
+def get_meminfo_mb(field):
     try:
-        with open("/proc/meminfo", "r") as f:
+        with open(MEMINFO_PATH, "r") as f:
             for line in f:
-                if line.startswith("MemTotal:"):
-                    kb = int(line.split()[1])
-                    return kb // 1024
-    except (FileNotFoundError, ValueError):
+                if line.startswith(field + ":"):
+                    return int(line.split()[1]) // 1024
+    except (OSError, ValueError, IndexError):
         pass
     return 0
 
+# Get total system RAM in MB
+def get_system_ram_mb():
+    return get_meminfo_mb("MemTotal")
+
 # Get available system RAM in MB
 def get_system_ram_available_mb():
-    try:
-        with open("/proc/meminfo", "r") as f:
-            for line in f:
-                if line.startswith("MemAvailable:"):
-                    kb = int(line.split()[1])
-                    return kb // 1024
-    except (FileNotFoundError, ValueError):
-        pass
-    return 0
+    return get_meminfo_mb("MemAvailable")
 
 ###########################################################
 # Summary

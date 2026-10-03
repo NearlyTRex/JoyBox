@@ -182,8 +182,9 @@ class Dotfiles(installer.Installer):
                 continue
             if BLOCK_BEGIN in content:
                 logger.log_info(f"Removing managed block from {path}")
-                self.connection.write_file(
-                    path, self.strip_managed_block(content, BLOCK_BEGIN, BLOCK_END))
+                if not self.connection.write_file(
+                        path, self.strip_managed_block(content, BLOCK_BEGIN, BLOCK_END)):
+                    return False
 
         # Restore any managed-dotfile backups we created
         for home_name in self.managed_dotfiles:

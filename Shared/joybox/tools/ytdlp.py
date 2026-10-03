@@ -97,6 +97,7 @@ class YtDlp(toolbase.ToolBase):
                 install_name = "YtDlp",
                 install_dir = programs.get_program_install_dir("YtDlp", "windows"),
                 search_file = "yt-dlp.exe",
+                install_files = ["yt-dlp.exe"],
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
@@ -110,6 +111,15 @@ class YtDlp(toolbase.ToolBase):
                 archive_dir = programs.get_program_backup_dir("YtDlp", "linux"),
                 install_name = "YtDlp",
                 install_dir = programs.get_program_install_dir("YtDlp", "linux"),
+                search_file = "yt-dlp_linux",
+                install_files = ["yt-dlp_linux"],
+                release_type = config.ReleaseType.PROGRAM,
+                chmod_files = [
+                    {
+                        "file": "yt-dlp_linux",
+                        "perms": 755
+                    }
+                ],
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)

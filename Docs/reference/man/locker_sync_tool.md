@@ -45,7 +45,7 @@ unattended, additive local-to-remote backup use `master_backup`.
 | Option | Description |
 |--------|-------------|
 | `-l, --primary_locker <primary_locker>` | Authoritative locker that the secondaries are brought in line with. Default: `Hetzner`. Allowed: `All`, `Local`, `Hetzner`, `Gdrive`, `External`. |
-| `-s, --secondary_lockers <secondary_lockers>` | Comma-separated locker names to update; unknown names are skipped with a warning. Default: `Gdrive,External`. |
+| `-s, --secondary_lockers <secondary_lockers>` | Comma-separated locker names to update; an unknown name stops the run. Default: `Gdrive,External`. |
 | `--skip_cache` | Rebuild every hash map instead of reusing one cached within the last 24 hours. |
 | `--clear_cache` | Delete every cached hash map before starting, not just those of the lockers in this run. |
 

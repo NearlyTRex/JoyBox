@@ -2,6 +2,7 @@
 import fnmatch
 import os
 import os.path
+import sys
 import joybox.config as config
 import joybox.environment as environment
 import joybox.paths as paths
@@ -78,8 +79,7 @@ def main():
     # Get base directory
     base_dir = paths.expand_path(args.locker_base_directory)
     if not paths.does_path_exist(base_dir):
-        logger.log_error("Base directory does not exist: %s" % base_dir)
-        return
+        logger.log_error("Base directory does not exist: %s" % base_dir, quit_program = True)
 
     # Parse filter patterns
     include_patterns = [p.strip() for p in args.include_filter.split(",") if p.strip()] if args.include_filter else []
@@ -117,15 +117,15 @@ def main():
 
     # Process each group
     hash_files_processed = []
+    failed_hash_files = []
     for group_key, files in files_by_hash_file.items():
         logger.log_info("Processing: %s (%d files)" % (group_key, len(files)))
 
         # Determine hash file path
         hash_file = environment.get_file_locker_hashes_file(group_key, depth = args.depth)
-        hash_files_processed.append(hash_file)
 
         # Hash files in this group
-        hashing.hash_files(
+        success = hashing.hash_files(
             src = files,
             output_file = hash_file,
             base_path = base_dir,
@@ -133,17 +133,28 @@ def main():
             include_enc_fields = False,
             verbose = args.verbose,
             pretend_run = args.pretend_run)
+        if not success:
+            logger.log_error("  Failed to write: %s" % hash_file)
+            failed_hash_files.append(hash_file)
+            continue
+        hash_files_processed.append(hash_file)
         logger.log_info("  Wrote: %s" % hash_file)
 
     # Clean missing entries from all processed hash files
     logger.log_info("Cleaning missing entries...")
     for hash_file in hash_files_processed:
-        hashing.clean_missing_hash_entries(
+        success = hashing.clean_missing_hash_entries(
             hash_file = hash_file,
             locker_root = base_dir,
             hash_format = config.HashFormatType.CSV,
             verbose = args.verbose,
             pretend_run = args.pretend_run)
+        if not success:
+            logger.log_error("Failed to clean: %s" % hash_file)
+            failed_hash_files.append(hash_file)
+    if failed_hash_files:
+        logger.log_error("%d hash files could not be written" % len(failed_hash_files))
+        sys.exit(1)
     logger.log_info("Done!")
 
 # Run through the shared error handling

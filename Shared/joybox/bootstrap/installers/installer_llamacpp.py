@@ -77,7 +77,7 @@ class LlamaCpp(installer.Installer):
         # Build dependencies
         logger.log_info("Installing build dependencies")
         code = self.connection.run_blocking(
-            ["apt-get", "install", "-y"] + self.get_build_dependencies(), sudo = True)
+            [self.aptget_tool, "install", "-y"] + self.get_build_dependencies(), sudo = True)
         if code != 0:
             logger.log_error("Failed to install build dependencies")
             return False

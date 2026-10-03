@@ -88,6 +88,7 @@ class FFMpeg(toolbase.ToolBase):
                 install_name = "FFMpeg",
                 install_dir = programs.get_program_install_dir("FFMpeg", "windows"),
                 search_file = "ffmpeg.exe",
+                install_files = ["ffmpeg.exe"],
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
@@ -102,6 +103,7 @@ class FFMpeg(toolbase.ToolBase):
                 install_name = "FFMpeg",
                 install_dir = programs.get_program_install_dir("FFMpeg", "linux"),
                 search_file = "ffmpeg",
+                install_files = ["ffmpeg"],
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)

@@ -105,7 +105,7 @@ setup_tools -p -v
 ## Notes
 
 - Package names are matched exactly and are case-sensitive (`FFMpeg`, `7-Zip`, `YtDlp`); an unknown
-  name is silently skipped.
+  name stops the run before anything is installed.
 - `--force` applies only to the selected packages; `--clean` wipes the whole tools directory. Use
   `--force` to update, `--clean` for a full rebuild.
 - Installation stops at the first package that fails.

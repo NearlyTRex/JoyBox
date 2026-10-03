@@ -85,7 +85,7 @@ def main():
         logger.log_info("Available presets:")
         for preset_name, desc in decompiler.list_presets():
             logger.log_info("  %s - %s" % (preset_name, desc))
-        return
+        return True
 
     # List scripts
     if args.list_scripts:
@@ -93,61 +93,56 @@ def main():
             scripts = decompiler.list_preset_scripts(args.preset)
             if scripts is None:
                 logger.log_error("Preset not found: %s" % args.preset)
-                return
+                return False
             logger.log_info("Available scripts for '%s':" % args.preset)
             for script_name, desc in scripts:
                 logger.log_info("  %s - %s" % (script_name, desc))
         else:
-            for preset_name, preset_desc in decompiler.list_presets():
+            for preset_name, _ in decompiler.list_presets():
                 logger.log_info("%s:" % preset_name)
                 for script_name, desc in decompiler.list_preset_scripts(preset_name):
                     logger.log_info("  %s - %s" % (script_name, desc))
-        return
+        return True
 
     # Launch program
     if args.action == config.DecompilerActionType.LAUNCH_PROGRAM:
-        decompiler.launch_program(
+        return decompiler.launch_program(
             verbose = args.verbose,
             pretend_run = args.pretend_run,
             exit_on_failure = args.exit_on_failure)
-        return
 
-    # Run script
-    if args.action == config.DecompilerActionType.RUN_SCRIPT:
-
-        # Preset mode
-        if args.preset:
-            if not args.script:
-                logger.log_error("--script is required when using --preset")
-                logger.log_info("Use --list_scripts --preset %s to see available scripts" % args.preset)
-                return
-            decompiler.run_script_from_preset(
-                preset_name = args.preset,
-                script_name = args.script,
-                script_args = args.script_args,
-                verbose = args.verbose,
-                pretend_run = args.pretend_run,
-                exit_on_failure = args.exit_on_failure)
-            return
-
-        # Manual mode
-        project_dir = parser.get_checked_path("project_dir")
-        script_path = parser.get_checked_path("script_path")
-        if not all([project_dir, args.project_name, args.program_name, script_path, args.script_name]):
-            logger.log_error("Manual mode requires: --project_dir, --project_name, --program_name, --script_path, --script_name")
-            logger.log_info("Or use preset mode with: --preset <name> --script <script>")
-            logger.log_info("Use --list_presets to see available presets")
-            return
-        decompiler.run_script(
-            project_dir = project_dir,
-            project_name = args.project_name,
-            program_name = args.program_name,
-            script_path = script_path,
-            script_name = args.script_name,
+    # Run script from a preset
+    if args.preset:
+        if not args.script:
+            logger.log_error("--script is required when using --preset")
+            logger.log_info("Use --list_scripts --preset %s to see available scripts" % args.preset)
+            return False
+        return decompiler.run_script_from_preset(
+            preset_name = args.preset,
+            script_name = args.script,
             script_args = args.script_args,
             verbose = args.verbose,
             pretend_run = args.pretend_run,
             exit_on_failure = args.exit_on_failure)
+
+    # Run script in manual mode; run_script checks that the paths exist
+    project_dir = parser.get_path("project_dir")
+    script_path = parser.get_path("script_path")
+    if not all([project_dir, args.project_name, args.program_name, script_path, args.script_name]):
+        logger.log_error("Manual mode requires: --project_dir, --project_name, --program_name, --script_path, --script_name")
+        logger.log_info("Or use preset mode with: --preset <name> --script <script>")
+        logger.log_info("Use --list_presets to see available presets")
+        return False
+    return decompiler.run_script(
+        project_dir = project_dir,
+        project_name = args.project_name,
+        program_name = args.program_name,
+        script_path = script_path,
+        script_name = args.script_name,
+        script_args = args.script_args,
+        verbose = args.verbose,
+        pretend_run = args.pretend_run,
+        exit_on_failure = args.exit_on_failure)
 
 # Run through the shared error handling
 def run():

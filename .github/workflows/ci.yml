@@ -22,7 +22,7 @@ jobs:
       # outside the process and stay local
       test-command: pytest -q -c Tests/pytest.ini Tests/unit
       # Today's floor; raise it as coverage improves, never lower it
-      coverage-fail-under: "75"
+      coverage-fail-under: "82"
 
   lint:
     name: Lint

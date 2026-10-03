@@ -66,6 +66,13 @@ def main():
     # Setup logging
     logger.setup_logging()
 
+    # Reject unknown filter values, which would otherwise widen the run to everything
+    for filter_values, filter_type in [(args.categories, config.Category), (args.subcategories, config.Subcategory)]:
+        if filter_values:
+            unknown_values = [value.strip() for value in filter_values.split(",") if value.strip() and not filter_type.from_string(value.strip())]
+            if unknown_values:
+                logger.log_error("Unknown %s values: %s" % (filter_type.__name__, ", ".join(unknown_values)), quit_program = True)
+
     # Log filtering if specified
     if args.categories:
         logger.log_info(f"Filtering to categories: {args.categories}")

@@ -158,6 +158,7 @@ class FakeBackend:
             "src_backend": src_backend,
             "src": src_rel_path,
             "dest": dest_rel_path,
+            "options": kwargs,
         })
         return self.result
 
@@ -510,3 +511,176 @@ def test_a_backup_can_be_encrypted(backends, encryption, tmp_path):
         str(source), "Games/Game.zip", locker_type = REMOTE, upload_encrypted = True)
 
     assert remote_backend(backends).copied[0]["dest"] == cryption.generate_encrypted_path("Games/Game.zip")
+
+
+def test_a_failed_backup_stops_early_when_asked(backends, monkeypatch, tmp_path):
+    source = tmp_path / "Game.zip"
+    source.write_text("data")
+    monkeypatch.setattr(
+        locker, "get_configured_lockers", lambda: [REMOTE, config.LockerType.LOCAL])
+    remote_backend(backends).result = False
+
+    assert locker.backup(
+        str(source), "Games/Game.zip", locker_type = config.LockerType.ALL,
+        exit_on_failure = True) is False
+    assert local_backend(backends).copied == []
+
+
+###########################################################
+# Naming the locker explicitly
+###########################################################
+
+OTHER = config.LockerType.GDRIVE
+
+
+def test_a_lookup_can_name_its_locker(backends):
+    backend_for(backends, OTHER).exists = False
+
+    assert locker.does_path_exist("/remote/Games/Game.zip", OTHER) is False
+    assert locker.does_path_contain_files("/remote/Games", OTHER) is True
+
+
+def test_a_download_can_name_its_source_locker(backends):
+    locker.sync_from_remote("/remote/Games/Game.zip", locker_type = OTHER)
+
+    assert local_backend(backends).synced[0]["src_backend"] is backend_for(backends, OTHER)
+
+
+def test_an_upload_can_name_its_destination_locker(backends, tmp_path):
+    source = tmp_path / "Game.zip"
+    source.write_text("data")
+
+    locker.sync_to_remote(str(source), locker_type = OTHER)
+
+    assert len(backend_for(backends, OTHER).synced) == 1
+    assert remote_backend(backends).synced == []
+
+
+###########################################################
+# Encrypted syncing
+###########################################################
+
+SYNC_PHRASE = "sync-phrase"
+
+
+@pytest.fixture
+def sync_phrase(monkeypatch):
+    monkeypatch.setattr(
+        locker.lockerinfo.LockerInfo, "get_passphrase", lambda self: SYNC_PHRASE)
+
+
+def test_a_decrypted_download_asks_for_decryption(backends, sync_phrase):
+    success, path = locker.sync_from_remote_decrypted("/remote/Games/Game.zip")
+    transfer = local_backend(backends).synced[0]
+
+    assert success is True
+    assert path == os.path.join(LOCAL_ROOT, "Games/Game.zip")
+    assert transfer["src_backend"] is remote_backend(backends)
+    assert transfer["options"]["cryption_type"] == config.CryptionType.DECRYPT
+    assert transfer["options"]["passphrase"] == SYNC_PHRASE
+
+
+def test_a_decrypted_download_can_be_redirected(backends, sync_phrase):
+    success, path = locker.sync_from_remote_decrypted(
+        "/remote/Games/Game.zip", dest = "/locker/Staging/Game.zip", locker_type = REMOTE)
+
+    assert local_backend(backends).synced[0]["dest"] == "Staging/Game.zip"
+    assert path == os.path.join(LOCAL_ROOT, "Staging/Game.zip")
+
+
+def test_a_failed_decrypted_download_reports_no_path(backends, sync_phrase):
+    local_backend(backends).result = False
+
+    assert locker.sync_from_remote_decrypted("/remote/Games/Game.zip") == (False, "")
+
+
+def test_an_encrypted_upload_asks_for_encryption(backends, sync_phrase, tmp_path):
+    source = tmp_path / "Game.zip"
+    source.write_text("data")
+
+    assert locker.sync_to_remote_encrypted(str(source)) is True
+    transfer = remote_backend(backends).synced[0]
+    assert transfer["src_backend"] is local_backend(backends)
+    assert transfer["options"]["cryption_type"] == config.CryptionType.ENCRYPT
+    assert transfer["options"]["passphrase"] == SYNC_PHRASE
+
+
+def test_an_encrypted_upload_can_be_redirected(backends, sync_phrase, tmp_path):
+    source = tmp_path / "Game.zip"
+    source.write_text("data")
+
+    locker.sync_to_remote_encrypted(
+        str(source), dest = "/remote/Staging/Game.zip", locker_type = REMOTE)
+
+    assert remote_backend(backends).synced[0]["dest"] == "Staging/Game.zip"
+
+
+def test_an_encrypted_upload_of_a_missing_source_is_refused(backends, sync_phrase, tmp_path):
+    assert locker.sync_to_remote_encrypted(str(tmp_path / "absent.zip")) is False
+    assert remote_backend(backends).synced == []
+
+
+def test_an_encrypted_copy_of_a_missing_source_is_refused(backends, encryption, tmp_path):
+    assert locker.copy_to_locker_encrypted(str(tmp_path / "absent.zip"), "Games/Game.zip", REMOTE) is False
+    assert encryption["encrypted"] == []
+
+
+def test_an_encrypted_copy_to_a_local_locker_is_plain(backends, encryption, tmp_path):
+    # A disk the user owns gains nothing from encryption, and loses readability.
+    source = tmp_path / "Game.zip"
+    source.write_text("data")
+
+    assert locker.copy_to_locker_encrypted(
+        str(source), "Games/Game.zip", config.LockerType.LOCAL) is True
+    assert encryption["encrypted"] == []
+    assert local_backend(backends).copied[0]["dest"] == "Games/Game.zip"
+
+
+###########################################################
+# Configured lockers
+###########################################################
+
+@pytest.fixture
+def configured(lockers, monkeypatch, tmp_path):
+    # LOCAL and EXTERNAL count when mounted; remotes count when the sync tool knows them.
+    state = {"remotes": set()}
+    monkeypatch.setattr(
+        locker.sync, "is_remote_configured",
+        lambda remote_name, remote_type: remote_name in state["remotes"])
+    lockers.set_value("UserData.Share", "locker_local_mount_path", str(tmp_path))
+    lockers.set_value("UserData.Share", "locker_external_mount_path", str(tmp_path / "absent"))
+    lockers.set_value("UserData.Share", "locker_gdrive_name", "")
+    lockers.set_value("UserData.Share", "locker_gdrive_type", "drive")
+    return state
+
+
+def test_a_mounted_local_locker_is_configured(configured):
+    assert locker.get_configured_lockers() == [config.LockerType.LOCAL]
+
+
+def test_a_mounted_external_locker_is_configured(configured, tmp_path):
+    (tmp_path / "absent").mkdir()
+
+    assert config.LockerType.EXTERNAL in locker.get_configured_lockers()
+
+
+def test_a_known_remote_is_configured(configured):
+    configured["remotes"].add("hetzner")
+
+    assert locker.get_configured_lockers() == [config.LockerType.LOCAL, REMOTE]
+
+
+def test_a_remote_without_a_name_is_not_configured(configured):
+    configured["remotes"].add("")
+
+    assert config.LockerType.GDRIVE not in locker.get_configured_lockers()
+
+
+def test_the_all_locker_is_never_configured(configured):
+    assert config.LockerType.ALL not in locker.get_configured_lockers()
+
+
+def test_an_unset_mount_leaves_a_disk_locker_unconfigured(configured, lockers):
+    lockers.set_value("UserData.Share", "locker_local_mount_path", "")
+
+    assert locker.get_configured_lockers() == []

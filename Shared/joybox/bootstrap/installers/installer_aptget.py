@@ -104,8 +104,9 @@ class AptGet(installer.Installer):
                 logger.log_error(f"Failed to add {arch} architecture")
                 return False
             changed = True
-        if changed:
-            self.update_package_lists()
+        if changed and not self.update_package_lists():
+            logger.log_error("Failed to update package lists")
+            return False
         return True
 
     def is_package_installed(self, package):
@@ -128,9 +129,7 @@ class AptGet(installer.Installer):
         for line in output.splitlines():
             line = line.strip()
             if line.startswith("Remv "):
-                parts = line.split()
-                if len(parts) >= 2:
-                    removed.append(parts[1])
+                removed.append(line.split()[1])
         return removed
 
     def is_package_available(self, package):

@@ -159,6 +159,7 @@ class Pegasus(toolbase.ToolBase):
                 install_name = "Pegasus",
                 install_dir = programs.get_program_install_dir("Pegasus", "windows"),
                 search_file = "pegasus-fe.exe",
+                install_files = ["pegasus-fe.exe"],
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)

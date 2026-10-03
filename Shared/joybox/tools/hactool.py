@@ -97,6 +97,7 @@ class HacTool(toolbase.ToolBase):
                 install_name = "HacTool",
                 install_dir = programs.get_program_install_dir("HacTool", "windows"),
                 search_file = "hactool.exe",
+                install_files = ["hactool.exe"],
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)

@@ -60,11 +60,8 @@ def does_path_exist(path, locker_type = None):
     if locker_type is None:
         locker_type = get_default_remote_locker()
 
-    # Get backend
+    # Get locker info and backend
     locker_info = lockerinfo.LockerInfo(locker_type)
-    if not locker_info:
-        logger.log_error("Locker %s not found" % locker_type)
-        return False
 
     # Check if path exists on backend
     backend = lockerbackend.get_backend_for_locker(locker_info)
@@ -78,11 +75,8 @@ def does_path_contain_files(path, locker_type = None):
     if locker_type is None:
         locker_type = get_default_remote_locker()
 
-    # Get backend
+    # Get locker info and backend
     locker_info = lockerinfo.LockerInfo(locker_type)
-    if not locker_info:
-        logger.log_error("Locker %s not found" % locker_type)
-        return False
 
     # Check if path contains files
     backend = lockerbackend.get_backend_for_locker(locker_info)
@@ -108,9 +102,6 @@ def sync_from_remote(
 
     # Get locker info and backend
     locker_info = lockerinfo.LockerInfo(locker_type)
-    if not locker_info:
-        logger.log_error("Locker %s not found" % locker_type)
-        return (False, "")
 
     # Get source backend
     src_backend = lockerbackend.get_backend_for_locker(locker_info)
@@ -161,9 +152,6 @@ def sync_to_remote(
 
     # Get locker info and backend
     locker_info = lockerinfo.LockerInfo(locker_type)
-    if not locker_info:
-        logger.log_error("Locker %s not found" % locker_type)
-        return False
 
     # Get source backend (local)
     local_info = lockerinfo.LockerInfo(config.LockerType.LOCAL)
@@ -204,9 +192,6 @@ def sync_from_remote_decrypted(
 
     # Get locker info
     locker_info = lockerinfo.LockerInfo(locker_type)
-    if not locker_info:
-        logger.log_error("Locker %s not found" % locker_type)
-        return (False, "")
 
     # Get source backend
     src_backend = lockerbackend.get_backend_for_locker(locker_info)
@@ -259,9 +244,6 @@ def sync_to_remote_encrypted(
 
     # Get locker info
     locker_info = lockerinfo.LockerInfo(locker_type)
-    if not locker_info:
-        logger.log_error("Locker %s not found" % locker_type)
-        return False
 
     # Get source backend (local)
     local_info = lockerinfo.LockerInfo(config.LockerType.LOCAL)
@@ -312,9 +294,6 @@ def copy_to_locker(
 
     # Get destination locker info and backend
     locker_info = lockerinfo.LockerInfo(locker_type)
-    if not locker_info:
-        logger.log_error("Locker %s not found" % locker_type)
-        return False
 
     # Copy to destination
     dest_backend = lockerbackend.get_backend_for_locker(locker_info)
@@ -347,9 +326,6 @@ def copy_to_locker_encrypted(
 
     # Get destination locker info
     locker_info = lockerinfo.LockerInfo(locker_type)
-    if not locker_info:
-        logger.log_error("Locker %s not found" % locker_type)
-        return False
 
     # For local-only lockers, skip encryption (just do a plain copy)
     if locker_info.is_local_only():
@@ -425,8 +401,6 @@ def get_configured_lockers():
         if locker_type == config.LockerType.ALL:
             continue
         locker_info = lockerinfo.LockerInfo(locker_type)
-        if not locker_info:
-            continue
         if locker_type == config.LockerType.LOCAL:
             if locker_info.get_mount_path() and paths.does_path_exist(locker_info.get_mount_path()):
                 configured.append(locker_type)

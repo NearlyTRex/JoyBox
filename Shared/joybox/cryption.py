@@ -135,7 +135,7 @@ def get_embedded_file_info(
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-    file_info["size"] = paths.get_file_size(tmp_file)
+    file_info["size"] = paths.get_file_size(tmp_file) if paths.does_path_exist(tmp_file) else 0
     file_info["mtime"] = paths.get_file_mod_time(src)
 
     # Clean up
@@ -402,6 +402,9 @@ def decrypt_files(
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
+        if not output_file:
+            logger.log_error("Unable to read the embedded name of '%s'" % file)
+            continue
         success = decrypt_file(
             src = file,
             output_file = output_file,

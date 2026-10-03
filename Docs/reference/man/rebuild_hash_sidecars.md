@@ -31,8 +31,8 @@ rest are hashed `--parallel_dirs` at a time.
 `--skip_existing` is keyed on path, not content: a file that already has an entry
 keeps its old row even if the file has changed. Every file is still hashed; only the
 database write is skipped. Use it to add new files quickly, and run without it when
-files may have changed. If the existing database cannot be downloaded, the run
-starts from an empty one, so nothing is skipped.
+files may have changed. If a database exists but cannot be downloaded, the run fails
+rather than upload one holding only the newly hashed files.
 
 ## Options
 

@@ -1,6 +1,7 @@
 # Imports
 import os
 import os.path
+import re
 
 # Local imports
 from joybox import platform_info
@@ -428,7 +429,7 @@ def get_file_locker_hashes_file(base_path, depth = 4):
 # Get repo root dir (the parent of the Scripts directory)
 def get_repo_root(expand = False):
     scripts_dir = settings.get_value("UserData.Dirs", "scripts_dir")
-    root = scripts_dir.replace("/Scripts", "") if scripts_dir else "$HOME/Repositories/JoyBox"
+    root = re.sub(r"[\\/]Scripts[\\/]*$", "", scripts_dir) if scripts_dir else "$HOME/Repositories/JoyBox"
     return os.path.expandvars(root) if expand else root
 
 # Get scripts root dir

@@ -3,6 +3,7 @@ import joybox.config as config
 import joybox.arguments as arguments
 import joybox.system as system
 import joybox.setup as setup
+import joybox.programs as programs
 import joybox.logger as logger
 
 # Build the argument parser
@@ -35,7 +36,7 @@ def build_parser():
             ("Preview without changing anything", "setup_tools -p -v"),
         ],
         notes = [
-            "Package names are matched exactly and are case-sensitive (`FFMpeg`, `7-Zip`, `YtDlp`); an unknown name is silently skipped.",
+            "Package names are matched exactly and are case-sensitive (`FFMpeg`, `7-Zip`, `YtDlp`); an unknown name stops the run before anything is installed.",
             "`--force` applies only to the selected packages; `--clean` wipes the whole tools directory. Use `--force` to update, `--clean` for a full rebuild.",
             "Installation stops at the first package that fails.",
             "`~/JoyBox.ini` must exist and symlinks must be supported, or the command exits before doing anything.",
@@ -74,19 +75,25 @@ def main():
     # Parse package list
     packages = None
     if args.packages:
-        packages = [p.strip() for p in args.packages.split(",")]
+        packages = [p.strip() for p in args.packages.split(",") if p.strip()]
+        known_packages = [package.get_name() for package in programs.get_tools()]
+        unknown_packages = [package for package in packages if package not in known_packages]
+        if unknown_packages:
+            logger.log_error("Unknown tool packages: %s" % ", ".join(unknown_packages), quit_program = True)
 
     # Create setup params from args
     setup_params = config.SetupParams.from_args(args)
 
     # Setup tools
-    setup.setup_tools(
+    success = setup.setup_tools(
         offline = args.offline,
         configure = args.configure,
         clean = args.clean,
         force = args.force,
         packages = packages,
         setup_params = setup_params)
+    if not success:
+        logger.log_error("Setup of tools failed", quit_program = True)
 
 # Run through the shared error handling
 def run():

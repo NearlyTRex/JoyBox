@@ -111,8 +111,8 @@ def main():
 
     # Get locker info
     locker_info = lockerinfo.LockerInfo(args.locker_type)
-    if not locker_info:
-        logger.log_error("Invalid locker", quit_program = True)
+    if locker_info.is_local_only():
+        logger.log_error("Locker '%s' is not a remote locker" % args.locker_type, quit_program = True)
 
     # Sync options
     remote_type = locker_info.get_type()
