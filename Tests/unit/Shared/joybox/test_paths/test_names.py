@@ -147,20 +147,6 @@ def test_files_group_by_their_directory():
     assert len(grouped["a"]) == 2
 
 
-def test_files_group_by_path_depth():
-    grouped = paths.group_files_by_path_depth(
-        [os.path.join("roms", "snes", "game.sfc"), os.path.join("roms", "nes", "game.nes")],
-        depth = 2)
-
-    assert sorted(grouped) == [os.path.join("roms", "nes"), os.path.join("roms", "snes")]
-
-
-def test_shallow_paths_fall_back_to_the_fallback_key():
-    grouped = paths.group_files_by_path_depth(["loose.txt"], depth = 2, fallback_key = "Other")
-
-    assert "Other" in grouped
-
-
 ###########################################################
 # Exclusion
 ###########################################################

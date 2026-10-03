@@ -145,7 +145,6 @@ class Mame(emulatorbase.EmulatorBase):
                 install_name = "Mame",
                 install_dir = programs.get_program_install_dir("Mame", "windows"),
                 backups_dir = programs.get_program_backup_dir("Mame", "windows"),
-                installer_type = config.InstallerType.SEVENZIP,
                 release_type = config.ReleaseType.ARCHIVE,
                 get_latest = True,
                 locker_type = setup_params.locker_type,

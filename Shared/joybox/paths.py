@@ -327,22 +327,6 @@ def group_files_by_directory(files):
         groups[dir_path].append(file_path)
     return groups
 
-# Group files by first N path components
-def group_files_by_path_depth(files, depth = 2, fallback_key = "Other"):
-    groups = {}
-    for file_path in files:
-        parts = file_path.split(os.sep)
-        if len(parts) >= depth:
-            group_key = os.sep.join(parts[:depth])
-        elif len(parts) >= 1:
-            group_key = fallback_key
-        else:
-            continue
-        if group_key not in groups:
-            groups[group_key] = []
-        groups[group_key].append(file_path)
-    return groups
-
 ###########################################################
 # Path conversion utilities
 ###########################################################

@@ -113,6 +113,14 @@ def test_a_shallow_path_groups_by_what_it_has(roots):
     assert built.endswith("Gaming.csv")
 
 
+def test_a_file_exactly_depth_deep_groups_by_its_folder(roots):
+    # The file name never counts toward the depth, so loose files share
+    # their folder's hash file instead of each getting one.
+    built = environment.get_file_locker_hashes_file(os.sep.join(["Photos", "b.jpg"]), depth = 2)
+
+    assert built.endswith("Photos.csv")
+
+
 def test_a_bare_name_falls_back_to_a_root_group(roots):
     # Without this the group key would be empty and every loose file would
     # share an unnamed hash file.

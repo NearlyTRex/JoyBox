@@ -93,7 +93,6 @@ def test_a_release_without_a_download_directory_is_not_installed(remote, monkeyp
     ("install_files", ["tool"]),
     ("chmod_files", [{"file": "tool", "perms": 755}]),
     ("rename_files", [{"from": "a", "to": "b", "ratio": 90}]),
-    ("installer_type", "inno"),
     ("release_type", "Archive"),
     ("locker_type", "Remote"),
     ("skip_autobackup", True),

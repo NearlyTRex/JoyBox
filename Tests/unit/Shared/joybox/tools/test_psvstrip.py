@@ -4,7 +4,7 @@ import pytest
 # Local imports
 from joybox.tools import psvstrip
 
-KEYS = ["search_file", "install_files", "installer_type", "release_type", "chmod_files", "rename_files"]
+KEYS = ["search_file", "install_files", "release_type", "chmod_files", "rename_files"]
 
 
 class Recorder:

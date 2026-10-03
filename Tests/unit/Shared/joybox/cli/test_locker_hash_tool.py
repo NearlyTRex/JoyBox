@@ -22,7 +22,7 @@ from joybox.cli import locker_hash_tool
 def locker(tmp_path, monkeypatch, isolated_settings):
     root = tmp_path / "Locker"
     for relative in ["Documents/Taxes/2024/return.pdf", "Documents/Taxes/notes.txt",
-                     "Photos/Trip/a.jpg", "Gaming/Roms/game.iso", ".hidden/secret.txt",
+                     "Photos/Trip/a.jpg", "Photos/b.jpg", "Gaming/Roms/game.iso", ".hidden/secret.txt",
                      "Documents/.cache/blob", "top.txt"]:
         path = root / relative
         path.parent.mkdir(parents = True, exist_ok = True)
@@ -63,9 +63,33 @@ def test_default_filters_skip_hidden_and_excluded_files(locker):
     assert hashed_files(locker["hashes"]) == {
         os.path.join("Documents", "Taxes.csv"): ["Documents/Taxes/2024/return.pdf", "Documents/Taxes/notes.txt"],
         os.path.join("Photos", "Trip.csv"): ["Photos/Trip/a.jpg"],
+        "Photos.csv": ["Photos/b.jpg"],
         "root.csv": ["top.txt"],
     }
     assert locker["errors"] == []
+
+
+def test_depth_one_gives_one_csv_per_top_level_folder(locker):
+    locker["run"]("-e", "", "-d", "1")
+
+    assert sorted(hashed_files(locker["hashes"])) == ["Documents.csv", "Gaming.csv", "Photos.csv", "root.csv"]
+
+
+def test_a_file_shallower_than_the_depth_uses_the_folders_it_has(locker):
+    locker["run"]("-i", "Documents/*", "-d", "3")
+
+    assert hashed_files(locker["hashes"]) == {
+        os.path.join("Documents", "Taxes", "2024.csv"): ["Documents/Taxes/2024/return.pdf"],
+        os.path.join("Documents", "Taxes.csv"): ["Documents/Taxes/notes.txt"],
+    }
+
+
+def test_a_depth_below_one_is_refused(locker):
+    with pytest.raises(SystemExit) as raised:
+        locker["run"]("-d", "0")
+    assert raised.value.code != 0
+    assert locker["errors"] == ["Depth must be at least 1"]
+    assert not locker["hashes"].exists()
 
 
 def test_include_filter_and_hidden_files(locker):
@@ -111,7 +135,7 @@ def test_failed_hash_write_exits_with_an_error(locker, monkeypatch):
     with pytest.raises(SystemExit) as raised:
         locker["run"]()
     assert raised.value.code == 1
-    assert locker["errors"][-1] == "3 hash files could not be written"
+    assert locker["errors"][-1] == "4 hash files could not be written"
     assert cleaned == []
 
 

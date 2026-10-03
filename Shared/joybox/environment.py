@@ -411,15 +411,10 @@ def get_file_audio_metadata_file(metadata_type, genre_type, album_name, artist_n
 def get_file_locker_hashes_root_dir():
     return paths.join_paths(get_file_metadata_root_dir(), "Locker", "Hashes")
 
-# Get file locker hashes file for a base path
-def get_file_locker_hashes_file(base_path, depth = 4):
-    parts = base_path.split(os.sep)
-    if len(parts) >= depth:
-        group_key = paths.join_paths(*parts[:depth])
-    elif len(parts) > 1:
-        group_key = paths.join_paths(*parts[:-1])
-    else:
-        group_key = "root"
+# Get file locker hashes file for a file, named by its first depth folders
+def get_file_locker_hashes_file(file_path, depth = 4):
+    folders = file_path.split(os.sep)[:-1][:depth]
+    group_key = paths.join_paths(*folders) if folders else "root"
     return paths.join_paths(get_file_locker_hashes_root_dir(), group_key + ".csv")
 
 ###########################################################

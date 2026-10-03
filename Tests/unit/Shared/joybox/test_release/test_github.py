@@ -210,7 +210,6 @@ def test_the_install_target_is_passed_through(github, downloads):
     ("install_files", ["tool"]),
     ("chmod_files", [{"file": "tool", "perms": "755"}]),
     ("rename_files", [{"from": "a", "to": "b"}]),
-    ("installer_type", "inno"),
     ("release_type", "Archive"),
     ("locker_type", "Remote"),
     ("skip_autobackup", True),
@@ -260,10 +259,9 @@ def test_no_scraped_url_installs_nothing(webpage_url, downloads):
 
 def test_webpage_install_options_are_passed_through(webpage_url, downloads):
     webpage_url["url"] = "https://acme.example/tool.AppImage"
-    fetch_webpage(ends_with = ".AppImage", install_files = ["tool"], installer_type = "inno")
+    fetch_webpage(ends_with = ".AppImage", install_files = ["tool"])
 
     assert downloads[0]["install_files"] == ["tool"]
-    assert downloads[0]["installer_type"] == "inno"
 
 
 @pytest.mark.parametrize("option,value", [

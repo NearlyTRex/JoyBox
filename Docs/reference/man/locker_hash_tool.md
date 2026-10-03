@@ -17,7 +17,7 @@ locker_hash_tool [options]
 Scans the locker directory, applies the hidden-file, include and exclude filters, and
 writes one CSV per group of files under `Locker/Hashes` in the configured file
 metadata directory (`file_metadata_dir` in `[UserData.Dirs]`). Files are grouped by
-the first `--depth` components of their path relative to the locker: with the default
+the first `--depth` folders of their path relative to the locker: with the default
 depth of 2, `Documents/Taxes/2024/return.pdf` is recorded in `Documents/Taxes.csv`.
 Each row holds the file's directory, name, XXH3 hash, size and modification time.
 
@@ -35,7 +35,7 @@ from every CSV the run touched.
 | `-i, --include_filter <include_filter>` | Comma-separated glob patterns relative to the locker; when given, only matching files are hashed (e.g. `Documents/**,Photos/**`). |
 | `-e, --exclude_filter <exclude_filter>` | Comma-separated glob patterns relative to the locker; matching files are skipped. Pass an empty string to exclude nothing. Default: `Gaming/Roms/**,Gaming/DLC/**,Gaming/Updates/**,Testing/**`. |
 | `--include_hidden` | Also hash files whose path has a component starting with `.`; they are skipped by default. |
-| `-d, --depth <depth>` | Number of leading path components that name a file's CSV, e.g. 2 groups `Documents/Taxes/...` into `Documents/Taxes.csv`. Default: `2`. |
+| `-d, --depth <depth>` | Number of leading folders that name a file's CSV, e.g. 2 groups `Documents/Taxes/...` into `Documents/Taxes.csv`. Default: `2`. |
 
 ### Common options
 
@@ -83,7 +83,8 @@ locker_hash_tool -l /media/user/External -d 1
 - Filters are `fnmatch` globs matched against the whole relative path, where `*` also matches `/`,
   so `Documents/*` covers every file below `Documents`.
 - The include filter is applied before the exclude filter, so an exclude always wins.
-- Files with fewer path components than `--depth` are all recorded in `root.csv`.
+- A file in fewer than `--depth` folders is recorded under the folders it has, so `Photos/b.jpg`
+  goes to `Photos.csv`; files at the locker root go to `root.csv`.
 
 ## See also
 

@@ -20,7 +20,7 @@ def build_parser():
             "Scans the locker directory, applies the hidden-file, include and exclude filters, and\n"
             "writes one CSV per group of files under `Locker/Hashes` in the configured file\n"
             "metadata directory (`file_metadata_dir` in `[UserData.Dirs]`). Files are grouped by\n"
-            "the first `--depth` components of their path relative to the locker: with the default\n"
+            "the first `--depth` folders of their path relative to the locker: with the default\n"
             "depth of 2, `Documents/Taxes/2024/return.pdf` is recorded in `Documents/Taxes.csv`.\n"
             "Each row holds the file's directory, name, XXH3 hash, size and modification time.\n"
             "\n"
@@ -37,7 +37,7 @@ def build_parser():
         notes = [
             "Filters are `fnmatch` globs matched against the whole relative path, where `*` also matches `/`, so `Documents/*` covers every file below `Documents`.",
             "The include filter is applied before the exclude filter, so an exclude always wins.",
-            "Files with fewer path components than `--depth` are all recorded in `root.csv`.",
+            "A file in fewer than `--depth` folders is recorded under the folders it has, so `Photos/b.jpg` goes to `Photos.csv`; files at the locker root go to `root.csv`.",
         ],
         see_also = ["rebuild_hash_sidecars", "master_backup"],
         section = "Backups & Lockers")
@@ -59,7 +59,7 @@ def build_parser():
     parser.add_integer_argument(
         args = ("-d", "--depth"),
         default = 2,
-        description = "Number of leading path components that name a file's CSV, e.g. 2 groups `Documents/Taxes/...` into `Documents/Taxes.csv`")
+        description = "Number of leading folders that name a file's CSV, e.g. 2 groups `Documents/Taxes/...` into `Documents/Taxes.csv`")
     parser.add_common_arguments()
     return parser
 
@@ -75,6 +75,10 @@ def main():
 
     # Setup logging
     logger.setup_logging()
+
+    # Check depth
+    if args.depth < 1:
+        logger.log_error("Depth must be at least 1", quit_program = True)
 
     # Get base directory
     base_dir = paths.expand_path(args.locker_base_directory)
@@ -113,16 +117,16 @@ def main():
     logger.log_info("Found %d files" % len(file_list))
 
     # Group files by their hash file destination
-    files_by_hash_file = paths.group_files_by_path_depth(file_list, depth = args.depth)
+    files_by_hash_file = {}
+    for file_path in file_list:
+        hash_file = environment.get_file_locker_hashes_file(file_path, depth = args.depth)
+        files_by_hash_file.setdefault(hash_file, []).append(file_path)
 
     # Process each group
     hash_files_processed = []
     failed_hash_files = []
-    for group_key, files in files_by_hash_file.items():
-        logger.log_info("Processing: %s (%d files)" % (group_key, len(files)))
-
-        # Determine hash file path
-        hash_file = environment.get_file_locker_hashes_file(group_key, depth = args.depth)
+    for hash_file, files in files_by_hash_file.items():
+        logger.log_info("Processing: %s (%d files)" % (hash_file, len(files)))
 
         # Hash files in this group
         success = hashing.hash_files(
