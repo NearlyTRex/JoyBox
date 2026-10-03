@@ -6,7 +6,31 @@ import pytest
 
 # Local imports
 from joybox import config
+from joybox.config.types import AssetType
 from joybox.config.types import EnumType
+from joybox.config.types import RemoteActionSyncType
+from joybox.config.types import RemoteActionType
+from joybox.config.types import SetupParams
+
+
+class Shade(EnumType):
+    DARK = ("Dark")
+    LIGHT = ("Light", ".lt")
+
+
+class Borrowed(EnumType):
+    # Members built from another enum's member, or from a nested pair
+    VIDEO = AssetType.VIDEO
+    PAIR = (("Pair", ".pr"),)
+
+
+class Numbered(EnumType):
+    ONE = 1
+
+
+class Other(EnumType):
+    DARK = ("Dark")
+    MISSING = ("Missing")
 
 
 ###########################################################
@@ -161,3 +185,156 @@ def test_every_member_round_trips_through_its_value(name, enum_class):
 def test_every_member_is_in_its_own_class(name, enum_class):
     for member in enum_class.members():
         assert member.val() in enum_class
+
+
+###########################################################
+# Construction
+###########################################################
+
+def test_a_plain_member_uses_its_value_as_cvalue():
+    assert Shade.DARK.cval() == "Dark"
+    assert Shade.LIGHT.cval() == ".lt"
+
+
+def test_a_non_string_member_uses_its_value_as_cvalue():
+    assert Numbered.ONE.cval() == 1
+
+
+def test_a_member_built_from_another_member_keeps_its_cvalue():
+    assert Borrowed.VIDEO.val() == "Video"
+    assert Borrowed.VIDEO.cval() == ".mp4"
+
+
+def test_a_member_built_from_a_nested_pair_splits_it():
+    assert Borrowed.PAIR.val() == "Pair"
+    assert Borrowed.PAIR.cval() == ".pr"
+
+
+###########################################################
+# String behaviour
+###########################################################
+
+def test_str_lower_and_upper_use_the_value():
+    assert str(Shade.LIGHT) == "Light"
+    assert Shade.LIGHT.lower() == "light"
+    assert Shade.LIGHT.upper() == "LIGHT"
+
+
+def test_concatenating_a_non_string_is_unsupported():
+    with pytest.raises(TypeError):
+        Shade.DARK + 1
+    with pytest.raises(TypeError):
+        1 + Shade.DARK
+
+
+def test_members_of_different_enums_with_one_value_are_equal():
+    assert Shade.DARK == Other.DARK
+    assert Shade.DARK != Other.MISSING
+
+
+def test_a_member_never_equals_a_non_string():
+    assert (Shade.DARK == 1) is False
+
+
+def test_ordering_against_members_strings_and_others():
+    assert Shade.DARK < Shade.LIGHT and Shade.DARK < "Light"
+    assert Shade.DARK <= Shade.DARK and Shade.DARK <= "Dark"
+    assert Shade.LIGHT > Shade.DARK and Shade.LIGHT > "Dark"
+    assert Shade.LIGHT >= Shade.LIGHT and Shade.LIGHT >= "Light"
+    for compare in (
+        lambda: Shade.DARK < 1,
+        lambda: Shade.DARK <= 1,
+        lambda: Shade.DARK > 1,
+        lambda: Shade.DARK >= 1):
+        with pytest.raises(TypeError):
+            compare()
+
+
+###########################################################
+# Class membership
+###########################################################
+
+def test_class_membership_accepts_members_values_and_foreign_members():
+    assert Shade.DARK in Shade
+    assert "Dark" in Shade
+    assert Other.DARK in Shade
+    assert RemoteActionType.PULL in RemoteActionSyncType
+
+
+def test_class_membership_rejects_unknown_values():
+    assert "Nope" not in Shade
+    assert Other.MISSING not in Shade
+    assert 1 not in Shade
+
+
+###########################################################
+# Conversion helpers
+###########################################################
+
+def test_from_enum_maps_a_foreign_member_by_value():
+    assert Shade.from_enum(Other.DARK) is Shade.DARK
+    assert Shade.from_enum(Other.MISSING) is None
+    assert Shade.from_enum(1) is None
+
+
+def test_from_string_of_an_unknown_name_is_none():
+    assert Shade.from_string("nope") is None
+
+
+@pytest.mark.parametrize("values,expected", [
+    (None, None),
+    ("", None),
+    ([], None),
+    ("dark, LIGHT", [Shade.DARK, Shade.LIGHT]),
+    (["light", Shade.DARK, "nope", 1], [Shade.LIGHT, Shade.DARK]),
+    (["nope"], None),
+    (Shade.LIGHT, [Shade.LIGHT]),
+    (1, None),
+])
+def test_from_list(values, expected):
+    assert Shade.from_list(values) == expected
+
+
+@pytest.mark.parametrize("value,expected", [
+    (Shade.LIGHT, "Light"),
+    ("light", "Light"),
+    ("nope", None),
+    (1, None),
+])
+def test_to_string(value, expected):
+    assert Shade.to_string(value) == expected
+
+
+def test_to_lower_and_upper_string():
+    assert Shade.to_lower_string("LIGHT") == "light"
+    assert Shade.to_upper_string(Shade.DARK) == "DARK"
+    assert Shade.to_lower_string("nope") is None
+    assert Shade.to_upper_string("nope") is None
+
+
+###########################################################
+# SetupParams
+###########################################################
+
+def test_setup_params_default_to_off():
+    assert SetupParams().to_dict() == {
+        "locker_type": None,
+        "skip_autobackup": False,
+        "verbose": False,
+        "pretend_run": False,
+        "exit_on_failure": False}
+
+
+def test_setup_params_read_what_args_provide():
+    class Args:
+        locker_type = "Local"
+        verbose = True
+
+    params = SetupParams.from_args(Args())
+
+    assert params.to_dict() == {
+        "locker_type": "Local",
+        "skip_autobackup": False,
+        "verbose": True,
+        "pretend_run": False,
+        "exit_on_failure": False}

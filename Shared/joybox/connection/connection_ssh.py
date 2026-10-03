@@ -140,8 +140,6 @@ class ConnectionSSH(connection.Connection):
             return self.handle_error("Unable to resolve remote home directory", e, return_value = None)
         return self.remote_home_directory
 
-    # Nothing here can answer a password prompt, so a command outside the
-    # account's grants fails at once rather than waiting on one forever
     def mark_command_as_sudo(self, cmd):
         if isinstance(cmd, str):
             return f"sudo -n {cmd}"
@@ -156,8 +154,12 @@ class ConnectionSSH(connection.Connection):
             parts.append(env_vars)
         if self.options.cwd:
             cwd = self.options.cwd
-            if cwd.startswith("~"):
-                cwd = "$HOME" + cwd[1:]
+            if cwd == "~":
+                cwd = "\"$HOME\""
+            elif cwd.startswith("~/"):
+                cwd = "\"$HOME\"/" + shlex.quote(cwd[2:])
+            else:
+                cwd = shlex.quote(cwd)
             parts.append(f"cd {cwd}")
         parts.append(cmd)
         return " && ".join(parts)
@@ -250,19 +252,21 @@ class ConnectionSSH(connection.Connection):
             if not self.flags.pretend_run:
                 cmd = self.process_command(cmd)
                 channel = ConnectionSSH.ssh_client.invoke_shell()
-                channel.settimeout(5.0)
-                channel.send(cmd + "\n")
-                while True:
-                    if channel.recv_ready():
-                        data = channel.recv(1024).decode("utf-8", errors="ignore")
-                        if self.flags.verbose:
-                            logger.log_info(data.strip())
-                    elif channel.exit_status_ready():
-                        break
-                    else:
-                        time.sleep(0.1)
-                exit_code = channel.recv_exit_status()
-                return exit_code
+                try:
+                    channel.settimeout(5.0)
+                    channel.send(cmd + "\nexit $?\n")
+                    while True:
+                        if channel.recv_ready():
+                            data = channel.recv(1024).decode("utf-8", errors="ignore")
+                            if self.flags.verbose:
+                                logger.log_info(data.strip())
+                        elif channel.exit_status_ready():
+                            break
+                        else:
+                            time.sleep(0.1)
+                    return channel.recv_exit_status()
+                finally:
+                    channel.close()
             return 0
         except Exception as e:
             if self.flags.exit_on_failure:
@@ -279,13 +283,14 @@ class ConnectionSSH(connection.Connection):
                 runtime.quit_program(code)
 
     def make_temporary_directory(self):
-        try:
-            temp_dir = self.run_output("mktemp -d").strip()
-            if self.flags.verbose:
-                logger.log_info(f"Created temporary directory: {temp_dir}")
-            return temp_dir
-        except Exception as e:
-            return self.handle_error("Failed to create temporary directory", e, return_value = None)
+        if self.flags.pretend_run:
+            return None
+        temp_dir = self.run_output("mktemp -d").strip()
+        if not temp_dir:
+            return self.handle_error("Failed to create temporary directory", "mktemp failed", return_value = None)
+        if self.flags.verbose:
+            logger.log_info(f"Created temporary directory: {temp_dir}")
+        return temp_dir
 
     def does_file_or_directory_exist(self, src):
         try:
@@ -293,8 +298,10 @@ class ConnectionSSH(connection.Connection):
                 logger.log_info(f"Checking existence of {src}")
             if not self.flags.pretend_run:
                 sftp = ConnectionSSH.ssh_client.open_sftp()
-                sftp.stat(src)
-                sftp.close()
+                try:
+                    sftp.stat(src)
+                finally:
+                    sftp.close()
             return True
         except FileNotFoundError:
             return False
@@ -303,74 +310,71 @@ class ConnectionSSH(connection.Connection):
 
     def transfer_files(self, src, dest, excludes = [], sudo = False):
         try:
-            sftp = ConnectionSSH.ssh_client.open_sftp()
-            sftp_lock = threading.Lock()
-
-            # For sudo transfers, upload to temp dir first then copy into place
-            if sudo:
-                temp_dest = "/tmp/transfer_" + uuid.uuid4().hex
-                actual_dest = dest
-                dest = temp_dest
-
-            # Gather all files and ensure remote dirs
-            file_tasks = []
-            for dirpath, dirnames, filenames in os.walk(src):
-                if paths.is_exclude_path(os.path.relpath(dirpath, src), excludes = excludes):
-                    continue
-
-                # Get remote directory
-                if dirpath == src:
-                    remote_dir = dest
-                else:
-                    remote_dir = os.path.join(dest, os.path.relpath(dirpath, src))
-
-                # Ensure the remote directory exists
-                logger.log_info(f"Making remote directory: {remote_dir}")
+            if self.flags.verbose:
+                logger.log_info(f"Transferring {src} to {dest}")
+            if self.flags.pretend_run:
+                return True
+            upload_dest = "/tmp/transfer_" + uuid.uuid4().hex if sudo else dest
+            try:
+                sftp = ConnectionSSH.ssh_client.open_sftp()
                 try:
-                    sftp.stat(remote_dir)
-                except FileNotFoundError:
-                    sftp.mkdir(remote_dir)
-
-                # Collect files to copy
-                for filename in filenames:
-                    local_file_path = os.path.join(dirpath, filename)
-                    remote_file_path = os.path.join(remote_dir, filename)
-                    file_tasks.append((local_file_path, remote_file_path))
-
-            # Upload files in parallel
-            def upload_file(task):
-                local_file, remote_file = task
-                try:
-                    with sftp_lock:
-                        logger.log_info(f"Transferring file: {local_file} to {remote_file}")
-                        sftp.put(local_file, remote_file)
-                    return True
-                except Exception as e:
-                    logger.log_error(f"Failed to transfer file {local_file} to {remote_file}: {e}")
-                    return False
-
-            # Start uploads
-            with concurrent.futures.ThreadPoolExecutor(max_workers = 8) as executor:
-                uploaded = list(executor.map(upload_file, file_tasks))
-            sftp.close()
-            if not all(uploaded):
-                if sudo:
-                    self.run_blocking(["rm", "-rf", temp_dest])
-                return self.handle_error(f"Failed to transfer {src} to {dest}", "%d file(s) failed" % uploaded.count(False))
-
-            # For sudo transfers, merge the staged tree into the destination
-            if sudo:
-                try:
-                    for cmd in [
-                        ["mkdir", "-p", actual_dest],
-                        ["cp", "-r", temp_dest + "/.", actual_dest]]:
-                        if self.run_blocking(cmd, sudo = True) != 0:
-                            return self.handle_error(f"Failed to transfer {src} to {actual_dest}", "copy failed")
+                    uploaded = self._upload_files(sftp, self._plan_upload(sftp, src, upload_dest, excludes))
                 finally:
-                    self.run_blocking(["rm", "-rf", temp_dest])
-            return True
+                    sftp.close()
+                if not all(uploaded):
+                    return self.handle_error(f"Failed to transfer {src} to {dest}", "%d file(s) failed" % uploaded.count(False))
+                if sudo:
+                    if os.path.isdir(src):
+                        cmds = [["mkdir", "-p", dest], ["cp", "-r", upload_dest + "/.", dest]]
+                    else:
+                        cmds = [["cp", upload_dest, dest]]
+                    for cmd in cmds:
+                        if self.run_blocking(cmd, sudo = True) != 0:
+                            return self.handle_error(f"Failed to transfer {src} to {dest}", "copy failed")
+                return True
+            finally:
+                if sudo:
+                    self.run_blocking(["rm", "-rf", "--", upload_dest])
         except Exception as e:
-            return self.handle_error(f"Failed to transfer {src} to {dest}", e, return_value = False)
+            return self.handle_error(f"Failed to transfer {src} to {dest}", e)
+
+    def _plan_upload(self, sftp, src, dest, excludes):
+        if not os.path.isdir(src):
+            return [(src, dest)]
+        file_tasks = []
+        for dirpath, dirnames, filenames in os.walk(src):
+            relative = os.path.relpath(dirpath, src)
+            dirnames[:] = [name for name in dirnames
+                if not paths.is_exclude_path(os.path.join(relative, name), excludes = excludes)]
+            remote_dir = dest if dirpath == src else os.path.join(dest, relative)
+            if self.flags.verbose:
+                logger.log_info(f"Making remote directory: {remote_dir}")
+            try:
+                sftp.stat(remote_dir)
+            except FileNotFoundError:
+                sftp.mkdir(remote_dir)
+            for filename in filenames:
+                if not paths.is_exclude_path(filename, excludes = excludes):
+                    file_tasks.append((os.path.join(dirpath, filename), os.path.join(remote_dir, filename)))
+        return file_tasks
+
+    def _upload_files(self, sftp, file_tasks):
+        sftp_lock = threading.Lock()
+
+        def upload_file(task):
+            local_file, remote_file = task
+            try:
+                with sftp_lock:
+                    if self.flags.verbose:
+                        logger.log_info(f"Transferring file: {local_file} to {remote_file}")
+                    sftp.put(local_file, remote_file)
+                return True
+            except Exception as e:
+                logger.log_error(f"Failed to transfer file {local_file} to {remote_file}: {e}")
+                return False
+
+        with concurrent.futures.ThreadPoolExecutor(max_workers = 8) as executor:
+            return list(executor.map(upload_file, file_tasks))
 
     def read_file(self, src, sudo = False):
         try:
@@ -381,10 +385,11 @@ class ConnectionSSH(connection.Connection):
                     return self.run_output(["cat", src], sudo = True)
                 else:
                     sftp = ConnectionSSH.ssh_client.open_sftp()
-                    with sftp.file(src, "r") as f:
-                        contents = f.read().decode()
-                    sftp.close()
-                    return contents
+                    try:
+                        with sftp.file(src, "r") as f:
+                            return f.read().decode()
+                    finally:
+                        sftp.close()
             return None
         except Exception as e:
             return self.handle_error(f"Unable to read file from {src}", e, return_value = None)
@@ -409,57 +414,46 @@ class ConnectionSSH(connection.Connection):
                         return self.handle_error(f"Failed to write file {src}", "copy failed")
                 else:
                     sftp = ConnectionSSH.ssh_client.open_sftp()
-                    with sftp.file(src, "w") as remote_file:
-                        remote_file.write(contents)
-                        remote_file.flush()
-                    sftp.close()
-                return True
+                    try:
+                        with sftp.file(src, "w") as remote_file:
+                            remote_file.write(contents)
+                            remote_file.flush()
+                    finally:
+                        sftp.close()
             return True
         except Exception as e:
             return self.handle_error(f"Failed to write file {src}", e)
 
+    def _run_operation(self, cmd, sudo, message):
+        try:
+            self.run_checked(cmd, sudo = sudo, throw_exception = True)
+            return True
+        except Exception as e:
+            return self.handle_error(message, e)
+
     def make_directory(self, src, sudo = False):
-        self.run_checked([
-            "mkdir", "-p", src], sudo = sudo)
-        return True
+        return self._run_operation(["mkdir", "-p", src], sudo, f"Unable to make directory {src}")
 
     def remove_file_or_directory(self, src, sudo = False):
-        remove_tool = "rm"
-        self.run_checked([
-            "sh", "-c", "%s -rf -- %s" % (remove_tool, src)], sudo = sudo)
-        return True
+        return self._run_operation(["rm", "-rf", "--", src], sudo, f"Unable to remove {src}")
 
     def copy_file_or_directory(self, src, dest, sudo = False):
-        self.run_checked([
-            "cp", "-r", src, dest], sudo = sudo)
-        return True
+        return self._run_operation(["cp", "-r", src, dest], sudo, f"Unable to copy {src} to {dest}")
 
     def move_file_or_directory(self, src, dest, sudo = False):
-        self.run_checked([
-            "mv", src, dest], sudo = sudo)
-        return True
+        return self._run_operation(["mv", src, dest], sudo, f"Unable to move {src} to {dest}")
 
     def link_file_or_directory(self, src, dest, sudo = False):
-        self.run_checked([
-            "ln", "-sf", src, dest], sudo = sudo)
-        return True
+        return self._run_operation(["ln", "-sf", src, dest], sudo, f"Unable to link {src} to {dest}")
 
     def download_file(self, url, dest, sudo = False):
-        self.run_checked([
-            "curl", "-L", "-o", dest, url], sudo = sudo)
-        return True
+        return self._run_operation(["curl", "-fL", "-o", dest, url], sudo, f"Unable to download {url} to {dest}")
 
     def extract_tar_archive(self, src, dest, sudo = False):
-        self.run_checked([
-            "tar", "-xf", src, "-C", dest], sudo = sudo)
-        return True
+        return self._run_operation(["tar", "-xf", src, "-C", dest], sudo, f"Unable to extract {src} to {dest}")
 
     def change_owner(self, src, owner, sudo = False):
-        self.run_checked([
-            "chown", "-R", owner, src], sudo = sudo)
-        return True
+        return self._run_operation(["chown", "-R", owner, src], sudo, f"Unable to change owner of {src}")
 
     def change_permission(self, src, permission, sudo = False):
-        self.run_checked([
-            "chmod", "-R", permission, src], sudo = sudo)
-        return True
+        return self._run_operation(["chmod", "-R", permission, src], sudo, f"Unable to change permissions of {src}")

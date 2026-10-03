@@ -10,7 +10,6 @@ import joybox.logger as logger
 import joybox.paths as paths
 import joybox.release as release
 import joybox.programs as programs
-import joybox.hashing as hashing
 import joybox.gui as gui
 import joybox.emulatorcommon as emulatorcommon
 import joybox.emulatorbase as emulatorbase
@@ -243,16 +242,8 @@ class RetroArch(emulatorbase.EmulatorBase):
                 return False
 
         # Verify system files
-        for filename, expected_md5 in system_files.items():
-            actual_md5 = hashing.calculate_file_md5(
-                src = paths.join_paths(environment.get_locker_gaming_emulator_setup_dir("RetroArch"), filename),
-                verbose = setup_params.verbose,
-                pretend_run = setup_params.pretend_run,
-                exit_on_failure = setup_params.exit_on_failure)
-            success = (expected_md5 == actual_md5)
-            if not success:
-                logger.log_error("Could not verify RetroArch system file %s" % filename)
-                return False
+        if not self.verify_system_files(system_files, setup_params):
+            return False
 
         # Copy system files
         for filename in system_files.keys():
@@ -303,7 +294,7 @@ class RetroArch(emulatorbase.EmulatorBase):
         # Get launch command
         launch_cmd = [
             programs.get_emulator_program("RetroArch"),
-            "-L", paths.join_paths(cores_dir, cores_mapping[game_platform] + cores_ext),
+            "-L", core_file,
             config.token_game_file
         ]
         if fullscreen:

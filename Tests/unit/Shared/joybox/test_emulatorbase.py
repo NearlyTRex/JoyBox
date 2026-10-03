@@ -2,6 +2,7 @@
 import pytest
 
 # Local imports
+from joybox import config
 from joybox import emulatorbase
 
 
@@ -57,6 +58,16 @@ def test_the_base_emulator_has_no_config():
 
 def test_the_base_emulator_has_no_save_type():
     assert emulatorbase.EmulatorBase().get_save_type() is None
+
+
+def test_the_base_emulator_setup_steps_succeed_as_no_ops():
+    emulator = emulatorbase.EmulatorBase()
+
+    assert (emulator.setup(), emulator.setup_offline(), emulator.configure()) == (True, True, True)
+
+
+def test_the_base_emulator_cannot_launch_anything():
+    assert emulatorbase.EmulatorBase().launch(game_info = None) is False
 
 
 def test_the_base_emulator_installs_addons_successfully():
@@ -215,3 +226,43 @@ def test_a_save_base_dir_is_resolved_under_the_emulator_root(emulator_root):
     emulator = build({"save_base_dir": {"linux": "TestMulator/User"}})
 
     assert emulator.get_save_base_dir() == "/emulators/TestMulator/User"
+
+
+###########################################################
+# System file verification
+###########################################################
+
+SYSTEM_FILES = {"bios/a.bin": "aaaa", "bios/b.bin": "bbbb"}
+
+
+@pytest.fixture
+def locker_hashes(monkeypatch):
+    hashes = {"/locker/TestMulator/bios/a.bin": "aaaa", "/locker/TestMulator/bios/b.bin": "bbbb"}
+    reads = []
+
+    def md5(src, pretend_run = False, **kwargs):
+        reads.append(src)
+        return "" if pretend_run else hashes[src]
+
+    monkeypatch.setattr(emulatorbase.environment, "get_locker_gaming_emulator_setup_dir",
+        lambda name: "/locker/%s" % name)
+    monkeypatch.setattr(emulatorbase.hashing, "calculate_file_md5", md5)
+    return {"hashes": hashes, "reads": reads}
+
+
+def test_matching_system_files_verify(locker_hashes):
+    assert build({}).verify_system_files(SYSTEM_FILES, config.SetupParams()) is True
+    assert locker_hashes["reads"] == list(locker_hashes["hashes"])
+
+
+def test_a_mismatched_system_file_fails_verification(locker_hashes):
+    locker_hashes["hashes"]["/locker/TestMulator/bios/a.bin"] = "ffff"
+
+    assert build({}).verify_system_files(SYSTEM_FILES, config.SetupParams()) is False
+    assert locker_hashes["reads"] == ["/locker/TestMulator/bios/a.bin"]
+
+
+def test_a_pretend_verification_passes_without_real_hashes(locker_hashes):
+    params = config.SetupParams(pretend_run = True)
+
+    assert build({}).verify_system_files(SYSTEM_FILES, params) is True

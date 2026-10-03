@@ -125,6 +125,20 @@ def main():
             print(f"  {name:<10} {extensions}")
         return True
 
+    # Check the arguments before spending anything on a request
+    try:
+        temperature = float(args.temperature)
+    except ValueError:
+        logger.log_error(f"Temperature must be a decimal such as 0.7, not {args.temperature}")
+        return False
+    attachments = args.attach or []
+    outlines = args.outline or []
+    system_files = [args.system_file] if args.system_file else []
+    for path in system_files + attachments + outlines:
+        if not os.path.isfile(path):
+            logger.log_error(f"No such file: {path}")
+            return False
+
     # Connect
     backend = llmchat.make_backend(args.backend, args.endpoint, args.api_key, args.model)
     if not backend:
@@ -138,18 +152,10 @@ def main():
         logger.log_error(f"Unknown model {model}. Available: {', '.join(available)}")
         return False
 
-    # Check the files before spending anything on a request
-    attachments = args.attach or []
-    outlines = args.outline or []
-    for path in attachments + outlines:
-        if not os.path.isfile(path):
-            logger.log_error(f"No such file: {path}")
-            return False
-
     # Size the window to the model unless told otherwise
     limit = args.num_ctx or backend.context_limit(model)
     session = llmchat.Session(
-        backend, model, limit, float(args.temperature), args.max_tokens)
+        backend, model, limit, temperature, args.max_tokens)
     session.seed_context(args.system_file, args.system, attachments, outlines)
 
     # Refuse a seed that cannot fit. A silently truncated context reads as
@@ -165,18 +171,16 @@ def main():
     # Ask question in terminal
     def ask(question):
         print(terminal.paint(f"\n{session.model}", terminal.GREEN))
-        session.ask(question, terminal.write)
+        reply = session.ask(question, terminal.write)
         print("\n")
+        return reply is not None
 
     # One-shot, for --ask or a pipe
     if args.ask:
-        ask(args.ask)
-        return True
+        return ask(args.ask)
     if not sys.stdin.isatty():
         piped = sys.stdin.read().strip()
-        if piped:
-            ask(piped)
-        return True
+        return ask(piped) if piped else True
 
     # Interactive
     room = f", window {limit:,} tokens" if limit else ""

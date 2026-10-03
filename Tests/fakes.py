@@ -428,6 +428,8 @@ class FakeChannel:
     def __init__(self, exit_code = 0, output = b""):
         self.exit_code = exit_code
         self.chunks = [output] if output else []
+        self.sent = []
+        self.closed = False
 
     def recv_exit_status(self):
         return self.exit_code
@@ -447,7 +449,10 @@ class FakeChannel:
         pass
 
     def send(self, data):
-        pass
+        self.sent.append(data)
+
+    def close(self):
+        self.closed = True
 
 
 class FakeStream:

@@ -164,10 +164,13 @@ class DockerAppInstaller(installer.Installer):
 
         # A missing key resolves to None and formats into templates as the
         # string "None", producing a config that looks valid and is not.
-        values = dict(self.env_values)
-        values.update(self.nginx_config_values)
+        # Check every source holding a key so one cannot mask another's blank.
+        sources = [self.env_values, self.nginx_config_values]
+        def is_blank(value):
+            return value is None or str(value).strip() in ["", "None"]
         missing = [key for key in self.required_settings
-            if values.get(key) is None or str(values.get(key)).strip() in ["", "None"]]
+            if not any(key in source for source in sources)
+            or any(key in source and is_blank(source[key]) for source in sources)]
         if missing:
             logger.log_error(f"Missing required settings for {self.app_name}: {', '.join(missing)}")
             logger.log_error(f"Set them in {settings.get_settings_file()} and re-run")
@@ -286,8 +289,8 @@ fi
         script += 'ln -sfn "$BACKUP_BASE/$STAMP" "$BACKUP_BASE/latest" || echo "Warning: could not update latest symlink"\n'
         script += 'echo "Backup complete: $BACKUP_BASE/$STAMP"\n'
 
-        # Retention
-        script += ('{ ls -1d "$BACKUP_BASE"/*/ 2>/dev/null || true; } | grep -v "\\.partial/$" '
+        # Retention; the latest symlink matches */ too and must not use a slot
+        script += ('{ ls -1d "$BACKUP_BASE"/*/ 2>/dev/null || true; } | grep -v -e "\\.partial/$" -e "/latest/$" '
                    '| sort | head -n -%d | xargs -r rm -rf || true\n') % self.get_backup_keep()
         script += 'rm -rf "$BACKUP_BASE"/*.partial 2>/dev/null || true\n'
         return script
@@ -402,10 +405,12 @@ fi
 
     def install_nginx_config(self):
         nginx_tmp_path = f"/tmp/{self.app_name}.conf"
-        if self.connection.write_file(nginx_tmp_path, self.nginx_config_template.format(**self.nginx_config_values)):
-            self.connection.run_checked([self.nginx_manager_tool, self.get_nginx_action("install"), nginx_tmp_path], sudo = True)
-            self.connection.run_checked([self.nginx_manager_tool, self.get_nginx_action("link"), f"{self.app_name}.conf"], sudo = True)
-            self.connection.remove_file_or_directory(nginx_tmp_path)
+        if not self.connection.write_file(nginx_tmp_path, self.nginx_config_template.format(**self.nginx_config_values)):
+            logger.log_error(f"Unable to write nginx config for {self.app_name}")
+            return False
+        self.connection.run_checked([self.nginx_manager_tool, self.get_nginx_action("install"), nginx_tmp_path], sudo = True)
+        self.connection.run_checked([self.nginx_manager_tool, self.get_nginx_action("link"), f"{self.app_name}.conf"], sudo = True)
+        self.connection.remove_file_or_directory(nginx_tmp_path)
         return True
 
     def uninstall_nginx_config(self):
@@ -452,7 +457,8 @@ fi
 
         # Create Nginx entry
         logger.log_info("Creating Nginx entry")
-        self.install_nginx_config()
+        if not self.install_nginx_config():
+            return False
 
         # Open firewall ports
         if self.nginx_ports:

@@ -165,6 +165,18 @@ class Connection:
     def change_permission(self, src, permission, sudo = False):
         return False
 
+    def install_crontab(self, contents):
+        temp_dir = self.make_temporary_directory()
+        if not temp_dir:
+            raise RuntimeError("Unable to stage the crontab")
+        try:
+            tmp_crontab = temp_dir + "/crontab"
+            if not self.write_file(tmp_crontab, contents):
+                raise RuntimeError("Unable to write %s" % tmp_crontab)
+            self.run_checked(["crontab", tmp_crontab], throw_exception = True)
+        finally:
+            self.remove_file_or_directory(temp_dir)
+
     def add_to_crontab(self, pattern):
         try:
             if self.flags.verbose:
@@ -176,12 +188,8 @@ class Connection:
                 lines = output.splitlines()
                 pattern = pattern.strip()
                 if pattern not in [line.strip() for line in lines]:
-                    tmp_crontab = "/tmp/crontab_update"
                     new_cron = f"{output.strip()}\n{pattern}" if output.strip() else pattern
-                    new_cron += "\n"
-                    self.write_file(tmp_crontab, new_cron)
-                    self.run_checked(["crontab", tmp_crontab])
-                    self.remove_file_or_directory(tmp_crontab)
+                    self.install_crontab(new_cron + "\n")
             return True
         except Exception as e:
             return self.handle_error(f"Unable to add to crontab: {pattern}", e, return_value = False)
@@ -198,12 +206,7 @@ class Connection:
                 new_lines = [line for line in lines if line.strip() != pattern.strip()]
                 if lines == new_lines:
                     return True
-                tmp_crontab = "/tmp/crontab_update"
-                new_cron = "\n".join(new_lines)
-                new_cron += "\n"
-                self.write_file(tmp_crontab, new_cron)
-                self.run_checked(["crontab", tmp_crontab])
-                self.remove_file_or_directory(tmp_crontab)
+                self.install_crontab("\n".join(new_lines) + "\n")
             return True
         except Exception as e:
             return self.handle_error(f"Unable to remove from crontab: {pattern}", e, return_value = False)
@@ -234,7 +237,7 @@ class Connection:
 
                 # Append path
                 new_paths = ";".join(current_paths + [src])
-                new_paths_escaped = new_paths.replace('"', '`"')
+                new_paths_escaped = new_paths.replace("`", "``").replace('"', '`"').replace("$", "`$")
                 code = self.run_return_code([
                     "powershell",
                     "-Command",
@@ -274,7 +277,8 @@ class Connection:
                     existing_content = ""
 
                 # Add to profile
-                export_line = f'export PATH="{src}:$PATH"\n'
+                escaped = "".join("\\" + char if char in '"\\$`' else char for char in src)
+                export_line = f'export PATH="{escaped}:$PATH"\n'
                 if export_line not in existing_content:
                     new_content = existing_content + "\n" + export_line + "\n"
                     return self.write_file(profile_file, new_content)

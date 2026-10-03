@@ -221,11 +221,13 @@ class Oscar(installer_dockerapp.DockerAppInstaller):
         # Public OSCAR port, proxied to the loopback-bound container
         logger.log_info("Installing Oscar stream entry")
         stream_tmp_path = f"/tmp/{self.app_name}.stream.conf"
-        if self.connection.write_file(stream_tmp_path,
+        if not self.connection.write_file(stream_tmp_path,
                 nginx_stream_config_template.format(**self.nginx_config_values)):
-            self.connection.run_checked([self.nginx_manager_tool, "install_stream_conf", stream_tmp_path], sudo = True)
-            self.connection.run_checked([self.nginx_manager_tool, "link_stream_conf", f"{self.app_name}.stream.conf"], sudo = True)
-            self.connection.remove_file_or_directory(stream_tmp_path)
+            logger.log_error(f"Unable to write nginx stream config for {self.app_name}")
+            return False
+        self.connection.run_checked([self.nginx_manager_tool, "install_stream_conf", stream_tmp_path], sudo = True)
+        self.connection.run_checked([self.nginx_manager_tool, "link_stream_conf", f"{self.app_name}.stream.conf"], sudo = True)
+        self.connection.remove_file_or_directory(stream_tmp_path)
 
         # Management API vhost
         logger.log_info("Installing Oscar API entry")

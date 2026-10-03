@@ -9,6 +9,7 @@ import joybox.prompts as prompts
 import joybox.serialization as serialization
 import joybox.environment as environment
 import joybox.gameinfo as gameinfo
+import joybox.storebase as storebase
 import joybox.stores as stores
 from .metadata import create_game_metadata_entry
 from .metadata import update_game_metadata_entry
@@ -27,12 +28,20 @@ def login_game_store(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    stores.get_store_by_categories(
+    store_obj = stores.get_store_by_categories(
         store_supercategory = game_supercategory,
         store_category = game_category,
-        store_subcategory = game_subcategory,
-        login = True)
-    return True
+        store_subcategory = game_subcategory)
+    if not store_obj:
+        return True
+
+    # Stores without a login of their own have nothing to log into
+    if type(store_obj).login is storebase.StoreBase.login:
+        return True
+    return store_obj.login(
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
 
 # Login all game stores
 def login_all_game_stores(
@@ -143,7 +152,7 @@ def import_game_store_purchases(
 
         # Add to ignore
         if should_import.lower() == "i":
-            add_game_json_ignore_entry(
+            success = add_game_json_ignore_entry(
                 game_supercategory = store_obj.get_supercategory(),
                 game_category = store_obj.get_category(),
                 game_subcategory = store_obj.get_subcategory(),
@@ -152,11 +161,19 @@ def import_game_store_purchases(
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
+            if not success:
+                logger.log_error("Unable to add ignore entry for game '%s'" % purchase_name)
+                return False
             continue
 
         # Prompt for entry name
-        default_name = gameinfo.derive_game_name_from_regular_name(purchase_name)
+        default_name = None
+        if purchase_name:
+            default_name = gameinfo.derive_game_name_from_regular_name(purchase_name)
         entry_name = prompts.prompt_for_value("Choose entry name", default_value = default_name)
+        if not entry_name:
+            logger.log_warning("No entry name chosen, skipping")
+            continue
 
         # Get appurl if possible
         if not purchase_appurl and purchase_name:
@@ -389,7 +406,6 @@ def download_game_store_purchase(
     game_info,
     output_dir = None,
     skip_existing = False,
-    force = False,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):

@@ -95,6 +95,14 @@ def test_an_explicit_environment_is_kept():
     assert connection.options.env == {"ONLY": "this"}
 
 
+def test_the_callers_options_are_left_alone():
+    options = runoptions.RunOptions()
+
+    connection_local.ConnectionLocal(runoptions.RunFlags(verbose = False), options)
+
+    assert options.env == {}
+
+
 def test_the_local_path_separator_is_the_platforms_own(connection):
     assert connection.get_path_separator() == os.sep
 
@@ -103,88 +111,244 @@ def test_the_local_path_separator_is_the_platforms_own(connection):
 # Running commands
 ###########################################################
 
-def test_output_is_captured(connection):
+class FakeProcesses:
+    # Stands in for the subprocess module; each call is recorded with the
+    # options it was started with.
+    PIPE = -1
+    STDOUT = -2
+
+    def __init__(self):
+        self.calls = []
+        self.output = b""
+        self.code = 0
+        self.error = None
+        self.chunks = []
+
+    def _start(self, cmd, kwargs):
+        self.calls.append({"cmd": cmd, **kwargs})
+        if self.error:
+            raise self.error
+
+    def run(self, cmd, **kwargs):
+        self._start(cmd, kwargs)
+        return type("Completed", (), {"stdout": self.output})()
+
+    def call(self, cmd, **kwargs):
+        self._start(cmd, kwargs)
+        for name in ["stdout", "stderr"]:
+            if hasattr(kwargs[name], "write"):
+                kwargs[name].write("%s\n" % name)
+        return self.code
+
+    def Popen(self, cmd, **kwargs):
+        self._start(cmd, kwargs)
+        fake = self
+        chunks = iter(self.chunks + [b""])
+
+        class Process:
+            stdout = type("Pipe", (), {"read": staticmethod(lambda size: next(chunks))})()
+
+            def __enter__(self):
+                return self
+
+            def __exit__(self, *exc):
+                return False
+
+            def wait(self):
+                return fake.code
+        return Process()
+
+
+@pytest.fixture
+def spawned(monkeypatch):
+    fake = FakeProcesses()
+    monkeypatch.setattr(connection_local, "subprocess", fake)
+    return fake
+
+
+@pytest.fixture
+def logged(monkeypatch):
+    lines = []
+    monkeypatch.setattr(connection_local.logger, "log_info", lambda message, **kwargs: lines.append(message))
+    monkeypatch.setattr(connection_local.logger, "log_error", lambda message, **kwargs: lines.append(str(message)))
+    return lines
+
+
+@pytest.fixture
+def strict():
+    return connection_local.ConnectionLocal(
+        runoptions.RunFlags(verbose = False, exit_on_failure = True),
+        runoptions.RunOptions())
+
+
+def test_the_home_directory_is_the_users(connection, monkeypatch):
+    monkeypatch.setattr(connection_local.runtime, "get_home_directory", lambda: "/home/someone")
+
+    assert connection.get_home_directory() == "/home/someone"
+
+
+def test_output_is_decoded_and_trimmed(connection, spawned):
+    spawned.output = b"  hello\n"
+
     assert connection.run_output(["echo", "hello"]) == "hello"
 
 
-def test_a_failing_command_reports_its_code(connection):
-    assert connection.run_return_code(["sh", "-c", "exit 3"]) == 3
+def test_standard_error_is_left_out_by_default(connection, spawned):
+    connection.run_output(["echo"])
+
+    assert "stderr" not in only(spawned.calls, None)
 
 
-def test_a_command_that_does_not_exist_reports_failure(connection):
-    assert connection.run_return_code(["definitely-not-a-real-binary"]) == 1
-
-
-def test_output_of_a_command_that_does_not_exist_is_empty(connection):
-    assert connection.run_output(["definitely-not-a-real-binary"]) == ""
-
-
-def test_standard_error_is_left_out_by_default(connection):
-    assert connection.run_output(["sh", "-c", "echo oops >&2; echo fine"]) == "fine"
-
-
-def test_standard_error_can_be_included(connection):
+def test_standard_error_can_be_included(connection, spawned):
     connection.options.include_stderr = True
 
-    assert "oops" in connection.run_output(["sh", "-c", "echo oops >&2"])
+    connection.run_output(["echo"])
+
+    assert only(spawned.calls, None)["stderr"] == FakeProcesses.STDOUT
 
 
-def test_a_command_runs_in_the_directory_it_was_given(connection, tmp_path):
-    connection.options.cwd = str(tmp_path)
-
-    assert connection.run_output(["pwd"]) == str(tmp_path)
-
-
-def test_a_command_sees_the_environment_it_was_given(connection):
+def test_a_command_runs_with_the_connections_options(connection, spawned):
+    connection.options.cwd = "/srv"
     connection.options.env = {"JOYBOX_TEST": "value"}
 
-    assert connection.run_output(["sh", "-c", "echo $JOYBOX_TEST"]) == "value"
+    connection.run_output(["pwd"])
+    call = only(spawned.calls, None)
+
+    assert (call["cwd"], call["env"], call["check"]) == ("/srv", {"JOYBOX_TEST": "value"}, False)
 
 
-def test_output_can_be_redirected_to_a_file(connection, tmp_path):
-    target = tmp_path / "out.log"
-    connection.options.stdout = str(target)
-
-    assert connection.run_return_code(["echo", "written"]) == 0
-    assert target.read_text().strip() == "written"
-
-
-def test_errors_can_be_redirected_to_a_file(connection, tmp_path):
-    target = tmp_path / "err.log"
-    connection.options.stderr = str(target)
-
-    connection.run_return_code(["sh", "-c", "echo oops >&2"])
-
-    assert target.read_text().strip() == "oops"
-
-
-def test_a_shell_command_is_run_through_a_shell(connection):
+@pytest.mark.parametrize("method", ["run_output", "run_return_code", "run_blocking"])
+def test_a_shell_command_is_run_as_one_string(connection, spawned, method):
     connection.options.shell = True
 
-    assert connection.run_output("echo one two") == "one two"
+    getattr(connection, method)(["echo", "one two"])
+    call = only(spawned.calls, None)
+
+    assert call["cmd"] == "echo 'one two'"
+    assert call["shell"] is True
 
 
-def test_pretending_runs_nothing(pretending):
+def test_a_shell_string_reaches_the_shell_verbatim(connection, spawned):
+    connection.options.shell = True
+
+    connection.run_output("echo one | tr o 0; exit 4")
+
+    assert only(spawned.calls, None)["cmd"] == "echo one | tr o 0; exit 4"
+
+
+@pytest.mark.parametrize("method", ["run_output", "run_return_code", "run_blocking"])
+def test_a_sudo_command_is_prefixed(connection, spawned, monkeypatch, method):
+    monkeypatch.setattr(connection_local.platform_info, "is_linux_platform", lambda: True)
+
+    getattr(connection, method)(["id"], sudo = True)
+
+    assert only(spawned.calls, None)["cmd"] == ["sudo", "id"]
+
+
+@pytest.mark.parametrize("method", ["run_output", "run_return_code", "run_blocking"])
+def test_a_verbose_command_is_logged(connection, spawned, logged, method):
+    connection.flags.verbose = True
+
+    getattr(connection, method)(["echo", "hi"])
+
+    assert logged == ['Running "echo hi"']
+
+
+@pytest.mark.parametrize("method,failed", [
+    ("run_output", ""), ("run_return_code", 1), ("run_blocking", 1)])
+def test_a_command_that_cannot_start_reports_failure(connection, spawned, method, failed):
+    spawned.error = FileNotFoundError("definitely-not-a-real-binary")
+
+    assert getattr(connection, method)(["definitely-not-a-real-binary"]) == failed
+
+
+@pytest.mark.parametrize("method", ["run_output", "run_return_code", "run_blocking"])
+def test_a_command_that_cannot_start_can_quit_the_program(strict, spawned, logged, method):
+    spawned.error = FileNotFoundError("definitely-not-a-real-binary")
+
+    with pytest.raises(SystemExit):
+        getattr(strict, method)(["definitely-not-a-real-binary"])
+    assert logged == ["definitely-not-a-real-binary"]
+
+
+def test_a_failing_command_reports_its_code(connection, spawned):
+    spawned.code = 3
+
+    assert connection.run_return_code(["false"]) == 3
+
+
+def test_output_and_errors_can_be_redirected_to_files(connection, spawned, tmp_path):
+    connection.options.stdout = str(tmp_path / "out.log")
+    connection.options.stderr = str(tmp_path / "err.log")
+
+    assert connection.run_return_code(["echo"]) == 0
+    assert (tmp_path / "out.log").read_text() == "stdout\n"
+    assert (tmp_path / "err.log").read_text() == "stderr\n"
+
+
+def test_redirect_files_are_closed_when_the_command_cannot_start(connection, spawned, monkeypatch, tmp_path):
+    connection.options.stdout = str(tmp_path / "out.log")
+    opened = []
+    real_open = open
+    spawned.error = OSError("no exec")
+
+    def tracking_open(*args, **kwargs):
+        opened.append(real_open(*args, **kwargs))
+        return opened[-1]
+
+    monkeypatch.setattr(connection_local, "open", tracking_open, raising = False)
+
+    assert connection.run_return_code(["echo"]) == 1
+    assert opened[0].closed
+
+
+def test_unredirected_output_is_inherited(connection, spawned):
+    connection.run_return_code(["echo"])
+    call = only(spawned.calls, None)
+
+    assert (call["stdout"], call["stderr"]) == (None, None)
+
+
+def test_blocking_output_is_streamed(connection, spawned, monkeypatch):
+    streamed = []
+    monkeypatch.setattr(connection_local.logger, "log_output", lambda text: None)
+    monkeypatch.setattr(connection_local.logger, "record_output", streamed.append)
+    spawned.chunks = [b"first\nsec", b"ond\n"]
+    spawned.code = 4
+
+    assert connection.run_blocking(["build"]) == 4
+    assert streamed == ["first", "second"]
+
+
+def test_pretending_runs_nothing(pretending, spawned):
     assert pretending.run_return_code(["sh", "-c", "exit 3"]) == 0
     assert pretending.run_output(["echo", "hello"]) == ""
+    assert pretending.run_blocking(["echo", "hello"]) == 0
+    assert spawned.calls == []
 
 
-def test_a_checked_command_that_fails_quits_the_program(connection):
+def test_a_checked_command_that_fails_quits_the_program(connection, monkeypatch):
+    monkeypatch.setattr(connection, "run_blocking", lambda cmd, sudo = False: 1)
+
     with pytest.raises(SystemExit):
-        connection.run_checked(["sh", "-c", "exit 1"])
+        connection.run_checked(["false"])
 
 
-def test_a_checked_command_can_raise_instead(connection):
+def test_a_checked_command_can_raise_instead(connection, monkeypatch):
+    monkeypatch.setattr(connection, "run_blocking", lambda cmd, sudo = False: 1)
+
     with pytest.raises(ValueError):
-        connection.run_checked(["sh", "-c", "exit 1"], throw_exception = True)
+        connection.run_checked(["false"], throw_exception = True)
 
 
-def test_a_checked_command_that_succeeds_returns(connection):
+def test_a_checked_command_that_succeeds_returns(connection, spawned):
     assert connection.run_checked(["true"]) is None
 
 
-def test_an_interactive_command_reports_its_code(connection):
-    assert connection.run_interactive(["sh", "-c", "exit 4"]) == 4
+def test_an_interactive_command_blocks(connection, spawned):
+    spawned.code = 4
+
+    assert connection.run_interactive(["sh"]) == 4
 
 
 ###########################################################
@@ -211,11 +375,11 @@ def test_a_privileged_directory_is_made_with_its_parents(connection, recorded):
 
 
 def test_a_privileged_removal_takes_the_whole_tree(connection, recorded):
-    # The path is also protected from being read as an option by the
-    # separator, so a path starting with a dash is still removed.
+    # The separator keeps a path starting with a dash from being read as an
+    # option, and the path is never parsed by a shell.
     connection.remove_file_or_directory("/opt/app", sudo = True)
 
-    assert only(recorded)["cmd"] == ["sh", "-c", "rm -rf -- /opt/app"]
+    assert only(recorded)["cmd"] == ["/bin/rm", "-rf", "--", "/opt/app"]
 
 
 def test_a_privileged_file_copy_is_not_recursive(connection, recorded, tmp_path):
@@ -543,3 +707,192 @@ def test_a_read_error_can_quit_the_program(tmp_path):
 
     with pytest.raises(SystemExit):
         strict.read_file(str(tmp_path / "absent.txt"))
+
+
+###########################################################
+# Privileged failures and dry runs
+###########################################################
+
+SUDO_OPERATIONS = [
+    ("make_directory", ("/opt/app",)),
+    ("remove_file_or_directory", ("/opt/app",)),
+    ("copy_file_or_directory", ("/tmp/a", "/opt/a")),
+    ("move_file_or_directory", ("/tmp/a", "/opt/a")),
+    ("link_file_or_directory", ("/tmp/a", "/opt/a")),
+    ("extract_tar_archive", ("/tmp/a.tar", "/opt/a")),
+    ("transfer_files", ("/tmp/a", "/opt/a")),
+    ("write_file", ("/opt/a", "contents")),
+    ("read_file", ("/opt/a",)),
+    ("download_file", ("https://example.test/a", "/opt/a")),
+    ("change_owner", ("/opt/a", "app:app")),
+    ("change_permission", ("/opt/a", "750")),
+]
+
+
+@pytest.fixture
+def on_linux(monkeypatch):
+    monkeypatch.setattr(connection_local.platform_info, "is_linux_platform", lambda: True)
+
+
+@pytest.mark.parametrize("method,args", SUDO_OPERATIONS)
+def test_a_verbose_privileged_operation_is_logged(connection, recorded, logged, on_linux, monkeypatch, method, args):
+    monkeypatch.setattr(connection_local.network, "download_url", lambda url, output_file, **kwargs: True)
+    connection.flags.verbose = True
+
+    getattr(connection, method)(*args, sudo = True)
+
+    assert logged
+
+
+@pytest.mark.parametrize("method,args", SUDO_OPERATIONS)
+def test_pretending_runs_no_privileged_command(pretending, spawned, on_linux, method, args):
+    result = getattr(pretending, method)(*args, sudo = True)
+
+    assert result is (None if method == "read_file" else True)
+    assert spawned.calls == []
+
+
+@pytest.mark.parametrize("method,args", [op for op in SUDO_OPERATIONS if op[0] not in ("write_file", "read_file", "transfer_files")])
+def test_a_failed_privileged_command_is_reported(connection, on_linux, monkeypatch, tmp_path, method, args):
+    # A failure is the caller's to handle unless the connection exits on failure.
+    monkeypatch.setattr(connection_local.network, "download_url", lambda url, output_file, **kwargs: True)
+    monkeypatch.setattr(connection, "run_blocking", lambda cmd, sudo = False: 1)
+
+    assert getattr(connection, method)(*args, sudo = True) is False
+
+
+@pytest.mark.parametrize("method,args", [op for op in SUDO_OPERATIONS if op[0] not in ("read_file",)])
+def test_a_failed_privileged_command_can_quit_the_program(strict, on_linux, logged, monkeypatch, method, args):
+    monkeypatch.setattr(connection_local.network, "download_url", lambda url, output_file, **kwargs: True)
+    monkeypatch.setattr(strict, "run_blocking", lambda cmd, sudo = False: 1)
+    monkeypatch.setattr(strict, "run_return_code", lambda cmd, sudo = False: 1)
+    monkeypatch.setattr(connection_local.os.path, "isdir", lambda path: False)
+
+    with pytest.raises(SystemExit):
+        getattr(strict, method)(*args, sudo = True)
+
+
+@pytest.mark.parametrize("method,args", [("change_owner", ("/opt/a", "app:app")), ("change_permission", ("/opt/a", "750"))])
+def test_an_unprivileged_ownership_change_runs_as_the_user(connection, recorded, on_linux, method, args):
+    getattr(connection, method)(*args)
+
+    assert only(recorded)["sudo"] is False
+
+
+def test_a_privileged_write_that_cannot_stage_is_reported(connection, recorded, monkeypatch):
+    def refuse(*args, **kwargs):
+        raise OSError("no space")
+    monkeypatch.setattr(connection_local.tempfile, "mkstemp", refuse)
+
+    assert connection.write_file("/etc/app.conf", "contents", sudo = True) is False
+    assert recorded == []
+
+
+def test_a_privileged_write_cleans_up_when_the_copy_cannot_start(connection, monkeypatch):
+    staged = []
+
+    def run(cmd, sudo = False):
+        staged.append(cmd[1])
+        raise OSError("no exec")
+
+    monkeypatch.setattr(connection, "run_return_code", run)
+
+    assert connection.write_file("/etc/app.conf", "contents", sudo = True) is False
+    assert not os.path.exists(staged[0])
+
+
+def test_a_failed_privileged_download_leaves_no_staged_file(connection, recorded, monkeypatch):
+    fetched = []
+    monkeypatch.setattr(
+        connection_local.network, "download_url",
+        lambda url, output_file, **kwargs: fetched.append(output_file) and False)
+
+    assert connection.download_file("https://example.test/a", "/opt/a", sudo = True) is False
+    assert not os.path.exists(fetched[0])
+
+
+def test_a_failed_privileged_move_leaves_no_staged_download(connection, monkeypatch):
+    fetched = []
+    monkeypatch.setattr(
+        connection_local.network, "download_url",
+        lambda url, output_file, **kwargs: fetched.append(output_file) or True)
+    monkeypatch.setattr(connection, "run_blocking", lambda cmd, sudo = False: 1)
+
+    assert connection.download_file("https://example.test/a", "/opt/a", sudo = True) is False
+    assert not os.path.exists(fetched[0])
+
+
+def test_a_privileged_download_is_moved_out_of_staging(connection, monkeypatch):
+    moved = []
+
+    def move(cmd, sudo = False, throw_exception = False):
+        moved.append(cmd[1])
+        os.remove(cmd[1])
+
+    monkeypatch.setattr(connection_local.network, "download_url", lambda url, output_file, **kwargs: True)
+    monkeypatch.setattr(connection, "run_checked", move)
+
+    assert connection.download_file("https://example.test/a", "/opt/a", sudo = True) is True
+    assert not os.path.exists(moved[0])
+
+
+def test_a_failed_privileged_file_transfer_is_reported(connection, monkeypatch, tmp_path):
+    source = tmp_path / "app.conf"
+    source.write_text("KEY=value")
+    monkeypatch.setattr(connection, "run_return_code", lambda cmd, sudo = False: 1)
+
+    assert connection.transfer_files(str(source), "/etc/app.conf", sudo = True) is False
+
+
+def test_a_privileged_transfer_that_cannot_stage_is_reported(connection, recorded, monkeypatch, tmp_path):
+    monkeypatch.setattr(connection_local.fileops, "copy_file_or_directory", lambda *args, **kwargs: False)
+
+    assert connection.transfer_files(str(tmp_path), "/opt/app", sudo = True) is False
+    assert recorded == []
+
+
+@pytest.mark.parametrize("failing", ["/bin/mkdir", "/bin/cp"])
+def test_a_failed_privileged_transfer_step_is_reported(connection, monkeypatch, tmp_path, failing):
+    ran = []
+
+    def run(cmd, sudo = False):
+        ran.append(cmd[0])
+        return 1 if cmd[0] == failing else 0
+
+    monkeypatch.setattr(connection, "run_return_code", run)
+
+    assert connection.transfer_files(str(tmp_path), "/opt/app", sudo = True) is False
+    assert ran[-1] == failing
+
+
+def test_a_privileged_transfer_that_raises_is_reported(connection, monkeypatch, tmp_path):
+    def refuse(*args, **kwargs):
+        raise OSError("no space")
+    monkeypatch.setattr(connection_local.tempfile, "mkdtemp", refuse)
+
+    assert connection.transfer_files(str(tmp_path), "/opt/app", sudo = True) is False
+
+
+def test_a_verbose_existence_check_is_logged(connection, logged, tmp_path):
+    connection.flags.verbose = True
+
+    connection.does_file_or_directory_exist(str(tmp_path))
+
+    assert logged == ["Checking existence of %s" % tmp_path]
+
+
+def test_an_existence_check_that_raises_is_reported(connection, monkeypatch):
+    def refuse(path):
+        raise OSError("denied")
+    monkeypatch.setattr(connection_local.os.path, "exists", refuse)
+
+    assert connection.does_file_or_directory_exist("/opt/app") is False
+
+
+def test_a_file_is_read(connection, logged, tmp_path):
+    target = tmp_path / "file.txt"
+    target.write_text("data")
+    connection.flags.verbose = True
+
+    assert connection.read_file(str(target)) == "data"
+    assert logged == ["Reading file %s" % target]

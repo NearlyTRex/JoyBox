@@ -9,7 +9,7 @@ Download one kind of artwork or video for each selected game and back it up to t
 ## Synopsis
 
 ```text
-download_game_metadata_assets [options]
+download_game_metadata_assets -t <asset_type> [options]
 ```
 
 ## Description
@@ -34,7 +34,7 @@ locker, or in every configured locker with `All`.
 | `-c, --game_category <game_category>` | Category of the games; all categories when omitted. Allowed: `Computer`, `Microsoft`, `Nintendo`, `Other`, `Sony`. |
 | `-s, --game_subcategory <game_subcategory>` | Subcategory (platform) of the games; every subcategory of the selected categories when omitted. Allowed: `Amazon Games`, `Disc`, `Epic Games`, `GOG`, `Humble Bundle`, `Itchio`, `Legacy Games`, `Puppet Combo`, `Red Candle`, `Square Enix`, `Steam`, `Zoom`, `Microsoft MSX`, `Microsoft Xbox`, `Microsoft Xbox 360`, `Microsoft Xbox 360 GOD`, `Microsoft Xbox 360 XBLA`, `Microsoft Xbox 360 XIG`, `Microsoft Xbox One`, `Microsoft Xbox One GOD`, `Nintendo 3DS`, `Nintendo 3DS Apps`, `Nintendo 3DS eShop`, `Nintendo 64`, `Nintendo Amiibo`, `Nintendo DS`, `Nintendo DSi`, `Nintendo Famicom`, `Nintendo Game Boy`, `Nintendo Game Boy Advance`, `Nintendo Game Boy Advance e-Reader`, `Nintendo Game Boy Color`, `Nintendo Gamecube`, `Nintendo NES`, `Nintendo SNES`, `Nintendo SNES MSU-1`, `Nintendo Super Famicom`, `Nintendo Super Game Boy`, `Nintendo Super Game Boy Color`, `Nintendo Switch`, `Nintendo Switch eShop`, `Nintendo Virtual Boy`, `Nintendo Wii`, `Nintendo Wii U`, `Nintendo Wii U eShop`, `Nintendo WiiWare`, `Apple iOS`, `Apple MacOS 8`, `Arcade`, `Atari 800`, `Atari 2600`, `Atari 5200`, `Atari 7800`, `Atari Jaguar`, `Atari Jaguar CD`, `Atari Lynx`, `Bandai WonderSwan`, `Bandai WonderSwan Color`, `Coleco ColecoVision`, `Commodore 64`, `Commodore Amiga`, `Google Android`, `Magnavox Odyssey 2`, `Mattel Intellivision`, `NEC PC-Engine`, `NEC PC-Engine CD`, `NEC SuperGrafx`, `NEC TurboGrafx-16`, `NEC TurboGrafx CD`, `Nokia N-Gage`, `Panasonic 3DO`, `Philips CDi`, `SNK Neo Geo Pocket Color`, `Sega 32X`, `Sega CD`, `Sega CD 32X`, `Sega Dreamcast`, `Sega Game Gear`, `Sega Genesis`, `Sega Master System`, `Sega Saturn`, `Sinclair ZX Spectrum`, `Texas Instruments TI-99-4A`, `Tiger Game.com`, `Sony PlayStation`, `Sony PlayStation 2`, `Sony PlayStation 3`, `Sony PlayStation 4`, `Sony PlayStation Network - PlayStation 3`, `Sony PlayStation Network - PlayStation 4`, `Sony PlayStation Network - PlayStation Portable`, `Sony PlayStation Network - PlayStation Portable Minis`, `Sony PlayStation Network - PlayStation Vita`, `Sony PlayStation Portable`, `Sony PlayStation Portable Video`, `Sony PlayStation Vita`. |
 | `-n, --game_name <game_name>` | Download only for the game with this exact name; every game with a JSON file when omitted. |
-| `-t, --asset_type <asset_type>` | Kind of asset to download. Allowed: `Background`, `BoxBack`, `BoxFront`, `Label`, `Screenshot`, `Video`. |
+| `-t, --asset_type <asset_type>` | Kind of asset to download. **Required.** Allowed: `Background`, `BoxBack`, `BoxFront`, `Label`, `Screenshot`, `Video`. |
 | `-m, --generation_mode <Custom\|Standard>` | How games are selected: `Standard` walks the selected categories, `Custom` takes exactly the given category, subcategory and name. Default: `Standard`. Allowed: `Custom`, `Standard`. |
 
 ### Behavior

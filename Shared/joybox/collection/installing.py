@@ -156,6 +156,11 @@ def install_local_game(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if not success:
+        fileops.remove_directory(
+            src = tmp_dir_result,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
         return False
 
     # Check if transformation is required
@@ -200,11 +205,12 @@ def install_local_game(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
-    # Check if game is now installed
-    if not is_local_game_installed(game_info):
+    # Check if game is now installed (a pretend run caches nothing)
+    if not pretend_run and not is_local_game_installed(game_info):
         gui.display_error_popup(
             title_text = "Failed to cache game",
             message_text = "Game could not be cached\n%s\n%s" % (game_name, game_platform))
+        return False
     return True
 
 # Install local untransformed game
@@ -254,19 +260,18 @@ def install_local_transformed_game(
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
+    success = False
     if not transform_success:
         logger.log_error(transform_result)
-        return False
+    else:
 
-    # Add to cache
-    success = install_local_untransformed_game(
-        game_info = game_info,
-        source_dir = paths.get_filename_directory(transform_result),
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    if not success:
-        return False
+        # Add to cache
+        success = install_local_untransformed_game(
+            game_info = game_info,
+            source_dir = paths.get_filename_directory(transform_result),
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
 
     # Delete temporary directory
     fileops.remove_directory(
@@ -274,9 +279,7 @@ def install_local_transformed_game(
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
-
-    # Return result
-    return is_local_game_installed(game_info)
+    return success
 
 # Install local game addons
 def install_local_game_addons(
@@ -295,9 +298,9 @@ def install_local_game_addons(
     # Get directories
     source_dlc_dirs = []
     source_update_dirs = []
-    for filename in game_info.get_value(config.json_key_dlc):
+    for filename in game_info.get_value(config.json_key_dlc) or []:
         source_dlc_dirs += [paths.join_paths(environment.get_locker_gaming_dlc_root_dir(), filename)]
-    for filename in game_info.get_value(config.json_key_update):
+    for filename in game_info.get_value(config.json_key_update) or []:
         source_update_dirs += [paths.join_paths(environment.get_locker_gaming_update_root_dir(), filename)]
 
     # Install add-ons
