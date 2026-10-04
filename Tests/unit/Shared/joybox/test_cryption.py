@@ -284,6 +284,20 @@ def test_an_empty_passphrase_is_refused_for_decryption(gpg, stored_source, tmp_p
             output_file = str(tmp_path / "out.dat"))
 
 
+@pytest.mark.parametrize("operation", [
+    lambda plain, stored, tmp_path: encrypt(plain, tmp_path),
+    lambda plain, stored, tmp_path: decrypt(stored, tmp_path),
+    lambda plain, stored, tmp_path: cryption.get_embedded_filename(src = stored, passphrase = PASSPHRASE),
+], ids = ["encrypt", "decrypt", "list-packets"])
+def test_the_passphrase_goes_over_stdin_not_argv(gpg, recording_command, plain_source, stored_source, tmp_path, operation):
+    # argv is visible to every local user and is what a verbose run logs.
+    operation(plain_source, stored_source, tmp_path)
+
+    assert PASSPHRASE not in recording_command.only()
+    assert recording_command.value_after("--passphrase-fd") == "0"
+    assert recording_command.options().get_stdin_input() == PASSPHRASE
+
+
 ###########################################################
 # Resolving stored names without gpg
 ###########################################################

@@ -463,3 +463,9 @@ class CommandOptions:
         return self.options.get_value(config.program_key_include_stderr, False)
     def set_include_stderr(self, value):
         self.options.set_value(config.program_key_include_stderr, value)
+
+    # Stdin input (written to the process then closed; keeps secrets out of argv)
+    def get_stdin_input(self):
+        return self.options.get_value(config.program_key_stdin_input)
+    def set_stdin_input(self, value):
+        self.options.set_value(config.program_key_stdin_input, value)

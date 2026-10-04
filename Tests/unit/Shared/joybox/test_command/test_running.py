@@ -119,6 +119,32 @@ def test_a_verbose_run_prints_the_command(processes, monkeypatch):
 # Standard error
 ###########################################################
 
+def test_stdin_is_not_piped_by_default(processes):
+    run()
+
+    assert processes.only().kwargs["stdin"] is None
+
+
+def test_stdin_input_is_written_to_the_process_and_closed(processes):
+    # Secrets go in this way so they never appear in argv or the logged command.
+    options = command.create_command_options(stdin_input = "secret")
+
+    run(options = options)
+
+    stdin = processes.only().stdin
+    assert processes.only().kwargs["stdin"] == subprocess.PIPE
+    assert stdin.written == "secret"
+    assert stdin.closed is True
+
+
+def test_a_process_that_ignores_stdin_still_runs(processes):
+    processes.stdin_broken = True
+    processes.stdout = "out\n"
+    options = command.create_command_options(stdin_input = "secret")
+
+    assert run(options = options) == ("out", 0)
+
+
 def test_stderr_goes_to_the_terminal_by_default(processes):
     processes.stderr = "warning\n"
 
