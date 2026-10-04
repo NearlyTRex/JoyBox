@@ -92,6 +92,7 @@ class Sunshine(toolbase.ToolBase):
                 install_name = "Sunshine",
                 install_dir = programs.get_program_install_dir("Sunshine", "windows"),
                 search_file = "sunshine.exe",
+                install_files = ["sunshine.exe", "assets", "scripts", "tools"],
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
@@ -105,6 +106,7 @@ class Sunshine(toolbase.ToolBase):
                 archive_dir = programs.get_program_backup_dir("Sunshine", "linux"),
                 install_name = "Sunshine",
                 install_dir = programs.get_program_install_dir("Sunshine", "linux"),
+                search_file = "Sunshine.AppImage",
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)

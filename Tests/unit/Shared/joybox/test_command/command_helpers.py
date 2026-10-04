@@ -14,6 +14,22 @@ from joybox import command
 # checked without launching anything.
 ###########################################################
 
+class FakeStdin:
+
+    def __init__(self, broken = False):
+        self.written = ""
+        self.closed = False
+        self.broken = broken
+
+    def write(self, text):
+        if self.broken:
+            raise BrokenPipeError()
+        self.written += text
+
+    def close(self):
+        self.closed = True
+
+
 class FakeProcess:
 
     def __init__(self, owner, cmd, **kwargs):
@@ -26,6 +42,7 @@ class FakeProcess:
         stdout_text = owner.stdout + (owner.stderr if merged else "")
         self.stdout = io.StringIO(stdout_text) if kwargs.get("stdout") == subprocess.PIPE else None
         self.stderr = io.StringIO(owner.stderr) if kwargs.get("stderr") == subprocess.PIPE else None
+        self.stdin = FakeStdin(owner.stdin_broken) if kwargs.get("stdin") == subprocess.PIPE else None
 
     def wait(self):
         self.owner.events.append("wait")
@@ -43,6 +60,7 @@ class FakeProcesses:
         self.stderr = ""
         self.returncode = 0
         self.never_exits = False
+        self.stdin_broken = False
         self.error = None
         self.launched = []
         self.called = []

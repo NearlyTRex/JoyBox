@@ -43,7 +43,8 @@ def build_parser():
     parser.add_enum_argument(
         args = ("-g", "--preset_option_group_type"),
         arg_type = config.PresetOptionGroupType,
-        description = "Preset group naming the platforms to run over; required")
+        required = True,
+        description = "Preset group naming the platforms to run over")
     parser.add_boolean_argument(args = ("-e", "--skip_existing"), description = "Pass `--skip_existing` on, so files already at the destination are skipped")
     parser.add_boolean_argument(args = ("-i", "--skip_identical"), description = "Pass `--skip_identical` on, so files already at the destination with the same content are skipped")
     parser.add_common_arguments()
@@ -66,7 +67,7 @@ def main():
     output_path = parser.get_output_path()
 
     # Get preset options
-    preset_options = config.presets_option_groups[args.preset_group_type]
+    preset_options = config.presets_option_groups[args.preset_option_group_type]
 
     # Create base command
     base_cmd = [
@@ -121,7 +122,13 @@ def main():
                 ]
             ]
 
+    # Unsupported tool
+    else:
+        logger.log_error("Unsupported preset tool %s" % args.preset_tool_type)
+        return False
+
     # Run commands
+    success = True
     for preset_cmd in preset_cmds:
         code = command.run_returncode_command(
             cmd = preset_cmd,
@@ -130,6 +137,8 @@ def main():
             exit_on_failure = args.exit_on_failure)
         if code != 0:
             logger.log_error("Preset command failed with code %d" % code)
+            success = False
+    return success
 
 # Run through the shared error handling
 def run():

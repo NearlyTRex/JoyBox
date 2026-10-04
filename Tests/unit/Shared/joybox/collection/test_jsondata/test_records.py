@@ -316,3 +316,42 @@ def test_an_empty_game_directory_records_no_files(json_root, game_root, no_store
     data = update(json_root, game_root)
 
     assert config.json_key_files not in data or data[config.json_key_files] == []
+
+
+###########################################################
+# Encrypted files on disk
+###########################################################
+
+RECORDS_PHRASE = "records-phrase"
+
+
+@pytest.fixture
+def locker_phrase(monkeypatch):
+    state = {"passphrase": RECORDS_PHRASE}
+    monkeypatch.setattr(
+        jsondata.lockerinfo.LockerInfo, "get_passphrase", lambda self: state["passphrase"])
+    return state
+
+
+def test_an_encrypted_file_is_recorded_under_its_embedded_name(json_root, game_root, no_store, locker_phrase, monkeypatch):
+    write(game_root / "abc.enc")
+    monkeypatch.setattr(
+        jsondata.cryption, "get_embedded_filename",
+        lambda src, passphrase, **kwargs: "game.nes" if passphrase == RECORDS_PHRASE else None)
+
+    data = update(json_root, game_root)
+
+    assert data[config.json_key_files] == ["game.nes"]
+
+
+def test_without_a_passphrase_files_are_recorded_as_stored(json_root, game_root, no_store, locker_phrase, monkeypatch):
+    # Reading an embedded name needs the passphrase, so none is attempted.
+    write(game_root / "abc.enc")
+    locker_phrase["passphrase"] = None
+    monkeypatch.setattr(
+        jsondata.cryption, "get_embedded_filename",
+        lambda *args, **kwargs: pytest.fail("no embedded name can be read without a passphrase"))
+
+    data = update(json_root, game_root)
+
+    assert data[config.json_key_files] == ["abc.enc"]

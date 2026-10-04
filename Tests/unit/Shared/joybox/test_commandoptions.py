@@ -20,7 +20,8 @@ SIMPLE_FIELDS = [
     "desktop_width", "env", "general_prefix_dir", "installer_type",
     "lnk_base_path", "output_paths", "overrides", "prefix_c_drive_real",
     "prefix_c_drive_virtual", "prefix_cwd", "prefix_dir", "prefix_name",
-    "prefix_user_profile_dir", "serial", "stderr", "stdout", "winver",
+    "prefix_user_profile_dir", "serial", "stderr", "stdin_input", "stdout",
+    "winver",
 ]
 
 

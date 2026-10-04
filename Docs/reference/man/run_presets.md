@@ -9,7 +9,7 @@ Run another JoyBox tool once per platform of a named preset group.
 ## Synopsis
 
 ```text
-run_presets [options]
+run_presets -g <preset_option_group_type> [options]
 ```
 
 ## Description
@@ -34,7 +34,7 @@ Groups: `Backup_Microsoft` and `Backup_OtherGen` (a whole category each),
 |--------|-------------|
 | `-o, --output_path <output_path>` | Destination directory passed to each run as `-o`; it must exist. |
 | `-r, --preset_tool_type <backup_tool>` | JoyBox tool to run for each platform. Default: `backup_tool`. Allowed: `backup_tool`. |
-| `-g, --preset_option_group_type <preset_option_group_type>` | Preset group naming the platforms to run over; required. Allowed: `Backup_Microsoft`, `Backup_NintendoGen`, `Backup_NintendoSwitch`, `Backup_OtherGen`, `Backup_SonyGen`, `Backup_SonyPS3`, `Backup_SonyPS4`, `Backup_SonyPSN`. |
+| `-g, --preset_option_group_type <preset_option_group_type>` | Preset group naming the platforms to run over. **Required.** Allowed: `Backup_Microsoft`, `Backup_NintendoGen`, `Backup_NintendoSwitch`, `Backup_OtherGen`, `Backup_SonyGen`, `Backup_SonyPS3`, `Backup_SonyPS4`, `Backup_SonyPSN`. |
 | `-e, --skip_existing` | Pass `--skip_existing` on, so files already at the destination are skipped. |
 | `-i, --skip_identical` | Pass `--skip_identical` on, so files already at the destination with the same content are skipped. |
 

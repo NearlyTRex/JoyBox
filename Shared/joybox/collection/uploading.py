@@ -31,16 +31,16 @@ def upload_game_files(
     if not paths.is_path_directory(game_root):
         return False
 
-    # Get locker info
-    locker_info = lockerinfo.LockerInfo(locker_type)
-    if not locker_info:
-        logger.log_error("Locker %s not found" % locker_type)
+    # Get passphrase
+    passphrase = lockerinfo.LockerInfo(locker_type).get_passphrase()
+    if not cryption.is_passphrase_valid(passphrase):
+        logger.log_error("No passphrase configured for locker %s" % locker_type)
         return False
 
     # Encrypt all files
     success = cryption.encrypt_files(
         src = game_root,
-        passphrase = locker_info.get_passphrase(),
+        passphrase = passphrase,
         delete_original = True,
         verbose = verbose,
         pretend_run = pretend_run,

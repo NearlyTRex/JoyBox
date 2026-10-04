@@ -1,4 +1,5 @@
 # Imports
+import http.client
 import json
 import os
 import urllib.error
@@ -20,6 +21,10 @@ import joybox.ollama as ollama
 BACKEND_OLLAMA = "ollama"
 BACKEND_OPENAI = "openai"
 BACKEND_CLAUDE = "claude"
+
+# A backend answered, but with an error instead of a reply
+class RequestFailed(Exception):
+    pass
 
 # Ollama, via its native chat route
 #
@@ -52,7 +57,7 @@ class OllamaBackend:
             for key, value in (info.get("model_info") or {}).items():
                 if key.endswith(".context_length"):
                     return int(value)
-        except (urllib.error.URLError, OSError, ValueError, KeyError, json.JSONDecodeError):
+        except (urllib.error.URLError, OSError, ValueError, TypeError, KeyError, json.JSONDecodeError):
             pass
         return 0
 
@@ -75,6 +80,8 @@ class OllamaBackend:
                     body = json.loads(line)
                 except json.JSONDecodeError:
                     continue
+                if body.get("error"):
+                    raise RequestFailed(body["error"])
                 piece = (body.get("message") or {}).get("content")
                 if piece:
                     parts.append(piece)
@@ -126,8 +133,14 @@ class OpenAIBackend:
                 if body == "[DONE]":
                     break
                 try:
-                    delta = json.loads(body)["choices"][0].get("delta", {})
-                except (json.JSONDecodeError, KeyError, IndexError):
+                    event = json.loads(body)
+                except json.JSONDecodeError:
+                    continue
+                if event.get("error"):
+                    raise RequestFailed(event["error"])
+                try:
+                    delta = event["choices"][0].get("delta") or {}
+                except (KeyError, IndexError):
                     continue
                 piece = delta.get("content")
                 if piece:
@@ -171,7 +184,8 @@ class ClaudeBackend:
             model = model or self.model,
             max_tokens = max_tokens,
             system_prompt = system or None)
-        reply = reply or ""
+        if reply is None:
+            raise RequestFailed("no reply from Claude")
         on_text(reply)
         return reply
 
@@ -189,6 +203,28 @@ def make_backend(kind, endpoint = None, api_key = "", model = None):
 # Backend names available to a caller
 def get_backend_keys():
     return [BACKEND_OLLAMA, BACKEND_OPENAI, BACKEND_CLAUDE]
+
+###########################################################
+# Coding preset
+###########################################################
+
+# System prompt for the coding preset, used when none is given
+CODING_SYSTEM_PROMPT = (
+    "You are a careful senior software engineer pairing with the user. Answer with "
+    "working code that matches the style of any files provided, and explain only what "
+    "is not obvious from the code. When a request is ambiguous, say what you assumed. "
+    "Prefer small, complete changes over sketches, and never invent APIs: if you are "
+    "unsure something exists, say so.")
+
+# Context window for the coding preset
+# A chat holds less than an agent session, and a smaller window leaves room
+# for a stronger model.
+CODING_CONTEXT_TOKENS = 32768
+
+# Choose the model for the coding preset: the one named, or the best coding
+# model the Ollama server can hold, prepared as ollama_tool's code action does
+def get_coding_model(model = None):
+    return model or ollama.prepare_coding_model(CODING_CONTEXT_TOKENS)
 
 ###########################################################
 # Session
@@ -303,7 +339,7 @@ class Session:
         try:
             reply = self.backend.stream(self.model, self.messages, self.temperature,
                                         self.max_tokens, self.limit, on_text)
-        except (urllib.error.URLError, OSError) as error:
+        except (urllib.error.URLError, OSError, http.client.HTTPException, RequestFailed) as error:
             logger.log_error(f"Request failed: {error}")
             self.messages.pop()
             return None

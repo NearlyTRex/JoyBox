@@ -370,3 +370,280 @@ def test_every_entry_point_consults_the_platform(store, monkeypatch, call, tmp_p
                       local_cache_dir = str(tmp_path / "absent")))
 
     assert seen == ["Sony PlayStation"]
+
+
+###########################################################
+# Store edge cases
+###########################################################
+
+def test_a_platform_without_a_store_is_not_installed_or_uninstalled(store):
+    store["store"] = None
+
+    assert installing.install_store_game(FakeGameInfo()) is False
+    assert installing.uninstall_store_game(FakeGameInfo()) is False
+
+
+def test_an_invalid_game_is_not_uninstalled(store):
+    assert installing.uninstall_store_game(FakeGameInfo(valid = False)) is False
+    assert store["store"].uninstalls == []
+
+
+###########################################################
+# Installing locally
+###########################################################
+
+class LocalGameInfo(FakeGameInfo):
+
+    def __init__(self, values = None, **kwargs):
+        super().__init__(**kwargs)
+        self.values = values or {}
+
+    def get_name(self):
+        return "Game"
+
+    def get_boxfront_asset(self):
+        return "/art/boxfront.png"
+
+    def get_remote_rom_dir(self):
+        return "/remote/roms/Game"
+
+    def get_value(self, key):
+        return self.values.get(key)
+
+
+@pytest.fixture
+def local(monkeypatch, tmp_path):
+    state = {
+        "cache": tmp_path / "cache",
+        "source_available": True,
+        "tmp_ok": True,
+        "sync_ok": True,
+        "transform": False,
+        "transform_ok": True,
+        "copy_ok": True,
+        "populate": True,
+        "popups": [],
+        "removed": [],
+        "synced": [],
+        "transformed": [],
+        "copied": [],
+        "tmp_count": 0,
+    }
+
+    def create_temporary_directory(**kwargs):
+        state["tmp_count"] += 1
+        return state["tmp_ok"], str(tmp_path / ("tmp%d" % state["tmp_count"]))
+
+    def sync_from_remote_decrypted(src, dest, **kwargs):
+        state["synced"].append((src, dest))
+        return state["sync_ok"]
+
+    def transform_game_file(source_dir, output_dir, **kwargs):
+        state["transformed"].append(source_dir)
+        if not state["transform_ok"]:
+            return False, "transform failed"
+        return True, output_dir + "/out/game.iso"
+
+    def copy_contents(src, dest, **kwargs):
+        state["copied"].append((src, dest))
+        if state["populate"]:
+            os.makedirs(dest, exist_ok = True)
+            with open(os.path.join(dest, "game.bin"), "w") as handle:
+                handle.write("content")
+        return state["copy_ok"]
+
+    monkeypatch.setattr(
+        installing.locker, "does_path_contain_files", lambda path: state["source_available"])
+    monkeypatch.setattr(installing.fileops, "create_temporary_directory", create_temporary_directory)
+    monkeypatch.setattr(installing.locker, "sync_from_remote_decrypted", sync_from_remote_decrypted)
+    monkeypatch.setattr(installing.transform, "transform_game_file", transform_game_file)
+    monkeypatch.setattr(installing.fileops, "copy_contents", copy_contents)
+    monkeypatch.setattr(
+        installing.fileops, "remove_directory",
+        lambda src, **kwargs: state["removed"].append(src) or True)
+    monkeypatch.setattr(
+        installing.platforms, "is_transform_platform", lambda platform: state["transform"])
+    monkeypatch.setattr(
+        installing.gui, "display_error_popup",
+        lambda title_text, message_text: state["popups"].append(title_text))
+    monkeypatch.setattr(
+        installing.gui, "display_loading_window",
+        lambda run_func, **kwargs: run_func())
+    return state
+
+
+def a_local_game(local):
+    return LocalGameInfo(local_cache_dir = str(local["cache"]))
+
+
+def test_an_already_cached_game_is_not_installed_again(local):
+    local["cache"].mkdir()
+    (local["cache"] / "game.bin").write_text("content")
+
+    assert installing.install_local_game(a_local_game(local)) is True
+    assert local["synced"] == []
+
+
+def test_a_game_without_source_files_is_not_installed(local):
+    local["source_available"] = False
+
+    assert installing.install_local_game(a_local_game(local)) is False
+    assert local["popups"] == ["Source files unavailable"]
+
+
+def test_a_failed_temporary_directory_stops_the_install(local):
+    local["tmp_ok"] = False
+
+    assert installing.install_local_game(a_local_game(local)) is False
+    assert local["synced"] == []
+
+
+def test_a_failed_download_stops_the_install_and_cleans_up(local, tmp_path):
+    local["sync_ok"] = False
+
+    assert installing.install_local_game(a_local_game(local)) is False
+    assert local["removed"] == [str(tmp_path / "tmp1")]
+    assert local["copied"] == []
+
+
+def test_a_local_game_is_downloaded_and_cached(local, tmp_path):
+    assert installing.install_local_game(a_local_game(local)) is True
+    assert local["synced"] == [("/remote/roms/Game", str(tmp_path / "tmp1"))]
+    assert local["copied"] == [(str(tmp_path / "tmp1"), str(local["cache"]))]
+    assert local["removed"] == [str(tmp_path / "tmp1")]
+    assert local["popups"] == []
+
+
+def test_a_transform_platform_game_is_transformed_before_caching(local, tmp_path):
+    local["transform"] = True
+
+    assert installing.install_local_game(a_local_game(local)) is True
+    assert local["transformed"] == [str(tmp_path / "tmp1")]
+    assert local["copied"] == [(str(tmp_path / "tmp2" / "out"), str(local["cache"]))]
+    assert local["removed"] == [str(tmp_path / "tmp2"), str(tmp_path / "tmp1")]
+
+
+def test_a_game_that_did_not_reach_the_cache_fails_the_install(local):
+    # Launching would otherwise start a game that is not there.
+    local["populate"] = False
+
+    assert installing.install_local_game(a_local_game(local)) is False
+    assert local["popups"] == ["Failed to cache game"]
+
+
+def test_a_pretend_install_is_not_reported_as_failed(local):
+    local["populate"] = False
+
+    assert installing.install_local_game(a_local_game(local), pretend_run = True) is True
+    assert local["popups"] == []
+
+
+def test_a_failed_copy_is_reported(local):
+    local["copy_ok"] = False
+
+    assert installing.install_local_untransformed_game(
+        a_local_game(local), source_dir = "/src") is False
+
+
+def test_a_failed_transform_temporary_directory_is_reported(local):
+    local["tmp_ok"] = False
+
+    assert installing.install_local_transformed_game(
+        a_local_game(local), source_dir = "/src") is False
+    assert local["transformed"] == []
+
+
+def test_a_failed_transform_is_reported_and_cleaned_up(local, tmp_path):
+    local["transform_ok"] = False
+
+    assert installing.install_local_transformed_game(
+        a_local_game(local), source_dir = "/src") is False
+    assert local["copied"] == []
+    assert local["removed"] == [str(tmp_path / "tmp1")]
+
+
+def test_a_failed_transformed_copy_is_reported_and_cleaned_up(local, tmp_path):
+    local["copy_ok"] = False
+
+    assert installing.install_local_transformed_game(
+        a_local_game(local), source_dir = "/src") is False
+    assert local["removed"] == [str(tmp_path / "tmp1")]
+
+
+###########################################################
+# Local addons
+###########################################################
+
+class FakeEmulator:
+
+    def __init__(self, platforms, result = True):
+        self.platforms = platforms
+        self.result = result
+        self.calls = []
+
+    def get_platforms(self):
+        return self.platforms
+
+    def install_addons(self, dlc_dirs, update_dirs, **kwargs):
+        self.calls.append((dlc_dirs, update_dirs))
+        return self.result
+
+
+@pytest.fixture
+def addons(monkeypatch):
+    state = {"possible": True, "emulators": []}
+    monkeypatch.setattr(
+        installing.platforms, "are_addons_possible", lambda platform: state["possible"])
+    monkeypatch.setattr(installing.programs, "get_emulators", lambda: state["emulators"])
+    monkeypatch.setattr(
+        installing.environment, "get_locker_gaming_dlc_root_dir", lambda: "/dlc")
+    monkeypatch.setattr(
+        installing.environment, "get_locker_gaming_update_root_dir", lambda: "/update")
+    return state
+
+
+def test_a_platform_without_addons_needs_no_work(addons):
+    addons["possible"] = False
+    emulator = FakeEmulator(["Nintendo Switch"])
+    addons["emulators"] = [emulator]
+
+    assert installing.install_local_game_addons(
+        LocalGameInfo(platform = "Nintendo Switch")) is True
+    assert emulator.calls == []
+
+
+def test_addons_go_to_the_platforms_emulators(addons):
+    switch = FakeEmulator(["Nintendo Switch"])
+    other = FakeEmulator(["Nintendo Wii"])
+    addons["emulators"] = [other, switch]
+    game = LocalGameInfo(platform = "Nintendo Switch", values = {
+        installing.config.json_key_dlc: ["Game/dlc1"],
+        installing.config.json_key_update: ["Game/update1"],
+    })
+
+    assert installing.install_local_game_addons(game) is True
+    assert switch.calls == [(["/dlc/Game/dlc1"], ["/update/Game/update1"])]
+    assert other.calls == []
+
+
+def test_a_game_without_addon_entries_installs_none(addons):
+    emulator = FakeEmulator(["Nintendo Switch"])
+    addons["emulators"] = [emulator]
+
+    assert installing.install_local_game_addons(
+        LocalGameInfo(platform = "Nintendo Switch")) is True
+    assert emulator.calls == [([], [])]
+
+
+def test_a_failed_addon_install_is_reported(addons):
+    addons["emulators"] = [FakeEmulator(["Nintendo Switch"], result = False)]
+
+    assert installing.install_local_game_addons(
+        LocalGameInfo(platform = "Nintendo Switch")) is False
+
+
+def test_installing_a_local_platform_reaches_the_local_install(store, local):
+    store["is_store"] = False
+
+    assert installing.install_game(a_local_game(local)) is True
+    assert local["copied"] != []

@@ -1,6 +1,7 @@
 # Imports
 import os
 import copy
+import contextlib
 import shutil
 import subprocess
 import tempfile
@@ -19,9 +20,9 @@ class ConnectionLocal(connection.Connection):
         self,
         flags = runoptions.RunFlags(),
         options = runoptions.RunOptions()):
-        if options and not options.env:
-            options.env = copy.deepcopy(os.environ)
         super().__init__(flags, options)
+        if not self.options.env:
+            self.options.env = copy.deepcopy(os.environ)
 
     # Map this connection's run flags to the keyword args shared fileops
     # primitives expect, so local file operations can delegate to them.
@@ -43,16 +44,21 @@ class ConnectionLocal(connection.Connection):
             return super().mark_command_as_sudo(cmd)
         return cmd
 
+    def _prepare_command(self, cmd, sudo):
+        if not (self.options.shell and isinstance(cmd, str)):
+            cmd = cmdline.create_command_list(cmd, style = "split")
+        if sudo:
+            cmd = self.mark_command_as_sudo(cmd)
+        if self.flags.verbose:
+            self.print_command(cmd)
+        if self.options.shell:
+            cmd = cmdline.create_command_string(cmd, style = "posix")
+        return cmd
+
     def run_output(self, cmd, sudo = False):
         try:
-            cmd = cmdline.create_command_list(cmd, style = "split")
-            if sudo:
-                cmd = self.mark_command_as_sudo(cmd)
-            if self.flags.verbose:
-                self.print_command(cmd)
+            cmd = self._prepare_command(cmd, sudo)
             if not self.flags.pretend_run:
-                if self.options.shell:
-                    cmd = cmdline.create_command_string(cmd, style = "posix")
                 output = ""
                 if self.options.include_stderr:
                     output = subprocess.run(
@@ -75,13 +81,6 @@ class ConnectionLocal(connection.Connection):
                         stdout = subprocess.PIPE).stdout
                 return cmdline.clean_command_output(output.strip())
             return ""
-        except subprocess.CalledProcessError as e:
-            if self.flags.exit_on_failure:
-                logger.log_error(e)
-                runtime.quit_program()
-            if self.options.include_stderr:
-                return e.output
-            return ""
         except Exception as e:
             if self.flags.exit_on_failure:
                 logger.log_error(e)
@@ -90,39 +89,24 @@ class ConnectionLocal(connection.Connection):
 
     def run_return_code(self, cmd, sudo = False):
         try:
-            cmd = cmdline.create_command_list(cmd, style = "split")
-            if sudo:
-                cmd = self.mark_command_as_sudo(cmd)
-            if self.flags.verbose:
-                self.print_command(cmd)
+            cmd = self._prepare_command(cmd, sudo)
             if not self.flags.pretend_run:
-                if self.options.shell:
-                    cmd = cmdline.create_command_string(cmd, style = "posix")
-                stdout = self.options.stdout
-                stderr = self.options.stderr
-                if paths.is_path_valid(self.options.stdout):
-                    stdout = open(self.options.stdout, "w")
-                if paths.is_path_valid(self.options.stderr):
-                    stderr = open(self.options.stderr, "w")
-                code = subprocess.call(
-                    cmd,
-                    shell = self.options.shell,
-                    cwd = self.options.cwd,
-                    env = self.options.env,
-                    creationflags = self.options.creationflags,
-                    stdout = stdout,
-                    stderr = stderr)
-                if paths.is_path_valid(self.options.stdout):
-                    stdout.close()
-                if paths.is_path_valid(self.options.stderr):
-                    stderr.close()
-                return code
+                with contextlib.ExitStack() as stack:
+                    stdout = self.options.stdout
+                    stderr = self.options.stderr
+                    if paths.is_path_valid(stdout):
+                        stdout = stack.enter_context(open(stdout, "w"))
+                    if paths.is_path_valid(stderr):
+                        stderr = stack.enter_context(open(stderr, "w"))
+                    return subprocess.call(
+                        cmd,
+                        shell = self.options.shell,
+                        cwd = self.options.cwd,
+                        env = self.options.env,
+                        creationflags = self.options.creationflags,
+                        stdout = stdout,
+                        stderr = stderr)
             return 0
-        except subprocess.CalledProcessError as e:
-            if self.flags.exit_on_failure:
-                logger.log_error(e)
-                runtime.quit_program()
-            return e.returncode
         except Exception as e:
             if self.flags.exit_on_failure:
                 logger.log_error(e)
@@ -131,15 +115,9 @@ class ConnectionLocal(connection.Connection):
 
     def run_blocking(self, cmd, sudo = False):
         try:
-            cmd = cmdline.create_command_list(cmd, style = "split")
-            if sudo:
-                cmd = self.mark_command_as_sudo(cmd)
-            if self.flags.verbose:
-                self.print_command(cmd)
+            cmd = self._prepare_command(cmd, sudo)
             if not self.flags.pretend_run:
-                if self.options.shell:
-                    cmd = cmdline.create_command_string(cmd, style = "posix")
-                process = subprocess.Popen(
+                with subprocess.Popen(
                     cmd,
                     shell = self.options.shell,
                     cwd = self.options.cwd,
@@ -147,15 +125,10 @@ class ConnectionLocal(connection.Connection):
                     creationflags = self.options.creationflags,
                     stdout = subprocess.PIPE,
                     stderr = subprocess.STDOUT,
-                    bufsize = 0)
-                self.stream_command_output(iter(lambda: process.stdout.read(4096), b""))
-                return process.wait()
+                    bufsize = 0) as process:
+                    self.stream_command_output(iter(lambda: process.stdout.read(4096), b""))
+                    return process.wait()
             return 0
-        except subprocess.CalledProcessError as e:
-            if self.flags.exit_on_failure:
-                logger.log_error(e)
-                runtime.quit_program()
-            return e.returncode
         except Exception as e:
             if self.flags.exit_on_failure:
                 logger.log_error(e)
@@ -201,7 +174,9 @@ class ConnectionLocal(connection.Connection):
                 if self.flags.pretend_run:
                     return True
                 if not os.path.isdir(src):
-                    return self.run_return_code([tools.get_copy_tool(), src, dest], sudo = True) == 0
+                    if self.run_return_code([tools.get_copy_tool(), src, dest], sudo = True) != 0:
+                        return self.handle_error(f"Unable to transfer {src} to {dest}", "copy failed")
+                    return True
                 staged = tempfile.mkdtemp()
                 try:
                     staged_tree = os.path.join(staged, "tree")
@@ -243,11 +218,11 @@ class ConnectionLocal(connection.Connection):
                 if self.flags.verbose:
                     logger.log_info(f"Writing file to {src}")
                 if not self.flags.pretend_run:
-                    with tempfile.NamedTemporaryFile(mode = "w", delete = False) as f:
-                        f.write(contents)
-                        temp_path = f.name
-                    os.chmod(temp_path, 0o644)
+                    fd, temp_path = tempfile.mkstemp()
                     try:
+                        with os.fdopen(fd, "w") as f:
+                            f.write(contents)
+                        os.chmod(temp_path, 0o644)
                         code = self.run_return_code([tools.get_copy_tool(), temp_path, src], sudo = True)
                     finally:
                         os.remove(temp_path)
@@ -264,7 +239,7 @@ class ConnectionLocal(connection.Connection):
                 if self.flags.verbose:
                     logger.log_info(f"Making directory {src}")
                 if not self.flags.pretend_run:
-                    self.run_checked([tools.get_make_dir_tool(), "-p", src], sudo = True)
+                    self.run_checked([tools.get_make_dir_tool(), "-p", src], sudo = True, throw_exception = True)
                 return True
             except Exception as e:
                 return self.handle_error(f"Unable to make directory {src}", e)
@@ -276,7 +251,7 @@ class ConnectionLocal(connection.Connection):
                 if self.flags.verbose:
                     logger.log_info(f"Removing {src}")
                 if not self.flags.pretend_run:
-                    self.run_checked(["sh", "-c", "rm -rf -- %s" % src], sudo = True)
+                    self.run_checked([tools.get_remove_tool(), "-rf", "--", src], sudo = True, throw_exception = True)
                 return True
             except Exception as e:
                 return self.handle_error(f"Unable to remove {src}", e)
@@ -289,7 +264,7 @@ class ConnectionLocal(connection.Connection):
                     logger.log_info(f"Copying {src} to {dest}")
                 if not self.flags.pretend_run:
                     cmd = [tools.get_copy_tool(), "-r", src, dest] if os.path.isdir(src) else [tools.get_copy_tool(), src, dest]
-                    self.run_checked(cmd, sudo = True)
+                    self.run_checked(cmd, sudo = True, throw_exception = True)
                 return True
             except Exception as e:
                 return self.handle_error(f"Unable to copy {src} to {dest}", e)
@@ -301,7 +276,7 @@ class ConnectionLocal(connection.Connection):
                 if self.flags.verbose:
                     logger.log_info(f"Moving {src} to {dest}")
                 if not self.flags.pretend_run:
-                    self.run_checked([tools.get_move_tool(), src, dest], sudo = True)
+                    self.run_checked([tools.get_move_tool(), src, dest], sudo = True, throw_exception = True)
                 return True
             except Exception as e:
                 return self.handle_error(f"Unable to move {src} to {dest}", e)
@@ -313,7 +288,7 @@ class ConnectionLocal(connection.Connection):
                 if self.flags.verbose:
                     logger.log_info(f"Linking {src} to {dest}")
                 if not self.flags.pretend_run:
-                    self.run_checked([tools.get_link_tool(), "-sf", src, dest], sudo = True)
+                    self.run_checked([tools.get_link_tool(), "-sf", src, dest], sudo = True, throw_exception = True)
                 return True
             except Exception as e:
                 return self.handle_error(f"Unable to link {src} to {dest}", e)
@@ -325,11 +300,15 @@ class ConnectionLocal(connection.Connection):
                 if self.flags.verbose:
                     logger.log_info(f"Downloading {url} to {dest}")
                 if not self.flags.pretend_run:
-                    with tempfile.NamedTemporaryFile(delete = False) as f:
-                        temp_path = f.name
-                    if not network.download_url(url, output_file = temp_path, **self._io_flags()):
-                        return self.handle_error(f"Unable to download {url}", "download failed")
-                    self.run_checked([tools.get_move_tool(), temp_path, dest], sudo = True)
+                    fd, temp_path = tempfile.mkstemp()
+                    os.close(fd)
+                    try:
+                        if not network.download_url(url, output_file = temp_path, **self._io_flags()):
+                            return self.handle_error(f"Unable to download {url}", "download failed")
+                        self.run_checked([tools.get_move_tool(), temp_path, dest], sudo = True, throw_exception = True)
+                    finally:
+                        if os.path.exists(temp_path):
+                            os.remove(temp_path)
                 return True
             except Exception as e:
                 return self.handle_error(f"Unable to download {url} to {dest}", e)
@@ -341,7 +320,7 @@ class ConnectionLocal(connection.Connection):
                 if self.flags.verbose:
                     logger.log_info(f"Extracting {src} to {dest}")
                 if not self.flags.pretend_run:
-                    self.run_checked([programs.get_tool_program("Tar"), "-xf", src, "-C", dest], sudo = True)
+                    self.run_checked([programs.get_tool_program("Tar"), "-xf", src, "-C", dest], sudo = True, throw_exception = True)
                 return True
             except Exception as e:
                 return self.handle_error(f"Unable to extract {src} to {dest}", e)
@@ -354,7 +333,7 @@ class ConnectionLocal(connection.Connection):
             if self.flags.verbose:
                 logger.log_info(f"Changing owner of {src} to {owner}")
             if not self.flags.pretend_run:
-                self.run_checked([tools.get_change_owner_tool(), "-R", owner, src], sudo = sudo)
+                self.run_checked([tools.get_change_owner_tool(), "-R", owner, src], sudo = sudo, throw_exception = True)
             return True
         except Exception as e:
             return self.handle_error(f"Unable to change owner of {src}", e)
@@ -366,7 +345,7 @@ class ConnectionLocal(connection.Connection):
             if self.flags.verbose:
                 logger.log_info(f"Changing permissions of {src} to {permission}")
             if not self.flags.pretend_run:
-                self.run_checked([tools.get_change_permission_tool(), "-R", permission, src], sudo = sudo)
+                self.run_checked([tools.get_change_permission_tool(), "-R", permission, src], sudo = sudo, throw_exception = True)
             return True
         except Exception as e:
             return self.handle_error(f"Unable to change permissions of {src}", e)

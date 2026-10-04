@@ -385,15 +385,19 @@ if platform_info.is_windows_platform():
     ini_defaults["Tools.Python"]["python_pip_exe"] = "pip.exe"
     ini_defaults["Tools.Python"]["python_install_dir"] = "C:\\Python311"
     ini_defaults["Tools.Python"]["python_venv_dir"] = "%USERPROFILE%\\.venv"
+    ini_defaults["Tools.Python"]["python_tools_dir"] = "%USERPROFILE%\\.joybox\\pytools"
 else:
     ini_defaults["Tools.Python"]["python_exe"] = "python3"
     ini_defaults["Tools.Python"]["python_pip_exe"] = "pip3"
     ini_defaults["Tools.Python"]["python_install_dir"] = "/usr/bin"
     ini_defaults["Tools.Python"]["python_venv_dir"] = "$HOME/.venv"
+    ini_defaults["Tools.Python"]["python_tools_dir"] = "$HOME/.local/share/joybox/pytools"
 
 # Tools.Ollama
 ini_defaults["Tools.Ollama"] = {}
 ini_defaults["Tools.Ollama"]["ollama_api_base"] = "http://localhost:11434"
+ini_defaults["Tools.Ollama"]["ollama_gpu_vram_mb"] = ""
+ini_defaults["Tools.Ollama"]["ollama_system_ram_mb"] = ""
 
 # Tools.Perl
 ini_defaults["Tools.Perl"] = {}

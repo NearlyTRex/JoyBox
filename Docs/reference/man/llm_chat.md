@@ -60,6 +60,7 @@ context use, `/help` lists the commands and `/quit` leaves.
 
 | Option | Description |
 |--------|-------------|
+| `-c, --code` | Coding preset for the `ollama` backend: the best coding model the server can hold with a 32K context (pulled and prepared when needed, unless `-m` names one), and a coding system prompt unless one is given. |
 | `--ask <ask>` | Ask this one question, print the reply and exit. |
 | `--max_tokens <max_tokens>` | Maximum number of tokens in a reply. Default: `2048`. |
 | `--num_ctx <num_ctx>` | Context window in tokens: requested from Ollama, and used by every backend to check that the seed and replies fit; `0` takes the model's maximum from Ollama and skips the check elsewhere. |
@@ -81,6 +82,12 @@ context use, `/help` lists the commands and `/quit` leaves.
 
 ```bash
 llm_chat
+```
+
+### Code with the best coding model the Ollama server can hold
+
+```bash
+llm_chat --code -a main.py
 ```
 
 ### Ask one question about a file and exit

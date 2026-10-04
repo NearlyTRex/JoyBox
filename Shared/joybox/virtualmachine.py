@@ -264,6 +264,17 @@ def get_install_command(
         "--noautoconsole"
     ]
 
+# Read whether virsh net-info reports a network as running
+# Persistent and Autostart also answer yes, so only the Active line counts.
+def is_network_active(output):
+    if not output:
+        return False
+    for line in output.splitlines():
+        key, _, value = line.partition(":")
+        if key.strip().lower() == "active":
+            return value.strip().lower() == "yes"
+    return False
+
 # Make sure libvirt's network is up, so a new guest gets a lease
 def start_network(network = DEFAULT_NETWORK, verbose = False, pretend_run = False):
     output = command.run_output_command(
@@ -272,7 +283,7 @@ def start_network(network = DEFAULT_NETWORK, verbose = False, pretend_run = Fals
         pretend_run = pretend_run)
     if isinstance(output, bytes):
         output = output.decode()
-    if output and "yes" in output.lower():
+    if is_network_active(output):
         return True
     for arguments in [["net-start", network], ["net-autostart", network]]:
         command.run_returncode_command(
@@ -282,6 +293,7 @@ def start_network(network = DEFAULT_NETWORK, verbose = False, pretend_run = Fals
     return True
 
 # Read the fixed-address entries of a network's DHCP config
+# The dns section has host elements of its own, which are not reservations.
 def parse_dhcp_hosts(network_xml):
     if not network_xml:
         return []
@@ -289,7 +301,11 @@ def parse_dhcp_hosts(network_xml):
         root = ElementTree.fromstring(network_xml)
     except ElementTree.ParseError:
         return []
-    return [dict(host.attrib) for host in root.iter("host") if host.get("mac") or host.get("ip")]
+    return [
+        {key: host.get(key) for key in ["mac", "name", "ip"] if host.get(key)}
+        for dhcp in root.iter("dhcp")
+        for host in dhcp.iter("host")
+        if host.get("mac") or host.get("ip")]
 
 # Build the XML for one fixed-address entry
 def build_dhcp_host_xml(mac = None, name = None, ip = None):
@@ -424,19 +440,17 @@ def create_vm(
     try:
         user_data = paths.join_paths(seed_dir, "user-data")
         meta_data = paths.join_paths(seed_dir, "meta-data")
-        fileops.touch_file(
-            src = user_data,
-            contents = build_user_data(
-                vm_name, ssh_public_key, console_password),
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        fileops.touch_file(
-            src = meta_data,
-            contents = build_meta_data(vm_name),
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
+        for seed_file, contents in [
+            (user_data, build_user_data(vm_name, ssh_public_key, console_password)),
+            (meta_data, build_meta_data(vm_name))]:
+            success = fileops.touch_file(
+                src = seed_file,
+                contents = contents,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
+            if not success:
+                return False
         code = connection.run_return_code(
             cmd = ["cloud-localds", seed_image, user_data, meta_data],
             sudo = True)

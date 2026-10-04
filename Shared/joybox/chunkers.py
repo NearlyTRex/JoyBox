@@ -40,7 +40,10 @@ class Chunker:
         out = {}
         for index, (line_number, label) in enumerate(found):
             end = found[index + 1][0] - 1 if index + 1 < len(found) else len(lines)
-            out[self.region_name(label, line_number)] = (line_number, end)
+            name = self.region_name(label, line_number)
+            if name in out:
+                name = f"{name}_{line_number}"
+            out[name] = (line_number, end)
         return out
 
     # How a region is addressed by a reader
@@ -66,7 +69,11 @@ class AsmChunker(Chunker):
     extensions = (".asm", ".s", ".nasm")
 
     LABEL = re.compile(r"^\s*(LAB_[0-9A-Fa-f]+|[A-Za-z_.$][\w.$]*):")
-    TARGET = re.compile(r"\b(?:CALL|JMP)\s+([A-Za-z_.$][\w.$]*)")
+    # Size and distance qualifiers precede the target; an operand that is only qualifiers is indirect
+    QUALIFIER = r"(?:SHORT|NEAR|FAR|BYTE|WORD|DWORD|QWORD|FWORD|PTR)"
+    TARGET = re.compile(
+        rf"\b(?:CALL|JMP)\s+(?:{QUALIFIER}\s+)*(?!{QUALIFIER}\b)([A-Za-z_.$][\w.$]*)",
+        re.IGNORECASE)
     XREF = re.compile(r";\s*XREF.*?(LAB_[0-9A-Fa-f]+)")
 
     def marks(self, lines):
@@ -74,23 +81,26 @@ class AsmChunker(Chunker):
         in_header = True
         for number, line in enumerate(lines, start = 1):
             stripped = line.strip()
-            if in_header and stripped and not stripped.startswith(";"):
-                found.append((number, "-- code begins --"))
-                in_header = False
             if not stripped:
                 continue
-            match = self.LABEL.match(line)
-            if match:
-                found.append((number, match.group(1)))
-                continue
-            match = self.XREF.search(line)
-            if match:
-                found.append((number, match.group(1)))
-                continue
-            match = self.TARGET.search(line)
-            if match and match.group(1) not in ("CALL", "JMP"):
-                found.append((number, f"-> {match.group(1)}"))
+            label = self.mark_line(line)
+            if in_header and not stripped.startswith(";"):
+                in_header = False
+                # One mark per line, so the first code line keeps its own label if it has one
+                label = label or "-- code begins --"
+            if label:
+                found.append((number, label))
         return self.thin(found)
+
+    # The label a single line contributes to the map, if any
+    def mark_line(self, line):
+        match = self.LABEL.match(line) or self.XREF.search(line)
+        if match:
+            return match.group(1)
+        match = self.TARGET.search(line)
+        if match:
+            return f"-> {match.group(1)}"
+        return None
 
 ###########################################################
 # C and C++
@@ -114,12 +124,13 @@ class CChunker(Chunker):
             if match:
                 found.append((number, f"{match.group(1)}: {match.group(2)[:60]}"))
                 continue
+            # Functions first, so one returning a struct is not taken for a type
+            if line and not line[0].isspace() and self.FUNCTION.match(line):
+                found.append((number, line.strip()[:70]))
+                continue
             match = self.TYPE.match(line)
             if match:
                 found.append((number, f"{match.group(1)} {match.group(2)}"))
-                continue
-            if line and not line[0].isspace() and self.FUNCTION.match(line):
-                found.append((number, line.strip()[:70]))
         return self.thin(found)
 
 ###########################################################
@@ -132,7 +143,7 @@ class JsonChunker(Chunker):
     name = "json"
     extensions = (".json",)
 
-    KEY = re.compile(r'^\s{0,4}"([^"]+)"\s*:')
+    KEY = re.compile(r'^(\s*)"([^"]+)"\s*:')
 
     def describe(self, value):
         if isinstance(value, dict):
@@ -150,17 +161,23 @@ class JsonChunker(Chunker):
             data = json.loads(text)
             if isinstance(data, dict):
                 summary = {key: self.describe(value) for key, value in data.items()}
-        except (json.JSONDecodeError, ValueError):
+        except ValueError:
             pass
 
+        # The first top-level key sets the indent; deeper keys are nested
         found = []
         seen = set()
+        top_indent = None
         for number, line in enumerate(lines, start = 1):
             match = self.KEY.match(line)
             if not match:
                 continue
-            key = match.group(1)
-            if key in seen:
+            indent, key = match.group(1), match.group(2)
+            if key in seen or (summary and key not in summary):
+                continue
+            if top_indent is None:
+                top_indent = indent
+            if indent != top_indent:
                 continue
             seen.add(key)
             note = f" ({summary[key]})" if key in summary else ""
@@ -176,7 +193,7 @@ class MarkdownChunker(Chunker):
     name = "markdown"
     extensions = (".md", ".markdown")
 
-    HEADING = re.compile(r"^(#{1,6})\s+(.+?)\s*$")
+    HEADING = re.compile(r"^(#{1,6})\s+(.+?)(?:\s+#+)?\s*$")
 
     def marks(self, lines):
         found = []
@@ -200,7 +217,7 @@ class PythonChunker(Chunker):
     name = "python"
     extensions = (".py",)
 
-    DEF = re.compile(r"^(\s*)(def|class)\s+([A-Za-z_]\w*)")
+    DEF = re.compile(r"^(\s*)(async\s+def|def|class)\s+([A-Za-z_]\w*)")
 
     def marks(self, lines):
         found = []
@@ -208,7 +225,8 @@ class PythonChunker(Chunker):
             match = self.DEF.match(line)
             if match:
                 indent = "  " if match.group(1) else ""
-                found.append((number, f"{indent}{match.group(2)} {match.group(3)}"))
+                kind = " ".join(match.group(2).split())
+                found.append((number, f"{indent}{kind} {match.group(3)}"))
         return self.thin(found)
 
 ###########################################################
@@ -299,7 +317,7 @@ def slice_lines(path, start = 0, end = 0, header = True):
     total = len(lines)
     start = max(1, start or 1)
     end = min(total, end or total)
-    if start > total:
+    if start > end:
         return ""
 
     body = "\n".join(f"{start + offset:>6}  {text}"

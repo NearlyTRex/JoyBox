@@ -37,9 +37,7 @@ def get_album_directories(genre_type = None, album_name = None, artist_name = No
                                    if f.lower().endswith('.mp3') and paths.is_path_file(paths.join_paths(item_path, f))]
                 if subdirs and not direct_mp3_files:
                     for subdir in subdirs:
-                        subdir_path = paths.join_paths(item_path, subdir)
-                        if paths.is_path_directory(subdir_path):
-                            album_dirs.append(subdir_path)
+                        album_dirs.append(paths.join_paths(item_path, subdir))
                 else:
                     album_dirs.append(item_path)
     return album_dirs

@@ -2,6 +2,8 @@
 import joybox.programs as programs
 import joybox.environment as environment
 import joybox.paths as paths
+import joybox.hashing as hashing
+import joybox.logger as logger
 from joybox import platform_info
 
 # Base emulator
@@ -97,6 +99,22 @@ class EmulatorBase:
 
     # Configure
     def configure(self, setup_params = None):
+        return True
+
+    # Verify locker system files against their expected md5s
+    def verify_system_files(self, system_files, setup_params):
+        setup_dir = environment.get_locker_gaming_emulator_setup_dir(self.get_name())
+        for filename, expected_md5 in system_files.items():
+            actual_md5 = hashing.calculate_file_md5(
+                src = paths.join_paths(setup_dir, filename),
+                verbose = setup_params.verbose,
+                pretend_run = setup_params.pretend_run,
+                exit_on_failure = setup_params.exit_on_failure)
+
+            # Pretend runs read nothing, so there is no hash to compare
+            if not setup_params.pretend_run and expected_md5 != actual_md5:
+                logger.log_error("Could not verify %s system file %s" % (self.get_name(), filename))
+                return False
         return True
 
     # Launch

@@ -224,6 +224,7 @@ def run_streamed_command(
     # Determine output file handling
     stdout_path = options.get_stdout() if paths.is_path_valid(options.get_stdout()) else None
     stderr_path = options.get_stderr() if paths.is_path_valid(options.get_stderr()) else None
+    stdin_input = options.get_stdin_input()
 
     # Determine stderr disposition:
     # - merge into stdout (OS-level, order-preserving) for include_stderr capture,
@@ -252,7 +253,7 @@ def run_streamed_command(
             creationflags = options.get_creationflags(),
             stdout = subprocess.PIPE,
             stderr = stderr_arg,
-            stdin = None,
+            stdin = subprocess.PIPE if stdin_input is not None else None,
             text = True,
             errors = "ignore",
             bufsize = 1)
@@ -280,6 +281,12 @@ def run_streamed_command(
                 args = (proc.stderr, capture_stderr, log_stderr, stderr_target)))
         for t in threads:
             t.start()
+        if stdin_input is not None:
+            try:
+                proc.stdin.write(stdin_input)
+                proc.stdin.close()
+            except BrokenPipeError:
+                pass
         proc.wait()
         for t in threads:
             t.join()

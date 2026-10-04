@@ -99,7 +99,7 @@ setup_game_emulators -p -v
 ## Notes
 
 - Emulator names are matched exactly and are case-sensitive (`FS-UAE`, `VICE-C64`, `mGBA`); an
-  unknown name is silently skipped.
+  unknown name stops the run before anything is installed.
 - `--force` applies only to the selected emulators; `--clean` wipes the whole emulators directory.
 - Installation stops at the first emulator that fails.
 - `~/JoyBox.ini` must exist and symlinks must be supported, or the command exits before doing

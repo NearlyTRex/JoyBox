@@ -309,6 +309,11 @@ def verify_image_checksum(
     pretend_run = False,
     exit_on_failure = False):
 
+    # A pretend run downloads nothing, so there is nothing to check
+    if pretend_run:
+        logger.log_info("Would verify %s against the published checksum for %s" % (iso_file, image))
+        return True
+
     # Read the published checksums, having checked who signed them
     work_dir_ok, work_dir = fileops.create_temporary_directory(
         verbose = verbose,
@@ -334,8 +339,6 @@ def verify_image_checksum(
     if not expected:
         logger.log_error("No published checksum was found for %s" % image)
         return False
-    if pretend_run:
-        return True
     logger.log_info("Verifying %s" % iso_file)
     actual = hashing.calculate_file_sha256(
         src = iso_file,
@@ -605,6 +608,9 @@ def read_overlay_file(overlay_file, verbose = False, pretend_run = False, exit_o
         logger.log_error("Overlay file is empty or unreadable: %s" % overlay_file)
         return None
     if "autoinstall" in data:
+        if not isinstance(data["autoinstall"], dict) or not data["autoinstall"]:
+            logger.log_error("Overlay file is empty or unreadable: %s" % overlay_file)
+            return None
         return data
     return {"autoinstall": data}
 
@@ -753,8 +759,11 @@ def obtain_source_image(
     # Already have one. A caller supplied image is taken as given, since it
     # need not be a published release at all; one left by an earlier run is
     # checked, because a truncated download looks exactly like a good one.
-    if paths.is_path_file(source_file):
-        return source_file
+    if source_file:
+        if paths.is_path_file(source_file):
+            return source_file
+        logger.log_error("Source image not found: %s" % source_file)
+        return None
     if paths.is_path_file(output_file):
         logger.log_info("Using the image already downloaded: %s" % output_file)
         if not verify:
@@ -878,21 +887,19 @@ def build_autoinstall_image(
     # image, so a missing directory otherwise surfaces as a curl failure after
     # it has already fetched some of a three gigabyte file.
     output_dir = paths.get_filename_directory(output_file)
-    if output_dir:
-        success = fileops.make_directory(
-            src = output_dir,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        if not success:
-            logger.log_error("Unable to create output directory: %s" % output_dir)
-            return False
+    success = fileops.make_directory(
+        src = output_dir,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    if not success:
+        logger.log_error("Unable to create output directory: %s" % output_dir)
+        return False
 
     # Get the stock image
     version = profile.get("version")
     if not download_file:
-        download_file = paths.join_paths(
-            paths.get_filename_directory(output_file), "ubuntu-server-%s.iso" % version)
+        download_file = paths.join_paths(output_dir, "ubuntu-server-%s.iso" % version)
     stock_image = obtain_source_image(
         output_file = download_file,
         version = version,

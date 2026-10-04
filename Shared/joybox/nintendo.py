@@ -753,8 +753,8 @@ def create_switch_profiles_dat(
     if not success:
         return False
 
-    # Check result
-    return os.path.exists(profiles_file)
+    # Check result; a pretend run writes nothing to check
+    return pretend_run or os.path.exists(profiles_file)
 
 # Trim Switch XCI file
 def trim_switch_xci(

@@ -97,6 +97,7 @@ class ThreeDSRomTool(toolbase.ToolBase):
                 install_name = "3DSRomTool",
                 install_dir = programs.get_program_install_dir("3DSRomTool", "windows"),
                 search_file = "rom_tool.exe",
+                install_files = ["rom_tool.exe"],
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)

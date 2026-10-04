@@ -92,7 +92,6 @@ def test_a_real_archive_is_not_skipped(stored, tmp_path):
     ("install_files", ["tool.sh"]),
     ("chmod_files", [{"file": "tool.sh", "perms": 755}]),
     ("rename_files", [{"from": "a", "to": "b", "ratio": 90}]),
-    ("installer_type", "inno"),
     ("release_type", "Archive"),
 ])
 def test_every_stored_install_option_is_passed_through(stored, tmp_path, option, value):

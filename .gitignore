@@ -1,12 +1,27 @@
+# Local configuration
 JoyBox.ini
+
+# Python
 *.pyc
 __pycache__/
-.pytest_cache/
 *.egg-info/
+
+# Tests and coverage
+.pytest_cache/
 .coverage
+
+# Build output
 build/
 
+# Disk images
+*.iso
+
+# Tools
+.aider*
+
 # Secrets / credentials (defense-in-depth; the pre-commit hook also blocks these)
+
+# Keys and certificates
 *.pem
 *.key
 *.p12
@@ -14,14 +29,16 @@ build/
 *.keystore
 *.jks
 *.ppk
+**/id_rsa
+**/id_dsa
+**/id_ecdsa
+**/id_ed25519
+
+# Environment and auth files
 .env
 .env.*
 .netrc
 .npmrc
 .audible_authcode
-**/id_rsa
-**/id_dsa
-**/id_ecdsa
-**/id_ed25519
 **/credentials
 **/*service-account*.json

@@ -242,10 +242,19 @@ class RecordingConnection(connection.Connection):
 # real installer to exercise.
 ###########################################################
 
+# Marks a package status left to follow the installed flag
+DERIVED_STATUS = object()
+
+
 class RecordingInstaller:
-    def __init__(self, name, installed = False, results = None, call_log = None):
+    def __init__(self, name, installed = False, results = None, call_log = None, package_status = DERIVED_STATUS):
         self.name = name
         self.installed = installed
+
+        # What get_package_status reports: a real installer's
+        # {"installed": [...], "missing": [...]}, or None for one without
+        # packages. By default the component is its one package.
+        self.package_status = package_status
 
         # Per-action return values, e.g. {"install": False}
         self.results = dict(results or {})
@@ -265,7 +274,11 @@ class RecordingInstaller:
         return self.installed
 
     def get_package_status(self):
-        return {"name": self.name, "installed": self.installed}
+        if self.package_status is not DERIVED_STATUS:
+            return self.package_status
+        if self.installed:
+            return {"installed": [self.name], "missing": []}
+        return {"installed": [], "missing": [self.name]}
 
     def install(self):
         return self._record("install")
@@ -428,6 +441,8 @@ class FakeChannel:
     def __init__(self, exit_code = 0, output = b""):
         self.exit_code = exit_code
         self.chunks = [output] if output else []
+        self.sent = []
+        self.closed = False
 
     def recv_exit_status(self):
         return self.exit_code
@@ -447,7 +462,10 @@ class FakeChannel:
         pass
 
     def send(self, data):
-        pass
+        self.sent.append(data)
+
+    def close(self):
+        self.closed = True
 
 
 class FakeStream:

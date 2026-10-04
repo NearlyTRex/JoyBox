@@ -60,118 +60,124 @@ def download_metadata_asset(
     if not tmp_dir_success:
         return False
 
-    # Get store
-    store_obj = stores.get_store_by_platform(
-        store_platform = game_info.get_platform(),
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-
-    # Get latest asset url
-    latest_asset_url = None
-    if store_obj:
-        latest_asset_url = store_obj.get_latest_asset_url(
-            identifier = game_info.get_store_asset_identifier(),
-            asset_type = asset_type,
-            game_name = game_info.get_name(),
+    # Temporary directory is removed whatever the outcome
+    try:
+        # Get store
+        store_obj = stores.get_store_by_platform(
+            store_platform = game_info.get_platform(),
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-    else:
-        latest_asset_url = metadataassetcollector.find_metadata_asset(
-            game_platform = game_info.get_platform(),
-            game_name = game_info.get_name(),
+
+        # Get latest asset url
+        latest_asset_url = None
+        if store_obj:
+            latest_asset_url = store_obj.get_latest_asset_url(
+                identifier = game_info.get_store_asset_identifier(),
+                asset_type = asset_type,
+                game_name = game_info.get_name(),
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
+        else:
+            latest_asset_url = metadataassetcollector.find_metadata_asset(
+                game_platform = game_info.get_platform(),
+                game_name = game_info.get_name(),
+                asset_type = asset_type,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
+        if not network.is_url_reachable(latest_asset_url):
+            logger.log_error(
+                message = "No reachable url for asset %s " % (asset_type),
+                game_supercategory = game_info.get_supercategory(),
+                game_category = game_info.get_category(),
+                game_subcategory = game_info.get_subcategory())
+            return False
+
+        # Get temp asset
+        tmp_asset_file_original = paths.join_paths(tmp_dir_result, paths.replace_invalid_path_characters(paths.get_filename_file(latest_asset_url)))
+        tmp_asset_file_converted = tmp_asset_file_original + output_asset_ext
+        fileops.make_directory(
+            src = output_asset_dir,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+
+        # Download asset
+        success = asset.download_asset(
+            asset_url = latest_asset_url,
+            asset_file = tmp_asset_file_original,
             asset_type = asset_type,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-    if not network.is_url_reachable(latest_asset_url):
-        return False
+        if not success:
+            logger.log_error(
+                message = "Download failed for asset %s " % (asset_type),
+                game_supercategory = game_info.get_supercategory(),
+                game_category = game_info.get_category(),
+                game_subcategory = game_info.get_subcategory())
+            return False
 
-    # Get temp asset
-    tmp_asset_file_original = paths.join_paths(tmp_dir_result, paths.replace_invalid_path_characters(paths.get_filename_file(latest_asset_url)))
-    tmp_asset_file_converted = tmp_asset_file_original + output_asset_ext
-    fileops.make_directory(
-        src = output_asset_dir,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
+        # Convert asset
+        success = asset.convert_asset(
+            asset_src = tmp_asset_file_original,
+            asset_dest = tmp_asset_file_converted,
+            asset_type = asset_type,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if not success:
+            logger.log_error(
+                message = "Convert failed for asset %s " % (asset_type),
+                game_supercategory = game_info.get_supercategory(),
+                game_category = game_info.get_category(),
+                game_subcategory = game_info.get_subcategory())
+            return False
 
-    # Download asset
-    success = asset.download_asset(
-        asset_url = latest_asset_url,
-        asset_file = tmp_asset_file_original,
-        asset_type = asset_type,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    if not success:
-        logger.log_error(
-            message = "Download failed for asset %s " % (asset_type),
-            game_supercategory = game_info.get_supercategory(),
-            game_category = game_info.get_category(),
-            game_subcategory = game_info.get_subcategory())
-        return False
+        # Clean asset
+        success = asset.clean_asset(
+            asset_file = tmp_asset_file_converted,
+            asset_type = asset_type,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if not success:
+            logger.log_error(
+                message = "Clean failed for asset %s " % (asset_type),
+                game_supercategory = game_info.get_supercategory(),
+                game_category = game_info.get_category(),
+                game_subcategory = game_info.get_subcategory())
+            return False
 
-    # Convert asset
-    success = asset.convert_asset(
-        asset_src = tmp_asset_file_original,
-        asset_dest = tmp_asset_file_converted,
-        asset_type = asset_type,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    if not success:
-        logger.log_error(
-            message = "Convert failed for asset %s " % (asset_type),
-            game_supercategory = game_info.get_supercategory(),
-            game_category = game_info.get_category(),
-            game_subcategory = game_info.get_subcategory())
-        return False
+        # Backup asset
+        dest_rel_path = locker.convert_to_relative_path(output_asset_file)
+        success = locker.backup(
+            src = tmp_asset_file_converted,
+            dest_rel_path = dest_rel_path,
+            locker_type = locker_type,
+            show_progress = True,
+            skip_existing = skip_existing,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if not success:
+            logger.log_error(
+                message = "Backup failed for asset %s " % (asset_type),
+                game_supercategory = game_info.get_supercategory(),
+                game_category = game_info.get_category(),
+                game_subcategory = game_info.get_subcategory())
+            return False
 
-    # Clean asset
-    success = asset.clean_asset(
-        asset_file = tmp_asset_file_converted,
-        asset_type = asset_type,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    if not success:
-        logger.log_error(
-            message = "Clean failed for asset %s " % (asset_type),
-            game_supercategory = game_info.get_supercategory(),
-            game_category = game_info.get_category(),
-            game_subcategory = game_info.get_subcategory())
-        return False
-
-    # Backup asset
-    dest_rel_path = locker.convert_to_relative_path(output_asset_file)
-    success = locker.backup(
-        src = tmp_asset_file_converted,
-        dest_rel_path = dest_rel_path,
-        locker_type = locker_type,
-        show_progress = True,
-        skip_existing = skip_existing,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    if not success:
-        logger.log_error(
-            message = "Backup failed for asset %s " % (asset_type),
-            game_supercategory = game_info.get_supercategory(),
-            game_category = game_info.get_category(),
-            game_subcategory = game_info.get_subcategory())
-        return False
-
-    # Delete temporary directory
-    fileops.remove_directory(
-        src = tmp_dir_result,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-
-    # Should be successful
-    return True
+        # Should be successful
+        return True
+    finally:
+        fileops.remove_directory(
+            src = tmp_dir_result,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
 
 # Download all metadata assets
 def download_all_metadata_assets(

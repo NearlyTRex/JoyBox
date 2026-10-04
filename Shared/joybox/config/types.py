@@ -5,12 +5,11 @@ import enum
 class EnumType(enum.Enum):
     def __new__(cls, value, cvalue = None):
         if isinstance(value, EnumType):
-            value = value.value
-            cvalue = value.cval() if hasattr(value, 'cval') else value
-        elif isinstance(value, str):
-            cvalue = cvalue if cvalue is not None else value
+            value, cvalue = value.value, value.cvalue
         elif isinstance(value, tuple):
             value, cvalue = value
+        elif cvalue is None:
+            cvalue = value
         obj = object.__new__(cls)
         obj._value_ = value
         obj.cvalue = cvalue
@@ -66,17 +65,6 @@ class EnumType(enum.Enum):
         if isinstance(other, str):
             return self.val() >= other
         return NotImplemented
-
-    def __contains__(cls, other):
-        if isinstance(other, cls):
-            return other in cls.members()
-        if isinstance(other, EnumType):
-            for member in cls.members():
-                if member.val() == other.val():
-                    return True
-        if isinstance(other, str):
-            return any(member.val() == other for member in cls.members())
-        return False
 
     @classmethod
     def members(cls):

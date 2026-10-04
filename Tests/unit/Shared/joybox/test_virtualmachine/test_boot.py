@@ -315,3 +315,98 @@ def test_a_value_not_given_comes_from_the_configuration(isolated_settings):
 def test_zero_is_an_answer_rather_than_an_absent_one(isolated_settings):
     # No forwarded port means no network, which is a thing to ask for.
     assert virtualmachine.get_boot_setting("vm_ssh_port", 2222, 0) == 0
+
+
+###########################################################
+# Boot failures and warnings
+###########################################################
+
+def test_the_missing_boot_tools_are_named(monkeypatch):
+    monkeypatch.setattr(
+        virtualmachine.command, "is_runnable_command", lambda tool: tool != "qemu-img")
+
+    assert virtualmachine.get_missing_boot_tools() == ["qemu-img"]
+
+
+def test_acceleration_needs_read_and_write_on_kvm(monkeypatch):
+    seen = []
+    monkeypatch.setattr(
+        virtualmachine.os, "access", lambda path, mode: seen.append((path, mode)) or False)
+
+    assert virtualmachine.is_acceleration_available() is False
+    assert seen == [("/dev/kvm", os.R_OK | os.W_OK)]
+
+
+def test_existing_firmware_variables_are_kept(monkeypatch, tmp_path):
+    # The firmware's boot entries live there, so a copy would lose the install.
+    copies = []
+    monkeypatch.setattr(
+        virtualmachine.fileops, "copy_file_or_directory", lambda **kwargs: copies.append(kwargs))
+    firmware_vars = tmp_path / "llm-vars.fd"
+    firmware_vars.write_bytes(b"entries")
+
+    assert virtualmachine.prepare_boot_firmware(str(firmware_vars), "/fw/vars.fd") is True
+    assert copies == []
+
+
+def test_a_boot_directory_that_cannot_be_made_is_reported(monkeypatch, bootable):
+    recorder = record(monkeypatch)
+    monkeypatch.setattr(virtualmachine.fileops, "make_directory", lambda **kwargs: False)
+    monkeypatch.setattr(virtualmachine.logger, "log_error", lambda *a, **k: None)
+
+    assert virtualmachine.boot_vm_image(vm_name = BOOT_NAME, boot_dir = bootable) is False
+    assert recorder.calls == []
+
+
+def test_a_disk_that_cannot_be_made_stops_the_boot(monkeypatch, bootable):
+    recorder = record(monkeypatch, returncode = 1)
+    monkeypatch.setattr(virtualmachine.logger, "log_error", lambda *a, **k: None)
+
+    assert virtualmachine.boot_vm_image(vm_name = BOOT_NAME, boot_dir = bootable) is False
+    assert len(recorder.calls) == 1
+
+
+def test_firmware_that_cannot_be_copied_stops_the_boot(monkeypatch, bootable):
+    recorder = record(monkeypatch)
+    monkeypatch.setattr(
+        virtualmachine.fileops, "copy_file_or_directory", lambda **kwargs: False)
+    monkeypatch.setattr(virtualmachine.logger, "log_error", lambda *a, **k: None)
+
+    assert virtualmachine.boot_vm_image(vm_name = BOOT_NAME, boot_dir = bootable) is False
+    assert not [call for call in recorder.calls if call["cmd"][0] == "qemu-system-x86_64"]
+
+
+def test_installing_over_an_existing_disk_is_warned_about(monkeypatch, bootable, tmp_path):
+    warnings = []
+    monkeypatch.setattr(virtualmachine.logger, "log_warning", warnings.append)
+    record(monkeypatch)
+    os.makedirs(bootable)
+    open(virtualmachine.get_boot_disk(BOOT_NAME, bootable), "wb").close()
+    image = tmp_path / "llm.iso"
+    image.write_bytes(b"iso")
+
+    assert virtualmachine.boot_vm_image(
+        vm_name = BOOT_NAME, iso_file = str(image), boot_dir = bootable) is True
+    assert [warning for warning in warnings if "installed over" in warning]
+
+
+def test_an_unaccelerated_boot_is_warned_about(monkeypatch, bootable):
+    warnings = []
+    monkeypatch.setattr(virtualmachine.logger, "log_warning", warnings.append)
+    monkeypatch.setattr(virtualmachine, "is_acceleration_available", lambda: False)
+    recorder = record(monkeypatch)
+
+    assert virtualmachine.boot_vm_image(vm_name = BOOT_NAME, boot_dir = bootable) is True
+    assert [warning for warning in warnings if "/dev/kvm" in warning]
+    assert "accel=kvm" not in recorder.text(1)
+
+
+def test_a_boot_without_a_forwarded_port_gets_no_network(monkeypatch, bootable):
+    infos = []
+    monkeypatch.setattr(virtualmachine.logger, "log_info", infos.append)
+    recorder = record(monkeypatch)
+
+    assert virtualmachine.boot_vm_image(
+        vm_name = BOOT_NAME, boot_dir = bootable, ssh_port = 0) is True
+    assert "-net none" in recorder.text(1)
+    assert not [info for info in infos if "ssh -p" in info]

@@ -32,8 +32,8 @@ def build_parser():
             "`--skip_existing` is keyed on path, not content: a file that already has an entry\n"
             "keeps its old row even if the file has changed. Every file is still hashed; only the\n"
             "database write is skipped. Use it to add new files quickly, and run without it when\n"
-            "files may have changed. If the existing database cannot be downloaded, the run\n"
-            "starts from an empty one, so nothing is skipped."),
+            "files may have changed. If a database exists but cannot be downloaded, the run fails\n"
+            "rather than upload one holding only the newly hashed files."),
         examples = [
             ("Rebuild the Hetzner sidecar from the local locker", "rebuild_hash_sidecars -l Local -d Hetzner -v"),
             ("Show what would be hashed without uploading anything", "rebuild_hash_sidecars -p -v"),
@@ -96,15 +96,9 @@ def main():
     # Setup logging
     logger.setup_logging()
 
-    # Get source locker info
+    # Get locker info
     source_info = lockerinfo.LockerInfo(args.source_locker)
-    if not source_info:
-        logger.log_error("Could not get locker info for %s" % args.source_locker, quit_program = True)
-
-    # Get dest locker info
     dest_info = lockerinfo.LockerInfo(args.dest_locker)
-    if not dest_info:
-        logger.log_error("Could not get locker info for %s" % args.dest_locker, quit_program = True)
 
     # Get paths
     source_root = source_info.get_mount_path()

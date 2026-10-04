@@ -210,7 +210,7 @@ class Program(jsondata.JsonData):
         ##########################
         # Windows program
         ##########################
-        elif program_is_windows:
+        else:
 
             # Update program options
             program_options.set_force_prefix(True)
@@ -594,6 +594,8 @@ def launch_computer_game(
 
     # Get selected program
     game_selected_program = game_info.select_store_launch_program(game_launch_dir)
+    if not game_selected_program:
+        return False
 
     # Run program
     return game_selected_program.run(

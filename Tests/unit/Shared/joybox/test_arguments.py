@@ -225,6 +225,29 @@ def test_a_single_multiple_enum_default_becomes_a_list(argv):
     assert parser.parse_args().locker_types == [config.LockerType.LOCAL]
 
 
+@pytest.mark.parametrize("allow_multiple", [False, True])
+def test_a_missing_required_enum_is_a_usage_error(argv, capsys, allow_multiple):
+    parser = build()
+    parser.add_enum_argument(
+        args = ("-t", "--locker_type"),
+        arg_type = config.LockerType,
+        allow_multiple = allow_multiple,
+        required = True)
+
+    with pytest.raises(SystemExit) as raised:
+        parser.parse_args()
+    assert raised.value.code == 2
+    assert "-t LOCKER_TYPE" in capsys.readouterr().err
+
+
+def test_a_given_required_enum_parses(argv):
+    parser = build()
+    parser.add_enum_argument(args = ("-t", "--locker_type"), arg_type = config.LockerType, required = True)
+    argv("-t", str(config.LockerType.LOCAL))
+
+    assert parser.parse_args().locker_type == config.LockerType.LOCAL
+
+
 @pytest.mark.parametrize("value,expected", [
     (config.LockerType.LOCAL, config.LockerType.LOCAL),
     (str(config.LockerType.LOCAL), config.LockerType.LOCAL),

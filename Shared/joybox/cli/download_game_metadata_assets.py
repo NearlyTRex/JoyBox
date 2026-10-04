@@ -44,6 +44,7 @@ def build_parser():
     parser.add_enum_argument(
         args = ("-t", "--asset_type"),
         arg_type = config.AssetType,
+        required = True,
         description = "Kind of asset to download")
     parser.add_enum_argument(
         args = ("-m", "--generation_mode"),
@@ -86,8 +87,7 @@ def main():
     # Show preview
     if not args.no_preview:
         details = [environment.get_locker_gaming_assets_root_dir()]
-        asset_desc = args.asset_type if args.asset_type else "all types"
-        if not prompts.prompt_for_preview("Download metadata assets (%s)" % asset_desc, details):
+        if not prompts.prompt_for_preview("Download metadata assets (%s)" % args.asset_type, details):
             logger.log_warning("Operation cancelled by user")
             return
 

@@ -1,6 +1,7 @@
 # Imports
 import os
 import os.path
+import tempfile
 
 # Local imports
 import joybox.config as config
@@ -21,7 +22,7 @@ from joybox import platform_info, runtime
 def is_url_reachable(url):
     try:
         import requests
-        get = requests.get(url)
+        get = requests.get(url, timeout=10)
         return (get.status_code == 200)
     except Exception:
         return False
@@ -81,16 +82,20 @@ def post_remote_json(
     url,
     headers = None,
     data = None,
+    timeout = 10,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
+    if pretend_run:
+        logger.log_info("Would POST to '%s'" % url)
+        return None
     try:
         if verbose:
             logger.log_info("Processing POST request to '%s'" % url)
         import requests
         if not headers:
             headers = {"Accept": "application/json"}
-        post = requests.post(url, headers=headers, json=data)
+        post = requests.post(url, headers=headers, json=data, timeout=timeout)
         if verbose:
             logger.log_info("Got response: %s" % str(post.status_code))
         if post.status_code == 200:
@@ -185,6 +190,10 @@ def download_url(
         logger.log_error("Download of %s failed" % url)
         return False
 
+    # A pretend run downloads nothing, so there is nothing to check
+    if pretend_run:
+        return True
+
     # Check result
     if output_dir:
         for obj in paths.get_directory_contents(output_dir):
@@ -259,6 +268,10 @@ def download_git_url(
         logger.log_error("Git download of %s failed" % url)
         return False
 
+    # A pretend run clones nothing, so there is nothing to check
+    if pretend_run:
+        return True
+
     # Check result
     return paths.does_directory_contain_files(output_dir)
 
@@ -277,14 +290,52 @@ def is_network_share_mounted(mount_dir, base_location, network_share):
     elif platform_info.is_linux_platform():
         mount_lines = command.run_output_command(
             cmd = ["mount"])
+        share_source = "//%s/%s" % (base_location, network_share)
+        share_target = os.path.normpath(mount_dir)
         for line in mount_lines.split("\n"):
-            if line.startswith("//%s/%s" % (base_location, network_share)):
-                if mount_dir in line:
-                    return True
+            source, on, rest = line.partition(" on ")
+            target = rest.rsplit(" type ", 1)[0]
+            if on and source == share_source and os.path.normpath(target) == share_target:
+                return True
         return False
 
     # Network share was not mounted
     return False
+
+# Map a windows drive to a share, passing the password in-process rather than on a command line
+def map_windows_drive(drive, remote, username, password):
+    import ctypes
+    import ctypes.wintypes as wintypes
+
+    class NETRESOURCE(ctypes.Structure):
+        _fields_ = [
+            ("dwScope", wintypes.DWORD),
+            ("dwType", wintypes.DWORD),
+            ("dwDisplayType", wintypes.DWORD),
+            ("dwUsage", wintypes.DWORD),
+            ("lpLocalName", wintypes.LPWSTR),
+            ("lpRemoteName", wintypes.LPWSTR),
+            ("lpComment", wintypes.LPWSTR),
+            ("lpProvider", wintypes.LPWSTR),
+        ]
+
+    resource = NETRESOURCE()
+    resource.dwType = 1  # RESOURCETYPE_DISK
+    resource.lpLocalName = drive
+    resource.lpRemoteName = remote
+    return ctypes.windll.mpr.WNetAddConnection2W(ctypes.byref(resource), password, username, 0)
+
+# Directory for mount.cifs credentials; a comma would split the -o option string
+def get_cifs_credentials_dir():
+    tmp_dir = tempfile.gettempdir()
+    return "/tmp" if "," in tmp_dir else tmp_dir
+
+# Write a mount.cifs credentials file readable only by its owner
+def write_cifs_credentials(username, password):
+    fd, credentials_file = tempfile.mkstemp(prefix = "joybox-cifs-", suffix = ".cred", dir = get_cifs_credentials_dir())
+    with os.fdopen(fd, "w") as handle:
+        handle.write("username=%s\npassword=%s\n" % (username, password))
+    return credentials_file
 
 # Mount network share
 def mount_network_share(
@@ -297,6 +348,11 @@ def mount_network_share(
     pretend_run = False,
     exit_on_failure = False):
 
+    # Credentials containing a line break cannot be expressed to either platform
+    if "\n" in username or "\n" in password:
+        logger.log_error("Share credentials must not contain line breaks", quit_program = exit_on_failure)
+        return False
+
     # Windows
     if platform_info.is_windows_platform():
 
@@ -304,23 +360,18 @@ def mount_network_share(
         if paths.is_path_directory(mount_dir):
             return True
 
-        # Get mount command
-        mount_cmd = [
-            "net",
-            "use",
-            "%s:" % paths.get_directory_drive(mount_dir),
-            "\\\\%s\\%s" % (base_location, network_share),
-            "/USER:%s" % username,
-            password
-        ]
-
-        # Run mount command
-        code = command.run_returncode_command(
-            cmd = mount_cmd,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        return (code == 0)
+        # Map drive
+        drive = "%s:" % paths.get_directory_drive(mount_dir)
+        remote = "\\\\%s\\%s" % (base_location, network_share)
+        if verbose:
+            logger.log_info("Mapping %s to %s" % (drive, remote))
+        if pretend_run:
+            return True
+        code = map_windows_drive(drive, remote, username, password)
+        if code != 0:
+            logger.log_error("Unable to map %s to %s (error %d)" % (drive, remote, code), quit_program = exit_on_failure)
+            return False
+        return True
 
     # Linux
     elif platform_info.is_linux_platform():
@@ -343,26 +394,36 @@ def mount_network_share(
             return False
 
         # Check if already mounted
-        if not paths.is_directory_empty(mount_dir):
+        if is_network_share_mounted(mount_dir, base_location, network_share):
             return True
 
-        # Get mount command
-        mount_cmd = [
-            "sudo",
-            "mount",
-            "-t", "cifs",
-            "-o", "username=%s,password=%s,uid=%s,gid=%s" % (username, password, os.geteuid(), os.getegid()),
-            "//%s/%s" % (base_location, network_share),
-            "%s" % mount_dir
-        ]
+        # Keep the password off the command line; a pretend run writes nothing
+        if pretend_run:
+            credentials_file = paths.join_paths(get_cifs_credentials_dir(), "joybox-cifs-pretend.cred")
+        else:
+            credentials_file = write_cifs_credentials(username, password)
+        try:
 
-        # Run mount command
-        code = command.run_returncode_command(
-            cmd = mount_cmd,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        return (code == 0)
+            # Get mount command
+            mount_cmd = [
+                "sudo",
+                "mount",
+                "-t", "cifs",
+                "-o", "credentials=%s,uid=%s,gid=%s" % (credentials_file, os.geteuid(), os.getegid()),
+                "//%s/%s" % (base_location, network_share),
+                "%s" % mount_dir
+            ]
+
+            # Run mount command
+            code = command.run_returncode_command(
+                cmd = mount_cmd,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
+            return (code == 0)
+        finally:
+            if not pretend_run:
+                os.remove(credentials_file)
 
     # Network share was not mounted
     return False
@@ -464,6 +525,11 @@ def update_github_repository(
     pretend_run = False,
     exit_on_failure = False):
 
+    # A pretend run must not merge anything
+    if pretend_run:
+        logger.log_info("Would update repository '%s' - '%s' from upstream" % (github_user, github_repo))
+        return True
+
     # Get update url
     update_url = "https://api.github.com/repos/%s/%s/merge-upstream" % (github_user, github_repo)
 
@@ -516,9 +582,46 @@ def archive_github_repository(
     if not tmp_dir_success:
         return False
 
+    # Archive through it, removing it whatever the outcome
+    try:
+        return archive_github_repository_via(
+            tmp_dir = tmp_dir_result,
+            github_user = github_user,
+            github_repo = github_repo,
+            github_token = github_token,
+            github_branch = github_branch,
+            output_dir = output_dir,
+            recursive = recursive,
+            clean = clean,
+            locker_type = locker_type,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+    finally:
+        fileops.remove_directory(
+            src = tmp_dir_result,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+
+# Archive github repository via a temporary directory
+def archive_github_repository_via(
+    tmp_dir,
+    github_user,
+    github_repo,
+    github_token = None,
+    github_branch = None,
+    output_dir = "",
+    recursive = True,
+    clean = False,
+    locker_type = None,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
     # Make temporary dirs
-    tmp_dir_download = paths.join_paths(tmp_dir_result, "download")
-    tmp_dir_archive = paths.join_paths(tmp_dir_result, "archive")
+    tmp_dir_download = paths.join_paths(tmp_dir, "download")
+    tmp_dir_archive = paths.join_paths(tmp_dir, "archive")
     tmp_file_archive = paths.join_paths(tmp_dir_archive, "tmp.zip")
     out_file_archive = paths.join_paths(output_dir, github_repo + "_" + str(runtime.get_current_timestamp()) + config.ArchiveFileType.ZIP.cval())
     fileops.make_directory(
@@ -558,14 +661,14 @@ def archive_github_repository(
         if not success:
             return False
 
-    # Archive repository
+    # Archive repository; a pretend run writes no archive to look for
     archive.create_archive_from_folder(
         archive_file = tmp_file_archive,
         source_dir = tmp_dir_download,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
-    if not os.path.exists(tmp_file_archive):
+    if not pretend_run and not os.path.exists(tmp_file_archive):
         logger.log_error("Unable to archive repository '%s' - '%s'" % (github_user, github_repo))
         return False
 
@@ -594,13 +697,6 @@ def archive_github_repository(
     if not success:
         logger.log_error("Backup failed for archive of repository '%s' - '%s'" % (github_user, github_repo))
         return False
-
-    # Delete temporary directory
-    fileops.remove_directory(
-        src = tmp_dir_result,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
 
     # Should be successful
     return True

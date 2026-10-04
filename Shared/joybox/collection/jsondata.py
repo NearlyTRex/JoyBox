@@ -152,15 +152,15 @@ def update_game_json_file(
         json_data = json_file_data,
         json_platform = game_platform)
 
-    # Get locker info
-    locker_info = lockerinfo.LockerInfo(locker_type)
+    # Get passphrase
+    passphrase = lockerinfo.LockerInfo(locker_type).get_passphrase()
 
-    # Get all files
+    # Get all files, naming encrypted ones by their embedded name when readable
     all_files = paths.build_file_list(game_root)
-    if locker_info:
+    if cryption.is_passphrase_valid(passphrase):
         all_files = cryption.get_real_file_paths(
             src = all_files,
-            passphrase = locker_info.get_passphrase(),
+            passphrase = passphrase,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)

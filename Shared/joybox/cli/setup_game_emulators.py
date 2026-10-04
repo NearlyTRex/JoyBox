@@ -3,6 +3,7 @@ import joybox.config as config
 import joybox.arguments as arguments
 import joybox.system as system
 import joybox.setup as setup
+import joybox.programs as programs
 import joybox.logger as logger
 
 # Build the argument parser
@@ -34,7 +35,7 @@ def build_parser():
             ("Preview without changing anything", "setup_game_emulators -p -v"),
         ],
         notes = [
-            "Emulator names are matched exactly and are case-sensitive (`FS-UAE`, `VICE-C64`, `mGBA`); an unknown name is silently skipped.",
+            "Emulator names are matched exactly and are case-sensitive (`FS-UAE`, `VICE-C64`, `mGBA`); an unknown name stops the run before anything is installed.",
             "`--force` applies only to the selected emulators; `--clean` wipes the whole emulators directory.",
             "Installation stops at the first emulator that fails.",
             "`~/JoyBox.ini` must exist and symlinks must be supported, or the command exits before doing anything.",
@@ -73,19 +74,25 @@ def main():
     # Parse package list
     packages = None
     if args.packages:
-        packages = [p.strip() for p in args.packages.split(",")]
+        packages = [p.strip() for p in args.packages.split(",") if p.strip()]
+        known_packages = [package.get_name() for package in programs.get_emulators()]
+        unknown_packages = [package for package in packages if package not in known_packages]
+        if unknown_packages:
+            logger.log_error("Unknown emulator packages: %s" % ", ".join(unknown_packages), quit_program = True)
 
     # Create setup params from args
     setup_params = config.SetupParams.from_args(args)
 
     # Setup emulators
-    setup.setup_emulators(
+    success = setup.setup_emulators(
         offline = args.offline,
         configure = args.configure,
         clean = args.clean,
         force = args.force,
         packages = packages,
         setup_params = setup_params)
+    if not success:
+        logger.log_error("Setup of emulators failed", quit_program = True)
 
 # Run through the shared error handling
 def run():

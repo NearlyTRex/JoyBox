@@ -346,11 +346,7 @@ def copy_files(
             exit_on_failure = exit_on_failure)
 
     # Get passphrase from locker
-    locker_info = lockerinfo.LockerInfo(locker_type)
-    if not locker_info:
-        logger.log_error("Locker %s not found" % locker_type)
-        return False
-    passphrase = locker_info.get_passphrase()
+    passphrase = lockerinfo.LockerInfo(locker_type).get_passphrase()
 
     # Encrypt
     if cryption_type == config.CryptionType.ENCRYPT:

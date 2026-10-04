@@ -42,7 +42,7 @@ the upload. This is the unattended form of `locker_sync_tool`.
 | Option | Description |
 |--------|-------------|
 | `-l, --local_locker <local_locker>` | Locker to back up from; its content is treated as authoritative. Default: `Local`. Allowed: `All`, `Local`, `Hetzner`, `Gdrive`, `External`. |
-| `-r, --remote_lockers <remote_lockers>` | Comma-separated locker names to back up to; unknown names are skipped with a warning. Default: `Hetzner,Gdrive`. |
+| `-r, --remote_lockers <remote_lockers>` | Comma-separated locker names to back up to; an unknown name stops the run. Default: `Hetzner,Gdrive`. |
 | `--no_rebuild_sidecars` | Do not refresh the SFTP destinations' hash sidecars after uploading. |
 | `--recycle_orphans` | Move destination files that are missing from the source into the destination's `.recycle_bin`; by default they are kept. |
 | `--skip_cache` | Rebuild every hash map instead of reusing one cached within the last 24 hours. |

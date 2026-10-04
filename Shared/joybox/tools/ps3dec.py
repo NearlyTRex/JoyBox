@@ -98,6 +98,7 @@ class PS3Dec(toolbase.ToolBase):
                 install_name = "PS3Dec",
                 install_dir = programs.get_program_install_dir("PS3Dec", "windows"),
                 search_file = "PS3Dec.exe",
+                install_files = ["PS3Dec.exe"],
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)

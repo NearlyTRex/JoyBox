@@ -183,6 +183,15 @@ class ProjectCTR(toolbase.ToolBase):
                 archive_dir = programs.get_program_backup_dir("CtrMakeRom", "linux"),
                 install_name = "CtrMakeRom",
                 install_dir = programs.get_program_install_dir("CtrMakeRom", "linux"),
+                search_file = "makerom",
+                install_files = ["makerom"],
+                release_type = config.ReleaseType.ARCHIVE,
+                chmod_files = [
+                    {
+                        "file": "makerom",
+                        "perms": 755
+                    }
+                ],
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
@@ -196,6 +205,15 @@ class ProjectCTR(toolbase.ToolBase):
                 archive_dir = programs.get_program_backup_dir("CtrTool", "linux"),
                 install_name = "CtrTool",
                 install_dir = programs.get_program_install_dir("CtrTool", "linux"),
+                search_file = "ctrtool",
+                install_files = ["ctrtool"],
+                release_type = config.ReleaseType.ARCHIVE,
+                chmod_files = [
+                    {
+                        "file": "ctrtool",
+                        "perms": 755
+                    }
+                ],
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)

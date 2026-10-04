@@ -126,6 +126,7 @@ class RClone(toolbase.ToolBase):
                 archive_dir = programs.get_program_backup_dir("RClone", "linux"),
                 install_name = "RClone",
                 install_dir = programs.get_program_install_dir("RClone", "linux"),
+                search_file = "rclone",
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
@@ -154,6 +155,8 @@ class RClone(toolbase.ToolBase):
                 hetzner_remote_config = json.loads(hetzner_remote_config_str)
             except Exception:
                 pass
+        if not isinstance(hetzner_remote_config, dict):
+            hetzner_remote_config = {}
         hetzner_remote_host = hetzner_remote_config.get("host")
         hetzner_remote_user = hetzner_remote_config.get("user")
         hetzner_remote_pass = hetzner_remote_config.get("pass")

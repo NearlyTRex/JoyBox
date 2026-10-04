@@ -59,7 +59,7 @@ def get_embedded_filename(
     info_cmd = [
         gpg_tool,
         "--list-packets",
-        "--passphrase", passphrase,
+        "--passphrase-fd", "0",
         "--quiet",
         "--batch",
         src
@@ -68,6 +68,8 @@ def get_embedded_filename(
     # Run info command (always run, even in pretend mode - this is read-only)
     info_output = command.run_output_command(
         cmd = info_cmd,
+        options = command.create_command_options(
+            stdin_input = passphrase),
         verbose = verbose,
         pretend_run = False,
         exit_on_failure = exit_on_failure)
@@ -135,7 +137,7 @@ def get_embedded_file_info(
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-    file_info["size"] = paths.get_file_size(tmp_file)
+    file_info["size"] = paths.get_file_size(tmp_file) if paths.does_path_exist(tmp_file) else 0
     file_info["mtime"] = paths.get_file_mod_time(src)
 
     # Clean up
@@ -237,7 +239,7 @@ def encrypt_file(
         gpg_tool,
         "--symmetric",
         "--cipher-algo", "AES256",
-        "--passphrase", passphrase,
+        "--passphrase-fd", "0",
         "--compress-algo", "none",
         "--set-filename", paths.get_filename_file(src),
         "--quiet",
@@ -250,7 +252,8 @@ def encrypt_file(
     code = command.run_returncode_command(
         cmd = encrypt_cmd,
         options = command.create_command_options(
-            blocking_processes = [gpg_tool]),
+            blocking_processes = [gpg_tool],
+            stdin_input = passphrase),
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -327,7 +330,7 @@ def decrypt_file(
     decrypt_cmd = [
         gpg_tool,
         "--output", output_file,
-        "--passphrase", passphrase,
+        "--passphrase-fd", "0",
         "--compress-algo", "none",
         "--quiet",
         "--batch",
@@ -339,7 +342,8 @@ def decrypt_file(
     code = command.run_returncode_command(
         cmd = decrypt_cmd,
         options = command.create_command_options(
-            blocking_processes = [gpg_tool]),
+            blocking_processes = [gpg_tool],
+            stdin_input = passphrase),
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -402,6 +406,9 @@ def decrypt_files(
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
+        if not output_file:
+            logger.log_error("Unable to read the embedded name of '%s'" % file)
+            continue
         success = decrypt_file(
             src = file,
             output_file = output_file,

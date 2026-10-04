@@ -117,14 +117,11 @@ def main():
                     json_transform_file = game_info.get_transform_file()
 
                     # Files to check
-                    files_to_check = []
-
-                    # Add files
-                    files_to_check += json_file_list
-                    if len(json_transform_file):
-                        files_to_check += json_transform_file
-                    else:
-                        files_to_check += json_launch_file
+                    files_to_check = list(json_file_list)
+                    if json_transform_file:
+                        files_to_check.append(json_transform_file)
+                    elif json_launch_file:
+                        files_to_check.append(json_launch_file)
 
                     # Each of these files should exist
                     for file_to_check in files_to_check:

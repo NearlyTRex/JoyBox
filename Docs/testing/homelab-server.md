@@ -37,8 +37,10 @@ ssh -i ~/.ssh/joybox_autoinstall -p 2222 you@localhost
 
 ```bash
 hostname                           # the hostname you configured
-sudo ufw status                    # only OpenSSH and 11434 allowed
+sudo ufw status                    # only 22, 11434 and 11435 allowed
 systemctl status ollama            # active, once first boot has finished
+systemctl status ollama-helper     # active
+curl -s localhost:11435/hardware   # no gpus in the VM, and its RAM
 ollama list                        # the first model, once the pull has finished
 gpu-status                         # "No NVIDIA GPU visible" is expected here
 ```
@@ -94,8 +96,8 @@ boot_vm_image -n llm -i ~/Images/llm.iso --headless
 
 ## What a VM cannot tell you
 
-- **The GPU.** None is passed through, so `drivers: install: true` finds nothing and ollama runs
-  on the processor. Driver installation is only exercised on real hardware.
+- **The GPU.** None is passed through, so the driver installs but nothing loads, and ollama runs
+  on the processor. Whether the driver drives the card is only exercised on real hardware.
 - **The real disk.** The install takes the largest disk it finds; in the VM that is the only one.
 
 Everything else — the disk layout, the account, the key, the firewall, the services the overlay

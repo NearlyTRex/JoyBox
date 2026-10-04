@@ -13,10 +13,12 @@ from joybox import platform_info
 
 # Check if iso is mounted
 def is_iso_mounted(iso_file, mount_dir):
+    if not paths.is_path_file(iso_file):
+        return False
+    mount_point = get_actual_mount_point(iso_file, mount_dir)
     return (
-        paths.is_path_file(iso_file) and
-        paths.does_path_exist(get_actual_mount_point(iso_file, mount_dir)) and
-        not paths.is_directory_empty(mount_dir)
+        paths.does_path_exist(mount_point) and
+        not paths.is_directory_empty(mount_point)
     )
 
 # Get the iso tool
@@ -381,7 +383,6 @@ def extract_iso_boot_images(
     return True
 
 # Build the command that packs a tree as an iso that boots
-# Build the command that packs a tree as an iso that boots
 # An image that only carries an el torito catalogue boots from a disc. To
 # boot from a usb stick it also needs a partition table describing the same
 # data, so the efi image is appended as a real partition and the boot code is
@@ -508,6 +509,7 @@ def get_actual_mount_point(
         drive_text = drive_output
         if isinstance(drive_output, bytes):
             drive_text = drive_output.decode()
+        drive_text = (drive_text or "").strip()
         if drive_text:
             return f"{drive_text}:\\"
         else:

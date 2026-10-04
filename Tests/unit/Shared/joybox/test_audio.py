@@ -388,3 +388,114 @@ def test_one_failing_genre_does_not_stop_the_others(monkeypatch):
 
     audio.process_all_genres(handler)
     assert handled == config.AudioGenreType.members()
+
+
+###########################################################
+# Album pipeline failures
+###########################################################
+
+class FakeMetadata:
+    def __init__(self):
+        self.calls = []
+        self.album_tags = {"tracks": []}
+        self.clear_result = True
+        self.set_result = True
+
+    def get_album_tags(self, **kwargs):
+        self.calls.append(("get", kwargs["album_dir"]))
+        return self.album_tags
+
+    def clear_album_tags(self, **kwargs):
+        self.calls.append(("clear", kwargs["album_dir"]))
+        return self.clear_result
+
+    def set_album_tags(self, **kwargs):
+        self.calls.append(("set", kwargs["album_dir"], kwargs["album_metadata"]))
+        return self.set_result
+
+
+@pytest.fixture
+def pipeline(music_root, monkeypatch):
+    handler = FakeMetadata()
+    written = []
+    monkeypatch.setattr(audio.audiometadata, "AudioMetadata", lambda: handler)
+    monkeypatch.setattr(
+        audio.environment, "get_file_audio_metadata_file",
+        lambda metadata_type, genre, album, artist = None: "/meta/%s/%s.json" % (artist, album))
+    monkeypatch.setattr(
+        audio.serialization, "write_json_file",
+        lambda src, json_data, **kwargs: written.append(src) or True)
+    handler.written = written
+    return handler
+
+
+def test_an_artist_album_writes_under_the_artist(music_root, pipeline):
+    make_album(music_root, GENRE.value, "Some Artist", "An Album")
+
+    assert audio.build_audio_metadata_files(GENRE) is True
+    assert pipeline.written == ["/meta/Some Artist/An Album.json"]
+
+
+def test_a_failed_metadata_write_fails_the_build(music_root, pipeline, monkeypatch):
+    make_album(music_root, GENRE.value, "An Album")
+    monkeypatch.setattr(audio.serialization, "write_json_file", lambda **kwargs: False)
+
+    assert audio.build_audio_metadata_files(GENRE) is False
+
+
+def test_an_artist_album_is_cleared(music_root, pipeline):
+    album = make_album(music_root, GENRE.value, "Some Artist", "An Album")
+
+    assert audio.clear_audio_metadata_tags(GENRE) is True
+    assert pipeline.calls == [("clear", str(album))]
+
+
+def test_a_failed_clear_stops_at_that_album(music_root, pipeline):
+    pipeline.clear_result = False
+    make_album(music_root, GENRE.value, "First Album")
+    make_album(music_root, GENRE.value, "Second Album")
+
+    assert audio.clear_audio_metadata_tags(GENRE) is False
+    assert len(pipeline.calls) == 1
+
+
+@pytest.fixture
+def sidecars(pipeline, monkeypatch):
+    stored = {}
+    is_path_file = audio.paths.is_path_file
+    monkeypatch.setattr(
+        audio.paths, "is_path_file", lambda path: path in stored or is_path_file(path))
+    monkeypatch.setattr(
+        audio.serialization, "read_json_file", lambda src, **kwargs: stored.get(src))
+    return stored
+
+
+def test_an_artist_album_reads_its_artist_sidecar(music_root, pipeline, sidecars):
+    album = make_album(music_root, GENRE.value, "Some Artist", "An Album")
+    sidecars["/meta/Some Artist/An Album.json"] = {"tracks": ["one"]}
+
+    assert audio.apply_audio_metadata_tags(GENRE) is True
+    assert pipeline.calls == [("set", str(album), {"tracks": ["one"]})]
+
+
+def test_an_unreadable_sidecar_fails_the_apply(music_root, pipeline, sidecars):
+    make_album(music_root, GENRE.value, "An Album")
+    sidecars["/meta/None/An Album.json"] = None
+
+    assert audio.apply_audio_metadata_tags(GENRE) is False
+    assert pipeline.calls == []
+
+
+def test_a_failed_apply_stops_at_that_album(music_root, pipeline, sidecars):
+    pipeline.set_result = False
+    make_album(music_root, GENRE.value, "An Album")
+    sidecars["/meta/None/An Album.json"] = {"tracks": []}
+
+    assert audio.apply_audio_metadata_tags(GENRE) is False
+
+
+def test_an_unreadable_archive_yields_nothing(tmp_path):
+    target = tmp_path / "archive.txt"
+    target.write_bytes(b"youtube \xff\xfe\n")
+
+    assert audio.get_archived_video_ids(str(target)) == set()

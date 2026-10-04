@@ -1,9 +1,11 @@
 # Imports
+import importlib.util
 import os
 import stat
 
 # Local imports
 from joybox import default_settings
+from joybox import platform_info
 
 
 ###########################################################
@@ -19,9 +21,76 @@ def read(path):
         return handle.read()
 
 
+def load_defaults_for(monkeypatch, windows, linux):
+    # Fresh copy of the module, so the shared one keeps the host's defaults
+    monkeypatch.setattr(platform_info, "is_windows_platform", lambda: windows)
+    monkeypatch.setattr(platform_info, "is_linux_platform", lambda: linux)
+    spec = importlib.util.spec_from_file_location("default_settings_copy", default_settings.__file__)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module.ini_defaults
+
+
+###########################################################
+# Platform defaults
+###########################################################
+
+def test_windows_defaults_use_windows_paths_and_tools(monkeypatch):
+    defaults = load_defaults_for(monkeypatch, windows = True, linux = False)
+
+    assert defaults["UserData.Dirs"]["tools_dir"] == "%USERPROFILE%\\Tools"
+    assert defaults["UserData.Share"]["locker_gdrive_mount_path"] == "%USERPROFILE%\\LockerGdrive"
+    assert defaults["UserData.Share"]["locker_external_mount_path"] == "E:\\"
+    assert defaults["Tools.Python"]["python_exe"] == "python.exe"
+    assert defaults["Tools.System"] == {"editor": "notepad.exe"}
+    assert "Tools.WinGet" in defaults and "Tools.Sandboxie" in defaults
+    for section in ("Tools.Apt", "Tools.Snap", "Tools.Flatpak", "Tools.Wine", "Tools.FuseISO"):
+        assert section not in defaults
+
+
+def test_windows_defaults_hold_no_unix_home_paths(monkeypatch):
+    # Absolute unix paths remain for server-side and remote settings
+    defaults = load_defaults_for(monkeypatch, windows = True, linux = False)
+
+    for section, values in defaults.items():
+        for key, value in values.items():
+            assert "$HOME" not in value, (section, key)
+
+
+def test_linux_defaults_use_unix_paths_and_tools(monkeypatch):
+    defaults = load_defaults_for(monkeypatch, windows = False, linux = True)
+
+    assert defaults["UserData.Dirs"]["tools_dir"] == "$HOME/Tools"
+    assert defaults["UserData.Share"]["locker_external_mount_path"] == "/mnt/external"
+    assert defaults["Tools.FuseISO"]["fuseiso_exe"] == "fuseiso"
+    assert "Tools.Wine" in defaults and "Tools.Apt" in defaults
+    assert "Tools.WinGet" not in defaults and "Tools.Sandboxie" not in defaults
+
+
+def test_mac_defaults_skip_the_linux_only_tools(monkeypatch):
+    defaults = load_defaults_for(monkeypatch, windows = False, linux = False)
+
+    assert "Tools.FuseISO" not in defaults
+    assert defaults["Tools.Curl"]["curl_exe"] == "curl"
+
+
 ###########################################################
 # Generating the content
 ###########################################################
+
+def test_an_unknown_section_is_skipped():
+    content = default_settings.generate_default_config_content(["No.Such.Section", "UserData.Switch"])
+
+    assert "No.Such.Section" not in content
+    assert "[UserData.Switch]" in content
+    assert content.startswith(default_settings.CONFIG_HEADER)
+
+
+def test_a_set_default_is_written_as_an_assignment():
+    content = default_settings.generate_default_config_content(["UserData.Switch"])
+
+    assert "profile_account_name = yuzu\n" in content
+
 
 def test_every_default_section_is_written(tmp_path):
     path = os.path.join(str(tmp_path), "JoyBox.ini")

@@ -26,6 +26,12 @@ class ScriptedConnection(Connection):
         self.commands = []
         self.removed = []
         self.existing = set()
+        self.staging = "/tmp/stage"
+        self.writable = True
+        self.crontab_code = 0
+
+    def make_temporary_directory(self):
+        return self.staging
 
     def run_output(self, cmd, sudo = False):
         self.commands.append(("output", list(cmd)))
@@ -36,10 +42,13 @@ class ScriptedConnection(Connection):
         return 0
 
     def run_checked(self, cmd, sudo = False, throw_exception = False):
-        self.commands.append(("checked", list(cmd)))
-        return True
+        self.commands.append(("checked", list(cmd), throw_exception))
+        if self.crontab_code != 0:
+            raise ValueError("Unable to run command: %s" % cmd)
 
     def write_file(self, src, contents, sudo = False):
+        if not self.writable:
+            return False
         self.files[src] = contents
         return True
 
@@ -55,7 +64,7 @@ class ScriptedConnection(Connection):
 
 
 def crontab_of(conn):
-    return conn.files.get("/tmp/crontab_update", "")
+    return conn.files.get("/tmp/stage/crontab", "")
 
 
 def quiet_logger(monkeypatch):
@@ -254,18 +263,18 @@ def test_an_installed_crontab_ends_with_a_newline():
     assert crontab_of(conn).endswith("\n")
 
 
-def test_the_temporary_crontab_is_removed():
+def test_the_crontab_staging_is_removed():
     conn = ScriptedConnection(output = "")
     conn.add_to_crontab(JOB)
 
-    assert conn.removed == ["/tmp/crontab_update"]
+    assert conn.removed == ["/tmp/stage"]
 
 
 def test_the_crontab_is_installed_from_the_temporary_file():
     conn = ScriptedConnection(output = "")
     conn.add_to_crontab(JOB)
 
-    assert ("checked", ["crontab", "/tmp/crontab_update"]) in conn.commands
+    assert ("checked", ["crontab", "/tmp/stage/crontab"], True) in conn.commands
 
 
 def test_a_job_is_removed_from_the_crontab():
@@ -321,6 +330,34 @@ def test_pretending_does_not_touch_the_crontab():
     assert conn.commands == []
 
 
+@pytest.mark.parametrize("method,output", [
+    ("add_to_crontab", ""), ("remove_from_crontab", JOB + "\n")])
+def test_a_crontab_that_cannot_be_staged_is_reported(method, output):
+    conn = ScriptedConnection(output = output, flags = runoptions.RunFlags(exit_on_failure = False))
+    conn.staging = None
+
+    assert getattr(conn, method)(JOB) is False
+    assert conn.commands == [("output", ["crontab", "-l"])]
+
+
+def test_a_crontab_that_cannot_be_written_is_not_installed():
+    conn = ScriptedConnection(output = "", flags = runoptions.RunFlags(exit_on_failure = False))
+    conn.writable = False
+
+    assert conn.add_to_crontab(JOB) is False
+    assert [kind for kind, *_ in conn.commands] == ["output"]
+    assert conn.removed == ["/tmp/stage"]
+
+
+def test_a_rejected_crontab_is_reported_and_cleaned_up():
+    # cron refusing the file is the caller's to handle unless it exits on failure.
+    conn = ScriptedConnection(output = JOB + "\n", flags = runoptions.RunFlags(exit_on_failure = False))
+    conn.crontab_code = 1
+
+    assert conn.remove_from_crontab(JOB) is False
+    assert conn.removed == ["/tmp/stage"]
+
+
 ###########################################################
 # Windows path
 ###########################################################
@@ -334,6 +371,13 @@ def test_a_path_is_appended_to_the_windows_path():
     conn.add_to_windows_path("C:\\New")
 
     assert "C:\\Windows;C:\\Tools;C:\\New" in setter_command(conn)[0][-1]
+
+
+def test_powershell_specials_in_a_windows_path_are_escaped():
+    conn = ScriptedConnection(output = "")
+    conn.add_to_windows_path('C:\\$Odd`"Dir')
+
+    assert '"C:\\`$Odd```"Dir"' in setter_command(conn)[0][-1]
 
 
 def test_an_already_present_windows_path_is_not_added_again():
@@ -385,6 +429,13 @@ def test_a_path_is_exported_into_the_profile():
     conn.add_to_unix_path("/opt/tool/bin")
 
     assert 'export PATH="/opt/tool/bin:$PATH"' in conn.files["~/.bashrc"]
+
+
+def test_shell_specials_in_an_exported_path_are_escaped():
+    conn = ScriptedConnection()
+    conn.add_to_unix_path('/opt/$odd"`dir\\')
+
+    assert 'export PATH="/opt/\\$odd\\"\\`dir\\\\:$PATH"' in conn.files["~/.bash_profile"]
 
 
 def test_the_existing_profile_content_is_kept():

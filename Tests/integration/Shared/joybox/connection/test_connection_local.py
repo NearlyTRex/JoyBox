@@ -153,6 +153,45 @@ def test_run_checked_reflects_the_exit_status(local_connection):
     assert local_connection.run_checked(["true"]) is not False
 
 
+def test_run_output_can_include_standard_error(local_connection):
+    local_connection.options.include_stderr = True
+
+    assert "oops" in local_connection.run_output(["sh", "-c", "echo oops >&2"])
+
+
+def test_commands_honour_the_working_directory_and_environment(local_connection, tmp_path):
+    local_connection.options.cwd = str(tmp_path)
+    local_connection.options.env = {"JOYBOX_TEST": "value"}
+
+    assert local_connection.run_output(["sh", "-c", "pwd; echo $JOYBOX_TEST"]) == "%s\nvalue" % tmp_path
+
+
+def test_run_return_code_redirects_to_files(local_connection, tmp_path):
+    local_connection.options.stdout = str(tmp_path / "out.log")
+    local_connection.options.stderr = str(tmp_path / "err.log")
+
+    local_connection.run_return_code(["sh", "-c", "echo written; echo oops >&2"])
+
+    assert (tmp_path / "out.log").read_text().strip() == "written"
+    assert (tmp_path / "err.log").read_text().strip() == "oops"
+
+
+def test_a_missing_program_reports_failure():
+    lenient = connection_local.ConnectionLocal(
+        runoptions.RunFlags(verbose = False, exit_on_failure = False),
+        runoptions.RunOptions())
+
+    assert lenient.run_return_code(["definitely-not-a-real-binary"]) == 1
+    assert lenient.run_blocking(["definitely-not-a-real-binary"]) == 1
+
+
+def test_a_shell_string_is_interpreted_by_the_shell(local_connection):
+    local_connection.options.shell = True
+
+    assert local_connection.run_output("echo one | tr o 0") == "0ne"
+    assert local_connection.run_blocking("echo streamed; exit 4") == 4
+
+
 ###########################################################
 # Pretend run
 ###########################################################

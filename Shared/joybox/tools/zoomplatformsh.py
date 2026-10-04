@@ -68,6 +68,15 @@ class ZoomPlatformSH(toolbase.ToolBase):
                 archive_dir = programs.get_library_backup_dir("ZoomPlatformSH", "lib"),
                 install_name = "ZoomPlatformSH",
                 install_dir = programs.get_library_install_dir("ZoomPlatformSH", "lib"),
+                search_file = "zoom-platform.sh",
+                install_files = ["zoom-platform.sh"],
+                release_type = config.ReleaseType.PROGRAM,
+                chmod_files = [
+                    {
+                        "file": "zoom-platform.sh",
+                        "perms": 755
+                    }
+                ],
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)

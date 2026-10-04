@@ -365,26 +365,6 @@ def test_a_failed_json_write_does_not_go_on_to_metadata(collection):
 
 
 ###########################################################
-# Logging in
-###########################################################
-
-def test_logging_in_asks_the_store_for_a_login(monkeypatch):
-    asked = {}
-
-    def get_store_by_categories(**kwargs):
-        asked.update(kwargs)
-        return FakeStore()
-
-    monkeypatch.setattr(purchase.stores, "get_store_by_categories", get_store_by_categories)
-
-    assert purchase.login_game_store(
-        config.Supercategory.ROMS,
-        config.Category.COMPUTER,
-        config.subcategory_map[config.Category.COMPUTER][0]) is True
-    assert asked["login"] is True
-
-
-###########################################################
 # Downloading a purchase
 ###########################################################
 
@@ -506,3 +486,359 @@ def test_a_download_clears_what_was_there_before(downloads):
     purchase.download_game_store_purchase(FakeGameInfo())
 
     assert downloads["store"].downloads[0]["clean_output"] is True
+
+
+def test_an_ignore_that_cannot_be_written_stops_the_import(collection, monkeypatch):
+    collection["store"] = FakeStore(purchases = [a_purchase()])
+    collection["answers"] = ["i"]
+    monkeypatch.setattr(purchase, "add_game_json_ignore_entry", lambda **kwargs: False)
+
+    assert run_import() is False
+
+
+###########################################################
+# Purchases with partial store data
+###########################################################
+
+def test_a_purchase_offered_by_appname_is_imported(collection):
+    collection["store"] = FakeStore(
+        purchases = [a_purchase(
+            appid = None, appname = "hl2", appurl = "https://store.example/hl2")],
+        identifier_key = config.json_key_store_appname)
+
+    assert run_import() is True
+    assert len(collection["created_json"]) == 1
+
+
+def test_a_purchase_without_a_name_takes_the_typed_name(collection):
+    collection["store"] = FakeStore(purchases = [a_purchase(name = None)])
+    collection["answers"] = ["y", "Typed Name"]
+
+    assert run_import() is True
+    assert collection["created_json"][0]["game_name"] == "Typed Name"
+
+
+def test_a_purchase_without_a_name_is_skipped_when_none_is_typed(collection):
+    collection["store"] = FakeStore(purchases = [a_purchase(name = None)])
+    collection["answers"] = ["y", ""]
+
+    assert run_import() is True
+    assert collection["created_json"] == []
+
+
+def test_a_purchase_without_a_name_is_not_looked_up_by_name(collection):
+    collection["store"] = FakeStore(
+        purchases = [a_purchase(name = None)],
+        latest_url = "https://store.example/looked-up")
+    collection["answers"] = ["y", "Typed Name"]
+
+    run_import()
+
+    initial = collection["created_json"][0]["initial_data"]
+    assert initial["fakestore"][config.json_key_store_appurl] is None
+
+
+###########################################################
+# Logging in
+###########################################################
+
+class LoginStore(FakeStore):
+
+    def __init__(self, login_result = True):
+        super().__init__()
+        self.login_result = login_result
+        self.login_calls = []
+
+    def login(self, **kwargs):
+        self.login_calls.append(kwargs)
+        return self.login_result
+
+
+def test_logging_into_a_category_without_a_store_succeeds(monkeypatch):
+    monkeypatch.setattr(purchase.stores, "get_store_by_categories", lambda **kwargs: None)
+
+    assert purchase.login_game_store(
+        config.Supercategory.ROMS,
+        config.Category.COMPUTER,
+        config.subcategory_map[config.Category.COMPUTER][0]) is True
+
+
+def test_a_store_without_its_own_login_has_nothing_to_log_into(monkeypatch):
+    class NoLoginStore(purchase.storebase.StoreBase):
+        pass
+
+    monkeypatch.setattr(
+        purchase.stores, "get_store_by_categories", lambda **kwargs: NoLoginStore())
+
+    assert purchase.login_game_store(
+        config.Supercategory.ROMS,
+        config.Category.COMPUTER,
+        config.subcategory_map[config.Category.COMPUTER][0]) is True
+
+
+@pytest.mark.parametrize("result", [True, False])
+def test_logging_in_reports_the_stores_result(monkeypatch, result):
+    store = LoginStore(login_result = result)
+    monkeypatch.setattr(purchase.stores, "get_store_by_categories", lambda **kwargs: store)
+
+    assert purchase.login_game_store(
+        config.Supercategory.ROMS,
+        config.Category.COMPUTER,
+        config.subcategory_map[config.Category.COMPUTER][0],
+        verbose = True) is result
+    assert store.login_calls[0]["verbose"] is True
+
+
+def test_logging_into_every_store_visits_every_subcategory(monkeypatch):
+    visited = []
+
+    def login_game_store(**kwargs):
+        visited.append((kwargs["game_category"], kwargs["game_subcategory"]))
+        return True
+
+    monkeypatch.setattr(purchase, "login_game_store", login_game_store)
+
+    assert purchase.login_all_game_stores() is True
+    expected = sum(len(config.subcategory_map[c]) for c in config.Category.members())
+    assert len(visited) == expected
+
+
+def test_logging_into_every_store_stops_at_the_first_failure(monkeypatch):
+    visited = []
+
+    def login_game_store(**kwargs):
+        visited.append(kwargs)
+        return False
+
+    monkeypatch.setattr(purchase, "login_game_store", login_game_store)
+
+    assert purchase.login_all_game_stores() is False
+    assert len(visited) == 1
+
+
+###########################################################
+# Updating purchases already in the collection
+###########################################################
+
+@pytest.fixture
+def updates(collection, monkeypatch, tmp_path):
+    json_file = tmp_path / "Half-Life 2.json"
+    json_file.write_text("{}")
+    collection.update({
+        "matches": [str(json_file)],
+        "updated_json": [],
+        "updated_metadata": [],
+        "update_json_ok": True,
+        "update_metadata_ok": True,
+    })
+
+    def update_game_json_file(**kwargs):
+        collection["updated_json"].append(kwargs)
+        return collection["update_json_ok"]
+
+    def update_game_metadata_entry(**kwargs):
+        collection["updated_metadata"].append(kwargs)
+        return collection["update_metadata_ok"]
+
+    monkeypatch.setattr(purchase, "update_game_json_file", update_game_json_file)
+    monkeypatch.setattr(purchase, "update_game_metadata_entry", update_game_metadata_entry)
+    return collection
+
+
+def run_update(**kwargs):
+    defaults = dict(
+        game_supercategory = config.Supercategory.ROMS,
+        game_category = config.Category.COMPUTER,
+        game_subcategory = config.subcategory_map[config.Category.COMPUTER][0])
+    defaults.update(kwargs)
+    return purchase.update_game_store_purchases(**defaults)
+
+
+def test_updating_a_category_without_a_store_is_skipped(updates):
+    updates["store"] = None
+
+    assert run_update() is True
+
+
+def test_updating_a_store_that_cannot_import_is_skipped(updates):
+    updates["store"] = FakeStore(can_import = False, purchases = [a_purchase()])
+
+    assert run_update() is True
+    assert updates["updated_json"] == []
+
+
+def test_updating_a_store_with_no_purchases_changes_nothing(updates):
+    updates["store"] = FakeStore(purchases = [])
+
+    assert run_update() is True
+    assert updates["updated_json"] == []
+
+
+def test_a_known_purchase_is_refreshed_by_its_game_name(updates):
+    updates["store"] = FakeStore(purchases = [a_purchase()])
+
+    assert run_update(keys = ["description"], force = True) is True
+    assert updates["updated_json"][0]["game_name"] == "Half-Life 2"
+    assert updates["updated_metadata"][0]["game_name"] == "Half-Life 2"
+    assert updates["updated_metadata"][0]["keys"] == ["description"]
+    assert updates["updated_metadata"][0]["force"] is True
+
+
+def test_updating_skips_a_purchase_without_an_identifier(updates):
+    updates["store"] = FakeStore(purchases = [a_purchase(appid = None)])
+
+    assert run_update() is True
+    assert updates["updated_json"] == []
+
+
+def test_updating_skips_an_ignored_purchase(updates):
+    updates["store"] = FakeStore(purchases = [a_purchase(appid = "220")])
+    updates["ignores"] = {"220": "Half-Life 2"}
+
+    assert run_update() is True
+    assert updates["updated_json"] == []
+
+
+def test_updating_skips_a_purchase_not_in_the_collection(updates):
+    updates["store"] = FakeStore(purchases = [a_purchase()])
+    updates["matches"] = []
+
+    assert run_update() is True
+    assert updates["updated_json"] == []
+
+
+def test_a_json_file_that_cannot_be_updated_stops_the_update(updates):
+    updates["store"] = FakeStore(purchases = [a_purchase()])
+    updates["update_json_ok"] = False
+
+    assert run_update() is False
+    assert updates["updated_metadata"] == []
+
+
+def test_a_metadata_entry_that_cannot_be_updated_stops_the_update(updates):
+    updates["store"] = FakeStore(purchases = [a_purchase()])
+    updates["update_metadata_ok"] = False
+
+    assert run_update() is False
+
+
+###########################################################
+# Building purchases
+###########################################################
+
+def test_building_imports_then_updates(monkeypatch):
+    calls = []
+    monkeypatch.setattr(
+        purchase, "import_game_store_purchases",
+        lambda **kwargs: calls.append("import") or True)
+    monkeypatch.setattr(
+        purchase, "update_game_store_purchases",
+        lambda **kwargs: calls.append(("update", kwargs["keys"], kwargs["force"])) or True)
+
+    assert purchase.build_game_store_purchases(
+        config.Supercategory.ROMS,
+        config.Category.COMPUTER,
+        config.subcategory_map[config.Category.COMPUTER][0],
+        keys = ["k"],
+        force = True) is True
+    assert calls == ["import", ("update", ["k"], True)]
+
+
+def test_a_failed_import_skips_the_update(monkeypatch):
+    calls = []
+    monkeypatch.setattr(purchase, "import_game_store_purchases", lambda **kwargs: False)
+    monkeypatch.setattr(
+        purchase, "update_game_store_purchases",
+        lambda **kwargs: calls.append("update") or True)
+
+    assert purchase.build_game_store_purchases(
+        config.Supercategory.ROMS,
+        config.Category.COMPUTER,
+        config.subcategory_map[config.Category.COMPUTER][0]) is False
+    assert calls == []
+
+
+def test_a_failed_update_fails_the_build(monkeypatch):
+    monkeypatch.setattr(purchase, "import_game_store_purchases", lambda **kwargs: True)
+    monkeypatch.setattr(purchase, "update_game_store_purchases", lambda **kwargs: False)
+
+    assert purchase.build_game_store_purchases(
+        config.Supercategory.ROMS,
+        config.Category.COMPUTER,
+        config.subcategory_map[config.Category.COMPUTER][0]) is False
+
+
+@pytest.fixture
+def builds(monkeypatch):
+    state = {"visited": [], "ok": True}
+
+    def build_game_store_purchases(**kwargs):
+        state["visited"].append((kwargs["game_category"], kwargs["game_subcategory"]))
+        return state["ok"]
+
+    monkeypatch.setattr(purchase, "build_game_store_purchases", build_game_store_purchases)
+    return state
+
+
+def test_building_everything_visits_every_subcategory(builds):
+    assert purchase.build_all_game_store_purchases() is True
+    expected = sum(len(config.subcategory_map[c]) for c in config.Category.members())
+    assert len(builds["visited"]) == expected
+
+
+def test_building_can_be_limited_to_categories(builds):
+    assert purchase.build_all_game_store_purchases(categories = [config.Category.COMPUTER]) is True
+    assert {category for category, _ in builds["visited"]} == {config.Category.COMPUTER}
+
+
+def test_building_can_be_limited_to_subcategories(builds):
+    subcategory = config.subcategory_map[config.Category.COMPUTER][0]
+
+    assert purchase.build_all_game_store_purchases(subcategories = [subcategory]) is True
+    assert builds["visited"] == [(config.Category.COMPUTER, subcategory)]
+
+
+def test_building_everything_stops_at_the_first_failure(builds):
+    builds["ok"] = False
+
+    assert purchase.build_all_game_store_purchases() is False
+    assert len(builds["visited"]) == 1
+
+
+###########################################################
+# Downloading every purchase
+###########################################################
+
+@pytest.fixture
+def all_downloads(monkeypatch):
+    state = {"names": ["Half-Life 2"], "downloaded": [], "ok": True}
+
+    monkeypatch.setattr(
+        purchase.gameinfo, "find_json_game_names",
+        lambda supercategory, category, subcategory: (
+            state["names"] if category == config.Category.COMPUTER else []))
+    monkeypatch.setattr(
+        purchase.gameinfo, "GameInfo",
+        lambda **kwargs: FakeGameInfo(name = kwargs["game_name"]))
+
+    def download_game_store_purchase(game_info, **kwargs):
+        state["downloaded"].append(game_info.get_name())
+        return state["ok"]
+
+    monkeypatch.setattr(purchase, "download_game_store_purchase", download_game_store_purchase)
+    return state
+
+
+def test_every_game_in_the_collection_is_downloaded(all_downloads):
+    all_downloads["names"] = ["Half-Life 2", "Portal"]
+
+    assert purchase.download_all_game_store_purchases() is True
+    subcategories = len(config.subcategory_map[config.Category.COMPUTER])
+    assert all_downloads["downloaded"] == ["Half-Life 2", "Portal"] * subcategories
+
+
+def test_downloading_everything_stops_at_the_first_failure(all_downloads):
+    all_downloads["ok"] = False
+
+    assert purchase.download_all_game_store_purchases() is False
+    assert all_downloads["downloaded"] == ["Half-Life 2"]

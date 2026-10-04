@@ -68,6 +68,7 @@ class PSVStrip(toolbase.ToolBase):
                 install_name = "PSVStrip",
                 install_dir = programs.get_program_install_dir("PSVStrip", "windows"),
                 search_file = "psvstrip.exe",
+                install_files = ["psvstrip.exe"],
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)

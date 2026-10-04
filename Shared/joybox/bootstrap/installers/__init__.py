@@ -64,6 +64,8 @@ from joybox.bootstrap.installers.installer_onepassword import (
 from joybox.bootstrap.installers.installer_python import (
     get_python_package_id as get_python_package_id,
     get_package_spec as get_package_spec,
+    is_isolated_package as is_isolated_package,
+    get_package_commands as get_package_commands,
     get_python_package_info as get_python_package_info,
     Python as Python)
 from joybox.bootstrap.installers.installer_sdl3 import (

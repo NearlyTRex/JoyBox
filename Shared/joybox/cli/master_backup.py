@@ -58,7 +58,7 @@ def build_parser():
     parser.add_string_argument(
         args = ("-r", "--remote_lockers"),
         default = "Hetzner,Gdrive",
-        description = "Comma-separated locker names to back up to; unknown names are skipped with a warning")
+        description = "Comma-separated locker names to back up to; an unknown name stops the run")
     parser.add_boolean_argument(
         args = ("--no_rebuild_sidecars",),
         description = "Do not refresh the SFTP destinations' hash sidecars after uploading")
@@ -93,7 +93,7 @@ def main():
             if locker_type:
                 remote_locker_types.append(locker_type)
             else:
-                logger.log_warning("Unknown locker type: %s" % locker_str)
+                logger.log_error("Unknown locker type: %s" % locker_str, quit_program = True)
     if not remote_locker_types:
         logger.log_error("No valid remote locker types specified", quit_program = True)
 

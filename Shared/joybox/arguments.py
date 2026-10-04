@@ -282,9 +282,11 @@ class ArgumentParser:
         arg_type = None,
         default = None,
         description = None,
-        allow_multiple = False):
+        allow_multiple = False,
+        required = False):
         enum_values = arg_type.values()
         quoted_enum_values = [f"'{value}'" for value in enum_values]
+        metavar = (args if isinstance(args, tuple) else (args,))[-1].lstrip("-").upper()
         if allow_multiple:
             if default is not None:
                 if not isinstance(default, list):
@@ -298,14 +300,16 @@ class ArgumentParser:
                 choices = arg_type.values(),
                 help = f"{description}.\nAllowed values are [{', '.join(quoted_enum_values)}]",
                 nargs = "+",
-                metavar = "")
+                required = required,
+                metavar = metavar)
         return self._add_argument(args, description,
             default = default,
             type = arg_type,
             action = EnumArgparseAction,
             choices = arg_type.values(),
             help = f"{description}.\nAllowed values are [{', '.join(quoted_enum_values)}]",
-            metavar = "")
+            required = required,
+            metavar = metavar)
 
     # Add enum list argument
     def add_enum_list_argument(

@@ -18,8 +18,13 @@ from joybox.cli import sync_tool
 
 class FakeLockerInfo:
 
+    local_only = False
+
     def __init__(self, locker_type = None):
         self.root = FakeLockerInfo.root
+
+    def is_local_only(self):
+        return FakeLockerInfo.local_only
 
     def get_type(self):
         return config.RemoteType.SFTP.val()
@@ -64,6 +69,7 @@ ACTIONS = {
 @pytest.fixture
 def tool(monkeypatch, tmp_path, isolated_settings):
     FakeLockerInfo.root = str(tmp_path)
+    monkeypatch.setattr(FakeLockerInfo, "local_only", False)
     state = {"result": True, "called": []}
     monkeypatch.setattr(sync_tool.setup, "check_requirements", lambda: None)
     monkeypatch.setattr(sync_tool.logger, "setup_logging", lambda: None)
@@ -104,4 +110,14 @@ def test_a_cancelled_preview_runs_nothing_and_is_not_an_error(tool, monkeypatch)
 
     system.run_main(sync_tool.main)
 
+    assert tool["called"] == []
+
+
+def test_a_locker_with_no_remote_is_refused(tool, monkeypatch):
+    # Without a remote type there is nothing for rclone to talk to.
+    monkeypatch.setattr(FakeLockerInfo, "local_only", True)
+
+    with pytest.raises(SystemExit) as raised:
+        tool["run"](config.RemoteActionType.LIST)
+    assert raised.value.code != 0
     assert tool["called"] == []

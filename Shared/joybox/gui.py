@@ -299,10 +299,7 @@ def display_loading_window(
     # Task that will keep the window open until it is done
     def do_task():
         if callable(run_func):
-            if run_func_args:
-                return run_func(run_func_args)
-            else:
-                return run_func()
+            return run_func(**run_func_args)
         return False
 
     # Run task in the background and wait for it to be completed
@@ -427,8 +424,10 @@ def display_choices_window(
 
         # Get selected choice
         if event == 'submit':
-            selected_choice = window["listbox"].get()[0]
-            break
+            selection = window["listbox"].get()
+            if selection:
+                selected_choice = selection[0]
+                break
 
     # Close window
     window.close()

@@ -236,6 +236,7 @@ from joybox.config.keys import (
     program_key_stdout as program_key_stdout,
     program_key_stderr as program_key_stderr,
     program_key_include_stderr as program_key_include_stderr,
+    program_key_stdin_input as program_key_stdin_input,
     program_step_key_from as program_step_key_from,
     program_step_key_to as program_step_key_to,
     program_step_key_dir as program_step_key_dir,

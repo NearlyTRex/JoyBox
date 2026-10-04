@@ -1,6 +1,5 @@
 # Local imports
 import joybox.config as config
-import joybox.logger as logger
 import joybox.paths as paths
 import joybox.environment as environment
 import joybox.hashing as hashing
@@ -36,9 +35,6 @@ def build_hash_files(
 
     # Get locker info
     locker_info = lockerinfo.LockerInfo(locker_type)
-    if not locker_info:
-        logger.log_error("Locker %s not found" % locker_type)
-        return False
 
     # Hash files
     success = hashing.hash_files(

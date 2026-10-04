@@ -59,7 +59,7 @@ def build_parser():
     parser.add_string_argument(
         args = ("-s", "--secondary_lockers"),
         default = "Gdrive,External",
-        description = "Comma-separated locker names to update; unknown names are skipped with a warning")
+        description = "Comma-separated locker names to update; an unknown name stops the run")
     parser.add_boolean_argument(
         args = ("--skip_cache",),
         description = "Rebuild every hash map instead of reusing one cached within the last 24 hours")
@@ -91,7 +91,7 @@ def main():
             if locker_type:
                 secondary_locker_types.append(locker_type)
             else:
-                logger.log_warning("Unknown locker type: %s" % locker_str)
+                logger.log_error("Unknown locker type: %s" % locker_str, quit_program = True)
     if not secondary_locker_types:
         logger.log_error("No valid secondary locker types specified", quit_program = True)
 

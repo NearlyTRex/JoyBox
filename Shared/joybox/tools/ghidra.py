@@ -111,6 +111,7 @@ class Ghidra(toolbase.ToolBase):
                 archive_dir = programs.get_library_backup_dir("Ghidra", "lib"),
                 install_name = "Ghidra",
                 install_dir = programs.get_library_install_dir("Ghidra", "lib"),
+                search_file = "ghidraRun",
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)

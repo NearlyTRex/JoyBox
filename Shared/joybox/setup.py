@@ -68,16 +68,17 @@ def setup_packages(
         if packages is not None and package_name not in packages:
             continue
 
-        # Force reinstall by cleaning the install directory
+        # Force reinstall by cleaning each of the package's install directories
         if force:
-            install_dir = programs.get_library_install_dir(package_name)
-            if paths.does_path_exist(install_dir):
-                logger.log_info("Forcing rebuild of %s (removing %s) ..." % (package_name, install_dir))
-                fileops.remove_directory(
-                    src = install_dir,
-                    verbose = setup_params.verbose,
-                    pretend_run = setup_params.pretend_run,
-                    exit_on_failure = setup_params.exit_on_failure)
+            for program_name in list(package.get_config()) or [package_name]:
+                install_dir = paths.join_paths(root_dir, program_name)
+                if paths.does_path_exist(install_dir):
+                    logger.log_info("Forcing rebuild of %s (removing %s) ..." % (package_name, install_dir))
+                    fileops.remove_directory(
+                        src = install_dir,
+                        verbose = setup_params.verbose,
+                        pretend_run = setup_params.pretend_run,
+                        exit_on_failure = setup_params.exit_on_failure)
 
         # Install package
         logger.log_info("Installing %s %s ..." % (package_type, package_name))

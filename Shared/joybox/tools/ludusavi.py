@@ -147,6 +147,7 @@ class Ludusavi(toolbase.ToolBase):
                 install_name = "Ludusavi",
                 install_dir = programs.get_program_install_dir("Ludusavi", "windows"),
                 search_file = "ludusavi.exe",
+                install_files = ["ludusavi.exe"],
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)
@@ -160,6 +161,14 @@ class Ludusavi(toolbase.ToolBase):
                 archive_dir = programs.get_program_backup_dir("Ludusavi", "linux"),
                 install_name = "Ludusavi",
                 install_dir = programs.get_program_install_dir("Ludusavi", "linux"),
+                search_file = "ludusavi",
+                install_files = ["ludusavi"],
+                chmod_files = [
+                    {
+                        "file": "ludusavi",
+                        "perms": 755
+                    }
+                ],
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)

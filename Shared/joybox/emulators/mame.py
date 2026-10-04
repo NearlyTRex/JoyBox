@@ -6,7 +6,7 @@ import joybox.logger as logger
 import joybox.paths as paths
 import joybox.release as release
 import joybox.programs as programs
-import joybox.hashing as hashing
+import joybox.gui as gui
 import joybox.emulatorcommon as emulatorcommon
 import joybox.emulatorbase as emulatorbase
 
@@ -60,6 +60,17 @@ system_files["roms/cdibios.zip"] = "f34b1f4badf6f587c91cb2505c3c531d"
 system_files["roms/intv_voice.zip"] = "60140f3f7c4409e18a65fe2799f22f79"
 system_files["roms/stic.zip"] = "2f4e36d03a8a2d9abaf3a94cb3583c8d"
 system_files["roms/intv.zip"] = "20b954b1ba6b378965050b2e887df924"
+
+# System drivers and media flags for non-arcade platforms
+system_drivers = {
+    config.Platform.OTHER_ATARI_5200: ("a5200", "-cart"),
+    config.Platform.OTHER_ATARI_7800: ("a7800", "-cart"),
+    config.Platform.OTHER_MAGNAVOX_ODYSSEY_2: ("odyssey2", "-cart"),
+    config.Platform.OTHER_MATTEL_INTELLIVISION: ("intv", "-cart"),
+    config.Platform.OTHER_PHILIPS_CDI: ("cdimono1", "-cdrom"),
+    config.Platform.OTHER_TEXAS_INSTRUMENTS_TI994A: ("ti99_4a", "-cart"),
+    config.Platform.OTHER_TIGER_GAMECOM: ("gamecom", "-cart1")
+}
 
 # Mame emulator
 class Mame(emulatorbase.EmulatorBase):
@@ -134,7 +145,6 @@ class Mame(emulatorbase.EmulatorBase):
                 install_name = "Mame",
                 install_dir = programs.get_program_install_dir("Mame", "windows"),
                 backups_dir = programs.get_program_backup_dir("Mame", "windows"),
-                installer_type = config.InstallerType.SEVENZIP,
                 release_type = config.ReleaseType.ARCHIVE,
                 get_latest = True,
                 locker_type = setup_params.locker_type,
@@ -242,16 +252,8 @@ class Mame(emulatorbase.EmulatorBase):
                 return False
 
         # Verify system files
-        for filename, expected_md5 in system_files.items():
-            actual_md5 = hashing.calculate_file_md5(
-                src = paths.join_paths(environment.get_locker_gaming_emulator_setup_dir("Mame"), filename),
-                verbose = setup_params.verbose,
-                pretend_run = setup_params.pretend_run,
-                exit_on_failure = setup_params.exit_on_failure)
-            success = (expected_md5 == actual_md5)
-            if not success:
-                logger.log_error("Could not verify Mame system file %s" % filename)
-                return False
+        if not self.verify_system_files(system_files, setup_params):
+            return False
 
         # Copy system files
         for filename in system_files.keys():
@@ -281,6 +283,12 @@ class Mame(emulatorbase.EmulatorBase):
         # Get game info
         game_platform = game_info.get_platform()
 
+        # Check if this platform is valid
+        if game_platform not in self.get_platforms():
+            gui.display_error_popup(
+                title_text = "Launch platform not defined",
+                message_text = "Launch platform %s not defined in Mame config" % game_platform)
+
         # Get launch command
         launch_cmd = [programs.get_emulator_program("Mame")]
 
@@ -289,55 +297,24 @@ class Mame(emulatorbase.EmulatorBase):
             "-inipath", programs.get_emulator_path_config_value("Mame", "config_dir")
         ]
 
-        # Add rom path
+        # Add rom path and launch file
         if game_platform == config.Platform.OTHER_ARCADE:
             launch_cmd += [
-                "-rompath", config.token_game_dir
-            ]
-        else:
-            launch_cmd += [
-                "-rompath", programs.get_emulator_path_config_value("Mame", "roms_dir")
-            ]
-
-        # Add launch file
-        if game_platform == config.Platform.OTHER_ARCADE:
-            launch_cmd += [
+                "-rompath", config.token_game_dir,
                 config.token_game_name
             ]
-        elif game_platform == config.Platform.OTHER_ATARI_5200:
+        else:
+            system_name, media_flag = system_drivers[game_platform]
             launch_cmd += [
-                "a5200",
-                "-cart", config.token_game_file
+                "-rompath", programs.get_emulator_path_config_value("Mame", "roms_dir"),
+                system_name,
+                media_flag, config.token_game_file
             ]
-        elif game_platform == config.Platform.OTHER_ATARI_7800:
+
+        # Mame runs fullscreen unless told otherwise
+        if not fullscreen:
             launch_cmd += [
-                "a7800",
-                "-cart", config.token_game_file
-            ]
-        elif game_platform == config.Platform.OTHER_MAGNAVOX_ODYSSEY_2:
-            launch_cmd += [
-                "odyssey2",
-                "-cart", config.token_game_file
-            ]
-        elif game_platform == config.Platform.OTHER_MATTEL_INTELLIVISION:
-            launch_cmd += [
-                "intv",
-                "-cart", config.token_game_file
-            ]
-        elif game_platform == config.Platform.OTHER_PHILIPS_CDI:
-            launch_cmd += [
-                "cdimono1",
-                "-cdrom", config.token_game_file
-            ]
-        elif game_platform == config.Platform.OTHER_TEXAS_INSTRUMENTS_TI994A:
-            launch_cmd += [
-                "ti99_4a",
-                "-cart", config.token_game_file
-            ]
-        elif game_platform == config.Platform.OTHER_TIGER_GAMECOM:
-            launch_cmd += [
-                "gamecom",
-                "-cart1", config.token_game_file
+                "-window"
             ]
 
         # Launch game

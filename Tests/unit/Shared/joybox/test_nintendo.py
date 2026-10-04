@@ -90,6 +90,13 @@ def test_a_profiles_dat_is_written(tmp_path):
     assert target.exists()
 
 
+def test_a_pretend_profiles_dat_succeeds_without_writing(tmp_path):
+    target = tmp_path / "profiles.dat"
+
+    assert nintendo.create_switch_profiles_dat(str(target), VALID_ID, "yuzu", pretend_run = True) is True
+    assert not target.exists()
+
+
 def test_a_profiles_dat_is_the_expected_size(tmp_path):
     # The emulator reads a fixed size record; a short file is not loadable.
     target = tmp_path / "profiles.dat"
