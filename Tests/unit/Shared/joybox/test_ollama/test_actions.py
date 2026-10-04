@@ -24,6 +24,8 @@ def console(monkeypatch):
         "answers": [],
         "selections": [],
         "pulled": [],
+        "pull_result": True,
+        "quantizations": [],
         "deleted": [],
         "launched": [],
         "info": "Model info",
@@ -44,6 +46,11 @@ def console(monkeypatch):
     monkeypatch.setattr(
         ollama, "pull_with_quantization",
         lambda name: state["pulled"].append(name) or True)
+    monkeypatch.setattr(
+        ollama, "pull_model",
+        lambda name: state["pulled"].append(name) or state["pull_result"])
+    monkeypatch.setattr(
+        ollama, "get_quantization_options", lambda name: state["quantizations"])
     monkeypatch.setattr(
         ollama, "launch_harness",
         lambda name, harness: state["launched"].append((name, harness)) or True)
@@ -296,6 +303,52 @@ def test_a_model_that_is_not_installed_is_offered_for_pulling(console):
 
     assert ollama.action_harness(model_name = "gemma3:12b") is True
     assert console["pulled"] == ["gemma3:12b"]
+    assert console["launched"] == [("gemma3:12b", ollama.DEFAULT_HARNESS)]
+
+
+def quantization(tag):
+    return {"tag": tag, "full_name": "gemma3:" + tag, "size_mb": 5000, "size_str": "5GB", "context": "128K"}
+
+
+def test_the_chosen_quantization_is_the_one_launched(console):
+    console["installed"] = [installed("qwen3:8b")]
+    console["answers"] = [True]
+    console["quantizations"] = [quantization("12b"), quantization("12b-it-q8_0")]
+    console["selections"] = [1]
+
+    ollama.action_harness(model_name = "gemma3:12b")
+
+    assert console["pulled"] == ["gemma3:12b-it-q8_0"]
+    assert console["launched"] == [("gemma3:12b-it-q8_0", ollama.DEFAULT_HARNESS)]
+
+
+def test_completion_only_quantizations_are_not_offered_to_a_harness(console, monkeypatch):
+    # Base and text models cannot chat or call tools, so an agent cannot use them.
+    offered = []
+    def prompt_for_selection(message, options, display_func = None):
+        offered.extend(o["tag"] for o in options)
+        return options[0]
+    monkeypatch.setattr(ollama.prompts, "prompt_for_selection", prompt_for_selection)
+    console["installed"] = [installed("qwen3:8b")]
+    console["answers"] = [True]
+    console["quantizations"] = [
+        quantization("12b"), quantization("12b-base"), quantization("12b-base-q4_K_M"),
+        quantization("12b-text-q8_0"), quantization("12b-it-q8_0")]
+
+    ollama.action_harness(model_name = "gemma3:12b")
+
+    assert offered == ["12b", "12b-it-q8_0"]
+
+
+def test_declining_the_quantization_launches_nothing(console):
+    console["installed"] = [installed("qwen3:8b")]
+    console["answers"] = [True]
+    console["quantizations"] = [quantization("12b"), quantization("12b-it-q8_0")]
+    console["selections"] = [None]
+
+    assert ollama.action_harness(model_name = "gemma3:12b") is True
+    assert console["pulled"] == []
+    assert console["launched"] == []
 
 
 def test_declining_to_pull_does_not_launch(console):
@@ -480,8 +533,8 @@ def test_declining_the_model_to_inspect_is_not_a_failure(console, monkeypatch):
     assert ollama.action_info() is True
 
 
-def test_a_failed_pull_does_not_launch_the_harness(console, monkeypatch):
-    monkeypatch.setattr(ollama, "pull_with_quantization", lambda name: False)
+def test_a_failed_pull_does_not_launch_the_harness(console):
+    console["pull_result"] = False
     console["installed"] = [installed("qwen3:8b")]
     console["answers"] = [True]
 

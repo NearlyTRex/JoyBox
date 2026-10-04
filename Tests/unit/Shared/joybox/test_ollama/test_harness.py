@@ -139,7 +139,26 @@ def test_an_openai_style_harness_gets_the_versioned_endpoint(harness_command):
 def test_codex_uses_its_own_ollama_provider(harness_command):
     ollama.launch_harness("qwen3:8b", "codex")
 
-    assert harness_command.only() == ["codex", "--oss", "--local-provider", "ollama", "-m", "qwen3:8b"]
+    assert harness_command.only()[:6] == ["codex", "--oss", "--local-provider", "ollama", "-m", "qwen3:8b"]
+
+
+def codex_config(harness_command):
+    cmd = harness_command.only()
+    return [cmd[i + 1] for i, arg in enumerate(cmd) if arg == "-c"]
+
+
+def test_codex_does_not_ask_to_sign_in(harness_command):
+    # --oss alone still puts up the ChatGPT sign-in before the prompt.
+    ollama.launch_harness("qwen3:8b", "codex")
+
+    assert "model_provider=ollama" in codex_config(harness_command)
+
+
+def test_codex_does_not_try_to_update_itself(harness_command):
+    # It is installed globally as root, so its updater cannot write there.
+    ollama.launch_harness("qwen3:8b", "codex")
+
+    assert "check_for_update_on_startup=false" in codex_config(harness_command)
 
 
 def test_codex_is_told_the_window_built_into_a_variant(harness_command):

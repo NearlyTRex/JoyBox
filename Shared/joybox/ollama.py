@@ -560,8 +560,13 @@ HARNESSES = {
         "name": "Codex CLI",
         "min_tokens": 8000,
 
-        # Its built-in ollama provider cannot be redefined, only pointed elsewhere
-        "command": ["codex", "--oss", "--local-provider", "ollama", "-m", "{model}"],
+        # Its built-in ollama provider cannot be redefined, only pointed elsewhere.
+        # --oss alone still puts up the ChatGPT sign-in, which model_provider
+        # skips. The bootstrap installs it globally as root, so its own
+        # updater fails.
+        "command": ["codex", "--oss", "--local-provider", "ollama", "-m", "{model}",
+            "-c", "model_provider=ollama",
+            "-c", "check_for_update_on_startup=false"],
         "env": {"CODEX_OSS_BASE_URL": "{api_base}/v1"},
         "context_args": ["-c", "model_context_window={context}"],
         "coding_context": 32768,
@@ -895,33 +900,49 @@ def format_installed_model_display(model):
 ###########################################################
 
 # Pull a model, offering a quantization choice when the model has several
-def pull_with_quantization(model_name):
-    hw = get_server_hardware()
-    vram_mb = hw["gpu_vram_total_mb"]
-    ram_mb = hw["system_ram_mb"]
+# Check if a tag is a raw completion model
+# Base and text tags continue text rather than follow a conversation, so they
+# cannot drive a chat or call tools.
+def is_completion_only_tag(tag):
+    return re.search(r"(^|-)(base|text)(-|$)", tag.lower()) is not None
 
-    # Check for available quantizations
+# Choose which quantization of a model to pull
+# Returns the full name chosen, the name itself when there is no choice to
+# make, or None when the choice is declined.
+def choose_quantization(model_name, chat_only = False):
     options = get_quantization_options(model_name)
-    if options and len(options) > 1:
-        logger.log_info("Available quantizations for %s:" % model_name)
-        logger.log_info("[+] fits GPU  [~] CPU offload  [-] too large")
-        selected = prompts.prompt_for_selection(
-            "Select quantization:",
-            options,
-            display_func = lambda o: format_quantization_display(o, vram_mb, ram_mb)
-        )
-        if selected is None:
-            return True
-        model_name = selected["full_name"]
+    if chat_only:
+        options = [o for o in options if not is_completion_only_tag(o["tag"])]
+    if len(options) <= 1:
+        return options[0]["full_name"] if options else model_name
+    hw = get_server_hardware()
+    logger.log_info("Available quantizations for %s:" % model_name)
+    logger.log_info("[+] fits GPU  [~] CPU offload  [-] too large")
+    selected = prompts.prompt_for_selection(
+        "Select quantization:",
+        options,
+        display_func = lambda o: format_quantization_display(o, hw["gpu_vram_total_mb"], hw["system_ram_mb"])
+    )
+    if selected is None:
+        return None
+    return selected["full_name"]
 
-    # Pull model
+# Pull a model, reporting the outcome
+def pull_and_report(model_name):
     logger.log_info("Pulling %s ..." % model_name)
     if pull_model(model_name):
         logger.log_info("Successfully pulled %s" % model_name)
         return True
-    else:
-        logger.log_error("Failed to pull %s" % model_name)
-        return False
+    logger.log_error("Failed to pull %s" % model_name)
+    return False
+
+# Pull a model in a quantization chosen from those available
+# Declining the choice pulls nothing and is not a failure.
+def pull_with_quantization(model_name):
+    chosen = choose_quantization(model_name)
+    if chosen is None:
+        return True
+    return pull_and_report(chosen)
 
 # List installed models
 def action_list(model_name = None, purpose = None, harness = None, show_all = False):
@@ -1131,11 +1152,14 @@ def action_harness(model_name = None, purpose = None, harness = None, show_all =
     elif model_name not in installed_names:
         logger.log_error("Model '%s' is not installed" % model_name)
         logger.log_info("Installed models: %s" % ", ".join(sorted(installed_names)))
-        if prompts.prompt_for_confirmation("Pull '%s' now?" % model_name, default_yes = True):
-            if not pull_with_quantization(model_name):
-                return False
-        else:
+        if not prompts.prompt_for_confirmation("Pull '%s' now?" % model_name, default_yes = True):
             return False
+        chosen = choose_quantization(model_name, chat_only = True)
+        if chosen is None:
+            return True
+        if not pull_and_report(chosen):
+            return False
+        model_name = chosen
 
     # Warn if the model's context window is too small for this harness
     if not check_context_window(model_name, harness):
