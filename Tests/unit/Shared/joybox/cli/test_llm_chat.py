@@ -293,3 +293,65 @@ def test_a_failed_run_exits_with_an_error(tool, monkeypatch):
     with pytest.raises(SystemExit) as raised:
         llm_chat.run()
     assert raised.value.code == 1
+
+
+###########################################################
+# Coding preset
+###########################################################
+
+@pytest.fixture
+def coding(tool, monkeypatch):
+    tool["backend"] = FakeBackend(models = ("qwen3-coder:30b-ctx64k", "devstral:24b"), limit = 262144)
+    tool["chosen"] = []
+    tool["sessions"] = []
+    monkeypatch.setattr(llm_chat.llmchat, "get_coding_model",
+        lambda model = None: tool["chosen"].append(model) or (model or "qwen3-coder:30b-ctx64k"))
+    real_session = llmchat.Session
+
+    def session(backend, model, limit, temperature, max_tokens):
+        made = real_session(backend, model, limit, temperature, max_tokens)
+        tool["sessions"].append(made)
+        return made
+    monkeypatch.setattr(llm_chat.llmchat, "Session", session)
+    return tool
+
+
+def test_the_coding_preset_picks_the_model_window_and_prompt(coding):
+    assert coding["run"]("--code", "--ask", "hi") is True
+
+    assert coding["chosen"] == [None]
+    assert coding["made"][0][3] == "qwen3-coder:30b-ctx64k"
+    assert coding["backend"].questions[0][0] == "qwen3-coder:30b-ctx64k"
+    session = coding["sessions"][0]
+    assert session.limit == llmchat.CODING_CONTEXT_TOKENS == 32768
+    assert llmchat.CODING_SYSTEM_PROMPT in str(session.seed)
+
+
+def test_the_coding_preset_keeps_a_named_model_window_and_prompt(coding):
+    assert coding["run"]("--code", "-m", "devstral:24b", "--num_ctx", "8192",
+        "--system", "Be terse.", "--ask", "hi") is True
+
+    assert coding["chosen"] == ["devstral:24b"]
+    session = coding["sessions"][0]
+    assert session.limit == 8192
+    assert "Be terse." in str(session.seed)
+    assert llmchat.CODING_SYSTEM_PROMPT not in str(session.seed)
+
+
+def test_the_coding_preset_needs_the_ollama_backend(coding):
+    assert coding["run"]("--code", "-b", "claude", "--ask", "hi") is False
+    assert "ollama" in coding["errors"][0]
+    assert coding["made"] == []
+
+
+def test_the_coding_preset_uses_the_configured_server(coding):
+    assert coding["run"]("--code", "-e", "http://elsewhere:11434", "--ask", "hi") is False
+    assert "--endpoint" in coding["errors"][0]
+    assert coding["chosen"] == []
+
+
+def test_the_coding_preset_stops_when_no_model_is_ready(coding, monkeypatch):
+    monkeypatch.setattr(llm_chat.llmchat, "get_coding_model", lambda model = None: None)
+
+    assert coding["run"]("--code", "--ask", "hi") is False
+    assert coding["made"] == []

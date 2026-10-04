@@ -82,6 +82,7 @@ def post_remote_json(
     url,
     headers = None,
     data = None,
+    timeout = 10,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -94,7 +95,7 @@ def post_remote_json(
         import requests
         if not headers:
             headers = {"Accept": "application/json"}
-        post = requests.post(url, headers=headers, json=data, timeout=10)
+        post = requests.post(url, headers=headers, json=data, timeout=timeout)
         if verbose:
             logger.log_info("Got response: %s" % str(post.status_code))
         if post.status_code == 200:

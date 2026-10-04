@@ -9,6 +9,7 @@ from . import installer
 from joybox import runoptions
 from joybox import logger
 from joybox import environment
+from joybox import platform_info
 
 # Extract package identifier from string or dict
 # This is the distribution name, used to query install state with pip show
@@ -30,6 +31,18 @@ def get_package_spec(pkg):
     if isinstance(spec, str):
         return [spec]
     return [str(part) for part in spec]
+
+# Check whether a package gets a virtual environment of its own
+# A tool that pins its dependencies exactly would otherwise move the shared
+# venv's packages to the versions it wants.
+def is_isolated_package(pkg):
+    return isinstance(pkg, dict) and bool(pkg.get("isolated"))
+
+# Get the commands an isolated package puts on the PATH
+def get_package_commands(pkg):
+    if isinstance(pkg, dict):
+        return list(pkg.get("commands", []))
+    return []
 
 # Get display info for a package
 def get_python_package_info(pkg):
@@ -60,6 +73,31 @@ class Python(installer.Installer):
     def get_packages(self):
         return packages.python.get(self.get_environment_type(), [])
 
+    def get_tools_dir(self):
+        tools_dir = settings.get_value("Tools.Python", "python_tools_dir")
+        if not tools_dir:
+            tools_dir = os.path.join("$HOME", ".local", "share", "joybox", "pytools")
+        return os.path.expandvars(tools_dir)
+
+    def get_isolated_venv_dir(self, pkg):
+        return os.path.join(self.get_tools_dir(), get_python_package_id(pkg))
+
+    def get_isolated_scripts_dir(self, pkg):
+        if platform_info.is_windows_platform():
+            return os.path.join(self.get_isolated_venv_dir(pkg), "Scripts")
+        return os.path.join(self.get_isolated_venv_dir(pkg), "bin")
+
+    def get_isolated_pip_tool(self, pkg):
+        return os.path.join(self.get_isolated_scripts_dir(pkg), settings.get_value("Tools.Python", "python_pip_exe"))
+
+    def get_command_link_dir(self):
+        return os.path.join(os.path.expanduser("~"), ".local", "bin")
+
+    def get_pip_tool(self, pkg):
+        if is_isolated_package(pkg):
+            return self.get_isolated_pip_tool(pkg)
+        return self.python_venv_pip_tool
+
     def get_repo_dir(self):
         return os.path.normpath(environment.get_repo_root(expand = True))
 
@@ -82,7 +120,7 @@ class Python(installer.Installer):
             return False
         for pkg in self.get_packages():
             pkg_id = get_python_package_id(pkg)
-            if not self.is_package_installed(pkg_id):
+            if not self.is_package_installed(pkg_id, self.get_pip_tool(pkg)):
                 return False
         return True
 
@@ -93,7 +131,7 @@ class Python(installer.Installer):
             pkg_id = get_python_package_id(pkg)
             pkg_info = get_python_package_info(pkg)
             display_name = pkg_info["name"] if pkg_info["name"] != pkg_id else pkg_id
-            if self.is_package_installed(pkg_id):
+            if self.is_package_installed(pkg_id, self.get_pip_tool(pkg)):
                 installed.append(display_name)
             else:
                 missing.append(display_name)
@@ -124,7 +162,11 @@ class Python(installer.Installer):
             pkg_id = get_python_package_id(pkg)
             pkg_info = get_python_package_info(pkg)
             display_name = pkg_info["name"] if pkg_info["name"] != pkg_id else pkg_id
-            if not self.install_package(get_package_spec(pkg)):
+            if is_isolated_package(pkg):
+                installed = self.install_isolated_package(pkg)
+            else:
+                installed = self.install_package(get_package_spec(pkg))
+            if not installed:
                 logger.log_error(f"Unable to install package {display_name}")
                 return False
         return True
@@ -135,7 +177,11 @@ class Python(installer.Installer):
             pkg_id = get_python_package_id(pkg)
             pkg_info = get_python_package_info(pkg)
             display_name = pkg_info["name"] if pkg_info["name"] != pkg_id else pkg_id
-            if not self.uninstall_package(pkg_id):
+            if is_isolated_package(pkg):
+                uninstalled = self.uninstall_isolated_package(pkg)
+            else:
+                uninstalled = self.uninstall_package(pkg_id)
+            if not uninstalled:
                 logger.log_error(f"Unable to uninstall package {display_name}")
                 return False
         return self.uninstall_package("joybox")
@@ -144,8 +190,8 @@ class Python(installer.Installer):
         code = self.connection.run_blocking([self.python_tool, "-m", "venv", venv_dir])
         return code == 0
 
-    def is_package_installed(self, package):
-        code = self.connection.run_blocking([self.python_venv_pip_tool, "show", package])
+    def is_package_installed(self, package, pip_tool = None):
+        code = self.connection.run_blocking([pip_tool or self.python_venv_pip_tool, "show", package])
         return code == 0
 
     def install_package(self, package):
@@ -156,3 +202,35 @@ class Python(installer.Installer):
     def uninstall_package(self, package):
         code = self.connection.run_blocking([self.python_venv_pip_tool, "uninstall", "-y", package])
         return code == 0
+
+    def install_isolated_package(self, pkg):
+        venv_dir = self.get_isolated_venv_dir(pkg)
+        if not self.connection.does_file_or_directory_exist(venv_dir):
+            logger.log_info(f"Creating Python virtual environment at {venv_dir}")
+            if not self.create_virtual_environment(venv_dir):
+                return False
+        code = self.connection.run_blocking(
+            [self.get_isolated_pip_tool(pkg), "install", "--upgrade"] + get_package_spec(pkg))
+        if code != 0:
+            return False
+        scripts_dir = self.get_isolated_scripts_dir(pkg)
+        if platform_info.is_windows_platform():
+            return self.connection.add_to_path(scripts_dir)
+        link_dir = self.get_command_link_dir()
+        for name in get_package_commands(pkg):
+            if not self.connection.link_file_or_directory(
+                os.path.join(scripts_dir, name), os.path.join(link_dir, name)):
+                return False
+        return True
+
+    def uninstall_isolated_package(self, pkg):
+        if not platform_info.is_windows_platform():
+            link_dir = self.get_command_link_dir()
+            for name in get_package_commands(pkg):
+                link = os.path.join(link_dir, name)
+                if self.connection.does_file_or_directory_exist(link):
+                    self.connection.remove_file_or_directory(link)
+        venv_dir = self.get_isolated_venv_dir(pkg)
+        if not self.connection.does_file_or_directory_exist(venv_dir):
+            return True
+        return self.connection.remove_file_or_directory(venv_dir)

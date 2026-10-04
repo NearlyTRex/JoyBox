@@ -158,3 +158,83 @@ def test_a_seed_file_that_cannot_be_written_fails(tmp_path, monkeypatch):
 
     assert autoinstall.write_seed_files(str(tmp_path / "iso"), complete_profile()) is False
     assert len(written) == 1
+
+
+###########################################################
+# Shipped overlays
+###########################################################
+
+def shipped_overlays(repo_root):
+    import glob
+    import os
+    return sorted(glob.glob(os.path.join(repo_root, "Scripts", "autoinstall", "*.yaml")))
+
+
+def runcmd_lines(seed):
+    commands = seed["autoinstall"].get("user-data", {}).get("runcmd", [])
+    return [" ".join(command) if isinstance(command, list) else command for command in commands]
+
+
+def test_there_are_shipped_overlays_to_check(repo_root):
+    assert shipped_overlays(repo_root)
+
+
+def test_a_shipped_overlay_that_enables_the_firewall_lets_ssh_in_first(repo_root):
+    # A key is the only way into the installed machine, so a firewall that
+    # comes up without port 22 open leaves nobody able to log in. The port is
+    # named rather than the OpenSSH application profile, which depends on a
+    # file in the target that ufw may not find.
+    for overlay_file in shipped_overlays(repo_root):
+        overlay = autoinstall.read_overlay_file(overlay_file)
+        seed = yaml.safe_load(autoinstall.build_user_data(complete_profile(), overlay))
+        lines = runcmd_lines(seed)
+        enables = [index for index, line in enumerate(lines) if line.startswith("ufw") and "enable" in line]
+        if not enables:
+            continue
+        allows = [index for index, line in enumerate(lines) if line.split()[:3] == ["ufw", "allow", "22/tcp"]]
+        assert allows, "%s enables ufw without allowing 22/tcp" % overlay_file
+        assert allows[0] < enables[0], "%s enables ufw before allowing 22/tcp" % overlay_file
+
+
+def llm_overlay_seed(repo_root):
+    import os
+    overlay = autoinstall.read_overlay_file(os.path.join(repo_root, "Scripts", "autoinstall", "homelab_llm.yaml"))
+    return yaml.safe_load(autoinstall.build_user_data(complete_profile(), overlay))
+
+
+def written_files(seed):
+    return {entry["path"]: entry["content"] for entry in seed["autoinstall"]["user-data"]["write_files"]}
+
+
+def test_the_llm_overlay_ships_the_helper_from_the_tree(repo_root):
+    # The overlay carries the helper inline; the copy in the tree is the one
+    # that is tested, so the two must not drift apart.
+    import os
+    with open(os.path.join(repo_root, "Scripts", "autoinstall", "ollama_helper.py")) as handle:
+        source = handle.read()
+
+    assert written_files(llm_overlay_seed(repo_root))["/usr/local/sbin/ollama-helper"] == source
+
+
+def test_ollama_starts_on_the_gpus_the_helper_chooses(repo_root):
+    override = written_files(llm_overlay_seed(repo_root))["/etc/systemd/system/ollama.service.d/override.conf"]
+
+    assert "ExecStartPre=+/usr/local/sbin/ollama-helper select" in override
+    assert "EnvironmentFile=-/run/ollama/gpus.env" in override
+
+
+def test_the_helper_report_is_served_and_reachable(repo_root):
+    seed = llm_overlay_seed(repo_root)
+    lines = runcmd_lines(seed)
+
+    assert "ExecStart=/usr/local/sbin/ollama-helper serve" in written_files(seed)["/etc/systemd/system/ollama-helper.service"]
+    assert "systemctl enable --now ollama-helper" in lines
+    assert lines.index("ufw allow 11435/tcp") < lines.index("ufw --force enable")
+
+
+def test_a_loaded_model_stays_loaded(repo_root):
+    # Loading is slow and the machine has nothing else to use the VRAM for, so
+    # a model stays until a request for another needs its room
+    override = written_files(llm_overlay_seed(repo_root))["/etc/systemd/system/ollama.service.d/override.conf"]
+
+    assert 'Environment="OLLAMA_KEEP_ALIVE=-1"' in override

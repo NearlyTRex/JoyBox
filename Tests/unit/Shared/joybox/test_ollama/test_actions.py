@@ -49,7 +49,9 @@ def console(monkeypatch):
         lambda name, harness: state["launched"].append((name, harness)) or True)
     monkeypatch.setattr(
         ollama.hardware, "get_hardware_summary", lambda: state["hardware"])
-    monkeypatch.setattr(ollama.hardware, "print_hardware_summary", lambda: None)
+    monkeypatch.setattr(ollama.hardware, "print_hardware_summary", lambda hw = None: None)
+    monkeypatch.setattr(ollama, "get_api_base", lambda: "http://localhost:11434")
+    monkeypatch.setattr(ollama, "get_setting_mb", lambda field: None)
     monkeypatch.setattr(ollama, "check_context_window", lambda name, harness: True)
 
     def prompt_for_confirmation(message, default_yes = False):

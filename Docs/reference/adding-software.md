@@ -36,6 +36,20 @@ python[constants.EnvironmentType.LOCAL_UBUNTU] += [
 ]
 ```
 
+Everything goes into the shared venv (`[Tools.Python] python_venv_dir`). A tool that pins its
+dependencies exactly would move that venv's packages to the versions it wants, so mark it
+`isolated`: it gets a venv of its own under `[Tools.Python] python_tools_dir`
+(`~/.local/share/joybox/pytools/<id>` by default), and the commands it names are linked into
+`~/.local/bin` (on Windows, its `Scripts` folder goes on the PATH instead).
+
+```python
+    {"id": "aider-chat", "name": "Aider", "isolated": True, "commands": ["aider"]},
+```
+
+A dry run shows whether a package needs it:
+`~/.venv/bin/pip install --dry-run --report report.json <package>` lists every version it would
+change.
+
 ## Docker Compose Apps
 
 Server apps that run as containers subclass `DockerAppInstaller`

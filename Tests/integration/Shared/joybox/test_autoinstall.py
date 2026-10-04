@@ -470,7 +470,7 @@ def test_the_shipped_gpu_overlay_reaches_the_image(tmp_path, stock_image, xorris
 
     seed = read_from_image(xorriso, output_file, "/nocloud/user-data", tmp_path)
 
-    assert "drivers" in seed
+    assert "nvidia-headless-no-dkms-580-server" in seed
     assert "ollama.com/install.sh" in seed
     assert "OLLAMA_HOST=0.0.0.0:11434" in seed
     assert "qemu-guest-agent" in seed

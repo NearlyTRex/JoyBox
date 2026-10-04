@@ -145,7 +145,7 @@ def test_a_previewed_seed_carries_the_overlay(repo_root, configured_env):
 
     assert result.returncode == 0
     assert "ollama.com/install.sh" in result.stdout
-    assert "drivers" in result.stdout
+    assert "nvidia-headless-no-dkms-580-server" in result.stdout
 
 
 @pytest.mark.slow

@@ -201,10 +201,10 @@ def test_a_quantization_is_marked_by_where_it_would_run(vram_mb, ram_mb, marker)
 # Hardware defaults
 ###########################################################
 
-def test_the_machine_is_measured_when_no_sizes_are_given(monkeypatch):
+def test_the_server_is_measured_when_no_sizes_are_given(monkeypatch):
     catalog_of(monkeypatch, [model(vram_mb = 12000)])
-    monkeypatch.setattr(ollama.hardware, "get_gpu_vram_total_mb", lambda: 8000)
-    monkeypatch.setattr(ollama.hardware, "get_system_ram_mb", lambda: 32000)
+    monkeypatch.setattr(ollama, "get_server_hardware", lambda: {
+        "gpu_vram_total_mb": 8000, "system_ram_mb": 32000})
 
     assert ollama.get_recommended_models()[0]["fit"] == ollama.FIT_OFFLOAD
 

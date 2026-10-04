@@ -132,8 +132,100 @@ def test_an_openai_style_harness_gets_the_versioned_endpoint(harness_command):
     # appended to it would double the separator.
     ollama.launch_harness("qwen3:8b", "codex")
 
-    assert harness_command.options().get_env_var("OPENAI_BASE_URL") == \
+    assert harness_command.options().get_env_var("CODEX_OSS_BASE_URL") == \
         "http://localhost:11434/v1"
+
+
+def test_codex_uses_its_own_ollama_provider(harness_command):
+    ollama.launch_harness("qwen3:8b", "codex")
+
+    assert harness_command.only() == ["codex", "--oss", "--local-provider", "ollama", "-m", "qwen3:8b"]
+
+
+def test_codex_is_told_the_window_built_into_a_variant(harness_command):
+    ollama.launch_harness("qwen3-coder:30b-ctx64k", "codex")
+
+    assert harness_command.only()[-2:] == ["-c", "model_context_window=65536"]
+
+
+def test_opencode_is_given_a_provider_for_the_server(harness_command):
+    import json
+    ollama.launch_harness("qwen3-coder:30b-ctx64k", "opencode")
+
+    assert harness_command.only() == ["opencode", "--model", "ollama/qwen3-coder:30b-ctx64k"]
+    config = json.loads(harness_command.options().get_env_var("OPENCODE_CONFIG_CONTENT"))
+    provider = config["provider"]["ollama"]
+    assert provider["options"]["baseURL"] == "http://localhost:11434/v1"
+    assert provider["models"]["qwen3-coder:30b-ctx64k"] == {
+        "name": "qwen3-coder:30b-ctx64k", "tools": True,
+        "limit": {"context": 65536, "output": 8192}}
+
+
+def test_opencode_leaves_an_unknown_window_to_the_server(harness_command):
+    import json
+    ollama.launch_harness("qwen3:8b", "opencode")
+
+    config = json.loads(harness_command.options().get_env_var("OPENCODE_CONFIG_CONTENT"))
+    assert "limit" not in config["provider"]["ollama"]["models"]["qwen3:8b"]
+
+
+def test_aider_talks_to_the_server_natively(harness_command):
+    ollama.launch_harness("qwen3:8b", "aider")
+
+    assert harness_command.only() == [
+        "aider", "--model", "ollama_chat/qwen3:8b", "--no-show-model-warnings"]
+    assert harness_command.options().get_env_var("OLLAMA_API_BASE") == "http://localhost:11434"
+
+
+@pytest.fixture
+def cache_root(monkeypatch, tmp_path):
+    monkeypatch.setattr(ollama.environment, "get_cache_root_dir", lambda: str(tmp_path))
+    return tmp_path
+
+
+def test_aider_keeps_a_variant_window_fixed(harness_command, cache_root):
+    # aider would otherwise size num_ctx to each request, and ollama reloads
+    # the model whenever it changes
+    ollama.launch_harness("devstral-small-2:24b-ctx32k", "aider")
+
+    command_line = harness_command.only()
+    assert command_line[-2] == "--model-settings-file"
+    settings_file = cache_root / "Ollama" / "aider" / "devstral-small-2_24b-ctx32k.model-settings.yml"
+    assert command_line[-1] == str(settings_file)
+    assert settings_file.read_text() == (
+        "- name: ollama_chat/devstral-small-2:24b-ctx32k\n"
+        "  extra_params:\n"
+        "    num_ctx: 32768\n")
+
+
+def test_aider_without_a_known_window_gets_no_settings(cache_root):
+    assert ollama.build_aider_args("http://box:11434", "qwen3:8b") == []
+    assert not (cache_root / "Ollama").exists()
+
+
+def test_unwritable_aider_settings_leave_aider_to_size_it(cache_root, monkeypatch):
+    monkeypatch.setattr(ollama.serialization, "write_text_file", lambda src, contents: False)
+
+    assert ollama.build_aider_args("http://box:11434", "m:ctx32k", 32768) == []
+
+
+def test_claude_code_is_told_the_window_built_into_a_variant(harness_command):
+    # It would otherwise assume a window far larger than the model holds
+    ollama.launch_harness("qwen3-coder:30b-ctx64k", "claude_code")
+
+    assert harness_command.options().get_env_var("CLAUDE_CODE_MAX_CONTEXT_TOKENS") == "65536"
+
+
+def test_a_model_without_a_built_in_window_sets_none(harness_command):
+    ollama.launch_harness("qwen3:8b", "claude_code")
+
+    assert harness_command.options().get_env_var("CLAUDE_CODE_MAX_CONTEXT_TOKENS") is None
+
+
+def test_a_harness_without_a_window_setting_is_not_given_one(harness_command):
+    ollama.launch_harness("qwen3-coder:30b-ctx64k", "codex")
+
+    assert harness_command.options().get_env_var("CLAUDE_CODE_MAX_CONTEXT_TOKENS") is None
 
 
 def test_a_harness_runs_in_passthrough(harness_command):

@@ -210,9 +210,9 @@ def get_hardware_summary():
         "system_ram_available_mb": get_system_ram_available_mb(),
     }
 
-# Print hardware summary
-def print_hardware_summary():
-    hw = get_hardware_summary()
+# Print hardware summary, this machine's unless one is given
+def print_hardware_summary(hw = None):
+    hw = hw or get_hardware_summary()
     logger.log_info("Hardware Summary:")
     logger.log_info("  GPU: %s" % hw["gpu_name"])
     if hw["gpu_vram_total_mb"] > 0:

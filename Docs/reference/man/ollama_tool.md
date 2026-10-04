@@ -15,10 +15,11 @@ ollama_tool <action> [options]
 ## Description
 
 Talks to the Ollama server at `[Tools.Ollama] ollama_api_base` in `~/JoyBox.ini`
-(`http://localhost:11434` by default) to list models and point harnesses at it, while
-pulling, deleting and showing a model run the local `ollama` command. If the server
-does not answer, the actions that need it start `ollama serve` in the background and
-wait up to ten seconds for it.
+(`http://localhost:11434` by default) to list models and point harnesses at it.
+Pulling, deleting and showing a model run the local `ollama` command with `OLLAMA_HOST`
+set to that server, so they act on a remote one too. If a local server does not
+answer, the actions that need it start `ollama serve` in the background and wait up
+to ten seconds for it; a remote one that does not answer is an error.
 
 It detects GPU VRAM and system RAM (NVIDIA through `nvidia-smi`, then AMD and Intel
 Arc through the Linux DRM sysfs files, then `rocm-smi`; the card with the most VRAM
@@ -26,6 +27,11 @@ counts) and marks each catalog model by how it fits: `[+]` fits in VRAM, `[~]` f
 only with CPU offload into RAM (slower), `[C]` cloud-hosted, `[-]` too large for
 both, `[*]` already installed. The catalog comes from the ollama.com search page,
 with a small built-in list as a fallback when that cannot be reached.
+
+Fits are judged against the machine the server runs on. A remote server cannot be
+measured from here, so set `[Tools.Ollama] ollama_gpu_vram_mb` (and optionally
+`ollama_system_ram_mb`) to its sizes in megabytes; without them it warns and uses
+this machine's.
 
 Actions:
 
@@ -41,13 +47,27 @@ Actions:
 - `info`: print `ollama show` output for a model; prompts for one without `-m`.
 - `harness`: start a coding-agent CLI with an installed model as its backend. An
   uninstalled `-m` is offered for pulling first.
+- `code`: the one command for coding. Picks the most capable coding model from a
+  ranked list whose weights, context and load overhead fit the server's VRAM (or
+  prepares `-m`), pulls it if needed, builds the context into a `-ctxNNk` variant
+  (64K for Claude Code, 32K for the other harnesses, leaving room for a stronger model),
+  loads it to check it sits wholly in VRAM, falling back to the next model if not, and
+  starts the harness (Claude Code unless `-H`) in the current directory. A prepared
+  variant is reused, so later runs start at once.
 
 Harnesses: `claude_code` runs `claude --model <m> --bare` against Ollama's Anthropic
-endpoint (`ANTHROPIC_BASE_URL`, `ANTHROPIC_API_KEY=ollama`) and wants a context window
-of at least 64K tokens. `codex` (`codex -m <m>`) and `opencode` (`opencode --model
-<m>`) use the OpenAI-compatible `/v1` endpoint (`OPENAI_BASE_URL`,
-`OPENAI_API_KEY=ollama`) and want at least 8K. When the model's advertised context is
-below that, you are warned and asked whether to launch anyway.
+endpoint and wants a context window of at least 64K tokens. `codex` uses its own
+ollama provider (`codex --oss --local-provider ollama`, pointed at the server with
+`CODEX_OSS_BASE_URL`). `opencode` is given an ollama provider through
+`OPENCODE_CONFIG_CONTENT`, so nothing is written to its config. `aider` runs
+`aider --model ollama_chat/<m>` with `OLLAMA_API_BASE`, and for a `-ctxNNk` variant a
+model-settings file under the cache dir that fixes `num_ctx`: left to itself aider
+sizes it to each request, and ollama reloads the model whenever it changes. Those three want at least
+8K, and aider and opencode send far less with each request than the other two, which
+suits local models. A `-ctxNNk` variant's window is passed to the harness, so it
+compacts the conversation before the model runs out. When a model's advertised
+context is below a harness's minimum, you are warned and asked whether to launch
+anyway.
 
 ## Options
 
@@ -55,10 +75,10 @@ below that, you are warned and asked whether to launch anyway.
 
 | Option | Description |
 |--------|-------------|
-| `<action>` | Action to perform: `list`, `available`, `best`, `pull`, `delete`, `info` or `harness`. |
+| `<action>` | Action to perform: `list`, `available`, `best`, `pull`, `delete`, `info`, `harness` or `code`. |
 | `-p, --purpose <purpose>` | Purpose to filter or pick for: `chat`, `tools`, `reasoning`, `vision`, `embedding` or `cloud`. |
-| `-m, --model <model>` | Model for `pull`, `delete`, `info` and `harness`: a base name such as `qwen2.5-coder:7b` or a full tag; prompts for one when omitted. |
-| `-H, --harness <harness>` | Coding-agent CLI for the `harness` action: `claude_code`, `codex` or `opencode`; `claude_code` when omitted. |
+| `-m, --model <model>` | Model for `pull`, `delete`, `info`, `harness` and `code`: a base name such as `qwen2.5-coder:7b` or a full tag; prompts for one when omitted. |
+| `-H, --harness <harness>` | Coding-agent CLI for the `harness` and `code` actions: `claude_code`, `codex`, `opencode` or `aider`; `claude_code` when omitted. |
 | `--all` | In `available`, also list models too large for this machine's VRAM and RAM. |
 
 ## Examples
@@ -99,6 +119,12 @@ ollama_tool pull -m qwen2.5-coder:7b
 ollama_tool pull -m qwen2.5-coder:7b-instruct-q4_K_M
 ```
 
+### Start coding on the best model the server can hold
+
+```bash
+ollama_tool code
+```
+
 ### Run Claude Code on a local model
 
 ```bash
@@ -109,6 +135,12 @@ ollama_tool harness -m qwen2.5-coder:7b
 
 ```bash
 ollama_tool harness -H codex -m qwen2.5-coder:7b
+```
+
+### Start coding with aider on the best model the server can hold
+
+```bash
+ollama_tool code -H aider
 ```
 
 ### Show details of an installed model
@@ -131,8 +163,8 @@ ollama_tool delete -m qwen2.5-coder:7b
 - The context size shown for a tag is the model's advertised maximum. Ollama's runtime context
   (`num_ctx`) defaults much lower; for long agent sessions start the server with a larger one, e.g.
   `OLLAMA_CONTEXT_LENGTH=65536 ollama serve`.
-- The `codex` and `opencode` harnesses may need their own provider configuration, and their flags
-  vary by version. The harness CLI must be on `PATH`; otherwise an install link is shown.
+- The harness CLI must be on `PATH`; otherwise how to install it is shown. aider pins its
+  dependencies, so the bootstrap installs it in a venv of its own.
 - Local models are much weaker at agentic tool use than hosted Claude.
 
 ## See also

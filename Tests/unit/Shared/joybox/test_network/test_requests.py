@@ -92,6 +92,13 @@ def test_json_is_posted_as_the_request_body(requests_module):
     assert only_call(requests_module)["json"] == {"prompt": "hello"}
 
 
+def test_a_post_waits_ten_seconds_unless_told_otherwise(requests_module):
+    network.post_remote_json("https://example.test/api", data = {})
+    network.post_remote_json("https://example.test/api", data = {}, timeout = 900)
+
+    assert [call["timeout"] for call in requests_module["calls"]] == [10, 900]
+
+
 def test_a_post_uses_the_post_method(requests_module):
     network.post_remote_json("https://example.test/api", data = {})
 

@@ -205,6 +205,28 @@ def get_backend_keys():
     return [BACKEND_OLLAMA, BACKEND_OPENAI, BACKEND_CLAUDE]
 
 ###########################################################
+# Coding preset
+###########################################################
+
+# System prompt for the coding preset, used when none is given
+CODING_SYSTEM_PROMPT = (
+    "You are a careful senior software engineer pairing with the user. Answer with "
+    "working code that matches the style of any files provided, and explain only what "
+    "is not obvious from the code. When a request is ambiguous, say what you assumed. "
+    "Prefer small, complete changes over sketches, and never invent APIs: if you are "
+    "unsure something exists, say so.")
+
+# Context window for the coding preset
+# A chat holds less than an agent session, and a smaller window leaves room
+# for a stronger model.
+CODING_CONTEXT_TOKENS = 32768
+
+# Choose the model for the coding preset: the one named, or the best coding
+# model the Ollama server can hold, prepared as ollama_tool's code action does
+def get_coding_model(model = None):
+    return model or ollama.prepare_coding_model(CODING_CONTEXT_TOKENS)
+
+###########################################################
 # Session
 ###########################################################
 
