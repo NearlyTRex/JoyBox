@@ -50,7 +50,7 @@ Actions:
 - `code`: the one command for coding. Picks the most capable coding model from a
   ranked list whose weights, context and load overhead fit the server's VRAM (or
   prepares `-m`), pulls it if needed, builds the context into a `-ctxNNk` variant
-  (64K for Claude Code, 32K for the other harnesses, leaving room for a stronger model),
+  (64K for Claude Code and Hermes Agent, 32K for the others, leaving room for a stronger model),
   loads it to check it sits wholly in VRAM, falling back to the next model if not, and
   starts the harness (Claude Code unless `-H`) in the current directory. A prepared
   variant is reused, so later runs start at once.
@@ -58,7 +58,11 @@ Actions:
 Harnesses: `claude_code` runs `claude --model <m> --bare` against Ollama's Anthropic
 endpoint and wants a context window of at least 64K tokens. `codex` uses its own
 ollama provider (`codex --oss --local-provider ollama`, pointed at the server with
-`CODEX_OSS_BASE_URL`). `opencode` is given an ollama provider through
+`CODEX_OSS_BASE_URL`), with its sign-in prompt and self-update turned off. `hermes`
+runs Hermes Agent's custom provider (`hermes --provider custom -m <m>`) pointed at the
+server's `/v1` endpoint with `CUSTOM_BASE_URL`, keeping its memory in `~/.hermes`; it
+refuses less than 64K, and reads the window from the server, so use a `-ctxNNk`
+variant (as `code` does). `opencode` is given an ollama provider through
 `OPENCODE_CONFIG_CONTENT`, so nothing is written to its config. `aider` runs
 `aider --model ollama_chat/<m>` with `OLLAMA_API_BASE`, and for a `-ctxNNk` variant a
 model-settings file under the cache dir that fixes `num_ctx`: left to itself aider
@@ -81,7 +85,7 @@ anyway.
 | `<action>` | Action to perform: `list`, `available`, `best`, `pull`, `delete`, `info`, `harness` or `code`. |
 | `-p, --purpose <purpose>` | Purpose to filter or pick for: `chat`, `tools`, `reasoning`, `vision`, `embedding` or `cloud`. |
 | `-m, --model <model>` | Model for `pull`, `delete`, `info`, `harness` and `code`: a base name such as `qwen2.5-coder:7b` or a full tag; prompts for one when omitted. |
-| `-H, --harness <harness>` | Coding-agent CLI for the `harness` and `code` actions: `claude_code`, `codex`, `opencode` or `aider`; `claude_code` when omitted. |
+| `-H, --harness <harness>` | Coding-agent CLI for the `harness` and `code` actions: `claude_code`, `codex`, `opencode`, `aider` or `hermes`; `claude_code` when omitted. |
 | `--all` | In `available`, also list models too large for this machine's VRAM and RAM. |
 
 ## Examples
@@ -144,6 +148,12 @@ ollama_tool harness -H codex -m qwen2.5-coder:7b
 
 ```bash
 ollama_tool code -H aider
+```
+
+### Start Hermes Agent on the best model the server can hold at 64K
+
+```bash
+ollama_tool code -H hermes
 ```
 
 ### Show details of an installed model

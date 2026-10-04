@@ -188,6 +188,21 @@ def test_opencode_leaves_an_unknown_window_to_the_server(harness_command):
     assert "limit" not in config["provider"]["ollama"]["models"]["qwen3:8b"]
 
 
+def test_hermes_uses_its_custom_provider_on_the_versioned_endpoint(harness_command):
+    # The server comes from the environment, so ~/.hermes/config.yaml is not written.
+    ollama.launch_harness("qwen3-coder:30b-ctx64k", "hermes")
+
+    assert harness_command.only() == ["hermes", "--provider", "custom", "-m", "qwen3-coder:30b-ctx64k"]
+    assert harness_command.options().get_env_var("CUSTOM_BASE_URL") == "http://localhost:11434/v1"
+
+
+def test_hermes_asks_for_the_window_it_refuses_to_run_below():
+    spec = ollama.HARNESSES["hermes"]
+
+    assert spec["min_tokens"] == 64000
+    assert spec["coding_context"] >= spec["min_tokens"]
+
+
 def launched(harness_command):
     # The last command is the harness; preflight checks may have run before it
     return harness_command.calls[-1]["cmd"]

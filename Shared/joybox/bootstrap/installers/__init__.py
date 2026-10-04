@@ -41,6 +41,8 @@ from joybox.bootstrap.installers.installer_flatpak import (
     Flatpak as Flatpak)
 from joybox.bootstrap.installers.installer_gitkraken import (
     GitKraken as GitKraken)
+from joybox.bootstrap.installers.installer_hermes import (
+    HermesAgent as HermesAgent)
 from joybox.bootstrap.installers.installer_jenkins import (
     Jenkins as Jenkins)
 from joybox.bootstrap.installers.installer_kanboard import (

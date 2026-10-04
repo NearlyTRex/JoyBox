@@ -399,6 +399,14 @@ ini_defaults["Tools.Ollama"]["ollama_api_base"] = "http://localhost:11434"
 ini_defaults["Tools.Ollama"]["ollama_gpu_vram_mb"] = ""
 ini_defaults["Tools.Ollama"]["ollama_system_ram_mb"] = ""
 
+# Tools.HermesAgent
+ini_defaults["Tools.HermesAgent"] = {}
+ini_defaults["Tools.HermesAgent"]["hermes_agent_release"] = "v2026.9.24"
+if platform_info.is_windows_platform():
+    ini_defaults["Tools.HermesAgent"]["hermes_agent_dir"] = "%USERPROFILE%\\.joybox\\hermes-agent"
+else:
+    ini_defaults["Tools.HermesAgent"]["hermes_agent_dir"] = "$HOME/.local/share/joybox/hermes-agent"
+
 # Tools.Perl
 ini_defaults["Tools.Perl"] = {}
 if platform_info.is_windows_platform():

@@ -524,22 +524,39 @@ def build_aider_args(api_base, model_name, context_tokens = None):
         return []
     return ["--model-settings-file", settings_file]
 
-# Coding-agent harnesses that can run against a model on the Ollama server.
-# Each entry gives the display name, the smallest context window worth
-# running it with (for check_context_window), the command, and the
-# environment that points it at the server. In those, "{model}" is the model
-# name, "{api_base}" the server's base URL and "{context}" the window built
-# into a -ctxNNk variant. context_env and context_args only apply when that
-# window is known; env_builders and arg_builders are called with
-# (api_base, model, context). Each preflight check runs in the directory the
-# harness will, before it starts, and returns False to stop the launch.
+###########################################################
+# Harnesses
 #
-# claude_code talks to Ollama's Anthropic-compatible endpoint, the others to
-# its OpenAI-compatible /v1 one. aider and opencode send far less with each
-# request than claude_code and codex, which suits local models.
-# coding_context is the window the code action builds in: only Claude Code
-# needs 64K, and a smaller one leaves room for a stronger model.
+# Coding-agent CLIs that can run against a model on the Ollama server. Each
+# entry gives:
+#
+#   name            display name
+#   min_tokens      smallest window worth running it with (check_context_window)
+#   command, env    how to start it and point it at the server
+#   context_args,   added only when the model is a -ctxNNk variant, so its
+#   context_env     window is known
+#   arg_builders,   called with (api_base, model, context) for what a
+#   env_builders    template cannot express
+#   preflight       checks run in its working directory before it starts;
+#                   one returning False stops the launch
+#   coding_context  the window the code action builds a variant with
+#   install_hint    shown when its command is not on the PATH
+#
+# In the templates, "{model}" is the model name, "{api_base}" the server's
+# base URL and "{context}" the window built into a -ctxNNk variant.
+#
+# Claude Code and Hermes Agent need 64K; the rest get 32K, which leaves room
+# for a stronger model. aider and opencode send far less with each request
+# than the others, which suits local models.
+###########################################################
+
 HARNESSES = {
+
+    # Claude Code
+    #
+    # Talks to Ollama's Anthropic-compatible endpoint. It assumes a window of
+    # its own for a model it does not know, far past what a local one holds,
+    # and would not compact in time, so a variant's window is passed in.
     "claude_code": {
         "name": "Claude Code",
         "min_tokens": 64000,
@@ -549,21 +566,20 @@ HARNESSES = {
             "ANTHROPIC_API_KEY": "ollama",
             "ANTHROPIC_AUTH_TOKEN": "",
         },
-
-        # Claude Code assumes a window of its own for a model it does not
-        # know, far past what a local one holds, and would not compact in time
         "context_env": "CLAUDE_CODE_MAX_CONTEXT_TOKENS",
         "coding_context": 65536,
         "install_hint": "https://docs.claude.com/claude-code",
     },
+
+    # Codex CLI
+    #
+    # Its built-in ollama provider cannot be redefined, only pointed at the
+    # server's /v1 endpoint. --oss alone still puts up the ChatGPT sign-in,
+    # which model_provider skips. The bootstrap installs it globally as root,
+    # so its own updater fails and is turned off.
     "codex": {
         "name": "Codex CLI",
         "min_tokens": 8000,
-
-        # Its built-in ollama provider cannot be redefined, only pointed elsewhere.
-        # --oss alone still puts up the ChatGPT sign-in, which model_provider
-        # skips. The bootstrap installs it globally as root, so its own
-        # updater fails.
         "command": ["codex", "--oss", "--local-provider", "ollama", "-m", "{model}",
             "-c", "model_provider=ollama",
             "-c", "check_for_update_on_startup=false"],
@@ -572,6 +588,12 @@ HARNESSES = {
         "coding_context": 32768,
         "install_hint": "npm install -g @openai/codex",
     },
+
+    # OpenCode
+    #
+    # Given an ollama provider on the server's /v1 endpoint through
+    # OPENCODE_CONFIG_CONTENT (build_opencode_config), so nothing is written to
+    # its config.
     "opencode": {
         "name": "OpenCode",
         "min_tokens": 8000,
@@ -580,6 +602,12 @@ HARNESSES = {
         "coding_context": 32768,
         "install_hint": "npm install -g opencode-ai",
     },
+
+    # Aider
+    #
+    # Talks to Ollama's native API. A variant's window is fixed in a
+    # model-settings file (build_aider_args), and a repository it cannot read
+    # is repacked first (prepare_git_for_aider).
     "aider": {
         "name": "Aider",
         "min_tokens": 8000,
@@ -589,6 +617,22 @@ HARNESSES = {
         "preflight": [prepare_git_for_aider],
         "coding_context": 32768,
         "install_hint": "the Python installer puts it in a venv of its own (bootstrap); it pins its dependencies, so not into a shared venv",
+    },
+
+    # Hermes Agent
+    #
+    # Its custom provider reads the server's /v1 endpoint from CUSTOM_BASE_URL,
+    # so nothing is written to ~/.hermes, which keeps its memory and skills
+    # between runs. It refuses a window under 64K and takes the window from
+    # /api/show, which only a -ctxNNk variant's num_ctx makes match what the
+    # server serves.
+    "hermes": {
+        "name": "Hermes Agent",
+        "min_tokens": 64000,
+        "command": ["hermes", "--provider", "custom", "-m", "{model}"],
+        "env": {"CUSTOM_BASE_URL": "{api_base}/v1"},
+        "coding_context": 65536,
+        "install_hint": "the bootstrap's hermes component (a pinned release in a venv of its own)",
     },
 }
 
@@ -733,11 +777,25 @@ def get_coding_candidates(vram_mb, context_tokens = CODING_CONTEXT_TOKENS):
         candidates.append(dict(tag, rank = rank, loaded_mb = loaded_mb))
     return candidates
 
+# Read the context window a model was trained for, or None when unknown
+def get_trained_context_tokens(model_name):
+    shown = network.post_remote_json(get_api_base() + "/api/show", data = {"model": model_name}, timeout = 30)
+    info = (shown or {}).get("model_info") or {}
+    trained = info.get("%s.context_length" % info.get("general.architecture"))
+    return trained if isinstance(trained, int) and trained > 0 else None
+
 # Create a model with the context window built in
 # Agents cannot pass num_ctx with each request, and the server's default is
-# far smaller than they need.
+# far smaller than they need. Ollama quietly caps num_ctx at the trained
+# window while still reporting the larger one, so an agent sizing itself from
+# that report would overrun the model; such a window is refused instead.
 def create_context_variant(model_name, context_tokens):
     variant = get_context_variant_name(model_name, context_tokens)
+    trained = get_trained_context_tokens(model_name)
+    if trained and context_tokens > trained:
+        logger.log_error("%s was trained for %d tokens, short of the %dK asked for" % (
+            model_name, trained, context_tokens // 1024))
+        return None
     result = network.post_remote_json(
         get_api_base() + "/api/create",
         data = {"model": variant, "from": model_name,

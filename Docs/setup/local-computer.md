@@ -124,6 +124,7 @@ python3 bootstrap.py -t local_ubuntu --list-components
 | `brave` | Brave Browser |
 | `gh` | GitHub CLI |
 | `gitkraken` | GitKraken |
+| `hermes` | Hermes Agent |
 | `ollama` | Ollama local LLM runtime |
 | `onepassword` | 1Password |
 | `steam` | Steam gaming platform |

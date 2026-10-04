@@ -69,13 +69,13 @@ pulls it, builds the context into a `-ctxNNk` variant, and loads it to check it 
 VRAM, falling back to the next model if it does not. Later runs reuse the prepared model and start
 at once; a better one that fits is offered first, so more cards move the pick up the list.
 
-Only Claude Code needs a 64K window. The other agents and `llm_chat --code` get 32K, which leaves
-room for a stronger model: on one 32 GB card, Claude Code gets `qwen3-coder:30b` and the rest get
-the dense `devstral-small-2:24b`; on three cards, `gpt-oss:120b`.
+Only Claude Code and Hermes Agent need a 64K window. The other agents and `llm_chat --code` get
+32K, which leaves room for a stronger model: on one 32 GB card, Claude Code and Hermes Agent get
+`qwen3-coder:30b` and the rest get the dense `devstral-small-2:24b`; on three cards, `gpt-oss:120b`.
 
-`-H` picks the agent: `claude_code` (the default), `aider`, `opencode` or `codex`. aider and
-opencode send far less with each request than Claude Code, which suits local models; for a
-question about code rather than a change to it, `llm_chat --code -a <files>` is the most reliable,
+`-H` picks the agent: `claude_code` (the default), `aider`, `opencode`, `codex` or `hermes`.
+aider and opencode send far less with each request than Claude Code, which suits local models; for
+a question about code rather than a change to it, `llm_chat --code -a <files>` is the most reliable,
 since the model sees exactly the files given and has nothing to find on its own.
 
 **The API has no authentication.** Anything that can reach port 11434 can use the models and read
