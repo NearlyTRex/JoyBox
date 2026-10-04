@@ -62,7 +62,10 @@ ollama provider (`codex --oss --local-provider ollama`, pointed at the server wi
 `OPENCODE_CONFIG_CONTENT`, so nothing is written to its config. `aider` runs
 `aider --model ollama_chat/<m>` with `OLLAMA_API_BASE`, and for a `-ctxNNk` variant a
 model-settings file under the cache dir that fixes `num_ctx`: left to itself aider
-sizes it to each request, and ollama reloads the model whenever it changes. Those three want at least
+sizes it to each request, and ollama reloads the model whenever it changes. Before
+aider starts, a repository it cannot read (packs git's loose-objects maintenance names
+`loose-*.pack`, which aider takes for corruption) is repacked with `git repack -a -d`.
+Those three want at least
 8K, and aider and opencode send far less with each request than the other two, which
 suits local models. A `-ctxNNk` variant's window is passed to the harness, so it
 compacts the conversation before the model runs out. When a model's advertised

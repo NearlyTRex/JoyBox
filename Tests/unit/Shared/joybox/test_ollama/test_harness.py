@@ -169,12 +169,17 @@ def test_opencode_leaves_an_unknown_window_to_the_server(harness_command):
     assert "limit" not in config["provider"]["ollama"]["models"]["qwen3:8b"]
 
 
+def launched(harness_command):
+    # The last command is the harness; preflight checks may have run before it
+    return harness_command.calls[-1]["cmd"]
+
+
 def test_aider_talks_to_the_server_natively(harness_command):
     ollama.launch_harness("qwen3:8b", "aider")
 
-    assert harness_command.only() == [
+    assert launched(harness_command) == [
         "aider", "--model", "ollama_chat/qwen3:8b", "--no-show-model-warnings"]
-    assert harness_command.options().get_env_var("OLLAMA_API_BASE") == "http://localhost:11434"
+    assert harness_command.options(-1).get_env_var("OLLAMA_API_BASE") == "http://localhost:11434"
 
 
 @pytest.fixture
@@ -188,7 +193,7 @@ def test_aider_keeps_a_variant_window_fixed(harness_command, cache_root):
     # the model whenever it changes
     ollama.launch_harness("devstral-small-2:24b-ctx32k", "aider")
 
-    command_line = harness_command.only()
+    command_line = launched(harness_command)
     assert command_line[-2] == "--model-settings-file"
     settings_file = cache_root / "Ollama" / "aider" / "devstral-small-2_24b-ctx32k.model-settings.yml"
     assert command_line[-1] == str(settings_file)
@@ -327,3 +332,108 @@ def test_a_missing_binary_without_an_install_hint_is_still_refused(harness_comma
     monkeypatch.setitem(ollama.HARNESSES, "codex", spec)
 
     assert ollama.launch_harness("qwen3:8b", "codex") is False
+
+
+###########################################################
+# Preflight
+#
+# aider reads git through GitPython's own reader, which only opens packs named
+# pack-*.pack; git's loose-objects maintenance writes loose-*.pack, and aider
+# then calls the repository corrupt and quits.
+###########################################################
+
+def make_packs(directory, *names):
+    directory.mkdir(parents = True, exist_ok = True)
+    for name in names:
+        (directory / name).write_bytes(b"")
+    return directory
+
+
+def test_only_ordinary_packs_are_readable(tmp_path):
+    pack_dir = make_packs(tmp_path / "pack",
+        "pack-aaa.pack", "pack-aaa.idx", "loose-bbb.pack", "loose-bbb.idx", "multi-pack-index")
+
+    assert ollama.get_unreadable_packs(str(pack_dir)) == ["loose-bbb.pack"]
+
+
+def test_a_missing_pack_dir_has_nothing_unreadable(tmp_path):
+    assert ollama.get_unreadable_packs(str(tmp_path / "absent")) == []
+
+
+@pytest.fixture
+def git(monkeypatch, tmp_path):
+    state = {"pack_dir": make_packs(tmp_path / "objects" / "pack", "pack-aaa.pack"),
+        "rev_parse": None, "repack_code": 0, "repack_leaves": [], "commands": []}
+    monkeypatch.setattr(ollama.programs, "get_tool_program", lambda name: "git")
+
+    def run_command(cmd, options = None, **kwargs):
+        state["commands"].append(cmd)
+        if state["rev_parse"] is not None:
+            return state["rev_parse"]
+        return (str(state["pack_dir"]) + "\n", 0)
+
+    def run_returncode_command(cmd, options = None, **kwargs):
+        state["commands"].append(cmd)
+        if state["repack_code"] == 0:
+            for path in state["pack_dir"].glob("loose-*"):
+                if path.name not in state["repack_leaves"]:
+                    path.unlink()
+        return state["repack_code"]
+
+    monkeypatch.setattr(ollama.command, "run_command", run_command)
+    monkeypatch.setattr(ollama.command, "run_returncode_command", run_returncode_command)
+    return state
+
+
+def test_a_readable_repository_is_left_alone(git):
+    assert ollama.prepare_git_for_aider() is True
+    assert git["commands"] == [["git", "rev-parse", "--path-format=absolute", "--git-path", "objects/pack"]]
+
+
+def test_outside_a_repository_there_is_nothing_to_do(git):
+    git["rev_parse"] = ("fatal: not a git repository\n", 128)
+
+    assert ollama.prepare_git_for_aider() is True
+    assert len(git["commands"]) == 1
+
+
+def test_unreadable_packs_are_repacked(git):
+    make_packs(git["pack_dir"], "loose-bbb.pack")
+
+    assert ollama.prepare_git_for_aider() is True
+    assert git["commands"][-1] == ["git", "repack", "-a", "-d"]
+    assert ollama.get_unreadable_packs(str(git["pack_dir"])) == []
+
+
+def test_a_failed_repack_stops_the_launch(git):
+    make_packs(git["pack_dir"], "loose-bbb.pack")
+    git["repack_code"] = 1
+
+    assert ollama.prepare_git_for_aider() is False
+
+
+def test_packs_still_unreadable_after_repacking_stop_the_launch(git):
+    make_packs(git["pack_dir"], "loose-bbb.pack")
+    git["repack_leaves"] = ["loose-bbb.pack"]
+
+    assert ollama.prepare_git_for_aider() is False
+
+
+def test_aider_checks_the_repository_before_starting():
+    assert ollama.prepare_git_for_aider in ollama.HARNESSES["aider"]["preflight"]
+
+
+def test_a_failed_preflight_launches_nothing(harness_command, monkeypatch):
+    monkeypatch.setitem(ollama.HARNESSES["aider"], "preflight", [lambda: False])
+
+    assert ollama.launch_harness("qwen3:8b", "aider") is False
+    assert harness_command.ran() is False
+
+
+def test_a_passed_preflight_launches(harness_command, monkeypatch):
+    checked = []
+    monkeypatch.setitem(ollama.HARNESSES["aider"], "preflight", [lambda: checked.append(True) or True])
+
+    assert ollama.launch_harness("qwen3:8b", "aider") is True
+    assert checked == [True]
+    assert launched(harness_command)[0] == "aider"

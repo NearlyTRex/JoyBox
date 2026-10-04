@@ -11,6 +11,7 @@ import joybox.environment as environment
 import joybox.logger as logger
 import joybox.network as network
 import joybox.hardware as hardware
+import joybox.programs as programs
 import joybox.prompts as prompts
 import joybox.serialization as serialization
 import joybox.settings as settings
@@ -472,6 +473,40 @@ def build_opencode_config(api_base, model_name, context_tokens = None):
             "options": {"baseURL": api_base + "/v1"},
             "models": {model_name: model}}}})
 
+# List the packs in a pack directory that GitPython's own reader cannot see
+# It only opens packs named pack-*.pack, and git's loose-objects maintenance
+# writes loose-*.pack beside them.
+def get_unreadable_packs(pack_dir):
+    try:
+        names = os.listdir(pack_dir)
+    except OSError:
+        return []
+    return sorted(name for name in names if name.endswith(".pack") and not name.startswith("pack-"))
+
+# Make the repository here readable by aider, repacking when it needs to be
+# aider reads git through GitPython's own reader, and an object in a pack it
+# cannot see makes aider call the repository corrupt and quit. Repacking puts
+# every object into one ordinary pack and changes nothing else.
+def prepare_git_for_aider():
+    git_tool = programs.get_tool_program("Git")
+    output, code = command.run_command(
+        [git_tool, "rev-parse", "--path-format=absolute", "--git-path", "objects/pack"])
+    if code != 0 or not output:
+        return True
+    pack_dir = output.strip()
+    unreadable = get_unreadable_packs(pack_dir)
+    if not unreadable:
+        return True
+    logger.log_info("Repacking the repository so aider can read it (%s)" % ", ".join(unreadable))
+    if command.run_returncode_command([git_tool, "repack", "-a", "-d"]) != 0:
+        logger.log_error("git repack failed; aider would report the repository as corrupt")
+        return False
+    remaining = get_unreadable_packs(pack_dir)
+    if remaining:
+        logger.log_error("Packs aider cannot read are still there after repacking: %s" % ", ".join(remaining))
+        return False
+    return True
+
 # Write aider's settings for a model on the Ollama server, returning its arguments
 # Left to itself, aider sends a num_ctx sized to each request, and ollama
 # reloads the model whenever num_ctx changes, which on a slow link to the GPU
@@ -496,7 +531,8 @@ def build_aider_args(api_base, model_name, context_tokens = None):
 # name, "{api_base}" the server's base URL and "{context}" the window built
 # into a -ctxNNk variant. context_env and context_args only apply when that
 # window is known; env_builders and arg_builders are called with
-# (api_base, model, context).
+# (api_base, model, context). Each preflight check runs in the directory the
+# harness will, before it starts, and returns False to stop the launch.
 #
 # claude_code talks to Ollama's Anthropic-compatible endpoint, the others to
 # its OpenAI-compatible /v1 one. aider and opencode send far less with each
@@ -545,6 +581,7 @@ HARNESSES = {
         "command": ["aider", "--model", "ollama_chat/{model}", "--no-show-model-warnings"],
         "env": {"OLLAMA_API_BASE": "{api_base}"},
         "arg_builders": [build_aider_args],
+        "preflight": [prepare_git_for_aider],
         "coding_context": 32768,
         "install_hint": "the Python installer puts it in a venv of its own (bootstrap); it pins its dependencies, so not into a shared venv",
     },
@@ -609,6 +646,11 @@ def launch_harness(model_name, harness = DEFAULT_HARNESS):
         if spec.get("install_hint"):
             logger.log_info("Install: %s" % spec["install_hint"])
         return False
+
+    # Put right whatever would stop the harness once it is running
+    for check in spec.get("preflight", []):
+        if not check():
+            return False
 
     options = command.create_command_options()
     for key, value in spec.get("env", {}).items():
