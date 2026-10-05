@@ -21,6 +21,13 @@ set to that server, so they act on a remote one too. If a local server does not
 answer, the actions that need it start `ollama serve` in the background and wait up
 to ten seconds for it; a remote one that does not answer is an error.
 
+A server whose API has no authentication, like the LLM server image, is best reached
+through an SSH tunnel: set `[Tools.Ollama] ollama_ssh_host` to its SSH destination
+(such as `aryie@192.168.1.15`), install the bootstrap's `ollama_tunnel` component, and
+point `ollama_api_base` at the tunnel's end, `http://localhost:11444` by default
+(`ollama_tunnel_port`). With an SSH host set, a `localhost` base is never taken for
+a local server, so nothing is started here when the tunnel is down.
+
 It detects GPU VRAM and system RAM (NVIDIA through `nvidia-smi`, then AMD and Intel
 Arc through the Linux DRM sysfs files, then `rocm-smi`; the card with the most VRAM
 counts) and marks each catalog model by how it fits: `[+]` fits in VRAM, `[~]` fits
@@ -54,6 +61,9 @@ Actions:
   loads it to check it sits wholly in VRAM, falling back to the next model if not, and
   starts the harness (Claude Code unless `-H`) in the current directory. A prepared
   variant is reused, so later runs start at once.
+- `update`: rerun ollama's installer on the server over SSH (`ollama_ssh_host`), then
+  wait for it to answer again. It was installed from its own script, so the system's
+  automatic updates never touch it.
 
 Harnesses: `claude_code` runs `claude --model <m> --bare` against Ollama's Anthropic
 endpoint and wants a context window of at least 64K tokens. `codex` uses its own
@@ -82,7 +92,7 @@ anyway.
 
 | Option | Description |
 |--------|-------------|
-| `<action>` | Action to perform: `list`, `available`, `best`, `pull`, `delete`, `info`, `harness` or `code`. |
+| `<action>` | Action to perform: `list`, `available`, `best`, `pull`, `delete`, `info`, `harness`, `code` or `update`. |
 | `-p, --purpose <purpose>` | Purpose to filter or pick for: `chat`, `tools`, `reasoning`, `vision`, `embedding` or `cloud`. |
 | `-m, --model <model>` | Model for `pull`, `delete`, `info`, `harness` and `code`: a base name such as `qwen2.5-coder:7b` or a full tag; prompts for one when omitted. |
 | `-H, --harness <harness>` | Coding-agent CLI for the `harness` and `code` actions: `claude_code`, `codex`, `opencode`, `aider` or `hermes`; `claude_code` when omitted. |
@@ -166,6 +176,12 @@ ollama_tool info -m qwen2.5-coder:7b
 
 ```bash
 ollama_tool delete -m qwen2.5-coder:7b
+```
+
+### Update ollama on the server
+
+```bash
+ollama_tool update
 ```
 
 ## Notes

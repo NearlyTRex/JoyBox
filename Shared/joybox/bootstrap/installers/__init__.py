@@ -59,6 +59,8 @@ from joybox.bootstrap.installers.installer_node import (
     Node as Node)
 from joybox.bootstrap.installers.installer_ollama import (
     Ollama as Ollama)
+from joybox.bootstrap.installers.installer_ollama_tunnel import (
+    OllamaTunnel as OllamaTunnel)
 from joybox.bootstrap.installers.installer_oscar import (
     Oscar as Oscar)
 from joybox.bootstrap.installers.installer_onepassword import (

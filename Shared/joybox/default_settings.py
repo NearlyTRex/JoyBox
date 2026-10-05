@@ -398,6 +398,8 @@ ini_defaults["Tools.Ollama"] = {}
 ini_defaults["Tools.Ollama"]["ollama_api_base"] = "http://localhost:11434"
 ini_defaults["Tools.Ollama"]["ollama_gpu_vram_mb"] = ""
 ini_defaults["Tools.Ollama"]["ollama_system_ram_mb"] = ""
+ini_defaults["Tools.Ollama"]["ollama_ssh_host"] = ""
+ini_defaults["Tools.Ollama"]["ollama_tunnel_port"] = "11444"
 
 # Tools.HermesAgent
 ini_defaults["Tools.HermesAgent"] = {}

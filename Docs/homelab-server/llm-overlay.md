@@ -21,16 +21,17 @@ ollama itself goes in on first boot, from its own installer, because that instal
 systemd to talk to. A drop-in written beforehand settles how it runs:
 
 ```text
-OLLAMA_HOST=0.0.0.0:11434     listen on the network, not just on localhost
+OLLAMA_HOST=127.0.0.1:11434   listen on localhost only; clients come in through SSH
 OLLAMA_MODELS=/var/lib/ollama/models
 OLLAMA_KEEP_ALIVE=-1          keep a model loaded until another is asked for
 OLLAMA_NUM_PARALLEL=2
 OLLAMA_MAX_LOADED_MODELS=2
 ```
 
-The machine comes up with `llama3.1:8b` already pulled, `ufw` allowing only SSH, the API port and
-the helper's port, and a `gpu-status` command that prints what the card is doing. Change the model
-on the last line of the overlay, or drop the line to choose later.
+The machine comes up with `llama3.1:8b` already pulled, `ufw` allowing only SSH, and a `gpu-status`
+command that prints what the card is doing. Change the model on the last line of the overlay, or
+drop the line to choose later. Services a headless server has no use for (ModemManager, udisks2,
+upower, multipathd, snapd) are stopped.
 
 ## The helper
 
@@ -44,18 +45,34 @@ firmware drew the console on (`boot_vga` in sysfs). A display card added only so
 screen stays out of the way, and a compute card added later is picked up by a reboot with nothing
 to edit. A machine whose only card drives the display still computes on it.
 
-**What the server has.** `ollama-helper serve` answers `GET http://<server>:11435/hardware` with
-the cards, which of them compute, their VRAM and the machine's RAM. `ollama_tool` and `llm_chat`
-read it to size models against the server rather than the machine they run on:
+**What the server has.** `ollama-helper serve` answers `GET /hardware` on port 11435 (localhost
+only, like the API) with the cards, which of them compute, their VRAM and the machine's RAM.
+`ollama_tool` and `llm_chat` read it through the tunnel to size models against the server rather
+than the machine they run on:
 
 ```bash
-curl http://<server>:11435/hardware
+curl http://localhost:11435/hardware     # with the tunnel up
 ```
 
 ## Coding against it
 
-On the computer you code on, point `[Tools.Ollama] ollama_api_base` in `~/JoyBox.ini` at the
-server (`http://<server>:11434`). Then, in the project you are working on:
+On the computer you code on, reach the server through an SSH tunnel. In `~/JoyBox.ini`:
+
+```ini
+[Tools.Ollama]
+ollama_ssh_host = you@<server>
+ollama_api_base = http://localhost:11444
+```
+
+then install the tunnel, a systemd user service that keeps `ssh -N -L ...` running and comes back
+after a dropped connection or a reboot:
+
+```bash
+python3 bootstrap.py -a setup -t local_ubuntu --components ollama_tunnel
+```
+
+The API arrives on port 11444 here (`ollama_tunnel_port`; 11434 is left for a local ollama) and the
+helper on 11435. Then, in the project you are working on:
 
 ```bash
 ollama_tool code          # Claude Code on the best coding model the server can hold
@@ -78,10 +95,17 @@ aider and opencode send far less with each request than Claude Code, which suits
 a question about code rather than a change to it, `llm_chat --code -a <files>` is the most reliable,
 since the model sees exactly the files given and has nothing to find on its own.
 
-**The API has no authentication.** Anything that can reach port 11434 can use the models and read
-what is asked of them, so this belongs on a network you control — not on a machine with a public
-address and not behind a router forwarding the port. Put it behind something that authenticates
-if it needs to be reachable from elsewhere.
+**The API has no authentication.** Anything that reaches port 11434 can pull, delete and run
+models and read what is asked of them. That is why it listens on the server's localhost only and
+the firewall opens nothing but SSH: the tunnel is the way in, and it authenticates with your key.
+Anyone else who should use the models needs an account or a key of their own on the server.
+
+ollama is installed from its own script, not a package, so automatic updates never touch it.
+`ollama_tool update` reruns the installer on the server over SSH.
+
+Every autoinstall machine also gets an sshd drop-in, `/etc/ssh/sshd_config.d/10-joybox.conf`: keys
+only, no root login, only the installed account (`AllowUsers`), three tries, and no forwarding but
+local ports, which is all the tunnel needs.
 
 **Secure Boot** and NVIDIA need a word. The drivers from Ubuntu's archive are signed by Canonical
 and load with Secure Boot on; drivers built by DKMS from NVIDIA's own installer are not, and

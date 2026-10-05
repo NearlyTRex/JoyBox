@@ -472,7 +472,7 @@ def test_the_shipped_gpu_overlay_reaches_the_image(tmp_path, stock_image, xorris
 
     assert "nvidia-headless-no-dkms-580-server" in seed
     assert "ollama.com/install.sh" in seed
-    assert "OLLAMA_HOST=0.0.0.0:11434" in seed
+    assert "OLLAMA_HOST=127.0.0.1:11434" in seed
     assert "qemu-guest-agent" in seed
     assert "homelab" in seed
 

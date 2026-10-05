@@ -45,6 +45,95 @@ def test_only_a_server_on_this_machine_is_local(monkeypatch, api_base, local):
 
 
 ###########################################################
+# Tunnel
+#
+# Through an SSH tunnel the base URL is on localhost, but the server is not
+# this machine; starting a local ollama would quietly answer in its place.
+###########################################################
+
+@pytest.fixture
+def tunneled(monkeypatch):
+    values = {"ollama_ssh_host": "aryie@llm"}
+    monkeypatch.setattr(
+        ollama.settings, "get_value",
+        lambda section, field, default_value = None, throw_exception = True: values.get(field, default_value))
+    monkeypatch.setattr(ollama, "get_api_base", lambda: "http://localhost:11444")
+    return values
+
+
+def test_a_tunnel_end_on_localhost_is_not_a_local_server(tunneled):
+    assert ollama.is_tunneled() is True
+    assert ollama.is_local_server() is False
+
+
+def test_no_ssh_host_means_no_tunnel(tunneled):
+    tunneled["ollama_ssh_host"] = ""
+
+    assert ollama.is_tunneled() is False
+    assert ollama.is_local_server() is True
+
+
+def test_a_tunnel_that_is_down_starts_nothing_locally(tunneled, monkeypatch, recording_command):
+    monkeypatch.setattr(ollama, "is_running", lambda: False)
+
+    assert ollama.start_serve() is False
+    assert recording_command.ran() is False
+
+
+###########################################################
+# Updating the server
+###########################################################
+
+@pytest.fixture
+def updating(tunneled, monkeypatch):
+    state = {"versions": ["0.35.1", None, "0.36.0"], "slept": 0}
+    monkeypatch.setattr(ollama, "get_server_version", lambda: state["versions"].pop(0) if state["versions"] else None)
+    monkeypatch.setattr(ollama.runtime, "sleep_program", lambda seconds: state.update(slept = state["slept"] + 1))
+    return state
+
+
+def test_update_reruns_the_installer_on_the_server(updating, recording_command):
+    assert ollama.action_update() is True
+    assert recording_command.only() == ["ssh", "aryie@llm", ollama.OLLAMA_INSTALL_COMMAND]
+
+
+def test_update_waits_for_the_server_to_answer_again(updating, recording_command):
+    ollama.action_update()
+
+    assert updating["versions"] == []
+    assert updating["slept"] == 1
+
+
+def test_update_needs_the_ssh_host(updating, recording_command, tunneled):
+    tunneled["ollama_ssh_host"] = ""
+
+    assert ollama.action_update() is False
+    assert recording_command.ran() is False
+
+
+def test_a_failed_installer_fails_the_update(updating, monkeypatch):
+    from fakes import RecordingCommand
+    RecordingCommand(monkeypatch, returncode = 1)
+
+    assert ollama.action_update() is False
+
+
+def test_a_server_that_does_not_come_back_fails_the_update(updating, recording_command):
+    updating["versions"] = ["0.35.1"]
+
+    assert ollama.action_update() is False
+    assert updating["slept"] == 30
+
+
+def test_the_server_version_is_read_from_the_api(monkeypatch):
+    monkeypatch.setattr(ollama, "get_api_base", lambda: "http://localhost:11444")
+    monkeypatch.setattr(ollama.network, "get_remote_json",
+        lambda url: {"version": "0.35.1"} if url == "http://localhost:11444/api/version" else None)
+
+    assert ollama.get_server_version() == "0.35.1"
+
+
+###########################################################
 # Server hardware
 #
 # Fits are judged against the machine the models run on. A remote server

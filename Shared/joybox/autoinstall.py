@@ -482,7 +482,29 @@ def build_network_config():
         },
     }
 
+# Where the sshd settings are written. sshd keeps the first value it reads
+# for a setting, and this sorts before the 50-cloud-init.conf cloud-init
+# writes, so these win.
+sshd_config_path = "/etc/ssh/sshd_config.d/10-joybox.conf"
+
+# Build the sshd settings every installed machine gets
+# A key is the only way in, and only for the account made here. A connection
+# may forward a local port to the machine, which is how a service bound to
+# localhost there is reached through an SSH tunnel, but nothing else.
+def build_sshd_config(username):
+    return (
+        "PasswordAuthentication no\n"
+        "KbdInteractiveAuthentication no\n"
+        "PermitRootLogin no\n"
+        "AllowUsers %s\n"
+        "MaxAuthTries 3\n"
+        "X11Forwarding no\n"
+        "AllowAgentForwarding no\n"
+        "AllowTcpForwarding local\n" % username)
+
 # Build the accounts the installed machine will have
+# Only the one account: cloud-init's "default" entry would add the distro's
+# own user (ubuntu) with passwordless sudo beside it.
 def build_user_config(profile):
     account = {
         "name": profile.get("username"),
@@ -495,11 +517,11 @@ def build_user_config(profile):
     if ssh_keys:
         account["ssh_authorized_keys"] = ssh_keys
     return {
-        "users": ["default", account],
+        "users": [account],
         "write_files": [
             {
-                "path": "/etc/ssh/sshd_config.d/99-disable-password.conf",
-                "content": "PasswordAuthentication no\n",
+                "path": sshd_config_path,
+                "content": build_sshd_config(profile.get("username")),
                 "permissions": "0644",
             },
         ],

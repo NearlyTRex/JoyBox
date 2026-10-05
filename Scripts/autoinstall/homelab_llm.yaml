@@ -39,11 +39,13 @@ autoinstall:
 
     write_files:
 
-      # The API listens on localhost until told otherwise, which is no use to
-      # anything else on the network. Everything that can reach the port can
-      # use the models, so keep the port off the open internet. A loaded model
-      # stays loaded until a request for another needs its room, since loading
-      # one is slow and the machine has nothing else to use the VRAM for.
+      # The API has no authentication: whatever reaches the port can pull,
+      # delete and run models and read what is asked of them. So it listens on
+      # localhost only, and clients reach it through an SSH tunnel, which
+      # authenticates with the account's key (the bootstrap's ollama_tunnel
+      # component on the workstation). A loaded model stays loaded until a
+      # request for another needs its room, since loading one is slow and the
+      # machine has nothing else to use the VRAM for.
       - path: /etc/systemd/system/ollama.service.d/override.conf
         permissions: '0644'
         content: |
@@ -51,7 +53,7 @@ autoinstall:
           StateDirectory=ollama
           ExecStartPre=+/usr/local/sbin/ollama-helper select
           EnvironmentFile=-/run/ollama/gpus.env
-          Environment="OLLAMA_HOST=0.0.0.0:11434"
+          Environment="OLLAMA_HOST=127.0.0.1:11434"
           Environment="OLLAMA_MODELS=/var/lib/ollama/models"
           Environment="OLLAMA_KEEP_ALIVE=-1"
           Environment="OLLAMA_NUM_PARALLEL=2"
@@ -98,6 +100,9 @@ autoinstall:
 
           # Port the hardware report is served on, beside ollama's 11434
           HELPER_PORT = 11435
+
+          # Address the hardware report is served on
+          HELPER_HOST = "127.0.0.1"
 
           ###########################################################
           # GPUs
@@ -229,8 +234,9 @@ autoinstall:
                   pass
 
           # Serve the hardware report until stopped
-          def serve(port = HELPER_PORT):
-              server = http.server.ThreadingHTTPServer(("0.0.0.0", port), HardwareHandler)
+          # On localhost only, like ollama: clients reach both through an SSH tunnel.
+          def serve(port = HELPER_PORT, host = HELPER_HOST):
+              server = http.server.ThreadingHTTPServer((host, port), HardwareHandler)
               server.serve_forever()
 
           # Run a command by name
@@ -267,10 +273,16 @@ autoinstall:
       - [systemctl, daemon-reload]
       - [systemctl, enable, --now, ollama]
       - [systemctl, enable, --now, ollama-helper]
+
+      # SSH is the only way in; the API and the helper are reached through it.
       - [ufw, allow, 22/tcp]
-      - [ufw, allow, 11434/tcp]
-      - [ufw, allow, 11435/tcp]
       - [ufw, --force, enable]
+
+      # What a headless server has no use for. Masked rather than disabled
+      # where D-Bus would otherwise start them on demand; snapd is only
+      # disabled, so the snaps it carries can be brought back with it.
+      - [systemctl, mask, --now, ModemManager.service, udisks2.service, upower.service, multipathd.service, multipathd.socket]
+      - [systemctl, disable, --now, snapd.service, snapd.socket, snapd.seeded.service]
 
       # First model, so the machine is answering questions when it comes up.
       # Drop this line to leave the choice for later. runcmd has no HOME, which
