@@ -48,6 +48,7 @@ available in the terminal as `<command> -h`.
 | Command | Description |
 |---------|-------------|
 | [build_man_pages](build_man_pages.md) | Generate the command reference in Docs from every command's help text. |
+| [coverage_tool](coverage_tool.md) | Measure the library's test coverage and report where it falls short. |
 | [decompiler_tool](decompiler_tool.md) | Open Ghidra with Python support, or run a PyGhidra script against a Ghidra project. |
 
 ## Files & Archives
