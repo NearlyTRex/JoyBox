@@ -1,5 +1,6 @@
 # Imports
 import os
+import stat
 
 # Third-party imports
 import pytest
@@ -122,6 +123,24 @@ def test_remove_directory_contents_clears_read_only_directories(tmp_path):
         for path in [root / "ro", root / "ro" / "inner"]:
             if path.exists():
                 os.chmod(path, 0o700)
+
+
+def test_clearing_a_read_only_directory_leaves_linked_directories_alone(tmp_path):
+    root = tmp_path / "root"
+    outside = tmp_path / "outside"
+    write(outside / "precious.txt")
+    write(root / "ro" / "file.txt")
+    os.symlink(outside, root / "ro" / "link")
+    os.chmod(outside, 0o500)
+    os.chmod(root / "ro", 0o500)
+    try:
+        assert fileops.remove_directory_contents(str(root))
+        assert os.listdir(root) == []
+        assert stat.S_IMODE(os.stat(outside).st_mode) == 0o500
+    finally:
+        os.chmod(outside, 0o700)
+        if (root / "ro").exists():
+            os.chmod(root / "ro", 0o700)
 
 
 def test_remove_directory_contents_in_a_pretend_run(tmp_path):

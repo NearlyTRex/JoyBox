@@ -214,3 +214,17 @@ def test_a_cloud_only_catalog_has_no_best_local_model(monkeypatch):
 
     assert ollama.get_best_model(
         purpose = ollama.PURPOSE_CLOUD, vram_mb = 8000, ram_mb = 32000) is None
+
+
+@pytest.mark.parametrize("given, measured", [
+    ({"vram_mb": 8000}, {"system_ram_mb": 32000}),
+    ({"ram_mb": 32000}, {"gpu_vram_total_mb": 8000})])
+def test_only_the_missing_size_is_taken_from_the_server(monkeypatch, given, measured):
+    # A size the caller supplies wins over what the server reports.
+    hardware = {"gpu_vram_total_mb": 1, "system_ram_mb": 1, **measured}
+    monkeypatch.setattr(ollama, "get_server_hardware", lambda: hardware)
+    catalog_of(monkeypatch, [model(vram_mb = 4000)])
+
+    found = ollama.get_recommended_models(**given)
+
+    assert found[0]["fit"] == ollama.FIT_GPU

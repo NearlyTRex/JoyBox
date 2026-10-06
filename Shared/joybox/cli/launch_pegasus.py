@@ -62,7 +62,7 @@ def main():
     # Get launch options
     launch_options = command.create_command_options()
     launch_options.set_cwd(paths.get_filename_directory(pegasus_tool))
-    launch_options.set_env(os.environ)
+    launch_options.set_env(dict(os.environ))
     launch_options.set_env_var("JOYBOX_LAUNCH_JSON", environment.get_command_path("launch_game_json"))
 
     # Run launch command
@@ -73,7 +73,7 @@ def main():
         pretend_run = args.pretend_run,
         exit_on_failure = args.exit_on_failure)
     if code != 0:
-        logger.log_error("Launch command failed with code %d" % code)
+        logger.log_error("Launch command failed with code %d" % code, quit_program = True)
 
 # Run through the shared error handling
 def run():

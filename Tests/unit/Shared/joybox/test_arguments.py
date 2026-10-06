@@ -1,4 +1,5 @@
 # Imports
+import enum
 import sys
 import pytest
 
@@ -654,3 +655,77 @@ def test_a_list_takes_one_value_per_flag_by_default(argv):
 
     assert parsed.components == ["nginx"]
     assert unknown == ["certbot"]
+
+
+###########################################################
+# Remaining helpers
+###########################################################
+
+class PlainColour(enum.Enum):
+    RED = "red"
+
+
+def test_an_enum_without_a_string_parser_yields_nothing():
+    assert arguments.parse_enum_value(PlainColour, "red") is None
+
+
+def test_help_shows_a_default_worth_reading_and_hides_an_empty_one():
+    parser = build()
+    parser.add_integer_argument(args = ("--retries",), default = 3, description = "Retries")
+    parser.add_string_argument(args = ("--label",), description = "Label")
+    text = parser.parser.format_help()
+
+    assert "Retries (default: 3)" in text
+    assert "Label (default" not in text
+
+
+def test_describe_reports_a_list_default_as_display_values():
+    parser = build()
+    parser.add_enum_argument(
+        args = ("-t", "--locker_types"),
+        arg_type = config.LockerType,
+        allow_multiple = True,
+        default = [config.LockerType.LOCAL])
+
+    assert describe_options(parser)["locker_types"]["default"] == [str(config.LockerType.LOCAL)]
+
+
+def test_a_list_default_for_multiple_enums_is_kept(argv):
+    parser = build()
+    parser.add_enum_argument(
+        args = ("-t", "--locker_types"),
+        arg_type = config.LockerType,
+        allow_multiple = True,
+        default = [config.LockerType.LOCAL, config.LockerType.GDRIVE])
+
+    assert parser.parse_args().locker_types == [config.LockerType.LOCAL, config.LockerType.GDRIVE]
+
+
+def test_an_argument_absent_from_the_namespace_has_no_path(argv):
+    # help is declared with a suppressed default, so it never lands in the namespace.
+    assert build().get_path("help") is None
+
+
+@pytest.mark.parametrize("given, expected", [((), 5), (("7",), 7)])
+def test_a_positional_integer_takes_its_default_when_omitted(argv, given, expected):
+    parser = build()
+    parser.add_integer_argument(args = "count", default = 5)
+    argv(*given)
+
+    assert parser.parse_args().count == expected
+
+
+def test_an_unchecked_output_path_may_be_missing(argv, tmp_path):
+    parser = build()
+    parser.add_output_path_argument()
+    argv("--output_path", str(tmp_path / "absent"))
+
+    assert parser.get_output_path(check_exists = False) == str(tmp_path / "absent")
+
+
+def test_the_game_offset_argument_is_a_string(argv):
+    parser = build()
+    parser.add_game_offset_argument()
+    argv("-g", "12")
+
+    assert parser.parse_args().game_offset == "12"

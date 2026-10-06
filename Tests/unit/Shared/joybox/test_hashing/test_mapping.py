@@ -279,3 +279,18 @@ def test_no_manifests_still_yields_an_empty_first_group(tmp_path):
     groups = hashing.get_file_groupings([], 100)
 
     assert groups == {"Group1": {"size": 0, "files": []}}
+
+
+def test_a_verbose_clean_reports_each_dropped_entry(tmp_path, locker, caplog):
+    hash_file = write_manifest(os.path.join(str(tmp_path), "hashes.json"), [
+        {"dir": "Games", "filename": "gone.zip", "hash": "b", "size": 7, "mtime": 1}])
+    hashing.clean_missing_hash_entries(hash_file, locker, verbose = True)
+
+    assert "Removing (missing): Games/gone.zip" in caplog.text
+
+
+def test_a_listed_path_that_is_not_a_file_is_not_mapped(tree, monkeypatch):
+    monkeypatch.setattr(hashing.paths, "build_file_list",
+                        lambda src, use_relative_paths: ["Nested"])
+
+    assert hashing.build_hash_map(tree) == {}

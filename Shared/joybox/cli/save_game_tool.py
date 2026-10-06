@@ -93,10 +93,8 @@ def main():
         config.SaveActionType.IMPORT_SAVE_PATHS: (collection.import_game_save_paths, "Import of save paths failed!"),
     }
 
-    # Get handler for action
-    handler, error_message = action_handlers.get(args.action, (None, None))
-    if not handler:
-        logger.log_error("Unknown action", quit_program = True)
+    # Get handler for action; the parser only accepts listed actions
+    handler, error_message = action_handlers[args.action]
 
     # Games with nothing to pack or unpack are skipped
     readiness_checks = {

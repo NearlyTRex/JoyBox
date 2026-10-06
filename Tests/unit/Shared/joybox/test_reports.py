@@ -198,3 +198,21 @@ def test_pretending_does_not_write_a_report(tmp_path):
     reports.write_list_report(["a", "b"], report_file = str(target), pretend_run = True)
 
     assert not target.exists()
+
+
+def test_a_title_is_logged_before_the_items(monkeypatch):
+    lines = []
+    monkeypatch.setattr(reports.logger, "log_info", lines.append)
+    reports.write_list_report(["a"], title = "Missing games")
+
+    assert lines[0] == "Missing games"
+
+
+def test_a_failed_report_write_is_reported(monkeypatch, tmp_path):
+    errors = []
+    monkeypatch.setattr(reports.logger, "log_error", errors.append)
+    monkeypatch.setattr(reports.serialization, "write_text_file", lambda **kwargs: False)
+    target = tmp_path / "missing.txt"
+
+    assert reports.write_list_report(["a"], report_file = str(target)) is False
+    assert errors == ["Failed to write report file: %s" % target]

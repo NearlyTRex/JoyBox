@@ -211,3 +211,19 @@ def test_file_age_of_a_missing_file(tmp_path):
 
 def test_an_invalid_path_is_no_ones_parent():
     assert paths.is_parent_path("/games", "/games/a\0b") is False
+
+
+def test_validity_on_windows_keeps_an_existing_drive(monkeypatch):
+    monkeypatch.setattr(paths.os, "name", "nt")
+    monkeypatch.setattr(paths.os.path, "splitdrive", lambda path: ("/", path))
+    assert paths.is_path_valid("Games/game.exe") is True
+
+
+def test_an_invalid_name_reported_by_windows_is_not_valid(monkeypatch):
+    def lstat(path):
+        error = OSError(22, "The filename, directory name, or volume label syntax is incorrect")
+        error.winerror = 123
+        raise error
+
+    monkeypatch.setattr(paths.os, "lstat", lstat)
+    assert paths.is_path_valid("C:/Games/bad?name.exe") is False

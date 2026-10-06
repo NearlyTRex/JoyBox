@@ -21,7 +21,7 @@ def format_cpp_file(
     if style_name:
         format_cmd += ["-style", style_name]
     elif style_inline:
-        format_cmd += [f"-style=\"{style_inline}\""]
+        format_cmd += [f"-style={style_inline}"]
     elif style_file:
         format_cmd += ["-style", os.path.realpath(style_file)]
     format_cmd += [

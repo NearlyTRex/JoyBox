@@ -130,3 +130,7 @@ def test_directory_parts():
 
 def test_changing_the_extension_of_a_bare_name():
     assert paths.change_filename_extension("rom.iso", ".chd") == "rom.chd"
+
+
+def test_a_root_base_dir_already_ends_with_a_separator():
+    assert paths.convert_file_list_to_relative_paths(["/a/b"], "/") == ["a/b"]

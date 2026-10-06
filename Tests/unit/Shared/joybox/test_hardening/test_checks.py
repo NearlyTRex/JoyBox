@@ -328,6 +328,24 @@ def test_a_hardened_server_passes_everything():
     assert results
 
 
+def test_command_output_given_as_bytes_is_decoded():
+    server = hardened_server()
+    server.commands["ufw"] = b"Status: inactive\n"
+
+    results = hardening.check_firewall(server)
+
+    assert not all_passed(results)
+
+
+def test_a_verbose_run_logs_the_report(monkeypatch):
+    logged = []
+    monkeypatch.setattr(hardening.logger, "log_info", logged.append)
+
+    results = hardening.verify_hardening(hardened_server(), domain = "joybox.test", verbose = True)
+
+    assert logged == [hardening.format_results(results)]
+
+
 def test_every_check_contributes_a_section():
     results = hardening.verify_hardening(hardened_server(), domain = "joybox.test")
     sections = {result.section for result in results}

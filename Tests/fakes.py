@@ -293,6 +293,15 @@ class RecordingInstaller:
         return self._record("restore")
 
 
+# The apt-get installer, which Ubuntu environments also ask to refresh and autoremove
+class RecordingAptGet(RecordingInstaller):
+    def update_package_lists(self):
+        return self._record("update_package_lists")
+
+    def auto_remove_packages(self):
+        return self._record("auto_remove_packages")
+
+
 ###########################################################
 # Command recorder
 #

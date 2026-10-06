@@ -48,6 +48,12 @@ def test_a_pyproject_without_dependencies_falls_through(tmp_path):
     assert requirements.get_declared_requirements(str(tmp_path)) == ["lxml"]
 
 
+def test_a_setup_cfg_without_install_requires_is_nothing(tmp_path):
+    (tmp_path / "setup.cfg").write_text("[options]\npackages = find:\n")
+
+    assert requirements.get_declared_requirements(str(tmp_path)) == []
+
+
 def test_nothing_declared_is_nothing(tmp_path):
     (tmp_path / "setup.py").write_text("from setuptools import setup\nsetup(install_requires = [])\n")
 
@@ -141,3 +147,22 @@ def test_a_failed_install_fails_the_setup(tool, monkeypatch):
 
     assert not requirements.setup_tool_requirements("Nile")
     assert not requirements.setup_tool_requirements_offline("Nile")
+
+
+def test_a_missing_venv_pip_fails_the_setup(tool, monkeypatch):
+    lib_dir, _, runs = tool
+    (lib_dir / "requirements.txt").write_text("zstandard\n")
+    monkeypatch.setattr(requirements.programs, "is_tool_installed", lambda name: False)
+
+    assert not requirements.setup_tool_requirements("Nile")
+    assert runs == []
+
+
+def test_failing_to_keep_wheels_fails_the_setup(tool, monkeypatch):
+    lib_dir, _, runs = tool
+    (lib_dir / "requirements.txt").write_text("zstandard\n")
+    monkeypatch.setattr(requirements.command, "run_returncode_command",
+                        lambda cmd, **kwargs: runs.append(cmd) or int("wheel" in cmd))
+
+    assert not requirements.setup_tool_requirements("Nile")
+    assert runs[-1][1] == "wheel"

@@ -69,19 +69,16 @@ def backup_store_game_files(
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
-    if not success:
-        return False
 
     # Upload files
-    success = upload_game_files(
-        game_info = game_info,
-        game_root = tmp_dir_result,
-        locker_type = locker_type,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    if not success:
-        return False
+    if success:
+        success = upload_game_files(
+            game_info = game_info,
+            game_root = tmp_dir_result,
+            locker_type = locker_type,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
 
     # Delete temporary directory
     fileops.remove_directory(
@@ -89,9 +86,7 @@ def backup_store_game_files(
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
-
-    # Should be successful
-    return True
+    return bool(success)
 
 ###########################################################
 

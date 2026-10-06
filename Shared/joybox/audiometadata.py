@@ -397,15 +397,9 @@ class AudioMetadata:
         if include_artwork and "covr" in audio.tags:
             artwork = []
             for cover in audio.tags["covr"]:
-                if hasattr(cover, "imageformat"):
-                    if cover.imageformat == self.mutagen_mp4.MP4Cover.FORMAT_JPEG:
-                        mime_type = "image/jpeg"
-                    elif cover.imageformat == self.mutagen_mp4.MP4Cover.FORMAT_PNG:
-                        mime_type = "image/png"
-                    else:
-                        mime_type = "image/jpeg"
-                else:
-                    mime_type = "image/jpeg"
+                mime_type = "image/jpeg"
+                if cover.imageformat == self.mutagen_mp4.MP4Cover.FORMAT_PNG:
+                    mime_type = "image/png"
                 artwork_data = {
                     "type": 3,  # Front cover
                     "desc": "",

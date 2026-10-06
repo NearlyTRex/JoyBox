@@ -151,3 +151,16 @@ def test_a_missing_file_quits_when_failures_are_fatal(tmp_path, name):
 
     with pytest.raises(SystemExit):
         digest(name, absent, exit_on_failure = True)
+
+
+def test_a_quiet_xxh3_pretend_run_reads_nothing(tmp_path):
+    pytest.importorskip("xxhash")
+
+    assert hashing.calculate_file_xxh3(os.path.join(str(tmp_path), "absent.bin"),
+                                       pretend_run = True) == ""
+
+
+def test_a_missing_file_xxh3_digests_to_nothing(tmp_path):
+    pytest.importorskip("xxhash")
+
+    assert hashing.calculate_file_xxh3(os.path.join(str(tmp_path), "absent.bin")) == ""

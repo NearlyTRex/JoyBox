@@ -2,6 +2,7 @@
 import os
 
 # Local imports
+import joybox.bootstrap.constants as constants
 import joybox.bootstrap.installers as installers
 from fakes import RecordingConnection
 
@@ -54,3 +55,29 @@ def test_the_python_wrappers_alone_are_installed(isolated_settings):
 def test_install_needs_the_venv(isolated_settings):
     connection = RecordingConnection()
     assert not installers.Wrappers(connection).install()
+
+
+def test_only_local_ubuntu_is_supported(isolated_settings):
+    wrappers, _ = build()
+    assert wrappers.get_supported_environments() == [constants.EnvironmentType.LOCAL_UBUNTU]
+
+
+def test_an_unwritable_wrapper_fails_the_install(isolated_settings, monkeypatch):
+    wrappers, connection = build()
+    monkeypatch.setattr(connection, "write_file", lambda src, contents, sudo = False: False)
+
+    assert not wrappers.install()
+    assert connection.permissions == []
+
+
+def test_uninstall_removes_the_recorded_wrappers_and_the_marker(isolated_settings):
+    wrappers, connection = build(recorded = ["python3", "pip3"])
+
+    assert wrappers.uninstall()
+    assert sorted(os.path.basename(path) for path in connection.removed_paths) == sorted(
+        ["python3", "pip3", os.path.basename(wrappers.marker_path)])
+
+
+def test_package_status_follows_the_marker(isolated_settings):
+    wrappers, _ = build(recorded = ["python3"])
+    assert wrappers.get_package_status() == {"installed": ["python3"], "missing": ["pip3"]}

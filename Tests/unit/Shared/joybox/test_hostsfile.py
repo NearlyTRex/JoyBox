@@ -247,3 +247,34 @@ def test_the_windows_hosts_file_is_under_system32(monkeypatch):
     built = hostsfile.get_hosts_file().replace("/", "\\")
 
     assert built.endswith("System32\\drivers\\etc\\hosts")
+
+
+###########################################################
+# Defaults, logging and missing files
+###########################################################
+
+def test_entries_default_to_the_configured_subdomains(isolated_settings):
+    isolated_settings.set_value("UserData.Cockpit", "cockpit_subdomain", "admin")
+
+    assert "%s admin.%s" % (ADDRESS, DOMAIN) in hostsfile.build_entries(ADDRESS, DOMAIN)
+
+
+def test_verbose_changes_name_every_entry(hosts, monkeypatch):
+    logged = []
+    monkeypatch.setattr(hostsfile.logger, "log_info", logged.append)
+    hostsfile.set_entries(ADDRESS, DOMAIN, ["www"], hosts_file = str(hosts), verbose = True)
+    hostsfile.remove_entries(hosts_file = str(hosts), verbose = True)
+    hostsfile.remove_entries(hosts_file = str(hosts), verbose = True)
+
+    text = "\n".join(logged)
+    assert "%s www.%s" % (ADDRESS, DOMAIN) in text
+    assert "Removing the JoyBox entries" in text
+    assert "No JoyBox entries" in text
+
+
+def test_removing_from_a_missing_file_reports_failure(tmp_path):
+    assert hostsfile.remove_entries(hosts_file = str(tmp_path / "absent")) is False
+
+
+def test_a_missing_file_lists_no_entries(tmp_path):
+    assert hostsfile.get_entries(hosts_file = str(tmp_path / "absent")) == []

@@ -122,9 +122,9 @@ def main():
         if random_game_entry:
             json_file = environment.get_game_json_metadata_file(
                 game_supercategory = config.Supercategory.ROMS,
-                game_category = random_game_entry[config.metadata_key_category],
-                game_subcategory = random_game_entry[config.metadata_key_subcategory],
-                game_name = random_game_entry[config.metadata_key_game])
+                game_category = game_category,
+                game_subcategory = game_subcategory,
+                game_name = random_game_entry.get_game())
 
     # Check json file
     if not json_file:

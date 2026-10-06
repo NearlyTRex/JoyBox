@@ -109,9 +109,11 @@ def test_converting_adds_only_the_encrypted_fields():
 
 
 def test_converting_leaves_existing_encrypted_fields_alone():
-    full = hashing.convert_to_full_hash_entry({"filename_enc": "kept.enc", "size_enc": 99})
+    full = hashing.convert_to_full_hash_entry(
+        {"filename_enc": "kept.enc", "hash_enc": "kept", "size_enc": 99})
 
     assert full["filename_enc"] == "kept.enc"
+    assert full["hash_enc"] == "kept"
     assert full["size_enc"] == 99
 
 

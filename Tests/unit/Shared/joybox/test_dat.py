@@ -379,3 +379,53 @@ def test_a_correctly_named_file_is_not_moved(tmp_path):
 
     assert rom.read_bytes() == b"rom contents"
     assert len(list(tmp_path.iterdir())) == 1
+
+
+###########################################################
+# Failure handling and logging
+###########################################################
+
+def test_a_missing_cache_dat_file_quits_when_asked(tmp_path):
+    with pytest.raises(SystemExit):
+        dat.Dat().import_cache_dat_file(str(tmp_path / "absent.dat"), exit_on_failure = True)
+
+
+def test_an_unwritable_cache_dat_file_reports_failure(tmp_path):
+    database = dat.Dat()
+    database.add_game(make_entry())
+
+    assert database.export_cache_dat_file(str(tmp_path)) is False
+
+
+def test_an_unwritable_cache_dat_file_quits_when_asked(tmp_path):
+    database = dat.Dat()
+    database.add_game(make_entry())
+
+    with pytest.raises(SystemExit):
+        database.export_cache_dat_file(str(tmp_path), exit_on_failure = True)
+
+
+def test_a_missing_clrmamepro_dat_file_quits_when_asked(tmp_path):
+    with pytest.raises(SystemExit):
+        dat.Dat().import_clrmamepro_dat_file(str(tmp_path / "absent.dat"), exit_on_failure = True)
+
+
+def test_verbose_operations_log_what_they_touch(tmp_path, monkeypatch):
+    messages = []
+    monkeypatch.setattr(dat.logger, "log_info", messages.append)
+    cache = write_cache(tmp_path / "cache.txt", [make_entry()])
+    xml = write_xml(tmp_path / "set.dat", "<datafile></datafile>")
+    roms = tmp_path / "roms"
+    roms.mkdir()
+    (roms / "a.sfc").write_bytes(b"a")
+
+    database = dat.Dat()
+    assert database.import_cache_dat_file(cache, verbose = True)
+    assert database.export_cache_dat_file(str(tmp_path / "out.txt"), verbose = True)
+    assert database.import_clrmamepro_dat_file(xml, verbose = True)
+    database.rename_files(str(roms), verbose = True)
+
+    assert any(cache in message for message in messages)
+    assert any("out.txt" in message for message in messages)
+    assert any(xml in message for message in messages)
+    assert any("a.sfc" in message for message in messages)

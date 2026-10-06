@@ -102,6 +102,14 @@ def test_closing_without_opening_is_harmless(tmp_path):
     sqlitedb.Database(str(tmp_path / "test.db")).close()
 
 
+def test_a_query_opens_the_connection_on_demand(tmp_path):
+    db = sqlitedb.Database(str(tmp_path / "test.db"))
+    try:
+        assert db.fetch_one("SELECT 1 AS one")["one"] == 1
+    finally:
+        db.close()
+
+
 ###########################################################
 # Tables
 ###########################################################
@@ -112,6 +120,15 @@ def test_a_table_is_created(database):
 
 def test_an_unknown_table_is_absent(database):
     assert database.table_exists("not_a_table") is False
+
+
+def test_a_primary_key_can_be_named_separately(database):
+    database.create_table("platforms", {"code": "TEXT", "label": "TEXT"}, primary_key = "code")
+    database.insert("platforms", {"code": "NES", "label": "Famicom"})
+
+    import sqlite3
+    with pytest.raises(sqlite3.IntegrityError):
+        database.insert("platforms", {"code": "NES", "label": "Again"})
 
 
 def test_creating_a_table_twice_is_harmless(database):
@@ -189,6 +206,13 @@ def test_inserting_no_rows_is_harmless(database):
 def test_a_row_is_updated(database):
     database.insert("games", {"name": "Doom", "platform": "DOS"})
     database.update("games", {"platform": "Windows"}, "name = ?", ("Doom",))
+
+    assert database.fetch_one("SELECT * FROM games")["platform"] == "Windows"
+
+
+def test_an_update_without_parameters_uses_a_literal_clause(database):
+    database.insert("games", {"name": "Doom", "platform": "DOS"})
+    database.update("games", {"platform": "Windows"}, "name = 'Doom'")
 
     assert database.fetch_one("SELECT * FROM games")["platform"] == "Windows"
 

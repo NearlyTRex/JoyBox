@@ -369,3 +369,179 @@ def test_published_rows_alternate(metadata_root, published):
     even_marker = config.publish_html_entry_even.split("%s")[0]
     assert odd_marker in contents
     assert even_marker in contents
+
+
+def test_initial_values_override_the_defaults(metadata_root):
+    create(metadata_root, initial_data = scraped(players = "4", coop = "Yes", playable = "No"))
+
+    entry = load(metadata_root).get_game(platform_of(), GAME)
+    assert (entry.get_players(), entry.get_coop(), entry.get_playable()) == ("4", "Yes", "No")
+
+
+def test_an_update_limited_to_present_keys_is_skipped(metadata_root, scraping):
+    create(metadata_root)
+
+    assert update(metadata_root, keys = [config.metadata_key_players]) is True
+    assert scraping["collected"] == []
+
+
+class FakeStore:
+
+    def __init__(self, latest):
+        self.latest = latest
+        self.asked = []
+
+    def get_key(self):
+        return "steam"
+
+    def get_metadata_identifier_key(self):
+        return "appurl"
+
+    def get_latest_metadata(self, identifier, **kwargs):
+        self.asked.append(identifier)
+        return self.latest
+
+
+class FakeJson:
+
+    def get_subvalue(self, key, subkey):
+        return "%s/%s" % (key, subkey)
+
+
+def test_a_store_game_is_updated_from_its_store(metadata_root, scraping, monkeypatch):
+    create(metadata_root)
+    scraping["store"] = FakeStore(scraped(developer = "Valve"))
+    monkeypatch.setattr(metadata, "read_game_json_data", lambda **kwargs: FakeJson())
+
+    assert update(metadata_root) is True
+    assert scraping["store"].asked == ["steam/appurl"]
+    assert scraping["collected"] == []
+    assert load(metadata_root).get_game(platform_of(), GAME).get_developer() == "Valve"
+
+
+###########################################################
+# Building entries
+###########################################################
+
+@pytest.fixture
+def building(monkeypatch):
+    state = {"created": [], "updated": [], "create_ok": True, "update_ok": True}
+
+    def create_game_metadata_entry(**kwargs):
+        state["created"].append(kwargs["game_name"])
+        return state["create_ok"]
+
+    def update_game_metadata_entry(**kwargs):
+        state["updated"].append((kwargs["game_name"], kwargs["keys"], kwargs["force"]))
+        return state["update_ok"]
+
+    monkeypatch.setattr(metadata, "create_game_metadata_entry", create_game_metadata_entry)
+    monkeypatch.setattr(metadata, "update_game_metadata_entry", update_game_metadata_entry)
+    monkeypatch.setattr(metadata.logger, "log_info", lambda message, **kwargs: None)
+    return state
+
+
+def test_building_an_entry_creates_then_updates(building):
+    assert metadata.build_game_metadata_entry(ROMS, CATEGORY, SUBCATEGORY, GAME, keys = ["genre"], force = True) is True
+    assert building["created"] == [GAME]
+    assert building["updated"] == [(GAME, ["genre"], True)]
+
+
+def test_a_failed_create_skips_the_update(building):
+    building["create_ok"] = False
+
+    assert metadata.build_game_metadata_entry(ROMS, CATEGORY, SUBCATEGORY, GAME) is False
+    assert building["updated"] == []
+
+
+def test_the_build_reports_the_update_result(building):
+    building["update_ok"] = False
+
+    assert metadata.build_game_metadata_entry(ROMS, CATEGORY, SUBCATEGORY, GAME) is False
+
+
+@pytest.fixture
+def every_game(monkeypatch):
+    state = {"built": [], "result": True}
+
+    def find_json_game_names(game_supercategory, game_category, game_subcategory):
+        return ["%s/A" % game_subcategory, "%s/B" % game_subcategory]
+
+    def build_game_metadata_entry(game_name, **kwargs):
+        state["built"].append(game_name)
+        return state["result"]
+
+    monkeypatch.setattr(metadata.gameinfo, "find_json_game_names", find_json_game_names)
+    monkeypatch.setattr(metadata, "build_game_metadata_entry", build_game_metadata_entry)
+    return state
+
+
+def test_building_everything_visits_every_subcategory(every_game):
+    assert metadata.build_all_game_metadata_entries() is True
+
+    expected = sum(len(config.subcategory_map[category]) for category in config.Category.members()) * 2
+    assert len(every_game["built"]) == expected
+
+
+def test_building_can_be_limited_to_categories_and_subcategories(every_game):
+    other = config.subcategory_map[CATEGORY][1]
+
+    assert metadata.build_all_game_metadata_entries(
+        categories = [str(CATEGORY)], subcategories = [str(SUBCATEGORY)]) is True
+    assert every_game["built"] == ["%s/A" % SUBCATEGORY, "%s/B" % SUBCATEGORY]
+    assert not any(str(other) in name for name in every_game["built"])
+
+
+def test_building_everything_stops_at_a_failure(every_game):
+    every_game["result"] = False
+
+    assert metadata.build_all_game_metadata_entries() is False
+    assert len(every_game["built"]) == 1
+
+
+###########################################################
+# Publishing every category
+###########################################################
+
+def test_a_category_without_metadata_publishes_an_empty_page(metadata_root, published):
+    create(metadata_root)
+    saves = [member for member in config.Supercategory.members() if member != ROMS][0]
+
+    assert metadata.publish_game_metadata_entries(saves, CATEGORY) is True
+    assert GAME not in published_file(published).read_text()
+
+
+@pytest.fixture
+def publishing(monkeypatch):
+    state = {"published": [], "result": True}
+
+    def publish_game_metadata_entries(game_supercategory, game_category, **kwargs):
+        state["published"].append(game_category)
+        return state["result"]
+
+    monkeypatch.setattr(metadata, "publish_game_metadata_entries", publish_game_metadata_entries)
+    return state
+
+
+def test_every_category_is_published(publishing):
+    assert metadata.publish_all_game_metadata_entries() is True
+    assert publishing["published"] == list(config.Category.members())
+
+
+def test_publishing_can_be_limited_to_categories(publishing):
+    assert metadata.publish_all_game_metadata_entries(categories = [str(CATEGORY)]) is True
+    assert publishing["published"] == [CATEGORY]
+
+
+def test_publishing_by_subcategory_publishes_only_the_whole_categories_holding_them(publishing):
+    subcategory = config.subcategory_map[CATEGORY][0]
+
+    assert metadata.publish_all_game_metadata_entries(subcategories = [str(subcategory)]) is True
+    assert publishing["published"] == [CATEGORY]
+
+
+def test_publishing_everything_stops_at_a_failure(publishing):
+    publishing["result"] = False
+
+    assert metadata.publish_all_game_metadata_entries() is False
+    assert len(publishing["published"]) == 1

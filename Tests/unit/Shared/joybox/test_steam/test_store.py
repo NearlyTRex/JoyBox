@@ -167,6 +167,14 @@ def test_an_unreadable_cache_is_refetched(steam_store, owned, cached):
     assert len(owned["fetched"]) == 1
 
 
+def test_an_unreadable_cache_is_refetched_quietly(steam_store, owned):
+    owned["cache"].parent.mkdir(parents = True)
+    owned["cache"].write_text(json.dumps({"not": "a list"}))
+
+    assert len(steam_store.get_latest_purchases()) == 2
+    assert len(owned["fetched"]) == 1
+
+
 def test_purchases_need_the_api(steam_store, owned, reachable):
     owned["json"] = None
     assert steam_store.get_latest_purchases() is None
@@ -278,6 +286,49 @@ def test_manifest_paths_join_the_app_info(steam_store, tools, recording_command,
     assert data.get_value(config.json_key_store_keys) == ["HKEY_CURRENT_USER/Software/Valve"]
 
 
+APP_INFO_WITHOUT_INSTALLDIR = '''"220"
+{
+    "common"
+    {
+        "name"      "Half-Life 2"
+    }
+}
+'''
+
+
+def test_an_app_without_an_installdir_takes_manifest_paths_unrooted(steam_store, tools, recording_command, reachable, monkeypatch):
+    bases = []
+
+    class Entry:
+        def get_paths(self, base_path):
+            bases.append(base_path)
+            return ["GAME_INSTALL_DIR/cfg"]
+        def get_keys(self):
+            return []
+
+    class OneEntryManifest:
+        def find_entry_by_steamid(self, steamid, **kwargs):
+            return Entry()
+        def find_entry_by_name(self, **kwargs):
+            return None
+
+    monkeypatch.setattr(steam.manifest, "get_manifest_instance", lambda: OneEntryManifest())
+    data = app_info(steam_store, recording_command, APP_INFO_WITHOUT_INSTALLDIR)
+
+    assert bases == [None]
+    assert data.get_value(config.json_key_store_name) == "Half-Life 2"
+    assert not data.get_value(config.json_key_store_installdir)
+    assert "GAME_INSTALL_DIR/cfg" in data.get_value(config.json_key_store_paths)
+
+
+def test_a_scalar_app_entry_gives_only_the_defaults(steam_store, tools, recording_command, reachable, no_manifest):
+    data = app_info(steam_store, recording_command, '"220" "unavailable"\n')
+
+    assert data.get_value(config.json_key_store_appid) == "220"
+    assert data.get_value(config.json_key_store_branchid) == "public"
+    assert not data.get_value(config.json_key_store_name)
+
+
 ###########################################################
 # Pages and assets
 ###########################################################
@@ -355,6 +406,16 @@ def test_a_missing_tool_stops_the_program(steam_store, tools, recording_command,
         getattr(steam_store, action)(*args)
 
 
+@pytest.mark.parametrize("action,tool", [("install", "SteamCMD"), ("launch", "Steam"), ("download", "SteamDepotDownloader")])
+def test_a_missing_tool_fails_when_the_error_does_not_quit(steam_store, tools, recording_command, monkeypatch, tmp_path, action, tool):
+    del tools[tool]
+    monkeypatch.setattr(steam.logger, "log_error", lambda message, **kwargs: None)
+    args = ("220", str(tmp_path)) if action == "download" else ("220",)
+
+    assert getattr(steam_store, action)(*args) is False
+    assert recording_command.calls == []
+
+
 ###########################################################
 # Downloading
 ###########################################################
@@ -399,6 +460,13 @@ def test_a_beta_branch_is_downloaded_as_such(steam_store, depot, recording_comma
     assert "-beta" not in recording_command.calls[1]["cmd"]
 
 
+def test_a_download_without_an_account_name_is_anonymous(steam_store, depot, recording_command, monkeypatch, tmp_path):
+    monkeypatch.setattr(steam_store, "get_account_name", lambda: "")
+
+    assert steam_store.download("220", str(tmp_path / "out")) is True
+    assert "-username" not in recording_command.only()
+
+
 def test_a_failed_download_removes_its_temp(steam_store, depot, recording_command, tmp_path):
     recording_command.returncode = 1
 
@@ -441,3 +509,9 @@ def test_user_id_paths_get_every_id_form(steam_store):
 
     for format_type in [config.SteamIDFormatType.STEAMID_64, config.SteamIDFormatType.STEAMID_3S, config.SteamIDFormatType.STEAMID_CS]:
         assert "userdata/%s/220" % steam_store.get_user_id(format_type) in variants
+
+
+def test_paths_without_a_user_id_get_no_id_variants(steam_store):
+    variants = steam_store.add_path_variants(["GAME_INSTALL_DIR/cfg"])
+
+    assert not any(steam_store.get_user_id() in path for path in variants)

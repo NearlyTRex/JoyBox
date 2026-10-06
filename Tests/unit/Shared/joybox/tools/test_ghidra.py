@@ -1,47 +1,64 @@
-# Third-party imports
-import pytest
+# Imports
+import os
 
 # Local imports
 from joybox.tools import ghidra
-
-KEYS = ["search_file", "install_files", "release_type", "chmod_files", "rename_files"]
-
-
-class Recorder:
-    def __init__(self):
-        self.calls = []
-
-    def __call__(self, **kwargs):
-        self.calls.append(kwargs)
-        return True
+from tools_helpers import (
+    assert_a_failed_step_stops_the_install,
+    assert_nothing_runs_when_already_installed,
+    assert_offline_matches_online,
+    assert_setup_params_reach_every_step,
+    installed_to,
+)
 
 
-@pytest.fixture
-def releases(monkeypatch):
-    for name in ["should_program_be_installed", "should_library_be_installed"]:
-        monkeypatch.setattr(ghidra.programs, name, lambda *args: True)
-    for name in ["get_program_install_dir", "get_library_install_dir"]:
-        monkeypatch.setattr(ghidra.programs, name, lambda name, platform: "/install/%s/%s" % (name, platform))
-    for name in ["get_program_backup_dir", "get_library_backup_dir"]:
-        monkeypatch.setattr(ghidra.programs, name, lambda name, platform: "/backup/%s/%s" % (name, platform))
-    monkeypatch.setattr(ghidra.platform_info, "is_windows_platform", lambda: False)
-    online = Recorder()
-    stored = Recorder()
-    monkeypatch.setattr(ghidra.release, "build_binary_from_source", online)
-    monkeypatch.setattr(ghidra.release, "setup_stored_release", stored)
-    return online, stored
+def test_setup_installs_the_library(steps):
+    assert ghidra.Ghidra().setup()
+
+    assert steps.names() == ["build_binary_from_source"]
+    assert installed_to(steps) == ["/install/Ghidra/lib"]
 
 
-def test_setup_offline_matches_the_online_install(releases):
-    online, stored = releases
-    tool = ghidra.Ghidra()
+def test_a_failed_step_stops_the_install(steps):
+    assert_a_failed_step_stops_the_install(steps, ghidra.Ghidra())
 
-    assert tool.setup()
-    assert tool.setup_offline()
 
+def test_nothing_runs_when_already_installed(steps):
+    assert_nothing_runs_when_already_installed(steps, ghidra.Ghidra())
+
+
+def test_setup_params_reach_every_step(steps):
+    assert_setup_params_reach_every_step(steps, ghidra.Ghidra())
+
+
+def test_setup_offline_matches_the_online_install(steps):
     # The built zip nests ghidraRun under a versioned folder
-    offline = {call["install_dir"]: call for call in stored.calls}
-    assert online.calls
-    for call in online.calls:
-        expected = {key: call[key] for key in KEYS if key in call}
-        assert {key: offline[call["install_dir"]].get(key) for key in expected} == expected
+    assert_offline_matches_online(steps, ghidra.Ghidra())
+
+
+def test_setup_builds_with_the_platform_gradle_wrapper(steps):
+    assert ghidra.Ghidra().setup()
+    assert steps.made("build_binary_from_source")[0]["build_cmd"][0] == "./gradlew"
+
+    steps.platform = "windows"
+    steps.reset()
+    assert ghidra.Ghidra().setup()
+    assert steps.made("build_binary_from_source")[0]["build_cmd"][0] == "gradlew.bat"
+
+
+def test_configure_installs_the_watcom_language_files(steps):
+    assert ghidra.Ghidra().configure()
+
+    written = {kwargs["src"]: kwargs["contents"] for kwargs in steps.made("touch_file")}
+    assert sorted(written) == sorted("/tools/" + path for path in ghidra.config_files)
+    for dest_path, src_filename in ghidra.config_files.items():
+        with open(os.path.join(ghidra.extra_files_dir, src_filename)) as handle:
+            assert written["/tools/" + dest_path] == handle.read().strip()
+
+
+def test_configure_stops_when_a_language_file_is_missing(steps, monkeypatch):
+    monkeypatch.setattr(ghidra, "extra_files_dir", "/nonexistent")
+
+    assert ghidra.Ghidra().configure() is False
+    assert steps.calls == []
+    assert steps.errors

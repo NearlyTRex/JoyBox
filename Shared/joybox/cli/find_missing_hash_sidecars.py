@@ -68,8 +68,6 @@ def main():
 
     # Get remote locker info
     remote_info = lockerinfo.LockerInfo(args.locker_type)
-    if not remote_info:
-        logger.log_error("Could not get locker info for %s" % args.locker_type, quit_program = True)
 
     # Get remote details
     remote_name = remote_info.get_name()

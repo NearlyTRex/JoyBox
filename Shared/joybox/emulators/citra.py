@@ -130,7 +130,7 @@ class Citra(emulatorbase.EmulatorBase):
     def setup_offline(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
-        self.setup(setup_params = setup_params)
+        return self.setup(setup_params = setup_params)
 
     # Configure
     def configure(self, setup_params = None):

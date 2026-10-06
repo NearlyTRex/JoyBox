@@ -298,3 +298,32 @@ def test_an_offset_run_still_rehashes_a_changed_file(tree, output_file):
     hashing.hash_files(tree, output_file, offset = "Games")
 
     assert hashing.read_hash_file_json(output_file)["Games/one.bin"]["hash"] != before
+
+
+###########################################################
+# Explicit base paths and verbose reruns
+###########################################################
+
+def test_a_tree_can_be_hashed_against_an_explicit_base_path(tree, output_file):
+    assert hashing.hash_files(tree, output_file, base_path = tree) is True
+    assert "one.bin" in hashing.read_hash_file_json(output_file)
+
+
+def test_a_verbose_rerun_reports_unchanged_files(tree, output_file, caplog):
+    hashing.hash_files(tree, output_file)
+    caplog.clear()
+    hashing.hash_files(tree, output_file, verbose = True)
+
+    assert "Skipping (unchanged): one.bin" in caplog.text
+
+
+def test_an_unchanged_file_takes_its_time_when_none_was_recorded(tree, output_file):
+    hashing.hash_files(tree, output_file)
+    contents = hashing.read_hash_file_json(output_file)
+    contents["one.bin"]["mtime"] = 0
+    hashing.write_hash_file_json(output_file, contents)
+
+    os.utime(os.path.join(tree, "one.bin"), (2000, 2000))
+    hashing.hash_files(tree, output_file)
+
+    assert hashing.read_hash_file_json(output_file)["one.bin"]["mtime"] == 2000

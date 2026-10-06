@@ -9,7 +9,7 @@ Write `.m3u` playlists for the media files in a directory tree.
 ## Synopsis
 
 ```text
-generate_playlist [options]
+generate_playlist -f <file_types> [options]
 ```
 
 ## Description
@@ -39,7 +39,7 @@ or hold a single entry are not written unless `--allow_empty_lists` or
 
 | Option | Description |
 |--------|-------------|
-| `-f, --file_types <file_types>` | Comma-separated file extensions to include, with the leading dot, e.g. `.mp3,.flac`. |
+| `-f, --file_types <file_types>` | Comma-separated file extensions to include, with the leading dot, e.g. `.mp3,.flac`. **Required.** |
 | `-t, --playlist_type <Tree\|Local>` | `Tree` writes one playlist for the whole tree; `Local` writes one inside each directory that holds matching files. Default: `Tree`. Allowed: `Tree`, `Local`. |
 
 ### Behavior

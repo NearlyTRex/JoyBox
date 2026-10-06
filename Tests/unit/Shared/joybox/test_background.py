@@ -77,3 +77,27 @@ def test_stopping_waits_for_a_run_in_progress():
 
 def test_stopping_a_job_that_never_started_is_harmless():
     background.BackgroundJob(job_func = lambda: None, units_exact = 1).stop()
+
+
+def test_an_unknown_unit_leaves_the_job_unscheduled():
+    job = background.BackgroundJob(job_func = lambda: None, units_exact = 1, units_type = "Days")
+
+    job.start()
+    job.stop()
+
+    assert job.job.job_func is None
+
+
+def test_the_scheduler_thread_sleeps_between_checks(monkeypatch):
+    job = background.BackgroundJob(job_func = lambda: None, units_exact = 1, sleep_interval = 3)
+    sleeps = []
+
+    def fake_sleep(seconds):
+        sleeps.append(seconds)
+        job.should_stop.set()
+
+    monkeypatch.setattr(background.runtime, "sleep_program", fake_sleep)
+    job.start()
+    job.thread.join(5)
+
+    assert sleeps == [3]

@@ -432,10 +432,6 @@ def transform_game_file(
     pretend_run = False,
     exit_on_failure = False):
 
-    # Get game info
-    game_category = game_info.get_category()
-    game_subcategory = game_info.get_subcategory()
-
     # Output dir doesn't exist
     if not paths.is_path_directory(output_dir):
         return (False, "Output directory doesn't exist")
@@ -446,6 +442,39 @@ def transform_game_file(
         pretend_run = pretend_run)
     if not tmp_dir_success:
         return (False, tmp_dir_result)
+
+    # Transform, removing the temporary directory whatever the outcome
+    try:
+        return transform_game_file_in(
+            game_info = game_info,
+            source_dir = source_dir,
+            output_dir = output_dir,
+            tmp_dir_result = tmp_dir_result,
+            keep_setup_files = keep_setup_files,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+    finally:
+        fileops.remove_directory(
+            src = tmp_dir_result,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+
+# Transform game file using a temporary directory
+def transform_game_file_in(
+    game_info,
+    source_dir,
+    output_dir,
+    tmp_dir_result,
+    keep_setup_files = False,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Get game info
+    game_category = game_info.get_category()
+    game_subcategory = game_info.get_subcategory()
 
     # Transform result
     transform_success = False
@@ -539,15 +568,5 @@ def transform_game_file(
     if not success:
         return (False, "Unable to move transformed output")
 
-    # Get final result
-    final_result_path = paths.join_paths(output_dir, paths.get_filename_file(transform_result))
-
-    # Delete temporary directory
-    fileops.remove_directory(
-        src = tmp_dir_result,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-
     # Return final result
-    return (True, final_result_path)
+    return (True, paths.join_paths(output_dir, paths.get_filename_file(transform_result)))

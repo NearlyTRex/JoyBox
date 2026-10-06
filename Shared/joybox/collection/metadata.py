@@ -357,8 +357,13 @@ def publish_all_game_metadata_entries(
     pretend_run = False,
     exit_on_failure = False):
     selected_categories = config.Category.from_list(categories) if categories else config.Category.members()
+    selected_subcategories = config.Subcategory.from_list(subcategories) if subcategories else None
     for game_supercategory in [config.Supercategory.ROMS]:
         for game_category in selected_categories:
+
+            # Pages cover a whole category; skip categories holding none of the selected subcategories
+            if selected_subcategories and not any(sc in selected_subcategories for sc in config.subcategory_map[game_category]):
+                continue
 
             # Publish metadata
             success = publish_game_metadata_entries(

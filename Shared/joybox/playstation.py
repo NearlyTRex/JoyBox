@@ -226,37 +226,29 @@ def verify_ps3_chd(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
-    # Extract chd
-    success = chd.extract_disc_chd(
-        chd_file = input_chd_file,
-        binary_file = output_iso_bin_file,
-        toc_file = output_iso_toc_file,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    if not success:
-        return False
-
-    # Extract ps3 iso
-    success = extract_ps3_iso(
-        iso_file = output_iso_bin_file,
-        dkey_file = input_dkey_file,
-        extract_dir = raw_tmp_dir,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    if not success:
-        return False
-
-    # Delete temporary directory
-    fileops.remove_directory(
-        src = tmp_dir_result,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-
-    # Should be verified now
-    return True
+    # Extract chd and decrypt it, removing the scratch copies either way
+    try:
+        success = chd.extract_disc_chd(
+            chd_file = input_chd_file,
+            binary_file = output_iso_bin_file,
+            toc_file = output_iso_toc_file,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if not success:
+            return False
+        return extract_ps3_iso(
+            iso_file = output_iso_bin_file,
+            dkey_file = input_dkey_file,
+            extract_dir = raw_tmp_dir,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+    finally:
+        fileops.remove_directory(
+            src = tmp_dir_result,
+            verbose = verbose,
+            pretend_run = pretend_run)
 
 # Extract psn pkg
 def extract_psn_pkg(

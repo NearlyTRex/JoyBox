@@ -413,6 +413,13 @@ def test_a_matching_byte_header_is_recognised(tmp_path):
     assert fileops.is_file_correctly_headered(str(target), b"PK\x03\x04") is True
 
 
+def test_a_header_that_is_neither_bytes_nor_text_never_matches(tmp_path):
+    target = tmp_path / "archive.zip"
+    target.write_bytes(b"PK")
+
+    assert fileops.is_file_correctly_headered(str(target), [0x50, 0x4B]) is False
+
+
 def test_a_matching_text_header_is_recognised(tmp_path):
     target = tmp_path / "script.sh"
     target.write_text("#!/bin/bash\necho hi\n")

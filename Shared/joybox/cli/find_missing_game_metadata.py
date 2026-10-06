@@ -62,12 +62,11 @@ def main():
     metadata_dir = environment.get_game_pegasus_metadata_root_dir()
 
     # Determine keys to check
-    keys_to_check = []
     if args.keys == config.MetadataKeyType.MINIMUM:
         keys_to_check = config.metadata_keys_minimum
     elif args.keys == config.MetadataKeyType.DOWNLOADABLE:
         keys_to_check = config.metadata_keys_downloadable
-    elif args.keys == config.MetadataKeyType.ALL:
+    else:
         keys_to_check = config.metadata_keys_all
 
     # Show preview

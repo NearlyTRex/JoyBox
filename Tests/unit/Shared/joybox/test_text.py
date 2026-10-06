@@ -1,4 +1,5 @@
 # Imports
+import sys
 import pytest
 
 # Local imports
@@ -75,6 +76,34 @@ def test_surrounding_whitespace_is_trimmed():
 
 def test_plain_ascii_survives_unchanged():
     assert text.clean_rich_text("Plain Name") == "Plain Name"
+
+
+def test_cleaning_falls_back_to_dropping_non_ascii_without_unidecode(monkeypatch):
+    monkeypatch.setitem(sys.modules, "unidecode", None)
+
+    assert text.clean_rich_text("Pokémon") == "Pokmon"
+
+
+###########################################################
+# Web text
+###########################################################
+
+def test_web_entities_are_blanked_after_rich_cleaning():
+    assert text.clean_web_text("Tom&amp;Jerry™") == "Tom Jerry(tm)"
+
+
+###########################################################
+# Web text extraction
+###########################################################
+
+def test_markup_is_reduced_to_its_text():
+    assert text.extract_web_text("<p>Hello <b>world</b></p>") == "Hello world"
+
+
+def test_extraction_without_html_text_yields_nothing(monkeypatch):
+    monkeypatch.setitem(sys.modules, "html_text", None)
+
+    assert text.extract_web_text("<p>Hello</p>") is None
 
 
 ###########################################################

@@ -51,6 +51,8 @@ def test_relative_file_list_strips_only_the_leading_root(tmp_path):
 def test_file_list_of_a_single_file(tmp_path):
     path = write(tmp_path / "rom.iso")
     assert paths.build_file_list(path) == [path]
+    # Callers join each entry onto their base, so a file root comes back absolute
+    assert paths.build_file_list(path, new_relative_path = "Games", use_relative_paths = True) == [path]
     os.symlink(path, tmp_path / "link.iso")
     assert paths.build_file_list(str(tmp_path / "link.iso"), ignore_symlinks = True) == []
 

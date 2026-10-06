@@ -676,10 +676,11 @@ def copy_contents(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    if not paths.does_path_exist(src, case_sensitive_paths):
+    if not pretend_run and not paths.does_path_exist(src, case_sensitive_paths):
+        logger.log_error("Source %s does not exist, cannot copy" % src)
         if exit_on_failure:
-            logger.log_error("Source %s does not exist, cannot copy" % src)
             runtime.quit_program()
+        return False
     file_list = paths.build_file_list(
         root = src,
         use_relative_paths = True,
@@ -739,10 +740,11 @@ def move_contents(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    if not paths.does_path_exist(src, case_sensitive_paths):
+    if not pretend_run and not paths.does_path_exist(src, case_sensitive_paths):
+        logger.log_error("Source %s does not exist, cannot move" % src)
         if exit_on_failure:
-            logger.log_error("Source %s does not exist, cannot move" % src)
             runtime.quit_program()
+        return False
     file_list = paths.build_file_list(
         root = src,
         use_relative_paths = True,
@@ -1096,10 +1098,11 @@ def sync_contents(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    if not paths.does_path_exist(src):
+    if not pretend_run and not paths.does_path_exist(src):
+        logger.log_error("Source %s does not exist, cannot sync" % src)
         if exit_on_failure:
-            logger.log_error("Source %s does not exist, cannot sync" % src)
             runtime.quit_program()
+        return False
     success = make_directory(
         src = dest,
         verbose = verbose,

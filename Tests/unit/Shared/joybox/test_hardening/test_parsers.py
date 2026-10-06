@@ -101,6 +101,12 @@ def test_no_containers_are_exposed_when_none_run():
     assert hardening.parse_exposed_containers("") == []
 
 
+def test_blank_lines_between_containers_are_ignored():
+    output = "web 0.0.0.0:80->80/tcp\n\n   \nnavidrome 127.0.0.1:4533->4533/tcp\n"
+
+    assert hardening.parse_exposed_containers(output) == ["web 0.0.0.0:80->80/tcp"]
+
+
 ###########################################################
 # sshd
 ###########################################################

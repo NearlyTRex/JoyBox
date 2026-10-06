@@ -326,3 +326,19 @@ def test_uninstalling_an_absent_isolated_package_succeeds(isolated_settings):
 
     assert python.uninstall_isolated_package(AIDER)
     assert connection.removed_paths == []
+
+
+def test_an_empty_tools_dir_setting_falls_back_to_the_default(isolated_settings):
+    isolated_settings.set_value("Tools.Python", "python_tools_dir", "")
+    python, _ = with_packages([AIDER])
+
+    assert python.get_tools_dir() == tools_dir()
+
+
+def test_on_windows_uninstall_has_no_links_to_remove(isolated_settings, monkeypatch):
+    venv = os.path.join(tools_dir(), "aider-chat")
+    python, connection = with_packages([AIDER], existing_paths = [venv])
+    monkeypatch.setattr(installer_python.platform_info, "is_windows_platform", lambda: True)
+
+    assert python.uninstall_isolated_package(AIDER)
+    assert connection.removed_paths == [venv]

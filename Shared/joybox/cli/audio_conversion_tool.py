@@ -83,36 +83,30 @@ def main():
     # Get output path (optional, don't validate existence)
     output_path = args.output_path
 
-    # Execute action
-    if args.action == config.AudioConversionAction.AAX_TO_M4A:
-
-        # Check if input is a directory or file
-        if paths.is_path_directory(input_path):
-            return audible.decrypt_aax_directory(
-                input_dir = input_path,
-                output_dir = output_path,
-                activation_bytes = args.activation_bytes,
-                authcode_file = args.authcode_file,
-                recursive = args.recursive,
-                overwrite = args.overwrite,
-                verbose = args.verbose,
-                pretend_run = args.pretend_run,
-                exit_on_failure = args.exit_on_failure)
-        elif paths.is_path_file(input_path):
-            return audible.decrypt_aax_to_m4a(
-                input_file = input_path,
-                output_file = output_path,
-                activation_bytes = args.activation_bytes,
-                authcode_file = args.authcode_file,
-                overwrite = args.overwrite,
-                verbose = args.verbose,
-                pretend_run = args.pretend_run,
-                exit_on_failure = args.exit_on_failure)
-        logger.log_error(f"Input is not a file or directory: {input_path}")
-        return False
-    else:
-        logger.log_error(f"Unknown action: {args.action}")
-        return False
+    # Convert a directory or a single file; AaxToM4a is the only action
+    if paths.is_path_directory(input_path):
+        return audible.decrypt_aax_directory(
+            input_dir = input_path,
+            output_dir = output_path,
+            activation_bytes = args.activation_bytes,
+            authcode_file = args.authcode_file,
+            recursive = args.recursive,
+            overwrite = args.overwrite,
+            verbose = args.verbose,
+            pretend_run = args.pretend_run,
+            exit_on_failure = args.exit_on_failure)
+    elif paths.is_path_file(input_path):
+        return audible.decrypt_aax_to_m4a(
+            input_file = input_path,
+            output_file = output_path,
+            activation_bytes = args.activation_bytes,
+            authcode_file = args.authcode_file,
+            overwrite = args.overwrite,
+            verbose = args.verbose,
+            pretend_run = args.pretend_run,
+            exit_on_failure = args.exit_on_failure)
+    logger.log_error(f"Input is not a file or directory: {input_path}")
+    return False
 
 # Run through the shared error handling
 def run():

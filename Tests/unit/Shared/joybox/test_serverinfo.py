@@ -251,6 +251,16 @@ def test_a_local_connection_also_carries_flags(isolated_settings):
     assert connection.flags.pretend_run
 
 
+def test_given_options_are_carried_into_the_connection(isolated_settings):
+    from joybox import runoptions
+
+    options = runoptions.RunOptions(cwd = "/srv/work")
+
+    connection = serverinfo.get_connection(options = options)
+
+    assert connection.options.cwd == "/srv/work"
+
+
 ###########################################################
 # Provisioning fields
 ###########################################################

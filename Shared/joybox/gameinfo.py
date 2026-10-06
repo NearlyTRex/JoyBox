@@ -318,9 +318,7 @@ class GameInfo:
 
     # Check if metadata exists
     def has_metadata(self):
-        if self.has_key(config.json_key_metadata):
-            return isinstance(self.get_value(config.json_key_metadata), metadataentry.MetadataEntry)
-        return False
+        return isinstance(self.get_value(config.json_key_metadata), metadataentry.MetadataEntry)
 
     # Get metadata
     def get_metadata(self):
@@ -923,13 +921,8 @@ def derive_game_name_from_regular_name(regular_name, region="USA"):
         if game_name.startswith(f"{flippable_word} "):
             base_name = game_name[len(flippable_word) + 1:]
             if " - " in base_name:
-                parts = base_name.split(" - ", 1)
-                if len(parts) == 2:
-                    first_part = parts[0].strip()
-                    second_part = parts[1].strip()
-                    game_name = f"{first_part}, {flippable_word} - {second_part}"
-                else:
-                    game_name = f"{base_name}, {flippable_word}"
+                first_part, second_part = base_name.split(" - ", 1)
+                game_name = f"{first_part.strip()}, {flippable_word} - {second_part.strip()}"
             else:
                 game_name = f"{base_name}, {flippable_word}"
             break

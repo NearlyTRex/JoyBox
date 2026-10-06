@@ -65,7 +65,7 @@ def main():
         pretend_run = args.pretend_run,
         exit_on_failure = args.exit_on_failure)
     if code != 0:
-        logger.log_error("List command failed with code %d" % code)
+        logger.log_error("List command failed with code %d" % code, quit_program = True)
 
 # Run through the shared error handling
 def run():

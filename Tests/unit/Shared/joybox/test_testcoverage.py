@@ -434,3 +434,124 @@ def test_the_data_lives_in_the_cache(isolated_settings):
 
     assert data_file.startswith(testcoverage.get_data_dir())
     assert os.path.basename(testcoverage.get_data_dir()) == "Coverage"
+
+
+###########################################################
+# Edge cases
+###########################################################
+
+def test_the_repository_path_is_normalised(monkeypatch):
+    monkeypatch.setattr(testcoverage.environment, "get_repo_root", lambda expand = False: "/repo/./JoyBox/")
+
+    assert testcoverage.get_repo_dir() == "/repo/JoyBox"
+
+
+def test_the_json_export_sits_beside_the_data(isolated_settings):
+    assert os.path.dirname(testcoverage.get_json_file()) == testcoverage.get_data_dir()
+
+
+@pytest.mark.parametrize("output, available", [("Coverage.py, version 7.6", True), ("", False), (None, False)])
+def test_coverage_availability_reads_its_version(recording_command, output, available):
+    recording_command.output = output
+
+    assert testcoverage.is_coverage_available() is available
+    assert recording_command.only()[1:] == ["-m", "coverage", "--version"]
+
+
+@pytest.mark.parametrize("code, exported", [(0, True), (1, False)])
+def test_the_json_export_runs_from_the_repository(recording_command, code, exported):
+    recording_command.returncode = code
+
+    assert testcoverage.export_json("/repo", "/c/data", "/c/out.json") is exported
+    assert recording_command.only()[3:] == ["json", "--data-file", "/c/data", "-o", "/c/out.json", "-q"]
+    assert recording_command.options().get_cwd() == "/repo"
+
+
+def test_a_file_outside_the_library_is_placed_by_its_first_directory():
+    assert testcoverage.get_area("Scripts/tool/run.py") == "Scripts"
+
+
+def test_a_function_with_no_measured_lines_is_left_out():
+    assert testcoverage.find_functions("def f():\n    pass\n", [], []) == []
+
+
+def test_unreadable_or_unparseable_sources_are_skipped(tmp_path):
+    (tmp_path / "broken.py").write_text("def (:\n")
+    files = {
+        "absent.py": {"missing_lines": [1]},
+        "broken.py": {"missing_lines": [1]},
+    }
+
+    assert testcoverage.find_untested_functions(files, str(tmp_path)) == {}
+
+
+def test_a_spotless_library_report_has_only_the_summary():
+    data = {"files": {"Shared/joybox/done.py": entry(5, 0)}, "totals": summary(5, 0)}
+
+    report = testcoverage.render_report(data, {})
+
+    assert "Measured" not in report
+    assert "## Files missing the most" not in report
+    assert "## Functions never run" not in report
+    assert "## Files with nothing run" not in report
+
+
+def test_a_long_list_of_unrun_files_is_capped():
+    files = {"Shared/joybox/m%d.py" % i: entry(2, 2) for i in range(3)}
+    data = {"files": files, "totals": summary(6, 6)}
+
+    report = testcoverage.render_report(data, {}, limit = 2)
+
+    assert "- `Shared/joybox/m1.py`\n- ... and 1 more" in report
+
+
+def test_a_module_missing_only_top_level_lines_lists_no_functions():
+    data = dict(entry(2, 1), executed_lines = [1], missing_lines = [2])
+
+    report = testcoverage.render_module_report("m.py", data, [], source = "x = 1\ny = 2\n")
+
+    assert "- **Untested lines:** 2" in report
+    assert "## Functions" not in report
+    assert "## Source" not in report
+
+
+def test_a_line_that_is_not_a_def_spans_only_itself():
+    assert testcoverage.find_span(SOURCE, 2) == (2, 2)
+
+
+def test_an_unreadable_export_fails(action, monkeypatch):
+    open(action["data_file"], "w").close()
+
+    def export_json(repo_dir, data_file, json_file, verbose = False):
+        with open(json_file, "w") as handle:
+            json.dump({"totals": {}}, handle)
+        return True
+    monkeypatch.setattr(testcoverage, "export_json", export_json)
+
+    assert testcoverage.run_action(testcoverage.ACTION_REPORT) is False
+    assert action["written"] == []
+
+
+def test_an_ambiguous_module_fails(action, monkeypatch):
+    open(action["data_file"], "w").close()
+    errors = []
+    monkeypatch.setattr(testcoverage.logger, "log_error", errors.append)
+
+    def export_json(repo_dir, data_file, json_file, verbose = False):
+        data = results()
+        data["files"]["Shared/joybox/cli/mod.py"] = entry(1, 0)
+        with open(json_file, "w") as handle:
+            json.dump(data, handle)
+        return True
+    monkeypatch.setattr(testcoverage, "export_json", export_json)
+
+    assert testcoverage.run_action(module = "mod") is False
+    assert errors == ["'mod' matches several files: Shared/joybox/cli/mod.py, Shared/joybox/mod.py"]
+
+
+def test_an_unwritable_report_file_fails(action, tmp_path, monkeypatch):
+    open(action["data_file"], "w").close()
+    monkeypatch.setattr(testcoverage.serialization, "write_text_file", lambda *args, **kwargs: False)
+
+    assert testcoverage.run_action(output_file = str(tmp_path / "report.md")) is False
+    assert len(action["written"]) == 1

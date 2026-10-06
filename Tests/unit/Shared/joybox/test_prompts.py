@@ -332,3 +332,32 @@ def test_a_selection_returns_the_original_object(answers):
     options = [{"id": 1}, {"id": 2}]
 
     assert prompts.prompt_for_selection("Pick", options) is options[1]
+
+
+###########################################################
+# Empty entries and urls
+###########################################################
+
+def test_an_empty_choice_without_a_default_asks_again(answers):
+    answers.queue.extend(["", "Yes"])
+
+    assert prompts.prompt_for_choice("Continue", choices = ["yes", "no"]) == "yes"
+    assert len(answers.prompts) == 2
+
+
+def test_an_empty_file_without_a_default_asks_again(answers, tmp_path):
+    answers.queue.extend(["", str(tmp_path)])
+
+    assert prompts.prompt_for_file("Path") == str(tmp_path)
+    assert len(answers.prompts) == 2
+
+
+def test_an_unreachable_url_asks_again(answers, monkeypatch):
+    reachable = "https://example.invalid/ok"
+    monkeypatch.setattr(prompts.network, "is_url_reachable", lambda url: url == reachable)
+    warnings = []
+    monkeypatch.setattr(prompts.logger, "log_warning", warnings.append)
+    answers.queue.extend(["https://example.invalid/down", reachable])
+
+    assert prompts.prompt_for_url("Url") == reachable
+    assert len(warnings) == 1

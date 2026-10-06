@@ -1,3 +1,9 @@
+# Imports
+import sys
+from datetime import datetime, timedelta
+
+import pytest
+
 # Local imports
 from joybox import strings
 
@@ -135,6 +141,16 @@ def test_url_components_are_extracted():
     assert strings.get_url_fragment(url) == "frag"
 
 
+def test_url_components_are_gathered_together():
+    assert strings.get_url_components("https://example.com/p;v=1?a=1#f") == {
+        "scheme": "https",
+        "netloc": "example.com",
+        "path": "/p",
+        "params": "v=1",
+        "query": "a=1",
+        "fragment": "f"}
+
+
 def test_query_parameters_are_stripped():
     assert strings.strip_string_query_params("https://example.com/p?a=1") == \
         "https://example.com/p"
@@ -171,3 +187,130 @@ def test_a_generated_id_is_a_non_empty_string():
 
     assert isinstance(generated, str)
     assert generated
+
+
+###########################################################
+# Suffix matching
+###########################################################
+
+def test_suffix_matching_can_be_case_sensitive():
+    assert strings.does_string_end_with_substring("archive.ZIP", ".zip", case_sensitive = True) is False
+    assert strings.does_string_end_with_substring("archive.zip", ".zip", case_sensitive = True) is True
+
+
+###########################################################
+# Enclosed substrings
+###########################################################
+
+def test_quoted_substrings_are_removed_with_their_padding():
+    assert strings.remove_enclosed_substrings('Game "beta" Edition') == "Game Edition"
+
+
+def test_quoted_substrings_at_either_end_are_removed():
+    assert strings.remove_enclosed_substrings('"x" Game "y"') == "Game"
+
+
+def test_custom_delimiters_are_honoured():
+    assert strings.remove_enclosed_substrings("Game (USA)", "(", ")") == "Game"
+
+
+###########################################################
+# Similarity
+###########################################################
+
+def test_similarity_tiers_follow_the_ratio():
+    assert strings.are_strings_highly_similar("abcdefghij", "abcdefghiz") is True
+    assert strings.are_strings_moderately_similar("abcdefghij", "abcdefghiz") is True
+    assert strings.are_strings_possibly_similar("abcd", "abxy") is True
+    assert strings.are_strings_possibly_similar("abcd", "wxyz") is False
+
+
+def test_similarity_without_thefuzz_is_zero(monkeypatch):
+    monkeypatch.setitem(sys.modules, "thefuzz", None)
+
+    assert strings.get_string_similarity_ratio("same", "same") == 0
+
+
+###########################################################
+# Dates
+###########################################################
+
+def close_to(moment, expected):
+    return abs(moment - expected) < timedelta(minutes = 1)
+
+
+@pytest.mark.parametrize("phrase, delta", [
+    ("3 days ago", timedelta(days = 3)),
+    ("2 weeks ago", timedelta(weeks = 2)),
+    ("yesterday", timedelta(days = 1)),
+    ("Today", timedelta(0)),
+    ("an hour ago", timedelta(hours = 1)),
+])
+def test_relative_phrases_are_measured_back_from_now(phrase, delta):
+    assert close_to(strings.get_datetime_from_unknown_string(phrase), datetime.now() - delta)
+
+
+def test_months_and_years_ago_step_back_by_calendar():
+    months = strings.get_datetime_from_unknown_string("1 month ago")
+    years = strings.get_datetime_from_unknown_string("4 years ago")
+
+    assert timedelta(days = 27) < datetime.now() - months < timedelta(days = 32)
+    assert years.year == datetime.now().year - 4
+
+
+def test_an_absolute_date_is_parsed():
+    assert strings.get_datetime_from_unknown_string(" March 5, 2021 ") == datetime(2021, 3, 5)
+
+
+def test_an_unrecognised_date_is_none():
+    assert strings.get_datetime_from_unknown_string("no date here") is None
+
+
+def test_a_date_is_reformatted():
+    assert strings.convert_date_string("2021-03-05", "%Y-%m-%d", "%d/%m/%Y") == "05/03/2021"
+
+
+def test_a_date_in_another_format_falls_back_to_parsing():
+    assert strings.convert_date_string("March 5, 2021", "%Y-%m-%d", "%Y%m%d") == "20210305"
+
+
+def test_an_unparseable_date_converts_to_none():
+    assert strings.convert_date_string("nonsense", "%Y-%m-%d", "%Y") is None
+
+
+def test_an_unknown_date_string_is_reformatted():
+    assert strings.convert_unknown_date_string("March 5, 2021", "%Y") == "2021"
+    assert strings.convert_unknown_date_string("nonsense", "%Y") is None
+
+
+def test_a_formatted_datetime_parses_back():
+    moment = strings.get_datetime_from_string("2021-03-05 10:11", "%Y-%m-%d %H:%M")
+
+    assert strings.get_string_from_datetime(moment, "%H:%M") == "10:11"
+
+
+###########################################################
+# Timestamps
+###########################################################
+
+def test_an_iso_timestamp_is_utc_seconds():
+    assert strings.parse_timestamp("2024-01-02T03:04:05Z") == 1704164645
+
+
+def test_fractional_seconds_are_dropped():
+    assert strings.parse_timestamp("2024-01-02T03:04:05.123Z") == 1704164645
+
+
+def test_a_space_separated_timestamp_is_local_time():
+    expected = int(datetime(2024, 1, 2, 3, 4, 5).timestamp())
+
+    assert strings.parse_timestamp(" 2024-01-02 03:04:05 ") == expected
+
+
+@pytest.mark.parametrize("value", ["", None, "garbage", "2024-13-40T00:00:00Z"])
+def test_a_missing_or_bad_timestamp_is_zero(value):
+    assert strings.parse_timestamp(value) == 0
+
+
+def test_url_encoding_can_use_plus_for_spaces():
+    assert strings.encode_url_string("a b", use_plus = True) == "a+b"

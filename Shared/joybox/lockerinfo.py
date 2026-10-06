@@ -21,7 +21,8 @@ class LockerInfo:
             self.remote_path = settings.get_value("UserData.Share", f"locker_{self.locker_type.lower()}_remote_path")
             self.config = settings.get_value("UserData.Share", f"locker_{self.locker_type.lower()}_config")
             self.token = settings.get_value("UserData.Share", f"locker_{self.locker_type.lower()}_token")
-            self.mount_flags = settings.get_value("UserData.Share", f"locker_{self.locker_type.lower()}_mount_flags").split(",")
+            mount_flags_str = settings.get_value("UserData.Share", f"locker_{self.locker_type.lower()}_mount_flags")
+            self.mount_flags = [f.strip() for f in mount_flags_str.split(",") if f.strip()] if mount_flags_str else []
         self.mount_path = settings.get_path_value("UserData.Share", f"locker_{self.locker_type.lower()}_mount_path")
         self.passphrase = settings.get_value("UserData.Share", f"locker_{self.locker_type.lower()}_passphrase") or settings.get_value("UserData.Protection", "locker_passphrase")
 

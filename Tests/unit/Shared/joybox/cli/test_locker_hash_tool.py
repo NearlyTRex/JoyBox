@@ -1,13 +1,12 @@
 # Imports
 import os
-import runpy
-import sys
 
 # Third-party imports
 import pytest
 
 # Local imports
-from joybox import hashing, system
+from cli_helpers import CommandHarness, assert_entry_points
+from joybox import hashing
 from joybox.cli import locker_hash_tool
 
 
@@ -29,22 +28,10 @@ def locker(tmp_path, monkeypatch, isolated_settings):
         path.write_text(relative)
     metadata = tmp_path / "Metadata"
     isolated_settings.set_value("UserData.Dirs", "file_metadata_dir", str(metadata))
-    monkeypatch.setattr(locker_hash_tool.setup, "check_requirements", lambda: None)
-    monkeypatch.setattr(locker_hash_tool.logger, "setup_logging", lambda: None)
-    errors = []
-    log_error = locker_hash_tool.logger.log_error
-
-    def record_error(message, **kwargs):
-        errors.append(message)
-        log_error(message, **kwargs)
-
-    monkeypatch.setattr(locker_hash_tool.logger, "log_error", record_error)
-
-    def run(*extra):
-        monkeypatch.setattr(sys, "argv", ["locker_hash_tool", "-l", str(root), *extra])
-        return system.run_main(locker_hash_tool.main)
-
-    return {"root": root, "hashes": metadata / "Locker" / "Hashes", "run": run, "errors": errors}
+    harness = CommandHarness(monkeypatch, locker_hash_tool)
+    harness.root = root
+    harness.hashes = metadata / "Locker" / "Hashes"
+    return harness
 
 
 def hashed_files(hashes_dir):
@@ -58,72 +45,67 @@ def hashed_files(hashes_dir):
 
 
 def test_default_filters_skip_hidden_and_excluded_files(locker):
-    locker["run"]()
+    locker.run("-l", str(locker.root))
 
-    assert hashed_files(locker["hashes"]) == {
+    assert hashed_files(locker.hashes) == {
         os.path.join("Documents", "Taxes.csv"): ["Documents/Taxes/2024/return.pdf", "Documents/Taxes/notes.txt"],
         os.path.join("Photos", "Trip.csv"): ["Photos/Trip/a.jpg"],
         "Photos.csv": ["Photos/b.jpg"],
         "root.csv": ["top.txt"],
     }
-    assert locker["errors"] == []
+    assert locker.errors == []
 
 
 def test_depth_one_gives_one_csv_per_top_level_folder(locker):
-    locker["run"]("-e", "", "-d", "1")
+    locker.run("-l", str(locker.root), "-e", "", "-d", "1")
 
-    assert sorted(hashed_files(locker["hashes"])) == ["Documents.csv", "Gaming.csv", "Photos.csv", "root.csv"]
+    assert sorted(hashed_files(locker.hashes)) == ["Documents.csv", "Gaming.csv", "Photos.csv", "root.csv"]
 
 
 def test_a_file_shallower_than_the_depth_uses_the_folders_it_has(locker):
-    locker["run"]("-i", "Documents/*", "-d", "3")
+    locker.run("-l", str(locker.root), "-i", "Documents/*", "-d", "3")
 
-    assert hashed_files(locker["hashes"]) == {
+    assert hashed_files(locker.hashes) == {
         os.path.join("Documents", "Taxes", "2024.csv"): ["Documents/Taxes/2024/return.pdf"],
         os.path.join("Documents", "Taxes.csv"): ["Documents/Taxes/notes.txt"],
     }
 
 
 def test_a_depth_below_one_is_refused(locker):
-    with pytest.raises(SystemExit) as raised:
-        locker["run"]("-d", "0")
-    assert raised.value.code != 0
-    assert locker["errors"] == ["Depth must be at least 1"]
-    assert not locker["hashes"].exists()
+    assert locker.exit_code("-l", str(locker.root), "-d", "0") != 0
+    assert locker.errors == ["Depth must be at least 1"]
+    assert not locker.hashes.exists()
 
 
 def test_include_filter_and_hidden_files(locker):
-    locker["run"]("-i", "Documents/*, ", "-e", "", "--include_hidden", "-d", "1")
+    locker.run("-l", str(locker.root), "-i", "Documents/*, ", "-e", "", "--include_hidden", "-d", "1")
 
-    assert hashed_files(locker["hashes"]) == {
+    assert hashed_files(locker.hashes) == {
         "Documents.csv": ["Documents/.cache/blob", "Documents/Taxes/2024/return.pdf", "Documents/Taxes/notes.txt"],
     }
 
 
 def test_rows_for_deleted_files_are_dropped(locker):
-    locker["run"]()
-    os.remove(locker["root"] / "Documents" / "Taxes" / "notes.txt")
+    locker.run("-l", str(locker.root))
+    os.remove(locker.root / "Documents" / "Taxes" / "notes.txt")
 
-    locker["run"]()
+    locker.run("-l", str(locker.root))
 
-    taxes = hashed_files(locker["hashes"])[os.path.join("Documents", "Taxes.csv")]
+    taxes = hashed_files(locker.hashes)[os.path.join("Documents", "Taxes.csv")]
     assert taxes == ["Documents/Taxes/2024/return.pdf"]
 
 
 def test_pretend_run_writes_nothing(locker):
-    locker["run"]("-p")
+    locker.run("-l", str(locker.root), "-p")
 
-    assert not locker["hashes"].exists()
+    assert not locker.hashes.exists()
 
 
-def test_missing_locker_exits_with_an_error(locker, monkeypatch, tmp_path):
+def test_missing_locker_exits_with_an_error(locker, tmp_path):
     missing = tmp_path / "Nowhere"
-    monkeypatch.setattr(sys, "argv", ["locker_hash_tool", "-l", str(missing)])
 
-    with pytest.raises(SystemExit) as raised:
-        system.run_main(locker_hash_tool.main)
-    assert raised.value.code != 0
-    assert locker["errors"] == ["Base directory does not exist: %s" % missing]
+    assert locker.exit_code("-l", str(missing)) != 0
+    assert locker.errors == ["Base directory does not exist: %s" % missing]
 
 
 def test_failed_hash_write_exits_with_an_error(locker, monkeypatch):
@@ -132,37 +114,26 @@ def test_failed_hash_write_exits_with_an_error(locker, monkeypatch):
     monkeypatch.setattr(locker_hash_tool.hashing, "clean_missing_hash_entries",
                         lambda **kwargs: cleaned.append(kwargs["hash_file"]) or True)
 
-    with pytest.raises(SystemExit) as raised:
-        locker["run"]()
-    assert raised.value.code == 1
-    assert locker["errors"][-1] == "4 hash files could not be written"
+    assert locker.exit_code("-l", str(locker.root)) == 1
+    assert locker.errors[-1] == "4 hash files could not be written"
     assert cleaned == []
 
 
 def test_failed_clean_exits_with_an_error(locker, monkeypatch):
     monkeypatch.setattr(locker_hash_tool.hashing, "clean_missing_hash_entries", lambda **kwargs: False)
 
-    with pytest.raises(SystemExit) as raised:
-        locker["run"]("-i", "top.txt")
-    assert raised.value.code == 1
-    assert locker["errors"] == [
-        "Failed to clean: %s" % (locker["hashes"] / "root.csv"),
+    assert locker.exit_code("-l", str(locker.root), "-i", "top.txt") == 1
+    assert locker.errors == [
+        "Failed to clean: %s" % (locker.hashes / "root.csv"),
         "1 hash files could not be written",
     ]
 
 
-def test_run_goes_through_the_shared_error_handling(locker, monkeypatch):
-    monkeypatch.setattr(sys, "argv", ["locker_hash_tool", "-l", str(locker["root"]), "-p"])
+def test_run_goes_through_the_shared_error_handling(locker):
+    locker.run("-l", str(locker.root), "-p")
 
-    locker_hash_tool.run()
-
-    assert locker["errors"] == []
+    assert locker.errors == []
 
 
-def test_running_the_module_starts_the_command(monkeypatch):
-    called = []
-    monkeypatch.setattr(system, "run_main", lambda main: called.append(main))
-
-    runpy.run_path(locker_hash_tool.__file__, run_name = "__main__")
-
-    assert len(called) == 1
+def test_entry_points_run_main(monkeypatch):
+    assert_entry_points(monkeypatch, locker_hash_tool)

@@ -105,6 +105,15 @@ def test_the_age_gate_is_answered(steam_store, page):
     assert page.clicked == ["view_product_page_btn"]
 
 
+def test_an_age_gate_without_a_confirm_button_is_filled_but_not_clicked(steam_store, page):
+    for element_id in ["app_agegate", "ageDay", "ageMonth", "ageYear"]:
+        page.add(element_id)
+
+    assert steam_store.get_latest_metadata(URL) is not None
+    assert len(page.keys) == 3
+    assert page.clicked == []
+
+
 def test_an_age_gate_without_its_selectors_is_left(steam_store, page):
     page.add("app_agegate")
 

@@ -203,3 +203,46 @@ def test_sorting_orders_a_manifest_written_out_of_order(json_file):
     with open(json_file, "r") as handle:
         written = json.load(handle)
     assert [item["filename"] for item in written] == ["apple.zip", "zebra.zip"]
+
+
+###########################################################
+# Verbose runs and unreadable manifests
+###########################################################
+
+def test_verbose_csv_reads_writes_and_sorts_report_the_file(csv_file, json_file, caplog):
+    contents = manifest(entry("Games", "one.zip"))
+    hashing.write_hash_file_csv(csv_file, contents, verbose = True)
+    hashing.read_hash_file_csv(csv_file, verbose = True)
+    hashing.write_hash_file_json(json_file, contents)
+    hashing.sort_hash_file(json_file, verbose = True)
+
+    out = caplog.text
+    assert "Writing CSV hash file" in out
+    assert "Reading CSV hash file" in out
+    assert "Sorting hash file" in out
+
+
+def test_a_malformed_csv_manifest_reads_as_what_parsed(csv_file):
+    with open(csv_file, "w") as handle:
+        handle.write("dir,filename,hash,size,mtime\nGames,one.zip,abc,notanumber,1\n")
+
+    assert hashing.read_hash_file_csv(csv_file) == {}
+
+
+def test_a_malformed_csv_manifest_quits_when_failures_are_fatal(csv_file):
+    with open(csv_file, "w") as handle:
+        handle.write("dir,filename\nGames,one.zip\n")
+
+    with pytest.raises(SystemExit):
+        hashing.read_hash_file_csv(csv_file, exit_on_failure = True)
+
+
+def test_an_unwritable_csv_manifest_reports_failure(tmp_path):
+    # A directory where the manifest should be cannot be opened for writing
+    (tmp_path / "hashes.csv").mkdir()
+    target = os.path.join(str(tmp_path), "hashes.csv")
+
+    assert hashing.write_hash_file_csv(target, manifest(entry("Games", "one.zip"))) is False
+    with pytest.raises(SystemExit):
+        hashing.write_hash_file_csv(target, manifest(entry("Games", "one.zip")),
+                                    exit_on_failure = True)

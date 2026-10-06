@@ -1,11 +1,9 @@
-# Imports
-import sys
-
 # Third-party imports
 import pytest
 
 # Local imports
-from joybox import config, system
+from cli_helpers import CommandHarness, assert_entry_points
+from joybox import config
 from joybox.cli import sync_tool
 
 
@@ -66,58 +64,105 @@ ACTIONS = {
 }
 
 
+def sync_args(action, *extra):
+    return ["-a", action.val(), "-l", "Hetzner", "--no-preview", *extra]
+
+
 @pytest.fixture
 def tool(monkeypatch, tmp_path, isolated_settings):
     FakeLockerInfo.root = str(tmp_path)
     monkeypatch.setattr(FakeLockerInfo, "local_only", False)
-    state = {"result": True, "called": []}
-    monkeypatch.setattr(sync_tool.setup, "check_requirements", lambda: None)
-    monkeypatch.setattr(sync_tool.logger, "setup_logging", lambda: None)
+    harness = CommandHarness(monkeypatch, sync_tool)
+    harness.result = True
+    harness.called = []
+    harness.kwargs = []
     monkeypatch.setattr(sync_tool.lockerinfo, "LockerInfo", FakeLockerInfo)
     for name in ACTIONS.values():
         def action(name = name, **kwargs):
-            state["called"].append(name)
-            return state["result"]
+            harness.called.append(name)
+            harness.kwargs.append(kwargs)
+            return harness.result
         monkeypatch.setattr(sync_tool.sync, name, action)
+    return harness
 
-    def run(action, *extra):
-        monkeypatch.setattr(sys, "argv", ["sync_tool", "-a", action.val(), "-l", "Hetzner", "--no-preview", *extra])
-        return system.run_main(sync_tool.main)
 
-    state["run"] = run
-    return state
+def test_every_action_has_a_handler():
+    assert sorted(ACTIONS, key = str) == sorted(config.RemoteActionType.members(), key = str)
 
 
 @pytest.mark.parametrize("action", list(ACTIONS))
 def test_a_successful_action_exits_cleanly(tool, action):
-    tool["run"](action)
+    tool.run(*sync_args(action))
 
-    assert tool["called"] == [ACTIONS[action]]
+    assert tool.called == [ACTIONS[action]]
 
 
 @pytest.mark.parametrize("action", list(ACTIONS))
 def test_a_failed_action_exits_with_an_error(tool, action):
-    tool["result"] = False
+    tool.result = False
 
-    with pytest.raises(SystemExit) as raised:
-        tool["run"](action)
-    assert raised.value.code == 1
+    assert tool.exit_code(*sync_args(action)) == 1
 
 
-def test_a_cancelled_preview_runs_nothing_and_is_not_an_error(tool, monkeypatch):
-    monkeypatch.setattr(sync_tool.prompts, "prompt_for_preview", lambda title, details: False)
-    monkeypatch.setattr(sys, "argv", ["sync_tool", "-a", "Diff", "-l", "Hetzner"])
+def test_a_cancelled_preview_runs_nothing_and_is_not_an_error(tool):
+    tool.confirm = False
 
-    system.run_main(sync_tool.main)
+    tool.run("-a", "Diff", "-l", "Hetzner")
 
-    assert tool["called"] == []
+    assert tool.called == []
 
 
 def test_a_locker_with_no_remote_is_refused(tool, monkeypatch):
     # Without a remote type there is nothing for rclone to talk to.
     monkeypatch.setattr(FakeLockerInfo, "local_only", True)
 
-    with pytest.raises(SystemExit) as raised:
-        tool["run"](config.RemoteActionType.LIST)
-    assert raised.value.code != 0
-    assert tool["called"] == []
+    assert tool.exit_code(*sync_args(config.RemoteActionType.LIST)) != 0
+    assert tool.called == []
+
+
+###########################################################
+# Local path, excludes and preview
+###########################################################
+
+def test_a_transfer_without_a_local_path_is_refused(tool):
+    FakeLockerInfo.root = ""
+
+    assert tool.exit_code(*sync_args(config.RemoteActionType.DOWNLOAD)) != 0
+    assert tool.called == []
+
+
+def test_a_transfer_to_a_missing_local_path_is_refused(tool, tmp_path):
+    FakeLockerInfo.root = str(tmp_path / "absent")
+
+    assert tool.exit_code(*sync_args(config.RemoteActionType.UPLOAD)) != 0
+    assert tool.called == []
+
+
+def test_excludes_on_the_command_line_replace_the_configured_ones(tool):
+    tool.run(*sync_args(config.RemoteActionType.PUSH, "--excludes", "Cache, Temp,"))
+
+    assert tool.kwargs[0]["excludes"] == ["Cache", "Temp"]
+
+
+@pytest.mark.parametrize("action", [config.RemoteActionType.DIFF, config.RemoteActionType.DIFFSYNC])
+def test_diffs_exclude_the_recycle_folder(tool, action):
+    tool.run(*sync_args(action))
+    tool.run(*sync_args(action, "--recycle_folder", ""))
+
+    assert [call["excludes"] for call in tool.kwargs] == [[".recycle_bin/**"], []]
+
+
+def test_the_preview_lists_only_the_paths_that_are_set(tool, monkeypatch, tmp_path):
+    tool.run("-a", "List", "-l", "Hetzner")
+    FakeLockerInfo.root = ""
+    monkeypatch.setattr(FakeLockerInfo, "get_remote_path", lambda self: "")
+    tool.run("-a", "List", "-l", "Hetzner")
+    previews = [details for _, details in tool.previews]
+
+    assert previews[0] == ["Local: %s" % tmp_path, "Remote: hetzner:/Locker", "Mount: %s" % tmp_path]
+    assert previews[1] == []
+    assert tool.called == ["list_files", "list_files"]
+
+
+def test_entry_points_run_main(monkeypatch):
+    assert_entry_points(monkeypatch, sync_tool)

@@ -654,8 +654,8 @@ class Steam(storebase.StoreBase):
         json_data.set_value(config.json_key_store_paths, [
             paths.join_paths(config.token_store_install_dir, "userdata", config.token_store_user_id, identifier)
         ])
-        if identifier in steam_json:
-            appdata = steam_json.get(identifier, {})
+        appdata = steam_json.get(identifier)
+        if isinstance(appdata, dict):
             appcommon = appdata.get("common", {})
             appconfig = appdata.get("config", {})
             appdepots = appdata.get("depots", {}).get("branches", {}).get(branch, {})

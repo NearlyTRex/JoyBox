@@ -129,3 +129,19 @@ def test_uninstall_of_nothing_succeeds(isolated_settings):
 
     assert hermes.uninstall()
     assert connection.removed_paths == []
+
+
+def test_a_failed_link_fails_the_install(isolated_settings, monkeypatch):
+    hermes, connection = make()
+    connection.existing_paths.update(installed_paths(hermes))
+    monkeypatch.setattr(connection, "link_file_or_directory", lambda src, dest, sudo = False: False)
+
+    assert not hermes.install()
+
+
+def test_an_unremovable_install_fails_the_uninstall(isolated_settings, monkeypatch):
+    hermes, connection = make()
+    connection.existing_paths.add(hermes.install_dir)
+    monkeypatch.setattr(connection, "remove_file_or_directory", lambda src, sudo = False: False)
+
+    assert not hermes.uninstall()

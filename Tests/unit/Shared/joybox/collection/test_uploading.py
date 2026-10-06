@@ -68,3 +68,80 @@ def test_an_upload_without_a_passphrase_sends_nothing(upload, passphrase):
     assert run_upload(upload) is False
     assert upload["encrypted"] == []
     assert upload["synced"] == []
+
+
+def test_the_default_game_root_is_the_locker_files_dir(upload, monkeypatch):
+    asked = []
+    monkeypatch.setattr(
+        uploading.environment, "get_locker_gaming_files_dir",
+        lambda **kwargs: asked.append(kwargs) or str(upload["root"]))
+
+    assert uploading.upload_game_files(FakeGameInfo()) is True
+    assert asked[0]["game_name"] == "Game"
+    assert upload["synced"] == [str(upload["root"])]
+
+
+def test_a_missing_game_root_uploads_nothing(upload, monkeypatch):
+    monkeypatch.setattr(
+        uploading.environment, "get_locker_gaming_files_dir",
+        lambda **kwargs: str(upload["root"] / "absent"))
+
+    assert uploading.upload_game_files(FakeGameInfo()) is False
+    assert upload["encrypted"] == []
+
+
+def test_a_failed_encryption_uploads_nothing(upload, monkeypatch):
+    monkeypatch.setattr(uploading.cryption, "encrypt_files", lambda **kwargs: [])
+
+    assert run_upload(upload) is False
+    assert upload["synced"] == []
+
+
+def test_a_failed_hash_uploads_nothing(upload, monkeypatch):
+    monkeypatch.setattr(uploading, "build_hash_files", lambda **kwargs: False)
+
+    assert run_upload(upload) is False
+    assert upload["synced"] == []
+
+
+def test_the_upload_reports_the_sync_result(upload, monkeypatch):
+    monkeypatch.setattr(uploading.locker, "sync_to_remote", lambda **kwargs: False)
+
+    assert run_upload(upload) is False
+
+
+###########################################################
+# Uploading every game
+###########################################################
+
+@pytest.fixture
+def every_game(monkeypatch):
+    state = {"uploaded": [], "result": True}
+
+    class StubGameInfo:
+        def __init__(self, game_supercategory, game_category, game_subcategory, game_name, **kwargs):
+            self.name = game_name
+
+    def find_json_game_names(game_supercategory, game_category, game_subcategory):
+        return ["Alpha", "Beta"] if game_subcategory == uploading.config.Subcategory.NINTENDO_NES else []
+
+    def upload_game_files(game_info, **kwargs):
+        state["uploaded"].append(game_info.name)
+        return state["result"]
+
+    monkeypatch.setattr(uploading.gameinfo, "GameInfo", StubGameInfo)
+    monkeypatch.setattr(uploading.gameinfo, "find_json_game_names", find_json_game_names)
+    monkeypatch.setattr(uploading, "upload_game_files", upload_game_files)
+    return state
+
+
+def test_every_game_is_uploaded(every_game):
+    assert uploading.upload_all_game_files() is True
+    assert every_game["uploaded"] == ["Alpha", "Beta"]
+
+
+def test_uploading_every_game_stops_at_a_failure(every_game):
+    every_game["result"] = False
+
+    assert uploading.upload_all_game_files() is False
+    assert every_game["uploaded"] == ["Alpha"]

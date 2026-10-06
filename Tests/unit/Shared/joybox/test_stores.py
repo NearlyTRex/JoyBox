@@ -311,3 +311,80 @@ def test_a_pretend_scrape_opens_no_browser_and_does_not_retry(store_list, monkey
     assert getattr(store, method)(identifier, pretend_run = True) is None
     assert connects == [True]
     assert sleeps == []
+
+
+###########################################################
+# Registry lookups by platform and category
+###########################################################
+
+def test_a_store_is_found_by_its_platform_and_categories(store_list):
+    import joybox.stores as stores
+
+    for store in store_list:
+        assert stores.get_store_by_platform(store.get_platform()).get_name() == store.get_name()
+        found = stores.get_store_by_categories(
+            store.get_supercategory(), store.get_category(), store.get_subcategory())
+        assert found.get_name() == store.get_name()
+        assert stores.is_store_platform(store.get_platform()) is True
+
+
+def test_unknown_platforms_and_categories_find_no_store(store_list):
+    import joybox.stores as stores
+
+    assert stores.get_store_by_platform("not-a-platform") is None
+    assert stores.get_store_by_categories("a", "b", "c") is None
+    assert stores.is_store_platform("not-a-platform") is False
+
+
+@pytest.mark.parametrize("capability", [
+    "can_handle_installing", "can_handle_launching", "can_import_purchases", "can_download_purchases"])
+def test_capability_checks_ask_the_platform_store(store_list, capability):
+    import joybox.stores as stores
+
+    for store in store_list:
+        assert getattr(stores, capability)(store.get_platform()) == getattr(store, capability)()
+    assert getattr(stores, capability)("not-a-platform") is False
+
+
+def test_a_store_is_logged_in_only_on_request(store_list, monkeypatch):
+    import joybox.stores as stores
+    from joybox.stores.disc import Disc
+    logins = []
+    monkeypatch.setattr(Disc, "login", lambda self, **kwargs: logins.append(kwargs))
+
+    stores.get_store_by_name(config.StoreType.DISC.val())
+    assert logins == []
+    stores.get_store_by_name(config.StoreType.DISC.val(), login = True, verbose = True)
+    assert logins == [{"verbose": True, "pretend_run": False, "exit_on_failure": False}]
+    assert stores.prepare_store(None, login = True) is None
+
+
+###########################################################
+# Install-dir stores
+###########################################################
+
+INSTALL_DIR_STORES = ["disc.Disc", "puppetcombo.PuppetCombo", "redcandle.RedCandle", "squareenix.SquareEnix", "zoom.Zoom"]
+
+
+def load_store_class(dotted):
+    import importlib
+    module_name, class_name = dotted.split(".")
+    module = importlib.import_module("joybox.stores." + module_name)
+    return module, getattr(module, class_name)
+
+
+@pytest.mark.parametrize("dotted", INSTALL_DIR_STORES)
+def test_an_install_dir_store_reports_its_install_dir(monkeypatch, tmp_path, dotted):
+    module, store_class = load_store_class(dotted)
+    monkeypatch.setattr(module.settings, "get_path_value", lambda section, key: str(tmp_path))
+
+    assert store_class().get_install_dir() == str(tmp_path)
+
+
+@pytest.mark.parametrize("dotted", INSTALL_DIR_STORES)
+def test_an_install_dir_store_refuses_a_missing_install_dir(monkeypatch, dotted):
+    module, store_class = load_store_class(dotted)
+    monkeypatch.setattr(module.settings, "get_path_value", lambda section, key: None)
+
+    with pytest.raises(RuntimeError):
+        store_class()

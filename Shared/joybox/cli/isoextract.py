@@ -84,7 +84,7 @@ def main():
                 exit_on_failure = args.exit_on_failure)
 
         # Extract as archive
-        elif args.extract_method == config.DiscExtractType.ARCHIVE:
+        else:
             archive.extract_archive(
                 archive_file = current_file,
                 extract_dir = output_dir,

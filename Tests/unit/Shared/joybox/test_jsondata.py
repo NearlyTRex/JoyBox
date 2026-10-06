@@ -234,3 +234,44 @@ def test_copying_the_object_is_deep():
 
 def test_platform_is_carried_on_the_copy():
     assert build().copy().get_platform() == PLATFORM
+
+
+###########################################################
+# Remaining fill paths
+###########################################################
+
+def test_a_top_level_fillonce_key_is_written_once():
+    data = build()
+    data.fill_value(FILLONCE_KEY, "first")
+    data.fill_value(FILLONCE_KEY, "second")
+
+    assert data.get_value(FILLONCE_KEY) == "first"
+
+
+def test_an_autofill_subkey_overwrites():
+    data = build({"store": {AUTOFILL_KEY: "original"}})
+    data.fill_subvalue("store", AUTOFILL_KEY, "replacement")
+
+    assert data.get_subvalue("store", AUTOFILL_KEY) == "replacement"
+
+
+def test_a_merge_subkey_combines_both_sides():
+    data = build({"store": {MERGE_KEY: ["a"]}})
+    data.fill_subvalue("store", MERGE_KEY, ["a", "b"])
+
+    assert data.get_subvalue("store", MERGE_KEY) == ["a", "b"]
+
+
+def test_an_uncategorised_subkey_is_not_written():
+    data = build({"store": {}})
+    data.fill_subvalue("store", UNCATEGORISED_KEY, "value")
+
+    assert data.has_subkey("store", UNCATEGORISED_KEY) is False
+
+
+def test_the_keys_and_platform_are_exposed():
+    data = build({"store": {}, "files": []})
+    data.set_platform(None)
+
+    assert sorted(data.get_keys()) == ["files", "store"]
+    assert data.get_platform() is None

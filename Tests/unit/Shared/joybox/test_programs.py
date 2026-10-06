@@ -403,3 +403,132 @@ def test_a_library_backup_dir_is_separate_from_its_install_dir(monkeypatch):
         lambda name, platform = None: "/locker/Programs/Tools/" + name)
 
     assert programs.get_library_install_dir("DXVK") != programs.get_library_backup_dir("DXVK")
+
+
+###########################################################
+# Program registry seams
+###########################################################
+
+@pytest.fixture
+def fake_registry(monkeypatch, tmp_path):
+    tools_root = tmp_path / "Tools"
+    emulators_root = tmp_path / "Emulators"
+    (tools_root / "Packer" / "linux").mkdir(parents = True)
+    (tools_root / "Packer" / "linux" / "packer").write_text("")
+    tool_config = {
+        "Packer": {"program": {"linux": "Packer/linux/packer"}, "run_sandboxed": {"linux": "wine"}},
+        "Ghost": {"program": {"linux": "Ghost/linux/ghost"}},
+    }
+    emulator_config = {
+        "Retro": {"program": {"linux": "Retro/linux/retro"}, "run_sandboxed": {"linux": "wine"}},
+    }
+    monkeypatch.setattr(programs, "get_tool_config", lambda: tool_config)
+    monkeypatch.setattr(programs, "get_emulator_config", lambda: emulator_config)
+    monkeypatch.setattr(programs.environment, "get_tools_root_dir", lambda: str(tools_root))
+    monkeypatch.setattr(programs.environment, "get_emulators_root_dir", lambda: str(emulators_root))
+    monkeypatch.setattr(programs.platform_info, "get_current_platform", lambda: "linux")
+    monkeypatch.setattr(programs.platform_info, "is_linux_platform", lambda: True)
+    return {
+        "tools_root": str(tools_root),
+        "emulators_root": str(emulators_root),
+        "packer": str(tools_root / "Packer" / "linux" / "packer"),
+    }
+
+
+def test_program_names_are_classified_by_registry(fake_registry):
+    assert programs.is_program_name_tool("Packer", "linux") is True
+    assert programs.is_program_name_emulator("Packer", "linux") is False
+    assert programs.is_program_name_emulator("Retro", "linux") is True
+    assert programs.is_program_name_tool("Retro", "linux") is False
+
+
+def test_install_and_backup_dirs_follow_the_program_kind(monkeypatch, fake_registry):
+    monkeypatch.setattr(
+        programs.environment, "get_locker_program_tool_dir",
+        lambda name, platform = None: "/locker/Tools/%s/%s" % (name, platform))
+    monkeypatch.setattr(
+        programs.environment, "get_locker_gaming_emulator_binaries_dir",
+        lambda name, platform = None: "/locker/Emulators/%s/%s" % (name, platform))
+
+    assert programs.get_program_install_dir("Packer", "linux") == fake_registry["tools_root"] + "/Packer/linux"
+    assert programs.get_program_install_dir("Retro", "linux") == fake_registry["emulators_root"] + "/Retro/linux"
+    assert programs.get_program_install_dir("Unknown", "linux") is None
+    assert programs.get_program_backup_dir("Packer", "linux") == "/locker/Tools/Packer/linux"
+    assert programs.get_program_backup_dir("Retro", "linux") == "/locker/Emulators/Retro/linux"
+    assert programs.get_program_backup_dir("Unknown", "linux") is None
+
+
+def test_a_platform_library_backup_dir_is_nested_by_platform(monkeypatch):
+    monkeypatch.setattr(
+        programs.environment, "get_locker_program_tool_dir", lambda name, platform = None: "/locker/" + name)
+
+    assert programs.get_library_backup_dir("DXVK", "linux") == "/locker/DXVK/linux"
+
+
+def test_a_missing_program_should_be_installed(fake_registry):
+    assert programs.should_program_be_installed("Ghost") is True
+    assert programs.should_program_be_installed("Retro") is True
+
+
+def test_a_present_or_unknown_program_should_not_be_installed(fake_registry):
+    assert programs.should_program_be_installed("Packer") is False
+    assert programs.should_program_be_installed("Unknown") is False
+
+
+def test_linux_programs_are_not_installed_off_linux(monkeypatch, fake_registry):
+    monkeypatch.setattr(programs.platform_info, "is_linux_platform", lambda: False)
+
+    assert programs.should_program_be_installed("Ghost", "linux") is False
+
+
+def test_a_library_is_installed_when_its_directory_is_empty(fake_registry):
+    assert programs.should_library_be_installed("Packer") is False
+    assert programs.should_library_be_installed("Absent") is True
+
+
+def test_installed_state_asks_whether_the_program_runs(monkeypatch, fake_registry):
+    import joybox.command as command
+    asked = []
+    monkeypatch.setattr(command, "is_runnable_command", lambda path: asked.append(path) or True)
+
+    assert programs.is_program_installed("Packer", "linux") is True
+    assert programs.is_program_installed("Retro", "linux") is True
+    assert programs.is_program_installed("Unknown", "linux") is False
+    assert asked == [fake_registry["packer"], fake_registry["emulators_root"] + "/Retro/linux/retro"]
+
+
+def test_program_dirs_are_the_program_parent(fake_registry):
+    assert programs.get_tool_program_dir("Packer", "linux") == fake_registry["tools_root"] + "/Packer/linux"
+    assert programs.get_emulator_program_dir("Retro", "linux") == fake_registry["emulators_root"] + "/Retro/linux"
+
+
+def test_path_config_values_resolve_under_their_roots(fake_registry):
+    assert programs.get_tool_path_config_value("Packer", "program", "linux") == fake_registry["packer"]
+    assert programs.get_emulator_path_config_value("Retro", "program", "linux") == \
+        fake_registry["emulators_root"] + "/Retro/linux/retro"
+
+
+def test_emulator_install_state_checks_the_program_file(fake_registry):
+    assert programs.is_emulator_installed("Retro", "linux") is False
+
+
+def test_registry_paths_are_classified_and_sandboxed(fake_registry, tmp_path):
+    packer = fake_registry["packer"]
+    retro = tmp_path / "Emulators" / "Retro" / "linux" / "retro"
+    retro.parent.mkdir(parents = True)
+    retro.write_text("")
+
+    assert programs.derive_tool_name_from_program_path(packer, "linux") == "Packer"
+    assert programs.derive_emulator_name_from_program_path(str(retro), "linux") == "Retro"
+    assert programs.is_program_path_sandboxed_tool(packer, "linux") == "wine"
+    assert programs.is_program_path_sandboxed_emulator(str(retro), "linux") == "wine"
+    assert programs.is_program_name_sandboxed_emulator("Retro", "linux") == "wine"
+
+
+def test_a_registry_path_without_sandboxing_is_not_sandboxed(monkeypatch, fake_registry):
+    monkeypatch.setattr(programs, "get_tool_config_value", lambda name, key, platform = None: None)
+    monkeypatch.setattr(programs, "get_emulator_config_value", lambda name, key, platform = None: None)
+    monkeypatch.setattr(programs, "derive_emulator_name_from_program_path", lambda path, platform = None: "Retro")
+
+    assert programs.is_program_path_sandboxed_tool(fake_registry["packer"], "linux") is False
+    assert programs.is_program_path_sandboxed_emulator("/any", "linux") is False

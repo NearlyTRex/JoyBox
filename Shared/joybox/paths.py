@@ -168,13 +168,8 @@ def build_file_list(root, excludes = [], new_relative_path = "", use_relative_pa
                     files.append(location)
     elif os.path.isfile(root):
         location = os.path.abspath(root)
-        if not ignore_symlinks or ignore_symlinks and not os.path.islink(location):
-            if use_relative_paths:
-                if len(new_relative_path) and not new_relative_path.endswith(config.os_pathsep):
-                    new_relative_path += config.os_pathsep
-                files.append(location.replace(absolute_root + os.sep, new_relative_path))
-            else:
-                files.append(location)
+        if not ignore_symlinks or not os.path.islink(location):
+            files.append(location)
     return prune_paths(files, excludes)
 
 # Build file list by extensions
@@ -251,6 +246,7 @@ def build_leaf_directory_list(
     # Build leaf dirs
     leaf_dirs = []
     large_dirs = []
+    root = os.path.normpath(root)
     work_queue = [root]
     while work_queue:
         current_path = work_queue.pop()
@@ -260,10 +256,7 @@ def build_leaf_directory_list(
             continue
 
         # Get relative path for exclude checking
-        if current_path.startswith(root):
-            rel_path = current_path[len(root):].lstrip(os.sep)
-        else:
-            rel_path = current_path
+        rel_path = current_path[len(root):].lstrip(os.sep)
 
         # Skip excluded directories
         if rel_path and matches_exclude_pattern(rel_path, excludes):
@@ -611,11 +604,7 @@ def get_filename_file(path):
 
 # Change filename extension
 def change_filename_extension(path, new_extension):
-    directory = get_filename_directory(path)
-    basename = get_filename_basename(path)
-    if directory:
-        return join_paths(directory, basename + new_extension)
-    return basename + new_extension
+    return join_paths(get_filename_directory(path), get_filename_basename(path) + new_extension)
 
 # Get file size
 def get_file_size(path):

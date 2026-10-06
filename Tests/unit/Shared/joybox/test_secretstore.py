@@ -1,4 +1,5 @@
 # Imports
+import os
 import subprocess
 
 # Third-party imports
@@ -229,3 +230,44 @@ def test_the_reference_is_named_when_it_cannot_be_read(monkeypatch, recorded_log
     secretstore.resolve_secret_reference(REFERENCE)
 
     assert REFERENCE in " ".join(recorded_logs)
+
+
+###########################################################
+# Finding the tool
+###########################################################
+
+def make_executable(path, mode = 0o755):
+    path.write_text("#!/bin/sh\n")
+    path.chmod(mode)
+    return str(path)
+
+
+def test_a_known_install_location_wins_over_the_path(monkeypatch, tmp_path):
+    known = make_executable(tmp_path / "known-op")
+    on_path = tmp_path / "bin"
+    on_path.mkdir()
+    make_executable(on_path / secretstore.secret_tool)
+    monkeypatch.setattr(secretstore, "secret_tool_paths", [known])
+    monkeypatch.setenv("PATH", str(on_path))
+
+    assert secretstore.get_secret_tool() == known
+
+
+def test_the_tool_is_found_on_the_path(monkeypatch, tmp_path):
+    empty = tmp_path / "empty"
+    empty.mkdir()
+    on_path = tmp_path / "bin"
+    on_path.mkdir()
+    found = make_executable(on_path / secretstore.secret_tool)
+    monkeypatch.setattr(secretstore, "secret_tool_paths", [str(tmp_path / "absent")])
+    monkeypatch.setenv("PATH", os.pathsep.join([str(empty), str(on_path)]))
+
+    assert secretstore.get_secret_tool() == found
+
+
+def test_a_non_executable_tool_is_not_found(monkeypatch, tmp_path):
+    make_executable(tmp_path / secretstore.secret_tool, mode = 0o644)
+    monkeypatch.setattr(secretstore, "secret_tool_paths", [str(tmp_path / secretstore.secret_tool)])
+    monkeypatch.setenv("PATH", str(tmp_path))
+
+    assert secretstore.get_secret_tool() is None
