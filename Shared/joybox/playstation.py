@@ -1,6 +1,7 @@
 # Imports
 import os
 import os.path
+import struct
 import zlib
 import base64
 
@@ -561,6 +562,45 @@ def verify_psv(
 
     # Must be good
     return True
+
+# Read param.sfo values
+def read_param_sfo(sfo_file):
+    try:
+        with open(sfo_file, "rb") as f:
+            data = f.read()
+        magic, _, key_table, data_table, count = struct.unpack_from("<4sIIII", data, 0)
+        if magic != b"\x00PSF":
+            return None
+        values = {}
+        for index in range(count):
+            key_offset, data_fmt, data_len, _, data_offset = struct.unpack_from("<HHIII", data, 20 + index * 16)
+            key = data[key_table + key_offset:].split(b"\x00", 1)[0].decode("utf-8")
+            raw = data[data_table + data_offset:data_table + data_offset + data_len]
+            if data_fmt == 0x0404:
+                values[key] = struct.unpack_from("<I", raw)[0]
+            else:
+                values[key] = raw.split(b"\x00", 1)[0].decode("utf-8")
+        return values
+    except Exception:
+        pass
+    return None
+
+# Find psv content root (the dir holding sce_sys/param.sfo)
+def find_psv_content_root(search_dir, title_id):
+    content_roots = []
+    for root, dirs, _ in os.walk(search_dir):
+        dirs.sort()
+        sfo_file = paths.join_paths(root, "sce_sys", "param.sfo")
+        if not os.path.isfile(sfo_file):
+            continue
+        sfo_values = read_param_sfo(sfo_file) or {}
+        if sfo_values.get("TITLE_ID") == title_id:
+            return root
+        content_roots.append(root)
+        dirs.clear()
+    if len(content_roots) == 1:
+        return content_roots[0]
+    return None
 
 ######################################################
 # Sony PlayStation Network

@@ -1,5 +1,12 @@
 # JoyBox
 
+[![CI](https://github.com/NearlyTRex/JoyBox/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/NearlyTRex/JoyBox/actions/workflows/ci.yml)
+[![Coverage](https://img.shields.io/badge/coverage-100%25-brightgreen)](https://github.com/NearlyTRex/JoyBox/actions/workflows/ci.yml)
+[![Security](https://github.com/NearlyTRex/JoyBox/actions/workflows/security.yml/badge.svg?branch=main)](https://github.com/NearlyTRex/JoyBox/actions/workflows/security.yml)
+[![Release](https://img.shields.io/github/v/release/NearlyTRex/JoyBox)](https://github.com/NearlyTRex/JoyBox/releases/latest)
+[![Python](https://img.shields.io/python/required-version-toml?tomlFilePath=https%3A%2F%2Fraw.githubusercontent.com%2FNearlyTRex%2FJoyBox%2Fmain%2Fpyproject.toml)](pyproject.toml)
+[![License](https://img.shields.io/github/license/NearlyTRex/JoyBox)](LICENSE)
+
 My personal collection of integrated scripts and tools
 
 This is simply a jumble of the various scripts and tools I wrote for my various environments. The

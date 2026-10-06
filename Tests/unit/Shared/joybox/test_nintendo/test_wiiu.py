@@ -114,7 +114,7 @@ def test_new_keys_are_added_to_the_existing_ones(tmp_path):
     incoming = tmp_path / "new.txt"
     incoming.write_text("ccc\n")
 
-    nintendo.update_wiiu_keys(str(incoming), str(existing))
+    assert nintendo.update_wiiu_keys(str(incoming), str(existing)) is True
 
     assert existing.read_text().split() == ["aaa", "bbb", "ccc"]
 
@@ -125,7 +125,7 @@ def test_a_key_already_present_is_not_duplicated(tmp_path):
     incoming = tmp_path / "new.txt"
     incoming.write_text("bbb\nccc\n")
 
-    nintendo.update_wiiu_keys(str(incoming), str(existing))
+    assert nintendo.update_wiiu_keys(str(incoming), str(existing)) is True
 
     assert existing.read_text().split() == ["aaa", "bbb", "ccc"]
 
@@ -137,7 +137,7 @@ def test_keys_are_written_in_a_stable_order(tmp_path):
     incoming = tmp_path / "new.txt"
     incoming.write_text("bbb\n")
 
-    nintendo.update_wiiu_keys(str(incoming), str(existing))
+    assert nintendo.update_wiiu_keys(str(incoming), str(existing)) is True
 
     assert existing.read_text().split() == ["aaa", "bbb", "ccc"]
 
@@ -148,7 +148,7 @@ def test_surrounding_whitespace_is_stripped_from_keys(tmp_path):
     incoming = tmp_path / "new.txt"
     incoming.write_text("\taaa\n")
 
-    nintendo.update_wiiu_keys(str(incoming), str(existing))
+    assert nintendo.update_wiiu_keys(str(incoming), str(existing)) is True
 
     assert existing.read_text().split() == ["aaa"]
 
@@ -159,9 +159,43 @@ def test_the_source_key_file_is_left_alone(tmp_path):
     incoming = tmp_path / "new.txt"
     incoming.write_text("bbb\n")
 
-    nintendo.update_wiiu_keys(str(incoming), str(existing))
+    assert nintendo.update_wiiu_keys(str(incoming), str(existing)) is True
 
     assert incoming.read_text() == "bbb\n"
+
+
+def test_keys_merge_without_a_trailing_newline_or_blank_lines(tmp_path):
+    existing = tmp_path / "keys.txt"
+    existing.write_text("aaa\n\n")
+    incoming = tmp_path / "new.txt"
+    incoming.write_text("bbb")
+
+    assert nintendo.update_wiiu_keys(str(incoming), str(existing)) is True
+    assert existing.read_text() == "aaa\nbbb\n"
+
+
+def test_a_pretend_key_update_writes_nothing(tmp_path):
+    existing = tmp_path / "keys.txt"
+    existing.write_text("aaa\n")
+    incoming = tmp_path / "new.txt"
+    incoming.write_text("bbb\n")
+
+    assert nintendo.update_wiiu_keys(str(incoming), str(existing), pretend_run = True) is True
+    assert existing.read_text() == "aaa\n"
+
+
+@pytest.mark.parametrize("missing", ["src", "dest"])
+def test_a_missing_key_file_fails_the_update(tmp_path, monkeypatch, missing):
+    errors = []
+    monkeypatch.setattr(nintendo.logger, "log_error", lambda message, **kwargs: errors.append(message))
+    files = {"src": tmp_path / "new.txt", "dest": tmp_path / "keys.txt"}
+    for name, path in files.items():
+        if name != missing:
+            path.write_text("aaa\n")
+
+    assert nintendo.update_wiiu_keys(str(files["src"]), str(files["dest"])) is False
+    assert errors == ["Unable to read Wii U keys file %s" % files[missing]]
+    assert not files[missing].exists()
 
 
 def test_decrypting_leaves_subdirectories_alone(installed, recording_command, nus_package):
@@ -229,7 +263,7 @@ def test_a_package_that_will_not_decrypt_is_not_installed(nus_package, scratch, 
     assert nintendo.install_wiiu_nus_package(nus_package, str(tmp_path / "nand")) is False
 
 
-@pytest.mark.parametrize("app_xml", [None, "<app><title_id>00050000</title_id></app>"])
+@pytest.mark.parametrize("app_xml", [None, "", "<app><title_id>00050000</title_id></app>"])
 def test_a_package_without_a_usable_title_id_is_not_installed(nus_package, scratch, decrypted, tmp_path, app_xml):
     decrypted["app_xml"] = app_xml
 

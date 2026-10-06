@@ -266,6 +266,7 @@ def test_verbose_reads_and_writes_log_the_path(tmp_path, logged):
 
 @pytest.mark.parametrize("call", [
     lambda base: serialization.read_text_file(os.path.join(base, "absent.txt"), exit_on_failure = True),
+    lambda base: serialization.read_binary_file(os.path.join(base, "absent.bin"), exit_on_failure = True),
     lambda base: serialization.write_text_file(base, "x", exit_on_failure = True),
     lambda base: serialization.parse_json_string("{nope", exit_on_failure = True),
     lambda base: serialization.read_json_file(os.path.join(base, "absent.json"), exit_on_failure = True),
@@ -285,6 +286,7 @@ def test_failures_without_exit_return_the_empty_value(tmp_path):
     base = str(tmp_path)
 
     assert serialization.read_text_file(os.path.join(base, "absent.txt")) is None
+    assert serialization.read_binary_file(os.path.join(base, "absent.bin")) is None
     assert serialization.write_text_file(base, "x") is False
     assert serialization.write_json_file(base + ".json", {1j: 1}) is False
     assert serialization.clean_json_file(os.path.join(base, "absent.json")) is False
@@ -312,6 +314,14 @@ def test_a_text_file_round_trips_through_a_new_directory(tmp_path, logged):
     assert serialization.write_text_file(target, "line one\n", verbose = True) is True
     assert serialization.read_text_file(target, verbose = True) == "line one\n"
     assert logged["info"] == ["Writing %s" % target, "Reading %s" % target]
+
+
+def test_a_binary_file_is_read_byte_for_byte(tmp_path, logged):
+    target = tmp_path / "blob.bin"
+    target.write_bytes(b"\x00\xff\r\n")
+
+    assert serialization.read_binary_file(str(target), verbose = True) == b"\x00\xff\r\n"
+    assert logged["info"] == ["Reading %s" % target]
 
 
 def test_pretend_run_does_not_write_text(tmp_path):

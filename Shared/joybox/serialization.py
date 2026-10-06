@@ -27,6 +27,20 @@ def read_text_file(src, verbose = False, exit_on_failure = False):
             runtime.quit_program()
         return None
 
+# Read binary file
+def read_binary_file(src, verbose = False, exit_on_failure = False):
+    try:
+        if verbose:
+            logger.log_info("Reading %s" % src)
+        with open(src, "rb") as input_file:
+            return input_file.read()
+    except Exception as e:
+        if exit_on_failure:
+            logger.log_error("Unable to read %s" % src)
+            logger.log_error(e)
+            runtime.quit_program()
+        return None
+
 # Write text file
 def write_text_file(src, contents, verbose = False, pretend_run = False, exit_on_failure = False):
     try:

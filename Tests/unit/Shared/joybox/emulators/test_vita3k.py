@@ -4,14 +4,15 @@ import pytest
 # Local imports
 from joybox import config
 from joybox.emulators import vita3k
+from fakes import write_param_sfo
 from emulator_helpers import (
-    SETUP_METHODS, Seams, check_configure_passes_the_setup_params_through,
+    SETUP_METHODS, Game, Seams, check_configure_passes_the_setup_params_through,
     check_extracts_present_archives_to_each_platform, check_launch_passes_the_game_and_options_through,
     check_passes_the_setup_params_through, check_refuses_a_system_file_with_the_wrong_hash,
     check_skips_archives_missing_from_the_locker, check_skips_platforms_that_are_not_wanted,
     check_stops_at_the_failed_call, check_stops_when_a_config_file_cannot_be_written,
     check_stops_when_an_archive_cannot_be_extracted, check_writes_every_config_file, expected_stored,
-    fetched_releases, launch_cmd, stored_releases)
+    fetched_releases, launch, launch_cmd, stored_releases)
 
 
 ###########################################################
@@ -110,11 +111,118 @@ def test_configure_refuses_a_system_file_with_the_wrong_hash(seams):
 
 ###########################################################
 # Launch
+#
+# The launch name is the title id. An app already in ux0/app runs by id;
+# otherwise Vita3K installs and runs the content root found in the game's
+# cache, with any root-level work.bin staged into sce_sys/package first.
 ###########################################################
 
-def test_launch_starts_the_program(seams):
-    assert launch_cmd(seams)[0] == "/bin/Vita3K"
+TITLE_ID = "PCSE00001"
 
 
-def test_launch_passes_the_game_and_options_through(seams):
-    check_launch_passes_the_game_and_options_through(seams)
+class TitledGame(Game):
+    def __init__(self, cache_dir, launch_name = TITLE_ID):
+        super().__init__(cache_dir)
+        self.launch_name = launch_name
+
+    def get_launch_name(self):
+        return self.launch_name
+
+
+@pytest.fixture
+def app_dir(seams, tmp_path):
+    app_dir = tmp_path / "ux0" / "app"
+    seams.monkeypatch.setattr(vita3k.programs, "get_emulator_path_config_value",
+        lambda name, key, platform = None: str(app_dir) if key == "app_dir" else "/emu/%s" % key)
+    return app_dir
+
+
+def game(seams, launch_name = TITLE_ID):
+    return TitledGame(str(seams.cache_dir), launch_name)
+
+
+def make_content(seams, title_id = TITLE_ID):
+    root = seams.cache_dir / ("EP0001-%s_00-0000000000000000" % title_id)
+    write_param_sfo(root / "sce_sys" / "param.sfo", {"TITLE_ID": title_id})
+    return root
+
+
+def stage_root_workbin(seams):
+    (seams.cache_dir / "work.bin").write_bytes(b"license")
+
+
+@pytest.mark.parametrize("launch_name", [None, ""])
+def test_launch_without_a_title_id_runs_nothing(seams, app_dir, launch_name):
+    assert seams.emulator().launch(game(seams, launch_name)) is False
+    assert seams.launched.calls == []
+
+
+def test_launch_runs_an_installed_app_by_title_id(seams, app_dir):
+    (app_dir / TITLE_ID).mkdir(parents = True)
+    make_content(seams)
+
+    assert launch_cmd(seams, game(seams)) == ["/bin/Vita3K", "-r", config.token_game_name]
+
+
+def test_launch_passes_the_game_and_options_through(seams, app_dir):
+    (app_dir / TITLE_ID).mkdir(parents = True)
+
+    check_launch_passes_the_game_and_options_through(seams, game(seams))
+
+
+def test_launch_fullscreen_adds_the_fullscreen_flag(seams, app_dir):
+    (app_dir / TITLE_ID).mkdir(parents = True)
+
+    assert launch_cmd(seams, game(seams), fullscreen = True) == [
+        "/bin/Vita3K", "-F", "-r", config.token_game_name]
+
+
+def test_launch_installs_from_the_cached_content_root(seams, app_dir):
+    root = make_content(seams)
+
+    assert launch_cmd(seams, game(seams), fullscreen = True) == ["/bin/Vita3K", "-F", str(root)]
+    assert not (root / "sce_sys" / "package").exists()
+
+
+def test_launch_stages_the_root_work_bin_into_the_package_dir(seams, app_dir):
+    root = make_content(seams)
+    stage_root_workbin(seams)
+
+    assert launch_cmd(seams, game(seams)) == ["/bin/Vita3K", str(root)]
+    assert (root / "sce_sys" / "package" / "work.bin").read_bytes() == b"license"
+
+
+def test_launch_keeps_a_work_bin_the_package_already_has(seams, app_dir):
+    root = make_content(seams)
+    (root / "sce_sys" / "package").mkdir()
+    (root / "sce_sys" / "package" / "work.bin").write_bytes(b"own")
+    stage_root_workbin(seams)
+
+    launch(seams, game(seams))
+
+    assert (root / "sce_sys" / "package" / "work.bin").read_bytes() == b"own"
+
+
+def test_a_pretend_launch_stages_nothing(seams, app_dir):
+    root = make_content(seams)
+    stage_root_workbin(seams)
+
+    assert launch_cmd(seams, game(seams), pretend_run = True) == ["/bin/Vita3K", str(root)]
+    assert not (root / "sce_sys" / "package").exists()
+
+
+def test_launch_without_app_content_runs_nothing(seams, app_dir):
+    (seams.cache_dir / "Game.psv").write_bytes(b"")
+
+    assert seams.emulator().launch(game(seams)) is False
+    assert seams.launched.calls == []
+
+
+@pytest.mark.parametrize("failing", ["make_directory", "copy_file_or_directory"])
+def test_launch_stops_when_the_work_bin_cannot_be_staged(seams, app_dir, failing):
+    make_content(seams)
+    stage_root_workbin(seams)
+    seams.monkeypatch.setattr(vita3k.fileops, failing, lambda **kwargs: False)
+
+    assert seams.emulator().launch(game(seams)) is False
+    assert seams.launched.calls == []

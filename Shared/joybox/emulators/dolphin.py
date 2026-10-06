@@ -10,6 +10,7 @@ import joybox.logger as logger
 import joybox.release as release
 import joybox.programs as programs
 import joybox.archive as archive
+import joybox.nintendo as nintendo
 import joybox.paths as paths
 import joybox.emulatorcommon as emulatorcommon
 import joybox.emulatorbase as emulatorbase
@@ -144,7 +145,14 @@ class Dolphin(emulatorbase.EmulatorBase):
         for package_dirset in [dlc_dirs, update_dirs]:
             for package_dir in package_dirset:
                 for wad_file in paths.build_file_list_by_extensions(package_dir, extensions = [".wad"]):
-                    pass
+                    success = nintendo.install_wii_wad(
+                        src_wad_file = wad_file,
+                        nand_dir = paths.join_paths(programs.get_emulator_path_config_value("Dolphin", "setup_dir"), "Wii"),
+                        verbose = verbose,
+                        pretend_run = pretend_run,
+                        exit_on_failure = exit_on_failure)
+                    if not success:
+                        return False
         return True
 
     # Setup
