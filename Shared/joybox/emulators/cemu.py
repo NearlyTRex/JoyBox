@@ -194,12 +194,15 @@ class Cemu(emulatorbase.EmulatorBase):
         for key_file in paths.build_file_list_by_extensions(game_cache_dir, extensions = [".txt"]):
             if key_file.endswith(".key.txt"):
                 for platform in ["windows", "linux"]:
-                    nintendo.update_wiiu_keys(
+                    success = nintendo.update_wiiu_keys(
                         src_key_file = key_file,
                         dest_key_file = programs.get_emulator_path_config_value("Cemu", "keys_file", platform),
                         verbose = verbose,
                         pretend_run = pretend_run,
                         exit_on_failure = exit_on_failure)
+                    if not success:
+                        logger.log_error("Could not update Cemu keys from %s" % key_file)
+                        return False
 
         # Get launch command
         launch_cmd = [

@@ -11,6 +11,7 @@ import joybox.programs as programs
 import joybox.logger as logger
 import joybox.paths as paths
 import joybox.hashing as hashing
+import joybox.serialization as serialization
 import joybox.webpage as webpage
 
 ######################################################
@@ -460,6 +461,59 @@ def install_3ds_cia(
     return True
 
 ######################################################
+# Nintendo Wii
+######################################################
+
+# Install Wii WAD file into an emulated NAND
+def install_wii_wad(
+    src_wad_file,
+    nand_dir,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+    import libWiiPy
+
+    # Read wad
+    wad_data = serialization.read_binary_file(
+        src = src_wad_file,
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
+    if wad_data is None:
+        logger.log_error("Unable to read WAD %s" % src_wad_file)
+        return False
+
+    # Load title
+    try:
+        title = libWiiPy.title.Title()
+        title.load_wad(wad_data)
+    except Exception as e:
+        logger.log_error("Unable to load WAD %s" % src_wad_file)
+        logger.log_error(e, quit_program = exit_on_failure)
+        return False
+
+    # Make nand directory
+    success = fileops.make_directory(
+        src = nand_dir,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    if not success:
+        return False
+
+    # Install title
+    if verbose:
+        logger.log_info("Installing %s into NAND %s" % (src_wad_file, nand_dir))
+    if pretend_run:
+        return True
+    try:
+        libWiiPy.nand.EmuNAND(nand_dir).install_title(title)
+    except Exception as e:
+        logger.log_error("Unable to install WAD %s" % src_wad_file)
+        logger.log_error(e, quit_program = exit_on_failure)
+        return False
+    return True
+
+######################################################
 # Nintendo Wii U
 ######################################################
 
@@ -602,12 +656,14 @@ def install_wiiu_nus_package(
 
     # Get title id
     app_titleid = ""
-    with open(app_xml_file, "r") as f:
-        data = f.read()
-        soup = webpage.parse_xml_page_source(data)
-        if soup:
-            for tag in soup.find_all("title_id"):
-                app_titleid = tag.text
+    app_xml_contents = serialization.read_text_file(
+        src = app_xml_file,
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
+    soup = webpage.parse_xml_page_source(app_xml_contents) if app_xml_contents else None
+    if soup:
+        for tag in soup.find_all("title_id"):
+            app_titleid = tag.text
     if len(app_titleid) != 16:
         return False
 
@@ -655,25 +711,25 @@ def update_wiiu_keys(
     pretend_run = False,
     exit_on_failure = False):
 
-    # Read existing keys
-    existing_keys = set()
-    with open(dest_key_file, "r") as f:
-        for line in f.readlines():
-            existing_keys.add(line.strip())
-
-    # Get new keys
-    new_keys = set()
-    with open(src_key_file, "r") as f:
-        for line in f.readlines():
-            new_keys.add(line.strip())
-
-    # Update keys
-    updated_keys = existing_keys.union(new_keys)
+    # Read keys
+    key_sets = []
+    for key_file in [dest_key_file, src_key_file]:
+        key_contents = serialization.read_text_file(
+            src = key_file,
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)
+        if key_contents is None:
+            logger.log_error("Unable to read Wii U keys file %s" % key_file)
+            return False
+        key_sets.append({line.strip() for line in key_contents.splitlines() if line.strip()})
 
     # Write keys
-    with open(dest_key_file, "w") as f:
-        for key in sorted(updated_keys):
-            f.write("%s\n" % key)
+    return serialization.write_text_file(
+        src = dest_key_file,
+        contents = "".join("%s\n" % key for key in sorted(set.union(*key_sets))),
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
 
 ######################################################
 # Nintendo Switch

@@ -11,7 +11,7 @@ from emulator_helpers import (
     check_skips_archives_missing_from_the_locker, check_skips_platforms_that_are_not_wanted,
     check_stops_at_the_failed_call, check_stops_when_a_config_file_cannot_be_written,
     check_stops_when_an_archive_cannot_be_extracted, check_writes_every_config_file, expected_stored,
-    fetched_releases, launch_cmd, stored_releases)
+    fetched_releases, launch_cmd, make_packages, stored_releases)
 
 
 ###########################################################
@@ -130,10 +130,23 @@ def test_launch_passes_the_game_and_options_through(seams):
 # Add-ons
 ###########################################################
 
-def test_install_addons_succeeds_for_wad_packages(seams, tmp_path):
-    dlc = tmp_path / "dlc"
-    dlc.mkdir()
-    (dlc / "channel.wad").write_text("")
+def test_install_addons_installs_each_wad_into_the_nand(seams, tmp_path):
+    installed = seams.fake(dolphin.nintendo, "install_wii_wad")
+    dlc = make_packages(tmp_path / "dlc", "channel.wad", "readme.txt")
+    update = make_packages(tmp_path / "update", "v1.wad")
 
-    assert seams.emulator().install_addons(dlc_dirs = [str(dlc)], update_dirs = [str(dlc)]) is True
-    assert seams.copied.calls == seams.extracted.calls == []
+    assert seams.emulator().install_addons(dlc_dirs = [dlc], update_dirs = [update], verbose = True) is True
+
+    assert installed.values("src_wad_file", "nand_dir") == [
+        (dlc + "/channel.wad", "/emu/Dolphin/setup_dir/None/Wii"),
+        (update + "/v1.wad", "/emu/Dolphin/setup_dir/None/Wii")]
+    assert installed.calls[0]["verbose"] is True
+
+
+def test_install_addons_stops_at_the_first_failed_wad(seams, tmp_path):
+    installed = seams.fake(dolphin.nintendo, "install_wii_wad")
+    installed.failures.add(1)
+    dlc = make_packages(tmp_path / "dlc", "a.wad", "b.wad")
+
+    assert seams.emulator().install_addons(dlc_dirs = [dlc]) is False
+    assert len(installed.calls) == 1

@@ -268,6 +268,7 @@ class Game:
 def launcher(monkeypatch, tmp_path):
     launched = {}
     keys = []
+    state = {"keys_result": True}
 
     def simple_launch(**kwargs):
         launched.update(kwargs)
@@ -275,13 +276,14 @@ def launcher(monkeypatch, tmp_path):
 
     def update_keys(src_key_file, dest_key_file, **kwargs):
         keys.append((src_key_file, dest_key_file, kwargs))
+        return state["keys_result"]
 
     monkeypatch.setattr(cemu.programs, "get_emulator_path_config_value",
         lambda name, key, platform = None: "/emu/%s/%s" % (key, platform))
     monkeypatch.setattr(cemu.programs, "get_emulator_program", lambda name: "/bin/cemu")
     monkeypatch.setattr(cemu.nintendo, "update_wiiu_keys", update_keys)
     monkeypatch.setattr(cemu.emulatorcommon, "simple_launch", simple_launch)
-    return {"launched": launched, "keys": keys, "cache": tmp_path}
+    return {"launched": launched, "keys": keys, "cache": tmp_path, "state": state}
 
 
 def test_launch_runs_the_game_file(launcher):
@@ -314,3 +316,16 @@ def test_launch_merges_bundled_keys_into_both_platforms(launcher):
         (str(key_file), "/emu/keys_file/linux"),
     ]
     assert launcher["keys"][0][2]["pretend_run"] is True
+
+
+def test_launch_stops_when_the_keys_cannot_be_updated(launcher, monkeypatch):
+    errors = []
+    monkeypatch.setattr(cemu.logger, "log_error", lambda message, **kwargs: errors.append(message))
+    key_file = launcher["cache"] / "game.key.txt"
+    key_file.write_text("")
+    launcher["state"]["keys_result"] = False
+
+    assert cemu.Cemu().launch(Game(str(launcher["cache"]))) is False
+    assert errors == ["Could not update Cemu keys from %s" % key_file]
+    assert len(launcher["keys"]) == 1
+    assert launcher["launched"] == {}

@@ -529,3 +529,30 @@ class FakeSSHClient:
     def only(self):
         assert len(self.commands) == 1, "expected one command, sent %d" % len(self.commands)
         return self.commands[0]
+
+
+###########################################################
+# param.sfo
+#
+# Writes a real PSF file: header, index table, key table and data table, with
+# strings stored null-terminated (0x0204) and integers as 32-bit (0x0404).
+###########################################################
+
+def write_param_sfo(path, values):
+    import struct
+    keys = b""
+    data = b""
+    index = b""
+    for key, value in values.items():
+        if isinstance(value, int):
+            raw, fmt = struct.pack("<I", value), 0x0404
+        else:
+            raw, fmt = value.encode("utf-8") + b"\x00", 0x0204
+        index += struct.pack("<HHIII", len(keys), fmt, len(raw), len(raw), len(data))
+        keys += key.encode("utf-8") + b"\x00"
+        data += raw
+    key_table = 20 + len(index)
+    header = struct.pack("<4sIIII", b"\x00PSF", 0x101, key_table, key_table + len(keys), len(values))
+    path.parent.mkdir(parents = True, exist_ok = True)
+    path.write_bytes(header + index + keys + data)
+    return path

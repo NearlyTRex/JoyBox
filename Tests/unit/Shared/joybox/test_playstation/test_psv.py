@@ -147,3 +147,66 @@ def test_unstripping_can_remove_the_stripped_source(installed, recording_command
     playstation.unstrip_psv("/in/Game.psv", "/in/Game.psve", "/out/Game.psv", delete_original = True)
 
     assert removed == ["/in/Game.psv"]
+
+
+###########################################################
+# PSV app content
+###########################################################
+
+def make_app(root, *parts, title_id = "PCSE00001"):
+    from fakes import write_param_sfo
+    app = root.joinpath(*parts)
+    write_param_sfo(app / "sce_sys" / "param.sfo", {"TITLE_ID": title_id, "ATTRIBUTE": 0x8000})
+    return app
+
+
+def test_reading_param_sfo_returns_strings_and_integers(tmp_path):
+    sfo_file = make_app(tmp_path, "app") / "sce_sys" / "param.sfo"
+
+    assert playstation.read_param_sfo(str(sfo_file)) == {"TITLE_ID": "PCSE00001", "ATTRIBUTE": 0x8000}
+
+
+def test_reading_a_file_without_the_psf_magic_gives_nothing(tmp_path):
+    sfo_file = tmp_path / "param.sfo"
+    sfo_file.write_bytes(b"\x00XYZ" + bytes(16))
+
+    assert playstation.read_param_sfo(str(sfo_file)) is None
+
+
+def test_reading_a_missing_param_sfo_gives_nothing(tmp_path):
+    assert playstation.read_param_sfo(str(tmp_path / "param.sfo")) is None
+
+
+def test_the_content_root_is_the_app_with_the_matching_title(tmp_path):
+    make_app(tmp_path, "EP0001-PCSE00002_00-X", title_id = "PCSE00002")
+    wanted = make_app(tmp_path, "EP0001-PCSE00001_00-X")
+
+    assert playstation.find_psv_content_root(str(tmp_path), "PCSE00001") == str(wanted)
+
+
+def test_a_single_app_is_the_content_root_whatever_its_title(tmp_path):
+    only = make_app(tmp_path, "content", title_id = "PCSE09999")
+    make_app(only, "sce_module", title_id = "PCSE08888")
+
+    assert playstation.find_psv_content_root(str(tmp_path), "PCSE00001") == str(only)
+
+
+def test_an_unreadable_param_sfo_still_marks_a_content_root(tmp_path):
+    app = tmp_path / "app"
+    (app / "sce_sys").mkdir(parents = True)
+    (app / "sce_sys" / "param.sfo").write_bytes(b"")
+
+    assert playstation.find_psv_content_root(str(tmp_path), "PCSE00001") == str(app)
+
+
+def test_several_unmatched_apps_have_no_content_root(tmp_path):
+    make_app(tmp_path, "a", title_id = "PCSE00002")
+    make_app(tmp_path, "b", title_id = "PCSE00003")
+
+    assert playstation.find_psv_content_root(str(tmp_path), "PCSE00001") is None
+
+
+def test_a_cartridge_dump_has_no_content_root(tmp_path):
+    (tmp_path / "Game.psv").write_bytes(b"")
+
+    assert playstation.find_psv_content_root(str(tmp_path), "PCSE00001") is None
