@@ -399,6 +399,8 @@ def test_a_windows_interactive_run_gets_the_working_directory_and_environment(wi
 
 
 def test_a_windows_interrupt_terminates_the_child(windows, monkeypatch):
+    # Output never ends, so the reader can only stop once the child is gone
+    monkeypatch.setattr(FakePty, "read", lambda self, size: "")
     monkeypatch.setattr(sys, "stdin", InterruptingInput())
 
     run()
