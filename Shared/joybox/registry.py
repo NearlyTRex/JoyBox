@@ -150,7 +150,7 @@ def export_registry_file(
     # Get registry options
     registry_options = options.copy()
     registry_options.set_force_prefix(True)
-    registry_options.set_shell(True)
+    registry_options.set_is_shell(True)
     registry_options.set_blocking_processes(["reg"])
 
     # Run registry command
@@ -222,42 +222,48 @@ def backup_user_registry(
     if not tmp_dir_success:
         return False
 
-    # Export each key to its own file and collect the entries
-    registry_data = {}
-    registry_data["header"] = ""
-    registry_data["entries"] = []
-    for key_index, base_key in enumerate(export_keys):
+    # Export each key to its own file, collect the entries, and drop the exports
+    try:
+        registry_data = {}
+        registry_data["header"] = ""
+        registry_data["entries"] = []
+        for key_index, base_key in enumerate(export_keys):
 
-        # Export registry key
-        temp_reg_file = paths.join_paths(tmp_dir_result, "temp%d.reg" % key_index)
-        success = export_registry_file(
-            registry_file = temp_reg_file,
-            registry_key = base_key,
-            options = options,
+            # Export registry key
+            temp_reg_file = paths.join_paths(tmp_dir_result, "temp%d.reg" % key_index)
+            success = export_registry_file(
+                registry_file = temp_reg_file,
+                registry_key = base_key,
+                options = options,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
+            if not success:
+                return False
+
+            # Read registry file
+            key_data = read_registry_file(
+                registry_file = temp_reg_file,
+                ignore_keys = ignore_keys,
+                keep_keys = keep_keys,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
+
+            # Collect entries
+            if not registry_data["header"]:
+                registry_data["header"] = key_data.get("header", "")
+            registry_data["entries"] += key_data.get("entries", [])
+
+        # Write new pruned registry file
+        return write_registry_file(
+            registry_file = registry_file,
+            registry_data = registry_data,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-        if not success:
-            return False
-
-        # Read registry file
-        key_data = read_registry_file(
-            registry_file = temp_reg_file,
-            ignore_keys = ignore_keys,
-            keep_keys = keep_keys,
+    finally:
+        fileops.remove_directory(
+            src = tmp_dir_result,
             verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-
-        # Collect entries
-        if not registry_data["header"]:
-            registry_data["header"] = key_data.get("header", "")
-        registry_data["entries"] += key_data.get("entries", [])
-
-    # Write new pruned registry file
-    return write_registry_file(
-        registry_file = registry_file,
-        registry_data = registry_data,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
+            pretend_run = pretend_run)

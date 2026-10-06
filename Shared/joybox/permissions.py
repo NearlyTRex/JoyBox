@@ -34,3 +34,5 @@ def run_as_root(func):
             func()
         except Exception:
             raise
+    else:
+        func()

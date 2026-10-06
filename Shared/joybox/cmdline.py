@@ -19,8 +19,6 @@ SENSITIVE_FLAGS = [
 def create_command_string_posix(cmd):
     if not cmd:
         return ""
-    if len(cmd) == 0:
-        return ""
     if isinstance(cmd, str):
         return copy.deepcopy(cmd)
     if isinstance(cmd, list):
@@ -32,8 +30,6 @@ def create_command_string_posix(cmd):
 # quoting rules do not apply.
 def create_command_string_basic(cmd):
     if not cmd:
-        return ""
-    if len(cmd) == 0:
         return ""
     if isinstance(cmd, str):
         return copy.deepcopy(cmd)
@@ -64,8 +60,6 @@ def create_command_string(cmd, style = "basic"):
 def create_command_list_enclosed(cmd):
     if not cmd:
         return []
-    if len(cmd) == 0:
-        return []
     if isinstance(cmd, list):
         return copy.deepcopy(cmd)
     if isinstance(cmd, str):
@@ -79,8 +73,6 @@ def create_command_list_enclosed(cmd):
 # quote awareness.
 def create_command_list_split(cmd):
     if not cmd:
-        return []
-    if len(cmd) == 0:
         return []
     if isinstance(cmd, list):
         return copy.deepcopy(cmd)

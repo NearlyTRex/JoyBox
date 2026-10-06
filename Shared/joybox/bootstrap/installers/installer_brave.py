@@ -40,4 +40,4 @@ class Brave(installer.Installer):
         self.connection.run_checked([self.aptget_tool, "remove", "-y", "brave-browser"], sudo = True)
         self.connection.remove_file_or_directory(self.sources_list_path, sudo = True)
         self.connection.remove_file_or_directory(self.archive_key_path, sudo = True)
-        return False
+        return True

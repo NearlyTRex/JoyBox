@@ -383,3 +383,105 @@ def test_no_export_keys_writes_an_empty_backup(tmp_path, fake_exports):
     assert registry.backup_user_registry(
         registry_file = target, options = None, export_keys = []) is True
     assert registry.read_registry_file(target)["entries"] == []
+
+
+def test_backing_up_removes_its_export_files(tmp_path, fake_exports, monkeypatch):
+    fake_exports["HKCU\\Software"] = [ACME]
+    work_dir = tmp_path / "work"
+    work_dir.mkdir()
+    monkeypatch.setattr(registry.fileops, "create_temporary_directory", lambda **kwargs: (True, str(work_dir)))
+
+    registry.backup_user_registry(
+        registry_file = str(tmp_path / "setup.reg"), options = None, export_keys = ["HKCU\\Software"])
+    assert not work_dir.exists()
+
+
+def test_no_temporary_directory_abandons_the_backup(tmp_path, monkeypatch):
+    monkeypatch.setattr(registry.fileops, "create_temporary_directory", lambda **kwargs: (False, ""))
+    target = tmp_path / "setup.reg"
+
+    assert registry.backup_user_registry(registry_file = str(target), options = None) is False
+    assert not target.exists()
+
+
+###########################################################
+# Failure handling
+###########################################################
+
+def test_an_unreadable_registry_file_quits_when_asked(tmp_path):
+    with pytest.raises(SystemExit):
+        registry.read_registry_file(str(tmp_path / "missing.reg"), verbose = True, exit_on_failure = True)
+
+
+def test_an_unwritable_registry_file_quits_when_asked(tmp_path):
+    data = {"header": HEADER, "entries": []}
+    with pytest.raises(SystemExit):
+        registry.write_registry_file(
+            str(tmp_path / "missing" / "user.reg"), data, verbose = True, exit_on_failure = True)
+
+
+def test_a_key_with_no_values_is_written_bare(tmp_path):
+    target = str(tmp_path / "user.reg")
+    data = {"header": HEADER, "entries": [{"key": "HKEY_CURRENT_USER\\Empty", "value": ""}]}
+
+    assert registry.write_registry_file(target, data)
+    with open(target, encoding = "utf-16") as handle:
+        assert handle.read() == HEADER + "\n\n[HKEY_CURRENT_USER\\Empty]\n\n"
+
+
+###########################################################
+# Exporting and importing through reg
+###########################################################
+
+@pytest.fixture
+def reg_runs(monkeypatch):
+    runs = {"calls": [], "code": 0, "creates": True}
+
+    def run_returncode_command(cmd, options, **kwargs):
+        runs["calls"].append((cmd, options))
+        if runs["creates"] and cmd[1] == "export":
+            write_reg(cmd[3], sample(ACME))
+        return runs["code"]
+    monkeypatch.setattr(registry.command, "run_returncode_command", run_returncode_command)
+    return runs
+
+
+def test_exporting_runs_reg_export_in_the_prefix(tmp_path, reg_runs):
+    target = str(tmp_path / "out.reg")
+    options = registry.command.create_command_options()
+
+    assert registry.export_registry_file(target, "HKCU\\Software", options)
+    cmd, used = reg_runs["calls"][0]
+    assert cmd == ["reg", "export", "\"HKCU\\Software\"", target, "/y"]
+    assert used.force_prefix() and used.is_shell()
+    assert used.get_blocking_processes() == ["reg"]
+    assert not options.force_prefix()
+
+
+def test_a_failed_export_reports_failure(tmp_path, reg_runs):
+    reg_runs["code"] = 1
+    options = registry.command.create_command_options()
+    assert registry.export_registry_file(str(tmp_path / "out.reg"), "HKCU\\Software", options) is False
+
+
+def test_an_export_that_writes_nothing_reports_failure(tmp_path, reg_runs):
+    reg_runs["creates"] = False
+    options = registry.command.create_command_options()
+    assert registry.export_registry_file(str(tmp_path / "out.reg"), "HKCU\\Software", options) is False
+
+
+def test_importing_runs_reg_import_in_the_prefix(tmp_path, reg_runs):
+    source = write_reg(tmp_path / "in.reg", sample(ACME))
+    options = registry.command.create_command_options()
+
+    assert registry.import_registry_file(source, options)
+    cmd, used = reg_runs["calls"][0]
+    assert cmd == ["reg", "import", source]
+    assert used.force_prefix()
+    assert used.get_blocking_processes() == ["reg"]
+
+
+def test_a_failed_import_reports_failure(tmp_path, reg_runs):
+    reg_runs["code"] = 1
+    source = write_reg(tmp_path / "in.reg", sample(ACME))
+    assert registry.import_registry_file(source, registry.command.create_command_options()) is False

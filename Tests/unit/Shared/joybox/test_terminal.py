@@ -211,6 +211,13 @@ def test_a_line_is_returned(monkeypatch):
     assert terminal.read_line("> ") == "typed"
 
 
+def test_a_line_is_read_without_readline(monkeypatch):
+    monkeypatch.setitem(sys.modules, "readline", None)
+    monkeypatch.setattr(builtins, "input", lambda prompt = "": "typed")
+
+    assert terminal.read_line("> ") == "typed"
+
+
 def test_the_prompt_is_shown(monkeypatch):
     seen = []
     monkeypatch.setattr(builtins, "input", lambda prompt = "": seen.append(prompt) or "")

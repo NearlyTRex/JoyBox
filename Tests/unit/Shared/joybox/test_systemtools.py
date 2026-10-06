@@ -142,3 +142,22 @@ def test_the_coreutils_are_distinct(isolated_settings):
     resolved = {getattr(systemtools, accessor)() for accessor in COREUTIL_ACCESSORS}
 
     assert len(resolved) == len(COREUTIL_ACCESSORS)
+
+
+###########################################################
+# Windows layout
+###########################################################
+
+def test_winget_joins_its_configured_directory_and_executable(isolated_settings):
+    isolated_settings.set_value("Tools.WinGet", "winget_install_dir", "/winget")
+    isolated_settings.set_value("Tools.WinGet", "winget_exe", "winget.exe")
+
+    assert systemtools.get_winget_tool() == os.path.join("/winget", "winget.exe")
+
+
+@pytest.mark.parametrize("accessor", ["get_python_venv_python_tool", "get_python_venv_pip_tool"])
+def test_windows_venv_binaries_sit_in_scripts(isolated_settings, monkeypatch, accessor):
+    monkeypatch.setattr(platform_info, "is_windows_platform", lambda: True)
+    isolated_settings.set_value("Tools.Python", "python_venv_dir", "/venv")
+
+    assert os.path.dirname(getattr(systemtools, accessor)()) == os.path.join("/venv", "Scripts")

@@ -181,7 +181,7 @@ def main():
             exit_on_failure = args.exit_on_failure)
 
     # Archive files
-    elif args.backup_type == config.BackupType.ARCHIVE:
+    else:
         backup.archive_sub_folders(
             input_base_path = source_file_root,
             output_base_path = dest_file_root,

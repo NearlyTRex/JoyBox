@@ -1,3 +1,6 @@
+# Imports
+import os
+
 # Local imports
 import joybox.bootstrap.constants as constants
 from joybox.bootstrap.installers import installer
@@ -182,3 +185,59 @@ def test_the_base_does_not_claim_a_successful_action():
 
     assert base.install() is False
     assert base.uninstall() is False
+
+
+def test_the_base_backup_and_restore_are_harmless():
+    base, connection = build()
+
+    assert base.backup() is True
+    assert base.restore() is True
+    assert connection.calls == []
+
+
+###########################################################
+# Environment type
+###########################################################
+
+def test_supported_environment_defaults_to_the_configured_type(isolated_settings):
+    base, _ = build()
+    base.get_supported_environments = lambda: [constants.EnvironmentType.LOCAL_UBUNTU]
+
+    base.set_environment_type(constants.EnvironmentType.LOCAL_UBUNTU)
+    assert base.get_environment_type() == constants.EnvironmentType.LOCAL_UBUNTU
+    assert base.supports_environment() is True
+
+    base.set_environment_type(constants.EnvironmentType.REMOTE_UBUNTU)
+    assert base.supports_environment() is False
+
+
+def test_windows_resolves_winget_instead_of_apt(isolated_settings, monkeypatch):
+    monkeypatch.setattr(installer.platform_info, "is_windows_platform", lambda: True)
+    isolated_settings.set_value("Tools.WinGet", "winget_exe", "winget.exe")
+    isolated_settings.set_value("Tools.WinGet", "winget_install_dir", "C:/WindowsApps")
+    base = installer.Installer(RecordingConnection(), runoptions.RunFlags(verbose = False))
+
+    assert base.winget_tool == os.path.join("C:/WindowsApps", "winget.exe")
+    assert not hasattr(base, "aptget_tool")
+
+
+###########################################################
+# Upstream install scripts
+###########################################################
+
+def test_an_install_script_is_run_and_removed():
+    base, connection = build()
+
+    assert base.install_from_script("https://example.test/install.sh", "x_install.sh", runner = "bash") is True
+    assert connection.downloads == [("https://example.test/install.sh", "/tmp/x_install.sh")]
+    assert connection.ran("bash /tmp/x_install.sh")
+    assert connection.removed_paths == ["/tmp/x_install.sh"]
+
+
+def test_a_failed_install_script_is_removed_and_reported():
+    connection = RecordingConnection(return_codes = {"x_install.sh": 3})
+    base = installer.Installer(connection, runoptions.RunFlags(verbose = False))
+
+    assert base.install_from_script("https://example.test/install.sh", "x_install.sh") is False
+    assert connection.ran("sh /tmp/x_install.sh")
+    assert connection.removed_paths == ["/tmp/x_install.sh"]

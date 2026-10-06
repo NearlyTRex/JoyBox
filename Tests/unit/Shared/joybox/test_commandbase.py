@@ -3,6 +3,9 @@ import pytest
 
 # Local imports
 from joybox import commandbase
+from joybox import environment
+from joybox import logger
+from joybox import programs
 
 
 ###########################################################
@@ -158,3 +161,53 @@ def test_a_search_directory_is_tried_before_the_path(tmp_path):
     resolved = commandbase.get_runnable_command_path("sh", search_dirs = [str(tmp_path)])
 
     assert resolved == str(local)
+
+
+def test_an_empty_search_directory_falls_back_to_the_path(tmp_path):
+    assert commandbase.get_runnable_command_path("sh", search_dirs = [str(tmp_path)]) == \
+        commandbase.get_runnable_command_path("sh")
+
+
+###########################################################
+# Command origin
+###########################################################
+
+def test_a_script_under_the_commands_dir_is_a_local_script(monkeypatch, tmp_path):
+    monkeypatch.setattr(environment, "get_commands_dir", lambda: str(tmp_path / "bin"))
+
+    assert commandbase.is_local_script_command([str(tmp_path / "bin" / "tool"), "-x"]) is True
+    assert commandbase.is_local_script_command(["/usr/bin/tool"]) is False
+
+
+@pytest.mark.parametrize("tool, emulator, expected", [
+    (True, False, True), (False, True, True), (False, False, False)])
+def test_a_program_path_is_local_when_it_is_a_tool_or_emulator(monkeypatch, tool, emulator, expected):
+    seen = []
+    monkeypatch.setattr(programs, "is_program_path_tool", lambda path: seen.append(path) or tool)
+    monkeypatch.setattr(programs, "is_program_path_emulator", lambda path: emulator)
+
+    assert commandbase.is_local_program_command(["/opt/prog", "--flag"]) is expected
+    assert seen == ["/opt/prog"]
+
+
+###########################################################
+# Printing
+###########################################################
+
+@pytest.mark.parametrize("cmd, expected", [
+    (["tool", "--token", "abc"], "tool --token ****"),
+    ("tool --token abc", "tool --token ****")])
+def test_a_printed_command_is_masked(monkeypatch, cmd, expected):
+    logged = []
+    monkeypatch.setattr(logger, "log_info", logged.append)
+    commandbase.print_command(cmd)
+
+    assert logged == [expected]
+
+
+def test_printing_an_unsupported_command_logs_nothing(monkeypatch):
+    logged = []
+    monkeypatch.setattr(logger, "log_info", logged.append)
+    commandbase.print_command(None)
+
+    assert logged == []

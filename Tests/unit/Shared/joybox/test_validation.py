@@ -128,6 +128,14 @@ def test_an_uncastable_bool_is_rejected(value):
     assert_rejects(validation.assert_is_castable_to_bool, value, "value")
 
 
+def test_a_value_that_cannot_be_stringified_is_not_a_castable_bool():
+    class Unprintable:
+        def __str__(self):
+            raise ValueError("no text form")
+
+    assert_rejects(validation.assert_is_castable_to_bool, Unprintable(), "value")
+
+
 ###########################################################
 # Containers
 ###########################################################

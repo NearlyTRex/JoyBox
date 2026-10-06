@@ -113,6 +113,9 @@ an installer would otherwise record into a clone the test cannot see.
 `RecordingConnection.copy()` returns `self` for exactly this reason. Any future
 double needs to do the same.
 
+**`cli_helpers.py`** — `CommandHarness` runs a `joybox.cli` command in process, recording its
+logs and previews; `Recorder` fakes a call; `assert_entry_points` checks `run()` and `__main__`.
+
 ## Conventions
 
 - Test names state the behaviour, not the function: `test_selfsigned_never_contacts_lets_encrypt`,

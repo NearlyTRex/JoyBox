@@ -150,7 +150,7 @@ def main():
                 logger.log_warning("Unable to archive repository %s" % github_repository.name)
 
     # Update repositories
-    elif args.action == config.GithubActionType.UPDATE:
+    else:
         for github_repository in github_repositories:
             if github_repository.fork:
                 success = network.update_github_repository(

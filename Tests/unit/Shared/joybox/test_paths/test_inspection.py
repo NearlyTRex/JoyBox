@@ -572,3 +572,20 @@ def test_filename_info_describes_the_file(tree):
 
     assert isinstance(info, dict)
     assert info
+
+
+def test_excludes_apply_under_an_unnormalised_root(tree, monkeypatch):
+    monkeypatch.chdir(tree.parent)
+    leaves = paths.build_leaf_directory_list("./root", excludes = ["logs/**"])
+    found = [os.path.basename(entry["path"]) for entry in leaves]
+
+    assert "logs" not in found
+    assert "deep" in found
+
+
+def test_a_leaf_counts_only_its_files(tree):
+    os.symlink(str(tree / "missing"), str(tree / "logs" / "dangling"))
+    leaves = paths.build_leaf_directory_list(str(tree))
+    logs = [entry for entry in leaves if entry["path"].endswith("logs")][0]
+
+    assert logs["file_count"] == 1

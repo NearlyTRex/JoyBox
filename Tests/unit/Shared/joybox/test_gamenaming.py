@@ -144,3 +144,11 @@ def test_a_platform_round_trips_through_its_categories():
     _, category, subcategory = gamenaming.derive_game_categories_from_platform(platform)
 
     assert gamenaming.derive_game_platform_from_categories(category, subcategory) == platform
+
+
+def test_an_unmatched_subcategory_derives_no_platform():
+    class Unmatched:
+        def val(self):
+            return "No Such Subcategory"
+
+    assert gamenaming.derive_game_platform_from_categories(None, Unmatched()) is None

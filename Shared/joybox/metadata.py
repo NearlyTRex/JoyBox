@@ -99,7 +99,10 @@ class Metadata:
 
     # Get random entry
     def get_random_entry(self):
-        game_platform = random.choice(self.get_sorted_platforms())
+        game_platforms = [platform for platform in self.get_sorted_platforms() if self.get_sorted_names(platform)]
+        if not game_platforms:
+            return None
+        game_platform = random.choice(game_platforms)
         game_name = random.choice(self.get_sorted_names(game_platform))
         game_entry = self.get_game(game_platform, game_name)
         return game_entry
@@ -168,13 +171,17 @@ class Metadata:
                     if line.startswith("collection:"):
                         collection_platform = line.replace("collection:", "").strip()
                         break
+                game_platform = config.Platform.from_string(collection_platform)
+                if not game_platform:
+                    logger.log_error("No known collection platform in %s" % pegasus_file)
+                    return
 
                 # Read game entries
                 for token in data.split("\n\n"):
 
                     # Create new entry
                     game_entry = metadataentry.MetadataEntry()
-                    game_entry.set_platform(config.Platform.from_string(collection_platform))
+                    game_entry.set_platform(game_platform)
                     in_description_section = False
 
                     # Parse entry tokens
@@ -205,10 +212,9 @@ class Metadata:
                             in_description_section = False
                             game_entry.set_genre(line.replace("genre:", "").strip())
 
-                        # Tag
+                        # Tag (no field in the metadata model; ends a description)
                         elif line.startswith("tag:"):
                             in_description_section = False
-                            game_entry.set_tag(line.replace("tag:", "").strip())
 
                         # Description
                         elif line.startswith("description:"):

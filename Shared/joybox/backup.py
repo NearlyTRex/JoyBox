@@ -422,6 +422,11 @@ def archive_folder(
         exit_on_failure = exit_on_failure)
     if not success:
         logger.log_error("Unable to archive backup file from %s to %s" % (input_path, output_path))
+        fileops.remove_directory(
+            src = tmp_dir_result,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = False)
         return False
 
     # Clean output
@@ -444,6 +449,11 @@ def archive_folder(
         exit_on_failure = exit_on_failure)
     if not success:
         logger.log_error("Unable to move archived backup file from %s to %s" % (input_path, output_path))
+        fileops.remove_directory(
+            src = tmp_dir_result,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = False)
         return False
 
     # Delete temporary directory
@@ -510,6 +520,11 @@ def archive_sub_folders(
                     exit_on_failure = exit_on_failure)
                 if not success:
                     logger.log_error("Unable to archive backup files from %s to %s" % (input_base_path, output_base_path))
+                    fileops.remove_directory(
+                        src = tmp_dir_result,
+                        verbose = verbose,
+                        pretend_run = pretend_run,
+                        exit_on_failure = False)
                     return False
 
                 # Clean output
@@ -532,6 +547,11 @@ def archive_sub_folders(
                     exit_on_failure = exit_on_failure)
                 if not success:
                     logger.log_error("Unable to move archived backup files from %s to %s" % (input_base_path, output_base_path))
+                    fileops.remove_directory(
+                        src = tmp_dir_result,
+                        verbose = verbose,
+                        pretend_run = pretend_run,
+                        exit_on_failure = False)
                     return False
 
     # Delete temporary directory

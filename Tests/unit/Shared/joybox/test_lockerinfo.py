@@ -25,6 +25,15 @@ def build(locker_type = LOCAL):
     return lockerinfo.LockerInfo(locker_type)
 
 
+@pytest.fixture
+def remote_locker(isolated_settings):
+    for key, value in {
+        "type": "s3", "name": "hetzner", "remote_path": "bucket/locker",
+        "config": "/rclone.conf", "token": "TOKEN_VALUE", "mount_flags": "--ro,--fast"}.items():
+        isolated_settings.set_value("UserData.Share", f"locker_hetzner_{key}", value)
+    return lockerinfo.LockerInfo(config.LockerType.HETZNER)
+
+
 ###########################################################
 # Local lockers
 ###########################################################
@@ -61,6 +70,36 @@ def test_the_mount_path_comes_from_settings(local_locker):
 
 def test_the_root_path_prefers_the_mount_path(local_locker):
     assert build(LOCAL).get_locker_root_path() == "/locker"
+
+
+def test_a_remote_locker_reads_its_details_from_settings(remote_locker):
+    assert remote_locker.get_type() == "s3"
+    assert remote_locker.get_config() == "/rclone.conf"
+    assert remote_locker.get_mount_flags() == ["--ro", "--fast"]
+    assert remote_locker.is_local_only() is False
+
+
+@pytest.mark.parametrize("flags", [None, "", " , "])
+def test_a_remote_locker_without_mount_flags_has_none(remote_locker, isolated_settings, flags):
+    isolated_settings.set_value("UserData.Share", "locker_hetzner_mount_flags", flags)
+
+    assert lockerinfo.LockerInfo(config.LockerType.HETZNER).get_mount_flags() == []
+
+
+def test_a_remote_lockers_mount_flags_ignore_padding(remote_locker, isolated_settings):
+    isolated_settings.set_value("UserData.Share", "locker_hetzner_mount_flags", " no_cache , read_only,")
+
+    assert lockerinfo.LockerInfo(config.LockerType.HETZNER).get_mount_flags() == ["no_cache", "read_only"]
+
+
+def test_a_remote_locker_uses_the_remote_backend(remote_locker):
+    assert remote_locker.get_backend_type() == config.BackendType.REMOTE
+
+
+def test_an_unmounted_remote_locker_is_rooted_at_its_remote_path(remote_locker):
+    remote_locker.mount_path = None
+
+    assert remote_locker.get_locker_root_path() == "bucket/locker"
 
 
 def test_the_locker_name_is_the_type(local_locker):

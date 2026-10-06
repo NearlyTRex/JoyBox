@@ -65,6 +65,7 @@ def test_an_unknown_platform_is_not_classified():
     assert platforms.is_letter_platform("not-a-platform") is False
     assert platforms.is_transform_platform("not-a-platform") is False
     assert platforms.is_letter_platform(None) is False
+    assert platforms.is_transform_platform(None) is False
 
 
 ###########################################################

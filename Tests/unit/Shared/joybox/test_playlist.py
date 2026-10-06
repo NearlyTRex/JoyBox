@@ -1,3 +1,6 @@
+# Third-party imports
+import pytest
+
 # Local imports
 from joybox import playlist
 
@@ -353,3 +356,43 @@ def test_local_playlists_match_an_uppercase_extension(tmp_path):
 def test_an_empty_tree_produces_no_playlists(tmp_path):
     assert playlist.generate_local_playlists(str(tmp_path), extensions = [".cue"]) is True
     assert list(tmp_path.iterdir()) == []
+
+
+###########################################################
+# Logging and failure handling
+###########################################################
+
+def test_verbose_reads_and_writes_are_logged(tmp_path, monkeypatch):
+    logged = []
+    monkeypatch.setattr(playlist.logger, "log_info", logged.append)
+    target = tmp_path / "game.m3u"
+    playlist.write_playlist(str(target), ["disc1.chd"], verbose = True)
+    playlist.read_playlist(str(target), verbose = True)
+
+    assert len(logged) == 2
+    assert all(str(target) in message for message in logged)
+
+
+def test_an_unreadable_playlist_quits_when_asked_to(tmp_path):
+    with pytest.raises(SystemExit):
+        playlist.read_playlist(str(tmp_path / "absent.m3u"), exit_on_failure = True)
+
+
+def test_an_unwritable_playlist_quits_when_asked_to(tmp_path):
+    with pytest.raises(SystemExit):
+        playlist.write_playlist(str(tmp_path / "absent" / "game.m3u"), ["disc1.chd"], exit_on_failure = True)
+
+
+def test_a_tree_playlist_can_keep_only_filenames(tmp_path):
+    touch(tmp_path, "a/disc1.chd", "b/disc2.chd")
+    output = tmp_path / "all.m3u"
+    playlist.generate_playlist(str(tmp_path), str(output), extensions = [".chd"], recursive = True, only_keep_ends = True)
+
+    assert sorted(lines(output)) == ["disc1.chd", "disc2.chd"]
+
+
+def test_a_failed_local_playlist_stops_the_run(tmp_path, monkeypatch):
+    touch(tmp_path, "Game/disc1.chd", "Game/disc2.chd")
+    monkeypatch.setattr(playlist, "write_playlist", lambda **kwargs: False)
+
+    assert playlist.generate_local_playlists(str(tmp_path), extensions = [".chd"]) is False

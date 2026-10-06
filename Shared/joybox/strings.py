@@ -107,14 +107,8 @@ def get_datetime_from_unknown_string(string):
     from dateutil import parser as date_parser
     from dateutil.relativedelta import relativedelta
 
-    # Try using standard and fuzzy formats first
+    # Relative phrases first, since fuzzy parsing reads "3 days ago" as the 3rd
     string = string.strip().lower()
-    try:
-        return date_parser.parse(string, fuzzy = True)
-    except Exception:
-        pass
-
-    # Handle other patterns
     patterns = [
         (r"(\d+)\s+days?\s+ago", lambda x: datetime.now() - timedelta(days=int(x))),
         (r"(\d+)\s+weeks?\s+ago", lambda x: datetime.now() - timedelta(weeks=int(x))),
@@ -128,7 +122,12 @@ def get_datetime_from_unknown_string(string):
         match = re.match(pattern, string)
         if match:
             return handler(match.group(1) if match.groups() else None)
-    return None
+
+    # Standard and fuzzy formats
+    try:
+        return date_parser.parse(string, fuzzy = True)
+    except Exception:
+        return None
 
 # Convert datetime to string
 def get_string_from_datetime(date_time, format_code):

@@ -164,7 +164,6 @@ def main():
             return
 
     # Run the action; the outcome becomes the exit status
-    success = False
     if args.action == config.RemoteActionType.INIT:
         success = sync.setup_remote(
             remote_name = remote_name,
@@ -310,7 +309,7 @@ def main():
             exit_on_failure = args.exit_on_failure)
 
     # Mount files
-    elif args.action == config.RemoteActionType.MOUNT:
+    else:
         success = sync.mount_files(
             remote_name = remote_name,
             remote_type = remote_type,

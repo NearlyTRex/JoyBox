@@ -87,6 +87,22 @@ def test_an_unknown_extension_resolves_to_nothing():
     assert archive.get_archive_type("notes.txt") is None
 
 
+@pytest.mark.parametrize("mime_type,expected", [
+    ("application/zip", config.ArchiveFileType.ZIP),
+    ("application/x-7z-compressed", config.ArchiveFileType.SEVENZIP),
+    ("application/x-rar-compressed", config.ArchiveFileType.RAR),
+    ("application/gzip", config.ArchiveFileType.TAR_GZ),
+    ("application/x-iso9660-image", config.ArchiveFileType.ISO),
+    ("text/plain", None),
+])
+def test_a_file_without_an_extension_is_typed_by_its_content(tmp_path, monkeypatch, mime_type, expected):
+    source = tmp_path / "download"
+    source.write_bytes(b"data")
+    monkeypatch.setattr(archive.paths, "get_file_mime_type", lambda path: mime_type)
+
+    assert archive.get_archive_type(str(source)) == expected
+
+
 ###########################################################
 # Capability flags
 ###########################################################
@@ -131,6 +147,14 @@ def test_an_extension_match_does_not_need_the_file_to_exist():
 def test_a_mime_match_needs_a_real_file(tmp_path):
     assert archive.is_known_archive(
         str(tmp_path / "absent.bin"), mime_types = ["application/zip"]) is False
+
+
+def test_a_matching_mime_type_identifies_a_real_file(tmp_path, monkeypatch):
+    source = tmp_path / "download"
+    source.write_bytes(b"data")
+    monkeypatch.setattr(archive.paths, "get_file_mime_type", lambda path: "Application/ZIP")
+
+    assert archive.is_known_archive(str(source), mime_types = ["application/zip"])
 
 
 def test_no_criteria_matches_nothing():
@@ -244,6 +268,15 @@ def test_a_split_archive_with_no_volumes_is_a_failure(tmp_path):
         str(tmp_path / "Game.7z"), None, "4g") is False
 
 
+def test_volumes_are_searched_up_to_the_last_numbered_one(monkeypatch):
+    seen = []
+    monkeypatch.setattr(archive.os.path, "exists", lambda path: seen.append(path) or True)
+
+    assert archive.check_archive_compression_output_files("/out/Game.7z", config.ArchiveFileType.SEVENZIP, "1g")
+    assert "/out/Game.7z.998" in seen
+    assert "/out/Game.7z.999" not in seen
+
+
 def test_a_lone_volume_loses_its_numbering(tmp_path):
     # Splitting that produced one part is not a split archive, and the .001
     # suffix would make every reader look for a second part.
@@ -331,6 +364,11 @@ def missing(monkeypatch):
 def existing_output(monkeypatch):
     monkeypatch.setattr(archive.os.path, "exists", lambda path: True)
     monkeypatch.setattr(archive.paths, "is_directory_empty", lambda path: False)
+
+
+def test_an_appimage_is_neither_creatable_nor_extractable():
+    assert not archive.is_creatable_archive_type(config.ArchiveFileType.APPIMAGE)
+    assert not archive.is_extractable_archive_type(config.ArchiveFileType.APPIMAGE)
 
 
 def test_creating_an_archive_adds_the_source(installed, recording_command, existing_output):
@@ -425,6 +463,43 @@ def test_archiving_a_folder_skips_what_was_excluded(installed, recording_command
     assert str(source / "skip.log") not in cmd
 
 
+def test_archiving_a_folder_runs_inside_it(installed, recording_command, existing_output, tmp_path):
+    source = tmp_path / "Game"
+    source.mkdir()
+
+    assert archive.create_archive_from_folder("/out/Game.zip", str(source)) is True
+    assert recording_command.options().get_cwd() == str(source)
+    assert "-tzip" in recording_command.only()
+
+
+@pytest.mark.parametrize("archive_file", ["/out/Game.rar", "/out/Game.unknown"])
+def test_archiving_a_folder_to_an_uncreatable_type_is_refused(installed, recording_command, tmp_path, archive_file):
+    assert archive.create_archive_from_folder(archive_file, str(tmp_path)) is False
+    assert recording_command.ran() is False
+
+
+def test_archiving_a_folder_without_the_tool_reports_failure(missing, recording_command, tmp_path):
+    assert archive.create_archive_from_folder("/out/Game.7z", str(tmp_path)) is False
+    assert recording_command.ran() is False
+
+
+def test_a_failed_folder_archive_keeps_the_folder(installed, monkeypatch, tmp_path):
+    from fakes import RecordingCommand
+    RecordingCommand(monkeypatch, returncode = 1)
+
+    assert archive.create_archive_from_folder("/out/Game.7z", str(tmp_path), delete_original = True) is False
+    assert tmp_path.exists()
+
+
+def test_archiving_a_folder_can_remove_it(installed, recording_command, existing_output, monkeypatch, tmp_path):
+    removed = []
+    monkeypatch.setattr(archive.fileops, "remove_directory", lambda src, **kwargs: removed.append(src))
+
+    archive.create_archive_from_folder("/out/Game.7z", str(tmp_path), delete_original = True)
+
+    assert removed == [str(tmp_path)]
+
+
 def test_extracting_names_the_destination(installed, recording_command, existing_output):
     archive.extract_archive("/in/Game.7z", "/out")
 
@@ -498,6 +573,25 @@ def test_unrar_can_keep_what_is_already_there(installed, recording_command, exis
 
 def test_extracting_without_the_tool_reports_failure(missing, recording_command):
     assert archive.extract_archive("/in/Game.7z", "/out") is False
+    assert recording_command.ran() is False
+
+
+@pytest.mark.parametrize("archive_file,tool", [
+    ("/in/Game.tar.gz", "Tar"),
+    ("/in/Game.rar", "Unrar"),
+])
+def test_extracting_without_the_format_tool_reports_failure(monkeypatch, recording_command, archive_file, tool):
+    # 7-Zip alone does not stand in for the tool a tarball or rar needs.
+    monkeypatch.setattr(archive.programs, "is_tool_installed", lambda name: name != tool)
+    monkeypatch.setattr(archive.programs, "get_tool_program", lambda name: "/tools/7z")
+
+    assert archive.extract_archive(archive_file, "/out") is False
+    assert recording_command.ran() is False
+
+
+@pytest.mark.parametrize("archive_file", ["/in/Game.unknown", "/in/Game.AppImage"])
+def test_extracting_an_unextractable_type_is_refused(installed, recording_command, archive_file):
+    assert archive.extract_archive(archive_file, "/out") is False
     assert recording_command.ran() is False
 
 
@@ -579,6 +673,15 @@ def test_an_empty_directory_keeps_its_own_entry(installed, monkeypatch):
     ]))
 
     assert archive.list_archive("/in/Game.7z") == ["alone.txt"]
+
+
+def test_a_directory_entry_without_its_flag_folds_into_its_contents(installed, monkeypatch):
+    listing_command(monkeypatch, "\n".join([
+        "2024-01-01 12:00:00 .....            0            0  nested",
+        "2024-01-01 12:00:00 ....A          100           50  nested/file.txt",
+    ]))
+
+    assert archive.list_archive("/in/Game.7z") == ["nested/file.txt"]
 
 
 def test_listing_decodes_byte_output(installed, monkeypatch):

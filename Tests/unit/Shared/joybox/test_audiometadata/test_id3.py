@@ -247,3 +247,19 @@ def test_the_class_needs_every_mutagen_module(monkeypatch):
         lambda module_path, module_name: None)
     with pytest.raises(ImportError):
         audiometadata.AudioMetadata()
+
+
+def test_kept_artwork_is_restored_when_removal_drops_the_tag_block(metadata, mp3_file, monkeypatch):
+    # Some formats clear the tag block entirely on delete.
+    class DroppingMP3(metadata.mp3_class):
+        def delete(self, *args, **kwargs):
+            super().delete(*args, **kwargs)
+            self.tags = None
+
+    monkeypatch.setattr(metadata, "mp3_class", DroppingMP3)
+    metadata.set_id3_tags(mp3_file, {"title": "A Title", "artwork": [artwork()]})
+
+    metadata.remove_id3_tags(mp3_file, preserve_artwork = True)
+    tags = metadata.get_id3_tags(mp3_file, artwork_format = config.ImageFileType.PNG)
+
+    assert tags["artwork"][0]["data"] == artwork()["data"]

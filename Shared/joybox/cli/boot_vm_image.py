@@ -109,8 +109,7 @@ def main():
         pretend_run = args.pretend_run,
         exit_on_failure = args.exit_on_failure)
     if not success:
-        logger.log_error("Unable to boot the machine")
-        return
+        logger.log_error("Unable to boot the machine", quit_program = True)
 
     # Say what comes next
     if args.iso:

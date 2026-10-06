@@ -201,3 +201,32 @@ def test_transfer_removes_a_partial_destination(tmp_path, monkeypatch):
     monkeypatch.setattr(fileops.shutil, "copymode", fail)
     assert not fileops.transfer_file(src, str(dest), skip_on_error = True)
     assert not dest.exists()
+
+
+###########################################################
+# Skipping
+###########################################################
+
+def test_a_copy_quietly_skips_an_existing_destination(tmp_path):
+    src = write(tmp_path / "src.txt", "new")
+    dest = write(tmp_path / "dest.txt", "old")
+
+    assert fileops.copy_file_or_directory(src, dest, skip_existing = True)
+    assert read(dest) == "old"
+
+
+def test_a_copy_quietly_skips_an_identical_destination(tmp_path, monkeypatch):
+    src = write(tmp_path / "src.txt", "same")
+    dest = write(tmp_path / "dest.txt", "same")
+    monkeypatch.setattr(fileops.shutil, "copy2", fail)
+
+    assert fileops.copy_file_or_directory(src, dest, skip_identical = True)
+
+
+def test_a_move_goes_ahead_when_the_destination_differs(tmp_path):
+    src = write(tmp_path / "src.txt", "new")
+    dest = write(tmp_path / "dest.txt", "old")
+
+    assert fileops.move_file_or_directory(src, dest, skip_identical = True)
+    assert read(dest) == "new"
+    assert not os.path.exists(src)

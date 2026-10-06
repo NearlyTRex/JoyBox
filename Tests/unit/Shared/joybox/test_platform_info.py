@@ -1,4 +1,6 @@
 # Imports
+import io
+import os
 import sys
 
 # Third-party imports
@@ -142,3 +144,45 @@ def test_values_are_unquoted():
     for accessor in [platform_info.get_linux_distro_name,
                      platform_info.get_linux_distro_version]:
         assert '"' not in accessor()
+
+
+###########################################################
+# Parsing os-release
+###########################################################
+
+OS_RELEASE = "/etc/os-release"
+
+
+@pytest.fixture
+def os_release(monkeypatch):
+    real_isfile = os.path.isfile
+
+    def install(contents):
+        monkeypatch.setattr(platform_info.os.path, "isfile",
+            lambda path: contents is not None if path == OS_RELEASE else real_isfile(path))
+        monkeypatch.setattr(platform_info, "open",
+            lambda path, *args, **kwargs: io.StringIO(contents), raising = False)
+    return install
+
+
+def test_comments_and_malformed_lines_are_skipped(os_release):
+    os_release('# NAME="Commented"\nBROKEN LINE\nA=B=C\nNAME="Debian GNU/Linux"\n')
+
+    assert platform_info.get_linux_distro_name() == "Debian GNU/Linux"
+
+
+def test_a_missing_release_file_yields_empty_fields(os_release):
+    os_release(None)
+
+    assert platform_info.get_linux_distro_name() == ""
+
+
+@pytest.mark.parametrize("contents, ubuntu", [
+    ('NAME="Ubuntu"\n', True),
+    ('NAME="Pop"\nID=ubuntu\n', True),
+    ('NAME="Mint"\nID=linuxmint\nID_LIKE="ubuntu debian"\n', True),
+    ('NAME="Fedora"\nID=fedora\nID_LIKE=rhel\n', False)])
+def test_ubuntu_is_detected_from_any_release_field(os_release, contents, ubuntu):
+    os_release(contents)
+
+    assert platform_info.is_ubuntu_distro() is ubuntu

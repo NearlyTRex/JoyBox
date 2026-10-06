@@ -204,13 +204,22 @@ def test_a_matching_process_is_interrupted(psutil):
     assert target.signals
 
 
-def test_the_platform_interrupt_signal_is_used(psutil):
-    expected = signal.CTRL_C_EVENT if hasattr(signal, "CTRL_C_EVENT") else signal.SIGINT
+def test_sigint_is_sent_where_there_is_no_console_event(psutil, monkeypatch):
+    monkeypatch.delattr(signal, "CTRL_C_EVENT", raising = False)
     target = FakeProcess("dolphin")
     psutil["processes"] = [target]
     process.interrupt_active_named_processes(["dolphin"])
 
-    assert target.signals == [expected]
+    assert target.signals == [signal.SIGINT]
+
+
+def test_the_console_event_is_sent_where_it_exists(psutil, monkeypatch):
+    monkeypatch.setattr(signal, "CTRL_C_EVENT", 0, raising = False)
+    target = FakeProcess("dolphin")
+    psutil["processes"] = [target]
+    process.interrupt_active_named_processes(["dolphin"])
+
+    assert target.signals == [0]
 
 
 def test_an_interrupt_does_not_kill(psutil):

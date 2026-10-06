@@ -163,6 +163,39 @@ def test_sync_contents_of_a_missing_source_exits_when_asked(tmp_path):
         fileops.sync_contents(str(tmp_path / "missing"), str(tmp_path / "dest"), exit_on_failure = True)
 
 
+def test_sync_contents_of_a_missing_source_keeps_the_destination(tmp_path):
+    # An unmounted source must not read as "empty" and wipe the copy.
+    dest = tmp_path / "dest"
+    write(dest / "kept.txt")
+
+    assert fileops.sync_contents(str(tmp_path / "missing"), str(dest)) is False
+    assert tree(dest) == {"kept.txt"}
+
+
+@pytest.mark.parametrize("function,moves", BULK)
+def test_bulk_transfer_of_a_missing_source_reports_failure(tmp_path, function, moves):
+    dest = tmp_path / "dest"
+
+    assert getattr(fileops, function)(str(tmp_path / "missing"), str(dest)) is False
+    assert not dest.exists()
+
+
+@pytest.mark.parametrize("function,moves", BULK)
+def test_pretending_a_bulk_transfer_of_a_missing_source_carries_on(tmp_path, function, moves):
+    dest = tmp_path / "dest"
+
+    assert getattr(fileops, function)(str(tmp_path / "missing"), str(dest), pretend_run = True) is True
+    assert not dest.exists()
+
+
+def test_pretending_to_sync_a_missing_source_carries_on(tmp_path):
+    dest = tmp_path / "dest"
+    write(dest / "kept.txt")
+
+    assert fileops.sync_contents(str(tmp_path / "missing"), str(dest), pretend_run = True) is True
+    assert tree(dest) == {"kept.txt"}
+
+
 @pytest.mark.parametrize("failing", ["make_directory", "remove_directory_contents"])
 def test_sync_contents_stops_at_a_failure(tmp_path, monkeypatch, failing):
     src = make_source(tmp_path / "src")

@@ -504,3 +504,30 @@ def test_two_games_derive_different_paths(tree):
 
     for accessor in PATH_ACCESSORS:
         assert getattr(first, accessor)() != getattr(second, accessor)()
+
+
+def test_an_explicit_remote_locker_sets_the_remote_paths(tree, monkeypatch):
+    monkeypatch.setattr(
+        environment, "get_locker_root_dir",
+        lambda locker_type = None: str(tree["locker"] / str(locker_type)))
+    built = gameinfo.GameInfo(json_file = write_game(tree), remote_locker_type = config.LockerType.GDRIVE)
+
+    assert str(config.LockerType.GDRIVE) in built.get_rom_dir(config.LockerType.GDRIVE)
+    assert built.get_rom_dir(config.LockerType.GDRIVE) == built.get_remote_rom_dir()
+    assert built.get_rom_dir(config.LockerType.GDRIVE) != built.get_rom_dir(config.LockerType.LOCAL)
+
+
+@pytest.mark.parametrize("windows, save_type", [(True, config.SaveType.SANDBOXIE), (False, config.SaveType.WINE)])
+def test_a_computer_game_saves_under_its_platform_layer(tree, monkeypatch, windows, save_type):
+    monkeypatch.setattr(gameinfo.platform_info, "is_windows_platform", lambda: windows)
+    built = gameinfo.GameInfo(json_file = write_game(
+        tree, name = "Doom", supercategory = config.Supercategory.ROMS,
+        category = config.Category.COMPUTER, subcategory = config.Subcategory.COMPUTER_GOG))
+
+    assert os.path.basename(built.get_save_dir()) == save_type.val()
+
+
+def test_the_json_data_is_the_parsed_file(tree):
+    built = gameinfo.GameInfo(json_file = write_game(tree, {"genre": "RPG"}))
+
+    assert built.get_json_data().get_value("genre") == "RPG"

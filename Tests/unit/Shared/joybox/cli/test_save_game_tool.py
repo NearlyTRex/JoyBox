@@ -6,6 +6,7 @@ import types
 import pytest
 
 # Local imports
+from cli_helpers import assert_entry_points
 from joybox import config
 from joybox import collection
 from joybox.cli import save_game_tool
@@ -213,3 +214,28 @@ def test_a_declined_preview_processes_nothing(run, tmp_path, monkeypatch):
 
     assert run.handled == []
     assert run.infos == ["Operation cancelled by user"]
+
+
+###########################################################
+# Entry point
+###########################################################
+
+def test_every_action_has_a_handler(run, tmp_path):
+    run.games = [make_game(tmp_path, "Saved", live = True)]
+    for action in config.SaveActionType.members():
+        run.invoke("-a", action.val(), "--no-preview")
+
+    assert run.errors == []
+
+
+def test_run_reports_a_clean_finish(run, tmp_path, monkeypatch):
+    monkeypatch.setattr(sys, "argv", ["save_game_tool", "-a", "Export", "--no-preview"])
+    run.games = [make_game(tmp_path, "Saved", live = True)]
+
+    save_game_tool.run()
+
+    assert handled_names(run) == ["Saved"]
+
+
+def test_entry_points_run_main(monkeypatch):
+    assert_entry_points(monkeypatch, save_game_tool)

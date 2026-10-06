@@ -275,3 +275,10 @@ def test_written_metadata_lands_in_the_metadata_file(game, monkeypatch):
 
     assert written["read"] == written["written"] == game.get_metadata_file()
     assert written["game"] == (game.get_platform(), game.get_name(), entry)
+
+
+def test_a_pick_outside_the_list_launches_nothing(tree, store, popups, monkeypatch, tmp_path):
+    game = build(tree, {"gog": {"launch": [program("a.exe"), program("b.exe")]}})
+    choose(monkeypatch, popups, "c.exe")
+
+    assert game.select_store_launch_program(str(tmp_path)) is None

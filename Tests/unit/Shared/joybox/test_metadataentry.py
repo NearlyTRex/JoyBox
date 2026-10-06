@@ -207,3 +207,49 @@ def test_merging_into_an_empty_entry_takes_everything():
 
     assert mine.get_value("game") == "Theirs"
     assert mine.get_value("developer") == "Acme"
+
+
+def test_an_explicit_merge_type_is_honoured():
+    mine = build(genre = ["RPG"])
+    mine.merge(build(genre = ["Action"]), merge_type = config.MergeType.ADDITIVE)
+
+    assert sorted(mine.get_value("genre")) == ["Action", "RPG"]
+
+
+def test_a_description_of_another_type_is_ignored():
+    entry = metadataentry.MetadataEntry()
+    entry.set_description(None)
+
+    assert entry.is_key_set(config.metadata_key_description) is False
+
+
+@pytest.mark.parametrize("values, missing", [
+    ({"game": "Name", "genre": "RPG"}, False),
+    ({"game": "Name"}, True),
+    ({"game": "Name", "genre": ""}, True)])
+def test_missing_data_means_absent_or_blank(values, missing):
+    assert build(**values).is_missing_data(["game", "genre"]) is missing
+
+
+###########################################################
+# Asset syncing
+###########################################################
+
+def test_every_asset_type_has_a_metadata_key():
+    assert set(metadataentry.asset_metadata_keys) == set(config.AssetType.members())
+
+
+def test_syncing_records_present_assets_and_drops_missing_ones(monkeypatch, tmp_path):
+    def asset_file(game_category, game_subcategory, game_name, asset_type):
+        return str(tmp_path / ("%s%s" % (asset_type.val(), asset_type.cval())))
+
+    monkeypatch.setattr(metadataentry.environment, "get_locker_gaming_asset_file", asset_file)
+    (tmp_path / "BoxFront.jpg").write_text("")
+    entry = build(game = "Some Game")
+    entry.set_video("stale.mp4")
+
+    entry.sync_assets()
+
+    assert entry.get_boxfront()
+    assert entry.is_key_set(config.metadata_key_video) is False
+    assert entry.is_key_set(config.metadata_key_label) is False

@@ -1,12 +1,9 @@
-# Imports
-import runpy
-import sys
-
 # Third-party imports
 import pytest
 
 # Local imports
-from joybox import config, system
+from cli_helpers import CommandHarness, assert_entry_points
+from joybox import config
 from joybox.cli import scan_game_files
 
 
@@ -28,46 +25,33 @@ STEPS = [
 
 class FakeManifest:
 
-    def __init__(self, state):
-        self.state = state
+    def __init__(self, harness):
+        self.harness = harness
 
     def load(self, **kwargs):
-        self.state["called"].append("load_manifest")
+        self.harness.called.append("load_manifest")
 
 
 @pytest.fixture
 def tool(monkeypatch, isolated_settings):
-    state = {"called": [], "kwargs": {}, "failing": None, "confirm": True, "errors": []}
-    monkeypatch.setattr(scan_game_files.setup, "check_requirements", lambda: None)
-    monkeypatch.setattr(scan_game_files.logger, "setup_logging", lambda: None)
-    monkeypatch.setattr(scan_game_files.manifest, "get_manifest_instance", lambda: FakeManifest(state))
-    monkeypatch.setattr(scan_game_files.prompts, "prompt_for_preview", lambda operation, details: state["confirm"])
+    harness = CommandHarness(monkeypatch, scan_game_files)
+    harness.called = []
+    harness.kwargs = {}
+    harness.failing = None
+    monkeypatch.setattr(scan_game_files.manifest, "get_manifest_instance", lambda: FakeManifest(harness))
     for name in STEPS:
         def step(name = name, **kwargs):
-            state["called"].append(name)
-            state["kwargs"][name] = kwargs
-            return name != state["failing"]
+            harness.called.append(name)
+            harness.kwargs[name] = kwargs
+            return name != harness.failing
         monkeypatch.setattr(scan_game_files.collection, name, step)
-    log_error = scan_game_files.logger.log_error
-
-    def record_error(message, **kwargs):
-        state["errors"].append(message)
-        log_error(message, **kwargs)
-
-    monkeypatch.setattr(scan_game_files.logger, "log_error", record_error)
-
-    def run(*extra):
-        monkeypatch.setattr(sys, "argv", ["scan_game_files", *extra])
-        return system.run_main(scan_game_files.main)
-
-    state["run"] = run
-    return state
+    return harness
 
 
 def test_default_run_skips_manifest_and_assets(tool):
-    tool["run"]("--no-preview")
+    tool.run("--no-preview")
 
-    assert tool["called"] == [
+    assert tool.called == [
         "build_all_game_store_purchases",
         "build_all_game_json_files",
         "build_all_game_metadata_entries",
@@ -76,22 +60,22 @@ def test_default_run_skips_manifest_and_assets(tool):
 
 
 def test_every_step_gets_the_selection(tool):
-    tool["run"]("-m", "-a", "-l", "Local", "-c", "Nintendo,Sony", "-s", "Nintendo Switch")
+    tool.run("-m", "-a", "-l", "Local", "-c", "Nintendo,Sony", "-s", "Nintendo Switch")
 
-    assert tool["called"] == ["load_manifest"] + STEPS
+    assert tool.called == ["load_manifest"] + STEPS
     for name in STEPS:
-        assert tool["kwargs"][name]["categories"] == "Nintendo,Sony"
-        assert tool["kwargs"][name]["subcategories"] == "Nintendo Switch"
-    assert tool["kwargs"]["build_all_game_json_files"]["locker_type"] == config.LockerType.LOCAL
-    assert tool["kwargs"]["download_all_metadata_assets"]["skip_existing"] is True
+        assert tool.kwargs[name]["categories"] == "Nintendo,Sony"
+        assert tool.kwargs[name]["subcategories"] == "Nintendo Switch"
+    assert tool.kwargs["build_all_game_json_files"]["locker_type"] == config.LockerType.LOCAL
+    assert tool.kwargs["download_all_metadata_assets"]["skip_existing"] is True
 
 
 def test_declined_preview_runs_nothing(tool):
-    tool["confirm"] = False
+    tool.confirm = False
 
-    tool["run"]("-m")
+    tool.run("-m")
 
-    assert tool["called"] == []
+    assert tool.called == []
 
 
 @pytest.mark.parametrize("failing, message", [
@@ -102,13 +86,11 @@ def test_declined_preview_runs_nothing(tool):
     ("publish_all_game_metadata_entries", "Publishing metadata files failed"),
 ])
 def test_a_failed_step_stops_the_pipeline(tool, failing, message):
-    tool["failing"] = failing
+    tool.failing = failing
 
-    with pytest.raises(SystemExit) as raised:
-        tool["run"]("--no-preview", "-a")
-    assert raised.value.code != 0
-    assert tool["errors"] == [message]
-    assert tool["called"] == STEPS[:STEPS.index(failing) + 1]
+    assert tool.exit_code("--no-preview", "-a") != 0
+    assert tool.errors == [message]
+    assert tool.called == STEPS[:STEPS.index(failing) + 1]
 
 
 @pytest.mark.parametrize("option, value, message", [
@@ -116,25 +98,16 @@ def test_a_failed_step_stops_the_pipeline(tool, failing, message):
     ("-s", "Nintendo Switch, Stema", "Unknown Subcategory values: Stema"),
 ])
 def test_a_misspelled_filter_quits_instead_of_scanning_everything(tool, option, value, message):
-    with pytest.raises(SystemExit) as raised:
-        tool["run"]("--no-preview", option, value)
-    assert raised.value.code != 0
-    assert tool["errors"] == [message]
-    assert tool["called"] == []
+    assert tool.exit_code("--no-preview", option, value) != 0
+    assert tool.errors == [message]
+    assert tool.called == []
 
 
-def test_run_goes_through_the_shared_error_handling(tool, monkeypatch):
-    monkeypatch.setattr(sys, "argv", ["scan_game_files", "--no-preview"])
+def test_run_goes_through_the_shared_error_handling(tool):
+    tool.run("--no-preview")
 
-    scan_game_files.run()
-
-    assert len(tool["called"]) == 4
+    assert len(tool.called) == 4
 
 
-def test_running_the_module_starts_the_command(monkeypatch):
-    called = []
-    monkeypatch.setattr(system, "run_main", lambda main: called.append(main))
-
-    runpy.run_path(scan_game_files.__file__, run_name = "__main__")
-
-    assert len(called) == 1
+def test_entry_points_run_main(monkeypatch):
+    assert_entry_points(monkeypatch, scan_game_files)

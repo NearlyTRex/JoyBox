@@ -170,6 +170,26 @@ def test_an_entry_without_the_store_is_skipped():
     assert loaded.find_entry_by_gogid(1) is None
 
 
+def test_a_store_block_without_an_id_is_skipped():
+    loaded = manifest.Manifest({"Partial": {"steam": {}, "gog": {}}})
+
+    assert loaded.find_entry_by_steamid(1) is None
+    assert loaded.find_entry_by_gogid(1) is None
+
+
+def test_loading_reads_the_configured_manifest(monkeypatch):
+    monkeypatch.setattr(manifest.programs, "get_tool_path_config_value",
+                        lambda tool, key: "/tools/ludusavi/manifest.yaml")
+    read = []
+    monkeypatch.setattr(manifest.serialization, "read_yaml_file",
+                        lambda src, **kwargs: read.append(src) or {"Chrono Trigger": WINDOWS_ENTRY})
+    loaded = manifest.Manifest()
+    loaded.load()
+
+    assert read == ["/tools/ludusavi/manifest.yaml"]
+    assert loaded.find_entry_by_steamid(12345) is not None
+
+
 def test_an_empty_manifest_finds_nothing():
     empty = manifest.Manifest()
 

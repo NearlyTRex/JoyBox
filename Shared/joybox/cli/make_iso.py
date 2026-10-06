@@ -95,7 +95,7 @@ def main():
                 exit_on_failure = args.exit_on_failure)
 
     # Create iso images from zips
-    elif args.disc_source_type == config.DiscSourceType.ZIP:
+    else:
         for file in paths.build_file_list_by_extensions(input_path, extensions = [".zip"]):
 
             # Get file info

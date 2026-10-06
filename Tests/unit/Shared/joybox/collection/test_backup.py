@@ -184,3 +184,99 @@ def test_an_unchanged_store_game_skips_the_backup(store, monkeypatch):
     monkeypatch.setattr(backup.fileops, "create_temporary_directory", fail)
 
     assert backup.backup_game_files(FakeGameInfo(buildid = "1000"), locker_type = None) is True
+
+
+###########################################################
+# Store backup pipeline
+###########################################################
+
+@pytest.fixture
+def pipeline(store, monkeypatch, tmp_path):
+    state = {"temp": tmp_path / "temp", "temp_ok": True, "downloaded": [], "uploaded": [],
+             "download_ok": True, "upload_ok": True}
+    store["store"] = FakeStore(latest = "2000")
+
+    def create_temporary_directory(**kwargs):
+        if not state["temp_ok"]:
+            return (False, "")
+        state["temp"].mkdir()
+        return (True, str(state["temp"]))
+
+    def download_game_store_purchase(game_info, output_dir, **kwargs):
+        state["downloaded"].append(output_dir)
+        return state["download_ok"]
+
+    def upload_game_files(game_info, game_root, locker_type, **kwargs):
+        state["uploaded"].append((game_root, locker_type))
+        return state["upload_ok"]
+
+    monkeypatch.setattr(backup.fileops, "create_temporary_directory", create_temporary_directory)
+    monkeypatch.setattr(backup, "download_game_store_purchase", download_game_store_purchase)
+    monkeypatch.setattr(backup, "upload_game_files", upload_game_files)
+    return state
+
+
+def test_a_changed_store_game_is_downloaded_then_uploaded(pipeline):
+    assert backup.backup_game_files(FakeGameInfo(), locker_type = "Primary") is True
+    assert pipeline["downloaded"] == [str(pipeline["temp"])]
+    assert pipeline["uploaded"] == [(str(pipeline["temp"]), "Primary")]
+    assert not pipeline["temp"].exists()
+
+
+def test_a_backup_without_a_temporary_directory_fails(pipeline):
+    pipeline["temp_ok"] = False
+
+    assert backup.backup_game_files(FakeGameInfo(), locker_type = None) is False
+    assert pipeline["downloaded"] == []
+
+
+def test_a_failed_download_uploads_nothing_and_cleans_up(pipeline):
+    pipeline["download_ok"] = False
+
+    assert backup.backup_game_files(FakeGameInfo(), locker_type = None) is False
+    assert pipeline["uploaded"] == []
+    assert not pipeline["temp"].exists()
+
+
+def test_a_failed_upload_fails_and_cleans_up(pipeline):
+    pipeline["upload_ok"] = False
+
+    assert backup.backup_game_files(FakeGameInfo(), locker_type = None) is False
+    assert not pipeline["temp"].exists()
+
+
+###########################################################
+# Backing up every game
+###########################################################
+
+@pytest.fixture
+def every_game(monkeypatch):
+    state = {"backed_up": [], "result": True}
+
+    class StubGameInfo:
+        def __init__(self, game_supercategory, game_category, game_subcategory, game_name, **kwargs):
+            self.name = game_name
+
+    def find_json_game_names(game_supercategory, game_category, game_subcategory):
+        return ["Alpha", "Beta"] if game_subcategory == backup.config.Subcategory.NINTENDO_NES else []
+
+    def backup_game_files(game_info, locker_type, **kwargs):
+        state["backed_up"].append((game_info.name, locker_type))
+        return state["result"]
+
+    monkeypatch.setattr(backup.gameinfo, "GameInfo", StubGameInfo)
+    monkeypatch.setattr(backup.gameinfo, "find_json_game_names", find_json_game_names)
+    monkeypatch.setattr(backup, "backup_game_files", backup_game_files)
+    return state
+
+
+def test_every_game_is_backed_up(every_game):
+    assert backup.backup_all_game_files("Primary") is True
+    assert every_game["backed_up"] == [("Alpha", "Primary"), ("Beta", "Primary")]
+
+
+def test_backing_up_every_game_stops_at_a_failure(every_game):
+    every_game["result"] = False
+
+    assert backup.backup_all_game_files("Primary") is False
+    assert every_game["backed_up"] == [("Alpha", "Primary")]

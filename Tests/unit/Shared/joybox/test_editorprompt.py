@@ -1,5 +1,10 @@
+# Imports
+import os
+
+import pytest
+
 # Local imports
-from joybox import editorprompt
+from joybox import command, editorprompt, environment, fileops
 
 
 ###########################################################
@@ -293,3 +298,88 @@ def test_a_custom_comment_character_round_trips():
 
     assert editorprompt.parse_action_lines(text, comment_char = "//") == [
         {"type": "UPLOAD", "path": "/a"}]
+
+
+###########################################################
+# Editor round trip
+###########################################################
+
+
+@pytest.fixture
+def scratch_file(tmp_path, monkeypatch):
+    path = str(tmp_path / "edit.txt")
+    monkeypatch.setattr(fileops, "create_temporary_file", lambda **kwargs: (True, path))
+    return path
+
+
+def fake_editor(monkeypatch, replacement = None, succeed = True):
+    seen = {}
+
+    def run(cmd, **kwargs):
+        seen["cmd"] = cmd
+        with open(cmd[1]) as handle:
+            seen["initial"] = handle.read()
+        if replacement is not None:
+            with open(cmd[1], "w") as handle:
+                handle.write(replacement)
+        return succeed
+    monkeypatch.setattr(command, "run_interactive_command", run)
+    return seen
+
+
+def test_the_editor_sees_the_content_and_its_edit_is_returned(scratch_file, monkeypatch):
+    seen = fake_editor(monkeypatch, replacement = "edited")
+
+    result = editorprompt.open_editor("original", editor = "nano")
+
+    assert seen["cmd"] == ["nano", scratch_file]
+    assert seen["initial"] == "original"
+    assert result == "edited"
+
+
+def test_the_scratch_file_is_removed_after_editing(scratch_file, monkeypatch):
+    fake_editor(monkeypatch, replacement = "edited")
+
+    editorprompt.open_editor("original", editor = "nano")
+
+    assert not os.path.exists(scratch_file)
+
+
+def test_the_configured_editor_is_used_when_none_is_given(scratch_file, monkeypatch):
+    monkeypatch.setattr(environment, "get_editor", lambda: "vim")
+    seen = fake_editor(monkeypatch)
+
+    editorprompt.open_editor("text")
+
+    assert seen["cmd"][0] == "vim"
+
+
+def test_a_failed_editor_returns_nothing_and_cleans_up(scratch_file, monkeypatch):
+    fake_editor(monkeypatch, succeed = False)
+
+    assert editorprompt.open_editor("text", editor = "nano") is None
+    assert not os.path.exists(scratch_file)
+
+
+def test_no_scratch_file_means_no_editor(monkeypatch):
+    monkeypatch.setattr(fileops, "create_temporary_file", lambda **kwargs: (False, "no"))
+    seen = fake_editor(monkeypatch)
+
+    assert editorprompt.open_editor("text", editor = "nano") is None
+    assert seen == {}
+
+
+def test_edited_actions_are_parsed(scratch_file, monkeypatch):
+    fake_editor(monkeypatch, replacement = "# note\nmove a -> b\ndelete c\n")
+
+    actions = editorprompt.open_editor_for_actions("", editor = "nano")
+
+    assert actions == [
+        {"type": "MOVE", "src": "a", "dest": "b"},
+        {"type": "DELETE", "path": "c"}]
+
+
+def test_a_failed_action_edit_returns_nothing(scratch_file, monkeypatch):
+    fake_editor(monkeypatch, succeed = False)
+
+    assert editorprompt.open_editor_for_actions("", editor = "nano") is None

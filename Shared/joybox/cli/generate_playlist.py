@@ -38,7 +38,7 @@ def build_parser():
     parser.add_input_path_argument(description = "Directory to scan; must exist")
     parser.add_output_path_argument(description = "Playlist file to write for `Tree`; not used by `Local`")
     parser.add_group("Selection")
-    parser.add_string_argument(args = ("-f", "--file_types"), description = "Comma-separated file extensions to include, with the leading dot, e.g. `.mp3,.flac`")
+    parser.add_string_argument(args = ("-f", "--file_types"), required = True, description = "Comma-separated file extensions to include, with the leading dot, e.g. `.mp3,.flac`")
     parser.add_enum_argument(
         args = ("-t", "--playlist_type"),
         arg_type = config.PlaylistType,
@@ -68,6 +68,8 @@ def main():
 
     # Generate tree playlists
     if args.playlist_type == config.PlaylistType.TREE:
+        if not args.output_path:
+            logger.log_error("Output path is required for Tree playlists (-o/--output_path)", quit_program = True)
         playlist.generate_tree_playlist(
             source_dir = input_path,
             output_file = args.output_path,
@@ -79,7 +81,7 @@ def main():
             exit_on_failure = args.exit_on_failure)
 
     # Generate local playlists
-    elif args.playlist_type == config.PlaylistType.LOCAL:
+    else:
         playlist.generate_local_playlists(
             source_dir = input_path,
             extensions = args.file_types.split(","),

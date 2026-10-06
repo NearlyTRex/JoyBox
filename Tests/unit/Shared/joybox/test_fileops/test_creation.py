@@ -67,6 +67,14 @@ def test_chmod_a_directory_without_directory_permissions(tmp_path):
     assert mode(path) == 0o755
 
 
+def test_chmod_leaves_a_special_file_alone(tmp_path):
+    fifo = tmp_path / "pipe"
+    os.mkfifo(fifo, 0o644)
+
+    assert fileops.chmod_file_or_directory(str(fifo), 600)
+    assert mode(fifo) == 0o644
+
+
 def test_chmod_in_a_pretend_run(tmp_path):
     path = write(tmp_path / "file.txt")
     before = mode(path)
@@ -198,6 +206,15 @@ def test_symlink_restores_the_working_directory_after_a_failure(tmp_path):
     before = os.getcwd()
     assert not fileops.create_symlink("a", "b", cwd = str(tmp_path / "missing"))
     assert os.getcwd() == before
+
+
+def test_a_symlink_is_made_when_the_working_directory_is_unreadable(tmp_path, monkeypatch):
+    write(tmp_path / "dir" / "target.txt")
+    monkeypatch.chdir(tmp_path)
+    monkeypatch.setattr(fileops.os, "getcwd", fail)
+
+    assert fileops.create_symlink("target.txt", "link.txt", cwd = str(tmp_path / "dir"))
+    assert read(tmp_path / "dir" / "link.txt") == "x"
 
 
 def test_symlink_in_a_pretend_run(tmp_path):

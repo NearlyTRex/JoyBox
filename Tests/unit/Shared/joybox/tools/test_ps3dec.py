@@ -1,47 +1,38 @@
-# Third-party imports
-import pytest
-
 # Local imports
 from joybox.tools import ps3dec
-
-KEYS = ["search_file", "install_files", "release_type", "chmod_files", "rename_files"]
-
-
-class Recorder:
-    def __init__(self):
-        self.calls = []
-
-    def __call__(self, **kwargs):
-        self.calls.append(kwargs)
-        return True
+from tools_helpers import (
+    assert_a_failed_step_stops_the_install,
+    assert_nothing_runs_when_already_installed,
+    assert_offline_matches_online,
+    assert_setup_params_reach_every_step,
+    installed_to,
+)
 
 
-@pytest.fixture
-def releases(monkeypatch):
-    for name in ["should_program_be_installed", "should_library_be_installed"]:
-        monkeypatch.setattr(ps3dec.programs, name, lambda *args: True)
-    for name in ["get_program_install_dir", "get_library_install_dir"]:
-        monkeypatch.setattr(ps3dec.programs, name, lambda name, platform: "/install/%s/%s" % (name, platform))
-    for name in ["get_program_backup_dir", "get_library_backup_dir"]:
-        monkeypatch.setattr(ps3dec.programs, name, lambda name, platform: "/backup/%s/%s" % (name, platform))
-    online = Recorder()
-    stored = Recorder()
-    monkeypatch.setattr(ps3dec.release, "download_github_release", online)
-    monkeypatch.setattr(ps3dec.release, "build_appimage_from_source", Recorder())
-    monkeypatch.setattr(ps3dec.release, "setup_stored_release", stored)
-    return online, stored
+def test_setup_installs_both_platforms(steps):
+    assert ps3dec.PS3Dec().setup()
+
+    assert steps.names() == [
+        "download_github_release",
+        "build_appimage_from_source",
+    ]
+    assert installed_to(steps) == [
+        "/install/PS3Dec/windows",
+        "/install/PS3Dec/linux",
+    ]
 
 
-def test_setup_offline_matches_the_online_install(releases):
-    online, stored = releases
-    tool = ps3dec.PS3Dec()
+def test_a_failed_step_stops_the_install(steps):
+    assert_a_failed_step_stops_the_install(steps, ps3dec.PS3Dec())
 
-    assert tool.setup()
-    assert tool.setup_offline()
 
-    # Offline installs only the files a fresh download would
-    offline = {call["install_dir"]: call for call in stored.calls}
-    assert online.calls
-    for call in online.calls:
-        expected = {key: call[key] for key in KEYS if key in call}
-        assert {key: offline[call["install_dir"]].get(key) for key in expected} == expected
+def test_nothing_runs_when_already_installed(steps):
+    assert_nothing_runs_when_already_installed(steps, ps3dec.PS3Dec())
+
+
+def test_setup_params_reach_every_step(steps):
+    assert_setup_params_reach_every_step(steps, ps3dec.PS3Dec())
+
+
+def test_setup_offline_matches_the_online_install(steps):
+    assert_offline_matches_online(steps, ps3dec.PS3Dec())

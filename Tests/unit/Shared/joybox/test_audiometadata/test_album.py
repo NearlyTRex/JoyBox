@@ -213,3 +213,13 @@ def test_clearing_stops_at_a_failing_track(metadata, tmp_path):
 
     assert metadata.clear_album_tags(album) is False
     assert metadata.clear_album_tags(str(tmp_path / "missing")) is False
+
+
+def test_album_fields_already_on_a_track_are_kept(metadata, tmp_path):
+    album = make_album(tmp_path, ["01.mp3"])
+    metadata.set_tags(track(album, "01.mp3"),
+        {"title": "One", "artist": "Band", "album": "Real Album", "album_artist": "Various"})
+
+    tags = metadata.get_album_tags(album, GENRE)["tracks"][0]["tags"]
+
+    assert (tags["album"], tags["album_artist"]) == ("Real Album", "Various")

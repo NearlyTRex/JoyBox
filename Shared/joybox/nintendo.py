@@ -716,13 +716,9 @@ def create_switch_profiles_dat(
 
     # Get user id bytes
     user_id_bytes = bytearray.fromhex("".join(reversed(textwrap.wrap(user_id, 2))))
-    if len(user_id_bytes) == 0:
-        return False
 
     # Get account name bytes
     account_name_bytes = bytearray(account_name, encoding = "utf-8")
-    if len(account_name_bytes) == 0:
-        return False
 
     # Initialize file contents
     file_contents = [b'\x00'] * 1616

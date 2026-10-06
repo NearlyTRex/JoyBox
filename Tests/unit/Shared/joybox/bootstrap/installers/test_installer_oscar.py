@@ -56,3 +56,12 @@ def test_uninstall_removes_the_stream_entry_and_the_api_vhost(isolated_settings)
 
     assert oscar.uninstall_nginx_config()
     assert connection.ran("remove_stream_conf", "oscar.stream.conf")
+
+
+def test_an_unwritable_dockerfile_stops_the_install(isolated_settings):
+    connection = FailingWrites("oscar.Dockerfile")
+    oscar = build_oscar(connection)
+
+    assert not oscar.install()
+    assert connection.moved == []
+    assert not connection.ran("compose")

@@ -2,7 +2,7 @@
 import pytest
 
 # Local imports
-from joybox import datautils
+from joybox import config, datautils, logger
 
 
 ###########################################################
@@ -39,6 +39,42 @@ def test_merging_two_non_dictionaries_is_none():
     assert datautils.merge_dictionaries(None, None) is None
 
 
+def test_a_default_merge_lets_the_second_dictionary_win_nested_keys():
+    merged = datautils.merge_dictionaries({"a": {"x": 1, "y": 1}}, {"a": {"y": 2}})
+
+    assert merged == {"a": {"x": 1, "y": 2}}
+
+
+def test_a_replace_merge_replaces_lists():
+    merged = datautils.merge_dictionaries({"a": [1]}, {"a": [2]}, config.MergeType.REPLACE)
+
+    assert merged == {"a": [2]}
+
+
+def test_an_additive_merge_extends_lists():
+    merged = datautils.merge_dictionaries({"a": [1]}, {"a": [2]}, config.MergeType.ADDITIVE)
+
+    assert merged == {"a": [1, 2]}
+
+
+def test_a_safe_replace_merge_replaces_matching_types():
+    merged = datautils.merge_dictionaries({"a": [1]}, {"a": [2]}, config.MergeType.SAFE_REPLACE)
+
+    assert merged == {"a": [2]}
+
+
+def test_a_safe_additive_merge_extends_matching_types():
+    merged = datautils.merge_dictionaries({"a": [1]}, {"a": [2]}, config.MergeType.SAFE_ADDITIVE)
+
+    assert merged == {"a": [1, 2]}
+
+
+def test_a_safe_merge_of_mismatched_types_keeps_the_first_dictionary():
+    merged = datautils.merge_dictionaries({"a": [1]}, {"a": "text"}, config.MergeType.SAFE_REPLACE)
+
+    assert merged == {"a": [1]}
+
+
 ###########################################################
 # Data merging
 ###########################################################
@@ -46,6 +82,7 @@ def test_merging_two_non_dictionaries_is_none():
 def test_merge_data_dispatches_on_type():
     assert datautils.merge_data(["a"], ["b"]) == ["a", "b"]
     assert datautils.merge_data("a", "b") == ["a", "b"]
+    assert datautils.merge_data({"a": 1}, {"b": 2}) == {"a": 1, "b": 2}
 
 
 def test_merge_data_with_one_empty_side_returns_the_other():
@@ -278,3 +315,36 @@ def test_a_none_retry_cleans_up_and_backs_off(monkeypatch):
     assert len(attempts) == 3
     assert len(cleanups) == 3
     assert delays == [1, 2]
+
+
+@pytest.mark.parametrize("operation_name, label", [("Fetch", "Fetch"), (None, "Operation")])
+def test_verbose_retries_report_each_attempt_and_the_final_failure(monkeypatch, operation_name, label):
+    warnings, errors, infos = [], [], []
+    monkeypatch.setattr(logger, "log_warning", warnings.append)
+    monkeypatch.setattr(logger, "log_error", errors.append)
+    monkeypatch.setattr(logger, "log_info", infos.append)
+    monkeypatch.setattr(datautils.time, "sleep", lambda seconds: None)
+
+    def always_raise():
+        raise RuntimeError("boom")
+
+    def bad_cleanup():
+        raise RuntimeError("stuck")
+
+    assert datautils.retry_with_backoff(
+        always_raise,
+        cleanup_func = bad_cleanup,
+        max_retries = 2,
+        verbose = True,
+        operation_name = operation_name) is None
+    assert warnings[0].startswith("%s failed (attempt 1/2): boom" % label)
+    assert "Cleanup failed: stuck" in warnings
+    assert errors == ["%s failed after 2 attempts" % label]
+    assert infos == ["Retrying in 1.0 seconds..."]
+
+
+def test_zero_retries_never_calls():
+    calls = []
+
+    assert datautils.retry_with_backoff(lambda: calls.append(1), max_retries = 0) is None
+    assert calls == []

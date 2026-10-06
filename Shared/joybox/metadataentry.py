@@ -9,6 +9,16 @@ import joybox.environment as environment
 import joybox.gamenaming as gamenaming
 import joybox.paths as paths
 
+# Metadata key holding each asset type's path
+asset_metadata_keys = {
+    config.AssetType.BACKGROUND: config.metadata_key_background,
+    config.AssetType.BOXBACK: config.metadata_key_boxback,
+    config.AssetType.BOXFRONT: config.metadata_key_boxfront,
+    config.AssetType.LABEL: config.metadata_key_label,
+    config.AssetType.SCREENSHOT: config.metadata_key_screenshot,
+    config.AssetType.VIDEO: config.metadata_key_video,
+}
+
 # Metadata entry class
 class MetadataEntry:
 
@@ -200,19 +210,7 @@ class MetadataEntry:
                 game_subcategory = self.get_subcategory(),
                 game_name = self.get_game(),
                 asset_type = asset_type)
-            game_metadata_key = None
-            if asset_type == config.AssetType.BACKGROUND:
-                game_metadata_key = config.metadata_key_background
-            elif asset_type == config.AssetType.BOXBACK:
-                game_metadata_key = config.metadata_key_boxback
-            elif asset_type == config.AssetType.BOXFRONT:
-                game_metadata_key = config.metadata_key_boxfront
-            elif asset_type == config.AssetType.LABEL:
-                game_metadata_key = config.metadata_key_label
-            elif asset_type == config.AssetType.SCREENSHOT:
-                game_metadata_key = config.metadata_key_screenshot
-            elif asset_type == config.AssetType.VIDEO:
-                game_metadata_key = config.metadata_key_video
+            game_metadata_key = asset_metadata_keys[asset_type]
             if paths.is_path_file(game_asset_file):
                 self.set_value(game_metadata_key, game_asset_string)
             else:

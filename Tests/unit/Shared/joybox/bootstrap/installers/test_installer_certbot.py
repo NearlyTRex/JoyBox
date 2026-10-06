@@ -1,6 +1,8 @@
 # Local imports
+import joybox.bootstrap.constants as constants
 import joybox.bootstrap.installers as installers
 from joybox import serverinfo
+from fakes import RecordingConnection
 
 
 ###########################################################
@@ -183,7 +185,6 @@ def test_uninstall_only_removes_renewal_in_letsencrypt_mode(isolated_settings, r
 ###########################################################
 
 def test_the_package_alone_is_not_installed(isolated_settings):
-    from fakes import RecordingConnection
     connection = RecordingConnection(
         existing_paths = ["/usr/bin/certbot"],
         return_codes = {"manager_certbot.sh check": 1})
@@ -192,9 +193,140 @@ def test_the_package_alone_is_not_installed(isolated_settings):
 
 
 def test_an_issued_certificate_is_installed(isolated_settings):
-    from fakes import RecordingConnection
     connection = RecordingConnection(existing_paths = ["/usr/bin/certbot"])
     certbot = build_certbot(isolated_settings, connection, "mkcert")
 
     assert certbot.is_installed()
     assert [certbot.cert_manager_tool, "check", "joybox.test"] in connection.commands
+
+
+def test_only_remote_ubuntu_is_supported(isolated_settings, recording_connection):
+    certbot = build_certbot(isolated_settings, recording_connection, "letsencrypt")
+
+    assert certbot.get_supported_environments() == [constants.EnvironmentType.REMOTE_UBUNTU]
+
+
+def test_no_package_is_not_installed(isolated_settings, recording_connection):
+    certbot = build_certbot(isolated_settings, recording_connection, "letsencrypt")
+
+    assert not certbot.is_installed()
+    assert not recording_connection.ran("check")
+
+
+###########################################################
+# mkcert
+#
+# The certificate is signed on the workstation by its local CA; only the leaf
+# and key travel to the target.
+###########################################################
+
+LOCAL_DIR = "/tmp/joybox-test"
+
+
+class NoTemporaryDirectory(RecordingConnection):
+    def make_temporary_directory(self):
+        self._record("make_temporary_directory")
+        return None
+
+
+class StagingFails(RecordingConnection):
+    def __init__(self, failing_method, **kwargs):
+        super().__init__(**kwargs)
+        self.failing_method = failing_method
+
+    def make_directory(self, src, sudo = False):
+        if self.failing_method == "make_directory":
+            self._record("make_directory", src, sudo = sudo)
+            return False
+        return super().make_directory(src, sudo = sudo)
+
+    def write_file(self, src, contents, sudo = False):
+        if self.failing_method == "write_file":
+            self._record("write_file", src, contents, sudo = sudo)
+            return False
+        return super().write_file(src, contents, sudo = sudo)
+
+
+def use_local(monkeypatch, local):
+    from joybox.bootstrap.installers import installer_certbot
+    monkeypatch.setattr(installer_certbot.connection, "ConnectionLocal", lambda flags, options: local)
+
+
+def mkcert_output(cert = "CERT", key = "KEY", **kwargs):
+    return RecordingConnection(file_contents = {
+        f"{LOCAL_DIR}/fullchain.pem": cert, f"{LOCAL_DIR}/privkey.pem": key}, **kwargs)
+
+
+def test_mkcert_signs_locally_and_installs_the_pair(isolated_settings, recording_connection, monkeypatch):
+    local = mkcert_output()
+    use_local(monkeypatch, local)
+    certbot = build_certbot(isolated_settings, recording_connection, "mkcert")
+
+    assert certbot.install()
+    assert local.ran("mkcert -cert-file", f"{LOCAL_DIR}/fullchain.pem", "joybox.test")
+    assert set(certbot.fully_qualified_domains) <= set(local.commands[0])
+    assert local.removed_paths == [LOCAL_DIR]
+    assert recording_connection.written("fullchain.pem") == "CERT"
+    assert recording_connection.ran("install_pair", "joybox.test")
+    assert not recording_connection.ran("mkcert")
+
+
+def test_mkcert_needs_a_local_temporary_directory(isolated_settings, recording_connection, monkeypatch):
+    use_local(monkeypatch, NoTemporaryDirectory())
+    certbot = build_certbot(isolated_settings, recording_connection, "mkcert")
+
+    assert not certbot.install()
+    assert not recording_connection.ran("install_pair")
+
+
+def test_a_failed_mkcert_cleans_up_and_fails(isolated_settings, recording_connection, monkeypatch):
+    local = mkcert_output(return_codes = {"mkcert": 1})
+    use_local(monkeypatch, local)
+    certbot = build_certbot(isolated_settings, recording_connection, "mkcert")
+
+    assert not certbot.install()
+    assert local.removed_paths == [LOCAL_DIR]
+    assert not recording_connection.ran("install_pair")
+
+
+def test_an_empty_mkcert_result_is_not_installed(isolated_settings, recording_connection, monkeypatch):
+    use_local(monkeypatch, mkcert_output(key = ""))
+    certbot = build_certbot(isolated_settings, recording_connection, "mkcert")
+
+    assert not certbot.install_mkcert_cert()
+    assert not recording_connection.ran("install_pair")
+
+
+def test_an_unstageable_pair_is_not_installed(isolated_settings):
+    for failing_method in ["make_directory", "write_file"]:
+        connection = StagingFails(failing_method)
+        certbot = build_certbot(isolated_settings, connection, "mkcert")
+
+        assert not certbot.write_cert_pair("CERT", "KEY")
+        assert not connection.ran("install_pair")
+
+
+def test_a_failed_selfsign_stops_before_nginx(isolated_settings, recording_connection, monkeypatch):
+    certbot = build_certbot(isolated_settings, recording_connection, "selfsigned")
+    monkeypatch.setattr(certbot, "install_selfsigned_cert", lambda: False)
+
+    assert not certbot.install()
+    assert not recording_connection.ran("restart")
+
+
+def test_letsencrypt_uninstall_removes_the_renewal(isolated_settings, recording_connection):
+    certbot = build_certbot(isolated_settings, recording_connection, "letsencrypt")
+    certbot.uninstall()
+
+    assert recording_connection.crontab_removed == [f"0 3 * * * {certbot.cert_manager_tool} renew"]
+    assert recording_connection.ran("remove -y certbot")
+
+
+def test_an_unwritable_default_entry_is_not_installed(isolated_settings, monkeypatch):
+    connection = RecordingConnection()
+    certbot = build_certbot(isolated_settings, connection, "selfsigned")
+    monkeypatch.setattr(connection, "write_file", lambda src, contents, sudo = False: False)
+
+    assert certbot.install()
+    assert not connection.ran("install_conf")
+    assert connection.ran("systemctl", "restart")

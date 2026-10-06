@@ -312,6 +312,12 @@ def test_the_classic_id_carries_its_parity(steam_store):
     assert classic == "STEAM_0:%d:%d" % (ACCOUNT % 2, ACCOUNT // 2)
 
 
+def test_an_odd_account_carries_the_odd_parity(steam_store, isolated_settings):
+    isolated_settings.set_value("UserData.Steam", "steam_userid", str(int(STEAMID64) + 1))
+
+    assert steam.Steam().get_user_id(config.SteamIDFormatType.STEAMID_CL) == "STEAM_0:1:%d" % (ACCOUNT // 2)
+
+
 def test_the_short_classic_id_is_the_halved_account(steam_store):
     assert steam_store.get_user_id(config.SteamIDFormatType.STEAMID_CS) == str(ACCOUNT // 2)
 

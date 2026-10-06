@@ -233,3 +233,64 @@ def test_a_long_note_is_wrapped_under_its_bullet():
     assert len(lines) > 1
     assert all(len(line) <= manpage.PAGE_WIDTH for line in lines)
     assert lines[0].startswith("- ") and all(line.startswith("  ") for line in lines[1:])
+
+
+###########################################################
+# Remaining paths
+###########################################################
+
+class FailedRun:
+    stderr = "Traceback\nImportError: no module named tool\n"
+
+
+def test_a_script_that_cannot_be_described_raises_with_its_error(monkeypatch):
+    monkeypatch.setattr(manpage.subprocess, "run", lambda *args, **kwargs: FailedRun())
+
+    with pytest.raises(RuntimeError, match = "(?s)Unable to describe tool: .*no module named tool$"):
+        manpage.describe_command("tool", [])
+
+
+def test_every_project_command_is_described(tmp_path, monkeypatch):
+    (tmp_path / "pyproject.toml").write_text(
+        "[project.scripts]\n"
+        "alpha = \"joybox.cli.alpha:run\"\n"
+        "beta = \"joybox.cli.beta:run\"\n")
+    monkeypatch.setattr(manpage, "describe_command", lambda module_name, python_path: {"module": module_name})
+
+    assert manpage.describe_commands(str(tmp_path / "pyproject.toml"), []) == {
+        "alpha": {"module": "joybox.cli.alpha"},
+        "beta": {"module": "joybox.cli.beta"},
+    }
+
+
+def test_a_known_see_also_tool_is_not_a_problem():
+    assert manpage.find_help_problems("tool", spec(see_also = ["other"]), ["tool", "other"]) == []
+
+
+def test_a_positional_is_shown_by_name_without_a_placeholder():
+    positional = option("source", ["source"], positional = True)
+
+    assert manpage.format_option_cell(positional) == "`<source>`"
+
+
+def test_a_flag_without_a_value_has_no_placeholder():
+    assert manpage.format_option_cell(option("verbose", ["-v"], takes_value = False)) == "`-v`"
+
+
+def test_a_list_default_is_shown_comma_separated():
+    cell = manpage.format_description_cell(option("types", default = ["local", "gdrive"]))
+
+    assert "Default: `local,gdrive`." in cell
+
+
+def test_details_get_a_description_section_and_no_examples_none():
+    page = manpage.render_page("tool", spec(details = "Longer text.\n", examples = []))
+
+    assert "## Description\n\nLonger text.\n" in page
+    assert "## Examples" not in page
+
+
+def test_a_missing_output_directory_has_every_page_stale(tmp_path):
+    stale, extra = manpage.find_stale_pages({"tool.md": "x"}, str(tmp_path / "absent"))
+
+    assert (stale, extra) == (["tool.md"], [])

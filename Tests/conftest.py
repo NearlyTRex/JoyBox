@@ -187,6 +187,17 @@ def session_settings_file(tmp_path_factory, session_home):
     return config_path
 
 
+@pytest.fixture(scope = "session", autouse = True)
+def session_logger(session_home):
+    # The joybox logger does not propagate, and caplog only attaches to
+    # non-propagating loggers that exist when a test starts. Created lazily,
+    # the first test to log would go uncaptured and bind the console handler
+    # to that test's short-lived capture stream.
+    from joybox import logger
+
+    return logger.get_logger()
+
+
 @pytest.fixture(autouse = True)
 def no_outbound_network(monkeypatch, request):
     # A test that quietly reaches the internet passes on a connected machine

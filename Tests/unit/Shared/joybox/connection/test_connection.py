@@ -684,3 +684,147 @@ def test_an_unknown_home_still_falls_back_to_a_candidate():
     conn.add_to_unix_path("/opt/tool/bin")
 
     assert list(conn.files) == ["~/.bash_profile"]
+
+
+###########################################################
+# Base transport defaults
+###########################################################
+
+@pytest.mark.parametrize("method,args,expected", [
+    ("setup", (), None),
+    ("teardown", (), None),
+    ("run_output", (["ls"],), ""),
+    ("run_return_code", (["ls"],), 0),
+    ("run_blocking", (["ls"],), 0),
+    ("run_interactive", (["ls"],), 0),
+    ("run_checked", (["ls"],), None),
+    ("make_temporary_directory", (), None),
+    ("make_directory", ("/a",), False),
+    ("remove_file_or_directory", ("/a",), False),
+    ("copy_file_or_directory", ("/a", "/b"), False),
+    ("move_file_or_directory", ("/a", "/b"), False),
+    ("link_file_or_directory", ("/a", "/b"), False),
+    ("does_file_or_directory_exist", ("/a",), False),
+    ("transfer_files", ("/a", "/b"), False),
+    ("read_file", ("/a",), None),
+    ("write_file", ("/a", "x"), False),
+    ("download_file", ("https://example.invalid/a", "/a"), False),
+    ("extract_tar_archive", ("/a.tar", "/b"), False),
+    ("change_owner", ("/a", "root"), False),
+    ("change_permission", ("/a", "755"), False),
+])
+def test_the_base_transport_does_nothing(method, args, expected):
+    assert getattr(Connection(), method)(*args) == expected
+
+
+def test_flags_and_options_are_replaced_whole():
+    conn = Connection()
+    flags = runoptions.RunFlags(verbose = False)
+    options = runoptions.RunOptions()
+
+    conn.set_flags(flags)
+    conn.set_options(options)
+
+    assert conn.get_flags() is flags
+    assert conn.get_options() is options
+
+
+def test_a_chunk_holding_only_part_of_a_character_logs_nothing_yet(monkeypatch):
+    recorded = quiet_logger(monkeypatch)
+    logged = []
+    monkeypatch.setattr(connection_module.logger, "log_output", logged.append)
+    snowman = "\u2603".encode("utf-8")
+
+    Connection().stream_command_output([snowman[:1], snowman[1:] + b"\n"])
+
+    assert logged == ["\u2603\n"]
+    assert recorded == ["\u2603"]
+
+
+###########################################################
+# Quiet crontab and path edits
+###########################################################
+
+def quiet(output = ""):
+    return HomedConnection(output = output, flags = runoptions.RunFlags(verbose = False, exit_on_failure = False))
+
+
+def test_a_quiet_crontab_edit_logs_nothing(monkeypatch):
+    logged = []
+    monkeypatch.setattr(connection_module.logger, "log_info", logged.append)
+    conn = quiet()
+
+    assert conn.add_to_crontab(JOB) is True
+    conn.output = JOB + "\n"
+    assert conn.remove_from_crontab(JOB) is True
+    assert logged == []
+
+
+def test_removing_from_a_missing_crontab_changes_nothing():
+    conn = quiet(output = "no crontab for deploy")
+
+    assert conn.remove_from_crontab(JOB) is True
+    assert conn.files == {}
+
+
+def test_a_quiet_path_edit_logs_nothing(monkeypatch):
+    logged = []
+    monkeypatch.setattr(connection_module.logger, "log_info", logged.append)
+    conn = quiet()
+
+    assert conn.add_to_windows_path("C:\\Tools") is True
+    assert conn.add_to_unix_path("/opt/tools") is True
+    assert logged == []
+
+
+@pytest.mark.parametrize("windows", [True, False])
+def test_add_to_path_follows_the_platform(monkeypatch, windows):
+    monkeypatch.setattr(connection_module.platform_info, "is_windows_platform", lambda: windows)
+    conn = quiet()
+
+    assert conn.add_to_path("/opt/tools") is True
+    if windows:
+        assert conn.commands[-1][1][0] == "powershell"
+    else:
+        assert any("/opt/tools" in contents for contents in conn.files.values())
+
+
+def test_a_failing_windows_path_edit_is_reported():
+    conn = quiet()
+
+    def broken(cmd, sudo = False):
+        raise OSError("powershell missing")
+    conn.run_output = broken
+
+    assert conn.add_to_windows_path("C:\\Tools") is False
+
+
+def test_a_failing_unix_path_edit_is_reported():
+    conn = quiet()
+
+    def broken(src, sudo = False):
+        raise OSError("unreadable")
+    conn.read_file = broken
+
+    assert conn.add_to_unix_path("/opt/tools") is False
+
+
+def test_pretending_does_not_touch_the_crontab_on_removal():
+    conn = quiet(output = JOB + "\n")
+    conn.get_flags().pretend_run = True
+
+    assert conn.remove_from_crontab(JOB) is True
+    assert conn.commands == []
+
+
+@pytest.mark.parametrize("cmd,shown", [
+    ("ls -la", 'Running "ls -la"'),
+    (["ls", "-la"], 'Running "ls -la"'),
+])
+def test_a_command_is_printed_as_one_line(monkeypatch, cmd, shown):
+    logged = []
+    monkeypatch.setattr(connection_module.logger, "log_info", logged.append)
+
+    Connection().print_command(cmd)
+
+    assert logged == [shown]

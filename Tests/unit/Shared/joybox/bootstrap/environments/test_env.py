@@ -2,6 +2,7 @@
 import pytest
 
 # Local imports
+import joybox.bootstrap.constants as constants
 from joybox.bootstrap.environments import env
 from fakes import RecordingInstaller
 
@@ -335,3 +336,14 @@ def test_local_setup_stops_at_the_first_failure_with_exit_on_failure(three_compo
 
     assert environment.setup() is False
     assert three_components["second"].calls == []
+
+
+def test_disconnecting_without_a_connection_is_harmless():
+    env.Environment().disconnect()
+
+
+def test_the_environment_type_is_shared_through_the_settings(isolated_settings):
+    environment = env.Environment()
+    environment.set_environment_type(constants.EnvironmentType.LOCAL_UBUNTU)
+
+    assert environment.get_environment_type() == constants.EnvironmentType.LOCAL_UBUNTU

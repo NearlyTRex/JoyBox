@@ -376,3 +376,91 @@ def test_saving_writes_the_reference_and_not_the_secret(config_file, vault):
         contents = written.read()
     assert SECRET_REFERENCE in contents
     assert SECRET_VALUE not in contents
+
+
+###########################################################
+# Unreadable files and uncoercible values
+###########################################################
+
+MALFORMED = "no section header here\n"
+
+
+def test_fields_are_listed_and_a_missing_section_has_none(config_file):
+    config_file("[A]\nx = 1\ny = 2\n")
+
+    assert settings.get_fields("A") == ["x", "y"]
+    assert settings.get_fields("Z") == []
+
+
+@pytest.mark.parametrize("call", [
+    lambda: settings.get_sections(),
+    lambda: settings.get_fields("A"),
+    lambda: settings.has_section("A"),
+    lambda: settings.has_field("A", "x"),
+    lambda: settings.get_value("A", "x"),
+    lambda: settings.get_integer_value("A", "x"),
+    lambda: settings.get_bool_value("A", "x"),
+    lambda: settings.get_path_value("A", "x"),
+    lambda: settings.get_list_value("A", "x"),
+])
+def test_a_malformed_file_raises_a_runtime_error_naming_the_file(config_file, call):
+    path = config_file(MALFORMED)
+
+    with pytest.raises(RuntimeError, match = path):
+        call()
+
+
+@pytest.mark.parametrize("call, expected", [
+    (lambda: settings.get_sections(throw_exception = False), []),
+    (lambda: settings.get_fields("A", throw_exception = False), []),
+    (lambda: settings.has_section("A", throw_exception = False), False),
+    (lambda: settings.has_field("A", "x", throw_exception = False), False),
+    (lambda: settings.get_value("A", "x", default_value = "d", throw_exception = False), "d"),
+    (lambda: settings.get_integer_value("A", "x", default_value = 3, throw_exception = False), 3),
+    (lambda: settings.get_bool_value("A", "x", default_value = True, throw_exception = False),
+     True),
+])
+def test_a_malformed_file_yields_the_fallback_when_not_throwing(config_file, call, expected):
+    config_file(MALFORMED)
+
+    assert call() == expected
+
+
+@pytest.mark.parametrize("value, expected", [(True, 1), (7, 7), (" 12 ", 12)])
+def test_overlay_integers_coerce_bools_ints_and_text(config_file, value, expected):
+    config_file("[S]\n")
+    settings.set_value("S", "port", value)
+
+    assert settings.get_integer_value("S", "port") == expected
+
+
+@pytest.mark.parametrize("getter", [settings.get_path_value, settings.get_list_value])
+def test_an_unset_path_or_list_returns_the_default(config_file, getter):
+    config_file("[S]\n")
+
+    assert getter("Nowhere", "nothing") is None
+
+
+@pytest.mark.parametrize("getter", [settings.get_path_value, settings.get_list_value])
+def test_a_non_text_path_or_list_value_raises(config_file, getter):
+    config_file("[S]\n")
+    settings.set_value("S", "field", 5)
+
+    with pytest.raises(RuntimeError):
+        getter("S", "field")
+
+
+@pytest.mark.parametrize("getter", [settings.get_path_value, settings.get_list_value])
+def test_a_non_text_path_or_list_value_falls_back_when_not_throwing(config_file, getter):
+    config_file("[S]\n")
+    settings.set_value("S", "field", 5)
+
+    assert getter("S", "field", default_value = "d", throw_exception = False) == "d"
+
+
+def test_a_non_boolean_overlay_value_raises(config_file):
+    config_file("[S]\n")
+    settings.set_value("S", "flag", "perhaps")
+
+    with pytest.raises(RuntimeError):
+        settings.get_bool_value("S", "flag")

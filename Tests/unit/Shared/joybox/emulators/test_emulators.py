@@ -30,3 +30,34 @@ def test_a_pretend_configure_succeeds_and_writes_nothing(name, tmp_path, monkeyp
 
     assert emulator.configure(config.SetupParams(pretend_run = True)) is True
     assert list(tmp_path.iterdir()) == []
+
+
+###########################################################
+# Lookup
+###########################################################
+
+def test_the_map_is_keyed_by_each_emulator_name():
+    for name, emulator in emulators.get_emulator_map().items():
+        assert emulator.get_name() == name
+
+
+def test_an_emulator_is_found_by_its_name():
+    assert isinstance(emulators.get_emulator_by_name("Dolphin"), emulators.Dolphin)
+
+
+def test_an_unknown_name_finds_no_emulator():
+    assert emulators.get_emulator_by_name("NoSuchEmulator") is None
+
+
+###########################################################
+# Sandboxing
+#
+# Only Wine runs inside the sandbox, so a program is sandboxed exactly when
+# its Linux build is a Windows executable.
+###########################################################
+
+@pytest.mark.parametrize("name", sorted(emulators.get_emulator_map()))
+def test_only_windows_programs_run_sandboxed_on_linux(name):
+    for entry in emulators.get_emulator_by_name(name).get_config().values():
+        assert entry["run_sandboxed"]["windows"] is False
+        assert entry["run_sandboxed"]["linux"] == entry["program"]["linux"].endswith(".exe")

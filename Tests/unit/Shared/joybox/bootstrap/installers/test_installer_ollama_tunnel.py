@@ -128,3 +128,20 @@ def test_uninstall_of_nothing_succeeds(isolated_settings):
 
     assert tunnel.uninstall()
     assert connection.commands == []
+
+
+def test_an_unwritable_unit_fails_the_install(isolated_settings, monkeypatch):
+    tunnel, connection = make(isolated_settings)
+    monkeypatch.setattr(connection, "write_file", lambda src, contents, sudo = False: False)
+
+    assert not tunnel.install()
+    assert not connection.ran("systemctl")
+
+
+def test_an_unremovable_unit_fails_the_uninstall(isolated_settings, monkeypatch):
+    tunnel, connection = make(isolated_settings)
+    connection.existing_paths.add(tunnel.unit_path)
+    monkeypatch.setattr(connection, "remove_file_or_directory", lambda src, sudo = False: False)
+
+    assert not tunnel.uninstall()
+    assert not connection.ran("daemon-reload")

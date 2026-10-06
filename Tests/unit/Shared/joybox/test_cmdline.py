@@ -159,3 +159,35 @@ def test_a_flag_prefix_is_not_masked_by_accident():
     # useful detail from the log for no gain.
     masked = cmdline.mask_sensitive_args(["tool", "--password-file", "/etc/creds"])
     assert masked == ["tool", "--password-file", "/etc/creds"]
+
+
+###########################################################
+# Unsupported command types
+###########################################################
+
+@pytest.mark.parametrize("style", ["basic", "posix"])
+def test_empty_commands_produce_an_empty_string_in_either_style(style):
+    assert cmdline.create_command_string([], style = style) == ""
+    assert cmdline.create_command_string(None, style = style) == ""
+
+
+@pytest.mark.parametrize("style", ["basic", "posix"])
+def test_a_non_sequence_command_produces_an_empty_string(style):
+    assert cmdline.create_command_string(42, style = style) == ""
+
+
+@pytest.mark.parametrize("style", ["enclosed", "split"])
+def test_a_non_sequence_command_produces_an_empty_list(style):
+    assert cmdline.create_command_list(42, style = style) == []
+
+
+def test_split_style_copies_a_list_and_empties_stay_empty():
+    original = ["ls", "-la"]
+    built = cmdline.create_command_list(original, style = "split")
+
+    assert built == original and built is not original
+    assert cmdline.create_command_list("", style = "split") == []
+
+
+def test_masking_passes_other_types_through():
+    assert cmdline.mask_sensitive_args(None) is None

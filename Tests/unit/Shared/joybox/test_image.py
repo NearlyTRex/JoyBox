@@ -258,3 +258,44 @@ def test_unreadable_data_converts_to_nothing():
 
 def test_empty_data_converts_to_nothing():
     assert image.convert_image_data_to_format(b"", config.ImageFileType.PNG) is None
+
+
+###########################################################
+# Logging and failure handling
+###########################################################
+
+def test_a_png_extension_selects_png(tmp_path):
+    source = make_image(tmp_path / "art.jpg", format = "JPEG")
+    target = tmp_path / "out.png"
+
+    assert image.convert_image(source, str(target)) is True
+    assert opened_format(target) == "PNG"
+
+
+def test_a_verbose_conversion_is_logged(tmp_path, monkeypatch):
+    logged = []
+    monkeypatch.setattr(image.logger, "log_info", logged.append)
+    image.convert_image(make_image(tmp_path / "art.png"), str(tmp_path / "out.jpg"), verbose = True)
+
+    assert logged and "out.jpg" in logged[0]
+
+
+def test_a_failed_conversion_quits_when_asked_to(tmp_path):
+    with pytest.raises(SystemExit):
+        image.convert_image(str(tmp_path / "absent.png"), str(tmp_path / "out.jpg"), exit_on_failure = True)
+
+
+def test_data_conversion_without_temporary_files_gives_nothing(monkeypatch):
+    monkeypatch.setattr(image.fileops, "create_temporary_file", lambda **kwargs: (False, None))
+
+    assert image.convert_image_data_to_format(b"data", config.ImageFileType.PNG) is None
+
+
+def test_a_half_created_pair_of_temporary_files_is_cleaned_up(monkeypatch, tmp_path):
+    created = tmp_path / "input.tmp"
+    created.write_bytes(b"")
+    results = iter([(True, str(created)), (False, "disk full")])
+    monkeypatch.setattr(image.fileops, "create_temporary_file", lambda **kwargs: next(results))
+
+    assert image.convert_image_data_to_format(b"data", config.ImageFileType.PNG) is None
+    assert not created.exists()

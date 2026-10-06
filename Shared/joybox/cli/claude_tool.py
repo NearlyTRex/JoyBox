@@ -104,7 +104,7 @@ def main():
     # Show preview
     if not args.no_preview:
         if extensions:
-            file_count = len(paths.build_file_listByExtensions(input_path, extensions = extensions))
+            file_count = len(paths.build_file_list_by_extensions(input_path, extensions = extensions))
         else:
             file_count = len(paths.build_file_list(input_path))
         details = [

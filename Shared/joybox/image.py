@@ -64,8 +64,7 @@ def convert_image(
                     image_format = config.ImageFileType.JPEG
                 elif image_ext in [".png"]:
                     image_format = config.ImageFileType.PNG
-            if not pretend_run:
-                rgb_image.save(image_dest, image_format.val())
+            rgb_image.save(image_dest, image_format.val())
             return paths.does_path_exist(image_dest)
         return False
     except Exception as e:
@@ -134,6 +133,9 @@ def convert_image_data_to_format(
     temp_output_ok, temp_output = fileops.create_temporary_file(suffix=target_format.cval())
     if not temp_input_ok or not temp_output_ok:
         logger.log_error("Failed to create temporary file")
+        for created_ok, created_file in [(temp_input_ok, temp_input), (temp_output_ok, temp_output)]:
+            if created_ok:
+                fileops.remove_file(created_file)
         return None
 
     # Write original image data to temp file

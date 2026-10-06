@@ -236,3 +236,130 @@ def test_several_values_accumulate_matches(collection):
         collection, search_values = ["Killing Time", "Murder House"])
 
     assert len(found) == 2
+
+
+###########################################################
+# Logging and failure handling
+###########################################################
+
+@pytest.fixture
+def logged(monkeypatch):
+    messages = {"info": [], "error": []}
+    monkeypatch.setattr(serialization.logger, "log_info", lambda message, **kwargs: messages["info"].append(message))
+    monkeypatch.setattr(serialization.logger, "log_error", lambda message, **kwargs: messages["error"].append(message))
+    return messages
+
+
+def test_verbose_reads_and_writes_log_the_path(tmp_path, logged):
+    json_path = str(tmp_path / "game.json")
+    serialization.write_json_file(json_path, {"a": ""}, verbose = True)
+    serialization.read_json_file(json_path, verbose = True)
+    serialization.clean_json_file(json_path, verbose = True)
+    serialization.parse_json_string("{}", verbose = True)
+
+    assert logged["info"] == [
+        "Writing %s" % json_path,
+        "Reading %s" % json_path,
+        "Cleaning %s" % json_path,
+        "Parsing {}"]
+
+
+@pytest.mark.parametrize("call", [
+    lambda base: serialization.read_text_file(os.path.join(base, "absent.txt"), exit_on_failure = True),
+    lambda base: serialization.write_text_file(base, "x", exit_on_failure = True),
+    lambda base: serialization.parse_json_string("{nope", exit_on_failure = True),
+    lambda base: serialization.read_json_file(os.path.join(base, "absent.json"), exit_on_failure = True),
+    lambda base: serialization.write_json_file(base + ".json", {1j: 1}, exit_on_failure = True),
+    lambda base: serialization.clean_json_file(os.path.join(base, "absent.json"), exit_on_failure = True),
+    lambda base: serialization.read_yaml_file(os.path.join(base, "absent.yaml"), exit_on_failure = True),
+    lambda base: serialization.read_csv_file(os.path.join(base, "absent.csv"), ["a"], exit_on_failure = True),
+])
+def test_exit_on_failure_logs_and_quits(tmp_path, logged, call):
+    with pytest.raises(SystemExit):
+        call(str(tmp_path))
+
+    assert logged["error"][0].startswith("Unable to")
+
+
+def test_failures_without_exit_return_the_empty_value(tmp_path):
+    base = str(tmp_path)
+
+    assert serialization.read_text_file(os.path.join(base, "absent.txt")) is None
+    assert serialization.write_text_file(base, "x") is False
+    assert serialization.write_json_file(base + ".json", {1j: 1}) is False
+    assert serialization.clean_json_file(os.path.join(base, "absent.json")) is False
+    assert serialization.read_yaml_file(os.path.join(base, "absent.yaml")) == {}
+    assert serialization.read_csv_file(os.path.join(base, "absent.csv"), ["a"]) == []
+
+
+def test_cleaning_a_null_document_leaves_it_untouched(tmp_path):
+    target = str(tmp_path / "null.json")
+    with open(target, "w") as handle:
+        handle.write("null")
+
+    assert serialization.clean_json_file(target) is True
+    with open(target) as handle:
+        assert handle.read() == "null"
+
+
+###########################################################
+# Text files
+###########################################################
+
+def test_a_text_file_round_trips_through_a_new_directory(tmp_path, logged):
+    target = str(tmp_path / "nested" / "notes.txt")
+
+    assert serialization.write_text_file(target, "line one\n", verbose = True) is True
+    assert serialization.read_text_file(target, verbose = True) == "line one\n"
+    assert logged["info"] == ["Writing %s" % target, "Reading %s" % target]
+
+
+def test_pretend_run_does_not_write_text(tmp_path):
+    target = str(tmp_path / "notes.txt")
+
+    assert serialization.write_text_file(target, "x", pretend_run = True) is True
+    assert not os.path.exists(target)
+
+
+###########################################################
+# YAML files
+###########################################################
+
+def test_a_yaml_file_is_read_without_stray_control_bytes(tmp_path, logged):
+    target = str(tmp_path / "game.yaml")
+    with open(target, "w") as handle:
+        handle.write("name: Chrono\x81 Trigger\x82\n")
+
+    assert serialization.read_yaml_file(target, verbose = True) == {"name": "Chrono Trigger"}
+    assert logged["info"] == ["Reading %s" % target]
+
+
+def test_a_non_yaml_extension_is_refused(tmp_path):
+    target = str(tmp_path / "game.txt")
+    with open(target, "w") as handle:
+        handle.write("name: x\n")
+
+    assert serialization.read_yaml_file(target) == {}
+
+
+###########################################################
+# CSV files
+###########################################################
+
+def test_csv_rows_matching_the_headers_become_dictionaries(tmp_path, logged):
+    target = str(tmp_path / "games.csv")
+    with open(target, "w") as handle:
+        handle.write('name,year\n"Chrono Trigger",1995\nshort\n')
+
+    rows = serialization.read_csv_file(target, ["name", "year"], verbose = True)
+
+    assert rows == [{"name": "name", "year": "year"}, {"name": "Chrono Trigger", "year": "1995"}]
+    assert logged["info"] == ["Reading %s" % target]
+
+
+def test_a_non_csv_extension_is_refused(tmp_path):
+    target = str(tmp_path / "games.txt")
+    with open(target, "w") as handle:
+        handle.write("a,b\n")
+
+    assert serialization.read_csv_file(target, ["a", "b"]) == []

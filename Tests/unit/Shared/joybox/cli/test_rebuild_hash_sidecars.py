@@ -1,12 +1,9 @@
-# Imports
-import runpy
-import sys
-
 # Third-party imports
 import pytest
 
 # Local imports
-from joybox import config, system
+from cli_helpers import CommandHarness, assert_entry_points
+from joybox import config
 from joybox.cli import rebuild_hash_sidecars
 
 
@@ -48,63 +45,47 @@ def tool(monkeypatch, tmp_path, isolated_settings):
     FakeLockerInfo.root = str(tmp_path)
     FakeLockerInfo.remote_path = "/Locker"
     FakeLockerInfo.excludes = ()
-    state = {"configured": True, "clear": True, "upload": True, "confirm": True,
-             "cleared": [], "uploaded": [], "previews": [], "errors": []}
-    monkeypatch.setattr(tool_module.setup, "check_requirements", lambda: None)
-    monkeypatch.setattr(tool_module.logger, "setup_logging", lambda: None)
+    harness = CommandHarness(monkeypatch, tool_module)
+    harness.configured = True
+    harness.clear = True
+    harness.upload = True
+    harness.cleared = []
+    harness.uploaded = []
     monkeypatch.setattr(tool_module.lockerinfo, "LockerInfo", FakeLockerInfo)
-    monkeypatch.setattr(tool_module.sync, "is_remote_configured", lambda name, remote_type: state["configured"])
+    monkeypatch.setattr(tool_module.sync, "is_remote_configured", lambda name, remote_type: harness.configured)
 
     def clear(**kwargs):
-        state["cleared"].append(kwargs)
-        return state["clear"]
+        harness.cleared.append(kwargs)
+        return harness.clear
 
     def upload(**kwargs):
-        state["uploaded"].append(kwargs)
-        return state["upload"]
-
-    def preview(operation, details):
-        state["previews"].append(details)
-        return state["confirm"]
+        harness.uploaded.append(kwargs)
+        return harness.upload
 
     monkeypatch.setattr(tool_module.sync, "clear_hash_sidecar_files", clear)
     monkeypatch.setattr(tool_module.sync, "upload_hash_sidecar_files", upload)
-    monkeypatch.setattr(tool_module.prompts, "prompt_for_preview", preview)
-    log_error = tool_module.logger.log_error
-
-    def record_error(message, **kwargs):
-        state["errors"].append(message)
-        log_error(message, **kwargs)
-
-    monkeypatch.setattr(tool_module.logger, "log_error", record_error)
-
-    def run(*extra):
-        monkeypatch.setattr(sys, "argv", ["rebuild_hash_sidecars", *extra])
-        return system.run_main(tool_module.main)
-
-    state["run"] = run
-    return state
+    return harness
 
 
 def test_whole_locker_is_hashed_into_the_destination_root(tool, tmp_path):
-    tool["run"]("--no-preview")
+    tool.run("--no-preview")
 
-    assert tool["cleared"] == []
-    upload = tool["uploaded"][0]
+    assert tool.cleared == []
+    upload = tool.uploaded[0]
     assert upload["remote_name"] == "hetzner"
     assert upload["remote_path"] == "/Locker"
     assert upload["local_path"] == str(tmp_path)
     assert upload["local_root"] == "/Locker"
     assert upload["skip_existing"] is False
-    assert tool["errors"] == []
+    assert tool.errors == []
 
 
 def test_subpath_narrows_both_sides_but_keeps_the_root_database(tool, tmp_path):
     (tmp_path / "Gaming" / "Roms").mkdir(parents = True)
 
-    tool["run"]("--no-preview", "--path", "Gaming/Roms", "-s", "-r", "2", "-f", "3")
+    tool.run("--no-preview", "--path", "Gaming/Roms", "-s", "-r", "2", "-f", "3")
 
-    upload = tool["uploaded"][0]
+    upload = tool.uploaded[0]
     assert upload["local_path"] == str(tmp_path / "Gaming" / "Roms")
     assert upload["remote_path"] == "/Locker/Gaming/Roms"
     assert upload["local_root"] == "/Locker"
@@ -115,64 +96,56 @@ def test_subpath_narrows_both_sides_but_keeps_the_root_database(tool, tmp_path):
 def test_a_remote_without_a_path_uses_its_top_level(tool):
     FakeLockerInfo.remote_path = None
 
-    tool["run"]("--no-preview")
+    tool.run("--no-preview")
 
-    assert tool["uploaded"][0]["local_root"] == ""
+    assert tool.uploaded[0]["local_root"] == ""
 
 
 def test_clear_always_targets_the_destination_root(tool, tmp_path):
     (tmp_path / "Music").mkdir()
 
-    tool["run"]("--no-preview", "-c", "--path", "Music")
+    tool.run("--no-preview", "-c", "--path", "Music")
 
-    assert tool["cleared"][0]["remote_path"] == "/Locker"
-    assert tool["uploaded"][0]["remote_path"] == "/Locker/Music"
+    assert tool.cleared[0]["remote_path"] == "/Locker"
+    assert tool.uploaded[0]["remote_path"] == "/Locker/Music"
 
 
 def test_failed_clear_stops_before_uploading(tool):
-    tool["clear"] = False
+    tool.clear = False
 
-    with pytest.raises(SystemExit) as raised:
-        tool["run"]("--no-preview", "-c")
-    assert raised.value.code == 1
-    assert tool["errors"] == ["Failed to clear sidecars"]
-    assert tool["uploaded"] == []
+    assert tool.exit_code("--no-preview", "-c") == 1
+    assert tool.errors == ["Failed to clear sidecars"]
+    assert tool.uploaded == []
 
 
 def test_failed_upload_exits_with_an_error(tool):
-    tool["upload"] = False
+    tool.upload = False
 
-    with pytest.raises(SystemExit) as raised:
-        tool["run"]("--no-preview")
-    assert raised.value.code == 1
-    assert tool["errors"] == ["Rebuild failed"]
+    assert tool.exit_code("--no-preview") == 1
+    assert tool.errors == ["Rebuild failed"]
 
 
 def test_missing_source_path_quits(tool, tmp_path):
-    with pytest.raises(SystemExit) as raised:
-        tool["run"]("--no-preview", "--path", "Nowhere")
-    assert raised.value.code != 0
-    assert tool["errors"] == ["Source path not accessible: %s" % (tmp_path / "Nowhere")]
-    assert tool["uploaded"] == []
+    assert tool.exit_code("--no-preview", "--path", "Nowhere") != 0
+    assert tool.errors == ["Source path not accessible: %s" % (tmp_path / "Nowhere")]
+    assert tool.uploaded == []
 
 
 def test_unconfigured_remote_quits(tool):
-    tool["configured"] = False
+    tool.configured = False
 
-    with pytest.raises(SystemExit) as raised:
-        tool["run"]("--no-preview")
-    assert raised.value.code != 0
-    assert tool["errors"] == ["Remote 'hetzner' is not configured"]
-    assert tool["uploaded"] == []
+    assert tool.exit_code("--no-preview") != 0
+    assert tool.errors == ["Remote 'hetzner' is not configured"]
+    assert tool.uploaded == []
 
 
 def test_preview_lists_the_plan_and_memory_ceiling(tool, tmp_path):
     FakeLockerInfo.excludes = ("Testing", "Cache")
 
-    tool["run"]("-c", "-s", "-r", "2", "-f", "2")
+    tool.run("-c", "-s", "-r", "2", "-f", "2")
 
     chunk_mb = config.hash_chunk_size // (1024 * 1024)
-    assert tool["previews"] == [[
+    assert [details for _, details in tool.previews] == [[
         "Source: %s" % tmp_path,
         "Destination: hetzner:/Locker/.locker_hashes.db",
         "Parallel dirs: 2, Parallel files: 2",
@@ -181,39 +154,32 @@ def test_preview_lists_the_plan_and_memory_ceiling(tool, tmp_path):
         "Clear existing sidecars: Yes",
         "Skip existing sidecars: Yes",
     ]]
-    assert len(tool["uploaded"]) == 1
+    assert len(tool.uploaded) == 1
 
 
 def test_declined_preview_changes_nothing(tool):
-    tool["confirm"] = False
+    tool.confirm = False
 
-    tool["run"]("-c")
+    tool.run("-c")
 
-    assert len(tool["previews"][0]) == 5
-    assert tool["cleared"] == []
-    assert tool["uploaded"] == []
+    assert len(tool.previews[0][1]) == 5
+    assert tool.cleared == []
+    assert tool.uploaded == []
 
 
 def test_preview_without_excludes_or_flags(tool, tmp_path):
-    tool["run"]()
+    tool.run()
 
-    assert len(tool["previews"][0]) == 4
-    assert len(tool["uploaded"]) == 1
-
-
-def test_run_goes_through_the_shared_error_handling(tool, monkeypatch):
-    tool["upload"] = False
-    monkeypatch.setattr(sys, "argv", ["rebuild_hash_sidecars", "--no-preview"])
-
-    with pytest.raises(SystemExit):
-        rebuild_hash_sidecars.run()
-    assert tool["errors"] == ["Rebuild failed"]
+    assert len(tool.previews[0][1]) == 4
+    assert len(tool.uploaded) == 1
 
 
-def test_running_the_module_starts_the_command(monkeypatch):
-    called = []
-    monkeypatch.setattr(system, "run_main", lambda main: called.append(main))
+def test_run_goes_through_the_shared_error_handling(tool):
+    tool.upload = False
 
-    runpy.run_path(rebuild_hash_sidecars.__file__, run_name = "__main__")
+    tool.exit_code("--no-preview")
+    assert tool.errors == ["Rebuild failed"]
 
-    assert len(called) == 1
+
+def test_entry_points_run_main(monkeypatch):
+    assert_entry_points(monkeypatch, rebuild_hash_sidecars)

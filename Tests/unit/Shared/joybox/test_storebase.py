@@ -506,3 +506,101 @@ def test_a_store_without_an_install_dir_still_builds_a_map():
     built = storebase.StoreBase().build_path_translation_map()
 
     assert built[config.token_store_install_dir] == [None]
+
+
+###########################################################
+# Unimplemented operations
+###########################################################
+
+@pytest.mark.parametrize("operation,args", [
+    ("get_latest_url", ["page_id"]),
+    ("is_installed", ["install_id"]),
+    ("install", ["install_id"]),
+    ("uninstall", ["install_id"]),
+    ("launch", ["launch_id"]),
+    ("download", ["download_id", "/out"]),
+])
+def test_the_base_operations_do_nothing(operation, args):
+    assert not getattr(SampleStore(), operation)(*args)
+
+
+def test_the_base_store_has_no_purchases():
+    assert SampleStore().get_latest_purchases() == []
+
+
+def test_the_purchases_cache_dir_is_created(monkeypatch, tmp_path):
+    cache_dir = str(tmp_path / "Purchases")
+    monkeypatch.setattr(storebase.environment, "get_cache_purchases_dir", lambda: cache_dir)
+
+    assert SampleStore().get_purchases_cache_dir() == cache_dir
+    assert os.path.isdir(cache_dir)
+
+
+###########################################################
+# Web driver
+###########################################################
+
+def test_web_connect_creates_a_driver(monkeypatch):
+    calls = []
+    monkeypatch.setattr(storebase.webpage, "create_web_driver", lambda **kwargs: calls.append(kwargs) or "driver")
+
+    assert SampleStore().web_connect(headless = True) == "driver"
+    assert calls[0]["make_headless"] is True
+
+
+def test_web_disconnect_destroys_the_driver(monkeypatch):
+    calls = []
+    monkeypatch.setattr(storebase.webpage, "destroy_web_driver", lambda **kwargs: calls.append(kwargs) or True)
+
+    assert SampleStore().web_disconnect("driver") is True
+    assert calls[0]["driver"] == "driver"
+
+
+###########################################################
+# Latest jsondata, metadata and assets
+###########################################################
+
+class NoManifest:
+    def find_entry_by_name(self, **kwargs):
+        return None
+
+
+def test_an_invalid_info_identifier_has_no_jsondata():
+    assert SampleStore().get_latest_jsondata("") is None
+
+
+def test_a_valid_info_identifier_gets_default_jsondata(monkeypatch):
+    monkeypatch.setattr(storebase.manifest, "get_manifest_instance", lambda: NoManifest())
+    json_data = SampleStore().get_latest_jsondata("Acme")
+
+    assert json_data.get_value(config.json_key_store_paths) == []
+    assert json_data.get_value(config.json_key_store_buildid) == config.default_buildid
+
+
+def test_an_invalid_metadata_identifier_has_no_metadata():
+    assert SampleStore().get_latest_metadata("") is None
+
+
+def test_metadata_is_collected_for_the_identifier(monkeypatch):
+    import joybox.metadatacollector as metadatacollector
+    calls = []
+    monkeypatch.setattr(metadatacollector, "collect_metadata_from_all", lambda **kwargs: calls.append(kwargs) or "entry")
+
+    assert SampleStore().get_latest_metadata("Acme") == "entry"
+    assert calls[0]["game_name"] == "Acme"
+    assert calls[0]["keys_to_check"] == config.metadata_keys_downloadable
+
+
+def test_an_invalid_asset_identifier_has_no_asset_url():
+    assert SampleStore().get_latest_asset_url("", "boxfront") is None
+
+
+@pytest.mark.parametrize("game_name,expected", [(None, "acme_id"), ("Acme", "Acme")])
+def test_an_asset_is_looked_up_by_game_name_or_identifier(monkeypatch, game_name, expected):
+    import joybox.metadataassetcollector as metadataassetcollector
+    calls = []
+    monkeypatch.setattr(metadataassetcollector, "find_metadata_asset", lambda **kwargs: calls.append(kwargs) or "url")
+
+    assert SampleStore().get_latest_asset_url("acme_id", "boxfront", game_name = game_name) == "url"
+    assert calls[0]["game_name"] == expected
+    assert calls[0]["asset_type"] == "boxfront"

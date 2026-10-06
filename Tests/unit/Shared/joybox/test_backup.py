@@ -411,6 +411,119 @@ def test_an_invalid_passphrase_decrypts_nothing(cryption, tmp_path):
     assert cryption["decrypted"] == []
 
 
+@pytest.fixture
+def scratch_dir(monkeypatch, tmp_path):
+    state = {"path": tmp_path / "scratch", "ok": True}
+
+    def create_temporary_directory(**kwargs):
+        if not state["ok"]:
+            return (False, "")
+        state["path"].mkdir()
+        return (True, str(state["path"]))
+    monkeypatch.setattr(backup.fileops, "create_temporary_directory", create_temporary_directory)
+    return state
+
+
+def test_an_encrypted_copy_that_decrypts_identically_is_skipped(source, cryption, scratch_dir, tmp_path):
+    dest = tmp_path / "dest"
+    write(source / "top.txt", "decrypted")
+    write(dest / "top.txt.enc", "old")
+
+    backup.copy_and_encrypt_files(str(source), str(dest), "phrase", skip_identical = True)
+
+    assert [os.path.basename(entry["src"]) for entry in cryption["encrypted"]] == ["deep.txt"]
+    assert cryption["decrypted"][0]["src"] == str(dest / "top.txt.enc")
+    assert not scratch_dir["path"].exists()
+
+
+def test_an_encrypted_copy_that_differs_is_replaced(source, cryption, scratch_dir, tmp_path):
+    dest = tmp_path / "dest"
+    write(dest / "top.txt.enc", "old")
+
+    backup.copy_and_encrypt_files(str(source), str(dest), "phrase", skip_identical = True)
+
+    assert sorted(os.path.basename(entry["src"]) for entry in cryption["encrypted"]) == ["deep.txt", "top.txt"]
+    assert not scratch_dir["path"].exists()
+
+
+def test_an_identical_check_without_scratch_space_encrypts_anyway(source, cryption, scratch_dir, tmp_path):
+    dest = tmp_path / "dest"
+    write(dest / "top.txt.enc", "old")
+    scratch_dir["ok"] = False
+
+    backup.copy_and_encrypt_files(str(source), str(dest), "phrase", skip_identical = True)
+
+    assert len(cryption["encrypted"]) == 2
+    assert cryption["decrypted"] == []
+
+
+def test_a_pretend_encrypted_copy_still_asks_to_encrypt(source, cryption, tmp_path):
+    assert backup.copy_and_encrypt_files(str(source), str(tmp_path / "dest"), "phrase", pretend_run = True) is True
+    assert len(cryption["encrypted"]) == 2
+
+
+@pytest.fixture
+def encrypted_source(cryption, tmp_path):
+    source = tmp_path / "source"
+    write(source / "top.txt.enc", "encrypted")
+    cryption["names"]["top.txt.enc"] = "top.txt"
+    return source
+
+
+def test_an_already_decrypted_file_can_be_skipped(encrypted_source, cryption, tmp_path):
+    dest = tmp_path / "dest"
+    write(dest / "top.txt", "old")
+
+    assert backup.copy_and_decrypt_files(str(encrypted_source), str(dest), "phrase", skip_existing = True) is True
+    assert cryption["decrypted"] == []
+
+
+def test_a_decrypted_copy_that_matches_is_left(encrypted_source, cryption, scratch_dir, tmp_path):
+    dest = tmp_path / "dest"
+    write(dest / "top.txt", "decrypted")
+
+    backup.copy_and_decrypt_files(str(encrypted_source), str(dest), "phrase", skip_identical = True, delete_original = True)
+
+    assert (dest / "top.txt").read_text() == "decrypted"
+    assert (encrypted_source / "top.txt.enc").exists()
+    assert not scratch_dir["path"].exists()
+
+
+@pytest.mark.parametrize("delete_original", [False, True])
+def test_a_decrypted_copy_that_differs_is_updated_from_scratch(encrypted_source, cryption, scratch_dir, tmp_path, delete_original):
+    dest = tmp_path / "dest"
+    write(dest / "top.txt", "old")
+
+    backup.copy_and_decrypt_files(
+        str(encrypted_source), str(dest), "phrase", skip_identical = True, delete_original = delete_original)
+
+    assert (dest / "top.txt").read_text() == "decrypted"
+    assert len(cryption["decrypted"]) == 1
+    assert (encrypted_source / "top.txt.enc").exists() is not delete_original
+    assert not scratch_dir["path"].exists()
+
+
+def test_an_identical_check_without_scratch_space_decrypts_in_place(encrypted_source, cryption, scratch_dir, tmp_path):
+    dest = tmp_path / "dest"
+    write(dest / "top.txt", "old")
+    scratch_dir["ok"] = False
+
+    backup.copy_and_decrypt_files(str(encrypted_source), str(dest), "phrase", skip_identical = True)
+
+    assert cryption["decrypted"][0]["out"] == str(dest / "top.txt")
+
+
+def test_a_pretend_decrypted_copy_still_asks_to_decrypt(encrypted_source, cryption, tmp_path):
+    assert backup.copy_and_decrypt_files(str(encrypted_source), str(tmp_path / "dest"), "phrase", pretend_run = True) is True
+    assert len(cryption["decrypted"]) == 1
+
+
+def test_a_failed_decryption_stops_the_restore(encrypted_source, cryption, tmp_path):
+    cryption["result"] = False
+
+    assert backup.copy_and_decrypt_files(str(encrypted_source), str(tmp_path / "dest"), "phrase") is False
+
+
 ###########################################################
 # Choosing how to copy
 ###########################################################
@@ -458,6 +571,11 @@ def test_a_plain_copy_needs_no_locker(routes):
     backup.copy_files("/in", "/out")
 
     assert "passphrase" not in routes[0][1]
+
+
+def test_an_unknown_cryption_type_copies_nothing(routes):
+    assert backup.copy_files("/in", "/out", cryption_type = "rot13") is False
+    assert routes == []
 
 
 ###########################################################
@@ -559,6 +677,21 @@ def test_a_failed_archive_moves_nothing(source, archiving, tmp_path):
     assert archiving["moved"] == []
 
 
+def test_a_failed_archive_removes_its_scratch_directory(source, archiving, tmp_path):
+    archiving["result"] = False
+
+    backup.archive_folder(str(source), str(tmp_path / "out"), "Backup")
+
+    assert not os.path.exists(archiving["scratch"])
+
+
+def test_a_failed_move_reports_failure_and_removes_scratch(source, archiving, monkeypatch, tmp_path):
+    monkeypatch.setattr(backup.fileops, "smart_move", lambda **kwargs: False)
+
+    assert backup.archive_folder(str(source), str(tmp_path / "out"), "Backup") is False
+    assert not os.path.exists(archiving["scratch"])
+
+
 def test_archiving_without_a_scratch_directory_reports_failure(source, monkeypatch, tmp_path):
     monkeypatch.setattr(
         backup.fileops, "create_temporary_directory", lambda **kwargs: (False, ""))
@@ -611,3 +744,48 @@ def test_an_excluded_top_folder_is_skipped(archiving, tmp_path):
     backup.archive_sub_folders(str(root), str(tmp_path / "out"), exclude_paths = ["Cache"])
 
     assert len(archiving["moved"]) == 1
+
+
+@pytest.fixture
+def game_tree(tmp_path):
+    root = tmp_path / "source"
+    write(root / "Gaming" / "GameOne" / "file.txt")
+    write(root / "readme.txt")
+    return root
+
+
+def test_sub_folders_use_the_requested_archive_type(game_tree, archiving, tmp_path):
+    output = tmp_path / "out"
+
+    assert backup.archive_sub_folders(str(game_tree), str(output), archive_type = config.ArchiveFileType.ZIP) is True
+    assert archiving["moved"][0][1] == str(output / "Gaming" / "GameOne.zip")
+
+
+def test_sub_folder_output_can_be_emptied_first(game_tree, archiving, tmp_path):
+    output = tmp_path / "out"
+
+    backup.archive_sub_folders(str(game_tree), str(output), clean_output = True)
+
+    assert archiving["emptied"] == [str(output / "Gaming")]
+
+
+def test_archiving_sub_folders_without_a_scratch_directory_reports_failure(game_tree, archiving, monkeypatch, tmp_path):
+    monkeypatch.setattr(backup.fileops, "create_temporary_directory", lambda **kwargs: (False, ""))
+
+    assert backup.archive_sub_folders(str(game_tree), str(tmp_path / "out")) is False
+    assert archiving["archived"] == []
+
+
+def test_a_failed_sub_folder_archive_stops_and_removes_scratch(game_tree, archiving, tmp_path):
+    archiving["result"] = False
+
+    assert backup.archive_sub_folders(str(game_tree), str(tmp_path / "out")) is False
+    assert archiving["moved"] == []
+    assert not os.path.exists(archiving["scratch"])
+
+
+def test_a_failed_sub_folder_move_stops_and_removes_scratch(game_tree, archiving, monkeypatch, tmp_path):
+    monkeypatch.setattr(backup.fileops, "smart_move", lambda **kwargs: False)
+
+    assert backup.archive_sub_folders(str(game_tree), str(tmp_path / "out")) is False
+    assert not os.path.exists(archiving["scratch"])

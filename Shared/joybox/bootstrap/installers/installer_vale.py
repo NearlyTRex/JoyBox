@@ -60,6 +60,7 @@ class Vale(installer.Installer):
         if code != 0:
             logger.log_error("Failed to extract Vale archive")
             self.connection.remove_file_or_directory(archive_path)
+            self.connection.remove_file_or_directory(extract_dir)
             return False
 
         # Move the binary into place

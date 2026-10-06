@@ -186,3 +186,35 @@ def test_mp4_file_info(metadata, m4a_file):
     assert info["path"] == m4a_file
     assert info["length"] == 1.0
     assert info["has_tags"] is False
+
+
+def test_an_empty_cover_atom_reads_as_no_artwork(metadata, m4a_file):
+    mp4 = metadata.mutagen_mp4
+    audio = mp4.MP4(m4a_file)
+    audio.add_tags()
+    audio.tags["covr"] = []
+    audio.tags["\xa9nam"] = []
+    audio.save()
+
+    assert metadata.get_mp4_tags(m4a_file) == {}
+
+
+def test_an_empty_artwork_list_writes_no_cover(metadata, m4a_file):
+    metadata.set_mp4_tags(m4a_file, {"title": "A Title", "artwork": []})
+
+    assert "covr" not in metadata.mutagen_mp4.MP4(m4a_file).tags
+
+
+def test_kept_cover_art_is_restored_when_removal_drops_the_tag_block(metadata, m4a_file, monkeypatch):
+    # Some formats clear the tag block entirely on delete.
+    class DroppingMP4(metadata.mp4_class):
+        def delete(self, *args, **kwargs):
+            super().delete(*args, **kwargs)
+            self.tags = None
+
+    monkeypatch.setattr(metadata, "mp4_class", DroppingMP4)
+    metadata.set_mp4_tags(m4a_file, {"title": "A Title", "artwork": [artwork()]})
+
+    metadata.remove_mp4_tags(m4a_file, preserve_artwork = True)
+
+    assert metadata.get_mp4_tags(m4a_file)["artwork"][0]["data"] == artwork()["data"]
