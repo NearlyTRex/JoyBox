@@ -83,8 +83,10 @@ first model, then:
 
 ```bash
 gpu-status                                  # on the server
-curl http://192.168.1.50:11434/api/tags     # from your computer
 ```
+
+The API listens on the server's localhost only. To use it from your computer, set up the SSH
+tunnel described in [Coding against it](../homelab-server/llm-overlay.md#coding-against-it).
 
 ## Where to go next
 

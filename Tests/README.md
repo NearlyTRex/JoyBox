@@ -23,6 +23,13 @@ pytest Tests -m requires_docker
 The config lives in `Tests/pytest.ini`, so pytest needs the path — a bare
 `pytest` from the repo root will not pick it up. `cd Tests && pytest` also works.
 
+## Coverage
+
+`coverage_tool run` measures the unit tests the way CI does and reports the
+overall figure against CI's floor, each area of the library, the files missing
+the most, and the functions no test runs. `coverage_tool report -m <module>`
+details one module; see [its page](../Docs/reference/man/coverage_tool.md).
+
 ## Layout
 
 Test files mirror the path of the source they cover:

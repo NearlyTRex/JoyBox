@@ -38,6 +38,7 @@ clean_game_json_files = "joybox.cli.clean_game_json_files:run"
 clean_game_metadata_files = "joybox.cli.clean_game_metadata_files:run"
 compress_files = "joybox.cli.compress_files:run"
 compress_folders = "joybox.cli.compress_folders:run"
+coverage_tool = "joybox.cli.coverage_tool:run"
 crypt_tool = "joybox.cli.crypt_tool:run"
 dat_renamer = "joybox.cli.dat_renamer:run"
 decompiler_tool = "joybox.cli.decompiler_tool:run"
@@ -96,6 +97,7 @@ decompiler = [
     "pyghidra",
 ]
 dev = [
+    "coverage",
     "pytest",
 ]
 

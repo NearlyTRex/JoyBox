@@ -32,8 +32,21 @@ def get_api_base():
 def is_running():
     return network.is_url_reachable(get_api_base())
 
+# Get the SSH destination of the server, when it is reached through a tunnel
+# The server's API then listens on its own localhost, and the base URL is the
+# local end of the tunnel (the bootstrap's ollama_tunnel component).
+def get_ssh_host():
+    return settings.get_value("Tools.Ollama", "ollama_ssh_host", "", throw_exception = False) or ""
+
+# Check if the server is reached through an SSH tunnel
+def is_tunneled():
+    return bool(get_ssh_host())
+
 # Check if the configured server is this machine
+# A tunnel's local end is on localhost too, but the server is not.
 def is_local_server():
+    if is_tunneled():
+        return False
     host = urllib.parse.urlparse(get_api_base()).hostname or ""
     return host in ("localhost", "::1", "0.0.0.0") or host.startswith("127.")
 
@@ -105,6 +118,8 @@ def start_serve():
         return True
     if not is_local_server():
         logger.log_error("Ollama server at %s is not answering" % get_api_base())
+        if is_tunneled():
+            logger.log_info("It is reached through an SSH tunnel to %s; check it with: systemctl --user status ollama-tunnel" % get_ssh_host())
         return False
     logger.log_info("Starting Ollama server...")
     options = command.create_command_options()
@@ -524,22 +539,39 @@ def build_aider_args(api_base, model_name, context_tokens = None):
         return []
     return ["--model-settings-file", settings_file]
 
-# Coding-agent harnesses that can run against a model on the Ollama server.
-# Each entry gives the display name, the smallest context window worth
-# running it with (for check_context_window), the command, and the
-# environment that points it at the server. In those, "{model}" is the model
-# name, "{api_base}" the server's base URL and "{context}" the window built
-# into a -ctxNNk variant. context_env and context_args only apply when that
-# window is known; env_builders and arg_builders are called with
-# (api_base, model, context). Each preflight check runs in the directory the
-# harness will, before it starts, and returns False to stop the launch.
+###########################################################
+# Harnesses
 #
-# claude_code talks to Ollama's Anthropic-compatible endpoint, the others to
-# its OpenAI-compatible /v1 one. aider and opencode send far less with each
-# request than claude_code and codex, which suits local models.
-# coding_context is the window the code action builds in: only Claude Code
-# needs 64K, and a smaller one leaves room for a stronger model.
+# Coding-agent CLIs that can run against a model on the Ollama server. Each
+# entry gives:
+#
+#   name            display name
+#   min_tokens      smallest window worth running it with (check_context_window)
+#   command, env    how to start it and point it at the server
+#   context_args,   added only when the model is a -ctxNNk variant, so its
+#   context_env     window is known
+#   arg_builders,   called with (api_base, model, context) for what a
+#   env_builders    template cannot express
+#   preflight       checks run in its working directory before it starts;
+#                   one returning False stops the launch
+#   coding_context  the window the code action builds a variant with
+#   install_hint    shown when its command is not on the PATH
+#
+# In the templates, "{model}" is the model name, "{api_base}" the server's
+# base URL and "{context}" the window built into a -ctxNNk variant.
+#
+# Claude Code and Hermes Agent need 64K; the rest get 32K, which leaves room
+# for a stronger model. aider and opencode send far less with each request
+# than the others, which suits local models.
+###########################################################
+
 HARNESSES = {
+
+    # Claude Code
+    #
+    # Talks to Ollama's Anthropic-compatible endpoint. It assumes a window of
+    # its own for a model it does not know, far past what a local one holds,
+    # and would not compact in time, so a variant's window is passed in.
     "claude_code": {
         "name": "Claude Code",
         "min_tokens": 64000,
@@ -549,24 +581,34 @@ HARNESSES = {
             "ANTHROPIC_API_KEY": "ollama",
             "ANTHROPIC_AUTH_TOKEN": "",
         },
-
-        # Claude Code assumes a window of its own for a model it does not
-        # know, far past what a local one holds, and would not compact in time
         "context_env": "CLAUDE_CODE_MAX_CONTEXT_TOKENS",
         "coding_context": 65536,
         "install_hint": "https://docs.claude.com/claude-code",
     },
+
+    # Codex CLI
+    #
+    # Its built-in ollama provider cannot be redefined, only pointed at the
+    # server's /v1 endpoint. --oss alone still puts up the ChatGPT sign-in,
+    # which model_provider skips. The bootstrap installs it globally as root,
+    # so its own updater fails and is turned off.
     "codex": {
         "name": "Codex CLI",
         "min_tokens": 8000,
-
-        # Its built-in ollama provider cannot be redefined, only pointed elsewhere
-        "command": ["codex", "--oss", "--local-provider", "ollama", "-m", "{model}"],
+        "command": ["codex", "--oss", "--local-provider", "ollama", "-m", "{model}",
+            "-c", "model_provider=ollama",
+            "-c", "check_for_update_on_startup=false"],
         "env": {"CODEX_OSS_BASE_URL": "{api_base}/v1"},
         "context_args": ["-c", "model_context_window={context}"],
         "coding_context": 32768,
         "install_hint": "npm install -g @openai/codex",
     },
+
+    # OpenCode
+    #
+    # Given an ollama provider on the server's /v1 endpoint through
+    # OPENCODE_CONFIG_CONTENT (build_opencode_config), so nothing is written to
+    # its config.
     "opencode": {
         "name": "OpenCode",
         "min_tokens": 8000,
@@ -575,6 +617,12 @@ HARNESSES = {
         "coding_context": 32768,
         "install_hint": "npm install -g opencode-ai",
     },
+
+    # Aider
+    #
+    # Talks to Ollama's native API. A variant's window is fixed in a
+    # model-settings file (build_aider_args), and a repository it cannot read
+    # is repacked first (prepare_git_for_aider).
     "aider": {
         "name": "Aider",
         "min_tokens": 8000,
@@ -584,6 +632,22 @@ HARNESSES = {
         "preflight": [prepare_git_for_aider],
         "coding_context": 32768,
         "install_hint": "the Python installer puts it in a venv of its own (bootstrap); it pins its dependencies, so not into a shared venv",
+    },
+
+    # Hermes Agent
+    #
+    # Its custom provider reads the server's /v1 endpoint from CUSTOM_BASE_URL,
+    # so nothing is written to ~/.hermes, which keeps its memory and skills
+    # between runs. It refuses a window under 64K and takes the window from
+    # /api/show, which only a -ctxNNk variant's num_ctx makes match what the
+    # server serves.
+    "hermes": {
+        "name": "Hermes Agent",
+        "min_tokens": 64000,
+        "command": ["hermes", "--provider", "custom", "-m", "{model}"],
+        "env": {"CUSTOM_BASE_URL": "{api_base}/v1"},
+        "coding_context": 65536,
+        "install_hint": "the bootstrap's hermes component (a pinned release in a venv of its own)",
     },
 }
 
@@ -728,11 +792,25 @@ def get_coding_candidates(vram_mb, context_tokens = CODING_CONTEXT_TOKENS):
         candidates.append(dict(tag, rank = rank, loaded_mb = loaded_mb))
     return candidates
 
+# Read the context window a model was trained for, or None when unknown
+def get_trained_context_tokens(model_name):
+    shown = network.post_remote_json(get_api_base() + "/api/show", data = {"model": model_name}, timeout = 30)
+    info = (shown or {}).get("model_info") or {}
+    trained = info.get("%s.context_length" % info.get("general.architecture"))
+    return trained if isinstance(trained, int) and trained > 0 else None
+
 # Create a model with the context window built in
 # Agents cannot pass num_ctx with each request, and the server's default is
-# far smaller than they need.
+# far smaller than they need. Ollama quietly caps num_ctx at the trained
+# window while still reporting the larger one, so an agent sizing itself from
+# that report would overrun the model; such a window is refused instead.
 def create_context_variant(model_name, context_tokens):
     variant = get_context_variant_name(model_name, context_tokens)
+    trained = get_trained_context_tokens(model_name)
+    if trained and context_tokens > trained:
+        logger.log_error("%s was trained for %d tokens, short of the %dK asked for" % (
+            model_name, trained, context_tokens // 1024))
+        return None
     result = network.post_remote_json(
         get_api_base() + "/api/create",
         data = {"model": variant, "from": model_name,
@@ -895,33 +973,49 @@ def format_installed_model_display(model):
 ###########################################################
 
 # Pull a model, offering a quantization choice when the model has several
-def pull_with_quantization(model_name):
-    hw = get_server_hardware()
-    vram_mb = hw["gpu_vram_total_mb"]
-    ram_mb = hw["system_ram_mb"]
+# Check if a tag is a raw completion model
+# Base and text tags continue text rather than follow a conversation, so they
+# cannot drive a chat or call tools.
+def is_completion_only_tag(tag):
+    return re.search(r"(^|-)(base|text)(-|$)", tag.lower()) is not None
 
-    # Check for available quantizations
+# Choose which quantization of a model to pull
+# Returns the full name chosen, the name itself when there is no choice to
+# make, or None when the choice is declined.
+def choose_quantization(model_name, chat_only = False):
     options = get_quantization_options(model_name)
-    if options and len(options) > 1:
-        logger.log_info("Available quantizations for %s:" % model_name)
-        logger.log_info("[+] fits GPU  [~] CPU offload  [-] too large")
-        selected = prompts.prompt_for_selection(
-            "Select quantization:",
-            options,
-            display_func = lambda o: format_quantization_display(o, vram_mb, ram_mb)
-        )
-        if selected is None:
-            return True
-        model_name = selected["full_name"]
+    if chat_only:
+        options = [o for o in options if not is_completion_only_tag(o["tag"])]
+    if len(options) <= 1:
+        return options[0]["full_name"] if options else model_name
+    hw = get_server_hardware()
+    logger.log_info("Available quantizations for %s:" % model_name)
+    logger.log_info("[+] fits GPU  [~] CPU offload  [-] too large")
+    selected = prompts.prompt_for_selection(
+        "Select quantization:",
+        options,
+        display_func = lambda o: format_quantization_display(o, hw["gpu_vram_total_mb"], hw["system_ram_mb"])
+    )
+    if selected is None:
+        return None
+    return selected["full_name"]
 
-    # Pull model
+# Pull a model, reporting the outcome
+def pull_and_report(model_name):
     logger.log_info("Pulling %s ..." % model_name)
     if pull_model(model_name):
         logger.log_info("Successfully pulled %s" % model_name)
         return True
-    else:
-        logger.log_error("Failed to pull %s" % model_name)
-        return False
+    logger.log_error("Failed to pull %s" % model_name)
+    return False
+
+# Pull a model in a quantization chosen from those available
+# Declining the choice pulls nothing and is not a failure.
+def pull_with_quantization(model_name):
+    chosen = choose_quantization(model_name)
+    if chosen is None:
+        return True
+    return pull_and_report(chosen)
 
 # List installed models
 def action_list(model_name = None, purpose = None, harness = None, show_all = False):
@@ -1131,11 +1225,14 @@ def action_harness(model_name = None, purpose = None, harness = None, show_all =
     elif model_name not in installed_names:
         logger.log_error("Model '%s' is not installed" % model_name)
         logger.log_info("Installed models: %s" % ", ".join(sorted(installed_names)))
-        if prompts.prompt_for_confirmation("Pull '%s' now?" % model_name, default_yes = True):
-            if not pull_with_quantization(model_name):
-                return False
-        else:
+        if not prompts.prompt_for_confirmation("Pull '%s' now?" % model_name, default_yes = True):
             return False
+        chosen = choose_quantization(model_name, chat_only = True)
+        if chosen is None:
+            return True
+        if not pull_and_report(chosen):
+            return False
+        model_name = chosen
 
     # Warn if the model's context window is too small for this harness
     if not check_context_window(model_name, harness):
@@ -1194,6 +1291,36 @@ def action_code(model_name = None, purpose = None, harness = None, show_all = Fa
     logger.log_info("Launching %s with model: %s" % (HARNESSES[harness]["name"], variant))
     return launch_harness(variant, harness)
 
+# Command that installs or updates ollama, run on the server
+# It was installed from its own script rather than a package, so the system's
+# automatic updates never touch it. The installer replaces the binary and its
+# unit file; the drop-in that sets how it runs is left alone.
+OLLAMA_INSTALL_COMMAND = "curl -fsSL https://ollama.com/install.sh | sh"
+
+# Get the server's ollama version, or None when it is not answering
+def get_server_version():
+    return (network.get_remote_json(get_api_base() + "/api/version") or {}).get("version")
+
+# Update ollama on the server by rerunning its installer there over SSH
+def action_update(model_name = None, purpose = None, harness = None, show_all = False):
+    host = get_ssh_host()
+    if not host:
+        logger.log_error("Updating needs the server's SSH destination in [Tools.Ollama] ollama_ssh_host")
+        return False
+    before = get_server_version()
+    logger.log_info("Updating ollama on %s (now %s)" % (host, before or "not answering"))
+    if command.run_returncode_command(["ssh", host, OLLAMA_INSTALL_COMMAND]) != 0:
+        logger.log_error("The ollama installer failed on %s" % host)
+        return False
+    for _ in range(30):
+        after = get_server_version()
+        if after:
+            logger.log_info("ollama on %s is at %s" % (host, after))
+            return True
+        runtime.sleep_program(1)
+    logger.log_error("ollama on %s did not come back after updating" % host)
+    return False
+
 ACTIONS = {
     "list": action_list,
     "available": action_available,
@@ -1203,6 +1330,7 @@ ACTIONS = {
     "info": action_info,
     "harness": action_harness,
     "code": action_code,
+    "update": action_update,
 }
 
 # Get the available action names

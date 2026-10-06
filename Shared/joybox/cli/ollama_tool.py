@@ -17,6 +17,13 @@ def build_parser():
             "answer, the actions that need it start `ollama serve` in the background and wait up\n"
             "to ten seconds for it; a remote one that does not answer is an error.\n"
             "\n"
+            "A server whose API has no authentication, like the LLM server image, is best reached\n"
+            "through an SSH tunnel: set `[Tools.Ollama] ollama_ssh_host` to its SSH destination\n"
+            "(such as `aryie@192.168.1.15`), install the bootstrap's `ollama_tunnel` component, and\n"
+            "point `ollama_api_base` at the tunnel's end, `http://localhost:11444` by default\n"
+            "(`ollama_tunnel_port`). With an SSH host set, a `localhost` base is never taken for\n"
+            "a local server, so nothing is started here when the tunnel is down.\n"
+            "\n"
             "It detects GPU VRAM and system RAM (NVIDIA through `nvidia-smi`, then AMD and Intel\n"
             "Arc through the Linux DRM sysfs files, then `rocm-smi`; the card with the most VRAM\n"
             "counts) and marks each catalog model by how it fits: `[+]` fits in VRAM, `[~]` fits\n"
@@ -46,15 +53,22 @@ def build_parser():
             "- `code`: the one command for coding. Picks the most capable coding model from a\n"
             "  ranked list whose weights, context and load overhead fit the server's VRAM (or\n"
             "  prepares `-m`), pulls it if needed, builds the context into a `-ctxNNk` variant\n"
-            "  (64K for Claude Code, 32K for the other harnesses, leaving room for a stronger model),\n"
+            "  (64K for Claude Code and Hermes Agent, 32K for the others, leaving room for a stronger model),\n"
             "  loads it to check it sits wholly in VRAM, falling back to the next model if not, and\n"
             "  starts the harness (Claude Code unless `-H`) in the current directory. A prepared\n"
             "  variant is reused, so later runs start at once.\n"
+            "- `update`: rerun ollama's installer on the server over SSH (`ollama_ssh_host`), then\n"
+            "  wait for it to answer again. It was installed from its own script, so the system's\n"
+            "  automatic updates never touch it.\n"
             "\n"
             "Harnesses: `claude_code` runs `claude --model <m> --bare` against Ollama's Anthropic\n"
             "endpoint and wants a context window of at least 64K tokens. `codex` uses its own\n"
             "ollama provider (`codex --oss --local-provider ollama`, pointed at the server with\n"
-            "`CODEX_OSS_BASE_URL`). `opencode` is given an ollama provider through\n"
+            "`CODEX_OSS_BASE_URL`), with its sign-in prompt and self-update turned off. `hermes`\n"
+            "runs Hermes Agent's custom provider (`hermes --provider custom -m <m>`) pointed at the\n"
+            "server's `/v1` endpoint with `CUSTOM_BASE_URL`, keeping its memory in `~/.hermes`; it\n"
+            "refuses less than 64K, and reads the window from the server, so use a `-ctxNNk`\n"
+            "variant (as `code` does). `opencode` is given an ollama provider through\n"
             "`OPENCODE_CONFIG_CONTENT`, so nothing is written to its config. `aider` runs\n"
             "`aider --model ollama_chat/<m>` with `OLLAMA_API_BASE`, and for a `-ctxNNk` variant a\n"
             "model-settings file under the cache dir that fixes `num_ctx`: left to itself aider\n"
@@ -78,8 +92,10 @@ def build_parser():
             ("Run Claude Code on a local model", "ollama_tool harness -m qwen2.5-coder:7b"),
             ("Run Codex CLI on a local model", "ollama_tool harness -H codex -m qwen2.5-coder:7b"),
             ("Start coding with aider on the best model the server can hold", "ollama_tool code -H aider"),
+            ("Start Hermes Agent on the best model the server can hold at 64K", "ollama_tool code -H hermes"),
             ("Show details of an installed model", "ollama_tool info -m qwen2.5-coder:7b"),
             ("Delete a model", "ollama_tool delete -m qwen2.5-coder:7b"),
+            ("Update ollama on the server", "ollama_tool update"),
         ],
         notes = [
             "This command has no common options: `-p` is `--purpose`, not a dry run, and every action that changes something asks first.",
@@ -92,7 +108,7 @@ def build_parser():
         section = "AI")
     parser.add_string_argument(
         args = ("action",),
-        description = "Action to perform: `list`, `available`, `best`, `pull`, `delete`, `info`, `harness` or `code`")
+        description = "Action to perform: `list`, `available`, `best`, `pull`, `delete`, `info`, `harness`, `code` or `update`")
     parser.add_string_argument(
         args = ("-p", "--purpose"),
         description = "Purpose to filter or pick for: `chat`, `tools`, `reasoning`, `vision`, `embedding` or `cloud`")
@@ -102,7 +118,7 @@ def build_parser():
     parser.add_string_argument(
         args = ("-H", "--harness"),
         default = None,
-        description = "Coding-agent CLI for the `harness` and `code` actions: `claude_code`, `codex`, `opencode` or `aider`; `claude_code` when omitted")
+        description = "Coding-agent CLI for the `harness` and `code` actions: `claude_code`, `codex`, `opencode`, `aider` or `hermes`; `claude_code` when omitted")
     parser.add_boolean_argument(
         args = ("--all",),
         description = "In `available`, also list models too large for this machine's VRAM and RAM")

@@ -20,6 +20,9 @@ GPU_ENV_FILE = "/run/ollama/gpus.env"
 # Port the hardware report is served on, beside ollama's 11434
 HELPER_PORT = 11435
 
+# Address the hardware report is served on
+HELPER_HOST = "127.0.0.1"
+
 ###########################################################
 # GPUs
 ###########################################################
@@ -150,8 +153,9 @@ class HardwareHandler(http.server.BaseHTTPRequestHandler):
         pass
 
 # Serve the hardware report until stopped
-def serve(port = HELPER_PORT):
-    server = http.server.ThreadingHTTPServer(("0.0.0.0", port), HardwareHandler)
+# On localhost only, like ollama: clients reach both through an SSH tunnel.
+def serve(port = HELPER_PORT, host = HELPER_HOST):
+    server = http.server.ThreadingHTTPServer((host, port), HardwareHandler)
     server.serve_forever()
 
 # Run a command by name

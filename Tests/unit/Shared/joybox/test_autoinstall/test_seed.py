@@ -1,5 +1,6 @@
 # Imports
 import fnmatch
+import os
 
 # Third-party imports
 import pytest
@@ -59,14 +60,14 @@ def test_the_password_hash_survives_unchanged():
 
 def test_an_ssh_key_reaches_the_account():
     _, data = seed_for(ssh_keys = ["ssh-ed25519 AAAA homelab@example.test"])
-    account = data["autoinstall"]["user-data"]["users"][1]
+    account = data["autoinstall"]["user-data"]["users"][0]
 
     assert account["ssh_authorized_keys"] == ["ssh-ed25519 AAAA homelab@example.test"]
 
 
 def test_an_account_without_a_key_declares_none():
     _, data = seed_for(ssh_keys = [])
-    account = data["autoinstall"]["user-data"]["users"][1]
+    account = data["autoinstall"]["user-data"]["users"][0]
 
     assert "ssh_authorized_keys" not in account
 
@@ -74,7 +75,7 @@ def test_an_account_without_a_key_declares_none():
 def test_the_account_can_use_sudo_without_a_password():
     # Nothing is watching the console to type one.
     _, data = seed_for()
-    account = data["autoinstall"]["user-data"]["users"][1]
+    account = data["autoinstall"]["user-data"]["users"][0]
 
     assert "NOPASSWD" in account["sudo"]
 
@@ -84,6 +85,42 @@ def test_password_logins_are_turned_off():
 
     assert data["autoinstall"]["ssh"]["allow-pw"] is False
     assert data["autoinstall"]["ssh"]["install-server"] is True
+
+
+def test_the_profile_account_is_the_only_one():
+    # cloud-init's "default" entry would add an ubuntu user with passwordless sudo.
+    _, data = seed_for(username = "homelab")
+
+    assert [user["name"] for user in data["autoinstall"]["user-data"]["users"]] == ["homelab"]
+
+
+def sshd_settings(data):
+    files = {entry["path"]: entry["content"] for entry in data["autoinstall"]["user-data"]["write_files"]}
+    return dict(line.split(" ", 1) for line in files[autoinstall.sshd_config_path].splitlines())
+
+
+def test_sshd_takes_only_a_key_for_the_profile_account():
+    _, data = seed_for(username = "homelab")
+    settings = sshd_settings(data)
+
+    assert settings["PasswordAuthentication"] == "no"
+    assert settings["KbdInteractiveAuthentication"] == "no"
+    assert settings["PermitRootLogin"] == "no"
+    assert settings["AllowUsers"] == "homelab"
+
+
+def test_sshd_forwards_only_local_ports():
+    # A tunnel to a service bound to localhost needs local forwarding; nothing else does.
+    settings = sshd_settings(seed_for()[1])
+
+    assert settings["AllowTcpForwarding"] == "local"
+    assert settings["X11Forwarding"] == "no"
+    assert settings["AllowAgentForwarding"] == "no"
+
+
+def test_sshd_settings_sort_before_cloud_inits():
+    # sshd keeps the first value it reads, and cloud-init writes 50-cloud-init.conf.
+    assert os.path.basename(autoinstall.sshd_config_path) < "50-cloud-init.conf"
 
 
 def test_ssh_is_enabled_on_the_installed_machine():

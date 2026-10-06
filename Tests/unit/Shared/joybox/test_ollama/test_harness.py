@@ -139,7 +139,26 @@ def test_an_openai_style_harness_gets_the_versioned_endpoint(harness_command):
 def test_codex_uses_its_own_ollama_provider(harness_command):
     ollama.launch_harness("qwen3:8b", "codex")
 
-    assert harness_command.only() == ["codex", "--oss", "--local-provider", "ollama", "-m", "qwen3:8b"]
+    assert harness_command.only()[:6] == ["codex", "--oss", "--local-provider", "ollama", "-m", "qwen3:8b"]
+
+
+def codex_config(harness_command):
+    cmd = harness_command.only()
+    return [cmd[i + 1] for i, arg in enumerate(cmd) if arg == "-c"]
+
+
+def test_codex_does_not_ask_to_sign_in(harness_command):
+    # --oss alone still puts up the ChatGPT sign-in before the prompt.
+    ollama.launch_harness("qwen3:8b", "codex")
+
+    assert "model_provider=ollama" in codex_config(harness_command)
+
+
+def test_codex_does_not_try_to_update_itself(harness_command):
+    # It is installed globally as root, so its updater cannot write there.
+    ollama.launch_harness("qwen3:8b", "codex")
+
+    assert "check_for_update_on_startup=false" in codex_config(harness_command)
 
 
 def test_codex_is_told_the_window_built_into_a_variant(harness_command):
@@ -167,6 +186,21 @@ def test_opencode_leaves_an_unknown_window_to_the_server(harness_command):
 
     config = json.loads(harness_command.options().get_env_var("OPENCODE_CONFIG_CONTENT"))
     assert "limit" not in config["provider"]["ollama"]["models"]["qwen3:8b"]
+
+
+def test_hermes_uses_its_custom_provider_on_the_versioned_endpoint(harness_command):
+    # The server comes from the environment, so ~/.hermes/config.yaml is not written.
+    ollama.launch_harness("qwen3-coder:30b-ctx64k", "hermes")
+
+    assert harness_command.only() == ["hermes", "--provider", "custom", "-m", "qwen3-coder:30b-ctx64k"]
+    assert harness_command.options().get_env_var("CUSTOM_BASE_URL") == "http://localhost:11434/v1"
+
+
+def test_hermes_asks_for_the_window_it_refuses_to_run_below():
+    spec = ollama.HARNESSES["hermes"]
+
+    assert spec["min_tokens"] == 64000
+    assert spec["coding_context"] >= spec["min_tokens"]
 
 
 def launched(harness_command):

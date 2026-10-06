@@ -46,8 +46,10 @@ class LocalUbuntu(env.Environment):
             "brave": installers.Brave(**self.installer_options),
             "gh": installers.Gh(**self.installer_options),
             "gitkraken": installers.GitKraken(**self.installer_options),
+            "hermes": installers.HermesAgent(**self.installer_options),
             "llamacpp": installers.LlamaCpp(**self.installer_options),
             "ollama": installers.Ollama(**self.installer_options),
+            "ollama_tunnel": installers.OllamaTunnel(**self.installer_options),
             "onepassword": installers.OnePassword(**self.installer_options),
             "steam": installers.Steam(**self.installer_options),
             "sysctl": installers.Sysctl(**self.installer_options),
@@ -77,7 +79,9 @@ class LocalUbuntu(env.Environment):
         self.installer_brave = self.available_components["brave"]
         self.installer_gh = self.available_components["gh"]
         self.installer_gitkraken = self.available_components["gitkraken"]
+        self.installer_hermes = self.available_components["hermes"]
         self.installer_ollama = self.available_components["ollama"]
+        self.installer_ollama_tunnel = self.available_components["ollama_tunnel"]
         self.installer_onepassword = self.available_components["onepassword"]
         self.installer_steam = self.available_components["steam"]
         self.installer_sysctl = self.available_components["sysctl"]

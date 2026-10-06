@@ -41,6 +41,8 @@ from joybox.bootstrap.installers.installer_flatpak import (
     Flatpak as Flatpak)
 from joybox.bootstrap.installers.installer_gitkraken import (
     GitKraken as GitKraken)
+from joybox.bootstrap.installers.installer_hermes import (
+    HermesAgent as HermesAgent)
 from joybox.bootstrap.installers.installer_jenkins import (
     Jenkins as Jenkins)
 from joybox.bootstrap.installers.installer_kanboard import (
@@ -57,6 +59,8 @@ from joybox.bootstrap.installers.installer_node import (
     Node as Node)
 from joybox.bootstrap.installers.installer_ollama import (
     Ollama as Ollama)
+from joybox.bootstrap.installers.installer_ollama_tunnel import (
+    OllamaTunnel as OllamaTunnel)
 from joybox.bootstrap.installers.installer_oscar import (
     Oscar as Oscar)
 from joybox.bootstrap.installers.installer_onepassword import (

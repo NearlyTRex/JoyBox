@@ -71,7 +71,7 @@ def test_an_overlay_keeps_the_generated_account():
     user_data = data["autoinstall"]["user-data"]
 
     assert user_data["runcmd"] == ["nvidia-smi"]
-    assert user_data["users"][1]["name"] == "homelab"
+    assert user_data["users"][0]["name"] == "homelab"
 
 
 ###########################################################
@@ -223,13 +223,33 @@ def test_ollama_starts_on_the_gpus_the_helper_chooses(repo_root):
     assert "EnvironmentFile=-/run/ollama/gpus.env" in override
 
 
-def test_the_helper_report_is_served_and_reachable(repo_root):
+def test_the_helper_report_is_served(repo_root):
     seed = llm_overlay_seed(repo_root)
-    lines = runcmd_lines(seed)
 
     assert "ExecStart=/usr/local/sbin/ollama-helper serve" in written_files(seed)["/etc/systemd/system/ollama-helper.service"]
-    assert "systemctl enable --now ollama-helper" in lines
-    assert lines.index("ufw allow 11435/tcp") < lines.index("ufw --force enable")
+    assert "systemctl enable --now ollama-helper" in runcmd_lines(seed)
+
+
+def test_the_api_listens_on_localhost_only(repo_root):
+    # It has no authentication, so it is reached through an SSH tunnel
+    override = written_files(llm_overlay_seed(repo_root))["/etc/systemd/system/ollama.service.d/override.conf"]
+
+    assert 'Environment="OLLAMA_HOST=127.0.0.1:11434"' in override
+
+
+def test_ssh_is_the_only_port_the_firewall_opens(repo_root):
+    allowed = [line for line in runcmd_lines(llm_overlay_seed(repo_root)) if line.startswith("ufw allow")]
+
+    assert allowed == ["ufw allow 22/tcp"]
+
+
+def test_services_a_headless_server_does_not_need_are_stopped(repo_root):
+    lines = runcmd_lines(llm_overlay_seed(repo_root))
+    masked = next(line for line in lines if line.startswith("systemctl mask --now")).split()[3:]
+    disabled = next(line for line in lines if line.startswith("systemctl disable --now")).split()[3:]
+
+    assert {"ModemManager.service", "udisks2.service", "upower.service", "multipathd.service"} <= set(masked)
+    assert {"snapd.service", "snapd.socket"} <= set(disabled)
 
 
 def test_a_loaded_model_stays_loaded(repo_root):

@@ -141,10 +141,39 @@ def test_a_variant_is_created_with_the_context_built_in(server):
     server["replies"]["create"] = {"status": "success"}
 
     assert ollama.create_context_variant("qwen3-coder:30b", 65536) == "qwen3-coder:30b-ctx64k"
-    url, data, timeout = server["posts"][0]
+    url, data, timeout = server["posts"][-1]
     assert url == "http://box:11434/api/create"
     assert data == {"model": "qwen3-coder:30b-ctx64k", "from": "qwen3-coder:30b",
         "parameters": {"num_ctx": 65536}, "stream": False}
+
+
+def shown(architecture, context_length):
+    return {"model_info": {"general.architecture": architecture,
+        "%s.context_length" % architecture: context_length,
+        "%s.rope.scaling.original_context_length" % architecture: 8192}}
+
+
+def test_a_window_past_what_the_model_was_trained_for_is_refused(server):
+    # Ollama would cap it silently while still reporting the larger window.
+    server["replies"]["show"] = shown("qwen3", 40960)
+    server["replies"]["create"] = {"status": "success"}
+
+    assert ollama.create_context_variant("hermes-4:14b", 65536) is None
+    assert [url for url, _, _ in server["posts"]] == ["http://box:11434/api/show"]
+
+
+def test_a_window_within_the_trained_one_is_built(server):
+    server["replies"]["show"] = shown("qwen3moe", 262144)
+    server["replies"]["create"] = {"status": "success"}
+
+    assert ollama.create_context_variant("qwen3-coder:30b", 65536) == "qwen3-coder:30b-ctx64k"
+
+
+def test_an_unknown_trained_window_does_not_block_the_variant(server):
+    server["replies"]["show"] = {"model_info": {}}
+    server["replies"]["create"] = {"status": "success"}
+
+    assert ollama.create_context_variant("qwen3-coder:30b", 65536) == "qwen3-coder:30b-ctx64k"
 
 
 @pytest.mark.parametrize("reply", [None, {"status": "failed"}])
