@@ -114,6 +114,16 @@ Point the client's server setting at `aim.example.com` port `5190`. The server a
 hostname to clients after login, so it must resolve and be reachable from wherever the client
 runs — a client that signs in and then hangs is almost always a wrong advertised host.
 
+Pidgin dropped AIM and ICQ after 2.14.2. The `pidgin` component of `local_ubuntu` builds both
+plugins from that release against the installed libpurple and puts them in `~/.purple/plugins`, so
+Pidgin offers AIM and ICQ again. Run it after `aptget`, which installs `pidgin` and `libpurple-dev`:
+
+```bash
+python3 bootstrap.py -a setup -t local_ubuntu --components pidgin
+```
+
+In Pidgin, add an AIM account and set the server and port under its Advanced tab.
+
 TOC, WebAPI and legacy ICQ are disabled: TOC is bound to container loopback (the server requires
 the setting), the others are switched off.
 

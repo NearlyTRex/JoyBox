@@ -1,5 +1,7 @@
 # Imports
 import os
+import re
+import tomllib
 
 # Local imports
 import joybox.bootstrap.constants as constants
@@ -10,6 +12,28 @@ from joybox import runoptions
 from joybox import logger
 from joybox import environment
 from joybox import platform_info
+from joybox import serialization
+from joybox import systemtools as tools
+
+# Extras of joybox the venv gets
+JOYBOX_EXTRAS = ["dev", "decompiler"]
+
+# Prints the requirements recorded in the installed joybox metadata, one per line
+INSTALLED_REQUIREMENTS_SCRIPT = "import importlib.metadata as m; print(chr(10).join(m.requires('joybox') or []))"
+
+# Get the normalized distribution name of a requirement line
+def get_requirement_name(line):
+    name = re.split(r"[\s;<>=!~\[@(]", line.strip(), maxsplit = 1)[0]
+    return re.sub(r"[-_.]+", "-", name).lower()
+
+# Get the requirement names in a block of requirement lines, ignoring comments
+def get_requirement_names(lines):
+    names = set()
+    for line in lines:
+        line = line.split("#", 1)[0].strip()
+        if line:
+            names.add(get_requirement_name(line))
+    return names
 
 # Extract package identifier from string or dict
 # This is the distribution name, used to query install state with pip show
@@ -109,14 +133,34 @@ class Python(installer.Installer):
                 return os.path.normpath(location) == self.get_repo_dir()
         return False
 
+    def get_declared_requirement_names(self):
+        repo_dir = self.get_repo_dir()
+        requirements = serialization.read_text_file(os.path.join(repo_dir, "requirements.in")) or ""
+        pyproject = tomllib.loads(serialization.read_text_file(os.path.join(repo_dir, "pyproject.toml")) or "")
+        extras = pyproject.get("project", {}).get("optional-dependencies", {})
+        lines = requirements.splitlines()
+        for extra in JOYBOX_EXTRAS:
+            lines += extras.get(extra, [])
+        return get_requirement_names(lines)
+
+    def get_installed_requirement_names(self):
+        output = self.connection.run_output([tools.get_python_venv_python_tool(), "-c", INSTALLED_REQUIREMENTS_SCRIPT]) or ""
+        return get_requirement_names(output.splitlines())
+
+    def is_joybox_current(self):
+        return self.get_installed_requirement_names() == self.get_declared_requirement_names()
+
     def install_joybox(self):
         logger.log_info(f"Installing joybox from {self.get_repo_dir()}")
         code = self.connection.run_blocking([
-            self.python_venv_pip_tool, "install", "--editable", self.get_repo_dir() + "[dev,decompiler]"])
+            self.python_venv_pip_tool, "install", "--editable",
+            self.get_repo_dir() + "[%s]" % ",".join(JOYBOX_EXTRAS)])
         return code == 0
 
     def is_installed(self):
         if not self.is_joybox_installed():
+            return False
+        if not self.is_joybox_current():
             return False
         for pkg in self.get_packages():
             pkg_id = get_python_package_id(pkg)

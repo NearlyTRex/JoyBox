@@ -128,6 +128,7 @@ python3 bootstrap.py -t local_ubuntu --list-components
 | `ollama` | Ollama local LLM runtime |
 | `ollama_tunnel` | SSH tunnel to the LLM server's API, kept up as a user service |
 | `onepassword` | 1Password |
+| `pidgin` | AIM/ICQ plugins for Pidgin, built from the last release that had them |
 | `steam` | Steam gaming platform |
 | `sysctl` | Kernel sysctl tweaks |
 | `udev` | USB device rules |
