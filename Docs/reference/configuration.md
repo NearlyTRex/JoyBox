@@ -69,6 +69,9 @@ documented in [Remote Server Services](../remote-server/services.md#aim--oscar-s
 and `UserData.FitLog` in [Remote Server Services](../remote-server/services.md#fitlog) since it has a timezone and
 catalog settings.
 
+Most services also take an admin login, listed in
+[Remote Server Services](../remote-server/services.md#logins).
+
 ## SSH authentication
 
 ```ini

@@ -3,6 +3,7 @@ from joybox import settings
 from joybox import serverinfo
 from . import installer_dockerapp
 from joybox import runoptions
+from joybox import logger
 
 # Nginx config template
 nginx_config_template = r"""
@@ -88,6 +89,11 @@ server {{
 """
 
 # Docker compose template
+#
+# The admin account is synced from JoyBox.ini on every start: created when it
+# is missing, its password reset when it exists, so the ini stays the source of
+# truth. $$ defers expansion to the container's shell, which reads the
+# credentials from the environment rather than from the command line.
 docker_compose_template = """
 services:
   filebrowser:
@@ -99,14 +105,27 @@ services:
     volumes:
       - ${FILEBROWSER_ROOT}:/srv
       - config_data:/config
-    entrypoint: >
-      sh -c "
-        if [ ! -f /config/filebrowser.db ]; then
-          /filebrowser config init --database /config/filebrowser.db &&
-          /filebrowser users add $FILEBROWSER_ADMIN_USER $FILEBROWSER_ADMIN_PASS --perm.admin --database /config/filebrowser.db;
-        fi &&
-        /filebrowser --database /config/filebrowser.db
-      "
+    environment:
+      FB_ADMIN_USER: ${FILEBROWSER_ADMIN_USER}
+      FB_ADMIN_PASS: ${FILEBROWSER_ADMIN_PASS}
+
+      # Read by the image's healthcheck, which otherwise expects settings.json
+      FB_PORT: "80"
+      FB_ADDRESS: 127.0.0.1
+    entrypoint:
+      - tini
+      - --
+      - sh
+      - -c
+      - |
+        set -e
+        DB=/config/filebrowser.db
+        if [ ! -f "$$DB" ]; then
+          filebrowser config init --database "$$DB" --root /srv --address 0.0.0.0 --port 80
+        fi
+        filebrowser users update "$$FB_ADMIN_USER" --password "$$FB_ADMIN_PASS" --perm.admin --database "$$DB" >/dev/null 2>&1 ||
+          filebrowser users add "$$FB_ADMIN_USER" "$$FB_ADMIN_PASS" --perm.admin --database "$$DB"
+        exec filebrowser --database "$$DB" --root /srv --address 0.0.0.0 --port 80
 volumes:
   config_data: {}
 """
@@ -115,9 +134,12 @@ volumes:
 env_template = """
 FILEBROWSER_PORT_HTTP={port_http}
 FILEBROWSER_ROOT={user_root}
-FILEBROWSER_ADMIN_USER={admin_user}
-FILEBROWSER_ADMIN_PASS={admin_pass}
+FILEBROWSER_ADMIN_USER='{admin_user}'
+FILEBROWSER_ADMIN_PASS='{admin_pass}'
 """
+
+# FileBrowser refuses shorter passwords for new users
+MINIMUM_PASSWORD_LENGTH = 12
 
 # FileBrowser Installer
 class FileBrowser(installer_dockerapp.DockerAppInstaller):
@@ -147,7 +169,16 @@ class FileBrowser(installer_dockerapp.DockerAppInstaller):
 
         # Behavior
         self.required_settings = ["domain", "subdomain", "port_http", "user_root", "admin_user", "admin_pass"]
+        self.quoted_settings = ["admin_user", "admin_pass"]
 
         # Backup
         self.backup_label = "FileBrowser"
         self.backup_volumes = ["config_data"]
+
+    def check_required_settings(self):
+        if not super().check_required_settings():
+            return False
+        if len(str(self.env_values["admin_pass"])) < MINIMUM_PASSWORD_LENGTH:
+            logger.log_error(f"filebrowser_admin_pass must be at least {MINIMUM_PASSWORD_LENGTH} characters")
+            return False
+        return True

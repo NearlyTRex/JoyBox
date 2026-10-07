@@ -3,6 +3,7 @@ from joybox import settings
 from joybox import serverinfo
 from . import installer_dockerapp
 from joybox import runoptions
+from joybox import logger
 
 # Docker compose template
 docker_compose_template = """
@@ -55,8 +56,39 @@ class Navidrome(installer_dockerapp.DockerAppInstaller):
         # Behavior
         self.required_settings = ["domain", "subdomain", "port_http", "music_dir"]
 
+        # Admin created on first install
+        self.admin_user = settings.get_value("UserData.Navidrome", "navidrome_admin_user",
+            default_value = "admin", throw_exception = False)
+        self.admin_pass = settings.get_value("UserData.Navidrome", "navidrome_admin_pass",
+            default_value = "", throw_exception = False)
+
         # Backup
         # Only the config volume: the music library is mounted read-only from
         # storage and is not this app's data.
         self.backup_label = "Navidrome"
         self.backup_volumes = ["config_data"]
+
+    def post_install(self):
+
+        # Without a password the first visitor to the site creates the admin
+        if not self.admin_pass:
+            logger.log_warning("navidrome_admin_pass is not set; the first visitor to the site creates the admin")
+            return True
+        if self.flags.pretend_run:
+            return True
+        base_url = "http://127.0.0.1:%s" % self.env_values["port_http"]
+        if not self.wait_for_http(f"{base_url}/app/"):
+            logger.log_error("Navidrome did not answer, so the admin was not created")
+            return False
+
+        # Only the first admin can be created this way
+        logger.log_info(f"Creating the Navidrome admin {self.admin_user}")
+        status = self.call_local_api("POST", f"{base_url}/auth/createAdmin",
+            {"username": self.admin_user, "password": self.admin_pass})
+        if status == "403":
+            logger.log_info("Navidrome already has an admin; manage it in the app")
+            return True
+        if status != "200":
+            logger.log_error(f"Unable to create the Navidrome admin (HTTP {status})")
+            return False
+        return True
