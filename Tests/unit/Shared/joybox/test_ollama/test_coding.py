@@ -69,6 +69,11 @@ def test_the_loaded_size_counts_weights_context_and_overhead():
     assert abs(ollama.estimate_loaded_mb(19456, 96, 65536) - 30108) < 512
 
 
+def test_each_card_adds_its_own_overhead():
+    # Measured on the server: the same model split over two cards took 31220 MB
+    assert abs(ollama.estimate_loaded_mb(19456, 96, 65536, gpu_count = 2) - 31220) < 512
+
+
 def test_one_card_gets_the_most_capable_models_that_fit(catalog):
     names = [c["full_name"] for c in ollama.get_coding_candidates(32768)]
 
@@ -79,6 +84,12 @@ def test_more_cards_put_a_larger_model_first(catalog):
     names = [c["full_name"] for c in ollama.get_coding_candidates(3 * 32768)]
 
     assert names == ["big:120b", "dense:24b", "moe:30b"]
+
+
+def test_splitting_over_cards_can_leave_a_model_out(catalog):
+    # moe:30b fits 31232 MB on one card, but not with a second card's overhead
+    assert [c["full_name"] for c in ollama.get_coding_candidates(31232)] == ["dense:24b", "moe:30b"]
+    assert [c["full_name"] for c in ollama.get_coding_candidates(31232, gpu_count = 2)] == ["dense:24b"]
 
 
 def test_the_context_decides_whether_a_model_fits(catalog):
@@ -313,7 +324,7 @@ def test_a_failed_create_prepares_nothing(prep, monkeypatch):
 @pytest.fixture
 def picker(prep, catalog, monkeypatch):
     monkeypatch.setattr(ollama, "ensure_running", lambda: True)
-    monkeypatch.setattr(ollama, "get_server_hardware", lambda: {"gpu_vram_total_mb": 32768})
+    monkeypatch.setattr(ollama, "get_server_hardware", lambda: {"gpu_vram_total_mb": 32768, "gpu_count": 1})
     return prep
 
 
@@ -349,8 +360,16 @@ def test_declining_the_better_one_falls_back_to_the_prepared_one(picker):
     assert picker["pulled"] == []
 
 
+def test_the_server_card_count_reaches_the_estimate(picker, monkeypatch):
+    monkeypatch.setattr(ollama, "get_server_hardware", lambda: {"gpu_vram_total_mb": 31232, "gpu_count": 2})
+    picker["fits"] = {"moe:30b-ctx64k"}
+
+    assert ollama.prepare_coding_model(ask = False) is None
+    assert picker["loaded"] == ["dense:24b-ctx64k"]
+
+
 def test_nothing_is_prepared_when_no_candidate_fits(picker, monkeypatch):
-    monkeypatch.setattr(ollama, "get_server_hardware", lambda: {"gpu_vram_total_mb": 4096})
+    monkeypatch.setattr(ollama, "get_server_hardware", lambda: {"gpu_vram_total_mb": 4096, "gpu_count": 1})
 
     assert ollama.prepare_coding_model(ask = False) is None
     assert picker["loaded"] == []

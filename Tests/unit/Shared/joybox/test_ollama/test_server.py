@@ -178,6 +178,7 @@ def test_a_local_server_is_this_machine(monkeypatch, machine):
     hw = ollama.get_server_hardware()
 
     assert hw["gpu_vram_total_mb"] == 4096
+    assert hw["gpu_count"] == 1
     assert hw["system_ram_mb"] == 16000
     assert machine["warnings"] == []
 
@@ -214,6 +215,7 @@ REPORT = {
         {"name": "Tesla V100", "compute": True}],
     "compute_vram_total_mb": 65536,
     "compute_vram_free_mb": 60000,
+    "compute_gpu_count": 2,
     "ram_total_mb": 30986,
     "ram_available_mb": 29877,
 }
@@ -228,6 +230,7 @@ def test_the_helper_report_describes_a_remote_server(monkeypatch, machine):
     assert hw["gpu_name"] == "Tesla PG500-216, Tesla V100"
     assert hw["gpu_vram_total_mb"] == 65536
     assert hw["gpu_vram_free_mb"] == 60000
+    assert hw["gpu_count"] == 2
     assert hw["system_ram_mb"] == 30986
     assert hw["system_ram_available_mb"] == 29877
     assert machine["warnings"] == []
@@ -240,6 +243,7 @@ def test_configured_sizes_win_over_the_helper_report(monkeypatch, machine):
     hw = ollama.get_server_hardware()
 
     assert hw["gpu_vram_total_mb"] == 8192
+    assert hw["gpu_count"] == 2
     assert hw["system_ram_mb"] == 30986
 
 

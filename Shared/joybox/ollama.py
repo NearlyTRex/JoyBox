@@ -88,7 +88,7 @@ def read_helper_report():
 # Sizes set in the settings win, then the server's helper report, then this
 # machine, which is only right when the server is local.
 def get_server_hardware():
-    hw = dict(hardware.get_hardware_summary())
+    hw = dict(hardware.get_hardware_summary(), gpu_count = 1)
     report = read_helper_report()
     if report:
         names = [gpu.get("name", "?") for gpu in report.get("gpus", []) if gpu.get("compute")]
@@ -96,6 +96,7 @@ def get_server_hardware():
             gpu_name = ", ".join(names) or "None detected",
             gpu_vram_total_mb = report["compute_vram_total_mb"],
             gpu_vram_free_mb = report.get("compute_vram_free_mb", 0),
+            gpu_count = max(report.get("compute_gpu_count", 1), 1),
             system_ram_mb = report.get("ram_total_mb", 0),
             system_ram_available_mb = report.get("ram_available_mb", 0))
     vram_mb = get_setting_mb("ollama_gpu_vram_mb")
@@ -756,13 +757,14 @@ CODING_MODELS = [
 CODING_CONTEXT_TOKENS = 65536
 
 # What a loaded model takes beyond its weights and context, as a share of the
-# weights plus a fixed amount, measured against models loaded on the server
+# weights plus a fixed amount for each card it is split across, measured
+# against models loaded on the server
 LOAD_OVERHEAD_SHARE = 0.15
 LOAD_OVERHEAD_MB = 1536
 
 # Estimate the VRAM a model takes once loaded with a context window
-def estimate_loaded_mb(size_mb, kv_kb_per_token, context_tokens):
-    return int(size_mb * (1 + LOAD_OVERHEAD_SHARE) + LOAD_OVERHEAD_MB + kv_kb_per_token * context_tokens / 1024)
+def estimate_loaded_mb(size_mb, kv_kb_per_token, context_tokens, gpu_count = 1):
+    return int(size_mb * (1 + LOAD_OVERHEAD_SHARE) + LOAD_OVERHEAD_MB * gpu_count + kv_kb_per_token * context_tokens / 1024)
 
 # Name of a model with the context window built in
 def get_context_variant_name(model_name, context_tokens):
@@ -774,7 +776,7 @@ def get_variant_context_tokens(model_name):
     return int(match.group(1)) * 1024 if match else None
 
 # List coding models that could fit, most capable first
-def get_coding_candidates(vram_mb, context_tokens = CODING_CONTEXT_TOKENS):
+def get_coding_candidates(vram_mb, context_tokens = CODING_CONTEXT_TOKENS, gpu_count = 1):
     candidates = []
     tags_by_family = {}
     for rank, entry in enumerate(CODING_MODELS):
@@ -786,7 +788,7 @@ def get_coding_candidates(vram_mb, context_tokens = CODING_CONTEXT_TOKENS):
             continue
         if parse_context_tokens(tag["context"]) < context_tokens:
             continue
-        loaded_mb = estimate_loaded_mb(tag["size_mb"], entry["kv_kb_per_token"], context_tokens)
+        loaded_mb = estimate_loaded_mb(tag["size_mb"], entry["kv_kb_per_token"], context_tokens, gpu_count)
         if loaded_mb > vram_mb:
             continue
         candidates.append(dict(tag, rank = rank, loaded_mb = loaded_mb))
@@ -864,7 +866,7 @@ def prepare_coding_model(context_tokens = CODING_CONTEXT_TOKENS, ask = True):
     if not ensure_running():
         return None
     hw = get_server_hardware()
-    candidates = get_coding_candidates(hw["gpu_vram_total_mb"], context_tokens)
+    candidates = get_coding_candidates(hw["gpu_vram_total_mb"], context_tokens, hw["gpu_count"])
     if not candidates:
         logger.log_error("No coding model fits %d MB of VRAM with a %dK context" % (
             hw["gpu_vram_total_mb"], context_tokens // 1024))
