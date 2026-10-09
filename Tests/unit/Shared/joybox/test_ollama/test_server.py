@@ -553,7 +553,7 @@ def test_tags_are_read_for_the_model_family(tags_page):
         "tag": "8b",
         "full_name": "qwen3:8b",
         "size_str": "5.2GB",
-        "size_mb": 5324,
+        "size_mb": 4959,
         "context": "40K",
     }
     assert tags[1]["full_name"] == "qwen3:8b-q8_0"

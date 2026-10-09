@@ -384,21 +384,17 @@ FALLBACK_CATALOG = [
 # Model tags / quantization
 ###########################################################
 
-# Parse size string like "5.2GB", "890MB" to MB
+# Bytes in each unit of a size string; ollama.com prints decimal units
+SIZE_UNIT_BYTES = {"KB": 10 ** 3, "MB": 10 ** 6, "GB": 10 ** 9, "TB": 10 ** 12}
+
+# Parse size string like "5.2GB", "890MB" to MB, the binary megabytes
+# nvidia-smi reports VRAM in
 def parse_size_to_mb(size_str):
     size_str = size_str.strip().upper()
     match = re.match(r'^([\d.]+)\s*(GB|MB|KB|TB)$', size_str)
     if not match:
         return 0
-    value = float(match.group(1))
-    unit = match.group(2)
-    if unit == "TB":
-        return int(value * 1024 * 1024)
-    if unit == "GB":
-        return int(value * 1024)
-    if unit == "MB":
-        return int(value)
-    return max(1, int(value / 1024))
+    return max(1, int(float(match.group(1)) * SIZE_UNIT_BYTES[match.group(2)] / (1024 * 1024)))
 
 # Fetch available tags (quantizations) for a model
 def get_model_tags(base_name):
@@ -739,32 +735,33 @@ def launch_harness(model_name, harness = DEFAULT_HARNESS):
 # Each carries roughly how much VRAM its context takes per token, from its
 # layer and key/value head counts or, where it has been loaded on the server,
 # from what it actually took, so a model is not downloaded only to find the
-# window does not fit beside it. Loading it is still the final check.
+# window does not fit beside it. Loading it is still the final check. Ollama
+# keeps a full window for each request it serves at once, so the counts are
+# for the two the server is set up for.
 # Dense models come before mixture-of-experts ones of a similar size, which
 # answer quickly but use a fraction of their weights on each token and are
 # shakier at the multi-step work an agent does.
 CODING_MODELS = [
-    {"name": "devstral-2:123b", "kv_kb_per_token": 352},
+    {"name": "devstral-2:123b", "kv_kb_per_token": 704},
     {"name": "gpt-oss:120b", "kv_kb_per_token": 72},
-    {"name": "qwen3-coder-next:latest", "kv_kb_per_token": 24},
-    {"name": "devstral-small-2:24b", "kv_kb_per_token": 262},
-    {"name": "qwen3-coder:30b", "kv_kb_per_token": 96},
+    {"name": "qwen3-coder-next:latest", "kv_kb_per_token": 32},
+    {"name": "devstral-small-2:24b", "kv_kb_per_token": 304},
+    {"name": "qwen3-coder:30b", "kv_kb_per_token": 180},
     {"name": "gpt-oss:20b", "kv_kb_per_token": 48},
-    {"name": "devstral:24b", "kv_kb_per_token": 160},
+    {"name": "devstral:24b", "kv_kb_per_token": 304},
 ]
 
 # Context window the preset asks for unless a harness asks for another
 CODING_CONTEXT_TOKENS = 65536
 
-# What a loaded model takes beyond its weights and context, as a share of the
-# weights plus a fixed amount for each card it is split across, measured
-# against models loaded on the server
-LOAD_OVERHEAD_SHARE = 0.15
-LOAD_OVERHEAD_MB = 1536
+# What a loaded model takes beyond its weights and context on each card it is
+# split across, measured against models loaded on the server; it does not
+# grow with the weights
+LOAD_OVERHEAD_MB = 1024
 
 # Estimate the VRAM a model takes once loaded with a context window
 def estimate_loaded_mb(size_mb, kv_kb_per_token, context_tokens, gpu_count = 1):
-    return int(size_mb * (1 + LOAD_OVERHEAD_SHARE) + LOAD_OVERHEAD_MB * gpu_count + kv_kb_per_token * context_tokens / 1024)
+    return int(size_mb + LOAD_OVERHEAD_MB * gpu_count + kv_kb_per_token * context_tokens / 1024)
 
 # Name of a model with the context window built in
 def get_context_variant_name(model_name, context_tokens):
