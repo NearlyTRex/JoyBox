@@ -121,6 +121,13 @@ def test_a_failed_build_fails_the_install(isolated_settings):
     assert connection.removed_paths[-2:] == [pidgin.archive_path, pidgin.build_dir]
 
 
+def test_a_failed_verification_fails_the_install(isolated_settings, monkeypatch):
+    pidgin, _ = make_verified()
+    monkeypatch.setattr(pidgin, "is_installed", lambda: False)
+
+    assert not pidgin.install()
+
+
 def test_a_pretend_run_skips_the_checksum(isolated_settings):
     flags = runoptions.RunFlags(verbose = False, pretend_run = True)
     connection = RecordingConnection(flags = flags)

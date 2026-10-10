@@ -163,6 +163,23 @@ def test_jenkins_writes_a_readable_admin_script_before_compose(isolated_settings
     assert (script_path, "644") in connection.permissions
 
 
+def test_jenkins_with_an_admin_password_skips_the_wizard_warning(isolated_settings, monkeypatch, capsys):
+    isolated_settings.set_value("UserData.Jenkins", "jenkins_admin_pass", "secret")
+    jenkins, _ = make(installers.Jenkins)
+    monkeypatch.setattr(installers.DockerAppInstaller, "install", lambda self: True)
+
+    assert jenkins.install()
+    assert "setup wizard" not in capsys.readouterr().out
+
+
+def test_jenkins_fails_when_the_admin_script_cannot_be_written(isolated_settings, monkeypatch):
+    jenkins, connection = make(installers.Jenkins)
+    monkeypatch.setattr(connection, "write_file", lambda *args, **kwargs: False)
+    monkeypatch.setattr(installers.DockerAppInstaller, "install", lambda self: pytest.fail("compose started"))
+
+    assert not jenkins.install()
+
+
 ###########################################################
 # FitLog
 ###########################################################
@@ -205,6 +222,24 @@ def test_fitlog_reports_a_failed_login(isolated_settings):
     assert not fitlog.post_install()
 
 
+@pytest.fixture
+def fitlog_login(isolated_settings):
+    isolated_settings.set_value("UserData.FitLog", "fitlog_user", "pam")
+    isolated_settings.set_value("UserData.FitLog", "fitlog_pass", "a long password")
+
+
+def test_fitlog_waits_for_a_healthy_container(fitlog_login):
+    fitlog, connection = make(installers.FitLog, return_codes = {"sh -c": 1})
+    assert not fitlog.post_install()
+    assert not connection.ran("user create")
+
+
+def test_fitlog_reports_an_unstaged_password(fitlog_login):
+    fitlog, connection = make(installers.FitLog, return_codes = {"install -m 600": 1})
+    assert not fitlog.post_install()
+    assert not connection.ran("user create")
+
+
 ###########################################################
 # Oscar
 ###########################################################
@@ -239,6 +274,12 @@ def test_oscar_reports_a_rejected_screen_name(oscar_login):
     assert not oscar.post_install()
 
 
+def test_oscar_waits_for_the_management_api(oscar_login):
+    oscar, connection = make(installers.Oscar, return_codes = {"sh -c": 1})
+    assert not oscar.post_install()
+    assert not connection.ran("-X POST")
+
+
 ###########################################################
 # Navidrome and Audiobookshelf
 ###########################################################
@@ -257,6 +298,13 @@ def test_navidrome_creates_the_first_admin(isolated_settings, status, expected):
     assert connection.ran("-X POST", "/auth/createAdmin")
 
 
+def test_navidrome_waits_for_the_server(isolated_settings):
+    isolated_settings.set_value("UserData.Navidrome", "navidrome_admin_pass", "secret")
+    navidrome, connection = make(installers.Navidrome, return_codes = {"sh -c": 1})
+    assert not navidrome.post_install()
+    assert not connection.ran("-X POST")
+
+
 def test_audiobookshelf_initialises_a_new_server(isolated_settings):
     isolated_settings.set_value("UserData.Audiobookshelf", "audiobookshelf_admin_pass", "secret")
     audiobookshelf, connection = make(installers.Audiobookshelf, command_output = {
@@ -273,8 +321,29 @@ def test_audiobookshelf_leaves_an_initialised_server_alone(isolated_settings):
     assert not connection.ran("-X POST")
 
 
-def test_logins_are_skipped_on_a_pretend_run(isolated_settings):
-    isolated_settings.set_value("UserData.Navidrome", "navidrome_admin_pass", "secret")
-    navidrome, connection = make(installers.Navidrome, flags = runoptions.RunFlags(verbose = False, pretend_run = True))
-    assert navidrome.post_install()
-    assert connection.commands == []
+def test_audiobookshelf_waits_for_the_server(isolated_settings):
+    isolated_settings.set_value("UserData.Audiobookshelf", "audiobookshelf_admin_pass", "secret")
+    audiobookshelf, connection = make(installers.Audiobookshelf, return_codes = {"sh -c": 1})
+    assert not audiobookshelf.post_install()
+    assert not connection.ran("-X POST")
+
+
+def test_audiobookshelf_reports_a_rejected_root_user(isolated_settings):
+    isolated_settings.set_value("UserData.Audiobookshelf", "audiobookshelf_admin_pass", "secret")
+    audiobookshelf, _ = make(installers.Audiobookshelf, command_output = {
+        "-X POST": "500", "/status": '{"app":"audiobookshelf","isInit":false}'})
+    assert not audiobookshelf.post_install()
+
+
+@pytest.mark.parametrize("installer_class, section, logins", [
+    (installers.Navidrome, "UserData.Navidrome", {"navidrome_admin_pass": "secret"}),
+    (installers.Audiobookshelf, "UserData.Audiobookshelf", {"audiobookshelf_admin_pass": "secret"}),
+    (installers.FitLog, "UserData.FitLog", {"fitlog_user": "pam", "fitlog_pass": "a long password"}),
+    (installers.Oscar, "UserData.Oscar", {"oscar_user": "pam", "oscar_pass": "secret"}),
+])
+def test_logins_are_skipped_on_a_pretend_run(isolated_settings, installer_class, section, logins):
+    for key, value in logins.items():
+        isolated_settings.set_value(section, key, value)
+    installer, connection = make(installer_class, flags = runoptions.RunFlags(verbose = False, pretend_run = True))
+    assert installer.post_install()
+    assert not connection.ran_any("curl", "docker", "sh -c", "install -m 600")
