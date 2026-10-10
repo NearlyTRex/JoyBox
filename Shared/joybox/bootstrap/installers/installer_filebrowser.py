@@ -139,7 +139,7 @@ FILEBROWSER_ADMIN_PASS='{admin_pass}'
 """
 
 # FileBrowser refuses shorter passwords for new users
-MINIMUM_PASSWORD_LENGTH = 12
+MINIMUM_ADMIN_PASS_LENGTH = 12
 
 # FileBrowser Installer
 class FileBrowser(installer_dockerapp.DockerAppInstaller):
@@ -178,7 +178,7 @@ class FileBrowser(installer_dockerapp.DockerAppInstaller):
     def check_required_settings(self):
         if not super().check_required_settings():
             return False
-        if len(str(self.env_values["admin_pass"])) < MINIMUM_PASSWORD_LENGTH:
-            logger.log_error(f"filebrowser_admin_pass must be at least {MINIMUM_PASSWORD_LENGTH} characters")
+        if len(str(self.env_values["admin_pass"])) < MINIMUM_ADMIN_PASS_LENGTH:
+            logger.log_error(f"filebrowser_admin_pass must be at least {MINIMUM_ADMIN_PASS_LENGTH} characters")
             return False
         return True
