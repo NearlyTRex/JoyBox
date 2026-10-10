@@ -9,6 +9,7 @@ updates:
       interval: weekly
     cooldown:
       default-days: 7
+    assignees: ["NearlyTRex"]
     groups:
       actions:
         patterns: ["*"]
@@ -19,6 +20,7 @@ updates:
       interval: weekly
     cooldown:
       default-days: 7
+    assignees: ["NearlyTRex"]
     groups:
       python:
         patterns: ["*"]
@@ -29,6 +31,7 @@ updates:
       interval: weekly
     cooldown:
       default-days: 7
+    assignees: ["NearlyTRex"]
     groups:
       submodules:
         patterns: ["*"]
