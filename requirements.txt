@@ -8,9 +8,9 @@ annotated-types==0.8.0 \
     --hash=sha256:13b2beaad985e05e2d6407ee4c4f35590b11f8d693a258a561055cac8f64cab7 \
     --hash=sha256:f072f4d804ea359e4eaf198b1af7a8b0943881a87f31bb764f8bf219bb9419e0
     # via pydantic
-anthropic==1.8.0 \
-    --hash=sha256:79a4516a21e64fd7b15be1a49ebf544bd6376c96a971a77365358823a2717bc6 \
-    --hash=sha256:9c1783ed90f409617749a61c5ab98e20624a572626f2e0a15cea03ed8e1401e5
+anthropic==1.11.0 \
+    --hash=sha256:3906fabac7ad7b5b46c6186040398fc7826885c77ce34e4dd7849de16fc8d0f8 \
+    --hash=sha256:52f97b2c485cca7ac66058374f5073a3febb7e6849b16989c145d602a3efee21
     # via -r requirements.in
 anyio==4.15.1 \
     --hash=sha256:6152fdbbf9a77fdec97731721bebf7c4c44f7c29b424b0065826173efc7ed101 \
@@ -1330,9 +1330,9 @@ screeninfo==0.8.1 \
     --hash=sha256:9983076bcc7e34402a1a9e4d7dabf3729411fd2abb3f3b4be7eba73519cd2ed1 \
     --hash=sha256:e97d6b173856edcfa3bd282f81deb528188aff14b11ec3e195584e7641be733c
     # via -r requirements.in
-selenium==4.49.0 \
-    --hash=sha256:0d1de9ec6977aa2d5f766d923d5076fdffa91681a8d4ffc9e3381a36839a20f2 \
-    --hash=sha256:c9d91274e5f55835e12b524adf1f231739ea811a8866d810e5bb42ba87cd8eda
+selenium==4.50.0 \
+    --hash=sha256:80402fb6f48e0ee2183ec1d58b257a593dcd5c8130c1e6419ee7509f2128be5d \
+    --hash=sha256:f724a38a7fd8b0561c6767c620bd9b2c7bd8012d4cb664b2ad23064e5d67d0df
     # via -r requirements.in
 six==1.17.0 \
     --hash=sha256:4721f391ed90541fddacab5acf947aa0d3dc7d27b2e1e8eda2be8970586c3274 \
