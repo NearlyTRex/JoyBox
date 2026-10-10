@@ -68,10 +68,10 @@ def test_install_builds_both_plugins_and_cleans_up(isolated_settings):
     for protocol in installer_pidgin.OSCAR_PROTOCOLS:
         assert connection.ran(
             "gcc", "-fvisibility=hidden", "-I/usr/include/libpurple",
-            f"oscar/lib{protocol}.c", f"oscar/oscar.c", f"lib{protocol}.so", "-lglib-2.0")
+            f"oscar/lib{protocol}.c", "oscar/oscar.c", f"lib{protocol}.so", "-lglib-2.0")
 
     built = [(os.path.join(pidgin.build_dir, f"lib{p}.so"), path)
-        for p, path in zip(installer_pidgin.OSCAR_PROTOCOLS, pidgin.get_plugin_paths())]
+        for p, path in zip(installer_pidgin.OSCAR_PROTOCOLS, pidgin.get_plugin_paths(), strict=True)]
     assert connection.moved == built
     assert all((path, "644") in connection.permissions for path in pidgin.get_plugin_paths())
     assert connection.removed_paths[-2:] == [pidgin.archive_path, pidgin.build_dir]

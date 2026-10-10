@@ -100,7 +100,7 @@ class Pidgin(installer.Installer):
     def get_package_status(self):
         installed = []
         missing = []
-        for protocol, path in zip(OSCAR_PROTOCOLS, self.get_plugin_paths()):
+        for protocol, path in zip(OSCAR_PROTOCOLS, self.get_plugin_paths(), strict=True):
             if self.connection.does_file_or_directory_exist(path):
                 installed.append(f"pidgin-{protocol}")
             else:
@@ -182,7 +182,7 @@ class Pidgin(installer.Installer):
 
         # Install into the per-user plugin directory
         self.connection.make_directory(self.get_plugin_dir())
-        for output_path, plugin_path in zip(built, self.get_plugin_paths()):
+        for output_path, plugin_path in zip(built, self.get_plugin_paths(), strict=True):
             self.connection.move_file_or_directory(output_path, plugin_path)
             self.connection.change_permission(plugin_path, "644")
         self.clean_build()
