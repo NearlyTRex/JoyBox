@@ -103,6 +103,12 @@ screen or in the scrollback.
 | `UserData.Share` | `locker_*_passphrase`, `locker_*_token` |
 | `UserData.Wordpress` | `wordpress_db_pass`, `wordpress_db_root_pass`, `wordpress_admin_pass` |
 | `UserData.FileBrowser` | `filebrowser_admin_pass` |
+| `UserData.Kanboard` | `kanboard_admin_pass` |
+| `UserData.Jenkins` | `jenkins_admin_pass` |
+| `UserData.Navidrome` | `navidrome_admin_pass` |
+| `UserData.Audiobookshelf` | `audiobookshelf_admin_pass` |
+| `UserData.FitLog` | `fitlog_pass` |
+| `UserData.Oscar` | `oscar_pass` |
 | `UserData.Autoinstall` | `autoinstall_password_hash` |
 | `Tools.*` | `github_access_token`, `steam_web_api_key`, `steamgriddb_api_key`, `anthropic_api_key`, `google_search_engine_api_key`, `humblebundle_auth_token` |
 

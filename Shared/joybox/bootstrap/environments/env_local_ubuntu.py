@@ -51,6 +51,7 @@ class LocalUbuntu(env.Environment):
             "ollama": installers.Ollama(**self.installer_options),
             "ollama_tunnel": installers.OllamaTunnel(**self.installer_options),
             "onepassword": installers.OnePassword(**self.installer_options),
+            "pidgin": installers.Pidgin(**self.installer_options),
             "steam": installers.Steam(**self.installer_options),
             "sysctl": installers.Sysctl(**self.installer_options),
             "udev": installers.Udev(**self.installer_options),
@@ -83,6 +84,7 @@ class LocalUbuntu(env.Environment):
         self.installer_ollama = self.available_components["ollama"]
         self.installer_ollama_tunnel = self.available_components["ollama_tunnel"]
         self.installer_onepassword = self.available_components["onepassword"]
+        self.installer_pidgin = self.available_components["pidgin"]
         self.installer_steam = self.available_components["steam"]
         self.installer_sysctl = self.available_components["sysctl"]
         self.installer_udev = self.available_components["udev"]

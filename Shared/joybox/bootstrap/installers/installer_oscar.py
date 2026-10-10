@@ -194,6 +194,12 @@ class Oscar(installer_dockerapp.DockerAppInstaller):
         self.env_template = env_template
         self.nginx_config_template = nginx_config_template
 
+        # Screen name created on install
+        self.screen_name = settings.get_value("UserData.Oscar", "oscar_user",
+            default_value = "", throw_exception = False)
+        self.screen_name_pass = settings.get_value("UserData.Oscar", "oscar_pass",
+            default_value = "", throw_exception = False)
+
         # Behavior
         self.nginx_ports = [str(self.port_public)]
         self.required_settings = ["domain", "subdomain", "port_public", "port_bos", "port_api"]
@@ -215,6 +221,31 @@ class Oscar(installer_dockerapp.DockerAppInstaller):
             return False
         self.connection.move_file_or_directory(dockerfile_tmp_path, f"{app_dir}/Dockerfile")
         return super().install()
+
+    def post_install(self):
+
+        # Screen names are otherwise created through the management API by hand
+        if not self.screen_name or not self.screen_name_pass:
+            logger.log_info("Set oscar_user and oscar_pass to create a screen name on install")
+            return True
+        if self.flags.pretend_run:
+            return True
+        api_url = "http://127.0.0.1:%s" % self.nginx_config_values["port_api"]
+        if not self.wait_for_http(f"{api_url}/user"):
+            logger.log_error("The Oscar management API did not answer, so the screen name was not created")
+            return False
+
+        # Create the screen name, or reset its password to match the ini
+        logger.log_info(f"Creating the Oscar screen name {self.screen_name}")
+        payload = {"screen_name": self.screen_name, "password": self.screen_name_pass}
+        status = self.call_local_api("POST", f"{api_url}/user", payload)
+        if status == "409":
+            logger.log_info(f"{self.screen_name} already exists; setting its password")
+            status = self.call_local_api("PUT", f"{api_url}/user/password", payload)
+        if status not in ["201", "204"]:
+            logger.log_error(f"Unable to create the Oscar screen name {self.screen_name} (HTTP {status})")
+            return False
+        return True
 
     def install_nginx_config(self):
 

@@ -123,13 +123,10 @@ def test_restore_verifies_checksums_before_touching_data(wordpress):
 
 
 def test_components_without_backup_data_do_nothing(isolated_settings, recording_connection):
-    # Jenkins deliberately declares no backup items: jenkins_home_dir points at
-    # /mnt/repositories, which holds every git repo on the box.
-    isolated_settings.set_value("UserData.Jenkins", "jenkins_home_dir", "/mnt/repositories")
-    jenkins = installers.Jenkins(recording_connection)
+    app = installers.DockerAppInstaller(recording_connection)
 
-    assert jenkins.has_backup_items() is False
-    assert jenkins.backup() is True
+    assert app.has_backup_items() is False
+    assert app.backup() is True
     assert recording_connection.commands == []
 
 

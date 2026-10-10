@@ -36,6 +36,32 @@ python3 bootstrap.py -a setup -t remote_ubuntu -s 0 --components wordpress
 | `fitlog` | FitLog — personal food and exercise tracker |
 | `oscar` | Open OSCAR Server — self-hosted AIM/ICQ |
 
+## Logins
+
+Each app's first login comes from `JoyBox.ini`, so a fresh deploy never shows a setup page that
+the first visitor could claim. Passwords can be `op://` references (see
+[Secrets](../reference/secrets.md)).
+
+| Component | Settings | Behaviour |
+|-----------|----------|-----------|
+| `cockpit` | `server_N_user`, `server_N_pass` | Cockpit signs in with the server's own account |
+| `wordpress` | `wordpress_admin_user`, `wordpress_admin_pass` | Created by the seed on install |
+| `filebrowser` | `filebrowser_admin_user`, `filebrowser_admin_pass` | Synced on every start; the password needs 12 or more characters |
+| `kanboard` | `kanboard_admin_user`, `kanboard_admin_pass` | Required. Synced on every deploy; the stock `admin`/`admin` account is renamed to the configured user |
+| `jenkins` | `jenkins_admin_user`, `jenkins_admin_pass` | Synced on every start, and the setup wizard is skipped. With no password the wizard runs instead |
+| `navidrome` | `navidrome_admin_user`, `navidrome_admin_pass` | Created on the first deploy only; manage it in the app afterwards |
+| `audiobookshelf` | `audiobookshelf_admin_user`, `audiobookshelf_admin_pass` | Created on the first deploy only; manage it in the app afterwards |
+| `fitlog` | `fitlog_user`, `fitlog_pass` | Created on the first deploy only, which prints the authenticator QR code once |
+| `oscar` | `oscar_user`, `oscar_pass` | A screen name, created or its password reset on every deploy |
+
+"Synced" means the ini wins: a password changed in the app is reset on the next deploy. Passwords
+are written to the app's `.env` in single quotes, so they cannot contain a single quote or a
+newline.
+
+FileBrowser also sits behind the shared htpasswd prompt, so it takes the htpasswd login first and
+the app login second. The OSCAR management API uses only the htpasswd login; AIM clients on port
+5190 use the screen name.
+
 ## The website
 
 WordPress serves the **apex domain**. `www` 301s to it, and both are on the certificate.
@@ -75,6 +101,8 @@ oscar_port_public = 5190
 oscar_port_bos = 15190
 oscar_port_api = 18080
 oscar_log_level = info
+oscar_user = myname
+oscar_pass = ...
 ```
 
 `oscar_port_public` is the port clients dial. `oscar_port_bos` and `oscar_port_api` are
@@ -93,7 +121,8 @@ stays open as long as the user is signed in, so a short timeout would silently d
 Accounts are **not** auto-created. `DISABLE_AUTH` is off, so an unknown screen name is rejected
 rather than claimed — otherwise anyone reaching port 5190 could take any name, including yours.
 
-Create accounts through the management API, which is proxied over HTTPS on the same subdomain
+`oscar_user` and `oscar_pass` create one screen name on every deploy, or reset its password to
+match. Create any others through the management API, which is proxied over HTTPS on the same subdomain
 behind the shared `.htpasswd`:
 
 ```bash
@@ -113,6 +142,16 @@ already.
 Point the client's server setting at `aim.example.com` port `5190`. The server advertises that
 hostname to clients after login, so it must resolve and be reachable from wherever the client
 runs — a client that signs in and then hangs is almost always a wrong advertised host.
+
+Pidgin dropped AIM and ICQ after 2.14.2. The `pidgin` component of `local_ubuntu` builds both
+plugins from that release against the installed libpurple and puts them in `~/.purple/plugins`, so
+Pidgin offers AIM and ICQ again. Run it after `aptget`, which installs `pidgin` and `libpurple-dev`:
+
+```bash
+python3 bootstrap.py -a setup -t local_ubuntu --components pidgin
+```
+
+In Pidgin, add an AIM account and set the server and port under its Advanced tab.
 
 TOC, WebAPI and legacy ICQ are disabled: TOC is bound to container loopback (the server requires
 the setting), the others are switched off.
@@ -136,6 +175,8 @@ fitlog_port_http = 8087
 fitlog_timezone = America/Los_Angeles
 fitlog_pull_minutes = 10
 fitlog_catalog_branch = main
+fitlog_user = me
+fitlog_pass = ...
 ```
 
 `fitlog_timezone` decides when "today" rolls over, so set it to your own zone.
@@ -145,8 +186,10 @@ app clones it on first start and pulls `fitlog_catalog_branch` every `fitlog_pul
 catalog change reaches the server with a push and no redeploy. Code changes need a new FitLog
 release and a bump of `FITLOG_VERSION`.
 
-FitLog has one login and no sign-up page. Create it once after the first deploy. The command
-prompts for a password and shows the authenticator QR code:
+FitLog has one login and no sign-up page. With `fitlog_user` and `fitlog_pass` set, the first
+deploy creates it and prints the authenticator QR code to the terminal, once and never to a log
+file; enroll it then. Later deploys leave the login alone. Without those settings, create it by
+hand after the first deploy. The command prompts for a password and shows the QR code:
 
 ```bash
 cd ~/apps/fitlog && docker compose exec fitlog fitlog user create <name>

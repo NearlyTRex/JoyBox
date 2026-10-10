@@ -80,6 +80,12 @@ class FitLog(installer_dockerapp.DockerAppInstaller):
         # Behavior
         self.required_settings = ["domain", "subdomain", "port_http", "timezone"]
 
+        # Login
+        self.login_user = settings.get_value("UserData.FitLog", "fitlog_user",
+            default_value = "", throw_exception = False)
+        self.login_pass = settings.get_value("UserData.FitLog", "fitlog_pass",
+            default_value = "", throw_exception = False)
+
         # Backup
         # The SQLite database: food log, workout plans, settings and the login.
         # The catalog volume is a clone of the repo, so it is not backed up.
@@ -88,8 +94,39 @@ class FitLog(installer_dockerapp.DockerAppInstaller):
 
     def post_install(self):
 
-        # The login is created interactively: it prompts for a password and
-        # shows the authenticator QR code.
-        logger.log_info("FitLog is running. Create the login once, on the server:")
-        logger.log_info(f"  cd {self.get_app_dir()} && docker compose exec fitlog fitlog user create <name>")
+        # Without a login in the ini, it is created by hand
+        create_command = f"cd {self.get_app_dir()} && docker compose exec fitlog fitlog user create <name>"
+        if not self.login_user or not self.login_pass:
+            logger.log_info("FitLog is running. Set fitlog_user and fitlog_pass, or create the login once, on the server:")
+            logger.log_info(f"  {create_command}")
+            return True
+        if self.flags.pretend_run:
+            return True
+        if not self.wait_for_service_health("fitlog"):
+            logger.log_error("FitLog did not start, so the login was not created")
+            return False
+
+        # The CLI reads the password and its confirmation from stdin
+        logger.log_info(f"Creating the FitLog login for {self.login_user}")
+        password_path = f"{self.get_app_dir()}/.login-password"
+        if not self.write_secret_file(password_path, f"{self.login_pass}\n{self.login_pass}\n"):
+            logger.log_error("Unable to stage the FitLog password")
+            return False
+        output = self.connection.run_output(["sh", "-c",
+            'docker exec -i fitlog fitlog user create "$1" < "$2" 2>&1; echo "exit=$?"',
+            "sh", self.login_user, password_path])
+        self.connection.remove_file_or_directory(password_path)
+
+        # Only one login exists, and its password is not reset on later deploys
+        if "A user already exists" in output:
+            logger.log_info("FitLog already has its login; change it with fitlog user reset-password")
+            return True
+        if "Created user" not in output:
+            logger.log_error("Unable to create the FitLog login:")
+            logger.log_error(output)
+            return False
+
+        # The authenticator secret goes to the console only, never the log files
+        logger.log_info("FitLog login created. Enroll it in an authenticator app now; it is shown once:")
+        logger.log_output(output[output.index("Created user"):output.rindex("exit=")] + "\n")
         return True

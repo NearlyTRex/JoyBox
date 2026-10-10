@@ -79,13 +79,18 @@ def test_an_unparseable_context_window_is_nothing(value):
 
 
 @pytest.mark.parametrize("value,expected", [
-    ("5.2GB", int(5.2 * 1024)),
-    ("890MB", 890),
-    ("1TB", 1024 * 1024),
+    ("5.2GB", 4959),
+    ("890MB", 848),
+    ("1TB", 953674),
     ("512KB", 1),
 ])
 def test_a_download_size_is_parsed_into_megabytes(value, expected):
     assert ollama.parse_size_to_mb(value) == expected
+
+
+def test_a_listed_size_is_in_decimal_units():
+    # ollama.com lists qwen3-coder-next at 52GB; its download is 49344 MB
+    assert abs(ollama.parse_size_to_mb("52GB") - 49344) < 512
 
 
 def test_a_download_size_is_parsed_whatever_its_case():

@@ -1,4 +1,5 @@
 # Imports
+import json
 import os
 
 # Local imports
@@ -107,6 +108,7 @@ class DockerAppInstaller(installer.Installer):
         self.nginx_config_mode = "http"
         self.nginx_ports = []
         self.required_settings = []
+        self.quoted_settings = []
 
         # Backup
         self.backup_label = ""
@@ -174,6 +176,14 @@ class DockerAppInstaller(installer.Installer):
         if missing:
             logger.log_error(f"Missing required settings for {self.app_name}: {', '.join(missing)}")
             logger.log_error(f"Set them in {settings.get_settings_file()} and re-run")
+            return False
+
+        # Quoted settings are written to .env inside single quotes, which keep
+        # compose from expanding $ or treating " #" as a comment
+        unquotable = [key for key in self.quoted_settings
+            if any(char in str(self.env_values.get(key) or "") for char in ["'", "\n"])]
+        if unquotable:
+            logger.log_error(f"Settings for {self.app_name} cannot contain a single quote or newline: {', '.join(unquotable)}")
             return False
         return True
 
@@ -483,6 +493,32 @@ fi
 
     def post_install(self):
         return True
+
+    def write_secret_file(self, path, contents):
+        if self.connection.run_return_code(["install", "-m", "600", "/dev/null", path]) != 0:
+            return False
+        return self.connection.write_file(path, contents)
+
+    def call_local_api(self, method, url, payload):
+
+        # The payload carries a password, so it goes through a private file
+        # rather than the command line
+        payload_path = f"{self.get_app_dir()}/.api-payload.json"
+        if not self.write_secret_file(payload_path, json.dumps(payload)):
+            logger.log_error(f"Unable to stage the API request for {self.app_name}")
+            return ""
+        status = self.connection.run_output([
+            "curl", "-s", "-o", "/dev/null", "-w", "%{http_code}", "-X", method,
+            "-H", "Content-Type: application/json", "--data-binary", f"@{payload_path}", url])
+        self.connection.remove_file_or_directory(payload_path)
+        return (status or "").strip()
+
+    def wait_for_http(self, url, timeout_seconds = 180):
+        logger.log_info(f"Waiting for {self.app_name} to answer at {url}")
+        script = ('for i in $(seq 1 %d); do '
+                  '[ "$(curl -s -o /dev/null -w %%{http_code} %s)" != "000" ] && exit 0; '
+                  'sleep 1; done; exit 1') % (timeout_seconds, url)
+        return self.connection.run_return_code(["sh", "-c", script]) == 0
 
     def wait_for_service_health(self, service, timeout_seconds = 300):
 

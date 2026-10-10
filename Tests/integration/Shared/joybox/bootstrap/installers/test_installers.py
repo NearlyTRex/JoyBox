@@ -33,8 +33,8 @@ REQUIRED_SETTINGS = [
     ("UserData.Wordpress", "wordpress_admin_pass", "adminpass"),
     ("UserData.Wordpress", "wordpress_admin_email", "nobody@joybox.test"),
     ("UserData.FileBrowser", "filebrowser_user_root", "/mnt/storage"),
-    ("UserData.FileBrowser", "filebrowser_admin_pass", "adminpass"),
-    ("UserData.Jenkins", "jenkins_home_dir", "/mnt/repositories"),
+    ("UserData.FileBrowser", "filebrowser_admin_pass", "a long adminpass"),
+    ("UserData.Kanboard", "kanboard_admin_pass", "adminpass"),
     ("UserData.Backup", "backup_root", "/mnt/storage/Backups"),
 ]
 

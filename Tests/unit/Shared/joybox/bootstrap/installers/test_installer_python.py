@@ -20,8 +20,10 @@ def repo_dir():
     return os.path.normpath(environment.get_repo_root(expand = True))
 
 
-def build(pip_show = ""):
-    connection = RecordingConnection(command_output = {"show joybox": pip_show})
+def build(pip_show = "", installed_requirements = ""):
+    connection = RecordingConnection(command_output = {
+        "show joybox": pip_show,
+        "importlib.metadata": installed_requirements})
     python = installers.Python(connection)
     python.get_packages = lambda: []
     return python, connection
@@ -54,6 +56,61 @@ def test_another_checkout_is_not_installed(isolated_settings):
 def test_this_checkout_is_installed(isolated_settings):
     python, _ = build(show_output(repo_dir()))
     assert python.is_installed()
+
+
+REQUIREMENTS_IN = """# What joybox uses
+libWiiPy
+python-dateutil
+pyuac; sys_platform == 'win32'
+"""
+
+PYPROJECT = """[project.optional-dependencies]
+decompiler = ["pyghidra"]
+dev = ["coverage", "pytest"]
+other = ["unrelated"]
+"""
+
+
+def build_in_checkout(tmp_path, monkeypatch, installed_requirements):
+    (tmp_path / "requirements.in").write_text(REQUIREMENTS_IN)
+    (tmp_path / "pyproject.toml").write_text(PYPROJECT)
+    monkeypatch.setattr(installers.Python, "get_repo_dir", lambda self: str(tmp_path))
+    return build(show_output(str(tmp_path)), installed_requirements = "\n".join(installed_requirements))
+
+
+def test_declared_requirements_include_the_venv_extras(isolated_settings, tmp_path, monkeypatch):
+    python, _ = build_in_checkout(tmp_path, monkeypatch, [])
+    assert python.get_declared_requirement_names() == {
+        "libwiipy", "python-dateutil", "pyuac", "pyghidra", "coverage", "pytest"}
+
+
+def test_current_metadata_is_installed(isolated_settings, tmp_path, monkeypatch):
+    python, _ = build_in_checkout(tmp_path, monkeypatch, [
+        "libWiiPy", "python-dateutil", 'pyuac; sys_platform == "win32"',
+        'pyghidra; extra == "decompiler"', 'coverage; extra == "dev"', 'pytest; extra == "dev"'])
+    assert python.is_installed()
+
+
+def test_metadata_missing_a_new_requirement_is_not_installed(isolated_settings, tmp_path, monkeypatch):
+    python, _ = build_in_checkout(tmp_path, monkeypatch, [
+        "python-dateutil", "pyuac", "pyghidra", "coverage", "pytest"])
+    assert not python.is_installed()
+
+
+def test_metadata_with_a_dropped_requirement_is_not_installed(isolated_settings, tmp_path, monkeypatch):
+    python, _ = build_in_checkout(tmp_path, monkeypatch, [
+        "libWiiPy", "python-dateutil", "pyuac", "pyghidra", "coverage", "pytest", "retired"])
+    assert not python.is_installed()
+
+
+def test_requirement_names_ignore_versions_markers_and_comments():
+    assert installer_python.get_requirement_names([
+        "# comment",
+        "",
+        "Python_Dateutil>=2.8 ; python_version >= '3'",
+        "foo[bar]==1.0  # trailing",
+        "baz @ https://example.com/baz.whl",
+    ]) == {"python-dateutil", "foo", "baz"}
 
 
 def test_uninstall_removes_joybox(isolated_settings):

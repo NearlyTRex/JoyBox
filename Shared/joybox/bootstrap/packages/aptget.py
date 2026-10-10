@@ -168,6 +168,7 @@ aptget[constants.EnvironmentType.LOCAL_UBUNTU] += [
     {"id": "libpng-dev", "category": "Libs"},
     {"id": "libpugixml-dev", "category": "Libs"},
     {"id": "libpulse-dev", "category": "Libs"},
+    {"id": "libpurple-dev", "category": "Libs"},
     {"id": "libpython3-dev", "category": "Libs"},
     {"id": "libqt5gamepad5-dev", "category": "Libs"},
     {"id": "libqt5multimedia5-plugins", "category": "Libs"},
@@ -242,6 +243,7 @@ aptget[constants.EnvironmentType.LOCAL_UBUNTU] += [
     {"id": "net-tools", "name": "net-tools", "description": "Network utilities (ifconfig, etc.)", "category": "Net"},
     {"id": "openssh-server", "name": "OpenSSH Server", "description": "SSH server", "category": "Net"},
     {"id": "openssl", "name": "OpenSSL", "description": "SSL/TLS toolkit", "category": "Net"},
+    {"id": "pidgin", "name": "Pidgin", "description": "Instant messenger (AIM/ICQ via the pidgin component)", "category": "Net"},
     {"id": "socat", "name": "socat", "description": "Multipurpose socket relay", "category": "Net"},
     {"id": "winbind", "name": "Winbind", "description": "Windows domain integration", "category": "Net"},
 

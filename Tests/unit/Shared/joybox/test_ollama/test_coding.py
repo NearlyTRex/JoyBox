@@ -64,9 +64,32 @@ def test_the_window_is_read_back_from_a_variant_name(name, tokens):
     assert ollama.get_variant_context_tokens(name) == tokens
 
 
-def test_the_loaded_size_counts_weights_context_and_overhead():
-    # Measured on the server: qwen3-coder:30b with a 64K window took 30108 MB
-    assert abs(ollama.estimate_loaded_mb(19456, 96, 65536) - 30108) < 512
+# Loaded sizes measured on the server: listed download, window, cards, MB taken
+MEASURED_LOADS = [
+    ("qwen3-coder:30b", "19GB", 65536, 1, 30108),
+    ("qwen3-coder:30b", "19GB", 32768, 2, 25460),
+    ("qwen3-coder:30b", "19GB", 65536, 2, 31220),
+    ("devstral-small-2:24b", "15GB", 32768, 2, 25156),
+    ("devstral-small-2:24b", "15GB", 65536, 2, 34876),
+    ("qwen3-coder-next:latest", "52GB", 32768, 2, 50552),
+    ("qwen3-coder-next:latest", "52GB", 65536, 2, 51576),
+]
+
+
+@pytest.mark.parametrize("name, size_str, context_tokens, gpu_count, measured_mb", MEASURED_LOADS)
+def test_the_estimate_covers_what_the_server_measured(name, size_str, context_tokens, gpu_count, measured_mb):
+    kv_kb_per_token = next(m["kv_kb_per_token"] for m in ollama.CODING_MODELS if m["name"] == name)
+
+    estimate = ollama.estimate_loaded_mb(
+        ollama.parse_size_to_mb(size_str), kv_kb_per_token, context_tokens, gpu_count)
+
+    # Never under, so a model judged to fit does; never far over, so one that fits is not passed by
+    assert measured_mb <= estimate <= measured_mb + 2560
+
+
+def test_each_card_adds_its_own_overhead():
+    assert ollama.estimate_loaded_mb(15360, 160, 65536, gpu_count = 2) - \
+        ollama.estimate_loaded_mb(15360, 160, 65536) == ollama.LOAD_OVERHEAD_MB
 
 
 def test_one_card_gets_the_most_capable_models_that_fit(catalog):
@@ -81,10 +104,16 @@ def test_more_cards_put_a_larger_model_first(catalog):
     assert names == ["big:120b", "dense:24b", "moe:30b"]
 
 
+def test_splitting_over_cards_can_leave_a_model_out(catalog):
+    # Both take 26624 MB on one card, but not with a second card's overhead
+    assert [c["full_name"] for c in ollama.get_coding_candidates(27136)] == ["dense:24b", "moe:30b"]
+    assert [c["full_name"] for c in ollama.get_coding_candidates(27136, gpu_count = 2)] == []
+
+
 def test_the_context_decides_whether_a_model_fits(catalog):
-    # 15 GB of weights fits 24 GB, but not once 64K of context is added
-    assert [c["full_name"] for c in ollama.get_coding_candidates(24576)] == []
-    assert [c["full_name"] for c in ollama.get_coding_candidates(24576, context_tokens = 16384)] == \
+    # 15 GB of weights fits 20 GB, but not once 64K of context is added
+    assert [c["full_name"] for c in ollama.get_coding_candidates(20480)] == []
+    assert [c["full_name"] for c in ollama.get_coding_candidates(20480, context_tokens = 16384)] == \
         ["dense:24b"]
 
 
@@ -313,7 +342,7 @@ def test_a_failed_create_prepares_nothing(prep, monkeypatch):
 @pytest.fixture
 def picker(prep, catalog, monkeypatch):
     monkeypatch.setattr(ollama, "ensure_running", lambda: True)
-    monkeypatch.setattr(ollama, "get_server_hardware", lambda: {"gpu_vram_total_mb": 32768})
+    monkeypatch.setattr(ollama, "get_server_hardware", lambda: {"gpu_vram_total_mb": 32768, "gpu_count": 1})
     return prep
 
 
@@ -349,8 +378,16 @@ def test_declining_the_better_one_falls_back_to_the_prepared_one(picker):
     assert picker["pulled"] == []
 
 
+def test_the_server_card_count_reaches_the_estimate(picker, monkeypatch):
+    monkeypatch.setattr(ollama, "get_server_hardware", lambda: {"gpu_vram_total_mb": 27136, "gpu_count": 2})
+    picker["fits"] = {"dense:24b-ctx64k"}
+
+    assert ollama.prepare_coding_model(ask = False) is None
+    assert picker["loaded"] == []
+
+
 def test_nothing_is_prepared_when_no_candidate_fits(picker, monkeypatch):
-    monkeypatch.setattr(ollama, "get_server_hardware", lambda: {"gpu_vram_total_mb": 4096})
+    monkeypatch.setattr(ollama, "get_server_hardware", lambda: {"gpu_vram_total_mb": 4096, "gpu_count": 1})
 
     assert ollama.prepare_coding_model(ask = False) is None
     assert picker["loaded"] == []

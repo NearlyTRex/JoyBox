@@ -93,12 +93,16 @@ ini_defaults["UserData.Audiobookshelf"] = {}
 ini_defaults["UserData.Audiobookshelf"]["audiobookshelf_subdomain"] = "audio"
 ini_defaults["UserData.Audiobookshelf"]["audiobookshelf_port_http"] = "8084"
 ini_defaults["UserData.Audiobookshelf"]["audiobookshelf_audio_dir"] = "/mnt/storage/Music/Audiobook"
+ini_defaults["UserData.Audiobookshelf"]["audiobookshelf_admin_user"] = "root"
+ini_defaults["UserData.Audiobookshelf"]["audiobookshelf_admin_pass"] = ""
 
 # UserData.Navidrome
 ini_defaults["UserData.Navidrome"] = {}
 ini_defaults["UserData.Navidrome"]["navidrome_subdomain"] = "music"
 ini_defaults["UserData.Navidrome"]["navidrome_port_http"] = "8085"
 ini_defaults["UserData.Navidrome"]["navidrome_music_dir"] = "/mnt/storage/Music"
+ini_defaults["UserData.Navidrome"]["navidrome_admin_user"] = "admin"
+ini_defaults["UserData.Navidrome"]["navidrome_admin_pass"] = ""
 
 # UserData.FileBrowser
 ini_defaults["UserData.FileBrowser"] = {}
@@ -113,12 +117,16 @@ ini_defaults["UserData.Jenkins"] = {}
 ini_defaults["UserData.Jenkins"]["jenkins_subdomain"] = "tools"
 ini_defaults["UserData.Jenkins"]["jenkins_port_http"] = "8083"
 ini_defaults["UserData.Jenkins"]["jenkins_port_agent"] = "50000"
-ini_defaults["UserData.Jenkins"]["jenkins_home_dir"] = "/mnt/repositories"
+ini_defaults["UserData.Jenkins"]["jenkins_repositories_dir"] = "/mnt/repositories"
+ini_defaults["UserData.Jenkins"]["jenkins_admin_user"] = "admin"
+ini_defaults["UserData.Jenkins"]["jenkins_admin_pass"] = ""
 
 # UserData.Kanboard
 ini_defaults["UserData.Kanboard"] = {}
 ini_defaults["UserData.Kanboard"]["kanboard_subdomain"] = "tasks"
 ini_defaults["UserData.Kanboard"]["kanboard_port_http"] = "8086"
+ini_defaults["UserData.Kanboard"]["kanboard_admin_user"] = "admin"
+ini_defaults["UserData.Kanboard"]["kanboard_admin_pass"] = ""
 
 # UserData.FitLog
 ini_defaults["UserData.FitLog"] = {}
@@ -127,6 +135,8 @@ ini_defaults["UserData.FitLog"]["fitlog_port_http"] = "8087"
 ini_defaults["UserData.FitLog"]["fitlog_timezone"] = "Etc/UTC"
 ini_defaults["UserData.FitLog"]["fitlog_pull_minutes"] = "10"
 ini_defaults["UserData.FitLog"]["fitlog_catalog_branch"] = "main"
+ini_defaults["UserData.FitLog"]["fitlog_user"] = ""
+ini_defaults["UserData.FitLog"]["fitlog_pass"] = ""
 
 # UserData.Backup
 ini_defaults["UserData.Backup"] = {}
@@ -174,6 +184,8 @@ ini_defaults["UserData.Oscar"]["oscar_port_public"] = "5190"
 ini_defaults["UserData.Oscar"]["oscar_port_bos"] = "15190"
 ini_defaults["UserData.Oscar"]["oscar_port_api"] = "18080"
 ini_defaults["UserData.Oscar"]["oscar_log_level"] = "info"
+ini_defaults["UserData.Oscar"]["oscar_user"] = ""
+ini_defaults["UserData.Oscar"]["oscar_pass"] = ""
 
 # UserData.Servers
 ini_defaults["UserData.Servers"] = {}
