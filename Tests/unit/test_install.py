@@ -26,7 +26,7 @@ FAKE_COMMANDS = {
 
 
 @pytest.fixture
-def installer(tmp_path, repo_root):
+def installer(tmp_path, repo_root, traced_env):
     bin_dir = tmp_path / "bin"
     bin_dir.mkdir()
     for name, body in FAKE_COMMANDS.items():
@@ -39,11 +39,11 @@ def installer(tmp_path, repo_root):
     args_file = tmp_path / "bootstrap-args"
 
     def run(*args, with_terminal = False, exit_code = 0):
-        environment = dict(os.environ,
+        environment = traced_env(dict(os.environ,
             PATH = "%s:/usr/bin:/bin" % bin_dir,
             JOYBOX_DIR = str(checkout),
             JOYBOX_TEST_ARGS = str(args_file),
-            JOYBOX_TEST_EXIT = str(exit_code))
+            JOYBOX_TEST_EXIT = str(exit_code)))
         command = ["bash", os.path.join(repo_root, "install.sh")] + list(args)
         if with_terminal:
             result = run_on_terminal(command, environment)

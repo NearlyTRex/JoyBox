@@ -30,6 +30,20 @@ overall figure against CI's floor, each area of the library, the files missing
 the most, and the functions no test runs. `coverage_tool report -m <module>`
 details one module; see [its page](../Docs/reference/man/coverage_tool.md).
 
+The shell under `Bootstrap/` and `install.sh` is measured separately, since
+coverage.py never sees it. `--shell-cov-report` prints how many of each script's
+statements the tests ran, and `--shell-cov-fail-under N` also fails the run below
+N percent, which CI enforces:
+
+```bash
+pytest -c Tests/pytest.ini Tests/unit --shell-cov-report
+```
+
+Every bash a test starts is traced through `BASH_ENV` (the `shell_sandbox` and
+`traced_env` fixtures set it up), and `joybox.shellcoverage` measures the traces.
+A statement counts as run when any of its lines was, because bash reports a
+multi-line command under its first or its last line depending on the construct.
+
 ## Layout
 
 Test files mirror the path of the source they cover:
@@ -113,6 +127,27 @@ an installer would otherwise record into a clone the test cannot see.
 `RecordingConnection.copy()` returns `self` for exactly this reason. Any future
 double needs to do the same.
 
+**`shell_sandbox`** — runs a script from `Bootstrap/` the way a fresh server
+would: as root, inside an unprivileged user namespace with no network, where
+`/etc`, `/var`, `/home`, `/root`, `/usr/local`, `/opt`, `/mnt`, `/srv` and `/tmp`
+are empty directories the test owns. `PATH` holds recording stubs for anything
+that changes a machine (`systemctl`, `apt-get`, `ufw`, `netplan`, `chown`, ...)
+and an allowlist of harmless real tools, so an unplanned command fails rather
+than running for real. Arrange with `write`, `add_user` and `stub(name, stdout,
+code, script)`; read back with `read`, `exists`, `host_path`, `calls(name)` and
+`ran(name, *args)`.
+
+```python
+def test_install_moves_boot_waiting_to_network_manager(server):
+    server.run("Bootstrap/managers/manager_cockpit.sh", "install")
+
+    assert server.ran("systemctl", "enable", "NetworkManager-wait-online.service")
+```
+
+It needs unprivileged user namespaces; where they are unavailable the tests skip,
+and the shell coverage floor catches it in CI. **`traced_env`** builds an
+environment for tests that run bash directly instead, such as `install.sh`'s.
+
 **`cli_helpers.py`** — `CommandHarness` runs a `joybox.cli` command in process, recording its
 logs and previews; `Recorder` fakes a call; `assert_entry_points` checks `run()` and `__main__`.
 
@@ -132,9 +167,11 @@ logs and previews; `Recorder` fakes a call; `assert_entry_points` checks `run()`
 
 ## Known gaps
 
-- The shell under `Bootstrap/scripts/` is covered only by contract tests on what
-  it writes and the order it runs in; nothing executes it. It stays shell because
-  it runs on a bare server before the repo or Python exists.
+- Half of the shell under `Bootstrap/` runs in the sandbox: `common.sh` and the
+  cockpit and nginx managers fully. The `init_*.sh` day-0 scripts, the dotfiles,
+  `seed.sh` and most of the certbot manager do not yet; raise CI's
+  `--shell-cov-fail-under` as they gain tests. The shell stays shell because it
+  runs on a bare server before the repo or Python exists.
 - `Shared/joybox` is 58k lines across 242 files. The pure modules are covered;
   `collection/`, `config/`, `stores/`, `emulators/` and `tools/` are not.
 - The audio and ollama logic moved out of the command modules has dispatch and parsing

@@ -126,8 +126,9 @@ case "$1" in
     remove_conf)
         check_directory_traversal "$2"
 
+        # -e is false for a link whose target is already gone
         local_path="$NGINX_SITES_ENABLED/$2"
-        [ -e "$local_path" ] && rm -f "$local_path"
+        rm -f "$local_path"
 
         local_path="$NGINX_SITES_AVAILABLE/$2"
         [ -e "$local_path" ] && rm -f "$local_path"
@@ -165,7 +166,7 @@ case "$1" in
         check_directory_traversal "$2"
 
         enabled_path="$NGINX_STREAMS_ENABLED/$2"
-        [ -e "$enabled_path" ] && rm -f "$enabled_path"
+        rm -f "$enabled_path"
 
         available_path="$NGINX_STREAMS_AVAILABLE/$2"
         [ -e "$available_path" ] && rm -f "$available_path"
