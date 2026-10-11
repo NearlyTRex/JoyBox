@@ -15,14 +15,15 @@ from joybox import config
 
 @pytest.fixture
 def store_list(isolated_settings):
-    # Only keys the default config declares are filled, so a store reading a
+    # Only keys the default config leaves unset or to 1Password are filled, so a store reading a
     # setting the defaults lack cannot be built.
     from joybox import default_settings
+    from joybox import secretstore
     for section, values in default_settings.ini_defaults.items():
         if not section.startswith("UserData."):
             continue
         for key, value in values.items():
-            if value == "":
+            if value == "" or secretstore.is_secret_reference(value):
                 isolated_settings.set_value(section, key, "1")
 
     import joybox.stores as stores

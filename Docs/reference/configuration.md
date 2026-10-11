@@ -6,6 +6,14 @@ The first `setup` run creates `~/JoyBox.ini` from the platform defaults if it do
 After that you edit it directly. Settings with an empty default are written commented out —
 uncomment them to set a value.
 
+Secrets and personal values (passwords, account names, API keys, server addresses) are written as
+`op://Personal/JoyBox/<section>/<field>` references, so a new file names where each one lives in
+1Password rather than holding it. Add those fields to the item, or replace a reference with a plain
+value. A reference only takes effect when it is in the file: a field your file leaves out is
+treated as unset, never looked up. See [Secrets](secrets.md).
+
+Server 1 is generated as the [local test guest](../testing/remote-server.md) at `joybox.test`.
+
 To point at a config file somewhere other than `~/JoyBox.ini`, pass `-c /path/to/JoyBox.ini`.
 
 > A missing key is **not** silently defaulted. Installers that need a value refuse to run and

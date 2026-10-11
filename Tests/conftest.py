@@ -126,7 +126,7 @@ def pytest_configure(config):
         os.environ["USERPROFILE"] = scratch
     from joybox import settings, default_settings
     config_path = os.path.join(scratch, "JoyBox.ini")
-    default_settings.create_default_config_file(config_path)
+    default_settings.create_default_config_file(config_path, include_secret_references = False)
     settings.reset()
     settings.set_settings_file(config_path)
 
@@ -181,7 +181,7 @@ def session_settings_file(tmp_path_factory, session_home):
     from joybox import settings, default_settings
 
     config_path = os.path.join(str(tmp_path_factory.mktemp("settings")), "JoyBox.ini")
-    default_settings.create_default_config_file(config_path)
+    default_settings.create_default_config_file(config_path, include_secret_references = False)
     settings.reset()
     settings.set_settings_file(config_path)
     return config_path
@@ -305,7 +305,7 @@ def isolated_settings(tmp_path, session_settings_file):
     from joybox import settings, default_settings, serverinfo
 
     config_path = os.path.join(str(tmp_path), "JoyBox.ini")
-    default_settings.create_default_config_file(config_path)
+    default_settings.create_default_config_file(config_path, include_secret_references = False)
 
     settings.reset()
     settings.set_settings_file(config_path)
