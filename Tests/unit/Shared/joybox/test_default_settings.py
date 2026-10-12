@@ -61,7 +61,7 @@ def test_linux_defaults_use_unix_paths_and_tools(monkeypatch):
     defaults = load_defaults_for(monkeypatch, windows = False, linux = True)
 
     assert defaults["UserData.Dirs"]["tools_dir"] == "$HOME/Tools"
-    assert defaults["UserData.Share"]["locker_external_mount_path"] == "/mnt/external"
+    assert defaults["UserData.Share"]["locker_external_mount_path"] == "/media/$USER/Locker"
     assert defaults["Tools.FuseISO"]["fuseiso_exe"] == "fuseiso"
     assert "Tools.Wine" in defaults and "Tools.Apt" in defaults
     assert "Tools.WinGet" not in defaults and "Tools.Sandboxie" not in defaults
@@ -112,13 +112,19 @@ def test_only_the_named_sections_are_written(tmp_path):
     assert "[UserData.Dirs]" not in contents
 
 
+def test_a_secret_is_written_as_a_reference_rather_than_left_unset():
+    content = default_settings.generate_default_config_content(["UserData.Wordpress"])
+
+    assert "wordpress_admin_pass = op://Personal/JoyBox/UserData.Wordpress/wordpress_admin_pass\n" in content
+
+
 def test_an_empty_default_is_written_as_a_comment(tmp_path):
     # An unset value has to round-trip as unset, not as the empty string
     path = os.path.join(str(tmp_path), "JoyBox.ini")
 
     default_settings.create_default_config_file(path, sections = ["UserData.Servers"])
 
-    assert "; server_0_host = " in read(path)
+    assert "; server_0_key_filepath = " in read(path)
 
 
 ###########################################################

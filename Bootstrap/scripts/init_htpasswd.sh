@@ -109,7 +109,7 @@ if [[ "$ACTION" == "setup" ]]; then
             exit 1
         fi
     fi
-else
+elif [[ "$ACTION" != "cleanup" ]]; then
     echo "Error: Invalid action '$ACTION'. Use 'setup' or 'cleanup'."
     print_usage
 fi

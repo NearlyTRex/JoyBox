@@ -28,6 +28,9 @@ def entry(isolated_settings):
         "server_1_key_filepath": "/home/deploy/.ssh/id_ed25519",
         "server_1_domain_name": "example.com",
         "server_1_htpasswd_pass": "admin-secret",
+        # A real host, not the generated config's test guest
+        "server_1_vm": "",
+        "server_1_tls_mode": "",
     }
     for field, value in values.items():
         isolated_settings.set_value(SECTION, field, value)

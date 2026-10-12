@@ -94,7 +94,10 @@ def has_field(section, field, throw_exception = True):
 
 def _get_shipped_default(section, field):
     from joybox import default_settings
-    return default_settings.ini_defaults.get(section, {}).get(field)
+    value = default_settings.ini_defaults.get(section, {}).get(field)
+    if secretstore.is_secret_reference(value):
+        return None
+    return value
 
 def get_value(section, field, default_value = None, throw_exception = True):
     if (section, field) in _overlay:

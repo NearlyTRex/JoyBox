@@ -18,9 +18,13 @@ jobs:
     permissions:
       contents: read
     with:
+      # The shell sandbox runs scripts in an unprivileged user namespace, which
+      # Ubuntu's runners restrict by default
+      commands: sudo sysctl -w kernel.apparmor_restrict_unprivileged_userns=0
       # The suite's pytest.ini lives in Tests/; integration tests need programs
-      # outside the process and stay local
-      test-command: pytest -q -c Tests/pytest.ini Tests/unit
+      # outside the process and stay local. Every shell statement is covered;
+      # new shell needs tests to keep it so
+      test-command: pytest -q -c Tests/pytest.ini Tests/unit --shell-cov-fail-under=100
       # Every line and branch is covered; new code needs tests to keep it so
       coverage-fail-under: "100"
 

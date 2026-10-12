@@ -84,6 +84,7 @@ def test_waiting_for_http_reports_a_timeout(isolated_settings):
 
 def test_filebrowser_needs_a_twelve_character_password(isolated_settings):
     isolated_settings.set_value("UserData.FileBrowser", "filebrowser_user_root", "/mnt/storage")
+    isolated_settings.set_value("UserData.FileBrowser", "filebrowser_admin_user", "admin")
     isolated_settings.set_value("UserData.FileBrowser", "filebrowser_admin_pass", "elevenchars")
     filebrowser, _ = make(installers.FileBrowser)
     assert not filebrowser.check_required_settings()

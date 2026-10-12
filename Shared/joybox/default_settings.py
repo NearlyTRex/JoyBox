@@ -1,4 +1,5 @@
 # Local imports
+import joybox.secretstore as secretstore
 import joybox.serialization as serialization
 from joybox import platform_info
 
@@ -6,6 +7,10 @@ from joybox import platform_info
 # Ini defaults
 ###########################################################
 ini_defaults = {}
+
+# 1Password reference for a secret or personal value, by section and field
+def get_secret_reference(section, field):
+    return "%sPersonal/JoyBox/%s/%s" % (secretstore.secret_reference_prefix, section, field)
 
 # UserData.Dirs
 ini_defaults["UserData.Dirs"] = {}
@@ -28,12 +33,12 @@ else:
 
 # UserData.Protection
 ini_defaults["UserData.Protection"] = {}
-ini_defaults["UserData.Protection"]["general_passphrase"] = ""
-ini_defaults["UserData.Protection"]["locker_passphrase"] = ""
+ini_defaults["UserData.Protection"]["general_passphrase"] = get_secret_reference("UserData.Protection", "general_passphrase")
+ini_defaults["UserData.Protection"]["locker_passphrase"] = get_secret_reference("UserData.Protection", "locker_passphrase")
 
 # UserData.Share
 ini_defaults["UserData.Share"] = {}
-ini_defaults["UserData.Share"]["primary_remote_locker"] = "hetzner"
+ini_defaults["UserData.Share"]["primary_remote_locker"] = "Hetzner"
 if platform_info.is_windows_platform():
     ini_defaults["UserData.Share"]["locker_local_mount_path"] = "%USERPROFILE%\\Locker"
 else:
@@ -41,9 +46,9 @@ else:
 ini_defaults["UserData.Share"]["locker_local_encrypted"] = "False"
 ini_defaults["UserData.Share"]["locker_local_excluded_dirs"] = ""
 ini_defaults["UserData.Share"]["locker_local_passphrase"] = ""
-for share_type in ["gdrive", "hetzner"]:
-    ini_defaults["UserData.Share"][f"locker_{share_type}_type"] = ""
-    ini_defaults["UserData.Share"][f"locker_{share_type}_name"] = ""
+for share_type, remote_type, remote_name in [("gdrive", "drive", "Gdrive"), ("hetzner", "sftp", "Hetzner")]:
+    ini_defaults["UserData.Share"][f"locker_{share_type}_type"] = remote_type
+    ini_defaults["UserData.Share"][f"locker_{share_type}_name"] = remote_name
     ini_defaults["UserData.Share"][f"locker_{share_type}_remote_path"] = "/"
     ini_defaults["UserData.Share"][f"locker_{share_type}_token"] = ""
     ini_defaults["UserData.Share"][f"locker_{share_type}_config"] = ""
@@ -59,11 +64,12 @@ for share_type in ["gdrive", "hetzner"]:
         ini_defaults["UserData.Share"][f"locker_{share_type}_excluded_dirs"] = ""
         ini_defaults["UserData.Share"][f"locker_{share_type}_encrypted"] = "True"
     ini_defaults["UserData.Share"][f"locker_{share_type}_passphrase"] = ""
+ini_defaults["UserData.Share"]["locker_hetzner_config"] = get_secret_reference("UserData.Share", "locker_hetzner_config")
 for share_type in ["external"]:
     if platform_info.is_windows_platform():
         ini_defaults["UserData.Share"][f"locker_{share_type}_mount_path"] = "E:\\"
     else:
-        ini_defaults["UserData.Share"][f"locker_{share_type}_mount_path"] = f"/mnt/{share_type}"
+        ini_defaults["UserData.Share"][f"locker_{share_type}_mount_path"] = "/media/$USER/Locker"
     ini_defaults["UserData.Share"][f"locker_{share_type}_excluded_dirs"] = ""
     ini_defaults["UserData.Share"][f"locker_{share_type}_encrypted"] = "False"
     ini_defaults["UserData.Share"][f"locker_{share_type}_passphrase"] = ""
@@ -77,15 +83,15 @@ ini_defaults["UserData.Cockpit"]["cockpit_port_http"] = "9090"
 ini_defaults["UserData.Wordpress"] = {}
 ini_defaults["UserData.Wordpress"]["wordpress_subdomain"] = "www"
 ini_defaults["UserData.Wordpress"]["wordpress_port_http"] = "8080"
-ini_defaults["UserData.Wordpress"]["wordpress_db_user"] = "wpuser"
-ini_defaults["UserData.Wordpress"]["wordpress_db_pass"] = ""
-ini_defaults["UserData.Wordpress"]["wordpress_db_name"] = "wpdatabase"
-ini_defaults["UserData.Wordpress"]["wordpress_db_root_pass"] = ""
+ini_defaults["UserData.Wordpress"]["wordpress_db_user"] = get_secret_reference("UserData.Wordpress", "wordpress_db_user")
+ini_defaults["UserData.Wordpress"]["wordpress_db_pass"] = get_secret_reference("UserData.Wordpress", "wordpress_db_pass")
+ini_defaults["UserData.Wordpress"]["wordpress_db_name"] = get_secret_reference("UserData.Wordpress", "wordpress_db_name")
+ini_defaults["UserData.Wordpress"]["wordpress_db_root_pass"] = get_secret_reference("UserData.Wordpress", "wordpress_db_root_pass")
 ini_defaults["UserData.Wordpress"]["wordpress_site_title"] = "JoyBox"
 ini_defaults["UserData.Wordpress"]["wordpress_site_tagline"] = ""
-ini_defaults["UserData.Wordpress"]["wordpress_admin_user"] = "admin"
-ini_defaults["UserData.Wordpress"]["wordpress_admin_pass"] = ""
-ini_defaults["UserData.Wordpress"]["wordpress_admin_email"] = ""
+ini_defaults["UserData.Wordpress"]["wordpress_admin_user"] = get_secret_reference("UserData.Wordpress", "wordpress_admin_user")
+ini_defaults["UserData.Wordpress"]["wordpress_admin_pass"] = get_secret_reference("UserData.Wordpress", "wordpress_admin_pass")
+ini_defaults["UserData.Wordpress"]["wordpress_admin_email"] = get_secret_reference("UserData.Wordpress", "wordpress_admin_email")
 ini_defaults["UserData.Wordpress"]["wordpress_seed_enabled"] = "True"
 
 # UserData.Audiobookshelf
@@ -93,24 +99,24 @@ ini_defaults["UserData.Audiobookshelf"] = {}
 ini_defaults["UserData.Audiobookshelf"]["audiobookshelf_subdomain"] = "audio"
 ini_defaults["UserData.Audiobookshelf"]["audiobookshelf_port_http"] = "8084"
 ini_defaults["UserData.Audiobookshelf"]["audiobookshelf_audio_dir"] = "/mnt/storage/Music/Audiobook"
-ini_defaults["UserData.Audiobookshelf"]["audiobookshelf_admin_user"] = "root"
-ini_defaults["UserData.Audiobookshelf"]["audiobookshelf_admin_pass"] = ""
+ini_defaults["UserData.Audiobookshelf"]["audiobookshelf_admin_user"] = get_secret_reference("UserData.Audiobookshelf", "audiobookshelf_admin_user")
+ini_defaults["UserData.Audiobookshelf"]["audiobookshelf_admin_pass"] = get_secret_reference("UserData.Audiobookshelf", "audiobookshelf_admin_pass")
 
 # UserData.Navidrome
 ini_defaults["UserData.Navidrome"] = {}
 ini_defaults["UserData.Navidrome"]["navidrome_subdomain"] = "music"
 ini_defaults["UserData.Navidrome"]["navidrome_port_http"] = "8085"
 ini_defaults["UserData.Navidrome"]["navidrome_music_dir"] = "/mnt/storage/Music"
-ini_defaults["UserData.Navidrome"]["navidrome_admin_user"] = "admin"
-ini_defaults["UserData.Navidrome"]["navidrome_admin_pass"] = ""
+ini_defaults["UserData.Navidrome"]["navidrome_admin_user"] = get_secret_reference("UserData.Navidrome", "navidrome_admin_user")
+ini_defaults["UserData.Navidrome"]["navidrome_admin_pass"] = get_secret_reference("UserData.Navidrome", "navidrome_admin_pass")
 
 # UserData.FileBrowser
 ini_defaults["UserData.FileBrowser"] = {}
 ini_defaults["UserData.FileBrowser"]["filebrowser_subdomain"] = "cloud"
 ini_defaults["UserData.FileBrowser"]["filebrowser_port_http"] = "8082"
-ini_defaults["UserData.FileBrowser"]["filebrowser_user_root"] = ""
-ini_defaults["UserData.FileBrowser"]["filebrowser_admin_user"] = "admin"
-ini_defaults["UserData.FileBrowser"]["filebrowser_admin_pass"] = ""
+ini_defaults["UserData.FileBrowser"]["filebrowser_user_root"] = "/mnt/storage"
+ini_defaults["UserData.FileBrowser"]["filebrowser_admin_user"] = get_secret_reference("UserData.FileBrowser", "filebrowser_admin_user")
+ini_defaults["UserData.FileBrowser"]["filebrowser_admin_pass"] = get_secret_reference("UserData.FileBrowser", "filebrowser_admin_pass")
 
 # UserData.Jenkins
 ini_defaults["UserData.Jenkins"] = {}
@@ -118,15 +124,15 @@ ini_defaults["UserData.Jenkins"]["jenkins_subdomain"] = "tools"
 ini_defaults["UserData.Jenkins"]["jenkins_port_http"] = "8083"
 ini_defaults["UserData.Jenkins"]["jenkins_port_agent"] = "50000"
 ini_defaults["UserData.Jenkins"]["jenkins_repositories_dir"] = "/mnt/repositories"
-ini_defaults["UserData.Jenkins"]["jenkins_admin_user"] = "admin"
-ini_defaults["UserData.Jenkins"]["jenkins_admin_pass"] = ""
+ini_defaults["UserData.Jenkins"]["jenkins_admin_user"] = get_secret_reference("UserData.Jenkins", "jenkins_admin_user")
+ini_defaults["UserData.Jenkins"]["jenkins_admin_pass"] = get_secret_reference("UserData.Jenkins", "jenkins_admin_pass")
 
 # UserData.Kanboard
 ini_defaults["UserData.Kanboard"] = {}
 ini_defaults["UserData.Kanboard"]["kanboard_subdomain"] = "tasks"
 ini_defaults["UserData.Kanboard"]["kanboard_port_http"] = "8086"
-ini_defaults["UserData.Kanboard"]["kanboard_admin_user"] = "admin"
-ini_defaults["UserData.Kanboard"]["kanboard_admin_pass"] = ""
+ini_defaults["UserData.Kanboard"]["kanboard_admin_user"] = get_secret_reference("UserData.Kanboard", "kanboard_admin_user")
+ini_defaults["UserData.Kanboard"]["kanboard_admin_pass"] = get_secret_reference("UserData.Kanboard", "kanboard_admin_pass")
 
 # UserData.FitLog
 ini_defaults["UserData.FitLog"] = {}
@@ -135,8 +141,8 @@ ini_defaults["UserData.FitLog"]["fitlog_port_http"] = "8087"
 ini_defaults["UserData.FitLog"]["fitlog_timezone"] = "Etc/UTC"
 ini_defaults["UserData.FitLog"]["fitlog_pull_minutes"] = "10"
 ini_defaults["UserData.FitLog"]["fitlog_catalog_branch"] = "main"
-ini_defaults["UserData.FitLog"]["fitlog_user"] = ""
-ini_defaults["UserData.FitLog"]["fitlog_pass"] = ""
+ini_defaults["UserData.FitLog"]["fitlog_user"] = get_secret_reference("UserData.FitLog", "fitlog_user")
+ini_defaults["UserData.FitLog"]["fitlog_pass"] = get_secret_reference("UserData.FitLog", "fitlog_pass")
 
 # UserData.Backup
 ini_defaults["UserData.Backup"] = {}
@@ -184,18 +190,19 @@ ini_defaults["UserData.Oscar"]["oscar_port_public"] = "5190"
 ini_defaults["UserData.Oscar"]["oscar_port_bos"] = "15190"
 ini_defaults["UserData.Oscar"]["oscar_port_api"] = "18080"
 ini_defaults["UserData.Oscar"]["oscar_log_level"] = "info"
-ini_defaults["UserData.Oscar"]["oscar_user"] = ""
-ini_defaults["UserData.Oscar"]["oscar_pass"] = ""
+ini_defaults["UserData.Oscar"]["oscar_user"] = get_secret_reference("UserData.Oscar", "oscar_user")
+ini_defaults["UserData.Oscar"]["oscar_pass"] = get_secret_reference("UserData.Oscar", "oscar_pass")
 
 # UserData.Servers
 ini_defaults["UserData.Servers"] = {}
-ini_defaults["UserData.Servers"]["server_0_host"] = ""
-ini_defaults["UserData.Servers"]["server_0_port"] = ""
-ini_defaults["UserData.Servers"]["server_0_user"] = ""
-ini_defaults["UserData.Servers"]["server_0_pass"] = ""
+# Server 0: the real host
+ini_defaults["UserData.Servers"]["server_0_host"] = get_secret_reference("UserData.Servers", "server_0_host")
+ini_defaults["UserData.Servers"]["server_0_port"] = get_secret_reference("UserData.Servers", "server_0_port")
+ini_defaults["UserData.Servers"]["server_0_user"] = get_secret_reference("UserData.Servers", "server_0_user")
+ini_defaults["UserData.Servers"]["server_0_pass"] = get_secret_reference("UserData.Servers", "server_0_pass")
 ini_defaults["UserData.Servers"]["server_0_key_filepath"] = ""
-ini_defaults["UserData.Servers"]["server_0_domain_name"] = ""
-ini_defaults["UserData.Servers"]["server_0_domain_contact"] = ""
+ini_defaults["UserData.Servers"]["server_0_domain_name"] = get_secret_reference("UserData.Servers", "domain_name")
+ini_defaults["UserData.Servers"]["server_0_domain_contact"] = get_secret_reference("UserData.Servers", "domain_contact")
 # How the TLS certificate is obtained:
 #   letsencrypt - real cert via certbot (the only option for a public server)
 #   mkcert      - locally trusted cert, signed on the workstation (local testing)
@@ -205,32 +212,43 @@ ini_defaults["UserData.Servers"]["server_0_tls_mode"] = "letsencrypt"
 # Local test guest this entry points at (testvm's name, e.g. joybox-test); empty for a real host
 ini_defaults["UserData.Servers"]["server_0_vm"] = ""
 # Login for the admin pages, set up by provision_server
-ini_defaults["UserData.Servers"]["server_0_htpasswd_user"] = ""
-ini_defaults["UserData.Servers"]["server_0_htpasswd_pass"] = ""
+ini_defaults["UserData.Servers"]["server_0_htpasswd_user"] = get_secret_reference("UserData.Servers", "htpasswd_user")
+ini_defaults["UserData.Servers"]["server_0_htpasswd_pass"] = get_secret_reference("UserData.Servers", "htpasswd_pass")
 # Storage Box mounted at /mnt/storage; leave empty to use local storage instead
 ini_defaults["UserData.Servers"]["server_0_storage_user"] = ""
 ini_defaults["UserData.Servers"]["server_0_storage_host"] = ""
 ini_defaults["UserData.Servers"]["server_0_storage_pass"] = ""
+# Server 1: the local test guest, at the address reserved for its fixed MAC on libvirt's default network
+ini_defaults["UserData.Servers"]["server_1_host"] = "192.168.122.10"
+ini_defaults["UserData.Servers"]["server_1_port"] = "22"
+ini_defaults["UserData.Servers"]["server_1_user"] = get_secret_reference("UserData.Servers", "server_1_user")
+ini_defaults["UserData.Servers"]["server_1_pass"] = get_secret_reference("UserData.Servers", "server_1_pass")
+ini_defaults["UserData.Servers"]["server_1_key_filepath"] = ""
+ini_defaults["UserData.Servers"]["server_1_domain_name"] = "joybox.test"
+ini_defaults["UserData.Servers"]["server_1_tls_mode"] = "mkcert"
+ini_defaults["UserData.Servers"]["server_1_vm"] = "joybox-test"
+ini_defaults["UserData.Servers"]["server_1_htpasswd_user"] = get_secret_reference("UserData.Servers", "htpasswd_user")
+ini_defaults["UserData.Servers"]["server_1_htpasswd_pass"] = get_secret_reference("UserData.Servers", "htpasswd_pass")
 
 # UserData.Scraping
 ini_defaults["UserData.Scraping"] = {}
 ini_defaults["UserData.Scraping"]["web_driver_type"] = "brave"
-ini_defaults["UserData.Scraping"]["steamgriddb_api_key"] = ""
-ini_defaults["UserData.Scraping"]["google_search_engine_id"] = ""
-ini_defaults["UserData.Scraping"]["google_search_engine_api_key"] = ""
+ini_defaults["UserData.Scraping"]["steamgriddb_api_key"] = get_secret_reference("UserData.Scraping", "steamgriddb_api_key")
+ini_defaults["UserData.Scraping"]["google_search_engine_id"] = get_secret_reference("UserData.Scraping", "google_search_engine_id")
+ini_defaults["UserData.Scraping"]["google_search_engine_api_key"] = get_secret_reference("UserData.Scraping", "google_search_engine_api_key")
 
 # UserData.Autoinstall
 ini_defaults["UserData.Autoinstall"] = {}
 ini_defaults["UserData.Autoinstall"]["autoinstall_version"] = "26.04"
-ini_defaults["UserData.Autoinstall"]["autoinstall_username"] = ""
-ini_defaults["UserData.Autoinstall"]["autoinstall_realname"] = ""
+ini_defaults["UserData.Autoinstall"]["autoinstall_username"] = "joybox"
+ini_defaults["UserData.Autoinstall"]["autoinstall_realname"] = "JoyBox"
 ini_defaults["UserData.Autoinstall"]["autoinstall_hostname"] = "ubuntu"
 ini_defaults["UserData.Autoinstall"]["autoinstall_password_hash"] = ""
-ini_defaults["UserData.Autoinstall"]["autoinstall_ssh_keys"] = ""
+ini_defaults["UserData.Autoinstall"]["autoinstall_ssh_keys"] = get_secret_reference("UserData.Autoinstall", "autoinstall_ssh_keys")
 ini_defaults["UserData.Autoinstall"]["autoinstall_locale"] = "en_US.UTF-8"
 ini_defaults["UserData.Autoinstall"]["autoinstall_keyboard"] = "us"
 ini_defaults["UserData.Autoinstall"]["autoinstall_timezone"] = "Etc/UTC"
-ini_defaults["UserData.Autoinstall"]["autoinstall_packages"] = ""
+ini_defaults["UserData.Autoinstall"]["autoinstall_packages"] = "qemu-guest-agent"
 ini_defaults["UserData.Autoinstall"]["autoinstall_serial_console"] = "false"
 ini_defaults["UserData.Autoinstall"]["autoinstall_overlay_file"] = ""
 ini_defaults["UserData.Autoinstall"]["autoinstall_signing_keyring"] = "/usr/share/keyrings/ubuntu-archive-keyring.gpg"
@@ -256,16 +274,16 @@ ini_defaults["UserData.Capture"]["overwrite_videos"] = "False"
 
 # UserData.GitHub
 ini_defaults["UserData.GitHub"] = {}
-ini_defaults["UserData.GitHub"]["github_username"] = ""
-ini_defaults["UserData.GitHub"]["github_access_token"] = ""
+ini_defaults["UserData.GitHub"]["github_username"] = get_secret_reference("UserData.GitHub", "github_username")
+ini_defaults["UserData.GitHub"]["github_access_token"] = get_secret_reference("UserData.GitHub", "github_access_token")
 
 # UserData.Anthropic
 ini_defaults["UserData.Anthropic"] = {}
-ini_defaults["UserData.Anthropic"]["anthropic_api_key"] = ""
+ini_defaults["UserData.Anthropic"]["anthropic_api_key"] = get_secret_reference("UserData.Anthropic", "anthropic_api_key")
 
 # UserData.Audible
 ini_defaults["UserData.Audible"] = {}
-ini_defaults["UserData.Audible"]["audible_activation_bytes"] = ""
+ini_defaults["UserData.Audible"]["audible_activation_bytes"] = get_secret_reference("UserData.Audible", "audible_activation_bytes")
 
 # UserData.Amazon
 ini_defaults["UserData.Amazon"] = {}
@@ -283,7 +301,7 @@ else:
 
 # UserData.Epic
 ini_defaults["UserData.Epic"] = {}
-ini_defaults["UserData.Epic"]["epic_username"] = ""
+ini_defaults["UserData.Epic"]["epic_username"] = get_secret_reference("UserData.Epic", "epic_username")
 if platform_info.is_windows_platform():
     ini_defaults["UserData.Epic"]["epic_install_dir"] = "C:\\Program Files\\Epic Games"
 else:
@@ -291,8 +309,8 @@ else:
 
 # UserData.GOG
 ini_defaults["UserData.GOG"] = {}
-ini_defaults["UserData.GOG"]["gog_username"] = ""
-ini_defaults["UserData.GOG"]["gog_email"] = ""
+ini_defaults["UserData.GOG"]["gog_username"] = get_secret_reference("UserData.GOG", "gog_username")
+ini_defaults["UserData.GOG"]["gog_email"] = get_secret_reference("UserData.GOG", "gog_email")
 ini_defaults["UserData.GOG"]["gog_platform"] = "windows"
 ini_defaults["UserData.GOG"]["gog_includes"] = "i,e"
 ini_defaults["UserData.GOG"]["gog_excludes"] = ""
@@ -303,10 +321,10 @@ else:
 
 # UserData.HumbleBundle
 ini_defaults["UserData.HumbleBundle"] = {}
-ini_defaults["UserData.HumbleBundle"]["humblebundle_username"] = ""
-ini_defaults["UserData.HumbleBundle"]["humblebundle_email"] = ""
+ini_defaults["UserData.HumbleBundle"]["humblebundle_username"] = get_secret_reference("UserData.HumbleBundle", "humblebundle_username")
+ini_defaults["UserData.HumbleBundle"]["humblebundle_email"] = get_secret_reference("UserData.HumbleBundle", "humblebundle_email")
 ini_defaults["UserData.HumbleBundle"]["humblebundle_platform"] = "windows"
-ini_defaults["UserData.HumbleBundle"]["humblebundle_auth_token"] = ""
+ini_defaults["UserData.HumbleBundle"]["humblebundle_auth_token"] = get_secret_reference("UserData.HumbleBundle", "humblebundle_auth_token")
 if platform_info.is_windows_platform():
     ini_defaults["UserData.HumbleBundle"]["humblebundle_install_dir"] = "C:\\Program Files (x86)\\Humble Bundle"
 else:
@@ -321,11 +339,11 @@ else:
 
 # UserData.Legacy
 ini_defaults["UserData.Legacy"] = {}
-ini_defaults["UserData.Legacy"]["legacy_username"] = ""
+ini_defaults["UserData.Legacy"]["legacy_username"] = get_secret_reference("UserData.Legacy", "legacy_username")
 if platform_info.is_windows_platform():
     ini_defaults["UserData.Legacy"]["legacy_install_dir"] = "C:\\Program Files (x86)\\Legacy Games"
 else:
-    ini_defaults["UserData.Legacy"]["legacy_install_dir"] = "$HOME/Games/Legacy"
+    ini_defaults["UserData.Legacy"]["legacy_install_dir"] = "$HOME/Games/LegacyGames"
 
 # UserData.PuppetCombo
 ini_defaults["UserData.PuppetCombo"] = {}
@@ -350,10 +368,10 @@ else:
 
 # UserData.Steam
 ini_defaults["UserData.Steam"] = {}
-ini_defaults["UserData.Steam"]["steam_accountname"] = ""
-ini_defaults["UserData.Steam"]["steam_username"] = ""
-ini_defaults["UserData.Steam"]["steam_userid"] = ""
-ini_defaults["UserData.Steam"]["steam_web_api_key"] = ""
+ini_defaults["UserData.Steam"]["steam_accountname"] = get_secret_reference("UserData.Steam", "steam_accountname")
+ini_defaults["UserData.Steam"]["steam_username"] = get_secret_reference("UserData.Steam", "steam_username")
+ini_defaults["UserData.Steam"]["steam_userid"] = get_secret_reference("UserData.Steam", "steam_userid")
+ini_defaults["UserData.Steam"]["steam_web_api_key"] = get_secret_reference("UserData.Steam", "steam_web_api_key")
 ini_defaults["UserData.Steam"]["steam_platform"] = "windows"
 ini_defaults["UserData.Steam"]["steam_arch"] = "64"
 if platform_info.is_windows_platform():
@@ -611,7 +629,7 @@ CONFIG_HEADER = """; ===========================================================
 
 """
 
-def generate_default_config_content(sections = None):
+def generate_default_config_content(sections = None, include_secret_references = True):
     sections_to_include = sections if sections else list(ini_defaults.keys())
     content = CONFIG_HEADER
     for section_name in sections_to_include:
@@ -619,17 +637,17 @@ def generate_default_config_content(sections = None):
             continue
         content += f"[{section_name}]\n"
         for key, value in ini_defaults[section_name].items():
-            if str(value) == "":
+            if str(value) == "" or (not include_secret_references and secretstore.is_secret_reference(value)):
                 content += f"; {key} = \n"
             else:
                 content += f"{key} = {value}\n"
         content += "\n"
     return content
 
-def create_default_config_file(path, sections = None, verbose = False, pretend_run = False, exit_on_failure = False):
+def create_default_config_file(path, sections = None, include_secret_references = True, verbose = False, pretend_run = False, exit_on_failure = False):
     return serialization.write_text_file(
         src = path,
-        contents = generate_default_config_content(sections),
+        contents = generate_default_config_content(sections, include_secret_references),
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)

@@ -48,6 +48,14 @@ EOF
         exit 1
     fi
 
+    # networkd no longer manages any link, so its wait-online would hold
+    # every boot until it timed out
+    systemctl disable systemd-networkd-wait-online.service || true
+    if ! systemctl enable NetworkManager-wait-online.service; then
+        echo "Error: Failed to enable NetworkManager-wait-online.service."
+        exit 1
+    fi
+
     cat > "/etc/polkit-1/rules.d/50-cockpit-packagekit.rules" <<EOF
 polkit.addRule(function(action, subject) {
     if ((action.id == "org.freedesktop.packagekit.system-sources-refresh" ||
@@ -63,6 +71,8 @@ uninstall_cockpit() {
 
     systemctl disable --now cockpit.socket || true
     systemctl disable --now NetworkManager || true
+    systemctl disable NetworkManager-wait-online.service || true
+    systemctl enable systemd-networkd-wait-online.service || true
     rm -rf /etc/systemd/system/cockpit.socket.d
     systemctl daemon-reload
 

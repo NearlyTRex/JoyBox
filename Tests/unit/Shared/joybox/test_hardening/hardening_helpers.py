@@ -37,6 +37,8 @@ class FakeServer:
         self.ran.append(list(cmd))
         if cmd[:2] == ["command", "-v"]:
             return cmd[2] if cmd[2] in self.present else ""
+        if cmd[:2] == ["bash", "-c"] and cmd[3] == "burst":
+            return "\n".join([self.commands.get("curl", "")] * int(cmd[5]))
         return self.commands.get(cmd[0], "")
 
     def run_return_code(self, cmd, sudo = False):

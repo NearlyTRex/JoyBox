@@ -148,6 +148,7 @@ def test_unknown_mode_fails_rather_than_guessing(isolated_settings, recording_co
 def test_mode_defaults_to_letsencrypt(isolated_settings, recording_connection):
     # A server entry that names no mode gets a real certificate.
     isolated_settings.set_value("UserData.Servers", "server_1_domain_name", "example.com")
+    isolated_settings.set_value("UserData.Servers", "server_1_tls_mode", "")
     serverinfo.select_server(1)
     certbot = installers.Certbot(recording_connection)
 

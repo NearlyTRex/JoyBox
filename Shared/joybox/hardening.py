@@ -303,9 +303,7 @@ def check_rate_limiting(connection, domain = None, burst_size = 40):
     # The name is pinned to the machine being checked: resolved normally, a
     # test guest using the real domain would burst the production server.
     if domain and has_command(connection, "curl"):
-        codes = []
-        for _ in range(burst_size):
-            codes.append(read_output(connection, get_burst_command(domain)).strip())
+        codes = read_output(connection, get_burst_command(domain, burst_size)).split()
         refused = count_rate_limited(codes)
         if refused:
             results.append(CheckResult(
@@ -316,17 +314,16 @@ def check_rate_limiting(connection, domain = None, burst_size = 40):
                 section, FAIL, "a %d-request burst was never rate limited" % burst_size))
     return results
 
-# Build one request of the rate-limit burst, aimed at the machine it runs on.
+# Build the rate-limit burst, aimed at the machine it runs on, printing one
+# status code per line. It runs as a single command: a round trip per request
+# is slower than the zone refills, so the burst would never be refused.
 # The certificate is not what is being checked, and a locally signed one is
 # not trusted on the target.
-def get_burst_command(domain):
-    return [
-        "curl", "-s", "-k",
-        "-o", "/dev/null",
-        "-w", "%{http_code}",
-        "--max-time", "5",
-        "--resolve", "%s:443:127.0.0.1" % domain,
-        "https://%s/" % domain]
+def get_burst_command(domain, burst_size):
+    script = ('for _ in $(seq "$2"); do '
+              'curl -s -k -o /dev/null -w "%{http_code}\\n" --max-time 5 '
+              '--resolve "$1:443:127.0.0.1" "https://$1/"; done')
+    return ["bash", "-c", script, "burst", domain, str(burst_size)]
 
 # Patches that install but never activate leave the box reporting itself
 # patched while running the vulnerable kernel

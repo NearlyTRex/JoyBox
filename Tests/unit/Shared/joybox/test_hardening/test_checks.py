@@ -270,7 +270,7 @@ def test_no_domain_runs_no_burst(server):
     server.install("curl", "200")
     hardening.check_rate_limiting(server)
 
-    assert not any(cmd[0] == "curl" for cmd in server.ran)
+    assert not any(cmd[:2] == ["bash", "-c"] for cmd in server.ran)
 
 
 def test_the_burst_stays_on_the_machine_being_checked(server):
@@ -279,9 +279,9 @@ def test_the_burst_stays_on_the_machine_being_checked(server):
     server.install("curl", "503")
     hardening.check_rate_limiting(server, domain = "example.com", burst_size = 1)
 
-    burst = [cmd for cmd in server.ran if cmd[0] == "curl"][0]
-    assert burst[burst.index("--resolve") + 1] == "example.com:443:127.0.0.1"
-    assert burst[-1] == "https://example.com/"
+    burst = [cmd for cmd in server.ran if cmd[:2] == ["bash", "-c"]][0]
+    assert '--resolve "$1:443:127.0.0.1" "https://$1/"' in burst[2]
+    assert burst[4] == "example.com"
 
 
 def test_the_burst_size_is_honoured(server):
@@ -289,7 +289,18 @@ def test_the_burst_size_is_honoured(server):
     server.install("curl", "200")
     hardening.check_rate_limiting(server, domain = "joybox.test", burst_size = 5)
 
-    assert len([cmd for cmd in server.ran if cmd[0] == "curl"]) == 5
+    bursts = [cmd for cmd in server.ran if cmd[:2] == ["bash", "-c"]]
+    assert len(bursts) == 1
+    assert bursts[0][5] == "5"
+
+
+def test_the_burst_is_sent_as_one_command(server):
+    # A round trip per request is slower than the zone refills
+    server.install("nginx", GOOD_NGINX)
+    server.install("curl", "200")
+    hardening.check_rate_limiting(server, domain = "joybox.test", burst_size = 40)
+
+    assert len([cmd for cmd in server.ran if cmd[:2] == ["bash", "-c"]]) == 1
 
 
 ###########################################################

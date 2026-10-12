@@ -126,9 +126,18 @@ def pytest_configure(config):
         os.environ["USERPROFILE"] = scratch
     from joybox import settings, default_settings
     config_path = os.path.join(scratch, "JoyBox.ini")
-    default_settings.create_default_config_file(config_path)
+    default_settings.create_default_config_file(config_path, include_secret_references = False)
     settings.reset()
     settings.set_settings_file(config_path)
+    configure_shell_tracing(config, scratch)
+
+
+def pytest_addoption(parser):
+    group = parser.getgroup("shell coverage")
+    group.addoption("--shell-cov-report", action = "store_true",
+                    help = "report how much of the shell under Bootstrap/ the tests ran")
+    group.addoption("--shell-cov-fail-under", type = float, default = None,
+                    help = "fail when shell coverage is below this percentage (implies the report)")
 
 
 def pytest_unconfigure(config):
@@ -181,7 +190,7 @@ def session_settings_file(tmp_path_factory, session_home):
     from joybox import settings, default_settings
 
     config_path = os.path.join(str(tmp_path_factory.mktemp("settings")), "JoyBox.ini")
-    default_settings.create_default_config_file(config_path)
+    default_settings.create_default_config_file(config_path, include_secret_references = False)
     settings.reset()
     settings.set_settings_file(config_path)
     return config_path
@@ -305,7 +314,7 @@ def isolated_settings(tmp_path, session_settings_file):
     from joybox import settings, default_settings, serverinfo
 
     config_path = os.path.join(str(tmp_path), "JoyBox.ini")
-    default_settings.create_default_config_file(config_path)
+    default_settings.create_default_config_file(config_path, include_secret_references = False)
 
     settings.reset()
     settings.set_settings_file(config_path)
@@ -360,3 +369,74 @@ def requires_tool(request):
         for name in marker.args:
             if not tool_path(name):
                 pytest.skip("%s is not installed" % name)
+
+
+###########################################################
+# Shell coverage
+#
+# Every bash a test starts sources a hook through BASH_ENV that sends its
+# xtrace to a file in the session's trace directory. At the end of the session
+# those traces are measured against the scripts; see joybox.shellcoverage.
+###########################################################
+
+def configure_shell_tracing(config, scratch):
+    from joybox import shellcoverage
+    trace_dir = os.path.join(scratch, "shell-traces")
+    os.makedirs(trace_dir)
+    hook_file = os.path.join(scratch, "shell-trace-hook.sh")
+    with open(hook_file, "w") as hook:
+        hook.write(shellcoverage.TRACE_HOOK)
+    config.joybox_shell_trace_dir = trace_dir
+    config.joybox_shell_hook = hook_file
+
+
+@pytest.fixture
+def traced_env(request):
+    # An environment for running bash directly that traces it for coverage
+    import uuid
+    from joybox import shellcoverage
+    config = request.config
+
+    def build(env = None):
+        traced = dict(os.environ if env is None else env)
+        traced["BASH_ENV"] = config.joybox_shell_hook
+        traced[shellcoverage.TRACE_VARIABLE] = os.path.join(
+            config.joybox_shell_trace_dir, "%s.trace" % uuid.uuid4().hex)
+        return traced
+    return build
+
+
+@pytest.fixture
+def shell_sandbox(request, tmp_path):
+    from shell_sandbox import ShellSandbox
+    config = request.config
+    return ShellSandbox(tmp_path / "sandbox", REPO_ROOT,
+                        config.joybox_shell_trace_dir, config.joybox_shell_hook)
+
+
+def get_shell_floor(config):
+    return config.getoption("--shell-cov-fail-under", default = None)
+
+
+def wants_shell_report(config):
+    return config.getoption("--shell-cov-report", default = False) or get_shell_floor(config) is not None
+
+
+def pytest_sessionfinish(session, exitstatus):
+    config = session.config
+    if not wants_shell_report(config):
+        return
+    from joybox import shellcoverage
+    results = shellcoverage.measure(REPO_ROOT, config.joybox_shell_trace_dir)
+    config.joybox_shell_results = results
+    if not shellcoverage.meets_floor(results, get_shell_floor(config)) and session.exitstatus == 0:
+        session.exitstatus = pytest.ExitCode.TESTS_FAILED
+
+
+def pytest_terminal_summary(terminalreporter, exitstatus, config):
+    results = getattr(config, "joybox_shell_results", None)
+    if results is None:
+        return
+    from joybox import shellcoverage
+    terminalreporter.write_sep("=", "shell coverage")
+    terminalreporter.write_line(shellcoverage.render_report(results, get_shell_floor(config)))

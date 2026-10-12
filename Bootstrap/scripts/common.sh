@@ -335,7 +335,7 @@ limit_req_zone \$binary_remote_addr zone=mylimit:10m rate=5r/s;
 EOF
 
     if ! grep -q "include /etc/nginx/snippets/rate-limit.conf" /etc/nginx/nginx.conf; then
-        sed -i '/##[[:space:]]*# Basic Settings/,/##[[:space:]]*$/{
+        sed -i '/#[[:space:]]*Basic Settings/,/##[[:space:]]*$/{
             /##[[:space:]]*$/a\\n\t# Rate Limiting\n\tinclude /etc/nginx/snippets/rate-limit.conf;\n
         }' /etc/nginx/nginx.conf
 

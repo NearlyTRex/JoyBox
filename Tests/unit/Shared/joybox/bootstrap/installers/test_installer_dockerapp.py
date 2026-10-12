@@ -23,8 +23,11 @@ from fakes import RecordingConnection
 @pytest.fixture
 def wordpress(isolated_settings, recording_connection):
     settings = isolated_settings
+    settings.set_value("UserData.Wordpress", "wordpress_db_user", "wpuser")
+    settings.set_value("UserData.Wordpress", "wordpress_db_name", "wpdatabase")
     settings.set_value("UserData.Wordpress", "wordpress_db_pass", "dbpass")
     settings.set_value("UserData.Wordpress", "wordpress_db_root_pass", "rootpass")
+    settings.set_value("UserData.Wordpress", "wordpress_admin_user", "admin")
     settings.set_value("UserData.Wordpress", "wordpress_admin_pass", "adminpass")
     settings.set_value("UserData.Wordpress", "wordpress_admin_email", "a@joybox.test")
     return installers.Wordpress(recording_connection)

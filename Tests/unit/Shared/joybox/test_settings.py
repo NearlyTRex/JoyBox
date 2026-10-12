@@ -73,6 +73,17 @@ def test_a_field_the_file_predates_falls_back_to_its_shipped_default(config_file
     assert settings.get_value("Tools.Tar", "tar_exe") == "tar"
 
 
+def test_a_shipped_secret_reference_is_not_a_fallback(config_file, monkeypatch):
+    # Resolving one would open 1Password for a field the file never named
+    from joybox import secretstore
+    monkeypatch.setattr(secretstore, "resolve_secret_reference",
+                        lambda *args, **kwargs: pytest.fail("a shipped reference was resolved"))
+    config_file("[S]\nname = joybox\n")
+
+    assert settings.get_value("UserData.Wordpress", "wordpress_admin_pass") is None
+    assert settings.get_integer_value("UserData.Servers", "server_0_port", throw_exception = False) is None
+
+
 def test_the_file_overrides_the_shipped_default(config_file):
     config_file("[Tools.Tar]\ntar_exe = gtar\n")
 
