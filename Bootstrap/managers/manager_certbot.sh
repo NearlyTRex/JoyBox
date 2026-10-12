@@ -18,11 +18,6 @@ print_available_domains() {
 }
 
 register_cert() {
-    if [ "$#" -lt 2 ]; then
-        echo "Usage: register_cert <contact_email> <domain1> [domain2 ... domainN]"
-        exit 1
-    fi
-
     EMAIL="$1"
     shift
     DOMAINS=("$@")
@@ -48,11 +43,6 @@ is_callers_file() {
 }
 
 install_pair() {
-    if [ "$#" -ne 3 ]; then
-        echo "Usage: install_pair <domain> <staged_fullchain> <staged_privkey>"
-        exit 1
-    fi
-
     local DOMAIN="$1"
     local FULLCHAIN="$2"
     local PRIVKEY="$3"
@@ -84,11 +74,6 @@ install_pair() {
 }
 
 selfsign_cert() {
-    if [ "$#" -lt 1 ]; then
-        echo "Usage: selfsign <domain> [other_name ...]"
-        exit 1
-    fi
-
     local DOMAIN="$1"
     local CERT_DIR="/etc/letsencrypt/live/$DOMAIN"
     local SANS=""
@@ -118,11 +103,6 @@ renew_certs() {
 }
 
 copy_certs() {
-    if [ "$#" -ne 2 ]; then
-        echo "Usage: copy_certs <domain> <destination_directory>"
-        exit 1
-    fi
-
     local DOMAIN="$1"
     local DEST_DIR="$2"
     local CERT_DIR="/etc/letsencrypt/live/$DOMAIN"
@@ -179,14 +159,6 @@ copy_certs() {
 }
 
 export_keystore() {
-    if [ "$#" -lt 4 ]; then
-        echo "Usage: export_keystore <domain> <destination_path> <password> <alias> [format] [permissions] [owner]"
-        echo "  format: p12 (default) or jks"
-        echo "  permissions: file permissions (default: 600)"
-        echo "  owner: file owner in format user:group (default: current user)"
-        exit 1
-    fi
-
     local DOMAIN="$1"
     local DEST_PATH="$2"
     local PASSWORD="$3"
@@ -300,11 +272,7 @@ export_keystore() {
         openssl pkcs12 -in "$DEST_PATH" -nokeys -noout -info -password "pass:$PASSWORD" 2>/dev/null || \
         echo "  Format: PKCS12"
     else
-        if command -v keytool >/dev/null 2>&1; then
-            keytool -list -keystore "$DEST_PATH" -storepass "$PASSWORD" -v | head -20
-        else
-            echo "  Format: JKS (keytool not available for detailed info)"
-        fi
+        keytool -list -keystore "$DEST_PATH" -storepass "$PASSWORD"
     fi
 
     echo "File permissions: $(stat -c '%A %U %G' "$DEST_PATH")"
@@ -336,11 +304,6 @@ list_certs() {
 }
 
 check_cert() {
-    if [ "$#" -ne 1 ]; then
-        echo "Usage: check_cert <domain>"
-        exit 1
-    fi
-
     local DOMAIN="$1"
     local CERT_DIR="/etc/letsencrypt/live/$DOMAIN"
 

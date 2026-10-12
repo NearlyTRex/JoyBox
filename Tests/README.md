@@ -33,7 +33,7 @@ details one module; see [its page](../Docs/reference/man/coverage_tool.md).
 The shell under `Bootstrap/` and `install.sh` is measured separately, since
 coverage.py never sees it. `--shell-cov-report` prints how many of each script's
 statements the tests ran, and `--shell-cov-fail-under N` also fails the run below
-N percent, which CI enforces:
+N percent. CI holds it at 100:
 
 ```bash
 pytest -c Tests/pytest.ini Tests/unit --shell-cov-report
@@ -167,11 +167,9 @@ logs and previews; `Recorder` fakes a call; `assert_entry_points` checks `run()`
 
 ## Known gaps
 
-- Half of the shell under `Bootstrap/` runs in the sandbox: `common.sh` and the
-  cockpit and nginx managers fully. The `init_*.sh` day-0 scripts, the dotfiles,
-  `seed.sh` and most of the certbot manager do not yet; raise CI's
-  `--shell-cov-fail-under` as they gain tests. The shell stays shell because it
-  runs on a bare server before the repo or Python exists.
+- The shell under `Bootstrap/` is fully covered in the sandbox, but against
+  stubs: nothing checks that the real apt, systemd, nginx or certbot accept what
+  it hands them. `verify_server` covers that on the rehearsal VM.
 - `Shared/joybox` is 58k lines across 242 files. The pure modules are covered;
   `collection/`, `config/`, `stores/`, `emulators/` and `tools/` are not.
 - The audio and ollama logic moved out of the command modules has dispatch and parsing

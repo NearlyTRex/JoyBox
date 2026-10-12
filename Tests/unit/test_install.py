@@ -110,3 +110,140 @@ def test_a_failed_bootstrap_fails_the_installer(installer):
     code, passed, on_tty = installer(exit_code = 1)
 
     assert code != 0
+
+
+###########################################################
+# install.sh on a bare machine
+#
+# The paths a fresh machine takes, run in the sandbox where the installer is
+# root unless told otherwise and every package tool is a stub.
+###########################################################
+
+CHECKOUT = "/root/Repositories/JoyBox"
+
+# A git whose HEAD moves on pull; a command named in $GIT_FAILS fails
+FAKE_GIT = r"""for word in fetch checkout pull clone; do
+    case " $* " in *" $word "*) case " ${GIT_FAILS:-} " in *" $word "*) exit 1 ;; esac ;; esac
+done
+case " $* " in
+    *" rev-parse "*) cat /root/head 2>/dev/null || echo abc123 ;;
+    *" pull "*) echo "${GIT_PULLED_TO:-abc123}" > /root/head ;;
+    *" clone "*) mkdir -p "${!#}/.git" ;;
+esac
+"""
+
+
+@pytest.fixture
+def bare(shell_sandbox):
+    shell_sandbox.stub("git", script = FAKE_GIT)
+    shell_sandbox.write(CHECKOUT + "/.git/HEAD", "ref: refs/heads/main\n")
+    return shell_sandbox
+
+
+def install_on(sandbox, **env):
+    return sandbox.run("install.sh", "-a", "status", env = env)
+
+
+def remove_command(sandbox, name):
+    os.remove(os.path.join(sandbox.stub_dir, name))
+
+
+def test_root_needs_no_sudo(bare):
+    bare.stub("dpkg", code = 1)
+
+    result = install_on(bare)
+
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert bare.ran("apt-get", "install", "-y", "python3-venv")
+    assert not bare.calls("sudo")
+
+
+def test_without_apt_it_refuses_to_run(bare):
+    remove_command(bare, "apt-get")
+
+    result = install_on(bare)
+
+    assert result.returncode == 1
+    assert "apt-get' was not found" in result.stderr
+
+
+def test_a_user_installs_prerequisites_through_sudo(bare):
+    bare.stub("id", stdout = "1000\n")
+    bare.stub("dpkg", code = 1)
+
+    result = install_on(bare)
+
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert bare.ran("sudo", "apt-get", "install", "-y", "python3-venv")
+
+
+def test_a_user_without_sudo_cannot_install(bare):
+    bare.stub("id", stdout = "1000\n")
+    remove_command(bare, "sudo")
+
+    result = install_on(bare)
+
+    assert result.returncode == 1
+    assert "neither root nor 'sudo'" in result.stderr
+
+
+def test_every_missing_prerequisite_is_installed(bare):
+    remove_command(bare, "python3")
+    bare.stub("dpkg", code = 1)
+    # bootstrap.py still has to run once the packages are in
+    bare.stub("apt-get", script = 'printf "#!/bin/bash\\n" > "${0%/*}/python3"; chmod +x "${0%/*}/python3"\n')
+
+    result = install_on(bare)
+
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert bare.ran("apt-get", "install", "-y", "python3", "python3-venv")
+
+
+def test_present_prerequisites_are_not_reinstalled(bare):
+    result = install_on(bare)
+
+    assert "Prerequisites already present" in result.stdout
+    assert not bare.calls("apt-get")
+
+
+def test_an_existing_checkout_is_fast_forwarded(bare):
+    result = install_on(bare, GIT_PULLED_TO = "def456")
+
+    assert result.returncode == 0
+    assert "Updated abc123 -> def456" in result.stdout
+
+
+def test_an_up_to_date_checkout_says_so(bare):
+    result = install_on(bare)
+
+    assert "Already up to date (abc123)" in result.stdout
+
+
+@pytest.mark.parametrize("failing, warning", [
+    ("fetch", "git fetch failed"),
+    ("checkout", "Could not switch to 'main'"),
+    ("pull", "Could not fast-forward"),
+])
+def test_a_checkout_that_cannot_update_is_used_as_it_is(bare, failing, warning):
+    result = install_on(bare, GIT_FAILS = failing)
+
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert warning in result.stderr
+    assert bare.ran("python3", "bootstrap.py", "-a", "status")
+
+
+def test_a_missing_checkout_is_cloned(bare):
+    result = install_on(bare, JOYBOX_DIR = "/srv/joybox/JoyBox", JOYBOX_REF = "dev")
+
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert bare.ran("git", "clone", "--branch", "dev", "https://github.com/NearlyTRex/JoyBox.git", "/srv/joybox/JoyBox")
+
+
+def test_a_directory_that_is_not_a_checkout_is_left_alone(bare):
+    bare.write("/srv/other/notes.txt", "mine\n")
+
+    result = install_on(bare, JOYBOX_DIR = "/srv/other")
+
+    assert result.returncode == 1
+    assert "is not a git checkout" in result.stderr
+    assert not bare.calls("git")
