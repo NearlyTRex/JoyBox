@@ -48,6 +48,11 @@ def test_lines_that_run_something_are_statements(line):
     assert statements(line) == [(1, 1)]
 
 
+@pytest.mark.parametrize("tail", [">" + "!<" * 40 + " (", "<&!" * 40 + " ("])
+def test_a_long_tail_that_runs_something_is_judged_quickly(tail):
+    assert not shellcoverage.is_inert_line("done " + tail)
+
+
 def test_a_backslash_continues_a_statement():
     assert statements("apt-get install \\", "    nginx \\", "    curl", "echo done") == [(1, 3), (4, 4)]
 

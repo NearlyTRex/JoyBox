@@ -60,12 +60,12 @@ exec "$@"
 """
 
 # Accounts every sandbox starts with
-BASE_PASSWD = (
+BASE_ACCOUNTS = (
     "root:x:0:0:root:/root:/bin/bash\n"
     "daemon:x:1:1:daemon:/usr/sbin:/usr/sbin/nologin\n"
     "www-data:x:33:33:www-data:/var/www:/usr/sbin/nologin\n"
     "nobody:x:65534:65534:nobody:/nonexistent:/usr/sbin/nologin\n")
-BASE_GROUP = (
+BASE_GROUPS = (
     "root:x:0:\n"
     "daemon:x:1:\n"
     "adm:x:4:\n"
@@ -129,8 +129,8 @@ class ShellSandbox:
             source = os.path.join("/etc", name)
             if os.path.isdir(source):
                 shutil.copytree(source, os.path.join(etc_dir, name), symlinks = True)
-        self.write("/etc/passwd", BASE_PASSWD)
-        self.write("/etc/group", BASE_GROUP)
+        self.write("/etc/passwd", BASE_ACCOUNTS)
+        self.write("/etc/group", BASE_GROUPS)
         self.write("/etc/nsswitch.conf", "passwd: files\ngroup: files\nhosts: files\n")
         self.write("/etc/hosts", "127.0.0.1 localhost\n")
         os.symlink("/proc/self/mounts", os.path.join(etc_dir, "mtab"))

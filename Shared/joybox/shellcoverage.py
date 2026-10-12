@@ -46,8 +46,8 @@ TRACE_LINE = re.compile(r"^\++(?P<path>/[^:\n]*):(?P<line>\d+): ", re.MULTILINE)
 STRUCTURAL_WORDS = {"{", "}", "(", ")", "fi", "done", "esac", "else", "then", "do", ";;", ";&", ";;&"}
 
 # What may follow a structural word on its line and still run nothing:
-# redirections of the construct it closes, and case terminators
-INERT_TAIL = re.compile(r"^(\s*(;;&|;;|;&|;|[0-9]*(>>|>&|<&|<<<|>|<)\s*\S+))*\s*$")
+# redirections of the construct it closes, and case terminators, one at a time
+INERT_TOKEN = re.compile(r"\s*(;;&|;;|;&|;|[0-9]*(>>|>&|<&|<<<|>|<)\s*\S+)")
 
 # A function header, with or without the keyword and the opening brace
 FUNCTION_HEADER = re.compile(r"^(function\s+[\w:.-]+(\s*\(\))?|[\w:.-]+\s*\(\))\s*\{?\s*$")
@@ -57,6 +57,15 @@ CASE_PATTERN = re.compile(r"^\s*\(?(?P<pattern>([^()\\\s]|\\.|\s(?=[^)]*\)))+)\)
 
 # A here-document operator and its terminator, quoted or not
 HEREDOC = re.compile(r"<<(?P<strip>-?)\s*(?P<quote>['\"]?)(?P<word>[\w.-]+)(?P=quote)")
+
+# Check if what follows a structural word runs nothing
+def is_inert_tail(text):
+    position = 0
+    while True:
+        match = INERT_TOKEN.match(text, position)
+        if not match:
+            return not text[position:].strip()
+        position = match.end()
 
 # Check if a line holds nothing that runs
 def is_inert_line(text):
@@ -68,7 +77,7 @@ def is_inert_line(text):
     word = stripped.split()[0]
     for structural in sorted(STRUCTURAL_WORDS, key = len, reverse = True):
         if word.startswith(structural) and (len(word) == len(structural) or not word[len(structural)].isalnum()):
-            return bool(INERT_TAIL.match(stripped[len(structural):]))
+            return is_inert_tail(stripped[len(structural):])
     return False
 
 # Remove a case pattern from the start of a line inside a case

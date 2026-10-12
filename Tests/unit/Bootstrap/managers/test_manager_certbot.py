@@ -245,7 +245,7 @@ def test_copy_without_a_certificate_lists_the_others(server, pair):
 
     assert result.returncode == 1
     assert "does not exist" in result.stdout
-    assert "other.example.com" in result.stdout
+    assert result.stdout.splitlines()[-1] == "other.example.com"
 
 
 def test_copy_without_any_certificate_says_so(server):
