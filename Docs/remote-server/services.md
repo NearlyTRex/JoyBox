@@ -61,8 +61,8 @@ newline.
 FileBrowser is not behind the shared htpasswd prompt: its own accounts are the login, each with a
 required authenticator code, and it locks an address out for 15 minutes after 8 failed attempts on
 one account. `filebrowser_totp_secret` encrypts the authenticator seeds in its database; generate it
-with `openssl rand -base64 32` and keep it, since changing it breaks every enrolled code. The OSCAR management API uses
-only the htpasswd login; AIM clients on port 5190 use the screen name.
+with `openssl rand -base64 32` and keep it, since changing it breaks every enrolled code. The OSCAR
+management API uses only the htpasswd login; AIM clients on port 5190 use the screen name.
 
 ## The website
 

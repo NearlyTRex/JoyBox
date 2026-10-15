@@ -45,7 +45,7 @@ def test_install_writes_each_rule_and_reloads(isolated_settings):
     udev, connection = make()
 
     assert udev.install()
-    for rule, path in zip(installer_udev.UDEV_RULES, RULE_PATHS):
+    for rule, path in zip(installer_udev.UDEV_RULES, RULE_PATHS, strict = True):
         assert connection.written(path) == rule["content"] + "\n"
     assert connection.ran("udevadm control --reload-rules")
     assert connection.ran("udevadm trigger")
