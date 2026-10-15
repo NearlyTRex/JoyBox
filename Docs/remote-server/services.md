@@ -30,7 +30,7 @@ python3 bootstrap.py -a setup -t remote_ubuntu -s 0 --components wordpress
 | `wordpress` | WordPress — serves the apex domain |
 | `audiobookshelf` | Audiobook streaming |
 | `navidrome` | Music streaming |
-| `filebrowser` | Web file manager |
+| `filebrowser` | Web file manager ([FileBrowser Quantum](https://github.com/gtsteffaniak/filebrowser)) |
 | `jenkins` | CI/CD server |
 | `kanboard` | Project management |
 | `fitlog` | FitLog — personal food and exercise tracker |
@@ -46,7 +46,7 @@ the first visitor could claim. Passwords can be `op://` references (see
 |-----------|----------|-----------|
 | `cockpit` | `server_N_user`, `server_N_pass` | Cockpit signs in with the server's own account |
 | `wordpress` | `wordpress_admin_user`, `wordpress_admin_pass` | Created by the seed on install |
-| `filebrowser` | `filebrowser_admin_user`, `filebrowser_admin_pass` | Synced on every start; the password needs 12 or more characters |
+| `filebrowser` | `filebrowser_admin_user`, `filebrowser_admin_pass`, `filebrowser_totp_secret` | Synced on every start; the password needs 12 or more characters. Every account must set up an authenticator code at first login. Add other people in the app's user management |
 | `kanboard` | `kanboard_admin_user`, `kanboard_admin_pass` | Required. Synced on every deploy; the stock `admin`/`admin` account is renamed to the configured user |
 | `jenkins` | `jenkins_admin_user`, `jenkins_admin_pass` | Synced on every start, and the setup wizard is skipped. With no password the wizard runs instead |
 | `navidrome` | `navidrome_admin_user`, `navidrome_admin_pass` | Created on the first deploy only; manage it in the app afterwards |
@@ -58,9 +58,11 @@ the first visitor could claim. Passwords can be `op://` references (see
 are written to the app's `.env` in single quotes, so they cannot contain a single quote or a
 newline.
 
-FileBrowser also sits behind the shared htpasswd prompt, so it takes the htpasswd login first and
-the app login second. The OSCAR management API uses only the htpasswd login; AIM clients on port
-5190 use the screen name.
+FileBrowser is not behind the shared htpasswd prompt: its own accounts are the login, each with a
+required authenticator code, and it locks an address out for 15 minutes after 8 failed attempts on
+one account. `filebrowser_totp_secret` encrypts the authenticator seeds in its database; generate it
+with `openssl rand -base64 32` and keep it, since changing it breaks every enrolled code. The OSCAR
+management API uses only the htpasswd login; AIM clients on port 5190 use the screen name.
 
 ## The website
 

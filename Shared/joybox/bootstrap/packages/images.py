@@ -35,8 +35,10 @@ docker_images["audiobookshelf"] = {
 }
 
 # FileBrowser
+# FileBrowser Quantum, the maintained fork; the original was archived in 2026.
+# The full image rather than -slim, for its ffmpeg and PDF thumbnails.
 docker_images["filebrowser"] = {
-    "FILEBROWSER_IMAGE": "filebrowser/filebrowser:v2.63.23"
+    "FILEBROWSER_IMAGE": "gtstef/filebrowser:1.5.8-stable"
 }
 
 # FitLog

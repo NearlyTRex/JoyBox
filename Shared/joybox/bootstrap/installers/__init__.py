@@ -32,7 +32,8 @@ from joybox.bootstrap.installers.installer_gh import (
 from joybox.bootstrap.installers.installer_githooks import (
     GitHooks as GitHooks)
 from joybox.bootstrap.installers.installer_filebrowser import (
-    FileBrowser as FileBrowser)
+    FileBrowser as FileBrowser,
+    is_totp_secret as is_totp_secret)
 from joybox.bootstrap.installers.installer_fitlog import (
     FitLog as FitLog)
 from joybox.bootstrap.installers.installer_flatpak import (

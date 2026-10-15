@@ -117,6 +117,7 @@ ini_defaults["UserData.FileBrowser"]["filebrowser_port_http"] = "8082"
 ini_defaults["UserData.FileBrowser"]["filebrowser_user_root"] = "/mnt/storage"
 ini_defaults["UserData.FileBrowser"]["filebrowser_admin_user"] = get_secret_reference("UserData.FileBrowser", "filebrowser_admin_user")
 ini_defaults["UserData.FileBrowser"]["filebrowser_admin_pass"] = get_secret_reference("UserData.FileBrowser", "filebrowser_admin_pass")
+ini_defaults["UserData.FileBrowser"]["filebrowser_totp_secret"] = get_secret_reference("UserData.FileBrowser", "filebrowser_totp_secret")
 
 # UserData.Jenkins
 ini_defaults["UserData.Jenkins"] = {}

@@ -26,7 +26,7 @@ reports at the end, so one broken service cannot silently skip the rest.
 | `kanboard` | `kanboard_data` and `kanboard_plugins` volumes |
 | `navidrome` | Config volume. The music library is mounted read-only from storage and is not copied |
 | `audiobookshelf` | Config volume. Cached metadata artwork is deliberately excluded — it is regenerable and large |
-| `filebrowser` | Config volume |
+| `filebrowser` | `data` volume — the database with accounts and shares. The files it serves are storage and are not copied |
 | `fitlog` | `fitlog_state` volume — the SQLite database with the food log, workout plans and login. The catalog volume is a clone of the repo and is not copied |
 | `oscar` | `oscar_data` volume — the SQLite database holding accounts, buddy lists and offline messages |
 | `jenkins` | `jenkins_home` volume, without job workspaces and caches. `/mnt/repositories` is mounted read-only and is not copied |
@@ -60,7 +60,7 @@ third-party. They are regenerated from `JoyBox.ini` on the next setup.
 
 Excluding `.env` keeps raw `JoyBox.ini` passwords out of the archives, but the dumps
 themselves still carry secrets: WordPress's `wp_options` and user password hashes,
-FileBrowser's bcrypt admin hash, OSCAR's account database. Those leave the server
+FileBrowser's account password hashes, OSCAR's account database. Those leave the server
 and land on storage you do not control.
 
 Set a recipient to encrypt them:

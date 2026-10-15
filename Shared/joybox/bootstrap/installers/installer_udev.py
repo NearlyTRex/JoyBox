@@ -15,6 +15,11 @@ UDEV_RULES = [
         "description": "Prevent ASRock LED Controller from registering as joystick",
         "content": 'SUBSYSTEM=="input", ATTRS{idVendor}=="26ce", ATTRS{idProduct}=="01a2", ENV{ID_INPUT_JOYSTICK}="", RUN+="/bin/rm -f /dev/input/js0"',
     },
+    {
+        "filename": "99-onboard-bluetooth-disable.rules",
+        "description": "Deauthorize the onboard Foxconn/MediaTek Bluetooth so only the USB dongle is used",
+        "content": 'ACTION!="remove", SUBSYSTEM=="usb", ATTR{idVendor}=="0489", ATTR{idProduct}=="e14f", ATTR{authorized}="0"',
+    },
 ]
 
 # Udev

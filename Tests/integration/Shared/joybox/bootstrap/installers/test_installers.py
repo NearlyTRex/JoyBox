@@ -1,4 +1,5 @@
 # Imports
+import base64
 import importlib
 import re
 import shutil
@@ -34,6 +35,7 @@ REQUIRED_SETTINGS = [
     ("UserData.Wordpress", "wordpress_admin_email", "nobody@joybox.test"),
     ("UserData.FileBrowser", "filebrowser_user_root", "/mnt/storage"),
     ("UserData.FileBrowser", "filebrowser_admin_pass", "a long adminpass"),
+    ("UserData.FileBrowser", "filebrowser_totp_secret", base64.b64encode(bytes(range(32))).decode()),
     ("UserData.Kanboard", "kanboard_admin_pass", "adminpass"),
     ("UserData.Backup", "backup_root", "/mnt/storage/Backups"),
 ]

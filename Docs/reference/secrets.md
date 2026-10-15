@@ -102,7 +102,7 @@ screen or in the scrollback.
 | `UserData.Protection` | `general_passphrase`, `locker_passphrase` |
 | `UserData.Share` | `locker_*_passphrase`, `locker_*_token` |
 | `UserData.Wordpress` | `wordpress_db_pass`, `wordpress_db_root_pass`, `wordpress_admin_pass` |
-| `UserData.FileBrowser` | `filebrowser_admin_pass` |
+| `UserData.FileBrowser` | `filebrowser_admin_pass`, `filebrowser_totp_secret` |
 | `UserData.Kanboard` | `kanboard_admin_pass` |
 | `UserData.Jenkins` | `jenkins_admin_pass` |
 | `UserData.Navidrome` | `navidrome_admin_pass` |

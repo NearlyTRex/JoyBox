@@ -1,8 +1,10 @@
 # Imports
+import base64
 import json
 
 # Third-party imports
 import pytest
+import yaml
 
 # Local imports
 import joybox.bootstrap.installers as installers
@@ -82,24 +84,95 @@ def test_waiting_for_http_reports_a_timeout(isolated_settings):
 # FileBrowser
 ###########################################################
 
-def test_filebrowser_needs_a_twelve_character_password(isolated_settings):
-    isolated_settings.set_value("UserData.FileBrowser", "filebrowser_user_root", "/mnt/storage")
-    isolated_settings.set_value("UserData.FileBrowser", "filebrowser_admin_user", "admin")
-    isolated_settings.set_value("UserData.FileBrowser", "filebrowser_admin_pass", "elevenchars")
+TOTP_SECRET = base64.b64encode(bytes(range(32))).decode()
+ADMIN_PASS = "twelve chars"
+SHORT_ADMIN_PASS = "elevenchars"
+
+
+def set_filebrowser_admin(isolated_settings, user = "admin", admin_pass = ADMIN_PASS, totp_secret = TOTP_SECRET):
+    isolated_settings.set_value("UserData.FileBrowser", "filebrowser_admin_user", user)
+    isolated_settings.set_value("UserData.FileBrowser", "filebrowser_admin_pass", admin_pass)
+    isolated_settings.set_value("UserData.FileBrowser", "filebrowser_totp_secret", totp_secret)
+
+
+def test_filebrowser_takes_its_admin_from_the_ini(isolated_settings):
+    set_filebrowser_admin(isolated_settings)
     filebrowser, _ = make(installers.FileBrowser)
+
+    assert filebrowser.check_required_settings()
+    assert "FILEBROWSER_ADMIN_USER='admin'" in env_file(filebrowser)
+    assert "FILEBROWSER_ADMIN_PASS='%s'" % ADMIN_PASS in env_file(filebrowser)
+    assert "FILEBROWSER_TOTP_SECRET='%s'" % TOTP_SECRET in env_file(filebrowser)
+    assert "FILEBROWSER_HOST=cloud.joybox.test" in env_file(filebrowser)
+
+
+def test_filebrowser_needs_a_twelve_character_password(isolated_settings):
+    set_filebrowser_admin(isolated_settings, admin_pass = SHORT_ADMIN_PASS)
+    filebrowser, _ = make(installers.FileBrowser)
+
     assert not filebrowser.check_required_settings()
 
-    isolated_settings.set_value("UserData.FileBrowser", "filebrowser_admin_pass", "twelve chars")
+
+def test_filebrowser_needs_an_admin(isolated_settings):
+    set_filebrowser_admin(isolated_settings, user = "")
     filebrowser, _ = make(installers.FileBrowser)
-    assert filebrowser.check_required_settings()
+
+    assert not filebrowser.check_required_settings()
 
 
-def test_filebrowser_syncs_the_admin_from_the_environment():
-    template = installer_filebrowser.docker_compose_template
-    assert "/filebrowser " not in template
-    assert 'users update "$$FB_ADMIN_USER" --password "$$FB_ADMIN_PASS"' in template
-    assert 'users add "$$FB_ADMIN_USER" "$$FB_ADMIN_PASS"' in template
-    assert "FB_PORT" in template
+@pytest.mark.parametrize("secret", [
+    "", "not base64!", base64.b64encode(b"x" * 31).decode(), base64.b64encode(b"x" * 33).decode()])
+def test_filebrowser_needs_a_full_size_totp_key(isolated_settings, secret):
+    set_filebrowser_admin(isolated_settings, totp_secret = secret)
+    filebrowser, _ = make(installers.FileBrowser)
+
+    assert not filebrowser.check_required_settings()
+
+
+@pytest.mark.parametrize("size", [16, 24, 32])
+def test_filebrowser_takes_each_key_size_it_uses_as_given(size):
+    assert installer_filebrowser.is_totp_secret(base64.b64encode(b"x" * size).decode())
+
+
+@pytest.mark.parametrize("user", ['ad"min', "ad min", "ad\\min", "admin:"])
+def test_filebrowser_refuses_an_admin_name_yaml_would_misread(isolated_settings, user):
+    set_filebrowser_admin(isolated_settings, user = user)
+    filebrowser, _ = make(installers.FileBrowser)
+
+    assert not filebrowser.check_required_settings()
+
+
+def filebrowser_compose():
+    return yaml.safe_load(installer_filebrowser.docker_compose_template)
+
+
+def filebrowser_config():
+    return yaml.safe_load(filebrowser_compose()["configs"]["config"]["content"])
+
+
+def test_filebrowser_logs_in_with_its_own_accounts():
+    auth = filebrowser_config()["auth"]
+
+    assert auth["methods"] == {"password": {"enabled": True, "minLength": 12, "signup": False, "enforcedOtp": True}}
+    assert auth["adminUsername"] == "${FILEBROWSER_ADMIN_USER}"
+
+
+def test_filebrowser_takes_its_secrets_from_the_environment():
+    service = filebrowser_compose()["services"]["filebrowser"]
+
+    assert service["environment"]["FILEBROWSER_ADMIN_PASSWORD"] == "${FILEBROWSER_ADMIN_PASS}"
+    assert service["environment"]["FILEBROWSER_TOTP_SECRET"] == "${FILEBROWSER_TOTP_SECRET}"
+    assert "FILEBROWSER_ADMIN_PASS" not in filebrowser_compose()["configs"]["config"]["content"]
+    assert "FILEBROWSER_TOTP_SECRET" not in filebrowser_compose()["configs"]["config"]["content"]
+
+
+def test_filebrowser_throttles_logins_by_the_address_nginx_saw():
+    assert filebrowser_config()["http"]["trustedHeaders"] == ["X-Real-IP"]
+    assert "proxy_set_header X-Real-IP $remote_addr;" in installer_filebrowser.nginx_config_template
+
+
+def test_filebrowser_is_not_behind_basic_auth():
+    assert "auth_basic" not in installer_filebrowser.nginx_config_template
 
 
 ###########################################################
