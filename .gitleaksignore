@@ -10,3 +10,6 @@
 # RetroArch's own public Discord application id, from its stock retroarch.cfg
 366445db9bf8c87b5f8775036ca532ea9317112a:Emulators/RetroArch/linux/RetroArch-Linux-x86_64.AppImage.home/.config/retroarch/retroarch.cfg:discord-client-id:150
 366445db9bf8c87b5f8775036ca532ea9317112a:Emulators/RetroArch/windows/retroarch.cfg:discord-client-id:136
+
+# A placeholder FileBrowser TOTP key in a test fixture, bytes 0x00..0x1f in base64
+ba3d845f28898311b2a25c6c3f5de4cb2cfe49f9:Tests/integration/Shared/joybox/bootstrap/installers/test_installers.py:generic-api-key:37
