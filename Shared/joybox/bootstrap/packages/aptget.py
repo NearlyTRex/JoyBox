@@ -229,7 +229,10 @@ aptget[constants.EnvironmentType.LOCAL_UBUNTU] += [
     {"id": "qt6-declarative-dev-tools", "category": "Libs"},
     {"id": "qt6-multimedia-dev", "category": "Libs"},
     {"id": "qt6-tools-dev", "category": "Libs"},
+    {"id": "qtbase5-dev", "category": "Libs"},
     {"id": "qtchooser", "category": "Libs"},
+    {"id": "qtdeclarative5-dev", "category": "Libs"},
+    {"id": "qtmultimedia5-dev", "category": "Libs"},
     {"id": "zlib1g-dev", "category": "Libs"},
 
     # Net
