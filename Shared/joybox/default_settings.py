@@ -642,14 +642,24 @@ CONFIG_HEADER = """; ===========================================================
 
 """
 
-def generate_default_config_content(sections = None, include_secret_references = True):
-    sections_to_include = sections if sections else list(ini_defaults.keys())
+# Values, as {section: {key: value}}, are written in place of the defaults, a
+# blank one included, and keys the defaults do not know are kept after them.
+def generate_default_config_content(sections = None, include_secret_references = True, values = None):
+    values = values or {}
+    sections_to_include = sections if sections else list(ini_defaults.keys()) + [
+        section_name for section_name in values if section_name not in ini_defaults]
     content = CONFIG_HEADER
     for section_name in sections_to_include:
-        if section_name not in ini_defaults:
+        if section_name not in ini_defaults and section_name not in values:
             continue
+        section_values = values.get(section_name, {})
         content += f"[{section_name}]\n"
-        for key, value in ini_defaults[section_name].items():
+        defaults = ini_defaults.get(section_name, {})
+        for key in list(defaults) + [key for key in section_values if key not in defaults]:
+            if key in section_values:
+                content += f"{key} = {section_values[key]}\n"
+                continue
+            value = defaults[key]
             if str(value) == "" or (not include_secret_references and secretstore.is_secret_reference(value)):
                 content += f"; {key} = \n"
             else:
@@ -657,10 +667,10 @@ def generate_default_config_content(sections = None, include_secret_references =
         content += "\n"
     return content
 
-def create_default_config_file(path, sections = None, include_secret_references = True, verbose = False, pretend_run = False, exit_on_failure = False):
+def create_default_config_file(path, sections = None, include_secret_references = True, values = None, verbose = False, pretend_run = False, exit_on_failure = False):
     return serialization.write_text_file(
         src = path,
-        contents = generate_default_config_content(sections, include_secret_references),
+        contents = generate_default_config_content(sections, include_secret_references, values),
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)

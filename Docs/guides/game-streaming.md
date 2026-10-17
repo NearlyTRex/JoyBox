@@ -12,6 +12,10 @@ controllers.
 | Host (has the games and the GPU) | Sunshine | [`launch_sunshine`](../reference/man/launch_sunshine.md) |
 | Client (the TV) | Moonlight | [`launch_moonlight`](../reference/man/launch_moonlight.md) |
 
+A new `~/JoyBox.ini` asks which of these a machine is and fills in the settings below. For an
+existing one, `python3 bootstrap.py -t local_ubuntu --recreate-config` asks again and keeps
+everything else.
+
 ## The host
 
 In `~/JoyBox.ini`:

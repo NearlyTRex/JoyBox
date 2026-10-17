@@ -8,8 +8,9 @@ same APT base, so they all use the `local_ubuntu` target.
 ## Quick steps
 
 ```bash
-# 1. Install. Clones to ~/Repositories/JoyBox, creates ~/JoyBox.ini, asks which components
-#    to set up (Enter takes all of them), then sets them up
+# 1. Install. Clones to ~/Repositories/JoyBox, creates ~/JoyBox.ini (asking whether this
+#    machine is a game-streaming host, client or neither), asks which components to set up
+#    (Enter takes all of them), then sets them up
 curl -fsSL https://raw.githubusercontent.com/NearlyTRex/JoyBox/main/install.sh | bash
 
 # 2. Open a new terminal so the shell config and PATH are picked up
@@ -22,6 +23,18 @@ python3 bootstrap.py -a setup -t local_ubuntu
 ```
 
 Already have the repo cloned? Skip step 1 and run step 4 from the checkout.
+
+**Picking up new settings.** `~/JoyBox.ini` is only created when it is missing, so settings added
+to JoyBox later never appear in it on their own. Rebuild it from the current defaults:
+
+```bash
+python3 bootstrap.py -t local_ubuntu --recreate-config
+```
+
+Every value your file sets is kept, `op://` references and deliberately blank ones included, and
+the old file is saved beside it as `JoyBox.ini.backup-<date>-<time>` (readable only by you). It
+asks the game-streaming questions again, with your current answers as the defaults. Comments you
+added to the file are not carried over.
 
 **Check it worked:**
 

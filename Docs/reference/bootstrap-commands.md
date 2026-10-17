@@ -55,6 +55,7 @@ python3 bootstrap.py -a setup -t local_ubuntu -v
 | `--list-images` | List the pinned container image for each docker component and exit |
 | `--backup-id` | Which backup to restore — a timestamp, or `latest` |
 | `--confirm` | Type `restore` to confirm a destructive restore |
+| `--recreate-config` | Rebuild the config file from the current defaults, keeping every value it sets and backing it up first, then exit. Needs no `-a` |
 | `--purge-data` | Delete container volumes and the app directory during teardown. **Destroys databases and app data**; without it both are kept |
 | `-p`, `--pretend_run` | Dry run — show what would happen, change nothing |
 | `-v`, `--verbose` | Verbose logging |
