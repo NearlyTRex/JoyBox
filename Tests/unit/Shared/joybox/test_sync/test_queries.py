@@ -2,7 +2,7 @@
 import pytest
 
 # Local imports
-from joybox import config, sync
+from joybox import sync
 from sync_helpers import REMOTE, REMOTE_TYPE, REMOTE_PATH, record
 
 
@@ -52,93 +52,63 @@ def test_a_query_passes_its_run_flags_on(monkeypatch):
 ###########################################################
 
 def test_a_failed_remote_listing_lists_nothing(rclone, quiet, monkeypatch):
-    record(monkeypatch, returncode = 1, output = "hetzner:\n")
+    record(monkeypatch, returncode = 1, output = "hetzner: sftp\n")
 
-    assert sync.get_configured_remotes() == []
+    assert sync.get_configured_remotes() == {}
 
 
 def test_blank_lines_are_not_remotes(rclone, monkeypatch):
-    record(monkeypatch, output = "hetzner:\n\n  \ngdrive:\n")
+    record(monkeypatch, output = "hetzner: sftp\n\n  \ngdrive: drive\n")
 
-    assert sync.get_configured_remotes() == ["hetzner:", "gdrive:"]
+    assert sync.get_configured_remotes() == {"hetzner": "sftp", "gdrive": "drive"}
 
 
-def test_the_remote_check_passes_its_flags_to_the_listing(rclone, quiet, monkeypatch):
+def test_the_remote_check_lists_the_remote_it_names_with_its_flags(rclone, quiet, monkeypatch):
     seen = []
-    monkeypatch.setattr(
-        sync, "get_configured_remotes", lambda **kwargs: seen.append(kwargs) or [])
-    sync.is_remote_configured(
-        REMOTE, REMOTE_TYPE, verbose = True, pretend_run = True, exit_on_failure = True)
+    monkeypatch.setattr(sync, "get_configured_remotes", lambda **kwargs: seen.append(kwargs) or {})
+    sync.is_remote_configured(REMOTE, REMOTE_TYPE, verbose = True, pretend_run = True, exit_on_failure = True)
 
-    assert seen == [{"verbose": True, "pretend_run": True, "exit_on_failure": True}]
+    assert seen == [{"remote_names": [REMOTE], "verbose": True, "pretend_run": True, "exit_on_failure": True}]
 
 
 def test_a_remote_whose_name_only_starts_the_same_is_not_configured(rclone, quiet, monkeypatch):
-    # hetznerEnc being set up says nothing about hetzner itself.
-    monkeypatch.setattr(sync, "get_configured_remotes", lambda **kwargs: ["hetznerEnc:"])
-    recorder = record(monkeypatch, output = "type = %s\n" % sync.get_remote_raw_type(REMOTE_TYPE))
-
-    assert sync.is_remote_configured(REMOTE, REMOTE_TYPE) is False
-    assert recorder.ran() is False
-
-
-def test_a_remote_whose_config_cannot_be_shown_is_not_configured(rclone, quiet, monkeypatch):
-    monkeypatch.setattr(sync, "get_configured_remotes", lambda **kwargs: ["hetzner:"])
-    record(monkeypatch, returncode = 1, output = "")
+    # hetznerEnc being defined says nothing about hetzner itself.
+    raw = sync.get_remote_raw_type(REMOTE_TYPE)
+    monkeypatch.setattr(sync, "get_configured_remotes", lambda **kwargs: {"hetznerenc": raw})
 
     assert sync.is_remote_configured(REMOTE, REMOTE_TYPE) is False
 
 
-def test_a_config_without_a_type_line_is_plainly_false(rclone, quiet, monkeypatch):
-    monkeypatch.setattr(sync, "get_configured_remotes", lambda **kwargs: ["hetzner:"])
-    record(monkeypatch, output = "[hetzner]\nhost = example.test\n")
-
+def test_a_configured_remote_check_without_rclone_is_false(no_rclone, quiet, recording_command):
     assert sync.is_remote_configured(REMOTE, REMOTE_TYPE) is False
-
-
-def test_a_configured_remote_check_without_rclone_is_false(no_rclone, quiet, monkeypatch):
-    monkeypatch.setattr(sync, "get_configured_remotes", lambda **kwargs: ["hetzner:"])
-
-    assert sync.is_remote_configured(REMOTE, REMOTE_TYPE) is False
+    assert recording_command.ran() is False
 
 
 ###########################################################
 # Setting up remotes
+#
+# Remotes are defined by the settings, so setting one up creates nothing: it
+# checks the remote resolves, and never puts a credential on a command line.
 ###########################################################
 
-def test_a_token_is_handed_to_a_manual_remote(rclone, recording_command):
-    sync.setup_manual_remote(REMOTE, REMOTE_TYPE, remote_token = '{"access_token": "x"}')
+def test_a_remote_the_settings_define_is_set_up(rclone, quiet, monkeypatch, recording_command):
+    checked = []
+    monkeypatch.setattr(sync, "is_remote_configured", lambda **kwargs: checked.append(kwargs) or True)
 
-    assert 'token={"access_token": "x"}' in recording_command.only()
-
-
-def test_a_token_in_the_config_is_not_doubled(rclone, recording_command):
-    sync.setup_manual_remote(
-        REMOTE, REMOTE_TYPE, remote_token = "outer", remote_config = {"token": "inner"})
-    cmd = recording_command.only()
-
-    assert "token=inner" in cmd
-    assert "token=outer" not in cmd
-
-
-def test_a_config_that_is_not_an_object_is_refused(rclone, quiet, recording_command):
-    assert sync.setup_remote(REMOTE, config.RemoteType.SFTP, remote_config = '["host"]') is False
+    assert sync.setup_remote(REMOTE, REMOTE_TYPE, verbose = True) is True
+    assert checked == [{"remote_name": REMOTE, "remote_type": REMOTE_TYPE,
+                        "verbose": True, "pretend_run": False, "exit_on_failure": False}]
     assert recording_command.ran() is False
 
 
-@pytest.mark.parametrize("call", ["setup_manual_remote", "setup_autoconnect_remote"])
-def test_a_verbose_setup_asks_rclone_to_be_verbose(rclone, recording_command, call):
-    getattr(sync, call)(REMOTE, config.RemoteType.DRIVE, verbose = True)
+def test_a_remote_the_settings_do_not_define_says_where_to_define_it(rclone, monkeypatch):
+    errors = []
+    monkeypatch.setattr(sync, "is_remote_configured", lambda **kwargs: False)
+    monkeypatch.setattr(sync.logger, "log_error", errors.append)
 
-    assert all("--verbose" in entry["cmd"] for entry in recording_command.calls)
-
-
-def test_a_failed_authorization_reports_failure(rclone, monkeypatch):
-    codes = iter([0, 1])
-    monkeypatch.setattr(
-        sync.command, "run_returncode_command", lambda **kwargs: next(codes))
-
-    assert sync.setup_autoconnect_remote(REMOTE, config.RemoteType.DRIVE) is False
+    assert sync.setup_remote(REMOTE, REMOTE_TYPE) is False
+    assert errors == ["Remote 'hetzner' is not defined as %s; set the locker's _name, _type and _config in "
+                      "[UserData.Share]" % sync.get_remote_raw_type(REMOTE_TYPE)]
 
 
 ###########################################################

@@ -3,6 +3,7 @@ import os
 
 # Third-party imports
 import pytest
+import yaml
 
 # Local imports
 from joybox import virtualmachine
@@ -25,7 +26,7 @@ from vm_helpers import NAME, fake_connection
 
 def test_every_required_tool_is_named():
     assert set(virtualmachine.REQUIRED_TOOLS) == {
-        "virt-install", "virsh", "qemu-img", "cloud-localds"}
+        "virt-install", "virsh", "qemu-img", "cloud-localds", "openssl"}
 
 
 def test_a_missing_tool_is_reported(monkeypatch):
@@ -95,10 +96,14 @@ def test_no_key_at_all_resolves_to_nothing(monkeypatch):
 # Cloud-init
 ###########################################################
 
+CONSOLE_HASH = "$6$saltsalt$ZmFrZWhhc2g"
+
+
 def user_data(**kwargs):
     defaults = dict(
         vm_name = NAME,
-        ssh_public_key = "ssh-ed25519 AAAA deploy@host")
+        ssh_public_key = "ssh-ed25519 AAAA deploy@host",
+        console_password_hash = CONSOLE_HASH)
     defaults.update(kwargs)
     return virtualmachine.build_user_data(**defaults)
 
@@ -133,17 +138,41 @@ def test_no_account_is_created():
     # Provisioning creates the account, with the grants a real server gets.
     built = user_data()
 
-    assert "users:" not in built
+    assert "users" not in yaml.safe_load(built)
     assert "NOPASSWD" not in built
 
 
-def test_a_console_password_is_set_for_root():
-    # The ssh hardening closes root login, so the console is the way back in.
-    assert "root:joybox" in user_data()
+def test_root_gets_the_console_password_as_a_hash():
+    # The ssh hardening closes root login, so the console is the way back in;
+    # the seed holds only the hash.
+    chpasswd = yaml.safe_load(user_data())["chpasswd"]
+
+    assert chpasswd == {"expire": False, "users": [{"name": "root", "password": CONSOLE_HASH, "type": "hash"}]}
 
 
-def test_the_console_password_can_be_chosen():
-    assert "root:hunter2" in user_data(console_password = "hunter2")
+def test_the_console_password_is_hashed_on_openssls_input(recording_command):
+    recording_command.output = "$6$abc$def\n"
+
+    assert virtualmachine.hash_console_password("hunter2") == "$6$abc$def"
+    assert recording_command.only() == ["openssl", "passwd", "-6", "-stdin"]
+    assert recording_command.options().get_stdin_input() == "hunter2\n"
+
+
+@pytest.mark.parametrize("output", ["", None, "hunter2"])
+def test_a_console_password_that_will_not_hash_is_refused(recording_command, caplog, output):
+    recording_command.output = output
+
+    assert virtualmachine.hash_console_password("hunter2") is None
+    assert "Unable to hash the console password" in caplog.text
+
+
+@pytest.mark.requires_binary("openssl")
+def test_openssl_gives_a_salted_sha512_crypt_hash():
+    first = virtualmachine.hash_console_password("joybox")
+    second = virtualmachine.hash_console_password("joybox")
+
+    assert first.startswith("$6$") and second.startswith("$6$")
+    assert first != second
 
 
 def test_password_login_is_enabled_at_first_boot():

@@ -15,7 +15,7 @@ general_passphrase = op://Private/JoyBox/general_passphrase
 locker_passphrase  = op://Private/JoyBox/locker_passphrase
 
 [UserData.Share]
-locker_hetzner_token = op://Private/JoyBox/hetzner_token
+locker_hetzner_config = op://Private/JoyBox/locker_hetzner_config
 ```
 
 Anything that does not start with `op://` is used exactly as written, so this can be adopted one
@@ -60,7 +60,7 @@ suits it better than a Password item, which has a password field you would leave
 ```text
 Vault:  Private
 Item:   JoyBox
-Fields: general_passphrase, locker_passphrase, locker_hetzner_token, ...
+Fields: general_passphrase, locker_passphrase, locker_hetzner_config, ...
 ```
 
 Give each field the **Password** type rather than Text. A text field resolves the same, but it is
@@ -70,7 +70,7 @@ the item to check a label. Name the fields after the ini keys and avoid spaces.
 A field inside a **named section** carries the section in its reference:
 
 ```text
-op://Private/JoyBox/Lockers/hetzner_token
+op://Private/JoyBox/Lockers/locker_hetzner_config
 ```
 
 Fields outside one skip that segment. Grouping is worth it for a long note, but renaming a
@@ -100,7 +100,7 @@ screen or in the scrollback.
 | Section | Fields |
 |---------|--------|
 | `UserData.Protection` | `general_passphrase`, `locker_passphrase` |
-| `UserData.Share` | `locker_*_passphrase`, `locker_*_token` |
+| `UserData.Share` | `locker_*_passphrase`, `locker_*_config`, `locker_*_token` |
 | `UserData.Wordpress` | `wordpress_db_pass`, `wordpress_db_root_pass`, `wordpress_admin_pass` |
 | `UserData.FileBrowser` | `filebrowser_admin_pass`, `filebrowser_totp_secret` |
 | `UserData.Kanboard` | `kanboard_admin_pass` |

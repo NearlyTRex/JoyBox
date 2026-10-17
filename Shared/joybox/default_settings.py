@@ -65,6 +65,7 @@ for share_type, remote_type, remote_name in [("gdrive", "drive", "Gdrive"), ("he
         ini_defaults["UserData.Share"][f"locker_{share_type}_encrypted"] = "True"
     ini_defaults["UserData.Share"][f"locker_{share_type}_passphrase"] = ""
 ini_defaults["UserData.Share"]["locker_hetzner_config"] = get_secret_reference("UserData.Share", "locker_hetzner_config")
+ini_defaults["UserData.Share"]["locker_gdrive_config"] = get_secret_reference("UserData.Share", "locker_gdrive_config")
 for share_type in ["external"]:
     if platform_info.is_windows_platform():
         ini_defaults["UserData.Share"][f"locker_{share_type}_mount_path"] = "E:\\"

@@ -9,39 +9,24 @@ from sync_helpers import REMOTE, REMOTE_TYPE
 ###########################################################
 # Remote naming
 #
-# An encrypted remote is the plain one with an "Enc" suffix, and rclone is
-# invoked with whichever name the caller derived - so a mismatch reads from
-# the wrong remote entirely.
+# An encrypted remote is the plain one with an "Enc" suffix, and a B2 bucket
+# is named after the plain one - so a name stripped wrongly addresses the
+# wrong bucket entirely.
 ###########################################################
-
-def test_an_encrypted_name_gains_the_suffix():
-    assert sync.get_encrypted_remote_name("Hetzner") == "HetznerEnc"
-
-
-def test_an_already_encrypted_name_is_unchanged():
-    assert sync.get_encrypted_remote_name("HetznerEnc") == "HetznerEnc"
-
 
 def test_an_unencrypted_name_loses_the_suffix():
     assert sync.get_unencrypted_remote_name("HetznerEnc") == "Hetzner"
 
 
-def test_an_already_unencrypted_name_is_unchanged():
-    assert sync.get_unencrypted_remote_name("Hetzner") == "Hetzner"
-
-
 @pytest.mark.parametrize("name", ["Hetzner", "B2", "Drive"])
-def test_the_pair_round_trips(name):
-    assert sync.get_unencrypted_remote_name(sync.get_encrypted_remote_name(name)) == name
+def test_an_already_unencrypted_name_is_unchanged(name):
+    assert sync.get_unencrypted_remote_name(name) == name
 
 
-@pytest.mark.parametrize("name", ["Hetzner", "HetznerEnc"])
-def test_both_directions_are_idempotent(name):
-    encrypted = sync.get_encrypted_remote_name(name)
-    unencrypted = sync.get_unencrypted_remote_name(name)
+def test_stripping_the_suffix_is_idempotent():
+    once = sync.get_unencrypted_remote_name("HetznerEnc")
 
-    assert sync.get_encrypted_remote_name(encrypted) == encrypted
-    assert sync.get_unencrypted_remote_name(unencrypted) == unencrypted
+    assert sync.get_unencrypted_remote_name(once) == once == "Hetzner"
 
 
 def test_a_name_containing_enc_is_not_stripped_mid_name():

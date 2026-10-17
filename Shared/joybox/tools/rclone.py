@@ -1,6 +1,3 @@
-# Imports
-import json
-
 # Local imports
 import joybox.config as config
 import joybox.logger as logger
@@ -10,27 +7,11 @@ import joybox.fileops as fileops
 import joybox.release as release
 import joybox.programs as programs
 import joybox.toolbase as toolbase
-import joybox.settings as settings
 
-# Config file templates
-config_template_gdrive = """
-[GDRIVE_NAME]
-type = GDRIVE_TYPE
-client_id =
-client_secret =
-scope = drive
-token = GDRIVE_TOKEN
-team_drive =
-root_folder_id =
-"""
-config_template_hetzner = """
-[HETZNER_NAME]
-type = HETZNER_TYPE
-host = HETZNER_HOST
-user = HETZNER_USER
-pass = HETZNER_PASS
-shell_type = unix
-disable_hashcheck = true
+# What rclone.conf holds. The remotes are defined by the settings and reach
+# rclone through the environment of each command; see joybox.rcloneremotes.
+config_note = """# Written by JoyBox. Remotes come from the locker settings in JoyBox.ini at
+# run time, so no credential is kept here; anything added here is replaced.
 """
 
 # RClone tool
@@ -140,49 +121,7 @@ class RClone(toolbase.ToolBase):
         if not setup_params:
             setup_params = config.SetupParams()
 
-        # Get gdrive options
-        gdrive_remote_name = settings.get_value("UserData.Share", "locker_gdrive_name", throw_exception = False)
-        gdrive_remote_type = settings.get_value("UserData.Share", "locker_gdrive_type", throw_exception = False)
-        gdrive_remote_token = settings.get_value("UserData.Share", "locker_gdrive_token", throw_exception = False)
-
-        # Get hetzner options
-        hetzner_remote_name = settings.get_value("UserData.Share", "locker_hetzner_name", throw_exception = False)
-        hetzner_remote_type = settings.get_value("UserData.Share", "locker_hetzner_type", throw_exception = False)
-        hetzner_remote_config_str = settings.get_value("UserData.Share", "locker_hetzner_config", throw_exception = False)
-        hetzner_remote_config = {}
-        if hetzner_remote_config_str:
-            try:
-                hetzner_remote_config = json.loads(hetzner_remote_config_str)
-            except Exception:
-                pass
-        if not isinstance(hetzner_remote_config, dict):
-            hetzner_remote_config = {}
-        hetzner_remote_host = hetzner_remote_config.get("host")
-        hetzner_remote_user = hetzner_remote_config.get("user")
-        hetzner_remote_pass = hetzner_remote_config.get("pass")
-
-        # Build config contents - only include sections with valid credentials
-        config_contents = ""
-
-        # Add gdrive section only if we have the required credentials
-        if gdrive_remote_name and gdrive_remote_type and gdrive_remote_token:
-            gdrive_section = config_template_gdrive.strip()
-            gdrive_section = gdrive_section.replace(config.token_gdrive_name, gdrive_remote_name)
-            gdrive_section = gdrive_section.replace(config.token_gdrive_type, gdrive_remote_type)
-            gdrive_section = gdrive_section.replace(config.token_gdrive_token, gdrive_remote_token)
-            config_contents += gdrive_section + "\n\n"
-
-        # Add hetzner section only if we have the required credentials
-        if hetzner_remote_name and hetzner_remote_type and hetzner_remote_host and hetzner_remote_user and hetzner_remote_pass:
-            hetzner_section = config_template_hetzner.strip()
-            hetzner_section = hetzner_section.replace(config.token_hetzner_name, hetzner_remote_name)
-            hetzner_section = hetzner_section.replace(config.token_hetzner_type, hetzner_remote_type)
-            hetzner_section = hetzner_section.replace(config.token_hetzner_host, hetzner_remote_host)
-            hetzner_section = hetzner_section.replace(config.token_hetzner_user, hetzner_remote_user)
-            hetzner_section = hetzner_section.replace(config.token_hetzner_pass, hetzner_remote_pass)
-            config_contents += hetzner_section + "\n"
-
-        # Write config files for each platform
+        # Leave no credential behind from a config an earlier version wrote
         config_files = [
             "RClone/windows/rclone.conf",
             "RClone/linux/rclone.conf"
@@ -190,8 +129,7 @@ class RClone(toolbase.ToolBase):
         for config_filename in config_files:
             success = fileops.touch_file(
                 src = paths.join_paths(environment.get_tools_root_dir(), config_filename),
-                contents = config_contents.strip(),
-                private = True,
+                contents = config_note,
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)

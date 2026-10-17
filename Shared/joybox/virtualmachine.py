@@ -22,7 +22,7 @@ import joybox.settings as settings
 from joybox.connection import ConnectionLocal
 
 # Tools this needs on the workstation
-REQUIRED_TOOLS = ["virt-install", "virsh", "qemu-img", "cloud-localds"]
+REQUIRED_TOOLS = ["virt-install", "virsh", "qemu-img", "cloud-localds", "openssl"]
 
 # Where libvirt keeps its images; only root can write here
 IMAGE_DIR = "/var/lib/libvirt/images"
@@ -119,16 +119,19 @@ def get_seed_image(vm_name = DEFAULT_NAME, image_dir = IMAGE_DIR):
 # The guest starts the way a freshly ordered server does: root reachable with
 # the key and no account of your own, so provisioning creates the account and
 # its sudo grants exactly as it would on the real host. The root console
-# password is the way back in once the sshd hardening has closed root login.
-def build_user_data(vm_name, ssh_public_key, console_password = "joybox"):
+# password is the way back in once the sshd hardening has closed root login;
+# the seed carries only its hash.
+def build_user_data(vm_name, ssh_public_key, console_password_hash):
     return "\n".join([
         "#cloud-config",
         "hostname: %s" % vm_name,
         "disable_root: false",
         "chpasswd:",
-        "  list: |",
-        "    root:%s" % console_password,
         "  expire: false",
+        "  users:",
+        "    - name: root",
+        "      password: %s" % console_password_hash,
+        "      type: hash",
         "ssh_pwauth: true",
         "write_files:",
         "  - path: /root/.ssh/authorized_keys",
@@ -144,6 +147,21 @@ def build_user_data(vm_name, ssh_public_key, console_password = "joybox"):
         "  - [ systemctl, enable, --now, ssh ]",
         "",
     ])
+
+# Hash a console password the way /etc/shadow keeps it (SHA-512 crypt). The
+# password reaches openssl on its input, never its command line.
+def hash_console_password(console_password, verbose = False, exit_on_failure = False):
+    output = command.run_output_command(
+        cmd = ["openssl", "passwd", "-6", "-stdin"],
+        options = command.create_command_options(stdin_input = console_password + "\n"),
+        verbose = verbose,
+        pretend_run = False,
+        exit_on_failure = exit_on_failure)
+    hashed = (output or "").strip()
+    if not hashed.startswith("$6$"):
+        logger.log_error("Unable to hash the console password")
+        return None
+    return hashed
 
 # Build the cloud-init meta data for a new guest
 def build_meta_data(vm_name):
@@ -410,6 +428,9 @@ def create_vm(
     if not ssh_public_key:
         return False
     ssh_public_key = ssh_public_key.strip()
+    console_password_hash = hash_console_password(console_password, verbose = verbose, exit_on_failure = exit_on_failure)
+    if not console_password_hash:
+        return False
 
     # Get the backing image
     base_image = fetch_base_image(
@@ -441,7 +462,7 @@ def create_vm(
         user_data = paths.join_paths(seed_dir, "user-data")
         meta_data = paths.join_paths(seed_dir, "meta-data")
         for seed_file, contents in [
-            (user_data, build_user_data(vm_name, ssh_public_key, console_password)),
+            (user_data, build_user_data(vm_name, ssh_public_key, console_password_hash)),
             (meta_data, build_meta_data(vm_name))]:
             success = fileops.touch_file(
                 src = seed_file,

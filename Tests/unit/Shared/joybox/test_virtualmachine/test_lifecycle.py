@@ -19,6 +19,7 @@ from vm_helpers import NAME, fake_connection
 ###########################################################
 
 KEY = "ssh-ed25519 AAAA deploy@workstation"
+CONSOLE_HASH = "$6$saltsalt$ZmFrZWhhc2g"
 
 
 @pytest.fixture
@@ -28,6 +29,9 @@ def creatable(monkeypatch, tmp_path):
     monkeypatch.setattr(virtualmachine, "does_vm_exist", lambda *a, **k: False)
     monkeypatch.setattr(virtualmachine.logger, "log_error", lambda *a, **k: None)
     monkeypatch.setattr(virtualmachine.logger, "log_info", lambda *a, **k: None)
+    hashed = []
+    monkeypatch.setattr(virtualmachine, "hash_console_password",
+        lambda console_password, **kwargs: hashed.append(console_password) or CONSOLE_HASH)
     key = tmp_path / "id_ed25519.pub"
     key.write_text(KEY + "\n")
     images = tmp_path / "images"
@@ -49,6 +53,7 @@ def creatable(monkeypatch, tmp_path):
     world.images = str(images)
     world.seed_dir = seed_dir
     world.removed = removed
+    world.hashed = hashed
     world.connection = fake_connection(monkeypatch)
     world.command = RecordingCommand(monkeypatch)
     return world
@@ -74,6 +79,24 @@ def test_the_seed_carries_the_key_and_the_name(creatable):
     assert KEY in (creatable.seed_dir / "user-data").read_text()
     assert "instance-id: %s" % NAME in (creatable.seed_dir / "meta-data").read_text()
     assert creatable.removed == [str(creatable.seed_dir)]
+
+
+def test_the_seed_holds_the_console_password_only_as_its_hash(creatable, monkeypatch):
+    seeds = []
+    monkeypatch.setattr(virtualmachine.fileops, "touch_file", lambda **kwargs: seeds.append(kwargs["contents"]) or True)
+
+    create(creatable, console_password = "hunter2")
+
+    assert creatable.hashed == ["hunter2"]
+    assert CONSOLE_HASH in seeds[0]
+    assert not [seed for seed in seeds if "hunter2" in seed]
+
+
+def test_a_console_password_that_will_not_hash_stops_before_any_disk_is_made(creatable, monkeypatch):
+    monkeypatch.setattr(virtualmachine, "hash_console_password", lambda console_password, **kwargs: None)
+
+    assert create(creatable) is False
+    assert not creatable.connection.ran("qemu-img")
 
 
 def test_the_seed_holding_the_console_password_is_kept_private(creatable, monkeypatch):
