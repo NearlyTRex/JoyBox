@@ -35,6 +35,11 @@ secret_timeout_seconds = 120
 # Secrets already fetched this run, so a field read in a loop asks once
 _resolved = {}
 
+# What the tool prints when it has no account to read from. Set once seen, so
+# a run that reads many references reports it once rather than for each.
+no_account_marker = "No accounts configured"
+_no_account = {"seen": False}
+
 ###########################################################
 # References
 ###########################################################
@@ -65,15 +70,20 @@ def get_secret_command(tool, reference):
 # Forget everything fetched this run
 def clear_resolved_secrets():
     _resolved.clear()
+    _no_account["seen"] = False
 
 # Resolve one reference
 # Run with the ordinary subprocess rather than the command module, which logs
 # what it runs and hands output through several layers; a secret should touch
-# as little as possible on its way to the caller.
+# as little as possible on its way to the caller. The tool gets no input: with
+# none it fails and says how to sign in, where with a terminal it offers to add
+# an account and then prompts into output that is being captured.
 def resolve_secret_reference(reference, verbose = False):
     reference = reference.strip()
     if reference in _resolved:
         return _resolved[reference]
+    if _no_account["seen"]:
+        return None
     tool = get_secret_tool()
     if not tool:
         logger.log_error(
@@ -86,6 +96,7 @@ def resolve_secret_reference(reference, verbose = False):
         result = subprocess.run(
             get_secret_command(tool, reference),
             check = False,
+            stdin = subprocess.DEVNULL,
             capture_output = True,
             text = True,
             timeout = secret_timeout_seconds)
@@ -103,7 +114,15 @@ def resolve_secret_reference(reference, verbose = False):
         # The tool's complaint names the item, not its contents
         detail = (result.stderr or "").strip().splitlines()
         logger.log_error("Unable to resolve %s" % reference)
-        if detail:
+        if no_account_marker in (result.stderr or ""):
+            _no_account["seen"] = True
+            for line in detail:
+                if line.strip():
+                    logger.log_error(line.strip())
+            logger.log_error(
+                "Sign in to the 1Password app and turn on its CLI integration, then run this "
+                "again; see Docs/reference/secrets.md")
+        elif detail:
             logger.log_error(detail[0])
         return None
     value = result.stdout
