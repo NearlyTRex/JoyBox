@@ -1,5 +1,7 @@
 # Imports
 import os
+
+# Third-party imports
 import pytest
 
 # Local imports
@@ -27,7 +29,7 @@ def payload(tmp_path):
 
 
 @pytest.fixture
-def built_iso(tmp_path, payload, requires_tool):
+def built_iso(tmp_path, payload):
     target = tmp_path / "game.iso"
     assert iso.create_iso(str(target), source_dir = str(payload)) is True
     return target
@@ -55,7 +57,7 @@ def test_a_created_iso_carries_the_iso9660_signature(built_iso):
         assert handle.read(5) == b"CD001"
 
 
-def test_a_volume_name_reaches_the_image(tmp_path, payload, requires_tool):
+def test_a_volume_name_reaches_the_image(tmp_path, payload):
     target = tmp_path / "game.iso"
     iso.create_iso(str(target), source_dir = str(payload), volume_name = "GAMEDISC")
 
@@ -64,14 +66,14 @@ def test_a_volume_name_reaches_the_image(tmp_path, payload, requires_tool):
         assert handle.read(8) == b"GAMEDISC"
 
 
-def test_creating_from_a_missing_directory_reports_failure(tmp_path, requires_tool):
+def test_creating_from_a_missing_directory_reports_failure(tmp_path):
     target = tmp_path / "game.iso"
     iso.create_iso(str(target), source_dir = str(tmp_path / "absent"))
 
     assert not target.exists() or target.stat().st_size == 0
 
 
-def test_several_source_directories_all_reach_the_image(tmp_path, requires_tool):
+def test_several_source_directories_all_reach_the_image(tmp_path):
     # The extra sources were silently dropped, producing an empty image.
     first = tmp_path / "first"
     second = tmp_path / "second"
@@ -88,7 +90,7 @@ def test_several_source_directories_all_reach_the_image(tmp_path, requires_tool)
     assert {"one.txt", "two.txt"} <= names
 
 
-def test_a_successful_create_deletes_the_source_when_asked(tmp_path, payload, requires_tool):
+def test_a_successful_create_deletes_the_source_when_asked(tmp_path, payload):
     target = tmp_path / "game.iso"
 
     assert iso.create_iso(
@@ -96,7 +98,7 @@ def test_a_successful_create_deletes_the_source_when_asked(tmp_path, payload, re
     assert not payload.exists()
 
 
-def test_pretending_creates_nothing(tmp_path, payload, requires_tool):
+def test_pretending_creates_nothing(tmp_path, payload):
     target = tmp_path / "game.iso"
     iso.create_iso(str(target), source_dir = str(payload), pretend_run = True)
 
@@ -117,7 +119,7 @@ def test_an_iso_extracts_its_files(tmp_path, built_iso):
 def test_extracted_content_matches_the_payload(tmp_path, built_iso, payload):
     out = extracted(tmp_path, built_iso)
     original = (payload / "data.bin").read_bytes()
-    restored = [path for path in out.rglob("data.bin")][0]
+    restored = list(out.rglob("data.bin"))[0]
 
     assert restored.read_bytes() == original
 
@@ -125,13 +127,13 @@ def test_extracted_content_matches_the_payload(tmp_path, built_iso, payload):
 def test_nesting_survives_the_round_trip(tmp_path, built_iso):
     # iso-level 3 plus joliet is what keeps deep paths intact.
     out = extracted(tmp_path, built_iso)
-    deep = [path for path in out.rglob("deep.txt")]
+    deep = list(out.rglob("deep.txt"))
 
     assert len(deep) == 1
     assert deep[0].read_text() == "deep\n"
 
 
-def test_a_long_filename_survives_the_round_trip(tmp_path, requires_tool):
+def test_a_long_filename_survives_the_round_trip(tmp_path):
     source = tmp_path / "payload"
     source.mkdir()
     long_name = "Final Fantasy VII (USA) (Disc 1) (Rev 1) - patched.bin"
@@ -153,11 +155,11 @@ def test_extracted_files_are_readable(tmp_path, built_iso):
             assert os.access(str(path), os.R_OK)
 
 
-def test_extracting_a_missing_image_reports_failure(tmp_path, requires_tool):
+def test_extracting_a_missing_image_reports_failure(tmp_path):
     assert iso.extract_iso(str(tmp_path / "absent.iso"), str(tmp_path / "out")) is False
 
 
-def test_extracting_a_non_image_reports_failure(tmp_path, requires_tool):
+def test_extracting_a_non_image_reports_failure(tmp_path):
     source = tmp_path / "notanimage.iso"
     source.write_text("this is not a disc image")
 

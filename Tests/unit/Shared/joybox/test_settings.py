@@ -19,7 +19,7 @@ from joybox import settings
 def config_file(tmp_path):
     def write(contents):
         path = os.path.join(str(tmp_path), "JoyBox.ini")
-        with open(path, "w") as config:
+        with open(path, "w", encoding = "utf-8") as config:
             config.write(contents)
         settings.reset()
         settings.set_settings_file(path)
@@ -147,7 +147,7 @@ def test_set_value_does_not_touch_the_file(config_file):
     path = config_file("[S]\nname = original\n")
     settings.set_value("S", "name", "overridden")
 
-    with open(path, "r") as config:
+    with open(path, "r", encoding = "utf-8") as config:
         assert "original" in config.read()
 
 
@@ -211,7 +211,7 @@ def test_save_persists_the_overlay(config_file):
     settings.set_value("S", "name", "overridden")
     settings.save()
 
-    with open(path, "r") as config:
+    with open(path, "r", encoding = "utf-8") as config:
         assert "overridden" in config.read()
 
 
@@ -220,7 +220,7 @@ def test_save_creates_a_missing_section(config_file):
     settings.set_value("Brand.New", "field", "value")
     settings.save()
 
-    with open(path, "r") as config:
+    with open(path, "r", encoding = "utf-8") as config:
         contents = config.read()
     assert "[Brand.New]" in contents
     assert "field = value" in contents
@@ -262,9 +262,9 @@ def test_switching_files_switches_the_values(tmp_path):
     # bootstrap.py -c relies on this for a fully independent config.
     first = os.path.join(str(tmp_path), "first.ini")
     second = os.path.join(str(tmp_path), "second.ini")
-    with open(first, "w") as config:
+    with open(first, "w", encoding = "utf-8") as config:
         config.write("[S]\nname = first\n")
-    with open(second, "w") as config:
+    with open(second, "w", encoding = "utf-8") as config:
         config.write("[S]\nname = second\n")
 
     settings.reset()
@@ -283,7 +283,7 @@ def test_is_present_reflects_the_file(tmp_path):
     assert settings.is_present() is False
 
     present = os.path.join(str(tmp_path), "present.ini")
-    with open(present, "w") as config:
+    with open(present, "w", encoding = "utf-8") as config:
         config.write("[S]\n")
     settings.set_settings_file(present)
     assert settings.is_present() is True
@@ -383,7 +383,7 @@ def test_saving_writes_the_reference_and_not_the_secret(config_file, vault):
 
     settings.save()
 
-    with open(path) as written:
+    with open(path, encoding = "utf-8") as written:
         contents = written.read()
     assert SECRET_REFERENCE in contents
     assert SECRET_VALUE not in contents
@@ -404,7 +404,7 @@ def test_fields_are_listed_and_a_missing_section_has_none(config_file):
 
 
 @pytest.mark.parametrize("call", [
-    lambda: settings.get_sections(),
+    settings.get_sections,
     lambda: settings.get_fields("A"),
     lambda: settings.has_section("A"),
     lambda: settings.has_field("A", "x"),

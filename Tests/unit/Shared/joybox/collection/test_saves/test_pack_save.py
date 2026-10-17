@@ -191,10 +191,10 @@ def test_a_pretend_run_reports_success_without_writing(game, fake_archive, fake_
 def test_flags_reach_the_archiver_and_the_locker(game, fake_archive, fake_locker):
     saves.pack_save(game, verbose = True, exit_on_failure = True)
 
-    for call in [fake_archive.created[0], fake_locker.backups[0]]:
-        assert call["verbose"] is True
-        assert call["exit_on_failure"] is True
-        assert call["pretend_run"] is False
+    flags = [(call["verbose"], call["exit_on_failure"], call["pretend_run"])
+             for call in [fake_archive.created[0], fake_locker.backups[0]]]
+
+    assert flags == [(True, True, False)] * 2
 
 
 ###########################################################

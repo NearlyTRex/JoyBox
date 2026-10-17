@@ -5,6 +5,8 @@ import subprocess
 # Third-party imports
 import pytest
 
+pytestmark = pytest.mark.requires_binary("bash", "unshare")
+
 DOTFILES_DIR = os.path.normpath(os.path.join(os.path.dirname(__file__), "..", "..", "..", "..", "Bootstrap", "dotfiles"))
 
 

@@ -75,5 +75,3 @@ def test_a_remote_without_a_type_is_not_configured(rclone, quiet, monkeypatch):
         lambda **kwargs: ("couldn't find type of fs for hetzner", 0))
 
     assert sync.is_remote_configured(REMOTE, REMOTE_TYPE) is False
-
-

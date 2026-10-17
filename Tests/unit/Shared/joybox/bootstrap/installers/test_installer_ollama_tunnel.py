@@ -99,6 +99,7 @@ def test_a_failed_start_fails_the_install(isolated_settings):
     tunnel, connection = make(isolated_settings, return_codes = {"enable --now": 1})
 
     assert not tunnel.install()
+    assert connection.ran("systemctl --user enable --now ollama-tunnel.service")
 
 
 ###########################################################

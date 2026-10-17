@@ -317,10 +317,10 @@ def fake_editor(monkeypatch, replacement = None, succeed = True):
 
     def run(cmd, **kwargs):
         seen["cmd"] = cmd
-        with open(cmd[1]) as handle:
+        with open(cmd[1], encoding = "utf-8") as handle:
             seen["initial"] = handle.read()
         if replacement is not None:
-            with open(cmd[1], "w") as handle:
+            with open(cmd[1], "w", encoding = "utf-8") as handle:
                 handle.write(replacement)
         return succeed
     monkeypatch.setattr(command, "run_interactive_command", run)

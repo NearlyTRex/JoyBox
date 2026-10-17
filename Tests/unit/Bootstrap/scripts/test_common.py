@@ -6,6 +6,11 @@ import subprocess
 # Third-party imports
 import pytest
 
+# Local imports
+from bootstrap_helpers import output
+
+pytestmark = pytest.mark.requires_binary("bash", "unshare")
+
 
 ###########################################################
 # Day-0 function library
@@ -23,10 +28,6 @@ COMMON = os.path.join(os.path.dirname(os.path.dirname(os.path.dirname(os.path.di
 # Source common.sh and run a snippet; the snippet's $1.. are args
 def run(sandbox, body, *args, env = None):
     return sandbox.run_command(["bash", "-c", 'source "$0"\n' + body, COMMON] + [str(arg) for arg in args], env = env)
-
-
-def output(result):
-    return result.stdout + result.stderr
 
 
 def mode(sandbox, path):

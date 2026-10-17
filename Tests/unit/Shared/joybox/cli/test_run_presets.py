@@ -77,9 +77,10 @@ def test_a_group_naming_nothing_runs_nothing(tool, monkeypatch):
 def test_pass_through_flags_reach_every_command(tool):
     tool.run("-o", tool.output, "-g", "Backup_Microsoft", "-v", "-x", "-e", "-i")
 
-    cmd = tool.commands[0]
-    for flag in ("--verbose", "--exit_on_failure", "--skip_existing", "--skip_identical"):
-        assert flag in cmd
+    missing = [flag for flag in ("--verbose", "--exit_on_failure", "--skip_existing", "--skip_identical")
+               if flag not in tool.commands[0]]
+
+    assert not missing, missing
 
 
 def test_a_failed_preset_command_exits_with_an_error(tool):

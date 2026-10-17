@@ -329,7 +329,8 @@ def test_the_backup_keeps_a_single_header(tmp_path, fake_exports):
         options = None,
         export_keys = ["HKCU\\Software", "HKLM\\Software"])
 
-    text = open(target, encoding = "utf-16").read()
+    with open(target, encoding = "utf-16") as handle:
+        text = handle.read()
     assert text.count(HEADER) == 1
     assert text.startswith(HEADER)
 

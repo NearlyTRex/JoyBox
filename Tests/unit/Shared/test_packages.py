@@ -173,7 +173,7 @@ NAMESPACE_PACKAGES = [
 def defined_names(module):
     import ast
     import inspect
-    with open(inspect.getsourcefile(module), "r") as source:
+    with open(inspect.getsourcefile(module), "r", encoding = "utf-8") as source:
         tree = ast.parse(source.read())
     names = []
     for node in tree.body:
@@ -211,4 +211,3 @@ def test_every_config_value_is_re_exported():
     missing = unexported("joybox.config", include_data = True)
 
     assert not missing, f"joybox/config/__init__.py does not re-export: {missing}"
-

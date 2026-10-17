@@ -6,7 +6,9 @@ import pytest
 
 # Local imports
 from joybox import release
-from release_helpers import build_appimage, failing, tree, write
+from file_helpers import tree
+from file_helpers import write
+from release_helpers import build_appimage, failing
 
 
 ###########################################################

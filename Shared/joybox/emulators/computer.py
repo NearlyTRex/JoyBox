@@ -148,7 +148,7 @@ class Computer(emulatorbase.EmulatorBase):
         return None
 
     # Get save dir
-    def get_save_dir(self, emulator_platform = None):
+    def get_save_dir(self, game_platform, emulator_platform = None):
         return None
 
     # Setup

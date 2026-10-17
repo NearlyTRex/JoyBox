@@ -7,7 +7,8 @@ import pytest
 
 # Local imports
 from joybox import release
-from release_helpers import failing, setup_archive, tree, write
+from file_helpers import tree, write
+from release_helpers import failing, setup_archive
 
 
 ###########################################################
@@ -122,12 +123,12 @@ def test_a_plain_program_is_installed_from_beside_the_archive(workspace):
 
 
 def test_a_program_release_does_not_extract_anything(workspace, monkeypatch):
-    def fail(**kwargs):
-        raise AssertionError("a standalone program is not an archive")
+    # A standalone program is not an archive.
+    extracted = []
+    monkeypatch.setattr(release.archive, "extract_archive", lambda **kwargs: extracted.append(kwargs))
 
-    monkeypatch.setattr(release.archive, "extract_archive", fail)
-
-    setup_archive(workspace, archive_name = "Tool-1.0.AppImage")
+    assert setup_archive(workspace, archive_name = "Tool-1.0.AppImage") is True
+    assert extracted == []
 
 
 ###########################################################

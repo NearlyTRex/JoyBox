@@ -1,12 +1,12 @@
 # Imports
 import os
 import pty
-import fcntl
-import termios
 import subprocess
 
 # Third-party imports
 import pytest
+
+pytestmark = pytest.mark.requires_binary("bash", "unshare", "setsid")
 
 
 ###########################################################
@@ -56,26 +56,22 @@ def installer(tmp_path, repo_root, shell_traced_env):
     return run
 
 
-# Give the script a controlling terminal of its own, as a user's shell would
+# Give the script a controlling terminal of its own, as a user's shell would:
+# setsid starts a new session and takes the pty on stdin as its terminal
 def run_on_terminal(command, environment):
     leader, follower = pty.openpty()
-
-    def take_terminal():
-        fcntl.ioctl(0, termios.TIOCSCTTY, 0)
-
     try:
-        process = subprocess.Popen(command, env = environment, stdin = follower,
-            stdout = follower, stderr = follower, start_new_session = True,
-            preexec_fn = take_terminal)
-        os.close(follower)
-        follower = None
-        while True:
-            try:
-                if not os.read(leader, 4096):
+        with subprocess.Popen(["setsid", "--ctty", "--wait"] + command, env = environment, stdin = follower,
+                              stdout = follower, stderr = follower) as process:
+            os.close(follower)
+            follower = None
+            while True:
+                try:
+                    if not os.read(leader, 4096):
+                        break
+                except OSError:
                     break
-            except OSError:
-                break
-        process.wait(timeout = 30)
+            process.wait(timeout = 30)
         return process
     finally:
         if follower is not None:
@@ -97,6 +93,7 @@ def test_without_a_terminal_it_installs_everything(installer):
 
     assert code == 0
     assert passed == ["bootstrap.py", "-a", "setup", "-t", "local_ubuntu"]
+    assert not on_tty
 
 
 def test_given_arguments_are_passed_through_unchanged(installer):
@@ -104,12 +101,14 @@ def test_given_arguments_are_passed_through_unchanged(installer):
 
     assert code == 0
     assert passed == ["bootstrap.py", "-a", "status", "-t", "local_ubuntu"]
+    assert on_tty
 
 
 def test_a_failed_bootstrap_fails_the_installer(installer):
-    code, passed, on_tty = installer(exit_code = 1)
+    code, passed, _ = installer(exit_code = 1)
 
     assert code != 0
+    assert passed == ["bootstrap.py", "-a", "setup", "-t", "local_ubuntu"]
 
 
 ###########################################################

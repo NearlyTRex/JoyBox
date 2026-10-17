@@ -174,10 +174,11 @@ def test_a_setup_copies_the_download_beside_it(world):
 def test_a_setup_makes_the_emulator_drives(world):
     world.run()
     made = [kwargs["src"] for kwargs in world.named("make_directory")]
+    drives = [
+        world.setup_dir, world.options.get_prefix_dos_c_drive(),
+        world.options.get_prefix_dos_d_drive(), world.options.get_prefix_scumm_dir()]
 
-    for path in [world.setup_dir, world.options.get_prefix_dos_c_drive(),
-                 world.options.get_prefix_dos_d_drive(), world.options.get_prefix_scumm_dir()]:
-        assert path in made
+    assert [path for path in drives if path not in made] == []
 
 
 def test_the_steps_run_in_order_with_the_token_map(world):
@@ -262,11 +263,13 @@ def test_setup_files_can_be_kept(world):
 
 def test_the_run_settings_reach_every_step(world):
     world.run(verbose = True, pretend_run = True, exit_on_failure = True)
+    flagged = [(name, kwargs) for name, kwargs in world.order if "pretend_run" in kwargs]
+    dropped = [
+        name for name, kwargs in flagged
+        if (kwargs["verbose"], kwargs["pretend_run"], kwargs["exit_on_failure"]) != (True, True, True)]
 
-    for name, kwargs in world.order:
-        if "pretend_run" in kwargs:
-            assert (kwargs["verbose"], kwargs["pretend_run"], kwargs["exit_on_failure"]) == \
-                (True, True, True), name
+    assert flagged
+    assert not dropped, dropped
 
 
 def test_a_setup_directory_that_cannot_be_made_stops_the_setup(world):

@@ -67,7 +67,7 @@ def test_an_empty_locker_is_empty_rather_than_failed(cache_dir, tmp_path):
 def test_a_built_map_is_cached(cache_dir, tmp_path):
     build(FakeLocalLocker(str(tmp_path), listing = {"Game.zip": entry()}))
 
-    with open(lockersync.get_cache_file("Locker")) as handle:
+    with open(lockersync.get_cache_file("Locker"), encoding = "utf-8") as handle:
         assert json.load(handle) == {"Game.zip": entry()}
 
 

@@ -181,7 +181,7 @@ def test_sorting_a_file_that_cannot_be_written_reports_failure(read_only_file):
 def test_a_failed_edit_leaves_the_contents_alone(read_only_file):
     fileops.replace_strings_in_file(read_only_file, [{"from": "data", "to": "other"}])
 
-    with open(read_only_file) as handle:
+    with open(read_only_file, encoding = "utf-8") as handle:
         assert handle.read() == "data\n"
 
 
@@ -271,7 +271,7 @@ def test_a_verbose_transfer_produces_the_same_file(tmp_path, source_file):
     target = str(tmp_path / "transferred.txt")
 
     assert fileops.transfer_file(source_file, target, verbose = True) is True
-    with open(target) as handle:
+    with open(target, encoding = "utf-8") as handle:
         assert handle.read() == "payload"
 
 
@@ -291,14 +291,14 @@ def test_a_verbose_edit_changes_the_same_contents(tmp_path, source_file):
     fileops.replace_strings_in_file(
         source_file, [{"from": "payload", "to": "replaced"}], verbose = True)
 
-    with open(source_file) as handle:
+    with open(source_file, encoding = "utf-8") as handle:
         assert handle.read() == "replaced"
 
 
 def test_a_verbose_append_adds_the_same_line(tmp_path, source_file):
     fileops.append_line_to_file(source_file, "a line", verbose = True)
 
-    with open(source_file) as handle:
+    with open(source_file, encoding = "utf-8") as handle:
         assert "a line" in handle.read()
 
 

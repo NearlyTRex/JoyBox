@@ -4,6 +4,8 @@ import os
 # Third-party imports
 import pytest
 
+pytestmark = pytest.mark.requires_binary("bash", "unshare")
+
 
 ###########################################################
 # Day-0 sudoers grant
@@ -18,7 +20,7 @@ SUDOERS = "/etc/sudoers.d/99-deploy-joybox"
 
 
 def read_list(repo_root, name):
-    with open(os.path.join(repo_root, "Bootstrap", "scripts", name)) as handle:
+    with open(os.path.join(repo_root, "Bootstrap", "scripts", name), "r", encoding = "utf-8") as handle:
         return [line.strip() for line in handle if line.strip() and not line.strip().startswith("#")]
 
 

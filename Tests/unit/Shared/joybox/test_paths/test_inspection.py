@@ -334,7 +334,6 @@ def test_a_similarly_named_directory_is_not_matched():
 ###########################################################
 
 def test_leaf_directories_are_the_ones_holding_files(tree):
-    # Without a threshold this returns one list; with one it returns a pair.
     found = sorted(os.path.basename(entry["path"])
                    for entry in paths.build_leaf_directory_list(str(tree)))
 
@@ -353,27 +352,28 @@ def test_a_leaf_carries_its_file_count_and_size(tree):
 def test_a_threshold_splits_the_result_in_two(tree):
     # The sync separates these so one huge folder does not stall the batch.
     # The comparison is strict, so a leaf has to exceed the count.
-    small, large = paths.build_leaf_directory_list(str(tree), large_file_count = 0)
+    small, large = paths.split_leaf_directory_list(str(tree), large_file_count = 0)
 
-    assert large
-    assert all(entry["file_count"] > 0 for entry in large)
+    assert sorted(os.path.basename(entry["path"]) for entry in small) == ["empty"]
+    assert sorted(os.path.basename(entry["path"]) for entry in large) == ["deep", "logs"]
 
 
 def test_a_leaf_at_the_threshold_is_not_large(tree):
-    small, large = paths.build_leaf_directory_list(str(tree), large_file_count = 1)
+    small, large = paths.split_leaf_directory_list(str(tree), large_file_count = 1)
 
     assert large == []
     assert small
 
 
 def test_a_size_threshold_also_splits(tree):
-    small, large = paths.build_leaf_directory_list(str(tree), large_total_size = 1)
+    small, large = paths.split_leaf_directory_list(str(tree), large_total_size = 1)
 
-    assert large
+    assert sorted(os.path.basename(entry["path"]) for entry in small) == ["empty"]
+    assert sorted(os.path.basename(entry["path"]) for entry in large) == ["deep", "logs"]
 
 
 def test_a_generous_threshold_leaves_nothing_large(tree):
-    small, large = paths.build_leaf_directory_list(
+    small, large = paths.split_leaf_directory_list(
         str(tree), large_file_count = 10000, large_total_size = 10 ** 12)
 
     assert large == []

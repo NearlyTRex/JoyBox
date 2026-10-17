@@ -27,25 +27,21 @@ def test_a_named_patch_file_is_read(tmp_path):
     patch_path = tmp_path / "fix.patch"
     patch_path.write_text(PATCH_BODY)
 
-    name, content = release.resolve_patch_entry({"path": str(patch_path)})
-
-    assert content == PATCH_BODY
+    assert release.resolve_patch_entry({"path": str(patch_path)})[1] == PATCH_BODY
 
 
 def test_a_named_patch_file_supplies_the_filename(tmp_path):
     patch_path = tmp_path / "fix.patch"
     patch_path.write_text(PATCH_BODY)
 
-    name, content = release.resolve_patch_entry({"path": str(patch_path)})
-
-    assert name == "fix.patch"
+    assert release.resolve_patch_entry({"path": str(patch_path)})[0] == "fix.patch"
 
 
 def test_an_explicit_filename_wins_over_the_path(tmp_path):
     patch_path = tmp_path / "fix.patch"
     patch_path.write_text(PATCH_BODY)
 
-    name, content = release.resolve_patch_entry(
+    name, _ = release.resolve_patch_entry(
         {"path": str(patch_path), "file": "renamed.patch"})
 
     assert name == "renamed.patch"
@@ -55,7 +51,7 @@ def test_a_named_patch_file_overrides_inline_content(tmp_path):
     patch_path = tmp_path / "fix.patch"
     patch_path.write_text(PATCH_BODY)
 
-    name, content = release.resolve_patch_entry(
+    _, content = release.resolve_patch_entry(
         {"path": str(patch_path), "content": "inline"})
 
     assert content == PATCH_BODY
@@ -79,14 +75,16 @@ def test_an_empty_entry_resolves_to_empty_strings():
     assert release.resolve_patch_entry({}) == ("", "")
 
 
-@pytest.mark.parametrize("field", ["file", "content", "path"])
-def test_a_null_field_is_treated_as_absent(field):
+@pytest.mark.parametrize("field, expected", [
+    ("file", ("", PATCH_BODY)),
+    ("content", ("fix.patch", "")),
+    ("path", ("fix.patch", PATCH_BODY)),
+])
+def test_a_null_field_is_treated_as_absent(field, expected):
     entry = {"file": "fix.patch", "content": PATCH_BODY, "path": ""}
     entry[field] = None
-    name, content = release.resolve_patch_entry(entry)
 
-    assert isinstance(name, str)
-    assert isinstance(content, str)
+    assert release.resolve_patch_entry(entry) == expected
 
 
 ###########################################################
@@ -99,7 +97,7 @@ def patching(tmp_path, monkeypatch):
     state = {"code": 0, "applied": applied, "source_dir": str(tmp_path / "source"), "patch_dir": str(tmp_path / "patches")}
 
     def run_returncode_command(cmd, options = None, **kwargs):
-        with open(cmd[2]) as handle:
+        with open(cmd[2], encoding = "utf-8") as handle:
             applied.append({"cmd": cmd, "cwd": options.get_cwd(), "body": handle.read(), "kwargs": kwargs})
         return state["code"]
 

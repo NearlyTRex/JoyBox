@@ -51,9 +51,9 @@ def test_a_path_that_exists_on_disk_is_local(lockers, tmp_path):
     assert locker.is_local_path(str(tmp_path)) is True
 
 
-def test_remote_is_the_complement_of_local(lockers):
-    for path in [f"{LOCAL_ROOT}/x", f"{REMOTE_ROOT}/x", "/nowhere/x"]:
-        assert locker.is_remote_path(path) is (not locker.is_local_path(path))
+@pytest.mark.parametrize("path", [f"{LOCAL_ROOT}/x", f"{REMOTE_ROOT}/x", "/nowhere/x"])
+def test_remote_is_the_complement_of_local(lockers, path):
+    assert locker.is_remote_path(path) is (not locker.is_local_path(path))
 
 
 def test_the_local_root_itself_is_not_matched_as_a_prefix(lockers):
@@ -337,7 +337,7 @@ def encryption(monkeypatch, tmp_path):
     def encrypt_file(src, passphrase, output_file, **kwargs):
         state["encrypted"].append({"src": src, "passphrase": passphrase, "out": output_file})
         if state["result"]:
-            with open(output_file, "w") as handle:
+            with open(output_file, "w", encoding = "utf-8") as handle:
                 handle.write("encrypted")
         return state["result"]
 
@@ -584,6 +584,7 @@ def test_a_decrypted_download_can_be_redirected(backends, sync_phrase):
     success, path = locker.sync_from_remote_decrypted(
         "/remote/Games/Game.zip", dest = "/locker/Staging/Game.zip", locker_type = REMOTE)
 
+    assert success is True
     assert local_backend(backends).synced[0]["dest"] == "Staging/Game.zip"
     assert path == os.path.join(LOCAL_ROOT, "Staging/Game.zip")
 

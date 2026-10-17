@@ -1,3 +1,6 @@
+# Local imports
+from joybox import webpage
+
 ###########################################################
 # Doubles for the browser
 #
@@ -159,3 +162,12 @@ class DyingDriver(FakeDriver):
             raise RuntimeError("session deleted")
         self.reads_left -= 1
         return self._url
+
+
+# The urls found on a page whose source is html
+def matching(page, html, **kwargs):
+    page["html"] = html
+    return webpage.get_matching_urls(
+        url = "https://releases.example/list",
+        base_url = "https://releases.example",
+        **kwargs)

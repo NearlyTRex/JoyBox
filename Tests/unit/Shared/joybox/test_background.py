@@ -76,7 +76,12 @@ def test_stopping_waits_for_a_run_in_progress():
 
 
 def test_stopping_a_job_that_never_started_is_harmless():
-    background.BackgroundJob(job_func = lambda: None, units_exact = 1).stop()
+    job = background.BackgroundJob(job_func = lambda: None, units_exact = 1)
+
+    job.stop()
+
+    assert job.should_stop.is_set()
+    assert job.thread is None
 
 
 def test_an_unknown_unit_leaves_the_job_unscheduled():

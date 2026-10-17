@@ -52,14 +52,14 @@ def test_an_empty_command_is_not_wrapped(installed_runners):
 
 
 def test_a_wine_command_starts_with_wine(installed_runners):
-    cmd, built = sandbox.setup_prefix_command(["game.exe", "-windowed"], options = wine())
+    cmd, _ = sandbox.setup_prefix_command(["game.exe", "-windowed"], options = wine())
 
     assert cmd == ["/tools/wine", "game.exe", "-windowed"]
 
 
 def test_a_wine_command_gets_a_copy_of_its_options(installed_runners):
     entry = wine()
-    cmd, built = sandbox.setup_prefix_command(["game.exe"], options = entry)
+    _, built = sandbox.setup_prefix_command(["game.exe"], options = entry)
 
     assert built is not entry
 
@@ -70,31 +70,31 @@ def test_a_virtual_desktop_wraps_the_game_in_explorer(installed_runners):
     entry.set_desktop_width(1024)
     entry.set_desktop_height(768)
 
-    cmd, built = sandbox.setup_prefix_command(["game.exe"], options = entry)
+    cmd, _ = sandbox.setup_prefix_command(["game.exe"], options = entry)
 
     assert cmd == ["/tools/wine", "explorer", "/desktop=1024x768", "game.exe"]
 
 
 def test_a_sandboxie_command_names_its_box(installed_runners):
-    cmd, built = sandbox.setup_prefix_command(["game.exe"], options = sandboxie())
+    cmd, _ = sandbox.setup_prefix_command(["game.exe"], options = sandboxie())
 
     assert cmd == ["/tools/start.exe", "/box:Game", "game.exe"]
 
 
 def test_a_sandboxed_tool_runs_hidden(installed_runners):
-    cmd, built = sandbox.setup_prefix_command(["tool.exe"], options = sandboxie(config.PrefixType.TOOL))
+    cmd, _ = sandbox.setup_prefix_command(["tool.exe"], options = sandboxie(config.PrefixType.TOOL))
 
     assert cmd == ["/tools/start.exe", "/box:Tool", "/hide_window", "tool.exe"]
 
 
 def test_a_batch_file_runs_through_cmd_under_sandboxie(installed_runners):
-    cmd, built = sandbox.setup_prefix_command(["setup.bat", "/q"], options = sandboxie())
+    cmd, _ = sandbox.setup_prefix_command(["setup.bat", "/q"], options = sandboxie())
 
     assert cmd == ["/tools/start.exe", "/box:Game", "cmd", "/c", "setup.bat", "/q"]
 
 
 def test_a_batch_file_runs_directly_under_wine(installed_runners):
-    cmd, built = sandbox.setup_prefix_command(["setup.bat"], options = wine())
+    cmd, _ = sandbox.setup_prefix_command(["setup.bat"], options = wine())
 
     assert cmd == ["/tools/wine", "setup.bat"]
 
@@ -146,15 +146,17 @@ def test_an_unmapped_working_directory_gets_no_drive(tmp_path):
 
 
 def test_a_mapped_working_directory_needs_a_prefix_to_map_into(tmp_path, monkeypatch):
-    def fail(**kwargs):
-        raise AssertionError("there is no prefix drive to link")
-
-    monkeypatch.setattr(sandbox.fileops, "create_symlink", fail)
+    # There is no prefix drive to link.
+    linked = []
+    monkeypatch.setattr(sandbox.fileops, "create_symlink", lambda **kwargs: linked.append(kwargs))
     entry = WINE(prefix_dir = None)
     entry.set_is_prefix_mapped_cwd(True)
     entry.set_cwd(str(tmp_path))
 
-    sandbox.setup_prefix_environment(["game.exe"], options = entry)
+    cmd, _ = sandbox.setup_prefix_environment(["game.exe"], options = entry)
+
+    assert cmd == ["game.exe"]
+    assert linked == []
 
 
 def test_environment_setup_without_options_changes_nothing():
@@ -171,7 +173,7 @@ def test_environment_setup_without_options_changes_nothing():
 def test_wine_cleanup_stops_the_wine_server(recording_command, monkeypatch):
     killed = []
     monkeypatch.setattr(sandbox.programs, "get_tool_program", lambda name: "/tools/" + name)
-    monkeypatch.setattr(sandbox.process, "kill_active_named_processes", lambda names: killed.append(names))
+    monkeypatch.setattr(sandbox.process, "kill_active_named_processes", killed.append)
 
     sandbox.cleanup_wine(["game.exe"], wine(), pretend_run = True)
 

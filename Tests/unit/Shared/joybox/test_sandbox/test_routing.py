@@ -1,6 +1,3 @@
-# Imports
-import pytest
-
 # Local imports
 from joybox import sandbox
 
@@ -14,33 +11,6 @@ from joybox import sandbox
 ###########################################################
 
 GAME_EXE = "/games/cache/Game/Game.exe"
-
-
-@pytest.fixture
-def installed_runners(monkeypatch):
-    # Neither runner is installed on the machine running the tests, and the
-    # lookup raises rather than returning nothing.
-    monkeypatch.setattr(sandbox, "get_wine_command", lambda: "/tools/wine")
-    monkeypatch.setattr(sandbox, "get_sandboxie_command", lambda: "/tools/start.exe")
-
-
-@pytest.fixture
-def linux(monkeypatch, installed_runners):
-    monkeypatch.setattr(sandbox.platform_info, "is_wine_platform", lambda: True)
-    monkeypatch.setattr(sandbox.platform_info, "is_sandboxie_platform", lambda: False)
-
-
-@pytest.fixture
-def windows(monkeypatch, installed_runners):
-    monkeypatch.setattr(sandbox.platform_info, "is_wine_platform", lambda: False)
-    monkeypatch.setattr(sandbox.platform_info, "is_sandboxie_platform", lambda: True)
-
-
-@pytest.fixture
-def cached_game(monkeypatch):
-    monkeypatch.setattr(sandbox.commandbase, "is_windows_executable_command", lambda cmd: True)
-    monkeypatch.setattr(sandbox.commandbase, "is_cached_game_command", lambda cmd: True)
-    monkeypatch.setattr(sandbox.commandbase, "is_local_sandboxed_program_command", lambda cmd: False)
 
 
 def test_a_cached_game_runs_via_wine_on_linux(linux, cached_game):

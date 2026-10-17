@@ -5,6 +5,11 @@ import subprocess
 # Third-party imports
 import pytest
 
+# Local imports
+from bootstrap_helpers import output
+
+pytestmark = pytest.mark.requires_binary("bash", "unshare", "openssl")
+
 
 ###########################################################
 # Certbot manager
@@ -72,7 +77,7 @@ def test_selfsign_refuses_a_bad_name_anywhere_in_the_list(run_manager, bootstrap
 
 
 def test_selfsign_locks_down_the_private_key(run_manager, bootstrap_dir):
-    with open(os.path.join(bootstrap_dir, "managers", "manager_certbot.sh")) as script:
+    with open(os.path.join(bootstrap_dir, "managers", "manager_certbot.sh"), "r", encoding = "utf-8") as script:
         body = script.read().split("selfsign_cert() {", 1)[1].split("\n}\n", 1)[0]
 
     assert 'chmod 600 "$CERT_DIR/privkey.pem"' in body
@@ -109,10 +114,6 @@ def server(shell_sandbox):
 def place(server, directory, pair, fullchain = "fullchain.pem", privkey = "privkey.pem"):
     server.write("%s/%s" % (directory, fullchain), pair[0])
     server.write("%s/%s" % (directory, privkey), pair[1])
-
-
-def output(result):
-    return result.stdout + result.stderr
 
 
 ###########################################################

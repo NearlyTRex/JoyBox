@@ -4,38 +4,32 @@ import os
 # Local imports
 import joybox.bootstrap.constants as constants
 from joybox.bootstrap.packages.aptget import aptget
-
-
-def parse_package_text_file(path):
-    # serverpackages.txt is a plain list with # comments
-    entries = []
-    with open(path, "r") as package_file:
-        for line in package_file:
-            line = line.strip()
-            if line and not line.startswith("#"):
-                entries.append(line)
-    return entries
+from package_list_helpers import parse_package_text_file
 
 
 def test_no_duplicate_ids():
-    for environment, package_list in aptget.items():
-        ids = [package["id"] for package in package_list]
-        duplicates = sorted({package_id for package_id in ids if ids.count(package_id) > 1})
-        assert not duplicates, f"{environment} has duplicate apt ids: {duplicates}"
+    duplicates = {
+        environment: sorted({package["id"] for package in package_list
+                             if [other["id"] for other in package_list].count(package["id"]) > 1})
+        for environment, package_list in aptget.items()}
+
+    assert not any(duplicates.values()), f"duplicate apt ids: {duplicates}"
 
 
 def test_every_package_has_an_id_and_category():
-    for environment, package_list in aptget.items():
-        for package in package_list:
-            assert package.get("id"), f"{environment} has a package with no id: {package}"
-            assert package.get("category"), f"{environment}: {package['id']} has no category"
+    incomplete = [
+        (environment, package) for environment, package_list in aptget.items() for package in package_list
+        if not package.get("id") or not package.get("category")]
+
+    assert not incomplete, f"packages without an id or category: {incomplete}"
 
 
 def test_the_ubuntu_environments_are_populated():
     # The Windows environments install through winget, not apt.
-    for environment in [constants.EnvironmentType.LOCAL_UBUNTU,
-                        constants.EnvironmentType.REMOTE_UBUNTU]:
-        assert aptget[environment], f"{environment} has no packages"
+    empty = [environment for environment in [constants.EnvironmentType.LOCAL_UBUNTU,
+                                             constants.EnvironmentType.REMOTE_UBUNTU] if not aptget[environment]]
+
+    assert not empty, f"environments with no packages: {empty}"
 
 
 def test_serverpackages_matches_the_remote_list(bootstrap_dir):

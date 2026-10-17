@@ -15,7 +15,7 @@ COMMAND_FUNCTIONS = ["build_parser", "main", "run"]
 
 
 def parse_module(path):
-    with open(path, "r") as module_file:
+    with open(path, "r", encoding = "utf-8") as module_file:
         return ast.parse(module_file.read())
 
 

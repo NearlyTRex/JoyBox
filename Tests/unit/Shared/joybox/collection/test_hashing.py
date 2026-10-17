@@ -80,7 +80,8 @@ def hash_files(monkeypatch, tmp_path):
     # Only the NES hash file exists.
     state = {"calls": [], "result": True}
     present = str(tmp_path / "Nintendo NES.json")
-    open(present, "w").close()
+    with open(present, "w", encoding = "utf-8"):
+        pass
 
     def get_game_hashes_metadata_file(game_supercategory, game_category, game_subcategory):
         if game_subcategory == "Nintendo NES":

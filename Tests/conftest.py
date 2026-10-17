@@ -353,20 +353,42 @@ def recording_command(monkeypatch):
     return RecordingCommand(monkeypatch)
 
 
-def tool_path(name):
+###########################################################
+# Required programs
+#
+# A test that needs a program outside the process says so with a marker, at
+# module (pytestmark), class or test level:
+#
+#     pytestmark = pytest.mark.requires_binary("docker")    # on PATH
+#     @pytest.mark.requires_binary("gpg", "xorriso|mkisofs") # "a|b": either
+#     @pytest.mark.requires_tool("XorrISO")                  # from the JoyBox tool registry
+#
+# Both are enforced while the tests are collected, so a machine without the
+# program skips the test before any of its fixtures start. Tests/unit/meta
+# holds every test file to declaring them this way.
+###########################################################
+
+def find_missing_binaries(names):
+    import shutil
+    return [name for name in names if not any(shutil.which(option) for option in name.split("|"))]
+
+
+def is_tool_installed(name):
     from joybox import programs
     try:
-        if not programs.is_tool_installed(name):
-            return None
-        return programs.get_tool_program(name)
+        return bool(programs.is_tool_installed(name) and programs.get_tool_program(name))
     except Exception:
-        return None
+        return False
 
 
-@pytest.fixture
-def requires_tool(request):
-    for marker in request.node.iter_markers("requires_tool"):
-        for name in marker.args:
-            if not tool_path(name):
-                pytest.skip("%s is not installed" % name)
+def find_missing_tools(names):
+    return [name for name in names if not is_tool_installed(name)]
 
+
+def pytest_collection_modifyitems(config, items):
+    for item in items:
+        binaries = [name for marker in item.iter_markers("requires_binary") for name in marker.args]
+        tools = [name for marker in item.iter_markers("requires_tool") for name in marker.args]
+        missing = find_missing_binaries(binaries) + ["%s (JoyBox tool)" % name for name in find_missing_tools(tools)]
+        if missing:
+            item.add_marker(pytest.mark.skip(reason = "%s not installed" % ", ".join(missing)))

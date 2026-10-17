@@ -3,7 +3,8 @@ import pytest
 
 # Local imports
 from joybox import virtualmachine
-from vm_helpers import NAME, fake_connection, record
+from fakes import RecordingCommand
+from vm_helpers import NAME, fake_connection
 
 
 ###########################################################
@@ -45,7 +46,7 @@ def creatable(monkeypatch, tmp_path):
     world.seed_dir = seed_dir
     world.removed = removed
     world.connection = fake_connection(monkeypatch)
-    world.command = record(monkeypatch)
+    world.command = RecordingCommand(monkeypatch)
     return world
 
 
@@ -90,7 +91,7 @@ def test_a_guest_without_an_address_is_not_reserved_one(creatable):
 
 
 def test_an_empty_key_file_is_refused(creatable):
-    with open(creatable.key, "w"):
+    with open(creatable.key, "w", encoding = "utf-8"):
         pass
 
     assert create(creatable) is False
@@ -206,7 +207,7 @@ Bridge:         virbr0
 
 
 def test_an_active_network_is_left_alone(monkeypatch):
-    recorder = record(monkeypatch, output = NET_INFO_ACTIVE.encode())
+    recorder = RecordingCommand(monkeypatch, output = NET_INFO_ACTIVE.encode())
 
     assert virtualmachine.start_network() is True
     assert recorder.only()[3:] == ["net-info", "default"]
@@ -214,7 +215,7 @@ def test_an_active_network_is_left_alone(monkeypatch):
 
 def test_a_persistent_but_stopped_network_is_started(monkeypatch):
     # Persistent: yes must not be read as running.
-    recorder = record(monkeypatch, output = NET_INFO_INACTIVE)
+    recorder = RecordingCommand(monkeypatch, output = NET_INFO_INACTIVE)
     virtualmachine.start_network()
 
     assert [call["cmd"][3:] for call in recorder.calls[1:]] == [
@@ -264,7 +265,7 @@ def test_empty_network_xml_has_no_reservations():
 
 
 def test_a_conflicting_ipv6_entry_can_be_replaced(monkeypatch):
-    recorder = record(monkeypatch, output = DNS_NETWORK_XML.encode())
+    recorder = RecordingCommand(monkeypatch, output = DNS_NETWORK_XML.encode())
 
     assert virtualmachine.reserve_address("six", "192.168.122.10", mac = "52:54:00:aa:bb:cc") is True
     deleted = [call["cmd"][7] for call in recorder.calls if "delete" in call["cmd"]]
@@ -273,20 +274,20 @@ def test_a_conflicting_ipv6_entry_can_be_replaced(monkeypatch):
 
 def test_a_failed_reservation_is_reported(monkeypatch):
     monkeypatch.setattr(virtualmachine.logger, "log_error", lambda *a, **k: None)
-    record(monkeypatch, returncode = 1, output = "")
+    RecordingCommand(monkeypatch, returncode = 1, output = "")
 
     assert virtualmachine.reserve_address(NAME, "192.168.122.10") is False
 
 
 def test_a_reservation_defaults_to_the_guest_mac(monkeypatch):
-    recorder = record(monkeypatch, output = "")
+    recorder = RecordingCommand(monkeypatch, output = "")
     virtualmachine.reserve_address(NAME, "192.168.122.10")
 
     assert "mac='%s'" % virtualmachine.get_vm_mac(NAME) in recorder.calls[-1]["cmd"][7]
 
 
 def test_forgetting_a_host_key_is_quiet(monkeypatch):
-    recorder = record(monkeypatch)
+    recorder = RecordingCommand(monkeypatch)
     virtualmachine.forget_host_key("192.168.122.10")
 
     assert recorder.only() == ["ssh-keygen", "-R", "192.168.122.10"]
@@ -298,27 +299,27 @@ def test_forgetting_a_host_key_is_quiet(monkeypatch):
 ###########################################################
 
 def test_a_running_guest_reported_as_bytes_is_not_started_again(monkeypatch):
-    recorder = record(monkeypatch, output = b"running\n")
+    recorder = RecordingCommand(monkeypatch, output = b"running\n")
 
     assert virtualmachine.start_vm(NAME) is True
     assert len(recorder.calls) == 1
 
 
 def test_a_guest_that_will_not_start_is_reported(monkeypatch):
-    record(monkeypatch, returncode = 1, output = "shut off\n")
+    RecordingCommand(monkeypatch, returncode = 1, output = "shut off\n")
 
     assert virtualmachine.start_vm(NAME) is False
 
 
 def test_the_interface_mac_is_read_from_virsh(monkeypatch):
-    recorder = record(monkeypatch, output = b" vnet0  network  default  virtio  52:54:00:CD:E9:CB\n")
+    recorder = RecordingCommand(monkeypatch, output = b" vnet0  network  default  virtio  52:54:00:CD:E9:CB\n")
 
     assert virtualmachine.get_vm_interface_mac(NAME) == "52:54:00:cd:e9:cb"
     assert recorder.only()[3:] == ["domiflist", NAME]
 
 
 def test_a_guest_without_an_interface_has_no_mac(monkeypatch):
-    record(monkeypatch, output = "")
+    RecordingCommand(monkeypatch, output = "")
 
     assert virtualmachine.get_vm_interface_mac(NAME) is None
 
@@ -332,7 +333,7 @@ def test_an_ipv4_line_without_an_address_yields_none():
 
 
 def test_snapshots_reported_as_bytes_are_listed(monkeypatch):
-    record(monkeypatch, output = b"pre-sshd\n\npost-sshd\n")
+    RecordingCommand(monkeypatch, output = b"pre-sshd\n\npost-sshd\n")
 
     assert virtualmachine.list_snapshots(NAME) == ["pre-sshd", "post-sshd"]
 
@@ -340,7 +341,7 @@ def test_snapshots_reported_as_bytes_are_listed(monkeypatch):
 def test_a_failed_undefine_is_reported_and_keeps_the_seed(monkeypatch):
     monkeypatch.setattr(virtualmachine, "does_vm_exist", lambda *a, **k: True)
     connection = fake_connection(monkeypatch)
-    record(monkeypatch, returncode = 1)
+    RecordingCommand(monkeypatch, returncode = 1)
 
     assert virtualmachine.destroy_vm(NAME) is False
     assert connection.removed_paths == []

@@ -43,9 +43,11 @@ def test_unix_covers_linux_and_mac():
         platform_info.is_linux_platform() or platform_info.is_mac_platform())
 
 
-def test_windows_is_not_unix():
-    if platform_info.is_windows_platform():
-        assert platform_info.is_unix_platform() is False
+def test_windows_is_not_unix(monkeypatch):
+    monkeypatch.setattr(platform_info.sys, "platform", "win32")
+
+    assert platform_info.is_windows_platform() is True
+    assert platform_info.is_unix_platform() is False
 
 
 ###########################################################
@@ -109,13 +111,16 @@ def test_a_platform_prefix_is_enough(monkeypatch):
 # Linux distribution
 ###########################################################
 
-def test_distribution_fields_are_strings():
-    for accessor in [platform_info.get_linux_distro_name,
-                     platform_info.get_linux_distro_version,
-                     platform_info.get_linux_distro_id,
-                     platform_info.get_linux_distro_id_like,
-                     platform_info.get_ubuntu_codename]:
-        assert isinstance(accessor(), str)
+def test_distribution_fields_are_read_from_their_keys(os_release):
+    os_release('NAME="Ubuntu"\nVERSION="24.04 LTS (Noble Numbat)"\nID=ubuntu\nID_LIKE=debian\n'
+               'UBUNTU_CODENAME=noble\n')
+
+    assert [accessor() for accessor in [
+        platform_info.get_linux_distro_name,
+        platform_info.get_linux_distro_version,
+        platform_info.get_linux_distro_id,
+        platform_info.get_linux_distro_id_like,
+        platform_info.get_ubuntu_codename]] == ["Ubuntu", "24.04 LTS (Noble Numbat)", "ubuntu", "debian", "noble"]
 
 
 def test_an_unknown_field_is_empty():
@@ -139,11 +144,12 @@ def test_ubuntu_detection_agrees_with_the_release_fields():
     assert platform_info.is_ubuntu_distro() == expected
 
 
-def test_values_are_unquoted():
+def test_values_are_unquoted(os_release):
     # os-release quotes values; a stray quote would break a version compare.
-    for accessor in [platform_info.get_linux_distro_name,
-                     platform_info.get_linux_distro_version]:
-        assert '"' not in accessor()
+    os_release('NAME="Debian GNU/Linux"\nVERSION="12 (bookworm)"\n')
+
+    assert platform_info.get_linux_distro_name() == "Debian GNU/Linux"
+    assert platform_info.get_linux_distro_version() == "12 (bookworm)"
 
 
 ###########################################################

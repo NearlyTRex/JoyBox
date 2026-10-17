@@ -17,6 +17,6 @@ def write_game(tree, data = None, name = GAME,
     target = environment.get_game_json_metadata_file(
         supercategory, category, subcategory, name)
     os.makedirs(os.path.dirname(target), exist_ok = True)
-    with open(target, "w") as handle:
+    with open(target, "w", encoding = "utf-8") as handle:
         handle.write(json.dumps(data if data is not None else {}))
     return target

@@ -64,27 +64,28 @@ def test_a_hyphenated_name_is_a_name_not_a_range():
 # Prompting
 ###########################################################
 
-def run_prompt(answers, names = NAMES):
+def run_prompt(answers):
     replies = iter(answers)
     output = []
-    chosen = picker.choose_components(names, read = lambda prompt: next(replies), write = output.append)
+    chosen = picker.choose_components(NAMES, read = lambda prompt: next(replies), write = output.append)
     return chosen, output
 
 
 def test_enter_twice_takes_everything():
-    chosen, output = run_prompt(["", ""])
+    chosen, _ = run_prompt(["", ""])
     assert chosen == NAMES
 
 
 def test_a_confirmed_selection_is_returned():
-    chosen, output = run_prompt(["4 5", "y"])
+    chosen, _ = run_prompt(["4 5", "y"])
     assert chosen == ["chrome", "steam"]
 
 
 def test_the_menu_numbers_every_component():
-    chosen, output = run_prompt(["", ""])
-    for number, name in enumerate(NAMES, 1):
-        assert f"  {number}) {name}" in output
+    _, output = run_prompt(["", ""])
+    unnumbered = [name for number, name in enumerate(NAMES, 1) if f"  {number}) {name}" not in output]
+
+    assert not unnumbered, unnumbered
 
 
 def test_an_invalid_selection_asks_again():
@@ -100,16 +101,16 @@ def test_excluding_everything_asks_again():
 
 
 def test_declining_the_confirmation_asks_again():
-    chosen, output = run_prompt(["1", "n", "2", "y"])
+    chosen, _ = run_prompt(["1", "n", "2", "y"])
     assert chosen == ["aptget"]
 
 
 def test_an_unclear_confirmation_asks_again_rather_than_declining():
-    chosen, output = run_prompt(["1", "steam", "y"])
+    chosen, _ = run_prompt(["1", "steam", "y"])
     assert chosen == ["config"]
 
 
 @pytest.mark.parametrize("answers", [["q"], ["QUIT"], ["1", "q"]])
 def test_quitting_returns_none(answers):
-    chosen, output = run_prompt(answers)
+    chosen, _ = run_prompt(answers)
     assert chosen is None

@@ -287,4 +287,3 @@ def test_run_flags_reach_the_scraper_and_the_download(webpage_url, downloads, fl
 
     assert webpage_url["asked"][0][flag] is True
     assert downloads[0][flag] is True
-

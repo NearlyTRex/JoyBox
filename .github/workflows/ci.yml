@@ -14,23 +14,25 @@ concurrency:
 jobs:
   python:
     name: Python
-    uses: NearlyTRex/Workflows/.github/workflows/python-ci.yml@f2c5c0b0c5e38def09fbe1756985d2dff50abea4 # v0.2.15
+    uses: NearlyTRex/Workflows/.github/workflows/python-ci.yml@a1a89468956df5ae1713b94579fec1defc4360a1 # v0.2.16
     permissions:
       contents: read
     with:
       # The suite's pytest.ini lives in Tests/, but the rootdir must stay the
       # repository for the shell plugins; integration tests need programs
-      # outside the process and stay local
-      test-command: pytest -q -c Tests/pytest.ini --rootdir=. Tests/unit
+      # outside the process and stay local. A file's tests share a worker, so
+      # its module fixtures are built once
+      test-command: pytest -q -c Tests/pytest.ini --rootdir=. -n auto --dist loadfile Tests/unit
       # Every line and branch is covered; new code needs tests to keep it so
       coverage-fail-under: "100"
       # Every shell statement, and every && / || handler, is run by the tests
       shell-coverage-source: Bootstrap install.sh
+      shell-coverage-fail-under: "100"
       shell-coverage-branch: true
       shell-sandbox: true
 
   lint:
     name: Lint
-    uses: NearlyTRex/Workflows/.github/workflows/lint.yml@4fe68c91984dd09dea6988fd603b128bc3f44ff7 # v0.2.9
+    uses: NearlyTRex/Workflows/.github/workflows/lint.yml@a1a89468956df5ae1713b94579fec1defc4360a1 # v0.2.16
     permissions:
       contents: read

@@ -35,8 +35,9 @@ def test_the_registry_is_populated(store_list):
 
 
 def test_every_store_has_a_name(store_list):
-    for store in store_list:
-        assert store.get_name() and store.get_name().strip()
+    unnamed = [type(store).__name__ for store in store_list if not (store.get_name() or "").strip()]
+
+    assert not unnamed, unnamed
 
 
 def test_store_names_are_unique(store_list):
@@ -65,25 +66,30 @@ def test_store_types_are_unique(store_list):
 def test_every_store_key_is_a_known_json_key(store_list):
     # get_store_by_platform resolves through these, so an unknown key would
     # write a section nothing else reads.
-    for store in store_list:
-        assert store.get_key() in config.json_keys_store, \
-            f"{store.get_name()} uses unregistered key {store.get_key()!r}"
+    unknown = {store.get_name(): store.get_key() for store in store_list if store.get_key() not in config.json_keys_store}
+
+    assert not unknown, f"unregistered store keys: {unknown}"
+
+
+# The name of a looked up store, or None when nothing was found
+def name_of(store):
+    return store.get_name() if store else None
 
 
 def test_a_store_is_found_by_its_name(store_list):
     import joybox.stores as stores
 
-    for store in store_list:
-        found = stores.get_store_by_name(store.get_name())
-        assert found is not None, f"{store.get_name()} is not findable by name"
+    found = {store.get_name(): name_of(stores.get_store_by_name(store.get_name())) for store in store_list}
+
+    assert found == {store.get_name(): store.get_name() for store in store_list}
 
 
 def test_a_store_is_found_by_its_type(store_list):
     import joybox.stores as stores
 
-    for store in store_list:
-        found = stores.get_store_by_type(store.get_type())
-        assert found is not None, f"{store.get_name()} is not findable by type"
+    found = {store.get_name(): name_of(stores.get_store_by_type(store.get_type())) for store in store_list}
+
+    assert found == {store.get_name(): store.get_name() for store in store_list}
 
 
 def test_an_unknown_store_is_not_found(store_list):
@@ -95,9 +101,9 @@ def test_an_unknown_store_is_not_found(store_list):
 
 def test_every_store_declares_an_identifier_key(store_list):
     # Purchases are matched on this, so a store without one can never match.
-    for store in store_list:
-        assert store.get_info_identifier_key() is not None, \
-            f"{store.get_name()} declares no info identifier"
+    missing = [store.get_name() for store in store_list if not store.get_info_identifier_key()]
+
+    assert not missing, f"stores declaring no info identifier: {missing}"
 
 
 ###########################################################
@@ -114,8 +120,9 @@ def test_every_store_declares_an_identifier_key(store_list):
 ###########################################################
 
 def test_every_store_names_a_platform(store_list):
-    for store in store_list:
-        assert store.get_platform(), "%s has no platform" % store.get_name()
+    missing = [store.get_name() for store in store_list if not store.get_platform()]
+
+    assert not missing, "stores with no platform: %s" % missing
 
 
 def test_every_store_platform_is_unique(store_list):
@@ -125,31 +132,33 @@ def test_every_store_platform_is_unique(store_list):
 
 
 def test_every_store_is_filed_under_known_categories(store_list):
-    for store in store_list:
-        assert store.get_supercategory() in config.Supercategory.members()
-        assert store.get_category() in config.Category.members()
+    unknown = [
+        store.get_name() for store in store_list
+        if store.get_supercategory() not in config.Supercategory.members()
+        or store.get_category() not in config.Category.members()]
+
+    assert not unknown, "stores filed under unknown categories: %s" % unknown
 
 
 def test_every_store_subcategory_belongs_to_its_category(store_list):
     # The pair is used to build paths; a subcategory from another category
     # writes the game into a directory nothing reads back.
-    for store in store_list:
-        allowed = config.subcategory_map[store.get_category()]
-        assert store.get_subcategory() in allowed, \
-            "%s: %s is not under %s" % (
-                store.get_name(), store.get_subcategory(), store.get_category())
+    misfiled = [
+        "%s: %s is not under %s" % (store.get_name(), store.get_subcategory(), store.get_category())
+        for store in store_list if store.get_subcategory() not in config.subcategory_map[store.get_category()]]
+
+    assert not misfiled, misfiled
 
 
 def test_every_store_platform_matches_its_categories(store_list):
     from joybox import gameinfo
 
-    for store in store_list:
-        derived = gameinfo.derive_game_platform_from_categories(
-            store.get_category(), store.get_subcategory())
-        assert store.get_platform() == derived, \
-            "%s: platform %s does not match %s / %s" % (
-                store.get_name(), store.get_platform(),
-                store.get_category(), store.get_subcategory())
+    platforms = {store.get_name(): store.get_platform() for store in store_list}
+    derived = {
+        store.get_name(): gameinfo.derive_game_platform_from_categories(store.get_category(), store.get_subcategory())
+        for store in store_list}
+
+    assert platforms == derived
 
 
 ###########################################################
@@ -157,19 +166,22 @@ def test_every_store_platform_matches_its_categories(store_list):
 ###########################################################
 
 def test_every_store_maps_its_identifier_keys(store_list):
-    for store in store_list:
-        keys = store.get_identifier_keys()
-        assert isinstance(keys, dict), "%s does not map its keys" % store.get_name()
-        assert keys, "%s maps no keys" % store.get_name()
+    unmapped = [
+        store.get_name() for store in store_list
+        if not isinstance(store.get_identifier_keys(), dict) or not store.get_identifier_keys()]
+
+    assert not unmapped, "stores mapping no identifier keys: %s" % unmapped
 
 
 def test_every_identifier_type_is_answered(store_list):
     # A store that leaves one out returns None, and the caller looks that up
     # in the json and silently finds nothing.
-    for store in store_list:
-        for identifier_type in config.StoreIdentifierType.members():
-            assert store.get_identifier_key(identifier_type), \
-                "%s has no %s identifier" % (store.get_name(), identifier_type)
+    missing = [
+        "%s has no %s identifier" % (store.get_name(), identifier_type)
+        for store in store_list for identifier_type in config.StoreIdentifierType.members()
+        if not store.get_identifier_key(identifier_type)]
+
+    assert not missing, missing
 
 
 @pytest.mark.parametrize("getter,identifier_type", [
@@ -184,16 +196,19 @@ def test_every_identifier_type_is_answered(store_list):
 def test_each_named_identifier_getter_matches_its_type(store_list, getter, identifier_type):
     # The named getters are thin wrappers, and one wired to the wrong type
     # reads another identifier's key.
-    for store in store_list:
-        assert getattr(store, getter)() == store.get_identifier_key(identifier_type), \
-            "%s: %s does not return its %s key" % (store.get_name(), getter, identifier_type)
+    named = {store.get_name(): getattr(store, getter)() for store in store_list}
+    typed = {store.get_name(): store.get_identifier_key(identifier_type) for store in store_list}
+
+    assert named == typed
 
 
 def test_every_identifier_key_is_a_known_json_key(store_list):
-    for store in store_list:
-        for identifier_type, key in store.get_identifier_keys().items():
-            assert key in config.json_keys_store_subdata + config.json_keys_store_appdata, \
-                "%s: %s is not a stored json key" % (store.get_name(), key)
+    stored = config.json_keys_store_subdata + config.json_keys_store_appdata
+    unknown = [
+        "%s: %s is not a stored json key" % (store.get_name(), key)
+        for store in store_list for key in store.get_identifier_keys().values() if key not in stored]
+
+    assert not unknown, unknown
 
 
 ###########################################################
@@ -214,18 +229,18 @@ VALIDATORS = [
 
 @pytest.mark.parametrize("validator", VALIDATORS)
 def test_every_validator_accepts_an_identifier(store_list, validator):
-    for store in store_list:
-        assert getattr(store, validator)("220") is True, \
-            "%s: %s refused an identifier" % (store.get_name(), validator)
+    refused = [store.get_name() for store in store_list if getattr(store, validator)("220") is not True]
+
+    assert not refused, "%s refused an identifier in %s" % (validator, refused)
 
 
 @pytest.mark.parametrize("validator", VALIDATORS)
 @pytest.mark.parametrize("candidate", ["", None, 220, [], {}])
 def test_every_validator_refuses_what_is_not_an_identifier(store_list, validator, candidate):
     # An empty identifier reaches the store as a lookup for everything.
-    for store in store_list:
-        assert getattr(store, validator)(candidate) is False, \
-            "%s: %s accepted %r" % (store.get_name(), validator, candidate)
+    accepted = [store.get_name() for store in store_list if getattr(store, validator)(candidate) is not False]
+
+    assert not accepted, "%s accepted %r in %s" % (validator, candidate, accepted)
 
 
 ###########################################################
@@ -244,19 +259,19 @@ CAPABILITIES = [
 def test_every_capability_is_answered_with_a_boolean(store_list, capability):
     # These are checked with "is True" in places, so a truthy string or None
     # reads as a refusal.
-    for store in store_list:
-        answer = getattr(store, capability)()
-        assert isinstance(answer, bool), \
-            "%s: %s answered %r" % (store.get_name(), capability, answer)
+    answers = {store.get_name(): getattr(store, capability)() for store in store_list}
+    not_booleans = {name: answer for name, answer in answers.items() if not isinstance(answer, bool)}
+
+    assert not not_booleans, "%s answered %r" % (capability, not_booleans)
 
 
 def test_a_store_that_downloads_can_also_import(store_list):
     # Downloading a purchase means knowing it exists, so the pair cannot be
     # the other way round.
-    for store in store_list:
-        if store.can_download_purchases():
-            assert store.can_import_purchases(), \
-                "%s downloads purchases it cannot import" % store.get_name()
+    unimportable = [
+        store.get_name() for store in store_list if store.can_download_purchases() and not store.can_import_purchases()]
+
+    assert not unimportable, "stores that download purchases they cannot import: %s" % unimportable
 
 
 ###########################################################
@@ -264,16 +279,24 @@ def test_a_store_that_downloads_can_also_import(store_list):
 ###########################################################
 
 def test_a_store_starts_logged_out(store_list):
-    for store in store_list:
-        assert store.is_logged_in() is False
+    logged_in = [store.get_name() for store in store_list if store.is_logged_in() is not False]
+
+    assert not logged_in, logged_in
+
+
+# The login state store reads back after each of states is set in turn
+def login_states_read_back(store, states):
+    found = []
+    for state in states:
+        store.set_logged_in(state)
+        found.append(store.is_logged_in())
+    return found
 
 
 def test_a_store_remembers_being_logged_in(store_list):
-    for store in store_list:
-        store.set_logged_in(True)
-        assert store.is_logged_in() is True
-        store.set_logged_in(False)
-        assert store.is_logged_in() is False
+    remembered = {store.get_name(): login_states_read_back(store, [True, False]) for store in store_list}
+
+    assert remembered == {store.get_name(): [True, False] for store in store_list}
 
 
 def test_every_store_names_its_own_cookie_file(store_list, monkeypatch):
@@ -305,7 +328,6 @@ def test_a_pretend_scrape_opens_no_browser_and_does_not_retry(store_list, monkey
 
     def web_connect(**kwargs):
         connects.append(kwargs.get("pretend_run"))
-        return None
     monkeypatch.setattr(store, "web_connect", web_connect)
     monkeypatch.setattr(datautils.time, "sleep", sleeps.append)
 
@@ -321,12 +343,18 @@ def test_a_pretend_scrape_opens_no_browser_and_does_not_retry(store_list, monkey
 def test_a_store_is_found_by_its_platform_and_categories(store_list):
     import joybox.stores as stores
 
-    for store in store_list:
-        assert stores.get_store_by_platform(store.get_platform()).get_name() == store.get_name()
-        found = stores.get_store_by_categories(
-            store.get_supercategory(), store.get_category(), store.get_subcategory())
-        assert found.get_name() == store.get_name()
-        assert stores.is_store_platform(store.get_platform()) is True
+    names = {store.get_name(): store.get_name() for store in store_list}
+    by_platform = {
+        store.get_name(): stores.get_store_by_platform(store.get_platform()).get_name() for store in store_list}
+    by_categories = {
+        store.get_name(): stores.get_store_by_categories(
+            store.get_supercategory(), store.get_category(), store.get_subcategory()).get_name()
+        for store in store_list}
+    unrecognised = [store.get_name() for store in store_list if stores.is_store_platform(store.get_platform()) is not True]
+
+    assert by_platform == names
+    assert by_categories == names
+    assert not unrecognised, unrecognised
 
 
 def test_unknown_platforms_and_categories_find_no_store(store_list):

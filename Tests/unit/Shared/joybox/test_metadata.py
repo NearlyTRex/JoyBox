@@ -239,8 +239,9 @@ def test_a_random_entry_skips_platforms_without_entries():
     database = build(entry("A"))
     database.game_database["Empty Platform"] = {}
 
-    for _ in range(20):
-        assert database.get_random_entry().get_game() == "A"
+    picked = {database.get_random_entry().get_game() for _ in range(20)}
+
+    assert picked == {"A"}
 
 
 def test_a_database_of_only_empty_platforms_has_no_random_entry():

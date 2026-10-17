@@ -1,5 +1,6 @@
 # Imports
 import os
+import pathlib
 
 # Third-party imports
 import pytest
@@ -10,7 +11,6 @@ from joybox.collection import saves
 
 pytestmark = [
     pytest.mark.requires_tool("7-Zip"),
-    pytest.mark.usefixtures("requires_tool"),
     pytest.mark.slow]
 
 
@@ -62,12 +62,12 @@ def game(tmp_path, monkeypatch):
     # The locker backup is a copy into the packed directory
     def backup(src, dest_rel_path, **kwargs):
         target = packed / os.path.basename(dest_rel_path)
-        target.write_bytes(open(src, "rb").read())
+        target.write_bytes(pathlib.Path(src).read_bytes())
         return True
 
     monkeypatch.setattr(saves.locker, "backup", backup)
     monkeypatch.setattr(
-        saves.locker, "convert_to_relative_path", lambda path: os.path.basename(path))
+        saves.locker, "convert_to_relative_path", os.path.basename)
     return FakeGameInfo(str(live), str(packed))
 
 
@@ -192,14 +192,14 @@ def test_a_packed_save_is_restored(tmp_path, game):
 
 
 def test_restored_content_matches_what_was_packed(tmp_path, game):
-    original = open(os.path.join(game.get_save_dir(), "slot1.sav"), "rb").read()
+    original = pathlib.Path(game.get_save_dir(), "slot1.sav").read_bytes()
     saves.pack_save(game)
     for name in os.listdir(game.get_save_dir()):
         os.remove(os.path.join(game.get_save_dir(), name))
     os.rmdir(game.get_save_dir())
     saves.unpack_save(game)
 
-    assert open(os.path.join(game.get_save_dir(), "slot1.sav"), "rb").read() == original
+    assert pathlib.Path(game.get_save_dir(), "slot1.sav").read_bytes() == original
 
 
 def test_the_newest_archive_is_the_one_restored(tmp_path, game):
@@ -217,7 +217,7 @@ def test_the_newest_archive_is_the_one_restored(tmp_path, game):
     os.rmdir(game.get_save_dir())
     saves.unpack_save(game)
 
-    assert open(os.path.join(game.get_save_dir(), "slot1.sav"), "rb").read() == \
+    assert pathlib.Path(game.get_save_dir(), "slot1.sav").read_bytes() == \
         b"the newer save"
 
 
@@ -228,7 +228,7 @@ def test_an_existing_save_is_not_overwritten(tmp_path, game):
         handle.write(b"newer progress")
 
     saves.unpack_save(game)
-    assert open(os.path.join(game.get_save_dir(), "slot1.sav"), "rb").read() == \
+    assert pathlib.Path(game.get_save_dir(), "slot1.sav").read_bytes() == \
         b"newer progress"
 
 

@@ -1,5 +1,6 @@
 # Imports
 import inspect
+import operator
 
 # Third-party imports
 import pytest
@@ -14,7 +15,7 @@ from joybox.config.types import SetupParams
 
 
 class Shade(EnumType):
-    DARK = ("Dark")
+    DARK = "Dark"
     LIGHT = ("Light", ".lt")
 
 
@@ -29,8 +30,8 @@ class Numbered(EnumType):
 
 
 class Other(EnumType):
-    DARK = ("Dark")
-    MISSING = ("Missing")
+    DARK = "Dark"
+    MISSING = "Missing"
 
 
 ###########################################################
@@ -156,15 +157,16 @@ def test_no_duplicate_values(name, enum_class):
 
 @pytest.mark.parametrize("name,enum_class", ENUM_CLASSES, ids = ENUM_IDS)
 def test_every_member_has_a_value_and_cvalue(name, enum_class):
-    for member in enum_class.members():
-        assert member.val() is not None, f"{name}.{member.name} has no value"
-        assert member.cval() is not None, f"{name}.{member.name} has no cvalue"
+    incomplete = [member.name for member in enum_class.members() if member.val() is None or member.cval() is None]
+
+    assert not incomplete, f"{name} members without a value or cvalue: {incomplete}"
 
 
 @pytest.mark.parametrize("name,enum_class", ENUM_CLASSES, ids = ENUM_IDS)
 def test_every_member_is_not_empty(name, enum_class):
-    for member in enum_class.members():
-        assert str(member.val()).strip(), f"{name}.{member.name} has an empty value"
+    empty = [member.name for member in enum_class.members() if not str(member.val()).strip()]
+
+    assert not empty, f"{name} members with an empty value: {empty}"
 
 
 @pytest.mark.parametrize("name,enum_class", ENUM_CLASSES, ids = ENUM_IDS)
@@ -176,15 +178,16 @@ def test_accessors_agree_on_length(name, enum_class):
 @pytest.mark.parametrize("name,enum_class", ENUM_CLASSES, ids = ENUM_IDS)
 def test_every_member_round_trips_through_its_value(name, enum_class):
     # Values cross JSON and settings boundaries as plain strings.
-    for member in enum_class.members():
-        assert enum_class.from_enum(member.val()) is member, \
-            f"{name}.{member.name} does not round-trip"
+    broken = [member.name for member in enum_class.members() if enum_class.from_enum(member.val()) is not member]
+
+    assert not broken, f"{name} members that do not round-trip: {broken}"
 
 
 @pytest.mark.parametrize("name,enum_class", ENUM_CLASSES, ids = ENUM_IDS)
 def test_every_member_is_in_its_own_class(name, enum_class):
-    for member in enum_class.members():
-        assert member.val() in enum_class
+    outside = [member.name for member in enum_class.members() if member.val() not in enum_class]
+
+    assert not outside, f"{name} members not in their own class: {outside}"
 
 
 ###########################################################
@@ -222,9 +225,9 @@ def test_str_lower_and_upper_use_the_value():
 
 def test_concatenating_a_non_string_is_unsupported():
     with pytest.raises(TypeError):
-        Shade.DARK + 1
+        operator.add(Shade.DARK, 1)
     with pytest.raises(TypeError):
-        1 + Shade.DARK
+        operator.add(1, Shade.DARK)
 
 
 def test_members_of_different_enums_with_one_value_are_equal():
@@ -238,9 +241,9 @@ def test_a_member_never_equals_a_non_string():
 
 def test_ordering_against_members_strings_and_others():
     assert Shade.DARK < Shade.LIGHT and Shade.DARK < "Light"
-    assert Shade.DARK <= Shade.DARK and Shade.DARK <= "Dark"
+    assert Shade.DARK <= Other.DARK and Shade.DARK <= "Dark"
     assert Shade.LIGHT > Shade.DARK and Shade.LIGHT > "Dark"
-    assert Shade.LIGHT >= Shade.LIGHT and Shade.LIGHT >= "Light"
+    assert Shade.DARK >= Other.DARK and Shade.LIGHT >= "Light"
     for compare in (
         lambda: Shade.DARK < 1,
         lambda: Shade.DARK <= 1,

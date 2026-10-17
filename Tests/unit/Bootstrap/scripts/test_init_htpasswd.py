@@ -4,6 +4,8 @@ import os
 # Third-party imports
 import pytest
 
+pytestmark = pytest.mark.requires_binary("bash", "unshare")
+
 
 ###########################################################
 # init_htpasswd.sh
@@ -24,8 +26,8 @@ def server(shell_sandbox):
     return shell_sandbox
 
 
-def setup(server, *args, input = None):
-    return server.run(SCRIPT, "--action", "setup", "--user", "admin", *args, input = input)
+def setup(server, *args, stdin = None):
+    return server.run(SCRIPT, "--action", "setup", "--user", "admin", *args, input = stdin)
 
 
 ###########################################################
@@ -68,14 +70,14 @@ def test_an_empty_password_file_is_refused(server):
 
 
 def test_the_password_is_prompted_for_when_not_given(server):
-    result = setup(server, input = "typed\ntyped\n")
+    result = setup(server, stdin = "typed\ntyped\n")
 
     assert result.returncode == 0, result.stdout + result.stderr
     assert server.ran("htpasswd", "-cbB", HTPASSWD, "admin", "typed")
 
 
 def test_a_mistyped_confirmation_is_refused(server):
-    result = setup(server, input = "typed\ntypo\n")
+    result = setup(server, stdin = "typed\ntypo\n")
 
     assert result.returncode == 1
     assert "passwords do not match" in result.stdout
@@ -83,7 +85,7 @@ def test_a_mistyped_confirmation_is_refused(server):
 
 
 def test_an_empty_prompted_password_is_refused(server):
-    result = setup(server, input = "\n\n")
+    result = setup(server, stdin = "\n\n")
 
     assert result.returncode == 1
     assert "password cannot be empty" in result.stdout

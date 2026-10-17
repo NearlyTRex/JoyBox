@@ -44,8 +44,8 @@ def terminal(monkeypatch):
 
 def test_a_clean_setup_exits_normally(run_bootstrap, components):
     run_bootstrap("-a", "setup")
-    for installer in components.values():
-        assert installer.calls == ["install"]
+
+    assert [installer.calls for installer in components.values()] == [["install"]] * 3
 
 
 def test_a_failed_component_fails_the_run(run_bootstrap, components):
@@ -87,8 +87,7 @@ def test_quitting_the_menu_changes_nothing(run_bootstrap, components, terminal, 
 
     run_bootstrap("-a", "setup", "--interactive")
 
-    for installer in components.values():
-        assert installer.calls == []
+    assert [installer.calls for installer in components.values()] == [[]] * 3
 
 
 @pytest.mark.parametrize("args", [
@@ -251,8 +250,7 @@ def test_an_empty_components_list_is_refused(run_bootstrap, components):
 def test_backup_runs_every_component(run_bootstrap, components):
     run_bootstrap("-a", "backup")
 
-    for installer in components.values():
-        assert installer.calls == ["backup"]
+    assert [installer.calls for installer in components.values()] == [["backup"]] * 3
 
 
 def test_teardown_runs_every_installed_component(run_bootstrap, components):
@@ -261,8 +259,7 @@ def test_teardown_runs_every_installed_component(run_bootstrap, components):
 
     run_bootstrap("-a", "teardown")
 
-    for installer in components.values():
-        assert installer.calls == ["uninstall"]
+    assert [installer.calls for installer in components.values()] == [["uninstall"]] * 3
 
 
 @pytest.mark.parametrize("args", [

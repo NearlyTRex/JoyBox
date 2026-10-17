@@ -45,12 +45,11 @@ def test_every_curated_field_survives_a_round_trip(metadata, mp3_file, field):
 def test_no_two_curated_fields_share_a_frame(metadata, mp3_file, field):
     metadata.set_id3_tags(mp3_file, {field: value_for(field)})
     tags = metadata.get_id3_tags(mp3_file)
+    sharing = [
+        other for other in audiometadata.curated_tag_fields
+        if other != field and tags.get(other) == value_for(field)]
 
-    for other in audiometadata.curated_tag_fields:
-        if other == field:
-            continue
-        assert tags.get(other) != value_for(field), \
-            "%s and %s share a frame" % (field, other)
+    assert not sharing, "%s shares a frame with %s" % (field, sharing)
 
 
 def test_several_tags_are_written_at_once(metadata, mp3_file):

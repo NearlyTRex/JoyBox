@@ -153,5 +153,3 @@ def test_a_hash_database_path_is_under_the_remote_path():
 
 def test_a_hash_database_path_works_without_a_remote_path():
     assert sync.get_hash_database_path()
-
-

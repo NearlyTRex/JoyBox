@@ -27,13 +27,13 @@ RECORDS = [
 @pytest.fixture
 def sidecar(tmp_path):
     path = str(tmp_path / "hashes.json")
-    with open(path, "w") as handle:
+    with open(path, "w", encoding = "utf-8") as handle:
         handle.write(json.dumps(RECORDS))
     return path
 
 
 def load(path):
-    with open(path) as handle:
+    with open(path, encoding = "utf-8") as handle:
         return json.load(handle)
 
 
@@ -73,7 +73,7 @@ def test_encrypted_fields_are_filled_in(sidecar):
 
 def test_existing_encrypted_fields_are_not_overwritten(tmp_path):
     path = str(tmp_path / "hashes.json")
-    with open(path, "w") as handle:
+    with open(path, "w", encoding = "utf-8") as handle:
         handle.write(json.dumps([{
             "dir": "Roms/A", "filename": "a.z64", "hash": "aaaa", "size": "1", "mtime": "1",
             "filename_enc": "already.enc", "hash_enc": "existing", "size_enc": 42,
@@ -92,7 +92,7 @@ def test_a_missing_sidecar_reads_as_empty(tmp_path):
 
 def test_a_malformed_sidecar_reads_as_empty(tmp_path):
     path = str(tmp_path / "hashes.json")
-    with open(path, "w") as handle:
+    with open(path, "w", encoding = "utf-8") as handle:
         handle.write("{not json")
 
     assert hashing.read_hash_file_json(path) == {}
@@ -101,7 +101,7 @@ def test_a_malformed_sidecar_reads_as_empty(tmp_path):
 def test_an_object_instead_of_a_list_reads_as_empty(tmp_path):
     # Only the list form is a sidecar; a bare object is something else.
     path = str(tmp_path / "hashes.json")
-    with open(path, "w") as handle:
+    with open(path, "w", encoding = "utf-8") as handle:
         handle.write(json.dumps({"not": "a list"}))
 
     assert hashing.read_hash_file_json(path) == {}
@@ -121,7 +121,7 @@ def test_a_sidecar_round_trips(sidecar):
 def test_a_written_sidecar_is_a_list(sidecar):
     hashing.write_hash_file_json(sidecar, hashing.read_hash_file_json(sidecar))
 
-    assert isinstance(load(sidecar), list)
+    assert sorted(entry["filename"] for entry in load(sidecar)) == ["A Game.z64", "B Game.z64"]
 
 
 def test_writing_preserves_every_entry(sidecar):

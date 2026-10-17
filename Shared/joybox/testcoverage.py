@@ -55,7 +55,7 @@ def is_coverage_available():
 # Build the command that runs the tests under coverage
 def build_measure_command(data_file, include_integration = False):
     cmd = [sys.executable, "-m", "coverage", "run", "--data-file", data_file,
-        "-m", "pytest", "-q", "-c", PYTEST_CONFIG, "--rootdir=.", UNIT_TESTS]
+        "-m", "pytest", "-q", "-c", PYTEST_CONFIG, "--rootdir=.", "-n", "auto", "--dist", "loadfile", UNIT_TESTS]
     if include_integration:
         cmd.append(INTEGRATION_TESTS)
     return cmd
@@ -63,12 +63,23 @@ def build_measure_command(data_file, include_integration = False):
 # Run the tests under coverage, returning pytest's exit code
 def measure(repo_dir, data_file, include_integration = False, verbose = False, pretend_run = False, exit_on_failure = False):
     fileops.make_directory(os.path.dirname(data_file), verbose = verbose, pretend_run = pretend_run)
-    return command.run_returncode_command(
+    code = command.run_returncode_command(
         cmd = build_measure_command(data_file, include_integration),
         options = command.create_command_options(cwd = repo_dir),
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
+    if not pretend_run:
+        combine(repo_dir, data_file, verbose = verbose)
+    return code
+
+# Merge the data file each xdist worker and subprocess wrote into one
+def combine(repo_dir, data_file, verbose = False):
+    code = command.run_returncode_command(
+        cmd = [sys.executable, "-m", "coverage", "combine", "--data-file", data_file, "--quiet"],
+        options = command.create_command_options(cwd = repo_dir),
+        verbose = verbose)
+    return code == 0
 
 # Export the data as JSON, which carries every number the report needs
 def export_json(repo_dir, data_file, json_file, verbose = False):
@@ -81,7 +92,7 @@ def export_json(repo_dir, data_file, json_file, verbose = False):
 # Read the coverage floor CI enforces, or None when there is none
 def read_ci_floor(repo_dir):
     text = serialization.read_text_file(paths.join_paths(repo_dir, CI_WORKFLOW)) or ""
-    match = re.search(r"coverage-fail-under:\s*[\"']?(\d+(?:\.\d+)?)", text)
+    match = re.search(r"^\s*coverage-fail-under:\s*[\"']?(\d+(?:\.\d+)?)", text, re.MULTILINE)
     return float(match.group(1)) if match else None
 
 ###########################################################

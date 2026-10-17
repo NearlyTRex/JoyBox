@@ -228,9 +228,9 @@ def stored_releases(seams):
     return seams.releases.values("release", "archive_dir", "install_dir")
 
 
-def expected_stored(name, platforms = PLATFORMS):
+def expected_stored(name, platforms = None):
     return [("setup_stored_release", "/backup/%s/%s" % (name, platform), "/install/%s/%s" % (name, platform))
-        for platform in platforms]
+        for platform in (PLATFORMS if platforms is None else platforms)]
 
 
 ###########################################################
@@ -240,6 +240,38 @@ def expected_stored(name, platforms = PLATFORMS):
 # the locker system files by md5 and copies or extracts them into each
 # platform's setup dir.
 ###########################################################
+
+# Configure alone: config files written under /emulators, locker system files
+# under /locker/<name>/ checked against the module's system_files hashes
+class ConfigureSeams:
+    def __init__(self, monkeypatch, module):
+        self.touched = []
+        self.copied = []
+        self.touch_ok = True
+        self.copy_ok = True
+        self.hashes = dict(module.system_files)
+        monkeypatch.setattr(module.environment, "get_emulators_root_dir", lambda: "/emulators")
+        monkeypatch.setattr(module.environment, "get_locker_gaming_emulator_setup_dir",
+            lambda name: "/locker/%s" % name)
+        monkeypatch.setattr(module.programs, "get_emulator_path_config_value",
+            lambda name, key, platform = None: "/emu/%s/%s" % (key, platform))
+        monkeypatch.setattr(module.fileops, "touch_file", self.touch)
+        monkeypatch.setattr(module.fileops, "smart_copy", self.copy)
+        monkeypatch.setattr(module.emulatorbase.hashing, "calculate_file_md5", self.md5)
+
+    def touch(self, src, contents, **kwargs):
+        self.touched.append((src, contents))
+        return self.touch_ok
+
+    def copy(self, src, dest, **kwargs):
+        self.copied.append((src, dest))
+        return self.copy_ok
+
+    def md5(self, src, pretend_run = False, **kwargs):
+        if pretend_run:
+            return ""
+        return self.hashes[src.split("/", 3)[3]]
+
 
 def check_writes_every_config_file(seams):
     assert seams.emulator().configure() is True

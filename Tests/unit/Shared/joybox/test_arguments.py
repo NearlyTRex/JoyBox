@@ -305,7 +305,7 @@ def test_a_positional_leftover_is_not_reported(argv, monkeypatch):
 def test_unknown_arguments_are_returned(argv):
     parser = build()
     argv("--not-a-flag")
-    args, unknown = parser.parse_known_args()
+    _, unknown = parser.parse_known_args()
 
     assert unknown == ["--not-a-flag"]
 

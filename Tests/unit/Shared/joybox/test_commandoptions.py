@@ -98,8 +98,9 @@ def test_fields_do_not_collide():
     for field in SIMPLE_FIELDS:
         getattr(options, f"set_{field}")(f"value-{field}")
 
-    for field in SIMPLE_FIELDS:
-        assert getattr(options, f"get_{field}")() == f"value-{field}"
+    read_back = {field: getattr(options, f"get_{field}")() for field in SIMPLE_FIELDS}
+
+    assert read_back == {field: f"value-{field}" for field in SIMPLE_FIELDS}
 
 
 ###########################################################
@@ -126,7 +127,7 @@ def test_setting_an_environment_variable_populates_the_environment():
     options = build()
     options.set_env_var("JOYBOX", "1")
 
-    assert options.get_env() is not None
+    assert options.get_env()["JOYBOX"] == "1"
 
 
 def test_setting_an_environment_variable_starts_from_the_process_environment(monkeypatch):
@@ -313,11 +314,12 @@ def test_setting_one_flag_leaves_the_others_alone(setter, getter):
     options = build()
     getattr(options, setter)(True)
 
-    for other_setter, other_getter in FLAGS:
-        if other_getter == getter:
-            continue
-        assert getattr(options, other_getter)() is False, \
-            "%s also turned on %s" % (setter, other_getter)
+    turned_on = [
+        other_getter for _, other_getter in FLAGS
+        if other_getter != getter and getattr(options, other_getter)() is not False]
+
+    assert getattr(options, getter)() is True
+    assert not turned_on, "%s also turned on %s" % (setter, turned_on)
 
 
 def test_every_flag_uses_its_own_key():
@@ -350,8 +352,9 @@ def test_turning_processing_off_leaves_the_other_flags_alone():
     options = build()
     options.set_allow_processing(False)
 
-    for _, getter in FLAGS:
-        assert getattr(options, getter)() is False
+    turned_on = [getter for _, getter in FLAGS if getattr(options, getter)() is not False]
+
+    assert not turned_on, turned_on
 
 
 def test_setting_another_flag_leaves_processing_allowed():

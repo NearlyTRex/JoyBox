@@ -4,6 +4,7 @@ import pytest
 # Local imports
 from joybox import config
 from joybox.emulators import mame
+from emulator_helpers import ConfigureSeams
 
 
 ###########################################################
@@ -123,39 +124,9 @@ def test_setup_offline_stops_at_the_first_failure(stored, failing_call):
 # Configure
 ###########################################################
 
-class Configure:
-    def __init__(self, monkeypatch):
-        self.touched = []
-        self.copied = []
-        self.touch_ok = True
-        self.copy_ok = True
-        self.hashes = dict(mame.system_files)
-        monkeypatch.setattr(mame.environment, "get_emulators_root_dir", lambda: "/emulators")
-        monkeypatch.setattr(mame.environment, "get_locker_gaming_emulator_setup_dir",
-            lambda name: "/locker/%s" % name)
-        monkeypatch.setattr(mame.programs, "get_emulator_path_config_value",
-            lambda name, key, platform = None: "/emu/%s/%s" % (key, platform))
-        monkeypatch.setattr(mame.fileops, "touch_file", self.touch)
-        monkeypatch.setattr(mame.fileops, "smart_copy", self.copy)
-        monkeypatch.setattr(mame.emulatorbase.hashing, "calculate_file_md5", self.md5)
-
-    def touch(self, src, contents, **kwargs):
-        self.touched.append((src, contents))
-        return self.touch_ok
-
-    def copy(self, src, dest, **kwargs):
-        self.copied.append((src, dest))
-        return self.copy_ok
-
-    def md5(self, src, pretend_run = False, **kwargs):
-        if pretend_run:
-            return ""
-        return self.hashes[src.removeprefix("/locker/Mame/")]
-
-
 @pytest.fixture
 def configure(monkeypatch):
-    return Configure(monkeypatch)
+    return ConfigureSeams(monkeypatch, mame)
 
 
 def test_configure_writes_inis_and_copies_system_files_to_each_platform(configure):

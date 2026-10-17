@@ -40,7 +40,7 @@ def pipeline(monkeypatch, tmp_path):
 
     def create_archive_from_folder(archive_file, **kwargs):
         if state["write_archive"]:
-            with open(archive_file, "w") as handle:
+            with open(archive_file, "w", encoding = "utf-8") as handle:
                 handle.write("zip")
 
     real_remove_directory = network.fileops.remove_directory

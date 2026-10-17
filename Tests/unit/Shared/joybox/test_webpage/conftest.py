@@ -30,8 +30,9 @@ def waits(monkeypatch):
             state["timeouts"].append(timeout)
 
         def until(self, condition):
-            if state["error"]:
-                raise state["error"]
+            error = state["error"]
+            if error is not None:
+                raise error
             return state["result"]
 
     monkeypatch.setattr(ui, "WebDriverWait", FakeWait)
@@ -47,8 +48,9 @@ def fetches(monkeypatch):
              "error": None, "destroyed": [], "requests": []}
 
     def get_page_source(**kwargs):
-        if state["source_error"]:
-            raise state["source_error"]
+        error = state["source_error"]
+        if error is not None:
+            raise error
         return state["source"]
 
     monkeypatch.setattr(webpage, "create_web_driver", lambda **kwargs: state["driver"])
@@ -63,8 +65,9 @@ def fetches(monkeypatch):
 
     def get(url, params = None, timeout = None):
         state["requests"].append({"url": url, "params": params, "timeout": timeout})
-        if state["error"]:
-            raise state["error"]
+        error = state["error"]
+        if error is not None:
+            raise error
         return types.SimpleNamespace(
             text = state["text"], status_code = state["status"],
             raise_for_status = raise_for_status)

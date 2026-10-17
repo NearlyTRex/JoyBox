@@ -253,7 +253,8 @@ def test_a_renamed_upload_lands_under_its_new_name(remote, cryption, tmp_path):
     passed = only(remote, "upload_files_to_remote")
     assert passed["local_path"] == staged
     assert passed["remote_path"] == os.path.join(REMOTE_PATH, "Games")
-    assert open(staged).read() == "data"
+    with open(staged, encoding = "utf-8") as handle:
+        assert handle.read() == "data"
 
 
 def test_a_renamed_upload_that_cannot_be_staged_fails(remote, cryption, tmp_path):

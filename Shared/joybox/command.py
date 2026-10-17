@@ -241,8 +241,8 @@ def run_streamed_command(
 
     # Get context stack
     with contextlib.ExitStack() as stack:
-        stdout_target = stack.enter_context(open(stdout_path, "w")) if stdout_path else None
-        stderr_target = stack.enter_context(open(stderr_path, "w")) if stderr_path else None
+        stdout_target = stack.enter_context(open(stdout_path, "w", encoding = "utf-8")) if stdout_path else None
+        stderr_target = stack.enter_context(open(stderr_path, "w", encoding = "utf-8")) if stderr_path else None
 
         # Open process
         proc = subprocess.Popen(

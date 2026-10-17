@@ -32,7 +32,7 @@ def write(path, contents = b"payload"):
 
 
 @pytest.fixture
-def plain_file(tmp_path, requires_tool):
+def plain_file(tmp_path):
     return write(tmp_path / "Save Game.dat", b"payload" * 1000)
 
 

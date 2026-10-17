@@ -28,6 +28,28 @@ def test_touch_writes_contents(tmp_path):
     assert read(path) == "héllo!"
 
 
+def test_touch_writes_text_as_utf8_rather_than_the_locales_encoding(tmp_path, monkeypatch):
+    # Windows defaults to a code page, so text has to name its encoding.
+    encodings = []
+
+    def recording_open(file, mode = "r", encoding = None, **kwargs):
+        encodings.append(encoding)
+        return open(file, mode, encoding = encoding, **kwargs)
+    monkeypatch.setattr(fileops, "open", recording_open, raising = False)
+    path = tmp_path / "file.txt"
+
+    assert fileops.touch_file(str(path), contents = "日本")
+    assert encodings == ["utf-8"]
+    assert path.read_bytes() == "日本".encode("utf-8")
+
+
+def test_touch_writes_bytes_in_binary_mode(tmp_path):
+    path = tmp_path / "file.bin"
+
+    assert fileops.touch_file(str(path), contents = b"\x00\xff", contents_mode = "wb")
+    assert path.read_bytes() == b"\x00\xff"
+
+
 def test_touch_in_a_pretend_run(tmp_path):
     path = tmp_path / "file.txt"
     assert fileops.touch_file(str(path), pretend_run = True)

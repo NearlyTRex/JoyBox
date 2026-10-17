@@ -18,9 +18,9 @@ def test_a_quit_command_ends_the_session(chat, output, line):
     assert run(line, chat, output) is False
 
 
-def test_every_other_command_continues_the_session(chat, output):
-    for line in ["/help", "/tokens", "/reset", "/model", "/not-a-command"]:
-        assert run(line, chat, output) is True
+@pytest.mark.parametrize("line", ["/help", "/tokens", "/reset", "/model", "/not-a-command"])
+def test_every_other_command_continues_the_session(chat, output, line):
+    assert run(line, chat, output) is True
 
 
 @pytest.mark.parametrize("line", ["", "   ", "\t", "\n"])

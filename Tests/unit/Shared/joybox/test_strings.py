@@ -120,11 +120,12 @@ def test_a_slug_contains_only_safe_characters():
                for character in slug), slug
 
 
-def test_slugging_is_idempotent():
+@pytest.mark.parametrize("name", ["Hello World", "Game: The Sequel!", "a  -  b"])
+def test_slugging_is_idempotent(name):
     # A second pass over stored data must not rewrite identifiers.
-    for name in ["Hello World", "Game: The Sequel!", "a  -  b"]:
-        once = strings.get_slug_string(name)
-        assert strings.get_slug_string(once) == once
+    once = strings.get_slug_string(name)
+
+    assert strings.get_slug_string(once) == once
 
 
 ###########################################################

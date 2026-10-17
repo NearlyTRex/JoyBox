@@ -196,8 +196,7 @@ def test_full_paths_are_written_by_default(tmp_path):
     target = tmp_path / "game.m3u"
     playlist.generate_playlist(str(tmp_path), str(target), extensions = [".cue"])
 
-    for entry in lines(target):
-        assert entry.startswith(str(tmp_path))
+    assert sorted(lines(target)) == [str(tmp_path / "Disc 1.cue"), str(tmp_path / "Disc 2.cue")]
 
 
 def test_subdirectories_are_ignored_without_recursion(tmp_path):
@@ -283,8 +282,7 @@ def test_a_tree_playlist_keeps_full_paths(tmp_path):
     target = tmp_path / "game.m3u"
     playlist.generate_tree_playlist(str(tmp_path), str(target), extensions = [".cue"])
 
-    for entry in lines(target):
-        assert entry.startswith(str(tmp_path))
+    assert sorted(lines(target)) == [str(tmp_path / "disc1" / "Disc 1.cue"), str(tmp_path / "disc2" / "Disc 2.cue")]
 
 
 def test_a_tree_playlist_honours_the_size_gates(tmp_path):

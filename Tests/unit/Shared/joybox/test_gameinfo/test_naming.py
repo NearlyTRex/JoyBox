@@ -258,15 +258,14 @@ def test_every_platform_directory_layout_parses(metadata_root):
     # path they are used to build.
     from joybox import gamenaming
 
-    for platform in config.Platform.members():
-        supercategory, category, subcategory = \
-            gamenaming.derive_game_categories_from_platform(platform)
-        if not (category and subcategory):
-            continue
+    layouts = [
+        (platform, gamenaming.derive_game_categories_from_platform(platform))
+        for platform in config.Platform.members()]
+    layouts = [(platform, parts) for platform, parts in layouts if parts[1] and parts[2]]
+    broken = [
+        platform for platform, parts in layouts
+        if gameinfo.derive_game_categories_from_file(
+            json_path(*(part.val() for part in parts), "Game", "Game.json")) != parts]
 
-        path = json_path(supercategory.val(), category.val(), subcategory.val(),
-                         "Game", "Game.json")
-        derived = gameinfo.derive_game_categories_from_file(path)
-
-        assert derived == (supercategory, category, subcategory), \
-            f"{platform} does not round-trip through its path"
+    assert layouts
+    assert not broken, "%s do not round-trip through their path" % broken

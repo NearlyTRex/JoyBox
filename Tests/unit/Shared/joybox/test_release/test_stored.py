@@ -5,7 +5,8 @@ import pytest
 
 # Local imports
 from joybox import release
-from release_helpers import install_stored, write
+from file_helpers import write
+from release_helpers import install_stored
 
 
 ###########################################################

@@ -10,7 +10,7 @@ import pytest
 from joybox import autoinstall
 from joybox import iso
 
-pytestmark = pytest.mark.slow
+pytestmark = [pytest.mark.requires_binary("xorriso"), pytest.mark.slow]
 
 
 ###########################################################
@@ -58,10 +58,7 @@ def xorriso():
     # The registry points at a vendored build that a hermetic run has no copy
     # of. The tool lookup is the seam; what it does to the image is what is
     # under test.
-    found = shutil.which("xorriso")
-    if not found:
-        pytest.skip("xorriso is not installed")
-    return found
+    return shutil.which("xorriso")
 
 
 @pytest.fixture(autouse = True)
@@ -74,7 +71,7 @@ def installed_tools(monkeypatch, xorriso):
         autoinstall.programs, "is_tool_installed",
         lambda name: bool(available.get(name)))
     monkeypatch.setattr(
-        autoinstall.programs, "get_tool_program", lambda name: available.get(name))
+        autoinstall.programs, "get_tool_program", available.get)
 
 
 # Distinct enough that extracting the wrong extent is visible
@@ -606,10 +603,10 @@ def test_verification_can_be_turned_off(tmp_path, monkeypatch, stock_image):
 
     monkeypatch.setattr(autoinstall, "fetch_release_checksums", fail)
 
-    assert autoinstall.obtain_source_image(
-        output_file = str(tmp_path / "downloaded.iso"),
-        version = "24.04",
-        verify = False) is not None
+    output_file = str(tmp_path / "downloaded.iso")
+
+    assert autoinstall.obtain_source_image(output_file = output_file, version = "24.04", verify = False) == output_file
+    assert os.path.isfile(output_file)
 
 
 def test_a_supplied_image_is_taken_as_given(tmp_path, monkeypatch, stock_image):
@@ -656,8 +653,6 @@ def ubuntu_keyring():
     keyring = "/usr/share/keyrings/ubuntu-archive-keyring.gpg"
     if not os.path.isfile(keyring):
         pytest.skip("no ubuntu keyring on this machine")
-    if not shutil.which("gpg"):
-        pytest.skip("gpg is not installed")
     return keyring
 
 
@@ -684,6 +679,7 @@ def test_at_least_one_signed_listing_is_kept():
 
 
 @pytest.mark.parametrize("release", signed_releases())
+@pytest.mark.requires_binary("gpg")
 def test_a_real_signature_is_accepted(release, tmp_path, ubuntu_keyring):
     # The shipped fingerprint is what a build trusts by default, so what has
     # to hold is that it accepts the releases people build from, not that it
@@ -698,12 +694,13 @@ def test_a_real_signature_is_accepted(release, tmp_path, ubuntu_keyring):
 
 
 @pytest.mark.parametrize("release", signed_releases())
+@pytest.mark.requires_binary("gpg")
 def test_a_listing_changed_after_signing_is_refused(release, tmp_path, ubuntu_keyring):
     # This is the case the signature exists for: a checksum swapped for one
     # matching a substituted image.
     listing, signature = copy_signed_release(release, tmp_path)
     tampered = tmp_path / "tampered"
-    with open(listing) as handle:
+    with open(listing, "r", encoding = "utf-8") as handle:
         contents = handle.read()
     tampered.write_text("0" + contents[1:])
 
@@ -714,6 +711,7 @@ def test_a_listing_changed_after_signing_is_refused(release, tmp_path, ubuntu_ke
         fingerprint = autoinstall.default_signing_fingerprint) is False
 
 
+@pytest.mark.requires_binary("gpg")
 def test_a_signature_from_another_key_is_refused(signed_files, ubuntu_keyring):
     # The keyring holds every key the distribution trusts; only one signs
     # these images.
@@ -726,6 +724,7 @@ def test_a_signature_from_another_key_is_refused(signed_files, ubuntu_keyring):
         fingerprint = "0" * 40) is False
 
 
+@pytest.mark.requires_binary("gpg")
 def test_an_empty_signature_is_refused(signed_files, ubuntu_keyring, tmp_path):
     listing, _ = signed_files
     empty = tmp_path / "empty.gpg"

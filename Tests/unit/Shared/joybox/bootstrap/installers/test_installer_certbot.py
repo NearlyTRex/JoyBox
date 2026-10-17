@@ -1,3 +1,6 @@
+# Third-party imports
+import pytest
+
 # Local imports
 import joybox.bootstrap.constants as constants
 import joybox.bootstrap.installers as installers
@@ -33,8 +36,9 @@ def test_san_list_covers_apex_and_every_subdomain(isolated_settings, recording_c
 def test_san_list_has_no_empty_entries(isolated_settings, recording_connection):
     # A bare ".joybox.test" makes certbot reject the whole batch.
     certbot = build_certbot(isolated_settings, recording_connection, "letsencrypt")
-    for name in certbot.fully_qualified_domains:
-        assert name and not name.startswith("."), f"malformed SAN: {name!r}"
+    malformed = [name for name in certbot.fully_qualified_domains if not name or name.startswith(".")]
+
+    assert not malformed, f"malformed SAN: {malformed!r}"
 
 
 def test_letsencrypt_mode_registers_and_schedules_renewal(isolated_settings, recording_connection):
@@ -227,7 +231,6 @@ LOCAL_DIR = "/tmp/joybox-test"
 class NoTemporaryDirectory(RecordingConnection):
     def make_temporary_directory(self):
         self._record("make_temporary_directory")
-        return None
 
 
 class StagingFails(RecordingConnection):
@@ -298,13 +301,13 @@ def test_an_empty_mkcert_result_is_not_installed(isolated_settings, recording_co
     assert not recording_connection.ran("install_pair")
 
 
-def test_an_unstageable_pair_is_not_installed(isolated_settings):
-    for failing_method in ["make_directory", "write_file"]:
-        connection = StagingFails(failing_method)
-        certbot = build_certbot(isolated_settings, connection, "mkcert")
+@pytest.mark.parametrize("failing_method", ["make_directory", "write_file"])
+def test_an_unstageable_pair_is_not_installed(isolated_settings, failing_method):
+    connection = StagingFails(failing_method)
+    certbot = build_certbot(isolated_settings, connection, "mkcert")
 
-        assert not certbot.write_cert_pair("CERT", "KEY")
-        assert not connection.ran("install_pair")
+    assert not certbot.write_cert_pair("CERT", "KEY")
+    assert not connection.ran("install_pair")
 
 
 def test_a_failed_selfsign_stops_before_nginx(isolated_settings, recording_connection, monkeypatch):

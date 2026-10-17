@@ -42,7 +42,7 @@ def switch_json(name = "Alpha"):
 
 def make_file(path, content = "{}"):
     os.makedirs(os.path.dirname(path), exist_ok = True)
-    with open(path, "w") as handle:
+    with open(path, "w", encoding = "utf-8") as handle:
         handle.write(content)
     return path
 

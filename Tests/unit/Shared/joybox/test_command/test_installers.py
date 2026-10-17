@@ -49,11 +49,11 @@ def test_a_marker_straddling_a_chunk_boundary_is_detected(marker, expected, tmp_
 
 @pytest.mark.parametrize("marker,expected", MARKERS, ids = [m for m, _ in MARKERS])
 def test_a_marker_at_every_boundary_offset_is_detected(marker, expected, tmp_path):
-    for shift in range(-len(marker), 1):
-        target = write_installer(
-            str(tmp_path / "setup.exe"), marker, offset = CHUNK + shift)
-        assert command.get_installer_type(target) == expected, \
-            f"{marker} missed at offset {CHUNK + shift}"
+    missed = [
+        CHUNK + shift for shift in range(-len(marker), 1)
+        if command.get_installer_type(write_installer(str(tmp_path / "setup.exe"), marker, offset = CHUNK + shift)) != expected]
+
+    assert not missed, f"{marker} missed at offsets {missed}"
 
 
 def test_a_marker_in_a_later_chunk_is_detected(tmp_path):

@@ -144,9 +144,10 @@ def test_orphans_are_listed_commented_out():
     # Recycling is destructive, so it is opt-in by uncommenting.
     content = lockersync.generate_action_file_content([recycle_action("gone.txt")], "Remote")
 
-    for line in content.split("\n"):
-        if "gone.txt" in line:
-            assert line.lstrip().startswith("#")
+    mentions = [line for line in content.split("\n") if "gone.txt" in line]
+
+    assert mentions
+    assert not [line for line in mentions if not line.lstrip().startswith("#")], mentions
 
 
 def test_orphans_can_be_omitted():

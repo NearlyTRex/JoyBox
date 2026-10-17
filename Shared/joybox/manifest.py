@@ -70,10 +70,10 @@ class Manifest:
                 search_result = containers.SearchResult()
                 search_result.set_title(manifest_name)
                 search_result.set_relevance(strings.get_string_similarity_ratio(name, manifest_name))
-                search_result.set_data(manifest_entry)
+                search_result.set_result_data(manifest_entry)
                 search_results.append(search_result)
         for search_result in sorted(search_results, key=lambda x: x.get_relevance(), reverse = True):
-            return ManifestEntry(search_result.get_data())
+            return ManifestEntry(search_result.get_result_data())
         return None
 
     # Find entry by steam id

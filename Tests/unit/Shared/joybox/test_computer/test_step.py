@@ -79,7 +79,7 @@ def test_a_program_and_a_step_do_not_share_keys():
     # Both are read from the same game json; a shared key would let one clobber
     # the other's value.
     entry = computer.Program()
-    for setter, getter, value in PLAIN_ACCESSORS:
+    for setter, _, value in PLAIN_ACCESSORS:
         getattr(entry, "set_" + setter)(value)
     entry.set_exe("game.exe")
     entry.set_cwd("Game")
@@ -88,7 +88,7 @@ def test_a_program_and_a_step_do_not_share_keys():
     step_entry.set_skip_existing(True)
     step_entry.set_skip_identical(True)
 
-    assert not (set(entry.get_data()) & set(step_entry.get_data()))
+    assert set(entry.get_data()).isdisjoint(step_entry.get_data())
 
 
 ###########################################################

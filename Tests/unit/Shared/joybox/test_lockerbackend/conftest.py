@@ -28,7 +28,7 @@ def remote(monkeypatch):
             # The file list is a temporary file the caller deletes afterwards,
             # so its contents are read while the call is still in progress.
             if kwargs.get("files_from") and os.path.isfile(kwargs["files_from"]):
-                with open(kwargs["files_from"]) as handle:
+                with open(kwargs["files_from"], encoding = "utf-8") as handle:
                     kwargs = dict(kwargs, files_listed = handle.read().strip())
             state["calls"].append({"name": name, "args": args, "kwargs": kwargs})
             if name in state["results"]:

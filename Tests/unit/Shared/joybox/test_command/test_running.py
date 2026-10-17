@@ -108,7 +108,7 @@ def test_a_shell_command_is_launched_as_one_string(processes):
 
 def test_a_verbose_run_prints_the_command(processes, monkeypatch):
     printed = []
-    monkeypatch.setattr(command, "print_command", lambda cmd: printed.append(cmd))
+    monkeypatch.setattr(command, "print_command", printed.append)
 
     run(verbose = True)
 
@@ -205,10 +205,12 @@ def test_an_output_file_is_closed_when_the_launch_fails(processes, tmp_path, mon
     opened = []
     real_open = open
 
-    def tracking_open(*args, **kwargs):
-        handle = real_open(*args, **kwargs)
+    def remember(handle):
         opened.append(handle)
         return handle
+
+    def tracking_open(*args, **kwargs):
+        return remember(real_open(*args, **kwargs))
 
     monkeypatch.setattr("builtins.open", tracking_open)
     processes.error = OSError("no such program")

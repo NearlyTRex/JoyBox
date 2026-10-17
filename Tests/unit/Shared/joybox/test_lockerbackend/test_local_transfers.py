@@ -53,7 +53,7 @@ def test_a_dangling_link_is_not_listed(tmp_path):
 def test_a_verbose_listing_reports_progress(tmp_path, monkeypatch):
     locker = make_locker(tmp_path, {"file%03d.bin" % index: str(index) for index in range(100)})
     messages = []
-    monkeypatch.setattr(lockerbackend.logger, "log_info", lambda message: messages.append(message))
+    monkeypatch.setattr(lockerbackend.logger, "log_info", messages.append)
     locker.list_files_with_hashes(verbose = True)
 
     assert "Processed 100/100 files" in messages

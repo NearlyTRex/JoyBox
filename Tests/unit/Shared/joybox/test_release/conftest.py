@@ -60,7 +60,7 @@ def webpage_url(monkeypatch):
 def workspace(tmp_path, monkeypatch):
     # The archive, the scratch directory it unpacks into, and the install
     # target, with the extractor standing in for a real 7-Zip run.
-    from release_helpers import write
+    from file_helpers import write
     scratch = tmp_path / "scratch"
     scratch.mkdir()
     install_dir = tmp_path / "install"
@@ -137,7 +137,7 @@ def remote(monkeypatch, tmp_path):
 def builder(tmp_path, monkeypatch):
     # Source checkouts, archive downloads, extraction and the build command
     # all write into a real scratch directory; nothing external runs.
-    from release_helpers import write
+    from file_helpers import write
     scratch = tmp_path / "scratch"
     scratch.mkdir()
     state = {

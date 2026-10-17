@@ -16,17 +16,11 @@ from joybox import config, gamenaming, paths, platforms
 ###########################################################
 
 def letter_platform():
-    for platform in config.Platform.members():
-        if platforms.is_letter_platform(platform):
-            return platform
-    pytest.skip("no letter platform configured")
+    return next(platform for platform in config.Platform.members() if platforms.is_letter_platform(platform))
 
 
 def non_letter_platform():
-    for platform in config.Platform.members():
-        if not platforms.is_letter_platform(platform):
-            return platform
-    pytest.skip("no non-letter platform configured")
+    return next(platform for platform in config.Platform.members() if not platforms.is_letter_platform(platform))
 
 
 ###########################################################
@@ -51,15 +45,14 @@ def test_an_empty_name_has_no_letter():
     assert gamenaming.derive_game_letter_from_name("") == ""
 
 
-def test_every_letter_is_one_of_the_expected_folders():
+@pytest.mark.parametrize("name", ["Alpha", "zulu", "7 Days", "Éclair", "Pokémon Red"])
+def test_every_letter_is_one_of_the_expected_folders(name):
     # Names are transliterated to ascii before they reach here, so the folder
     # set stays A-Z plus the numeric one. Anything else is a stray directory.
-    expected = set("ABCDEFGHIJKLMNOPQRSTUVWXYZ")
-    for name in ["Alpha", "zulu", "7 Days", "Éclair", "Pokémon Red"]:
-        cleaned = paths.replace_invalid_path_characters(name)
-        letter = gamenaming.derive_game_letter_from_name(cleaned)
-        assert letter in expected or letter == config.general_folder_numeric, \
-            f"{name!r} derived {letter!r}"
+    expected = set("ABCDEFGHIJKLMNOPQRSTUVWXYZ") | {config.general_folder_numeric}
+    letter = gamenaming.derive_game_letter_from_name(paths.replace_invalid_path_characters(name))
+
+    assert letter in expected, f"{name!r} derived {letter!r}"
 
 
 ###########################################################
@@ -132,8 +125,7 @@ def test_no_platform_derives_nothing():
 @pytest.mark.parametrize("platform", config.Platform.members())
 def test_every_platform_derives_a_category(platform):
     # A platform with no category would land its games outside the tree.
-    supercategory, category, subcategory = \
-        gamenaming.derive_game_categories_from_platform(platform)
+    supercategory, category, _ = gamenaming.derive_game_categories_from_platform(platform)
 
     assert supercategory == config.Supercategory.ROMS
     assert category is not None, f"{platform} has no category"

@@ -172,10 +172,10 @@ class LocalBackend(LockerBackend):
     def list_files_with_hashes(
         self,
         excludes = [],
-        parallel_files = 8,
         verbose = False,
         pretend_run = False,
-        exit_on_failure = False):
+        exit_on_failure = False,
+        parallel_files = 8):
 
         # Check root path
         hash_map = {}

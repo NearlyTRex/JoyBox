@@ -144,14 +144,13 @@ def test_recycling_passes_its_file_list_on(rclone, recorded_move, file_list):
 
 def test_recycling_never_purges(rclone, monkeypatch, file_list):
     # The whole point is that it stays recoverable.
+    purged = []
     monkeypatch.setattr(sync, "move_files_on_remote", lambda **kwargs: True)
+    monkeypatch.setattr(sync, "purge_path_on_remote", lambda **kwargs: purged.append(kwargs))
 
-    def fail(**kwargs):
-        raise AssertionError("recycling must not purge")
-
-    monkeypatch.setattr(sync, "purge_path_on_remote", fail)
-    sync.recycle_files_on_remote(
-        REMOTE, REMOTE_TYPE, "/Gaming/Roms", file_list)
+    assert sync.recycle_files_on_remote(
+        REMOTE, REMOTE_TYPE, "/Gaming/Roms", file_list) is True
+    assert purged == []
 
 
 def test_a_custom_recycle_folder_is_used(rclone, recorded_move, file_list):
@@ -219,5 +218,3 @@ def test_emptying_the_bin_never_purges_its_parent(rclone, monkeypatch):
     sync.empty_recycle_bin(REMOTE, REMOTE_TYPE, "/Gaming/Roms")
 
     assert purged[0]["remote_path"] != "/Gaming/Roms"
-
-

@@ -15,7 +15,7 @@ from hashing_helpers import write_file
 ###########################################################
 
 def write_manifest(path, entries):
-    with open(path, "w") as handle:
+    with open(path, "w", encoding = "utf-8") as handle:
         json.dump(entries, handle)
     return path
 

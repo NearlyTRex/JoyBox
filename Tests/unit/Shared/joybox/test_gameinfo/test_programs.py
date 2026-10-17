@@ -168,7 +168,7 @@ def test_runnable_files_are_found_and_recorded(tree, store, popups, monkeypatch,
     chosen = game.select_store_launch_program(str(install))
 
     assert (chosen.get_exe(), chosen.get_cwd()) == ("game.exe", "Game")
-    with open(json_file) as handle:
+    with open(json_file, encoding = "utf-8") as handle:
         assert json.load(handle)["gog"]["launch"] == [{"exe": "game.exe", "cwd": "Game"}]
 
 
@@ -216,7 +216,7 @@ def test_updating_writes_back_only_persistent_keys(tree):
 
     assert game.update_json_file() is True
 
-    with open(json_file) as handle:
+    with open(json_file, encoding = "utf-8") as handle:
         written = json.load(handle)
     assert written == {"files": ["a.bin"], "launch_name": "new"}
 
@@ -228,7 +228,7 @@ def test_a_pretend_update_writes_nothing(tree):
 
     game.update_json_file(pretend_run = True)
 
-    with open(json_file) as handle:
+    with open(json_file, encoding = "utf-8") as handle:
         assert json.load(handle) == {"launch_name": "old"}
 
 

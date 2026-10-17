@@ -5,7 +5,7 @@ import os
 import pytest
 
 # Local imports
-from joybox import programs
+from joybox import config, programs
 
 
 ###########################################################
@@ -45,7 +45,7 @@ def test_an_unlisted_platform_returns_the_whole_mapping():
     # is visible instead of looking like an absent key.
     resolved = programs.get_config_value(CONFIG, "Ghidra", "program", "haiku")
 
-    assert isinstance(resolved, dict)
+    assert resolved == CONFIG["Ghidra"]["program"]
 
 
 def test_a_non_platform_value_ignores_the_platform():
@@ -129,19 +129,20 @@ def test_emulator_names_are_unique():
     assert not duplicates, f"duplicate emulator names: {duplicates}"
 
 
-def test_every_emulator_declares_platforms():
-    for emulator in programs.get_emulators():
-        assert emulator.get_platforms() is not None, \
-            f"{emulator.get_name()} declares no platforms"
+def test_every_emulator_declares_known_platforms():
+    known = set(config.Platform.members())
+    unknown = [
+        (emulator.get_name(), platform) for emulator in programs.get_emulators()
+        for platform in emulator.get_platforms() if platform not in known]
+
+    assert not unknown, f"emulators declaring unknown platforms: {unknown}"
 
 
 def test_an_emulator_is_found_by_its_platform():
-    for emulator in programs.get_emulators():
-        platforms = emulator.get_platforms()
-        if platforms:
-            found = programs.get_emulator_by_platform(platforms[0])
-            assert found is not None
-            break
+    emulator = next(emulator for emulator in programs.get_emulators() if emulator.get_platforms())
+    found = programs.get_emulator_by_platform(emulator.get_platforms()[0])
+
+    assert emulator.get_platforms()[0] in found.get_platforms()
 
 
 def test_an_unhandled_platform_has_no_emulator():
@@ -261,12 +262,15 @@ def test_a_program_is_the_program_key():
 ###########################################################
 
 @pytest.fixture
-def known_tool():
-    for tool in programs.get_tools():
-        path = programs.get_tool_program(tool.get_name())
-        if path and os.path.exists(path):
-            return tool.get_name(), path
-    pytest.skip("no installed tool to classify")
+def known_tool(tmp_path, monkeypatch):
+    # The first tool with a program, installed under a scratch tools root
+    monkeypatch.setattr(programs.environment, "get_tools_root_dir", lambda: str(tmp_path))
+    name = next(tool.get_name() for tool in programs.get_tools() if programs.get_tool_program(tool.get_name()))
+    path = programs.get_tool_program(name)
+    os.makedirs(os.path.dirname(path), exist_ok = True)
+    with open(path, "w", encoding = "utf-8"):
+        pass
+    return name, path
 
 
 def test_a_tool_path_is_recognised_as_a_tool(known_tool):
@@ -275,10 +279,11 @@ def test_a_tool_path_is_recognised_as_a_tool(known_tool):
     name, path = known_tool
 
     assert programs.is_program_path_tool(path) is True
+    assert programs.derive_tool_name_from_program_path(path) == name
 
 
 def test_a_tool_path_is_not_an_emulator(known_tool):
-    name, path = known_tool
+    _, path = known_tool
 
     assert programs.is_program_path_emulator(path) is False
 
@@ -367,7 +372,7 @@ def test_an_unrelated_path_is_not_a_sandboxed_program():
 ###########################################################
 
 def test_an_installed_tool_is_reported_installed(known_tool):
-    name, path = known_tool
+    name, _ = known_tool
 
     assert programs.is_tool_installed(name) is True
 

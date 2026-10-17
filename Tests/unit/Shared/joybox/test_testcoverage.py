@@ -19,6 +19,12 @@ from joybox import testcoverage
 # figures are totalled and ranked.
 ###########################################################
 
+# Create path as an empty file
+def empty_file(path):
+    with open(path, "w", encoding = "utf-8"):
+        pass
+
+
 SOURCE = """def used(x):
     if x:
         return 1
@@ -177,6 +183,7 @@ def test_a_partial_file_name_does_not_match():
     ('      coverage-fail-under: "82"\n', 82.0),
     ("      coverage-fail-under: 83.5\n", 83.5),
     ("jobs: {}\n", None),
+    ('      shell-coverage-fail-under: "90"\n      coverage-fail-under: "100"\n', 100.0),
 ])
 def test_the_ci_floor_is_read_from_the_workflow(tmp_path, text, floor):
     workflow = tmp_path / ".github" / "workflows" / "ci.yml"
@@ -198,7 +205,8 @@ def test_the_unit_tests_are_measured_the_way_ci_runs_them():
     cmd = testcoverage.build_measure_command("/cache/coverage.data")
 
     assert cmd[:6] == [sys.executable, "-m", "coverage", "run", "--data-file", "/cache/coverage.data"]
-    assert cmd[6:] == ["-m", "pytest", "-q", "-c", "Tests/pytest.ini", "--rootdir=.", "Tests/unit"]
+    assert cmd[6:] == ["-m", "pytest", "-q", "-c", "Tests/pytest.ini", "--rootdir=.", "-n", "auto", "--dist", "loadfile",
+        "Tests/unit"]
 
 
 def test_integration_tests_are_added_when_asked():
@@ -206,11 +214,35 @@ def test_integration_tests_are_added_when_asked():
 
 
 def test_measuring_runs_from_the_repository(recording_command, tmp_path):
-    testcoverage.measure("/repo", str(tmp_path / "Coverage" / "coverage.data"))
+    data_file = str(tmp_path / "Coverage" / "coverage.data")
 
-    assert recording_command.only()[2:4] == ["coverage", "run"]
+    testcoverage.measure("/repo", data_file)
+
+    assert recording_command.calls[0]["cmd"][2:4] == ["coverage", "run"]
     assert recording_command.options().get_cwd() == "/repo"
     assert (tmp_path / "Coverage").is_dir()
+
+
+def test_each_workers_data_is_combined_after_measuring(recording_command, tmp_path):
+    data_file = str(tmp_path / "coverage.data")
+
+    testcoverage.measure("/repo", data_file)
+
+    assert recording_command.calls[1]["cmd"][1:] == ["-m", "coverage", "combine", "--data-file", data_file, "--quiet"]
+    assert recording_command.options(1).get_cwd() == "/repo"
+
+
+def test_a_pretend_measurement_combines_nothing(recording_command, tmp_path):
+    testcoverage.measure("/repo", str(tmp_path / "coverage.data"), pretend_run = True)
+
+    assert len(recording_command.calls) == 1
+
+
+@pytest.mark.parametrize("code, combined", [(0, True), (1, False)])
+def test_combining_reports_whether_it_merged(recording_command, code, combined):
+    recording_command.returncode = code
+
+    assert testcoverage.combine("/repo", "/cache/coverage.data") is combined
 
 
 ###########################################################
@@ -342,11 +374,11 @@ def action(repo, tmp_path, monkeypatch):
     def measure(repo_dir, data_file, include_integration = False, **kwargs):
         state["measured"].append((repo_dir, include_integration, kwargs.get("pretend_run")))
         if not kwargs.get("pretend_run"):
-            open(data_file, "w").close()
+            empty_file(data_file)
         return state["code"]
 
     def export_json(repo_dir, data_file, json_file, verbose = False):
-        with open(json_file, "w") as handle:
+        with open(json_file, "w", encoding = "utf-8") as handle:
             json.dump(results(), handle)
         return True
 
@@ -382,7 +414,7 @@ def test_report_needs_an_earlier_measurement(action):
 
 
 def test_report_uses_the_last_measurement(action):
-    open(action["data_file"], "w").close()
+    empty_file(action["data_file"])
 
     assert testcoverage.run_action(testcoverage.ACTION_REPORT) is True
     assert action["measured"] == []
@@ -390,7 +422,7 @@ def test_report_uses_the_last_measurement(action):
 
 
 def test_a_module_report_is_written_to_a_file_when_asked(action, tmp_path):
-    open(action["data_file"], "w").close()
+    empty_file(action["data_file"])
     output = tmp_path / "out" / "brief.md"
 
     assert testcoverage.run_action(module = "mod", show_source = True, output_file = str(output)) is True
@@ -399,7 +431,7 @@ def test_a_module_report_is_written_to_a_file_when_asked(action, tmp_path):
 
 
 def test_an_unknown_module_fails(action):
-    open(action["data_file"], "w").close()
+    empty_file(action["data_file"])
 
     assert testcoverage.run_action(module = "nothing.py") is False
     assert action["written"] == []
@@ -423,7 +455,7 @@ def test_run_without_coverage_installed_fails(action, monkeypatch):
 
 
 def test_a_failed_export_fails(action, monkeypatch):
-    open(action["data_file"], "w").close()
+    empty_file(action["data_file"])
     monkeypatch.setattr(testcoverage, "export_json", lambda *args, **kwargs: False)
 
     assert testcoverage.run_action(testcoverage.ACTION_REPORT) is False
@@ -520,10 +552,10 @@ def test_a_line_that_is_not_a_def_spans_only_itself():
 
 
 def test_an_unreadable_export_fails(action, monkeypatch):
-    open(action["data_file"], "w").close()
+    empty_file(action["data_file"])
 
     def export_json(repo_dir, data_file, json_file, verbose = False):
-        with open(json_file, "w") as handle:
+        with open(json_file, "w", encoding = "utf-8") as handle:
             json.dump({"totals": {}}, handle)
         return True
     monkeypatch.setattr(testcoverage, "export_json", export_json)
@@ -533,14 +565,14 @@ def test_an_unreadable_export_fails(action, monkeypatch):
 
 
 def test_an_ambiguous_module_fails(action, monkeypatch):
-    open(action["data_file"], "w").close()
+    empty_file(action["data_file"])
     errors = []
     monkeypatch.setattr(testcoverage.logger, "log_error", errors.append)
 
     def export_json(repo_dir, data_file, json_file, verbose = False):
         data = results()
         data["files"]["Shared/joybox/cli/mod.py"] = entry(1, 0)
-        with open(json_file, "w") as handle:
+        with open(json_file, "w", encoding = "utf-8") as handle:
             json.dump(data, handle)
         return True
     monkeypatch.setattr(testcoverage, "export_json", export_json)
@@ -550,7 +582,7 @@ def test_an_ambiguous_module_fails(action, monkeypatch):
 
 
 def test_an_unwritable_report_file_fails(action, tmp_path, monkeypatch):
-    open(action["data_file"], "w").close()
+    empty_file(action["data_file"])
     monkeypatch.setattr(testcoverage.serialization, "write_text_file", lambda *args, **kwargs: False)
 
     assert testcoverage.run_action(output_file = str(tmp_path / "report.md")) is False

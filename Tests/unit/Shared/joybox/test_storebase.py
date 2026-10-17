@@ -165,9 +165,12 @@ def test_no_token_survives_expansion():
         general(config.computer_folder_gamedata, "save"))
     expanded = storebase.convert_from_tokenized_path(tokenized)
 
-    for token in [config.token_game_install_dir, config.token_user_profile_dir,
-                  config.token_user_public_dir, config.token_user_registry_dir]:
-        assert token not in expanded
+    survivors = [
+        token for token in [config.token_game_install_dir, config.token_user_profile_dir,
+                            config.token_user_public_dir, config.token_user_registry_dir]
+        if token in expanded]
+
+    assert survivors == []
 
 
 ###########################################################
@@ -177,14 +180,9 @@ def test_no_token_survives_expansion():
 # grow the stored paths on every run.
 ###########################################################
 
-class _Store(storebase.StoreBase):
-    def __init__(self):
-        pass
-
-
 def test_variants_are_added_for_each_appdata_form():
     base = next(iter(config.appdata_variants.keys()))
-    variants = _Store().add_path_variants([f"USER_PROFILE_DIR{base}Game"])
+    variants = storebase.StoreBase().add_path_variants([f"USER_PROFILE_DIR{base}Game"])
 
     assert len(variants) == 1 + len(config.appdata_variants[base])
 
@@ -193,7 +191,7 @@ def test_the_original_path_is_kept():
     base = next(iter(config.appdata_variants.keys()))
     original = f"USER_PROFILE_DIR{base}Game"
 
-    assert original in _Store().add_path_variants([original])
+    assert original in storebase.StoreBase().add_path_variants([original])
 
 
 def test_the_caller_list_is_not_modified():
@@ -201,7 +199,7 @@ def test_the_caller_list_is_not_modified():
     original = [f"USER_PROFILE_DIR{base}Game"]
     before = list(original)
 
-    _Store().add_path_variants(original)
+    storebase.StoreBase().add_path_variants(original)
 
     assert original == before
 
@@ -213,24 +211,24 @@ def test_a_games_stored_paths_are_not_modified():
     data = jsondata.JsonData({"store": {"paths": [f"USER_PROFILE_DIR{base}Game"]}})
     live = data.get_subvalue("store", "paths")
 
-    _Store().add_path_variants(live)
+    storebase.StoreBase().add_path_variants(live)
 
     assert data.get_subvalue("store", "paths") == [f"USER_PROFILE_DIR{base}Game"]
 
 
 def test_no_variants_are_added_for_an_unrelated_path():
-    assert _Store().add_path_variants(["somewhere/else"]) == ["somewhere/else"]
+    assert storebase.StoreBase().add_path_variants(["somewhere/else"]) == ["somewhere/else"]
 
 
 def test_no_paths_yields_nothing():
-    assert _Store().add_path_variants([]) == []
-    assert _Store().add_path_variants() == []
+    assert storebase.StoreBase().add_path_variants([]) == []
+    assert storebase.StoreBase().add_path_variants() == []
 
 
 def test_repeated_calls_do_not_accumulate():
     # A shared default would carry results from one call into the next.
-    first = _Store().add_path_variants()
-    second = _Store().add_path_variants()
+    first = storebase.StoreBase().add_path_variants()
+    second = storebase.StoreBase().add_path_variants()
 
     assert first == [] and second == []
 
@@ -498,8 +496,10 @@ def test_the_profile_token_is_empty_without_the_environment(monkeypatch):
 
 def test_every_token_maps_to_a_list():
     # Callers iterate each entry, so a bare string would iterate characters.
-    for value in SampleStore().build_path_translation_map().values():
-        assert isinstance(value, list)
+    built = SampleStore().build_path_translation_map()
+    not_lists = sorted(token for token, value in built.items() if not isinstance(value, list))
+
+    assert not_lists == []
 
 
 def test_a_store_without_an_install_dir_still_builds_a_map():
@@ -570,7 +570,7 @@ def test_an_invalid_info_identifier_has_no_jsondata():
 
 
 def test_a_valid_info_identifier_gets_default_jsondata(monkeypatch):
-    monkeypatch.setattr(storebase.manifest, "get_manifest_instance", lambda: NoManifest())
+    monkeypatch.setattr(storebase.manifest, "get_manifest_instance", NoManifest)
     json_data = SampleStore().get_latest_jsondata("Acme")
 
     assert json_data.get_value(config.json_key_store_paths) == []

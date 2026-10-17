@@ -21,7 +21,7 @@ from joybox import hardening
 
 @pytest.fixture(scope = "module")
 def common_sh(bootstrap_dir):
-    with open(os.path.join(bootstrap_dir, "scripts", "common.sh"), "r") as script:
+    with open(os.path.join(bootstrap_dir, "scripts", "common.sh"), "r", encoding = "utf-8") as script:
         return script.read()
 
 
@@ -47,7 +47,10 @@ def test_the_sshd_dropin_is_written(common_sh):
 def test_the_sshd_dropin_is_read_before_cloud_inits(common_sh):
     # sshd keeps the first value it reads, and cloud-init's 50-cloud-init.conf
     # can turn password login back on
-    assert "00-joybox.conf" < "50-cloud-init.conf"
+    dropin = re.search(r"local dropin=(\S+)", common_sh).group(1)
+
+    assert os.path.basename(dropin) < "50-cloud-init.conf"
+    assert "%s <<" % dropin in common_sh
     assert "/etc/ssh/sshd_config.d/99-joybox.conf <<" not in common_sh
 
 
@@ -144,8 +147,9 @@ def test_every_checked_jail_is_configured(common_sh):
     # The names check_fail2ban asks fail2ban-client about by default
     configured = set(re.findall(r"^\[([\w-]+)\]$", common_sh, re.MULTILINE))
 
-    for jail in ["sshd", "nginx-http-auth"]:
-        assert jail in configured, "common.sh configures no '%s' jail" % jail
+    missing = [jail for jail in ["sshd", "nginx-http-auth"] if jail not in configured]
+
+    assert not missing, "common.sh configures no jail for %s" % missing
 
 
 def test_the_ssh_jail_reads_journald(common_sh):

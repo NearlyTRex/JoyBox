@@ -64,7 +64,7 @@ def test_published_ports_bind_loopback(app_name, installers_dir):
     # Read the module text rather than instantiating: construction needs a
     # populated config, and the binding is a property of the template itself.
     path = os.path.join(installers_dir, f"installer_{app_name}.py")
-    with open(path, "r") as installer_file:
+    with open(path, "r", encoding = "utf-8") as installer_file:
         source = installer_file.read()
 
     specs = compose_port_specs(source)
@@ -87,7 +87,7 @@ def test_every_compose_template_is_covered_by_the_port_test(installers_dir):
     for filename in os.listdir(installers_dir):
         if not (filename.startswith("installer_") and filename.endswith(".py")):
             continue
-        with open(os.path.join(installers_dir, filename), "r") as installer_file:
+        with open(os.path.join(installers_dir, filename), "r", encoding = "utf-8") as installer_file:
             source = installer_file.read()
         if "docker_compose_template" in source and compose_port_specs(source):
             with_ports.add(filename[len("installer_"):-3])
@@ -103,7 +103,7 @@ def test_every_compose_template_is_covered_by_the_port_test(installers_dir):
 def nginx_template_sources(installers_dir):
     for filename in sorted(os.listdir(installers_dir)):
         if filename.startswith("installer_") and filename.endswith(".py"):
-            with open(os.path.join(installers_dir, filename), "r") as installer_file:
+            with open(os.path.join(installers_dir, filename), "r", encoding = "utf-8") as installer_file:
                 yield filename, installer_file.read()
 
 

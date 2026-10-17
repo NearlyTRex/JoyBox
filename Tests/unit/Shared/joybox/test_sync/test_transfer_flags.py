@@ -156,7 +156,7 @@ def test_a_failed_sidecar_update_does_not_fail_the_upload(rclone, recording_comm
     # The files arrived; the next sync re-hashes anything the sidecar lacks.
     warnings = []
     monkeypatch.setattr(sync, "upload_hash_sidecar_files", lambda **kwargs: False)
-    monkeypatch.setattr(sync.logger, "log_warning", lambda message: warnings.append(message))
+    monkeypatch.setattr(sync.logger, "log_warning", warnings.append)
 
     assert run("upload_files_to_remote", local_root = "/locker") is True
     assert warnings

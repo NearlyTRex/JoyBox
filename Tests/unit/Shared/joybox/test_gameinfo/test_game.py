@@ -256,7 +256,8 @@ def test_a_wrapped_subvalue_is_a_json_object(tree):
 
 
 def test_a_wrapped_missing_value_is_still_an_object(game):
-    assert game.get_wrapped_value("absent") is not None
+    assert game.get_wrapped_value("absent").get_data() == {}
+    assert game.get_wrapped_value("absent", "fallback").get_data() == "fallback"
 
 
 ###########################################################
@@ -502,8 +503,9 @@ def test_two_games_derive_different_paths(tree):
     first = gameinfo.GameInfo(json_file = write_game(tree, name = "Chrono Trigger (USA)"))
     second = gameinfo.GameInfo(json_file = write_game(tree, name = "Super Metroid (USA)"))
 
-    for accessor in PATH_ACCESSORS:
-        assert getattr(first, accessor)() != getattr(second, accessor)()
+    shared = [accessor for accessor in PATH_ACCESSORS if getattr(first, accessor)() == getattr(second, accessor)()]
+
+    assert not shared, shared
 
 
 def test_an_explicit_remote_locker_sets_the_remote_paths(tree, monkeypatch):

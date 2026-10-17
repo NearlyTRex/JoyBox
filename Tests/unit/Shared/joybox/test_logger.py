@@ -25,8 +25,9 @@ def test_a_full_context_carries_every_part():
         game_subcategory = config.Subcategory.NINTENDO_64,
         game_name = "Super Mario 64")
 
-    for part in ["Roms", "Nintendo", "Nintendo 64", "Super Mario 64"]:
-        assert f"[{part}]" in context
+    missing = [part for part in ["Roms", "Nintendo", "Nintendo 64", "Super Mario 64"] if f"[{part}]" not in context]
+
+    assert not missing, context
 
 
 def test_context_parts_are_ordered_broad_to_narrow():
@@ -120,18 +121,24 @@ def test_the_script_name_is_usable_as_a_filename(monkeypatch):
 # Logging calls
 ###########################################################
 
-@pytest.mark.parametrize("level", ["log_info", "log_warning", "log_error"])
-def test_every_level_accepts_a_message(level):
+@pytest.mark.parametrize("level, name", [("log_info", "INFO"), ("log_warning", "WARNING"), ("log_error", "ERROR")])
+def test_every_level_accepts_a_message(caplog, level, name):
     # These are called from every script; none may raise on a plain string.
     getattr(logger, level)("a message")
 
+    assert [(record.levelname, record.getMessage()) for record in caplog.records] == [(name, "a message")]
 
-def test_logging_accepts_an_exception():
+
+def test_logging_accepts_an_exception(caplog):
     logger.log_error(RuntimeError("boom"))
 
+    assert [(record.levelname, record.getMessage()) for record in caplog.records] == [("ERROR", "boom")]
 
-def test_logging_accepts_a_non_string():
+
+def test_logging_accepts_a_non_string(caplog):
     logger.log_info(12345)
+
+    assert [(record.levelname, record.getMessage()) for record in caplog.records] == [("INFO", "12345")]
 
 
 
@@ -210,12 +217,13 @@ def test_a_logger_without_outputs_has_no_handlers(make_logger):
 
 
 def test_a_stdout_that_cannot_reconfigure_still_gets_a_handler(make_logger, monkeypatch):
-    monkeypatch.setattr(sys, "stdout", io.StringIO())
+    stream = io.StringIO()
+    monkeypatch.setattr(sys, "stdout", stream)
 
     instance = make_logger("probe_stringio", file_output = False)
     instance.info("hello")
 
-    assert "hello" in sys.stdout.getvalue()
+    assert "hello" in stream.getvalue()
 
 
 def test_the_default_log_directory_is_the_runtime_one(tmp_path, monkeypatch):

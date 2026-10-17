@@ -182,7 +182,8 @@ def test_the_report_is_served_as_json(served):
 @pytest.mark.allow_network
 def test_other_paths_are_not_found(served):
     with pytest.raises(urllib.error.HTTPError) as raised:
-        urllib.request.urlopen(served + "/other", timeout = 5)
+        with urllib.request.urlopen(served + "/other", timeout = 5) as response:
+            response.read()
 
     assert raised.value.code == 404
 

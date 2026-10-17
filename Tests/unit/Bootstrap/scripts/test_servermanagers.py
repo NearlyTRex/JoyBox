@@ -1,14 +1,8 @@
 # Imports
 import os
 
-def parse_package_text_file(path):
-    entries = []
-    with open(path, "r") as package_file:
-        for line in package_file:
-            line = line.strip()
-            if line and not line.startswith("#"):
-                entries.append(line)
-    return entries
+# Local imports
+from package_list_helpers import parse_package_text_file
 
 
 def test_every_listed_manager_exists(bootstrap_dir):

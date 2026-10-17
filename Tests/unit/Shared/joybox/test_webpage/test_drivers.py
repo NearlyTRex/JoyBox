@@ -57,8 +57,9 @@ def browsers(monkeypatch):
 
     def browser(kind):
         def create(service = None, options = None):
-            if state["error"]:
-                raise state["error"]
+            error = state["error"]
+            if error is not None:
+                raise error
             created = {"kind": kind, "service": service, "options": options}
             state["created"].append(created)
             return created
@@ -67,8 +68,9 @@ def browsers(monkeypatch):
     def manager(kind):
         class FakeManager:
             def install(self):
-                if state["manager_error"]:
-                    raise state["manager_error"]
+                error = state["manager_error"]
+                if error is not None:
+                    raise error
                 return state["managed"][kind]
         return FakeManager
 

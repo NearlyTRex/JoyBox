@@ -75,7 +75,7 @@ def describe_command(module_name, python_path, timeout = 60):
             env = env)
         if not os.path.exists(output_path):
             raise RuntimeError("Unable to describe %s: %s" % (module_name, result.stderr.strip()[-2000:]))
-        with open(output_path, "r") as output_file:
+        with open(output_path, "r", encoding = "utf-8") as output_file:
             spec = json.load(output_file)
     spec = replace_home_in_defaults(spec, home_dir)
     spec["module"] = module_name
@@ -274,7 +274,7 @@ def find_stale_pages(pages, output_dir):
         if not os.path.exists(path):
             stale.append(filename)
             continue
-        with open(path, "r") as page_file:
+        with open(path, "r", encoding = "utf-8") as page_file:
             if page_file.read() != content:
                 stale.append(filename)
     extra = []
@@ -287,7 +287,7 @@ def write_pages(pages, output_dir):
     os.makedirs(output_dir, exist_ok = True)
     stale, extra = find_stale_pages(pages, output_dir)
     for filename in stale:
-        with open(os.path.join(output_dir, filename), "w") as page_file:
+        with open(os.path.join(output_dir, filename), "w", encoding = "utf-8") as page_file:
             page_file.write(pages[filename])
     for filename in extra:
         os.remove(os.path.join(output_dir, filename))

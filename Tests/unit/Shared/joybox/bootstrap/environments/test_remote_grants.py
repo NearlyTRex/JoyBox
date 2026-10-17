@@ -25,7 +25,7 @@ ENVIRONMENT_FILE = os.path.join(
 # The component names, read from the source so nothing is built while tests
 # are collected
 def read_component_names():
-    with open(ENVIRONMENT_FILE, "r") as source:
+    with open(ENVIRONMENT_FILE, "r", encoding = "utf-8") as source:
         tree = ast.parse(source.read())
     for node in ast.walk(tree):
         if (isinstance(node, ast.Assign) and isinstance(node.value, ast.Dict)

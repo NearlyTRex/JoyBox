@@ -65,7 +65,7 @@ def test_the_install_result_is_returned(remote):
 def test_the_download_directory_is_always_removed(remote, download_ok, install_ok):
     remote["download_ok"] = download_ok
     remote["install_ok"] = install_ok
-    with open(os.path.join(remote["scratch"], "Tool-1.0.zip"), "w") as handle:
+    with open(os.path.join(remote["scratch"], "Tool-1.0.zip"), "w", encoding = "utf-8") as handle:
         handle.write("archive")
 
     release.download_general_release(

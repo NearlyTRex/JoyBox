@@ -20,6 +20,10 @@ def build_environment(components):
     return environment
 
 
+def recorded_calls(components):
+    return {name: installer.calls for name, installer in components.items()}
+
+
 @pytest.fixture
 def three_components():
     return {
@@ -91,8 +95,7 @@ def test_force_ignores_the_installed_state(three_components):
 
     environment.process_components("install", force = True)
 
-    for installer in three_components.values():
-        assert installer.calls == ["install"]
+    assert recorded_calls(three_components) == {"first": ["install"], "second": ["install"], "third": ["install"]}
 
 
 ###########################################################
@@ -105,8 +108,7 @@ def test_no_selection_processes_everything(three_components):
 
     environment.process_components("install")
 
-    for installer in three_components.values():
-        assert installer.calls == ["install"]
+    assert recorded_calls(three_components) == {"first": ["install"], "second": ["install"], "third": ["install"]}
 
 
 def test_a_selection_limits_what_runs(three_components):
@@ -134,8 +136,7 @@ def test_an_empty_selection_processes_nothing(three_components):
 
     environment.process_components("install")
 
-    for installer in three_components.values():
-        assert installer.calls == []
+    assert recorded_calls(three_components) == {"first": [], "second": [], "third": []}
 
 
 ###########################################################
@@ -246,20 +247,20 @@ class CountingConnection:
         self.teardowns += 1
 
 
-def test_building_an_environment_does_not_connect():
+def test_building_an_environment_does_not_connect(monkeypatch):
     # Listing components must work without a reachable target.
     from joybox.bootstrap.environments import env_remote_ubuntu
     from joybox.connection import connection_ssh
 
     connected = []
-    original = connection_ssh.ConnectionSSH.setup
-    connection_ssh.ConnectionSSH.setup = lambda self: connected.append(self)
-    try:
-        environment = env_remote_ubuntu.RemoteUbuntu(ssh_host = None)
-        assert environment.get_available_components()
-    finally:
-        connection_ssh.ConnectionSSH.setup = original
 
+    def record_setup(connection):
+        connected.append(connection)
+    monkeypatch.setattr(connection_ssh.ConnectionSSH, "setup", record_setup)
+
+    environment = env_remote_ubuntu.RemoteUbuntu(ssh_host = None)
+
+    assert environment.get_available_components()
     assert connected == []
 
 
@@ -339,7 +340,11 @@ def test_local_setup_stops_at_the_first_failure_with_exit_on_failure(three_compo
 
 
 def test_disconnecting_without_a_connection_is_harmless():
-    env.Environment().disconnect()
+    environment = env.Environment()
+
+    environment.disconnect()
+
+    assert environment.connection is None
 
 
 def test_the_environment_type_is_shared_through_the_settings(isolated_settings):

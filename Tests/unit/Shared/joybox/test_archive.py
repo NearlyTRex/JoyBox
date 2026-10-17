@@ -25,16 +25,18 @@ DETECTORS = [
 def test_each_detector_recognises_its_own_extensions(detector, enum_class):
     check = getattr(archive, detector)
 
-    for extension in enum_class.cvalues():
-        assert check(f"file{extension}") is True, f"{detector} missed {extension}"
+    missed = [extension for extension in enum_class.cvalues() if check(f"file{extension}") is not True]
+
+    assert not missed, f"{detector} missed {missed}"
 
 
 @pytest.mark.parametrize("detector,enum_class", DETECTORS, ids = [d for d, _ in DETECTORS])
 def test_each_detector_is_case_insensitive(detector, enum_class):
     check = getattr(archive, detector)
 
-    for extension in enum_class.cvalues():
-        assert check(f"file{extension.upper()}") is True
+    missed = [extension for extension in enum_class.cvalues() if check(f"file{extension.upper()}") is not True]
+
+    assert not missed, f"{detector} missed {missed}"
 
 
 @pytest.mark.parametrize("detector,_enum", DETECTORS, ids = [d for d, _ in DETECTORS])
@@ -45,9 +47,9 @@ def test_no_detector_claims_a_plain_file(detector, _enum):
 @pytest.mark.parametrize("detector,enum_class", DETECTORS, ids = [d for d, _ in DETECTORS])
 def test_every_archive_type_is_an_archive(detector, enum_class):
     # is_archive has to cover every type the codebase can extract.
-    for extension in enum_class.cvalues():
-        assert archive.is_archive(f"file{extension}") is True, \
-            f"is_archive does not recognise {extension}"
+    missed = [extension for extension in enum_class.cvalues() if archive.is_archive(f"file{extension}") is not True]
+
+    assert not missed, f"is_archive does not recognise {missed}"
 
 
 def test_rar_counts_as_an_archive():
@@ -118,10 +120,14 @@ def test_rar_cannot_be_created():
 
 
 def test_everything_creatable_is_also_extractable():
-    for archive_type in config.ArchiveFileType.members():
-        if archive.is_creatable_archive_type(archive_type):
-            assert archive.is_extractable_archive_type(archive_type) is True, \
-                f"{archive_type} can be created but not extracted"
+    creatable = [
+        archive_type for archive_type in config.ArchiveFileType.members()
+        if archive.is_creatable_archive_type(archive_type)]
+    unextractable = [
+        archive_type for archive_type in creatable if archive.is_extractable_archive_type(archive_type) is not True]
+
+    assert creatable
+    assert not unextractable, f"{unextractable} can be created but not extracted"
 
 
 @pytest.mark.parametrize("archive_type", [
@@ -347,7 +353,7 @@ TOOL_PATHS = {
 @pytest.fixture
 def installed(monkeypatch):
     monkeypatch.setattr(archive.programs, "is_tool_installed", lambda name: name in TOOL_PATHS)
-    monkeypatch.setattr(archive.programs, "get_tool_program", lambda name: TOOL_PATHS.get(name))
+    monkeypatch.setattr(archive.programs, "get_tool_program", TOOL_PATHS.get)
     monkeypatch.setattr(
         archive.sandbox, "translate_path_if_necessary",
         lambda path, program_exe, program_name: path)
@@ -429,12 +435,11 @@ def test_a_failed_creation_keeps_the_source(installed, monkeypatch):
     from fakes import RecordingCommand
     RecordingCommand(monkeypatch, returncode = 1)
 
-    def fail(*args, **kwargs):
-        raise AssertionError("the source must survive a failed archive")
+    removed = []
+    monkeypatch.setattr(archive.fileops, "remove_file", lambda src, **kwargs: removed.append(src))
 
-    monkeypatch.setattr(archive.fileops, "remove_file", fail)
-
-    archive.create_archive_from_file("/out/Game.7z", "/in/Game.iso", delete_original = True)
+    assert archive.create_archive_from_file("/out/Game.7z", "/in/Game.iso", delete_original = True) is False
+    assert removed == []
 
 
 def test_archiving_a_folder_adds_each_member(installed, recording_command, existing_output, tmp_path):

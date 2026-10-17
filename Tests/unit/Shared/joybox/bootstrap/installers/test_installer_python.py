@@ -1,11 +1,16 @@
 # Imports
 import os
 
+# Third-party imports
+import pytest
+
 # Local imports
 import joybox.bootstrap.installers as installers
 import joybox.bootstrap.constants as constants
+import joybox.bootstrap.packages as packages
 from joybox.bootstrap.installers import installer_python
 from joybox import environment
+from joybox import settings
 from fakes import RecordingConnection
 
 
@@ -163,8 +168,11 @@ def test_supported_environments(isolated_settings):
         constants.EnvironmentType.LOCAL_UBUNTU, constants.EnvironmentType.LOCAL_WINDOWS]
 
 
-def test_package_list_follows_environment_type(isolated_settings):
-    assert isinstance(installers.Python(RecordingConnection()).get_packages(), list)
+@pytest.mark.parametrize("environment_type", list(constants.EnvironmentType))
+def test_package_list_follows_environment_type(isolated_settings, environment_type):
+    settings.set_value("UserData.General", "environment_type", environment_type)
+
+    assert installers.Python(RecordingConnection()).get_packages() == packages.python.get(environment_type, [])
 
 
 def test_installed_needs_every_package(isolated_settings):

@@ -72,9 +72,13 @@ def windows_home(monkeypatch, tmp_path):
         os.symlink(src, dest)
         return True
 
+    def touch_file(src, **kwargs):
+        with open(src, "w", encoding = "utf-8"):
+            return True
+
     monkeypatch.setattr(environment.platform_info, "is_unix_platform", lambda: False)
     monkeypatch.setenv("HOME", str(tmp_path))
-    monkeypatch.setattr(fileops, "touch_file", lambda src, **kwargs: open(src, "w").close() or True)
+    monkeypatch.setattr(fileops, "touch_file", touch_file)
     monkeypatch.setattr(fileops, "create_symlink", create_symlink)
     return {"home": tmp_path, "created": created}
 

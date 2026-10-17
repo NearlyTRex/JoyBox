@@ -26,7 +26,7 @@ def release(monkeypatch):
     def download_url(url, output_file, **kwargs):
         state["downloaded"].append(url)
         if state["download_ok"]:
-            with open(output_file, "w") as handle:
+            with open(output_file, "w", encoding = "utf-8") as handle:
                 handle.write("image")
         return state["download_ok"]
 
@@ -160,14 +160,14 @@ def stock(monkeypatch, tmp_path):
     def extract_buildable_iso_tree(iso_file, extract_dir, **kwargs):
         grub_dir = os.path.join(extract_dir, "boot", "grub")
         os.makedirs(grub_dir)
-        with open(os.path.join(grub_dir, "grub.cfg"), "w") as handle:
+        with open(os.path.join(grub_dir, "grub.cfg"), "w", encoding = "utf-8") as handle:
             handle.write(GRUB_CONFIG)
         return state["tree_ok"]
 
     def create_bootable_iso(iso_file, source_dir, **kwargs):
-        with open(os.path.join(source_dir, "nocloud", "user-data")) as handle:
+        with open(os.path.join(source_dir, "nocloud", "user-data"), encoding = "utf-8") as handle:
             user_data = handle.read()
-        with open(os.path.join(source_dir, "boot", "grub", "grub.cfg")) as handle:
+        with open(os.path.join(source_dir, "boot", "grub", "grub.cfg"), encoding = "utf-8") as handle:
             grub = handle.read()
         state["created"].append(dict(kwargs, iso_file = iso_file, user_data = user_data, grub = grub))
         return state["create_ok"]

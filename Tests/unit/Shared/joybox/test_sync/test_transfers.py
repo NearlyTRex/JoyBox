@@ -1,3 +1,6 @@
+# Third-party imports
+import pytest
+
 # Local imports
 from joybox import sync
 from sync_helpers import (
@@ -169,16 +172,20 @@ def test_a_failed_upload_is_reported(rclone, monkeypatch):
         REMOTE, REMOTE_TYPE, REMOTE_PATH, LOCAL) is False
 
 
-def test_a_failed_upload_does_not_update_the_sidecar(rclone, monkeypatch):
+@pytest.fixture
+def sidecar_uploads(monkeypatch):
+    uploads = []
+    monkeypatch.setattr(sync, "upload_hash_sidecar_files", lambda **kwargs: uploads.append(kwargs) or True)
+    return uploads
+
+
+def test_a_failed_upload_does_not_update_the_sidecar(rclone, monkeypatch, sidecar_uploads):
     # A sidecar describing files that never arrived is worse than none.
     record(monkeypatch, returncode = 1)
 
-    def fail(**kwargs):
-        raise AssertionError("the sidecar should not be written")
-
-    monkeypatch.setattr(sync, "upload_hash_sidecar_files", fail)
-    sync.upload_files_to_remote(
-        REMOTE, REMOTE_TYPE, REMOTE_PATH, LOCAL, local_root = "/locker")
+    assert sync.upload_files_to_remote(
+        REMOTE, REMOTE_TYPE, REMOTE_PATH, LOCAL, local_root = "/locker") is False
+    assert sidecar_uploads == []
 
 
 def test_a_successful_upload_updates_the_sidecar(rclone, monkeypatch):
@@ -193,65 +200,17 @@ def test_a_successful_upload_updates_the_sidecar(rclone, monkeypatch):
     assert updated
 
 
-def test_the_sidecar_update_can_be_turned_off(rclone, monkeypatch):
+def test_the_sidecar_update_can_be_turned_off(rclone, monkeypatch, sidecar_uploads):
     record(monkeypatch)
 
-    def fail(**kwargs):
-        raise AssertionError("the sidecar should not be written")
-
-    monkeypatch.setattr(sync, "upload_hash_sidecar_files", fail)
-    sync.upload_files_to_remote(
+    assert sync.upload_files_to_remote(
         REMOTE, REMOTE_TYPE, REMOTE_PATH, LOCAL,
-        local_root = "/locker", update_sidecar = False)
+        local_root = "/locker", update_sidecar = False) is True
+    assert sidecar_uploads == []
 
 
-def test_no_local_root_writes_no_sidecar(rclone, monkeypatch):
+def test_no_local_root_writes_no_sidecar(rclone, monkeypatch, sidecar_uploads):
     record(monkeypatch)
 
-    def fail(**kwargs):
-        raise AssertionError("the sidecar should not be written")
-
-    monkeypatch.setattr(sync, "upload_hash_sidecar_files", fail)
-    sync.upload_files_to_remote(REMOTE, REMOTE_TYPE, REMOTE_PATH, LOCAL)
-
-
-###########################################################
-# Syncing
-#
-# sync makes the destination match the source, which means deleting whatever
-# the source does not have. The direction is the whole safety story.
-###########################################################
-
-def test_a_sync_pushes_local_to_remote(rclone, monkeypatch):
-    recorder = record(monkeypatch)
-    sync.sync_files_to_remote(REMOTE, REMOTE_TYPE, REMOTE_PATH, LOCAL)
-    arguments = positional_arguments(recorder.only())
-
-    assert arguments[0] == "sync"
-    assert arguments[1] == LOCAL
-    assert arguments[2].startswith(REMOTE + ":")
-
-
-def test_a_sync_never_has_the_remote_as_its_source(rclone, monkeypatch):
-    # Reversed, this would delete the local library to match the remote.
-    recorder = record(monkeypatch)
-    sync.sync_files_to_remote(REMOTE, REMOTE_TYPE, REMOTE_PATH, LOCAL)
-
-    assert not positional_arguments(recorder.only())[1].startswith(REMOTE + ":")
-
-
-def test_a_pretend_sync_is_a_dry_run(rclone, monkeypatch):
-    recorder = record(monkeypatch)
-    sync.sync_files_to_remote(
-        REMOTE, REMOTE_TYPE, REMOTE_PATH, LOCAL, pretend_run = True)
-
-    assert "--dry-run" in recorder.only()
-
-
-def test_a_failed_sync_is_reported(rclone, monkeypatch):
-    record(monkeypatch, returncode = 1)
-
-    assert sync.sync_files_to_remote(
-        REMOTE, REMOTE_TYPE, REMOTE_PATH, LOCAL) is False
-
-
+    assert sync.upload_files_to_remote(REMOTE, REMOTE_TYPE, REMOTE_PATH, LOCAL) is True
+    assert sidecar_uploads == []

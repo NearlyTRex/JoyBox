@@ -3,7 +3,7 @@ import pytest
 
 # Local imports
 from joybox import webpage
-from webpage_helpers import FakeDriver
+from webpage_helpers import FakeDriver, matching
 
 pytest.importorskip("bs4")
 exceptions = pytest.importorskip("selenium.common.exceptions")
@@ -76,14 +76,6 @@ def test_verbose_fetching_returns_the_same_text(fetches, driver, source, error, 
 # Matching urls on a page
 ###########################################################
 
-def matching(page, html, **kwargs):
-    page["html"] = html
-    return webpage.get_matching_urls(
-        url = "https://releases.example/list",
-        base_url = "https://releases.example",
-        **kwargs)
-
-
 def test_a_relative_iframe_is_resolved_against_the_base(page):
     found = matching(page, '<iframe src="/embed/trailer"></iframe>')
 
@@ -107,7 +99,9 @@ def test_a_link_written_as_padded_text_is_found_without_its_padding(page):
 def test_matched_text_links_are_plain_strings(page):
     found = matching(page, "<p>https://cdn.example/app.zip</p>", starts_with = "https://cdn")
 
-    assert all(type(url) is str for url in found)
+    # A bs4 string subclass would keep the whole parse tree alive.
+    assert found == ["https://cdn.example/app.zip"]
+    assert [type(url) for url in found] == [str]
 
 
 def test_an_empty_href_is_skipped(page):

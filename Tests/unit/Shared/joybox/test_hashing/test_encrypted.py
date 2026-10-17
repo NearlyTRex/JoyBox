@@ -26,7 +26,7 @@ def encrypted_tree(tmp_path, monkeypatch):
     write_file(root, os.path.join("Games", "abc.enc"), b"ciphertext")
     embedded = {"info": dict(EMBEDDED)}
     monkeypatch.setattr(hashing.cryption, "is_file_encrypted", lambda path: True)
-    monkeypatch.setattr(hashing.cryption, "is_passphrase_valid", lambda phrase: bool(phrase))
+    monkeypatch.setattr(hashing.cryption, "is_passphrase_valid", bool)
     monkeypatch.setattr(hashing.cryption, "get_embedded_file_info",
                         lambda src, passphrase, **kwargs: embedded["info"])
     return str(root), embedded

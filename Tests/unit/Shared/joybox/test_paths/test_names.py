@@ -54,10 +54,11 @@ def test_split_keeps_the_remainder(path, expected):
     assert paths.get_filename_split(path) == expected
 
 
-def test_split_round_trips():
-    for path in ["dir/file.txt", "archive.tar.gz", "noextension", ".hidden"]:
-        remainder, extension = paths.get_filename_split(path)
-        assert remainder + extension == path
+@pytest.mark.parametrize("path", ["dir/file.txt", "archive.tar.gz", "noextension", ".hidden"])
+def test_split_round_trips(path):
+    remainder, extension = paths.get_filename_split(path)
+
+    assert remainder + extension == path
 
 
 def test_filename_file_drops_the_directory():

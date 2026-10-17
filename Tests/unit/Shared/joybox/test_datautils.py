@@ -203,7 +203,6 @@ def test_a_first_attempt_returning_none_is_accepted():
 
     def find_nothing():
         calls.append(1)
-        return None
 
     assert datautils.retry_with_backoff(find_nothing, max_retries = 3, initial_delay = 0) is None
     assert len(calls) == 1, "a clean empty result must not trigger a retry storm"
@@ -241,7 +240,6 @@ def test_none_after_an_exception_keeps_retrying():
         attempts.append(1)
         if len(attempts) == 1:
             raise RuntimeError("boom")
-        return None
 
     assert datautils.retry_with_backoff(raise_then_none, max_retries = 4, initial_delay = 0) is None
     assert len(attempts) > 2, "a None after a failure should not end the run early"
@@ -304,7 +302,6 @@ def test_a_none_retry_cleans_up_and_backs_off(monkeypatch):
         attempts.append(1)
         if len(attempts) == 1:
             raise RuntimeError("boom")
-        return None
 
     assert datautils.retry_with_backoff(
         raise_then_none,

@@ -107,9 +107,9 @@ def test_a_file_without_an_extension_fences_as_text(tmp_path):
 
 def test_a_rendered_file_holds_every_line(sample_file):
     rendered = chunkers.render_file(sample_file)
+    missing = [line for line in ["one", "two", "three", "four", "five"] if line not in rendered]
 
-    for line in ["one", "two", "three", "four", "five"]:
-        assert line in rendered
+    assert not missing, missing
 
 
 def test_a_rendered_file_reports_its_length(sample_file):
@@ -220,7 +220,11 @@ def test_an_empty_string_estimates_zero():
 
 
 def test_an_estimate_is_a_whole_number():
-    assert isinstance(chunkers.estimate_tokens("some text here"), int)
+    # Ten characters are 2.8 tokens, rounded down.
+    estimate = chunkers.estimate_tokens("x" * 10)
+
+    assert isinstance(estimate, int)
+    assert estimate == 2
 
 
 def test_a_reversed_range_is_empty(sample_file):

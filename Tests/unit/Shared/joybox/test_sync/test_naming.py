@@ -98,5 +98,3 @@ def test_a_non_b2_path_has_no_bucket():
 def test_a_remote_raw_type_is_lowercase():
     assert sync.get_remote_raw_type(REMOTE_TYPE) == \
         sync.get_remote_raw_type(REMOTE_TYPE).lower()
-
-

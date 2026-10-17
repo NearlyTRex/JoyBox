@@ -224,7 +224,7 @@ def decrypted(monkeypatch):
         for folder in ["code", "content", "meta"]:
             os.makedirs(os.path.join(nus_package_dir, folder), exist_ok = True)
         if state["app_xml"] is not None:
-            with open(os.path.join(nus_package_dir, "code", "app.xml"), "w") as handle:
+            with open(os.path.join(nus_package_dir, "code", "app.xml"), "w", encoding = "utf-8") as handle:
                 handle.write(state["app_xml"])
         return True
     monkeypatch.setattr(nintendo, "decrypt_wiiu_nus_package", decrypt_wiiu_nus_package)

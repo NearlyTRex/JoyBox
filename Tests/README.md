@@ -24,8 +24,8 @@ pytest --rootdir=. Tests/unit/Shared/joybox/bootstrap/packages/test_aptget.py
 # Skip the slow subprocess and docker tests
 pytest --rootdir=. Tests -m "not slow"
 
-# Only what needs docker
-pytest --rootdir=. Tests -m requires_docker
+# Across every core, the way CI runs the unit tests
+pytest --rootdir=. Tests/unit -n auto --dist loadfile
 ```
 
 The config lives in `Tests/pytest.ini`, which pytest finds from the test paths,
@@ -171,12 +171,51 @@ logs and previews; `Recorder` fakes a call; `assert_entry_points` checks `run()`
 - Comments are short and factual — one line, stating an invariant or a
   consequence. No narration of when or how something was changed; git history
   covers that.
-- Mark anything involving a subprocess or container `@pytest.mark.slow`, and
-  anything needing a binary with `requires_docker` / `requires_nginx` plus a
-  `skipif`, so the suite still runs on a machine without them.
+- Mark anything involving a subprocess or container `@pytest.mark.slow`.
+- **Declare the programs a test needs.** `pytest.mark.requires_binary("docker")`
+  for a program on `PATH` (`"a|b"` accepts either) and
+  `pytest.mark.requires_tool("XorrISO")` for one from the JoyBox tool registry,
+  at module (`pytestmark`), class or test level. Both are enforced while the
+  tests are collected, so a machine without the program skips the test before
+  any of its fixtures start. Don't check inside a test or fixture
+  (`shutil.which` and `pytest.skip`, `skipif`). A test using `shell_sandbox`
+  declares `"bash", "unshare"`, one using `shell_traced_env` `"bash"`, and
+  every integration file declares at least one program, or runs this
+  interpreter in a subprocess (`sys.executable`): one that needs neither
+  belongs in `unit/`.
 - **Tests assert the intended contract.** If a test fails because the source is
   wrong, fix the source. Do not add an `xfail` or rewrite the assertion to match
   broken behaviour.
+
+## The meta suite
+
+`unit/meta/` holds every file under `unit/` and `integration/` to the
+conventions above, statically, so a test that can't fail is caught when it is
+written. Each rule is also run against a sample that breaks it, so the rules
+themselves can fail.
+
+- `test_test_quality.py`: a test that asserts nothing; checks that sit only
+  inside an `if`, loop or `try` and may never run; `except ...: pass`; an
+  assertion true by construction; a test whose only checks are `is not None`
+  or `isinstance`; a helper pasted into several files (share it from the
+  nearest `conftest.py` or a `*_helpers.py`). A check is an `assert`, an
+  `assert_*` call, `pytest.fail`, a `pytest.raises` block, or a call to a
+  helper that makes one, followed into the `*_helpers.py` it came from.
+- `test_binary_requirements.py`: the `requires_binary` / `requires_tool`
+  rules above, through any depth of fixtures.
+- `test_file_hygiene.py`: duplicate tests, helpers and constants, imports
+  below the header, and the 900 line limit.
+- `test_layout.py`: every directory mirrors one in the repository, and a split
+  `test_<module>/` package covers a real module and holds only collectable tests.
+- `test_pylint.py`: pylint with `Tests/pylintrc` over every test file; any
+  message fails. The rcfile only turns off pytest idioms and the repository's
+  own conventions.
+- `test_signatures.py`: an override in `Shared/joybox` keeps every parameter of
+  the method it overrides, so a call through the base class works on every
+  subclass.
+
+There are no exemption lists to add to: when a rule trips, fix the test, or the
+source when the test found a bug.
 
 ## Known gaps
 

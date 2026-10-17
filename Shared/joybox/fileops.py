@@ -225,14 +225,11 @@ def touch_file(src, contents = "", contents_mode = "w", encoding = None, verbose
         if not pretend_run:
             os.makedirs(paths.get_filename_directory(src), exist_ok = True)
             if len(contents):
-                if encoding:
-                    with open(src, contents_mode, encoding = encoding) as f:
-                        f.write(contents)
-                else:
-                    with open(src, contents_mode) as f:
-                        f.write(contents)
+                text_encoding = None if "b" in contents_mode else (encoding or "utf-8")
+                with open(src, contents_mode, encoding = text_encoding) as f:
+                    f.write(contents)
             else:
-                open(src, "a").close()
+                open(src, "a", encoding = "utf-8").close()
         return True
     except Exception as e:
         if exit_on_failure:

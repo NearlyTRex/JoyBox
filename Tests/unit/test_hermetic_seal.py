@@ -44,6 +44,7 @@ def test_os_system_is_sealed_too():
         os.system("sudo true")
 
 
+@pytest.mark.requires_binary("true")
 def test_an_ordinary_program_still_runs():
     assert subprocess.run(["true"], check = False).returncode == 0
 
@@ -75,5 +76,5 @@ def test_collection_is_already_sealed():
 
 
 def test_the_generated_settings_hold_no_secret_references():
-    with open(COLLECTION_SETTINGS_FILE, "r") as config:
+    with open(COLLECTION_SETTINGS_FILE, "r", encoding = "utf-8") as config:
         assert "op://" not in config.read()

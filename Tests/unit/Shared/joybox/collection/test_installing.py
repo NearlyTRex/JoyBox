@@ -448,7 +448,7 @@ def local(monkeypatch, tmp_path):
         state["copied"].append((src, dest))
         if state["populate"]:
             os.makedirs(dest, exist_ok = True)
-            with open(os.path.join(dest, "game.bin"), "w") as handle:
+            with open(os.path.join(dest, "game.bin"), "w", encoding = "utf-8") as handle:
                 handle.write("content")
         return state["copy_ok"]
 

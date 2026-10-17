@@ -1,6 +1,8 @@
 # Third-party imports
 import pytest
 
+pytestmark = pytest.mark.requires_binary("bash", "unshare")
+
 
 ###########################################################
 # init_joybox.sh
@@ -9,12 +11,6 @@ import pytest
 ###########################################################
 
 SCRIPT = "Bootstrap/scripts/init_joybox.sh"
-
-
-@pytest.fixture
-def server(shell_sandbox):
-    shell_sandbox.add_user("deploy")
-    return shell_sandbox
 
 
 def test_the_repository_is_cloned_as_the_user(server):

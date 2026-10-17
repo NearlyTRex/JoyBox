@@ -32,7 +32,7 @@ def test_only_local_ubuntu_is_supported(isolated_settings):
 
 
 def test_plugins_go_in_the_per_user_plugin_directory(isolated_settings):
-    pidgin, connection = make()
+    pidgin, _ = make()
     plugin_dir = os.path.join(os.path.expanduser("~"), ".purple", "plugins")
     assert pidgin.get_plugin_dir() == plugin_dir
     assert pidgin.get_plugin_paths() == [

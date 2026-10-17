@@ -53,8 +53,9 @@ def psutil(monkeypatch):
     module.ZombieProcess = type("ZombieProcess", (FakeError,), {})
 
     def process_iter():
-        if state["raise_on_iter"]:
-            raise state["raise_on_iter"]
+        error = state["raise_on_iter"]
+        if error is not None:
+            raise error
         return list(state["processes"])
 
     module.process_iter = process_iter
@@ -165,8 +166,12 @@ def test_an_unmatched_process_is_left_running(psutil):
     assert other.killed is False
 
 
-def test_killing_nothing_is_harmless(psutil):
+def test_killing_nothing_is_harmless(psutil, monkeypatch):
+    errors = []
+    monkeypatch.setattr(process.logger, "log_error", errors.append)
     process.kill_active_named_processes(["dolphin"])
+
+    assert errors == []
 
 
 def test_every_match_is_killed(psutil):
@@ -239,8 +244,12 @@ def test_an_unmatched_process_is_not_interrupted(psutil):
     assert other.signals == []
 
 
-def test_interrupting_nothing_is_harmless(psutil):
+def test_interrupting_nothing_is_harmless(psutil, monkeypatch):
+    errors = []
+    monkeypatch.setattr(process.logger, "log_error", errors.append)
     process.interrupt_active_named_processes(["dolphin"])
+
+    assert errors == []
 
 
 def test_a_denied_interrupt_is_logged_not_raised(psutil, monkeypatch):
@@ -335,13 +344,18 @@ def test_no_timeout_is_not_an_immediate_give_up(psutil, monkeypatch):
     assert checks["count"] == 4
 
 
-def test_a_vanished_process_ends_the_wait(psutil, no_sleep):
+def test_a_vanished_process_ends_the_wait(psutil, no_sleep, monkeypatch):
     class Vanishing(FakeProcess):
         def is_running(self):
             raise psutil["module"].NoSuchProcess()
 
+    warnings = []
+    monkeypatch.setattr(process.logger, "log_warning", warnings.append)
     psutil["processes"] = [Vanishing("dolphin")]
     process.wait_for_named_processes(["dolphin"])
+
+    assert no_sleep == []
+    assert warnings == []
 
 
 def test_a_denied_wait_is_reported_not_raised(psutil, monkeypatch):

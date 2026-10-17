@@ -1,10 +1,14 @@
 # Imports
 import os
+import pkgutil
 import subprocess
 import sys
 
 # Third-party imports
 import pytest
+
+# Local imports
+import joybox.cli
 
 
 ###########################################################
@@ -20,8 +24,7 @@ HELP_TIMEOUT_SECONDS = 60
 def run_help(module_name, repo_root, env):
     # Commands resolve JoyBox.ini from the home directory, so a run without a
     # hermetic home reads the developer's own configuration.
-    from conftest import SHARED_DIR
-    env = dict(env, PYTHONPATH = SHARED_DIR)
+    env = dict(env, PYTHONPATH = os.path.join(repo_root, "Shared"))
     return subprocess.run(
         [sys.executable, "-m", module_name, "--help"],
         capture_output = True,
@@ -34,8 +37,10 @@ def run_help(module_name, repo_root, env):
 def pytest_generate_tests(metafunc):
     # Parametrized from the package so a new command is picked up automatically
     if "script_name" in metafunc.fixturenames:
-        from conftest import find_cli_files
-        parameters = [(name, "joybox.cli." + name) for name, _ in find_cli_files()]
+        parameters = [
+            (module.name, "joybox.cli." + module.name)
+            for module in sorted(pkgutil.iter_modules(joybox.cli.__path__), key = lambda module: module.name)
+            if not module.name.startswith("_")]
         metafunc.parametrize(
             "script_name,script_path",
             parameters,
@@ -89,8 +94,7 @@ autoinstall_packages = curl, git
 
 
 def run_show_seed(repo_root, env, extra = None):
-    from conftest import SHARED_DIR
-    env = dict(env, PYTHONPATH = SHARED_DIR)
+    env = dict(env, PYTHONPATH = os.path.join(repo_root, "Shared"))
     return subprocess.run(
         [sys.executable, "-m", "joybox.cli.build_autoinstall_iso", "--show_seed"] + (extra or []),
         capture_output = True,
@@ -114,14 +118,14 @@ def env_with_home(hermetic_env, home):
 def incomplete_env(hermetic_env, tmp_path):
     # A config that exists but has not been filled in, which is the state a
     # fresh checkout is in.
-    with open(os.path.join(str(tmp_path), "JoyBox.ini"), "w") as handle:
+    with open(os.path.join(str(tmp_path), "JoyBox.ini"), "w", encoding = "utf-8") as handle:
         handle.write("[UserData.Autoinstall]\nautoinstall_hostname = ubuntu\n")
     return env_with_home(hermetic_env, tmp_path)
 
 
 @pytest.fixture
 def configured_env(hermetic_env, tmp_path):
-    with open(os.path.join(str(tmp_path), "JoyBox.ini"), "w") as handle:
+    with open(os.path.join(str(tmp_path), "JoyBox.ini"), "w", encoding = "utf-8") as handle:
         handle.write(INI)
     return env_with_home(hermetic_env, tmp_path)
 

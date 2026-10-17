@@ -76,7 +76,7 @@ def test_an_unknown_hash_type_reads_as_no_hash(rclone, monkeypatch):
 def test_a_verbose_listing_reports_its_count(rclone, monkeypatch):
     listing(monkeypatch, '[{"Path": "a.zip", "Hashes": {"MD5": "aaaa"}}]')
     messages = []
-    monkeypatch.setattr(sync.logger, "log_info", lambda message: messages.append(message))
+    monkeypatch.setattr(sync.logger, "log_info", messages.append)
     sync.list_files_with_hashes(REMOTE, REMOTE_TYPE, REMOTE_PATH, verbose = True)
 
     assert "Loaded 1 file hashes" in messages
@@ -134,7 +134,7 @@ def test_a_sidecar_is_read_for_real_on_a_pretend_run(remote, temp_dirs):
 def test_the_sidecar_download_directory_is_removed(remote, temp_dirs, monkeypatch):
     make_database(remote.store, [{"file_path": "a.zip", "hash": "aaaa"}])
     messages = []
-    monkeypatch.setattr(sync.logger, "log_info", lambda message: messages.append(message))
+    monkeypatch.setattr(sync.logger, "log_info", messages.append)
     sync.list_files_with_hashes_from_sidecar(REMOTE, REMOTE_TYPE, REMOTE_PATH, verbose = True)
 
     assert not os.path.exists(temp_dirs[0])
@@ -239,7 +239,7 @@ def test_a_large_hashing_run_reports_progress(tmp_path, monkeypatch):
     for index in range(101):
         (tmp_path / ("%03d.bin" % index)).write_text(str(index))
     messages = []
-    monkeypatch.setattr(sync.logger, "log_info", lambda message: messages.append(message))
+    monkeypatch.setattr(sync.logger, "log_info", messages.append)
 
     assert len(sync.build_hash_sidecar_data(str(tmp_path), verbose = True)) == 101
     assert "  Hashing 101 files..." in messages
@@ -262,6 +262,7 @@ def test_excluded_directories_are_not_units(tree):
     small, large = sync.build_hash_sidecar_directory_list(str(tree), excludes = ["Games/Extra"])
 
     assert os.path.join(str(tree), "Games", "Extra") not in [d["path"] for d in small]
+    assert large == []
 
 
 def test_a_directory_over_a_threshold_is_large(tree):
@@ -276,6 +277,7 @@ def test_a_directory_over_the_size_threshold_is_large(tree):
     small, large = sync.build_hash_sidecar_directory_list(str(tree), large_total_size = 3)
 
     assert [d["files"] for d in large] == [["game.zip"]]
+    assert len(small) == 2
 
 
 @pytest.mark.parametrize("path,root,expected", [

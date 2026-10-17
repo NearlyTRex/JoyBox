@@ -132,7 +132,7 @@ def test_an_entry_is_found_by_exact_name(loaded_manifest):
 
 def test_an_entry_is_found_by_a_close_name(loaded_manifest):
     # Names come from store metadata and rarely match exactly.
-    assert loaded_manifest.find_entry_by_name("Chrono Trigger ") is not None
+    assert loaded_manifest.find_entry_by_name("Chrono Trigger ").get_install_dir() == "Chrono Trigger"
 
 
 def test_an_unrelated_name_finds_nothing(loaded_manifest):
@@ -147,7 +147,7 @@ def test_an_entry_is_found_by_steam_id(loaded_manifest):
 
 
 def test_a_steam_id_matches_as_a_string(loaded_manifest):
-    assert loaded_manifest.find_entry_by_steamid("12345") is not None
+    assert loaded_manifest.find_entry_by_steamid("12345").get_install_dir() == "Chrono Trigger"
 
 
 def test_an_unknown_steam_id_finds_nothing(loaded_manifest):
@@ -155,7 +155,7 @@ def test_an_unknown_steam_id_finds_nothing(loaded_manifest):
 
 
 def test_an_entry_is_found_by_gog_id(loaded_manifest):
-    assert loaded_manifest.find_entry_by_gogid(67890) is not None
+    assert loaded_manifest.find_entry_by_gogid(67890).get_install_dir() == "Chrono Trigger"
 
 
 def test_an_unknown_gog_id_finds_nothing(loaded_manifest):
@@ -202,4 +202,7 @@ def test_an_empty_manifest_finds_nothing():
 ###########################################################
 
 def test_the_shared_instance_is_reused():
-    assert manifest.get_manifest_instance() is manifest.get_manifest_instance()
+    first = manifest.get_manifest_instance()
+
+    assert manifest.get_manifest_instance() is first
+    assert manifest.shared_manifest is first

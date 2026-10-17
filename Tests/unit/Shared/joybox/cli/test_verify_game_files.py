@@ -50,6 +50,11 @@ class FakeMetadata:
         FakeMetadata.verified.append(self.metadata_file)
 
 
+def read_json(path):
+    with open(path, "r", encoding = "utf-8") as handle:
+        return json.load(handle)
+
+
 @pytest.fixture
 def library(monkeypatch, tmp_path, isolated_settings):
     json_root = tmp_path / "Json"
@@ -83,7 +88,7 @@ def library(monkeypatch, tmp_path, isolated_settings):
                         lambda category, subcategory: str(metadata_root / (subcategory.val() + ".txt")))
     monkeypatch.setattr(environment, "get_game_hashes_metadata_file",
                         lambda supercategory, category, subcategory: str(hashes_root / (subcategory.val() + ".json")))
-    monkeypatch.setattr(tool_module.hashing, "read_hash_file_json", lambda path: json.loads(open(path).read()))
+    monkeypatch.setattr(tool_module.hashing, "read_hash_file_json", read_json)
 
     def add_game(name, data, stored = ()):
         FakeGameInfo.games[name] = data

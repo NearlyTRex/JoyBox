@@ -5,7 +5,7 @@ import os
 import pytest
 
 # Local imports
-from joybox import decompiler
+from joybox import config, decompiler
 from fakes import RecordingCommand
 
 
@@ -27,7 +27,7 @@ def test_presets_are_registered():
 
 @pytest.mark.parametrize("preset_name", PRESET_NAMES)
 def test_a_preset_is_looked_up_by_name(preset_name):
-    assert decompiler.get_decompiler_preset(preset_name) is not None
+    assert decompiler.get_decompiler_preset(preset_name) is config.decompiler_presets[preset_name]
 
 
 def test_an_unknown_preset_is_not_found():
@@ -41,8 +41,9 @@ def test_an_unknown_preset_is_not_found():
 def test_every_preset_declares_its_project(preset_name):
     preset = decompiler.get_decompiler_preset(preset_name)
 
-    for key in ["repository", "project_dir", "project_name", "description"]:
-        assert preset.get(key), f"{preset_name} has no {key}"
+    missing = [key for key in ["repository", "project_dir", "project_name", "description"] if not preset.get(key)]
+
+    assert not missing, f"{preset_name} has no {missing}"
 
 
 @pytest.mark.parametrize("preset_name", PRESET_NAMES)
@@ -52,8 +53,11 @@ def test_every_preset_declares_scripts(preset_name):
 
 @pytest.mark.parametrize("preset_name", PRESET_NAMES)
 def test_every_script_is_looked_up_by_name(preset_name):
-    for script_name in decompiler.get_preset_script_names(preset_name):
-        assert decompiler.get_preset_script(preset_name, script_name) is not None
+    looked_up = {
+        script_name: decompiler.get_preset_script(preset_name, script_name)
+        for script_name in decompiler.get_preset_script_names(preset_name)}
+
+    assert looked_up == config.decompiler_presets[preset_name]["scripts"]
 
 
 def test_an_unknown_script_is_not_found():
@@ -62,9 +66,11 @@ def test_an_unknown_script_is_not_found():
 
 @pytest.mark.parametrize("preset_name", PRESET_NAMES)
 def test_every_script_declares_a_path(preset_name):
-    for script_name in decompiler.get_preset_script_names(preset_name):
-        script = decompiler.get_preset_script(preset_name, script_name)
-        assert script.get("script_path"), f"{preset_name}.{script_name} has no script_path"
+    missing = [
+        script_name for script_name in decompiler.get_preset_script_names(preset_name)
+        if not decompiler.get_preset_script(preset_name, script_name).get("script_path")]
+
+    assert not missing, f"{preset_name} scripts with no script_path: {missing}"
 
 
 ###########################################################
@@ -94,10 +100,12 @@ def test_the_project_directory_resolves_under_the_repository(repositories, prese
 @pytest.mark.parametrize("preset_name", PRESET_NAMES)
 def test_every_script_path_resolves_under_the_repository(repositories, preset_name):
     resolved = decompiler.resolve_preset_paths(preset_name)
+    outside = [
+        script_name for script_name, script in resolved["scripts"].items()
+        if not script["script_path_abs"].startswith(resolved["repo_path"])]
 
-    for script_name, script in resolved["scripts"].items():
-        assert script["script_path_abs"].startswith(resolved["repo_path"]), \
-            f"{preset_name}.{script_name} resolves outside the repository"
+    assert list(resolved["scripts"]) == decompiler.get_preset_script_names(preset_name)
+    assert not outside, f"{preset_name} scripts resolved outside the repository: {outside}"
 
 
 @pytest.mark.parametrize("preset_name", PRESET_NAMES)
@@ -105,8 +113,7 @@ def test_resolution_keeps_the_original_entries(repositories, preset_name):
     preset = decompiler.get_decompiler_preset(preset_name)
     resolved = decompiler.resolve_preset_paths(preset_name)
 
-    for key in preset:
-        assert key in resolved
+    assert set(preset) <= set(resolved)
 
 
 def test_resolution_does_not_modify_the_stored_preset(repositories):
@@ -130,12 +137,17 @@ def test_resolved_scripts_do_not_modify_the_stored_scripts(repositories):
 
 def test_flag_arguments_are_left_alone(repositories):
     # A "-flag" must not be rewritten into a path.
+    preset = decompiler.get_decompiler_preset(PRESET_NAMES[0])
     resolved = decompiler.resolve_preset_paths(PRESET_NAMES[0])
+    flags = [
+        argument for script in preset["scripts"].values()
+        for argument in script.get("default_args", []) if argument.startswith("-")]
+    resolved_flags = [
+        argument for script in resolved["scripts"].values()
+        for argument in script.get("default_args_abs", []) if argument.startswith("-")]
 
-    for script in resolved["scripts"].values():
-        for argument in script.get("default_args_abs", []):
-            if argument.startswith("-"):
-                assert not argument.startswith("/repos")
+    assert flags
+    assert resolved_flags == flags
 
 
 ###########################################################
@@ -155,9 +167,10 @@ def test_every_preset_is_listed_with_a_description():
 def test_every_script_is_listed_with_a_description(preset_name):
     listed = decompiler.list_preset_scripts(preset_name)
 
-    assert len(listed) == len(decompiler.get_preset_script_names(preset_name))
-    for name, description in listed:
-        assert description
+    undescribed = [name for name, description in listed if not description]
+
+    assert [name for name, _ in listed] == decompiler.get_preset_script_names(preset_name)
+    assert not undescribed, undescribed
 
 
 def test_a_script_of_an_unknown_preset_is_not_found():

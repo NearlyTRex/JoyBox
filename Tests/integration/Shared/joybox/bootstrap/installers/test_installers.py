@@ -2,7 +2,6 @@
 import base64
 import importlib
 import re
-import shutil
 import subprocess
 
 # Third-party imports
@@ -10,6 +9,8 @@ import pytest
 
 # Local imports
 import joybox.bootstrap.installers as installers
+
+
 ###########################################################
 # Generated artifacts, validated by the real tools
 #
@@ -39,9 +40,6 @@ REQUIRED_SETTINGS = [
     ("UserData.Kanboard", "kanboard_admin_pass", "adminpass"),
     ("UserData.Backup", "backup_root", "/mnt/storage/Backups"),
 ]
-
-docker_available = shutil.which("docker") is not None
-
 
 @pytest.fixture
 def populated_settings(isolated_settings):
@@ -75,8 +73,7 @@ def nginx_template_for(app_name, installer):
 ###########################################################
 
 @pytest.mark.parametrize("app_name", DOCKER_APPS)
-@pytest.mark.skipif(not docker_available, reason = "docker is not installed")
-@pytest.mark.requires_docker
+@pytest.mark.requires_binary("docker")
 @pytest.mark.slow
 def test_compose_template_is_valid(app_name, populated_settings, recording_connection, tmp_path):
     installer = build_installer(app_name, recording_connection)
@@ -98,8 +95,7 @@ def test_compose_template_is_valid(app_name, populated_settings, recording_conne
 
 
 @pytest.mark.parametrize("app_name", DOCKER_APPS)
-@pytest.mark.skipif(not docker_available, reason = "docker is not installed")
-@pytest.mark.requires_docker
+@pytest.mark.requires_binary("docker")
 @pytest.mark.slow
 def test_compose_publishes_only_on_loopback(app_name, populated_settings, recording_connection, tmp_path):
     # Docker's resolved view, so an env var expanding to a bare port cannot pass.
@@ -132,6 +128,7 @@ def test_compose_publishes_only_on_loopback(app_name, populated_settings, record
 ###########################################################
 
 @pytest.mark.parametrize("app_name", DOCKER_APPS)
+@pytest.mark.requires_binary("bash")
 def test_backup_script_parses(app_name, populated_settings, recording_connection, tmp_path):
     installer = build_installer(app_name, recording_connection)
     if not installer.has_backup_items():
@@ -145,6 +142,7 @@ def test_backup_script_parses(app_name, populated_settings, recording_connection
 
 
 @pytest.mark.parametrize("app_name", DOCKER_APPS)
+@pytest.mark.requires_binary("bash")
 def test_restore_script_parses(app_name, populated_settings, recording_connection, tmp_path):
     installer = build_installer(app_name, recording_connection)
     if not installer.has_backup_items():
@@ -158,6 +156,7 @@ def test_restore_script_parses(app_name, populated_settings, recording_connectio
 
 
 @pytest.mark.parametrize("app_name", DOCKER_APPS)
+@pytest.mark.requires_binary("bash")
 def test_encrypted_backup_script_parses(app_name, populated_settings, recording_connection, tmp_path):
     # The age step sits inside a docker exec pipe, the most quoting-sensitive line.
     populated_settings.set_value("UserData.Backup", "backup_age_recipient", "age1example")
