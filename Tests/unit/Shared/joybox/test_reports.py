@@ -33,6 +33,7 @@ def test_a_list_at_the_limit_is_not_trimmed():
     summarized, total, trimmed = summarize(20)
 
     assert summarized == list(range(20))
+    assert total == 20
     assert trimmed is False
 
 
@@ -65,6 +66,7 @@ def test_a_tuple_is_accepted():
 
     assert summarized == [0, 1, 2]
     assert total == 3
+    assert trimmed is False
 
 
 ###########################################################
@@ -111,6 +113,7 @@ def test_one_item_over_the_limit_is_still_trimmed():
     summarized, total, trimmed = summarize(21)
 
     assert trimmed is True
+    assert total == 21
     assert summarized[10] == "... (1 more items) ..."
 
 
@@ -136,6 +139,7 @@ def test_a_limit_below_two_shows_no_items(max_display):
     summarized, total, trimmed = reports.get_summarized_list(items, max_display)
 
     assert trimmed is True
+    assert total == 10
     assert summarized == ["... (10 more items) ..."]
 
 

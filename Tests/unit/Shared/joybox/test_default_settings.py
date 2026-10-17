@@ -52,9 +52,9 @@ def test_windows_defaults_hold_no_unix_home_paths(monkeypatch):
     # Absolute unix paths remain for server-side and remote settings
     defaults = load_defaults_for(monkeypatch, windows = True, linux = False)
 
-    for section, values in defaults.items():
-        for key, value in values.items():
-            assert "$HOME" not in value, (section, key)
+    home_paths = [(section, key) for section, values in defaults.items() for key, value in values.items() if "$HOME" in value]
+
+    assert not home_paths, home_paths
 
 
 def test_linux_defaults_use_unix_paths_and_tools(monkeypatch):
@@ -98,8 +98,9 @@ def test_every_default_section_is_written(tmp_path):
     default_settings.create_default_config_file(path)
 
     contents = read(path)
-    for section in default_settings.ini_defaults:
-        assert "[%s]" % section in contents
+    missing = [section for section in default_settings.ini_defaults if "[%s]" % section not in contents]
+
+    assert not missing, missing
 
 
 def test_only_the_named_sections_are_written(tmp_path):

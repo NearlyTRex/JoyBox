@@ -1,12 +1,12 @@
 # Imports
 import os
 import pty
-import fcntl
-import termios
 import subprocess
 
 # Third-party imports
 import pytest
+
+pytestmark = pytest.mark.requires_binary("bash", "unshare", "setsid")
 
 
 ###########################################################
@@ -26,7 +26,7 @@ FAKE_COMMANDS = {
 
 
 @pytest.fixture
-def installer(tmp_path, repo_root, traced_env):
+def installer(tmp_path, repo_root, shell_traced_env):
     bin_dir = tmp_path / "bin"
     bin_dir.mkdir()
     for name, body in FAKE_COMMANDS.items():
@@ -39,7 +39,7 @@ def installer(tmp_path, repo_root, traced_env):
     args_file = tmp_path / "bootstrap-args"
 
     def run(*args, with_terminal = False, exit_code = 0):
-        environment = traced_env(dict(os.environ,
+        environment = shell_traced_env(dict(os.environ,
             PATH = "%s:/usr/bin:/bin" % bin_dir,
             JOYBOX_DIR = str(checkout),
             JOYBOX_TEST_ARGS = str(args_file),
@@ -56,26 +56,22 @@ def installer(tmp_path, repo_root, traced_env):
     return run
 
 
-# Give the script a controlling terminal of its own, as a user's shell would
+# Give the script a controlling terminal of its own, as a user's shell would:
+# setsid starts a new session and takes the pty on stdin as its terminal
 def run_on_terminal(command, environment):
     leader, follower = pty.openpty()
-
-    def take_terminal():
-        fcntl.ioctl(0, termios.TIOCSCTTY, 0)
-
     try:
-        process = subprocess.Popen(command, env = environment, stdin = follower,
-            stdout = follower, stderr = follower, start_new_session = True,
-            preexec_fn = take_terminal)
-        os.close(follower)
-        follower = None
-        while True:
-            try:
-                if not os.read(leader, 4096):
+        with subprocess.Popen(["setsid", "--ctty", "--wait"] + command, env = environment, stdin = follower,
+                              stdout = follower, stderr = follower) as process:
+            os.close(follower)
+            follower = None
+            while True:
+                try:
+                    if not os.read(leader, 4096):
+                        break
+                except OSError:
                     break
-            except OSError:
-                break
-        process.wait(timeout = 30)
+            process.wait(timeout = 30)
         return process
     finally:
         if follower is not None:
@@ -97,6 +93,7 @@ def test_without_a_terminal_it_installs_everything(installer):
 
     assert code == 0
     assert passed == ["bootstrap.py", "-a", "setup", "-t", "local_ubuntu"]
+    assert not on_tty
 
 
 def test_given_arguments_are_passed_through_unchanged(installer):
@@ -104,12 +101,14 @@ def test_given_arguments_are_passed_through_unchanged(installer):
 
     assert code == 0
     assert passed == ["bootstrap.py", "-a", "status", "-t", "local_ubuntu"]
+    assert on_tty
 
 
 def test_a_failed_bootstrap_fails_the_installer(installer):
-    code, passed, on_tty = installer(exit_code = 1)
+    code, passed, _ = installer(exit_code = 1)
 
     assert code != 0
+    assert passed == ["bootstrap.py", "-a", "setup", "-t", "local_ubuntu"]
 
 
 ###########################################################
@@ -122,7 +121,7 @@ def test_a_failed_bootstrap_fails_the_installer(installer):
 CHECKOUT = "/root/Repositories/JoyBox"
 
 # A git whose HEAD moves on pull; a command named in $GIT_FAILS fails
-FAKE_GIT = r"""for word in fetch checkout pull clone; do
+FAKE_GIT = r"""for word in fetch checkout pull clone rev-parse; do
     case " $* " in *" $word "*) case " ${GIT_FAILS:-} " in *" $word "*) exit 1 ;; esac ;; esac
 done
 case " $* " in
@@ -189,14 +188,17 @@ def test_a_user_without_sudo_cannot_install(bare):
 
 def test_every_missing_prerequisite_is_installed(bare):
     remove_command(bare, "python3")
+    os.rename(os.path.join(bare.stub_dir, "git"), os.path.join(bare.stub_dir, ".git.pending"))
     bare.stub("dpkg", code = 1)
-    # bootstrap.py still has to run once the packages are in
-    bare.stub("apt-get", script = 'printf "#!/bin/bash\\n" > "${0%/*}/python3"; chmod +x "${0%/*}/python3"\n')
+    # git and bootstrap.py still have to run once the packages are in
+    bare.stub("apt-get", script = (
+        'mv "${0%/*}/.git.pending" "${0%/*}/git" 2>/dev/null || true\n'
+        'printf "#!/bin/bash\\n" > "${0%/*}/python3"; chmod +x "${0%/*}/python3"\n'))
 
     result = install_on(bare)
 
     assert result.returncode == 0, result.stdout + result.stderr
-    assert bare.ran("apt-get", "install", "-y", "python3", "python3-venv")
+    assert bare.ran("apt-get", "install", "-y", "git", "python3", "python3-venv")
 
 
 def test_present_prerequisites_are_not_reinstalled(bare):
@@ -217,6 +219,13 @@ def test_an_up_to_date_checkout_says_so(bare):
     result = install_on(bare)
 
     assert "Already up to date (abc123)" in result.stdout
+
+
+def test_a_checkout_without_a_readable_head_still_updates(bare):
+    result = install_on(bare, GIT_FAILS = "rev-parse")
+
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert "Already up to date (?)" in result.stdout
 
 
 @pytest.mark.parametrize("failing, warning", [

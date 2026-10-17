@@ -20,11 +20,11 @@ def on_windows(isolated_settings, monkeypatch):
     isolated_settings.set_value("Tools.WinGet", "winget_install_dir", "C:/WindowsApps")
 
 
-def make(isolated_settings, monkeypatch, packages = PACKAGES, **kwargs):
+def make(isolated_settings, monkeypatch, packages = None, **kwargs):
     on_windows(isolated_settings, monkeypatch)
     connection = RecordingConnection(**kwargs)
     winget = installers.WinGet(connection)
-    winget.get_packages = lambda: list(packages)
+    winget.get_packages = lambda: list(PACKAGES if packages is None else packages)
     return winget, connection
 
 

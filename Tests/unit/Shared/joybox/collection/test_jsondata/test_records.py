@@ -8,6 +8,7 @@ import pytest
 # Local imports
 from joybox import config
 from joybox.collection import jsondata
+from file_helpers import write
 
 
 ###########################################################
@@ -47,7 +48,7 @@ def json_file(json_root, name = GAME):
 
 
 def read_json(path):
-    with open(str(path)) as handle:
+    with open(str(path), encoding = "utf-8") as handle:
         return json.load(handle)
 
 
@@ -72,9 +73,10 @@ def test_a_supercategory_without_games_keeps_none():
                           config.Supercategory.DLC,
                           config.Supercategory.UPDATES)
     ]
+    possible = [supercategory for supercategory in others if jsondata.are_game_json_file_possible(supercategory) is not False]
 
-    for supercategory in others:
-        assert jsondata.are_game_json_file_possible(supercategory) is False
+    assert others
+    assert not possible, possible
 
 
 ###########################################################
@@ -236,14 +238,6 @@ def no_store(monkeypatch):
     # under test here.
     monkeypatch.setattr(
         jsondata.stores, "get_store_by_platform", lambda **kwargs: None)
-
-
-def write(path, contents = "data"):
-    path = str(path)
-    os.makedirs(os.path.dirname(path), exist_ok = True)
-    with open(path, "w") as handle:
-        handle.write(contents)
-    return path
 
 
 def update(json_root, game_root):

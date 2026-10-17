@@ -1,6 +1,9 @@
 # Imports
 import getpass
 
+# Third-party imports
+import pytest
+
 # Local imports
 from joybox import sandbox
 from sandbox_helpers import WINE, SANDBOXIE, NEITHER
@@ -48,9 +51,11 @@ def test_a_sandboxie_drive_has_no_colon():
     assert ":" not in sandbox.get_real_drive_path(SANDBOXIE(), "d")
 
 
-def test_the_c_drive_shortcut_matches_the_general_lookup():
-    for entry in [WINE(), SANDBOXIE()]:
-        assert sandbox.get_real_c_drive_path(entry) == sandbox.get_real_drive_path(entry, "c")
+@pytest.mark.parametrize("prefix", [WINE, SANDBOXIE], ids = ["wine", "sandboxie"])
+def test_the_c_drive_shortcut_matches_the_general_lookup(prefix):
+    entry = prefix()
+
+    assert sandbox.get_real_c_drive_path(entry) == sandbox.get_real_drive_path(entry, "c")
 
 
 def test_a_non_prefix_has_no_drive_path():
@@ -99,9 +104,11 @@ def test_a_non_prefix_has_no_public_profile():
     assert sandbox.get_public_profile_path(NEITHER()) is None
 
 
-def test_the_public_and_user_profiles_are_distinct():
-    for entry in [WINE(), SANDBOXIE()]:
-        assert sandbox.get_public_profile_path(entry) != sandbox.get_user_profile_path(entry)
+@pytest.mark.parametrize("prefix", [WINE, SANDBOXIE], ids = ["wine", "sandboxie"])
+def test_the_public_and_user_profiles_are_distinct(prefix):
+    entry = prefix()
+
+    assert sandbox.get_public_profile_path(entry) != sandbox.get_user_profile_path(entry)
 
 
 ###########################################################

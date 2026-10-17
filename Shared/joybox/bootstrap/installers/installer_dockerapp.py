@@ -392,7 +392,7 @@ fi
             if not os.path.exists(identity_local):
                 logger.log_error(f"backup_age_identity points at a missing file: {identity_local}")
                 return False
-            with open(identity_local, "r") as identity_file:
+            with open(identity_local, "r", encoding = "utf-8") as identity_file:
                 identity_contents = identity_file.read()
             identity_remote = f"/dev/shm/joybox_age_{self.app_name}.key"
             if not self.connection.write_file(identity_remote, identity_contents):

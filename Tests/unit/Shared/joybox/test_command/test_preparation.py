@@ -157,7 +157,7 @@ def test_appimage_handling_can_be_forced(tmp_path):
 
     _, new_options = command.preprocess_command([str(target)], options = options)
 
-    assert new_options.get_env_var("XDG_CONFIG_HOME") is not None
+    assert new_options.get_env_var("XDG_CONFIG_HOME") == os.path.join(os.path.realpath(str(target) + ".home"), ".config")
 
 
 def test_a_prefix_command_is_routed_through_the_sandbox(monkeypatch):
@@ -176,14 +176,15 @@ def test_a_prefix_command_is_routed_through_the_sandbox(monkeypatch):
 
 
 def test_a_native_command_is_not_routed_through_the_sandbox(monkeypatch):
-    def fail(*args, **kwargs):
-        raise AssertionError("a native command needs no prefix")
-
+    prefixed = []
     monkeypatch.setattr(command.sandbox, "should_be_run_via_wine", lambda cmd: False)
     monkeypatch.setattr(command.sandbox, "should_be_run_via_sandboxie", lambda cmd: False)
-    monkeypatch.setattr(command, "setup_prefix_command", fail)
+    monkeypatch.setattr(command, "setup_prefix_command", lambda cmd, options, **kwargs: prefixed.append(cmd))
 
-    command.preprocess_command(["/usr/bin/true"])
+    new_cmd, _ = command.preprocess_command(["/usr/bin/true"])
+
+    assert new_cmd == ["/usr/bin/true"]
+    assert prefixed == []
 
 
 def test_preprocessing_passes_the_run_flags_to_the_prefix_setup(monkeypatch):
@@ -325,15 +326,15 @@ def test_a_sandboxie_command_is_cleaned_up_afterwards(monkeypatch):
 
 
 def test_a_native_command_needs_no_cleanup(monkeypatch):
-    def fail(**kwargs):
-        raise AssertionError("a native command was never sandboxed")
-
+    cleaned = []
     monkeypatch.setattr(command.sandbox, "should_be_run_via_wine", lambda cmd: False)
     monkeypatch.setattr(command.sandbox, "should_be_run_via_sandboxie", lambda cmd: False)
-    monkeypatch.setattr(command.sandbox, "cleanup_wine", fail)
-    monkeypatch.setattr(command.sandbox, "cleanup_sandboxie", fail)
+    monkeypatch.setattr(command.sandbox, "cleanup_wine", lambda **kwargs: cleaned.append("wine"))
+    monkeypatch.setattr(command.sandbox, "cleanup_sandboxie", lambda **kwargs: cleaned.append("sandboxie"))
 
     command.postprocess_command(["/usr/bin/true"])
+
+    assert cleaned == []
 
 
 def test_every_output_path_is_transferred_out_of_the_sandbox(monkeypatch):
@@ -353,15 +354,17 @@ def test_every_output_path_is_transferred_out_of_the_sandbox(monkeypatch):
 
 
 def test_output_paths_that_are_not_a_list_are_ignored(monkeypatch):
-    def fail(**kwargs):
-        raise AssertionError("nothing to transfer")
-
+    transferred = []
     monkeypatch.setattr(command.sandbox, "should_be_run_via_wine", lambda cmd: False)
     monkeypatch.setattr(command.sandbox, "should_be_run_via_sandboxie", lambda cmd: False)
-    monkeypatch.setattr(command.sandbox, "transfer_from_sandbox", fail)
+    monkeypatch.setattr(
+        command.sandbox, "transfer_from_sandbox",
+        lambda path, **kwargs: transferred.append(path))
     options = command.create_command_options(output_paths = "/out/one")
 
     command.postprocess_command(["/games/Game.exe"], options = options)
+
+    assert transferred == []
 
 
 def test_postprocessing_passes_the_run_flags_to_every_step(monkeypatch):

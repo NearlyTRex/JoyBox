@@ -1,6 +1,8 @@
 # Third-party imports
 import pytest
 
+pytestmark = pytest.mark.requires_binary("bash", "unshare")
+
 
 ###########################################################
 # JoyBox aliases

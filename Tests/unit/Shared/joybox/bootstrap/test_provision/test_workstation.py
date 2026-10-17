@@ -100,7 +100,7 @@ def test_scripts_are_not_shipped_without_a_directory(entry):
 
 def test_a_failed_copy_stops_the_shipping(entry):
     class Refusing(RecordingConnection):
-        def transfer_files(self, src, dest, excludes = [], sudo = False):
+        def transfer_files(self, src, dest, excludes = None, sudo = False):
             super().transfer_files(src, dest, excludes = excludes, sudo = sudo)
             return False
     connection = Refusing()

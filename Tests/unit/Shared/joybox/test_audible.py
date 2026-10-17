@@ -329,6 +329,7 @@ def test_a_missing_ffmpeg_is_refused(ffmpeg, book, exit_on_failure):
             audible.decrypt_aax_to_m4a(book, activation_bytes = KEY_BYTES, exit_on_failure = True)
     else:
         assert audible.decrypt_aax_to_m4a(book, activation_bytes = KEY_BYTES) is False
+    assert ffmpeg["command"].ran() is False
 
 
 ###########################################################
@@ -391,6 +392,7 @@ def test_an_empty_batch_is_refused(decrypted, exit_on_failure):
             audible.decrypt_aax_files_to_m4a([], exit_on_failure = True)
     else:
         assert audible.decrypt_aax_files_to_m4a([]) is False
+    assert decrypted["calls"] == []
 
 
 @pytest.mark.parametrize("exit_on_failure", [False, True])
@@ -459,3 +461,4 @@ def test_a_missing_directory_is_refused(library, tmp_path, exit_on_failure):
             audible.decrypt_aax_directory(missing, exit_on_failure = True)
     else:
         assert audible.decrypt_aax_directory(missing) is False
+    assert library["batches"] == []

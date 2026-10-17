@@ -67,8 +67,9 @@ def test_identity():
 
 
 def test_every_program_runs_unsandboxed():
-    for entry in computer.Computer().get_config().values():
-        assert entry["run_sandboxed"] == {"windows": False, "linux": False}
+    sandboxing = {name: entry["run_sandboxed"] for name, entry in computer.Computer().get_config().items()}
+
+    assert sandboxing == {name: {"windows": False, "linux": False} for name in PROGRAMS}
 
 
 def test_the_config_files_match_the_configured_paths():
@@ -92,12 +93,12 @@ def test_the_save_type_follows_the_host(monkeypatch, is_windows, save_type):
 
 def test_there_is_no_single_config_or_save_location():
     emulator = computer.Computer()
+    locations = [
+        (emulator.get_config_file(platform), emulator.get_save_base_dir(platform),
+         emulator.get_save_sub_dirs(platform), emulator.get_save_dir(platform))
+        for platform in [None] + PLATFORMS]
 
-    for platform in [None] + PLATFORMS:
-        assert emulator.get_config_file(platform) is None
-        assert emulator.get_save_base_dir(platform) is None
-        assert emulator.get_save_sub_dirs(platform) is None
-        assert emulator.get_save_dir(platform) is None
+    assert locations == [(None, None, None, None)] * (len(PLATFORMS) + 1)
 
 
 ###########################################################
@@ -120,11 +121,14 @@ def test_setup_installs_both_programs_for_each_platform(online):
 
 def test_the_linux_builds_link_their_binary_as_the_apprun(online):
     computer.Computer().setup()
+    linux_calls = online.calls[2:]
+    symlinks = [call["internal_symlinks"] for call in linux_calls]
+    uncopied = [call["install_name"] for call in linux_calls
+                if not any(copy["to"] == "AppImage/" + call["internal_symlinks"][0]["from"]
+                           for copy in call["internal_copies"])]
 
-    for call in online.calls[2:]:
-        (symlink,) = call["internal_symlinks"]
-        assert symlink["to"] == "AppRun"
-        assert any(copy["to"] == "AppImage/" + symlink["from"] for copy in call["internal_copies"])
+    assert [[symlink["to"] for symlink in links] for links in symlinks] == [["AppRun"]] * len(PROGRAMS)
+    assert not uncopied, uncopied
 
 
 def test_setup_passes_the_setup_params_through(online):
@@ -132,9 +136,8 @@ def test_setup_passes_the_setup_params_through(online):
 
     computer.Computer().setup(params)
 
-    for call in online.calls:
-        assert (call["locker_type"], call["verbose"], call["pretend_run"], call["exit_on_failure"]) == (
-            "local", True, True, True)
+    assert [(call["locker_type"], call["verbose"], call["pretend_run"], call["exit_on_failure"])
+            for call in online.calls] == [("local", True, True, True)] * len(PROGRAMS) * len(PLATFORMS)
 
 
 @pytest.mark.parametrize("wanted", PROGRAMS)
@@ -169,8 +172,8 @@ def test_setup_offline_restores_both_programs_for_each_platform(stored):
 def test_setup_offline_passes_the_setup_params_through(stored):
     computer.Computer().setup_offline(config.SetupParams(verbose = True, pretend_run = True, exit_on_failure = True))
 
-    for call in stored.calls:
-        assert (call["verbose"], call["pretend_run"], call["exit_on_failure"]) == (True, True, True)
+    assert [(call["verbose"], call["pretend_run"], call["exit_on_failure"])
+            for call in stored.calls] == [(True, True, True)] * len(PROGRAMS) * len(PLATFORMS)
 
 
 def test_setup_offline_skips_programs_that_are_not_wanted(stored, program_paths):
@@ -225,8 +228,8 @@ def test_the_win31_config_keeps_the_dosbox_section_first(touched):
 def test_configure_passes_the_setup_params_through(touched):
     computer.Computer().configure(config.SetupParams(verbose = True, pretend_run = True, exit_on_failure = True))
 
-    for _, _, kwargs in touched["calls"]:
-        assert kwargs == {"verbose": True, "pretend_run": True, "exit_on_failure": True}
+    assert [kwargs for _, _, kwargs in touched["calls"]] == [
+        {"verbose": True, "pretend_run": True, "exit_on_failure": True}] * len(computer.config_files)
 
 
 def test_configure_stops_when_a_config_file_cannot_be_written(touched):

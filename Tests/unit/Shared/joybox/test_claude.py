@@ -153,7 +153,7 @@ def test_an_empty_reply_is_none(client):
 ])
 def test_an_api_error_becomes_a_warning(client, monkeypatch, error, expected):
     warnings = []
-    monkeypatch.setattr(claude.logger, "log_warning", lambda message: warnings.append(message))
+    monkeypatch.setattr(claude.logger, "log_warning", warnings.append)
     client.error = RuntimeError(error)
 
     assert claude.send_message("hello") is None
@@ -232,10 +232,15 @@ def run(tree, **kwargs):
     return claude.process_files(tree["source"], tree["output"], tree["prompt"], **kwargs)
 
 
+def output_text(tree, *parts):
+    with open(os.path.join(tree["output"], *parts), encoding = "utf-8") as handle:
+        return handle.read()
+
+
 def test_every_file_is_written_beside_its_relative_path(tree):
     assert run(tree, verbose = True) == (2, 0, 0)
-    assert open(os.path.join(tree["output"], "a.txt")).read() == "done"
-    assert open(os.path.join(tree["output"], "sub", "b.md")).read() == "done"
+    assert output_text(tree, "a.txt") == "done"
+    assert output_text(tree, "sub", "b.md") == "done"
 
 
 def test_extensions_narrow_the_file_list(tree):
@@ -245,16 +250,16 @@ def test_extensions_narrow_the_file_list(tree):
 
 def test_an_existing_output_is_skipped_when_asked(tree):
     os.makedirs(tree["output"])
-    with open(os.path.join(tree["output"], "a.txt"), "w") as handle:
+    with open(os.path.join(tree["output"], "a.txt"), "w", encoding = "utf-8") as handle:
         handle.write("kept")
 
     assert run(tree, skip_existing = True, verbose = True) == (1, 1, 0)
-    assert open(os.path.join(tree["output"], "a.txt")).read() == "kept"
+    assert output_text(tree, "a.txt") == "kept"
 
 
 def test_an_existing_output_is_skipped_quietly(tree):
     os.makedirs(tree["output"])
-    with open(os.path.join(tree["output"], "a.txt"), "w") as handle:
+    with open(os.path.join(tree["output"], "a.txt"), "w", encoding = "utf-8") as handle:
         handle.write("kept")
 
     assert run(tree, skip_existing = True) == (1, 1, 0)

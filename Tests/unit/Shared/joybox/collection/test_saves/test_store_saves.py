@@ -97,9 +97,11 @@ def test_path_variants_are_resolved_too(tmp_path, store_game, store):
 
 def test_no_entry_keeps_an_unresolved_token(store_game, store):
     # A token the path does not contain must not yield a copy of the raw path.
-    for entry in saves.get_store_path_entries(store_game):
-        assert PROFILE not in entry["full"]
-        assert INSTALL not in entry["full"]
+    entries = saves.get_store_path_entries(store_game)
+    unresolved = [entry["full"] for entry in entries if PROFILE in entry["full"] or INSTALL in entry["full"]]
+
+    assert entries
+    assert not unresolved, unresolved
 
 
 def test_a_token_with_no_location_on_this_machine_yields_nothing(store_game, store):

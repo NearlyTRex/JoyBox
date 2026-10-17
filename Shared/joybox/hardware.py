@@ -56,7 +56,7 @@ def get_drm_gpu_info():
     gpus = []
     for total_path in sorted(glob.glob(DRM_VRAM_TOTAL_GLOB)):
         try:
-            with open(total_path, "r") as handle:
+            with open(total_path, "r", encoding = "utf-8") as handle:
                 total_bytes = int(handle.read().strip())
         except (OSError, ValueError):
             continue
@@ -64,13 +64,13 @@ def get_drm_gpu_info():
             continue
         used_bytes = 0
         try:
-            with open(total_path.replace("mem_info_vram_total", "mem_info_vram_used"), "r") as handle:
+            with open(total_path.replace("mem_info_vram_total", "mem_info_vram_used"), "r", encoding = "utf-8") as handle:
                 used_bytes = int(handle.read().strip())
         except (OSError, ValueError):
             used_bytes = 0
         vendor = ""
         try:
-            with open(total_path.replace("mem_info_vram_total", "vendor"), "r") as handle:
+            with open(total_path.replace("mem_info_vram_total", "vendor"), "r", encoding = "utf-8") as handle:
                 vendor = handle.read().strip()
         except OSError:
             vendor = ""
@@ -179,7 +179,7 @@ MEMINFO_PATH = "/proc/meminfo"
 # Get one /proc/meminfo field in MB, or 0 if it cannot be read
 def get_meminfo_mb(field):
     try:
-        with open(MEMINFO_PATH, "r") as f:
+        with open(MEMINFO_PATH, "r", encoding = "utf-8") as f:
             for line in f:
                 if line.startswith(field + ":"):
                     return int(line.split()[1]) // 1024

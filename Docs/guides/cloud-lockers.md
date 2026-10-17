@@ -11,20 +11,29 @@ Lockers are the storage targets JoyBox backs up to:
 
 Configuration is read from `~/JoyBox.ini`.
 
-## Step 1 — create the rclone remote
+## Step 1 — keep each remote's credentials in 1Password
 
-A locker is backed by a normal rclone remote; JoyBox calls rclone under the hood.
+A locker is backed by an rclone remote, but there is no `rclone config` step: JoyBox defines
+each remote from the locker's settings when it runs rclone, and hands it over in the environment
+of that one command (`RCLONE_CONFIG_<NAME>_<OPTION>`). No credential is written to
+`rclone.conf`, which only holds a note, or appears on a command line.
 
-```bash
-rclone config        # add an SFTP remote for Hetzner, a Drive remote for Gdrive, etc.
-```
+The remote's options go in `locker_<name>_config` as a JSON object, kept in 1Password as a
+[secret reference](../reference/secrets.md):
 
-For **Hetzner / any SFTP** remote, add this to the rclone remote config — SFTP shells have no
-usable `md5sum`, so without it transfers fail with false "corrupted on transfer" errors:
+- **Hetzner / any SFTP** — `{"host": "u123456.your-storagebox.de", "user": "u123456", "pass": "..."}`.
+  The password may be plain or already obscured with `rclone obscure`; JoyBox obscures a plain one
+  the way `rclone config create` would. `shell_type = unix` and `disable_hashcheck = true` are
+  added for you: SFTP shells have no usable `md5sum`, so without it transfers fail with false
+  "corrupted on transfer" errors.
+- **Google Drive** — a [service account](https://rclone.org/drive/#service-account-support), so
+  there is no OAuth token for rclone to refresh and store:
+  `{"service_account_credentials": { ...the key JSON... }, "root_folder_id": "<locker folder id>"}`.
+  Create the service account in Google Cloud, download its JSON key, and share the locker folder
+  with the account's email address. The folder id is the last part of the folder's URL.
 
-```ini
-disable_hashcheck = true
-```
+A remote name is the locker's `_name`, and may use letters, digits and `_` only. Check one
+resolves with `sync_tool -a Init -l <locker>`.
 
 > **Important:** JoyBox does its **own** encryption (the `cryption` module) for encrypted
 > lockers — it is *not* rclone crypt. The rclone remote stays plain; encrypted lockers must go
@@ -40,7 +49,8 @@ lowercased locker type (`hetzner`, `gdrive`, `external`).
 [UserData.Share]
 # --- Hetzner: full encrypted backup over SFTP ---
 locker_hetzner_type          = SFTP            ; SFTP | Drive | WebDAV | B2
-locker_hetzner_name          = HetznerBox      ; the rclone remote name from step 1
+locker_hetzner_name          = HetznerBox      ; the rclone remote name
+locker_hetzner_config        = op://Private/JoyBox/locker_hetzner_config
 locker_hetzner_remote_path   = JoyBox          ; path within the remote
 locker_hetzner_encrypted     = true            ; JoyBox-side encryption on this locker
 ; locker_hetzner_excluded_dirs = .recycle_bin/**, *.tmp
@@ -50,6 +60,7 @@ locker_hetzner_encrypted     = true            ; JoyBox-side encryption on this 
 # --- Gdrive: plaintext, ROMs excluded ---
 locker_gdrive_type           = Drive
 locker_gdrive_name           = GdriveBackup
+locker_gdrive_config         = op://Private/JoyBox/locker_gdrive_config
 locker_gdrive_remote_path    = /JoyBox
 locker_gdrive_encrypted      = false
 locker_gdrive_excluded_dirs  = Gaming/Roms/**, Gaming/DLC/**, Gaming/Updates/**

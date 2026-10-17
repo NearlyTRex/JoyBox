@@ -114,6 +114,9 @@ include = ["joybox*"]
 [tool.coverage.run]
 branch = true
 source = ["Shared"]
+# The tests run in pytest-xdist workers, each writing its own data file
+parallel = true
+patch = ["subprocess"]
 
 [tool.coverage.report]
 skip_covered = true

@@ -423,47 +423,47 @@ def test_pretending_does_not_change_the_windows_path():
 ###########################################################
 
 def test_a_path_is_exported_into_the_profile():
-    conn = ScriptedConnection()
-    conn.existing.add("~/.bashrc")
-    conn.files["~/.bashrc"] = "# existing\n"
+    conn = HomedConnection()
+    conn.existing.add("/home/deploy/.bashrc")
+    conn.files["/home/deploy/.bashrc"] = "# existing\n"
     conn.add_to_unix_path("/opt/tool/bin")
 
-    assert 'export PATH="/opt/tool/bin:$PATH"' in conn.files["~/.bashrc"]
+    assert 'export PATH="/opt/tool/bin:$PATH"' in conn.files["/home/deploy/.bashrc"]
 
 
 def test_shell_specials_in_an_exported_path_are_escaped():
-    conn = ScriptedConnection()
+    conn = HomedConnection()
     conn.add_to_unix_path('/opt/$odd"`dir\\')
 
-    assert 'export PATH="/opt/\\$odd\\"\\`dir\\\\:$PATH"' in conn.files["~/.bash_profile"]
+    assert 'export PATH="/opt/\\$odd\\"\\`dir\\\\:$PATH"' in conn.files["/home/deploy/.bash_profile"]
 
 
 def test_the_existing_profile_content_is_kept():
-    conn = ScriptedConnection()
-    conn.existing.add("~/.bashrc")
-    conn.files["~/.bashrc"] = "# existing\n"
+    conn = HomedConnection()
+    conn.existing.add("/home/deploy/.bashrc")
+    conn.files["/home/deploy/.bashrc"] = "# existing\n"
     conn.add_to_unix_path("/opt/tool/bin")
 
-    assert "# existing" in conn.files["~/.bashrc"]
+    assert "# existing" in conn.files["/home/deploy/.bashrc"]
 
 
 def test_an_already_exported_path_is_not_added_again():
-    conn = ScriptedConnection()
-    conn.existing.add("~/.bashrc")
-    conn.files["~/.bashrc"] = 'export PATH="/opt/tool/bin:$PATH"\n'
+    conn = HomedConnection()
+    conn.existing.add("/home/deploy/.bashrc")
+    conn.files["/home/deploy/.bashrc"] = 'export PATH="/opt/tool/bin:$PATH"\n'
     conn.add_to_unix_path("/opt/tool/bin")
 
-    assert conn.files["~/.bashrc"].count("/opt/tool/bin") == 1
+    assert conn.files["/home/deploy/.bashrc"].count("/opt/tool/bin") == 1
 
 
 def test_the_first_existing_profile_is_chosen():
     # The candidates are ordered by precedence at login.
-    conn = ScriptedConnection()
-    conn.existing.update(["~/.bashrc", "~/.zshrc"])
+    conn = HomedConnection()
+    conn.existing.update(["/home/deploy/.bashrc", "/home/deploy/.zshrc"])
     conn.add_to_unix_path("/opt/tool/bin")
 
-    assert "~/.bashrc" in conn.files
-    assert "~/.zshrc" not in conn.files
+    assert "/home/deploy/.bashrc" in conn.files
+    assert "/home/deploy/.zshrc" not in conn.files
 
 
 def test_pretending_does_not_change_the_profile():
@@ -679,11 +679,11 @@ def test_the_fallback_profile_is_also_resolved():
     assert list(conn.files) == ["/home/deploy/.bash_profile"]
 
 
-def test_an_unknown_home_still_falls_back_to_a_candidate():
-    conn = ScriptedConnection()
-    conn.add_to_unix_path("/opt/tool/bin")
+def test_an_unknown_home_is_refused_rather_than_written_as_a_literal_tilde():
+    conn = ScriptedConnection(flags = runoptions.RunFlags(exit_on_failure = False))
 
-    assert list(conn.files) == ["~/.bash_profile"]
+    assert conn.add_to_unix_path("/opt/tool/bin") is False
+    assert conn.files == {}
 
 
 ###########################################################

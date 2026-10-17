@@ -3,7 +3,7 @@ import os
 
 # Local imports
 from joybox import paths
-from paths_helpers import write
+from file_helpers import write
 
 
 def make_tree(root):
@@ -151,14 +151,14 @@ def test_leaf_directories_split_by_thresholds(tmp_path):
     write(tmp_path / "many" / "f2")
     write(tmp_path / "many" / "f3")
     write(tmp_path / "small" / "f1")
-    small, large = paths.build_leaf_directory_list(str(tmp_path), large_file_count = 2, large_total_size = 50)
+    small, large = paths.split_leaf_directory_list(str(tmp_path), large_file_count = 2, large_total_size = 50)
     assert [leaf["path"] for leaf in small] == [str(tmp_path / "small")]
     assert sorted(leaf["path"] for leaf in large) == [str(tmp_path / "big"), str(tmp_path / "many")]
 
 
 def test_leaf_directories_of_a_missing_root(tmp_path):
     assert paths.build_leaf_directory_list(str(tmp_path / "missing")) == []
-    assert paths.build_leaf_directory_list(str(tmp_path / "missing"), large_file_count = 1) == ([], [])
+    assert paths.split_leaf_directory_list(str(tmp_path / "missing"), large_file_count = 1) == ([], [])
 
 
 ###########################################################

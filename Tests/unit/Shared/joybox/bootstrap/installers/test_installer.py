@@ -62,9 +62,9 @@ def test_the_app_directory_is_built_from_the_home():
 
 def test_every_environment_is_supported_by_default():
     base, _ = build()
+    unsupported = [environment for environment in constants.EnvironmentType if base.supports_environment(environment) is not True]
 
-    for environment in constants.EnvironmentType:
-        assert base.supports_environment(environment) is True
+    assert not unsupported, unsupported
 
 
 def test_an_unsupported_environment_is_rejected():

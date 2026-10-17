@@ -11,18 +11,22 @@ permissions: {}
 jobs:
   check:
     name: Check
-    uses: NearlyTRex/Workflows/.github/workflows/python-ci.yml@4fe68c91984dd09dea6988fd603b128bc3f44ff7 # v0.2.9
+    uses: NearlyTRex/Workflows/.github/workflows/python-ci.yml@a1a89468956df5ae1713b94579fec1defc4360a1 # v0.2.16
     permissions:
       contents: read
     # The same inputs as the python job in ci.yml
     with:
-      test-command: pytest -q -c Tests/pytest.ini Tests/unit
+      test-command: pytest -q -c Tests/pytest.ini --rootdir=. -n auto --dist loadfile Tests/unit
       coverage-fail-under: "100"
+      shell-coverage-source: Bootstrap install.sh
+      shell-coverage-fail-under: "100"
+      shell-coverage-branch: true
+      shell-sandbox: true
 
   release:
     name: Release
     needs: check
-    uses: NearlyTRex/Workflows/.github/workflows/release.yml@4fe68c91984dd09dea6988fd603b128bc3f44ff7 # v0.2.9
+    uses: NearlyTRex/Workflows/.github/workflows/release.yml@a1a89468956df5ae1713b94579fec1defc4360a1 # v0.2.16
     permissions:
       contents: write
     with:

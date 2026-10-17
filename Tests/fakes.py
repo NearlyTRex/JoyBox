@@ -131,9 +131,15 @@ class RecordingConnection(connection.Connection):
         self._record_command("run_interactive", cmd, sudo)
         return self._lookup(self.return_codes, cmd, 0)
 
+    # As the real connections do: nothing to check on success, and a failure
+    # never returns, it raises when asked to or ends the program
     def run_checked(self, cmd, sudo = False, throw_exception = False):
         self._record_command("run_checked", cmd, sudo)
-        return self._lookup(self.return_codes, cmd, 0) == 0
+        code = self._lookup(self.return_codes, cmd, 0)
+        if code != 0:
+            if throw_exception:
+                raise ValueError("Unable to run command: %s" % cmd)
+            raise SystemExit(code)
 
     ###########################################################
     # Filesystem
@@ -178,8 +184,8 @@ class RecordingConnection(connection.Connection):
         self._record("does_file_or_directory_exist", src)
         return src in self.existing_paths
 
-    def transfer_files(self, src, dest, excludes = [], sudo = False):
-        self._record("transfer_files", src, dest, excludes = excludes, sudo = sudo)
+    def transfer_files(self, src, dest, excludes = None, sudo = False):
+        self._record("transfer_files", src, dest, excludes = [] if excludes is None else excludes, sudo = sudo)
         return True
 
     def read_file(self, src, sudo = False):

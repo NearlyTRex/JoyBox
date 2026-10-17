@@ -216,6 +216,7 @@ def test_no_server_index_means_this_machine(server):
     connection = serverinfo.get_connection()
 
     assert isinstance(connection, ConnectionLocal)
+    assert not isinstance(connection, ConnectionSSH)
 
 
 def test_a_server_index_means_ssh(server):

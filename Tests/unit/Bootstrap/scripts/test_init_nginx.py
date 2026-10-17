@@ -4,6 +4,8 @@ import os
 # Third-party imports
 import pytest
 
+pytestmark = pytest.mark.requires_binary("bash", "unshare")
+
 
 ###########################################################
 # Day-0 web server setup

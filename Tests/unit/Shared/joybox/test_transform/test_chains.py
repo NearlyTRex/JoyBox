@@ -6,6 +6,7 @@ import pytest
 
 # Local imports
 from joybox import config, transform
+from file_helpers import write
 
 
 ###########################################################
@@ -36,14 +37,6 @@ class FakeGameInfo:
 
 # A disc key's shape, 32 hex digits, and plainly not a real one
 FAKE_DISC_KEY = "0" * 32
-
-
-def write(path, contents = "data"):
-    path = str(path)
-    os.makedirs(os.path.dirname(path), exist_ok = True)
-    with open(path, "w") as handle:
-        handle.write(contents)
-    return path
 
 
 ###########################################################
@@ -121,7 +114,7 @@ def test_a_playlist_is_rewritten_to_point_at_the_extracted_discs(extracted_chd, 
 
     assert success is True
     assert result == os.path.join(output, "Game.m3u")
-    with open(result) as handle:
+    with open(result, encoding = "utf-8") as handle:
         assert handle.read().splitlines() == ["Game (Disc 1).iso", "Game (Disc 2).iso"]
 
 
@@ -381,6 +374,7 @@ def test_a_vita_package_keeps_its_licence_as_work_bin(psn_tools, tmp_path):
     success, result = transform.transform_psv_network_package(source, output)
 
     assert success is True
+    assert result == os.path.join(output, config.raw_files_index)
     assert psn_tools["copied"] == [(
         str(tmp_path / "downloads" / "Game.work.bin"),
         os.path.join(output, "work.bin"))]

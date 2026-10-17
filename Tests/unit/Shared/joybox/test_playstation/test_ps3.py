@@ -297,12 +297,11 @@ def test_extracting_can_remove_the_decrypted_copy(decrypted, extracted, key_file
 
 
 def test_extracting_keeps_the_decrypted_copy_by_default(decrypted, extracted, key_file, monkeypatch):
-    def fail(*args, **kwargs):
-        raise AssertionError("nothing may be removed unless deletion was asked for")
+    removed = []
+    monkeypatch.setattr(playstation.fileops, "remove_file", lambda src, **kwargs: removed.append(src))
 
-    monkeypatch.setattr(playstation.fileops, "remove_file", fail)
-
-    playstation.extract_ps3_iso("/in/Game.iso", key_file, extracted)
+    assert playstation.extract_ps3_iso("/in/Game.iso", key_file, extracted) is True
+    assert removed == []
 
 
 ###########################################################

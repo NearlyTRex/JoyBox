@@ -92,7 +92,7 @@ class FakeProcesses:
         monkeypatch.setattr(command.subprocess, "call", call)
         monkeypatch.setattr(command, "postprocess_command", postprocess)
         monkeypatch.setattr(command.process, "wait_for_named_processes", wait_for)
-        monkeypatch.setattr(command.runtime, "sleep_program", lambda seconds: self.slept.append(seconds))
+        monkeypatch.setattr(command.runtime, "sleep_program", self.slept.append)
 
     # The single launched process, failing loudly when there was not exactly one
     def only(self):

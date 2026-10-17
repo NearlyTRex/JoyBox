@@ -33,6 +33,14 @@ if not os.path.realpath(joybox.__file__).startswith(os.path.realpath(SHARED_DIR)
     pytest.exit("joybox is imported from %s, not this checkout; run: pip install -e \"%s[dev]\"" % (
         os.path.dirname(joybox.__file__), REPO_ROOT), returncode = 2)
 
+
+# The shell plugins resolve script paths from the rootdir, which -c would
+# otherwise make Tests/
+def check_rootdir(config):
+    if str(config.rootpath) != REPO_ROOT:
+        pytest.exit("pytest's rootdir is %s, not the repository; pass --rootdir=%s" % (
+            config.rootpath, REPO_ROOT), returncode = 2)
+
 ###########################################################
 # The seal
 #
@@ -117,6 +125,7 @@ def unseal_programs():
 
 def pytest_configure(config):
     import tempfile
+    check_rootdir(config)
     seal_programs()
     scratch = tempfile.mkdtemp(prefix = "joybox-tests-")
     config.joybox_scratch = scratch
@@ -129,15 +138,6 @@ def pytest_configure(config):
     default_settings.create_default_config_file(config_path, include_secret_references = False)
     settings.reset()
     settings.set_settings_file(config_path)
-    configure_shell_tracing(config, scratch)
-
-
-def pytest_addoption(parser):
-    group = parser.getgroup("shell coverage")
-    group.addoption("--shell-cov-report", action = "store_true",
-                    help = "report how much of the shell under Bootstrap/ the tests ran")
-    group.addoption("--shell-cov-fail-under", type = float, default = None,
-                    help = "fail when shell coverage is below this percentage (implies the report)")
 
 
 def pytest_unconfigure(config):
@@ -353,90 +353,42 @@ def recording_command(monkeypatch):
     return RecordingCommand(monkeypatch)
 
 
-def tool_path(name):
+###########################################################
+# Required programs
+#
+# A test that needs a program outside the process says so with a marker, at
+# module (pytestmark), class or test level:
+#
+#     pytestmark = pytest.mark.requires_binary("docker")    # on PATH
+#     @pytest.mark.requires_binary("gpg", "xorriso|mkisofs") # "a|b": either
+#     @pytest.mark.requires_tool("XorrISO")                  # from the JoyBox tool registry
+#
+# Both are enforced while the tests are collected, so a machine without the
+# program skips the test before any of its fixtures start. Tests/unit/meta
+# holds every test file to declaring them this way.
+###########################################################
+
+def find_missing_binaries(names):
+    import shutil
+    return [name for name in names if not any(shutil.which(option) for option in name.split("|"))]
+
+
+def is_tool_installed(name):
     from joybox import programs
     try:
-        if not programs.is_tool_installed(name):
-            return None
-        return programs.get_tool_program(name)
+        return bool(programs.is_tool_installed(name) and programs.get_tool_program(name))
     except Exception:
-        return None
+        return False
 
 
-@pytest.fixture
-def requires_tool(request):
-    for marker in request.node.iter_markers("requires_tool"):
-        for name in marker.args:
-            if not tool_path(name):
-                pytest.skip("%s is not installed" % name)
+def find_missing_tools(names):
+    return [name for name in names if not is_tool_installed(name)]
 
 
-###########################################################
-# Shell coverage
-#
-# Every bash a test starts sources a hook through BASH_ENV that sends its
-# xtrace to a file in the session's trace directory. At the end of the session
-# those traces are measured against the scripts; see joybox.shellcoverage.
-###########################################################
-
-def configure_shell_tracing(config, scratch):
-    from joybox import shellcoverage
-    trace_dir = os.path.join(scratch, "shell-traces")
-    os.makedirs(trace_dir)
-    hook_file = os.path.join(scratch, "shell-trace-hook.sh")
-    with open(hook_file, "w") as hook:
-        hook.write(shellcoverage.TRACE_HOOK)
-    config.joybox_shell_trace_dir = trace_dir
-    config.joybox_shell_hook = hook_file
-
-
-@pytest.fixture
-def traced_env(request):
-    # An environment for running bash directly that traces it for coverage
-    import uuid
-    from joybox import shellcoverage
-    config = request.config
-
-    def build(env = None):
-        traced = dict(os.environ if env is None else env)
-        traced["BASH_ENV"] = config.joybox_shell_hook
-        traced[shellcoverage.TRACE_VARIABLE] = os.path.join(
-            config.joybox_shell_trace_dir, "%s.trace" % uuid.uuid4().hex)
-        return traced
-    return build
-
-
-@pytest.fixture
-def shell_sandbox(request, tmp_path):
-    from shell_sandbox import ShellSandbox
-    config = request.config
-    return ShellSandbox(tmp_path / "sandbox", REPO_ROOT,
-                        config.joybox_shell_trace_dir, config.joybox_shell_hook)
-
-
-def get_shell_floor(config):
-    return config.getoption("--shell-cov-fail-under", default = None)
-
-
-def wants_shell_report(config):
-    return config.getoption("--shell-cov-report", default = False) or get_shell_floor(config) is not None
-
-
-def pytest_sessionfinish(session, exitstatus):
-    config = session.config
-    if not wants_shell_report(config):
-        return
-    from joybox import shellcoverage
-    results = shellcoverage.measure(REPO_ROOT, config.joybox_shell_trace_dir)
-    config.joybox_shell_results = results
-    if not shellcoverage.meets_floor(results, get_shell_floor(config)) and session.exitstatus == 0:
-        session.exitstatus = pytest.ExitCode.TESTS_FAILED
-
-
-def pytest_terminal_summary(terminalreporter, exitstatus, config):
-    results = getattr(config, "joybox_shell_results", None)
-    if results is None:
-        return
-    from joybox import shellcoverage
-    terminalreporter.write_sep("=", "shell coverage")
-    terminalreporter.write_line(shellcoverage.render_report(results, get_shell_floor(config)))
+def pytest_collection_modifyitems(config, items):
+    for item in items:
+        binaries = [name for marker in item.iter_markers("requires_binary") for name in marker.args]
+        tools = [name for marker in item.iter_markers("requires_tool") for name in marker.args]
+        missing = find_missing_binaries(binaries) + ["%s (JoyBox tool)" % name for name in find_missing_tools(tools)]
+        if missing:
+            item.add_marker(pytest.mark.skip(reason = "%s not installed" % ", ".join(missing)))

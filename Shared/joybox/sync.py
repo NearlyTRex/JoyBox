@@ -10,6 +10,7 @@ import concurrent.futures
 import joybox.config as config
 import joybox.command as command
 import joybox.programs as programs
+import joybox.rcloneremotes as rcloneremotes
 import joybox.serialization as serialization
 import joybox.strings as strings
 import joybox.logger as logger
@@ -31,12 +32,6 @@ def get_unencrypted_remote_name(remote_name):
     if remote_name.endswith("Enc"):
         return remote_name[:-len("Enc")]
     return remote_name
-
-# Get encrypted remote name
-def get_encrypted_remote_name(remote_name):
-    if remote_name.endswith("Enc"):
-        return remote_name
-    return "%sEnc" % (remote_name)
 
 # Get remote raw type
 def get_remote_raw_type(remote_type):
@@ -115,8 +110,11 @@ def get_excludes_with(excludes, pattern):
         excludes.append(pattern)
     return excludes
 
-# Get configured remotes
+# Get the remotes rclone can reach, by lowercased name, with their types.
+# Remotes defined by the settings are passed in, since rclone only sees those
+# in the environment of a command that names them.
 def get_configured_remotes(
+    remote_names = (),
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -127,26 +125,33 @@ def get_configured_remotes(
         rclone_tool = programs.get_tool_program("RClone")
     if not rclone_tool:
         logger.log_error("RClone was not found")
-        return []
+        return {}
 
     # Get list command
     list_cmd = [
         rclone_tool,
-        "listremotes"
+        "listremotes",
+        "--long"
     ]
 
     # Run list command
     list_text, code = run_query_command(
         cmd = list_cmd,
+        options = rcloneremotes.get_rclone_options(remote_names),
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if code != 0:
         logger.log_error("Unable to list configured remotes")
-        return []
+        return {}
 
-    # Return remote list
-    return [line.strip() for line in list_text.splitlines() if line.strip()]
+    # Each line is "name: type"; rclone lowercases a name it read from the environment
+    remotes = {}
+    for line in list_text.splitlines():
+        name, _, remote_type = line.partition(":")
+        if name.strip():
+            remotes[name.strip().lower()] = remote_type.strip()
+    return remotes
 
 # Check if remote is configured
 def is_remote_configured(
@@ -155,214 +160,42 @@ def is_remote_configured(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-
-    # Check if the remote name exists in the list of remotes
     logger.log_info("Checking if remote '%s' exists..." % remote_name)
     configured_remotes = get_configured_remotes(
+        remote_names = [remote_name],
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     logger.log_info("Found %d configured remotes" % len(configured_remotes))
-    if not any(remote.rstrip(":") == remote_name for remote in configured_remotes):
+    found_type = configured_remotes.get(remote_name.lower())
+    if found_type is None:
         logger.log_info("Remote '%s' not in configured remotes" % remote_name)
         return False
-
-    # Get tool
-    rclone_tool = None
-    if programs.is_tool_installed("RClone"):
-        rclone_tool = programs.get_tool_program("RClone")
-    if not rclone_tool:
-        logger.log_error("RClone was not found")
-        return False
-
-    # Get show command
-    show_cmd = [
-        rclone_tool,
-        "config",
-        "show", remote_name
-    ]
-
-    # Run show command
-    show_text, code = run_query_command(
-        cmd = show_cmd,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-
-    # Check if the remote is configured
-    if code != 0 or "couldn't find type of fs for" in show_text:
-        logger.log_info("Remote type not found")
-        return False
-
-    # Check if the remote type matches
-    match = re.search(r"type\s*=\s*(\S+)", show_text)
-    result = bool(match) and (match.group(1) == get_remote_raw_type(remote_type))
+    result = found_type == get_remote_raw_type(remote_type)
     logger.log_info("Remote type match result: %s" % result)
     return result
 
-# Setup autoconnect remote
-def setup_autoconnect_remote(
-    remote_name,
-    remote_type,
-    verbose = False,
-    pretend_run = False,
-    exit_on_failure = False):
-
-    # Get tool
-    rclone_tool = None
-    if programs.is_tool_installed("RClone"):
-        rclone_tool = programs.get_tool_program("RClone")
-    if not rclone_tool:
-        logger.log_error("RClone was not found")
-        return False
-
-    # Get create command
-    create_cmd = [
-        rclone_tool,
-        "config",
-        "create", remote_name,
-        get_remote_raw_type(remote_type),
-        "config_is_local=false"
-    ]
-    if verbose:
-        create_cmd += ["--verbose"]
-
-    # Run create command
-    code = command.run_returncode_command(
-        cmd = create_cmd,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    if code != 0:
-        return False
-
-    # Get authorize command
-    authorize_cmd = [
-        rclone_tool,
-        "config",
-        "reconnect", "%s:" % remote_name
-    ]
-    if verbose:
-        authorize_cmd += ["--verbose"]
-
-    # Run authorize command
-    code = command.run_returncode_command(
-        cmd = authorize_cmd,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    return code == 0
-
-# Setup manual remote
-def setup_manual_remote(
-    remote_name,
-    remote_type,
-    remote_token = None,
-    remote_config = None,
-    verbose = False,
-    pretend_run = False,
-    exit_on_failure = False):
-
-    # Get tool
-    rclone_tool = None
-    if programs.is_tool_installed("RClone"):
-        rclone_tool = programs.get_tool_program("RClone")
-    if not rclone_tool:
-        logger.log_error("RClone was not found")
-        return False
-
-    # Get create command
-    create_cmd = [
-        rclone_tool,
-        "config",
-        "create", remote_name,
-        get_remote_raw_type(remote_type)
-    ]
-    if isinstance(remote_config, dict):
-        for config_key, config_value in remote_config.items():
-            create_cmd += ["%s=%s" % (config_key, config_value)]
-    if remote_token and not (isinstance(remote_config, dict) and "token" in remote_config):
-        create_cmd += ["token=%s" % remote_token]
-    if verbose:
-        create_cmd += ["--verbose"]
-
-    # Run create command
-    code = command.run_returncode_command(
-        cmd = create_cmd,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    return code == 0
-
-# Setup encrypted remote
-def setup_encrypted_remote(
-    remote_name,
-    remote_path,
-    remote_encryption_key,
-    verbose = False,
-    pretend_run = False,
-    exit_on_failure = False):
-
-    # Get tool
-    rclone_tool = None
-    if programs.is_tool_installed("RClone"):
-        rclone_tool = programs.get_tool_program("RClone")
-    if not rclone_tool:
-        logger.log_error("RClone was not found")
-        return False
-
-    # Get create command
-    create_cmd = [
-        rclone_tool,
-        "config",
-        "create", get_encrypted_remote_name(remote_name),
-        "crypt",
-        "remote=%s:" % remote_name,
-        "password=%s" % remote_encryption_key
-    ]
-
-    # Run create command
-    code = command.run_returncode_command(
-        cmd = create_cmd,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    return code == 0
-
-# Setup remote
+# Setup remote. Remotes are defined by the settings and reach rclone through
+# the environment, so there is nothing to create: this checks the one named
+# here resolves to the type expected.
 def setup_remote(
     remote_name,
     remote_type,
-    remote_token = None,
-    remote_config = None,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-
-    # Drive can use automatic setting
-    if remote_type == config.RemoteType.DRIVE:
-        return setup_autoconnect_remote(
-            remote_type = remote_type,
-            remote_name = remote_name,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-
-    # Others should use manual
-    else:
-        if isinstance(remote_config, str):
-            remote_config = serialization.parse_json_string(remote_config)
-            if not isinstance(remote_config, dict):
-                logger.log_error("Remote config must be a JSON object")
-                return False
-        return setup_manual_remote(
-            remote_type = remote_type,
-            remote_name = remote_name,
-            remote_token = remote_token,
-            remote_config = remote_config,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
+    if is_remote_configured(
+        remote_name = remote_name,
+        remote_type = remote_type,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure):
+        logger.log_info("Remote '%s' is defined by the settings" % remote_name)
+        return True
+    logger.log_error(
+        "Remote '%s' is not defined as %s; set the locker's _name, _type and _config in [UserData.Share]" % (
+            remote_name, get_remote_raw_type(remote_type)))
+    return False
 
 # Get path MD5
 def get_path_md5(
@@ -391,6 +224,7 @@ def get_path_md5(
     # Run md5sum command
     md5sum_text, code = run_query_command(
         cmd = md5sum_cmd,
+        options = rcloneremotes.get_rclone_options([remote_name]),
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -430,6 +264,7 @@ def get_path_mod_time(
     # Run lsl command
     lsl_text, code = run_query_command(
         cmd = lsl_cmd,
+        options = rcloneremotes.get_rclone_options([remote_name]),
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -493,6 +328,7 @@ def does_directory_exist(
     # Run list command
     list_text, code = run_query_command(
         cmd = list_cmd,
+        options = rcloneremotes.get_rclone_options([remote_name]),
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -535,7 +371,7 @@ def does_file_exist(
     options.set_suppress_output(True)
     code = command.run_returncode_command(
         cmd = lsjson_cmd,
-        options = options,
+        options = rcloneremotes.get_rclone_options([remote_name], options),
         verbose = verbose)
     return code == 0
 
@@ -593,6 +429,7 @@ def does_path_contain_files(
     # Run list command
     list_text, code = run_query_command(
         cmd = list_cmd,
+        options = rcloneremotes.get_rclone_options([remote_name]),
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -629,7 +466,7 @@ def create_remote_directory(
     # Run command, keeping stderr to tell an existing directory from a failure
     output, code = run_query_command(
         cmd = mkdir_cmd,
-        options = command.create_command_options(include_stderr = True),
+        options = rcloneremotes.get_rclone_options([remote_name], command.create_command_options(include_stderr = True)),
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = False)
@@ -692,6 +529,7 @@ def download_files_from_remote(
     # Run copy command
     code = command.run_returncode_command(
         cmd = copy_cmd,
+        options = rcloneremotes.get_rclone_options([remote_name]),
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -755,6 +593,7 @@ def upload_files_to_remote(
     # Run copy command
     code = command.run_returncode_command(
         cmd = copy_cmd,
+        options = rcloneremotes.get_rclone_options([remote_name]),
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -815,6 +654,7 @@ def sync_files_to_remote(
     # Run sync command
     code = command.run_returncode_command(
         cmd = sync_cmd,
+        options = rcloneremotes.get_rclone_options([remote_name]),
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -868,6 +708,7 @@ def move_files_on_remote(
     # Run move command
     code = command.run_returncode_command(
         cmd = move_cmd,
+        options = rcloneremotes.get_rclone_options([remote_name]),
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -910,6 +751,7 @@ def purge_path_on_remote(
     # Run purge command
     code = command.run_returncode_command(
         cmd = purge_cmd,
+        options = rcloneremotes.get_rclone_options([remote_name]),
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -949,6 +791,7 @@ def delete_file_on_remote(
     # Run delete command
     code = command.run_returncode_command(
         cmd = delete_cmd,
+        options = rcloneremotes.get_rclone_options([remote_name]),
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -1051,6 +894,7 @@ def pull_files_from_remote(
     # Run sync command
     code = command.run_returncode_command(
         cmd = sync_cmd,
+        options = rcloneremotes.get_rclone_options([remote_name]),
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -1101,6 +945,7 @@ def push_files_to_remote(
     # Run sync command
     code = command.run_returncode_command(
         cmd = sync_cmd,
+        options = rcloneremotes.get_rclone_options([remote_name]),
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -1155,6 +1000,7 @@ def merge_files_both_ways(
     # Run bisync command
     code = command.run_returncode_command(
         cmd = bisync_cmd,
+        options = rcloneremotes.get_rclone_options([remote_name]),
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -1221,6 +1067,7 @@ def diff_files(
     # Run check command
     command.run_returncode_command(
         cmd = check_cmd,
+        options = rcloneremotes.get_rclone_options([remote_name]),
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -1537,6 +1384,7 @@ def list_files(
     # Run list command
     code = command.run_returncode_command(
         cmd = list_cmd,
+        options = rcloneremotes.get_rclone_options([remote_name]),
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -1616,8 +1464,8 @@ def mount_files(
     # Run mount command
     code = command.run_returncode_command(
         cmd = mount_cmd,
-        options = command.create_command_options(
-            is_daemon = platform_info.is_unix_platform()),
+        options = rcloneremotes.get_rclone_options([remote_name], command.create_command_options(
+            is_daemon = platform_info.is_unix_platform())),
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -1662,6 +1510,7 @@ def copy_remote_to_remote(
     # Run copyto command
     code = command.run_returncode_command(
         cmd = copyto_cmd,
+        options = rcloneremotes.get_rclone_options([src_remote_name, dest_remote_name]),
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -1716,6 +1565,7 @@ def list_files_with_hashes(
     # run would see an empty remote.
     lsjson_output, lsjson_code = command.run_command(
         cmd = lsjson_cmd,
+        options = rcloneremotes.get_rclone_options([remote_name]),
         capture_output = True,
         log_stderr = True,
         verbose = verbose,

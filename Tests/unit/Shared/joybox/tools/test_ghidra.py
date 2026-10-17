@@ -52,7 +52,7 @@ def test_configure_installs_the_watcom_language_files(steps):
     written = {kwargs["src"]: kwargs["contents"] for kwargs in steps.made("touch_file")}
     assert sorted(written) == sorted("/tools/" + path for path in ghidra.config_files)
     for dest_path, src_filename in ghidra.config_files.items():
-        with open(os.path.join(ghidra.extra_files_dir, src_filename)) as handle:
+        with open(os.path.join(ghidra.extra_files_dir, src_filename), encoding = "utf-8") as handle:
             assert written["/tools/" + dest_path] == handle.read().strip()
 
 

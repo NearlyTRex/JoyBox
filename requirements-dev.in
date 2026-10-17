@@ -4,5 +4,9 @@
 # Measures the tests for coverage_tool and CI's floor
 coverage
 pytest
+# Spreads the tests across cores in CI and coverage_tool
+pytest-xdist
+# Lints the tests, through Tests/unit/meta/test_pylint.py
+pylint
 # Builds the editable install in CI
 setuptools>=77

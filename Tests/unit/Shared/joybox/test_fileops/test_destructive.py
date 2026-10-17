@@ -7,6 +7,7 @@ import pytest
 
 # Local imports
 from joybox import fileops
+from file_helpers import tree
 
 
 ###########################################################
@@ -19,24 +20,14 @@ from joybox import fileops
 def write(path, contents = "content"):
     path = str(path)
     os.makedirs(os.path.dirname(path), exist_ok = True)
-    with open(path, "w") as target:
+    with open(path, "w", encoding = "utf-8") as target:
         target.write(contents)
     return path
 
 
 def read(path):
-    with open(str(path), "r") as target:
+    with open(str(path), "r", encoding = "utf-8") as target:
         return target.read()
-
-
-def tree(root):
-    # Every file under root, relative and sorted, so a layout can be compared
-    # as a whole rather than one exists() call at a time.
-    found = []
-    for directory, _, filenames in os.walk(str(root)):
-        for filename in filenames:
-            found.append(os.path.relpath(os.path.join(directory, filename), str(root)))
-    return sorted(found)
 
 
 ###########################################################
@@ -240,11 +231,16 @@ def test_each_failure_appends_to_the_error_log(tmp_path):
     assert read(log).split() == ["/first.txt", "/second.txt"]
 
 
-def test_an_unwritable_error_log_does_not_raise(tmp_path):
+def test_an_unwritable_error_log_does_not_raise(tmp_path, monkeypatch):
     # Losing the log is not worth aborting a long bulk copy over.
+    warnings = []
+    monkeypatch.setattr(fileops.logger, "log_warning", warnings.append)
     unwritable = str(tmp_path / "missing-dir" / "errors.log")
 
     fileops.report_fileio_error("/first.txt", None, unwritable)
+
+    assert warnings[-1].startswith("Unable to write error log '%s'" % unwritable)
+    assert not os.path.exists(unwritable)
 
 
 ###########################################################

@@ -265,6 +265,8 @@ class Connection:
                 # Get profile
                 profile_candidates = [
                     self.resolve_home_path(candidate) for candidate in profile_candidates]
+                if profile_candidates[0].startswith("~"):
+                    raise ValueError("the home directory is unknown, so no profile can be found")
                 profile_file = profile_candidates[0]
                 for candidate in profile_candidates:
                     if self.does_file_or_directory_exist(candidate):

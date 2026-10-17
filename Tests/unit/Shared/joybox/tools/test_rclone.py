@@ -36,13 +36,6 @@ def installed(monkeypatch):
 
 
 @pytest.fixture
-def share_settings(monkeypatch):
-    values = {}
-    monkeypatch.setattr(rclone.settings, "get_value", lambda section, key, **kwargs: values.get(key))
-    return values
-
-
-@pytest.fixture
 def written(monkeypatch, tmp_path):
     recorder = Recorder()
     monkeypatch.setattr(rclone.environment, "get_tools_root_dir", lambda: str(tmp_path))
@@ -128,82 +121,30 @@ def test_setup_offline_stops_on_a_failed_install(monkeypatch, installed, results
 
 ###########################################################
 # Configure
+#
+# Remotes come from the settings through the environment of each command, so
+# rclone.conf is only a note; writing it also clears the credentials an
+# earlier version left there.
 ###########################################################
 
-def set_gdrive(values):
-    values.update({
-        "locker_gdrive_name": "gdrive",
-        "locker_gdrive_type": "drive",
-        "locker_gdrive_token": GDRIVE_SECRET,
-    })
-
-
-def set_hetzner(values, **overrides):
-    remote = {"host": "box.example", "user": "u1", "pass": HETZNER_SECRET}
-    remote.update(overrides)
-    values.update({
-        "locker_hetzner_name": "hetzner",
-        "locker_hetzner_type": "sftp",
-        "locker_hetzner_config": json.dumps(remote),
-    })
-
-
-def test_configure_writes_both_remotes_to_both_platforms(share_settings, written, tmp_path):
-    set_gdrive(share_settings)
-    set_hetzner(share_settings)
-
+def test_configure_writes_the_note_for_both_platforms(written, tmp_path):
     assert rclone.RClone().configure()
 
-    assert [call["src"] for call in written.calls] == [
-        str(tmp_path / "RClone/windows/rclone.conf"),
-        str(tmp_path / "RClone/linux/rclone.conf"),
+    assert [(call["src"], call["contents"]) for call in written.calls] == [
+        (str(tmp_path / "RClone/windows/rclone.conf"), rclone.config_note),
+        (str(tmp_path / "RClone/linux/rclone.conf"), rclone.config_note),
     ]
-    contents = written.calls[0]["contents"]
-    assert contents.startswith("[gdrive]\ntype = drive\n")
-    assert "token = %s" % GDRIVE_SECRET in contents
-    assert "\n\n[hetzner]\ntype = sftp\nhost = box.example\nuser = u1\npass = %s\n" % HETZNER_SECRET in contents
-    assert contents == written.calls[1]["contents"]
-    assert "GDRIVE_" not in contents and "HETZNER_" not in contents
 
 
-def test_configure_without_credentials_writes_empty_files(share_settings, written):
+def test_configure_writes_no_credential_the_settings_hold(isolated_settings, written):
+    isolated_settings.set_value("UserData.Share", "locker_hetzner_config", json.dumps({"pass": HETZNER_SECRET}))
+    isolated_settings.set_value("UserData.Share", "locker_gdrive_token", GDRIVE_SECRET)
+
     assert rclone.RClone().configure(config.SetupParams())
-
-    assert [call["contents"] for call in written.calls] == ["", ""]
-
-
-def test_configure_omits_a_partial_gdrive_remote(share_settings, written):
-    set_gdrive(share_settings)
-    share_settings["locker_gdrive_token"] = None
-    set_hetzner(share_settings)
-
-    assert rclone.RClone().configure()
-
-    assert written.calls[0]["contents"].startswith("[hetzner]")
+    assert not [call for call in written.calls if HETZNER_SECRET in call["contents"] or GDRIVE_SECRET in call["contents"]]
 
 
-def test_configure_omits_a_hetzner_remote_missing_its_password(share_settings, written):
-    set_hetzner(share_settings, **{"pass": ""})
-
-    assert rclone.RClone().configure()
-
-    assert written.calls[0]["contents"] == ""
-
-
-@pytest.mark.parametrize("raw", ["{not json", "[1, 2]", "\"box.example\""])
-def test_configure_ignores_a_hetzner_config_that_is_not_an_object(share_settings, written, raw):
-    set_gdrive(share_settings)
-    set_hetzner(share_settings)
-    share_settings["locker_hetzner_config"] = raw
-
-    assert rclone.RClone().configure()
-
-    contents = written.calls[0]["contents"]
-    assert contents.startswith("[gdrive]")
-    assert "[hetzner]" not in contents
-
-
-def test_configure_stops_when_a_file_cannot_be_written(share_settings, written):
+def test_configure_stops_when_a_file_cannot_be_written(written):
     written.results = [False]
 
     assert not rclone.RClone().configure()

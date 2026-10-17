@@ -196,5 +196,6 @@ def test_an_empty_path_stays_empty():
 def test_a_built_token_map_resolves_its_own_tokens():
     token_map = build(game_install_dir = "/prefix/drive_c/Game", hdd_base_dir = "/hdd")
 
-    for token, expected in token_map.items():
-        assert sandbox.resolve_path(token, token_map) == expected
+    resolved = {token: sandbox.resolve_path(token, token_map) for token in token_map}
+
+    assert resolved == token_map

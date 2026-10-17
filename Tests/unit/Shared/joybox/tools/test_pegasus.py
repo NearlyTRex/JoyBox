@@ -181,7 +181,7 @@ def test_configure_lists_every_metadata_dir(tools_root):
 
 
 def test_configure_without_metadata_writes_empty_game_dirs(tools_root):
-    root, metadata = tools_root
+    root, _ = tools_root
 
     assert pegasus.Pegasus().configure(config.SetupParams())
 

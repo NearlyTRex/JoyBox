@@ -112,7 +112,6 @@ def test_update_needs_the_ssh_host(updating, recording_command, tunneled):
 
 
 def test_a_failed_installer_fails_the_update(updating, monkeypatch):
-    from fakes import RecordingCommand
     RecordingCommand(monkeypatch, returncode = 1)
 
     assert ollama.action_update() is False
@@ -167,7 +166,7 @@ def machine(monkeypatch):
     monkeypatch.setattr(ollama.hardware, "get_hardware_summary", lambda: {
         "gpu_name": "Local card", "gpu_vram_total_mb": 4096, "gpu_vram_free_mb": 4000,
         "system_ram_mb": 16000, "system_ram_available_mb": 12000})
-    monkeypatch.setattr(ollama.logger, "log_warning", lambda message: state["warnings"].append(message))
+    monkeypatch.setattr(ollama.logger, "log_warning", state["warnings"].append)
     monkeypatch.setattr(ollama, "read_helper_report", lambda: state.get("report"))
     return state
 

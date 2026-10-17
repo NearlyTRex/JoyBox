@@ -4,6 +4,8 @@ import os
 # Third-party imports
 import pytest
 
+pytestmark = pytest.mark.requires_binary("bash", "unshare")
+
 
 ###########################################################
 # init_localstorage.sh
@@ -12,12 +14,6 @@ import pytest
 ###########################################################
 
 SCRIPT = "Bootstrap/scripts/init_localstorage.sh"
-
-
-@pytest.fixture
-def server(shell_sandbox):
-    shell_sandbox.add_user("deploy")
-    return shell_sandbox
 
 
 def test_storage_is_created_at_the_default_mount_path(server):

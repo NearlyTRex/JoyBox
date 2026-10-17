@@ -7,7 +7,7 @@ import pytest
 # Local imports
 from joybox import config
 from joybox import paths
-from paths_helpers import write
+from file_helpers import write
 
 
 ###########################################################

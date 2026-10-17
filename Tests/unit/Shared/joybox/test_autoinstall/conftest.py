@@ -68,7 +68,7 @@ def published_files(monkeypatch, tmp_path):
         state["downloaded"].append(url)
         if url.endswith(state["failing"]):
             return False
-        with open(output_file, "w") as handle:
+        with open(output_file, "w", encoding = "utf-8") as handle:
             handle.write(state["listing"] if url.endswith("SHA256SUMS") else "signature")
         return True
 

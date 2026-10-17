@@ -70,7 +70,7 @@ class Dotfiles(installer.Installer):
     def get_template(self, template_name):
         template_path = os.path.join(self.template_dir, template_name)
         try:
-            with open(template_path, "r") as f:
+            with open(template_path, "r", encoding = "utf-8") as f:
                 return f.read()
         except Exception as e:
             logger.log_error(f"Failed to read template: {template_path}")
@@ -202,7 +202,7 @@ class Dotfiles(installer.Installer):
         logger.log_info("Dotfile uninstallation complete")
         return True
 
-    def backup(self):
+    def backup(self, tag = ""):
         logger.log_info("Capturing dotfiles into the repo")
 
         # Make captures dir

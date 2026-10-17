@@ -28,7 +28,9 @@ HELPERS = {
 def test_every_keyword_is_one_the_helper_takes(shared_dir):
     wrong = []
     for path in sorted(glob.glob(os.path.join(shared_dir, "joybox", "tools", "*.py"))):
-        for node in ast.walk(ast.parse(open(path).read())):
+        with open(path, "r", encoding = "utf-8") as module_file:
+            tree = ast.parse(module_file.read())
+        for node in ast.walk(tree):
             if not isinstance(node, ast.Call):
                 continue
             helper = HELPERS.get(ast.unparse(node.func))

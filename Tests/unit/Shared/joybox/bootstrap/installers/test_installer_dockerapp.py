@@ -40,10 +40,12 @@ def assert_valid_shell(script, tmp_path, label):
     assert result.returncode == 0, f"{label} is not valid shell:\n{result.stderr}"
 
 
+@pytest.mark.requires_binary("bash")
 def test_backup_script_is_valid_shell(wordpress, tmp_path):
     assert_valid_shell(wordpress.build_backup_script(), tmp_path, "backup")
 
 
+@pytest.mark.requires_binary("bash")
 def test_restore_script_is_valid_shell(wordpress, tmp_path):
     assert_valid_shell(wordpress.build_restore_script("latest"), tmp_path, "restore")
 
@@ -315,6 +317,7 @@ def test_backup_helper_image_can_be_overridden(isolated_settings):
 # Backup and restore of directories and volumes
 ###########################################################
 
+@pytest.mark.requires_binary("bash")
 def test_backup_archives_directories_without_a_database(isolated_settings, tmp_path):
     app = build_demo(backup_dirs = ["data"], backup_excludes = ["cache"])
     script = app.build_backup_script("nightly")
@@ -333,6 +336,7 @@ def test_retention_does_not_count_the_latest_symlink(isolated_settings):
     assert '-e "/latest/$"' in script
 
 
+@pytest.mark.requires_binary("bash")
 def test_restore_extracts_directories_without_a_database(isolated_settings, tmp_path):
     app = build_demo(backup_dirs = ["data"], backup_volumes = ["db"])
     script = app.build_restore_script("20260101_000000")

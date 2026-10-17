@@ -28,10 +28,8 @@ NUMBER_FIELDS = ["size", "size_enc", "mtime"]
 def test_normalizing_fills_in_every_field():
     normalized = hashing.normalize_hash_entry({})
 
-    for field in STRING_FIELDS:
-        assert normalized[field] == ""
-    for field in NUMBER_FIELDS:
-        assert normalized[field] == 0
+    assert {field: normalized[field] for field in STRING_FIELDS} == dict.fromkeys(STRING_FIELDS, "")
+    assert {field: normalized[field] for field in NUMBER_FIELDS} == dict.fromkeys(NUMBER_FIELDS, 0)
 
 
 def test_normalizing_keeps_the_values_that_are_present():

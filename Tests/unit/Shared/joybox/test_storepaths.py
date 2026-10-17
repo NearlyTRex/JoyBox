@@ -57,10 +57,10 @@ def test_appdata_roaming_is_matched_in_either_case(variant):
     assert "Roaming" in tokenize(variant)
 
 
-def test_no_traversal_survives_tokenization():
+@pytest.mark.parametrize("path", ["{AppData}/../Roaming/Game", "{AppData}/../LocalLow/Game"])
+def test_no_traversal_survives_tokenization(path):
     # A ".." left in the result would escape the backup root.
-    for path in ["{AppData}/../Roaming/Game", "{AppData}/../LocalLow/Game"]:
-        assert ".." not in tokenize(path)
+    assert ".." not in tokenize(path)
 
 
 @pytest.mark.parametrize("token,expected", [
@@ -122,17 +122,19 @@ def test_the_result_is_normalized():
     assert "//" not in tokenize("{AppData}//Game")
 
 
-def test_no_source_token_survives():
+@pytest.mark.parametrize("path", [
+    "{AppData}/x", "{UserDir}/x", "{EpicID}/x", "{InstallDir}/x", "{UserSavedGames}/x", "%USERPROFILE%/x"])
+def test_no_source_token_survives(path):
     # An unreplaced token would be treated as a literal directory name.
-    for path in ["{AppData}/x", "{UserDir}/x", "{EpicID}/x", "{InstallDir}/x",
-                 "{UserSavedGames}/x", "%USERPROFILE%/x"]:
-        result = tokenize(path)
-        assert "{" not in result and "}" not in result, result
-        assert "%" not in result, result
+    result = tokenize(path)
+
+    assert "{" not in result and "}" not in result, result
+    assert "%" not in result, result
 
 
-def test_no_angle_token_survives():
-    for path in ["<home>/x", "<root>/x", "<base>/x", "<winDocuments>/x",
-                 "<winPublic>/x", "<storeUserId>/x"]:
-        result = tokenize(path)
-        assert "<" not in result and ">" not in result, result
+@pytest.mark.parametrize("path", [
+    "<home>/x", "<root>/x", "<base>/x", "<winDocuments>/x", "<winPublic>/x", "<storeUserId>/x"])
+def test_no_angle_token_survives(path):
+    result = tokenize(path)
+
+    assert "<" not in result and ">" not in result, result

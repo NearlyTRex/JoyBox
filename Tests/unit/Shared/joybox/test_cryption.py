@@ -33,8 +33,10 @@ def test_an_encrypted_name_is_the_hash_of_the_filename():
 
 
 def test_an_encrypted_name_is_deterministic():
-    assert cryption.generate_encrypted_filename("game.iso") == \
-        cryption.generate_encrypted_filename("game.iso")
+    first = cryption.generate_encrypted_filename("game.iso")
+    second = cryption.generate_encrypted_filename("game.iso")
+
+    assert first == second
 
 
 def test_different_files_get_different_names():

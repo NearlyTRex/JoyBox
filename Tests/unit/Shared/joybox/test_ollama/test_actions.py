@@ -449,8 +449,13 @@ def test_an_empty_catalogue_is_not_a_failure(console, catalog):
 ###########################################################
 
 def test_every_action_can_be_dispatched_by_name(console, catalog):
-    for action in ollama.get_action_keys():
-        assert ollama.run_action(action) is not None
+    # With nothing installed or configured, the actions that need a model or a
+    # host refuse and the rest succeed
+    results = {action: ollama.run_action(action) for action in ollama.get_action_keys()}
+
+    assert results == {
+        "list": True, "available": True, "best": True, "pull": True, "delete": True, "info": True,
+        "harness": False, "code": False, "update": False}
 
 
 ###########################################################
@@ -460,7 +465,7 @@ def test_every_action_can_be_dispatched_by_name(console, catalog):
 @pytest.fixture
 def logged(monkeypatch):
     lines = []
-    monkeypatch.setattr(ollama.logger, "log_info", lambda message: lines.append(message))
+    monkeypatch.setattr(ollama.logger, "log_info", lines.append)
     return lines
 
 

@@ -9,6 +9,9 @@ import warnings
 # Third-party imports
 import pytest
 
+# Local imports
+import joybox
+
 
 ###########################################################
 # Whole-tree sweeps
@@ -21,7 +24,7 @@ import pytest
 
 def discover_modules(shared_dir):
     found = []
-    for dirpath, dirnames, filenames in os.walk(shared_dir):
+    for dirpath, _, filenames in os.walk(shared_dir):
         if "__pycache__" in dirpath:
             continue
         for filename in sorted(filenames):
@@ -33,12 +36,8 @@ def discover_modules(shared_dir):
     return found
 
 
-def _shared_dir():
-    from conftest import SHARED_DIR
-    return os.path.join(SHARED_DIR, "joybox")
-
-
-MODULES = discover_modules(_shared_dir())
+# conftest makes sure joybox is this checkout's
+MODULES = discover_modules(os.path.dirname(joybox.__file__))
 MODULE_IDS = [name for name, _ in MODULES]
 
 
@@ -52,13 +51,18 @@ def test_every_module_imports(module_name, path):
     # path runs; importing every module surfaces it now.
     with warnings.catch_warnings():
         warnings.simplefilter("ignore")
-        importlib.import_module(module_name)
+        module = importlib.import_module(module_name)
+
+    assert os.path.realpath(module.__file__) == os.path.realpath(path)
 
 
 @pytest.mark.parametrize("module_name,path", MODULES, ids = MODULE_IDS)
-def test_every_module_parses(module_name, path):
+def test_every_module_compiles_for_the_oldest_supported_python(module_name, path):
+    # requires-python is >=3.12; newer syntax would only fail on that interpreter
     with open(path, "r", encoding = "utf-8") as handle:
-        ast.parse(handle.read())
+        tree = ast.parse(handle.read(), filename = path, feature_version = (3, 12))
+
+    assert compile(tree, path, "exec").co_filename == path
 
 
 ###########################################################

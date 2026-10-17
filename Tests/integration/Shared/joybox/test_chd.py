@@ -1,5 +1,7 @@
 # Imports
 import os
+
+# Third-party imports
 import pytest
 
 # Local imports
@@ -30,7 +32,7 @@ def payload(tmp_path):
 
 
 @pytest.fixture
-def source_iso(tmp_path, payload, requires_tool):
+def source_iso(tmp_path, payload):
     target = tmp_path / "source.iso"
     assert iso.create_iso(str(target), source_dir = str(payload)) is True
     return target

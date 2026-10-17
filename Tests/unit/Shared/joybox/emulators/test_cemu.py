@@ -74,8 +74,10 @@ def test_the_config_files_match_the_configured_paths():
 def test_saves_live_inside_the_setup_dir():
     entry = cemu.Cemu().get_config()["Cemu"]
 
-    for platform in PLATFORMS:
-        assert entry["save_dir"][platform].startswith(entry["setup_dir"][platform] + "/mlc01/")
+    outside = [platform for platform in PLATFORMS
+               if not entry["save_dir"][platform].startswith(entry["setup_dir"][platform] + "/mlc01/")]
+
+    assert not outside, outside
 
 
 ###########################################################
@@ -98,9 +100,8 @@ def test_setup_passes_the_setup_params_through(download):
 
     cemu.Cemu().setup(params)
 
-    for call in download.calls:
-        assert (call["locker_type"], call["verbose"], call["pretend_run"], call["exit_on_failure"]) == (
-            "local", True, True, True)
+    assert [(call["locker_type"], call["verbose"], call["pretend_run"], call["exit_on_failure"])
+            for call in download.calls] == [("local", True, True, True)] * len(PLATFORMS)
 
 
 def test_setup_skips_platforms_that_are_not_wanted(download, program_paths):
@@ -131,8 +132,8 @@ def test_setup_offline_restores_each_platform(stored):
 def test_setup_offline_passes_the_setup_params_through(stored):
     cemu.Cemu().setup_offline(config.SetupParams(verbose = True, pretend_run = True, exit_on_failure = True))
 
-    for call in stored.calls:
-        assert (call["verbose"], call["pretend_run"], call["exit_on_failure"]) == (True, True, True)
+    assert [(call["verbose"], call["pretend_run"], call["exit_on_failure"])
+            for call in stored.calls] == [(True, True, True)] * len(PLATFORMS)
 
 
 def test_setup_offline_skips_platforms_that_are_not_wanted(stored, program_paths):
@@ -178,8 +179,8 @@ def test_configure_writes_every_config_file(touched):
 def test_configure_passes_the_setup_params_through(touched):
     cemu.Cemu().configure(config.SetupParams(verbose = True, pretend_run = True, exit_on_failure = True))
 
-    for _, _, kwargs in touched["calls"]:
-        assert kwargs == {"verbose": True, "pretend_run": True, "exit_on_failure": True}
+    assert [kwargs for _, _, kwargs in touched["calls"]] == [
+        {"verbose": True, "pretend_run": True, "exit_on_failure": True}] * len(cemu.config_files)
 
 
 def test_configure_stops_when_a_config_file_cannot_be_written(touched):

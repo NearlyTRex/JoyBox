@@ -66,8 +66,9 @@ def test_each_report_path_gets_its_flag(rclone, recording_command, quiet, tmp_pa
     }
     run_diff(tmp_path, **{name: str(tmp_path / name) for name in reports})
 
-    for name, flag in reports.items():
-        assert recording_command.value_after(flag) == str(tmp_path / name)
+    values = {name: recording_command.value_after(flag) for name, flag in reports.items()}
+
+    assert values == {name: str(tmp_path / name) for name in reports}
 
 
 def test_a_quick_diff_compares_sizes_only(rclone, recording_command, quiet, tmp_path):
@@ -91,7 +92,7 @@ def test_the_combined_report_is_summarised(rclone, recording_command, monkeypatc
     combined = tmp_path / "combined.txt"
     combined.write_text("= same\n- remote_only\n+ local_only\n* changed\n! broken\n? other\n= also_same\n")
     messages = []
-    monkeypatch.setattr(sync.logger, "log_info", lambda message: messages.append(message))
+    monkeypatch.setattr(sync.logger, "log_info", messages.append)
     run_diff(tmp_path, diff_combined_path = str(combined))
 
     assert "Number of unchanged files: 2" in messages
@@ -123,7 +124,10 @@ def transfers(monkeypatch):
     def recorder(kind):
         def record_call(**kwargs):
             listed = kwargs.get("files_from")
-            kwargs["listed"] = open(listed).read() if listed and os.path.exists(listed) else None
+            kwargs["listed"] = None
+            if listed and os.path.exists(listed):
+                with open(listed, encoding = "utf-8") as handle:
+                    kwargs["listed"] = handle.read()
             calls[kind].append(kwargs)
             return True
         return record_call
@@ -144,7 +148,7 @@ def generated_diffs(monkeypatch, transfers):
     def fake_diff(**kwargs):
         transfers["diff"].append(kwargs)
         for key, lines in reports.items():
-            with open(kwargs[key], "w") as handle:
+            with open(kwargs[key], "w", encoding = "utf-8") as handle:
                 handle.write("".join(line + "\n" for line in lines))
         return True
 
@@ -267,8 +271,8 @@ def test_a_verbose_diff_sync_explains_changed_files(generated_diffs, transfers, 
         sync, "get_path_mod_time",
         lambda remote_path, **kwargs: remote_times[os.path.basename(remote_path)])
     messages = []
-    monkeypatch.setattr(sync.logger, "log_info", lambda message: messages.append(message))
-    monkeypatch.setattr(sync.logger, "log_warning", lambda message: messages.append(message))
+    monkeypatch.setattr(sync.logger, "log_info", messages.append)
+    monkeypatch.setattr(sync.logger, "log_warning", messages.append)
 
     assert run_diff_sync(verbose = True) is True
     assert "Local is newer: local.zip" in messages

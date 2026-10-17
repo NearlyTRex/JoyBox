@@ -5,6 +5,8 @@ import stat
 # Third-party imports
 import pytest
 
+pytestmark = pytest.mark.requires_binary("bash", "unshare")
+
 
 ###########################################################
 # Cockpit manager
@@ -95,6 +97,15 @@ def test_install_moves_boot_waiting_to_network_manager(server):
     assert server.ran("systemctl", "enable", "NetworkManager-wait-online.service")
 
 
+def test_a_networkd_wait_that_will_not_disable_does_not_stop_the_install(server):
+    fail_systemctl(server, "disable", "systemd-networkd-wait-online.service")
+
+    result = install(server)
+
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert server.ran("systemctl", "enable", "NetworkManager-wait-online.service")
+
+
 def test_a_public_9090_rule_is_removed(server):
     server.stub("ufw", stdout = "Status: active\n9090/tcp ALLOW Anywhere\n")
 
@@ -167,6 +178,17 @@ def test_uninstall_gives_boot_waiting_back_to_networkd(server):
 
     assert server.ran("systemctl", "disable", "NetworkManager-wait-online.service")
     assert server.ran("systemctl", "enable", "systemd-networkd-wait-online.service")
+
+
+def test_uninstall_carries_on_past_services_and_packages_already_gone(server):
+    server.stub("systemctl", script = 'case "$1" in disable|enable) exit 1 ;; esac\nexit 0\n')
+    server.stub("apt-get", script = '[ "$1" = remove ] && exit 1\nexit 0\n')
+
+    result = uninstall(server)
+
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert server.ran("systemctl", "enable", "systemd-networkd-wait-online.service")
+    assert server.ran("apt-get", "autoremove", "-y")
 
 
 def test_uninstall_reapplies_netplan_only_when_it_removed_a_file(server):

@@ -29,7 +29,7 @@ def cache_dir(monkeypatch, tmp_path):
 def messages(monkeypatch):
     # Everything logged, by level
     logged = {"info": [], "warning": [], "error": []}
-    monkeypatch.setattr(lockersync.logger, "log_info", lambda message: logged["info"].append(message))
-    monkeypatch.setattr(lockersync.logger, "log_warning", lambda message: logged["warning"].append(message))
-    monkeypatch.setattr(lockersync.logger, "log_error", lambda message: logged["error"].append(message))
+    monkeypatch.setattr(lockersync.logger, "log_info", logged["info"].append)
+    monkeypatch.setattr(lockersync.logger, "log_warning", logged["warning"].append)
+    monkeypatch.setattr(lockersync.logger, "log_error", logged["error"].append)
     return logged

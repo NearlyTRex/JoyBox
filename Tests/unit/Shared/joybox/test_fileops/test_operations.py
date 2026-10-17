@@ -16,13 +16,13 @@ from joybox import fileops
 ###########################################################
 
 def write(path, contents = "content"):
-    with open(path, "w") as target:
+    with open(path, "w", encoding = "utf-8") as target:
         target.write(contents)
     return path
 
 
 def read(path):
-    with open(path, "r") as target:
+    with open(path, "r", encoding = "utf-8") as target:
         return target.read()
 
 
@@ -106,6 +106,7 @@ def test_two_temporary_files_do_not_collide():
     first_ok, first = fileops.create_temporary_file()
     second_ok, second = fileops.create_temporary_file()
 
+    assert first_ok is True and second_ok is True
     assert first != second
 
     fileops.remove_file(first)

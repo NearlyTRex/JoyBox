@@ -8,6 +8,8 @@
 # wishlist of venv tools is in Shared/joybox/bootstrap/packages/python.py.
 anthropic
 beautifulsoup4
+# rclone's obscuring of the passwords it is handed
+cryptography
 html-text
 libWiiPy
 lxml

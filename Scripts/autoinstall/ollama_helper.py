@@ -59,7 +59,7 @@ def sysfs_device_name(bus_id):
 # Check whether the firmware drew the console on this card
 def is_boot_vga(bus_id, sysfs_root = "/sys/bus/pci/devices"):
     try:
-        with open(os.path.join(sysfs_root, sysfs_device_name(bus_id), "boot_vga")) as handle:
+        with open(os.path.join(sysfs_root, sysfs_device_name(bus_id), "boot_vga"), encoding = "utf-8") as handle:
             return handle.read().strip() == "1"
     except OSError:
         return False
@@ -95,7 +95,7 @@ def compute_gpus(gpus):
 def read_ram(meminfo_file = "/proc/meminfo"):
     values = {}
     try:
-        with open(meminfo_file) as handle:
+        with open(meminfo_file, encoding = "utf-8") as handle:
             for line in handle:
                 key, _, rest = line.partition(":")
                 fields = rest.split()
@@ -119,7 +119,7 @@ def build_gpu_env(gpus):
 # Write the GPU choice where ollama's unit reads it
 def select(gpus, env_file = GPU_ENV_FILE):
     os.makedirs(os.path.dirname(env_file), exist_ok = True)
-    with open(env_file, "w") as handle:
+    with open(env_file, "w", encoding = "utf-8") as handle:
         handle.write(build_gpu_env(gpus))
     return True
 

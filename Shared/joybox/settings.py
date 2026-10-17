@@ -43,7 +43,7 @@ def _ensure_loaded():
     global _parser, _loaded_path
     if _loaded_path != _settings_file:
         parser = configparser.ConfigParser(interpolation = None)
-        parser.read(_settings_file)
+        parser.read(_settings_file, encoding = "utf-8")
         _parser = parser
         _loaded_path = _settings_file
 
@@ -190,5 +190,5 @@ def save():
         if not _parser.has_section(section):
             _parser.add_section(section)
         _parser.set(section, field, str(value))
-    with open(_settings_file, "w") as f:
+    with open(_settings_file, "w", encoding = "utf-8") as f:
         _parser.write(f)

@@ -21,9 +21,9 @@ def build_parser():
             "\n"
             "Actions:\n"
             "\n"
-            "- `Init`: create the rclone remote. A Google Drive remote is created and then\n"
-            "  authorised with `rclone config reconnect`; other types are created from the JSON in\n"
-            "  the locker's `_config` setting.\n"
+            "- `Init`: check the locker's remote resolves. Remotes are defined by the settings, the\n"
+            "  JSON in `_config` included, and reach rclone through the environment of each command,\n"
+            "  so nothing is created and no credential is written to rclone.conf.\n"
             "- `Download` / `Upload`: `rclone copy` from remote to local, or local to remote. Files\n"
             "  that differ are overwritten; nothing is deleted.\n"
             "- `Pull` / `Push`: `rclone sync` from remote to local, or local to remote. The\n"
@@ -45,7 +45,7 @@ def build_parser():
             "`--excludes` replaces them. `Diff` and `DiffSync` also skip dot-directories and the\n"
             "recycle folder."),
         examples = [
-            ("Create the rclone remote for the Hetzner locker", "sync_tool -a Init -l Hetzner"),
+            ("Check the Hetzner locker's remote resolves", "sync_tool -a Init -l Hetzner"),
             ("Copy everything from the remote into the local locker", "sync_tool -a Download -l Hetzner"),
             ("Show the paths an upload would use without running it", "sync_tool -a Upload -l Hetzner -p -v"),
             ("Make the remote an exact copy of the local locker, deleting remote-only files", "sync_tool -a Push -l Gdrive"),
@@ -118,8 +118,6 @@ def main():
     remote_type = locker_info.get_type()
     remote_name = locker_info.get_name()
     remote_path = locker_info.get_remote_path()
-    remote_token = locker_info.get_token()
-    remote_config = locker_info.get_config()
     local_path = lockerinfo.LockerInfo(config.LockerType.LOCAL).get_mount_path()
     mount_path = locker_info.get_mount_path()
     mount_flags = locker_info.get_mount_flags()
@@ -168,8 +166,6 @@ def main():
         success = sync.setup_remote(
             remote_name = remote_name,
             remote_type = remote_type,
-            remote_token = remote_token,
-            remote_config = remote_config,
             verbose = args.verbose,
             pretend_run = args.pretend_run,
             exit_on_failure = args.exit_on_failure)

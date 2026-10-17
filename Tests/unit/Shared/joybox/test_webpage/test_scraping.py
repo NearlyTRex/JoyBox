@@ -3,7 +3,7 @@ import pytest
 
 # Local imports
 from joybox import webpage
-from webpage_helpers import FakeDriver, FakeElement, FakeParent, ClickableElement
+from webpage_helpers import FakeDriver, FakeElement, FakeParent, ClickableElement, matching
 
 pytest.importorskip("bs4")
 By = pytest.importorskip("selenium.webdriver.common.by").By
@@ -275,15 +275,6 @@ def test_a_page_nothing_can_fetch_is_empty(fetches):
 ###########################################################
 # Matching urls on a page
 ###########################################################
-
-
-def matching(page, html, **kwargs):
-    page["html"] = html
-    return webpage.get_matching_urls(
-        url = "https://releases.example/list",
-        base_url = "https://releases.example",
-        **kwargs)
-
 
 def test_an_absolute_link_is_found(page):
     found = matching(page, '<a href="https://cdn.example/app-1.0.zip">download</a>')

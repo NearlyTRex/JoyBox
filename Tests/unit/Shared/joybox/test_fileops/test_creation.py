@@ -28,6 +28,72 @@ def test_touch_writes_contents(tmp_path):
     assert read(path) == "héllo!"
 
 
+def test_touch_writes_text_as_utf8_rather_than_the_locales_encoding(tmp_path, monkeypatch):
+    # Windows defaults to a code page, so text has to name its encoding.
+    encodings = []
+
+    def recording_open(file, mode = "r", encoding = None, **kwargs):
+        encodings.append(encoding)
+        return open(file, mode, encoding = encoding, **kwargs)
+    monkeypatch.setattr(fileops, "open", recording_open, raising = False)
+    path = tmp_path / "file.txt"
+
+    assert fileops.touch_file(str(path), contents = "日本")
+    assert encodings == ["utf-8"]
+    assert path.read_bytes() == "日本".encode("utf-8")
+
+
+@pytest.mark.parametrize("contents_mode", ["w", "a"])
+def test_a_private_file_is_created_for_its_owner_only(tmp_path, contents_mode):
+    path = tmp_path / "secret.conf"
+
+    assert fileops.touch_file(str(path), contents = "pass = x", contents_mode = contents_mode, private = True)
+    assert mode(path) == 0o600
+    assert read(path) == "pass = x"
+
+
+def test_an_existing_file_is_tightened_before_a_secret_lands_in_it(tmp_path):
+    path = tmp_path / "secret.conf"
+    path.write_text("old", encoding = "utf-8")
+    path.chmod(0o644)
+
+    assert fileops.touch_file(str(path), contents = "pass = x", private = True)
+    assert mode(path) == 0o600
+    assert read(path) == "pass = x"
+
+
+def test_appending_privately_keeps_what_was_there(tmp_path):
+    path = tmp_path / "secret.conf"
+    path.write_text("a\n", encoding = "utf-8")
+
+    assert fileops.touch_file(str(path), contents = "b\n", contents_mode = "a", private = True)
+    assert read(path) == "a\nb\n"
+
+
+def test_a_private_file_that_cannot_be_tightened_is_closed_and_reported(tmp_path, monkeypatch):
+    closed = []
+    real_close = os.close
+
+    def refuse(path, perms):
+        raise OSError("not permitted")
+
+    def close(descriptor):
+        closed.append(descriptor)
+        real_close(descriptor)
+    monkeypatch.setattr(fileops.os, "chmod", refuse)
+    monkeypatch.setattr(fileops.os, "close", close)
+
+    assert fileops.touch_file(str(tmp_path / "secret.conf"), contents = "x", private = True) is False
+    assert len(closed) == 1
+
+
+def test_touch_writes_bytes_in_binary_mode(tmp_path):
+    path = tmp_path / "file.bin"
+
+    assert fileops.touch_file(str(path), contents = b"\x00\xff", contents_mode = "wb")
+    assert path.read_bytes() == b"\x00\xff"
+
+
 def test_touch_in_a_pretend_run(tmp_path):
     path = tmp_path / "file.txt"
     assert fileops.touch_file(str(path), pretend_run = True)

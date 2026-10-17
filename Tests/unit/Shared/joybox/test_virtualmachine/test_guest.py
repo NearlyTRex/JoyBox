@@ -1,9 +1,14 @@
+# Imports
+import os
+
 # Third-party imports
 import pytest
+import yaml
 
 # Local imports
 from joybox import virtualmachine
-from vm_helpers import NAME, fake_connection, record
+from fakes import RecordingCommand
+from vm_helpers import NAME, fake_connection
 
 
 ###########################################################
@@ -21,7 +26,7 @@ from vm_helpers import NAME, fake_connection, record
 
 def test_every_required_tool_is_named():
     assert set(virtualmachine.REQUIRED_TOOLS) == {
-        "virt-install", "virsh", "qemu-img", "cloud-localds"}
+        "virt-install", "virsh", "qemu-img", "cloud-localds", "openssl"}
 
 
 def test_a_missing_tool_is_reported(monkeypatch):
@@ -91,10 +96,14 @@ def test_no_key_at_all_resolves_to_nothing(monkeypatch):
 # Cloud-init
 ###########################################################
 
+CONSOLE_HASH = "$6$saltsalt$ZmFrZWhhc2g"
+
+
 def user_data(**kwargs):
     defaults = dict(
         vm_name = NAME,
-        ssh_public_key = "ssh-ed25519 AAAA deploy@host")
+        ssh_public_key = "ssh-ed25519 AAAA deploy@host",
+        console_password_hash = CONSOLE_HASH)
     defaults.update(kwargs)
     return virtualmachine.build_user_data(**defaults)
 
@@ -129,17 +138,41 @@ def test_no_account_is_created():
     # Provisioning creates the account, with the grants a real server gets.
     built = user_data()
 
-    assert "users:" not in built
+    assert "users" not in yaml.safe_load(built)
     assert "NOPASSWD" not in built
 
 
-def test_a_console_password_is_set_for_root():
-    # The ssh hardening closes root login, so the console is the way back in.
-    assert "root:joybox" in user_data()
+def test_root_gets_the_console_password_as_a_hash():
+    # The ssh hardening closes root login, so the console is the way back in;
+    # the seed holds only the hash.
+    chpasswd = yaml.safe_load(user_data())["chpasswd"]
+
+    assert chpasswd == {"expire": False, "users": [{"name": "root", "password": CONSOLE_HASH, "type": "hash"}]}
 
 
-def test_the_console_password_can_be_chosen():
-    assert "root:hunter2" in user_data(console_password = "hunter2")
+def test_the_console_password_is_hashed_on_openssls_input(recording_command):
+    recording_command.output = "$6$abc$def\n"
+
+    assert virtualmachine.hash_console_password("hunter2") == "$6$abc$def"
+    assert recording_command.only() == ["openssl", "passwd", "-6", "-stdin"]
+    assert recording_command.options().get_stdin_input() == "hunter2\n"
+
+
+@pytest.mark.parametrize("output", ["", None, "hunter2"])
+def test_a_console_password_that_will_not_hash_is_refused(recording_command, caplog, output):
+    recording_command.output = output
+
+    assert virtualmachine.hash_console_password("hunter2") is None
+    assert "Unable to hash the console password" in caplog.text
+
+
+@pytest.mark.requires_binary("openssl")
+def test_openssl_gives_a_salted_sha512_crypt_hash():
+    first = virtualmachine.hash_console_password("joybox")
+    second = virtualmachine.hash_console_password("joybox")
+
+    assert first.startswith("$6$") and second.startswith("$6$")
+    assert first != second
 
 
 def test_password_login_is_enabled_at_first_boot():
@@ -183,7 +216,8 @@ def test_two_guests_do_not_share_images():
 def test_the_base_image_is_shared_between_guests():
     # It is the backing file, so a per guest copy would waste the space the
     # copy on write disk exists to save.
-    assert virtualmachine.get_base_image("noble") == virtualmachine.get_base_image("noble")
+    assert virtualmachine.get_base_image("noble") == os.path.join(
+        virtualmachine.IMAGE_DIR, "noble-server-cloudimg-amd64.img")
 
 
 def test_each_release_has_its_own_base_image():
@@ -302,21 +336,21 @@ def test_the_memory_and_processors_are_passed():
 ###########################################################
 
 def test_an_existing_guest_is_found(monkeypatch):
-    recorder = record(monkeypatch, returncode = 0)
+    recorder = RecordingCommand(monkeypatch, returncode = 0)
 
     assert virtualmachine.does_vm_exist(NAME) is True
     assert recorder.only()[:4] == ["virsh", "--connect", "qemu:///system", "dominfo"]
 
 
 def test_an_absent_guest_is_not_found(monkeypatch):
-    record(monkeypatch, returncode = 1)
+    RecordingCommand(monkeypatch, returncode = 1)
 
     assert virtualmachine.does_vm_exist(NAME) is False
 
 
 def test_checking_for_a_guest_is_quiet(monkeypatch):
     # Asking about a guest that is not there is a normal question.
-    recorder = record(monkeypatch, returncode = 1)
+    recorder = RecordingCommand(monkeypatch, returncode = 1)
     virtualmachine.does_vm_exist(NAME)
 
     assert recorder.options().is_output_suppressed() is True
@@ -330,19 +364,19 @@ DOMIFADDR = """
 
 
 def test_an_address_is_read_from_the_lease(monkeypatch):
-    record(monkeypatch, output = DOMIFADDR)
+    RecordingCommand(monkeypatch, output = DOMIFADDR)
 
     assert virtualmachine.get_vm_ip(NAME) == "192.168.122.50"
 
 
 def test_an_address_without_a_lease_is_nothing(monkeypatch):
-    record(monkeypatch, output = " Name  MAC address  Protocol  Address\n")
+    RecordingCommand(monkeypatch, output = " Name  MAC address  Protocol  Address\n")
 
     assert virtualmachine.get_vm_ip(NAME) is None
 
 
 def test_byte_output_is_decoded(monkeypatch):
-    record(monkeypatch, output = DOMIFADDR.encode())
+    RecordingCommand(monkeypatch, output = DOMIFADDR.encode())
 
     assert virtualmachine.get_vm_ip(NAME) == "192.168.122.50"
 
@@ -383,7 +417,7 @@ def test_an_existing_base_image_is_not_downloaded_again(monkeypatch, tmp_path):
 ###########################################################
 
 def test_a_snapshot_is_taken(monkeypatch):
-    recorder = record(monkeypatch)
+    recorder = RecordingCommand(monkeypatch)
 
     assert virtualmachine.snapshot_vm(NAME, "pre-sshd") is True
     assert recorder.only()[:5] == ["virsh", "--connect", "qemu:///system", "snapshot-create-as", NAME]
@@ -391,14 +425,14 @@ def test_a_snapshot_is_taken(monkeypatch):
 
 
 def test_a_snapshot_can_be_unnamed(monkeypatch):
-    recorder = record(monkeypatch)
+    recorder = RecordingCommand(monkeypatch)
     virtualmachine.snapshot_vm(NAME)
 
     assert recorder.only() == ["virsh", "--connect", "qemu:///system", "snapshot-create-as", NAME]
 
 
 def test_a_named_snapshot_is_reverted_to(monkeypatch):
-    recorder = record(monkeypatch)
+    recorder = RecordingCommand(monkeypatch)
 
     assert virtualmachine.revert_vm(NAME, "pre-sshd") is True
     assert recorder.only()[:5] == ["virsh", "--connect", "qemu:///system", "snapshot-revert", NAME]
@@ -406,26 +440,26 @@ def test_a_named_snapshot_is_reverted_to(monkeypatch):
 
 
 def test_reverting_without_a_name_uses_the_current_one(monkeypatch):
-    recorder = record(monkeypatch)
+    recorder = RecordingCommand(monkeypatch)
     virtualmachine.revert_vm(NAME)
 
     assert "--current" in recorder.only()
 
 
 def test_snapshots_are_listed(monkeypatch):
-    record(monkeypatch, output = "pre-sshd\npre-docker\n")
+    RecordingCommand(monkeypatch, output = "pre-sshd\npre-docker\n")
 
     assert virtualmachine.list_snapshots(NAME) == ["pre-sshd", "pre-docker"]
 
 
 def test_no_snapshots_list_as_empty(monkeypatch):
-    record(monkeypatch, output = "")
+    RecordingCommand(monkeypatch, output = "")
 
     assert virtualmachine.list_snapshots(NAME) == []
 
 
 def test_a_failed_snapshot_is_reported(monkeypatch):
-    record(monkeypatch, returncode = 1)
+    RecordingCommand(monkeypatch, returncode = 1)
 
     assert virtualmachine.snapshot_vm(NAME, "pre-sshd") is False
 
@@ -435,7 +469,7 @@ def test_a_failed_snapshot_is_reported(monkeypatch):
 ###########################################################
 
 def test_destroying_removes_the_guest_and_its_storage(monkeypatch):
-    recorder = record(monkeypatch)
+    recorder = RecordingCommand(monkeypatch)
     monkeypatch.setattr(virtualmachine, "does_vm_exist", lambda *a, **k: True)
     fake_connection(monkeypatch)
 
@@ -446,7 +480,7 @@ def test_destroying_removes_the_guest_and_its_storage(monkeypatch):
 
 def test_destroying_stops_the_guest_first(monkeypatch):
     # An undefine on a running guest leaves it defined.
-    recorder = record(monkeypatch)
+    recorder = RecordingCommand(monkeypatch)
     monkeypatch.setattr(virtualmachine, "does_vm_exist", lambda *a, **k: True)
     fake_connection(monkeypatch)
     virtualmachine.destroy_vm(NAME)
@@ -459,7 +493,7 @@ def test_destroying_stops_the_guest_first(monkeypatch):
 
 def test_destroying_removes_the_seed(monkeypatch):
     # The seed is not attached storage, so the undefine leaves it behind.
-    record(monkeypatch)
+    RecordingCommand(monkeypatch)
     monkeypatch.setattr(virtualmachine, "does_vm_exist", lambda *a, **k: True)
     connection = fake_connection(monkeypatch)
     virtualmachine.destroy_vm(NAME)
@@ -469,7 +503,7 @@ def test_destroying_removes_the_seed(monkeypatch):
 
 def test_the_seed_is_removed_through_sudo(monkeypatch):
     # It sits in libvirt's image directory, which only root can write.
-    record(monkeypatch)
+    RecordingCommand(monkeypatch)
     monkeypatch.setattr(virtualmachine, "does_vm_exist", lambda *a, **k: True)
     connection = fake_connection(monkeypatch)
     virtualmachine.destroy_vm(NAME)
@@ -478,14 +512,14 @@ def test_the_seed_is_removed_through_sudo(monkeypatch):
 
 
 def test_destroying_something_absent_is_success(monkeypatch):
-    record(monkeypatch)
+    RecordingCommand(monkeypatch)
     monkeypatch.setattr(virtualmachine, "does_vm_exist", lambda *a, **k: False)
 
     assert virtualmachine.destroy_vm(NAME) is True
 
 
 def test_destroying_something_absent_removes_nothing(monkeypatch):
-    recorder = record(monkeypatch)
+    recorder = RecordingCommand(monkeypatch)
     monkeypatch.setattr(virtualmachine, "does_vm_exist", lambda *a, **k: False)
     virtualmachine.destroy_vm(NAME)
 
@@ -548,7 +582,8 @@ NETWORK_XML = """<network>
 
 
 def test_a_guest_keeps_the_same_mac():
-    assert virtualmachine.get_vm_mac(NAME) == virtualmachine.get_vm_mac(NAME)
+    # Derived from the name alone, so it survives a rebuild of the guest.
+    assert virtualmachine.get_vm_mac(NAME) == "52:54:00:cd:e9:cb"
 
 
 def test_two_guests_get_different_macs():
@@ -586,7 +621,7 @@ def test_the_reservation_is_changed_live_and_persisted():
 
 
 def test_reserving_adds_the_guest(monkeypatch):
-    recorder = record(monkeypatch, output = NETWORK_XML)
+    recorder = RecordingCommand(monkeypatch, output = NETWORK_XML)
 
     assert virtualmachine.reserve_address(NAME, "192.168.122.10", mac = "52:54:00:aa:bb:cc") is True
     added = [call["cmd"] for call in recorder.calls if "add-last" in call["cmd"]]
@@ -594,7 +629,7 @@ def test_reserving_adds_the_guest(monkeypatch):
 
 
 def test_reserving_replaces_what_held_the_address(monkeypatch):
-    recorder = record(monkeypatch, output = NETWORK_XML)
+    recorder = RecordingCommand(monkeypatch, output = NETWORK_XML)
     virtualmachine.reserve_address(NAME, "192.168.122.20", mac = "52:54:00:aa:bb:cc")
 
     deleted = [call["cmd"] for call in recorder.calls if "delete" in call["cmd"]]
@@ -605,7 +640,7 @@ def test_an_existing_reservation_is_left_alone(monkeypatch):
     existing = NETWORK_XML.replace(
         "<host mac='52:54:00:11:22:33' name='other' ip='192.168.122.20'/>",
         "<host mac='52:54:00:aa:bb:cc' name='%s' ip='192.168.122.10'/>" % NAME)
-    recorder = record(monkeypatch, output = existing)
+    recorder = RecordingCommand(monkeypatch, output = existing)
 
     assert virtualmachine.reserve_address(NAME, "192.168.122.10", mac = "52:54:00:aa:bb:cc") is True
     assert not [call for call in recorder.calls if "net-update" in call["cmd"]]
@@ -630,28 +665,28 @@ def test_no_interface_has_no_mac():
 
 
 def test_a_running_guest_is_not_started_again(monkeypatch):
-    recorder = record(monkeypatch, output = "running\n")
+    recorder = RecordingCommand(monkeypatch, output = "running\n")
 
     assert virtualmachine.start_vm(NAME) is True
     assert not [call for call in recorder.calls if "start" in call["cmd"]]
 
 
 def test_a_stopped_guest_is_started(monkeypatch):
-    recorder = record(monkeypatch, output = "shut off\n")
+    recorder = RecordingCommand(monkeypatch, output = "shut off\n")
     virtualmachine.start_vm(NAME)
 
     assert [call for call in recorder.calls if call["cmd"][3:] == ["start", NAME]]
 
 
 def test_a_missing_snapshot_needs_no_deleting(monkeypatch):
-    recorder = record(monkeypatch, output = "other\n")
+    recorder = RecordingCommand(monkeypatch, output = "other\n")
 
     assert virtualmachine.delete_snapshot(NAME, "pre-sshd") is True
     assert not [call for call in recorder.calls if "snapshot-delete" in call["cmd"]]
 
 
 def test_an_existing_snapshot_is_deleted(monkeypatch):
-    recorder = record(monkeypatch, output = "pre-sshd\n")
+    recorder = RecordingCommand(monkeypatch, output = "pre-sshd\n")
     virtualmachine.delete_snapshot(NAME, "pre-sshd")
 
     assert [call for call in recorder.calls if call["cmd"][3:] == ["snapshot-delete", NAME, "pre-sshd"]]

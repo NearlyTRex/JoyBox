@@ -140,25 +140,30 @@ def test_change_permission_applies_the_mode(local_connection, tmp_path):
 # Commands
 ###########################################################
 
+@pytest.mark.requires_binary("echo")
 def test_run_output_returns_stdout(local_connection):
     assert "joybox" in local_connection.run_output(["echo", "joybox"])
 
 
+@pytest.mark.requires_binary("true", "false")
 def test_run_return_code_reports_success_and_failure(local_connection):
     assert local_connection.run_return_code(["true"]) == 0
     assert local_connection.run_return_code(["false"]) != 0
 
 
+@pytest.mark.requires_binary("true")
 def test_run_checked_reflects_the_exit_status(local_connection):
     assert local_connection.run_checked(["true"]) is not False
 
 
+@pytest.mark.requires_binary("sh")
 def test_run_output_can_include_standard_error(local_connection):
     local_connection.options.include_stderr = True
 
     assert "oops" in local_connection.run_output(["sh", "-c", "echo oops >&2"])
 
 
+@pytest.mark.requires_binary("sh")
 def test_commands_honour_the_working_directory_and_environment(local_connection, tmp_path):
     local_connection.options.cwd = str(tmp_path)
     local_connection.options.env = {"JOYBOX_TEST": "value"}
@@ -166,6 +171,7 @@ def test_commands_honour_the_working_directory_and_environment(local_connection,
     assert local_connection.run_output(["sh", "-c", "pwd; echo $JOYBOX_TEST"]) == "%s\nvalue" % tmp_path
 
 
+@pytest.mark.requires_binary("sh")
 def test_run_return_code_redirects_to_files(local_connection, tmp_path):
     local_connection.options.stdout = str(tmp_path / "out.log")
     local_connection.options.stderr = str(tmp_path / "err.log")
@@ -185,6 +191,7 @@ def test_a_missing_program_reports_failure():
     assert lenient.run_blocking(["definitely-not-a-real-binary"]) == 1
 
 
+@pytest.mark.requires_binary("sh", "tr")
 def test_a_shell_string_is_interpreted_by_the_shell(local_connection):
     local_connection.options.shell = True
 

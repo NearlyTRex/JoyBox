@@ -28,7 +28,7 @@ def csv_file(tmp_path):
 
 
 def write_raw_json(path, payload):
-    with open(path, "w") as handle:
+    with open(path, "w", encoding = "utf-8") as handle:
         json.dump(payload, handle)
     return path
 
@@ -105,7 +105,7 @@ def test_entries_are_written_in_key_order(json_file):
 
     hashing.write_hash_file_json(json_file, contents)
 
-    with open(json_file, "r") as handle:
+    with open(json_file, "r", encoding = "utf-8") as handle:
         written = json.load(handle)
     assert [item["filename"] for item in written] == ["apple.zip", "mango.zip", "zebra.zip"]
 
@@ -138,8 +138,8 @@ def test_csv_sizes_and_times_come_back_as_numbers(csv_file):
 
     data = hashing.read_hash_file_csv(csv_file)["Games/one.zip"]
 
-    assert isinstance(data["size"], int)
-    assert isinstance(data["mtime"], int)
+    assert (type(data["size"]), data["size"]) == (int, 10)
+    assert (type(data["mtime"]), data["mtime"]) == (int, 111)
 
 
 def test_a_missing_csv_manifest_reads_as_empty(tmp_path):
@@ -150,7 +150,7 @@ def test_a_csv_manifest_carries_a_header(csv_file):
     hashing.write_hash_file_csv(csv_file, {"Games/one.zip": {
         "dir": "Games", "filename": "one.zip", "hash": "aaa", "size": 1, "mtime": 2}})
 
-    with open(csv_file, "r") as handle:
+    with open(csv_file, "r", encoding = "utf-8") as handle:
         assert handle.readline().strip() == "dir,filename,hash,size,mtime"
 
 
@@ -174,7 +174,7 @@ def test_csv_rows_are_written_in_key_order(csv_file):
 
     hashing.write_hash_file_csv(csv_file, contents)
 
-    with open(csv_file, "r") as handle:
+    with open(csv_file, "r", encoding = "utf-8") as handle:
         rows = handle.read().splitlines()[1:]
     assert [row.split(",")[1] for row in rows] == ["apple.zip", "mango.zip", "zebra.zip"]
 
@@ -200,7 +200,7 @@ def test_sorting_orders_a_manifest_written_out_of_order(json_file):
 
     hashing.sort_hash_file(json_file)
 
-    with open(json_file, "r") as handle:
+    with open(json_file, "r", encoding = "utf-8") as handle:
         written = json.load(handle)
     assert [item["filename"] for item in written] == ["apple.zip", "zebra.zip"]
 
@@ -223,14 +223,14 @@ def test_verbose_csv_reads_writes_and_sorts_report_the_file(csv_file, json_file,
 
 
 def test_a_malformed_csv_manifest_reads_as_what_parsed(csv_file):
-    with open(csv_file, "w") as handle:
+    with open(csv_file, "w", encoding = "utf-8") as handle:
         handle.write("dir,filename,hash,size,mtime\nGames,one.zip,abc,notanumber,1\n")
 
     assert hashing.read_hash_file_csv(csv_file) == {}
 
 
 def test_a_malformed_csv_manifest_quits_when_failures_are_fatal(csv_file):
-    with open(csv_file, "w") as handle:
+    with open(csv_file, "w", encoding = "utf-8") as handle:
         handle.write("dir,filename\nGames,one.zip\n")
 
     with pytest.raises(SystemExit):

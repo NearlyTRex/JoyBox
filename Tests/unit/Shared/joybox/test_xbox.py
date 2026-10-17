@@ -104,11 +104,12 @@ def test_a_successful_extract_deletes_the_image_when_asked(installed, recording_
 
 def test_the_image_is_kept_by_default(installed, recording_command, existing_output,
                                       monkeypatch):
-    def fail(*args, **kwargs):
-        raise AssertionError("the image must be kept unless asked for")
-
-    monkeypatch.setattr(xbox.fileops, "remove_file", fail)
+    removed = []
+    monkeypatch.setattr(
+        xbox.fileops, "remove_file", lambda src, **kwargs: removed.append(src))
     xbox.extract_xbox_iso("/in/Game.iso", "/out")
+
+    assert removed == []
 
 
 ###########################################################

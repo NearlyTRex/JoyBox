@@ -95,9 +95,9 @@ class ConnectionLocal(connection.Connection):
                     stdout = self.options.stdout
                     stderr = self.options.stderr
                     if paths.is_path_valid(stdout):
-                        stdout = stack.enter_context(open(stdout, "w"))
+                        stdout = stack.enter_context(open(stdout, "w", encoding = "utf-8"))
                     if paths.is_path_valid(stderr):
-                        stderr = stack.enter_context(open(stderr, "w"))
+                        stderr = stack.enter_context(open(stderr, "w", encoding = "utf-8"))
                     return subprocess.call(
                         cmd,
                         shell = self.options.shell,
@@ -205,7 +205,7 @@ class ConnectionLocal(connection.Connection):
                     return self.run_output(["cat", src], sudo = True)
                 else:
                     contents = ""
-                    with open(src, "r") as f:
+                    with open(src, "r", encoding = "utf-8") as f:
                         contents = f.read()
                     return contents
             return None
@@ -305,7 +305,11 @@ class ConnectionLocal(connection.Connection):
                     try:
                         if not network.download_url(url, output_file = temp_path, **self._io_flags()):
                             return self.handle_error(f"Unable to download {url}", "download failed")
+                        # Leave it as root's curl would: mkstemp's private, user owned file is
+                        # unreadable to apt's sandbox user and writable by the user
+                        os.chmod(temp_path, 0o644)
                         self.run_checked([tools.get_move_tool(), temp_path, dest], sudo = True, throw_exception = True)
+                        self.run_checked([tools.get_change_owner_tool(), "0:0", dest], sudo = True, throw_exception = True)
                     finally:
                         if os.path.exists(temp_path):
                             os.remove(temp_path)

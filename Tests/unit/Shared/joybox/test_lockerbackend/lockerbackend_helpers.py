@@ -39,11 +39,19 @@ class FakeLockerInfo:
         return self.passphrase
 
 
+class MountedLockerInfo:
+
+    def __init__(self, root):
+        self.root = root
+
+    def get_mount_path(self):
+        return self.root
+
+
 class FakeLocalBackend(lockerbackend.LocalBackend):
 
     def __init__(self, root):
-        self.root_path = root
-        self.locker_info = None
+        super().__init__(MountedLockerInfo(root))
 
 
 def only(state, name):

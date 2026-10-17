@@ -6,7 +6,7 @@ import pytest
 
 # Local imports
 from joybox import virtualmachine
-from vm_helpers import record
+from fakes import RecordingCommand
 
 
 ###########################################################
@@ -249,7 +249,7 @@ def test_a_workstation_without_firmware_is_told_so(monkeypatch, bootable):
 
 
 def test_an_image_that_is_not_there_stops_before_a_disk_is_made(monkeypatch, bootable):
-    recorder = record(monkeypatch)
+    recorder = RecordingCommand(monkeypatch)
 
     assert virtualmachine.boot_vm_image(
         vm_name = BOOT_NAME,
@@ -260,7 +260,7 @@ def test_an_image_that_is_not_there_stops_before_a_disk_is_made(monkeypatch, boo
 
 
 def test_a_disk_is_made_before_the_machine_runs(monkeypatch, bootable, tmp_path):
-    recorder = record(monkeypatch)
+    recorder = RecordingCommand(monkeypatch)
     image = tmp_path / "llm.iso"
     image.write_bytes(b"iso")
 
@@ -272,9 +272,10 @@ def test_a_disk_is_made_before_the_machine_runs(monkeypatch, bootable, tmp_path)
 
 
 def test_an_existing_disk_is_not_made_again(monkeypatch, bootable, tmp_path):
-    recorder = record(monkeypatch)
+    recorder = RecordingCommand(monkeypatch)
     os.makedirs(bootable)
-    open(virtualmachine.get_boot_disk(BOOT_NAME, bootable), "wb").close()
+    with open(virtualmachine.get_boot_disk(BOOT_NAME, bootable), "wb"):
+        pass
 
     assert virtualmachine.boot_vm_image(vm_name = BOOT_NAME, boot_dir = bootable) is True
 
@@ -283,19 +284,22 @@ def test_an_existing_disk_is_not_made_again(monkeypatch, bootable, tmp_path):
 
 
 def test_a_reset_throws_the_disk_away(monkeypatch, bootable, tmp_path):
-    record(monkeypatch)
+    # The recorder never runs qemu-img, so the old disk is gone and nothing
+    # new takes its place.
+    recorder = RecordingCommand(monkeypatch)
     os.makedirs(bootable)
     disk = virtualmachine.get_boot_disk(BOOT_NAME, bootable)
     with open(disk, "wb") as handle:
         handle.write(b"old")
 
-    virtualmachine.boot_vm_image(vm_name = BOOT_NAME, boot_dir = bootable, reset = True)
+    assert virtualmachine.boot_vm_image(vm_name = BOOT_NAME, boot_dir = bootable, reset = True) is True
 
-    assert not os.path.exists(disk) or open(disk, "rb").read() != b"old"
+    assert not os.path.exists(disk)
+    assert "qemu-img" in recorder.text(0)
 
 
 def test_a_machine_that_will_not_start_is_reported(monkeypatch, bootable):
-    record(monkeypatch, returncode = 1)
+    RecordingCommand(monkeypatch, returncode = 1)
 
     assert virtualmachine.boot_vm_image(vm_name = BOOT_NAME, boot_dir = bootable) is False
 
@@ -350,7 +354,7 @@ def test_existing_firmware_variables_are_kept(monkeypatch, tmp_path):
 
 
 def test_a_boot_directory_that_cannot_be_made_is_reported(monkeypatch, bootable):
-    recorder = record(monkeypatch)
+    recorder = RecordingCommand(monkeypatch)
     monkeypatch.setattr(virtualmachine.fileops, "make_directory", lambda **kwargs: False)
     monkeypatch.setattr(virtualmachine.logger, "log_error", lambda *a, **k: None)
 
@@ -359,7 +363,7 @@ def test_a_boot_directory_that_cannot_be_made_is_reported(monkeypatch, bootable)
 
 
 def test_a_disk_that_cannot_be_made_stops_the_boot(monkeypatch, bootable):
-    recorder = record(monkeypatch, returncode = 1)
+    recorder = RecordingCommand(monkeypatch, returncode = 1)
     monkeypatch.setattr(virtualmachine.logger, "log_error", lambda *a, **k: None)
 
     assert virtualmachine.boot_vm_image(vm_name = BOOT_NAME, boot_dir = bootable) is False
@@ -367,7 +371,7 @@ def test_a_disk_that_cannot_be_made_stops_the_boot(monkeypatch, bootable):
 
 
 def test_firmware_that_cannot_be_copied_stops_the_boot(monkeypatch, bootable):
-    recorder = record(monkeypatch)
+    recorder = RecordingCommand(monkeypatch)
     monkeypatch.setattr(
         virtualmachine.fileops, "copy_file_or_directory", lambda **kwargs: False)
     monkeypatch.setattr(virtualmachine.logger, "log_error", lambda *a, **k: None)
@@ -379,9 +383,10 @@ def test_firmware_that_cannot_be_copied_stops_the_boot(monkeypatch, bootable):
 def test_installing_over_an_existing_disk_is_warned_about(monkeypatch, bootable, tmp_path):
     warnings = []
     monkeypatch.setattr(virtualmachine.logger, "log_warning", warnings.append)
-    record(monkeypatch)
+    RecordingCommand(monkeypatch)
     os.makedirs(bootable)
-    open(virtualmachine.get_boot_disk(BOOT_NAME, bootable), "wb").close()
+    with open(virtualmachine.get_boot_disk(BOOT_NAME, bootable), "wb"):
+        pass
     image = tmp_path / "llm.iso"
     image.write_bytes(b"iso")
 
@@ -394,7 +399,7 @@ def test_an_unaccelerated_boot_is_warned_about(monkeypatch, bootable):
     warnings = []
     monkeypatch.setattr(virtualmachine.logger, "log_warning", warnings.append)
     monkeypatch.setattr(virtualmachine, "is_acceleration_available", lambda: False)
-    recorder = record(monkeypatch)
+    recorder = RecordingCommand(monkeypatch)
 
     assert virtualmachine.boot_vm_image(vm_name = BOOT_NAME, boot_dir = bootable) is True
     assert [warning for warning in warnings if "/dev/kvm" in warning]
@@ -404,7 +409,7 @@ def test_an_unaccelerated_boot_is_warned_about(monkeypatch, bootable):
 def test_a_boot_without_a_forwarded_port_gets_no_network(monkeypatch, bootable):
     infos = []
     monkeypatch.setattr(virtualmachine.logger, "log_info", infos.append)
-    recorder = record(monkeypatch)
+    recorder = RecordingCommand(monkeypatch)
 
     assert virtualmachine.boot_vm_image(
         vm_name = BOOT_NAME, boot_dir = bootable, ssh_port = 0) is True

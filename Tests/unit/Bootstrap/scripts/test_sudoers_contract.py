@@ -3,9 +3,14 @@ import os
 import re
 import subprocess
 
+# Third-party imports
+import pytest
+
 # Local imports
 from joybox import hardening
 from fakes import RecordingConnection
+
+pytestmark = pytest.mark.requires_binary("bash")
 
 
 ###########################################################
@@ -17,7 +22,7 @@ from fakes import RecordingConnection
 ###########################################################
 
 def read_verify_grants(bootstrap_dir):
-    with open(os.path.join(bootstrap_dir, "scripts", "common.sh"), "r") as script:
+    with open(os.path.join(bootstrap_dir, "scripts", "common.sh"), "r", encoding = "utf-8") as script:
         contents = script.read()
     block = contents.split('Cmnd_Alias JOYBOX_VERIFY = ', 1)[1].split('echo ""', 1)[0]
     entries = re.findall(r'echo "\s*(/[^",\\]+?)(?:,)?\s*(?:\\\\)?"', block)
@@ -43,7 +48,7 @@ def test_every_privileged_check_is_granted(bootstrap_dir):
 
 
 def test_the_verify_grant_is_given_to_the_user(bootstrap_dir):
-    with open(os.path.join(bootstrap_dir, "scripts", "common.sh"), "r") as script:
+    with open(os.path.join(bootstrap_dir, "scripts", "common.sh"), "r", encoding = "utf-8") as script:
         contents = script.read()
 
     assert "NOPASSWD: APT_MANAGE, JOYBOX_VERIFY," in contents

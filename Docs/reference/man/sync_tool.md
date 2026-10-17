@@ -21,9 +21,9 @@ JoyBox encryption, even for a locker marked `encrypted`.
 
 Actions:
 
-- `Init`: create the rclone remote. A Google Drive remote is created and then
-  authorised with `rclone config reconnect`; other types are created from the JSON in
-  the locker's `_config` setting.
+- `Init`: check the locker's remote resolves. Remotes are defined by the settings, the
+  JSON in `_config` included, and reach rclone through the environment of each command,
+  so nothing is created and no credential is written to rclone.conf.
 - `Download` / `Upload`: `rclone copy` from remote to local, or local to remote. Files
   that differ are overwritten; nothing is deleted.
 - `Pull` / `Push`: `rclone sync` from remote to local, or local to remote. The
@@ -87,7 +87,7 @@ recycle folder.
 
 ## Examples
 
-### Create the rclone remote for the Hetzner locker
+### Check the Hetzner locker's remote resolves
 
 ```bash
 sync_tool -a Init -l Hetzner

@@ -1,6 +1,8 @@
 # Imports
 import os
 import subprocess
+
+# Third-party imports
 import pytest
 
 # Local imports
@@ -26,7 +28,7 @@ def payload(tmp_path):
 
 
 @pytest.fixture
-def built_iso(tmp_path, payload, requires_tool):
+def built_iso(tmp_path, payload):
     # Building the fixture image is scaffolding, so it calls the tool directly
     # rather than going through a wrapper.
     tool = programs.get_tool_program("ExtractXIso")
@@ -54,24 +56,24 @@ def test_an_xiso_extracts_its_files(tmp_path, built_iso):
 def test_extracted_content_matches_the_payload(tmp_path, built_iso, payload):
     out = tmp_path / "out"
     xbox.extract_xbox_iso(str(built_iso), str(out))
-    restored = [path for path in out.rglob("data.bin")][0]
+    restored = list(out.rglob("data.bin"))[0]
 
     assert restored.read_bytes() == (payload / "data.bin").read_bytes()
 
 
-def test_extracting_a_non_xiso_reports_failure(tmp_path, requires_tool):
+def test_extracting_a_non_xiso_reports_failure(tmp_path):
     source = tmp_path / "notanimage.iso"
     source.write_text("this is not a disc image")
 
     assert xbox.extract_xbox_iso(str(source), str(tmp_path / "out")) is False
 
 
-def test_extracting_a_missing_image_reports_failure(tmp_path, requires_tool):
+def test_extracting_a_missing_image_reports_failure(tmp_path):
     assert xbox.extract_xbox_iso(
         str(tmp_path / "absent.iso"), str(tmp_path / "out")) is False
 
 
-def test_a_failed_extract_leaves_the_image_alone(tmp_path, requires_tool):
+def test_a_failed_extract_leaves_the_image_alone(tmp_path):
     source = tmp_path / "notanimage.iso"
     source.write_text("this is not a disc image")
     xbox.extract_xbox_iso(str(source), str(tmp_path / "out"), delete_original = True)
@@ -109,7 +111,7 @@ def test_a_rewritten_xiso_still_extracts(tmp_path, built_iso, payload):
 
     out = tmp_path / "out"
     assert xbox.extract_xbox_iso(str(built_iso), str(out)) is True
-    restored = [path for path in out.rglob("data.bin")][0]
+    restored = list(out.rglob("data.bin"))[0]
     assert restored.read_bytes() == (payload / "data.bin").read_bytes()
 
 
@@ -136,12 +138,12 @@ def test_discarding_the_original_leaves_the_image_in_place(tmp_path, built_iso):
     assert not [path for path in tmp_path.iterdir() if path.suffix == ".old"]
 
 
-def test_rewriting_a_non_xiso_reports_failure(tmp_path, requires_tool):
+def test_rewriting_a_non_xiso_reports_failure(tmp_path):
     source = tmp_path / "notanimage.iso"
     source.write_text("this is not a disc image")
 
     assert xbox.rewrite_xbox_iso(str(source)) is False
 
 
-def test_rewriting_a_missing_image_reports_failure(tmp_path, requires_tool):
+def test_rewriting_a_missing_image_reports_failure(tmp_path):
     assert xbox.rewrite_xbox_iso(str(tmp_path / "absent.iso")) is False

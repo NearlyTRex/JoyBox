@@ -68,14 +68,23 @@ def test_a_tool_and_an_emulator_do_not_share_a_name():
 # Configuration
 ###########################################################
 
+# Keys of a config whose entry is not itself a mapping, or None when the
+# config is not a mapping at all
+def malformed_entries(program):
+    declared = program.get_config()
+    if not isinstance(declared, dict):
+        return None
+    return sorted(key for key, entry in declared.items() if not isinstance(entry, dict))
+
+
 @pytest.mark.parametrize("tool", TOOLS, ids = TOOL_IDS)
-def test_every_tool_config_is_a_mapping(tool):
-    assert isinstance(tool.get_config(), dict)
+def test_every_tool_config_maps_names_to_entries(tool):
+    assert malformed_entries(tool) == []
 
 
 @pytest.mark.parametrize("emulator", EMULATORS, ids = EMULATOR_IDS)
-def test_every_emulator_config_is_a_mapping(emulator):
-    assert isinstance(emulator.get_config(), dict)
+def test_every_emulator_config_maps_names_to_entries(emulator):
+    assert malformed_entries(emulator) == []
 
 
 @pytest.mark.parametrize("emulator", EMULATORS, ids = EMULATOR_IDS)
@@ -112,9 +121,9 @@ def test_merged_emulator_configs_do_not_lose_entries():
 def test_every_declared_platform_is_registered(emulator):
     # A platform string that is not a real member never matches anything, so
     # the emulator is silently unreachable for it.
-    for platform in emulator.get_platforms() or []:
-        assert platform in config.Platform.members(), \
-            f"{emulator.get_name()} claims unknown platform {platform!r}"
+    unknown = [platform for platform in emulator.get_platforms() or [] if platform not in config.Platform.members()]
+
+    assert not unknown, f"{emulator.get_name()} claims unknown platforms {unknown!r}"
 
 
 def test_no_platform_is_claimed_by_two_emulators():
@@ -131,10 +140,10 @@ def test_no_platform_is_claimed_by_two_emulators():
 
 @pytest.mark.parametrize("emulator", EMULATORS, ids = EMULATOR_IDS)
 def test_a_declared_platform_resolves_back_to_its_emulator(emulator):
-    for platform in emulator.get_platforms() or []:
-        found = programs.get_emulator_by_platform(platform)
-        assert found is not None
-        assert found.get_name() == emulator.get_name()
+    platforms = emulator.get_platforms() or []
+    resolved = [programs.get_emulator_by_platform(platform) for platform in platforms]
+
+    assert [found.get_name() if found else None for found in resolved] == [emulator.get_name()] * len(platforms)
 
 
 def test_an_unknown_platform_resolves_to_nothing():

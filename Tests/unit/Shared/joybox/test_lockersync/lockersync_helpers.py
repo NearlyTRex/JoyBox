@@ -101,21 +101,36 @@ class RecordingMixin:
         return self.sidecar_result
 
 
+class BackendLockerInfo:
+
+    def __init__(self, mount_path = None, remote_type = None):
+        self.mount_path = mount_path
+        self.remote_type = remote_type
+
+    def get_mount_path(self):
+        return self.mount_path
+
+    def get_name(self):
+        return "remote"
+
+    def get_type(self):
+        return self.remote_type
+
+    def get_remote_path(self):
+        return "/Locker"
+
+
 class FakeLocalLocker(RecordingMixin, lockerbackend.LocalBackend):
 
     def __init__(self, root, listing = None, result = True):
-        self.locker_info = None
-        self.root_path = root
+        super().__init__(BackendLockerInfo(mount_path = root))
         self.setup_recording({} if listing is None else listing, None, result)
 
 
 class FakeRemoteLocker(RecordingMixin, lockerbackend.RemoteBackend):
 
     def __init__(self, remote_type = config.RemoteType.DRIVE, listing = None, sidecar = None, result = True):
-        self.locker_info = None
-        self.remote_name = "remote"
-        self.remote_type = remote_type.val()
-        self.remote_path = "/Locker"
+        super().__init__(BackendLockerInfo(remote_type = remote_type.val()))
         self.setup_recording({} if listing is None else listing, {} if sidecar is None else sidecar, result)
 
 

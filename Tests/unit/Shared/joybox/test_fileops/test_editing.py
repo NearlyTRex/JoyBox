@@ -28,8 +28,14 @@ def test_fileio_error_keeps_the_destination_in_a_pretend_run(tmp_path):
     assert os.path.exists(dest)
 
 
-def test_fileio_error_survives_an_unwritable_log(tmp_path):
+def test_fileio_error_survives_an_unwritable_log(tmp_path, monkeypatch):
+    warnings = []
+    monkeypatch.setattr(fileops.logger, "log_warning", warnings.append)
+
     fileops.report_fileio_error("src.bin", None, str(tmp_path / "missing" / "errors.txt"))
+
+    assert warnings[0] == "Skipping file after I/O error: 'src.bin'"
+    assert warnings[1].startswith("Unable to write error log")
 
 
 ###########################################################

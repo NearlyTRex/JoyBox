@@ -167,5 +167,3 @@ def test_a_malformed_listing_is_a_failure(rclone, quiet, monkeypatch):
 
 def test_a_listing_without_rclone_is_a_failure(no_rclone, quiet, recording_command):
     assert sync.list_files_with_hashes(REMOTE, REMOTE_TYPE, REMOTE_PATH) is None
-
-

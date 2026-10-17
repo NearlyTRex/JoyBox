@@ -17,9 +17,9 @@ coverage_tool <action> [options]
 Actions:
 
 - `run`: run the unit tests under coverage.py the way CI does (from the checkout,
-  `pytest -q -c Tests/pytest.ini Tests/unit`, with pyproject's `[tool.coverage]`
-  settings), then report. The data is kept in the cache's `Coverage` directory, not
-  the checkout.
+  `pytest -q -c Tests/pytest.ini --rootdir=. -n auto --dist loadfile Tests/unit`, with
+  pyproject's `[tool.coverage]` settings), combine each worker's data, then report. The
+  data is kept in the cache's `Coverage` directory, not the checkout.
 - `report`: report on the last measurement without running anything.
 
 The library report gives the overall figure against the floor CI enforces (read

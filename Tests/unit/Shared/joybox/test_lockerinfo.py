@@ -193,12 +193,12 @@ def test_a_specific_passphrase_wins_over_the_shared_one(local_locker):
 ###########################################################
 
 def test_the_configured_primary_remote_is_used(isolated_settings):
-    for locker_type in config.LockerType.members():
-        if locker_type in (config.LockerType.LOCAL, config.LockerType.EXTERNAL):
-            continue
-        isolated_settings.set_value("UserData.Share", "primary_remote_locker", locker_type.val())
-        assert lockerinfo.get_primary_remote_locker_type() == locker_type
-        break
+    locker_type = next(
+        member for member in config.LockerType.members()
+        if member not in (config.LockerType.LOCAL, config.LockerType.EXTERNAL))
+    isolated_settings.set_value("UserData.Share", "primary_remote_locker", locker_type.val())
+
+    assert lockerinfo.get_primary_remote_locker_type() == locker_type
 
 
 def test_the_primary_remote_lookup_ignores_case(isolated_settings):

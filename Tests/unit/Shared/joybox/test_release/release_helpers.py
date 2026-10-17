@@ -3,6 +3,7 @@ import os
 
 # Local imports
 from joybox import release
+from file_helpers import write
 
 PATCH_BODY = "--- a/main.c\n+++ b/main.c\n"
 
@@ -35,22 +36,6 @@ def fetch_webpage(**kwargs):
         install_name = "Tool", install_dir = "/tools/Tool")
     defaults.update(kwargs)
     return release.download_webpage_release(**defaults)
-
-
-def write(path, contents = "data"):
-    path = str(path)
-    os.makedirs(os.path.dirname(path), exist_ok = True)
-    with open(path, "w") as handle:
-        handle.write(contents)
-    return path
-
-
-def tree(root):
-    found = []
-    for directory, _, filenames in os.walk(str(root)):
-        for filename in filenames:
-            found.append(os.path.relpath(os.path.join(directory, filename), str(root)))
-    return sorted(found)
 
 
 def failing(*args, **kwargs):

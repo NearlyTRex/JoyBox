@@ -13,9 +13,13 @@ from joybox import llmchat
 # Backend selection
 ###########################################################
 
-def test_every_backend_key_builds_a_backend():
-    for key in llmchat.get_backend_keys():
-        assert llmchat.make_backend(key) is not None
+def test_every_backend_key_builds_its_backend():
+    built = {key: type(llmchat.make_backend(key)) for key in llmchat.get_backend_keys()}
+
+    assert built == {
+        llmchat.BACKEND_OLLAMA: llmchat.OllamaBackend,
+        llmchat.BACKEND_OPENAI: llmchat.OpenAIBackend,
+        llmchat.BACKEND_CLAUDE: llmchat.ClaudeBackend}
 
 
 def test_the_backend_keys_are_distinct():
@@ -70,8 +74,9 @@ def server(monkeypatch):
 
     def urlopen(request, timeout = None):
         state["requests"].append(request)
-        if state["error"]:
-            raise state["error"]
+        error = state["error"]
+        if error is not None:
+            raise error
         return state["response"]
 
     monkeypatch.setattr(llmchat.urllib.request, "urlopen", urlopen)

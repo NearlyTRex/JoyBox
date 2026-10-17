@@ -103,7 +103,7 @@ def launch(monkeypatch, tmp_path):
 
 
 def test_a_game_runs_its_selected_program(launch):
-    game, options, windows, tokens = launch
+    game, options, _, tokens = launch
 
     assert computer.launch_computer_game(
         game, capture_type = "video", capture_file = "/out.mp4", fullscreen = True,
@@ -118,7 +118,7 @@ def test_a_game_runs_its_selected_program(launch):
 
 
 def test_a_game_prefix_links_the_cache_and_saves(launch):
-    game, options, windows, tokens = launch
+    game, options, _, _ = launch
     computer.launch_computer_game(game)
     created = options.prefix_calls[0]
 
@@ -133,7 +133,7 @@ def test_a_game_prefix_links_the_cache_and_saves(launch):
 
 
 def test_the_prefix_is_made_behind_a_loading_window(launch):
-    game, options, windows, tokens = launch
+    game, _, windows, _ = launch
     computer.launch_computer_game(game)
 
     assert windows[0]["image_file"] == "/assets/boxfront.png"
@@ -146,7 +146,7 @@ def test_the_prefix_is_made_behind_a_loading_window(launch):
     (False, False, "/prefix/drive_c"),
 ])
 def test_the_program_is_chosen_from_the_right_drive(launch, dos, win31, expected):
-    game, options, windows, tokens = launch
+    game = launch[0]
     game.dos = dos
     game.win31 = win31
     computer.launch_computer_game(game)
@@ -155,7 +155,7 @@ def test_the_program_is_chosen_from_the_right_drive(launch, dos, win31, expected
 
 
 def test_a_prefix_without_a_drive_cannot_launch(launch):
-    game, options, windows, tokens = launch
+    game, options, _, _ = launch
     options.c_drive = None
 
     assert computer.launch_computer_game(game) is False
@@ -165,7 +165,7 @@ def test_a_prefix_without_a_drive_cannot_launch(launch):
 def test_a_game_with_no_program_chosen_cannot_launch(launch):
     # Selection gives nothing back when the install has nothing runnable or the
     # choice is cancelled.
-    game, options, windows, tokens = launch
+    game = launch[0]
     game.program = None
 
     assert computer.launch_computer_game(game) is False

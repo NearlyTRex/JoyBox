@@ -85,12 +85,9 @@ def test_a_crc32_is_rendered_the_way_a_dat_file_stores_one(payload_file):
 
 def test_a_crc32_with_leading_zeros_keeps_its_width(tmp_path):
     # "%x" would drop them, giving a checksum narrower than any dat carries
-    for index in range(600):
-        candidate = write_file(tmp_path, "probe.bin", b"x" * index)
-        if hashing.calculate_file_crc32(candidate).startswith("0"):
-            assert len(hashing.calculate_file_crc32(candidate)) == 8
-            return
-    pytest.skip("no short crc32 found to pad")
+    candidate = write_file(tmp_path, "probe.bin", b"x" * 23)
+
+    assert hashing.calculate_file_crc32(candidate) == "036683ba"
 
 
 ###########################################################

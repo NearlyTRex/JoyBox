@@ -12,7 +12,7 @@ from joybox import config, containers
 # relevance - so the accessors have to round-trip and not collide.
 ###########################################################
 
-SEARCH_FIELDS = ["id", "title", "description", "url", "date", "relevance", "data"]
+SEARCH_FIELDS = ["id", "title", "description", "url", "date", "relevance", "result_data"]
 ASSET_FIELDS = ["mime", "width", "height", "duration"]
 
 
@@ -50,9 +50,10 @@ def test_relevance_keeps_its_numeric_type():
 def test_arbitrary_data_is_carried_through():
     payload = {"nested": {"value": 1}}
     result = containers.SearchResult()
-    result.set_data(payload)
+    result.set_result_data(payload)
 
-    assert result.get_data() == payload
+    assert result.get_result_data() == payload
+    assert result.get_data() == {"data": payload}
 
 
 def test_results_sort_by_relevance():
@@ -97,7 +98,11 @@ def test_asset_fields_do_not_collide_with_search_fields():
 
 
 def test_an_asset_result_is_a_search_result():
-    assert isinstance(containers.AssetSearchResult(), containers.SearchResult)
+    result = containers.AssetSearchResult()
+    result.set_title("Title")
+
+    assert isinstance(result, containers.SearchResult)
+    assert result.get_title() == "Title"
 
 
 ###########################################################

@@ -10,13 +10,13 @@ from joybox import serialization
 
 
 def write_json(path, data):
-    with open(path, "w") as handle:
+    with open(path, "w", encoding = "utf-8") as handle:
         handle.write(json.dumps(data))
     return path
 
 
 def read_json(path):
-    with open(path) as handle:
+    with open(path, encoding = "utf-8") as handle:
         return json.load(handle)
 
 
@@ -32,7 +32,7 @@ def test_a_json_file_is_read(tmp_path):
 def test_a_non_json_extension_is_refused(tmp_path):
     # The extension is the guard against reading an arbitrary file as metadata.
     target = str(tmp_path / "game.txt")
-    with open(target, "w") as handle:
+    with open(target, "w", encoding = "utf-8") as handle:
         handle.write('{"name": "x"}')
 
     assert serialization.read_json_file(target) == {}
@@ -44,7 +44,7 @@ def test_a_missing_file_reads_as_empty(tmp_path):
 
 def test_malformed_json_reads_as_empty(tmp_path):
     target = str(tmp_path / "broken.json")
-    with open(target, "w") as handle:
+    with open(target, "w", encoding = "utf-8") as handle:
         handle.write("{not valid json")
 
     assert serialization.read_json_file(target) == {}
@@ -87,7 +87,7 @@ def test_keys_are_sorted_on_request(tmp_path):
     target = str(tmp_path / "game.json")
     serialization.write_json_file(target, {"c": 1, "a": 2, "b": 3}, sort_keys = True)
 
-    with open(target) as handle:
+    with open(target, encoding = "utf-8") as handle:
         contents = handle.read()
     assert contents.index('"a"') < contents.index('"b"') < contents.index('"c"')
 
@@ -148,7 +148,7 @@ def test_cleaning_can_sort_without_removing(tmp_path):
 
 def test_cleaning_a_non_json_extension_is_refused(tmp_path):
     target = str(tmp_path / "game.txt")
-    with open(target, "w") as handle:
+    with open(target, "w", encoding = "utf-8") as handle:
         handle.write('{"a": ""}')
 
     assert serialization.clean_json_file(target) is False
@@ -296,11 +296,11 @@ def test_failures_without_exit_return_the_empty_value(tmp_path):
 
 def test_cleaning_a_null_document_leaves_it_untouched(tmp_path):
     target = str(tmp_path / "null.json")
-    with open(target, "w") as handle:
+    with open(target, "w", encoding = "utf-8") as handle:
         handle.write("null")
 
     assert serialization.clean_json_file(target) is True
-    with open(target) as handle:
+    with open(target, encoding = "utf-8") as handle:
         assert handle.read() == "null"
 
 
@@ -337,7 +337,7 @@ def test_pretend_run_does_not_write_text(tmp_path):
 
 def test_a_yaml_file_is_read_without_stray_control_bytes(tmp_path, logged):
     target = str(tmp_path / "game.yaml")
-    with open(target, "w") as handle:
+    with open(target, "w", encoding = "utf-8") as handle:
         handle.write("name: Chrono\x81 Trigger\x82\n")
 
     assert serialization.read_yaml_file(target, verbose = True) == {"name": "Chrono Trigger"}
@@ -346,7 +346,7 @@ def test_a_yaml_file_is_read_without_stray_control_bytes(tmp_path, logged):
 
 def test_a_non_yaml_extension_is_refused(tmp_path):
     target = str(tmp_path / "game.txt")
-    with open(target, "w") as handle:
+    with open(target, "w", encoding = "utf-8") as handle:
         handle.write("name: x\n")
 
     assert serialization.read_yaml_file(target) == {}
@@ -358,7 +358,7 @@ def test_a_non_yaml_extension_is_refused(tmp_path):
 
 def test_csv_rows_matching_the_headers_become_dictionaries(tmp_path, logged):
     target = str(tmp_path / "games.csv")
-    with open(target, "w") as handle:
+    with open(target, "w", encoding = "utf-8") as handle:
         handle.write('name,year\n"Chrono Trigger",1995\nshort\n')
 
     rows = serialization.read_csv_file(target, ["name", "year"], verbose = True)
@@ -369,7 +369,7 @@ def test_csv_rows_matching_the_headers_become_dictionaries(tmp_path, logged):
 
 def test_a_non_csv_extension_is_refused(tmp_path):
     target = str(tmp_path / "games.txt")
-    with open(target, "w") as handle:
+    with open(target, "w", encoding = "utf-8") as handle:
         handle.write("a,b\n")
 
     assert serialization.read_csv_file(target, ["a", "b"]) == []

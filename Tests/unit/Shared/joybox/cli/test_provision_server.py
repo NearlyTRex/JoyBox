@@ -72,7 +72,8 @@ def tool(monkeypatch):
 def test_a_successful_run_selects_the_server_and_runs_every_stage(tool):
     tool.run("-s", "1", "-c", "nginx", "certbot")
 
-    [provisioner] = FakeProvisioner.created
+    assert len(FakeProvisioner.created) == 1
+    provisioner = FakeProvisioner.created[0]
     assert provisioner.ran
     assert provisioner.server.index == 1
     assert provisioner.components == ["nginx", "certbot"]
@@ -86,7 +87,8 @@ def test_a_successful_run_selects_the_server_and_runs_every_stage(tool):
 def test_a_pretend_run_only_describes_the_plan(tool):
     tool.run("-s", "1", "--stages", "deploy", "verify", "-p")
 
-    [provisioner] = FakeProvisioner.created
+    assert len(FakeProvisioner.created) == 1
+    provisioner = FakeProvisioner.created[0]
     assert not provisioner.ran
     assert tool.selected == []
     assert "plan: deploy,verify" in tool.infos

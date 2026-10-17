@@ -104,9 +104,11 @@ def test_a_backtrace_starts_with_a_newline():
 
 
 def test_each_backtrace_line_names_a_function():
-    for line in debug.get_backtrace().strip().splitlines():
-        assert "Function:" in line
-        assert "Line:" in line
+    lines = debug.get_backtrace().strip().splitlines()
+    unnamed = [line for line in lines if "Function:" not in line or "Line:" not in line]
+
+    assert lines
+    assert not unnamed, unnamed
 
 
 def test_skipping_drops_the_nearest_frames():

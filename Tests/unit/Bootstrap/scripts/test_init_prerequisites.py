@@ -13,7 +13,7 @@ import pytest
 ###########################################################
 
 def read_script(bootstrap_dir, name):
-    with open(os.path.join(bootstrap_dir, "scripts", name), "r") as script:
+    with open(os.path.join(bootstrap_dir, "scripts", name), "r", encoding = "utf-8") as script:
         return script.read()
 
 

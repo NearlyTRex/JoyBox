@@ -57,8 +57,9 @@ def requests_module(monkeypatch):
                 "timeout": timeout,
                 "json": json,
             })
-            if state["error"]:
-                raise state["error"]
+            error = state["error"]
+            if error is not None:
+                raise error
             return state["response"]
         return run
 
@@ -77,7 +78,7 @@ def requests_module(monkeypatch):
 def installed(monkeypatch):
     from network_helpers import TOOL_PATHS
     monkeypatch.setattr(network.programs, "is_tool_installed", lambda name: name in TOOL_PATHS)
-    monkeypatch.setattr(network.programs, "get_tool_program", lambda name: TOOL_PATHS.get(name))
+    monkeypatch.setattr(network.programs, "get_tool_program", TOOL_PATHS.get)
     return TOOL_PATHS
 
 

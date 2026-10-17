@@ -8,6 +8,7 @@ import pytest
 from joybox import archive
 from joybox import fileops
 from joybox import install
+from install_helpers import make_prefix, make_tree
 
 
 ###########################################################
@@ -17,25 +18,6 @@ from joybox import install
 # locker. These cover the paths that finish before the archiver runs; the
 # round trips through 7-Zip are integration tests.
 ###########################################################
-
-def make_tree(root, *relative_paths):
-    for relative in relative_paths:
-        target = root / relative
-        target.parent.mkdir(parents = True, exist_ok = True)
-        target.write_text("content of %s\n" % relative)
-    return root
-
-
-@pytest.fixture
-def prefix(tmp_path):
-    root = tmp_path / "prefix"
-    root.mkdir()
-    return make_tree(
-        root,
-        "Program Files/Game/game.exe",
-        "Program Files/Game/data/assets.pak",
-        "ProgramData/Game/settings.ini")
-
 
 ###########################################################
 # Packing
@@ -56,7 +38,8 @@ def test_a_missing_directory_packs_nothing(tmp_path):
     assert install.pack_install_image(str(tmp_path / "absent"), str(image)) is False
 
 
-def test_pretending_packs_nothing(tmp_path, prefix):
+def test_pretending_packs_nothing(tmp_path):
+    prefix = make_prefix(tmp_path)
     image = tmp_path / "install.7z"
     install.pack_install_image(str(prefix), str(image), pretend_run = True)
 
@@ -123,7 +106,7 @@ def archiver(monkeypatch):
             str(path.relative_to(source_dir)) for path in pathlib.Path(source_dir).rglob("*")
             if path.is_file()))
         if calls["succeed"]:
-            open(archive_file, "w").close()
+            pathlib.Path(archive_file).touch()
         return calls["succeed"]
 
     def extract_archive(archive_file, extract_dir, **kwargs):
@@ -135,7 +118,8 @@ def archiver(monkeypatch):
     return calls
 
 
-def test_packing_archives_only_the_kept_paths(tmp_path, prefix, archiver):
+def test_packing_archives_only_the_kept_paths(tmp_path, archiver):
+    prefix = make_prefix(tmp_path)
     make_tree(prefix, "windows/system32/kernel32.dll")
     image = tmp_path / "install.7z"
 
@@ -148,19 +132,22 @@ def test_packing_archives_only_the_kept_paths(tmp_path, prefix, archiver):
     assert prefix.exists()
 
 
-def test_packing_can_delete_the_original(tmp_path, prefix, archiver):
+def test_packing_can_delete_the_original(tmp_path, archiver):
+    prefix = make_prefix(tmp_path)
     assert install.pack_install_image(str(prefix), str(tmp_path / "install.7z"), delete_original = True) is True
     assert not prefix.exists()
 
 
-def test_a_failed_archive_keeps_the_original(tmp_path, prefix, archiver):
+def test_a_failed_archive_keeps_the_original(tmp_path, archiver):
+    prefix = make_prefix(tmp_path)
     archiver["succeed"] = False
 
     assert install.pack_install_image(str(prefix), str(tmp_path / "install.7z"), delete_original = True) is False
     assert prefix.exists()
 
 
-def test_packing_fails_without_a_temporary_directory(tmp_path, prefix, archiver, monkeypatch):
+def test_packing_fails_without_a_temporary_directory(tmp_path, archiver, monkeypatch):
+    prefix = make_prefix(tmp_path)
     monkeypatch.setattr(fileops, "create_temporary_directory", lambda **kwargs: (False, None))
 
     assert install.pack_install_image(str(prefix), str(tmp_path / "install.7z")) is False

@@ -23,7 +23,7 @@ def test_every_platform_is_registered(platform):
 
 @pytest.mark.parametrize("platform", ALL_PLATFORMS, ids = PLATFORM_IDS)
 def test_every_platform_has_a_section(platform):
-    assert platforms.get_platform_section(platform) is not None
+    assert platforms.get_platform_section(platform) is config.platforms[platform]
 
 
 def test_an_unknown_platform_is_invalid():
@@ -42,7 +42,8 @@ def test_a_missing_key_returns_nothing():
 def test_a_value_is_read_from_the_section():
     platform = ALL_PLATFORMS[0]
 
-    assert platforms.get_platform_value(platform, config.platform_key_addons) is not None
+    assert platforms.get_platform_value(platform, config.platform_key_addons) == \
+        config.platforms[platform][config.platform_key_addons]
 
 
 ###########################################################
@@ -50,15 +51,15 @@ def test_a_value_is_read_from_the_section():
 ###########################################################
 
 def test_letter_platforms_are_a_subset_of_all_platforms():
-    for platform in config.letter_platforms:
-        assert platforms.is_platform_valid(platform), \
-            f"{platform} is a letter platform but not registered"
+    unregistered = [platform for platform in config.letter_platforms if not platforms.is_platform_valid(platform)]
+
+    assert not unregistered, unregistered
 
 
 def test_transform_platforms_are_a_subset_of_all_platforms():
-    for platform in config.transform_platforms:
-        assert platforms.is_platform_valid(platform), \
-            f"{platform} is a transform platform but not registered"
+    unregistered = [platform for platform in config.transform_platforms if not platforms.is_platform_valid(platform)]
+
+    assert not unregistered, unregistered
 
 
 def test_an_unknown_platform_is_not_classified():
@@ -74,8 +75,9 @@ def test_an_unknown_platform_is_not_classified():
 
 @pytest.mark.parametrize("platform", ALL_PLATFORMS, ids = PLATFORM_IDS)
 def test_every_platform_declares_addon_types(platform):
-    assert platforms.get_addon_types(platform) is not None, \
-        f"{platform} declares no addon types"
+    declared = platforms.get_addon_types(platform)
+
+    assert set(declared) <= set(config.AddonType.members()), f"{platform} declares {declared}"
 
 
 @pytest.mark.parametrize("platform", ALL_PLATFORMS, ids = PLATFORM_IDS)
@@ -99,7 +101,10 @@ def test_addons_are_possible_when_any_type_is_declared(platform):
 
 @pytest.mark.parametrize("platform", ALL_PLATFORMS, ids = PLATFORM_IDS)
 def test_every_platform_declares_launcher_types(platform):
-    assert platforms.get_launcher_types(platform) is not None
+    declared = platforms.get_launcher_types(platform)
+
+    assert declared, f"{platform} declares no launcher types"
+    assert set(declared) <= set(config.LaunchType.members()), declared
 
 
 @pytest.mark.parametrize("platform", ALL_PLATFORMS, ids = PLATFORM_IDS)
@@ -133,12 +138,14 @@ def test_the_key_categories_do_not_overlap(platform):
 
 @pytest.mark.parametrize("platform", ALL_PLATFORMS, ids = PLATFORM_IDS)
 def test_category_membership_matches_the_lists(platform):
-    for key in platforms.get_autofill_json_keys(platform) or []:
-        assert platforms.is_autofill_json_key(platform, key) is True
-    for key in platforms.get_fillonce_json_keys(platform) or []:
-        assert platforms.is_fillonce_json_key(platform, key) is True
-    for key in platforms.get_merge_json_keys(platform) or []:
-        assert platforms.is_merge_json_key(platform, key) is True
+    unmatched = [
+        (listing.__name__, key) for listing, member in [
+            (platforms.get_autofill_json_keys, platforms.is_autofill_json_key),
+            (platforms.get_fillonce_json_keys, platforms.is_fillonce_json_key),
+            (platforms.get_merge_json_keys, platforms.is_merge_json_key)]
+        for key in listing(platform) or [] if member(platform, key) is not True]
+
+    assert not unmatched, unmatched
 
 
 @pytest.mark.parametrize("platform", ALL_PLATFORMS, ids = PLATFORM_IDS)

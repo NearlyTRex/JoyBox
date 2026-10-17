@@ -174,7 +174,7 @@ def write_hash_file(path, entries):
         }
         for directory, filename, size in entries
     ]
-    with open(path, "w") as handle:
+    with open(path, "w", encoding = "utf-8") as handle:
         handle.write(json.dumps(records))
     return path
 

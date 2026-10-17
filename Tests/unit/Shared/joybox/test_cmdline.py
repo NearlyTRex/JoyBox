@@ -150,8 +150,7 @@ def test_joined_flag_values_are_masked_in_a_string(flag):
 def test_several_secrets_in_one_command_are_all_masked():
     masked = cmdline.mask_sensitive_args("tool --token=abc --secret def --password=ghi")
 
-    for secret in ["abc", "def", "ghi"]:
-        assert secret not in masked
+    assert masked == "tool --token=**** --secret **** --password=****"
 
 
 def test_a_flag_prefix_is_not_masked_by_accident():

@@ -1,5 +1,8 @@
 # Imports
 import base64
+import pathlib
+
+# Third-party imports
 import pytest
 
 # Local imports
@@ -134,7 +137,7 @@ def test_converting_a_jpeg_to_jpeg_copies_it(tmp_path):
     target = tmp_path / "copy.jpg"
 
     assert image.convert_image_to_jpeg(source, str(target)) is True
-    assert target.read_bytes() == open(source, "rb").read()
+    assert target.read_bytes() == pathlib.Path(source).read_bytes()
 
 
 def test_converting_a_png_to_png_copies_it(tmp_path):
@@ -142,7 +145,7 @@ def test_converting_a_png_to_png_copies_it(tmp_path):
     target = tmp_path / "copy.png"
 
     assert image.convert_image_to_png(source, str(target)) is True
-    assert target.read_bytes() == open(source, "rb").read()
+    assert target.read_bytes() == pathlib.Path(source).read_bytes()
 
 
 def test_the_target_format_is_taken_from_the_extension(tmp_path):
@@ -172,10 +175,10 @@ def test_an_undeterminable_format_reports_failure(tmp_path):
 
 def test_the_source_survives_conversion(tmp_path):
     source = make_image(tmp_path / "art.jpg")
-    original = open(source, "rb").read()
+    original = pathlib.Path(source).read_bytes()
     image.convert_image_to_png(source, str(tmp_path / "art.png"))
 
-    assert open(source, "rb").read() == original
+    assert pathlib.Path(source).read_bytes() == original
 
 
 def test_a_missing_source_reports_failure(tmp_path):
@@ -218,7 +221,7 @@ def test_jpeg_data_is_converted_to_png(tmp_path):
     # Embedded album artwork is overwhelmingly jpeg.
     source = make_image(tmp_path / "art.jpg")
     result = image.convert_image_data_to_format(
-        open(source, "rb").read(), config.ImageFileType.PNG)
+        pathlib.Path(source).read_bytes(), config.ImageFileType.PNG)
 
     assert result is not None
     assert decode(result).startswith(b"\x89PNG")
@@ -227,7 +230,7 @@ def test_jpeg_data_is_converted_to_png(tmp_path):
 def test_png_data_is_converted_to_jpeg(tmp_path):
     source = make_image(tmp_path / "art.png")
     result = image.convert_image_data_to_format(
-        open(source, "rb").read(), config.ImageFileType.JPEG)
+        pathlib.Path(source).read_bytes(), config.ImageFileType.JPEG)
 
     assert decode(result).startswith(b"\xff\xd8")
 
@@ -235,7 +238,7 @@ def test_png_data_is_converted_to_jpeg(tmp_path):
 def test_converted_data_is_base64_text(tmp_path):
     source = make_image(tmp_path / "art.jpg")
     result = image.convert_image_data_to_format(
-        open(source, "rb").read(), config.ImageFileType.PNG)
+        pathlib.Path(source).read_bytes(), config.ImageFileType.PNG)
 
     assert isinstance(result, str)
     assert base64.b64encode(decode(result)).decode("utf-8") == result
@@ -245,7 +248,7 @@ def test_converted_data_reopens_as_the_target_format(tmp_path):
     import io
     source = make_image(tmp_path / "art.jpg", colour = "blue")
     result = image.convert_image_data_to_format(
-        open(source, "rb").read(), config.ImageFileType.PNG)
+        pathlib.Path(source).read_bytes(), config.ImageFileType.PNG)
 
     with PIL.open(io.BytesIO(decode(result))) as handle:
         assert handle.format == "PNG"

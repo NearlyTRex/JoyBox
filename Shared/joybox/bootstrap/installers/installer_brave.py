@@ -14,9 +14,12 @@ class Brave(installer.Installer):
         super().__init__(connection, flags, options)
         self.url = "https://brave-browser-apt-release.s3.brave.com"
         self.archive_key = "brave-browser-archive-keyring.gpg"
-        self.sources_list = "brave-browser-release.list"
+        self.sources_file = "brave-browser.sources"
         self.archive_key_path = f"/usr/share/keyrings/{self.archive_key}"
-        self.sources_list_path = f"/etc/apt/sources.list.d/{self.sources_list}"
+        self.sources_path = "/etc/apt/sources.list.d/brave-browser-release.sources"
+
+        # Where earlier installs wrote a one-line source for the same repository
+        self.legacy_sources_list_path = "/etc/apt/sources.list.d/brave-browser-release.list"
 
     def get_supported_environments(self):
         return [
@@ -28,9 +31,15 @@ class Brave(installer.Installer):
 
     def install(self):
         logger.log_info("Installing Brave")
-        self.connection.download_file(f"{self.url}/{self.archive_key}", self.archive_key_path, sudo = True)
-        self.connection.write_file(f"/tmp/{self.sources_list}", f"deb [signed-by={self.archive_key_path}] {self.url}/ stable main\n")
-        self.connection.move_file_or_directory(f"/tmp/{self.sources_list}", self.sources_list_path, sudo = True)
+
+        # Brave publishes both the keyring and the deb822 source that names it
+        for name, path in [(self.archive_key, self.archive_key_path), (self.sources_file, self.sources_path)]:
+            if not self.connection.download_file(f"{self.url}/{name}", path, sudo = True):
+                logger.log_error(f"Unable to download {name} from {self.url}")
+                return False
+
+        # A second definition of the repository makes apt warn on every update
+        self.connection.remove_file_or_directory(self.legacy_sources_list_path, sudo = True)
         self.connection.run_checked([self.aptget_tool, "update"], sudo = True)
         self.connection.run_checked([self.aptget_tool, "install", "-y", "brave-browser"], sudo = True)
         return True
@@ -38,6 +47,7 @@ class Brave(installer.Installer):
     def uninstall(self):
         logger.log_info("Uninstalling Brave")
         self.connection.run_checked([self.aptget_tool, "remove", "-y", "brave-browser"], sudo = True)
-        self.connection.remove_file_or_directory(self.sources_list_path, sudo = True)
+        self.connection.remove_file_or_directory(self.sources_path, sudo = True)
+        self.connection.remove_file_or_directory(self.legacy_sources_list_path, sudo = True)
         self.connection.remove_file_or_directory(self.archive_key_path, sudo = True)
         return True

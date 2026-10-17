@@ -235,17 +235,13 @@ def matches_exclude_pattern(rel_path, excludes):
     return False
 
 # Returns list of dicts with path, file_count, and total_size
-# Can separate into large/small based on thresholds
 def build_leaf_directory_list(
     root,
     excludes = [],
-    ignore_hidden = True,
-    large_file_count = None,
-    large_total_size = None):
+    ignore_hidden = True):
 
     # Build leaf dirs
     leaf_dirs = []
-    large_dirs = []
     root = os.path.normpath(root)
     work_queue = [root]
     while work_queue:
@@ -288,27 +284,33 @@ def build_leaf_directory_list(
                 total_size += get_file_size(entry_path)
 
         # Build directory info
-        dir_info = {
+        leaf_dirs.append({
             "path": current_path,
             "file_count": file_count,
             "total_size": total_size
-        }
+        })
+    return leaf_dirs
 
-        # Separate large directories if thresholds are specified
+# Returns the leaf directories as (small, large), where large ones exceed a threshold
+def split_leaf_directory_list(
+    root,
+    excludes = [],
+    ignore_hidden = True,
+    large_file_count = None,
+    large_total_size = None):
+    small_dirs = []
+    large_dirs = []
+    for dir_info in build_leaf_directory_list(root, excludes, ignore_hidden):
         is_large = False
-        if large_file_count is not None and file_count > large_file_count:
+        if large_file_count is not None and dir_info["file_count"] > large_file_count:
             is_large = True
-        if large_total_size is not None and total_size > large_total_size:
+        if large_total_size is not None and dir_info["total_size"] > large_total_size:
             is_large = True
         if is_large:
             large_dirs.append(dir_info)
         else:
-            leaf_dirs.append(dir_info)
-
-    # Return based on whether thresholds were specified
-    if large_file_count is not None or large_total_size is not None:
-        return leaf_dirs, large_dirs
-    return leaf_dirs
+            small_dirs.append(dir_info)
+    return small_dirs, large_dirs
 
 # Group files by their parent directory
 def group_files_by_directory(files):

@@ -80,7 +80,7 @@ def test_a_file_written_inside_the_prefix_is_moved_out(wine_prefix, monkeypatch)
         lambda src, dest, **kwargs: moved.append((src, dest)))
     inside = os.path.join(wine_prefix.get_prefix_dir(), "drive_c", "Games")
     os.makedirs(inside)
-    with open(os.path.join(inside, "save.dat"), "w") as handle:
+    with open(os.path.join(inside, "save.dat"), "w", encoding = "utf-8") as handle:
         handle.write("payload")
 
     sandbox.transfer_from_sandbox("C:/Games/save.dat", wine_prefix)
@@ -96,7 +96,7 @@ def test_a_copy_can_be_left_behind_in_the_sandbox(wine_prefix, tmp_path, monkeyp
         lambda src, dest, **kwargs: copied.append((src, dest)))
     inside = os.path.join(wine_prefix.get_prefix_dir(), "drive_c", "Games")
     os.makedirs(inside)
-    with open(os.path.join(inside, "save.dat"), "w") as handle:
+    with open(os.path.join(inside, "save.dat"), "w", encoding = "utf-8") as handle:
         handle.write("payload")
 
     sandbox.transfer_from_sandbox("C:/Games/save.dat", wine_prefix, keep_in_sandbox = True)
@@ -117,24 +117,27 @@ def test_a_directory_is_transferred_by_its_contents(wine_prefix, monkeypatch):
     assert moved == [(inside, "C:/Games")]
 
 
-def test_nothing_is_transferred_when_the_prefix_holds_nothing(wine_prefix, monkeypatch):
-    def fail(*args, **kwargs):
-        raise AssertionError("there is nothing in the prefix to transfer")
+@pytest.fixture
+def transfers(monkeypatch):
+    # Every move or copy out of the sandbox, by the fileops helper that made it
+    made = []
+    for name in ["move_file_or_directory", "move_contents", "copy_file_or_directory", "copy_contents"]:
+        monkeypatch.setattr(
+            sandbox.fileops, name, lambda src, dest, name = name, **kwargs: made.append((name, src, dest)))
+    return made
 
-    monkeypatch.setattr(sandbox.fileops, "move_file_or_directory", fail)
-    monkeypatch.setattr(sandbox.fileops, "move_contents", fail)
 
+def test_nothing_is_transferred_when_the_prefix_holds_nothing(wine_prefix, transfers):
     sandbox.transfer_from_sandbox("C:/Games/save.dat", wine_prefix)
 
+    assert transfers == []
 
-def test_nothing_is_transferred_without_a_prefix(monkeypatch):
-    def fail(*args, **kwargs):
-        raise AssertionError("a path outside a prefix is already where it belongs")
 
-    monkeypatch.setattr(sandbox.fileops, "move_file_or_directory", fail)
-    monkeypatch.setattr(sandbox.fileops, "move_contents", fail)
-
+def test_nothing_is_transferred_without_a_prefix(transfers):
+    # A path outside a prefix is already where it belongs.
     sandbox.transfer_from_sandbox("/home/user/save.dat", options())
+
+    assert transfers == []
 
 
 def test_a_directory_left_in_the_sandbox_is_copied_by_its_contents(wine_prefix, monkeypatch):
@@ -150,23 +153,18 @@ def test_a_directory_left_in_the_sandbox_is_copied_by_its_contents(wine_prefix, 
     assert copied == [(inside, "C:/Games")]
 
 
-def test_a_host_path_seen_through_the_sandbox_is_not_transferred(wine_prefix, monkeypatch):
-    def fail(*args, **kwargs):
-        raise AssertionError("a host path is already where it belongs")
-
-    monkeypatch.setattr(sandbox.fileops, "move_file_or_directory", fail)
+def test_a_host_path_seen_through_the_sandbox_is_not_transferred(wine_prefix, transfers, monkeypatch):
     monkeypatch.setattr(sandbox, "translate_virtual_path_to_real_path", lambda path, options: path)
 
     sandbox.transfer_from_sandbox("/home/user/save.dat", wine_prefix)
 
+    assert transfers == []
 
-def test_an_untranslatable_path_is_not_transferred(wine_prefix, monkeypatch):
-    def fail(*args, **kwargs):
-        raise AssertionError("there is no sandbox path to transfer from")
 
-    monkeypatch.setattr(sandbox.fileops, "move_file_or_directory", fail)
-
+def test_an_untranslatable_path_is_not_transferred(transfers):
     sandbox.transfer_from_sandbox("Games/save.dat", options(sandboxie = True, prefix_dir = "C:/Sandbox/Game"))
+
+    assert transfers == []
 
 
 ###########################################################

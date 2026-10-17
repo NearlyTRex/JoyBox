@@ -1,3 +1,6 @@
+# Third-party imports
+import pytest
+
 # Local imports
 import joybox.bootstrap.constants as constants
 import joybox.bootstrap.installers as installers
@@ -26,14 +29,33 @@ def test_installed_follows_the_browser_binary(isolated_settings):
     assert brave.is_installed()
 
 
-def test_install_adds_the_signed_repository_then_the_package(isolated_settings):
+def test_install_takes_braves_keyring_and_source_then_the_package(isolated_settings):
     brave, connection = make()
 
     assert brave.install()
-    assert connection.downloads == [(f"{brave.url}/{brave.archive_key}", brave.archive_key_path)]
-    assert connection.written(brave.sources_list).startswith(f"deb [signed-by={brave.archive_key_path}] {brave.url}/")
-    assert connection.moved == [(f"/tmp/{brave.sources_list}", brave.sources_list_path)]
+    assert connection.downloads == [
+        (f"{brave.url}/brave-browser-archive-keyring.gpg", "/usr/share/keyrings/brave-browser-archive-keyring.gpg"),
+        (f"{brave.url}/brave-browser.sources", "/etc/apt/sources.list.d/brave-browser-release.sources")]
+    assert connection.ran("update")
     assert connection.ran("install -y brave-browser")
+
+
+def test_install_drops_the_one_line_source_earlier_installs_wrote(isolated_settings):
+    brave, connection = make()
+    connection.existing_paths.add("/etc/apt/sources.list.d/brave-browser-release.list")
+
+    assert brave.install()
+    assert connection.removed_paths == ["/etc/apt/sources.list.d/brave-browser-release.list"]
+
+
+@pytest.mark.parametrize("failing", ["brave-browser-archive-keyring.gpg", "brave-browser.sources"])
+def test_a_failed_download_stops_before_apt_runs(isolated_settings, monkeypatch, failing):
+    brave, connection = make()
+    monkeypatch.setattr(connection, "download_file", lambda url, dest, sudo = False: not url.endswith(failing))
+
+    assert brave.install() is False
+    assert not connection.ran("update")
+    assert not connection.ran("install -y brave-browser")
 
 
 def test_uninstall_removes_the_package_and_the_repository(isolated_settings):
@@ -41,4 +63,7 @@ def test_uninstall_removes_the_package_and_the_repository(isolated_settings):
 
     assert brave.uninstall()
     assert connection.ran("remove -y brave-browser")
-    assert connection.removed_paths == [brave.sources_list_path, brave.archive_key_path]
+    assert connection.removed_paths == [
+        "/etc/apt/sources.list.d/brave-browser-release.sources",
+        "/etc/apt/sources.list.d/brave-browser-release.list",
+        "/usr/share/keyrings/brave-browser-archive-keyring.gpg"]

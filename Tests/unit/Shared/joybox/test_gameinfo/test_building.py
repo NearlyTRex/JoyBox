@@ -1,4 +1,7 @@
 # Imports
+import json
+
+# Third-party imports
 import pytest
 
 # Local imports
@@ -27,21 +30,17 @@ def game_tree(isolated_settings, tmp_path):
 
 
 def write_game(game_tree, data = None, name = GAME_NAME):
-    import json
-
     game_dir = game_tree["root"] / "Json" / "Roms" / "Computer" / "Steam" / name
     game_dir.mkdir(parents = True, exist_ok = True)
     json_file = game_dir / (name + ".json")
-    with open(str(json_file), "w") as handle:
+    with open(str(json_file), "w", encoding = "utf-8") as handle:
         json.dump(data if data is not None else {}, handle)
     return str(json_file)
 
 
 @pytest.fixture
 def game(game_tree):
-    from joybox import gameinfo as gameinfo_module
-
-    return gameinfo_module.GameInfo(
+    return gameinfo.GameInfo(
         json_file = write_game(game_tree, {"steam": {"appid": "220"}}))
 
 
@@ -74,22 +73,18 @@ def test_a_game_reads_its_json_contents(game):
 
 
 def test_a_game_without_a_json_file_cannot_be_built(game_tree, tmp_path):
-    from joybox import gameinfo as gameinfo_module
-
     with pytest.raises(FileNotFoundError):
-        gameinfo_module.GameInfo(json_file = str(tmp_path / "absent.json"))
+        gameinfo.GameInfo(json_file = str(tmp_path / "absent.json"))
 
 
 def test_a_json_file_outside_the_collection_cannot_be_built(game_tree, tmp_path):
     # The categories come from the path, and without them nothing downstream
     # knows where the game belongs.
-    from joybox import gameinfo as gameinfo_module
-
     stray = tmp_path / "stray.json"
     stray.write_text("{}")
 
     with pytest.raises(ValueError, match = "categories"):
-        gameinfo_module.GameInfo(json_file = str(stray))
+        gameinfo.GameInfo(json_file = str(stray))
 
 
 ###########################################################
@@ -101,20 +96,18 @@ def test_a_json_file_outside_the_collection_cannot_be_built(game_tree, tmp_path)
 ###########################################################
 
 def store_fields():
-    from joybox import gameinfo as gameinfo_module
-
     # store_launch_programs wraps store_launch in Program objects rather than
     # storing a value of its own, so it is covered separately below.
     skipped = {"store_launch_programs"}
 
     fields = []
-    for name in dir(gameinfo_module.GameInfo):
+    for name in dir(gameinfo.GameInfo):
         if not name.startswith("set_store_"):
             continue
         field = name[len("set_"):]
         if field in skipped:
             continue
-        if hasattr(gameinfo_module.GameInfo, "get_" + field):
+        if hasattr(gameinfo.GameInfo, "get_" + field):
             fields.append(field)
     return sorted(fields)
 
@@ -142,11 +135,11 @@ def test_no_two_store_fields_share_a_key(game, field):
     # fields shadow each other.
     getattr(game, "set_" + field)("value-for-%s" % field, store_key = "steam")
 
-    for other in STORE_FIELDS:
-        if other == field:
-            continue
-        assert getattr(game, "get_" + other)(store_key = "steam") != \
-            "value-for-%s" % field, "%s and %s share a key" % (field, other)
+    shadowed = [
+        other for other in STORE_FIELDS
+        if other != field and getattr(game, "get_" + other)(store_key = "steam") == "value-for-%s" % field]
+
+    assert not shadowed, "%s shares a key with %s" % (field, shadowed)
 
 
 def test_launch_programs_are_stored_as_their_data(game):

@@ -217,22 +217,35 @@ def sanitize_filenames(path, extension = None, verbose = False, pretend_run = Fa
 # File and directory creation utilities
 ###########################################################
 
+# Open a file only its owner can read
+def open_private_file(src, contents_mode, encoding):
+    flags = os.O_WRONLY | os.O_CREAT | getattr(os, "O_BINARY", 0)
+    flags |= os.O_APPEND if "a" in contents_mode else os.O_TRUNC
+    descriptor = os.open(src, flags, 0o600)
+    try:
+        os.chmod(src, 0o600)
+    except OSError:
+        os.close(descriptor)
+        raise
+    return os.fdopen(descriptor, contents_mode, encoding = encoding)
+
 # Touch file
-def touch_file(src, contents = "", contents_mode = "w", encoding = None, verbose = False, pretend_run = False, exit_on_failure = False):
+def touch_file(src, contents = "", contents_mode = "w", encoding = None, private = False, verbose = False, pretend_run = False, exit_on_failure = False):
     try:
         if verbose:
             logger.log_info("Touching file %s" % src)
         if not pretend_run:
             os.makedirs(paths.get_filename_directory(src), exist_ok = True)
             if len(contents):
-                if encoding:
-                    with open(src, contents_mode, encoding = encoding) as f:
-                        f.write(contents)
+                text_encoding = None if "b" in contents_mode else (encoding or "utf-8")
+                if private:
+                    handle = open_private_file(src, contents_mode, text_encoding)
                 else:
-                    with open(src, contents_mode) as f:
-                        f.write(contents)
+                    handle = open(src, contents_mode, encoding = text_encoding)
+                with handle as f:
+                    f.write(contents)
             else:
-                open(src, "a").close()
+                open(src, "a", encoding = "utf-8").close()
         return True
     except Exception as e:
         if exit_on_failure:

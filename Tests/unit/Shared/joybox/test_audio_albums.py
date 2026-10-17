@@ -112,7 +112,7 @@ def test_every_track_reaches_the_metadata_file(library, metadata):
     tag(metadata, album_dir, "02 - Second.mp3", title = "Second")
 
     audio.build_audio_metadata_files(genre_type = GENRE)
-    with open(str(built_json(library))) as handle:
+    with open(str(built_json(library)), encoding = "utf-8") as handle:
         data = json.load(handle)
 
     assert [track["filename"] for track in data["tracks"]] == \
@@ -124,7 +124,7 @@ def test_a_tracks_tags_are_recorded(library, metadata):
     tag(metadata, album_dir, "01 - First.mp3", title = "First", artist = "An Artist")
 
     audio.build_audio_metadata_files(genre_type = GENRE)
-    with open(str(built_json(library))) as handle:
+    with open(str(built_json(library)), encoding = "utf-8") as handle:
         data = json.load(handle)
 
     first = data["tracks"][0]["tags"]
@@ -151,7 +151,7 @@ def test_track_numbers_can_be_taken_from_the_running_order(library, metadata):
     tag(metadata, album_dir, "02 - Second.mp3", track_number = "1")
 
     audio.build_audio_metadata_files(genre_type = GENRE, use_index_for_track_number = True)
-    with open(str(built_json(library))) as handle:
+    with open(str(built_json(library)), encoding = "utf-8") as handle:
         data = json.load(handle)
 
     assert [track["tags"]["track_number"] for track in data["tracks"]] == ["1", "2"]
@@ -162,7 +162,7 @@ def test_original_track_numbers_are_kept_by_default(library, metadata):
     tag(metadata, album_dir, "01 - First.mp3", track_number = "7")
 
     audio.build_audio_metadata_files(genre_type = GENRE)
-    with open(str(built_json(library))) as handle:
+    with open(str(built_json(library)), encoding = "utf-8") as handle:
         data = json.load(handle)
 
     assert data["tracks"][0]["tags"]["track_number"] == "7"
@@ -174,7 +174,7 @@ def test_a_forced_tag_overrides_what_the_file_carried(library, metadata):
 
     audio.build_audio_metadata_files(
         genre_type = GENRE, force_tags = {"genre": "Chosen Genre"})
-    with open(str(built_json(library))) as handle:
+    with open(str(built_json(library)), encoding = "utf-8") as handle:
         data = json.load(handle)
 
     assert data["tracks"][0]["tags"]["genre"] == "Chosen Genre"
@@ -204,10 +204,10 @@ def test_metadata_is_written_back_onto_the_tracks(library, metadata):
 
     # Stand in for the hand edit the json file exists for
     path = built_json(library)
-    with open(str(path)) as handle:
+    with open(str(path), encoding = "utf-8") as handle:
         data = json.load(handle)
     data["tracks"][0]["tags"]["title"] = "Corrected"
-    with open(str(path), "w") as handle:
+    with open(str(path), "w", encoding = "utf-8") as handle:
         json.dump(data, handle)
 
     assert audio.apply_audio_metadata_tags(genre_type = GENRE) is True

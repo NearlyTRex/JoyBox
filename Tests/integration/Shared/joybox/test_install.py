@@ -1,13 +1,15 @@
 # Imports
 import os
+
+# Third-party imports
 import pytest
 
 # Local imports
 from joybox import config, install
+from install_helpers import make_prefix, make_tree
 
 pytestmark = [
     pytest.mark.requires_tool("7-Zip"),
-    pytest.mark.usefixtures("requires_tool"),
     pytest.mark.slow]
 
 
@@ -18,25 +20,6 @@ pytestmark = [
 # locker. The ignore list keeps the Windows layer out; a path that slips
 # through adds hundreds of megabytes of system files per game.
 ###########################################################
-
-def make_tree(root, *relative_paths):
-    for relative in relative_paths:
-        target = root / relative
-        target.parent.mkdir(parents = True, exist_ok = True)
-        target.write_text("content of %s\n" % relative)
-    return root
-
-
-@pytest.fixture
-def prefix(tmp_path):
-    root = tmp_path / "prefix"
-    root.mkdir()
-    return make_tree(
-        root,
-        "Program Files/Game/game.exe",
-        "Program Files/Game/data/assets.pak",
-        "ProgramData/Game/settings.ini")
-
 
 def unpacked_names(root):
     return {
@@ -49,7 +32,8 @@ def unpacked_names(root):
 # Packing
 ###########################################################
 
-def test_an_install_image_is_packed(tmp_path, prefix):
+def test_an_install_image_is_packed(tmp_path):
+    prefix = make_prefix(tmp_path)
     image = tmp_path / "install.7z"
 
     assert install.pack_install_image(str(prefix), str(image)) is True
@@ -57,7 +41,8 @@ def test_an_install_image_is_packed(tmp_path, prefix):
     assert image.stat().st_size > 0
 
 
-def test_a_packed_image_holds_the_game_files(tmp_path, prefix):
+def test_a_packed_image_holds_the_game_files(tmp_path):
+    prefix = make_prefix(tmp_path)
     image = tmp_path / "install.7z"
     install.pack_install_image(str(prefix), str(image))
 
@@ -66,7 +51,8 @@ def test_a_packed_image_holds_the_game_files(tmp_path, prefix):
     assert "Program Files/Game/game.exe" in unpacked_names(out)
 
 
-def test_nesting_survives_a_pack_and_unpack(tmp_path, prefix):
+def test_nesting_survives_a_pack_and_unpack(tmp_path):
+    prefix = make_prefix(tmp_path)
     image = tmp_path / "install.7z"
     install.pack_install_image(str(prefix), str(image))
 
@@ -75,7 +61,8 @@ def test_nesting_survives_a_pack_and_unpack(tmp_path, prefix):
     assert "Program Files/Game/data/assets.pak" in unpacked_names(out)
 
 
-def test_file_contents_survive_a_round_trip(tmp_path, prefix):
+def test_file_contents_survive_a_round_trip(tmp_path):
+    prefix = make_prefix(tmp_path)
     image = tmp_path / "install.7z"
     install.pack_install_image(str(prefix), str(image))
 
@@ -85,14 +72,16 @@ def test_file_contents_survive_a_round_trip(tmp_path, prefix):
     assert restored.read_text() == "content of Program Files/Game/game.exe\n"
 
 
-def test_the_source_is_kept_by_default(tmp_path, prefix):
+def test_the_source_is_kept_by_default(tmp_path):
+    prefix = make_prefix(tmp_path)
     image = tmp_path / "install.7z"
     install.pack_install_image(str(prefix), str(image))
 
     assert prefix.exists()
 
 
-def test_the_source_is_removed_when_asked(tmp_path, prefix):
+def test_the_source_is_removed_when_asked(tmp_path):
+    prefix = make_prefix(tmp_path)
     image = tmp_path / "install.7z"
     install.pack_install_image(str(prefix), str(image), delete_original = True)
 
@@ -142,7 +131,8 @@ def test_a_similarly_named_path_is_kept(tmp_path):
 # Unpacking
 ###########################################################
 
-def test_unpacking_creates_the_target(tmp_path, prefix):
+def test_unpacking_creates_the_target(tmp_path):
+    prefix = make_prefix(tmp_path)
     image = tmp_path / "install.7z"
     install.pack_install_image(str(prefix), str(image))
     out = tmp_path / "nested" / "out"
@@ -158,7 +148,8 @@ def test_unpacking_a_non_archive_reports_failure(tmp_path):
     assert install.unpack_install_image(str(source), str(tmp_path / "out")) is False
 
 
-def test_the_image_is_kept_by_default(tmp_path, prefix):
+def test_the_image_is_kept_by_default(tmp_path):
+    prefix = make_prefix(tmp_path)
     image = tmp_path / "install.7z"
     install.pack_install_image(str(prefix), str(image))
     install.unpack_install_image(str(image), str(tmp_path / "out"))
@@ -166,7 +157,8 @@ def test_the_image_is_kept_by_default(tmp_path, prefix):
     assert image.exists()
 
 
-def test_the_image_is_removed_when_asked(tmp_path, prefix):
+def test_the_image_is_removed_when_asked(tmp_path):
+    prefix = make_prefix(tmp_path)
     image = tmp_path / "install.7z"
     install.pack_install_image(str(prefix), str(image))
     install.unpack_install_image(
@@ -179,7 +171,8 @@ def test_the_image_is_removed_when_asked(tmp_path, prefix):
 # Mounting
 ###########################################################
 
-def test_mounting_unpacks_into_an_empty_directory(tmp_path, prefix):
+def test_mounting_unpacks_into_an_empty_directory(tmp_path):
+    prefix = make_prefix(tmp_path)
     image = tmp_path / "install.7z"
     install.pack_install_image(str(prefix), str(image))
     mount = tmp_path / "mnt"
@@ -189,7 +182,8 @@ def test_mounting_unpacks_into_an_empty_directory(tmp_path, prefix):
     assert "Program Files/Game/game.exe" in unpacked_names(mount)
 
 
-def test_mounting_an_already_populated_directory_does_nothing(tmp_path, prefix):
+def test_mounting_an_already_populated_directory_does_nothing(tmp_path):
+    prefix = make_prefix(tmp_path)
     # Unpacking over an existing mount would overwrite a running game's files.
     image = tmp_path / "install.7z"
     install.pack_install_image(str(prefix), str(image))

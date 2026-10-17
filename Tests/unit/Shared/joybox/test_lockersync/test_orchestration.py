@@ -101,7 +101,7 @@ def run(primary, secondaries, **kwargs):
 
 
 def cached(name, excludes):
-    with open(lockersync.get_cache_file(name, excludes)) as handle:
+    with open(lockersync.get_cache_file(name, excludes), encoding = "utf-8") as handle:
         return json.load(handle)
 
 

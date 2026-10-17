@@ -409,16 +409,20 @@ class LocalOnlyInfo(FakeLockerInfo):
 
 
 def test_a_local_only_locker_gets_the_local_backend():
-    assert isinstance(
-        lockerbackend.get_backend_for_locker(LocalOnlyInfo()), lockerbackend.LocalBackend)
+    info = LocalOnlyInfo()
+    backend = lockerbackend.get_backend_for_locker(info)
+
+    assert (type(backend), backend.locker_info) == (lockerbackend.LocalBackend, info)
 
 
 def test_a_configured_remote_gets_the_remote_backend(monkeypatch):
     monkeypatch.setattr(
         lockerbackend.sync, "is_remote_configured", lambda name, remote_type: True)
 
-    assert isinstance(
-        lockerbackend.get_backend_for_locker(FakeLockerInfo()), lockerbackend.RemoteBackend)
+    info = FakeLockerInfo()
+    backend = lockerbackend.get_backend_for_locker(info)
+
+    assert (type(backend), backend.locker_info) == (lockerbackend.RemoteBackend, info)
 
 
 def test_an_unconfigured_remote_falls_back_to_local(monkeypatch):
@@ -427,5 +431,7 @@ def test_an_unconfigured_remote_falls_back_to_local(monkeypatch):
     monkeypatch.setattr(
         lockerbackend.sync, "is_remote_configured", lambda name, remote_type: False)
 
-    assert isinstance(
-        lockerbackend.get_backend_for_locker(FakeLockerInfo()), lockerbackend.LocalBackend)
+    info = FakeLockerInfo()
+    backend = lockerbackend.get_backend_for_locker(info)
+
+    assert (type(backend), backend.locker_info) == (lockerbackend.LocalBackend, info)

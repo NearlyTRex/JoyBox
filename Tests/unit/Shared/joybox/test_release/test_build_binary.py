@@ -6,7 +6,8 @@ import pytest
 
 # Local imports
 from joybox import release
-from release_helpers import build_binary, failing, tree
+from file_helpers import tree
+from release_helpers import build_binary, failing
 
 
 ###########################################################
@@ -40,7 +41,7 @@ def test_the_output_directory_narrows_the_search(builder):
     builder["outputs"]["make"] = {"tool": "decoy", os.path.join("out", "tool"): "binary"}
 
     assert build_binary(builder, output_dir = "out") is True
-    with open(os.path.join(builder["install_dir"], "Tool")) as handle:
+    with open(os.path.join(builder["install_dir"], "Tool"), encoding = "utf-8") as handle:
         assert handle.read() == "binary"
 
 

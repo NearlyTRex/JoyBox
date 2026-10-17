@@ -86,7 +86,7 @@ def read_json_file(src, verbose = False, pretend_run = False, exit_on_failure = 
         if verbose:
             logger.log_info("Reading %s" % src)
         json_data = {}
-        with open(src, "r") as input_file:
+        with open(src, "r", encoding = "utf-8") as input_file:
             file_contents = input_file.read()
             json_data = json.loads(file_contents)
         return json_data
@@ -108,7 +108,7 @@ def write_json_file(src, json_data, sort_keys = False, verbose = False, pretend_
             parent_dir = os.path.dirname(src)
             if parent_dir and not os.path.exists(parent_dir):
                 os.makedirs(parent_dir)
-            with open(src, "w", newline='\n') as output_file:
+            with open(src, "w", newline='\n', encoding = "utf-8") as output_file:
                 json_string = json.dumps(json_data, indent = 4, sort_keys = sort_keys)
                 output_file.write(json_string)
         return True
@@ -128,7 +128,7 @@ def clean_json_file(src, sort_keys = False, remove_empty_values = False, verbose
             logger.log_info("Cleaning %s" % src)
         if not pretend_run:
             json_data = None
-            with open(src, "r") as input_file:
+            with open(src, "r", encoding = "utf-8") as input_file:
                 json_data = json.loads(input_file.read())
                 if remove_empty_values:
                     json_keys_to_remove = []
@@ -147,7 +147,7 @@ def clean_json_file(src, sort_keys = False, remove_empty_values = False, verbose
                     for key in json_keys_to_remove:
                         json_data.pop(key)
             if json_data is not None:
-                with open(src, "w", newline='\n') as output_file:
+                with open(src, "w", newline='\n', encoding = "utf-8") as output_file:
                     json_string = json.dumps(json_data, indent = 4, sort_keys = sort_keys)
                     output_file.write(json_string)
         return True
@@ -190,7 +190,7 @@ def read_yaml_file(src, verbose = False, pretend_run = False, exit_on_failure = 
         if verbose:
             logger.log_info("Reading %s" % src)
         yaml_data = {}
-        with open(src, "r") as input_file:
+        with open(src, "r", encoding = "utf-8") as input_file:
             file_contents = input_file.read()
             file_contents = file_contents.replace(u'\x81', "")
             file_contents = file_contents.replace(u'\x82', "")

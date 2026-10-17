@@ -196,7 +196,7 @@ def test_a_rap_whose_package_has_no_content_id_is_not_renamed(tmp_path):
 
 def encode_zrif(payload):
     # The inverse of the decoder, using the same seeded dictionary.
-    zrif_base64 = (b"eNpjYBgFo2AU0AsYAIElGt8MRJiDCAsw3xhEmIAIU4N4AwNdRxcXZ3+/EJCAkW6Ac7C7ARwYgviuQAaIdoPSzlDaBUo7QmknIM3ACIZM78+u7kx3VWYEAGJ9HV0=")
+    zrif_base64 = b"eNpjYBgFo2AU0AsYAIElGt8MRJiDCAsw3xhEmIAIU4N4AwNdRxcXZ3+/EJCAkW6Ac7C7ARwYgviuQAaIdoPSzlDaBUo7QmknIM3ACIZM78+u7kx3VWYEAGJ9HV0="
     dictionary = zlib.decompress(base64.b64decode(zrif_base64))
     compressor = zlib.compressobj(9, zlib.DEFLATED, 10, zdict = dictionary)
     data = compressor.compress(payload) + compressor.flush()

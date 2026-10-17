@@ -1,7 +1,6 @@
 # Imports
 import base64
 import importlib
-import shutil
 import subprocess
 
 # Third-party imports
@@ -10,7 +9,7 @@ import pytest
 # Local imports
 from joybox import audiometadata
 
-pytestmark = pytest.mark.slow
+pytestmark = [pytest.mark.requires_binary("ffmpeg"), pytest.mark.slow]
 
 
 ###########################################################
@@ -46,8 +45,6 @@ def metadata():
 
 @pytest.fixture
 def m4a_file(tmp_path):
-    if not shutil.which("ffmpeg"):
-        pytest.skip("ffmpeg is not installed")
     target = str(tmp_path / "track.m4a")
     result = subprocess.run([
         "ffmpeg", "-loglevel", "error", "-y",

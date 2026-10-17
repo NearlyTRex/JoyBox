@@ -23,7 +23,7 @@ def installed(monkeypatch):
     from nintendo_helpers import TOOL_PATHS
     tools = dict(TOOL_PATHS)
     monkeypatch.setattr(nintendo.programs, "is_tool_installed", lambda name: name in tools)
-    monkeypatch.setattr(nintendo.programs, "get_tool_program", lambda name: tools.get(name))
+    monkeypatch.setattr(nintendo.programs, "get_tool_program", tools.get)
     return tools
 
 @pytest.fixture
@@ -67,4 +67,3 @@ def nus_package(tmp_path):
     (package / "00000000.app").write_bytes(b"app")
     (package / "keep.txt").write_text("notes")
     return str(package)
-

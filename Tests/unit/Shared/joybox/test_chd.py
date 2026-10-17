@@ -44,9 +44,9 @@ def test_the_toc_beside_a_chd_swaps_the_extension():
     assert chd.get_disc_toc("/games/Game.chd") == "/games/Game.toc"
 
 
-def test_the_companion_paths_stay_in_the_same_directory():
-    for accessor in [chd.get_disc_iso, chd.get_disc_toc]:
-        assert accessor("/games/psx/Game.chd").startswith("/games/psx/")
+@pytest.mark.parametrize("accessor", [chd.get_disc_iso, chd.get_disc_toc])
+def test_the_companion_paths_stay_in_the_same_directory(accessor):
+    assert accessor("/games/psx/Game.chd").startswith("/games/psx/")
 
 
 def test_the_companion_paths_differ():
@@ -137,11 +137,11 @@ def test_a_successful_create_deletes_the_source_when_asked(installed, recording_
 
 def test_the_source_is_kept_by_default(installed, recording_command, existing_output,
                                        monkeypatch):
-    def fail(*args, **kwargs):
-        raise AssertionError("the source must be kept unless asked for")
+    removed = []
+    monkeypatch.setattr(chd.fileops, "remove_file", lambda src, **kwargs: removed.append(src))
 
-    monkeypatch.setattr(chd.fileops, "remove_file", fail)
-    chd.create_disc_chd("/out/Game.chd", "/in/Game.iso")
+    assert chd.create_disc_chd("/out/Game.chd", "/in/Game.iso") is True
+    assert removed == []
 
 
 ###########################################################

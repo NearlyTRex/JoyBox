@@ -248,7 +248,7 @@ def test_an_interactive_run_is_preprocessed_and_printed_when_verbose(terminal, m
     monkeypatch.setattr(
         command, "preprocess_command",
         lambda cmd, options, **kwargs: (["wine"] + cmd, options))
-    monkeypatch.setattr(command, "print_command", lambda cmd: printed.append(cmd))
+    monkeypatch.setattr(command, "print_command", printed.append)
 
     run(["/games/Game.exe"], verbose = True)
 

@@ -35,7 +35,7 @@ def ignore_file():
 
 
 def read_ignores():
-    with open(ignore_file()) as handle:
+    with open(ignore_file(), encoding = "utf-8") as handle:
         return json.load(handle)
 
 
@@ -52,7 +52,7 @@ def write_game(name, data):
     target = jsondata.environment.get_game_json_metadata_file(
         ROMS, CATEGORY, SUBCATEGORY, name)
     os.makedirs(os.path.dirname(target), exist_ok = True)
-    with open(target, "w") as handle:
+    with open(target, "w", encoding = "utf-8") as handle:
         handle.write(json.dumps(data))
     return target
 
@@ -114,7 +114,7 @@ def test_a_read_game_json_carries_its_platform(metadata_root):
     write_game("Chrono Trigger (USA)", {})
     data = jsondata.read_game_json_data(ROMS, CATEGORY, SUBCATEGORY, "Chrono Trigger (USA)")
 
-    assert data.get_platform() is not None
+    assert data.get_platform() == config.Platform.NINTENDO_NES
 
 
 def test_an_empty_game_json_reads_as_an_empty_object(metadata_root):

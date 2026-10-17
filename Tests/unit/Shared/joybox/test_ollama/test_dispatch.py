@@ -1,3 +1,6 @@
+# Imports
+import inspect
+
 # Local imports
 from joybox import ollama
 
@@ -12,22 +15,27 @@ from joybox import ollama
 
 def test_the_documented_actions_exist():
     # These names are the tool's positional argument.
-    for action in ["list", "available", "best", "pull", "delete", "info", "harness"]:
-        assert action in ollama.get_action_keys()
+    missing = [
+        action for action in ["list", "available", "best", "pull", "delete", "info", "harness"]
+        if action not in ollama.get_action_keys()]
+
+    assert not missing, missing
 
 
 def test_every_action_is_callable():
-    for action, handler in ollama.ACTIONS.items():
-        assert callable(handler), f"{action} is not callable"
+    uncallable = [action for action, handler in ollama.ACTIONS.items() if not callable(handler)]
+
+    assert not uncallable, uncallable
 
 
 def test_every_action_accepts_the_shared_signature():
     # Dispatch passes all four keywords, so a missing one raises at call time.
-    import inspect
-    for action, handler in ollama.ACTIONS.items():
-        parameters = inspect.signature(handler).parameters
-        for keyword in ["model_name", "purpose", "harness", "show_all"]:
-            assert keyword in parameters, f"{action} does not accept {keyword}"
+    missing = [
+        (action, keyword) for action, handler in ollama.ACTIONS.items()
+        for keyword in ["model_name", "purpose", "harness", "show_all"]
+        if keyword not in inspect.signature(handler).parameters]
+
+    assert not missing, missing
 
 
 def test_an_unknown_action_fails_rather_than_raising():
@@ -77,8 +85,9 @@ def test_the_default_harness_is_a_known_one():
 
 
 def test_every_harness_has_a_display_name():
-    for key, harness in ollama.HARNESSES.items():
-        assert harness.get("name"), f"harness {key} has no name"
+    unnamed = [key for key, harness in ollama.HARNESSES.items() if not harness.get("name")]
+
+    assert not unnamed, unnamed
 
 
 def test_harness_keys_match_the_harness_table():

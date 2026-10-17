@@ -29,7 +29,7 @@ if _here not in sys.path:
 def installed(monkeypatch):
     from playstation_helpers import TOOL_PATHS
     monkeypatch.setattr(playstation.programs, "is_tool_installed", lambda name: name in TOOL_PATHS)
-    monkeypatch.setattr(playstation.programs, "get_tool_program", lambda name: TOOL_PATHS.get(name))
+    monkeypatch.setattr(playstation.programs, "get_tool_program", TOOL_PATHS.get)
     return TOOL_PATHS
 
 
@@ -57,4 +57,4 @@ def venv_only(monkeypatch):
     # The interpreter is there but the script it would run is not.
     from playstation_helpers import TOOL_PATHS
     monkeypatch.setattr(playstation.programs, "is_tool_installed", lambda name: name == "PythonVenvPython")
-    monkeypatch.setattr(playstation.programs, "get_tool_program", lambda name: TOOL_PATHS.get(name))
+    monkeypatch.setattr(playstation.programs, "get_tool_program", TOOL_PATHS.get)

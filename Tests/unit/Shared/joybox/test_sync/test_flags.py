@@ -16,9 +16,9 @@ def base_flags():
 
 def test_the_common_flags_are_always_present():
     flags = base_flags()
+    missing = [flag for flag in ["--fast-list", "--tpslimit", "--transfers", "--order-by"] if flag not in flags]
 
-    for flag in ["--fast-list", "--tpslimit", "--transfers", "--order-by"]:
-        assert flag in flags
+    assert not missing, missing
 
 
 def test_transfers_are_serialized():
@@ -45,9 +45,12 @@ def test_a_change_action_creates_empty_directories(action_type):
 def test_a_drive_remote_gets_its_own_flags():
     flags = sync.get_common_remote_flags("Remote", config.RemoteType.DRIVE, None)
 
-    for flag in ["--drive-acknowledge-abuse", "--drive-stop-on-upload-limit",
-                 "--drive-stop-on-download-limit", "--drive-chunk-size"]:
-        assert flag in flags
+    missing = [
+        flag for flag in ["--drive-acknowledge-abuse", "--drive-stop-on-upload-limit",
+                          "--drive-stop-on-download-limit", "--drive-chunk-size"]
+        if flag not in flags]
+
+    assert not missing, missing
 
 
 def test_a_non_drive_remote_gets_no_drive_flags():
@@ -177,5 +180,3 @@ def test_a_blank_exclude_is_dropped():
 @pytest.mark.parametrize("value", [[], "", None, 12345])
 def test_nothing_to_exclude_adds_no_flags(value):
     assert sync.get_exclude_flags(value) == []
-
-

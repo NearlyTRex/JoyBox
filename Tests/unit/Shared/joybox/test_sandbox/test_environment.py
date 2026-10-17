@@ -40,13 +40,13 @@ def test_a_non_prefix_command_is_left_alone():
 def test_a_prefix_command_gets_a_copy_of_its_options():
     # The caller's options are reused for the next launch.
     entry = prefixed()
-    cmd, built = setup_env(entry)
+    _, built = setup_env(entry)
 
     assert built is not entry
 
 
 def test_wine_debug_output_is_silenced():
-    cmd, built = setup_env(prefixed())
+    _, built = setup_env(prefixed())
 
     assert env_of(built).get("WINEDEBUG") == "-all"
 
@@ -55,19 +55,19 @@ def test_the_prefix_location_is_exported():
     # Without this wine uses ~/.wine and the saves land outside the collection.
     entry = prefixed()
     entry.set_prefix_dir("/prefixes/game")
-    cmd, built = setup_env(entry)
+    _, built = setup_env(entry)
 
     assert env_of(built).get("WINEPREFIX") == "/prefixes/game"
 
 
 def test_no_prefix_directory_exports_no_location():
-    cmd, built = setup_env(prefixed(prefix_dir = None))
+    _, built = setup_env(prefixed(prefix_dir = None))
 
     assert "WINEPREFIX" not in env_of(built)
 
 
 def test_a_64_bit_prefix_is_the_default():
-    cmd, built = setup_env(prefixed())
+    _, built = setup_env(prefixed())
 
     assert env_of(built).get("WINEARCH") == "win64"
 
@@ -76,14 +76,14 @@ def test_a_32_bit_prefix_is_declared():
     # A prefix created with the wrong bitness cannot be changed afterwards.
     entry = prefixed()
     entry.set_is_32_bit(True)
-    cmd, built = setup_env(entry)
+    _, built = setup_env(entry)
 
     assert env_of(built).get("WINEARCH") == "win32"
 
 
 def test_the_menu_builder_is_always_disabled():
     # Otherwise every install litters the host's application menu.
-    cmd, built = setup_env(prefixed())
+    _, built = setup_env(prefixed())
 
     assert "winemenubuilder.exe=d" in env_of(built).get("WINEDLLOVERRIDES", "")
 
@@ -91,7 +91,7 @@ def test_the_menu_builder_is_always_disabled():
 def test_game_overrides_are_appended():
     entry = prefixed()
     entry.set_overrides(["ddraw=n,b"])
-    cmd, built = setup_env(entry)
+    _, built = setup_env(entry)
     overrides = env_of(built).get("WINEDLLOVERRIDES", "")
 
     assert "winemenubuilder.exe=d" in overrides
@@ -101,32 +101,32 @@ def test_game_overrides_are_appended():
 def test_overrides_are_semicolon_separated():
     entry = prefixed()
     entry.set_overrides(["ddraw=n,b", "d3d9=n"])
-    cmd, built = setup_env(entry)
+    _, built = setup_env(entry)
 
     assert env_of(built).get("WINEDLLOVERRIDES", "").count(";") == 2
 
 
 def test_wine_blocks_on_its_own_processes():
-    cmd, built = setup_env(prefixed())
+    _, built = setup_env(prefixed())
 
     assert built.get_blocking_processes()
 
 
 def test_a_sandboxie_command_blocks_on_its_own_processes():
-    cmd, built = setup_env(prefixed(wine = False))
+    _, built = setup_env(prefixed(wine = False))
 
     assert built.get_blocking_processes()
 
 
 def test_a_sandboxie_command_gets_no_wine_environment():
-    cmd, built = setup_env(prefixed(wine = False))
+    _, built = setup_env(prefixed(wine = False))
 
     assert "WINEPREFIX" not in env_of(built)
     assert "WINEARCH" not in env_of(built)
 
 
 def test_the_command_itself_is_unchanged_by_the_environment():
-    cmd, built = setup_env(prefixed(), cmd = ["game.exe", "-windowed"])
+    cmd, _ = setup_env(prefixed(), cmd = ["game.exe", "-windowed"])
 
     assert cmd == ["game.exe", "-windowed"]
 
@@ -187,7 +187,7 @@ def test_a_32_bit_prefix_has_no_syswow64_copies(prefix_tree):
 
 
 def test_no_libraries_installs_nothing(prefix_tree):
-    root, libs = prefix_tree
+    root, _ = prefix_tree
     entry = options(wine = True, prefix_dir = str(root))
     sandbox.install_wine_dlls(entry)
 
@@ -195,7 +195,7 @@ def test_no_libraries_installs_nothing(prefix_tree):
 
 
 def test_installing_dispatches_on_the_prefix_kind(prefix_tree, monkeypatch):
-    root, libs = prefix_tree
+    root, _ = prefix_tree
     reached = []
     monkeypatch.setattr(
         sandbox, "install_wine_dlls", lambda *args, **kwargs: reached.append("wine"))
@@ -209,12 +209,14 @@ def test_installing_dispatches_on_the_prefix_kind(prefix_tree, monkeypatch):
     assert reached == ["wine", "sandboxie"]
 
 
-def test_a_non_prefix_installs_nothing(prefix_tree, monkeypatch):
-    root, libs = prefix_tree
+def test_a_non_prefix_installs_nothing(monkeypatch):
+    reached = []
+    monkeypatch.setattr(
+        sandbox, "install_wine_dlls", lambda *args, **kwargs: reached.append("wine"))
+    monkeypatch.setattr(
+        sandbox, "install_sandboxie_dlls",
+        lambda *args, **kwargs: reached.append("sandboxie"))
 
-    def fail(*args, **kwargs):
-        raise AssertionError("nothing should be installed")
-
-    monkeypatch.setattr(sandbox, "install_wine_dlls", fail)
-    monkeypatch.setattr(sandbox, "install_sandboxie_dlls", fail)
     sandbox.install_dlls(NEITHER())
+
+    assert reached == []

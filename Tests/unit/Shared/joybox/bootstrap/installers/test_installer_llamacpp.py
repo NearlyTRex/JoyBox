@@ -27,10 +27,10 @@ def test_the_vulkan_backend_has_the_spirv_headers_its_shaders_need(isolated_sett
     assert "spirv-headers" in build("vulkan").get_build_dependencies()
 
 
-def test_model_downloads_get_https(isolated_settings):
+@pytest.mark.parametrize("backend", ["cpu", "cuda", "vulkan", "hip"])
+def test_model_downloads_get_https(isolated_settings, backend):
     # Without OpenSSL headers the build succeeds but cannot fetch models
-    for backend in ("cpu", "cuda", "vulkan", "hip"):
-        assert "libssl-dev" in build(backend).get_build_dependencies()
+    assert "libssl-dev" in build(backend).get_build_dependencies()
 
 
 def test_only_the_vulkan_backend_pulls_in_vulkan(isolated_settings):
@@ -42,12 +42,12 @@ def test_the_retired_curl_option_is_not_passed(isolated_settings):
     assert not any(flag.startswith("-DLLAMA_CURL") for flag in build("vulkan").get_cmake_flags())
 
 
-def test_cmake_flags_select_the_backend(isolated_settings):
-    expected = {"cpu": None, "cuda": "-DGGML_CUDA=ON", "vulkan": "-DGGML_VULKAN=ON", "hip": "-DGGML_HIP=ON"}
-    for backend, flag in expected.items():
-        flags = build(backend).get_cmake_flags()
-        assert flags[:2] == ["-DCMAKE_BUILD_TYPE=Release", "-DCMAKE_INSTALL_PREFIX=/usr/local"]
-        assert flags[2:] == ([flag] if flag else [])
+@pytest.mark.parametrize("backend, backend_flags", [
+    ("cpu", []), ("cuda", ["-DGGML_CUDA=ON"]), ("vulkan", ["-DGGML_VULKAN=ON"]), ("hip", ["-DGGML_HIP=ON"])])
+def test_cmake_flags_select_the_backend(isolated_settings, backend, backend_flags):
+    flags = build(backend).get_cmake_flags()
+
+    assert flags == ["-DCMAKE_BUILD_TYPE=Release", "-DCMAKE_INSTALL_PREFIX=/usr/local"] + backend_flags
 
 
 ###########################################################

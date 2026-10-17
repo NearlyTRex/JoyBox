@@ -23,14 +23,24 @@ def host(monkeypatch):
     return state
 
 
-def test_a_supported_host_passes(host):
+@pytest.fixture
+def errors(monkeypatch):
+    logged = []
+    monkeypatch.setattr(setup.logger, "log_error", lambda message, **kwargs: logged.append(message))
+    return logged
+
+
+def test_a_supported_host_passes(host, errors):
     setup.check_requirements()
 
+    assert errors == []
 
-def test_a_windows_host_passes(host):
+
+def test_a_windows_host_passes(host, errors):
     host.update(windows = True, linux = False)
-
     setup.check_requirements()
+
+    assert errors == []
 
 
 def test_an_old_python_exits(host, monkeypatch):
@@ -274,7 +284,8 @@ def test_assets_keep_an_existing_locker_dir(asset_dirs, monkeypatch):
     existing = asset_path(locker, category, subcategory, asset_type)
     os.makedirs(existing)
     keep = os.path.join(existing, "keep.png")
-    open(keep, "w").close()
+    with open(keep, "w", encoding = "utf-8"):
+        pass
     made = []
 
     monkeypatch.setattr(setup.fileops, "create_symlink", lambda **kwargs: True)

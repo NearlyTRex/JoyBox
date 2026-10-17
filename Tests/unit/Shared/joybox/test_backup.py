@@ -6,6 +6,7 @@ import pytest
 
 # Local imports
 from joybox import backup, config
+from file_helpers import tree, write
 
 
 ###########################################################
@@ -194,22 +195,6 @@ def test_a_base_path_skips_the_locker_lookup(tmp_path, monkeypatch):
 # silently, is a backup that cannot be restored.
 ###########################################################
 
-def write(path, contents = "data"):
-    path = str(path)
-    os.makedirs(os.path.dirname(path), exist_ok = True)
-    with open(path, "w") as handle:
-        handle.write(contents)
-    return path
-
-
-def tree(root):
-    found = []
-    for directory, _, filenames in os.walk(str(root)):
-        for filename in filenames:
-            found.append(os.path.relpath(os.path.join(directory, filename), str(root)))
-    return sorted(found)
-
-
 @pytest.fixture
 def source(tmp_path):
     root = tmp_path / "source"
@@ -229,7 +214,7 @@ def test_copied_contents_match_the_source(source, tmp_path):
     dest = tmp_path / "dest"
     backup.copy_files_normally(str(source), str(dest))
 
-    with open(dest / "nested" / "deep.txt") as handle:
+    with open(dest / "nested" / "deep.txt", encoding = "utf-8") as handle:
         assert handle.read() == "deep"
 
 

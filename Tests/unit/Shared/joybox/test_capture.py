@@ -27,12 +27,13 @@ def grabber(monkeypatch):
 
     class FakeImage:
         def save(self, path):
-            with open(path, "w") as handle:
+            with open(path, "w", encoding = "utf-8") as handle:
                 handle.write("png")
 
     def grab(bbox = None):
-        if state["error"]:
-            raise state["error"]
+        error = state["error"]
+        if error:
+            raise error
         state["regions"].append(bbox)
         return FakeImage()
 

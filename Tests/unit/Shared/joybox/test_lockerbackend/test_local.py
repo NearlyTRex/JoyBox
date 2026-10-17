@@ -1,6 +1,9 @@
 # Imports
 import hashlib
 import os
+import pathlib
+
+# Third-party imports
 import pytest
 
 # Local imports
@@ -279,8 +282,7 @@ def test_a_file_is_copied_in(tmp_path, locker):
     source.write_bytes(b"payload")
 
     assert locker.copy_from(str(source), "games/incoming.bin") is True
-    assert open(os.path.join(locker.get_root_path(), "games", "incoming.bin"), "rb").read() \
-        == b"payload"
+    assert pathlib.Path(locker.get_root_path(), "games", "incoming.bin").read_bytes() == b"payload"
 
 
 def test_copying_in_creates_missing_directories(tmp_path, locker):
@@ -299,7 +301,7 @@ def test_copying_in_can_skip_an_existing_file(tmp_path, locker):
         handle.write(b"old")
 
     locker.copy_from(str(source), "incoming.bin", skip_existing = True)
-    assert open(target, "rb").read() == b"old"
+    assert pathlib.Path(target).read_bytes() == b"old"
 
 
 def test_copying_in_overwrites_by_default(tmp_path, locker):
@@ -310,7 +312,7 @@ def test_copying_in_overwrites_by_default(tmp_path, locker):
         handle.write(b"old")
 
     locker.copy_from(str(source), "incoming.bin")
-    assert open(target, "rb").read() == b"new"
+    assert pathlib.Path(target).read_bytes() == b"new"
 
 
 ###########################################################
@@ -345,7 +347,7 @@ def test_synced_content_matches(pair):
     dest.sync_from(source, "one.bin", "one.bin")
     target = os.path.join(dest.get_root_path(), "one.bin")
 
-    assert open(target, "rb").read() == b"one.bin"
+    assert pathlib.Path(target).read_bytes() == b"one.bin"
 
 
 def test_a_sync_can_rename(pair):
@@ -407,9 +409,7 @@ def test_a_batch_reports_failures_separately(pair):
 
 def test_a_batch_action_without_a_destination_keeps_its_source_name(pair):
     source, dest = pair
-    succeeded, failed = dest.sync_batch_from(source, [{"src": "one.bin"}])
-
-    assert succeeded == ["one.bin"]
+    assert dest.sync_batch_from(source, [{"src": "one.bin"}]) == (["one.bin"], [])
     assert dest.file_exists("one.bin") is True
 
 
@@ -421,10 +421,7 @@ def test_an_empty_batch_does_nothing(pair):
 
 def test_a_batch_reports_destination_names(pair):
     source, dest = pair
-    succeeded, failed = dest.sync_batch_from(
-        source, [{"src": "one.bin", "dest": "renamed.bin"}])
-
-    assert succeeded == ["renamed.bin"]
+    assert dest.sync_batch_from(source, [{"src": "one.bin", "dest": "renamed.bin"}]) == (["renamed.bin"], [])
 
 
 ###########################################################
@@ -467,7 +464,9 @@ def test_a_custom_recycle_folder_is_used(stocked):
 def test_a_local_only_locker_gets_a_local_backend(tmp_path):
     info = FakeLockerInfo(str(tmp_path), local_only = True)
 
-    assert isinstance(lockerbackend.get_backend_for_locker(info), lockerbackend.LocalBackend)
+    backend = lockerbackend.get_backend_for_locker(info)
+
+    assert (type(backend), backend.locker_info) == (lockerbackend.LocalBackend, info)
 
 
 def test_an_unconfigured_remote_falls_back_to_local(tmp_path, monkeypatch):
@@ -476,21 +475,27 @@ def test_an_unconfigured_remote_falls_back_to_local(tmp_path, monkeypatch):
     monkeypatch.setattr(lockerbackend.sync, "is_remote_configured", lambda name, kind: False)
     info = FakeLockerInfo(str(tmp_path), local_only = False, name = "hetzner")
 
-    assert isinstance(lockerbackend.get_backend_for_locker(info), lockerbackend.LocalBackend)
+    backend = lockerbackend.get_backend_for_locker(info)
+
+    assert (type(backend), backend.locker_info) == (lockerbackend.LocalBackend, info)
 
 
 def test_a_configured_remote_gets_a_remote_backend(tmp_path, monkeypatch):
     monkeypatch.setattr(lockerbackend.sync, "is_remote_configured", lambda name, kind: True)
     info = FakeLockerInfo(str(tmp_path), local_only = False, name = "hetzner")
 
-    assert isinstance(lockerbackend.get_backend_for_locker(info), lockerbackend.RemoteBackend)
+    backend = lockerbackend.get_backend_for_locker(info)
+
+    assert (type(backend), backend.locker_info) == (lockerbackend.RemoteBackend, info)
 
 
 def test_a_remote_without_a_name_falls_back_to_local(tmp_path, monkeypatch):
     monkeypatch.setattr(lockerbackend.sync, "is_remote_configured", lambda name, kind: True)
     info = FakeLockerInfo(str(tmp_path), local_only = False, name = "")
 
-    assert isinstance(lockerbackend.get_backend_for_locker(info), lockerbackend.LocalBackend)
+    backend = lockerbackend.get_backend_for_locker(info)
+
+    assert (type(backend), backend.locker_info) == (lockerbackend.LocalBackend, info)
 
 
 def test_a_local_backend_reports_no_sidecar_work(locker):

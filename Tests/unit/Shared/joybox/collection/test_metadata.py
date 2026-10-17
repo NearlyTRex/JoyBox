@@ -78,10 +78,10 @@ def test_games_keep_metadata_entries():
 
 def test_anything_that_is_not_a_game_keeps_none():
     # Saves, dlc and updates hang off a game rather than being listed.
-    for supercategory in config.Supercategory.members():
-        if supercategory == ROMS:
-            continue
-        assert metadata.are_game_metadata_file_possible(supercategory) is False
+    possible = [supercategory for supercategory in config.Supercategory.members()
+                if supercategory != ROMS and metadata.are_game_metadata_file_possible(supercategory) is not False]
+
+    assert not possible, possible
 
 
 ###########################################################
@@ -252,14 +252,17 @@ def test_an_incomplete_entry_is_filled_in(metadata_root, scraping):
     assert load(metadata_root).get_game(platform_of(), GAME).get_developer() == "Valve"
 
 
-def test_a_complete_entry_is_left_alone(metadata_root, scraping):
-    # Scraping every entry on every run would hammer the sources for nothing.
+# An entry with every downloadable key already filled in
+def complete_entry():
     complete = metadataentry.MetadataEntry()
     for key in config.metadata_keys_downloadable:
-        setter = getattr(complete, "set_" + key, None)
-        if setter:
-            setter("already here")
-    create(metadata_root, initial_data = complete)
+        getattr(complete, "set_" + key)("already here")
+    return complete
+
+
+def test_a_complete_entry_is_left_alone(metadata_root, scraping):
+    # Scraping every entry on every run would hammer the sources for nothing.
+    create(metadata_root, initial_data = complete_entry())
 
     update(metadata_root)
 
@@ -267,12 +270,7 @@ def test_a_complete_entry_is_left_alone(metadata_root, scraping):
 
 
 def test_a_complete_entry_can_be_refreshed_on_request(metadata_root, scraping):
-    complete = metadataentry.MetadataEntry()
-    for key in config.metadata_keys_downloadable:
-        setter = getattr(complete, "set_" + key, None)
-        if setter:
-            setter("already here")
-    create(metadata_root, initial_data = complete)
+    create(metadata_root, initial_data = complete_entry())
 
     update(metadata_root, force = True)
 
@@ -365,8 +363,8 @@ def test_published_rows_alternate(metadata_root, published):
     publish(metadata_root)
     contents = published_file(published).read_text()
 
-    odd_marker = config.publish_html_entry_odd.split("%s")[0]
-    even_marker = config.publish_html_entry_even.split("%s")[0]
+    odd_marker = config.publish_html_entry_odd.split("%s", maxsplit = 1)[0]
+    even_marker = config.publish_html_entry_even.split("%s", maxsplit = 1)[0]
     assert odd_marker in contents
     assert even_marker in contents
 

@@ -7,6 +7,7 @@ import pytest
 
 # Local imports
 from joybox import config, transform
+from file_helpers import write
 
 
 ###########################################################
@@ -23,14 +24,6 @@ def game_info(category = None, subcategory = None, transform_file = "game.iso"):
         get_subcategory = lambda: subcategory,
         get_transform_file = lambda: transform_file,
         get_key_file = lambda: "game.dkey")
-
-
-def write(path, contents = "data"):
-    path = str(path)
-    os.makedirs(os.path.dirname(path), exist_ok = True)
-    with open(path, "w") as handle:
-        handle.write(contents)
-    return path
 
 
 def fail(**kwargs):

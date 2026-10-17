@@ -45,10 +45,10 @@ class SearchResult(jsondata.JsonData):
     def get_relevance(self):
         return self.get_value(config.search_result_key_relevance)
 
-    # Data
-    def set_data(self, value):
+    # Data the result carries; set_data and get_data are the whole document's
+    def set_result_data(self, value):
         self.set_value(config.search_result_key_data, value)
-    def get_data(self):
+    def get_result_data(self):
         return self.get_value(config.search_result_key_data)
 
 # Asset search result

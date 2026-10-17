@@ -142,10 +142,10 @@ def test_nothing_fits_a_small_card(catalog):
     assert ollama.get_coding_candidates(4096) == []
 
 
-def test_the_shipped_list_names_full_tags():
-    for entry in ollama.CODING_MODELS:
-        assert ":" in entry["name"]
-        assert entry["kv_kb_per_token"] > 0
+@pytest.mark.parametrize("entry", ollama.CODING_MODELS, ids = lambda entry: entry["name"])
+def test_the_shipped_list_names_full_tags(entry):
+    assert ":" in entry["name"]
+    assert entry["kv_kb_per_token"] > 0
 
 
 ###########################################################
@@ -172,6 +172,7 @@ def test_a_variant_is_created_with_the_context_built_in(server):
     assert ollama.create_context_variant("qwen3-coder:30b", 65536) == "qwen3-coder:30b-ctx64k"
     url, data, timeout = server["posts"][-1]
     assert url == "http://box:11434/api/create"
+    assert timeout == 120
     assert data == {"model": "qwen3-coder:30b-ctx64k", "from": "qwen3-coder:30b",
         "parameters": {"num_ctx": 65536}, "stream": False}
 

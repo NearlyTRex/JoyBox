@@ -5,23 +5,32 @@ Mirrors the repo layout: `unit/` and `integration/`, each containing `Bootstrap`
 
 ## Running
 
+The `shell_sandbox` and shell coverage plugins come from
+[NearlyTRex/Workflows](https://github.com/NearlyTRex/Workflows)' `actions/shell-coverage`,
+which CI loads for you. Locally, put a checkout of it on `PYTHONPATH`:
+
 ```bash
-# Everything, from the repo root
-pytest Tests
-
-# One area
-pytest Tests/unit/Shared
-pytest Tests/unit/Shared/joybox/bootstrap/packages/test_aptget.py
-
-# Skip the slow subprocess and docker tests
-pytest Tests -m "not slow"
-
-# Only what needs docker
-pytest Tests -m requires_docker
+export PYTHONPATH=~/Repositories/Workflows/actions/shell-coverage
 ```
 
-The config lives in `Tests/pytest.ini`, so pytest needs the path — a bare
-`pytest` from the repo root will not pick it up. `cd Tests && pytest` also works.
+```bash
+# Everything, from the repo root
+pytest --rootdir=. Tests
+
+# One area
+pytest --rootdir=. Tests/unit/Shared
+pytest --rootdir=. Tests/unit/Shared/joybox/bootstrap/packages/test_aptget.py
+
+# Skip the slow subprocess and docker tests
+pytest --rootdir=. Tests -m "not slow"
+
+# Across every core, the way CI runs the unit tests
+pytest --rootdir=. Tests/unit -n auto --dist loadfile
+```
+
+The config lives in `Tests/pytest.ini`, which pytest finds from the test paths,
+but the rootdir has to be the repo root: the shell plugins resolve scripts from
+it. The suite stops with the fix when it is not.
 
 ## Coverage
 
@@ -31,18 +40,22 @@ the most, and the functions no test runs. `coverage_tool report -m <module>`
 details one module; see [its page](../Docs/reference/man/coverage_tool.md).
 
 The shell under `Bootstrap/` and `install.sh` is measured separately, since
-coverage.py never sees it. `--shell-cov-report` prints how many of each script's
-statements the tests ran, and `--shell-cov-fail-under N` also fails the run below
-N percent. CI holds it at 100:
+coverage.py never sees it, by the library's `pytest_shell_cov` plugin. CI holds
+it at 100%, counting the right-hand side of every `&&` and `||` as a statement of
+its own, so an error handler needs a test where its command fails. To run it
+locally, install the parser the plugin reads scripts with, then:
 
 ```bash
-pytest -c Tests/pytest.ini Tests/unit --shell-cov-report
+pip install --require-hashes --no-deps -r ~/Repositories/Workflows/actions/shell-coverage/requirements.txt
+pytest -c Tests/pytest.ini --rootdir=. Tests/unit \
+    --shell-cov-source Bootstrap --shell-cov-source install.sh --shell-cov-branch --shell-cov-report
 ```
 
-Every bash a test starts is traced through `BASH_ENV` (the `shell_sandbox` and
-`traced_env` fixtures set it up), and `joybox.shellcoverage` measures the traces.
-A statement counts as run when any of its lines was, because bash reports a
-multi-line command under its first or its last line depending on the construct.
+Every bash a test starts is traced through `BASH_ENV`, inherited from the
+environment or, for a test that builds its own, from the `shell_traced_env`
+fixture. A statement counts as run when any of its lines was, because bash
+reports a multi-line command under its first or its last line depending on the
+construct.
 
 ## Layout
 
@@ -145,7 +158,7 @@ def test_install_moves_boot_waiting_to_network_manager(server):
 ```
 
 It needs unprivileged user namespaces; where they are unavailable the tests skip,
-and the shell coverage floor catches it in CI. **`traced_env`** builds an
+except in CI, which fails them. **`shell_traced_env`** builds an
 environment for tests that run bash directly instead, such as `install.sh`'s.
 
 **`cli_helpers.py`** — `CommandHarness` runs a `joybox.cli` command in process, recording its
@@ -158,12 +171,51 @@ logs and previews; `Recorder` fakes a call; `assert_entry_points` checks `run()`
 - Comments are short and factual — one line, stating an invariant or a
   consequence. No narration of when or how something was changed; git history
   covers that.
-- Mark anything involving a subprocess or container `@pytest.mark.slow`, and
-  anything needing a binary with `requires_docker` / `requires_nginx` plus a
-  `skipif`, so the suite still runs on a machine without them.
+- Mark anything involving a subprocess or container `@pytest.mark.slow`.
+- **Declare the programs a test needs.** `pytest.mark.requires_binary("docker")`
+  for a program on `PATH` (`"a|b"` accepts either) and
+  `pytest.mark.requires_tool("XorrISO")` for one from the JoyBox tool registry,
+  at module (`pytestmark`), class or test level. Both are enforced while the
+  tests are collected, so a machine without the program skips the test before
+  any of its fixtures start. Don't check inside a test or fixture
+  (`shutil.which` and `pytest.skip`, `skipif`). A test using `shell_sandbox`
+  declares `"bash", "unshare"`, one using `shell_traced_env` `"bash"`, and
+  every integration file declares at least one program, or runs this
+  interpreter in a subprocess (`sys.executable`): one that needs neither
+  belongs in `unit/`.
 - **Tests assert the intended contract.** If a test fails because the source is
   wrong, fix the source. Do not add an `xfail` or rewrite the assertion to match
   broken behaviour.
+
+## The meta suite
+
+`unit/meta/` holds every file under `unit/` and `integration/` to the
+conventions above, statically, so a test that can't fail is caught when it is
+written. Each rule is also run against a sample that breaks it, so the rules
+themselves can fail.
+
+- `test_test_quality.py`: a test that asserts nothing; checks that sit only
+  inside an `if`, loop or `try` and may never run; `except ...: pass`; an
+  assertion true by construction; a test whose only checks are `is not None`
+  or `isinstance`; a helper pasted into several files (share it from the
+  nearest `conftest.py` or a `*_helpers.py`). A check is an `assert`, an
+  `assert_*` call, `pytest.fail`, a `pytest.raises` block, or a call to a
+  helper that makes one, followed into the `*_helpers.py` it came from.
+- `test_binary_requirements.py`: the `requires_binary` / `requires_tool`
+  rules above, through any depth of fixtures.
+- `test_file_hygiene.py`: duplicate tests, helpers and constants, imports
+  below the header, and the 900 line limit.
+- `test_layout.py`: every directory mirrors one in the repository, and a split
+  `test_<module>/` package covers a real module and holds only collectable tests.
+- `test_pylint.py`: pylint with `Tests/pylintrc` over every test file; any
+  message fails. The rcfile only turns off pytest idioms and the repository's
+  own conventions.
+- `test_signatures.py`: an override in `Shared/joybox` keeps every parameter of
+  the method it overrides, so a call through the base class works on every
+  subclass.
+
+There are no exemption lists to add to: when a rule trips, fix the test, or the
+source when the test found a bug.
 
 ## Known gaps
 

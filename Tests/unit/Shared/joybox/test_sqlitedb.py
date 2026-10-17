@@ -93,13 +93,22 @@ def test_two_handles_on_one_file_share_a_connection(tmp_path):
 
 def test_closing_twice_is_harmless(tmp_path):
     db = sqlitedb.Database(str(tmp_path / "test.db"))
-    db.open()
+    first = db.open()
     db.close()
     db.close()
+    try:
+        second = db.open()
+
+        assert second is not first
+        assert second.execute("SELECT 1").fetchone()[0] == 1
+    finally:
+        db.close()
 
 
 def test_closing_without_opening_is_harmless(tmp_path):
     sqlitedb.Database(str(tmp_path / "test.db")).close()
+
+    assert not (tmp_path / "test.db").exists()
 
 
 def test_a_query_opens_the_connection_on_demand(tmp_path):

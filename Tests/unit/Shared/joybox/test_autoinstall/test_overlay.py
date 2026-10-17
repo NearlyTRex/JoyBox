@@ -179,21 +179,24 @@ def test_there_are_shipped_overlays_to_check(repo_root):
     assert shipped_overlays(repo_root)
 
 
+# True when ufw is never enabled, or 22/tcp is allowed before it is
+def ssh_opens_before_the_firewall(overlay_file):
+    overlay = autoinstall.read_overlay_file(overlay_file)
+    lines = runcmd_lines(yaml.safe_load(autoinstall.build_user_data(complete_profile(), overlay)))
+    enables = [index for index, line in enumerate(lines) if line.startswith("ufw") and "enable" in line]
+    allows = [index for index, line in enumerate(lines) if line.split()[:3] == ["ufw", "allow", "22/tcp"]]
+    return not enables or (bool(allows) and allows[0] < enables[0])
+
+
 def test_a_shipped_overlay_that_enables_the_firewall_lets_ssh_in_first(repo_root):
     # A key is the only way into the installed machine, so a firewall that
     # comes up without port 22 open leaves nobody able to log in. The port is
     # named rather than the OpenSSH application profile, which depends on a
     # file in the target that ufw may not find.
-    for overlay_file in shipped_overlays(repo_root):
-        overlay = autoinstall.read_overlay_file(overlay_file)
-        seed = yaml.safe_load(autoinstall.build_user_data(complete_profile(), overlay))
-        lines = runcmd_lines(seed)
-        enables = [index for index, line in enumerate(lines) if line.startswith("ufw") and "enable" in line]
-        if not enables:
-            continue
-        allows = [index for index, line in enumerate(lines) if line.split()[:3] == ["ufw", "allow", "22/tcp"]]
-        assert allows, "%s enables ufw without allowing 22/tcp" % overlay_file
-        assert allows[0] < enables[0], "%s enables ufw before allowing 22/tcp" % overlay_file
+    locked_out = [
+        overlay_file for overlay_file in shipped_overlays(repo_root) if not ssh_opens_before_the_firewall(overlay_file)]
+
+    assert not locked_out, "these enable ufw before allowing 22/tcp: %s" % locked_out
 
 
 def llm_overlay_seed(repo_root):
@@ -210,7 +213,7 @@ def test_the_llm_overlay_ships_the_helper_from_the_tree(repo_root):
     # The overlay carries the helper inline; the copy in the tree is the one
     # that is tested, so the two must not drift apart.
     import os
-    with open(os.path.join(repo_root, "Scripts", "autoinstall", "ollama_helper.py")) as handle:
+    with open(os.path.join(repo_root, "Scripts", "autoinstall", "ollama_helper.py"), encoding = "utf-8") as handle:
         source = handle.read()
 
     assert written_files(llm_overlay_seed(repo_root))["/usr/local/sbin/ollama-helper"] == source

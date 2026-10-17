@@ -3,6 +3,8 @@ import ctypes
 import os
 import stat
 import types
+
+# Third-party imports
 import pytest
 
 # Local imports
@@ -129,7 +131,8 @@ def mount_run(monkeypatch):
             path = option.split(",")[0].removeprefix("credentials=")
             state["credentials_path"] = path
             if os.path.exists(path):
-                state["credentials"] = (open(path).read(), stat.S_IMODE(os.stat(path).st_mode))
+                with open(path, encoding = "utf-8") as handle:
+                    state["credentials"] = (handle.read(), stat.S_IMODE(os.stat(path).st_mode))
         return state["codes"][cmd[1]]
 
     def run_output_command(cmd, **kwargs):

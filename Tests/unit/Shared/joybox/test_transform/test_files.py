@@ -52,7 +52,7 @@ def chains(monkeypatch, tmp_path):
             target_dir = kwargs.get("output_dir") or str(tmp_path)
             os.makedirs(target_dir, exist_ok = True)
             produced = os.path.join(target_dir, produces)
-            with open(produced, "w") as handle:
+            with open(produced, "w", encoding = "utf-8") as handle:
                 handle.write(name)
             return (True, produced)
         return run
@@ -89,6 +89,7 @@ def test_a_computer_game_uses_the_program_transform(chains, workspace):
         FakeGameInfo(category = config.Category.COMPUTER), str(source), str(output))
 
     assert success is True
+    assert result.startswith(str(output))
     assert names(chains) == ["transform_computer_programs"]
 
 
@@ -192,10 +193,11 @@ def test_a_successful_transform_lands_in_the_output_directory(chains, workspace)
 
 def test_the_temporary_directory_is_cleaned_up(chains, workspace):
     source, output = workspace
-    success, result = transform.transform_game_file(
+    success, _ = transform.transform_game_file(
         FakeGameInfo(category = config.Category.COMPUTER), str(source), str(output))
     temporary = [entry["output_dir"] for _, entry in chains][0]
 
+    assert success is True
     assert not os.path.exists(temporary)
 
 
@@ -235,6 +237,7 @@ def test_a_failing_first_step_stops_the_chain(monkeypatch, chains, workspace):
         str(source), str(output))
 
     assert success is False
+    assert result == "not a disc image"
     assert "transform_xbox_disc_image" not in names(chains)
 
 

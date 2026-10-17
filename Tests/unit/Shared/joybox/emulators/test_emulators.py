@@ -37,12 +37,17 @@ def test_a_pretend_configure_succeeds_and_writes_nothing(name, tmp_path, monkeyp
 ###########################################################
 
 def test_the_map_is_keyed_by_each_emulator_name():
-    for name, emulator in emulators.get_emulator_map().items():
-        assert emulator.get_name() == name
+    emulator_map = emulators.get_emulator_map()
+
+    assert emulator_map
+    assert {name: emulator.get_name() for name, emulator in emulator_map.items()} == {name: name for name in emulator_map}
 
 
 def test_an_emulator_is_found_by_its_name():
-    assert isinstance(emulators.get_emulator_by_name("Dolphin"), emulators.Dolphin)
+    emulator = emulators.get_emulator_by_name("Dolphin")
+
+    assert isinstance(emulator, emulators.Dolphin)
+    assert emulator.get_name() == "Dolphin"
 
 
 def test_an_unknown_name_finds_no_emulator():
@@ -58,6 +63,9 @@ def test_an_unknown_name_finds_no_emulator():
 
 @pytest.mark.parametrize("name", sorted(emulators.get_emulator_map()))
 def test_only_windows_programs_run_sandboxed_on_linux(name):
-    for entry in emulators.get_emulator_by_name(name).get_config().values():
-        assert entry["run_sandboxed"]["windows"] is False
-        assert entry["run_sandboxed"]["linux"] == entry["program"]["linux"].endswith(".exe")
+    entries = emulators.get_emulator_by_name(name).get_config()
+    sandboxing = {program: entry["run_sandboxed"] for program, entry in entries.items()}
+
+    assert sandboxing == {
+        program: {"windows": False, "linux": entry["program"]["linux"].endswith(".exe")}
+        for program, entry in entries.items()}
