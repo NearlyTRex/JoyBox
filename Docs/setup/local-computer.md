@@ -75,11 +75,12 @@ Re-running is safe: the checkout is fast-forwarded and anything already installe
 JoyBox is a Python package, and the `python` component installs this checkout into `~/.venv` in
 editable mode. pip creates one command per entry in `[project.scripts]` in `pyproject.toml`
 (`master_backup`, `build_autoinstall_iso`, …) in `~/.venv/bin`, which the `dotfiles` component
-puts on your `PATH`. Editable means changes to the code take effect immediately; a command added
-to `[project.scripts]` since the last setup appears once the package is reinstalled:
+puts on your `PATH`. Editable means changes to the code take effect immediately. A command added
+to (or changed in) `[project.scripts]` since the last setup needs the package installed again,
+which the `python` component notices and does on its next run:
 
 ```bash
-~/.venv/bin/pip install --editable ~/Repositories/JoyBox[dev,decompiler]
+python3 bootstrap.py -a setup -t local_ubuntu --components python
 ```
 
 What each command does is in the [command reference](../reference/man/README.md), and the flags
