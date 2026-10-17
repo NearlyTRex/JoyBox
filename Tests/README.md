@@ -5,23 +5,32 @@ Mirrors the repo layout: `unit/` and `integration/`, each containing `Bootstrap`
 
 ## Running
 
+The `shell_sandbox` and shell coverage plugins come from
+[NearlyTRex/Workflows](https://github.com/NearlyTRex/Workflows)' `actions/shell-coverage`,
+which CI loads for you. Locally, put a checkout of it on `PYTHONPATH`:
+
 ```bash
-# Everything, from the repo root
-pytest Tests
-
-# One area
-pytest Tests/unit/Shared
-pytest Tests/unit/Shared/joybox/bootstrap/packages/test_aptget.py
-
-# Skip the slow subprocess and docker tests
-pytest Tests -m "not slow"
-
-# Only what needs docker
-pytest Tests -m requires_docker
+export PYTHONPATH=~/Repositories/Workflows/actions/shell-coverage
 ```
 
-The config lives in `Tests/pytest.ini`, so pytest needs the path — a bare
-`pytest` from the repo root will not pick it up. `cd Tests && pytest` also works.
+```bash
+# Everything, from the repo root
+pytest --rootdir=. Tests
+
+# One area
+pytest --rootdir=. Tests/unit/Shared
+pytest --rootdir=. Tests/unit/Shared/joybox/bootstrap/packages/test_aptget.py
+
+# Skip the slow subprocess and docker tests
+pytest --rootdir=. Tests -m "not slow"
+
+# Only what needs docker
+pytest --rootdir=. Tests -m requires_docker
+```
+
+The config lives in `Tests/pytest.ini`, which pytest finds from the test paths,
+but the rootdir has to be the repo root: the shell plugins resolve scripts from
+it. The suite stops with the fix when it is not.
 
 ## Coverage
 
@@ -31,18 +40,22 @@ the most, and the functions no test runs. `coverage_tool report -m <module>`
 details one module; see [its page](../Docs/reference/man/coverage_tool.md).
 
 The shell under `Bootstrap/` and `install.sh` is measured separately, since
-coverage.py never sees it. `--shell-cov-report` prints how many of each script's
-statements the tests ran, and `--shell-cov-fail-under N` also fails the run below
-N percent. CI holds it at 100:
+coverage.py never sees it, by the library's `pytest_shell_cov` plugin. CI holds
+it at 100%, counting the right-hand side of every `&&` and `||` as a statement of
+its own, so an error handler needs a test where its command fails. To run it
+locally, install the parser the plugin reads scripts with, then:
 
 ```bash
-pytest -c Tests/pytest.ini Tests/unit --shell-cov-report
+pip install --require-hashes --no-deps -r ~/Repositories/Workflows/actions/shell-coverage/requirements.txt
+pytest -c Tests/pytest.ini --rootdir=. Tests/unit \
+    --shell-cov-source Bootstrap --shell-cov-source install.sh --shell-cov-branch --shell-cov-report
 ```
 
-Every bash a test starts is traced through `BASH_ENV` (the `shell_sandbox` and
-`traced_env` fixtures set it up), and `joybox.shellcoverage` measures the traces.
-A statement counts as run when any of its lines was, because bash reports a
-multi-line command under its first or its last line depending on the construct.
+Every bash a test starts is traced through `BASH_ENV`, inherited from the
+environment or, for a test that builds its own, from the `shell_traced_env`
+fixture. A statement counts as run when any of its lines was, because bash
+reports a multi-line command under its first or its last line depending on the
+construct.
 
 ## Layout
 
@@ -145,7 +158,7 @@ def test_install_moves_boot_waiting_to_network_manager(server):
 ```
 
 It needs unprivileged user namespaces; where they are unavailable the tests skip,
-and the shell coverage floor catches it in CI. **`traced_env`** builds an
+except in CI, which fails them. **`shell_traced_env`** builds an
 environment for tests that run bash directly instead, such as `install.sh`'s.
 
 **`cli_helpers.py`** — `CommandHarness` runs a `joybox.cli` command in process, recording its

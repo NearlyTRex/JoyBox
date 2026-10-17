@@ -15,10 +15,10 @@ import pytest
 ###########################################################
 
 @pytest.fixture
-def run_manager(traced_env):
+def run_manager(shell_traced_env):
     def run(bootstrap_dir, *arguments):
         script = os.path.join(bootstrap_dir, "managers", "manager_certbot.sh")
-        env = traced_env(dict(os.environ, SUDO_UID = str(os.getuid())))
+        env = shell_traced_env(dict(os.environ, SUDO_UID = str(os.getuid())))
         return subprocess.run(["bash", script] + list(arguments),
                               capture_output = True, text = True, env = env, check = False)
     return run
@@ -294,6 +294,16 @@ def test_export_writes_a_pkcs12_keystore(server, pair):
     check = subprocess.run(["openssl", "pkcs12", "-in", server.host_path("/srv/app/keystore"), "-nokeys",
                             "-password", "pass:secret"], capture_output = True, text = True, check = False)
     assert check.returncode == 0, check.stderr
+
+
+def test_export_names_the_format_when_openssl_cannot_describe_the_keystore(server, pair):
+    place(server, LIVE, pair)
+    server.stub("openssl", script = 'case " $* " in *" -info "*) exit 1 ;; esac\nexec "${0%/*}/../tools/openssl" "$@"\n')
+
+    result = export(server)
+
+    assert result.returncode == 0, output(result)
+    assert "Format: PKCS12" in result.stdout
 
 
 def test_export_sets_the_permissions_and_owner_asked_for(server, pair):

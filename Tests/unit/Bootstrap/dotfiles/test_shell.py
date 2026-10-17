@@ -68,11 +68,11 @@ def test_root_gets_a_red_user_name(shell):
     assert result.stdout.startswith("\\[\\033[1;31m\\]\\u"), result.stdout
 
 
-def test_other_users_get_a_green_one(traced_env, tmp_path):
+def test_other_users_get_a_green_one(shell_traced_env, tmp_path):
     if os.geteuid() == 0:
         pytest.skip("needs a user other than root")
     script = os.path.join(DOTFILES_DIR, "shell.sh")
-    env = traced_env({"PATH": os.environ["PATH"], "HOME": str(tmp_path)})
+    env = shell_traced_env({"PATH": os.environ["PATH"], "HOME": str(tmp_path)})
 
     result = subprocess.run(["bash", "-c", 'source "%s"; echo "$PS1"' % script],
                             env = env, capture_output = True, text = True, check = False)

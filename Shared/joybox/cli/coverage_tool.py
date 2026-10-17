@@ -13,7 +13,7 @@ def build_parser():
             "Actions:\n"
             "\n"
             "- `run`: run the unit tests under coverage.py the way CI does (from the checkout,\n"
-            "  `pytest -q -c Tests/pytest.ini Tests/unit`, with pyproject's `[tool.coverage]`\n"
+            "  `pytest -q -c Tests/pytest.ini --rootdir=. Tests/unit`, with pyproject's `[tool.coverage]`\n"
             "  settings), then report. The data is kept in the cache's `Coverage` directory, not\n"
             "  the checkout.\n"
             "- `report`: report on the last measurement without running anything.\n"

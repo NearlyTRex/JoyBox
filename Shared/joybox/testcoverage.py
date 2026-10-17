@@ -55,7 +55,7 @@ def is_coverage_available():
 # Build the command that runs the tests under coverage
 def build_measure_command(data_file, include_integration = False):
     cmd = [sys.executable, "-m", "coverage", "run", "--data-file", data_file,
-        "-m", "pytest", "-q", "-c", PYTEST_CONFIG, UNIT_TESTS]
+        "-m", "pytest", "-q", "-c", PYTEST_CONFIG, "--rootdir=.", UNIT_TESTS]
     if include_integration:
         cmd.append(INTEGRATION_TESTS)
     return cmd

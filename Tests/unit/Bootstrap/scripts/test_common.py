@@ -56,12 +56,12 @@ def test_root_is_accepted(shell_sandbox):
     assert result.stdout.strip() == "ok"
 
 
-def test_an_ordinary_user_is_refused(traced_env):
+def test_an_ordinary_user_is_refused(shell_traced_env):
     # The sandbox is always root, so this runs as the developer instead
     if os.geteuid() == 0:
         pytest.skip("running as root")
     result = subprocess.run(["bash", "-c", 'source "$0"; ensure_root_user; echo ok', COMMON],
-                            capture_output = True, text = True, env = traced_env(), check = False)
+                            capture_output = True, text = True, env = shell_traced_env(), check = False)
 
     assert result.returncode == 1
     assert "Please run this script as root" in result.stdout
@@ -297,6 +297,16 @@ def test_unattended_upgrades_are_installed_and_enabled(shell_sandbox):
     assert shell_sandbox.ran("systemctl", "enable", "--now", "unattended-upgrades")
 
 
+def test_unattended_upgrades_that_will_not_start_still_finish_configuring(shell_sandbox):
+    shell_sandbox.write("/etc/apt/apt.conf.d/.keep", "")
+    shell_sandbox.stub("systemctl", code = 1)
+
+    result = run(shell_sandbox, "configure_unattended_upgrades")
+
+    assert result.returncode == 0, output(result)
+    assert "Unattended-upgrades configuration complete." in result.stdout
+
+
 def test_the_firewall_admits_ssh_and_web_before_it_is_enabled(shell_sandbox):
     run(shell_sandbox, "configure_ufw_firewall")
 
@@ -461,6 +471,19 @@ def test_an_existing_setup_is_kept_and_the_rule_set_moved_to_the_pin(shell_sandb
     assert shell_sandbox.ran("git", "-C", MODSEC + "/crs", "checkout", "-q", "v4.29.0")
     assert shell_sandbox.read(MODSEC + "/crs/crs-setup.conf") == "mine\n"
     assert "crs-setup.conf already exists" in result.stdout
+
+
+def test_a_rule_set_that_cannot_fetch_is_still_moved_to_the_pin(shell_sandbox):
+    shell_sandbox.stub("git", script = '[ "$3" = fetch ] && exit 1; exit 0\n')
+    shell_sandbox.write(MODSEC + "/modsecurity.conf", "SecRuleEngine On\n")
+    shell_sandbox.write(MODSEC + "/crs/.git/HEAD", "")
+    shell_sandbox.write(MODSEC + "/crs/crs-setup.conf", "mine\n")
+    shell_sandbox.write(MODSEC + "/crs/rules/a.conf", "")
+
+    result = run(shell_sandbox, "configure_modsecurity")
+
+    assert result.returncode == 0, output(result)
+    assert shell_sandbox.ran("git", "-C", MODSEC + "/crs", "checkout", "-q", "v4.29.0")
 
 
 def test_a_pin_that_cannot_be_checked_out_keeps_the_existing_rules(shell_sandbox):

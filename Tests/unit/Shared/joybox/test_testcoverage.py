@@ -198,7 +198,7 @@ def test_the_unit_tests_are_measured_the_way_ci_runs_them():
     cmd = testcoverage.build_measure_command("/cache/coverage.data")
 
     assert cmd[:6] == [sys.executable, "-m", "coverage", "run", "--data-file", "/cache/coverage.data"]
-    assert cmd[6:] == ["-m", "pytest", "-q", "-c", "Tests/pytest.ini", "Tests/unit"]
+    assert cmd[6:] == ["-m", "pytest", "-q", "-c", "Tests/pytest.ini", "--rootdir=.", "Tests/unit"]
 
 
 def test_integration_tests_are_added_when_asked():

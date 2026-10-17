@@ -29,13 +29,13 @@ def fake_command(sandbox, name):
     sandbox.write("/root/.venv/bin/%s" % name, '#!/bin/bash\necho "%s $*"\n' % name, mode = 0o755)
 
 
-def test_the_commands_are_read_from_the_venvs_console_scripts(traced_env, tmp_path):
+def test_the_commands_are_read_from_the_venvs_console_scripts(shell_traced_env, tmp_path):
     python = tmp_path / ".venv" / "bin" / "python3"
     python.parent.mkdir(parents = True)
     python.write_text('#!/bin/bash\nexec "%s" "$@"\n' % sys.executable)
     python.chmod(0o755)
     script = os.path.join(DOTFILES_DIR, "joybox_functions.sh")
-    env = traced_env({"PATH": os.environ["PATH"], "HOME": str(tmp_path)})
+    env = shell_traced_env({"PATH": os.environ["PATH"], "HOME": str(tmp_path)})
 
     result = subprocess.run(["bash", "-c", 'source "%s"; _jb_commands' % script],
                             env = env, capture_output = True, text = True, check = False)
