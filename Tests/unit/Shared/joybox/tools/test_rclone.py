@@ -166,6 +166,14 @@ def test_configure_writes_both_remotes_to_both_platforms(share_settings, written
     assert "GDRIVE_" not in contents and "HETZNER_" not in contents
 
 
+def test_the_config_holding_the_credentials_is_kept_private(share_settings, written):
+    set_gdrive(share_settings)
+    set_hetzner(share_settings)
+
+    assert rclone.RClone().configure()
+    assert [call.get("private") for call in written.calls] == [True, True]
+
+
 def test_configure_without_credentials_writes_empty_files(share_settings, written):
     assert rclone.RClone().configure(config.SetupParams())
 

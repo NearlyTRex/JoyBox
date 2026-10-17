@@ -1,3 +1,7 @@
+# Imports
+import os
+import stat
+
 # Third-party imports
 import pytest
 
@@ -70,6 +74,24 @@ def test_the_seed_carries_the_key_and_the_name(creatable):
     assert KEY in (creatable.seed_dir / "user-data").read_text()
     assert "instance-id: %s" % NAME in (creatable.seed_dir / "meta-data").read_text()
     assert creatable.removed == [str(creatable.seed_dir)]
+
+
+def test_the_seed_holding_the_console_password_is_kept_private(creatable, monkeypatch):
+    # The seed directory is removed after the image is built, so read the
+    # modes while cloud-localds would be reading the files
+    modes = {}
+
+    def build_image(cmd, **kwargs):
+        if cmd[0] == "cloud-localds":
+            for name in ["user-data", "meta-data"]:
+                modes[name] = stat.S_IMODE(os.stat(creatable.seed_dir / name).st_mode)
+        return original(cmd, **kwargs)
+    original = creatable.connection.run_return_code
+    monkeypatch.setattr(creatable.connection, "run_return_code", build_image)
+
+    create(creatable)
+
+    assert modes == {"user-data": 0o600, "meta-data": 0o600}
 
 
 def test_the_address_is_reserved_before_the_install(creatable):

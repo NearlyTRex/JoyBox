@@ -446,6 +446,7 @@ def create_vm(
             success = fileops.touch_file(
                 src = seed_file,
                 contents = contents,
+                private = True,
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
