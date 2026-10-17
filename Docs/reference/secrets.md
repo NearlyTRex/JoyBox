@@ -124,6 +124,7 @@ screen or in the scrollback.
 |---------|--------|
 | `UserData.Protection` | `general_passphrase`, `locker_passphrase` |
 | `UserData.Backup` | `backup_age_identity_key` |
+| `UserData.Streaming` | `sunshine_user`, `sunshine_pass` |
 | `UserData.Share` | `locker_*_passphrase`, `locker_*_config`, `locker_*_token` |
 | `UserData.Wordpress` | `wordpress_db_pass`, `wordpress_db_root_pass`, `wordpress_admin_pass` |
 | `UserData.FileBrowser` | `filebrowser_admin_pass`, `filebrowser_totp_secret` |

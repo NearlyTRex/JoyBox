@@ -43,8 +43,13 @@ python3 bootstrap.py -a setup -t local_ubuntu --components udev,ufw,autostart
   `sunshine_allowed_subnet` only. The rules apply once ufw is enabled.
 - `autostart` starts `launch_sunshine` at every desktop login.
 
+`setup_tools -c` also writes the web page's login, from the 1Password fields
+`UserData.Streaming/sunshine_user` and `sunshine_pass` (the `[UserData.Streaming]` settings).
+Sunshine keeps only a salted hash of the password, and its paired clients are left as they were.
+Without those fields, the web page asks you to choose a login the first time you open it.
+
 Log out and back in (or run `launch_sunshine`). Then open `https://localhost:47990`, accept the
-self-signed certificate and choose the web page's username and password.
+self-signed certificate and sign in.
 
 ## The client
 
