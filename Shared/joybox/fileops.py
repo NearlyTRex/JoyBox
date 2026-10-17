@@ -15,6 +15,7 @@ import joybox.modules as modules
 import joybox.paths as paths
 from joybox import runtime
 import joybox.text as text
+import joybox.secretstore as secretstore
 
 ###########################################################
 # Error handlers
@@ -237,6 +238,8 @@ def touch_file(src, contents = "", contents_mode = "w", encoding = None, private
         if not pretend_run:
             os.makedirs(paths.get_filename_directory(src), exist_ok = True)
             if len(contents):
+                if secretstore.is_secret_reference(contents) and not private:
+                    raise ValueError("Refusing to write secret reference to non-private file: %s" % src)
                 text_encoding = None if "b" in contents_mode else (encoding or "utf-8")
                 if private:
                     handle = open_private_file(src, contents_mode, text_encoding)
