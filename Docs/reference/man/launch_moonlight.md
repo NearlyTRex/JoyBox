@@ -14,10 +14,10 @@ launch_moonlight [options]
 
 ## Description
 
-Runs the Moonlight program from the tools directory. With a host, from `--host` or
-`[Tools.Moonlight] moonlight_host`, it streams that host's app straight away, from
-`--app` or `[Tools.Moonlight] moonlight_app` (Pegasus by default). Without one it
-opens Moonlight's host list.
+Runs the Moonlight program from the tools directory. It streams the host's app
+straight away: the host from `--host` or `[Tools.Moonlight] moonlight_host`
+(192.168.1.12 by default), the app from `--app` or `[Tools.Moonlight] moonlight_app`
+(Pegasus by default). With `moonlight_host` cleared it opens Moonlight's host list.
 
 `--pair` pairs with the host instead: Moonlight shows a PIN, which is entered on the
 host's Sunshine web page (port 47990). A host only has to be paired once.
