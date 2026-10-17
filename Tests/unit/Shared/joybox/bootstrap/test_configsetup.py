@@ -128,7 +128,7 @@ locker_gdrive_config =
 locker_hetzner_config = op://Personal/JoyBox/UserData.Share/locker_hetzner_config
 
 [Tools.Ollama]
-ollama_ssh_host = aryie@192.168.1.15
+ollama_ssh_host = testuser@192.168.1.15
 
 [Custom.Section]
 kept = yes
@@ -146,7 +146,7 @@ def test_a_rebuild_keeps_every_value_the_old_file_set(old_file):
     assert configsetup.recreate_config(old_file, interactive = False)
 
     rebuilt = parse(old_file)
-    assert rebuilt["Tools.Ollama"]["ollama_ssh_host"] == "aryie@192.168.1.15"
+    assert rebuilt["Tools.Ollama"]["ollama_ssh_host"] == "testuser@192.168.1.15"
     assert rebuilt["UserData.Share"]["locker_hetzner_config"] == "op://Personal/JoyBox/UserData.Share/locker_hetzner_config"
     assert rebuilt["Custom.Section"]["kept"] == "yes"
 

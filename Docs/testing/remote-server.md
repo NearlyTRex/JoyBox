@@ -35,8 +35,8 @@ server, so the real entry is untouched and nothing has to be switched back:
 server_1_host = 192.168.122.10
 server_1_port = 22
 server_1_user = <you>
-server_1_key_filepath = /home/<you>/.ssh/id_ed25519
-server_1_domain_name = joybox.test
+server_1_key_filepath = $HOME/.ssh/id_ed25519
+server_1_domain_name = op://Personal/JoyBox/UserData.Servers/domain_name
 server_1_tls_mode = mkcert
 server_1_vm = joybox-test
 server_1_htpasswd_pass = op://Personal/JoyBox/UserData.Servers/server_1_htpasswd_pass
@@ -49,9 +49,12 @@ server_1_htpasswd_pass = op://Personal/JoyBox/UserData.Servers/server_1_htpasswd
 - Leave the `storage` fields out: `init_localstorage.sh` creates the same `/mnt/storage`
   tree a Storage Box would, so `navidrome_music_dir`, `audiobookshelf_audio_dir` and
   `backup_root` are already right.
-- The guest can use the real domain instead of `joybox.test`. While the hosts block is in
-  place this machine reaches the guest rather than the real server; the hardening checks'
-  rate-limit burst stays on the guest either way.
+- The guest uses the real server's domain (the same reference as `server_0_domain_name`),
+  so it is rehearsed under the name it will really serve. While the hosts block is in place
+  this machine reaches the guest rather than the real server; the hardening checks'
+  rate-limit burst stays on the guest either way. Set `server_1_domain_name = joybox.test`
+  to keep them apart. With `mkcert` the guest's certificate is local, so nothing is asked of
+  the real domain's certificate authority.
 
 ## What the guest starts as
 

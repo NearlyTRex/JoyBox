@@ -140,7 +140,7 @@ ini_defaults["UserData.Kanboard"]["kanboard_admin_pass"] = get_secret_reference(
 ini_defaults["UserData.FitLog"] = {}
 ini_defaults["UserData.FitLog"]["fitlog_subdomain"] = "fit"
 ini_defaults["UserData.FitLog"]["fitlog_port_http"] = "8087"
-ini_defaults["UserData.FitLog"]["fitlog_timezone"] = "Etc/UTC"
+ini_defaults["UserData.FitLog"]["fitlog_timezone"] = "America/Los_Angeles"
 ini_defaults["UserData.FitLog"]["fitlog_pull_minutes"] = "10"
 ini_defaults["UserData.FitLog"]["fitlog_catalog_branch"] = "main"
 ini_defaults["UserData.FitLog"]["fitlog_user"] = get_secret_reference("UserData.FitLog", "fitlog_user")
@@ -152,12 +152,18 @@ ini_defaults["UserData.Backup"]["backup_root"] = "/mnt/storage/Backups"
 ini_defaults["UserData.Backup"]["backup_keep"] = "7"
 # Public key (age1...) that backup archives are encrypted to. Leave empty to write
 # plain gzip. The server only ever holds the public half, so a compromised box
-# cannot read its own backup history.
-ini_defaults["UserData.Backup"]["backup_age_recipient"] = ""
+# cannot read its own backup history. Kept in 1Password beside its private half.
+ini_defaults["UserData.Backup"]["backup_age_recipient"] = get_secret_reference("UserData.Backup", "backup_age_recipient")
 # Local path to the matching private key, used only during restore. Never written
 # to the server's disk - restore stages it on tmpfs and removes it afterwards.
 # Lose this and every encrypted backup is unrecoverable.
-ini_defaults["UserData.Backup"]["backup_age_identity"] = ""
+if platform_info.is_windows_platform():
+    ini_defaults["UserData.Backup"]["backup_age_identity"] = "%USERPROFILE%\\.joybox-age.key"
+else:
+    ini_defaults["UserData.Backup"]["backup_age_identity"] = "$HOME/.joybox-age.key"
+# The private key itself, kept in 1Password so every machine restores with the
+# same one; the bootstrap's keys component writes it to backup_age_identity.
+ini_defaults["UserData.Backup"]["backup_age_identity_key"] = get_secret_reference("UserData.Backup", "backup_age_identity_key")
 
 # UserData.VM
 # Local machines used to rehearse an install before it is run on hardware.
@@ -225,8 +231,11 @@ ini_defaults["UserData.Servers"]["server_1_host"] = "192.168.122.10"
 ini_defaults["UserData.Servers"]["server_1_port"] = "22"
 ini_defaults["UserData.Servers"]["server_1_user"] = get_secret_reference("UserData.Servers", "server_1_user")
 ini_defaults["UserData.Servers"]["server_1_pass"] = get_secret_reference("UserData.Servers", "server_1_pass")
-ini_defaults["UserData.Servers"]["server_1_key_filepath"] = ""
-ini_defaults["UserData.Servers"]["server_1_domain_name"] = "joybox.test"
+if platform_info.is_windows_platform():
+    ini_defaults["UserData.Servers"]["server_1_key_filepath"] = "%USERPROFILE%\\.ssh\\id_ed25519"
+else:
+    ini_defaults["UserData.Servers"]["server_1_key_filepath"] = "$HOME/.ssh/id_ed25519"
+ini_defaults["UserData.Servers"]["server_1_domain_name"] = get_secret_reference("UserData.Servers", "domain_name")
 ini_defaults["UserData.Servers"]["server_1_tls_mode"] = "mkcert"
 ini_defaults["UserData.Servers"]["server_1_vm"] = "joybox-test"
 ini_defaults["UserData.Servers"]["server_1_htpasswd_user"] = get_secret_reference("UserData.Servers", "htpasswd_user")
@@ -242,8 +251,8 @@ ini_defaults["UserData.Scraping"]["google_search_engine_api_key"] = get_secret_r
 # UserData.Autoinstall
 ini_defaults["UserData.Autoinstall"] = {}
 ini_defaults["UserData.Autoinstall"]["autoinstall_version"] = "26.04"
-ini_defaults["UserData.Autoinstall"]["autoinstall_username"] = "joybox"
-ini_defaults["UserData.Autoinstall"]["autoinstall_realname"] = "JoyBox"
+ini_defaults["UserData.Autoinstall"]["autoinstall_username"] = get_secret_reference("UserData.Autoinstall", "autoinstall_username")
+ini_defaults["UserData.Autoinstall"]["autoinstall_realname"] = get_secret_reference("UserData.Autoinstall", "autoinstall_realname")
 ini_defaults["UserData.Autoinstall"]["autoinstall_hostname"] = "ubuntu"
 ini_defaults["UserData.Autoinstall"]["autoinstall_password_hash"] = ""
 ini_defaults["UserData.Autoinstall"]["autoinstall_ssh_keys"] = get_secret_reference("UserData.Autoinstall", "autoinstall_ssh_keys")
@@ -252,7 +261,10 @@ ini_defaults["UserData.Autoinstall"]["autoinstall_keyboard"] = "us"
 ini_defaults["UserData.Autoinstall"]["autoinstall_timezone"] = "Etc/UTC"
 ini_defaults["UserData.Autoinstall"]["autoinstall_packages"] = "qemu-guest-agent"
 ini_defaults["UserData.Autoinstall"]["autoinstall_serial_console"] = "false"
-ini_defaults["UserData.Autoinstall"]["autoinstall_overlay_file"] = ""
+if platform_info.is_windows_platform():
+    ini_defaults["UserData.Autoinstall"]["autoinstall_overlay_file"] = "C:\\Repositories\\JoyBox\\Scripts\\autoinstall\\homelab_llm.yaml"
+else:
+    ini_defaults["UserData.Autoinstall"]["autoinstall_overlay_file"] = "$HOME/Repositories/JoyBox/Scripts/autoinstall/homelab_llm.yaml"
 ini_defaults["UserData.Autoinstall"]["autoinstall_signing_keyring"] = "/usr/share/keyrings/ubuntu-archive-keyring.gpg"
 ini_defaults["UserData.Autoinstall"]["autoinstall_signing_fingerprint"] = "843938DF228D22F7B3742BC0D94AA3F0EFE21092"
 
@@ -427,10 +439,10 @@ else:
 
 # Tools.Ollama
 ini_defaults["Tools.Ollama"] = {}
-ini_defaults["Tools.Ollama"]["ollama_api_base"] = "http://localhost:11434"
+ini_defaults["Tools.Ollama"]["ollama_api_base"] = "http://localhost:11444"
 ini_defaults["Tools.Ollama"]["ollama_gpu_vram_mb"] = ""
 ini_defaults["Tools.Ollama"]["ollama_system_ram_mb"] = ""
-ini_defaults["Tools.Ollama"]["ollama_ssh_host"] = ""
+ini_defaults["Tools.Ollama"]["ollama_ssh_host"] = get_secret_reference("UserData.Autoinstall", "autoinstall_ssh_host")
 ini_defaults["Tools.Ollama"]["ollama_tunnel_port"] = "11444"
 
 # Tools.Sunshine

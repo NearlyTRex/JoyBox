@@ -63,16 +63,25 @@ themselves still carry secrets: WordPress's `wp_options` and user password hashe
 FileBrowser's account password hashes, OSCAR's account database. Those leave the server
 and land on storage you do not control.
 
-Set a recipient to encrypt them:
+A recipient encrypts them. The defaults already name one, with the private key kept in
+1Password:
 
 ```ini
 [UserData.Backup]
 backup_age_recipient = age1...
-backup_age_identity = /home/you/.joybox-age.key
+backup_age_identity = $HOME/.joybox-age.key
+backup_age_identity_key = op://Personal/JoyBox/UserData.Backup/backup_age_identity_key
 ```
 
-Generate a pair with `age-keygen -o ~/.joybox-age.key`; it prints the public line
-that goes in `backup_age_recipient`.
+The bootstrap's `keys` component writes `backup_age_identity_key` to `backup_age_identity`,
+readable only by you, on each machine that lacks it, and refuses a key whose public half is
+not `backup_age_recipient`. It never makes a new key: one key decrypts every backup, so a new
+one would decrypt none of them.
+
+Starting over with a key of your own: `age-keygen -o ~/.joybox-age.key` prints the public
+line for `backup_age_recipient`. Put the file's `AGE-SECRET-KEY-…` line in a 1Password
+Password field at the `backup_age_identity_key` reference (paste it in the app, not on the
+command line).
 
 Archives are then written as `db.sql.gz.age` and `<volume>.tar.gz.age`, encrypted
 per-file so one corrupt archive does not cost the set. Checksums cover the encrypted

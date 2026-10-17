@@ -19,7 +19,7 @@ def build_parser():
             "\n"
             "A server whose API has no authentication, like the LLM server image, is best reached\n"
             "through an SSH tunnel: set `[Tools.Ollama] ollama_ssh_host` to its SSH destination\n"
-            "(such as `aryie@192.168.1.15`), install the bootstrap's `ollama_tunnel` component, and\n"
+            "(such as `user@192.168.1.15`), install the bootstrap's `ollama_tunnel` component, and\n"
             "point `ollama_api_base` at the tunnel's end, `http://localhost:11444` by default\n"
             "(`ollama_tunnel_port`). With an SSH host set, a `localhost` base is never taken for\n"
             "a local server, so nothing is started here when the tunnel is down.\n"

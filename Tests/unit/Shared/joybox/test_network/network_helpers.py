@@ -4,7 +4,7 @@ import types
 
 class FakeRepo:
 
-    def __init__(self, name, owner = "aryie", fork = False, private = False):
+    def __init__(self, name, owner = "testuser", fork = False, private = False):
         self.name = name
         self.owner = types.SimpleNamespace(login = owner)
         self.fork = fork

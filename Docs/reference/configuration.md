@@ -12,7 +12,7 @@ Secrets and personal values (passwords, account names, API keys, server addresse
 value. A reference only takes effect when it is in the file: a field your file leaves out is
 treated as unset, never looked up. See [Secrets](secrets.md).
 
-Server 1 is generated as the [local test guest](../testing/remote-server.md) at `joybox.test`.
+Server 1 is generated as the [local test guest](../testing/remote-server.md), under the real server's domain.
 
 To point at a config file somewhere other than `~/JoyBox.ini`, pass `-c /path/to/JoyBox.ini`.
 
@@ -137,13 +137,15 @@ so nothing downstream changes.
 ```ini
 [UserData.Backup]
 backup_age_recipient = age1...
-backup_age_identity = /home/you/.joybox-age.key
+backup_age_identity = $HOME/.joybox-age.key
+backup_age_identity_key = op://Personal/JoyBox/UserData.Backup/backup_age_identity_key
 ```
 
 With a recipient set, every archive is encrypted with `age` before it lands on the
 Storage Box. The server only ever holds the public key. `backup_age_identity` is a
 path on *your* machine, read only during restore and staged on the server's tmpfs
-for the duration.
+for the duration. The `keys` component writes it from `backup_age_identity_key`; see
+[Backup & Restore](../remote-server/backup-restore.md).
 
 **Losing the private key makes every encrypted backup unrecoverable.** Store it
 somewhere off-server that you will not lose.

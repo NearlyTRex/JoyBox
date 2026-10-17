@@ -390,6 +390,7 @@ def test_restore_aborts_when_the_snapshot_fails(isolated_settings):
 
 
 def test_restore_snapshots_then_restores_the_requested_backup(isolated_settings):
+    isolated_settings.set_value("UserData.Backup", "backup_age_identity", "")
     flags = runoptions.RunFlags(verbose = False, backup_id = "20260101_000000")
     app = build_demo(installed = True, flags = flags, backup_dirs = ["data"])
 
@@ -402,12 +403,14 @@ def test_restore_snapshots_then_restores_the_requested_backup(isolated_settings)
 
 
 def test_restore_defaults_to_latest(isolated_settings):
+    isolated_settings.set_value("UserData.Backup", "backup_age_identity", "")
     app = build_demo(installed = True, backup_dirs = ["data"])
     assert app.restore()
     assert app.connection.ran("Restore complete", "/latest")
 
 
 def test_a_failed_restore_reports_failure(isolated_settings):
+    isolated_settings.set_value("UserData.Backup", "backup_age_identity", "")
     connection = RecordingConnection(
         command_output = {"docker ps -a": DEMO_RUNNING},
         return_codes = {"Restore complete": 3})

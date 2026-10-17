@@ -129,6 +129,7 @@ python3 bootstrap.py -t local_ubuntu --list-components
 | `python` | Python venv, JoyBox itself (editable) and the other venv tools |
 | `wrappers` | `python3`/`pip3` in ~/.joybox/bin, pointing at the venv |
 | `aptget` | All APT packages |
+| `keys` | The backup decryption key, written from 1Password, and this machine's SSH key, generated if missing |
 | `autostart` | Desktop login entries: Sunshine on a streaming host, Moonlight on a living-room client |
 | `awscli` | AWS CLI |
 | `flatpak` | Flatpak apps |

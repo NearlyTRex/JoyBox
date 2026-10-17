@@ -22,7 +22,7 @@ if _here not in sys.path:
 @pytest.fixture
 def github(monkeypatch):
     from network_helpers import FakeUser
-    state = {"repos": [], "login": "aryie", "token": None}
+    state = {"repos": [], "login": "testuser", "token": None}
 
     class FakeGithub:
         def __init__(self, token = None):

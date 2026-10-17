@@ -39,6 +39,7 @@ def test_the_server_is_probed_at_the_configured_base(monkeypatch):
     ("http://llm:11434", False),
 ])
 def test_only_a_server_on_this_machine_is_local(monkeypatch, api_base, local):
+    monkeypatch.setattr(ollama, "get_ssh_host", lambda: "")
     monkeypatch.setattr(ollama, "get_api_base", lambda: api_base)
 
     assert ollama.is_local_server() is local
@@ -53,7 +54,7 @@ def test_only_a_server_on_this_machine_is_local(monkeypatch, api_base, local):
 
 @pytest.fixture
 def tunneled(monkeypatch):
-    values = {"ollama_ssh_host": "aryie@llm"}
+    values = {"ollama_ssh_host": "testuser@llm"}
     monkeypatch.setattr(
         ollama.settings, "get_value",
         lambda section, field, default_value = None, throw_exception = True: values.get(field, default_value))
@@ -94,7 +95,7 @@ def updating(tunneled, monkeypatch):
 
 def test_update_reruns_the_installer_on_the_server(updating, recording_command):
     assert ollama.action_update() is True
-    assert recording_command.only() == ["ssh", "aryie@llm", ollama.OLLAMA_INSTALL_COMMAND]
+    assert recording_command.only() == ["ssh", "testuser@llm", ollama.OLLAMA_INSTALL_COMMAND]
 
 
 def test_update_waits_for_the_server_to_answer_again(updating, recording_command):
@@ -296,6 +297,7 @@ def test_the_listing_prints_the_server_hardware(monkeypatch):
 @pytest.fixture
 def server(monkeypatch):
     state = {"probes": [], "sleeps": 0}
+    monkeypatch.setattr(ollama, "get_ssh_host", lambda: "")
     monkeypatch.setattr(ollama, "get_api_base", lambda: "http://localhost:11434")
     monkeypatch.setattr(ollama, "is_running", lambda: state["probes"].pop(0))
     monkeypatch.setattr(

@@ -14,7 +14,7 @@ from fakes import RecordingConnection
 # localhost; this tunnel, authenticated by the SSH key, is the only way to it.
 ###########################################################
 
-HOST = "aryie@192.168.1.15"
+HOST = "testuser@192.168.1.15"
 
 
 def make(isolated_settings, host = HOST, port = "11444", **kwargs):
