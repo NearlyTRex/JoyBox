@@ -20,6 +20,13 @@ UDEV_RULES = [
         "description": "Deauthorize the onboard Foxconn/MediaTek Bluetooth so only the USB dongle is used",
         "content": 'ACTION!="remove", SUBSYSTEM=="usb", ATTR{idVendor}=="0489", ATTR{idProduct}=="e14f", ATTR{authorized}="0"',
     },
+    {
+        "filename": "60-sunshine.rules",
+        "description": "Let the logged-in user create the virtual input devices Sunshine streams controllers through",
+        "content": (
+            'KERNEL=="uinput", SUBSYSTEM=="misc", OPTIONS+="static_node=uinput", TAG+="uaccess"\n'
+            'KERNEL=="uhid", TAG+="uaccess"'),
+    },
 ]
 
 # Udev
