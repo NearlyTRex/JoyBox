@@ -37,6 +37,7 @@ class LocalUbuntu(env.Environment):
             "githooks": installers.GitHooks(**self.installer_options),
             "python": installers.Python(**self.installer_options),
             "wrappers": installers.Wrappers(**self.installer_options),
+            "autostart": installers.Autostart(**self.installer_options),
             "awscli": installers.AwsCli(**self.installer_options),
             "flatpak": installers.Flatpak(**self.installer_options),
             "node": installers.Node(**self.installer_options),
@@ -55,6 +56,7 @@ class LocalUbuntu(env.Environment):
             "steam": installers.Steam(**self.installer_options),
             "sysctl": installers.Sysctl(**self.installer_options),
             "udev": installers.Udev(**self.installer_options),
+            "ufw": installers.Ufw(**self.installer_options),
             "vale": installers.Vale(**self.installer_options),
             "virtualbox": installers.VirtualBox(**self.installer_options),
             "vscodium": installers.VSCodium(**self.installer_options),
@@ -71,6 +73,7 @@ class LocalUbuntu(env.Environment):
         self.installer_wrappers = self.available_components["wrappers"]
         self.installer_aptget = self.available_components["aptget"]
         self.installer_sdl3 = self.available_components["sdl3"]
+        self.installer_autostart = self.available_components["autostart"]
         self.installer_awscli = self.available_components["awscli"]
         self.installer_flatpak = self.available_components["flatpak"]
         self.installer_node = self.available_components["node"]
@@ -88,6 +91,7 @@ class LocalUbuntu(env.Environment):
         self.installer_steam = self.available_components["steam"]
         self.installer_sysctl = self.available_components["sysctl"]
         self.installer_udev = self.available_components["udev"]
+        self.installer_ufw = self.available_components["ufw"]
         self.installer_virtualbox = self.available_components["virtualbox"]
         self.installer_vscodium = self.available_components["vscodium"]
         self.installer_wine = self.available_components["wine"]

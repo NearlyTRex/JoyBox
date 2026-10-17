@@ -433,6 +433,17 @@ ini_defaults["Tools.Ollama"]["ollama_system_ram_mb"] = ""
 ini_defaults["Tools.Ollama"]["ollama_ssh_host"] = ""
 ini_defaults["Tools.Ollama"]["ollama_tunnel_port"] = "11444"
 
+# Tools.Sunshine
+ini_defaults["Tools.Sunshine"] = {}
+ini_defaults["Tools.Sunshine"]["sunshine_streaming_host"] = "False"
+ini_defaults["Tools.Sunshine"]["sunshine_allowed_subnet"] = "192.168.1.0/24"
+
+# Tools.Moonlight
+ini_defaults["Tools.Moonlight"] = {}
+ini_defaults["Tools.Moonlight"]["moonlight_host"] = ""
+ini_defaults["Tools.Moonlight"]["moonlight_app"] = "Pegasus"
+ini_defaults["Tools.Moonlight"]["moonlight_autostart"] = "False"
+
 # Tools.HermesAgent
 ini_defaults["Tools.HermesAgent"] = {}
 ini_defaults["Tools.HermesAgent"]["hermes_agent_release"] = "v2026.9.24"

@@ -20,8 +20,10 @@ def build_parser():
         ],
         notes = [
             "Sunshine must be installed first (`setup_tools -k Sunshine`); the command exits with an error if it is not found.",
+            "`setup_tools -k Sunshine -c` writes the apps clients can start (Desktop, Pegasus and Steam Big Picture); apps added in Sunshine's web page are replaced the next time it configures.",
+            "Set `[Tools.Sunshine] sunshine_streaming_host` and install the bootstrap's `autostart`, `ufw` and `udev` components to start it at every login, open its ports to the LAN and allow virtual controllers.",
         ],
-        see_also = ["setup_tools", "launch_pegasus"],
+        see_also = ["setup_tools", "launch_pegasus", "launch_moonlight"],
         section = "Game Launching")
     parser.add_common_arguments()
     return parser

@@ -3,6 +3,8 @@ from joybox.bootstrap.installers.installer_aptget import (
     get_aptget_package_id as get_aptget_package_id,
     get_aptget_package_info as get_aptget_package_info,
     AptGet as AptGet)
+from joybox.bootstrap.installers.installer_autostart import (
+    Autostart as Autostart)
 from joybox.bootstrap.installers.installer_awscli import (
     AwsCli as AwsCli)
 from joybox.bootstrap.installers.installer_audiobookshelf import (
@@ -85,6 +87,8 @@ from joybox.bootstrap.installers.installer_sysctl import (
     Sysctl as Sysctl)
 from joybox.bootstrap.installers.installer_udev import (
     Udev as Udev)
+from joybox.bootstrap.installers.installer_ufw import (
+    Ufw as Ufw)
 from joybox.bootstrap.installers.installer_vale import (
     Vale as Vale)
 from joybox.bootstrap.installers.installer_virtualbox import (

@@ -1,3 +1,10 @@
+# Imports
+import json
+import os
+
+# Third-party imports
+import pytest
+
 # Local imports
 from joybox.tools import sunshine
 from tools_helpers import (
@@ -44,4 +51,47 @@ def test_configure_writes_a_config_for_each_platform(steps):
     assert [kwargs["src"] for kwargs in steps.made("touch_file")] == [
         "/tools/Sunshine/windows/config/sunshine.conf",
         "/tools/Sunshine/linux/Sunshine.AppImage.home/.config/sunshine/sunshine.conf",
+        "/tools/Sunshine/windows/config/apps.json",
+        "/tools/Sunshine/linux/Sunshine.AppImage.home/.config/sunshine/apps.json",
     ]
+
+
+def test_configure_leaves_the_web_page_settings_alone(steps):
+    # An empty sunshine.conf is only touched, so settings saved in Sunshine's
+    # web page survive another setup.
+    assert sunshine.Sunshine().configure()
+
+    confs = [kwargs for kwargs in steps.made("touch_file") if kwargs["src"].endswith("sunshine.conf")]
+    assert [kwargs["contents"] for kwargs in confs] == ["", ""]
+
+
+###########################################################
+# Apps
+###########################################################
+
+def app_names(platform):
+    return [app["name"] for app in json.loads(sunshine.build_apps(platform))["apps"]]
+
+
+@pytest.mark.parametrize("platform", ["windows", "linux"])
+def test_clients_can_start_the_desktop_pegasus_and_steam(platform):
+    assert app_names(platform) == ["Desktop", "Pegasus", "Steam Big Picture"]
+
+
+def test_pegasus_starts_through_the_joybox_command(isolated_settings):
+    apps = json.loads(sunshine.build_apps("linux"))["apps"]
+
+    assert apps[1]["cmd"].endswith(os.path.join("bin", "launch_pegasus"))
+
+
+def test_linux_apps_get_the_real_home_back():
+    # The AppImage's portable home would otherwise hide JoyBox.ini and Steam.
+    assert json.loads(sunshine.build_apps("linux"))["env"] == {"HOME": os.path.expanduser("~")}
+    assert json.loads(sunshine.build_apps("windows"))["env"] == {}
+
+
+def test_steam_is_detached_and_closed_when_the_stream_ends():
+    steam = json.loads(sunshine.build_apps("linux"))["apps"][2]
+
+    assert steam["detached"] == ["setsid steam steam://open/bigpicture"]
+    assert steam["prep-cmd"] == [{"do": "", "undo": "setsid steam steam://close/bigpicture"}]
