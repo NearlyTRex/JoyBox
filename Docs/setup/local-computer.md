@@ -150,7 +150,7 @@ python3 bootstrap.py -t local_ubuntu --list-components
 | `udev` | USB device rules, and virtual-controller access for Sunshine |
 | `ufw` | Firewall rules: Sunshine's ports, opened to the LAN on a streaming host |
 | `virtualbox` | VirtualBox |
-| `vscodium` | VSCodium |
+| `vscodium` | VSCodium, with the settings and extensions kept in `Bootstrap/vscodium/` (see [Dotfiles](../reference/dotfiles.md#vscodium)) |
 | `wine` | Wine + dependencies |
 | `xorg` | Xorg input tweaks (remaps Magic Trackpad middle-click to left) |
 
