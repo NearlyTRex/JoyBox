@@ -56,3 +56,26 @@ def test_a_value_computed_at_run_time_is_not_a_secret(hook, line):
 ])
 def test_a_literal_secret_is_still_caught(hook, line):
     assert is_flagged(hook, line)
+
+
+@pytest.mark.parametrize("line", [
+    'PASSWORD="hunter2secret"',  # gitleaks:allow
+    'api_key = "sk-live-0123456789"',  # gitleaks:allow
+])
+def test_a_reported_secret_is_redacted(hook, line):
+    # The finding names the file and the line, but never repeats the secret
+    name, pattern = next((name, pattern) for name, pattern in hook.SECRET_RES if pattern.search(line))
+    match = pattern.search(line)
+    finding = hook.describe_secret("config.ini", name, line, match)
+
+    assert "config.ini" in finding and "[REDACTED]" in finding
+    assert match.group(0) not in finding
+
+
+def test_a_long_line_is_cut_short_after_redaction(hook):
+    line = 'token = "abcdefghijklmnop0123"' + " " * 200 + "tail"  # gitleaks:allow
+    name, pattern = next((name, pattern) for name, pattern in hook.SECRET_RES if pattern.search(line))
+
+    finding = hook.describe_secret("big.txt", name, line, pattern.search(line))
+
+    assert finding.endswith("…") and "abcdefghijklmnop0123" not in finding

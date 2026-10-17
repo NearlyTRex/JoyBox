@@ -9,7 +9,6 @@ from . import installer
 from joybox import runoptions
 from joybox import logger
 from joybox import settings
-from joybox import default_settings
 
 # Keys this machine needs
 # A "secret" key is the same on every machine, so it is written from the value
@@ -62,8 +61,8 @@ class Keys(installer.Installer):
     def install_secret_key(self, key, path):
         value = settings.get_value(*key["value"], default_value = "", throw_exception = False) or ""
         if not value:
-            logger.log_error("Unable to read [%s] %s; store the key in 1Password at %s" % (
-                key["value"][0], key["value"][1], default_settings.get_secret_reference(*key["value"])))
+            logger.log_error("Unable to read [%s] %s; store the key in the JoyBox 1Password item, as field %s/%s" % (
+                key["value"][0], key["value"][1], key["value"][0], key["value"][1]))
             return False
         self.connection.make_directory(os.path.dirname(path))
         if not self.write_secret_file(path, value.strip() + "\n"):

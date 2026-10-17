@@ -150,7 +150,11 @@ def main():
                 exit_on_failure = args.exit_on_failure)
             if overlay is None:
                 return
-        print(autoinstall.build_user_data(profile, overlay))
+        # The hash is redacted here only; the image itself still carries it
+        shown_profile = dict(profile)
+        if shown_profile.get("password_hash"):
+            shown_profile["password_hash"] = "[REDACTED]"
+        print(autoinstall.build_user_data(shown_profile, overlay))
         print(autoinstall.build_meta_data(profile))
         if problems:
             logger.log_error("This configuration will not build until those are answered")

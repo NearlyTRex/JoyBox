@@ -462,17 +462,18 @@ class Steam(storebase.StoreBase):
 
         # Get steam url
         steam_url = "https://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/"
-        steam_url += "?key=%s" % self.get_web_api_key()
-        steam_url += "&steamid=%s" % self.get_user_id(config.SteamIDFormatType.STEAMID_64)
+        steam_url += "?steamid=%s" % self.get_user_id(config.SteamIDFormatType.STEAMID_64)
         steam_url += "&include_appinfo=true"
         steam_url += "&include_played_free_games=true"
         steam_url += "&format=json"
-        if not network.is_url_reachable(steam_url):
+        steam_params = {"key": self.get_web_api_key()}
+        if not network.is_url_reachable(steam_url, params = steam_params):
             return None
 
         # Get steam json
         steam_json = network.get_remote_json(
             url = steam_url,
+            params = steam_params,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)

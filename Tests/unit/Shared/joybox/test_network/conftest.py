@@ -49,10 +49,11 @@ def requests_module(monkeypatch):
     state = {"response": FakeResponse(), "error": None, "calls": []}
 
     def record(method):
-        def run(url, headers = None, timeout = None, json = None):
+        def run(url, headers = None, timeout = None, json = None, params = None):
             state["calls"].append({
                 "method": method,
                 "url": url,
+                "params": params,
                 "headers": headers,
                 "timeout": timeout,
                 "json": json,

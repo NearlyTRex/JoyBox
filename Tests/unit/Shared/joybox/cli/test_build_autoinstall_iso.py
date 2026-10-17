@@ -84,6 +84,26 @@ def test_show_seed_prints_the_seed_without_building(tool, capsys):
     assert tool.errors == []
 
 
+def test_show_seed_redacts_the_password_hash(tool, capsys, monkeypatch):
+    tool.profile["password_hash"] = "$6$salt$hashedvalue"
+    shown = []
+    monkeypatch.setattr(build_autoinstall_iso.autoinstall, "build_user_data",
+        lambda profile, overlay: shown.append(profile["password_hash"]) or "user-data")
+
+    tool.main("-w")
+
+    assert shown == ["[REDACTED]"]
+    assert "hashedvalue" not in capsys.readouterr().out
+
+
+def test_the_image_still_carries_the_password_hash(tool, tmp_path):
+    tool.profile["password_hash"] = "$6$salt$hashedvalue"
+
+    tool.main("-o", str(tmp_path))
+
+    assert tool.build.calls[0]["profile"]["password_hash"] == "$6$salt$hashedvalue"
+
+
 def test_show_seed_reads_the_configured_overlay(tool, capsys):
     tool.profile["overlay_file"] = "configured.yaml"
 
