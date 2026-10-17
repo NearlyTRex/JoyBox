@@ -47,14 +47,17 @@ self-signed certificate and choose the web page's username and password.
 
 ## The client
 
-In the client's `~/JoyBox.ini`:
+In the client's `~/JoyBox.ini` (answering **client** when the ini is created sets these):
 
 ```ini
 [Tools.Moonlight]
-moonlight_host = 192.168.1.20
+moonlight_host = 192.168.1.12
 moonlight_app = Pegasus
 moonlight_autostart = True
 ```
+
+`192.168.1.12` is the host's address by default, so give the host that address with a DHCP
+reservation on the router, or set `moonlight_host` to wherever it is.
 
 ```bash
 setup_tools -k Moonlight

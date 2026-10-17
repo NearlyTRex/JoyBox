@@ -32,9 +32,17 @@ def tool(monkeypatch, isolated_settings):
 
 
 def test_without_a_host_the_host_list_opens(tool):
+    tool.settings.set_value("Tools.Moonlight", "moonlight_host", "")
+
     tool.run()
 
     assert tool.commands == [[MOONLIGHT_PATH]]
+
+
+def test_the_default_host_is_streamed_from(tool):
+    tool.run()
+
+    assert tool.commands == [[MOONLIGHT_PATH, "stream", "192.168.1.12", "Pegasus"]]
 
 
 def test_the_configured_host_streams_the_configured_app(tool):
@@ -60,6 +68,7 @@ def test_pairing_pairs_instead_of_streaming(tool):
 
 
 def test_pairing_without_a_host_stops_before_launching(tool):
+    tool.settings.set_value("Tools.Moonlight", "moonlight_host", "")
     assert tool.exit_code("--pair") != 0
 
     assert tool.errors == ["Pairing needs a host, from --host or [Tools.Moonlight] moonlight_host"]

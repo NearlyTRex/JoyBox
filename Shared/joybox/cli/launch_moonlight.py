@@ -12,10 +12,10 @@ def build_parser():
     parser = arguments.ArgumentParser(
         description = "Start the Moonlight game-streaming client installed by setup_tools.",
         details = (
-            "Runs the Moonlight program from the tools directory. With a host, from `--host` or\n"
-            "`[Tools.Moonlight] moonlight_host`, it streams that host's app straight away, from\n"
-            "`--app` or `[Tools.Moonlight] moonlight_app` (Pegasus by default). Without one it\n"
-            "opens Moonlight's host list.\n"
+            "Runs the Moonlight program from the tools directory. It streams the host's app\n"
+            "straight away: the host from `--host` or `[Tools.Moonlight] moonlight_host`\n"
+            "(192.168.1.12 by default), the app from `--app` or `[Tools.Moonlight] moonlight_app`\n"
+            "(Pegasus by default). With `moonlight_host` cleared it opens Moonlight's host list.\n"
             "\n"
             "`--pair` pairs with the host instead: Moonlight shows a PIN, which is entered on the\n"
             "host's Sunshine web page (port 47990). A host only has to be paired once.\n"
