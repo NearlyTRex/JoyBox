@@ -3,18 +3,19 @@
 [← Docs index](../README.md)
 
 One computer runs the games and streams them with **Sunshine**. Another, such as a mini PC in the
-living room, plays them with **Moonlight**. Both are installed by `setup_tools`. The bootstrap
-starts each one at login, opens the host's firewall to the LAN, and lets Sunshine create virtual
-controllers.
+living room, plays them with **Moonlight**. `setup_tools` installs them, and its configure step
+(`-c`) adds the one each machine's role uses to the app menu. The bootstrap starts it at login,
+opens the host's firewall to the LAN, and lets Sunshine create virtual controllers.
 
 | Machine | Program | Command |
 |---------|---------|---------|
 | Host (has the games and the GPU) | Sunshine | [`launch_sunshine`](../reference/man/launch_sunshine.md) |
 | Client (the TV) | Moonlight | [`launch_moonlight`](../reference/man/launch_moonlight.md) |
 
-A new `~/JoyBox.ini` asks which of these a machine is and fills in the settings below. For an
-existing one, `python3 bootstrap.py -t local_ubuntu --recreate-config` asks again and keeps
-everything else.
+A new `~/JoyBox.ini` asks which of these a machine is and fills in the settings below, so on a
+fresh machine the `curl … | bash` install sets up the bootstrap side: answer the streaming
+question and take every component, then run the `setup_tools` line below. For an existing ini,
+`python3 bootstrap.py -t local_ubuntu --recreate-config` asks again and keeps everything else.
 
 ## The host
 
@@ -26,7 +27,7 @@ sunshine_streaming_host = True
 sunshine_allowed_subnet = 192.168.1.0/24
 ```
 
-Then install and configure Sunshine, and the bootstrap pieces around it:
+Then set it up:
 
 ```bash
 setup_tools -k Sunshine -c
@@ -34,8 +35,8 @@ python3 bootstrap.py -a setup -t local_ubuntu --components udev,ufw,autostart
 ```
 
 - `setup_tools -c` writes the apps a client can start: **Desktop**, **Pegasus** (through
-  `launch_pegasus`) and **Steam Big Picture**. Running it again replaces any apps added in
-  Sunshine's web page. Settings saved in the web page are kept.
+  `launch_pegasus`) and **Steam Big Picture**, and adds Sunshine to the app menu. Running it
+  again replaces any apps added in Sunshine's web page. Settings saved in the web page are kept.
 - `udev` lets the logged-in user create the virtual controllers and keyboards a client's input
   arrives through.
 - `ufw` allows Sunshine's ports (TCP 47984, 47989, 47990, 48010 and UDP 47998–48000) from
@@ -47,10 +48,12 @@ self-signed certificate and choose the web page's username and password.
 
 ## The client
 
-In the client's `~/JoyBox.ini` (answering **client** when the ini is created sets these):
+In the client's `~/JoyBox.ini` (answering **client** when the ini is created sets these;
+`moonlight_autostart` is the answer to whether to stream at every login):
 
 ```ini
 [Tools.Moonlight]
+moonlight_client = True
 moonlight_host = 192.168.1.12
 moonlight_app = Pegasus
 moonlight_autostart = True
@@ -60,9 +63,12 @@ moonlight_autostart = True
 reservation on the router, or set `moonlight_host` to wherever it is.
 
 ```bash
-setup_tools -k Moonlight
+setup_tools -k Moonlight -c
 python3 bootstrap.py -a setup -t local_ubuntu --components autostart
 ```
+
+`setup_tools -c` installs Moonlight and adds it to the app menu, and `autostart` starts it at
+every login when `moonlight_autostart` is on.
 
 Pair once:
 

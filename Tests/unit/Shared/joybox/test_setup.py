@@ -131,6 +131,29 @@ def test_configure_runs_after_each_setup(tmp_path):
     assert {passed for package in (first, second) for _, passed in package.calls} == {params}
 
 
+def test_failed_backups_are_listed_once_the_run_is_done(tmp_path, monkeypatch):
+    warnings = []
+    monkeypatch.setattr(setup.logger, "log_warning", lambda message, *a, **k: warnings.append(message))
+
+    class BackupFailing(Package):
+        def setup(self, setup_params = None):
+            setup.release.failed_backups.append("/locker/tools/Tool.zip")
+            return super().setup(setup_params)
+
+    assert setup.setup_packages([BackupFailing("Tool")], "tool", str(tmp_path)) is True
+    assert warnings[0] == "1 download(s) could not be backed up to the lockers:"
+    assert "  /locker/tools/Tool.zip" in warnings
+
+
+def test_failed_backups_from_an_earlier_run_are_not_listed_again(tmp_path, monkeypatch):
+    warnings = []
+    monkeypatch.setattr(setup.logger, "log_warning", lambda message, *a, **k: warnings.append(message))
+    setup.release.failed_backups.append("/locker/tools/Old.zip")
+
+    assert setup.setup_packages([Package("Tool")], "tool", str(tmp_path)) is True
+    assert warnings == []
+
+
 def test_a_failed_setup_stops_the_run(tmp_path):
     first, second = Package("First", setup_ok = False), Package("Second")
 

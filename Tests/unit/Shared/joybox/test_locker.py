@@ -650,7 +650,7 @@ def configured(lockers, monkeypatch, tmp_path):
     monkeypatch.setattr(
         locker.sync, "is_remote_configured",
         lambda remote_name, remote_type: remote_name in state["remotes"])
-    lockers.set_value("UserData.Share", f"locker_{REMOTE.lower()}_config", '{"host": "example.com"}')
+    lockers.set_value("UserData.Share", f"locker_{REMOTE.lower()}_config", '{"host": "example.com", "pass": "x"}')
     lockers.set_value("UserData.Share", "locker_local_mount_path", str(tmp_path))
     lockers.set_value("UserData.Share", "locker_external_mount_path", str(tmp_path / "absent"))
     lockers.set_value("UserData.Share", "locker_gdrive_name", "")
@@ -691,12 +691,12 @@ def test_a_remote_without_credentials_is_not_configured(configured, lockers):
     assert locker.get_configured_lockers() == [config.LockerType.LOCAL]
 
 
-def test_a_token_is_enough_to_sign_in(configured, lockers):
+def test_a_remote_missing_part_of_its_sign_in_is_not_configured(configured, lockers):
+    # An SFTP host with no password or key is as unusable as no host at all
     configured["remotes"].add("hetzner")
-    lockers.set_value("UserData.Share", f"locker_{REMOTE.lower()}_config", "")
-    lockers.set_value("UserData.Share", f"locker_{REMOTE.lower()}_token", '{"access_token": "abc"}')
+    lockers.set_value("UserData.Share", f"locker_{REMOTE.lower()}_config", '{"host": "example.com"}')
 
-    assert locker.get_configured_lockers() == [config.LockerType.LOCAL, REMOTE]
+    assert locker.get_configured_lockers() == [config.LockerType.LOCAL]
 
 
 def test_a_remote_without_a_name_is_not_configured(configured):

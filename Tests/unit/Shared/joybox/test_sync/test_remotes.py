@@ -45,6 +45,7 @@ def test_the_listing_sees_the_remotes_it_is_asked_about(rclone, isolated_setting
     isolated_settings.set_value("UserData.Share", "locker_hetzner_name", "HetznerBox")
     isolated_settings.set_value("UserData.Share", "locker_hetzner_type", "SFTP")
     isolated_settings.set_value("UserData.Share", "locker_hetzner_config", '{"host": "box.example"}')
+    monkeypatch.setattr(sync.rcloneremotes.knownhosts, "remember_host", lambda host, port = 22: True)
     recorder = RecordingCommand(monkeypatch, output = "hetznerbox: sftp\n")
 
     sync.get_configured_remotes(remote_names = ["HetznerBox"])

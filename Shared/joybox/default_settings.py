@@ -452,6 +452,7 @@ ini_defaults["Tools.Sunshine"]["sunshine_allowed_subnet"] = "192.168.1.0/24"
 
 # Tools.Moonlight
 ini_defaults["Tools.Moonlight"] = {}
+ini_defaults["Tools.Moonlight"]["moonlight_client"] = "False"
 ini_defaults["Tools.Moonlight"]["moonlight_host"] = "192.168.1.12"
 ini_defaults["Tools.Moonlight"]["moonlight_app"] = "Pegasus"
 ini_defaults["Tools.Moonlight"]["moonlight_autostart"] = "False"

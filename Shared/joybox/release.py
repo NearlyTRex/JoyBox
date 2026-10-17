@@ -17,6 +17,15 @@ import joybox.network as network
 import joybox.paths as paths
 import joybox.locker as locker
 
+# Backups that failed this run. A copy in a locker is there to reinstall from
+# offline, so its failure is reported but never undoes an install that worked.
+failed_backups = []
+
+# Record a backup that failed
+def note_failed_backup(backup_dest):
+    failed_backups.append(backup_dest)
+    logger.log_warning("Unable to back up %s to the lockers; the install itself is fine" % backup_dest)
+
 # Remove a temporary directory, tolerating failure
 def remove_temporary_directory(tmp_dir, verbose = False, pretend_run = False):
     fileops.remove_directory(
@@ -286,8 +295,7 @@ def install_general_release(
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if not success:
-            logger.log_error("Unable to backup files")
-            return False
+            note_failed_backup(backup_dest)
 
     # Check result
     if pretend_run:
@@ -918,8 +926,7 @@ def build_binary_from_source(
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
-                logger.log_error("Unable to backup files")
-                return False
+                note_failed_backup(backup_dest)
 
         # Check result
         if pretend_run:
@@ -1082,8 +1089,7 @@ def build_appimage_from_source(
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
-                logger.log_error("Unable to backup files")
-                return False
+                note_failed_backup(backup_dest)
 
         # Check result
         if pretend_run:

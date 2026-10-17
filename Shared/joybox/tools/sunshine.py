@@ -11,6 +11,8 @@ import joybox.fileops as fileops
 import joybox.release as release
 import joybox.programs as programs
 import joybox.toolbase as toolbase
+import joybox.desktopentry as desktopentry
+import joybox.settings as settings
 
 # Config files
 config_files = {}
@@ -167,4 +169,19 @@ class Sunshine(toolbase.ToolBase):
             if not success:
                 logger.log_error("Could not setup Sunshine config files")
                 return False
+
+        # Put it in the app menu on a machine whose streaming role uses it
+        success = desktopentry.set_launcher(
+            enabled = settings.get_bool_value("Tools.Sunshine", "sunshine_streaming_host", False, throw_exception = False),
+            filename = "joybox-sunshine.desktop",
+            name = "Sunshine",
+            description = "Stream this machine's games to Moonlight clients",
+            command = "launch_sunshine",
+            icon = "video-display",
+            verbose = setup_params.verbose,
+            pretend_run = setup_params.pretend_run,
+            exit_on_failure = setup_params.exit_on_failure)
+        if not success:
+            logger.log_error("Could not setup the Sunshine launcher")
+            return False
         return True

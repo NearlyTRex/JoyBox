@@ -7,6 +7,8 @@ import joybox.fileops as fileops
 import joybox.release as release
 import joybox.programs as programs
 import joybox.toolbase as toolbase
+import joybox.desktopentry as desktopentry
+import joybox.settings as settings
 
 # Config files
 config_files = {}
@@ -126,4 +128,19 @@ class Moonlight(toolbase.ToolBase):
             if not success:
                 logger.log_error("Could not setup Moonlight config files")
                 return False
+
+        # Put it in the app menu on a machine whose streaming role uses it
+        success = desktopentry.set_launcher(
+            enabled = settings.get_bool_value("Tools.Moonlight", "moonlight_client", False, throw_exception = False),
+            filename = "joybox-moonlight.desktop",
+            name = "Moonlight",
+            description = "Play games streamed from the Sunshine host",
+            command = "launch_moonlight",
+            icon = "input-gaming",
+            verbose = setup_params.verbose,
+            pretend_run = setup_params.pretend_run,
+            exit_on_failure = setup_params.exit_on_failure)
+        if not success:
+            logger.log_error("Could not setup the Moonlight launcher")
+            return False
         return True

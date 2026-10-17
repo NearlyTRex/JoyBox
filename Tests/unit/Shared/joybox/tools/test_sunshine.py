@@ -95,3 +95,25 @@ def test_steam_is_detached_and_closed_when_the_stream_ends():
 
     assert steam["detached"] == ["setsid steam steam://open/bigpicture"]
     assert steam["prep-cmd"] == [{"do": "", "undo": "setsid steam steam://close/bigpicture"}]
+
+
+###########################################################
+# App menu launcher
+###########################################################
+
+@pytest.mark.parametrize("streaming_host", [True, False])
+def test_configure_puts_sunshine_in_the_menu_only_on_a_streaming_host(steps, isolated_settings, streaming_host):
+    isolated_settings.set_value("Tools.Sunshine", "sunshine_streaming_host", str(streaming_host))
+
+    assert sunshine.Sunshine().configure()
+
+    launcher = steps.made("set_launcher")[0]
+    assert launcher["enabled"] is streaming_host
+    assert (launcher["filename"], launcher["command"]) == ("joybox-sunshine.desktop", "launch_sunshine")
+
+
+def test_a_failed_launcher_fails_the_configure(steps):
+    steps.fail_at = len(sunshine.config_files)
+
+    assert not sunshine.Sunshine().configure()
+    assert steps.errors == ["Could not setup the Sunshine launcher"]

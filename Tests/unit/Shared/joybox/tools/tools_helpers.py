@@ -1,5 +1,6 @@
 # Local imports
 from joybox import config
+from joybox import desktopentry
 from joybox import environment
 from joybox import fileops
 from joybox import logger
@@ -23,6 +24,7 @@ SEAMS = {
     network: ["download_github_repository", "archive_github_repository"],
     requirements: ["setup_tool_requirements", "setup_tool_requirements_offline"],
     fileops: ["copy_file_or_directory", "touch_file"],
+    desktopentry: ["set_launcher"],
 }
 
 # Choices a download makes that a stored install has to repeat
