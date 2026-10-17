@@ -1,6 +1,7 @@
 # Local imports
 import joybox.config as config
 import joybox.sync as sync
+import joybox.rcloneremotes as rcloneremotes
 import joybox.logger as logger
 import joybox.paths as paths
 import joybox.environment as environment
@@ -413,12 +414,12 @@ def get_configured_lockers():
             continue
 
         # A remote is defined from its settings, so rclone lists it even with
-        # nothing to sign in with; one without credentials can only fail
+        # nothing to sign in with; one that cannot sign in can only fail
         if not sync.is_tool_installed():
             logger.log_info("RClone is not installed yet, so locker %s is skipped" % locker_type)
             continue
-        if not locker_info.get_config() and not locker_info.get_token():
-            logger.log_info("Locker %s has no config or token to sign in with, so it is skipped" % locker_type)
+        if not rcloneremotes.can_sign_in(locker_info.get_name()):
+            logger.log_info("Locker %s has nothing to sign in with, so it is skipped" % locker_type)
             continue
         if sync.is_remote_configured(
             remote_name = locker_info.get_name(),

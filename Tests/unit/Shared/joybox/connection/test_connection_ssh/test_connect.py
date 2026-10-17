@@ -246,7 +246,7 @@ class HostKeyClient(AcceptingClient):
 def test_the_known_hosts_are_loaded_before_connecting(monkeypatch, tmp_path):
     known_hosts = tmp_path / "known_hosts"
     known_hosts.write_text("")
-    monkeypatch.setattr(connection_ssh, "get_known_hosts_path", lambda: str(known_hosts))
+    monkeypatch.setattr(connection_ssh.knownhosts, "get_known_hosts_path", lambda: str(known_hosts))
     client = fake_paramiko(monkeypatch, AcceptingClient())
 
     build().connect()
@@ -256,7 +256,7 @@ def test_the_known_hosts_are_loaded_before_connecting(monkeypatch, tmp_path):
 
 
 def test_without_known_hosts_nothing_is_loaded(monkeypatch, tmp_path):
-    monkeypatch.setattr(connection_ssh, "get_known_hosts_path", lambda: str(tmp_path / "absent"))
+    monkeypatch.setattr(connection_ssh.knownhosts, "get_known_hosts_path", lambda: str(tmp_path / "absent"))
     client = fake_paramiko(monkeypatch, AcceptingClient())
 
     build().connect()

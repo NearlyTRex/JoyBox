@@ -197,11 +197,15 @@ def test_nothing_is_backed_up_without_a_destination(workspace, backups):
     assert backups == []
 
 
-def test_a_failed_backup_fails_the_install(workspace, monkeypatch):
+def test_a_failed_backup_is_reported_but_keeps_the_install(workspace, monkeypatch):
+    # The locker copy is for reinstalling offline; a locker that is down or
+    # half set up must not undo an install that worked.
     monkeypatch.setattr(release.locker, "convert_to_relative_path", lambda path: "relative/x")
     monkeypatch.setattr(release.locker, "backup", lambda **kwargs: False)
+    monkeypatch.setattr(release, "failed_backups", [])
 
-    assert setup_archive(workspace, backups_dir = "/locker/tools") is False
+    assert setup_archive(workspace, backups_dir = "/locker/tools") is True
+    assert release.failed_backups == ["/locker/tools/Tool-1.0.zip"]
 
 
 def test_the_backup_goes_to_the_requested_locker(workspace, backups):

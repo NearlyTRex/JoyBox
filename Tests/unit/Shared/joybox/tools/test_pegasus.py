@@ -194,3 +194,19 @@ def test_configure_stops_when_a_file_cannot_be_written(monkeypatch, tools_root):
 
     assert not pegasus.Pegasus().configure()
     assert len(touched.calls) == 1
+
+
+def test_configure_puts_pegasus_in_the_menu(monkeypatch, tools_root):
+    launchers = Recorder([True])
+    monkeypatch.setattr(pegasus.desktopentry, "set_launcher", launchers)
+
+    assert pegasus.Pegasus().configure()
+
+    assert launchers.calls[0]["enabled"] is True
+    assert (launchers.calls[0]["filename"], launchers.calls[0]["command"]) == ("joybox-pegasus.desktop", "launch_pegasus")
+
+
+def test_a_failed_pegasus_launcher_fails_the_configure(monkeypatch, tools_root):
+    monkeypatch.setattr(pegasus.desktopentry, "set_launcher", Recorder([False]))
+
+    assert not pegasus.Pegasus().configure()

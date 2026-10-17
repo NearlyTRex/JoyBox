@@ -66,7 +66,8 @@ def test_a_client_names_its_host_and_starts_at_login(answers):
     values = configsetup.ask_streaming_questions({})
 
     assert values["Tools.Moonlight"] == {
-        "moonlight_host": "192.168.1.12", "moonlight_app": "Pegasus", "moonlight_autostart": "True"}
+        "moonlight_client": "True", "moonlight_host": "192.168.1.12", "moonlight_app": "Pegasus",
+        "moonlight_autostart": "True"}
     assert values["Tools.Sunshine"]["sunshine_streaming_host"] == "False"
 
 
@@ -100,9 +101,11 @@ def test_none_turns_both_roles_off(answers):
 @pytest.mark.parametrize("values, role", [
     ({}, "none"),
     ({"Tools.Sunshine": {"sunshine_streaming_host": "True"}}, "host"),
-    ({"Tools.Moonlight": {"moonlight_autostart": "True"}}, "client"),
+    ({"Tools.Moonlight": {"moonlight_client": "True"}}, "client"),
+    # A client that does not start at login is still a client
+    ({"Tools.Moonlight": {"moonlight_client": "True", "moonlight_autostart": "False"}}, "client"),
     # Every file names a host, since it has a default, so that alone is no client
-    ({"Tools.Moonlight": {"moonlight_host": "192.168.1.12", "moonlight_autostart": "False"}}, "none"),
+    ({"Tools.Moonlight": {"moonlight_host": "192.168.1.12"}}, "none"),
 ])
 def test_the_current_role_is_the_default_answer(values, role):
     assert configsetup.get_streaming_role(values) == role

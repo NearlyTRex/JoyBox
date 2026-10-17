@@ -8,6 +8,7 @@ import joybox.programs as programs
 import joybox.environment as environment
 import joybox.fileops as fileops
 import joybox.toolbase as toolbase
+import joybox.desktopentry as desktopentry
 
 # Config files
 config_files = {}
@@ -207,4 +208,19 @@ class Pegasus(toolbase.ToolBase):
             if not success:
                 logger.log_error("Could not setup Pegasus config files")
                 return False
+
+        # Put it in the app menu
+        success = desktopentry.set_launcher(
+            enabled = True,
+            filename = "joybox-pegasus.desktop",
+            name = "Pegasus",
+            description = "Browse and launch the game collection",
+            command = "launch_pegasus",
+            icon = "applications-games",
+            verbose = setup_params.verbose,
+            pretend_run = setup_params.pretend_run,
+            exit_on_failure = setup_params.exit_on_failure)
+        if not success:
+            logger.log_error("Could not setup the Pegasus launcher")
+            return False
         return True

@@ -52,12 +52,10 @@ def set_config_value(values, section, key, value):
 ###########################################################
 
 # Get the streaming role the values describe
-# The host address has a default, so every file names one; only a client
-# starts Moonlight at login, so that is what marks one.
 def get_streaming_role(values):
     if get_config_value(values, "Tools.Sunshine", "sunshine_streaming_host").lower() == "true":
         return "host"
-    if get_config_value(values, "Tools.Moonlight", "moonlight_autostart").lower() == "true":
+    if get_config_value(values, "Tools.Moonlight", "moonlight_client").lower() == "true":
         return "client"
     return "none"
 
@@ -69,6 +67,7 @@ def ask_streaming_questions(values):
         choices = STREAMING_ROLES,
         default_value = get_streaming_role(values))
     set_config_value(values, "Tools.Sunshine", "sunshine_streaming_host", str(role == "host"))
+    set_config_value(values, "Tools.Moonlight", "moonlight_client", str(role == "client"))
     if role != "client":
         set_config_value(values, "Tools.Moonlight", "moonlight_autostart", "False")
     if role == "host":

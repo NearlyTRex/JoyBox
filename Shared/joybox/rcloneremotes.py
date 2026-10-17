@@ -8,6 +8,7 @@ import re
 # Local imports
 import joybox.config as config
 import joybox.commandbase as commandbase
+import joybox.knownhosts as knownhosts
 import joybox.logger as logger
 import joybox.serialization as serialization
 import joybox.settings as settings
@@ -37,6 +38,14 @@ TYPE_OPTIONS = {
 
 # Options rclone only accepts obscured
 OBSCURED_OPTIONS = {"pass", "password", "password2", "key_file_pass"}
+
+# What each remote type cannot sign in without: one option from every group
+SIGN_IN_OPTIONS = {
+    config.RemoteType.DRIVE: [("token", "service_account_file", "service_account_credentials")],
+    config.RemoteType.SFTP: [("host",), ("pass", "key_file", "key_pem", "key_use_agent")],
+    config.RemoteType.B2: [("account",), ("key",)],
+    config.RemoteType.WEBDAV: [("url",)],
+}
 
 # rclone's obscuring key. It is public: obscuring keeps a value from being read
 # at a glance, it does not keep it secret
@@ -127,7 +136,7 @@ def get_remote_options(remote_name):
         logger.log_error("Locker %s names remote %s but has no type" % (locker_type, remote_name))
         return None
     options = {"type": config.RemoteType.to_lower_string(remote_type)}
-    options.update(TYPE_OPTIONS.get(remote_type, {}))
+    options.update(TYPE_OPTIONS.get(config.RemoteType.from_string(remote_type), {}))
     remote_config = get_locker_setting(locker_type, "config")
     if remote_config:
         parsed = serialization.parse_json_string(remote_config) if isinstance(remote_config, str) else remote_config
@@ -138,9 +147,27 @@ def get_remote_options(remote_name):
     remote_token = get_locker_setting(locker_type, "token")
     if remote_token and "token" not in options:
         options["token"] = remote_token
+
+    # An SFTP server is checked against the keys ssh keeps, unless the config
+    # names its own file
+    if config.RemoteType.from_string(remote_type) == config.RemoteType.SFTP:
+        options.setdefault("known_hosts_file", knownhosts.get_known_hosts_path())
     for option in OBSCURED_OPTIONS & set(options):
         options[option] = ensure_obscured(options[option])
     return options
+
+# Whether a remote's settings hold what its type needs to sign in. A remote is
+# defined from its settings alone, so rclone lists it either way, and one that
+# cannot sign in only fails once something is sent to it.
+def can_sign_in(remote_name):
+    options = get_remote_options(remote_name)
+    if not options:
+        return False
+    remote_type = config.RemoteType.from_string(get_locker_setting(find_remote_locker_type(remote_name), "type"))
+    for group in SIGN_IN_OPTIONS.get(remote_type, []):
+        if not any(options.get(option) for option in group):
+            return False
+    return True
 
 # Get the environment that defines these remotes for rclone
 def get_remote_environment(remote_names):
@@ -152,6 +179,12 @@ def get_remote_environment(remote_names):
         if not REMOTE_NAME.match(remote_name):
             logger.log_error("Remote %s can't be defined for rclone; use letters, digits and _ only" % remote_name)
             continue
+
+        # Record a new server's key before rclone checks it, so a fresh machine
+        # can reach it; a server whose key cannot be read is left unknown, and
+        # rclone refuses it
+        if options.get("known_hosts_file") == knownhosts.get_known_hosts_path() and options.get("host"):
+            knownhosts.remember_host(options["host"], options.get("port", 22))
         for option, value in options.items():
             environment["RCLONE_CONFIG_%s_%s" % (remote_name.upper(), option.upper())] = value
     return environment

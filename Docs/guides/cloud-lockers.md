@@ -25,7 +25,10 @@ The remote's options go in `locker_<name>_config` as a JSON object, kept in 1Pas
   The password may be plain or already obscured with `rclone obscure`; JoyBox obscures a plain one
   the way `rclone config create` would. `shell_type = unix` and `disable_hashcheck = true` are
   added for you: SFTP shells have no usable `md5sum`, so without it transfers fail with false
-  "corrupted on transfer" errors.
+  "corrupted on transfer" errors. The server's host key is checked against `~/.ssh/known_hosts`
+  (`known_hosts_file`): the first time a machine uses the locker its key is recorded there, and
+  after that a different key is refused, so nothing can pose as the server. Set
+  `known_hosts_file` in the config to use a file of your own instead.
 - **Google Drive** — a [service account](https://rclone.org/drive/#service-account-support), so
   there is no OAuth token for rclone to refresh and store:
   `{"service_account_credentials": { ...the key JSON... }, "root_folder_id": "<locker folder id>"}`.

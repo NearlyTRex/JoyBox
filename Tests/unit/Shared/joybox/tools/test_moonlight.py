@@ -1,3 +1,6 @@
+# Third-party imports
+import pytest
+
 # Local imports
 from joybox.tools import moonlight
 from tools_helpers import (
@@ -43,3 +46,25 @@ def test_configure_writes_into_the_appimage_home(steps):
 
     assert [kwargs["src"] for kwargs in steps.made("touch_file")] == [
         "/tools/Moonlight/linux/Moonlight.AppImage.home/.config/Moonlight Game Streaming Project/Moonlight.conf"]
+
+
+###########################################################
+# App menu launcher
+###########################################################
+
+@pytest.mark.parametrize("client", [True, False])
+def test_configure_puts_moonlight_in_the_menu_only_on_a_client(steps, isolated_settings, client):
+    isolated_settings.set_value("Tools.Moonlight", "moonlight_client", str(client))
+
+    assert moonlight.Moonlight().configure()
+
+    launcher = steps.made("set_launcher")[0]
+    assert launcher["enabled"] is client
+    assert (launcher["filename"], launcher["command"]) == ("joybox-moonlight.desktop", "launch_moonlight")
+
+
+def test_a_failed_launcher_fails_the_configure(steps):
+    steps.fail_at = len(moonlight.config_files)
+
+    assert not moonlight.Moonlight().configure()
+    assert steps.errors == ["Could not setup the Moonlight launcher"]

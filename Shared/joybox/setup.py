@@ -8,6 +8,7 @@ import joybox.fileops as fileops
 import joybox.logger as logger
 import joybox.paths as paths
 import joybox.programs as programs
+import joybox.release as release
 import joybox.settings as settings
 from joybox import platform_info, runtime
 
@@ -61,6 +62,7 @@ def setup_packages(
                 exit_on_failure = setup_params.exit_on_failure)
 
     # Install packages
+    release.failed_backups.clear()
     for package in package_list:
         package_name = package.get_name()
 
@@ -93,6 +95,13 @@ def setup_packages(
             success = package.configure(setup_params = setup_params)
             if not success:
                 return False
+
+    # Report the downloads the lockers did not get, which -f backs up again once fixed
+    if release.failed_backups:
+        logger.log_warning("%d download(s) could not be backed up to the lockers:" % len(release.failed_backups))
+        for backup_dest in release.failed_backups:
+            logger.log_warning("  %s" % backup_dest)
+        logger.log_warning("Fix the lockers, then reinstall those %ss with --force to back them up" % package_type)
     return True
 
 # Setup tools

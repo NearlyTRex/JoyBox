@@ -3,7 +3,7 @@ import os
 
 # Local imports
 import joybox.bootstrap.constants as constants
-import joybox.environment as environment
+import joybox.desktopentry as desktopentry
 from . import installer
 from joybox import runoptions
 from joybox import logger
@@ -55,14 +55,8 @@ class Autostart(installer.Installer):
         return settings.get_bool_value(*entry["enabled_by"], default_value = False, throw_exception = False)
 
     def build_entry(self, entry):
-        return (
-            "[Desktop Entry]\n"
-            "Type=Application\n"
-            "Name=%s\n"
-            "Comment=%s\n"
-            "Exec=%s\n"
-            "X-GNOME-Autostart-enabled=true\n" % (
-                entry["name"], entry["description"], environment.get_command_path(entry["command"])))
+        return desktopentry.build_desktop_entry(
+            entry["name"], entry["description"], entry["command"], ["X-GNOME-Autostart-enabled=true"])
 
     def is_installed(self):
         for entry in AUTOSTART_ENTRIES:

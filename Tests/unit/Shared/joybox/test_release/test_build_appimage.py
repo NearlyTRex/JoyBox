@@ -146,10 +146,12 @@ def test_the_appimage_backup_can_be_skipped(builder, backups):
     assert backups == []
 
 
-def test_a_failed_appimage_backup_fails_the_build(builder, backups, monkeypatch):
+def test_a_failed_appimage_backup_is_reported_but_keeps_the_build(builder, backups, monkeypatch):
     monkeypatch.setattr(release.locker, "backup", failing)
+    monkeypatch.setattr(release, "failed_backups", [])
 
-    assert build_appimage(builder, backups_dir = "/locker/tools") is False
+    assert build_appimage(builder, backups_dir = "/locker/tools") is True
+    assert len(release.failed_backups) == 1
 
 
 ###########################################################
