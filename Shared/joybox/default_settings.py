@@ -129,6 +129,11 @@ ini_defaults["UserData.Jenkins"]["jenkins_repositories_dir"] = "/mnt/repositorie
 ini_defaults["UserData.Jenkins"]["jenkins_admin_user"] = get_secret_reference("UserData.Jenkins", "jenkins_admin_user")
 ini_defaults["UserData.Jenkins"]["jenkins_admin_pass"] = get_secret_reference("UserData.Jenkins", "jenkins_admin_pass")
 
+# UserData.Streaming
+ini_defaults["UserData.Streaming"] = {}
+ini_defaults["UserData.Streaming"]["sunshine_user"] = get_secret_reference("UserData.Streaming", "sunshine_user")
+ini_defaults["UserData.Streaming"]["sunshine_pass"] = get_secret_reference("UserData.Streaming", "sunshine_pass")
+
 # UserData.Kanboard
 ini_defaults["UserData.Kanboard"] = {}
 ini_defaults["UserData.Kanboard"]["kanboard_subdomain"] = "tasks"
