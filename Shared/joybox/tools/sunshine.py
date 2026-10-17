@@ -1,3 +1,7 @@
+# Imports
+import os
+import json
+
 # Local imports
 import joybox.config as config
 import joybox.logger as logger
@@ -12,6 +16,34 @@ import joybox.toolbase as toolbase
 config_files = {}
 config_files["Sunshine/windows/config/sunshine.conf"] = ""
 config_files["Sunshine/linux/Sunshine.AppImage.home/.config/sunshine/sunshine.conf"] = ""
+config_files["Sunshine/windows/config/apps.json"] = ""
+config_files["Sunshine/linux/Sunshine.AppImage.home/.config/sunshine/apps.json"] = ""
+
+# Build the apps a Moonlight client can start
+# The Linux AppImage runs with its .home folder as HOME, which its apps would
+# inherit, so the real one is put back for them.
+def build_apps(platform):
+    steam_prefix = "setsid steam " if platform == "linux" else ""
+    apps = {
+        "env": {"HOME": os.path.expanduser("~")} if platform == "linux" else {},
+        "apps": [
+            {
+                "name": "Desktop",
+                "image-path": "desktop.png"
+            },
+            {
+                "name": "Pegasus",
+                "cmd": environment.get_command_path("launch_pegasus")
+            },
+            {
+                "name": "Steam Big Picture",
+                "detached": [steam_prefix + "steam://open/bigpicture"],
+                "prep-cmd": [{"do": "", "undo": steam_prefix + "steam://close/bigpicture"}],
+                "image-path": "steam.png"
+            }
+        ]
+    }
+    return json.dumps(apps, indent = 4)
 
 # Sunshine tool
 class Sunshine(toolbase.ToolBase):
@@ -119,6 +151,10 @@ class Sunshine(toolbase.ToolBase):
     def configure(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
+
+        # Update app lists
+        config_files["Sunshine/windows/config/apps.json"] = build_apps("windows")
+        config_files["Sunshine/linux/Sunshine.AppImage.home/.config/sunshine/apps.json"] = build_apps("linux")
 
         # Create config files
         for config_filename, config_contents in config_files.items():

@@ -115,6 +115,7 @@ python3 bootstrap.py -t local_ubuntu --list-components
 | `python` | Python venv, JoyBox itself (editable) and the other venv tools |
 | `wrappers` | `python3`/`pip3` in ~/.joybox/bin, pointing at the venv |
 | `aptget` | All APT packages |
+| `autostart` | Desktop login entries: Sunshine on a streaming host, Moonlight on a living-room client |
 | `awscli` | AWS CLI |
 | `flatpak` | Flatpak apps |
 | `node` | Global npm packages (ccusage, Codex, OpenCode) |
@@ -131,7 +132,8 @@ python3 bootstrap.py -t local_ubuntu --list-components
 | `pidgin` | AIM/ICQ plugins for Pidgin, built from the last release that had them |
 | `steam` | Steam gaming platform |
 | `sysctl` | Kernel sysctl tweaks |
-| `udev` | USB device rules |
+| `udev` | USB device rules, and virtual-controller access for Sunshine |
+| `ufw` | Firewall rules: Sunshine's ports, opened to the LAN on a streaming host |
 | `virtualbox` | VirtualBox |
 | `vscodium` | VSCodium |
 | `wine` | Wine + dependencies |

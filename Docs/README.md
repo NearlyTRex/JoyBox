@@ -37,6 +37,7 @@ Which VM tool is for which server: [Testing](testing/README.md).
 | [Locker Backups](guides/locker-backups.md) | Pushing the local locker to remotes with `master_backup`, and hash sidecars |
 | [Game Collection](guides/game-collection.md) | Updating game JSON and metadata for store purchases and manually added files |
 | [Save Games](guides/save-games.md) | Capturing and archiving game saves |
+| [Game Streaming](guides/game-streaming.md) | Streaming this computer's games to a living-room PC with Sunshine and Moonlight |
 | [Audio & Music](guides/audio.md) | Downloading, tagging and converting audio, and building playlists |
 
 ## Reference

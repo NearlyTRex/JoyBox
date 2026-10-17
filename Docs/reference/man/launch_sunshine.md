@@ -47,9 +47,16 @@ launch_sunshine -p -v
 
 - Sunshine must be installed first (`setup_tools -k Sunshine`); the command exits with an error if
   it is not found.
+- `setup_tools -k Sunshine -c` writes the apps clients can start (Desktop, Pegasus and Steam Big
+  Picture); apps added in Sunshine's web page are replaced the next time it configures.
+- Set `[Tools.Sunshine] sunshine_streaming_host` and install the bootstrap's `autostart`, `ufw` and
+  `udev` components to start it at every login, open its ports to the LAN and allow virtual
+  controllers.
 
 ## See also
 
 - [setup_tools](setup_tools.md) — Install, update, or rebuild the third-party tools JoyBox depends
   on
 - [launch_pegasus](launch_pegasus.md) — Start the Pegasus game frontend installed by setup_tools
+- [launch_moonlight](launch_moonlight.md) — Start the Moonlight game-streaming client installed by
+  setup_tools

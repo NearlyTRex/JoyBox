@@ -93,6 +93,7 @@ available in the terminal as `<command> -h`.
 |---------|-------------|
 | [install_game_json](install_game_json.md) | Install a game described by its JSON file into the local game cache. |
 | [launch_game_json](launch_game_json.md) | Launch a game described by its JSON file, installing it and restoring its save first. |
+| [launch_moonlight](launch_moonlight.md) | Start the Moonlight game-streaming client installed by setup_tools. |
 | [launch_pegasus](launch_pegasus.md) | Start the Pegasus game frontend installed by setup_tools. |
 | [launch_sunshine](launch_sunshine.md) | Start the Sunshine game-streaming host installed by setup_tools. |
 
