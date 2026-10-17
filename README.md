@@ -32,3 +32,5 @@ Everything is in **[Docs](Docs/README.md)**. The common paths:
 - [Remote Server Setup](Docs/setup/remote-server.md) · [testing it](Docs/testing/remote-server.md)
 - [Homelab Server Setup](Docs/setup/homelab-server.md) · [testing it](Docs/testing/homelab-server.md)
 - [Command Reference](Docs/reference/man/README.md)
+
+Found a security problem? See the [Security Policy](SECURITY.md) for how to report it privately.
