@@ -131,9 +131,10 @@ def test_find_images_builds_an_encoded_search_url(search_credentials, monkeypatc
     assert query["searchType"] == ["image"]
     assert query["fileType"] == ["jpg"]
     assert query["imgSize"] == ["large"]
-    assert query["cx"] == ["engine id"]
-    assert query["key"] == ["key&x"]
-    assert remote.calls[0]["kwargs"] == {"verbose": True, "pretend_run": True, "exit_on_failure": True}
+    assert "cx" not in query and "key" not in query
+    assert remote.calls[0]["kwargs"] == {
+        "params": {"cx": "engine id", "key": "key&x"},
+        "verbose": True, "pretend_run": True, "exit_on_failure": True}
 
 
 def test_find_images_accepts_type_and_size_names(search_credentials, monkeypatch):

@@ -71,6 +71,15 @@ def added_lines(path):
             yield line[1:]
 
 
+# The finding for a secret on an added line. The match itself is redacted, so
+# the secret the hook just caught is not printed to the terminal or a CI log.
+def describe_secret(path, name, text, match):
+    snippet = (text[:match.start()] + "[REDACTED]" + text[match.end():]).strip()
+    if len(snippet) > 100:
+        snippet = snippet[:100] + "…"
+    return f"  [secret] {path}: {name} -> {snippet}"
+
+
 def scan():
     findings = []
     files = staged_files()
@@ -93,10 +102,7 @@ def scan():
                     continue
                 if name == "Assigned secret" and PLACEHOLDER_RE.match(m.group(2).strip()):
                     continue
-                snippet = text.strip()
-                if len(snippet) > 100:
-                    snippet = snippet[:100] + "…"
-                findings.append(f"  [secret] {f}: {name} -> {snippet}")
+                findings.append(describe_secret(f, name, text, m))
                 break
 
     # 3) gitleaks if available

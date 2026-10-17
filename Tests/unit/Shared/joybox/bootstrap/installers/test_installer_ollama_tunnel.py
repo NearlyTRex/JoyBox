@@ -14,7 +14,7 @@ from fakes import RecordingConnection
 # localhost; this tunnel, authenticated by the SSH key, is the only way to it.
 ###########################################################
 
-HOST = "aryie@192.168.1.15"
+HOST = "testuser@192.168.1.15"
 
 
 def make(isolated_settings, host = HOST, port = "11444", **kwargs):
@@ -146,3 +146,16 @@ def test_an_unremovable_unit_fails_the_uninstall(isolated_settings, monkeypatch)
 
     assert not tunnel.uninstall()
     assert not connection.ran("daemon-reload")
+
+
+def test_making_the_component_reads_no_setting(isolated_settings, monkeypatch):
+    # Every component is made on every bootstrap run, and the host is usually a
+    # 1Password reference, so reading it here would prompt for unrelated work.
+    read = []
+    get_value = installers.installer_ollama_tunnel.settings.get_value
+    monkeypatch.setattr(installers.installer_ollama_tunnel.settings, "get_value",
+        lambda section, field, *args, **kwargs: read.append(field) or get_value(section, field, *args, **kwargs))
+
+    installers.OllamaTunnel(RecordingConnection())
+
+    assert "ollama_ssh_host" not in read

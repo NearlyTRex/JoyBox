@@ -19,10 +19,12 @@ from joybox import platform_info, runtime
 ###########################################################
 
 # Check if url is reachable
-def is_url_reachable(url):
+# Query parameters go in params rather than the url, so a key among them never
+# reaches a log line that names the url
+def is_url_reachable(url, params = None):
     try:
         import requests
-        get = requests.get(url, timeout=10)
+        get = requests.get(url, params=params, timeout=10)
         return (get.status_code == 200)
     except Exception:
         return False
@@ -31,6 +33,7 @@ def is_url_reachable(url):
 def get_remote_json(
     url,
     headers = None,
+    params = None,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -40,7 +43,7 @@ def get_remote_json(
         import requests
         if not headers:
             headers = {"Accept": "application/json"}
-        get = requests.get(url, headers=headers, timeout=10)
+        get = requests.get(url, headers=headers, params=params, timeout=10)
         if verbose:
             logger.log_info("Got response: %s" % str(get.status_code))
         if get.status_code == 200:

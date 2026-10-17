@@ -193,12 +193,51 @@ def test_setup_creates_a_missing_config_file(created, components, tmp_path):
 
 
 def test_an_uncreatable_config_file_stops_setup(created, components, tmp_path, monkeypatch):
-    monkeypatch.setattr(cli.default_settings, "create_default_config_file", lambda path: False)
+    monkeypatch.setattr(cli.configsetup, "create_config", lambda path, interactive: False)
 
     with pytest.raises(SystemExit):
         cli.main(["-t", "local_ubuntu", "-a", "setup", "-c", str(tmp_path / "absent.ini")])
 
     assert created == []
+
+
+def test_a_new_config_file_asks_only_when_there_is_a_terminal(created, components, tmp_path, monkeypatch):
+    asked = []
+    monkeypatch.setattr(cli.configsetup, "create_config", lambda path, interactive: asked.append(interactive) or True)
+    monkeypatch.setattr("sys.stdin.isatty", lambda: False)
+    (tmp_path / "new").mkdir()
+
+    cli.main(["-t", "local_ubuntu", "-a", "setup", "-c", str(tmp_path / "new" / "JoyBox.ini")])
+
+    assert asked == [False]
+
+
+def test_recreating_the_config_needs_no_action_and_runs_nothing(created, components, tmp_path, monkeypatch):
+    config_file = tmp_path / "JoyBox.ini"
+    config_file.write_text("[Tools.Ollama]\nollama_ssh_host = me@llm\n")
+    monkeypatch.setattr("sys.stdin.isatty", lambda: False)
+
+    cli.main(["-t", "local_ubuntu", "--recreate-config", "-c", str(config_file)])
+
+    assert "ollama_ssh_host = me@llm" in config_file.read_text()
+    assert "[Tools.Sunshine]" in config_file.read_text()
+    assert created == []
+
+
+def test_recreating_a_missing_config_fails(created, tmp_path):
+    with pytest.raises(SystemExit):
+        cli.main(["-t", "local_ubuntu", "--recreate-config", "-c", str(tmp_path / "absent.ini")])
+
+    assert not (tmp_path / "absent.ini").exists()
+
+
+def test_a_failed_recreate_fails_the_run(created, tmp_path, monkeypatch):
+    config_file = tmp_path / "JoyBox.ini"
+    config_file.write_text("")
+    monkeypatch.setattr(cli.configsetup, "recreate_config", lambda path, interactive: False)
+
+    with pytest.raises(SystemExit):
+        cli.main(["-t", "local_ubuntu", "--recreate-config", "-c", str(config_file)])
 
 
 def test_other_actions_need_an_existing_config_file(created, tmp_path):

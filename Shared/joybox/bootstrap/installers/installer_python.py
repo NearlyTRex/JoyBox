@@ -21,6 +21,13 @@ JOYBOX_EXTRAS = ["dev", "decompiler"]
 # Prints the requirements recorded in the installed joybox metadata, one per line
 INSTALLED_REQUIREMENTS_SCRIPT = "import importlib.metadata as m; print(chr(10).join(m.requires('joybox') or []))"
 
+# Prints the commands recorded in the installed joybox metadata, as name=target
+# lines. pip only writes a command when it installs the package, so one added
+# to pyproject.toml since is missing until joybox is installed again.
+INSTALLED_COMMANDS_SCRIPT = (
+    "import importlib.metadata as m; print(chr(10).join('%s=%s' % (e.name, e.value) "
+    "for e in m.distribution('joybox').entry_points if e.group == 'console_scripts'))")
+
 # Get the normalized distribution name of a requirement line
 def get_requirement_name(line):
     name = re.split(r"[\s;<>=!~\[@(]", line.strip(), maxsplit = 1)[0]
@@ -133,11 +140,13 @@ class Python(installer.Installer):
                 return os.path.normpath(location) == self.get_repo_dir()
         return False
 
+    def get_pyproject(self):
+        return tomllib.loads(serialization.read_text_file(os.path.join(self.get_repo_dir(), "pyproject.toml")) or "")
+
     def get_declared_requirement_names(self):
         repo_dir = self.get_repo_dir()
         requirements = serialization.read_text_file(os.path.join(repo_dir, "requirements.in")) or ""
-        pyproject = tomllib.loads(serialization.read_text_file(os.path.join(repo_dir, "pyproject.toml")) or "")
-        extras = pyproject.get("project", {}).get("optional-dependencies", {})
+        extras = self.get_pyproject().get("project", {}).get("optional-dependencies", {})
         lines = requirements.splitlines()
         for extra in JOYBOX_EXTRAS:
             lines += extras.get(extra, [])
@@ -147,8 +156,18 @@ class Python(installer.Installer):
         output = self.connection.run_output([tools.get_python_venv_python_tool(), "-c", INSTALLED_REQUIREMENTS_SCRIPT]) or ""
         return get_requirement_names(output.splitlines())
 
+    def get_declared_commands(self):
+        scripts = self.get_pyproject().get("project", {}).get("scripts", {})
+        return {"%s=%s" % (name, target) for name, target in scripts.items()}
+
+    def get_installed_commands(self):
+        output = self.connection.run_output([tools.get_python_venv_python_tool(), "-c", INSTALLED_COMMANDS_SCRIPT]) or ""
+        return {line.strip() for line in output.splitlines() if line.strip()}
+
     def is_joybox_current(self):
-        return self.get_installed_requirement_names() == self.get_declared_requirement_names()
+        if self.get_installed_requirement_names() != self.get_declared_requirement_names():
+            return False
+        return self.get_installed_commands() == self.get_declared_commands()
 
     def install_joybox(self):
         logger.log_info(f"Installing joybox from {self.get_repo_dir()}")

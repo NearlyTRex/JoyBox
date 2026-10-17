@@ -8,8 +8,9 @@ same APT base, so they all use the `local_ubuntu` target.
 ## Quick steps
 
 ```bash
-# 1. Install. Clones to ~/Repositories/JoyBox, creates ~/JoyBox.ini, asks which components
-#    to set up (Enter takes all of them), then sets them up
+# 1. Install. Clones to ~/Repositories/JoyBox, creates ~/JoyBox.ini (asking whether this
+#    machine is a game-streaming host, client or neither), asks which components to set up
+#    (Enter takes all of them), then sets them up
 curl -fsSL https://raw.githubusercontent.com/NearlyTRex/JoyBox/main/install.sh | bash
 
 # 2. Open a new terminal so the shell config and PATH are picked up
@@ -22,6 +23,18 @@ python3 bootstrap.py -a setup -t local_ubuntu
 ```
 
 Already have the repo cloned? Skip step 1 and run step 4 from the checkout.
+
+**Picking up new settings.** `~/JoyBox.ini` is only created when it is missing, so settings added
+to JoyBox later never appear in it on their own. Rebuild it from the current defaults:
+
+```bash
+python3 bootstrap.py -t local_ubuntu --recreate-config
+```
+
+Every value your file sets is kept, `op://` references and deliberately blank ones included, and
+the old file is saved beside it as `JoyBox.ini.backup-<date>-<time>` (readable only by you). It
+asks the game-streaming questions again, with your current answers as the defaults. Comments you
+added to the file are not carried over.
 
 **Check it worked:**
 
@@ -62,11 +75,12 @@ Re-running is safe: the checkout is fast-forwarded and anything already installe
 JoyBox is a Python package, and the `python` component installs this checkout into `~/.venv` in
 editable mode. pip creates one command per entry in `[project.scripts]` in `pyproject.toml`
 (`master_backup`, `build_autoinstall_iso`, …) in `~/.venv/bin`, which the `dotfiles` component
-puts on your `PATH`. Editable means changes to the code take effect immediately; a command added
-to `[project.scripts]` since the last setup appears once the package is reinstalled:
+puts on your `PATH`. Editable means changes to the code take effect immediately. A command added
+to (or changed in) `[project.scripts]` since the last setup needs the package installed again,
+which the `python` component notices and does on its next run:
 
 ```bash
-~/.venv/bin/pip install --editable ~/Repositories/JoyBox[dev,decompiler]
+python3 bootstrap.py -a setup -t local_ubuntu --components python
 ```
 
 What each command does is in the [command reference](../reference/man/README.md), and the flags
@@ -115,6 +129,7 @@ python3 bootstrap.py -t local_ubuntu --list-components
 | `python` | Python venv, JoyBox itself (editable) and the other venv tools |
 | `wrappers` | `python3`/`pip3` in ~/.joybox/bin, pointing at the venv |
 | `aptget` | All APT packages |
+| `keys` | The backup decryption key, written from 1Password, and this machine's SSH key, generated if missing |
 | `autostart` | Desktop login entries: Sunshine on a streaming host, Moonlight on a living-room client |
 | `awscli` | AWS CLI |
 | `flatpak` | Flatpak apps |
@@ -135,7 +150,7 @@ python3 bootstrap.py -t local_ubuntu --list-components
 | `udev` | USB device rules, and virtual-controller access for Sunshine |
 | `ufw` | Firewall rules: Sunshine's ports, opened to the LAN on a streaming host |
 | `virtualbox` | VirtualBox |
-| `vscodium` | VSCodium |
+| `vscodium` | VSCodium, with the settings and extensions kept in `Bootstrap/vscodium/` (see [Dotfiles](../reference/dotfiles.md#vscodium)) |
 | `wine` | Wine + dependencies |
 | `xorg` | Xorg input tweaks (remaps Magic Trackpad middle-click to left) |
 

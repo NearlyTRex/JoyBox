@@ -30,3 +30,18 @@ the block plus `~/.joybox/shell.sh`, so a whole-file copy would just duplicate t
 On `setup`, any file present in `captured/` is restored to your home directory (existing
 files are backed up to `*.joybox.backup` first). To manage additional dotfiles, add them to
 `self.managed_dotfiles` in `Shared/joybox/bootstrap/installers/installer_dotfiles.py`.
+
+## VSCodium
+
+The `vscodium` component works the same way for the editor. `-a backup` captures
+`settings.json` and `keybindings.json` from `~/.config/VSCodium/User/`, and the installed
+extensions as `extensions.txt`, into `Bootstrap/vscodium/`:
+
+```bash
+python3 bootstrap.py -a backup -t local_ubuntu --components vscodium
+```
+
+On `setup` it installs VSCodium if needed, writes any captured file that differs (keeping the
+first copy it replaces at `*.joybox.backup`) and installs any missing extension. It counts as
+installed only once all of that matches, so re-running `setup` brings an existing machine up to
+date as well. The repo is public: look over a capture before committing it.

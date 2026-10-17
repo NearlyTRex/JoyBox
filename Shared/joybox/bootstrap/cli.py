@@ -8,11 +8,11 @@ from joybox import runoptions
 from joybox import logger
 from joybox import runtime
 from joybox import settings
-from joybox import default_settings
 import joybox.bootstrap.constants as constants
 import joybox.bootstrap.packages as packages
 import joybox.bootstrap.runner as runner
 import joybox.bootstrap.picker as picker
+import joybox.bootstrap.configsetup as configsetup
 
 # Build the argument parser
 def build_parser():
@@ -59,6 +59,7 @@ def build_parser():
     parser.add_argument("--list-images", dest = "list_images", action = "store_true", help = "List the pinned container image for each docker component and exit")
     parser.add_argument("--backup-id", dest = "backup_id", help = "Backup timestamp to restore, or 'latest'")
     parser.add_argument("--confirm", dest = "confirm", help = "Type 'restore' to confirm a destructive restore")
+    parser.add_argument("--recreate-config", dest = "recreate_config", action = "store_true", help = "Rebuild the config file from the current defaults, keeping the values it sets and backing it up first, then exit")
     return parser
 
 # Main
@@ -68,9 +69,9 @@ def main(argv = None):
     parser = build_parser()
     args, unknown = parser.parse_known_args(argv)
 
-    # Require action unless listing components
+    # Require action unless listing components or rebuilding the config
     is_info_only = args.list_components or args.list_images
-    if not is_info_only and not args.action:
+    if not is_info_only and not args.recreate_config and not args.action:
         parser.error("the following arguments are required: -a/--action")
 
     # Check arguments
@@ -85,10 +86,21 @@ def main(argv = None):
     # Get config file
     config_file = os.path.realpath(args.config_file)
     settings.set_settings_file(config_file)
+
+    # Rebuild the config, asking the questions again when there is someone to ask
+    if args.recreate_config:
+        if not os.path.exists(config_file):
+            logger.log_error_and_quit(f"Config file '{config_file}' does not exist")
+        if not configsetup.recreate_config(config_file, interactive = sys.stdin.isatty()):
+            logger.log_error_and_quit(f"Unable to recreate config file '{config_file}'")
+        logger.log_info(f"Recreated '{config_file}'")
+        return
+
+    # Config not found, create it now
     if not os.path.exists(config_file) and not is_info_only:
         if args.action == "setup":
             logger.log_info(f"Config file '{config_file}' not found; creating it with defaults")
-            if not default_settings.create_default_config_file(config_file):
+            if not configsetup.create_config(config_file, interactive = sys.stdin.isatty()):
                 logger.log_error_and_quit(f"Unable to create config file '{config_file}'")
             logger.log_info(f"Created '{config_file}' — edit it to change any values, then re-run if needed")
         else:

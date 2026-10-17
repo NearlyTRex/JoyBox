@@ -1,3 +1,6 @@
+# Imports
+import urllib.parse
+
 # Local imports
 import joybox.config as config
 import joybox.fileops as fileops
@@ -7,6 +10,12 @@ import joybox.programs as programs
 import joybox.network as network
 import joybox.image as image
 import joybox.google as google
+
+# Whether a url is a YouTube page, by its real host rather than its prefix,
+# which https://www.youtube.com.example.net would also have
+def is_youtube_url(url):
+    parsed = urllib.parse.urlparse(url)
+    return parsed.scheme == "https" and parsed.hostname == "www.youtube.com"
 
 # Clean exif data
 def clean_exif_data(
@@ -55,7 +64,7 @@ def download_asset(
     if asset_type == config.AssetType.VIDEO:
 
         # YouTube
-        if asset_url.startswith("https://www.youtube.com"):
+        if is_youtube_url(asset_url):
             success = google.download_video(
                 video_url = asset_url,
                 output_file = asset_file,

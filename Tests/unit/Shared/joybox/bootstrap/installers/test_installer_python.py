@@ -25,9 +25,10 @@ def repo_dir():
     return os.path.normpath(environment.get_repo_root(expand = True))
 
 
-def build(pip_show = "", installed_requirements = ""):
+def build(pip_show = "", installed_requirements = "", installed_commands = ""):
     connection = RecordingConnection(command_output = {
         "show joybox": pip_show,
+        "console_scripts": installed_commands,
         "importlib.metadata": installed_requirements})
     python = installers.Python(connection)
     python.get_packages = lambda: []
@@ -69,18 +70,31 @@ python-dateutil
 pyuac; sys_platform == 'win32'
 """
 
-PYPROJECT = """[project.optional-dependencies]
+PYPROJECT = """[project.scripts]
+setup_tools = "joybox.cli.setup_tools:run"
+launch_moonlight = "joybox.cli.launch_moonlight:run"
+
+[project.optional-dependencies]
 decompiler = ["pyghidra"]
 dev = ["coverage", "pytest"]
 other = ["unrelated"]
 """
 
+DECLARED_COMMANDS = ("setup_tools=joybox.cli.setup_tools:run", "launch_moonlight=joybox.cli.launch_moonlight:run")
 
-def build_in_checkout(tmp_path, monkeypatch, installed_requirements):
+
+def build_in_checkout(tmp_path, monkeypatch, installed_requirements, installed_commands = DECLARED_COMMANDS):
     (tmp_path / "requirements.in").write_text(REQUIREMENTS_IN)
     (tmp_path / "pyproject.toml").write_text(PYPROJECT)
     monkeypatch.setattr(installers.Python, "get_repo_dir", lambda self: str(tmp_path))
-    return build(show_output(str(tmp_path)), installed_requirements = "\n".join(installed_requirements))
+    return build(show_output(str(tmp_path)),
+        installed_requirements = "\n".join(installed_requirements),
+        installed_commands = "\n".join(installed_commands))
+
+
+CURRENT_REQUIREMENTS = [
+    "libWiiPy", "python-dateutil", 'pyuac; sys_platform == "win32"',
+    'pyghidra; extra == "decompiler"', 'coverage; extra == "dev"', 'pytest; extra == "dev"']
 
 
 def test_declared_requirements_include_the_venv_extras(isolated_settings, tmp_path, monkeypatch):
@@ -93,6 +107,26 @@ def test_current_metadata_is_installed(isolated_settings, tmp_path, monkeypatch)
     python, _ = build_in_checkout(tmp_path, monkeypatch, [
         "libWiiPy", "python-dateutil", 'pyuac; sys_platform == "win32"',
         'pyghidra; extra == "decompiler"', 'coverage; extra == "dev"', 'pytest; extra == "dev"'])
+    assert python.is_installed()
+
+
+def test_a_command_added_since_the_install_is_not_installed(isolated_settings, tmp_path, monkeypatch):
+    # pip writes a command only when it installs joybox, so a new one needs
+    # joybox installed again before it exists.
+    python, _ = build_in_checkout(tmp_path, monkeypatch, CURRENT_REQUIREMENTS,
+        installed_commands = ["setup_tools=joybox.cli.setup_tools:run"])
+    assert not python.is_installed()
+
+
+def test_a_command_pointing_somewhere_new_is_not_installed(isolated_settings, tmp_path, monkeypatch):
+    python, _ = build_in_checkout(tmp_path, monkeypatch, CURRENT_REQUIREMENTS, installed_commands = [
+        "setup_tools=joybox.cli.setup_tools:run", "launch_moonlight=joybox.cli.old_moonlight:run"])
+    assert not python.is_installed()
+
+
+def test_installed_commands_ignore_blank_lines(isolated_settings, tmp_path, monkeypatch):
+    python, _ = build_in_checkout(tmp_path, monkeypatch, CURRENT_REQUIREMENTS,
+        installed_commands = DECLARED_COMMANDS + ("", "  "))
     assert python.is_installed()
 
 

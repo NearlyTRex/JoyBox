@@ -30,9 +30,14 @@ class RefusingClient(FakeSSHClient):
     def __init__(self):
         super().__init__()
         self.connects = []
+        self.policy = None
+        self.loaded_host_keys = []
 
     def set_missing_host_key_policy(self, policy):
-        pass
+        self.policy = policy
+
+    def load_host_keys(self, filename):
+        self.loaded_host_keys.append(filename)
 
     def get_transport(self):
         return None
@@ -57,9 +62,6 @@ class AcceptingClient(RefusingClient):
 
 def fake_paramiko(monkeypatch, client, **members):
     class Module:
-        class AutoAddPolicy:
-            pass
-
         @staticmethod
         def SSHClient():
             return client

@@ -22,7 +22,7 @@ if _here not in sys.path:
 @pytest.fixture
 def github(monkeypatch):
     from network_helpers import FakeUser
-    state = {"repos": [], "login": "aryie", "token": None}
+    state = {"repos": [], "login": "testuser", "token": None}
 
     class FakeGithub:
         def __init__(self, token = None):
@@ -49,10 +49,11 @@ def requests_module(monkeypatch):
     state = {"response": FakeResponse(), "error": None, "calls": []}
 
     def record(method):
-        def run(url, headers = None, timeout = None, json = None):
+        def run(url, headers = None, timeout = None, json = None, params = None):
             state["calls"].append({
                 "method": method,
                 "url": url,
+                "params": params,
                 "headers": headers,
                 "timeout": timeout,
                 "json": json,

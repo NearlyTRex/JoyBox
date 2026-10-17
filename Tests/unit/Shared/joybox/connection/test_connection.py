@@ -249,7 +249,7 @@ def test_adding_a_job_twice_does_not_duplicate_it():
 
 def test_a_missing_crontab_message_is_not_treated_as_content():
     # crontab -l says "no crontab for <user>" for a fresh account.
-    conn = ScriptedConnection(output = "no crontab for aryie\n")
+    conn = ScriptedConnection(output = "no crontab for testuser\n")
     conn.add_to_crontab(JOB)
 
     assert crontab_of(conn).strip() == JOB
@@ -622,15 +622,15 @@ def test_a_trailing_separator_on_the_home_is_not_doubled():
 
 
 def test_windows_separators_are_used_when_that_is_the_side():
-    conn = HomedConnection(home = "C:\\Users\\aryie", separator = "\\")
+    conn = HomedConnection(home = "C:\\Users\\testuser", separator = "\\")
 
-    assert conn.resolve_home_path("~/Tools/bin") == "C:\\Users\\aryie\\Tools\\bin"
+    assert conn.resolve_home_path("~/Tools/bin") == "C:\\Users\\testuser\\Tools\\bin"
 
 
 def test_a_windows_home_path_is_expanded():
-    conn = HomedConnection(home = "C:\\Users\\aryie", separator = "\\")
+    conn = HomedConnection(home = "C:\\Users\\testuser", separator = "\\")
 
-    assert conn.resolve_home_path("~\\Tools") == "C:\\Users\\aryie\\Tools"
+    assert conn.resolve_home_path("~\\Tools") == "C:\\Users\\testuser\\Tools"
 
 
 @pytest.mark.parametrize("value", [None, 12345, ["~/x"], b"~/x"])

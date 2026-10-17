@@ -247,3 +247,14 @@ def test_an_existing_asset_is_not_overwritten_by_the_transfer(conversions):
     transfer = [kwargs for name, kwargs in conversions if name == "transfer"][0]
 
     assert transfer["skip_existing"] is True
+
+
+@pytest.mark.parametrize("url, expected", [
+    ("https://www.youtube.com/watch?v=abc123", True),
+    ("https://www.youtube.com.example.net/watch?v=abc123", False),
+    ("https://example.net/https://www.youtube.com/watch", False),
+    ("http://www.youtube.com/watch?v=abc123", False),
+])
+def test_only_youtube_itself_counts_as_youtube(url, expected):
+    # A prefix check would also take a host that merely starts the same way
+    assert asset.is_youtube_url(url) is expected

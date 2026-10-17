@@ -123,6 +123,7 @@ screen or in the scrollback.
 | Section | Fields |
 |---------|--------|
 | `UserData.Protection` | `general_passphrase`, `locker_passphrase` |
+| `UserData.Backup` | `backup_age_identity_key` |
 | `UserData.Share` | `locker_*_passphrase`, `locker_*_config`, `locker_*_token` |
 | `UserData.Wordpress` | `wordpress_db_pass`, `wordpress_db_root_pass`, `wordpress_admin_pass` |
 | `UserData.FileBrowser` | `filebrowser_admin_pass`, `filebrowser_totp_secret` |
@@ -132,7 +133,8 @@ screen or in the scrollback.
 | `UserData.Audiobookshelf` | `audiobookshelf_admin_pass` |
 | `UserData.FitLog` | `fitlog_pass` |
 | `UserData.Oscar` | `oscar_pass` |
-| `UserData.Autoinstall` | `autoinstall_password_hash` |
+| `UserData.Autoinstall` | `autoinstall_password_hash`, `autoinstall_username`, `autoinstall_realname` |
+| `Tools.Ollama` | `ollama_ssh_host` (its default reads the `UserData.Autoinstall/autoinstall_ssh_host` field) |
 | `Tools.*` | `github_access_token`, `steam_web_api_key`, `steamgriddb_api_key`, `anthropic_api_key`, `google_search_engine_api_key`, `humblebundle_auth_token` |
 
 ## How it behaves

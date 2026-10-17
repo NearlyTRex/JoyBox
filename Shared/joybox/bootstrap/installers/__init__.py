@@ -48,6 +48,8 @@ from joybox.bootstrap.installers.installer_hermes import (
     HermesAgent as HermesAgent)
 from joybox.bootstrap.installers.installer_jenkins import (
     Jenkins as Jenkins)
+from joybox.bootstrap.installers.installer_keys import (
+    Keys as Keys)
 from joybox.bootstrap.installers.installer_kanboard import (
     Kanboard as Kanboard)
 from joybox.bootstrap.installers.installer_llamacpp import (

@@ -28,10 +28,14 @@ class OllamaTunnel(installer.Installer):
         flags = runoptions.RunFlags(),
         options = runoptions.RunOptions()):
         super().__init__(connection, flags, options)
-        self.ssh_host = settings.get_value("Tools.Ollama", "ollama_ssh_host", "", throw_exception = False) or ""
-        self.tunnel_port = settings.get_value("Tools.Ollama", "ollama_tunnel_port", "11444", throw_exception = False)
         self.unit_name = "ollama-tunnel.service"
         self.unit_path = os.path.join(os.path.expanduser("~"), ".config", "systemd", "user", self.unit_name)
+
+    def get_ssh_host(self):
+        return settings.get_value("Tools.Ollama", "ollama_ssh_host", "", throw_exception = False) or ""
+
+    def get_tunnel_port(self):
+        return settings.get_value("Tools.Ollama", "ollama_tunnel_port", "11444", throw_exception = False)
 
     def get_supported_environments(self):
         return [
@@ -51,15 +55,17 @@ class OllamaTunnel(installer.Installer):
     # ExitOnForwardFailure makes a taken port fail rather than run with no
     # tunnel; either way systemd retries. Both ends bind to localhost only.
     def build_unit(self):
+        ssh_host = self.get_ssh_host()
+        tunnel_port = self.get_tunnel_port()
         forwards = [
-            "-L", "127.0.0.1:%s:127.0.0.1:%d" % (self.tunnel_port, SERVER_API_PORT),
+            "-L", "127.0.0.1:%s:127.0.0.1:%d" % (tunnel_port, SERVER_API_PORT),
             "-L", "127.0.0.1:%d:127.0.0.1:%d" % (SERVER_HELPER_PORT, SERVER_HELPER_PORT),
         ]
         command = ["/usr/bin/ssh", "-N",
             "-o", "BatchMode=yes",
             "-o", "ExitOnForwardFailure=yes",
             "-o", "ServerAliveInterval=30",
-            "-o", "ServerAliveCountMax=3"] + forwards + [self.ssh_host]
+            "-o", "ServerAliveCountMax=3"] + forwards + [ssh_host]
         return (
             "[Unit]\n"
             "Description=SSH tunnel to the Ollama server at %s\n"
@@ -71,17 +77,18 @@ class OllamaTunnel(installer.Installer):
             "RestartSec=10\n"
             "\n"
             "[Install]\n"
-            "WantedBy=default.target\n" % (self.ssh_host, " ".join(command)))
+            "WantedBy=default.target\n" % (ssh_host, " ".join(command)))
 
     def install(self):
 
         # Nothing to do without a server to reach
-        if not self.ssh_host:
+        ssh_host = self.get_ssh_host()
+        if not ssh_host:
             logger.log_info("No [Tools.Ollama] ollama_ssh_host is set, so there is no tunnel to keep up")
             return True
 
         # Write the unit
-        logger.log_info(f"Installing the SSH tunnel to the Ollama server at {self.ssh_host}")
+        logger.log_info(f"Installing the SSH tunnel to the Ollama server at {ssh_host}")
         self.connection.make_directory(os.path.dirname(self.unit_path))
         if not self.connection.write_file(self.unit_path, self.build_unit()):
             logger.log_error(f"Failed to write {self.unit_path}")
@@ -95,7 +102,7 @@ class OllamaTunnel(installer.Installer):
                 return False
 
         # All done
-        logger.log_info(f"Tunnel up: point [Tools.Ollama] ollama_api_base at http://localhost:{self.tunnel_port}")
+        logger.log_info(f"Tunnel up: point [Tools.Ollama] ollama_api_base at http://localhost:{self.get_tunnel_port()}")
         return True
 
     def uninstall(self):

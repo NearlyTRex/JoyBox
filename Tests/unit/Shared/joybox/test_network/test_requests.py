@@ -35,9 +35,27 @@ def test_a_refused_connection_is_unreachable(requests_module):
     assert network.is_url_reachable("https://example.test") is False
 
 
+def test_reachability_sends_its_query_parameters_apart_from_the_url(requests_module):
+    network.is_url_reachable("https://example.test", params = {"key": "k"})
+
+    assert only_call(requests_module)["url"] == "https://example.test"
+    assert only_call(requests_module)["params"] == {"key": "k"}
+
+
 ###########################################################
 # JSON
 ###########################################################
+
+def test_a_json_request_keeps_its_query_parameters_out_of_what_is_logged(requests_module, monkeypatch):
+    # A key in the url would be printed by the verbose and failure messages.
+    logged = []
+    monkeypatch.setattr(network.logger, "log_info", lambda message, *a, **k: logged.append(message))
+
+    network.get_remote_json("https://example.test/api", params = {"key": "api-key-value"}, verbose = True)
+
+    assert only_call(requests_module)["params"] == {"key": "api-key-value"}
+    assert logged and not any("api-key-value" in line for line in logged)
+
 
 def test_json_is_returned_from_a_successful_response(requests_module):
     requests_module["response"] = FakeResponse(payload = {"models": []})

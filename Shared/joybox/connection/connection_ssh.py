@@ -12,6 +12,7 @@ from joybox import runtime, cmdline
 from joybox import logger, runoptions
 from . import connection
 import joybox.paths as paths
+import joybox.fileops as fileops
 
 # Lazy import for paramiko (only needed for SSH connections)
 paramiko = None
@@ -40,6 +41,29 @@ def _load_private_key(filepath = None, key_str = None):
             attempts.append("%s: %s" % (key_class.__name__, e))
     raise ValueError("Could not load SSH private key (%s)" % "; ".join(attempts))
 
+# Where the keys of servers already seen are kept, shared with ssh itself
+def get_known_hosts_path():
+    return os.path.join(os.path.expanduser("~"), ".ssh", "known_hosts")
+
+# Trust a server's key the first time it is seen and remember it, as ssh's
+# StrictHostKeyChecking=accept-new does. A key that later differs from the
+# remembered one is refused by paramiko itself, since the known keys are loaded
+# before connecting.
+class RememberNewHostKeyPolicy:
+    def __init__(self, known_hosts_path):
+        self.known_hosts_path = known_hosts_path
+
+    def missing_host_key(self, client, hostname, key):
+        known_hosts_dir = os.path.dirname(self.known_hosts_path)
+        if not paths.does_path_exist(known_hosts_dir):
+            fileops.make_directory(known_hosts_dir)
+            fileops.chmod_file_or_directory(known_hosts_dir, "700")
+        line = "%s %s %s\n" % (hostname, key.get_name(), key.get_base64())
+        if not fileops.touch_file(self.known_hosts_path, contents = line, contents_mode = "a"):
+            raise OSError("Unable to remember the host key of %s in %s" % (hostname, self.known_hosts_path))
+        client.get_host_keys().add(hostname, key.get_name(), key)
+        logger.log_info("Trusting the %s host key of %s, seen for the first time" % (key.get_name(), hostname))
+
 class ConnectionSSH(connection.Connection):
     ssh_client = None
 
@@ -66,7 +90,10 @@ class ConnectionSSH(connection.Connection):
         _ensure_paramiko()
         if not ConnectionSSH.ssh_client:
             ConnectionSSH.ssh_client = paramiko.SSHClient()
-            ConnectionSSH.ssh_client.set_missing_host_key_policy(paramiko.AutoAddPolicy())
+            known_hosts_path = get_known_hosts_path()
+            if paths.does_path_exist(known_hosts_path):
+                ConnectionSSH.ssh_client.load_host_keys(known_hosts_path)
+            ConnectionSSH.ssh_client.set_missing_host_key_policy(RememberNewHostKeyPolicy(known_hosts_path))
         if self.is_connected():
             return
         if self.ssh_key_str or self.ssh_key_filepath:

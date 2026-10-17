@@ -390,7 +390,7 @@ fi
         identity_remote = ""
         if identity_local:
             if not os.path.exists(identity_local):
-                logger.log_error(f"backup_age_identity points at a missing file: {identity_local}")
+                logger.log_error(f"backup_age_identity points at a missing file: {identity_local}; the bootstrap's keys component writes it")
                 return False
             with open(identity_local, "r", encoding = "utf-8") as identity_file:
                 identity_contents = identity_file.read()
@@ -493,11 +493,6 @@ fi
 
     def post_install(self):
         return True
-
-    def write_secret_file(self, path, contents):
-        if self.connection.run_return_code(["install", "-m", "600", "/dev/null", path]) != 0:
-            return False
-        return self.connection.write_file(path, contents)
 
     def call_local_api(self, method, url, payload):
 

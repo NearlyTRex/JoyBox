@@ -120,12 +120,11 @@ def find_images(
     image_size = config.SizeType.from_enum(image_size)
     if image_size:
         search_url += "&imgSize=%s" % image_size.val().lower()
-    search_url += "&cx=%s" % strings.encode_url_string(google_search_engine_id)
-    search_url += "&key=%s" % strings.encode_url_string(google_search_engine_api_key)
 
     # Get search results
     image_json = network.get_remote_json(
         url = search_url,
+        params = {"cx": google_search_engine_id, "key": google_search_engine_api_key},
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)

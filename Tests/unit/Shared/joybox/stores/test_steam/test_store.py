@@ -103,8 +103,9 @@ def owned(steam_store, reachable, monkeypatch, tmp_path):
     reachable["all"] = True
     monkeypatch.setattr(steam_store, "get_purchases_cache_dir", lambda: str(tmp_path / "cache"))
 
-    def get_remote_json(url, **kwargs):
+    def get_remote_json(url, params = None, **kwargs):
         state["fetched"].append(url)
+        state.setdefault("params", []).append(params)
         return state["json"]
     monkeypatch.setattr(steam.network, "get_remote_json", get_remote_json)
     state["cache"] = tmp_path / "cache" / "steam_purchases_cache.json"
@@ -120,7 +121,8 @@ def test_owned_games_become_purchases(steam_store, owned, reachable):
     assert first.get_value(config.json_key_store_appurl) == "https://store.steampowered.com/app/220"
     assert first.get_value(config.json_key_store_branchid) == "public"
     assert "steamid=%s" % STEAMID64 in owned["fetched"][0]
-    assert "key=apikey" in owned["fetched"][0]
+    assert owned["params"][0] == {"key": "apikey"}
+    assert "apikey" not in owned["fetched"][0]
 
 
 def test_each_purchase_probes_its_page_once(steam_store, owned, reachable):

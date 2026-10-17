@@ -208,3 +208,89 @@ def test_teardown_without_a_client_does_nothing():
     build().teardown()
 
     assert connection_ssh.ConnectionSSH.ssh_client is None
+
+
+###########################################################
+# Host keys
+#
+# A server is trusted the first time it is seen and held to that key after,
+# as ssh's accept-new does; paramiko refuses a changed key once the known
+# keys are loaded.
+###########################################################
+
+class FakeHostKey:
+    def get_name(self):
+        return "ssh-ed25519"
+
+    def get_base64(self):
+        return "AAAAC3NzaC1lZDI1NTE5AAAAIFakeHostKeyForTests"
+
+
+class FakeHostKeys:
+    def __init__(self):
+        self.added = []
+
+    def add(self, hostname, keytype, key):
+        self.added.append((hostname, keytype, key))
+
+
+class HostKeyClient(AcceptingClient):
+    def __init__(self):
+        super().__init__()
+        self.host_keys = FakeHostKeys()
+
+    def get_host_keys(self):
+        return self.host_keys
+
+
+def test_the_known_hosts_are_loaded_before_connecting(monkeypatch, tmp_path):
+    known_hosts = tmp_path / "known_hosts"
+    known_hosts.write_text("")
+    monkeypatch.setattr(connection_ssh, "get_known_hosts_path", lambda: str(known_hosts))
+    client = fake_paramiko(monkeypatch, AcceptingClient())
+
+    build().connect()
+
+    assert client.loaded_host_keys == [str(known_hosts)]
+    assert isinstance(client.policy, connection_ssh.RememberNewHostKeyPolicy)
+
+
+def test_without_known_hosts_nothing_is_loaded(monkeypatch, tmp_path):
+    monkeypatch.setattr(connection_ssh, "get_known_hosts_path", lambda: str(tmp_path / "absent"))
+    client = fake_paramiko(monkeypatch, AcceptingClient())
+
+    build().connect()
+
+    assert client.loaded_host_keys == []
+
+
+def test_a_new_server_is_remembered(tmp_path):
+    known_hosts = tmp_path / "known_hosts"
+    known_hosts.write_text("old.test ssh-ed25519 AAAAexisting\n")
+    client = HostKeyClient()
+
+    connection_ssh.RememberNewHostKeyPolicy(str(known_hosts)).missing_host_key(client, "[server.test]:2222", FakeHostKey())
+
+    assert known_hosts.read_text() == (
+        "old.test ssh-ed25519 AAAAexisting\n"
+        "[server.test]:2222 ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIFakeHostKeyForTests\n")
+    assert client.host_keys.added[0][:2] == ("[server.test]:2222", "ssh-ed25519")
+
+
+def test_a_missing_ssh_directory_is_made_private(tmp_path):
+    known_hosts = tmp_path / ".ssh" / "known_hosts"
+
+    connection_ssh.RememberNewHostKeyPolicy(str(known_hosts)).missing_host_key(HostKeyClient(), "server.test", FakeHostKey())
+
+    assert known_hosts.is_file()
+    assert oct((tmp_path / ".ssh").stat().st_mode & 0o777) == "0o700"
+
+
+def test_a_key_that_cannot_be_remembered_is_refused(monkeypatch, tmp_path):
+    monkeypatch.setattr(connection_ssh.fileops, "touch_file", lambda *args, **kwargs: False)
+    client = HostKeyClient()
+
+    with pytest.raises(OSError):
+        connection_ssh.RememberNewHostKeyPolicy(str(tmp_path / "known_hosts")).missing_host_key(client, "server.test", FakeHostKey())
+
+    assert client.host_keys.added == []

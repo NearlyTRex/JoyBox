@@ -145,7 +145,7 @@ def mount_run(monkeypatch):
 
 
 def mount(mount_dir, **kwargs):
-    return network.mount_network_share(mount_dir, "server", "share", "aryie", SHARE_SECRET, **kwargs)
+    return network.mount_network_share(mount_dir, "server", "share", "testuser", SHARE_SECRET, **kwargs)
 
 
 def test_a_linux_share_is_mounted_over_cifs(linux, mount_run):
@@ -171,7 +171,7 @@ def test_the_credentials_file_holds_the_login_verbatim(linux, mount_run):
     mount("/mnt/share")
 
     content, mode = mount_run["credentials"]
-    assert content == "username=aryie\npassword=%s\n" % SHARE_SECRET
+    assert content == "username=testuser\npassword=%s\n" % SHARE_SECRET
     assert mode == 0o600
 
 
@@ -243,7 +243,7 @@ def test_a_linux_mount_point_that_cannot_be_made_fails(linux, mount_run):
     assert len(mount_run["calls"]) == 1
 
 
-@pytest.mark.parametrize("username, password", [("aryie\ndomain=evil", SHARE_SECRET), ("aryie", "pass\ndomain=evil")])
+@pytest.mark.parametrize("username, password", [("testuser\ndomain=evil", SHARE_SECRET), ("testuser", "pass\ndomain=evil")])
 def test_credentials_with_a_line_break_are_refused(linux, mount_run, username, password):
     # A line break would add lines of its own to the credentials file.
     assert network.mount_network_share("/mnt/share", "server", "share", username, password) is False
@@ -253,7 +253,7 @@ def test_credentials_with_a_line_break_are_refused(linux, mount_run, username, p
 def test_credentials_with_a_line_break_can_quit_the_program(linux, mount_run):
     with pytest.raises(SystemExit):
         network.mount_network_share(
-            "/mnt/share", "server", "share", "aryie", "pass\nword", exit_on_failure = True)
+            "/mnt/share", "server", "share", "testuser", "pass\nword", exit_on_failure = True)
 
 
 @pytest.fixture
@@ -273,7 +273,7 @@ def mapped(monkeypatch):
 def test_a_windows_share_is_mapped_to_its_drive(windows, mapped, recording_command):
     assert mount("Z:\\", verbose = True) is True
 
-    assert mapped["calls"] == [("z:", "\\\\server\\share", "aryie", SHARE_SECRET)]
+    assert mapped["calls"] == [("z:", "\\\\server\\share", "testuser", SHARE_SECRET)]
     assert recording_command.ran() is False
 
 
@@ -311,8 +311,8 @@ def test_a_windows_mapping_hands_the_password_to_the_api(monkeypatch):
     fake = types.SimpleNamespace(mpr = types.SimpleNamespace(WNetAddConnection2W = add_connection))
     monkeypatch.setattr(ctypes, "windll", fake, raising = False)
 
-    assert network.map_windows_drive("z:", "\\\\server\\share", "aryie", SHARE_SECRET) == 0
-    assert seen == [("z:", "\\\\server\\share", 1, SHARE_SECRET, "aryie", 0)]
+    assert network.map_windows_drive("z:", "\\\\server\\share", "testuser", SHARE_SECRET) == 0
+    assert seen == [("z:", "\\\\server\\share", 1, SHARE_SECRET, "testuser", 0)]
 
 
 def test_an_unknown_platform_mounts_nothing(monkeypatch, recording_command):

@@ -20,7 +20,7 @@ def reachable(monkeypatch):
     # Declares which urls answer, so the probing order is observable.
     state = {"ok": set(), "all": False, "probed": []}
 
-    def is_url_reachable(url):
+    def is_url_reachable(url, params = None):
         state["probed"].append(url)
         if state["all"]:
             return True

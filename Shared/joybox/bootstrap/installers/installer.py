@@ -85,6 +85,13 @@ class Installer:
     def get_app_dir(self):
         return "%s/apps/%s" % (self.get_remote_home(), self.app_name)
 
+    # Write a file only its owner can read, created that way before anything is
+    # in it so the contents are never readable by anyone else
+    def write_secret_file(self, path, contents):
+        if self.connection.run_return_code(["install", "-m", "600", "/dev/null", path]) != 0:
+            return False
+        return self.connection.write_file(path, contents)
+
     def install_nginx_snippet(self, snippet_name, contents):
 
         # Snippets are included by server blocks owned by other components,
