@@ -47,6 +47,29 @@ sudo apt install 1password-cli
 Then turn on the desktop integration in **1Password → Settings → Developer → Integrate with
 1Password CLI**. The tool asks the app to unlock; nothing is stored in a file.
 
+### On a new machine
+
+1. Install the app and the tool with the bootstrap's `onepassword` component.
+2. Open the app and sign in to your account. The Secret Key is in your Emergency Kit, or in the
+   app on a machine that is already signed in, under your account's settings.
+3. Turn on **Settings → Developer → Integrate with 1Password CLI**.
+4. Check it: `op vault list` should list your vaults after the app asks you to approve.
+
+If `op` asks **"Do you want to add an account manually now?"**, answer no. That is the other way
+to sign in, without the app, and it ends by printing a line like this:
+
+```text
+export OP_SESSION_ABCDEFGH="..."
+```
+
+That is a session token for the shell you are in. **Don't put it in `.bashrc`**: it stops working
+after 30 minutes of not being used, and until then it is a secret sitting in a file. With the
+desktop integration there is nothing to export. Without the app, run `eval $(op signin)` in each
+shell before the JoyBox commands instead.
+
+JoyBox itself never lets `op` prompt: with no account set up it says so once and treats every
+reference as unresolved for the rest of that run.
+
 A **service account token** in `.bashrc` is the other way to authenticate, and it is worse for a
 workstation: the token is itself a secret sitting in a file, it opens every vault it is scoped
 to, and it never prompts. It belongs on a headless machine that has to run unattended, scoped to

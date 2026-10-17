@@ -409,11 +409,21 @@ def get_configured_lockers():
             if locker_info.get_mount_path() and paths.does_path_exist(locker_info.get_mount_path()):
                 configured.append(locker_type)
             continue
-        if locker_info.get_name():
-            if sync.is_remote_configured(
-                remote_name = locker_info.get_name(),
-                remote_type = locker_info.get_type()):
-                configured.append(locker_type)
+        if not locker_info.get_name():
+            continue
+
+        # A remote is defined from its settings, so rclone lists it even with
+        # nothing to sign in with; one without credentials can only fail
+        if not sync.is_tool_installed():
+            logger.log_info("RClone is not installed yet, so locker %s is skipped" % locker_type)
+            continue
+        if not locker_info.get_config() and not locker_info.get_token():
+            logger.log_info("Locker %s has no config or token to sign in with, so it is skipped" % locker_type)
+            continue
+        if sync.is_remote_configured(
+            remote_name = locker_info.get_name(),
+            remote_type = locker_info.get_type()):
+            configured.append(locker_type)
     return configured
 
 # Backup source to configured lockers

@@ -199,6 +199,62 @@ def test_a_failure_is_not_cached(monkeypatch, recorded_logs):
     assert secretstore.resolve_secret_reference(REFERENCE) == RESOLVED_SECRET
 
 
+NO_ACCOUNT = (
+    "No accounts configured for use with 1Password CLI.\n"
+    "\n"
+    " - Turn on the 1Password desktop app integration to sign in with the accounts you've added to the app.")
+
+
+def test_the_tool_is_given_no_input(monkeypatch, recorded_logs):
+    # With a terminal it offers to add an account, then prompts into output
+    # that is being captured, and the read hangs until it times out.
+    seen = []
+    monkeypatch.setattr(secretstore, "get_secret_tool", lambda: "/usr/bin/op")
+    monkeypatch.setattr(
+        secretstore.subprocess, "run", lambda cmd, **kwargs: seen.append(kwargs) or FakeResult(stdout = RESOLVED_SECRET))
+
+    secretstore.resolve_secret_reference(REFERENCE)
+
+    assert seen[0]["stdin"] is subprocess.DEVNULL
+
+
+def test_no_account_is_reported_with_how_to_sign_in(monkeypatch, recorded_logs):
+    monkeypatch.setattr(secretstore, "get_secret_tool", lambda: "/usr/bin/op")
+    monkeypatch.setattr(
+        secretstore.subprocess, "run", lambda cmd, **kwargs: FakeResult(returncode = 1, stderr = NO_ACCOUNT))
+
+    assert secretstore.resolve_secret_reference(REFERENCE) is None
+
+    assert any("desktop app integration" in line for line in recorded_logs)
+    assert any("Docs/reference/secrets.md" in line for line in recorded_logs)
+
+
+def test_no_account_is_reported_once_per_run(monkeypatch, recorded_logs):
+    # Unlike a locked vault, nothing in the run can sign in, so each further
+    # reference would only repeat the same complaint.
+    calls = []
+    monkeypatch.setattr(secretstore, "get_secret_tool", lambda: "/usr/bin/op")
+    monkeypatch.setattr(
+        secretstore.subprocess, "run", lambda cmd, **kwargs: calls.append(cmd) or FakeResult(returncode = 1, stderr = NO_ACCOUNT))
+
+    assert secretstore.resolve_secret_reference(REFERENCE) is None
+    assert secretstore.resolve_secret_reference("op://Private/JoyBox/general_passphrase") is None
+
+    assert len(calls) == 1
+
+
+def test_forgetting_asks_again_after_signing_in(monkeypatch, recorded_logs):
+    outcomes = [FakeResult(returncode = 1, stderr = NO_ACCOUNT), FakeResult(stdout = RESOLVED_SECRET)]
+    monkeypatch.setattr(secretstore, "get_secret_tool", lambda: "/usr/bin/op")
+    monkeypatch.setattr(
+        secretstore.subprocess, "run", lambda cmd, **kwargs: outcomes.pop(0))
+
+    assert secretstore.resolve_secret_reference(REFERENCE) is None
+    secretstore.clear_resolved_secrets()
+
+    assert secretstore.resolve_secret_reference(REFERENCE) == RESOLVED_SECRET
+
+
 ###########################################################
 # What gets said out loud
 ###########################################################
