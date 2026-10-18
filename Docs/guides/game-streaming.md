@@ -34,9 +34,11 @@ setup_tools -k Sunshine -c
 python3 bootstrap.py -a setup -t local_ubuntu --components udev,ufw,autostart
 ```
 
-- `setup_tools -c` writes the apps a client can start: **Desktop**, **Pegasus** (through
-  `launch_pegasus`) and **Steam Big Picture**, and adds Sunshine to the app menu. Running it
-  again replaces any apps added in Sunshine's web page. Settings saved in the web page are kept.
+- `setup_tools -c` writes the apps a client can start, from `streaming_apps` in
+  `Shared/joybox/config/streaming.py`: **Desktop**, **Pegasus** (through `launch_pegasus`) and
+  **Steam Big Picture** to begin with. Edit that list to offer other apps, or fewer, then run it
+  again. It also adds Sunshine to the app menu. Running it replaces any apps added in Sunshine's
+  web page; settings saved in the web page are kept.
 - `udev` lets the logged-in user create the virtual controllers and keyboards a client's input
   arrives through.
 - `ufw` allows Sunshine's ports (TCP 47984, 47989, 47990, 48010 and UDP 47998–48000) from
@@ -84,4 +86,5 @@ launch_moonlight --pair
 Moonlight shows a PIN. Enter it on the host's web page under **PIN**. After that,
 `launch_moonlight` (and every login, with `moonlight_autostart`) goes straight into
 `moonlight_app` on the host. Pass `--app "Steam Big Picture"` or `--app Desktop` to pick another
-one. Clear `moonlight_host` to get Moonlight's host list instead.
+one, or set `moonlight_app` to make it the default. `launch_moonlight --list` shows the apps the
+host offers, the names those take. Clear `moonlight_host` to get Moonlight's host list instead.

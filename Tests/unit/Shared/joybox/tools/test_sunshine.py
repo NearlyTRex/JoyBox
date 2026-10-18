@@ -214,3 +214,28 @@ def test_a_failed_login_fails_the_configure(steps, isolated_settings):
 
     assert not sunshine.Sunshine().configure()
     assert steps.errors == ["Could not setup the Sunshine login"]
+
+
+###########################################################
+# Apps from the config
+###########################################################
+
+def test_the_app_list_follows_the_config(monkeypatch):
+    # Taking an app out of config.streaming_apps takes it out of the host's list
+    monkeypatch.setattr(sunshine.config, "streaming_apps", [
+        app for app in sunshine.config.streaming_apps if app["name"] != "Pegasus"])
+
+    assert app_names("linux") == ["Desktop", "Steam Big Picture"]
+
+
+def test_an_app_takes_only_what_its_config_gives_it(monkeypatch):
+    monkeypatch.setattr(sunshine.config, "streaming_apps", [{"name": "Desktop"}])
+
+    assert json.loads(sunshine.build_apps("linux"))["apps"] == [{"name": "Desktop"}]
+
+
+def test_windows_steam_uses_its_url_handler():
+    steam = json.loads(sunshine.build_apps("windows"))["apps"][2]
+
+    assert steam["detached"] == ["steam://open/bigpicture"]
+    assert steam["prep-cmd"] == [{"do": "", "undo": "steam://close/bigpicture"}]

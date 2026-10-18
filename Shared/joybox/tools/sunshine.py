@@ -25,31 +25,26 @@ config_files["Sunshine/linux/Sunshine.AppImage.home/.config/sunshine/sunshine.co
 config_files["Sunshine/windows/config/apps.json"] = ""
 config_files["Sunshine/linux/Sunshine.AppImage.home/.config/sunshine/apps.json"] = ""
 
-# Build the apps a Moonlight client can start
+# Build the app list a Moonlight client can start from, from config.streaming_apps
 # The Linux AppImage runs with its .home folder as HOME, which its apps would
 # inherit, so the real one is put back for them.
 def build_apps(platform):
-    steam_prefix = "setsid steam " if platform == "linux" else ""
-    apps = {
+    apps = []
+    for streaming_app in config.streaming_apps:
+        app = {"name": streaming_app["name"]}
+        if "command" in streaming_app:
+            app["cmd"] = environment.get_command_path(streaming_app["command"])
+        if "detached" in streaming_app:
+            app["detached"] = [streaming_app["detached"][platform]]
+        if "undo" in streaming_app:
+            app["prep-cmd"] = [{"do": "", "undo": streaming_app["undo"][platform]}]
+        if "image" in streaming_app:
+            app["image-path"] = streaming_app["image"]
+        apps.append(app)
+    return json.dumps({
         "env": {"HOME": os.path.expanduser("~")} if platform == "linux" else {},
-        "apps": [
-            {
-                "name": "Desktop",
-                "image-path": "desktop.png"
-            },
-            {
-                "name": "Pegasus",
-                "cmd": environment.get_command_path("launch_pegasus")
-            },
-            {
-                "name": "Steam Big Picture",
-                "detached": [steam_prefix + "steam://open/bigpicture"],
-                "prep-cmd": [{"do": "", "undo": steam_prefix + "steam://close/bigpicture"}],
-                "image-path": "steam.png"
-            }
-        ]
-    }
-    return json.dumps(apps, indent = 4)
+        "apps": apps
+    }, indent = 4)
 
 # Where each platform's Sunshine keeps its state: the web page login, and the
 # clients paired with it, which writing the login must keep
