@@ -94,3 +94,31 @@ def test_a_failed_launch_exits_with_an_error(tool):
 
 def test_entry_points_run_main(monkeypatch):
     assert_entry_points(monkeypatch, launch_moonlight)
+
+
+def test_listing_asks_the_host_for_its_apps(tool):
+    tool.run("--host", "gamebox", "--list")
+
+    assert tool.commands == [[MOONLIGHT_PATH, "list", "gamebox"]]
+
+
+def test_listing_uses_the_configured_host(tool):
+    tool.run("--list")
+
+    assert tool.commands == [[MOONLIGHT_PATH, "list", "192.168.1.12"]]
+
+
+def test_listing_without_a_host_stops_before_launching(tool):
+    tool.settings.set_value("Tools.Moonlight", "moonlight_host", "")
+
+    assert tool.exit_code("--list") != 0
+
+    assert tool.errors == ["Listing apps needs a host, from --host or [Tools.Moonlight] moonlight_host"]
+    assert tool.commands == []
+
+
+def test_pairing_and_listing_cannot_be_combined(tool):
+    assert tool.exit_code("--pair", "--list") != 0
+
+    assert tool.errors == ["--pair and --list cannot be combined"]
+    assert tool.commands == []

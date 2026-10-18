@@ -20,14 +20,19 @@ def build_parser():
             "`--pair` pairs with the host instead: Moonlight shows a PIN, which is entered on the\n"
             "host's Sunshine web page (port 47990). A host only has to be paired once.\n"
             "\n"
+            "`--list` lists the apps the host offers, the names `--app` and `moonlight_app` take,\n"
+            "as the host's Sunshine reports them. The host has to be paired first.\n"
+            "\n"
             "It waits for Moonlight to exit and logs an error if it exits with a non-zero code."),
         examples = [
             ("Stream the configured host's app", "launch_moonlight"),
             ("Pair with a host", "launch_moonlight --host 192.168.1.20 --pair"),
+            ("List the apps the configured host offers", "launch_moonlight --list"),
             ("Stream Steam Big Picture from a host", "launch_moonlight --host 192.168.1.20 --app \"Steam Big Picture\""),
         ],
         notes = [
             "Moonlight must be installed first (`setup_tools -k Moonlight`); the command exits with an error if it is not found.",
+            "The apps a host offers are set in `Shared/joybox/config/streaming.py` and written by `setup_tools -k Sunshine -c` on the host.",
             "Set `[Tools.Moonlight] moonlight_autostart` and install the bootstrap's `autostart` component to start it at every login.",
         ],
         see_also = ["setup_tools", "launch_sunshine"],
@@ -36,6 +41,7 @@ def build_parser():
     parser.add_string_argument(args = ("--host"), description = "Sunshine host to stream from, by address or name; defaults to `[Tools.Moonlight] moonlight_host`")
     parser.add_string_argument(args = ("--app"), description = "App on the host to start; defaults to `[Tools.Moonlight] moonlight_app`")
     parser.add_boolean_argument(args = ("--pair"), description = "Pair with the host instead of streaming")
+    parser.add_boolean_argument(args = ("--list"), description = "List the apps the host offers instead of streaming")
     parser.add_common_arguments()
     return parser
 
@@ -62,13 +68,18 @@ def main():
     # Get host and app
     host = args.host or settings.get_value("Tools.Moonlight", "moonlight_host", "", throw_exception = False)
     app = args.app or settings.get_value("Tools.Moonlight", "moonlight_app", "", throw_exception = False)
-    if args.pair and not host:
-        logger.log_error("Pairing needs a host, from --host or [Tools.Moonlight] moonlight_host", quit_program = True)
+    if args.pair and args.list:
+        logger.log_error("--pair and --list cannot be combined", quit_program = True)
+    if (args.pair or args.list) and not host:
+        logger.log_error("%s needs a host, from --host or [Tools.Moonlight] moonlight_host" % (
+            "Pairing" if args.pair else "Listing apps"), quit_program = True)
 
     # Get launch command
     launch_cmd = [moonlight_tool]
     if args.pair:
         launch_cmd += ["pair", host]
+    elif args.list:
+        launch_cmd += ["list", host]
     elif host and app:
         launch_cmd += ["stream", host, app]
 

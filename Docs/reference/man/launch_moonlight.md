@@ -22,6 +22,9 @@ straight away: the host from `--host` or `[Tools.Moonlight] moonlight_host`
 `--pair` pairs with the host instead: Moonlight shows a PIN, which is entered on the
 host's Sunshine web page (port 47990). A host only has to be paired once.
 
+`--list` lists the apps the host offers, the names `--app` and `moonlight_app` take,
+as the host's Sunshine reports them. The host has to be paired first.
+
 It waits for Moonlight to exit and logs an error if it exits with a non-zero code.
 
 ## Options
@@ -33,6 +36,7 @@ It waits for Moonlight to exit and logs an error if it exits with a non-zero cod
 | `--host <host>` | Sunshine host to stream from, by address or name; defaults to `[Tools.Moonlight] moonlight_host`. |
 | `--app <app>` | App on the host to start; defaults to `[Tools.Moonlight] moonlight_app`. |
 | `--pair` | Pair with the host instead of streaming. |
+| `--list` | List the apps the host offers instead of streaming. |
 
 ### Common options
 
@@ -57,6 +61,12 @@ launch_moonlight
 launch_moonlight --host 192.168.1.20 --pair
 ```
 
+### List the apps the configured host offers
+
+```bash
+launch_moonlight --list
+```
+
 ### Stream Steam Big Picture from a host
 
 ```bash
@@ -67,6 +77,8 @@ launch_moonlight --host 192.168.1.20 --app "Steam Big Picture"
 
 - Moonlight must be installed first (`setup_tools -k Moonlight`); the command exits with an error if
   it is not found.
+- The apps a host offers are set in `Shared/joybox/config/streaming.py` and written by `setup_tools
+  -k Sunshine -c` on the host.
 - Set `[Tools.Moonlight] moonlight_autostart` and install the bootstrap's `autostart` component to
   start it at every login.
 

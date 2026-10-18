@@ -26,6 +26,8 @@ from joybox.config.files import (
     WindowsProgramFileType as WindowsProgramFileType,
     LinuxProgramFileType as LinuxProgramFileType,
     NintendoWiiUFileType as NintendoWiiUFileType)
+from joybox.config.streaming import (
+    streaming_apps as streaming_apps)
 from joybox.config.general import (
     project_name as project_name,
     minimum_python_major_version as minimum_python_major_version,
