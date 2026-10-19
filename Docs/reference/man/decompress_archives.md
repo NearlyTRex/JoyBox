@@ -17,7 +17,8 @@ decompress_archives [options]
 Finds every archive of the chosen types under the input path (or takes the one file
 given) and extracts it into a `<name>` folder next to it, or with `-s` straight into
 the directory the archive is in. Tarballs are extracted with tar, RAR archives with
-unrar and everything else with 7-Zip.
+unrar, StuffIt archives with unar and everything else with 7-Zip. Names in LZH
+archives are decoded from Shift-JIS to UTF-8.
 
 Existing files in the output folder are overwritten, and an archive is extracted again
 even if its folder already exists.
@@ -29,7 +30,7 @@ even if its folder already exists.
 | Option | Description |
 |--------|-------------|
 | `-i, --input_path <input_path>` | An archive file, or a directory searched recursively for archives; must exist. |
-| `-a, --archive_types <archive_types>` | Archive types to extract, space separated; each selects files by its extension. Default: `ZIP`. Allowed: `ZIP`, `INSTALL`, `7Z`, `RAR`, `TAR_BZ2`, `TB2`, `TBZ`, `TBZ2`, `TZ2`, `TAR_GZ`, `TAZ_GZ`, `TGZ`, `TAR_LZ`, `TAR_LZMA`, `TLZ`, `TAR_LZO`, `TAR_XZ`, `TXZ`, `TAR_Z`, `TZ`, `TAZ`, `TAR_ZST`, `TZST`, `ISO`, `EXE`, `APPIMAGE`. |
+| `-a, --archive_types <archive_types>` | Archive types to extract, space separated; each selects files by its extension. Default: `ZIP`. Allowed: `ZIP`, `INSTALL`, `7Z`, `RAR`, `LZH`, `LHA`, `SIT`, `TAR_BZ2`, `TB2`, `TBZ`, `TBZ2`, `TZ2`, `TAR_GZ`, `TAZ_GZ`, `TGZ`, `TAR_LZ`, `TAR_LZMA`, `TLZ`, `TAR_LZO`, `TAR_XZ`, `TXZ`, `TAR_Z`, `TZ`, `TAZ`, `TAR_ZST`, `TZST`, `ISO`, `EXE`, `APPIMAGE`. |
 | `-s, --same_dir` | Extract into the archive's own directory instead of a `<name>` folder. |
 | `-d, --delete_originals` | Delete each archive after it is extracted. |
 
@@ -56,6 +57,18 @@ decompress_archives -i /path/to/archives
 decompress_archives -i /path/to/archives -a ZIP 7Z RAR -d -p -v
 ```
 
+### Extract Japanese LZH archives
+
+```bash
+decompress_archives -i /path/to/archives -a LZH LHA
+```
+
+### Extract classic Mac StuffIt archives
+
+```bash
+decompress_archives -i /path/to/archives -a SIT
+```
+
 ### Extract a tarball next to itself
 
 ```bash
@@ -67,7 +80,7 @@ decompress_archives -i /path/to/backup.tar.gz -a TAR_GZ -s
 - Archives are matched by extension only, e.g. `ZIP` selects `.zip` files and `TAR_GZ` selects
   `.tar.gz` files.
 - `APPIMAGE` archives are refused with an error.
-- 7-Zip must be installed as a JoyBox tool, plus tar and unrar for those formats.
+- 7-Zip must be installed as a JoyBox tool, plus tar, unrar and unar for those formats.
 
 ## See also
 

@@ -590,6 +590,15 @@ else:
     ini_defaults["Tools.Unrar"]["unrar_exe"] = "unrar"
     ini_defaults["Tools.Unrar"]["unrar_install_dir"] = "/usr/bin"
 
+# Tools.Unar
+ini_defaults["Tools.Unar"] = {}
+if platform_info.is_windows_platform():
+    ini_defaults["Tools.Unar"]["unar_exe"] = "unar.exe"
+    ini_defaults["Tools.Unar"]["unar_install_dir"] = "%ProgramFiles%\\unar"
+else:
+    ini_defaults["Tools.Unar"]["unar_exe"] = "unar"
+    ini_defaults["Tools.Unar"]["unar_install_dir"] = "/usr/bin"
+
 # Tools.Docker
 ini_defaults["Tools.Docker"] = {}
 if platform_info.is_windows_platform():

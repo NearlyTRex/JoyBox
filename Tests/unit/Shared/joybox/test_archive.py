@@ -16,6 +16,8 @@ DETECTORS = [
     ("is_zip_archive", config.ArchiveZipFileType),
     ("is_7z_archive", config.Archive7zFileType),
     ("is_rar_archive", config.ArchiveRarFileType),
+    ("is_lzh_archive", config.ArchiveLzhFileType),
+    ("is_stuffit_archive", config.ArchiveStuffItFileType),
     ("is_tarball_archive", config.ArchiveTarballFileType),
     ("is_disc_archive", config.ArchiveDiscFileType),
 ]
@@ -80,6 +82,9 @@ def test_a_tarball_compound_extension_is_recognised():
     (".zip", config.ArchiveFileType.ZIP),
     (".7z", config.ArchiveFileType.SEVENZIP),
     (".rar", config.ArchiveFileType.RAR),
+    (".lzh", config.ArchiveFileType.LZH),
+    (".lha", config.ArchiveFileType.LHA),
+    (".sit", config.ArchiveFileType.SIT),
 ])
 def test_a_type_is_resolved_from_the_extension(extension, expected):
     assert archive.get_archive_type(f"file{extension}") == expected
@@ -93,6 +98,8 @@ def test_an_unknown_extension_resolves_to_nothing():
     ("application/zip", config.ArchiveFileType.ZIP),
     ("application/x-7z-compressed", config.ArchiveFileType.SEVENZIP),
     ("application/x-rar-compressed", config.ArchiveFileType.RAR),
+    ("application/x-lzh-compressed", config.ArchiveFileType.LZH),
+    ("application/x-stuffit", config.ArchiveFileType.SIT),
     ("application/gzip", config.ArchiveFileType.TAR_GZ),
     ("application/x-iso9660-image", config.ArchiveFileType.ISO),
     ("text/plain", None),
@@ -134,6 +141,8 @@ def test_everything_creatable_is_also_extractable():
     config.ArchiveFileType.ZIP,
     config.ArchiveFileType.SEVENZIP,
     config.ArchiveFileType.RAR,
+    config.ArchiveFileType.LZH,
+    config.ArchiveFileType.SIT,
     config.ArchiveFileType.ISO,
     config.ArchiveFileType.EXE,
 ])
@@ -347,6 +356,7 @@ TOOL_PATHS = {
     "7-Zip": "/tools/7z",
     "Tar": "/tools/tar",
     "Unrar": "/tools/unrar",
+    "Unar": "/tools/unar",
 }
 
 
@@ -576,6 +586,80 @@ def test_unrar_can_keep_what_is_already_there(installed, recording_command, exis
     assert "-o-" in recording_command.only()
 
 
+def test_a_stuffit_is_extracted_with_unar(installed, recording_command, existing_output):
+    archive.extract_archive("/in/Game.sit", "/out")
+    cmd = recording_command.only()
+
+    assert cmd[0] == "/tools/unar"
+    assert cmd[-1] == "/in/Game.sit"
+    assert recording_command.value_after("-o") == "/out"
+
+
+def test_unar_does_not_wrap_the_contents_in_a_folder(installed, recording_command, existing_output):
+    # Without -D unar adds its own folder when the archive holds several items,
+    # so the files would land one level deeper than with every other format.
+    archive.extract_archive("/in/Game.sit", "/out")
+
+    assert "-D" in recording_command.only()
+
+
+def test_unar_takes_a_password_when_given_one(installed, recording_command, existing_output):
+    archive.extract_archive("/in/Game.sit", "/out", password = "example")
+
+    assert recording_command.value_after("-p") == "example"
+
+
+def test_unar_overwrites_by_default(installed, recording_command, existing_output):
+    # Without -f or -s unar asks what to do with each existing file and the run hangs.
+    archive.extract_archive("/in/Game.sit", "/out")
+    cmd = recording_command.only()
+
+    assert "-f" in cmd
+    assert "-s" not in cmd
+
+
+def test_unar_can_keep_what_is_already_there(installed, recording_command, existing_output):
+    archive.extract_archive("/in/Game.sit", "/out", skip_existing = True)
+    cmd = recording_command.only()
+
+    assert "-s" in cmd
+    assert "-f" not in cmd
+
+
+def test_an_lzh_is_extracted_with_sevenzip(installed, recording_command, existing_output, monkeypatch):
+    monkeypatch.setattr(archive.fileops, "decode_legacy_filenames", lambda **kwargs: True)
+    archive.extract_archive("/in/Game.lzh", "/out")
+    cmd = recording_command.only()
+
+    assert cmd[0] == "/tools/7z"
+    assert "-o/out" in cmd
+
+
+def test_an_lzh_has_its_names_decoded_from_shift_jis(installed, recording_command, existing_output, monkeypatch):
+    # LZH archives store names in the packer's code page, which for the
+    # Japanese games they mostly hold is Shift-JIS.
+    decoded = []
+    monkeypatch.setattr(archive.fileops, "decode_legacy_filenames", lambda **kwargs: decoded.append(kwargs) or True)
+
+    assert archive.extract_archive("/in/Game.lzh", "/out") is True
+    assert [(d["src"], d["encoding"]) for d in decoded] == [("/out", "cp932")]
+
+
+def test_other_archives_keep_their_names(installed, recording_command, existing_output, monkeypatch):
+    decoded = []
+    monkeypatch.setattr(archive.fileops, "decode_legacy_filenames", lambda **kwargs: decoded.append(kwargs) or True)
+
+    archive.extract_archive("/in/Game.7z", "/out")
+
+    assert decoded == []
+
+
+def test_a_failed_name_decode_reports_failure(installed, recording_command, existing_output, monkeypatch):
+    monkeypatch.setattr(archive.fileops, "decode_legacy_filenames", lambda **kwargs: False)
+
+    assert archive.extract_archive("/in/Game.lzh", "/out") is False
+
+
 def test_extracting_without_the_tool_reports_failure(missing, recording_command):
     assert archive.extract_archive("/in/Game.7z", "/out") is False
     assert recording_command.ran() is False
@@ -584,6 +668,7 @@ def test_extracting_without_the_tool_reports_failure(missing, recording_command)
 @pytest.mark.parametrize("archive_file,tool", [
     ("/in/Game.tar.gz", "Tar"),
     ("/in/Game.rar", "Unrar"),
+    ("/in/Game.sit", "Unar"),
 ])
 def test_extracting_without_the_format_tool_reports_failure(monkeypatch, recording_command, archive_file, tool):
     # 7-Zip alone does not stand in for the tool a tarball or rar needs.
