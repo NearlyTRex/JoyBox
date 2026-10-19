@@ -411,6 +411,11 @@ class DiscExtractType(EnumType):
     ISO                     = ("Iso")
     ARCHIVE                 = ("Archive")
 
+# Disc filesystem type
+class DiscFilesystemType(EnumType):
+    ISO                     = ("ISO")
+    HFS                     = ("HFS")
+
 # Disc source type
 class DiscSourceType(EnumType):
     FOLDER                  = ("Folder")

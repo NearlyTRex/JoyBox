@@ -324,6 +324,14 @@ def test_a_binary_file_is_read_byte_for_byte(tmp_path, logged):
     assert logged["info"] == ["Reading %s" % target]
 
 
+def test_a_binary_file_range_is_read_from_its_offset(tmp_path):
+    target = tmp_path / "blob.bin"
+    target.write_bytes(b"0123456789")
+
+    assert serialization.read_binary_file(str(target), offset = 3, length = 4) == b"3456"
+    assert serialization.read_binary_file(str(target), offset = 8) == b"89"
+
+
 def test_pretend_run_does_not_write_text(tmp_path):
     target = str(tmp_path / "notes.txt")
 

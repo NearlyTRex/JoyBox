@@ -292,6 +292,12 @@ def test_decoding_keeps_a_complete_directory_name_as_a_directory(tmp_path):
     assert tree(tmp_path) == {"顔", os.path.join("顔", "file.txt")}
 
 
+def test_a_name_that_is_not_in_the_encoding_is_not_split():
+    # 0x81 must be followed by a trail byte, and a space is not one, so the
+    # name is broken partway through rather than cut short at its end.
+    assert fileops.is_name_split_in_encoding(os.fsdecode(b"\x81 abc"), "cp932") is False
+
+
 def test_decoding_keeps_a_split_name_whose_rejoined_name_exists(tmp_path):
     first, second = split_at_backslash("表示.png")
     write(tmp_path / first / second, "split")

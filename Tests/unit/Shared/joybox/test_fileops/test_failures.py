@@ -354,3 +354,16 @@ def test_a_verbose_temporary_file_is_still_usable():
     assert os.path.isfile(temp_file)
 
     fileops.remove_file(temp_file)
+
+
+###########################################################
+# Timestamps
+###########################################################
+
+def test_a_missing_file_has_no_modified_time_to_set(tmp_path):
+    assert fileops.set_file_modified_time(str(tmp_path / "absent.txt"), 0) is False
+
+
+def test_a_missing_file_modified_time_can_quit_the_program(tmp_path):
+    with pytest.raises(SystemExit):
+        fileops.set_file_modified_time(str(tmp_path / "absent.txt"), 0, exit_on_failure = True)

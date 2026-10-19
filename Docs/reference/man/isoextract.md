@@ -23,6 +23,14 @@ image instead, and the extracted files are then made readable and writable by
 everyone (666 for files, 777 for folders).
 With `-e Archive`, only 7-Zip is used.
 
+`-f` picks which filesystem of a hybrid Mac/PC disc to extract. `ISO` (the default)
+reads the ISO 9660 or Joliet side, which holds the Windows files. `HFS` reads the
+classic Mac HFS volume instead, found through the disc's Apple partition map or at the
+start of the image, and ignores `-e`. Each file's data fork is written as the file;
+when it also has a resource fork, a Finder type and creator or Finder flags, they are
+written beside it as an AppleDouble `._<name>` file, which macOS and netatalk read
+back. `/` in a Mac name becomes `:`. HFS+ volumes are not supported.
+
 There is no confirmation prompt; the tool starts straight away.
 
 ## Options
@@ -33,6 +41,7 @@ There is no confirmation prompt; the tool starts straight away.
 |--------|-------------|
 | `-i, --input_path <input_path>` | An `.iso` file, or a directory searched recursively for them; must exist. |
 | `-e, --extract_method <Iso\|Archive>` | `Iso` tries 7-Zip and falls back to xorriso; `Archive` uses 7-Zip only. Default: `Iso`. Allowed: `Iso`, `Archive`. |
+| `-f, --filesystem <ISO\|HFS>` | Filesystem to extract from a hybrid disc: `ISO` for the ISO 9660 or Joliet side, `HFS` for the Mac side. Default: `ISO`. Allowed: `ISO`, `HFS`. |
 | `-s, --skip_existing` | With `-e Archive`, keep files that already exist in the output folder instead of overwriting them. |
 | `-d, --delete_originals` | Delete each ISO after it is extracted. |
 
@@ -65,9 +74,16 @@ isoextract -i /path/to/isos -d -p -v
 isoextract -i "/path/to/Game (USA).iso" -e Archive
 ```
 
+### Extract the Mac side of a hybrid disc
+
+```bash
+isoextract -i "/path/to/Game (USA).iso" -f HFS
+```
+
 ## Notes
 
 - 7-Zip must be installed as a JoyBox tool, and xorriso (XorrISO) for the `-e Iso` fallback.
+- `-f HFS` reads the volume with the machfs Python package, holding it in memory.
 
 ## See also
 

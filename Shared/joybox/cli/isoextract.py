@@ -2,6 +2,7 @@
 import joybox.config as config
 import joybox.system as system
 import joybox.iso as iso
+import joybox.hfs as hfs
 import joybox.arguments as arguments
 import joybox.archive as archive
 import joybox.setup as setup
@@ -22,14 +23,24 @@ def build_parser():
             "everyone (666 for files, 777 for folders).\n"
             "With `-e Archive`, only 7-Zip is used.\n"
             "\n"
+            "`-f` picks which filesystem of a hybrid Mac/PC disc to extract. `ISO` (the default)\n"
+            "reads the ISO 9660 or Joliet side, which holds the Windows files. `HFS` reads the\n"
+            "classic Mac HFS volume instead, found through the disc's Apple partition map or at the\n"
+            "start of the image, and ignores `-e`. Each file's data fork is written as the file;\n"
+            "when it also has a resource fork, a Finder type and creator or Finder flags, they are\n"
+            "written beside it as an AppleDouble `._<name>` file, which macOS and netatalk read\n"
+            "back. `/` in a Mac name becomes `:`. HFS+ volumes are not supported.\n"
+            "\n"
             "There is no confirmation prompt; the tool starts straight away."),
         examples = [
             ("Extract every ISO in a folder", "isoextract -i /path/to/isos"),
             ("Extract and delete the ISOs, previewing first", "isoextract -i /path/to/isos -d -p -v"),
             ("Extract one image with 7-Zip only", "isoextract -i \"/path/to/Game (USA).iso\" -e Archive"),
+            ("Extract the Mac side of a hybrid disc", "isoextract -i \"/path/to/Game (USA).iso\" -f HFS"),
         ],
         notes = [
             "7-Zip must be installed as a JoyBox tool, and xorriso (XorrISO) for the `-e Iso` fallback.",
+            "`-f HFS` reads the volume with the machfs Python package, holding it in memory.",
         ],
         see_also = ["make_iso", "decompress_archives", "chdextract"],
         section = "Game ROMs & Images")
@@ -39,6 +50,11 @@ def build_parser():
         arg_type = config.DiscExtractType,
         default = config.DiscExtractType.ISO,
         description = "`Iso` tries 7-Zip and falls back to xorriso; `Archive` uses 7-Zip only")
+    parser.add_enum_argument(
+        args = ("-f", "--filesystem"),
+        arg_type = config.DiscFilesystemType,
+        default = config.DiscFilesystemType.ISO,
+        description = "Filesystem to extract from a hybrid disc: `ISO` for the ISO 9660 or Joliet side, `HFS` for the Mac side")
     parser.add_boolean_argument(args = ("-s", "--skip_existing"), description = "With `-e Archive`, keep files that already exist in the output folder instead of overwriting them")
     parser.add_boolean_argument(args = ("-d", "--delete_originals"), description = "Delete each ISO after it is extracted")
     parser.add_common_arguments()
@@ -73,8 +89,18 @@ def main():
         if paths.is_path_directory(output_dir):
             continue
 
+        # Extract mac side
+        if args.filesystem == config.DiscFilesystemType.HFS:
+            hfs.extract_hfs(
+                image_file = current_file,
+                extract_dir = output_dir,
+                delete_original = args.delete_originals,
+                verbose = args.verbose,
+                pretend_run = args.pretend_run,
+                exit_on_failure = args.exit_on_failure)
+
         # Extract as iso
-        if args.extract_method == config.DiscExtractType.ISO:
+        elif args.extract_method == config.DiscExtractType.ISO:
             iso.extract_iso(
                 iso_file = current_file,
                 extract_dir = output_dir,

@@ -445,6 +445,7 @@ from joybox.config.types import (
     CaptureType as CaptureType,
     DiscType as DiscType,
     DiscExtractType as DiscExtractType,
+    DiscFilesystemType as DiscFilesystemType,
     DiscSourceType as DiscSourceType,
     AssetType as AssetType,
     AssetMinType as AssetMinType,

@@ -28,12 +28,15 @@ def read_text_file(src, verbose = False, exit_on_failure = False):
         return None
 
 # Read binary file
-def read_binary_file(src, verbose = False, exit_on_failure = False):
+def read_binary_file(src, offset = 0, length = None, verbose = False, exit_on_failure = False):
     try:
         if verbose:
             logger.log_info("Reading %s" % src)
         with open(src, "rb") as input_file:
-            return input_file.read()
+            input_file.seek(offset)
+            if length is None:
+                return input_file.read()
+            return input_file.read(length)
     except Exception as e:
         if exit_on_failure:
             logger.log_error("Unable to read %s" % src)

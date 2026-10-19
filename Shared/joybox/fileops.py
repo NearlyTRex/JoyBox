@@ -237,7 +237,8 @@ def decode_legacy_filenames(src, encoding, verbose = False, pretend_run = False,
                             os.rename(os.path.join(path, child), after)
                     if not pretend_run and not os.listdir(path):
                         os.rmdir(path)
-                        return rejoin_split_names(root)
+                        rejoin_split_names(root)
+                        return
                     continue
                 rejoin_split_names(path)
         rejoin_split_names(src)
@@ -360,6 +361,21 @@ def chmod_file_or_directory(src, perms, dperms = None, verbose = False, pretend_
     except Exception as e:
         if exit_on_failure:
             logger.log_error("Unable to change permissions of %s to %s" % (src, str(perms)))
+            logger.log_error(e)
+            runtime.quit_program()
+        return False
+
+# Set file modified time
+def set_file_modified_time(src, timestamp, verbose = False, pretend_run = False, exit_on_failure = False):
+    try:
+        if verbose:
+            logger.log_info("Setting modified time of %s to %s" % (src, str(timestamp)))
+        if not pretend_run:
+            os.utime(src, (timestamp, timestamp))
+        return True
+    except Exception as e:
+        if exit_on_failure:
+            logger.log_error("Unable to set modified time of %s" % src)
             logger.log_error(e)
             runtime.quit_program()
         return False

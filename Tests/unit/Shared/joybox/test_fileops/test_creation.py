@@ -305,3 +305,24 @@ def test_resolve_symlink_reports_a_failure(tmp_path, monkeypatch):
     assert fileops.resolve_symlink(str(link)) is None
     with pytest.raises(SystemExit):
         fileops.resolve_symlink(str(link), exit_on_failure = True)
+
+
+###########################################################
+# Timestamps
+###########################################################
+
+def test_set_modified_time_moves_the_file_date(tmp_path):
+    path = str(tmp_path / "dated.txt")
+    write(path, "x")
+
+    assert fileops.set_file_modified_time(path, 1104537600, verbose = True) is True
+    assert os.path.getmtime(path) == 1104537600
+
+
+def test_set_modified_time_leaves_the_file_date_in_a_pretend_run(tmp_path):
+    path = str(tmp_path / "dated.txt")
+    write(path, "x")
+    before = os.path.getmtime(path)
+
+    assert fileops.set_file_modified_time(path, 1104537600, pretend_run = True) is True
+    assert os.path.getmtime(path) == before
