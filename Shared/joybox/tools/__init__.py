@@ -1,6 +1,7 @@
 # Imports
 from .appimagetool import AppImageTool
 from .balenaetcher import BalenaEtcher
+from .bchunk import Bchunk
 from .brave import Brave
 from .cdecrypt import CDecrypt
 from .chrome import Chrome
@@ -77,6 +78,7 @@ def get_tool_map():
         instances[instance.get_name()] = instance
     add_instance(AppImageTool)
     add_instance(BalenaEtcher)
+    add_instance(Bchunk)
     add_instance(Brave)
     add_instance(CDecrypt)
     add_instance(Chrome)

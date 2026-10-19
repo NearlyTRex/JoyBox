@@ -208,6 +208,15 @@ def test_pretending_still_builds_the_command(installed, recording_command, exist
     assert recording_command.ran() is True
     assert recording_command.calls[0]["kwargs"].get("pretend_run") is True
 
+@pytest.mark.parametrize("call", [
+    lambda: chd.create_disc_chd("/out/Game.chd", "/in/Game.iso", pretend_run = True),
+    lambda: chd.extract_disc_chd("/in/Game.chd", "/o/Game.bin", "/o/Game.toc", pretend_run = True),
+])
+def test_pretending_reports_success_without_an_output(installed, recording_command, call):
+    # Nothing is written, so the output check alone would call every pretend run a failure.
+    assert call() is True
+
+
 
 ###########################################################
 # Extract cleanup and verify output
@@ -400,3 +409,132 @@ def test_archiving_stops_at_the_first_failure_and_keeps_the_chd(archive_seams, f
 
     assert chd.archive_disc_chd("/in/Game.chd", "/out/Game.zip", delete_original = True) is False
     assert archive_seams["removed_files"] == []
+
+
+###########################################################
+# Extracting to ISO
+#
+# chdman writes CUE/BIN into a temporary folder and bchunk splits it into
+# numbered tracks, which are then moved beside the requested iso.
+###########################################################
+
+@pytest.fixture
+def bchunk(monkeypatch, installed):
+    # Stands in for both tools: chdman writes the cue and bin, bchunk the numbered tracks.
+    state = {"calls": [], "cue": "  TRACK 01 MODE2/2352\n", "tracks": ["01.iso"], "extracted": True, "returncode": 0}
+    def extract_disc_chd(**kwargs):
+        state["calls"].append(kwargs)
+        if not state["extracted"]:
+            return False
+        with open(kwargs["toc_file"], "w", encoding = "utf-8") as handle:
+            handle.write('FILE "Game.bin" BINARY\n' + state["cue"])
+        with open(kwargs["binary_file"], "wb") as handle:
+            handle.write(b"binary")
+        return True
+    def run_returncode_command(cmd, **kwargs):
+        state["calls"].append(list(cmd))
+        for track in state["tracks"]:
+            with open(cmd[3] + track, "wb") as handle:
+                handle.write(b"track")
+        return state["returncode"]
+    monkeypatch.setattr(chd, "extract_disc_chd", extract_disc_chd)
+    monkeypatch.setattr(chd.command, "run_returncode_command", run_returncode_command)
+    return state
+
+
+def test_iso_extraction_feeds_the_extracted_cue_and_bin_to_bchunk(tmp_path, bchunk):
+    chd.extract_disc_chd_to_iso(str(tmp_path / "Game.chd"), str(tmp_path / "Game.iso"))
+
+    extracted, bchunk_cmd = bchunk["calls"]
+    assert bchunk_cmd[:3] == ["/tools/chdman", extracted["binary_file"], extracted["toc_file"]]
+    assert extracted["toc_file"].endswith("Game.cue")
+
+
+def test_a_single_track_is_named_after_the_iso(tmp_path, bchunk):
+    assert chd.extract_disc_chd_to_iso(str(tmp_path / "Game.chd"), str(tmp_path / "Game.iso")) is True
+
+    assert sorted(path.name for path in tmp_path.iterdir()) == ["Game.iso"]
+
+
+def test_several_tracks_keep_their_numbered_names(tmp_path, bchunk):
+    bchunk["tracks"] = ["01.iso", "02.cdr"]
+
+    assert chd.extract_disc_chd_to_iso(str(tmp_path / "Game.chd"), str(tmp_path / "Game.iso")) is True
+
+    assert sorted(path.name for path in tmp_path.iterdir()) == ["Game01.iso", "Game02.cdr"]
+
+
+def test_no_tracks_reports_failure(tmp_path, bchunk):
+    bchunk["tracks"] = []
+
+    assert chd.extract_disc_chd_to_iso(str(tmp_path / "Game.chd"), str(tmp_path / "Game.iso")) is False
+
+
+def test_iso_extraction_deletes_the_chd_when_asked(tmp_path, bchunk):
+    source = tmp_path / "Game.chd"
+    source.write_bytes(b"")
+
+    chd.extract_disc_chd_to_iso(str(source), str(tmp_path / "Game.iso"), delete_original = True)
+
+    assert not source.exists()
+
+
+@pytest.mark.parametrize("track_type", ["MODE1/2048", "MODE2/2048"])
+def test_a_lone_2048_byte_track_becomes_the_iso_without_bchunk(tmp_path, bchunk, track_type):
+    bchunk["cue"] = "  TRACK 01 %s\n" % track_type
+
+    assert chd.extract_disc_chd_to_iso(str(tmp_path / "Game.chd"), str(tmp_path / "Game.iso")) is True
+
+    assert len(bchunk["calls"]) == 1
+    assert (tmp_path / "Game.iso").read_bytes() == b"binary"
+
+
+@pytest.mark.parametrize("cue", ["  TRACK 01 MODE1/2048\n  TRACK 02 AUDIO\n", "  TRACK 01 CDG\n", ""])
+def test_tracks_bchunk_cannot_split_report_failure(tmp_path, bchunk, cue):
+    bchunk["cue"] = cue
+
+    assert chd.extract_disc_chd_to_iso(str(tmp_path / "Game.chd"), str(tmp_path / "Game.iso")) is False
+
+    assert len(bchunk["calls"]) == 1
+    assert sorted(path.name for path in tmp_path.iterdir()) == []
+
+
+def test_a_failed_chdman_extraction_skips_bchunk(tmp_path, bchunk):
+    bchunk["extracted"] = False
+
+    assert chd.extract_disc_chd_to_iso(str(tmp_path / "Game.chd"), str(tmp_path / "Game.iso")) is False
+
+    assert len(bchunk["calls"]) == 1
+
+
+def test_a_failed_bchunk_run_writes_no_iso(tmp_path, bchunk):
+    bchunk["returncode"] = 1
+
+    assert chd.extract_disc_chd_to_iso(str(tmp_path / "Game.chd"), str(tmp_path / "Game.iso")) is False
+
+    assert sorted(path.name for path in tmp_path.iterdir()) == []
+
+
+@pytest.mark.parametrize("cue", ["  TRACK 01 MODE1/2048\n", "  TRACK 01 MODE2/2352\n"])
+def test_a_failed_move_reports_failure(monkeypatch, tmp_path, bchunk, cue):
+    bchunk["cue"] = cue
+    monkeypatch.setattr(chd.fileops, "move_file_or_directory", lambda **kwargs: False)
+
+    assert chd.extract_disc_chd_to_iso(str(tmp_path / "Game.chd"), str(tmp_path / "Game.iso")) is False
+
+
+def test_no_temporary_directory_reports_failure(monkeypatch, installed):
+    monkeypatch.setattr(chd.fileops, "create_temporary_directory", lambda **kwargs: (False, "no space"))
+
+    assert chd.extract_disc_chd_to_iso("/in/Game.chd", "/out/Game.iso") is False
+
+
+def test_pretending_to_extract_an_iso_writes_nothing(tmp_path, installed, recording_command):
+    assert chd.extract_disc_chd_to_iso(str(tmp_path / "Game.chd"), str(tmp_path / "Game.iso"), pretend_run = True) is True
+
+    assert recording_command.only()[:2] == ["/tools/chdman", "extractcd"]
+    assert sorted(path.name for path in tmp_path.iterdir()) == []
+
+
+def test_iso_extraction_without_bchunk_reports_failure(missing):
+    assert chd.extract_disc_chd_to_iso("/in/Game.chd", "/out/Game.iso") is False

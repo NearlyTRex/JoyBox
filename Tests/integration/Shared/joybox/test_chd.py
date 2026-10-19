@@ -182,3 +182,51 @@ def test_a_full_round_trip_survives_a_second_pass(tmp_path, source_chd):
     assert chd.extract_disc_chd(
         str(second), str(again), str(tmp_path / "again.toc")) is True
     assert again.read_bytes() == binary.read_bytes()
+
+
+###########################################################
+# Extracting to ISO
+###########################################################
+
+@pytest.mark.requires_tool("Bchunk")
+def test_a_chd_extracts_to_an_iso_of_its_source_bytes(tmp_path, source_chd, source_iso):
+    target = tmp_path / "out.iso"
+
+    assert chd.extract_disc_chd_to_iso(str(source_chd), str(target)) is True
+    original = source_iso.read_bytes()
+    assert target.read_bytes()[:len(original)] == original
+
+
+@pytest.mark.requires_tool("Bchunk")
+def test_extracting_to_an_iso_leaves_no_cue_or_bin(tmp_path, source_chd):
+    chd.extract_disc_chd_to_iso(str(source_chd), str(tmp_path / "out.iso"))
+
+    assert not list(tmp_path.glob("*.bin"))
+    assert not list(tmp_path.glob("*.cue"))
+
+
+@pytest.mark.requires_tool("Bchunk")
+def test_an_extracted_iso_mounts_with_its_files(tmp_path, source_chd):
+    target = tmp_path / "out.iso"
+    chd.extract_disc_chd_to_iso(str(source_chd), str(target))
+
+    extract_dir = tmp_path / "files"
+    assert iso.extract_iso(str(target), str(extract_dir)) is True
+    assert (extract_dir / "readme.txt").read_text() == "test payload\n"
+
+
+@pytest.mark.requires_tool("Bchunk")
+def test_a_raw_mode1_chd_is_split_by_bchunk_to_its_user_data(tmp_path):
+    # A 2352-byte track carries sync and error-correction bytes around each
+    # 2048-byte sector; bchunk is what strips them back to a plain ISO.
+    sectors = [os.urandom(2048) for _ in range(300)]
+    header = b"\x00" + b"\xff" * 10 + b"\x00" + b"\x00\x02\x00\x01"
+    (tmp_path / "raw.bin").write_bytes(b"".join(header + sector + b"\x00" * 288 for sector in sectors))
+    (tmp_path / "raw.cue").write_text('FILE "raw.bin" BINARY\n  TRACK 01 MODE1/2352\n    INDEX 01 00:00:00\n')
+    source = tmp_path / "raw.chd"
+    assert chd.create_disc_chd(str(source), str(tmp_path / "raw.cue")) is True
+
+    target = tmp_path / "out" / "raw.iso"
+    target.parent.mkdir()
+    assert chd.extract_disc_chd_to_iso(str(source), str(target)) is True
+    assert target.read_bytes() == b"".join(sectors)

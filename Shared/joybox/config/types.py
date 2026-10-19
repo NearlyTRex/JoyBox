@@ -281,6 +281,13 @@ class GenerationModeType(EnumType):
     CUSTOM                  = ("Custom")
     STANDARD                = ("Standard")
 
+# Disc extract format type
+class DiscExtractFormatType(EnumType):
+    CUE                     = ("CUE", ".cue")
+    GDI                     = ("GDI", ".gdi")
+    TOC                     = ("TOC", ".toc")
+    ISO                     = ("ISO", ".iso")
+
 # Analyze mode type
 class AnalyzeModeType(EnumType):
     ALL                     = ("All")

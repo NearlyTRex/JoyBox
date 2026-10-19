@@ -599,6 +599,15 @@ else:
     ini_defaults["Tools.Unar"]["unar_exe"] = "unar"
     ini_defaults["Tools.Unar"]["unar_install_dir"] = "/usr/bin"
 
+# Tools.Bchunk
+ini_defaults["Tools.Bchunk"] = {}
+if platform_info.is_windows_platform():
+    ini_defaults["Tools.Bchunk"]["bchunk_exe"] = "bchunk.exe"
+    ini_defaults["Tools.Bchunk"]["bchunk_install_dir"] = "%ProgramFiles%\\bchunk"
+else:
+    ini_defaults["Tools.Bchunk"]["bchunk_exe"] = "bchunk"
+    ini_defaults["Tools.Bchunk"]["bchunk_install_dir"] = "/usr/bin"
+
 # Tools.Docker
 ini_defaults["Tools.Docker"] = {}
 if platform_info.is_windows_platform():

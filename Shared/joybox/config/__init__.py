@@ -425,6 +425,7 @@ from joybox.config.types import (
     GithubActionType as GithubActionType,
     BackendType as BackendType,
     GenerationModeType as GenerationModeType,
+    DiscExtractFormatType as DiscExtractFormatType,
     AnalyzeModeType as AnalyzeModeType,
     MetadataKeyType as MetadataKeyType,
     SteamIDFormatType as SteamIDFormatType,
