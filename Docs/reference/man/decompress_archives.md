@@ -89,4 +89,5 @@ decompress_archives -i /path/to/backup.tar.gz -a TAR_GZ -s
 - [compress_folders](compress_folders.md) — Compress each folder in a directory into an archive of
   its own with 7-Zip
 - [verify_archives](verify_archives.md) — Test archive files for corruption with 7-Zip
-- [isoextract](isoextract.md) — Extract the files from ISO images into a folder beside each image
+- [isoextract](isoextract.md) — Extract the files from ISO and Toast images into a folder beside
+  each image

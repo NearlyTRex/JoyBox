@@ -51,6 +51,17 @@ def test_hfs_filesystem_extracts_the_mac_side_with_either_method(tool, tmp_path,
         "delete_original": True, "verbose": False, "pretend_run": False, "exit_on_failure": False}]
 
 
+def test_toast_images_are_extracted_like_isos(tool, tmp_path):
+    (tmp_path / "Mac Game.toast").write_bytes(b"x")
+    (tmp_path / "Notes.txt").write_bytes(b"x")
+
+    tool.run("-i", str(tmp_path), "-f", "HFS")
+
+    assert sorted((call["image_file"], call["extract_dir"]) for call in tool.hfs_calls.calls) == [
+        (str(tmp_path / "Game.iso"), str(tmp_path / "Game")),
+        (str(tmp_path / "Mac Game.toast"), str(tmp_path / "Mac Game"))]
+
+
 def test_iso_filesystem_is_the_default(tool, tmp_path):
     tool.run("-i", str(tmp_path), "-f", "ISO")
 

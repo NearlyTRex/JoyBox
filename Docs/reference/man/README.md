@@ -107,7 +107,7 @@ available in the terminal as `<command> -h`.
 | [chdverify](chdverify.md) | Check CHD files against their internal SHA-1 checksums with chdman. |
 | [chdzip](chdzip.md) | Repack the files on each CHD disc image into a zip archive. |
 | [dat_renamer](dat_renamer.md) | Rename ROM files to the names a DAT file gives them, matching by MD5. |
-| [isoextract](isoextract.md) | Extract the files from ISO images into a folder beside each image. |
+| [isoextract](isoextract.md) | Extract the files from ISO and Toast images into a folder beside each image. |
 | [make_iso](make_iso.md) | Build an ISO image from each folder, or each zip file, in a directory. |
 | [nds_rom_tool](nds_rom_tool.md) | Decrypt or encrypt Nintendo DS ROMs in place with NDecrypt. |
 | [ps3_rom_tool](ps3_rom_tool.md) | Check that PlayStation 3 disc CHDs decrypt and extract with their disc keys. |

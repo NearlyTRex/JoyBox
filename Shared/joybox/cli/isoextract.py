@@ -12,11 +12,12 @@ import joybox.paths as paths
 # Build the argument parser
 def build_parser():
     parser = arguments.ArgumentParser(
-        description = "Extract the files from ISO images into a folder beside each image.",
+        description = "Extract the files from ISO and Toast images into a folder beside each image.",
         details = (
-            "Finds every `.iso` file under the input path (or takes the one file given) and\n"
-            "extracts it into a `<name>` folder next to it. An ISO whose `<name>` folder already\n"
-            "exists is skipped.\n"
+            "Finds every `.iso` and `.toast` file under the input path (or takes the one file given)\n"
+            "and extracts it into a `<name>` folder next to it. An image whose `<name>` folder\n"
+            "already exists is skipped. A Roxio Toast `.toast` image has the same layout as an ISO;\n"
+            "Mac-only Toast discs hold no ISO 9660 side, so they need `-f HFS`.\n"
             "\n"
             "With the default `-e Iso`, 7-Zip is tried first; if it fails, xorriso extracts the\n"
             "image instead, and the extracted files are then made readable and writable by\n"
@@ -39,6 +40,7 @@ def build_parser():
             ("Extract and delete the ISOs, previewing first", "isoextract -i /path/to/isos -d -p -v"),
             ("Extract one image with 7-Zip only", "isoextract -i \"/path/to/Game (USA).iso\" -e Archive"),
             ("Extract the Mac side of a hybrid disc", "isoextract -i \"/path/to/Game (USA).iso\" -f HFS"),
+            ("Extract the Mac files of every Toast image in a folder", "isoextract -i /path/to/toasts -f HFS"),
         ],
         notes = [
             "7-Zip must be installed as a JoyBox tool, and xorriso (XorrISO) for the `-e Iso` fallback.",
@@ -46,7 +48,7 @@ def build_parser():
         ],
         see_also = ["make_iso", "decompress_archives", "chdextract"],
         section = "Game ROMs & Images")
-    parser.add_input_path_argument(description = "An `.iso` file, or a directory searched recursively for them; must exist")
+    parser.add_input_path_argument(description = "An `.iso` or `.toast` file, or a directory searched recursively for them; must exist")
     parser.add_enum_argument(
         args = ("-e", "--extract_method"),
         arg_type = config.DiscExtractType,
@@ -79,7 +81,8 @@ def main():
     input_path = parser.get_input_path()
 
     # Convert disc image files
-    for file in paths.build_file_list_by_extensions(input_path, extensions = [".iso"]):
+    disc_image_extensions = [config.DiscImageFileType.ISO.cval(), config.DiscImageFileType.TOAST.cval()]
+    for file in paths.build_file_list_by_extensions(input_path, extensions = disc_image_extensions):
 
         # Get file info
         current_file = file

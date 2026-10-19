@@ -142,8 +142,8 @@ class Logger:
     def _format_message(self, message, game_supercategory, game_category, game_subcategory, game_name):
         context = format_game_context(game_supercategory, game_category, game_subcategory, game_name)
         if context:
-            return "%s %s" % (context, message)
-        return message
+            return escape_surrogates("%s %s" % (context, message))
+        return escape_surrogates(str(message))
 
     def debug(self, message, game_supercategory = None, game_category = None, game_subcategory = None, game_name = None):
         self._logger.debug(self._format_message(message, game_supercategory, game_category, game_subcategory, game_name))
@@ -166,6 +166,15 @@ class Logger:
     @property
     def log_file(self):
         return self._current_log_file
+
+# Escape surrogates
+# Undecodable filename bytes reach Python as lone surrogates, which no utf-8 handler can write
+def escape_surrogates(text):
+    try:
+        text.encode("utf-8")
+        return text
+    except UnicodeEncodeError:
+        return text.encode("utf-8", "backslashreplace").decode("utf-8")
 
 _global_logger = None
 def get_logger(name = "output"):

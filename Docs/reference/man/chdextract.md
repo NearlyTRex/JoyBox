@@ -88,4 +88,5 @@ chdextract -i /path/to/chds -f ISO
   chdman
 - [chdverify](chdverify.md) — Check CHD files against their internal SHA-1 checksums with chdman
 - [chdzip](chdzip.md) — Repack the files on each CHD disc image into a zip archive
-- [isoextract](isoextract.md) — Extract the files from ISO images into a folder beside each image
+- [isoextract](isoextract.md) — Extract the files from ISO and Toast images into a folder beside
+  each image
