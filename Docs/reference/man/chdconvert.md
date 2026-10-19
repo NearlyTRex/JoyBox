@@ -4,7 +4,7 @@
 
 [← Command index](README.md)
 
-Convert CD disc images (ISO, CUE, GDI) to CHD files with chdman.
+Convert CD disc images (ISO, CUE, GDI, Toast) to CHD files with chdman.
 
 ## Synopsis
 
@@ -16,7 +16,8 @@ chdconvert [options]
 
 Finds every disc image of the chosen types under the input path (or takes the one
 file given) and runs `chdman createcd` on it, writing `<name>.chd` next to it. For a
-`.cue` or `.gdi` sheet, chdman reads the track files the sheet lists.
+`.cue` or `.gdi` sheet, chdman reads the track files the sheet lists. A Roxio Toast
+`.toast` image holds plain 2048-byte sectors, so chdman reads it as it does an ISO.
 
 An image whose `<name>.chd` already exists is skipped.
 
@@ -27,8 +28,8 @@ An image whose `<name>.chd` already exists is skipped.
 | Option | Description |
 |--------|-------------|
 | `-i, --input_path <input_path>` | A disc image file, or a directory searched recursively for images; must exist. |
-| `-t, --disc_image_types <disc_image_types>` | Image types to convert, space separated; each selects files by its extension (`ISO` is `.iso`, `CUE` is `.cue`, and so on). Default: `ISO,CUE,GDI`. Allowed: `ISO`, `CUE`, `TOC`, `GDI`, `CHD`. |
-| `-d, --delete_originals` | Delete the image file given to chdman (the `.iso`, `.cue`, `.gdi` or `.toc` itself) once its CHD is made. |
+| `-t, --disc_image_types <disc_image_types>` | Image types to convert, space separated; each selects files by its extension (`ISO` is `.iso`, `CUE` is `.cue`, and so on). Default: `ISO,CUE,GDI,TOAST`. Allowed: `ISO`, `CUE`, `TOC`, `GDI`, `CHD`, `TOAST`. |
+| `-d, --delete_originals` | Delete the image file given to chdman (the `.iso`, `.cue`, `.gdi`, `.toc` or `.toast` itself) once its CHD is made. |
 
 ### Common options
 
@@ -41,7 +42,7 @@ An image whose `<name>.chd` already exists is skipped.
 
 ## Examples
 
-### Convert every ISO, CUE and GDI image in a folder
+### Convert every ISO, CUE, GDI and Toast image in a folder
 
 ```bash
 chdconvert -i /path/to/discs
@@ -57,6 +58,12 @@ chdconvert -i /path/to/discs -t CUE -d -p -v
 
 ```bash
 chdconvert -i /path/to/discs -t ISO GDI
+```
+
+### Convert Mac Toast images only
+
+```bash
+chdconvert -i /path/to/discs -t TOAST
 ```
 
 ## Notes

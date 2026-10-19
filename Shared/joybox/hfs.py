@@ -78,6 +78,21 @@ def get_hfs_volume_info(image_file, offset, length):
         return (embedded_offset, embed_count * allocation_block_size, mdb[0x7C:0x7E])
     return (offset, length, signature)
 
+# Find apm partition
+# Returns (start_block, block_count) of the first partition of a type, reading entries spaced entry_size apart
+def find_apm_partition(image_file, entry_size, partition_type):
+    entry_count = 1
+    index = 0
+    while index < entry_count:
+        entry = serialization.read_binary_file(image_file, offset = entry_size * (index + 1), length = 80)
+        if not entry or len(entry) < 80 or entry[0:2] != apm_entry_signature:
+            return None
+        entry_count, start_block, block_count = struct.unpack(">III", entry[4:16])
+        if entry[48:80].rstrip(b"\0") == partition_type:
+            return (start_block, block_count)
+        index += 1
+    return None
+
 # Find hfs volume
 # Returns (offset, length, signature) of the HFS or HFS+ volume in a disc image, or None
 def find_hfs_volume(image_file):
@@ -86,18 +101,18 @@ def find_hfs_volume(image_file):
         return None
 
     # Volume behind an Apple partition map
+    # CD maps often give 2048-byte blocks yet space their entries and count their partitions in 512 bytes
     if header[0:2] == apm_signature:
         block_size = struct.unpack(">H", header[2:4])[0] or apm_default_block_size
-        entry_count = 1
-        index = 0
-        while index < entry_count:
-            entry = serialization.read_binary_file(image_file, offset = block_size * (index + 1), length = 80)
-            if not entry or len(entry) < 80 or entry[0:2] != apm_entry_signature:
-                return None
-            entry_count, start_block, block_count = struct.unpack(">III", entry[4:16])
-            if entry[48:80].rstrip(b"\0") == apm_hfs_partition_type:
-                return get_hfs_volume_info(image_file, start_block * block_size, block_count * block_size)
-            index += 1
+        for entry_size in sorted({apm_default_block_size, block_size}):
+            partition = find_apm_partition(image_file, entry_size, apm_hfs_partition_type)
+            if not partition:
+                continue
+            start_block, block_count = partition
+            for unit_size in sorted({entry_size, block_size}):
+                volume_info = get_hfs_volume_info(image_file, start_block * unit_size, block_count * unit_size)
+                if volume_info:
+                    return volume_info
         return None
 
     # Bare volume, as on hybrids that lay ISO 9660 over an HFS volume without a partition map

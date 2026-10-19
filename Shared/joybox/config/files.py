@@ -8,6 +8,7 @@ class DiscImageFileType(types.EnumType):
     TOC                     = ("TOC", ".toc")
     GDI                     = ("GDI", ".gdi")
     CHD                     = ("CHD", ".chd")
+    TOAST                   = ("TOAST", ".toast")
 
 # Image types
 class ImageFileType(types.EnumType):

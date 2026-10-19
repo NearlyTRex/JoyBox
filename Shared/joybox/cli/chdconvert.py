@@ -13,17 +13,19 @@ import joybox.prompts as prompts
 # Build the argument parser
 def build_parser():
     parser = arguments.ArgumentParser(
-        description = "Convert CD disc images (ISO, CUE, GDI) to CHD files with chdman.",
+        description = "Convert CD disc images (ISO, CUE, GDI, Toast) to CHD files with chdman.",
         details = (
             "Finds every disc image of the chosen types under the input path (or takes the one\n"
             "file given) and runs `chdman createcd` on it, writing `<name>.chd` next to it. For a\n"
-            "`.cue` or `.gdi` sheet, chdman reads the track files the sheet lists.\n"
+            "`.cue` or `.gdi` sheet, chdman reads the track files the sheet lists. A Roxio Toast\n"
+            "`.toast` image holds plain 2048-byte sectors, so chdman reads it as it does an ISO.\n"
             "\n"
             "An image whose `<name>.chd` already exists is skipped."),
         examples = [
-            ("Convert every ISO, CUE and GDI image in a folder", "chdconvert -i /path/to/discs"),
+            ("Convert every ISO, CUE, GDI and Toast image in a folder", "chdconvert -i /path/to/discs"),
             ("Convert only CUE sheets and delete them afterwards, previewing first", "chdconvert -i /path/to/discs -t CUE -d -p -v"),
             ("Convert ISO and GDI images only", "chdconvert -i /path/to/discs -t ISO GDI"),
+            ("Convert Mac Toast images only", "chdconvert -i /path/to/discs -t TOAST"),
         ],
         notes = [
             "Images are always converted with `createcd`, which makes CD CHDs.",
@@ -35,10 +37,10 @@ def build_parser():
     parser.add_enum_argument(
         args = ("-t", "--disc_image_types"),
         arg_type = config.DiscImageFileType,
-        default = [config.DiscImageFileType.ISO, config.DiscImageFileType.CUE, config.DiscImageFileType.GDI],
+        default = [config.DiscImageFileType.ISO, config.DiscImageFileType.CUE, config.DiscImageFileType.GDI, config.DiscImageFileType.TOAST],
         description = "Image types to convert, space separated; each selects files by its extension (`ISO` is `.iso`, `CUE` is `.cue`, and so on)",
         allow_multiple = True)
-    parser.add_boolean_argument(args = ("-d", "--delete_originals"), description = "Delete the image file given to chdman (the `.iso`, `.cue`, `.gdi` or `.toc` itself) once its CHD is made")
+    parser.add_boolean_argument(args = ("-d", "--delete_originals"), description = "Delete the image file given to chdman (the `.iso`, `.cue`, `.gdi`, `.toc` or `.toast` itself) once its CHD is made")
     parser.add_common_arguments()
     return parser
 

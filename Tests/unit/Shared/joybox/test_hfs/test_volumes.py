@@ -37,6 +37,25 @@ def test_a_partition_map_without_a_block_size_counts_in_512_bytes(write_image):
     assert hfs.find_hfs_volume(image) == (HFS_START_BLOCK * 512, CLASSIC_VOLUME_SIZE, b"BD")
 
 
+def test_a_cd_partition_map_with_2048_byte_blocks_and_512_byte_entries_is_read(write_image):
+    # How Toast lays out a Mac-only CD, such as Aliens vs. Predator 2 (MacPlay)
+    image = write_image(make_apm_image(make_classic_volume(), block_size = 2048))
+
+    assert hfs.find_hfs_volume(image) == (HFS_START_BLOCK * 512, CLASSIC_VOLUME_SIZE, b"BD")
+
+
+def test_a_partition_map_with_entries_a_block_apart_is_read(write_image):
+    image = write_image(make_apm_image(make_classic_volume(), block_size = 2048, entry_size = 2048))
+
+    assert hfs.find_hfs_volume(image) == (HFS_START_BLOCK * 512, CLASSIC_VOLUME_SIZE, b"BD")
+
+
+def test_an_hfs_partition_without_a_volume_has_none(write_image):
+    image = write_image(make_apm_image(bytes(CLASSIC_VOLUME_SIZE)))
+
+    assert hfs.find_hfs_volume(image) is None
+
+
 def test_a_partition_map_points_at_an_hfsplus_volume(write_image):
     volume = HFSPlusBuilder().build()
     image = write_image(make_apm_image(volume))

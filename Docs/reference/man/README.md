@@ -102,7 +102,7 @@ available in the terminal as `<command> -h`.
 | Command | Description |
 |---------|-------------|
 | [3ds_rom_tool](3ds_rom_tool.md) | Convert, trim, untrim, extract or inspect Nintendo 3DS CIA and CCI (.3ds) files. |
-| [chdconvert](chdconvert.md) | Convert CD disc images (ISO, CUE, GDI) to CHD files with chdman. |
+| [chdconvert](chdconvert.md) | Convert CD disc images (ISO, CUE, GDI, Toast) to CHD files with chdman. |
 | [chdextract](chdextract.md) | Extract CD disc images from CHD files with chdman. |
 | [chdverify](chdverify.md) | Check CHD files against their internal SHA-1 checksums with chdman. |
 | [chdzip](chdzip.md) | Repack the files on each CHD disc image into a zip archive. |

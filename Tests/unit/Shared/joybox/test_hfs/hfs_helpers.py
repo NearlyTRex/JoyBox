@@ -59,11 +59,12 @@ def make_partition_entry(entry_count, start_block, block_count, partition_type):
     return entry.ljust(512, b"\0")
 
 
-def make_apm_image(volume, partition_type = b"Apple_HFS", block_size = 512):
+def make_apm_image(volume, partition_type = b"Apple_HFS", block_size = 512, entry_size = 512):
+    # Entries sit entry_size apart and count their partitions in entry_size units
     image = b"ER" + struct.pack(">H", block_size)
-    image = image.ljust(512, b"\0")
-    image += make_partition_entry(2, 1, 2, b"Apple_partition_map")
-    image += make_partition_entry(2, HFS_START_BLOCK, len(volume) // 512, partition_type)
+    image = image.ljust(entry_size, b"\0")
+    image += make_partition_entry(2, 1, 2, b"Apple_partition_map").ljust(entry_size, b"\0")
+    image += make_partition_entry(2, HFS_START_BLOCK * 512 // entry_size, len(volume) // entry_size, partition_type).ljust(entry_size, b"\0")
     return image.ljust(HFS_START_BLOCK * 512, b"\0") + volume
 
 
