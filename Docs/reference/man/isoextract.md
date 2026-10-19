@@ -25,11 +25,13 @@ With `-e Archive`, only 7-Zip is used.
 
 `-f` picks which filesystem of a hybrid Mac/PC disc to extract. `ISO` (the default)
 reads the ISO 9660 or Joliet side, which holds the Windows files. `HFS` reads the
-classic Mac HFS volume instead, found through the disc's Apple partition map or at the
+Mac HFS or HFS+ volume instead, found through the disc's Apple partition map or at the
 start of the image, and ignores `-e`. Each file's data fork is written as the file;
 when it also has a resource fork, a Finder type and creator or Finder flags, they are
 written beside it as an AppleDouble `._<name>` file, which macOS and netatalk read
-back. `/` in a Mac name becomes `:`. HFS+ volumes are not supported.
+back. `/` in a Mac name becomes `:`. On HFS+, hard links are written as copies of
+their file, symlinks stay symlinks, the journal and other volume internals are left
+out, and files stored compressed (Mac OS X 10.6 and later) are skipped with a warning.
 
 There is no confirmation prompt; the tool starts straight away.
 
@@ -83,7 +85,7 @@ isoextract -i "/path/to/Game (USA).iso" -f HFS
 ## Notes
 
 - 7-Zip must be installed as a JoyBox tool, and xorriso (XorrISO) for the `-e Iso` fallback.
-- `-f HFS` reads the volume with the machfs Python package, holding it in memory.
+- `-f HFS` reads classic HFS volumes with the machfs Python package, holding the volume in memory.
 
 ## See also
 

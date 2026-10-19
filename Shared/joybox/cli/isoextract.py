@@ -25,11 +25,13 @@ def build_parser():
             "\n"
             "`-f` picks which filesystem of a hybrid Mac/PC disc to extract. `ISO` (the default)\n"
             "reads the ISO 9660 or Joliet side, which holds the Windows files. `HFS` reads the\n"
-            "classic Mac HFS volume instead, found through the disc's Apple partition map or at the\n"
+            "Mac HFS or HFS+ volume instead, found through the disc's Apple partition map or at the\n"
             "start of the image, and ignores `-e`. Each file's data fork is written as the file;\n"
             "when it also has a resource fork, a Finder type and creator or Finder flags, they are\n"
             "written beside it as an AppleDouble `._<name>` file, which macOS and netatalk read\n"
-            "back. `/` in a Mac name becomes `:`. HFS+ volumes are not supported.\n"
+            "back. `/` in a Mac name becomes `:`. On HFS+, hard links are written as copies of\n"
+            "their file, symlinks stay symlinks, the journal and other volume internals are left\n"
+            "out, and files stored compressed (Mac OS X 10.6 and later) are skipped with a warning.\n"
             "\n"
             "There is no confirmation prompt; the tool starts straight away."),
         examples = [
@@ -40,7 +42,7 @@ def build_parser():
         ],
         notes = [
             "7-Zip must be installed as a JoyBox tool, and xorriso (XorrISO) for the `-e Iso` fallback.",
-            "`-f HFS` reads the volume with the machfs Python package, holding it in memory.",
+            "`-f HFS` reads classic HFS volumes with the machfs Python package, holding the volume in memory.",
         ],
         see_also = ["make_iso", "decompress_archives", "chdextract"],
         section = "Game ROMs & Images")
