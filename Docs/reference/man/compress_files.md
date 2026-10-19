@@ -32,7 +32,7 @@ if the file fits in one volume, it is renamed back to the plain archive name.
 | Option | Description |
 |--------|-------------|
 | `-i, --input_path <input_path>` | Directory whose files are compressed; must exist. |
-| `-a, --archive_type <archive_type>` | Archive format to create; only `ZIP` and `7Z` are supported. Default: `ZIP`. Allowed: `ZIP`, `INSTALL`, `7Z`, `RAR`, `TAR_BZ2`, `TB2`, `TBZ`, `TBZ2`, `TZ2`, `TAR_GZ`, `TAZ_GZ`, `TGZ`, `TAR_LZ`, `TAR_LZMA`, `TLZ`, `TAR_LZO`, `TAR_XZ`, `TXZ`, `TAR_Z`, `TZ`, `TAZ`, `TAR_ZST`, `TZST`, `ISO`, `EXE`, `APPIMAGE`. |
+| `-a, --archive_type <archive_type>` | Archive format to create; only `ZIP` and `7Z` are supported. Default: `ZIP`. Allowed: `ZIP`, `INSTALL`, `7Z`, `RAR`, `LZH`, `LHA`, `SIT`, `TAR_BZ2`, `TB2`, `TBZ`, `TBZ2`, `TZ2`, `TAR_GZ`, `TAZ_GZ`, `TGZ`, `TAR_LZ`, `TAR_LZMA`, `TLZ`, `TAR_LZO`, `TAR_XZ`, `TXZ`, `TAR_Z`, `TZ`, `TAZ`, `TAR_ZST`, `TZST`, `ISO`, `EXE`, `APPIMAGE`. |
 | `-w, --password <password>` | Password to encrypt the archives with; none when omitted. |
 | `-s, --volume_size <volume_size>` | Split archives into volumes of this size, in 7-Zip's `-v` format such as `100m` or `4g`; not split when omitted. |
 | `-t, --file_types <file_types>` | Comma-separated file name suffixes to compress, such as `.iso,.bin`; empty compresses every file. |

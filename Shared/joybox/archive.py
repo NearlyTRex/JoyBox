@@ -34,6 +34,10 @@ def is_archive(archive_file):
         return True
     elif is_rar_archive(archive_file):
         return True
+    elif is_lzh_archive(archive_file):
+        return True
+    elif is_stuffit_archive(archive_file):
+        return True
     elif is_tarball_archive(archive_file):
         return True
     elif is_disc_archive(archive_file):
@@ -64,6 +68,20 @@ def is_rar_archive(archive_file):
         archive_file = archive_file,
         extensions = config.ArchiveRarFileType.cvalues(),
         mime_types = config.mime_types_rar)
+
+# Determine if file is a lzh archive
+def is_lzh_archive(archive_file):
+    return is_known_archive(
+        archive_file = archive_file,
+        extensions = config.ArchiveLzhFileType.cvalues(),
+        mime_types = config.mime_types_lzh)
+
+# Determine if file is a stuffit archive
+def is_stuffit_archive(archive_file):
+    return is_known_archive(
+        archive_file = archive_file,
+        extensions = config.ArchiveStuffItFileType.cvalues(),
+        mime_types = config.mime_types_stuffit)
 
 # Determine if file is a tarball archive
 def is_tarball_archive(archive_file):
@@ -106,6 +124,10 @@ def get_archive_type(archive_file):
             return config.ArchiveFileType.SEVENZIP
         if is_rar_archive(archive_file):
             return config.ArchiveFileType.RAR
+        if is_lzh_archive(archive_file):
+            return config.ArchiveFileType.LZH
+        if is_stuffit_archive(archive_file):
+            return config.ArchiveFileType.SIT
         if is_tarball_archive(archive_file):
             return config.ArchiveFileType.TAR_GZ
         if is_disc_archive(archive_file):
@@ -127,6 +149,10 @@ def is_extractable_archive_type(archive_type):
     if archive_type in config.Archive7zFileType.members():
         return True
     if archive_type in config.ArchiveRarFileType.members():
+        return True
+    if archive_type in config.ArchiveLzhFileType.members():
+        return True
+    if archive_type in config.ArchiveStuffItFileType.members():
         return True
     if archive_type in config.ArchiveTarballFileType.members():
         return True
@@ -416,6 +442,12 @@ def extract_archive(
         if not archive_tool:
             logger.log_error("Unrar was not found")
             return False
+    elif is_stuffit_archive(archive_file):
+        if programs.is_tool_installed("Unar"):
+            archive_tool = programs.get_tool_program("Unar")
+        if not archive_tool:
+            logger.log_error("Unar was not found")
+            return False
     else:
         if programs.is_tool_installed("7-Zip"):
             archive_tool = programs.get_tool_program("7-Zip")
@@ -468,6 +500,19 @@ def extract_archive(
             archive_file,
             extract_dir + os.sep
         ]
+    elif is_stuffit_archive(archive_file):
+        extract_cmd = [
+            archive_tool,
+            "-o", extract_dir,
+            "-D"
+        ]
+        if isinstance(password, str) and len(password) > 0:
+            extract_cmd += ["-p", password]
+        if skip_existing:
+            extract_cmd += ["-s"]
+        else:
+            extract_cmd += ["-f"]
+        extract_cmd += [archive_file]
     else:
         extract_cmd = [
             archive_tool,
@@ -496,6 +541,17 @@ def extract_archive(
         exit_on_failure = exit_on_failure)
     if code != 0:
         return False
+
+    # Decode Shift-JIS names, which lzh archives store without saying so
+    if is_lzh_archive(archive_file):
+        success = fileops.decode_legacy_filenames(
+            src = extract_dir,
+            encoding = "cp932",
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if not success:
+            return False
 
     # Clean up
     if delete_original:

@@ -15,12 +15,21 @@ chdextract [options]
 ## Description
 
 Finds every `.chd` file under the input path (or takes the one file given) and runs
-`chdman extractcd` on it, writing a table of contents `<name>.cue` and the track
-data `<name>.bin` next to it. `-t` and `-b` change those two extensions; chdman
-picks the table-of-contents format from the extension, so `-t .gdi` writes a GDI
-sheet and `-t .toc` a cdrdao TOC.
+`chdman extractcd` on it, writing the disc next to it in the format `-f` picks:
 
-A CHD is skipped when either output file already exists.
+- `CUE`: a CUE sheet `<name>.cue` and the track data `<name>.bin`
+- `GDI`: a GDI sheet `<name>.gdi` and its tracks, for Dreamcast discs
+- `TOC`: a cdrdao TOC `<name>.toc` and the track data `<name>.bin`
+- `ISO`: an ISO image `<name>.iso`
+
+`-b` changes the `.bin` extension of the sheet formats.
+
+`ISO` extracts the CHD to CUE/BIN in a temporary folder and splits it with `bchunk`.
+A disc that is one 2048-byte data track (a CHD made from an ISO) is already an ISO
+and skips bchunk. A disc with more than one track keeps bchunk's numbered names
+(`<name>01.iso`, `<name>02.cdr`, ...).
+
+A CHD is skipped when any of its output files already exists.
 
 ## Options
 
@@ -29,8 +38,8 @@ A CHD is skipped when either output file already exists.
 | Option | Description |
 |--------|-------------|
 | `-i, --input_path <input_path>` | A `.chd` file, or a directory searched recursively for them; must exist. |
-| `-t, --toc_ext <toc_ext>` | Extension of the table-of-contents file, including the dot; chdman writes CUE, GDI or TOC format to match. Default: `.cue`. |
-| `-b, --bin_ext <bin_ext>` | Extension of the binary track file, including the dot. Default: `.bin`. |
+| `-f, --format <CUE\|GDI\|TOC\|ISO>` | Format to write each disc in. Default: `CUE`. Allowed: `CUE`, `GDI`, `TOC`, `ISO`. |
+| `-b, --bin_ext <bin_ext>` | Extension of the binary track file, including the dot; ignored for `ISO`. Default: `.bin`. |
 | `-d, --delete_originals` | Delete each CHD after it is extracted. |
 
 ### Common options
@@ -59,16 +68,25 @@ chdextract -i /path/to/chds -d -p -v
 ### Extract a Dreamcast CHD with a GDI sheet
 
 ```bash
-chdextract -i "/path/to/Game (USA).chd" -t .gdi
+chdextract -i "/path/to/Game (USA).chd" -f GDI
+```
+
+### Extract every CHD in a folder to ISO
+
+```bash
+chdextract -i /path/to/chds -f ISO
 ```
 
 ## Notes
 
 - chdman (MameChdman) must be installed as a JoyBox tool.
+- `ISO` also needs bchunk (Bchunk).
 
 ## See also
 
-- [chdconvert](chdconvert.md) — Convert CD disc images (ISO, CUE, GDI) to CHD files with chdman
+- [chdconvert](chdconvert.md) — Convert CD disc images (ISO, CUE, GDI, Toast) to CHD files with
+  chdman
 - [chdverify](chdverify.md) — Check CHD files against their internal SHA-1 checksums with chdman
 - [chdzip](chdzip.md) — Repack the files on each CHD disc image into a zip archive
-- [isoextract](isoextract.md) — Extract the files from ISO images into a folder beside each image
+- [isoextract](isoextract.md) — Extract the files from ISO and Toast images into a folder beside
+  each image

@@ -18,7 +18,7 @@ def tool(monkeypatch, isolated_settings, tmp_path):
     harness = CommandHarness(monkeypatch, chdconvert)
     harness.created = []
     monkeypatch.setattr(chdconvert.chd, "create_disc_chd", lambda **kwargs: harness.created.append(kwargs))
-    for name in ("one.iso", "two.cue", "two.bin", "three.gdi", "done.iso", "done.chd"):
+    for name in ("one.iso", "two.cue", "two.bin", "three.gdi", "four.toast", "done.iso", "done.chd"):
         (tmp_path / name).write_bytes(b"")
     return harness
 
@@ -30,10 +30,10 @@ def created_names(tool):
 def test_each_image_without_a_chd_is_converted(tool, tmp_path):
     tool.run("--no-preview", "-i", str(tmp_path), "-d")
 
-    assert created_names(tool) == ["one.chd", "three.chd", "two.chd"]
+    assert created_names(tool) == ["four.chd", "one.chd", "three.chd", "two.chd"]
     assert all(call["delete_original"] for call in tool.created)
     assert {call["source_iso"] for call in tool.created} == {
-        str(tmp_path / "one.iso"), str(tmp_path / "two.cue"), str(tmp_path / "three.gdi")}
+        str(tmp_path / "one.iso"), str(tmp_path / "two.cue"), str(tmp_path / "three.gdi"), str(tmp_path / "four.toast")}
 
 
 def test_only_the_selected_image_types_are_converted(tool, tmp_path):
@@ -42,13 +42,19 @@ def test_only_the_selected_image_types_are_converted(tool, tmp_path):
     assert created_names(tool) == ["two.chd"]
 
 
+def test_toast_images_can_be_converted_alone(tool, tmp_path):
+    tool.run("--no-preview", "-i", str(tmp_path), "-t", "TOAST")
+
+    assert created_names(tool) == ["four.chd"]
+
+
 def test_the_preview_describes_the_run(tool, tmp_path):
     tool.run("-i", str(tmp_path))
 
     [(title, details)] = tool.previews
     assert title == "Convert to CHD"
     assert details[0] == "Path: %s" % tmp_path
-    assert len(tool.created) == 3
+    assert len(tool.created) == 4
 
 
 def test_a_cancelled_preview_converts_nothing(tool, tmp_path):

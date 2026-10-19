@@ -27,7 +27,7 @@ Nothing is written or changed.
 | Option | Description |
 |--------|-------------|
 | `-i, --input_path <input_path>` | An archive file, or a directory searched recursively for archives; must exist. |
-| `-a, --archive_types <archive_types>` | Archive types to test, space separated; each selects files by its extension. Default: `ZIP`. Allowed: `ZIP`, `INSTALL`, `7Z`, `RAR`, `TAR_BZ2`, `TB2`, `TBZ`, `TBZ2`, `TZ2`, `TAR_GZ`, `TAZ_GZ`, `TGZ`, `TAR_LZ`, `TAR_LZMA`, `TLZ`, `TAR_LZO`, `TAR_XZ`, `TXZ`, `TAR_Z`, `TZ`, `TAZ`, `TAR_ZST`, `TZST`, `ISO`, `EXE`, `APPIMAGE`. |
+| `-a, --archive_types <archive_types>` | Archive types to test, space separated; each selects files by its extension. Default: `ZIP`. Allowed: `ZIP`, `INSTALL`, `7Z`, `RAR`, `LZH`, `LHA`, `SIT`, `TAR_BZ2`, `TB2`, `TBZ`, `TBZ2`, `TZ2`, `TAR_GZ`, `TAZ_GZ`, `TGZ`, `TAR_LZ`, `TAR_LZMA`, `TLZ`, `TAR_LZO`, `TAR_XZ`, `TXZ`, `TAR_Z`, `TZ`, `TAZ`, `TAR_ZST`, `TZST`, `ISO`, `EXE`, `APPIMAGE`. |
 
 ### Common options
 

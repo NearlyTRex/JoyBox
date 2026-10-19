@@ -1,12 +1,15 @@
 # Imports
 import os
 import os.path
+import re
 
 # Local imports
 import joybox.config as config
 import joybox.fileops as fileops
 import joybox.command as command
 import joybox.programs as programs
+import joybox.paths as paths
+import joybox.serialization as serialization
 import joybox.logger as logger
 import joybox.iso as iso
 import joybox.archive as archive
@@ -71,6 +74,8 @@ def create_disc_chd(
             exit_on_failure = exit_on_failure)
 
     # Check result
+    if pretend_run:
+        return True
     return os.path.exists(chd_file)
 
 # Extract disc chd
@@ -124,7 +129,133 @@ def extract_disc_chd(
             exit_on_failure = exit_on_failure)
 
     # Check result
+    if pretend_run:
+        return True
     return os.path.exists(binary_file)
+
+# Track types bchunk can split
+bchunk_track_types = ["MODE1/2352", "MODE2/2352", "MODE2/2336", "AUDIO"]
+
+# Track types that already hold plain 2048-byte iso sectors
+iso_track_types = ["MODE1/2048", "MODE2/2048"]
+
+# Get cue track types
+def get_cue_track_types(cue_file):
+    cue_text = serialization.read_text_file(cue_file) or ""
+    return re.findall(r"^\s*TRACK\s+\d+\s+(\S+)", cue_text, flags = re.MULTILINE | re.IGNORECASE)
+
+# Extract disc chd to iso
+def extract_disc_chd_to_iso(
+    chd_file,
+    iso_file,
+    delete_original = False,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Get tool
+    bchunk_tool = None
+    if programs.is_tool_installed("Bchunk"):
+        bchunk_tool = programs.get_tool_program("Bchunk")
+    if not bchunk_tool:
+        logger.log_error("Bchunk was not found")
+        return False
+
+    # Create temporary directory
+    tmp_dir_success, tmp_dir_result = fileops.create_temporary_directory(
+        verbose = verbose,
+        pretend_run = pretend_run)
+    if not tmp_dir_success:
+        return False
+
+    # Extract cue/bin from chd
+    tmp_basename = paths.get_filename_basename(chd_file)
+    tmp_bin = paths.join_paths(tmp_dir_result, tmp_basename + ".bin")
+    tmp_cue = paths.join_paths(tmp_dir_result, tmp_basename + config.DiscImageFileType.CUE.cval())
+    success = extract_disc_chd(
+        chd_file = chd_file,
+        binary_file = tmp_bin,
+        toc_file = tmp_cue,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    if not success:
+        fileops.remove_directory(src = tmp_dir_result, verbose = verbose, pretend_run = pretend_run)
+        return False
+
+    # A pretend run has no cue to read
+    if pretend_run:
+        return True
+
+    # A lone 2048-byte data track is already an iso; bchunk cannot read one
+    track_types = get_cue_track_types(tmp_cue)
+    tracks_dir = paths.join_paths(tmp_dir_result, "tracks")
+    fileops.make_directory(src = tracks_dir, verbose = verbose)
+    if len(track_types) == 1 and track_types[0] in iso_track_types:
+        success = fileops.move_file_or_directory(
+            src = tmp_bin,
+            dest = paths.join_paths(tracks_dir, paths.get_filename_file(iso_file)),
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)
+        if not success:
+            fileops.remove_directory(src = tmp_dir_result, verbose = verbose)
+            return False
+
+    # Split tracks with bchunk, which numbers each one (Game01.iso, Game02.cdr, ...)
+    else:
+        unsupported_types = sorted(set(track_types) - set(bchunk_track_types))
+        if not track_types or unsupported_types:
+            logger.log_error("Bchunk cannot split the tracks of %s (%s)" % (chd_file, ", ".join(unsupported_types) or "no tracks"))
+            fileops.remove_directory(src = tmp_dir_result, verbose = verbose)
+            return False
+        bchunk_cmd = [
+            bchunk_tool,
+            tmp_bin,
+            tmp_cue,
+            paths.join_paths(tracks_dir, paths.get_filename_basename(iso_file))
+        ]
+        code = command.run_returncode_command(
+            cmd = bchunk_cmd,
+            options = command.create_command_options(
+                blocking_processes = [bchunk_tool]),
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)
+        if code != 0:
+            fileops.remove_directory(src = tmp_dir_result, verbose = verbose)
+            return False
+
+    # Move tracks beside the iso, naming a lone track after the iso itself
+    track_files = sorted(paths.get_directory_contents(tracks_dir))
+    if not track_files:
+        logger.log_error("Bchunk wrote no tracks for %s" % chd_file)
+        fileops.remove_directory(src = tmp_dir_result, verbose = verbose)
+        return False
+    for track_file in track_files:
+        dest_file = iso_file
+        if len(track_files) > 1:
+            dest_file = paths.join_paths(paths.get_filename_directory(iso_file), track_file)
+        success = fileops.move_file_or_directory(
+            src = paths.join_paths(tracks_dir, track_file),
+            dest = dest_file,
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)
+        if not success:
+            fileops.remove_directory(src = tmp_dir_result, verbose = verbose)
+            return False
+
+    # Clean up
+    fileops.remove_directory(
+        src = tmp_dir_result,
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
+    if delete_original:
+        fileops.remove_file(
+            src = chd_file,
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)
+
+    # Check result
+    return True
 
 # Archive disc chd
 def archive_disc_chd(

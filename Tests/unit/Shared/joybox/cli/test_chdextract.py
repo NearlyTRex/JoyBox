@@ -16,7 +16,9 @@ from joybox.cli import chdextract
 def tool(monkeypatch, isolated_settings):
     command = CommandHarness(monkeypatch, chdextract)
     command.extract = Recorder(result = True)
+    command.extract_iso = Recorder(result = True)
     monkeypatch.setattr(chdextract.chd, "extract_disc_chd", command.extract)
+    monkeypatch.setattr(chdextract.chd, "extract_disc_chd_to_iso", command.extract_iso)
     return command
 
 
@@ -36,18 +38,38 @@ def test_only_chds_without_outputs_are_extracted(tool, discs):
     assert call["delete_original"] is False
 
 
-def test_custom_extensions_name_the_outputs(tool, discs):
-    tool.main("-i", str(discs), "--no-preview", "-t", ".gdi", "-b", ".raw", "-d")
+def test_the_format_and_bin_extension_name_the_outputs(tool, discs):
+    tool.main("-i", str(discs), "--no-preview", "-f", "GDI", "-b", ".raw", "-d")
 
     outputs = [(call["binary_file"], call["toc_file"]) for call in tool.extract.calls]
     assert (str(discs / "has_bin.raw"), str(discs / "has_bin.gdi")) in outputs
     assert all(call["delete_original"] for call in tool.extract.calls)
 
 
-def test_the_preview_shows_the_output_extensions(tool, discs):
-    tool.main("-i", str(discs))
+@pytest.mark.parametrize("extract_format", ["CUE", "GDI", "TOC", "ISO"])
+def test_the_preview_shows_the_format(tool, discs, extract_format):
+    tool.main("-i", str(discs), "-f", extract_format)
 
-    assert tool.previews == [("Extract CHD", ["Path: %s" % discs, "Output: .cue + .bin", "Delete originals: False"])]
+    assert tool.previews == [("Extract CHD", ["Path: %s" % discs, "Format: %s" % extract_format, "Delete originals: False"])]
+
+
+def test_an_unknown_format_is_rejected(tool, discs):
+    with pytest.raises(SystemExit):
+        tool.main("-i", str(discs), "--no-preview", "-f", "NRG")
+
+    assert tool.extract.calls == []
+
+
+def test_iso_mode_extracts_chds_without_an_iso(tool, tmp_path):
+    for name in ["new.chd", "has_iso.chd", "has_iso.iso", "has_track.chd", "has_track01.iso"]:
+        (tmp_path / name).write_bytes(b"")
+
+    tool.main("-i", str(tmp_path), "--no-preview", "-f", "ISO", "-d")
+
+    assert tool.extract.calls == []
+    assert [(call["chd_file"], call["iso_file"]) for call in tool.extract_iso.calls] == \
+        [(str(tmp_path / "new.chd"), str(tmp_path / "new.iso"))]
+    assert tool.extract_iso.calls[0]["delete_original"] is True
 
 
 def test_a_declined_preview_extracts_nothing(tool, discs):

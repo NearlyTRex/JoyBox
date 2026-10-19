@@ -32,6 +32,7 @@ aptget[constants.EnvironmentType.LOCAL_UBUNTU] += [
     {"id": "qdirstat", "name": "QDirStat", "description": "Disk usage statistics", "category": "Admin"},
     {"id": "thunar", "name": "Thunar", "description": "XFCE file manager", "category": "Admin"},
     {"id": "tmux", "name": "tmux", "description": "Terminal multiplexer", "category": "Admin"},
+    {"id": "unar", "name": "unar", "description": "Extract StuffIt archives", "category": "Admin"},
     {"id": "unrar", "name": "unrar", "description": "Extract RAR archives", "category": "Admin"},
     {"id": "unzip", "name": "unzip", "description": "Extract ZIP archives", "category": "Admin"},
     {"id": "zip", "name": "zip", "description": "Create ZIP archives", "category": "Admin"},

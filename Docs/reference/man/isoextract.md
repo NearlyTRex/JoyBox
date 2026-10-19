@@ -4,7 +4,7 @@
 
 [← Command index](README.md)
 
-Extract the files from ISO images into a folder beside each image.
+Extract the files from ISO and Toast images into a folder beside each image.
 
 ## Synopsis
 
@@ -14,14 +14,25 @@ isoextract [options]
 
 ## Description
 
-Finds every `.iso` file under the input path (or takes the one file given) and
-extracts it into a `<name>` folder next to it. An ISO whose `<name>` folder already
-exists is skipped.
+Finds every `.iso` and `.toast` file under the input path (or takes the one file given)
+and extracts it into a `<name>` folder next to it. An image whose `<name>` folder
+already exists is skipped. A Roxio Toast `.toast` image has the same layout as an ISO;
+Mac-only Toast discs hold no ISO 9660 side, so they need `-f HFS`.
 
 With the default `-e Iso`, 7-Zip is tried first; if it fails, xorriso extracts the
 image instead, and the extracted files are then made readable and writable by
 everyone (666 for files, 777 for folders).
 With `-e Archive`, only 7-Zip is used.
+
+`-f` picks which filesystem of a hybrid Mac/PC disc to extract. `ISO` (the default)
+reads the ISO 9660 or Joliet side, which holds the Windows files. `HFS` reads the
+Mac HFS or HFS+ volume instead, found through the disc's Apple partition map or at the
+start of the image, and ignores `-e`. Each file's data fork is written as the file;
+when it also has a resource fork, a Finder type and creator or Finder flags, they are
+written beside it as an AppleDouble `._<name>` file, which macOS and netatalk read
+back. `/` in a Mac name becomes `:`. On HFS+, hard links are written as copies of
+their file, symlinks stay symlinks, the journal and other volume internals are left
+out, and files stored compressed (Mac OS X 10.6 and later) are skipped with a warning.
 
 There is no confirmation prompt; the tool starts straight away.
 
@@ -31,8 +42,9 @@ There is no confirmation prompt; the tool starts straight away.
 
 | Option | Description |
 |--------|-------------|
-| `-i, --input_path <input_path>` | An `.iso` file, or a directory searched recursively for them; must exist. |
+| `-i, --input_path <input_path>` | An `.iso` or `.toast` file, or a directory searched recursively for them; must exist. |
 | `-e, --extract_method <Iso\|Archive>` | `Iso` tries 7-Zip and falls back to xorriso; `Archive` uses 7-Zip only. Default: `Iso`. Allowed: `Iso`, `Archive`. |
+| `-f, --filesystem <ISO\|HFS>` | Filesystem to extract from a hybrid disc: `ISO` for the ISO 9660 or Joliet side, `HFS` for the Mac side. Default: `ISO`. Allowed: `ISO`, `HFS`. |
 | `-s, --skip_existing` | With `-e Archive`, keep files that already exist in the output folder instead of overwriting them. |
 | `-d, --delete_originals` | Delete each ISO after it is extracted. |
 
@@ -65,9 +77,22 @@ isoextract -i /path/to/isos -d -p -v
 isoextract -i "/path/to/Game (USA).iso" -e Archive
 ```
 
+### Extract the Mac side of a hybrid disc
+
+```bash
+isoextract -i "/path/to/Game (USA).iso" -f HFS
+```
+
+### Extract the Mac files of every Toast image in a folder
+
+```bash
+isoextract -i /path/to/toasts -f HFS
+```
+
 ## Notes
 
 - 7-Zip must be installed as a JoyBox tool, and xorriso (XorrISO) for the `-e Iso` fallback.
+- `-f HFS` reads classic HFS volumes with the machfs Python package, holding the volume in memory.
 
 ## See also
 

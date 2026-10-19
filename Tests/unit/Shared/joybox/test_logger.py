@@ -141,6 +141,25 @@ def test_logging_accepts_a_non_string(caplog):
     assert [(record.levelname, record.getMessage()) for record in caplog.records] == [("INFO", "12345")]
 
 
+@pytest.mark.parametrize("message", [
+    "Renaming %s" % os.fsdecode(b"\x8a\xe7.png"),
+    OSError("cannot open %s" % os.fsdecode(b"\x8a\xe7.png")),
+])
+def test_undecodable_filename_bytes_are_escaped(caplog, message):
+    # Undecodable bytes arrive as lone surrogates, which no utf-8 handler can write.
+    logger.log_info(message)
+
+    [record] = caplog.records
+    assert record.getMessage().endswith("\\udc8a\\udce7.png")
+    record.getMessage().encode("utf-8")
+
+
+def test_a_game_context_message_is_escaped_too(caplog):
+    logger.log_info(os.fsdecode(b"\x8a.png"), game_name = "Game")
+
+    assert caplog.records[0].getMessage().endswith("\\udc8a.png")
+
+
 
 ###########################################################
 # Logger instances

@@ -1,6 +1,7 @@
 # Imports
 from .appimagetool import AppImageTool
 from .balenaetcher import BalenaEtcher
+from .bchunk import Bchunk
 from .brave import Brave
 from .cdecrypt import CDecrypt
 from .chrome import Chrome
@@ -58,6 +59,7 @@ from .steamless import Steamless
 from .sunshine import Sunshine
 from .tar import Tar
 from .threedsromtool import ThreeDSRomTool
+from .unar import Unar
 from .unrar import Unrar
 from .unzip import Unzip
 from .vkd3d import VKD3D
@@ -76,6 +78,7 @@ def get_tool_map():
         instances[instance.get_name()] = instance
     add_instance(AppImageTool)
     add_instance(BalenaEtcher)
+    add_instance(Bchunk)
     add_instance(Brave)
     add_instance(CDecrypt)
     add_instance(Chrome)
@@ -133,6 +136,7 @@ def get_tool_map():
     add_instance(Sunshine)
     add_instance(Tar)
     add_instance(ThreeDSRomTool)
+    add_instance(Unar)
     add_instance(Unrar)
     add_instance(Unzip)
     add_instance(VKD3D)

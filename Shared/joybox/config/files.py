@@ -8,6 +8,7 @@ class DiscImageFileType(types.EnumType):
     TOC                     = ("TOC", ".toc")
     GDI                     = ("GDI", ".gdi")
     CHD                     = ("CHD", ".chd")
+    TOAST                   = ("TOAST", ".toast")
 
 # Image types
 class ImageFileType(types.EnumType):
@@ -31,6 +32,13 @@ class ArchiveFileType(types.EnumType):
 
     # Rar
     RAR                     = ("RAR", ".rar")
+
+    # Lzh
+    LZH                     = ("LZH", ".lzh")
+    LHA                     = ("LHA", ".lha")
+
+    # StuffIt
+    SIT                     = ("SIT", ".sit")
 
     # BZip2
     TAR_BZ2                 = ("TAR_BZ2", ".tar.bz2")
@@ -88,6 +96,15 @@ class Archive7zFileType(types.EnumType):
 # Archive rar file types
 class ArchiveRarFileType(types.EnumType):
     RAR                     = (ArchiveFileType.RAR.val(), ArchiveFileType.RAR.cval())
+
+# Archive lzh file types
+class ArchiveLzhFileType(types.EnumType):
+    LZH                     = (ArchiveFileType.LZH.val(), ArchiveFileType.LZH.cval())
+    LHA                     = (ArchiveFileType.LHA.val(), ArchiveFileType.LHA.cval())
+
+# Archive stuffit file types
+class ArchiveStuffItFileType(types.EnumType):
+    SIT                     = (ArchiveFileType.SIT.val(), ArchiveFileType.SIT.cval())
 
 # Archive tarball file types
 class ArchiveTarballFileType(types.EnumType):

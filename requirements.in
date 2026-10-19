@@ -13,6 +13,8 @@ cryptography
 html-text
 libWiiPy
 lxml
+# Reads classic Mac HFS volumes for isoextract -f HFS
+machfs
 mergedeep
 mutagen
 paramiko

@@ -77,7 +77,9 @@ make_iso -i /path/to/folders -n GAMEDISC
 
 ## See also
 
-- [isoextract](isoextract.md) — Extract the files from ISO images into a folder beside each image
+- [isoextract](isoextract.md) — Extract the files from ISO and Toast images into a folder beside
+  each image
 - [compress_folders](compress_folders.md) — Compress each folder in a directory into an archive of
   its own with 7-Zip
-- [chdconvert](chdconvert.md) — Convert CD disc images (ISO, CUE, GDI) to CHD files with chdman
+- [chdconvert](chdconvert.md) — Convert CD disc images (ISO, CUE, GDI, Toast) to CHD files with
+  chdman

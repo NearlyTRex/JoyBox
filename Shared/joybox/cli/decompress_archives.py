@@ -16,19 +16,22 @@ def build_parser():
             "Finds every archive of the chosen types under the input path (or takes the one file\n"
             "given) and extracts it into a `<name>` folder next to it, or with `-s` straight into\n"
             "the directory the archive is in. Tarballs are extracted with tar, RAR archives with\n"
-            "unrar and everything else with 7-Zip.\n"
+            "unrar, StuffIt archives with unar and everything else with 7-Zip. Names in LZH\n"
+            "archives are decoded from Shift-JIS to UTF-8.\n"
             "\n"
             "Existing files in the output folder are overwritten, and an archive is extracted again\n"
             "even if its folder already exists."),
         examples = [
             ("Extract every zip in a folder", "decompress_archives -i /path/to/archives"),
             ("Extract zip, 7z and RAR archives and delete them, previewing first", "decompress_archives -i /path/to/archives -a ZIP 7Z RAR -d -p -v"),
+            ("Extract Japanese LZH archives", "decompress_archives -i /path/to/archives -a LZH LHA"),
+            ("Extract classic Mac StuffIt archives", "decompress_archives -i /path/to/archives -a SIT"),
             ("Extract a tarball next to itself", "decompress_archives -i /path/to/backup.tar.gz -a TAR_GZ -s"),
         ],
         notes = [
             "Archives are matched by extension only, e.g. `ZIP` selects `.zip` files and `TAR_GZ` selects `.tar.gz` files.",
             "`APPIMAGE` archives are refused with an error.",
-            "7-Zip must be installed as a JoyBox tool, plus tar and unrar for those formats.",
+            "7-Zip must be installed as a JoyBox tool, plus tar, unrar and unar for those formats.",
         ],
         see_also = ["compress_files", "compress_folders", "verify_archives", "isoextract"],
         section = "Files & Archives")

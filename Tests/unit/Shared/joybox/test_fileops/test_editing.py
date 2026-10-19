@@ -227,6 +227,102 @@ def test_lowercasing_reports_a_failed_rename(tmp_path, monkeypatch):
         fileops.lowercase_all_paths(str(tmp_path), exit_on_failure = True)
 
 
+def sjis_name(text):
+    # How a utf-8 filesystem hands back a name that was written as Shift-JIS bytes.
+    return os.fsdecode(text.encode("cp932"))
+
+
+def test_decoding_renames_legacy_files_and_directories(tmp_path):
+    write(tmp_path / sjis_name("顔") / sjis_name("主人公1.png"))
+    assert fileops.decode_legacy_filenames(str(tmp_path), "cp932", verbose = True)
+    assert tree(tmp_path) == {"顔", os.path.join("顔", "主人公1.png")}
+
+
+def test_decoding_leaves_utf8_names_alone(tmp_path):
+    # Names that are already utf-8 are valid cp932 too often enough to be mangled.
+    write(tmp_path / "主人公.png")
+    write(tmp_path / "plain.txt")
+    assert fileops.decode_legacy_filenames(str(tmp_path), "cp932")
+    assert tree(tmp_path) == {"主人公.png", "plain.txt"}
+
+
+def test_decoding_leaves_names_the_encoding_cannot_read(tmp_path):
+    undecodable = os.fsdecode(b"\x81\x20.bin")
+    write(tmp_path / undecodable)
+    assert fileops.decode_legacy_filenames(str(tmp_path), "cp932")
+    assert tree(tmp_path) == {undecodable}
+
+
+def test_decoding_does_not_overwrite_an_existing_name(tmp_path):
+    write(tmp_path / sjis_name("顔.png"), "legacy")
+    write(tmp_path / "顔.png", "current")
+    assert fileops.decode_legacy_filenames(str(tmp_path), "cp932")
+    assert read(tmp_path / "顔.png") == "current"
+    assert sjis_name("顔.png") in os.listdir(tmp_path)
+
+
+def split_at_backslash(text):
+    # How an extractor that reads 0x5c as a separator writes a Shift-JIS name
+    # whose second byte is 0x5c, as in 表 (0x95 0x5c).
+    return [os.fsdecode(part) for part in text.encode("cp932").split(b"\\")]
+
+
+def test_decoding_rejoins_a_name_split_at_a_backslash(tmp_path):
+    write(tmp_path / "Picture" / os.path.join(*split_at_backslash("表示.png")))
+    write(tmp_path / "Picture" / os.path.join(*split_at_backslash("表示２.png")))
+    assert fileops.decode_legacy_filenames(str(tmp_path), "cp932", verbose = True)
+    assert tree(tmp_path) == {"Picture", os.path.join("Picture", "表示.png"), os.path.join("Picture", "表示２.png")}
+
+
+def test_decoding_rejoins_a_name_split_more_than_once(tmp_path):
+    write(tmp_path / os.path.join(*split_at_backslash("表表.png")))
+    assert fileops.decode_legacy_filenames(str(tmp_path), "cp932")
+    assert tree(tmp_path) == {"表表.png"}
+
+
+def test_decoding_rejoins_a_split_directory_name(tmp_path):
+    write(tmp_path / os.path.join(*split_at_backslash("表示")) / "file.txt")
+    assert fileops.decode_legacy_filenames(str(tmp_path), "cp932")
+    assert tree(tmp_path) == {"表示", os.path.join("表示", "file.txt")}
+
+
+def test_decoding_keeps_a_complete_directory_name_as_a_directory(tmp_path):
+    write(tmp_path / sjis_name("顔") / "file.txt")
+    assert fileops.decode_legacy_filenames(str(tmp_path), "cp932")
+    assert tree(tmp_path) == {"顔", os.path.join("顔", "file.txt")}
+
+
+def test_a_name_that_is_not_in_the_encoding_is_not_split():
+    # 0x81 must be followed by a trail byte, and a space is not one, so the
+    # name is broken partway through rather than cut short at its end.
+    assert fileops.is_name_split_in_encoding(os.fsdecode(b"\x81 abc"), "cp932") is False
+
+
+def test_decoding_keeps_a_split_name_whose_rejoined_name_exists(tmp_path):
+    first, second = split_at_backslash("表示.png")
+    write(tmp_path / first / second, "split")
+    write(tmp_path / (first + "\\" + second), "whole")
+    assert fileops.decode_legacy_filenames(str(tmp_path), "cp932")
+    assert read(tmp_path / "表示.png") == "whole"
+    assert os.path.isdir(tmp_path / first)
+
+
+def test_decoding_in_a_pretend_run(tmp_path):
+    write(tmp_path / sjis_name("顔.png"))
+    first, second = split_at_backslash("表示.png")
+    write(tmp_path / first / second)
+    assert fileops.decode_legacy_filenames(str(tmp_path), "cp932", pretend_run = True)
+    assert tree(tmp_path) == {sjis_name("顔.png"), first, os.path.join(first, second)}
+
+
+def test_decoding_reports_a_failed_rename(tmp_path, monkeypatch):
+    write(tmp_path / sjis_name("顔.png"))
+    monkeypatch.setattr(os, "rename", fail)
+    assert not fileops.decode_legacy_filenames(str(tmp_path), "cp932")
+    with pytest.raises(SystemExit):
+        fileops.decode_legacy_filenames(str(tmp_path), "cp932", exit_on_failure = True)
+
+
 def test_sanitizing_filenames_honours_the_extension_filter(tmp_path):
     write(tmp_path / "Game: One.txt")
     write(tmp_path / "Game: Two.bin")

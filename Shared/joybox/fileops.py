@@ -1,5 +1,6 @@
 # Imports
 import os
+import codecs
 import stat
 import time
 import shutil
@@ -195,6 +196,84 @@ def lowercase_all_paths(src, verbose = False, pretend_run = False, exit_on_failu
             runtime.quit_program()
         return False
 
+# Determine if a name stops partway through a character of a legacy encoding
+def is_name_split_in_encoding(name, encoding):
+    try:
+        name.encode("utf-8")
+        return False
+    except UnicodeEncodeError:
+        pass
+    decoder = codecs.getincrementaldecoder(encoding)()
+    try:
+        decoder.decode(os.fsencode(name), final = False)
+    except UnicodeDecodeError:
+        return False
+    try:
+        decoder.decode(b"", final = True)
+        return False
+    except UnicodeDecodeError:
+        return True
+
+# Decode names that are not utf-8 from a legacy encoding
+def decode_legacy_filenames(src, encoding, verbose = False, pretend_run = False, exit_on_failure = False):
+    try:
+        if verbose:
+            logger.log_info("Decoding %s paths in directory %s" % (encoding, src))
+
+        # Rejoin names split where a character's second byte was read as a backslash
+        def rejoin_split_names(root):
+            for name in sorted(os.listdir(root)):
+                path = os.path.join(root, name)
+                if not os.path.isdir(path) or os.path.islink(path):
+                    continue
+                if is_name_split_in_encoding(name, encoding):
+                    for child in os.listdir(path):
+                        after = os.path.join(root, name + "\\" + child)
+                        if os.path.exists(after):
+                            continue
+                        if verbose:
+                            logger.log_info("Rejoining %s to %s" % (os.path.join(path, child), after))
+                        if not pretend_run:
+                            os.rename(os.path.join(path, child), after)
+                    if not pretend_run and not os.listdir(path):
+                        os.rmdir(path)
+                        rejoin_split_names(root)
+                        return
+                    continue
+                rejoin_split_names(path)
+        rejoin_split_names(src)
+
+        # Decode each name
+        def on_found_items(root, items):
+            for name in items:
+                try:
+                    name.encode("utf-8")
+                    continue
+                except UnicodeEncodeError:
+                    pass
+                try:
+                    decoded_name = os.fsencode(name).decode(encoding)
+                except UnicodeDecodeError:
+                    continue
+                before = os.path.join(root, name)
+                after = os.path.join(root, decoded_name)
+                if os.path.exists(after):
+                    continue
+                if verbose:
+                    logger.log_info("Renaming %s to %s" % (before, after))
+                if not pretend_run:
+                    os.rename(before, after)
+        for root, dirs, files in os.walk(src, topdown = False):
+            on_found_items(root, dirs)
+            on_found_items(root, files)
+        return True
+    except Exception as e:
+        if exit_on_failure:
+            logger.log_error("Unable to decode paths in directory %s" % src)
+            logger.log_error(e)
+            runtime.quit_program()
+        return False
+
 # Sanitize filenames
 def sanitize_filenames(path, extension = None, verbose = False, pretend_run = False, exit_on_failure = False):
     for obj in paths.get_directory_contents(path):
@@ -282,6 +361,21 @@ def chmod_file_or_directory(src, perms, dperms = None, verbose = False, pretend_
     except Exception as e:
         if exit_on_failure:
             logger.log_error("Unable to change permissions of %s to %s" % (src, str(perms)))
+            logger.log_error(e)
+            runtime.quit_program()
+        return False
+
+# Set file modified time
+def set_file_modified_time(src, timestamp, verbose = False, pretend_run = False, exit_on_failure = False):
+    try:
+        if verbose:
+            logger.log_info("Setting modified time of %s to %s" % (src, str(timestamp)))
+        if not pretend_run:
+            os.utime(src, (timestamp, timestamp))
+        return True
+    except Exception as e:
+        if exit_on_failure:
+            logger.log_error("Unable to set modified time of %s" % src)
             logger.log_error(e)
             runtime.quit_program()
         return False
