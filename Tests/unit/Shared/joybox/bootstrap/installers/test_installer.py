@@ -241,3 +241,10 @@ def test_a_failed_install_script_is_removed_and_reported():
     assert base.install_from_script("https://example.test/install.sh", "x_install.sh") is False
     assert connection.ran("sh /tmp/x_install.sh")
     assert connection.removed_paths == ["/tmp/x_install.sh"]
+
+
+def test_an_install_script_gets_its_arguments():
+    base, connection = build()
+
+    assert base.install_from_script("https://example.test/install.sh", "x_install.sh", args = ["-y"]) is True
+    assert connection.ran("sh /tmp/x_install.sh -y")

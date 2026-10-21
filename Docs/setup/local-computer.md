@@ -145,6 +145,7 @@ python3 bootstrap.py -t local_ubuntu --list-components
 | `ollama_tunnel` | SSH tunnel to the LLM server's API, kept up as a user service |
 | `onepassword` | 1Password |
 | `pidgin` | AIM/ICQ plugins for Pidgin, built from the last release that had them |
+| `rust` | Current stable Rust and cargo from rustup (not apt's older `cargo`), the `x86_64-pc-windows-msvc` target, and cargo-xwin + xwin for MSVC builds (`cargo xwin build --target x86_64-pc-windows-msvc`) |
 | `steam` | Steam gaming platform |
 | `sysctl` | Kernel sysctl tweaks |
 | `udev` | USB device rules, and virtual-controller access for Sunshine |

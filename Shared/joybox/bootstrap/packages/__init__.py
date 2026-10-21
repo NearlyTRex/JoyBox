@@ -1,6 +1,9 @@
 # Imports
 from joybox.bootstrap.packages.aptget import (
     aptget as aptget)
+from joybox.bootstrap.packages.cargo import (
+    cargo as cargo,
+    rust_targets as rust_targets)
 from joybox.bootstrap.packages.flatpak import (
     flatpak as flatpak)
 from joybox.bootstrap.packages.images import (
