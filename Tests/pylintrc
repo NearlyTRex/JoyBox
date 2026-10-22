@@ -1,4 +1,4 @@
-# Pylint for the tests; Tests/unit/meta/test_pylint.py runs it and fails on any message.
+# Pylint for the tests; pytest-testrex's meta suite runs it and fails on any message.
 #
 # The library is linted by ruff. Tests get pylint's deeper checks too (fakes
 # whose calls no longer match the real signature, names a fixture never sets,
