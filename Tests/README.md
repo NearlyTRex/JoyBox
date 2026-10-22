@@ -5,13 +5,9 @@ Mirrors the repo layout: `unit/` and `integration/`, each containing `Bootstrap`
 
 ## Running
 
-The `shell_sandbox` and shell coverage plugins come from
-[NearlyTRex/Workflows](https://github.com/NearlyTRex/Workflows)' `actions/shell-coverage`,
-which CI loads for you. Locally, put a checkout of it on `PYTHONPATH`:
-
-```bash
-export PYTHONPATH=~/Repositories/Workflows/actions/shell-coverage
-```
+The meta suite, the hermetic seal, `requires_binary`, and the `shell_sandbox` and
+shell coverage plugins come from [pytest-testrex](https://github.com/NearlyTRex/TestRex),
+which `requirements-dev.txt` installs and pytest loads by itself.
 
 ```bash
 # Everything, from the repo root
@@ -40,13 +36,12 @@ the most, and the functions no test runs. `coverage_tool report -m <module>`
 details one module; see [its page](../Docs/reference/man/coverage_tool.md).
 
 The shell under `Bootstrap/` and `install.sh` is measured separately, since
-coverage.py never sees it, by the library's `pytest_shell_cov` plugin. CI holds
+coverage.py never sees it, by pytest-testrex's shell coverage plugin. CI holds
 it at 100%, counting the right-hand side of every `&&` and `||` as a statement of
 its own, so an error handler needs a test where its command fails. To run it
-locally, install the parser the plugin reads scripts with, then:
+locally:
 
 ```bash
-pip install --require-hashes --no-deps -r ~/Repositories/Workflows/actions/shell-coverage/requirements.txt
 pytest -c Tests/pytest.ini --rootdir=. Tests/unit \
     --shell-cov-source Bootstrap --shell-cov-source install.sh --shell-cov-branch --shell-cov-report
 ```
@@ -189,33 +184,37 @@ logs and previews; `Recorder` fakes a call; `assert_entry_points` checks `run()`
 
 ## The meta suite
 
-`unit/meta/` holds every file under `unit/` and `integration/` to the
-conventions above, statically, so a test that can't fail is caught when it is
-written. Each rule is also run against a sample that breaks it, so the rules
-themselves can fail.
+`unit/meta/test_testrex.py` runs [pytest-testrex](https://github.com/NearlyTRex/TestRex)'s
+meta suite, configured in `pyproject.toml`'s `[tool.testrex]`. It holds every file under
+`unit/` and `integration/` to the conventions above, statically, so a test that can't fail
+is caught when it is written:
 
-- `test_test_quality.py`: a test that asserts nothing; checks that sit only
-  inside an `if`, loop or `try` and may never run; `except ...: pass`; an
-  assertion true by construction; a test whose only checks are `is not None`
-  or `isinstance`; a helper pasted into several files (share it from the
-  nearest `conftest.py` or a `*_helpers.py`). A check is an `assert`, an
-  `assert_*` call, `pytest.fail`, a `pytest.raises` block, or a call to a
-  helper that makes one, followed into the `*_helpers.py` it came from.
-- `test_binary_requirements.py`: the `requires_binary` / `requires_tool`
-  rules above, through any depth of fixtures.
-- `test_file_hygiene.py`: duplicate tests, helpers and constants, imports
-  below the header, and the 900 line limit.
-- `test_layout.py`: every directory mirrors one in the repository, and a split
-  `test_<module>/` package covers a real module and holds only collectable tests.
-- `test_pylint.py`: pylint with `Tests/pylintrc` over every test file; any
-  message fails. The rcfile only turns off pytest idioms and the repository's
-  own conventions.
-- `test_signatures.py`: an override in `Shared/joybox` keeps every parameter of
-  the method it overrides, so a call through the base class works on every
-  subclass.
+- **Quality:** a test that asserts nothing; checks that sit only inside an `if`, loop or
+  `try` and may never run; `except ...: pass`; an assertion true by construction; a test
+  whose only checks are `is not None` or `isinstance`; a helper pasted into several files
+  (share it from the nearest `conftest.py` or a `*_helpers.py`).
+- **Programs:** the `requires_binary` / `requires_tool` rules above, through any depth of
+  fixtures. `requires_tool` is checked against the tool registry by the
+  `pytest_testrex_requirement_checkers` hook in `conftest.py`.
+- **Hygiene:** duplicate tests, helpers and constants, imports below the header, and the
+  900 line limit.
+- **Layout:** every directory mirrors one in the repository, and a split `test_<module>/`
+  package covers a real module and holds only collectable tests.
+- **Pylint:** `Tests/pylintrc` over every test file; any message fails.
+- **Signatures:** an override in `joybox` keeps every parameter of the method it
+  overrides, so a call through the base class works on every subclass.
 
 There are no exemption lists to add to: when a rule trips, fix the test, or the
 source when the test found a bug.
+
+It also holds `Shared/` and `Scripts/` to the library standards: a comment above every
+public definition that says more than its name, in at most three lines; file, JSON and
+subprocess work through `fileops`, `serialization` and `command`; no printing or exiting
+outside `cli/`; and no mutable defaults, narration, commented-out code, functions past 40
+lines or three levels of nesting, or modules past 900 lines. The library had findings
+under most of these when they were adopted, so `[tool.testrex.baseline]` records how many
+each rule may have. A fix fails the suite until its baseline is lowered to match, so the
+counts only fall; a new finding anywhere fails it at once.
 
 ## Known gaps
 

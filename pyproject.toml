@@ -122,6 +122,74 @@ patch = ["subprocess"]
 [tool.coverage.report]
 skip_covered = true
 
+[tool.testrex]
+# The meta suite and the hermetic seal, from pytest-testrex; see Tests/README.md
+min_test_files = 500
+requirement_markers = ["requires_tool"]
+# Raise privileges, read the password manager, reach another machine, or change
+# this one's services and VMs
+sealed_programs = [
+    "sudo", "su", "pkexec", "doas",
+    "op",
+    "ssh", "scp", "sftp", "sshfs", "ssh-copy-id", "sshpass",
+    "virsh", "virt-install", "qemu-system-x86_64",
+    "systemctl", "apt", "apt-get", "ufw", "iptables", "mkcert",
+    "useradd", "usermod", "groupadd", "adduser",
+]
+pylint_rcfile = "Tests/pylintrc"
+signature_packages = ["joybox"]
+library_targets = ["Shared", "Scripts"]
+# A comment above every public definition, saying more than its name, in at most three lines
+doc_style = "comment"
+doc_max_lines = 3
+command_paths = ["Shared/joybox/cli", "Scripts"]
+standards = [
+    "no-print", "no-exit", "mutable-defaults", "bare-except", "import-time-io",
+    "no-narration", "commented-out-code", "long-functions", "long-modules",
+]
+# The helpers carry verbose logging, pretend_run and exit_on_failure, which raw calls skip
+wrapper_modules = [
+    "Shared/joybox/fileops.py", "Shared/joybox/serialization.py",
+    "Shared/joybox/command.py", "Shared/joybox/commandbase.py",
+]
+
+[tool.testrex.wrappers]
+"open" = "joybox.serialization (read_text_file, write_text_file) or fileops.open_private_file"
+"os.makedirs" = "joybox.fileops.make_directory"
+"os.mkdir" = "joybox.fileops.make_directory"
+"os.remove" = "joybox.fileops.remove_file"
+"os.unlink" = "joybox.fileops.remove_file"
+"os.rename" = "joybox.fileops.move_file_or_directory"
+"os.symlink" = "joybox.fileops.create_symlink"
+"os.chmod" = "joybox.fileops.chmod_file_or_directory"
+"shutil.rmtree" = "joybox.fileops.remove_directory"
+"shutil.copy" = "joybox.fileops.copy_file_or_directory"
+"shutil.copy2" = "joybox.fileops.copy_file_or_directory"
+"shutil.copyfile" = "joybox.fileops.copy_file_or_directory"
+"shutil.copytree" = "joybox.fileops.copy_file_or_directory"
+"shutil.move" = "joybox.fileops.move_file_or_directory"
+"json.load" = "joybox.serialization.read_json_file"
+"json.dump" = "joybox.serialization.write_json_file"
+"json.loads" = "joybox.serialization.parse_json_string"
+"subprocess.run" = "joybox.command"
+"subprocess.Popen" = "joybox.command"
+"subprocess.check_output" = "joybox.command"
+"subprocess.call" = "joybox.command"
+
+[tool.testrex.baseline]
+# Findings the library had when each rule was adopted; lowered as they are fixed, never raised
+documented = 803
+doc-length = 41
+doc-paraphrase = 1693
+wrappers = 83
+no-print = 8
+no-exit = 4
+mutable-defaults = 120
+no-narration = 1
+commented-out-code = 2
+long-functions = 664
+long-modules = 13
+
 [tool.ruff.lint]
 # The Workflows library's default set, pinned here so a library change is a
 # deliberate change in this repo, plus rules whose findings are usually bugs
