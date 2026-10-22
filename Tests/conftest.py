@@ -42,91 +42,19 @@ def check_rootdir(config):
             config.rootpath, REPO_ROOT), returncode = 2)
 
 ###########################################################
-# The seal
+# The session
 #
-# Applied when the session starts, before any test module is imported, so it
+# Set up when the session starts, before any test module is imported, so it
 # covers collection as well as the tests: a module that builds something at
-# import time reads settings and may start programs before any fixture runs.
-# From here on HOME is a scratch directory, the settings file is a generated
-# default with no secret references, and the programs below are refused.
+# import time reads settings before any fixture runs. From here on HOME is a
+# scratch directory and the settings file a generated default with no secret
+# references. pytest-testrex seals the programs in [tool.testrex]
+# sealed_programs, and closes outbound network, from the same moment.
 ###########################################################
-
-# Programs a test must never start for real: they raise privileges, read the
-# password manager, reach another machine, or change this one's services and VMs
-SEALED_PROGRAMS = {
-    "sudo", "su", "pkexec", "doas",
-    "op",
-    "ssh", "scp", "sftp", "sshfs", "ssh-copy-id", "sshpass",
-    "virsh", "virt-install", "qemu-system-x86_64",
-    "systemctl", "apt", "apt-get", "ufw", "iptables", "mkcert",
-    "useradd", "usermod", "groupadd", "adduser",
-}
-
-_unsealed = {}
-
-
-def get_program_name(args, shell = False):
-    import shlex
-    if isinstance(args, (str, bytes)):
-        text = args.decode() if isinstance(args, bytes) else args
-        tokens = shlex.split(text) if text.strip() else []
-    else:
-        tokens = [str(arg) for arg in args]
-    for token in tokens:
-        # Leading VAR=value assignments in a shell string are not the program
-        if shell and "=" in token and not token.startswith(("/", ".")):
-            continue
-        return os.path.basename(token)
-    return ""
-
-
-def check_sealed(args, shell = False):
-    program = get_program_name(args, shell = shell)
-    if program in SEALED_PROGRAMS:
-        raise RuntimeError(
-            "tests may not run %s for real; replace the connection or "
-            "command runner with a fake" % program)
-
-
-def seal_programs():
-    import subprocess
-
-    class SealedPopen(subprocess.Popen):
-        def __init__(self, args, *rest, **kwargs):
-            check_sealed(args, shell = kwargs.get("shell", False))
-            super().__init__(args, *rest, **kwargs)
-
-    _unsealed["Popen"] = subprocess.Popen
-    _unsealed["system"] = os.system
-    subprocess.Popen = SealedPopen
-
-    def sealed_system(command):
-        check_sealed(command, shell = True)
-        return _unsealed["system"](command)
-    os.system = sealed_system
-
-    for name in ["execv", "execve", "execvp", "execvpe", "execl", "execlp"]:
-        original = getattr(os, name)
-        _unsealed[name] = original
-        def sealed_exec(path, *rest, original = original):
-            check_sealed([path])
-            return original(path, *rest)
-        setattr(os, name, sealed_exec)
-
-
-def unseal_programs():
-    import subprocess
-    if "Popen" in _unsealed:
-        subprocess.Popen = _unsealed.pop("Popen")
-    for name, original in list(_unsealed.items()):
-        setattr(os, name, original)
-    _unsealed.clear()
-
 
 def pytest_configure(config):
     import tempfile
     check_rootdir(config)
-    seal_programs()
     scratch = tempfile.mkdtemp(prefix = "joybox-tests-")
     config.joybox_scratch = scratch
     if not os.environ.get("JOYBOX_TESTS_REAL_HOME"):
@@ -142,7 +70,6 @@ def pytest_configure(config):
 
 def pytest_unconfigure(config):
     import shutil
-    unseal_programs()
     home = getattr(config, "joybox_home", None)
     if home:
         for name, value in zip(["HOME", "USERPROFILE"], home, strict = True):
@@ -205,26 +132,6 @@ def session_logger(session_home):
     from joybox import logger
 
     return logger.get_logger()
-
-
-@pytest.fixture(autouse = True)
-def no_outbound_network(monkeypatch, request):
-    # A test that quietly reaches the internet passes on a connected machine
-    # and fails in CI, and its result depends on a third party. Subprocess
-    # based tests are unaffected; this only closes the in-process path.
-    import socket
-
-    if request.node.get_closest_marker("allow_network"):
-        return
-
-    def refuse(*args, **kwargs):
-        raise RuntimeError(
-            "outbound network access is not available to tests; "
-            "mark the test with @pytest.mark.allow_network if it truly needs it")
-
-    monkeypatch.setattr(socket.socket, "connect", refuse)
-    monkeypatch.setattr(socket.socket, "connect_ex", refuse)
-    monkeypatch.setattr(socket, "create_connection", refuse)
 
 
 @pytest.fixture(scope = "session")
@@ -363,15 +270,11 @@ def recording_command(monkeypatch):
 #     @pytest.mark.requires_binary("gpg", "xorriso|mkisofs") # "a|b": either
 #     @pytest.mark.requires_tool("XorrISO")                  # from the JoyBox tool registry
 #
-# Both are enforced while the tests are collected, so a machine without the
-# program skips the test before any of its fixtures start. Tests/unit/meta
-# holds every test file to declaring them this way.
+# pytest-testrex enforces both while the tests are collected, so a machine
+# without the program skips the test before any of its fixtures start;
+# requires_tool through the hook below. Its meta suite holds every test file
+# to declaring them this way.
 ###########################################################
-
-def find_missing_binaries(names):
-    import shutil
-    return [name for name in names if not any(shutil.which(option) for option in name.split("|"))]
-
 
 def is_tool_installed(name):
     from joybox import programs
@@ -382,13 +285,8 @@ def is_tool_installed(name):
 
 
 def find_missing_tools(names):
-    return [name for name in names if not is_tool_installed(name)]
+    return ["%s (JoyBox tool)" % name for name in names if not is_tool_installed(name)]
 
 
-def pytest_collection_modifyitems(config, items):
-    for item in items:
-        binaries = [name for marker in item.iter_markers("requires_binary") for name in marker.args]
-        tools = [name for marker in item.iter_markers("requires_tool") for name in marker.args]
-        missing = find_missing_binaries(binaries) + ["%s (JoyBox tool)" % name for name in find_missing_tools(tools)]
-        if missing:
-            item.add_marker(pytest.mark.skip(reason = "%s not installed" % ", ".join(missing)))
+def pytest_testrex_requirement_checkers(config):
+    return {"requires_tool": find_missing_tools}
