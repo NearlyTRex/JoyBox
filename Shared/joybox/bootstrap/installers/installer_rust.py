@@ -35,26 +35,33 @@ class Rust(installer.Installer):
         self.rustup_tool = os.path.join(self.cargo_bin_dir, "rustup")
         self.cargo_tool = os.path.join(self.cargo_bin_dir, "cargo")
 
+    # Only the local Ubuntu workstation builds Rust
     def get_supported_environments(self):
         return [
             constants.EnvironmentType.LOCAL_UBUNTU,
         ]
 
+    # Crates to cargo install for this environment
     def get_packages(self):
         return packages.cargo.get(self.get_environment_type(), [])
 
+    # Extra rustup compile targets, like x86_64-pc-windows-msvc for cargo-xwin
     def get_targets(self):
         return packages.rust_targets.get(self.get_environment_type(), [])
 
+    # Whether rustup has put cargo in ~/.cargo/bin
     def is_toolchain_installed(self):
         return self.connection.does_file_or_directory_exist(self.cargo_tool)
 
+    # Whether a crate's binary is in ~/.cargo/bin
     def is_package_installed(self, binary):
         return self.connection.does_file_or_directory_exist(os.path.join(self.cargo_bin_dir, binary))
 
+    # Target triples rustup reports as installed
     def get_installed_targets(self):
         return self.connection.run_output([self.rustup_tool, "target", "list", "--installed"]).split()
 
+    # Installed only once the toolchain, every target and every crate are present
     def is_installed(self):
         if not self.is_toolchain_installed():
             return False
@@ -67,6 +74,7 @@ class Rust(installer.Installer):
                 return False
         return True
 
+    # The toolchain, targets and crates, split into installed and missing names
     def get_package_status(self):
         installed = []
         missing = []
@@ -90,6 +98,7 @@ class Rust(installer.Installer):
                 missing.append(pkg_info["name"])
         return {"installed": installed, "missing": missing}
 
+    # Install or update the stable toolchain, then add missing targets and crates
     def install(self):
 
         # Install the stable toolchain from rustup (installs to ~/.cargo, adds it to PATH)
@@ -131,6 +140,7 @@ class Rust(installer.Installer):
         logger.log_info("Rust installed successfully")
         return True
 
+    # Remove the toolchain with rustup self uninstall, taking its crates with it
     def uninstall(self):
 
         # Start uninstall
