@@ -81,6 +81,10 @@ from joybox.bootstrap.installers.installer_python import (
     get_requirement_name as get_requirement_name,
     get_requirement_names as get_requirement_names,
     Python as Python)
+from joybox.bootstrap.installers.installer_rust import (
+    get_cargo_package_id as get_cargo_package_id,
+    get_cargo_package_info as get_cargo_package_info,
+    Rust as Rust)
 from joybox.bootstrap.installers.installer_sdl3 import (
     Sdl3 as Sdl3)
 from joybox.bootstrap.installers.installer_steam import (

@@ -152,12 +152,12 @@ class Installer:
         logger.log_info(f"No restore implemented for {self.__class__.__name__}")
         return True
 
-    def install_from_script(self, url, tmp_name, runner = "sh"):
+    def install_from_script(self, url, tmp_name, runner = "sh", args = None):
         tmp_path = f"/tmp/{tmp_name}"
         logger.log_info(f"Downloading installer from {url}")
         self.connection.download_file(url, tmp_path)
         logger.log_info("Running installer script")
-        code = self.connection.run_blocking([runner, tmp_path])
+        code = self.connection.run_blocking([runner, tmp_path] + list(args or []))
         self.connection.remove_file_or_directory(tmp_path)
         if code != 0:
             logger.log_error(f"Installer script failed (exit {code}): {url}")

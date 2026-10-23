@@ -8,7 +8,7 @@ The `dotfiles` component manages your shell config **non-destructively**:
   `functions.sh`, `completions.sh`).
 - It injects a single marker-delimited block into `~/.bashrc` / `~/.bash_profile` that
   sources those files. Everything outside the block (your own edits, things added by other
-  installers such as the `deno` line) is left untouched:
+  installers such as the `deno` and rustup `.cargo/env` lines) is left untouched:
 
   ```bash
   # >>> JOYBOX MANAGED BLOCK >>>
