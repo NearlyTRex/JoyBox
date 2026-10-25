@@ -141,6 +141,7 @@ python3 bootstrap.py -t local_ubuntu --list-components
 | `gh` | GitHub CLI |
 | `gitkraken` | GitKraken |
 | `hermes` | Hermes Agent |
+| `llvm` | Current stable LLVM from apt.llvm.org beside the distribution's clang: `clang++-23`, clang-tidy, clang-format, lld, llvm-cov and libc++ |
 | `ollama` | Ollama local LLM runtime |
 | `ollama_tunnel` | SSH tunnel to the LLM server's API, kept up as a user service |
 | `onepassword` | 1Password |

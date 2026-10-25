@@ -54,6 +54,8 @@ from joybox.bootstrap.installers.installer_kanboard import (
     Kanboard as Kanboard)
 from joybox.bootstrap.installers.installer_llamacpp import (
     LlamaCpp as LlamaCpp)
+from joybox.bootstrap.installers.installer_llvm import (
+    Llvm as Llvm)
 from joybox.bootstrap.installers.installer_navidrome import (
     Navidrome as Navidrome)
 from joybox.bootstrap.installers.installer_nginx import (
