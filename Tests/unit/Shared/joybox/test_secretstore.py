@@ -1,4 +1,5 @@
 # Imports
+import json
 import os
 import subprocess
 
@@ -327,3 +328,202 @@ def test_a_non_executable_tool_is_not_found(monkeypatch, tmp_path):
     monkeypatch.setenv("PATH", str(tmp_path))
 
     assert secretstore.get_secret_tool() is None
+
+
+###########################################################
+# Storing
+#
+# A tool that signs in somewhere writes what it got back into the field its
+# setting references. The item is read and written back whole, so every
+# other field has to come through unchanged, and the value has to travel on
+# standard input, never the command line, where other processes can read it.
+###########################################################
+
+STORED_REFERENCE = "op://Personal/JoyBox/UserData.Share/locker_gdrive_config"
+STORED_VALUE = "fresh-options"
+
+
+def make_item(fields = None, sections = None):
+    item = {"id": "itemid", "vault": {"id": "vaultid"}, "fields": fields or []}
+    if sections is not None:
+        item["sections"] = sections
+    return item
+
+
+class FakeVault:
+
+    # Answers item get with its item and records each item edit
+    def __init__(self, monkeypatch, item, get_result = None, edit_result = None):
+        self.item = item
+        self.get_result = get_result
+        self.edit_result = edit_result
+        self.calls = []
+        self.edited = None
+        monkeypatch.setattr(secretstore, "get_secret_tool", lambda: "/usr/bin/op")
+        monkeypatch.setattr(secretstore.subprocess, "run", self.run)
+
+    def run(self, cmd, **kwargs):
+        self.calls.append((list(cmd), kwargs))
+        if cmd[2] == "get":
+            return self.get_result or FakeResult(stdout = json.dumps(self.item))
+        self.edited = json.loads(kwargs["input"])
+        return self.edit_result or FakeResult()
+
+
+@pytest.mark.parametrize("reference, expected", [
+    (STORED_REFERENCE, ("Personal", "JoyBox", "UserData.Share", "locker_gdrive_config")),
+    ("op://Personal/JoyBox/field", ("Personal", "JoyBox", None, "field")),
+    (" op://Personal/JoyBox/field ", ("Personal", "JoyBox", None, "field")),
+])
+def test_a_reference_splits_into_its_parts(reference, expected):
+    assert secretstore.parse_secret_reference(reference) == expected
+
+
+@pytest.mark.parametrize("reference", [
+    "plain", None, "op://Personal/JoyBox", "op://Personal//field", "op://a/b/c/d/e",
+])
+def test_anything_but_a_reference_to_one_field_does_not_split(reference):
+    assert secretstore.parse_secret_reference(reference) is None
+
+
+def test_an_existing_field_gets_the_value_and_everything_else_is_kept(monkeypatch, recorded_logs):
+    other = {"id": "pw", "label": "password", "type": "CONCEALED", "value": "keep"}
+    target = {"id": "f1", "label": "locker_gdrive_config", "type": "CONCEALED",
+              "value": "old", "section": {"id": "s1", "label": "UserData.Share"}}
+    vault = FakeVault(monkeypatch, make_item([other, target], [{"id": "s1", "label": "UserData.Share"}]))
+
+    assert secretstore.store_secret_reference(STORED_REFERENCE, STORED_VALUE) is True
+    assert vault.edited["fields"][0] == other
+    assert vault.edited["fields"][1]["value"] == STORED_VALUE
+    assert vault.edited["fields"][1]["id"] == "f1"
+
+
+def test_the_item_is_read_with_its_values(monkeypatch, recorded_logs):
+    # Read concealed, every secret on the item would be written back blank
+    vault = FakeVault(monkeypatch, make_item())
+    secretstore.store_secret_reference(STORED_REFERENCE, STORED_VALUE)
+
+    assert "--reveal" in vault.calls[0][0]
+    assert vault.calls[0][1]["stdin"] is subprocess.DEVNULL
+
+
+def test_the_value_travels_on_standard_input(monkeypatch, recorded_logs):
+    vault = FakeVault(monkeypatch, make_item())
+    secretstore.store_secret_reference(STORED_REFERENCE, STORED_VALUE)
+    edit_cmd, edit_kwargs = vault.calls[1]
+
+    assert edit_cmd == ["/usr/bin/op", "item", "edit", "itemid", "--vault", "vaultid"]
+    assert STORED_VALUE in edit_kwargs["input"]
+    assert not any(STORED_VALUE in part for part in edit_cmd)
+
+
+def test_a_missing_field_is_added_concealed_in_a_new_section(monkeypatch, recorded_logs):
+    vault = FakeVault(monkeypatch, {"id": "itemid"})
+    secretstore.store_secret_reference(STORED_REFERENCE, STORED_VALUE)
+    field = vault.edited["fields"][0]
+    section = vault.edited["sections"][0]
+
+    assert field["type"] == "CONCEALED"
+    assert field["label"] == "locker_gdrive_config"
+    assert section["label"] == "UserData.Share"
+    assert field["section"] == {"id": section["id"]}
+    assert vault.calls[1][0][-1] == "Personal"
+
+
+def test_a_missing_field_joins_the_section_already_there(monkeypatch, recorded_logs):
+    vault = FakeVault(monkeypatch, make_item(sections = [{"id": "s1", "label": "UserData.Share"}]))
+    secretstore.store_secret_reference(STORED_REFERENCE, STORED_VALUE)
+
+    assert vault.edited["fields"][0]["section"] == {"id": "s1"}
+    assert len(vault.edited["sections"]) == 1
+
+
+def test_a_reference_without_a_section_adds_a_field_outside_any(monkeypatch, recorded_logs):
+    vault = FakeVault(monkeypatch, make_item())
+    secretstore.store_secret_reference("op://Personal/JoyBox/field", STORED_VALUE)
+
+    assert "section" not in vault.edited["fields"][0]
+    assert "sections" not in vault.edited
+
+
+@pytest.mark.parametrize("field, matches", [
+    ({"id": "f", "label": "other"}, False),
+    ({"id": "locker_gdrive_config", "label": "renamed", "section": {"id": "UserData.Share"}}, True),
+    ({"id": "f", "label": "locker_gdrive_config", "section": {"id": "s", "label": "Elsewhere"}}, False),
+    ({"id": "f", "label": "locker_gdrive_config"}, False),
+])
+def test_a_field_matches_by_label_or_id_within_its_section(field, matches):
+    assert secretstore.is_referenced_field(field, "locker_gdrive_config", "UserData.Share") is matches
+
+
+def test_a_reference_naming_two_fields_stores_nothing(monkeypatch, recorded_logs):
+    twins = [{"id": "a", "label": "field"}, {"id": "b", "label": "field"}]
+    vault = FakeVault(monkeypatch, make_item(twins))
+
+    assert secretstore.store_secret_reference("op://Personal/JoyBox/field", STORED_VALUE) is False
+    assert vault.edited is None
+
+
+def test_storing_forgets_the_old_value(monkeypatch, recorded_logs):
+    outcomes = [FakeResult(stdout = "old")]
+    monkeypatch.setattr(secretstore, "get_secret_tool", lambda: "/usr/bin/op")
+    monkeypatch.setattr(secretstore.subprocess, "run", lambda cmd, **kwargs: outcomes.pop(0))
+    secretstore.resolve_secret_reference(STORED_REFERENCE)
+    FakeVault(monkeypatch, make_item())
+
+    assert secretstore.store_secret_reference(" %s " % STORED_REFERENCE, STORED_VALUE, verbose = True) is True
+    assert secretstore._resolved == {}
+    assert "Storing" in recorded_logs[-1]
+
+
+def test_a_value_is_never_logged_when_storing(monkeypatch, recorded_logs):
+    FakeVault(monkeypatch, make_item(), edit_result = FakeResult(returncode = 1, stderr = "denied"))
+    secretstore.store_secret_reference(STORED_REFERENCE, STORED_VALUE, verbose = True)
+
+    assert recorded_logs
+    assert not any(STORED_VALUE in line for line in recorded_logs)
+
+
+def test_storing_to_something_not_a_field_reference_is_refused(monkeypatch, recorded_logs):
+    monkeypatch.setattr(secretstore.subprocess, "run", lambda *a, **k: pytest.fail("ran the tool"))
+
+    assert secretstore.store_secret_reference("op://Personal/JoyBox", STORED_VALUE) is False
+
+
+def test_storing_without_the_tool_is_refused(monkeypatch, recorded_logs):
+    monkeypatch.setattr(secretstore, "get_secret_tool", lambda: None)
+
+    assert secretstore.store_secret_reference(STORED_REFERENCE, STORED_VALUE) is False
+
+
+@pytest.mark.parametrize("get_result, edit_result", [
+    (FakeResult(returncode = 1, stderr = "item not found\nmore"), None),
+    (FakeResult(returncode = 1), None),
+    (FakeResult(stdout = "not json"), None),
+    (FakeResult(stdout = "[1]"), None),
+    (None, FakeResult(returncode = 1, stderr = "denied")),
+    (None, FakeResult(returncode = 1)),
+])
+def test_a_refused_read_or_write_stores_nothing(monkeypatch, recorded_logs, get_result, edit_result):
+    FakeVault(monkeypatch, make_item(), get_result = get_result, edit_result = edit_result)
+
+    assert secretstore.store_secret_reference(STORED_REFERENCE, STORED_VALUE) is False
+    assert any("Unable" in line for line in recorded_logs)
+
+
+@pytest.mark.parametrize("failing_call", [0, 1])
+@pytest.mark.parametrize("error", [subprocess.TimeoutExpired("op", 1), OSError("gone")])
+def test_a_tool_that_cannot_run_stores_nothing(monkeypatch, recorded_logs, failing_call, error):
+    calls = []
+
+    def run(cmd, **kwargs):
+        calls.append(cmd)
+        if len(calls) - 1 == failing_call:
+            raise error
+        return FakeResult(stdout = json.dumps(make_item()))
+
+    monkeypatch.setattr(secretstore, "get_secret_tool", lambda: "/usr/bin/op")
+    monkeypatch.setattr(secretstore.subprocess, "run", run)
+
+    assert secretstore.store_secret_reference(STORED_REFERENCE, STORED_VALUE) is False
+    assert len(calls) == failing_call + 1

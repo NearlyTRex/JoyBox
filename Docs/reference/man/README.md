@@ -35,6 +35,7 @@ available in the terminal as `<command> -h`.
 | [crypt_tool](crypt_tool.md) | Encrypt or decrypt files in place with GPG. |
 | [find_missing_hash_sidecars](find_missing_hash_sidecars.md) | List files on a remote locker that have no entry in its hash sidecar database. |
 | [github_tool](github_tool.md) | Archive your GitHub repositories into the locker, or sync your forks with upstream. |
+| [locker_auth_tool](locker_auth_tool.md) | Sign a remote locker in to Google Drive with your own OAuth client and store the result in 1Password. |
 | [locker_hash_tool](locker_hash_tool.md) | Record the XXH3 hash, size and modification time of every file in a locker directory. |
 | [locker_sync_tool](locker_sync_tool.md) | Sync a primary locker to one or more secondary lockers, reviewing each change in an editor. |
 | [master_backup](master_backup.md) | Back up the local locker to one or more remote lockers in one unattended run. |

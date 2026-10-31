@@ -59,6 +59,7 @@ launch_pegasus = "joybox.cli.launch_pegasus:run"
 launch_sunshine = "joybox.cli.launch_sunshine:run"
 list_dupes = "joybox.cli.list_dupes:run"
 llm_chat = "joybox.cli.llm_chat:run"
+locker_auth_tool = "joybox.cli.locker_auth_tool:run"
 locker_hash_tool = "joybox.cli.locker_hash_tool:run"
 locker_sync_tool = "joybox.cli.locker_sync_tool:run"
 login_game_stores = "joybox.cli.login_game_stores:run"
@@ -187,7 +188,7 @@ no-exit = 4
 mutable-defaults = 120
 no-narration = 1
 commented-out-code = 2
-long-functions = 664
+long-functions = 663
 long-modules = 13
 
 [tool.ruff.lint]

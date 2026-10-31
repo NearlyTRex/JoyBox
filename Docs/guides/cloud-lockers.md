@@ -29,11 +29,28 @@ The remote's options go in `locker_<name>_config` as a JSON object, kept in 1Pas
   (`known_hosts_file`): the first time a machine uses the locker its key is recorded there, and
   after that a different key is refused, so nothing can pose as the server. Set
   `known_hosts_file` in the config to use a file of your own instead.
-- **Google Drive** — a [service account](https://rclone.org/drive/#service-account-support), so
-  there is no OAuth token for rclone to refresh and store:
-  `{"service_account_credentials": { ...the key JSON... }, "root_folder_id": "<locker folder id>"}`.
-  Create the service account in Google Cloud, download its JSON key, and share the locker folder
-  with the account's email address. The folder id is the last part of the folder's URL.
+- **Google Drive** — an OAuth token from your own Google account and your own OAuth client:
+  `{"client_id": "...", "client_secret": "...", "token": { ...the token JSON... }, "root_folder_id": "<locker folder id>"}`.
+  rclone refreshes the token in memory on each run and writes nothing back. To get one:
+  1. In a Google Cloud project, enable the Google Drive API.
+  2. On the Branding page, fill in the app name, support email, home page and privacy policy
+     URLs, and add their domain under authorized domains. Leave the logo empty, since a logo
+     requires verification.
+  3. On the Audience page, choose External and **Publish app**, so its status is *In production*.
+     A *Testing* app's refresh tokens expire after 7 days. The app does not need verifying.
+  4. Create an OAuth client of type **Desktop app** and download its JSON.
+  5. Run [`locker_auth_tool`](../reference/man/locker_auth_tool.md)
+     `--client_file <downloaded JSON> --folder_id <folder id or URL>`. It signs in through the
+     browser, checks the token can list the folder, and writes the options to the field
+     `locker_gdrive_config` references. Click past the "Google hasn't verified this app"
+     warning; open the link in a private window (`--no_browser` prints it) if Google answers
+     with an error page. Delete the downloaded JSON afterwards.
+
+  To sign in again later, such as after revoking access, run `locker_auth_tool` on its own: it
+  reuses the stored client and folder. The folder id is the last part of the folder's URL. A Google Drive
+  [service account](https://rclone.org/drive/#service-account-support) only works with a
+  Workspace shared drive: it has no storage quota of its own, so its uploads to a personal Drive
+  fail with `storageQuotaExceeded`.
 
 A remote name is the locker's `_name`, and may use letters, digits and `_` only. Check one
 resolves with `sync_tool -a Init -l <locker>`.

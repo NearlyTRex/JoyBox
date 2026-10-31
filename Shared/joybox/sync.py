@@ -197,6 +197,97 @@ def setup_remote(
             remote_name, get_remote_raw_type(remote_type)))
     return False
 
+# Get the token rclone prints between its paste markers, or None
+def parse_authorize_output(output):
+    match = re.search(r"--->\s*(\{.*?\})\s*<---End paste", output or "", re.DOTALL)
+    if not match:
+        return None
+    token = serialization.parse_json_string(match.group(1))
+    if not token.get("refresh_token"):
+        return None
+    return token
+
+# Sign in to a remote type with an OAuth client and get its token. The client
+# goes in the environment, not the command line; rclone's sign-in link reaches
+# the terminal on stderr while the token is captured from stdout, unlogged.
+def authorize_remote(
+    remote_type,
+    client_id,
+    client_secret,
+    open_browser = True,
+    verbose = False,
+    pretend_run = False):
+
+    # Get rclone tool
+    rclone_tool = None
+    if programs.is_tool_installed("RClone"):
+        rclone_tool = programs.get_tool_program("RClone")
+    if not rclone_tool:
+        logger.log_error("RClone was not found")
+        return None
+
+    # Get authorize command
+    raw_type = get_remote_raw_type(remote_type)
+    authorize_cmd = [rclone_tool, "authorize", raw_type]
+    if not open_browser:
+        authorize_cmd += ["--auth-no-open-browser"]
+    authorize_options = command.create_command_options()
+    authorize_options.set_env_var("RCLONE_%s_CLIENT_ID" % raw_type.upper(), client_id)
+    authorize_options.set_env_var("RCLONE_%s_CLIENT_SECRET" % raw_type.upper(), client_secret)
+
+    # Run authorize command; it waits for the sign-in, however long that takes
+    authorize_text, code = run_query_command(
+        cmd = authorize_cmd,
+        options = authorize_options,
+        verbose = verbose,
+        pretend_run = pretend_run)
+    if pretend_run:
+        return None
+    if code != 0:
+        logger.log_error("rclone authorize failed")
+        return None
+    token = parse_authorize_output(authorize_text)
+    if not token:
+        logger.log_error("rclone authorize printed no token with a refresh token")
+    return token
+
+# Check a remote can be signed in to and listed, returning how many entries
+# are at its top level, or None
+def count_remote_entries(
+    remote_name,
+    remote_type,
+    remote_path,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Get rclone tool
+    rclone_tool = None
+    if programs.is_tool_installed("RClone"):
+        rclone_tool = programs.get_tool_program("RClone")
+    if not rclone_tool:
+        logger.log_error("RClone was not found")
+        return None
+
+    # Get lsf command
+    lsf_cmd = [
+        rclone_tool,
+        "lsf",
+        "--max-depth", "1",
+        get_remote_connection_path(remote_name, remote_type, remote_path)
+    ]
+
+    # Run lsf command
+    lsf_text, code = run_query_command(
+        cmd = lsf_cmd,
+        options = rcloneremotes.get_rclone_options([remote_name]),
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    if code != 0:
+        return None
+    return len([line for line in lsf_text.splitlines() if line.strip()])
+
 # Get path MD5
 def get_path_md5(
     remote_name,
