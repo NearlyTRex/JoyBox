@@ -137,15 +137,18 @@ def update_game_json_file(
 
     # Get json file path
     json_file_path = environment.get_game_json_metadata_file(game_supercategory, game_category, game_subcategory, game_name)
-    if not paths.does_path_exist(json_file_path):
+    json_file_exists = paths.does_path_exist(json_file_path)
+    if not json_file_exists and not pretend_run:
         return False
 
-    # Read json data
-    json_file_data = serialization.read_json_file(
-        src = json_file_path,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
+    # Read json data, or start from the empty file a dry run did not create
+    json_file_data = {}
+    if json_file_exists:
+        json_file_data = serialization.read_json_file(
+            src = json_file_path,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
 
     # Create json data object
     json_obj = jsondata.JsonData(

@@ -191,6 +191,19 @@ def test_a_second_game_joins_the_same_file(metadata_root):
     assert loaded.has_game(platform_of(), "Portal") is True
 
 
+def test_a_dry_run_adds_no_entry_to_an_existing_file(metadata_root):
+    create(metadata_root)
+    before = metadata_file(metadata_root).read_text(encoding = "utf8")
+
+    assert create(metadata_root, game_name = "Portal", pretend_run = True) is True
+    assert metadata_file(metadata_root).read_text(encoding = "utf8") == before
+
+
+def test_a_dry_run_creates_no_metadata_file(metadata_root):
+    assert create(metadata_root, pretend_run = True) is True
+    assert not metadata_file(metadata_root).exists()
+
+
 def test_a_category_without_metadata_writes_nothing(metadata_root):
     saves = [
         member for member in config.Supercategory.members() if member != ROMS][0]
@@ -460,9 +473,10 @@ def test_the_build_reports_the_update_result(building):
 
 @pytest.fixture
 def every_game(monkeypatch):
-    state = {"built": [], "result": True}
+    state = {"built": [], "result": True, "lockers": set()}
 
-    def find_json_game_names(game_supercategory, game_category, game_subcategory):
+    def find_json_game_names(game_supercategory, game_category, game_subcategory, locker_type = None):
+        state["lockers"].add(locker_type)
         return ["%s/A" % game_subcategory, "%s/B" % game_subcategory]
 
     def build_game_metadata_entry(game_name, **kwargs):
@@ -488,6 +502,18 @@ def test_building_can_be_limited_to_categories_and_subcategories(every_game):
         categories = [str(CATEGORY)], subcategories = [str(SUBCATEGORY)]) is True
     assert every_game["built"] == ["%s/A" % SUBCATEGORY, "%s/B" % SUBCATEGORY]
     assert not any(str(other) in name for name in every_game["built"])
+
+
+def test_building_lists_every_json_game_by_default(every_game):
+    metadata.build_all_game_metadata_entries(categories = [str(CATEGORY)])
+
+    assert every_game["lockers"] == {None}
+
+
+def test_building_can_be_limited_to_a_lockers_games(every_game):
+    metadata.build_all_game_metadata_entries(categories = [str(CATEGORY)], locker_type = config.LockerType.LOCAL)
+
+    assert every_game["lockers"] == {config.LockerType.LOCAL}
 
 
 def test_building_everything_stops_at_a_failure(every_game):

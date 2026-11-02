@@ -177,3 +177,33 @@ def test_a_failed_cache_write_still_returns_purchases(epic_store, owned, monkeyp
     monkeypatch.setattr(epic.serialization, "write_json_file", lambda **kwargs: False)
 
     assert len(epic_store.get_latest_purchases(verbose = verbose)) == 2
+
+
+###########################################################
+# Saved sign-in
+#
+# The purchase step checks these files before running the store's tool, so
+# they must be where the tool keeps its sign-in.
+###########################################################
+
+def test_the_sign_in_is_legendarys_user_file(epic_store, monkeypatch, tmp_path):
+    monkeypatch.delenv("LEGENDARY_CONFIG_PATH", raising = False)
+    monkeypatch.setenv("XDG_CONFIG_HOME", str(tmp_path))
+
+    assert epic_store.get_login_files() == [str(tmp_path / "legendary" / "user.json")]
+
+
+def test_legendarys_config_path_overrides_the_sign_in_dir(epic_store, monkeypatch, tmp_path):
+    monkeypatch.setenv("LEGENDARY_CONFIG_PATH", str(tmp_path / "custom"))
+
+    assert epic_store.get_login_files() == [str(tmp_path / "custom" / "user.json")]
+
+
+def test_epic_is_signed_in_once_legendary_saved_a_user(epic_store, monkeypatch, tmp_path):
+    monkeypatch.delenv("LEGENDARY_CONFIG_PATH", raising = False)
+    monkeypatch.setenv("XDG_CONFIG_HOME", str(tmp_path))
+    assert epic_store.has_saved_login() is False
+
+    (tmp_path / "legendary").mkdir()
+    (tmp_path / "legendary" / "user.json").write_text("{}")
+    assert epic_store.has_saved_login() is True

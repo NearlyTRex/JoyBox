@@ -355,6 +355,10 @@ class Steam(storebase.StoreBase):
     # Connection
     ############################################################
 
+    # Get how to sign in again
+    def get_login_hint(self):
+        return "check steam_userid and steam_web_api_key in the UserData.Steam section of JoyBox.ini"
+
     # Login
     def login(
         self,

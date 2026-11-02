@@ -37,7 +37,18 @@ JSON, metadata, hashes, and assets.
 ```bash
 # scan one subcategory: builds JSON + metadata, downloads assets (-a), loads manifest (-m)
 scan_game_files -c Nintendo -s "Nintendo 64" -a -m -v
+
+# everything in the local locker, leaving the stores alone
+scan_game_files -l Local --skip_purchases -v
 ```
+
+With `--skip_purchases` the metadata and asset steps also cover only the games in the `-l` locker,
+rather than every JSON file, most of which are store purchases.
+
+Without `--skip_purchases` the run also imports store purchases. A store that is not signed in,
+or whose purchases cannot be listed, is skipped with a warning saying how to sign in again
+(usually `login_game_stores -c Computer -s "<store>"`), and the skipped stores are named at the
+end of that step.
 
 > **Note:** `scan_game_files` takes **comma-separated lists** —
 > `-c`/`--categories` and `-s`/`--subcategories` (e.g. `-c Nintendo,Sony

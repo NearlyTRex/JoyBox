@@ -53,6 +53,16 @@ def test_json_and_locker_game_names(tree, tmp_path):
         ROMS, CATEGORY, SUBCATEGORY, locker_base_dir = str(tmp_path / "elsewhere")) == ["From Base"]
 
 
+def test_json_game_names_can_be_narrowed_to_a_lockers_games(tree):
+    # Games known only from a store purchase have no files in the locker.
+    write_game(tree, name = "In Locker")
+    write_game(tree, name = "Purchase Only")
+    make_dirs(tree["locker"], os.path.join("Gaming", "Roms", CATEGORY.val(), SUBCATEGORY.val(), "In Locker"))
+
+    assert gameinfo.find_json_game_names(ROMS, CATEGORY, SUBCATEGORY) == ["In Locker", "Purchase Only"]
+    assert gameinfo.find_json_game_names(ROMS, CATEGORY, SUBCATEGORY, config.LockerType.LOCAL) == ["In Locker"]
+
+
 ###########################################################
 # Iterating the selection
 ###########################################################

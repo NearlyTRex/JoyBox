@@ -880,10 +880,14 @@ def find_all_game_names(base_dir, game_supercategory, game_category, game_subcat
             game_names.append(game_name)
     return game_names
 
-# Find json game names
-def find_json_game_names(game_supercategory, game_category, game_subcategory):
+# Find json game names, narrowed to the games with files in a locker when one is given
+def find_json_game_names(game_supercategory, game_category, game_subcategory, locker_type = None):
     base_dir = environment.get_game_json_metadata_root_dir()
-    return find_all_game_names(base_dir, game_supercategory, game_category, game_subcategory)
+    game_names = find_all_game_names(base_dir, game_supercategory, game_category, game_subcategory)
+    if locker_type:
+        locker_game_names = set(find_locker_game_names(game_supercategory, game_category, game_subcategory, locker_type))
+        game_names = [game_name for game_name in game_names if game_name in locker_game_names]
+    return game_names
 
 # Find locker game names
 def find_locker_game_names(game_supercategory, game_category, game_subcategory, locker_type = None, locker_base_dir = None):

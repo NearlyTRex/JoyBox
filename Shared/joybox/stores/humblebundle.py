@@ -120,6 +120,14 @@ class HumbleBundle(storebase.StoreBase):
         return True
 
     ############################################################
+    # Connection
+    ############################################################
+
+    # Get how to sign in again
+    def get_login_hint(self):
+        return "set humblebundle_auth_token in the UserData.HumbleBundle section of JoyBox.ini to a fresh _simpleauth_sess cookie from humblebundle.com"
+
+    ############################################################
     # Manager
     ############################################################
 

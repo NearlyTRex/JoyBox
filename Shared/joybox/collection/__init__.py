@@ -58,6 +58,7 @@ from joybox.collection.purchase import (
     login_all_game_stores as login_all_game_stores,
     import_game_store_purchases as import_game_store_purchases,
     update_game_store_purchases as update_game_store_purchases,
+    get_game_store_purchases as get_game_store_purchases,
     build_game_store_purchases as build_game_store_purchases,
     build_all_game_store_purchases as build_all_game_store_purchases,
     download_game_store_purchase as download_game_store_purchase,

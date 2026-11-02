@@ -181,8 +181,8 @@ wrapper_modules = [
 # Findings the library had when each rule was adopted; lowered as they are fixed, never raised
 documented = 803
 doc-length = 41
-doc-paraphrase = 1693
-wrappers = 83
+doc-paraphrase = 1692
+wrappers = 82
 no-print = 8
 no-exit = 4
 mutable-defaults = 120

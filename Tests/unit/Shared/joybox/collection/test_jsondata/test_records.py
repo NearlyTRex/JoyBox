@@ -294,6 +294,23 @@ def test_an_update_of_a_missing_json_file_reports_failure(json_root, game_root, 
         ROMS, CATEGORY, SUBCATEGORY, GAME, str(game_root)) is False
 
 
+def test_a_dry_run_updates_a_new_game_without_writing_it(json_root, game_root, no_store):
+    # A dry run's create writes nothing, so its update must not need the file.
+    write(game_root / "game.exe")
+
+    assert jsondata.update_game_json_file(
+        ROMS, CATEGORY, SUBCATEGORY, GAME, str(game_root), pretend_run = True) is True
+    assert not os.path.exists(json_file(json_root))
+
+
+def test_a_dry_run_builds_a_new_game_without_writing_it(json_root, game_root, no_store):
+    write(game_root / "game.exe")
+
+    assert jsondata.build_game_json_file(
+        ROMS, CATEGORY, SUBCATEGORY, GAME, game_root = str(game_root), pretend_run = True) is True
+    assert not os.path.exists(json_file(json_root))
+
+
 def test_a_category_without_json_files_updates_nothing(json_root, game_root, no_store):
     saves = [
         member for member in config.Supercategory.members()

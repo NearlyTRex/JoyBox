@@ -1,5 +1,6 @@
 # Imports
 import json
+import os
 import re
 
 # Local imports
@@ -90,6 +91,11 @@ class Amazon(storebase.StoreBase):
     ############################################################
     # Connection
     ############################################################
+
+    # Get files the purchase listing's saved sign-in is kept in
+    def get_login_files(self):
+        config_dir = paths.join_paths(os.environ.get("NILE_CONFIG_PATH") or self.get_user_config_dir(), "nile")
+        return [paths.join_paths(config_dir, "user.json")]
 
     # Login
     def login(

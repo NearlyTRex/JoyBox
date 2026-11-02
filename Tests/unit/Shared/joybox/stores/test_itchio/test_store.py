@@ -91,3 +91,14 @@ def test_a_browser_that_will_not_close_fails_the_login(itchio_store, browser):
 
     assert itchio_store.login() is False
     assert itchio_store.is_logged_in() is False
+
+
+###########################################################
+# Saved sign-in
+#
+# The purchase step checks these files before running the store's tool, so
+# they must be where the tool keeps its sign-in.
+###########################################################
+
+def test_the_sign_in_is_the_saved_cookie(itchio_store):
+    assert itchio_store.get_login_files() == [itchio_store.get_cookie_file()]

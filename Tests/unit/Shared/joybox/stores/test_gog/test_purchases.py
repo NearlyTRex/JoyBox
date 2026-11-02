@@ -30,9 +30,9 @@ def listing(gog_store, tools, temp_dir, monkeypatch, tmp_path):
     state = {"json": LISTING, "code": 0, "calls": []}
     monkeypatch.setattr(gog_store, "get_purchases_cache_dir", lambda: str(tmp_path / "cache"))
 
-    def run_returncode_command(cmd, options = None, **kwargs):
+    def run_returncode_command(cmd, options = None, pretend_run = False, **kwargs):
         state["calls"].append((list(cmd), options))
-        if state["json"] is not None:
+        if state["json"] is not None and not pretend_run:
             with open(options.get_stdout(), "w", encoding = "utf-8") as handle:
                 handle.write(json.dumps(state["json"]))
         return state["code"]
@@ -51,6 +51,11 @@ def test_listed_games_become_purchases(gog_store, listing, temp_dir):
     assert first.get_value(config.json_key_store_appurl) == "https://www.gog.com/en/game/the_witcher"
     assert listing["calls"][0][0] == ["/tools/lgogdownloader", "--list", "j"]
     assert listing["calls"][0][1].get_stdout() == str(temp_dir["path"] / "manifest.json")
+
+
+def test_a_dry_run_still_lists_purchases(gog_store, listing, temp_dir):
+    # Listing changes nothing, and a dry run that skipped it would always fail to parse.
+    assert appids(gog_store.get_latest_purchases(pretend_run = True)) == ["1207658924", "1207658932"]
 
 
 def test_the_listing_temp_is_removed(gog_store, listing, temp_dir):

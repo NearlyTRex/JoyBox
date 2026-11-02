@@ -311,6 +311,65 @@ def test_the_base_login_does_nothing():
 
 
 ###########################################################
+# Saved sign-in
+#
+# The purchase step skips a store whose saved sign-in is missing instead of
+# running its tool to fail, so a store that cannot be checked must count as
+# signed in.
+###########################################################
+
+class FileLoginStore(SampleStore):
+
+    def __init__(self, login_files):
+        super().__init__()
+        self.login_files = login_files
+
+    def get_login_files(self):
+        return self.login_files
+
+
+def test_a_store_that_cannot_be_checked_counts_as_signed_in():
+    assert storebase.StoreBase().has_saved_login() is True
+
+
+def test_a_store_with_every_login_file_is_signed_in(tmp_path):
+    login_file = tmp_path / "user.json"
+    login_file.write_text("{}")
+
+    assert FileLoginStore([str(login_file)]).has_saved_login() is True
+
+
+def test_a_missing_login_file_means_not_signed_in(tmp_path):
+    present = tmp_path / "user.json"
+    present.write_text("{}")
+
+    assert FileLoginStore([str(present), str(tmp_path / "tokens.json")]).has_saved_login() is False
+
+
+def test_the_login_hint_names_the_store_to_sign_in():
+    class ComputerStore(SampleStore):
+        def get_category(self):
+            return config.Category.COMPUTER
+        def get_subcategory(self):
+            return config.Subcategory.COMPUTER_EPIC_GAMES
+
+    assert ComputerStore().get_login_hint() == 'login_game_stores -c Computer -s "Epic Games"'
+
+
+def test_the_user_config_dir_follows_xdg(monkeypatch, tmp_path):
+    monkeypatch.setenv("XDG_CONFIG_HOME", str(tmp_path))
+
+    assert SampleStore().get_user_config_dir() == str(tmp_path)
+
+
+def test_the_user_config_dir_defaults_to_dot_config(monkeypatch, tmp_path):
+    monkeypatch.delenv("XDG_CONFIG_HOME", raising = False)
+    monkeypatch.setenv("HOME", str(tmp_path))
+
+    assert SampleStore().get_user_config_dir() == str(tmp_path / ".config")
+
+
+###########################################################
 # Capabilities
 ###########################################################
 

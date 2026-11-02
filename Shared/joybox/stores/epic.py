@@ -1,5 +1,6 @@
 # Imports
 import json
+import os
 
 # Local imports
 import joybox.config as config
@@ -105,6 +106,11 @@ class Epic(storebase.StoreBase):
     ############################################################
     # Connection
     ############################################################
+
+    # Get files the purchase listing's saved sign-in is kept in
+    def get_login_files(self):
+        config_dir = os.environ.get("LEGENDARY_CONFIG_PATH") or paths.join_paths(self.get_user_config_dir(), "legendary")
+        return [paths.join_paths(config_dir, "user.json")]
 
     # Login
     def login(

@@ -85,6 +85,10 @@ class Itchio(storebase.StoreBase):
     # Connection
     ############################################################
 
+    # Get files the purchase listing's saved sign-in is kept in
+    def get_login_files(self):
+        return [self.get_cookie_file()]
+
     # Login
     def login(
         self,

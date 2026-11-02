@@ -71,6 +71,7 @@ def import_game_store_purchases(
     game_supercategory,
     game_category,
     game_subcategory,
+    purchases = None,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -85,11 +86,12 @@ def import_game_store_purchases(
         return True
 
     # Get all purchases
-    logger.log_info("Retrieving purchases for %s" % store_obj.get_type())
-    purchases = store_obj.get_latest_purchases(
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
+    if purchases is None:
+        logger.log_info("Retrieving purchases for %s" % store_obj.get_type())
+        purchases = store_obj.get_latest_purchases(
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
     if not purchases:
         return True
 
@@ -223,6 +225,7 @@ def update_game_store_purchases(
     game_supercategory,
     game_category,
     game_subcategory,
+    purchases = None,
     keys = [],
     force = False,
     verbose = False,
@@ -239,11 +242,12 @@ def update_game_store_purchases(
         return True
 
     # Get all purchases
-    logger.log_info("Retrieving purchases for %s" % store_obj.get_type())
-    purchases = store_obj.get_latest_purchases(
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
+    if purchases is None:
+        logger.log_info("Retrieving purchases for %s" % store_obj.get_type())
+        purchases = store_obj.get_latest_purchases(
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
     if not purchases:
         return True
 
@@ -329,6 +333,32 @@ def update_game_store_purchases(
 
 ############################################################
 
+# Get a store's purchases, or None when they cannot be listed, naming the store in skipped_stores
+def get_game_store_purchases(
+    store_obj,
+    skipped_stores = None,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Skip a store with no saved sign-in, rather than running its tool to fail
+    purchases = None
+    if not store_obj.has_saved_login():
+        logger.log_warning("Skipping %s purchases: not signed in. To sign in: %s" %
+            (store_obj.get_type(), store_obj.get_login_hint()))
+    else:
+        logger.log_info("Retrieving purchases for %s" % store_obj.get_type())
+        purchases = store_obj.get_latest_purchases(
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if purchases is None:
+            logger.log_warning("Skipping %s purchases: they could not be listed, usually because the sign-in expired. To sign in again: %s" %
+                (store_obj.get_type(), store_obj.get_login_hint()))
+    if purchases is None and skipped_stores is not None:
+        skipped_stores.append(store_obj.get_type())
+    return purchases
+
 # Build game store purchase
 def build_game_store_purchases(
     game_supercategory,
@@ -336,36 +366,40 @@ def build_game_store_purchases(
     game_subcategory,
     keys = [],
     force = False,
+    skipped_stores = None,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
 
-    # Log categories
+    # Get store
+    store_obj = stores.get_store_by_categories(game_supercategory, game_category, game_subcategory)
+    if not store_obj or not store_obj.can_import_purchases():
+        return True
     logger.log_info("Building store purchases [Category: '%s', Subcategory: '%s'] ..." %
         (game_category, game_subcategory))
 
-    # Import store purchases
-    success = import_game_store_purchases(
-        game_supercategory = game_supercategory,
-        game_category = game_category,
-        game_subcategory = game_subcategory,
+    # Get purchases once for both the import and the update
+    purchases = get_game_store_purchases(
+        store_obj = store_obj,
+        skipped_stores = skipped_stores,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
-    if not success:
-        return False
+    if purchases is None:
+        return True
 
-    # Update store purchases
-    success = update_game_store_purchases(
+    # Import new purchases, then update known ones
+    selection = dict(
         game_supercategory = game_supercategory,
         game_category = game_category,
         game_subcategory = game_subcategory,
-        keys = keys,
-        force = force,
+        purchases = purchases,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
-    return success
+    if not import_game_store_purchases(**selection):
+        return False
+    return update_game_store_purchases(keys = keys, force = force, **selection)
 
 # Build all game store purchases
 def build_all_game_store_purchases(
@@ -378,6 +412,7 @@ def build_all_game_store_purchases(
     exit_on_failure = False):
     selected_categories = config.Category.from_list(categories) if categories else config.Category.members()
     selected_subcategories = config.Subcategory.from_list(subcategories) if subcategories else None
+    skipped_stores = []
     for game_supercategory in [config.Supercategory.ROMS]:
         for game_category in selected_categories:
             category_subcategories = config.subcategory_map[game_category]
@@ -390,13 +425,16 @@ def build_all_game_store_purchases(
                     game_subcategory = game_subcategory,
                     keys = keys,
                     force = force,
+                    skipped_stores = skipped_stores,
                     verbose = verbose,
                     pretend_run = pretend_run,
                     exit_on_failure = exit_on_failure)
                 if not success:
                     return False
 
-    # Should be successful
+    # List the stores that were left out
+    if skipped_stores:
+        logger.log_warning("Store purchases skipped for: %s" % ", ".join(str(store_type) for store_type in skipped_stores))
     return True
 
 ############################################################

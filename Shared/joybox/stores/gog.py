@@ -1,3 +1,6 @@
+# Imports
+import os
+
 # Local imports
 import joybox.config as config
 import joybox.datautils as datautils
@@ -134,6 +137,16 @@ class GOG(storebase.StoreBase):
     ############################################################
     # Connection
     ############################################################
+
+    # Get files the purchase listing's saved sign-in is kept in
+    def get_login_files(self):
+        if not programs.is_tool_installed("LGOGDownloader"):
+            return []
+        config_dir = self.get_user_config_dir()
+        appimage_home_dir = os.path.realpath(programs.get_tool_program("LGOGDownloader") + ".home")
+        if paths.is_path_directory(appimage_home_dir):
+            config_dir = paths.join_paths(appimage_home_dir, ".config")
+        return [paths.join_paths(config_dir, "lgogdownloader", "galaxy_tokens.json")]
 
     # Login LGOGDownloader
     def login_lgog_downloader(
@@ -326,7 +339,6 @@ class GOG(storebase.StoreBase):
                     options = command.create_command_options(
                         stdout = tmp_file_manifest),
                     verbose = False,
-                    pretend_run = pretend_run,
                     exit_on_failure = exit_on_failure)
                 if code != 0:
                     logger.log_error("Unable to find gog purchases")

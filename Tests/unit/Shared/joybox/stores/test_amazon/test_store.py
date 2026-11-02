@@ -98,3 +98,23 @@ def test_login_needs_python_and_nile(amazon_store, tools, recording_command, too
 
     assert amazon_store.login() is False
     assert recording_command.calls == []
+
+
+###########################################################
+# Saved sign-in
+#
+# The purchase step checks these files before running the store's tool, so
+# they must be where the tool keeps its sign-in.
+###########################################################
+
+def test_the_sign_in_is_niles_user_file(amazon_store, monkeypatch, tmp_path):
+    monkeypatch.delenv("NILE_CONFIG_PATH", raising = False)
+    monkeypatch.setenv("XDG_CONFIG_HOME", str(tmp_path))
+
+    assert amazon_store.get_login_files() == [str(tmp_path / "nile" / "user.json")]
+
+
+def test_niles_config_path_overrides_the_sign_in_dir(amazon_store, monkeypatch, tmp_path):
+    monkeypatch.setenv("NILE_CONFIG_PATH", str(tmp_path / "custom"))
+
+    assert amazon_store.get_login_files() == [str(tmp_path / "custom" / "nile" / "user.json")]

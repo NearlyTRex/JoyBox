@@ -242,6 +242,7 @@ def build_all_game_metadata_entries(
     keys = [],
     categories = None,
     subcategories = None,
+    locker_type = None,
     force = False,
     verbose = False,
     pretend_run = False,
@@ -257,7 +258,8 @@ def build_all_game_metadata_entries(
                 game_names = gameinfo.find_json_game_names(
                     game_supercategory,
                     game_category,
-                    game_subcategory)
+                    game_subcategory,
+                    locker_type)
                 for game_name in game_names:
                     success = build_game_metadata_entry(
                         game_supercategory = game_supercategory,
