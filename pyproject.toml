@@ -188,7 +188,7 @@ no-exit = 4
 mutable-defaults = 120
 no-narration = 1
 commented-out-code = 2
-long-functions = 663
+long-functions = 662
 long-modules = 13
 
 [tool.ruff.lint]

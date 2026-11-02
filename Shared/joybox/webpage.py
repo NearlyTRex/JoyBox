@@ -272,6 +272,22 @@ def is_url_loaded(driver, url, verbose = False):
             logger.log_warning("IsUrlLoaded: Failed to check if URL is loaded: %s" % str(e))
         return False
 
+# Check if the page is a Cloudflare bot challenge instead of the requested content
+def is_challenge_page(driver, verbose = False):
+    try:
+        from selenium.webdriver.common.by import By
+        if not is_session_valid(driver, verbose):
+            return False
+        if driver.find_elements(By.ID, "challenge-error-text"):
+            if verbose:
+                logger.log_warning("IsChallengePage: Bot challenge served for %s" % get_current_page_url(driver, verbose))
+            return True
+        return False
+    except Exception as e:
+        if verbose:
+            logger.log_warning("IsChallengePage: Failed to check for a bot challenge: %s" % str(e))
+        return False
+
 ###########################################################
 
 # Element locator

@@ -6,7 +6,7 @@ import pytest
 
 # Local imports
 from joybox import webpage
-from webpage_helpers import FakeDriver
+from webpage_helpers import FakeDriver, FakeElement, FakeParent
 
 pytest.importorskip("bs4")
 
@@ -128,6 +128,22 @@ def test_a_dead_session_has_nothing_loaded():
 @pytest.mark.parametrize("url", [None, "", 12345])
 def test_an_invalid_url_is_never_loaded(url):
     assert webpage.is_url_loaded(FakeDriver(), url) is False
+
+
+@pytest.mark.parametrize("found, expected", [([FakeElement()], True), ([], False)])
+def test_a_challenge_page_is_recognised_by_its_error_text(found, expected):
+    driver = FakeParent(found = found)
+
+    assert webpage.is_challenge_page(driver, verbose = True) is expected
+    assert driver.lookups == [("id", "challenge-error-text")]
+
+
+def test_a_dead_session_is_not_a_challenge_page():
+    assert webpage.is_challenge_page(FakeDriver(dead = True)) is False
+
+
+def test_a_failed_challenge_lookup_is_not_a_challenge_page():
+    assert webpage.is_challenge_page(FakeParent(error = RuntimeError("crashed")), verbose = True) is False
 
 
 ###########################################################

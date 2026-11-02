@@ -257,6 +257,15 @@ def test_a_missing_entry_is_not_updated(metadata_root, scraping):
     assert scraping["collected"] == []
 
 
+def test_the_scrapers_are_given_the_callers_tally(metadata_root, scraping):
+    create(metadata_root)
+    stats = object()
+
+    update(metadata_root, stats = stats)
+
+    assert scraping["collected"][0]["stats"] is stats
+
+
 def test_an_incomplete_entry_is_filled_in(metadata_root, scraping):
     create(metadata_root)
     scraping["latest"] = scraped(developer = "Valve")
@@ -473,7 +482,7 @@ def test_the_build_reports_the_update_result(building):
 
 @pytest.fixture
 def every_game(monkeypatch):
-    state = {"built": [], "result": True, "lockers": set()}
+    state = {"built": [], "result": True, "lockers": set(), "stats": [], "summaries": []}
 
     def find_json_game_names(game_supercategory, game_category, game_subcategory, locker_type = None):
         state["lockers"].add(locker_type)
@@ -481,9 +490,14 @@ def every_game(monkeypatch):
 
     def build_game_metadata_entry(game_name, **kwargs):
         state["built"].append(game_name)
+        state["stats"].append(kwargs["stats"])
         return state["result"]
 
     monkeypatch.setattr(metadata.gameinfo, "find_json_game_names", find_json_game_names)
+    def log_summary(stats):
+        state["summaries"].append(stats)
+
+    monkeypatch.setattr(metadata.metadatacollector.CollectionStats, "log_summary", log_summary)
     monkeypatch.setattr(metadata, "build_game_metadata_entry", build_game_metadata_entry)
     return state
 
@@ -521,6 +535,16 @@ def test_building_everything_stops_at_a_failure(every_game):
 
     assert metadata.build_all_game_metadata_entries() is False
     assert len(every_game["built"]) == 1
+
+
+@pytest.mark.parametrize("result", [True, False])
+def test_building_everything_shares_one_tally_and_logs_it_once(every_game, result):
+    every_game["result"] = result
+
+    metadata.build_all_game_metadata_entries(categories = [str(CATEGORY)])
+
+    assert len(set(map(id, every_game["stats"]))) == 1
+    assert every_game["summaries"] == [every_game["stats"][0]]
 
 
 ###########################################################

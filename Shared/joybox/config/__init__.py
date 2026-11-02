@@ -297,7 +297,8 @@ from joybox.config.keys import (
 from joybox.config.metadata import (
     gametype_weights as gametype_weights,
     gametype_weight_else as gametype_weight_else,
-    gamefaqs_platforms as gamefaqs_platforms)
+    gamefaqs_platforms as gamefaqs_platforms,
+    tgdb_platforms as tgdb_platforms)
 from joybox.config.platforms import (
     Platform as Platform,
     transform_platforms as transform_platforms,

@@ -51,6 +51,7 @@ from joybox.collection.metadata import (
     update_game_metadata_entry as update_game_metadata_entry,
     build_game_metadata_entry as build_game_metadata_entry,
     build_all_game_metadata_entries as build_all_game_metadata_entries,
+    iterate_selected_json_games as iterate_selected_json_games,
     publish_game_metadata_entries as publish_game_metadata_entries,
     publish_all_game_metadata_entries as publish_all_game_metadata_entries)
 from joybox.collection.purchase import (
