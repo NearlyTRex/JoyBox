@@ -394,3 +394,126 @@ def test_a_failed_local_playlist_stops_the_run(tmp_path, monkeypatch):
     monkeypatch.setattr(playlist, "write_playlist", lambda **kwargs: False)
 
     assert playlist.generate_local_playlists(str(tmp_path), extensions = [".chd"]) is False
+
+
+###########################################################
+# Disc playlists
+#
+# Numbered or labelled disc images get a playlist named after the game, so the json
+# builder picks it as the game file and disc swapping works.
+###########################################################
+
+def disc_playlist(directory, name = "Game"):
+    return playlist.generate_disc_playlist(str(directory), name)
+
+
+def test_numbered_discs_get_a_playlist(tmp_path):
+    touch(tmp_path, "Game (Disc 1).chd", "Game (Disc 2).chd")
+
+    assert disc_playlist(tmp_path) is True
+    assert lines(tmp_path / "Game.m3u") == ["Game (Disc 1).chd", "Game (Disc 2).chd"]
+
+
+def test_discs_are_listed_by_number_not_by_name(tmp_path):
+    # Sorted as text, disc 10 would come before disc 2.
+    touch(tmp_path, *["Game (Disc %d).chd" % number for number in range(1, 11)])
+
+    disc_playlist(tmp_path)
+
+    assert lines(tmp_path / "Game.m3u") == ["Game (Disc %d).chd" % number for number in range(1, 11)]
+
+
+@pytest.mark.parametrize("first,second", [
+    ("Game (Disk 1).cue", "Game (Disk 2).cue"),
+    ("Game (Disc 1 of 2).iso", "Game (Disc 2 of 2).iso"),
+    ("Game (disc 1).gdi", "Game (disc 2).gdi"),
+])
+def test_other_numbering_styles_are_recognised(tmp_path, first, second):
+    touch(tmp_path, first, second)
+
+    disc_playlist(tmp_path)
+
+    assert lines(tmp_path / "Game.m3u") == [first, second]
+
+
+@pytest.mark.parametrize("names,expected", [
+    (["Game (Bonus Disc).iso", "Game (Game Disc).iso"], ["Game (Game Disc).iso", "Game (Bonus Disc).iso"]),
+    (["Game (Video Disc).chd", "Game (Bonus Disc).chd", "Game (Game Disc).chd"],
+     ["Game (Game Disc).chd", "Game (Bonus Disc).chd", "Game (Video Disc).chd"]),
+    (["Game (Disc B).cue", "Game (Disc A).cue"], ["Game (Disc A).cue", "Game (Disc B).cue"]),
+    (["Game (Bonus Disc).chd", "Game (Disc 2).chd", "Game (Disc 1).chd"],
+     ["Game (Disc 1).chd", "Game (Disc 2).chd", "Game (Bonus Disc).chd"]),
+])
+def test_labelled_discs_get_a_playlist(tmp_path, names, expected):
+    # Redump names some sets by role instead of number; the game disc boots first.
+    touch(tmp_path, *names)
+
+    disc_playlist(tmp_path)
+
+    assert lines(tmp_path / "Game.m3u") == expected
+
+
+def test_a_disc_marker_needs_parentheses(tmp_path):
+    touch(tmp_path, "Demo Disc Volume 1.iso", "Demo Disc Volume 2.iso")
+
+    disc_playlist(tmp_path)
+
+    assert not (tmp_path / "Game.m3u").exists()
+
+
+def test_track_files_are_left_out(tmp_path):
+    # The cue sheet names its own tracks; the playlist lists only the sheets.
+    touch(tmp_path, "Game (Disc 1).cue", "Game (Disc 1).bin", "Game (Disc 2).cue", "Game (Disc 2).bin")
+
+    disc_playlist(tmp_path)
+
+    assert lines(tmp_path / "Game.m3u") == ["Game (Disc 1).cue", "Game (Disc 2).cue"]
+
+
+def test_an_existing_playlist_is_kept(tmp_path):
+    touch(tmp_path, "Game (Disc 1).chd", "Game (Disc 2).chd")
+    (tmp_path / "Custom.m3u").write_text("Game (Disc 2).chd\n", encoding = "utf8")
+
+    disc_playlist(tmp_path)
+
+    assert not (tmp_path / "Game.m3u").exists()
+    assert lines(tmp_path / "Custom.m3u") == ["Game (Disc 2).chd"]
+
+
+@pytest.mark.parametrize("names", [
+    ["Game (Disc 1).chd"],
+    ["Game.chd", "Other.chd"],
+    ["Game (Disc 1).zip", "Game (Disc 2).zip"],
+    [],
+])
+def test_no_playlist_without_several_numbered_discs(tmp_path, names):
+    touch(tmp_path, *names)
+
+    assert disc_playlist(tmp_path) is True
+    assert not (tmp_path / "Game.m3u").exists()
+
+
+def test_only_discs_at_the_top_level_count(tmp_path):
+    # Sub-folders hold dlc, updates and extras, not the game's own discs.
+    touch(tmp_path, "Extra/Bonus (Disc 1).chd", "Extra/Bonus (Disc 2).chd")
+    (tmp_path / "Folder (Disc 3).chd").mkdir()
+
+    disc_playlist(tmp_path)
+
+    assert not (tmp_path / "Game.m3u").exists()
+
+
+def test_two_images_for_one_disc_make_no_playlist(tmp_path, caplog):
+    # Which image to list is a guess, so it is left to the user.
+    touch(tmp_path, "Game (Disc 1).chd", "Game (Disc 1).iso", "Game (Disc 2).chd")
+
+    assert disc_playlist(tmp_path) is True
+    assert not (tmp_path / "Game.m3u").exists()
+    assert "share a disc" in caplog.text
+
+
+def test_a_dry_run_writes_no_disc_playlist(tmp_path):
+    touch(tmp_path, "Game (Disc 1).chd", "Game (Disc 2).chd")
+
+    assert playlist.generate_disc_playlist(str(tmp_path), "Game", pretend_run = True) is True
+    assert not (tmp_path / "Game.m3u").exists()

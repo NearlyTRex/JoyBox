@@ -124,7 +124,7 @@ def browser(monkeypatch):
     monkeypatch.setattr(webpage, "get_element_text", lambda element, verbose = False: element.text if element else None)
     monkeypatch.setattr(webpage, "get_element_children_text", lambda element, verbose = False: element.children_text)
     monkeypatch.setattr(webpage, "get_element_link_url", lambda element, verbose = False: element.link)
-    monkeypatch.setattr(metadatacollector.datautils.time, "sleep", fake.slept.append)
+    monkeypatch.setattr(metadatacollector.webpage.datautils.time, "sleep", fake.slept.append)
     return fake
 
 
@@ -207,6 +207,22 @@ def test_tgdb_results_without_a_title_are_not_candidates(browser):
     metadatacollector.collect_metadata_from_tgdb(PLATFORM, GAME_NAME)
 
     assert browser.clicked == [titled]
+
+
+def test_tgdb_does_not_open_a_result_too_unlike_the_name(browser):
+    tgdb_results(browser, FakeElement(text = "Pokemon Snap\nNintendo 64", link = TGDB_GAME_URL))
+    tgdb_game(browser, description = "Take photos.")
+
+    assert metadatacollector.collect_metadata_from_tgdb(PLATFORM, GAME_NAME) is None
+    assert browser.clicked == []
+
+
+def test_tgdb_takes_its_lowest_match_score_from_the_scraping_settings(browser, isolated_settings):
+    tgdb_results(browser, FakeElement(text = "Super Mario 64 DS\nNintendo DS", link = TGDB_GAME_URL))
+    tgdb_game(browser, description = "A plumber collects stars.")
+    isolated_settings.set_value("UserData.Scraping", "min_match_score", "95")
+
+    assert metadatacollector.collect_metadata_from_tgdb(PLATFORM, GAME_NAME) is None
 
 
 @pytest.mark.parametrize("cells", [[], [FakeElement(text = None)]])

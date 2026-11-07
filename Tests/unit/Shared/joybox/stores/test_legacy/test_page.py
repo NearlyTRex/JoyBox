@@ -52,6 +52,19 @@ def test_a_best_match_without_a_link_falls_back_to_the_next_best(legacy_store, b
     assert legacy_store.get_latest_url("Mystery Case Files") == "https://www.bigfishgames.com/fallback/"
 
 
+def test_a_result_too_unlike_the_name_is_not_opened(legacy_store, browser):
+    browser.add(result_cell("Hidden Expedition", "https://www.bigfishgames.com/third/"))
+
+    assert legacy_store.get_latest_url("Mystery Case Files") is None
+
+
+def test_the_lowest_match_score_comes_from_the_scraping_settings(legacy_store, browser, isolated_settings):
+    browser.add(result_cell("Mystery Case Files Two", "https://www.bigfishgames.com/two/"))
+    isolated_settings.set_value("UserData.Scraping", "min_match_score", "99")
+
+    assert legacy_store.get_latest_url("Mystery Case Files") is None
+
+
 @pytest.mark.parametrize("cells", [[], [result_cell(title = None), result_cell(href = None)]])
 def test_no_usable_result_gives_no_url_without_retrying(legacy_store, browser, cells):
     browser.add(*cells)

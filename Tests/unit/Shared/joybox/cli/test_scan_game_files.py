@@ -101,6 +101,14 @@ def test_a_full_scan_covers_every_json_game(tool):
     assert tool.kwargs["download_all_metadata_assets"]["locker_type"] is None
 
 
+@pytest.mark.parametrize("flags, expected", [((), False), (("--create_playlists",), True)])
+def test_playlists_are_written_only_when_asked(tool, flags, expected):
+    # Lockers may be read-only.
+    tool.run("--no-preview", *flags)
+
+    assert tool.kwargs["build_all_game_json_files"]["create_disc_playlists"] is expected
+
+
 def test_declined_preview_runs_nothing(tool):
     tool.confirm = False
 

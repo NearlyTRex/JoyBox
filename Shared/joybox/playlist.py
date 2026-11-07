@@ -1,4 +1,8 @@
+# Imports
+import re
+
 # Local imports
+import joybox.config as config
 import joybox.strings as strings
 import joybox.logger as logger
 import joybox.paths as paths
@@ -147,3 +151,66 @@ def generate_local_playlists(
 
     # Should be successful
     return True
+
+# Disc markers in file names: numbered "(Disc 1)", "(Disk 2)", "(Disc 1 of 3)", lettered "(Disc A)", or labelled "(Game Disc)", "(Bonus Disc)"
+disc_marker_pattern = re.compile(r"\((?:(?:disc|disk) (\d+|[a-z])(?: of \d+)?|([^()]+) (?:disc|disk))\)", re.IGNORECASE)
+
+# Get disc sort key: numbered discs first, then lettered, then labelled with the game disc leading
+def get_disc_sort_key(filename):
+    disc_match = disc_marker_pattern.search(filename)
+    if not disc_match:
+        return None
+    disc_id, disc_label = disc_match.groups()
+    if disc_id and disc_id.isdigit():
+        return (0, int(disc_id), "")
+    if disc_id:
+        return (1, 0, disc_id.lower())
+    disc_label = disc_label.lower()
+    return (2, 0 if disc_label == "game" else 1, disc_label)
+
+# Get disc playlist contents, in disc order, or None when one disc has several images
+def get_disc_playlist_contents(source_dir):
+    discs = {}
+    for obj in paths.get_directory_contents(source_dir):
+        if not paths.is_path_file(paths.join_paths(source_dir, obj)):
+            continue
+        if not paths.does_filename_match_extensions(obj, config.DiscImageFileType.cvalues()):
+            continue
+        disc_key = get_disc_sort_key(obj)
+        if disc_key:
+            discs.setdefault(disc_key, []).append(obj)
+    if any(len(disc_files) > 1 for disc_files in discs.values()):
+        return None
+    if len(discs) < 2:
+        return []
+    return [discs[disc_key][0] for disc_key in sorted(discs)]
+
+# Generate disc playlist, unless the directory already has a playlist
+def generate_disc_playlist(
+    source_dir,
+    playlist_name,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Keep an existing playlist
+    if paths.does_directory_contain_files_by_extensions(path = source_dir, extensions = [".m3u"], recursive = False):
+        return True
+
+    # Get numbered discs
+    disc_files = get_disc_playlist_contents(source_dir)
+    if disc_files is None:
+        logger.log_warning("Several disc images share a disc in %s, not creating a playlist" % source_dir)
+        return True
+    if not disc_files:
+        return True
+
+    # Write playlist
+    output_file = paths.join_paths(source_dir, playlist_name + ".m3u")
+    logger.log_info("Creating disc playlist %s" % output_file)
+    return write_playlist(
+        output_file = output_file,
+        playlist_contents = disc_files,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)

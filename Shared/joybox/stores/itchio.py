@@ -1,6 +1,5 @@
 # Local imports
 import joybox.config as config
-import joybox.datautils as datautils
 import joybox.serialization as serialization
 import joybox.logger as logger
 import joybox.fileops as fileops
@@ -339,7 +338,6 @@ class Itchio(storebase.StoreBase):
             element_more_information = webpage.wait_for_element(
                 driver = web_driver,
                 locator = webpage.ElementLocator({"xpath": "//div[@class='toggle_row']//a[contains(text(), 'More information')]"}),
-                wait_time = 15,
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = False)
@@ -351,7 +349,6 @@ class Itchio(storebase.StoreBase):
             element_game_description = webpage.wait_for_element(
                 driver = web_driver,
                 locator = webpage.ElementLocator({"class": "formatted_description"}),
-                wait_time = 15,
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = False)
@@ -400,12 +397,9 @@ class Itchio(storebase.StoreBase):
 
         # Use retry function with cleanup
         try:
-            return datautils.retry_with_backoff(
+            return webpage.retry_scrape(
                 func = attempt_metadata_fetch,
                 cleanup_func = cleanup_driver,
-                max_retries = 3,
-                initial_delay = 2,
-                backoff_factor = 2,
                 verbose = verbose,
                 operation_name = "Itch.io metadata fetch for '%s'" % identifier)
         finally:

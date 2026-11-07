@@ -3,7 +3,6 @@ import collections
 
 # Local imports
 import joybox.config as config
-import joybox.datautils as datautils
 import joybox.logger as logger
 import joybox.strings as strings
 import joybox.gameinfo as gameinfo
@@ -17,8 +16,8 @@ BLOCKED = object()
 
 # Per-run tally of what each metadata source produced
 class CollectionStats:
-    source_outcomes = ["filled", "empty", "blocked", "unsupported", "skipped"]
-    game_outcomes = ["complete", "partial", "nothing found"]
+    source_outcomes = ("filled", "empty", "blocked", "unsupported", "skipped")
+    game_outcomes = ("complete", "partial", "nothing found")
 
     def __init__(self):
         self.sources = {}
@@ -112,12 +111,9 @@ def fetch_with_web_driver(
 
     # Use retry function with cleanup
     try:
-        return datautils.retry_with_backoff(
+        return webpage.retry_scrape(
             func = attempt_fetch,
             cleanup_func = cleanup_driver,
-            max_retries = 3,
-            initial_delay = 2,
-            backoff_factor = 2,
             verbose = verbose,
             operation_name = operation_name)
     finally:
@@ -185,7 +181,6 @@ def collect_metadata_from_tgdb(
         element_search_result = webpage.wait_for_element(
             driver = web_driver,
             locator = webpage.ElementLocator({"class": "container-fluid"}),
-            wait_time = 15,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = False)
@@ -217,8 +212,10 @@ def collect_metadata_from_tgdb(
                     score_entry["ratio"] = strings.get_string_similarity_ratio(natural_name, potential_title)
                     scores_list.append(score_entry)
 
+        min_match_score = webpage.get_min_match_score()
+        scores_list = [score_entry for score_entry in scores_list if score_entry["ratio"] >= min_match_score]
         if not scores_list:
-            return None  # No titled results, not an error
+            return None  # No titled result close enough, not an error
 
         # Click on the highest score element
         best_entry = max(scores_list, key = lambda d: d["ratio"])
@@ -232,7 +229,6 @@ def collect_metadata_from_tgdb(
         element_game_description = webpage.wait_for_element(
             driver = web_driver,
             locator = webpage.ElementLocator({"class": "game-overview"}),
-            wait_time = 15,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = False)
@@ -317,7 +313,6 @@ def collect_metadata_from_gamefaqs(
         element_homepage_marker = webpage.wait_for_element(
             driver = web_driver,
             locator = webpage.ElementLocator({"class": "home_jbi_ft"}),
-            wait_time = 15,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = False)
@@ -335,7 +330,6 @@ def collect_metadata_from_gamefaqs(
         element_search_result = webpage.wait_for_element(
             driver = web_driver,
             locator = webpage.ElementLocator({"class": "span12"}),
-            wait_time = 15,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = False)
@@ -388,7 +382,6 @@ def collect_metadata_from_gamefaqs(
         element_game_description = webpage.wait_for_element(
             driver = web_driver,
             locator = webpage.ElementLocator({"class": "game_desc"}),
-            wait_time = 15,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = False)
@@ -471,7 +464,6 @@ def collect_metadata_from_bigfishgames(
         element_game_description = webpage.wait_for_element(
             driver = web_driver,
             locator = webpage.ElementLocator({"class": "productFullDetail__descriptionContent"}),
-            wait_time = 15,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = False)
@@ -482,7 +474,6 @@ def collect_metadata_from_bigfishgames(
         element_game_bullets = webpage.wait_for_element(
             driver = web_driver,
             locator = webpage.ElementLocator({"class": "productFullDetail__bullets"}),
-            wait_time = 15,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = False)

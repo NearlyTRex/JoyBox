@@ -48,6 +48,15 @@ def test_a_store_with_no_purchases_creates_nothing(collection):
     assert collection["created_json"] == []
 
 
+def test_a_given_listing_is_imported_without_asking_the_store(collection):
+    store = FakeStore(purchases = [a_purchase(appid = "1"), a_purchase(appid = "2")])
+    collection["store"] = store
+
+    assert run_import(purchases = [a_purchase()]) is True
+    assert store.fetches == 0
+    assert len(collection["created_json"]) == 1
+
+
 ###########################################################
 # Importing a new purchase
 ###########################################################

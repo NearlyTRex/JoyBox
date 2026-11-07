@@ -4,7 +4,6 @@ import os
 
 # Local imports
 import joybox.config as config
-import joybox.datautils as datautils
 import joybox.command as command
 import joybox.programs as programs
 import joybox.serialization as serialization
@@ -249,8 +248,11 @@ class Epic(storebase.StoreBase):
                 score_entry["ratio"] = strings.get_string_similarity_ratio(identifier, game_cell_text)
                 scores_list.append(score_entry)
 
-        # Get the best url match
+        # Get the best url match among results close enough to the name
+        min_match_score = webpage.get_min_match_score()
         for score_entry in sorted(scores_list, key=lambda d: d["ratio"], reverse=True):
+            if score_entry["ratio"] < min_match_score:
+                break
             game_cell = score_entry["element"]
             game_link_element = webpage.get_element(
                 parent = game_cell,
@@ -535,7 +537,6 @@ class Epic(storebase.StoreBase):
             element_game_description = webpage.wait_for_element(
                 driver = web_driver,
                 locator = webpage.ElementLocator({"id": "about-long-description"}),
-                wait_time = 15,
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = False)
@@ -605,12 +606,9 @@ class Epic(storebase.StoreBase):
 
         # Use retry function with cleanup
         try:
-            return datautils.retry_with_backoff(
+            return webpage.retry_scrape(
                 func = attempt_metadata_fetch,
                 cleanup_func = cleanup_driver,
-                max_retries = 3,
-                initial_delay = 2,
-                backoff_factor = 2,
                 verbose = verbose,
                 operation_name = "Epic metadata fetch for '%s'" % identifier)
         finally:

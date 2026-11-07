@@ -65,6 +65,15 @@ def test_updating_a_store_with_no_purchases_changes_nothing(updates):
     assert updates["updated_json"] == []
 
 
+def test_a_given_listing_is_updated_without_asking_the_store(updates):
+    store = FakeStore(purchases = [])
+    updates["store"] = store
+
+    assert run_update(purchases = [a_purchase()]) is True
+    assert store.fetches == 0
+    assert updates["updated_json"][0]["game_name"] == "Half-Life 2"
+
+
 def test_a_known_purchase_is_refreshed_by_its_game_name(updates):
     updates["store"] = FakeStore(purchases = [a_purchase()])
 

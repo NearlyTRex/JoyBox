@@ -14,6 +14,13 @@ import joybox.programs as programs
 import joybox.locker as locker
 from joybox import platform_info, runtime
 
+# Seconds a plain HTTP request may take before it is abandoned
+request_timeout_seconds = 10
+
+# How often curl retries a transient download failure, and how long it waits to connect
+download_retries = 3
+download_connect_timeout_seconds = 30
+
 ###########################################################
 # Info
 ###########################################################
@@ -21,10 +28,10 @@ from joybox import platform_info, runtime
 # Check if url is reachable
 # Query parameters go in params rather than the url, so a key among them never
 # reaches a log line that names the url
-def is_url_reachable(url, params = None):
+def is_url_reachable(url, params = None, timeout = request_timeout_seconds):
     try:
         import requests
-        get = requests.get(url, params=params, timeout=10)
+        get = requests.get(url, params=params, timeout=timeout)
         return (get.status_code == 200)
     except Exception:
         return False
@@ -34,6 +41,7 @@ def get_remote_json(
     url,
     headers = None,
     params = None,
+    timeout = request_timeout_seconds,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -43,7 +51,7 @@ def get_remote_json(
         import requests
         if not headers:
             headers = {"Accept": "application/json"}
-        get = requests.get(url, headers=headers, params=params, timeout=10)
+        get = requests.get(url, headers=headers, params=params, timeout=timeout)
         if verbose:
             logger.log_info("Got response: %s" % str(get.status_code))
         if get.status_code == 200:
@@ -59,6 +67,7 @@ def get_remote_json(
 def get_remote_html(
     url,
     headers = None,
+    timeout = request_timeout_seconds,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -68,7 +77,7 @@ def get_remote_html(
         import requests
         if not headers:
             headers = {}
-        get = requests.get(url, headers=headers, timeout=10)
+        get = requests.get(url, headers=headers, timeout=timeout)
         if verbose:
             logger.log_info("Got response: %s" % str(get.status_code))
         if get.status_code == 200:
@@ -85,7 +94,7 @@ def post_remote_json(
     url,
     headers = None,
     data = None,
-    timeout = 10,
+    timeout = request_timeout_seconds,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -114,6 +123,7 @@ def post_remote_json(
 def get_remote_xml(
     url,
     headers = None,
+    timeout = request_timeout_seconds,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -124,7 +134,7 @@ def get_remote_xml(
         import xmltodict
         if not headers:
             headers = {"Accept": "text/xml"}
-        get = requests.get(url, headers=headers, timeout=10)
+        get = requests.get(url, headers=headers, timeout=timeout)
         if verbose:
             logger.log_info("Got response: %s" % str(get.status_code))
         if get.status_code == 200:
@@ -145,6 +155,8 @@ def download_url(
     url,
     output_dir = None,
     output_file = None,
+    retries = download_retries,
+    connect_timeout = download_connect_timeout_seconds,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -160,7 +172,9 @@ def download_url(
     # Get download command
     download_cmd = [
         download_tool,
-        "-L"
+        "-L",
+        "--retry", str(retries),
+        "--connect-timeout", str(connect_timeout)
     ]
     if output_dir:
         download_cmd += [

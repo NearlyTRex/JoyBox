@@ -17,6 +17,27 @@ def test_a_download_follows_redirects(installed, recording_command, tmp_path):
     assert "-L" in recording_command.only()
 
 
+def test_a_download_retries_transient_failures_and_bounds_the_connect(installed, recording_command, tmp_path):
+    # A dropped connection or a 5xx mid-download otherwise fails the whole step.
+    target = tmp_path / "file.bin"
+    target.write_text("payload")
+
+    network.download_url("https://example.test/file.bin", output_file = str(target))
+
+    assert recording_command.value_after("--retry") == str(network.download_retries)
+    assert recording_command.value_after("--connect-timeout") == str(network.download_connect_timeout_seconds)
+
+
+def test_a_download_takes_its_own_retry_and_connect_limits(installed, recording_command, tmp_path):
+    target = tmp_path / "file.bin"
+    target.write_text("payload")
+
+    network.download_url("https://example.test/file.bin", output_file = str(target), retries = 0, connect_timeout = 5)
+
+    assert recording_command.value_after("--retry") == "0"
+    assert recording_command.value_after("--connect-timeout") == "5"
+
+
 def test_a_download_to_a_file_names_the_output(installed, recording_command, tmp_path):
     target = tmp_path / "file.bin"
     target.write_text("payload")

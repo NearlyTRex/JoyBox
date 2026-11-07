@@ -11,6 +11,7 @@ import joybox.stores as stores
 import joybox.strings as strings
 import joybox.jsondata as jsondata
 import joybox.lockerinfo as lockerinfo
+import joybox.playlist as playlist
 
 ############################################################
 
@@ -295,6 +296,7 @@ def build_game_json_file(
     game_name,
     game_root = None,
     locker_type = None,
+    create_disc_playlists = False,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -313,6 +315,17 @@ def build_game_json_file(
     # Log categories
     logger.log_info("Building json [Category: '%s', Subcategory: '%s', Name: '%s'] ..." %
         (game_category, game_subcategory, game_name))
+
+    # Create disc playlist, so the json picks it as the game file
+    if create_disc_playlists and game_supercategory == config.Supercategory.ROMS:
+        success = playlist.generate_disc_playlist(
+            source_dir = game_root,
+            playlist_name = game_name,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if not success:
+            return False
 
     # Create json file
     success = create_game_json_file(
@@ -344,6 +357,7 @@ def build_all_game_json_files(
     locker_type = None,
     categories = None,
     subcategories = None,
+    create_disc_playlists = False,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -367,6 +381,7 @@ def build_all_game_json_files(
                         game_subcategory = game_subcategory,
                         game_name = game_name,
                         locker_type = locker_type,
+                        create_disc_playlists = create_disc_playlists,
                         verbose = verbose,
                         pretend_run = pretend_run,
                         exit_on_failure = exit_on_failure)

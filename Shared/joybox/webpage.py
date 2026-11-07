@@ -5,6 +5,7 @@ import subprocess
 
 # Local imports
 import joybox.config as config
+import joybox.datautils as datautils
 import joybox.programs as programs
 import joybox.serialization as serialization
 import joybox.strings as strings
@@ -17,6 +18,46 @@ from joybox import runtime
 
 # Seconds a plain request may take before it is abandoned
 request_timeout_seconds = 30
+
+# Scraping limits; each can be overridden in UserData.Scraping
+default_element_wait_seconds = 15
+default_fetch_retries = 3
+default_fetch_retry_delay_seconds = 2
+default_min_match_score = 50
+
+###########################################################
+
+# A scraping limit from UserData.Scraping, never below its minimum
+def get_scraping_limit(field, fallback, minimum = 0):
+    value = settings.get_integer_value("UserData.Scraping", field, fallback, throw_exception = False)
+    return max(fallback if value is None else value, minimum)
+
+# Seconds to wait for an element before treating it as absent
+def get_element_wait_seconds():
+    return get_scraping_limit("element_wait_seconds", default_element_wait_seconds, minimum = 1)
+
+# Attempts a page scrape gets before it is given up
+def get_fetch_retries():
+    return get_scraping_limit("fetch_retries", default_fetch_retries, minimum = 1)
+
+# Seconds before the first retry of a scrape; each later retry waits twice as long
+def get_fetch_retry_delay_seconds():
+    return get_scraping_limit("fetch_retry_delay_seconds", default_fetch_retry_delay_seconds)
+
+# Lowest title similarity (0-100) a search result needs to be opened
+def get_min_match_score():
+    return get_scraping_limit("min_match_score", default_min_match_score)
+
+# Retry a scrape with the configured attempts and backoff, cleaning up between tries
+def retry_scrape(func, cleanup_func = None, verbose = False, operation_name = None):
+    return datautils.retry_with_backoff(
+        func = func,
+        cleanup_func = cleanup_func,
+        max_retries = get_fetch_retries(),
+        initial_delay = get_fetch_retry_delay_seconds(),
+        backoff_factor = 2,
+        verbose = verbose,
+        operation_name = operation_name)
 
 ###########################################################
 
@@ -415,10 +456,12 @@ def is_session_valid(
 def wait_for_element(
     driver,
     locator,
-    wait_time = 15,
+    wait_time = None,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
+    if wait_time is None:
+        wait_time = get_element_wait_seconds()
     try:
         from selenium.webdriver.support.ui import WebDriverWait
         from selenium.webdriver.support import expected_conditions as EC

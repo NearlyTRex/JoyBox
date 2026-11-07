@@ -63,5 +63,5 @@ def browser(legacy_store, monkeypatch):
     monkeypatch.setattr(legacy_store, "web_disconnect", web_disconnect)
     monkeypatch.setattr(legacy.webpage, "load_url", load_url)
     monkeypatch.setattr(legacy.webpage, "wait_for_element", wait_for_element)
-    monkeypatch.setattr(legacy.datautils.time, "sleep", fake.slept.append)
+    monkeypatch.setattr(legacy.webpage.datautils.time, "sleep", fake.slept.append)
     return fake

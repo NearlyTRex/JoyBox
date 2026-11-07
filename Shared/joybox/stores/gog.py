@@ -3,7 +3,6 @@ import os
 
 # Local imports
 import joybox.config as config
-import joybox.datautils as datautils
 import joybox.command as command
 import joybox.programs as programs
 import joybox.serialization as serialization
@@ -544,7 +543,6 @@ class GOG(storebase.StoreBase):
             element_game_description = webpage.wait_for_element(
                 driver = web_driver,
                 locator = webpage.ElementLocator({"class": "description"}),
-                wait_time = 15,  # 15 second timeout
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = False)
@@ -591,12 +589,9 @@ class GOG(storebase.StoreBase):
 
         # Use retry function with cleanup
         try:
-            return datautils.retry_with_backoff(
+            return webpage.retry_scrape(
                 func = attempt_metadata_fetch,
                 cleanup_func = cleanup_driver,
-                max_retries = 3,
-                initial_delay = 2,
-                backoff_factor = 2,
                 verbose = verbose,
                 operation_name = "GOG metadata fetch for '%s'" % identifier)
         finally:

@@ -28,6 +28,13 @@ replaces a file. Only the `Roms`, `DLC` and `Updates` supercategories have JSON 
 The game directory is `-i` if given, otherwise the game's place under `-b`, otherwise
 the gaming folder of the `-l` locker (the Local locker when `-l` is omitted).
 
+With `--create_playlists`, before listing a `Roms` game's files, writes
+`<game name>.m3u` in its folder when it has two or more disc images marked `(Disc N)`,
+`(Disk N)`, `(Disc N of M)`, `(Disc A)` or by role, such as `(Game Disc)` and
+`(Bonus Disc)`, and no playlist yet. Numbered discs come first in number order, then
+lettered ones, then labelled ones with the game disc first. The playlist becomes the
+game's launch or transform file.
+
 ## Options
 
 ### Input
@@ -47,6 +54,12 @@ the gaming folder of the `-l` locker (the Local locker when `-l` is omitted).
 | `-l, --locker_type <locker_type>` | Locker to list games from and read their files in; Local when omitted. Allowed: `All`, `Local`, `Hetzner`, `Gdrive`, `External`. |
 | `-m, --generation_mode <Custom\|Standard>` | How categories are selected: `Standard` walks the selected categories, `Custom` takes exactly the given category and subcategory. Default: `Standard`. Allowed: `Custom`, `Standard`. |
 | `-b, --locker_base_dir <locker_base_dir>` | Locker root to list and read games from instead of the `-l` locker's mount path (its Gaming folder is used). |
+
+### Output
+
+| Option | Description |
+|--------|-------------|
+| `--create_playlists` | Write a `.m3u` playlist into the folder of each multi-disc `Roms` game that has none; off by default so read-only lockers are left untouched. |
 
 ### Common options
 
@@ -97,6 +110,8 @@ build_game_json_files -c Nintendo -s "Nintendo Switch" -l Local -p -v
   even with `-i`.
 - `-i` is used as the directory of every selected game, so use it together with `-n`.
 - The supercategory defaults to `Roms`; pass `-u` for DLC or updates.
+- No disc playlist is made when two images are the same disc, or when the locker is encrypted, since
+  the disc names are then hidden.
 
 ## See also
 

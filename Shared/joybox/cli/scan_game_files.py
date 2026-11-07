@@ -20,7 +20,9 @@ def build_parser():
             "2. Import and refresh store purchases, as `build_game_store_purchases` does, unless\n"
             "   `--skip_purchases` is given. A store that is not signed in is skipped with a warning.\n"
             "   With `--skip_purchases`, steps 4 and 5 also cover only the games in the `-l` locker.\n"
-            "3. Build JSON files from the games in the `-l` locker, as `build_game_json_files` does.\n"
+            "3. Build JSON files from the games in the `-l` locker, as `build_game_json_files` does,\n"
+            "   with `--create_playlists` also writing a `.m3u` playlist for multi-disc games that\n"
+            "   have none yet.\n"
             "4. Build metadata entries, as `build_game_metadata_files` does.\n"
             "5. Download missing BoxFront and Video assets, only with `-a`.\n"
             "6. Publish the metadata to HTML, as `publish_game_metadata_files` does.\n"
@@ -33,6 +35,7 @@ def build_parser():
             ("Scan only the games in the local locker, leaving the stores alone", "scan_game_files -l Local --skip_purchases"),
             ("Scan two subcategories and download assets", "scan_game_files -s \"Nintendo Switch,Steam\" -l Local -a"),
             ("Load the manifest, then scan", "scan_game_files -m -l Local"),
+            ("Scan the local locker, writing playlists for multi-disc games", "scan_game_files -l Local --create_playlists"),
             ("Dry run", "scan_game_files -l Local -p -v"),
         ],
         notes = [
@@ -55,6 +58,7 @@ def build_parser():
     parser.add_boolean_argument(args = ("--skip_purchases"), description = "Skip importing and refreshing store purchases, and build metadata and assets only for the games in the `-l` locker")
     parser.add_boolean_argument(args = ("-a", "--download_assets"), description = "Also download missing BoxFront and Video assets for each game")
     parser.add_boolean_argument(args = ("-m", "--load_manifest"), description = "Load the Ludusavi manifest of game save locations before the first step")
+    parser.add_boolean_argument(args = ("--create_playlists"), description = "In the JSON step, write a `.m3u` playlist into the folder of each multi-disc game that has none; off by default so read-only lockers are left untouched")
     parser.add_common_arguments()
     return parser
 
@@ -125,6 +129,7 @@ def main():
         locker_type = args.locker_type,
         categories = args.categories,
         subcategories = args.subcategories,
+        create_disc_playlists = args.create_playlists,
         verbose = args.verbose,
         pretend_run = args.pretend_run,
         exit_on_failure = args.exit_on_failure)
