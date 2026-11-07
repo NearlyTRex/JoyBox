@@ -93,6 +93,7 @@ aptget[constants.EnvironmentType.LOCAL_UBUNTU] += [
     {"id": "qttools5-dev-tools", "name": "Qt5 Tools", "description": "Qt5 additional tools", "category": "Devel"},
     {"id": "ripgrep", "name": "ripgrep", "description": "Fast recursive grep alternative", "category": "Devel"},
     {"id": "ruby-full", "name": "Ruby", "description": "Ruby programming language", "category": "Devel"},
+    {"id": "shellcheck", "name": "ShellCheck", "description": "Shell script linter", "category": "Devel"},
     {"id": "xa65", "name": "xa65", "description": "6502 cross-assembler", "category": "Devel"},
 
     # Gnome

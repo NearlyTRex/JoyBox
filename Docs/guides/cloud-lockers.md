@@ -30,7 +30,16 @@ The remote's options go in `locker_<name>_config` as a JSON object, kept in 1Pas
   after that a different key is refused, so nothing can pose as the server. Set
   `known_hosts_file` in the config to use a file of your own instead.
 - **Google Drive** — an OAuth token from your own Google account and your own OAuth client:
-  `{"client_id": "...", "client_secret": "...", "token": { ...the token JSON... }, "root_folder_id": "<locker folder id>"}`.
+
+  ```text
+  {
+    "client_id": "...",
+    "client_secret": "...",
+    "token": { ...the token JSON... },
+    "root_folder_id": "<locker folder id>"
+  }
+  ```
+
   rclone refreshes the token in memory on each run and writes nothing back. To get one:
   1. In a Google Cloud project, enable the Google Drive API.
   2. On the Branding page, fill in the app name, support email, home page and privacy policy
@@ -47,8 +56,8 @@ The remote's options go in `locker_<name>_config` as a JSON object, kept in 1Pas
      with an error page. Delete the downloaded JSON afterwards.
 
   To sign in again later, such as after revoking access, run `locker_auth_tool` on its own: it
-  reuses the stored client and folder. The folder id is the last part of the folder's URL. A Google Drive
-  [service account](https://rclone.org/drive/#service-account-support) only works with a
+  reuses the stored client and folder. The folder id is the last part of the folder's URL. A
+  Google Drive [service account](https://rclone.org/drive/#service-account-support) only works with a
   Workspace shared drive: it has no storage quota of its own, so its uploads to a personal Drive
   fail with `storageQuotaExceeded`.
 

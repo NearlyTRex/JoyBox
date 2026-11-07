@@ -57,6 +57,7 @@ python[constants.EnvironmentType.LOCAL_UBUNTU] += [
     {"id": "pipenv", "name": "Pipenv", "description": "Python dev workflow tool", "category": "Dev"},
     {"id": "pyghidra", "name": "PyGhidra", "description": "Ghidra Python bindings", "category": "Dev"},
     {"id": "ruff", "name": "Ruff", "description": "Python linter", "category": "Dev"},
+    {"id": "rumdl", "name": "rumdl", "description": "Markdown linter", "category": "Dev"},
     {"id": "wheel", "name": "Wheel", "description": "Python wheel packaging", "category": "Dev"},
 
     # GUI
