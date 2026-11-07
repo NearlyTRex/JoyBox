@@ -4,7 +4,7 @@
 
 [← Command index](README.md)
 
-Convert CD disc images (ISO, CUE, GDI, Toast) to CHD files with chdman.
+Convert CD disc images (ISO, CUE, GDI, Toast, MDS) to CHD files with chdman.
 
 ## Synopsis
 
@@ -19,6 +19,11 @@ file given) and runs `chdman createcd` on it, writing `<name>.chd` next to it. F
 `.cue` or `.gdi` sheet, chdman reads the track files the sheet lists. A Roxio Toast
 `.toast` image holds plain 2048-byte sectors, so chdman reads it as it does an ISO.
 
+chdman cannot read an Alcohol 120% `.mds` descriptor, so JoyBox reads it and writes
+a CUE sheet in a temporary folder for chdman. The CUE reads the `.mdf` data file in
+place when its tracks lie back to back; when the image also stores subchannel data,
+each track is first copied out without it.
+
 An image whose `<name>.chd` already exists is skipped.
 
 ## Options
@@ -28,8 +33,8 @@ An image whose `<name>.chd` already exists is skipped.
 | Option | Description |
 |--------|-------------|
 | `-i, --input_path <input_path>` | A disc image file, or a directory searched recursively for images; must exist. |
-| `-t, --disc_image_types <disc_image_types>` | Image types to convert, space separated; each selects files by its extension (`ISO` is `.iso`, `CUE` is `.cue`, and so on). Default: `ISO,CUE,GDI,TOAST`. Allowed: `ISO`, `CUE`, `TOC`, `GDI`, `CHD`, `TOAST`. |
-| `-d, --delete_originals` | Delete the image file given to chdman (the `.iso`, `.cue`, `.gdi`, `.toc` or `.toast` itself) once its CHD is made. |
+| `-t, --disc_image_types <disc_image_types>` | Image types to convert, space separated; each selects files by its extension (`ISO` is `.iso`, `CUE` is `.cue`, and so on). Default: `ISO,CUE,GDI,TOAST,MDS`. Allowed: `ISO`, `CUE`, `TOC`, `GDI`, `CHD`, `TOAST`, `MDS`. |
+| `-d, --delete_originals` | Delete the image file given to chdman (the `.iso`, `.cue`, `.gdi`, `.toc` or `.toast` itself, or an `.mds` together with its `.mdf`) once its CHD is made. |
 
 ### Common options
 
@@ -66,10 +71,20 @@ chdconvert -i /path/to/discs -t ISO GDI
 chdconvert -i /path/to/discs -t TOAST
 ```
 
+### Convert Alcohol MDS/MDF images and delete both files afterwards
+
+```bash
+chdconvert -i /path/to/discs -t MDS -d
+```
+
 ## Notes
 
 - Images are always converted with `createcd`, which makes CD CHDs.
 - chdman (MameChdman) must be installed as a JoyBox tool.
+- Only version 1 `.mds` descriptors of single-session discs convert; multi-session discs and MDF
+  data split over several files are reported and skipped.
+- The subchannel data in an `.mds` image is dropped, so copy protection that reads it does not
+  survive the conversion.
 
 ## See also
 

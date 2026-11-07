@@ -267,6 +267,7 @@ def test_verbose_reads_and_writes_log_the_path(tmp_path, logged):
 @pytest.mark.parametrize("call", [
     lambda base: serialization.read_text_file(os.path.join(base, "absent.txt"), exit_on_failure = True),
     lambda base: serialization.read_binary_file(os.path.join(base, "absent.bin"), exit_on_failure = True),
+    lambda base: serialization.copy_binary_records(os.path.join(base, "absent.bin"), base + ".out", 0, 1, 4, exit_on_failure = True),
     lambda base: serialization.write_text_file(base, "x", exit_on_failure = True),
     lambda base: serialization.parse_json_string("{nope", exit_on_failure = True),
     lambda base: serialization.read_json_file(os.path.join(base, "absent.json"), exit_on_failure = True),
@@ -287,6 +288,7 @@ def test_failures_without_exit_return_the_empty_value(tmp_path):
 
     assert serialization.read_text_file(os.path.join(base, "absent.txt")) is None
     assert serialization.read_binary_file(os.path.join(base, "absent.bin")) is None
+    assert serialization.copy_binary_records(os.path.join(base, "absent.bin"), base + ".out", 0, 1, 4) is False
     assert serialization.write_text_file(base, "x") is False
     assert serialization.write_json_file(base + ".json", {1j: 1}) is False
     assert serialization.clean_json_file(os.path.join(base, "absent.json")) is False
@@ -381,3 +383,47 @@ def test_a_non_csv_extension_is_refused(tmp_path):
         handle.write("a,b\n")
 
     assert serialization.read_csv_file(target, ["a", "b"]) == []
+
+
+def test_binary_records_are_copied_from_their_offset(tmp_path):
+    source = tmp_path / "blob.bin"
+    source.write_bytes(b"xx" + b"abcd" * 3)
+    target = tmp_path / "out.bin"
+
+    assert serialization.copy_binary_records(str(source), str(target), 2, 3, 4) is True
+    assert target.read_bytes() == b"abcd" * 3
+
+
+def test_binary_records_keep_only_their_leading_bytes(tmp_path):
+    source = tmp_path / "blob.bin"
+    source.write_bytes(b"".join(bytes([n]) * 3 + b"--" for n in range(5)))
+    target = tmp_path / "out.bin"
+
+    assert serialization.copy_binary_records(str(source), str(target), 0, 5, 5, keep_size = 3, records_per_read = 2) is True
+    assert target.read_bytes() == b"".join(bytes([n]) * 3 for n in range(5))
+
+
+def test_copying_more_records_than_a_file_holds_fails(tmp_path):
+    source = tmp_path / "blob.bin"
+    source.write_bytes(b"abcd" * 2)
+
+    assert serialization.copy_binary_records(str(source), str(tmp_path / "out.bin"), 0, 3, 4) is False
+
+
+def test_copying_binary_records_logs_when_verbose(tmp_path, logged):
+    source = tmp_path / "blob.bin"
+    source.write_bytes(b"abcd")
+    target = tmp_path / "out.bin"
+
+    serialization.copy_binary_records(str(source), str(target), 0, 1, 4, verbose = True)
+
+    assert logged["info"] == ["Copying 1 records of 4 bytes from %s to %s" % (source, target)]
+
+
+def test_pretending_to_copy_binary_records_writes_nothing(tmp_path):
+    source = tmp_path / "blob.bin"
+    source.write_bytes(b"abcd")
+    target = tmp_path / "out.bin"
+
+    assert serialization.copy_binary_records(str(source), str(target), 0, 1, 4, pretend_run = True) is True
+    assert not target.exists()

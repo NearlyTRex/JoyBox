@@ -81,5 +81,5 @@ make_iso -i /path/to/folders -n GAMEDISC
   each image
 - [compress_folders](compress_folders.md) — Compress each folder in a directory into an archive of
   its own with 7-Zip
-- [chdconvert](chdconvert.md) — Convert CD disc images (ISO, CUE, GDI, Toast) to CHD files with
+- [chdconvert](chdconvert.md) — Convert CD disc images (ISO, CUE, GDI, Toast, MDS) to CHD files with
   chdman

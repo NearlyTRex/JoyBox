@@ -44,6 +44,46 @@ def read_binary_file(src, offset = 0, length = None, verbose = False, exit_on_fa
             runtime.quit_program()
         return None
 
+# Read records from an open binary file, keeping the first keep_size bytes of each
+def read_binary_records(input_file, record_count, record_size, keep_size):
+    chunk = input_file.read(record_count * record_size)
+    if len(chunk) != record_count * record_size:
+        raise EOFError("file ends %d records short" % (record_count - len(chunk) // record_size))
+    if keep_size == record_size:
+        return chunk
+    view = memoryview(chunk)
+    return b"".join(view[start:start + keep_size] for start in range(0, len(chunk), record_size))
+
+# Copy fixed-size records out of a binary file, keeping the first keep_size bytes of each
+def copy_binary_records(
+    src,
+    dest,
+    offset,
+    record_count,
+    record_size,
+    keep_size = None,
+    records_per_read = 1024,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+    try:
+        if verbose:
+            logger.log_info("Copying %d records of %d bytes from %s to %s" % (record_count, record_size, src, dest))
+        if pretend_run:
+            return True
+        with open(src, "rb") as input_file, open(dest, "wb") as output_file:
+            input_file.seek(offset)
+            for first in range(0, record_count, records_per_read):
+                count = min(records_per_read, record_count - first)
+                output_file.write(read_binary_records(input_file, count, record_size, keep_size or record_size))
+        return True
+    except Exception as e:
+        if exit_on_failure:
+            logger.log_error("Unable to copy records from %s to %s" % (src, dest))
+            logger.log_error(e)
+            runtime.quit_program()
+        return False
+
 # Write text file
 def write_text_file(src, contents, verbose = False, pretend_run = False, exit_on_failure = False):
     try:

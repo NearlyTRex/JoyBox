@@ -58,7 +58,7 @@ chdverify -i "/path/to/Game (USA).chd" --no-preview
 
 ## See also
 
-- [chdconvert](chdconvert.md) — Convert CD disc images (ISO, CUE, GDI, Toast) to CHD files with
+- [chdconvert](chdconvert.md) — Convert CD disc images (ISO, CUE, GDI, Toast, MDS) to CHD files with
   chdman
 - [chdextract](chdextract.md) — Extract CD disc images from CHD files with chdman
 - [ps3_rom_tool](ps3_rom_tool.md) — Check that PlayStation 3 disc CHDs decrypt and extract with

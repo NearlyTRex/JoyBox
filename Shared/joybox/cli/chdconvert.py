@@ -13,12 +13,17 @@ import joybox.prompts as prompts
 # Build the argument parser
 def build_parser():
     parser = arguments.ArgumentParser(
-        description = "Convert CD disc images (ISO, CUE, GDI, Toast) to CHD files with chdman.",
+        description = "Convert CD disc images (ISO, CUE, GDI, Toast, MDS) to CHD files with chdman.",
         details = (
             "Finds every disc image of the chosen types under the input path (or takes the one\n"
             "file given) and runs `chdman createcd` on it, writing `<name>.chd` next to it. For a\n"
             "`.cue` or `.gdi` sheet, chdman reads the track files the sheet lists. A Roxio Toast\n"
             "`.toast` image holds plain 2048-byte sectors, so chdman reads it as it does an ISO.\n"
+            "\n"
+            "chdman cannot read an Alcohol 120% `.mds` descriptor, so JoyBox reads it and writes\n"
+            "a CUE sheet in a temporary folder for chdman. The CUE reads the `.mdf` data file in\n"
+            "place when its tracks lie back to back; when the image also stores subchannel data,\n"
+            "each track is first copied out without it.\n"
             "\n"
             "An image whose `<name>.chd` already exists is skipped."),
         examples = [
@@ -26,10 +31,13 @@ def build_parser():
             ("Convert only CUE sheets and delete them afterwards, previewing first", "chdconvert -i /path/to/discs -t CUE -d -p -v"),
             ("Convert ISO and GDI images only", "chdconvert -i /path/to/discs -t ISO GDI"),
             ("Convert Mac Toast images only", "chdconvert -i /path/to/discs -t TOAST"),
+            ("Convert Alcohol MDS/MDF images and delete both files afterwards", "chdconvert -i /path/to/discs -t MDS -d"),
         ],
         notes = [
             "Images are always converted with `createcd`, which makes CD CHDs.",
             "chdman (MameChdman) must be installed as a JoyBox tool.",
+            "Only version 1 `.mds` descriptors of single-session discs convert; multi-session discs and MDF data split over several files are reported and skipped.",
+            "The subchannel data in an `.mds` image is dropped, so copy protection that reads it does not survive the conversion.",
         ],
         see_also = ["chdextract", "chdverify", "chdzip"],
         section = "Game ROMs & Images")
@@ -37,10 +45,10 @@ def build_parser():
     parser.add_enum_argument(
         args = ("-t", "--disc_image_types"),
         arg_type = config.DiscImageFileType,
-        default = [config.DiscImageFileType.ISO, config.DiscImageFileType.CUE, config.DiscImageFileType.GDI, config.DiscImageFileType.TOAST],
+        default = [config.DiscImageFileType.ISO, config.DiscImageFileType.CUE, config.DiscImageFileType.GDI, config.DiscImageFileType.TOAST, config.DiscImageFileType.MDS],
         description = "Image types to convert, space separated; each selects files by its extension (`ISO` is `.iso`, `CUE` is `.cue`, and so on)",
         allow_multiple = True)
-    parser.add_boolean_argument(args = ("-d", "--delete_originals"), description = "Delete the image file given to chdman (the `.iso`, `.cue`, `.gdi`, `.toc` or `.toast` itself) once its CHD is made")
+    parser.add_boolean_argument(args = ("-d", "--delete_originals"), description = "Delete the image file given to chdman (the `.iso`, `.cue`, `.gdi`, `.toc` or `.toast` itself, or an `.mds` together with its `.mdf`) once its CHD is made")
     parser.add_common_arguments()
     return parser
 

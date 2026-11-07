@@ -108,6 +108,7 @@ aptget[constants.EnvironmentType.LOCAL_UBUNTU] += [
     # Graphics
     {"id": "bchunk", "name": "bchunk", "description": "CD image converter", "category": "Graphics"},
     {"id": "cdrdao", "name": "cdrdao", "description": "CD burning tool", "category": "Graphics"},
+    {"id": "mdf2iso", "name": "mdf2iso", "description": "Alcohol MDF to ISO converter", "category": "Graphics"},
     {"id": "gimp", "name": "GIMP", "description": "Image editor", "category": "Graphics"},
     {"id": "ffmpeg", "name": "FFmpeg", "description": "Video/audio converter", "category": "Graphics"},
     {"id": "handbrake", "name": "HandBrake", "description": "Video transcoder", "category": "Graphics"},

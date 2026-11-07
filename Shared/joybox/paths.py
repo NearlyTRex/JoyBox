@@ -345,6 +345,13 @@ def convert_to_top_level_paths(path_list, path_root = None, only_files = False, 
             top_level_paths.add(path_front)
     return strings.sort_strings(top_level_paths)
 
+# Get relative path from a directory, or None when there is no route (another drive)
+def get_relative_path(path, start_dir):
+    try:
+        return os.path.relpath(path, start_dir)
+    except ValueError:
+        return None
+
 # Convert file list to relative paths
 def convert_file_list_to_relative_paths(file_list, base_dir):
     replacement = normalize_file_path(base_dir, separator = config.os_pathsep)

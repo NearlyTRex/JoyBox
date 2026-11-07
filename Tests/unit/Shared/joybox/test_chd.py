@@ -538,3 +538,106 @@ def test_pretending_to_extract_an_iso_writes_nothing(tmp_path, installed, record
 
 def test_iso_extraction_without_bchunk_reports_failure(missing):
     assert chd.extract_disc_chd_to_iso("/in/Game.chd", "/out/Game.iso") is False
+
+
+###########################################################
+# Creating through a converter
+#
+# chdman cannot read every disc image format, so a converter registered for
+# the extension writes a sheet chdman can read into a temporary directory and
+# that sheet is what chdman is given.
+###########################################################
+
+@pytest.fixture
+def converter(monkeypatch, tmp_path):
+    work = tmp_path / "work"
+    work.mkdir()
+    state = {"result": None, "calls": [], "removed": [], "dirs_removed": [], "work": str(work)}
+    state["result"] = (state["work"] + "/Game.cue", ["/in/Game.img", "/in/Game.sub"])
+
+    def convert(source_file, output_dir, **kwargs):
+        state["calls"].append((source_file, output_dir, kwargs.get("pretend_run")))
+        return state["result"]
+
+    monkeypatch.setattr(chd, "disc_sheet_converters", {})
+    chd.register_disc_sheet_converter(".IMG", convert)
+    monkeypatch.setattr(chd.fileops, "create_temporary_directory", lambda **kwargs: (True, str(work)))
+    monkeypatch.setattr(chd.fileops, "remove_directory", lambda src, **kwargs: state["dirs_removed"].append(src))
+    monkeypatch.setattr(chd.fileops, "remove_file", lambda src, **kwargs: state["removed"].append(src))
+    return state
+
+
+def test_mds_images_have_a_converter():
+    assert chd.get_disc_sheet_converter("/in/Game.mds") is chd.mds.convert_mds_to_cue
+    assert chd.get_disc_sheet_converter("/in/GAME.MDS") is chd.mds.convert_mds_to_cue
+
+
+@pytest.mark.parametrize("image", ["/in/Game.iso", "/in/Game.cue", "/in/Game.gdi", "/in/Game.toast"])
+def test_images_chdman_reads_have_no_converter(image):
+    assert chd.get_disc_sheet_converter(image) is None
+
+
+def test_a_converted_image_is_created_from_its_sheet(installed, recording_command, existing_output, converter):
+    assert chd.create_disc_chd("/out/Game.chd", "/in/Game.img") is True
+
+    assert converter["calls"] == [("/in/Game.img", converter["work"], False)]
+    assert recording_command.only()[:2] == ["/tools/chdman", "createcd"]
+    assert recording_command.value_after("-i") == converter["work"] + "/Game.cue"
+    assert recording_command.value_after("-o") == "/out/Game.chd"
+
+
+def test_a_registered_extension_matches_without_case(installed, recording_command, existing_output, converter):
+    chd.create_disc_chd("/out/Game.chd", "/in/GAME.img")
+
+    assert converter["calls"][0][0] == "/in/GAME.img"
+
+
+def test_the_sheet_directory_is_removed_after_converting(installed, recording_command, existing_output, converter):
+    chd.create_disc_chd("/out/Game.chd", "/in/Game.img")
+
+    assert converter["dirs_removed"] == [converter["work"]]
+
+
+def test_every_source_file_of_a_converted_image_is_deleted_when_asked(installed, recording_command, existing_output, converter):
+    assert chd.create_disc_chd("/out/Game.chd", "/in/Game.img", delete_original = True) is True
+
+    assert converter["removed"] == ["/in/Game.img", "/in/Game.sub"]
+
+
+def test_a_converted_image_is_kept_by_default(installed, recording_command, existing_output, converter):
+    chd.create_disc_chd("/out/Game.chd", "/in/Game.img")
+
+    assert converter["removed"] == []
+
+
+def test_a_failed_conversion_runs_nothing_and_cleans_up(installed, recording_command, converter):
+    converter["result"] = None
+
+    assert chd.create_disc_chd("/out/Game.chd", "/in/Game.img", delete_original = True) is False
+    assert recording_command.ran() is False
+    assert converter["dirs_removed"] == [converter["work"]]
+    assert converter["removed"] == []
+
+
+def test_a_failed_create_from_a_sheet_keeps_the_image(installed, monkeypatch, converter):
+    from fakes import RecordingCommand
+    RecordingCommand(monkeypatch, returncode = 1)
+
+    assert chd.create_disc_chd("/out/Game.chd", "/in/Game.img", delete_original = True) is False
+    assert converter["removed"] == []
+    assert converter["dirs_removed"] == [converter["work"]]
+
+
+def test_a_missing_temporary_directory_converts_nothing(installed, recording_command, converter, monkeypatch):
+    monkeypatch.setattr(chd.fileops, "create_temporary_directory", lambda **kwargs: (False, "no space"))
+
+    assert chd.create_disc_chd("/out/Game.chd", "/in/Game.img") is False
+    assert recording_command.ran() is False
+    assert converter["calls"] == []
+
+
+def test_pretending_a_conversion_passes_pretend_through(installed, recording_command, converter):
+    assert chd.create_disc_chd("/out/Game.chd", "/in/Game.img", delete_original = True, pretend_run = True) is True
+
+    assert converter["calls"][0][2] is True
+    assert recording_command.calls[0]["kwargs"].get("pretend_run") is True

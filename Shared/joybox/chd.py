@@ -12,6 +12,7 @@ import joybox.paths as paths
 import joybox.serialization as serialization
 import joybox.logger as logger
 import joybox.iso as iso
+import joybox.mds as mds
 import joybox.archive as archive
 
 # Get disc iso
@@ -28,6 +29,25 @@ def is_disc_chd_mounted(chd_file, mount_dir):
         iso_file = get_disc_iso(chd_file),
         mount_dir = mount_dir)
 
+# Converters for disc images chdman cannot read, by extension
+# A converter is called as converter(source_file, output_dir, verbose, pretend_run,
+# exit_on_failure). It writes a sheet chdman reads (cue, toc or gdi) into the empty
+# output_dir and returns (sheet file, source files the sheet stands for), or None.
+disc_sheet_converters = {
+    config.DiscImageFileType.MDS.cval(): mds.convert_mds_to_cue,
+}
+
+# Register a converter for disc images with an extension
+def register_disc_sheet_converter(extension, converter):
+    disc_sheet_converters[extension.lower()] = converter
+
+# Get the converter for a disc image, or None when chdman reads it directly
+def get_disc_sheet_converter(source_file):
+    for extension, converter in disc_sheet_converters.items():
+        if source_file.lower().endswith(extension):
+            return converter
+    return None
+
 # Create disc chd
 def create_disc_chd(
     chd_file,
@@ -36,6 +56,18 @@ def create_disc_chd(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
+
+    # An image chdman cannot read goes through its converter
+    converter = get_disc_sheet_converter(source_iso)
+    if converter:
+        return create_disc_chd_with_converter(
+            chd_file = chd_file,
+            source_file = source_iso,
+            converter = converter,
+            delete_original = delete_original,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
 
     # Get tool
     chd_tool = None
@@ -77,6 +109,46 @@ def create_disc_chd(
     if pretend_run:
         return True
     return os.path.exists(chd_file)
+
+# Create disc chd from an image through its converter
+def create_disc_chd_with_converter(
+    chd_file,
+    source_file,
+    converter,
+    delete_original = False,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+
+    # Create temporary directory
+    tmp_dir_success, tmp_dir_result = fileops.create_temporary_directory(
+        verbose = verbose,
+        pretend_run = pretend_run)
+    if not tmp_dir_success:
+        return False
+
+    # Write a sheet chdman reads, then convert it
+    converted = converter(
+        source_file = source_file,
+        output_dir = tmp_dir_result,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    success = bool(converted) and create_disc_chd(
+        chd_file = chd_file,
+        source_iso = converted[0],
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    fileops.remove_directory(src = tmp_dir_result, verbose = verbose, pretend_run = pretend_run)
+    if not success:
+        return False
+
+    # Clean up
+    if delete_original:
+        for src in converted[1]:
+            fileops.remove_file(src = src, verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure)
+    return True
 
 # Extract disc chd
 def extract_disc_chd(
