@@ -115,6 +115,13 @@ def test_requests_are_rate_limited():
     assert built[built.index("--tpslimit") + 1] == "10"
 
 
+def test_the_rate_limit_and_transfers_can_be_given():
+    built = sync.get_common_remote_flags(REMOTE, REMOTE_TYPE, None, tps_limit = 4, transfers = 2)
+
+    assert built[built.index("--tpslimit") + 1] == "4"
+    assert built[built.index("--transfers") + 1] == "2"
+
+
 def test_smallest_files_go_first():
     # So an interrupted run has moved as many whole files as possible.
     built = flags_for()

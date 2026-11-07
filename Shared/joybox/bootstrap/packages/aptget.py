@@ -93,6 +93,7 @@ aptget[constants.EnvironmentType.LOCAL_UBUNTU] += [
     {"id": "qttools5-dev-tools", "name": "Qt5 Tools", "description": "Qt5 additional tools", "category": "Devel"},
     {"id": "ripgrep", "name": "ripgrep", "description": "Fast recursive grep alternative", "category": "Devel"},
     {"id": "ruby-full", "name": "Ruby", "description": "Ruby programming language", "category": "Devel"},
+    {"id": "shellcheck", "name": "ShellCheck", "description": "Shell script linter", "category": "Devel"},
     {"id": "xa65", "name": "xa65", "description": "6502 cross-assembler", "category": "Devel"},
 
     # Gnome
@@ -108,6 +109,7 @@ aptget[constants.EnvironmentType.LOCAL_UBUNTU] += [
     # Graphics
     {"id": "bchunk", "name": "bchunk", "description": "CD image converter", "category": "Graphics"},
     {"id": "cdrdao", "name": "cdrdao", "description": "CD burning tool", "category": "Graphics"},
+    {"id": "mdf2iso", "name": "mdf2iso", "description": "Alcohol MDF to ISO converter", "category": "Graphics"},
     {"id": "gimp", "name": "GIMP", "description": "Image editor", "category": "Graphics"},
     {"id": "ffmpeg", "name": "FFmpeg", "description": "Video/audio converter", "category": "Graphics"},
     {"id": "handbrake", "name": "HandBrake", "description": "Video transcoder", "category": "Graphics"},

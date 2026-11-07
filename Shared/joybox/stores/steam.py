@@ -355,6 +355,10 @@ class Steam(storebase.StoreBase):
     # Connection
     ############################################################
 
+    # Get how to sign in again
+    def get_login_hint(self):
+        return "check steam_userid and steam_web_api_key in the UserData.Steam section of JoyBox.ini"
+
     # Login
     def login(
         self,
@@ -780,7 +784,6 @@ class Steam(storebase.StoreBase):
             element_game_description = webpage.wait_for_element(
                 driver = web_driver,
                 locator = webpage.ElementLocator({"id": "aboutThisGame"}),
-                wait_time = 15,
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = False)
@@ -831,12 +834,9 @@ class Steam(storebase.StoreBase):
 
         # Use retry function with cleanup
         try:
-            return datautils.retry_with_backoff(
+            return webpage.retry_scrape(
                 func = attempt_metadata_fetch,
                 cleanup_func = cleanup_driver,
-                max_retries = 3,
-                initial_delay = 2,
-                backoff_factor = 2,
                 verbose = verbose,
                 operation_name = "Steam metadata fetch for '%s'" % identifier)
         finally:

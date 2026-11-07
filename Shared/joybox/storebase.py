@@ -216,6 +216,22 @@ class StoreBase:
     def set_logged_in(self, value):
         self.logged_in = value
 
+    # Get files the purchase listing's saved sign-in is kept in; empty when it cannot be checked
+    def get_login_files(self):
+        return []
+
+    # Check if the purchase listing has a saved sign-in to use
+    def has_saved_login(self):
+        return all(paths.is_path_file(login_file) for login_file in self.get_login_files())
+
+    # Get how to sign in again
+    def get_login_hint(self):
+        return "login_game_stores -c %s -s \"%s\"" % (self.get_category(), self.get_subcategory())
+
+    # Get the config dir command-line tools keep their settings in
+    def get_user_config_dir(self):
+        return os.environ.get("XDG_CONFIG_HOME") or paths.expand_path("~/.config")
+
     # Login
     def login(
         self,

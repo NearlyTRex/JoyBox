@@ -389,6 +389,24 @@ def test_saving_writes_the_reference_and_not_the_secret(config_file, vault):
     assert SECRET_VALUE not in contents
 
 
+def test_a_raw_read_leaves_a_reference_unresolved(config_file, vault):
+    # A tool that writes to the field needs where it is, not what it holds
+    config_file("[UserData.Protection]\nlocker_passphrase = %s\n" % SECRET_REFERENCE)
+    settings.set_value("S", "set", SECRET_REFERENCE)
+
+    assert settings.get_raw_value("UserData.Protection", "locker_passphrase") == SECRET_REFERENCE
+    assert settings.get_raw_value("S", "set") == SECRET_REFERENCE
+    assert vault == []
+
+
+def test_a_raw_read_falls_back_like_an_ordinary_one(config_file, vault):
+    config_file("[S]\nname = joybox\n")
+
+    assert settings.get_raw_value("Tools.Tar", "tar_exe") == "tar"
+    assert settings.get_raw_value("S", "absent", default_value = "d") == "d"
+    assert settings.get_raw_value("UserData.Wordpress", "wordpress_admin_pass") is None
+
+
 ###########################################################
 # Unreadable files and uncoercible values
 ###########################################################
@@ -409,6 +427,7 @@ def test_fields_are_listed_and_a_missing_section_has_none(config_file):
     lambda: settings.has_section("A"),
     lambda: settings.has_field("A", "x"),
     lambda: settings.get_value("A", "x"),
+    lambda: settings.get_raw_value("A", "x"),
     lambda: settings.get_integer_value("A", "x"),
     lambda: settings.get_bool_value("A", "x"),
     lambda: settings.get_path_value("A", "x"),
@@ -427,6 +446,7 @@ def test_a_malformed_file_raises_a_runtime_error_naming_the_file(config_file, ca
     (lambda: settings.has_section("A", throw_exception = False), False),
     (lambda: settings.has_field("A", "x", throw_exception = False), False),
     (lambda: settings.get_value("A", "x", default_value = "d", throw_exception = False), "d"),
+    (lambda: settings.get_raw_value("A", "x", default_value = "d", throw_exception = False), "d"),
     (lambda: settings.get_integer_value("A", "x", default_value = 3, throw_exception = False), 3),
     (lambda: settings.get_bool_value("A", "x", default_value = True, throw_exception = False),
      True),

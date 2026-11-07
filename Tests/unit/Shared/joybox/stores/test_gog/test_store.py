@@ -182,3 +182,38 @@ def test_a_game_is_installed_when_its_folder_has_files(gog_store):
 
     assert gog_store.is_installed("1207658924") is True
     assert gog_store.is_installed("") is False
+
+
+###########################################################
+# Saved sign-in
+#
+# The purchase step checks these files before running the store's tool, so
+# they must be where the tool keeps its sign-in.
+###########################################################
+
+@pytest.fixture
+def lgogdownloader(monkeypatch, tmp_path):
+    state = {"installed": True, "program": str(tmp_path / "LGOGDownloader.AppImage")}
+    monkeypatch.setattr(gog.programs, "is_tool_installed", lambda name: state["installed"] and name == "LGOGDownloader")
+    monkeypatch.setattr(gog.programs, "get_tool_program", lambda name: state["program"])
+    return state
+
+
+def test_the_sign_in_is_in_the_appimages_own_home(gog_store, lgogdownloader, tmp_path):
+    (tmp_path / "LGOGDownloader.AppImage.home").mkdir()
+
+    expected = tmp_path / "LGOGDownloader.AppImage.home" / ".config" / "lgogdownloader" / "galaxy_tokens.json"
+    assert gog_store.get_login_files() == [str(expected)]
+
+
+def test_without_an_appimage_home_the_sign_in_is_in_the_user_config(gog_store, lgogdownloader, monkeypatch, tmp_path):
+    monkeypatch.setenv("XDG_CONFIG_HOME", str(tmp_path / "config"))
+
+    assert gog_store.get_login_files() == [str(tmp_path / "config" / "lgogdownloader" / "galaxy_tokens.json")]
+
+
+def test_without_lgogdownloader_the_sign_in_cannot_be_checked(gog_store, lgogdownloader):
+    lgogdownloader["installed"] = False
+
+    assert gog_store.get_login_files() == []
+    assert gog_store.has_saved_login() is True

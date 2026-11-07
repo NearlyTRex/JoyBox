@@ -36,6 +36,19 @@ def test_top_level_paths_under_a_root_without_a_filter_keep_everything(tmp_path)
 # Relative conversion
 ###########################################################
 
+def test_a_relative_path_climbs_out_of_its_start():
+    assert paths.get_relative_path("/g/a/Game.mdf", "/g/tmp/work") == os.path.join("..", "..", "a", "Game.mdf")
+
+
+def test_a_path_with_no_relative_route_has_no_relative_path(monkeypatch):
+    def other_drive(path, start):
+        raise ValueError("path is on mount 'D:', start on mount 'C:'")
+
+    monkeypatch.setattr(paths.os.path, "relpath", other_drive)
+
+    assert paths.get_relative_path("D:\\Game.mdf", "C:\\work") is None
+
+
 def test_relative_conversion_strips_only_the_leading_base():
     assert paths.convert_file_list_to_relative_paths(["/g/a/g/b"], "/g") == ["a/g/b"]
     assert paths.convert_file_list_to_relative_paths(["/g/a"], "/g/") == ["a"]

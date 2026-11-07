@@ -1,10 +1,76 @@
+# Imports
+import collections
+
 # Local imports
 import joybox.config as config
-import joybox.datautils as datautils
+import joybox.logger as logger
 import joybox.strings as strings
 import joybox.gameinfo as gameinfo
 import joybox.webpage as webpage
 import joybox.metadataentry as metadataentry
+
+############################################################
+
+# Fetch result for a page behind a bot challenge; not None, so retries stop at once
+BLOCKED = object()
+
+# Per-run tally of what each metadata source produced
+class CollectionStats:
+    source_outcomes = ("filled", "empty", "blocked", "unsupported", "skipped")
+    game_outcomes = ("complete", "partial", "nothing found")
+
+    def __init__(self):
+        self.sources = {}
+        self.games = collections.Counter()
+
+    # Count one outcome for a source
+    def record_source(self, source_name, outcome):
+        self.sources.setdefault(source_name, collections.Counter())[outcome] += 1
+
+    # Count how complete one game's collected metadata came back
+    def record_game(self, outcome):
+        self.games[outcome] += 1
+
+    # One line per source, then one for the games
+    def summary_lines(self):
+        def describe(counts, outcomes):
+            return ", ".join("%d %s" % (counts[outcome], outcome) for outcome in outcomes if counts[outcome])
+        lines = ["%s: %s" % (source_name, describe(counts, self.source_outcomes)) for source_name, counts in self.sources.items()]
+        if self.games:
+            lines.append("Games: %s" % describe(self.games, self.game_outcomes))
+        return lines
+
+    # Sources that were challenged every time they were actually fetched
+    def fully_blocked_sources(self):
+        return [source_name for source_name, counts in self.sources.items()
+            if counts["blocked"] and not counts["filled"] and not counts["empty"]]
+
+    # Log the summary, warning about any source that was blocked throughout
+    def log_summary(self):
+        lines = self.summary_lines()
+        if not lines:
+            return
+        logger.log_info("Metadata collection summary:")
+        for line in lines:
+            logger.log_info("  " + line)
+        for source_name in self.fully_blocked_sources():
+            logger.log_warning("%s served a bot challenge for every game it was asked about" % source_name)
+
+# Record one source outcome, if a tally is being kept
+def record_source_outcome(stats, source_name, outcome):
+    if stats is not None:
+        stats.record_source(source_name, outcome)
+
+# Record what a source fetch produced and give its caller-facing result
+def finish_source_fetch(stats, source_name, result):
+    if result is BLOCKED:
+        outcome = "blocked"
+    elif isinstance(result, metadataentry.MetadataEntry) and result.game_entry:
+        outcome = "filled"
+    else:
+        outcome = "empty"
+    record_source_outcome(stats, source_name, outcome)
+    return None if result is BLOCKED else result
 
 ############################################################
 
@@ -45,12 +111,9 @@ def fetch_with_web_driver(
 
     # Use retry function with cleanup
     try:
-        return datautils.retry_with_backoff(
+        return webpage.retry_scrape(
             func = attempt_fetch,
             cleanup_func = cleanup_driver,
-            max_retries = 3,
-            initial_delay = 2,
-            backoff_factor = 2,
             verbose = verbose,
             operation_name = operation_name)
     finally:
@@ -85,9 +148,17 @@ def apply_detail_lines(metadata_result, detail_lines, detail_fields):
 def collect_metadata_from_tgdb(
     game_platform,
     game_name,
+    stats = None,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
+
+    # Get TheGamesDB platform ids
+    tgdb_platform_ids = config.tgdb_platforms.get(game_platform)
+    if not tgdb_platform_ids:
+        record_source_outcome(stats, "TheGamesDB", "unsupported")
+        return None
+    platform_filter = "".join("&platform_id%5B%5D=" + platform_id for platform_id in tgdb_platform_ids)
 
     # Fetch function
     def attempt_metadata_fetch(web_driver):
@@ -99,7 +170,7 @@ def collect_metadata_from_tgdb(
         metadata_result = metadataentry.MetadataEntry()
 
         # Load url
-        success = webpage.load_url(web_driver, "https://thegamesdb.net/search.php?name=" + search_terms)
+        success = webpage.load_url(web_driver, "https://thegamesdb.net/search.php?name=" + search_terms + platform_filter)
         if not success:
             raise Exception("Failed to load TheGamesDB search page")
 
@@ -110,7 +181,6 @@ def collect_metadata_from_tgdb(
         element_search_result = webpage.wait_for_element(
             driver = web_driver,
             locator = webpage.ElementLocator({"class": "container-fluid"}),
-            wait_time = 15,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = False)
@@ -142,8 +212,10 @@ def collect_metadata_from_tgdb(
                     score_entry["ratio"] = strings.get_string_similarity_ratio(natural_name, potential_title)
                     scores_list.append(score_entry)
 
+        min_match_score = webpage.get_min_match_score()
+        scores_list = [score_entry for score_entry in scores_list if score_entry["ratio"] >= min_match_score]
         if not scores_list:
-            return None  # No titled results, not an error
+            return None  # No titled result close enough, not an error
 
         # Click on the highest score element
         best_entry = max(scores_list, key = lambda d: d["ratio"])
@@ -157,7 +229,6 @@ def collect_metadata_from_tgdb(
         element_game_description = webpage.wait_for_element(
             driver = web_driver,
             locator = webpage.ElementLocator({"class": "game-overview"}),
-            wait_time = 15,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = False)
@@ -197,11 +268,12 @@ def collect_metadata_from_tgdb(
         return metadata_result
 
     # Fetch with retries
-    return fetch_with_web_driver(
+    result = fetch_with_web_driver(
         fetch_func = attempt_metadata_fetch,
         operation_name = "TheGamesDB metadata fetch for '%s' (%s)" % (game_name, game_platform),
         verbose = verbose,
         pretend_run = pretend_run)
+    return finish_source_fetch(stats, "TheGamesDB", result)
 
 ############################################################
 
@@ -209,6 +281,7 @@ def collect_metadata_from_tgdb(
 def collect_metadata_from_gamefaqs(
     game_platform,
     game_name,
+    stats = None,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -216,6 +289,7 @@ def collect_metadata_from_gamefaqs(
     # Get GameFAQs platform name
     gamefaqs_platform_info = config.gamefaqs_platforms.get(game_platform)
     if not gamefaqs_platform_info:
+        record_source_outcome(stats, "GameFAQs", "unsupported")
         return None
     gamefaqs_platform = gamefaqs_platform_info[0]
 
@@ -232,12 +306,13 @@ def collect_metadata_from_gamefaqs(
         success = webpage.load_url(web_driver, "https://gamefaqs.gamespot.com")
         if not success:
             raise Exception("Failed to load GameFAQs homepage")
+        if webpage.is_challenge_page(web_driver, verbose = verbose):
+            return BLOCKED
 
         # Look for homepage marker
         element_homepage_marker = webpage.wait_for_element(
             driver = web_driver,
             locator = webpage.ElementLocator({"class": "home_jbi_ft"}),
-            wait_time = 15,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = False)
@@ -245,15 +320,16 @@ def collect_metadata_from_gamefaqs(
             raise Exception("GameFAQs homepage marker not found")
 
         # Load search URL
-        success = webpage.load_url(web_driver, "https://gamefaqs.gamespot.com/search_advanced?game=" + search_terms)
+        success = webpage.load_url(web_driver, "https://gamefaqs.gamespot.com/search?game=" + search_terms)
         if not success:
             raise Exception("Failed to load GameFAQs search page")
+        if webpage.is_challenge_page(web_driver, verbose = verbose):
+            return BLOCKED
 
         # Look for search results
         element_search_result = webpage.wait_for_element(
             driver = web_driver,
             locator = webpage.ElementLocator({"class": "span12"}),
-            wait_time = 15,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = False)
@@ -306,7 +382,6 @@ def collect_metadata_from_gamefaqs(
         element_game_description = webpage.wait_for_element(
             driver = web_driver,
             locator = webpage.ElementLocator({"class": "game_desc"}),
-            wait_time = 15,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = False)
@@ -353,11 +428,12 @@ def collect_metadata_from_gamefaqs(
         return metadata_result
 
     # Fetch with retries
-    return fetch_with_web_driver(
+    result = fetch_with_web_driver(
         fetch_func = attempt_metadata_fetch,
         operation_name = "GameFAQs metadata fetch for '%s' (%s)" % (game_name, game_platform),
         verbose = verbose,
         pretend_run = pretend_run)
+    return finish_source_fetch(stats, "GameFAQs", result)
 
 ############################################################
 
@@ -365,6 +441,7 @@ def collect_metadata_from_gamefaqs(
 def collect_metadata_from_bigfishgames(
     game_platform,
     game_name,
+    stats = None,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -387,7 +464,6 @@ def collect_metadata_from_bigfishgames(
         element_game_description = webpage.wait_for_element(
             driver = web_driver,
             locator = webpage.ElementLocator({"class": "productFullDetail__descriptionContent"}),
-            wait_time = 15,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = False)
@@ -398,7 +474,6 @@ def collect_metadata_from_bigfishgames(
         element_game_bullets = webpage.wait_for_element(
             driver = web_driver,
             locator = webpage.ElementLocator({"class": "productFullDetail__bullets"}),
-            wait_time = 15,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = False)
@@ -422,11 +497,12 @@ def collect_metadata_from_bigfishgames(
         return metadata_result
 
     # Fetch with retries
-    return fetch_with_web_driver(
+    result = fetch_with_web_driver(
         fetch_func = attempt_metadata_fetch,
         operation_name = "BigFishGames metadata fetch for '%s' (%s)" % (game_name, game_platform),
         verbose = verbose,
         pretend_run = pretend_run)
+    return finish_source_fetch(stats, "BigFishGames", result)
 
 ############################################################
 
@@ -435,6 +511,7 @@ def collect_metadata_from_all(
     game_platform,
     game_name,
     keys_to_check,
+    stats = None,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -442,15 +519,30 @@ def collect_metadata_from_all(
     # Metadata result
     metadata_result = metadataentry.MetadataEntry()
 
-    # Try from GameFAQs
-    metadata_result_gamefaqs = collect_metadata_from_gamefaqs(
-        game_platform = game_platform,
-        game_name = game_name,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    if isinstance(metadata_result_gamefaqs, metadataentry.MetadataEntry):
-        metadata_result.merge(metadata_result_gamefaqs)
+    # Try each source in priority order; earlier sources keep their values
+    sources = [("GameFAQs", collect_metadata_from_gamefaqs), ("TheGamesDB", collect_metadata_from_tgdb)]
+    for source_name, collect_func in sources:
+        if not metadata_result.is_missing_data(keys_to_check):
+            record_source_outcome(stats, source_name, "skipped")
+            continue
+        source_result = collect_func(
+            game_platform = game_platform,
+            game_name = game_name,
+            stats = stats,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if isinstance(source_result, metadataentry.MetadataEntry):
+            metadata_result.merge(source_result)
+
+    # Tally the game
+    if stats is not None:
+        if not metadata_result.game_entry:
+            stats.record_game("nothing found")
+        elif metadata_result.is_missing_data(keys_to_check):
+            stats.record_game("partial")
+        else:
+            stats.record_game("complete")
 
     # Return result
     return metadata_result

@@ -27,7 +27,14 @@ def build_parser():
             "replaces a file. Only the `Roms`, `DLC` and `Updates` supercategories have JSON files.\n"
             "\n"
             "The game directory is `-i` if given, otherwise the game's place under `-b`, otherwise\n"
-            "the gaming folder of the `-l` locker (the Local locker when `-l` is omitted)."),
+            "the gaming folder of the `-l` locker (the Local locker when `-l` is omitted).\n"
+            "\n"
+            "With `--create_playlists`, before listing a `Roms` game's files, writes\n"
+            "`<game name>.m3u` in its folder when it has two or more disc images marked `(Disc N)`,\n"
+            "`(Disk N)`, `(Disc N of M)`, `(Disc A)` or by role, such as `(Game Disc)` and\n"
+            "`(Bonus Disc)`, and no playlist yet. Numbered discs come first in number order, then\n"
+            "lettered ones, then labelled ones with the game disc first. The playlist becomes the\n"
+            "game's launch or transform file."),
         examples = [
             ("Build JSON for one new update from the local locker", "build_game_json_files -u Updates -c Nintendo -s \"Nintendo Switch\" -n \"Pokemon Legends Z-A (World)\" -l Local"),
             ("Build JSON for a whole platform from a remote locker", "build_game_json_files -c Nintendo -s \"Nintendo Switch\" -l Hetzner"),
@@ -40,6 +47,7 @@ def build_parser():
             "`-n` must name a game folder that exists in the locker; games are always listed from the locker, even with `-i`.",
             "`-i` is used as the directory of every selected game, so use it together with `-n`.",
             "The supercategory defaults to `Roms`; pass `-u` for DLC or updates.",
+            "No disc playlist is made when two images are the same disc, or when the locker is encrypted, since the disc names are then hidden.",
         ],
         see_also = ["upload_game_files", "clean_game_json_files", "analyze_game_json_files", "build_game_metadata_files", "build_game_hash_files"],
         section = "Game Collection")
@@ -63,6 +71,8 @@ def build_parser():
         args = ("-b", "--locker_base_dir"),
         default = None,
         description = "Locker root to list and read games from instead of the `-l` locker's mount path (its Gaming folder is used)")
+    parser.add_group("Output")
+    parser.add_boolean_argument(args = ("--create_playlists"), description = "Write a `.m3u` playlist into the folder of each multi-disc `Roms` game that has none; off by default so read-only lockers are left untouched")
     parser.add_common_arguments()
     return parser
 
@@ -126,6 +136,7 @@ def main():
             game_name = game_name,
             game_root = game_root,
             locker_type = args.locker_type,
+            create_disc_playlists = args.create_playlists,
             verbose = args.verbose,
             pretend_run = args.pretend_run,
             exit_on_failure = args.exit_on_failure)

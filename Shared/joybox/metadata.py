@@ -6,10 +6,10 @@ import joybox.config as config
 import joybox.datautils as datautils
 import joybox.logger as logger
 import joybox.environment as environment
-import joybox.fileops as fileops
 import joybox.gamenaming as gamenaming
 import joybox.metadataentry as metadataentry
 import joybox.paths as paths
+import joybox.serialization as serialization
 
 # Metadata database class
 class Metadata:
@@ -302,106 +302,107 @@ class Metadata:
         verbose = False,
         pretend_run = False,
         exit_on_failure = False):
-        file_mode = "a" if append_existing else "w"
-        if not paths.does_path_exist(pegasus_file):
-            fileops.make_directory(
-                src = paths.get_filename_directory(pegasus_file),
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
-            fileops.touch_file(
+        contents = []
+        if append_existing and paths.does_path_exist(pegasus_file):
+            contents.append(serialization.read_text_file(
                 src = pegasus_file,
                 verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
-        with open(pegasus_file, file_mode, encoding="utf8", newline="\n") as file:
-            for game_platform in self.get_sorted_platforms():
-                game_supercategory, game_category, game_subcategory = gamenaming.derive_game_categories_from_platform(game_platform)
+                exit_on_failure = exit_on_failure) or "")
+        for game_platform in self.get_sorted_platforms():
+            game_supercategory, game_category, game_subcategory = gamenaming.derive_game_categories_from_platform(game_platform)
 
-                # Get launch command
-                launch_cmd = [
-                    "{env.JOYBOX_LAUNCH_JSON}",
-                    "-c", "\"" + game_category + "\"",
-                    "-s", "\"" + game_subcategory + "\"",
-                    "-n", "{file.basename}"
-                ]
+            # Get launch command
+            launch_cmd = [
+                "{env.JOYBOX_LAUNCH_JSON}",
+                "-c", "\"" + game_category + "\"",
+                "-s", "\"" + game_subcategory + "\"",
+                "-n", "{file.basename}"
+            ]
 
-                # Write header
-                file.write("collection: %s\n" % game_platform.val())
-                file.write("launch: %s\n" % " ".join(launch_cmd))
-                file.write("\n\n")
+            # Write header
+            contents.append("collection: %s\n" % game_platform.val())
+            contents.append("launch: %s\n" % " ".join(launch_cmd))
+            contents.append("\n\n")
 
-                # Write each entry
-                for game_entry in self.get_sorted_entries(game_platform):
+            # Write each entry
+            for game_entry in self.get_sorted_entries(game_platform):
 
-                    # Game
-                    if game_entry.get_game():
-                        file.write("game: " + game_entry.get_game() + "\n")
+                # Game
+                if game_entry.get_game():
+                    contents.append("game: " + game_entry.get_game() + "\n")
 
-                    # File
-                    if game_entry.get_file():
-                        file.write("file: " + game_entry.get_file() + "\n")
+                # File
+                if game_entry.get_file():
+                    contents.append("file: " + game_entry.get_file() + "\n")
 
-                    # Developer
-                    if game_entry.get_developer():
-                        file.write("developer: " + game_entry.get_developer() + "\n")
+                # Developer
+                if game_entry.get_developer():
+                    contents.append("developer: " + game_entry.get_developer() + "\n")
 
-                    # Publisher
-                    if game_entry.get_publisher():
-                        file.write("publisher: " + game_entry.get_publisher() + "\n")
+                # Publisher
+                if game_entry.get_publisher():
+                    contents.append("publisher: " + game_entry.get_publisher() + "\n")
 
-                    # Genre
-                    if game_entry.get_genre():
-                        file.write("genre: " + game_entry.get_genre() + "\n")
+                # Genre
+                if game_entry.get_genre():
+                    contents.append("genre: " + game_entry.get_genre() + "\n")
 
-                    # Description
-                    if game_entry.get_description():
-                        file.write("description:\n")
-                        for desc_line in game_entry.get_description():
-                            file.write("  " + desc_line + "\n")
+                # Description
+                if game_entry.get_description():
+                    contents.append("description:\n")
+                    for desc_line in game_entry.get_description():
+                        contents.append("  " + desc_line + "\n")
 
-                    # Release
-                    if game_entry.get_release():
-                        file.write("release: " + game_entry.get_release() + "\n")
+                # Release
+                if game_entry.get_release():
+                    contents.append("release: " + game_entry.get_release() + "\n")
 
-                    # Players
-                    if game_entry.get_players():
-                        file.write("players: " + game_entry.get_players() + "\n")
+                # Players
+                if game_entry.get_players():
+                    contents.append("players: " + game_entry.get_players() + "\n")
 
-                    # Boxfront
-                    if game_entry.get_boxfront():
-                        file.write("assets.boxfront: " + game_entry.get_boxfront() + "\n")
+                # Boxfront
+                if game_entry.get_boxfront():
+                    contents.append("assets.boxfront: " + game_entry.get_boxfront() + "\n")
 
-                    # Boxback
-                    if game_entry.get_boxback():
-                        file.write("assets.boxback: " + game_entry.get_boxback() + "\n")
+                # Boxback
+                if game_entry.get_boxback():
+                    contents.append("assets.boxback: " + game_entry.get_boxback() + "\n")
 
-                    # Background
-                    if game_entry.get_background():
-                        file.write("assets.background: " + game_entry.get_background() + "\n")
+                # Background
+                if game_entry.get_background():
+                    contents.append("assets.background: " + game_entry.get_background() + "\n")
 
-                    # Screenshot
-                    if game_entry.get_screenshot():
-                        file.write("assets.screenshot: " + game_entry.get_screenshot() + "\n")
+                # Screenshot
+                if game_entry.get_screenshot():
+                    contents.append("assets.screenshot: " + game_entry.get_screenshot() + "\n")
 
-                    # Video
-                    if game_entry.get_video():
-                        file.write("assets.video: " + game_entry.get_video() + "\n")
+                # Video
+                if game_entry.get_video():
+                    contents.append("assets.video: " + game_entry.get_video() + "\n")
 
-                    # Url
-                    if game_entry.get_url():
-                        file.write("x-url: " + game_entry.get_url() + "\n")
+                # Url
+                if game_entry.get_url():
+                    contents.append("x-url: " + game_entry.get_url() + "\n")
 
-                    # Co-op
-                    if game_entry.get_coop():
-                        file.write("x-co-op: " + game_entry.get_coop() + "\n")
+                # Co-op
+                if game_entry.get_coop():
+                    contents.append("x-co-op: " + game_entry.get_coop() + "\n")
 
-                    # Playable
-                    if game_entry.get_playable():
-                        file.write("x-playable: " + game_entry.get_playable() + "\n")
+                # Playable
+                if game_entry.get_playable():
+                    contents.append("x-playable: " + game_entry.get_playable() + "\n")
 
-                    # Divider
-                    file.write("\n\n")
+                # Divider
+                contents.append("\n\n")
+
+        # Write file
+        return serialization.write_text_file(
+            src = pegasus_file,
+            contents = "".join(contents),
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
 
     # Export to metadata file
     def export_to_metadata_file(

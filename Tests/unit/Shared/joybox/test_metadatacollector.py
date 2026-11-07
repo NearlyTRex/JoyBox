@@ -120,13 +120,15 @@ def browser(monkeypatch):
     monkeypatch.setattr(webpage, "get_element", get_element)
     monkeypatch.setattr(webpage, "click_element", click_element)
     monkeypatch.setattr(webpage, "is_url_loaded", is_url_loaded)
+    monkeypatch.setattr(webpage, "is_challenge_page", lambda driver, verbose = False: CHALLENGE in fake.page_for(driver.url))
     monkeypatch.setattr(webpage, "get_element_text", lambda element, verbose = False: element.text if element else None)
     monkeypatch.setattr(webpage, "get_element_children_text", lambda element, verbose = False: element.children_text)
     monkeypatch.setattr(webpage, "get_element_link_url", lambda element, verbose = False: element.link)
-    monkeypatch.setattr(metadatacollector.datautils.time, "sleep", fake.slept.append)
+    monkeypatch.setattr(metadatacollector.webpage.datautils.time, "sleep", fake.slept.append)
     return fake
 
 
+CHALLENGE = "challenge-error-text"
 PLATFORM = config.Platform.NINTENDO_64
 PLATFORM_NAME = config.gamefaqs_platforms[PLATFORM][0]
 GAME_NAME = "Super Mario 64 (USA)"
@@ -136,7 +138,7 @@ GAME_NAME = "Super Mario 64 (USA)"
 # TheGamesDB
 ###########################################################
 
-TGDB_SEARCH_URL = "https://thegamesdb.net/search.php?name=Super+Mario+64"
+TGDB_SEARCH_URL = "https://thegamesdb.net/search.php?name=Super+Mario+64&platform_id%5B%5D=3"
 TGDB_GAME_URL = "https://thegamesdb.net/game.php?id=1"
 TGDB_OTHER_URL = "https://thegamesdb.net/game.php?id=2"
 
@@ -207,6 +209,22 @@ def test_tgdb_results_without_a_title_are_not_candidates(browser):
     assert browser.clicked == [titled]
 
 
+def test_tgdb_does_not_open_a_result_too_unlike_the_name(browser):
+    tgdb_results(browser, FakeElement(text = "Pokemon Snap\nNintendo 64", link = TGDB_GAME_URL))
+    tgdb_game(browser, description = "Take photos.")
+
+    assert metadatacollector.collect_metadata_from_tgdb(PLATFORM, GAME_NAME) is None
+    assert browser.clicked == []
+
+
+def test_tgdb_takes_its_lowest_match_score_from_the_scraping_settings(browser, isolated_settings):
+    tgdb_results(browser, FakeElement(text = "Super Mario 64 DS\nNintendo DS", link = TGDB_GAME_URL))
+    tgdb_game(browser, description = "A plumber collects stars.")
+    isolated_settings.set_value("UserData.Scraping", "min_match_score", "95")
+
+    assert metadatacollector.collect_metadata_from_tgdb(PLATFORM, GAME_NAME) is None
+
+
 @pytest.mark.parametrize("cells", [[], [FakeElement(text = None)]])
 def test_tgdb_without_a_titled_result_gives_no_metadata_and_does_not_retry(browser, cells):
     tgdb_results(browser, *cells)
@@ -215,6 +233,17 @@ def test_tgdb_without_a_titled_result_gives_no_metadata_and_does_not_retry(brows
     assert metadatacollector.collect_metadata_from_tgdb(PLATFORM, GAME_NAME) is None
     assert len(browser.drivers) == 1
     assert browser.slept == []
+
+
+def test_tgdb_a_platform_it_does_not_list_opens_no_browser(browser):
+    assert metadatacollector.collect_metadata_from_tgdb("Not A Platform", GAME_NAME) is None
+    assert browser.created == []
+
+
+def test_tgdb_searches_every_id_a_platform_maps_to(browser):
+    metadatacollector.collect_metadata_from_tgdb(config.Platform.OTHER_SEGA_GENESIS, "Sonic the Hedgehog (USA)")
+
+    assert browser.loaded == ["https://thegamesdb.net/search.php?name=Sonic+the+Hedgehog&platform_id%5B%5D=18&platform_id%5B%5D=36"]
 
 
 def test_tgdb_without_a_results_container_gives_no_metadata(browser):
@@ -268,7 +297,7 @@ def test_tgdb_game_page_with_nothing_on_it_gives_an_empty_entry(browser):
 ###########################################################
 
 GAMEFAQS_HOME_URL = "https://gamefaqs.gamespot.com"
-GAMEFAQS_SEARCH_URL = "https://gamefaqs.gamespot.com/search_advanced?game=Super+Mario+64"
+GAMEFAQS_SEARCH_URL = "https://gamefaqs.gamespot.com/search?game=Super+Mario+64"
 GAMEFAQS_GAME_URL = "https://gamefaqs.gamespot.com/n64/198848-super-mario-64"
 GAMEFAQS_OTHER_URL = "https://gamefaqs.gamespot.com/ds/920785-super-mario-64-ds"
 
@@ -427,6 +456,30 @@ def test_gamefaqs_a_search_page_that_will_not_load_is_retried(browser):
 
     assert metadatacollector.collect_metadata_from_gamefaqs(PLATFORM, GAME_NAME) is None
     assert browser.loaded == [GAMEFAQS_HOME_URL, GAMEFAQS_SEARCH_URL] * 3
+
+
+@pytest.mark.parametrize("blocked_url", [GAMEFAQS_HOME_URL, GAMEFAQS_SEARCH_URL])
+def test_gamefaqs_a_bot_challenge_gives_no_metadata_and_does_not_retry(browser, blocked_url):
+    gamefaqs_ready(browser)
+    browser.pages[blocked_url] = {CHALLENGE: FakeElement(), "home_jbi_ft": FakeElement(), "span12": FakeElement()}
+    stats = metadatacollector.CollectionStats()
+
+    assert metadatacollector.collect_metadata_from_gamefaqs(PLATFORM, GAME_NAME, stats = stats) is None
+    assert stats.sources == {"GameFAQs": {"blocked": 1}}
+    assert browser.loaded[-1] == blocked_url
+    assert browser.waits == ([15] if blocked_url == GAMEFAQS_SEARCH_URL else [])
+    assert browser.destroyed_drivers() == browser.drivers == [browser.drivers[0]]
+    assert browser.slept == []
+
+
+def test_gamefaqs_a_bot_challenge_after_a_failed_attempt_stops_the_retries(browser):
+    gamefaqs_ready(browser)
+    browser.pages[GAMEFAQS_HOME_URL][CHALLENGE] = FakeElement()
+    browser.failed_loads = 1
+
+    assert metadatacollector.collect_metadata_from_gamefaqs(PLATFORM, GAME_NAME) is None
+    assert len(browser.drivers) == 2
+    assert browser.slept == [2]
 
 
 def test_gamefaqs_a_platform_it_does_not_list_opens_no_browser(browser):
@@ -597,33 +650,173 @@ def test_a_pretend_run_without_a_browser_does_not_retry(browser, collect, ready,
     assert len(browser.created) == 1
     assert browser.slept == []
 
-
 ###########################################################
 # All sources
+#
+# GameFAQs is asked first and TheGamesDB fills whatever it left out; a value
+# from an earlier source is never overwritten by a later one.
 ###########################################################
 
-def test_all_sources_gives_the_gamefaqs_metadata(monkeypatch):
-    calls = []
-
-    def collect_metadata_from_gamefaqs(**kwargs):
-        calls.append(kwargs)
+def fake_source(monkeypatch, name, calls, **values):
+    def collect(**kwargs):
+        calls.append((name, kwargs))
+        if not values:
+            return None
         entry = metadataentry.MetadataEntry()
-        entry.set_developer("Nintendo EAD")
+        for key, value in values.items():
+            entry.set_value(key, value)
         return entry
-    monkeypatch.setattr(metadatacollector, "collect_metadata_from_gamefaqs", collect_metadata_from_gamefaqs)
+    monkeypatch.setattr(metadatacollector, "collect_metadata_from_%s" % name, collect)
 
-    entry = metadatacollector.collect_metadata_from_all(PLATFORM, GAME_NAME, config.metadata_keys_downloadable,
+
+COMPLETE = {key: "x" for key in config.metadata_keys_downloadable}
+
+
+def test_all_sources_passes_the_callers_flags_to_each_source(monkeypatch):
+    calls = []
+    fake_source(monkeypatch, "gamefaqs", calls)
+    fake_source(monkeypatch, "tgdb", calls)
+
+    metadatacollector.collect_metadata_from_all(PLATFORM, GAME_NAME, config.metadata_keys_downloadable,
         verbose = True, pretend_run = True, exit_on_failure = True)
 
-    assert entry.game_entry == {config.metadata_key_developer: "Nintendo EAD"}
-    assert calls == [{"game_platform": PLATFORM, "game_name": GAME_NAME,
-        "verbose": True, "pretend_run": True, "exit_on_failure": True}]
+    expected = {"game_platform": PLATFORM, "game_name": GAME_NAME, "stats": None,
+        "verbose": True, "pretend_run": True, "exit_on_failure": True}
+    assert calls == [("gamefaqs", expected), ("tgdb", expected)]
 
 
-def test_all_sources_without_gamefaqs_metadata_gives_an_empty_entry(monkeypatch):
-    monkeypatch.setattr(metadatacollector, "collect_metadata_from_gamefaqs", lambda **kwargs: None)
+def test_all_sources_fills_gaps_from_tgdb_without_overwriting_gamefaqs(monkeypatch):
+    calls = []
+    fake_source(monkeypatch, "gamefaqs", calls, **{config.metadata_key_developer: "Nintendo EAD"})
+    fake_source(monkeypatch, "tgdb", calls, **{config.metadata_key_developer: "Someone Else", config.metadata_key_players: "1"})
+
+    entry = metadatacollector.collect_metadata_from_all(PLATFORM, GAME_NAME, config.metadata_keys_downloadable)
+
+    assert entry.game_entry == {config.metadata_key_developer: "Nintendo EAD", config.metadata_key_players: "1"}
+
+
+def test_all_sources_uses_tgdb_when_gamefaqs_gives_nothing(monkeypatch):
+    calls = []
+    fake_source(monkeypatch, "gamefaqs", calls)
+    fake_source(monkeypatch, "tgdb", calls, **{config.metadata_key_players: "1"})
+
+    entry = metadatacollector.collect_metadata_from_all(PLATFORM, GAME_NAME, config.metadata_keys_downloadable)
+
+    assert entry.game_entry == {config.metadata_key_players: "1"}
+
+
+def test_all_sources_skips_tgdb_once_gamefaqs_fills_every_key(monkeypatch):
+    calls = []
+    stats = metadatacollector.CollectionStats()
+    fake_source(monkeypatch, "gamefaqs", calls, **COMPLETE)
+    fake_source(monkeypatch, "tgdb", calls, **{config.metadata_key_players: "4"})
+
+    entry = metadatacollector.collect_metadata_from_all(PLATFORM, GAME_NAME, config.metadata_keys_downloadable, stats = stats)
+
+    assert [name for name, kwargs in calls] == ["gamefaqs"]
+    assert calls[0][1]["stats"] is stats
+    assert entry.game_entry == COMPLETE
+    assert stats.sources == {"TheGamesDB": {"skipped": 1}}
+    assert stats.games == {"complete": 1}
+
+
+@pytest.mark.parametrize("gamefaqs_values, tgdb_values, outcome", [
+    ({}, {}, "nothing found"),
+    ({config.metadata_key_developer: "Nintendo EAD"}, {}, "partial"),
+    ({config.metadata_key_developer: "Nintendo EAD"}, COMPLETE, "complete"),
+], ids = ["nothing", "partial", "complete"])
+def test_all_sources_tallies_how_complete_each_game_came_back(monkeypatch, gamefaqs_values, tgdb_values, outcome):
+    stats = metadatacollector.CollectionStats()
+    fake_source(monkeypatch, "gamefaqs", [], **gamefaqs_values)
+    fake_source(monkeypatch, "tgdb", [], **tgdb_values)
+
+    metadatacollector.collect_metadata_from_all(PLATFORM, GAME_NAME, config.metadata_keys_downloadable, stats = stats)
+
+    assert stats.games == {outcome: 1}
+
+
+def test_all_sources_without_any_metadata_gives_an_empty_entry(monkeypatch):
+    calls = []
+    fake_source(monkeypatch, "gamefaqs", calls)
+    fake_source(monkeypatch, "tgdb", calls)
 
     entry = metadatacollector.collect_metadata_from_all(PLATFORM, GAME_NAME, config.metadata_keys_downloadable)
 
     assert isinstance(entry, metadataentry.MetadataEntry)
     assert entry.game_entry == {}
+
+
+###########################################################
+# Collection tally
+###########################################################
+
+@pytest.mark.parametrize("collect, ready, platform, name, source", [
+    pytest.param(metadatacollector.collect_metadata_from_tgdb, tgdb_ready, PLATFORM, GAME_NAME, "TheGamesDB", id = "tgdb"),
+    pytest.param(metadatacollector.collect_metadata_from_gamefaqs, gamefaqs_ready, PLATFORM, GAME_NAME, "GameFAQs", id = "gamefaqs"),
+    pytest.param(metadatacollector.collect_metadata_from_bigfishgames, bigfish_ready,
+        config.Platform.COMPUTER_LEGACY_GAMES, "Mystery Case Files", "BigFishGames", id = "bigfish"),
+])
+def test_each_source_records_whether_it_filled_anything(browser, collect, ready, platform, name, source):
+    stats = metadatacollector.CollectionStats()
+
+    collect(platform, name, stats = stats)
+    ready(browser)
+    collect(platform, name, stats = stats)
+
+    assert stats.sources == {source: {"empty": 1, "filled": 1}}
+
+
+@pytest.mark.parametrize("collect, source", [
+    (metadatacollector.collect_metadata_from_tgdb, "TheGamesDB"),
+    (metadatacollector.collect_metadata_from_gamefaqs, "GameFAQs"),
+], ids = ["tgdb", "gamefaqs"])
+def test_a_platform_a_source_does_not_list_is_recorded_as_unsupported(browser, collect, source):
+    stats = metadatacollector.CollectionStats()
+
+    collect("Not A Platform", GAME_NAME, stats = stats)
+
+    assert stats.sources == {source: {"unsupported": 1}}
+
+
+def tally(**sources):
+    stats = metadatacollector.CollectionStats()
+    for source_name, outcomes in sources.items():
+        for outcome, count in outcomes.items():
+            for _ in range(count):
+                stats.record_source(source_name, outcome)
+    return stats
+
+
+def test_the_summary_lists_each_sources_outcomes_and_the_games():
+    stats = tally(GameFAQs = {"blocked": 3, "unsupported": 1}, TheGamesDB = {"filled": 2, "empty": 1, "skipped": 1})
+    stats.record_game("partial")
+    stats.record_game("nothing found")
+    stats.record_game("partial")
+
+    assert stats.summary_lines() == [
+        "GameFAQs: 3 blocked, 1 unsupported",
+        "TheGamesDB: 2 filled, 1 empty, 1 skipped",
+        "Games: 2 partial, 1 nothing found",
+    ]
+
+
+def test_a_source_blocked_for_every_game_it_tried_is_warned_about(monkeypatch):
+    infos, warnings = [], []
+    monkeypatch.setattr(metadatacollector.logger, "log_info", infos.append)
+    monkeypatch.setattr(metadatacollector.logger, "log_warning", warnings.append)
+    stats = tally(GameFAQs = {"blocked": 2, "unsupported": 5}, TheGamesDB = {"blocked": 1, "filled": 1})
+
+    stats.log_summary()
+
+    assert infos[0] == "Metadata collection summary:"
+    assert warnings == ["GameFAQs served a bot challenge for every game it was asked about"]
+
+
+def test_an_empty_tally_logs_nothing(monkeypatch):
+    logged = []
+    monkeypatch.setattr(metadatacollector.logger, "log_info", logged.append)
+    monkeypatch.setattr(metadatacollector.logger, "log_warning", logged.append)
+
+    metadatacollector.CollectionStats().log_summary()
+
+    assert logged == []

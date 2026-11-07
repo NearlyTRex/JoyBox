@@ -152,6 +152,15 @@ def test_a_json_request_does_not_wait_forever(requests_module):
     assert only_call(requests_module)["timeout"] == 10
 
 
+@pytest.mark.parametrize("request_func", [
+    network.get_remote_json, network.get_remote_html, network.get_remote_xml, network.post_remote_json, network.is_url_reachable,
+], ids = ["json", "html", "xml", "post", "reachable"])
+def test_a_request_takes_its_own_timeout(requests_module, request_func):
+    request_func("https://example.test", timeout = 45)
+
+    assert only_call(requests_module)["timeout"] == 45
+
+
 def test_an_html_request_does_not_wait_forever(requests_module):
     # A scrape that hangs holds up the whole run with no way to interrupt it.
     network.get_remote_html("https://example.test")

@@ -62,3 +62,15 @@ def test_names_find_assets_and_appnames_find_everything_else(humble_store):
     assert all(keys[kind] == config.json_key_store_name for kind in by_name)
     assert all(keys[kind] == config.json_key_store_appname for kind in by_appname)
     assert len(keys) == len(by_name) + len(by_appname)
+
+
+###########################################################
+# Saved sign-in
+#
+# The purchase step checks these files before running the store's tool, so
+# they must be where the tool keeps its sign-in.
+###########################################################
+
+def test_signing_in_again_means_renewing_the_auth_token(humble_store):
+    assert "humblebundle_auth_token" in humble_store.get_login_hint()
+    assert humble_store.get_login_files() == []

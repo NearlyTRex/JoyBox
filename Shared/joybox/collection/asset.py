@@ -183,6 +183,7 @@ def download_metadata_asset(
 def download_all_metadata_assets(
     categories = None,
     subcategories = None,
+    locker_type = None,
     skip_existing = False,
     verbose = False,
     pretend_run = False,
@@ -198,7 +199,8 @@ def download_all_metadata_assets(
                 game_names = gameinfo.find_json_game_names(
                     game_supercategory,
                     game_category,
-                    game_subcategory)
+                    game_subcategory,
+                    locker_type)
                 for game_name in game_names:
                     game_info = gameinfo.GameInfo(
                         game_supercategory = game_supercategory,

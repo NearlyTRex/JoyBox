@@ -374,6 +374,24 @@ def test_appending_keeps_the_existing_export(tmp_path):
     assert "game: A" in written and "game: B" in written
 
 
+def test_a_dry_run_export_leaves_the_file_alone(tmp_path):
+    path = tmp_path / "metadata.pegasus.txt"
+    build(entry("A")).export_to_pegasus_file(str(path))
+    before = path.read_text(encoding = "utf8")
+
+    build(entry("B")).export_to_pegasus_file(str(path), pretend_run = True)
+
+    assert path.read_text(encoding = "utf8") == before
+
+
+def test_a_dry_run_export_creates_nothing(tmp_path):
+    path = tmp_path / "sub" / "metadata.pegasus.txt"
+
+    build(entry()).export_to_pegasus_file(str(path), pretend_run = True)
+
+    assert not (tmp_path / "sub").exists()
+
+
 def test_a_tag_line_is_skipped_and_ends_the_description(tmp_path):
     path = tmp_path / "metadata.pegasus.txt"
     path.write_text(

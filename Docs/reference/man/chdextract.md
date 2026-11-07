@@ -84,7 +84,7 @@ chdextract -i /path/to/chds -f ISO
 
 ## See also
 
-- [chdconvert](chdconvert.md) — Convert CD disc images (ISO, CUE, GDI, Toast) to CHD files with
+- [chdconvert](chdconvert.md) — Convert CD disc images (ISO, CUE, GDI, Toast, MDS) to CHD files with
   chdman
 - [chdverify](chdverify.md) — Check CHD files against their internal SHA-1 checksums with chdman
 - [chdzip](chdzip.md) — Repack the files on each CHD disc image into a zip archive

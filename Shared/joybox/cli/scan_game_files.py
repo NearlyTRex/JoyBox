@@ -17,8 +17,12 @@ def build_parser():
             "Runs, in order, for the `Roms` supercategory of the selected categories:\n"
             "\n"
             "1. Load the Ludusavi manifest of game save locations, only with `-m`.\n"
-            "2. Import and refresh store purchases, as `build_game_store_purchases` does.\n"
-            "3. Build JSON files from the games in the `-l` locker, as `build_game_json_files` does.\n"
+            "2. Import and refresh store purchases, as `build_game_store_purchases` does, unless\n"
+            "   `--skip_purchases` is given. A store that is not signed in is skipped with a warning.\n"
+            "   With `--skip_purchases`, steps 4 and 5 also cover only the games in the `-l` locker.\n"
+            "3. Build JSON files from the games in the `-l` locker, as `build_game_json_files` does,\n"
+            "   with `--create_playlists` also writing a `.m3u` playlist for multi-disc games that\n"
+            "   have none yet.\n"
             "4. Build metadata entries, as `build_game_metadata_files` does.\n"
             "5. Download missing BoxFront and Video assets, only with `-a`.\n"
             "6. Publish the metadata to HTML, as `publish_game_metadata_files` does.\n"
@@ -28,12 +32,15 @@ def build_parser():
         examples = [
             ("Run the pipeline for everything in the local locker", "scan_game_files -l Local"),
             ("Scan two categories", "scan_game_files -c Nintendo,Sony -l Local"),
+            ("Scan only the games in the local locker, leaving the stores alone", "scan_game_files -l Local --skip_purchases"),
             ("Scan two subcategories and download assets", "scan_game_files -s \"Nintendo Switch,Steam\" -l Local -a"),
             ("Load the manifest, then scan", "scan_game_files -m -l Local"),
+            ("Scan the local locker, writing playlists for multi-disc games", "scan_game_files -l Local --create_playlists"),
             ("Dry run", "scan_game_files -l Local -p -v"),
         ],
         notes = [
             "The purchase step, and the asset step for non-store games, ask questions, so the run is interactive.",
+            "Stores that are not signed in, or whose purchases cannot be listed, are skipped and named at the end of the purchase step; sign in with `login_game_stores`.",
             "Publishing always writes whole categories; `-s` does not narrow it.",
             "Unrecognised names in `-c` or `-s` are dropped silently, and if none are left every category or subcategory is processed.",
         ],
@@ -48,8 +55,10 @@ def build_parser():
     parser.add_enum_list_argument(args = ("-c", "--categories"), arg_type = config.Category, description = "Categories to process; all when omitted")
     parser.add_enum_list_argument(args = ("-s", "--subcategories"), arg_type = config.Subcategory, description = "Subcategories to process; every subcategory of the selected categories when omitted")
     parser.add_group("Steps")
+    parser.add_boolean_argument(args = ("--skip_purchases"), description = "Skip importing and refreshing store purchases, and build metadata and assets only for the games in the `-l` locker")
     parser.add_boolean_argument(args = ("-a", "--download_assets"), description = "Also download missing BoxFront and Video assets for each game")
     parser.add_boolean_argument(args = ("-m", "--load_manifest"), description = "Load the Ludusavi manifest of game save locations before the first step")
+    parser.add_boolean_argument(args = ("--create_playlists"), description = "In the JSON step, write a `.m3u` playlist into the folder of each multi-disc game that has none; off by default so read-only lockers are left untouched")
     parser.add_common_arguments()
     return parser
 
@@ -84,11 +93,15 @@ def main():
         details = [
             "JSON dir: %s" % environment.get_game_json_metadata_root_dir(),
             "Metadata dir: %s" % environment.get_game_metadata_root_dir(),
-            "Published dir: %s" % environment.get_game_published_metadata_root_dir()
+            "Published dir: %s" % environment.get_game_published_metadata_root_dir(),
+            "Store purchases: %s" % ("skipped" if args.skip_purchases else "imported and refreshed")
         ]
         if not prompts.prompt_for_preview("Scan game files (build store purchases, JSON, metadata, publish)", details):
             logger.log_warning("Operation cancelled by user")
             return
+
+    # Narrow the metadata and asset steps to the locker's games when the stores are left alone
+    scanned_locker_type = (args.locker_type or config.LockerType.LOCAL) if args.skip_purchases else None
 
     # Load manifest
     if args.load_manifest:
@@ -99,15 +112,16 @@ def main():
             exit_on_failure = args.exit_on_failure)
 
     # Build game store purchases
-    logger.log_info("Building store purchases ...")
-    success = collection.build_all_game_store_purchases(
-        categories = args.categories,
-        subcategories = args.subcategories,
-        verbose = args.verbose,
-        pretend_run = args.pretend_run,
-        exit_on_failure = args.exit_on_failure)
-    if not success:
-        logger.log_error("Building store purchases failed", quit_program = True)
+    if not args.skip_purchases:
+        logger.log_info("Building store purchases ...")
+        success = collection.build_all_game_store_purchases(
+            categories = args.categories,
+            subcategories = args.subcategories,
+            verbose = args.verbose,
+            pretend_run = args.pretend_run,
+            exit_on_failure = args.exit_on_failure)
+        if not success:
+            logger.log_error("Building store purchases failed", quit_program = True)
 
     # Build game json files
     logger.log_info("Building json files ...")
@@ -115,6 +129,7 @@ def main():
         locker_type = args.locker_type,
         categories = args.categories,
         subcategories = args.subcategories,
+        create_disc_playlists = args.create_playlists,
         verbose = args.verbose,
         pretend_run = args.pretend_run,
         exit_on_failure = args.exit_on_failure)
@@ -126,6 +141,7 @@ def main():
     success = collection.build_all_game_metadata_entries(
         categories = args.categories,
         subcategories = args.subcategories,
+        locker_type = scanned_locker_type,
         verbose = args.verbose,
         pretend_run = args.pretend_run,
         exit_on_failure = args.exit_on_failure)
@@ -138,6 +154,7 @@ def main():
         success = collection.download_all_metadata_assets(
             categories = args.categories,
             subcategories = args.subcategories,
+            locker_type = scanned_locker_type,
             skip_existing = True,
             verbose = args.verbose,
             pretend_run = args.pretend_run,

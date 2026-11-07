@@ -22,6 +22,7 @@ def tool(monkeypatch, isolated_settings):
     harness = CommandHarness(monkeypatch, build_game_json_files)
     harness.built = []
     harness.listed = []
+    harness.playlists = []
     harness.result = True
     module = build_game_json_files
     monkeypatch.setattr(module.gameinfo, "iterate_selected_game_categories", lambda **kwargs: iter([CATEGORIES]))
@@ -32,6 +33,7 @@ def tool(monkeypatch, isolated_settings):
 
     def build(**kwargs):
         harness.built.append((kwargs["game_name"], kwargs["game_root"], kwargs["locker_type"]))
+        harness.playlists.append(kwargs["create_disc_playlists"])
         return harness.result
 
     monkeypatch.setattr(module.gameinfo, "find_locker_game_names", find_names)
@@ -65,6 +67,14 @@ def test_a_locker_base_dir_roots_each_game_in_its_gaming_folder(tool, tmp_path):
     assert root.startswith(str(tmp_path / "Gaming"))
     assert "Alpha" in root
     assert tool.listed[0][-1] == str(tmp_path)
+
+
+@pytest.mark.parametrize("flags, expected", [((), False), (("--create_playlists",), True)])
+def test_playlists_are_written_only_when_asked(tool, flags, expected):
+    # Lockers may be read-only.
+    tool.run("--no-preview", *flags)
+
+    assert tool.playlists == [expected, expected]
 
 
 def test_the_preview_lists_each_json_file(tool):

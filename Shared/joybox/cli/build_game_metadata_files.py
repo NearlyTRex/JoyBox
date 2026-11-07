@@ -4,6 +4,7 @@ import joybox.environment as environment
 import joybox.system as system
 import joybox.gameinfo as gameinfo
 import joybox.collection as collection
+import joybox.metadatacollector as metadatacollector
 import joybox.arguments as arguments
 import joybox.setup as setup
 import joybox.logger as logger
@@ -85,16 +86,19 @@ def main():
             return
 
     # Build metadata files
+    stats = metadatacollector.CollectionStats()
     for game_supercategory, game_category, game_subcategory, game_name, _ in games_to_process:
         success = collection.build_game_metadata_entry(
             game_supercategory = game_supercategory,
             game_category = game_category,
             game_subcategory = game_subcategory,
             game_name = game_name,
+            stats = stats,
             verbose = args.verbose,
             pretend_run = args.pretend_run,
             exit_on_failure = args.exit_on_failure)
         if not success:
+            stats.log_summary()
             logger.log_error(
                 message = "Build of metadata file failed!",
                 game_supercategory = game_supercategory,
@@ -102,6 +106,7 @@ def main():
                 game_subcategory = game_subcategory,
                 game_name = game_name,
                 quit_program = True)
+    stats.log_summary()
 
 # Run through the shared error handling
 def run():

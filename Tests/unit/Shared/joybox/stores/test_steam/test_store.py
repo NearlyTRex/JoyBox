@@ -523,3 +523,15 @@ def test_paths_without_a_user_id_get_no_id_variants(steam_store):
     variants = steam_store.add_path_variants(["GAME_INSTALL_DIR/cfg"])
 
     assert not any(steam_store.get_user_id() in path for path in variants)
+
+
+###########################################################
+# Saved sign-in
+#
+# The purchase step checks these files before running the store's tool, so
+# they must be where the tool keeps its sign-in.
+###########################################################
+
+def test_steam_purchases_need_the_web_api_settings_not_a_sign_in(steam_store):
+    assert "steam_web_api_key" in steam_store.get_login_hint()
+    assert steam_store.has_saved_login() is True

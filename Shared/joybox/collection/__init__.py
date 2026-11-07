@@ -51,6 +51,7 @@ from joybox.collection.metadata import (
     update_game_metadata_entry as update_game_metadata_entry,
     build_game_metadata_entry as build_game_metadata_entry,
     build_all_game_metadata_entries as build_all_game_metadata_entries,
+    iterate_selected_json_games as iterate_selected_json_games,
     publish_game_metadata_entries as publish_game_metadata_entries,
     publish_all_game_metadata_entries as publish_all_game_metadata_entries)
 from joybox.collection.purchase import (
@@ -58,6 +59,7 @@ from joybox.collection.purchase import (
     login_all_game_stores as login_all_game_stores,
     import_game_store_purchases as import_game_store_purchases,
     update_game_store_purchases as update_game_store_purchases,
+    get_game_store_purchases as get_game_store_purchases,
     build_game_store_purchases as build_game_store_purchases,
     build_all_game_store_purchases as build_all_game_store_purchases,
     download_game_store_purchase as download_game_store_purchase,

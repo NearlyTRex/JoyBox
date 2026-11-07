@@ -11,6 +11,7 @@ import joybox.stores as stores
 import joybox.strings as strings
 import joybox.jsondata as jsondata
 import joybox.lockerinfo as lockerinfo
+import joybox.playlist as playlist
 
 ############################################################
 
@@ -137,15 +138,18 @@ def update_game_json_file(
 
     # Get json file path
     json_file_path = environment.get_game_json_metadata_file(game_supercategory, game_category, game_subcategory, game_name)
-    if not paths.does_path_exist(json_file_path):
+    json_file_exists = paths.does_path_exist(json_file_path)
+    if not json_file_exists and not pretend_run:
         return False
 
-    # Read json data
-    json_file_data = serialization.read_json_file(
-        src = json_file_path,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
+    # Read json data, or start from the empty file a dry run did not create
+    json_file_data = {}
+    if json_file_exists:
+        json_file_data = serialization.read_json_file(
+            src = json_file_path,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
 
     # Create json data object
     json_obj = jsondata.JsonData(
@@ -292,6 +296,7 @@ def build_game_json_file(
     game_name,
     game_root = None,
     locker_type = None,
+    create_disc_playlists = False,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -310,6 +315,17 @@ def build_game_json_file(
     # Log categories
     logger.log_info("Building json [Category: '%s', Subcategory: '%s', Name: '%s'] ..." %
         (game_category, game_subcategory, game_name))
+
+    # Create disc playlist, so the json picks it as the game file
+    if create_disc_playlists and game_supercategory == config.Supercategory.ROMS:
+        success = playlist.generate_disc_playlist(
+            source_dir = game_root,
+            playlist_name = game_name,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if not success:
+            return False
 
     # Create json file
     success = create_game_json_file(
@@ -341,6 +357,7 @@ def build_all_game_json_files(
     locker_type = None,
     categories = None,
     subcategories = None,
+    create_disc_playlists = False,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -364,6 +381,7 @@ def build_all_game_json_files(
                         game_subcategory = game_subcategory,
                         game_name = game_name,
                         locker_type = locker_type,
+                        create_disc_playlists = create_disc_playlists,
                         verbose = verbose,
                         pretend_run = pretend_run,
                         exit_on_failure = exit_on_failure)

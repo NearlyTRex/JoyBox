@@ -63,5 +63,5 @@ def browser(itchio_store, monkeypatch):
     monkeypatch.setattr(itchio.webpage, "wait_for_element", wait_for_element)
     monkeypatch.setattr(itchio.webpage, "scroll_to_end_of_page", scroll_to_end_of_page)
     monkeypatch.setattr(itchio.runtime, "sleep_program", fake.slept.append)
-    monkeypatch.setattr(itchio.datautils.time, "sleep", lambda seconds: None)
+    monkeypatch.setattr(itchio.webpage.datautils.time, "sleep", lambda seconds: None)
     return fake

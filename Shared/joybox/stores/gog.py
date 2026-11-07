@@ -1,6 +1,8 @@
+# Imports
+import os
+
 # Local imports
 import joybox.config as config
-import joybox.datautils as datautils
 import joybox.command as command
 import joybox.programs as programs
 import joybox.serialization as serialization
@@ -134,6 +136,16 @@ class GOG(storebase.StoreBase):
     ############################################################
     # Connection
     ############################################################
+
+    # Get files the purchase listing's saved sign-in is kept in
+    def get_login_files(self):
+        if not programs.is_tool_installed("LGOGDownloader"):
+            return []
+        config_dir = self.get_user_config_dir()
+        appimage_home_dir = os.path.realpath(programs.get_tool_program("LGOGDownloader") + ".home")
+        if paths.is_path_directory(appimage_home_dir):
+            config_dir = paths.join_paths(appimage_home_dir, ".config")
+        return [paths.join_paths(config_dir, "lgogdownloader", "galaxy_tokens.json")]
 
     # Login LGOGDownloader
     def login_lgog_downloader(
@@ -326,7 +338,6 @@ class GOG(storebase.StoreBase):
                     options = command.create_command_options(
                         stdout = tmp_file_manifest),
                     verbose = False,
-                    pretend_run = pretend_run,
                     exit_on_failure = exit_on_failure)
                 if code != 0:
                     logger.log_error("Unable to find gog purchases")
@@ -532,7 +543,6 @@ class GOG(storebase.StoreBase):
             element_game_description = webpage.wait_for_element(
                 driver = web_driver,
                 locator = webpage.ElementLocator({"class": "description"}),
-                wait_time = 15,  # 15 second timeout
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = False)
@@ -579,12 +589,9 @@ class GOG(storebase.StoreBase):
 
         # Use retry function with cleanup
         try:
-            return datautils.retry_with_backoff(
+            return webpage.retry_scrape(
                 func = attempt_metadata_fetch,
                 cleanup_func = cleanup_driver,
-                max_retries = 3,
-                initial_delay = 2,
-                backoff_factor = 2,
                 verbose = verbose,
                 operation_name = "GOG metadata fetch for '%s'" % identifier)
         finally:

@@ -294,6 +294,83 @@ def test_an_update_of_a_missing_json_file_reports_failure(json_root, game_root, 
         ROMS, CATEGORY, SUBCATEGORY, GAME, str(game_root)) is False
 
 
+def test_a_dry_run_updates_a_new_game_without_writing_it(json_root, game_root, no_store):
+    # A dry run's create writes nothing, so its update must not need the file.
+    write(game_root / "game.exe")
+
+    assert jsondata.update_game_json_file(
+        ROMS, CATEGORY, SUBCATEGORY, GAME, str(game_root), pretend_run = True) is True
+    assert not os.path.exists(json_file(json_root))
+
+
+def test_a_dry_run_builds_a_new_game_without_writing_it(json_root, game_root, no_store):
+    write(game_root / "game.exe")
+
+    assert jsondata.build_game_json_file(
+        ROMS, CATEGORY, SUBCATEGORY, GAME, game_root = str(game_root), pretend_run = True) is True
+    assert not os.path.exists(json_file(json_root))
+
+
+@pytest.mark.parametrize("category,subcategory,key", [
+    (config.Category.SONY, config.Subcategory.SONY_PLAYSTATION, config.json_key_launch_file),
+    (config.Category.COMPUTER, config.Subcategory.COMPUTER_DISC, config.json_key_transform_file),
+])
+def test_numbered_discs_become_the_game_file(json_root, game_root, no_store, category, subcategory, key):
+    # The playlist is made before the listing, so the json picks it.
+    write(game_root / "Game (Disc 1).chd")
+    write(game_root / "Game (Disc 2).chd")
+
+    assert jsondata.build_game_json_file(
+        ROMS, category, subcategory, GAME, game_root = str(game_root), create_disc_playlists = True) is True
+    data = read_json(json_root / str(category) / str(subcategory) / (GAME + ".json"))
+
+    assert (game_root / (GAME + ".m3u")).exists()
+    assert GAME + ".m3u" in data[config.json_key_files]
+    assert data[key] == GAME + ".m3u"
+
+
+def test_a_failed_disc_playlist_stops_the_build(json_root, game_root, no_store, monkeypatch):
+    monkeypatch.setattr(jsondata.playlist, "generate_disc_playlist", lambda **kwargs: False)
+
+    assert jsondata.build_game_json_file(
+        ROMS, CATEGORY, SUBCATEGORY, GAME, game_root = str(game_root), create_disc_playlists = True) is False
+    assert not os.path.exists(json_file(json_root))
+
+
+def test_without_the_flag_a_game_folder_is_left_untouched(json_root, game_root, no_store):
+    # Lockers may be read-only, so writing a playlist must be asked for.
+    write(game_root / "Game (Disc 1).chd")
+    write(game_root / "Game (Disc 2).chd")
+
+    assert jsondata.build_game_json_file(
+        ROMS, config.Category.SONY, config.Subcategory.SONY_PLAYSTATION, GAME, game_root = str(game_root)) is True
+
+    assert not (game_root / (GAME + ".m3u")).exists()
+
+
+def test_building_every_game_passes_the_playlist_flag_on(monkeypatch):
+    built = []
+    monkeypatch.setattr(jsondata.gameinfo, "find_locker_game_names", lambda *args: [GAME])
+    monkeypatch.setattr(jsondata, "build_game_json_file", lambda **kwargs: built.append(kwargs) or True)
+
+    assert jsondata.build_all_game_json_files(
+        categories = [config.Category.SONY], subcategories = [config.Subcategory.SONY_PLAYSTATION],
+        create_disc_playlists = True) is True
+
+    assert [kwargs["create_disc_playlists"] for kwargs in built] == [True]
+
+
+def test_only_game_roms_get_a_disc_playlist(json_root, game_root, no_store, monkeypatch):
+    # Dlc and update folders are not launched on their own.
+    called = []
+    monkeypatch.setattr(jsondata.playlist, "generate_disc_playlist", lambda **kwargs: called.append(kwargs) or True)
+
+    jsondata.build_game_json_file(
+        config.Supercategory.DLC, CATEGORY, SUBCATEGORY, GAME, game_root = str(game_root), create_disc_playlists = True)
+
+    assert called == []
+
+
 def test_a_category_without_json_files_updates_nothing(json_root, game_root, no_store):
     saves = [
         member for member in config.Supercategory.members()

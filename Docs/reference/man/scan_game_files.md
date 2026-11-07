@@ -18,8 +18,12 @@ scan_game_files [options]
 Runs, in order, for the `Roms` supercategory of the selected categories:
 
 1. Load the Ludusavi manifest of game save locations, only with `-m`.
-2. Import and refresh store purchases, as `build_game_store_purchases` does.
-3. Build JSON files from the games in the `-l` locker, as `build_game_json_files` does.
+2. Import and refresh store purchases, as `build_game_store_purchases` does, unless
+   `--skip_purchases` is given. A store that is not signed in is skipped with a warning.
+   With `--skip_purchases`, steps 4 and 5 also cover only the games in the `-l` locker.
+3. Build JSON files from the games in the `-l` locker, as `build_game_json_files` does,
+   with `--create_playlists` also writing a `.m3u` playlist for multi-disc games that
+   have none yet.
 4. Build metadata entries, as `build_game_metadata_files` does.
 5. Download missing BoxFront and Video assets, only with `-a`.
 6. Publish the metadata to HTML, as `publish_game_metadata_files` does.
@@ -42,8 +46,10 @@ comma-separated lists, and omitting them processes everything.
 
 | Option | Description |
 |--------|-------------|
+| `--skip_purchases` | Skip importing and refreshing store purchases, and build metadata and assets only for the games in the `-l` locker. |
 | `-a, --download_assets` | Also download missing BoxFront and Video assets for each game. |
 | `-m, --load_manifest` | Load the Ludusavi manifest of game save locations before the first step. |
+| `--create_playlists` | In the JSON step, write a `.m3u` playlist into the folder of each multi-disc game that has none; off by default so read-only lockers are left untouched. |
 
 ### Common options
 
@@ -68,6 +74,12 @@ scan_game_files -l Local
 scan_game_files -c Nintendo,Sony -l Local
 ```
 
+### Scan only the games in the local locker, leaving the stores alone
+
+```bash
+scan_game_files -l Local --skip_purchases
+```
+
 ### Scan two subcategories and download assets
 
 ```bash
@@ -80,6 +92,12 @@ scan_game_files -s "Nintendo Switch,Steam" -l Local -a
 scan_game_files -m -l Local
 ```
 
+### Scan the local locker, writing playlists for multi-disc games
+
+```bash
+scan_game_files -l Local --create_playlists
+```
+
 ### Dry run
 
 ```bash
@@ -90,6 +108,8 @@ scan_game_files -l Local -p -v
 
 - The purchase step, and the asset step for non-store games, ask questions, so the run is
   interactive.
+- Stores that are not signed in, or whose purchases cannot be listed, are skipped and named at the
+  end of the purchase step; sign in with `login_game_stores`.
 - Publishing always writes whole categories; `-s` does not narrow it.
 - Unrecognised names in `-c` or `-s` are dropped silently, and if none are left every category or
   subcategory is processed.

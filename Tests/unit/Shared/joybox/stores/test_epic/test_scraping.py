@@ -66,7 +66,7 @@ def browser(epic_store, monkeypatch):
         lambda parent, locator, all_elements = False, **kwargs: find(parent, locator, all_elements))
     monkeypatch.setattr(epic.webpage, "get_element_children_text", lambda element: element.text if element else None)
     monkeypatch.setattr(epic.webpage, "get_element_attribute", lambda element, name: element.attrs.get(name))
-    monkeypatch.setattr(epic.datautils.time, "sleep", lambda seconds: None)
+    monkeypatch.setattr(epic.webpage.datautils.time, "sleep", lambda seconds: None)
     return fake
 
 
@@ -112,6 +112,19 @@ def test_no_linked_result_gives_no_url(epic_store, browser):
 
     assert epic_store.get_latest_url("Hades") is None
     assert browser.disconnected == ["driver-1"]
+
+
+def test_a_result_too_unlike_the_name_is_not_opened(epic_store, browser):
+    add_result(browser, "Hades", "https://store.epicgames.com/p/hades")
+
+    assert epic_store.get_latest_url("Fortnite Battle Royale") is None
+
+
+def test_the_lowest_match_score_comes_from_the_scraping_settings(epic_store, browser, isolated_settings):
+    add_result(browser, "Hades II", "https://store.epicgames.com/p/hades-2")
+    isolated_settings.set_value("UserData.Scraping", "min_match_score", "95")
+
+    assert epic_store.get_latest_url("Hades") is None
 
 
 def test_empty_results_give_no_url(epic_store, browser):

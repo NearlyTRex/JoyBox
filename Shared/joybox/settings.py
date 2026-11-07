@@ -112,6 +112,19 @@ def get_value(section, field, default_value = None, throw_exception = True):
             raise RuntimeError("Unable to get settings value [file=%s][section=%s][field=%s]" % (_settings_file, section, field)) from e
         return default_value
 
+# Get a value as written, a reference left unresolved
+def get_raw_value(section, field, default_value = None, throw_exception = True):
+    if (section, field) in _overlay:
+        return _overlay[(section, field)]
+    try:
+        _ensure_loaded()
+        return _parser.get(section, field, fallback = default_value
+            if default_value is not None else _get_shipped_default(section, field))
+    except Exception as e:
+        if throw_exception:
+            raise RuntimeError("Unable to get settings value [file=%s][section=%s][field=%s]" % (_settings_file, section, field)) from e
+        return default_value
+
 def _coerce_integer(value):
     if isinstance(value, bool):
         return int(value)

@@ -191,6 +191,19 @@ def test_a_second_game_joins_the_same_file(metadata_root):
     assert loaded.has_game(platform_of(), "Portal") is True
 
 
+def test_a_dry_run_adds_no_entry_to_an_existing_file(metadata_root):
+    create(metadata_root)
+    before = metadata_file(metadata_root).read_text(encoding = "utf8")
+
+    assert create(metadata_root, game_name = "Portal", pretend_run = True) is True
+    assert metadata_file(metadata_root).read_text(encoding = "utf8") == before
+
+
+def test_a_dry_run_creates_no_metadata_file(metadata_root):
+    assert create(metadata_root, pretend_run = True) is True
+    assert not metadata_file(metadata_root).exists()
+
+
 def test_a_category_without_metadata_writes_nothing(metadata_root):
     saves = [
         member for member in config.Supercategory.members() if member != ROMS][0]
@@ -242,6 +255,15 @@ def scraped(**values):
 def test_a_missing_entry_is_not_updated(metadata_root, scraping):
     assert update(metadata_root) is True
     assert scraping["collected"] == []
+
+
+def test_the_scrapers_are_given_the_callers_tally(metadata_root, scraping):
+    create(metadata_root)
+    stats = object()
+
+    update(metadata_root, stats = stats)
+
+    assert scraping["collected"][0]["stats"] is stats
 
 
 def test_an_incomplete_entry_is_filled_in(metadata_root, scraping):
@@ -460,16 +482,22 @@ def test_the_build_reports_the_update_result(building):
 
 @pytest.fixture
 def every_game(monkeypatch):
-    state = {"built": [], "result": True}
+    state = {"built": [], "result": True, "lockers": set(), "stats": [], "summaries": []}
 
-    def find_json_game_names(game_supercategory, game_category, game_subcategory):
+    def find_json_game_names(game_supercategory, game_category, game_subcategory, locker_type = None):
+        state["lockers"].add(locker_type)
         return ["%s/A" % game_subcategory, "%s/B" % game_subcategory]
 
     def build_game_metadata_entry(game_name, **kwargs):
         state["built"].append(game_name)
+        state["stats"].append(kwargs["stats"])
         return state["result"]
 
     monkeypatch.setattr(metadata.gameinfo, "find_json_game_names", find_json_game_names)
+    def log_summary(stats):
+        state["summaries"].append(stats)
+
+    monkeypatch.setattr(metadata.metadatacollector.CollectionStats, "log_summary", log_summary)
     monkeypatch.setattr(metadata, "build_game_metadata_entry", build_game_metadata_entry)
     return state
 
@@ -490,11 +518,33 @@ def test_building_can_be_limited_to_categories_and_subcategories(every_game):
     assert not any(str(other) in name for name in every_game["built"])
 
 
+def test_building_lists_every_json_game_by_default(every_game):
+    metadata.build_all_game_metadata_entries(categories = [str(CATEGORY)])
+
+    assert every_game["lockers"] == {None}
+
+
+def test_building_can_be_limited_to_a_lockers_games(every_game):
+    metadata.build_all_game_metadata_entries(categories = [str(CATEGORY)], locker_type = config.LockerType.LOCAL)
+
+    assert every_game["lockers"] == {config.LockerType.LOCAL}
+
+
 def test_building_everything_stops_at_a_failure(every_game):
     every_game["result"] = False
 
     assert metadata.build_all_game_metadata_entries() is False
     assert len(every_game["built"]) == 1
+
+
+@pytest.mark.parametrize("result", [True, False])
+def test_building_everything_shares_one_tally_and_logs_it_once(every_game, result):
+    every_game["result"] = result
+
+    metadata.build_all_game_metadata_entries(categories = [str(CATEGORY)])
+
+    assert len(set(map(id, every_game["stats"]))) == 1
+    assert every_game["summaries"] == [every_game["stats"][0]]
 
 
 ###########################################################

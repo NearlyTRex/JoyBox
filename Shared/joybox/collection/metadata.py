@@ -102,6 +102,7 @@ def update_game_metadata_entry(
     game_name,
     keys = [],
     force = False,
+    stats = None,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -173,6 +174,7 @@ def update_game_metadata_entry(
             game_platform = game_platform,
             game_name = game_name,
             keys_to_check = config.metadata_keys_downloadable,
+            stats = stats,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
@@ -204,6 +206,7 @@ def build_game_metadata_entry(
     game_name,
     keys = [],
     force = False,
+    stats = None,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -225,55 +228,60 @@ def build_game_metadata_entry(
         return False
 
     # Update metadata entry
-    success = update_game_metadata_entry(
+    return update_game_metadata_entry(
         game_supercategory = game_supercategory,
         game_category = game_category,
         game_subcategory = game_subcategory,
         game_name = game_name,
         keys = keys,
         force = force,
+        stats = stats,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
-    return success
 
 # Build all game metadata entries
 def build_all_game_metadata_entries(
     keys = [],
     categories = None,
     subcategories = None,
+    locker_type = None,
     force = False,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
+    stats = metadatacollector.CollectionStats()
+    success = True
+    for game_supercategory, game_category, game_subcategory, game_name in iterate_selected_json_games(
+        categories, subcategories, locker_type):
+        success = build_game_metadata_entry(
+            game_supercategory = game_supercategory,
+            game_category = game_category,
+            game_subcategory = game_subcategory,
+            game_name = game_name,
+            keys = keys,
+            force = force,
+            stats = stats,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if not success:
+            break
+    stats.log_summary()
+    return success
+
+# Every json game in the selected categories, as (supercategory, category, subcategory, name)
+def iterate_selected_json_games(categories, subcategories, locker_type):
+    game_supercategory = config.Supercategory.ROMS
     selected_categories = config.Category.from_list(categories) if categories else config.Category.members()
     selected_subcategories = config.Subcategory.from_list(subcategories) if subcategories else None
-    for game_supercategory in [config.Supercategory.ROMS]:
-        for game_category in selected_categories:
-            category_subcategories = config.subcategory_map[game_category]
-            if selected_subcategories:
-                category_subcategories = [sc for sc in category_subcategories if sc in selected_subcategories]
-            for game_subcategory in category_subcategories:
-                game_names = gameinfo.find_json_game_names(
-                    game_supercategory,
-                    game_category,
-                    game_subcategory)
-                for game_name in game_names:
-                    success = build_game_metadata_entry(
-                        game_supercategory = game_supercategory,
-                        game_category = game_category,
-                        game_subcategory = game_subcategory,
-                        game_name = game_name,
-                        keys = keys,
-                        force = force,
-                        verbose = verbose,
-                        pretend_run = pretend_run,
-                        exit_on_failure = exit_on_failure)
-                    if not success:
-                        return False
-
-    # Should be successful
-    return True
+    for game_category in selected_categories:
+        category_subcategories = config.subcategory_map[game_category]
+        if selected_subcategories:
+            category_subcategories = [sc for sc in category_subcategories if sc in selected_subcategories]
+        for game_subcategory in category_subcategories:
+            for game_name in gameinfo.find_json_game_names(game_supercategory, game_category, game_subcategory, locker_type):
+                yield game_supercategory, game_category, game_subcategory, game_name
 
 ############################################################
 

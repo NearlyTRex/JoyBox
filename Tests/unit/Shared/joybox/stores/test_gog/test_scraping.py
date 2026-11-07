@@ -55,7 +55,7 @@ def page(gog_store, monkeypatch):
     monkeypatch.setattr(gog.webpage, "wait_for_element", wait_for_element)
     monkeypatch.setattr(gog.webpage, "get_element", get_element)
     monkeypatch.setattr(gog.webpage, "get_element_children_text", lambda element: element[1])
-    monkeypatch.setattr(gog.datautils.time, "sleep", lambda seconds: None)
+    monkeypatch.setattr(gog.webpage.datautils.time, "sleep", lambda seconds: None)
     return fake
 
 

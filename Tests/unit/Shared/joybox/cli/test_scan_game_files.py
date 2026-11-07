@@ -70,6 +70,45 @@ def test_every_step_gets_the_selection(tool):
     assert tool.kwargs["download_all_metadata_assets"]["skip_existing"] is True
 
 
+def test_skipping_purchases_scans_only_the_locker(tool):
+    tool.run("--no-preview", "--skip_purchases", "-l", "Local")
+
+    assert tool.called == [
+        "build_all_game_json_files",
+        "build_all_game_metadata_entries",
+        "publish_all_game_metadata_entries",
+    ]
+
+
+def test_skipping_purchases_narrows_metadata_and_assets_to_the_locker(tool):
+    tool.run("--no-preview", "--skip_purchases", "-a", "-l", "Gdrive")
+
+    assert tool.kwargs["build_all_game_metadata_entries"]["locker_type"] == config.LockerType.GDRIVE
+    assert tool.kwargs["download_all_metadata_assets"]["locker_type"] == config.LockerType.GDRIVE
+
+
+def test_skipping_purchases_defaults_to_the_local_locker(tool):
+    tool.run("--no-preview", "--skip_purchases", "-a")
+
+    assert tool.kwargs["build_all_game_metadata_entries"]["locker_type"] == config.LockerType.LOCAL
+    assert tool.kwargs["download_all_metadata_assets"]["locker_type"] == config.LockerType.LOCAL
+
+
+def test_a_full_scan_covers_every_json_game(tool):
+    tool.run("--no-preview", "-a", "-l", "Local")
+
+    assert tool.kwargs["build_all_game_metadata_entries"]["locker_type"] is None
+    assert tool.kwargs["download_all_metadata_assets"]["locker_type"] is None
+
+
+@pytest.mark.parametrize("flags, expected", [((), False), (("--create_playlists",), True)])
+def test_playlists_are_written_only_when_asked(tool, flags, expected):
+    # Lockers may be read-only.
+    tool.run("--no-preview", *flags)
+
+    assert tool.kwargs["build_all_game_json_files"]["create_disc_playlists"] is expected
+
+
 def test_declined_preview_runs_nothing(tool):
     tool.confirm = False
 

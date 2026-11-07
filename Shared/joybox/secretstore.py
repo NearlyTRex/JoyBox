@@ -12,11 +12,14 @@
 # authority it would have had over a plain file.
 
 # Imports
+import json
 import os
 import subprocess
+import uuid
 
 # Local imports
 import joybox.logger as logger
+import joybox.serialization as serialization
 
 # What a reference looks like. 1Password's own syntax, so the same string
 # works with the tool directly, and with op inject and op run.
@@ -63,9 +66,52 @@ def get_secret_tool():
 def get_secret_command(tool, reference):
     return [tool, "read", "--no-newline", reference]
 
+# Split a reference into vault, item, section and field; the section is None
+# for op://vault/item/field. None when it is not a reference to one field.
+def parse_secret_reference(reference):
+    if not is_secret_reference(reference):
+        return None
+    parts = reference.strip()[len(secret_reference_prefix):].split("/")
+    if any(not part for part in parts):
+        return None
+    if len(parts) == 3:
+        return (parts[0], parts[1], None, parts[2])
+    if len(parts) == 4:
+        return tuple(parts)
+    return None
+
 ###########################################################
 # Resolving
 ###########################################################
+
+# Run the tool, giving it no input unless there is some to send. A value being
+# stored goes on standard input rather than the command line, where other
+# processes can read it.
+def run_secret_tool(cmd, action, reference, input_text = None):
+    try:
+        return subprocess.run(
+            cmd,
+            check = False,
+            input = input_text,
+            stdin = None if input_text is not None else subprocess.DEVNULL,
+            capture_output = True,
+            text = True,
+            timeout = secret_timeout_seconds)
+    except subprocess.TimeoutExpired:
+        logger.log_error(
+            "Timed out %s %s; the vault may be waiting to be unlocked" % (action, reference))
+    except Exception as e:
+        logger.log_error("Unable to run %s for %s" % (secret_tool, reference))
+        logger.log_error(e)
+    return None
+
+# Log a refusal from the tool with the first line of its complaint, which
+# names the item, not its contents
+def log_tool_refusal(message, result):
+    logger.log_error(message)
+    detail = (result.stderr or "").strip().splitlines()
+    if detail:
+        logger.log_error(detail[0])
 
 # Forget everything fetched this run
 def clear_resolved_secrets():
@@ -92,22 +138,8 @@ def resolve_secret_reference(reference, verbose = False):
         return None
     if verbose:
         logger.log_info("Resolving %s" % reference)
-    try:
-        result = subprocess.run(
-            get_secret_command(tool, reference),
-            check = False,
-            stdin = subprocess.DEVNULL,
-            capture_output = True,
-            text = True,
-            timeout = secret_timeout_seconds)
-    except subprocess.TimeoutExpired:
-        logger.log_error(
-            "Timed out resolving %s; the vault may be waiting to be unlocked"
-            % reference)
-        return None
-    except Exception as e:
-        logger.log_error("Unable to resolve %s" % reference)
-        logger.log_error(e)
+    result = run_secret_tool(get_secret_command(tool, reference), "resolving", reference)
+    if not result:
         return None
     if result.returncode != 0:
 
@@ -138,3 +170,91 @@ def resolve_value(value, verbose = False):
     if not is_secret_reference(value):
         return value
     return resolve_secret_reference(value, verbose = verbose)
+
+###########################################################
+# Storing
+###########################################################
+
+# Determine whether an item field is the one a reference names
+def is_referenced_field(field, field_name, section_name):
+    if field_name not in (field.get("label"), field.get("id")):
+        return False
+    if section_name is None:
+        return True
+    section = field.get("section") or {}
+    return section_name in (section.get("label"), section.get("id"))
+
+# Set a field on an item's JSON, adding it as a concealed field, and its
+# section, when the item has none by that name
+def set_item_field(item, field_name, section_name, value):
+    fields = item.setdefault("fields", [])
+    matches = [field for field in fields if is_referenced_field(field, field_name, section_name)]
+    if len(matches) > 1:
+        return False
+    if matches:
+        matches[0]["value"] = value
+        return True
+    field = {"id": uuid.uuid4().hex, "label": field_name, "type": "CONCEALED", "value": value}
+    if section_name is not None:
+        sections = item.setdefault("sections", [])
+        section = next((s for s in sections if section_name in (s.get("label"), s.get("id"))), None)
+        if not section:
+            section = {"id": uuid.uuid4().hex, "label": section_name}
+            sections.append(section)
+        field["section"] = {"id": section["id"]}
+    fields.append(field)
+    return True
+
+# Read an item with its values, or writing it back would blank them
+def read_secret_item(tool, vault_name, item_name, reference):
+    result = run_secret_tool(
+        [tool, "item", "get", item_name, "--vault", vault_name, "--format", "json", "--reveal"],
+        "reading", reference)
+    if not result:
+        return None
+    if result.returncode != 0:
+        log_tool_refusal("Unable to read the item for %s" % reference, result)
+        return None
+    item = serialization.parse_json_string(result.stdout)
+    if not isinstance(item, dict) or not item.get("id"):
+        logger.log_error("Unable to read the item for %s" % reference)
+        return None
+    return item
+
+# Write an item back whole
+def write_secret_item(tool, vault_name, item, reference):
+    vault_id = (item.get("vault") or {}).get("id", vault_name)
+    result = run_secret_tool(
+        [tool, "item", "edit", item["id"], "--vault", vault_id],
+        "storing", reference, input_text = json.dumps(item))
+    if not result:
+        return False
+    if result.returncode != 0:
+        log_tool_refusal("Unable to store %s" % reference, result)
+        return False
+    return True
+
+# Store a value in the field a reference names. The whole item is read and
+# written back, so it must not hold a passkey, which a JSON template drops.
+def store_secret_reference(reference, value, verbose = False):
+    parsed = parse_secret_reference(reference)
+    if not parsed:
+        logger.log_error("%s is not a reference to one field" % reference)
+        return False
+    vault_name, item_name, section_name, field_name = parsed
+    tool = get_secret_tool()
+    if not tool:
+        logger.log_error("Unable to store %s; install the 1Password command line tool" % reference)
+        return False
+    if verbose:
+        logger.log_info("Storing %s" % reference)
+    item = read_secret_item(tool, vault_name, item_name, reference)
+    if not item:
+        return False
+    if not set_item_field(item, field_name, section_name, value):
+        logger.log_error("%s names more than one field" % reference)
+        return False
+    if not write_secret_item(tool, vault_name, item, reference):
+        return False
+    _resolved.pop(reference.strip(), None)
+    return True
