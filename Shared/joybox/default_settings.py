@@ -295,6 +295,13 @@ ini_defaults["UserData.Capture"]["capture_framerate"] = "30"
 ini_defaults["UserData.Capture"]["overwrite_screenshots"] = "False"
 ini_defaults["UserData.Capture"]["overwrite_videos"] = "False"
 
+# UserData.GameMic
+ini_defaults["UserData.GameMic"] = {}
+ini_defaults["UserData.GameMic"]["game_mic_mode"] = "silent"
+ini_defaults["UserData.GameMic"]["game_mic_allow"] = ""
+ini_defaults["UserData.GameMic"]["game_mic_protect"] = "Discord,WEBRTC VoiceEngine,obs,firefox,chrome,brave,zoom,teams-for-linux"
+ini_defaults["UserData.GameMic"]["game_mic_lock_output"] = "False"
+
 # UserData.GitHub
 ini_defaults["UserData.GitHub"] = {}
 ini_defaults["UserData.GitHub"]["github_username"] = get_secret_reference("UserData.GitHub", "github_username")

@@ -52,6 +52,17 @@ fixture. A statement counts as run when any of its lines was, because bash
 reports a multi-line command under its first or its last line depending on the
 construct.
 
+The WirePlumber Lua under `Bootstrap/wireplumber/` is held to 100% of its
+statements too, by pytest-testrex's Lua coverage plugin. Its tests run the
+scripts in a lupa runtime from the `lua_runtime` fixture, against the fake
+WirePlumber host in `Tests/unit/Bootstrap/wireplumber/conftest.py`, so they need
+no Lua installed:
+
+```bash
+pytest -c Tests/pytest.ini --rootdir=. Tests/unit/Bootstrap/wireplumber \
+    --lua-cov-source Bootstrap/wireplumber --lua-cov-report
+```
+
 ## Layout
 
 Test files mirror the path of the source they cover:
