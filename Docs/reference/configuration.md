@@ -173,3 +173,31 @@ wordpress_db_image = mariadb:11.4
 ```
 
 Run `python3 bootstrap.py -t remote_ubuntu --list-images` to see every pin and any override.
+
+## Game mic
+
+The `pipewire` and `wireplumber` components keep Wine and Proton games from taking over your
+microphone. They read:
+
+```ini
+[UserData.GameMic]
+game_mic_mode = silent
+game_mic_allow = Lethal Company.exe, DRG.exe
+game_mic_protect = Discord,WEBRTC VoiceEngine,obs,firefox,chrome,brave,zoom,teams-for-linux
+game_mic_lock_output = False
+```
+
+`game_mic_mode` is one of:
+
+- `silent`: games record from the "Game Mic (silent)" source and cannot change any mic's volume.
+- `locked`: games record from your real mic but cannot change its volume.
+- `off`: nothing is deployed and any earlier files are removed.
+
+`game_mic_allow` lists games that keep the real mic in `silent` mode, with its volume still locked.
+`game_mic_protect` lists apps that are never treated as games, even if they look like one. Both
+match a process binary or application name, ignoring case. `game_mic_lock_output = True` also
+stops games changing any output's volume.
+
+Rerun the components after changing these. WirePlumber is restarted for you. Restarting PipeWire
+or its PulseAudio server disconnects Discord and other voice apps until they are relaunched, so the
+install only prints that command; quit those apps before you run it.

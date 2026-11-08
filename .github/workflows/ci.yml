@@ -21,8 +21,11 @@ jobs:
       # The suite's pytest.ini lives in Tests/, but the rootdir must stay the
       # repository for the shell plugins; integration tests need programs
       # outside the process and stay local. A file's tests share a worker, so
-      # its module fixtures are built once
-      test-command: pytest -q -c Tests/pytest.ini --rootdir=. -n auto --dist loadfile Tests/unit
+      # its module fixtures are built once. Every Lua statement is run by the
+      # tests, in lupa runtimes standing in for WirePlumber
+      test-command: >-
+        pytest -q -c Tests/pytest.ini --rootdir=. -n auto --dist loadfile Tests/unit
+        --lua-cov-source Bootstrap/wireplumber --lua-cov-fail-under 100
       # Every line and branch is covered; new code needs tests to keep it so
       coverage-fail-under: "100"
       # Every shell statement, and every && / || handler, is run by the tests

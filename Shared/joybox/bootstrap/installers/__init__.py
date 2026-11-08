@@ -64,6 +64,8 @@ from joybox.bootstrap.installers.installer_node import (
     get_node_package_id as get_node_package_id,
     get_node_package_info as get_node_package_info,
     Node as Node)
+from joybox.bootstrap.installers.installer_managedfiles import (
+    ManagedFiles as ManagedFiles)
 from joybox.bootstrap.installers.installer_ollama import (
     Ollama as Ollama)
 from joybox.bootstrap.installers.installer_ollama_tunnel import (
@@ -74,6 +76,8 @@ from joybox.bootstrap.installers.installer_onepassword import (
     OnePassword as OnePassword)
 from joybox.bootstrap.installers.installer_pidgin import (
     Pidgin as Pidgin)
+from joybox.bootstrap.installers.installer_pipewire import (
+    Pipewire as Pipewire)
 from joybox.bootstrap.installers.installer_python import (
     get_python_package_id as get_python_package_id,
     get_package_spec as get_package_spec,
@@ -107,6 +111,8 @@ from joybox.bootstrap.installers.installer_wine import (
     Wine as Wine)
 from joybox.bootstrap.installers.installer_winget import (
     WinGet as WinGet)
+from joybox.bootstrap.installers.installer_wireplumber import (
+    Wireplumber as Wireplumber)
 from joybox.bootstrap.installers.installer_wordpress import (
     Wordpress as Wordpress)
 from joybox.bootstrap.installers.installer_wrappers import (

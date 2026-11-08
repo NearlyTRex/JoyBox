@@ -55,6 +55,7 @@ class LocalUbuntu(env.Environment):
             "ollama_tunnel": installers.OllamaTunnel(**self.installer_options),
             "onepassword": installers.OnePassword(**self.installer_options),
             "pidgin": installers.Pidgin(**self.installer_options),
+            "pipewire": installers.Pipewire(**self.installer_options),
             "rust": installers.Rust(**self.installer_options),
             "steam": installers.Steam(**self.installer_options),
             "sysctl": installers.Sysctl(**self.installer_options),
@@ -64,6 +65,7 @@ class LocalUbuntu(env.Environment):
             "virtualbox": installers.VirtualBox(**self.installer_options),
             "vscodium": installers.VSCodium(**self.installer_options),
             "wine": installers.Wine(**self.installer_options),
+            "wireplumber": installers.Wireplumber(**self.installer_options),
             "xorg": installers.Xorg(**self.installer_options)
         }
 
@@ -93,6 +95,7 @@ class LocalUbuntu(env.Environment):
         self.installer_ollama_tunnel = self.available_components["ollama_tunnel"]
         self.installer_onepassword = self.available_components["onepassword"]
         self.installer_pidgin = self.available_components["pidgin"]
+        self.installer_pipewire = self.available_components["pipewire"]
         self.installer_rust = self.available_components["rust"]
         self.installer_steam = self.available_components["steam"]
         self.installer_sysctl = self.available_components["sysctl"]
@@ -101,6 +104,7 @@ class LocalUbuntu(env.Environment):
         self.installer_virtualbox = self.available_components["virtualbox"]
         self.installer_vscodium = self.available_components["vscodium"]
         self.installer_wine = self.available_components["wine"]
+        self.installer_wireplumber = self.available_components["wireplumber"]
         self.installer_xorg = self.available_components["xorg"]
 
     def setup(self):

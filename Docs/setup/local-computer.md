@@ -146,6 +146,7 @@ python3 bootstrap.py -t local_ubuntu --list-components
 | `ollama_tunnel` | SSH tunnel to the LLM server's API, kept up as a user service |
 | `onepassword` | 1Password |
 | `pidgin` | AIM/ICQ plugins for Pidgin, built from the last release that had them |
+| `pipewire` | A silent "Game Mic (silent)" source for Wine/Proton games, and a rule that stops them changing any mic's volume; set by `[UserData.GameMic]` (see [Configuration](../reference/configuration.md#game-mic)) |
 | `rust` | Current stable Rust and cargo from rustup (not apt's older `cargo`), the `x86_64-pc-windows-msvc` target, and cargo-xwin + xwin for MSVC builds (`cargo xwin build --target x86_64-pc-windows-msvc`) |
 | `steam` | Steam gaming platform |
 | `sysctl` | Kernel sysctl tweaks |
@@ -154,6 +155,7 @@ python3 bootstrap.py -t local_ubuntu --list-components
 | `virtualbox` | VirtualBox |
 | `vscodium` | VSCodium, with the settings and extensions kept in `Bootstrap/vscodium/` (see [Dotfiles](../reference/dotfiles.md#vscodium)) |
 | `wine` | Wine + dependencies |
+| `wireplumber` | Keeps every Wine/Proton game's recording on the silent game mic, so games never open or reconfigure your real mic, except the games and apps `[UserData.GameMic]` excludes; install with `pipewire` |
 | `xorg` | Xorg input tweaks (remaps Magic Trackpad middle-click to left) |
 
 ## Where to go next
