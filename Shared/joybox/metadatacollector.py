@@ -14,9 +14,29 @@ import joybox.metadataentry as metadataentry
 # Fetch result for a page behind a bot challenge; not None, so retries stop at once
 BLOCKED = object()
 
+# Bot challenges in a row after which a source is not asked again this run
+blocked_streak_limit = 3
+
+# Bot challenges each source has served in a row, this run
+blocked_streaks = collections.Counter()
+
+# Note whether a source fetch was challenged, giving up on the source after a run of them
+def note_blocked(source_name, blocked):
+    if not blocked:
+        blocked_streaks[source_name] = 0
+        return
+    blocked_streaks[source_name] += 1
+    if blocked_streaks[source_name] == blocked_streak_limit:
+        logger.log_warning("%s served a bot challenge %d games in a row; not asking it again this run" % (
+            source_name, blocked_streak_limit))
+
+# Whether a source has been given up on for this run
+def is_given_up(source_name):
+    return blocked_streaks[source_name] >= blocked_streak_limit
+
 # Per-run tally of what each metadata source produced
 class CollectionStats:
-    source_outcomes = ("filled", "empty", "blocked", "unsupported", "skipped")
+    source_outcomes = ("filled", "empty", "blocked", "given up", "unsupported", "skipped")
     game_outcomes = ("complete", "partial", "nothing found")
 
     def __init__(self):
@@ -69,6 +89,7 @@ def finish_source_fetch(stats, source_name, result):
         outcome = "filled"
     else:
         outcome = "empty"
+    note_blocked(source_name, result is BLOCKED)
     record_source_outcome(stats, source_name, outcome)
     return None if result is BLOCKED else result
 
@@ -506,6 +527,14 @@ def collect_metadata_from_bigfishgames(
 
 ############################################################
 
+# Why a source is not asked about a game, or None to ask it
+def get_skip_reason(source_name, metadata_result, keys_to_check):
+    if not metadata_result.is_missing_data(keys_to_check):
+        return "skipped"
+    if is_given_up(source_name):
+        return "given up"
+    return None
+
 # Collect metadata from all
 def collect_metadata_from_all(
     game_platform,
@@ -522,8 +551,9 @@ def collect_metadata_from_all(
     # Try each source in priority order; earlier sources keep their values
     sources = [("GameFAQs", collect_metadata_from_gamefaqs), ("TheGamesDB", collect_metadata_from_tgdb)]
     for source_name, collect_func in sources:
-        if not metadata_result.is_missing_data(keys_to_check):
-            record_source_outcome(stats, source_name, "skipped")
+        skip_reason = get_skip_reason(source_name, metadata_result, keys_to_check)
+        if skip_reason:
+            record_source_outcome(stats, source_name, skip_reason)
             continue
         source_result = collect_func(
             game_platform = game_platform,

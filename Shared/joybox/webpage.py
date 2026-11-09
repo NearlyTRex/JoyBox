@@ -1,7 +1,12 @@
 # Imports
+import atexit
 import json
+import os
 import re
+import signal
 import subprocess
+import time
+import urllib.parse
 
 # Local imports
 import joybox.config as config
@@ -24,6 +29,10 @@ default_element_wait_seconds = 15
 default_fetch_retries = 3
 default_fetch_retry_delay_seconds = 2
 default_min_match_score = 50
+default_page_load_interval_seconds = 3
+
+# Seconds a stopped browser gets to exit before it is killed
+browser_stop_seconds = 3
 
 ###########################################################
 
@@ -47,6 +56,10 @@ def get_fetch_retry_delay_seconds():
 # Lowest title similarity (0-100) a search result needs to be opened
 def get_min_match_score():
     return get_scraping_limit("min_match_score", default_min_match_score)
+
+# Seconds between two page loads from the same site
+def get_page_load_interval_seconds():
+    return get_scraping_limit("page_load_interval_seconds", default_page_load_interval_seconds)
 
 # Retry a scrape with the configured attempts and backoff, cleaning up between tries
 def retry_scrape(func, cleanup_func = None, verbose = False, operation_name = None):
@@ -79,6 +92,79 @@ def parse_xml_page_source(xml_contents):
 
 ###########################################################
 
+# When each site last had a page loaded, by host
+last_page_loads = {}
+
+# Process groups of the browsers started and not yet stopped
+running_browser_groups = set()
+
+# Sleep between page loads
+def pause(seconds):
+    time.sleep(seconds)
+
+# Wait out the rest of a site's page load interval, then note the load
+def wait_for_page_load_turn(url):
+    host = urllib.parse.urlsplit(url).hostname or ""
+    last_load = last_page_loads.get(host)
+    if last_load is not None:
+        remaining = last_load + get_page_load_interval_seconds() - time.monotonic()
+        if remaining > 0:
+            pause(remaining)
+    last_page_loads[host] = time.monotonic()
+
+# Driver service options that start the driver, and the browser it launches, in
+# a process group of their own; a launcher script such as brave-browser runs the
+# browser as its child, so quitting the driver alone leaves the browser running
+def get_driver_service_options():
+    return {"popen_kw": {"start_new_session": True}} if hasattr(os, "killpg") else {}
+
+# The process group a driver service runs in, or None
+def get_service_group(service):
+    pid = getattr(getattr(service, "process", None), "pid", None)
+    return pid if isinstance(pid, int) and hasattr(os, "killpg") else None
+
+# Send a signal to a process group, False once nothing in it is left
+def signal_process_group(group_id, signal_number):
+    try:
+        os.killpg(group_id, signal_number)
+        return True
+    except OSError:
+        return False
+
+# Stop whatever is left in a browser's process group, killing what outlives the grace period
+def stop_browser_group(group_id):
+    if group_id is None:
+        return
+    running_browser_groups.discard(group_id)
+    if not signal_process_group(group_id, signal.SIGTERM):
+        return
+    deadline = time.monotonic() + browser_stop_seconds
+    while time.monotonic() < deadline:
+        if not signal_process_group(group_id, 0):
+            return
+        pause(0.1)
+    signal_process_group(group_id, signal.SIGKILL)
+
+# Stop the browsers still running at exit, such as one an interrupt cut off
+def stop_running_browsers():
+    for group_id in list(running_browser_groups):
+        stop_browser_group(group_id)
+
+atexit.register(stop_running_browsers)
+
+# Start a browser through its driver service, tracking its process group and
+# stopping the group if the start fails
+def start_browser(browser_class, service, options):
+    try:
+        web_driver = browser_class(service = service, options = options)
+    except BaseException:
+        stop_browser_group(get_service_group(service))
+        raise
+    group_id = get_service_group(service)
+    if group_id is not None:
+        running_browser_groups.add(group_id)
+    return web_driver
+
 # Create chrome web driver
 def create_chrome_web_driver(
     download_dir = None,
@@ -106,7 +192,10 @@ def create_chrome_web_driver(
             from selenium.webdriver.chrome.options import Options as ChromeOptions
             from selenium.webdriver import Chrome
             from webdriver_manager.chrome import ChromeDriverManager
-            service = ChromeService(executable_path = ChromeDriverManager().install(), log_output = subprocess.DEVNULL)
+            service = ChromeService(
+                executable_path = ChromeDriverManager().install(),
+                log_output = subprocess.DEVNULL,
+                **get_driver_service_options())
             options = ChromeOptions()
             options.add_argument("--start-maximized")
             options.add_argument("--no-sandbox")
@@ -127,8 +216,7 @@ def create_chrome_web_driver(
                 options.add_argument("--window-size=1920,1080")
             if paths.is_path_valid(binary_location) and paths.does_path_exist(binary_location):
                 options.binary_location = binary_location
-            web_driver = Chrome(service = service, options = options)
-            return web_driver
+            return start_browser(Chrome, service, options)
         return None
     except Exception as e:
         if verbose:
@@ -166,7 +254,10 @@ def create_firefox_web_driver(
             from selenium.webdriver.firefox.options import Options as FirefoxOptions
             from selenium.webdriver import Firefox
             from webdriver_manager.firefox import GeckoDriverManager
-            service = FirefoxService(executable_path = GeckoDriverManager().install(), log_output = subprocess.DEVNULL)
+            service = FirefoxService(
+                executable_path = GeckoDriverManager().install(),
+                log_output = subprocess.DEVNULL,
+                **get_driver_service_options())
             options = FirefoxOptions()
             if paths.is_path_valid(download_dir) and paths.does_path_exist(download_dir):
                 options.set_preference("browser.download.folderList", 2)
@@ -177,8 +268,7 @@ def create_firefox_web_driver(
                 options.add_argument("--headless")
             if paths.is_path_valid(binary_location) and paths.does_path_exist(binary_location):
                 options.binary_location = binary_location
-            web_driver = Firefox(service = service, options = options)
-            return web_driver
+            return start_browser(Firefox, service, options)
         return None
     except Exception as e:
         if verbose:
@@ -242,11 +332,14 @@ def destroy_web_driver(
     try:
         if verbose:
             logger.log_info("Destroying web driver")
-        if not pretend_run:
-            if driver:
+        if not pretend_run and driver:
+            group_id = get_service_group(getattr(driver, "service", None))
+            try:
                 # quit closes every window and stops the driver service, even
                 # when the browser session is already gone
                 driver.quit()
+            finally:
+                stop_browser_group(group_id)
         return True
     except Exception as e:
         if verbose:
@@ -273,6 +366,7 @@ def load_url(
             return False
         logger.log_info("Loading url %s" % url)
         if not pretend_run:
+            wait_for_page_load_turn(url)
             driver.get(url)
         return True
     except Exception as e:

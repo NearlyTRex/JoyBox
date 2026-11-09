@@ -101,7 +101,7 @@ def test_chrome_runs_the_driver_matching_the_browser(browsers):
 
     assert created["kind"] == "chrome"
     assert created["service"].executable_path == "/cache/chromedriver"
-    assert created["service"].kwargs == {}
+    assert created["service"].kwargs == webpage.get_driver_service_options()
 
 
 @pytest.mark.parametrize("missing", ["tool", "managed"])

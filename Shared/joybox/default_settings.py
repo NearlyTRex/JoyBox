@@ -253,6 +253,7 @@ ini_defaults["UserData.Scraping"]["element_wait_seconds"] = "15"
 ini_defaults["UserData.Scraping"]["fetch_retries"] = "3"
 ini_defaults["UserData.Scraping"]["fetch_retry_delay_seconds"] = "2"
 ini_defaults["UserData.Scraping"]["min_match_score"] = "50"
+ini_defaults["UserData.Scraping"]["page_load_interval_seconds"] = "3"
 ini_defaults["UserData.Scraping"]["steamgriddb_api_key"] = get_secret_reference("UserData.Scraping", "steamgriddb_api_key")
 ini_defaults["UserData.Scraping"]["google_search_engine_id"] = get_secret_reference("UserData.Scraping", "google_search_engine_id")
 ini_defaults["UserData.Scraping"]["google_search_engine_api_key"] = get_secret_reference("UserData.Scraping", "google_search_engine_api_key")

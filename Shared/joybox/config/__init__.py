@@ -12,6 +12,7 @@ from joybox.config.categories import (
     Subcategory as Subcategory,
     subcategory_map as subcategory_map)
 from joybox.config.decompiler import (
+    no_pseudocode_checks as no_pseudocode_checks,
     decompiler_presets as decompiler_presets)
 from joybox.config.files import (
     DiscImageFileType as DiscImageFileType,
