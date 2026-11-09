@@ -18,6 +18,7 @@ LIMITS = [
     pytest.param(webpage.get_fetch_retries, "fetch_retries", webpage.default_fetch_retries, 1, id = "retries"),
     pytest.param(webpage.get_fetch_retry_delay_seconds, "fetch_retry_delay_seconds", webpage.default_fetch_retry_delay_seconds, 0, id = "retry-delay"),
     pytest.param(webpage.get_min_match_score, "min_match_score", webpage.default_min_match_score, 0, id = "match-score"),
+    pytest.param(webpage.get_page_load_interval_seconds, "page_load_interval_seconds", webpage.default_page_load_interval_seconds, 0, id = "page-interval"),
 ]
 
 

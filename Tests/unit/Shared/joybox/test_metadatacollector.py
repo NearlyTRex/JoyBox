@@ -820,3 +820,42 @@ def test_an_empty_tally_logs_nothing(monkeypatch):
     metadatacollector.CollectionStats().log_summary()
 
     assert logged == []
+
+
+###########################################################
+# Giving up on a blocked source
+###########################################################
+
+def test_a_source_blocked_games_in_a_row_is_given_up_with_one_warning(monkeypatch):
+    warnings = []
+    monkeypatch.setattr(metadatacollector.logger, "log_warning", warnings.append)
+
+    for _ in range(metadatacollector.blocked_streak_limit + 1):
+        metadatacollector.finish_source_fetch(None, "GameFAQs", metadatacollector.BLOCKED)
+
+    assert metadatacollector.is_given_up("GameFAQs")
+    assert not metadatacollector.is_given_up("TheGamesDB")
+    assert warnings == ["GameFAQs served a bot challenge 3 games in a row; not asking it again this run"]
+
+
+def test_a_fetch_that_gets_through_resets_the_streak():
+    for _ in range(metadatacollector.blocked_streak_limit - 1):
+        metadatacollector.finish_source_fetch(None, "GameFAQs", metadatacollector.BLOCKED)
+    metadatacollector.finish_source_fetch(None, "GameFAQs", None)
+    metadatacollector.finish_source_fetch(None, "GameFAQs", metadatacollector.BLOCKED)
+
+    assert not metadatacollector.is_given_up("GameFAQs")
+
+
+def test_all_sources_stops_asking_a_given_up_source(monkeypatch):
+    calls = []
+    stats = metadatacollector.CollectionStats()
+    fake_source(monkeypatch, "gamefaqs", calls)
+    fake_source(monkeypatch, "tgdb", calls, **{config.metadata_key_players: "1"})
+    metadatacollector.blocked_streaks["GameFAQs"] = metadatacollector.blocked_streak_limit
+
+    entry = metadatacollector.collect_metadata_from_all(PLATFORM, GAME_NAME, config.metadata_keys_downloadable, stats = stats)
+
+    assert [name for name, kwargs in calls] == ["tgdb"]
+    assert entry.game_entry == {config.metadata_key_players: "1"}
+    assert stats.sources == {"GameFAQs": {"given up": 1}}

@@ -123,6 +123,24 @@ def session_settings_file(tmp_path_factory, session_home):
     return config_path
 
 
+@pytest.fixture(autouse = True)
+def page_load_pauses(monkeypatch):
+    # Page loads from one site are spaced out; tests record the pauses instead
+    # of sleeping through them, and start with no site loaded yet
+    from joybox import webpage
+    pauses = []
+    monkeypatch.setattr(webpage, "pause", pauses.append)
+    monkeypatch.setattr(webpage, "last_page_loads", {})
+    return pauses
+
+
+@pytest.fixture(autouse = True)
+def fresh_blocked_sources(monkeypatch):
+    # Which metadata sources have been given up on lasts a run; each test is a run
+    from joybox import metadatacollector
+    monkeypatch.setattr(metadatacollector, "blocked_streaks", metadatacollector.collections.Counter())
+
+
 @pytest.fixture(scope = "session", autouse = True)
 def session_logger(session_home):
     # The joybox logger does not propagate, and caplog only attaches to
