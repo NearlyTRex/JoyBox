@@ -4,6 +4,9 @@
 import os
 import sys
 
+# Local imports
+from joybox import serialization
+
 ###########################################################
 # Platform
 ###########################################################
@@ -46,17 +49,19 @@ def get_current_platform():
 # Linux distribution
 ###########################################################
 
+# The file a Linux distribution describes itself in
+OS_RELEASE_FILE = "/etc/os-release"
+
 # Get a field value from /etc/os-release
 def get_linux_distro_value(field):
-    if os.path.isfile("/etc/os-release"):
-        with open("/etc/os-release", "r", encoding="utf-8") as f:
-            for line in f.readlines():
-                if line.startswith("#"):
-                    continue
-                tokens = line.strip().split("=")
-                if len(tokens) == 2:
-                    if tokens[0] == field:
-                        return tokens[1].strip("\"")
+    if not os.path.isfile(OS_RELEASE_FILE):
+        return ""
+    for line in serialization.read_text_lines(OS_RELEASE_FILE) or []:
+        if line.startswith("#"):
+            continue
+        tokens = line.strip().split("=")
+        if len(tokens) == 2 and tokens[0] == field:
+            return tokens[1].strip("\"")
     return ""
 
 def get_linux_distro_name():

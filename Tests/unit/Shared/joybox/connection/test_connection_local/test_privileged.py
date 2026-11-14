@@ -132,6 +132,23 @@ def test_a_privileged_write_cleans_up_the_staged_file(connection, recorded):
     assert not os.path.exists(only(recorded)["cmd"][1])
 
 
+def test_a_staged_file_that_cannot_be_made_readable_is_not_copied(connection, recorded, monkeypatch):
+    monkeypatch.setattr(connection_local.fileops, "chmod_file_or_directory", lambda path, perms: False)
+
+    assert connection.write_file("/etc/app.conf", "contents", sudo = True) is False
+    assert recorded == []
+
+
+def test_a_download_that_cannot_be_made_readable_is_not_moved(connection, monkeypatch):
+    moved = []
+    monkeypatch.setattr(connection_local.network, "download_url", lambda url, output_file, **kwargs: True)
+    monkeypatch.setattr(connection_local.fileops, "chmod_file_or_directory", lambda path, perms: False)
+    monkeypatch.setattr(connection, "run_checked", lambda cmd, sudo = False, throw_exception = False: moved.append(cmd))
+
+    assert connection.download_file("https://example.test/key.gpg", "/usr/share/keyrings/key.gpg", sudo = True) is False
+    assert moved == []
+
+
 def test_a_failed_privileged_write_is_reported(connection, monkeypatch):
     monkeypatch.setattr(connection, "run_return_code", lambda cmd, sudo = False: 1)
 

@@ -1,5 +1,4 @@
 # Imports
-import json
 
 # Local imports
 import joybox.config as config
@@ -62,10 +61,9 @@ def load_cached_hash_map(cache_file, locker_name, verbose = False):
         cache_age_hours = (runtime.get_current_timestamp() - cache_mtime) / 3600
         if cache_age_hours < 0 or cache_age_hours >= CACHE_MAX_AGE_HOURS:
             return None
-        with open(cache_file, "r", encoding = "utf-8") as cache_handle:
-            hash_map = json.load(cache_handle)
-    except (OSError, ValueError):
-        hash_map = None
+    except OSError:
+        return None
+    hash_map = serialization.parse_json_or_none(serialization.read_text_file(cache_file))
 
     # A cache that does not hold a map of entries is rebuilt rather than trusted
     if not isinstance(hash_map, dict) or not all(isinstance(entry, dict) for entry in hash_map.values()):

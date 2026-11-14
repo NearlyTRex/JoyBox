@@ -2,6 +2,7 @@
 import os
 import json
 import csv
+import tomllib
 
 # Local imports
 import joybox.logger as logger
@@ -14,11 +15,11 @@ from joybox import runtime
 ###########################################################
 
 # Read text file
-def read_text_file(src, verbose = False, exit_on_failure = False):
+def read_text_file(src, encoding = "utf-8", errors = "strict", verbose = False, exit_on_failure = False):
     try:
         if verbose:
             logger.log_info("Reading %s" % src)
-        with open(src, "r", encoding="utf-8") as input_file:
+        with open(src, "r", encoding = encoding, errors = errors) as input_file:
             return input_file.read()
     except Exception as e:
         if exit_on_failure:
@@ -26,6 +27,15 @@ def read_text_file(src, verbose = False, exit_on_failure = False):
             logger.log_error(e)
             runtime.quit_program()
         return None
+
+# Read a text file as its lines, split only at newlines and without them, or None
+# when it cannot be read
+def read_text_lines(src, encoding = "utf-8", errors = "strict", verbose = False, exit_on_failure = False):
+    contents = read_text_file(src, encoding = encoding, errors = errors, verbose = verbose, exit_on_failure = exit_on_failure)
+    if contents is None:
+        return None
+    lines = contents.split("\n")
+    return lines[:-1] if lines[-1] == "" else lines
 
 # Read binary file
 def read_binary_file(src, offset = 0, length = None, verbose = False, exit_on_failure = False):
@@ -43,6 +53,52 @@ def read_binary_file(src, offset = 0, length = None, verbose = False, exit_on_fa
             logger.log_error(e)
             runtime.quit_program()
         return None
+
+# Read a binary file a chunk at a time; an error is raised to the caller, which has
+# already used the chunks before it
+def read_binary_chunks(src, chunk_size = 1024 * 1024):
+    with open(src, "rb") as input_file:
+        yield from iter(lambda: input_file.read(chunk_size), b"")
+
+# Write bytes to a file, False when it cannot be written
+def write_binary_file(src, contents, verbose = False, pretend_run = False, exit_on_failure = False):
+    try:
+        if verbose:
+            logger.log_info("Writing %s" % src)
+        if not pretend_run:
+            with open(src, "wb") as output_file:
+                output_file.write(contents)
+        return True
+    except (OSError, TypeError) as e:
+        if exit_on_failure:
+            logger.log_error("Unable to write %s" % src)
+            logger.log_error(e)
+            runtime.quit_program()
+        return False
+
+# Copy length bytes, starting at offset, out of one binary file into another
+def copy_binary_range(src, dest, offset, length, chunk_size = 1024 * 1024, verbose = False, pretend_run = False, exit_on_failure = False):
+    try:
+        if verbose:
+            logger.log_info("Copying %d bytes at %d from %s to %s" % (length, offset, src, dest))
+        if pretend_run:
+            return True
+        with open(src, "rb") as input_file, open(dest, "wb") as output_file:
+            input_file.seek(offset)
+            remaining = length
+            while remaining > 0:
+                chunk = input_file.read(min(remaining, chunk_size))
+                if not chunk:
+                    raise EOFError("%s ends %d bytes short" % (src, remaining))
+                output_file.write(chunk)
+                remaining -= len(chunk)
+        return True
+    except (OSError, EOFError) as e:
+        if exit_on_failure:
+            logger.log_error("Unable to copy from %s to %s" % (src, dest))
+            logger.log_error(e)
+            runtime.quit_program()
+        return False
 
 # Read records from an open binary file, keeping the first keep_size bytes of each
 def read_binary_records(input_file, record_count, record_size, keep_size):
@@ -85,7 +141,7 @@ def copy_binary_records(
         return False
 
 # Write text file
-def write_text_file(src, contents, verbose = False, pretend_run = False, exit_on_failure = False):
+def write_text_file(src, contents, encoding = "utf-8", newline = "\n", verbose = False, pretend_run = False, exit_on_failure = False):
     try:
         if verbose:
             logger.log_info("Writing %s" % src)
@@ -93,7 +149,7 @@ def write_text_file(src, contents, verbose = False, pretend_run = False, exit_on
             parent_dir = os.path.dirname(src)
             if parent_dir and not os.path.exists(parent_dir):
                 os.makedirs(parent_dir)
-            with open(src, "w", encoding="utf-8", newline='\n') as output_file:
+            with open(src, "w", encoding = encoding, newline = newline) as output_file:
                 output_file.write(contents)
         return True
     except Exception as e:
@@ -120,6 +176,14 @@ def parse_json_string(string, verbose = False, pretend_run = False, exit_on_fail
             logger.log_error(e)
             runtime.quit_program()
         return {}
+
+# Parse a json string, or None when it is not json, for a caller that must tell
+# a failure from an empty object
+def parse_json_or_none(string):
+    try:
+        return json.loads(string)
+    except (TypeError, ValueError):
+        return None
 
 # Read json file
 def read_json_file(src, verbose = False, pretend_run = False, exit_on_failure = False):
@@ -272,3 +336,54 @@ def read_csv_file(src, headers, verbose = False, pretend_run = False, exit_on_fa
             logger.log_error(e)
             runtime.quit_program()
         return []
+
+# Read a csv file whose first row names its columns, as one dict per row, or None
+# when it cannot be read
+def read_csv_records(src, verbose = False, exit_on_failure = False):
+    try:
+        if verbose:
+            logger.log_info("Reading %s" % src)
+        with open(src, mode = "r", newline = "", encoding = "utf-8") as input_file:
+            return list(csv.DictReader(input_file))
+    except (OSError, UnicodeDecodeError, csv.Error) as e:
+        if exit_on_failure:
+            logger.log_error("Unable to read %s" % src)
+            logger.log_error(e)
+            runtime.quit_program()
+        return None
+
+# Write one csv row per record, under a row naming the columns
+def write_csv_records(src, columns, records, verbose = False, pretend_run = False, exit_on_failure = False):
+    try:
+        if verbose:
+            logger.log_info("Writing %s" % src)
+        if not pretend_run:
+            with open(src, mode = "w", newline = "", encoding = "utf-8") as output_file:
+                writer = csv.DictWriter(output_file, fieldnames = columns)
+                writer.writeheader()
+                writer.writerows(records)
+        return True
+    except (OSError, ValueError, csv.Error) as e:
+        if exit_on_failure:
+            logger.log_error("Unable to write %s" % src)
+            logger.log_error(e)
+            runtime.quit_program()
+        return False
+
+###########################################################
+# TOML file I/O utilities
+###########################################################
+
+# Read toml file, or {} when it cannot be read
+def read_toml_file(src, verbose = False, exit_on_failure = False):
+    try:
+        if verbose:
+            logger.log_info("Reading %s" % src)
+        with open(src, "rb") as input_file:
+            return tomllib.load(input_file)
+    except (OSError, UnicodeDecodeError, tomllib.TOMLDecodeError) as e:
+        if exit_on_failure:
+            logger.log_error("Unable to read %s" % src)
+            logger.log_error(e)
+            runtime.quit_program()
+        return {}

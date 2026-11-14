@@ -1,6 +1,4 @@
 # Imports
-import io
-import os
 import sys
 
 # Third-party imports
@@ -156,18 +154,13 @@ def test_values_are_unquoted(os_release):
 # Parsing os-release
 ###########################################################
 
-OS_RELEASE = "/etc/os-release"
-
-
 @pytest.fixture
-def os_release(monkeypatch):
-    real_isfile = os.path.isfile
-
+def os_release(monkeypatch, tmp_path):
     def install(contents):
-        monkeypatch.setattr(platform_info.os.path, "isfile",
-            lambda path: contents is not None if path == OS_RELEASE else real_isfile(path))
-        monkeypatch.setattr(platform_info, "open",
-            lambda path, *args, **kwargs: io.StringIO(contents), raising = False)
+        target = tmp_path / "os-release"
+        if contents is not None:
+            target.write_text(contents, encoding = "utf-8")
+        monkeypatch.setattr(platform_info, "OS_RELEASE_FILE", str(target))
     return install
 
 

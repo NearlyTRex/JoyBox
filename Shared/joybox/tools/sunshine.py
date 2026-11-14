@@ -71,10 +71,7 @@ def is_login_current(state, username, password):
 def write_login(state_file, username, password, verbose = False, pretend_run = False, exit_on_failure = False):
     state = {}
     if paths.does_path_exist(state_file):
-        try:
-            state = json.loads(serialization.read_text_file(state_file) or "")
-        except ValueError:
-            state = None
+        state = serialization.parse_json_or_none(serialization.read_text_file(state_file) or "")
         if not isinstance(state, dict):
             logger.log_error("Unable to read %s, so the Sunshine login is not written over it" % state_file)
             return False

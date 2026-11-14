@@ -425,6 +425,16 @@ def test_restore_refuses_a_missing_identity_file(isolated_settings, tmp_path):
     assert not app.connection.ran("Restore complete")
 
 
+def test_restore_refuses_an_unreadable_identity_file(isolated_settings, tmp_path):
+    identity = tmp_path / "age.txt"
+    identity.write_bytes(b"\xff\xfe not text")
+    isolated_settings.set_value("UserData.Backup", "backup_age_identity", str(identity))
+    app = build_demo(installed = True, backup_dirs = ["data"])
+
+    assert not app.restore()
+    assert not app.connection.ran("Restore complete")
+
+
 def test_restore_stages_the_identity_on_tmpfs_and_removes_it(isolated_settings, tmp_path):
     identity = tmp_path / "age.txt"
     identity.write_text(DEMO_KEY)

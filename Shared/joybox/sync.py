@@ -1170,18 +1170,17 @@ def diff_files(
         count_only_dest = 0
         count_only_src = 0
         count_error = 0
-        with open(diff_combined_path, "r", encoding="utf8") as f:
-            for line in f.readlines():
-                if line.startswith("="):
-                    count_unchanged += 1
-                elif line.startswith("-"):
-                    count_only_dest += 1
-                elif line.startswith("+"):
-                    count_only_src += 1
-                elif line.startswith("*"):
-                    count_changed += 1
-                elif line.startswith("!"):
-                    count_error += 1
+        for line in serialization.read_text_lines(diff_combined_path) or []:
+            if line.startswith("="):
+                count_unchanged += 1
+            elif line.startswith("-"):
+                count_only_dest += 1
+            elif line.startswith("+"):
+                count_only_src += 1
+            elif line.startswith("*"):
+                count_changed += 1
+            elif line.startswith("!"):
+                count_error += 1
         logger.log_info("Number of unchanged files: %d" % count_unchanged)
         logger.log_info("Number of changed files: %d" % count_changed)
         logger.log_info("Number of files only on %s%s: %d" % (get_remote_raw_type(remote_type), remote_path, count_only_dest))
@@ -1214,8 +1213,7 @@ def write_transfer_list(entries, temp_files):
 def read_diff_entries(diff_path):
     if not os.path.exists(diff_path):
         return []
-    with open(diff_path, "r", encoding="utf8") as f:
-        return [line.strip() for line in f.readlines() if line.strip()]
+    return [line.strip() for line in serialization.read_text_lines(diff_path) or [] if line.strip()]
 
 # Diff sync files
 def diff_sync_files(

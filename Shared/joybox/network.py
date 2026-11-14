@@ -440,7 +440,7 @@ def mount_network_share(
             return (code == 0)
         finally:
             if not pretend_run:
-                os.remove(credentials_file)
+                fileops.remove_file(credentials_file)
 
     # Network share was not mounted
     return False

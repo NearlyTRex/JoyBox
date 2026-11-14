@@ -1,10 +1,10 @@
 # Imports
-import json
 import shutil
 
 # Local imports
 import joybox.config as config
 import joybox.logger as logger
+from joybox import serialization
 import joybox.command as command
 import joybox.programs as programs
 import joybox.strings as strings
@@ -13,7 +13,7 @@ import joybox.rumble as rumble
 import joybox.paths as paths
 import joybox.containers as containers
 import joybox.datautils as datautils
-import joybox.fileops as fileops
+from joybox import fileops
 import joybox.settings as settings
 
 # Hard safety cap on concurrent fragment downloads. yt-dlp's -N runs multiple
@@ -166,10 +166,7 @@ def find_images(
 
 # Parse video search line
 def parse_video_search_line(line):
-    try:
-        line_json = json.loads(line)
-    except ValueError:
-        return None
+    line_json = serialization.parse_json_or_none(line)
     if not isinstance(line_json, dict):
         return None
     line_title = line_json.get("title")

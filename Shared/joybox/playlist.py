@@ -6,6 +6,7 @@ import joybox.config as config
 import joybox.strings as strings
 import joybox.logger as logger
 import joybox.paths as paths
+from joybox import serialization
 
 # Read playlist file
 def read_playlist(
@@ -13,22 +14,12 @@ def read_playlist(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    try:
-        if verbose:
-            logger.log_info("Reading playlist file %s" % input_file)
-        if not pretend_run:
-            playlist_contents = []
-            with open(input_file, "r", encoding="utf8") as f:
-                playlist_contents = []
-                for line in f.readlines():
-                    playlist_contents.append(line.strip())
-            return playlist_contents
-        return []
-    except Exception as e:
-        if exit_on_failure:
-            logger.log_error("Unable to read playlist file %s" % input_file)
-            logger.log_error(e, quit_program = True)
-        return []
+    if verbose:
+        logger.log_info("Reading playlist file %s" % input_file)
+    if not pretend_run:
+        lines = serialization.read_text_lines(input_file, exit_on_failure = exit_on_failure)
+        return [line.strip() for line in lines] if lines is not None else []
+    return []
 
 # Write playlist file
 def write_playlist(
@@ -37,19 +28,12 @@ def write_playlist(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    try:
-        if verbose:
-            logger.log_info("Writing playlist file %s" % output_file)
-        if not pretend_run:
-            with open(output_file, "w", encoding="utf8") as f:
-                for entry in playlist_contents:
-                    f.write(entry + "\n")
-        return True
-    except Exception as e:
-        if exit_on_failure:
-            logger.log_error("Unable to write playlist file %s" % output_file)
-            logger.log_error(e, quit_program = True)
-        return False
+    if verbose:
+        logger.log_info("Writing playlist file %s" % output_file)
+    if not pretend_run:
+        contents = "".join(entry + "\n" for entry in playlist_contents)
+        return serialization.write_text_file(output_file, contents, exit_on_failure = exit_on_failure)
+    return True
 
 # Generate playlist file
 def generate_playlist(

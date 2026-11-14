@@ -9,6 +9,7 @@ import urllib.request
 import joybox.chunkers as chunkers
 import joybox.logger as logger
 import joybox.ollama as ollama
+from joybox import serialization
 
 ###########################################################
 # Backends
@@ -38,9 +39,9 @@ class OllamaBackend:
     def models(self):
         try:
             with urllib.request.urlopen(f"{self.endpoint}/v1/models", timeout = 10) as response:
-                payload = json.loads(response.read().decode())
+                payload = serialization.parse_json_or_none(response.read().decode()) or {}
             return [entry["id"] for entry in payload.get("data", [])]
-        except (urllib.error.URLError, OSError, KeyError, json.JSONDecodeError):
+        except (OSError, KeyError):
             return []
 
     def context_limit(self, model):
@@ -50,7 +51,7 @@ class OllamaBackend:
                 data = json.dumps({"name": model}).encode(),
                 headers = {"Content-Type": "application/json"})
             with urllib.request.urlopen(request, timeout = 10) as response:
-                info = json.loads(response.read().decode())
+                info = serialization.parse_json_or_none(response.read().decode()) or {}
             for key, value in (info.get("model_info") or {}).items():
                 if key.endswith(".context_length"):
                     return int(value)
@@ -73,9 +74,8 @@ class OllamaBackend:
                 line = raw.decode().strip()
                 if not line:
                     continue
-                try:
-                    body = json.loads(line)
-                except json.JSONDecodeError:
+                body = serialization.parse_json_or_none(line)
+                if not isinstance(body, dict):
                     continue
                 if body.get("error"):
                     raise RequestFailed(body["error"])
@@ -105,9 +105,9 @@ class OpenAIBackend:
         try:
             request = urllib.request.Request(f"{self.endpoint}/v1/models", headers = self.headers())
             with urllib.request.urlopen(request, timeout = 10) as response:
-                payload = json.loads(response.read().decode())
+                payload = serialization.parse_json_or_none(response.read().decode()) or {}
             return [entry["id"] for entry in payload.get("data", [])]
-        except (urllib.error.URLError, OSError, KeyError, json.JSONDecodeError):
+        except (OSError, KeyError):
             return []
 
     def context_limit(self, model):
@@ -129,9 +129,8 @@ class OpenAIBackend:
                 body = line[6:]
                 if body == "[DONE]":
                     break
-                try:
-                    event = json.loads(body)
-                except json.JSONDecodeError:
+                event = serialization.parse_json_or_none(body)
+                if not isinstance(event, dict):
                     continue
                 if event.get("error"):
                     raise RequestFailed(event["error"])
@@ -459,13 +458,10 @@ def handle_command(line, session, say, warn, window_override = 0):
     # Save transcript
     elif command == "/save":
         target = argument or "transcript.md"
-        try:
-            with open(target, "w", encoding = "utf-8") as handle:
-                handle.write(session.transcript())
-        except OSError as error:
-            warn(f"  could not write {target}: {error}")
-        else:
+        if serialization.write_text_file(target, session.transcript()):
             say(f"  wrote {target}")
+        else:
+            warn(f"  could not write {target}")
 
     # List tokens
     elif command == "/tokens":

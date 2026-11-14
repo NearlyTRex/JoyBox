@@ -4,9 +4,9 @@ import os.path
 
 # Local imports
 import joybox.validation as validation
-import joybox.logger as logger
 import joybox.paths as paths
-import joybox.fileops as fileops
+from joybox import fileops
+from joybox import serialization
 import joybox.command as command
 
 # Read registry file
@@ -20,17 +20,11 @@ def read_registry_file(
 
     # Get registry text
     registry_text = ""
-    try:
-        if verbose:
-            logger.log_info("Reading registry file '%s'" % registry_file)
-        if not pretend_run:
-            with open(registry_file, "r", encoding="utf-16") as file:
-                registry_text = file.read()
-    except Exception as e:
-        if exit_on_failure:
-            logger.log_error("Unable to read registry file '%s'" % registry_file)
-            logger.log_error(e, quit_program = True)
-        return {}
+    if not pretend_run:
+        registry_text = serialization.read_text_file(
+            registry_file, encoding = "utf-16", verbose = verbose, exit_on_failure = exit_on_failure)
+        if registry_text is None:
+            return {}
 
     # Create registry container
     registry = {}
@@ -110,20 +104,10 @@ def write_registry_file(
             registry_text += "%s\n" % entry["value"]
         registry_text += "\n"
 
-    # Write registry file
-    try:
-        if verbose:
-            logger.log_info("Writing registry file '%s'" % registry_file)
-        if not pretend_run:
-            with open(registry_file, "w", encoding="utf-16") as file:
-                file.write(registry_text)
-        return True
-    except Exception as e:
-        if exit_on_failure:
-            logger.log_error("Unable to write registry file '%s'" % registry_file)
-            logger.log_error(e, quit_program = True)
-        return False
-    return False
+    # Write registry file, in the platform's line endings as regedit writes them
+    return serialization.write_text_file(
+        registry_file, registry_text, encoding = "utf-16", newline = None,
+        verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure)
 
 # Export registry file
 def export_registry_file(

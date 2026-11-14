@@ -11,7 +11,8 @@ import joybox.command as command
 import joybox.programs as programs
 import joybox.logger as logger
 import joybox.paths as paths
-import joybox.fileops as fileops
+from joybox import serialization
+from joybox import fileops
 import joybox.iso as iso
 import joybox.chd as chd
 from joybox import runtime
@@ -22,11 +23,9 @@ from joybox import runtime
 
 # Get decryption key
 def get_ps3_decryption_key(dkey_file):
-    dkey_contents = ""
-    if os.path.exists(dkey_file):
-        with open(dkey_file, "r", encoding="utf-8") as f:
-            dkey_contents = f.read().strip()
-    return dkey_contents
+    if not os.path.exists(dkey_file):
+        return ""
+    return (serialization.read_text_file(dkey_file) or "").strip()
 
 # Encrypt ps3 iso
 def encrypt_ps3_iso(
@@ -565,9 +564,10 @@ def verify_psv(
 
 # Read param.sfo values
 def read_param_sfo(sfo_file):
+    data = serialization.read_binary_file(sfo_file)
+    if data is None:
+        return None
     try:
-        with open(sfo_file, "rb") as f:
-            data = f.read()
         magic, _, key_table, data_table, count = struct.unpack_from("<4sIIII", data, 0)
         if magic != b"\x00PSF":
             return None
@@ -581,7 +581,7 @@ def read_param_sfo(sfo_file):
             else:
                 values[key] = raw.split(b"\x00", 1)[0].decode("utf-8")
         return values
-    except (OSError, struct.error, UnicodeDecodeError):
+    except (struct.error, UnicodeDecodeError):
         return None
 
 # Find psv content root (the dir holding sce_sys/param.sfo)
@@ -618,32 +618,26 @@ def get_psn_workbin_bytes_from_zrif_string(zrif_str):
     except (ValueError, zlib.error):
         return None
 
+# A content id read out of a file, or None when it could not be read or is not text
+def decode_content_id(data):
+    if data is None:
+        return None
+    try:
+        return data.decode("utf-8")
+    except UnicodeDecodeError:
+        return None
+
 # Get psn package content id
 def get_psn_package_content_id(pkg_file):
-    try:
-        with open(pkg_file, "rb") as f:
-            f.seek(0x30)
-            return f.read(0x24).decode("utf-8")
-    except (OSError, UnicodeDecodeError):
-        return None
+    return decode_content_id(serialization.read_binary_file(pkg_file, offset = 0x30, length = 0x24))
 
 # Get psn work.bin content id
 def get_psn_workbin_content_id(workbin_file):
-    try:
-        with open(workbin_file, "rb") as f:
-            f.seek(0x10)
-            return f.read(0x24).decode("utf-8")
-    except (OSError, UnicodeDecodeError):
-        return None
+    return decode_content_id(serialization.read_binary_file(workbin_file, offset = 0x10, length = 0x24))
 
 # Get psn fake.rif content id
 def get_psn_fakerif_content_id(fakerif_file):
-    try:
-        with open(fakerif_file, "rb") as f:
-            f.seek(0x50)
-            return f.read(0x24).decode("utf-8")
-    except (OSError, UnicodeDecodeError):
-        return None
+    return decode_content_id(serialization.read_binary_file(fakerif_file, offset = 0x50, length = 0x24))
 
 # Get psn package info
 def get_psn_package_info(

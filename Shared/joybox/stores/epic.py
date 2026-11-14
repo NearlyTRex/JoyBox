@@ -1,5 +1,4 @@
 # Imports
-import json
 import os
 
 # Local imports
@@ -340,14 +339,7 @@ class Epic(storebase.StoreBase):
             return None
 
         # Get epic json
-        epic_json = []
-        try:
-            epic_json = json.loads(list_output)
-        except Exception as e:
-            logger.log_error(e)
-            logger.log_error("Unable to parse epic game list")
-            logger.log_error("Received output:\n%s" % list_output)
-            return None
+        epic_json = serialization.parse_json_or_none(list_output)
         if not isinstance(epic_json, list):
             logger.log_error("Unable to parse epic game list")
             logger.log_error("Received output:\n%s" % list_output)
@@ -448,14 +440,7 @@ class Epic(storebase.StoreBase):
             return None
 
         # Get epic json
-        epic_json = {}
-        try:
-            epic_json = json.loads(info_output)
-        except Exception as e:
-            logger.log_error(e)
-            logger.log_error("Unable to parse epic game information for '%s'" % identifier)
-            logger.log_error("Received output:\n%s" % info_output)
-            return None
+        epic_json = serialization.parse_json_or_none(info_output)
         game_info = epic_json.get("game") if isinstance(epic_json, dict) else None
         if not isinstance(game_info, dict):
             logger.log_error("Unable to parse epic game information for '%s'" % identifier)

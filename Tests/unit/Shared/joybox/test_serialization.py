@@ -275,6 +275,11 @@ def test_verbose_reads_and_writes_log_the_path(tmp_path, logged):
     lambda base: serialization.clean_json_file(os.path.join(base, "absent.json"), exit_on_failure = True),
     lambda base: serialization.read_yaml_file(os.path.join(base, "absent.yaml"), exit_on_failure = True),
     lambda base: serialization.read_csv_file(os.path.join(base, "absent.csv"), ["a"], exit_on_failure = True),
+    lambda base: serialization.write_binary_file(base, b"x", exit_on_failure = True),
+    lambda base: serialization.copy_binary_range(os.path.join(base, "absent.bin"), base + ".out", 0, 1, exit_on_failure = True),
+    lambda base: serialization.read_csv_records(os.path.join(base, "absent.csv"), exit_on_failure = True),
+    lambda base: serialization.write_csv_records(base, ["a"], [], exit_on_failure = True),
+    lambda base: serialization.read_toml_file(os.path.join(base, "absent.toml"), exit_on_failure = True),
 ])
 def test_exit_on_failure_logs_and_quits(tmp_path, logged, call):
     with pytest.raises(SystemExit):
@@ -294,6 +299,12 @@ def test_failures_without_exit_return_the_empty_value(tmp_path):
     assert serialization.clean_json_file(os.path.join(base, "absent.json")) is False
     assert serialization.read_yaml_file(os.path.join(base, "absent.yaml")) == {}
     assert serialization.read_csv_file(os.path.join(base, "absent.csv"), ["a"]) == []
+    assert serialization.read_text_lines(os.path.join(base, "absent.txt")) is None
+    assert serialization.write_binary_file(base, b"x") is False
+    assert serialization.copy_binary_range(os.path.join(base, "absent.bin"), base + ".out", 0, 1) is False
+    assert serialization.read_csv_records(os.path.join(base, "absent.csv")) is None
+    assert serialization.write_csv_records(base, ["a"], []) is False
+    assert serialization.read_toml_file(os.path.join(base, "absent.toml")) == {}
 
 
 def test_cleaning_a_null_document_leaves_it_untouched(tmp_path):
@@ -427,3 +438,118 @@ def test_pretending_to_copy_binary_records_writes_nothing(tmp_path):
 
     assert serialization.copy_binary_records(str(source), str(target), 0, 1, 4, pretend_run = True) is True
     assert not target.exists()
+
+
+###########################################################
+# Lines, chunks, ranges, csv records and toml
+###########################################################
+
+def test_text_lines_split_only_at_newlines(tmp_path):
+    # A game name can hold a character str.splitlines also breaks at.
+    target = tmp_path / "list.txt"
+    target.write_text("one\ntwo\x85half\n", encoding = "utf-8")
+
+    assert serialization.read_text_lines(str(target)) == ["one", "two\x85half"]
+
+
+def test_a_last_line_without_a_newline_is_kept(tmp_path):
+    target = tmp_path / "list.txt"
+    target.write_text("one\ntwo", encoding = "utf-8")
+
+    assert serialization.read_text_lines(str(target)) == ["one", "two"]
+
+
+def test_text_is_read_and_written_in_the_encoding_asked_for(tmp_path):
+    target = str(tmp_path / "user.reg")
+    serialization.write_text_file(target, "caf\u00e9\n", encoding = "utf-16")
+
+    assert serialization.read_text_file(target, encoding = "utf-16") == "caf\u00e9\n"
+    assert serialization.read_text_file(target) is None
+    assert "\ufffd" in serialization.read_text_file(target, errors = "replace")
+
+
+def test_a_binary_file_is_read_in_chunks(tmp_path):
+    target = tmp_path / "data.bin"
+    target.write_bytes(b"abcdefg")
+
+    assert list(serialization.read_binary_chunks(str(target), chunk_size = 3)) == [b"abc", b"def", b"g"]
+
+
+def test_a_missing_file_raises_from_the_chunk_reader(tmp_path):
+    with pytest.raises(FileNotFoundError):
+        list(serialization.read_binary_chunks(str(tmp_path / "absent.bin")))
+
+
+def test_a_binary_file_is_written(tmp_path, logged):
+    target = tmp_path / "data.bin"
+
+    assert serialization.write_binary_file(str(target), b"\x00\x01", verbose = True) is True
+    assert target.read_bytes() == b"\x00\x01"
+    assert logged["info"] == ["Writing %s" % target]
+
+
+def test_pretending_writes_no_binary_file(tmp_path):
+    target = tmp_path / "data.bin"
+
+    assert serialization.write_binary_file(str(target), b"x", pretend_run = True) is True
+    assert not target.exists()
+
+
+def test_a_byte_range_is_copied_from_its_offset(tmp_path, logged):
+    source = tmp_path / "image.iso"
+    source.write_bytes(b"0123456789")
+    target = tmp_path / "boot.img"
+
+    assert serialization.copy_binary_range(str(source), str(target), 2, 5, chunk_size = 2, verbose = True) is True
+    assert target.read_bytes() == b"23456"
+    assert logged["info"] == ["Copying 5 bytes at 2 from %s to %s" % (source, target)]
+
+
+def test_a_range_past_the_end_of_the_file_fails(tmp_path):
+    source = tmp_path / "image.iso"
+    source.write_bytes(b"0123")
+
+    assert serialization.copy_binary_range(str(source), str(tmp_path / "boot.img"), 2, 5) is False
+
+
+def test_pretending_copies_no_range(tmp_path):
+    target = tmp_path / "boot.img"
+
+    assert serialization.copy_binary_range(str(tmp_path / "absent.iso"), str(target), 0, 1, pretend_run = True) is True
+    assert not target.exists()
+
+
+@pytest.mark.parametrize("text, expected", [('{"a": 1}', {"a": 1}), ("[]", []), ("{}", {}), ("{nope", None), (None, None)])
+def test_a_json_string_parses_or_says_it_did_not(text, expected):
+    assert serialization.parse_json_or_none(text) == expected
+
+
+def test_csv_records_round_trip_under_their_header(tmp_path, logged):
+    target = str(tmp_path / "hashes.csv")
+    records = [{"name": "a", "size": "1"}, {"name": "b, c", "size": "2"}]
+
+    assert serialization.write_csv_records(target, ["name", "size"], records, verbose = True) is True
+    assert serialization.read_csv_records(target, verbose = True) == records
+    assert logged["info"] == ["Writing %s" % target, "Reading %s" % target]
+
+
+def test_pretending_writes_no_csv_records(tmp_path):
+    target = tmp_path / "hashes.csv"
+
+    assert serialization.write_csv_records(str(target), ["a"], [{"a": "1"}], pretend_run = True) is True
+    assert not target.exists()
+
+
+def test_a_toml_file_is_read(tmp_path, logged):
+    target = tmp_path / "pyproject.toml"
+    target.write_text('[project]\nname = "demo"\n', encoding = "utf-8")
+
+    assert serialization.read_toml_file(str(target), verbose = True) == {"project": {"name": "demo"}}
+    assert logged["info"] == ["Reading %s" % target]
+
+
+def test_malformed_toml_reads_as_empty(tmp_path):
+    target = tmp_path / "pyproject.toml"
+    target.write_text("[project\n", encoding = "utf-8")
+
+    assert serialization.read_toml_file(str(target)) == {}

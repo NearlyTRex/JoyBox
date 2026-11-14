@@ -2,12 +2,11 @@
 import os
 import copy
 import contextlib
-import shutil
 import subprocess
 import tempfile
 
 # Local imports
-from joybox import platform_info, runtime, cmdline, fileops
+from joybox import platform_info, runtime, cmdline, fileops, serialization
 from joybox import network, archive
 from joybox import logger, runoptions
 from joybox import systemtools as tools
@@ -187,7 +186,7 @@ class ConnectionLocal(connection.Connection):
                         if self.run_return_code(cmd, sudo = True) != 0:
                             return self.handle_error(f"Unable to transfer files from {src} to {dest}", "copy failed")
                 finally:
-                    shutil.rmtree(staged, ignore_errors = True)
+                    fileops.remove_directory(staged)
                 return True
             except Exception as e:
                 return self.handle_error(f"Unable to transfer files from {src} to {dest}", e)
@@ -198,20 +197,16 @@ class ConnectionLocal(connection.Connection):
             **self._io_flags())
 
     def read_file(self, src, sudo = False):
-        try:
-            if self.flags.verbose:
-                logger.log_info(f"Reading file {src}")
-            if not self.flags.pretend_run:
-                if sudo:
-                    return self.run_output(["cat", src], sudo = True)
-                else:
-                    contents = ""
-                    with open(src, "r", encoding = "utf-8") as f:
-                        contents = f.read()
-                    return contents
+        if self.flags.verbose:
+            logger.log_info(f"Reading file {src}")
+        if self.flags.pretend_run:
             return None
-        except Exception as e:
-            return self.handle_error(f"Unable to read file {src}", e, return_value = None)
+        if sudo:
+            return self.run_output(["cat", src], sudo = True)
+        contents = serialization.read_text_file(src)
+        if contents is None:
+            return self.handle_error(f"Unable to read file {src}", "read failed", return_value = None)
+        return contents
 
     def write_file(self, src, contents, sudo = False):
         if sudo:
@@ -223,10 +218,11 @@ class ConnectionLocal(connection.Connection):
                     try:
                         with os.fdopen(fd, "w") as f:
                             f.write(contents)
-                        os.chmod(temp_path, 0o644)
-                        code = self.run_return_code([tools.get_copy_tool(), temp_path, src], sudo = True)
+                        code = 1
+                        if fileops.chmod_file_or_directory(temp_path, "644"):
+                            code = self.run_return_code([tools.get_copy_tool(), temp_path, src], sudo = True)
                     finally:
-                        os.remove(temp_path)
+                        fileops.remove_file(temp_path)
                     if code != 0:
                         return self.handle_error(f"Unable to write file to {src}", "copy failed")
                 return True
@@ -308,12 +304,12 @@ class ConnectionLocal(connection.Connection):
                             return self.handle_error(f"Unable to download {url}", "download failed")
                         # Leave it as root's curl would: mkstemp's private, user owned file is
                         # unreadable to apt's sandbox user and writable by the user
-                        os.chmod(temp_path, 0o644)
+                        if not fileops.chmod_file_or_directory(temp_path, "644"):
+                            return self.handle_error(f"Unable to download {url} to {dest}", "chmod failed")
                         self.run_checked([tools.get_move_tool(), temp_path, dest], sudo = True, throw_exception = True)
                         self.run_checked([tools.get_change_owner_tool(), "0:0", dest], sudo = True, throw_exception = True)
                     finally:
-                        if os.path.exists(temp_path):
-                            os.remove(temp_path)
+                        fileops.remove_file(temp_path)
                 return True
             except Exception as e:
                 return self.handle_error(f"Unable to download {url} to {dest}", e)

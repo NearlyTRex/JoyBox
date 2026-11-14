@@ -5,8 +5,9 @@ import os.path
 # Local imports
 import joybox.command as command
 import joybox.logger as logger
+from joybox import serialization
 import joybox.paths as paths
-import joybox.fileops as fileops
+from joybox import fileops
 import joybox.programs as programs
 import joybox.archive as archive
 from joybox import platform_info
@@ -315,22 +316,10 @@ def get_efi_boot_image_extent(report):
 
 # Copy a run of bytes out of an image
 def copy_iso_extent(iso_file, output_file, offset, length):
-    try:
-        with open(iso_file, "rb") as source:
-            source.seek(offset)
-            with open(output_file, "wb") as target:
-                remaining = length
-                while remaining > 0:
-                    chunk = source.read(min(remaining, 1024 * 1024))
-                    if not chunk:
-                        break
-                    target.write(chunk)
-                    remaining -= len(chunk)
-                return remaining == 0
-    except Exception as e:
-        logger.log_error("Unable to read boot data from %s" % iso_file)
-        logger.log_error(e)
-        return False
+    if serialization.copy_binary_range(iso_file, output_file, offset, length):
+        return True
+    logger.log_error("Unable to read boot data from %s" % iso_file)
+    return False
 
 # Extract the boot data of an image
 # Neither the efi image nor the boot code is in the filesystem tree, so a

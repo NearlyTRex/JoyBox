@@ -1,5 +1,4 @@
 # Imports
-import json
 import os
 import re
 
@@ -373,11 +372,7 @@ class Amazon(storebase.StoreBase):
             return None
 
         # Get amazon json
-        amazon_json = None
-        try:
-            amazon_json = json.loads(info_output)
-        except Exception as e:
-            logger.log_error(e)
+        amazon_json = serialization.parse_json_or_none(info_output)
         if not isinstance(amazon_json, dict):
             logger.log_error("Unable to parse amazon information for '%s'" % identifier)
             logger.log_error("Received output:\n%s" % info_output)

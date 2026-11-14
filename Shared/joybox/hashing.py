@@ -1,7 +1,6 @@
 # Imports
 import os
 import os.path
-import csv
 import zlib
 import hashlib
 
@@ -40,20 +39,19 @@ def calculate_file_crc32(
             return ""
         if verbose:
             logger.log_info("Calculating crc32 for %s" % src)
-        with open(src, "rb") as file:
-            read_size = 0
-            total_size = os.path.getsize(src)
-            percent_done = 0
-            checksum = 0
+        read_size = 0
+        total_size = os.path.getsize(src)
+        percent_done = 0
+        checksum = 0
+        if verbose:
+            logger.log_percent_complete(percent_done)
+        for chunk in serialization.read_binary_chunks(src, chunksize):
+            checksum = zlib.crc32(chunk, checksum)
             if verbose:
+                read_size += len(chunk)
+                percent_done = int(round(100 * read_size / total_size))
                 logger.log_percent_complete(percent_done)
-            while (chunk := file.read(chunksize)):
-                checksum = zlib.crc32(chunk, checksum)
-                if verbose:
-                    read_size += len(chunk)
-                    percent_done = int(round(100 * read_size / total_size))
-                    logger.log_percent_complete(percent_done)
-            return "%08x" % checksum
+        return "%08x" % checksum
     except Exception as e:
         if exit_on_failure:
             logger.log_error("Unable to calculate crc32 for %s" % src)
@@ -74,20 +72,19 @@ def calculate_file_md5(
             return ""
         if verbose:
             logger.log_info("Calculating md5 for %s" % src)
-        with open(src, "rb") as file:
-            read_size = 0
-            total_size = os.path.getsize(src)
-            percent_done = 0
-            md5_hash = hashlib.md5()
+        read_size = 0
+        total_size = os.path.getsize(src)
+        percent_done = 0
+        md5_hash = hashlib.md5()
+        if verbose:
+            logger.log_percent_complete(percent_done)
+        for chunk in serialization.read_binary_chunks(src, chunksize):
+            md5_hash.update(chunk)
             if verbose:
+                read_size += len(chunk)
+                percent_done = int(round(100 * read_size / total_size))
                 logger.log_percent_complete(percent_done)
-            for chunk in iter(lambda: file.read(chunksize),b""):
-                md5_hash.update(chunk)
-                if verbose:
-                    read_size += len(chunk)
-                    percent_done = int(round(100 * read_size / total_size))
-                    logger.log_percent_complete(percent_done)
-            return md5_hash.hexdigest()
+        return md5_hash.hexdigest()
     except Exception as e:
         if exit_on_failure:
             logger.log_error("Unable to calculate md5 for %s" % src)
@@ -108,20 +105,19 @@ def calculate_file_sha1(
             return ""
         if verbose:
             logger.log_info("Calculating sha1 for %s" % src)
-        with open(src, "rb") as file:
-            read_size = 0
-            total_size = os.path.getsize(src)
-            percent_done = 0
-            sha1_hash = hashlib.sha1()
+        read_size = 0
+        total_size = os.path.getsize(src)
+        percent_done = 0
+        sha1_hash = hashlib.sha1()
+        if verbose:
+            logger.log_percent_complete(percent_done)
+        for chunk in serialization.read_binary_chunks(src, chunksize):
+            sha1_hash.update(chunk)
             if verbose:
+                read_size += len(chunk)
+                percent_done = int(round(100 * read_size / total_size))
                 logger.log_percent_complete(percent_done)
-            for chunk in iter(lambda: file.read(chunksize),b""):
-                sha1_hash.update(chunk)
-                if verbose:
-                    read_size += len(chunk)
-                    percent_done = int(round(100 * read_size / total_size))
-                    logger.log_percent_complete(percent_done)
-            return sha1_hash.hexdigest()
+        return sha1_hash.hexdigest()
     except Exception as e:
         if exit_on_failure:
             logger.log_error("Unable to calculate sha1 for %s" % src)
@@ -142,20 +138,19 @@ def calculate_file_sha256(
             return ""
         if verbose:
             logger.log_info("Calculating sha256 for %s" % src)
-        with open(src, "rb") as file:
-            read_size = 0
-            total_size = os.path.getsize(src)
-            percent_done = 0
-            sha256_hash = hashlib.sha256()
+        read_size = 0
+        total_size = os.path.getsize(src)
+        percent_done = 0
+        sha256_hash = hashlib.sha256()
+        if verbose:
+            logger.log_percent_complete(percent_done)
+        for chunk in serialization.read_binary_chunks(src, chunksize):
+            sha256_hash.update(chunk)
             if verbose:
+                read_size += len(chunk)
+                percent_done = int(round(100 * read_size / total_size))
                 logger.log_percent_complete(percent_done)
-            for chunk in iter(lambda: file.read(chunksize),b""):
-                sha256_hash.update(chunk)
-                if verbose:
-                    read_size += len(chunk)
-                    percent_done = int(round(100 * read_size / total_size))
-                    logger.log_percent_complete(percent_done)
-            return sha256_hash.hexdigest()
+        return sha256_hash.hexdigest()
     except Exception as e:
         if exit_on_failure:
             logger.log_error("Unable to calculate sha256 for %s" % src)
@@ -177,20 +172,19 @@ def calculate_file_xxh3(
         if verbose:
             logger.log_info("Calculating xxh3 for %s" % src)
         import xxhash
-        with open(src, "rb") as file:
-            read_size = 0
-            total_size = os.path.getsize(src)
-            percent_done = 0
-            xxh3_hash = xxhash.xxh3_64()
+        read_size = 0
+        total_size = os.path.getsize(src)
+        percent_done = 0
+        xxh3_hash = xxhash.xxh3_64()
+        if verbose:
+            logger.log_percent_complete(percent_done)
+        for chunk in serialization.read_binary_chunks(src, chunksize):
+            xxh3_hash.update(chunk)
             if verbose:
+                read_size += len(chunk)
+                percent_done = int(round(100 * read_size / total_size))
                 logger.log_percent_complete(percent_done)
-            for chunk in iter(lambda: file.read(chunksize),b""):
-                xxh3_hash.update(chunk)
-                if verbose:
-                    read_size += len(chunk)
-                    percent_done = int(round(100 * read_size / total_size))
-                    logger.log_percent_complete(percent_done)
-            return xxh3_hash.hexdigest()
+        return xxh3_hash.hexdigest()
     except Exception as e:
         if exit_on_failure:
             logger.log_error("Unable to calculate xxh3 for %s" % src)
@@ -397,6 +391,9 @@ def write_hash_file_json(
         exit_on_failure = exit_on_failure)
     return success
 
+# The columns of a csv hash file, in order
+HASH_FILE_COLUMNS = ["dir", "filename", "hash", "size", "mtime"]
+
 # Read csv hash file
 def read_hash_file_csv(
     src,
@@ -409,17 +406,16 @@ def read_hash_file_csv(
             logger.log_info("Reading CSV hash file: %s" % src)
         if not paths.does_path_exist(src):
             return hash_contents
-        with open(src, "r", newline="", encoding="utf-8") as f:
-            reader = csv.DictReader(f)
-            for row in reader:
-                file_location = paths.join_paths(row["dir"], row["filename"])
-                hash_contents[file_location] = {
-                    "dir": row["dir"],
-                    "filename": row["filename"],
-                    "hash": row["hash"],
-                    "size": int(row["size"]),
-                    "mtime": int(row["mtime"])
-                }
+        rows = serialization.read_csv_records(src, exit_on_failure = exit_on_failure)
+        for row in rows or []:
+            file_location = paths.join_paths(row["dir"], row["filename"])
+            hash_contents[file_location] = {
+                "dir": row["dir"],
+                "filename": row["filename"],
+                "hash": row["hash"],
+                "size": int(row["size"]),
+                "mtime": int(row["mtime"])
+            }
     except Exception as e:
         if exit_on_failure:
             logger.log_error("Unable to read CSV hash file: %s" % src)
@@ -433,34 +429,18 @@ def write_hash_file_csv(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    try:
-        if verbose:
-            logger.log_info("Writing CSV hash file: %s" % src)
-        if pretend_run:
-            return True
-        fileops.make_directory(
-            src = paths.get_filename_directory(src),
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        with open(src, "w", newline="", encoding="utf-8") as f:
-            writer = csv.DictWriter(f, fieldnames=["dir", "filename", "hash", "size", "mtime"])
-            writer.writeheader()
-            for hash_key in sorted(hash_contents.keys()):
-                data = hash_contents[hash_key]
-                writer.writerow({
-                    "dir": data["dir"],
-                    "filename": data["filename"],
-                    "hash": data["hash"],
-                    "size": data["size"],
-                    "mtime": data["mtime"]
-                })
+    if verbose:
+        logger.log_info("Writing CSV hash file: %s" % src)
+    if pretend_run:
         return True
-    except Exception as e:
-        if exit_on_failure:
-            logger.log_error("Unable to write CSV hash file: %s" % src)
-            logger.log_error(e, quit_program = True)
-        return False
+    fileops.make_directory(
+        src = paths.get_filename_directory(src),
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    records = [{column: hash_contents[hash_key][column] for column in HASH_FILE_COLUMNS}
+               for hash_key in sorted(hash_contents.keys())]
+    return serialization.write_csv_records(src, HASH_FILE_COLUMNS, records, exit_on_failure = exit_on_failure)
 
 # Sort hash file
 def sort_hash_file(

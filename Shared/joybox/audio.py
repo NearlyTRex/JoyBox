@@ -46,14 +46,13 @@ def get_album_directories(genre_type = None, album_name = None, artist_name = No
 def get_archived_video_ids(archive_file):
     ids = set()
     if archive_file and paths.is_path_file(archive_file):
-        try:
-            with open(archive_file, "r", encoding = "utf-8") as f:
-                for line in f:
-                    tokens = line.split()
-                    if tokens:
-                        ids.add(tokens[-1])
-        except (OSError, UnicodeDecodeError) as e:
-            logger.log_warning("Unable to read download archive %s, so every video counts as new: %s" % (archive_file, e))
+        lines = serialization.read_text_lines(archive_file)
+        if lines is None:
+            logger.log_warning("Unable to read download archive %s, so every video counts as new" % archive_file)
+        for line in lines or []:
+            tokens = line.split()
+            if tokens:
+                ids.add(tokens[-1])
     return ids
 
 # Collect audio files in a directory and upload them to the channel's music dir

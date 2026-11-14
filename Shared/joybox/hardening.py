@@ -9,11 +9,11 @@
 # of one command and says what it means, which is the part worth testing.
 
 # Imports
-import json
 import re
 
 # Local imports
 import joybox.logger as logger
+from joybox import serialization
 
 # What a single check concluded
 PASS = "PASS"
@@ -123,10 +123,7 @@ def parse_userns_remap_suffix(output):
 
 # Whether a docker daemon config declares a key
 def parse_daemon_keys(contents):
-    try:
-        data = json.loads(contents or "")
-    except Exception:
-        return []
+    data = serialization.parse_json_or_none(contents or "")
     if not isinstance(data, dict):
         return []
     return sorted(data.keys())

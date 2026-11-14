@@ -520,3 +520,8 @@ def test_an_ambiguous_region_name_warns(tmp_path, monkeypatch):
 
     assert chunkers.slice_region(str(target), "def") == ""
     assert "def_alpha" in warnings[0]
+
+
+def test_an_unreadable_file_raises(tmp_path):
+    with pytest.raises(OSError, match = "Unable to read"):
+        chunkers.read_lines(str(tmp_path))
