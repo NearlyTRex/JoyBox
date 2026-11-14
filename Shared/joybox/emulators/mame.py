@@ -5,6 +5,7 @@ import joybox.fileops as fileops
 import joybox.logger as logger
 import joybox.paths as paths
 import joybox.release as release
+from joybox import sourcebuild
 import joybox.programs as programs
 import joybox.gui as gui
 import joybox.emulatorcommon as emulatorcommon
@@ -157,7 +158,7 @@ class Mame(emulatorbase.EmulatorBase):
 
         # Build linux program
         if programs.should_program_be_installed("Mame", "linux"):
-            success = release.build_appimage_from_source(
+            success = sourcebuild.build_appimage_from_source(
                 release_url = "https://github.com/NearlyTRex/Mame.git",
                 output_file = "App-x86_64.AppImage",
                 install_name = "Mame",

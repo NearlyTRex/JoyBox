@@ -6,9 +6,11 @@ import pytest
 
 # Local imports
 from joybox import release
+from joybox import sourcebuild
 from file_helpers import tree
 from file_helpers import write
-from release_helpers import build_appimage, failing
+from fakes import failing
+from sourcebuild_helpers import build_appimage
 
 
 ###########################################################
@@ -37,9 +39,9 @@ def test_appimagetool_packs_the_appdir_from_the_scratch_directory(builder):
 
 def test_built_files_are_laid_out_in_the_appdir(builder, monkeypatch):
     copied = []
-    real = release.fileops.smart_copy
+    real = sourcebuild.fileops.smart_copy
     monkeypatch.setattr(
-        release.fileops, "smart_copy",
+        sourcebuild.fileops, "smart_copy",
         lambda src, dest, **kwargs: copied.append((src, dest)) or real(src = src, dest = dest, **kwargs))
 
     assert build_appimage(builder, internal_copies = [
@@ -64,7 +66,7 @@ def test_a_missing_appdir_file_stops_the_build(builder):
 def test_appdir_symlinks_are_made_inside_the_appdir(builder, monkeypatch):
     linked = []
     monkeypatch.setattr(
-        release.fileops, "create_symlink",
+        sourcebuild.fileops, "create_symlink",
         lambda src, dest, cwd = None, **kwargs: linked.append((src, dest, cwd)) or True)
 
     assert build_appimage(builder, internal_symlinks = [{"from": "usr/bin/tool", "to": "AppRun"}]) is True
@@ -72,7 +74,7 @@ def test_appdir_symlinks_are_made_inside_the_appdir(builder, monkeypatch):
 
 
 def test_a_failed_symlink_stops_the_build(builder, monkeypatch):
-    monkeypatch.setattr(release.fileops, "create_symlink", failing)
+    monkeypatch.setattr(sourcebuild.fileops, "create_symlink", failing)
 
     assert build_appimage(builder, internal_symlinks = [{"from": "usr/bin/tool", "to": "AppRun"}]) is False
 
@@ -98,20 +100,20 @@ def test_a_failed_build_never_packs(builder):
 
 
 def test_a_folder_that_cannot_be_made_stops_the_build(builder, monkeypatch):
-    real = release.fileops.make_directory
+    real = sourcebuild.fileops.make_directory
 
     def make_directory(src, **kwargs):
         if src == appdir(builder):
             return False
         return real(src = src, **kwargs)
 
-    monkeypatch.setattr(release.fileops, "make_directory", make_directory)
+    monkeypatch.setattr(sourcebuild.fileops, "make_directory", make_directory)
 
     assert build_appimage(builder) is False
 
 
 def test_an_appimage_that_will_not_copy_installs_nothing(builder, monkeypatch):
-    monkeypatch.setattr(release.fileops, "smart_copy", failing)
+    monkeypatch.setattr(sourcebuild.fileops, "smart_copy", failing)
 
     assert build_appimage(builder) is False
 
@@ -147,7 +149,7 @@ def test_the_appimage_backup_can_be_skipped(builder, backups):
 
 
 def test_a_failed_appimage_backup_is_reported_but_keeps_the_build(builder, backups, monkeypatch):
-    monkeypatch.setattr(release.locker, "backup", failing)
+    monkeypatch.setattr(sourcebuild.locker, "backup", failing)
     monkeypatch.setattr(release, "failed_backups", [])
 
     assert build_appimage(builder, backups_dir = "/locker/tools") is True
@@ -187,7 +189,7 @@ def test_run_flags_reach_the_pack_and_the_backup(builder, backups, flag):
 
 def test_appimage_build_options_reach_the_source_build(builder, monkeypatch):
     seen = []
-    monkeypatch.setattr(release, "build_from_source", lambda **kwargs: seen.append(kwargs) or None)
+    monkeypatch.setattr(sourcebuild, "build_from_source", lambda **kwargs: seen.append(kwargs) or None)
 
     assert build_appimage(builder, release_branch = "stable", build_dir = "Build") is False
     assert seen[0]["release_branch"] == "stable"

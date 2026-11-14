@@ -8,7 +8,8 @@ import pytest
 # Local imports
 from joybox import release
 from file_helpers import tree, write
-from release_helpers import failing, setup_archive
+from fakes import failing
+from release_helpers import setup_archive
 
 
 ###########################################################

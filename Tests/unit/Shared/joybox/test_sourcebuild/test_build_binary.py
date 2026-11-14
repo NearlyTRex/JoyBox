@@ -6,8 +6,10 @@ import pytest
 
 # Local imports
 from joybox import release
+from joybox import sourcebuild
 from file_helpers import tree
-from release_helpers import build_binary, failing
+from fakes import failing
+from sourcebuild_helpers import build_binary
 
 
 ###########################################################
@@ -96,7 +98,7 @@ def test_a_built_archive_that_will_not_unpack_installs_nothing(builder):
 
 def test_a_built_archive_that_will_not_copy_installs_nothing(builder, monkeypatch):
     builder["outputs"]["make"] = {"tool.zip": "archive"}
-    monkeypatch.setattr(release.fileops, "copy_contents", failing)
+    monkeypatch.setattr(sourcebuild.fileops, "copy_contents", failing)
 
     assert build_binary(builder, output_file = "tool.zip", search_file = "tool") is False
 
@@ -133,7 +135,7 @@ def test_the_built_file_backup_can_be_skipped(builder, backups, options):
 
 
 def test_a_failed_backup_is_reported_but_keeps_the_build(builder, backups, monkeypatch):
-    monkeypatch.setattr(release.locker, "backup", failing)
+    monkeypatch.setattr(sourcebuild.locker, "backup", failing)
     monkeypatch.setattr(release, "failed_backups", [])
 
     assert build_binary(builder, backups_dir = "/locker/tools") is True
@@ -145,20 +147,20 @@ def test_a_failed_backup_is_reported_but_keeps_the_build(builder, backups, monke
 ###########################################################
 
 def test_an_install_folder_that_cannot_be_made_installs_nothing(builder, monkeypatch):
-    real = release.fileops.make_directory
+    real = sourcebuild.fileops.make_directory
 
     def make_directory(src, **kwargs):
         if src == builder["install_dir"]:
             return False
         return real(src = src, **kwargs)
 
-    monkeypatch.setattr(release.fileops, "make_directory", make_directory)
+    monkeypatch.setattr(sourcebuild.fileops, "make_directory", make_directory)
 
     assert build_binary(builder) is False
 
 
 def test_a_built_file_that_will_not_copy_installs_nothing(builder, monkeypatch):
-    monkeypatch.setattr(release.fileops, "smart_copy", failing)
+    monkeypatch.setattr(sourcebuild.fileops, "smart_copy", failing)
 
     assert build_binary(builder) is False
 
@@ -175,7 +177,7 @@ def test_the_scratch_directory_is_always_removed(builder, options):
 
 
 def test_a_failed_backup_still_removes_the_scratch_directory(builder, backups, monkeypatch):
-    monkeypatch.setattr(release.locker, "backup", failing)
+    monkeypatch.setattr(sourcebuild.locker, "backup", failing)
     build_binary(builder, backups_dir = "/locker/tools")
 
     assert not os.path.exists(builder["scratch"])
@@ -202,7 +204,7 @@ def test_run_flags_reach_the_build_and_the_backup(builder, backups, flag):
 
 def test_build_options_reach_the_source_build(builder, monkeypatch):
     seen = []
-    monkeypatch.setattr(release, "build_from_source", lambda **kwargs: seen.append(kwargs) or None)
+    monkeypatch.setattr(sourcebuild, "build_from_source", lambda **kwargs: seen.append(kwargs) or None)
     patches = [{"file": "fix.patch", "content": "x"}]
 
     assert build_binary(

@@ -3,6 +3,7 @@ import os
 
 # Local imports
 from joybox import config
+from joybox import sourcebuild
 
 ###########################################################
 # Emulator seams
@@ -20,7 +21,6 @@ RELEASE_FUNCTIONS = [
     "download_github_release",
     "download_general_release",
     "download_webpage_release",
-    "build_appimage_from_source",
     "setup_stored_release",
 ]
 
@@ -79,6 +79,8 @@ class Seams:
         self.releases = Recorder()
         for name in RELEASE_FUNCTIONS:
             monkeypatch.setattr(module.release, name, self.releases.tagged(name))
+        monkeypatch.setattr(
+            sourcebuild, "build_appimage_from_source", self.releases.tagged("build_appimage_from_source"))
 
         programs = module.programs
         monkeypatch.setattr(programs, "should_program_be_installed",

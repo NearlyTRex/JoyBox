@@ -2,6 +2,7 @@
 import joybox.config as config
 import joybox.logger as logger
 import joybox.release as release
+from joybox import sourcebuild
 import joybox.programs as programs
 import joybox.emulatorbase as emulatorbase
 
@@ -64,7 +65,7 @@ class Mesen(emulatorbase.EmulatorBase):
 
         # Build linux program
         if programs.should_program_be_installed("Mesen", "linux"):
-            success = release.build_appimage_from_source(
+            success = sourcebuild.build_appimage_from_source(
                 release_url = "https://github.com/NearlyTRex/Mesen.git",
                 output_file = "Mesen-x86_64.AppImage",
                 install_name = "Mesen",

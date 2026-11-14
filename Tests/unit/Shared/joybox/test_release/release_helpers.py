@@ -5,12 +5,6 @@ import os
 from joybox import release
 from file_helpers import write
 
-PATCH_BODY = "--- a/main.c\n+++ b/main.c\n"
-
-GIT_URL = "https://github.com/acme/tool.git"
-TARBALL_URL = "https://dl.example/tool-1.0.tar.gz"
-
-
 def asset(name):
     return {"name": name, "browser_download_url": "https://dl.example/" + name}
 
@@ -38,10 +32,6 @@ def fetch_webpage(**kwargs):
     return release.download_webpage_release(**defaults)
 
 
-def failing(*args, **kwargs):
-    return False
-
-
 def setup_archive(workspace, archive_name = "Tool-1.0.zip", **kwargs):
     archive_file = write(os.path.join(str(workspace["root"]), "downloads", archive_name))
     defaults = dict(
@@ -59,31 +49,3 @@ def install_stored(archive_dir, **kwargs):
         install_dir = "/tools/Tool")
     defaults.update(kwargs)
     return release.setup_stored_release(**defaults)
-
-
-def build_source(**kwargs):
-    defaults = dict(release_url = GIT_URL, build_cmd = ["make"])
-    defaults.update(kwargs)
-    return release.build_from_source(**defaults)
-
-
-def build_binary(builder, **kwargs):
-    defaults = dict(
-        release_url = GIT_URL,
-        build_cmd = ["make"],
-        output_file = "tool",
-        install_name = "Tool",
-        install_dir = builder["install_dir"])
-    defaults.update(kwargs)
-    return release.build_binary_from_source(**defaults)
-
-
-def build_appimage(builder, **kwargs):
-    defaults = dict(
-        release_url = GIT_URL,
-        build_cmd = ["make"],
-        output_file = "Tool-x86_64.AppImage",
-        install_name = "Tool",
-        install_dir = builder["install_dir"])
-    defaults.update(kwargs)
-    return release.build_appimage_from_source(**defaults)

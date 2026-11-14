@@ -8,6 +8,7 @@ import joybox.environment as environment
 import joybox.fileops as fileops
 import joybox.logger as logger
 import joybox.release as release
+from joybox import sourcebuild
 import joybox.programs as programs
 import joybox.archive as archive
 from joybox.nintendo import wii
@@ -184,7 +185,7 @@ class Dolphin(emulatorbase.EmulatorBase):
 
         # Build linux program
         if programs.should_program_be_installed("Dolphin", "linux"):
-            success = release.build_appimage_from_source(
+            success = sourcebuild.build_appimage_from_source(
                 release_url = "https://github.com/NearlyTRex/Dolphin.git",
                 output_file = "Dolphin_Emulator-x86_64.AppImage",
                 install_name = "Dolphin",

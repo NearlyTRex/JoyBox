@@ -562,3 +562,11 @@ def write_param_sfo(path, values):
     path.parent.mkdir(parents = True, exist_ok = True)
     path.write_bytes(header + index + keys + data)
     return path
+
+
+###########################################################
+# Failing stub
+###########################################################
+
+def failing(*args, **kwargs):
+    return False

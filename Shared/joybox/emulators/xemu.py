@@ -5,6 +5,7 @@ import joybox.fileops as fileops
 import joybox.logger as logger
 import joybox.paths as paths
 import joybox.release as release
+from joybox import sourcebuild
 import joybox.programs as programs
 import joybox.emulatorcommon as emulatorcommon
 import joybox.emulatorbase as emulatorbase
@@ -100,7 +101,7 @@ class Xemu(emulatorbase.EmulatorBase):
 
         # Build linux program
         if programs.should_program_be_installed("Xemu", "linux"):
-            success = release.build_appimage_from_source(
+            success = sourcebuild.build_appimage_from_source(
                 release_url = "https://github.com/NearlyTRex/Xemu.git",
                 output_file = "xemu-x86_64.AppImage",
                 install_name = "Xemu",

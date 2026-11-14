@@ -7,6 +7,7 @@ import joybox.config as config
 import joybox.logger as logger
 import joybox.paths as paths
 import joybox.release as release
+from joybox import sourcebuild
 import joybox.serialization as serialization
 import joybox.programs as programs
 import joybox.environment as environment
@@ -80,7 +81,7 @@ class Ghidra(toolbase.ToolBase):
                 ]
 
             # Build Ghidra from source
-            success = release.build_binary_from_source(
+            success = sourcebuild.build_binary_from_source(
                 release_url = "https://github.com/NearlyTRex/Ghidra.git",
                 release_branch = "dev-testing",
                 output_file = ".zip",

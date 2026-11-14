@@ -46,7 +46,7 @@ def online(monkeypatch, program_paths):
     fake = Release()
     monkeypatch.setattr(computer.release, "download_github_release", fake)
     monkeypatch.setattr(computer.release, "download_webpage_release", fake)
-    monkeypatch.setattr(computer.release, "build_appimage_from_source", fake)
+    monkeypatch.setattr(computer.sourcebuild, "build_appimage_from_source", fake)
     return fake
 
 

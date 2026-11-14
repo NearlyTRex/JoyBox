@@ -2,6 +2,7 @@
 import joybox.config as config
 import joybox.logger as logger
 import joybox.release as release
+from joybox import sourcebuild
 import joybox.programs as programs
 import joybox.emulatorbase as emulatorbase
 
@@ -63,7 +64,7 @@ class Stella(emulatorbase.EmulatorBase):
 
         # Build linux program
         if programs.should_program_be_installed("Stella", "linux"):
-            success = release.build_appimage_from_source(
+            success = sourcebuild.build_appimage_from_source(
                 release_url = "https://github.com/NearlyTRex/Stella.git",
                 output_file = "Stella-x86_64.AppImage",
                 install_name = "Stella",

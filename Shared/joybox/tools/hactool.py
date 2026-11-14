@@ -2,6 +2,7 @@
 import joybox.config as config
 import joybox.logger as logger
 import joybox.release as release
+from joybox import sourcebuild
 import joybox.programs as programs
 import joybox.toolbase as toolbase
 
@@ -57,7 +58,7 @@ class HacTool(toolbase.ToolBase):
 
         # Build linux program
         if programs.should_program_be_installed("HacTool", "linux"):
-            success = release.build_appimage_from_source(
+            success = sourcebuild.build_appimage_from_source(
                 release_url = "https://github.com/NearlyTRex/HacTool.git",
                 output_file = "App-x86_64.AppImage",
                 install_name = "HacTool",

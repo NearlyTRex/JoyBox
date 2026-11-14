@@ -5,8 +5,9 @@ import os
 import pytest
 
 # Local imports
-from joybox import release
-from release_helpers import PATCH_BODY, failing
+from joybox import sourcebuild
+from fakes import failing
+from sourcebuild_helpers import PATCH_BODY
 
 
 ###########################################################
@@ -20,28 +21,28 @@ from release_helpers import PATCH_BODY, failing
 def test_an_inline_patch_is_used_as_it_stands():
     entry = {"file": "fix.patch", "content": PATCH_BODY}
 
-    assert release.resolve_patch_entry(entry) == ("fix.patch", PATCH_BODY)
+    assert sourcebuild.resolve_patch_entry(entry) == ("fix.patch", PATCH_BODY)
 
 
 def test_a_named_patch_file_is_read(tmp_path):
     patch_path = tmp_path / "fix.patch"
     patch_path.write_text(PATCH_BODY)
 
-    assert release.resolve_patch_entry({"path": str(patch_path)})[1] == PATCH_BODY
+    assert sourcebuild.resolve_patch_entry({"path": str(patch_path)})[1] == PATCH_BODY
 
 
 def test_a_named_patch_file_supplies_the_filename(tmp_path):
     patch_path = tmp_path / "fix.patch"
     patch_path.write_text(PATCH_BODY)
 
-    assert release.resolve_patch_entry({"path": str(patch_path)})[0] == "fix.patch"
+    assert sourcebuild.resolve_patch_entry({"path": str(patch_path)})[0] == "fix.patch"
 
 
 def test_an_explicit_filename_wins_over_the_path(tmp_path):
     patch_path = tmp_path / "fix.patch"
     patch_path.write_text(PATCH_BODY)
 
-    name, _ = release.resolve_patch_entry(
+    name, _ = sourcebuild.resolve_patch_entry(
         {"path": str(patch_path), "file": "renamed.patch"})
 
     assert name == "renamed.patch"
@@ -51,7 +52,7 @@ def test_a_named_patch_file_overrides_inline_content(tmp_path):
     patch_path = tmp_path / "fix.patch"
     patch_path.write_text(PATCH_BODY)
 
-    _, content = release.resolve_patch_entry(
+    _, content = sourcebuild.resolve_patch_entry(
         {"path": str(patch_path), "content": "inline"})
 
     assert content == PATCH_BODY
@@ -60,19 +61,19 @@ def test_a_named_patch_file_overrides_inline_content(tmp_path):
 def test_a_missing_patch_file_falls_back_to_inline_content(tmp_path):
     entry = {"path": str(tmp_path / "absent.patch"), "content": "inline", "file": "a.patch"}
 
-    assert release.resolve_patch_entry(entry) == ("a.patch", "inline")
+    assert sourcebuild.resolve_patch_entry(entry) == ("a.patch", "inline")
 
 
 def test_an_unreadable_patch_file_resolves_to_nothing(tmp_path, monkeypatch):
     patch_path = tmp_path / "fix.patch"
     patch_path.write_text(PATCH_BODY)
-    monkeypatch.setattr(release.serialization, "read_text_file", lambda *a, **k: None)
+    monkeypatch.setattr(sourcebuild.serialization, "read_text_file", lambda *a, **k: None)
 
-    assert release.resolve_patch_entry({"path": str(patch_path)}) == (None, None)
+    assert sourcebuild.resolve_patch_entry({"path": str(patch_path)}) == (None, None)
 
 
 def test_an_empty_entry_resolves_to_empty_strings():
-    assert release.resolve_patch_entry({}) == ("", "")
+    assert sourcebuild.resolve_patch_entry({}) == ("", "")
 
 
 @pytest.mark.parametrize("field, expected", [
@@ -84,7 +85,7 @@ def test_a_null_field_is_treated_as_absent(field, expected):
     entry = {"file": "fix.patch", "content": PATCH_BODY, "path": ""}
     entry[field] = None
 
-    assert release.resolve_patch_entry(entry) == expected
+    assert sourcebuild.resolve_patch_entry(entry) == expected
 
 
 ###########################################################
@@ -101,13 +102,13 @@ def patching(tmp_path, monkeypatch):
             applied.append({"cmd": cmd, "cwd": options.get_cwd(), "body": handle.read(), "kwargs": kwargs})
         return state["code"]
 
-    monkeypatch.setattr(release.command, "run_returncode_command", run_returncode_command)
-    monkeypatch.setattr(release.programs, "get_tool_program", lambda name: "/usr/bin/" + name.lower())
+    monkeypatch.setattr(sourcebuild.command, "run_returncode_command", run_returncode_command)
+    monkeypatch.setattr(sourcebuild.programs, "get_tool_program", lambda name: "/usr/bin/" + name.lower())
     return state
 
 
 def apply(patching, patches, **kwargs):
-    return release.apply_source_patches(
+    return sourcebuild.apply_source_patches(
         source_patches = patches,
         source_dir = patching["source_dir"],
         patch_dir = patching["patch_dir"],
@@ -152,7 +153,7 @@ def test_a_patch_with_no_content_stops_the_build(patching, tmp_path):
 def test_an_unreadable_patch_stops_the_build(patching, tmp_path, monkeypatch):
     patch_path = tmp_path / "fix.patch"
     patch_path.write_text(PATCH_BODY)
-    monkeypatch.setattr(release.serialization, "read_text_file", lambda *a, **k: None)
+    monkeypatch.setattr(sourcebuild.serialization, "read_text_file", lambda *a, **k: None)
 
     assert apply(patching, [{"path": str(patch_path)}]) is False
 
@@ -167,7 +168,7 @@ def test_a_patch_that_will_not_apply_stops_the_build(patching):
 
 
 def test_a_patch_that_cannot_be_written_stops_the_build(patching, monkeypatch):
-    monkeypatch.setattr(release.fileops, "touch_file", failing)
+    monkeypatch.setattr(sourcebuild.fileops, "touch_file", failing)
 
     assert apply(patching, [{"file": "fix.patch", "content": PATCH_BODY}]) is False
     assert patching["applied"] == []
@@ -183,7 +184,7 @@ def test_no_patch_list_applies_nothing(patching, patches):
 def test_run_flags_reach_git_apply(patching, monkeypatch, flag):
     seen = []
     monkeypatch.setattr(
-        release.command, "run_returncode_command",
+        sourcebuild.command, "run_returncode_command",
         lambda cmd, options = None, **kwargs: seen.append(kwargs) or 0)
     apply(patching, [{"file": "fix.patch", "content": PATCH_BODY}], **{flag: True})
 
