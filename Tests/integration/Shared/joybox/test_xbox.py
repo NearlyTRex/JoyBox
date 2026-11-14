@@ -8,7 +8,7 @@ import pytest
 # Local imports
 from joybox import programs, xbox
 
-pytestmark = [pytest.mark.requires_tool("ExtractXIso"), pytest.mark.slow]
+pytestmark = [pytest.mark.integration, pytest.mark.requires_tool("ExtractXIso"), pytest.mark.slow]
 
 
 ###########################################################

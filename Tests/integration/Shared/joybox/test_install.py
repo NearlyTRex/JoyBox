@@ -9,6 +9,7 @@ from joybox import config, install
 from install_helpers import make_prefix, make_tree
 
 pytestmark = [
+    pytest.mark.integration,
     pytest.mark.requires_tool("7-Zip"),
     pytest.mark.slow]
 

@@ -10,6 +10,7 @@ from joybox import chd
 from mds_helpers import build_mds
 
 pytestmark = [
+    pytest.mark.integration,
     pytest.mark.requires_tool("MameChdman"),
     pytest.mark.slow,
 ]

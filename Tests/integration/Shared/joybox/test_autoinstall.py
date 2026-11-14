@@ -10,7 +10,7 @@ import pytest
 from joybox import autoinstall
 from joybox import iso
 
-pytestmark = [pytest.mark.requires_binary("xorriso"), pytest.mark.slow]
+pytestmark = [pytest.mark.integration, pytest.mark.requires_binary("xorriso"), pytest.mark.slow]
 
 
 ###########################################################

@@ -8,6 +8,7 @@ import pytest
 from joybox import chd, iso
 
 pytestmark = [
+    pytest.mark.integration,
     pytest.mark.requires_tool("MameChdman"),
     pytest.mark.requires_tool("XorrISO"),
     pytest.mark.slow,

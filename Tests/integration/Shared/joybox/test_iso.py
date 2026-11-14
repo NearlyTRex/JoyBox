@@ -7,7 +7,7 @@ import pytest
 # Local imports
 from joybox import iso
 
-pytestmark = [pytest.mark.requires_tool("XorrISO"), pytest.mark.slow]
+pytestmark = [pytest.mark.integration, pytest.mark.requires_tool("XorrISO"), pytest.mark.slow]
 
 
 ###########################################################

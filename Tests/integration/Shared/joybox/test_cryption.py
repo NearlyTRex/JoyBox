@@ -7,7 +7,7 @@ import pytest
 # Local imports
 from joybox import cryption
 
-pytestmark = [pytest.mark.requires_tool("Gpg"), pytest.mark.slow]
+pytestmark = [pytest.mark.integration, pytest.mark.requires_tool("Gpg"), pytest.mark.slow]
 
 
 ###########################################################

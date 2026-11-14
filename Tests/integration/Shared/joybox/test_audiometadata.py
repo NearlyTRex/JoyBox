@@ -9,7 +9,7 @@ import pytest
 # Local imports
 from joybox import audiometadata
 
-pytestmark = [pytest.mark.requires_binary("ffmpeg"), pytest.mark.slow]
+pytestmark = [pytest.mark.integration, pytest.mark.requires_binary("ffmpeg"), pytest.mark.slow]
 
 
 ###########################################################

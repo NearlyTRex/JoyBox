@@ -164,3 +164,11 @@ def assert_offline_matches_online(steps, tool):
     for install_dir, backup_dir, kwargs in online:
         expected = {key: kwargs[key] for key in KEYS if key in kwargs}
         assert {key: offline[install_dir].get(key) for key in expected} == expected
+
+
+def assert_installs_nothing(steps, tool):
+    # The system package manager provides it, so nothing is fetched or written
+    for method in lifecycle(tool):
+        steps.reset()
+        assert getattr(tool, method)() is True, method
+        assert steps.calls == [], method

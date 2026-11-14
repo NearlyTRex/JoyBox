@@ -9,7 +9,7 @@ pytest-xdist
 # The meta suite the tests are held to, the hermetic seal, requires_binary, the shell
 # coverage and shell sandbox plugins CI's shell inputs turn on, and Lua coverage with
 # the lupa runtime the WirePlumber script's tests run in
-pytest-testrex[shell,lua]>=0.1.5
+pytest-testrex[shell,lua]>=0.1.7
 # Lints the tests, through the meta suite
 pylint
 # Builds the editable install in CI

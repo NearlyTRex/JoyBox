@@ -180,6 +180,13 @@ def test_the_report_is_served_as_json(served):
 
 
 @pytest.mark.allow_network
+def test_a_trailing_slash_is_the_same_report(served):
+    with urllib.request.urlopen(served + "/hardware/", timeout = 5) as response:
+        assert response.headers["Content-Type"] == "application/json"
+        assert json.loads(response.read().decode())["compute_gpu_count"] == 1
+
+
+@pytest.mark.allow_network
 def test_other_paths_are_not_found(served):
     with pytest.raises(urllib.error.HTTPError) as raised:
         with urllib.request.urlopen(served + "/other", timeout = 5) as response:
@@ -207,6 +214,29 @@ def test_serve_starts_the_server(helper, monkeypatch):
 
     assert helper.main(["ollama-helper", "serve"]) == 0
     assert started == [True]
+
+
+def test_the_server_listens_on_localhost_beside_ollama(helper, monkeypatch):
+    bound = []
+
+    class Server:
+        def __init__(self, address, handler):
+            bound.append((address, handler))
+
+        def serve_forever(self):
+            bound.append("serving")
+
+    monkeypatch.setattr(helper.http.server, "ThreadingHTTPServer", Server)
+    helper.serve()
+
+    assert bound == [(("127.0.0.1", 11435), helper.HardwareHandler), "serving"]
+
+
+def test_a_failed_select_is_an_error(helper, monkeypatch):
+    monkeypatch.setattr(helper, "read_gpus", lambda: [])
+    monkeypatch.setattr(helper, "select", lambda gpus: False)
+
+    assert helper.main(["ollama-helper", "select"]) == 1
 
 
 @pytest.mark.parametrize("argv", [["ollama-helper"], ["ollama-helper", "other"]])
