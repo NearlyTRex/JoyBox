@@ -32,7 +32,7 @@ def tool(monkeypatch):
         harness.logged_in.append(game_subcategory)
         return game_subcategory not in harness.failing
 
-    monkeypatch.setattr(login_game_stores.gameinfo, "iterate_selected_game_categories", categories)
+    monkeypatch.setattr(login_game_stores.gamecollection, "iterate_selected_game_categories", categories)
     monkeypatch.setattr(login_game_stores.collection, "login_game_store", login)
     return harness
 

@@ -350,7 +350,7 @@ def test_without_the_flag_a_game_folder_is_left_untouched(json_root, game_root, 
 
 def test_building_every_game_passes_the_playlist_flag_on(monkeypatch):
     built = []
-    monkeypatch.setattr(jsondata.gameinfo, "find_locker_game_names", lambda *args: [GAME])
+    monkeypatch.setattr(jsondata.gamecollection, "find_locker_game_names", lambda *args: [GAME])
     monkeypatch.setattr(jsondata, "build_game_json_file", lambda **kwargs: built.append(kwargs) or True)
 
     assert jsondata.build_all_game_json_files(
@@ -629,7 +629,7 @@ def every_game(monkeypatch):
         state["built"].append(game_name)
         return state["result"]
 
-    monkeypatch.setattr(jsondata.gameinfo, "find_locker_game_names", find_locker_game_names)
+    monkeypatch.setattr(jsondata.gamecollection, "find_locker_game_names", find_locker_game_names)
     monkeypatch.setattr(jsondata, "build_game_json_file", build_game_json_file)
     return state
 

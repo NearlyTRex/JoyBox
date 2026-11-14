@@ -2,7 +2,7 @@
 import joybox.config as config
 import joybox.environment as environment
 import joybox.system as system
-import joybox.gameinfo as gameinfo
+from joybox import gamecollection
 import joybox.collection as collection
 import joybox.metadatacollector as metadatacollector
 import joybox.arguments as arguments
@@ -65,10 +65,10 @@ def main():
 
     # Collect games to process
     games_to_process = []
-    for game_supercategory, game_category, game_subcategory in gameinfo.iterate_selected_game_categories(
+    for game_supercategory, game_category, game_subcategory in gamecollection.iterate_selected_game_categories(
         parser = parser,
         generation_mode = args.generation_mode):
-        game_names = gameinfo.find_json_game_names(
+        game_names = gamecollection.find_json_game_names(
             game_supercategory,
             game_category,
             game_subcategory)

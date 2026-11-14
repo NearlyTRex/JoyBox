@@ -25,7 +25,7 @@ def tool(monkeypatch, isolated_settings):
     harness.playlists = []
     harness.result = True
     module = build_game_json_files
-    monkeypatch.setattr(module.gameinfo, "iterate_selected_game_categories", lambda **kwargs: iter([CATEGORIES]))
+    monkeypatch.setattr(module.gamecollection, "iterate_selected_game_categories", lambda **kwargs: iter([CATEGORIES]))
 
     def find_names(*args):
         harness.listed.append(args)
@@ -36,7 +36,7 @@ def tool(monkeypatch, isolated_settings):
         harness.playlists.append(kwargs["create_disc_playlists"])
         return harness.result
 
-    monkeypatch.setattr(module.gameinfo, "find_locker_game_names", find_names)
+    monkeypatch.setattr(module.gamecollection, "find_locker_game_names", find_names)
     monkeypatch.setattr(module.collection, "build_game_json_file", build)
     return harness
 

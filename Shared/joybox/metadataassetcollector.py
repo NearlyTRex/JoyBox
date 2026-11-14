@@ -2,7 +2,7 @@
 import joybox.config as config
 import joybox.logger as logger
 import joybox.prompts as prompts
-import joybox.gameinfo as gameinfo
+from joybox import gamenaming
 import joybox.google as google
 import joybox.stores as stores
 
@@ -23,7 +23,7 @@ def find_metadata_assets_from_google_images(
 
     # Return search results
     return google.find_images(
-        search_name = gameinfo.derive_regular_name_from_game_name(game_name),
+        search_name = gamenaming.derive_regular_name_from_game_name(game_name),
         image_dimensions = config.asset_boxfront_dimensions,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -46,7 +46,7 @@ def find_metadata_assets_from_youtube(
 
     # Return search results
     return google.find_videos(
-        search_name = gameinfo.derive_regular_name_from_game_name(game_name, custom_suffix = " trailer"),
+        search_name = gamenaming.derive_regular_name_from_game_name(game_name, custom_suffix = " trailer"),
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -68,7 +68,7 @@ def find_metadata_assets_from_steam(
 
     # Build asset list
     return stores.find_steam_assets(
-        search_name = gameinfo.derive_regular_name_from_game_name(game_name),
+        search_name = gamenaming.derive_regular_name_from_game_name(game_name),
         asset_type = asset_type,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -91,7 +91,7 @@ def find_metadata_assets_from_steamgriddb(
 
     # Return search results
     return stores.find_steam_griddb_covers(
-        search_name = gameinfo.derive_regular_name_from_game_name(game_name),
+        search_name = gamenaming.derive_regular_name_from_game_name(game_name),
         image_dimensions = config.asset_boxfront_dimensions,
         image_types = config.ImageFileType.members(),
         verbose = verbose,

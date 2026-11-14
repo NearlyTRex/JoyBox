@@ -75,7 +75,7 @@ def library(monkeypatch, tmp_path, isolated_settings):
     monkeypatch.setattr(tool_module.gameinfo, "GameInfo", FakeGameInfo)
     monkeypatch.setattr(tool_module.metadata, "Metadata", FakeMetadata)
     monkeypatch.setattr(tool_module.gameinfo, "derive_game_categories_from_file", lambda json_file: SWITCH)
-    monkeypatch.setattr(tool_module.gameinfo, "find_json_game_names",
+    monkeypatch.setattr(tool_module.gamecollection, "find_json_game_names",
                         lambda supercategory, category, subcategory:
                         sorted(FakeGameInfo.games) if (supercategory, category, subcategory) == SWITCH else [])
     monkeypatch.setattr(environment, "get_game_json_metadata_root_dir", lambda: str(json_root))
@@ -138,8 +138,8 @@ def test_missing_transform_file_quits(library):
 
 def test_game_whose_json_disappeared_is_skipped(library, monkeypatch):
     library.add_game("Alpha", {"files": ["Alpha.nsp"]}, ["Alpha.nsp"])
-    names = verify_game_files.gameinfo.find_json_game_names
-    monkeypatch.setattr(verify_game_files.gameinfo, "find_json_game_names",
+    names = verify_game_files.gamecollection.find_json_game_names
+    monkeypatch.setattr(verify_game_files.gamecollection, "find_json_game_names",
                         lambda *args: names(*args) + ["Ghost"] if names(*args) else [])
 
     library.run("--no-preview")

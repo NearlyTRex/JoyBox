@@ -22,7 +22,7 @@ def tool(monkeypatch):
         harness.backed_up.append((game_info.get_name(), locker_type))
         return game_info.get_name() not in harness.failing
 
-    monkeypatch.setattr(backup_game_files.gameinfo, "iterate_selected_game_infos",
+    monkeypatch.setattr(backup_game_files.gamecollection, "iterate_selected_game_infos",
         lambda parser, generation_mode, **kwargs: iter(harness.games))
     monkeypatch.setattr(backup_game_files.collection, "backup_game_files", backup)
     return harness

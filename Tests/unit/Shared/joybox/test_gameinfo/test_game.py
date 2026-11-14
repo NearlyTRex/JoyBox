@@ -34,8 +34,8 @@ def test_the_platform_is_derived_from_the_categories(game):
     assert str(SUBCATEGORY) in str(game.get_platform())
 
 
-def test_a_game_can_be_built_from_its_categories(tree):
-    write_game(tree)
+def test_a_game_can_be_built_from_its_categories(game_tree):
+    write_game(game_tree)
     built = gameinfo.GameInfo(
         game_supercategory = SUPERCATEGORY,
         game_category = CATEGORY,
@@ -45,7 +45,7 @@ def test_a_game_can_be_built_from_its_categories(tree):
     assert built.get_name() == GAME
 
 
-def test_a_missing_json_file_is_refused(tree):
+def test_a_missing_json_file_is_refused(game_tree):
     # Every command starts here, so failing loudly beats a half built object.
     with pytest.raises(FileNotFoundError):
         gameinfo.GameInfo(
@@ -55,21 +55,21 @@ def test_a_missing_json_file_is_refused(tree):
             game_name = "Absent Game")
 
 
-def test_the_json_file_is_remembered(game, tree):
+def test_the_json_file_is_remembered(game, game_tree):
     assert game.get_json_file().endswith(GAME + ".json")
     assert os.path.exists(game.get_json_file())
 
 
-def test_a_game_in_another_category_derives_that_category(tree):
+def test_a_game_in_another_category_derives_that_category(game_tree):
     other = config.Subcategory.NINTENDO_SNES
-    path = write_game(tree, subcategory = other)
+    path = write_game(game_tree, subcategory = other)
     built = gameinfo.GameInfo(json_file = path)
 
     assert built.get_subcategory() == other
 
 
-def test_a_game_in_another_supercategory_derives_that_supercategory(tree):
-    path = write_game(tree, supercategory = config.Supercategory.DLC)
+def test_a_game_in_another_supercategory_derives_that_supercategory(game_tree):
+    path = write_game(game_tree, supercategory = config.Supercategory.DLC)
     built = gameinfo.GameInfo(json_file = path)
 
     assert built.get_supercategory() == config.Supercategory.DLC
@@ -79,14 +79,14 @@ def test_a_game_in_another_supercategory_derives_that_supercategory(tree):
 # Deriving categories from a path
 ###########################################################
 
-def test_a_json_path_derives_its_triple(tree):
-    path = write_game(tree)
+def test_a_json_path_derives_its_triple(game_tree):
+    path = write_game(game_tree)
     derived = gameinfo.derive_game_categories_from_file(path)
 
     assert derived == (SUPERCATEGORY, CATEGORY, SUBCATEGORY)
 
 
-def test_a_locker_path_derives_the_same_triple(tree):
+def test_a_locker_path_derives_the_same_triple(game_tree):
     path = environment.get_locker_gaming_files_dir(
         SUPERCATEGORY, CATEGORY, SUBCATEGORY, GAME)
     derived = gameinfo.derive_game_categories_from_file(
@@ -100,15 +100,15 @@ def test_a_locker_path_derives_the_same_triple(tree):
     (config.Category.SONY, config.Subcategory.SONY_PLAYSTATION_3),
     (config.Category.MICROSOFT, config.Subcategory.MICROSOFT_XBOX),
 ])
-def test_each_category_is_recognised(tree, category, subcategory):
-    path = write_game(tree, category = category, subcategory = subcategory)
+def test_each_category_is_recognised(game_tree, category, subcategory):
+    path = write_game(game_tree, category = category, subcategory = subcategory)
     derived = gameinfo.derive_game_categories_from_file(path)
 
     assert derived[1] == category
     assert derived[2] == subcategory
 
 
-def test_an_unrelated_path_derives_nothing(tree):
+def test_an_unrelated_path_derives_nothing(game_tree):
     assert gameinfo.derive_game_categories_from_file("/tmp/somewhere/game.json") == \
         (None, None, None)
 
@@ -117,9 +117,9 @@ def test_an_invalid_path_derives_nothing():
     assert gameinfo.derive_game_categories_from_file(None) == (None, None, None)
 
 
-def test_a_path_with_no_subcategory_derives_nothing(tree):
+def test_a_path_with_no_subcategory_derives_nothing(game_tree):
     shallow = os.path.join(
-        str(tree["json"]), str(SUPERCATEGORY), str(CATEGORY), "game.json")
+        str(game_tree["json"]), str(SUPERCATEGORY), str(CATEGORY), "game.json")
 
     assert gameinfo.derive_game_categories_from_file(shallow) == (None, None, None)
 
@@ -128,8 +128,8 @@ def test_a_path_with_no_subcategory_derives_nothing(tree):
 # Values
 ###########################################################
 
-def test_a_value_is_read(tree):
-    built = gameinfo.GameInfo(json_file = write_game(tree, {"appname": "Chrono Trigger"}))
+def test_a_value_is_read(game_tree):
+    built = gameinfo.GameInfo(json_file = write_game(game_tree, {"appname": "Chrono Trigger"}))
 
     assert built.get_value("appname") == "Chrono Trigger"
 
@@ -139,8 +139,8 @@ def test_a_missing_value_falls_back(game):
     assert game.get_value("absent", "fallback") == "fallback"
 
 
-def test_a_subvalue_is_read(tree):
-    built = gameinfo.GameInfo(json_file = write_game(tree, {"steam": {"appid": "12345"}}))
+def test_a_subvalue_is_read(game_tree):
+    built = gameinfo.GameInfo(json_file = write_game(game_tree, {"steam": {"appid": "12345"}}))
 
     assert built.get_subvalue("steam", "appid") == "12345"
 
@@ -150,8 +150,8 @@ def test_a_missing_subvalue_falls_back(game):
     assert game.get_subvalue("steam", "appid", "fallback") == "fallback"
 
 
-def test_key_presence_is_reported(tree):
-    built = gameinfo.GameInfo(json_file = write_game(tree, {"steam": {"appid": "12345"}}))
+def test_key_presence_is_reported(game_tree):
+    built = gameinfo.GameInfo(json_file = write_game(game_tree, {"steam": {"appid": "12345"}}))
 
     assert built.has_key("steam") is True
     assert built.has_key("gog") is False
@@ -165,8 +165,8 @@ def test_a_value_is_written(game):
     assert game.get_value("appname") == "Chrono Trigger"
 
 
-def test_a_subvalue_is_written(tree):
-    built = gameinfo.GameInfo(json_file = write_game(tree, {"steam": {}}))
+def test_a_subvalue_is_written(game_tree):
+    built = gameinfo.GameInfo(json_file = write_game(game_tree, {"steam": {}}))
     built.set_subvalue("steam", "appid", "12345")
 
     assert built.get_subvalue("steam", "appid") == "12345"
@@ -187,24 +187,24 @@ def test_a_default_subvalue_still_needs_its_parent(game):
     assert game.has_key("steam") is False
 
 
-def test_an_existing_subvalue_is_replaced(tree):
-    built = gameinfo.GameInfo(json_file = write_game(tree, {"steam": {"appid": "old"}}))
+def test_an_existing_subvalue_is_replaced(game_tree):
+    built = gameinfo.GameInfo(json_file = write_game(game_tree, {"steam": {"appid": "old"}}))
     built.set_subvalue("steam", "appid", "new")
 
     assert built.get_subvalue("steam", "appid") == "new"
 
 
-def test_a_sibling_subvalue_is_untouched(tree):
+def test_a_sibling_subvalue_is_untouched(game_tree):
     built = gameinfo.GameInfo(
-        json_file = write_game(tree, {"steam": {"appid": "12345", "branchid": "beta"}}))
+        json_file = write_game(game_tree, {"steam": {"appid": "12345", "branchid": "beta"}}))
     built.set_subvalue("steam", "appid", "99999")
 
     assert built.get_subvalue("steam", "branchid") == "beta"
 
 
-def test_a_default_value_does_not_overwrite(tree):
+def test_a_default_value_does_not_overwrite(game_tree):
     # Filling defaults must not undo what a scrape or the user already set.
-    built = gameinfo.GameInfo(json_file = write_game(tree, {"appname": "Existing"}))
+    built = gameinfo.GameInfo(json_file = write_game(game_tree, {"appname": "Existing"}))
     built.set_default_value("appname", "Default")
 
     assert built.get_value("appname") == "Existing"
@@ -216,15 +216,15 @@ def test_a_default_value_fills_a_gap(game):
     assert game.get_value("appname") == "Default"
 
 
-def test_a_default_subvalue_does_not_overwrite(tree):
-    built = gameinfo.GameInfo(json_file = write_game(tree, {"steam": {"appid": "12345"}}))
+def test_a_default_subvalue_does_not_overwrite(game_tree):
+    built = gameinfo.GameInfo(json_file = write_game(game_tree, {"steam": {"appid": "12345"}}))
     built.set_default_subvalue("steam", "appid", "99999")
 
     assert built.get_subvalue("steam", "appid") == "12345"
 
 
-def test_a_default_subvalue_fills_a_gap(tree):
-    built = gameinfo.GameInfo(json_file = write_game(tree, {"steam": {"other": "x"}}))
+def test_a_default_subvalue_fills_a_gap(game_tree):
+    built = gameinfo.GameInfo(json_file = write_game(game_tree, {"steam": {"other": "x"}}))
     built.set_default_subvalue("steam", "appid", "12345")
 
     assert built.get_subvalue("steam", "appid") == "12345"
@@ -241,16 +241,16 @@ def test_a_default_subvalue_needs_its_key_to_exist(game):
 # Wrapped values
 ###########################################################
 
-def test_a_wrapped_value_is_a_json_object(tree):
-    built = gameinfo.GameInfo(json_file = write_game(tree, {"steam": {"appid": "12345"}}))
+def test_a_wrapped_value_is_a_json_object(game_tree):
+    built = gameinfo.GameInfo(json_file = write_game(game_tree, {"steam": {"appid": "12345"}}))
     wrapped = built.get_wrapped_value("steam")
 
     assert wrapped.get_value("appid") == "12345"
 
 
-def test_a_wrapped_subvalue_is_a_json_object(tree):
+def test_a_wrapped_subvalue_is_a_json_object(game_tree):
     # This raised NameError on every call from a mistyped module reference.
-    built = gameinfo.GameInfo(json_file = write_game(tree, {"steam": {"appid": "12345"}}))
+    built = gameinfo.GameInfo(json_file = write_game(game_tree, {"steam": {"appid": "12345"}}))
 
     assert built.get_wrapped_subvalue("steam", "appid").get_data() == "12345"
 
@@ -390,7 +390,7 @@ class FakeStore:
 
 
 @pytest.fixture
-def store_game(tree, monkeypatch):
+def store_game(game_tree, monkeypatch):
     store = FakeStore()
     monkeypatch.setattr(
         gameinfo.stores, "get_store_by_platform", lambda platform, **kwargs: store)
@@ -399,7 +399,7 @@ def store_game(tree, monkeypatch):
         "download_id": "download", "asset_id": "asset",
         "metadata_id": "metadata", "page_id": "page",
     }}
-    return gameinfo.GameInfo(json_file = write_game(tree, data)), store
+    return gameinfo.GameInfo(json_file = write_game(game_tree, data)), store
 
 
 IDENTIFIERS = [
@@ -499,20 +499,20 @@ def test_a_rom_directory_is_chosen_by_locker(game):
     assert local == game.get_local_rom_dir()
 
 
-def test_two_games_derive_different_paths(tree):
-    first = gameinfo.GameInfo(json_file = write_game(tree, name = "Chrono Trigger (USA)"))
-    second = gameinfo.GameInfo(json_file = write_game(tree, name = "Super Metroid (USA)"))
+def test_two_games_derive_different_paths(game_tree):
+    first = gameinfo.GameInfo(json_file = write_game(game_tree, name = "Chrono Trigger (USA)"))
+    second = gameinfo.GameInfo(json_file = write_game(game_tree, name = "Super Metroid (USA)"))
 
     shared = [accessor for accessor in PATH_ACCESSORS if getattr(first, accessor)() == getattr(second, accessor)()]
 
     assert not shared, shared
 
 
-def test_an_explicit_remote_locker_sets_the_remote_paths(tree, monkeypatch):
+def test_an_explicit_remote_locker_sets_the_remote_paths(game_tree, monkeypatch):
     monkeypatch.setattr(
         environment, "get_locker_root_dir",
-        lambda locker_type = None: str(tree["locker"] / str(locker_type)))
-    built = gameinfo.GameInfo(json_file = write_game(tree), remote_locker_type = config.LockerType.GDRIVE)
+        lambda locker_type = None: str(game_tree["locker"] / str(locker_type)))
+    built = gameinfo.GameInfo(json_file = write_game(game_tree), remote_locker_type = config.LockerType.GDRIVE)
 
     assert str(config.LockerType.GDRIVE) in built.get_rom_dir(config.LockerType.GDRIVE)
     assert built.get_rom_dir(config.LockerType.GDRIVE) == built.get_remote_rom_dir()
@@ -520,16 +520,16 @@ def test_an_explicit_remote_locker_sets_the_remote_paths(tree, monkeypatch):
 
 
 @pytest.mark.parametrize("windows, save_type", [(True, config.SaveType.SANDBOXIE), (False, config.SaveType.WINE)])
-def test_a_computer_game_saves_under_its_platform_layer(tree, monkeypatch, windows, save_type):
+def test_a_computer_game_saves_under_its_platform_layer(game_tree, monkeypatch, windows, save_type):
     monkeypatch.setattr(gameinfo.platform_info, "is_windows_platform", lambda: windows)
     built = gameinfo.GameInfo(json_file = write_game(
-        tree, name = "Doom", supercategory = config.Supercategory.ROMS,
+        game_tree, name = "Doom", supercategory = config.Supercategory.ROMS,
         category = config.Category.COMPUTER, subcategory = config.Subcategory.COMPUTER_GOG))
 
     assert os.path.basename(built.get_save_dir()) == save_type.val()
 
 
-def test_the_json_data_is_the_parsed_file(tree):
-    built = gameinfo.GameInfo(json_file = write_game(tree, {"genre": "RPG"}))
+def test_the_json_data_is_the_parsed_file(game_tree):
+    built = gameinfo.GameInfo(json_file = write_game(game_tree, {"genre": "RPG"}))
 
     assert built.get_json_data().get_value("genre") == "RPG"

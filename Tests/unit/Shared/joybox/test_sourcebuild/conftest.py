@@ -15,40 +15,6 @@ if _here not in sys.path:
     sys.path.append(_here)
 
 
-@pytest.fixture(autouse = True)
-def quiet_logs(monkeypatch):
-    errors = []
-    monkeypatch.setattr(sourcebuild.logger, "log_error", lambda message, *args, **kwargs: errors.append(str(message)))
-    monkeypatch.setattr(sourcebuild.logger, "log_warning", lambda *args, **kwargs: None)
-    return errors
-
-
-@pytest.fixture
-def webpage_url(monkeypatch):
-    holder = {"url": None, "asked": []}
-
-    def get_matching_url(**kwargs):
-        holder["asked"].append(kwargs)
-        return holder["url"]
-
-    monkeypatch.setattr(sourcebuild.webpage, "get_matching_url", get_matching_url)
-    return holder
-
-
-@pytest.fixture
-def backups(monkeypatch):
-    calls = []
-
-    def backup(src, dest_rel_path, **kwargs):
-        calls.append((src, dest_rel_path, kwargs))
-        return True
-
-    monkeypatch.setattr(
-        sourcebuild.locker, "convert_to_relative_path", lambda path: "relative/" + os.path.basename(path))
-    monkeypatch.setattr(sourcebuild.locker, "backup", backup)
-    return calls
-
-
 @pytest.fixture
 def builder(tmp_path, monkeypatch):
     # Source checkouts, archive downloads, extraction and the build command

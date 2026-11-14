@@ -3,7 +3,7 @@ import joybox.config as config
 import joybox.system as system
 import joybox.arguments as arguments
 import joybox.collection as collection
-import joybox.gameinfo as gameinfo
+from joybox import gamecollection
 import joybox.setup as setup
 import joybox.logger as logger
 import joybox.prompts as prompts
@@ -105,7 +105,7 @@ def main():
 
     # Collect games to process
     games_to_process = []
-    for game_info in gameinfo.iterate_selected_game_infos(
+    for game_info in gamecollection.iterate_selected_game_infos(
         parser = parser,
         verbose = args.verbose,
         pretend_run = args.pretend_run,

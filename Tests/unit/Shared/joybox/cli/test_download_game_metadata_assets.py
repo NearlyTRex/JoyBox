@@ -13,7 +13,7 @@ def tool(monkeypatch, isolated_settings):
     harness.games = [FakeGameInfo("Alpha"), FakeGameInfo("Beta")]
     harness.results = {}
     harness.calls = []
-    monkeypatch.setattr(tool_module.gameinfo, "iterate_selected_game_infos", lambda **kwargs: iter(harness.games))
+    monkeypatch.setattr(tool_module.gamecollection, "iterate_selected_game_infos", lambda **kwargs: iter(harness.games))
 
     def fake_download(game_info, asset_type, **kwargs):
         harness.calls.append((game_info.get_name(), asset_type, kwargs))

@@ -28,9 +28,9 @@ def tool(monkeypatch):
         harness.built.append(game_name)
         return game_name not in harness.failing
 
-    monkeypatch.setattr(build_game_metadata_files.gameinfo, "iterate_selected_game_categories",
+    monkeypatch.setattr(build_game_metadata_files.gamecollection, "iterate_selected_game_categories",
         lambda parser, generation_mode: iter([(ROMS, NINTENDO, SWITCH), (ROMS, NINTENDO, WII)]))
-    monkeypatch.setattr(build_game_metadata_files.gameinfo, "find_json_game_names",
+    monkeypatch.setattr(build_game_metadata_files.gamecollection, "find_json_game_names",
         lambda supercategory, category, subcategory: list(names[subcategory]))
     monkeypatch.setattr(build_game_metadata_files.environment, "get_game_metadata_file",
         lambda category, subcategory: "/metadata/%s.txt" % subcategory)

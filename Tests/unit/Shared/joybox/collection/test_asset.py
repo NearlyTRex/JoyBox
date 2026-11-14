@@ -247,7 +247,7 @@ def all_assets(monkeypatch):
     def find_json_game_names(supercategory, category, subcategory, locker_type = None):
         state["lockers"].add(locker_type)
         return state["names"] if category == config.Category.COMPUTER else []
-    monkeypatch.setattr(asset.gameinfo, "find_json_game_names", find_json_game_names)
+    monkeypatch.setattr(asset.gamecollection, "find_json_game_names", find_json_game_names)
     monkeypatch.setattr(
         asset.gameinfo, "GameInfo",
         lambda **kwargs: FakeGameInfo(name = kwargs["game_name"]))

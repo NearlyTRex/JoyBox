@@ -49,7 +49,7 @@ def tool(monkeypatch, isolated_settings):
             return list(GAMES)
         return []
 
-    monkeypatch.setattr(analyze_game_json_files.gameinfo, "find_json_game_names", find_json_game_names)
+    monkeypatch.setattr(analyze_game_json_files.gamecollection, "find_json_game_names", find_json_game_names)
     monkeypatch.setattr(analyze_game_json_files.gameinfo, "GameInfo", FakeGameInfo)
     return command
 

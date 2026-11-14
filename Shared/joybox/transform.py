@@ -6,7 +6,7 @@ import os.path
 import joybox.config as config
 import joybox.environment as environment
 import joybox.fileops as fileops
-import joybox.gameinfo as gameinfo
+from joybox import gamenaming
 import joybox.install as install
 import joybox.computer as computer
 import joybox.archive as archive
@@ -34,7 +34,7 @@ def transform_computer_programs(
     game_subcategory = game_info.get_subcategory()
 
     # Get paths
-    output_extract_dir = paths.join_paths(output_dir, gameinfo.derive_regular_name_from_game_name(game_name))
+    output_extract_dir = paths.join_paths(output_dir, gamenaming.derive_regular_name_from_game_name(game_name))
     output_extract_index_file = paths.join_paths(output_extract_dir, config.raw_files_index)
     output_install_file = paths.join_paths(output_dir, game_name + ".install")
     cached_install_dir = environment.get_cache_gaming_install_dir(game_category, game_subcategory, game_name)

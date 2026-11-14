@@ -32,7 +32,7 @@ def tool(monkeypatch, isolated_settings, tmp_path):
             return str(tmp_path / ("%s.json" % game_name))
         return str(tmp_path / "other" / ("%s.json" % game_name))
 
-    monkeypatch.setattr(module.gameinfo, "find_json_game_names", find_names)
+    monkeypatch.setattr(module.gamecollection, "find_json_game_names", find_names)
     monkeypatch.setattr(module.environment, "get_game_json_metadata_file", json_file)
     monkeypatch.setattr(module.serialization, "clean_json_file", lambda **kwargs: harness.cleaned.append(kwargs))
     return harness

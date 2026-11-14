@@ -15,14 +15,6 @@ if _here not in sys.path:
     sys.path.append(_here)
 
 
-@pytest.fixture(autouse = True)
-def quiet_logs(monkeypatch):
-    errors = []
-    monkeypatch.setattr(release.logger, "log_error", lambda message, *args, **kwargs: errors.append(str(message)))
-    monkeypatch.setattr(release.logger, "log_warning", lambda *args, **kwargs: None)
-    return errors
-
-
 @pytest.fixture
 def github(monkeypatch):
     holder = {"json": None, "urls": []}
@@ -42,18 +34,6 @@ def downloads(monkeypatch):
         release, "download_general_release",
         lambda **kwargs: calls.append(kwargs) or True)
     return calls
-
-
-@pytest.fixture
-def webpage_url(monkeypatch):
-    holder = {"url": None, "asked": []}
-
-    def get_matching_url(**kwargs):
-        holder["asked"].append(kwargs)
-        return holder["url"]
-
-    monkeypatch.setattr(release.webpage, "get_matching_url", get_matching_url)
-    return holder
 
 
 @pytest.fixture
@@ -84,20 +64,6 @@ def workspace(tmp_path, monkeypatch):
         "install_dir": str(install_dir),
         "payload": payload,
     }
-
-
-@pytest.fixture
-def backups(monkeypatch):
-    calls = []
-
-    def backup(src, dest_rel_path, **kwargs):
-        calls.append((src, dest_rel_path, kwargs))
-        return True
-
-    monkeypatch.setattr(
-        release.locker, "convert_to_relative_path", lambda path: "relative/" + os.path.basename(path))
-    monkeypatch.setattr(release.locker, "backup", backup)
-    return calls
 
 
 @pytest.fixture

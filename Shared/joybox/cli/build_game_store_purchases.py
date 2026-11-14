@@ -1,7 +1,7 @@
 # Imports
 import joybox.config as config
 import joybox.system as system
-import joybox.gameinfo as gameinfo
+from joybox import gamecollection
 import joybox.collection as collection
 import joybox.arguments as arguments
 import joybox.setup as setup
@@ -65,7 +65,7 @@ def main():
 
     # Collect categories to process
     categories_to_process = []
-    for game_supercategory, game_category, game_subcategory in gameinfo.iterate_selected_game_categories(
+    for game_supercategory, game_category, game_subcategory in gamecollection.iterate_selected_game_categories(
         parser = parser,
         generation_mode = args.generation_mode):
         categories_to_process.append((game_supercategory, game_category, game_subcategory))
