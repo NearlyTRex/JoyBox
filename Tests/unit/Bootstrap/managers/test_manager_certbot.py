@@ -1,5 +1,6 @@
 # Imports
 import os
+import re
 import subprocess
 
 # Third-party imports
@@ -420,7 +421,8 @@ def test_check_prints_the_certificate(server, pair):
     result = server.run(SCRIPT, "check", "example.com")
 
     assert result.returncode == 0, output(result)
-    assert "Subject: CN = example.com" in result.stdout
+    # OpenSSL 3.0 prints "CN = example.com", later releases "CN=example.com"
+    assert re.search(r"Subject: CN ?= ?example\.com$", result.stdout, re.MULTILINE), output(result)
     assert "Not After" in result.stdout
 
 
