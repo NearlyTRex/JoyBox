@@ -4,7 +4,7 @@ import joybox.logger as logger
 import joybox.prompts as prompts
 from joybox import gamenaming
 import joybox.google as google
-import joybox.stores as stores
+from joybox.stores import steamlookups
 
 ############################################################
 
@@ -67,7 +67,7 @@ def find_metadata_assets_from_steam(
         return []
 
     # Build asset list
-    return stores.find_steam_assets(
+    return steamlookups.find_steam_assets(
         search_name = gamenaming.derive_regular_name_from_game_name(game_name),
         asset_type = asset_type,
         verbose = verbose,
@@ -90,7 +90,7 @@ def find_metadata_assets_from_steamgriddb(
         return []
 
     # Return search results
-    return stores.find_steam_griddb_covers(
+    return steamlookups.find_steam_griddb_covers(
         search_name = gamenaming.derive_regular_name_from_game_name(game_name),
         image_dimensions = config.asset_boxfront_dimensions,
         image_types = config.ImageFileType.members(),

@@ -8,51 +8,14 @@ import joybox.fileops as fileops
 import joybox.network as network
 import joybox.paths as paths
 import joybox.settings as settings
-import joybox.image as image
 import joybox.jsondata as jsondata
-import joybox.containers as containers
-import joybox.datautils as datautils
 import joybox.webpage as webpage
 import joybox.storebase as storebase
 import joybox.strings as strings
 import joybox.metadataentry as metadataentry
 import joybox.manifest as manifest
-import joybox.modules as modules
 import joybox.backup as backup
-
-# Get steam page
-def get_steam_page(appid):
-    url = "https://store.steampowered.com/app/%s" % appid
-    if network.is_url_reachable(url):
-        return url
-    return None
-
-# Get steam cover
-def get_steam_cover(appid):
-    for cdn_type in config.ContentDeliveryNetworkType.members():
-        url = "https://cdn.%s.steamstatic.com/steam/apps/%s/library_600x900_2x.jpg" % (cdn_type.lower(), appid)
-        if network.is_url_reachable(url):
-            return url
-    return None
-
-# Get steam trailer
-def get_steam_trailer(
-    appid,
-    verbose = False,
-    pretend_run = False,
-    exit_on_failure = False):
-    for cdn_type in config.ContentDeliveryNetworkType.members():
-        asset_url = webpage.get_matching_url(
-            url = get_steam_page(appid),
-            base_url = "https://video.%s.steamstatic.com/store_trailers" % cdn_type.lower(),
-            starts_with = "https://video.%s.steamstatic.com/store_trailers" % cdn_type.lower(),
-            ends_with = ".mp4",
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        if asset_url:
-            return asset_url
-    return None
+from joybox.stores import steamlookups
 
 # Get steam prefix dir
 def get_steam_prefix_dir(install_dir, appid):
@@ -61,156 +24,6 @@ def get_steam_prefix_dir(install_dir, appid):
 # Get steam manifest file
 def get_steam_manifest_file(install_dir, appid):
     return paths.join_paths(install_dir, "steamapps", f"appmanifest_{appid}.acf")
-
-# Find steam appid matches
-def find_steam_appid_matches(
-    search_name,
-    verbose = False,
-    pretend_run = False,
-    exit_on_failure = False):
-
-    # Load appid list
-    appid_list = serialization.read_csv_file(
-        src = programs.get_tool_path_config_value("SteamAppIDList", "csv"),
-        headers = [config.search_result_key_id, config.search_result_key_title],
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-
-    # Build list of matches
-    search_results = []
-    for entry in appid_list:
-        search_result = containers.AssetSearchResult(entry)
-        if strings.are_strings_highly_similar(search_name, search_result.get_title()):
-            search_result.set_relevance(strings.get_string_similarity_ratio(search_name, search_result.get_title()))
-            search_results.append(search_result)
-    return search_results
-
-# Find steam appid match
-def find_steam_appid_match(
-    search_name,
-    only_active_pages = True,
-    verbose = False,
-    pretend_run = False,
-    exit_on_failure = False):
-
-    # Get relevant matches
-    search_results = find_steam_appid_matches(
-        search_name = search_name,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    if len(search_results) == 0:
-        return None
-
-    # Return top search result
-    ranked_results = sorted(search_results, key = lambda x: x.get_relevance(), reverse = True)
-    if only_active_pages:
-        for search_result in ranked_results:
-            if get_steam_page(search_result.get_id()):
-                return search_result
-        return None
-    return ranked_results[0]
-
-# Find Steam assets
-def find_steam_assets(
-    search_name,
-    asset_type,
-    verbose = False,
-    pretend_run = False,
-    exit_on_failure = False):
-
-    # Get search result
-    search_result = find_steam_appid_match(
-        search_name = search_name,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    if not search_result:
-        return []
-
-    # Get asset url
-    asset_url = None
-    if asset_type == config.AssetType.BOXFRONT:
-        asset_url = get_steam_cover(search_result.get_id())
-    elif asset_type == config.AssetType.VIDEO:
-        asset_url = get_steam_trailer(
-            appid = search_result.get_id(),
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-    if not asset_url:
-        return []
-
-    # Return search result
-    search_result.set_url(asset_url)
-    return [search_result]
-
-# Find SteamGridDB covers
-def find_steam_griddb_covers(
-    search_name,
-    image_dimensions = None,
-    image_types = None,
-    verbose = False,
-    pretend_run = False,
-    exit_on_failure = False):
-
-    # Get authorization info
-    steamgriddb_api_key = settings.get_value("UserData.Scraping", "steamgriddb_api_key")
-
-    # Import steamgrid
-    steamgrid = modules.import_python_module_package(
-        module_path = programs.get_tool_path_config_value("PySteamGridDB", "package_dir"),
-        module_name = programs.get_tool_config_value("PySteamGridDB", "package_name"))
-
-    # Initialize client
-    sgdb = steamgrid.SteamGridDB(steamgriddb_api_key)
-
-    # Build search results
-    search_results = []
-    for game_entry in sgdb.search_game(strings.encode_url_string(search_name, use_plus = True)):
-        search_grids = sgdb.get_grids_by_gameid(game_ids=[game_entry.id])
-        if datautils.is_iterable_container(search_grids):
-            for search_grid in search_grids:
-
-                # Get grid info
-                grid_id = game_entry.id
-                grid_name = game_entry.name
-                grid_release_date = game_entry.release_date
-                grid_url = search_grid.url
-                grid_width = int(search_grid.width)
-                grid_height = int(search_grid.height)
-
-                # Ignore dissimilar images
-                if not strings.are_strings_highly_similar(search_name, grid_name):
-                    continue
-
-                # Ignore images that do not match requested dimensions
-                if datautils.is_iterable_non_string(image_dimensions) and len(image_dimensions) == 2:
-                    requested_width, requested_height = map(int, image_dimensions)
-                    if grid_width != requested_width or grid_height != requested_height:
-                        continue
-
-                # Ignore images that do not match requested types
-                if datautils.is_iterable_non_string(image_types) and len(image_types) > 0:
-                    found_type = image.get_image_format(grid_url)
-                    if found_type and found_type not in image_types:
-                        continue
-
-                # Add search result
-                search_result = containers.AssetSearchResult()
-                search_result.set_id(grid_id)
-                search_result.set_title(grid_name)
-                search_result.set_description(f"{grid_name} ({grid_release_date})")
-                search_result.set_date(grid_release_date)
-                search_result.set_url(grid_url)
-                search_result.set_width(grid_width)
-                search_result.set_height(grid_height)
-                search_result.set_relevance(strings.get_string_similarity_ratio(search_name, grid_name))
-                search_results.append(search_result)
-
-    # Return search results
-    return sorted(search_results, key=lambda x: x.get_relevance(), reverse = True)
 
 # Steam store
 class Steam(storebase.StoreBase):
@@ -418,7 +231,7 @@ class Steam(storebase.StoreBase):
             return None
 
         # Return latest url
-        return get_steam_page(identifier)
+        return steamlookups.get_steam_page(identifier)
 
     ############################################################
     # Purchases
@@ -734,51 +547,8 @@ class Steam(storebase.StoreBase):
             # Create metadata entry
             metadata_entry = metadataentry.MetadataEntry()
 
-            # Check for age gate (don't exit on failure to find the age gate)
-            element_age_gate = webpage.wait_for_element(
-                driver = web_driver,
-                locator = webpage.ElementLocator({"id": "app_agegate"}),
-                wait_time = 5,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = False)
-            if element_age_gate:
-
-                # Get age selectors
-                day_selector = webpage.get_element(
-                    parent = element_age_gate,
-                    locator = webpage.ElementLocator({"id": "ageDay"}),
-                    verbose = verbose,
-                    pretend_run = pretend_run,
-                    exit_on_failure = False)
-                month_selector = webpage.get_element(
-                    parent = element_age_gate,
-                    locator = webpage.ElementLocator({"id": "ageMonth"}),
-                    verbose = verbose,
-                    pretend_run = pretend_run,
-                    exit_on_failure = False)
-                year_selector = webpage.get_element(
-                    parent = element_age_gate,
-                    locator = webpage.ElementLocator({"id": "ageYear"}),
-                    verbose = verbose,
-                    pretend_run = pretend_run,
-                    exit_on_failure = False)
-
-                # Select date
-                if day_selector and month_selector and year_selector:
-                    webpage.send_keys_to_element(day_selector, "1")
-                    webpage.send_keys_to_element(month_selector, "January")
-                    webpage.send_keys_to_element(year_selector, "1980")
-
-                    # Click confirm button
-                    confirm_button = webpage.get_element(
-                        parent = element_age_gate,
-                        locator = webpage.ElementLocator({"id": "view_product_page_btn"}),
-                        verbose = verbose,
-                        pretend_run = pretend_run,
-                        exit_on_failure = False)
-                    if confirm_button:
-                        webpage.click_element(confirm_button)
+            # Answer the age gate
+            steamlookups.answer_steam_age_gate(web_driver, verbose = verbose, pretend_run = pretend_run)
 
             # Look for game description
             element_game_description = webpage.wait_for_element(
@@ -805,31 +575,10 @@ class Steam(storebase.StoreBase):
                 exit_on_failure = False)
             if element_game_details:
 
-                # Grab the information text
+                # Read the details text
                 raw_game_details = webpage.get_element_text(element_game_details)
                 if raw_game_details:
-                    for game_detail_line in raw_game_details.split("\n"):
-
-                        # Release
-                        if strings.does_string_start_with_substring(game_detail_line, "Release Date:"):
-                            release_text = strings.trim_substring_from_start(game_detail_line, "Release Date:").strip()
-                            release_text = strings.convert_date_string(release_text, "%b %d, %Y", "%Y-%m-%d")
-                            metadata_entry.set_release(release_text)
-
-                        # Developer
-                        elif strings.does_string_start_with_substring(game_detail_line, "Developer:"):
-                            developer_text = strings.trim_substring_from_start(game_detail_line, "Developer:").strip()
-                            metadata_entry.set_developer(developer_text)
-
-                        # Publisher
-                        elif strings.does_string_start_with_substring(game_detail_line, "Publisher:"):
-                            publisher_text = strings.trim_substring_from_start(game_detail_line, "Publisher:").strip()
-                            metadata_entry.set_publisher(publisher_text)
-
-                        # Genre
-                        elif strings.does_string_start_with_substring(game_detail_line, "Genre:"):
-                            genre_text = strings.trim_substring_from_start(game_detail_line, "Genre:").strip().replace(", ", ";")
-                            metadata_entry.set_genre(genre_text)
+                    steamlookups.read_steam_page_details(raw_game_details, metadata_entry)
             return metadata_entry
 
         # Use retry function with cleanup
@@ -868,11 +617,11 @@ class Steam(storebase.StoreBase):
 
         # BoxFront
         if asset_type == config.AssetType.BOXFRONT:
-            latest_asset_url = get_steam_cover(identifier)
+            latest_asset_url = steamlookups.get_steam_cover(identifier)
 
         # Video
         elif asset_type == config.AssetType.VIDEO:
-            latest_asset_url = get_steam_trailer(
+            latest_asset_url = steamlookups.get_steam_trailer(
                 appid = identifier,
                 verbose = verbose,
                 pretend_run = pretend_run,
