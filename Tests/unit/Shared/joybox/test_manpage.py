@@ -239,15 +239,16 @@ def test_a_long_note_is_wrapped_under_its_bullet():
 # Remaining paths
 ###########################################################
 
-class FailedRun:
-    stderr = "Traceback\nImportError: no module named tool\n"
+def test_a_script_that_cannot_be_described_raises_with_its_error(tmp_path, shared_dir):
+    with pytest.raises(RuntimeError, match = "(?s)Unable to describe no_such_tool: .*No module named 'no_such_tool'"):
+        manpage.describe_command("no_such_tool", [shared_dir, str(tmp_path)])
 
 
-def test_a_script_that_cannot_be_described_raises_with_its_error(monkeypatch):
-    monkeypatch.setattr(manpage.subprocess, "run", lambda *args, **kwargs: FailedRun())
+def test_a_script_that_hangs_is_stopped(tmp_path, shared_dir):
+    (tmp_path / "stuck.py").write_text("import time\ndef build_parser():\n    time.sleep(60)\n")
 
-    with pytest.raises(RuntimeError, match = "(?s)Unable to describe tool: .*no module named tool$"):
-        manpage.describe_command("tool", [])
+    with pytest.raises(RuntimeError, match = "Unable to describe stuck"):
+        manpage.describe_command("stuck", [shared_dir, str(tmp_path)], timeout = 1)
 
 
 def test_every_project_command_is_described(tmp_path, monkeypatch):

@@ -158,6 +158,14 @@ standards = [
 wrapper_modules = [
     "Shared/joybox/fileops.py", "Shared/joybox/serialization.py",
     "Shared/joybox/command.py", "Shared/joybox/commandbase.py",
+    # The local process and file layer behind the connection API
+    "Shared/joybox/connection/connection_local.py",
+    # Imported by fileops, so it cannot use it
+    "Shared/joybox/logger.py",
+    # A secret passes through a bare subprocess, not the logging command module
+    "Shared/joybox/secretstore.py",
+    # Runs on the LLM server, where JoyBox is not installed
+    "Scripts/autoinstall/ollama_helper.py",
 ]
 
 [tool.testrex.wrappers]
@@ -187,11 +195,10 @@ wrapper_modules = [
 # Findings the library had when each rule was adopted; lowered as they are fixed, never raised
 documented = 801
 doc-paraphrase = 1692
-wrappers = 14
 long-functions = 646
 long-modules = 13
 # pylint over Shared and Scripts with pytest-testrex's library rcfile
-pylint-source = 4931
+pylint-source = 4929
 
 [tool.ruff.lint]
 # The Workflows library's default set, pinned here so a library change is a

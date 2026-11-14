@@ -472,3 +472,10 @@ class CommandOptions:
         return self.options.get_value(config.program_key_stdin_input)
     def set_stdin_input(self, value):
         self.options.set_value(config.program_key_stdin_input, value)
+
+    # Seconds a captured or output-suppressed command may run before it is stopped, or None
+    def get_timeout(self):
+        return self.options.get_value(config.program_key_timeout)
+    # Set how many seconds a command may run, None for no limit
+    def set_timeout(self, value):
+        self.options.set_value(config.program_key_timeout, value)

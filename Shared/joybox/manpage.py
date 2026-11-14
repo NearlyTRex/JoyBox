@@ -2,12 +2,12 @@
 import os
 import os.path
 import sys
-import subprocess
 import tempfile
 import textwrap
 
 # Local imports
 import joybox.default_settings as default_settings
+from joybox import command
 from joybox import fileops
 from joybox import serialization
 
@@ -45,10 +45,10 @@ def find_commands(pyproject_path):
     pyproject = serialization.read_toml_file(pyproject_path, exit_on_failure = True)
     scripts = pyproject.get("project", {}).get("scripts", {})
     found = []
-    for command, target in sorted(scripts.items()):
+    for command_name, target in sorted(scripts.items()):
         module_name = target.split(":", 1)[0]
         if module_name.startswith(COMMAND_PACKAGE + "."):
-            found.append((command, module_name))
+            found.append((command_name, module_name))
     return found
 
 # Get the source file a command module was generated from, relative to the repo
@@ -65,16 +65,15 @@ def describe_command(module_name, python_path, timeout = 60):
         env["HOME"] = home_dir
         env["USERPROFILE"] = home_dir
         env["PYTHONPATH"] = os.pathsep.join(python_path)
-        result = subprocess.run(
-            [sys.executable, "-c", PROBE_SOURCE, module_name, output_path],
-            check = False,
-            capture_output = True,
-            text = True,
-            timeout = timeout,
-            cwd = home_dir,
-            env = env)
+        options = command.create_command_options()
+        options.set_allow_processing(False)
+        options.set_env(env)
+        options.set_cwd(home_dir)
+        options.set_timeout(timeout)
+        options.set_include_stderr(True)
+        output = command.run_output_command([sys.executable, "-c", PROBE_SOURCE, module_name, output_path], options = options)
         if not os.path.exists(output_path):
-            raise RuntimeError("Unable to describe %s: %s" % (module_name, result.stderr.strip()[-2000:]))
+            raise RuntimeError("Unable to describe %s: %s" % (module_name, output[-2000:]))
         spec = serialization.read_json_file(output_path, exit_on_failure = True)
     spec = replace_home_in_defaults(spec, home_dir)
     spec["module"] = module_name
@@ -108,11 +107,11 @@ def find_help_problems(tool_name, spec, known_tools):
                 problems.append("no help text for %s" % format_flags(option))
     if not spec.get("examples"):
         problems.append("no examples")
-    for title, command in spec.get("examples", []):
+    for title, example in spec.get("examples", []):
         if not title.strip():
             problems.append("an example has no title")
-        if not command.startswith(tool_name):
-            problems.append("example does not run %s: %s" % (tool_name, command))
+        if not example.startswith(tool_name):
+            problems.append("example does not run %s: %s" % (tool_name, example))
     for other in spec.get("see_also", []):
         if other == tool_name:
             problems.append("see_also names itself")
@@ -213,8 +212,8 @@ def render_page(tool_name, spec, descriptions = None):
         lines.append("")
     if spec.get("examples"):
         lines += ["## Examples", ""]
-        for title, command in spec["examples"]:
-            lines += ["### %s" % title, "", "```bash", command, "```", ""]
+        for title, example in spec["examples"]:
+            lines += ["### %s" % title, "", "```bash", example, "```", ""]
     if spec.get("notes"):
         lines += ["## Notes", ""]
         lines += [format_bullet(note) for note in spec["notes"]]

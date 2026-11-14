@@ -1,5 +1,6 @@
 # Imports
 import subprocess
+import sys
 
 # Third-party imports
 import pytest
@@ -400,3 +401,46 @@ def test_the_wrappers_pass_the_run_flags_through(monkeypatch, wrapper):
     assert seen["verbose"] is True
     assert seen["pretend_run"] is True
     assert seen["exit_on_failure"] is True
+
+
+###########################################################
+# Timeouts
+###########################################################
+
+SLEEPER = [sys.executable, "-c", "import time; time.sleep(30)"]
+
+
+@pytest.fixture
+def warnings(monkeypatch):
+    found = []
+    monkeypatch.setattr(command.logger, "log_warning", found.append)
+    return found
+
+
+def timed_options(timeout, suppress_output = False):
+    options = command.create_command_options()
+    options.set_allow_processing(False)
+    options.set_timeout(timeout)
+    options.set_suppress_output(suppress_output)
+    return options
+
+
+def test_a_captured_command_is_stopped_at_its_timeout(warnings):
+    _, code = command.run_command(SLEEPER, options = timed_options(0.5))
+
+    assert code != 0
+    assert warnings == ["The command ran for more than 0.5 seconds and was stopped"]
+
+
+def test_a_suppressed_command_is_stopped_at_its_timeout(warnings):
+    _, code = command.run_command(SLEEPER, options = timed_options(0.5, suppress_output = True))
+
+    assert code != 0
+    assert warnings == ["The command ran for more than 0.5 seconds and was stopped"]
+
+
+def test_a_command_that_finishes_in_time_is_not_stopped(warnings):
+    output, code = command.run_command([sys.executable, "-c", "print('done')"], options = timed_options(30))
+
+    assert (output, code) == ("done", 0)
+    assert warnings == []
