@@ -5,6 +5,7 @@ import os
 import pytest
 
 # Local imports
+from joybox import imageboot
 from joybox import virtualmachine
 from fakes import RecordingCommand
 
@@ -27,7 +28,7 @@ def boot_command(**kwargs):
         firmware_code = "/fw/code.fd",
         firmware_vars = "/vms/llm-vars.fd")
     defaults.update(kwargs)
-    return virtualmachine.get_boot_command(**defaults)
+    return imageboot.get_boot_command(**defaults)
 
 
 ###########################################################
@@ -37,9 +38,9 @@ def boot_command(**kwargs):
 def test_a_firmware_pair_is_found_where_a_distribution_puts_it(monkeypatch):
     pairs = [("/absent/code.fd", "/absent/vars.fd"), ("/here/code.fd", "/here/vars.fd")]
     monkeypatch.setattr(
-        virtualmachine.paths, "is_path_file", lambda path: path.startswith("/here/"))
+        imageboot.paths, "is_path_file", lambda path: path.startswith("/here/"))
 
-    assert virtualmachine.get_firmware_pair(pairs) == ("/here/code.fd", "/here/vars.fd")
+    assert imageboot.get_firmware_pair(pairs) == ("/here/code.fd", "/here/vars.fd")
 
 
 def test_half_a_firmware_pair_is_not_enough(monkeypatch):
@@ -47,28 +48,28 @@ def test_half_a_firmware_pair_is_not_enough(monkeypatch):
     # on its own cannot be used.
     pairs = [("/here/code.fd", "/here/vars.fd")]
     monkeypatch.setattr(
-        virtualmachine.paths, "is_path_file", lambda path: path.endswith("code.fd"))
+        imageboot.paths, "is_path_file", lambda path: path.endswith("code.fd"))
 
-    assert virtualmachine.get_firmware_pair(pairs) is None
+    assert imageboot.get_firmware_pair(pairs) is None
 
 
 def test_no_firmware_at_all_is_reported(monkeypatch):
-    monkeypatch.setattr(virtualmachine.paths, "is_path_file", lambda path: False)
+    monkeypatch.setattr(imageboot.paths, "is_path_file", lambda path: False)
 
-    assert virtualmachine.get_firmware_pair() is None
+    assert imageboot.get_firmware_pair() is None
 
 
 def test_the_firmware_variables_are_per_machine():
     # The firmware writes its boot entries into them, so a shared copy would
     # have one machine's entries pointing at another's disk.
-    first = virtualmachine.get_boot_firmware_vars("first")
-    second = virtualmachine.get_boot_firmware_vars("second")
+    first = imageboot.get_boot_firmware_vars("first")
+    second = imageboot.get_boot_firmware_vars("second")
 
     assert first != second
 
 
 def test_a_machine_does_not_write_to_the_distribution_firmware():
-    assert not virtualmachine.get_boot_firmware_vars(BOOT_NAME).startswith("/usr/share")
+    assert not imageboot.get_boot_firmware_vars(BOOT_NAME).startswith("/usr/share")
 
 
 ###########################################################
@@ -76,21 +77,21 @@ def test_a_machine_does_not_write_to_the_distribution_firmware():
 ###########################################################
 
 def test_a_booted_machine_disk_is_named_after_it():
-    assert virtualmachine.get_boot_disk(BOOT_NAME).endswith("%s.qcow2" % BOOT_NAME)
+    assert imageboot.get_boot_disk(BOOT_NAME).endswith("%s.qcow2" % BOOT_NAME)
 
 
 def test_two_booted_machines_do_not_share_a_disk():
-    assert virtualmachine.get_boot_disk("first") != virtualmachine.get_boot_disk("second")
+    assert imageboot.get_boot_disk("first") != imageboot.get_boot_disk("second")
 
 
 def test_a_booted_machine_is_kept_where_it_can_be_written():
     # Not beside the libvirt guests, which are under a directory only root
     # can write to.
-    assert not virtualmachine.get_boot_disk(BOOT_NAME).startswith(virtualmachine.IMAGE_DIR)
+    assert not imageboot.get_boot_disk(BOOT_NAME).startswith(virtualmachine.IMAGE_DIR)
 
 
 def test_a_given_directory_is_used_as_it_is():
-    assert virtualmachine.get_boot_disk(BOOT_NAME, "/tmp/vms") == "/tmp/vms/llm.qcow2"
+    assert imageboot.get_boot_disk(BOOT_NAME, "/tmp/vms") == "/tmp/vms/llm.qcow2"
 
 
 ###########################################################
@@ -192,7 +193,7 @@ def test_a_windowed_machine_is_not_made_headless():
 ###########################################################
 
 def test_a_blank_disk_is_made_at_the_size_asked_for():
-    built = virtualmachine.get_create_boot_disk_command("/vms/llm.qcow2", 40)
+    built = imageboot.get_create_boot_disk_command("/vms/llm.qcow2", 40)
 
     assert "40G" in built
     assert "/vms/llm.qcow2" in built
@@ -201,7 +202,7 @@ def test_a_blank_disk_is_made_at_the_size_asked_for():
 def test_a_blank_disk_is_sparse():
     # Sixty gigabytes of models has to fit, and a raw disk would cost that
     # much on the workstation before anything was installed.
-    built = virtualmachine.get_create_boot_disk_command("/vms/llm.qcow2", 60)
+    built = imageboot.get_create_boot_disk_command("/vms/llm.qcow2", 60)
 
     assert built[built.index("-f") + 1] == "qcow2"
 
@@ -209,7 +210,7 @@ def test_a_blank_disk_is_sparse():
 def test_a_blank_disk_is_not_backed_by_anything():
     # Unlike the rehearsal guests, which start from a cloud image; this one
     # is what an installer writes to from nothing.
-    built = virtualmachine.get_create_boot_disk_command("/vms/llm.qcow2", 60)
+    built = imageboot.get_create_boot_disk_command("/vms/llm.qcow2", 60)
 
     assert "-b" not in built
 
@@ -225,33 +226,33 @@ def test_a_blank_disk_is_not_backed_by_anything():
 @pytest.fixture
 def bootable(monkeypatch, tmp_path):
     # A workstation with everything a boot needs
-    monkeypatch.setattr(virtualmachine, "get_missing_boot_tools", lambda: [])
+    monkeypatch.setattr(imageboot, "get_missing_boot_tools", lambda: [])
     monkeypatch.setattr(
-        virtualmachine, "get_firmware_pair", lambda pairs = None: ("/fw/code.fd", "/fw/vars.fd"))
-    monkeypatch.setattr(virtualmachine, "is_acceleration_available", lambda: True)
+        imageboot, "get_firmware_pair", lambda pairs = None: ("/fw/code.fd", "/fw/vars.fd"))
+    monkeypatch.setattr(imageboot, "is_acceleration_available", lambda: True)
     monkeypatch.setattr(
-        virtualmachine.fileops, "copy_file_or_directory", lambda **kwargs: True)
+        imageboot.fileops, "copy_file_or_directory", lambda **kwargs: True)
     return str(tmp_path / "vms")
 
 
 def test_a_workstation_without_the_tools_is_told_which(monkeypatch, bootable):
-    monkeypatch.setattr(virtualmachine, "get_missing_boot_tools", lambda: ["qemu-img"])
+    monkeypatch.setattr(imageboot, "get_missing_boot_tools", lambda: ["qemu-img"])
 
-    assert virtualmachine.boot_vm_image(vm_name = BOOT_NAME, boot_dir = bootable) is False
+    assert imageboot.boot_vm_image(vm_name = BOOT_NAME, boot_dir = bootable) is False
 
 
 def test_a_workstation_without_firmware_is_told_so(monkeypatch, bootable):
     # Booting without it would fall back to bios and fail for a reason that
     # has nothing to do with the image being tested.
-    monkeypatch.setattr(virtualmachine, "get_firmware_pair", lambda pairs = None: None)
+    monkeypatch.setattr(imageboot, "get_firmware_pair", lambda pairs = None: None)
 
-    assert virtualmachine.boot_vm_image(vm_name = BOOT_NAME, boot_dir = bootable) is False
+    assert imageboot.boot_vm_image(vm_name = BOOT_NAME, boot_dir = bootable) is False
 
 
 def test_an_image_that_is_not_there_stops_before_a_disk_is_made(monkeypatch, bootable):
     recorder = RecordingCommand(monkeypatch)
 
-    assert virtualmachine.boot_vm_image(
+    assert imageboot.boot_vm_image(
         vm_name = BOOT_NAME,
         iso_file = "/images/absent.iso",
         boot_dir = bootable) is False
@@ -264,7 +265,7 @@ def test_a_disk_is_made_before_the_machine_runs(monkeypatch, bootable, tmp_path)
     image = tmp_path / "llm.iso"
     image.write_bytes(b"iso")
 
-    assert virtualmachine.boot_vm_image(
+    assert imageboot.boot_vm_image(
         vm_name = BOOT_NAME, iso_file = str(image), boot_dir = bootable) is True
 
     assert "qemu-img" in recorder.text(0)
@@ -274,10 +275,10 @@ def test_a_disk_is_made_before_the_machine_runs(monkeypatch, bootable, tmp_path)
 def test_an_existing_disk_is_not_made_again(monkeypatch, bootable, tmp_path):
     recorder = RecordingCommand(monkeypatch)
     os.makedirs(bootable)
-    with open(virtualmachine.get_boot_disk(BOOT_NAME, bootable), "wb"):
+    with open(imageboot.get_boot_disk(BOOT_NAME, bootable), "wb"):
         pass
 
-    assert virtualmachine.boot_vm_image(vm_name = BOOT_NAME, boot_dir = bootable) is True
+    assert imageboot.boot_vm_image(vm_name = BOOT_NAME, boot_dir = bootable) is True
 
     assert len(recorder.calls) == 1
     assert "qemu-system-x86_64" in recorder.text(0)
@@ -288,11 +289,11 @@ def test_a_reset_throws_the_disk_away(monkeypatch, bootable, tmp_path):
     # new takes its place.
     recorder = RecordingCommand(monkeypatch)
     os.makedirs(bootable)
-    disk = virtualmachine.get_boot_disk(BOOT_NAME, bootable)
+    disk = imageboot.get_boot_disk(BOOT_NAME, bootable)
     with open(disk, "wb") as handle:
         handle.write(b"old")
 
-    assert virtualmachine.boot_vm_image(vm_name = BOOT_NAME, boot_dir = bootable, reset = True) is True
+    assert imageboot.boot_vm_image(vm_name = BOOT_NAME, boot_dir = bootable, reset = True) is True
 
     assert not os.path.exists(disk)
     assert "qemu-img" in recorder.text(0)
@@ -301,24 +302,24 @@ def test_a_reset_throws_the_disk_away(monkeypatch, bootable, tmp_path):
 def test_a_machine_that_will_not_start_is_reported(monkeypatch, bootable):
     RecordingCommand(monkeypatch, returncode = 1)
 
-    assert virtualmachine.boot_vm_image(vm_name = BOOT_NAME, boot_dir = bootable) is False
+    assert imageboot.boot_vm_image(vm_name = BOOT_NAME, boot_dir = bootable) is False
 
 
 def test_a_value_given_on_the_command_line_wins(isolated_settings):
     isolated_settings.set_value("UserData.VM", "vm_memory", "2048")
 
-    assert virtualmachine.get_boot_setting("vm_memory", 6144, 8192) == 8192
+    assert imageboot.get_boot_setting("vm_memory", 6144, 8192) == 8192
 
 
 def test_a_value_not_given_comes_from_the_configuration(isolated_settings):
     isolated_settings.set_value("UserData.VM", "vm_memory", "2048")
 
-    assert virtualmachine.get_boot_setting("vm_memory", 6144) == 2048
+    assert imageboot.get_boot_setting("vm_memory", 6144) == 2048
 
 
 def test_zero_is_an_answer_rather_than_an_absent_one(isolated_settings):
     # No forwarded port means no network, which is a thing to ask for.
-    assert virtualmachine.get_boot_setting("vm_ssh_port", 2222, 0) == 0
+    assert imageboot.get_boot_setting("vm_ssh_port", 2222, 0) == 0
 
 
 ###########################################################
@@ -327,17 +328,17 @@ def test_zero_is_an_answer_rather_than_an_absent_one(isolated_settings):
 
 def test_the_missing_boot_tools_are_named(monkeypatch):
     monkeypatch.setattr(
-        virtualmachine.command, "is_runnable_command", lambda tool: tool != "qemu-img")
+        imageboot.command, "is_runnable_command", lambda tool: tool != "qemu-img")
 
-    assert virtualmachine.get_missing_boot_tools() == ["qemu-img"]
+    assert imageboot.get_missing_boot_tools() == ["qemu-img"]
 
 
 def test_acceleration_needs_read_and_write_on_kvm(monkeypatch):
     seen = []
     monkeypatch.setattr(
-        virtualmachine.os, "access", lambda path, mode: seen.append((path, mode)) or False)
+        imageboot.os, "access", lambda path, mode: seen.append((path, mode)) or False)
 
-    assert virtualmachine.is_acceleration_available() is False
+    assert imageboot.is_acceleration_available() is False
     assert seen == [("/dev/kvm", os.R_OK | os.W_OK)]
 
 
@@ -345,73 +346,73 @@ def test_existing_firmware_variables_are_kept(monkeypatch, tmp_path):
     # The firmware's boot entries live there, so a copy would lose the install.
     copies = []
     monkeypatch.setattr(
-        virtualmachine.fileops, "copy_file_or_directory", lambda **kwargs: copies.append(kwargs))
+        imageboot.fileops, "copy_file_or_directory", lambda **kwargs: copies.append(kwargs))
     firmware_vars = tmp_path / "llm-vars.fd"
     firmware_vars.write_bytes(b"entries")
 
-    assert virtualmachine.prepare_boot_firmware(str(firmware_vars), "/fw/vars.fd") is True
+    assert imageboot.prepare_boot_firmware(str(firmware_vars), "/fw/vars.fd") is True
     assert copies == []
 
 
 def test_a_boot_directory_that_cannot_be_made_is_reported(monkeypatch, bootable):
     recorder = RecordingCommand(monkeypatch)
-    monkeypatch.setattr(virtualmachine.fileops, "make_directory", lambda **kwargs: False)
-    monkeypatch.setattr(virtualmachine.logger, "log_error", lambda *a, **k: None)
+    monkeypatch.setattr(imageboot.fileops, "make_directory", lambda **kwargs: False)
+    monkeypatch.setattr(imageboot.logger, "log_error", lambda *a, **k: None)
 
-    assert virtualmachine.boot_vm_image(vm_name = BOOT_NAME, boot_dir = bootable) is False
+    assert imageboot.boot_vm_image(vm_name = BOOT_NAME, boot_dir = bootable) is False
     assert recorder.calls == []
 
 
 def test_a_disk_that_cannot_be_made_stops_the_boot(monkeypatch, bootable):
     recorder = RecordingCommand(monkeypatch, returncode = 1)
-    monkeypatch.setattr(virtualmachine.logger, "log_error", lambda *a, **k: None)
+    monkeypatch.setattr(imageboot.logger, "log_error", lambda *a, **k: None)
 
-    assert virtualmachine.boot_vm_image(vm_name = BOOT_NAME, boot_dir = bootable) is False
+    assert imageboot.boot_vm_image(vm_name = BOOT_NAME, boot_dir = bootable) is False
     assert len(recorder.calls) == 1
 
 
 def test_firmware_that_cannot_be_copied_stops_the_boot(monkeypatch, bootable):
     recorder = RecordingCommand(monkeypatch)
     monkeypatch.setattr(
-        virtualmachine.fileops, "copy_file_or_directory", lambda **kwargs: False)
-    monkeypatch.setattr(virtualmachine.logger, "log_error", lambda *a, **k: None)
+        imageboot.fileops, "copy_file_or_directory", lambda **kwargs: False)
+    monkeypatch.setattr(imageboot.logger, "log_error", lambda *a, **k: None)
 
-    assert virtualmachine.boot_vm_image(vm_name = BOOT_NAME, boot_dir = bootable) is False
+    assert imageboot.boot_vm_image(vm_name = BOOT_NAME, boot_dir = bootable) is False
     assert not [call for call in recorder.calls if call["cmd"][0] == "qemu-system-x86_64"]
 
 
 def test_installing_over_an_existing_disk_is_warned_about(monkeypatch, bootable, tmp_path):
     warnings = []
-    monkeypatch.setattr(virtualmachine.logger, "log_warning", warnings.append)
+    monkeypatch.setattr(imageboot.logger, "log_warning", warnings.append)
     RecordingCommand(monkeypatch)
     os.makedirs(bootable)
-    with open(virtualmachine.get_boot_disk(BOOT_NAME, bootable), "wb"):
+    with open(imageboot.get_boot_disk(BOOT_NAME, bootable), "wb"):
         pass
     image = tmp_path / "llm.iso"
     image.write_bytes(b"iso")
 
-    assert virtualmachine.boot_vm_image(
+    assert imageboot.boot_vm_image(
         vm_name = BOOT_NAME, iso_file = str(image), boot_dir = bootable) is True
     assert [warning for warning in warnings if "installed over" in warning]
 
 
 def test_an_unaccelerated_boot_is_warned_about(monkeypatch, bootable):
     warnings = []
-    monkeypatch.setattr(virtualmachine.logger, "log_warning", warnings.append)
-    monkeypatch.setattr(virtualmachine, "is_acceleration_available", lambda: False)
+    monkeypatch.setattr(imageboot.logger, "log_warning", warnings.append)
+    monkeypatch.setattr(imageboot, "is_acceleration_available", lambda: False)
     recorder = RecordingCommand(monkeypatch)
 
-    assert virtualmachine.boot_vm_image(vm_name = BOOT_NAME, boot_dir = bootable) is True
+    assert imageboot.boot_vm_image(vm_name = BOOT_NAME, boot_dir = bootable) is True
     assert [warning for warning in warnings if "/dev/kvm" in warning]
     assert "accel=kvm" not in recorder.text(1)
 
 
 def test_a_boot_without_a_forwarded_port_gets_no_network(monkeypatch, bootable):
     infos = []
-    monkeypatch.setattr(virtualmachine.logger, "log_info", infos.append)
+    monkeypatch.setattr(imageboot.logger, "log_info", infos.append)
     recorder = RecordingCommand(monkeypatch)
 
-    assert virtualmachine.boot_vm_image(
+    assert imageboot.boot_vm_image(
         vm_name = BOOT_NAME, boot_dir = bootable, ssh_port = 0) is True
     assert "-net none" in recorder.text(1)
     assert not [info for info in infos if "ssh -p" in info]

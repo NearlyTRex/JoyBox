@@ -3,7 +3,7 @@ import joybox.arguments as arguments
 import joybox.logger as logger
 import joybox.setup as setup
 import joybox.system as system
-import joybox.virtualmachine as virtualmachine
+from joybox import imageboot
 
 # Build the argument parser
 def build_parser():
@@ -47,7 +47,7 @@ def build_parser():
     parser.add_group("Machine")
     parser.add_string_argument(
         args = ("-n", "--name"),
-        default = virtualmachine.DEFAULT_BOOT_NAME,
+        default = imageboot.DEFAULT_BOOT_NAME,
         description = "Machine name, which names its disk and its firmware variables")
     parser.add_string_argument(
         args = ("-i", "--iso"),
@@ -94,7 +94,7 @@ def main():
     logger.setup_logging()
 
     # Boot it
-    success = virtualmachine.boot_vm_image(
+    success = imageboot.boot_vm_image(
         vm_name = args.name,
         iso_file = args.iso,
         boot_dir = args.boot_dir,

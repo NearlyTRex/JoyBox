@@ -20,7 +20,7 @@ def tool(monkeypatch):
         harness.boots.append(kwargs)
         return harness.result
 
-    monkeypatch.setattr(boot_vm_image.virtualmachine, "boot_vm_image", boot)
+    monkeypatch.setattr(boot_vm_image.imageboot, "boot_vm_image", boot)
     return harness
 
 
