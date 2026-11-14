@@ -8,6 +8,8 @@ import pytest
 from joybox import runoptions
 from joybox.connection import connection_local
 
+pytestmark = pytest.mark.integration
+
 
 ###########################################################
 # ConnectionLocal against a real filesystem

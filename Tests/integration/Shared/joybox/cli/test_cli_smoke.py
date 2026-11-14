@@ -10,6 +10,8 @@ import pytest
 # Local imports
 import joybox.cli
 
+pytestmark = pytest.mark.integration
+
 
 ###########################################################
 # CLI smoke

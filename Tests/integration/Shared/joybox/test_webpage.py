@@ -9,6 +9,8 @@ import pytest
 from joybox import config
 from joybox import webpage
 
+pytestmark = pytest.mark.integration
+
 ###########################################################
 # Real browsers
 #

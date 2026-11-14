@@ -27,7 +27,7 @@ def server(shell_sandbox):
 
 
 def setup(server, *args, stdin = None):
-    return server.run(SCRIPT, "--action", "setup", "--user", "admin", *args, input = stdin)
+    return server.run(SCRIPT, "--action", "setup", "--user", "admin", *args, stdin = stdin)
 
 
 ###########################################################

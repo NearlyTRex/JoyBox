@@ -10,6 +10,7 @@ from joybox import config
 from joybox.collection import saves
 
 pytestmark = [
+    pytest.mark.integration,
     pytest.mark.requires_tool("7-Zip"),
     pytest.mark.slow]
 

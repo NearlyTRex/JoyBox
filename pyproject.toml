@@ -98,9 +98,13 @@ wiiu_rom_tool = "joybox.cli.wiiu_rom_tool:run"
 decompiler = [
     "pyghidra",
 ]
+# The test toolchain of requirements-dev.in, so the venv can run the suite
 dev = [
     "coverage",
     "pytest",
+    "pytest-xdist",
+    "pytest-testrex[shell,lua]>=0.1.7",
+    "pylint",
 ]
 
 [tool.setuptools.dynamic]
@@ -190,6 +194,8 @@ no-narration = 1
 commented-out-code = 2
 long-functions = 662
 long-modules = 13
+# pylint over Shared and Scripts with pytest-testrex's library rcfile
+pylint-source = 5094
 
 [tool.ruff.lint]
 # The Workflows library's default set, pinned here so a library change is a

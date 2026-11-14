@@ -16,11 +16,11 @@ class FuseISO(toolbase.ToolBase):
     # Get config
     def get_config(self):
 
-        # Get python info
+        # Get fuseiso info
         fuseiso_exe = settings.get_value("Tools.FuseISO", "fuseiso_exe")
         fusermount_exe = settings.get_value("Tools.FuseISO", "fusermount_exe")
-        fuseiso_install_dir = settings.get_value("Tools.FuseISO", "fuseiso_install_dir")
-        fusermount_install_dir = settings.get_value("Tools.FuseISO", "fusermount_install_dir")
+        fuseiso_install_dir = settings.get_path_value("Tools.FuseISO", "fuseiso_install_dir")
+        fusermount_install_dir = settings.get_path_value("Tools.FuseISO", "fusermount_install_dir")
 
         # Return config
         return {

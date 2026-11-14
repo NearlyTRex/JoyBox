@@ -10,6 +10,8 @@ import pytest
 # Local imports
 import joybox.bootstrap.installers as installers
 
+pytestmark = pytest.mark.integration
+
 
 ###########################################################
 # Generated artifacts, validated by the real tools

@@ -28,9 +28,9 @@ def test_a_package_directory_is_imported(tmp_path, clean_modules):
     assert str(tmp_path) in sys.path
 
 
-def test_an_already_imported_package_is_reused(tmp_path, clean_modules):
+def test_an_already_imported_package_is_reused(tmp_path, clean_modules, monkeypatch):
     sentinel = object()
-    sys.modules["joybox_probe_loaded"] = sentinel
+    monkeypatch.setitem(sys.modules, "joybox_probe_loaded", sentinel)
 
     module = modules.import_python_module_package(str(tmp_path), "joybox_probe_loaded")
 
