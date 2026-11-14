@@ -131,7 +131,7 @@ def test_launch_passes_the_game_and_options_through(seams):
 ###########################################################
 
 def test_install_addons_installs_each_wad_into_the_nand(seams, tmp_path):
-    installed = seams.fake(dolphin.nintendo, "install_wii_wad")
+    installed = seams.fake(dolphin.wii, "install_wii_wad")
     dlc = make_packages(tmp_path / "dlc", "channel.wad", "readme.txt")
     update = make_packages(tmp_path / "update", "v1.wad")
 
@@ -144,7 +144,7 @@ def test_install_addons_installs_each_wad_into_the_nand(seams, tmp_path):
 
 
 def test_install_addons_stops_at_the_first_failed_wad(seams, tmp_path):
-    installed = seams.fake(dolphin.nintendo, "install_wii_wad")
+    installed = seams.fake(dolphin.wii, "install_wii_wad")
     installed.failures.add(1)
     dlc = make_packages(tmp_path / "dlc", "a.wad", "b.wad")
 

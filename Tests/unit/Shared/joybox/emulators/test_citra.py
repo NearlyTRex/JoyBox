@@ -125,7 +125,7 @@ def test_launch_passes_the_game_and_options_through(seams):
 ###########################################################
 
 def test_install_addons_installs_each_cia_into_the_sd_card(seams, tmp_path):
-    installed = seams.fake(citra.nintendo, "install_3ds_cia")
+    installed = seams.fake(citra.threeds, "install_3ds_cia")
     dlc = make_packages(tmp_path / "dlc", "dlc.cia", "readme.txt")
     update = make_packages(tmp_path / "update", "v1.cia")
 
@@ -138,7 +138,7 @@ def test_install_addons_installs_each_cia_into_the_sd_card(seams, tmp_path):
 
 
 def test_install_addons_stops_at_the_first_failed_cia(seams, tmp_path):
-    installed = seams.fake(citra.nintendo, "install_3ds_cia")
+    installed = seams.fake(citra.threeds, "install_3ds_cia")
     installed.failures.add(1)
     dlc = make_packages(tmp_path / "dlc", "a.cia", "b.cia")
 

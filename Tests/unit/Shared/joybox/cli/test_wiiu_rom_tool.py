@@ -22,9 +22,8 @@ def tool(monkeypatch, isolated_settings, tmp_path):
     (tmp_path / "Other").mkdir()
     (tmp_path / "Other" / "other.tik").write_bytes(b"")
     harness.package = str(tmp_path / "Game")
-    nintendo = wiiu_rom_tool.nintendo
-    monkeypatch.setattr(nintendo, "decrypt_wiiu_nus_package", lambda **kwargs: harness.decrypted.append(kwargs))
-    monkeypatch.setattr(nintendo, "verify_wiiu_nus_package", lambda **kwargs: harness.verified.append(kwargs))
+    monkeypatch.setattr(wiiu_rom_tool.wiiu, "decrypt_wiiu_nus_package", lambda **kwargs: harness.decrypted.append(kwargs))
+    monkeypatch.setattr(wiiu_rom_tool.wiiu, "verify_wiiu_nus_package", lambda **kwargs: harness.verified.append(kwargs))
     return harness
 
 

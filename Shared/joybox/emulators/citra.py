@@ -10,7 +10,7 @@ import joybox.logger as logger
 import joybox.release as release
 import joybox.programs as programs
 import joybox.archive as archive
-import joybox.nintendo as nintendo
+from joybox.nintendo import threeds
 import joybox.paths as paths
 import joybox.emulatorcommon as emulatorcommon
 import joybox.emulatorbase as emulatorbase
@@ -82,7 +82,7 @@ class Citra(emulatorbase.EmulatorBase):
         for package_dirset in [dlc_dirs, update_dirs]:
             for package_dir in package_dirset:
                 for cia_file in paths.build_file_list_by_extensions(package_dir, extensions = [".cia"]):
-                    success = nintendo.install_3ds_cia(
+                    success = threeds.install_3ds_cia(
                         src_3ds_file = cia_file,
                         sdmc_dir = paths.join_paths(programs.get_emulator_path_config_value("Citra", "setup_dir"), "sdmc"),
                         verbose = verbose,

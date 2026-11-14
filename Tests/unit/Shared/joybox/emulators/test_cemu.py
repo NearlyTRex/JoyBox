@@ -205,7 +205,7 @@ def nus(monkeypatch, tmp_path):
 
     monkeypatch.setattr(cemu.programs, "get_emulator_path_config_value",
         lambda name, key, platform = None: "/emu/%s/%s" % (name, key))
-    monkeypatch.setattr(cemu.nintendo, "install_wiiu_nus_package", install)
+    monkeypatch.setattr(cemu.wiiu, "install_wiiu_nus_package", install)
     return {"installed": installed, "state": state, "root": tmp_path}
 
 
@@ -282,7 +282,7 @@ def launcher(monkeypatch, tmp_path):
     monkeypatch.setattr(cemu.programs, "get_emulator_path_config_value",
         lambda name, key, platform = None: "/emu/%s/%s" % (key, platform))
     monkeypatch.setattr(cemu.programs, "get_emulator_program", lambda name: "/bin/cemu")
-    monkeypatch.setattr(cemu.nintendo, "update_wiiu_keys", update_keys)
+    monkeypatch.setattr(cemu.wiiu, "update_wiiu_keys", update_keys)
     monkeypatch.setattr(cemu.emulatorcommon, "simple_launch", simple_launch)
     return {"launched": launched, "keys": keys, "cache": tmp_path, "state": state}
 

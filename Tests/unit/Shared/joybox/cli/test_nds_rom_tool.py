@@ -17,8 +17,8 @@ def tool(monkeypatch, isolated_settings):
     command = CommandHarness(monkeypatch, nds_rom_tool)
     command.decrypt = Recorder(result = True)
     command.encrypt = Recorder(result = True)
-    monkeypatch.setattr(nds_rom_tool.nintendo, "decrypt_nds_rom", command.decrypt)
-    monkeypatch.setattr(nds_rom_tool.nintendo, "encrypt_nds_rom", command.encrypt)
+    monkeypatch.setattr(nds_rom_tool.ds, "decrypt_nds_rom", command.decrypt)
+    monkeypatch.setattr(nds_rom_tool.ds, "encrypt_nds_rom", command.encrypt)
     return command
 
 

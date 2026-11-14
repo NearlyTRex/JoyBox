@@ -1,6 +1,6 @@
 # Imports
 import joybox.system as system
-import joybox.nintendo as nintendo
+from joybox.nintendo import ds
 import joybox.arguments as arguments
 import joybox.setup as setup
 import joybox.logger as logger
@@ -69,7 +69,7 @@ def main():
 
         # Decrypt NDS file
         if args.decrypt:
-            nintendo.decrypt_nds_rom(
+            ds.decrypt_nds_rom(
                 nds_file = current_file,
                 generate_hash = args.generate_hash,
                 verbose = args.verbose,
@@ -78,7 +78,7 @@ def main():
 
         # Encrypt NDS file
         elif args.encrypt:
-            nintendo.encrypt_nds_rom(
+            ds.encrypt_nds_rom(
                 nds_file = current_file,
                 generate_hash = args.generate_hash,
                 verbose = args.verbose,

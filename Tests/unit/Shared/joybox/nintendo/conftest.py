@@ -6,7 +6,8 @@ import sys
 import pytest
 
 # Local imports
-from joybox import nintendo
+from joybox import fileops
+from joybox import programs
 
 # Helpers beside this file are imported by name, so this directory has to be
 # importable; appended so the suite's top level conftest is not shadowed.
@@ -22,19 +23,19 @@ if _here not in sys.path:
 def installed(monkeypatch):
     from nintendo_helpers import TOOL_PATHS
     tools = dict(TOOL_PATHS)
-    monkeypatch.setattr(nintendo.programs, "is_tool_installed", lambda name: name in tools)
-    monkeypatch.setattr(nintendo.programs, "get_tool_program", tools.get)
+    monkeypatch.setattr(programs, "is_tool_installed", lambda name: name in tools)
+    monkeypatch.setattr(programs, "get_tool_program", tools.get)
     return tools
 
 @pytest.fixture
 def missing(monkeypatch):
-    monkeypatch.setattr(nintendo.programs, "is_tool_installed", lambda name: False)
-    monkeypatch.setattr(nintendo.programs, "get_tool_program", lambda name: None)
+    monkeypatch.setattr(programs, "is_tool_installed", lambda name: False)
+    monkeypatch.setattr(programs, "get_tool_program", lambda name: None)
 
 
 @pytest.fixture
 def existing_output(monkeypatch):
-    monkeypatch.setattr(nintendo.os.path, "exists", lambda path: True)
+    monkeypatch.setattr(os.path, "exists", lambda path: True)
 
 
 @pytest.fixture
@@ -44,7 +45,7 @@ def scratch(monkeypatch, tmp_path):
     workspace = tmp_path / "scratch"
     workspace.mkdir()
     monkeypatch.setattr(
-        nintendo.fileops, "create_temporary_directory",
+        fileops, "create_temporary_directory",
         lambda **kwargs: (True, str(workspace)))
     return str(workspace)
 
@@ -52,7 +53,7 @@ def scratch(monkeypatch, tmp_path):
 @pytest.fixture
 def no_scratch(monkeypatch):
     monkeypatch.setattr(
-        nintendo.fileops, "create_temporary_directory",
+        fileops, "create_temporary_directory",
         lambda **kwargs: (False, ""))
 
 

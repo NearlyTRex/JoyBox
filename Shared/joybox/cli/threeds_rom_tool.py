@@ -1,6 +1,6 @@
 # Imports
 import joybox.system as system
-import joybox.nintendo as nintendo
+from joybox.nintendo import threeds
 import joybox.arguments as arguments
 import joybox.setup as setup
 import joybox.logger as logger
@@ -101,7 +101,7 @@ def main():
 
         # Convert CIA to 3DS(CCI)
         if args.cia_to_cci and current_file.endswith(".cia"):
-            nintendo.convert_3ds_cia_to_cci(
+            threeds.convert_3ds_cia_to_cci(
                 src_3ds_file = current_file,
                 dest_3ds_file = output_file_trimmed_3ds,
                 verbose = args.verbose,
@@ -110,7 +110,7 @@ def main():
 
         # Convert 3DS(CCI) to CIA
         elif args.cci_to_cia and current_file.endswith(".3ds"):
-            nintendo.convert_3ds_cci_to_cia(
+            threeds.convert_3ds_cci_to_cia(
                 src_3ds_file = current_file,
                 dest_3ds_file = output_file_cia,
                 verbose = args.verbose,
@@ -119,7 +119,7 @@ def main():
 
         # Trim 3DS
         elif args.trim_cci and current_file.endswith(".3ds") and ".trim" not in current_file:
-            nintendo.trim_3ds_cci(
+            threeds.trim_3ds_cci(
                 src_3ds_file = current_file,
                 dest_3ds_file = output_file_trimmed_3ds,
                 verbose = args.verbose,
@@ -128,7 +128,7 @@ def main():
 
         # Untrim 3DS
         elif args.untrim_cci and current_file.endswith(".trim.3ds"):
-            nintendo.untrim_3ds_cci(
+            threeds.untrim_3ds_cci(
                 src_3ds_file = current_file,
                 dest_3ds_file = output_file_3ds,
                 verbose = args.verbose,
@@ -137,7 +137,7 @@ def main():
 
         # Extract CIA
         elif args.extract_cia and current_file.endswith(".cia"):
-            nintendo.extract_3ds_cia(
+            threeds.extract_3ds_cia(
                 src_3ds_file = current_file,
                 extract_dir = output_dir,
                 verbose = args.verbose,
@@ -146,7 +146,7 @@ def main():
 
         # Print info
         elif args.info:
-            info = nintendo.get_3ds_file_info(
+            info = threeds.get_3ds_file_info(
                 src_3ds_file = current_file,
                 verbose = args.verbose,
                 pretend_run = args.pretend_run,

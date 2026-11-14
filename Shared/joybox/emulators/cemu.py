@@ -5,7 +5,7 @@ import joybox.fileops as fileops
 import joybox.logger as logger
 import joybox.release as release
 import joybox.programs as programs
-import joybox.nintendo as nintendo
+from joybox.nintendo import wiiu
 import joybox.paths as paths
 import joybox.emulatorcommon as emulatorcommon
 import joybox.emulatorbase as emulatorbase
@@ -74,7 +74,7 @@ class Cemu(emulatorbase.EmulatorBase):
                 for tik_file in paths.build_file_list_by_extensions(package_dir, extensions = [".tik"]):
                     if tik_file.endswith("title.tik"):
                         tik_dir = paths.get_filename_directory(tik_file)
-                        success = nintendo.install_wiiu_nus_package(
+                        success = wiiu.install_wiiu_nus_package(
                             nus_package_dir = tik_dir,
                             nand_dir = paths.join_paths(programs.get_emulator_path_config_value("Cemu", "setup_dir"), "mlc01"),
                             verbose = verbose,
@@ -196,7 +196,7 @@ class Cemu(emulatorbase.EmulatorBase):
         for key_file in paths.build_file_list_by_extensions(game_cache_dir, extensions = [".txt"]):
             if key_file.endswith(".key.txt"):
                 for platform in ["windows", "linux"]:
-                    success = nintendo.update_wiiu_keys(
+                    success = wiiu.update_wiiu_keys(
                         src_key_file = key_file,
                         dest_key_file = programs.get_emulator_path_config_value("Cemu", "keys_file", platform),
                         verbose = verbose,

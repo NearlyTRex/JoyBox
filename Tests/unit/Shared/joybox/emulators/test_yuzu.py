@@ -118,7 +118,7 @@ def test_an_invalid_profile_falls_back_to_the_default(isolated_settings):
 
 @pytest.fixture
 def profiles(seams, profile):
-    seams.profiles = seams.fake(yuzu.nintendo, "create_switch_profiles_dat")
+    seams.profiles = seams.fake(yuzu.switch, "create_switch_profiles_dat")
     return seams
 
 
@@ -177,7 +177,7 @@ def test_configure_stops_when_a_system_file_cannot_be_copied(profiles):
 
 @pytest.fixture
 def nsp(seams):
-    seams.installed = seams.fake(yuzu.nintendo, "install_switch_nsp")
+    seams.installed = seams.fake(yuzu.switch, "install_switch_nsp")
     return seams
 
 
