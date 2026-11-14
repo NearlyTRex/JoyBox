@@ -2,8 +2,8 @@
 import pytest
 
 # Local imports
-from joybox import autoinstall
-from autoinstall_helpers import UBUNTU_FINGERPRINT, check_signature, status_line
+from joybox import ubunturelease
+from ubunturelease_helpers import UBUNTU_FINGERPRINT, check_signature, status_line
 
 
 ###########################################################
@@ -16,7 +16,7 @@ from autoinstall_helpers import UBUNTU_FINGERPRINT, check_signature, status_line
 ###########################################################
 
 def test_the_signature_is_published_beside_the_checksums():
-    assert autoinstall.get_checksum_signature_url("24.04") == \
+    assert ubunturelease.get_checksum_signature_url("24.04") == \
         "https://releases.ubuntu.com/24.04/SHA256SUMS.gpg"
 
 
@@ -67,12 +67,12 @@ def test_a_missing_keyring_is_reported(signature_check, tmp_path):
 
 
 def test_a_signature_cannot_be_checked_without_gpg(monkeypatch, tmp_path):
-    monkeypatch.setattr(autoinstall.programs, "is_tool_installed", lambda name: False)
-    monkeypatch.setattr(autoinstall.programs, "get_tool_program", lambda name: None)
+    monkeypatch.setattr(ubunturelease.programs, "is_tool_installed", lambda name: False)
+    monkeypatch.setattr(ubunturelease.programs, "get_tool_program", lambda name: None)
     listing = tmp_path / "SHA256SUMS"
     listing.write_text("")
 
-    assert autoinstall.verify_checksum_signature(str(listing), str(listing)) is False
+    assert ubunturelease.verify_checksum_signature(str(listing), str(listing)) is False
 
 
 @pytest.mark.parametrize("status", ["", None, "gpg: no valid OpenPGP data found"])
@@ -83,11 +83,11 @@ def test_an_unreadable_verification_is_refused(signature_check, tmp_path, status
 
 
 def test_the_reported_fingerprint_is_read_from_the_status():
-    assert autoinstall.get_verified_fingerprint(status_line()) == UBUNTU_FINGERPRINT
+    assert ubunturelease.get_verified_fingerprint(status_line()) == UBUNTU_FINGERPRINT
 
 
 def test_byte_status_output_is_decoded():
-    assert autoinstall.get_verified_fingerprint(status_line().encode()) == UBUNTU_FINGERPRINT
+    assert ubunturelease.get_verified_fingerprint(status_line().encode()) == UBUNTU_FINGERPRINT
 
 
 def test_the_signing_key_is_configurable(isolated_settings, tmp_path):
@@ -98,12 +98,12 @@ def test_the_signing_key_is_configurable(isolated_settings, tmp_path):
     isolated_settings.set_value(
         "UserData.Autoinstall", "autoinstall_signing_keyring", str(tmp_path / "other.gpg"))
 
-    assert autoinstall.get_signing_fingerprint() == "0" * 40
-    assert autoinstall.get_signing_keyring() == str(tmp_path / "other.gpg")
+    assert ubunturelease.get_signing_fingerprint() == "0" * 40
+    assert ubunturelease.get_signing_keyring() == str(tmp_path / "other.gpg")
 
 
 def test_the_ubuntu_signing_key_is_expected_by_default(isolated_settings):
-    assert autoinstall.get_signing_fingerprint() == UBUNTU_FINGERPRINT
+    assert ubunturelease.get_signing_fingerprint() == UBUNTU_FINGERPRINT
 
 
 def test_the_configured_key_is_used_when_none_is_given(signature_check, isolated_settings, tmp_path):
@@ -125,7 +125,7 @@ def test_another_key_is_refused_by_the_configured_fingerprint(signature_check, i
 
 
 def test_gpg_is_found_through_the_tool_registry(monkeypatch):
-    monkeypatch.setattr(autoinstall.programs, "is_tool_installed", lambda name: name == "Gpg")
-    monkeypatch.setattr(autoinstall.programs, "get_tool_program", lambda name: "/tools/" + name)
+    monkeypatch.setattr(ubunturelease.programs, "is_tool_installed", lambda name: name == "Gpg")
+    monkeypatch.setattr(ubunturelease.programs, "get_tool_program", lambda name: "/tools/" + name)
 
-    assert autoinstall.get_signature_tool() == "/tools/Gpg"
+    assert ubunturelease.get_signature_tool() == "/tools/Gpg"
