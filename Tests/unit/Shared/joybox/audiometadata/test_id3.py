@@ -7,6 +7,8 @@ import pytest
 # Local imports
 from joybox import audiometadata
 from joybox import config
+from joybox import image
+from joybox import modules
 from audiometadata_helpers import PNG_PIXEL, artwork
 
 
@@ -170,7 +172,7 @@ def test_artwork_in_the_requested_format_is_read_as_is(metadata, mp3_file):
 
 
 def test_artwork_is_converted_to_the_requested_format(metadata, mp3_file, monkeypatch):
-    monkeypatch.setattr(audiometadata.image, "convert_image_data_to_format",
+    monkeypatch.setattr(image, "convert_image_data_to_format",
         lambda image_data, target_format: base64.b64encode(b"jpeg bytes").decode("ascii"))
     metadata.set_id3_tags(mp3_file, {"artwork": [artwork()]})
 
@@ -181,7 +183,7 @@ def test_artwork_is_converted_to_the_requested_format(metadata, mp3_file, monkey
 
 
 def test_artwork_that_cannot_be_converted_is_kept_as_it_was(metadata, mp3_file, monkeypatch):
-    monkeypatch.setattr(audiometadata.image, "convert_image_data_to_format",
+    monkeypatch.setattr(image, "convert_image_data_to_format",
         lambda image_data, target_format: None)
     metadata.set_id3_tags(mp3_file, {"artwork": [artwork()]})
 
@@ -242,7 +244,7 @@ def test_mp3_file_info(metadata, mp3_file):
 
 
 def test_the_class_needs_every_mutagen_module(monkeypatch):
-    monkeypatch.setattr(audiometadata.modules, "import_python_module_package",
+    monkeypatch.setattr(modules, "import_python_module_package",
         lambda module_path, module_name: None)
     with pytest.raises(ImportError):
         audiometadata.AudioMetadata()

@@ -8,6 +8,7 @@ import pytest
 
 # Local imports
 from joybox import audiometadata
+from joybox import modules
 
 pytestmark = [pytest.mark.integration, pytest.mark.requires_binary("ffmpeg"), pytest.mark.slow]
 
@@ -34,13 +35,13 @@ def metadata():
         for name in ("mutagen", "mutagen.mp3", "mutagen.id3", "mutagen.mp4")
     ]
     pending = iter(loaded)
-    original = audiometadata.modules.import_python_module_package
-    audiometadata.modules.import_python_module_package = \
+    original = modules.import_python_module_package
+    modules.import_python_module_package = \
         lambda module_path, module_name: next(pending)
     try:
         yield audiometadata.AudioMetadata()
     finally:
-        audiometadata.modules.import_python_module_package = original
+        modules.import_python_module_package = original
 
 
 @pytest.fixture

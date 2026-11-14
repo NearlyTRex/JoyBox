@@ -8,6 +8,7 @@ import pytest
 
 # Local imports
 from joybox import audiometadata
+from joybox import modules
 
 # Helpers beside this file are imported by name, so this directory has to be
 # importable; appended so the suite's top level conftest is not shadowed.
@@ -24,7 +25,7 @@ def metadata(monkeypatch):
         importlib.import_module(name)
         for name in ("mutagen", "mutagen.mp3", "mutagen.id3", "mutagen.mp4")
     ])
-    monkeypatch.setattr(audiometadata.modules, "import_python_module_package",
+    monkeypatch.setattr(modules, "import_python_module_package",
         lambda module_path, module_name: next(loaded))
     return audiometadata.AudioMetadata()
 
