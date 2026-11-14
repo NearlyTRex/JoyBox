@@ -49,10 +49,8 @@ def get_python_package_id(pkg):
         return pkg
     return pkg.get("id", "")
 
-# Extract the arguments pip install should receive for a package
-# Defaults to the id, which is right for anything on PyPI. A package with a
-# "spec" installs from that instead, so a git URL or a local checkout can be
-# used while pip show still queries by the plain distribution name.
+# Extract what pip install receives for a package: its "spec" when it has one,
+# such as a git URL or local checkout, else its id; pip show still uses the id
 def get_package_spec(pkg):
     if isinstance(pkg, str):
         return [pkg]

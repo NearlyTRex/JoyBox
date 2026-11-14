@@ -47,11 +47,8 @@ DRM_VENDOR_NAMES = {
     "0x10de": "NVIDIA GPU",
 }
 
-# Get dedicated-GPU VRAM (AMD / Intel Arc) from the Linux DRM sysfs interface.
-# The amdgpu and i915/xe drivers expose mem_info_vram_total (and mem_info_vram_used)
-# for cards with dedicated VRAM; integrated GPUs share system RAM and have no such
-# file, so they are skipped. Returns one entry per card, matching the NVIDIA payload
-# shape (free = total - used).
+# Get dedicated AMD and Intel Arc VRAM from DRM sysfs mem_info_vram_*, one entry per
+# card in the NVIDIA shape; integrated GPUs, which have no such file, are skipped
 def get_drm_gpu_info():
     gpus = []
     for total_path in sorted(glob.glob(DRM_VRAM_TOTAL_GLOB)):
@@ -84,10 +81,8 @@ def get_drm_gpu_info():
         })
     return gpus
 
-# Get AMD GPU VRAM via rocm-smi as a fallback when DRM sysfs is unavailable. Parses
-# the CSV output, locating the VRAM total/used columns by header name (bytes -> MB)
-# rather than by fragile positional matching. Returns [] if rocm-smi is missing or
-# the output is unparseable.
+# Get AMD VRAM from rocm-smi's CSV, by column header, when DRM sysfs has none;
+# [] when rocm-smi is missing or its output does not parse
 def get_amd_rocm_gpu_info():
     output = command.run_output_command(
         ["rocm-smi", "--showmeminfo", "vram", "--csv"])

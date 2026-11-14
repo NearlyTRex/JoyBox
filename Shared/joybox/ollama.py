@@ -15,6 +15,7 @@ import joybox.programs as programs
 import joybox.prompts as prompts
 import joybox.serialization as serialization
 import joybox.settings as settings
+from joybox import terminal
 from joybox import runtime
 
 ###########################################################
@@ -271,11 +272,9 @@ def parse_context_tokens(context_str):
         return int(value * 1024 * 1024)
     return int(value)
 
-# Parse model entries from Ollama search HTML. When filter_purpose is set (a
-# server-side ?c=<purpose> filter was applied), every entry is assigned that
-# purpose — needed for filters like "cloud" that aren't model-level capability
-# tags (cloud models still advertise tools/thinking/vision). Otherwise the
-# purpose is inferred from capability tags.
+# Parse model entries from Ollama search HTML, each given filter_purpose when the
+# search was filtered by it, since filters like "cloud" are not capability tags,
+# and otherwise the purpose its capability tags imply
 def parse_search_html(html, filter_purpose = None):
     models = []
     blocks = re.split(r'<a href="/library/', html)
@@ -495,10 +494,8 @@ def get_unreadable_packs(pack_dir):
         return []
     return sorted(name for name in names if name.endswith(".pack") and not name.startswith("pack-"))
 
-# Make the repository here readable by aider, repacking when it needs to be
-# aider reads git through GitPython's own reader, and an object in a pack it
-# cannot see makes aider call the repository corrupt and quit. Repacking puts
-# every object into one ordinary pack and changes nothing else.
+# Make the repository here readable by aider, whose GitPython reader calls it corrupt
+# over a pack it cannot see, by repacking into one ordinary pack when needed
 def prepare_git_for_aider():
     git_tool = programs.get_tool_program("Git")
     output, code = command.run_command(
@@ -519,11 +516,9 @@ def prepare_git_for_aider():
         return False
     return True
 
-# Write aider's settings for a model on the Ollama server, returning its arguments
-# Left to itself, aider sends a num_ctx sized to each request, and ollama
-# reloads the model whenever num_ctx changes, which on a slow link to the GPU
-# is a minute or more per message. Fixing it at the window built into the
-# variant keeps the loaded model in place.
+# Write aider's settings for a model on the Ollama server, returning its arguments;
+# num_ctx is fixed at the variant's window, since ollama reloads the model, a minute
+# or more, whenever aider's per-request num_ctx changes
 def build_aider_args(api_base, model_name, context_tokens = None):
     if not context_tokens:
         return []
@@ -655,11 +650,9 @@ DEFAULT_HARNESS = "claude_code"
 def get_harness_keys():
     return sorted(HARNESSES.keys())
 
-# Verify a model's reported context window meets a harness's recommended minimum.
-# The requirement is either a harness key (e.g. "claude_code") or a dict with
-# "name" and "min_tokens". Returns True if the model meets the minimum or the
-# context info is unavailable (so callers don't abort on missing data); False
-# (with a warning) if it falls short.
+# Whether a model's context window meets a requirement, a harness key or a dict of
+# "name" and "min_tokens"; True when the window is unknown, False with a warning
+# when it falls short
 def check_context_window(model_name, requirement):
     req = HARNESSES[requirement] if isinstance(requirement, str) else requirement
     name = req["name"]
@@ -798,11 +791,9 @@ def get_trained_context_tokens(model_name):
     trained = info.get("%s.context_length" % info.get("general.architecture"))
     return trained if isinstance(trained, int) and trained > 0 else None
 
-# Create a model with the context window built in
-# Agents cannot pass num_ctx with each request, and the server's default is
-# far smaller than they need. Ollama quietly caps num_ctx at the trained
-# window while still reporting the larger one, so an agent sizing itself from
-# that report would overrun the model; such a window is refused instead.
+# Create a model with the context window built in, for agents that cannot pass
+# num_ctx; a window past the trained one is refused, since ollama would quietly
+# cap it while reporting the larger size
 def create_context_variant(model_name, context_tokens):
     variant = get_context_variant_name(model_name, context_tokens)
     trained = get_trained_context_tokens(model_name)
@@ -855,10 +846,8 @@ def prepare_coding_variant(model_name, context_tokens = CODING_CONTEXT_TOKENS, a
         return None
     return variant
 
-# Find the best coding model for the server and prepare it
-# Candidates are tried most capable first, so a server given more VRAM moves
-# up the list. Declining to pull one falls back to the next, which may be one
-# prepared earlier; a prepared model is only loaded, so it starts at once.
+# Find the best coding model for the server and prepare it, most capable first; a
+# declined pull falls back to the next, and one prepared earlier is only loaded
 def prepare_coding_model(context_tokens = CODING_CONTEXT_TOKENS, ask = True):
     if not ensure_running():
         return None
@@ -891,10 +880,8 @@ FIT_CLOUD = "cloud"       # Cloud-hosted (no local download; hardware fit N/A)
 # Display/sort order (best fit first)
 FIT_ORDER = [FIT_GPU, FIT_OFFLOAD, FIT_CLOUD, FIT_NONE]
 
-# Get models with fit classification based on VRAM and RAM. By default, models
-# too large for the hardware (FIT_NONE) and cloud-hosted models (FIT_CLOUD) are
-# excluded, since neither is runnable on local hardware; set include_unfit /
-# include_cloud to include them. A PURPOSE_CLOUD query forces include_cloud on.
+# Get models classified by how they fit the VRAM and RAM, leaving out FIT_NONE and
+# FIT_CLOUD ones unless include_unfit or include_cloud, which PURPOSE_CLOUD implies
 def get_recommended_models(purpose = None, vram_mb = None, ram_mb = None, include_unfit = False, include_cloud = False):
     if purpose == PURPOSE_CLOUD:
         include_cloud = True
@@ -971,10 +958,8 @@ def format_installed_model_display(model):
 # knowing which options a given action cares about.
 ###########################################################
 
-# Pull a model, offering a quantization choice when the model has several
-# Check if a tag is a raw completion model
-# Base and text tags continue text rather than follow a conversation, so they
-# cannot drive a chat or call tools.
+# Whether a tag is a base or text model, which continues text rather than follows a
+# conversation, so cannot drive a chat or call tools
 def is_completion_only_tag(tag):
     return re.search(r"(^|-)(base|text)(-|$)", tag.lower()) is not None
 
@@ -1186,7 +1171,7 @@ def action_info(model_name = None, purpose = None, harness = None, show_all = Fa
     info = show_model(model_name)
     if info:
         logger.log_info("Model info for %s:" % model_name)
-        print(info)
+        terminal.write(info + "\n")
         return True
     else:
         logger.log_error("Could not get info for %s (is it installed?)" % model_name)
@@ -1268,10 +1253,8 @@ def action_best(model_name = None, purpose = None, harness = None, show_all = Fa
         return pull_with_quantization(best["name"])
     return True
 
-# Action dispatch
-# Start a coding agent on the best coding model for the server
-# The one command to reach for: it picks, pulls and sizes the model, then runs
-# the agent in the current directory.
+# Start a coding agent in the current directory on the best coding model for the
+# server, picking, pulling and sizing it first
 def action_code(model_name = None, purpose = None, harness = None, show_all = False):
     harness = harness or DEFAULT_HARNESS
     if harness not in HARNESSES:
@@ -1320,6 +1303,7 @@ def action_update(model_name = None, purpose = None, harness = None, show_all = 
     logger.log_error("ollama on %s did not come back after updating" % host)
     return False
 
+# Action dispatch
 ACTIONS = {
     "list": action_list,
     "available": action_available,

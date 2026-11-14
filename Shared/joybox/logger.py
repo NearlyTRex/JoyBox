@@ -6,7 +6,7 @@ import types
 from datetime import datetime
 
 # Local imports
-from joybox import runtime
+from joybox import runtime, terminal
 
 # ANSI color codes for terminal output
 class Colors:
@@ -222,13 +222,13 @@ def log_header(message, width = 60):
     log_info("=" * width)
 
 def log_percent_complete(percent_complete):
-    print(">>> Percent complete: %s%% " % percent_complete, end='\r', flush=True)
+    terminal.write(">>> Percent complete: %s%% \r" % percent_complete)
 
 def log_progress_dot():
-    print(".", end="", flush=True)
+    terminal.write(".")
 
 def log_progress_newline():
-    print(flush=True)
+    terminal.write("\n")
 
 ###########################################################
 # Raw command-output streaming

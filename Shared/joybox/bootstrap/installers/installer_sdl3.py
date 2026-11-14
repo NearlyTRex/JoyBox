@@ -4,12 +4,9 @@ from . import installer
 from joybox import runoptions
 from joybox import logger
 
-# SDL3
-# Built from source because SDL3 (and SDL3_ttf) are not yet available in the
-# official Ubuntu/Mint apt repositories. Required by emulators that have ported
-# off SDL2, e.g. PPSSPP (master), which calls find_package(SDL3 REQUIRED) and
-# find_package(SDL3_ttf REQUIRED). Installs to /usr/local so CMake's
-# find_package picks it up automatically.
+# SDL3 and SDL3_ttf, built from source since Ubuntu/Mint do not package them yet,
+# for emulators ported off SDL2 such as PPSSPP master; installed to /usr/local so
+# CMake's find_package finds them
 class Sdl3(installer.Installer):
     def __init__(
         self,

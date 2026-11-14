@@ -147,7 +147,8 @@ library_targets = ["Shared", "Scripts"]
 # A comment above every public definition, saying more than its name, in at most three lines
 doc_style = "comment"
 doc_max_lines = 3
-command_paths = ["Shared/joybox/cli", "Scripts"]
+# The commands, and the one exit and one stdout helper library code goes through
+command_paths = ["Shared/joybox/cli", "Scripts", "Shared/joybox/runtime.py", "Shared/joybox/terminal.py"]
 standards = [
     "no-print", "no-exit", "mutable-defaults", "bare-except", "import-time-io",
     "no-narration", "commented-out-code", "long-functions", "long-modules",
@@ -183,15 +184,10 @@ wrapper_modules = [
 
 [tool.testrex.baseline]
 # Findings the library had when each rule was adopted; lowered as they are fixed, never raised
-documented = 803
-doc-length = 41
+documented = 801
 doc-paraphrase = 1692
 wrappers = 82
-no-print = 8
-no-exit = 4
 mutable-defaults = 120
-no-narration = 1
-commented-out-code = 2
 long-functions = 662
 long-modules = 13
 # pylint over Shared and Scripts with pytest-testrex's library rcfile

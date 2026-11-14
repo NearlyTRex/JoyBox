@@ -21,11 +21,9 @@ import joybox.text as text
 # Error handlers
 ###########################################################
 
-# Report a per-file I/O failure during a bulk copy/move.
-# Removes any partial destination (so a half-written file doesn't masquerade as a success)
-# and appends the source path to an optional error log. Used by the bulk copy/move helpers
-# when skip_on_error is enabled so transient I/O failures (e.g. a failing USB disk) don't
-# abort the whole run.
+# Report a file a skip_on_error bulk copy or move could not handle, so a failing disk
+# does not abort the run: remove its partial destination, so it does not pass for a
+# success, and add the source to the error log when there is one
 def report_fileio_error(src_path, dest_path = None, error_log_path = None, verbose = False, pretend_run = False):
     logger.log_warning("Skipping file after I/O error: '%s'" % src_path)
     if not pretend_run and dest_path and paths.does_path_exist(dest_path):

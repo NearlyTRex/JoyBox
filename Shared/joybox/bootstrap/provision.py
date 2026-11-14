@@ -24,6 +24,7 @@ import joybox.command as command
 import joybox.hardening as hardening
 import joybox.hostsfile as hostsfile
 import joybox.logger as logger
+from joybox import terminal
 import joybox.virtualmachine as virtualmachine
 from joybox import runoptions
 from joybox.connection import ConnectionSSH
@@ -422,7 +423,7 @@ class Provisioner:
                 connection = connection,
                 domain = self.server.get_domain_name(),
                 public_ports = runner.get_public_ports(self.server.get_index()))
-        print(hardening.format_results(results))
+        terminal.write(hardening.format_results(results) + "\n")
         self.verify_failures = hardening.count_failures(results)
         if self.verify_failures:
             logger.log_error("%d check(s) failed" % self.verify_failures)

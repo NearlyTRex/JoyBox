@@ -269,10 +269,8 @@ def get_iso_boot_report(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
-# Find where the efi boot image sits inside an image
-# It is a hidden el torito entry rather than a file in the tree, so there is
-# nothing to copy out by path. The catalogue gives its start and its length,
-# and the entry is read out of the image itself.
+# Find where the efi boot image sits inside an image: a hidden el torito entry,
+# not a file in the tree, so its start and length come from the catalogue
 def get_efi_boot_image_extent(report):
     if not report:
         return None
@@ -382,11 +380,9 @@ def extract_iso_boot_images(
         return False
     return True
 
-# Build the command that packs a tree as an iso that boots
-# An image that only carries an el torito catalogue boots from a disc. To
-# boot from a usb stick it also needs a partition table describing the same
-# data, so the efi image is appended as a real partition and the boot code is
-# put back in the system area.
+# Build the command that packs a tree as an iso that boots from a disc and, with
+# the efi image appended as a real partition and the boot code in the system
+# area, from a usb stick
 def get_bootable_iso_command(
     iso_tool,
     iso_file,

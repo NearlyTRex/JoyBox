@@ -118,12 +118,9 @@ def clear_resolved_secrets():
     _resolved.clear()
     _no_account["seen"] = False
 
-# Resolve one reference
-# Run with the ordinary subprocess rather than the command module, which logs
-# what it runs and hands output through several layers; a secret should touch
-# as little as possible on its way to the caller. The tool gets no input: with
-# none it fails and says how to sign in, where with a terminal it offers to add
-# an account and then prompts into output that is being captured.
+# Resolve one reference through a bare subprocess, not the logging command module, so
+# the secret passes through as little as possible; with no stdin the tool says how to
+# sign in instead of prompting into captured output
 def resolve_secret_reference(reference, verbose = False):
     reference = reference.strip()
     if reference in _resolved:

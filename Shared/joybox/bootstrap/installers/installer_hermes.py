@@ -8,13 +8,9 @@ from joybox import runoptions
 from joybox import logger
 from joybox import settings
 
-# Hermes Agent
-#
-# Nous Research's agent CLI. Upstream refuses to build wheels, because it finds
-# its skills, locales and TUI through the source tree, and its install.sh edits
-# shell rc files and apt-installs packages. So it runs from a checkout of a
-# pinned release, installed editable into a venv of its own, with the command
-# linked into ~/.local/bin. Its data in ~/.hermes is not touched.
+# Nous Research's Hermes agent CLI, run editable from a pinned checkout in its own
+# venv, since it finds its files through the source tree and its install.sh edits
+# rc files; the command is linked into ~/.local/bin and ~/.hermes is left alone
 class HermesAgent(installer.Installer):
     def __init__(
         self,

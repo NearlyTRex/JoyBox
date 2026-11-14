@@ -42,10 +42,9 @@ def _load_private_key(filepath = None, key_str = None):
             attempts.append("%s: %s" % (key_class.__name__, e))
     raise ValueError("Could not load SSH private key (%s)" % "; ".join(attempts))
 
-# Trust a server's key the first time it is seen and remember it, as ssh's
-# StrictHostKeyChecking=accept-new does. A key that later differs from the
-# remembered one is refused by paramiko itself, since the known keys are loaded
-# before connecting.
+# Trust and remember a server's key the first time, as StrictHostKeyChecking=
+# accept-new does; paramiko refuses a later different key, since the known
+# keys are loaded before connecting
 class RememberNewHostKeyPolicy:
     def __init__(self, known_hosts_path):
         self.known_hosts_path = known_hosts_path

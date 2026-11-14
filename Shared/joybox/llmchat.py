@@ -26,12 +26,9 @@ BACKEND_CLAUDE = "claude"
 class RequestFailed(Exception):
     pass
 
-# Ollama, via its native chat route
-#
-# The OpenAI-compatible route it also serves cannot set the context window,
-# and the runtime default sits far below what a model supports. It then
-# truncates without saying so, which reads as the model ignoring your files.
-# The native route accepts num_ctx, so that is what is used here.
+# Ollama, through its native chat route, which takes num_ctx; the OpenAI-compatible
+# one keeps the small default window and silently truncates, so the model seems to
+# ignore your files
 class OllamaBackend:
     kind = BACKEND_OLLAMA
 
@@ -148,11 +145,8 @@ class OpenAIBackend:
                     on_text(piece)
         return "".join(parts)
 
-# Claude, through the existing joybox.claude wrapper
-#
-# That wrapper is one-shot rather than streaming, so the whole reply arrives
-# at once. The conversation is flattened into a single prompt, since the
-# wrapper takes a prompt and a system prompt rather than a message list.
+# Claude, through the joybox.claude wrapper, which is one-shot and takes a prompt and
+# a system prompt, so the reply arrives whole and the conversation is flattened
 class ClaudeBackend:
     kind = BACKEND_CLAUDE
 

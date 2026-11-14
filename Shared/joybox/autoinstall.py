@@ -129,10 +129,8 @@ def get_checksum_listing_url(version):
 def get_checksum_signature_url(version):
     return "%s%s" % (get_release_listing_url(version), "SHA256SUMS.gpg")
 
-# Get the keyring the signature is checked against
-# The checksums are only worth as much as the connection that fetched them
-# unless the signature over them is checked, and that needs a key obtained
-# some other way. Distributions ship one.
+# Get the keyring the checksums' signature is checked against; without it the
+# checksums are only as trustworthy as the connection that fetched them
 def get_signing_keyring():
     return settings.get_path_value(
         "UserData.Autoinstall", "autoinstall_signing_keyring",
@@ -453,13 +451,9 @@ def get_install_profile_problems(profile):
 # Cloud-init seed
 ###########################################################
 
-# Build the storage layout
-# The whole largest disk, replaced, with an ext4 root and no LVM. The boot
-# partition depends on how the stick was booted, which is only known on the
-# target: an efi partition under UEFI, a bios_grub one under legacy BIOS.
-# A fixed partition list can only be right for one of them, and grub fails at
-# the very end of the install on the other, so the installer's own layout
-# picks it.
+# Build the storage layout: the whole largest disk, ext4 root, no LVM. The
+# installer's own layout picks the boot partition, efi under UEFI or bios_grub
+# under BIOS, since only the target knows; a fixed list breaks grub on the other
 def build_storage_config():
     return {
         "layout": {
@@ -468,11 +462,9 @@ def build_storage_config():
         }
     }
 
-# Build the network configuration
-# The installer otherwise writes the interface names it saw, and those follow
-# the pci slot, so moving or adding a card renames the port and the machine
-# comes up with no network. Optional, so a port with no cable does not hold
-# up the boot.
+# Build the network configuration, matching ports by en*/eth* rather than the
+# pci-slot names the installer saw, which change when a card moves; optional, so
+# a port with no cable does not hold up the boot
 def build_network_config():
     return {
         "version": 2,
@@ -487,10 +479,9 @@ def build_network_config():
 # writes, so these win.
 sshd_config_path = "/etc/ssh/sshd_config.d/10-joybox.conf"
 
-# Build the sshd settings every installed machine gets
-# A key is the only way in, and only for the account made here. A connection
-# may forward a local port to the machine, which is how a service bound to
-# localhost there is reached through an SSH tunnel, but nothing else.
+# Build the sshd settings every installed machine gets: key-only login for the
+# account made here, and local port forwarding, so a service bound to localhost
+# is reachable through a tunnel, but no other forwarding
 def build_sshd_config(username):
     return (
         "PasswordAuthentication no\n"
@@ -673,12 +664,9 @@ def write_seed_files(
 # Boot configuration
 ###########################################################
 
-# Get the kernel arguments that point the installer at the seed
-# The seed argument carries a semicolon, which grub reads as the end of one
-# command and the start of the next. Left as it is, grub loads the kernel
-# with half the argument and never sees the rest, so the machine boots the
-# installer and waits for someone to answer it. Isolinux has no such rule and
-# takes the argument as written.
+# Get the kernel arguments that point the installer at the seed. Grub reads the
+# seed's semicolon as a command break and boots an interactive installer, so it
+# is escaped for grub; isolinux takes it as written
 def get_kernel_arguments(profile = None, escape_semicolons = False):
     seed_argument = "ds=nocloud;s=%s" % seed_source
     if escape_semicolons:

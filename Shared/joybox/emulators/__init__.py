@@ -30,7 +30,6 @@ from .phoenix import Phoenix
 from .ppsspp import PPSSPP
 from .retroarch import RetroArch
 from .rpcs3 import RPCS3
-# from .ryujinx import Ryujinx
 from .sameboy import SameBoy
 from .sheepshaver import SheepShaver
 from .snes9x import Snes9x
@@ -79,7 +78,6 @@ def get_emulator_map():
     add_instance(PPSSPP)
     add_instance(RetroArch)
     add_instance(RPCS3)
-    # add_instance(Ryujinx)
     add_instance(SameBoy)
     add_instance(SheepShaver)
     add_instance(Snes9x)

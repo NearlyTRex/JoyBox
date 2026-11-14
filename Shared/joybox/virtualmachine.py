@@ -115,12 +115,9 @@ def get_seed_image(vm_name = DEFAULT_NAME, image_dir = IMAGE_DIR):
 # Cloud-init
 ###########################################################
 
-# Build the cloud-init user data for a new guest.
-# The guest starts the way a freshly ordered server does: root reachable with
-# the key and no account of your own, so provisioning creates the account and
-# its sudo grants exactly as it would on the real host. The root console
-# password is the way back in once the sshd hardening has closed root login;
-# the seed carries only its hash.
+# Build the cloud-init user data for a new guest, starting as a fresh server does,
+# root by key and no account, so provisioning runs as on the real host; root's console
+# password, as a hash, is the way in once hardening closes root login
 def build_user_data(vm_name, ssh_public_key, console_password_hash):
     return "\n".join([
         "#cloud-config",
@@ -725,10 +722,8 @@ def get_boot_setting(field, fallback, given = None):
 def get_create_boot_disk_command(disk_image, disk_size = DEFAULT_BOOT_DISK_SIZE):
     return ["qemu-img", "create", "-f", "qcow2", disk_image, "%dG" % disk_size]
 
-# Build the command that boots a machine
-# An image in the drive means an install, so the machine is pointed at the
-# drive and stopped when the installer reboots. Without one the disk is
-# booted, which is how the installed system is looked at afterwards.
+# Build the command that boots a machine: from the image, stopping when the installer
+# reboots, when there is one to install, else from the disk
 def get_boot_command(
     disk_image,
     firmware_code,

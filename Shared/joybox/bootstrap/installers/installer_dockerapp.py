@@ -77,12 +77,9 @@ server {{
 }}
 """
 
-# Docker app installer
-#
-# Shared skeleton for the Docker Compose apps. A subclass sets its app name,
-# its compose/env/nginx templates and the values they format with; everything
-# else - directories, temp file staging, nginx wiring, compose lifecycle - is
-# handled here.
+# Shared skeleton for the Docker Compose apps: a subclass sets its name, its
+# compose/env/nginx templates and their values; this handles directories,
+# staging, nginx wiring and the compose lifecycle
 class DockerAppInstaller(installer.Installer):
     def __init__(
         self,

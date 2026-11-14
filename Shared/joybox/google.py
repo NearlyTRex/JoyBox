@@ -22,12 +22,9 @@ import joybox.settings as settings
 # clamped to this ceiling regardless of config.
 MAX_CONCURRENT_FRAGMENTS = 8
 
-# Locate a JavaScript runtime for yt-dlp's YouTube nsig "n challenge" solver.
-# Recent yt-dlp needs an external JS runtime (Deno preferred) to compute the nsig
-# value; without one YouTube returns only storyboard images and downloads fail with
-# "Requested format is not available". Deno is installed by the JoyBox Bootstrap
-# layer at ~/.deno/bin, which is NOT on the download subprocess PATH, so we locate
-# it explicitly and hand yt-dlp "--js-runtimes deno:<path>".
+# yt-dlp's "--js-runtimes deno:<path>", without which YouTube's nsig challenge fails
+# with "Requested format is not available"; Bootstrap installs Deno in ~/.deno/bin,
+# which is not on the download's PATH
 def get_javascript_runtime_args():
     candidates = [paths.expand_path("~/.deno/bin/deno"), shutil.which("deno")]
     for deno_path in candidates:
