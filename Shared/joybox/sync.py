@@ -1613,10 +1613,13 @@ def list_files_with_hashes(
     remote_type,
     remote_path,
     hash_type = None,
-    excludes = [],
+    excludes = None,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
+
+    # Get excludes
+    excludes = [] if excludes is None else excludes
 
     # Use default hash type
     if hash_type is None:
@@ -1854,7 +1857,7 @@ def build_hash_sidecar_data(local_path, file_list = None, parallel_files = 4, pr
 # Build the units a sidecar is hashed in: every directory holding files, with its direct files
 def build_hash_sidecar_directory_list(
     local_path,
-    excludes = [],
+    excludes = (),
     large_file_count = None,
     large_total_size = None):
 
@@ -1929,13 +1932,16 @@ def upload_hash_sidecar_files(
     remote_path,
     local_path,
     local_root,
-    excludes = [],
+    excludes = None,
     skip_existing = False,
     parallel_dirs = 4,
     parallel_files = 4,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
+
+    # Get excludes
+    excludes = [] if excludes is None else excludes
 
     # Create temp directory for database work
     tmp_dir_success, tmp_dir_result = fileops.create_temporary_directory(verbose = verbose)

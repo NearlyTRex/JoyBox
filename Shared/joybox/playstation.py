@@ -581,9 +581,8 @@ def read_param_sfo(sfo_file):
             else:
                 values[key] = raw.split(b"\x00", 1)[0].decode("utf-8")
         return values
-    except Exception:
-        pass
-    return None
+    except (OSError, struct.error, UnicodeDecodeError):
+        return None
 
 # Find psv content root (the dir holding sce_sys/param.sfo)
 def find_psv_content_root(search_dir, title_id):
@@ -616,9 +615,8 @@ def get_psn_workbin_bytes_from_zrif_string(zrif_str):
         workbin_bytes = zrif_decompressor.decompress(zrif_str_bytes)
         workbin_bytes += zrif_decompressor.flush()
         return workbin_bytes
-    except Exception:
-        pass
-    return None
+    except (ValueError, zlib.error):
+        return None
 
 # Get psn package content id
 def get_psn_package_content_id(pkg_file):
@@ -626,9 +624,8 @@ def get_psn_package_content_id(pkg_file):
         with open(pkg_file, "rb") as f:
             f.seek(0x30)
             return f.read(0x24).decode("utf-8")
-    except Exception:
-        pass
-    return None
+    except (OSError, UnicodeDecodeError):
+        return None
 
 # Get psn work.bin content id
 def get_psn_workbin_content_id(workbin_file):
@@ -636,9 +633,8 @@ def get_psn_workbin_content_id(workbin_file):
         with open(workbin_file, "rb") as f:
             f.seek(0x10)
             return f.read(0x24).decode("utf-8")
-    except Exception:
-        pass
-    return None
+    except (OSError, UnicodeDecodeError):
+        return None
 
 # Get psn fake.rif content id
 def get_psn_fakerif_content_id(fakerif_file):
@@ -646,9 +642,8 @@ def get_psn_fakerif_content_id(fakerif_file):
         with open(fakerif_file, "rb") as f:
             f.seek(0x50)
             return f.read(0x24).decode("utf-8")
-    except Exception:
-        pass
-    return None
+    except (OSError, UnicodeDecodeError):
+        return None
 
 # Get psn package info
 def get_psn_package_info(

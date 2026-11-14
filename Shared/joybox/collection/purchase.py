@@ -226,7 +226,7 @@ def update_game_store_purchases(
     game_category,
     game_subcategory,
     purchases = None,
-    keys = [],
+    keys = None,
     force = False,
     verbose = False,
     pretend_run = False,
@@ -364,7 +364,7 @@ def build_game_store_purchases(
     game_supercategory,
     game_category,
     game_subcategory,
-    keys = [],
+    keys = None,
     force = False,
     skipped_stores = None,
     verbose = False,
@@ -403,7 +403,7 @@ def build_game_store_purchases(
 
 # Build all game store purchases
 def build_all_game_store_purchases(
-    keys = [],
+    keys = None,
     categories = None,
     subcategories = None,
     force = False,

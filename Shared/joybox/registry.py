@@ -12,8 +12,8 @@ import joybox.command as command
 # Read registry file
 def read_registry_file(
     registry_file,
-    ignore_keys = [],
-    keep_keys = [],
+    ignore_keys = (),
+    keep_keys = (),
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -205,12 +205,16 @@ def import_registry_file(
 def backup_user_registry(
     registry_file,
     options,
-    export_keys = [],
-    ignore_keys = [],
-    keep_keys = [],
+    export_keys = (),
+    ignore_keys = None,
+    keep_keys = None,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
+
+    # Get keys
+    ignore_keys = [] if ignore_keys is None else ignore_keys
+    keep_keys = [] if keep_keys is None else keep_keys
 
     # Check params
     validation.assert_is_valid_path(registry_file, "registry_file")

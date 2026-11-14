@@ -145,6 +145,16 @@ def test_a_vanished_process_list_matches_nothing(psutil):
     assert process.find_active_named_processes(["dolphin"]) == []
 
 
+def test_a_process_that_exits_during_the_scan_does_not_hide_the_rest(psutil):
+    class Exited(FakeProcess):
+        def name(self):
+            raise psutil["module"].NoSuchProcess()
+
+    psutil["processes"] = [Exited("dolphin", pid = 1), FakeProcess("dolphin", pid = 2)]
+
+    assert [proc.pid for proc in process.find_active_named_processes(["dolphin"])] == [2]
+
+
 ###########################################################
 # Killing
 ###########################################################
@@ -195,6 +205,20 @@ def test_a_denied_kill_is_logged_not_raised(psutil, monkeypatch):
     process.kill_active_named_processes(["dolphin"])
 
     assert errors
+
+
+def test_a_denied_kill_does_not_spare_the_other_matches(psutil, monkeypatch):
+    monkeypatch.setattr(process.logger, "log_error", lambda message: None)
+
+    class Stubborn(FakeProcess):
+        def kill(self):
+            raise psutil["module"].AccessDenied()
+
+    other = FakeProcess("dolphin", pid = 2)
+    psutil["processes"] = [Stubborn("dolphin", pid = 1), other]
+    process.kill_active_named_processes(["dolphin"])
+
+    assert other.killed is True
 
 
 ###########################################################
@@ -356,6 +380,24 @@ def test_a_vanished_process_ends_the_wait(psutil, no_sleep, monkeypatch):
 
     assert no_sleep == []
     assert warnings == []
+
+
+def test_a_vanished_process_does_not_end_the_wait_for_the_others(psutil, no_sleep):
+    class Vanishing(FakeProcess):
+        def is_running(self):
+            raise psutil["module"].NoSuchProcess()
+
+    class Finishing(FakeProcess):
+        checks = 0
+
+        def is_running(self):
+            Finishing.checks += 1
+            return Finishing.checks < 3
+
+    psutil["processes"] = [Vanishing("dolphin", pid = 1), Finishing("dolphin", pid = 2)]
+    process.wait_for_named_processes(["dolphin"])
+
+    assert Finishing.checks == 3
 
 
 def test_a_denied_wait_is_reported_not_raised(psutil, monkeypatch):

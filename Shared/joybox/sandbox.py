@@ -91,7 +91,8 @@ def get_sandboxie_blocking_processes():
     ]
 
 # Get blocking processes
-def get_blocking_processes(options, initial_processes = []):
+def get_blocking_processes(options, initial_processes = None):
+    initial_processes = [] if initial_processes is None else initial_processes
     blocking_processes = copy.deepcopy(initial_processes)
     if options.is_wine_prefix():
         blocking_processes += get_wine_blocking_processes()
@@ -188,8 +189,8 @@ def get_public_profile_path(options):
 # Install wine dlls
 def install_wine_dlls(
     options,
-    dlls_32 = [],
-    dlls_64 = [],
+    dlls_32 = (),
+    dlls_64 = (),
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -223,8 +224,8 @@ def install_wine_dlls(
 # Install sandboxie dlls
 def install_sandboxie_dlls(
     options,
-    dlls_32 = [],
-    dlls_64 = [],
+    dlls_32 = (),
+    dlls_64 = (),
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -233,11 +234,13 @@ def install_sandboxie_dlls(
 # Install dlls
 def install_dlls(
     options,
-    dlls_32 = [],
-    dlls_64 = [],
+    dlls_32 = None,
+    dlls_64 = None,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
+    dlls_32 = [] if dlls_32 is None else dlls_32
+    dlls_64 = [] if dlls_64 is None else dlls_64
     if options.is_wine_prefix():
         install_wine_dlls(
             options = options,
@@ -292,10 +295,13 @@ def restore_registry(
 # Backup registry
 def backup_registry(
     options,
-    registry_keys = [],
+    registry_keys = None,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
+
+    # Get registry keys
+    registry_keys = [] if registry_keys is None else registry_keys
 
     # Imports
     import joybox.registry as registry
@@ -534,7 +540,7 @@ def build_token_map(
     setup_base_dir = None,
     hdd_base_dir = None,
     disc_base_dir = None,
-    disc_files = [],
+    disc_files = (),
     use_drive_letters = False):
 
     # Create token map
@@ -584,7 +590,8 @@ def build_token_map(
 # Resolve path
 def resolve_path(
     path,
-    token_map = {}):
+    token_map = None):
+    token_map = {} if token_map is None else token_map
     for token, replacement in token_map.items():
         if token in path:
             path = path.replace(token, replacement)
@@ -1097,7 +1104,7 @@ def create_basic_prefix(
 # Create linked prefix
 def create_linked_prefix(
     options,
-    other_links = [],
+    other_links = (),
     clean_existing = True,
     verbose = False,
     pretend_run = False,

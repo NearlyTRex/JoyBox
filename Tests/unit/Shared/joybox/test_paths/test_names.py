@@ -247,6 +247,7 @@ def test_runs_of_spaces_collapse():
     ("/games/psx/Disc 1.cue", [".cue"], True),
     ("Disc 1.cue", [], False),
     ("Disc 1.cue", None, False),
+    ("Disc 1.cue", ".cue", False),
     ("cue", [".cue"], False),
     ("rescue", [".cue"], False),
     ("archive.tar.gz", [".tar.gz"], True),

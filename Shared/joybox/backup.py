@@ -46,7 +46,7 @@ def resolve_path(
 def copy_files_normally(
     input_base_path,
     output_base_path,
-    exclude_paths = [],
+    exclude_paths = None,
     show_progress = False,
     skip_existing = False,
     skip_identical = False,
@@ -99,7 +99,7 @@ def copy_and_encrypt_files(
     input_base_path,
     output_base_path,
     passphrase,
-    exclude_paths = [],
+    exclude_paths = None,
     delete_original = False,
     skip_existing = False,
     skip_identical = False,
@@ -190,7 +190,7 @@ def copy_and_decrypt_files(
     input_base_path,
     output_base_path,
     passphrase,
-    exclude_paths = [],
+    exclude_paths = None,
     delete_original = False,
     skip_existing = False,
     skip_identical = False,
@@ -315,7 +315,7 @@ def copy_files(
     output_base_path,
     cryption_type = None,
     locker_type = None,
-    exclude_paths = [],
+    exclude_paths = None,
     delete_original = False,
     show_progress = False,
     skip_existing = False,
@@ -383,7 +383,7 @@ def archive_folder(
     output_path,
     output_name,
     archive_type = None,
-    exclude_paths = [],
+    exclude_paths = None,
     clean_output = False,
     show_progress = False,
     skip_existing = False,
@@ -391,6 +391,9 @@ def archive_folder(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
+
+    # Get exclude paths
+    exclude_paths = [] if exclude_paths is None else exclude_paths
 
     # Select archive type
     if not archive_type:
@@ -471,7 +474,7 @@ def archive_sub_folders(
     input_base_path,
     output_base_path,
     archive_type = None,
-    exclude_paths = [],
+    exclude_paths = None,
     clean_output = False,
     show_progress = False,
     skip_existing = False,

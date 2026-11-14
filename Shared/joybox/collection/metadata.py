@@ -100,7 +100,7 @@ def update_game_metadata_entry(
     game_category,
     game_subcategory,
     game_name,
-    keys = [],
+    keys = None,
     force = False,
     stats = None,
     verbose = False,
@@ -204,7 +204,7 @@ def build_game_metadata_entry(
     game_category,
     game_subcategory,
     game_name,
-    keys = [],
+    keys = None,
     force = False,
     stats = None,
     verbose = False,
@@ -242,7 +242,7 @@ def build_game_metadata_entry(
 
 # Build all game metadata entries
 def build_all_game_metadata_entries(
-    keys = [],
+    keys = None,
     categories = None,
     subcategories = None,
     locker_type = None,

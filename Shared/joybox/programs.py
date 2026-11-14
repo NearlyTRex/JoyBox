@@ -13,11 +13,10 @@ from joybox import platform_info
 def get_config_value(program_config, program_name, program_key, program_platform = None):
     if not program_platform:
         program_platform = platform_info.get_current_platform()
-    program_value = None
     try:
         program_value = program_config[program_name][program_key]
-    except Exception:
-        pass
+    except (KeyError, TypeError):
+        program_value = None
     if isinstance(program_value, dict):
         if program_platform in program_value.keys():
             return program_value[program_platform]

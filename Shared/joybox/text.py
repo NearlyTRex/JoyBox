@@ -1,4 +1,5 @@
 # Imports
+import importlib.util
 import re
 import textwrap
 
@@ -43,11 +44,10 @@ def wrap_text_to_lines(text, width = 80, spacer = "."):
 # Clean rich text
 def clean_rich_text(text):
     new_text = text
-    try:
+    # unidecode is optional; without it non-ascii is dropped below
+    if importlib.util.find_spec("unidecode"):
         import unidecode
         new_text = unidecode.unidecode(new_text)
-    except Exception:
-        pass
     for old, new in config.rich_text_replacements.items():
         new_text = new_text.replace(old, new)
     new_text = new_text.encode("ascii", "ignore").decode()

@@ -202,7 +202,7 @@ def clean_json_file(src, sort_keys = False, remove_empty_values = False, verbose
         return False
 
 # Search json files
-def search_json_files(src, search_values = [], search_keys = [], verbose = False, pretend_run = False, exit_on_failure = False):
+def search_json_files(src, search_values = (), search_keys = None, verbose = False, pretend_run = False, exit_on_failure = False):
     found_files = []
     for json_file in paths.build_file_list_by_extensions(src, extensions = [".json"]):
         json_data = read_json_file(

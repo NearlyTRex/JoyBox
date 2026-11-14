@@ -33,7 +33,7 @@ def read_playlist(
 # Write playlist file
 def write_playlist(
     output_file,
-    playlist_contents = [],
+    playlist_contents = (),
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -55,7 +55,7 @@ def write_playlist(
 def generate_playlist(
     source_dir,
     output_file,
-    extensions = [],
+    extensions = None,
     recursive = False,
     allow_empty_lists = False,
     allow_single_lists = False,
@@ -63,6 +63,9 @@ def generate_playlist(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
+
+    # Get extensions
+    extensions = [] if extensions is None else extensions
 
     # Generate playlist contents
     playlist_contents = []
@@ -100,7 +103,7 @@ def generate_playlist(
 def generate_tree_playlist(
     source_dir,
     output_file,
-    extensions = [],
+    extensions = None,
     allow_empty_lists = False,
     allow_single_lists = False,
     verbose = False,
@@ -120,7 +123,7 @@ def generate_tree_playlist(
 # Generate local playlists
 def generate_local_playlists(
     source_dir,
-    extensions = [],
+    extensions = None,
     allow_empty_lists = False,
     allow_single_lists = False,
     verbose = False,

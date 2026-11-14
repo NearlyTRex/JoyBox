@@ -173,10 +173,11 @@ def find_metadata_asset(
     if value.startswith("http"):
         asset_link = value
     elif value.isdigit():
-        try:
-            asset_link = search_results[int(value)].get_url()
-        except Exception:
-            pass
+        index = int(value)
+        if index < len(search_results):
+            asset_link = search_results[index].get_url()
+        else:
+            logger.log_error("There is no asset %d; the last is %d" % (index, len(search_results) - 1))
 
     # Return metadata
     return asset_link

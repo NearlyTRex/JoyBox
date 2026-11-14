@@ -156,13 +156,11 @@ class JsonChunker(Chunker):
 
     def marks(self, lines):
         text = "\n".join(lines)
-        summary = {}
         try:
             data = json.loads(text)
-            if isinstance(data, dict):
-                summary = {key: self.describe(value) for key, value in data.items()}
         except ValueError:
-            pass
+            data = None
+        summary = {key: self.describe(value) for key, value in data.items()} if isinstance(data, dict) else {}
 
         # The first top-level key sets the indent; deeper keys are nested
         found = []

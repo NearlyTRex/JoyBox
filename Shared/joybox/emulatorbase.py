@@ -86,7 +86,7 @@ class EmulatorBase:
         return saves_dir
 
     # Install add-ons
-    def install_addons(self, dlc_dirs = [], update_dirs = [], verbose = False, pretend_run = False, exit_on_failure = False):
+    def install_addons(self, dlc_dirs = None, update_dirs = None, verbose = False, pretend_run = False, exit_on_failure = False):
         return True
 
     # Setup

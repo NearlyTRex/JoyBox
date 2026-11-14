@@ -100,7 +100,7 @@ def read_ram(meminfo_file = "/proc/meminfo"):
                 if fields and fields[0].isdigit():
                     values[key.strip()] = int(fields[0]) // 1024
     except OSError:
-        pass
+        return 0, 0
     return values.get("MemTotal", 0), values.get("MemAvailable", 0)
 
 ###########################################################

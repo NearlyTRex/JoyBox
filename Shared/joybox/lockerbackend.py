@@ -45,7 +45,7 @@ class LockerBackend(ABC):
     @abstractmethod
     def list_files_with_hashes(
         self,
-        excludes = [],
+        excludes = None,
         verbose = False,
         pretend_run = False,
         exit_on_failure = False):
@@ -150,7 +150,7 @@ class LockerBackend(ABC):
     def update_sidecar_from_local(
         self,
         local_root_path,
-        excludes = [],
+        excludes = None,
         clear_first = False,
         verbose = False,
         pretend_run = False,
@@ -171,11 +171,14 @@ class LocalBackend(LockerBackend):
 
     def list_files_with_hashes(
         self,
-        excludes = [],
+        excludes = None,
         verbose = False,
         pretend_run = False,
         exit_on_failure = False,
         parallel_files = 8):
+
+        # Get excludes
+        excludes = [] if excludes is None else excludes
 
         # Check root path
         hash_map = {}
@@ -397,7 +400,7 @@ class RemoteBackend(LockerBackend):
 
     def list_files_with_hashes(
         self,
-        excludes = [],
+        excludes = None,
         verbose = False,
         pretend_run = False,
         exit_on_failure = False):
@@ -648,7 +651,7 @@ class RemoteBackend(LockerBackend):
     def update_sidecar_from_local(
         self,
         local_root_path,
-        excludes = [],
+        excludes = None,
         clear_first = False,
         verbose = False,
         pretend_run = False,

@@ -474,8 +474,8 @@ def get_github_repository(
 def get_github_repositories(
     github_user,
     github_token = None,
-    include_repos = [],
-    exclude_repos = [],
+    include_repos = (),
+    exclude_repos = (),
     exclude_forks = False,
     exclude_private = False,
     verbose = False,

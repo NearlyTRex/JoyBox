@@ -141,7 +141,9 @@ class Dolphin(emulatorbase.EmulatorBase):
         }
 
     # Install add-ons
-    def install_addons(self, dlc_dirs = [], update_dirs = [], verbose = False, pretend_run = False, exit_on_failure = False):
+    def install_addons(self, dlc_dirs = None, update_dirs = None, verbose = False, pretend_run = False, exit_on_failure = False):
+        dlc_dirs = [] if dlc_dirs is None else dlc_dirs
+        update_dirs = [] if update_dirs is None else update_dirs
         for package_dirset in [dlc_dirs, update_dirs]:
             for package_dir in package_dirset:
                 for wad_file in paths.build_file_list_by_extensions(package_dir, extensions = [".wad"]):

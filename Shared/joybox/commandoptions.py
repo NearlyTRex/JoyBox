@@ -361,11 +361,14 @@ class CommandOptions:
         prefix_dir = None,
         general_prefix_dir = None,
         linked_prefix = False,
-        other_links = [],
+        other_links = None,
         clean_existing = True,
         verbose = False,
         pretend_run = False,
         exit_on_failure = False):
+
+        # Get other links
+        other_links = [] if other_links is None else other_links
 
         # Imports
         import joybox.sandbox as sandbox

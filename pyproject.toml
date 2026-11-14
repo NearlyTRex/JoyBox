@@ -152,6 +152,7 @@ command_paths = ["Shared/joybox/cli", "Scripts", "Shared/joybox/runtime.py", "Sh
 standards = [
     "no-print", "no-exit", "mutable-defaults", "bare-except", "import-time-io",
     "no-narration", "commented-out-code", "long-functions", "long-modules",
+    "silent-except", "blanket-suppression",
 ]
 # The helpers carry verbose logging, pretend_run and exit_on_failure, which raw calls skip
 wrapper_modules = [
@@ -187,11 +188,10 @@ wrapper_modules = [
 documented = 801
 doc-paraphrase = 1692
 wrappers = 82
-mutable-defaults = 120
-long-functions = 662
+long-functions = 660
 long-modules = 13
 # pylint over Shared and Scripts with pytest-testrex's library rcfile
-pylint-source = 5094
+pylint-source = 4961
 
 [tool.ruff.lint]
 # The Workflows library's default set, pinned here so a library change is a

@@ -331,7 +331,8 @@ class ConnectionSSH(connection.Connection):
         except Exception as e:
             return self.handle_error(f"Error checking existence of {src}", e)
 
-    def transfer_files(self, src, dest, excludes = [], sudo = False):
+    def transfer_files(self, src, dest, excludes = None, sudo = False):
+        excludes = [] if excludes is None else excludes
         try:
             if self.flags.verbose:
                 logger.log_info(f"Transferring {src} to {dest}")

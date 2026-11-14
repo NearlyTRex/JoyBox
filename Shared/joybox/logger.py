@@ -116,10 +116,9 @@ class Logger:
         return "%s_%s.log" % (self.name, timestamp)
 
     def add_console_handler(self):
-        try:
+        # A replaced stdout, as under a test runner, may not be reconfigurable
+        if callable(getattr(sys.stdout, "reconfigure", None)):
             sys.stdout.reconfigure(errors="backslashreplace")
-        except (AttributeError, ValueError):
-            pass
         handler = logging.StreamHandler(sys.stdout)
         handler.setLevel(self.level)
         formatter = ColoredFormatter(

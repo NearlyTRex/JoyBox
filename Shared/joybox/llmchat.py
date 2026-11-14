@@ -54,8 +54,8 @@ class OllamaBackend:
             for key, value in (info.get("model_info") or {}).items():
                 if key.endswith(".context_length"):
                     return int(value)
-        except (urllib.error.URLError, OSError, ValueError, TypeError, KeyError, json.JSONDecodeError):
-            pass
+        except (OSError, ValueError, TypeError, KeyError):
+            return 0
         return 0
 
     def stream(self, model, messages, temperature, max_tokens, num_ctx, on_text):

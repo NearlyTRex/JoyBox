@@ -164,7 +164,8 @@ class ConnectionLocal(connection.Connection):
         except Exception as e:
             return self.handle_error("Error checking existence of %s" % src, e)
 
-    def transfer_files(self, src, dest, excludes = [], sudo = False):
+    def transfer_files(self, src, dest, excludes = None, sudo = False):
+        excludes = [] if excludes is None else excludes
         if sudo:
             try:
                 if self.flags.verbose:

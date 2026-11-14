@@ -545,7 +545,8 @@ def convert_to_full_hash_entry(hash_data):
 # Check if file needs to be hashed (based on mtime/size comparison).
 # The manifest key and the path on disk differ when an offset is in play, so
 # file_path overrides what is joined to base_path.
-def does_file_need_to_be_hashed(src, base_path, hash_contents = {}, file_path = None):
+def does_file_need_to_be_hashed(src, base_path, hash_contents = None, file_path = None):
+    hash_contents = {} if hash_contents is None else hash_contents
     if src not in hash_contents:
         return True
     try:
@@ -809,10 +810,13 @@ def clean_missing_hash_entries(
 def build_hash_map(
     src_path,
     hash_type = None,
-    excludes = [],
+    excludes = None,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
+
+    # Get excludes
+    excludes = [] if excludes is None else excludes
 
     # Default to MD5
     if hash_type is None:

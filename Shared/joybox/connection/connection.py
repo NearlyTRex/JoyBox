@@ -144,7 +144,7 @@ class Connection:
     def does_file_or_directory_exist(self, src):
         return False
 
-    def transfer_files(self, src, dest, excludes = [], sudo = False):
+    def transfer_files(self, src, dest, excludes = None, sudo = False):
         return False
 
     def read_file(self, src, sudo = False):

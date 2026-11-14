@@ -39,11 +39,10 @@ def assert_is_int(var_value, var_name):
 
 # Assert that variable is castable to integer
 def assert_is_castable_to_int(var_value, var_name):
-    test_value = None
     try:
         test_value = int(var_value)
-    except Exception:
-        pass
+    except (TypeError, ValueError):
+        test_value = None
     assert type(test_value) is int, "%s should be castable to an integer" % var_name
 
 # Assert that variable is boolean
@@ -58,10 +57,9 @@ def assert_is_castable_to_bool(var_value, var_name):
     else:
         try:
             text_value = str(var_value).strip().lower()
-            if text_value in configparser.ConfigParser.BOOLEAN_STATES:
-                test_value = configparser.ConfigParser.BOOLEAN_STATES[text_value]
-        except Exception:
-            pass
+        except (TypeError, ValueError):
+            text_value = ""
+        test_value = configparser.ConfigParser.BOOLEAN_STATES.get(text_value)
     assert type(test_value) is bool, "%s should be castable to boolean" % var_name
 
 # Assert that variable is list

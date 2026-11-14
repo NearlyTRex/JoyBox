@@ -46,7 +46,7 @@ def get_unmount_tool():
 def create_iso(
     iso_file,
     source_dir = None,
-    source_dirs = [],
+    source_dirs = (),
     volume_name = None,
     delete_original = False,
     verbose = False,

@@ -30,7 +30,7 @@ def get_cache_dir():
     fileops.make_directory(src = cache_dir)
     return cache_dir
 
-def get_cache_file(locker_name, excludes = []):
+def get_cache_file(locker_name, excludes = ()):
 
     # A map built with excludes is missing files, so it is cached apart from the full one
     if not excludes:
@@ -78,11 +78,14 @@ def load_cached_hash_map(cache_file, locker_name, verbose = False):
 def build_locker_hash_map(
     backend,
     locker_name,
-    excludes = [],
+    excludes = None,
     use_cache = True,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
+
+    # Get excludes
+    excludes = [] if excludes is None else excludes
 
     # Use a recent cache when there is one
     cache_file = get_cache_file(locker_name, excludes)
@@ -181,8 +184,11 @@ def build_sync_actions(
     secondary_hashes,
     primary_encrypted = False,
     secondary_encrypted = False,
-    exclude_write_paths = [],
+    exclude_write_paths = None,
     verbose = False):
+
+    # Get exclude write paths
+    exclude_write_paths = [] if exclude_write_paths is None else exclude_write_paths
 
     # Process each file in primary
     actions = []

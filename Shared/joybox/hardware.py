@@ -179,7 +179,7 @@ def get_meminfo_mb(field):
                 if line.startswith(field + ":"):
                     return int(line.split()[1]) // 1024
     except (OSError, ValueError, IndexError):
-        pass
+        return 0
     return 0
 
 # Get total system RAM in MB

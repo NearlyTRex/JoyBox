@@ -59,7 +59,7 @@ def is_file_correctly_headered(src, expected_header):
 ###########################################################
 
 # Replace strings in file
-def replace_strings_in_file(src, replacements = [], verbose = False, pretend_run = False, exit_on_failure = False):
+def replace_strings_in_file(src, replacements = (), verbose = False, pretend_run = False, exit_on_failure = False):
     try:
         if not os.path.isfile(src):
             if verbose:
@@ -194,13 +194,18 @@ def lowercase_all_paths(src, verbose = False, pretend_run = False, exit_on_failu
             runtime.quit_program()
         return False
 
-# Determine if a name stops partway through a character of a legacy encoding
-def is_name_split_in_encoding(name, encoding):
+# Whether a name is valid utf-8, rather than holding undecodable bytes
+def is_utf8_name(name):
     try:
         name.encode("utf-8")
-        return False
     except UnicodeEncodeError:
-        pass
+        return False
+    return True
+
+# Determine if a name stops partway through a character of a legacy encoding
+def is_name_split_in_encoding(name, encoding):
+    if is_utf8_name(name):
+        return False
     decoder = codecs.getincrementaldecoder(encoding)()
     try:
         decoder.decode(os.fsencode(name), final = False)
@@ -244,11 +249,8 @@ def decode_legacy_filenames(src, encoding, verbose = False, pretend_run = False,
         # Decode each name
         def on_found_items(root, items):
             for name in items:
-                try:
-                    name.encode("utf-8")
+                if is_utf8_name(name):
                     continue
-                except UnicodeEncodeError:
-                    pass
                 try:
                     decoded_name = os.fsencode(name).decode(encoding)
                 except UnicodeDecodeError:
@@ -500,7 +502,7 @@ def resolve_symlink(src, verbose = False, pretend_run = False, exit_on_failure =
 def copy_file_or_directory(
     src,
     dest,
-    excludes = [],
+    excludes = (),
     skip_existing = False,
     skip_identical = False,
     skip_on_error = False,

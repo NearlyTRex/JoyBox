@@ -52,8 +52,8 @@ def get_archived_video_ids(archive_file):
                     tokens = line.split()
                     if tokens:
                         ids.add(tokens[-1])
-        except Exception:
-            pass
+        except (OSError, UnicodeDecodeError) as e:
+            logger.log_warning("Unable to read download archive %s, so every video counts as new: %s" % (archive_file, e))
     return ids
 
 # Collect audio files in a directory and upload them to the channel's music dir

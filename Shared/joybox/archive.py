@@ -14,7 +14,7 @@ import joybox.fileops as fileops
 import joybox.sandbox as sandbox
 
 # Determine if file is a known archive
-def is_known_archive(archive_file, extensions = [], mime_types = []):
+def is_known_archive(archive_file, extensions = (), mime_types = ()):
     for ext in extensions:
         if archive_file.lower().endswith(ext.lower()):
             return True
@@ -335,7 +335,7 @@ def create_archive_from_file(
 def create_archive_from_folder(
     archive_file,
     source_dir,
-    excludes = [],
+    excludes = (),
     password = None,
     volume_size = None,
     delete_original = False,

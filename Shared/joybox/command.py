@@ -286,7 +286,7 @@ def run_streamed_command(
                 proc.stdin.write(stdin_input)
                 proc.stdin.close()
             except BrokenPipeError:
-                pass
+                logger.log_warning("The command exited before reading all of its input")
         proc.wait()
         for t in threads:
             t.join()
@@ -689,10 +689,13 @@ def get_installer_setup_command(
 def get_dos_launch_command(
     options,
     start_program = None,
-    start_args = [],
+    start_args = None,
     start_letter = "c",
     start_offset = None,
     fullscreen = False):
+
+    # Get start args
+    start_args = [] if start_args is None else start_args
 
     # Search for disc images
     disc_images = paths.build_file_list_by_extensions(options.get_prefix_dos_d_drive(), extensions = [".chd"])
@@ -742,10 +745,13 @@ def get_dos_launch_command(
 def get_win31_launch_command(
     options,
     start_program = None,
-    start_args = [],
+    start_args = None,
     start_letter = "c",
     start_offset = None,
     fullscreen = False):
+
+    # Get start args
+    start_args = [] if start_args is None else start_args
 
     # Search for disc images
     disc_images = paths.build_file_list_by_extensions(options.get_prefix_dos_d_drive(), extensions = [".chd"])
