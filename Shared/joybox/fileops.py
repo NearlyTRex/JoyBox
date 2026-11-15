@@ -21,6 +21,14 @@ import joybox.text as text
 # Error handlers
 ###########################################################
 
+# Report a file operation that failed, quitting when told to, and return False
+def report_failure(message, error, exit_on_failure = False):
+    if exit_on_failure:
+        logger.log_error(message)
+        logger.log_error(error)
+        runtime.quit_program()
+    return False
+
 # Report a file a skip_on_error bulk copy or move could not handle, so a failing disk
 # does not abort the run: remove its partial destination, so it does not pass for a
 # success, and add the source to the error log when there is one
@@ -92,11 +100,7 @@ def lowercase_all_paths(src, verbose = False, pretend_run = False, exit_on_failu
             on_found_items(root, files)
         return True
     except Exception as e:
-        if exit_on_failure:
-            logger.log_error("Unable to lowercase directory %s" % src)
-            logger.log_error(e)
-            runtime.quit_program()
-        return False
+        return report_failure("Unable to lowercase directory %s" % src, e, exit_on_failure)
 
 # Whether a name is valid utf-8, rather than holding undecodable bytes
 def is_utf8_name(name):
@@ -121,62 +125,71 @@ def is_name_split_in_encoding(name, encoding):
     except UnicodeDecodeError:
         return True
 
+# Move a split directory's children up beside it, each rejoined to its name with a backslash
+# unless that name is taken, returning whether the emptied directory was removed
+def rejoin_split_directory(root, name, verbose = False, pretend_run = False):
+    path = os.path.join(root, name)
+    for child in os.listdir(path):
+        after = os.path.join(root, name + "\\" + child)
+        if os.path.exists(after):
+            continue
+        if verbose:
+            logger.log_info("Rejoining %s to %s" % (os.path.join(path, child), after))
+        if not pretend_run:
+            os.rename(os.path.join(path, child), after)
+    if pretend_run or os.listdir(path):
+        return False
+    os.rmdir(path)
+    return True
+
+# Rejoin names split where a character's second byte was read as a backslash
+def rejoin_split_names(root, encoding, verbose = False, pretend_run = False):
+    for name in sorted(os.listdir(root)):
+        path = os.path.join(root, name)
+        if not os.path.isdir(path) or os.path.islink(path):
+            continue
+        if not is_name_split_in_encoding(name, encoding):
+            rejoin_split_names(path, encoding, verbose, pretend_run)
+        elif rejoin_split_directory(root, name, verbose, pretend_run):
+            rejoin_split_names(root, encoding, verbose, pretend_run)
+            return
+
+# Get a name that is not utf-8 decoded from a legacy encoding, or None when it is utf-8 or undecodable
+def get_legacy_decoded_name(name, encoding):
+    if is_utf8_name(name):
+        return None
+    try:
+        return os.fsencode(name).decode(encoding)
+    except UnicodeDecodeError:
+        return None
+
+# Rename names in a directory that are not utf-8 to their legacy decoding, unless that name is taken
+def decode_legacy_names(root, names, encoding, verbose = False, pretend_run = False):
+    for name in names:
+        decoded_name = get_legacy_decoded_name(name, encoding)
+        if not decoded_name:
+            continue
+        before = os.path.join(root, name)
+        after = os.path.join(root, decoded_name)
+        if os.path.exists(after):
+            continue
+        if verbose:
+            logger.log_info("Renaming %s to %s" % (before, after))
+        if not pretend_run:
+            os.rename(before, after)
+
 # Decode names that are not utf-8 from a legacy encoding
 def decode_legacy_filenames(src, encoding, verbose = False, pretend_run = False, exit_on_failure = False):
     try:
         if verbose:
             logger.log_info("Decoding %s paths in directory %s" % (encoding, src))
-
-        # Rejoin names split where a character's second byte was read as a backslash
-        def rejoin_split_names(root):
-            for name in sorted(os.listdir(root)):
-                path = os.path.join(root, name)
-                if not os.path.isdir(path) or os.path.islink(path):
-                    continue
-                if is_name_split_in_encoding(name, encoding):
-                    for child in os.listdir(path):
-                        after = os.path.join(root, name + "\\" + child)
-                        if os.path.exists(after):
-                            continue
-                        if verbose:
-                            logger.log_info("Rejoining %s to %s" % (os.path.join(path, child), after))
-                        if not pretend_run:
-                            os.rename(os.path.join(path, child), after)
-                    if not pretend_run and not os.listdir(path):
-                        os.rmdir(path)
-                        rejoin_split_names(root)
-                        return
-                    continue
-                rejoin_split_names(path)
-        rejoin_split_names(src)
-
-        # Decode each name
-        def on_found_items(root, items):
-            for name in items:
-                if is_utf8_name(name):
-                    continue
-                try:
-                    decoded_name = os.fsencode(name).decode(encoding)
-                except UnicodeDecodeError:
-                    continue
-                before = os.path.join(root, name)
-                after = os.path.join(root, decoded_name)
-                if os.path.exists(after):
-                    continue
-                if verbose:
-                    logger.log_info("Renaming %s to %s" % (before, after))
-                if not pretend_run:
-                    os.rename(before, after)
+        rejoin_split_names(src, encoding, verbose, pretend_run)
         for root, dirs, files in os.walk(src, topdown = False):
-            on_found_items(root, dirs)
-            on_found_items(root, files)
+            decode_legacy_names(root, dirs, encoding, verbose, pretend_run)
+            decode_legacy_names(root, files, encoding, verbose, pretend_run)
         return True
     except Exception as e:
-        if exit_on_failure:
-            logger.log_error("Unable to decode paths in directory %s" % src)
-            logger.log_error(e)
-            runtime.quit_program()
-        return False
+        return report_failure("Unable to decode paths in directory %s" % src, e, exit_on_failure)
 
 # Sanitize filenames
 def sanitize_filenames(path, extension = None, verbose = False, pretend_run = False, exit_on_failure = False):
@@ -212,62 +225,60 @@ def open_private_file(src, contents_mode, encoding):
         raise
     return os.fdopen(descriptor, contents_mode, encoding = encoding)
 
+# Write contents to a file, text in the encoding given or utf-8, and only its owner able to read it when private
+def write_file_contents(src, contents, contents_mode = "w", encoding = None, private = False):
+    text_encoding = None if "b" in contents_mode else (encoding or "utf-8")
+    if private:
+        handle = open_private_file(src, contents_mode, text_encoding)
+    else:
+        handle = open(src, contents_mode, encoding = text_encoding)
+    with handle as f:
+        f.write(contents)
+
 # Touch file
 def touch_file(src, contents = "", contents_mode = "w", encoding = None, private = False, verbose = False, pretend_run = False, exit_on_failure = False):
     try:
         if verbose:
             logger.log_info("Touching file %s" % src)
-        if not pretend_run:
-            os.makedirs(paths.get_filename_directory(src), exist_ok = True)
-            if len(contents):
-                text_encoding = None if "b" in contents_mode else (encoding or "utf-8")
-                if private:
-                    handle = open_private_file(src, contents_mode, text_encoding)
-                else:
-                    handle = open(src, contents_mode, encoding = text_encoding)
-                with handle as f:
-                    f.write(contents)
-            else:
-                open(src, "a", encoding = "utf-8").close()
+        if pretend_run:
+            return True
+        os.makedirs(paths.get_filename_directory(src), exist_ok = True)
+        if len(contents):
+            write_file_contents(src, contents, contents_mode, encoding, private)
+        else:
+            open(src, "a", encoding = "utf-8").close()
         return True
     except Exception as e:
-        if exit_on_failure:
-            logger.log_error("Unable to touch file %s" % src)
-            logger.log_error(e)
-            runtime.quit_program()
-        return False
+        return report_failure("Unable to touch file %s" % src, e, exit_on_failure)
+
+# Change a directory's permissions and those of everything under it, directories to dperms when given
+def chmod_directory_tree(src, perms, dperms = None):
+    file_mode = int(str(perms), base = 8)
+    dir_mode = int(str(dperms or perms), base = 8)
+    os.chmod(src, dir_mode)
+    for root, dirs, files in os.walk(src):
+        for f in files:
+            os.chmod(os.path.join(root, f), file_mode)
+        for d in dirs:
+            os.chmod(os.path.join(root, d), dir_mode)
 
 # Chmod file or directory
 def chmod_file_or_directory(src, perms, dperms = None, verbose = False, pretend_run = False, exit_on_failure = False):
+    message = "Unable to change permissions of %s to %s" % (src, str(perms))
     try:
         if verbose:
             logger.log_info("Changing permissions of %s to %s" % (src, str(perms)))
-        if not pretend_run:
-            if not os.path.exists(src):
-                if exit_on_failure:
-                    logger.log_error("Unable to change permissions of %s to %s" % (src, str(perms)))
-                    logger.log_error("Path does not exist")
-                    runtime.quit_program()
-                return False
-            if os.path.isfile(src):
-                os.chmod(src, int(str(perms), base=8))
-            elif os.path.isdir(src):
-                os.chmod(src, int(str(dperms if dperms else perms), base=8))
-                for root, dirs, files in os.walk(src):
-                    for f in files:
-                        os.chmod(os.path.join(root, f), int(str(perms), base=8))
-                    for d in dirs:
-                        if dperms:
-                            os.chmod(os.path.join(root, d), int(str(dperms), base=8))
-                        else:
-                            os.chmod(os.path.join(root, d), int(str(perms), base=8))
+        if pretend_run:
+            return True
+        if not os.path.exists(src):
+            return report_failure(message, "Path does not exist", exit_on_failure)
+        if os.path.isfile(src):
+            os.chmod(src, int(str(perms), base = 8))
+        elif os.path.isdir(src):
+            chmod_directory_tree(src, perms, dperms)
         return True
     except Exception as e:
-        if exit_on_failure:
-            logger.log_error("Unable to change permissions of %s to %s" % (src, str(perms)))
-            logger.log_error(e)
-            runtime.quit_program()
-        return False
+        return report_failure(message, e, exit_on_failure)
 
 # Set file modified time
 def set_file_modified_time(src, timestamp, verbose = False, pretend_run = False, exit_on_failure = False):
@@ -278,11 +289,7 @@ def set_file_modified_time(src, timestamp, verbose = False, pretend_run = False,
             os.utime(src, (timestamp, timestamp))
         return True
     except Exception as e:
-        if exit_on_failure:
-            logger.log_error("Unable to set modified time of %s" % src)
-            logger.log_error(e)
-            runtime.quit_program()
-        return False
+        return report_failure("Unable to set modified time of %s" % src, e, exit_on_failure)
 
 # Mark as executable
 def mark_as_executable(src, verbose = False, pretend_run = False, exit_on_failure = False):
@@ -294,11 +301,7 @@ def mark_as_executable(src, verbose = False, pretend_run = False, exit_on_failur
             os.chmod(src, st.st_mode | stat.S_IEXEC)
         return True
     except Exception as e:
-        if exit_on_failure:
-            logger.log_error("Unable to mark %s as executable" % src)
-            logger.log_error(e)
-            runtime.quit_program()
-        return False
+        return report_failure("Unable to mark %s as executable" % src, e, exit_on_failure)
 
 # Create temporary directory
 def create_temporary_directory(directory = None, verbose = False, pretend_run = False):
@@ -332,6 +335,30 @@ def create_temporary_file(suffix = "", prefix = "tmp", verbose = False, pretend_
         return (False, "Unable to create temporary file")
     return (True, temp_file)
 
+# Get the working directory, or None when it no longer exists
+def get_working_directory():
+    try:
+        return os.getcwd()
+    except OSError:
+        return None
+
+# Make a path's parent directory, when it has one
+def make_parent_directory(path, verbose = False):
+    parent_dir = os.path.dirname(path)
+    if parent_dir:
+        if verbose:
+            logger.log_info("Making parent dir %s" % parent_dir)
+        os.makedirs(parent_dir, exist_ok = True)
+
+# Remove whatever is at a path: a link, a file or a directory tree
+def remove_existing_path(path):
+    if os.path.islink(path):
+        os.unlink(path)
+    elif os.path.isfile(path):
+        os.remove(path)
+    elif os.path.isdir(path):
+        shutil.rmtree(path)
+
 # Create symlink
 def create_symlink(
     src,
@@ -346,36 +373,21 @@ def create_symlink(
     try:
         if verbose:
             logger.log_info("Creating symlink from %s to %s" % (src, dest))
-        if not pretend_run:
-            if cwd:
-                try:
-                    prev_cwd = os.getcwd()
-                except OSError:
-                    prev_cwd = None
-                os.chdir(cwd)
-            if make_parent:
-                parent_dir = os.path.dirname(dest)
-                if parent_dir:
-                    if verbose:
-                        logger.log_info("Making parent dir %s" % parent_dir)
-                    os.makedirs(parent_dir, exist_ok = True)
-            if overwrite:
-                if verbose:
-                    logger.log_info("Removing destination %s first" % dest)
-                if os.path.islink(dest):
-                    os.unlink(dest)
-                elif os.path.isfile(dest):
-                    os.remove(dest)
-                elif os.path.isdir(dest):
-                    shutil.rmtree(dest)
-            os.symlink(src, dest, target_is_directory = os.path.isdir(src))
+        if pretend_run:
+            return True
+        if cwd:
+            prev_cwd = get_working_directory()
+            os.chdir(cwd)
+        if make_parent:
+            make_parent_directory(dest, verbose)
+        if overwrite:
+            if verbose:
+                logger.log_info("Removing destination %s first" % dest)
+            remove_existing_path(dest)
+        os.symlink(src, dest, target_is_directory = os.path.isdir(src))
         return True
     except Exception as e:
-        if exit_on_failure:
-            logger.log_error("Unable to create symlink from %s to %s" % (src, dest))
-            logger.log_error(e)
-            runtime.quit_program()
-        return False
+        return report_failure("Unable to create symlink from %s to %s" % (src, dest), e, exit_on_failure)
     finally:
         if prev_cwd is not None:
             os.chdir(prev_cwd)
@@ -390,15 +402,44 @@ def resolve_symlink(src, verbose = False, pretend_run = False, exit_on_failure =
                 return os.path.realpath(src)
         return None
     except Exception as e:
-        if exit_on_failure:
-            logger.log_error("Unable to resolve symlink %s" % src)
-            logger.log_error(e)
-            runtime.quit_program()
+        report_failure("Unable to resolve symlink %s" % src, e, exit_on_failure)
         return None
 
 ###########################################################
 # File and directory copy/move utilities
 ###########################################################
+
+# Get why a copy or move can skip its destination: "exists" when skipping existing ones,
+# "identical" when skipping ones with the same contents, or None to go ahead
+def get_skip_reason(src, dest, skip_existing = False, skip_identical = False, case_sensitive_paths = True, verbose = False, exit_on_failure = False):
+    import joybox.hashing as hashing
+    if skip_existing and paths.does_path_exist(dest, case_sensitive_paths):
+        return "exists"
+    if skip_identical and hashing.are_files_identical(
+        first = src,
+        second = dest,
+        case_sensitive_paths = case_sensitive_paths,
+        verbose = verbose,
+        exit_on_failure = exit_on_failure):
+        return "identical"
+    return None
+
+# Report a copy or move that failed: as a skipped file when skipping on errors, else as a failure
+def report_transfer_failure(message, error, src, dest, skip_on_error, error_log_path, verbose, pretend_run, exit_on_failure):
+    if skip_on_error:
+        report_fileio_error(src, dest, error_log_path, verbose, pretend_run)
+        return False
+    return report_failure(message, error, exit_on_failure)
+
+# Whether a name matches any of the fnmatch patterns given
+def is_excluded_name(name, excludes):
+    return any(fnmatch.fnmatch(name, pattern) for pattern in excludes or ())
+
+# Get a copytree ignore function skipping names that match any of the patterns, or None without any
+def get_exclude_ignore(excludes):
+    if not excludes:
+        return None
+    return lambda _, names: {name for name in names if is_excluded_name(name, excludes)}
 
 # Copy file or directory
 # `excludes` is a list of fnmatch patterns; matching names are skipped (applied
@@ -415,48 +456,26 @@ def copy_file_or_directory(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    import joybox.hashing as hashing
     try:
-        if skip_existing and paths.does_path_exist(dest, case_sensitive_paths):
+        skip_reason = get_skip_reason(
+            src, dest, skip_existing, skip_identical, case_sensitive_paths, verbose, exit_on_failure and not skip_on_error)
+        if skip_reason:
             if verbose:
-                logger.log_info("Skipping (exists): '%s'" % dest)
+                logger.log_info("Skipping (%s): '%s'" % (skip_reason, dest))
             return True
-        if skip_identical:
-            if hashing.are_files_identical(
-                first = src,
-                second = dest,
-                case_sensitive_paths = case_sensitive_paths,
-                verbose = verbose,
-                exit_on_failure = exit_on_failure and not skip_on_error):
-                if verbose:
-                    logger.log_info("Skipping (identical): '%s'" % dest)
-                return True
         if verbose:
             logger.log_info("Copying: '%s' -> '%s'" % (src, dest))
-        if not pretend_run:
-            if os.path.isdir(src):
-                ignore = None
-                if excludes:
-                    def ignore(_, names):
-                        ignored = set()
-                        for pattern in excludes:
-                            ignored.update(fnmatch.filter(names, pattern))
-                        return ignored
-                shutil.copytree(src, dest, ignore = ignore, dirs_exist_ok = True)
-            else:
-                if excludes and any(fnmatch.fnmatch(os.path.basename(src), pattern) for pattern in excludes):
-                    return True
-                shutil.copy(src, dest)
+        if pretend_run:
+            return True
+        if os.path.isdir(src):
+            shutil.copytree(src, dest, ignore = get_exclude_ignore(excludes), dirs_exist_ok = True)
+        elif not is_excluded_name(os.path.basename(src), excludes):
+            shutil.copy(src, dest)
         return True
     except Exception as e:
-        if skip_on_error:
-            report_fileio_error(src, dest, error_log_path, verbose, pretend_run)
-            return False
-        if exit_on_failure:
-            logger.log_error("Unable to copy %s to %s" % (src, dest))
-            logger.log_error(e)
-            runtime.quit_program()
-        return False
+        return report_transfer_failure(
+            "Unable to copy %s to %s" % (src, dest), e,
+            src, dest, skip_on_error, error_log_path, verbose, pretend_run, exit_on_failure)
 
 # Move file or directory
 def move_file_or_directory(
@@ -470,32 +489,39 @@ def move_file_or_directory(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    import joybox.hashing as hashing
     try:
-        if skip_existing and paths.does_path_exist(dest, case_sensitive_paths):
+        if get_skip_reason(
+            src, dest, skip_existing, skip_identical, case_sensitive_paths, verbose, exit_on_failure and not skip_on_error):
             return True
-        if skip_identical:
-            if hashing.are_files_identical(
-                first = src,
-                second = dest,
-                case_sensitive_paths = case_sensitive_paths,
-                verbose = verbose,
-                exit_on_failure = exit_on_failure and not skip_on_error):
-                return True
         if verbose:
             logger.log_info("Moving %s to %s" % (src, dest))
         if not pretend_run:
             shutil.move(src, dest)
         return True
     except Exception as e:
-        if skip_on_error:
-            report_fileio_error(src, dest, error_log_path, verbose, pretend_run)
-            return False
-        if exit_on_failure:
-            logger.log_error("Unable to move %s to %s" % (src, dest))
-            logger.log_error(e)
-            runtime.quit_program()
-        return False
+        return report_transfer_failure(
+            "Unable to move %s to %s" % (src, dest), e,
+            src, dest, skip_on_error, error_log_path, verbose, pretend_run, exit_on_failure)
+
+# Copy a file's contents from one open file to another in chunks, updating a progress bar when there is one
+def copy_file_chunks(fsrc, fdest, progress_bar = None):
+    for buf in iter(lambda: fsrc.read(config.transfer_chunk_size), b""):
+        fdest.write(buf)
+        if progress_bar:
+            progress_bar.update(len(buf))
+
+# Copy a file's contents across, with a progress bar when asked
+def copy_file_contents(src, dest, show_progress = False):
+    progress_bar = None
+    if show_progress:
+        import tqdm
+        progress_bar = tqdm.tqdm(total = paths.get_file_size(src))
+    try:
+        with open(src, "rb") as fsrc, open(dest, "wb") as fdest:
+            copy_file_chunks(fsrc, fdest, progress_bar)
+    finally:
+        if progress_bar:
+            progress_bar.close()
 
 # Transfer file
 def transfer_file(
@@ -511,59 +537,22 @@ def transfer_file(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    import joybox.hashing as hashing
     try:
-        if skip_existing and paths.does_path_exist(dest, case_sensitive_paths):
+        if os.path.abspath(src) == os.path.abspath(dest) or get_skip_reason(
+            src, dest, skip_existing, skip_identical, case_sensitive_paths, verbose, exit_on_failure and not skip_on_error):
             return True
-        if os.path.abspath(src) == os.path.abspath(dest):
-            return True
-        if skip_identical:
-            if hashing.are_files_identical(
-                first = src,
-                second = dest,
-                case_sensitive_paths = case_sensitive_paths,
-                verbose = verbose,
-                exit_on_failure = exit_on_failure and not skip_on_error):
-                return True
         if verbose:
             logger.log_info("Transferring %s to %s" % (src, dest))
         if not pretend_run:
-            total_size = paths.get_file_size(src)
-            progress_bar = None
-            progress_callback = None
-            if show_progress:
-                import tqdm
-                progress_bar = tqdm.tqdm(total = total_size)
-                def progress_callback(copied, total_copied, total):
-                    progress_bar.update(copied)
-            try:
-                with open(src, "rb") as fsrc:
-                    with open(dest, "wb") as fdest:
-                        num_bytes_transferred = 0
-                        while True:
-                            buf = fsrc.read(config.transfer_chunk_size)
-                            if not buf:
-                                break
-                            fdest.write(buf)
-                            num_bytes_transferred += len(buf)
-                            if callable(progress_callback):
-                                progress_callback(len(buf), num_bytes_transferred, total_size)
-            finally:
-                if progress_bar:
-                    progress_bar.close()
+            copy_file_contents(src, dest, show_progress)
             shutil.copymode(src, dest)
             if delete_afterwards:
                 os.remove(src)
         return True
     except Exception as e:
-        if skip_on_error:
-            report_fileio_error(src, dest, error_log_path, verbose, pretend_run)
-            return False
-        if exit_on_failure:
-            logger.log_error("Unable to transfer %s to %s" % (src, dest))
-            logger.log_error(e)
-            runtime.quit_program()
-        return False
+        return report_transfer_failure(
+            "Unable to transfer %s to %s" % (src, dest), e,
+            src, dest, skip_on_error, error_log_path, verbose, pretend_run, exit_on_failure)
 
 ###########################################################
 # Directory creation/removal utilities
@@ -580,11 +569,7 @@ def make_directory(src, verbose = False, pretend_run = False, exit_on_failure = 
         return True
     except Exception as e:
         if not os.path.isdir(src):
-            if exit_on_failure:
-                logger.log_error("Unable to make directory %s" % src)
-                logger.log_error(e)
-                runtime.quit_program()
-            return False
+            return report_failure("Unable to make directory %s" % src, e, exit_on_failure)
         return True
 
 # Remove file
@@ -597,11 +582,7 @@ def remove_file(src, verbose = False, pretend_run = False, exit_on_failure = Fal
                 os.remove(src)
         return True
     except Exception as e:
-        if exit_on_failure:
-            logger.log_error("Unable to remove file %s" % src)
-            logger.log_error(e)
-            runtime.quit_program()
-        return False
+        return report_failure("Unable to remove file %s" % src, e, exit_on_failure)
 
 # Remove symlink
 def remove_symlink(src, verbose = False, pretend_run = False, exit_on_failure = False):
@@ -613,11 +594,7 @@ def remove_symlink(src, verbose = False, pretend_run = False, exit_on_failure = 
                 os.unlink(src)
         return True
     except Exception as e:
-        if exit_on_failure:
-            logger.log_error("Unable to remove symlink %s" % src)
-            logger.log_error(e)
-            runtime.quit_program()
-        return False
+        return report_failure("Unable to remove symlink %s" % src, e, exit_on_failure)
 
 # Remove directory
 def remove_directory(src, verbose = False, pretend_run = False, exit_on_failure = False):
@@ -629,44 +606,40 @@ def remove_directory(src, verbose = False, pretend_run = False, exit_on_failure 
                 shutil.rmtree(src)
         return True
     except Exception as e:
-        if exit_on_failure:
-            logger.log_error("Unable to remove directory %s" % src)
-            logger.log_error(e)
-            runtime.quit_program()
-        return False
+        return report_failure("Unable to remove directory %s" % src, e, exit_on_failure)
+
+# Make a directory and the directories under it writable, leaving links alone
+def make_directories_writable(dir_path):
+    os.chmod(dir_path, stat.S_IRWXU)
+    for sub_root, sub_dirs, _ in os.walk(dir_path):
+        for sub_dir in sub_dirs:
+            sub_path = os.path.join(sub_root, sub_dir)
+            if not os.path.islink(sub_path):
+                os.chmod(sub_path, stat.S_IRWXU)
+
+# Remove an entry of a directory: a file or link unlinked, a directory tree removed, making its
+# directories writable first when read-only ones block removal of what they hold
+def remove_directory_entry(path):
+    if os.path.islink(path) or not os.path.isdir(path):
+        os.unlink(path)
+        return
+    try:
+        shutil.rmtree(path)
+    except PermissionError:
+        make_directories_writable(path)
+        shutil.rmtree(path)
 
 # Remove directory contents
 def remove_directory_contents(src, verbose = False, pretend_run = False, exit_on_failure = False):
     try:
         if verbose:
             logger.log_info("Removing contents of directory %s" % src)
-        if not pretend_run:
-            for root, dirs, files in os.walk(src):
-                for f in files:
-                    os.unlink(os.path.join(root, f))
-                for d in dirs:
-                    dir_path = os.path.join(root, d)
-                    if os.path.islink(dir_path):
-                        os.unlink(dir_path)
-                        continue
-                    try:
-                        shutil.rmtree(dir_path)
-                    except PermissionError:
-                        # Read-only directories block removal of what they hold
-                        os.chmod(dir_path, stat.S_IRWXU)
-                        for sub_root, sub_dirs, _ in os.walk(dir_path):
-                            for sub_dir in sub_dirs:
-                                sub_path = os.path.join(sub_root, sub_dir)
-                                if not os.path.islink(sub_path):
-                                    os.chmod(sub_path, stat.S_IRWXU)
-                        shutil.rmtree(dir_path)
+        if not pretend_run and os.path.isdir(src):
+            for name in os.listdir(src):
+                remove_directory_entry(os.path.join(src, name))
         return True
     except Exception as e:
-        if exit_on_failure:
-            logger.log_error("Unable to remove contents of directory %s" % src)
-            logger.log_error(e)
-            runtime.quit_program()
-        return False
+        return report_failure("Unable to remove contents of directory %s" % src, e, exit_on_failure)
 
 
 # Remove object
@@ -685,11 +658,7 @@ def remove_file_or_directory(src, verbose = False, pretend_run = False, exit_on_
                     exit_on_failure = exit_on_failure)
         return True
     except Exception as e:
-        if exit_on_failure:
-            logger.log_error("Unable to remove %s" % src)
-            logger.log_error(e)
-            runtime.quit_program()
-        return False
+        return report_failure("Unable to remove %s" % src, e, exit_on_failure)
 
 def remove_object(obj, verbose = False, pretend_run = False, exit_on_failure = False):
     if os.path.isfile(obj):
@@ -722,6 +691,21 @@ def remove_object(obj, verbose = False, pretend_run = False, exit_on_failure = F
 # Recycle bin utilities
 ###########################################################
 
+# Get a file's path within a recycle bin: relative to the recycle root when under it, else its name
+def get_recycle_relative_path(src, recycle_root):
+    abs_src = os.path.abspath(src)
+    abs_root = os.path.abspath(recycle_root)
+    if os.path.commonpath([abs_src, abs_root]) == abs_root:
+        return os.path.relpath(abs_src, abs_root)
+    return paths.get_filename_file(src)
+
+# Get a recycle bin destination not yet taken, stamping the time onto one that is
+def get_unused_recycle_path(dest_path):
+    if not paths.does_path_exist(dest_path):
+        return dest_path
+    base, ext = os.path.splitext(dest_path)
+    return "%s_%d%s" % (base, int(time.time()), ext)
+
 # Move file to recycle bin instead of deleting
 def recycle_file(
     src,
@@ -731,37 +715,19 @@ def recycle_file(
     pretend_run = False,
     exit_on_failure = False):
 
-    # Check file exists
+    # Skip files missing or already in the recycle bin
     if not paths.does_path_exist(src):
         if verbose:
             logger.log_info("File does not exist: %s" % src)
         return True
-
-    # Get relative path from recycle root
-    abs_src = os.path.abspath(src)
-    abs_root = os.path.abspath(recycle_root)
-    if os.path.commonpath([abs_src, abs_root]) == abs_root:
-        rel_path = os.path.relpath(abs_src, abs_root)
-    else:
-        rel_path = paths.get_filename_file(src)
-
-    # Skip if already in recycle bin
+    rel_path = get_recycle_relative_path(src, recycle_root)
     if rel_path.split(os.sep)[0] == recycle_folder:
         if verbose:
             logger.log_info("File already in recycle bin: %s" % src)
         return True
 
-    # Build destination path in recycle bin
-    recycle_bin_path = paths.join_paths(recycle_root, recycle_folder)
-    dest_path = paths.join_paths(recycle_bin_path, rel_path)
-
-    # Handle existing file in recycle bin by adding timestamp
-    if paths.does_path_exist(dest_path):
-        timestamp = int(time.time())
-        base, ext = os.path.splitext(dest_path)
-        dest_path = "%s_%d%s" % (base, timestamp, ext)
-
-    # Create destination directory and move file
+    # Move the file into the recycle bin
+    dest_path = get_unused_recycle_path(paths.join_paths(recycle_root, recycle_folder, rel_path))
     if verbose:
         logger.log_info("Recycling: %s -> %s" % (src, dest_path))
     make_directory(
@@ -804,65 +770,37 @@ def empty_recycle_bin(
 # Link info utilities
 ###########################################################
 
+# Get the target, working directory and arguments of a parsed link file with a full path, under a base path
+def get_parsed_link_info(lnk, lnk_base_path):
+    lnk_offset_path = paths.get_filename_drive_offset(paths.normalize_file_path(lnk._link_info.path))
+    lnk_working_dir = "."
+    if lnk.link_flags.HasWorkingDir:
+        lnk_working_dir = paths.normalize_file_path(lnk.work_dir)
+    lnk_arguments = []
+    if lnk.link_flags.HasArguments:
+        lnk_arguments = text.split_by_enclosed_substrings(lnk.arguments.strip("\x00"), "\"", "\"")
+    lnk_target = paths.normalize_file_path(os.path.join(lnk_base_path, lnk_offset_path))
+    if ntpath.isabs(lnk_working_dir):
+        lnk_cwd = paths.normalize_file_path(os.path.join(lnk_base_path, paths.get_directory_drive_offset(lnk_working_dir)))
+    else:
+        lnk_cwd = paths.normalize_file_path(os.path.join(paths.get_filename_directory(lnk_target), lnk_working_dir))
+    return {"target": lnk_target, "cwd": lnk_cwd, "args": lnk_arguments}
+
 # Get link info
 def get_link_info(lnk_path, lnk_base_path):
-
-    # Imports
     import joybox.programs as programs
-
-    # Import pylnk
     pylnk = modules.import_python_module_file(
         module_path = programs.get_tool_program("PyLnk"),
         module_name = "pylnk")
-
-    # Link info
-    info = {}
-    info["target"] = ""
-    info["cwd"] = ""
-    info["args"] = []
-
-    # Check params
+    info = {"target": "", "cwd": "", "args": []}
     if not paths.is_path_valid(lnk_path) or not os.path.isfile(lnk_path) or not lnk_path.endswith(".lnk"):
         return info
     if not paths.is_path_valid(lnk_base_path) or not os.path.isdir(lnk_base_path):
         return info
-
-    # Parse link file
     try:
         lnk = pylnk.Lnk(lnk_path)
-        has_full_path = lnk._link_info
-        has_working_dir = lnk.link_flags.HasWorkingDir
-        has_arguments = lnk.link_flags.HasArguments
-        if has_full_path:
-
-            # Get full path
-            lnk_full_path = paths.normalize_file_path(lnk._link_info.path)
-            lnk_offset_path = paths.get_filename_drive_offset(lnk_full_path)
-
-            # Get working dir
-            lnk_working_dir = "."
-            if has_working_dir:
-                lnk_working_dir = paths.normalize_file_path(lnk.work_dir)
-
-            # Get arguments
-            lnk_arguments = []
-            if has_arguments:
-                lnk_arguments = text.split_by_enclosed_substrings(lnk.arguments.strip("\x00"), "\"", "\"")
-
-            # Get target
-            lnk_target = paths.normalize_file_path(os.path.join(lnk_base_path, lnk_offset_path))
-
-            # Get cwd
-            lnk_cwd = ""
-            if ntpath.isabs(lnk_working_dir):
-                lnk_cwd = paths.normalize_file_path(os.path.join(lnk_base_path, paths.get_directory_drive_offset(lnk_working_dir)))
-            else:
-                lnk_cwd = paths.normalize_file_path(os.path.join(paths.get_filename_directory(lnk_target), lnk_working_dir))
-
-            # Get info
-            info["target"] = lnk_target
-            info["cwd"] = lnk_cwd
-            info["args"] = lnk_arguments
+        if lnk._link_info:
+            info = get_parsed_link_info(lnk, lnk_base_path)
     except Exception as e:
         logger.log_error(e)
     return info

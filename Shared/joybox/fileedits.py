@@ -7,7 +7,7 @@ import re
 
 # Local imports
 from joybox import logger
-from joybox import runtime
+from joybox import fileops
 from joybox import serialization
 
 ###########################################################
@@ -31,6 +31,13 @@ def is_file_correctly_headered(src, expected_header):
 # The line breaks Python's universal newlines read a text file by
 universal_newline_pattern = re.compile(r"\r\n|\r|\n")
 
+# Apply string replacements to contents, skipping any without both a from and a to
+def apply_replacements(contents, replacements):
+    for entry in replacements:
+        if entry["from"] and entry["to"]:
+            contents = contents.replace(entry["from"], entry["to"])
+    return contents
+
 # Replace strings in file
 def replace_strings_in_file(src, replacements = (), verbose = False, pretend_run = False, exit_on_failure = False):
     try:
@@ -40,23 +47,14 @@ def replace_strings_in_file(src, replacements = (), verbose = False, pretend_run
             return False
         if verbose:
             logger.log_info("Replacing lines in file %s" % src)
-        if not pretend_run:
-            src_contents = serialization.read_text_file(src, exit_on_failure = exit_on_failure)
-            if src_contents is None:
-                return False
-            for entry in replacements:
-                entry_from = entry["from"]
-                entry_to = entry["to"]
-                if entry_from and entry_to:
-                    src_contents = src_contents.replace(entry_from, entry_to)
-            return serialization.write_text_file(src, src_contents, exit_on_failure = exit_on_failure)
-        return True
+        if pretend_run:
+            return True
+        src_contents = serialization.read_text_file(src, exit_on_failure = exit_on_failure)
+        if src_contents is None:
+            return False
+        return serialization.write_text_file(src, apply_replacements(src_contents, replacements), exit_on_failure = exit_on_failure)
     except Exception as e:
-        if exit_on_failure:
-            logger.log_error("Unable to replace strings in file %s" % src)
-            logger.log_error(e)
-            runtime.quit_program()
-        return False
+        return fileops.report_failure("Unable to replace strings in file %s" % src, e, exit_on_failure)
 
 # Append line to file
 def append_line_to_file(src, line, verbose = False, pretend_run = False, exit_on_failure = False):
@@ -80,11 +78,7 @@ def append_line_to_file(src, line, verbose = False, pretend_run = False, exit_on
                 src, src_bytes + separator + (line + "\n").encode("utf-8"), exit_on_failure = exit_on_failure)
         return True
     except Exception as e:
-        if exit_on_failure:
-            logger.log_error("Unable to add line '%s' to file %s" % (line, src))
-            logger.log_error(e)
-            runtime.quit_program()
-        return False
+        return fileops.report_failure("Unable to add line '%s' to file %s" % (line, src), e, exit_on_failure)
 
 # Sort file contents
 def sort_file_contents(src, verbose = False, pretend_run = False, exit_on_failure = False):
