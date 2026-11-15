@@ -372,6 +372,7 @@ class CommandOptions:
 
         # Imports
         import joybox.sandbox as sandbox
+        import joybox.sandboxprefix as sandboxprefix
 
         # Setup prefix
         self.setup_prefix(
@@ -383,7 +384,7 @@ class CommandOptions:
 
         # Create prefix
         if linked_prefix:
-            success = sandbox.create_linked_prefix(
+            success = sandboxprefix.create_linked_prefix(
                 options = self,
                 other_links = other_links,
                 clean_existing = clean_existing,
@@ -393,7 +394,7 @@ class CommandOptions:
             if not success:
                 return False
         else:
-            success = sandbox.create_basic_prefix(
+            success = sandboxprefix.create_basic_prefix(
                 options = self,
                 clean_existing = clean_existing,
                 verbose = verbose,

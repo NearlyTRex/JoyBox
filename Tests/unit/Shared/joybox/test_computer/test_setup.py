@@ -114,8 +114,8 @@ class SetupWorld:
             (computer.fileops, "copy_contents"),
             (computer.fileops, "copy_file_or_directory"),
             (computer.fileops, "remove_directory"),
-            (computer.sandbox, "mount_disc_image"),
-            (computer.sandbox, "unmount_disc_image"),
+            (computer.sandboxdrives, "mount_disc_image"),
+            (computer.sandboxdrives, "unmount_disc_image"),
             (computer.install, "pack_install_image"),
         ]:
             monkeypatch.setattr(owner, name, self.recorder(name))

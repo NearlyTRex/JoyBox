@@ -11,6 +11,7 @@ import joybox.paths as paths
 import joybox.command as command
 import joybox.programs as programs
 import joybox.sandbox as sandbox
+from joybox import sandboxdrives
 import joybox.archive as archive
 import joybox.display as display
 import joybox.install as install
@@ -435,7 +436,7 @@ def setup_computer_game(
     for game_disc_file in game_disc_files:
 
         # Mount disc
-        success = sandbox.mount_disc_image(
+        success = sandboxdrives.mount_disc_image(
             src = game_disc_file,
             mount_dir = paths.join_paths(game_setup_dir, paths.get_filename_basename(game_disc_file)),
             options = game_setup_options,
@@ -508,7 +509,7 @@ def setup_computer_game(
 
     # Unmount discs
     for game_disc_file in game_disc_files:
-        success = sandbox.unmount_disc_image(
+        success = sandboxdrives.unmount_disc_image(
             src = game_disc_file,
             mount_dir = paths.join_paths(game_setup_dir, paths.get_filename_basename(game_disc_file)),
             options = game_setup_options,

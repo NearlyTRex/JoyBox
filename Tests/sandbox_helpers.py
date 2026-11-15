@@ -34,3 +34,11 @@ def SANDBOXIE(**kwargs):
 
 def NEITHER(**kwargs):
     return options(**kwargs)
+
+
+# A Sandboxie prefix at a Windows sandbox folder
+SANDBOX = "C:/Sandbox/Game"
+
+
+def sandboxie():
+    return SANDBOXIE(prefix_dir = SANDBOX)

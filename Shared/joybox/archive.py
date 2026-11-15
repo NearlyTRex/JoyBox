@@ -11,7 +11,7 @@ import joybox.programs as programs
 import joybox.logger as logger
 import joybox.paths as paths
 import joybox.fileops as fileops
-import joybox.sandbox as sandbox
+from joybox import sandboxpaths
 
 # Determine if file is a known archive
 def is_known_archive(archive_file, extensions = (), mime_types = ()):
@@ -282,7 +282,7 @@ def create_archive_from_file(
         return False
 
     # Get path to add
-    path_to_add = sandbox.translate_path_if_necessary(
+    path_to_add = sandboxpaths.translate_path_if_necessary(
         path = source_file,
         program_exe = archive_tool,
         program_name = "7-Zip")
@@ -367,7 +367,7 @@ def create_archive_from_folder(
     for obj in paths.get_directory_contents(source_dir):
         if obj in excludes:
             continue
-        path_to_add = sandbox.translate_path_if_necessary(
+        path_to_add = sandboxpaths.translate_path_if_necessary(
             path = paths.join_paths(source_dir, obj),
             program_exe = archive_tool,
             program_name = "7-Zip")

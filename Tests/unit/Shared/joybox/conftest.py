@@ -10,6 +10,8 @@ from joybox import environment
 from joybox import locker
 from joybox import lockerinfo
 from joybox import ollama
+from joybox import commandoptions
+from joybox import sandbox
 from joybox import webfetch
 
 
@@ -74,3 +76,42 @@ def tunneled(monkeypatch):
         lambda section, field, default_value = None, throw_exception = True: values.get(field, default_value))
     monkeypatch.setattr(ollama, "get_api_base", lambda: "http://localhost:11444")
     return values
+
+
+# Wine and Sandboxie prefixes and the platforms they run on
+@pytest.fixture
+def installed_runners(monkeypatch):
+    # Neither runner is installed on the machine running the tests, and the
+    # lookup raises rather than returning nothing.
+    monkeypatch.setattr(sandbox, "get_wine_command", lambda: "/tools/wine")
+    monkeypatch.setattr(sandbox, "get_sandboxie_command", lambda: "/tools/start.exe")
+
+
+@pytest.fixture
+def wine_platform(monkeypatch, installed_runners):
+    monkeypatch.setattr(sandbox.platform_info, "is_wine_platform", lambda: True)
+    monkeypatch.setattr(sandbox.platform_info, "is_sandboxie_platform", lambda: False)
+
+
+@pytest.fixture
+def sandboxie_platform(monkeypatch, installed_runners):
+    monkeypatch.setattr(sandbox.platform_info, "is_wine_platform", lambda: False)
+    monkeypatch.setattr(sandbox.platform_info, "is_sandboxie_platform", lambda: True)
+
+
+@pytest.fixture
+def cached_game(monkeypatch):
+    monkeypatch.setattr(sandbox.commandbase, "is_windows_executable_command", lambda cmd: True)
+    monkeypatch.setattr(sandbox.commandbase, "is_cached_game_command", lambda cmd: True)
+    monkeypatch.setattr(sandbox.commandbase, "is_local_sandboxed_program_command", lambda cmd: False)
+
+
+@pytest.fixture
+def wine_prefix(tmp_path):
+    prefix = tmp_path / "prefix"
+    (prefix / "dosdevices").mkdir(parents = True)
+    (prefix / "drive_c").mkdir()
+    entry = commandoptions.CommandOptions()
+    entry.set_is_wine_prefix(True)
+    entry.set_prefix_dir(str(prefix))
+    return entry

@@ -12,6 +12,7 @@ import joybox.logger as logger
 import joybox.paths as paths
 import joybox.programs as programs
 import joybox.sandbox as sandbox
+from joybox import sandboxpaths
 import joybox.capture as capture
 import joybox.settings as settings
 import joybox.process as process
@@ -187,7 +188,7 @@ def postprocess_command(
     # Transfer files from sandbox if necessary
     if isinstance(options.get_output_paths(), list):
         for output_path in options.get_output_paths():
-            sandbox.transfer_from_sandbox(
+            sandboxpaths.transfer_from_sandbox(
                 path = output_path,
                 options = options,
                 verbose = verbose,

@@ -365,7 +365,7 @@ def installed(monkeypatch):
     monkeypatch.setattr(archive.programs, "is_tool_installed", lambda name: name in TOOL_PATHS)
     monkeypatch.setattr(archive.programs, "get_tool_program", TOOL_PATHS.get)
     monkeypatch.setattr(
-        archive.sandbox, "translate_path_if_necessary",
+        archive.sandboxpaths, "translate_path_if_necessary",
         lambda path, program_exe, program_name: path)
     return TOOL_PATHS
 

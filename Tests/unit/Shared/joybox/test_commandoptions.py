@@ -5,7 +5,7 @@ import os
 import pytest
 
 # Local imports
-from joybox import commandoptions, config
+from joybox import commandoptions, config, programs, sandbox, sandboxprefix
 
 
 ###########################################################
@@ -54,7 +54,7 @@ def test_every_field_uses_a_distinct_key(field):
 # Tricks
 #
 # get_tricks composes the stored list with winver, since the Windows version
-# is itself a winetrick. sandbox.py iterates the result to build the
+# is itself a winetrick. sandboxprefix.py iterates the result to build the
 # "winetricks <name>" commands, so it must always yield whole names.
 ###########################################################
 
@@ -705,7 +705,6 @@ def test_a_prefix_that_does_not_exist_yet_is_not_ready(tmp_path):
 
 @pytest.fixture
 def sandbox_dirs(monkeypatch, tmp_path):
-    from joybox import programs
     roots = {"Wine": str(tmp_path / "wine"), "Sandboxie": str(tmp_path / "sandboxie")}
     monkeypatch.setattr(programs, "get_tool_path_config_value", lambda tool, key: roots[tool])
     return roots
@@ -768,7 +767,6 @@ def test_a_native_setup_leaves_the_prefix_directory_unset(sandbox_dirs):
 
 @pytest.fixture
 def fake_sandbox(monkeypatch, tmp_path):
-    from joybox import sandbox
     state = {"calls": [], "result": True, "profile": tmp_path / "profile", "c_drive": tmp_path / "drive_c"}
     state["profile"].mkdir()
     state["c_drive"].mkdir()
@@ -779,8 +777,8 @@ def fake_sandbox(monkeypatch, tmp_path):
             return state["result"]
         return run
 
-    monkeypatch.setattr(sandbox, "create_basic_prefix", create("basic"))
-    monkeypatch.setattr(sandbox, "create_linked_prefix", create("linked"))
+    monkeypatch.setattr(sandboxprefix, "create_basic_prefix", create("basic"))
+    monkeypatch.setattr(sandboxprefix, "create_linked_prefix", create("linked"))
     monkeypatch.setattr(sandbox, "get_user_profile_path", lambda options: str(state["profile"]))
     monkeypatch.setattr(sandbox, "get_real_c_drive_path", lambda options: str(state["c_drive"]))
     return state

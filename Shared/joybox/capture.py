@@ -9,6 +9,7 @@ import joybox.validation as validation
 import joybox.logger as logger
 import joybox.programs as programs
 import joybox.sandbox as sandbox
+from joybox import sandboxpaths
 import joybox.background as background
 import joybox.process as process
 from joybox import platform_info
@@ -190,7 +191,7 @@ def capture_video(
     capture_options.setup_prefix(
         is_wine_prefix = sandbox.should_be_run_via_wine(ffmpeg_tool),
         is_sandboxie_prefix = sandbox.should_be_run_via_sandboxie(ffmpeg_tool),
-        prefix_name = sandbox.get_program_prefix_name("FFMpeg"))
+        prefix_name = sandboxpaths.get_program_prefix_name("FFMpeg"))
 
     # Run capture command
     command.run_returncode_command(
