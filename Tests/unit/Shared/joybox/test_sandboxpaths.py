@@ -5,7 +5,7 @@ import os
 import pytest
 
 # Local imports
-from joybox import config, sandbox, sandboxpaths
+from joybox import config, filebulk, fileops, sandbox, sandboxpaths
 from sandbox_helpers import options, WINE, NEITHER, sandboxie
 
 
@@ -107,7 +107,7 @@ def test_a_copy_can_be_left_behind_in_the_sandbox(wine_prefix, tmp_path, monkeyp
 def test_a_directory_is_transferred_by_its_contents(wine_prefix, monkeypatch):
     moved = []
     monkeypatch.setattr(
-        sandbox.fileops, "move_contents",
+        filebulk, "move_contents",
         lambda src, dest, **kwargs: moved.append((src, dest)))
     inside = os.path.join(wine_prefix.get_prefix_dir(), "drive_c", "Games")
     os.makedirs(inside)
@@ -119,11 +119,13 @@ def test_a_directory_is_transferred_by_its_contents(wine_prefix, monkeypatch):
 
 @pytest.fixture
 def transfers(monkeypatch):
-    # Every move or copy out of the sandbox, by the fileops helper that made it
+    # Every move or copy out of the sandbox, by the helper that made it
     made = []
-    for name in ["move_file_or_directory", "move_contents", "copy_file_or_directory", "copy_contents"]:
+    for owner, name in [
+        (fileops, "move_file_or_directory"), (filebulk, "move_contents"),
+        (fileops, "copy_file_or_directory"), (filebulk, "copy_contents")]:
         monkeypatch.setattr(
-            sandbox.fileops, name, lambda src, dest, name = name, **kwargs: made.append((name, src, dest)))
+            owner, name, lambda src, dest, name = name, **kwargs: made.append((name, src, dest)))
     return made
 
 
@@ -143,7 +145,7 @@ def test_nothing_is_transferred_without_a_prefix(transfers):
 def test_a_directory_left_in_the_sandbox_is_copied_by_its_contents(wine_prefix, monkeypatch):
     copied = []
     monkeypatch.setattr(
-        sandbox.fileops, "copy_contents",
+        filebulk, "copy_contents",
         lambda src, dest, **kwargs: copied.append((src, dest)))
     inside = os.path.join(wine_prefix.get_prefix_dir(), "drive_c", "Games")
     os.makedirs(inside)

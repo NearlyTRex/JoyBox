@@ -6,6 +6,7 @@ import pytest
 
 # Local imports
 from joybox.nintendo import wiiu
+from joybox import filebulk
 
 
 ###########################################################
@@ -69,7 +70,7 @@ def test_verifying_a_package_works_on_a_copy(installed, recording_command, nus_p
     # Decryption writes into the package directory, so verifying in place
     # would modify the very thing it was asked to check.
     seen = {}
-    monkeypatch.setattr(wiiu.fileops, "copy_contents", lambda src, dest, **kwargs: True)
+    monkeypatch.setattr(filebulk, "copy_contents", lambda src, dest, **kwargs: True)
     def decrypt_wiiu_nus_package(nus_package_dir, **kwargs):
         seen["dir"] = nus_package_dir
         return True
@@ -84,7 +85,7 @@ def test_verifying_a_package_works_on_a_copy(installed, recording_command, nus_p
 def test_verifying_a_package_copies_it_to_the_scratch_directory(installed, recording_command, nus_package, scratch, monkeypatch):
     copies = []
     monkeypatch.setattr(
-        wiiu.fileops, "copy_contents",
+        filebulk, "copy_contents",
         lambda src, dest, **kwargs: copies.append((src, dest)))
     monkeypatch.setattr(wiiu, "decrypt_wiiu_nus_package", lambda **kwargs: True)
 
@@ -94,7 +95,7 @@ def test_verifying_a_package_copies_it_to_the_scratch_directory(installed, recor
 
 
 def test_a_package_that_will_not_decrypt_is_not_verified(installed, nus_package, scratch, monkeypatch):
-    monkeypatch.setattr(wiiu.fileops, "copy_contents", lambda **kwargs: True)
+    monkeypatch.setattr(filebulk, "copy_contents", lambda **kwargs: True)
     monkeypatch.setattr(wiiu, "decrypt_wiiu_nus_package", lambda **kwargs: False)
 
     assert wiiu.verify_wiiu_nus_package(nus_package) is False

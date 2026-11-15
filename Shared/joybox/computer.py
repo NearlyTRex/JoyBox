@@ -6,6 +6,7 @@ import os.path
 import joybox.config as config
 import joybox.environment as environment
 import joybox.fileops as fileops
+from joybox import filebulk
 import joybox.jsondata as jsondata
 import joybox.paths as paths
 import joybox.command as command
@@ -306,7 +307,7 @@ class ProgramStep(jsondata.JsonData):
 
         # Copy step
         if program_step_type == "copy":
-            return fileops.smart_copy(
+            return filebulk.smart_copy(
                 src = program_step_from,
                 dest = program_step_to,
                 skip_existing = program_skip_existing,
@@ -318,7 +319,7 @@ class ProgramStep(jsondata.JsonData):
 
         # Move step
         elif program_step_type == "move":
-            return fileops.smart_move(
+            return filebulk.smart_move(
                 src = program_step_from,
                 dest = program_step_to,
                 skip_existing = program_skip_existing,
@@ -390,7 +391,7 @@ def setup_computer_game(
         return False
 
     # Copy game files
-    success = fileops.copy_contents(
+    success = filebulk.copy_contents(
         src = paths.get_filename_directory(source_file),
         dest = game_setup_dir,
         show_progress = True,
@@ -490,7 +491,7 @@ def setup_computer_game(
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-        fileops.copy_contents(
+        filebulk.copy_contents(
             src = prefix_public_profile_path,
             dest = paths.join_paths(game_setup_options.get_prefix_c_drive_real(), "Public"),
             verbose = verbose,

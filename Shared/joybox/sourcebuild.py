@@ -9,6 +9,7 @@ from joybox import archive
 from joybox import command
 from joybox import environment
 from joybox import fileops
+from joybox import filebulk
 from joybox import locker
 from joybox import logger
 from joybox import network
@@ -350,7 +351,7 @@ def build_binary_from_source(
                     break
 
             # Copy contents to install directory
-            success = fileops.copy_contents(
+            success = filebulk.copy_contents(
                 src = search_dir,
                 dest = install_dir,
                 verbose = verbose,
@@ -361,7 +362,7 @@ def build_binary_from_source(
                 return False
         else:
             # Copy release file directly
-            success = fileops.smart_copy(
+            success = filebulk.smart_copy(
                 src = built_file,
                 dest = paths.join_paths(install_dir, final_file),
                 verbose = verbose,
@@ -375,7 +376,7 @@ def build_binary_from_source(
         for obj in external_copies:
             src_obj = paths.join_paths(tmp_dir, obj["from"])
             dest_obj = paths.join_paths(install_dir, obj["to"])
-            success = fileops.smart_copy(
+            success = filebulk.smart_copy(
                 src = src_obj,
                 dest = dest_obj,
                 verbose = verbose,
@@ -472,7 +473,7 @@ def build_appimage_from_source(
             dest_obj = paths.join_paths(tmp_dir, obj["to"])
             if obj["from"].startswith("AppImageTool"):
                 src_obj = paths.join_paths(environment.get_tools_root_dir(), obj["from"])
-            success = fileops.smart_copy(
+            success = filebulk.smart_copy(
                 src = src_obj,
                 dest = dest_obj,
                 verbose = verbose,
@@ -524,7 +525,7 @@ def build_appimage_from_source(
         final_file = install_name + ".AppImage"
 
         # Copy release file
-        success = fileops.smart_copy(
+        success = filebulk.smart_copy(
             src = built_file,
             dest = paths.join_paths(install_dir, final_file),
             verbose = verbose,
@@ -538,7 +539,7 @@ def build_appimage_from_source(
         for obj in external_copies:
             src_obj = paths.join_paths(tmp_dir, obj["from"])
             dest_obj = paths.join_paths(install_dir, obj["to"])
-            success = fileops.smart_copy(
+            success = filebulk.smart_copy(
                 src = src_obj,
                 dest = dest_obj,
                 verbose = verbose,

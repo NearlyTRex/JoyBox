@@ -6,6 +6,7 @@ import os.path
 import joybox.config as config
 import joybox.environment as environment
 import joybox.fileops as fileops
+from joybox import filebulk
 from joybox import gamenaming
 import joybox.install as install
 import joybox.computer as computer
@@ -92,7 +93,7 @@ def transform_computer_programs(
                 return (False, "Unable to install computer game")
 
             # Backup install image
-            success = fileops.smart_transfer(
+            success = filebulk.smart_transfer(
                 src = output_install_file,
                 dest = cached_install_file,
                 delete_afterwards = True,
@@ -559,7 +560,7 @@ def transform_game_file_in(
         return (False, "No transformation was able to be done")
 
     # Move transformed output out of temporary directory
-    success = fileops.move_contents(
+    success = filebulk.move_contents(
         src = paths.get_filename_directory(transform_result),
         dest = output_dir,
         verbose = verbose,

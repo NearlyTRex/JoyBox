@@ -3,6 +3,7 @@ import pytest
 
 # Local imports
 from joybox import computer, config
+from joybox import filebulk
 
 
 ###########################################################
@@ -111,7 +112,7 @@ class SetupWorld:
             computer.sandbox, "get_public_profile_path", lambda options: str(self.public))
         for owner, name in [
             (computer.fileops, "make_directory"),
-            (computer.fileops, "copy_contents"),
+            (filebulk, "copy_contents"),
             (computer.fileops, "copy_file_or_directory"),
             (computer.fileops, "remove_directory"),
             (computer.sandboxdrives, "mount_disc_image"),

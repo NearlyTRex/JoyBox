@@ -7,6 +7,7 @@ import pytest
 # Local imports
 from joybox import release
 from joybox import sourcebuild
+from joybox import filebulk
 from file_helpers import tree
 from fakes import failing
 from sourcebuild_helpers import build_binary
@@ -98,7 +99,7 @@ def test_a_built_archive_that_will_not_unpack_installs_nothing(builder):
 
 def test_a_built_archive_that_will_not_copy_installs_nothing(builder, monkeypatch):
     builder["outputs"]["make"] = {"tool.zip": "archive"}
-    monkeypatch.setattr(sourcebuild.fileops, "copy_contents", failing)
+    monkeypatch.setattr(filebulk, "copy_contents", failing)
 
     assert build_binary(builder, output_file = "tool.zip", search_file = "tool") is False
 
@@ -160,7 +161,7 @@ def test_an_install_folder_that_cannot_be_made_installs_nothing(builder, monkeyp
 
 
 def test_a_built_file_that_will_not_copy_installs_nothing(builder, monkeypatch):
-    monkeypatch.setattr(sourcebuild.fileops, "smart_copy", failing)
+    monkeypatch.setattr(filebulk, "smart_copy", failing)
 
     assert build_binary(builder) is False
 

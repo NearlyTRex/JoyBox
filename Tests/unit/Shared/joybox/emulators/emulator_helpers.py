@@ -4,6 +4,7 @@ import os
 # Local imports
 from joybox import config
 from joybox import sourcebuild
+from joybox import filebulk
 
 ###########################################################
 # Emulator seams
@@ -104,7 +105,7 @@ class Seams:
         self.launched = Recorder()
         if hasattr(module, "fileops"):
             monkeypatch.setattr(module.fileops, "touch_file", self.touched)
-            monkeypatch.setattr(module.fileops, "smart_copy", self.copied)
+            monkeypatch.setattr(filebulk, "smart_copy", self.copied)
         if hasattr(module, "archive"):
             monkeypatch.setattr(module.archive, "extract_archive", self.extracted)
         if hasattr(module, "emulatorcommon"):
@@ -258,7 +259,7 @@ class ConfigureSeams:
         monkeypatch.setattr(module.programs, "get_emulator_path_config_value",
             lambda name, key, platform = None: "/emu/%s/%s" % (key, platform))
         monkeypatch.setattr(module.fileops, "touch_file", self.touch)
-        monkeypatch.setattr(module.fileops, "smart_copy", self.copy)
+        monkeypatch.setattr(filebulk, "smart_copy", self.copy)
         monkeypatch.setattr(module.emulatorbase.hashing, "calculate_file_md5", self.md5)
 
     def touch(self, src, contents, **kwargs):

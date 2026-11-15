@@ -4,6 +4,7 @@ import base64
 # Local imports
 import joybox.config as config
 from joybox import fileops
+from joybox import filebulk
 from joybox import serialization
 import joybox.logger as logger
 import joybox.paths as paths
@@ -83,7 +84,7 @@ def convert_image_to_jpeg(
     pretend_run = False,
     exit_on_failure = False):
     if is_image_jpeg(image_src):
-        return fileops.smart_transfer(
+        return filebulk.smart_transfer(
             src = image_src,
             dest = image_dest,
             skip_existing = True,
@@ -106,7 +107,7 @@ def convert_image_to_png(
     pretend_run = False,
     exit_on_failure = False):
     if is_image_png(image_src):
-        return fileops.smart_transfer(
+        return filebulk.smart_transfer(
             src = image_src,
             dest = image_dest,
             skip_existing = True,

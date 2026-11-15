@@ -9,6 +9,7 @@ import pytest
 from joybox import config
 from joybox import storebase
 from joybox.collection import saves
+from joybox import filebulk
 
 
 ###########################################################
@@ -207,7 +208,7 @@ def copying(monkeypatch):
         copies.append((src, dest, kwargs))
         shutil.copytree(src, dest)
         return True
-    monkeypatch.setattr(saves.fileops, "smart_copy", smart_copy)
+    monkeypatch.setattr(filebulk, "smart_copy", smart_copy)
     return copies
 
 
@@ -259,7 +260,7 @@ def test_nothing_installed_exports_nothing(store_game, store, copying, packing, 
 def test_a_failed_copy_fails_the_export(store_game, store, installed, packing, temp_dirs, monkeypatch):
     # Packing a partial save would record it as the newest one.
     packs, _ = packing
-    monkeypatch.setattr(saves.fileops, "smart_copy", lambda **kwargs: False)
+    monkeypatch.setattr(filebulk, "smart_copy", lambda **kwargs: False)
 
     assert saves.export_store_game_save(store_game) is False
     assert packs == []
@@ -284,7 +285,7 @@ def test_no_temporary_directory_fails_the_export(store_game, store, monkeypatch)
 def test_a_pretend_run_creates_no_temporary_directory(store_game, store, installed, packing, temp_dirs, monkeypatch):
     copies = []
     monkeypatch.setattr(
-        saves.fileops, "smart_copy", lambda **kwargs: copies.append(kwargs) or True)
+        filebulk, "smart_copy", lambda **kwargs: copies.append(kwargs) or True)
 
     saves.export_store_game_save(store_game, pretend_run = True)
 

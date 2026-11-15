@@ -5,6 +5,7 @@ import os.path
 # Local imports
 import joybox.config as config
 import joybox.fileops as fileops
+from joybox import filebulk
 import joybox.command as command
 import joybox.programs as programs
 import joybox.text as text
@@ -217,7 +218,7 @@ def encrypt_file(
 
     # Plain copy if already encrypted
     if is_file_encrypted(src):
-        success = fileops.smart_copy(
+        success = filebulk.smart_copy(
             src = src,
             dest = output_file,
             skip_existing = True,
@@ -309,7 +310,7 @@ def decrypt_file(
 
     # Plain copy if already decrypted
     if not is_file_encrypted(src):
-        success = fileops.smart_copy(
+        success = filebulk.smart_copy(
             src = src,
             dest = output_file,
             skip_existing = True,

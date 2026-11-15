@@ -6,6 +6,9 @@ import stat
 import pytest
 
 # Local imports
+from joybox import archive
+from joybox import filebulk
+from joybox import fileops
 from joybox import release
 from file_helpers import tree, write
 from fakes import failing
@@ -252,6 +255,11 @@ def test_an_explicit_program_type_copies_an_unrecognised_file(workspace):
 # directory the release was unpacked into.
 ###########################################################
 
+# The module a step's helper lives in
+def owner_of(target):
+    return next(module for module in (fileops, filebulk, archive) if hasattr(module, target))
+
+
 @pytest.mark.parametrize("target,archive_name,options", [
     ("make_directory", "Tool-1.0.zip", {}),
     ("smart_copy", "Tool-1.0.AppImage", {}),
@@ -262,7 +270,7 @@ def test_an_explicit_program_type_copies_an_unrecognised_file(workspace):
     ("smart_move", "Tool-1.0.zip", {"rename_files": [{"from": "tool.sh", "to": "t.sh", "ratio": 90}]}),
 ])
 def test_a_failed_step_fails_the_install(workspace, monkeypatch, target, archive_name, options):
-    monkeypatch.setattr(release.fileops, target, failing)
+    monkeypatch.setattr(owner_of(target), target, failing)
 
     assert setup_archive(workspace, archive_name = archive_name, **options) is False
 
@@ -276,8 +284,7 @@ def test_a_failed_step_fails_the_install(workspace, monkeypatch, target, archive
 ])
 def test_a_failed_install_removes_its_scratch_directory(workspace, monkeypatch, target, archive_name):
     write(os.path.join(workspace["scratch"], "leftover"))
-    owner = release.archive if target == "extract_archive" else release.fileops
-    monkeypatch.setattr(owner, target, failing)
+    monkeypatch.setattr(owner_of(target), target, failing)
 
     assert setup_archive(workspace, archive_name = archive_name) is False
     assert not os.path.exists(workspace["scratch"])

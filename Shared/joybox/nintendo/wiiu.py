@@ -8,6 +8,7 @@ import os
 from joybox import command
 from joybox import config
 from joybox import fileops
+from joybox import filebulk
 from joybox import logger
 from joybox import paths
 from joybox import programs
@@ -88,7 +89,7 @@ def verify_wiiu_nus_package(
         return False
 
     # Copy package
-    fileops.copy_contents(
+    filebulk.copy_contents(
         src = nus_package_dir,
         dest = tmp_dir_result,
         verbose = verbose,
@@ -128,7 +129,7 @@ def install_wiiu_nus_package(
         return False
 
     # Copy package
-    fileops.copy_contents(
+    filebulk.copy_contents(
         src = nus_package_dir,
         dest = tmp_dir_result,
         verbose = verbose,

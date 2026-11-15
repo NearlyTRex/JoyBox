@@ -7,6 +7,7 @@ import pytest
 
 # Local imports
 from joybox import config, transform
+from joybox import filebulk
 from file_helpers import write
 
 
@@ -44,13 +45,13 @@ def installer(monkeypatch, tmp_path):
         transform.environment, "get_cache_gaming_install_dir",
         lambda category, subcategory, name: str(tmp_path / "cache" / name))
     monkeypatch.setattr(transform.computer, "setup_computer_game", succeed)
-    monkeypatch.setattr(transform.fileops, "smart_transfer", succeed)
+    monkeypatch.setattr(filebulk, "smart_transfer", succeed)
     monkeypatch.setattr(transform.install, "unpack_install_image", succeed)
     return write(tmp_path / "source" / "setup.exe")
 
 
 @pytest.mark.parametrize("owner, name, reason", [
-    ("fileops", "smart_transfer", "Unable to backup computer game install"),
+    ("filebulk", "smart_transfer", "Unable to backup computer game install"),
     ("install", "unpack_install_image", "Unable to unpack install image"),
     ("fileops", "touch_file", "Unable to create raw index"),
 ])
@@ -210,7 +211,7 @@ def test_a_failing_platform_step_reports_its_reason(monkeypatch, tmp_path, outpu
 
 def test_output_that_cannot_be_moved_fails(monkeypatch, tmp_path, output_dir):
     monkeypatch.setattr(transform, "transform_computer_programs", produce())
-    monkeypatch.setattr(transform.fileops, "move_contents", fail)
+    monkeypatch.setattr(filebulk, "move_contents", fail)
 
     result = transform.transform_game_file(game_info(config.Category.COMPUTER), "/src", output_dir)
 
@@ -222,7 +223,7 @@ def test_a_failed_transform_removes_its_temporary_directory(monkeypatch, tmp_pat
     scratch.mkdir()
     monkeypatch.setattr(transform.fileops, "create_temporary_directory", lambda **kwargs: (True, str(scratch)))
     monkeypatch.setattr(transform, "transform_computer_programs", produce())
-    monkeypatch.setattr(transform.fileops, "move_contents", fail)
+    monkeypatch.setattr(filebulk, "move_contents", fail)
 
     transform.transform_game_file(game_info(config.Category.COMPUTER), "/src", output_dir)
 

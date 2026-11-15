@@ -2,6 +2,7 @@
 import joybox.config as config
 import joybox.environment as environment
 import joybox.fileops as fileops
+from joybox import filebulk
 import joybox.logger as logger
 import joybox.paths as paths
 import joybox.release as release
@@ -184,7 +185,7 @@ class Xemu(emulatorbase.EmulatorBase):
         # Copy system files
         for filename in system_files.keys():
             for platform in ["windows", "linux"]:
-                success = fileops.smart_copy(
+                success = filebulk.smart_copy(
                     src = paths.join_paths(environment.get_locker_gaming_emulator_setup_dir("Xemu"), filename),
                     dest = paths.join_paths(programs.get_emulator_path_config_value("Xemu", "setup_dir", platform), filename),
                     verbose = setup_params.verbose,

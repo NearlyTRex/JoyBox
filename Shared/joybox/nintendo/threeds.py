@@ -7,6 +7,7 @@ import os
 # Local imports
 from joybox import command
 from joybox import fileops
+from joybox import filebulk
 from joybox import logger
 from joybox import paths
 from joybox import programs
@@ -288,7 +289,7 @@ def extract_3ds_cia(
                 exit_on_failure = exit_on_failure)
 
     # Move extracted files
-    fileops.move_contents(
+    filebulk.move_contents(
         src = tmp_dir_result,
         dest = extract_dir,
         verbose = verbose,

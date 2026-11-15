@@ -6,6 +6,7 @@ import os.path
 import joybox.config as config
 import joybox.logger as logger
 import joybox.fileops as fileops
+from joybox import filebulk
 import joybox.archive as archive
 import joybox.strings as strings
 from joybox import webfetch
@@ -158,7 +159,7 @@ def install_general_release(
             appimage_file = paths.join_paths(tmp_dir_result, install_name + ".AppImage")
 
             # Copy app image
-            success = fileops.smart_copy(
+            success = filebulk.smart_copy(
                 src = archive_file,
                 dest = appimage_file,
                 verbose = verbose,
@@ -223,7 +224,7 @@ def install_general_release(
         for install_file in install_files:
             install_file_src = os.path.abspath(paths.join_paths(search_dir, install_file))
             install_file_dest = paths.join_paths(install_dir, install_file)
-            success = fileops.smart_copy(
+            success = filebulk.smart_copy(
                 src = install_file_src,
                 dest = install_file_dest,
                 verbose = verbose,
@@ -233,7 +234,7 @@ def install_general_release(
                 logger.log_error("Unable to copy install file %s" % install_file)
                 return False
     else:
-        success = fileops.copy_contents(
+        success = filebulk.copy_contents(
             src = search_dir,
             dest = install_dir,
             verbose = verbose,
@@ -270,7 +271,7 @@ def install_general_release(
                 rename_to = rename_entry["to"]
                 rename_ratio = rename_entry["ratio"]
                 if strings.get_string_similarity_ratio(rename_from, filename_file) > rename_ratio:
-                    success = fileops.smart_move(
+                    success = filebulk.smart_move(
                         src = filename,
                         dest = paths.join_paths(filename_dir, rename_to),
                         verbose = verbose,

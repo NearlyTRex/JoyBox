@@ -4,6 +4,7 @@ import joybox.logger as logger
 import joybox.paths as paths
 import joybox.environment as environment
 import joybox.fileops as fileops
+from joybox import filebulk
 import joybox.programs as programs
 import joybox.transform as transform
 import joybox.platforms as platforms
@@ -222,7 +223,7 @@ def install_local_untransformed_game(
     exit_on_failure = False):
 
     # Copy game files
-    success = fileops.copy_contents(
+    success = filebulk.copy_contents(
         src = source_dir,
         dest = game_info.get_local_cache_dir(),
         show_progress = True,

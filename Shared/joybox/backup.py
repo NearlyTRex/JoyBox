@@ -4,6 +4,7 @@ import joybox.logger as logger
 import joybox.paths as paths
 import joybox.environment as environment
 import joybox.fileops as fileops
+from joybox import filebulk
 import joybox.archive as archive
 import joybox.cryption as cryption
 import joybox.hashing as hashing
@@ -66,7 +67,7 @@ def copy_files_normally(
         dest_path = paths.join_paths(output_base_path, src_file)
 
         # Copy file
-        success = fileops.smart_copy(
+        success = filebulk.smart_copy(
             src = src_path,
             dest = dest_path,
             show_progress = show_progress,
@@ -441,7 +442,7 @@ def archive_folder(
             exit_on_failure = exit_on_failure)
 
     # Move archive
-    success = fileops.smart_move(
+    success = filebulk.smart_move(
         src = tmp_archive_file,
         dest = out_archive_file,
         show_progress = show_progress,
@@ -539,7 +540,7 @@ def archive_sub_folders(
                         exit_on_failure = exit_on_failure)
 
                 # Move archive
-                success = fileops.smart_move(
+                success = filebulk.smart_move(
                     src = tmp_archive_file,
                     dest = out_archive_file,
                     show_progress = show_progress,

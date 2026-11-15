@@ -6,6 +6,9 @@ import pytest
 
 # Local imports
 from joybox import fileops
+from joybox import fileedits
+from file_helpers import write
+from fileops_helpers import read
 
 
 ###########################################################
@@ -14,16 +17,6 @@ from joybox import fileops
 # Most of this deletes, moves or overwrites. -p is documented as a safe dry
 # run, so every destructive path has to honour it.
 ###########################################################
-
-def write(path, contents = "content"):
-    with open(path, "w", encoding = "utf-8") as target:
-        target.write(contents)
-    return path
-
-
-def read(path):
-    with open(path, "r", encoding = "utf-8") as target:
-        return target.read()
 
 
 ###########################################################
@@ -126,57 +119,11 @@ def test_pretending_creates_nothing_temporary(creator):
 
 
 ###########################################################
-# Editing
-###########################################################
-
-def test_strings_are_replaced_in_place(tmp_path):
-    target = write(str(tmp_path / "config.txt"), "host = old\nport = 1\n")
-
-    assert fileops.replace_strings_in_file(
-        target, [{"from": "old", "to": "new"}]) is True
-    assert "host = new" in read(target)
-
-
-def test_several_replacements_all_apply(tmp_path):
-    target = write(str(tmp_path / "config.txt"), "a b\n")
-
-    fileops.replace_strings_in_file(
-        target, [{"from": "a", "to": "1"}, {"from": "b", "to": "2"}])
-
-    assert read(target) == "1 2\n"
-
-
-def test_replacing_in_a_missing_file_reports_failure(tmp_path):
-    assert fileops.replace_strings_in_file(
-        str(tmp_path / "absent.txt"), [{"from": "a", "to": "b"}]) is False
-
-
-def test_replacing_in_a_directory_reports_failure(tmp_path):
-    assert fileops.replace_strings_in_file(
-        str(tmp_path), [{"from": "a", "to": "b"}]) is False
-
-
-def test_a_line_is_appended(tmp_path):
-    target = write(str(tmp_path / "log.txt"), "first\n")
-
-    assert fileops.append_line_to_file(target, "second") is True
-    assert "first" in read(target)
-    assert "second" in read(target)
-
-
-def test_file_contents_are_sorted(tmp_path):
-    target = write(str(tmp_path / "list.txt"), "c\na\nb\n")
-
-    assert fileops.sort_file_contents(target) is True
-    assert read(target).split() == ["a", "b", "c"]
-
-
-###########################################################
 # Copying and moving
 ###########################################################
 
 def test_copy_leaves_the_source(tmp_path):
-    source = write(str(tmp_path / "a.txt"))
+    source = write(str(tmp_path / "a.txt"), "content")
     destination = str(tmp_path / "b.txt")
 
     fileops.copy_file_or_directory(source, destination)
@@ -186,7 +133,7 @@ def test_copy_leaves_the_source(tmp_path):
 
 
 def test_move_removes_the_source(tmp_path):
-    source = write(str(tmp_path / "a.txt"))
+    source = write(str(tmp_path / "a.txt"), "content")
     destination = str(tmp_path / "b.txt")
 
     fileops.move_file_or_directory(source, destination)
@@ -211,7 +158,7 @@ def test_a_directory_copies_with_its_contents(tmp_path):
 ###########################################################
 
 def test_a_file_is_removed(tmp_path):
-    target = write(str(tmp_path / "a.txt"))
+    target = write(str(tmp_path / "a.txt"), "content")
 
     assert fileops.remove_file(target) is True
     assert not os.path.exists(target)
@@ -220,7 +167,7 @@ def test_a_file_is_removed(tmp_path):
 def test_a_directory_tree_is_removed(tmp_path):
     target = tmp_path / "tree"
     target.mkdir()
-    write(str(target / "inner.txt"))
+    write(str(target / "inner.txt"), "content")
 
     assert fileops.remove_directory(str(target)) is True
     assert not os.path.exists(str(target))
@@ -229,7 +176,7 @@ def test_a_directory_tree_is_removed(tmp_path):
 def test_directory_contents_are_removed_but_the_directory_stays(tmp_path):
     target = tmp_path / "tree"
     target.mkdir()
-    write(str(target / "inner.txt"))
+    write(str(target / "inner.txt"), "content")
     (target / "sub").mkdir()
 
     assert fileops.remove_directory_contents(str(target)) is True
@@ -241,7 +188,7 @@ def test_empty_directories_are_pruned(tmp_path):
     root = tmp_path / "root"
     (root / "empty").mkdir(parents = True)
     (root / "full").mkdir()
-    write(str(root / "full" / "inner.txt"))
+    write(str(root / "full" / "inner.txt"), "content")
 
     fileops.remove_empty_directories(str(root))
 
@@ -254,7 +201,7 @@ def test_empty_directories_are_pruned(tmp_path):
 ###########################################################
 
 def test_a_symlink_is_created_and_resolves(tmp_path):
-    source = write(str(tmp_path / "real.txt"))
+    source = write(str(tmp_path / "real.txt"), "content")
     link = str(tmp_path / "link.txt")
 
     fileops.create_symlink(source, link)
@@ -264,7 +211,7 @@ def test_a_symlink_is_created_and_resolves(tmp_path):
 
 
 def test_removing_a_symlink_leaves_the_target(tmp_path):
-    source = write(str(tmp_path / "real.txt"))
+    source = write(str(tmp_path / "real.txt"), "content")
     link = str(tmp_path / "link.txt")
     fileops.create_symlink(source, link)
 
@@ -281,14 +228,14 @@ def test_removing_a_symlink_leaves_the_target(tmp_path):
 def test_permissions_are_applied(tmp_path):
     # Permissions are an octal string, not an int: perms is parsed with
     # int(str(perms), base=8), so 0o600 becomes "384" and fails.
-    target = write(str(tmp_path / "secret.env"))
+    target = write(str(tmp_path / "secret.env"), "content")
 
     assert fileops.chmod_file_or_directory(target, "600") is True
     assert oct(os.stat(target).st_mode & 0o777) == "0o600"
 
 
 def test_a_non_octal_permission_string_reports_failure(tmp_path):
-    target = write(str(tmp_path / "secret.env"))
+    target = write(str(tmp_path / "secret.env"), "content")
     before = os.stat(target).st_mode & 0o777
 
     assert fileops.chmod_file_or_directory(target, "not-octal") is False
@@ -300,7 +247,7 @@ def test_directory_permissions_apply_to_contents(tmp_path):
     # 700 directories; the root is a directory too and takes the same.
     root = tmp_path / "tree"
     root.mkdir()
-    inner = write(str(root / "inner.txt"))
+    inner = write(str(root / "inner.txt"), "content")
 
     fileops.chmod_file_or_directory(str(root), "600", dperms = "700")
 
@@ -338,7 +285,7 @@ def test_pretend_run_does_not_make_directories(tmp_path):
 
 
 def test_pretend_run_does_not_remove_a_file(tmp_path):
-    target = write(str(tmp_path / "a.txt"))
+    target = write(str(tmp_path / "a.txt"), "content")
 
     fileops.remove_file(target, pretend_run = True)
 
@@ -348,7 +295,7 @@ def test_pretend_run_does_not_remove_a_file(tmp_path):
 def test_pretend_run_does_not_remove_a_directory(tmp_path):
     target = tmp_path / "tree"
     target.mkdir()
-    write(str(target / "inner.txt"))
+    write(str(target / "inner.txt"), "content")
 
     fileops.remove_directory(str(target), pretend_run = True)
 
@@ -358,7 +305,7 @@ def test_pretend_run_does_not_remove_a_directory(tmp_path):
 def test_pretend_run_does_not_empty_a_directory(tmp_path):
     target = tmp_path / "tree"
     target.mkdir()
-    write(str(target / "inner.txt"))
+    write(str(target / "inner.txt"), "content")
 
     fileops.remove_directory_contents(str(target), pretend_run = True)
 
@@ -368,7 +315,7 @@ def test_pretend_run_does_not_empty_a_directory(tmp_path):
 def test_pretend_run_does_not_edit_a_file(tmp_path):
     target = write(str(tmp_path / "config.txt"), "host = old\n")
 
-    fileops.replace_strings_in_file(
+    fileedits.replace_strings_in_file(
         target, [{"from": "old", "to": "new"}], pretend_run = True)
 
     assert read(target) == "host = old\n"
@@ -377,13 +324,13 @@ def test_pretend_run_does_not_edit_a_file(tmp_path):
 def test_pretend_run_does_not_append(tmp_path):
     target = write(str(tmp_path / "log.txt"), "first\n")
 
-    fileops.append_line_to_file(target, "second", pretend_run = True)
+    fileedits.append_line_to_file(target, "second", pretend_run = True)
 
     assert read(target) == "first\n"
 
 
 def test_pretend_run_does_not_copy(tmp_path):
-    source = write(str(tmp_path / "a.txt"))
+    source = write(str(tmp_path / "a.txt"), "content")
     destination = str(tmp_path / "b.txt")
 
     fileops.copy_file_or_directory(source, destination, pretend_run = True)
@@ -392,62 +339,13 @@ def test_pretend_run_does_not_copy(tmp_path):
 
 
 def test_pretend_run_does_not_move(tmp_path):
-    source = write(str(tmp_path / "a.txt"))
+    source = write(str(tmp_path / "a.txt"), "content")
     destination = str(tmp_path / "b.txt")
 
     fileops.move_file_or_directory(source, destination, pretend_run = True)
 
     assert os.path.isfile(source)
     assert not os.path.exists(destination)
-
-
-###########################################################
-# Headers
-#
-# Used to tell a real archive from a file with the right extension.
-###########################################################
-
-def test_a_matching_byte_header_is_recognised(tmp_path):
-    target = tmp_path / "archive.zip"
-    target.write_bytes(b"PK\x03\x04rest of the file")
-
-    assert fileops.is_file_correctly_headered(str(target), b"PK\x03\x04") is True
-
-
-def test_a_header_that_is_neither_bytes_nor_text_never_matches(tmp_path):
-    target = tmp_path / "archive.zip"
-    target.write_bytes(b"PK")
-
-    assert fileops.is_file_correctly_headered(str(target), [0x50, 0x4B]) is False
-
-
-def test_a_matching_text_header_is_recognised(tmp_path):
-    target = tmp_path / "script.sh"
-    target.write_text("#!/bin/bash\necho hi\n")
-
-    assert fileops.is_file_correctly_headered(str(target), "#!/bin/bash") is True
-
-
-def test_a_wrong_header_is_rejected(tmp_path):
-    target = tmp_path / "archive.zip"
-    target.write_bytes(b"not an archive at all")
-
-    assert fileops.is_file_correctly_headered(str(target), b"PK\x03\x04") is False
-
-
-def test_a_truncated_file_is_rejected(tmp_path):
-    target = tmp_path / "archive.zip"
-    target.write_bytes(b"PK")
-
-    assert fileops.is_file_correctly_headered(str(target), b"PK\x03\x04") is False
-
-
-def test_a_missing_file_has_no_header(tmp_path):
-    assert fileops.is_file_correctly_headered(str(tmp_path / "absent"), b"PK") is False
-
-
-def test_a_directory_has_no_header(tmp_path):
-    assert fileops.is_file_correctly_headered(str(tmp_path), b"PK") is False
 
 
 ###########################################################
@@ -558,6 +456,36 @@ def test_replacing_symlinks_leaves_real_directories_alone(tmp_path):
 
 
 ###########################################################
+# Permissions
+###########################################################
+
+def test_a_file_is_made_executable(tmp_path):
+    target = tmp_path / "tool"
+    target.write_text("#!/bin/sh\n")
+
+    assert fileops.mark_as_executable(str(target)) is True
+    assert os.access(str(target), os.X_OK)
+
+
+def test_permissions_are_set_from_an_octal_string(tmp_path):
+    target = tmp_path / "secret.env"
+    target.write_text("TOKEN=x\n")
+    fileops.chmod_file_or_directory(str(target), "600")
+
+    assert oct(os.stat(str(target)).st_mode)[-3:] == "600"
+
+
+def test_directory_permissions_can_differ_from_file_ones(tmp_path):
+    root = tmp_path / "tree"
+    (root / "nested").mkdir(parents = True)
+    (root / "file.txt").write_text("content")
+    fileops.chmod_file_or_directory(str(root), "600", dperms = "700")
+
+    assert oct(os.stat(str(root / "nested")).st_mode)[-3:] == "700"
+    assert oct(os.stat(str(root / "file.txt")).st_mode)[-3:] == "600"
+
+
+###########################################################
 # Renaming in place
 ###########################################################
 
@@ -625,36 +553,6 @@ def test_sanitizing_leaves_a_clean_name_alone(tmp_path):
     fileops.sanitize_filenames(str(root))
 
     assert "already clean.txt" in os.listdir(str(root))
-
-
-###########################################################
-# Permissions
-###########################################################
-
-def test_a_file_is_made_executable(tmp_path):
-    target = tmp_path / "tool"
-    target.write_text("#!/bin/sh\n")
-
-    assert fileops.mark_as_executable(str(target)) is True
-    assert os.access(str(target), os.X_OK)
-
-
-def test_permissions_are_set_from_an_octal_string(tmp_path):
-    target = tmp_path / "secret.env"
-    target.write_text("TOKEN=x\n")
-    fileops.chmod_file_or_directory(str(target), "600")
-
-    assert oct(os.stat(str(target)).st_mode)[-3:] == "600"
-
-
-def test_directory_permissions_can_differ_from_file_ones(tmp_path):
-    root = tmp_path / "tree"
-    (root / "nested").mkdir(parents = True)
-    (root / "file.txt").write_text("content")
-    fileops.chmod_file_or_directory(str(root), "600", dperms = "700")
-
-    assert oct(os.stat(str(root / "nested")).st_mode)[-3:] == "700"
-    assert oct(os.stat(str(root / "file.txt")).st_mode)[-3:] == "600"
 
 
 ###########################################################
@@ -740,145 +638,3 @@ def test_emptying_an_absent_bin_is_success(tmp_path):
     root.mkdir()
 
     assert fileops.empty_recycle_bin(str(root)) is True
-
-
-###########################################################
-# Smart transfers
-###########################################################
-
-def test_a_smart_copy_creates_missing_parents(tmp_path):
-    source = tmp_path / "source.txt"
-    source.write_text("content")
-    target = tmp_path / "a" / "b" / "target.txt"
-
-    assert fileops.smart_copy(str(source), str(target)) is True
-    assert target.read_text() == "content"
-
-
-def test_a_smart_copy_leaves_the_source(tmp_path):
-    source = tmp_path / "source.txt"
-    source.write_text("content")
-    fileops.smart_copy(str(source), str(tmp_path / "target.txt"))
-
-    assert source.exists()
-
-
-def test_a_smart_move_removes_the_source(tmp_path):
-    source = tmp_path / "source.txt"
-    source.write_text("content")
-    fileops.smart_move(str(source), str(tmp_path / "target.txt"))
-
-    assert not source.exists()
-    assert (tmp_path / "target.txt").read_text() == "content"
-
-
-def test_a_smart_copy_can_skip_an_existing_target(tmp_path):
-    source = tmp_path / "source.txt"
-    source.write_text("new")
-    target = tmp_path / "target.txt"
-    target.write_text("old")
-    fileops.smart_copy(str(source), str(target), skip_existing = True)
-
-    assert target.read_text() == "old"
-
-
-def test_a_smart_copy_skips_an_identical_target(tmp_path):
-    source = tmp_path / "source.txt"
-    source.write_text("same")
-    target = tmp_path / "target.txt"
-    target.write_text("same")
-
-    assert fileops.smart_copy(str(source), str(target), skip_identical = True) is True
-    assert target.read_text() == "same"
-
-
-def test_a_glob_copies_every_match(tmp_path):
-    source = tmp_path / "source"
-    source.mkdir()
-    for name in ["a.cue", "b.cue", "c.bin"]:
-        (source / name).write_text(name)
-    target = tmp_path / "target"
-
-    fileops.smart_copy(str(source / "*.cue"), str(target))
-    assert sorted(os.listdir(str(target))) == ["a.cue", "b.cue"]
-
-
-def test_a_directory_copies_with_its_tree(tmp_path):
-    source = tmp_path / "source"
-    (source / "nested").mkdir(parents = True)
-    (source / "nested" / "file.txt").write_text("content")
-    target = tmp_path / "target"
-
-    fileops.smart_copy(str(source), str(target))
-    assert (target / "nested" / "file.txt").read_text() == "content"
-
-
-###########################################################
-# Contents
-###########################################################
-
-def test_contents_are_copied_without_the_directory_itself(tmp_path):
-    source = tmp_path / "source"
-    source.mkdir()
-    (source / "file.txt").write_text("content")
-    target = tmp_path / "target"
-    target.mkdir()
-
-    assert fileops.copy_contents(str(source), str(target)) is True
-    assert (target / "file.txt").exists()
-    assert not (target / "source").exists()
-
-
-def test_contents_are_moved_without_the_directory_itself(tmp_path):
-    source = tmp_path / "source"
-    source.mkdir()
-    (source / "file.txt").write_text("content")
-    target = tmp_path / "target"
-    target.mkdir()
-    fileops.move_contents(str(source), str(target))
-
-    assert (target / "file.txt").exists()
-    assert not (source / "file.txt").exists()
-
-
-def test_moving_contents_keeps_the_source_directory(tmp_path):
-    source = tmp_path / "source"
-    source.mkdir()
-    (source / "file.txt").write_text("content")
-    target = tmp_path / "target"
-    target.mkdir()
-    fileops.move_contents(str(source), str(target))
-
-    assert source.is_dir()
-
-
-def test_the_directory_itself_is_chmodded(tmp_path):
-    # Its contents are unreachable otherwise when the directory is the read
-    # only one, which is exactly what an extracted iso leaves behind.
-    root = tmp_path / "tree"
-    root.mkdir()
-    (root / "file.txt").write_text("content")
-    os.chmod(str(root), 0o555)
-    fileops.chmod_file_or_directory(str(root), "777")
-
-    assert oct(os.stat(str(root)).st_mode)[-3:] == "777"
-
-
-def test_a_read_only_directory_can_then_be_emptied(tmp_path):
-    root = tmp_path / "tree"
-    root.mkdir()
-    (root / "file.txt").write_text("content")
-    os.chmod(str(root), 0o555)
-    fileops.chmod_file_or_directory(str(root), "777")
-
-    assert fileops.remove_directory_contents(str(root)) is True
-    assert os.listdir(str(root)) == []
-
-
-def test_the_directory_takes_the_directory_permissions(tmp_path):
-    root = tmp_path / "tree"
-    root.mkdir()
-    (root / "file.txt").write_text("content")
-    fileops.chmod_file_or_directory(str(root), "644", dperms = "755")
-
-    assert oct(os.stat(str(root)).st_mode)[-3:] == "755"

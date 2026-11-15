@@ -10,6 +10,7 @@ import joybox.config as config
 import joybox.logger as logger
 import joybox.paths as paths
 import joybox.fileops as fileops
+from joybox import filebulk
 import joybox.hashing as hashing
 import joybox.cryption as cryption
 import joybox.sync as sync
@@ -319,7 +320,7 @@ class LocalBackend(LockerBackend):
 
         # If no cryption needed, copy directly
         if cryption_type == config.CryptionType.NONE:
-            return fileops.smart_copy(
+            return filebulk.smart_copy(
                 src = src_full_path,
                 dest = dest_full_path,
                 show_progress = show_progress,
@@ -347,7 +348,7 @@ class LocalBackend(LockerBackend):
         pretend_run = False,
         exit_on_failure = False):
         dest_full_path = paths.join_paths(self.root_path, dest_rel_path)
-        return fileops.smart_copy(
+        return filebulk.smart_copy(
             src = src_abs_path,
             dest = dest_full_path,
             skip_existing = skip_existing,
@@ -453,7 +454,7 @@ class RemoteBackend(LockerBackend):
                 return False
             upload_path = paths.join_paths(temp_dir, dest_name)
         try:
-            if temp_dir and not fileops.smart_copy(
+            if temp_dir and not filebulk.smart_copy(
                 src = src_full_path,
                 dest = upload_path,
                 verbose = verbose,

@@ -3,6 +3,7 @@ import joybox.config as config
 import joybox.logger as logger
 import joybox.paths as paths
 import joybox.fileops as fileops
+from joybox import filebulk
 import joybox.archive as archive
 import joybox.locker as locker
 import joybox.gameinfo as gameinfo
@@ -457,7 +458,7 @@ def export_store_game_save(
                 logger.log_info(f"Checking path: {path_full}")
             if not paths.does_directory_contain_files(path_full):
                 continue
-            success = fileops.smart_copy(
+            success = filebulk.smart_copy(
                 src = path_full,
                 dest = paths.join_paths(tmp_dir_result, path_relative),
                 show_progress = True,

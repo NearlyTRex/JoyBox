@@ -7,7 +7,8 @@ import pytest
 
 # Local imports
 from joybox import fileops
-from fileops_helpers import write, read, tree, fail
+from file_helpers import write
+from fileops_helpers import read, tree, fail
 
 
 ###########################################################

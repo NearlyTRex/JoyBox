@@ -16,6 +16,7 @@ import joybox.strings as strings
 import joybox.logger as logger
 import joybox.paths as paths
 import joybox.fileops as fileops
+from joybox import fileedits
 import joybox.hashing as hashing
 import joybox.sqlitedb as sqlitedb
 from joybox import platform_info
@@ -1190,7 +1191,7 @@ def diff_files(
     # Sort diff files
     for diff_path in [diff_combined_path, diff_intersected_path, diff_missing_src_path, diff_missing_dest_path, diff_error_path]:
         if diff_path and os.path.exists(diff_path):
-            fileops.sort_file_contents(
+            fileedits.sort_file_contents(
                 src = diff_path,
                 verbose = verbose,
                 pretend_run = pretend_run,

@@ -6,6 +6,7 @@ import pytest
 
 # Local imports
 from joybox import sync
+from joybox import fileedits
 from sync_helpers import REMOTE, REMOTE_TYPE, LOCAL, REMOTE_PATH
 
 
@@ -29,7 +30,7 @@ def excludes_of(cmd):
 def sorted_files(monkeypatch):
     sorted_paths = []
     monkeypatch.setattr(
-        sync.fileops, "sort_file_contents",
+        fileedits, "sort_file_contents",
         lambda src, **kwargs: sorted_paths.append(src) or True)
     return sorted_paths
 

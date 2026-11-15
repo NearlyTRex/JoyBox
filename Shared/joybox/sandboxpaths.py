@@ -9,6 +9,7 @@ import os.path
 from joybox import config
 from joybox import validation
 from joybox import fileops
+from joybox import filebulk
 from joybox import commandbase
 from joybox import programs
 from joybox import paths
@@ -141,7 +142,7 @@ def transfer_from_sandbox(
     # Transfer from sandbox
     if keep_in_sandbox:
         if paths.is_path_directory(real_path):
-            fileops.copy_contents(
+            filebulk.copy_contents(
                 src = real_path,
                 dest = path,
                 verbose = verbose,
@@ -156,7 +157,7 @@ def transfer_from_sandbox(
                 exit_on_failure = exit_on_failure)
     else:
         if paths.is_path_directory(real_path):
-            fileops.move_contents(
+            filebulk.move_contents(
                 src = real_path,
                 dest = path,
                 verbose = verbose,

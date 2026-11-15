@@ -7,6 +7,7 @@ import pytest
 # Local imports
 from joybox import release
 from joybox import sourcebuild
+from joybox import filebulk
 from file_helpers import tree
 from file_helpers import write
 from fakes import failing
@@ -39,9 +40,9 @@ def test_appimagetool_packs_the_appdir_from_the_scratch_directory(builder):
 
 def test_built_files_are_laid_out_in_the_appdir(builder, monkeypatch):
     copied = []
-    real = sourcebuild.fileops.smart_copy
+    real = filebulk.smart_copy
     monkeypatch.setattr(
-        sourcebuild.fileops, "smart_copy",
+        filebulk, "smart_copy",
         lambda src, dest, **kwargs: copied.append((src, dest)) or real(src = src, dest = dest, **kwargs))
 
     assert build_appimage(builder, internal_copies = [
@@ -113,7 +114,7 @@ def test_a_folder_that_cannot_be_made_stops_the_build(builder, monkeypatch):
 
 
 def test_an_appimage_that_will_not_copy_installs_nothing(builder, monkeypatch):
-    monkeypatch.setattr(sourcebuild.fileops, "smart_copy", failing)
+    monkeypatch.setattr(filebulk, "smart_copy", failing)
 
     assert build_appimage(builder) is False
 

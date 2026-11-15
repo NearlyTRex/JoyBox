@@ -6,6 +6,7 @@ import pytest
 
 # Local imports
 from joybox.nintendo import threeds
+from joybox import filebulk
 
 
 ###########################################################
@@ -133,7 +134,7 @@ def test_a_failed_trim_does_not_move_anything(installed, monkeypatch, scratch, w
 def test_extracting_a_cia_names_every_output(installed, recording_command, scratch, existing_output, monkeypatch):
     monkeypatch.setattr(threeds.paths, "get_directory_contents", lambda path: [])
     monkeypatch.setattr(threeds.paths, "is_directory_empty", lambda path: False)
-    monkeypatch.setattr(threeds.fileops, "move_contents", lambda **kwargs: True)
+    monkeypatch.setattr(filebulk, "move_contents", lambda **kwargs: True)
 
     threeds.extract_3ds_cia("/in/Game.cia", "/out")
     cmd = recording_command.only()
@@ -150,7 +151,7 @@ def test_extracted_contents_are_renamed_to_app_files(installed, recording_comman
     moves = []
     monkeypatch.setattr(threeds.paths, "get_directory_contents", lambda path: ["contents.0000", "00000000.tik"])
     monkeypatch.setattr(threeds.paths, "is_directory_empty", lambda path: False)
-    monkeypatch.setattr(threeds.fileops, "move_contents", lambda **kwargs: True)
+    monkeypatch.setattr(filebulk, "move_contents", lambda **kwargs: True)
     monkeypatch.setattr(
         threeds.fileops, "move_file_or_directory",
         lambda src, dest, **kwargs: moves.append((src, dest)))
@@ -176,7 +177,7 @@ def test_an_empty_extraction_reports_failure(installed, recording_command, scrat
     # A run that produced an empty directory is not an extraction.
     monkeypatch.setattr(threeds.paths, "get_directory_contents", lambda path: [])
     monkeypatch.setattr(threeds.paths, "is_directory_empty", lambda path: True)
-    monkeypatch.setattr(threeds.fileops, "move_contents", lambda **kwargs: True)
+    monkeypatch.setattr(filebulk, "move_contents", lambda **kwargs: True)
 
     assert threeds.extract_3ds_cia("/in/Game.cia", "/out") is False
 

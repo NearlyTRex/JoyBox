@@ -6,7 +6,7 @@ import types
 from joybox import fileops
 from joybox import modules
 from joybox import programs
-from fileops_helpers import write
+from file_helpers import write
 
 
 ###########################################################
