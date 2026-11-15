@@ -6,7 +6,6 @@ import re
 
 # Local imports
 from joybox import command
-from joybox import programs
 from joybox import rcloneremotes
 from joybox import serialization
 from joybox import logger
@@ -22,11 +21,8 @@ def get_configured_remotes(
     exit_on_failure = False):
 
     # Get tool
-    rclone_tool = None
-    if programs.is_tool_installed("RClone"):
-        rclone_tool = programs.get_tool_program("RClone")
+    rclone_tool = sync.get_rclone_tool()
     if not rclone_tool:
-        logger.log_error("RClone was not found")
         return {}
 
     # Get list command
@@ -120,12 +116,9 @@ def authorize_remote(
     verbose = False,
     pretend_run = False):
 
-    # Get rclone tool
-    rclone_tool = None
-    if programs.is_tool_installed("RClone"):
-        rclone_tool = programs.get_tool_program("RClone")
+    # Get tool
+    rclone_tool = sync.get_rclone_tool()
     if not rclone_tool:
-        logger.log_error("RClone was not found")
         return None
 
     # Get authorize command
@@ -163,12 +156,9 @@ def count_remote_entries(
     pretend_run = False,
     exit_on_failure = False):
 
-    # Get rclone tool
-    rclone_tool = None
-    if programs.is_tool_installed("RClone"):
-        rclone_tool = programs.get_tool_program("RClone")
+    # Get tool
+    rclone_tool = sync.get_rclone_tool()
     if not rclone_tool:
-        logger.log_error("RClone was not found")
         return None
 
     # Get lsf command

@@ -99,6 +99,110 @@ def get_excludes_with(excludes, pattern):
         excludes.append(pattern)
     return excludes
 
+# Get the rclone program, or None, logging that it is missing unless told not to
+def get_rclone_tool(log_missing = True):
+    rclone_tool = None
+    if programs.is_tool_installed("RClone"):
+        rclone_tool = programs.get_tool_program("RClone")
+    if not rclone_tool and log_missing:
+        logger.log_error("RClone was not found")
+    return rclone_tool
+
+# Get the flags for a dry run, an interactive run and a verbose run, verbose ones showing progress unless told not to
+def get_run_flags(pretend_run = False, interactive = False, verbose = False, progress = True):
+    flags = []
+    if pretend_run:
+        flags += ["--dry-run"]
+    if interactive:
+        flags += ["--interactive"]
+    if verbose:
+        flags += ["--verbose", "--progress"] if progress else ["--verbose"]
+    return flags
+
+# Check a transfer's file list exists; a missing one would widen the transfer to everything
+def is_file_list_readable(files_from):
+    if files_from and not paths.is_path_file(files_from):
+        logger.log_error("File list %s does not exist" % files_from)
+        return False
+    return True
+
+# Run an rclone command with the named remotes' credentials, returning whether it succeeded
+def run_rclone_command(cmd, remote_names, options = None, verbose = False, pretend_run = False, exit_on_failure = False):
+    code = command.run_returncode_command(
+        cmd = cmd,
+        options = rcloneremotes.get_rclone_options(remote_names, options),
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    return code == 0
+
+# Run an rclone transfer over the given paths. The common remote flags are added for an
+# action type, then excludes, the file list and extra flags, then the run flags.
+def run_transfer(
+    subcommand,
+    transfer_paths,
+    remote_names,
+    remote_type = None,
+    remote_action_type = None,
+    excludes = None,
+    files_from = None,
+    extra_flags = (),
+    interactive = False,
+    progress = True,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+    rclone_tool = get_rclone_tool()
+    if not rclone_tool or not is_file_list_readable(files_from):
+        return False
+    cmd = [rclone_tool, subcommand] + list(transfer_paths)
+    if remote_action_type:
+        cmd += get_common_remote_flags(
+            remote_name = remote_names[0],
+            remote_type = remote_type,
+            remote_action_type = remote_action_type)
+    cmd += get_exclude_flags(excludes)
+    if files_from:
+        cmd += ["--files-from", files_from]
+    cmd += list(extra_flags)
+    cmd += get_run_flags(pretend_run = pretend_run, interactive = interactive, verbose = verbose, progress = progress)
+    return run_rclone_command(
+        cmd = cmd,
+        remote_names = remote_names,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+
+# Run an rclone query on a path of a remote, returning its decoded output and exit code,
+# or None when rclone is missing
+def run_remote_query(
+    remote_name,
+    remote_type,
+    remote_path,
+    subcommand,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+    rclone_tool = get_rclone_tool()
+    if not rclone_tool:
+        return None
+    return run_query_command(
+        cmd = [rclone_tool] + subcommand + [get_remote_connection_path(remote_name, remote_type, remote_path)],
+        options = rcloneremotes.get_rclone_options([remote_name]),
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+
+# Get the entry a hash listing keeps for a file
+def get_hash_entry(file_path, file_hash, size, mtime):
+    return {
+        "filename": paths.get_filename_file(file_path),
+        "dir": paths.get_filename_directory(file_path),
+        "hash": file_hash or "",
+        "size": size or 0,
+        "mtime": mtime or 0
+    }
+
 # Get path MD5
 def get_path_md5(
     remote_name,
@@ -108,33 +212,20 @@ def get_path_md5(
     pretend_run = False,
     exit_on_failure = False):
 
-    # Get rclone tool
-    rclone_tool = None
-    if programs.is_tool_installed("RClone"):
-        rclone_tool = programs.get_tool_program("RClone")
-    if not rclone_tool:
-        logger.log_error("RClone was not found")
-        return None
-
-    # Get md5sum command
-    md5sum_cmd = [
-        rclone_tool,
-        "md5sum",
-        get_remote_connection_path(remote_name, remote_type, remote_path)
-    ]
-
-    # Run md5sum command
-    md5sum_text, code = run_query_command(
-        cmd = md5sum_cmd,
-        options = rcloneremotes.get_rclone_options([remote_name]),
+    # Run md5sum
+    result = run_remote_query(
+        remote_name = remote_name,
+        remote_type = remote_type,
+        remote_path = remote_path,
+        subcommand = ["md5sum"],
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
-    if code != 0:
+    if result is None or result[1] != 0:
         return None
 
     # Get md5 (format: "<32 hex digits>  filename")
-    match = re.match(r"\s*([0-9a-fA-F]{32})\s+\S", md5sum_text)
+    match = re.match(r"\s*([0-9a-fA-F]{32})\s+\S", result[0])
     if match:
         return match.group(1)
     return None
@@ -148,33 +239,20 @@ def get_path_mod_time(
     pretend_run = False,
     exit_on_failure = False):
 
-    # Get rclone tool
-    rclone_tool = None
-    if programs.is_tool_installed("RClone"):
-        rclone_tool = programs.get_tool_program("RClone")
-    if not rclone_tool:
-        logger.log_error("RClone was not found")
-        return 0
-
-    # Get lsl command (outputs: size modtime filename)
-    lsl_cmd = [
-        rclone_tool,
-        "lsl",
-        get_remote_connection_path(remote_name, remote_type, remote_path)
-    ]
-
-    # Run lsl command
-    lsl_text, code = run_query_command(
-        cmd = lsl_cmd,
-        options = rcloneremotes.get_rclone_options([remote_name]),
+    # Run lsl (outputs: size modtime filename)
+    result = run_remote_query(
+        remote_name = remote_name,
+        remote_type = remote_type,
+        remote_path = remote_path,
+        subcommand = ["lsl"],
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
-    if code != 0:
+    if result is None or result[1] != 0:
         return 0
 
     # Extract timestamp (format: "  size YYYY-MM-DD HH:MM:SS.nnnnnnnnn filename")
-    match = re.match(r"\s*\d+\s+(\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}:\d{2})", lsl_text)
+    match = re.match(r"\s*\d+\s+(\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}:\d{2})", result[0])
     if match:
         return strings.parse_timestamp(match.group(1))
     return 0
@@ -211,40 +289,17 @@ def does_directory_exist(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-
-    # Get tool
-    rclone_tool = None
-    if programs.is_tool_installed("RClone"):
-        rclone_tool = programs.get_tool_program("RClone")
-    if not rclone_tool:
-        logger.log_error("RClone was not found")
-        return False
-
-    # Get list command
-    list_cmd = [
-        rclone_tool,
-        "lsf",
-        get_remote_connection_path(remote_name, remote_type, remote_path)
-    ]
-
-    # Run list command
-    list_text, code = run_query_command(
-        cmd = list_cmd,
-        options = rcloneremotes.get_rclone_options([remote_name]),
+    result = run_remote_query(
+        remote_name = remote_name,
+        remote_type = remote_type,
+        remote_path = remote_path,
+        subcommand = ["lsf"],
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
-
-    # Check existence
-    if code != 0:
+    if result is None or result[1] != 0:
         return False
-    elif "ERROR" in list_text:
-        return False
-    elif "error listing" in list_text:
-        return False
-    elif "directory not found" in list_text:
-        return False
-    return True
+    return not any(marker in result[0] for marker in ("ERROR", "error listing", "directory not found"))
 
 # Check if file exists on remote
 def does_file_exist(
@@ -254,28 +309,18 @@ def does_file_exist(
     verbose = False):
 
     # Get tool
-    rclone_tool = None
-    if programs.is_tool_installed("RClone"):
-        rclone_tool = programs.get_tool_program("RClone")
+    rclone_tool = get_rclone_tool()
     if not rclone_tool:
-        logger.log_error("RClone was not found")
         return False
 
-    # Use rclone lsjson to check if specific file exists
-    lsjson_cmd = [
-        rclone_tool,
-        "lsjson",
-        get_remote_connection_path(remote_name, remote_type, remote_path)
-    ]
-
-    # Run lsjson command - returns 0 if file exists, non-zero if not
+    # Run lsjson, which succeeds only when the file exists
     options = command.create_command_options()
     options.set_suppress_output(True)
-    code = command.run_returncode_command(
-        cmd = lsjson_cmd,
-        options = rcloneremotes.get_rclone_options([remote_name], options),
+    return run_rclone_command(
+        cmd = [rclone_tool, "lsjson", get_remote_connection_path(remote_name, remote_type, remote_path)],
+        remote_names = [remote_name],
+        options = options,
         verbose = verbose)
-    return code == 0
 
 # Check if path (file or directory) exists on remote
 def does_path_exist(
@@ -311,35 +356,17 @@ def does_path_contain_files(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-
-    # Get tool
-    rclone_tool = None
-    if programs.is_tool_installed("RClone"):
-        rclone_tool = programs.get_tool_program("RClone")
-    if not rclone_tool:
-        logger.log_error("RClone was not found")
-        return False
-
-    # Get list command
-    list_cmd = [
-        rclone_tool,
-        "lsf",
-        "--files-only",
-        get_remote_connection_path(remote_name, remote_type, remote_path)
-    ]
-
-    # Run list command
-    list_text, code = run_query_command(
-        cmd = list_cmd,
-        options = rcloneremotes.get_rclone_options([remote_name]),
+    result = run_remote_query(
+        remote_name = remote_name,
+        remote_type = remote_type,
+        remote_path = remote_path,
+        subcommand = ["lsf", "--files-only"],
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
-
-    # Check if there are any files in the directory
-    if code != 0:
+    if result is None or result[1] != 0:
         return False
-    return len(list_text.strip()) > 0
+    return len(result[0].strip()) > 0
 
 # Create directory on remote
 def create_remote_directory(
@@ -350,9 +377,7 @@ def create_remote_directory(
     pretend_run = False):
 
     # Get tool
-    rclone_tool = None
-    if programs.is_tool_installed("RClone"):
-        rclone_tool = programs.get_tool_program("RClone")
+    rclone_tool = get_rclone_tool(log_missing = False)
     if not rclone_tool:
         return False
 
@@ -385,42 +410,15 @@ def sync_files_to_remote(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-
-    # Get tool
-    rclone_tool = None
-    if programs.is_tool_installed("RClone"):
-        rclone_tool = programs.get_tool_program("RClone")
-    if not rclone_tool:
-        logger.log_error("RClone was not found")
-        return False
-
-    # Get sync command
-    sync_cmd = [
-        rclone_tool,
-        "sync",
-        local_path,
-        get_remote_connection_path(remote_name, remote_type, remote_path)
-    ]
-    sync_cmd += get_common_remote_flags(
-        remote_name = remote_name,
+    return run_transfer(
+        subcommand = "sync",
+        transfer_paths = [local_path, get_remote_connection_path(remote_name, remote_type, remote_path)],
+        remote_names = [remote_name],
         remote_type = remote_type,
-        remote_action_type = config.RemoteActionType.UPLOAD)
-    if pretend_run:
-        sync_cmd += ["--dry-run"]
-    if verbose:
-        sync_cmd += [
-            "--verbose",
-            "--progress"
-        ]
-
-    # Run sync command
-    code = command.run_returncode_command(
-        cmd = sync_cmd,
-        options = rcloneremotes.get_rclone_options([remote_name]),
+        remote_action_type = config.RemoteActionType.UPLOAD,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
-    return code == 0
 
 # Move files on remote
 def move_files_on_remote(
@@ -432,49 +430,17 @@ def move_files_on_remote(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-
-    # Get tool
-    rclone_tool = None
-    if programs.is_tool_installed("RClone"):
-        rclone_tool = programs.get_tool_program("RClone")
-    if not rclone_tool:
-        logger.log_error("RClone was not found")
-        return False
-
-    # A file list that cannot be read must not widen the transfer to everything
-    if files_from and not paths.is_path_file(files_from):
-        logger.log_error("File list %s does not exist" % files_from)
-        return False
-
-    # Build full remote paths
-    src_full = get_remote_connection_path(remote_name, remote_type, src_path)
-    dest_full = get_remote_connection_path(remote_name, remote_type, dest_path)
-
-    # Build move command
-    move_cmd = [
-        rclone_tool,
-        "move",
-        src_full,
-        dest_full
-    ]
-    if files_from:
-        move_cmd += ["--files-from", files_from]
-    if pretend_run:
-        move_cmd += ["--dry-run"]
-    if verbose:
-        move_cmd += [
-            "--verbose",
-            "--progress"
-        ]
-
-    # Run move command
-    code = command.run_returncode_command(
-        cmd = move_cmd,
-        options = rcloneremotes.get_rclone_options([remote_name]),
+    return run_transfer(
+        subcommand = "move",
+        transfer_paths = [
+            get_remote_connection_path(remote_name, remote_type, src_path),
+            get_remote_connection_path(remote_name, remote_type, dest_path)
+        ],
+        remote_names = [remote_name],
+        files_from = files_from,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
-    return code == 0
 
 # Purge path on remote
 def purge_path_on_remote(
@@ -484,40 +450,13 @@ def purge_path_on_remote(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-
-    # Get tool
-    rclone_tool = None
-    if programs.is_tool_installed("RClone"):
-        rclone_tool = programs.get_tool_program("RClone")
-    if not rclone_tool:
-        logger.log_error("RClone was not found")
-        return False
-
-    # Build full remote path
-    remote_full = get_remote_connection_path(remote_name, remote_type, remote_path)
-
-    # Build purge command
-    purge_cmd = [
-        rclone_tool,
-        "purge",
-        remote_full
-    ]
-    if pretend_run:
-        purge_cmd += ["--dry-run"]
-    if verbose:
-        purge_cmd += [
-            "--verbose",
-            "--progress"
-        ]
-
-    # Run purge command
-    code = command.run_returncode_command(
-        cmd = purge_cmd,
-        options = rcloneremotes.get_rclone_options([remote_name]),
+    return run_transfer(
+        subcommand = "purge",
+        transfer_paths = [get_remote_connection_path(remote_name, remote_type, remote_path)],
+        remote_names = [remote_name],
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
-    return code == 0
 
 # Delete single file on remote
 def delete_file_on_remote(
@@ -527,37 +466,14 @@ def delete_file_on_remote(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-
-    # Get tool
-    rclone_tool = None
-    if programs.is_tool_installed("RClone"):
-        rclone_tool = programs.get_tool_program("RClone")
-    if not rclone_tool:
-        logger.log_error("RClone was not found")
-        return False
-
-    # Build full remote path
-    remote_full = get_remote_connection_path(remote_name, remote_type, remote_path)
-
-    # Build deletefile command
-    delete_cmd = [
-        rclone_tool,
-        "deletefile",
-        remote_full
-    ]
-    if pretend_run:
-        delete_cmd += ["--dry-run"]
-    if verbose:
-        delete_cmd += ["--verbose"]
-
-    # Run delete command
-    code = command.run_returncode_command(
-        cmd = delete_cmd,
-        options = rcloneremotes.get_rclone_options([remote_name]),
+    return run_transfer(
+        subcommand = "deletefile",
+        transfer_paths = [get_remote_connection_path(remote_name, remote_type, remote_path)],
+        remote_names = [remote_name],
+        progress = False,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
-    return code == 0
 
 # Move files to recycle bin on remote
 def recycle_files_on_remote(
@@ -622,45 +538,17 @@ def pull_files_from_remote(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-
-    # Get tool
-    rclone_tool = None
-    if programs.is_tool_installed("RClone"):
-        rclone_tool = programs.get_tool_program("RClone")
-    if not rclone_tool:
-        logger.log_error("RClone was not found")
-        return False
-
-    # Get sync command
-    sync_cmd = [
-        rclone_tool,
-        "sync",
-        get_remote_connection_path(remote_name, remote_type, remote_path),
-        local_path
-    ]
-    sync_cmd += get_common_remote_flags(
-        remote_name = remote_name,
+    return run_transfer(
+        subcommand = "sync",
+        transfer_paths = [get_remote_connection_path(remote_name, remote_type, remote_path), local_path],
+        remote_names = [remote_name],
         remote_type = remote_type,
-        remote_action_type = config.RemoteActionType.PULL)
-    sync_cmd += get_exclude_flags(excludes)
-    if pretend_run:
-        sync_cmd += ["--dry-run"]
-    if interactive:
-        sync_cmd += ["--interactive"]
-    if verbose:
-        sync_cmd += [
-            "--verbose",
-            "--progress"
-        ]
-
-    # Run sync command
-    code = command.run_returncode_command(
-        cmd = sync_cmd,
-        options = rcloneremotes.get_rclone_options([remote_name]),
+        remote_action_type = config.RemoteActionType.PULL,
+        excludes = excludes,
+        interactive = interactive,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
-    return code == 0
 
 # Push files to remote
 def push_files_to_remote(
@@ -673,45 +561,17 @@ def push_files_to_remote(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-
-    # Get tool
-    rclone_tool = None
-    if programs.is_tool_installed("RClone"):
-        rclone_tool = programs.get_tool_program("RClone")
-    if not rclone_tool:
-        logger.log_error("RClone was not found")
-        return False
-
-    # Get sync command
-    sync_cmd = [
-        rclone_tool,
-        "sync",
-        local_path,
-        get_remote_connection_path(remote_name, remote_type, remote_path)
-    ]
-    sync_cmd += get_common_remote_flags(
-        remote_name = remote_name,
+    return run_transfer(
+        subcommand = "sync",
+        transfer_paths = [local_path, get_remote_connection_path(remote_name, remote_type, remote_path)],
+        remote_names = [remote_name],
         remote_type = remote_type,
-        remote_action_type = config.RemoteActionType.PUSH)
-    sync_cmd += get_exclude_flags(excludes)
-    if pretend_run:
-        sync_cmd += ["--dry-run"]
-    if interactive:
-        sync_cmd += ["--interactive"]
-    if verbose:
-        sync_cmd += [
-            "--verbose",
-            "--progress"
-        ]
-
-    # Run sync command
-    code = command.run_returncode_command(
-        cmd = sync_cmd,
-        options = rcloneremotes.get_rclone_options([remote_name]),
+        remote_action_type = config.RemoteActionType.PUSH,
+        excludes = excludes,
+        interactive = interactive,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
-    return code == 0
 
 # Merge files both ways
 def merge_files_both_ways(
@@ -725,48 +585,18 @@ def merge_files_both_ways(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-
-    # Get tool
-    rclone_tool = None
-    if programs.is_tool_installed("RClone"):
-        rclone_tool = programs.get_tool_program("RClone")
-    if not rclone_tool:
-        logger.log_error("RClone was not found")
-        return False
-
-    # Get bisync command
-    bisync_cmd = [
-        rclone_tool,
-        "bisync",
-        local_path,
-        get_remote_connection_path(remote_name, remote_type, remote_path),
-        "--check-access"
-    ]
-    bisync_cmd += get_common_remote_flags(
-        remote_name = remote_name,
+    return run_transfer(
+        subcommand = "bisync",
+        transfer_paths = [local_path, get_remote_connection_path(remote_name, remote_type, remote_path)],
+        remote_names = [remote_name],
         remote_type = remote_type,
-        remote_action_type = config.RemoteActionType.MERGE)
-    bisync_cmd += get_exclude_flags(excludes)
-    if resync:
-        bisync_cmd += ["--resync"]
-    if pretend_run:
-        bisync_cmd += ["--dry-run"]
-    if interactive:
-        bisync_cmd += ["--interactive"]
-    if verbose:
-        bisync_cmd += [
-            "--verbose",
-            "--progress"
-        ]
-
-    # Run bisync command
-    code = command.run_returncode_command(
-        cmd = bisync_cmd,
-        options = rcloneremotes.get_rclone_options([remote_name]),
+        remote_action_type = config.RemoteActionType.MERGE,
+        excludes = excludes,
+        extra_flags = ["--check-access"] + (["--resync"] if resync else []),
+        interactive = interactive,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
-    return code == 0
 
 # Copy file from one remote to another
 def copy_remote_to_remote(
@@ -779,36 +609,13 @@ def copy_remote_to_remote(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-
-    # Get tool
-    rclone_tool = None
-    if programs.is_tool_installed("RClone"):
-        rclone_tool = programs.get_tool_program("RClone")
-    if not rclone_tool:
-        logger.log_error("RClone was not found")
-        return False
-
-    # Build source and dest paths
-    src_full = get_remote_connection_path(src_remote_name, src_remote_type, src_remote_path)
-    dest_full = get_remote_connection_path(dest_remote_name, dest_remote_type, dest_remote_path)
-
-    # Build copyto command
-    copyto_cmd = [
-        rclone_tool,
-        "copyto",
-        src_full,
-        dest_full
-    ]
-    if pretend_run:
-        copyto_cmd += ["--dry-run"]
-    if verbose:
-        copyto_cmd += ["--verbose", "--progress"]
-
-    # Run copyto command
-    code = command.run_returncode_command(
-        cmd = copyto_cmd,
-        options = rcloneremotes.get_rclone_options([src_remote_name, dest_remote_name]),
+    return run_transfer(
+        subcommand = "copyto",
+        transfer_paths = [
+            get_remote_connection_path(src_remote_name, src_remote_type, src_remote_path),
+            get_remote_connection_path(dest_remote_name, dest_remote_type, dest_remote_path)
+        ],
+        remote_names = [src_remote_name, dest_remote_name],
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
-    return code == 0
