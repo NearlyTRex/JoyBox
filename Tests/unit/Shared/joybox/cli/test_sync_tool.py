@@ -5,6 +5,7 @@ import pytest
 from cli_helpers import CommandHarness, assert_entry_points
 from joybox import config
 from joybox.cli import sync_tool
+from sync_helpers import sync_owner
 
 
 ###########################################################
@@ -82,7 +83,7 @@ def tool(monkeypatch, tmp_path, isolated_settings):
             harness.called.append(name)
             harness.kwargs.append(kwargs)
             return harness.result
-        monkeypatch.setattr(sync_tool.sync, name, action)
+        monkeypatch.setattr(sync_owner(name), name, action)
     return harness
 
 

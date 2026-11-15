@@ -5,7 +5,10 @@ import os
 import pytest
 
 # Local imports
-from joybox import sync
+from joybox import fileops
+from joybox import hashing
+from joybox import logger
+from joybox import synctransfers
 from sync_helpers import REMOTE, REMOTE_TYPE, make_database, read_database
 
 
@@ -36,11 +39,11 @@ def tree(tmp_path):
 @pytest.fixture(autouse = True)
 def silent(monkeypatch):
     for name in ["log_info", "log_warning", "log_error"]:
-        monkeypatch.setattr(sync.logger, name, lambda *args, **kwargs: None)
+        monkeypatch.setattr(logger, name, lambda *args, **kwargs: None)
 
 
 def upload(local_path, remote_path = TARGET, **kwargs):
-    return sync.upload_hash_sidecar_files(
+    return synctransfers.upload_hash_sidecar_files(
         remote_name = REMOTE, remote_type = REMOTE_TYPE, remote_path = remote_path,
         local_path = str(local_path), local_root = ROOT, **kwargs)
 
@@ -56,7 +59,7 @@ def test_a_recorded_file_carries_its_hash_size_and_time(tree, remote, temp_dirs)
     upload(tree)
     entry = read_database(remote.store)["Roms/top.zip"]
 
-    assert entry["hash"] == sync.hashing.calculate_file_md5(str(tree / "top.zip"))
+    assert entry["hash"] == hashing.calculate_file_md5(str(tree / "top.zip"))
     assert entry["size"] == 3
     assert entry["mtime"] > 0
 
@@ -65,7 +68,7 @@ def test_the_database_goes_back_beside_the_sidecar_root(tree, remote, temp_dirs)
     upload(tree)
 
     assert remote.uploads[0]["remote_path"] == ROOT
-    assert os.path.basename(remote.uploads[0]["local_path"]) == sync.HASH_DATABASE_FILE
+    assert os.path.basename(remote.uploads[0]["local_path"]) == synctransfers.HASH_DATABASE_FILE
 
 
 def test_a_single_uploaded_file_is_recorded(tree, remote, temp_dirs):
@@ -92,7 +95,7 @@ def test_existing_records_are_kept(tree, remote, temp_dirs):
     upload(tree)
 
     assert "Other/kept.zip" in read_database(remote.store)
-    assert remote.downloads[0]["remote_path"] == sync.get_hash_database_path(ROOT)
+    assert remote.downloads[0]["remote_path"] == synctransfers.get_hash_database_path(ROOT)
 
 
 def test_an_existing_record_is_refreshed_by_default(tree, remote, temp_dirs):
@@ -123,7 +126,7 @@ def test_a_failed_database_download_keeps_the_remote_copy(tree, remote, temp_dir
 
 def test_a_download_that_leaves_no_database_is_a_failure(tree, remote, temp_dirs, monkeypatch):
     make_database(remote.store, [{"file_path": "Other/kept.zip", "hash": "kkkk"}])
-    monkeypatch.setattr(sync, "download_files_from_remote", lambda **kwargs: True)
+    monkeypatch.setattr(synctransfers, "download_files_from_remote", lambda **kwargs: True)
 
     assert upload(tree) is False
     assert remote.uploads == []
@@ -164,7 +167,7 @@ def test_the_temporary_directory_is_removed_after_an_error(tree, remote, temp_di
     def explode(**kwargs):
         raise RuntimeError("disk gone")
 
-    monkeypatch.setattr(sync, "build_hash_sidecar_data", explode)
+    monkeypatch.setattr(synctransfers, "build_hash_sidecar_data", explode)
 
     with pytest.raises(RuntimeError):
         upload(tree)
@@ -172,7 +175,7 @@ def test_the_temporary_directory_is_removed_after_an_error(tree, remote, temp_di
 
 
 def test_no_temporary_directory_is_a_failure(tree, remote, monkeypatch):
-    monkeypatch.setattr(sync.fileops, "create_temporary_directory", lambda **kwargs: (False, None))
+    monkeypatch.setattr(fileops, "create_temporary_directory", lambda **kwargs: (False, None))
 
     assert upload(tree) is False
 
@@ -204,25 +207,25 @@ def test_a_failed_database_upload_is_a_failure(tree, remote, temp_dirs):
 
 @pytest.fixture
 def unreadable(monkeypatch):
-    original = sync.hashing.calculate_file_md5
+    original = hashing.calculate_file_md5
 
     def calculate(src, **kwargs):
         if os.path.basename(src) == "game.zip":
             return ""
         return original(src, **kwargs)
 
-    monkeypatch.setattr(sync.hashing, "calculate_file_md5", calculate)
+    monkeypatch.setattr(hashing, "calculate_file_md5", calculate)
 
 
 @pytest.fixture
 def all_large(monkeypatch):
-    original = sync.build_hash_sidecar_directory_list
+    original = synctransfers.build_hash_sidecar_directory_list
 
     def build(**kwargs):
         small, large = original(**kwargs)
         return [], small + large
 
-    monkeypatch.setattr(sync, "build_hash_sidecar_directory_list", build)
+    monkeypatch.setattr(synctransfers, "build_hash_sidecar_directory_list", build)
 
 
 def test_an_unhashable_file_fails_the_update_but_keeps_the_rest(tree, remote, temp_dirs, unreadable):

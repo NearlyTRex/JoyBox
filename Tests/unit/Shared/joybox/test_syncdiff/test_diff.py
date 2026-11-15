@@ -5,7 +5,13 @@ import os
 import pytest
 
 # Local imports
+from joybox import fileops
+from joybox import logger
+from joybox import paths
+from joybox import serialization
 from joybox import sync
+from joybox import syncdiff
+from joybox import synctransfers
 from joybox import fileedits
 from sync_helpers import REMOTE, REMOTE_TYPE, LOCAL, REMOTE_PATH
 
@@ -19,7 +25,7 @@ def run_diff(tmp_path, **kwargs):
         remote_name = REMOTE, remote_type = REMOTE_TYPE,
         remote_path = REMOTE_PATH, local_path = LOCAL)
     defaults.update(kwargs)
-    return sync.diff_files(**defaults)
+    return syncdiff.diff_files(**defaults)
 
 
 def excludes_of(cmd):
@@ -93,7 +99,7 @@ def test_the_combined_report_is_summarised(rclone, recording_command, monkeypatc
     combined = tmp_path / "combined.txt"
     combined.write_text("= same\n- remote_only\n+ local_only\n* changed\n! broken\n? other\n= also_same\n")
     messages = []
-    monkeypatch.setattr(sync.logger, "log_info", messages.append)
+    monkeypatch.setattr(logger, "log_info", messages.append)
     run_diff(tmp_path, diff_combined_path = str(combined))
 
     assert "Number of unchanged files: 2" in messages
@@ -133,11 +139,11 @@ def transfers(monkeypatch):
             return True
         return record_call
 
-    monkeypatch.setattr(sync, "upload_files_to_remote", recorder("upload"))
-    monkeypatch.setattr(sync, "download_files_from_remote", recorder("download"))
+    monkeypatch.setattr(synctransfers, "upload_files_to_remote", recorder("upload"))
+    monkeypatch.setattr(synctransfers, "download_files_from_remote", recorder("download"))
     monkeypatch.setattr(sync, "recycle_files_on_remote", recorder("recycle"))
     for name in ["log_info", "log_warning", "log_error"]:
-        monkeypatch.setattr(sync.logger, name, lambda *a, **k: None)
+        monkeypatch.setattr(logger, name, lambda *a, **k: None)
     return calls
 
 
@@ -153,7 +159,7 @@ def generated_diffs(monkeypatch, transfers):
                 handle.write("".join(line + "\n" for line in lines))
         return True
 
-    monkeypatch.setattr(sync, "diff_files", fake_diff)
+    monkeypatch.setattr(syncdiff, "diff_files", fake_diff)
     return reports
 
 
@@ -162,7 +168,7 @@ def run_diff_sync(**kwargs):
         remote_name = REMOTE, remote_type = REMOTE_TYPE,
         remote_path = REMOTE_PATH, local_path = LOCAL)
     defaults.update(kwargs)
-    return sync.diff_sync_files(**defaults)
+    return syncdiff.diff_sync_files(**defaults)
 
 
 def test_without_a_diff_directory_the_diffs_are_generated(generated_diffs, transfers):
@@ -182,7 +188,7 @@ def test_a_generated_diff_directory_is_removed_afterwards(generated_diffs, trans
 
 def test_a_generated_diff_directory_is_removed_after_a_failure(generated_diffs, transfers, monkeypatch):
     generated_diffs["diff_missing_dest_path"] = ["new.zip"]
-    monkeypatch.setattr(sync, "upload_files_to_remote", lambda **kwargs: False)
+    monkeypatch.setattr(synctransfers, "upload_files_to_remote", lambda **kwargs: False)
 
     assert run_diff_sync() is False
     assert not os.path.exists(os.path.dirname(transfers["diff"][0]["diff_combined_path"]))
@@ -198,7 +204,7 @@ def test_a_given_diff_directory_is_read_not_regenerated(generated_diffs, transfe
 
 
 def test_no_diff_directory_and_no_temporary_one_is_a_failure(transfers, monkeypatch):
-    monkeypatch.setattr(sync.fileops, "create_temporary_directory", lambda **kwargs: (False, None))
+    monkeypatch.setattr(fileops, "create_temporary_directory", lambda **kwargs: (False, None))
 
     assert run_diff_sync() is False
 
@@ -222,7 +228,7 @@ def test_transfer_lists_are_removed_afterwards(generated_diffs, transfers, kind,
 ])
 def test_a_transfer_list_that_cannot_be_created_stops_the_run(generated_diffs, transfers, monkeypatch, report, options):
     generated_diffs[report] = ["game.zip"]
-    monkeypatch.setattr(sync.fileops, "create_temporary_file", lambda **kwargs: (False, None))
+    monkeypatch.setattr(fileops, "create_temporary_file", lambda **kwargs: (False, None))
 
     assert run_diff_sync(**options) is False
     assert transfers["upload"] == transfers["download"] == transfers["recycle"] == []
@@ -231,7 +237,7 @@ def test_a_transfer_list_that_cannot_be_created_stops_the_run(generated_diffs, t
 def test_a_transfer_list_that_cannot_be_written_stops_the_run(generated_diffs, transfers, monkeypatch):
     # An empty list would read as nothing to transfer and report success.
     generated_diffs["diff_missing_dest_path"] = ["game.zip"]
-    monkeypatch.setattr(sync.serialization, "write_text_file", lambda *args, **kwargs: False)
+    monkeypatch.setattr(serialization, "write_text_file", lambda *args, **kwargs: False)
 
     assert run_diff_sync() is False
     assert transfers["upload"] == []
@@ -267,13 +273,13 @@ def test_a_verbose_diff_sync_explains_changed_files(generated_diffs, transfers, 
     local_times = {"local.zip": 2000, "remote.zip": 1000, "unknown.zip": 0}
     remote_times = {"local.zip": 1000, "remote.zip": 2000, "unknown.zip": 1000}
     monkeypatch.setattr(
-        sync.paths, "get_file_mod_time", lambda path: local_times[os.path.basename(path)])
+        paths, "get_file_mod_time", lambda path: local_times[os.path.basename(path)])
     monkeypatch.setattr(
         sync, "get_path_mod_time",
         lambda remote_path, **kwargs: remote_times[os.path.basename(remote_path)])
     messages = []
-    monkeypatch.setattr(sync.logger, "log_info", messages.append)
-    monkeypatch.setattr(sync.logger, "log_warning", messages.append)
+    monkeypatch.setattr(logger, "log_info", messages.append)
+    monkeypatch.setattr(logger, "log_warning", messages.append)
 
     assert run_diff_sync(verbose = True) is True
     assert "Local is newer: local.zip" in messages

@@ -2,8 +2,11 @@
 import pytest
 
 # Local imports
-from joybox import config, sync
-from sync_helpers import REMOTE, REMOTE_TYPE, REMOTE_PATH, record
+from joybox import logger
+from joybox import platform_info
+from joybox import config
+from joybox import synclisting
+from sync_helpers import REMOTE, REMOTE_TYPE, REMOTE_PATH, connection_path, record
 
 
 ###########################################################
@@ -14,19 +17,15 @@ from sync_helpers import REMOTE, REMOTE_TYPE, REMOTE_PATH, record
 # an empty directory that has contents.
 ###########################################################
 
-def connection_path():
-    return sync.get_remote_connection_path(REMOTE, REMOTE_TYPE, REMOTE_PATH)
-
-
 def test_files_are_listed_one_level_deep_by_default(rclone, recording_command):
-    assert sync.list_files(REMOTE, REMOTE_TYPE, REMOTE_PATH) is True
+    assert synclisting.list_files(REMOTE, REMOTE_TYPE, REMOTE_PATH) is True
 
     assert recording_command.only()[1] == "ls"
     assert recording_command.value_after("--max-depth") == 1
 
 
 def test_a_recursive_listing_has_no_depth_limit(rclone, recording_command):
-    sync.list_files(REMOTE, REMOTE_TYPE, REMOTE_PATH, recursive = True)
+    synclisting.list_files(REMOTE, REMOTE_TYPE, REMOTE_PATH, recursive = True)
     cmd = recording_command.only()
 
     assert cmd[1] == "ls"
@@ -34,13 +33,13 @@ def test_a_recursive_listing_has_no_depth_limit(rclone, recording_command):
 
 
 def test_directories_are_listed_with_their_own_subcommand(rclone, recording_command):
-    sync.list_files(REMOTE, REMOTE_TYPE, REMOTE_PATH, only_directories = True)
+    synclisting.list_files(REMOTE, REMOTE_TYPE, REMOTE_PATH, only_directories = True)
 
     assert recording_command.only()[1] == "lsd"
 
 
 def test_a_recursive_directory_listing_is_marked_recursive(rclone, recording_command):
-    sync.list_files(
+    synclisting.list_files(
         REMOTE, REMOTE_TYPE, REMOTE_PATH, only_directories = True, recursive = True)
     cmd = recording_command.only()
 
@@ -48,7 +47,7 @@ def test_a_recursive_directory_listing_is_marked_recursive(rclone, recording_com
 
 
 def test_a_listing_addresses_the_remote_path(rclone, recording_command):
-    sync.list_files(REMOTE, REMOTE_TYPE, REMOTE_PATH)
+    synclisting.list_files(REMOTE, REMOTE_TYPE, REMOTE_PATH)
 
     assert recording_command.only()[-1] == connection_path()
 
@@ -56,59 +55,11 @@ def test_a_listing_addresses_the_remote_path(rclone, recording_command):
 def test_a_failed_listing_reports_failure(rclone, monkeypatch):
     record(monkeypatch, returncode = 1)
 
-    assert sync.list_files(REMOTE, REMOTE_TYPE, REMOTE_PATH) is False
+    assert synclisting.list_files(REMOTE, REMOTE_TYPE, REMOTE_PATH) is False
 
 
 def test_listing_without_rclone_reports_failure(no_rclone, recording_command):
-    assert sync.list_files(REMOTE, REMOTE_TYPE, REMOTE_PATH) is False
-    assert recording_command.ran() is False
-
-
-###########################################################
-# Copying between remotes
-###########################################################
-
-OTHER = "backblaze"
-
-
-def test_a_remote_to_remote_copy_names_both_ends(rclone, recording_command):
-    assert sync.copy_remote_to_remote(
-        REMOTE, REMOTE_TYPE, REMOTE_PATH,
-        OTHER, REMOTE_TYPE, "/Backup") is True
-
-    cmd = recording_command.only()
-    assert cmd[1] == "copyto"
-    assert cmd[2] == connection_path()
-    assert cmd[3] == sync.get_remote_connection_path(OTHER, REMOTE_TYPE, "/Backup")
-
-
-def test_a_remote_to_remote_copy_is_a_dry_run_when_pretending(rclone, recording_command):
-    # The transfer never touches this machine, so the dry run has to be asked
-    # of rclone itself rather than skipped locally.
-    sync.copy_remote_to_remote(
-        REMOTE, REMOTE_TYPE, REMOTE_PATH, OTHER, REMOTE_TYPE, "/Backup",
-        pretend_run = True)
-
-    assert "--dry-run" in recording_command.only()
-
-
-def test_a_remote_to_remote_copy_is_not_a_dry_run_by_default(rclone, recording_command):
-    sync.copy_remote_to_remote(
-        REMOTE, REMOTE_TYPE, REMOTE_PATH, OTHER, REMOTE_TYPE, "/Backup")
-
-    assert "--dry-run" not in recording_command.only()
-
-
-def test_a_failed_remote_to_remote_copy_reports_failure(rclone, monkeypatch):
-    record(monkeypatch, returncode = 1)
-
-    assert sync.copy_remote_to_remote(
-        REMOTE, REMOTE_TYPE, REMOTE_PATH, OTHER, REMOTE_TYPE, "/Backup") is False
-
-
-def test_a_remote_to_remote_copy_without_rclone_reports_failure(no_rclone, recording_command):
-    assert sync.copy_remote_to_remote(
-        REMOTE, REMOTE_TYPE, REMOTE_PATH, OTHER, REMOTE_TYPE, "/Backup") is False
+    assert synclisting.list_files(REMOTE, REMOTE_TYPE, REMOTE_PATH) is False
     assert recording_command.ran() is False
 
 
@@ -124,7 +75,7 @@ def mount_point(tmp_path):
 
 
 def test_a_remote_is_mounted_at_its_mount_point(rclone, recording_command, mount_point):
-    assert sync.mount_files(REMOTE, REMOTE_TYPE, REMOTE_PATH, mount_point) is True
+    assert synclisting.mount_files(REMOTE, REMOTE_TYPE, REMOTE_PATH, mount_point) is True
 
     cmd = recording_command.only()
     assert cmd[1] == "mount"
@@ -134,13 +85,13 @@ def test_a_remote_is_mounted_at_its_mount_point(rclone, recording_command, mount
 def test_a_mount_caches_by_default(rclone, recording_command, mount_point):
     # Without a cache every read goes back to the remote, which makes reading
     # a game off the mount unusably slow.
-    sync.mount_files(REMOTE, REMOTE_TYPE, REMOTE_PATH, mount_point)
+    synclisting.mount_files(REMOTE, REMOTE_TYPE, REMOTE_PATH, mount_point)
 
     assert recording_command.value_after("--vfs-cache-mode") == "full"
 
 
 def test_a_mount_can_skip_the_cache(rclone, recording_command, mount_point):
-    sync.mount_files(REMOTE, REMOTE_TYPE, REMOTE_PATH, mount_point, no_cache = True)
+    synclisting.mount_files(REMOTE, REMOTE_TYPE, REMOTE_PATH, mount_point, no_cache = True)
 
     assert recording_command.value_after("--vfs-cache-mode") == "off"
 
@@ -152,7 +103,7 @@ def test_a_mount_can_skip_the_cache(rclone, recording_command, mount_point):
     ("read_only", "--read-only"),
 ])
 def test_every_mount_option_has_its_flag(rclone, recording_command, mount_point, option, flag):
-    sync.mount_files(
+    synclisting.mount_files(
         REMOTE, REMOTE_TYPE, REMOTE_PATH, mount_point, **{option: True})
 
     assert flag in recording_command.only()
@@ -162,7 +113,7 @@ def test_every_mount_option_has_its_flag(rclone, recording_command, mount_point,
     "--no-checksum", "--no-modtime", "--no-seek", "--read-only",
 ])
 def test_no_mount_option_is_added_unasked(rclone, recording_command, mount_point, flag):
-    sync.mount_files(REMOTE, REMOTE_TYPE, REMOTE_PATH, mount_point)
+    synclisting.mount_files(REMOTE, REMOTE_TYPE, REMOTE_PATH, mount_point)
 
     assert flag not in recording_command.only()
 
@@ -173,7 +124,7 @@ def test_a_mount_point_that_is_already_in_use_is_left_alone(rclone, recording_co
     busy.mkdir()
     (busy / "already-here.txt").write_text("data")
 
-    assert sync.mount_files(REMOTE, REMOTE_TYPE, REMOTE_PATH, str(busy)) is True
+    assert synclisting.mount_files(REMOTE, REMOTE_TYPE, REMOTE_PATH, str(busy)) is True
     assert recording_command.ran() is False
 
 
@@ -181,17 +132,17 @@ def test_a_missing_mount_point_is_created(rclone, recording_command, tmp_path, m
     import os
 
     target = tmp_path / "new-mount"
-    monkeypatch.setattr(sync.platform_info, "is_unix_platform", lambda: True)
+    monkeypatch.setattr(platform_info, "is_unix_platform", lambda: True)
 
-    assert sync.mount_files(REMOTE, REMOTE_TYPE, REMOTE_PATH, str(target)) is True
+    assert synclisting.mount_files(REMOTE, REMOTE_TYPE, REMOTE_PATH, str(target)) is True
     assert os.path.isdir(str(target))
 
 
 def test_a_unix_mount_runs_in_the_background(rclone, recording_command, mount_point, monkeypatch):
     # A foreground mount would block the caller for as long as it is mounted.
-    monkeypatch.setattr(sync.platform_info, "is_unix_platform", lambda: True)
+    monkeypatch.setattr(platform_info, "is_unix_platform", lambda: True)
 
-    sync.mount_files(REMOTE, REMOTE_TYPE, REMOTE_PATH, mount_point)
+    synclisting.mount_files(REMOTE, REMOTE_TYPE, REMOTE_PATH, mount_point)
 
     assert "--daemon" in recording_command.only()
     assert recording_command.options().is_daemon() is True
@@ -200,11 +151,11 @@ def test_a_unix_mount_runs_in_the_background(rclone, recording_command, mount_po
 def test_a_failed_mount_reports_failure(rclone, monkeypatch, mount_point):
     record(monkeypatch, returncode = 1)
 
-    assert sync.mount_files(REMOTE, REMOTE_TYPE, REMOTE_PATH, mount_point) is False
+    assert synclisting.mount_files(REMOTE, REMOTE_TYPE, REMOTE_PATH, mount_point) is False
 
 
 def test_mounting_without_rclone_reports_failure(no_rclone, recording_command, mount_point):
-    assert sync.mount_files(REMOTE, REMOTE_TYPE, REMOTE_PATH, mount_point) is False
+    assert synclisting.mount_files(REMOTE, REMOTE_TYPE, REMOTE_PATH, mount_point) is False
     assert recording_command.ran() is False
 
 
@@ -231,7 +182,7 @@ def hash_listing(monkeypatch, output):
 def test_each_file_is_listed_with_its_hash(rclone, monkeypatch):
     hash_listing(monkeypatch, LISTING)
 
-    listed = sync.list_files_with_hashes(REMOTE, REMOTE_TYPE, REMOTE_PATH)
+    listed = synclisting.list_files_with_hashes(REMOTE, REMOTE_TYPE, REMOTE_PATH)
 
     assert list(listed.keys()) == ["Games/Game.zip"]
     assert listed["Games/Game.zip"]["hash"] == "aaaa"
@@ -241,13 +192,13 @@ def test_each_file_is_listed_with_its_hash(rclone, monkeypatch):
 def test_a_directory_entry_is_not_listed_as_a_file(rclone, monkeypatch):
     hash_listing(monkeypatch, LISTING)
 
-    assert "Games" not in sync.list_files_with_hashes(REMOTE, REMOTE_TYPE, REMOTE_PATH)
+    assert "Games" not in synclisting.list_files_with_hashes(REMOTE, REMOTE_TYPE, REMOTE_PATH)
 
 
 def test_a_listed_file_carries_its_name_and_directory(rclone, monkeypatch):
     hash_listing(monkeypatch, LISTING)
 
-    entry = sync.list_files_with_hashes(REMOTE, REMOTE_TYPE, REMOTE_PATH)["Games/Game.zip"]
+    entry = synclisting.list_files_with_hashes(REMOTE, REMOTE_TYPE, REMOTE_PATH)["Games/Game.zip"]
 
     assert entry["filename"] == "Game.zip"
     assert entry["dir"] == "Games"
@@ -256,7 +207,7 @@ def test_a_listed_file_carries_its_name_and_directory(rclone, monkeypatch):
 def test_a_listed_file_carries_a_parsed_time(rclone, monkeypatch):
     hash_listing(monkeypatch, LISTING)
 
-    entry = sync.list_files_with_hashes(REMOTE, REMOTE_TYPE, REMOTE_PATH)["Games/Game.zip"]
+    entry = synclisting.list_files_with_hashes(REMOTE, REMOTE_TYPE, REMOTE_PATH)["Games/Game.zip"]
 
     assert entry["mtime"] > 0
 
@@ -271,7 +222,7 @@ def test_the_asked_for_hash_is_the_one_returned(rclone, monkeypatch, hash_type, 
     # every comparison against the local copy fail.
     hash_listing(monkeypatch, LISTING)
 
-    listed = sync.list_files_with_hashes(
+    listed = synclisting.list_files_with_hashes(
         REMOTE, REMOTE_TYPE, REMOTE_PATH, hash_type = hash_type)
 
     assert listed["Games/Game.zip"]["hash"] == expected
@@ -284,7 +235,7 @@ def test_a_lowercase_hash_key_is_accepted(rclone, monkeypatch):
        "IsDir": false, "Hashes": {"md5": "dddd"}}
     ]""")
 
-    listed = sync.list_files_with_hashes(REMOTE, REMOTE_TYPE, REMOTE_PATH)
+    listed = synclisting.list_files_with_hashes(REMOTE, REMOTE_TYPE, REMOTE_PATH)
 
     assert listed["Game.zip"]["hash"] == "dddd"
 
@@ -295,13 +246,13 @@ def test_a_file_without_a_hash_is_still_listed(rclone, monkeypatch):
        "IsDir": false, "Hashes": {}}
     ]""")
 
-    listed = sync.list_files_with_hashes(REMOTE, REMOTE_TYPE, REMOTE_PATH)
+    listed = synclisting.list_files_with_hashes(REMOTE, REMOTE_TYPE, REMOTE_PATH)
 
     assert listed["Game.zip"]["hash"] == ""
 
 
 def test_a_listing_asks_for_hashes_of_files_only(rclone, recording_command):
-    sync.list_files_with_hashes(REMOTE, REMOTE_TYPE, REMOTE_PATH)
+    synclisting.list_files_with_hashes(REMOTE, REMOTE_TYPE, REMOTE_PATH)
     cmd = recording_command.only()
 
     assert cmd[1] == "lsjson"
@@ -311,7 +262,7 @@ def test_a_listing_asks_for_hashes_of_files_only(rclone, recording_command):
 
 
 def test_excluded_paths_are_kept_out_of_the_listing(rclone, recording_command):
-    sync.list_files_with_hashes(REMOTE, REMOTE_TYPE, REMOTE_PATH, excludes = ["Cache"])
+    synclisting.list_files_with_hashes(REMOTE, REMOTE_TYPE, REMOTE_PATH, excludes = ["Cache"])
 
     assert any("Cache" in str(part) for part in recording_command.only())
 
@@ -319,7 +270,7 @@ def test_excluded_paths_are_kept_out_of_the_listing(rclone, recording_command):
 def test_byte_output_is_decoded_for_a_hash_listing(rclone, monkeypatch):
     hash_listing(monkeypatch, LISTING.encode())
 
-    assert "Games/Game.zip" in sync.list_files_with_hashes(REMOTE, REMOTE_TYPE, REMOTE_PATH)
+    assert "Games/Game.zip" in synclisting.list_files_with_hashes(REMOTE, REMOTE_TYPE, REMOTE_PATH)
 
 
 @pytest.mark.parametrize("output", ["", "   ", "not json at all"])
@@ -327,25 +278,98 @@ def test_an_unusable_listing_is_a_failure(rclone, quiet, monkeypatch, output):
     # rclone prints [] for an empty remote, so no output is not an empty remote.
     hash_listing(monkeypatch, output)
 
-    assert sync.list_files_with_hashes(REMOTE, REMOTE_TYPE, REMOTE_PATH) is None
+    assert synclisting.list_files_with_hashes(REMOTE, REMOTE_TYPE, REMOTE_PATH) is None
 
 
 def test_an_empty_remote_lists_as_empty(rclone, monkeypatch):
     hash_listing(monkeypatch, "[]")
 
-    assert sync.list_files_with_hashes(REMOTE, REMOTE_TYPE, REMOTE_PATH) == {}
+    assert synclisting.list_files_with_hashes(REMOTE, REMOTE_TYPE, REMOTE_PATH) == {}
 
 
 def test_a_hash_listing_runs_for_real_on_a_pretend_run(rclone, monkeypatch):
     # Listing only reads; skipping it would make a dry run see an empty remote.
     recorder = hash_listing(monkeypatch, LISTING)
 
-    listed = sync.list_files_with_hashes(REMOTE, REMOTE_TYPE, REMOTE_PATH, pretend_run = True)
+    listed = synclisting.list_files_with_hashes(REMOTE, REMOTE_TYPE, REMOTE_PATH, pretend_run = True)
 
     assert "Games/Game.zip" in listed
     assert recorder.calls[0]["kwargs"]["pretend_run"] is False
 
 
 def test_a_hash_listing_without_rclone_is_a_failure(no_rclone, quiet, recording_command):
-    assert sync.list_files_with_hashes(REMOTE, REMOTE_TYPE, REMOTE_PATH) is None
+    assert synclisting.list_files_with_hashes(REMOTE, REMOTE_TYPE, REMOTE_PATH) is None
     assert recording_command.ran() is False
+
+
+###########################################################
+# Hash listings from rclone
+#
+# rclone's JSON is parsed field by field. A listing of the wrong shape, or a
+# field that is present but null, must drop that entry rather than abort the
+# whole listing.
+###########################################################
+
+def listing(monkeypatch, output, returncode = 0):
+    return record(monkeypatch, output = output, returncode = returncode)
+
+
+def test_a_failed_listing_is_a_failure(rclone, quiet, monkeypatch):
+    # A partial listing would read as files missing from the remote.
+    listing(monkeypatch, '[{"Path": "a.zip", "Hashes": {"MD5": "aaaa"}}]', returncode = 1)
+
+    assert synclisting.list_files_with_hashes(REMOTE, REMOTE_TYPE, REMOTE_PATH) is None
+
+
+@pytest.mark.parametrize("output", ['{"Path": "a.zip"}', '"a.zip"', "42"])
+def test_a_listing_that_is_not_a_list_is_a_failure(rclone, quiet, monkeypatch, output):
+    listing(monkeypatch, output)
+
+    assert synclisting.list_files_with_hashes(REMOTE, REMOTE_TYPE, REMOTE_PATH) is None
+
+
+def test_entries_of_the_wrong_shape_are_skipped(rclone, monkeypatch):
+    listing(monkeypatch, '["a.zip", 7, null, {"Path": "b.zip", "Hashes": {"MD5": "bbbb"}}]')
+
+    assert list(synclisting.list_files_with_hashes(REMOTE, REMOTE_TYPE, REMOTE_PATH)) == ["b.zip"]
+
+
+@pytest.mark.parametrize("path", [None, "", 5])
+def test_an_entry_without_a_usable_path_is_skipped(rclone, monkeypatch, path):
+    import json
+    listing(monkeypatch, json.dumps([{"Path": path, "Hashes": {"MD5": "aaaa"}}]))
+
+    assert synclisting.list_files_with_hashes(REMOTE, REMOTE_TYPE, REMOTE_PATH) == {}
+
+
+def test_null_fields_fall_back_to_their_defaults(rclone, monkeypatch):
+    listing(monkeypatch, '[{"Path": "a.zip", "Hashes": null, "Size": null, "ModTime": null}]')
+
+    entry = synclisting.list_files_with_hashes(REMOTE, REMOTE_TYPE, REMOTE_PATH)["a.zip"]
+
+    assert entry["hash"] == ""
+    assert entry["size"] == 0
+    assert entry["mtime"] == 0
+
+
+def test_a_null_hash_value_reads_as_no_hash(rclone, monkeypatch):
+    listing(monkeypatch, '[{"Path": "a.zip", "Hashes": {"MD5": null}}]')
+
+    assert synclisting.list_files_with_hashes(REMOTE, REMOTE_TYPE, REMOTE_PATH)["a.zip"]["hash"] == ""
+
+
+def test_an_unknown_hash_type_reads_as_no_hash(rclone, monkeypatch):
+    listing(monkeypatch, '[{"Path": "a.zip", "Hashes": {"MD5": "aaaa"}}]')
+
+    listed = synclisting.list_files_with_hashes(REMOTE, REMOTE_TYPE, REMOTE_PATH, hash_type = "crc32")
+
+    assert listed["a.zip"]["hash"] == ""
+
+
+def test_a_verbose_listing_reports_its_count(rclone, monkeypatch):
+    listing(monkeypatch, '[{"Path": "a.zip", "Hashes": {"MD5": "aaaa"}}]')
+    messages = []
+    monkeypatch.setattr(logger, "log_info", messages.append)
+    synclisting.list_files_with_hashes(REMOTE, REMOTE_TYPE, REMOTE_PATH, verbose = True)
+
+    assert "Loaded 1 file hashes" in messages

@@ -1,7 +1,7 @@
 # Imports
 import joybox.config as config
 import joybox.system as system
-import joybox.sync as sync
+from joybox import syncremotes
 import joybox.arguments as arguments
 import joybox.setup as setup
 import joybox.logger as logger
@@ -79,7 +79,7 @@ def main():
         logger.log_warning("Operation cancelled by user")
         return
     if args.pretend_run:
-        sync.authorize_remote(remote[0], client[0], client[1], open_browser = not args.no_browser, pretend_run = True)
+        syncremotes.authorize_remote(remote[0], client[0], client[1], open_browser = not args.no_browser, pretend_run = True)
         return True
     return lockerauth.sign_in_locker(
         locker_type = args.locker_type,

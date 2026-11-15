@@ -2,7 +2,9 @@
 import joybox.config as config
 import joybox.system as system
 import joybox.lockerinfo as lockerinfo
-import joybox.sync as sync
+from joybox import synclisting
+from joybox import syncremotes
+from joybox import synctransfers
 import joybox.paths as paths
 import joybox.arguments as arguments
 import joybox.setup as setup
@@ -81,7 +83,7 @@ def main():
         remote_path = paths.join_paths(locker_root, subpath).replace("\\", "/")
 
     # Validate
-    if not sync.is_remote_configured(remote_name, remote_type):
+    if not syncremotes.is_remote_configured(remote_name, remote_type):
         logger.log_error("Remote '%s' is not configured" % remote_name, quit_program = True)
 
     # Log action
@@ -90,11 +92,11 @@ def main():
 
     # Get all files on remote (with hashes if available)
     logger.log_info("Listing remote files...")
-    remote_files = sync.list_files_with_hashes(
+    remote_files = synclisting.list_files_with_hashes(
         remote_name = remote_name,
         remote_type = remote_type,
         remote_path = remote_path,
-        excludes = [sync.HASH_DATABASE_FILE],
+        excludes = [synctransfers.HASH_DATABASE_FILE],
         verbose = args.verbose,
         pretend_run = args.pretend_run,
         exit_on_failure = args.exit_on_failure)
@@ -104,7 +106,7 @@ def main():
 
     # Get files covered by sidecars (always read from locker root)
     logger.log_info("Listing hash sidecars...")
-    sidecar_files = sync.list_files_with_hashes_from_sidecar(
+    sidecar_files = synctransfers.list_files_with_hashes_from_sidecar(
         remote_name = remote_name,
         remote_type = remote_type,
         remote_path = locker_root,

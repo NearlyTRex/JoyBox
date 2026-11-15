@@ -2,7 +2,7 @@
 import pytest
 
 # Local imports
-from joybox import sync
+from joybox import synctransfers
 from sync_helpers import (
     REMOTE, REMOTE_TYPE, LOCAL, REMOTE_PATH, positional_arguments, record)
 
@@ -22,7 +22,7 @@ from sync_helpers import (
 
 def test_a_download_copies_from_the_remote(rclone, monkeypatch, tmp_path):
     recorder = record(monkeypatch)
-    sync.download_files_from_remote(
+    synctransfers.download_files_from_remote(
         REMOTE, REMOTE_TYPE, REMOTE_PATH, str(tmp_path))
     arguments = positional_arguments(recorder.only())
 
@@ -34,7 +34,7 @@ def test_a_download_copies_from_the_remote(rclone, monkeypatch, tmp_path):
 def test_a_download_to_a_file_uses_copyto(rclone, monkeypatch, tmp_path):
     # copy would put the file inside a directory of that name.
     recorder = record(monkeypatch)
-    sync.download_files_from_remote(
+    synctransfers.download_files_from_remote(
         REMOTE, REMOTE_TYPE, REMOTE_PATH + "/game.zip", str(tmp_path / "game.zip"))
 
     assert positional_arguments(recorder.only())[0] == "copyto"
@@ -42,7 +42,7 @@ def test_a_download_to_a_file_uses_copyto(rclone, monkeypatch, tmp_path):
 
 def test_a_download_to_a_trailing_slash_uses_copy(rclone, monkeypatch):
     recorder = record(monkeypatch)
-    sync.download_files_from_remote(
+    synctransfers.download_files_from_remote(
         REMOTE, REMOTE_TYPE, REMOTE_PATH, "/somewhere/new/")
 
     assert positional_arguments(recorder.only())[0] == "copy"
@@ -50,7 +50,7 @@ def test_a_download_to_a_trailing_slash_uses_copy(rclone, monkeypatch):
 
 def test_a_download_carries_the_common_flags(rclone, monkeypatch, tmp_path):
     recorder = record(monkeypatch)
-    sync.download_files_from_remote(
+    synctransfers.download_files_from_remote(
         REMOTE, REMOTE_TYPE, REMOTE_PATH, str(tmp_path))
 
     assert "--transfers" in recorder.only()
@@ -59,7 +59,7 @@ def test_a_download_carries_the_common_flags(rclone, monkeypatch, tmp_path):
 def test_a_single_file_download_carries_no_bulk_flags(rclone, monkeypatch, tmp_path):
     # copyto takes one file; the listing and ordering flags do not apply.
     recorder = record(monkeypatch)
-    sync.download_files_from_remote(
+    synctransfers.download_files_from_remote(
         REMOTE, REMOTE_TYPE, REMOTE_PATH + "/game.zip", str(tmp_path / "game.zip"))
 
     assert "--fast-list" not in recorder.only()
@@ -67,7 +67,7 @@ def test_a_single_file_download_carries_no_bulk_flags(rclone, monkeypatch, tmp_p
 
 def test_a_download_passes_its_excludes(rclone, monkeypatch, tmp_path):
     recorder = record(monkeypatch)
-    sync.download_files_from_remote(
+    synctransfers.download_files_from_remote(
         REMOTE, REMOTE_TYPE, REMOTE_PATH, str(tmp_path), excludes = ["*.tmp"])
 
     assert recorder.value_after("--exclude") == "*.tmp"
@@ -77,7 +77,7 @@ def test_a_download_can_be_limited_to_a_file_list(rclone, monkeypatch, tmp_path)
     listing = tmp_path / "files.txt"
     listing.write_text("game.zip\n")
     recorder = record(monkeypatch)
-    sync.download_files_from_remote(
+    synctransfers.download_files_from_remote(
         REMOTE, REMOTE_TYPE, REMOTE_PATH, str(tmp_path), files_from = str(listing))
 
     assert recorder.value_after("--files-from") == str(listing)
@@ -87,7 +87,7 @@ def test_a_download_with_an_unreadable_file_list_is_refused(rclone, monkeypatch,
     # Dropping the list would transfer everything instead.
     recorder = record(monkeypatch)
 
-    assert sync.download_files_from_remote(
+    assert synctransfers.download_files_from_remote(
         REMOTE, REMOTE_TYPE, REMOTE_PATH, str(tmp_path),
         files_from = str(tmp_path / "absent.txt")) is False
     assert recorder.ran() is False
@@ -95,7 +95,7 @@ def test_a_download_with_an_unreadable_file_list_is_refused(rclone, monkeypatch,
 
 def test_a_pretend_download_is_a_dry_run(rclone, monkeypatch, tmp_path):
     recorder = record(monkeypatch)
-    sync.download_files_from_remote(
+    synctransfers.download_files_from_remote(
         REMOTE, REMOTE_TYPE, REMOTE_PATH, str(tmp_path), pretend_run = True)
 
     assert "--dry-run" in recorder.only()
@@ -104,12 +104,12 @@ def test_a_pretend_download_is_a_dry_run(rclone, monkeypatch, tmp_path):
 def test_a_failed_download_is_reported(rclone, monkeypatch, tmp_path):
     record(monkeypatch, returncode = 1)
 
-    assert sync.download_files_from_remote(
+    assert synctransfers.download_files_from_remote(
         REMOTE, REMOTE_TYPE, REMOTE_PATH, str(tmp_path)) is False
 
 
 def test_a_download_without_rclone_is_refused(no_rclone, recording_command, tmp_path):
-    assert sync.download_files_from_remote(
+    assert synctransfers.download_files_from_remote(
         REMOTE, REMOTE_TYPE, REMOTE_PATH, str(tmp_path)) is False
     assert recording_command.ran() is False
 
@@ -121,7 +121,7 @@ def test_a_download_without_rclone_is_refused(no_rclone, recording_command, tmp_
 def test_an_upload_copies_to_the_remote(rclone, monkeypatch):
     # The reverse of a download: local first, remote second.
     recorder = record(monkeypatch)
-    sync.upload_files_to_remote(REMOTE, REMOTE_TYPE, REMOTE_PATH, LOCAL)
+    synctransfers.upload_files_to_remote(REMOTE, REMOTE_TYPE, REMOTE_PATH, LOCAL)
     arguments = positional_arguments(recorder.calls[0]["cmd"])
 
     assert arguments[0] == "copy"
@@ -131,10 +131,10 @@ def test_an_upload_copies_to_the_remote(rclone, monkeypatch):
 
 def test_an_upload_and_a_download_are_opposites(rclone, monkeypatch, tmp_path):
     recorder = record(monkeypatch)
-    sync.upload_files_to_remote(REMOTE, REMOTE_TYPE, REMOTE_PATH, str(tmp_path))
+    synctransfers.upload_files_to_remote(REMOTE, REMOTE_TYPE, REMOTE_PATH, str(tmp_path))
     upload = positional_arguments(recorder.calls[0]["cmd"])
     recorder.calls.clear()
-    sync.download_files_from_remote(REMOTE, REMOTE_TYPE, REMOTE_PATH, str(tmp_path))
+    synctransfers.download_files_from_remote(REMOTE, REMOTE_TYPE, REMOTE_PATH, str(tmp_path))
     download = positional_arguments(recorder.calls[0]["cmd"])
 
     assert upload[1] == download[2]
@@ -143,7 +143,7 @@ def test_an_upload_and_a_download_are_opposites(rclone, monkeypatch, tmp_path):
 
 def test_an_upload_can_skip_existing_files(rclone, monkeypatch):
     recorder = record(monkeypatch)
-    sync.upload_files_to_remote(
+    synctransfers.upload_files_to_remote(
         REMOTE, REMOTE_TYPE, REMOTE_PATH, LOCAL, skip_existing = True)
 
     assert "--ignore-existing" in recorder.calls[0]["cmd"]
@@ -151,14 +151,14 @@ def test_an_upload_can_skip_existing_files(rclone, monkeypatch):
 
 def test_an_upload_overwrites_by_default(rclone, monkeypatch):
     recorder = record(monkeypatch)
-    sync.upload_files_to_remote(REMOTE, REMOTE_TYPE, REMOTE_PATH, LOCAL)
+    synctransfers.upload_files_to_remote(REMOTE, REMOTE_TYPE, REMOTE_PATH, LOCAL)
 
     assert "--ignore-existing" not in recorder.calls[0]["cmd"]
 
 
 def test_an_upload_passes_its_excludes(rclone, monkeypatch):
     recorder = record(monkeypatch)
-    sync.upload_files_to_remote(
+    synctransfers.upload_files_to_remote(
         REMOTE, REMOTE_TYPE, REMOTE_PATH, LOCAL, excludes = ["*.tmp", "cache/**"])
     cmd = recorder.calls[0]["cmd"]
 
@@ -168,14 +168,14 @@ def test_an_upload_passes_its_excludes(rclone, monkeypatch):
 def test_a_failed_upload_is_reported(rclone, monkeypatch):
     record(monkeypatch, returncode = 1)
 
-    assert sync.upload_files_to_remote(
+    assert synctransfers.upload_files_to_remote(
         REMOTE, REMOTE_TYPE, REMOTE_PATH, LOCAL) is False
 
 
 @pytest.fixture
 def sidecar_uploads(monkeypatch):
     uploads = []
-    monkeypatch.setattr(sync, "upload_hash_sidecar_files", lambda **kwargs: uploads.append(kwargs) or True)
+    monkeypatch.setattr(synctransfers, "upload_hash_sidecar_files", lambda **kwargs: uploads.append(kwargs) or True)
     return uploads
 
 
@@ -183,7 +183,7 @@ def test_a_failed_upload_does_not_update_the_sidecar(rclone, monkeypatch, sideca
     # A sidecar describing files that never arrived is worse than none.
     record(monkeypatch, returncode = 1)
 
-    assert sync.upload_files_to_remote(
+    assert synctransfers.upload_files_to_remote(
         REMOTE, REMOTE_TYPE, REMOTE_PATH, LOCAL, local_root = "/locker") is False
     assert sidecar_uploads == []
 
@@ -192,9 +192,9 @@ def test_a_successful_upload_updates_the_sidecar(rclone, monkeypatch):
     record(monkeypatch)
     updated = []
     monkeypatch.setattr(
-        sync, "upload_hash_sidecar_files",
+        synctransfers, "upload_hash_sidecar_files",
         lambda **kwargs: updated.append(kwargs) or True)
-    sync.upload_files_to_remote(
+    synctransfers.upload_files_to_remote(
         REMOTE, REMOTE_TYPE, REMOTE_PATH, LOCAL, local_root = "/locker")
 
     assert updated
@@ -203,7 +203,7 @@ def test_a_successful_upload_updates_the_sidecar(rclone, monkeypatch):
 def test_the_sidecar_update_can_be_turned_off(rclone, monkeypatch, sidecar_uploads):
     record(monkeypatch)
 
-    assert sync.upload_files_to_remote(
+    assert synctransfers.upload_files_to_remote(
         REMOTE, REMOTE_TYPE, REMOTE_PATH, LOCAL,
         local_root = "/locker", update_sidecar = False) is True
     assert sidecar_uploads == []
@@ -212,5 +212,5 @@ def test_the_sidecar_update_can_be_turned_off(rclone, monkeypatch, sidecar_uploa
 def test_no_local_root_writes_no_sidecar(rclone, monkeypatch, sidecar_uploads):
     record(monkeypatch)
 
-    assert sync.upload_files_to_remote(REMOTE, REMOTE_TYPE, REMOTE_PATH, LOCAL) is True
+    assert synctransfers.upload_files_to_remote(REMOTE, REMOTE_TYPE, REMOTE_PATH, LOCAL) is True
     assert sidecar_uploads == []

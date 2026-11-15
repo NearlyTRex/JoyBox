@@ -3,6 +3,8 @@ import pytest
 
 # Local imports
 from cli_helpers import CommandHarness, assert_entry_points
+from joybox import syncremotes
+from joybox import synctransfers
 from joybox import config
 from joybox.cli import rebuild_hash_sidecars
 
@@ -52,7 +54,7 @@ def tool(monkeypatch, tmp_path, isolated_settings):
     harness.cleared = []
     harness.uploaded = []
     monkeypatch.setattr(tool_module.lockerinfo, "LockerInfo", FakeLockerInfo)
-    monkeypatch.setattr(tool_module.sync, "is_remote_configured", lambda name, remote_type: harness.configured)
+    monkeypatch.setattr(syncremotes, "is_remote_configured", lambda name, remote_type: harness.configured)
 
     def clear(**kwargs):
         harness.cleared.append(kwargs)
@@ -62,8 +64,8 @@ def tool(monkeypatch, tmp_path, isolated_settings):
         harness.uploaded.append(kwargs)
         return harness.upload
 
-    monkeypatch.setattr(tool_module.sync, "clear_hash_sidecar_files", clear)
-    monkeypatch.setattr(tool_module.sync, "upload_hash_sidecar_files", upload)
+    monkeypatch.setattr(synctransfers, "clear_hash_sidecar_files", clear)
+    monkeypatch.setattr(synctransfers, "upload_hash_sidecar_files", upload)
     return harness
 
 

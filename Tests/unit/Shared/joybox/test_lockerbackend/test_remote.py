@@ -5,6 +5,7 @@ import os
 import pytest
 
 # Local imports
+from joybox import syncremotes
 from joybox import config, lockerbackend
 from lockerbackend_helpers import REMOTE_NAME, REMOTE_PATH, FakeLockerInfo, FakeLocalBackend, backend, called, only
 
@@ -417,7 +418,7 @@ def test_a_local_only_locker_gets_the_local_backend():
 
 def test_a_configured_remote_gets_the_remote_backend(monkeypatch):
     monkeypatch.setattr(
-        lockerbackend.sync, "is_remote_configured", lambda name, remote_type: True)
+        syncremotes, "is_remote_configured", lambda name, remote_type: True)
 
     info = FakeLockerInfo()
     backend = lockerbackend.get_backend_for_locker(info)
@@ -429,7 +430,7 @@ def test_an_unconfigured_remote_falls_back_to_local(monkeypatch):
     # Without an rclone remote there is nothing to talk to, and falling back
     # keeps a half-configured machine usable.
     monkeypatch.setattr(
-        lockerbackend.sync, "is_remote_configured", lambda name, remote_type: False)
+        syncremotes, "is_remote_configured", lambda name, remote_type: False)
 
     info = FakeLockerInfo()
     backend = lockerbackend.get_backend_for_locker(info)

@@ -2,8 +2,9 @@
 import pytest
 
 # Local imports
-from joybox import config, sync
-from sync_helpers import REMOTE, REMOTE_TYPE, REMOTE_PATH, record
+from joybox import config
+from joybox import syncremotes
+from sync_helpers import REMOTE, REMOTE_TYPE, REMOTE_PATH, connection_path, record
 
 
 ###########################################################
@@ -22,7 +23,7 @@ AUTHORIZE_OUTPUT = "Paste the following into your remote machine --->\n%s\n<---E
 
 
 def sign_in(**kwargs):
-    return sync.authorize_remote(config.RemoteType.DRIVE, CLIENT_ID, CLIENT_PHRASE, **kwargs)
+    return syncremotes.authorize_remote(config.RemoteType.DRIVE, CLIENT_ID, CLIENT_PHRASE, **kwargs)
 
 
 def test_the_printed_token_is_returned(rclone, monkeypatch):
@@ -90,7 +91,7 @@ def test_a_failed_sign_in_gets_nothing(rclone, quiet, monkeypatch, returncode, o
 
 
 def test_no_output_holds_no_token():
-    assert sync.parse_authorize_output(None) is None
+    assert syncremotes.parse_authorize_output(None) is None
 
 
 ###########################################################
@@ -100,23 +101,23 @@ def test_no_output_holds_no_token():
 def test_the_top_level_entries_are_counted(rclone, monkeypatch):
     recorder = record(monkeypatch, output = "Games/\nnotes.txt\n\n")
 
-    assert sync.count_remote_entries(REMOTE, REMOTE_TYPE, REMOTE_PATH) == 2
+    assert syncremotes.count_remote_entries(REMOTE, REMOTE_TYPE, REMOTE_PATH) == 2
     cmd = recorder.calls[0]["cmd"]
     assert cmd[1:4] == ["lsf", "--max-depth", "1"]
-    assert cmd[-1] == sync.get_remote_connection_path(REMOTE, REMOTE_TYPE, REMOTE_PATH)
+    assert cmd[-1] == connection_path()
 
 
 def test_an_empty_remote_has_no_entries(rclone, monkeypatch):
     record(monkeypatch, output = "")
 
-    assert sync.count_remote_entries(REMOTE, REMOTE_TYPE, REMOTE_PATH) == 0
+    assert syncremotes.count_remote_entries(REMOTE, REMOTE_TYPE, REMOTE_PATH) == 0
 
 
 def test_a_failed_listing_counts_nothing(rclone, monkeypatch):
     record(monkeypatch, returncode = 1, output = "")
 
-    assert sync.count_remote_entries(REMOTE, REMOTE_TYPE, REMOTE_PATH) is None
+    assert syncremotes.count_remote_entries(REMOTE, REMOTE_TYPE, REMOTE_PATH) is None
 
 
 def test_counting_without_rclone_counts_nothing(no_rclone, quiet):
-    assert sync.count_remote_entries(REMOTE, REMOTE_TYPE, REMOTE_PATH) is None
+    assert syncremotes.count_remote_entries(REMOTE, REMOTE_TYPE, REMOTE_PATH) is None

@@ -4,20 +4,33 @@ import shutil
 
 # Local imports
 from joybox import config, sqlitedb, sync
+from joybox import syncdiff, synclisting, syncremotes, synctransfers
+from module_helpers import owner_of
 
 
 ###########################################################
-# Shared values for the sync suite
+# Shared values for the sync suites
 #
-# sync.py is large enough that its tests are split by area. Anything more than
-# one file needs lives here, so a helper cannot drift between files or shadow
-# another file's copy of itself.
+# sync and the modules split from it are tested across several directories.
+# Anything more than one file needs lives here, so a helper cannot drift
+# between files or shadow another file's copy of itself.
 ###########################################################
 
 REMOTE = "hetzner"
 REMOTE_TYPE = config.RemoteType.members()[0]
 LOCAL = "/locker/Gaming/Roms"
 REMOTE_PATH = "/Gaming/Roms"
+SYNC_MODULES = (sync, syncremotes, synctransfers, syncdiff, synclisting)
+
+
+# The sync module that defines a function
+def sync_owner(name):
+    return owner_of(name, *SYNC_MODULES)
+
+
+# The rclone path of REMOTE_PATH on REMOTE
+def connection_path():
+    return sync.get_remote_connection_path(REMOTE, REMOTE_TYPE, REMOTE_PATH)
 
 
 # Everything up to the first flag: the subcommand and the paths it acts on
@@ -73,8 +86,8 @@ class FakeRemote:
         self.uploads = []
         self.download_result = True
         self.upload_result = True
-        monkeypatch.setattr(sync, "download_files_from_remote", self.download)
-        monkeypatch.setattr(sync, "upload_files_to_remote", self.upload)
+        monkeypatch.setattr(synctransfers, "download_files_from_remote", self.download)
+        monkeypatch.setattr(synctransfers, "upload_files_to_remote", self.upload)
         monkeypatch.setattr(
             sync, "does_file_exist", lambda *args, **kwargs: os.path.exists(str(self.store)))
 

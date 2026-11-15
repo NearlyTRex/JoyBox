@@ -2,6 +2,8 @@
 import pytest
 
 # Local imports
+from joybox import command
+from joybox import programs
 from joybox import sync
 from sync_helpers import REMOTE, REMOTE_TYPE, REMOTE_PATH, record
 
@@ -18,19 +20,19 @@ MD5 = "d41d8cd98f00b204e9800998ecf8427e"
 
 
 def test_rclone_is_reported_as_installed_when_the_tool_is(monkeypatch):
-    monkeypatch.setattr(sync.programs, "is_tool_installed", lambda name: name == "RClone")
+    monkeypatch.setattr(programs, "is_tool_installed", lambda name: name == "RClone")
 
     assert sync.is_tool_installed() is True
 
 
 def test_a_query_decodes_byte_output(monkeypatch):
-    monkeypatch.setattr(sync.command, "run_command", lambda **kwargs: (b"text", 0))
+    monkeypatch.setattr(command, "run_command", lambda **kwargs: (b"text", 0))
 
     assert sync.run_query_command(["rclone"]) == ("text", 0)
 
 
 def test_a_query_with_no_output_reads_as_empty_text(monkeypatch):
-    monkeypatch.setattr(sync.command, "run_command", lambda **kwargs: (None, 3))
+    monkeypatch.setattr(command, "run_command", lambda **kwargs: (None, 3))
 
     assert sync.run_query_command(["rclone"]) == ("", 3)
 
@@ -45,70 +47,6 @@ def test_a_query_passes_its_run_flags_on(monkeypatch):
     assert kwargs["pretend_run"] is True
     assert kwargs["exit_on_failure"] is True
     assert kwargs["capture_output"] is True
-
-
-###########################################################
-# Configured remotes
-###########################################################
-
-def test_a_failed_remote_listing_lists_nothing(rclone, quiet, monkeypatch):
-    record(monkeypatch, returncode = 1, output = "hetzner: sftp\n")
-
-    assert sync.get_configured_remotes() == {}
-
-
-def test_blank_lines_are_not_remotes(rclone, monkeypatch):
-    record(monkeypatch, output = "hetzner: sftp\n\n  \ngdrive: drive\n")
-
-    assert sync.get_configured_remotes() == {"hetzner": "sftp", "gdrive": "drive"}
-
-
-def test_the_remote_check_lists_the_remote_it_names_with_its_flags(rclone, quiet, monkeypatch):
-    seen = []
-    monkeypatch.setattr(sync, "get_configured_remotes", lambda **kwargs: seen.append(kwargs) or {})
-    sync.is_remote_configured(REMOTE, REMOTE_TYPE, verbose = True, pretend_run = True, exit_on_failure = True)
-
-    assert seen == [{"remote_names": [REMOTE], "verbose": True, "pretend_run": True, "exit_on_failure": True}]
-
-
-def test_a_remote_whose_name_only_starts_the_same_is_not_configured(rclone, quiet, monkeypatch):
-    # hetznerEnc being defined says nothing about hetzner itself.
-    raw = sync.get_remote_raw_type(REMOTE_TYPE)
-    monkeypatch.setattr(sync, "get_configured_remotes", lambda **kwargs: {"hetznerenc": raw})
-
-    assert sync.is_remote_configured(REMOTE, REMOTE_TYPE) is False
-
-
-def test_a_configured_remote_check_without_rclone_is_false(no_rclone, quiet, recording_command):
-    assert sync.is_remote_configured(REMOTE, REMOTE_TYPE) is False
-    assert recording_command.ran() is False
-
-
-###########################################################
-# Setting up remotes
-#
-# Remotes are defined by the settings, so setting one up creates nothing: it
-# checks the remote resolves, and never puts a credential on a command line.
-###########################################################
-
-def test_a_remote_the_settings_define_is_set_up(rclone, quiet, monkeypatch, recording_command):
-    checked = []
-    monkeypatch.setattr(sync, "is_remote_configured", lambda **kwargs: checked.append(kwargs) or True)
-
-    assert sync.setup_remote(REMOTE, REMOTE_TYPE, verbose = True) is True
-    assert checked == [{"remote_name": REMOTE, "remote_type": REMOTE_TYPE,
-                        "verbose": True, "pretend_run": False, "exit_on_failure": False}]
-    assert recording_command.ran() is False
-
-
-def test_a_remote_the_settings_do_not_define_says_where_to_define_it(rclone, monkeypatch):
-    errors = []
-    monkeypatch.setattr(sync, "is_remote_configured", lambda **kwargs: False)
-    monkeypatch.setattr(sync.logger, "log_error", errors.append)
-
-    assert sync.setup_remote(REMOTE, REMOTE_TYPE) is False
-    assert errors == ["Remote 'hetzner' is not defined as %s; set the locker's _name, _type and _config in "
-                      "[UserData.Share]" % sync.get_remote_raw_type(REMOTE_TYPE)]
 
 
 ###########################################################

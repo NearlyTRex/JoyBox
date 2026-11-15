@@ -5,6 +5,8 @@ import os
 import pytest
 
 # Local imports
+from joybox import logger
+from joybox import programs
 from joybox import config
 from joybox import environment
 from joybox import locker
@@ -115,3 +117,23 @@ def wine_prefix(tmp_path):
     entry.set_is_wine_prefix(True)
     entry.set_prefix_dir(str(prefix))
     return entry
+
+
+# rclone, installed or missing
+@pytest.fixture
+def rclone(monkeypatch):
+    monkeypatch.setattr(programs, "is_tool_installed", lambda name: True)
+    monkeypatch.setattr(programs, "get_tool_program", lambda name: "/tools/rclone")
+    return "/tools/rclone"
+
+
+@pytest.fixture
+def no_rclone(monkeypatch):
+    monkeypatch.setattr(programs, "is_tool_installed", lambda name: False)
+    monkeypatch.setattr(programs, "get_tool_program", lambda name: None)
+
+
+@pytest.fixture
+def quiet(monkeypatch):
+    monkeypatch.setattr(logger, "log_info", lambda *args, **kwargs: None)
+    monkeypatch.setattr(logger, "log_error", lambda *args, **kwargs: None)

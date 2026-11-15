@@ -3,6 +3,9 @@ import pytest
 
 # Local imports
 from cli_helpers import CommandHarness, assert_entry_points
+from joybox import synclisting
+from joybox import syncremotes
+from joybox import synctransfers
 from joybox import config
 from joybox.cli import find_missing_hash_sidecars
 
@@ -38,9 +41,9 @@ def tool(monkeypatch, isolated_settings):
     harness.reported = []
     tool_module = find_missing_hash_sidecars
     monkeypatch.setattr(tool_module.lockerinfo, "LockerInfo", FakeLockerInfo)
-    monkeypatch.setattr(tool_module.sync, "is_remote_configured", lambda name, remote_type: True)
-    monkeypatch.setattr(tool_module.sync, "list_files_with_hashes", lambda **kwargs: harness.remote)
-    monkeypatch.setattr(tool_module.sync, "list_files_with_hashes_from_sidecar", lambda **kwargs: harness.sidecar)
+    monkeypatch.setattr(syncremotes, "is_remote_configured", lambda name, remote_type: True)
+    monkeypatch.setattr(synclisting, "list_files_with_hashes", lambda **kwargs: harness.remote)
+    monkeypatch.setattr(synctransfers, "list_files_with_hashes_from_sidecar", lambda **kwargs: harness.sidecar)
     monkeypatch.setattr(tool_module.reports, "write_list_report", lambda items, **kwargs: harness.reported.extend(items))
     return harness
 
@@ -79,7 +82,7 @@ def test_a_remote_without_a_sidecar_reports_every_file(tool):
 
 def test_a_subtree_is_listed_but_looked_up_from_the_locker_root(tool, monkeypatch):
     listed = []
-    monkeypatch.setattr(find_missing_hash_sidecars.sync, "list_files_with_hashes",
+    monkeypatch.setattr(synclisting, "list_files_with_hashes",
         lambda **kwargs: listed.append(kwargs["remote_path"]) or {"Game.zip": {}, "New.zip": {}})
     tool.sidecar = {"Gaming/Roms/Game.zip": {}}
 
@@ -90,7 +93,7 @@ def test_a_subtree_is_listed_but_looked_up_from_the_locker_root(tool, monkeypatc
 
 
 def test_an_unconfigured_remote_stops_before_listing(tool, monkeypatch):
-    monkeypatch.setattr(find_missing_hash_sidecars.sync, "is_remote_configured", lambda name, remote_type: False)
+    monkeypatch.setattr(syncremotes, "is_remote_configured", lambda name, remote_type: False)
 
     assert tool.exit_code() != 0
     assert tool.errors == ["Remote 'hetzner' is not configured"]

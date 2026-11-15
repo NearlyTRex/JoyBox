@@ -5,6 +5,7 @@ import os
 import pytest
 
 # Local imports
+from joybox import syncremotes
 from joybox import config, cryption, hashutil, locker
 
 
@@ -648,7 +649,7 @@ def configured(lockers, monkeypatch, tmp_path):
     state = {"remotes": set(), "rclone": True}
     monkeypatch.setattr(locker.sync, "is_tool_installed", lambda: state["rclone"])
     monkeypatch.setattr(
-        locker.sync, "is_remote_configured",
+        syncremotes, "is_remote_configured",
         lambda remote_name, remote_type: remote_name in state["remotes"])
     lockers.set_value("UserData.Share", f"locker_{REMOTE.lower()}_config", '{"host": "example.com", "pass": "x"}')
     lockers.set_value("UserData.Share", "locker_local_mount_path", str(tmp_path))

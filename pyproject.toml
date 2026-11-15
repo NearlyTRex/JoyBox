@@ -196,9 +196,8 @@ wrapper_modules = [
 documented = 801
 doc-paraphrase = 1692
 long-functions = 643
-long-modules = 1
 # pylint over Shared and Scripts with pytest-testrex's library rcfile
-pylint-source = 4735
+pylint-source = 4728
 
 [tool.ruff.lint]
 # The Workflows library's default set, pinned here so a library change is a

@@ -14,6 +14,9 @@ from joybox import filebulk
 import joybox.hashing as hashing
 import joybox.cryption as cryption
 import joybox.sync as sync
+from joybox import synclisting
+from joybox import syncremotes
+from joybox import synctransfers
 import joybox.serialization as serialization
 import joybox.environment as environment
 
@@ -274,7 +277,7 @@ class LocalBackend(LockerBackend):
 
             # If no cryption needed, download straight to the destination path
             if cryption_type == config.CryptionType.NONE:
-                return sync.download_files_from_remote(
+                return synctransfers.download_files_from_remote(
                     remote_name = src_backend.remote_name,
                     remote_type = src_backend.remote_type,
                     remote_path = paths.join_paths(src_backend.remote_path, src_rel_path),
@@ -295,7 +298,7 @@ class LocalBackend(LockerBackend):
                 return False
             temp_file = paths.join_paths(temp_dir, paths.get_filename_file(stored_rel_path))
             try:
-                success = sync.download_files_from_remote(
+                success = synctransfers.download_files_from_remote(
                     remote_name = src_backend.remote_name,
                     remote_type = src_backend.remote_type,
                     remote_path = paths.join_paths(src_backend.remote_path, stored_rel_path),
@@ -405,7 +408,7 @@ class RemoteBackend(LockerBackend):
         verbose = False,
         pretend_run = False,
         exit_on_failure = False):
-        return sync.list_files_with_hashes(
+        return synclisting.list_files_with_hashes(
             remote_name = self.remote_name,
             remote_type = self.remote_type,
             remote_path = self.remote_path,
@@ -420,7 +423,7 @@ class RemoteBackend(LockerBackend):
         verbose = False,
         pretend_run = False,
         exit_on_failure = False):
-        return sync.list_files_with_hashes_from_sidecar(
+        return synctransfers.list_files_with_hashes_from_sidecar(
             remote_name = self.remote_name,
             remote_type = self.remote_type,
             remote_path = self.remote_path,
@@ -461,7 +464,7 @@ class RemoteBackend(LockerBackend):
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure):
                 return False
-            return sync.upload_files_to_remote(
+            return synctransfers.upload_files_to_remote(
                 remote_name = self.remote_name,
                 remote_type = self.remote_type,
                 remote_path = dest_remote_path if is_directory else paths.get_filename_directory(dest_remote_path),
@@ -540,7 +543,7 @@ class RemoteBackend(LockerBackend):
                 if not ok:
                     logger.log_error("Failed to write file list %s" % files_from)
                 else:
-                    ok = sync.upload_files_to_remote(
+                    ok = synctransfers.upload_files_to_remote(
                         remote_name = self.remote_name,
                         remote_type = self.remote_type,
                         remote_path = self.remote_path,
@@ -622,7 +625,7 @@ class RemoteBackend(LockerBackend):
 
                     # Single upload of this batch's staging tree (mirrors dest structure)
                     if staged:
-                        if sync.upload_files_to_remote(
+                        if synctransfers.upload_files_to_remote(
                             remote_name = self.remote_name,
                             remote_type = self.remote_type,
                             remote_path = self.remote_path,
@@ -661,9 +664,9 @@ class RemoteBackend(LockerBackend):
         # Optionally clear the existing sidecar first (one-time purge of stale entries).
         # Rebuilding on top of a sidecar that could not be cleared would keep the stale ones.
         if clear_first:
-            db_path = sync.get_hash_database_path(self.remote_path)
+            db_path = synctransfers.get_hash_database_path(self.remote_path)
             if sync.does_file_exist(self.remote_name, self.remote_type, db_path, verbose = verbose):
-                if not sync.clear_hash_sidecar_files(
+                if not synctransfers.clear_hash_sidecar_files(
                     remote_name = self.remote_name,
                     remote_type = self.remote_type,
                     remote_path = self.remote_path,
@@ -674,7 +677,7 @@ class RemoteBackend(LockerBackend):
                     return False
 
         # Rebuild the sidecar from authoritative local (plaintext) content
-        return sync.upload_hash_sidecar_files(
+        return synctransfers.upload_hash_sidecar_files(
             remote_name = self.remote_name,
             remote_type = self.remote_type,
             remote_path = self.remote_path,
@@ -784,7 +787,7 @@ class RemoteBackend(LockerBackend):
                     stored_rel_path = src_backend.get_stored_rel_path(src_rel_path)
                 download_dir = paths.join_paths(temp_dir, "download")
                 source_file = paths.join_paths(download_dir, paths.get_filename_file(stored_rel_path))
-                if not sync.download_files_from_remote(
+                if not synctransfers.download_files_from_remote(
                     remote_name = src_backend.remote_name,
                     remote_type = src_backend.remote_type,
                     remote_path = paths.join_paths(src_backend.remote_path, stored_rel_path),
@@ -805,7 +808,7 @@ class RemoteBackend(LockerBackend):
                 return False
 
             # Upload the staged file
-            return sync.upload_files_to_remote(
+            return synctransfers.upload_files_to_remote(
                 remote_name = self.remote_name,
                 remote_type = self.remote_type,
                 remote_path = paths.get_filename_directory(dest_remote_path),
@@ -866,7 +869,7 @@ def get_backend_for_locker(locker_info):
     else:
         remote_name = locker_info.get_name()
         remote_type = locker_info.get_type()
-        if remote_name and remote_type and sync.is_remote_configured(remote_name, remote_type):
+        if remote_name and remote_type and syncremotes.is_remote_configured(remote_name, remote_type):
             return RemoteBackend(locker_info)
         else:
             return LocalBackend(locker_info)

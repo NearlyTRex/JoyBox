@@ -5,6 +5,7 @@ import json
 import pytest
 
 # Local imports
+from joybox import syncremotes
 from joybox import config, lockersync
 from lockersync_helpers import FakeBackend, FakeLocalLocker, FakeLockerInfo, FakeRemoteLocker, entry
 
@@ -17,7 +18,7 @@ from lockersync_helpers import FakeBackend, FakeLocalLocker, FakeLockerInfo, Fak
 def configured(monkeypatch):
     state = {"configured": True}
     monkeypatch.setattr(
-        lockersync.sync, "is_remote_configured", lambda name, remote_type: state["configured"])
+        syncremotes, "is_remote_configured", lambda name, remote_type: state["configured"])
     return state
 
 
@@ -74,7 +75,7 @@ class Lockers:
         monkeypatch.setattr(lockersync.lockerinfo, "LockerInfo", lambda locker_type: self.infos[locker_type])
         monkeypatch.setattr(
             lockersync.lockerbackend, "get_backend_for_locker", lambda info: self.backends[info.name])
-        monkeypatch.setattr(lockersync.sync, "is_remote_configured", lambda name, remote_type: True)
+        monkeypatch.setattr(syncremotes, "is_remote_configured", lambda name, remote_type: True)
 
     def local(self, name, listing = None, **kwargs):
         root = self.tmp_path / name

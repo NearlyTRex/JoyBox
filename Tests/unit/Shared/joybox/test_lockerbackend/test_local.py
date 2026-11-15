@@ -7,6 +7,7 @@ import pathlib
 import pytest
 
 # Local imports
+from joybox import syncremotes
 from joybox import lockerbackend
 
 
@@ -472,7 +473,7 @@ def test_a_local_only_locker_gets_a_local_backend(tmp_path):
 def test_an_unconfigured_remote_falls_back_to_local(tmp_path, monkeypatch):
     # Without a configured rclone remote there is nothing to talk to, so the
     # mount path is the only thing left that works.
-    monkeypatch.setattr(lockerbackend.sync, "is_remote_configured", lambda name, kind: False)
+    monkeypatch.setattr(syncremotes, "is_remote_configured", lambda name, kind: False)
     info = FakeLockerInfo(str(tmp_path), local_only = False, name = "hetzner")
 
     backend = lockerbackend.get_backend_for_locker(info)
@@ -481,7 +482,7 @@ def test_an_unconfigured_remote_falls_back_to_local(tmp_path, monkeypatch):
 
 
 def test_a_configured_remote_gets_a_remote_backend(tmp_path, monkeypatch):
-    monkeypatch.setattr(lockerbackend.sync, "is_remote_configured", lambda name, kind: True)
+    monkeypatch.setattr(syncremotes, "is_remote_configured", lambda name, kind: True)
     info = FakeLockerInfo(str(tmp_path), local_only = False, name = "hetzner")
 
     backend = lockerbackend.get_backend_for_locker(info)
@@ -490,7 +491,7 @@ def test_a_configured_remote_gets_a_remote_backend(tmp_path, monkeypatch):
 
 
 def test_a_remote_without_a_name_falls_back_to_local(tmp_path, monkeypatch):
-    monkeypatch.setattr(lockerbackend.sync, "is_remote_configured", lambda name, kind: True)
+    monkeypatch.setattr(syncremotes, "is_remote_configured", lambda name, kind: True)
     info = FakeLockerInfo(str(tmp_path), local_only = False, name = "")
 
     backend = lockerbackend.get_backend_for_locker(info)

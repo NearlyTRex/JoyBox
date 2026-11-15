@@ -134,22 +134,3 @@ def test_an_unavailable_md5_is_not_a_match(rclone, monkeypatch):
     monkeypatch.setattr(sync, "get_path_md5", lambda **kwargs: None)
 
     assert sync.does_path_match_md5(REMOTE, REMOTE_TYPE, "/x", "bbbb") is False
-
-
-###########################################################
-# Hash database paths
-###########################################################
-
-def test_a_hash_database_path_uses_forward_slashes():
-    # Remote paths are posix regardless of the host.
-    built = sync.get_hash_database_path("Gaming\\Roms")
-
-    assert "\\" not in built
-
-
-def test_a_hash_database_path_is_under_the_remote_path():
-    assert sync.get_hash_database_path("Gaming").startswith("Gaming/")
-
-
-def test_a_hash_database_path_works_without_a_remote_path():
-    assert sync.get_hash_database_path()

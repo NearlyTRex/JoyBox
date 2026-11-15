@@ -3,6 +3,7 @@ import pytest
 
 # Local imports
 from joybox import sync
+from joybox import synclisting
 from sync_helpers import (
     REMOTE, REMOTE_TYPE, LOCAL, REMOTE_PATH, positional_arguments, record)
 
@@ -146,7 +147,7 @@ def test_files_are_listed_with_hashes(rclone, monkeypatch):
          "Hashes": {"md5": "abc123"}, "IsDir": False, "ModTime": "2024-01-01T00:00:00Z"},
     ]
     recorder = record(monkeypatch, output = _json.dumps(entries))
-    built = sync.list_files_with_hashes(REMOTE, REMOTE_TYPE, REMOTE_PATH)
+    built = synclisting.list_files_with_hashes(REMOTE, REMOTE_TYPE, REMOTE_PATH)
 
     assert "lsjson" in recorder.text()
     assert "--recursive" in recorder.only()
@@ -156,14 +157,14 @@ def test_files_are_listed_with_hashes(rclone, monkeypatch):
 def test_a_listing_with_no_output_is_a_failure(rclone, quiet, monkeypatch):
     record(monkeypatch, output = "")
 
-    assert sync.list_files_with_hashes(REMOTE, REMOTE_TYPE, REMOTE_PATH) is None
+    assert synclisting.list_files_with_hashes(REMOTE, REMOTE_TYPE, REMOTE_PATH) is None
 
 
 def test_a_malformed_listing_is_a_failure(rclone, quiet, monkeypatch):
     record(monkeypatch, output = "not json at all")
 
-    assert sync.list_files_with_hashes(REMOTE, REMOTE_TYPE, REMOTE_PATH) is None
+    assert synclisting.list_files_with_hashes(REMOTE, REMOTE_TYPE, REMOTE_PATH) is None
 
 
 def test_a_listing_without_rclone_is_a_failure(no_rclone, quiet, recording_command):
-    assert sync.list_files_with_hashes(REMOTE, REMOTE_TYPE, REMOTE_PATH) is None
+    assert synclisting.list_files_with_hashes(REMOTE, REMOTE_TYPE, REMOTE_PATH) is None

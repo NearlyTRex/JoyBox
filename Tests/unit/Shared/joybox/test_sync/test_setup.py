@@ -3,7 +3,7 @@ import pytest
 
 # Local imports
 from joybox import sync
-from sync_helpers import REMOTE, REMOTE_TYPE, REMOTE_PATH, record
+from sync_helpers import REMOTE, REMOTE_TYPE, REMOTE_PATH, connection_path, record
 
 
 ###########################################################
@@ -24,7 +24,7 @@ def test_a_checksum_command_addresses_the_remote_path(rclone, recording_command)
     cmd = recording_command.only()
 
     assert cmd[1] == "md5sum"
-    assert cmd[2] == sync.get_remote_connection_path(REMOTE, REMOTE_TYPE, REMOTE_PATH)
+    assert cmd[2] == connection_path()
 
 
 def test_byte_output_is_decoded_for_a_checksum(rclone, monkeypatch):

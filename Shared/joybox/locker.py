@@ -1,6 +1,7 @@
 # Local imports
 import joybox.config as config
 import joybox.sync as sync
+from joybox import syncremotes
 import joybox.rcloneremotes as rcloneremotes
 import joybox.logger as logger
 import joybox.paths as paths
@@ -421,7 +422,7 @@ def get_configured_lockers():
         if not rcloneremotes.can_sign_in(locker_info.get_name()):
             logger.log_info("Locker %s has nothing to sign in with, so it is skipped" % locker_type)
             continue
-        if sync.is_remote_configured(
+        if syncremotes.is_remote_configured(
             remote_name = locker_info.get_name(),
             remote_type = locker_info.get_type()):
             configured.append(locker_type)

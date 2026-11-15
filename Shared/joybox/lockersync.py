@@ -7,7 +7,7 @@ import joybox.paths as paths
 import joybox.fileops as fileops
 import joybox.lockerinfo as lockerinfo
 import joybox.lockerbackend as lockerbackend
-import joybox.sync as sync
+from joybox import syncremotes
 import joybox.editorprompt as editorprompt
 import joybox.environment as environment
 import joybox.serialization as serialization
@@ -509,7 +509,7 @@ def verify_prerequisites(
             logger.log_error("Primary locker path not accessible: %s" % primary_path)
             return False
     elif isinstance(primary_backend, lockerbackend.RemoteBackend):
-        if not sync.is_remote_configured(primary_backend.remote_name, primary_backend.remote_type):
+        if not syncremotes.is_remote_configured(primary_backend.remote_name, primary_backend.remote_type):
             logger.log_error("Primary remote not configured: %s" % primary_backend.remote_name)
             return False
 
@@ -521,7 +521,7 @@ def verify_prerequisites(
                 logger.log_error("Secondary locker path not accessible: %s" % sec_path)
                 return False
         elif isinstance(sec_backend, lockerbackend.RemoteBackend):
-            if not sync.is_remote_configured(sec_backend.remote_name, sec_backend.remote_type):
+            if not syncremotes.is_remote_configured(sec_backend.remote_name, sec_backend.remote_type):
                 logger.log_error("Secondary remote not configured: %s" % sec_backend.remote_name)
                 return False
     return True

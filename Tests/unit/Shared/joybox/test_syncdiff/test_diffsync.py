@@ -5,7 +5,11 @@ import os
 import pytest
 
 # Local imports
+from joybox import logger
+from joybox import paths
 from joybox import sync
+from joybox import syncdiff
+from joybox import synctransfers
 from sync_helpers import REMOTE, REMOTE_TYPE, LOCAL, REMOTE_PATH
 
 
@@ -32,16 +36,16 @@ def write_diff(diff_dir, name, *entries):
 def transfers(monkeypatch):
     calls = {"upload": [], "download": [], "recycle": []}
     monkeypatch.setattr(
-        sync, "upload_files_to_remote",
+        synctransfers, "upload_files_to_remote",
         lambda **kwargs: calls["upload"].append(kwargs) or True)
     monkeypatch.setattr(
-        sync, "download_files_from_remote",
+        synctransfers, "download_files_from_remote",
         lambda **kwargs: calls["download"].append(kwargs) or True)
     monkeypatch.setattr(
         sync, "recycle_files_on_remote",
         lambda **kwargs: calls["recycle"].append(kwargs) or True)
-    monkeypatch.setattr(sync.logger, "log_info", lambda *a, **k: None)
-    monkeypatch.setattr(sync.logger, "log_warning", lambda *a, **k: None)
+    monkeypatch.setattr(logger, "log_info", lambda *a, **k: None)
+    monkeypatch.setattr(logger, "log_warning", lambda *a, **k: None)
     return calls
 
 
@@ -50,7 +54,7 @@ def run_diff_sync(diff_dir, **kwargs):
         remote_name = REMOTE, remote_type = REMOTE_TYPE,
         remote_path = REMOTE_PATH, local_path = LOCAL, diff_dir = str(diff_dir))
     defaults.update(kwargs)
-    return sync.diff_sync_files(**defaults)
+    return syncdiff.diff_sync_files(**defaults)
 
 
 def listed(calls, kind):
@@ -153,7 +157,7 @@ def clocks(monkeypatch):
         lambda remote_name, remote_type, remote_path, **kwargs:
             times["remote"].get(os.path.basename(remote_path)))
     monkeypatch.setattr(
-        sync.paths, "get_file_mod_time",
+        paths, "get_file_mod_time",
         lambda path: times["local"].get(os.path.basename(path)))
     return times
 
@@ -225,21 +229,21 @@ def test_several_changed_files_go_their_own_ways(diff_dir, transfers, clocks):
 ###########################################################
 
 def test_a_missing_diff_directory_is_refused(tmp_path, transfers):
-    assert sync.diff_sync_files(
+    assert syncdiff.diff_sync_files(
         remote_name = REMOTE, remote_type = REMOTE_TYPE,
         remote_path = REMOTE_PATH, local_path = LOCAL,
         diff_dir = str(tmp_path / "absent")) is False
 
 
 def test_a_failed_upload_stops_the_run(diff_dir, transfers, monkeypatch):
-    monkeypatch.setattr(sync, "upload_files_to_remote", lambda **kwargs: False)
+    monkeypatch.setattr(synctransfers, "upload_files_to_remote", lambda **kwargs: False)
     write_diff(diff_dir, "diff_missing_dest.txt", "new.zip")
 
     assert run_diff_sync(diff_dir) is False
 
 
 def test_a_failed_download_stops_the_run(diff_dir, transfers, monkeypatch):
-    monkeypatch.setattr(sync, "download_files_from_remote", lambda **kwargs: False)
+    monkeypatch.setattr(synctransfers, "download_files_from_remote", lambda **kwargs: False)
     write_diff(diff_dir, "diff_missing_src.txt", "onlyremote.zip")
 
     assert run_diff_sync(diff_dir) is False
