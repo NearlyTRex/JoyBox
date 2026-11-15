@@ -1,13 +1,11 @@
 # Imports
 import os
 import sys
-import types
 
 # Third-party imports
 import pytest
 
 # Local imports
-from joybox import webpage
 
 # Helpers beside this file are imported by name, so this directory has to be
 # importable; pytest only loads conftest itself. Appended rather than inserted,
@@ -36,55 +34,4 @@ def waits(monkeypatch):
             return state["result"]
 
     monkeypatch.setattr(ui, "WebDriverWait", FakeWait)
-    return state
-
-
-@pytest.fixture
-def fetches(monkeypatch):
-    # The driver path and a stand-in requests module, each scriptable.
-    from webpage_helpers import FakeDriver
-    state = {"driver": FakeDriver(), "source": "<html>driver</html>",
-             "source_error": None, "text": "<html>requests</html>", "status": 200,
-             "error": None, "destroyed": [], "requests": []}
-
-    def get_page_source(**kwargs):
-        error = state["source_error"]
-        if error is not None:
-            raise error
-        return state["source"]
-
-    monkeypatch.setattr(webpage, "create_web_driver", lambda **kwargs: state["driver"])
-    monkeypatch.setattr(webpage, "get_page_source", get_page_source)
-    monkeypatch.setattr(
-        webpage, "destroy_web_driver",
-        lambda driver, **kwargs: state["destroyed"].append(driver))
-
-    def raise_for_status():
-        if state["status"] >= 400:
-            raise RuntimeError("HTTP %d" % state["status"])
-
-    def get(url, params = None, timeout = None):
-        state["requests"].append({"url": url, "params": params, "timeout": timeout})
-        error = state["error"]
-        if error is not None:
-            raise error
-        return types.SimpleNamespace(
-            text = state["text"], status_code = state["status"],
-            raise_for_status = raise_for_status)
-
-    module = types.ModuleType("requests")
-    module.get = get
-    monkeypatch.setitem(sys.modules, "requests", module)
-    return state
-
-
-@pytest.fixture
-def page(monkeypatch):
-    state = {"html": "", "calls": []}
-
-    def get_website_text(**kwargs):
-        state["calls"].append(kwargs)
-        return state["html"]
-
-    monkeypatch.setattr(webpage, "get_website_text", get_website_text)
     return state

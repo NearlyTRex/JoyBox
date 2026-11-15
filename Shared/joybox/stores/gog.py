@@ -13,6 +13,7 @@ import joybox.paths as paths
 import joybox.settings as settings
 import joybox.jsondata as jsondata
 import joybox.webpage as webpage
+from joybox import webfetch
 import joybox.storebase as storebase
 import joybox.strings as strings
 import joybox.metadataentry as metadataentry
@@ -633,7 +634,7 @@ class GOG(storebase.StoreBase):
 
         # Video
         elif asset_type == config.AssetType.VIDEO:
-            latest_asset_url = webpage.get_matching_url(
+            latest_asset_url = webfetch.get_matching_url(
                 url = identifier,
                 base_url = "https://www.youtube.com/embed",
                 starts_with = "https://www.youtube.com/embed",

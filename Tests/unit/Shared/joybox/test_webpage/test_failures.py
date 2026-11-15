@@ -1,5 +1,4 @@
 # Imports
-import json
 
 # Third-party imports
 import pytest
@@ -7,6 +6,7 @@ import pytest
 # Local imports
 from joybox import webpage
 from webpage_helpers import (
+    LOCATOR,
     BrokenElement, ClickableElement, DyingDriver, FailingDriver, FakeDriver,
     FakeElement, FakeParent)
 
@@ -14,7 +14,6 @@ pytest.importorskip("bs4")
 By = pytest.importorskip("selenium.webdriver.common.by").By
 exceptions = pytest.importorskip("selenium.common.exceptions")
 
-LOCATOR = webpage.ElementLocator({"css_selector": "div.game"})
 COOKIES = [{"name": "session", "value": "abc123", "domain": ".example.com"}]
 
 
@@ -234,121 +233,3 @@ def test_verbose_keys_are_sent():
 ])
 def test_verbose_keys_that_are_not_sent_report_failure(element, keys):
     assert webpage.send_keys_to_element(element, keys, verbose = True) is False
-
-
-###########################################################
-# Cookie failures
-###########################################################
-
-def test_a_verbose_save_writes_the_cookies(tmp_path):
-    target = tmp_path / "store.json"
-
-    assert webpage.save_cookie(FakeDriver(cookies = COOKIES), str(target), verbose = True) is True
-    assert json.loads(target.read_text()) == COOKIES
-
-
-@pytest.mark.parametrize("cookies,path", [([], "store.json"), (COOKIES, "")])
-def test_a_verbose_save_with_nothing_to_write_saves_nothing(tmp_path, cookies, path):
-    target = str(tmp_path / path) if path else path
-
-    assert webpage.save_cookie(FakeDriver(cookies = cookies), target, verbose = True) is False
-
-
-@pytest.mark.parametrize("verbose", [False, True])
-def test_a_cookie_directory_that_cannot_be_made_saves_nothing(tmp_path, monkeypatch, verbose):
-    monkeypatch.setattr(webpage.fileops, "make_directory", lambda **kwargs: False)
-    target = tmp_path / "store.json"
-
-    assert webpage.save_cookie(FakeDriver(cookies = COOKIES), str(target), verbose = verbose) is False
-    assert not target.exists()
-
-
-@pytest.mark.parametrize("verbose", [False, True])
-def test_cookies_that_cannot_be_written_as_json_are_not_saved(tmp_path, verbose):
-    driver = FakeDriver(cookies = [{"name": "session", "value": object()}])
-
-    assert webpage.save_cookie(driver, str(tmp_path / "store.json"), verbose = verbose) is False
-
-
-def test_a_failed_save_can_quit_the_program(tmp_path):
-    driver = FakeDriver(cookies = [{"name": "session", "value": object()}])
-
-    with pytest.raises(SystemExit):
-        webpage.save_cookie(driver, str(tmp_path / "store.json"), exit_on_failure = True)
-
-
-def test_save_options_are_passed_to_the_file_writes(tmp_path, monkeypatch):
-    calls = []
-
-    def record(name):
-        def call(**kwargs):
-            calls.append((name, kwargs))
-            return True
-        return call
-
-    monkeypatch.setattr(webpage.fileops, "make_directory", record("make_directory"))
-    monkeypatch.setattr(webpage.fileops, "touch_file", record("touch_file"))
-    target = str(tmp_path / "store.json")
-
-    assert webpage.save_cookie(
-        FakeDriver(cookies = COOKIES), target, pretend_run = True, exit_on_failure = True) is True
-    for name, kwargs in calls:
-        assert (kwargs["pretend_run"], kwargs["exit_on_failure"]) == (True, True), name
-
-
-def write_cookies(tmp_path, cookies):
-    target = tmp_path / "store.json"
-    target.write_text(json.dumps(cookies))
-    return str(target)
-
-
-def test_a_verbose_load_adds_the_cookies(tmp_path):
-    driver = FakeDriver()
-
-    assert webpage.load_cookie(driver, write_cookies(tmp_path, COOKIES), verbose = True) is True
-    assert driver.added_cookies == COOKIES
-
-
-@pytest.mark.parametrize("cookies", [
-    [{"bad": "cookie"}, "not a cookie"],
-    [],
-])
-@pytest.mark.parametrize("verbose", [False, True])
-def test_a_cookie_file_with_no_usable_cookies_loads_nothing(tmp_path, cookies, verbose):
-    # Reporting success here sends the scraper on as if it were signed in.
-    driver = FakeDriver()
-
-    assert webpage.load_cookie(driver, write_cookies(tmp_path, cookies), verbose = verbose) is False
-    assert driver.added_cookies == []
-
-
-def test_pretending_to_load_cookies_succeeds(tmp_path):
-    assert webpage.load_cookie(FakeDriver(), write_cookies(tmp_path, COOKIES), pretend_run = True) is True
-
-
-def test_a_verbose_missing_cookie_file_loads_nothing(tmp_path):
-    assert webpage.load_cookie(FakeDriver(), str(tmp_path / "absent.json"), verbose = True) is False
-
-
-def test_a_verbose_cookie_file_that_is_not_a_list_is_refused(tmp_path):
-    assert webpage.load_cookie(FakeDriver(), write_cookies(tmp_path, {"name": "x"}), verbose = True) is False
-
-
-@pytest.mark.parametrize("verbose", [False, True])
-def test_a_cookie_file_that_cannot_be_read_loads_nothing(tmp_path, monkeypatch, verbose):
-    def broken(**kwargs):
-        raise OSError("disk error")
-
-    monkeypatch.setattr(webpage.serialization, "read_json_file", broken)
-
-    assert webpage.load_cookie(FakeDriver(), write_cookies(tmp_path, COOKIES), verbose = verbose) is False
-
-
-def test_a_failed_cookie_load_can_quit_the_program(tmp_path, monkeypatch):
-    def broken(**kwargs):
-        raise OSError("disk error")
-
-    monkeypatch.setattr(webpage.serialization, "read_json_file", broken)
-
-    with pytest.raises(SystemExit):
-        webpage.load_cookie(FakeDriver(), write_cookies(tmp_path, COOKIES), exit_on_failure = True)

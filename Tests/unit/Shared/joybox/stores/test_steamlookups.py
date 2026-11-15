@@ -56,7 +56,7 @@ def test_a_cover_stops_at_the_first_cdn_that_answers(reachable):
 def test_a_trailer_is_scraped_from_the_store_page(reachable, monkeypatch):
     reachable["all"] = True
     monkeypatch.setattr(
-        steamlookups.webpage, "get_matching_url",
+        steamlookups.webfetch, "get_matching_url",
         lambda **kwargs: "https://video.cdn.steamstatic.com/store_trailers/movie.mp4")
 
     assert steamlookups.get_steam_trailer(STEAM_APPID).endswith(".mp4")
@@ -69,7 +69,7 @@ def test_a_trailer_is_looked_for_as_a_video_file(reachable, monkeypatch):
     def get_matching_url(**kwargs):
         seen.update(kwargs)
 
-    monkeypatch.setattr(steamlookups.webpage, "get_matching_url", get_matching_url)
+    monkeypatch.setattr(steamlookups.webfetch, "get_matching_url", get_matching_url)
     steamlookups.get_steam_trailer(STEAM_APPID)
 
     assert seen["ends_with"] == ".mp4"
@@ -78,7 +78,7 @@ def test_a_trailer_is_looked_for_as_a_video_file(reachable, monkeypatch):
 
 def test_no_trailer_anywhere_is_nothing(reachable, monkeypatch):
     reachable["all"] = True
-    monkeypatch.setattr(steamlookups.webpage, "get_matching_url", lambda **kwargs: None)
+    monkeypatch.setattr(steamlookups.webfetch, "get_matching_url", lambda **kwargs: None)
 
     assert steamlookups.get_steam_trailer(STEAM_APPID) is None
 
@@ -187,7 +187,7 @@ def test_a_video_is_found_for_a_matched_game(appid_list, reachable, monkeypatch)
     reachable["all"] = True
     appid_list["rows"] = [row("220", "Half-Life 2")]
     monkeypatch.setattr(
-        steamlookups.webpage, "get_matching_url",
+        steamlookups.webfetch, "get_matching_url",
         lambda **kwargs: "https://video.cdn.steamstatic.com/store_trailers/movie.mp4")
 
     results = steamlookups.find_steam_assets("Half-Life 2", config.AssetType.VIDEO)

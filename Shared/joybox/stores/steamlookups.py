@@ -13,6 +13,7 @@ from joybox import serialization
 from joybox import settings
 from joybox import strings
 from joybox import webpage
+from joybox import webfetch
 
 # Get steam page
 def get_steam_page(appid):
@@ -36,7 +37,7 @@ def get_steam_trailer(
     pretend_run = False,
     exit_on_failure = False):
     for cdn_type in config.ContentDeliveryNetworkType.members():
-        asset_url = webpage.get_matching_url(
+        asset_url = webfetch.get_matching_url(
             url = get_steam_page(appid),
             base_url = "https://video.%s.steamstatic.com/store_trailers" % cdn_type.lower(),
             starts_with = "https://video.%s.steamstatic.com/store_trailers" % cdn_type.lower(),

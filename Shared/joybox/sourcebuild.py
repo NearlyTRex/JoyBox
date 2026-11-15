@@ -16,7 +16,7 @@ from joybox import paths
 from joybox import programs
 from joybox import release
 from joybox import serialization
-from joybox import webpage
+from joybox import webfetch
 
 # Resolve a source patch entry to its filename and contents
 def resolve_patch_entry(patch_entry, verbose = False, exit_on_failure = False):
@@ -107,7 +107,7 @@ def build_from_source(
 
     # Find release url if necessary
     if webpage_url:
-        release_url = webpage.get_matching_url(
+        release_url = webfetch.get_matching_url(
             url = webpage_url,
             base_url = webpage_base_url,
             starts_with = starts_with,

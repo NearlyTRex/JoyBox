@@ -5,6 +5,8 @@ import joybox.logger as logger
 import joybox.fileops as fileops
 import joybox.jsondata as jsondata
 import joybox.webpage as webpage
+from joybox import webcookies
+from joybox import webfetch
 import joybox.storebase as storebase
 import joybox.strings as strings
 import joybox.metadataentry as metadataentry
@@ -110,7 +112,7 @@ class Itchio(storebase.StoreBase):
         # Log into website
         success = False
         try:
-            success = webpage.login_cookie_website(
+            success = webcookies.login_cookie_website(
                 driver = web_driver,
                 url = "https://itch.io/login",
                 cookie = self.get_cookie_file(),
@@ -227,7 +229,7 @@ class Itchio(storebase.StoreBase):
         exit_on_failure = False):
 
         # Load url
-        success = webpage.load_cookie_website(
+        success = webcookies.load_cookie_website(
             driver = web_driver,
             url = "https://itch.io/my-purchases",
             cookie = self.get_cookie_file(),
@@ -321,7 +323,7 @@ class Itchio(storebase.StoreBase):
                 raise Exception("Failed to connect to web driver")
 
             # Load url with cookie
-            success = webpage.load_cookie_website(
+            success = webcookies.load_cookie_website(
                 driver = web_driver,
                 url = identifier,
                 cookie = self.get_cookie_file(),
@@ -460,7 +462,7 @@ class Itchio(storebase.StoreBase):
 
         # Video
         elif asset_type == config.AssetType.VIDEO:
-            latest_asset_url = webpage.get_matching_url(
+            latest_asset_url = webfetch.get_matching_url(
                 url = identifier,
                 base_url = "https://www.youtube.com/embed",
                 starts_with = "https://www.youtube.com/embed",
@@ -482,7 +484,7 @@ class Itchio(storebase.StoreBase):
 
         # Load search page
         search_terms = strings.get_url_path(identifier).strip("/")
-        success = webpage.load_cookie_website(
+        success = webcookies.load_cookie_website(
             driver = web_driver,
             url = "https://itch.io/search?q=" + search_terms,
             cookie = self.get_cookie_file(),

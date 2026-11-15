@@ -9,7 +9,7 @@ from joybox import config
 from joybox import environment
 from joybox import locker
 from joybox import lockerinfo
-from joybox import webpage
+from joybox import webfetch
 
 
 # Locker backups, recorded instead of copied
@@ -35,7 +35,7 @@ def webpage_url(monkeypatch):
         holder["asked"].append(kwargs)
         return holder["url"]
 
-    monkeypatch.setattr(webpage, "get_matching_url", get_matching_url)
+    monkeypatch.setattr(webfetch, "get_matching_url", get_matching_url)
     return holder
 
 

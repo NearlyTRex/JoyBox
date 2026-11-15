@@ -9,6 +9,7 @@ from joybox import serialization
 import joybox.settings as settings
 import joybox.jsondata as jsondata
 import joybox.webpage as webpage
+from joybox import webfetch
 import joybox.storebase as storebase
 import joybox.strings as strings
 import joybox.metadataassetcollector as metadataassetcollector
@@ -462,7 +463,7 @@ class Legacy(storebase.StoreBase):
 
         # Video
         elif asset_type == config.AssetType.VIDEO:
-            latest_asset_url = webpage.get_matching_url(
+            latest_asset_url = webfetch.get_matching_url(
                 url = identifier,
                 base_url = "https://www.bigfishgames.com",
                 starts_with = "https://www.youtube.com/embed",

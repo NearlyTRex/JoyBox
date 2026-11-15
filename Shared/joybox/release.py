@@ -8,7 +8,7 @@ import joybox.logger as logger
 import joybox.fileops as fileops
 import joybox.archive as archive
 import joybox.strings as strings
-import joybox.webpage as webpage
+from joybox import webfetch
 import joybox.network as network
 import joybox.paths as paths
 import joybox.locker as locker
@@ -518,7 +518,7 @@ def download_webpage_release(
     exit_on_failure = False):
 
     # Get archive url
-    archive_url = webpage.get_matching_url(
+    archive_url = webfetch.get_matching_url(
         url = webpage_url,
         base_url = webpage_base_url,
         starts_with = starts_with,

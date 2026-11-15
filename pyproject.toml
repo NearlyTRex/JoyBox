@@ -196,7 +196,7 @@ wrapper_modules = [
 documented = 801
 doc-paraphrase = 1692
 long-functions = 645
-long-modules = 6
+long-modules = 5
 # pylint over Shared and Scripts with pytest-testrex's library rcfile
 pylint-source = 4838
 

@@ -1,6 +1,9 @@
 # Local imports
 from joybox import webpage
 
+# A locator the fakes answer to
+LOCATOR = webpage.ElementLocator({"css_selector": "div.game"})
+
 ###########################################################
 # Doubles for the browser
 #
@@ -165,9 +168,3 @@ class DyingDriver(FakeDriver):
 
 
 # The urls found on a page whose source is html
-def matching(page, html, **kwargs):
-    page["html"] = html
-    return webpage.get_matching_urls(
-        url = "https://releases.example/list",
-        base_url = "https://releases.example",
-        **kwargs)
