@@ -397,14 +397,14 @@ def test_an_outline_is_attached_without_its_body(session, tmp_path):
 ###########################################################
 
 def test_a_named_coding_model_is_used_as_it_is(monkeypatch):
-    monkeypatch.setattr(llmchat.ollama, "prepare_coding_model", lambda context_tokens: pytest.fail("prepared"))
+    monkeypatch.setattr(llmchat.ollamaagents, "prepare_coding_model", lambda context_tokens: pytest.fail("prepared"))
 
     assert llmchat.get_coding_model("devstral:24b") == "devstral:24b"
 
 
 def test_without_a_name_the_server_best_is_prepared_for_a_chat_window(monkeypatch):
     asked = []
-    monkeypatch.setattr(llmchat.ollama, "prepare_coding_model",
+    monkeypatch.setattr(llmchat.ollamaagents, "prepare_coding_model",
         lambda context_tokens: asked.append(context_tokens) or "devstral-small-2:24b-ctx32k")
 
     assert llmchat.get_coding_model() == "devstral-small-2:24b-ctx32k"

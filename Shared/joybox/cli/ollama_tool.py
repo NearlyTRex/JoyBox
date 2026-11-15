@@ -3,7 +3,7 @@ import joybox.system as system
 import joybox.arguments as arguments
 import joybox.setup as setup
 import joybox.logger as logger
-import joybox.ollama as ollama
+from joybox import ollamaactions
 
 # Build the argument parser
 def build_parser():
@@ -138,7 +138,7 @@ def main():
     logger.setup_logging()
 
     # Run action
-    return ollama.run_action(
+    return ollamaactions.run_action(
         action = args.action,
         model_name = args.model,
         purpose = args.purpose,

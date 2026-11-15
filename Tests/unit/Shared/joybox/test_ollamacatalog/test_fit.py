@@ -3,8 +3,8 @@ import pytest
 
 # Local imports
 from joybox import ollama
+from joybox import ollamacatalog
 from ollama_helpers import catalog_of, model
-
 
 
 ###########################################################
@@ -15,55 +15,55 @@ from ollama_helpers import catalog_of, model
 def test_a_model_that_fits_vram_runs_on_the_gpu(monkeypatch):
     catalog_of(monkeypatch, [model(vram_mb = 4000)])
 
-    found = ollama.get_recommended_models(vram_mb = 8000, ram_mb = 32000)
+    found = ollamacatalog.get_recommended_models(vram_mb = 8000, ram_mb = 32000)
 
-    assert found[0]["fit"] == ollama.FIT_GPU
+    assert found[0]["fit"] == ollamacatalog.FIT_GPU
     assert found[0]["fits_vram"] is True
 
 
 def test_a_model_larger_than_vram_offloads_to_ram(monkeypatch):
     catalog_of(monkeypatch, [model(vram_mb = 12000)])
 
-    found = ollama.get_recommended_models(vram_mb = 8000, ram_mb = 32000)
+    found = ollamacatalog.get_recommended_models(vram_mb = 8000, ram_mb = 32000)
 
-    assert found[0]["fit"] == ollama.FIT_OFFLOAD
+    assert found[0]["fit"] == ollamacatalog.FIT_OFFLOAD
     assert found[0]["fits_vram"] is False
 
 
 def test_a_model_larger_than_the_machine_is_left_out(monkeypatch):
     catalog_of(monkeypatch, [model(vram_mb = 64000)])
 
-    assert ollama.get_recommended_models(vram_mb = 8000, ram_mb = 32000) == []
+    assert ollamacatalog.get_recommended_models(vram_mb = 8000, ram_mb = 32000) == []
 
 
 def test_an_oversized_model_can_be_asked_for(monkeypatch):
     catalog_of(monkeypatch, [model(vram_mb = 64000)])
 
-    found = ollama.get_recommended_models(vram_mb = 8000, ram_mb = 32000, include_unfit = True)
+    found = ollamacatalog.get_recommended_models(vram_mb = 8000, ram_mb = 32000, include_unfit = True)
 
-    assert found[0]["fit"] == ollama.FIT_NONE
+    assert found[0]["fit"] == ollamacatalog.FIT_NONE
 
 
 def test_a_cloud_model_is_left_out_of_local_recommendations(monkeypatch):
     catalog_of(monkeypatch, [model(cloud_only = True, vram_mb = 0)])
 
-    assert ollama.get_recommended_models(vram_mb = 8000, ram_mb = 32000) == []
+    assert ollamacatalog.get_recommended_models(vram_mb = 8000, ram_mb = 32000) == []
 
 
 def test_asking_for_cloud_models_includes_them(monkeypatch):
-    catalog_of(monkeypatch, [model(purpose = ollama.PURPOSE_CLOUD, cloud_only = True, vram_mb = 0)])
+    catalog_of(monkeypatch, [model(purpose = ollamacatalog.PURPOSE_CLOUD, cloud_only = True, vram_mb = 0)])
 
-    found = ollama.get_recommended_models(
-        purpose = ollama.PURPOSE_CLOUD, vram_mb = 8000, ram_mb = 32000)
+    found = ollamacatalog.get_recommended_models(
+        purpose = ollamacatalog.PURPOSE_CLOUD, vram_mb = 8000, ram_mb = 32000)
 
-    assert found[0]["fit"] == ollama.FIT_CLOUD
+    assert found[0]["fit"] == ollamacatalog.FIT_CLOUD
 
 
 def test_a_model_of_unknown_size_does_not_fit(monkeypatch):
     # An unknown size cannot be promised to load, so it is not recommended.
     catalog_of(monkeypatch, [model(vram_mb = 0)])
 
-    assert ollama.get_recommended_models(vram_mb = 8000, ram_mb = 32000) == []
+    assert ollamacatalog.get_recommended_models(vram_mb = 8000, ram_mb = 32000) == []
 
 
 def test_recommendations_are_ordered_by_how_well_they_run(monkeypatch):
@@ -72,19 +72,19 @@ def test_recommendations_are_ordered_by_how_well_they_run(monkeypatch):
         model(name = "gpu:8b", vram_mb = 4000),
     ])
 
-    found = ollama.get_recommended_models(vram_mb = 8000, ram_mb = 32000)
+    found = ollamacatalog.get_recommended_models(vram_mb = 8000, ram_mb = 32000)
 
     assert [entry["name"] for entry in found] == ["gpu:8b", "offload:14b"]
 
 
 def test_another_purpose_is_filtered_out(monkeypatch):
     catalog_of(monkeypatch, [
-        model(name = "chat:8b", purpose = ollama.PURPOSE_CHAT),
-        model(name = "tools:8b", purpose = ollama.PURPOSE_TOOLS),
+        model(name = "chat:8b", purpose = ollamacatalog.PURPOSE_CHAT),
+        model(name = "tools:8b", purpose = ollamacatalog.PURPOSE_TOOLS),
     ])
 
-    found = ollama.get_recommended_models(
-        purpose = ollama.PURPOSE_TOOLS, vram_mb = 8000, ram_mb = 32000)
+    found = ollamacatalog.get_recommended_models(
+        purpose = ollamacatalog.PURPOSE_TOOLS, vram_mb = 8000, ram_mb = 32000)
 
     assert [entry["name"] for entry in found] == ["tools:8b"]
 
@@ -95,7 +95,7 @@ def test_the_catalog_is_left_unmodified(monkeypatch):
     entry = model()
     catalog_of(monkeypatch, [entry])
 
-    ollama.get_recommended_models(vram_mb = 8000, ram_mb = 32000)
+    ollamacatalog.get_recommended_models(vram_mb = 8000, ram_mb = 32000)
 
     assert "fit" not in entry
 
@@ -110,7 +110,7 @@ def test_the_largest_model_that_fits_the_gpu_wins(monkeypatch):
         model(name = "large:14b", vram_mb = 7000, params = "14B"),
     ])
 
-    best = ollama.get_best_model(purpose = None, vram_mb = 8000, ram_mb = 32000)
+    best = ollamacatalog.get_best_model(purpose = None, vram_mb = 8000, ram_mb = 32000)
 
     assert best["name"] == "large:14b"
 
@@ -122,7 +122,7 @@ def test_a_gpu_model_beats_a_larger_offloaded_one(monkeypatch):
         model(name = "gpu:8b", vram_mb = 4000, params = "8B"),
     ])
 
-    best = ollama.get_best_model(purpose = None, vram_mb = 8000, ram_mb = 32000)
+    best = ollamacatalog.get_best_model(purpose = None, vram_mb = 8000, ram_mb = 32000)
 
     assert best["name"] == "gpu:8b"
 
@@ -133,7 +133,7 @@ def test_the_largest_offloaded_model_is_taken_when_nothing_fits_the_gpu(monkeypa
         model(name = "big:32b", vram_mb = 20000, params = "32B"),
     ])
 
-    best = ollama.get_best_model(purpose = None, vram_mb = 2000, ram_mb = 32000)
+    best = ollamacatalog.get_best_model(purpose = None, vram_mb = 2000, ram_mb = 32000)
 
     assert best["name"] == "big:32b"
 
@@ -141,7 +141,7 @@ def test_the_largest_offloaded_model_is_taken_when_nothing_fits_the_gpu(monkeypa
 def test_nothing_is_picked_when_nothing_runs(monkeypatch):
     catalog_of(monkeypatch, [model(vram_mb = 64000)])
 
-    assert ollama.get_best_model(purpose = None, vram_mb = 4000, ram_mb = 8000) is None
+    assert ollamacatalog.get_best_model(purpose = None, vram_mb = 4000, ram_mb = 8000) is None
 
 
 ###########################################################
@@ -149,25 +149,25 @@ def test_nothing_is_picked_when_nothing_runs(monkeypatch):
 ###########################################################
 
 def test_a_fitting_model_is_marked_as_such():
-    line = ollama.format_model_display(model(vram_mb = 5000, fits_vram = True))
+    line = ollamacatalog.format_model_display(model(vram_mb = 5000, fits_vram = True))
 
     assert line.startswith("[+]")
 
 
 def test_a_model_that_does_not_fit_is_marked_differently():
-    line = ollama.format_model_display(model(vram_mb = 64000, fits_vram = False))
+    line = ollamacatalog.format_model_display(model(vram_mb = 64000, fits_vram = False))
 
     assert line.startswith("[-]")
 
 
 def test_a_display_line_reports_the_size_in_gigabytes():
-    line = ollama.format_model_display(model(vram_mb = 5120, fits_vram = True))
+    line = ollamacatalog.format_model_display(model(vram_mb = 5120, fits_vram = True))
 
     assert "5.0 GB" in line
 
 
 def test_an_installed_model_is_described_by_its_build():
-    line = ollama.format_installed_model_display({
+    line = ollamacatalog.format_installed_model_display({
         "name": "qwen3:8b",
         "size_gb": 4.7,
         "parameter_size": "8B",
@@ -190,7 +190,7 @@ def test_a_quantization_is_marked_by_where_it_would_run(vram_mb, ram_mb, marker)
         "context": "128K",
     }
 
-    line = ollama.format_quantization_display(option, vram_mb, ram_mb)
+    line = ollamacatalog.format_quantization_display(option, vram_mb, ram_mb)
 
     assert line.startswith("[%s]" % marker)
     assert "qwen3:8b-q4_K_M" in line
@@ -206,14 +206,14 @@ def test_the_server_is_measured_when_no_sizes_are_given(monkeypatch):
     monkeypatch.setattr(ollama, "get_server_hardware", lambda: {
         "gpu_vram_total_mb": 8000, "system_ram_mb": 32000})
 
-    assert ollama.get_recommended_models()[0]["fit"] == ollama.FIT_OFFLOAD
+    assert ollamacatalog.get_recommended_models()[0]["fit"] == ollamacatalog.FIT_OFFLOAD
 
 
 def test_a_cloud_only_catalog_has_no_best_local_model(monkeypatch):
-    catalog_of(monkeypatch, [model(purpose = ollama.PURPOSE_CLOUD, cloud_only = True, vram_mb = 0)])
+    catalog_of(monkeypatch, [model(purpose = ollamacatalog.PURPOSE_CLOUD, cloud_only = True, vram_mb = 0)])
 
-    assert ollama.get_best_model(
-        purpose = ollama.PURPOSE_CLOUD, vram_mb = 8000, ram_mb = 32000) is None
+    assert ollamacatalog.get_best_model(
+        purpose = ollamacatalog.PURPOSE_CLOUD, vram_mb = 8000, ram_mb = 32000) is None
 
 
 @pytest.mark.parametrize("given, measured", [
@@ -225,6 +225,6 @@ def test_only_the_missing_size_is_taken_from_the_server(monkeypatch, given, meas
     monkeypatch.setattr(ollama, "get_server_hardware", lambda: hardware)
     catalog_of(monkeypatch, [model(vram_mb = 4000)])
 
-    found = ollama.get_recommended_models(**given)
+    found = ollamacatalog.get_recommended_models(**given)
 
-    assert found[0]["fit"] == ollama.FIT_GPU
+    assert found[0]["fit"] == ollamacatalog.FIT_GPU

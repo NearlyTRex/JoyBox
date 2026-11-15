@@ -3,6 +3,8 @@ import pytest
 
 # Local imports
 from joybox import ollama
+from joybox import ollamacatalog
+from joybox import ollamaagents
 
 
 ###########################################################
@@ -37,12 +39,12 @@ TAGS = {
 @pytest.fixture
 def catalog(monkeypatch):
     state = {"families": []}
-    monkeypatch.setattr(ollama, "CODING_MODELS", MODELS)
+    monkeypatch.setattr(ollamaagents, "CODING_MODELS", MODELS)
 
     def get_model_tags(family):
         state["families"].append(family)
         return TAGS.get(family, [])
-    monkeypatch.setattr(ollama, "get_model_tags", get_model_tags)
+    monkeypatch.setattr(ollamacatalog, "get_model_tags", get_model_tags)
     return state
 
 
@@ -51,7 +53,7 @@ def catalog(monkeypatch):
 ###########################################################
 
 def test_the_variant_name_carries_the_context():
-    assert ollama.get_context_variant_name("qwen3-coder:30b", 65536) == "qwen3-coder:30b-ctx64k"
+    assert ollamaagents.get_context_variant_name("qwen3-coder:30b", 65536) == "qwen3-coder:30b-ctx64k"
 
 
 @pytest.mark.parametrize("name, tokens", [
@@ -61,7 +63,7 @@ def test_the_variant_name_carries_the_context():
     ("model:ctx64k-q4", None),
 ])
 def test_the_window_is_read_back_from_a_variant_name(name, tokens):
-    assert ollama.get_variant_context_tokens(name) == tokens
+    assert ollamaagents.get_variant_context_tokens(name) == tokens
 
 
 # Loaded sizes measured on the server: listed download, window, cards, MB taken
@@ -78,71 +80,71 @@ MEASURED_LOADS = [
 
 @pytest.mark.parametrize("name, size_str, context_tokens, gpu_count, measured_mb", MEASURED_LOADS)
 def test_the_estimate_covers_what_the_server_measured(name, size_str, context_tokens, gpu_count, measured_mb):
-    kv_kb_per_token = next(m["kv_kb_per_token"] for m in ollama.CODING_MODELS if m["name"] == name)
+    kv_kb_per_token = next(m["kv_kb_per_token"] for m in ollamaagents.CODING_MODELS if m["name"] == name)
 
-    estimate = ollama.estimate_loaded_mb(
-        ollama.parse_size_to_mb(size_str), kv_kb_per_token, context_tokens, gpu_count)
+    estimate = ollamaagents.estimate_loaded_mb(
+        ollamacatalog.parse_size_to_mb(size_str), kv_kb_per_token, context_tokens, gpu_count)
 
     # Never under, so a model judged to fit does; never far over, so one that fits is not passed by
     assert measured_mb <= estimate <= measured_mb + 2560
 
 
 def test_each_card_adds_its_own_overhead():
-    assert ollama.estimate_loaded_mb(15360, 160, 65536, gpu_count = 2) - \
-        ollama.estimate_loaded_mb(15360, 160, 65536) == ollama.LOAD_OVERHEAD_MB
+    assert ollamaagents.estimate_loaded_mb(15360, 160, 65536, gpu_count = 2) - \
+        ollamaagents.estimate_loaded_mb(15360, 160, 65536) == ollamaagents.LOAD_OVERHEAD_MB
 
 
 def test_one_card_gets_the_most_capable_models_that_fit(catalog):
-    names = [c["full_name"] for c in ollama.get_coding_candidates(32768)]
+    names = [c["full_name"] for c in ollamaagents.get_coding_candidates(32768)]
 
     assert names == ["dense:24b", "moe:30b"]
 
 
 def test_more_cards_put_a_larger_model_first(catalog):
-    names = [c["full_name"] for c in ollama.get_coding_candidates(3 * 32768)]
+    names = [c["full_name"] for c in ollamaagents.get_coding_candidates(3 * 32768)]
 
     assert names == ["big:120b", "dense:24b", "moe:30b"]
 
 
 def test_splitting_over_cards_can_leave_a_model_out(catalog):
     # Both take 26624 MB on one card, but not with a second card's overhead
-    assert [c["full_name"] for c in ollama.get_coding_candidates(27136)] == ["dense:24b", "moe:30b"]
-    assert [c["full_name"] for c in ollama.get_coding_candidates(27136, gpu_count = 2)] == []
+    assert [c["full_name"] for c in ollamaagents.get_coding_candidates(27136)] == ["dense:24b", "moe:30b"]
+    assert [c["full_name"] for c in ollamaagents.get_coding_candidates(27136, gpu_count = 2)] == []
 
 
 def test_the_context_decides_whether_a_model_fits(catalog):
     # 15 GB of weights fits 20 GB, but not once 64K of context is added
-    assert [c["full_name"] for c in ollama.get_coding_candidates(20480)] == []
-    assert [c["full_name"] for c in ollama.get_coding_candidates(20480, context_tokens = 16384)] == \
+    assert [c["full_name"] for c in ollamaagents.get_coding_candidates(20480)] == []
+    assert [c["full_name"] for c in ollamaagents.get_coding_candidates(20480, context_tokens = 16384)] == \
         ["dense:24b"]
 
 
 def test_a_smaller_window_admits_shorter_contexts(catalog):
-    names = [c["full_name"] for c in ollama.get_coding_candidates(32768, context_tokens = 32768)]
+    names = [c["full_name"] for c in ollamaagents.get_coding_candidates(32768, context_tokens = 32768)]
 
     assert names == ["dense:24b", "moe:30b", "short:32b"]
 
 
 def test_a_candidate_carries_its_estimate(catalog):
-    candidate = ollama.get_coding_candidates(32768)[0]
+    candidate = ollamaagents.get_coding_candidates(32768)[0]
 
-    assert candidate["loaded_mb"] == ollama.estimate_loaded_mb(15360, 160, 65536)
+    assert candidate["loaded_mb"] == ollamaagents.estimate_loaded_mb(15360, 160, 65536)
     assert candidate["rank"] == 1
 
 
 def test_each_family_page_is_read_once(catalog, monkeypatch):
-    monkeypatch.setattr(ollama, "CODING_MODELS", MODELS + [{"name": "big:20b", "kv_kb_per_token": 48}])
+    monkeypatch.setattr(ollamaagents, "CODING_MODELS", MODELS + [{"name": "big:20b", "kv_kb_per_token": 48}])
 
-    ollama.get_coding_candidates(32768)
+    ollamaagents.get_coding_candidates(32768)
 
     assert sorted(catalog["families"]) == ["big", "dense", "missing", "moe", "short"]
 
 
 def test_nothing_fits_a_small_card(catalog):
-    assert ollama.get_coding_candidates(4096) == []
+    assert ollamaagents.get_coding_candidates(4096) == []
 
 
-@pytest.mark.parametrize("entry", ollama.CODING_MODELS, ids = lambda entry: entry["name"])
+@pytest.mark.parametrize("entry", ollamaagents.CODING_MODELS, ids = lambda entry: entry["name"])
 def test_the_shipped_list_names_full_tags(entry):
     assert ":" in entry["name"]
     assert entry["kv_kb_per_token"] > 0
@@ -169,7 +171,7 @@ def server(monkeypatch):
 def test_a_variant_is_created_with_the_context_built_in(server):
     server["replies"]["create"] = {"status": "success"}
 
-    assert ollama.create_context_variant("qwen3-coder:30b", 65536) == "qwen3-coder:30b-ctx64k"
+    assert ollamaagents.create_context_variant("qwen3-coder:30b", 65536) == "qwen3-coder:30b-ctx64k"
     url, data, timeout = server["posts"][-1]
     assert url == "http://box:11434/api/create"
     assert timeout == 120
@@ -188,7 +190,7 @@ def test_a_window_past_what_the_model_was_trained_for_is_refused(server):
     server["replies"]["show"] = shown("qwen3", 40960)
     server["replies"]["create"] = {"status": "success"}
 
-    assert ollama.create_context_variant("hermes-4:14b", 65536) is None
+    assert ollamaagents.create_context_variant("hermes-4:14b", 65536) is None
     assert [url for url, _, _ in server["posts"]] == ["http://box:11434/api/show"]
 
 
@@ -196,21 +198,21 @@ def test_a_window_within_the_trained_one_is_built(server):
     server["replies"]["show"] = shown("qwen3moe", 262144)
     server["replies"]["create"] = {"status": "success"}
 
-    assert ollama.create_context_variant("qwen3-coder:30b", 65536) == "qwen3-coder:30b-ctx64k"
+    assert ollamaagents.create_context_variant("qwen3-coder:30b", 65536) == "qwen3-coder:30b-ctx64k"
 
 
 def test_an_unknown_trained_window_does_not_block_the_variant(server):
     server["replies"]["show"] = {"model_info": {}}
     server["replies"]["create"] = {"status": "success"}
 
-    assert ollama.create_context_variant("qwen3-coder:30b", 65536) == "qwen3-coder:30b-ctx64k"
+    assert ollamaagents.create_context_variant("qwen3-coder:30b", 65536) == "qwen3-coder:30b-ctx64k"
 
 
 @pytest.mark.parametrize("reply", [None, {"status": "failed"}])
 def test_a_variant_that_is_not_created_is_none(server, reply):
     server["replies"]["create"] = reply
 
-    assert ollama.create_context_variant("qwen3-coder:30b", 65536) is None
+    assert ollamaagents.create_context_variant("qwen3-coder:30b", 65536) is None
 
 
 def loaded(name, size, size_vram):
@@ -221,7 +223,7 @@ def test_a_model_wholly_in_vram_is_on_the_gpu(server):
     server["replies"]["generate"] = {"done": True}
     server["ps"] = loaded("m:ctx64k", 100, 100)
 
-    assert ollama.is_loaded_on_gpu("m:ctx64k") is True
+    assert ollamaagents.is_loaded_on_gpu("m:ctx64k") is True
     url, data, timeout = server["posts"][0]
     assert url == "http://box:11434/api/generate"
     assert data["model"] == "m:ctx64k" and data["prompt"] == ""
@@ -232,7 +234,7 @@ def test_how_long_it_stays_loaded_is_left_to_the_server(server):
     # A keep_alive sent here would override the server's own setting
     server["replies"]["generate"] = {"done": True}
 
-    ollama.is_loaded_on_gpu("m:ctx64k")
+    ollamaagents.is_loaded_on_gpu("m:ctx64k")
 
     assert "keep_alive" not in server["posts"][0][1]
 
@@ -247,11 +249,11 @@ def test_a_model_partly_in_ram_or_missing_is_not(server, ps):
     server["replies"]["generate"] = {"done": True}
     server["ps"] = ps
 
-    assert ollama.is_loaded_on_gpu("m:ctx64k") is False
+    assert ollamaagents.is_loaded_on_gpu("m:ctx64k") is False
 
 
 def test_a_model_that_does_not_load_is_not_on_the_gpu(server):
-    assert ollama.is_loaded_on_gpu("m:ctx64k") is False
+    assert ollamaagents.is_loaded_on_gpu("m:ctx64k") is False
 
 
 ###########################################################
@@ -268,25 +270,25 @@ def prep(monkeypatch):
         lambda name: state["pulled"].append(name) or state["installed"].append(name) or True)
 
     def create_context_variant(name, context_tokens):
-        variant = ollama.get_context_variant_name(name, context_tokens)
+        variant = ollamaagents.get_context_variant_name(name, context_tokens)
         state["created"].append(variant)
         state["installed"].append(variant)
         return variant
-    monkeypatch.setattr(ollama, "create_context_variant", create_context_variant)
-    monkeypatch.setattr(ollama, "is_loaded_on_gpu",
+    monkeypatch.setattr(ollamaagents, "create_context_variant", create_context_variant)
+    monkeypatch.setattr(ollamaagents, "is_loaded_on_gpu",
         lambda name: state["loaded"].append(name) or name in state["fits"])
 
     def prompt_for_confirmation(message, default_yes = False):
         state["asked"].append(message)
         return state["answers"].pop(0) if state["answers"] else default_yes
-    monkeypatch.setattr(ollama.prompts, "prompt_for_confirmation", prompt_for_confirmation)
+    monkeypatch.setattr(ollamaagents.prompts, "prompt_for_confirmation", prompt_for_confirmation)
     return state
 
 
 def test_a_new_model_is_pulled_given_its_context_and_checked(prep):
     prep["fits"] = {"m:30b-ctx64k"}
 
-    assert ollama.prepare_coding_variant("m:30b", 65536) == "m:30b-ctx64k"
+    assert ollamaagents.prepare_coding_variant("m:30b", 65536) == "m:30b-ctx64k"
     assert prep["pulled"] == ["m:30b"]
     assert prep["created"] == ["m:30b-ctx64k"]
     assert prep["loaded"] == ["m:30b-ctx64k"]
@@ -296,7 +298,7 @@ def test_a_prepared_model_is_only_checked(prep):
     prep["installed"] = ["m:30b", "m:30b-ctx64k"]
     prep["fits"] = {"m:30b-ctx64k"}
 
-    assert ollama.prepare_coding_variant("m:30b", 65536) == "m:30b-ctx64k"
+    assert ollamaagents.prepare_coding_variant("m:30b", 65536) == "m:30b-ctx64k"
     assert prep["pulled"] == [] and prep["created"] == []
     assert prep["asked"] == []
 
@@ -305,7 +307,7 @@ def test_an_installed_model_only_needs_its_context(prep):
     prep["installed"] = ["m:30b"]
     prep["fits"] = {"m:30b-ctx64k"}
 
-    assert ollama.prepare_coding_variant("m:30b", 65536) == "m:30b-ctx64k"
+    assert ollamaagents.prepare_coding_variant("m:30b", 65536) == "m:30b-ctx64k"
     assert prep["pulled"] == []
     assert prep["created"] == ["m:30b-ctx64k"]
 
@@ -313,26 +315,26 @@ def test_an_installed_model_only_needs_its_context(prep):
 def test_declining_the_pull_prepares_nothing(prep):
     prep["answers"] = [False]
 
-    assert ollama.prepare_coding_variant("m:30b", 65536) is None
+    assert ollamaagents.prepare_coding_variant("m:30b", 65536) is None
     assert prep["pulled"] == []
 
 
 def test_a_model_that_spills_out_of_vram_is_not_used(prep):
-    assert ollama.prepare_coding_variant("m:30b", 65536) is None
+    assert ollamaagents.prepare_coding_variant("m:30b", 65536) is None
     assert prep["loaded"] == ["m:30b-ctx64k"]
 
 
 def test_a_failed_pull_prepares_nothing(prep, monkeypatch):
     monkeypatch.setattr(ollama, "pull_model", lambda name: False)
 
-    assert ollama.prepare_coding_variant("m:30b", 65536) is None
+    assert ollamaagents.prepare_coding_variant("m:30b", 65536) is None
     assert prep["created"] == []
 
 
 def test_a_failed_create_prepares_nothing(prep, monkeypatch):
-    monkeypatch.setattr(ollama, "create_context_variant", lambda name, context_tokens: None)
+    monkeypatch.setattr(ollamaagents, "create_context_variant", lambda name, context_tokens: None)
 
-    assert ollama.prepare_coding_variant("m:30b", 65536) is None
+    assert ollamaagents.prepare_coding_variant("m:30b", 65536) is None
     assert prep["loaded"] == []
 
 
@@ -350,14 +352,14 @@ def picker(prep, catalog, monkeypatch):
 def test_the_best_candidate_that_fits_is_prepared(picker):
     picker["fits"] = {"dense:24b-ctx64k"}
 
-    assert ollama.prepare_coding_model(ask = False) == "dense:24b-ctx64k"
+    assert ollamaagents.prepare_coding_model(ask = False) == "dense:24b-ctx64k"
     assert picker["pulled"] == ["dense:24b"]
 
 
 def test_the_next_candidate_is_tried_when_one_does_not_fit(picker):
     picker["fits"] = {"moe:30b-ctx64k"}
 
-    assert ollama.prepare_coding_model(ask = False) == "moe:30b-ctx64k"
+    assert ollamaagents.prepare_coding_model(ask = False) == "moe:30b-ctx64k"
     assert picker["loaded"] == ["dense:24b-ctx64k", "moe:30b-ctx64k"]
 
 
@@ -366,7 +368,7 @@ def test_a_better_candidate_is_offered_before_a_prepared_one(picker):
     picker["installed"] = ["moe:30b", "moe:30b-ctx64k"]
     picker["fits"] = {"moe:30b-ctx64k", "dense:24b-ctx64k"}
 
-    assert ollama.prepare_coding_model() == "dense:24b-ctx64k"
+    assert ollamaagents.prepare_coding_model() == "dense:24b-ctx64k"
     assert picker["asked"] == ["Pull dense:24b now?"]
 
 
@@ -375,7 +377,7 @@ def test_declining_the_better_one_falls_back_to_the_prepared_one(picker):
     picker["fits"] = {"moe:30b-ctx64k", "dense:24b-ctx64k"}
     picker["answers"] = [False]
 
-    assert ollama.prepare_coding_model() == "moe:30b-ctx64k"
+    assert ollamaagents.prepare_coding_model() == "moe:30b-ctx64k"
     assert picker["pulled"] == []
 
 
@@ -383,79 +385,23 @@ def test_the_server_card_count_reaches_the_estimate(picker, monkeypatch):
     monkeypatch.setattr(ollama, "get_server_hardware", lambda: {"gpu_vram_total_mb": 27136, "gpu_count": 2})
     picker["fits"] = {"dense:24b-ctx64k"}
 
-    assert ollama.prepare_coding_model(ask = False) is None
+    assert ollamaagents.prepare_coding_model(ask = False) is None
     assert picker["loaded"] == []
 
 
 def test_nothing_is_prepared_when_no_candidate_fits(picker, monkeypatch):
     monkeypatch.setattr(ollama, "get_server_hardware", lambda: {"gpu_vram_total_mb": 4096, "gpu_count": 1})
 
-    assert ollama.prepare_coding_model(ask = False) is None
+    assert ollamaagents.prepare_coding_model(ask = False) is None
     assert picker["loaded"] == []
 
 
 def test_nothing_is_prepared_when_every_candidate_fails(picker):
-    assert ollama.prepare_coding_model(ask = False) is None
+    assert ollamaagents.prepare_coding_model(ask = False) is None
     assert len(picker["loaded"]) == 2
 
 
 def test_nothing_is_prepared_without_a_server(picker, monkeypatch):
     monkeypatch.setattr(ollama, "ensure_running", lambda: False)
 
-    assert ollama.prepare_coding_model(ask = False) is None
-
-
-###########################################################
-# The code action
-###########################################################
-
-@pytest.fixture
-def code(monkeypatch):
-    state = {"prepared": [], "launched": [], "variant": "qwen3-coder:30b-ctx64k"}
-    monkeypatch.setattr(ollama, "ensure_running", lambda: True)
-    monkeypatch.setattr(ollama, "prepare_coding_model",
-        lambda context_tokens: state["prepared"].append(("best", context_tokens)) or state["variant"])
-    monkeypatch.setattr(ollama, "prepare_coding_variant",
-        lambda name, context_tokens: state["prepared"].append((name, context_tokens)) or state["variant"])
-    monkeypatch.setattr(ollama, "launch_harness",
-        lambda name, harness: state["launched"].append((name, harness)) or True)
-    return state
-
-
-def test_code_starts_claude_code_on_the_best_model(code):
-    assert ollama.run_action("code") is True
-    assert code["prepared"] == [("best", 65536)]
-    assert code["launched"] == [("qwen3-coder:30b-ctx64k", "claude_code")]
-
-
-def test_code_prepares_a_named_model(code):
-    assert ollama.run_action("code", model_name = "devstral:24b", harness = "codex") is True
-    assert code["prepared"] == [("devstral:24b", 32768)]
-    assert code["launched"] == [("qwen3-coder:30b-ctx64k", "codex")]
-
-
-@pytest.mark.parametrize("harness, context_tokens", [
-    ("claude_code", 65536), ("aider", 32768), ("opencode", 32768), ("codex", 32768)])
-def test_only_claude_code_asks_for_a_64k_window(code, harness, context_tokens):
-    # A smaller window leaves room for a stronger model
-    assert ollama.run_action("code", harness = harness) is True
-    assert code["prepared"] == [("best", context_tokens)]
-
-
-def test_code_launches_nothing_without_a_model(code):
-    code["variant"] = None
-
-    assert ollama.run_action("code") is False
-    assert code["launched"] == []
-
-
-def test_code_refuses_an_unknown_harness(code):
-    assert ollama.run_action("code", harness = "nope") is False
-    assert code["prepared"] == []
-
-
-def test_code_needs_a_server_for_a_named_model(code, monkeypatch):
-    monkeypatch.setattr(ollama, "ensure_running", lambda: False)
-
-    assert ollama.run_action("code", model_name = "devstral:24b") is False
-    assert code["prepared"] == []
+    assert ollamaagents.prepare_coding_model(ask = False) is None

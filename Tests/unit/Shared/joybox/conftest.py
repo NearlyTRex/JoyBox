@@ -9,6 +9,7 @@ from joybox import config
 from joybox import environment
 from joybox import locker
 from joybox import lockerinfo
+from joybox import ollama
 from joybox import webfetch
 
 
@@ -62,3 +63,14 @@ def game_tree(tmp_path, monkeypatch):
     monkeypatch.setattr(
         lockerinfo, "get_primary_remote_locker_type", lambda: config.LockerType.LOCAL)
     return roots
+
+
+# An Ollama server reached through an SSH tunnel's local end
+@pytest.fixture
+def tunneled(monkeypatch):
+    values = {"ollama_ssh_host": "testuser@llm"}
+    monkeypatch.setattr(
+        ollama.settings, "get_value",
+        lambda section, field, default_value = None, throw_exception = True: values.get(field, default_value))
+    monkeypatch.setattr(ollama, "get_api_base", lambda: "http://localhost:11444")
+    return values

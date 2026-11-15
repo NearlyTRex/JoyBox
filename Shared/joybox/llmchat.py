@@ -9,6 +9,7 @@ import urllib.request
 import joybox.chunkers as chunkers
 import joybox.logger as logger
 import joybox.ollama as ollama
+from joybox import ollamaagents
 from joybox import serialization
 
 ###########################################################
@@ -217,7 +218,7 @@ CODING_CONTEXT_TOKENS = 32768
 # Choose the model for the coding preset: the one named, or the best coding
 # model the Ollama server can hold, prepared as ollama_tool's code action does
 def get_coding_model(model = None):
-    return model or ollama.prepare_coding_model(CODING_CONTEXT_TOKENS)
+    return model or ollamaagents.prepare_coding_model(CODING_CONTEXT_TOKENS)
 
 ###########################################################
 # Session

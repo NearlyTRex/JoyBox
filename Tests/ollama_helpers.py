@@ -1,23 +1,20 @@
 # Local imports
-from joybox import ollama
+from joybox import ollamacatalog
 
 
 ###########################################################
-# Shared values for the ollama suite
-#
-# ollama.py is large enough that its tests are split by area. Anything more
-# than one file needs lives here, so a helper cannot drift between files.
+# Catalog and installed-model entries shared by the ollama module tests
 ###########################################################
 
 def catalog_of(monkeypatch, models):
-    monkeypatch.setattr(ollama, "get_model_catalog", lambda purpose = None: models)
+    monkeypatch.setattr(ollamacatalog, "get_model_catalog", lambda purpose = None: models)
 
 
 def model(name = "model:8b", purpose = None, vram_mb = 5000, **extra):
     entry = {
         "name": name,
         "display": name,
-        "purpose": purpose or ollama.PURPOSE_CHAT,
+        "purpose": purpose or ollamacatalog.PURPOSE_CHAT,
         "params": "8B",
         "vram_mb": vram_mb,
         "description": "A model",

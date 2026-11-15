@@ -9,7 +9,7 @@ from joybox.cli import ollama_tool
 ###########################################################
 # Action dispatch
 #
-# Every option is handed to ollama.run_action, whose result is the exit status.
+# Every option is handed to ollamaactions.run_action, whose result is the exit status.
 ###########################################################
 
 @pytest.fixture
@@ -22,7 +22,7 @@ def tool(monkeypatch, isolated_settings):
         harness.actions.append(kwargs)
         return harness.result
 
-    monkeypatch.setattr(ollama_tool.ollama, "run_action", run_action)
+    monkeypatch.setattr(ollama_tool.ollamaactions, "run_action", run_action)
     return harness
 
 
