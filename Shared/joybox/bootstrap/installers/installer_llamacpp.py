@@ -7,19 +7,9 @@ from . import installer
 from joybox import runoptions
 from joybox import logger
 
-# llama.cpp
-#
-# Built from source rather than pulled as a binary, because the useful
-# build flags are hardware-specific. Unlike ollama it exposes grammar-
-# constrained sampling, fixed seeds, prompt caching and logprobs -- all of
-# which promptc needs: grammars for output contracts, seeds for
-# reproducible pass@k, and the tokenizer endpoint for exact token budgets.
-#
-# Backend selection:
-#   cpu     portable, always builds
-#   cuda    NVIDIA
-#   vulkan  AMD/Intel via the ordinary graphics driver, no ROCm required
-#   hip     AMD via ROCm
+# llama.cpp, built from source for hardware-specific flags. Unlike ollama it has the
+# grammars, fixed seeds, prompt caching and tokenizer endpoint promptc needs for
+# output contracts, reproducible pass@k and exact token budgets
 class LlamaCpp(installer.Installer):
     def __init__(
         self,
@@ -31,6 +21,8 @@ class LlamaCpp(installer.Installer):
         self.install_prefix = "/usr/local"
         self.server_binary_path = "/usr/local/bin/llama-server"
         self.repository_url = "https://github.com/ggml-org/llama.cpp.git"
+        # cpu portable; cuda NVIDIA; vulkan AMD/Intel through the graphics driver,
+        # no ROCm; hip AMD through ROCm
         self.backend = "vulkan"
 
     def get_supported_environments(self):

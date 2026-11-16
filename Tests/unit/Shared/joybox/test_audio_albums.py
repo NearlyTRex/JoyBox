@@ -7,7 +7,7 @@ import os
 import pytest
 
 # Local imports
-from joybox import audio, audiometadata, config
+from joybox import audio, audiometadata, config, modules
 
 pytestmark = pytest.mark.slow
 
@@ -44,7 +44,7 @@ def real_mutagen(monkeypatch):
 
     sequenced.index = 0
     monkeypatch.setattr(
-        audiometadata.modules, "import_python_module_package", sequenced)
+        modules, "import_python_module_package", sequenced)
 
 
 @pytest.fixture

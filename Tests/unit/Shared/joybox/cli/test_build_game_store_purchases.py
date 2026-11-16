@@ -27,7 +27,7 @@ def tool(monkeypatch):
         harness.built.append(game_subcategory)
         return game_subcategory not in harness.failing
 
-    monkeypatch.setattr(build_game_store_purchases.gameinfo, "iterate_selected_game_categories",
+    monkeypatch.setattr(build_game_store_purchases.gamecollection, "iterate_selected_game_categories",
         lambda parser, generation_mode: iter(STORES))
     monkeypatch.setattr(build_game_store_purchases.collection, "build_game_store_purchases", build)
     return harness

@@ -3,6 +3,7 @@ import pytest
 
 # Local imports
 from joybox import computer, config
+from joybox import filebulk
 from computer_helpers import PLAIN_ACCESSORS, TOKEN_MAP, step
 
 
@@ -102,8 +103,8 @@ def test_a_program_and_a_step_do_not_share_keys():
 def actions(monkeypatch):
     calls = []
     for owner, name in [
-        (computer.fileops, "smart_copy"),
-        (computer.fileops, "smart_move"),
+        (filebulk, "smart_copy"),
+        (filebulk, "smart_move"),
         (computer.archive, "extract_archive"),
         (computer.fileops, "lowercase_all_paths"),
     ]:

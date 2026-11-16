@@ -6,6 +6,7 @@ import pytest
 
 # Local imports
 from joybox import backup, config
+from joybox import filebulk
 from file_helpers import tree, write
 
 
@@ -249,14 +250,14 @@ def test_pretending_copies_nothing(source, tmp_path):
 
 def test_a_failed_copy_stops_the_backup(source, tmp_path, monkeypatch):
     # A partial backup that reports success is worse than a failed one.
-    monkeypatch.setattr(backup.fileops, "smart_copy", lambda **kwargs: False)
+    monkeypatch.setattr(filebulk, "smart_copy", lambda **kwargs: False)
 
     assert backup.copy_files_normally(str(source), str(tmp_path / "dest")) is False
 
 
 def test_a_failed_copy_can_be_skipped(source, tmp_path, monkeypatch):
     # A failing disk should not cost the files that still read cleanly.
-    monkeypatch.setattr(backup.fileops, "smart_copy", lambda **kwargs: False)
+    monkeypatch.setattr(filebulk, "smart_copy", lambda **kwargs: False)
     reported = []
     monkeypatch.setattr(
         backup.fileops, "report_fileio_error",
@@ -589,7 +590,7 @@ def archiving(monkeypatch, tmp_path):
         return True
 
     monkeypatch.setattr(backup.archive, "create_archive_from_folder", create_archive_from_folder)
-    monkeypatch.setattr(backup.fileops, "smart_move", smart_move)
+    monkeypatch.setattr(filebulk, "smart_move", smart_move)
     monkeypatch.setattr(
         backup.fileops, "remove_directory_contents",
         lambda src, **kwargs: state["emptied"].append(src) or True)
@@ -671,7 +672,7 @@ def test_a_failed_archive_removes_its_scratch_directory(source, archiving, tmp_p
 
 
 def test_a_failed_move_reports_failure_and_removes_scratch(source, archiving, monkeypatch, tmp_path):
-    monkeypatch.setattr(backup.fileops, "smart_move", lambda **kwargs: False)
+    monkeypatch.setattr(filebulk, "smart_move", lambda **kwargs: False)
 
     assert backup.archive_folder(str(source), str(tmp_path / "out"), "Backup") is False
     assert not os.path.exists(archiving["scratch"])
@@ -770,7 +771,7 @@ def test_a_failed_sub_folder_archive_stops_and_removes_scratch(game_tree, archiv
 
 
 def test_a_failed_sub_folder_move_stops_and_removes_scratch(game_tree, archiving, monkeypatch, tmp_path):
-    monkeypatch.setattr(backup.fileops, "smart_move", lambda **kwargs: False)
+    monkeypatch.setattr(filebulk, "smart_move", lambda **kwargs: False)
 
     assert backup.archive_sub_folders(str(game_tree), str(tmp_path / "out")) is False
     assert not os.path.exists(archiving["scratch"])

@@ -12,6 +12,7 @@ import joybox.logger as logger
 import joybox.paths as paths
 import joybox.programs as programs
 import joybox.sandbox as sandbox
+from joybox import sandboxpaths
 import joybox.capture as capture
 import joybox.settings as settings
 import joybox.process as process
@@ -187,7 +188,7 @@ def postprocess_command(
     # Transfer files from sandbox if necessary
     if isinstance(options.get_output_paths(), list):
         for output_path in options.get_output_paths():
-            sandbox.transfer_from_sandbox(
+            sandboxpaths.transfer_from_sandbox(
                 path = output_path,
                 options = options,
                 verbose = verbose,
@@ -195,6 +196,15 @@ def postprocess_command(
                 exit_on_failure = exit_on_failure)
 
 ###########################################################
+
+# Wait for a command to finish, stopping it once it has run for timeout seconds
+def wait_for_command(proc, timeout):
+    try:
+        proc.wait(timeout = timeout)
+    except subprocess.TimeoutExpired:
+        logger.log_warning("The command ran for more than %s seconds and was stopped" % timeout)
+        proc.kill()
+        proc.wait()
 
 # Wait for blocking processes, then post-process
 def finish_command(
@@ -286,8 +296,8 @@ def run_streamed_command(
                 proc.stdin.write(stdin_input)
                 proc.stdin.close()
             except BrokenPipeError:
-                pass
-        proc.wait()
+                logger.log_warning("The command exited before reading all of its input")
+        wait_for_command(proc, options.get_timeout())
         for t in threads:
             t.join()
     return (cmdline.clean_command_output("".join(output_lines).strip()), proc.returncode)
@@ -366,7 +376,7 @@ def run_command(
                 creationflags = options.get_creationflags(),
                 stdout = subprocess.DEVNULL,
                 stderr = subprocess.DEVNULL)
-            proc.wait()
+            wait_for_command(proc, options.get_timeout())
             finish_command(
                 cmd = cmd,
                 options = options,
@@ -401,7 +411,7 @@ def run_output_command(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    output, returncode = run_command(
+    output, _ = run_command(
         cmd = cmd,
         options = options,
         capture_output = True,
@@ -419,7 +429,7 @@ def run_returncode_command(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    output, returncode = run_command(
+    _, returncode = run_command(
         cmd = cmd,
         options = options,
         capture_output = False,
@@ -583,7 +593,7 @@ def run_capture_command(
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-        return (code == 0)
+        return code == 0
 
     # Get capture info
     capture_duration = settings.get_integer_value("UserData.Capture", "capture_duration")
@@ -602,18 +612,17 @@ def run_capture_command(
         # Run while capturing screenshots
         if paths.is_path_file(capture_file) and not overwrite_screenshots:
             return run_start()
-        else:
-            return capture.capture_screenshot_while_running(
-                run_func = run_start,
-                output_file = capture_file,
-                time_duration = capture_duration,
-                time_interval = capture_interval,
-                time_units_type = config.UnitType.SECONDS,
-                capture_origin = (capture_origin_x, capture_origin_y),
-                capture_resolution = (capture_resolution_w, capture_resolution_h),
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+        return capture.capture_screenshot_while_running(
+            run_func = run_start,
+            output_file = capture_file,
+            time_duration = capture_duration,
+            time_interval = capture_interval,
+            time_units_type = config.UnitType.SECONDS,
+            capture_origin = (capture_origin_x, capture_origin_y),
+            capture_resolution = (capture_resolution_w, capture_resolution_h),
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
 
     # Video capturing
     elif capture_type == config.CaptureType.VIDEO:
@@ -621,17 +630,16 @@ def run_capture_command(
         # Run while capturing video
         if paths.is_path_file(capture_file) and not overwrite_videos:
             return run_start()
-        else:
-            return capture.capture_video_while_running(
-                run_func = run_start,
-                output_file = capture_file,
-                capture_origin = (capture_origin_x, capture_origin_y),
-                capture_resolution = (capture_resolution_w, capture_resolution_h),
-                capture_framerate = capture_framerate,
-                capture_duration = capture_duration,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+        return capture.capture_video_while_running(
+            run_func = run_start,
+            output_file = capture_file,
+            capture_origin = (capture_origin_x, capture_origin_y),
+            capture_resolution = (capture_resolution_w, capture_resolution_h),
+            capture_framerate = capture_framerate,
+            capture_duration = capture_duration,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
 
     # No capture
     else:
@@ -689,10 +697,13 @@ def get_installer_setup_command(
 def get_dos_launch_command(
     options,
     start_program = None,
-    start_args = [],
+    start_args = None,
     start_letter = "c",
     start_offset = None,
     fullscreen = False):
+
+    # Get start args
+    start_args = [] if start_args is None else start_args
 
     # Search for disc images
     disc_images = paths.build_file_list_by_extensions(options.get_prefix_dos_d_drive(), extensions = [".chd"])
@@ -742,10 +753,13 @@ def get_dos_launch_command(
 def get_win31_launch_command(
     options,
     start_program = None,
-    start_args = [],
+    start_args = None,
     start_letter = "c",
     start_offset = None,
     fullscreen = False):
+
+    # Get start args
+    start_args = [] if start_args is None else start_args
 
     # Search for disc images
     disc_images = paths.build_file_list_by_extensions(options.get_prefix_dos_d_drive(), extensions = [".chd"])

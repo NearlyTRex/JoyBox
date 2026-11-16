@@ -344,7 +344,7 @@ def test_the_latest_url_is_the_store_page(steam_store, reachable):
 
 def test_asset_urls_by_type(steam_store, reachable, monkeypatch):
     reachable["all"] = True
-    monkeypatch.setattr(steam, "get_steam_trailer", lambda appid, **kwargs: "trailer-%s.mp4" % appid)
+    monkeypatch.setattr(steam.steamlookups, "get_steam_trailer", lambda appid, **kwargs: "trailer-%s.mp4" % appid)
 
     assert "220/library_600x900_2x.jpg" in steam_store.get_latest_asset_url("220", config.AssetType.BOXFRONT)
     assert steam_store.get_latest_asset_url("220", config.AssetType.VIDEO) == "trailer-220.mp4"

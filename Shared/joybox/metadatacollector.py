@@ -5,7 +5,7 @@ import collections
 import joybox.config as config
 import joybox.logger as logger
 import joybox.strings as strings
-import joybox.gameinfo as gameinfo
+from joybox import gamenaming
 import joybox.webpage as webpage
 import joybox.metadataentry as metadataentry
 
@@ -185,7 +185,7 @@ def collect_metadata_from_tgdb(
     def attempt_metadata_fetch(web_driver):
 
         # Get search terms
-        search_terms = gameinfo.derive_game_search_terms_from_name(game_name, game_platform)
+        search_terms = gamenaming.derive_game_search_terms_from_name(game_name, game_platform)
 
         # Metadata result
         metadata_result = metadataentry.MetadataEntry()
@@ -196,7 +196,7 @@ def collect_metadata_from_tgdb(
             raise Exception("Failed to load TheGamesDB search page")
 
         # Get natural name
-        natural_name = gameinfo.derive_regular_name_from_game_name(game_name)
+        natural_name = gamenaming.derive_regular_name_from_game_name(game_name)
 
         # Find the root container element
         element_search_result = webpage.wait_for_element(
@@ -318,7 +318,7 @@ def collect_metadata_from_gamefaqs(
     def attempt_metadata_fetch(web_driver):
 
         # Get search terms
-        search_terms = gameinfo.derive_game_search_terms_from_name(game_name, game_platform)
+        search_terms = gamenaming.derive_game_search_terms_from_name(game_name, game_platform)
 
         # Metadata result
         metadata_result = metadataentry.MetadataEntry()
@@ -471,7 +471,7 @@ def collect_metadata_from_bigfishgames(
     def attempt_metadata_fetch(web_driver):
 
         # Get search terms
-        search_terms = gameinfo.derive_game_search_terms_from_name(game_name, game_platform)
+        search_terms = gamenaming.derive_game_search_terms_from_name(game_name, game_platform)
 
         # Metadata result
         metadata_result = metadataentry.MetadataEntry()

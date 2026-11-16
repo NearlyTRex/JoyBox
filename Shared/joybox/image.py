@@ -3,7 +3,9 @@ import base64
 
 # Local imports
 import joybox.config as config
-import joybox.fileops as fileops
+from joybox import fileops
+from joybox import filebulk
+from joybox import serialization
 import joybox.logger as logger
 import joybox.paths as paths
 from joybox import runtime
@@ -82,7 +84,7 @@ def convert_image_to_jpeg(
     pretend_run = False,
     exit_on_failure = False):
     if is_image_jpeg(image_src):
-        return fileops.smart_transfer(
+        return filebulk.smart_transfer(
             src = image_src,
             dest = image_dest,
             skip_existing = True,
@@ -105,7 +107,7 @@ def convert_image_to_png(
     pretend_run = False,
     exit_on_failure = False):
     if is_image_png(image_src):
-        return fileops.smart_transfer(
+        return filebulk.smart_transfer(
             src = image_src,
             dest = image_dest,
             skip_existing = True,
@@ -138,12 +140,8 @@ def convert_image_data_to_format(
                 fileops.remove_file(created_file)
         return None
 
-    # Write original image data to temp file
-    with open(temp_input, "wb") as f:
-        f.write(image_data)
-
-    # Convert to target format
-    if convert_image(
+    # Write original image data to temp file, then convert it to the target format
+    if serialization.write_binary_file(temp_input, image_data) and convert_image(
         image_src = temp_input,
         image_dest = temp_output,
         image_format = target_format,
@@ -152,15 +150,14 @@ def convert_image_data_to_format(
         exit_on_failure = exit_on_failure):
 
         # Read converted image data
-        with open(temp_output, "rb") as f:
-            converted_data = f.read()
+        converted_data = serialization.read_binary_file(temp_output)
 
         # Clean up temp files
         fileops.remove_file(temp_input)
         fileops.remove_file(temp_output)
 
         # Return base64 encoded data
-        return base64.b64encode(converted_data).decode("utf-8")
+        return base64.b64encode(converted_data).decode("utf-8") if converted_data is not None else None
 
     # Clean up temp files on failure
     fileops.remove_file(temp_input)

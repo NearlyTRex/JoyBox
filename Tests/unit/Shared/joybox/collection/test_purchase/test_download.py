@@ -140,7 +140,7 @@ def all_downloads(monkeypatch):
     state = {"names": ["Half-Life 2"], "downloaded": [], "ok": True}
 
     monkeypatch.setattr(
-        purchase.gameinfo, "find_json_game_names",
+        purchase.gamecollection, "find_json_game_names",
         lambda supercategory, category, subcategory: (
             state["names"] if category == config.Category.COMPUTER else []))
     monkeypatch.setattr(

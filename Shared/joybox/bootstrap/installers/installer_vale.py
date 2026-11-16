@@ -7,10 +7,8 @@ from . import installer
 from joybox import runoptions
 from joybox import logger
 
-# Vale (prose linter -- rule-based, no model involved)
-#
-# Used by promptc for the vocabulary-consistency and banned-phrase checks
-# that back PC104. Deterministic and CI-friendly, which is the whole point.
+# Vale, a rule-based prose linter with no model, so deterministic in CI; promptc
+# uses it for the vocabulary and banned-phrase checks behind PC104
 class Vale(installer.Installer):
     def __init__(
         self,

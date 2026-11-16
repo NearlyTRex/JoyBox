@@ -138,6 +138,7 @@ program_key_stdout = "stdout"
 program_key_stderr = "stderr"
 program_key_include_stderr = "include_stderr"
 program_key_stdin_input = "stdin_input"
+program_key_timeout = "timeout"
 
 # Computer program step keys
 program_step_key_from = "from"

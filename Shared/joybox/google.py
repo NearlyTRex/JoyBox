@@ -1,10 +1,10 @@
 # Imports
-import json
 import shutil
 
 # Local imports
 import joybox.config as config
 import joybox.logger as logger
+from joybox import serialization
 import joybox.command as command
 import joybox.programs as programs
 import joybox.strings as strings
@@ -13,7 +13,7 @@ import joybox.rumble as rumble
 import joybox.paths as paths
 import joybox.containers as containers
 import joybox.datautils as datautils
-import joybox.fileops as fileops
+from joybox import fileops
 import joybox.settings as settings
 
 # Hard safety cap on concurrent fragment downloads. yt-dlp's -N runs multiple
@@ -22,12 +22,9 @@ import joybox.settings as settings
 # clamped to this ceiling regardless of config.
 MAX_CONCURRENT_FRAGMENTS = 8
 
-# Locate a JavaScript runtime for yt-dlp's YouTube nsig "n challenge" solver.
-# Recent yt-dlp needs an external JS runtime (Deno preferred) to compute the nsig
-# value; without one YouTube returns only storyboard images and downloads fail with
-# "Requested format is not available". Deno is installed by the JoyBox Bootstrap
-# layer at ~/.deno/bin, which is NOT on the download subprocess PATH, so we locate
-# it explicitly and hand yt-dlp "--js-runtimes deno:<path>".
+# yt-dlp's "--js-runtimes deno:<path>", without which YouTube's nsig challenge fails
+# with "Requested format is not available"; Bootstrap installs Deno in ~/.deno/bin,
+# which is not on the download's PATH
 def get_javascript_runtime_args():
     candidates = [paths.expand_path("~/.deno/bin/deno"), shutil.which("deno")]
     for deno_path in candidates:
@@ -169,10 +166,7 @@ def find_images(
 
 # Parse video search line
 def parse_video_search_line(line):
-    try:
-        line_json = json.loads(line)
-    except ValueError:
-        return None
+    line_json = serialization.parse_json_or_none(line)
     if not isinstance(line_json, dict):
         return None
     line_title = line_json.get("title")

@@ -1,5 +1,4 @@
 # Imports
-import json
 
 # Local imports
 import joybox.config as config
@@ -8,7 +7,7 @@ import joybox.paths as paths
 import joybox.fileops as fileops
 import joybox.lockerinfo as lockerinfo
 import joybox.lockerbackend as lockerbackend
-import joybox.sync as sync
+from joybox import syncremotes
 import joybox.editorprompt as editorprompt
 import joybox.environment as environment
 import joybox.serialization as serialization
@@ -30,7 +29,7 @@ def get_cache_dir():
     fileops.make_directory(src = cache_dir)
     return cache_dir
 
-def get_cache_file(locker_name, excludes = []):
+def get_cache_file(locker_name, excludes = ()):
 
     # A map built with excludes is missing files, so it is cached apart from the full one
     if not excludes:
@@ -62,10 +61,9 @@ def load_cached_hash_map(cache_file, locker_name, verbose = False):
         cache_age_hours = (runtime.get_current_timestamp() - cache_mtime) / 3600
         if cache_age_hours < 0 or cache_age_hours >= CACHE_MAX_AGE_HOURS:
             return None
-        with open(cache_file, "r", encoding = "utf-8") as cache_handle:
-            hash_map = json.load(cache_handle)
-    except (OSError, ValueError):
-        hash_map = None
+    except OSError:
+        return None
+    hash_map = serialization.parse_json_or_none(serialization.read_text_file(cache_file))
 
     # A cache that does not hold a map of entries is rebuilt rather than trusted
     if not isinstance(hash_map, dict) or not all(isinstance(entry, dict) for entry in hash_map.values()):
@@ -78,11 +76,14 @@ def load_cached_hash_map(cache_file, locker_name, verbose = False):
 def build_locker_hash_map(
     backend,
     locker_name,
-    excludes = [],
+    excludes = None,
     use_cache = True,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
+
+    # Get excludes
+    excludes = [] if excludes is None else excludes
 
     # Use a recent cache when there is one
     cache_file = get_cache_file(locker_name, excludes)
@@ -181,8 +182,11 @@ def build_sync_actions(
     secondary_hashes,
     primary_encrypted = False,
     secondary_encrypted = False,
-    exclude_write_paths = [],
+    exclude_write_paths = None,
     verbose = False):
+
+    # Get exclude write paths
+    exclude_write_paths = [] if exclude_write_paths is None else exclude_write_paths
 
     # Process each file in primary
     actions = []
@@ -505,7 +509,7 @@ def verify_prerequisites(
             logger.log_error("Primary locker path not accessible: %s" % primary_path)
             return False
     elif isinstance(primary_backend, lockerbackend.RemoteBackend):
-        if not sync.is_remote_configured(primary_backend.remote_name, primary_backend.remote_type):
+        if not syncremotes.is_remote_configured(primary_backend.remote_name, primary_backend.remote_type):
             logger.log_error("Primary remote not configured: %s" % primary_backend.remote_name)
             return False
 
@@ -517,7 +521,7 @@ def verify_prerequisites(
                 logger.log_error("Secondary locker path not accessible: %s" % sec_path)
                 return False
         elif isinstance(sec_backend, lockerbackend.RemoteBackend):
-            if not sync.is_remote_configured(sec_backend.remote_name, sec_backend.remote_type):
+            if not syncremotes.is_remote_configured(sec_backend.remote_name, sec_backend.remote_type):
                 logger.log_error("Secondary remote not configured: %s" % sec_backend.remote_name)
                 return False
     return True

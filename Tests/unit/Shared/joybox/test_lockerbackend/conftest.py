@@ -7,6 +7,7 @@ import pytest
 
 # Local imports
 from joybox import lockerbackend
+from sync_helpers import sync_owner
 
 # Helpers beside this file are imported by name, so this directory has to be
 # importable; pytest only loads conftest itself. Appended rather than inserted:
@@ -49,7 +50,7 @@ def remote(monkeypatch):
         ("does_file_exist", "exists"),
         ("does_path_contain_files", "contains"),
     ]:
-        monkeypatch.setattr(lockerbackend.sync, name, record(name, key))
+        monkeypatch.setattr(sync_owner(name), name, record(name, key))
     return state
 
 

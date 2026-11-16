@@ -2,8 +2,12 @@
 import pytest
 
 # Local imports
-from joybox import sync
-from sync_helpers import REMOTE, REMOTE_TYPE, LOCAL, REMOTE_PATH, positional_arguments, record
+from joybox import fileops
+from joybox import logger
+from joybox import platform_info
+from joybox import synclisting
+from joybox import synctransfers
+from sync_helpers import REMOTE, REMOTE_TYPE, LOCAL, REMOTE_PATH, connection_path, positional_arguments, record, sync_owner
 
 
 ###########################################################
@@ -54,7 +58,7 @@ INTERACTIVE = [
 def run(name, **extra):
     kwargs = dict(TRANSFERS[name])
     kwargs.update(extra)
-    return getattr(sync, name)(**kwargs)
+    return getattr(sync_owner(name), name)(**kwargs)
 
 
 @pytest.mark.parametrize("name", sorted(TRANSFERS))
@@ -123,7 +127,7 @@ def test_a_sync_to_the_remote_puts_local_first(rclone, recording_command):
 
     assert arguments[0] == "sync"
     assert arguments[1] == LOCAL
-    assert arguments[2] == sync.get_remote_connection_path(REMOTE, REMOTE_TYPE, REMOTE_PATH)
+    assert arguments[2] == connection_path()
 
 
 ###########################################################
@@ -155,8 +159,8 @@ def test_an_upload_with_an_unreadable_file_list_is_refused(rclone, quiet, record
 def test_a_failed_sidecar_update_does_not_fail_the_upload(rclone, recording_command, monkeypatch):
     # The files arrived; the next sync re-hashes anything the sidecar lacks.
     warnings = []
-    monkeypatch.setattr(sync, "upload_hash_sidecar_files", lambda **kwargs: False)
-    monkeypatch.setattr(sync.logger, "log_warning", warnings.append)
+    monkeypatch.setattr(synctransfers, "upload_hash_sidecar_files", lambda **kwargs: False)
+    monkeypatch.setattr(logger, "log_warning", warnings.append)
 
     assert run("upload_files_to_remote", local_root = "/locker") is True
     assert warnings
@@ -167,35 +171,35 @@ def test_a_failed_sidecar_update_does_not_fail_the_upload(rclone, recording_comm
 ###########################################################
 
 def test_a_listing_without_rclone_is_refused_quietly(no_rclone, quiet, recording_command):
-    assert sync.list_files(REMOTE, REMOTE_TYPE, REMOTE_PATH) is False
+    assert synclisting.list_files(REMOTE, REMOTE_TYPE, REMOTE_PATH) is False
 
 
 def test_a_verbose_mount_writes_a_log(rclone, recording_command, tmp_path):
     mount_point = tmp_path / "mount"
     mount_point.mkdir()
-    sync.mount_files(REMOTE, REMOTE_TYPE, REMOTE_PATH, str(mount_point), verbose = True)
+    synclisting.mount_files(REMOTE, REMOTE_TYPE, REMOTE_PATH, str(mount_point), verbose = True)
 
     assert recording_command.value_after("--log-level") == "INFO"
 
 
 def test_a_mount_point_that_cannot_be_made_empty_is_refused(rclone, quiet, recording_command, monkeypatch, tmp_path):
-    monkeypatch.setattr(sync.platform_info, "is_unix_platform", lambda: True)
-    monkeypatch.setattr(sync.fileops, "make_directory", lambda **kwargs: False)
+    monkeypatch.setattr(platform_info, "is_unix_platform", lambda: True)
+    monkeypatch.setattr(fileops, "make_directory", lambda **kwargs: False)
 
-    assert sync.mount_files(REMOTE, REMOTE_TYPE, REMOTE_PATH, str(tmp_path / "absent")) is False
+    assert synclisting.mount_files(REMOTE, REMOTE_TYPE, REMOTE_PATH, str(tmp_path / "absent")) is False
     assert recording_command.ran() is False
 
 
 def test_a_pretend_mount_creates_no_mount_point(rclone, recording_command, monkeypatch, tmp_path):
     target = tmp_path / "new-mount"
-    monkeypatch.setattr(sync.platform_info, "is_unix_platform", lambda: True)
+    monkeypatch.setattr(platform_info, "is_unix_platform", lambda: True)
 
-    assert sync.mount_files(REMOTE, REMOTE_TYPE, REMOTE_PATH, str(target), pretend_run = True) is True
+    assert synclisting.mount_files(REMOTE, REMOTE_TYPE, REMOTE_PATH, str(target), pretend_run = True) is True
     assert not target.exists()
 
 
 def test_a_non_unix_mount_runs_in_the_foreground(rclone, recording_command, monkeypatch, tmp_path):
-    monkeypatch.setattr(sync.platform_info, "is_unix_platform", lambda: False)
-    sync.mount_files(REMOTE, REMOTE_TYPE, REMOTE_PATH, str(tmp_path / "M"))
+    monkeypatch.setattr(platform_info, "is_unix_platform", lambda: False)
+    synclisting.mount_files(REMOTE, REMOTE_TYPE, REMOTE_PATH, str(tmp_path / "M"))
 
     assert "--daemon" not in recording_command.only()

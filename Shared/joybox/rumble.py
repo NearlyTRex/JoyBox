@@ -53,11 +53,9 @@ def fetch_channel_page(page_url, verbose = False, pretend_run = False, exit_on_f
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
-# Enumerate a Rumble channel's videos as (id, url) pairs, paging until a page
-# yields no new videos (the last page + 1 returns a 404 body with no video json).
-# The id is Rumble's url-slug id; it is not yt-dlp's canonical archive id, so the
-# download layer relies on yt-dlp's own --download-archive to skip existing
-# videos rather than the pre-download filter.
+# A Rumble channel's videos as (id, url) pairs, paging until one adds none; the id is
+# the url slug, not yt-dlp's archive id, so skipping downloaded videos is left to
+# --download-archive
 def get_channel_video_urls(channel_url, verbose = False, pretend_run = False, exit_on_failure = False):
 
     # Normalize to the base channel url (strip any query/trailing slash)

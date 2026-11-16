@@ -1,6 +1,7 @@
 # Local imports
 import joybox.config as config
 import joybox.fileops as fileops
+from joybox import filebulk
 import joybox.logger as logger
 import joybox.paths as paths
 import joybox.release as release
@@ -101,7 +102,7 @@ def convert_to_native_save(
     # Move save files
     for save_file in paths.build_file_list(save_dir):
         if search_path in save_file and ignore_path not in save_file:
-            success = fileops.smart_move(
+            success = filebulk.smart_move(
                 src = save_file,
                 dest = save_file.replace(search_path, replace_path),
                 show_progress = True,

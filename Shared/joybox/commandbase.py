@@ -31,7 +31,7 @@ def is_only_starter_command(cmd):
 ###########################################################
 
 # Get runnable command path
-def get_runnable_command_path(cmd, search_dirs = []):
+def get_runnable_command_path(cmd, search_dirs = ()):
     for search_dir in search_dirs:
         potential_paths = [paths.join_paths(search_dir, cmd)]
         for cmd_ext in config.WindowsProgramFileType.cvalues():
@@ -43,7 +43,8 @@ def get_runnable_command_path(cmd, search_dirs = []):
     return shutil.which(cmd)
 
 # Check if runnable command
-def is_runnable_command(cmd, search_dirs = []):
+def is_runnable_command(cmd, search_dirs = None):
+    search_dirs = [] if search_dirs is None else search_dirs
     cmd_path = get_runnable_command_path(cmd, search_dirs)
     if not cmd_path:
         return False
@@ -52,7 +53,7 @@ def is_runnable_command(cmd, search_dirs = []):
 ###########################################################
 
 # Check if command type is found
-def is_command_type_found(cmd, cmd_exts = [], search_start = 0, search_len = -1):
+def is_command_type_found(cmd, cmd_exts = (), search_start = 0, search_len = -1):
     cmd_list = cmdline.create_command_list(cmd)
     for cmd_index in range(len(cmd_list)):
         cmd_segment = cmd_list[cmd_index]

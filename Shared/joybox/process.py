@@ -11,59 +11,65 @@ from joybox import runtime
 # Process management
 ###########################################################
 
-# Find active processes
-def find_active_named_processes(process_names = []):
+# The errors psutil raises for a process that has exited or cannot be read
+def get_process_errors():
     import psutil
-    process_objs = []
+    return (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess)
+
+# Whether a process has one of the names, exactly or by basename; one that has
+# exited or cannot be read has none
+def has_process_name(proc, process_names):
     try:
-        for proc in psutil.process_iter():
-            for process_name in process_names:
-                if process_name == proc.name():
-                    process_objs.append(proc)
-                elif ntpath.basename(process_name) == ntpath.basename(proc.name()):
-                    process_objs.append(proc)
-    except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess):
-        pass
-    return process_objs
+        name = proc.name()
+    except get_process_errors():
+        return False
+    return any(process_name == name or ntpath.basename(process_name) == ntpath.basename(name)
+               for process_name in process_names)
+
+# Find active processes
+def find_active_named_processes(process_names = ()):
+    import psutil
+    try:
+        candidates = list(psutil.process_iter())
+    except get_process_errors():
+        return []
+    return [proc for proc in candidates if has_process_name(proc, process_names)]
 
 # Kill active processes
-def kill_active_named_processes(process_names = []):
-    import psutil
-    try:
-        for proc in find_active_named_processes(process_names):
+def kill_active_named_processes(process_names = ()):
+    for proc in find_active_named_processes(process_names):
+        try:
             proc.kill()
-    except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess) as e:
-        logger.log_error(e)
+        except get_process_errors() as e:
+            logger.log_error(e)
 
 # Interrupt active processes
-def interrupt_active_named_processes(process_names = []):
-    import psutil
-    try:
-        for proc in find_active_named_processes(process_names):
-            if hasattr(signal, "CTRL_C_EVENT"):
-                proc.send_signal(signal.CTRL_C_EVENT)
-            else:
-                proc.send_signal(signal.SIGINT)
-    except (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess) as e:
-        logger.log_error(e)
+def interrupt_active_named_processes(process_names = ()):
+    number = signal.CTRL_C_EVENT if hasattr(signal, "CTRL_C_EVENT") else signal.SIGINT
+    for proc in find_active_named_processes(process_names):
+        try:
+            proc.send_signal(number)
+        except get_process_errors() as e:
+            logger.log_error(e)
+
+# Wait for one process to finish, until timeout seconds after start_time
+def wait_for_process(proc, start_time, timeout):
+    logger.log_info("Waiting for process %s (pid=%d)..." % (proc.name(), proc.pid))
+    while proc.is_running():
+        if timeout and time.time() - start_time > timeout:
+            logger.log_warning("Timeout after %d seconds waiting for %s (pid=%d)" % (timeout, proc.name(), proc.pid))
+            return
+        runtime.sleep_program(1)
+    logger.log_info("Process (pid=%d) finished" % proc.pid)
 
 # Wait for processes
-def wait_for_named_processes(process_names = [], timeout = 1200):
+def wait_for_named_processes(process_names = (), timeout = 1200):
     import psutil
-    try:
-        start_time = time.time()
-        for proc in find_active_named_processes(process_names):
-            logger.log_info("Waiting for process %s (pid=%d)..." % (proc.name(), proc.pid))
-            while True:
-                if not proc.is_running():
-                    logger.log_info("Process %s (pid=%d) finished" % (proc.name(), proc.pid))
-                    break
-                elapsed = time.time() - start_time
-                if timeout and elapsed > timeout:
-                    logger.log_warning("Timeout after %d seconds waiting for %s (pid=%d)" % (timeout, proc.name(), proc.pid))
-                    break
-                runtime.sleep_program(1)
-    except (psutil.NoSuchProcess, psutil.ZombieProcess):
-        pass  # Process already finished, which is fine
-    except psutil.AccessDenied as e:
-        logger.log_warning("Access denied while waiting for process: %s" % e)
+    start_time = time.time()
+    for proc in find_active_named_processes(process_names):
+        try:
+            wait_for_process(proc, start_time, timeout)
+        except (psutil.NoSuchProcess, psutil.ZombieProcess):
+            logger.log_info("Process (pid=%d) finished" % proc.pid)
+        except psutil.AccessDenied as e:
+            logger.log_warning("Access denied while waiting for process: %s" % e)

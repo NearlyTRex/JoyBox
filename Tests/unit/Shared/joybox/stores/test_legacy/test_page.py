@@ -174,7 +174,7 @@ def asset_lookups(monkeypatch):
         return "https://www.youtube.com/embed/abc?enablejsapi=1"
 
     monkeypatch.setattr(legacy.metadataassetcollector, "find_metadata_asset", find_metadata_asset)
-    monkeypatch.setattr(legacy.webpage, "get_matching_url", get_matching_url)
+    monkeypatch.setattr(legacy.webfetch, "get_matching_url", get_matching_url)
     return calls
 
 

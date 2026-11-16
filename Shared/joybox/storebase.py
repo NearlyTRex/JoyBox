@@ -7,6 +7,7 @@ import joybox.config as config
 import joybox.logger as logger
 import joybox.jsondata as jsondata
 import joybox.webpage as webpage
+from joybox import webcookies
 import joybox.paths as paths
 import joybox.strings as strings
 import joybox.manifest as manifest
@@ -272,7 +273,7 @@ class StoreBase:
 
     # Get cookie file
     def get_cookie_file(self):
-        return webpage.get_cookie_file(self.get_name().lower())
+        return webcookies.get_cookie_file(self.get_name().lower())
 
     ############################################################
     # Versions

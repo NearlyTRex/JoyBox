@@ -54,8 +54,8 @@ def load(metadata_root):
 
 
 def platform_of():
-    from joybox import gameinfo
-    return gameinfo.derive_game_platform_from_categories(CATEGORY, SUBCATEGORY)
+    from joybox import gamenaming
+    return gamenaming.derive_game_platform_from_categories(CATEGORY, SUBCATEGORY)
 
 
 def create(metadata_root, **kwargs):
@@ -493,7 +493,7 @@ def every_game(monkeypatch):
         state["stats"].append(kwargs["stats"])
         return state["result"]
 
-    monkeypatch.setattr(metadata.gameinfo, "find_json_game_names", find_json_game_names)
+    monkeypatch.setattr(metadata.gamecollection, "find_json_game_names", find_json_game_names)
     def log_summary(stats):
         state["summaries"].append(stats)
 

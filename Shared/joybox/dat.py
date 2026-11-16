@@ -5,7 +5,8 @@ from xml.dom import minidom
 import joybox.config as config
 import joybox.logger as logger
 import joybox.paths as paths
-import joybox.fileops as fileops
+from joybox import serialization
+from joybox import fileops
 import joybox.hashing as hashing
 
 # General datfile class
@@ -32,51 +33,34 @@ class Dat:
 
     # Import cache dat file
     def import_cache_dat_file(self, dat_file, verbose = False, pretend_run = False, exit_on_failure = False):
-        try:
-            if verbose:
-                logger.log_info("Importing cache dat file '%s'" % dat_file)
-            if not pretend_run:
-                with open(dat_file, "r", encoding="utf8", newline="\n") as file:
-                    for line in file.readlines():
-                        line_tokens = line.strip().split(" || ")
-                        if len(line_tokens) >= 5:
-                            game_entry = {}
-                            game_entry[config.dat_key_game] = line_tokens[0]
-                            game_entry[config.dat_key_file] = line_tokens[1]
-                            game_entry[config.dat_key_size] = line_tokens[2]
-                            game_entry[config.dat_key_crc] = line_tokens[3]
-                            game_entry[config.dat_key_md5] = line_tokens[4]
-                            self.add_game(game_entry)
-            return True
-        except Exception as e:
-            if exit_on_failure:
-                logger.log_error("Unable import cache dat file '%s'" % dat_file)
-                logger.log_error(e, quit_program = True)
-            return False
+        if verbose:
+            logger.log_info("Importing cache dat file '%s'" % dat_file)
+        if not pretend_run:
+            lines = serialization.read_text_lines(dat_file, exit_on_failure = exit_on_failure)
+            if lines is None:
+                return False
+            for line in lines:
+                line_tokens = line.strip().split(" || ")
+                if len(line_tokens) >= 5:
+                    game_entry = {}
+                    game_entry[config.dat_key_game] = line_tokens[0]
+                    game_entry[config.dat_key_file] = line_tokens[1]
+                    game_entry[config.dat_key_size] = line_tokens[2]
+                    game_entry[config.dat_key_crc] = line_tokens[3]
+                    game_entry[config.dat_key_md5] = line_tokens[4]
+                    self.add_game(game_entry)
+        return True
 
     # Export cache dat file
     def export_cache_dat_file(self, dat_file, verbose = False, pretend_run = False, exit_on_failure = False):
-        try:
-            if verbose:
-                logger.log_info("Exporting cache dat file '%s'" % dat_file)
-            if not pretend_run:
-                with open(dat_file, "w", encoding="utf8", newline="\n") as file:
-                    for key in self.game_database.keys():
-                        game_entry = self.game_database[key]
-                        replacements = (
-                            game_entry[config.dat_key_game],
-                            game_entry[config.dat_key_file],
-                            game_entry[config.dat_key_size],
-                            game_entry[config.dat_key_crc],
-                            game_entry[config.dat_key_md5]
-                        )
-                        file.write("%s || %s || %s || %s || %s\n" % replacements)
-            return True
-        except Exception as e:
-            if exit_on_failure:
-                logger.log_error("Unable to export cache dat file '%s'" % dat_file)
-                logger.log_error(e, quit_program = True)
-            return False
+        if verbose:
+            logger.log_info("Exporting cache dat file '%s'" % dat_file)
+        if not pretend_run:
+            fields = (config.dat_key_game, config.dat_key_file, config.dat_key_size, config.dat_key_crc, config.dat_key_md5)
+            contents = "".join(
+                " || ".join(game_entry[field] for field in fields) + "\n" for game_entry in self.game_database.values())
+            return serialization.write_text_file(dat_file, contents, exit_on_failure = exit_on_failure)
+        return True
 
     # Import clrmamepro dat file
     def import_clrmamepro_dat_file(self, dat_file, verbose = False, pretend_run = False, exit_on_failure = False):

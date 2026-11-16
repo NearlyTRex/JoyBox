@@ -58,8 +58,8 @@ def browser(itchio_store, monkeypatch):
 
     monkeypatch.setattr(itchio_store, "web_connect", web_connect)
     monkeypatch.setattr(itchio_store, "web_disconnect", web_disconnect)
-    monkeypatch.setattr(itchio.webpage, "load_cookie_website", load_cookie_website)
-    monkeypatch.setattr(itchio.webpage, "login_cookie_website", login_cookie_website)
+    monkeypatch.setattr(itchio.webcookies, "load_cookie_website", load_cookie_website)
+    monkeypatch.setattr(itchio.webcookies, "login_cookie_website", login_cookie_website)
     monkeypatch.setattr(itchio.webpage, "wait_for_element", wait_for_element)
     monkeypatch.setattr(itchio.webpage, "scroll_to_end_of_page", scroll_to_end_of_page)
     monkeypatch.setattr(itchio.runtime, "sleep_program", fake.slept.append)

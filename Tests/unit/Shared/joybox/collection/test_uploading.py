@@ -130,7 +130,7 @@ def every_game(monkeypatch):
         return state["result"]
 
     monkeypatch.setattr(uploading.gameinfo, "GameInfo", StubGameInfo)
-    monkeypatch.setattr(uploading.gameinfo, "find_json_game_names", find_json_game_names)
+    monkeypatch.setattr(uploading.gamecollection, "find_json_game_names", find_json_game_names)
     monkeypatch.setattr(uploading, "upload_game_files", upload_game_files)
     return state
 

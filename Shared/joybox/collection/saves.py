@@ -3,9 +3,11 @@ import joybox.config as config
 import joybox.logger as logger
 import joybox.paths as paths
 import joybox.fileops as fileops
+from joybox import filebulk
 import joybox.archive as archive
 import joybox.locker as locker
 import joybox.gameinfo as gameinfo
+from joybox import gamecollection
 import joybox.stores as stores
 import joybox.storebase as storebase
 import joybox.hashing as hashing
@@ -217,7 +219,7 @@ def pack_all_saves(
     for game_supercategory in [config.Supercategory.ROMS]:
         for game_category in config.Category.members():
             for game_subcategory in config.subcategory_map[game_category]:
-                game_names = gameinfo.find_json_game_names(
+                game_names = gamecollection.find_json_game_names(
                     game_supercategory,
                     game_category,
                     game_subcategory)
@@ -317,7 +319,7 @@ def unpack_all_saves(
     for game_supercategory in [config.Supercategory.ROMS]:
         for game_category in config.Category.members():
             for game_subcategory in config.subcategory_map[game_category]:
-                game_names = gameinfo.find_json_game_names(
+                game_names = gamecollection.find_json_game_names(
                     game_supercategory,
                     game_category,
                     game_subcategory)
@@ -456,7 +458,7 @@ def export_store_game_save(
                 logger.log_info(f"Checking path: {path_full}")
             if not paths.does_directory_contain_files(path_full):
                 continue
-            success = fileops.smart_copy(
+            success = filebulk.smart_copy(
                 src = path_full,
                 dest = paths.join_paths(tmp_dir_result, path_relative),
                 show_progress = True,
@@ -566,7 +568,7 @@ def import_all_game_save_paths(
     for game_supercategory in [config.Supercategory.ROMS]:
         for game_category in config.Category.members():
             for game_subcategory in config.subcategory_map[game_category]:
-                game_names = gameinfo.find_json_game_names(
+                game_names = gamecollection.find_json_game_names(
                     game_supercategory,
                     game_category,
                     game_subcategory)
@@ -617,7 +619,7 @@ def import_all_game_saves(
     for game_supercategory in [config.Supercategory.ROMS]:
         for game_category in config.Category.members():
             for game_subcategory in config.subcategory_map[game_category]:
-                game_names = gameinfo.find_json_game_names(
+                game_names = gamecollection.find_json_game_names(
                     game_supercategory,
                     game_category,
                     game_subcategory)
@@ -672,7 +674,7 @@ def export_all_game_save(
     for game_supercategory in [config.Supercategory.ROMS]:
         for game_category in config.Category.members():
             for game_subcategory in config.subcategory_map[game_category]:
-                game_names = gameinfo.find_json_game_names(
+                game_names = gamecollection.find_json_game_names(
                     game_supercategory,
                     game_category,
                     game_subcategory)

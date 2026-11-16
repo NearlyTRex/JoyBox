@@ -5,6 +5,7 @@ import joybox.fileops as fileops
 import joybox.logger as logger
 import joybox.paths as paths
 import joybox.release as release
+from joybox import sourcebuild
 import joybox.programs as programs
 import joybox.emulatorcommon as emulatorcommon
 import joybox.emulatorbase as emulatorbase
@@ -82,7 +83,7 @@ class Flycast(emulatorbase.EmulatorBase):
 
         # Build linux program
         if programs.should_program_be_installed("Flycast", "linux"):
-            success = release.build_appimage_from_source(
+            success = sourcebuild.build_appimage_from_source(
                 release_url = "https://github.com/NearlyTRex/Flycast.git",
                 output_file = "App-x86_64.AppImage",
                 install_name = "Flycast",

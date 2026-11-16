@@ -222,8 +222,9 @@ def test_a_written_registry_file_is_utf16(tmp_path):
 
 def test_writing_to_an_unwritable_path_reports_failure(tmp_path):
     data = {"header": HEADER, "entries": []}
+    (tmp_path / "file").write_text("")
 
-    assert registry.write_registry_file(str(tmp_path / "missing" / "out.reg"), data) is False
+    assert registry.write_registry_file(str(tmp_path / "file" / "out.reg"), data) is False
 
 
 def test_pretending_does_not_write_a_registry_file(tmp_path):
@@ -416,9 +417,10 @@ def test_an_unreadable_registry_file_quits_when_asked(tmp_path):
 
 def test_an_unwritable_registry_file_quits_when_asked(tmp_path):
     data = {"header": HEADER, "entries": []}
+    (tmp_path / "file").write_text("")
     with pytest.raises(SystemExit):
         registry.write_registry_file(
-            str(tmp_path / "missing" / "user.reg"), data, verbose = True, exit_on_failure = True)
+            str(tmp_path / "file" / "user.reg"), data, verbose = True, exit_on_failure = True)
 
 
 def test_a_key_with_no_values_is_written_bare(tmp_path):

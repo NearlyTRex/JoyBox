@@ -361,14 +361,18 @@ class CommandOptions:
         prefix_dir = None,
         general_prefix_dir = None,
         linked_prefix = False,
-        other_links = [],
+        other_links = None,
         clean_existing = True,
         verbose = False,
         pretend_run = False,
         exit_on_failure = False):
 
+        # Get other links
+        other_links = [] if other_links is None else other_links
+
         # Imports
         import joybox.sandbox as sandbox
+        import joybox.sandboxprefix as sandboxprefix
 
         # Setup prefix
         self.setup_prefix(
@@ -380,7 +384,7 @@ class CommandOptions:
 
         # Create prefix
         if linked_prefix:
-            success = sandbox.create_linked_prefix(
+            success = sandboxprefix.create_linked_prefix(
                 options = self,
                 other_links = other_links,
                 clean_existing = clean_existing,
@@ -390,7 +394,7 @@ class CommandOptions:
             if not success:
                 return False
         else:
-            success = sandbox.create_basic_prefix(
+            success = sandboxprefix.create_basic_prefix(
                 options = self,
                 clean_existing = clean_existing,
                 verbose = verbose,
@@ -469,3 +473,10 @@ class CommandOptions:
         return self.options.get_value(config.program_key_stdin_input)
     def set_stdin_input(self, value):
         self.options.set_value(config.program_key_stdin_input, value)
+
+    # Seconds a captured or output-suppressed command may run before it is stopped, or None
+    def get_timeout(self):
+        return self.options.get_value(config.program_key_timeout)
+    # Set how many seconds a command may run, None for no limit
+    def set_timeout(self, value):
+        self.options.set_value(config.program_key_timeout, value)

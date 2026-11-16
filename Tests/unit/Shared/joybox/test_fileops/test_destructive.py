@@ -7,7 +7,10 @@ import pytest
 
 # Local imports
 from joybox import fileops
-from file_helpers import tree
+from joybox import filebulk
+from file_helpers import tree, write
+from fileops_helpers import read
+
 
 
 ###########################################################
@@ -16,18 +19,6 @@ from file_helpers import tree
 # Everything here either writes over a destination or deletes a source, so the
 # skip flags and the dry run are the difference between a backup and a loss.
 ###########################################################
-
-def write(path, contents = "content"):
-    path = str(path)
-    os.makedirs(os.path.dirname(path), exist_ok = True)
-    with open(path, "w", encoding = "utf-8") as target:
-        target.write(contents)
-    return path
-
-
-def read(path):
-    with open(str(path), "r", encoding = "utf-8") as target:
-        return target.read()
 
 
 ###########################################################
@@ -244,377 +235,21 @@ def test_an_unwritable_error_log_does_not_raise(tmp_path, monkeypatch):
 
 
 ###########################################################
-# Copying and moving contents
-###########################################################
-
-def test_a_nested_tree_copies_in_full(tmp_path):
-    source = tmp_path / "src"
-    write(source / "top.txt", "top")
-    write(source / "deep" / "nested" / "leaf.txt", "leaf")
-    dest = str(tmp_path / "dest")
-
-    assert fileops.copy_contents(str(source), dest) is True
-    assert tree(dest) == [os.path.join("deep", "nested", "leaf.txt"), "top.txt"]
-    assert read(os.path.join(dest, "deep", "nested", "leaf.txt")) == "leaf"
-
-
-def test_copying_contents_leaves_the_source(tmp_path):
-    source = tmp_path / "src"
-    write(source / "top.txt")
-    dest = str(tmp_path / "dest")
-
-    fileops.copy_contents(str(source), dest)
-
-    assert tree(source) == ["top.txt"]
-
-
-def test_moving_contents_empties_the_source(tmp_path):
-    source = tmp_path / "src"
-    write(source / "top.txt")
-    write(source / "deep" / "leaf.txt")
-    dest = str(tmp_path / "dest")
-
-    assert fileops.move_contents(str(source), dest) is True
-    assert tree(source) == []
-    assert tree(dest) == [os.path.join("deep", "leaf.txt"), "top.txt"]
-
-
-def test_copying_contents_merges_into_an_existing_destination(tmp_path):
-    source = tmp_path / "src"
-    write(source / "new.txt", "new")
-    dest = tmp_path / "dest"
-    write(dest / "kept.txt", "kept")
-
-    fileops.copy_contents(str(source), str(dest))
-
-    assert tree(dest) == ["kept.txt", "new.txt"]
-
-
-def test_symlinked_files_can_be_ignored(tmp_path):
-    source = tmp_path / "src"
-    write(source / "real.txt", "real")
-    os.symlink(str(source / "real.txt"), str(source / "link.txt"))
-    dest = str(tmp_path / "dest")
-
-    fileops.copy_contents(str(source), dest, ignore_symlinks = True)
-
-    assert tree(dest) == ["real.txt"]
-
-
-def test_symlinked_files_are_copied_by_default(tmp_path):
-    source = tmp_path / "src"
-    write(source / "real.txt", "real")
-    os.symlink(str(source / "real.txt"), str(source / "link.txt"))
-    dest = str(tmp_path / "dest")
-
-    fileops.copy_contents(str(source), dest)
-
-    assert tree(dest) == ["link.txt", "real.txt"]
-
-
-def test_a_symlinked_directory_can_be_followed(tmp_path):
-    outside = tmp_path / "outside"
-    write(outside / "leaf.txt", "leaf")
-    source = tmp_path / "src"
-    write(source / "top.txt")
-    os.symlink(str(outside), str(source / "linked"))
-    dest = str(tmp_path / "dest")
-
-    fileops.copy_contents(str(source), dest, follow_symlink_dirs = True)
-
-    assert os.path.join("linked", "leaf.txt") in tree(dest)
-
-
-def test_a_symlinked_directory_is_not_followed_by_default(tmp_path):
-    outside = tmp_path / "outside"
-    write(outside / "leaf.txt", "leaf")
-    source = tmp_path / "src"
-    write(source / "top.txt")
-    os.symlink(str(outside), str(source / "linked"))
-    dest = str(tmp_path / "dest")
-
-    fileops.copy_contents(str(source), dest)
-
-    assert tree(dest) == ["top.txt"]
-
-
-def test_pretending_does_not_copy_contents(tmp_path):
-    source = tmp_path / "src"
-    write(source / "top.txt")
-    dest = str(tmp_path / "dest")
-
-    assert fileops.copy_contents(str(source), dest, pretend_run = True) is True
-    assert not os.path.exists(dest)
-
-
-def test_pretending_does_not_move_contents(tmp_path):
-    source = tmp_path / "src"
-    write(source / "top.txt")
-
-    fileops.move_contents(str(source), str(tmp_path / "dest"), pretend_run = True)
-
-    assert tree(source) == ["top.txt"]
-
-
-def test_copying_from_a_missing_source_can_quit_the_program(tmp_path):
-    with pytest.raises(SystemExit):
-        fileops.copy_contents(
-            str(tmp_path / "absent"),
-            str(tmp_path / "dest"),
-            exit_on_failure = True)
-
-
-def test_moving_from_a_missing_source_can_quit_the_program(tmp_path):
-    with pytest.raises(SystemExit):
-        fileops.move_contents(
-            str(tmp_path / "absent"),
-            str(tmp_path / "dest"),
-            exit_on_failure = True)
-
-
-def test_identical_files_are_skipped_across_a_whole_tree(tmp_path):
-    source = tmp_path / "src"
-    write(source / "same.txt", "same")
-    write(source / "differs.txt", "new")
-    dest = tmp_path / "dest"
-    write(dest / "same.txt", "same")
-    write(dest / "differs.txt", "old")
-
-    fileops.copy_contents(str(source), str(dest), skip_identical = True)
-
-    assert read(dest / "differs.txt") == "new"
-
-
-###########################################################
-# Globbed copies and moves
-###########################################################
-
-def test_only_matching_files_are_copied(tmp_path):
-    source = tmp_path / "src"
-    write(source / "keep.txt")
-    write(source / "other.dat")
-    dest = str(tmp_path / "dest")
-
-    assert fileops.copy_globbed_files(str(source / "*.txt"), dest) is True
-    assert tree(dest) == ["keep.txt"]
-
-
-def test_a_glob_copy_leaves_the_matches_in_place(tmp_path):
-    source = tmp_path / "src"
-    write(source / "keep.txt")
-
-    fileops.copy_globbed_files(str(source / "*.txt"), str(tmp_path / "dest"))
-
-    assert tree(source) == ["keep.txt"]
-
-
-def test_a_glob_move_removes_the_matches(tmp_path):
-    source = tmp_path / "src"
-    write(source / "keep.txt", "payload")
-    write(source / "other.dat", "kept")
-    dest = str(tmp_path / "dest")
-
-    assert fileops.move_globbed_files(str(source / "*.txt"), dest) is True
-    assert tree(source) == ["other.dat"]
-    assert read(os.path.join(dest, "keep.txt")) == "payload"
-
-
-def test_a_glob_that_matches_nothing_is_success(tmp_path):
-    source = tmp_path / "src"
-    write(source / "other.dat")
-
-    assert fileops.copy_globbed_files(str(source / "*.txt"), str(tmp_path / "dest")) is True
-
-
-def test_a_glob_move_that_matches_a_directory_copies_its_name(tmp_path):
-    # A directory match cannot be opened as a file, so it is reported rather
-    # than silently dropped.
-    source = tmp_path / "src"
-    os.makedirs(str(source / "subdir"))
-
-    assert fileops.move_globbed_files(str(source / "*"), str(tmp_path / "dest")) is False
-
-
-def test_pretending_does_not_move_globbed_files(tmp_path):
-    source = tmp_path / "src"
-    write(source / "keep.txt")
-
-    fileops.move_globbed_files(str(source / "*.txt"), str(tmp_path / "dest"), pretend_run = True)
-
-    assert tree(source) == ["keep.txt"]
-
-
-###########################################################
-# Smart copy, move and transfer
-###########################################################
-
-def test_a_smart_copy_of_a_directory_copies_its_contents(tmp_path):
-    source = tmp_path / "src"
-    write(source / "deep" / "leaf.txt", "leaf")
-    dest = str(tmp_path / "dest")
-
-    assert fileops.smart_copy(str(source), dest) is True
-    assert tree(dest) == [os.path.join("deep", "leaf.txt")]
-
-
-def test_a_smart_copy_of_a_glob_copies_the_matches(tmp_path):
-    source = tmp_path / "src"
-    write(source / "keep.txt")
-    write(source / "other.dat")
-    dest = str(tmp_path / "dest")
-
-    assert fileops.smart_copy(str(source / "*.txt"), dest) is True
-    assert tree(dest) == ["keep.txt"]
-
-
-def test_a_smart_move_of_a_directory_empties_it(tmp_path):
-    source = tmp_path / "src"
-    write(source / "deep" / "leaf.txt", "leaf")
-    dest = str(tmp_path / "dest")
-
-    assert fileops.smart_move(str(source), dest) is True
-    assert tree(source) == []
-    assert tree(dest) == [os.path.join("deep", "leaf.txt")]
-
-
-def test_a_smart_move_of_a_glob_removes_the_matches(tmp_path):
-    source = tmp_path / "src"
-    write(source / "keep.txt")
-    dest = str(tmp_path / "dest")
-
-    assert fileops.smart_move(str(source / "*.txt"), dest) is True
-    assert tree(source) == []
-    assert tree(dest) == ["keep.txt"]
-
-
-def test_a_smart_transfer_copies_when_told_to_keep_the_source(tmp_path):
-    source = write(tmp_path / "src.txt", "payload")
-    dest = str(tmp_path / "out" / "dest.txt")
-
-    assert fileops.smart_transfer(source, dest) is True
-    assert os.path.isfile(source)
-    assert read(dest) == "payload"
-
-
-def test_a_smart_transfer_moves_when_told_to_delete_the_source(tmp_path):
-    source = write(tmp_path / "src.txt", "payload")
-    dest = str(tmp_path / "out" / "dest.txt")
-
-    assert fileops.smart_transfer(source, dest, delete_afterwards = True) is True
-    assert not os.path.exists(source)
-    assert read(dest) == "payload"
-
-
-def test_a_smart_transfer_of_a_directory_keeps_the_tree(tmp_path):
-    source = tmp_path / "src"
-    write(source / "deep" / "leaf.txt", "leaf")
-    dest = str(tmp_path / "dest")
-
-    assert fileops.smart_transfer(str(source), dest, delete_afterwards = True) is True
-    assert tree(dest) == [os.path.join("deep", "leaf.txt")]
-
-
-###########################################################
-# Syncing
-###########################################################
-
-def test_a_sync_replaces_what_the_destination_held(tmp_path):
-    source = tmp_path / "src"
-    write(source / "new.txt", "new")
-    dest = tmp_path / "dest"
-    write(dest / "stale.txt", "stale")
-
-    assert fileops.sync_contents(str(source), str(dest)) is True
-    assert tree(dest) == ["new.txt"]
-
-
-def test_a_sync_creates_a_missing_destination(tmp_path):
-    source = tmp_path / "src"
-    write(source / "new.txt", "new")
-    dest = str(tmp_path / "dest")
-
-    assert fileops.sync_contents(str(source), dest) is True
-    assert tree(dest) == ["new.txt"]
-
-
-def test_a_sync_leaves_the_source_alone(tmp_path):
-    source = tmp_path / "src"
-    write(source / "new.txt", "new")
-
-    fileops.sync_contents(str(source), str(tmp_path / "dest"))
-
-    assert tree(source) == ["new.txt"]
-
-
-def test_syncing_from_a_missing_source_can_quit_the_program(tmp_path):
-    # Without the guard the destination is emptied and then filled from
-    # nothing, which is a silent wipe.
-    with pytest.raises(SystemExit):
-        fileops.sync_contents(
-            str(tmp_path / "absent"),
-            str(tmp_path / "dest"),
-            exit_on_failure = True)
-
-
-def test_pretending_does_not_sync(tmp_path):
-    source = tmp_path / "src"
-    write(source / "new.txt", "new")
-    dest = tmp_path / "dest"
-    write(dest / "stale.txt", "stale")
-
-    fileops.sync_contents(str(source), str(dest), pretend_run = True)
-
-    assert tree(dest) == ["stale.txt"]
-
-
-def test_syncing_data_from_a_directory_mirrors_it(tmp_path):
-    source = tmp_path / "src"
-    write(source / "new.txt", "new")
-    dest = tmp_path / "dest"
-    write(dest / "stale.txt", "stale")
-
-    assert fileops.sync_data(str(source), str(dest)) is True
-    assert tree(dest) == ["new.txt"]
-
-
-def test_syncing_data_from_a_file_copies_it(tmp_path):
-    source = write(tmp_path / "src.txt", "payload")
-    dest = str(tmp_path / "out" / "dest.txt")
-
-    assert fileops.sync_data(source, dest) is True
-    assert read(dest) == "payload"
-
-
-def test_syncing_data_from_a_glob_copies_the_matches(tmp_path):
-    source = tmp_path / "src"
-    write(source / "keep.txt")
-    write(source / "other.dat")
-    dest = tmp_path / "dest"
-
-    assert fileops.sync_data(str(source / "*.txt"), str(dest / "*.txt")) is True
-    assert tree(dest) == ["keep.txt"]
-
-
-def test_syncing_data_from_a_missing_source_reports_failure(tmp_path):
-    assert fileops.sync_data(str(tmp_path / "absent"), str(tmp_path / "dest")) is False
-
-
-###########################################################
 # Removing by pattern
 ###########################################################
 
 def test_every_glob_match_is_removed(tmp_path):
-    write(tmp_path / "one.txt")
-    write(tmp_path / "two.txt")
-    write(tmp_path / "kept.dat")
+    write(tmp_path / "one.txt", "content")
+    write(tmp_path / "two.txt", "content")
+    write(tmp_path / "kept.dat", "content")
 
     assert fileops.remove_file_or_directory(str(tmp_path / "*.txt")) is True
     assert tree(tmp_path) == ["kept.dat"]
 
 
 def test_a_glob_removal_takes_directories_too(tmp_path):
-    write(tmp_path / "dir.txt" / "leaf.txt")
-    write(tmp_path / "kept.dat")
+    write(tmp_path / "dir.txt" / "leaf.txt", "content")
+    write(tmp_path / "kept.dat", "content")
 
     fileops.remove_file_or_directory(str(tmp_path / "*.txt"))
 
@@ -626,21 +261,21 @@ def test_removing_a_pattern_that_matches_nothing_is_success(tmp_path):
 
 
 def test_pretending_does_not_remove_matches(tmp_path):
-    write(tmp_path / "one.txt")
+    write(tmp_path / "one.txt", "content")
 
     assert fileops.remove_file_or_directory(str(tmp_path / "*.txt"), pretend_run = True) is True
     assert tree(tmp_path) == ["one.txt"]
 
 
 def test_an_object_is_removed_by_its_type(tmp_path):
-    target = write(tmp_path / "file.txt")
+    target = write(tmp_path / "file.txt", "content")
 
     assert fileops.remove_object(target) is True
     assert not os.path.exists(target)
 
 
 def test_a_symlink_is_removed_without_its_target(tmp_path):
-    target = write(tmp_path / "real.txt")
+    target = write(tmp_path / "real.txt", "content")
     link = str(tmp_path / "link.txt")
     os.symlink(target, link)
 
@@ -661,7 +296,7 @@ def test_a_broken_symlink_is_removed(tmp_path):
 
 def test_a_directory_object_is_removed_with_its_contents(tmp_path):
     target = tmp_path / "dir"
-    write(target / "deep" / "leaf.txt")
+    write(target / "deep" / "leaf.txt", "content")
 
     assert fileops.remove_object(str(target)) is True
     assert not os.path.exists(str(target))
@@ -673,7 +308,7 @@ def test_removing_a_missing_object_reports_failure(tmp_path):
 
 def test_syncing_data_from_a_missing_source_can_quit_the_program(tmp_path):
     with pytest.raises(SystemExit):
-        fileops.sync_data(
+        filebulk.sync_data(
             str(tmp_path / "absent"),
             str(tmp_path / "dest"),
             exit_on_failure = True)

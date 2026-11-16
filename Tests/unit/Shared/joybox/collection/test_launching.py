@@ -118,8 +118,9 @@ def steps(monkeypatch):
         "import_local_game_save", "export_local_game_save"]:
         monkeypatch.setattr(launching, name, recorder.step(name))
     monkeypatch.setattr(launching, "fileops", types.SimpleNamespace(**{
-        name: recorder.step(name) for name in [
-            "create_symlink", "replace_strings_in_file", "remove_object", "make_directory"]}))
+        name: recorder.step(name) for name in ["create_symlink", "remove_object", "make_directory"]}))
+    monkeypatch.setattr(launching, "fileedits", types.SimpleNamespace(
+        replace_strings_in_file = recorder.step("replace_strings_in_file")))
     monkeypatch.setattr(launching, "gui", types.SimpleNamespace(
         display_error_popup = recorder.step("display_error_popup")))
     return recorder

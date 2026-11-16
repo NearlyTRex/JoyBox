@@ -6,6 +6,7 @@ import joybox.logger as logger
 import joybox.paths as paths
 import joybox.programs as programs
 import joybox.release as release
+from joybox import sourcebuild
 import joybox.emulatorbase as emulatorbase
 import joybox.computer as computer
 from joybox import platform_info
@@ -196,7 +197,7 @@ class Computer(emulatorbase.EmulatorBase):
 
         # Build linux programs
         if programs.should_program_be_installed("DosBoxX", "linux"):
-            success = release.build_appimage_from_source(
+            success = sourcebuild.build_appimage_from_source(
                 release_url = "https://github.com/NearlyTRex/DosboxX.git",
                 output_file = "DOSBox-X-x86_64.AppImage",
                 install_name = "DosBoxX",
@@ -242,7 +243,7 @@ class Computer(emulatorbase.EmulatorBase):
                 logger.log_error("Could not setup DosBoxX")
                 return False
         if programs.should_program_be_installed("ScummVM", "linux"):
-            success = release.build_appimage_from_source(
+            success = sourcebuild.build_appimage_from_source(
                 release_url = "https://github.com/NearlyTRex/ScummVM.git",
                 output_file = "ScummVM-x86_64.AppImage",
                 install_name = "ScummVM",

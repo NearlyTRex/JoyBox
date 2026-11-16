@@ -4,6 +4,7 @@ import glob
 # Local imports
 import joybox.command as command
 import joybox.logger as logger
+from joybox import serialization
 
 ###########################################################
 # GPU detection (NVIDIA)
@@ -47,33 +48,26 @@ DRM_VENDOR_NAMES = {
     "0x10de": "NVIDIA GPU",
 }
 
-# Get dedicated-GPU VRAM (AMD / Intel Arc) from the Linux DRM sysfs interface.
-# The amdgpu and i915/xe drivers expose mem_info_vram_total (and mem_info_vram_used)
-# for cards with dedicated VRAM; integrated GPUs share system RAM and have no such
-# file, so they are skipped. Returns one entry per card, matching the NVIDIA payload
-# shape (free = total - used).
+# The integer a sysfs file holds, or None when it cannot be read or is not one
+def read_sysfs_int(path):
+    contents = serialization.read_text_file(path)
+    if contents is None:
+        return None
+    try:
+        return int(contents.strip())
+    except ValueError:
+        return None
+
+# Get dedicated AMD and Intel Arc VRAM from DRM sysfs mem_info_vram_*, one entry per
+# card in the NVIDIA shape; integrated GPUs, which have no such file, are skipped
 def get_drm_gpu_info():
     gpus = []
     for total_path in sorted(glob.glob(DRM_VRAM_TOTAL_GLOB)):
-        try:
-            with open(total_path, "r", encoding = "utf-8") as handle:
-                total_bytes = int(handle.read().strip())
-        except (OSError, ValueError):
+        total_bytes = read_sysfs_int(total_path)
+        if not total_bytes or total_bytes <= 0:
             continue
-        if total_bytes <= 0:
-            continue
-        used_bytes = 0
-        try:
-            with open(total_path.replace("mem_info_vram_total", "mem_info_vram_used"), "r", encoding = "utf-8") as handle:
-                used_bytes = int(handle.read().strip())
-        except (OSError, ValueError):
-            used_bytes = 0
-        vendor = ""
-        try:
-            with open(total_path.replace("mem_info_vram_total", "vendor"), "r", encoding = "utf-8") as handle:
-                vendor = handle.read().strip()
-        except OSError:
-            vendor = ""
+        used_bytes = read_sysfs_int(total_path.replace("mem_info_vram_total", "mem_info_vram_used")) or 0
+        vendor = (serialization.read_text_file(total_path.replace("mem_info_vram_total", "vendor")) or "").strip()
         total_mb = total_bytes // (1024 * 1024)
         used_mb = used_bytes // (1024 * 1024)
         gpus.append({
@@ -84,10 +78,8 @@ def get_drm_gpu_info():
         })
     return gpus
 
-# Get AMD GPU VRAM via rocm-smi as a fallback when DRM sysfs is unavailable. Parses
-# the CSV output, locating the VRAM total/used columns by header name (bytes -> MB)
-# rather than by fragile positional matching. Returns [] if rocm-smi is missing or
-# the output is unparseable.
+# Get AMD VRAM from rocm-smi's CSV, by column header, when DRM sysfs has none;
+# [] when rocm-smi is missing or its output does not parse
 def get_amd_rocm_gpu_info():
     output = command.run_output_command(
         ["rocm-smi", "--showmeminfo", "vram", "--csv"])
@@ -178,13 +170,12 @@ MEMINFO_PATH = "/proc/meminfo"
 
 # Get one /proc/meminfo field in MB, or 0 if it cannot be read
 def get_meminfo_mb(field):
-    try:
-        with open(MEMINFO_PATH, "r", encoding = "utf-8") as f:
-            for line in f:
-                if line.startswith(field + ":"):
-                    return int(line.split()[1]) // 1024
-    except (OSError, ValueError, IndexError):
-        pass
+    for line in serialization.read_text_lines(MEMINFO_PATH) or []:
+        if line.startswith(field + ":"):
+            try:
+                return int(line.split()[1]) // 1024
+            except (ValueError, IndexError):
+                return 0
     return 0
 
 # Get total system RAM in MB

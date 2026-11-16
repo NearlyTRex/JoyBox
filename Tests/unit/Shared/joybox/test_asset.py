@@ -3,6 +3,7 @@ import pytest
 
 # Local imports
 from joybox import asset, config
+from joybox import filebulk
 
 
 ###########################################################
@@ -194,7 +195,7 @@ def conversions(monkeypatch):
         asset.image, "convert_image_to_jpeg",
         lambda **kwargs: calls.append(("convert", kwargs)) or True)
     monkeypatch.setattr(
-        asset.fileops, "smart_transfer",
+        filebulk, "smart_transfer",
         lambda **kwargs: calls.append(("transfer", kwargs)) or True)
     return calls
 
@@ -224,7 +225,7 @@ def test_a_failed_conversion_stops_the_transfer(monkeypatch):
     transfers = []
     monkeypatch.setattr(asset.image, "convert_image_to_jpeg", lambda **kwargs: False)
     monkeypatch.setattr(
-        asset.fileops, "smart_transfer",
+        filebulk, "smart_transfer",
         lambda **kwargs: transfers.append(kwargs) or True)
 
     assert asset.convert_asset(

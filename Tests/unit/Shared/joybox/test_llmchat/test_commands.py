@@ -306,18 +306,24 @@ def test_saving_defaults_to_a_named_file(chat, output, tmp_path, monkeypatch):
     assert (tmp_path / "transcript.md").exists()
 
 
+# A path that cannot be written: its parent is a file
+def unwritable(tmp_path):
+    (tmp_path / "file").write_text("")
+    return tmp_path / "file" / "transcript.md"
+
+
 def test_saving_to_an_unwritable_path_is_reported(chat, output, tmp_path):
     # Every other failure here warns and carries on.
-    run("/save %s" % (tmp_path / "absent" / "transcript.md"), chat, output)
+    run("/save %s" % unwritable(tmp_path), chat, output)
 
     assert output.warned
 
 
 def test_saving_to_an_unwritable_path_continues_the_session(chat, output, tmp_path):
-    assert run("/save %s" % (tmp_path / "absent" / "transcript.md"), chat, output) is True
+    assert run("/save %s" % unwritable(tmp_path), chat, output) is True
 
 
 def test_a_failed_save_says_nothing_succeeded(chat, output, tmp_path):
-    run("/save %s" % (tmp_path / "absent" / "transcript.md"), chat, output)
+    run("/save %s" % unwritable(tmp_path), chat, output)
 
     assert not any("wrote" in line for line in output.said)

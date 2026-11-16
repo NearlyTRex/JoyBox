@@ -5,6 +5,8 @@ import joybox.environment as environment
 import joybox.hashing as hashing
 import joybox.lockerinfo as lockerinfo
 import joybox.gameinfo as gameinfo
+from joybox import gamecollection
+from joybox import gamenaming
 
 ###########################################################
 
@@ -30,7 +32,7 @@ def build_hash_files(
 
     # Get hash info
     hash_file = environment.get_game_hashes_metadata_file(game_info.get_supercategory(), game_info.get_category(), game_info.get_subcategory())
-    game_name_path = gameinfo.derive_game_name_path_from_name(game_info.get_name(), game_info.get_platform())
+    game_name_path = gamenaming.derive_game_name_path_from_name(game_info.get_name(), game_info.get_platform())
     hash_offset = paths.join_paths(game_info.get_supercategory(), game_info.get_category(), game_info.get_subcategory(), game_name_path)
 
     # Get locker info
@@ -82,7 +84,7 @@ def build_all_hash_files(
     for game_supercategory in [config.Supercategory.ROMS]:
         for game_category in config.Category.members():
             for game_subcategory in config.subcategory_map[game_category]:
-                game_names = gameinfo.find_json_game_names(
+                game_names = gamecollection.find_json_game_names(
                     game_supercategory,
                     game_category,
                     game_subcategory)

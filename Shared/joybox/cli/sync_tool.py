@@ -2,6 +2,10 @@
 import joybox.config as config
 import joybox.system as system
 import joybox.sync as sync
+from joybox import syncdiff
+from joybox import synclisting
+from joybox import syncremotes
+from joybox import synctransfers
 import joybox.lockerinfo as lockerinfo
 import joybox.arguments as arguments
 import joybox.setup as setup
@@ -163,7 +167,7 @@ def main():
 
     # Run the action; the outcome becomes the exit status
     if args.action == config.RemoteActionType.INIT:
-        success = sync.setup_remote(
+        success = syncremotes.setup_remote(
             remote_name = remote_name,
             remote_type = remote_type,
             verbose = args.verbose,
@@ -172,7 +176,7 @@ def main():
 
     # Download files
     elif args.action == config.RemoteActionType.DOWNLOAD:
-        success = sync.download_files_from_remote(
+        success = synctransfers.download_files_from_remote(
             remote_name = remote_name,
             remote_type = remote_type,
             remote_path = remote_path,
@@ -185,7 +189,7 @@ def main():
 
     # Upload files
     elif args.action == config.RemoteActionType.UPLOAD:
-        success = sync.upload_files_to_remote(
+        success = synctransfers.upload_files_to_remote(
             remote_name = remote_name,
             remote_type = remote_type,
             remote_path = remote_path,
@@ -241,7 +245,7 @@ def main():
         diff_excludes = list(excludes)
         if args.recycle_folder:
             diff_excludes.append(args.recycle_folder + "/**")
-        success = sync.diff_files(
+        success = syncdiff.diff_files(
             remote_name = remote_name,
             remote_type = remote_type,
             remote_path = remote_path,
@@ -262,7 +266,7 @@ def main():
         diffsync_excludes = list(excludes)
         if args.recycle_folder:
             diffsync_excludes.append(args.recycle_folder + "/**")
-        success = sync.diff_sync_files(
+        success = syncdiff.diff_sync_files(
             remote_name = remote_name,
             remote_type = remote_type,
             remote_path = remote_path,
@@ -294,7 +298,7 @@ def main():
 
     # List files
     elif args.action == config.RemoteActionType.LIST:
-        success = sync.list_files(
+        success = synclisting.list_files(
             remote_name = remote_name,
             remote_type = remote_type,
             remote_path = remote_path,
@@ -306,7 +310,7 @@ def main():
 
     # Mount files
     else:
-        success = sync.mount_files(
+        success = synclisting.mount_files(
             remote_name = remote_name,
             remote_type = remote_type,
             remote_path = remote_path,

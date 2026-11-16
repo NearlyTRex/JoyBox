@@ -35,7 +35,7 @@ def prompt_for_int(description, default_value = None):
 prompt_for_integer_value = prompt_for_int
 
 # Prompt for a value constrained to a set of choices
-def prompt_for_choice(description, choices = [], default_value = None):
+def prompt_for_choice(description, choices = (), default_value = None):
     while True:
         value = prompt_for_value(description, default_value)
         if not isinstance(value, str):
@@ -81,7 +81,8 @@ def prompt_for_url(description, default_value = None):
         logger.log_warning("That was not a valid url, please try again")
 
 # Show preview and prompt for confirmation
-def prompt_for_preview(operation, details = [], default_yes = True, max_details = 20):
+def prompt_for_preview(operation, details = None, default_yes = True, max_details = 20):
+    details = [] if details is None else details
     logger.log_info("=" * 60)
     logger.log_info("Operation: %s" % operation)
     if details:

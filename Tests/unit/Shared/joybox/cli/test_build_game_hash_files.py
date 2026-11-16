@@ -41,7 +41,7 @@ def tool(monkeypatch, isolated_settings):
         harness.cleaned.append((kwargs["game_subcategory"], kwargs["locker_root"]))
         return harness.clean
 
-    monkeypatch.setattr(tool_module.gameinfo, "iterate_selected_game_infos", iterate)
+    monkeypatch.setattr(tool_module.gamecollection, "iterate_selected_game_infos", iterate)
     monkeypatch.setattr(tool_module.collection, "build_hash_files", build)
     monkeypatch.setattr(tool_module.collection, "clean_missing_hash_entries", clean)
     monkeypatch.setattr(tool_module.environment, "get_locker_gaming_files_offset",

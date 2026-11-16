@@ -9,6 +9,8 @@ import urllib.request
 import joybox.chunkers as chunkers
 import joybox.logger as logger
 import joybox.ollama as ollama
+from joybox import ollamaagents
+from joybox import serialization
 
 ###########################################################
 # Backends
@@ -26,12 +28,9 @@ BACKEND_CLAUDE = "claude"
 class RequestFailed(Exception):
     pass
 
-# Ollama, via its native chat route
-#
-# The OpenAI-compatible route it also serves cannot set the context window,
-# and the runtime default sits far below what a model supports. It then
-# truncates without saying so, which reads as the model ignoring your files.
-# The native route accepts num_ctx, so that is what is used here.
+# Ollama, through its native chat route, which takes num_ctx; the OpenAI-compatible
+# one keeps the small default window and silently truncates, so the model seems to
+# ignore your files
 class OllamaBackend:
     kind = BACKEND_OLLAMA
 
@@ -41,9 +40,9 @@ class OllamaBackend:
     def models(self):
         try:
             with urllib.request.urlopen(f"{self.endpoint}/v1/models", timeout = 10) as response:
-                payload = json.loads(response.read().decode())
+                payload = serialization.parse_json_or_none(response.read().decode()) or {}
             return [entry["id"] for entry in payload.get("data", [])]
-        except (urllib.error.URLError, OSError, KeyError, json.JSONDecodeError):
+        except (OSError, KeyError):
             return []
 
     def context_limit(self, model):
@@ -53,12 +52,12 @@ class OllamaBackend:
                 data = json.dumps({"name": model}).encode(),
                 headers = {"Content-Type": "application/json"})
             with urllib.request.urlopen(request, timeout = 10) as response:
-                info = json.loads(response.read().decode())
+                info = serialization.parse_json_or_none(response.read().decode()) or {}
             for key, value in (info.get("model_info") or {}).items():
                 if key.endswith(".context_length"):
                     return int(value)
-        except (urllib.error.URLError, OSError, ValueError, TypeError, KeyError, json.JSONDecodeError):
-            pass
+        except (OSError, ValueError, TypeError, KeyError):
+            return 0
         return 0
 
     def stream(self, model, messages, temperature, max_tokens, num_ctx, on_text):
@@ -76,9 +75,8 @@ class OllamaBackend:
                 line = raw.decode().strip()
                 if not line:
                     continue
-                try:
-                    body = json.loads(line)
-                except json.JSONDecodeError:
+                body = serialization.parse_json_or_none(line)
+                if not isinstance(body, dict):
                     continue
                 if body.get("error"):
                     raise RequestFailed(body["error"])
@@ -108,9 +106,9 @@ class OpenAIBackend:
         try:
             request = urllib.request.Request(f"{self.endpoint}/v1/models", headers = self.headers())
             with urllib.request.urlopen(request, timeout = 10) as response:
-                payload = json.loads(response.read().decode())
+                payload = serialization.parse_json_or_none(response.read().decode()) or {}
             return [entry["id"] for entry in payload.get("data", [])]
-        except (urllib.error.URLError, OSError, KeyError, json.JSONDecodeError):
+        except (OSError, KeyError):
             return []
 
     def context_limit(self, model):
@@ -132,9 +130,8 @@ class OpenAIBackend:
                 body = line[6:]
                 if body == "[DONE]":
                     break
-                try:
-                    event = json.loads(body)
-                except json.JSONDecodeError:
+                event = serialization.parse_json_or_none(body)
+                if not isinstance(event, dict):
                     continue
                 if event.get("error"):
                     raise RequestFailed(event["error"])
@@ -148,11 +145,8 @@ class OpenAIBackend:
                     on_text(piece)
         return "".join(parts)
 
-# Claude, through the existing joybox.claude wrapper
-#
-# That wrapper is one-shot rather than streaming, so the whole reply arrives
-# at once. The conversation is flattened into a single prompt, since the
-# wrapper takes a prompt and a system prompt rather than a message list.
+# Claude, through the joybox.claude wrapper, which is one-shot and takes a prompt and
+# a system prompt, so the reply arrives whole and the conversation is flattened
 class ClaudeBackend:
     kind = BACKEND_CLAUDE
 
@@ -224,7 +218,7 @@ CODING_CONTEXT_TOKENS = 32768
 # Choose the model for the coding preset: the one named, or the best coding
 # model the Ollama server can hold, prepared as ollama_tool's code action does
 def get_coding_model(model = None):
-    return model or ollama.prepare_coding_model(CODING_CONTEXT_TOKENS)
+    return model or ollamaagents.prepare_coding_model(CODING_CONTEXT_TOKENS)
 
 ###########################################################
 # Session
@@ -465,13 +459,10 @@ def handle_command(line, session, say, warn, window_override = 0):
     # Save transcript
     elif command == "/save":
         target = argument or "transcript.md"
-        try:
-            with open(target, "w", encoding = "utf-8") as handle:
-                handle.write(session.transcript())
-        except OSError as error:
-            warn(f"  could not write {target}: {error}")
-        else:
+        if serialization.write_text_file(target, session.transcript()):
             say(f"  wrote {target}")
+        else:
+            warn(f"  could not write {target}")
 
     # List tokens
     elif command == "/tokens":

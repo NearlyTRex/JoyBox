@@ -9,11 +9,11 @@
 # of one command and says what it means, which is the part worth testing.
 
 # Imports
-import json
 import re
 
 # Local imports
 import joybox.logger as logger
+from joybox import serialization
 
 # What a single check concluded
 PASS = "PASS"
@@ -123,10 +123,7 @@ def parse_userns_remap_suffix(output):
 
 # Whether a docker daemon config declares a key
 def parse_daemon_keys(contents):
-    try:
-        data = json.loads(contents or "")
-    except Exception:
-        return []
+    data = serialization.parse_json_or_none(contents or "")
     if not isinstance(data, dict):
         return []
     return sorted(data.keys())
@@ -314,11 +311,9 @@ def check_rate_limiting(connection, domain = None, burst_size = 40):
                 section, FAIL, "a %d-request burst was never rate limited" % burst_size))
     return results
 
-# Build the rate-limit burst, aimed at the machine it runs on, printing one
-# status code per line. It runs as a single command: a round trip per request
-# is slower than the zone refills, so the burst would never be refused.
-# The certificate is not what is being checked, and a locally signed one is
-# not trusted on the target.
+# Build the rate-limit burst at the machine it runs on, one status code per line, as
+# one command since a round trip per request is slower than the zone refills; it
+# skips certificate checks, which a locally signed certificate would fail
 def get_burst_command(domain, burst_size):
     script = ('for _ in $(seq "$2"); do '
               'curl -s -k -o /dev/null -w "%{http_code}\\n" --max-time 5 '

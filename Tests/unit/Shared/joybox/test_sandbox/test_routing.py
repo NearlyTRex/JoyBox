@@ -13,29 +13,29 @@ from joybox import sandbox
 GAME_EXE = "/games/cache/Game/Game.exe"
 
 
-def test_a_cached_game_runs_via_wine_on_linux(linux, cached_game):
+def test_a_cached_game_runs_via_wine_on_linux(wine_platform, cached_game):
     assert sandbox.should_be_run_via_wine(GAME_EXE) is True
 
 
-def test_a_cached_game_does_not_run_via_wine_on_windows(windows, cached_game):
+def test_a_cached_game_does_not_run_via_wine_on_windows(sandboxie_platform, cached_game):
     assert sandbox.should_be_run_via_wine(GAME_EXE) is False
 
 
-def test_a_cached_game_runs_via_sandboxie_on_windows(windows, cached_game):
+def test_a_cached_game_runs_via_sandboxie_on_windows(sandboxie_platform, cached_game):
     assert sandbox.should_be_run_via_sandboxie(GAME_EXE) is True
 
 
-def test_a_cached_game_does_not_run_via_sandboxie_on_linux(linux, cached_game):
+def test_a_cached_game_does_not_run_via_sandboxie_on_linux(wine_platform, cached_game):
     assert sandbox.should_be_run_via_sandboxie(GAME_EXE) is False
 
 
-def test_a_native_program_is_not_routed_through_wine(linux, monkeypatch):
+def test_a_native_program_is_not_routed_through_wine(wine_platform, monkeypatch):
     monkeypatch.setattr(sandbox.commandbase, "is_windows_executable_command", lambda cmd: False)
 
     assert sandbox.should_be_run_via_wine("/usr/bin/true") is False
 
 
-def test_a_sandboxed_local_program_runs_via_wine(linux, monkeypatch):
+def test_a_sandboxed_local_program_runs_via_wine(wine_platform, monkeypatch):
     monkeypatch.setattr(sandbox.commandbase, "is_windows_executable_command", lambda cmd: True)
     monkeypatch.setattr(sandbox.commandbase, "is_cached_game_command", lambda cmd: False)
     monkeypatch.setattr(sandbox.commandbase, "is_local_sandboxed_program_command", lambda cmd: True)
@@ -43,7 +43,7 @@ def test_a_sandboxed_local_program_runs_via_wine(linux, monkeypatch):
     assert sandbox.should_be_run_via_wine(GAME_EXE) is True
 
 
-def test_an_unsandboxed_windows_program_is_left_alone(linux, monkeypatch):
+def test_an_unsandboxed_windows_program_is_left_alone(wine_platform, monkeypatch):
     monkeypatch.setattr(sandbox.commandbase, "is_windows_executable_command", lambda cmd: True)
     monkeypatch.setattr(sandbox.commandbase, "is_cached_game_command", lambda cmd: False)
     monkeypatch.setattr(sandbox.commandbase, "is_local_sandboxed_program_command", lambda cmd: False)
@@ -51,22 +51,22 @@ def test_an_unsandboxed_windows_program_is_left_alone(linux, monkeypatch):
     assert sandbox.should_be_run_via_wine(GAME_EXE) is False
 
 
-def test_a_command_already_running_under_wine_is_not_wrapped_again(linux, cached_game):
+def test_a_command_already_running_under_wine_is_not_wrapped_again(wine_platform, cached_game):
     # Wrapping twice starts wine inside wine, which never launches the game.
     assert sandbox.should_be_run_via_wine(["/tools/wine", GAME_EXE]) is False
 
 
-def test_a_command_already_running_under_sandboxie_is_not_wrapped_again(windows, cached_game):
+def test_a_command_already_running_under_sandboxie_is_not_wrapped_again(sandboxie_platform, cached_game):
     assert sandbox.should_be_run_via_sandboxie(["/tools/start.exe", GAME_EXE]) is False
 
 
-def test_a_native_program_is_not_routed_through_sandboxie(windows, monkeypatch):
+def test_a_native_program_is_not_routed_through_sandboxie(sandboxie_platform, monkeypatch):
     monkeypatch.setattr(sandbox.commandbase, "is_windows_executable_command", lambda cmd: False)
 
     assert sandbox.should_be_run_via_sandboxie("C:/Windows/notepad.txt") is False
 
 
-def test_a_sandboxed_local_program_runs_via_sandboxie(windows, monkeypatch):
+def test_a_sandboxed_local_program_runs_via_sandboxie(sandboxie_platform, monkeypatch):
     monkeypatch.setattr(sandbox.commandbase, "is_windows_executable_command", lambda cmd: True)
     monkeypatch.setattr(sandbox.commandbase, "is_cached_game_command", lambda cmd: False)
     monkeypatch.setattr(sandbox.commandbase, "is_local_sandboxed_program_command", lambda cmd: True)

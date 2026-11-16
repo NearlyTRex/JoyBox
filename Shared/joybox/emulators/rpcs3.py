@@ -6,6 +6,7 @@ import os.path
 import joybox.config as config
 import joybox.environment as environment
 import joybox.fileops as fileops
+from joybox import filebulk
 import joybox.logger as logger
 import joybox.paths as paths
 import joybox.release as release
@@ -198,7 +199,7 @@ class RPCS3(emulatorbase.EmulatorBase):
         # Copy exdata files
         if game_platform == config.Platform.SONY_PLAYSTATION_NETWORK_PS3:
             for exdata_file in paths.build_file_list_by_extensions(game_cache_dir, extensions = [".rap", ".edat"]):
-                fileops.smart_copy(
+                filebulk.smart_copy(
                     src = exdata_file,
                     dest = paths.join_paths(game_save_dir, "exdata"),
                     verbose = verbose,

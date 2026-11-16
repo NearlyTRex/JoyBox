@@ -1,9 +1,11 @@
 # Imports
 import os
 import configparser
+import io
 
 # Local imports
 import joybox.secretstore as secretstore
+from joybox import serialization
 
 # Settings file name and default locations (home preferred, repo-root fallback)
 CONFIG_FILENAME = "JoyBox.ini"
@@ -203,5 +205,6 @@ def save():
         if not _parser.has_section(section):
             _parser.add_section(section)
         _parser.set(section, field, str(value))
-    with open(_settings_file, "w", encoding = "utf-8") as f:
-        _parser.write(f)
+    contents = io.StringIO()
+    _parser.write(contents)
+    return serialization.write_text_file(_settings_file, contents.getvalue())

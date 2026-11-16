@@ -45,7 +45,7 @@ def online(monkeypatch, program_paths):
     # One fake for both so calls stay in order across platforms
     fake = Release()
     monkeypatch.setattr(mame.release, "download_github_release", fake)
-    monkeypatch.setattr(mame.release, "build_appimage_from_source", fake)
+    monkeypatch.setattr(mame.sourcebuild, "build_appimage_from_source", fake)
     return fake
 
 

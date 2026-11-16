@@ -5,8 +5,9 @@ import os.path
 # Local imports
 import joybox.command as command
 import joybox.logger as logger
+from joybox import serialization
 import joybox.paths as paths
-import joybox.fileops as fileops
+from joybox import fileops
 import joybox.programs as programs
 import joybox.archive as archive
 from joybox import platform_info
@@ -46,7 +47,7 @@ def get_unmount_tool():
 def create_iso(
     iso_file,
     source_dir = None,
-    source_dirs = [],
+    source_dirs = (),
     volume_name = None,
     delete_original = False,
     verbose = False,
@@ -269,10 +270,8 @@ def get_iso_boot_report(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
-# Find where the efi boot image sits inside an image
-# It is a hidden el torito entry rather than a file in the tree, so there is
-# nothing to copy out by path. The catalogue gives its start and its length,
-# and the entry is read out of the image itself.
+# Find where the efi boot image sits inside an image: a hidden el torito entry,
+# not a file in the tree, so its start and length come from the catalogue
 def get_efi_boot_image_extent(report):
     if not report:
         return None
@@ -317,22 +316,10 @@ def get_efi_boot_image_extent(report):
 
 # Copy a run of bytes out of an image
 def copy_iso_extent(iso_file, output_file, offset, length):
-    try:
-        with open(iso_file, "rb") as source:
-            source.seek(offset)
-            with open(output_file, "wb") as target:
-                remaining = length
-                while remaining > 0:
-                    chunk = source.read(min(remaining, 1024 * 1024))
-                    if not chunk:
-                        break
-                    target.write(chunk)
-                    remaining -= len(chunk)
-                return remaining == 0
-    except Exception as e:
-        logger.log_error("Unable to read boot data from %s" % iso_file)
-        logger.log_error(e)
-        return False
+    if serialization.copy_binary_range(iso_file, output_file, offset, length):
+        return True
+    logger.log_error("Unable to read boot data from %s" % iso_file)
+    return False
 
 # Extract the boot data of an image
 # Neither the efi image nor the boot code is in the filesystem tree, so a
@@ -382,11 +369,9 @@ def extract_iso_boot_images(
         return False
     return True
 
-# Build the command that packs a tree as an iso that boots
-# An image that only carries an el torito catalogue boots from a disc. To
-# boot from a usb stick it also needs a partition table describing the same
-# data, so the efi image is appended as a real partition and the boot code is
-# put back in the system area.
+# Build the command that packs a tree as an iso that boots from a disc and, with
+# the efi image appended as a real partition and the boot code in the system
+# area, from a usb stick
 def get_bootable_iso_command(
     iso_tool,
     iso_file,

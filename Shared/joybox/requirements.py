@@ -1,13 +1,13 @@
 # Imports
 import configparser
 import os
-import tomllib
 
 # Local imports
 import joybox.command as command
-import joybox.fileops as fileops
+from joybox import fileops
 import joybox.logger as logger
 import joybox.programs as programs
+from joybox import serialization
 
 ###########################################################
 # Declared requirements of a downloaded Python tool
@@ -28,8 +28,7 @@ def get_declared_requirements(tool_dir):
         return ["-r", requirements_file]
     pyproject_file = os.path.join(tool_dir, "pyproject.toml")
     if os.path.isfile(pyproject_file):
-        with open(pyproject_file, "rb") as pyproject:
-            dependencies = tomllib.load(pyproject).get("project", {}).get("dependencies", [])
+        dependencies = serialization.read_toml_file(pyproject_file).get("project", {}).get("dependencies", [])
         if dependencies:
             return list(dependencies)
     setup_cfg_file = os.path.join(tool_dir, "setup.cfg")

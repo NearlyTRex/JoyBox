@@ -1,14 +1,15 @@
 # Imports
-import json
 
 # Local imports
 import joybox.config as config
 import joybox.command as command
 import joybox.programs as programs
 import joybox.logger as logger
+from joybox import serialization
 import joybox.settings as settings
 import joybox.jsondata as jsondata
 import joybox.webpage as webpage
+from joybox import webfetch
 import joybox.storebase as storebase
 import joybox.strings as strings
 import joybox.metadataassetcollector as metadataassetcollector
@@ -331,11 +332,7 @@ class Legacy(storebase.StoreBase):
             return None
 
         # Get legacy json
-        legacy_json = None
-        try:
-            legacy_json = json.loads(list_output)
-        except Exception as e:
-            logger.log_error(e)
+        legacy_json = serialization.parse_json_or_none(list_output)
         if not isinstance(legacy_json, list):
             logger.log_error("Unable to parse legacy game list")
             logger.log_error("Received output:\n%s" % list_output)
@@ -415,11 +412,7 @@ class Legacy(storebase.StoreBase):
             return None
 
         # Get legacy json
-        legacy_json = None
-        try:
-            legacy_json = json.loads(info_output)
-        except Exception as e:
-            logger.log_error(e)
+        legacy_json = serialization.parse_json_or_none(info_output)
         if not isinstance(legacy_json, dict):
             logger.log_error("Unable to parse legacy game information for '%s'" % identifier)
             logger.log_error("Received output:\n%s" % info_output)
@@ -470,7 +463,7 @@ class Legacy(storebase.StoreBase):
 
         # Video
         elif asset_type == config.AssetType.VIDEO:
-            latest_asset_url = webpage.get_matching_url(
+            latest_asset_url = webfetch.get_matching_url(
                 url = identifier,
                 base_url = "https://www.bigfishgames.com",
                 starts_with = "https://www.youtube.com/embed",

@@ -67,10 +67,8 @@ def open_editor(
 
     return result
 
-# Parse a line-based action file where:
-# - Lines starting with # are comments (ignored)
-# - Empty lines are ignored
-# - Each line is: ACTION path [-> dest]
+# Parse a line-based action file, one "ACTION path [-> dest]" per line,
+# skipping blank lines and # comments
 def parse_action_lines(
     content,
     comment_char = "#",

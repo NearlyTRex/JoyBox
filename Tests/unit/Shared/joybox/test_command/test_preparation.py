@@ -344,7 +344,7 @@ def test_every_output_path_is_transferred_out_of_the_sandbox(monkeypatch):
     monkeypatch.setattr(command.sandbox, "should_be_run_via_wine", lambda cmd: False)
     monkeypatch.setattr(command.sandbox, "should_be_run_via_sandboxie", lambda cmd: False)
     monkeypatch.setattr(
-        command.sandbox, "transfer_from_sandbox",
+        command.sandboxpaths, "transfer_from_sandbox",
         lambda path, **kwargs: transferred.append(path))
     options = command.create_command_options(output_paths = ["/out/one", "/out/two"])
 
@@ -358,7 +358,7 @@ def test_output_paths_that_are_not_a_list_are_ignored(monkeypatch):
     monkeypatch.setattr(command.sandbox, "should_be_run_via_wine", lambda cmd: False)
     monkeypatch.setattr(command.sandbox, "should_be_run_via_sandboxie", lambda cmd: False)
     monkeypatch.setattr(
-        command.sandbox, "transfer_from_sandbox",
+        command.sandboxpaths, "transfer_from_sandbox",
         lambda path, **kwargs: transferred.append(path))
     options = command.create_command_options(output_paths = "/out/one")
 
@@ -378,7 +378,7 @@ def test_postprocessing_passes_the_run_flags_to_every_step(monkeypatch):
     monkeypatch.setattr(command.sandbox, "should_be_run_via_sandboxie", lambda cmd: True)
     monkeypatch.setattr(command.sandbox, "cleanup_wine", record)
     monkeypatch.setattr(command.sandbox, "cleanup_sandboxie", record)
-    monkeypatch.setattr(command.sandbox, "transfer_from_sandbox", record)
+    monkeypatch.setattr(command.sandboxpaths, "transfer_from_sandbox", record)
     options = command.create_command_options(output_paths = ["/out/one"])
 
     command.postprocess_command(["/games/Game.exe"], options = options, **flags)

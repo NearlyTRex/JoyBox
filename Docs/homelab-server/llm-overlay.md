@@ -81,7 +81,7 @@ llm_chat --code -a file   # or a chat with the same model, seeded with files
 ```
 
 The first run picks the most capable model from a ranked list (`CODING_MODELS` in
-`Shared/joybox/ollama.py`) whose weights, context and load overhead fit the computing cards,
+`Shared/joybox/ollamaagents.py`) whose weights, context and load overhead fit the computing cards,
 pulls it, builds the context into a `-ctxNNk` variant, and loads it to check it sits wholly in
 VRAM, falling back to the next model if it does not. Later runs reuse the prepared model and start
 at once; a better one that fits is offered first, so more cards move the pick up the list.

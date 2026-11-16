@@ -93,7 +93,7 @@ def run(monkeypatch, isolated_settings):
         log_error = log_error,
         log_info = state.infos.append,
         log_warning = state.infos.append))
-    monkeypatch.setattr(save_game_tool, "gameinfo", types.SimpleNamespace(
+    monkeypatch.setattr(save_game_tool, "gamecollection", types.SimpleNamespace(
         iterate_selected_game_infos = lambda **kwargs: iter(state.games)))
     monkeypatch.setattr(save_game_tool, "prompts", types.SimpleNamespace(
         prompt_for_preview = prompt_for_preview))

@@ -3,6 +3,8 @@ import os
 
 # Local imports
 from joybox import config
+from joybox import sourcebuild
+from joybox import filebulk
 
 ###########################################################
 # Emulator seams
@@ -20,7 +22,6 @@ RELEASE_FUNCTIONS = [
     "download_github_release",
     "download_general_release",
     "download_webpage_release",
-    "build_appimage_from_source",
     "setup_stored_release",
 ]
 
@@ -79,6 +80,8 @@ class Seams:
         self.releases = Recorder()
         for name in RELEASE_FUNCTIONS:
             monkeypatch.setattr(module.release, name, self.releases.tagged(name))
+        monkeypatch.setattr(
+            sourcebuild, "build_appimage_from_source", self.releases.tagged("build_appimage_from_source"))
 
         programs = module.programs
         monkeypatch.setattr(programs, "should_program_be_installed",
@@ -102,7 +105,7 @@ class Seams:
         self.launched = Recorder()
         if hasattr(module, "fileops"):
             monkeypatch.setattr(module.fileops, "touch_file", self.touched)
-            monkeypatch.setattr(module.fileops, "smart_copy", self.copied)
+            monkeypatch.setattr(filebulk, "smart_copy", self.copied)
         if hasattr(module, "archive"):
             monkeypatch.setattr(module.archive, "extract_archive", self.extracted)
         if hasattr(module, "emulatorcommon"):
@@ -256,7 +259,7 @@ class ConfigureSeams:
         monkeypatch.setattr(module.programs, "get_emulator_path_config_value",
             lambda name, key, platform = None: "/emu/%s/%s" % (key, platform))
         monkeypatch.setattr(module.fileops, "touch_file", self.touch)
-        monkeypatch.setattr(module.fileops, "smart_copy", self.copy)
+        monkeypatch.setattr(filebulk, "smart_copy", self.copy)
         monkeypatch.setattr(module.emulatorbase.hashing, "calculate_file_md5", self.md5)
 
     def touch(self, src, contents, **kwargs):

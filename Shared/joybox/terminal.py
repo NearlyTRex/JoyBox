@@ -1,4 +1,5 @@
 # Imports
+import importlib.util
 import os
 import sys
 
@@ -58,10 +59,9 @@ def notice(message):
 # Read a line with editing and history enabled. Returns None at EOF or on
 # interrupt, so a caller can treat both as "done".
 def read_line(prompt_text, colour = CYAN):
-    try:
-        import readline  # noqa: F401  -- enables editing and history
-    except ImportError:
-        pass
+    # Importing readline turns on editing and history where it exists
+    if importlib.util.find_spec("readline"):
+        import readline  # noqa: F401
     try:
         return input(paint(prompt_text, colour))
     except (EOFError, KeyboardInterrupt):

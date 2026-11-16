@@ -3,7 +3,8 @@ import sys
 import joybox.config as config
 import joybox.system as system
 import joybox.lockerinfo as lockerinfo
-import joybox.sync as sync
+from joybox import syncremotes
+from joybox import synctransfers
 import joybox.paths as paths
 import joybox.arguments as arguments
 import joybox.setup as setup
@@ -119,12 +120,12 @@ def main():
     # Validate
     if not paths.does_path_exist(source_path):
         logger.log_error("Source path not accessible: %s" % source_path, quit_program = True)
-    if not sync.is_remote_configured(dest_name, dest_type):
+    if not syncremotes.is_remote_configured(dest_name, dest_type):
         logger.log_error("Remote '%s' is not configured" % dest_name, quit_program = True)
 
     # Show preview
     if not args.no_preview:
-        db_path = sync.get_hash_database_path(dest_root)
+        db_path = synctransfers.get_hash_database_path(dest_root)
         max_memory_bytes = args.parallel_dirs * args.parallel_files * config.hash_chunk_size
         max_memory_mb = max_memory_bytes / (1024 * 1024)
         details = [
@@ -148,7 +149,7 @@ def main():
     # Clear existing sidecars if requested (always clear at dest root)
     if args.clear:
         logger.log_info("Clearing existing sidecars...")
-        if not sync.clear_hash_sidecar_files(
+        if not synctransfers.clear_hash_sidecar_files(
             remote_name = dest_name,
             remote_type = dest_type,
             remote_path = dest_root,
@@ -159,7 +160,7 @@ def main():
             sys.exit(1)
 
     # Rebuild
-    success = sync.upload_hash_sidecar_files(
+    success = synctransfers.upload_hash_sidecar_files(
         remote_name = dest_name,
         remote_type = dest_type,
         remote_path = dest_path,

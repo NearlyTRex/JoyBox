@@ -12,15 +12,9 @@ from joybox import settings
 SERVER_API_PORT = 11434
 SERVER_HELPER_PORT = 11435
 
-# Ollama tunnel
-#
-# The LLM server's API has no authentication, so it listens on the server's
-# own localhost and is reached through SSH, which authenticates with the
-# account's key. This keeps a tunnel up as a systemd user service: the API
-# on [Tools.Ollama] ollama_tunnel_port here (not 11434, which a local ollama
-# may hold) and the helper on its own port, which is where ollama_tool looks
-# for it. [Tools.Ollama] ollama_api_base should then be the tunnel's end,
-# http://localhost:<tunnel port>.
+# A systemd user service keeping an SSH tunnel to the LLM server, whose API has no
+# authentication and listens only on its localhost. Point [Tools.Ollama]
+# ollama_api_base at http://localhost:<ollama_tunnel_port>
 class OllamaTunnel(installer.Installer):
     def __init__(
         self,
@@ -34,6 +28,7 @@ class OllamaTunnel(installer.Installer):
     def get_ssh_host(self):
         return settings.get_value("Tools.Ollama", "ollama_ssh_host", "", throw_exception = False) or ""
 
+    # Not 11434, which a local ollama may hold
     def get_tunnel_port(self):
         return settings.get_value("Tools.Ollama", "ollama_tunnel_port", "11444", throw_exception = False)
 
@@ -50,10 +45,8 @@ class OllamaTunnel(installer.Installer):
             return {"installed": ["ollama-tunnel"], "missing": []}
         return {"installed": [], "missing": ["ollama-tunnel"]}
 
-    # The unit that keeps the tunnel up
-    # BatchMode makes a missing key fail rather than wait for a password, and
-    # ExitOnForwardFailure makes a taken port fail rather than run with no
-    # tunnel; either way systemd retries. Both ends bind to localhost only.
+    # The unit that keeps the tunnel up, binding both ends to localhost only;
+    # the helper keeps its own port, which is where ollama_tool looks for it
     def build_unit(self):
         ssh_host = self.get_ssh_host()
         tunnel_port = self.get_tunnel_port()
@@ -61,6 +54,8 @@ class OllamaTunnel(installer.Installer):
             "-L", "127.0.0.1:%s:127.0.0.1:%d" % (tunnel_port, SERVER_API_PORT),
             "-L", "127.0.0.1:%d:127.0.0.1:%d" % (SERVER_HELPER_PORT, SERVER_HELPER_PORT),
         ]
+        # A missing key or a taken port fails rather than hangs or runs with no
+        # tunnel, and systemd retries
         command = ["/usr/bin/ssh", "-N",
             "-o", "BatchMode=yes",
             "-o", "ExitOnForwardFailure=yes",

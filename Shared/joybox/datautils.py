@@ -86,7 +86,8 @@ def is_iterable_non_string(obj):
     return is_iterable_container(obj)
 
 # Search dictionary
-def search_dictionary(data, search_value, search_keys = []):
+def search_dictionary(data, search_value, search_keys = None):
+    search_keys = [] if search_keys is None else search_keys
     if not isinstance(data, dict):
         return []
     for key, value in data.items():

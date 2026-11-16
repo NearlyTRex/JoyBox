@@ -151,11 +151,11 @@ def test_every_store_subcategory_belongs_to_its_category(store_list):
 
 
 def test_every_store_platform_matches_its_categories(store_list):
-    from joybox import gameinfo
+    from joybox import gamenaming
 
     platforms = {store.get_name(): store.get_platform() for store in store_list}
     derived = {
-        store.get_name(): gameinfo.derive_game_platform_from_categories(store.get_category(), store.get_subcategory())
+        store.get_name(): gamenaming.derive_game_platform_from_categories(store.get_category(), store.get_subcategory())
         for store in store_list}
 
     assert platforms == derived

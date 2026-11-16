@@ -4,6 +4,7 @@ import os.path
 
 # Local imports
 import joybox.config as config
+import joybox.logger as logger
 import joybox.validation as validation
 import joybox.display as display
 import joybox.programs as programs
@@ -293,8 +294,8 @@ def display_loading_window(
             image_obj = Image.open(image_file)
             image_obj.thumbnail((window_width, window_height / 2))
             window["image"].update(data = ImageTk.PhotoImage(image_obj))
-        except Exception:
-            pass
+        except (ImportError, OSError) as e:
+            logger.log_warning("Unable to show image %s: %s" % (image_file, e))
 
     # Task that will keep the window open until it is done
     def do_task():

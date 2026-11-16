@@ -160,10 +160,8 @@ autoinstall:
                   gpu["display"] = is_boot_vga(gpu["bus_id"], sysfs_root)
               return gpus
 
-          # Choose the GPUs ollama computes on
-          # Every card but the one driving the display, so a card added later is used
-          # without anything being edited. A machine whose only card is the display one
-          # still uses it.
+          # Choose the GPUs ollama computes on: every card but the display one, so a
+          # card added later is used unedited, or the display card when it is the only one
           def compute_gpus(gpus):
               chosen = [gpu for gpu in gpus if not gpu.get("display")]
               return chosen or list(gpus)
@@ -183,7 +181,7 @@ autoinstall:
                           if fields and fields[0].isdigit():
                               values[key.strip()] = int(fields[0]) // 1024
               except OSError:
-                  pass
+                  return 0, 0
               return values.get("MemTotal", 0), values.get("MemAvailable", 0)
 
           ###########################################################

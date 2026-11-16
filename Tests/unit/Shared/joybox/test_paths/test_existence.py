@@ -196,6 +196,10 @@ def test_mime_type_without_libmagic(tmp_path, monkeypatch):
     assert paths.get_file_mime_type(write(tmp_path / "file")) == ""
 
 
+def test_a_missing_file_has_no_mime_type(tmp_path):
+    assert paths.get_file_mime_type(str(tmp_path / "missing")) == ""
+
+
 def test_file_age(tmp_path):
     path = write(tmp_path / "file")
     hour_ago = time.time() - 3600

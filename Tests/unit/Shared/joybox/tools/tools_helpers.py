@@ -9,6 +9,7 @@ from joybox import platform_info
 from joybox import programs
 from joybox import release
 from joybox import requirements
+from joybox import sourcebuild
 from joybox import toolbase
 
 # Every helper a tool's setup, offline setup or configure hands work to
@@ -17,10 +18,9 @@ SEAMS = {
         "download_github_release",
         "download_general_release",
         "download_webpage_release",
-        "build_appimage_from_source",
-        "build_binary_from_source",
         "setup_stored_release",
     ],
+    sourcebuild: ["build_appimage_from_source", "build_binary_from_source"],
     network: ["download_github_repository", "archive_github_repository"],
     requirements: ["setup_tool_requirements", "setup_tool_requirements_offline"],
     fileops: ["copy_file_or_directory", "touch_file"],

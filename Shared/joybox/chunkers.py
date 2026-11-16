@@ -1,10 +1,10 @@
 # Imports
-import json
 import os
 import re
 
 # Local imports
 import joybox.logger as logger
+from joybox import serialization
 
 ###########################################################
 # Chunkers
@@ -156,13 +156,8 @@ class JsonChunker(Chunker):
 
     def marks(self, lines):
         text = "\n".join(lines)
-        summary = {}
-        try:
-            data = json.loads(text)
-            if isinstance(data, dict):
-                summary = {key: self.describe(value) for key, value in data.items()}
-        except ValueError:
-            pass
+        data = serialization.parse_json_or_none(text)
+        summary = {key: self.describe(value) for key, value in data.items()} if isinstance(data, dict) else {}
 
         # The first top-level key sets the indent; deeper keys are nested
         found = []
@@ -280,8 +275,10 @@ def list_chunkers():
 
 # Read a file, tolerating whatever encoding it turns out to be
 def read_lines(path):
-    with open(path, "r", encoding = "utf-8", errors = "replace") as handle:
-        return handle.read().splitlines()
+    contents = serialization.read_text_file(path, errors = "replace")
+    if contents is None:
+        raise OSError("Unable to read %s" % path)
+    return contents.splitlines()
 
 # A map of the file: structure and line numbers, no body
 def outline(path, header = True):

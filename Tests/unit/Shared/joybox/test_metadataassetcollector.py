@@ -29,8 +29,8 @@ def sources(monkeypatch):
 
     monkeypatch.setattr(metadataassetcollector.google, "find_images", recorder("images", ["https://img/1"]))
     monkeypatch.setattr(metadataassetcollector.google, "find_videos", recorder("videos", ["https://vid/1"]))
-    monkeypatch.setattr(metadataassetcollector.stores, "find_steam_assets", recorder("steam", ["https://steam/1"]))
-    monkeypatch.setattr(metadataassetcollector.stores, "find_steam_griddb_covers", recorder("griddb", ["https://grid/1"]))
+    monkeypatch.setattr(metadataassetcollector.steamlookups, "find_steam_assets", recorder("steam", ["https://steam/1"]))
+    monkeypatch.setattr(metadataassetcollector.steamlookups, "find_steam_griddb_covers", recorder("griddb", ["https://grid/1"]))
     monkeypatch.setattr(metadataassetcollector.logger, "log_info", lambda message, **kwargs: None)
     return calls
 

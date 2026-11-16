@@ -4,6 +4,7 @@ import os
 # Local imports
 import joybox.bootstrap as bootstrap
 import joybox.bootstrap.constants as constants
+from joybox import serialization
 from . import installer
 from joybox import runoptions
 from joybox import logger
@@ -69,13 +70,10 @@ class Dotfiles(installer.Installer):
 
     def get_template(self, template_name):
         template_path = os.path.join(self.template_dir, template_name)
-        try:
-            with open(template_path, "r", encoding = "utf-8") as f:
-                return f.read()
-        except Exception as e:
+        contents = serialization.read_text_file(template_path)
+        if contents is None:
             logger.log_error(f"Failed to read template: {template_path}")
-            logger.log_error(str(e))
-            return None
+        return contents
 
     def get_repo_name(self, home_name):
         return home_name[1:] if home_name.startswith(".") else home_name

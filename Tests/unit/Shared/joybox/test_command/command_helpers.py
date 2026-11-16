@@ -44,7 +44,7 @@ class FakeProcess:
         self.stderr = io.StringIO(owner.stderr) if kwargs.get("stderr") == subprocess.PIPE else None
         self.stdin = FakeStdin(owner.stdin_broken) if kwargs.get("stdin") == subprocess.PIPE else None
 
-    def wait(self):
+    def wait(self, timeout = None):
         self.owner.events.append("wait")
         return self.returncode
 

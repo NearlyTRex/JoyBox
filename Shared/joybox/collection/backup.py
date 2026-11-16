@@ -2,6 +2,7 @@
 import joybox.config as config
 import joybox.fileops as fileops
 import joybox.gameinfo as gameinfo
+from joybox import gamecollection
 import joybox.stores as stores
 from .purchase import download_game_store_purchase
 from .uploading import upload_game_files
@@ -159,7 +160,7 @@ def backup_all_game_files(
     for game_supercategory in [config.Supercategory.ROMS]:
         for game_category in config.Category.members():
             for game_subcategory in config.subcategory_map[game_category]:
-                game_names = gameinfo.find_json_game_names(
+                game_names = gamecollection.find_json_game_names(
                     game_supercategory,
                     game_category,
                     game_subcategory)

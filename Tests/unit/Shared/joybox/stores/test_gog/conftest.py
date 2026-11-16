@@ -38,21 +38,6 @@ def tools(monkeypatch):
 
 
 @pytest.fixture
-def reachable(monkeypatch):
-    # Declares which urls answer, so the probing order is observable.
-    state = {"ok": set(), "all": False, "probed": []}
-
-    def is_url_reachable(url):
-        state["probed"].append(url)
-        if state["all"]:
-            return True
-        return url in state["ok"]
-
-    monkeypatch.setattr(gog.network, "is_url_reachable", is_url_reachable)
-    return state
-
-
-@pytest.fixture
 def no_manifest(monkeypatch):
     class EmptyManifest:
         def find_entry_by_gogid(self, **kwargs):

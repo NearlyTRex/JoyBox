@@ -141,13 +141,16 @@ def process_files(
     input_path,
     output_path,
     prompt_file,
-    extensions = [],
+    extensions = None,
     model = None,
     max_tokens = None,
     system_prompt = None,
     skip_existing = False,
     verbose = False,
     pretend_run = False):
+
+    # Get extensions
+    extensions = [] if extensions is None else extensions
 
     # Read prompt template
     prompt_template = serialization.read_text_file(prompt_file)

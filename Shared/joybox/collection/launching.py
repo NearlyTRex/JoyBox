@@ -1,6 +1,7 @@
 # Local imports
 import joybox.config as config
 import joybox.fileops as fileops
+from joybox import fileedits
 import joybox.programs as programs
 import joybox.stores as stores
 import joybox.gui as gui
@@ -140,7 +141,7 @@ def launch_local_game(
 
     # Setup launcher config file
     if paths.is_path_file(game_launcher_config_file):
-        fileops.replace_strings_in_file(
+        fileedits.replace_strings_in_file(
             src = game_launcher_config_file,
             replacements = [
                 {"from": config.token_emulator_setup_root, "to": game_launcher_setup_dir},
@@ -163,7 +164,7 @@ def launch_local_game(
 
     # Revert launcher config file
     if paths.is_path_file(game_launcher_config_file):
-        fileops.replace_strings_in_file(
+        fileedits.replace_strings_in_file(
             src = game_launcher_config_file,
             replacements = [
                 {"from": game_launcher_setup_dir, "to": config.token_emulator_setup_root},

@@ -140,10 +140,8 @@ def summarize_areas(files):
         area["percent"] = get_percent(area)
     return sorted(areas.values(), key = lambda a: (-a["missing_lines"], a["area"]))
 
-# Find the functions in a source file and what of each was run
-# Each statement line counts toward the innermost function whose body holds
-# it, so a nested function's lines are not also its parent's. A def line is
-# run when its enclosing scope is, so it belongs to that scope, not the body.
+# Find the functions in a source file and what of each was run, each line counted to
+# the innermost function holding it, and a def line to its enclosing scope
 def find_functions(source, executed_lines, missing_lines):
     spans = []
     def visit(node, prefix):

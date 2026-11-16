@@ -3,7 +3,7 @@ import urllib.parse
 
 # Local imports
 import joybox.config as config
-import joybox.fileops as fileops
+from joybox import filebulk
 import joybox.logger as logger
 import joybox.command as command
 import joybox.programs as programs
@@ -123,7 +123,7 @@ def convert_asset(
             return False
 
     # Transfer file by default
-    success = fileops.smart_transfer(
+    success = filebulk.smart_transfer(
         src = asset_src,
         dest = asset_dest,
         skip_existing = True,

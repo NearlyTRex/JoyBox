@@ -171,7 +171,7 @@ def finders(monkeypatch):
         return "https://www.youtube.com/embed/abc?enablejsapi=1"
 
     monkeypatch.setattr(gog.metadataassetcollector, "find_metadata_asset", find_metadata_asset)
-    monkeypatch.setattr(gog.webpage, "get_matching_url", get_matching_url)
+    monkeypatch.setattr(gog.webfetch, "get_matching_url", get_matching_url)
     return calls
 
 

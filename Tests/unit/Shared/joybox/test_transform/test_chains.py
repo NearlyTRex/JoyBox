@@ -6,6 +6,7 @@ import pytest
 
 # Local imports
 from joybox import config, transform
+from joybox import filebulk
 from file_helpers import write
 
 
@@ -420,7 +421,7 @@ def computer_tools(monkeypatch, tmp_path):
         transform.computer, "setup_computer_game",
         lambda **kwargs: calls["installed"].append(kwargs["output_image"]) or True)
     monkeypatch.setattr(
-        transform.fileops, "smart_transfer",
+        filebulk, "smart_transfer",
         lambda src, dest, **kwargs: calls["transferred"].append((src, dest)) or True)
     monkeypatch.setattr(
         transform.install, "unpack_install_image",

@@ -7,6 +7,7 @@ import joybox.platforms as platforms
 import joybox.collection as collection
 import joybox.metadata as metadata
 import joybox.gameinfo as gameinfo
+from joybox import gamenaming
 import joybox.arguments as arguments
 import joybox.gui as gui
 import joybox.setup as setup
@@ -105,7 +106,7 @@ def main():
         if not game_subcategory:
             potential_subcategories = []
             for potential_subcategory in config.subcategory_map[game_category]:
-                potential_platform = gameinfo.derive_game_platform_from_categories(game_category, potential_subcategory)
+                potential_platform = gamenaming.derive_game_platform_from_categories(game_category, potential_subcategory)
                 if not platforms.has_no_launcher(potential_platform):
                     potential_subcategories.append(potential_subcategory)
             game_subcategory = random.choice(potential_subcategories)

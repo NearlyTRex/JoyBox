@@ -6,6 +6,7 @@ import os
 import joybox.bootstrap.constants as constants
 import joybox.bootstrap.packages as packages
 from joybox import settings
+from joybox import serialization
 from . import installer
 from joybox import runoptions
 from joybox import logger
@@ -77,12 +78,9 @@ server {{
 }}
 """
 
-# Docker app installer
-#
-# Shared skeleton for the Docker Compose apps. A subclass sets its app name,
-# its compose/env/nginx templates and the values they format with; everything
-# else - directories, temp file staging, nginx wiring, compose lifecycle - is
-# handled here.
+# Shared skeleton for the Docker Compose apps: a subclass sets its name, its
+# compose/env/nginx templates and their values; this handles directories,
+# staging, nginx wiring and the compose lifecycle
 class DockerAppInstaller(installer.Installer):
     def __init__(
         self,
@@ -392,8 +390,10 @@ fi
             if not os.path.exists(identity_local):
                 logger.log_error(f"backup_age_identity points at a missing file: {identity_local}; the bootstrap's keys component writes it")
                 return False
-            with open(identity_local, "r", encoding = "utf-8") as identity_file:
-                identity_contents = identity_file.read()
+            identity_contents = serialization.read_text_file(identity_local)
+            if identity_contents is None:
+                logger.log_error(f"Unable to read the age identity {identity_local}")
+                return False
             identity_remote = f"/dev/shm/joybox_age_{self.app_name}.key"
             if not self.connection.write_file(identity_remote, identity_contents):
                 logger.log_error("Could not stage the age identity on the server")

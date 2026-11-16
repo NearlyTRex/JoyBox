@@ -6,6 +6,7 @@ import pytest
 
 # Local imports
 from joybox import playstation
+from joybox import fileedits
 from playstation_helpers import FAKE_DISC_KEY
 
 
@@ -261,14 +262,14 @@ def test_a_wrong_header_reports_a_bad_key(decrypted, monkeypatch, tmp_path, key_
 
 
 def test_a_wrong_header_can_quit_the_program(decrypted, extracted, key_file, monkeypatch):
-    monkeypatch.setattr(playstation.fileops, "is_file_correctly_headered", lambda src, header: False)
+    monkeypatch.setattr(fileedits, "is_file_correctly_headered", lambda src, header: False)
 
     with pytest.raises(SystemExit):
         playstation.extract_ps3_iso("/in/Game.iso", key_file, extracted, exit_on_failure = True)
 
 
 def test_a_wrong_eboot_header_can_quit_the_program(decrypted, extracted, key_file, monkeypatch):
-    monkeypatch.setattr(playstation.fileops, "is_file_correctly_headered", lambda src, header: header != "SCE")
+    monkeypatch.setattr(fileedits, "is_file_correctly_headered", lambda src, header: header != "SCE")
 
     with pytest.raises(SystemExit):
         playstation.extract_ps3_iso("/in/Game.iso", key_file, extracted, exit_on_failure = True)

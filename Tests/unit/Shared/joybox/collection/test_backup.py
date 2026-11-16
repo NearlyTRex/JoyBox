@@ -265,7 +265,7 @@ def every_game(monkeypatch):
         return state["result"]
 
     monkeypatch.setattr(backup.gameinfo, "GameInfo", StubGameInfo)
-    monkeypatch.setattr(backup.gameinfo, "find_json_game_names", find_json_game_names)
+    monkeypatch.setattr(backup.gamecollection, "find_json_game_names", find_json_game_names)
     monkeypatch.setattr(backup, "backup_game_files", backup_game_files)
     return state
 

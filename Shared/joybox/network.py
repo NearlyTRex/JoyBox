@@ -440,7 +440,7 @@ def mount_network_share(
             return (code == 0)
         finally:
             if not pretend_run:
-                os.remove(credentials_file)
+                fileops.remove_file(credentials_file)
 
     # Network share was not mounted
     return False
@@ -474,8 +474,8 @@ def get_github_repository(
 def get_github_repositories(
     github_user,
     github_token = None,
-    include_repos = [],
-    exclude_repos = [],
+    include_repos = (),
+    exclude_repos = (),
     exclude_forks = False,
     exclude_private = False,
     verbose = False,

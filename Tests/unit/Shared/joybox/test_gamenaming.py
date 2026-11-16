@@ -144,3 +144,127 @@ def test_an_unmatched_subcategory_derives_no_platform():
             return "No Such Subcategory"
 
     assert gamenaming.derive_game_platform_from_categories(None, Unmatched()) is None
+
+
+###########################################################
+# Name derivation
+#
+# A game name carries its region and qualifiers in parentheses; the regular
+# name is the clean display form. The pair has to agree, because one derives
+# the on-disk path and the other is what gets shown and searched.
+###########################################################
+
+@pytest.mark.parametrize("game_name,expected", [
+    ("Chrono Trigger (USA)", "Chrono Trigger"),
+    ("Final Fantasy VII (USA) (Disc 1)", "Final Fantasy VII"),
+    ("Dustforce (USA) (En,Fr,De,Es,It)", "Dustforce"),
+])
+def test_parenthetical_qualifiers_are_stripped(game_name, expected):
+    assert gamenaming.derive_regular_name_from_game_name(game_name) == expected
+
+
+@pytest.mark.parametrize("game_name,expected", [
+    ("Legend of Zelda, The - Ocarina of Time (USA)", "The Legend of Zelda - Ocarina of Time"),
+    ("Bug's Life, A (USA)", "A Bug's Life"),
+    ("Eye of Judgment, The - Legends (USA)", "The Eye of Judgment - Legends"),
+])
+def test_a_trailing_article_is_moved_to_the_front(game_name, expected):
+    assert gamenaming.derive_regular_name_from_game_name(game_name) == expected
+
+
+def test_a_name_without_an_article_is_left_alone():
+    assert gamenaming.derive_regular_name_from_game_name("Metroid Prime (USA)") == "Metroid Prime"
+
+
+def test_a_custom_prefix_and_suffix_are_applied():
+    derived = gamenaming.derive_regular_name_from_game_name(
+        "Chrono Trigger (USA)", custom_prefix = "[", custom_suffix = "]")
+
+    assert derived == "[Chrono Trigger]"
+
+
+###########################################################
+# The inverse
+###########################################################
+
+def test_a_region_is_appended():
+    assert gamenaming.derive_game_name_from_regular_name("Chrono Trigger") == \
+        "Chrono Trigger (USA)"
+
+
+def test_the_region_is_configurable():
+    assert gamenaming.derive_game_name_from_regular_name("Chrono Trigger", "Japan") == \
+        "Chrono Trigger (Japan)"
+
+
+@pytest.mark.parametrize("regular_name,expected", [
+    ("The Legend of Zelda - Ocarina of Time", "Legend of Zelda, The - Ocarina of Time (USA)"),
+    ("A Bug's Life", "Bug's Life, A (USA)"),
+])
+def test_a_leading_article_is_moved_to_the_end(regular_name, expected):
+    assert gamenaming.derive_game_name_from_regular_name(regular_name) == expected
+
+
+def test_an_article_moves_behind_the_first_subtitle_segment():
+    # "The X - Y" becomes "X, The - Y", not "X - Y, The".
+    derived = gamenaming.derive_game_name_from_regular_name("The Eye of Judgment - Legends")
+
+    assert derived == "Eye of Judgment, The - Legends (USA)"
+
+
+def test_a_colon_becomes_a_dash():
+    # Colons are not valid in paths on every platform.
+    assert ":" not in gamenaming.derive_game_name_from_regular_name("Game: The Sequel")
+
+
+def test_an_ampersand_is_spelled_out():
+    assert "and" in gamenaming.derive_game_name_from_regular_name("Chip & Dale")
+
+
+def test_a_ce_suffix_is_expanded():
+    assert "Collector's Edition" in \
+        gamenaming.derive_game_name_from_regular_name("Some Game CE")
+
+
+###########################################################
+# Round trip
+###########################################################
+
+@pytest.mark.parametrize("game_name", [
+    "Chrono Trigger (USA)",
+    "Legend of Zelda, The - Ocarina of Time (USA)",
+    "Bug's Life, A (USA)",
+    "Metroid Prime (USA)",
+])
+def test_a_plain_name_round_trips(game_name):
+    regular = gamenaming.derive_regular_name_from_game_name(game_name)
+
+    assert gamenaming.derive_game_name_from_regular_name(regular) == game_name
+
+
+def test_extra_qualifiers_are_not_restored():
+    # Only the region comes back; disc and language qualifiers are dropped on
+    # the way to the regular name and stay dropped.
+    regular = gamenaming.derive_regular_name_from_game_name("Final Fantasy VII (USA) (Disc 1)")
+
+    assert gamenaming.derive_game_name_from_regular_name(regular) == "Final Fantasy VII (USA)"
+
+
+###########################################################
+# Slugs and search terms
+###########################################################
+
+def test_a_slug_comes_from_the_regular_name():
+    assert gamenaming.derive_slug_name_from_game_name("Legend of Zelda, The (USA)") == \
+        "the_legend_of_zelda"
+
+
+def test_a_slug_drops_qualifiers():
+    assert gamenaming.derive_slug_name_from_game_name("Dustforce (USA) (En,Fr)") == "dustforce"
+
+
+def test_search_terms_are_url_encoded():
+    terms = gamenaming.derive_game_search_terms_from_name("Chrono Trigger (USA)", None)
+
+    assert " " not in terms
+    assert "Chrono" in terms

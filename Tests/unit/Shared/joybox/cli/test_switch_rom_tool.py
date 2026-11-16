@@ -20,9 +20,8 @@ def tool(monkeypatch, isolated_settings, tmp_path):
     harness.untrimmed = []
     (tmp_path / "game.xci").write_bytes(b"")
     (tmp_path / "game.nsp").write_bytes(b"")
-    nintendo = switch_rom_tool.nintendo
-    monkeypatch.setattr(nintendo, "trim_switch_xci", lambda **kwargs: harness.trimmed.append(kwargs))
-    monkeypatch.setattr(nintendo, "untrim_switch_xci", lambda **kwargs: harness.untrimmed.append(kwargs))
+    monkeypatch.setattr(switch_rom_tool.switch, "trim_switch_xci", lambda **kwargs: harness.trimmed.append(kwargs))
+    monkeypatch.setattr(switch_rom_tool.switch, "untrim_switch_xci", lambda **kwargs: harness.untrimmed.append(kwargs))
     return harness
 
 

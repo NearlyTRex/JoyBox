@@ -4,7 +4,7 @@ import os.path
 import joybox.config as config
 import joybox.environment as environment
 import joybox.metadata as metadata
-import joybox.gameinfo as gameinfo
+from joybox import gamenaming
 import joybox.system as system
 import joybox.arguments as arguments
 import joybox.setup as setup
@@ -86,7 +86,7 @@ def main():
 
                         # Get game info
                         game_name = game_entry.get_game()
-                        game_supercategory, game_category, game_subcategory = gameinfo.derive_game_categories_from_platform(game_platform)
+                        game_supercategory, game_category, game_subcategory = gamenaming.derive_game_categories_from_platform(game_platform)
 
                         # Get asset file
                         asset_file = environment.get_locker_gaming_asset_file(game_category, game_subcategory, game_name, asset_type)

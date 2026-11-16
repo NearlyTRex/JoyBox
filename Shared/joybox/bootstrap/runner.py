@@ -5,9 +5,6 @@ from joybox import logger
 from joybox import runoptions
 from joybox import serverinfo
 
-# Build the environment that runs components on this machine or on a server
-# entry. Remote environments need a server index; its domain is required
-# unless the caller is only listing what is available.
 # The ports a server's components open on purpose, read from their
 # declarations; nothing connects
 def get_public_ports(server_index):
@@ -17,6 +14,9 @@ def get_public_ports(server_index):
         require_domain = False)
     return environment.get_public_ports() if environment else []
 
+# Build the environment that runs components on this machine or on a server
+# entry. Remote environments need a server index; its domain is required
+# unless the caller is only listing what is available.
 def create_environment(
     environment_type,
     server_index = None,

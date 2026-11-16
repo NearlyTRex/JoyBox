@@ -5,7 +5,7 @@ import json
 import pytest
 
 # Local imports
-from joybox import config, gameinfo
+from joybox import config, gameinfo, gamenaming
 
 
 ###########################################################
@@ -59,7 +59,7 @@ def test_a_game_derives_its_categories_from_where_it_sits(game):
 
 
 def test_a_game_derives_its_platform(game):
-    assert game.get_platform() == gameinfo.derive_game_platform_from_categories(
+    assert game.get_platform() == gamenaming.derive_game_platform_from_categories(
         config.Category.COMPUTER, config.Subcategory.COMPUTER_STEAM)
 
 

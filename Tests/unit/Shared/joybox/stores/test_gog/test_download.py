@@ -6,6 +6,7 @@ import pytest
 
 # Local imports
 from joybox.stores import gog
+from joybox import filebulk
 
 
 ###########################################################
@@ -131,7 +132,7 @@ def test_move_options_are_passed_through(gog_store, lgog, monkeypatch, tmp_path)
     def move_contents(src, dest, **kwargs):
         moves.append((src, dest, kwargs))
         return True
-    monkeypatch.setattr(gog.fileops, "move_contents", move_contents)
+    monkeypatch.setattr(filebulk, "move_contents", move_contents)
 
     gog_store.download("the_witcher", str(tmp_path / "out"), show_progress = True, skip_existing = True, skip_identical = True)
 
@@ -149,7 +150,7 @@ def test_a_failed_download_removes_its_temp(gog_store, lgog, temp_dir, tmp_path)
 
 
 def test_a_failed_move_removes_its_temp(gog_store, lgog, temp_dir, monkeypatch, tmp_path):
-    monkeypatch.setattr(gog.fileops, "move_contents", lambda **kwargs: False)
+    monkeypatch.setattr(filebulk, "move_contents", lambda **kwargs: False)
 
     assert gog_store.download("the_witcher", str(tmp_path / "out")) is False
     assert not temp_dir["path"].exists()

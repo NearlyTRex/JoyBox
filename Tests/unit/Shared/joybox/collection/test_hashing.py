@@ -160,7 +160,7 @@ def every_game(monkeypatch):
         return state["result"]
 
     monkeypatch.setattr(hashing.gameinfo, "GameInfo", StubGameInfo)
-    monkeypatch.setattr(hashing.gameinfo, "find_json_game_names", find_json_game_names)
+    monkeypatch.setattr(hashing.gamecollection, "find_json_game_names", find_json_game_names)
     monkeypatch.setattr(hashing, "build_hash_files", build_hash_files)
     return state
 

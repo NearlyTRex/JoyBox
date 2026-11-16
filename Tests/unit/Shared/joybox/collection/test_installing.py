@@ -4,6 +4,7 @@ import pytest
 
 # Local imports
 from joybox.collection import installing
+from joybox import filebulk
 
 
 ###########################################################
@@ -457,7 +458,7 @@ def local(monkeypatch, tmp_path):
     monkeypatch.setattr(installing.fileops, "create_temporary_directory", create_temporary_directory)
     monkeypatch.setattr(installing.locker, "sync_from_remote_decrypted", sync_from_remote_decrypted)
     monkeypatch.setattr(installing.transform, "transform_game_file", transform_game_file)
-    monkeypatch.setattr(installing.fileops, "copy_contents", copy_contents)
+    monkeypatch.setattr(filebulk, "copy_contents", copy_contents)
     monkeypatch.setattr(
         installing.fileops, "remove_directory",
         lambda src, **kwargs: state["removed"].append(src) or True)

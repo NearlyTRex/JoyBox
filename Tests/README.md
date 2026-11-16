@@ -248,18 +248,18 @@ definition of the same name goes unnoticed, and the second one silently wins.
 When that happens, split the file into a directory of the same name:
 
 ```text
-unit/Shared/joybox/test_sync.py
+unit/Shared/joybox/test_lockersync.py
 ```
 
 becomes
 
 ```text
-unit/Shared/joybox/test_sync/
-    conftest.py        fixtures shared by the files beside it
-    sync_helpers.py    constants and plain helpers, imported by name
-    test_naming.py
-    test_flags.py
-    test_transfers.py
+unit/Shared/joybox/test_lockersync/
+    conftest.py              fixtures shared by the files beside it
+    lockersync_helpers.py    constants and plain helpers, imported by name
+    test_actions.py
+    test_cache.py
+    test_execution.py
     ...
 ```
 

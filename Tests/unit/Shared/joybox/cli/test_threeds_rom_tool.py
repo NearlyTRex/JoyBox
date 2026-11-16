@@ -18,10 +18,10 @@ def tool(monkeypatch, tmp_path):
     harness = CommandHarness(monkeypatch, threeds_rom_tool)
     harness.calls = []
     for name in ("convert_3ds_cia_to_cci", "convert_3ds_cci_to_cia", "trim_3ds_cci", "untrim_3ds_cci", "extract_3ds_cia"):
-        monkeypatch.setattr(threeds_rom_tool.nintendo, name,
+        monkeypatch.setattr(threeds_rom_tool.threeds, name,
             lambda name = name, **kwargs: harness.calls.append((name, kwargs["src_3ds_file"].rsplit("/", 1)[-1],
                 (kwargs.get("dest_3ds_file") or kwargs["extract_dir"]).rsplit("/", 1)[-1])))
-    monkeypatch.setattr(threeds_rom_tool.nintendo, "get_3ds_file_info",
+    monkeypatch.setattr(threeds_rom_tool.threeds, "get_3ds_file_info",
         lambda src_3ds_file, **kwargs: "info:" + src_3ds_file.rsplit("/", 1)[-1])
     for name in ("A.cia", "B.3ds", "C.trim.3ds"):
         (tmp_path / name).write_bytes(b"x")

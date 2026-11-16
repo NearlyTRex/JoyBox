@@ -8,11 +8,13 @@ import joybox.programs as programs
 import joybox.serialization as serialization
 import joybox.logger as logger
 import joybox.fileops as fileops
+from joybox import filebulk
 import joybox.network as network
 import joybox.paths as paths
 import joybox.settings as settings
 import joybox.jsondata as jsondata
 import joybox.webpage as webpage
+from joybox import webfetch
 import joybox.storebase as storebase
 import joybox.strings as strings
 import joybox.metadataentry as metadataentry
@@ -633,7 +635,7 @@ class GOG(storebase.StoreBase):
 
         # Video
         elif asset_type == config.AssetType.VIDEO:
-            latest_asset_url = webpage.get_matching_url(
+            latest_asset_url = webfetch.get_matching_url(
                 url = identifier,
                 base_url = "https://www.youtube.com/embed",
                 starts_with = "https://www.youtube.com/embed",
@@ -794,7 +796,7 @@ class GOG(storebase.StoreBase):
 
             # Move dlc extra into main extra
             if paths.does_directory_contain_files(tmp_dir_dlc_extra):
-                fileops.move_contents(
+                filebulk.move_contents(
                     src = tmp_dir_dlc_extra,
                     dest = tmp_dir_extra,
                     skip_existing = True,
@@ -816,7 +818,7 @@ class GOG(storebase.StoreBase):
                     exit_on_failure = exit_on_failure)
 
             # Move downloaded files
-            success = fileops.move_contents(
+            success = filebulk.move_contents(
                 src = tmp_dir_result,
                 dest = output_dir,
                 show_progress = show_progress,

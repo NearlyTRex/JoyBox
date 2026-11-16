@@ -5,6 +5,7 @@ import json
 import pytest
 
 # Local imports
+from joybox import syncremotes
 from joybox import lockerauth
 
 
@@ -172,8 +173,8 @@ def remote_calls(drive_locker, monkeypatch):
         state["saved"].append((reference, json.loads(value)))
         return state["stored"]
 
-    monkeypatch.setattr(lockerauth.sync, "authorize_remote", authorize)
-    monkeypatch.setattr(lockerauth.sync, "count_remote_entries", count)
+    monkeypatch.setattr(syncremotes, "authorize_remote", authorize)
+    monkeypatch.setattr(syncremotes, "count_remote_entries", count)
     monkeypatch.setattr(lockerauth.secretstore, "store_secret_reference", store)
     return state
 

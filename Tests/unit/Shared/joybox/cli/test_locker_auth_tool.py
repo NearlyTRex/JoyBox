@@ -6,6 +6,7 @@ import pytest
 
 # Local imports
 from cli_helpers import CommandHarness, assert_entry_points
+from joybox import syncremotes
 from joybox import lockerauth, settings
 from joybox.cli import locker_auth_tool
 
@@ -62,8 +63,8 @@ def tool(monkeypatch, tmp_path, isolated_settings):
 
     monkeypatch.setattr(lockerauth.secretstore, "resolve_secret_reference", resolve)
     monkeypatch.setattr(lockerauth.secretstore, "store_secret_reference", store)
-    monkeypatch.setattr(lockerauth.sync, "authorize_remote", authorize)
-    monkeypatch.setattr(lockerauth.sync, "count_remote_entries", count)
+    monkeypatch.setattr(syncremotes, "authorize_remote", authorize)
+    monkeypatch.setattr(syncremotes, "count_remote_entries", count)
     harness.client_file = write_client(tmp_path, {"installed": {"client_id": CLIENT_ID, "client_secret": CLIENT_PHRASE}})
     return harness
 
@@ -152,7 +153,7 @@ def test_a_cancelled_preview_signs_nothing_in(tool):
 
 def test_a_pretend_run_signs_nothing_in(tool, monkeypatch):
     pretended = []
-    monkeypatch.setattr(lockerauth.sync, "authorize_remote",
+    monkeypatch.setattr(syncremotes, "authorize_remote",
                         lambda *args, **kwargs: pretended.append(kwargs))
     tool.run(*new_client_args(tool, "-p"))
 

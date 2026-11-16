@@ -95,7 +95,7 @@ def test_the_video_is_the_embedded_youtube_link(itchio_store, browser, monkeypat
     def get_matching_url(**kwargs):
         seen.update(kwargs)
         return "https://www.youtube.com/embed/abc"
-    monkeypatch.setattr(itchio.webpage, "get_matching_url", get_matching_url)
+    monkeypatch.setattr(itchio.webfetch, "get_matching_url", get_matching_url)
 
     url = itchio_store.get_latest_asset_url(GAME_URL, config.AssetType.VIDEO)
 

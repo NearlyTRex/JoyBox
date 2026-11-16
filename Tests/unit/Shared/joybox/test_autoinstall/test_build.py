@@ -6,7 +6,11 @@ import pytest
 
 # Local imports
 from joybox import autoinstall
-from autoinstall_helpers import complete_profile, image_named
+from joybox import ubunturelease
+from autoinstall_helpers import complete_profile
+
+# The release image the build is handed
+IMAGE = "ubuntu-24.04.1-live-server-amd64.iso"
 
 
 ###########################################################
@@ -16,7 +20,7 @@ from autoinstall_helpers import complete_profile, image_named
 @pytest.fixture
 def release(monkeypatch):
     state = {
-        "image": image_named("24.04.1"),
+        "image": IMAGE,
         "download_ok": True,
         "verified": True,
         "downloaded": [],
@@ -35,9 +39,9 @@ def release(monkeypatch):
         return state["verified"]
 
     monkeypatch.setattr(
-        autoinstall, "find_latest_release_image", lambda **kwargs: state["image"])
+        ubunturelease, "find_latest_release_image", lambda **kwargs: state["image"])
     monkeypatch.setattr(autoinstall.network, "download_url", download_url)
-    monkeypatch.setattr(autoinstall, "verify_image_checksum", verify_image_checksum)
+    monkeypatch.setattr(ubunturelease, "verify_image_checksum", verify_image_checksum)
     return state
 
 
@@ -67,8 +71,8 @@ def test_the_newest_image_is_downloaded_and_verified(release, tmp_path):
 
     assert obtain(tmp_path, verify_signature = False) == output_file
     assert release["downloaded"] == [
-        "https://releases.ubuntu.com/24.04/" + image_named("24.04.1")]
-    assert release["verified_files"] == [(output_file, image_named("24.04.1"), False)]
+        "https://releases.ubuntu.com/24.04/" + IMAGE]
+    assert release["verified_files"] == [(output_file, IMAGE, False)]
 
 
 def test_a_download_is_not_verified_when_asked_not_to(release, tmp_path):
@@ -115,7 +119,7 @@ def test_an_earlier_download_is_reused_unchecked_when_asked(release, tmp_path):
 def test_an_earlier_download_that_does_not_verify_is_fetched_again(release, monkeypatch, tmp_path):
     (tmp_path / "stock.iso").write_text("truncated")
     results = iter([False, True])
-    monkeypatch.setattr(autoinstall, "verify_image_checksum", lambda **kwargs: next(results))
+    monkeypatch.setattr(ubunturelease, "verify_image_checksum", lambda **kwargs: next(results))
 
     assert obtain(tmp_path) == str(tmp_path / "stock.iso")
     assert (tmp_path / "stock.iso").read_text() == "image"

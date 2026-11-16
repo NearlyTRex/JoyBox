@@ -4,6 +4,7 @@ import pytest
 # Local imports
 from joybox import config
 from joybox.tools import goldbergemu
+from joybox import filebulk
 
 USER_ID = "76561190000000001"
 GOLDBERG = "AppData/Roaming/Goldberg SteamEmu Saves"
@@ -115,7 +116,7 @@ def test_convert_to_native_save_keeps_other_roaming_data(tmp_path):
 
 def test_convert_to_native_save_stops_on_a_failed_move(monkeypatch, tmp_path):
     write(tmp_path / "General" / GOLDBERG / "480" / "save.dat")
-    monkeypatch.setattr(goldbergemu.fileops, "smart_move", Recorder([False]))
+    monkeypatch.setattr(filebulk, "smart_move", Recorder([False]))
     removed = Recorder()
     monkeypatch.setattr(goldbergemu.fileops, "remove_directory", removed)
 

@@ -5,6 +5,7 @@ import joybox.paths as paths
 import joybox.environment as environment
 import joybox.fileops as fileops
 import joybox.release as release
+from joybox import sourcebuild
 import joybox.programs as programs
 import joybox.toolbase as toolbase
 from joybox import platform_info
@@ -42,7 +43,7 @@ class LGOGDownloader(toolbase.ToolBase):
 
         # Build linux program
         if programs.should_program_be_installed("LGOGDownloader", "linux"):
-            success = release.build_appimage_from_source(
+            success = sourcebuild.build_appimage_from_source(
                 release_url = "https://github.com/NearlyTRex/LGOGDownloader.git",
                 output_file = "App-x86_64.AppImage",
                 install_name = "LGOGDownloader",

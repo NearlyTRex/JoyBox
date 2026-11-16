@@ -4,7 +4,7 @@ import re
 
 # Local imports
 import joybox.config as config
-import joybox.sync as sync
+from joybox import syncremotes
 import joybox.logger as logger
 import joybox.paths as paths
 import joybox.secretstore as secretstore
@@ -139,7 +139,7 @@ def sign_in_locker(
     open_browser = True,
     verbose = False):
     remote_type, remote_name, remote_path = remote
-    token = sync.authorize_remote(
+    token = syncremotes.authorize_remote(
         remote_type = remote_type,
         client_id = client[0],
         client_secret = client[1],
@@ -152,7 +152,7 @@ def sign_in_locker(
     # setting them in memory has the check use the new ones
     new_options = build_options(options, client, folder_id, token)
     settings.set_value(SHARE_SECTION, get_locker_key(locker_type) + "_config", json.dumps(new_options))
-    entries = sync.count_remote_entries(remote_name = remote_name, remote_type = remote_type, remote_path = remote_path, verbose = verbose)
+    entries = syncremotes.count_remote_entries(remote_name = remote_name, remote_type = remote_type, remote_path = remote_path, verbose = verbose)
     if entries is None:
         logger.log_error("The new token cannot list %s:%s; nothing was stored" % (remote_name, remote_path))
         return False

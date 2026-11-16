@@ -3,6 +3,8 @@ import pytest
 
 # Local imports
 from joybox import ollama
+from joybox import ollamacatalog
+from joybox import ollamaactions
 from fakes import RecordingCommand
 
 
@@ -52,16 +54,6 @@ def test_only_a_server_on_this_machine_is_local(monkeypatch, api_base, local):
 # this machine; starting a local ollama would quietly answer in its place.
 ###########################################################
 
-@pytest.fixture
-def tunneled(monkeypatch):
-    values = {"ollama_ssh_host": "testuser@llm"}
-    monkeypatch.setattr(
-        ollama.settings, "get_value",
-        lambda section, field, default_value = None, throw_exception = True: values.get(field, default_value))
-    monkeypatch.setattr(ollama, "get_api_base", lambda: "http://localhost:11444")
-    return values
-
-
 def test_a_tunnel_end_on_localhost_is_not_a_local_server(tunneled):
     assert ollama.is_tunneled() is True
     assert ollama.is_local_server() is False
@@ -79,58 +71,6 @@ def test_a_tunnel_that_is_down_starts_nothing_locally(tunneled, monkeypatch, rec
 
     assert ollama.start_serve() is False
     assert recording_command.ran() is False
-
-
-###########################################################
-# Updating the server
-###########################################################
-
-@pytest.fixture
-def updating(tunneled, monkeypatch):
-    state = {"versions": ["0.35.1", None, "0.36.0"], "slept": 0}
-    monkeypatch.setattr(ollama, "get_server_version", lambda: state["versions"].pop(0) if state["versions"] else None)
-    monkeypatch.setattr(ollama.runtime, "sleep_program", lambda seconds: state.update(slept = state["slept"] + 1))
-    return state
-
-
-def test_update_reruns_the_installer_on_the_server(updating, recording_command):
-    assert ollama.action_update() is True
-    assert recording_command.only() == ["ssh", "testuser@llm", ollama.OLLAMA_INSTALL_COMMAND]
-
-
-def test_update_waits_for_the_server_to_answer_again(updating, recording_command):
-    ollama.action_update()
-
-    assert updating["versions"] == []
-    assert updating["slept"] == 1
-
-
-def test_update_needs_the_ssh_host(updating, recording_command, tunneled):
-    tunneled["ollama_ssh_host"] = ""
-
-    assert ollama.action_update() is False
-    assert recording_command.ran() is False
-
-
-def test_a_failed_installer_fails_the_update(updating, monkeypatch):
-    RecordingCommand(monkeypatch, returncode = 1)
-
-    assert ollama.action_update() is False
-
-
-def test_a_server_that_does_not_come_back_fails_the_update(updating, recording_command):
-    updating["versions"] = ["0.35.1"]
-
-    assert ollama.action_update() is False
-    assert updating["slept"] == 30
-
-
-def test_the_server_version_is_read_from_the_api(monkeypatch):
-    monkeypatch.setattr(ollama, "get_api_base", lambda: "http://localhost:11444")
-    monkeypatch.setattr(ollama.network, "get_remote_json",
-        lambda url: {"version": "0.35.1"} if url == "http://localhost:11444/api/version" else None)
-
-    assert ollama.get_server_version() == "0.35.1"
 
 
 ###########################################################
@@ -287,9 +227,9 @@ def test_the_listing_prints_the_server_hardware(monkeypatch):
     monkeypatch.setattr(ollama, "get_server_hardware", lambda: {
         "gpu_vram_total_mb": 32768, "system_ram_mb": 65536})
     monkeypatch.setattr(ollama.hardware, "print_hardware_summary", lambda hw = None: printed.append(hw))
-    monkeypatch.setattr(ollama, "get_recommended_models", lambda **kwargs: [])
+    monkeypatch.setattr(ollamacatalog, "get_recommended_models", lambda **kwargs: [])
 
-    ollama.action_available(purpose = ollama.PURPOSE_CHAT)
+    ollamaactions.action_available(purpose = ollamacatalog.PURPOSE_CHAT)
 
     assert printed == [{"gpu_vram_total_mb": 32768, "system_ram_mb": 65536}]
 
@@ -389,6 +329,56 @@ def test_an_unusable_tags_reply_lists_nothing(monkeypatch, reply):
     assert ollama.list_installed_models() == []
 
 
+def test_installed_models_are_listed_with_their_details(monkeypatch):
+    monkeypatch.setattr(ollama.network, "get_remote_json", lambda url: {"models": [{
+        "name": "qwen3:8b",
+        "size": 5 * (1024 ** 3),
+        "details": {
+            "family": "qwen3",
+            "parameter_size": "8B",
+            "quantization_level": "Q4_K_M",
+            "format": "gguf",
+        },
+    }]})
+
+    models = ollama.list_installed_models()
+
+    assert models[0]["name"] == "qwen3:8b"
+    assert models[0]["size_gb"] == 5.0
+    assert models[0]["quantization"] == "Q4_K_M"
+
+
+def test_installed_models_are_listed_in_order(monkeypatch):
+    monkeypatch.setattr(ollama.network, "get_remote_json", lambda url: {"models": [
+        {"name": "qwen3:8b"},
+        {"name": "gemma3:12b"},
+    ]})
+
+    assert [entry["name"] for entry in ollama.list_installed_models()] == \
+        ["gemma3:12b", "qwen3:8b"]
+
+
+def test_a_model_without_details_still_lists(monkeypatch):
+    monkeypatch.setattr(ollama.network, "get_remote_json", lambda url: {"models": [{"name": "bare"}]})
+
+    assert ollama.list_installed_models()[0] == {
+        "name": "bare",
+        "size_bytes": 0,
+        "size_gb": 0.0,
+        "family": "",
+        "parameter_size": "",
+        "quantization": "",
+        "format": "",
+    }
+
+
+@pytest.mark.parametrize("response", [None, {}, {"error": "nope"}])
+def test_an_unusable_response_lists_nothing(monkeypatch, response):
+    monkeypatch.setattr(ollama.network, "get_remote_json", lambda url: response)
+
+    assert ollama.list_installed_models() == []
+
+
 ###########################################################
 # Model commands
 ###########################################################
@@ -441,186 +431,3 @@ def test_no_output_is_no_information(monkeypatch):
     RecordingCommand(monkeypatch, output = "")
 
     assert ollama.show_model("qwen3:8b") is None
-
-
-###########################################################
-# Remote catalog
-###########################################################
-
-SEARCH_PAGE = (
-    '<a href="/library/qwen3" class="group">'
-    '<p class="max-w-lg">A model</p>'
-    '<span x-test-size class="tag">8b</span>')
-
-
-@pytest.fixture
-def search(monkeypatch):
-    state = {"html": SEARCH_PAGE, "requests": []}
-
-    def get_remote_html(url, headers = None):
-        state["requests"].append((url, headers))
-        return state["html"]
-    monkeypatch.setattr(ollama.network, "get_remote_html", get_remote_html)
-    monkeypatch.setattr(ollama, "remote_catalog_cache", {})
-    return state
-
-
-def test_an_unfiltered_search_infers_purposes(search):
-    models = ollama.fetch_remote_models()
-
-    assert search["requests"] == [("https://ollama.com/search", {"HX-Request": "true"})]
-    assert models[0]["name"] == "qwen3:8b"
-    assert models[0]["purpose"] == ollama.PURPOSE_CHAT
-
-
-def test_a_purpose_filters_the_search_server_side(search):
-    models = ollama.fetch_remote_models(ollama.PURPOSE_CLOUD)
-
-    assert search["requests"][0][0] == \
-        "https://ollama.com/search?c=%s" % ollama.PURPOSE_TO_SEARCH[ollama.PURPOSE_CLOUD]
-    assert models[0]["purpose"] == ollama.PURPOSE_CLOUD
-
-
-def test_a_purpose_without_a_search_filter_searches_everything(search):
-    models = ollama.fetch_remote_models(ollama.PURPOSE_CHAT)
-
-    assert search["requests"][0][0] == "https://ollama.com/search"
-    assert models[0]["purpose"] == ollama.PURPOSE_CHAT
-
-
-def test_an_unreachable_search_finds_nothing(search):
-    search["html"] = None
-
-    assert ollama.fetch_remote_models() == []
-
-
-def test_a_link_without_a_name_is_skipped():
-    assert ollama.parse_search_html('<a href="/library/"x">') == []
-
-
-def test_the_remote_catalog_is_cached_per_purpose(search):
-    first = ollama.get_model_catalog(ollama.PURPOSE_CHAT)
-    second = ollama.get_model_catalog(ollama.PURPOSE_CHAT)
-
-    assert first is second
-    assert len(search["requests"]) == 1
-
-
-def test_the_built_in_catalog_is_used_offline(search):
-    search["html"] = None
-
-    assert ollama.get_model_catalog() is ollama.FALLBACK_CATALOG
-    assert ollama.remote_catalog_cache == {}
-
-
-def test_the_built_in_catalog_is_filtered_by_purpose(search):
-    search["html"] = None
-
-    models = ollama.get_model_catalog(ollama.PURPOSE_TOOLS)
-
-    assert models
-    assert all(m["purpose"] == ollama.PURPOSE_TOOLS for m in models)
-
-
-###########################################################
-# Tags
-###########################################################
-
-def tag_link(family, tag, size, context):
-    return (
-        '<a href="/library/%s:%s" class="md:hidden flex">'
-        '<span>%s</span> · <span>%s context window</span></a>' % (family, tag, size, context))
-
-
-@pytest.fixture
-def tags_page(monkeypatch):
-    state = {"html": "", "requests": []}
-
-    def get_remote_html(url, headers = None):
-        state["requests"].append(url)
-        return state["html"]
-    monkeypatch.setattr(ollama.network, "get_remote_html", get_remote_html)
-    return state
-
-
-def test_tags_are_read_for_the_model_family(tags_page):
-    tags_page["html"] = tag_link("qwen3", "8b", "5.2GB", "40K") + \
-        tag_link("qwen3", "8b-q8_0", "8.9GB", "40K")
-
-    tags = ollama.get_model_tags("qwen3:8b")
-
-    assert tags_page["requests"] == ["https://ollama.com/library/qwen3/tags"]
-    assert tags[0] == {
-        "tag": "8b",
-        "full_name": "qwen3:8b",
-        "size_str": "5.2GB",
-        "size_mb": 4959,
-        "context": "40K",
-    }
-    assert tags[1]["full_name"] == "qwen3:8b-q8_0"
-
-
-def test_a_repeated_tag_is_listed_once(tags_page):
-    tags_page["html"] = tag_link("qwen3", "8b", "5.2GB", "40K") * 2
-
-    assert len(ollama.get_model_tags("qwen3")) == 1
-
-
-def test_an_unreachable_tags_page_has_no_tags(tags_page):
-    tags_page["html"] = None
-
-    assert ollama.get_model_tags("qwen3") == []
-
-
-###########################################################
-# Pulling with a quantization choice
-###########################################################
-
-@pytest.fixture
-def puller(monkeypatch):
-    state = {"options": [], "selection": None, "pulled": [], "result": True, "shown": []}
-    monkeypatch.setattr(ollama.hardware, "get_hardware_summary", lambda: {
-        "gpu_vram_total_mb": 8000, "system_ram_mb": 32000})
-    monkeypatch.setattr(ollama, "get_quantization_options", lambda name: state["options"])
-    monkeypatch.setattr(
-        ollama, "pull_model", lambda name: state["pulled"].append(name) or state["result"])
-
-    def prompt_for_selection(message, options, display_func = None):
-        state["shown"] = [display_func(o) for o in options]
-        return None if state["selection"] is None else options[state["selection"]]
-    monkeypatch.setattr(ollama.prompts, "prompt_for_selection", prompt_for_selection)
-    return state
-
-
-def quant(full_name, size_mb):
-    return {"full_name": full_name, "size_mb": size_mb, "size_str": "?", "context": "40K"}
-
-
-def test_a_model_with_one_quantization_is_pulled_as_named(puller):
-    puller["options"] = [quant("qwen3:8b", 5000)]
-
-    assert ollama.pull_with_quantization("qwen3:8b") is True
-    assert puller["pulled"] == ["qwen3:8b"]
-
-
-def test_the_chosen_quantization_is_pulled(puller):
-    puller["options"] = [quant("qwen3:8b", 5000), quant("qwen3:8b-fp16", 16000)]
-    puller["selection"] = 1
-
-    assert ollama.pull_with_quantization("qwen3:8b") is True
-    assert puller["pulled"] == ["qwen3:8b-fp16"]
-    assert puller["shown"][0].startswith("[+]")
-    assert puller["shown"][1].startswith("[~]")
-
-
-def test_declining_the_quantization_pulls_nothing(puller):
-    puller["options"] = [quant("qwen3:8b", 5000), quant("qwen3:8b-fp16", 16000)]
-
-    assert ollama.pull_with_quantization("qwen3:8b") is True
-    assert puller["pulled"] == []
-
-
-def test_a_failed_pull_is_reported(puller):
-    puller["result"] = False
-
-    assert ollama.pull_with_quantization("qwen3:8b") is False

@@ -420,6 +420,13 @@ def test_importing_a_missing_file_imports_nothing(tmp_path):
     assert database.get_sorted_platforms() == []
 
 
+def test_importing_an_unreadable_file_imports_nothing(tmp_path):
+    database = metadata.Metadata()
+    database.import_from_pegasus_file(str(tmp_path))
+
+    assert database.get_sorted_platforms() == []
+
+
 def test_an_unknown_metadata_format_is_neither_read_nor_written(tmp_path):
     path = str(tmp_path / "metadata.txt")
     database = build(entry())

@@ -47,7 +47,7 @@ def online(monkeypatch, installed):
         "theme": Recorder(),
     }
     monkeypatch.setattr(pegasus.release, "download_github_release", recording("github", fakes["github"]))
-    monkeypatch.setattr(pegasus.release, "build_appimage_from_source", recording("appimage", fakes["appimage"]))
+    monkeypatch.setattr(pegasus.sourcebuild, "build_appimage_from_source", recording("appimage", fakes["appimage"]))
     monkeypatch.setattr(pegasus.network, "download_github_repository", recording("theme", fakes["theme"]))
     fakes["order"] = calls
     return fakes

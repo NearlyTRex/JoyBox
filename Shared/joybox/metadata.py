@@ -162,8 +162,8 @@ class Metadata:
         pretend_run = False,
         exit_on_failure = False):
         if paths.does_path_exist(pegasus_file):
-            with open(pegasus_file, "r", encoding="utf8") as file:
-                data = file.read()
+            data = serialization.read_text_file(pegasus_file, verbose = verbose, exit_on_failure = exit_on_failure)
+            if data is not None:
 
                 # Read header
                 collection_platform = ""

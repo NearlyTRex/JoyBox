@@ -1,5 +1,4 @@
 # Imports
-import json
 
 # Local imports
 import joybox.config as config
@@ -176,11 +175,7 @@ class HumbleBundle(storebase.StoreBase):
             return None
 
         # Get humble json
-        humble_json = None
-        try:
-            humble_json = json.loads(info_output)
-        except Exception as e:
-            logger.log_error(e)
+        humble_json = serialization.parse_json_or_none(info_output)
         if not isinstance(humble_json, dict):
             logger.log_error("Unable to parse humble game information for '%s'" % appname)
             logger.log_error("Received output:\n%s" % info_output)

@@ -2,10 +2,11 @@
 import joybox.config as config
 import joybox.environment as environment
 import joybox.fileops as fileops
+from joybox import filebulk
 import joybox.logger as logger
 import joybox.release as release
 import joybox.programs as programs
-import joybox.nintendo as nintendo
+from joybox.nintendo import switch
 import joybox.paths as paths
 import joybox.settings as settings
 import joybox.emulatorcommon as emulatorcommon
@@ -59,7 +60,7 @@ class Yuzu(emulatorbase.EmulatorBase):
         # Get switch info
         profile_user_id = settings.get_value("UserData.Switch", "profile_user_id")
         profile_account_name = settings.get_value("UserData.Switch", "profile_account_name")
-        if not nintendo.is_valid_switch_profile_info(profile_user_id, profile_account_name):
+        if not switch.is_valid_switch_profile_info(profile_user_id, profile_account_name):
             logger.log_warning("No Switch profile found in ini, using default")
             profile_user_id = "F6F389D41D6BC0BDD6BD928C526AE556"
             profile_account_name = "yuzu"
@@ -97,11 +98,13 @@ class Yuzu(emulatorbase.EmulatorBase):
         }
 
     # Install add-ons
-    def install_addons(self, dlc_dirs = [], update_dirs = [], verbose = False, pretend_run = False, exit_on_failure = False):
+    def install_addons(self, dlc_dirs = None, update_dirs = None, verbose = False, pretend_run = False, exit_on_failure = False):
+        dlc_dirs = [] if dlc_dirs is None else dlc_dirs
+        update_dirs = [] if update_dirs is None else update_dirs
         for package_dirset in [dlc_dirs, update_dirs]:
             for package_dir in package_dirset:
                 for nsp_file in paths.build_file_list_by_extensions(package_dir, extensions = [".nsp"]):
-                    success = nintendo.install_switch_nsp(
+                    success = switch.install_switch_nsp(
                         nsp_file = nsp_file,
                         nand_dir = paths.join_paths(programs.get_emulator_path_config_value("Yuzu", "setup_dir"), "nand"),
                         verbose = verbose,
@@ -173,7 +176,7 @@ class Yuzu(emulatorbase.EmulatorBase):
 
         # Create profiles
         for platform in ["windows", "linux"]:
-            success = nintendo.create_switch_profiles_dat(
+            success = switch.create_switch_profiles_dat(
                 profiles_file = programs.get_emulator_path_config_value("Yuzu", "profiles_file", platform),
                 user_id = programs.get_emulator_config_value("Yuzu", "profile_user_id"),
                 account_name = programs.get_emulator_config_value("Yuzu", "profile_account_name"),
@@ -191,7 +194,7 @@ class Yuzu(emulatorbase.EmulatorBase):
         # Copy system files
         for filename in system_files.keys():
             for platform in ["windows", "linux"]:
-                success = fileops.smart_copy(
+                success = filebulk.smart_copy(
                     src = paths.join_paths(environment.get_locker_gaming_emulator_setup_dir("Yuzu"), filename),
                     dest = paths.join_paths(programs.get_emulator_path_config_value("Yuzu", "setup_dir", platform), filename),
                     verbose = setup_params.verbose,

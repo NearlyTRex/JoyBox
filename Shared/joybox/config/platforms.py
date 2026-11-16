@@ -206,1354 +206,672 @@ json_keys_merge_computer = [
 # Platforms
 platforms = {}
 
-###########################################################
+# Add platform section, under the subcategory sharing the platform's name
+def add_platform(
+    platform,
+    category,
+    launcher,
+    addons = (),
+    autofill = (keys.json_key_files,),
+    fillonce = (),
+    merge = ()):
+    platforms[platform] = {
+        keys.platform_key_supercategory: categories.Supercategory.ROMS,
+        keys.platform_key_category: category,
+        keys.platform_key_subcategory: categories.Subcategory[platform.name],
+        keys.platform_key_addons: list(addons),
+        keys.platform_key_launcher: [launcher],
+        keys.platform_key_autofill_json: list(autofill),
+        keys.platform_key_fillonce_json: list(fillonce),
+        keys.platform_key_merge_json: list(merge)
+    }
+
+# Add computer platform section, merging its store's json key
+def add_computer_platform(platform, store_key):
+    add_platform(
+        platform,
+        categories.Category.COMPUTER,
+        types.LaunchType.LAUNCH_FILE,
+        autofill = json_keys_autofill_computer,
+        fillonce = json_keys_fillonce_computer,
+        merge = json_keys_merge_computer + [store_key])
+
 # Computer - Amazon Games
-###########################################################
-computer_amazon_games = {}
-computer_amazon_games[keys.platform_key_supercategory] = categories.Supercategory.ROMS
-computer_amazon_games[keys.platform_key_category] = categories.Category.COMPUTER
-computer_amazon_games[keys.platform_key_subcategory] = categories.Subcategory.COMPUTER_AMAZON_GAMES
-computer_amazon_games[keys.platform_key_addons] = []
-computer_amazon_games[keys.platform_key_launcher] = [types.LaunchType.LAUNCH_FILE]
-computer_amazon_games[keys.platform_key_autofill_json] = json_keys_autofill_computer
-computer_amazon_games[keys.platform_key_fillonce_json] = json_keys_fillonce_computer
-computer_amazon_games[keys.platform_key_merge_json] = json_keys_merge_computer + [keys.json_key_amazon]
-platforms[Platform.COMPUTER_AMAZON_GAMES] = computer_amazon_games
+add_computer_platform(Platform.COMPUTER_AMAZON_GAMES, keys.json_key_amazon)
 
-###########################################################
 # Computer - Disc
-###########################################################
-computer_disc = {}
-computer_disc[keys.platform_key_supercategory] = categories.Supercategory.ROMS
-computer_disc[keys.platform_key_category] = categories.Category.COMPUTER
-computer_disc[keys.platform_key_subcategory] = categories.Subcategory.COMPUTER_DISC
-computer_disc[keys.platform_key_addons] = []
-computer_disc[keys.platform_key_launcher] = [types.LaunchType.LAUNCH_FILE]
-computer_disc[keys.platform_key_autofill_json] = json_keys_autofill_computer
-computer_disc[keys.platform_key_fillonce_json] = json_keys_fillonce_computer
-computer_disc[keys.platform_key_merge_json] = json_keys_merge_computer + [keys.json_key_disc]
-platforms[Platform.COMPUTER_DISC] = computer_disc
+add_computer_platform(Platform.COMPUTER_DISC, keys.json_key_disc)
 
-###########################################################
 # Computer - Epic Games
-###########################################################
-computer_epic_games = {}
-computer_epic_games[keys.platform_key_supercategory] = categories.Supercategory.ROMS
-computer_epic_games[keys.platform_key_category] = categories.Category.COMPUTER
-computer_epic_games[keys.platform_key_subcategory] = categories.Subcategory.COMPUTER_EPIC_GAMES
-computer_epic_games[keys.platform_key_addons] = []
-computer_epic_games[keys.platform_key_launcher] = [types.LaunchType.LAUNCH_FILE]
-computer_epic_games[keys.platform_key_autofill_json] = json_keys_autofill_computer
-computer_epic_games[keys.platform_key_fillonce_json] = json_keys_fillonce_computer
-computer_epic_games[keys.platform_key_merge_json] = json_keys_merge_computer + [keys.json_key_epic]
-platforms[Platform.COMPUTER_EPIC_GAMES] = computer_epic_games
+add_computer_platform(Platform.COMPUTER_EPIC_GAMES, keys.json_key_epic)
 
-###########################################################
 # Computer - GOG
-###########################################################
-computer_gog = {}
-computer_gog[keys.platform_key_supercategory] = categories.Supercategory.ROMS
-computer_gog[keys.platform_key_category] = categories.Category.COMPUTER
-computer_gog[keys.platform_key_subcategory] = categories.Subcategory.COMPUTER_GOG
-computer_gog[keys.platform_key_addons] = []
-computer_gog[keys.platform_key_launcher] = [types.LaunchType.LAUNCH_FILE]
-computer_gog[keys.platform_key_autofill_json] = json_keys_autofill_computer
-computer_gog[keys.platform_key_fillonce_json] = json_keys_fillonce_computer
-computer_gog[keys.platform_key_merge_json] = json_keys_merge_computer + [keys.json_key_gog]
-platforms[Platform.COMPUTER_GOG] = computer_gog
+add_computer_platform(Platform.COMPUTER_GOG, keys.json_key_gog)
 
-###########################################################
 # Computer - Humble Bundle
-###########################################################
-computer_humble_bundle = {}
-computer_humble_bundle[keys.platform_key_supercategory] = categories.Supercategory.ROMS
-computer_humble_bundle[keys.platform_key_category] = categories.Category.COMPUTER
-computer_humble_bundle[keys.platform_key_subcategory] = categories.Subcategory.COMPUTER_HUMBLE_BUNDLE
-computer_humble_bundle[keys.platform_key_addons] = []
-computer_humble_bundle[keys.platform_key_launcher] = [types.LaunchType.LAUNCH_FILE]
-computer_humble_bundle[keys.platform_key_autofill_json] = json_keys_autofill_computer
-computer_humble_bundle[keys.platform_key_fillonce_json] = json_keys_fillonce_computer
-computer_humble_bundle[keys.platform_key_merge_json] = json_keys_merge_computer + [keys.json_key_humble]
-platforms[Platform.COMPUTER_HUMBLE_BUNDLE] = computer_humble_bundle
+add_computer_platform(Platform.COMPUTER_HUMBLE_BUNDLE, keys.json_key_humble)
 
-###########################################################
 # Computer - Itchio
-###########################################################
-computer_itchio = {}
-computer_itchio[keys.platform_key_supercategory] = categories.Supercategory.ROMS
-computer_itchio[keys.platform_key_category] = categories.Category.COMPUTER
-computer_itchio[keys.platform_key_subcategory] = categories.Subcategory.COMPUTER_ITCHIO
-computer_itchio[keys.platform_key_addons] = []
-computer_itchio[keys.platform_key_launcher] = [types.LaunchType.LAUNCH_FILE]
-computer_itchio[keys.platform_key_autofill_json] = json_keys_autofill_computer
-computer_itchio[keys.platform_key_fillonce_json] = json_keys_fillonce_computer
-computer_itchio[keys.platform_key_merge_json] = json_keys_merge_computer + [keys.json_key_itchio]
-platforms[Platform.COMPUTER_ITCHIO] = computer_itchio
+add_computer_platform(Platform.COMPUTER_ITCHIO, keys.json_key_itchio)
 
-###########################################################
 # Computer - Legacy Games
-###########################################################
-computer_legacy_games = {}
-computer_legacy_games[keys.platform_key_supercategory] = categories.Supercategory.ROMS
-computer_legacy_games[keys.platform_key_category] = categories.Category.COMPUTER
-computer_legacy_games[keys.platform_key_subcategory] = categories.Subcategory.COMPUTER_LEGACY_GAMES
-computer_legacy_games[keys.platform_key_addons] = []
-computer_legacy_games[keys.platform_key_launcher] = [types.LaunchType.LAUNCH_FILE]
-computer_legacy_games[keys.platform_key_autofill_json] = json_keys_autofill_computer
-computer_legacy_games[keys.platform_key_fillonce_json] = json_keys_fillonce_computer
-computer_legacy_games[keys.platform_key_merge_json] = json_keys_merge_computer + [keys.json_key_legacy]
-platforms[Platform.COMPUTER_LEGACY_GAMES] = computer_legacy_games
+add_computer_platform(Platform.COMPUTER_LEGACY_GAMES, keys.json_key_legacy)
 
-###########################################################
 # Computer - Puppet Combo
-###########################################################
-computer_puppet_combo = {}
-computer_puppet_combo[keys.platform_key_supercategory] = categories.Supercategory.ROMS
-computer_puppet_combo[keys.platform_key_category] = categories.Category.COMPUTER
-computer_puppet_combo[keys.platform_key_subcategory] = categories.Subcategory.COMPUTER_PUPPET_COMBO
-computer_puppet_combo[keys.platform_key_addons] = []
-computer_puppet_combo[keys.platform_key_launcher] = [types.LaunchType.LAUNCH_FILE]
-computer_puppet_combo[keys.platform_key_autofill_json] = json_keys_autofill_computer
-computer_puppet_combo[keys.platform_key_fillonce_json] = json_keys_fillonce_computer
-computer_puppet_combo[keys.platform_key_merge_json] = json_keys_merge_computer + [keys.json_key_puppetcombo]
-platforms[Platform.COMPUTER_PUPPET_COMBO] = computer_puppet_combo
+add_computer_platform(Platform.COMPUTER_PUPPET_COMBO, keys.json_key_puppetcombo)
 
-###########################################################
 # Computer - Red Candle
-###########################################################
-computer_red_candle = {}
-computer_red_candle[keys.platform_key_supercategory] = categories.Supercategory.ROMS
-computer_red_candle[keys.platform_key_category] = categories.Category.COMPUTER
-computer_red_candle[keys.platform_key_subcategory] = categories.Subcategory.COMPUTER_RED_CANDLE
-computer_red_candle[keys.platform_key_addons] = []
-computer_red_candle[keys.platform_key_launcher] = [types.LaunchType.LAUNCH_FILE]
-computer_red_candle[keys.platform_key_autofill_json] = json_keys_autofill_computer
-computer_red_candle[keys.platform_key_fillonce_json] = json_keys_fillonce_computer
-computer_red_candle[keys.platform_key_merge_json] = json_keys_merge_computer + [keys.json_key_redcandle]
-platforms[Platform.COMPUTER_RED_CANDLE] = computer_red_candle
+add_computer_platform(Platform.COMPUTER_RED_CANDLE, keys.json_key_redcandle)
 
-###########################################################
 # Computer - Square Enix
-###########################################################
-computer_square_enix = {}
-computer_square_enix[keys.platform_key_supercategory] = categories.Supercategory.ROMS
-computer_square_enix[keys.platform_key_category] = categories.Category.COMPUTER
-computer_square_enix[keys.platform_key_subcategory] = categories.Subcategory.COMPUTER_SQUARE_ENIX
-computer_square_enix[keys.platform_key_addons] = []
-computer_square_enix[keys.platform_key_launcher] = [types.LaunchType.LAUNCH_FILE]
-computer_square_enix[keys.platform_key_autofill_json] = json_keys_autofill_computer
-computer_square_enix[keys.platform_key_fillonce_json] = json_keys_fillonce_computer
-computer_square_enix[keys.platform_key_merge_json] = json_keys_merge_computer + [keys.json_key_squareenix]
-platforms[Platform.COMPUTER_SQUARE_ENIX] = computer_square_enix
+add_computer_platform(Platform.COMPUTER_SQUARE_ENIX, keys.json_key_squareenix)
 
-###########################################################
 # Computer - Steam
-###########################################################
-computer_steam = {}
-computer_steam[keys.platform_key_supercategory] = categories.Supercategory.ROMS
-computer_steam[keys.platform_key_category] = categories.Category.COMPUTER
-computer_steam[keys.platform_key_subcategory] = categories.Subcategory.COMPUTER_STEAM
-computer_steam[keys.platform_key_addons] = []
-computer_steam[keys.platform_key_launcher] = [types.LaunchType.LAUNCH_FILE]
-computer_steam[keys.platform_key_autofill_json] = json_keys_autofill_computer
-computer_steam[keys.platform_key_fillonce_json] = json_keys_fillonce_computer
-computer_steam[keys.platform_key_merge_json] = json_keys_merge_computer + [keys.json_key_steam]
-platforms[Platform.COMPUTER_STEAM] = computer_steam
+add_computer_platform(Platform.COMPUTER_STEAM, keys.json_key_steam)
 
-###########################################################
 # Computer - Zoom
-###########################################################
-computer_zoom = {}
-computer_zoom[keys.platform_key_supercategory] = categories.Supercategory.ROMS
-computer_zoom[keys.platform_key_category] = categories.Category.COMPUTER
-computer_zoom[keys.platform_key_subcategory] = categories.Subcategory.COMPUTER_ZOOM
-computer_zoom[keys.platform_key_addons] = []
-computer_zoom[keys.platform_key_launcher] = [types.LaunchType.LAUNCH_FILE]
-computer_zoom[keys.platform_key_autofill_json] = json_keys_autofill_computer
-computer_zoom[keys.platform_key_fillonce_json] = json_keys_fillonce_computer
-computer_zoom[keys.platform_key_merge_json] = json_keys_merge_computer + [keys.json_key_zoom]
-platforms[Platform.COMPUTER_ZOOM] = computer_zoom
+add_computer_platform(Platform.COMPUTER_ZOOM, keys.json_key_zoom)
 
-######################################################################################
-
-###########################################################
 # Microsoft MSX
-###########################################################
-microsoft_msx = {}
-microsoft_msx[keys.platform_key_supercategory] = categories.Supercategory.ROMS
-microsoft_msx[keys.platform_key_category] = categories.Category.MICROSOFT
-microsoft_msx[keys.platform_key_subcategory] = categories.Subcategory.MICROSOFT_MSX
-microsoft_msx[keys.platform_key_addons] = []
-microsoft_msx[keys.platform_key_launcher] = [types.LaunchType.LAUNCH_FILE]
-microsoft_msx[keys.platform_key_autofill_json] = [keys.json_key_files, keys.json_key_launch_file]
-microsoft_msx[keys.platform_key_fillonce_json] = []
-microsoft_msx[keys.platform_key_merge_json] = []
-platforms[Platform.MICROSOFT_MSX] = microsoft_msx
+add_platform(
+    Platform.MICROSOFT_MSX,
+    categories.Category.MICROSOFT,
+    types.LaunchType.LAUNCH_FILE,
+    autofill = [keys.json_key_files, keys.json_key_launch_file])
 
-###########################################################
 # Microsoft Xbox
-###########################################################
-microsoft_xbox = {}
-microsoft_xbox[keys.platform_key_supercategory] = categories.Supercategory.ROMS
-microsoft_xbox[keys.platform_key_category] = categories.Category.MICROSOFT
-microsoft_xbox[keys.platform_key_subcategory] = categories.Subcategory.MICROSOFT_XBOX
-microsoft_xbox[keys.platform_key_addons] = []
-microsoft_xbox[keys.platform_key_launcher] = [types.LaunchType.LAUNCH_FILE]
-microsoft_xbox[keys.platform_key_autofill_json] = [keys.json_key_files, keys.json_key_transform_file]
-microsoft_xbox[keys.platform_key_fillonce_json] = [keys.json_key_launch_file]
-microsoft_xbox[keys.platform_key_merge_json] = []
-platforms[Platform.MICROSOFT_XBOX] = microsoft_xbox
+add_platform(
+    Platform.MICROSOFT_XBOX,
+    categories.Category.MICROSOFT,
+    types.LaunchType.LAUNCH_FILE,
+    autofill = [keys.json_key_files, keys.json_key_transform_file],
+    fillonce = [keys.json_key_launch_file])
 
-###########################################################
 # Microsoft Xbox 360
-###########################################################
-microsoft_xbox_360 = {}
-microsoft_xbox_360[keys.platform_key_supercategory] = categories.Supercategory.ROMS
-microsoft_xbox_360[keys.platform_key_category] = categories.Category.MICROSOFT
-microsoft_xbox_360[keys.platform_key_subcategory] = categories.Subcategory.MICROSOFT_XBOX_360
-microsoft_xbox_360[keys.platform_key_addons] = [types.AddonType.DLC, types.AddonType.UPDATES]
-microsoft_xbox_360[keys.platform_key_launcher] = [types.LaunchType.LAUNCH_FILE]
-microsoft_xbox_360[keys.platform_key_autofill_json] = [keys.json_key_files, keys.json_key_transform_file]
-microsoft_xbox_360[keys.platform_key_fillonce_json] = [keys.json_key_launch_file]
-microsoft_xbox_360[keys.platform_key_merge_json] = []
-platforms[Platform.MICROSOFT_XBOX_360] = microsoft_xbox_360
+add_platform(
+    Platform.MICROSOFT_XBOX_360,
+    categories.Category.MICROSOFT,
+    types.LaunchType.LAUNCH_FILE,
+    addons = [types.AddonType.DLC, types.AddonType.UPDATES],
+    autofill = [keys.json_key_files, keys.json_key_transform_file],
+    fillonce = [keys.json_key_launch_file])
 
-###########################################################
 # Microsoft Xbox 360 GOD
-###########################################################
-microsoft_xbox_360_god = {}
-microsoft_xbox_360_god[keys.platform_key_supercategory] = categories.Supercategory.ROMS
-microsoft_xbox_360_god[keys.platform_key_category] = categories.Category.MICROSOFT
-microsoft_xbox_360_god[keys.platform_key_subcategory] = categories.Subcategory.MICROSOFT_XBOX_360_GOD
-microsoft_xbox_360_god[keys.platform_key_addons] = [types.AddonType.DLC, types.AddonType.UPDATES]
-microsoft_xbox_360_god[keys.platform_key_launcher] = [types.LaunchType.LAUNCH_FILE]
-microsoft_xbox_360_god[keys.platform_key_autofill_json] = [keys.json_key_files]
-microsoft_xbox_360_god[keys.platform_key_fillonce_json] = [keys.json_key_launch_file]
-microsoft_xbox_360_god[keys.platform_key_merge_json] = []
-platforms[Platform.MICROSOFT_XBOX_360_GOD] = microsoft_xbox_360_god
+add_platform(
+    Platform.MICROSOFT_XBOX_360_GOD,
+    categories.Category.MICROSOFT,
+    types.LaunchType.LAUNCH_FILE,
+    addons = [types.AddonType.DLC, types.AddonType.UPDATES],
+    fillonce = [keys.json_key_launch_file])
 
-###########################################################
 # Microsoft Xbox 360 XBLA
-###########################################################
-microsoft_xbox_360_xbla = {}
-microsoft_xbox_360_xbla[keys.platform_key_supercategory] = categories.Supercategory.ROMS
-microsoft_xbox_360_xbla[keys.platform_key_category] = categories.Category.MICROSOFT
-microsoft_xbox_360_xbla[keys.platform_key_subcategory] = categories.Subcategory.MICROSOFT_XBOX_360_XBLA
-microsoft_xbox_360_xbla[keys.platform_key_addons] = [types.AddonType.DLC, types.AddonType.UPDATES]
-microsoft_xbox_360_xbla[keys.platform_key_launcher] = [types.LaunchType.LAUNCH_FILE]
-microsoft_xbox_360_xbla[keys.platform_key_autofill_json] = [keys.json_key_files]
-microsoft_xbox_360_xbla[keys.platform_key_fillonce_json] = [keys.json_key_launch_file]
-microsoft_xbox_360_xbla[keys.platform_key_merge_json] = []
-platforms[Platform.MICROSOFT_XBOX_360_XBLA] = microsoft_xbox_360_xbla
+add_platform(
+    Platform.MICROSOFT_XBOX_360_XBLA,
+    categories.Category.MICROSOFT,
+    types.LaunchType.LAUNCH_FILE,
+    addons = [types.AddonType.DLC, types.AddonType.UPDATES],
+    fillonce = [keys.json_key_launch_file])
 
-###########################################################
 # Microsoft Xbox 360 XIG
-###########################################################
-microsoft_xbox_360_xig = {}
-microsoft_xbox_360_xig[keys.platform_key_supercategory] = categories.Supercategory.ROMS
-microsoft_xbox_360_xig[keys.platform_key_category] = categories.Category.MICROSOFT
-microsoft_xbox_360_xig[keys.platform_key_subcategory] = categories.Subcategory.MICROSOFT_XBOX_360_XIG
-microsoft_xbox_360_xig[keys.platform_key_addons] = []
-microsoft_xbox_360_xig[keys.platform_key_launcher] = [types.LaunchType.LAUNCH_FILE]
-microsoft_xbox_360_xig[keys.platform_key_autofill_json] = [keys.json_key_files]
-microsoft_xbox_360_xig[keys.platform_key_fillonce_json] = [keys.json_key_launch_file]
-microsoft_xbox_360_xig[keys.platform_key_merge_json] = []
-platforms[Platform.MICROSOFT_XBOX_360_XIG] = microsoft_xbox_360_xig
+add_platform(
+    Platform.MICROSOFT_XBOX_360_XIG,
+    categories.Category.MICROSOFT,
+    types.LaunchType.LAUNCH_FILE,
+    fillonce = [keys.json_key_launch_file])
 
-###########################################################
 # Microsoft Xbox One
-###########################################################
-microsoft_xbox_one = {}
-microsoft_xbox_one[keys.platform_key_supercategory] = categories.Supercategory.ROMS
-microsoft_xbox_one[keys.platform_key_category] = categories.Category.MICROSOFT
-microsoft_xbox_one[keys.platform_key_subcategory] = categories.Subcategory.MICROSOFT_XBOX_ONE
-microsoft_xbox_one[keys.platform_key_addons] = []
-microsoft_xbox_one[keys.platform_key_launcher] = [types.LaunchType.NO_LAUNCHER]
-microsoft_xbox_one[keys.platform_key_autofill_json] = [keys.json_key_files]
-microsoft_xbox_one[keys.platform_key_fillonce_json] = []
-microsoft_xbox_one[keys.platform_key_merge_json] = []
-platforms[Platform.MICROSOFT_XBOX_ONE] = microsoft_xbox_one
+add_platform(
+    Platform.MICROSOFT_XBOX_ONE,
+    categories.Category.MICROSOFT,
+    types.LaunchType.NO_LAUNCHER)
 
-###########################################################
 # Microsoft Xbox One GOD
-###########################################################
-microsoft_xbox_one_god = {}
-microsoft_xbox_one_god[keys.platform_key_supercategory] = categories.Supercategory.ROMS
-microsoft_xbox_one_god[keys.platform_key_category] = categories.Category.MICROSOFT
-microsoft_xbox_one_god[keys.platform_key_subcategory] = categories.Subcategory.MICROSOFT_XBOX_ONE_GOD
-microsoft_xbox_one_god[keys.platform_key_addons] = []
-microsoft_xbox_one_god[keys.platform_key_launcher] = [types.LaunchType.NO_LAUNCHER]
-microsoft_xbox_one_god[keys.platform_key_autofill_json] = [keys.json_key_files]
-microsoft_xbox_one_god[keys.platform_key_fillonce_json] = []
-microsoft_xbox_one_god[keys.platform_key_merge_json] = []
-platforms[Platform.MICROSOFT_XBOX_ONE_GOD] = microsoft_xbox_one_god
+add_platform(
+    Platform.MICROSOFT_XBOX_ONE_GOD,
+    categories.Category.MICROSOFT,
+    types.LaunchType.NO_LAUNCHER)
 
-######################################################################################
-
-###########################################################
 # Nintendo 3DS
-###########################################################
-nintendo_3ds = {}
-nintendo_3ds[keys.platform_key_supercategory] = categories.Supercategory.ROMS
-nintendo_3ds[keys.platform_key_category] = categories.Category.NINTENDO
-nintendo_3ds[keys.platform_key_subcategory] = categories.Subcategory.NINTENDO_3DS
-nintendo_3ds[keys.platform_key_addons] = [types.AddonType.DLC, types.AddonType.UPDATES]
-nintendo_3ds[keys.platform_key_launcher] = [types.LaunchType.LAUNCH_FILE]
-nintendo_3ds[keys.platform_key_autofill_json] = [keys.json_key_files, keys.json_key_launch_file]
-nintendo_3ds[keys.platform_key_fillonce_json] = []
-nintendo_3ds[keys.platform_key_merge_json] = []
-platforms[Platform.NINTENDO_3DS] = nintendo_3ds
+add_platform(
+    Platform.NINTENDO_3DS,
+    categories.Category.NINTENDO,
+    types.LaunchType.LAUNCH_FILE,
+    addons = [types.AddonType.DLC, types.AddonType.UPDATES],
+    autofill = [keys.json_key_files, keys.json_key_launch_file])
 
-###########################################################
 # Nintendo 3DS Apps
-###########################################################
-nintendo_3ds_apps = {}
-nintendo_3ds_apps[keys.platform_key_supercategory] = categories.Supercategory.ROMS
-nintendo_3ds_apps[keys.platform_key_category] = categories.Category.NINTENDO
-nintendo_3ds_apps[keys.platform_key_subcategory] = categories.Subcategory.NINTENDO_3DS_APPS
-nintendo_3ds_apps[keys.platform_key_addons] = []
-nintendo_3ds_apps[keys.platform_key_launcher] = [types.LaunchType.NO_LAUNCHER]
-nintendo_3ds_apps[keys.platform_key_autofill_json] = [keys.json_key_files]
-nintendo_3ds_apps[keys.platform_key_fillonce_json] = []
-nintendo_3ds_apps[keys.platform_key_merge_json] = []
-platforms[Platform.NINTENDO_3DS_APPS] = nintendo_3ds_apps
+add_platform(
+    Platform.NINTENDO_3DS_APPS,
+    categories.Category.NINTENDO,
+    types.LaunchType.NO_LAUNCHER)
 
-###########################################################
 # Nintendo 3DS eShop
-###########################################################
-nintendo_3ds_eshop = {}
-nintendo_3ds_eshop[keys.platform_key_supercategory] = categories.Supercategory.ROMS
-nintendo_3ds_eshop[keys.platform_key_category] = categories.Category.NINTENDO
-nintendo_3ds_eshop[keys.platform_key_subcategory] = categories.Subcategory.NINTENDO_3DS_ESHOP
-nintendo_3ds_eshop[keys.platform_key_addons] = [types.AddonType.DLC, types.AddonType.UPDATES]
-nintendo_3ds_eshop[keys.platform_key_launcher] = [types.LaunchType.LAUNCH_FILE]
-nintendo_3ds_eshop[keys.platform_key_autofill_json] = [keys.json_key_files, keys.json_key_launch_file]
-nintendo_3ds_eshop[keys.platform_key_fillonce_json] = []
-nintendo_3ds_eshop[keys.platform_key_merge_json] = []
-platforms[Platform.NINTENDO_3DS_ESHOP] = nintendo_3ds_eshop
+add_platform(
+    Platform.NINTENDO_3DS_ESHOP,
+    categories.Category.NINTENDO,
+    types.LaunchType.LAUNCH_FILE,
+    addons = [types.AddonType.DLC, types.AddonType.UPDATES],
+    autofill = [keys.json_key_files, keys.json_key_launch_file])
 
-###########################################################
 # Nintendo 64
-###########################################################
-nintendo_64 = {}
-nintendo_64[keys.platform_key_supercategory] = categories.Supercategory.ROMS
-nintendo_64[keys.platform_key_category] = categories.Category.NINTENDO
-nintendo_64[keys.platform_key_subcategory] = categories.Subcategory.NINTENDO_64
-nintendo_64[keys.platform_key_addons] = []
-nintendo_64[keys.platform_key_launcher] = [types.LaunchType.LAUNCH_FILE]
-nintendo_64[keys.platform_key_autofill_json] = [keys.json_key_files, keys.json_key_launch_file]
-nintendo_64[keys.platform_key_fillonce_json] = []
-nintendo_64[keys.platform_key_merge_json] = []
-platforms[Platform.NINTENDO_64] = nintendo_64
+add_platform(
+    Platform.NINTENDO_64,
+    categories.Category.NINTENDO,
+    types.LaunchType.LAUNCH_FILE,
+    autofill = [keys.json_key_files, keys.json_key_launch_file])
 
-###########################################################
 # Nintendo Amiibo
-###########################################################
-nintendo_amiibo = {}
-nintendo_amiibo[keys.platform_key_supercategory] = categories.Supercategory.ROMS
-nintendo_amiibo[keys.platform_key_category] = categories.Category.NINTENDO
-nintendo_amiibo[keys.platform_key_subcategory] = categories.Subcategory.NINTENDO_AMIIBO
-nintendo_amiibo[keys.platform_key_addons] = [types.AddonType.DLC]
-nintendo_amiibo[keys.platform_key_launcher] = [types.LaunchType.NO_LAUNCHER]
-nintendo_amiibo[keys.platform_key_autofill_json] = [keys.json_key_files]
-nintendo_amiibo[keys.platform_key_fillonce_json] = []
-nintendo_amiibo[keys.platform_key_merge_json] = []
-platforms[Platform.NINTENDO_AMIIBO] = nintendo_amiibo
+add_platform(
+    Platform.NINTENDO_AMIIBO,
+    categories.Category.NINTENDO,
+    types.LaunchType.NO_LAUNCHER,
+    addons = [types.AddonType.DLC])
 
-###########################################################
 # Nintendo DS
-###########################################################
-nintendo_ds = {}
-nintendo_ds[keys.platform_key_supercategory] = categories.Supercategory.ROMS
-nintendo_ds[keys.platform_key_category] = categories.Category.NINTENDO
-nintendo_ds[keys.platform_key_subcategory] = categories.Subcategory.NINTENDO_DS
-nintendo_ds[keys.platform_key_addons] = []
-nintendo_ds[keys.platform_key_launcher] = [types.LaunchType.LAUNCH_FILE]
-nintendo_ds[keys.platform_key_autofill_json] = [keys.json_key_files, keys.json_key_launch_file]
-nintendo_ds[keys.platform_key_fillonce_json] = []
-nintendo_ds[keys.platform_key_merge_json] = []
-platforms[Platform.NINTENDO_DS] = nintendo_ds
+add_platform(
+    Platform.NINTENDO_DS,
+    categories.Category.NINTENDO,
+    types.LaunchType.LAUNCH_FILE,
+    autofill = [keys.json_key_files, keys.json_key_launch_file])
 
-###########################################################
 # Nintendo DSi
-###########################################################
-nintendo_dsi = {}
-nintendo_dsi[keys.platform_key_supercategory] = categories.Supercategory.ROMS
-nintendo_dsi[keys.platform_key_category] = categories.Category.NINTENDO
-nintendo_dsi[keys.platform_key_subcategory] = categories.Subcategory.NINTENDO_DSI
-nintendo_dsi[keys.platform_key_addons] = []
-nintendo_dsi[keys.platform_key_launcher] = [types.LaunchType.LAUNCH_FILE]
-nintendo_dsi[keys.platform_key_autofill_json] = [keys.json_key_files, keys.json_key_launch_file]
-nintendo_dsi[keys.platform_key_fillonce_json] = []
-nintendo_dsi[keys.platform_key_merge_json] = []
-platforms[Platform.NINTENDO_DSI] = nintendo_dsi
+add_platform(
+    Platform.NINTENDO_DSI,
+    categories.Category.NINTENDO,
+    types.LaunchType.LAUNCH_FILE,
+    autofill = [keys.json_key_files, keys.json_key_launch_file])
 
-###########################################################
 # Nintendo Famicom
-###########################################################
-nintendo_famicom = {}
-nintendo_famicom[keys.platform_key_supercategory] = categories.Supercategory.ROMS
-nintendo_famicom[keys.platform_key_category] = categories.Category.NINTENDO
-nintendo_famicom[keys.platform_key_subcategory] = categories.Subcategory.NINTENDO_FAMICOM
-nintendo_famicom[keys.platform_key_addons] = []
-nintendo_famicom[keys.platform_key_launcher] = [types.LaunchType.LAUNCH_FILE]
-nintendo_famicom[keys.platform_key_autofill_json] = [keys.json_key_files, keys.json_key_launch_file]
-nintendo_famicom[keys.platform_key_fillonce_json] = []
-nintendo_famicom[keys.platform_key_merge_json] = []
-platforms[Platform.NINTENDO_FAMICOM] = nintendo_famicom
+add_platform(
+    Platform.NINTENDO_FAMICOM,
+    categories.Category.NINTENDO,
+    types.LaunchType.LAUNCH_FILE,
+    autofill = [keys.json_key_files, keys.json_key_launch_file])
 
-###########################################################
 # Nintendo Game Boy
-###########################################################
-nintendo_game_boy = {}
-nintendo_game_boy[keys.platform_key_supercategory] = categories.Supercategory.ROMS
-nintendo_game_boy[keys.platform_key_category] = categories.Category.NINTENDO
-nintendo_game_boy[keys.platform_key_subcategory] = categories.Subcategory.NINTENDO_GAME_BOY
-nintendo_game_boy[keys.platform_key_addons] = []
-nintendo_game_boy[keys.platform_key_launcher] = [types.LaunchType.LAUNCH_FILE]
-nintendo_game_boy[keys.platform_key_autofill_json] = [keys.json_key_files, keys.json_key_launch_file]
-nintendo_game_boy[keys.platform_key_fillonce_json] = []
-nintendo_game_boy[keys.platform_key_merge_json] = []
-platforms[Platform.NINTENDO_GAME_BOY] = nintendo_game_boy
+add_platform(
+    Platform.NINTENDO_GAME_BOY,
+    categories.Category.NINTENDO,
+    types.LaunchType.LAUNCH_FILE,
+    autofill = [keys.json_key_files, keys.json_key_launch_file])
 
-###########################################################
 # Nintendo Game Boy Advance
-###########################################################
-nintendo_game_boy_advance = {}
-nintendo_game_boy_advance[keys.platform_key_supercategory] = categories.Supercategory.ROMS
-nintendo_game_boy_advance[keys.platform_key_category] = categories.Category.NINTENDO
-nintendo_game_boy_advance[keys.platform_key_subcategory] = categories.Subcategory.NINTENDO_GAME_BOY_ADVANCE
-nintendo_game_boy_advance[keys.platform_key_addons] = []
-nintendo_game_boy_advance[keys.platform_key_launcher] = [types.LaunchType.LAUNCH_FILE]
-nintendo_game_boy_advance[keys.platform_key_autofill_json] = [keys.json_key_files, keys.json_key_launch_file]
-nintendo_game_boy_advance[keys.platform_key_fillonce_json] = []
-nintendo_game_boy_advance[keys.platform_key_merge_json] = []
-platforms[Platform.NINTENDO_GAME_BOY_ADVANCE] = nintendo_game_boy_advance
+add_platform(
+    Platform.NINTENDO_GAME_BOY_ADVANCE,
+    categories.Category.NINTENDO,
+    types.LaunchType.LAUNCH_FILE,
+    autofill = [keys.json_key_files, keys.json_key_launch_file])
 
-###########################################################
 # Nintendo Game Boy Advance e-Reader
-###########################################################
-nintendo_game_boy_advance_ereader = {}
-nintendo_game_boy_advance_ereader[keys.platform_key_supercategory] = categories.Supercategory.ROMS
-nintendo_game_boy_advance_ereader[keys.platform_key_category] = categories.Category.NINTENDO
-nintendo_game_boy_advance_ereader[keys.platform_key_subcategory] = categories.Subcategory.NINTENDO_GAME_BOY_ADVANCE_EREADER
-nintendo_game_boy_advance_ereader[keys.platform_key_addons] = []
-nintendo_game_boy_advance_ereader[keys.platform_key_launcher] = [types.LaunchType.LAUNCH_FILE]
-nintendo_game_boy_advance_ereader[keys.platform_key_autofill_json] = [keys.json_key_files, keys.json_key_launch_file]
-nintendo_game_boy_advance_ereader[keys.platform_key_fillonce_json] = []
-nintendo_game_boy_advance_ereader[keys.platform_key_merge_json] = []
-platforms[Platform.NINTENDO_GAME_BOY_ADVANCE_EREADER] = nintendo_game_boy_advance_ereader
+add_platform(
+    Platform.NINTENDO_GAME_BOY_ADVANCE_EREADER,
+    categories.Category.NINTENDO,
+    types.LaunchType.LAUNCH_FILE,
+    autofill = [keys.json_key_files, keys.json_key_launch_file])
 
-###########################################################
 # Nintendo Game Boy Color
-###########################################################
-nintendo_game_boy_color = {}
-nintendo_game_boy_color[keys.platform_key_supercategory] = categories.Supercategory.ROMS
-nintendo_game_boy_color[keys.platform_key_category] = categories.Category.NINTENDO
-nintendo_game_boy_color[keys.platform_key_subcategory] = categories.Subcategory.NINTENDO_GAME_BOY_COLOR
-nintendo_game_boy_color[keys.platform_key_addons] = []
-nintendo_game_boy_color[keys.platform_key_launcher] = [types.LaunchType.LAUNCH_FILE]
-nintendo_game_boy_color[keys.platform_key_autofill_json] = [keys.json_key_files, keys.json_key_launch_file]
-nintendo_game_boy_color[keys.platform_key_fillonce_json] = []
-nintendo_game_boy_color[keys.platform_key_merge_json] = []
-platforms[Platform.NINTENDO_GAME_BOY_COLOR] = nintendo_game_boy_color
+add_platform(
+    Platform.NINTENDO_GAME_BOY_COLOR,
+    categories.Category.NINTENDO,
+    types.LaunchType.LAUNCH_FILE,
+    autofill = [keys.json_key_files, keys.json_key_launch_file])
 
-###########################################################
 # Nintendo Gamecube
-###########################################################
-nintendo_gamecube = {}
-nintendo_gamecube[keys.platform_key_supercategory] = categories.Supercategory.ROMS
-nintendo_gamecube[keys.platform_key_category] = categories.Category.NINTENDO
-nintendo_gamecube[keys.platform_key_subcategory] = categories.Subcategory.NINTENDO_GAMECUBE
-nintendo_gamecube[keys.platform_key_addons] = []
-nintendo_gamecube[keys.platform_key_launcher] = [types.LaunchType.LAUNCH_FILE]
-nintendo_gamecube[keys.platform_key_autofill_json] = [keys.json_key_files, keys.json_key_launch_file]
-nintendo_gamecube[keys.platform_key_fillonce_json] = []
-nintendo_gamecube[keys.platform_key_merge_json] = []
-platforms[Platform.NINTENDO_GAMECUBE] = nintendo_gamecube
+add_platform(
+    Platform.NINTENDO_GAMECUBE,
+    categories.Category.NINTENDO,
+    types.LaunchType.LAUNCH_FILE,
+    autofill = [keys.json_key_files, keys.json_key_launch_file])
 
-###########################################################
 # Nintendo NES
-###########################################################
-nintendo_nes = {}
-nintendo_nes[keys.platform_key_supercategory] = categories.Supercategory.ROMS
-nintendo_nes[keys.platform_key_category] = categories.Category.NINTENDO
-nintendo_nes[keys.platform_key_subcategory] = categories.Subcategory.NINTENDO_NES
-nintendo_nes[keys.platform_key_addons] = []
-nintendo_nes[keys.platform_key_launcher] = [types.LaunchType.LAUNCH_FILE]
-nintendo_nes[keys.platform_key_autofill_json] = [keys.json_key_files, keys.json_key_launch_file]
-nintendo_nes[keys.platform_key_fillonce_json] = []
-nintendo_nes[keys.platform_key_merge_json] = []
-platforms[Platform.NINTENDO_NES] = nintendo_nes
+add_platform(
+    Platform.NINTENDO_NES,
+    categories.Category.NINTENDO,
+    types.LaunchType.LAUNCH_FILE,
+    autofill = [keys.json_key_files, keys.json_key_launch_file])
 
-###########################################################
 # Nintendo SNES
-###########################################################
-nintendo_snes = {}
-nintendo_snes[keys.platform_key_supercategory] = categories.Supercategory.ROMS
-nintendo_snes[keys.platform_key_category] = categories.Category.NINTENDO
-nintendo_snes[keys.platform_key_subcategory] = categories.Subcategory.NINTENDO_SNES
-nintendo_snes[keys.platform_key_addons] = []
-nintendo_snes[keys.platform_key_launcher] = [types.LaunchType.LAUNCH_FILE]
-nintendo_snes[keys.platform_key_autofill_json] = [keys.json_key_files, keys.json_key_launch_file]
-nintendo_snes[keys.platform_key_fillonce_json] = []
-nintendo_snes[keys.platform_key_merge_json] = []
-platforms[Platform.NINTENDO_SNES] = nintendo_snes
+add_platform(
+    Platform.NINTENDO_SNES,
+    categories.Category.NINTENDO,
+    types.LaunchType.LAUNCH_FILE,
+    autofill = [keys.json_key_files, keys.json_key_launch_file])
 
-###########################################################
 # Nintendo SNES MSU-1
-###########################################################
-nintendo_snes_msu1 = {}
-nintendo_snes_msu1[keys.platform_key_supercategory] = categories.Supercategory.ROMS
-nintendo_snes_msu1[keys.platform_key_category] = categories.Category.NINTENDO
-nintendo_snes_msu1[keys.platform_key_subcategory] = categories.Subcategory.NINTENDO_SNES_MSU1
-nintendo_snes_msu1[keys.platform_key_addons] = []
-nintendo_snes_msu1[keys.platform_key_launcher] = [types.LaunchType.LAUNCH_FILE]
-nintendo_snes_msu1[keys.platform_key_autofill_json] = [keys.json_key_files, keys.json_key_launch_file]
-nintendo_snes_msu1[keys.platform_key_fillonce_json] = []
-nintendo_snes_msu1[keys.platform_key_merge_json] = []
-platforms[Platform.NINTENDO_SNES_MSU1] = nintendo_snes_msu1
+add_platform(
+    Platform.NINTENDO_SNES_MSU1,
+    categories.Category.NINTENDO,
+    types.LaunchType.LAUNCH_FILE,
+    autofill = [keys.json_key_files, keys.json_key_launch_file])
 
-###########################################################
 # Nintendo Super Famicom
-###########################################################
-nintendo_super_famicom = {}
-nintendo_super_famicom[keys.platform_key_supercategory] = categories.Supercategory.ROMS
-nintendo_super_famicom[keys.platform_key_category] = categories.Category.NINTENDO
-nintendo_super_famicom[keys.platform_key_subcategory] = categories.Subcategory.NINTENDO_SUPER_FAMICOM
-nintendo_super_famicom[keys.platform_key_addons] = []
-nintendo_super_famicom[keys.platform_key_launcher] = [types.LaunchType.LAUNCH_FILE]
-nintendo_super_famicom[keys.platform_key_autofill_json] = [keys.json_key_files, keys.json_key_launch_file]
-nintendo_super_famicom[keys.platform_key_fillonce_json] = []
-nintendo_super_famicom[keys.platform_key_merge_json] = []
-platforms[Platform.NINTENDO_SUPER_FAMICOM] = nintendo_super_famicom
+add_platform(
+    Platform.NINTENDO_SUPER_FAMICOM,
+    categories.Category.NINTENDO,
+    types.LaunchType.LAUNCH_FILE,
+    autofill = [keys.json_key_files, keys.json_key_launch_file])
 
-###########################################################
 # Nintendo Super Game Boy
-###########################################################
-nintendo_super_game_boy = {}
-nintendo_super_game_boy[keys.platform_key_supercategory] = categories.Supercategory.ROMS
-nintendo_super_game_boy[keys.platform_key_category] = categories.Category.NINTENDO
-nintendo_super_game_boy[keys.platform_key_subcategory] = categories.Subcategory.NINTENDO_SUPER_GAME_BOY
-nintendo_super_game_boy[keys.platform_key_addons] = []
-nintendo_super_game_boy[keys.platform_key_launcher] = [types.LaunchType.LAUNCH_FILE]
-nintendo_super_game_boy[keys.platform_key_autofill_json] = [keys.json_key_files, keys.json_key_launch_file]
-nintendo_super_game_boy[keys.platform_key_fillonce_json] = []
-nintendo_super_game_boy[keys.platform_key_merge_json] = []
-platforms[Platform.NINTENDO_SUPER_GAME_BOY] = nintendo_super_game_boy
+add_platform(
+    Platform.NINTENDO_SUPER_GAME_BOY,
+    categories.Category.NINTENDO,
+    types.LaunchType.LAUNCH_FILE,
+    autofill = [keys.json_key_files, keys.json_key_launch_file])
 
-###########################################################
 # Nintendo Super Game Boy Color
-###########################################################
-nintendo_super_game_boy_color = {}
-nintendo_super_game_boy_color[keys.platform_key_supercategory] = categories.Supercategory.ROMS
-nintendo_super_game_boy_color[keys.platform_key_category] = categories.Category.NINTENDO
-nintendo_super_game_boy_color[keys.platform_key_subcategory] = categories.Subcategory.NINTENDO_SUPER_GAME_BOY_COLOR
-nintendo_super_game_boy_color[keys.platform_key_addons] = []
-nintendo_super_game_boy_color[keys.platform_key_launcher] = [types.LaunchType.LAUNCH_FILE]
-nintendo_super_game_boy_color[keys.platform_key_autofill_json] = [keys.json_key_files, keys.json_key_launch_file]
-nintendo_super_game_boy_color[keys.platform_key_fillonce_json] = []
-nintendo_super_game_boy_color[keys.platform_key_merge_json] = []
-platforms[Platform.NINTENDO_SUPER_GAME_BOY_COLOR] = nintendo_super_game_boy_color
+add_platform(
+    Platform.NINTENDO_SUPER_GAME_BOY_COLOR,
+    categories.Category.NINTENDO,
+    types.LaunchType.LAUNCH_FILE,
+    autofill = [keys.json_key_files, keys.json_key_launch_file])
 
-###########################################################
 # Nintendo Switch
-###########################################################
-nintendo_switch = {}
-nintendo_switch[keys.platform_key_supercategory] = categories.Supercategory.ROMS
-nintendo_switch[keys.platform_key_category] = categories.Category.NINTENDO
-nintendo_switch[keys.platform_key_subcategory] = categories.Subcategory.NINTENDO_SWITCH
-nintendo_switch[keys.platform_key_addons] = [types.AddonType.DLC, types.AddonType.UPDATES]
-nintendo_switch[keys.platform_key_launcher] = [types.LaunchType.LAUNCH_FILE]
-nintendo_switch[keys.platform_key_autofill_json] = [keys.json_key_files, keys.json_key_launch_file]
-nintendo_switch[keys.platform_key_fillonce_json] = []
-nintendo_switch[keys.platform_key_merge_json] = []
-platforms[Platform.NINTENDO_SWITCH] = nintendo_switch
+add_platform(
+    Platform.NINTENDO_SWITCH,
+    categories.Category.NINTENDO,
+    types.LaunchType.LAUNCH_FILE,
+    addons = [types.AddonType.DLC, types.AddonType.UPDATES],
+    autofill = [keys.json_key_files, keys.json_key_launch_file])
 
-###########################################################
 # Nintendo Switch eShop
-###########################################################
-nintendo_switch_eshop = {}
-nintendo_switch_eshop[keys.platform_key_supercategory] = categories.Supercategory.ROMS
-nintendo_switch_eshop[keys.platform_key_category] = categories.Category.NINTENDO
-nintendo_switch_eshop[keys.platform_key_subcategory] = categories.Subcategory.NINTENDO_SWITCH_ESHOP
-nintendo_switch_eshop[keys.platform_key_addons] = [types.AddonType.DLC, types.AddonType.UPDATES]
-nintendo_switch_eshop[keys.platform_key_launcher] = [types.LaunchType.LAUNCH_FILE]
-nintendo_switch_eshop[keys.platform_key_autofill_json] = [keys.json_key_files, keys.json_key_launch_file]
-nintendo_switch_eshop[keys.platform_key_fillonce_json] = []
-nintendo_switch_eshop[keys.platform_key_merge_json] = []
-platforms[Platform.NINTENDO_SWITCH_ESHOP] = nintendo_switch_eshop
+add_platform(
+    Platform.NINTENDO_SWITCH_ESHOP,
+    categories.Category.NINTENDO,
+    types.LaunchType.LAUNCH_FILE,
+    addons = [types.AddonType.DLC, types.AddonType.UPDATES],
+    autofill = [keys.json_key_files, keys.json_key_launch_file])
 
-###########################################################
 # Nintendo Virtual Boy
-###########################################################
-nintendo_virtual_boy = {}
-nintendo_virtual_boy[keys.platform_key_supercategory] = categories.Supercategory.ROMS
-nintendo_virtual_boy[keys.platform_key_category] = categories.Category.NINTENDO
-nintendo_virtual_boy[keys.platform_key_subcategory] = categories.Subcategory.NINTENDO_VIRTUAL_BOY
-nintendo_virtual_boy[keys.platform_key_addons] = []
-nintendo_virtual_boy[keys.platform_key_launcher] = [types.LaunchType.LAUNCH_FILE]
-nintendo_virtual_boy[keys.platform_key_autofill_json] = [keys.json_key_files, keys.json_key_launch_file]
-nintendo_virtual_boy[keys.platform_key_fillonce_json] = []
-nintendo_virtual_boy[keys.platform_key_merge_json] = []
-platforms[Platform.NINTENDO_VIRTUAL_BOY] = nintendo_virtual_boy
+add_platform(
+    Platform.NINTENDO_VIRTUAL_BOY,
+    categories.Category.NINTENDO,
+    types.LaunchType.LAUNCH_FILE,
+    autofill = [keys.json_key_files, keys.json_key_launch_file])
 
-###########################################################
 # Nintendo Wii
-###########################################################
-nintendo_wii = {}
-nintendo_wii[keys.platform_key_supercategory] = categories.Supercategory.ROMS
-nintendo_wii[keys.platform_key_category] = categories.Category.NINTENDO
-nintendo_wii[keys.platform_key_subcategory] = categories.Subcategory.NINTENDO_WII
-nintendo_wii[keys.platform_key_addons] = [types.AddonType.DLC]
-nintendo_wii[keys.platform_key_launcher] = [types.LaunchType.LAUNCH_FILE]
-nintendo_wii[keys.platform_key_autofill_json] = [keys.json_key_files, keys.json_key_launch_file]
-nintendo_wii[keys.platform_key_fillonce_json] = []
-nintendo_wii[keys.platform_key_merge_json] = []
-platforms[Platform.NINTENDO_WII] = nintendo_wii
+add_platform(
+    Platform.NINTENDO_WII,
+    categories.Category.NINTENDO,
+    types.LaunchType.LAUNCH_FILE,
+    addons = [types.AddonType.DLC],
+    autofill = [keys.json_key_files, keys.json_key_launch_file])
 
-###########################################################
 # Nintendo Wii U
-###########################################################
-nintendo_wii_u = {}
-nintendo_wii_u[keys.platform_key_supercategory] = categories.Supercategory.ROMS
-nintendo_wii_u[keys.platform_key_category] = categories.Category.NINTENDO
-nintendo_wii_u[keys.platform_key_subcategory] = categories.Subcategory.NINTENDO_WII_U
-nintendo_wii_u[keys.platform_key_addons] = [types.AddonType.DLC, types.AddonType.UPDATES]
-nintendo_wii_u[keys.platform_key_launcher] = [types.LaunchType.LAUNCH_FILE]
-nintendo_wii_u[keys.platform_key_autofill_json] = [keys.json_key_files, keys.json_key_launch_file]
-nintendo_wii_u[keys.platform_key_fillonce_json] = []
-nintendo_wii_u[keys.platform_key_merge_json] = []
-platforms[Platform.NINTENDO_WII_U] = nintendo_wii_u
+add_platform(
+    Platform.NINTENDO_WII_U,
+    categories.Category.NINTENDO,
+    types.LaunchType.LAUNCH_FILE,
+    addons = [types.AddonType.DLC, types.AddonType.UPDATES],
+    autofill = [keys.json_key_files, keys.json_key_launch_file])
 
-###########################################################
 # Nintendo Wii U eShop
-###########################################################
-nintendo_wii_u_eshop = {}
-nintendo_wii_u_eshop[keys.platform_key_supercategory] = categories.Supercategory.ROMS
-nintendo_wii_u_eshop[keys.platform_key_category] = categories.Category.NINTENDO
-nintendo_wii_u_eshop[keys.platform_key_subcategory] = categories.Subcategory.NINTENDO_WII_U_ESHOP
-nintendo_wii_u_eshop[keys.platform_key_addons] = [types.AddonType.DLC, types.AddonType.UPDATES]
-nintendo_wii_u_eshop[keys.platform_key_launcher] = [types.LaunchType.LAUNCH_FILE]
-nintendo_wii_u_eshop[keys.platform_key_autofill_json] = [keys.json_key_files, keys.json_key_launch_file]
-nintendo_wii_u_eshop[keys.platform_key_fillonce_json] = []
-nintendo_wii_u_eshop[keys.platform_key_merge_json] = []
-platforms[Platform.NINTENDO_WII_U_ESHOP] = nintendo_wii_u_eshop
+add_platform(
+    Platform.NINTENDO_WII_U_ESHOP,
+    categories.Category.NINTENDO,
+    types.LaunchType.LAUNCH_FILE,
+    addons = [types.AddonType.DLC, types.AddonType.UPDATES],
+    autofill = [keys.json_key_files, keys.json_key_launch_file])
 
-###########################################################
 # Nintendo WiiWare
-###########################################################
-nintendo_wiiware = {}
-nintendo_wiiware[keys.platform_key_supercategory] = categories.Supercategory.ROMS
-nintendo_wiiware[keys.platform_key_category] = categories.Category.NINTENDO
-nintendo_wiiware[keys.platform_key_subcategory] = categories.Subcategory.NINTENDO_WIIWARE
-nintendo_wiiware[keys.platform_key_addons] = [types.AddonType.DLC]
-nintendo_wiiware[keys.platform_key_launcher] = [types.LaunchType.LAUNCH_FILE]
-nintendo_wiiware[keys.platform_key_autofill_json] = [keys.json_key_files, keys.json_key_launch_file]
-nintendo_wiiware[keys.platform_key_fillonce_json] = []
-nintendo_wiiware[keys.platform_key_merge_json] = []
-platforms[Platform.NINTENDO_WIIWARE] = nintendo_wiiware
+add_platform(
+    Platform.NINTENDO_WIIWARE,
+    categories.Category.NINTENDO,
+    types.LaunchType.LAUNCH_FILE,
+    addons = [types.AddonType.DLC],
+    autofill = [keys.json_key_files, keys.json_key_launch_file])
 
-######################################################################################
-
-###########################################################
 # Apple iOS
-###########################################################
-apple_ios = {}
-apple_ios[keys.platform_key_supercategory] = categories.Supercategory.ROMS
-apple_ios[keys.platform_key_category] = categories.Category.OTHER
-apple_ios[keys.platform_key_subcategory] = categories.Subcategory.OTHER_APPLE_IOS
-apple_ios[keys.platform_key_addons] = []
-apple_ios[keys.platform_key_launcher] = [types.LaunchType.NO_LAUNCHER]
-apple_ios[keys.platform_key_autofill_json] = [keys.json_key_files]
-apple_ios[keys.platform_key_fillonce_json] = []
-apple_ios[keys.platform_key_merge_json] = []
-platforms[Platform.OTHER_APPLE_IOS] = apple_ios
+add_platform(
+    Platform.OTHER_APPLE_IOS,
+    categories.Category.OTHER,
+    types.LaunchType.NO_LAUNCHER)
 
-###########################################################
 # Apple MacOS 8
-###########################################################
-apple_macos_8 = {}
-apple_macos_8[keys.platform_key_supercategory] = categories.Supercategory.ROMS
-apple_macos_8[keys.platform_key_category] = categories.Category.OTHER
-apple_macos_8[keys.platform_key_subcategory] = categories.Subcategory.OTHER_APPLE_MACOS_8
-apple_macos_8[keys.platform_key_addons] = []
-apple_macos_8[keys.platform_key_launcher] = [types.LaunchType.LAUNCH_FILE]
-apple_macos_8[keys.platform_key_autofill_json] = [keys.json_key_files, keys.json_key_launch_file]
-apple_macos_8[keys.platform_key_fillonce_json] = []
-apple_macos_8[keys.platform_key_merge_json] = []
-platforms[Platform.OTHER_APPLE_MACOS_8] = apple_macos_8
+add_platform(
+    Platform.OTHER_APPLE_MACOS_8,
+    categories.Category.OTHER,
+    types.LaunchType.LAUNCH_FILE,
+    autofill = [keys.json_key_files, keys.json_key_launch_file])
 
-###########################################################
 # Arcade
-###########################################################
-arcade = {}
-arcade[keys.platform_key_supercategory] = categories.Supercategory.ROMS
-arcade[keys.platform_key_category] = categories.Category.OTHER
-arcade[keys.platform_key_subcategory] = categories.Subcategory.OTHER_ARCADE
-arcade[keys.platform_key_addons] = []
-arcade[keys.platform_key_launcher] = [types.LaunchType.LAUNCH_NAME]
-arcade[keys.platform_key_autofill_json] = [keys.json_key_files]
-arcade[keys.platform_key_fillonce_json] = [keys.json_key_launch_name]
-arcade[keys.platform_key_merge_json] = []
-platforms[Platform.OTHER_ARCADE] = arcade
+add_platform(
+    Platform.OTHER_ARCADE,
+    categories.Category.OTHER,
+    types.LaunchType.LAUNCH_NAME,
+    fillonce = [keys.json_key_launch_name])
 
-###########################################################
 # Atari 800
-###########################################################
-atari_800 = {}
-atari_800[keys.platform_key_supercategory] = categories.Supercategory.ROMS
-atari_800[keys.platform_key_category] = categories.Category.OTHER
-atari_800[keys.platform_key_subcategory] = categories.Subcategory.OTHER_ATARI_800
-atari_800[keys.platform_key_addons] = []
-atari_800[keys.platform_key_launcher] = [types.LaunchType.LAUNCH_FILE]
-atari_800[keys.platform_key_autofill_json] = [keys.json_key_files, keys.json_key_launch_file]
-atari_800[keys.platform_key_fillonce_json] = []
-atari_800[keys.platform_key_merge_json] = []
-platforms[Platform.OTHER_ATARI_800] = atari_800
+add_platform(
+    Platform.OTHER_ATARI_800,
+    categories.Category.OTHER,
+    types.LaunchType.LAUNCH_FILE,
+    autofill = [keys.json_key_files, keys.json_key_launch_file])
 
-###########################################################
 # Atari 2600
-###########################################################
-atari_2600 = {}
-atari_2600[keys.platform_key_supercategory] = categories.Supercategory.ROMS
-atari_2600[keys.platform_key_category] = categories.Category.OTHER
-atari_2600[keys.platform_key_subcategory] = categories.Subcategory.OTHER_ATARI_2600
-atari_2600[keys.platform_key_addons] = []
-atari_2600[keys.platform_key_launcher] = [types.LaunchType.LAUNCH_FILE]
-atari_2600[keys.platform_key_autofill_json] = [keys.json_key_files, keys.json_key_launch_file]
-atari_2600[keys.platform_key_fillonce_json] = []
-atari_2600[keys.platform_key_merge_json] = []
-platforms[Platform.OTHER_ATARI_2600] = atari_2600
+add_platform(
+    Platform.OTHER_ATARI_2600,
+    categories.Category.OTHER,
+    types.LaunchType.LAUNCH_FILE,
+    autofill = [keys.json_key_files, keys.json_key_launch_file])
 
-###########################################################
 # Atari 5200
-###########################################################
-atari_5200 = {}
-atari_5200[keys.platform_key_supercategory] = categories.Supercategory.ROMS
-atari_5200[keys.platform_key_category] = categories.Category.OTHER
-atari_5200[keys.platform_key_subcategory] = categories.Subcategory.OTHER_ATARI_5200
-atari_5200[keys.platform_key_addons] = []
-atari_5200[keys.platform_key_launcher] = [types.LaunchType.LAUNCH_FILE]
-atari_5200[keys.platform_key_autofill_json] = [keys.json_key_files, keys.json_key_launch_file]
-atari_5200[keys.platform_key_fillonce_json] = []
-atari_5200[keys.platform_key_merge_json] = []
-platforms[Platform.OTHER_ATARI_5200] = atari_5200
+add_platform(
+    Platform.OTHER_ATARI_5200,
+    categories.Category.OTHER,
+    types.LaunchType.LAUNCH_FILE,
+    autofill = [keys.json_key_files, keys.json_key_launch_file])
 
-###########################################################
 # Atari 7800
-###########################################################
-atari_7800 = {}
-atari_7800[keys.platform_key_supercategory] = categories.Supercategory.ROMS
-atari_7800[keys.platform_key_category] = categories.Category.OTHER
-atari_7800[keys.platform_key_subcategory] = categories.Subcategory.OTHER_ATARI_7800
-atari_7800[keys.platform_key_addons] = []
-atari_7800[keys.platform_key_launcher] = [types.LaunchType.LAUNCH_FILE]
-atari_7800[keys.platform_key_autofill_json] = [keys.json_key_files, keys.json_key_launch_file]
-atari_7800[keys.platform_key_fillonce_json] = []
-atari_7800[keys.platform_key_merge_json] = []
-platforms[Platform.OTHER_ATARI_7800] = atari_7800
+add_platform(
+    Platform.OTHER_ATARI_7800,
+    categories.Category.OTHER,
+    types.LaunchType.LAUNCH_FILE,
+    autofill = [keys.json_key_files, keys.json_key_launch_file])
 
-###########################################################
 # Atari Jaguar
-###########################################################
-atari_jaguar = {}
-atari_jaguar[keys.platform_key_supercategory] = categories.Supercategory.ROMS
-atari_jaguar[keys.platform_key_category] = categories.Category.OTHER
-atari_jaguar[keys.platform_key_subcategory] = categories.Subcategory.OTHER_ATARI_JAGUAR
-atari_jaguar[keys.platform_key_addons] = []
-atari_jaguar[keys.platform_key_launcher] = [types.LaunchType.LAUNCH_FILE]
-atari_jaguar[keys.platform_key_autofill_json] = [keys.json_key_files, keys.json_key_launch_file]
-atari_jaguar[keys.platform_key_fillonce_json] = []
-atari_jaguar[keys.platform_key_merge_json] = []
-platforms[Platform.OTHER_ATARI_JAGUAR] = atari_jaguar
+add_platform(
+    Platform.OTHER_ATARI_JAGUAR,
+    categories.Category.OTHER,
+    types.LaunchType.LAUNCH_FILE,
+    autofill = [keys.json_key_files, keys.json_key_launch_file])
 
-###########################################################
 # Atari Jaguar CD
-###########################################################
-atari_jaguar_cd = {}
-atari_jaguar_cd[keys.platform_key_supercategory] = categories.Supercategory.ROMS
-atari_jaguar_cd[keys.platform_key_category] = categories.Category.OTHER
-atari_jaguar_cd[keys.platform_key_subcategory] = categories.Subcategory.OTHER_ATARI_JAGUAR_CD
-atari_jaguar_cd[keys.platform_key_addons] = []
-atari_jaguar_cd[keys.platform_key_launcher] = [types.LaunchType.LAUNCH_FILE]
-atari_jaguar_cd[keys.platform_key_autofill_json] = [keys.json_key_files, keys.json_key_launch_file]
-atari_jaguar_cd[keys.platform_key_fillonce_json] = []
-atari_jaguar_cd[keys.platform_key_merge_json] = []
-platforms[Platform.OTHER_ATARI_JAGUAR_CD] = atari_jaguar_cd
+add_platform(
+    Platform.OTHER_ATARI_JAGUAR_CD,
+    categories.Category.OTHER,
+    types.LaunchType.LAUNCH_FILE,
+    autofill = [keys.json_key_files, keys.json_key_launch_file])
 
-###########################################################
 # Atari Lynx
-###########################################################
-atari_lynx = {}
-atari_lynx[keys.platform_key_supercategory] = categories.Supercategory.ROMS
-atari_lynx[keys.platform_key_category] = categories.Category.OTHER
-atari_lynx[keys.platform_key_subcategory] = categories.Subcategory.OTHER_ATARI_LYNX
-atari_lynx[keys.platform_key_addons] = []
-atari_lynx[keys.platform_key_launcher] = [types.LaunchType.LAUNCH_FILE]
-atari_lynx[keys.platform_key_autofill_json] = [keys.json_key_files, keys.json_key_launch_file]
-atari_lynx[keys.platform_key_fillonce_json] = []
-atari_lynx[keys.platform_key_merge_json] = []
-platforms[Platform.OTHER_ATARI_LYNX] = atari_lynx
+add_platform(
+    Platform.OTHER_ATARI_LYNX,
+    categories.Category.OTHER,
+    types.LaunchType.LAUNCH_FILE,
+    autofill = [keys.json_key_files, keys.json_key_launch_file])
 
-###########################################################
 # Bandai WonderSwan
-###########################################################
-bandai_wonderswan = {}
-bandai_wonderswan[keys.platform_key_supercategory] = categories.Supercategory.ROMS
-bandai_wonderswan[keys.platform_key_category] = categories.Category.OTHER
-bandai_wonderswan[keys.platform_key_subcategory] = categories.Subcategory.OTHER_BANDAI_WONDERSWAN
-bandai_wonderswan[keys.platform_key_addons] = []
-bandai_wonderswan[keys.platform_key_launcher] = [types.LaunchType.LAUNCH_FILE]
-bandai_wonderswan[keys.platform_key_autofill_json] = [keys.json_key_files, keys.json_key_launch_file]
-bandai_wonderswan[keys.platform_key_fillonce_json] = []
-bandai_wonderswan[keys.platform_key_merge_json] = []
-platforms[Platform.OTHER_BANDAI_WONDERSWAN] = bandai_wonderswan
+add_platform(
+    Platform.OTHER_BANDAI_WONDERSWAN,
+    categories.Category.OTHER,
+    types.LaunchType.LAUNCH_FILE,
+    autofill = [keys.json_key_files, keys.json_key_launch_file])
 
-###########################################################
 # Bandai WonderSwan Color
-###########################################################
-bandai_wonderswan_color = {}
-bandai_wonderswan_color[keys.platform_key_supercategory] = categories.Supercategory.ROMS
-bandai_wonderswan_color[keys.platform_key_category] = categories.Category.OTHER
-bandai_wonderswan_color[keys.platform_key_subcategory] = categories.Subcategory.OTHER_BANDAI_WONDERSWAN_COLOR
-bandai_wonderswan_color[keys.platform_key_addons] = []
-bandai_wonderswan_color[keys.platform_key_launcher] = [types.LaunchType.LAUNCH_FILE]
-bandai_wonderswan_color[keys.platform_key_autofill_json] = [keys.json_key_files, keys.json_key_launch_file]
-bandai_wonderswan_color[keys.platform_key_fillonce_json] = []
-bandai_wonderswan_color[keys.platform_key_merge_json] = []
-platforms[Platform.OTHER_BANDAI_WONDERSWAN_COLOR] = bandai_wonderswan_color
+add_platform(
+    Platform.OTHER_BANDAI_WONDERSWAN_COLOR,
+    categories.Category.OTHER,
+    types.LaunchType.LAUNCH_FILE,
+    autofill = [keys.json_key_files, keys.json_key_launch_file])
 
-###########################################################
 # Coleco ColecoVision
-###########################################################
-coleco_colecovision = {}
-coleco_colecovision[keys.platform_key_supercategory] = categories.Supercategory.ROMS
-coleco_colecovision[keys.platform_key_category] = categories.Category.OTHER
-coleco_colecovision[keys.platform_key_subcategory] = categories.Subcategory.OTHER_COLECO_COLECOVISION
-coleco_colecovision[keys.platform_key_addons] = []
-coleco_colecovision[keys.platform_key_launcher] = [types.LaunchType.LAUNCH_FILE]
-coleco_colecovision[keys.platform_key_autofill_json] = [keys.json_key_files, keys.json_key_launch_file]
-coleco_colecovision[keys.platform_key_fillonce_json] = []
-coleco_colecovision[keys.platform_key_merge_json] = []
-platforms[Platform.OTHER_COLECO_COLECOVISION] = coleco_colecovision
+add_platform(
+    Platform.OTHER_COLECO_COLECOVISION,
+    categories.Category.OTHER,
+    types.LaunchType.LAUNCH_FILE,
+    autofill = [keys.json_key_files, keys.json_key_launch_file])
 
-###########################################################
 # Commodore 64
-###########################################################
-commodore_64 = {}
-commodore_64[keys.platform_key_supercategory] = categories.Supercategory.ROMS
-commodore_64[keys.platform_key_category] = categories.Category.OTHER
-commodore_64[keys.platform_key_subcategory] = categories.Subcategory.OTHER_COMMODORE_64
-commodore_64[keys.platform_key_addons] = []
-commodore_64[keys.platform_key_launcher] = [types.LaunchType.LAUNCH_FILE]
-commodore_64[keys.platform_key_autofill_json] = [keys.json_key_files, keys.json_key_launch_file]
-commodore_64[keys.platform_key_fillonce_json] = []
-commodore_64[keys.platform_key_merge_json] = []
-platforms[Platform.OTHER_COMMODORE_64] = commodore_64
+add_platform(
+    Platform.OTHER_COMMODORE_64,
+    categories.Category.OTHER,
+    types.LaunchType.LAUNCH_FILE,
+    autofill = [keys.json_key_files, keys.json_key_launch_file])
 
-###########################################################
 # Commodore Amiga
-###########################################################
-commodore_amiga = {}
-commodore_amiga[keys.platform_key_supercategory] = categories.Supercategory.ROMS
-commodore_amiga[keys.platform_key_category] = categories.Category.OTHER
-commodore_amiga[keys.platform_key_subcategory] = categories.Subcategory.OTHER_COMMODORE_AMIGA
-commodore_amiga[keys.platform_key_addons] = []
-commodore_amiga[keys.platform_key_launcher] = [types.LaunchType.LAUNCH_FILE]
-commodore_amiga[keys.platform_key_autofill_json] = [keys.json_key_files, keys.json_key_launch_file]
-commodore_amiga[keys.platform_key_fillonce_json] = []
-commodore_amiga[keys.platform_key_merge_json] = []
-platforms[Platform.OTHER_COMMODORE_AMIGA] = commodore_amiga
+add_platform(
+    Platform.OTHER_COMMODORE_AMIGA,
+    categories.Category.OTHER,
+    types.LaunchType.LAUNCH_FILE,
+    autofill = [keys.json_key_files, keys.json_key_launch_file])
 
-###########################################################
 # Google Android
-###########################################################
-google_android = {}
-google_android[keys.platform_key_supercategory] = categories.Supercategory.ROMS
-google_android[keys.platform_key_category] = categories.Category.OTHER
-google_android[keys.platform_key_subcategory] = categories.Subcategory.OTHER_GOOGLE_ANDROID
-google_android[keys.platform_key_addons] = []
-google_android[keys.platform_key_launcher] = [types.LaunchType.NO_LAUNCHER]
-google_android[keys.platform_key_autofill_json] = [keys.json_key_files]
-google_android[keys.platform_key_fillonce_json] = []
-google_android[keys.platform_key_merge_json] = []
-platforms[Platform.OTHER_GOOGLE_ANDROID] = google_android
+add_platform(
+    Platform.OTHER_GOOGLE_ANDROID,
+    categories.Category.OTHER,
+    types.LaunchType.NO_LAUNCHER)
 
-###########################################################
 # Magnavox Odyssey 2
-###########################################################
-magnavox_odyssey_2 = {}
-magnavox_odyssey_2[keys.platform_key_supercategory] = categories.Supercategory.ROMS
-magnavox_odyssey_2[keys.platform_key_category] = categories.Category.OTHER
-magnavox_odyssey_2[keys.platform_key_subcategory] = categories.Subcategory.OTHER_MAGNAVOX_ODYSSEY_2
-magnavox_odyssey_2[keys.platform_key_addons] = []
-magnavox_odyssey_2[keys.platform_key_launcher] = [types.LaunchType.LAUNCH_FILE]
-magnavox_odyssey_2[keys.platform_key_autofill_json] = [keys.json_key_files, keys.json_key_launch_file]
-magnavox_odyssey_2[keys.platform_key_fillonce_json] = []
-magnavox_odyssey_2[keys.platform_key_merge_json] = []
-platforms[Platform.OTHER_MAGNAVOX_ODYSSEY_2] = magnavox_odyssey_2
+add_platform(
+    Platform.OTHER_MAGNAVOX_ODYSSEY_2,
+    categories.Category.OTHER,
+    types.LaunchType.LAUNCH_FILE,
+    autofill = [keys.json_key_files, keys.json_key_launch_file])
 
-###########################################################
 # Mattel Intellivision
-###########################################################
-mattel_intellivision = {}
-mattel_intellivision[keys.platform_key_supercategory] = categories.Supercategory.ROMS
-mattel_intellivision[keys.platform_key_category] = categories.Category.OTHER
-mattel_intellivision[keys.platform_key_subcategory] = categories.Subcategory.OTHER_MATTEL_INTELLIVISION
-mattel_intellivision[keys.platform_key_addons] = []
-mattel_intellivision[keys.platform_key_launcher] = [types.LaunchType.LAUNCH_FILE]
-mattel_intellivision[keys.platform_key_autofill_json] = [keys.json_key_files, keys.json_key_launch_file]
-mattel_intellivision[keys.platform_key_fillonce_json] = []
-mattel_intellivision[keys.platform_key_merge_json] = []
-platforms[Platform.OTHER_MATTEL_INTELLIVISION] = mattel_intellivision
+add_platform(
+    Platform.OTHER_MATTEL_INTELLIVISION,
+    categories.Category.OTHER,
+    types.LaunchType.LAUNCH_FILE,
+    autofill = [keys.json_key_files, keys.json_key_launch_file])
 
-###########################################################
 # NEC PC-Engine
-###########################################################
-nec_pcengine = {}
-nec_pcengine[keys.platform_key_supercategory] = categories.Supercategory.ROMS
-nec_pcengine[keys.platform_key_category] = categories.Category.OTHER
-nec_pcengine[keys.platform_key_subcategory] = categories.Subcategory.OTHER_NEC_PCENGINE
-nec_pcengine[keys.platform_key_addons] = []
-nec_pcengine[keys.platform_key_launcher] = [types.LaunchType.LAUNCH_FILE]
-nec_pcengine[keys.platform_key_autofill_json] = [keys.json_key_files, keys.json_key_launch_file]
-nec_pcengine[keys.platform_key_fillonce_json] = []
-nec_pcengine[keys.platform_key_merge_json] = []
-platforms[Platform.OTHER_NEC_PCENGINE] = nec_pcengine
+add_platform(
+    Platform.OTHER_NEC_PCENGINE,
+    categories.Category.OTHER,
+    types.LaunchType.LAUNCH_FILE,
+    autofill = [keys.json_key_files, keys.json_key_launch_file])
 
-###########################################################
 # NEC PC-Engine CD
-###########################################################
-nec_pcengine_cd = {}
-nec_pcengine_cd[keys.platform_key_supercategory] = categories.Supercategory.ROMS
-nec_pcengine_cd[keys.platform_key_category] = categories.Category.OTHER
-nec_pcengine_cd[keys.platform_key_subcategory] = categories.Subcategory.OTHER_NEC_PCENGINE_CD
-nec_pcengine_cd[keys.platform_key_addons] = []
-nec_pcengine_cd[keys.platform_key_launcher] = [types.LaunchType.LAUNCH_FILE]
-nec_pcengine_cd[keys.platform_key_autofill_json] = [keys.json_key_files, keys.json_key_launch_file]
-nec_pcengine_cd[keys.platform_key_fillonce_json] = []
-nec_pcengine_cd[keys.platform_key_merge_json] = []
-platforms[Platform.OTHER_NEC_PCENGINE_CD] = nec_pcengine_cd
+add_platform(
+    Platform.OTHER_NEC_PCENGINE_CD,
+    categories.Category.OTHER,
+    types.LaunchType.LAUNCH_FILE,
+    autofill = [keys.json_key_files, keys.json_key_launch_file])
 
-###########################################################
 # NEC SuperGrafx
-###########################################################
-nec_supergrafx = {}
-nec_supergrafx[keys.platform_key_supercategory] = categories.Supercategory.ROMS
-nec_supergrafx[keys.platform_key_category] = categories.Category.OTHER
-nec_supergrafx[keys.platform_key_subcategory] = categories.Subcategory.OTHER_NEC_SUPERGRAFX
-nec_supergrafx[keys.platform_key_addons] = []
-nec_supergrafx[keys.platform_key_launcher] = [types.LaunchType.LAUNCH_FILE]
-nec_supergrafx[keys.platform_key_autofill_json] = [keys.json_key_files, keys.json_key_launch_file]
-nec_supergrafx[keys.platform_key_fillonce_json] = []
-nec_supergrafx[keys.platform_key_merge_json] = []
-platforms[Platform.OTHER_NEC_SUPERGRAFX] = nec_supergrafx
+add_platform(
+    Platform.OTHER_NEC_SUPERGRAFX,
+    categories.Category.OTHER,
+    types.LaunchType.LAUNCH_FILE,
+    autofill = [keys.json_key_files, keys.json_key_launch_file])
 
-###########################################################
 # NEC TurboGrafx-16
-###########################################################
-nec_turbografx_16 = {}
-nec_turbografx_16[keys.platform_key_supercategory] = categories.Supercategory.ROMS
-nec_turbografx_16[keys.platform_key_category] = categories.Category.OTHER
-nec_turbografx_16[keys.platform_key_subcategory] = categories.Subcategory.OTHER_NEC_TURBOGRAFX_16
-nec_turbografx_16[keys.platform_key_addons] = []
-nec_turbografx_16[keys.platform_key_launcher] = [types.LaunchType.LAUNCH_FILE]
-nec_turbografx_16[keys.platform_key_autofill_json] = [keys.json_key_files, keys.json_key_launch_file]
-nec_turbografx_16[keys.platform_key_fillonce_json] = []
-nec_turbografx_16[keys.platform_key_merge_json] = []
-platforms[Platform.OTHER_NEC_TURBOGRAFX_16] = nec_turbografx_16
+add_platform(
+    Platform.OTHER_NEC_TURBOGRAFX_16,
+    categories.Category.OTHER,
+    types.LaunchType.LAUNCH_FILE,
+    autofill = [keys.json_key_files, keys.json_key_launch_file])
 
-###########################################################
 # NEC TurboGrafx CD
-###########################################################
-nec_turbografx_cd = {}
-nec_turbografx_cd[keys.platform_key_supercategory] = categories.Supercategory.ROMS
-nec_turbografx_cd[keys.platform_key_category] = categories.Category.OTHER
-nec_turbografx_cd[keys.platform_key_subcategory] = categories.Subcategory.OTHER_NEC_TURBOGRAFX_CD
-nec_turbografx_cd[keys.platform_key_addons] = []
-nec_turbografx_cd[keys.platform_key_launcher] = [types.LaunchType.LAUNCH_FILE]
-nec_turbografx_cd[keys.platform_key_autofill_json] = [keys.json_key_files, keys.json_key_launch_file]
-nec_turbografx_cd[keys.platform_key_fillonce_json] = []
-nec_turbografx_cd[keys.platform_key_merge_json] = []
-platforms[Platform.OTHER_NEC_TURBOGRAFX_CD] = nec_turbografx_cd
+add_platform(
+    Platform.OTHER_NEC_TURBOGRAFX_CD,
+    categories.Category.OTHER,
+    types.LaunchType.LAUNCH_FILE,
+    autofill = [keys.json_key_files, keys.json_key_launch_file])
 
-###########################################################
 # Nokia N-Gage
-###########################################################
-nokia_ngage = {}
-nokia_ngage[keys.platform_key_supercategory] = categories.Supercategory.ROMS
-nokia_ngage[keys.platform_key_category] = categories.Category.OTHER
-nokia_ngage[keys.platform_key_subcategory] = categories.Subcategory.OTHER_NOKIA_NGAGE
-nokia_ngage[keys.platform_key_addons] = []
-nokia_ngage[keys.platform_key_launcher] = [types.LaunchType.LAUNCH_NAME]
-nokia_ngage[keys.platform_key_autofill_json] = [keys.json_key_files]
-nokia_ngage[keys.platform_key_fillonce_json] = [keys.json_key_launch_name]
-nokia_ngage[keys.platform_key_merge_json] = []
-platforms[Platform.OTHER_NOKIA_NGAGE] = nokia_ngage
+add_platform(
+    Platform.OTHER_NOKIA_NGAGE,
+    categories.Category.OTHER,
+    types.LaunchType.LAUNCH_NAME,
+    fillonce = [keys.json_key_launch_name])
 
-###########################################################
 # Panasonic 3DO
-###########################################################
-panasonic_3do = {}
-panasonic_3do[keys.platform_key_supercategory] = categories.Supercategory.ROMS
-panasonic_3do[keys.platform_key_category] = categories.Category.OTHER
-panasonic_3do[keys.platform_key_subcategory] = categories.Subcategory.OTHER_PANASONIC_3DO
-panasonic_3do[keys.platform_key_addons] = []
-panasonic_3do[keys.platform_key_launcher] = [types.LaunchType.LAUNCH_FILE]
-panasonic_3do[keys.platform_key_autofill_json] = [keys.json_key_files, keys.json_key_launch_file]
-panasonic_3do[keys.platform_key_fillonce_json] = []
-panasonic_3do[keys.platform_key_merge_json] = []
-platforms[Platform.OTHER_PANASONIC_3DO] = panasonic_3do
+add_platform(
+    Platform.OTHER_PANASONIC_3DO,
+    categories.Category.OTHER,
+    types.LaunchType.LAUNCH_FILE,
+    autofill = [keys.json_key_files, keys.json_key_launch_file])
 
-###########################################################
 # Philips CDi
-###########################################################
-philips_cdi = {}
-philips_cdi[keys.platform_key_supercategory] = categories.Supercategory.ROMS
-philips_cdi[keys.platform_key_category] = categories.Category.OTHER
-philips_cdi[keys.platform_key_subcategory] = categories.Subcategory.OTHER_PHILIPS_CDI
-philips_cdi[keys.platform_key_addons] = []
-philips_cdi[keys.platform_key_launcher] = [types.LaunchType.LAUNCH_FILE]
-philips_cdi[keys.platform_key_autofill_json] = [keys.json_key_files, keys.json_key_launch_file]
-philips_cdi[keys.platform_key_fillonce_json] = []
-philips_cdi[keys.platform_key_merge_json] = []
-platforms[Platform.OTHER_PHILIPS_CDI] = philips_cdi
+add_platform(
+    Platform.OTHER_PHILIPS_CDI,
+    categories.Category.OTHER,
+    types.LaunchType.LAUNCH_FILE,
+    autofill = [keys.json_key_files, keys.json_key_launch_file])
 
-###########################################################
 # SNK Neo Geo Pocket Color
-###########################################################
-snk_neogeo_pocket_color = {}
-snk_neogeo_pocket_color[keys.platform_key_supercategory] = categories.Supercategory.ROMS
-snk_neogeo_pocket_color[keys.platform_key_category] = categories.Category.OTHER
-snk_neogeo_pocket_color[keys.platform_key_subcategory] = categories.Subcategory.OTHER_SNK_NEOGEO_POCKET_COLOR
-snk_neogeo_pocket_color[keys.platform_key_addons] = []
-snk_neogeo_pocket_color[keys.platform_key_launcher] = [types.LaunchType.LAUNCH_FILE]
-snk_neogeo_pocket_color[keys.platform_key_autofill_json] = [keys.json_key_files, keys.json_key_launch_file]
-snk_neogeo_pocket_color[keys.platform_key_fillonce_json] = []
-snk_neogeo_pocket_color[keys.platform_key_merge_json] = []
-platforms[Platform.OTHER_SNK_NEOGEO_POCKET_COLOR] = snk_neogeo_pocket_color
+add_platform(
+    Platform.OTHER_SNK_NEOGEO_POCKET_COLOR,
+    categories.Category.OTHER,
+    types.LaunchType.LAUNCH_FILE,
+    autofill = [keys.json_key_files, keys.json_key_launch_file])
 
-###########################################################
 # Sega 32X
-###########################################################
-sega_32x = {}
-sega_32x[keys.platform_key_supercategory] = categories.Supercategory.ROMS
-sega_32x[keys.platform_key_category] = categories.Category.OTHER
-sega_32x[keys.platform_key_subcategory] = categories.Subcategory.OTHER_SEGA_32X
-sega_32x[keys.platform_key_addons] = []
-sega_32x[keys.platform_key_launcher] = [types.LaunchType.LAUNCH_FILE]
-sega_32x[keys.platform_key_autofill_json] = [keys.json_key_files, keys.json_key_launch_file]
-sega_32x[keys.platform_key_fillonce_json] = []
-sega_32x[keys.platform_key_merge_json] = []
-platforms[Platform.OTHER_SEGA_32X] = sega_32x
+add_platform(
+    Platform.OTHER_SEGA_32X,
+    categories.Category.OTHER,
+    types.LaunchType.LAUNCH_FILE,
+    autofill = [keys.json_key_files, keys.json_key_launch_file])
 
-###########################################################
 # Sega CD
-###########################################################
-sega_cd = {}
-sega_cd[keys.platform_key_supercategory] = categories.Supercategory.ROMS
-sega_cd[keys.platform_key_category] = categories.Category.OTHER
-sega_cd[keys.platform_key_subcategory] = categories.Subcategory.OTHER_SEGA_CD
-sega_cd[keys.platform_key_addons] = []
-sega_cd[keys.platform_key_launcher] = [types.LaunchType.LAUNCH_FILE]
-sega_cd[keys.platform_key_autofill_json] = [keys.json_key_files, keys.json_key_launch_file]
-sega_cd[keys.platform_key_fillonce_json] = []
-sega_cd[keys.platform_key_merge_json] = []
-platforms[Platform.OTHER_SEGA_CD] = sega_cd
+add_platform(
+    Platform.OTHER_SEGA_CD,
+    categories.Category.OTHER,
+    types.LaunchType.LAUNCH_FILE,
+    autofill = [keys.json_key_files, keys.json_key_launch_file])
 
-###########################################################
 # Sega CD 32X
-###########################################################
-sega_cd_32x = {}
-sega_cd_32x[keys.platform_key_supercategory] = categories.Supercategory.ROMS
-sega_cd_32x[keys.platform_key_category] = categories.Category.OTHER
-sega_cd_32x[keys.platform_key_subcategory] = categories.Subcategory.OTHER_SEGA_CD_32X
-sega_cd_32x[keys.platform_key_addons] = []
-sega_cd_32x[keys.platform_key_launcher] = [types.LaunchType.LAUNCH_FILE]
-sega_cd_32x[keys.platform_key_autofill_json] = [keys.json_key_files, keys.json_key_launch_file]
-sega_cd_32x[keys.platform_key_fillonce_json] = []
-sega_cd_32x[keys.platform_key_merge_json] = []
-platforms[Platform.OTHER_SEGA_CD_32X] = sega_cd_32x
+add_platform(
+    Platform.OTHER_SEGA_CD_32X,
+    categories.Category.OTHER,
+    types.LaunchType.LAUNCH_FILE,
+    autofill = [keys.json_key_files, keys.json_key_launch_file])
 
-###########################################################
 # Sega Dreamcast
-###########################################################
-sega_dreamcast = {}
-sega_dreamcast[keys.platform_key_supercategory] = categories.Supercategory.ROMS
-sega_dreamcast[keys.platform_key_category] = categories.Category.OTHER
-sega_dreamcast[keys.platform_key_subcategory] = categories.Subcategory.OTHER_SEGA_DREAMCAST
-sega_dreamcast[keys.platform_key_addons] = []
-sega_dreamcast[keys.platform_key_launcher] = [types.LaunchType.LAUNCH_FILE]
-sega_dreamcast[keys.platform_key_autofill_json] = [keys.json_key_files, keys.json_key_launch_file]
-sega_dreamcast[keys.platform_key_fillonce_json] = []
-sega_dreamcast[keys.platform_key_merge_json] = []
-platforms[Platform.OTHER_SEGA_DREAMCAST] = sega_dreamcast
+add_platform(
+    Platform.OTHER_SEGA_DREAMCAST,
+    categories.Category.OTHER,
+    types.LaunchType.LAUNCH_FILE,
+    autofill = [keys.json_key_files, keys.json_key_launch_file])
 
-###########################################################
 # Sega Game Gear
-###########################################################
-sega_game_gear = {}
-sega_game_gear[keys.platform_key_supercategory] = categories.Supercategory.ROMS
-sega_game_gear[keys.platform_key_category] = categories.Category.OTHER
-sega_game_gear[keys.platform_key_subcategory] = categories.Subcategory.OTHER_SEGA_GAME_GEAR
-sega_game_gear[keys.platform_key_addons] = []
-sega_game_gear[keys.platform_key_launcher] = [types.LaunchType.LAUNCH_FILE]
-sega_game_gear[keys.platform_key_autofill_json] = [keys.json_key_files, keys.json_key_launch_file]
-sega_game_gear[keys.platform_key_fillonce_json] = []
-sega_game_gear[keys.platform_key_merge_json] = []
-platforms[Platform.OTHER_SEGA_GAME_GEAR] = sega_game_gear
+add_platform(
+    Platform.OTHER_SEGA_GAME_GEAR,
+    categories.Category.OTHER,
+    types.LaunchType.LAUNCH_FILE,
+    autofill = [keys.json_key_files, keys.json_key_launch_file])
 
-###########################################################
 # Sega Genesis
-###########################################################
-sega_genesis = {}
-sega_genesis[keys.platform_key_supercategory] = categories.Supercategory.ROMS
-sega_genesis[keys.platform_key_category] = categories.Category.OTHER
-sega_genesis[keys.platform_key_subcategory] = categories.Subcategory.OTHER_SEGA_GENESIS
-sega_genesis[keys.platform_key_addons] = []
-sega_genesis[keys.platform_key_launcher] = [types.LaunchType.LAUNCH_FILE]
-sega_genesis[keys.platform_key_autofill_json] = [keys.json_key_files, keys.json_key_launch_file]
-sega_genesis[keys.platform_key_fillonce_json] = []
-sega_genesis[keys.platform_key_merge_json] = []
-platforms[Platform.OTHER_SEGA_GENESIS] = sega_genesis
+add_platform(
+    Platform.OTHER_SEGA_GENESIS,
+    categories.Category.OTHER,
+    types.LaunchType.LAUNCH_FILE,
+    autofill = [keys.json_key_files, keys.json_key_launch_file])
 
-###########################################################
 # Sega Master System
-###########################################################
-sega_master_system = {}
-sega_master_system[keys.platform_key_supercategory] = categories.Supercategory.ROMS
-sega_master_system[keys.platform_key_category] = categories.Category.OTHER
-sega_master_system[keys.platform_key_subcategory] = categories.Subcategory.OTHER_SEGA_MASTER_SYSTEM
-sega_master_system[keys.platform_key_addons] = []
-sega_master_system[keys.platform_key_launcher] = [types.LaunchType.LAUNCH_FILE]
-sega_master_system[keys.platform_key_autofill_json] = [keys.json_key_files, keys.json_key_launch_file]
-sega_master_system[keys.platform_key_fillonce_json] = []
-sega_master_system[keys.platform_key_merge_json] = []
-platforms[Platform.OTHER_SEGA_MASTER_SYSTEM] = sega_master_system
+add_platform(
+    Platform.OTHER_SEGA_MASTER_SYSTEM,
+    categories.Category.OTHER,
+    types.LaunchType.LAUNCH_FILE,
+    autofill = [keys.json_key_files, keys.json_key_launch_file])
 
-###########################################################
 # Sega Saturn
-###########################################################
-sega_saturn = {}
-sega_saturn[keys.platform_key_supercategory] = categories.Supercategory.ROMS
-sega_saturn[keys.platform_key_category] = categories.Category.OTHER
-sega_saturn[keys.platform_key_subcategory] = categories.Subcategory.OTHER_SEGA_SATURN
-sega_saturn[keys.platform_key_addons] = []
-sega_saturn[keys.platform_key_launcher] = [types.LaunchType.LAUNCH_FILE]
-sega_saturn[keys.platform_key_autofill_json] = [keys.json_key_files, keys.json_key_launch_file]
-sega_saturn[keys.platform_key_fillonce_json] = []
-sega_saturn[keys.platform_key_merge_json] = []
-platforms[Platform.OTHER_SEGA_SATURN] = sega_saturn
+add_platform(
+    Platform.OTHER_SEGA_SATURN,
+    categories.Category.OTHER,
+    types.LaunchType.LAUNCH_FILE,
+    autofill = [keys.json_key_files, keys.json_key_launch_file])
 
-###########################################################
 # Sinclair ZX Spectrum
-###########################################################
-sinclair_zx_spectrum = {}
-sinclair_zx_spectrum[keys.platform_key_supercategory] = categories.Supercategory.ROMS
-sinclair_zx_spectrum[keys.platform_key_category] = categories.Category.OTHER
-sinclair_zx_spectrum[keys.platform_key_subcategory] = categories.Subcategory.OTHER_SINCLAIR_ZX_SPECTRUM
-sinclair_zx_spectrum[keys.platform_key_addons] = []
-sinclair_zx_spectrum[keys.platform_key_launcher] = [types.LaunchType.LAUNCH_FILE]
-sinclair_zx_spectrum[keys.platform_key_autofill_json] = [keys.json_key_files, keys.json_key_launch_file]
-sinclair_zx_spectrum[keys.platform_key_fillonce_json] = []
-sinclair_zx_spectrum[keys.platform_key_merge_json] = []
-platforms[Platform.OTHER_SINCLAIR_ZX_SPECTRUM] = sinclair_zx_spectrum
+add_platform(
+    Platform.OTHER_SINCLAIR_ZX_SPECTRUM,
+    categories.Category.OTHER,
+    types.LaunchType.LAUNCH_FILE,
+    autofill = [keys.json_key_files, keys.json_key_launch_file])
 
-###########################################################
 # Texas Instruments TI-99-4A
-###########################################################
-texas_instruments_ti994a = {}
-texas_instruments_ti994a[keys.platform_key_supercategory] = categories.Supercategory.ROMS
-texas_instruments_ti994a[keys.platform_key_category] = categories.Category.OTHER
-texas_instruments_ti994a[keys.platform_key_subcategory] = categories.Subcategory.OTHER_TEXAS_INSTRUMENTS_TI994A
-texas_instruments_ti994a[keys.platform_key_addons] = []
-texas_instruments_ti994a[keys.platform_key_launcher] = [types.LaunchType.LAUNCH_FILE]
-texas_instruments_ti994a[keys.platform_key_autofill_json] = [keys.json_key_files, keys.json_key_launch_file]
-texas_instruments_ti994a[keys.platform_key_fillonce_json] = []
-texas_instruments_ti994a[keys.platform_key_merge_json] = []
-platforms[Platform.OTHER_TEXAS_INSTRUMENTS_TI994A] = texas_instruments_ti994a
+add_platform(
+    Platform.OTHER_TEXAS_INSTRUMENTS_TI994A,
+    categories.Category.OTHER,
+    types.LaunchType.LAUNCH_FILE,
+    autofill = [keys.json_key_files, keys.json_key_launch_file])
 
-###########################################################
 # Tiger Game.com
-###########################################################
-tiger_gamecom = {}
-tiger_gamecom[keys.platform_key_supercategory] = categories.Supercategory.ROMS
-tiger_gamecom[keys.platform_key_category] = categories.Category.OTHER
-tiger_gamecom[keys.platform_key_subcategory] = categories.Subcategory.OTHER_TIGER_GAMECOM
-tiger_gamecom[keys.platform_key_addons] = []
-tiger_gamecom[keys.platform_key_launcher] = [types.LaunchType.LAUNCH_FILE]
-tiger_gamecom[keys.platform_key_autofill_json] = [keys.json_key_files, keys.json_key_launch_file]
-tiger_gamecom[keys.platform_key_fillonce_json] = []
-tiger_gamecom[keys.platform_key_merge_json] = []
-platforms[Platform.OTHER_TIGER_GAMECOM] = tiger_gamecom
+add_platform(
+    Platform.OTHER_TIGER_GAMECOM,
+    categories.Category.OTHER,
+    types.LaunchType.LAUNCH_FILE,
+    autofill = [keys.json_key_files, keys.json_key_launch_file])
 
-######################################################################################
-
-###########################################################
 # Sony PlayStation
-###########################################################
-sony_playstation = {}
-sony_playstation[keys.platform_key_supercategory] = categories.Supercategory.ROMS
-sony_playstation[keys.platform_key_category] = categories.Category.SONY
-sony_playstation[keys.platform_key_subcategory] = categories.Subcategory.SONY_PLAYSTATION
-sony_playstation[keys.platform_key_addons] = []
-sony_playstation[keys.platform_key_launcher] = [types.LaunchType.LAUNCH_FILE]
-sony_playstation[keys.platform_key_autofill_json] = [keys.json_key_files, keys.json_key_launch_file]
-sony_playstation[keys.platform_key_fillonce_json] = []
-sony_playstation[keys.platform_key_merge_json] = []
-platforms[Platform.SONY_PLAYSTATION] = sony_playstation
+add_platform(
+    Platform.SONY_PLAYSTATION,
+    categories.Category.SONY,
+    types.LaunchType.LAUNCH_FILE,
+    autofill = [keys.json_key_files, keys.json_key_launch_file])
 
-###########################################################
 # Sony PlayStation 2
-###########################################################
-sony_playstation_2 = {}
-sony_playstation_2[keys.platform_key_supercategory] = categories.Supercategory.ROMS
-sony_playstation_2[keys.platform_key_category] = categories.Category.SONY
-sony_playstation_2[keys.platform_key_subcategory] = categories.Subcategory.SONY_PLAYSTATION_2
-sony_playstation_2[keys.platform_key_addons] = []
-sony_playstation_2[keys.platform_key_launcher] = [types.LaunchType.LAUNCH_FILE]
-sony_playstation_2[keys.platform_key_autofill_json] = [keys.json_key_files, keys.json_key_launch_file]
-sony_playstation_2[keys.platform_key_fillonce_json] = []
-sony_playstation_2[keys.platform_key_merge_json] = []
-platforms[Platform.SONY_PLAYSTATION_2] = sony_playstation_2
+add_platform(
+    Platform.SONY_PLAYSTATION_2,
+    categories.Category.SONY,
+    types.LaunchType.LAUNCH_FILE,
+    autofill = [keys.json_key_files, keys.json_key_launch_file])
 
-###########################################################
 # Sony PlayStation 3
-###########################################################
-sony_playstation_3 = {}
-sony_playstation_3[keys.platform_key_supercategory] = categories.Supercategory.ROMS
-sony_playstation_3[keys.platform_key_category] = categories.Category.SONY
-sony_playstation_3[keys.platform_key_subcategory] = categories.Subcategory.SONY_PLAYSTATION_3
-sony_playstation_3[keys.platform_key_addons] = [types.AddonType.DLC, types.AddonType.UPDATES]
-sony_playstation_3[keys.platform_key_launcher] = [types.LaunchType.LAUNCH_FILE]
-sony_playstation_3[keys.platform_key_autofill_json] = [keys.json_key_files, keys.json_key_transform_file]
-sony_playstation_3[keys.platform_key_fillonce_json] = [keys.json_key_launch_file]
-sony_playstation_3[keys.platform_key_merge_json] = []
-platforms[Platform.SONY_PLAYSTATION_3] = sony_playstation_3
+add_platform(
+    Platform.SONY_PLAYSTATION_3,
+    categories.Category.SONY,
+    types.LaunchType.LAUNCH_FILE,
+    addons = [types.AddonType.DLC, types.AddonType.UPDATES],
+    autofill = [keys.json_key_files, keys.json_key_transform_file],
+    fillonce = [keys.json_key_launch_file])
 
-###########################################################
 # Sony PlayStation 4
-###########################################################
-sony_playstation_4 = {}
-sony_playstation_4[keys.platform_key_supercategory] = categories.Supercategory.ROMS
-sony_playstation_4[keys.platform_key_category] = categories.Category.SONY
-sony_playstation_4[keys.platform_key_subcategory] = categories.Subcategory.SONY_PLAYSTATION_4
-sony_playstation_4[keys.platform_key_addons] = [types.AddonType.DLC, types.AddonType.UPDATES]
-sony_playstation_4[keys.platform_key_launcher] = [types.LaunchType.NO_LAUNCHER]
-sony_playstation_4[keys.platform_key_autofill_json] = [keys.json_key_files]
-sony_playstation_4[keys.platform_key_fillonce_json] = []
-sony_playstation_4[keys.platform_key_merge_json] = []
-platforms[Platform.SONY_PLAYSTATION_4] = sony_playstation_4
+add_platform(
+    Platform.SONY_PLAYSTATION_4,
+    categories.Category.SONY,
+    types.LaunchType.NO_LAUNCHER,
+    addons = [types.AddonType.DLC, types.AddonType.UPDATES])
 
-###########################################################
 # Sony PlayStation Network - PlayStation 3
-###########################################################
-sony_playstation_network_ps3 = {}
-sony_playstation_network_ps3[keys.platform_key_supercategory] = categories.Supercategory.ROMS
-sony_playstation_network_ps3[keys.platform_key_category] = categories.Category.SONY
-sony_playstation_network_ps3[keys.platform_key_subcategory] = categories.Subcategory.SONY_PLAYSTATION_NETWORK_PS3
-sony_playstation_network_ps3[keys.platform_key_addons] = [types.AddonType.DLC, types.AddonType.UPDATES]
-sony_playstation_network_ps3[keys.platform_key_launcher] = [types.LaunchType.LAUNCH_FILE]
-sony_playstation_network_ps3[keys.platform_key_autofill_json] = [keys.json_key_files, keys.json_key_transform_file]
-sony_playstation_network_ps3[keys.platform_key_fillonce_json] = [keys.json_key_launch_file]
-sony_playstation_network_ps3[keys.platform_key_merge_json] = []
-platforms[Platform.SONY_PLAYSTATION_NETWORK_PS3] = sony_playstation_network_ps3
+add_platform(
+    Platform.SONY_PLAYSTATION_NETWORK_PS3,
+    categories.Category.SONY,
+    types.LaunchType.LAUNCH_FILE,
+    addons = [types.AddonType.DLC, types.AddonType.UPDATES],
+    autofill = [keys.json_key_files, keys.json_key_transform_file],
+    fillonce = [keys.json_key_launch_file])
 
-###########################################################
 # Sony PlayStation Network - PlayStation 4
-###########################################################
-sony_playstation_network_ps4 = {}
-sony_playstation_network_ps4[keys.platform_key_supercategory] = categories.Supercategory.ROMS
-sony_playstation_network_ps4[keys.platform_key_category] = categories.Category.SONY
-sony_playstation_network_ps4[keys.platform_key_subcategory] = categories.Subcategory.SONY_PLAYSTATION_NETWORK_PS4
-sony_playstation_network_ps4[keys.platform_key_addons] = [types.AddonType.DLC, types.AddonType.UPDATES]
-sony_playstation_network_ps4[keys.platform_key_launcher] = [types.LaunchType.NO_LAUNCHER]
-sony_playstation_network_ps4[keys.platform_key_autofill_json] = [keys.json_key_files]
-sony_playstation_network_ps4[keys.platform_key_fillonce_json] = []
-sony_playstation_network_ps4[keys.platform_key_merge_json] = []
-platforms[Platform.SONY_PLAYSTATION_NETWORK_PS4] = sony_playstation_network_ps4
+add_platform(
+    Platform.SONY_PLAYSTATION_NETWORK_PS4,
+    categories.Category.SONY,
+    types.LaunchType.NO_LAUNCHER,
+    addons = [types.AddonType.DLC, types.AddonType.UPDATES])
 
-###########################################################
 # Sony PlayStation Network - PlayStation Portable
-###########################################################
-sony_playstation_network_psp = {}
-sony_playstation_network_psp[keys.platform_key_supercategory] = categories.Supercategory.ROMS
-sony_playstation_network_psp[keys.platform_key_category] = categories.Category.SONY
-sony_playstation_network_psp[keys.platform_key_subcategory] = categories.Subcategory.SONY_PLAYSTATION_NETWORK_PSP
-sony_playstation_network_psp[keys.platform_key_addons] = [types.AddonType.DLC, types.AddonType.UPDATES]
-sony_playstation_network_psp[keys.platform_key_launcher] = [types.LaunchType.LAUNCH_FILE]
-sony_playstation_network_psp[keys.platform_key_autofill_json] = [keys.json_key_files, keys.json_key_launch_file]
-sony_playstation_network_psp[keys.platform_key_fillonce_json] = []
-sony_playstation_network_psp[keys.platform_key_merge_json] = []
-platforms[Platform.SONY_PLAYSTATION_NETWORK_PSP] = sony_playstation_network_psp
+add_platform(
+    Platform.SONY_PLAYSTATION_NETWORK_PSP,
+    categories.Category.SONY,
+    types.LaunchType.LAUNCH_FILE,
+    addons = [types.AddonType.DLC, types.AddonType.UPDATES],
+    autofill = [keys.json_key_files, keys.json_key_launch_file])
 
-###########################################################
 # Sony PlayStation Network - PlayStation Portable Minis
-###########################################################
-sony_playstation_network_pspm = {}
-sony_playstation_network_pspm[keys.platform_key_supercategory] = categories.Supercategory.ROMS
-sony_playstation_network_pspm[keys.platform_key_category] = categories.Category.SONY
-sony_playstation_network_pspm[keys.platform_key_subcategory] = categories.Subcategory.SONY_PLAYSTATION_NETWORK_PSPM
-sony_playstation_network_pspm[keys.platform_key_addons] = []
-sony_playstation_network_pspm[keys.platform_key_launcher] = [types.LaunchType.LAUNCH_FILE]
-sony_playstation_network_pspm[keys.platform_key_autofill_json] = [keys.json_key_files, keys.json_key_launch_file]
-sony_playstation_network_pspm[keys.platform_key_fillonce_json] = []
-sony_playstation_network_pspm[keys.platform_key_merge_json] = []
-platforms[Platform.SONY_PLAYSTATION_NETWORK_PSPM] = sony_playstation_network_pspm
+add_platform(
+    Platform.SONY_PLAYSTATION_NETWORK_PSPM,
+    categories.Category.SONY,
+    types.LaunchType.LAUNCH_FILE,
+    autofill = [keys.json_key_files, keys.json_key_launch_file])
 
-###########################################################
 # Sony PlayStation Network - PlayStation Vita
-###########################################################
-sony_playstation_network_psv = {}
-sony_playstation_network_psv[keys.platform_key_supercategory] = categories.Supercategory.ROMS
-sony_playstation_network_psv[keys.platform_key_category] = categories.Category.SONY
-sony_playstation_network_psv[keys.platform_key_subcategory] = categories.Subcategory.SONY_PLAYSTATION_NETWORK_PSV
-sony_playstation_network_psv[keys.platform_key_addons] = [types.AddonType.DLC, types.AddonType.UPDATES]
-sony_playstation_network_psv[keys.platform_key_launcher] = [types.LaunchType.LAUNCH_NAME]
-sony_playstation_network_psv[keys.platform_key_autofill_json] = [keys.json_key_files, keys.json_key_transform_file]
-sony_playstation_network_psv[keys.platform_key_fillonce_json] = [keys.json_key_launch_name]
-sony_playstation_network_psv[keys.platform_key_merge_json] = []
-platforms[Platform.SONY_PLAYSTATION_NETWORK_PSV] = sony_playstation_network_psv
+add_platform(
+    Platform.SONY_PLAYSTATION_NETWORK_PSV,
+    categories.Category.SONY,
+    types.LaunchType.LAUNCH_NAME,
+    addons = [types.AddonType.DLC, types.AddonType.UPDATES],
+    autofill = [keys.json_key_files, keys.json_key_transform_file],
+    fillonce = [keys.json_key_launch_name])
 
-###########################################################
 # Sony PlayStation Portable
-###########################################################
-sony_playstation_portable = {}
-sony_playstation_portable[keys.platform_key_supercategory] = categories.Supercategory.ROMS
-sony_playstation_portable[keys.platform_key_category] = categories.Category.SONY
-sony_playstation_portable[keys.platform_key_subcategory] = categories.Subcategory.SONY_PLAYSTATION_PORTABLE
-sony_playstation_portable[keys.platform_key_addons] = [types.AddonType.DLC, types.AddonType.UPDATES]
-sony_playstation_portable[keys.platform_key_launcher] = [types.LaunchType.LAUNCH_FILE]
-sony_playstation_portable[keys.platform_key_autofill_json] = [keys.json_key_files, keys.json_key_launch_file]
-sony_playstation_portable[keys.platform_key_fillonce_json] = []
-sony_playstation_portable[keys.platform_key_merge_json] = []
-platforms[Platform.SONY_PLAYSTATION_PORTABLE] = sony_playstation_portable
+add_platform(
+    Platform.SONY_PLAYSTATION_PORTABLE,
+    categories.Category.SONY,
+    types.LaunchType.LAUNCH_FILE,
+    addons = [types.AddonType.DLC, types.AddonType.UPDATES],
+    autofill = [keys.json_key_files, keys.json_key_launch_file])
 
-###########################################################
 # Sony PlayStation Portable Video
-###########################################################
-sony_playstation_portable_video = {}
-sony_playstation_portable_video[keys.platform_key_supercategory] = categories.Supercategory.ROMS
-sony_playstation_portable_video[keys.platform_key_category] = categories.Category.SONY
-sony_playstation_portable_video[keys.platform_key_subcategory] = categories.Subcategory.SONY_PLAYSTATION_PORTABLE_VIDEO
-sony_playstation_portable_video[keys.platform_key_addons] = []
-sony_playstation_portable_video[keys.platform_key_launcher] = [types.LaunchType.NO_LAUNCHER]
-sony_playstation_portable_video[keys.platform_key_autofill_json] = [keys.json_key_files]
-sony_playstation_portable_video[keys.platform_key_fillonce_json] = []
-sony_playstation_portable_video[keys.platform_key_merge_json] = []
-platforms[Platform.SONY_PLAYSTATION_PORTABLE_VIDEO] = sony_playstation_portable_video
+add_platform(
+    Platform.SONY_PLAYSTATION_PORTABLE_VIDEO,
+    categories.Category.SONY,
+    types.LaunchType.NO_LAUNCHER)
 
-###########################################################
 # Sony PlayStation Vita
-###########################################################
-sony_playstation_vita = {}
-sony_playstation_vita[keys.platform_key_supercategory] = categories.Supercategory.ROMS
-sony_playstation_vita[keys.platform_key_category] = categories.Category.SONY
-sony_playstation_vita[keys.platform_key_subcategory] = categories.Subcategory.SONY_PLAYSTATION_VITA
-sony_playstation_vita[keys.platform_key_addons] = [types.AddonType.DLC, types.AddonType.UPDATES]
-sony_playstation_vita[keys.platform_key_launcher] = [types.LaunchType.LAUNCH_NAME]
-sony_playstation_vita[keys.platform_key_autofill_json] = [keys.json_key_files]
-sony_playstation_vita[keys.platform_key_fillonce_json] = [keys.json_key_launch_name]
-sony_playstation_vita[keys.platform_key_merge_json] = []
-platforms[Platform.SONY_PLAYSTATION_VITA] = sony_playstation_vita
+add_platform(
+    Platform.SONY_PLAYSTATION_VITA,
+    categories.Category.SONY,
+    types.LaunchType.LAUNCH_NAME,
+    addons = [types.AddonType.DLC, types.AddonType.UPDATES],
+    fillonce = [keys.json_key_launch_name])

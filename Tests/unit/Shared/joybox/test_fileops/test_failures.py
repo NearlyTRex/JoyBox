@@ -6,6 +6,8 @@ import pytest
 
 # Local imports
 from joybox import fileops
+from joybox import filebulk
+from joybox import fileedits
 
 
 ###########################################################
@@ -151,50 +153,6 @@ def test_moving_a_missing_source_reports_failure(tmp_path):
 
 
 ###########################################################
-# Editing
-###########################################################
-
-@pytest.fixture
-def read_only_file(tmp_path):
-    # Editing happens in place, so it is the file's own mode that stops it
-    # rather than the directory's.
-    target = tmp_path / "read-only.txt"
-    target.write_text("data\n")
-    os.chmod(str(target), 0o400)
-    yield str(target)
-    os.chmod(str(target), 0o600)
-
-
-def test_editing_a_file_that_cannot_be_written_reports_failure(read_only_file):
-    assert fileops.replace_strings_in_file(
-        read_only_file, [{"from": "data", "to": "other"}]) is False
-
-
-def test_appending_to_a_file_that_cannot_be_written_reports_failure(read_only_file):
-    assert fileops.append_line_to_file(read_only_file, "a line") is False
-
-
-def test_sorting_a_file_that_cannot_be_written_reports_failure(read_only_file):
-    assert fileops.sort_file_contents(read_only_file) is False
-
-
-def test_a_failed_edit_leaves_the_contents_alone(read_only_file):
-    fileops.replace_strings_in_file(read_only_file, [{"from": "data", "to": "other"}])
-
-    with open(read_only_file, encoding = "utf-8") as handle:
-        assert handle.read() == "data\n"
-
-
-@pytest.mark.parametrize("operation,args", [
-    ("replace_strings_in_file", ([{"from": "a", "to": "b"}],)),
-    ("append_line_to_file", ("a line",)),
-    ("sort_file_contents", ()),
-])
-def test_editing_a_missing_file_reports_failure(tmp_path, operation, args):
-    assert getattr(fileops, operation)(str(tmp_path / "absent.txt"), *args) is False
-
-
-###########################################################
 # Permissions
 ###########################################################
 
@@ -288,7 +246,7 @@ def test_a_verbose_symlink_resolves_the_same_way(tmp_path, source_file):
 
 
 def test_a_verbose_edit_changes_the_same_contents(tmp_path, source_file):
-    fileops.replace_strings_in_file(
+    fileedits.replace_strings_in_file(
         source_file, [{"from": "payload", "to": "replaced"}], verbose = True)
 
     with open(source_file, encoding = "utf-8") as handle:
@@ -296,7 +254,7 @@ def test_a_verbose_edit_changes_the_same_contents(tmp_path, source_file):
 
 
 def test_a_verbose_append_adds_the_same_line(tmp_path, source_file):
-    fileops.append_line_to_file(source_file, "a line", verbose = True)
+    fileedits.append_line_to_file(source_file, "a line", verbose = True)
 
     with open(source_file, encoding = "utf-8") as handle:
         assert "a line" in handle.read()
@@ -306,7 +264,7 @@ def test_a_verbose_sort_orders_the_same_way(tmp_path):
     target = tmp_path / "list.txt"
     target.write_text("b\na\n")
 
-    fileops.sort_file_contents(str(target), verbose = True)
+    fileedits.sort_file_contents(str(target), verbose = True)
 
     assert target.read_text() == "a\nb\n"
 
@@ -334,7 +292,7 @@ def test_a_verbose_sync_mirrors_the_same_way(tmp_path):
     (source / "file.txt").write_text("data")
     dest = tmp_path / "dest"
 
-    assert fileops.sync_contents(str(source), str(dest), verbose = True) is True
+    assert filebulk.sync_contents(str(source), str(dest), verbose = True) is True
     assert (dest / "file.txt").read_text() == "data"
 
 

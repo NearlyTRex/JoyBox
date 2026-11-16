@@ -4,6 +4,7 @@ import joybox.logger as logger
 import joybox.network as network
 import joybox.paths as paths
 import joybox.release as release
+from joybox import sourcebuild
 import joybox.programs as programs
 import joybox.environment as environment
 import joybox.fileops as fileops
@@ -107,7 +108,7 @@ class Pegasus(toolbase.ToolBase):
 
         # Build linux program
         if programs.should_program_be_installed("Pegasus", "linux"):
-            success = release.build_appimage_from_source(
+            success = sourcebuild.build_appimage_from_source(
                 release_url = "https://github.com/NearlyTRex/Pegasus.git",
                 output_file = "App-x86_64.AppImage",
                 install_name = "Pegasus",

@@ -4,6 +4,7 @@ import joybox.logger as logger
 import joybox.paths as paths
 import joybox.environment as environment
 import joybox.fileops as fileops
+from joybox import filebulk
 import joybox.archive as archive
 import joybox.cryption as cryption
 import joybox.hashing as hashing
@@ -46,7 +47,7 @@ def resolve_path(
 def copy_files_normally(
     input_base_path,
     output_base_path,
-    exclude_paths = [],
+    exclude_paths = None,
     show_progress = False,
     skip_existing = False,
     skip_identical = False,
@@ -66,7 +67,7 @@ def copy_files_normally(
         dest_path = paths.join_paths(output_base_path, src_file)
 
         # Copy file
-        success = fileops.smart_copy(
+        success = filebulk.smart_copy(
             src = src_path,
             dest = dest_path,
             show_progress = show_progress,
@@ -99,7 +100,7 @@ def copy_and_encrypt_files(
     input_base_path,
     output_base_path,
     passphrase,
-    exclude_paths = [],
+    exclude_paths = None,
     delete_original = False,
     skip_existing = False,
     skip_identical = False,
@@ -190,7 +191,7 @@ def copy_and_decrypt_files(
     input_base_path,
     output_base_path,
     passphrase,
-    exclude_paths = [],
+    exclude_paths = None,
     delete_original = False,
     skip_existing = False,
     skip_identical = False,
@@ -315,7 +316,7 @@ def copy_files(
     output_base_path,
     cryption_type = None,
     locker_type = None,
-    exclude_paths = [],
+    exclude_paths = None,
     delete_original = False,
     show_progress = False,
     skip_existing = False,
@@ -383,7 +384,7 @@ def archive_folder(
     output_path,
     output_name,
     archive_type = None,
-    exclude_paths = [],
+    exclude_paths = None,
     clean_output = False,
     show_progress = False,
     skip_existing = False,
@@ -391,6 +392,9 @@ def archive_folder(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
+
+    # Get exclude paths
+    exclude_paths = [] if exclude_paths is None else exclude_paths
 
     # Select archive type
     if not archive_type:
@@ -438,7 +442,7 @@ def archive_folder(
             exit_on_failure = exit_on_failure)
 
     # Move archive
-    success = fileops.smart_move(
+    success = filebulk.smart_move(
         src = tmp_archive_file,
         dest = out_archive_file,
         show_progress = show_progress,
@@ -471,7 +475,7 @@ def archive_sub_folders(
     input_base_path,
     output_base_path,
     archive_type = None,
-    exclude_paths = [],
+    exclude_paths = None,
     clean_output = False,
     show_progress = False,
     skip_existing = False,
@@ -536,7 +540,7 @@ def archive_sub_folders(
                         exit_on_failure = exit_on_failure)
 
                 # Move archive
-                success = fileops.smart_move(
+                success = filebulk.smart_move(
                     src = tmp_archive_file,
                     dest = out_archive_file,
                     show_progress = show_progress,

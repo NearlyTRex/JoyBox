@@ -147,15 +147,25 @@ library_targets = ["Shared", "Scripts"]
 # A comment above every public definition, saying more than its name, in at most three lines
 doc_style = "comment"
 doc_max_lines = 3
-command_paths = ["Shared/joybox/cli", "Scripts"]
+# The commands, and the one exit and one stdout helper library code goes through
+command_paths = ["Shared/joybox/cli", "Scripts", "Shared/joybox/runtime.py", "Shared/joybox/terminal.py"]
 standards = [
     "no-print", "no-exit", "mutable-defaults", "bare-except", "import-time-io",
     "no-narration", "commented-out-code", "long-functions", "long-modules",
+    "silent-except", "blanket-suppression",
 ]
 # The helpers carry verbose logging, pretend_run and exit_on_failure, which raw calls skip
 wrapper_modules = [
     "Shared/joybox/fileops.py", "Shared/joybox/serialization.py",
     "Shared/joybox/command.py", "Shared/joybox/commandbase.py",
+    # The local process and file layer behind the connection API
+    "Shared/joybox/connection/connection_local.py",
+    # Imported by fileops, so it cannot use it
+    "Shared/joybox/logger.py",
+    # A secret passes through a bare subprocess, not the logging command module
+    "Shared/joybox/secretstore.py",
+    # Runs on the LLM server, where JoyBox is not installed
+    "Scripts/autoinstall/ollama_helper.py",
 ]
 
 [tool.testrex.wrappers]
@@ -183,19 +193,11 @@ wrapper_modules = [
 
 [tool.testrex.baseline]
 # Findings the library had when each rule was adopted; lowered as they are fixed, never raised
-documented = 803
-doc-length = 41
+documented = 801
 doc-paraphrase = 1692
-wrappers = 82
-no-print = 8
-no-exit = 4
-mutable-defaults = 120
-no-narration = 1
-commented-out-code = 2
-long-functions = 662
-long-modules = 13
+long-functions = 602
 # pylint over Shared and Scripts with pytest-testrex's library rcfile
-pylint-source = 5094
+pylint-source = 4721
 
 [tool.ruff.lint]
 # The Workflows library's default set, pinned here so a library change is a

@@ -89,7 +89,9 @@ def test_a_unicode_entry_round_trips(tmp_path):
 
 
 def test_writing_to_an_unwritable_path_reports_failure(tmp_path):
-    assert playlist.write_playlist(str(tmp_path / "missing" / "game.m3u"), ["x"]) is False
+    (tmp_path / "file").write_text("")
+
+    assert playlist.write_playlist(str(tmp_path / "file" / "game.m3u"), ["x"]) is False
 
 
 def test_pretending_does_not_write_a_playlist(tmp_path):
@@ -377,8 +379,9 @@ def test_an_unreadable_playlist_quits_when_asked_to(tmp_path):
 
 
 def test_an_unwritable_playlist_quits_when_asked_to(tmp_path):
+    (tmp_path / "file").write_text("")
     with pytest.raises(SystemExit):
-        playlist.write_playlist(str(tmp_path / "absent" / "game.m3u"), ["disc1.chd"], exit_on_failure = True)
+        playlist.write_playlist(str(tmp_path / "file" / "game.m3u"), ["disc1.chd"], exit_on_failure = True)
 
 
 def test_a_tree_playlist_can_keep_only_filenames(tmp_path):

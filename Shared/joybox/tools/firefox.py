@@ -23,10 +23,8 @@ def get_profile_roots():
         os.path.join(home, ".var", "app", "org.mozilla.firefox", ".mozilla", "firefox"),
     ]
 
-# Find the profile Firefox opens by default, or "" when there is none
-# An install records the profile it uses in its [Install...] section; the
-# Default=1 flag on a [Profile...] section is only what older Firefox used, and
-# it can mark a profile nothing opens.
+# Find the profile Firefox opens by default, or "" when there is none, from the
+# [Install...] section; older Firefox's Default=1 can mark one nothing opens
 def find_default_profile_dir(profile_roots = None):
     for root in profile_roots if profile_roots is not None else get_profile_roots():
         text = serialization.read_text_file(os.path.join(root, "profiles.ini"))

@@ -1,8 +1,6 @@
-# Imports
-import sys
-
 # Local imports
 import joybox.logger as logger
+from joybox import runtime
 
 ###########################################################
 # Program control
@@ -17,10 +15,10 @@ def run_main(main_func):
                 logger.log_info("Script completed successfully")
             else:
                 logger.log_error("Script completed with errors")
-                sys.exit(1)
+                runtime.quit_program(1)
     except KeyboardInterrupt:
         logger.log_warning("\nOperation cancelled by user")
-        sys.exit(130)
+        runtime.quit_program(130)
     except Exception as e:
         logger.log_error(f"Script failed with exception: {e}")
-        sys.exit(1)
+        runtime.quit_program(1)

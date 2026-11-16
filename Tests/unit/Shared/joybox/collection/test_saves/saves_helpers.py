@@ -147,7 +147,8 @@ def make_catalog(monkeypatch, games):
         built.append((game_name, kwargs))
         return games[game_name]
 
+    monkeypatch.setattr(saves, "gamecollection", types.SimpleNamespace(
+        find_json_game_names = find_json_game_names))
     monkeypatch.setattr(saves, "gameinfo", types.SimpleNamespace(
-        find_json_game_names = find_json_game_names,
         GameInfo = game_info_factory))
     return built

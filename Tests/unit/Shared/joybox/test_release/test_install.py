@@ -6,9 +6,14 @@ import stat
 import pytest
 
 # Local imports
+from joybox import archive
+from joybox import filebulk
+from joybox import fileops
 from joybox import release
 from file_helpers import tree, write
-from release_helpers import failing, setup_archive
+from fakes import failing
+from module_helpers import owner_of
+from release_helpers import setup_archive
 
 
 ###########################################################
@@ -261,7 +266,7 @@ def test_an_explicit_program_type_copies_an_unrecognised_file(workspace):
     ("smart_move", "Tool-1.0.zip", {"rename_files": [{"from": "tool.sh", "to": "t.sh", "ratio": 90}]}),
 ])
 def test_a_failed_step_fails_the_install(workspace, monkeypatch, target, archive_name, options):
-    monkeypatch.setattr(release.fileops, target, failing)
+    monkeypatch.setattr(owner_of(target, fileops, filebulk, archive), target, failing)
 
     assert setup_archive(workspace, archive_name = archive_name, **options) is False
 
@@ -275,8 +280,7 @@ def test_a_failed_step_fails_the_install(workspace, monkeypatch, target, archive
 ])
 def test_a_failed_install_removes_its_scratch_directory(workspace, monkeypatch, target, archive_name):
     write(os.path.join(workspace["scratch"], "leftover"))
-    owner = release.archive if target == "extract_archive" else release.fileops
-    monkeypatch.setattr(owner, target, failing)
+    monkeypatch.setattr(owner_of(target, fileops, filebulk, archive), target, failing)
 
     assert setup_archive(workspace, archive_name = archive_name) is False
     assert not os.path.exists(workspace["scratch"])

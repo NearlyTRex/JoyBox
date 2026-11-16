@@ -7,6 +7,7 @@ import joybox.system as system
 import joybox.metadata as metadata
 import joybox.hashing as hashing
 import joybox.gameinfo as gameinfo
+from joybox import gamecollection
 import joybox.arguments as arguments
 import joybox.setup as setup
 import joybox.logger as logger
@@ -93,7 +94,7 @@ def main():
     for game_supercategory in config.Supercategory.members():
         for game_category in config.Category.members():
             for game_subcategory in config.subcategory_map[game_category]:
-                game_names = gameinfo.find_json_game_names(
+                game_names = gamecollection.find_json_game_names(
                     game_supercategory,
                     game_category,
                     game_subcategory)

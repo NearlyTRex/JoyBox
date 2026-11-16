@@ -121,7 +121,7 @@ def replace_invalid_path_characters(path):
 ###########################################################
 
 # Prune paths
-def prune_paths(paths, excludes = []):
+def prune_paths(paths, excludes = ()):
     new_paths = set()
     for path in paths:
         should_add = True
@@ -149,7 +149,8 @@ def prune_child_paths(paths):
     return strings.sort_strings(new_paths)
 
 # Build file list
-def build_file_list(root, excludes = [], new_relative_path = "", use_relative_paths = False, ignore_symlinks = False, follow_symlink_dirs = False):
+def build_file_list(root, excludes = None, new_relative_path = "", use_relative_paths = False, ignore_symlinks = False, follow_symlink_dirs = False):
+    excludes = [] if excludes is None else excludes
     files = []
     if not is_path_valid(root):
         return files
@@ -173,7 +174,9 @@ def build_file_list(root, excludes = [], new_relative_path = "", use_relative_pa
     return prune_paths(files, excludes)
 
 # Build file list by extensions
-def build_file_list_by_extensions(root, excludes = [], extensions = [], new_relative_path = "", use_relative_paths = False, ignore_symlinks = False, follow_symlink_dirs = False):
+def build_file_list_by_extensions(root, excludes = None, extensions = None, new_relative_path = "", use_relative_paths = False, ignore_symlinks = False, follow_symlink_dirs = False):
+    excludes = [] if excludes is None else excludes
+    extensions = [] if extensions is None else extensions
     files = []
     for file in build_file_list(root, excludes, new_relative_path, use_relative_paths, ignore_symlinks, follow_symlink_dirs):
         base, ext = get_filename_split(file)
@@ -185,7 +188,8 @@ def build_file_list_by_extensions(root, excludes = [], extensions = [], new_rela
     return strings.sort_strings(files)
 
 # Build directory list
-def build_directory_list(root, excludes = [], new_relative_path = "", use_relative_paths = False, ignore_symlinks = False, follow_symlink_dirs = False):
+def build_directory_list(root, excludes = None, new_relative_path = "", use_relative_paths = False, ignore_symlinks = False, follow_symlink_dirs = False):
+    excludes = [] if excludes is None else excludes
     directories = []
     if not is_path_valid(root):
         return directories
@@ -206,7 +210,8 @@ def build_directory_list(root, excludes = [], new_relative_path = "", use_relati
     return prune_paths(directories, excludes)
 
 # Build empty directory list
-def build_empty_directory_list(root, excludes = [], new_relative_path = "", use_relative_paths = False):
+def build_empty_directory_list(root, excludes = None, new_relative_path = "", use_relative_paths = False):
+    excludes = [] if excludes is None else excludes
     directories = []
     for potential_dir in build_directory_list(root, excludes, new_relative_path, use_relative_paths):
         if is_directory_empty(potential_dir):
@@ -214,7 +219,8 @@ def build_empty_directory_list(root, excludes = [], new_relative_path = "", use_
     return directories
 
 # Build symlink directory list
-def build_symlink_directory_list(root, excludes = [], new_relative_path = "", use_relative_paths = False):
+def build_symlink_directory_list(root, excludes = None, new_relative_path = "", use_relative_paths = False):
+    excludes = [] if excludes is None else excludes
     directories = []
     for potential_dir in build_directory_list(root, excludes, new_relative_path, use_relative_paths):
         if os.path.islink(potential_dir):
@@ -237,8 +243,11 @@ def matches_exclude_pattern(rel_path, excludes):
 # Returns list of dicts with path, file_count, and total_size
 def build_leaf_directory_list(
     root,
-    excludes = [],
+    excludes = None,
     ignore_hidden = True):
+
+    # Get excludes
+    excludes = [] if excludes is None else excludes
 
     # Build leaf dirs
     leaf_dirs = []
@@ -294,10 +303,11 @@ def build_leaf_directory_list(
 # Returns the leaf directories as (small, large), where large ones exceed a threshold
 def split_leaf_directory_list(
     root,
-    excludes = [],
+    excludes = None,
     ignore_hidden = True,
     large_file_count = None,
     large_total_size = None):
+    excludes = [] if excludes is None else excludes
     small_dirs = []
     large_dirs = []
     for dir_info in build_leaf_directory_list(root, excludes, ignore_hidden):
@@ -453,7 +463,8 @@ def get_directory_size(path):
     return sum(p.stat().st_size for p in pathlib.Path(path).rglob('*') if p.is_file())
 
 # Get directory contents
-def get_directory_contents(path, excludes = []):
+def get_directory_contents(path, excludes = None):
+    excludes = [] if excludes is None else excludes
     contents = []
     if does_path_exist(path):
         if os.path.isdir(path):
@@ -498,7 +509,8 @@ def does_directory_contain_files(path, recursive = True):
         return len(files) > 0
 
 # Check if directory contains files by extensions
-def does_directory_contain_files_by_extensions(path, extensions = [], recursive = True):
+def does_directory_contain_files_by_extensions(path, extensions = None, recursive = True):
+    extensions = [] if extensions is None else extensions
     if recursive:
         return len(build_file_list_by_extensions(path, extensions = extensions)) > 0
     else:
@@ -598,7 +610,8 @@ def get_filename_front_slice(path):
     return rebase_file_path(path, get_filename_front(path) + config.os_pathsep, "")
 
 # Check if filename matches extensions
-def does_filename_match_extensions(path, extensions = []):
+def does_filename_match_extensions(path, extensions = None):
+    extensions = [] if extensions is None else extensions
     if not isinstance(extensions, list):
         return False
     lowered = path.lower()
@@ -623,10 +636,12 @@ def get_file_size(path):
 def get_file_mime_type(path):
     try:
         import magic
+    except ImportError:
+        return ""
+    try:
         return magic.from_file(path, mime=True)
-    except Exception:
-        pass
-    return ""
+    except (OSError, magic.MagicException):
+        return ""
 
 # Get file age in hours
 def get_file_age_in_hours(path):
@@ -701,7 +716,7 @@ def is_path_valid(path):
         return True
 
 # Check if a path should be excluded (any exclude token appears in a path component)
-def is_exclude_path(path, excludes = []):
+def is_exclude_path(path, excludes = ()):
     for exclude in excludes:
         if any(exclude in part for part in path.split(os.sep)):
             return True

@@ -8,9 +8,10 @@ import joybox.environment as environment
 import joybox.fileops as fileops
 import joybox.logger as logger
 import joybox.release as release
+from joybox import sourcebuild
 import joybox.programs as programs
 import joybox.archive as archive
-import joybox.nintendo as nintendo
+from joybox.nintendo import wii
 import joybox.paths as paths
 import joybox.emulatorcommon as emulatorcommon
 import joybox.emulatorbase as emulatorbase
@@ -141,11 +142,13 @@ class Dolphin(emulatorbase.EmulatorBase):
         }
 
     # Install add-ons
-    def install_addons(self, dlc_dirs = [], update_dirs = [], verbose = False, pretend_run = False, exit_on_failure = False):
+    def install_addons(self, dlc_dirs = None, update_dirs = None, verbose = False, pretend_run = False, exit_on_failure = False):
+        dlc_dirs = [] if dlc_dirs is None else dlc_dirs
+        update_dirs = [] if update_dirs is None else update_dirs
         for package_dirset in [dlc_dirs, update_dirs]:
             for package_dir in package_dirset:
                 for wad_file in paths.build_file_list_by_extensions(package_dir, extensions = [".wad"]):
-                    success = nintendo.install_wii_wad(
+                    success = wii.install_wii_wad(
                         src_wad_file = wad_file,
                         nand_dir = paths.join_paths(programs.get_emulator_path_config_value("Dolphin", "setup_dir"), "Wii"),
                         verbose = verbose,
@@ -182,7 +185,7 @@ class Dolphin(emulatorbase.EmulatorBase):
 
         # Build linux program
         if programs.should_program_be_installed("Dolphin", "linux"):
-            success = release.build_appimage_from_source(
+            success = sourcebuild.build_appimage_from_source(
                 release_url = "https://github.com/NearlyTRex/Dolphin.git",
                 output_file = "Dolphin_Emulator-x86_64.AppImage",
                 install_name = "Dolphin",
