@@ -85,11 +85,8 @@ def list_preset_scripts(preset_name):
 def launch_program(verbose = False, pretend_run = False, exit_on_failure = False):
 
     # Get Python tool
-    python_tool = None
-    if programs.is_tool_installed("PythonVenvPython"):
-        python_tool = programs.get_tool_program("PythonVenvPython")
+    python_tool = programs.find_tool_program("PythonVenvPython")
     if not python_tool:
-        logger.log_error("PythonVenvPython was not found")
         return False
 
     # Get Ghidra install directory for pyghidra
@@ -137,11 +134,8 @@ def run_script(
     exit_on_failure = False):
 
     # Get tool
-    python_tool = None
-    if programs.is_tool_installed("PythonVenvPython"):
-        python_tool = programs.get_tool_program("PythonVenvPython")
+    python_tool = programs.find_tool_program("PythonVenvPython")
     if not python_tool:
-        logger.log_error("PythonVenvPython was not found")
         return False
 
     # Get Ghidra install directory for pyghidra

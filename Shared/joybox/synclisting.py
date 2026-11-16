@@ -3,6 +3,7 @@
 # Local imports
 from joybox import config
 from joybox import command
+from joybox import programs
 from joybox import rcloneremotes
 from joybox import serialization
 from joybox import strings
@@ -35,7 +36,7 @@ def list_files(
         subcommand = ["lsd", "-R"] if recursive else ["lsd"]
     else:
         subcommand = ["ls"] if recursive else ["ls", "--max-depth", 1]
-    rclone_tool = sync.get_rclone_tool()
+    rclone_tool = programs.find_tool_program("RClone")
     if not rclone_tool:
         return False
     return sync.run_rclone_command(
@@ -95,7 +96,7 @@ def mount_files(
         return True
     if not prepare_mount_point(mount_path, verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure):
         return False
-    rclone_tool = sync.get_rclone_tool()
+    rclone_tool = programs.find_tool_program("RClone")
     if not rclone_tool:
         return False
 
@@ -154,7 +155,7 @@ def list_files_with_hashes(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    rclone_tool = sync.get_rclone_tool()
+    rclone_tool = programs.find_tool_program("RClone")
     if not rclone_tool:
         return None
     if verbose:

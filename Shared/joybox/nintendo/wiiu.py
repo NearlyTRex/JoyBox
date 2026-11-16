@@ -24,11 +24,8 @@ def decrypt_wiiu_nus_package(
     exit_on_failure = False):
 
     # Get tool
-    decrypt_tool = None
-    if programs.is_tool_installed("CDecrypt"):
-        decrypt_tool = programs.get_tool_program("CDecrypt")
+    decrypt_tool = programs.find_tool_program("CDecrypt")
     if not decrypt_tool:
-        logger.log_error("CDecrypt was not found")
         return False
 
     # Get input files

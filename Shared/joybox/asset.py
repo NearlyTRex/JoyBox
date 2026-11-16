@@ -4,7 +4,6 @@ import urllib.parse
 # Local imports
 import joybox.config as config
 from joybox import filebulk
-import joybox.logger as logger
 import joybox.command as command
 import joybox.programs as programs
 import joybox.network as network
@@ -25,11 +24,8 @@ def clean_exif_data(
     exit_on_failure = False):
 
     # Get tool
-    exif_tool = None
-    if programs.is_tool_installed("ExifTool"):
-        exif_tool = programs.get_tool_program("ExifTool")
+    exif_tool = programs.find_tool_program("ExifTool")
     if not exif_tool:
-        logger.log_error("ExifTool was not found")
         return False
 
     # Get clean command

@@ -51,11 +51,8 @@ def run_pip(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    pip_tool = None
-    if programs.is_tool_installed("PythonVenvPip"):
-        pip_tool = programs.get_tool_program("PythonVenvPip")
+    pip_tool = programs.find_tool_program("PythonVenvPip")
     if not pip_tool:
-        logger.log_error("PythonVenvPip was not found")
         return False
     code = command.run_returncode_command(
         cmd = [pip_tool] + pip_args,

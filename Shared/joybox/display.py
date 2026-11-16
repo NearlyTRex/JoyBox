@@ -1,7 +1,6 @@
 # Local imports
 import joybox.command as command
 import joybox.programs as programs
-import joybox.logger as logger
 import joybox.settings as settings
 
 # Get current screen resolution
@@ -16,11 +15,8 @@ def get_current_screen_resolution():
 def set_screen_resolution(width, height, colors, verbose = False, pretend_run = False, exit_on_failure = False):
 
     # Get tool
-    nircmd_tool = None
-    if programs.is_tool_installed("NirCmd"):
-        nircmd_tool = programs.get_tool_program("NirCmd")
+    nircmd_tool = programs.find_tool_program("NirCmd")
     if not nircmd_tool:
-        logger.log_error("NirCmd was not found")
         return False
 
     # Get resolution command

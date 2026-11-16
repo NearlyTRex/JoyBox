@@ -116,11 +116,8 @@ def capture_video(
     validation.assert_is_valid_path(output_file, "output_file")
 
     # Get tool
-    ffmpeg_tool = None
-    if programs.is_tool_installed("FFMpeg"):
-        ffmpeg_tool = programs.get_tool_program("FFMpeg")
+    ffmpeg_tool = programs.find_tool_program("FFMpeg")
     if not ffmpeg_tool:
-        logger.log_error("FFMpeg was not found")
         return False
 
     # Get capture command
@@ -222,11 +219,8 @@ def capture_video_while_running(
     validation.assert_callable(run_func, "run_func")
 
     # Get tool
-    ffmpeg_tool = None
-    if programs.is_tool_installed("FFMpeg"):
-        ffmpeg_tool = programs.get_tool_program("FFMpeg")
+    ffmpeg_tool = programs.find_tool_program("FFMpeg")
     if not ffmpeg_tool:
-        logger.log_error("FFMpeg was not found")
         return False
 
     # Create capture func

@@ -119,11 +119,8 @@ def decrypt_aax_to_m4a(
         return False
 
     # Check for FFMpeg
-    ffmpeg_tool = None
-    if programs.is_tool_installed("FFMpeg"):
-        ffmpeg_tool = programs.get_tool_program("FFMpeg")
+    ffmpeg_tool = programs.find_tool_program("FFMpeg")
     if not ffmpeg_tool:
-        logger.log_error("FFMpeg was not found")
         if exit_on_failure:
             runtime.quit_program()
         return False

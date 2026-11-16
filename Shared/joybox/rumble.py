@@ -37,11 +37,8 @@ def is_rumble_channel_url(url):
 def fetch_channel_page(page_url, verbose = False, pretend_run = False, exit_on_failure = False):
 
     # Get tool
-    curl_tool = None
-    if programs.is_tool_installed("Curl"):
-        curl_tool = programs.get_tool_program("Curl")
+    curl_tool = programs.find_tool_program("Curl")
     if not curl_tool:
-        logger.log_error("Curl was not found")
         return None
 
     # Fetch (silent, follow redirects, browser user agent)

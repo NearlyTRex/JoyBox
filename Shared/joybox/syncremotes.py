@@ -6,6 +6,7 @@ import re
 
 # Local imports
 from joybox import command
+from joybox import programs
 from joybox import rcloneremotes
 from joybox import serialization
 from joybox import logger
@@ -21,7 +22,7 @@ def get_configured_remotes(
     exit_on_failure = False):
 
     # Get tool
-    rclone_tool = sync.get_rclone_tool()
+    rclone_tool = programs.find_tool_program("RClone")
     if not rclone_tool:
         return {}
 
@@ -117,7 +118,7 @@ def authorize_remote(
     pretend_run = False):
 
     # Get tool
-    rclone_tool = sync.get_rclone_tool()
+    rclone_tool = programs.find_tool_program("RClone")
     if not rclone_tool:
         return None
 
@@ -157,7 +158,7 @@ def count_remote_entries(
     exit_on_failure = False):
 
     # Get tool
-    rclone_tool = sync.get_rclone_tool()
+    rclone_tool = programs.find_tool_program("RClone")
     if not rclone_tool:
         return None
 

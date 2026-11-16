@@ -99,15 +99,6 @@ def get_excludes_with(excludes, pattern):
         excludes.append(pattern)
     return excludes
 
-# Get the rclone program, or None, logging that it is missing unless told not to
-def get_rclone_tool(log_missing = True):
-    rclone_tool = None
-    if programs.is_tool_installed("RClone"):
-        rclone_tool = programs.get_tool_program("RClone")
-    if not rclone_tool and log_missing:
-        logger.log_error("RClone was not found")
-    return rclone_tool
-
 # Get the flags for a dry run, an interactive run and a verbose run, verbose ones showing progress unless told not to
 def get_run_flags(pretend_run = False, interactive = False, verbose = False, progress = True):
     flags = []
@@ -152,7 +143,7 @@ def run_transfer(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    rclone_tool = get_rclone_tool()
+    rclone_tool = programs.find_tool_program("RClone")
     if not rclone_tool or not is_file_list_readable(files_from):
         return False
     cmd = [rclone_tool, subcommand] + list(transfer_paths)
@@ -183,7 +174,7 @@ def run_remote_query(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    rclone_tool = get_rclone_tool()
+    rclone_tool = programs.find_tool_program("RClone")
     if not rclone_tool:
         return None
     return run_query_command(
@@ -309,7 +300,7 @@ def does_file_exist(
     verbose = False):
 
     # Get tool
-    rclone_tool = get_rclone_tool()
+    rclone_tool = programs.find_tool_program("RClone")
     if not rclone_tool:
         return False
 
@@ -377,7 +368,7 @@ def create_remote_directory(
     pretend_run = False):
 
     # Get tool
-    rclone_tool = get_rclone_tool(log_missing = False)
+    rclone_tool = programs.find_tool_program("RClone", log_missing = False)
     if not rclone_tool:
         return False
 

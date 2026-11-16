@@ -134,19 +134,13 @@ class HumbleBundle(storebase.StoreBase):
     def get_manager_cmd(self):
 
         # Get tool
-        python_tool = None
-        if programs.is_tool_installed("PythonVenvPython"):
-            python_tool = programs.get_tool_program("PythonVenvPython")
+        python_tool = programs.find_tool_program("PythonVenvPython")
         if not python_tool:
-            logger.log_error("PythonVenvPython was not found")
             return None
 
         # Get script
-        humble_script = None
-        if programs.is_tool_installed("HumbleBundleManager"):
-            humble_script = programs.get_tool_program("HumbleBundleManager")
+        humble_script = programs.find_tool_program("HumbleBundleManager")
         if not humble_script:
-            logger.log_error("HumbleBundleManager was not found")
             return None
         return [python_tool, humble_script, "--auth", self.get_auth_token()]
 

@@ -19,11 +19,8 @@ def extract_xbox_iso(
     exit_on_failure = False):
 
     # Get tool
-    extract_tool = None
-    if programs.is_tool_installed("ExtractXIso"):
-        extract_tool = programs.get_tool_program("ExtractXIso")
+    extract_tool = programs.find_tool_program("ExtractXIso")
     if not extract_tool:
-        logger.log_error("ExtractXIso was not found")
         return False
 
     # Get extract command
@@ -66,11 +63,8 @@ def rewrite_xbox_iso(
     exit_on_failure = False):
 
     # Get tool
-    extract_tool = None
-    if programs.is_tool_installed("ExtractXIso"):
-        extract_tool = programs.get_tool_program("ExtractXIso")
+    extract_tool = programs.find_tool_program("ExtractXIso")
     if not extract_tool:
-        logger.log_error("ExtractXIso was not found")
         return False
 
     # Get rewrite command

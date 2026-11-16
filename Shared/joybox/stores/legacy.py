@@ -115,19 +115,13 @@ class Legacy(storebase.StoreBase):
             return True
 
         # Get tool
-        python_tool = None
-        if programs.is_tool_installed("PythonVenvPython"):
-            python_tool = programs.get_tool_program("PythonVenvPython")
+        python_tool = programs.find_tool_program("PythonVenvPython")
         if not python_tool:
-            logger.log_error("PythonVenvPython was not found")
             return False
 
         # Get script
-        heirloom_script = None
-        if programs.is_tool_installed("Heirloom"):
-            heirloom_script = programs.get_tool_program("Heirloom")
+        heirloom_script = programs.find_tool_program("Heirloom")
         if not heirloom_script:
-            logger.log_error("Heirloom was not found")
             return False
 
         # Get login command
@@ -298,19 +292,13 @@ class Legacy(storebase.StoreBase):
         exit_on_failure = False):
 
         # Get tool
-        python_tool = None
-        if programs.is_tool_installed("PythonVenvPython"):
-            python_tool = programs.get_tool_program("PythonVenvPython")
+        python_tool = programs.find_tool_program("PythonVenvPython")
         if not python_tool:
-            logger.log_error("PythonVenvPython was not found")
             return None
 
         # Get script
-        heirloom_script = None
-        if programs.is_tool_installed("Heirloom"):
-            heirloom_script = programs.get_tool_program("Heirloom")
+        heirloom_script = programs.find_tool_program("Heirloom")
         if not heirloom_script:
-            logger.log_error("Heirloom was not found")
             return None
 
         # Get list command
@@ -378,19 +366,13 @@ class Legacy(storebase.StoreBase):
             return None
 
         # Get tool
-        python_tool = None
-        if programs.is_tool_installed("PythonVenvPython"):
-            python_tool = programs.get_tool_program("PythonVenvPython")
+        python_tool = programs.find_tool_program("PythonVenvPython")
         if not python_tool:
-            logger.log_error("PythonVenvPython was not found")
             return None
 
         # Get script
-        heirloom_script = None
-        if programs.is_tool_installed("Heirloom"):
-            heirloom_script = programs.get_tool_program("Heirloom")
+        heirloom_script = programs.find_tool_program("Heirloom")
         if not heirloom_script:
-            logger.log_error("Heirloom was not found")
             return None
 
         # Get info command

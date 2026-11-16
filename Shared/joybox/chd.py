@@ -70,11 +70,8 @@ def create_disc_chd(
             exit_on_failure = exit_on_failure)
 
     # Get tool
-    chd_tool = None
-    if programs.is_tool_installed("MameChdman"):
-        chd_tool = programs.get_tool_program("MameChdman")
+    chd_tool = programs.find_tool_program("MameChdman")
     if not chd_tool:
-        logger.log_error("MameChdman was not found")
         return False
 
     # Get create command
@@ -162,11 +159,8 @@ def extract_disc_chd(
     exit_on_failure = False):
 
     # Get tool
-    chd_tool = None
-    if programs.is_tool_installed("MameChdman"):
-        chd_tool = programs.get_tool_program("MameChdman")
+    chd_tool = programs.find_tool_program("MameChdman")
     if not chd_tool:
-        logger.log_error("MameChdman was not found")
         return False
 
     # Get extract command
@@ -226,11 +220,8 @@ def extract_disc_chd_to_iso(
     exit_on_failure = False):
 
     # Get tool
-    bchunk_tool = None
-    if programs.is_tool_installed("Bchunk"):
-        bchunk_tool = programs.get_tool_program("Bchunk")
+    bchunk_tool = programs.find_tool_program("Bchunk")
     if not bchunk_tool:
-        logger.log_error("Bchunk was not found")
         return False
 
     # Create temporary directory
@@ -388,11 +379,8 @@ def verify_disc_chd(
     exit_on_failure = False):
 
     # Get tool
-    chd_tool = None
-    if programs.is_tool_installed("MameChdman"):
-        chd_tool = programs.get_tool_program("MameChdman")
+    chd_tool = programs.find_tool_program("MameChdman")
     if not chd_tool:
-        logger.log_error("MameChdman was not found")
         return False
 
     # Get verify command

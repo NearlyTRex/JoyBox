@@ -108,19 +108,13 @@ class Amazon(storebase.StoreBase):
             return True
 
         # Get tool
-        python_tool = None
-        if programs.is_tool_installed("PythonVenvPython"):
-            python_tool = programs.get_tool_program("PythonVenvPython")
+        python_tool = programs.find_tool_program("PythonVenvPython")
         if not python_tool:
-            logger.log_error("PythonVenvPython was not found")
             return False
 
         # Get script
-        nile_script = None
-        if programs.is_tool_installed("Nile"):
-            nile_script = programs.get_tool_program("Nile")
+        nile_script = programs.find_tool_program("Nile")
         if not nile_script:
-            logger.log_error("Nile was not found")
             return False
 
         # Get login command
@@ -208,19 +202,13 @@ class Amazon(storebase.StoreBase):
                 use_cache = False
 
         # Get tool
-        python_tool = None
-        if programs.is_tool_installed("PythonVenvPython"):
-            python_tool = programs.get_tool_program("PythonVenvPython")
+        python_tool = programs.find_tool_program("PythonVenvPython")
         if not python_tool:
-            logger.log_error("PythonVenvPython was not found")
             return None
 
         # Get script
-        nile_script = None
-        if programs.is_tool_installed("Nile"):
-            nile_script = programs.get_tool_program("Nile")
+        nile_script = programs.find_tool_program("Nile")
         if not nile_script:
-            logger.log_error("Nile was not found")
             return None
 
         # Get refresh command
@@ -337,19 +325,13 @@ class Amazon(storebase.StoreBase):
             return None
 
         # Get tool
-        python_tool = None
-        if programs.is_tool_installed("PythonVenvPython"):
-            python_tool = programs.get_tool_program("PythonVenvPython")
+        python_tool = programs.find_tool_program("PythonVenvPython")
         if not python_tool:
-            logger.log_error("PythonVenvPython was not found")
             return None
 
         # Get script
-        nile_script = None
-        if programs.is_tool_installed("Nile"):
-            nile_script = programs.get_tool_program("Nile")
+        nile_script = programs.find_tool_program("Nile")
         if not nile_script:
-            logger.log_error("Nile was not found")
             return None
 
         # Get info command
@@ -426,19 +408,13 @@ class Amazon(storebase.StoreBase):
             return False
 
         # Get tool
-        python_tool = None
-        if programs.is_tool_installed("PythonVenvPython"):
-            python_tool = programs.get_tool_program("PythonVenvPython")
+        python_tool = programs.find_tool_program("PythonVenvPython")
         if not python_tool:
-            logger.log_error("PythonVenvPython was not found")
             return False
 
         # Get script
-        nile_script = None
-        if programs.is_tool_installed("Nile"):
-            nile_script = programs.get_tool_program("Nile")
+        nile_script = programs.find_tool_program("Nile")
         if not nile_script:
-            logger.log_error("Nile was not found")
             return False
 
         # Create temporary directory

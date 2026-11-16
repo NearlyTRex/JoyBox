@@ -5,6 +5,7 @@ import os.path
 # Local imports
 import joybox.environment as environment
 import joybox.paths as paths
+from joybox import logger
 from joybox import platform_info
 
 ###########################################################
@@ -213,6 +214,14 @@ def is_tool_installed(tool_name, tool_platform = None):
     if tool_program:
         return os.path.exists(tool_program)
     return False
+
+# Get an installed tool's program, or None, logging that it is missing unless told not to
+def find_tool_program(tool_name, log_missing = True):
+    if is_tool_installed(tool_name):
+        return get_tool_program(tool_name)
+    if log_missing:
+        logger.log_error("%s was not found" % tool_name)
+    return None
 
 # Determine if emulator is installed
 def is_emulator_installed(emulator_name, emulator_platform = None):

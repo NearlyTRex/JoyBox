@@ -9,7 +9,6 @@ import textwrap
 from joybox import command
 from joybox import fileops
 from joybox import hashing
-from joybox import logger
 from joybox import paths
 from joybox import programs
 
@@ -96,19 +95,13 @@ def trim_switch_xci(
     exit_on_failure = False):
 
     # Get tool
-    python_tool = None
-    if programs.is_tool_installed("PythonVenvPython"):
-        python_tool = programs.get_tool_program("PythonVenvPython")
+    python_tool = programs.find_tool_program("PythonVenvPython")
     if not python_tool:
-        logger.log_error("PythonVenvPython was not found")
         return False
 
     # Get script
-    trim_script = None
-    if programs.is_tool_installed("XCITrimmer"):
-        trim_script = programs.get_tool_program("XCITrimmer")
+    trim_script = programs.find_tool_program("XCITrimmer")
     if not trim_script:
-        logger.log_error("XCITrimmer was not found")
         return False
 
     # Create temporary directory
@@ -181,19 +174,13 @@ def untrim_switch_xci(
     exit_on_failure = False):
 
     # Get tool
-    python_tool = None
-    if programs.is_tool_installed("PythonVenvPython"):
-        python_tool = programs.get_tool_program("PythonVenvPython")
+    python_tool = programs.find_tool_program("PythonVenvPython")
     if not python_tool:
-        logger.log_error("PythonVenvPython was not found")
         return False
 
     # Get script
-    untrim_script = None
-    if programs.is_tool_installed("XCITrimmer"):
-        untrim_script = programs.get_tool_program("XCITrimmer")
+    untrim_script = programs.find_tool_program("XCITrimmer")
     if not untrim_script:
-        logger.log_error("XCITrimmer was not found")
         return False
 
     # Create temporary directory
@@ -265,11 +252,8 @@ def extract_switch_nsp(
     exit_on_failure = False):
 
     # Get tool
-    extract_tool = None
-    if programs.is_tool_installed("HacTool"):
-        extract_tool = programs.get_tool_program("HacTool")
+    extract_tool = programs.find_tool_program("HacTool")
     if not extract_tool:
-        logger.log_error("HacTool was not found")
         return False
 
     # Get extract command

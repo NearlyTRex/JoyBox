@@ -49,11 +49,8 @@ def get_embedded_filename(
     validation.assert_is_non_empty_string(passphrase, "passphrase")
 
     # Get tool
-    gpg_tool = None
-    if programs.is_tool_installed("Gpg"):
-        gpg_tool = programs.get_tool_program("Gpg")
+    gpg_tool = programs.find_tool_program("Gpg")
     if not gpg_tool:
-        logger.log_error("Gpg was not found")
         return None
 
     # Get info command
@@ -228,11 +225,8 @@ def encrypt_file(
         return success
 
     # Get tool
-    gpg_tool = None
-    if programs.is_tool_installed("Gpg"):
-        gpg_tool = programs.get_tool_program("Gpg")
+    gpg_tool = programs.find_tool_program("Gpg")
     if not gpg_tool:
-        logger.log_error("Gpg was not found")
         return False
 
     # Get encrypt command
@@ -320,11 +314,8 @@ def decrypt_file(
         return success
 
     # Get tool
-    gpg_tool = None
-    if programs.is_tool_installed("Gpg"):
-        gpg_tool = programs.get_tool_program("Gpg")
+    gpg_tool = programs.find_tool_program("Gpg")
     if not gpg_tool:
-        logger.log_error("Gpg was not found")
         return False
 
     # Get decrypt command

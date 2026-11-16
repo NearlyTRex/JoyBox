@@ -8,7 +8,6 @@ import os
 from joybox import command
 from joybox import fileops
 from joybox import filebulk
-from joybox import logger
 from joybox import paths
 from joybox import programs
 
@@ -21,11 +20,8 @@ def convert_3ds_cia_to_cci(
     exit_on_failure = False):
 
     # Get tool
-    convert_tool = None
-    if programs.is_tool_installed("CtrMakeRom"):
-        convert_tool = programs.get_tool_program("CtrMakeRom")
+    convert_tool = programs.find_tool_program("CtrMakeRom")
     if not convert_tool:
-        logger.log_error("CtrMakeRom was not found")
         return False
 
     # Get convert command
@@ -59,11 +55,8 @@ def convert_3ds_cci_to_cia(
     exit_on_failure = False):
 
     # Get tool
-    convert_tool = None
-    if programs.is_tool_installed("CtrMakeRom"):
-        convert_tool = programs.get_tool_program("CtrMakeRom")
+    convert_tool = programs.find_tool_program("CtrMakeRom")
     if not convert_tool:
-        logger.log_error("CtrMakeRom was not found")
         return False
 
     # Get convert command
@@ -97,11 +90,8 @@ def trim_3ds_cci(
     exit_on_failure = False):
 
     # Get tool
-    trim_tool = None
-    if programs.is_tool_installed("3DSRomTool"):
-        trim_tool = programs.get_tool_program("3DSRomTool")
+    trim_tool = programs.find_tool_program("3DSRomTool")
     if not trim_tool:
-        logger.log_error("3DSRomTool was not found")
         return False
 
     # Create temporary directory
@@ -165,11 +155,8 @@ def untrim_3ds_cci(
     exit_on_failure = False):
 
     # Get tool
-    trim_tool = None
-    if programs.is_tool_installed("3DSRomTool"):
-        trim_tool = programs.get_tool_program("3DSRomTool")
+    trim_tool = programs.find_tool_program("3DSRomTool")
     if not trim_tool:
-        logger.log_error("3DSRomTool was not found")
         return False
 
     # Create temporary directory
@@ -235,11 +222,8 @@ def extract_3ds_cia(
     exit_on_failure = False):
 
     # Get tool
-    extract_tool = None
-    if programs.is_tool_installed("CtrTool"):
-        extract_tool = programs.get_tool_program("CtrTool")
+    extract_tool = programs.find_tool_program("CtrTool")
     if not extract_tool:
-        logger.log_error("CtrTool was not found")
         return False
 
     # Create temporary directory
@@ -314,11 +298,8 @@ def get_3ds_file_info(
     exit_on_failure = False):
 
     # Get tool
-    print_tool = None
-    if programs.is_tool_installed("CtrTool"):
-        print_tool = programs.get_tool_program("CtrTool")
+    print_tool = programs.find_tool_program("CtrTool")
     if not print_tool:
-        logger.log_error("CtrTool was not found")
         return ""
 
     # Get print command

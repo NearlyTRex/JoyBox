@@ -7,6 +7,7 @@ import contextlib
 
 # Local imports
 from joybox import config
+from joybox import programs
 from joybox import serialization
 from joybox import logger
 from joybox import paths
@@ -67,7 +68,7 @@ def diff_files(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    rclone_tool = sync.get_rclone_tool()
+    rclone_tool = programs.find_tool_program("RClone")
     if not rclone_tool:
         return False
 

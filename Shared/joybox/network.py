@@ -162,11 +162,8 @@ def download_url(
     exit_on_failure = False):
 
     # Get tool
-    download_tool = None
-    if programs.is_tool_installed("Curl"):
-        download_tool = programs.get_tool_program("Curl")
+    download_tool = programs.find_tool_program("Curl")
     if not download_tool:
-        logger.log_error("Curl was not found")
         return False
 
     # Get download command
@@ -251,11 +248,8 @@ def download_git_url(
         return True
 
     # Get tool
-    download_tool = None
-    if programs.is_tool_installed("Git"):
-        download_tool = programs.get_tool_program("Git")
+    download_tool = programs.find_tool_program("Git")
     if not download_tool:
-        logger.log_error("Git was not found")
         return False
 
     # Get download command

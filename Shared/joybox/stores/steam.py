@@ -184,11 +184,8 @@ class Steam(storebase.StoreBase):
             return True
 
         # Get tool
-        steam_tool = None
-        if programs.is_tool_installed("SteamCMD"):
-            steam_tool = programs.get_tool_program("SteamCMD")
+        steam_tool = programs.find_tool_program("SteamCMD")
         if not steam_tool:
-            logger.log_error("SteamCMD was not found")
             return False
 
         # Get login command
@@ -408,11 +405,8 @@ class Steam(storebase.StoreBase):
             return None
 
         # Get tool
-        steamcmd_tool = None
-        if programs.is_tool_installed("SteamCMD"):
-            steamcmd_tool = programs.get_tool_program("SteamCMD")
+        steamcmd_tool = programs.find_tool_program("SteamCMD")
         if not steamcmd_tool:
-            logger.log_error("SteamCMD was not found")
             return None
 
         # Get info command

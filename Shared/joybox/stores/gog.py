@@ -157,11 +157,8 @@ class GOG(storebase.StoreBase):
         exit_on_failure = False):
 
         # Get tool
-        gog_tool = None
-        if programs.is_tool_installed("LGOGDownloader"):
-            gog_tool = programs.get_tool_program("LGOGDownloader")
+        gog_tool = programs.find_tool_program("LGOGDownloader")
         if not gog_tool:
-            logger.log_error("LGOGDownloader was not found")
             return False
 
         # Get login command
@@ -188,11 +185,8 @@ class GOG(storebase.StoreBase):
         exit_on_failure = False):
 
         # Get tool
-        python_tool = None
-        if programs.is_tool_installed("PythonVenvPython"):
-            python_tool = programs.get_tool_program("PythonVenvPython")
+        python_tool = programs.find_tool_program("PythonVenvPython")
         if not python_tool:
-            logger.log_error("PythonVenvPython was not found")
             return False
 
         # Get script
@@ -311,11 +305,8 @@ class GOG(storebase.StoreBase):
         # Fetch fresh data if not using cache
         if not use_cache:
             # Get tool
-            gog_tool = None
-            if programs.is_tool_installed("LGOGDownloader"):
-                gog_tool = programs.get_tool_program("LGOGDownloader")
+            gog_tool = programs.find_tool_program("LGOGDownloader")
             if not gog_tool:
-                logger.log_error("LGOGDownloader was not found")
                 return None
 
             # Create temporary directory
@@ -680,11 +671,8 @@ class GOG(storebase.StoreBase):
             return False
 
         # Get tool
-        python_tool = None
-        if programs.is_tool_installed("PythonVenvPython"):
-            python_tool = programs.get_tool_program("PythonVenvPython")
+        python_tool = programs.find_tool_program("PythonVenvPython")
         if not python_tool:
-            logger.log_error("PythonVenvPython was not found")
             return False
 
         # Get script
@@ -742,11 +730,8 @@ class GOG(storebase.StoreBase):
             return False
 
         # Get tool
-        gog_tool = None
-        if programs.is_tool_installed("LGOGDownloader"):
-            gog_tool = programs.get_tool_program("LGOGDownloader")
+        gog_tool = programs.find_tool_program("LGOGDownloader")
         if not gog_tool:
-            logger.log_error("LGOGDownloader was not found")
             return False
 
         # Create temporary directory

@@ -122,19 +122,13 @@ class Epic(storebase.StoreBase):
             return True
 
         # Get tool
-        python_tool = None
-        if programs.is_tool_installed("PythonVenvPython"):
-            python_tool = programs.get_tool_program("PythonVenvPython")
+        python_tool = programs.find_tool_program("PythonVenvPython")
         if not python_tool:
-            logger.log_error("PythonVenvPython was not found")
             return False
 
         # Get script
-        legendary_script = None
-        if programs.is_tool_installed("Legendary"):
-            legendary_script = programs.get_tool_program("Legendary")
+        legendary_script = programs.find_tool_program("Legendary")
         if not legendary_script:
-            logger.log_error("Legendary was not found")
             return False
 
         # Get login command
@@ -306,19 +300,13 @@ class Epic(storebase.StoreBase):
                 use_cache = False
 
         # Get tool
-        python_tool = None
-        if programs.is_tool_installed("PythonVenvPython"):
-            python_tool = programs.get_tool_program("PythonVenvPython")
+        python_tool = programs.find_tool_program("PythonVenvPython")
         if not python_tool:
-            logger.log_error("PythonVenvPython was not found")
             return None
 
         # Get script
-        legendary_script = None
-        if programs.is_tool_installed("Legendary"):
-            legendary_script = programs.get_tool_program("Legendary")
+        legendary_script = programs.find_tool_program("Legendary")
         if not legendary_script:
-            logger.log_error("Legendary was not found")
             return None
 
         # Get list command
@@ -407,19 +395,13 @@ class Epic(storebase.StoreBase):
             return None
 
         # Get tool
-        python_tool = None
-        if programs.is_tool_installed("PythonVenvPython"):
-            python_tool = programs.get_tool_program("PythonVenvPython")
+        python_tool = programs.find_tool_program("PythonVenvPython")
         if not python_tool:
-            logger.log_error("PythonVenvPython was not found")
             return None
 
         # Get script
-        legendary_script = None
-        if programs.is_tool_installed("Legendary"):
-            legendary_script = programs.get_tool_program("Legendary")
+        legendary_script = programs.find_tool_program("Legendary")
         if not legendary_script:
-            logger.log_error("Legendary was not found")
             return None
 
         # Get info command

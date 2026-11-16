@@ -4,7 +4,6 @@
 
 # Local imports
 from joybox import command
-from joybox import logger
 from joybox import programs
 
 # Encrypt Nintendo DS rom
@@ -16,11 +15,8 @@ def encrypt_nds_rom(
     exit_on_failure = False):
 
     # Get tool
-    encrypt_tool = None
-    if programs.is_tool_installed("NDecrypt"):
-        encrypt_tool = programs.get_tool_program("NDecrypt")
+    encrypt_tool = programs.find_tool_program("NDecrypt")
     if not encrypt_tool:
-        logger.log_error("NDecrypt was not found")
         return False
 
     # Get encrypt command
@@ -49,11 +45,8 @@ def decrypt_nds_rom(
     exit_on_failure = False):
 
     # Get tool
-    decrypt_tool = None
-    if programs.is_tool_installed("NDecrypt"):
-        decrypt_tool = programs.get_tool_program("NDecrypt")
+    decrypt_tool = programs.find_tool_program("NDecrypt")
     if not decrypt_tool:
-        logger.log_error("NDecrypt was not found")
         return False
 
     # Get decrypt command
