@@ -73,6 +73,25 @@ def find_locker_game_names(game_supercategory, game_category, game_subcategory, 
         base_dir = environment.get_locker_gaming_root_dir(locker_type)
     return find_all_game_names(base_dir, game_supercategory, game_category, game_subcategory)
 
+# Iterate every rom category, as (supercategory, category, subcategory)
+def iterate_rom_categories():
+    for game_category in config.Category.members():
+        for game_subcategory in config.subcategory_map[game_category]:
+            yield config.Supercategory.ROMS, game_category, game_subcategory
+
+# Iterate the info of every rom game with json metadata
+def iterate_rom_game_infos(verbose = False, pretend_run = False, exit_on_failure = False):
+    for game_supercategory, game_category, game_subcategory in iterate_rom_categories():
+        for game_name in find_json_game_names(game_supercategory, game_category, game_subcategory):
+            yield gameinfo.GameInfo(
+                game_supercategory = game_supercategory,
+                game_category = game_category,
+                game_subcategory = game_subcategory,
+                game_name = game_name,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
+
 # Iterate selected game categories
 def iterate_selected_game_categories(
     parser,

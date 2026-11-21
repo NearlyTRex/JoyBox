@@ -537,3 +537,41 @@ def test_a_registry_path_without_sandboxing_is_not_sandboxed(monkeypatch, fake_r
 
     assert programs.is_program_path_sandboxed_tool(fake_registry["packer"], "linux") is False
     assert programs.is_program_path_sandboxed_emulator("/any", "linux") is False
+
+
+###########################################################
+# Installed tool lookup
+###########################################################
+
+@pytest.fixture
+def installed_tools(monkeypatch):
+    installed = {"PythonVenvPython": "/venv/bin/python", "Nile": "/tools/nile/cli.py"}
+    errors = []
+    monkeypatch.setattr(programs, "is_tool_installed", lambda tool_name: tool_name in installed)
+    monkeypatch.setattr(programs, "get_tool_program", lambda tool_name: installed[tool_name])
+    monkeypatch.setattr(programs.logger, "log_error", lambda message, **kwargs: errors.append(message))
+    return installed, errors
+
+
+def test_an_installed_tool_program_is_found(installed_tools):
+    assert programs.find_tool_program("Nile") == "/tools/nile/cli.py"
+
+
+def test_a_missing_tool_is_logged_unless_told_not_to(installed_tools):
+    _, errors = installed_tools
+
+    assert programs.find_tool_program("Legendary") is None
+    assert programs.find_tool_program("Heirloom", log_missing = False) is None
+    assert errors == ["Legendary was not found"]
+
+
+def test_a_python_script_runs_through_the_venv_python(installed_tools):
+    assert programs.get_python_script_command("Nile") == ["/venv/bin/python", "/tools/nile/cli.py"]
+
+
+@pytest.mark.parametrize("missing", ["PythonVenvPython", "Nile"])
+def test_a_python_script_needs_the_venv_python_and_the_script(installed_tools, missing):
+    installed, _ = installed_tools
+    del installed[missing]
+
+    assert programs.get_python_script_command("Nile") is None

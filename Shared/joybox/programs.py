@@ -223,6 +223,16 @@ def find_tool_program(tool_name, log_missing = True):
         logger.log_error("%s was not found" % tool_name)
     return None
 
+# Get the command running a python script tool through the venv python, or None when either is missing
+def get_python_script_command(script_tool_name):
+    python_tool = find_tool_program("PythonVenvPython")
+    if not python_tool:
+        return None
+    script = find_tool_program(script_tool_name)
+    if not script:
+        return None
+    return [python_tool, script]
+
 # Determine if emulator is installed
 def is_emulator_installed(emulator_name, emulator_platform = None):
     emulator_program = get_emulator_program(emulator_name, emulator_platform)

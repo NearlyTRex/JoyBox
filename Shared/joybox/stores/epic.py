@@ -121,21 +121,14 @@ class Epic(storebase.StoreBase):
         if self.is_logged_in():
             return True
 
-        # Get tool
-        python_tool = programs.find_tool_program("PythonVenvPython")
-        if not python_tool:
-            return False
-
-        # Get script
-        legendary_script = programs.find_tool_program("Legendary")
-        if not legendary_script:
+        # Get script command
+        script_cmd = programs.get_python_script_command("Legendary")
+        if not script_cmd:
             return False
 
         # Get login command
-        login_cmd = [
-            python_tool,
-            legendary_script,
-            "auth"
+        login_cmd = script_cmd + [
+                        "auth"
         ]
 
         # Run login command
@@ -299,21 +292,14 @@ class Epic(storebase.StoreBase):
                     logger.log_warning("Failed to load Epic cache, will fetch fresh data")
                 use_cache = False
 
-        # Get tool
-        python_tool = programs.find_tool_program("PythonVenvPython")
-        if not python_tool:
-            return None
-
-        # Get script
-        legendary_script = programs.find_tool_program("Legendary")
-        if not legendary_script:
+        # Get script command
+        script_cmd = programs.get_python_script_command("Legendary")
+        if not script_cmd:
             return None
 
         # Get list command
-        list_cmd = [
-            python_tool,
-            legendary_script,
-            "list",
+        list_cmd = script_cmd + [
+                        "list",
             "--json"
         ]
 
@@ -394,21 +380,14 @@ class Epic(storebase.StoreBase):
             logger.log_warning("Info identifier '%s' was not valid" % identifier)
             return None
 
-        # Get tool
-        python_tool = programs.find_tool_program("PythonVenvPython")
-        if not python_tool:
-            return None
-
-        # Get script
-        legendary_script = programs.find_tool_program("Legendary")
-        if not legendary_script:
+        # Get script command
+        script_cmd = programs.get_python_script_command("Legendary")
+        if not script_cmd:
             return None
 
         # Get info command
-        info_cmd = [
-            python_tool,
-            legendary_script,
-            "info", identifier,
+        info_cmd = script_cmd + [
+                        "info", identifier,
             "--json"
         ]
 

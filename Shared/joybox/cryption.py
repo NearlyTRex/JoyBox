@@ -79,6 +79,21 @@ def get_embedded_filename(
         return text.clean_rich_text(possible_name)
     return None
 
+# Get the info of an encrypted file from its decrypted copy: the name it embeds, its hash when
+# given a hasher, its size and the encrypted file's modification time
+def get_decrypted_file_info(src, decrypted_file, embedded_filename, hasher, chunksize, verbose = False, pretend_run = False, exit_on_failure = False):
+    file_info = {"filename": embedded_filename}
+    if callable(hasher):
+        file_info["hash"] = hasher(
+            src = decrypted_file,
+            chunksize = chunksize,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+    file_info["size"] = paths.get_file_size(decrypted_file) if paths.does_path_exist(decrypted_file) else 0
+    file_info["mtime"] = paths.get_file_mod_time(src)
+    return file_info
+
 # Get embedded file info
 def get_embedded_file_info(
     src,
@@ -99,54 +114,21 @@ def get_embedded_file_info(
     if not embedded_filename:
         return None
 
-    # Create temporary directory
-    tmp_dir_success, tmp_dir_result = fileops.create_temporary_directory(
-        verbose = verbose,
-        pretend_run = pretend_run)
-    if not tmp_dir_success:
-        return None
-
-    # Get temporary file
-    tmp_file = paths.join_paths(tmp_dir_result, embedded_filename)
-
-    # Decrypt file
-    success = decrypt_file(
-        src = src,
-        passphrase = passphrase,
-        output_file = tmp_file,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    if not success:
-        fileops.remove_directory(
-            src = tmp_dir_result,
+    # Decrypt into a temporary directory and read the file decrypted
+    with fileops.temporary_directory(verbose = verbose, pretend_run = pretend_run) as tmp_dir:
+        if not tmp_dir:
+            return None
+        tmp_file = paths.join_paths(tmp_dir, embedded_filename)
+        success = decrypt_file(
+            src = src,
+            passphrase = passphrase,
+            output_file = tmp_file,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-        return None
-
-    # Get file info
-    file_info = {}
-    file_info["filename"] = embedded_filename
-    if callable(hasher):
-        file_info["hash"] = hasher(
-            src = tmp_file,
-            chunksize = chunksize,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-    file_info["size"] = paths.get_file_size(tmp_file) if paths.does_path_exist(tmp_file) else 0
-    file_info["mtime"] = paths.get_file_mod_time(src)
-
-    # Clean up
-    fileops.remove_directory(
-        src = tmp_dir_result,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-
-    # Return file info
-    return file_info
+        if not success:
+            return None
+        return get_decrypted_file_info(src, tmp_file, embedded_filename, hasher, chunksize, verbose, pretend_run, exit_on_failure)
 
 # Get real file path
 def get_real_file_path(

@@ -56,13 +56,11 @@ def download_metadata_asset(
         asset_type)
     output_asset_ext = paths.get_filename_extension(output_asset_file)
 
-    # Create temporary directory
-    tmp_dir_success, tmp_dir_result = fileops.create_temporary_directory(verbose = verbose)
-    if not tmp_dir_success:
-        return False
+    # Download into a temporary directory, removed whatever the outcome
+    with fileops.temporary_directory(verbose = verbose) as tmp_dir_result:
+        if not tmp_dir_result:
+            return False
 
-    # Temporary directory is removed whatever the outcome
-    try:
         # Get store
         store_obj = stores.get_store_by_platform(
             store_platform = game_info.get_platform(),
@@ -173,12 +171,6 @@ def download_metadata_asset(
 
         # Should be successful
         return True
-    finally:
-        fileops.remove_directory(
-            src = tmp_dir_result,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
 
 # Download all metadata assets
 def download_all_metadata_assets(

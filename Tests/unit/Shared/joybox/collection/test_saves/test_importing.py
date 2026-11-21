@@ -144,10 +144,10 @@ def test_every_game_is_visited_until_one_fails(monkeypatch, function, per_game, 
     ("export_all_game_save", "export_game_save"),
 ])
 def test_every_game_succeeding_succeeds(monkeypatch, function, per_game):
-    built = make_catalog(monkeypatch, {"First": "first", "Second": "second"})
+    walks = make_catalog(monkeypatch, {"First": "first", "Second": "second"})
     visited = []
     monkeypatch.setattr(saves, per_game, lambda game_info, **kwargs: visited.append(game_info) or True)
 
     assert getattr(saves, function)(pretend_run = True) is True
     assert visited == ["first", "second"]
-    assert built[0][1]["pretend_run"] is True
+    assert walks == [{"verbose": False, "pretend_run": True, "exit_on_failure": False}]

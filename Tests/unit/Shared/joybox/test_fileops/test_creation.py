@@ -201,6 +201,50 @@ def test_temporary_directory_reports_a_failure(monkeypatch):
     assert fileops.create_temporary_directory() == (False, "Unable to create temporary directory")
 
 
+def test_temporary_directory_block_removes_it_afterwards(tmp_path):
+    with fileops.temporary_directory(directory = str(tmp_path)) as path:
+        assert os.path.dirname(path) == os.path.realpath(tmp_path)
+        write(os.path.join(path, "scratch.txt"), "data")
+    assert os.listdir(tmp_path) == []
+
+
+def test_temporary_directory_block_removes_it_on_an_error(tmp_path):
+    with pytest.raises(RuntimeError):
+        with fileops.temporary_directory(directory = str(tmp_path)):
+            raise RuntimeError("failed")
+    assert os.listdir(tmp_path) == []
+
+
+def test_temporary_directory_block_yields_none_when_it_cannot_be_made(monkeypatch):
+    monkeypatch.setattr(fileops.tempfile, "mkdtemp", lambda **kwargs: "/nonexistent/joybox")
+    with fileops.temporary_directory() as path:
+        assert path is None
+
+
+def test_temporary_directory_block_in_a_pretend_run(tmp_path):
+    with fileops.temporary_directory(directory = str(tmp_path), pretend_run = True) as path:
+        assert os.path.dirname(path) == str(tmp_path)
+    assert os.listdir(tmp_path) == []
+
+
+def test_an_existing_directory_is_used_and_kept(tmp_path):
+    with fileops.existing_or_temporary_directory(str(tmp_path)) as path:
+        assert path == str(tmp_path)
+        write(os.path.join(path, "kept.txt"), "data")
+    assert os.listdir(tmp_path) == ["kept.txt"]
+
+
+def test_without_an_existing_directory_a_temporary_one_is_used(tmp_path, monkeypatch):
+    def mkdtemp(**kwargs):
+        os.mkdir(tmp_path / "made")
+        return str(tmp_path / "made")
+
+    monkeypatch.setattr(fileops.tempfile, "mkdtemp", mkdtemp)
+    with fileops.existing_or_temporary_directory(None) as path:
+        assert path == os.path.realpath(tmp_path / "made")
+    assert not os.path.exists(path)
+
+
 def test_temporary_file():
     ok, path = fileops.create_temporary_file(suffix = ".txt", prefix = "joybox", verbose = True)
     try:

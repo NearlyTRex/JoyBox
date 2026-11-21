@@ -223,7 +223,7 @@ def packing(monkeypatch):
         packs.append({"save_dir": input_save_dir, "files": files, **kwargs})
         return packs_result[0]
     packs_result = [True]
-    monkeypatch.setattr(saves, "_pack_save_dir", pack_save_dir)
+    monkeypatch.setattr(saves, "pack_save_dir", pack_save_dir)
     return packs, packs_result
 
 

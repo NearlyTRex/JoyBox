@@ -64,6 +64,30 @@ def test_json_game_names_can_be_narrowed_to_a_lockers_games(game_tree):
 
 
 ###########################################################
+# Iterating every rom
+###########################################################
+
+def test_every_rom_subcategory_is_walked_once():
+    walked = list(gamecollection.iterate_rom_categories())
+    expected = sum(len(config.subcategory_map[category]) for category in config.Category.members())
+
+    assert len(walked) == len(set(walked)) == expected
+    assert {supercategory for supercategory, _, _ in walked} == {ROMS}
+    assert (ROMS, CATEGORY, SUBCATEGORY) in walked
+    assert (ROMS, COMPUTER, GOG) in walked
+
+
+def test_every_rom_game_with_json_is_built(game_tree):
+    write_game(game_tree, name = "Contra")
+    write_game(game_tree, name = "Zelda")
+
+    games = list(gamecollection.iterate_rom_game_infos(verbose = True))
+
+    assert [(game.get_category(), game.get_subcategory(), game.get_name()) for game in games] == [
+        (CATEGORY, SUBCATEGORY, "Contra"), (CATEGORY, SUBCATEGORY, "Zelda")]
+
+
+###########################################################
 # Iterating the selection
 ###########################################################
 

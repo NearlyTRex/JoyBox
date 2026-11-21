@@ -140,12 +140,9 @@ def all_downloads(monkeypatch):
     state = {"names": ["Half-Life 2"], "downloaded": [], "ok": True}
 
     monkeypatch.setattr(
-        purchase.gamecollection, "find_json_game_names",
-        lambda supercategory, category, subcategory: (
-            state["names"] if category == config.Category.COMPUTER else []))
-    monkeypatch.setattr(
-        purchase.gameinfo, "GameInfo",
-        lambda **kwargs: FakeGameInfo(name = kwargs["game_name"]))
+        purchase.gamecollection, "iterate_rom_game_infos",
+        lambda verbose = False, pretend_run = False, exit_on_failure = False: (
+            FakeGameInfo(name = name) for name in state["names"]))
 
     def download_game_store_purchase(game_info, **kwargs):
         state["downloaded"].append(game_info.get_name())
@@ -159,8 +156,7 @@ def test_every_game_in_the_collection_is_downloaded(all_downloads):
     all_downloads["names"] = ["Half-Life 2", "Portal"]
 
     assert purchase.download_all_game_store_purchases() is True
-    subcategories = len(config.subcategory_map[config.Category.COMPUTER])
-    assert all_downloads["downloaded"] == ["Half-Life 2", "Portal"] * subcategories
+    assert all_downloads["downloaded"] == ["Half-Life 2", "Portal"]
 
 
 def test_downloading_everything_stops_at_the_first_failure(all_downloads):

@@ -1,5 +1,6 @@
 # Imports
 import os
+import contextlib
 import codecs
 import stat
 import time
@@ -320,6 +321,28 @@ def create_temporary_directory(directory = None, verbose = False, pretend_run = 
     if not os.path.isdir(temp_dir):
         return (False, "Unable to create temporary directory")
     return (True, temp_dir)
+
+# Make a temporary directory for a with block, removing it afterwards. Yields its path,
+# or None when it could not be made.
+@contextlib.contextmanager
+def temporary_directory(directory = None, verbose = False, pretend_run = False):
+    success, temp_dir = create_temporary_directory(directory = directory, verbose = verbose, pretend_run = pretend_run)
+    if not success:
+        yield None
+        return
+    try:
+        yield temp_dir
+    finally:
+        remove_directory(src = temp_dir, verbose = verbose, pretend_run = pretend_run, exit_on_failure = False)
+
+# The directory given, left as it is, or else a temporary one removed afterwards. Yields
+# None when a temporary one could not be made.
+@contextlib.contextmanager
+def existing_or_temporary_directory(existing_dir, verbose = False, pretend_run = False):
+    with contextlib.ExitStack() as stack:
+        if not existing_dir:
+            existing_dir = stack.enter_context(temporary_directory(verbose = verbose, pretend_run = pretend_run))
+        yield existing_dir
 
 # Create temporary file
 def create_temporary_file(suffix = "", prefix = "tmp", verbose = False, pretend_run = False):

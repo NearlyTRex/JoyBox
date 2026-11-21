@@ -758,30 +758,28 @@ class Steam(storebase.StoreBase):
             logger.log_error("SteamDepotDownloader was not found", quit_program = True)
             return False
 
-        # Create temporary directory
-        tmp_dir_success, tmp_dir_result = fileops.create_temporary_directory(verbose = verbose)
-        if not tmp_dir_success:
-            return False
+        # Download into a temporary directory and archive it
+        with fileops.temporary_directory(verbose = verbose) as tmp_dir_result:
+            if not tmp_dir_result:
+                return False
 
-        # Get download command
-        download_cmd = [
-            steamdepot_tool,
-            "-app", identifier,
-            "-os", self.get_preferred_platform(),
-            "-osarch", self.get_preferred_architecture(),
-            "-dir", tmp_dir_result
-        ]
-        if isinstance(branch, str) and len(branch) and branch != "public":
-            download_cmd += [
-                "-beta", branch
+            # Get download command
+            download_cmd = [
+                steamdepot_tool,
+                "-app", identifier,
+                "-os", self.get_preferred_platform(),
+                "-osarch", self.get_preferred_architecture(),
+                "-dir", tmp_dir_result
             ]
-        if isinstance(self.get_account_name(), str) and len(self.get_account_name()):
-            download_cmd += [
-                "-username", self.get_account_name(),
-                "-remember-password"
-            ]
-
-        try:
+            if isinstance(branch, str) and len(branch) and branch != "public":
+                download_cmd += [
+                    "-beta", branch
+                ]
+            if isinstance(self.get_account_name(), str) and len(self.get_account_name()):
+                download_cmd += [
+                    "-username", self.get_account_name(),
+                    "-remember-password"
+                ]
 
             # Run download command
             code = command.run_returncode_command(
@@ -809,14 +807,6 @@ class Steam(storebase.StoreBase):
                 exit_on_failure = exit_on_failure)
             if not success:
                 return False
-        finally:
-
-            # Delete temporary directory
-            fileops.remove_directory(
-                src = tmp_dir_result,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = False)
 
         # Check results
         return paths.does_directory_contain_files(output_dir)

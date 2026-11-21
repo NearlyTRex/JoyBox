@@ -613,15 +613,11 @@ def build_autoinstall_image(
         return False
 
     # Work somewhere disposable
-    work_dir_ok, work_dir = fileops.create_temporary_directory(
-        verbose = verbose,
-        pretend_run = pretend_run)
-    if not work_dir_ok:
-        logger.log_error("Unable to create temporary directory")
-        return False
-    iso_dir = paths.join_paths(work_dir, "iso")
-
-    try:
+    with fileops.temporary_directory(verbose = verbose, pretend_run = pretend_run) as work_dir:
+        if not work_dir:
+            logger.log_error("Unable to create temporary directory")
+            return False
+        iso_dir = paths.join_paths(work_dir, "iso")
 
         # Take the image apart
         success = iso.extract_buildable_iso_tree(
@@ -674,12 +670,6 @@ def build_autoinstall_image(
             exit_on_failure = exit_on_failure)
         if not success:
             return False
-    finally:
-        fileops.remove_directory(
-            src = work_dir,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = False)
 
     logger.log_info("Built autoinstall image: %s" % output_file)
     return True

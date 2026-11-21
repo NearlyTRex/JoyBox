@@ -448,13 +448,10 @@ def create_vm(
         return False
 
     # Build the cloud-init seed
-    seed_success, seed_dir = fileops.create_temporary_directory(
-        verbose = verbose,
-        pretend_run = pretend_run)
-    if not seed_success:
-        return False
     seed_image = get_seed_image(vm_name, image_dir)
-    try:
+    with fileops.temporary_directory(verbose = verbose, pretend_run = pretend_run) as seed_dir:
+        if not seed_dir:
+            return False
         user_data = paths.join_paths(seed_dir, "user-data")
         meta_data = paths.join_paths(seed_dir, "meta-data")
         for seed_file, contents in [
@@ -474,11 +471,6 @@ def create_vm(
             sudo = True)
         if code != 0:
             return False
-    finally:
-        fileops.remove_directory(
-            src = seed_dir,
-            verbose = verbose,
-            pretend_run = pretend_run)
 
     # Bring up the network, pin the guest's address, and install
     start_network(network, verbose = verbose, pretend_run = pretend_run)

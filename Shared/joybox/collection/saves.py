@@ -6,7 +6,6 @@ import joybox.fileops as fileops
 from joybox import filebulk
 import joybox.archive as archive
 import joybox.locker as locker
-import joybox.gameinfo as gameinfo
 from joybox import gamecollection
 import joybox.stores as stores
 import joybox.storebase as storebase
@@ -64,7 +63,7 @@ def pack_save(
         return False
 
     # Pack save directory
-    return _pack_save_dir(
+    return pack_save_dir(
         game_info = game_info,
         input_save_dir = input_save_dir,
         output_save_dir = output_save_dir,
@@ -73,8 +72,16 @@ def pack_save(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
+# Log a save failure against the game's category
+def log_save_error(game_info, message):
+    logger.log_error(
+        message = message,
+        game_supercategory = game_info.get_supercategory(),
+        game_category = game_info.get_category(),
+        game_subcategory = game_info.get_subcategory())
+
 # Pack a save directory already known to hold save data
-def _pack_save_dir(
+def pack_save_dir(
     game_info,
     input_save_dir,
     output_save_dir,
@@ -83,10 +90,8 @@ def _pack_save_dir(
     pretend_run = False,
     exit_on_failure = False):
 
-    # Log packing
-    logger.log_info(f"Packing save for {game_info.get_name()}")
-
     # Make output save dir
+    logger.log_info(f"Packing save for {game_info.get_name()}")
     success = fileops.make_directory(
         src = output_save_dir,
         verbose = verbose,
@@ -95,31 +100,71 @@ def _pack_save_dir(
     if not success:
         return False
 
-    # Create temporary directory
-    tmp_dir_success, tmp_dir_result = fileops.create_temporary_directory(
-        verbose = verbose,
-        pretend_run = pretend_run)
-    if not tmp_dir_success:
-        return False
-    try:
-        return _archive_and_backup_save(
+    # Archive and back up through a temporary directory
+    with fileops.temporary_directory(verbose = verbose, pretend_run = pretend_run) as tmp_dir:
+        if not tmp_dir:
+            return False
+        return archive_and_backup_save(
             game_info = game_info,
             input_save_dir = input_save_dir,
             output_save_dir = output_save_dir,
-            tmp_dir = tmp_dir_result,
+            tmp_dir = tmp_dir,
             locker_type = locker_type,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-    finally:
-        fileops.remove_directory(
-            src = tmp_dir_result,
+
+# Archive a save directory and test the archive, leaving out a computer game's wine and sandboxie prefixes
+def create_save_archive(game_info, archive_file, input_save_dir, verbose = False, pretend_run = False, exit_on_failure = False):
+    input_excludes = []
+    if game_info.get_category() == config.Category.COMPUTER:
+        input_excludes = [config.SaveType.WINE.val(), config.SaveType.SANDBOXIE.val()]
+    success = archive.create_archive_from_folder(
+        archive_file = archive_file,
+        source_dir = input_save_dir,
+        excludes = input_excludes,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    if not success:
+        log_save_error(game_info, "Unable to archive save")
+        return False
+    success = archive.test_archive(
+        archive_file = archive_file,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    if not success:
+        log_save_error(game_info, "Unable to validate save")
+        return False
+    return True
+
+# Get the lockers a save backs up to: always the local one, which duplicate checks and unpacking read
+def get_save_locker_types(locker_type):
+    if locker_type in (None, config.LockerType.LOCAL):
+        return [config.LockerType.LOCAL]
+    return [config.LockerType.LOCAL, locker_type]
+
+# Back up a save archive to each locker given
+def backup_save_archive(game_info, archive_file, dest_rel_path, locker_types, verbose = False, pretend_run = False, exit_on_failure = False):
+    for locker_type in locker_types:
+        success = locker.backup(
+            src = archive_file,
+            dest_rel_path = dest_rel_path,
+            locker_type = locker_type,
+            show_progress = True,
+            skip_existing = True,
+            skip_identical = True,
             verbose = verbose,
             pretend_run = pretend_run,
-            exit_on_failure = False)
+            exit_on_failure = exit_on_failure)
+        if not success:
+            log_save_error(game_info, "Unable to backup save")
+            return False
+    return True
 
 # Archive save into a temporary directory and back it up
-def _archive_and_backup_save(
+def archive_and_backup_save(
     game_info,
     input_save_dir,
     output_save_dir,
@@ -129,46 +174,10 @@ def _archive_and_backup_save(
     pretend_run = False,
     exit_on_failure = False):
 
-    # Get save archive info
+    # Archive save, unless an identical archive is already packed
     tmp_save_archive_file = paths.join_paths(tmp_dir, game_info.get_name() + config.ArchiveFileType.ZIP.cval())
-    out_save_archive_file = paths.join_paths(output_save_dir, game_info.get_name() + "_" + str(runtime.get_current_timestamp()) + config.ArchiveFileType.ZIP.cval())
-
-    # Get excludes
-    input_excludes = []
-    if game_info.get_category() == config.Category.COMPUTER:
-        input_excludes = [config.SaveType.WINE.val(), config.SaveType.SANDBOXIE.val()]
-
-    # Archive save
-    success = archive.create_archive_from_folder(
-        archive_file = tmp_save_archive_file,
-        source_dir = input_save_dir,
-        excludes = input_excludes,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    if not success:
-        logger.log_error(
-            message = "Unable to archive save",
-            game_supercategory = game_info.get_supercategory(),
-            game_category = game_info.get_category(),
-            game_subcategory = game_info.get_subcategory())
+    if not create_save_archive(game_info, tmp_save_archive_file, input_save_dir, verbose, pretend_run, exit_on_failure):
         return False
-
-    # Test archive
-    success = archive.test_archive(
-        archive_file = tmp_save_archive_file,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    if not success:
-        logger.log_error(
-            message = "Unable to validate save",
-            game_supercategory = game_info.get_supercategory(),
-            game_category = game_info.get_category(),
-            game_subcategory = game_info.get_subcategory())
-        return False
-
-    # Check if already archived
     found_files = hashing.find_duplicate_archives(
         filename = tmp_save_archive_file,
         directory = output_save_dir,
@@ -179,34 +188,14 @@ def _archive_and_backup_save(
         logger.log_info("Save is already packed, skipping")
         return True
 
-    # The local archive directory is what duplicate checks and unpacking read
-    locker_types = [config.LockerType.LOCAL]
-    if locker_type not in (None, config.LockerType.LOCAL):
-        locker_types.append(locker_type)
-
-    # Backup archive
+    # Backup archive under a timestamped name
     logger.log_info(f"Backing up save to {output_save_dir}")
-    dest_rel_path = locker.convert_to_relative_path(out_save_archive_file)
-    for backup_locker_type in locker_types:
-        success = locker.backup(
-            src = tmp_save_archive_file,
-            dest_rel_path = dest_rel_path,
-            locker_type = backup_locker_type,
-            show_progress = True,
-            skip_existing = True,
-            skip_identical = True,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-        if not success:
-            logger.log_error(
-                message = "Unable to backup save",
-                game_supercategory = game_info.get_supercategory(),
-                game_category = game_info.get_category(),
-                game_subcategory = game_info.get_subcategory())
-            return False
-
-    # Log success
+    out_save_archive_file = paths.join_paths(
+        output_save_dir, game_info.get_name() + "_" + str(runtime.get_current_timestamp()) + config.ArchiveFileType.ZIP.cval())
+    if not backup_save_archive(
+        game_info, tmp_save_archive_file, locker.convert_to_relative_path(out_save_archive_file),
+        get_save_locker_types(locker_type), verbose, pretend_run, exit_on_failure):
+        return False
     logger.log_info("Save packed successfully")
     return True
 
@@ -216,34 +205,17 @@ def pack_all_saves(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    for game_supercategory in [config.Supercategory.ROMS]:
-        for game_category in config.Category.members():
-            for game_subcategory in config.subcategory_map[game_category]:
-                game_names = gamecollection.find_json_game_names(
-                    game_supercategory,
-                    game_category,
-                    game_subcategory)
-                for game_name in game_names:
-                    game_info = gameinfo.GameInfo(
-                        game_supercategory = game_supercategory,
-                        game_category = game_category,
-                        game_subcategory = game_subcategory,
-                        game_name = game_name,
-                        verbose = verbose,
-                        pretend_run = pretend_run,
-                        exit_on_failure = exit_on_failure)
-                    if not can_save_be_packed(game_info):
-                        continue
-                    success = pack_save(
-                        game_info = game_info,
-                        locker_type = locker_type,
-                        verbose = verbose,
-                        pretend_run = pretend_run,
-                        exit_on_failure = exit_on_failure)
-                    if not success:
-                        return False
-
-    # Should be successful
+    for game_info in gamecollection.iterate_rom_game_infos(verbose, pretend_run, exit_on_failure):
+        if not can_save_be_packed(game_info):
+            continue
+        success = pack_save(
+            game_info = game_info,
+            locker_type = locker_type,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if not success:
+            return False
     return True
 
 ############################################################
@@ -266,13 +238,16 @@ def unpack_save(
             logger.log_info(f"No packed save found for {game_info.get_name()}")
         return False
 
-    # Log unpacking
+    # Unpack the latest save archive, whose timestamped name sorts last
     logger.log_info(f"Unpacking save for {game_info.get_name()}")
-
-    # Get latest save archive, whose timestamped name sorts last
     latest_save_archive = strings.sort_strings(paths.build_file_list(input_save_dir))[-1]
+    if not extract_save_archive(game_info, latest_save_archive, output_save_dir, verbose, pretend_run, exit_on_failure):
+        return False
+    logger.log_info("Save unpacked successfully")
+    return True
 
-    # Make output save dir
+# Extract a save archive into a save directory, checking it held something
+def extract_save_archive(game_info, archive_file, output_save_dir, verbose = False, pretend_run = False, exit_on_failure = False):
     success = fileops.make_directory(
         src = output_save_dir,
         verbose = verbose,
@@ -280,35 +255,20 @@ def unpack_save(
         exit_on_failure = exit_on_failure)
     if not success:
         return False
-
-    # Unpack save archive
     if verbose:
-        logger.log_info(f"Extracting from {latest_save_archive}")
+        logger.log_info(f"Extracting from {archive_file}")
     success = archive.extract_archive(
-        archive_file = latest_save_archive,
+        archive_file = archive_file,
         extract_dir = output_save_dir,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if not success:
-        logger.log_error(
-            message = "Unable to unpack save",
-            game_supercategory = game_info.get_supercategory(),
-            game_category = game_info.get_category(),
-            game_subcategory = game_info.get_subcategory())
+        log_save_error(game_info, "Unable to unpack save")
         return False
-
-    # Check result
     if not pretend_run and paths.is_directory_empty(output_save_dir):
-        logger.log_error(
-            message = "Unpacked save is empty",
-            game_supercategory = game_info.get_supercategory(),
-            game_category = game_info.get_category(),
-            game_subcategory = game_info.get_subcategory())
+        log_save_error(game_info, "Unpacked save is empty")
         return False
-
-    # Log success
-    logger.log_info("Save unpacked successfully")
     return True
 
 # Unpack all saves
@@ -316,36 +276,27 @@ def unpack_all_saves(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    for game_supercategory in [config.Supercategory.ROMS]:
-        for game_category in config.Category.members():
-            for game_subcategory in config.subcategory_map[game_category]:
-                game_names = gamecollection.find_json_game_names(
-                    game_supercategory,
-                    game_category,
-                    game_subcategory)
-                for game_name in game_names:
-                    game_info = gameinfo.GameInfo(
-                        game_supercategory = game_supercategory,
-                        game_category = game_category,
-                        game_subcategory = game_subcategory,
-                        game_name = game_name,
-                        verbose = verbose,
-                        pretend_run = pretend_run,
-                        exit_on_failure = exit_on_failure)
-                    if not can_save_be_unpacked(game_info):
-                        continue
-                    success = unpack_save(
-                        game_info = game_info,
-                        verbose = verbose,
-                        pretend_run = pretend_run,
-                        exit_on_failure = exit_on_failure)
-                    if not success:
-                        return False
-
-    # Should be successful
+    for game_info in gamecollection.iterate_rom_game_infos(verbose, pretend_run, exit_on_failure):
+        if not can_save_be_unpacked(game_info):
+            continue
+        success = unpack_save(
+            game_info = game_info,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if not success:
+            return False
     return True
 
 ############################################################
+
+# Get a store path's entries, one per replacement of each translation key it holds
+def translate_store_path(path, relative_path, translation_map):
+    entries = []
+    for base_key, key_replacements in translation_map.items():
+        if base_key in path:
+            entries += [{"full": path.replace(base_key, key_replacement), "relative": relative_path} for key_replacement in key_replacements]
+    return entries
 
 # Get store path entries
 def get_store_path_entries(
@@ -359,27 +310,16 @@ def get_store_path_entries(
     if not store_obj:
         return []
 
-    # Get paths
-    store_paths = store_obj.add_path_variants(game_info.get_store_paths())
-
-    # Get translation map
+    # Translate each path variant, without repeats
     translation_map = store_obj.build_path_translation_map(
         appid = game_info.get_store_appid(),
         appname = game_info.get_store_name())
-
-    # Translate paths
     translated_paths = []
-    for path in store_paths:
+    for path in store_obj.add_path_variants(game_info.get_store_paths()):
         relative_path = storebase.convert_from_tokenized_path(path, store_type = store_obj.get_type())
-        for base_key, key_replacements in translation_map.items():
-            if base_key not in path:
-                continue
-            for key_replacement in key_replacements:
-                entry = {}
-                entry["full"] = path.replace(base_key, key_replacement)
-                entry["relative"] = relative_path
-                if entry not in translated_paths:
-                    translated_paths.append(entry)
+        for entry in translate_store_path(path, relative_path, translation_map):
+            if entry not in translated_paths:
+                translated_paths.append(entry)
     return translated_paths
 
 # Import store game save paths
@@ -426,6 +366,30 @@ def import_store_game_save(
     exit_on_failure = False):
     return True
 
+# Copy the store save paths holding files into a directory, under their relative paths.
+# Returns whether every copy succeeded, and whether there was anything to copy.
+def copy_store_save_files(store_path_entries, dest_dir, verbose = False, pretend_run = False, exit_on_failure = False):
+    copied = False
+    for store_path_entry in store_path_entries:
+        path_full = store_path_entry.get("full")
+        if verbose:
+            logger.log_info(f"Checking path: {path_full}")
+        if not paths.does_directory_contain_files(path_full):
+            continue
+        success = filebulk.smart_copy(
+            src = path_full,
+            dest = paths.join_paths(dest_dir, store_path_entry.get("relative")),
+            show_progress = True,
+            skip_existing = True,
+            ignore_symlinks = True,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if not success:
+            return False, copied
+        copied = True
+    return True, copied
+
 # Export store game save
 def export_store_game_save(
     game_info,
@@ -433,61 +397,29 @@ def export_store_game_save(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
+    with fileops.temporary_directory(verbose = verbose, pretend_run = pretend_run) as tmp_dir:
+        if not tmp_dir:
+            return False
 
-    # Create temporary directory
-    tmp_dir_success, tmp_dir_result = fileops.create_temporary_directory(
-        verbose = verbose,
-        pretend_run = pretend_run)
-    if not tmp_dir_success:
-        return False
-    try:
-
-        # Get store path entries
+        # Copy store files
         store_path_entries = get_store_path_entries(
             game_info = game_info,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-
-        # Copy store files
-        at_least_one_copy = False
-        for store_path_entry in store_path_entries:
-            path_full = store_path_entry.get("full")
-            path_relative = store_path_entry.get("relative")
-            if verbose:
-                logger.log_info(f"Checking path: {path_full}")
-            if not paths.does_directory_contain_files(path_full):
-                continue
-            success = filebulk.smart_copy(
-                src = path_full,
-                dest = paths.join_paths(tmp_dir_result, path_relative),
-                show_progress = True,
-                skip_existing = True,
-                ignore_symlinks = True,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
-            if not success:
-                return False
-            at_least_one_copy = True
-        if not at_least_one_copy:
-            return True
+        success, copied = copy_store_save_files(store_path_entries, tmp_dir, verbose, pretend_run, exit_on_failure)
+        if not success or not copied:
+            return success
 
         # Pack copied files, which a pretend run never wrote
-        return _pack_save_dir(
+        return pack_save_dir(
             game_info = game_info,
-            input_save_dir = tmp_dir_result,
+            input_save_dir = tmp_dir,
             output_save_dir = game_info.get_local_save_dir(),
             locker_type = locker_type,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-    finally:
-        fileops.remove_directory(
-            src = tmp_dir_result,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = False)
 
 ############################################################
 
@@ -565,31 +497,14 @@ def import_all_game_save_paths(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    for game_supercategory in [config.Supercategory.ROMS]:
-        for game_category in config.Category.members():
-            for game_subcategory in config.subcategory_map[game_category]:
-                game_names = gamecollection.find_json_game_names(
-                    game_supercategory,
-                    game_category,
-                    game_subcategory)
-                for game_name in game_names:
-                    game_info = gameinfo.GameInfo(
-                        game_supercategory = game_supercategory,
-                        game_category = game_category,
-                        game_subcategory = game_subcategory,
-                        game_name = game_name,
-                        verbose = verbose,
-                        pretend_run = pretend_run,
-                        exit_on_failure = exit_on_failure)
-                    success = import_game_save_paths(
-                        game_info = game_info,
-                        verbose = verbose,
-                        pretend_run = pretend_run,
-                        exit_on_failure = exit_on_failure)
-                    if not success:
-                        return False
-
-    # Should be successful
+    for game_info in gamecollection.iterate_rom_game_infos(verbose, pretend_run, exit_on_failure):
+        success = import_game_save_paths(
+            game_info = game_info,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if not success:
+            return False
     return True
 
 # Import game save
@@ -616,31 +531,14 @@ def import_all_game_saves(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    for game_supercategory in [config.Supercategory.ROMS]:
-        for game_category in config.Category.members():
-            for game_subcategory in config.subcategory_map[game_category]:
-                game_names = gamecollection.find_json_game_names(
-                    game_supercategory,
-                    game_category,
-                    game_subcategory)
-                for game_name in game_names:
-                    game_info = gameinfo.GameInfo(
-                        game_supercategory = game_supercategory,
-                        game_category = game_category,
-                        game_subcategory = game_subcategory,
-                        game_name = game_name,
-                        verbose = verbose,
-                        pretend_run = pretend_run,
-                        exit_on_failure = exit_on_failure)
-                    success = import_game_save(
-                        game_info = game_info,
-                        verbose = verbose,
-                        pretend_run = pretend_run,
-                        exit_on_failure = exit_on_failure)
-                    if not success:
-                        return False
-
-    # Should be successful
+    for game_info in gamecollection.iterate_rom_game_infos(verbose, pretend_run, exit_on_failure):
+        success = import_game_save(
+            game_info = game_info,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if not success:
+            return False
     return True
 
 # Export game save
@@ -671,32 +569,15 @@ def export_all_game_save(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    for game_supercategory in [config.Supercategory.ROMS]:
-        for game_category in config.Category.members():
-            for game_subcategory in config.subcategory_map[game_category]:
-                game_names = gamecollection.find_json_game_names(
-                    game_supercategory,
-                    game_category,
-                    game_subcategory)
-                for game_name in game_names:
-                    game_info = gameinfo.GameInfo(
-                        game_supercategory = game_supercategory,
-                        game_category = game_category,
-                        game_subcategory = game_subcategory,
-                        game_name = game_name,
-                        verbose = verbose,
-                        pretend_run = pretend_run,
-                        exit_on_failure = exit_on_failure)
-                    success = export_game_save(
-                        game_info = game_info,
-                        locker_type = locker_type,
-                        verbose = verbose,
-                        pretend_run = pretend_run,
-                        exit_on_failure = exit_on_failure)
-                    if not success:
-                        return False
-
-    # Should be successful
+    for game_info in gamecollection.iterate_rom_game_infos(verbose, pretend_run, exit_on_failure):
+        success = export_game_save(
+            game_info = game_info,
+            locker_type = locker_type,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if not success:
+            return False
     return True
 
 ############################################################

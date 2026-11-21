@@ -182,7 +182,7 @@ def test_no_temporary_directory_means_no_transform(monkeypatch, output_dir):
 
     result = transform.transform_game_file(game_info(config.Category.COMPUTER), "/src", output_dir)
 
-    assert result == (False, "disk full")
+    assert result == (False, "Unable to create temporary directory")
 
 
 def produce():

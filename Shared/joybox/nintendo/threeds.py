@@ -81,6 +81,39 @@ def convert_3ds_cci_to_cia(
     # Check result
     return os.path.exists(dest_3ds_file)
 
+# Run 3DSRomTool in mode "--trim" or "--restore" over a copy of a cci in a temporary
+# directory, which it rewrites in place, then move the copy to the destination
+def run_3ds_rom_tool(mode, src_3ds_file, dest_3ds_file, verbose = False, pretend_run = False, exit_on_failure = False):
+    trim_tool = programs.find_tool_program("3DSRomTool")
+    if not trim_tool:
+        return False
+    with fileops.temporary_directory(verbose = verbose, pretend_run = pretend_run) as tmp_dir:
+        if not tmp_dir:
+            return False
+        tmp_3ds_file = paths.join_paths(tmp_dir, "temp.3ds")
+        fileops.copy_file_or_directory(
+            src = src_3ds_file,
+            dest = tmp_3ds_file,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        code = command.run_returncode_command(
+            cmd = [trim_tool, mode, tmp_3ds_file],
+            options = command.create_command_options(
+                blocking_processes = [trim_tool]),
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if code != 0:
+            return False
+        fileops.move_file_or_directory(
+            src = tmp_3ds_file,
+            dest = dest_3ds_file,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+    return os.path.exists(dest_3ds_file)
+
 # Trim 3DS CCI file
 def trim_3ds_cci(
     src_3ds_file,
@@ -88,63 +121,7 @@ def trim_3ds_cci(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-
-    # Get tool
-    trim_tool = programs.find_tool_program("3DSRomTool")
-    if not trim_tool:
-        return False
-
-    # Create temporary directory
-    tmp_dir_success, tmp_dir_result = fileops.create_temporary_directory(verbose = verbose, pretend_run = pretend_run)
-    if not tmp_dir_success:
-        return False
-
-    # Temporary files
-    tmp_3ds_file = paths.join_paths(tmp_dir_result, "temp.3ds")
-
-    # Copy source file
-    fileops.copy_file_or_directory(
-        src = src_3ds_file,
-        dest = tmp_3ds_file,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-
-    # Get trim command
-    trim_cmd = [
-        trim_tool,
-        "--trim",
-        tmp_3ds_file
-    ]
-
-    # Run trim command
-    code = command.run_returncode_command(
-        cmd = trim_cmd,
-        options = command.create_command_options(
-            blocking_processes = [trim_tool]),
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    if code != 0:
-        return False
-
-    # Move new file
-    fileops.move_file_or_directory(
-        src = tmp_3ds_file,
-        dest = dest_3ds_file,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-
-    # Delete temporary directory
-    fileops.remove_directory(
-        src = tmp_dir_result,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-
-    # Check result
-    return os.path.exists(dest_3ds_file)
+    return run_3ds_rom_tool("--trim", src_3ds_file, dest_3ds_file, verbose, pretend_run, exit_on_failure)
 
 # Untrim 3DS CCI file
 def untrim_3ds_cci(
@@ -153,65 +130,18 @@ def untrim_3ds_cci(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
+    return run_3ds_rom_tool("--restore", src_3ds_file, dest_3ds_file, verbose, pretend_run, exit_on_failure)
 
-    # Get tool
-    trim_tool = programs.find_tool_program("3DSRomTool")
-    if not trim_tool:
-        return False
-
-    # Create temporary directory
-    tmp_dir_success, tmp_dir_result = fileops.create_temporary_directory(
-        verbose = verbose,
-        pretend_run = pretend_run)
-    if not tmp_dir_success:
-        return False
-
-    # Temporary files
-    tmp_3ds_file = paths.join_paths(tmp_dir_result, "temp.3ds")
-
-    # Copy source file
-    fileops.copy_file_or_directory(
-        src = src_3ds_file,
-        dest = tmp_3ds_file,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-
-    # Get trim command
-    trim_cmd = [
-        trim_tool,
-        "--restore",
-        tmp_3ds_file
-    ]
-
-    # Run trim command
-    code = command.run_returncode_command(
-        cmd = trim_cmd,
-        options = command.create_command_options(
-            blocking_processes = [trim_tool]),
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    if code != 0:
-        return False
-
-    # Move new file
-    fileops.move_file_or_directory(
-        src = tmp_3ds_file,
-        dest = dest_3ds_file,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-
-    # Delete temporary directory
-    fileops.remove_directory(
-        src = tmp_dir_result,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-
-    # Check result
-    return os.path.exists(dest_3ds_file)
+# Rename the contents files ctrtool extracted to .app files, named by their extension
+def rename_3ds_cia_contents(extract_dir, verbose = False, pretend_run = False, exit_on_failure = False):
+    for obj in paths.get_directory_contents(extract_dir):
+        if obj.startswith("contents"):
+            fileops.move_file_or_directory(
+                src = paths.join_paths(extract_dir, obj),
+                dest = paths.join_paths(extract_dir, paths.get_filename_extension(obj).strip(".") + ".app"),
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure)
 
 # Extract 3DS CIA file
 def extract_3ds_cia(
@@ -220,74 +150,37 @@ def extract_3ds_cia(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-
-    # Get tool
     extract_tool = programs.find_tool_program("CtrTool")
     if not extract_tool:
         return False
 
-    # Create temporary directory
-    tmp_dir_success, tmp_dir_result = fileops.create_temporary_directory(
-        verbose = verbose,
-        pretend_run = pretend_run)
-    if not tmp_dir_success:
-        return False
-
-    # Get temporary files
-    tmp_file_cer = paths.join_paths(tmp_dir_result, "00000000.cer")
-    tmp_file_tik = paths.join_paths(tmp_dir_result, "00000000.tik")
-    tmp_file_tmd = paths.join_paths(tmp_dir_result, "00000000.tmd")
-    tmp_base_contents = paths.join_paths(tmp_dir_result, "contents")
-
-    # Get extract command
-    extract_cmd = [
-        extract_tool,
-        "--contents", tmp_base_contents,
-        "--certs", tmp_file_cer,
-        "--tik", tmp_file_tik,
-        "--tmd", tmp_file_tmd,
-        src_3ds_file
-    ]
-
-    # Run extract command
-    code = command.run_returncode_command(
-        cmd = extract_cmd,
-        options = command.create_command_options(
-            blocking_processes = [extract_tool]),
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    if code != 0:
-        return False
-
-    # Rename app files
-    for obj in paths.get_directory_contents(tmp_dir_result):
-        if obj.startswith("contents"):
-            obj_path = paths.join_paths(tmp_dir_result, obj)
-            obj_basename = paths.get_filename_extension(obj).strip(".")
-            fileops.move_file_or_directory(
-                src = obj_path,
-                dest = paths.join_paths(tmp_dir_result, obj_basename + ".app"),
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
-
-    # Move extracted files
-    filebulk.move_contents(
-        src = tmp_dir_result,
-        dest = extract_dir,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-
-    # Delete temporary directory
-    fileops.remove_directory(
-        src = tmp_dir_result,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-
-    # Check result
+    # Extract in a temporary directory, then move what was extracted
+    with fileops.temporary_directory(verbose = verbose, pretend_run = pretend_run) as tmp_dir:
+        if not tmp_dir:
+            return False
+        code = command.run_returncode_command(
+            cmd = [
+                extract_tool,
+                "--contents", paths.join_paths(tmp_dir, "contents"),
+                "--certs", paths.join_paths(tmp_dir, "00000000.cer"),
+                "--tik", paths.join_paths(tmp_dir, "00000000.tik"),
+                "--tmd", paths.join_paths(tmp_dir, "00000000.tmd"),
+                src_3ds_file
+            ],
+            options = command.create_command_options(
+                blocking_processes = [extract_tool]),
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if code != 0:
+            return False
+        rename_3ds_cia_contents(tmp_dir, verbose, pretend_run, exit_on_failure)
+        filebulk.move_contents(
+            src = tmp_dir,
+            dest = extract_dir,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
     return os.path.exists(extract_dir) and not paths.is_directory_empty(extract_dir)
 
 # Get 3DS file info

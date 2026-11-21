@@ -114,21 +114,14 @@ class Legacy(storebase.StoreBase):
         if self.is_logged_in():
             return True
 
-        # Get tool
-        python_tool = programs.find_tool_program("PythonVenvPython")
-        if not python_tool:
-            return False
-
-        # Get script
-        heirloom_script = programs.find_tool_program("Heirloom")
-        if not heirloom_script:
+        # Get script command
+        script_cmd = programs.get_python_script_command("Heirloom")
+        if not script_cmd:
             return False
 
         # Get login command
-        login_cmd = [
-            python_tool,
-            heirloom_script,
-            "login"
+        login_cmd = script_cmd + [
+                        "login"
         ]
 
         # Run login command
@@ -141,10 +134,8 @@ class Legacy(storebase.StoreBase):
             return False
 
         # Get refresh command
-        refresh_cmd = [
-            python_tool,
-            heirloom_script,
-            "refresh"
+        refresh_cmd = script_cmd + [
+                        "refresh"
         ]
 
         # Run refresh command
@@ -291,21 +282,14 @@ class Legacy(storebase.StoreBase):
         pretend_run = False,
         exit_on_failure = False):
 
-        # Get tool
-        python_tool = programs.find_tool_program("PythonVenvPython")
-        if not python_tool:
-            return None
-
-        # Get script
-        heirloom_script = programs.find_tool_program("Heirloom")
-        if not heirloom_script:
+        # Get script command
+        script_cmd = programs.get_python_script_command("Heirloom")
+        if not script_cmd:
             return None
 
         # Get list command
-        list_cmd = [
-            python_tool,
-            heirloom_script,
-            "list",
+        list_cmd = script_cmd + [
+                        "list",
             "--json",
             "--quiet"
         ]
@@ -365,21 +349,14 @@ class Legacy(storebase.StoreBase):
             logger.log_warning("Info identifier '%s' was not valid" % identifier)
             return None
 
-        # Get tool
-        python_tool = programs.find_tool_program("PythonVenvPython")
-        if not python_tool:
-            return None
-
-        # Get script
-        heirloom_script = programs.find_tool_program("Heirloom")
-        if not heirloom_script:
+        # Get script command
+        script_cmd = programs.get_python_script_command("Heirloom")
+        if not script_cmd:
             return None
 
         # Get info command
-        info_cmd = [
-            python_tool,
-            heirloom_script,
-            "info",
+        info_cmd = script_cmd + [
+                        "info",
             "--uuid", identifier,
             "--quiet"
         ]

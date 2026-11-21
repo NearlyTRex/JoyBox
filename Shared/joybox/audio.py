@@ -108,6 +108,39 @@ def collect_and_upload_audio(work_dir, channel_music_dir, locker_type = None, ve
     fileops.remove_directory(src = audio_only_dir, verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure)
     return True
 
+# Download a batch, then collect and upload its audio. It works in the persistent directory,
+# kept for resuming, when there is one, and otherwise in a temporary one.
+def download_audio_batch(
+    target,
+    persistent_dir,
+    archive_file,
+    music_dir,
+    cookie_source = None,
+    locker_type = None,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+    with fileops.existing_or_temporary_directory(persistent_dir, verbose = verbose, pretend_run = pretend_run) as work_dir:
+        if not work_dir:
+            logger.log_error("Failed to create temporary directory for batch")
+            return False
+        success = google.download_video(
+            video_url = target,
+            audio_only = True,
+            output_dir = work_dir,
+            download_archive = archive_file,
+            cookie_source = cookie_source,
+            concurrent_fragments = getattr(config, "audio_download_concurrent_fragments", 1),
+            sanitize_filenames = True,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if not success:
+            logger.log_error("Failed to download batch")
+            return False
+        return collect_and_upload_audio(
+            work_dir, music_dir, locker_type = locker_type, verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure)
+
 # Download channel audio files
 def download_channel_audio_files(channels, genre_type, channel_name = None, oldest_first = None, cookie_source = None, locker_type = None, output_path = None, verbose = False, pretend_run = False, exit_on_failure = False):
 
@@ -208,43 +241,18 @@ def download_channel_audio_files(channels, genre_type, channel_name = None, olde
         for b_index, target in enumerate(batch_targets, 1):
             if len(batch_targets) > 1:
                 logger.log_info(f"[{channel_name}] Batch {b_index}/{len(batch_targets)}")
-
-            # Working dir for this batch (persistent dir is reused and kept)
-            if persistent_dir:
-                work_dir = persistent_dir
-            else:
-                tmp_dir_success, work_dir = fileops.create_temporary_directory(verbose = verbose, pretend_run = pretend_run)
-                if not tmp_dir_success:
-                    logger.log_error("Failed to create temporary directory for batch")
-                    return False
-
-            # Download the batch
-            success = google.download_video(
-                video_url = target,
-                audio_only = True,
-                output_dir = work_dir,
-                download_archive = channel_archive_file,
+            success = download_audio_batch(
+                target = target,
+                persistent_dir = persistent_dir,
+                archive_file = channel_archive_file,
+                music_dir = channel_music_dir,
                 cookie_source = cookie_source,
-                concurrent_fragments = getattr(config, "audio_download_concurrent_fragments", 1),
-                sanitize_filenames = True,
+                locker_type = locker_type,
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not success:
-                logger.log_error("Failed to download batch")
-                if not persistent_dir:
-                    fileops.remove_directory(src = work_dir, verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure)
                 return False
-
-            # Collect + upload this batch right away
-            if not collect_and_upload_audio(work_dir, channel_music_dir, locker_type = locker_type, verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure):
-                if not persistent_dir:
-                    fileops.remove_directory(src = work_dir, verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure)
-                return False
-
-            # Clean up throwaway working dir (a persistent dir is kept for resume)
-            if not persistent_dir:
-                fileops.remove_directory(src = work_dir, verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure)
         logger.log_info(f"[{i}/{len(channels)}] Completed processing channel: {channel_name}")
     logger.log_info("Audio download process completed successfully")
     return True

@@ -586,15 +586,10 @@ def archive_github_repository(
     pretend_run = False,
     exit_on_failure = False):
 
-    # Create temporary directory
-    tmp_dir_success, tmp_dir_result = fileops.create_temporary_directory(
-        verbose = verbose,
-        pretend_run = pretend_run)
-    if not tmp_dir_success:
-        return False
-
-    # Archive through it, removing it whatever the outcome
-    try:
+    # Archive through a temporary directory
+    with fileops.temporary_directory(verbose = verbose, pretend_run = pretend_run) as tmp_dir_result:
+        if not tmp_dir_result:
+            return False
         return archive_github_repository_via(
             tmp_dir = tmp_dir_result,
             github_user = github_user,
@@ -605,12 +600,6 @@ def archive_github_repository(
             recursive = recursive,
             clean = clean,
             locker_type = locker_type,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-    finally:
-        fileops.remove_directory(
-            src = tmp_dir_result,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)

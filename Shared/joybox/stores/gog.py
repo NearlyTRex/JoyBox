@@ -309,21 +309,19 @@ class GOG(storebase.StoreBase):
             if not gog_tool:
                 return None
 
-            # Create temporary directory
-            tmp_dir_success, tmp_dir_result = fileops.create_temporary_directory(verbose = verbose)
-            if not tmp_dir_success:
-                return None
+            # List purchases into a temporary manifest
+            with fileops.temporary_directory(verbose = verbose) as tmp_dir_result:
+                if not tmp_dir_result:
+                    return None
 
-            # Get temporary paths
-            tmp_file_manifest = paths.join_paths(tmp_dir_result, "manifest.json")
+                # Get temporary paths
+                tmp_file_manifest = paths.join_paths(tmp_dir_result, "manifest.json")
 
-            # Get list command
-            list_cmd = [
-                gog_tool,
-                "--list", "j"
-            ]
-
-            try:
+                # Get list command
+                list_cmd = [
+                    gog_tool,
+                    "--list", "j"
+                ]
 
                 # Run list command
                 code = command.run_returncode_command(
@@ -345,14 +343,6 @@ class GOG(storebase.StoreBase):
                 if not isinstance(gog_json, list) or not all(isinstance(entry, dict) for entry in gog_json):
                     logger.log_error("Unable to parse gog game list")
                     return None
-            finally:
-
-                # Delete temporary directory
-                fileops.remove_directory(
-                    src = tmp_dir_result,
-                    verbose = verbose,
-                    pretend_run = pretend_run,
-                    exit_on_failure = False)
 
             # Save to cache
             fileops.make_directory(cache_dir, verbose = verbose, pretend_run = pretend_run)
@@ -734,39 +724,37 @@ class GOG(storebase.StoreBase):
         if not gog_tool:
             return False
 
-        # Create temporary directory
-        tmp_dir_success, tmp_dir_result = fileops.create_temporary_directory(verbose = verbose)
-        if not tmp_dir_success:
-            return False
+        # Download into a temporary directory and move it to the output
+        with fileops.temporary_directory(verbose = verbose) as tmp_dir_result:
+            if not tmp_dir_result:
+                return False
 
-        # Get temporary paths
-        tmp_dir_extra = paths.join_paths(tmp_dir_result, "extra")
-        tmp_dir_dlc = paths.join_paths(tmp_dir_result, "dlc")
-        tmp_dir_dlc_extra = paths.join_paths(tmp_dir_dlc, "extra")
+            # Get temporary paths
+            tmp_dir_extra = paths.join_paths(tmp_dir_result, "extra")
+            tmp_dir_dlc = paths.join_paths(tmp_dir_result, "dlc")
+            tmp_dir_dlc_extra = paths.join_paths(tmp_dir_dlc, "extra")
 
-        # Get download command
-        download_cmd = [
-            gog_tool,
-            "--download",
-            "--game=^%s$" % identifier,
-            "--platform=%s" % self.get_preferred_platform(),
-            "--directory=%s" % tmp_dir_result,
-            "--check-free-space",
-            "--threads=1",
-            "--subdir-game=.",
-            "--subdir-extras=extra",
-            "--subdir-dlc=dlc"
-        ]
-        if isinstance(self.includes, str) and len(self.includes):
-            download_cmd += [
-                "--include=%s" % self.includes
+            # Get download command
+            download_cmd = [
+                gog_tool,
+                "--download",
+                "--game=^%s$" % identifier,
+                "--platform=%s" % self.get_preferred_platform(),
+                "--directory=%s" % tmp_dir_result,
+                "--check-free-space",
+                "--threads=1",
+                "--subdir-game=.",
+                "--subdir-extras=extra",
+                "--subdir-dlc=dlc"
             ]
-        if isinstance(self.excludes, str) and len(self.excludes):
-            download_cmd += [
-                "--exclude=%s" % self.excludes
-            ]
-
-        try:
+            if isinstance(self.includes, str) and len(self.includes):
+                download_cmd += [
+                    "--include=%s" % self.includes
+                ]
+            if isinstance(self.excludes, str) and len(self.excludes):
+                download_cmd += [
+                    "--exclude=%s" % self.excludes
+                ]
 
             # Run download command
             code = command.run_returncode_command(
@@ -814,14 +802,6 @@ class GOG(storebase.StoreBase):
                 exit_on_failure = exit_on_failure)
             if not success:
                 return False
-        finally:
-
-            # Delete temporary directory
-            fileops.remove_directory(
-                src = tmp_dir_result,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = False)
 
         # Check result
         return paths.does_directory_contain_files(output_dir)

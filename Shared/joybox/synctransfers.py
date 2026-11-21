@@ -114,15 +114,12 @@ def update_uploaded_sidecar(remote_name, remote_type, remote_path, local_path, l
 # or None when the directory cannot be made; the directory is removed afterwards
 @contextlib.contextmanager
 def temporary_hash_database(verbose = False):
-    success, temp_dir = fileops.create_temporary_directory(verbose = verbose)
-    if not success:
-        logger.log_error("Failed to create temp directory for hash database")
-        yield None
-        return
-    try:
+    with fileops.temporary_directory(verbose = verbose) as temp_dir:
+        if not temp_dir:
+            logger.log_error("Failed to create temp directory for hash database")
+            yield None
+            return
         yield paths.join_paths(temp_dir, HASH_DATABASE_FILE)
-    finally:
-        fileops.remove_directory(src = temp_dir, verbose = verbose, exit_on_failure = False)
 
 # An open hash database, closed afterwards. Its tables are created first when initializing.
 @contextlib.contextmanager

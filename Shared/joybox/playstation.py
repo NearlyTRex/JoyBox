@@ -34,16 +34,6 @@ def get_ps3_decryption_key(dkey_file):
         return ""
     return (serialization.read_text_file(dkey_file) or "").strip()
 
-# Get the command running a python script tool through the venv python, or None when either is missing
-def get_python_script_command(script_tool_name):
-    python_tool = programs.find_tool_program("PythonVenvPython")
-    if not python_tool:
-        return None
-    script = programs.find_tool_program(script_tool_name)
-    if not script:
-        return None
-    return [python_tool, script]
-
 # Run a conversion command, logging the failure given when it does not succeed
 def run_conversion_command(cmd, failure_message, verbose = False, pretend_run = False, exit_on_failure = False):
     code = command.run_returncode_command(
@@ -193,19 +183,11 @@ def verify_ps3_chd(
     pretend_run = False,
     exit_on_failure = False):
 
-    # Extract and decrypt in a temporary directory, removing the scratch copies either way
-    tmp_dir_success, tmp_dir_result = fileops.create_temporary_directory(
-        verbose = verbose,
-        pretend_run = pretend_run)
-    if not tmp_dir_success:
-        return False
-    try:
-        return extract_and_decrypt_ps3_chd(chd_file, tmp_dir_result, verbose, pretend_run, exit_on_failure)
-    finally:
-        fileops.remove_directory(
-            src = tmp_dir_result,
-            verbose = verbose,
-            pretend_run = pretend_run)
+    # Extract and decrypt in a temporary directory
+    with fileops.temporary_directory(verbose = verbose, pretend_run = pretend_run) as tmp_dir:
+        if not tmp_dir:
+            return False
+        return extract_and_decrypt_ps3_chd(chd_file, tmp_dir, verbose, pretend_run, exit_on_failure)
 
 # Extract psn pkg
 def extract_psn_pkg(
@@ -215,7 +197,7 @@ def extract_psn_pkg(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    script_cmd = get_python_script_command("PSNGetPkgInfo")
+    script_cmd = programs.get_python_script_command("PSNGetPkgInfo")
     if not script_cmd:
         return False
     if not run_conversion_command(
@@ -268,7 +250,7 @@ def unstrip_psv(
 
 # Run PSVTools with the arguments given, logging the failure given when it does not succeed
 def run_psv_tools(args, failure_message, verbose = False, pretend_run = False, exit_on_failure = False):
-    script_cmd = get_python_script_command("PSVTools")
+    script_cmd = programs.get_python_script_command("PSVTools")
     if not script_cmd:
         return False
     return run_conversion_command(script_cmd + args, failure_message, verbose, pretend_run, exit_on_failure)
@@ -422,7 +404,7 @@ def get_psn_package_info(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    script_cmd = get_python_script_command("PSNGetPkgInfo")
+    script_cmd = programs.get_python_script_command("PSNGetPkgInfo")
     if not script_cmd:
         return None
     info_output = command.run_output_command(

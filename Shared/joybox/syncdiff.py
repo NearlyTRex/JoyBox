@@ -110,23 +110,24 @@ def read_diff_entries(diff_path):
 @contextlib.contextmanager
 def diff_workspace(diff_dir):
     generate_diffs = not diff_dir
-    if generate_diffs:
-        success, diff_dir = fileops.create_temporary_directory()
-        if not success:
+    with fileops.existing_or_temporary_directory(diff_dir) as work_dir:
+        if not work_dir:
             logger.log_error("Failed to create diff directory")
             yield None, False, []
             return
-    temp_files = []
-    try:
-        if not paths.does_path_exist(diff_dir):
-            logger.log_error("Diff directory was invalid")
-            diff_dir = None
-        yield diff_dir, generate_diffs, temp_files
-    finally:
-        for temp_file in temp_files:
-            fileops.remove_file(temp_file, exit_on_failure = False)
-        if generate_diffs:
-            fileops.remove_directory(diff_dir, exit_on_failure = False)
+        temp_files = []
+        try:
+            if not paths.does_path_exist(work_dir):
+                logger.log_error("Diff directory was invalid")
+                work_dir = None
+            yield work_dir, generate_diffs, temp_files
+        finally:
+            remove_temporary_files(temp_files)
+
+# Remove the temporary files a diff sync made
+def remove_temporary_files(temp_files):
+    for temp_file in temp_files:
+        fileops.remove_file(temp_file, exit_on_failure = False)
 
 # Get a diff sync's excludes: hidden files and folders, and the recycle folder when there is one
 def get_diff_sync_excludes(excludes, recycle_folder):

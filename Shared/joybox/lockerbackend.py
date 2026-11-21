@@ -1,5 +1,6 @@
 # Imports
 import os
+import contextlib
 import os.path
 import threading
 import concurrent.futures
@@ -32,6 +33,29 @@ def get_cryption_function(cryption_type):
     if cryption_type == config.CryptionType.ENCRYPT:
         return cryption.encrypt_file
     return cryption.decrypt_file
+
+# Encrypt a batch of files into a staging directory, each under its destination's encrypted
+# path, returning the destinations staged and those that failed
+def stage_encrypted_batch(batch, src_root, staging, passphrase, verbose = False, pretend_run = False, exit_on_failure = False):
+    staged, failed = [], []
+    for action in batch:
+        src_rel = action.get("src", "")
+        dest_rel = action.get("dest", src_rel)
+        dest_dir_rel = paths.get_filename_directory(dest_rel)
+        staged_dir = paths.join_paths(staging, dest_dir_rel) if dest_dir_rel else staging
+        fileops.make_directory(src = staged_dir)
+        if cryption.encrypt_file(
+            src = paths.join_paths(src_root, src_rel),
+            passphrase = passphrase,
+            output_file = paths.join_paths(staged_dir, cryption.generate_encrypted_filename(paths.get_filename_file(dest_rel))),
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure):
+            staged.append(dest_rel)
+        else:
+            logger.log_error("Failed to encrypt: %s" % dest_rel)
+            failed.append(dest_rel)
+    return staged, failed
 
 ###########################################################
 # Abstract Base Class
@@ -292,12 +316,11 @@ class LocalBackend(LockerBackend):
                 stored_rel_path = src_backend.get_stored_rel_path(src_rel_path)
 
             # Download to temp, then encrypt/decrypt
-            temp_dir_ok, temp_dir = fileops.create_temporary_directory(verbose = verbose)
-            if not temp_dir_ok:
-                logger.log_error("Failed to create temp directory for sync")
-                return False
-            temp_file = paths.join_paths(temp_dir, paths.get_filename_file(stored_rel_path))
-            try:
+            with fileops.temporary_directory(verbose = verbose) as temp_dir:
+                if not temp_dir:
+                    logger.log_error("Failed to create temp directory for sync")
+                    return False
+                temp_file = paths.join_paths(temp_dir, paths.get_filename_file(stored_rel_path))
                 success = synctransfers.download_files_from_remote(
                     remote_name = src_backend.remote_name,
                     remote_type = src_backend.remote_type,
@@ -315,8 +338,6 @@ class LocalBackend(LockerBackend):
                     verbose = verbose,
                     pretend_run = pretend_run,
                     exit_on_failure = exit_on_failure)
-            finally:
-                fileops.remove_directory(temp_dir, exit_on_failure = False)
 
         # Handle local source
         src_full_path = paths.join_paths(src_backend.get_root_path(), src_rel_path)
@@ -447,23 +468,22 @@ class RemoteBackend(LockerBackend):
         is_directory = paths.is_path_directory(src_full_path)
         dest_name = paths.get_filename_file(dest_rel_path)
         upload_path = src_full_path
-        temp_dir = None
-        if not is_directory and paths.get_filename_file(src_full_path) != dest_name:
+        with contextlib.ExitStack() as stack:
+            if not is_directory and paths.get_filename_file(src_full_path) != dest_name:
 
-            # A renamed file is staged under its destination name first
-            temp_dir_ok, temp_dir = fileops.create_temporary_directory(verbose = verbose)
-            if not temp_dir_ok:
-                logger.log_error("Failed to create temp directory for upload to %s" % self.remote_name)
-                return False
-            upload_path = paths.join_paths(temp_dir, dest_name)
-        try:
-            if temp_dir and not filebulk.smart_copy(
-                src = src_full_path,
-                dest = upload_path,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure):
-                return False
+                # A renamed file is staged under its destination name first
+                temp_dir = stack.enter_context(fileops.temporary_directory(verbose = verbose))
+                if not temp_dir:
+                    logger.log_error("Failed to create temp directory for upload to %s" % self.remote_name)
+                    return False
+                upload_path = paths.join_paths(temp_dir, dest_name)
+                if not filebulk.smart_copy(
+                    src = src_full_path,
+                    dest = upload_path,
+                    verbose = verbose,
+                    pretend_run = pretend_run,
+                    exit_on_failure = exit_on_failure):
+                    return False
             return synctransfers.upload_files_to_remote(
                 remote_name = self.remote_name,
                 remote_type = self.remote_type,
@@ -474,9 +494,6 @@ class RemoteBackend(LockerBackend):
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-        finally:
-            if temp_dir:
-                fileops.remove_directory(temp_dir, exit_on_failure = False)
 
     def sync_batch_from(
         self,
@@ -594,51 +611,12 @@ class RemoteBackend(LockerBackend):
             if current:
                 batches.append(current)
 
-            # Process each batch: stage -> encrypt -> single upload -> clear staging
+            # Stage, encrypt and upload each batch in turn
             for batch in batches:
-                staging_ok, staging = fileops.create_temporary_directory(directory = stage_parent, verbose = verbose)
-                if not staging_ok:
-                    logger.log_error("Failed to create staging directory for encrypted upload")
-                    failed.extend([a.get("dest", a.get("src", "")) for a in batch])
-                    continue
-                staged = []
-                try:
-                    for action in batch:
-                        src_rel = action.get("src", "")
-                        dest_rel = action.get("dest", src_rel)
-                        src_full = paths.join_paths(src_root, src_rel)
-                        dest_dir_rel = paths.get_filename_directory(dest_rel)
-                        enc_name = cryption.generate_encrypted_filename(paths.get_filename_file(dest_rel))
-                        staged_dir = paths.join_paths(staging, dest_dir_rel) if dest_dir_rel else staging
-                        fileops.make_directory(src = staged_dir)
-                        if cryption.encrypt_file(
-                            src = src_full,
-                            passphrase = passphrase,
-                            output_file = paths.join_paths(staged_dir, enc_name),
-                            verbose = verbose,
-                            pretend_run = pretend_run,
-                            exit_on_failure = exit_on_failure):
-                            staged.append(dest_rel)
-                        else:
-                            logger.log_error("Failed to encrypt: %s" % dest_rel)
-                            failed.append(dest_rel)
-
-                    # Single upload of this batch's staging tree (mirrors dest structure)
-                    if staged:
-                        if synctransfers.upload_files_to_remote(
-                            remote_name = self.remote_name,
-                            remote_type = self.remote_type,
-                            remote_path = self.remote_path,
-                            local_path = staging,
-                            update_sidecar = False,
-                            verbose = verbose,
-                            pretend_run = pretend_run,
-                            exit_on_failure = exit_on_failure):
-                            succeeded.extend(staged)
-                        else:
-                            failed.extend(staged)
-                finally:
-                    fileops.remove_directory(staging, exit_on_failure = False)
+                batch_succeeded, batch_failed = self.upload_encrypted_batch(
+                    batch, src_root, stage_parent, passphrase, verbose, pretend_run, exit_on_failure)
+                succeeded.extend(batch_succeeded)
+                failed.extend(batch_failed)
             return (succeeded, failed)
 
         # Other cryption types (e.g. decrypt): per-file fallback
@@ -651,6 +629,28 @@ class RemoteBackend(LockerBackend):
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
+
+    # Encrypt a batch of files into a staging directory mirroring their destinations, and upload
+    # it in one go, returning the destinations that succeeded and those that failed
+    def upload_encrypted_batch(self, batch, src_root, stage_parent, passphrase, verbose = False, pretend_run = False, exit_on_failure = False):
+        with fileops.temporary_directory(directory = stage_parent, verbose = verbose) as staging:
+            if not staging:
+                logger.log_error("Failed to create staging directory for encrypted upload")
+                return [], [a.get("dest", a.get("src", "")) for a in batch]
+            staged, failed = stage_encrypted_batch(batch, src_root, staging, passphrase, verbose, pretend_run, exit_on_failure)
+            if not staged:
+                return [], failed
+            if synctransfers.upload_files_to_remote(
+                remote_name = self.remote_name,
+                remote_type = self.remote_type,
+                remote_path = self.remote_path,
+                local_path = staging,
+                update_sidecar = False,
+                verbose = verbose,
+                pretend_run = pretend_run,
+                exit_on_failure = exit_on_failure):
+                return staged, failed
+            return [], failed + staged
 
     def update_sidecar_from_local(
         self,
@@ -769,11 +769,10 @@ class RemoteBackend(LockerBackend):
         dest_name = paths.get_filename_file(dest_rel_path)
         if cryption_type == config.CryptionType.ENCRYPT:
             dest_name = cryption.generate_encrypted_filename(dest_name)
-        temp_dir_ok, temp_dir = fileops.create_temporary_directory(verbose = verbose)
-        if not temp_dir_ok:
-            logger.log_error("Failed to create temp directory for sync to %s" % self.remote_name)
-            return False
-        try:
+        with fileops.temporary_directory(verbose = verbose) as temp_dir:
+            if not temp_dir:
+                logger.log_error("Failed to create temp directory for sync to %s" % self.remote_name)
+                return False
             staged_dir = paths.join_paths(temp_dir, "staged")
             staged_file = paths.join_paths(staged_dir, dest_name)
             fileops.make_directory(src = staged_dir, verbose = verbose, pretend_run = pretend_run)
@@ -817,8 +816,6 @@ class RemoteBackend(LockerBackend):
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-        finally:
-            fileops.remove_directory(temp_dir, exit_on_failure = False)
 
     def copy_from(
         self,

@@ -42,7 +42,7 @@ def temp_dirs(tmp_path, monkeypatch):
     root = tmp_path / "tmp"
     root.mkdir()
 
-    def create_temporary_directory(verbose = False, pretend_run = False):
+    def create_temporary_directory(directory = None, verbose = False, pretend_run = False):
         if pretend_run:
             path = str(root / "pretend")
         else:

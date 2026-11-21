@@ -321,16 +321,11 @@ def setup_general_release(
     pretend_run = False,
     exit_on_failure = False):
 
-    # Create temporary directory
-    tmp_dir_success, tmp_dir_result = fileops.create_temporary_directory(
-        verbose = verbose,
-        pretend_run = pretend_run)
-    if not tmp_dir_success:
-        logger.log_error("Unable to create temporary directory")
-        return False
-
-    # Install release
-    try:
+    # Install release from a temporary directory
+    with fileops.temporary_directory(verbose = verbose, pretend_run = pretend_run) as tmp_dir_result:
+        if not tmp_dir_result:
+            logger.log_error("Unable to create temporary directory")
+            return False
         return install_general_release(
             archive_file = archive_file,
             install_name = install_name,
@@ -347,8 +342,6 @@ def setup_general_release(
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-    finally:
-        remove_temporary_directory(tmp_dir_result, verbose = verbose, pretend_run = pretend_run)
 
 # Download general release
 def download_general_release(
@@ -367,19 +360,12 @@ def download_general_release(
     pretend_run = False,
     exit_on_failure = False):
 
-    # Create temporary directory
-    tmp_dir_success, tmp_dir_result = fileops.create_temporary_directory(
-        verbose = verbose,
-        pretend_run = pretend_run)
-    if not tmp_dir_success:
-        logger.log_error("Unable to create temporary directory")
-        return False
-
-    # Get archive info
-    archive_filename = paths.get_filename_file(archive_url)
-    archive_file = paths.join_paths(tmp_dir_result, archive_filename)
-
-    try:
+    # Download release into a temporary directory and set it up from there
+    with fileops.temporary_directory(verbose = verbose, pretend_run = pretend_run) as tmp_dir_result:
+        if not tmp_dir_result:
+            logger.log_error("Unable to create temporary directory")
+            return False
+        archive_file = paths.join_paths(tmp_dir_result, paths.get_filename_file(archive_url))
 
         # Download release
         success = network.download_url(
@@ -408,8 +394,6 @@ def download_general_release(
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-    finally:
-        remove_temporary_directory(tmp_dir_result, verbose = verbose, pretend_run = pretend_run)
 
 # Find the first release asset whose name matches the given prefix and suffix
 def find_github_asset_url(release_json_list, starts_with, ends_with):

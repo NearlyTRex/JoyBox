@@ -117,27 +117,22 @@ def create_disc_chd_with_converter(
     pretend_run = False,
     exit_on_failure = False):
 
-    # Create temporary directory
-    tmp_dir_success, tmp_dir_result = fileops.create_temporary_directory(
-        verbose = verbose,
-        pretend_run = pretend_run)
-    if not tmp_dir_success:
-        return False
-
-    # Write a sheet chdman reads, then convert it
-    converted = converter(
-        source_file = source_file,
-        output_dir = tmp_dir_result,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    success = bool(converted) and create_disc_chd(
-        chd_file = chd_file,
-        source_iso = converted[0],
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    fileops.remove_directory(src = tmp_dir_result, verbose = verbose, pretend_run = pretend_run)
+    # Write a sheet chdman reads in a temporary directory, then convert it
+    with fileops.temporary_directory(verbose = verbose, pretend_run = pretend_run) as tmp_dir:
+        if not tmp_dir:
+            return False
+        converted = converter(
+            source_file = source_file,
+            output_dir = tmp_dir,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        success = bool(converted) and create_disc_chd(
+            chd_file = chd_file,
+            source_iso = converted[0],
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
     if not success:
         return False
 
@@ -210,88 +205,33 @@ def get_cue_track_types(cue_file):
     cue_text = serialization.read_text_file(cue_file) or ""
     return re.findall(r"^\s*TRACK\s+\d+\s+(\S+)", cue_text, flags = re.MULTILINE | re.IGNORECASE)
 
-# Extract disc chd to iso
-def extract_disc_chd_to_iso(
-    chd_file,
-    iso_file,
-    delete_original = False,
-    verbose = False,
-    pretend_run = False,
-    exit_on_failure = False):
-
-    # Get tool
-    bchunk_tool = programs.find_tool_program("Bchunk")
-    if not bchunk_tool:
-        return False
-
-    # Create temporary directory
-    tmp_dir_success, tmp_dir_result = fileops.create_temporary_directory(
-        verbose = verbose,
-        pretend_run = pretend_run)
-    if not tmp_dir_success:
-        return False
-
-    # Extract cue/bin from chd
-    tmp_basename = paths.get_filename_basename(chd_file)
-    tmp_bin = paths.join_paths(tmp_dir_result, tmp_basename + ".bin")
-    tmp_cue = paths.join_paths(tmp_dir_result, tmp_basename + config.DiscImageFileType.CUE.cval())
-    success = extract_disc_chd(
-        chd_file = chd_file,
-        binary_file = tmp_bin,
-        toc_file = tmp_cue,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    if not success:
-        fileops.remove_directory(src = tmp_dir_result, verbose = verbose, pretend_run = pretend_run)
-        return False
-
-    # A pretend run has no cue to read
-    if pretend_run:
-        return True
-
-    # A lone 2048-byte data track is already an iso; bchunk cannot read one
-    track_types = get_cue_track_types(tmp_cue)
-    tracks_dir = paths.join_paths(tmp_dir_result, "tracks")
-    fileops.make_directory(src = tracks_dir, verbose = verbose)
+# Split a cue/bin's tracks into a directory. bchunk cannot read a lone 2048-byte data track,
+# so that is moved as the iso itself; any others bchunk splits into numbered tracks.
+def split_cue_bin_tracks(bchunk_tool, chd_file, bin_file, cue_file, tracks_dir, iso_file, verbose = False, exit_on_failure = False):
+    track_types = get_cue_track_types(cue_file)
     if len(track_types) == 1 and track_types[0] in iso_track_types:
-        success = fileops.move_file_or_directory(
-            src = tmp_bin,
+        return fileops.move_file_or_directory(
+            src = bin_file,
             dest = paths.join_paths(tracks_dir, paths.get_filename_file(iso_file)),
             verbose = verbose,
             exit_on_failure = exit_on_failure)
-        if not success:
-            fileops.remove_directory(src = tmp_dir_result, verbose = verbose)
-            return False
+    unsupported_types = sorted(set(track_types) - set(bchunk_track_types))
+    if not track_types or unsupported_types:
+        logger.log_error("Bchunk cannot split the tracks of %s (%s)" % (chd_file, ", ".join(unsupported_types) or "no tracks"))
+        return False
+    code = command.run_returncode_command(
+        cmd = [bchunk_tool, bin_file, cue_file, paths.join_paths(tracks_dir, paths.get_filename_basename(iso_file))],
+        options = command.create_command_options(
+            blocking_processes = [bchunk_tool]),
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
+    return code == 0
 
-    # Split tracks with bchunk, which numbers each one (Game01.iso, Game02.cdr, ...)
-    else:
-        unsupported_types = sorted(set(track_types) - set(bchunk_track_types))
-        if not track_types or unsupported_types:
-            logger.log_error("Bchunk cannot split the tracks of %s (%s)" % (chd_file, ", ".join(unsupported_types) or "no tracks"))
-            fileops.remove_directory(src = tmp_dir_result, verbose = verbose)
-            return False
-        bchunk_cmd = [
-            bchunk_tool,
-            tmp_bin,
-            tmp_cue,
-            paths.join_paths(tracks_dir, paths.get_filename_basename(iso_file))
-        ]
-        code = command.run_returncode_command(
-            cmd = bchunk_cmd,
-            options = command.create_command_options(
-                blocking_processes = [bchunk_tool]),
-            verbose = verbose,
-            exit_on_failure = exit_on_failure)
-        if code != 0:
-            fileops.remove_directory(src = tmp_dir_result, verbose = verbose)
-            return False
-
-    # Move tracks beside the iso, naming a lone track after the iso itself
+# Move split tracks beside the iso, naming a lone track after the iso itself
+def move_split_tracks(chd_file, tracks_dir, iso_file, verbose = False, exit_on_failure = False):
     track_files = sorted(paths.get_directory_contents(tracks_dir))
     if not track_files:
         logger.log_error("Bchunk wrote no tracks for %s" % chd_file)
-        fileops.remove_directory(src = tmp_dir_result, verbose = verbose)
         return False
     for track_file in track_files:
         dest_file = iso_file
@@ -303,22 +243,73 @@ def extract_disc_chd_to_iso(
             verbose = verbose,
             exit_on_failure = exit_on_failure)
         if not success:
-            fileops.remove_directory(src = tmp_dir_result, verbose = verbose)
+            return False
+    return True
+
+# Extract disc chd to iso
+def extract_disc_chd_to_iso(
+    chd_file,
+    iso_file,
+    delete_original = False,
+    verbose = False,
+    pretend_run = False,
+    exit_on_failure = False):
+    bchunk_tool = programs.find_tool_program("Bchunk")
+    if not bchunk_tool:
+        return False
+
+    # Extract cue/bin from chd in a temporary directory, then split its tracks out
+    with fileops.temporary_directory(verbose = verbose, pretend_run = pretend_run) as tmp_dir:
+        if not tmp_dir:
+            return False
+        tmp_base = paths.join_paths(tmp_dir, paths.get_filename_basename(chd_file))
+        tmp_bin, tmp_cue = tmp_base + ".bin", tmp_base + config.DiscImageFileType.CUE.cval()
+        success = extract_disc_chd(
+            chd_file = chd_file,
+            binary_file = tmp_bin,
+            toc_file = tmp_cue,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if not success:
             return False
 
-    # Clean up
-    fileops.remove_directory(
-        src = tmp_dir_result,
-        verbose = verbose,
-        exit_on_failure = exit_on_failure)
+        # A pretend run has no cue to read
+        if pretend_run:
+            return True
+        tracks_dir = paths.join_paths(tmp_dir, "tracks")
+        fileops.make_directory(src = tracks_dir, verbose = verbose)
+        if not split_cue_bin_tracks(bchunk_tool, chd_file, tmp_bin, tmp_cue, tracks_dir, iso_file, verbose, exit_on_failure):
+            return False
+        if not move_split_tracks(chd_file, tracks_dir, iso_file, verbose, exit_on_failure):
+            return False
     if delete_original:
-        fileops.remove_file(
-            src = chd_file,
-            verbose = verbose,
-            exit_on_failure = exit_on_failure)
-
-    # Check result
+        fileops.remove_file(src = chd_file, verbose = verbose, exit_on_failure = exit_on_failure)
     return True
+
+# Mount a chd in a directory and archive its contents, unmounting before the directory goes
+def archive_mounted_disc_chd(chd_file, zip_file, mount_dir, verbose = False, pretend_run = False, exit_on_failure = False):
+    success = mount_disc_chd(
+        chd_file = chd_file,
+        mount_dir = mount_dir,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
+    if not success:
+        return False
+    try:
+        return archive.create_archive_from_folder(
+            archive_file = zip_file,
+            source_dir = mount_dir,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+    finally:
+        unmount_disc_chd(
+            chd_file = chd_file,
+            mount_dir = mount_dir,
+            verbose = verbose,
+            pretend_run = pretend_run)
 
 # Archive disc chd
 def archive_disc_chd(
@@ -329,46 +320,17 @@ def archive_disc_chd(
     pretend_run = False,
     exit_on_failure = False):
 
-    # Create temporary directory
-    tmp_dir_success, tmp_dir_result = fileops.create_temporary_directory(
-        verbose = verbose,
-        pretend_run = pretend_run)
-    if not tmp_dir_success:
-        return False
-
-    # Mount chd
-    success = mount_disc_chd(
-        chd_file = chd_file,
-        mount_dir = tmp_dir_result,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    if not success:
-        return False
-
-    # Archive contents
-    success = archive.create_archive_from_folder(
-        archive_file = zip_file,
-        source_dir = tmp_dir_result,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    if not success:
-        return False
-
-    # Clean up
+    # Mount chd in a temporary directory and archive its contents
+    with fileops.temporary_directory(verbose = verbose, pretend_run = pretend_run) as tmp_dir:
+        if not tmp_dir:
+            return False
+        if not archive_mounted_disc_chd(chd_file, zip_file, tmp_dir, verbose, pretend_run, exit_on_failure):
+            return False
     if delete_original:
         fileops.remove_file(
             src = chd_file,
             verbose = verbose,
             pretend_run = pretend_run)
-    fileops.remove_directory(
-        src = tmp_dir_result,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-
-    # Check result
     return os.path.exists(zip_file)
 
 # Verify disc chd

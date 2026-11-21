@@ -4,7 +4,6 @@ import joybox.paths as paths
 import joybox.environment as environment
 import joybox.hashing as hashing
 import joybox.lockerinfo as lockerinfo
-import joybox.gameinfo as gameinfo
 from joybox import gamecollection
 from joybox import gamenaming
 
@@ -81,32 +80,15 @@ def build_all_hash_files(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    for game_supercategory in [config.Supercategory.ROMS]:
-        for game_category in config.Category.members():
-            for game_subcategory in config.subcategory_map[game_category]:
-                game_names = gamecollection.find_json_game_names(
-                    game_supercategory,
-                    game_category,
-                    game_subcategory)
-                for game_name in game_names:
-                    game_info = gameinfo.GameInfo(
-                        game_supercategory = game_supercategory,
-                        game_category = game_category,
-                        game_subcategory = game_subcategory,
-                        game_name = game_name,
-                        verbose = verbose,
-                        pretend_run = pretend_run,
-                        exit_on_failure = exit_on_failure)
-                    success = build_hash_files(
-                        game_info = game_info,
-                        locker_type = locker_type,
-                        verbose = verbose,
-                        pretend_run = pretend_run,
-                        exit_on_failure = exit_on_failure)
-                    if not success:
-                        return False
-
-    # Should be successful
+    for game_info in gamecollection.iterate_rom_game_infos(verbose, pretend_run, exit_on_failure):
+        success = build_hash_files(
+            game_info = game_info,
+            locker_type = locker_type,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if not success:
+            return False
     return True
 
 ############################################################

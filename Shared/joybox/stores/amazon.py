@@ -107,21 +107,14 @@ class Amazon(storebase.StoreBase):
         if self.is_logged_in():
             return True
 
-        # Get tool
-        python_tool = programs.find_tool_program("PythonVenvPython")
-        if not python_tool:
-            return False
-
-        # Get script
-        nile_script = programs.find_tool_program("Nile")
-        if not nile_script:
+        # Get script command
+        script_cmd = programs.get_python_script_command("Nile")
+        if not script_cmd:
             return False
 
         # Get login command
-        login_cmd = [
-            python_tool,
-            nile_script,
-            "--quiet",
+        login_cmd = script_cmd + [
+                        "--quiet",
             "auth",
             "--login"
         ]
@@ -136,10 +129,8 @@ class Amazon(storebase.StoreBase):
             return False
 
         # Get refresh command
-        refresh_cmd = [
-            python_tool,
-            nile_script,
-            "--quiet",
+        refresh_cmd = script_cmd + [
+                        "--quiet",
             "auth",
             "--refresh"
         ]
@@ -201,21 +192,14 @@ class Amazon(storebase.StoreBase):
                     logger.log_warning("Failed to load Amazon cache, will fetch fresh data")
                 use_cache = False
 
-        # Get tool
-        python_tool = programs.find_tool_program("PythonVenvPython")
-        if not python_tool:
-            return None
-
-        # Get script
-        nile_script = programs.find_tool_program("Nile")
-        if not nile_script:
+        # Get script command
+        script_cmd = programs.get_python_script_command("Nile")
+        if not script_cmd:
             return None
 
         # Get refresh command
-        refresh_cmd = [
-            python_tool,
-            nile_script,
-            "--quiet",
+        refresh_cmd = script_cmd + [
+                        "--quiet",
             "auth",
             "--refresh"
         ]
@@ -230,10 +214,8 @@ class Amazon(storebase.StoreBase):
             return None
 
         # Get sync command
-        sync_cmd = [
-            python_tool,
-            nile_script,
-            "--quiet",
+        sync_cmd = script_cmd + [
+                        "--quiet",
             "library",
             "sync"
         ]
@@ -248,10 +230,8 @@ class Amazon(storebase.StoreBase):
             return None
 
         # Get list command
-        list_cmd = [
-            python_tool,
-            nile_script,
-            "library",
+        list_cmd = script_cmd + [
+                        "library",
             "list"
         ]
 
@@ -324,21 +304,14 @@ class Amazon(storebase.StoreBase):
             logger.log_warning("Info identifier '%s' was not valid" % identifier)
             return None
 
-        # Get tool
-        python_tool = programs.find_tool_program("PythonVenvPython")
-        if not python_tool:
-            return None
-
-        # Get script
-        nile_script = programs.find_tool_program("Nile")
-        if not nile_script:
+        # Get script command
+        script_cmd = programs.get_python_script_command("Nile")
+        if not script_cmd:
             return None
 
         # Get info command
-        info_cmd = [
-            python_tool,
-            nile_script,
-            "--quiet",
+        info_cmd = script_cmd + [
+                        "--quiet",
             "details",
             identifier
         ]
@@ -407,33 +380,22 @@ class Amazon(storebase.StoreBase):
             logger.log_warning("Download identifier '%s' was not valid" % identifier)
             return False
 
-        # Get tool
-        python_tool = programs.find_tool_program("PythonVenvPython")
-        if not python_tool:
+        # Get script command
+        script_cmd = programs.get_python_script_command("Nile")
+        if not script_cmd:
             return False
 
-        # Get script
-        nile_script = programs.find_tool_program("Nile")
-        if not nile_script:
-            return False
+        # Download into a temporary directory and archive it
+        with fileops.temporary_directory(verbose = verbose, pretend_run = pretend_run) as tmp_dir_result:
+            if not tmp_dir_result:
+                return False
 
-        # Create temporary directory
-        tmp_dir_success, tmp_dir_result = fileops.create_temporary_directory(
-            verbose = verbose,
-            pretend_run = pretend_run)
-        if not tmp_dir_success:
-            return False
-
-        # Get download command
-        download_cmd = [
-            python_tool,
-            nile_script,
-            "verify",
-            "--path", tmp_dir_result,
-            identifier
-        ]
-
-        try:
+            # Get download command
+            download_cmd = script_cmd + [
+                                "verify",
+                "--path", tmp_dir_result,
+                identifier
+            ]
 
             # Run download command
             code = command.run_returncode_command(
@@ -458,14 +420,6 @@ class Amazon(storebase.StoreBase):
                 exit_on_failure = exit_on_failure)
             if not success:
                 return False
-        finally:
-
-            # Delete temporary directory
-            fileops.remove_directory(
-                src = tmp_dir_result,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = False)
 
         # Check results
         return paths.does_directory_contain_files(output_dir)

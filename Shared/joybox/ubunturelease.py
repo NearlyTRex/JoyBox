@@ -286,13 +286,10 @@ def verify_image_checksum(
         return True
 
     # Read the published checksums, having checked who signed them
-    work_dir_ok, work_dir = fileops.create_temporary_directory(
-        verbose = verbose,
-        pretend_run = pretend_run)
-    if not work_dir_ok:
-        logger.log_error("Unable to create temporary directory")
-        return False
-    try:
+    with fileops.temporary_directory(verbose = verbose, pretend_run = pretend_run) as work_dir:
+        if not work_dir:
+            logger.log_error("Unable to create temporary directory")
+            return False
         checksums = fetch_release_checksums(
             version = version,
             work_dir = work_dir,
@@ -300,12 +297,6 @@ def verify_image_checksum(
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-    finally:
-        fileops.remove_directory(
-            src = work_dir,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = False)
     expected = (checksums or {}).get(image)
     if not expected:
         logger.log_error("No published checksum was found for %s" % image)

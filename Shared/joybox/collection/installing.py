@@ -142,69 +142,55 @@ def install_local_game(
             message_text = "Source files are not available\n%s\n%s" % (game_name, game_platform))
         return False
 
-    # Create temporary directory
-    tmp_dir_success, tmp_dir_result = fileops.create_temporary_directory(
-        verbose = verbose,
-        pretend_run = pretend_run)
-    if not tmp_dir_success:
-        return False
+    # Download into a temporary directory and install from there
+    with fileops.temporary_directory(verbose = verbose, pretend_run = pretend_run) as tmp_dir_result:
+        if not tmp_dir_result:
+            return False
 
-    # Download files
-    success = locker.sync_from_remote_decrypted(
-        src = game_remote_rom_dir,
-        dest = tmp_dir_result,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    if not success:
-        fileops.remove_directory(
-            src = tmp_dir_result,
+        # Download files
+        success = locker.sync_from_remote_decrypted(
+            src = game_remote_rom_dir,
+            dest = tmp_dir_result,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-        return False
+        if not success:
+            return False
 
-    # Check if transformation is required
-    if platforms.is_transform_platform(game_platform):
+        # Check if transformation is required
+        if platforms.is_transform_platform(game_platform):
 
-        # Install transformed game
-        def install_transformed_game():
-            return install_local_transformed_game(
-                game_info = game_info,
-                source_dir = tmp_dir_result,
-                keep_setup_files = keep_setup_files,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
-        gui.display_loading_window(
-            title_text = "Installing to cache",
-            message_text = "Transforming and adding game to cache\n%s\n%s" % (game_name, game_platform),
-            failure_text = "Unable to install game to cache",
-            image_file = game_artwork,
-            run_func = install_transformed_game)
-    else:
+            # Install transformed game
+            def install_transformed_game():
+                return install_local_transformed_game(
+                    game_info = game_info,
+                    source_dir = tmp_dir_result,
+                    keep_setup_files = keep_setup_files,
+                    verbose = verbose,
+                    pretend_run = pretend_run,
+                    exit_on_failure = exit_on_failure)
+            gui.display_loading_window(
+                title_text = "Installing to cache",
+                message_text = "Transforming and adding game to cache\n%s\n%s" % (game_name, game_platform),
+                failure_text = "Unable to install game to cache",
+                image_file = game_artwork,
+                run_func = install_transformed_game)
+        else:
 
-        # Install game
-        def install_game():
-            return install_local_untransformed_game(
-                game_info = game_info,
-                source_dir = tmp_dir_result,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
-        gui.display_loading_window(
-            title_text = "Installing to cache",
-            message_text = "Adding game to cache\n%s\n%s" % (game_name, game_platform),
-            failure_text = "Unable to install game to cache",
-            image_file = game_artwork,
-            run_func = install_game)
-
-    # Delete temporary directory
-    fileops.remove_directory(
-        src = tmp_dir_result,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
+            # Install game
+            def install_game():
+                return install_local_untransformed_game(
+                    game_info = game_info,
+                    source_dir = tmp_dir_result,
+                    verbose = verbose,
+                    pretend_run = pretend_run,
+                    exit_on_failure = exit_on_failure)
+            gui.display_loading_window(
+                title_text = "Installing to cache",
+                message_text = "Adding game to cache\n%s\n%s" % (game_name, game_platform),
+                failure_text = "Unable to install game to cache",
+                image_file = game_artwork,
+                run_func = install_game)
 
     # Check if game is now installed (a pretend run caches nothing)
     if not pretend_run and not is_local_game_installed(game_info):
@@ -245,42 +231,27 @@ def install_local_transformed_game(
     pretend_run = False,
     exit_on_failure = False):
 
-    # Create temporary directory
-    tmp_dir_success, tmp_dir_result = fileops.create_temporary_directory(
-        verbose = verbose,
-        pretend_run = pretend_run)
-    if not tmp_dir_success:
-        return False
-
-    # Transform game file
-    transform_success, transform_result = transform.transform_game_file(
-        game_info = game_info,
-        source_dir = source_dir,
-        output_dir = tmp_dir_result,
-        keep_setup_files = keep_setup_files,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    success = False
-    if not transform_success:
-        logger.log_error(transform_result)
-    else:
-
-        # Add to cache
-        success = install_local_untransformed_game(
+    # Transform game file into a temporary directory and add it to the cache
+    with fileops.temporary_directory(verbose = verbose, pretend_run = pretend_run) as tmp_dir_result:
+        if not tmp_dir_result:
+            return False
+        transform_success, transform_result = transform.transform_game_file(
+            game_info = game_info,
+            source_dir = source_dir,
+            output_dir = tmp_dir_result,
+            keep_setup_files = keep_setup_files,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+        if not transform_success:
+            logger.log_error(transform_result)
+            return False
+        return install_local_untransformed_game(
             game_info = game_info,
             source_dir = paths.get_filename_directory(transform_result),
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-
-    # Delete temporary directory
-    fileops.remove_directory(
-        src = tmp_dir_result,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    return success
 
 # Install local game addons
 def install_local_game_addons(

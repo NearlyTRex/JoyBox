@@ -133,16 +133,11 @@ class HumbleBundle(storebase.StoreBase):
     # Get manager command prefix
     def get_manager_cmd(self):
 
-        # Get tool
-        python_tool = programs.find_tool_program("PythonVenvPython")
-        if not python_tool:
+        # Get script command
+        script_cmd = programs.get_python_script_command("HumbleBundleManager")
+        if not script_cmd:
             return None
-
-        # Get script
-        humble_script = programs.find_tool_program("HumbleBundleManager")
-        if not humble_script:
-            return None
-        return [python_tool, humble_script, "--auth", self.get_auth_token()]
+        return script_cmd + ["--auth", self.get_auth_token()]
 
     # Get purchase details
     def get_purchase_details(
@@ -404,22 +399,18 @@ class HumbleBundle(storebase.StoreBase):
         if not manager_cmd:
             return False
 
-        # Create temporary directory
-        tmp_dir_success, tmp_dir_result = fileops.create_temporary_directory(
-            verbose = verbose,
-            pretend_run = pretend_run)
-        if not tmp_dir_success:
-            return False
+        # Download into a temporary directory and archive it
+        with fileops.temporary_directory(verbose = verbose, pretend_run = pretend_run) as tmp_dir_result:
+            if not tmp_dir_result:
+                return False
 
-        # Get download command
-        download_cmd = manager_cmd + [
-            "--download", identifier,
-            "--platform", self.get_preferred_platform(),
-            "--path", tmp_dir_result,
-            "--quiet"
-        ]
-
-        try:
+            # Get download command
+            download_cmd = manager_cmd + [
+                "--download", identifier,
+                "--platform", self.get_preferred_platform(),
+                "--path", tmp_dir_result,
+                "--quiet"
+            ]
 
             # Run download command
             code = command.run_returncode_command(
@@ -444,14 +435,6 @@ class HumbleBundle(storebase.StoreBase):
                 exit_on_failure = exit_on_failure)
             if not success:
                 return False
-        finally:
-
-            # Delete temporary directory
-            fileops.remove_directory(
-                src = tmp_dir_result,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = False)
 
         # Check results
         return paths.does_directory_contain_files(output_dir)

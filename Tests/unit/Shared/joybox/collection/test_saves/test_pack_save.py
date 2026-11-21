@@ -214,7 +214,7 @@ def test_every_game_with_a_save_is_packed(tmp_path, game, monkeypatch):
         "First": catalog_game(tmp_path, "First"),
         "Second": catalog_game(tmp_path, "Second", with_save = False),
         "Third": catalog_game(tmp_path, "Third")}
-    built = make_catalog(monkeypatch, games)
+    walks = make_catalog(monkeypatch, games)
     packed = []
 
     def pack_save(game_info, **kwargs):
@@ -226,7 +226,7 @@ def test_every_game_with_a_save_is_packed(tmp_path, game, monkeypatch):
     assert [name for name, _ in packed] == ["First", "Third"]
     assert packed[0][1]["locker_type"] == config.LockerType.LOCAL
     assert packed[0][1]["verbose"] is True
-    assert built[0][1]["game_supercategory"] == config.Supercategory.ROMS
+    assert walks[0]["verbose"] is True
 
 
 def test_a_game_without_a_save_does_not_stop_packing(tmp_path, game, fake_locker, monkeypatch):

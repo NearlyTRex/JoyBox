@@ -437,27 +437,16 @@ def transform_game_file(
     if not paths.is_path_directory(output_dir):
         return (False, "Output directory doesn't exist")
 
-    # Create temporary directory
-    tmp_dir_success, tmp_dir_result = fileops.create_temporary_directory(
-        verbose = verbose,
-        pretend_run = pretend_run)
-    if not tmp_dir_success:
-        return (False, tmp_dir_result)
-
-    # Transform, removing the temporary directory whatever the outcome
-    try:
+    # Transform in a temporary directory
+    with fileops.temporary_directory(verbose = verbose, pretend_run = pretend_run) as tmp_dir:
+        if not tmp_dir:
+            return (False, "Unable to create temporary directory")
         return transform_game_file_in(
             game_info = game_info,
             source_dir = source_dir,
             output_dir = output_dir,
-            tmp_dir_result = tmp_dir_result,
+            tmp_dir_result = tmp_dir,
             keep_setup_files = keep_setup_files,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-    finally:
-        fileops.remove_directory(
-            src = tmp_dir_result,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
