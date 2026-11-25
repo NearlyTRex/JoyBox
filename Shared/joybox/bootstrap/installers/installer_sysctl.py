@@ -12,6 +12,16 @@ SYSCTL_SETTINGS = [
         "value": "1024",
         "description": "Raise inotify instance limit (GitKraken/editors exhaust the default 128 when switching repos)",
     },
+    {
+        "key": "vm.swappiness",
+        "value": "180",
+        "description": "Swap eagerly, since zram swap is far cheaper than dropping file cache",
+    },
+    {
+        "key": "vm.page-cluster",
+        "value": "0",
+        "description": "Read swap one page at a time (zram has no seek cost to amortize)",
+    },
 ]
 
 # Sysctl

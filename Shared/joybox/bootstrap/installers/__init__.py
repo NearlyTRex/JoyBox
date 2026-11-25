@@ -95,6 +95,8 @@ from joybox.bootstrap.installers.installer_sdl3 import (
     Sdl3 as Sdl3)
 from joybox.bootstrap.installers.installer_steam import (
     Steam as Steam)
+from joybox.bootstrap.installers.installer_swapfile import (
+    Swapfile as Swapfile)
 from joybox.bootstrap.installers.installer_sysctl import (
     Sysctl as Sysctl)
 from joybox.bootstrap.installers.installer_udev import (
@@ -119,5 +121,7 @@ from joybox.bootstrap.installers.installer_wrappers import (
     Wrappers as Wrappers)
 from joybox.bootstrap.installers.installer_xorg import (
     Xorg as Xorg)
+from joybox.bootstrap.installers.installer_zram import (
+    Zram as Zram)
 from joybox.bootstrap.installers.installer import (
     Installer as Installer)

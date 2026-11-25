@@ -59,6 +59,8 @@ class LocalUbuntu(env.Environment):
             "rust": installers.Rust(**self.installer_options),
             "steam": installers.Steam(**self.installer_options),
             "sysctl": installers.Sysctl(**self.installer_options),
+            "zram": installers.Zram(**self.installer_options),
+            "swapfile": installers.Swapfile(**self.installer_options),
             "udev": installers.Udev(**self.installer_options),
             "ufw": installers.Ufw(**self.installer_options),
             "vale": installers.Vale(**self.installer_options),
@@ -99,6 +101,8 @@ class LocalUbuntu(env.Environment):
         self.installer_rust = self.available_components["rust"]
         self.installer_steam = self.available_components["steam"]
         self.installer_sysctl = self.available_components["sysctl"]
+        self.installer_zram = self.available_components["zram"]
+        self.installer_swapfile = self.available_components["swapfile"]
         self.installer_udev = self.available_components["udev"]
         self.installer_ufw = self.available_components["ufw"]
         self.installer_virtualbox = self.available_components["virtualbox"]
