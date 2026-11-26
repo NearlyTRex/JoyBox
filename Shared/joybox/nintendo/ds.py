@@ -34,7 +34,7 @@ def encrypt_nds_rom(
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
-    return (code == 0)
+    return code == 0
 
 # Decrypt Nintendo DS rom
 def decrypt_nds_rom(
@@ -64,6 +64,6 @@ def decrypt_nds_rom(
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
-    return (code == 0)
+    return code == 0
 
 ######################################################

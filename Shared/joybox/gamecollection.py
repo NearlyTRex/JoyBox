@@ -100,7 +100,7 @@ def iterate_selected_game_categories(
     game_subcategory_map = None):
 
     # Determine generation mode
-    args, unknown = parser.parse_known_args()
+    args, _ = parser.parse_known_args()
     if generation_mode is None:
         generation_mode = getattr(args, "generation_mode", config.GenerationModeType.STANDARD)
 
@@ -137,7 +137,7 @@ def iterate_selected_game_infos(
     exit_on_failure = False):
 
     # Determine generation mode
-    args, unknown = parser.parse_known_args()
+    args, _ = parser.parse_known_args()
     if generation_mode is None:
         generation_mode = getattr(args, "generation_mode", config.GenerationModeType.STANDARD)
 

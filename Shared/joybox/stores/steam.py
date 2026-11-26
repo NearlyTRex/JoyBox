@@ -457,7 +457,7 @@ class Steam(storebase.StoreBase):
             return None
 
         # Build jsondata
-        if not isinstance(branch, str) or not len(branch):
+        if not isinstance(branch, str) or not branch:
             branch = config.SteamBranchType.PUBLIC.lower()
         json_data = self.create_default_jsondata()
         json_data.set_value(config.json_key_store_appid, identifier)
@@ -683,7 +683,7 @@ class Steam(storebase.StoreBase):
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-        return (code == 0)
+        return code == 0
 
     ############################################################
     # Launch
@@ -724,7 +724,7 @@ class Steam(storebase.StoreBase):
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-        return (code == 0)
+        return code == 0
 
     ############################################################
     # Download

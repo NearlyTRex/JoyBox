@@ -32,7 +32,7 @@ def is_url_reachable(url, params = None, timeout = request_timeout_seconds):
     try:
         import requests
         get = requests.get(url, params=params, timeout=timeout)
-        return (get.status_code == 200)
+        return get.status_code == 200
     except Exception:
         return False
 
@@ -330,10 +330,10 @@ def map_windows_drive(drive, remote, username, password):
             ("lpProvider", wintypes.LPWSTR),
         ]
 
-    resource = NETRESOURCE()
-    resource.dwType = 1  # RESOURCETYPE_DISK
-    resource.lpLocalName = drive
-    resource.lpRemoteName = remote
+    resource = NETRESOURCE(
+        dwType = 1,  # RESOURCETYPE_DISK
+        lpLocalName = drive,
+        lpRemoteName = remote)
     return ctypes.windll.mpr.WNetAddConnection2W(ctypes.byref(resource), password, username, 0)
 
 # Directory for mount.cifs credentials; a comma would split the -o option string
@@ -431,7 +431,7 @@ def mount_network_share(
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-            return (code == 0)
+            return code == 0
         finally:
             if not pretend_run:
                 fileops.remove_file(credentials_file)

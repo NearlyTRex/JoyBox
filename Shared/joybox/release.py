@@ -220,7 +220,7 @@ def install_general_release(
                 break
 
     # Copy release files
-    if isinstance(install_files, list) and len(install_files):
+    if isinstance(install_files, list) and install_files:
         for install_file in install_files:
             install_file_src = os.path.abspath(paths.join_paths(search_dir, install_file))
             install_file_dest = paths.join_paths(install_dir, install_file)
@@ -245,7 +245,7 @@ def install_general_release(
             return False
 
     # Chmod files
-    if isinstance(chmod_files, list) and len(chmod_files):
+    if isinstance(chmod_files, list) and chmod_files:
         for filename in paths.build_file_list(install_dir):
             for chmod_entry in chmod_files:
                 chmod_file = paths.normalize_file_path(chmod_entry["file"])
@@ -262,7 +262,7 @@ def install_general_release(
                         return False
 
     # Rename files
-    if isinstance(rename_files, list) and len(rename_files):
+    if isinstance(rename_files, list) and rename_files:
         for filename in paths.build_file_list(install_dir):
             filename_dir = paths.get_filename_directory(filename)
             filename_file = paths.get_filename_file(filename)

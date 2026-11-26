@@ -48,8 +48,8 @@ def restore_default_screen_resolution(verbose = False, pretend_run = False, exit
 
     # Ignore if already at the default resolution
     current_w, current_h = get_current_screen_resolution()
-    is_default_w = (current_w == screen_resolution_w)
-    is_default_h = (current_h == screen_resolution_h)
+    is_default_w = current_w == screen_resolution_w
+    is_default_h = current_h == screen_resolution_h
     if is_default_w and is_default_h:
         return True
 

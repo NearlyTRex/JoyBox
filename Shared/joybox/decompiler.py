@@ -120,7 +120,7 @@ def launch_program(verbose = False, pretend_run = False, exit_on_failure = False
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
-    return (code == 0)
+    return code == 0
 
 def run_script(
     project_dir,
@@ -206,7 +206,7 @@ def run_script(
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
-    return (code == 0)
+    return code == 0
 
 def run_script_from_preset(
     preset_name,

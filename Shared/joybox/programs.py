@@ -180,7 +180,7 @@ def get_emulator_path_config_value(emulator_name, emulator_key, emulator_platfor
 def derive_tool_name_from_program_path(program_path, tool_platform = None):
     if not program_path or not os.path.exists(program_path):
         return None
-    for tool_name in get_tool_config().keys():
+    for tool_name in get_tool_config():
         tool_path = get_tool_program(tool_name, tool_platform)
         if tool_path and os.path.normpath(tool_path) == os.path.normpath(program_path):
             return tool_name
@@ -190,7 +190,7 @@ def derive_tool_name_from_program_path(program_path, tool_platform = None):
 def derive_emulator_name_from_program_path(program_path, emulator_platform = None):
     if not program_path or not os.path.exists(program_path):
         return None
-    for emulator_name in get_emulator_config().keys():
+    for emulator_name in get_emulator_config():
         emulator_path = get_emulator_program(emulator_name, emulator_platform)
         if emulator_path and os.path.normpath(emulator_path) == os.path.normpath(program_path):
             return emulator_name

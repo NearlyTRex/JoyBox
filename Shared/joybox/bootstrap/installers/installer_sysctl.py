@@ -1,8 +1,8 @@
 # Local imports
 import joybox.bootstrap.constants as constants
-from . import installer
 from joybox import runoptions
 from joybox import logger
+from . import installer
 
 # Sysctl settings to install
 # Each setting has: key, value, description

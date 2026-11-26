@@ -178,7 +178,7 @@ def install_local_game(
         else:
 
             # Install game
-            def install_game():
+            def install_untransformed_game():
                 return install_local_untransformed_game(
                     game_info = game_info,
                     source_dir = tmp_dir_result,
@@ -190,7 +190,7 @@ def install_local_game(
                 message_text = "Adding game to cache\n%s\n%s" % (game_name, game_platform),
                 failure_text = "Unable to install game to cache",
                 image_file = game_artwork,
-                run_func = install_game)
+                run_func = install_untransformed_game)
 
     # Check if game is now installed (a pretend run caches nothing)
     if not pretend_run and not is_local_game_installed(game_info):

@@ -278,7 +278,7 @@ def build_hash_sidecar_directory_list(
 # Get a remote path relative to a remote root, or None when it is outside it
 def get_remote_relative_path(remote_path, remote_root):
     root = remote_root.rstrip("/")
-    if remote_path == root or remote_path == remote_root:
+    if remote_path in (root, remote_root):
         return ""
     if remote_path.startswith(root + "/"):
         return remote_path[len(root) + 1:]

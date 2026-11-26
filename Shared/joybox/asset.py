@@ -45,7 +45,7 @@ def clean_exif_data(
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
-    return (code == 0)
+    return code == 0
 
 # Download asset
 def download_asset(

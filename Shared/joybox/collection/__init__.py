@@ -1,4 +1,5 @@
 # Imports
+import sys as _sys
 from joybox.collection.asset import (
     does_metadata_asset_exist as does_metadata_asset_exist,
     download_metadata_asset as download_metadata_asset,
@@ -100,7 +101,6 @@ from joybox.collection.uploading import (
     upload_all_game_files as upload_all_game_files)
 
 # Submodule handles
-import sys as _sys
 asset = _sys.modules["joybox.collection.asset"]
 backup = _sys.modules["joybox.collection.backup"]
 hashing = _sys.modules["joybox.collection.hashing"]

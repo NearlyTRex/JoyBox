@@ -2,9 +2,9 @@
 import joybox.bootstrap.constants as constants
 from joybox import connection
 import joybox.bootstrap.installers as installers
-from . import env
 from joybox import runoptions
 from joybox import logger
+from . import env
 
 # Local Ubuntu
 class LocalUbuntu(env.Environment):

@@ -58,18 +58,18 @@ def create_switch_profiles_dat(
 
     # Write user_id_1
     file_index = 0x10
-    for offset in range(0, len(user_id_bytes)):
-        file_contents[file_index + offset] = bytes([user_id_bytes[offset]])
+    for offset, value in enumerate(user_id_bytes):
+        file_contents[file_index + offset] = bytes([value])
 
     # Write user_id_2
     file_index = 0x20
-    for offset in range(0, len(user_id_bytes)):
-        file_contents[file_index + offset] = bytes([user_id_bytes[offset]])
+    for offset, value in enumerate(user_id_bytes):
+        file_contents[file_index + offset] = bytes([value])
 
     # Write account_name
     file_index = 0x38
-    for offset in range(0, len(account_name_bytes)):
-        file_contents[file_index + offset] = bytes([account_name_bytes[offset]])
+    for offset, value in enumerate(account_name_bytes):
+        file_contents[file_index + offset] = bytes([value])
 
     # Write file
     success = fileops.touch_file(

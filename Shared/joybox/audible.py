@@ -265,7 +265,7 @@ def decrypt_aax_directory(
     # Find AAX files
     aax_files = []
     if recursive:
-        for root, dirs, files in os.walk(input_dir):
+        for root, _, files in os.walk(input_dir):
             for filename in files:
                 if filename.lower().endswith((".aax", ".aa")):
                     aax_files.append(paths.join_paths(root, filename))

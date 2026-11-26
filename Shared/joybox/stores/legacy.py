@@ -130,7 +130,7 @@ class Legacy(storebase.StoreBase):
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-        if (code != 0):
+        if code != 0:
             return False
 
         # Get refresh command

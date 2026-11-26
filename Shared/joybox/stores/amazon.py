@@ -125,7 +125,7 @@ class Amazon(storebase.StoreBase):
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-        if (code != 0):
+        if code != 0:
             return False
 
         # Get refresh command
@@ -210,7 +210,7 @@ class Amazon(storebase.StoreBase):
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-        if (code != 0):
+        if code != 0:
             return None
 
         # Get sync command
@@ -226,7 +226,7 @@ class Amazon(storebase.StoreBase):
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-        if (code != 0):
+        if code != 0:
             return None
 
         # Get list command

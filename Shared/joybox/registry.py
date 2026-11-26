@@ -72,7 +72,7 @@ def read_registry_file(
         registry_entry["value"] = "\n".join(registry_values)
 
         # Add entry
-        if len(keep_keys):
+        if keep_keys:
             should_keep = False
             for keep_key in keep_keys:
                 if registry_key.startswith(keep_key):

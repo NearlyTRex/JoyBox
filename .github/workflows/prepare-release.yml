@@ -14,7 +14,7 @@ permissions: {}
 jobs:
   prepare:
     name: Prepare
-    uses: NearlyTRex/Workflows/.github/workflows/prepare-release.yml@a312ddd3b1f067963e825ffbab2cae8f82f6dcb1 # v0.2.29
+    uses: NearlyTRex/Workflows/.github/workflows/prepare-release.yml@e2e2ef1bcb7ffd9947b86cc8f1c416a4243ee87a # v0.2.31
     permissions:
       contents: write
       pull-requests: write

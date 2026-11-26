@@ -1,7 +1,7 @@
 # Imports
 import os
-import contextlib
 import os.path
+import contextlib
 import threading
 import concurrent.futures
 from abc import ABC, abstractmethod
@@ -138,7 +138,7 @@ class LockerBackend(ABC):
         if not root:
             return full_path
         trimmed_root = root.rstrip(os.sep)
-        if full_path == root or full_path == trimmed_root:
+        if full_path in (root, trimmed_root):
             return ""
         if full_path.startswith(trimmed_root + os.sep):
             return full_path[len(trimmed_root) + len(os.sep):]

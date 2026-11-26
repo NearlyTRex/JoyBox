@@ -132,7 +132,7 @@ def import_game_store_purchases(
             search_keys = config.json_keys_store_appdata,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-        if len(json_matches):
+        if json_matches:
             continue
 
         # Determine if this should be imported
@@ -288,7 +288,7 @@ def update_game_store_purchases(
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         json_file = None
-        if len(json_matches):
+        if json_matches:
             json_file = json_matches[0]
         if not paths.is_path_file(json_file):
             continue
@@ -386,14 +386,14 @@ def build_game_store_purchases(
         return True
 
     # Import new purchases, then update known ones
-    selection = dict(
-        game_supercategory = game_supercategory,
-        game_category = game_category,
-        game_subcategory = game_subcategory,
-        purchases = purchases,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
+    selection = {
+        "game_supercategory": game_supercategory,
+        "game_category": game_category,
+        "game_subcategory": game_subcategory,
+        "purchases": purchases,
+        "verbose": verbose,
+        "pretend_run": pretend_run,
+        "exit_on_failure": exit_on_failure}
     if not import_game_store_purchases(**selection):
         return False
     return update_game_store_purchases(keys = keys, force = force, **selection)

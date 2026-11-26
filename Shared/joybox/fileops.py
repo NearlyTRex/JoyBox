@@ -244,7 +244,7 @@ def touch_file(src, contents = "", contents_mode = "w", encoding = None, private
         if pretend_run:
             return True
         os.makedirs(paths.get_filename_directory(src), exist_ok = True)
-        if len(contents):
+        if contents:
             write_file_contents(src, contents, contents_mode, encoding, private)
         else:
             open(src, "a", encoding = "utf-8").close()

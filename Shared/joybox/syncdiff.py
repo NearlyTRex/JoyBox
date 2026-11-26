@@ -238,9 +238,10 @@ def diff_sync_files(
     with diff_workspace(diff_dir) as (diff_dir, generate_diffs, temp_files):
         if not diff_dir:
             return False
-        transfer = dict(
-            remote_name = remote_name, remote_type = remote_type, remote_path = remote_path, local_path = local_path,
-            verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure)
+        transfer = {
+            "remote_name": remote_name, "remote_type": remote_type, "remote_path": remote_path,
+            "local_path": local_path, "verbose": verbose, "pretend_run": pretend_run,
+            "exit_on_failure": exit_on_failure}
         diff_paths = [os.path.join(diff_dir, name) for name in (
             diff_combined_file, diff_intersected_file, diff_missing_src_file, diff_missing_dest_file)]
         if generate_diffs:

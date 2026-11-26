@@ -175,7 +175,7 @@ class GOG(storebase.StoreBase):
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-        return (code == 0)
+        return code == 0
 
     # Login HeroicGogDL
     def login_heroic_gogdl(
@@ -212,7 +212,7 @@ class GOG(storebase.StoreBase):
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-        return (code == 0)
+        return code == 0
 
     # Login
     def login(
@@ -693,7 +693,7 @@ class GOG(storebase.StoreBase):
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-        return (code == 0)
+        return code == 0
 
     ############################################################
     # Download
