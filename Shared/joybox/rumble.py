@@ -2,9 +2,9 @@
 import re
 
 # Local imports
-import joybox.logger as logger
-import joybox.command as command
-import joybox.programs as programs
+from joybox import logger
+from joybox import command
+from joybox import programs
 
 # Browser user agent. Rumble fingerprint-blocks some HTTP clients (python
 # requests gets a 403); curl with a browser user agent is served normally.

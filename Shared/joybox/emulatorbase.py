@@ -1,9 +1,9 @@
 # Local imports
-import joybox.programs as programs
-import joybox.environment as environment
-import joybox.paths as paths
-import joybox.hashing as hashing
-import joybox.logger as logger
+from joybox import programs
+from joybox import environment
+from joybox import paths
+from joybox import hashing
+from joybox import logger
 from joybox import platform_info
 
 # Base emulator

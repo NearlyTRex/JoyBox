@@ -12,7 +12,7 @@ from joybox import logger, runoptions
 from joybox import systemtools as tools
 from joybox import programs
 from . import connection
-import joybox.paths as paths
+from joybox import paths
 
 class ConnectionLocal(connection.Connection):
     def __init__(

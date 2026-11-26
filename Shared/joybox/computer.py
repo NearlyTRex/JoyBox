@@ -3,21 +3,21 @@ import os
 import os.path
 
 # Local imports
-import joybox.config as config
-import joybox.environment as environment
-import joybox.fileops as fileops
+from joybox import config
+from joybox import environment
+from joybox import fileops
 from joybox import filebulk
-import joybox.jsondata as jsondata
-import joybox.paths as paths
-import joybox.command as command
-import joybox.programs as programs
-import joybox.sandbox as sandbox
+from joybox import jsondata
+from joybox import paths
+from joybox import command
+from joybox import programs
+from joybox import sandbox
 from joybox import sandboxdrives
-import joybox.archive as archive
-import joybox.display as display
-import joybox.install as install
-import joybox.gui as gui
-import joybox.logger as logger
+from joybox import archive
+from joybox import display
+from joybox import install
+from joybox import gui
+from joybox import logger
 from joybox import platform_info
 
 # Program

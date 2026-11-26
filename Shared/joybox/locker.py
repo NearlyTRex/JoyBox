@@ -1,15 +1,15 @@
 # Local imports
-import joybox.config as config
-import joybox.sync as sync
+from joybox import config
+from joybox import sync
 from joybox import syncremotes
-import joybox.rcloneremotes as rcloneremotes
-import joybox.logger as logger
-import joybox.paths as paths
-import joybox.environment as environment
-import joybox.fileops as fileops
-import joybox.cryption as cryption
-import joybox.lockerinfo as lockerinfo
-import joybox.lockerbackend as lockerbackend
+from joybox import rcloneremotes
+from joybox import logger
+from joybox import paths
+from joybox import environment
+from joybox import fileops
+from joybox import cryption
+from joybox import lockerinfo
+from joybox import lockerbackend
 
 ###########################################################
 # Helpers

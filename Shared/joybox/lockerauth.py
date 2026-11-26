@@ -3,13 +3,13 @@ import json
 import re
 
 # Local imports
-import joybox.config as config
+from joybox import config
 from joybox import syncremotes
-import joybox.logger as logger
-import joybox.paths as paths
-import joybox.secretstore as secretstore
-import joybox.serialization as serialization
-import joybox.settings as settings
+from joybox import logger
+from joybox import paths
+from joybox import secretstore
+from joybox import serialization
+from joybox import settings
 
 ###########################################################
 # Signing a remote locker in with OAuth

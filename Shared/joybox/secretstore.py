@@ -18,8 +18,8 @@ import subprocess
 import uuid
 
 # Local imports
-import joybox.logger as logger
-import joybox.serialization as serialization
+from joybox import logger
+from joybox import serialization
 
 # What a reference looks like. 1Password's own syntax, so the same string
 # works with the tool directly, and with op inject and op run.

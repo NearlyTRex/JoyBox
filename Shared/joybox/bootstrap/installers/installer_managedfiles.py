@@ -2,7 +2,7 @@
 import os
 
 # Local imports
-import joybox.bootstrap as bootstrap
+from joybox import bootstrap
 from . import installer
 from joybox import runoptions
 from joybox import logger

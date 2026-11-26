@@ -2,8 +2,8 @@
 import string
 
 # Local imports
-import joybox.bootstrap.constants as constants
-import joybox.bootstrap.gamemic as gamemic
+from joybox.bootstrap import constants
+from joybox.bootstrap import gamemic
 from . import installer_managedfiles
 
 # WirePlumber 0.4 policy config and the scripts it loads, from Bootstrap/wireplumber

@@ -5,13 +5,13 @@ import zlib
 import hashlib
 
 # Local imports
-import joybox.config as config
-import joybox.fileops as fileops
-import joybox.logger as logger
-import joybox.paths as paths
-import joybox.serialization as serialization
-import joybox.archive as archive
-import joybox.cryption as cryption
+from joybox import config
+from joybox import fileops
+from joybox import logger
+from joybox import paths
+from joybox import serialization
+from joybox import archive
+from joybox import cryption
 
 ###########################################################
 

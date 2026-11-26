@@ -1,9 +1,9 @@
 # Local imports
-import joybox.containers as containers
-import joybox.programs as programs
-import joybox.serialization as serialization
-import joybox.storepaths as storepaths
-import joybox.strings as strings
+from joybox import containers
+from joybox import programs
+from joybox import serialization
+from joybox import storepaths
+from joybox import strings
 
 # Manifest entry
 class ManifestEntry:

@@ -62,7 +62,7 @@ def mount_disc_image(
     exit_on_failure = False):
 
     # Imports
-    import joybox.chd as chd
+    from joybox import chd
 
     # Check params
     validation.assert_path_exists(src, "src")
@@ -104,7 +104,7 @@ def unmount_disc_image(
     exit_on_failure = False):
 
     # Imports
-    import joybox.chd as chd
+    from joybox import chd
 
     # Check params
     validation.assert_path_exists(src, "src")

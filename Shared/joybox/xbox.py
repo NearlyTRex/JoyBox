@@ -3,11 +3,11 @@ import os
 import os.path
 
 # Local imports
-import joybox.command as command
-import joybox.fileops as fileops
-import joybox.programs as programs
-import joybox.logger as logger
-import joybox.paths as paths
+from joybox import command
+from joybox import fileops
+from joybox import programs
+from joybox import logger
+from joybox import paths
 
 # Extract Xbox ISO
 def extract_xbox_iso(

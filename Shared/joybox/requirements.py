@@ -3,10 +3,10 @@ import configparser
 import os
 
 # Local imports
-import joybox.command as command
+from joybox import command
 from joybox import fileops
-import joybox.logger as logger
-import joybox.programs as programs
+from joybox import logger
+from joybox import programs
 from joybox import serialization
 
 ###########################################################

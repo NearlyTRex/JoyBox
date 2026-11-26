@@ -1,14 +1,14 @@
 # Imports
-import joybox.config as config
-import joybox.environment as environment
+from joybox import config
+from joybox import environment
 from joybox import gamecollection
-import joybox.system as system
-import joybox.arguments as arguments
-import joybox.setup as setup
-import joybox.logger as logger
-import joybox.paths as paths
-import joybox.prompts as prompts
-import joybox.serialization as serialization
+from joybox import system
+from joybox import arguments
+from joybox import setup
+from joybox import logger
+from joybox import paths
+from joybox import prompts
+from joybox import serialization
 
 # Build the argument parser
 def build_parser():

@@ -3,7 +3,7 @@ import os
 import re
 
 # Local imports
-import joybox.logger as logger
+from joybox import logger
 from joybox import serialization
 
 ###########################################################

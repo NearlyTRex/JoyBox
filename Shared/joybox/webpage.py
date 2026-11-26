@@ -7,13 +7,13 @@ import time
 import urllib.parse
 
 # Local imports
-import joybox.config as config
-import joybox.datautils as datautils
-import joybox.programs as programs
-import joybox.text as text
-import joybox.logger as logger
-import joybox.paths as paths
-import joybox.settings as settings
+from joybox import config
+from joybox import datautils
+from joybox import programs
+from joybox import text
+from joybox import logger
+from joybox import paths
+from joybox import settings
 from joybox import runtime
 
 # Scraping limits; each can be overridden in UserData.Scraping

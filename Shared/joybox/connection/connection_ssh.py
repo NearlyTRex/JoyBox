@@ -11,9 +11,9 @@ from io import StringIO
 from joybox import runtime, cmdline
 from joybox import logger, runoptions
 from . import connection
-import joybox.paths as paths
-import joybox.fileops as fileops
-import joybox.knownhosts as knownhosts
+from joybox import paths
+from joybox import fileops
+from joybox import knownhosts
 
 # Lazy import for paramiko (only needed for SSH connections)
 paramiko = None

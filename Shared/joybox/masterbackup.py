@@ -1,8 +1,8 @@
 # Imports
-import joybox.config as config
-import joybox.logger as logger
-import joybox.lockerinfo as lockerinfo
-import joybox.lockersync as lockersync
+from joybox import config
+from joybox import logger
+from joybox import lockerinfo
+from joybox import lockersync
 
 ###########################################################
 # Master Backup Orchestrator

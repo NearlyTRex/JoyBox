@@ -1,16 +1,16 @@
 # Local imports
-import joybox.config as config
-import joybox.logger as logger
-import joybox.environment as environment
-import joybox.fileops as fileops
+from joybox import config
+from joybox import logger
+from joybox import environment
+from joybox import fileops
 from joybox import gamecollection
 from joybox import gamenaming
-import joybox.metadata as metadata
-import joybox.metadataentry as metadataentry
-import joybox.paths as paths
-import joybox.metadatacollector as metadatacollector
-import joybox.stores as stores
-import joybox.strings as strings
+from joybox import metadata
+from joybox import metadataentry
+from joybox import paths
+from joybox import metadatacollector
+from joybox import stores
+from joybox import strings
 from .jsondata import read_game_json_data
 
 ############################################################

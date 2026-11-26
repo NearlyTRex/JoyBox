@@ -1,9 +1,9 @@
 # Local imports
-import joybox.config as config
-import joybox.logger as logger
-import joybox.prompts as prompts
+from joybox import config
+from joybox import logger
+from joybox import prompts
 from joybox import gamenaming
-import joybox.google as google
+from joybox import google
 from joybox.stores import steamlookups
 
 ############################################################

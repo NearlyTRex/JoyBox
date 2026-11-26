@@ -10,10 +10,10 @@
 import os
 
 # Local imports
-import joybox.command as command
-import joybox.fileops as fileops
-import joybox.logger as logger
-import joybox.paths as paths
+from joybox import command
+from joybox import fileops
+from joybox import logger
+from joybox import paths
 
 # How long to wait for a server to show its key
 SCAN_TIMEOUT_SECONDS = 10

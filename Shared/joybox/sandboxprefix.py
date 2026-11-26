@@ -23,7 +23,7 @@ def create_wine_prefix(
     exit_on_failure = False):
 
     # Imports
-    import joybox.command as command
+    from joybox import command
 
     # Make directory
     success = fileops.make_directory(
@@ -77,7 +77,7 @@ def create_sandboxie_prefix(
     exit_on_failure = False):
 
     # Imports
-    import joybox.command as command
+    from joybox import command
 
     # Make directories
     for prefix_subdir in [

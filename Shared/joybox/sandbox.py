@@ -3,13 +3,13 @@ import getpass
 import copy
 
 # Local imports
-import joybox.config as config
-import joybox.validation as validation
-import joybox.fileops as fileops
-import joybox.commandbase as commandbase
-import joybox.programs as programs
-import joybox.paths as paths
-import joybox.process as process
+from joybox import config
+from joybox import validation
+from joybox import fileops
+from joybox import commandbase
+from joybox import programs
+from joybox import paths
+from joybox import process
 from joybox import cmdline
 from joybox import platform_info
 
@@ -266,7 +266,7 @@ def restore_registry(
     exit_on_failure = False):
 
     # Imports
-    import joybox.registry as registry
+    from joybox import registry
 
     # Get registry dir
     registry_dir = options.get_prefix_user_profile_registry_dir()
@@ -302,7 +302,7 @@ def backup_registry(
     registry_keys = [] if registry_keys is None else registry_keys
 
     # Imports
-    import joybox.registry as registry
+    from joybox import registry
 
     # Ignore empty keys
     if not registry_keys:
@@ -629,7 +629,7 @@ def setup_prefix_command(
     exit_on_failure = False):
 
     # Imports
-    import joybox.gui as gui
+    from joybox import gui
 
     # Check options
     if not options:
@@ -695,7 +695,7 @@ def setup_prefix_command(
 def cleanup_wine(cmd, options, verbose = False, pretend_run = False, exit_on_failure = False):
 
     # Imports
-    import joybox.command as command
+    from joybox import command
 
     # Get wine server tool
     wine_server_tool = programs.get_tool_program("WineServer")

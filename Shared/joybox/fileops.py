@@ -11,12 +11,12 @@ import fnmatch
 import ntpath
 
 # Local imports
-import joybox.config as config
-import joybox.logger as logger
-import joybox.modules as modules
-import joybox.paths as paths
+from joybox import config
+from joybox import logger
+from joybox import modules
+from joybox import paths
 from joybox import runtime
-import joybox.text as text
+from joybox import text
 
 ###########################################################
 # Error handlers
@@ -435,7 +435,7 @@ def resolve_symlink(src, verbose = False, pretend_run = False, exit_on_failure =
 # Get why a copy or move can skip its destination: "exists" when skipping existing ones,
 # "identical" when skipping ones with the same contents, or None to go ahead
 def get_skip_reason(src, dest, skip_existing = False, skip_identical = False, case_sensitive_paths = True, verbose = False, exit_on_failure = False):
-    import joybox.hashing as hashing
+    from joybox import hashing
     if skip_existing and paths.does_path_exist(dest, case_sensitive_paths):
         return "exists"
     if skip_identical and hashing.are_files_identical(
@@ -811,7 +811,7 @@ def get_parsed_link_info(lnk, lnk_base_path):
 
 # Get link info
 def get_link_info(lnk_path, lnk_base_path):
-    import joybox.programs as programs
+    from joybox import programs
     pylnk = modules.import_python_module_file(
         module_path = programs.get_tool_program("PyLnk"),
         module_name = "pylnk")

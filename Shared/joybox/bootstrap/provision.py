@@ -17,15 +17,15 @@ import time
 import uuid
 
 # Local imports
-import joybox.bootstrap as bootstrap
-import joybox.bootstrap.constants as constants
-import joybox.bootstrap.runner as runner
-import joybox.command as command
-import joybox.hardening as hardening
-import joybox.hostsfile as hostsfile
-import joybox.logger as logger
+from joybox import bootstrap
+from joybox.bootstrap import constants
+from joybox.bootstrap import runner
+from joybox import command
+from joybox import hardening
+from joybox import hostsfile
+from joybox import logger
 from joybox import terminal
-import joybox.virtualmachine as virtualmachine
+from joybox import virtualmachine
 from joybox import runoptions
 from joybox.connection import ConnectionSSH
 

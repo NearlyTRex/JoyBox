@@ -3,14 +3,14 @@ import os
 import re
 
 # Local imports
-import joybox.validation as validation
-import joybox.logger as logger
-import joybox.paths as paths
-import joybox.fileops as fileops
-import joybox.command as command
-import joybox.programs as programs
-import joybox.serialization as serialization
-import joybox.settings as settings
+from joybox import validation
+from joybox import logger
+from joybox import paths
+from joybox import fileops
+from joybox import command
+from joybox import programs
+from joybox import serialization
+from joybox import settings
 from joybox import runtime
 
 # Extract activation bytes from text (finds 8 hex character sequence)

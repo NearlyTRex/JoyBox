@@ -3,8 +3,8 @@ import time
 import collections.abc
 
 # Local imports
-import joybox.config as config
-import joybox.logger as logger
+from joybox import config
+from joybox import logger
 
 ###########################################################
 # Data structure utilities

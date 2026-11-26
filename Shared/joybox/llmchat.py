@@ -6,9 +6,9 @@ import urllib.error
 import urllib.request
 
 # Local imports
-import joybox.chunkers as chunkers
-import joybox.logger as logger
-import joybox.ollama as ollama
+from joybox import chunkers
+from joybox import logger
+from joybox import ollama
 from joybox import ollamaagents
 from joybox import serialization
 
@@ -151,7 +151,7 @@ class ClaudeBackend:
     kind = BACKEND_CLAUDE
 
     def __init__(self, model = None):
-        import joybox.claude as claude
+        from joybox import claude
         self.claude = claude
         self.model = model or claude.DEFAULT_MODEL
 

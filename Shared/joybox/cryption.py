@@ -3,16 +3,16 @@ import os
 import os.path
 
 # Local imports
-import joybox.config as config
-import joybox.fileops as fileops
+from joybox import config
+from joybox import fileops
 from joybox import filebulk
-import joybox.command as command
-import joybox.programs as programs
-import joybox.text as text
-import joybox.validation as validation
-import joybox.logger as logger
-import joybox.paths as paths
-import joybox.hashutil as hashutil
+from joybox import command
+from joybox import programs
+from joybox import text
+from joybox import validation
+from joybox import logger
+from joybox import paths
+from joybox import hashutil
 
 # Determine if file is encrypted
 def is_file_encrypted(src):

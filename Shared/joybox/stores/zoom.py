@@ -1,8 +1,8 @@
 # Local imports
-import joybox.config as config
-import joybox.settings as settings
-import joybox.storebase as storebase
-import joybox.paths as paths
+from joybox import config
+from joybox import settings
+from joybox import storebase
+from joybox import paths
 
 # Zoom store
 class Zoom(storebase.StoreBase):

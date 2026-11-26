@@ -1,6 +1,6 @@
 # Local imports
-import joybox.config as config
-import joybox.paths as paths
+from joybox import config
+from joybox import paths
 
 # Create tokenized path
 def create_tokenized_path(path, base_path = None):

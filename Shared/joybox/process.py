@@ -4,7 +4,7 @@ import time
 import ntpath
 
 # Local imports
-import joybox.logger as logger
+from joybox import logger
 from joybox import runtime
 
 ###########################################################

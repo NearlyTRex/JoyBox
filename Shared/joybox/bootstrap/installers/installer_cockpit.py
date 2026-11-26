@@ -1,5 +1,5 @@
 # Local imports
-import joybox.bootstrap.constants as constants
+from joybox.bootstrap import constants
 from joybox import settings
 from joybox import serverinfo
 from . import installer

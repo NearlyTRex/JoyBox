@@ -2,14 +2,14 @@
 import random
 
 # Local imports
-import joybox.config as config
-import joybox.datautils as datautils
-import joybox.logger as logger
-import joybox.environment as environment
-import joybox.gamenaming as gamenaming
-import joybox.metadataentry as metadataentry
-import joybox.paths as paths
-import joybox.serialization as serialization
+from joybox import config
+from joybox import datautils
+from joybox import logger
+from joybox import environment
+from joybox import gamenaming
+from joybox import metadataentry
+from joybox import paths
+from joybox import serialization
 
 # Metadata database class
 class Metadata:

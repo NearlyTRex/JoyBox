@@ -2,10 +2,10 @@
 import re
 
 # Local imports
-import joybox.config as config
-import joybox.strings as strings
-import joybox.logger as logger
-import joybox.paths as paths
+from joybox import config
+from joybox import strings
+from joybox import logger
+from joybox import paths
 from joybox import serialization
 
 # Read playlist file

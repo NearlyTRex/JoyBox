@@ -3,19 +3,19 @@ import os
 import os.path
 
 # Local imports
-import joybox.config as config
-import joybox.environment as environment
-import joybox.fileops as fileops
+from joybox import config
+from joybox import environment
+from joybox import fileops
 from joybox import filebulk
 from joybox import gamenaming
-import joybox.install as install
-import joybox.computer as computer
-import joybox.archive as archive
-import joybox.playlist as playlist
-import joybox.paths as paths
-import joybox.chd as chd
-import joybox.playstation as playstation
-import joybox.xbox as xbox
+from joybox import install
+from joybox import computer
+from joybox import archive
+from joybox import playlist
+from joybox import paths
+from joybox import chd
+from joybox import playstation
+from joybox import xbox
 
 ###########################################################
 

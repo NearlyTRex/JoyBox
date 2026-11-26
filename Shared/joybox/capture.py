@@ -4,14 +4,14 @@ import os.path
 import threading
 
 # Local imports
-import joybox.commandbase as commandbase
-import joybox.validation as validation
-import joybox.logger as logger
-import joybox.programs as programs
-import joybox.sandbox as sandbox
+from joybox import commandbase
+from joybox import validation
+from joybox import logger
+from joybox import programs
+from joybox import sandbox
 from joybox import sandboxpaths
-import joybox.background as background
-import joybox.process as process
+from joybox import background
+from joybox import process
 from joybox import platform_info
 
 # Capture screenshot
@@ -110,7 +110,7 @@ def capture_video(
     exit_on_failure = False):
 
     # Imports
-    import joybox.command as command
+    from joybox import command
 
     # Check params
     validation.assert_is_valid_path(output_file, "output_file")

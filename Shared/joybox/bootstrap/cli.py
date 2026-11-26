@@ -8,11 +8,11 @@ from joybox import runoptions
 from joybox import logger
 from joybox import runtime
 from joybox import settings
-import joybox.bootstrap.constants as constants
-import joybox.bootstrap.packages as packages
-import joybox.bootstrap.runner as runner
-import joybox.bootstrap.picker as picker
-import joybox.bootstrap.configsetup as configsetup
+from joybox.bootstrap import constants
+from joybox.bootstrap import packages
+from joybox.bootstrap import runner
+from joybox.bootstrap import picker
+from joybox.bootstrap import configsetup
 
 # Build the argument parser
 def build_parser():

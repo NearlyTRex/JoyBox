@@ -1,16 +1,16 @@
 # Local imports
-import joybox.config as config
-import joybox.logger as logger
-import joybox.environment as environment
-import joybox.fileops as fileops
-import joybox.gameinfo as gameinfo
+from joybox import config
+from joybox import logger
+from joybox import environment
+from joybox import fileops
+from joybox import gameinfo
 from joybox import gamecollection
-import joybox.asset as asset
-import joybox.network as network
-import joybox.paths as paths
-import joybox.locker as locker
-import joybox.stores as stores
-import joybox.metadataassetcollector as metadataassetcollector
+from joybox import asset
+from joybox import network
+from joybox import paths
+from joybox import locker
+from joybox import stores
+from joybox import metadataassetcollector
 
 ############################################################
 

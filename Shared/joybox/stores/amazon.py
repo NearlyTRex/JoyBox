@@ -3,18 +3,18 @@ import os
 import re
 
 # Local imports
-import joybox.config as config
-import joybox.logger as logger
-import joybox.paths as paths
-import joybox.fileops as fileops
-import joybox.command as command
-import joybox.backup as backup
-import joybox.programs as programs
-import joybox.serialization as serialization
-import joybox.jsondata as jsondata
-import joybox.storebase as storebase
-import joybox.strings as strings
-import joybox.settings as settings
+from joybox import config
+from joybox import logger
+from joybox import paths
+from joybox import fileops
+from joybox import command
+from joybox import backup
+from joybox import programs
+from joybox import serialization
+from joybox import jsondata
+from joybox import storebase
+from joybox import strings
+from joybox import settings
 
 # Nile library list line: optional installed marker, title, id, optional genres
 nile_library_line = re.compile(r"^(?:\(INSTALLED\) )?(?P<title>.*) ID: (?P<appid>\S+)(?: GENRES: .*)?$")

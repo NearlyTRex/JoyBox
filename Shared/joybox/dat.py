@@ -2,12 +2,12 @@
 from xml.dom import minidom
 
 # Local imports
-import joybox.config as config
-import joybox.logger as logger
-import joybox.paths as paths
+from joybox import config
+from joybox import logger
+from joybox import paths
 from joybox import serialization
 from joybox import fileops
-import joybox.hashing as hashing
+from joybox import hashing
 
 # General datfile class
 class Dat:

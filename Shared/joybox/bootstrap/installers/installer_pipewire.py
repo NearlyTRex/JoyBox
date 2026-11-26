@@ -2,8 +2,8 @@
 import string
 
 # Local imports
-import joybox.bootstrap.constants as constants
-import joybox.bootstrap.gamemic as gamemic
+from joybox.bootstrap import constants
+from joybox.bootstrap import gamemic
 from . import installer_managedfiles
 
 # PipeWire config drop-ins, from Bootstrap/pipewire

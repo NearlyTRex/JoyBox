@@ -1,18 +1,18 @@
 # Local imports
-import joybox.config as config
-import joybox.logger as logger
-import joybox.paths as paths
-import joybox.serialization as serialization
-import joybox.environment as environment
-import joybox.fileops as fileops
+from joybox import config
+from joybox import logger
+from joybox import paths
+from joybox import serialization
+from joybox import environment
+from joybox import fileops
 from joybox import gamecollection
 from joybox import gamenaming
-import joybox.cryption as cryption
-import joybox.stores as stores
-import joybox.strings as strings
-import joybox.jsondata as jsondata
-import joybox.lockerinfo as lockerinfo
-import joybox.playlist as playlist
+from joybox import cryption
+from joybox import stores
+from joybox import strings
+from joybox import jsondata
+from joybox import lockerinfo
+from joybox import playlist
 
 ############################################################
 

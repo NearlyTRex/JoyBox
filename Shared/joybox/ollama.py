@@ -2,11 +2,11 @@
 import urllib.parse
 
 # Local imports
-import joybox.command as command
-import joybox.hardware as hardware
-import joybox.logger as logger
-import joybox.network as network
-import joybox.settings as settings
+from joybox import command
+from joybox import hardware
+from joybox import logger
+from joybox import network
+from joybox import settings
 from joybox import runtime
 
 ###########################################################

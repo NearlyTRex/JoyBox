@@ -5,8 +5,8 @@ import time
 import types
 
 # Local imports
-import joybox.paths as paths
-import joybox.fileops as fileops
+from joybox import paths
+from joybox import fileops
 
 # Thread-local storage for connections
 _thread_local = threading.local()

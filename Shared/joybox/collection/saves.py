@@ -1,16 +1,16 @@
 # Local imports
-import joybox.config as config
-import joybox.logger as logger
-import joybox.paths as paths
-import joybox.fileops as fileops
+from joybox import config
+from joybox import logger
+from joybox import paths
+from joybox import fileops
 from joybox import filebulk
-import joybox.archive as archive
-import joybox.locker as locker
+from joybox import archive
+from joybox import locker
 from joybox import gamecollection
-import joybox.stores as stores
-import joybox.storebase as storebase
-import joybox.hashing as hashing
-import joybox.strings as strings
+from joybox import stores
+from joybox import storebase
+from joybox import hashing
+from joybox import strings
 from joybox import runtime
 
 ############################################################

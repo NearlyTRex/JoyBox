@@ -1,11 +1,11 @@
 # Imports
 import os
 import os.path
-import joybox.system as system
-import joybox.google as google
-import joybox.arguments as arguments
-import joybox.setup as setup
-import joybox.logger as logger
+from joybox import system
+from joybox import google
+from joybox import arguments
+from joybox import setup
+from joybox import logger
 
 # Build the argument parser
 def build_parser():

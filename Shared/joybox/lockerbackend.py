@@ -7,19 +7,19 @@ import concurrent.futures
 from abc import ABC, abstractmethod
 
 # Local imports
-import joybox.config as config
-import joybox.logger as logger
-import joybox.paths as paths
-import joybox.fileops as fileops
+from joybox import config
+from joybox import logger
+from joybox import paths
+from joybox import fileops
 from joybox import filebulk
-import joybox.hashing as hashing
-import joybox.cryption as cryption
-import joybox.sync as sync
+from joybox import hashing
+from joybox import cryption
+from joybox import sync
 from joybox import synclisting
 from joybox import syncremotes
 from joybox import synctransfers
-import joybox.serialization as serialization
-import joybox.environment as environment
+from joybox import serialization
+from joybox import environment
 
 # Cryption types a transfer understands
 CRYPTION_TYPES = (

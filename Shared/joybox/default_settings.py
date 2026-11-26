@@ -1,6 +1,6 @@
 # Local imports
-import joybox.secretstore as secretstore
-import joybox.serialization as serialization
+from joybox import secretstore
+from joybox import serialization
 from joybox import platform_info
 
 ###########################################################

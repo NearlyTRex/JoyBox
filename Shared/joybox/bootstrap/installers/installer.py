@@ -3,7 +3,7 @@ import datetime
 
 # Local imports
 from joybox import systemtools as tools
-import joybox.bootstrap.constants as constants
+from joybox.bootstrap import constants
 from joybox import runoptions
 from joybox import logger
 from joybox import platform_info

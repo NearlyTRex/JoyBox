@@ -7,15 +7,15 @@ import threading
 
 # Local imports
 from joybox import platform_info, runtime, cmdline
-import joybox.config as config
-import joybox.logger as logger
-import joybox.paths as paths
-import joybox.programs as programs
-import joybox.sandbox as sandbox
+from joybox import config
+from joybox import logger
+from joybox import paths
+from joybox import programs
+from joybox import sandbox
 from joybox import sandboxpaths
-import joybox.capture as capture
-import joybox.settings as settings
-import joybox.process as process
+from joybox import capture
+from joybox import settings
+from joybox import process
 from joybox.commandbase import (
     create_command_options as create_command_options,
     get_starter_command as get_starter_command,

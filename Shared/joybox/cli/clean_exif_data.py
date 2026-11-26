@@ -1,9 +1,9 @@
 # Imports
-import joybox.system as system
-import joybox.asset as asset
-import joybox.arguments as arguments
-import joybox.setup as setup
-import joybox.logger as logger
+from joybox import system
+from joybox import asset
+from joybox import arguments
+from joybox import setup
+from joybox import logger
 
 # Build the argument parser
 def build_parser():

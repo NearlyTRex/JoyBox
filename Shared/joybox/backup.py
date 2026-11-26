@@ -1,14 +1,14 @@
 # Local imports
-import joybox.config as config
-import joybox.logger as logger
-import joybox.paths as paths
-import joybox.environment as environment
-import joybox.fileops as fileops
+from joybox import config
+from joybox import logger
+from joybox import paths
+from joybox import environment
+from joybox import fileops
 from joybox import filebulk
-import joybox.archive as archive
-import joybox.cryption as cryption
-import joybox.hashing as hashing
-import joybox.lockerinfo as lockerinfo
+from joybox import archive
+from joybox import cryption
+from joybox import hashing
+from joybox import lockerinfo
 
 # Resolve path
 def resolve_path(

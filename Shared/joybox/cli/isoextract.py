@@ -1,13 +1,13 @@
 # Imports
-import joybox.config as config
-import joybox.system as system
-import joybox.iso as iso
-import joybox.hfs as hfs
-import joybox.arguments as arguments
-import joybox.archive as archive
-import joybox.setup as setup
-import joybox.logger as logger
-import joybox.paths as paths
+from joybox import config
+from joybox import system
+from joybox import iso
+from joybox import hfs
+from joybox import arguments
+from joybox import archive
+from joybox import setup
+from joybox import logger
+from joybox import paths
 
 # Build the argument parser
 def build_parser():

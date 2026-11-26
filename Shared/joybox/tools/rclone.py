@@ -1,12 +1,12 @@
 # Local imports
-import joybox.config as config
-import joybox.logger as logger
-import joybox.paths as paths
-import joybox.environment as environment
-import joybox.fileops as fileops
-import joybox.release as release
-import joybox.programs as programs
-import joybox.toolbase as toolbase
+from joybox import config
+from joybox import logger
+from joybox import paths
+from joybox import environment
+from joybox import fileops
+from joybox import release
+from joybox import programs
+from joybox import toolbase
 
 # What rclone.conf holds. The remotes are defined by the settings and reach
 # rclone through the environment of each command; see joybox.rcloneremotes.

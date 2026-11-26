@@ -8,11 +8,11 @@
 import os
 
 # Local imports
-import joybox.logger as logger
-import joybox.runoptions as runoptions
-import joybox.serialization as serialization
-import joybox.settings as settings
-import joybox.textblock as textblock
+from joybox import logger
+from joybox import runoptions
+from joybox import serialization
+from joybox import settings
+from joybox import textblock
 from joybox import platform_info
 from joybox.connection import ConnectionLocal
 

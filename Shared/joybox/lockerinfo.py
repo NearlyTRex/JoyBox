@@ -1,6 +1,6 @@
 # Local imports
-import joybox.config as config
-import joybox.settings as settings
+from joybox import config
+from joybox import settings
 
 # Locker info
 class LockerInfo:

@@ -5,9 +5,9 @@ import csv
 import tomllib
 
 # Local imports
-import joybox.logger as logger
-import joybox.paths as paths
-import joybox.datautils as datautils
+from joybox import logger
+from joybox import paths
+from joybox import datautils
 from joybox import runtime
 
 ###########################################################

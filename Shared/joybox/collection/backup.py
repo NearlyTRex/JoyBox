@@ -1,7 +1,7 @@
 # Local imports
-import joybox.fileops as fileops
+from joybox import fileops
 from joybox import gamecollection
-import joybox.stores as stores
+from joybox import stores
 from .purchase import download_game_store_purchase
 from .uploading import upload_game_files
 

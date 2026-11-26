@@ -1,19 +1,19 @@
 # Imports
 
 # Local imports
-import joybox.config as config
-import joybox.command as command
-import joybox.programs as programs
-import joybox.logger as logger
+from joybox import config
+from joybox import command
+from joybox import programs
+from joybox import logger
 from joybox import serialization
-import joybox.settings as settings
-import joybox.jsondata as jsondata
-import joybox.webpage as webpage
+from joybox import settings
+from joybox import jsondata
+from joybox import webpage
 from joybox import webfetch
-import joybox.storebase as storebase
-import joybox.strings as strings
-import joybox.metadataassetcollector as metadataassetcollector
-import joybox.paths as paths
+from joybox import storebase
+from joybox import strings
+from joybox import metadataassetcollector
+from joybox import paths
 
 # Get stripped string value from heirloom json, empty when missing or not a string
 def get_json_string(json_object, key):

@@ -2,9 +2,9 @@
 import copy
 
 # Local imports
-import joybox.config as config
-import joybox.datautils as datautils
-import joybox.platforms as platforms
+from joybox import config
+from joybox import datautils
+from joybox import platforms
 
 # General json data class
 class JsonData:

@@ -4,11 +4,11 @@ import shutil
 
 # Local imports
 from joybox import cmdline
-import joybox.config as config
-import joybox.logger as logger
-import joybox.paths as paths
-import joybox.environment as environment
-import joybox.commandoptions as commandoptions
+from joybox import config
+from joybox import logger
+from joybox import paths
+from joybox import environment
+from joybox import commandoptions
 
 # Create command options
 def create_command_options(*args, **kwargs):
@@ -85,7 +85,7 @@ def is_local_script_command(cmd):
 
 # Check if local program command
 def is_local_program_command(cmd):
-    import joybox.programs as programs
+    from joybox import programs
     starter_cmd = get_starter_command(cmd)
     is_tool = programs.is_program_path_tool(starter_cmd)
     is_emulator = programs.is_program_path_emulator(starter_cmd)
@@ -93,7 +93,7 @@ def is_local_program_command(cmd):
 
 # Check if local sandboxed program command
 def is_local_sandboxed_program_command(cmd):
-    import joybox.programs as programs
+    from joybox import programs
     starter_cmd = get_starter_command(cmd)
     is_sandboxed_tool = programs.is_program_path_sandboxed_tool(starter_cmd)
     is_sandboxed_emulator = programs.is_program_path_sandboxed_emulator(starter_cmd)

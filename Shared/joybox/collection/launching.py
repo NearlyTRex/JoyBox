@@ -1,11 +1,11 @@
 # Local imports
-import joybox.config as config
-import joybox.fileops as fileops
+from joybox import config
+from joybox import fileops
 from joybox import fileedits
-import joybox.programs as programs
-import joybox.stores as stores
-import joybox.gui as gui
-import joybox.paths as paths
+from joybox import programs
+from joybox import stores
+from joybox import gui
+from joybox import paths
 from .installing import install_store_game
 from .installing import install_local_game
 from .saves import import_store_game_save

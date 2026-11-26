@@ -4,10 +4,10 @@ import struct
 import unicodedata
 
 # Local imports
-import joybox.fileops as fileops
-import joybox.logger as logger
-import joybox.paths as paths
-import joybox.serialization as serialization
+from joybox import fileops
+from joybox import logger
+from joybox import paths
+from joybox import serialization
 
 # Volume signatures, 1024 bytes into the volume
 hfs_signature = b"BD"

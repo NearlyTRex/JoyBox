@@ -1,14 +1,14 @@
 # Local imports
-import joybox.config as config
-import joybox.environment as environment
-import joybox.fileops as fileops
-import joybox.logger as logger
-import joybox.release as release
-import joybox.programs as programs
+from joybox import config
+from joybox import environment
+from joybox import fileops
+from joybox import logger
+from joybox import release
+from joybox import programs
 from joybox.nintendo import wiiu
-import joybox.paths as paths
-import joybox.emulatorcommon as emulatorcommon
-import joybox.emulatorbase as emulatorbase
+from joybox import paths
+from joybox import emulatorcommon
+from joybox import emulatorbase
 
 # Config files
 config_files = {}

@@ -6,12 +6,12 @@ import os
 import re
 
 # Local imports
-import joybox.config as config
-import joybox.commandbase as commandbase
-import joybox.knownhosts as knownhosts
-import joybox.logger as logger
-import joybox.serialization as serialization
-import joybox.settings as settings
+from joybox import config
+from joybox import commandbase
+from joybox import knownhosts
+from joybox import logger
+from joybox import serialization
+from joybox import settings
 
 ###########################################################
 # Remotes from the settings

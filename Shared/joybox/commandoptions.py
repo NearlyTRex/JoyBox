@@ -4,10 +4,10 @@ import os.path
 import copy
 
 # Local imports
-import joybox.config as config
-import joybox.jsondata as jsondata
-import joybox.paths as paths
-import joybox.settings as settings
+from joybox import config
+from joybox import jsondata
+from joybox import paths
+from joybox import settings
 
 # Command options
 class CommandOptions:
@@ -335,7 +335,7 @@ class CommandOptions:
         general_prefix_dir = None):
 
         # Imports
-        import joybox.sandbox as sandbox
+        from joybox import sandbox
 
         # Basic prefix info
         self.set_is_wine_prefix(is_wine_prefix)
@@ -371,8 +371,8 @@ class CommandOptions:
         other_links = [] if other_links is None else other_links
 
         # Imports
-        import joybox.sandbox as sandbox
-        import joybox.sandboxprefix as sandboxprefix
+        from joybox import sandbox
+        from joybox import sandboxprefix
 
         # Setup prefix
         self.setup_prefix(

@@ -1,6 +1,6 @@
 # Local imports
-import joybox.config as config
-import joybox.jsondata as jsondata
+from joybox import config
+from joybox import jsondata
 
 # Search result
 class SearchResult(jsondata.JsonData):

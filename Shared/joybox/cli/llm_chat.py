@@ -2,13 +2,13 @@
 import os
 import os.path
 import sys
-import joybox.arguments as arguments
-import joybox.chunkers as chunkers
-import joybox.llmchat as llmchat
-import joybox.logger as logger
-import joybox.setup as setup
-import joybox.system as system
-import joybox.terminal as terminal
+from joybox import arguments
+from joybox import chunkers
+from joybox import llmchat
+from joybox import logger
+from joybox import setup
+from joybox import system
+from joybox import terminal
 
 # Build the argument parser
 def build_parser():

@@ -1,14 +1,14 @@
 # Local imports
-import joybox.config as config
-import joybox.logger as logger
-import joybox.paths as paths
-import joybox.environment as environment
-import joybox.fileops as fileops
-import joybox.release as release
-import joybox.programs as programs
-import joybox.toolbase as toolbase
-import joybox.desktopentry as desktopentry
-import joybox.settings as settings
+from joybox import config
+from joybox import logger
+from joybox import paths
+from joybox import environment
+from joybox import fileops
+from joybox import release
+from joybox import programs
+from joybox import toolbase
+from joybox import desktopentry
+from joybox import settings
 
 # Config files
 config_files = {}

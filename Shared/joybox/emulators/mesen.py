@@ -1,10 +1,10 @@
 # Local imports
-import joybox.config as config
-import joybox.logger as logger
-import joybox.release as release
+from joybox import config
+from joybox import logger
+from joybox import release
 from joybox import sourcebuild
-import joybox.programs as programs
-import joybox.emulatorbase as emulatorbase
+from joybox import programs
+from joybox import emulatorbase
 
 # Config files
 config_files = {}

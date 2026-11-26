@@ -4,8 +4,8 @@ import re
 import tomllib
 
 # Local imports
-import joybox.bootstrap.constants as constants
-import joybox.bootstrap.packages as packages
+from joybox.bootstrap import constants
+from joybox.bootstrap import packages
 from joybox import settings
 from . import installer
 from joybox import runoptions

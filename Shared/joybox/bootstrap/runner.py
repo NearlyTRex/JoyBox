@@ -1,6 +1,6 @@
 # Imports
-import joybox.bootstrap.constants as constants
-import joybox.bootstrap.environments as environments
+from joybox.bootstrap import constants
+from joybox.bootstrap import environments
 from joybox import logger
 from joybox import runoptions
 from joybox import serverinfo

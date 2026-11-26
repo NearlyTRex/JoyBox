@@ -3,8 +3,8 @@ import os
 import os.path
 
 # Local imports
-import joybox.environment as environment
-import joybox.paths as paths
+from joybox import environment
+from joybox import paths
 from joybox import logger
 from joybox import platform_info
 
@@ -100,7 +100,7 @@ def should_library_be_installed(library_name):
 
 # Determine if program is installed
 def is_program_installed(program_name, program_platform = None):
-    import joybox.command as command
+    from joybox import command
     if is_program_name_tool(program_name, program_platform):
         return command.is_runnable_command(get_tool_program(program_name, program_platform))
     elif is_program_name_emulator(program_name, program_platform):
@@ -111,12 +111,12 @@ def is_program_installed(program_name, program_platform = None):
 
 # Get tools
 def get_tools():
-    import joybox.tools as tools
+    from joybox import tools
     return tools.get_tool_list()
 
 # Get emulators
 def get_emulators():
-    import joybox.emulators as emulators
+    from joybox import emulators
     return emulators.get_emulator_list()
 
 # Get emulator by platform
@@ -128,7 +128,7 @@ def get_emulator_by_platform(emulator_platform):
 
 # Get tool config
 def get_tool_config():
-    import joybox.tools as tools
+    from joybox import tools
     merged_config = {}
     for tool in tools.get_tool_list():
         merged_config.update(tool.get_config())
@@ -136,7 +136,7 @@ def get_tool_config():
 
 # Get emulator config
 def get_emulator_config():
-    import joybox.emulators as emulators
+    from joybox import emulators
     merged_config = {}
     for emulator in emulators.get_emulator_list():
         merged_config.update(emulator.get_config())

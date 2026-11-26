@@ -8,9 +8,9 @@ import ntpath
 import time
 
 # Local imports
-import joybox.config as config
-import joybox.text as text
-import joybox.strings as strings
+from joybox import config
+from joybox import text
+from joybox import strings
 
 ###########################################################
 # Path checking and validation utilities

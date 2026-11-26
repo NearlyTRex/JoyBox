@@ -3,16 +3,16 @@ import os
 import os.path
 
 # Local imports
-import joybox.config as config
-import joybox.logger as logger
-import joybox.fileops as fileops
+from joybox import config
+from joybox import logger
+from joybox import fileops
 from joybox import filebulk
-import joybox.archive as archive
-import joybox.strings as strings
+from joybox import archive
+from joybox import strings
 from joybox import webfetch
-import joybox.network as network
-import joybox.paths as paths
-import joybox.locker as locker
+from joybox import network
+from joybox import paths
+from joybox import locker
 
 # Backups that failed this run. A copy in a locker is there to reinstall from
 # offline, so its failure is reported but never undoes an install that worked.

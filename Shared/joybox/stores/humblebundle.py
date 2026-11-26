@@ -1,18 +1,18 @@
 # Imports
 
 # Local imports
-import joybox.config as config
-import joybox.logger as logger
-import joybox.fileops as fileops
-import joybox.programs as programs
-import joybox.serialization as serialization
-import joybox.command as command
-import joybox.backup as backup
-import joybox.jsondata as jsondata
-import joybox.storebase as storebase
-import joybox.strings as strings
-import joybox.paths as paths
-import joybox.settings as settings
+from joybox import config
+from joybox import logger
+from joybox import fileops
+from joybox import programs
+from joybox import serialization
+from joybox import command
+from joybox import backup
+from joybox import jsondata
+from joybox import storebase
+from joybox import strings
+from joybox import paths
+from joybox import settings
 
 # HumbleBundle store
 class HumbleBundle(storebase.StoreBase):

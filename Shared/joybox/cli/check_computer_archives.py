@@ -1,11 +1,11 @@
 # Imports
 import os
 import os.path
-import joybox.system as system
-import joybox.arguments as arguments
-import joybox.setup as setup
-import joybox.logger as logger
-import joybox.paths as paths
+from joybox import system
+from joybox import arguments
+from joybox import setup
+from joybox import logger
+from joybox import paths
 
 # Build the argument parser
 def build_parser():

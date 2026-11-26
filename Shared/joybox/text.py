@@ -4,7 +4,7 @@ import re
 import textwrap
 
 # Local imports
-import joybox.config as config
+from joybox import config
 
 ###########################################################
 # Text processing utilities

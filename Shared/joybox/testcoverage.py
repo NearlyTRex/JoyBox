@@ -5,13 +5,13 @@ import re
 import sys
 
 # Local imports
-import joybox.command as command
-import joybox.environment as environment
-import joybox.fileops as fileops
-import joybox.logger as logger
-import joybox.paths as paths
-import joybox.serialization as serialization
-import joybox.terminal as terminal
+from joybox import command
+from joybox import environment
+from joybox import fileops
+from joybox import logger
+from joybox import paths
+from joybox import serialization
+from joybox import terminal
 
 ###########################################################
 # Locations

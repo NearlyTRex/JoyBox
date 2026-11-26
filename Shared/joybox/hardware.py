@@ -2,8 +2,8 @@
 import glob
 
 # Local imports
-import joybox.command as command
-import joybox.logger as logger
+from joybox import command
+from joybox import logger
 from joybox import serialization
 
 ###########################################################

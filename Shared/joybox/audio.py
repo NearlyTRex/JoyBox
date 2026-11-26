@@ -1,13 +1,13 @@
 # Local imports
-import joybox.config as config
-import joybox.logger as logger
-import joybox.paths as paths
-import joybox.serialization as serialization
-import joybox.environment as environment
-import joybox.fileops as fileops
-import joybox.google as google
-import joybox.locker as locker
-import joybox.audiometadata as audiometadata
+from joybox import config
+from joybox import logger
+from joybox import paths
+from joybox import serialization
+from joybox import environment
+from joybox import fileops
+from joybox import google
+from joybox import locker
+from joybox import audiometadata
 
 # Get album directories for processing
 def get_album_directories(genre_type = None, album_name = None, artist_name = None):

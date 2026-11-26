@@ -3,10 +3,10 @@ import re
 import struct
 
 # Local imports
-import joybox.config as config
-import joybox.logger as logger
-import joybox.paths as paths
-import joybox.serialization as serialization
+from joybox import config
+from joybox import logger
+from joybox import paths
+from joybox import serialization
 
 # Alcohol 120% media descriptor (.mds) beside its data file (.mdf), read as
 # libmirage reads it; only version 1 descriptors have a known layout

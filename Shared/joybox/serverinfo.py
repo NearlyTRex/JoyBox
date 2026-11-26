@@ -5,7 +5,7 @@
 # tools that check a server agree on what an entry contains.
 
 # Local imports
-import joybox.settings as settings
+from joybox import settings
 
 # Section holding the server entries
 SECTION = "UserData.Servers"

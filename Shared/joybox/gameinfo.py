@@ -2,18 +2,18 @@
 import os
 
 # Local imports
-import joybox.config as config
-import joybox.validation as validation
-import joybox.environment as environment
-import joybox.metadata as metadata
-import joybox.metadataentry as metadataentry
-import joybox.paths as paths
-import joybox.serialization as serialization
-import joybox.jsondata as jsondata
-import joybox.computer as computer
-import joybox.stores as stores
-import joybox.gui as gui
-import joybox.lockerinfo as lockerinfo
+from joybox import config
+from joybox import validation
+from joybox import environment
+from joybox import metadata
+from joybox import metadataentry
+from joybox import paths
+from joybox import serialization
+from joybox import jsondata
+from joybox import computer
+from joybox import stores
+from joybox import gui
+from joybox import lockerinfo
 from joybox import platform_info
 from joybox import gamenaming
 

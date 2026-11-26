@@ -2,8 +2,8 @@
 import os
 
 # Local imports
-import joybox.bootstrap as bootstrap
-import joybox.bootstrap.constants as constants
+from joybox import bootstrap
+from joybox.bootstrap import constants
 from joybox import serialization
 from . import installer
 from joybox import runoptions

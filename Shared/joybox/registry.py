@@ -3,11 +3,11 @@ import os
 import os.path
 
 # Local imports
-import joybox.validation as validation
-import joybox.paths as paths
+from joybox import validation
+from joybox import paths
 from joybox import fileops
 from joybox import serialization
-import joybox.command as command
+from joybox import command
 
 # Read registry file
 def read_registry_file(

@@ -5,9 +5,9 @@ import argparse
 import enum
 
 # Local imports
-import joybox.config as config
-import joybox.logger as logger
-import joybox.paths as paths
+from joybox import config
+from joybox import logger
+from joybox import paths
 
 # Enum parser
 def parse_enum_value(enum_type, enum_value):

@@ -3,17 +3,17 @@ import os
 import os.path
 
 # Local imports
-import joybox.config as config
-import joybox.environment as environment
-import joybox.fileops as fileops
-import joybox.logger as logger
-import joybox.paths as paths
-import joybox.release as release
-import joybox.programs as programs
-import joybox.archive as archive
-import joybox.playstation as playstation
-import joybox.emulatorcommon as emulatorcommon
-import joybox.emulatorbase as emulatorbase
+from joybox import config
+from joybox import environment
+from joybox import fileops
+from joybox import logger
+from joybox import paths
+from joybox import release
+from joybox import programs
+from joybox import archive
+from joybox import playstation
+from joybox import emulatorcommon
+from joybox import emulatorbase
 
 # Config files
 config_files = {}

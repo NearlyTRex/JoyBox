@@ -2,8 +2,8 @@
 import threading
 
 # Local imports
-import joybox.config as config
-import joybox.validation as validation
+from joybox import config
+from joybox import validation
 from joybox import runtime
 
 # Background job

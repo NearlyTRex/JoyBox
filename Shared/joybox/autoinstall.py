@@ -3,13 +3,13 @@ import copy
 import re
 
 # Local imports
-import joybox.fileops as fileops
-import joybox.iso as iso
-import joybox.logger as logger
-import joybox.network as network
-import joybox.paths as paths
-import joybox.serialization as serialization
-import joybox.settings as settings
+from joybox import fileops
+from joybox import iso
+from joybox import logger
+from joybox import network
+from joybox import paths
+from joybox import serialization
+from joybox import settings
 from joybox import ubunturelease
 
 ###########################################################

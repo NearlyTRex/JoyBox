@@ -1,7 +1,7 @@
 # Local imports
-import joybox.toolbase as toolbase
-import joybox.settings as settings
-import joybox.paths as paths
+from joybox import toolbase
+from joybox import settings
+from joybox import paths
 
 # Config files
 config_files = {}

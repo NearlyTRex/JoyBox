@@ -1,17 +1,17 @@
 # Imports
 
 # Local imports
-import joybox.config as config
-import joybox.logger as logger
-import joybox.paths as paths
-import joybox.fileops as fileops
-import joybox.lockerinfo as lockerinfo
-import joybox.lockerbackend as lockerbackend
+from joybox import config
+from joybox import logger
+from joybox import paths
+from joybox import fileops
+from joybox import lockerinfo
+from joybox import lockerbackend
 from joybox import syncremotes
-import joybox.editorprompt as editorprompt
-import joybox.environment as environment
-import joybox.serialization as serialization
-import joybox.hashutil as hashutil
+from joybox import editorprompt
+from joybox import environment
+from joybox import serialization
+from joybox import hashutil
 from joybox import runtime
 
 # Recycle folder at a locker's root

@@ -2,12 +2,12 @@
 import copy
 
 # Local imports
-import joybox.config as config
-import joybox.datautils as datautils
-import joybox.text as text
-import joybox.environment as environment
-import joybox.gamenaming as gamenaming
-import joybox.paths as paths
+from joybox import config
+from joybox import datautils
+from joybox import text
+from joybox import environment
+from joybox import gamenaming
+from joybox import paths
 
 # Metadata key holding each asset type's path
 asset_metadata_keys = {

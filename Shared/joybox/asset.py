@@ -2,13 +2,13 @@
 import urllib.parse
 
 # Local imports
-import joybox.config as config
+from joybox import config
 from joybox import filebulk
-import joybox.command as command
-import joybox.programs as programs
-import joybox.network as network
-import joybox.image as image
-import joybox.google as google
+from joybox import command
+from joybox import programs
+from joybox import network
+from joybox import image
+from joybox import google
 
 # Whether a url is a YouTube page, by its real host rather than its prefix,
 # which https://www.youtube.com.example.net would also have

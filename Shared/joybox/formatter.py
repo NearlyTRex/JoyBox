@@ -2,7 +2,7 @@
 import os
 
 # Local imports
-import joybox.command as command
+from joybox import command
 
 # Format C/C++ file
 def format_cpp_file(

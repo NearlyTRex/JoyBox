@@ -1,7 +1,7 @@
 # Local imports
-import joybox.command as command
-import joybox.programs as programs
-import joybox.settings as settings
+from joybox import command
+from joybox import programs
+from joybox import settings
 
 # Get current screen resolution
 def get_current_screen_resolution():

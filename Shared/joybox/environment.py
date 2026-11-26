@@ -5,11 +5,11 @@ import re
 
 # Local imports
 from joybox import platform_info
-import joybox.config as config
-import joybox.gamenaming as gamenaming
-import joybox.settings as settings
-import joybox.paths as paths
-import joybox.lockerinfo as lockerinfo
+from joybox import config
+from joybox import gamenaming
+from joybox import settings
+from joybox import paths
+from joybox import lockerinfo
 
 ###########################################################
 # System capabilities
@@ -41,7 +41,7 @@ def are_symlinks_supported():
     if platform_info.is_unix_platform():
         return True
     else:
-        import joybox.fileops as fileops
+        from joybox import fileops
         test_file_src = paths.join_paths(os.path.expanduser("~"), ".symsrc")
         test_file_dest = paths.join_paths(os.path.expanduser("~"), ".symdest")
         if os.path.islink(test_file_dest):

@@ -1,14 +1,14 @@
 # Local imports
-import joybox.config as config
-import joybox.environment as environment
-import joybox.fileops as fileops
-import joybox.logger as logger
-import joybox.paths as paths
-import joybox.programs as programs
-import joybox.release as release
+from joybox import config
+from joybox import environment
+from joybox import fileops
+from joybox import logger
+from joybox import paths
+from joybox import programs
+from joybox import release
 from joybox import sourcebuild
-import joybox.emulatorbase as emulatorbase
-import joybox.computer as computer
+from joybox import emulatorbase
+from joybox import computer
 from joybox import platform_info
 
 # Config files

@@ -2,7 +2,7 @@
 import os
 
 # Local imports
-import joybox.bootstrap as bootstrap
+from joybox import bootstrap
 from joybox import settings
 from joybox import serverinfo
 from . import installer_dockerapp

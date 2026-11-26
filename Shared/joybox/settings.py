@@ -4,7 +4,7 @@ import configparser
 import io
 
 # Local imports
-import joybox.secretstore as secretstore
+from joybox import secretstore
 from joybox import serialization
 
 # Settings file name and default locations (home preferred, repo-root fallback)

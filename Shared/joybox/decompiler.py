@@ -2,11 +2,11 @@
 import os
 
 # Local imports
-import joybox.config as config
-import joybox.logger as logger
-import joybox.environment as environment
-import joybox.programs as programs
-import joybox.command as command
+from joybox import config
+from joybox import logger
+from joybox import environment
+from joybox import programs
+from joybox import command
 
 ###########################################################
 

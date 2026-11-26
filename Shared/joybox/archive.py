@@ -5,12 +5,12 @@ import zipfile
 import re
 
 # Local imports
-import joybox.config as config
-import joybox.command as command
-import joybox.programs as programs
-import joybox.logger as logger
-import joybox.paths as paths
-import joybox.fileops as fileops
+from joybox import config
+from joybox import command
+from joybox import programs
+from joybox import logger
+from joybox import paths
+from joybox import fileops
 from joybox import sandboxpaths
 
 # Determine if file is a known archive

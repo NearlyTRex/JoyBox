@@ -3,10 +3,10 @@ import os
 import os.path
 
 # Local imports
-import joybox.config as config
-import joybox.fileops as fileops
-import joybox.paths as paths
-import joybox.archive as archive
+from joybox import config
+from joybox import fileops
+from joybox import paths
+from joybox import archive
 
 # Check if install image is mounted
 def is_install_image_mounted(install_file, mount_dir):

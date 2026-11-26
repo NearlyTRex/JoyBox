@@ -4,14 +4,14 @@ import os.path
 import tempfile
 
 # Local imports
-import joybox.config as config
-import joybox.command as command
-import joybox.logger as logger
-import joybox.paths as paths
-import joybox.fileops as fileops
-import joybox.archive as archive
-import joybox.programs as programs
-import joybox.locker as locker
+from joybox import config
+from joybox import command
+from joybox import logger
+from joybox import paths
+from joybox import fileops
+from joybox import archive
+from joybox import programs
+from joybox import locker
 from joybox import platform_info, runtime
 
 # Seconds a plain HTTP request may take before it is abandoned
@@ -316,7 +316,7 @@ def is_network_share_mounted(mount_dir, base_location, network_share):
 # Map a windows drive to a share, passing the password in-process rather than on a command line
 def map_windows_drive(drive, remote, username, password):
     import ctypes
-    import ctypes.wintypes as wintypes
+    from ctypes import wintypes
 
     class NETRESOURCE(ctypes.Structure):
         _fields_ = [

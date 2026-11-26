@@ -9,15 +9,15 @@
 # Imports
 import hashlib
 import os
-import xml.etree.ElementTree as ElementTree
+from xml.etree import ElementTree
 
 # Local imports
-import joybox.command as command
-import joybox.runoptions as runoptions
-import joybox.fileops as fileops
-import joybox.logger as logger
-import joybox.paths as paths
-import joybox.serialization as serialization
+from joybox import command
+from joybox import runoptions
+from joybox import fileops
+from joybox import logger
+from joybox import paths
+from joybox import serialization
 from joybox.connection import ConnectionLocal
 
 # Tools this needs on the workstation

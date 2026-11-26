@@ -4,16 +4,16 @@ import os.path
 import re
 
 # Local imports
-import joybox.config as config
-import joybox.fileops as fileops
-import joybox.command as command
-import joybox.programs as programs
-import joybox.paths as paths
-import joybox.serialization as serialization
-import joybox.logger as logger
-import joybox.iso as iso
-import joybox.mds as mds
-import joybox.archive as archive
+from joybox import config
+from joybox import fileops
+from joybox import command
+from joybox import programs
+from joybox import paths
+from joybox import serialization
+from joybox import logger
+from joybox import iso
+from joybox import mds
+from joybox import archive
 
 # Get disc iso
 def get_disc_iso(chd_file):

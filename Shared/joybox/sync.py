@@ -4,13 +4,13 @@ import os.path
 import re
 
 # Local imports
-import joybox.config as config
-import joybox.command as command
-import joybox.programs as programs
-import joybox.rcloneremotes as rcloneremotes
-import joybox.strings as strings
-import joybox.logger as logger
-import joybox.paths as paths
+from joybox import config
+from joybox import command
+from joybox import programs
+from joybox import rcloneremotes
+from joybox import strings
+from joybox import logger
+from joybox import paths
 
 # Check if tool is installed
 def is_tool_installed():

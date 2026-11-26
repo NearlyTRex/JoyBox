@@ -4,9 +4,9 @@
 import os
 
 # Local imports
-import joybox.network as network
-import joybox.logger as logger
-import joybox.reports as reports
+from joybox import network
+from joybox import logger
+from joybox import reports
 
 ###########################################################
 # Basic prompts

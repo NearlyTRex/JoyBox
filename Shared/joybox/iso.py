@@ -3,13 +3,13 @@ import os
 import os.path
 
 # Local imports
-import joybox.command as command
-import joybox.logger as logger
+from joybox import command
+from joybox import logger
 from joybox import serialization
-import joybox.paths as paths
+from joybox import paths
 from joybox import fileops
-import joybox.programs as programs
-import joybox.archive as archive
+from joybox import programs
+from joybox import archive
 from joybox import platform_info
 
 # Check if iso is mounted

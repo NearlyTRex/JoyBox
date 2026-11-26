@@ -1,9 +1,9 @@
 # Local imports
-import joybox.command as command
-import joybox.environment as environment
-import joybox.fileops as fileops
-import joybox.logger as logger
-import joybox.serialization as serialization
+from joybox import command
+from joybox import environment
+from joybox import fileops
+from joybox import logger
+from joybox import serialization
 
 # Open editor for user to review and modify content
 def open_editor(

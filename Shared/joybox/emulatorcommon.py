@@ -1,9 +1,9 @@
 # Local imports
-import joybox.config as config
-import joybox.command as command
-import joybox.logger as logger
-import joybox.paths as paths
-import joybox.gui as gui
+from joybox import config
+from joybox import command
+from joybox import logger
+from joybox import paths
+from joybox import gui
 
 # Simple generic launcher
 def simple_launch(

@@ -1,8 +1,8 @@
 # Imports
-import joybox.arguments as arguments
-import joybox.logger as logger
-import joybox.setup as setup
-import joybox.system as system
+from joybox import arguments
+from joybox import logger
+from joybox import setup
+from joybox import system
 from joybox import imageboot
 
 # Build the argument parser

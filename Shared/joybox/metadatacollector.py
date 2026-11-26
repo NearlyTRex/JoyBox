@@ -2,12 +2,12 @@
 import collections
 
 # Local imports
-import joybox.config as config
-import joybox.logger as logger
-import joybox.strings as strings
+from joybox import config
+from joybox import logger
+from joybox import strings
 from joybox import gamenaming
-import joybox.webpage as webpage
-import joybox.metadataentry as metadataentry
+from joybox import webpage
+from joybox import metadataentry
 
 ############################################################
 

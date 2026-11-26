@@ -1,12 +1,12 @@
 # Imports
-import joybox.arguments as arguments
-import joybox.hardening as hardening
-import joybox.bootstrap.runner as runner
-import joybox.logger as logger
-import joybox.runtime as runtime
-import joybox.serverinfo as serverinfo
-import joybox.setup as setup
-import joybox.system as system
+from joybox import arguments
+from joybox import hardening
+from joybox.bootstrap import runner
+from joybox import logger
+from joybox import runtime
+from joybox import serverinfo
+from joybox import setup
+from joybox import system
 from joybox import runoptions
 
 # Build the argument parser

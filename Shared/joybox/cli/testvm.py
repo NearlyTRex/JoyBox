@@ -1,11 +1,11 @@
 # Imports
-import joybox.arguments as arguments
-import joybox.command as command
-import joybox.hostsfile as hostsfile
-import joybox.logger as logger
-import joybox.setup as setup
-import joybox.system as system
-import joybox.virtualmachine as virtualmachine
+from joybox import arguments
+from joybox import command
+from joybox import hostsfile
+from joybox import logger
+from joybox import setup
+from joybox import system
+from joybox import virtualmachine
 
 # Build the argument parser
 def build_parser():

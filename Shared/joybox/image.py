@@ -2,12 +2,12 @@
 import base64
 
 # Local imports
-import joybox.config as config
+from joybox import config
 from joybox import fileops
 from joybox import filebulk
 from joybox import serialization
-import joybox.logger as logger
-import joybox.paths as paths
+from joybox import logger
+from joybox import paths
 from joybox import runtime
 
 # Get image format

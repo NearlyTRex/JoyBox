@@ -3,16 +3,16 @@ import os
 import os.path
 
 # Local imports
-import joybox.config as config
-import joybox.logger as logger
-import joybox.jsondata as jsondata
-import joybox.webpage as webpage
+from joybox import config
+from joybox import logger
+from joybox import jsondata
+from joybox import webpage
 from joybox import webcookies
-import joybox.paths as paths
-import joybox.strings as strings
-import joybox.manifest as manifest
-import joybox.environment as environment
-import joybox.fileops as fileops
+from joybox import paths
+from joybox import strings
+from joybox import manifest
+from joybox import environment
+from joybox import fileops
 from joybox.storepaths import (
     create_tokenized_path as create_tokenized_path)
 
@@ -445,7 +445,7 @@ class StoreBase:
             return None
 
         # Collect metadata entry
-        import joybox.metadatacollector as metadatacollector
+        from joybox import metadatacollector
         return metadatacollector.collect_metadata_from_all(
             game_platform = self.get_platform(),
             game_name = identifier,
@@ -474,7 +474,7 @@ class StoreBase:
             return None
 
         # Collect asset url
-        import joybox.metadataassetcollector as metadataassetcollector
+        from joybox import metadataassetcollector
         return metadataassetcollector.find_metadata_asset(
             game_platform = self.get_platform(),
             game_name = game_name if game_name else identifier,

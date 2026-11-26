@@ -1,16 +1,16 @@
 # Local imports
-import joybox.config as config
-import joybox.logger as logger
-import joybox.paths as paths
-import joybox.environment as environment
-import joybox.fileops as fileops
+from joybox import config
+from joybox import logger
+from joybox import paths
+from joybox import environment
+from joybox import fileops
 from joybox import filebulk
-import joybox.programs as programs
-import joybox.transform as transform
-import joybox.platforms as platforms
-import joybox.locker as locker
-import joybox.stores as stores
-import joybox.gui as gui
+from joybox import programs
+from joybox import transform
+from joybox import platforms
+from joybox import locker
+from joybox import stores
+from joybox import gui
 
 ###########################################################
 

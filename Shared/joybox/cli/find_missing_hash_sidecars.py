@@ -1,15 +1,15 @@
 # Imports
-import joybox.config as config
-import joybox.system as system
-import joybox.lockerinfo as lockerinfo
+from joybox import config
+from joybox import system
+from joybox import lockerinfo
 from joybox import synclisting
 from joybox import syncremotes
 from joybox import synctransfers
-import joybox.paths as paths
-import joybox.arguments as arguments
-import joybox.setup as setup
-import joybox.logger as logger
-import joybox.reports as reports
+from joybox import paths
+from joybox import arguments
+from joybox import setup
+from joybox import logger
+from joybox import reports
 
 # Build the argument parser
 def build_parser():

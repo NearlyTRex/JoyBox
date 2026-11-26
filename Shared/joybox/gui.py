@@ -3,14 +3,14 @@ import os
 import os.path
 
 # Local imports
-import joybox.config as config
-import joybox.logger as logger
-import joybox.validation as validation
-import joybox.display as display
-import joybox.programs as programs
-import joybox.modules as modules
+from joybox import config
+from joybox import logger
+from joybox import validation
+from joybox import display
+from joybox import programs
+from joybox import modules
 from joybox import platform_info, runtime
-import joybox.paths as paths
+from joybox import paths
 
 # Display popup
 def display_popup(

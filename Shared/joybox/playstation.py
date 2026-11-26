@@ -6,16 +6,16 @@ import zlib
 import base64
 
 # Local imports
-import joybox.config as config
-import joybox.command as command
-import joybox.programs as programs
-import joybox.logger as logger
-import joybox.paths as paths
+from joybox import config
+from joybox import command
+from joybox import programs
+from joybox import logger
+from joybox import paths
 from joybox import serialization
 from joybox import fileops
 from joybox import fileedits
-import joybox.iso as iso
-import joybox.chd as chd
+from joybox import iso
+from joybox import chd
 from joybox import runtime
 
 ######################################################

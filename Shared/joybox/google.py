@@ -2,19 +2,19 @@
 import shutil
 
 # Local imports
-import joybox.config as config
-import joybox.logger as logger
+from joybox import config
+from joybox import logger
 from joybox import serialization
-import joybox.command as command
-import joybox.programs as programs
-import joybox.strings as strings
-import joybox.network as network
-import joybox.rumble as rumble
-import joybox.paths as paths
-import joybox.containers as containers
-import joybox.datautils as datautils
+from joybox import command
+from joybox import programs
+from joybox import strings
+from joybox import network
+from joybox import rumble
+from joybox import paths
+from joybox import containers
+from joybox import datautils
 from joybox import fileops
-import joybox.settings as settings
+from joybox import settings
 
 # Hard safety cap on concurrent fragment downloads. yt-dlp's -N runs multiple
 # fragment downloads per video in parallel; too many parallel connections gets

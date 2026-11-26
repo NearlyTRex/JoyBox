@@ -1,6 +1,6 @@
 # Local imports
-import joybox.logger as logger
-import joybox.serialization as serialization
+from joybox import logger
+from joybox import serialization
 
 ###########################################################
 # List summarization utilities

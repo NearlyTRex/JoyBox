@@ -1,5 +1,5 @@
 # Local imports
-import joybox.config as config
+from joybox import config
 
 ###########################################################
 

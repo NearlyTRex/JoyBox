@@ -3,14 +3,14 @@ import fnmatch
 import os
 import os.path
 import sys
-import joybox.config as config
-import joybox.environment as environment
-import joybox.paths as paths
-import joybox.hashing as hashing
-import joybox.arguments as arguments
-import joybox.setup as setup
-import joybox.system as system
-import joybox.logger as logger
+from joybox import config
+from joybox import environment
+from joybox import paths
+from joybox import hashing
+from joybox import arguments
+from joybox import setup
+from joybox import system
+from joybox import logger
 
 # Build the argument parser
 def build_parser():

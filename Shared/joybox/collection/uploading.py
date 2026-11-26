@@ -1,10 +1,10 @@
 # Local imports
-import joybox.logger as logger
-import joybox.paths as paths
-import joybox.environment as environment
-import joybox.cryption as cryption
-import joybox.locker as locker
-import joybox.lockerinfo as lockerinfo
+from joybox import logger
+from joybox import paths
+from joybox import environment
+from joybox import cryption
+from joybox import locker
+from joybox import lockerinfo
 from joybox import gamecollection
 from .hashing import build_hash_files
 

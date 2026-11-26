@@ -3,7 +3,7 @@ import os
 import configparser
 
 # Local imports
-import joybox.paths as paths
+from joybox import paths
 
 ###########################################################
 # Assertion and validation utilities

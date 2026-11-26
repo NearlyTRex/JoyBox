@@ -6,7 +6,7 @@ import tempfile
 import textwrap
 
 # Local imports
-import joybox.default_settings as default_settings
+from joybox import default_settings
 from joybox import command
 from joybox import fileops
 from joybox import serialization
