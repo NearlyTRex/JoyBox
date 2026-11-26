@@ -595,7 +595,7 @@ def test_archive(
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
-    return (code == 0)
+    return code == 0
 
 # List archive
 def list_archive(

@@ -29,7 +29,7 @@ def get_image_format(image_file):
 
 # Detect if image is a certain format
 def is_image_format(image_file, image_format):
-    return (get_image_format(image_file) == image_format)
+    return get_image_format(image_file) == image_format
 
 # Detect if image is jpeg
 def is_image_jpeg(image_file):

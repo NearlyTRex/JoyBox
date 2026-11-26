@@ -20,7 +20,7 @@ def are_game_metadata_file_possible(
     game_supercategory,
     game_category = None,
     game_subcategory = None):
-    return (game_supercategory == config.Supercategory.ROMS)
+    return game_supercategory == config.Supercategory.ROMS
 
 ############################################################
 

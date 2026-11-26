@@ -202,84 +202,84 @@ class SetupParams:
 
 # Locker types
 class LockerType(EnumType):
-    ALL                     = ("All")
-    LOCAL                   = ("Local")
-    HETZNER                 = ("Hetzner")
-    GDRIVE                  = ("Gdrive")
-    EXTERNAL                = ("External")
+    ALL                     = "All"
+    LOCAL                   = "Local"
+    HETZNER                 = "Hetzner"
+    GDRIVE                  = "Gdrive"
+    EXTERNAL                = "External"
 
 # Locker folder types
 class LockerFolderType(EnumType):
-    ARTWORK                 = ("Artwork")
-    BOOKS                   = ("Books")
-    DEVELOPMENT             = ("Development")
-    DOCUMENTS               = ("Documents")
-    GAMING                  = ("Gaming")
-    MOVIES                  = ("Movies")
-    MUSIC                   = ("Music")
-    PHOTOS                  = ("Photos")
-    PROGRAMS                = ("Programs")
+    ARTWORK                 = "Artwork"
+    BOOKS                   = "Books"
+    DEVELOPMENT             = "Development"
+    DOCUMENTS               = "Documents"
+    GAMING                  = "Gaming"
+    MOVIES                  = "Movies"
+    MUSIC                   = "Music"
+    PHOTOS                  = "Photos"
+    PROGRAMS                = "Programs"
 
 # Passphrase types
 class PassphraseType(EnumType):
-    GENERAL                 = ("General")
-    LOCKER                  = ("Locker")
+    GENERAL                 = "General"
+    LOCKER                  = "Locker"
 
 # Backup types
 class BackupType(EnumType):
-    COPY                    = ("Copy")
-    ARCHIVE                 = ("Archive")
+    COPY                    = "Copy"
+    ARCHIVE                 = "Archive"
 
 # Cryption types
 class CryptionType(EnumType):
-    NONE                    = ("None")
-    ENCRYPT                 = ("Encrypt")
-    DECRYPT                 = ("Decrypt")
+    NONE                    = "None"
+    ENCRYPT                 = "Encrypt"
+    DECRYPT                 = "Decrypt"
 
 # Hash algorithm types
 class HashType(EnumType):
-    MD5                     = ("MD5")
-    SHA1                    = ("SHA1")
-    XXH3                    = ("XXH3")
-    SHA256                  = ("SHA256")
-    CRC32                   = ("CRC32")
+    MD5                     = "MD5"
+    SHA1                    = "SHA1"
+    XXH3                    = "XXH3"
+    SHA256                  = "SHA256"
+    CRC32                   = "CRC32"
 
 # Hash format types
 class HashFormatType(EnumType):
-    JSON                    = ("Json")
-    CSV                     = ("Csv")
+    JSON                    = "Json"
+    CSV                     = "Csv"
 
 # Sync action types
 class SyncActionType(EnumType):
-    COPY                    = ("Copy")
-    COPY_DECRYPT            = ("CopyDecrypt")
-    COPY_ENCRYPT            = ("CopyEncrypt")
-    UPDATE                  = ("Update")
-    UPDATE_DECRYPT          = ("UpdateDecrypt")
-    UPDATE_ENCRYPT          = ("UpdateEncrypt")
-    DELETE                  = ("Delete")
-    RECYCLE                 = ("Recycle")
+    COPY                    = "Copy"
+    COPY_DECRYPT            = "CopyDecrypt"
+    COPY_ENCRYPT            = "CopyEncrypt"
+    UPDATE                  = "Update"
+    UPDATE_DECRYPT          = "UpdateDecrypt"
+    UPDATE_ENCRYPT          = "UpdateEncrypt"
+    DELETE                  = "Delete"
+    RECYCLE                 = "Recycle"
 
 # Decompiler action type
 class DecompilerActionType(EnumType):
-    LAUNCH_PROGRAM          = ("LaunchProgram")
-    RUN_SCRIPT              = ("RunScript")
+    LAUNCH_PROGRAM          = "LaunchProgram"
+    RUN_SCRIPT              = "RunScript"
 
 # Github action type
 class GithubActionType(EnumType):
-    ARCHIVE                 = ("Archive")
-    UPDATE                  = ("Update")
+    ARCHIVE                 = "Archive"
+    UPDATE                  = "Update"
 
 # Backend types
 class BackendType(EnumType):
-    LOCAL                   = ("Local")
-    REMOTE                  = ("Remote")
-    EXTERNAL                = ("External")
+    LOCAL                   = "Local"
+    REMOTE                  = "Remote"
+    EXTERNAL                = "External"
 
 # Generation mode type
 class GenerationModeType(EnumType):
-    CUSTOM                  = ("Custom")
-    STANDARD                = ("Standard")
+    CUSTOM                  = "Custom"
+    STANDARD                = "Standard"
 
 # Disc extract format type
 class DiscExtractFormatType(EnumType):
@@ -290,136 +290,136 @@ class DiscExtractFormatType(EnumType):
 
 # Analyze mode type
 class AnalyzeModeType(EnumType):
-    ALL                     = ("All")
-    MISSING_GAME_FILES      = ("MissingGameFiles")
-    UNPLAYABLE_GAMES        = ("UnplayableGames")
+    ALL                     = "All"
+    MISSING_GAME_FILES      = "MissingGameFiles"
+    UNPLAYABLE_GAMES        = "UnplayableGames"
 
 # Metadata key type
 class MetadataKeyType(EnumType):
-    MINIMUM                 = ("Minimum")
-    DOWNLOADABLE            = ("Downloadable")
-    ALL                     = ("All")
+    MINIMUM                 = "Minimum"
+    DOWNLOADABLE            = "Downloadable"
+    ALL                     = "All"
 
 # Steam id formats
 class SteamIDFormatType(EnumType):
-    STEAMID_64              = ("SteamID64")
-    STEAMID_3L              = ("SteamID3L")
-    STEAMID_3S              = ("SteamID3S")
-    STEAMID_CL              = ("SteamIDCL")
-    STEAMID_CS              = ("SteamIDCS")
+    STEAMID_64              = "SteamID64"
+    STEAMID_3L              = "SteamID3L"
+    STEAMID_3S              = "SteamID3S"
+    STEAMID_CL              = "SteamIDCL"
+    STEAMID_CS              = "SteamIDCS"
 
 # Steam branch formats
 class SteamBranchType(EnumType):
-    PUBLIC                  = ("Public")
+    PUBLIC                  = "Public"
 
 # Metadata format types
 class MetadataFormatType(EnumType):
-    PEGASUS                 = ("Pegasus")
+    PEGASUS                 = "Pegasus"
 
 # Metadata source types
 class MetadataSourceType(EnumType):
-    THEGAMESDB              = ("TheGamesDB")
-    GAMEFAQS                = ("GameFAQs")
-    STORE                   = ("Store")
+    THEGAMESDB              = "TheGamesDB"
+    GAMEFAQS                = "GameFAQs"
+    STORE                   = "Store"
 
 # Addon types
 class AddonType(EnumType):
-    DLC                     = ("DLC")
-    UPDATES                 = ("Updates")
+    DLC                     = "DLC"
+    UPDATES                 = "Updates"
 
 # Launch types
 class LaunchType(EnumType):
-    NO_LAUNCHER             = ("NoLauncher")
-    LAUNCH_FILE             = ("LaunchFile")
-    LAUNCH_NAME             = ("LaunchName")
+    NO_LAUNCHER             = "NoLauncher"
+    LAUNCH_FILE             = "LaunchFile"
+    LAUNCH_NAME             = "LaunchName"
 
 # Unit types
 class UnitType(EnumType):
-    SECONDS                 = ("Seconds")
-    MINUTES                 = ("Minutes")
-    HOURS                   = ("Hours")
+    SECONDS                 = "Seconds"
+    MINUTES                 = "Minutes"
+    HOURS                   = "Hours"
 
 # Prefix types
 class PrefixType(EnumType):
-    DEFAULT                 = ("Default")
-    TOOL                    = ("Tool")
-    EMULATOR                = ("Emulator")
-    GAME                    = ("Game")
-    SETUP                   = ("Setup")
+    DEFAULT                 = "Default"
+    TOOL                    = "Tool"
+    EMULATOR                = "Emulator"
+    GAME                    = "Game"
+    SETUP                   = "Setup"
 
 # Save types
 class SaveType(EnumType):
-    GENERAL                 = ("General")
-    WINE                    = ("Wine")
-    SANDBOXIE               = ("Sandboxie")
+    GENERAL                 = "General"
+    WINE                    = "Wine"
+    SANDBOXIE               = "Sandboxie"
 
 # Save action types
 class SaveActionType(EnumType):
-    PACK                    = ("Pack")
-    UNPACK                  = ("Unpack")
-    IMPORT                  = ("Import")
-    EXPORT                  = ("Export")
-    IMPORT_SAVE_PATHS       = ("ImportSavePaths")
+    PACK                    = "Pack"
+    UNPACK                  = "Unpack"
+    IMPORT                  = "Import"
+    EXPORT                  = "Export"
+    IMPORT_SAVE_PATHS       = "ImportSavePaths"
 
 # Remote types
 class RemoteType(EnumType):
-    DRIVE                   = ("Drive")
-    B2                      = ("B2")
-    WEBDAV                  = ("WebDAV")
-    SFTP                    = ("SFTP")
+    DRIVE                   = "Drive"
+    B2                      = "B2"
+    WEBDAV                  = "WebDAV"
+    SFTP                    = "SFTP"
 
 # Remote action types
 class RemoteActionType(EnumType):
-    INIT                    = ("Init")
-    DOWNLOAD                = ("Download")
-    UPLOAD                  = ("Upload")
-    PULL                    = ("Pull")
-    PUSH                    = ("Push")
-    MERGE                   = ("Merge")
-    DIFF                    = ("Diff")
-    DIFFSYNC                = ("DiffSync")
-    EMPTYRECYCLE            = ("EmptyRecycle")
-    LIST                    = ("List")
-    MOUNT                   = ("Mount")
+    INIT                    = "Init"
+    DOWNLOAD                = "Download"
+    UPLOAD                  = "Upload"
+    PULL                    = "Pull"
+    PUSH                    = "Push"
+    MERGE                   = "Merge"
+    DIFF                    = "Diff"
+    DIFFSYNC                = "DiffSync"
+    EMPTYRECYCLE            = "EmptyRecycle"
+    LIST                    = "List"
+    MOUNT                   = "Mount"
 
 # Remote action sync types
 class RemoteActionSyncType(EnumType):
-    PULL                    = (RemoteActionType.PULL.val())
-    PUSH                    = (RemoteActionType.PUSH.val())
-    MERGE                   = (RemoteActionType.MERGE.val())
+    PULL                    = RemoteActionType.PULL.val()
+    PUSH                    = RemoteActionType.PUSH.val()
+    MERGE                   = RemoteActionType.MERGE.val()
 
 # Remote action change types
 class RemoteActionChangeType(EnumType):
-    DOWNLOAD                = (RemoteActionType.DOWNLOAD.val())
-    UPLOAD                  = (RemoteActionType.UPLOAD.val())
-    PULL                    = (RemoteActionType.PULL.val())
-    PUSH                    = (RemoteActionType.PUSH.val())
-    MERGE                   = (RemoteActionType.MERGE.val())
+    DOWNLOAD                = RemoteActionType.DOWNLOAD.val()
+    UPLOAD                  = RemoteActionType.UPLOAD.val()
+    PULL                    = RemoteActionType.PULL.val()
+    PUSH                    = RemoteActionType.PUSH.val()
+    MERGE                   = RemoteActionType.MERGE.val()
 
 # Capture types
 class CaptureType(EnumType):
-    SCREENSHOT              = ("Screenshot")
-    VIDEO                   = ("Video")
+    SCREENSHOT              = "Screenshot"
+    VIDEO                   = "Video"
 
 # Disc types
 class DiscType(EnumType):
-    NORMAL                  = ("Normal")
-    MACWIN                  = ("MacWin")
+    NORMAL                  = "Normal"
+    MACWIN                  = "MacWin"
 
 # Disc extract type
 class DiscExtractType(EnumType):
-    ISO                     = ("Iso")
-    ARCHIVE                 = ("Archive")
+    ISO                     = "Iso"
+    ARCHIVE                 = "Archive"
 
 # Disc filesystem type
 class DiscFilesystemType(EnumType):
-    ISO                     = ("ISO")
-    HFS                     = ("HFS")
+    ISO                     = "ISO"
+    HFS                     = "HFS"
 
 # Disc source type
 class DiscSourceType(EnumType):
-    FOLDER                  = ("Folder")
-    ZIP                     = ("Zip")
+    FOLDER                  = "Folder"
+    ZIP                     = "Zip"
 
 # Asset types
 class AssetType(EnumType):
@@ -449,125 +449,125 @@ class AssetVideoType(EnumType):
 
 # Message types
 class MessageType(EnumType):
-    GENERAL                 = ("General")
-    OK                      = ("OK")
-    YES_NO                  = ("YesNo")
-    CANCEL                  = ("Cancel")
-    OK_CANCEL               = ("OkCancel")
-    ERROR                   = ("Error")
-    AUTO_CLOSE              = ("AutoClose")
-    GET_TEXT                = ("GetText")
-    GET_FILE                = ("GetFile")
-    GET_FOLDER              = ("GetFolder")
+    GENERAL                 = "General"
+    OK                      = "OK"
+    YES_NO                  = "YesNo"
+    CANCEL                  = "Cancel"
+    OK_CANCEL               = "OkCancel"
+    ERROR                   = "Error"
+    AUTO_CLOSE              = "AutoClose"
+    GET_TEXT                = "GetText"
+    GET_FILE                = "GetFile"
+    GET_FOLDER              = "GetFolder"
 
 # Installer types
 class InstallerType(EnumType):
-    INNO                    = ("Inno")
-    NSIS                    = ("NSIS")
-    INS                     = ("InstallShield")
-    SEVENZIP                = ("7Zip")
-    WINRAR                  = ("WinRAR")
-    UNKNOWN                 = ("Unknown")
+    INNO                    = "Inno"
+    NSIS                    = "NSIS"
+    INS                     = "InstallShield"
+    SEVENZIP                = "7Zip"
+    WINRAR                  = "WinRAR"
+    UNKNOWN                 = "Unknown"
 
 # Release types
 class ReleaseType(EnumType):
-    PROGRAM                 = ("Program")
-    INSTALLER               = ("Installer")
-    ARCHIVE                 = ("Archive")
+    PROGRAM                 = "Program"
+    INSTALLER               = "Installer"
+    ARCHIVE                 = "Archive"
 
 # Preset tool types
 class PresetToolType(EnumType):
-    BACKUP_TOOL             = ("backup_tool")
+    BACKUP_TOOL             = "backup_tool"
 
 # Preset option group types
 class PresetOptionGroupType(EnumType):
-    BACKUP_MICROSOFT        = ("Backup_Microsoft")
-    BACKUP_NINTENDOGEN      = ("Backup_NintendoGen")
-    BACKUP_NINTENDOSWITCH   = ("Backup_NintendoSwitch")
-    BACKUP_OTHERGEN         = ("Backup_OtherGen")
-    BACKUP_SONYGEN          = ("Backup_SonyGen")
-    BACKUP_SONYPS3          = ("Backup_SonyPS3")
-    BACKUP_SONYPS4          = ("Backup_SonyPS4")
-    BACKUP_SONYPSN          = ("Backup_SonyPSN")
+    BACKUP_MICROSOFT        = "Backup_Microsoft"
+    BACKUP_NINTENDOGEN      = "Backup_NintendoGen"
+    BACKUP_NINTENDOSWITCH   = "Backup_NintendoSwitch"
+    BACKUP_OTHERGEN         = "Backup_OtherGen"
+    BACKUP_SONYGEN          = "Backup_SonyGen"
+    BACKUP_SONYPS3          = "Backup_SonyPS3"
+    BACKUP_SONYPS4          = "Backup_SonyPS4"
+    BACKUP_SONYPSN          = "Backup_SonyPSN"
 
 # Store types
 class StoreType(EnumType):
-    AMAZON                  = ("Amazon")
-    DISC                    = ("Disc")
-    GOG                     = ("GOG")
-    EPIC                    = ("Epic")
-    HUMBLE_BUNDLE           = ("HumbleBundle")
-    ITCHIO                  = ("Itchio")
-    LEGACY                  = ("Legacy")
-    PUPPET_COMBO            = ("PuppetCombo")
-    RED_CANDLE              = ("RedCandle")
-    SQUARE_ENIX             = ("SquareEnix")
-    STEAM                   = ("Steam")
-    ZOOM                    = ("Zoom")
+    AMAZON                  = "Amazon"
+    DISC                    = "Disc"
+    GOG                     = "GOG"
+    EPIC                    = "Epic"
+    HUMBLE_BUNDLE           = "HumbleBundle"
+    ITCHIO                  = "Itchio"
+    LEGACY                  = "Legacy"
+    PUPPET_COMBO            = "PuppetCombo"
+    RED_CANDLE              = "RedCandle"
+    SQUARE_ENIX             = "SquareEnix"
+    STEAM                   = "Steam"
+    ZOOM                    = "Zoom"
 
 # Store identifier types
 class StoreIdentifierType(EnumType):
-    INFO                    = ("Info")
-    INSTALL                 = ("Install")
-    LAUNCH                  = ("Launch")
-    DOWNLOAD                = ("Download")
-    ASSET                   = ("Asset")
-    METADATA                = ("Metadata")
-    PAGE                    = ("Page")
+    INFO                    = "Info"
+    INSTALL                 = "Install"
+    LAUNCH                  = "Launch"
+    DOWNLOAD                = "Download"
+    ASSET                   = "Asset"
+    METADATA                = "Metadata"
+    PAGE                    = "Page"
 
 # Playlist types
 class PlaylistType(EnumType):
-    TREE                    = ("Tree")
-    LOCAL                   = ("Local")
+    TREE                    = "Tree"
+    LOCAL                   = "Local"
 
 # Merge types
 class MergeType(EnumType):
-    REPLACE                 = ("Replace")
-    ADDITIVE                = ("Additive")
-    SAFE_REPLACE            = ("SafeReplace")
-    SAFE_ADDITIVE           = ("SafeAdditive")
+    REPLACE                 = "Replace"
+    ADDITIVE                = "Additive"
+    SAFE_REPLACE            = "SafeReplace"
+    SAFE_ADDITIVE           = "SafeAdditive"
 
 # Web driver types
 class WebDriverType(EnumType):
-    FIREFOX                 = ("Firefox")
-    CHROME                  = ("Chrome")
-    BRAVE                   = ("Brave")
+    FIREFOX                 = "Firefox"
+    CHROME                  = "Chrome"
+    BRAVE                   = "Brave"
 
 # Size types
 class SizeType(EnumType):
-    SMALL                   = ("Small")
-    MEDIUM                  = ("Medium")
-    LARGE                   = ("Large")
+    SMALL                   = "Small"
+    MEDIUM                  = "Medium"
+    LARGE                   = "Large"
 
 # Content delivery network types
 class ContentDeliveryNetworkType(EnumType):
-    CLOUDFLARE              = ("Cloudflare")
-    FASTLY                  = ("Fastly")
+    CLOUDFLARE              = "Cloudflare"
+    FASTLY                  = "Fastly"
 
 # Audio metadata types
 class AudioMetadataType(EnumType):
-    ARCHIVE                 = ("Archive")
-    HASH                    = ("Hash")
-    TAG                     = ("Tag")
+    ARCHIVE                 = "Archive"
+    HASH                    = "Hash"
+    TAG                     = "Tag"
 
 # Audio metadata action types
 class AudioMetadataAction(EnumType):
-    TAG                     = ("Tag")
-    CLEAR                   = ("Clear")
-    APPLY                   = ("Apply")
+    TAG                     = "Tag"
+    CLEAR                   = "Clear"
+    APPLY                   = "Apply"
 
 # Audio conversion action types
 class AudioConversionAction(EnumType):
-    AAX_TO_M4A              = ("AaxToM4a")
+    AAX_TO_M4A              = "AaxToM4a"
 
 # Audio genre types
 class AudioGenreType(EnumType):
-    ASMR                    = ("ASMR")
-    AUDIOBOOK               = ("Audiobook")
-    CLASSICAL               = ("Classical")
-    GAME                    = ("Game")
-    RADIO                   = ("Radio")
-    REGULAR                 = ("Regular")
-    SOUNDTRACK              = ("Soundtrack")
-    STORY                   = ("Story")
-    THERAPY                 = ("Therapy")
+    ASMR                    = "ASMR"
+    AUDIOBOOK               = "Audiobook"
+    CLASSICAL               = "Classical"
+    GAME                    = "Game"
+    RADIO                   = "Radio"
+    REGULAR                 = "Regular"
+    SOUNDTRACK              = "Soundtrack"
+    STORY                   = "Story"
+    THERAPY                 = "Therapy"

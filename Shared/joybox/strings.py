@@ -40,17 +40,17 @@ def get_string_similarity_ratio(string1, string2):
 # Check if strings are highly similar
 def are_strings_highly_similar(string1, string2):
     ratio = get_string_similarity_ratio(string1, string2)
-    return (ratio >= 90)
+    return ratio >= 90
 
 # Check if strings are moderately similar
 def are_strings_moderately_similar(string1, string2):
     ratio = get_string_similarity_ratio(string1, string2)
-    return (ratio >= 80)
+    return ratio >= 80
 
 # Check if strings are possibly similar
 def are_strings_possibly_similar(string1, string2):
     ratio = get_string_similarity_ratio(string1, string2)
-    return (ratio >= 50)
+    return ratio >= 50
 
 # Sort strings
 def sort_strings(strings):
