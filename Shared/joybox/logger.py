@@ -1,4 +1,5 @@
 # Imports
+import functools
 import os
 import sys
 import logging
@@ -175,12 +176,13 @@ def escape_surrogates(text):
     except UnicodeEncodeError:
         return text.encode("utf-8", "backslashreplace").decode("utf-8")
 
-_global_logger = None
+# The process-wide logger, made on first use or replaced by setup_logging
+_state = types.SimpleNamespace(logger = None)
+
 def get_logger(name = "output"):
-    global _global_logger
-    if _global_logger is None:
-        _global_logger = Logger(name)
-    return _global_logger
+    if _state.logger is None:
+        _state.logger = Logger(name)
+    return _state.logger
 
 def get_script_name():
     if sys.argv and sys.argv[0]:
@@ -188,15 +190,14 @@ def get_script_name():
     return "output"
 
 def setup_logging(name = None, log_dir = None, level = logging.DEBUG, use_colors = True):
-    global _global_logger
     if name is None:
         name = get_script_name()
-    _global_logger = Logger(
+    _state.logger = Logger(
         name = name,
         log_dir = log_dir,
         level = level,
         use_colors = use_colors)
-    return _global_logger
+    return _state.logger
 
 def log_info(message, game_supercategory = None, game_category = None, game_subcategory = None, game_name = None):
     get_logger().info(message, game_supercategory, game_category, game_subcategory, game_name)
@@ -236,25 +237,23 @@ def log_progress_newline():
 # (no level/timestamp prefix) to a dedicated output log.
 
 OUTPUT_LOGGER_NAME = "joybox.output"
-_output_recorder_ready = False
 
 def log_output(text):
     sys.stdout.write(text)
     sys.stdout.flush()
 
+# Set up the output recorder once, on the first line recorded
+@functools.cache
 def _ensure_output_recorder():
-    global _output_recorder_ready
     recorder = logging.getLogger(OUTPUT_LOGGER_NAME)
-    if not _output_recorder_ready:
-        recorder.setLevel(logging.DEBUG)
-        recorder.propagate = False
-        log_dir = runtime.get_log_directory()
-        os.makedirs(log_dir, exist_ok = True)
-        log_file = os.path.join(log_dir, "output_%s.log" % datetime.now().strftime("%Y%m%d_%H%M%S"))
-        handler = logging.FileHandler(log_file, mode = "a", encoding = "utf-8", errors = "backslashreplace")
-        handler.setFormatter(logging.Formatter("%(message)s"))
-        recorder.addHandler(handler)
-        _output_recorder_ready = True
+    recorder.setLevel(logging.DEBUG)
+    recorder.propagate = False
+    log_dir = runtime.get_log_directory()
+    os.makedirs(log_dir, exist_ok = True)
+    log_file = os.path.join(log_dir, "output_%s.log" % datetime.now().strftime("%Y%m%d_%H%M%S"))
+    handler = logging.FileHandler(log_file, mode = "a", encoding = "utf-8", errors = "backslashreplace")
+    handler.setFormatter(logging.Formatter("%(message)s"))
+    recorder.addHandler(handler)
     return recorder
 
 def record_output(line):

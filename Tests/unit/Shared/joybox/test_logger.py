@@ -1,4 +1,5 @@
 # Imports
+import functools
 import io
 import logging
 import os
@@ -303,7 +304,7 @@ def test_a_pipe_gets_plain_level_names(monkeypatch):
 
 @pytest.fixture
 def global_logger(tmp_path, monkeypatch):
-    monkeypatch.setattr(logger, "_global_logger", None)
+    monkeypatch.setattr(logger._state, "logger", None)
     instance = logger.setup_logging(name = "probe_global", log_dir = str(tmp_path), use_colors = False)
     yield instance
     for handler in list(instance._logger.handlers):
@@ -317,7 +318,7 @@ def test_setup_logging_installs_the_global_logger(global_logger):
 
 
 def test_setup_logging_defaults_the_name_to_the_script(tmp_path, monkeypatch):
-    monkeypatch.setattr(logger, "_global_logger", None)
+    monkeypatch.setattr(logger._state, "logger", None)
     monkeypatch.setattr(sys, "argv", ["/bin/probe_script.py"])
 
     instance = logger.setup_logging(log_dir = str(tmp_path))
@@ -364,7 +365,7 @@ def test_raw_output_is_written_verbatim(capsys):
 
 def test_recorded_output_lands_in_one_output_log(tmp_path, monkeypatch):
     monkeypatch.setattr(runtime, "get_log_directory", lambda: str(tmp_path))
-    monkeypatch.setattr(logger, "_output_recorder_ready", False)
+    monkeypatch.setattr(logger, "_ensure_output_recorder", functools.cache(logger._ensure_output_recorder.__wrapped__))
     recorder = logging.getLogger(logger.OUTPUT_LOGGER_NAME)
     existing = list(recorder.handlers)
     try:

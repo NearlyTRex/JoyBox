@@ -1,4 +1,5 @@
 # Imports
+import importlib
 import os
 import shlex
 import threading
@@ -15,21 +16,16 @@ from joybox import paths
 from joybox import fileops
 from joybox import knownhosts
 
-# Lazy import for paramiko (only needed for SSH connections)
-paramiko = None
-
-def _ensure_paramiko():
-    global paramiko
-    if paramiko is None:
-        import paramiko as _paramiko
-        paramiko = _paramiko
+# Get paramiko, imported on first use since only SSH connections need it
+def _get_paramiko():
+    return importlib.import_module("paramiko")
 
 # Load a private key without assuming its type. RSAKey.from_private_key* accepts
 # only RSA, so an ed25519 key - what ssh-keygen produces by default - is rejected
 # outright. Newer paramiko exposes PKey.from_path, which sniffs the type; fall back
 # to trying each class in turn when it is unavailable.
 def _load_private_key(filepath = None, key_str = None):
-    _ensure_paramiko()
+    paramiko = _get_paramiko()
     if filepath and hasattr(paramiko.PKey, "from_path"):
         return paramiko.PKey.from_path(filepath)
     attempts = []
@@ -83,7 +79,7 @@ class ConnectionSSH(connection.Connection):
         self.remote_home_directory = None
 
     def connect(self, timeout = None):
-        _ensure_paramiko()
+        paramiko = _get_paramiko()
         if not ConnectionSSH.ssh_client:
             ConnectionSSH.ssh_client = paramiko.SSHClient()
             known_hosts_path = knownhosts.get_known_hosts_path()

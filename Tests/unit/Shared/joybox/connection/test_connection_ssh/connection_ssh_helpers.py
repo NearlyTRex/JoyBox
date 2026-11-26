@@ -68,5 +68,5 @@ def fake_paramiko(monkeypatch, client, **members):
 
     for name, value in members.items():
         setattr(Module, name, value)
-    monkeypatch.setattr(connection_ssh, "paramiko", Module)
+    monkeypatch.setattr(connection_ssh, "_get_paramiko", lambda: Module)
     return client

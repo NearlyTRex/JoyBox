@@ -103,7 +103,7 @@ dev = [
     "coverage",
     "pytest",
     "pytest-xdist",
-    "pytest-testrex[shell,lua]>=0.1.8",
+    "pytest-testrex[shell,lua]>=0.1.9",
     "pylint",
 ]
 
@@ -193,11 +193,11 @@ wrapper_modules = [
 
 [tool.testrex.baseline]
 # Findings the library had when each rule was adopted; lowered as they are fixed, never raised
-documented = 801
-doc-paraphrase = 1692
+documented = 800
+doc-paraphrase = 1691
 long-functions = 541
 # pylint over Shared and Scripts with pytest-testrex's library rcfile
-pylint-source = 1307
+pylint-source = 1292
 
 [tool.ruff.lint]
 # The Workflows library's default set, pinned here so a library change is a

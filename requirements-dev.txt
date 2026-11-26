@@ -1424,9 +1424,9 @@ pytest==9.2.0 \
     #   -r requirements-dev.in
     #   pytest-testrex
     #   pytest-xdist
-pytest-testrex==0.1.8 \
-    --hash=sha256:ec9ec2a93920244709cbc438f4de9371dde5837e7e2afbb4cf3646699a8bfdce \
-    --hash=sha256:ece7e012470099f1893d39f1ec2c7d221f0be5d4144b693c844391d916c8a95d
+pytest-testrex==0.1.9 \
+    --hash=sha256:69572e9b206f8523d770a0c11242ab56898131129e64023529430331ea840b88 \
+    --hash=sha256:dd6aff782a9c41584c6b514f50e6de2da51127b3f88df0c90edc364447087d6a
     # via -r requirements-dev.in
 pytest-xdist==3.8.0 \
     --hash=sha256:202ca578cfeb7370784a8c33d6d05bc6e13b4f25b5053c30a152269fd10f0b88 \

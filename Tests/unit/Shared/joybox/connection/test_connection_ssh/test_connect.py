@@ -66,14 +66,11 @@ def test_teardown_without_a_transport_does_not_fail(monkeypatch):
     assert connection_ssh.ConnectionSSH.ssh_client is None
 
 
-def test_paramiko_is_imported_on_first_use(monkeypatch):
+def test_paramiko_is_imported_when_asked_for(monkeypatch):
     module = object()
-    monkeypatch.setattr(connection_ssh, "paramiko", None)
     monkeypatch.setitem(sys.modules, "paramiko", module)
 
-    connection_ssh._ensure_paramiko()
-
-    assert connection_ssh.paramiko is module
+    assert connection_ssh._get_paramiko() is module
 
 
 def test_a_login_without_any_credential_is_refused(monkeypatch):

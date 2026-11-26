@@ -1,3 +1,6 @@
+# Imports
+import functools
+
 # Local imports
 from joybox import containers
 from joybox import programs
@@ -98,12 +101,7 @@ class Manifest:
                 return ManifestEntry(manifest_entry)
         return None
 
-# Shared instance
-shared_manifest = None
-
-# Get manifest instance
+# Get the manifest instance the process shares, built on first use
+@functools.cache
 def get_manifest_instance():
-    global shared_manifest
-    if shared_manifest is None:
-        shared_manifest = Manifest()
-    return shared_manifest
+    return Manifest()
