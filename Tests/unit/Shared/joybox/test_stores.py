@@ -155,7 +155,7 @@ def test_every_store_platform_matches_its_categories(store_list):
 
     platforms = {store.get_name(): store.get_platform() for store in store_list}
     derived = {
-        store.get_name(): gamenaming.derive_game_platform_from_categories(store.get_category(), store.get_subcategory())
+        store.get_name(): gamenaming.derive_game_platform_from_categories(store.get_subcategory())
         for store in store_list}
 
     assert platforms == derived

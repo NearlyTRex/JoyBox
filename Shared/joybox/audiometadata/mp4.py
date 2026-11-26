@@ -19,15 +19,16 @@ class Mp4TagsMixin:
 
         # Check file exists
         if not paths.is_path_file(audio_file):
-            logger.log_error(f"Audio file not found: {audio_file}")
+            logger.log_error(f"Audio file not found: {audio_file}", quit_program = exit_on_failure)
             return None
 
         # Read tags from audio file
-        logger.log_info(f"Reading MP4 tags from {audio_file}")
+        if verbose:
+            logger.log_info(f"Reading MP4 tags from {audio_file}")
         try:
             audio = self.mp4_class(audio_file)
         except Exception as e:
-            logger.log_error(f"Failed to load MP4 file: {e}")
+            logger.log_error(f"Failed to load MP4 file: {e}", quit_program = exit_on_failure)
             return None
         if audio.tags is None:
             return {}
@@ -73,15 +74,16 @@ class Mp4TagsMixin:
 
         # Check file exists
         if not paths.is_path_file(audio_file):
-            logger.log_error(f"Audio file not found: {audio_file}")
+            logger.log_error(f"Audio file not found: {audio_file}", quit_program = exit_on_failure)
             return False
 
         # Load audio file
-        logger.log_info(f"Setting MP4 tags on {audio_file}")
+        if verbose:
+            logger.log_info(f"Setting MP4 tags on {audio_file}")
         try:
             audio = self.mp4_class(audio_file)
         except Exception as e:
-            logger.log_error(f"Failed to load MP4 file: {e}")
+            logger.log_error(f"Failed to load MP4 file: {e}", quit_program = exit_on_failure)
             return False
 
         # Add tags if they don't exist
@@ -108,7 +110,7 @@ class Mp4TagsMixin:
                     else:
                         audio.tags[mp4_key] = [str(value)]
                 except ValueError:
-                    logger.log_error(f"MP4 {tag_name} must be a number, not '{value}': {audio_file}")
+                    logger.log_error(f"MP4 {tag_name} must be a number, not '{value}': {audio_file}", quit_program = exit_on_failure)
                     return False
 
         # Set artwork
@@ -140,15 +142,16 @@ class Mp4TagsMixin:
 
         # Check file exists
         if not paths.is_path_file(audio_file):
-            logger.log_error(f"Audio file not found: {audio_file}")
+            logger.log_error(f"Audio file not found: {audio_file}", quit_program = exit_on_failure)
             return False
 
         # Load audio file
-        logger.log_info(f"Removing MP4 tags from {audio_file}")
+        if verbose:
+            logger.log_info(f"Removing MP4 tags from {audio_file}")
         try:
             audio = self.mp4_class(audio_file)
         except Exception as e:
-            logger.log_error(f"Failed to load MP4 file: {e}")
+            logger.log_error(f"Failed to load MP4 file: {e}", quit_program = exit_on_failure)
             return False
 
         # No tags to remove
@@ -190,8 +193,12 @@ class Mp4TagsMixin:
 
         # Check file exists
         if not paths.is_path_file(audio_file):
-            logger.log_error(f"Audio file not found: {audio_file}")
+            logger.log_error(f"Audio file not found: {audio_file}", quit_program = exit_on_failure)
             return None
+
+        # Log what is read
+        if verbose:
+            logger.log_info(f"Reading MP4 file info from {audio_file}")
 
         # Get audio info
         try:
@@ -208,5 +215,5 @@ class Mp4TagsMixin:
             }
             return file_info
         except Exception as e:
-            logger.log_error(f"Failed to get MP4 file info: {e}")
+            logger.log_error(f"Failed to get MP4 file info: {e}", quit_program = exit_on_failure)
             return None

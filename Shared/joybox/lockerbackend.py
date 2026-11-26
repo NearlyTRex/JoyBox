@@ -183,6 +183,7 @@ class LockerBackend(ABC):
         verbose = False,
         pretend_run = False,
         exit_on_failure = False):
+        del local_root_path, excludes, clear_first, verbose, pretend_run, exit_on_failure
         return True
 
 ###########################################################
@@ -436,7 +437,6 @@ class RemoteBackend(LockerBackend):
             hash_type = config.HashType.MD5,
             excludes = excludes,
             verbose = verbose,
-            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
     def list_files_with_hashes_from_sidecar(
@@ -444,12 +444,12 @@ class RemoteBackend(LockerBackend):
         verbose = False,
         pretend_run = False,
         exit_on_failure = False):
+        del pretend_run
         return synctransfers.list_files_with_hashes_from_sidecar(
             remote_name = self.remote_name,
             remote_type = self.remote_type,
             remote_path = self.remote_path,
             verbose = verbose,
-            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
     def upload_local_path(

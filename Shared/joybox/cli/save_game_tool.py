@@ -108,7 +108,6 @@ def main():
     for game_info in gamecollection.iterate_selected_game_infos(
         parser = parser,
         verbose = args.verbose,
-        pretend_run = args.pretend_run,
         exit_on_failure = args.exit_on_failure):
         if is_ready and not is_ready(game_info):
             if args.verbose:

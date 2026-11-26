@@ -133,9 +133,9 @@ def test_every_platform_derives_a_category(platform):
 
 def test_a_platform_round_trips_through_its_categories():
     platform = letter_platform()
-    _, category, subcategory = gamenaming.derive_game_categories_from_platform(platform)
+    _, _, subcategory = gamenaming.derive_game_categories_from_platform(platform)
 
-    assert gamenaming.derive_game_platform_from_categories(category, subcategory) == platform
+    assert gamenaming.derive_game_platform_from_categories(subcategory) == platform
 
 
 def test_an_unmatched_subcategory_derives_no_platform():
@@ -143,7 +143,7 @@ def test_an_unmatched_subcategory_derives_no_platform():
         def val(self):
             return "No Such Subcategory"
 
-    assert gamenaming.derive_game_platform_from_categories(None, Unmatched()) is None
+    assert gamenaming.derive_game_platform_from_categories(Unmatched()) is None
 
 
 ###########################################################
@@ -264,7 +264,7 @@ def test_a_slug_drops_qualifiers():
 
 
 def test_search_terms_are_url_encoded():
-    terms = gamenaming.derive_game_search_terms_from_name("Chrono Trigger (USA)", None)
+    terms = gamenaming.derive_game_search_terms_from_name("Chrono Trigger (USA)")
 
     assert " " not in terms
     assert "Chrono" in terms

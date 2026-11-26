@@ -138,7 +138,6 @@ def download_metadata_asset(
         # Clean asset
         success = asset.clean_asset(
             asset_file = tmp_asset_file_converted,
-            asset_type = asset_type,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
@@ -201,7 +200,6 @@ def download_all_metadata_assets(
                         game_subcategory = game_subcategory,
                         game_name = game_name,
                         verbose = verbose,
-                        pretend_run = pretend_run,
                         exit_on_failure = exit_on_failure)
                     for asset_type in config.AssetMinType.members():
                         success = download_metadata_asset(

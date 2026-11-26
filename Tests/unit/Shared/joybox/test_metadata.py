@@ -289,12 +289,19 @@ def test_verifying_present_files_reports_nothing(metadata_root):
     assert errors == []
 
 
-def test_verifying_a_missing_file_quits(metadata_root):
+def test_verifying_a_missing_file_quits_when_asked_to(metadata_root):
     _, errors = metadata_root
-    build(entry("A")).verify_files()
 
+    assert build(entry("A")).verify_files(exit_on_failure = True) is False
     assert "game.z64" in errors[0][0]
     assert errors[-1][1] == {"quit_program": True}
+
+
+def test_verifying_a_missing_file_reports_failure_otherwise(metadata_root):
+    _, errors = metadata_root
+
+    assert build(entry("A")).verify_files() is False
+    assert errors[-1][1] == {"quit_program": False}
 
 
 ###########################################################

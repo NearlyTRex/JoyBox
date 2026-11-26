@@ -205,10 +205,7 @@ def find_duplicate_files(
 # Find duplicate archives in the search directory
 def find_duplicate_archives(
     filename,
-    directory,
-    verbose = False,
-    pretend_run = False,
-    exit_on_failure = False):
+    directory):
     found_files = []
     test_checksums = sorted(archive.get_archive_checksums(filename), key = lambda item: (item["path"], item["crc"]))
     if not test_checksums:
@@ -240,10 +237,7 @@ def are_plain_files_identical(
 # Check if archive files are identical
 def are_archive_files_identical(
     first,
-    second,
-    verbose = False,
-    pretend_run = False,
-    exit_on_failure = False):
+    second):
     first_is_archive = archive.is_archive(first)
     second_is_archive = archive.is_archive(second)
     if first_is_archive and second_is_archive:
@@ -276,10 +270,7 @@ def are_files_identical(
     # Compare as archive files
     identical = are_archive_files_identical(
         first = first,
-        second = second,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
+        second = second)
     if identical:
         return True
 
@@ -344,12 +335,10 @@ def get_file_groupings(filenames, max_group_size):
 def read_hash_file_json(
     src,
     verbose = False,
-    pretend_run = False,
     exit_on_failure = False):
     json_hashes = serialization.read_json_file(
         src = src,
         verbose = verbose,
-        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     hash_contents = {}
     if isinstance(json_hashes, list):
@@ -390,7 +379,6 @@ HASH_FILE_COLUMNS = ["dir", "filename", "hash", "size", "mtime"]
 def read_hash_file_csv(
     src,
     verbose = False,
-    pretend_run = False,
     exit_on_failure = False):
     hash_contents = {}
     try:
@@ -445,7 +433,6 @@ def sort_hash_file(
     hash_contents = read_hash_file_json(
         src = src,
         verbose = verbose,
-        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     return write_hash_file_json(
         src = src,
@@ -667,7 +654,6 @@ def hash_files(
         hash_contents = read_func(
             src = output_file,
             verbose = verbose,
-            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
     # Hash each file
@@ -754,7 +740,6 @@ def clean_missing_hash_entries(
     hash_contents = read_func(
         src = hash_file,
         verbose = verbose,
-        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
     # Check each entry and remove if file doesn't exist

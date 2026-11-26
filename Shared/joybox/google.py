@@ -92,7 +92,6 @@ def find_images(
     image_dimensions = None,
     num_results = 20,
     verbose = False,
-    pretend_run = False,
     exit_on_failure = False):
 
     # Get authorization info
@@ -124,7 +123,6 @@ def find_images(
         url = search_url,
         params = {"cx": google_search_engine_id, "key": google_search_engine_api_key},
         verbose = verbose,
-        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if not isinstance(image_json, dict):
         logger.log_error("Unable to find images for '%s'" % search_name)

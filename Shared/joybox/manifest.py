@@ -58,15 +58,14 @@ class Manifest:
             self.manifest = manifest
 
     # Load
-    def load(self, verbose = False, pretend_run = False, exit_on_failure = False):
+    def load(self, verbose = False, exit_on_failure = False):
         self.manifest = serialization.read_yaml_file(
             src = programs.get_tool_path_config_value("LudusaviManifest", "yaml"),
             verbose = verbose,
-            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
     # Find entry by name
-    def find_entry_by_name(self, name, verbose = False, pretend_run = False, exit_on_failure = False):
+    def find_entry_by_name(self, name):
         search_results = []
         for manifest_name, manifest_entry in self.manifest.items():
             if strings.are_strings_highly_similar(manifest_name, name):
@@ -80,7 +79,7 @@ class Manifest:
         return None
 
     # Find entry by steam id
-    def find_entry_by_steamid(self, steamid, verbose = False, pretend_run = False, exit_on_failure = False):
+    def find_entry_by_steamid(self, steamid):
         for manifest_name, manifest_entry in self.manifest.items():
             if "steam" not in manifest_entry:
                 continue
@@ -91,7 +90,7 @@ class Manifest:
         return None
 
     # Find entry by gog id
-    def find_entry_by_gogid(self, gogid, verbose = False, pretend_run = False, exit_on_failure = False):
+    def find_entry_by_gogid(self, gogid):
         for manifest_name, manifest_entry in self.manifest.items():
             if "gog" not in manifest_entry:
                 continue

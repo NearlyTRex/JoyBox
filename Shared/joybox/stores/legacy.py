@@ -210,7 +210,6 @@ class Legacy(storebase.StoreBase):
                 driver = web_driver,
                 locator = webpage.ElementLocator({"class": "productcollection__root"}),
                 verbose = verbose,
-                pretend_run = pretend_run,
                 exit_on_failure = False)
             if not element_search_result:
                 return None  # No search results found, not an error
@@ -222,7 +221,6 @@ class Legacy(storebase.StoreBase):
                 locator = webpage.ElementLocator({"class": "productcollection__items"}),
                 all_elements = True,
                 verbose = verbose,
-                pretend_run = pretend_run,
                 exit_on_failure = False)
             if game_cells:
                 for game_cell in game_cells:
@@ -230,7 +228,6 @@ class Legacy(storebase.StoreBase):
                         parent = game_cell,
                         locator = webpage.ElementLocator({"class": "productcollection__item-title"}),
                         verbose = verbose,
-                        pretend_run = pretend_run,
                         exit_on_failure = False)
                     if game_title_element:
                         game_cell_text = webpage.get_element_children_text(game_title_element)
@@ -252,7 +249,6 @@ class Legacy(storebase.StoreBase):
                     parent = game_cell,
                     locator = webpage.ElementLocator({"tag": "a"}),
                     verbose = verbose,
-                    pretend_run = pretend_run,
                     exit_on_failure = False)
                 if game_link_element:
                     appurl = webpage.get_element_attribute(game_link_element, "href")

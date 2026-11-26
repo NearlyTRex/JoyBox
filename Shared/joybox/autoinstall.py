@@ -298,14 +298,13 @@ def merge_autoinstall_data(base, overlay):
 # Read an overlay file
 # The file may be written as a whole autoinstall document or as just the
 # contents of one, so both are accepted.
-def read_overlay_file(overlay_file, verbose = False, pretend_run = False, exit_on_failure = False):
+def read_overlay_file(overlay_file, verbose = False, exit_on_failure = False):
     if not paths.is_path_file(overlay_file):
         logger.log_error("Overlay file not found: %s" % overlay_file)
         return None
     data = serialization.read_yaml_file(
         src = overlay_file,
         verbose = verbose,
-        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if not isinstance(data, dict) or not data:
         logger.log_error("Overlay file is empty or unreadable: %s" % overlay_file)
@@ -471,7 +470,6 @@ def obtain_source_image(
         image = ubunturelease.find_latest_release_image(
             version = version,
             verbose = verbose,
-            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if image and ubunturelease.verify_image_checksum(
             iso_file = output_file,
@@ -493,7 +491,6 @@ def obtain_source_image(
     image = ubunturelease.find_latest_release_image(
         version = version,
         verbose = verbose,
-        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if not image:
         return None
@@ -578,7 +575,6 @@ def build_autoinstall_image(
         overlay = read_overlay_file(
             overlay_file = overlay_file,
             verbose = verbose,
-            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if overlay is None:
             return False

@@ -80,7 +80,6 @@ def main():
         parser = parser,
         generation_mode = args.generation_mode,
         verbose = args.verbose,
-        pretend_run = args.pretend_run,
         exit_on_failure = args.exit_on_failure):
         games_to_process.append(game_info)
 

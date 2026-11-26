@@ -144,7 +144,7 @@ def backup_all_game_files(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    for game_info in gamecollection.iterate_rom_game_infos(verbose, pretend_run, exit_on_failure):
+    for game_info in gamecollection.iterate_rom_game_infos(verbose, exit_on_failure):
         success = backup_game_files(
             game_info = game_info,
             locker_type = locker_type,

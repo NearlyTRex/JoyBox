@@ -26,8 +26,17 @@ def emulator_root(monkeypatch):
     return ROOT
 
 
+# The base with only its abstract steps filled in, to see the defaults
+class Bare(emulatorbase.EmulatorBase):
+    def setup(self, setup_params = None):
+        return True
+
+    def setup_offline(self, setup_params = None):
+        return True
+
+
 def build(config_values, name = "TestMulator", platforms = None):
-    class TestEmulator(emulatorbase.EmulatorBase):
+    class TestEmulator(Bare):
         def get_name(self):
             return name
 
@@ -45,34 +54,36 @@ def build(config_values, name = "TestMulator", platforms = None):
 ###########################################################
 
 def test_the_base_emulator_is_anonymous():
-    assert emulatorbase.EmulatorBase().get_name() == ""
+    assert Bare().get_name() == ""
 
 
 def test_the_base_emulator_claims_no_platforms():
-    assert emulatorbase.EmulatorBase().get_platforms() == []
+    assert Bare().get_platforms() == []
 
 
 def test_the_base_emulator_has_no_config():
-    assert emulatorbase.EmulatorBase().get_config() == {}
+    assert Bare().get_config() == {}
 
 
 def test_the_base_emulator_has_no_save_type():
-    assert emulatorbase.EmulatorBase().get_save_type() is None
+    assert Bare().get_save_type() is None
 
 
-def test_the_base_emulator_setup_steps_succeed_as_no_ops():
-    emulator = emulatorbase.EmulatorBase()
+def test_every_emulator_must_say_how_it_sets_up():
+    assert emulatorbase.EmulatorBase.__abstractmethods__ == {"setup", "setup_offline"}
 
-    assert (emulator.setup(), emulator.setup_offline(), emulator.configure()) == (True, True, True)
+
+def test_the_base_emulator_configure_step_succeeds_as_a_no_op():
+    assert Bare().configure() is True
 
 
 def test_the_base_emulator_cannot_launch_anything():
-    assert emulatorbase.EmulatorBase().launch(game_info = None) is False
+    assert Bare().launch(game_info = None) is False
 
 
 def test_the_base_emulator_installs_addons_successfully():
     # Most emulators have no addons; the default must not report failure.
-    assert emulatorbase.EmulatorBase().install_addons() is True
+    assert Bare().install_addons() is True
 
 
 ###########################################################

@@ -448,7 +448,6 @@ def download_github_release(
     release_json_list = network.get_remote_json(
         url = github_url,
         verbose = verbose,
-        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if not release_json_list:
         logger.log_error("Unable to find github release information from '%s'" % github_url)

@@ -213,7 +213,6 @@ def get_archive_compression_flags(archive_type, password, volume_size):
 # Check archive compression output files
 def check_archive_compression_output_files(
     archive_file,
-    archive_type,
     volume_size,
     verbose = False,
     pretend_run = False,
@@ -326,7 +325,6 @@ def create_archive_from_file(
     # Check output files
     return check_archive_compression_output_files(
         archive_file = archive_file,
-        archive_type = archive_type,
         volume_size = volume_size,
         verbose = verbose,
         pretend_run = pretend_run,
@@ -412,7 +410,6 @@ def create_archive_from_folder(
     # Check output files
     return check_archive_compression_output_files(
         archive_file = archive_file,
-        archive_type = archive_type,
         volume_size = volume_size,
         verbose = verbose,
         pretend_run = pretend_run,

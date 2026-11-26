@@ -116,7 +116,6 @@ def main():
         include_repos = include_repos,
         exclude_repos = exclude_repos,
         verbose = args.verbose,
-        pretend_run = args.pretend_run,
         exit_on_failure = args.exit_on_failure)
 
     # Show preview

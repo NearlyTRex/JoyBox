@@ -57,7 +57,7 @@ def test_a_sidecar_is_read_for_real_on_a_pretend_run(remote, temp_dirs):
     make_database(remote.store, [{"file_path": "a.zip", "hash": "aaaa"}])
 
     assert synctransfers.list_files_with_hashes_from_sidecar(
-        REMOTE, REMOTE_TYPE, REMOTE_PATH, pretend_run = True)
+        REMOTE, REMOTE_TYPE, REMOTE_PATH)
     assert remote.downloads[0]["pretend_run"] is False
 
 

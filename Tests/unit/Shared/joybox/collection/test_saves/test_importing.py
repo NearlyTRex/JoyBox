@@ -150,4 +150,4 @@ def test_every_game_succeeding_succeeds(monkeypatch, function, per_game):
 
     assert getattr(saves, function)(pretend_run = True) is True
     assert visited == ["first", "second"]
-    assert walks == [{"verbose": False, "pretend_run": True, "exit_on_failure": False}]
+    assert walks == [{"verbose": False, "exit_on_failure": False}]

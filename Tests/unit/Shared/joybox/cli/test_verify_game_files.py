@@ -46,8 +46,8 @@ class FakeMetadata:
     def import_from_metadata_file(self, metadata_file):
         self.metadata_file = metadata_file
 
-    def verify_files(self):
-        FakeMetadata.verified.append(self.metadata_file)
+    def verify_files(self, verbose = False, exit_on_failure = False):
+        FakeMetadata.verified.append((self.metadata_file, verbose, exit_on_failure))
 
 
 def read_json(path):
@@ -112,7 +112,7 @@ def test_a_consistent_library_passes(library):
     library.run("--no-preview")
 
     assert library.errors == []
-    assert FakeMetadata.verified == [str(library.metadata / "Nintendo Switch.txt")]
+    assert FakeMetadata.verified == [(str(library.metadata / "Nintendo Switch.txt"), False, True)]
 
 
 def test_json_without_a_game_directory_quits(library):

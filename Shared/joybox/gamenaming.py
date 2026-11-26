@@ -25,7 +25,7 @@ def derive_game_name_path_from_name(game_name, game_platform):
         return game_name
 
 # Derive game platform from categories
-def derive_game_platform_from_categories(game_category, game_subcategory):
+def derive_game_platform_from_categories(game_subcategory):
     for game_platform in config.Platform.members():
         if game_platform.val().endswith(game_subcategory.val()):
             return game_platform
@@ -93,6 +93,6 @@ def derive_slug_name_from_game_name(game_name, custom_prefix = "", custom_suffix
     return derive_slug_name_from_regular_name(regular_name)
 
 # Derive game search terms from name
-def derive_game_search_terms_from_name(game_name, game_platform, custom_prefix = "", custom_suffix = ""):
+def derive_game_search_terms_from_name(game_name, custom_prefix = "", custom_suffix = ""):
     regular_name = derive_regular_name_from_game_name(game_name, custom_prefix, custom_suffix)
     return strings.encode_url_string(regular_name, use_plus = True)

@@ -98,7 +98,6 @@ def main():
         remote_path = remote_path,
         excludes = [synctransfers.HASH_DATABASE_FILE],
         verbose = args.verbose,
-        pretend_run = args.pretend_run,
         exit_on_failure = args.exit_on_failure)
     if remote_files is None:
         logger.log_error("Could not list files on %s" % remote_name, quit_program = True)
@@ -111,7 +110,6 @@ def main():
         remote_type = remote_type,
         remote_path = locker_root,
         verbose = args.verbose,
-        pretend_run = args.pretend_run,
         exit_on_failure = args.exit_on_failure)
     if sidecar_files is None:
         logger.log_error("Could not read the hash sidecar on %s" % remote_name, quit_program = True)

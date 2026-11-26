@@ -26,7 +26,6 @@ def find_metadata_assets_from_google_images(
         search_name = gamenaming.derive_regular_name_from_game_name(game_name),
         image_dimensions = config.asset_boxfront_dimensions,
         verbose = verbose,
-        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
 ############################################################
@@ -95,7 +94,6 @@ def find_metadata_assets_from_steamgriddb(
         image_dimensions = config.asset_boxfront_dimensions,
         image_types = config.ImageFileType.members(),
         verbose = verbose,
-        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
 ############################################################

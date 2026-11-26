@@ -177,7 +177,6 @@ class Epic(storebase.StoreBase):
                 web_driver = web_driver,
                 identifier = identifier,
                 verbose = verbose,
-                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
         finally:
             self.web_disconnect(
@@ -192,7 +191,6 @@ class Epic(storebase.StoreBase):
         web_driver,
         identifier,
         verbose = False,
-        pretend_run = False,
         exit_on_failure = False):
 
         # Get search terms
@@ -208,7 +206,6 @@ class Epic(storebase.StoreBase):
             driver = web_driver,
             locator = webpage.ElementLocator({"class": "css-1ufzxyu"}),
             verbose = verbose,
-            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if not element_search_result:
             return None
@@ -278,7 +275,6 @@ class Epic(storebase.StoreBase):
             cached_data = serialization.read_json_file(
                 src = cache_file_purchases,
                 verbose = verbose,
-                pretend_run = pretend_run,
                 exit_on_failure = False)
             if isinstance(cached_data, list) and all(isinstance(entry, dict) for entry in cached_data):
                 cached_purchases = []
@@ -485,7 +481,6 @@ class Epic(storebase.StoreBase):
                 driver = web_driver,
                 locator = webpage.ElementLocator({"id": "about-long-description"}),
                 verbose = verbose,
-                pretend_run = pretend_run,
                 exit_on_failure = False)
             if element_game_description:
                 raw_game_description = webpage.get_element_children_text(element_game_description)
@@ -498,7 +493,6 @@ class Epic(storebase.StoreBase):
                 locator = webpage.ElementLocator({"class": "css-8f0505"}),
                 all_elements = True,
                 verbose = verbose,
-                pretend_run = pretend_run,
                 exit_on_failure = False)
             if elements_potential_genres:
                 for element_potential_genre in elements_potential_genres:
@@ -509,7 +503,6 @@ class Epic(storebase.StoreBase):
                             locator = webpage.ElementLocator({"class": "css-cyjj8t"}),
                             all_elements = True,
                             verbose = verbose,
-                            pretend_run = pretend_run,
                             exit_on_failure = False)
                         if element_game_genres:
                             game_genres = []
@@ -526,7 +519,6 @@ class Epic(storebase.StoreBase):
                 locator = webpage.ElementLocator({"class": "css-s97i32"}),
                 all_elements = True,
                 verbose = verbose,
-                pretend_run = pretend_run,
                 exit_on_failure = False)
             if elements_details:
                 for elements_detail in elements_details:

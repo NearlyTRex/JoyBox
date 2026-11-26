@@ -75,7 +75,7 @@ def diff_files(
     # Run check, leaving out hidden files and folders and writing the diff files asked for
     diff_paths = [diff_combined_path, diff_intersected_path, diff_missing_src_path, diff_missing_dest_path, diff_error_path]
     check_cmd = [rclone_tool, "check", local_path, sync.get_remote_connection_path(remote_name, remote_type, remote_path)]
-    check_cmd += sync.get_common_remote_flags(remote_name, remote_type, config.RemoteActionType.DIFF)
+    check_cmd += sync.get_common_remote_flags(remote_type, config.RemoteActionType.DIFF)
     check_cmd += sync.get_exclude_flags(sync.get_excludes_with(excludes, ".*/**"))
     check_cmd += get_diff_output_flags(diff_paths)
     if quick:

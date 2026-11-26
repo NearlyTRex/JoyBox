@@ -17,7 +17,7 @@ from joybox.cli import make_iso
 def tool(monkeypatch, isolated_settings):
     command = CommandHarness(monkeypatch, make_iso)
     command.create = Recorder(result = True)
-    command.extract = Recorder(result = True)
+    command.extract = Recorder(result = True, spec = make_iso.archive.extract_archive)
     monkeypatch.setattr(make_iso.iso, "create_iso", command.create)
     monkeypatch.setattr(make_iso.archive, "extract_archive", command.extract)
     return command
@@ -57,7 +57,6 @@ def test_zips_without_an_image_are_extracted_then_imaged(tool, sources):
 
     assert tool.extract.values("archive_file") == [str(sources / "Zip A.zip")]
     assert tool.extract.values("extract_dir") == [str(sources / "Zip A_extracted")]
-    assert tool.extract.values("work_dir") == [str(sources)]
     assert tool.create.values("iso_file") == [str(sources / "Zip A.iso")]
     assert tool.create.values("source_dir") == [str(sources / "Zip A_extracted")]
     assert tool.create.values("volume_name") == [""]

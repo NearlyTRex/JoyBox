@@ -43,7 +43,7 @@ def find_all_game_names(base_dir, game_supercategory, game_category, game_subcat
     base_path = paths.join_paths(base_dir, game_supercategory, game_category, game_subcategory)
 
     # Get platform
-    game_platform = gamenaming.derive_game_platform_from_categories(game_category, game_subcategory)
+    game_platform = gamenaming.derive_game_platform_from_categories(game_subcategory)
 
     # Collect game names
     game_names = []
@@ -80,7 +80,7 @@ def iterate_rom_categories():
             yield config.Supercategory.ROMS, game_category, game_subcategory
 
 # Iterate the info of every rom game with json metadata
-def iterate_rom_game_infos(verbose = False, pretend_run = False, exit_on_failure = False):
+def iterate_rom_game_infos(verbose = False, exit_on_failure = False):
     for game_supercategory, game_category, game_subcategory in iterate_rom_categories():
         for game_name in find_json_game_names(game_supercategory, game_category, game_subcategory):
             yield gameinfo.GameInfo(
@@ -89,7 +89,6 @@ def iterate_rom_game_infos(verbose = False, pretend_run = False, exit_on_failure
                 game_subcategory = game_subcategory,
                 game_name = game_name,
                 verbose = verbose,
-                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
 
 # Iterate selected game categories
@@ -133,7 +132,6 @@ def iterate_selected_game_infos(
     game_subcategory_map = None,
     game_name_filter = None,
     verbose = False,
-    pretend_run = False,
     exit_on_failure = False):
 
     # Determine generation mode
@@ -155,7 +153,6 @@ def iterate_selected_game_infos(
             game_subcategory = args.game_subcategory,
             game_name = args.game_name,
             verbose = verbose,
-            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         return
 
@@ -189,7 +186,6 @@ def iterate_selected_game_infos(
                     game_subcategory = game_subcategory,
                     game_name = game_name,
                     verbose = verbose,
-                    pretend_run = pretend_run,
                     exit_on_failure = exit_on_failure)
             except Exception as e:
                 logger.log_warning("Skipping '%s': %s" % (game_name, str(e)))

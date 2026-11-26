@@ -207,8 +207,7 @@ def build_sync_actions(
     secondary_hashes,
     primary_encrypted = False,
     secondary_encrypted = False,
-    exclude_write_paths = None,
-    verbose = False):
+    exclude_write_paths = None):
     exclude_write_paths = [] if exclude_write_paths is None else exclude_write_paths
 
     # Files missing on the secondary are copied, and those whose hash differs updated
@@ -464,8 +463,7 @@ def is_backend_accessible(backend, role):
 
 def verify_prerequisites(
     primary_backend,
-    secondary_backends,
-    verbose = False):
+    secondary_backends):
     if not is_backend_accessible(primary_backend, "Primary"):
         return False
     return all(is_backend_accessible(sec_backend, "Secondary") for sec_backend in secondary_backends)
@@ -583,8 +581,7 @@ def plan_secondary_sync(primary_info, primary_hashes, sec_info, secondary_hashes
         secondary_hashes = secondary_hashes,
         primary_encrypted = primary_info.is_encrypted(),
         secondary_encrypted = sec_info.is_encrypted(),
-        exclude_write_paths = sec_info.get_excluded_dirs(),
-        verbose = verbose)
+        exclude_write_paths = sec_info.get_excluded_dirs())
     if not actions:
         logger.log_info("No sync actions needed for %s" % sec_name)
         return []
@@ -645,7 +642,7 @@ def sync_lockers(
     secondary_infos = [lockerinfo.LockerInfo(lt) for lt in secondary_locker_types]
     primary_backend = lockerbackend.get_backend_for_locker(primary_info)
     secondary_backends = [lockerbackend.get_backend_for_locker(info) for info in secondary_infos]
-    if not verify_prerequisites(primary_backend, secondary_backends, verbose):
+    if not verify_prerequisites(primary_backend, secondary_backends):
         return False
     primary_hashes = build_primary_hash_map(primary_info, primary_backend, skip_cache, verbose, pretend_run, exit_on_failure)
     if not primary_hashes:

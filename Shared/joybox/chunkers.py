@@ -1,6 +1,7 @@
 # Imports
 import os
 import re
+from abc import ABC, abstractmethod
 
 # Local imports
 from joybox import logger
@@ -19,20 +20,21 @@ from joybox import serialization
 #   marks(lines)    -> [(line_number, label)]     the map
 #   regions(lines)  -> {name: (start, end)}       addressable spans
 #
-# Register a new one by subclassing Chunker and listing its extensions.
+# Register a new one by subclassing Chunker, implementing marks and listing its extensions.
 
 # Maximum marks in an outline before it is thinned; an outline is a map,
 # not a transcript.
 MAX_MARKS = 120
 
 # Base chunker
-class Chunker:
+class Chunker(ABC):
     name = "text"
     extensions = ()
 
     # Structural points of interest, as (line_number, label)
+    @abstractmethod
     def marks(self, lines):
-        return []
+        ...
 
     # Named spans, as {name: (start_line, end_line)}, both inclusive
     def regions(self, lines):

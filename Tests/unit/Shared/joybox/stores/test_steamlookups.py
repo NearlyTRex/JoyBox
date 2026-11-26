@@ -277,3 +277,32 @@ def test_a_game_without_grids_gives_no_covers(griddb):
     add_game(griddb, 1, "Half-Life 2", None)
 
     assert steamlookups.find_steam_griddb_covers("Half-Life 2") == []
+
+
+@pytest.fixture
+def griddb_logs(griddb, monkeypatch):
+    logs = []
+    monkeypatch.setattr(steamlookups.logger, "log_error", lambda message, **kwargs: logs.append((message, kwargs)))
+    monkeypatch.setattr(steamlookups.logger, "log_info", lambda message: logs.append((message, {})))
+    return logs
+
+
+def test_a_search_says_what_it_searches_for_when_verbose(griddb, griddb_logs):
+    steamlookups.find_steam_griddb_covers("Half-Life 2", verbose = True)
+
+    assert griddb_logs == [("Searching SteamGridDB for 'Half-Life 2'", {})]
+
+
+def test_a_missing_api_key_finds_no_covers(griddb, griddb_logs, isolated_settings):
+    isolated_settings.set_value("UserData.Scraping", "steamgriddb_api_key", "")
+
+    assert steamlookups.find_steam_griddb_covers("Half-Life 2", exit_on_failure = True) == []
+    assert griddb_logs == [("No steamgriddb_api_key in UserData.Scraping", {"quit_program": True})]
+    assert griddb["searched"] == []
+
+
+def test_a_missing_steamgriddb_package_finds_no_covers(griddb, griddb_logs, monkeypatch):
+    monkeypatch.setattr(steamlookups.modules, "import_python_module_package", lambda module_path, module_name: None)
+
+    assert steamlookups.find_steam_griddb_covers("Half-Life 2") == []
+    assert griddb_logs == [("PySteamGridDB is not installed", {"quit_program": False})]

@@ -21,7 +21,7 @@ def test_a_sidecar_listing_is_passed_through(remote, listing):
     assert backend().list_files_with_hashes_from_sidecar(pretend_run = True) == listing
     passed = only(remote, "list_files_with_hashes_from_sidecar")
     assert passed["remote_path"] == REMOTE_PATH
-    assert passed["pretend_run"] is True
+    assert "pretend_run" not in passed
 
 
 def test_a_failed_listing_is_passed_through(remote):

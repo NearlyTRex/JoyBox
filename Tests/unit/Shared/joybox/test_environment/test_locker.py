@@ -120,7 +120,7 @@ def test_two_games_do_not_share_a_directory(roots):
 
 def test_a_save_dir_sits_under_the_saves_root(roots):
     built = environment.get_locker_gaming_save_dir(
-        SUPERCATEGORY, CATEGORY, SUBCATEGORY, GAME)
+        CATEGORY, SUBCATEGORY, GAME)
 
     assert built.startswith(environment.get_locker_gaming_saves_root_dir())
 
@@ -128,23 +128,23 @@ def test_a_save_dir_sits_under_the_saves_root(roots):
 def test_a_save_dir_does_not_repeat_the_supercategory(roots):
     # Saves are their own supercategory; the game's own is not part of the path.
     built = environment.get_locker_gaming_save_dir(
-        SUPERCATEGORY, CATEGORY, SUBCATEGORY, GAME)
+        CATEGORY, SUBCATEGORY, GAME)
 
     assert str(SUPERCATEGORY) not in parts(built)
 
 
 def test_a_save_dir_uses_the_derived_name_path(roots):
     built = environment.get_locker_gaming_save_dir(
-        SUPERCATEGORY, CATEGORY, SUBCATEGORY, GAME)
+        CATEGORY, SUBCATEGORY, GAME)
 
     assert built.replace("\\", "/").endswith(name_path().replace("\\", "/"))
 
 
 def test_two_games_do_not_share_a_save_dir(roots):
     first = environment.get_locker_gaming_save_dir(
-        SUPERCATEGORY, CATEGORY, SUBCATEGORY, "Chrono Trigger (USA)")
+        CATEGORY, SUBCATEGORY, "Chrono Trigger (USA)")
     second = environment.get_locker_gaming_save_dir(
-        SUPERCATEGORY, CATEGORY, SUBCATEGORY, "Super Metroid (USA)")
+        CATEGORY, SUBCATEGORY, "Super Metroid (USA)")
 
     assert first != second
 

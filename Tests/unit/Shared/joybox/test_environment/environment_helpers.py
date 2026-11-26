@@ -27,7 +27,7 @@ def parts(path):
 
 
 def name_path():
-    platform = gamenaming.derive_game_platform_from_categories(CATEGORY, SUBCATEGORY)
+    platform = gamenaming.derive_game_platform_from_categories(SUBCATEGORY)
     return gamenaming.derive_game_name_path_from_name(GAME, platform)
 
 

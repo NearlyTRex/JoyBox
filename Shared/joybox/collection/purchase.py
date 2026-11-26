@@ -130,7 +130,6 @@ def import_game_store_purchases(
                 game_subcategory = store_obj.get_subcategory()),
             search_values = purchase_identifiers,
             search_keys = config.json_keys_store_appdata,
-            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if json_matches:
             continue
@@ -285,7 +284,6 @@ def update_game_store_purchases(
                 game_subcategory = store_obj.get_subcategory()),
             search_values = purchase_identifiers,
             search_keys = config.json_keys_store_appdata,
-            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         json_file = None
         if json_matches:
@@ -501,7 +499,7 @@ def download_all_game_store_purchases(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    for game_info in gamecollection.iterate_rom_game_infos(verbose, pretend_run, exit_on_failure):
+    for game_info in gamecollection.iterate_rom_game_infos(verbose, exit_on_failure):
         success = download_game_store_purchase(
             game_info = game_info,
             verbose = verbose,

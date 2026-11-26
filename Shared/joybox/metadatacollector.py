@@ -185,7 +185,7 @@ def collect_metadata_from_tgdb(
     def attempt_metadata_fetch(web_driver):
 
         # Get search terms
-        search_terms = gamenaming.derive_game_search_terms_from_name(game_name, game_platform)
+        search_terms = gamenaming.derive_game_search_terms_from_name(game_name)
 
         # Metadata result
         metadata_result = metadataentry.MetadataEntry()
@@ -203,7 +203,6 @@ def collect_metadata_from_tgdb(
             driver = web_driver,
             locator = webpage.ElementLocator({"class": "container-fluid"}),
             verbose = verbose,
-            pretend_run = pretend_run,
             exit_on_failure = False)
         if not element_search_result:
             return None  # No search results found, not an error
@@ -215,7 +214,6 @@ def collect_metadata_from_tgdb(
             locator = webpage.ElementLocator({"class": "card-footer"}),
             all_elements = True,
             verbose = verbose,
-            pretend_run = pretend_run,
             exit_on_failure = False)
         if game_cells:
             for game_cell in game_cells:
@@ -251,7 +249,6 @@ def collect_metadata_from_tgdb(
             driver = web_driver,
             locator = webpage.ElementLocator({"class": "game-overview"}),
             verbose = verbose,
-            pretend_run = pretend_run,
             exit_on_failure = False)
         if element_game_description:
             raw_game_description = webpage.get_element_text(element_game_description)
@@ -264,7 +261,6 @@ def collect_metadata_from_tgdb(
             locator = webpage.ElementLocator({"class": "card-body"}),
             all_elements = True,
             verbose = verbose,
-            pretend_run = pretend_run,
             exit_on_failure = False)
         if element_game_details_list:
             for element_game_details in element_game_details_list:
@@ -273,7 +269,6 @@ def collect_metadata_from_tgdb(
                     locator = webpage.ElementLocator({"tag": "p"}),
                     all_elements = True,
                     verbose = verbose,
-                    pretend_run = pretend_run,
                     exit_on_failure = False)
                 if element_paragraphs:
                     apply_detail_lines(
@@ -318,7 +313,7 @@ def collect_metadata_from_gamefaqs(
     def attempt_metadata_fetch(web_driver):
 
         # Get search terms
-        search_terms = gamenaming.derive_game_search_terms_from_name(game_name, game_platform)
+        search_terms = gamenaming.derive_game_search_terms_from_name(game_name)
 
         # Metadata result
         metadata_result = metadataentry.MetadataEntry()
@@ -335,7 +330,6 @@ def collect_metadata_from_gamefaqs(
             driver = web_driver,
             locator = webpage.ElementLocator({"class": "home_jbi_ft"}),
             verbose = verbose,
-            pretend_run = pretend_run,
             exit_on_failure = False)
         if not element_homepage_marker:
             raise Exception("GameFAQs homepage marker not found")
@@ -352,7 +346,6 @@ def collect_metadata_from_gamefaqs(
             driver = web_driver,
             locator = webpage.ElementLocator({"class": "span12"}),
             verbose = verbose,
-            pretend_run = pretend_run,
             exit_on_failure = False)
         if not element_search_result:
             return None  # No search results found, not an error
@@ -363,7 +356,6 @@ def collect_metadata_from_gamefaqs(
             parent = element_search_result,
             locator = webpage.ElementLocator({"tag": "tbody"}),
             verbose = verbose,
-            pretend_run = pretend_run,
             exit_on_failure = False)
         if elements_search_table:
             elements_search_rows = webpage.get_element(
@@ -371,7 +363,6 @@ def collect_metadata_from_gamefaqs(
                 locator = webpage.ElementLocator({"tag": "tr"}),
                 all_elements = True,
                 verbose = verbose,
-                pretend_run = pretend_run,
                 exit_on_failure = False)
 
         # Navigate to the first result on this platform
@@ -382,7 +373,6 @@ def collect_metadata_from_gamefaqs(
                 locator = webpage.ElementLocator({"tag": "td"}),
                 all_elements = True,
                 verbose = verbose,
-                pretend_run = pretend_run,
                 exit_on_failure = False)
             if not elements_search_cols or len(elements_search_cols) < 4:
                 continue
@@ -404,7 +394,6 @@ def collect_metadata_from_gamefaqs(
             driver = web_driver,
             locator = webpage.ElementLocator({"class": "game_desc"}),
             verbose = verbose,
-            pretend_run = pretend_run,
             exit_on_failure = False)
         if element_game_description:
 
@@ -417,7 +406,6 @@ def collect_metadata_from_gamefaqs(
                     parent = web_driver,
                     locator = webpage.ElementLocator({"link_text": "more »"}),
                     verbose = verbose,
-                    pretend_run = pretend_run,
                     exit_on_failure = False)
                 if element_game_description_more:
                     webpage.click_element(element_game_description_more)
@@ -433,7 +421,6 @@ def collect_metadata_from_gamefaqs(
             locator = webpage.ElementLocator({"class": "content"}),
             all_elements = True,
             verbose = verbose,
-            pretend_run = pretend_run,
             exit_on_failure = False)
         if element_game_details_list:
             apply_detail_lines(
@@ -471,7 +458,7 @@ def collect_metadata_from_bigfishgames(
     def attempt_metadata_fetch(web_driver):
 
         # Get search terms
-        search_terms = gamenaming.derive_game_search_terms_from_name(game_name, game_platform)
+        search_terms = gamenaming.derive_game_search_terms_from_name(game_name)
 
         # Metadata result
         metadata_result = metadataentry.MetadataEntry()
@@ -486,7 +473,6 @@ def collect_metadata_from_bigfishgames(
             driver = web_driver,
             locator = webpage.ElementLocator({"class": "productFullDetail__descriptionContent"}),
             verbose = verbose,
-            pretend_run = pretend_run,
             exit_on_failure = False)
         if not element_game_description:
             return None  # No description found, might be no results
@@ -496,7 +482,6 @@ def collect_metadata_from_bigfishgames(
             driver = web_driver,
             locator = webpage.ElementLocator({"class": "productFullDetail__bullets"}),
             verbose = verbose,
-            pretend_run = pretend_run,
             exit_on_failure = False)
 
         # Grab the description text

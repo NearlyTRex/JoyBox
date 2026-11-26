@@ -1,12 +1,13 @@
 # Imports
 import copy
 import codecs
+from abc import ABC, abstractmethod
 
 # Local imports
 from joybox import platform_info, runtime, cmdline
 from joybox import logger, runoptions
 
-class Connection:
+class Connection(ABC):
     def __init__(
         self,
         flags = runoptions.RunFlags(),
@@ -81,20 +82,25 @@ class Connection:
         if isinstance(masked, list):
             logger.log_info("Running \"%s\"" % " ".join(masked))
 
+    @abstractmethod
     def run_output(self, cmd, sudo = False):
-        return ""
+        ...
 
+    @abstractmethod
     def run_return_code(self, cmd, sudo = False):
-        return 0
+        ...
 
+    @abstractmethod
     def run_blocking(self, cmd, sudo = False):
-        return 0
+        ...
 
+    @abstractmethod
     def run_interactive(self, cmd, sudo = False):
-        return 0
+        ...
 
+    @abstractmethod
     def run_checked(self, cmd, sudo = False, throw_exception = False):
-        return None
+        ...
 
     def get_home_directory(self):
         return None
@@ -126,44 +132,57 @@ class Connection:
     def make_temporary_directory(self):
         return None
 
+    @abstractmethod
     def make_directory(self, src, sudo = False):
-        return False
+        ...
 
+    @abstractmethod
     def remove_file_or_directory(self, src, sudo = False):
-        return False
+        ...
 
+    @abstractmethod
     def copy_file_or_directory(self, src, dest, sudo = False):
-        return False
+        ...
 
+    @abstractmethod
     def move_file_or_directory(self, src, dest, sudo = False):
-        return False
+        ...
 
+    @abstractmethod
     def link_file_or_directory(self, src, dest, sudo = False):
-        return False
+        ...
 
+    @abstractmethod
     def does_file_or_directory_exist(self, src):
-        return False
+        ...
 
+    @abstractmethod
     def transfer_files(self, src, dest, excludes = None, sudo = False):
-        return False
+        ...
 
+    @abstractmethod
     def read_file(self, src, sudo = False):
-        return None
+        ...
 
+    @abstractmethod
     def write_file(self, src, contents, sudo = False):
-        return False
+        ...
 
+    @abstractmethod
     def download_file(self, url, dest, sudo = False):
-        return False
+        ...
 
+    @abstractmethod
     def extract_tar_archive(self, src, dest, sudo = False):
-        return False
+        ...
 
+    @abstractmethod
     def change_owner(self, src, owner, sudo = False):
-        return False
+        ...
 
+    @abstractmethod
     def change_permission(self, src, permission, sudo = False):
-        return False
+        ...
 
     def install_crontab(self, contents):
         temp_dir = self.make_temporary_directory()

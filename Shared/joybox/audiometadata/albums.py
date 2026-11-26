@@ -14,14 +14,18 @@ class AlbumTagsMixin:
 
         # Check file exists
         if not paths.is_path_file(audio_file):
-            logger.log_error(f"Audio file not found: {audio_file}")
+            logger.log_error(f"Audio file not found: {audio_file}", quit_program = exit_on_failure)
             return None
+
+        # Log what is read
+        if verbose:
+            logger.log_info(f"Reading MP3 file info from {audio_file}")
 
         # Get audio info
         try:
             audio = self.mp3_class(audio_file, ID3 = self.id3_class)
         except Exception as e:
-            logger.log_error(f"Failed to get MP3 file info: {e}")
+            logger.log_error(f"Failed to get MP3 file info: {e}", quit_program = exit_on_failure)
             return None
         file_info = {
             "path": audio_file,

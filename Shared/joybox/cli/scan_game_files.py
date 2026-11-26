@@ -108,7 +108,6 @@ def main():
         logger.log_info("Loading manifest ...")
         manifest.get_manifest_instance().load(
             verbose = args.verbose,
-            pretend_run = args.pretend_run,
             exit_on_failure = args.exit_on_failure)
 
     # Build game store purchases

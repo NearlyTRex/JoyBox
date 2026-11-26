@@ -33,11 +33,10 @@ def get_release_listing_url(version):
     return "%s/%s/" % (RELEASES_URL_BASE, version)
 
 # Find the server images published for a release
-def find_release_images(version, verbose = False, pretend_run = False, exit_on_failure = False):
+def find_release_images(version, verbose = False, exit_on_failure = False):
     listing = network.get_remote_html(
         url = get_release_listing_url(version),
         verbose = verbose,
-        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if not listing:
         return []
@@ -58,11 +57,10 @@ def get_image_version(image):
     return tuple(parts)
 
 # Find the newest server image published for a release
-def find_latest_release_image(version, verbose = False, pretend_run = False, exit_on_failure = False):
+def find_latest_release_image(version, verbose = False, exit_on_failure = False):
     images = find_release_images(
         version = version,
         verbose = verbose,
-        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if not images:
         logger.log_error("No Ubuntu %s server images found at %s" % (
@@ -71,11 +69,10 @@ def find_latest_release_image(version, verbose = False, pretend_run = False, exi
     return images[-1]
 
 # Find the download url of the newest server image for a release
-def find_latest_release_url(version, verbose = False, pretend_run = False, exit_on_failure = False):
+def find_latest_release_url(version, verbose = False, exit_on_failure = False):
     image = find_latest_release_image(
         version = version,
         verbose = verbose,
-        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if not image:
         return None
@@ -143,7 +140,6 @@ def verify_checksum_signature(
     keyring_file = None,
     fingerprint = None,
     verbose = False,
-    pretend_run = False,
     exit_on_failure = False):
 
     # Get tool
@@ -225,7 +221,6 @@ def fetch_release_checksums(
             listing_file = listing_file,
             signature_file = signature_file,
             verbose = verbose,
-            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if not success:
             return None
@@ -237,11 +232,10 @@ def fetch_release_checksums(
         exit_on_failure = exit_on_failure))
 
 # Read the published checksums for a release
-def find_release_checksums(version, verbose = False, pretend_run = False, exit_on_failure = False):
+def find_release_checksums(version, verbose = False, exit_on_failure = False):
     listing = network.get_remote_html(
         url = get_checksum_listing_url(version),
         verbose = verbose,
-        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     return parse_checksum_listing(listing)
 
@@ -262,11 +256,10 @@ def parse_checksum_listing(listing):
     return checksums
 
 # Find the published checksum for one image
-def find_image_checksum(version, image, verbose = False, pretend_run = False, exit_on_failure = False):
+def find_image_checksum(version, image, verbose = False, exit_on_failure = False):
     checksums = find_release_checksums(
         version = version,
         verbose = verbose,
-        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     return checksums.get(image)
 

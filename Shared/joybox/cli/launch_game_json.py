@@ -106,7 +106,7 @@ def main():
         if not game_subcategory:
             potential_subcategories = []
             for potential_subcategory in config.subcategory_map[game_category]:
-                potential_platform = gamenaming.derive_game_platform_from_categories(game_category, potential_subcategory)
+                potential_platform = gamenaming.derive_game_platform_from_categories(potential_subcategory)
                 if not platforms.has_no_launcher(potential_platform):
                     potential_subcategories.append(potential_subcategory)
             game_subcategory = random.choice(potential_subcategories)
@@ -141,7 +141,6 @@ def main():
     game_info = gameinfo.GameInfo(
         json_file = json_file,
         verbose = args.verbose,
-        pretend_run = args.pretend_run,
         exit_on_failure = args.exit_on_failure)
 
     # Check ability to launch

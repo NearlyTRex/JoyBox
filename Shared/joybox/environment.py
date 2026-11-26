@@ -134,7 +134,7 @@ def get_locker_gaming_tags_root_dir(locker_type = None):
 
 # Get locker gaming files offset
 def get_locker_gaming_files_offset(game_supercategory, game_category, game_subcategory, game_name):
-    game_platform = gamenaming.derive_game_platform_from_categories(game_category, game_subcategory)
+    game_platform = gamenaming.derive_game_platform_from_categories(game_subcategory)
     game_name_path = gamenaming.derive_game_name_path_from_name(game_name, game_platform)
     return paths.join_paths(
         game_supercategory,
@@ -159,8 +159,8 @@ def get_locker_gaming_saves_root_dir(locker_type = None):
         config.Supercategory.SAVES)
 
 # Get locker gaming save dir
-def get_locker_gaming_save_dir(game_supercategory, game_category, game_subcategory, game_name, locker_type = None):
-    game_platform = gamenaming.derive_game_platform_from_categories(game_category, game_subcategory)
+def get_locker_gaming_save_dir(game_category, game_subcategory, game_name, locker_type = None):
+    game_platform = gamenaming.derive_game_platform_from_categories(game_subcategory)
     game_name_path = gamenaming.derive_game_name_path_from_name(game_name, game_platform)
     return paths.join_paths(
         get_locker_gaming_saves_root_dir(locker_type),
@@ -356,7 +356,7 @@ def get_json_metadata_dir(game_supercategory, game_category, game_subcategory):
 
 # Get json metadata file
 def get_game_json_metadata_file(game_supercategory, game_category, game_subcategory, game_name):
-    game_platform = gamenaming.derive_game_platform_from_categories(game_category, game_subcategory)
+    game_platform = gamenaming.derive_game_platform_from_categories(game_subcategory)
     game_name_path = gamenaming.derive_game_name_path_from_name(game_name, game_platform)
     return paths.join_paths(
         get_json_metadata_dir(game_supercategory, game_category, game_subcategory),
@@ -489,7 +489,7 @@ def get_cache_gaming_roms_root_dir():
 
 # Get cache gaming rom dir
 def get_cache_gaming_rom_dir(game_category, game_subcategory, game_name):
-    game_platform = gamenaming.derive_game_platform_from_categories(game_category, game_subcategory)
+    game_platform = gamenaming.derive_game_platform_from_categories(game_subcategory)
     game_name_path = gamenaming.derive_game_name_path_from_name(game_name, game_platform)
     return paths.join_paths(
         get_cache_gaming_roms_root_dir(),
@@ -505,7 +505,7 @@ def get_cache_gaming_installs_root_dir():
 
 # Get cache gaming install dir
 def get_cache_gaming_install_dir(game_category, game_subcategory, game_name):
-    game_platform = gamenaming.derive_game_platform_from_categories(game_category, game_subcategory)
+    game_platform = gamenaming.derive_game_platform_from_categories(game_subcategory)
     game_name_path = gamenaming.derive_game_name_path_from_name(game_name, game_platform)
     return paths.join_paths(
         get_cache_gaming_installs_root_dir(),
@@ -521,7 +521,7 @@ def get_cache_gaming_saves_root_dir():
 
 # Get cache gaming save dir
 def get_cache_gaming_save_dir(game_category, game_subcategory, game_name, save_type = None):
-    game_platform = gamenaming.derive_game_platform_from_categories(game_category, game_subcategory)
+    game_platform = gamenaming.derive_game_platform_from_categories(game_subcategory)
     game_name_path = gamenaming.derive_game_name_path_from_name(game_name, game_platform)
     if save_type:
         return paths.join_paths(
@@ -545,7 +545,7 @@ def get_cache_gaming_setup_root_dir():
 
 # Get cache gaming setup dir
 def get_cache_gaming_setup_dir(game_category, game_subcategory, game_name):
-    game_platform = gamenaming.derive_game_platform_from_categories(game_category, game_subcategory)
+    game_platform = gamenaming.derive_game_platform_from_categories(game_subcategory)
     game_name_path = gamenaming.derive_game_name_path_from_name(game_name, game_platform)
     return paths.join_paths(
         get_cache_gaming_setup_root_dir(),

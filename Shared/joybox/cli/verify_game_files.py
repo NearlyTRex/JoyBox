@@ -88,7 +88,7 @@ def main():
             if paths.is_path_file(metadata_file):
                 metadata_obj = metadata.Metadata()
                 metadata_obj.import_from_metadata_file(metadata_file)
-                metadata_obj.verify_files()
+                metadata_obj.verify_files(verbose = args.verbose, exit_on_failure = True)
 
     # Verify json files
     for game_supercategory in config.Supercategory.members():
@@ -109,7 +109,6 @@ def main():
                     game_info = gameinfo.GameInfo(
                         json_file = json_file,
                         verbose = args.verbose,
-                        pretend_run = args.pretend_run,
                         exit_on_failure = args.exit_on_failure)
 
                     # Get game info

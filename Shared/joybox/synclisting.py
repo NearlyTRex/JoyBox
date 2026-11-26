@@ -154,7 +154,6 @@ def list_files_with_hashes(
     hash_type = None,
     excludes = None,
     verbose = False,
-    pretend_run = False,
     exit_on_failure = False):
     rclone_tool = programs.find_tool_program("RClone")
     if not rclone_tool:

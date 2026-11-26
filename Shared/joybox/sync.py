@@ -35,7 +35,7 @@ def get_remote_connection_path(remote_name, remote_type, remote_path):
         return "%s:%s" % (remote_name, remote_path)
 
 # Get common remote flags
-def get_common_remote_flags(remote_name, remote_type, remote_action_type, tps_limit = 10, transfers = 1):
+def get_common_remote_flags(remote_type, remote_action_type, tps_limit = 10, transfers = 1):
     flags = [
         "--fast-list",
         "--tpslimit", str(tps_limit),
@@ -150,7 +150,6 @@ def run_transfer(
     cmd = [rclone_tool, subcommand] + list(transfer_paths)
     if remote_action_type:
         cmd += get_common_remote_flags(
-            remote_name = remote_names[0],
             remote_type = remote_type,
             remote_action_type = remote_action_type)
     cmd += get_exclude_flags(excludes)

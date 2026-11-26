@@ -180,10 +180,7 @@ def archive_and_backup_save(
         return False
     found_files = hashing.find_duplicate_archives(
         filename = tmp_save_archive_file,
-        directory = output_save_dir,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
+        directory = output_save_dir)
     if found_files:
         logger.log_info("Save is already packed, skipping")
         return True
@@ -205,7 +202,7 @@ def pack_all_saves(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    for game_info in gamecollection.iterate_rom_game_infos(verbose, pretend_run, exit_on_failure):
+    for game_info in gamecollection.iterate_rom_game_infos(verbose, exit_on_failure):
         if not can_save_be_packed(game_info):
             continue
         success = pack_save(
@@ -276,7 +273,7 @@ def unpack_all_saves(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    for game_info in gamecollection.iterate_rom_game_infos(verbose, pretend_run, exit_on_failure):
+    for game_info in gamecollection.iterate_rom_game_infos(verbose, exit_on_failure):
         if not can_save_be_unpacked(game_info):
             continue
         success = unpack_save(
@@ -497,7 +494,7 @@ def import_all_game_save_paths(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    for game_info in gamecollection.iterate_rom_game_infos(verbose, pretend_run, exit_on_failure):
+    for game_info in gamecollection.iterate_rom_game_infos(verbose, exit_on_failure):
         success = import_game_save_paths(
             game_info = game_info,
             verbose = verbose,
@@ -531,7 +528,7 @@ def import_all_game_saves(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    for game_info in gamecollection.iterate_rom_game_infos(verbose, pretend_run, exit_on_failure):
+    for game_info in gamecollection.iterate_rom_game_infos(verbose, exit_on_failure):
         success = import_game_save(
             game_info = game_info,
             verbose = verbose,
@@ -569,7 +566,7 @@ def export_all_game_save(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    for game_info in gamecollection.iterate_rom_game_infos(verbose, pretend_run, exit_on_failure):
+    for game_info in gamecollection.iterate_rom_game_infos(verbose, exit_on_failure):
         success = export_game_save(
             game_info = game_info,
             locker_type = locker_type,

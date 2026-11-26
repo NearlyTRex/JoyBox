@@ -32,6 +32,7 @@ class ManagedFiles(installer.Installer):
 
     # Contents to deploy for a file, given the text shipped in Bootstrap
     def render(self, name, contents):
+        del name
         return contents
 
     # Destination of a file with the home directory expanded

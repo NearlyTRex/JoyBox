@@ -231,7 +231,6 @@ def copy_and_decrypt_files(
                 src = src_path,
                 passphrase = passphrase,
                 verbose = verbose,
-                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if not real_name:
                 logger.log_error("Unable to get embedded filename from '%s'" % src_path)

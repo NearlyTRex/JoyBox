@@ -11,12 +11,15 @@ class ToolBase:
 
     # Setup
     def setup(self, setup_params = None):
+        del setup_params
         return True
 
     # Setup offline
     def setup_offline(self, setup_params = None):
+        del setup_params
         return True
 
     # Configure
     def configure(self, setup_params = None):
+        del setup_params
         return True

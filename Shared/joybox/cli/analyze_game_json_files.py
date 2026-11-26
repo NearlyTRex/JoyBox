@@ -66,7 +66,6 @@ def main():
                         game_subcategory = game_subcategory,
                         game_name = game_name,
                         verbose = args.verbose,
-                        pretend_run = args.pretend_run,
                         exit_on_failure = args.exit_on_failure)
                     game_files = game_info.get_files()
 

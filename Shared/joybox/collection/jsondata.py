@@ -32,7 +32,6 @@ def read_game_json_data(
     game_subcategory,
     game_name,
     verbose = False,
-    pretend_run = False,
     exit_on_failure = False):
 
     # Check categories
@@ -48,11 +47,10 @@ def read_game_json_data(
     json_file_data = serialization.read_json_file(
         src = json_file_path,
         verbose = verbose,
-        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
     # Get platform
-    game_platform = gamenaming.derive_game_platform_from_categories(game_category, game_subcategory)
+    game_platform = gamenaming.derive_game_platform_from_categories(game_subcategory)
 
     # Return json data object
     json_obj = jsondata.JsonData(
@@ -83,7 +81,7 @@ def create_game_json_file(
         return True
 
     # Get platform
-    game_platform = gamenaming.derive_game_platform_from_categories(game_category, game_subcategory)
+    game_platform = gamenaming.derive_game_platform_from_categories(game_subcategory)
 
     # Build json data
     json_file_data = {}
@@ -132,7 +130,7 @@ def update_game_json_file(
         return True
 
     # Get platform
-    game_platform = gamenaming.derive_game_platform_from_categories(game_category, game_subcategory)
+    game_platform = gamenaming.derive_game_platform_from_categories(game_subcategory)
 
     # Get regular name
     game_regular_name = gamenaming.derive_regular_name_from_game_name(game_name)
@@ -149,7 +147,6 @@ def update_game_json_file(
         json_file_data = serialization.read_json_file(
             src = json_file_path,
             verbose = verbose,
-            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
     # Create json data object
@@ -167,7 +164,6 @@ def update_game_json_file(
             src = all_files,
             passphrase = passphrase,
             verbose = verbose,
-            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
     # Get rebased files
@@ -423,7 +419,6 @@ def get_game_json_ignore_entries(
     json_file_data = serialization.read_json_file(
         src = json_file_path,
         verbose = verbose,
-        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     return json_file_data
 
@@ -443,7 +438,7 @@ def add_game_json_ignore_entry(
         return True
 
     # Get platform
-    game_platform = gamenaming.derive_game_platform_from_categories(game_category, game_subcategory)
+    game_platform = gamenaming.derive_game_platform_from_categories(game_subcategory)
 
     # Get json file path
     json_file_path = environment.get_game_json_metadata_ignore_file(game_supercategory, game_category, game_subcategory)
@@ -461,7 +456,6 @@ def add_game_json_ignore_entry(
     json_file_data = serialization.read_json_file(
         src = json_file_path,
         verbose = verbose,
-        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
     # Create json data object

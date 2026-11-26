@@ -44,7 +44,6 @@ def get_remote_json(
     params = None,
     timeout = REQUEST_TIMEOUT_SECONDS,
     verbose = False,
-    pretend_run = False,
     exit_on_failure = False):
     try:
         if verbose:
@@ -70,7 +69,6 @@ def get_remote_html(
     headers = None,
     timeout = REQUEST_TIMEOUT_SECONDS,
     verbose = False,
-    pretend_run = False,
     exit_on_failure = False):
     try:
         if verbose:
@@ -126,7 +124,6 @@ def get_remote_xml(
     headers = None,
     timeout = REQUEST_TIMEOUT_SECONDS,
     verbose = False,
-    pretend_run = False,
     exit_on_failure = False):
     try:
         if verbose:
@@ -450,7 +447,6 @@ def get_github_repository(
     github_repo,
     github_token = None,
     verbose = False,
-    pretend_run = False,
     exit_on_failure = False):
     try:
         import github
@@ -474,7 +470,6 @@ def get_github_repositories(
     exclude_forks = False,
     exclude_private = False,
     verbose = False,
-    pretend_run = False,
     exit_on_failure = False):
     try:
         import github

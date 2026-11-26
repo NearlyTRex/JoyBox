@@ -112,6 +112,7 @@ class OpenAIBackend:
             return []
 
     def context_limit(self, model):
+        del model
         return 0
 
     def stream(self, model, messages, temperature, max_tokens, num_ctx, on_text):
@@ -159,6 +160,7 @@ class ClaudeBackend:
         return [self.model]
 
     def context_limit(self, model):
+        del model
         return 0
 
     def flatten(self, messages):

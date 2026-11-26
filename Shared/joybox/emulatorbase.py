@@ -1,3 +1,6 @@
+# Imports
+from abc import ABC, abstractmethod
+
 # Local imports
 from joybox import programs
 from joybox import environment
@@ -7,7 +10,7 @@ from joybox import logger
 from joybox import platform_info
 
 # Base emulator
-class EmulatorBase:
+class EmulatorBase(ABC):
 
     # Get name
     def get_name(self):
@@ -87,18 +90,22 @@ class EmulatorBase:
 
     # Install add-ons
     def install_addons(self, dlc_dirs = None, update_dirs = None, verbose = False, pretend_run = False, exit_on_failure = False):
+        del dlc_dirs, update_dirs, verbose, pretend_run, exit_on_failure
         return True
 
     # Setup
+    @abstractmethod
     def setup(self, setup_params = None):
-        return True
+        ...
 
     # Setup offline
+    @abstractmethod
     def setup_offline(self, setup_params = None):
-        return True
+        ...
 
     # Configure
     def configure(self, setup_params = None):
+        del setup_params
         return True
 
     # Verify locker system files against their expected md5s
@@ -127,4 +134,5 @@ class EmulatorBase:
         verbose = False,
         pretend_run = False,
         exit_on_failure = False):
+        del game_info, capture_type, capture_file, fullscreen, verbose, pretend_run, exit_on_failure
         return False

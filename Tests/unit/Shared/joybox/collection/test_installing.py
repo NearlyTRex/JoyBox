@@ -3,6 +3,7 @@ import os
 import pytest
 
 # Local imports
+from joybox import config
 from joybox.collection import installing
 from joybox import filebulk
 
@@ -408,6 +409,9 @@ class LocalGameInfo(FakeGameInfo):
     def get_remote_rom_dir(self):
         return "/remote/roms/Game"
 
+    def get_rom_dir(self, locker_type):
+        return "/local/roms/Game" if locker_type == config.LockerType.LOCAL else self.get_remote_rom_dir()
+
     def get_value(self, key):
         return self.values.get(key)
 
@@ -426,6 +430,8 @@ def local(monkeypatch, tmp_path):
         "popups": [],
         "removed": [],
         "synced": [],
+        "sync_lockers": [],
+        "checked": [],
         "transformed": [],
         "copied": [],
         "tmp_count": 0,
@@ -435,9 +441,10 @@ def local(monkeypatch, tmp_path):
         state["tmp_count"] += 1
         return state["tmp_ok"], str(tmp_path / ("tmp%d" % state["tmp_count"]))
 
-    def sync_from_remote_decrypted(src, dest, **kwargs):
+    def sync_from_remote_decrypted(src, dest, locker_type = None, **kwargs):
         state["synced"].append((src, dest))
-        return state["sync_ok"]
+        state["sync_lockers"].append(locker_type)
+        return (True, dest) if state["sync_ok"] else (False, "")
 
     def transform_game_file(source_dir, output_dir, **kwargs):
         state["transformed"].append(source_dir)
@@ -454,7 +461,8 @@ def local(monkeypatch, tmp_path):
         return state["copy_ok"]
 
     monkeypatch.setattr(
-        installing.locker, "does_path_contain_files", lambda path: state["source_available"])
+        installing.locker, "does_path_contain_files",
+        lambda path, locker_type = None: state["checked"].append((path, locker_type)) or state["source_available"])
     monkeypatch.setattr(installing.fileops, "create_temporary_directory", create_temporary_directory)
     monkeypatch.setattr(installing.locker, "sync_from_remote_decrypted", sync_from_remote_decrypted)
     monkeypatch.setattr(installing.transform, "transform_game_file", transform_game_file)
@@ -490,6 +498,26 @@ def test_a_game_without_source_files_is_not_installed(local):
 
     assert installing.install_local_game(a_local_game(local)) is False
     assert local["popups"] == ["Source files unavailable"]
+
+
+def test_the_install_reads_from_the_chosen_locker(local):
+    installing.install_local_game(a_local_game(local), locker_type = config.LockerType.LOCAL)
+
+    assert local["checked"] == [("/local/roms/Game", config.LockerType.LOCAL)]
+    assert [src for src, _ in local["synced"]] == ["/local/roms/Game"]
+    assert local["sync_lockers"] == [config.LockerType.LOCAL]
+
+
+def test_without_a_locker_the_install_reads_from_the_default_remote(local):
+    installing.install_local_game(a_local_game(local))
+
+    assert local["checked"] == [("/remote/roms/Game", None)]
+    assert local["sync_lockers"] == [None]
+
+
+def test_all_lockers_is_not_a_source_to_install_from(local):
+    assert installing.install_local_game(a_local_game(local), locker_type = config.LockerType.ALL) is False
+    assert (local["checked"], local["synced"]) == ([], [])
 
 
 def test_a_failed_temporary_directory_stops_the_install(local):

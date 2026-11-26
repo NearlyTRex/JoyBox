@@ -160,7 +160,6 @@ class Itchio(storebase.StoreBase):
             cached_data = serialization.read_json_file(
                 src = cache_file_purchases,
                 verbose = verbose,
-                pretend_run = pretend_run,
                 exit_on_failure = False)
             if isinstance(cached_data, list) and all(isinstance(entry, dict) for entry in cached_data):
                 return self.make_purchases(cached_data)
@@ -341,7 +340,6 @@ class Itchio(storebase.StoreBase):
                 driver = web_driver,
                 locator = webpage.ElementLocator({"xpath": "//div[@class='toggle_row']//a[contains(text(), 'More information')]"}),
                 verbose = verbose,
-                pretend_run = pretend_run,
                 exit_on_failure = False)
             if element_more_information:
                 webpage.click_element(element_more_information)
@@ -352,7 +350,6 @@ class Itchio(storebase.StoreBase):
                 driver = web_driver,
                 locator = webpage.ElementLocator({"class": "formatted_description"}),
                 verbose = verbose,
-                pretend_run = pretend_run,
                 exit_on_failure = False)
             if element_game_description:
                 raw_game_description = webpage.get_element_text(element_game_description)
@@ -364,7 +361,6 @@ class Itchio(storebase.StoreBase):
                 parent = web_driver,
                 locator = webpage.ElementLocator({"class": "game_info_panel_widget"}),
                 verbose = verbose,
-                pretend_run = pretend_run,
                 exit_on_failure = False)
             if element_game_details:
                 raw_game_details = webpage.get_element_text(element_game_details)
@@ -499,7 +495,6 @@ class Itchio(storebase.StoreBase):
             driver = web_driver,
             locator = webpage.ElementLocator({"class": "browse_game_grid"}),
             verbose = verbose,
-            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if not element_search_result:
             return None

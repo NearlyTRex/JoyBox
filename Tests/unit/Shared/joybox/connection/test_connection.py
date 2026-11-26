@@ -4,8 +4,7 @@ import pytest
 # Local imports
 from joybox import runoptions
 from joybox.connection import connection as connection_module
-
-Connection = connection_module.Connection
+from fakes import StubConnection as Connection
 
 
 ###########################################################

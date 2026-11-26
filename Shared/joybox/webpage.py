@@ -455,7 +455,6 @@ def wait_for_all_elements(
     locators = None,
     wait_time = 1000,
     verbose = False,
-    pretend_run = False,
     exit_on_failure = False):
     try:
         from selenium.webdriver.support.ui import WebDriverWait
@@ -491,7 +490,6 @@ def wait_for_any_element(
     locators = None,
     wait_time = 1000,
     verbose = False,
-    pretend_run = False,
     exit_on_failure = False):
     try:
         from selenium.webdriver.support.ui import WebDriverWait
@@ -544,7 +542,6 @@ def wait_for_element(
     locator,
     wait_time = None,
     verbose = False,
-    pretend_run = False,
     exit_on_failure = False):
     if wait_time is None:
         wait_time = get_element_wait_seconds()
@@ -584,7 +581,6 @@ def get_element(
     locator,
     all_elements = False,
     verbose = False,
-    pretend_run = False,
     exit_on_failure = False):
     try:
         from selenium.common.exceptions import NoSuchElementException, WebDriverException

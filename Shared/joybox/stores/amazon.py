@@ -177,7 +177,6 @@ class Amazon(storebase.StoreBase):
             cached_data = serialization.read_json_file(
                 src = cache_file_purchases,
                 verbose = verbose,
-                pretend_run = pretend_run,
                 exit_on_failure = False)
             if isinstance(cached_data, list) and all(isinstance(entry, dict) for entry in cached_data):
                 cached_purchases = []

@@ -432,7 +432,6 @@ def backup(
     show_progress = False,
     skip_existing = False,
     skip_identical = False,
-    case_sensitive_paths = True,
     upload_encrypted = False,
     verbose = False,
     pretend_run = False,

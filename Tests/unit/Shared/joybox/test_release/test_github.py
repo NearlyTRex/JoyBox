@@ -180,7 +180,7 @@ def test_an_empty_release_list_installs_nothing(github, downloads):
     assert fetch(ends_with = ".AppImage") is False
 
 
-@pytest.mark.parametrize("flag", ["verbose", "pretend_run", "exit_on_failure"])
+@pytest.mark.parametrize("flag", ["verbose", "exit_on_failure"])
 def test_run_flags_reach_the_api_call_and_the_download(github, downloads, monkeypatch, flag):
     asked = []
     monkeypatch.setattr(
@@ -190,6 +190,17 @@ def test_run_flags_reach_the_api_call_and_the_download(github, downloads, monkey
 
     assert asked[0][flag] is True
     assert downloads[0][flag] is True
+
+
+def test_a_pretend_run_reaches_the_download_but_not_the_release_lookup(github, downloads, monkeypatch):
+    asked = []
+    monkeypatch.setattr(
+        release.network, "get_remote_json",
+        lambda url, **kwargs: asked.append(kwargs) or [release_with("tool.AppImage")])
+    fetch(ends_with = ".AppImage", pretend_run = True)
+
+    assert "pretend_run" not in asked[0]
+    assert downloads[0]["pretend_run"] is True
 
 
 ###########################################################

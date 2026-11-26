@@ -41,7 +41,7 @@ def create_game_metadata_entry(
         return True
 
     # Get platform
-    game_platform = gamenaming.derive_game_platform_from_categories(game_category, game_subcategory)
+    game_platform = gamenaming.derive_game_platform_from_categories(game_subcategory)
 
     # Get metadata file path
     metadata_file_path = environment.get_game_metadata_file(game_category, game_subcategory)
@@ -52,7 +52,6 @@ def create_game_metadata_entry(
         metadata_obj.import_from_metadata_file(
             metadata_file = metadata_file_path,
             verbose = verbose,
-            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
     if metadata_obj.has_game(game_platform, game_name):
         return True
@@ -117,7 +116,7 @@ def update_game_metadata_entry(
         return True
 
     # Get platform
-    game_platform = gamenaming.derive_game_platform_from_categories(game_category, game_subcategory)
+    game_platform = gamenaming.derive_game_platform_from_categories(game_subcategory)
 
     # Get metadata file path
     metadata_file_path = environment.get_game_metadata_file(game_category, game_subcategory)
@@ -128,7 +127,6 @@ def update_game_metadata_entry(
         metadata_obj.import_from_metadata_file(
             metadata_file = metadata_file_path,
             verbose = verbose,
-            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
     if not metadata_obj.has_game(game_platform, game_name):
         return True
@@ -140,7 +138,6 @@ def update_game_metadata_entry(
         game_subcategory = game_subcategory,
         game_name = game_name,
         verbose = verbose,
-        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
     # Get game entry

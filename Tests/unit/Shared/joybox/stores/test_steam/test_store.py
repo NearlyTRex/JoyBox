@@ -1,4 +1,5 @@
 # Imports
+import inspect
 import json
 import os
 import time
@@ -432,7 +433,10 @@ def depot(steam_store, tools, recording_command, monkeypatch, tmp_path):
         return (True, str(state["temp"]))
     monkeypatch.setattr(steam.fileops, "create_temporary_directory", create_temporary_directory)
 
+    real_archive_folder = inspect.signature(steam.backup.archive_folder)
+
     def archive_folder(input_path, output_path, **kwargs):
+        real_archive_folder.bind(input_path, output_path, **kwargs)
         state["archived"].append((input_path, kwargs))
         if state["archive_ok"]:
             os.makedirs(output_path, exist_ok = True)
@@ -451,7 +455,7 @@ def test_a_download_is_archived_and_its_temp_removed(steam_store, depot, recordi
     assert recording_command.only() == [
         "/tools/depot", "-app", "220", "-os", "linux", "-osarch", "64", "-dir", str(depot["temp"]),
         "-username", "player", "-remember-password"]
-    assert depot["archived"][0][1]["excludes"] == [".DepotDownloader"]
+    assert depot["archived"][0][1]["exclude_paths"] == [".DepotDownloader"]
     assert not depot["temp"].exists()
 
 

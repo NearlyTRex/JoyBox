@@ -262,12 +262,12 @@ def test_a_single_archive_is_checked_for(tmp_path):
     target = tmp_path / "Game.7z"
     target.write_text("archive")
 
-    assert archive.check_archive_compression_output_files(str(target), None, None) is True
+    assert archive.check_archive_compression_output_files(str(target), None) is True
 
 
 def test_a_missing_archive_is_a_failure(tmp_path):
     assert archive.check_archive_compression_output_files(
-        str(tmp_path / "absent.7z"), None, None) is False
+        str(tmp_path / "absent.7z"), None) is False
 
 
 def test_every_volume_is_checked_for(tmp_path):
@@ -275,19 +275,19 @@ def test_every_volume_is_checked_for(tmp_path):
     for index in [1, 2, 3]:
         (tmp_path / ("Game.7z.%03d" % index)).write_text("volume")
 
-    assert archive.check_archive_compression_output_files(str(target), None, "4g") is True
+    assert archive.check_archive_compression_output_files(str(target), "4g") is True
 
 
 def test_a_split_archive_with_no_volumes_is_a_failure(tmp_path):
     assert archive.check_archive_compression_output_files(
-        str(tmp_path / "Game.7z"), None, "4g") is False
+        str(tmp_path / "Game.7z"), "4g") is False
 
 
 def test_volumes_are_searched_up_to_the_last_numbered_one(monkeypatch):
     seen = []
     monkeypatch.setattr(archive.os.path, "exists", lambda path: seen.append(path) or True)
 
-    assert archive.check_archive_compression_output_files("/out/Game.7z", config.ArchiveFileType.SEVENZIP, "1g")
+    assert archive.check_archive_compression_output_files("/out/Game.7z", "1g")
     assert "/out/Game.7z.998" in seen
     assert "/out/Game.7z.999" not in seen
 
@@ -298,7 +298,7 @@ def test_a_lone_volume_loses_its_numbering(tmp_path):
     target = tmp_path / "Game.7z"
     (tmp_path / "Game.7z.001").write_text("volume")
 
-    assert archive.check_archive_compression_output_files(str(target), None, "4g") is True
+    assert archive.check_archive_compression_output_files(str(target), "4g") is True
     assert target.is_file()
     assert not (tmp_path / "Game.7z.001").exists()
 

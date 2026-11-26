@@ -137,7 +137,6 @@ class Metadata:
     def verify_files(
         self,
         verbose = False,
-        pretend_run = False,
         exit_on_failure = False):
         for game_platform in self.get_sorted_platforms():
             for game_name in self.get_sorted_names(game_platform):
@@ -152,14 +151,15 @@ class Metadata:
                 file_path_real = paths.join_paths(environment.get_game_json_metadata_root_dir(), file_path_relative)
                 if not paths.does_path_exist(file_path_real):
                     logger.log_error("File not found:\n%s" % file_path_relative)
-                    logger.log_error("Verification of '%s - %s' failed" % (game_platform, game_name), quit_program = True)
+                    logger.log_error("Verification of '%s - %s' failed" % (game_platform, game_name), quit_program = exit_on_failure)
+                    return False
+        return True
 
     # Import from pegasus file
     def import_from_pegasus_file(
         self,
         pegasus_file,
         verbose = False,
-        pretend_run = False,
         exit_on_failure = False):
         if paths.does_path_exist(pegasus_file):
             data = serialization.read_text_file(pegasus_file, verbose = verbose, exit_on_failure = exit_on_failure)
@@ -285,13 +285,11 @@ class Metadata:
         metadata_file,
         metadata_format = config.MetadataFormatType.PEGASUS,
         verbose = False,
-        pretend_run = False,
         exit_on_failure = False):
         if metadata_format == config.MetadataFormatType.PEGASUS:
             self.import_from_pegasus_file(
                 pegasus_file = metadata_file,
                 verbose = verbose,
-                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
 
     # Export to pegasus file

@@ -26,15 +26,16 @@ class Id3TagsMixin:
 
         # Check file exists
         if not paths.is_path_file(audio_file):
-            logger.log_error(f"Audio file not found: {audio_file}")
+            logger.log_error(f"Audio file not found: {audio_file}", quit_program = exit_on_failure)
             return None
 
         # Read tags from audio file
-        logger.log_info(f"Reading ID3 tags from {audio_file}")
+        if verbose:
+            logger.log_info(f"Reading ID3 tags from {audio_file}")
         try:
             audio = self.mp3_class(audio_file, ID3 = self.id3_class)
         except Exception as e:
-            logger.log_error(f"Failed to load MP3 file: {e}")
+            logger.log_error(f"Failed to load MP3 file: {e}", quit_program = exit_on_failure)
             return None
         if audio.tags is None:
             return {}
@@ -110,15 +111,16 @@ class Id3TagsMixin:
 
         # Check file exists
         if not paths.is_path_file(audio_file):
-            logger.log_error(f"Audio file not found: {audio_file}")
+            logger.log_error(f"Audio file not found: {audio_file}", quit_program = exit_on_failure)
             return False
 
         # Load audio file
-        logger.log_info(f"Setting ID3 tags on {audio_file}")
+        if verbose:
+            logger.log_info(f"Setting ID3 tags on {audio_file}")
         try:
             audio = self.mp3_class(audio_file, ID3 = self.id3_class)
         except Exception as e:
-            logger.log_error(f"Failed to load MP3 file: {e}")
+            logger.log_error(f"Failed to load MP3 file: {e}", quit_program = exit_on_failure)
             return False
 
         # Add ID3 tags if they don"t exist
@@ -169,15 +171,16 @@ class Id3TagsMixin:
 
         # Check file exists
         if not paths.is_path_file(audio_file):
-            logger.log_error(f"Audio file not found: {audio_file}")
+            logger.log_error(f"Audio file not found: {audio_file}", quit_program = exit_on_failure)
             return False
 
         # Load audio file
-        logger.log_info(f"Removing ID3 tags from {audio_file}")
+        if verbose:
+            logger.log_info(f"Removing ID3 tags from {audio_file}")
         try:
             audio = self.mp3_class(audio_file, ID3 = self.id3_class)
         except Exception as e:
-            logger.log_error(f"Failed to load MP3 file: {e}")
+            logger.log_error(f"Failed to load MP3 file: {e}", quit_program = exit_on_failure)
             return False
 
         # No tags to remove

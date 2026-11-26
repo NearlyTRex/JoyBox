@@ -125,18 +125,23 @@ def install_local_game(
     pretend_run = False,
     exit_on_failure = False):
 
+    # Installing reads from one locker
+    if locker_type == config.LockerType.ALL:
+        logger.log_error("Installing reads from one locker; choose one instead of %s" % locker_type)
+        return False
+
     # Get game info
     game_name = game_info.get_name()
     game_platform = game_info.get_platform()
     game_artwork = game_info.get_boxfront_asset()
-    game_remote_rom_dir = game_info.get_remote_rom_dir()
+    game_rom_dir = game_info.get_rom_dir(locker_type)
 
     # Check if already installed
     if is_local_game_installed(game_info):
         return True
 
     # Check if source files are available
-    if not locker.does_path_contain_files(game_remote_rom_dir):
+    if not locker.does_path_contain_files(game_rom_dir, locker_type = locker_type):
         gui.display_error_popup(
             title_text = "Source files unavailable",
             message_text = "Source files are not available\n%s\n%s" % (game_name, game_platform))
@@ -148,9 +153,10 @@ def install_local_game(
             return False
 
         # Download files
-        success = locker.sync_from_remote_decrypted(
-            src = game_remote_rom_dir,
+        success, _ = locker.sync_from_remote_decrypted(
+            src = game_rom_dir,
             dest = tmp_dir_result,
+            locker_type = locker_type,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)

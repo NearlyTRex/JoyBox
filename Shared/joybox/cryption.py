@@ -43,7 +43,6 @@ def get_embedded_filename(
     src,
     passphrase,
     verbose = False,
-    pretend_run = False,
     exit_on_failure = False):
 
     # Check passphrase
@@ -110,7 +109,6 @@ def get_embedded_file_info(
         src = src,
         passphrase = passphrase,
         verbose = verbose,
-        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if not embedded_filename:
         return None
@@ -136,7 +134,6 @@ def get_real_file_path(
     src,
     passphrase,
     verbose = False,
-    pretend_run = False,
     exit_on_failure = False):
     if not is_file_encrypted(src):
         return src
@@ -145,7 +142,6 @@ def get_real_file_path(
         src = src,
         passphrase = passphrase,
         verbose = verbose,
-        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if real_name:
         return paths.join_paths(real_dir, real_name)
@@ -156,7 +152,6 @@ def get_real_file_paths(
     src,
     passphrase,
     verbose = False,
-    pretend_run = False,
     exit_on_failure = False):
     real_paths = []
     if isinstance(src, list):
@@ -165,7 +160,6 @@ def get_real_file_paths(
                 src = source_file,
                 passphrase = passphrase,
                 verbose = verbose,
-                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if real_path:
                 real_paths.append(real_path)
@@ -278,7 +272,6 @@ def decrypt_file(
             src = src,
             passphrase = passphrase,
             verbose = verbose,
-            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
     if not paths.is_path_valid(output_file):
         return False
@@ -379,7 +372,6 @@ def decrypt_files(
             src = file,
             passphrase = passphrase,
             verbose = verbose,
-            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if not output_file:
             logger.log_error("Unable to read the embedded name of '%s'" % file)

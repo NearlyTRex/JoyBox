@@ -6,6 +6,7 @@ from joybox import config
 from joybox import containers
 from joybox import datautils
 from joybox import image
+from joybox import logger
 from joybox import modules
 from joybox import network
 from joybox import programs
@@ -53,7 +54,6 @@ def get_steam_trailer(
 def find_steam_appid_matches(
     search_name,
     verbose = False,
-    pretend_run = False,
     exit_on_failure = False):
 
     # Load appid list
@@ -61,7 +61,6 @@ def find_steam_appid_matches(
         src = programs.get_tool_path_config_value("SteamAppIDList", "csv"),
         headers = [config.SEARCH_RESULT_KEY_ID, config.SEARCH_RESULT_KEY_TITLE],
         verbose = verbose,
-        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
     # Build list of matches
@@ -78,14 +77,12 @@ def find_steam_appid_match(
     search_name,
     only_active_pages = True,
     verbose = False,
-    pretend_run = False,
     exit_on_failure = False):
 
     # Get relevant matches
     search_results = find_steam_appid_matches(
         search_name = search_name,
         verbose = verbose,
-        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if len(search_results) == 0:
         return None
@@ -111,7 +108,6 @@ def find_steam_assets(
     search_result = find_steam_appid_match(
         search_name = search_name,
         verbose = verbose,
-        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if not search_result:
         return []
@@ -139,18 +135,25 @@ def find_steam_griddb_covers(
     image_dimensions = None,
     image_types = None,
     verbose = False,
-    pretend_run = False,
     exit_on_failure = False):
 
     # Get authorization info
     steamgriddb_api_key = settings.get_value("UserData.Scraping", "steamgriddb_api_key")
+    if not steamgriddb_api_key:
+        logger.log_error("No steamgriddb_api_key in UserData.Scraping", quit_program = exit_on_failure)
+        return []
 
     # Import steamgrid
     steamgrid = modules.import_python_module_package(
         module_path = programs.get_tool_path_config_value("PySteamGridDB", "package_dir"),
         module_name = programs.get_tool_config_value("PySteamGridDB", "package_name"))
+    if not steamgrid:
+        logger.log_error("PySteamGridDB is not installed", quit_program = exit_on_failure)
+        return []
 
     # Initialize client
+    if verbose:
+        logger.log_info("Searching SteamGridDB for '%s'" % search_name)
     sgdb = steamgrid.SteamGridDB(steamgriddb_api_key)
 
     # Build search results
@@ -200,13 +203,12 @@ def find_steam_griddb_covers(
     return sorted(search_results, key=lambda x: x.get_relevance(), reverse = True)
 
 # Answer the store page's age gate, when it shows one
-def answer_steam_age_gate(web_driver, verbose = False, pretend_run = False):
+def answer_steam_age_gate(web_driver, verbose = False):
     element_age_gate = webpage.wait_for_element(
         driver = web_driver,
         locator = webpage.ElementLocator({"id": "app_agegate"}),
         wait_time = 5,
         verbose = verbose,
-        pretend_run = pretend_run,
         exit_on_failure = False)
     if not element_age_gate:
         return
@@ -217,7 +219,6 @@ def answer_steam_age_gate(web_driver, verbose = False, pretend_run = False):
             parent = element_age_gate,
             locator = webpage.ElementLocator({"id": selector_id}),
             verbose = verbose,
-            pretend_run = pretend_run,
             exit_on_failure = False)
         for selector_id in ("ageDay", "ageMonth", "ageYear")]
     if not all(selectors):
@@ -228,7 +229,6 @@ def answer_steam_age_gate(web_driver, verbose = False, pretend_run = False):
         parent = element_age_gate,
         locator = webpage.ElementLocator({"id": "view_product_page_btn"}),
         verbose = verbose,
-        pretend_run = pretend_run,
         exit_on_failure = False)
     if confirm_button:
         webpage.click_element(confirm_button)

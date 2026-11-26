@@ -80,7 +80,6 @@ def load_cookie(
         cookie_list = serialization.read_json_file(
             src = path,
             verbose = verbose,
-            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if not isinstance(cookie_list, list):
             if verbose:
@@ -146,7 +145,6 @@ def login_cookie_website(
         locator = locator,
         wait_time = wait_time,
         verbose = verbose,
-        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
     if not login_check:
         return False

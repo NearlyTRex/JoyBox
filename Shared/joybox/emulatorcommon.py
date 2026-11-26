@@ -76,6 +76,7 @@ def simple_launch(
         cmd = real_launch_cmd,
         options = launch_options,
         capture_type = capture_type,
+        capture_file = capture_file,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)

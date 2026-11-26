@@ -32,7 +32,6 @@ class GameInfo:
         game_name = None,
         remote_locker_type = None,
         verbose = False,
-        pretend_run = False,
         exit_on_failure = False):
 
         # Json info
@@ -62,7 +61,6 @@ class GameInfo:
             json_file = self.json_file,
             remote_locker_type = remote_locker_type,
             verbose = verbose,
-            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
     # Parse game json
@@ -71,14 +69,12 @@ class GameInfo:
         json_file,
         remote_locker_type = None,
         verbose = False,
-        pretend_run = False,
         exit_on_failure = False):
 
         # Read json data
         self.json_data = jsondata.JsonData(serialization.read_json_file(
             src = json_file,
             verbose = verbose,
-            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure))
 
         # Save json file
@@ -93,7 +89,7 @@ class GameInfo:
         self.game_supercategory, self.game_category, self.game_subcategory = derive_game_categories_from_file(json_file)
         if None in (self.game_supercategory, self.game_category, self.game_subcategory):
             raise ValueError("Unable to derive game categories from %s" % json_file)
-        self.game_platform = gamenaming.derive_game_platform_from_categories(self.game_category, self.game_subcategory)
+        self.game_platform = gamenaming.derive_game_platform_from_categories(self.game_subcategory)
         validation.assert_is_not_none(self.game_supercategory, "game_supercategory")
         validation.assert_is_not_none(self.game_category, "game_category")
         validation.assert_is_not_none(self.game_subcategory, "game_subcategory")
@@ -148,13 +144,11 @@ class GameInfo:
             self.game_name,
             remote_locker_type)
         local_save_dir = environment.get_locker_gaming_save_dir(
-            self.game_supercategory,
             self.game_category,
             self.game_subcategory,
             self.game_name,
             config.LockerType.LOCAL)
         remote_save_dir = environment.get_locker_gaming_save_dir(
-            self.game_supercategory,
             self.game_category,
             self.game_subcategory,
             self.game_name,
@@ -182,12 +176,10 @@ class GameInfo:
     def read_raw_json_data(
         self,
         verbose = False,
-        pretend_run = False,
         exit_on_failure = False):
         return serialization.read_json_file(
             src = self.get_json_file(),
             verbose = verbose,
-            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
     # Write raw json data
@@ -209,12 +201,10 @@ class GameInfo:
     def read_wrapped_json_data(
         self,
         verbose = False,
-        pretend_run = False,
         exit_on_failure = False):
         return jsondata.JsonData(
             json_data = self.read_raw_json_data(
                 verbose = verbose,
-                pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure),
             json_platform = self.get_platform())
 
@@ -241,7 +231,6 @@ class GameInfo:
         exit_on_failure = False):
         json_wrapper = self.read_wrapped_json_data(
             verbose = verbose,
-            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         for key in config.persistent_json_keys:
             value = self.get_value(key)

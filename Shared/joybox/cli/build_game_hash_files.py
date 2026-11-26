@@ -91,7 +91,6 @@ def main():
         locker_type = args.locker_type,
         locker_base_dir = locker_base_dir,
         verbose = args.verbose,
-        pretend_run = args.pretend_run,
         exit_on_failure = args.exit_on_failure):
         if parser.get_input_path(check_exists = False):
             game_root = parser.get_input_path(check_exists = False)

@@ -260,7 +260,6 @@ class Steam(storebase.StoreBase):
             cached_data = serialization.read_json_file(
                 src = cache_file_purchases,
                 verbose = verbose,
-                pretend_run = pretend_run,
                 exit_on_failure = False)
             if isinstance(cached_data, list) and all(isinstance(entry, dict) for entry in cached_data):
                 cached_purchases = []
@@ -290,7 +289,6 @@ class Steam(storebase.StoreBase):
             url = steam_url,
             params = steam_params,
             verbose = verbose,
-            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if not steam_json:
             logger.log_error("Unable to find steam release information from '%s'" % steam_url)
@@ -365,10 +363,7 @@ class Steam(storebase.StoreBase):
 
         # Augment by manifest
         manifest_entry = manifest.get_manifest_instance().find_entry_by_steamid(
-            steamid = identifier,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
+            steamid = identifier)
         if manifest_entry:
             base_path = None
             if json_data.has_key(config.JSON_KEY_STORE_INSTALLDIR):
@@ -543,14 +538,13 @@ class Steam(storebase.StoreBase):
             metadata_entry = metadataentry.MetadataEntry()
 
             # Answer the age gate
-            steamlookups.answer_steam_age_gate(web_driver, verbose = verbose, pretend_run = pretend_run)
+            steamlookups.answer_steam_age_gate(web_driver, verbose = verbose)
 
             # Look for game description
             element_game_description = webpage.wait_for_element(
                 driver = web_driver,
                 locator = webpage.ElementLocator({"id": "aboutThisGame"}),
                 verbose = verbose,
-                pretend_run = pretend_run,
                 exit_on_failure = False)
             if element_game_description:
                 raw_game_description = webpage.get_element_children_text(element_game_description)
@@ -566,7 +560,6 @@ class Steam(storebase.StoreBase):
                 parent = web_driver,
                 locator = webpage.ElementLocator({"id": "genresAndManufacturer"}),
                 verbose = verbose,
-                pretend_run = pretend_run,
                 exit_on_failure = False)
             if element_game_details:
 
@@ -798,7 +791,7 @@ class Steam(storebase.StoreBase):
                 input_path = tmp_dir_result,
                 output_path = output_dir,
                 output_name = output_name,
-                excludes = [".DepotDownloader"],
+                exclude_paths = [".DepotDownloader"],
                 clean_output = clean_output,
                 show_progress = show_progress,
                 skip_existing = skip_existing,

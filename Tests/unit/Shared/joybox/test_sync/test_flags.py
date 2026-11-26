@@ -3,7 +3,7 @@ import pytest
 
 # Local imports
 from joybox import config, sync
-from sync_helpers import REMOTE, REMOTE_TYPE
+from sync_helpers import REMOTE_TYPE
 
 
 ###########################################################
@@ -11,7 +11,7 @@ from sync_helpers import REMOTE, REMOTE_TYPE
 ###########################################################
 
 def base_flags():
-    return sync.get_common_remote_flags("Remote", config.RemoteType.SFTP, None)
+    return sync.get_common_remote_flags(config.RemoteType.SFTP, None)
 
 
 def test_the_common_flags_are_always_present():
@@ -30,20 +30,20 @@ def test_transfers_are_serialized():
 
 @pytest.mark.parametrize("action_type", config.RemoteActionSyncType.members())
 def test_a_sync_action_tracks_renames(action_type):
-    flags = sync.get_common_remote_flags("Remote", config.RemoteType.SFTP, action_type)
+    flags = sync.get_common_remote_flags(config.RemoteType.SFTP, action_type)
 
     assert "--track-renames" in flags
 
 
 @pytest.mark.parametrize("action_type", config.RemoteActionChangeType.members())
 def test_a_change_action_creates_empty_directories(action_type):
-    flags = sync.get_common_remote_flags("Remote", config.RemoteType.SFTP, action_type)
+    flags = sync.get_common_remote_flags(config.RemoteType.SFTP, action_type)
 
     assert "--create-empty-src-dirs" in flags
 
 
 def test_a_drive_remote_gets_its_own_flags():
-    flags = sync.get_common_remote_flags("Remote", config.RemoteType.DRIVE, None)
+    flags = sync.get_common_remote_flags(config.RemoteType.DRIVE, None)
 
     missing = [
         flag for flag in ["--drive-acknowledge-abuse", "--drive-stop-on-upload-limit",
@@ -54,7 +54,7 @@ def test_a_drive_remote_gets_its_own_flags():
 
 
 def test_a_non_drive_remote_gets_no_drive_flags():
-    flags = sync.get_common_remote_flags("Remote", config.RemoteType.SFTP, None)
+    flags = sync.get_common_remote_flags(config.RemoteType.SFTP, None)
 
     assert not any(flag.startswith("--drive-") for flag in flags)
 
@@ -99,7 +99,7 @@ def test_exclude_flags_stay_paired():
 
 def flags_for(action_type = None, remote_type = None):
     return sync.get_common_remote_flags(
-        REMOTE, remote_type or REMOTE_TYPE, action_type)
+        remote_type or REMOTE_TYPE, action_type)
 
 
 def test_transfers_stay_serial():
@@ -116,7 +116,7 @@ def test_requests_are_rate_limited():
 
 
 def test_the_rate_limit_and_transfers_can_be_given():
-    built = sync.get_common_remote_flags(REMOTE, REMOTE_TYPE, None, tps_limit = 4, transfers = 2)
+    built = sync.get_common_remote_flags(REMOTE_TYPE, None, tps_limit = 4, transfers = 2)
 
     assert built[built.index("--tpslimit") + 1] == "4"
     assert built[built.index("--transfers") + 1] == "2"

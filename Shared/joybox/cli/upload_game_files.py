@@ -92,7 +92,6 @@ def main():
         generation_mode = args.generation_mode,
         locker_type = args.source_locker,
         verbose = args.verbose,
-        pretend_run = args.pretend_run,
         exit_on_failure = args.exit_on_failure):
         game_root = custom_input_path or environment.get_locker_gaming_files_dir(
             game_info.get_supercategory(),

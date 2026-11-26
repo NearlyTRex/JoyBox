@@ -296,7 +296,6 @@ class GOG(storebase.StoreBase):
             gog_json = serialization.read_json_file(
                 src = cache_file_manifest,
                 verbose = verbose,
-                pretend_run = pretend_run,
                 exit_on_failure = False)
             if not isinstance(gog_json, list) or not all(isinstance(entry, dict) for entry in gog_json):
                 if verbose:
@@ -339,7 +338,6 @@ class GOG(storebase.StoreBase):
                 gog_json = serialization.read_json_file(
                     src = tmp_file_manifest,
                     verbose = verbose,
-                    pretend_run = pretend_run,
                     exit_on_failure = False)
                 if not isinstance(gog_json, list) or not all(isinstance(entry, dict) for entry in gog_json):
                     logger.log_error("Unable to parse gog game list")
@@ -397,10 +395,7 @@ class GOG(storebase.StoreBase):
 
         # Augment by manifest
         manifest_entry = manifest.get_manifest_instance().find_entry_by_gogid(
-            gogid = identifier,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
+            gogid = identifier)
         if manifest_entry:
             manifest_paths = manifest_entry.get_paths(config.TOKEN_GAME_INSTALL_DIR)
             game_paths = list(set(game_paths).union(manifest_paths))
@@ -439,7 +434,6 @@ class GOG(storebase.StoreBase):
         gog_json = network.get_remote_json(
             url = gog_url,
             verbose = verbose,
-            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if not gog_json:
             logger.log_error("Unable to find gog release information from '%s'" % gog_url)
@@ -528,7 +522,6 @@ class GOG(storebase.StoreBase):
                 driver = web_driver,
                 locator = webpage.ElementLocator({"class": "description"}),
                 verbose = verbose,
-                pretend_run = pretend_run,
                 exit_on_failure = False)
             if element_game_description:
                 raw_game_description = webpage.get_element_children_text(element_game_description)
@@ -541,7 +534,6 @@ class GOG(storebase.StoreBase):
                 locator = webpage.ElementLocator({"class": "details__row"}),
                 all_elements = True,
                 verbose = verbose,
-                pretend_run = pretend_run,
                 exit_on_failure = False)
             if elements_details:
                 for elements_detail in elements_details:

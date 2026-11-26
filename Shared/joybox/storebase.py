@@ -237,6 +237,7 @@ class StoreBase:
         verbose = False,
         pretend_run = False,
         exit_on_failure = False):
+        del verbose, pretend_run, exit_on_failure
         return False
 
     # Web connect
@@ -310,7 +311,7 @@ class StoreBase:
         verbose = False,
         pretend_run = False,
         exit_on_failure = False):
-        return None
+        del identifier, verbose, pretend_run, exit_on_failure
 
     ############################################################
     # Purchases
@@ -328,6 +329,7 @@ class StoreBase:
         verbose = False,
         pretend_run = False,
         exit_on_failure = False):
+        del verbose, pretend_run, exit_on_failure
         return []
 
     ############################################################
@@ -352,15 +354,13 @@ class StoreBase:
         exit_on_failure = False):
 
         # Get existing paths and keys
+        del verbose, pretend_run, exit_on_failure
         game_paths = list(json_data.get_value(config.JSON_KEY_STORE_PATHS))
         game_keys = list(json_data.get_value(config.JSON_KEY_STORE_KEYS))
 
         # Augment by manifest
         manifest_entry = manifest.get_manifest_instance().find_entry_by_name(
-            name = identifier,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
+            name = identifier)
         if manifest_entry:
             base_path = config.TOKEN_GAME_INSTALL_DIR
             manifest_paths = manifest_entry.get_paths(base_path)
@@ -413,6 +413,7 @@ class StoreBase:
         exit_on_failure = False):
 
         # Check identifier
+        del branch
         if not self.is_valid_info_identifier(identifier):
             logger.log_warning("Info identifier '%s' was not valid" % identifier)
             return None
@@ -492,6 +493,7 @@ class StoreBase:
         verbose = False,
         pretend_run = False,
         exit_on_failure = False):
+        del identifier, verbose, pretend_run, exit_on_failure
         return False
 
     # Install
@@ -501,6 +503,7 @@ class StoreBase:
         verbose = False,
         pretend_run = False,
         exit_on_failure = False):
+        del identifier, verbose, pretend_run, exit_on_failure
         return False
 
     # Uninstall
@@ -510,6 +513,7 @@ class StoreBase:
         verbose = False,
         pretend_run = False,
         exit_on_failure = False):
+        del identifier, verbose, pretend_run, exit_on_failure
         return False
 
     ############################################################
@@ -523,6 +527,7 @@ class StoreBase:
         verbose = False,
         pretend_run = False,
         exit_on_failure = False):
+        del identifier, verbose, pretend_run, exit_on_failure
         return False
 
     ############################################################
@@ -543,6 +548,8 @@ class StoreBase:
         verbose = False,
         pretend_run = False,
         exit_on_failure = False):
+        del (identifier, output_dir, output_name, branch, clean_output, show_progress,
+            skip_existing, skip_identical, verbose, pretend_run, exit_on_failure)
         return False
 
     ############################################################
@@ -553,6 +560,7 @@ class StoreBase:
     def build_path_translation_map(self, appid = None, appname = None):
 
         # Build translation map
+        del appid, appname
         translation_map = {}
 
         # Add registry dir

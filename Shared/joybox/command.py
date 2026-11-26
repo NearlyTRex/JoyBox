@@ -36,9 +36,7 @@ def is_prefix_command(cmd):
 # Setup powershell command
 def setup_powershell_command(
     cmd,
-    options = create_command_options(),
-    verbose = False,
-    exit_on_failure = False):
+    options = create_command_options()):
 
     # Copy params
     new_cmd = cmd
@@ -54,9 +52,7 @@ def setup_powershell_command(
 # Setup appimage command
 def setup_appimage_command(
     cmd,
-    options = create_command_options(),
-    verbose = False,
-    exit_on_failure = False):
+    options = create_command_options()):
 
     # Copy params
     new_cmd = cmd
@@ -125,17 +121,13 @@ def preprocess_command(
     if is_powershell_command(cmd) or options.force_powershell():
         cmd, options = setup_powershell_command(
             cmd = cmd,
-            options = options,
-            verbose = verbose,
-            exit_on_failure = exit_on_failure)
+            options = options)
 
     # Preprocess for appimages
     if is_appimage_command(cmd) or options.force_appimage():
         cmd, options = setup_appimage_command(
             cmd = cmd,
-            options = options,
-            verbose = verbose,
-            exit_on_failure = exit_on_failure)
+            options = options)
 
     # Preprocess for prefix
     if is_prefix_command(cmd) or options.force_prefix():

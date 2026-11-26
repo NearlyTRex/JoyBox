@@ -113,7 +113,6 @@ def main():
             archive.extract_archive(
                 archive_file = current_file,
                 extract_dir = extracted_dir,
-                work_dir = current_dir,
                 delete_original = args.delete_originals,
                 verbose = args.verbose,
                 pretend_run = args.pretend_run,

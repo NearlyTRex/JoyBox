@@ -146,6 +146,7 @@ class Installer:
         return False
 
     def backup(self, tag = ""):
+        del tag
         return True
 
     def restore(self):

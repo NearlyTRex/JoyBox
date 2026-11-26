@@ -82,7 +82,6 @@ def download_asset(
 # Clean asset
 def clean_asset(
     asset_file,
-    asset_type,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):

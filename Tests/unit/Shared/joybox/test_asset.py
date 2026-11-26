@@ -167,20 +167,20 @@ def test_a_failed_download_is_reported(monkeypatch):
 ###########################################################
 
 def test_a_clean_asset_reports_success(installed, recording_command):
-    assert asset.clean_asset("/assets/art.jpg", config.AssetType.BOXFRONT) is True
+    assert asset.clean_asset("/assets/art.jpg") is True
 
 
 def test_a_failed_exif_clean_fails_the_asset(installed, monkeypatch):
     from fakes import RecordingCommand
     RecordingCommand(monkeypatch, returncode = 1)
 
-    assert asset.clean_asset("/assets/art.jpg", config.AssetType.BOXFRONT) is False
+    assert asset.clean_asset("/assets/art.jpg") is False
 
 
 @pytest.mark.parametrize("asset_type", config.AssetType.members())
 def test_every_asset_type_is_cleaned(installed, recording_command, asset_type):
     # Exif is not only an image concern; a scraped video carries it too.
-    assert asset.clean_asset("/assets/file", asset_type) is True
+    assert asset.clean_asset("/assets/file") is True
     assert recording_command.ran() is True
 
 

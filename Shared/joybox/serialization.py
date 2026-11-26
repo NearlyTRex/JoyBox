@@ -164,7 +164,7 @@ def write_text_file(src, contents, encoding = "utf-8", newline = "\n", verbose =
 ###########################################################
 
 # Parse json string
-def parse_json_string(string, verbose = False, pretend_run = False, exit_on_failure = False):
+def parse_json_string(string, verbose = False, exit_on_failure = False):
     try:
         if verbose:
             logger.log_info("Parsing %s" % string)
@@ -186,7 +186,7 @@ def parse_json_or_none(string):
         return None
 
 # Read json file
-def read_json_file(src, verbose = False, pretend_run = False, exit_on_failure = False):
+def read_json_file(src, verbose = False, exit_on_failure = False):
     try:
         if not src.endswith(".json"):
             return {}
@@ -266,13 +266,12 @@ def clean_json_file(src, sort_keys = False, remove_empty_values = False, verbose
         return False
 
 # Search json files
-def search_json_files(src, search_values = (), search_keys = None, verbose = False, pretend_run = False, exit_on_failure = False):
+def search_json_files(src, search_values = (), search_keys = None, verbose = False, exit_on_failure = False):
     found_files = []
     for json_file in paths.build_file_list_by_extensions(src, extensions = [".json"]):
         json_data = read_json_file(
             src = json_file,
             verbose = verbose,
-            pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         for search_value in search_values:
             if search_value:
@@ -289,7 +288,7 @@ def search_json_files(src, search_values = (), search_keys = None, verbose = Fal
 ###########################################################
 
 # Read yaml file
-def read_yaml_file(src, verbose = False, pretend_run = False, exit_on_failure = False):
+def read_yaml_file(src, verbose = False, exit_on_failure = False):
     try:
         import yaml
         if not src.endswith(".yaml"):
@@ -315,7 +314,7 @@ def read_yaml_file(src, verbose = False, pretend_run = False, exit_on_failure = 
 ###########################################################
 
 # Read csv file
-def read_csv_file(src, headers, verbose = False, pretend_run = False, exit_on_failure = False):
+def read_csv_file(src, headers, verbose = False, exit_on_failure = False):
     try:
         if not src.endswith(".csv"):
             return []

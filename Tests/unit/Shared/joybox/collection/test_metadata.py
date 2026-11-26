@@ -55,7 +55,7 @@ def load(metadata_root):
 
 def platform_of():
     from joybox import gamenaming
-    return gamenaming.derive_game_platform_from_categories(CATEGORY, SUBCATEGORY)
+    return gamenaming.derive_game_platform_from_categories(SUBCATEGORY)
 
 
 def create(metadata_root, **kwargs):

@@ -152,7 +152,6 @@ def list_files_with_hashes_from_sidecar(
     remote_type,
     remote_path,
     verbose = False,
-    pretend_run = False,
     exit_on_failure = False):
     with temporary_hash_database() as temp_db_path:
         if not temp_db_path:

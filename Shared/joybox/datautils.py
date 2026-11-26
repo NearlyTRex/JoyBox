@@ -35,7 +35,7 @@ def merge_dictionaries(dict1, dict2, merge_type = None):
         return None
 
 # Merge lists
-def merge_lists(list1, list2, merge_type = None):
+def merge_lists(list1, list2):
     if isinstance(list1, list) and isinstance(list2, list):
         return sorted(set(list1 + list2))
     elif isinstance(list1, list) and not isinstance(list2, list):
@@ -55,8 +55,7 @@ def merge_data(data1, data2, merge_type = None):
     elif isinstance(data1, list) or isinstance(data2, list):
         return merge_lists(
             list1 = data1,
-            list2 = data2,
-            merge_type = merge_type)
+            list2 = data2)
     else:
         if data1 and data2:
             return [data1, data2]

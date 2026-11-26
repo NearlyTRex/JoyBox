@@ -137,8 +137,8 @@ def make_catalog(monkeypatch, games):
     # games maps a game name to its FakeGameInfo; returns the flags each walk was given
     walks = []
 
-    def iterate_rom_game_infos(verbose = False, pretend_run = False, exit_on_failure = False):
-        walks.append({"verbose": verbose, "pretend_run": pretend_run, "exit_on_failure": exit_on_failure})
+    def iterate_rom_game_infos(verbose = False, exit_on_failure = False):
+        walks.append({"verbose": verbose, "exit_on_failure": exit_on_failure})
         yield from games.values()
 
     monkeypatch.setattr(saves.gamecollection, "iterate_rom_game_infos", iterate_rom_game_infos)

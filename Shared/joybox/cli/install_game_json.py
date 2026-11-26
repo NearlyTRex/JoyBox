@@ -40,7 +40,7 @@ def build_parser():
         args = ("-l", "--locker_type"),
         arg_type = config.LockerType,
         default = config.LockerType.HETZNER,
-        description = "Source locker named in the preview")
+        description = "Locker to install the game's files from")
     parser.add_game_category_argument(description = "Category of the game, used with `-s` and `-n` to find its JSON file")
     parser.add_game_subcategory_argument(description = "Subcategory (platform) of the game, used with `-c` and `-n` to find its JSON file")
     parser.add_game_name_argument(description = "Name of the game, used with `-c` and `-s` to find its JSON file")
@@ -92,7 +92,6 @@ def main():
     game_info = gameinfo.GameInfo(
         json_file = json_file,
         verbose = args.verbose,
-        pretend_run = args.pretend_run,
         exit_on_failure = args.exit_on_failure)
 
     # Show preview
