@@ -130,7 +130,7 @@ def download_audio_batch(
             output_dir = work_dir,
             download_archive = archive_file,
             cookie_source = cookie_source,
-            concurrent_fragments = getattr(config, "audio_download_concurrent_fragments", 1),
+            concurrent_fragments = getattr(config, "AUDIO_DOWNLOAD_CONCURRENT_FRAGMENTS", 1),
             sanitize_filenames = True,
             verbose = verbose,
             pretend_run = pretend_run,
@@ -147,7 +147,7 @@ def download_channel_audio_files(channels, genre_type, channel_name = None, olde
     # Resolve download order. oldest_first is tri-state: True/False force the order,
     # None falls back to the config default (audio_download_oldest_first).
     if oldest_first is None:
-        oldest_first = getattr(config, "audio_download_oldest_first", False)
+        oldest_first = getattr(config, "AUDIO_DOWNLOAD_OLDEST_FIRST", False)
 
     # Optionally filter to a single channel (case-insensitive; matches exact name
     # first, then falls back to a substring match)
@@ -221,7 +221,7 @@ def download_channel_audio_files(channels, genre_type, channel_name = None, olde
             return url or f"https://www.youtube.com/watch?v={vid}"
 
         # Build batch targets (each target is downloaded + uploaded in turn)
-        batch_size = getattr(config, "audio_download_batch_size", 0) or 0
+        batch_size = getattr(config, "AUDIO_DOWNLOAD_BATCH_SIZE", 0) or 0
         batch_targets = []
         if not all_videos:
             logger.log_warning("Could not enumerate channel videos; downloading whole channel in one pass")

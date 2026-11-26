@@ -82,7 +82,7 @@ def test_a_plain_request_carries_its_params_and_a_timeout(fetches):
 
     assert fetches["requests"] == [{
         "url": "https://store.example", "params": {"page": 2},
-        "timeout": webfetch.request_timeout_seconds}]
+        "timeout": webfetch.REQUEST_TIMEOUT_SECONDS}]
 
 
 def test_an_error_response_is_not_page_text(fetches):

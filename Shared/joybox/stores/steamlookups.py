@@ -59,7 +59,7 @@ def find_steam_appid_matches(
     # Load appid list
     appid_list = serialization.read_csv_file(
         src = programs.get_tool_path_config_value("SteamAppIDList", "csv"),
-        headers = [config.search_result_key_id, config.search_result_key_title],
+        headers = [config.SEARCH_RESULT_KEY_ID, config.SEARCH_RESULT_KEY_TITLE],
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)

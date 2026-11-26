@@ -34,8 +34,8 @@ FULL = {key: "set" for key in config.metadata_keys_all}
 ENTRIES = {
     "Nintendo Switch": [
         FakeEntry("Alpha", FULL),
-        FakeEntry("Beta", {**FULL, config.metadata_key_description: ""}),
-        FakeEntry("Gamma", {key: value for key, value in FULL.items() if key != config.metadata_key_genre}),
+        FakeEntry("Beta", {**FULL, config.METADATA_KEY_DESCRIPTION: ""}),
+        FakeEntry("Gamma", {key: value for key, value in FULL.items() if key != config.METADATA_KEY_GENRE}),
     ],
 }
 
@@ -74,8 +74,8 @@ def test_unset_and_empty_keys_are_reported_per_key(tool):
     tool.run("--no-preview")
 
     assert reported(tool) == {
-        "Missing_%s.txt" % config.metadata_key_description: ["Nintendo Switch - Beta"],
-        "Missing_%s.txt" % config.metadata_key_genre: ["Nintendo Switch - Gamma"],
+        "Missing_%s.txt" % config.METADATA_KEY_DESCRIPTION: ["Nintendo Switch - Beta"],
+        "Missing_%s.txt" % config.METADATA_KEY_GENRE: ["Nintendo Switch - Gamma"],
     }
     assert len(tool.loaded) == 1
     assert tool.loaded[0].endswith("metadata.pegasus.txt")

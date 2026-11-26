@@ -40,7 +40,7 @@ def test_loopback_and_nginx_site_is_installed(isolated_settings):
 
 def test_nginx_proxies_to_loopback(isolated_settings):
     from joybox.bootstrap.installers import installer_cockpit
-    assert "proxy_pass https://127.0.0.1:" in installer_cockpit.nginx_config_template
+    assert "proxy_pass https://127.0.0.1:" in installer_cockpit.NGINX_CONFIG_TEMPLATE
 
 
 def test_only_remote_ubuntu_is_supported(isolated_settings):

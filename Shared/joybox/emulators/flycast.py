@@ -181,7 +181,7 @@ class Flycast(emulatorbase.EmulatorBase):
         # Get launch command
         launch_cmd = [
             programs.get_emulator_program("Flycast"),
-            config.token_game_file
+            config.TOKEN_GAME_FILE
         ]
         if fullscreen:
             launch_cmd += [

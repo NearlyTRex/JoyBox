@@ -13,7 +13,7 @@ from joybox import emulatorbase
 
 # Config files
 config_files = {}
-config_file_general = """
+CONFIG_FILE_GENERAL = """
 [general]
 show_welcome = false
 
@@ -26,8 +26,8 @@ flashrom_path = 'EMULATOR_SETUP_ROOT/bios/complex_4627.bin'
 eeprom_path = "GAME_SAVE_DIR/eeprom.bin"
 hdd_path = "GAME_SAVE_DIR/xbox_hdd.qcow2"
 """
-config_files["Xemu/windows/xemu.toml"] = config_file_general
-config_files["Xemu/linux/Xemu.AppImage.home/.local/share/xemu/xemu/xemu.toml"] = config_file_general
+config_files["Xemu/windows/xemu.toml"] = CONFIG_FILE_GENERAL
+config_files["Xemu/linux/Xemu.AppImage.home/.local/share/xemu/xemu/xemu.toml"] = CONFIG_FILE_GENERAL
 
 # System files
 system_files = {}
@@ -210,7 +210,7 @@ class Xemu(emulatorbase.EmulatorBase):
         # Get launch command
         launch_cmd = [
             programs.get_emulator_program("Xemu"),
-            "-dvd_path", config.token_game_file
+            "-dvd_path", config.TOKEN_GAME_FILE
         ]
         if fullscreen:
             launch_cmd += [

@@ -303,7 +303,7 @@ def test_a_known_install_location_wins_over_the_path(monkeypatch, tmp_path):
     known = make_executable(tmp_path / "known-op")
     on_path = tmp_path / "bin"
     on_path.mkdir()
-    make_executable(on_path / secretstore.secret_tool)
+    make_executable(on_path / secretstore.SECRET_TOOL)
     monkeypatch.setattr(secretstore, "secret_tool_paths", [known])
     monkeypatch.setenv("PATH", str(on_path))
 
@@ -315,7 +315,7 @@ def test_the_tool_is_found_on_the_path(monkeypatch, tmp_path):
     empty.mkdir()
     on_path = tmp_path / "bin"
     on_path.mkdir()
-    found = make_executable(on_path / secretstore.secret_tool)
+    found = make_executable(on_path / secretstore.SECRET_TOOL)
     monkeypatch.setattr(secretstore, "secret_tool_paths", [str(tmp_path / "absent")])
     monkeypatch.setenv("PATH", os.pathsep.join([str(empty), str(on_path)]))
 
@@ -323,8 +323,8 @@ def test_the_tool_is_found_on_the_path(monkeypatch, tmp_path):
 
 
 def test_a_non_executable_tool_is_not_found(monkeypatch, tmp_path):
-    make_executable(tmp_path / secretstore.secret_tool, mode = 0o644)
-    monkeypatch.setattr(secretstore, "secret_tool_paths", [str(tmp_path / secretstore.secret_tool)])
+    make_executable(tmp_path / secretstore.SECRET_TOOL, mode = 0o644)
+    monkeypatch.setattr(secretstore, "secret_tool_paths", [str(tmp_path / secretstore.SECRET_TOOL)])
     monkeypatch.setenv("PATH", str(tmp_path))
 
     assert secretstore.get_secret_tool() is None

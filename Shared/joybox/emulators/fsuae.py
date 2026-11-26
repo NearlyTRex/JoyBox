@@ -13,14 +13,14 @@ from joybox import emulatorbase
 
 # Config files
 config_files = {}
-config_file_general = """
+CONFIG_FILE_GENERAL = """
 [config]
 amiga_model = A500
 governor_warning = 0
 """
 config_files["FS-UAE/windows/Portable.ini"] = ""
-config_files["FS-UAE/windows/Configurations/Default.fs-uae"] = config_file_general
-config_files["FS-UAE/linux/FS-UAE.AppImage.home/FS-UAE/Configurations/Default.fs-uae"] = config_file_general
+config_files["FS-UAE/windows/Configurations/Default.fs-uae"] = CONFIG_FILE_GENERAL
+config_files["FS-UAE/linux/FS-UAE.AppImage.home/FS-UAE/Configurations/Default.fs-uae"] = CONFIG_FILE_GENERAL
 
 # System files
 system_files = {}
@@ -210,7 +210,7 @@ class FSUAE(emulatorbase.EmulatorBase):
         # Get launch command
         launch_cmd = [
             programs.get_emulator_program("FS-UAE"),
-            config.token_game_file
+            config.TOKEN_GAME_FILE
         ]
         if fullscreen:
             launch_cmd += [

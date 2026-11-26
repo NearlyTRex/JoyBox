@@ -11,7 +11,7 @@ from joybox import logger
 # published ports bypass ufw entirely, so binding the container publicly would
 # put port 5190 on the internet regardless of the firewall. Going through nginx
 # is what makes ufw actually govern this port.
-nginx_stream_config_template = """
+NGINX_STREAM_CONFIG_TEMPLATE = """
 upstream oscar_bos {{
     server 127.0.0.1:{port_bos};
 }}
@@ -33,7 +33,7 @@ server {{
 #
 # The management API is how screen names get created, so it is proxied over
 # https behind the shared htpasswd file rather than exposed directly.
-nginx_config_template = """
+NGINX_CONFIG_TEMPLATE = """
 server {{
     listen 80;
     server_name {subdomain}.{domain};
@@ -74,7 +74,7 @@ server {{
 # Upstream publishes no container image, so the server is built from a pinned
 # git tag. The sqlite driver is pure Go (modernc.org/sqlite), so the binary can
 # be built without cgo and shipped on a bare runtime image.
-dockerfile_template = """
+DOCKERFILE_TEMPLATE = """
 ARG OSCAR_BUILDER_IMAGE=golang:1.26.2-alpine
 ARG OSCAR_RUNTIME_IMAGE=alpine:3.22
 
@@ -95,7 +95,7 @@ CMD ["/app/open_oscar_server"]
 """
 
 # Docker compose template
-docker_compose_template = """
+DOCKER_COMPOSE_TEMPLATE = """
 services:
   oscar:
     build:
@@ -149,7 +149,7 @@ volumes:
 """
 
 # Env template
-env_template = """
+ENV_TEMPLATE = """
 OSCAR_PUBLIC_HOST={public_host}
 OSCAR_PORT_PUBLIC={port_public}
 OSCAR_PORT_BOS={port_bos}
@@ -190,9 +190,9 @@ class Oscar(installer_dockerapp.DockerAppInstaller):
         }
 
         # Templates
-        self.docker_compose_template = docker_compose_template
-        self.env_template = env_template
-        self.nginx_config_template = nginx_config_template
+        self.docker_compose_template = DOCKER_COMPOSE_TEMPLATE
+        self.env_template = ENV_TEMPLATE
+        self.nginx_config_template = NGINX_CONFIG_TEMPLATE
 
         # Screen name created on install
         self.screen_name = settings.get_value("UserData.Oscar", "oscar_user",
@@ -216,7 +216,7 @@ class Oscar(installer_dockerapp.DockerAppInstaller):
         app_dir = self.get_app_dir()
         self.connection.make_directory(app_dir)
         dockerfile_tmp_path = f"/tmp/{self.app_name}.Dockerfile"
-        if not self.connection.write_file(dockerfile_tmp_path, dockerfile_template):
+        if not self.connection.write_file(dockerfile_tmp_path, DOCKERFILE_TEMPLATE):
             logger.log_error(f"Unable to write dockerfile for {self.app_name}")
             return False
         self.connection.move_file_or_directory(dockerfile_tmp_path, f"{app_dir}/Dockerfile")
@@ -253,7 +253,7 @@ class Oscar(installer_dockerapp.DockerAppInstaller):
         logger.log_info("Installing Oscar stream entry")
         stream_tmp_path = f"/tmp/{self.app_name}.stream.conf"
         if not self.connection.write_file(stream_tmp_path,
-                nginx_stream_config_template.format(**self.nginx_config_values)):
+                NGINX_STREAM_CONFIG_TEMPLATE.format(**self.nginx_config_values)):
             logger.log_error(f"Unable to write nginx stream config for {self.app_name}")
             return False
         self.connection.run_checked([self.nginx_manager_tool, "install_stream_conf", stream_tmp_path], sudo = True)

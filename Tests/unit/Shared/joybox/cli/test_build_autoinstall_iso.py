@@ -47,7 +47,7 @@ def test_the_image_is_built_in_the_working_directory_by_default(tool, tmp_path, 
     assert (call["source_file"], call["overlay_file"], call["user_data_file"]) == (None, None, None)
     assert (call["verify"], call["verify_signature"]) == (True, True)
     assert tool.infos[-1] == ("Booting from it installs configured without asking anything (%d seconds to interrupt), then powers off."
-                             % build_autoinstall_iso.autoinstall.boot_timeout)
+                             % build_autoinstall_iso.autoinstall.BOOT_TIMEOUT)
 
 
 def test_command_line_values_override_the_profile(tool, tmp_path):

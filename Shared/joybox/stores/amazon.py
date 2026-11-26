@@ -61,18 +61,18 @@ class Amazon(storebase.StoreBase):
 
     # Get key
     def get_key(self):
-        return config.json_key_amazon
+        return config.JSON_KEY_AMAZON
 
     # Get identifier keys
     def get_identifier_keys(self):
         return {
-            config.StoreIdentifierType.INFO: config.json_key_store_appid,
-            config.StoreIdentifierType.INSTALL: config.json_key_store_appid,
-            config.StoreIdentifierType.LAUNCH: config.json_key_store_appid,
-            config.StoreIdentifierType.DOWNLOAD: config.json_key_store_appid,
-            config.StoreIdentifierType.ASSET: config.json_key_store_name,
-            config.StoreIdentifierType.METADATA: config.json_key_store_name,
-            config.StoreIdentifierType.PAGE: config.json_key_store_name
+            config.StoreIdentifierType.INFO: config.JSON_KEY_STORE_APPID,
+            config.StoreIdentifierType.INSTALL: config.JSON_KEY_STORE_APPID,
+            config.StoreIdentifierType.LAUNCH: config.JSON_KEY_STORE_APPID,
+            config.StoreIdentifierType.DOWNLOAD: config.JSON_KEY_STORE_APPID,
+            config.StoreIdentifierType.ASSET: config.JSON_KEY_STORE_NAME,
+            config.StoreIdentifierType.METADATA: config.JSON_KEY_STORE_NAME,
+            config.StoreIdentifierType.PAGE: config.JSON_KEY_STORE_NAME
         }
 
     # Get install dir
@@ -262,14 +262,14 @@ class Amazon(storebase.StoreBase):
             purchase = jsondata.JsonData(
                 json_data = {},
                 json_platform = self.get_platform())
-            purchase.set_value(config.json_key_store_appid, line_appid)
-            purchase.set_value(config.json_key_store_name, line_title)
+            purchase.set_value(config.JSON_KEY_STORE_APPID, line_appid)
+            purchase.set_value(config.JSON_KEY_STORE_NAME, line_title)
             purchases.append(purchase)
 
             # Store data for caching
             purchases_data.append({
-                config.json_key_store_appid: line_appid,
-                config.json_key_store_name: line_title
+                config.JSON_KEY_STORE_APPID: line_appid,
+                config.JSON_KEY_STORE_NAME: line_title
             })
 
         # Save to cache
@@ -336,7 +336,7 @@ class Amazon(storebase.StoreBase):
         # Get details
         amazon_version = amazon_json.get("version")
         if not isinstance(amazon_version, str) or not amazon_version.strip():
-            amazon_version = config.default_buildid
+            amazon_version = config.DEFAULT_BUILDID
         amazon_product = amazon_json.get("product")
         if not isinstance(amazon_product, dict):
             amazon_product = {}
@@ -346,9 +346,9 @@ class Amazon(storebase.StoreBase):
 
         # Build jsondata
         json_data = self.create_default_jsondata()
-        json_data.set_value(config.json_key_store_appid, identifier)
-        json_data.set_value(config.json_key_store_buildid, amazon_version.strip())
-        json_data.set_value(config.json_key_store_name, amazon_title.strip())
+        json_data.set_value(config.JSON_KEY_STORE_APPID, identifier)
+        json_data.set_value(config.JSON_KEY_STORE_BUILDID, amazon_version.strip())
+        json_data.set_value(config.JSON_KEY_STORE_NAME, amazon_title.strip())
         return self.augment_jsondata(
             json_data = json_data,
             identifier = identifier,

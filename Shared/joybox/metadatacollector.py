@@ -15,7 +15,7 @@ from joybox import metadataentry
 BLOCKED = object()
 
 # Bot challenges in a row after which a source is not asked again this run
-blocked_streak_limit = 3
+BLOCKED_STREAK_LIMIT = 3
 
 # Bot challenges each source has served in a row, this run
 blocked_streaks = collections.Counter()
@@ -26,13 +26,13 @@ def note_blocked(source_name, blocked):
         blocked_streaks[source_name] = 0
         return
     blocked_streaks[source_name] += 1
-    if blocked_streaks[source_name] == blocked_streak_limit:
+    if blocked_streaks[source_name] == BLOCKED_STREAK_LIMIT:
         logger.log_warning("%s served a bot challenge %d games in a row; not asking it again this run" % (
-            source_name, blocked_streak_limit))
+            source_name, BLOCKED_STREAK_LIMIT))
 
 # Whether a source has been given up on for this run
 def is_given_up(source_name):
-    return blocked_streaks[source_name] >= blocked_streak_limit
+    return blocked_streaks[source_name] >= BLOCKED_STREAK_LIMIT
 
 # Per-run tally of what each metadata source produced
 class CollectionStats:

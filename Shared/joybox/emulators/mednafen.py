@@ -202,7 +202,7 @@ class Mednafen(emulatorbase.EmulatorBase):
         # Get launch command
         launch_cmd = [
             programs.get_emulator_program("Mednafen"),
-            config.token_game_file
+            config.TOKEN_GAME_FILE
         ]
 
         # Launch game

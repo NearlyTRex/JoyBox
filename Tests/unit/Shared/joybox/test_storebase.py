@@ -36,9 +36,9 @@ def round_trip(path, **kwargs):
 ###########################################################
 
 @pytest.mark.parametrize("folder,token", [
-    (config.computer_folder_gamedata, config.token_game_install_dir),
-    (config.computer_folder_public, config.token_user_public_dir),
-    (config.computer_folder_registry, config.token_user_registry_dir),
+    (config.COMPUTER_FOLDER_GAMEDATA, config.TOKEN_GAME_INSTALL_DIR),
+    (config.COMPUTER_FOLDER_PUBLIC, config.TOKEN_USER_PUBLIC_DIR),
+    (config.COMPUTER_FOLDER_REGISTRY, config.TOKEN_USER_REGISTRY_DIR),
 ])
 def test_each_general_folder_becomes_its_token(folder, token):
     tokenized = storebase.convert_to_tokenized_path(general(folder, "save"))
@@ -49,30 +49,30 @@ def test_each_general_folder_becomes_its_token(folder, token):
 def test_the_general_root_becomes_the_profile_token():
     tokenized = storebase.convert_to_tokenized_path(general("AppData", "Roaming", "Game"))
 
-    assert tokenized.startswith(config.token_user_profile_dir)
+    assert tokenized.startswith(config.TOKEN_USER_PROFILE_DIR)
 
 
 def test_a_store_directory_becomes_the_store_token():
     tokenized = storebase.convert_to_tokenized_path(
-        general(config.computer_folder_store, STORE_TYPE, "game"),
+        general(config.COMPUTER_FOLDER_STORE, STORE_TYPE, "game"),
         store_type = STORE_TYPE)
 
-    assert tokenized == os.path.join(config.token_store_install_dir, "game")
+    assert tokenized == os.path.join(config.TOKEN_STORE_INSTALL_DIR, "game")
 
 
 def test_a_store_directory_is_left_alone_without_a_store_type():
     # Without the store type there is nothing to anchor the replacement on.
     tokenized = storebase.convert_to_tokenized_path(
-        general(config.computer_folder_store, STORE_TYPE, "game"))
+        general(config.COMPUTER_FOLDER_STORE, STORE_TYPE, "game"))
 
-    assert config.token_store_install_dir not in tokenized
+    assert config.TOKEN_STORE_INSTALL_DIR not in tokenized
 
 
 def test_a_user_id_becomes_the_user_token():
     tokenized = storebase.convert_to_tokenized_path(
         general("AppData", STORE_USER_ID, "save"), store_user_id = STORE_USER_ID)
 
-    assert config.token_store_user_id in tokenized
+    assert config.TOKEN_STORE_USER_ID in tokenized
     assert STORE_USER_ID not in tokenized
 
 
@@ -92,9 +92,9 @@ def test_a_path_outside_general_is_only_normalized():
 ###########################################################
 
 @pytest.mark.parametrize("folder,token", [
-    (config.computer_folder_gamedata, config.token_game_install_dir),
-    (config.computer_folder_public, config.token_user_public_dir),
-    (config.computer_folder_registry, config.token_user_registry_dir),
+    (config.COMPUTER_FOLDER_GAMEDATA, config.TOKEN_GAME_INSTALL_DIR),
+    (config.COMPUTER_FOLDER_PUBLIC, config.TOKEN_USER_PUBLIC_DIR),
+    (config.COMPUTER_FOLDER_REGISTRY, config.TOKEN_USER_REGISTRY_DIR),
 ])
 def test_each_token_expands_back_to_its_folder(folder, token):
     expanded = storebase.convert_from_tokenized_path(os.path.join(token, "save"))
@@ -104,25 +104,25 @@ def test_each_token_expands_back_to_its_folder(folder, token):
 
 def test_the_profile_token_expands_to_the_general_root():
     expanded = storebase.convert_from_tokenized_path(
-        os.path.join(config.token_user_profile_dir, "AppData", "Game"))
+        os.path.join(config.TOKEN_USER_PROFILE_DIR, "AppData", "Game"))
 
     assert expanded == general("AppData", "Game")
 
 
 def test_the_store_token_expands_with_the_store_type():
     expanded = storebase.convert_from_tokenized_path(
-        os.path.join(config.token_store_install_dir, "game"), store_type = STORE_TYPE)
+        os.path.join(config.TOKEN_STORE_INSTALL_DIR, "game"), store_type = STORE_TYPE)
 
-    assert expanded == general(config.computer_folder_store, STORE_TYPE, "game")
+    assert expanded == general(config.COMPUTER_FOLDER_STORE, STORE_TYPE, "game")
 
 
 def test_the_user_token_expands_to_the_user_id():
     expanded = storebase.convert_from_tokenized_path(
-        os.path.join(config.token_user_profile_dir, config.token_store_user_id, "save"),
+        os.path.join(config.TOKEN_USER_PROFILE_DIR, config.TOKEN_STORE_USER_ID, "save"),
         store_user_id = STORE_USER_ID)
 
     assert STORE_USER_ID in expanded
-    assert config.token_store_user_id not in expanded
+    assert config.TOKEN_STORE_USER_ID not in expanded
 
 
 ###########################################################
@@ -130,9 +130,9 @@ def test_the_user_token_expands_to_the_user_id():
 ###########################################################
 
 @pytest.mark.parametrize("path", [
-    general(config.computer_folder_gamedata, "save"),
-    general(config.computer_folder_public, "docs"),
-    general(config.computer_folder_registry, "keys"),
+    general(config.COMPUTER_FOLDER_GAMEDATA, "save"),
+    general(config.COMPUTER_FOLDER_PUBLIC, "docs"),
+    general(config.COMPUTER_FOLDER_REGISTRY, "keys"),
     general("AppData", "Roaming", "Game"),
     general("Documents", "My Games", "save.dat"),
 ])
@@ -141,7 +141,7 @@ def test_a_path_survives_the_round_trip(path):
 
 
 def test_a_store_path_survives_the_round_trip():
-    path = general(config.computer_folder_store, STORE_TYPE, "game", "save")
+    path = general(config.COMPUTER_FOLDER_STORE, STORE_TYPE, "game", "save")
 
     assert round_trip(path, store_type = STORE_TYPE) == paths.normalize_file_path(path)
 
@@ -153,7 +153,7 @@ def test_a_user_id_path_survives_the_round_trip():
 
 
 def test_a_path_with_every_token_survives_the_round_trip():
-    path = general(config.computer_folder_store, STORE_TYPE, STORE_USER_ID, "save")
+    path = general(config.COMPUTER_FOLDER_STORE, STORE_TYPE, STORE_USER_ID, "save")
 
     assert round_trip(path, store_type = STORE_TYPE, store_user_id = STORE_USER_ID) == \
         paths.normalize_file_path(path)
@@ -162,12 +162,12 @@ def test_a_path_with_every_token_survives_the_round_trip():
 def test_no_token_survives_expansion():
     # A token left in an expanded path becomes a literal directory name.
     tokenized = storebase.convert_to_tokenized_path(
-        general(config.computer_folder_gamedata, "save"))
+        general(config.COMPUTER_FOLDER_GAMEDATA, "save"))
     expanded = storebase.convert_from_tokenized_path(tokenized)
 
     survivors = [
-        token for token in [config.token_game_install_dir, config.token_user_profile_dir,
-                            config.token_user_public_dir, config.token_user_registry_dir]
+        token for token in [config.TOKEN_GAME_INSTALL_DIR, config.TOKEN_USER_PROFILE_DIR,
+                            config.TOKEN_USER_PUBLIC_DIR, config.TOKEN_USER_REGISTRY_DIR]
         if token in expanded]
 
     assert survivors == []
@@ -521,36 +521,36 @@ def test_two_stores_get_distinct_cookie_files(monkeypatch):
 def test_the_translation_map_covers_the_known_tokens():
     built = SampleStore().build_path_translation_map()
 
-    assert config.token_user_public_dir in built
-    assert config.token_user_profile_dir in built
-    assert config.token_store_install_dir in built
-    assert config.token_user_registry_dir in built
+    assert config.TOKEN_USER_PUBLIC_DIR in built
+    assert config.TOKEN_USER_PROFILE_DIR in built
+    assert config.TOKEN_STORE_INSTALL_DIR in built
+    assert config.TOKEN_USER_REGISTRY_DIR in built
 
 
 def test_the_store_token_points_at_the_install_directory():
     built = SampleStore().build_path_translation_map()
 
-    assert built[config.token_store_install_dir] == ["/store/install"]
+    assert built[config.TOKEN_STORE_INSTALL_DIR] == ["/store/install"]
 
 
 def test_the_public_token_points_at_the_windows_public_profile():
     built = SampleStore().build_path_translation_map()
 
-    assert "C:\\Users\\Public" in built[config.token_user_public_dir]
+    assert "C:\\Users\\Public" in built[config.TOKEN_USER_PUBLIC_DIR]
 
 
 def test_the_profile_token_follows_the_environment(monkeypatch):
     monkeypatch.setenv("USERPROFILE", "C:\\Users\\deploy")
     built = SampleStore().build_path_translation_map()
 
-    assert built[config.token_user_profile_dir] == ["C:\\Users\\deploy"]
+    assert built[config.TOKEN_USER_PROFILE_DIR] == ["C:\\Users\\deploy"]
 
 
 def test_the_profile_token_is_empty_without_the_environment(monkeypatch):
     monkeypatch.delenv("USERPROFILE", raising = False)
     built = SampleStore().build_path_translation_map()
 
-    assert built[config.token_user_profile_dir] == []
+    assert built[config.TOKEN_USER_PROFILE_DIR] == []
 
 
 def test_every_token_maps_to_a_list():
@@ -564,7 +564,7 @@ def test_every_token_maps_to_a_list():
 def test_a_store_without_an_install_dir_still_builds_a_map():
     built = storebase.StoreBase().build_path_translation_map()
 
-    assert built[config.token_store_install_dir] == [None]
+    assert built[config.TOKEN_STORE_INSTALL_DIR] == [None]
 
 
 ###########################################################
@@ -632,8 +632,8 @@ def test_a_valid_info_identifier_gets_default_jsondata(monkeypatch):
     monkeypatch.setattr(storebase.manifest, "get_manifest_instance", NoManifest)
     json_data = SampleStore().get_latest_jsondata("Acme")
 
-    assert json_data.get_value(config.json_key_store_paths) == []
-    assert json_data.get_value(config.json_key_store_buildid) == config.default_buildid
+    assert json_data.get_value(config.JSON_KEY_STORE_PATHS) == []
+    assert json_data.get_value(config.JSON_KEY_STORE_BUILDID) == config.DEFAULT_BUILDID
 
 
 def test_an_invalid_metadata_identifier_has_no_metadata():

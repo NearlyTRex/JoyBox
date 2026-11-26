@@ -60,7 +60,7 @@ def test_the_menu_stops_waiting():
 
     patched = autoinstall.patch_boot_config_contents(contents)
 
-    assert "set timeout=%d" % autoinstall.boot_timeout in patched
+    assert "set timeout=%d" % autoinstall.BOOT_TIMEOUT in patched
     assert "set timeout=30" not in patched
 
 
@@ -68,7 +68,7 @@ def test_an_isolinux_menu_stops_waiting():
     # isolinux counts its timeout in tenths of a second.
     patched = autoinstall.patch_boot_config_contents("timeout 300\n")
 
-    assert "timeout %d" % (autoinstall.boot_timeout * 10) in patched
+    assert "timeout %d" % (autoinstall.BOOT_TIMEOUT * 10) in patched
 
 
 def test_lines_that_are_not_boot_entries_are_untouched():

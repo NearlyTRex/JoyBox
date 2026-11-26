@@ -46,18 +46,18 @@ class SquareEnix(storebase.StoreBase):
 
     # Get key
     def get_key(self):
-        return config.json_key_squareenix
+        return config.JSON_KEY_SQUAREENIX
 
     # Get identifier keys
     def get_identifier_keys(self):
         return {
-            config.StoreIdentifierType.INFO: config.json_key_store_name,
-            config.StoreIdentifierType.INSTALL: config.json_key_store_name,
-            config.StoreIdentifierType.LAUNCH: config.json_key_store_name,
-            config.StoreIdentifierType.DOWNLOAD: config.json_key_store_name,
-            config.StoreIdentifierType.ASSET: config.json_key_store_name,
-            config.StoreIdentifierType.METADATA: config.json_key_store_name,
-            config.StoreIdentifierType.PAGE: config.json_key_store_name
+            config.StoreIdentifierType.INFO: config.JSON_KEY_STORE_NAME,
+            config.StoreIdentifierType.INSTALL: config.JSON_KEY_STORE_NAME,
+            config.StoreIdentifierType.LAUNCH: config.JSON_KEY_STORE_NAME,
+            config.StoreIdentifierType.DOWNLOAD: config.JSON_KEY_STORE_NAME,
+            config.StoreIdentifierType.ASSET: config.JSON_KEY_STORE_NAME,
+            config.StoreIdentifierType.METADATA: config.JSON_KEY_STORE_NAME,
+            config.StoreIdentifierType.PAGE: config.JSON_KEY_STORE_NAME
         }
 
     # Get install dir

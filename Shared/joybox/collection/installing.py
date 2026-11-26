@@ -270,9 +270,9 @@ def install_local_game_addons(
     # Get directories
     source_dlc_dirs = []
     source_update_dirs = []
-    for filename in game_info.get_value(config.json_key_dlc) or []:
+    for filename in game_info.get_value(config.JSON_KEY_DLC) or []:
         source_dlc_dirs += [paths.join_paths(environment.get_locker_gaming_dlc_root_dir(), filename)]
-    for filename in game_info.get_value(config.json_key_update) or []:
+    for filename in game_info.get_value(config.JSON_KEY_UPDATE) or []:
         source_update_dirs += [paths.join_paths(environment.get_locker_gaming_update_root_dir(), filename)]
 
     # Install add-ons

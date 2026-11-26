@@ -282,7 +282,7 @@ def smart_copy(
         exit_on_failure = exit_on_failure)
     if not success:
         return False
-    if config.token_glob in paths.get_filename_basename(src):
+    if config.TOKEN_GLOB in paths.get_filename_basename(src):
         return copy_globbed_files(
             glob_pattern = src,
             dest_dir = dest,
@@ -348,7 +348,7 @@ def smart_move(
         exit_on_failure = exit_on_failure)
     if not success:
         return False
-    if config.token_glob in paths.get_filename_basename(src):
+    if config.TOKEN_GLOB in paths.get_filename_basename(src):
         return move_globbed_files(
             glob_pattern = src,
             dest_dir = dest,
@@ -483,8 +483,8 @@ def sync_contents(
 
 # Sync data
 def sync_data(data_src, data_dest, verbose = False, pretend_run = False, exit_on_failure = False):
-    is_glob_src = config.token_glob in paths.get_filename_basename(data_src)
-    is_glob_dest = config.token_glob in paths.get_filename_basename(data_dest)
+    is_glob_src = config.TOKEN_GLOB in paths.get_filename_basename(data_src)
+    is_glob_dest = config.TOKEN_GLOB in paths.get_filename_basename(data_dest)
     if is_glob_src and is_glob_dest:
         return copy_globbed_files(
             glob_pattern = data_src,

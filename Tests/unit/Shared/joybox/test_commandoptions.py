@@ -799,7 +799,7 @@ def test_creating_a_prefix_records_its_profile_and_drives(fake_sandbox):
     assert create(options) is True
     assert options.get_prefix_user_profile_dir() == str(fake_sandbox["profile"])
     assert options.get_prefix_c_drive_real() == str(fake_sandbox["c_drive"])
-    assert options.get_prefix_c_drive_virtual() == config.drive_root_windows
+    assert options.get_prefix_c_drive_virtual() == config.DRIVE_ROOT_WINDOWS
 
 
 def test_a_basic_prefix_is_created_unless_a_linked_one_is_asked_for(fake_sandbox):

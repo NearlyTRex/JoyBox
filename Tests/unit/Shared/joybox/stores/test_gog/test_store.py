@@ -30,7 +30,7 @@ def test_the_store_describes_itself(gog_store):
     assert gog_store.get_supercategory() == config.Supercategory.ROMS
     assert gog_store.get_category() == config.Category.COMPUTER
     assert gog_store.get_subcategory() == config.Subcategory.COMPUTER_GOG
-    assert gog_store.get_key() == config.json_key_gog
+    assert gog_store.get_key() == config.JSON_KEY_GOG
     assert gog_store.get_preferred_platform() == "windows"
     assert gog_store.get_user_name() == "player"
     assert gog_store.get_email() == "player@joybox.test"
@@ -47,13 +47,13 @@ def test_launching_is_not_offered(gog_store):
 def test_identifiers_split_between_id_name_and_page(gog_store):
     keys = gog_store.get_identifier_keys()
 
-    assert keys[config.StoreIdentifierType.INFO] == config.json_key_store_appid
-    assert keys[config.StoreIdentifierType.INSTALL] == config.json_key_store_appid
-    assert keys[config.StoreIdentifierType.LAUNCH] == config.json_key_store_appname
-    assert keys[config.StoreIdentifierType.DOWNLOAD] == config.json_key_store_appname
-    assert keys[config.StoreIdentifierType.PAGE] == config.json_key_store_appname
-    assert keys[config.StoreIdentifierType.ASSET] == config.json_key_store_appurl
-    assert keys[config.StoreIdentifierType.METADATA] == config.json_key_store_appurl
+    assert keys[config.StoreIdentifierType.INFO] == config.JSON_KEY_STORE_APPID
+    assert keys[config.StoreIdentifierType.INSTALL] == config.JSON_KEY_STORE_APPID
+    assert keys[config.StoreIdentifierType.LAUNCH] == config.JSON_KEY_STORE_APPNAME
+    assert keys[config.StoreIdentifierType.DOWNLOAD] == config.JSON_KEY_STORE_APPNAME
+    assert keys[config.StoreIdentifierType.PAGE] == config.JSON_KEY_STORE_APPNAME
+    assert keys[config.StoreIdentifierType.ASSET] == config.JSON_KEY_STORE_APPURL
+    assert keys[config.StoreIdentifierType.METADATA] == config.JSON_KEY_STORE_APPURL
 
 
 def test_the_latest_url_is_the_store_page(gog_store):

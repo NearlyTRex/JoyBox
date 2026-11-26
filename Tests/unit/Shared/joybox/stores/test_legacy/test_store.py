@@ -34,7 +34,7 @@ def test_the_store_describes_itself(legacy_store, tmp_path):
     assert legacy_store.get_supercategory() == config.Supercategory.ROMS
     assert legacy_store.get_category() == config.Category.COMPUTER
     assert legacy_store.get_subcategory() == config.Subcategory.COMPUTER_LEGACY_GAMES
-    assert legacy_store.get_key() == config.json_key_legacy
+    assert legacy_store.get_key() == config.JSON_KEY_LEGACY
     assert legacy_store.get_user_name() == "player"
     assert legacy_store.get_install_dir() == str(tmp_path / "legacy")
     assert legacy_store.can_import_purchases() and legacy_store.can_download_purchases()
@@ -43,9 +43,9 @@ def test_the_store_describes_itself(legacy_store, tmp_path):
 def test_assets_use_the_page_metadata_the_name_and_everything_else_the_appid(legacy_store):
     keys = legacy_store.get_identifier_keys()
 
-    assert keys.pop(config.StoreIdentifierType.ASSET) == config.json_key_store_appurl
-    assert keys.pop(config.StoreIdentifierType.METADATA) == config.json_key_store_name
-    assert set(keys.values()) == {config.json_key_store_appid}
+    assert keys.pop(config.StoreIdentifierType.ASSET) == config.JSON_KEY_STORE_APPURL
+    assert keys.pop(config.StoreIdentifierType.METADATA) == config.JSON_KEY_STORE_NAME
+    assert set(keys.values()) == {config.JSON_KEY_STORE_APPID}
 
 
 ###########################################################

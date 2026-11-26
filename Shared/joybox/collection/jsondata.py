@@ -182,13 +182,13 @@ def update_game_json_file(
     for rebased_file in rebased_files:
         if game_supercategory in [config.Supercategory.ROMS]:
             rebased_subfile = paths.get_filename_front_slice(rebased_file)
-            if rebased_file.startswith(config.json_key_dlc):
+            if rebased_file.startswith(config.JSON_KEY_DLC):
                 all_dlc.append(rebased_subfile)
-            elif rebased_file.startswith(config.json_key_update):
+            elif rebased_file.startswith(config.JSON_KEY_UPDATE):
                 all_updates.append(rebased_subfile)
-            elif rebased_file.startswith(config.json_key_extra):
+            elif rebased_file.startswith(config.JSON_KEY_EXTRA):
                 all_extras.append(rebased_subfile)
-            elif rebased_file.startswith(config.json_key_dependencies):
+            elif rebased_file.startswith(config.JSON_KEY_DEPENDENCIES):
                 all_dependencies.append(rebased_subfile)
             else:
                 all_main.append(rebased_file)
@@ -206,17 +206,17 @@ def update_game_json_file(
 
     # Set common keys
     if isinstance(rebased_files, list) and len(rebased_files) > 0:
-        json_obj.fill_value(config.json_key_files, rebased_files)
+        json_obj.fill_value(config.JSON_KEY_FILES, rebased_files)
     if isinstance(all_dlc, list) and len(all_dlc) > 0:
-        json_obj.fill_value(config.json_key_dlc, all_dlc)
+        json_obj.fill_value(config.JSON_KEY_DLC, all_dlc)
     if isinstance(all_updates, list) and len(all_updates) > 0:
-        json_obj.fill_value(config.json_key_update, all_updates)
+        json_obj.fill_value(config.JSON_KEY_UPDATE, all_updates)
     if isinstance(all_extras, list) and len(all_extras) > 0:
-        json_obj.fill_value(config.json_key_extra, all_extras)
+        json_obj.fill_value(config.JSON_KEY_EXTRA, all_extras)
     if isinstance(all_dependencies, list) and len(all_dependencies) > 0:
-        json_obj.fill_value(config.json_key_dependencies, all_dependencies)
+        json_obj.fill_value(config.JSON_KEY_DEPENDENCIES, all_dependencies)
     if isinstance(best_game_file, str) and len(best_game_file) > 0:
-        json_obj.fill_value(config.json_key_transform_file, best_game_file)
+        json_obj.fill_value(config.JSON_KEY_TRANSFORM_FILE, best_game_file)
 
     # Rom keys
     if game_supercategory in [config.Supercategory.ROMS]:
@@ -233,21 +233,21 @@ def update_game_json_file(
             if store_obj:
                 json_obj.fill_value(store_obj.get_key(), {})
                 if game_platform in config.manual_import_platforms:
-                    json_obj.fill_subvalue(store_obj.get_key(), config.json_key_store_appid, strings.generate_unique_id())
-                    json_obj.fill_subvalue(store_obj.get_key(), config.json_key_store_appname, strings.get_slug_string(game_regular_name))
-                    json_obj.fill_subvalue(store_obj.get_key(), config.json_key_store_name, game_regular_name)
+                    json_obj.fill_subvalue(store_obj.get_key(), config.JSON_KEY_STORE_APPID, strings.generate_unique_id())
+                    json_obj.fill_subvalue(store_obj.get_key(), config.JSON_KEY_STORE_APPNAME, strings.get_slug_string(game_regular_name))
+                    json_obj.fill_subvalue(store_obj.get_key(), config.JSON_KEY_STORE_NAME, game_regular_name)
 
         # Set other platform keys
         else:
             if isinstance(best_game_file, str) and len(best_game_file) > 0:
-                json_obj.fill_value(config.json_key_launch_file, best_game_file)
+                json_obj.fill_value(config.JSON_KEY_LAUNCH_FILE, best_game_file)
 
         # Get latest jsondata
         latest_jsondata = None
         if store_obj:
             latest_jsondata = store_obj.get_latest_jsondata(
                 identifier = json_obj.get_subvalue(store_obj.get_key(), store_obj.get_info_identifier_key()),
-                branch = json_obj.get_subvalue(store_obj.get_key(), config.json_key_store_branchid),
+                branch = json_obj.get_subvalue(store_obj.get_key(), config.JSON_KEY_STORE_BRANCHID),
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
@@ -256,13 +256,13 @@ def update_game_json_file(
         if latest_jsondata:
             for store_subdata_key in config.json_keys_store_subdata:
                 if latest_jsondata.has_key(store_subdata_key):
-                    if store_subdata_key == config.json_key_store_buildid:
-                        existing_buildid = json_obj.get_subvalue(store_obj.get_key(), config.json_key_store_buildid)
+                    if store_subdata_key == config.JSON_KEY_STORE_BUILDID:
+                        existing_buildid = json_obj.get_subvalue(store_obj.get_key(), config.JSON_KEY_STORE_BUILDID)
                         new_buildid = latest_jsondata.get_value(store_subdata_key)
-                        if existing_buildid and existing_buildid != config.default_buildid and new_buildid == config.default_buildid:
+                        if existing_buildid and existing_buildid != config.DEFAULT_BUILDID and new_buildid == config.DEFAULT_BUILDID:
                             continue
                     json_obj.fill_subvalue(store_obj.get_key(), store_subdata_key, latest_jsondata.get_value(store_subdata_key))
-                    if store_subdata_key == config.json_key_store_paths:
+                    if store_subdata_key == config.JSON_KEY_STORE_PATHS:
                         store_paths = json_obj.get_subvalue(store_obj.get_key(), store_subdata_key, [])
                         store_paths = paths.prune_child_paths(store_paths)
                         json_obj.set_subvalue(store_obj.get_key(), store_subdata_key, store_paths)

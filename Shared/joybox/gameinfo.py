@@ -161,14 +161,14 @@ class GameInfo:
             remote_locker_type)
 
         # Set paths
-        self.set_value(config.json_key_save_dir, save_dir)
-        self.set_value(config.json_key_general_save_dir, general_save_dir)
-        self.set_value(config.json_key_local_cache_dir, local_cache_dir)
-        self.set_value(config.json_key_remote_cache_dir, remote_cache_dir)
-        self.set_value(config.json_key_local_rom_dir, local_rom_dir)
-        self.set_value(config.json_key_remote_rom_dir, remote_rom_dir)
-        self.set_value(config.json_key_local_save_dir, local_save_dir)
-        self.set_value(config.json_key_remote_save_dir, remote_save_dir)
+        self.set_value(config.JSON_KEY_SAVE_DIR, save_dir)
+        self.set_value(config.JSON_KEY_GENERAL_SAVE_DIR, general_save_dir)
+        self.set_value(config.JSON_KEY_LOCAL_CACHE_DIR, local_cache_dir)
+        self.set_value(config.JSON_KEY_REMOTE_CACHE_DIR, remote_cache_dir)
+        self.set_value(config.JSON_KEY_LOCAL_ROM_DIR, local_rom_dir)
+        self.set_value(config.JSON_KEY_REMOTE_ROM_DIR, remote_rom_dir)
+        self.set_value(config.JSON_KEY_LOCAL_SAVE_DIR, local_save_dir)
+        self.set_value(config.JSON_KEY_REMOTE_SAVE_DIR, remote_save_dir)
 
     # Get json file
     def get_json_file(self):
@@ -307,17 +307,17 @@ class GameInfo:
 
     # Check if metadata exists
     def has_metadata(self):
-        return isinstance(self.get_value(config.json_key_metadata), metadataentry.MetadataEntry)
+        return isinstance(self.get_value(config.JSON_KEY_METADATA), metadataentry.MetadataEntry)
 
     # Get metadata
     def get_metadata(self):
         if self.has_metadata():
-            return self.get_value(config.json_key_metadata)
+            return self.get_value(config.JSON_KEY_METADATA)
         return None
 
     # Set metadata
     def set_metadata(self, metadata):
-        return self.set_value(config.json_key_metadata, metadata)
+        return self.set_value(config.JSON_KEY_METADATA, metadata)
 
     # Get metadata value
     def get_metadata_value(self, key):
@@ -372,11 +372,11 @@ class GameInfo:
 
     # Check if coop
     def is_coop(self):
-        return self.get_metadata_value(config.metadata_key_coop) == "Yes"
+        return self.get_metadata_value(config.METADATA_KEY_COOP) == "Yes"
 
     # Check if playable
     def is_playable(self):
-        return self.get_metadata_value(config.metadata_key_playable) == "Yes"
+        return self.get_metadata_value(config.METADATA_KEY_PLAYABLE) == "Yes"
 
     ##############################
 
@@ -432,27 +432,27 @@ class GameInfo:
 
     # Get launch name
     def get_launch_name(self):
-        return self.get_value(config.json_key_launch_name)
+        return self.get_value(config.JSON_KEY_LAUNCH_NAME)
 
     # Get launch file
     def get_launch_file(self):
-        return self.get_value(config.json_key_launch_file)
+        return self.get_value(config.JSON_KEY_LAUNCH_FILE)
 
     # Get launch dir
     def get_launch_dir(self):
-        return self.get_value(config.json_key_launch_dir)
+        return self.get_value(config.JSON_KEY_LAUNCH_DIR)
 
     # Get transform file
     def get_transform_file(self):
-        return self.get_value(config.json_key_transform_file)
+        return self.get_value(config.JSON_KEY_TRANSFORM_FILE)
 
     # Get key file
     def get_key_file(self):
-        return self.get_value(config.json_key_key_file)
+        return self.get_value(config.JSON_KEY_KEY_FILE)
 
     # Get files
     def get_files(self, extension = None):
-        files = self.get_value(config.json_key_files)
+        files = self.get_value(config.JSON_KEY_FILES)
         if not files:
             return []
         if isinstance(extension, str):
@@ -463,53 +463,53 @@ class GameInfo:
 
     # Get dlc
     def get_dlc(self):
-        return self.get_value(config.json_key_dlc)
+        return self.get_value(config.JSON_KEY_DLC)
 
     # Get updates
     def get_updates(self):
-        return self.get_value(config.json_key_update)
+        return self.get_value(config.JSON_KEY_UPDATE)
 
     # Get extras
     def get_extras(self):
-        return self.get_value(config.json_key_extra)
+        return self.get_value(config.JSON_KEY_EXTRA)
 
     # Get dependencies
     def get_dependencies(self):
-        return self.get_value(config.json_key_dependencies)
+        return self.get_value(config.JSON_KEY_DEPENDENCIES)
 
     ##############################
 
     # Get save dir
     def get_save_dir(self):
-        return self.get_value(config.json_key_save_dir)
+        return self.get_value(config.JSON_KEY_SAVE_DIR)
 
     # Get general save dir
     def get_general_save_dir(self):
-        return self.get_value(config.json_key_general_save_dir)
+        return self.get_value(config.JSON_KEY_GENERAL_SAVE_DIR)
 
     # Get local cache dir
     def get_local_cache_dir(self):
-        return self.get_value(config.json_key_local_cache_dir)
+        return self.get_value(config.JSON_KEY_LOCAL_CACHE_DIR)
 
     # Get remote cache dir
     def get_remote_cache_dir(self):
-        return self.get_value(config.json_key_remote_cache_dir)
+        return self.get_value(config.JSON_KEY_REMOTE_CACHE_DIR)
 
     # Get local rom dir
     def get_local_rom_dir(self):
-        return self.get_value(config.json_key_local_rom_dir)
+        return self.get_value(config.JSON_KEY_LOCAL_ROM_DIR)
 
     # Get remote rom dir
     def get_remote_rom_dir(self):
-        return self.get_value(config.json_key_remote_rom_dir)
+        return self.get_value(config.JSON_KEY_REMOTE_ROM_DIR)
 
     # Get local save dir
     def get_local_save_dir(self):
-        return self.get_value(config.json_key_local_save_dir)
+        return self.get_value(config.JSON_KEY_LOCAL_SAVE_DIR)
 
     # Get remote save dir
     def get_remote_save_dir(self):
-        return self.get_value(config.json_key_remote_save_dir)
+        return self.get_value(config.JSON_KEY_REMOTE_SAVE_DIR)
 
     # Get rom dir by locker type
     def get_rom_dir(self, locker_type):
@@ -596,101 +596,101 @@ class GameInfo:
 
     # Get store appid
     def get_store_appid(self, store_key = None):
-        return self.get_subvalue(store_key if store_key else self.get_main_store_key(), config.json_key_store_appid)
+        return self.get_subvalue(store_key if store_key else self.get_main_store_key(), config.JSON_KEY_STORE_APPID)
     def set_store_appid(self, value, store_key = None):
-        self.set_subvalue(store_key if store_key else self.get_main_store_key(), config.json_key_store_appid, value)
+        self.set_subvalue(store_key if store_key else self.get_main_store_key(), config.JSON_KEY_STORE_APPID, value)
 
     # Get store appname
     def get_store_appname(self, store_key = None):
-        return self.get_subvalue(store_key if store_key else self.get_main_store_key(), config.json_key_store_appname)
+        return self.get_subvalue(store_key if store_key else self.get_main_store_key(), config.JSON_KEY_STORE_APPNAME)
     def set_store_appname(self, value, store_key = None):
-        self.set_subvalue(store_key if store_key else self.get_main_store_key(), config.json_key_store_appname, value)
+        self.set_subvalue(store_key if store_key else self.get_main_store_key(), config.JSON_KEY_STORE_APPNAME, value)
 
     # Get store appurl
     def get_store_appurl(self, store_key = None):
-        return self.get_subvalue(store_key if store_key else self.get_main_store_key(), config.json_key_store_appurl)
+        return self.get_subvalue(store_key if store_key else self.get_main_store_key(), config.JSON_KEY_STORE_APPURL)
     def set_store_appurl(self, value, store_key = None):
-        self.set_subvalue(store_key if store_key else self.get_main_store_key(), config.json_key_store_appurl, value)
+        self.set_subvalue(store_key if store_key else self.get_main_store_key(), config.JSON_KEY_STORE_APPURL, value)
 
     # Get store branchid
     def get_store_branchid(self, store_key = None):
-        return self.get_subvalue(store_key if store_key else self.get_main_store_key(), config.json_key_store_branchid)
+        return self.get_subvalue(store_key if store_key else self.get_main_store_key(), config.JSON_KEY_STORE_BRANCHID)
     def set_store_branchid(self, value, store_key = None):
-        self.set_subvalue(store_key if store_key else self.get_main_store_key(), config.json_key_store_branchid, value)
+        self.set_subvalue(store_key if store_key else self.get_main_store_key(), config.JSON_KEY_STORE_BRANCHID, value)
 
     # Get store builddate
     def get_store_builddate(self, store_key = None):
-        return self.get_subvalue(store_key if store_key else self.get_main_store_key(), config.json_key_store_builddate)
+        return self.get_subvalue(store_key if store_key else self.get_main_store_key(), config.JSON_KEY_STORE_BUILDDATE)
     def set_store_builddate(self, value, store_key = None):
-        self.set_subvalue(store_key if store_key else self.get_main_store_key(), config.json_key_store_builddate, value)
+        self.set_subvalue(store_key if store_key else self.get_main_store_key(), config.JSON_KEY_STORE_BUILDDATE, value)
 
     # Get store buildid
     def get_store_buildid(self, store_key = None):
-        return self.get_subvalue(store_key if store_key else self.get_main_store_key(), config.json_key_store_buildid)
+        return self.get_subvalue(store_key if store_key else self.get_main_store_key(), config.JSON_KEY_STORE_BUILDID)
     def set_store_buildid(self, value, store_key = None):
-        self.set_subvalue(store_key if store_key else self.get_main_store_key(), config.json_key_store_buildid, value)
+        self.set_subvalue(store_key if store_key else self.get_main_store_key(), config.JSON_KEY_STORE_BUILDID, value)
 
     # Get store name
     def get_store_name(self, store_key = None):
-        return self.get_subvalue(store_key if store_key else self.get_main_store_key(), config.json_key_store_name)
+        return self.get_subvalue(store_key if store_key else self.get_main_store_key(), config.JSON_KEY_STORE_NAME)
     def set_store_name(self, value, store_key = None):
-        self.set_subvalue(store_key if store_key else self.get_main_store_key(), config.json_key_store_name, value)
+        self.set_subvalue(store_key if store_key else self.get_main_store_key(), config.JSON_KEY_STORE_NAME, value)
 
     # Get store controller support
     def get_store_controller_support(self, store_key = None):
-        return self.get_subvalue(store_key if store_key else self.get_main_store_key(), config.json_key_store_controller_support)
+        return self.get_subvalue(store_key if store_key else self.get_main_store_key(), config.JSON_KEY_STORE_CONTROLLER_SUPPORT)
     def set_store_controller_support(self, value, store_key = None):
-        self.set_subvalue(store_key if store_key else self.get_main_store_key(), config.json_key_store_controller_support, value)
+        self.set_subvalue(store_key if store_key else self.get_main_store_key(), config.JSON_KEY_STORE_CONTROLLER_SUPPORT, value)
 
     # Get store installdir
     def get_store_installdir(self, store_key = None):
-        return self.get_subvalue(store_key if store_key else self.get_main_store_key(), config.json_key_store_installdir)
+        return self.get_subvalue(store_key if store_key else self.get_main_store_key(), config.JSON_KEY_STORE_INSTALLDIR)
     def set_store_installdir(self, value, store_key = None):
-        self.set_subvalue(store_key if store_key else self.get_main_store_key(), config.json_key_store_installdir, value)
+        self.set_subvalue(store_key if store_key else self.get_main_store_key(), config.JSON_KEY_STORE_INSTALLDIR, value)
 
     # Get store paths
     def get_store_paths(self, store_key = None):
-        return self.get_subvalue(store_key if store_key else self.get_main_store_key(), config.json_key_store_paths, [])
+        return self.get_subvalue(store_key if store_key else self.get_main_store_key(), config.JSON_KEY_STORE_PATHS, [])
     def set_store_paths(self, value, store_key = None):
-        self.set_subvalue(store_key if store_key else self.get_main_store_key(), config.json_key_store_paths, value)
+        self.set_subvalue(store_key if store_key else self.get_main_store_key(), config.JSON_KEY_STORE_PATHS, value)
 
     # Get store keys
     def get_store_keys(self, store_key = None):
-        return self.get_subvalue(store_key if store_key else self.get_main_store_key(), config.json_key_store_keys, [])
+        return self.get_subvalue(store_key if store_key else self.get_main_store_key(), config.JSON_KEY_STORE_KEYS, [])
     def set_store_keys(self, value, store_key = None):
-        self.set_subvalue(store_key if store_key else self.get_main_store_key(), config.json_key_store_keys, value)
+        self.set_subvalue(store_key if store_key else self.get_main_store_key(), config.JSON_KEY_STORE_KEYS, value)
 
     # Get store launch
     def get_store_launch(self, store_key = None):
-        return self.get_subvalue(store_key if store_key else self.get_main_store_key(), config.json_key_store_launch, [])
+        return self.get_subvalue(store_key if store_key else self.get_main_store_key(), config.JSON_KEY_STORE_LAUNCH, [])
     def get_store_launch_programs(self, store_key = None):
         return [computer.Program(p) for p in self.get_store_launch(store_key)]
     def set_store_launch(self, value, store_key = None):
-        self.set_subvalue(store_key if store_key else self.get_main_store_key(), config.json_key_store_launch, value)
+        self.set_subvalue(store_key if store_key else self.get_main_store_key(), config.JSON_KEY_STORE_LAUNCH, value)
     def set_store_launch_programs(self, value, store_key = None):
         self.set_store_launch([v.get_data() for v in value], store_key)
 
     # Get store setup
     def get_store_setup(self, store_key = None):
-        return self.get_subvalue(store_key if store_key else self.get_main_store_key(), config.json_key_store_setup, {})
+        return self.get_subvalue(store_key if store_key else self.get_main_store_key(), config.JSON_KEY_STORE_SETUP, {})
     def set_store_setup(self, value, store_key = None):
-        self.set_subvalue(store_key if store_key else self.get_main_store_key(), config.json_key_store_setup, value)
+        self.set_subvalue(store_key if store_key else self.get_main_store_key(), config.JSON_KEY_STORE_SETUP, value)
 
     # Get store setup install
     def get_store_setup_install(self, store_key = None):
-        return self.get_store_setup(store_key).get(config.json_key_store_setup_install, [])
+        return self.get_store_setup(store_key).get(config.JSON_KEY_STORE_SETUP_INSTALL, [])
     def get_store_setup_install_programs(self, store_key = None):
         return [computer.Program(p) for p in self.get_store_setup_install(store_key)]
 
     # Get store setup preinstall
     def get_store_setup_preinstall(self, store_key = None):
-        return self.get_store_setup(store_key).get(config.json_key_store_setup_preinstall, [])
+        return self.get_store_setup(store_key).get(config.JSON_KEY_STORE_SETUP_PREINSTALL, [])
     def get_store_setup_preinstall_steps(self, store_key = None):
         return [computer.ProgramStep(p) for p in self.get_store_setup_preinstall(store_key)]
 
     # Get store setup postinstall
     def get_store_setup_postinstall(self, store_key = None):
-        return self.get_store_setup(store_key).get(config.json_key_store_setup_postinstall, [])
+        return self.get_store_setup(store_key).get(config.JSON_KEY_STORE_SETUP_POSTINSTALL, [])
     def get_store_setup_postinstall_steps(self, store_key = None):
         return [computer.ProgramStep(p) for p in self.get_store_setup_postinstall(store_key)]
 
@@ -717,7 +717,7 @@ class GameInfo:
             # Parse down the complete list to the ones most likely to be games
             runnable_files_likely = []
             for relative_path in runnable_files_all:
-                path_to_add = paths.normalize_file_path(relative_path, separator = config.os_pathsep)
+                path_to_add = paths.normalize_file_path(relative_path, separator = config.OS_PATHSEP)
                 should_ignore = False
                 for ignore_path in config.ignored_paths_install:
                     if path_to_add.startswith(ignore_path):
@@ -793,17 +793,17 @@ class GameInfo:
 
     # Determine if store has dos programs
     def does_store_have_dos_programs(self, store_key = None):
-        matching_programs = self.find_store_matching_programs(store_key = store_key, store_subkey = config.program_key_is_dos)
+        matching_programs = self.find_store_matching_programs(store_key = store_key, store_subkey = config.PROGRAM_KEY_IS_DOS)
         return len(matching_programs) > 0
 
     # Determine if store has win31 programs
     def does_store_have_win31_programs(self, store_key = None):
-        matching_programs = self.find_store_matching_programs(store_key = store_key, store_subkey = config.program_key_is_win31)
+        matching_programs = self.find_store_matching_programs(store_key = store_key, store_subkey = config.PROGRAM_KEY_IS_WIN31)
         return len(matching_programs) > 0
 
     # Determine if store has scumm programs
     def does_store_have_scumm_programs(self, store_key = None):
-        matching_programs = self.find_store_matching_programs(store_key = store_key, store_subkey = config.program_key_is_scumm)
+        matching_programs = self.find_store_matching_programs(store_key = store_key, store_subkey = config.PROGRAM_KEY_IS_SCUMM)
         return len(matching_programs) > 0
 
     # Determine if store has windows programs

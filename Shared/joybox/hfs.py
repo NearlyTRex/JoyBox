@@ -10,50 +10,50 @@ from joybox import paths
 from joybox import serialization
 
 # Volume signatures, 1024 bytes into the volume
-hfs_signature = b"BD"
+HFS_SIGNATURE = b"BD"
 hfsplus_signatures = [b"H+", b"HX"]
 
 # Apple partition map
-apm_signature = b"ER"
-apm_entry_signature = b"PM"
-apm_hfs_partition_type = b"Apple_HFS"
-apm_default_block_size = 512
+APM_SIGNATURE = b"ER"
+APM_ENTRY_SIGNATURE = b"PM"
+APM_HFS_PARTITION_TYPE = b"Apple_HFS"
+APM_DEFAULT_BLOCK_SIZE = 512
 
 # Seconds from the HFS epoch (1904) to the Unix epoch (1970) and to the AppleDouble epoch (2000)
-hfs_to_unix_seconds = 2082844800
-hfs_to_appledouble_seconds = 3029529600
+HFS_TO_UNIX_SECONDS = 2082844800
+HFS_TO_APPLEDOUBLE_SECONDS = 3029529600
 
 # AppleDouble entries
-appledouble_magic = 0x00051607
-appledouble_version = 0x00020000
-appledouble_entry_resource_fork = 2
-appledouble_entry_file_dates = 8
-appledouble_entry_finder_info = 9
-appledouble_unknown_date = -0x80000000
+APPLEDOUBLE_MAGIC = 0x00051607
+APPLEDOUBLE_VERSION = 0x00020000
+APPLEDOUBLE_ENTRY_RESOURCE_FORK = 2
+APPLEDOUBLE_ENTRY_FILE_DATES = 8
+APPLEDOUBLE_ENTRY_FINDER_INFO = 9
+APPLEDOUBLE_UNKNOWN_DATE = -0x80000000
 
 # HFS+ volume header
-hfsplus_block_size_offset = 40
-hfsplus_extents_file_offset = 192
-hfsplus_catalog_file_offset = 272
+HFSPLUS_BLOCK_SIZE_OFFSET = 40
+HFSPLUS_EXTENTS_FILE_OFFSET = 192
+HFSPLUS_CATALOG_FILE_OFFSET = 272
 
 # HFS+ catalog
-hfsplus_root_folder_id = 2
-hfsplus_extents_file_id = 3
-hfsplus_catalog_file_id = 4
-hfsplus_folder_record = 1
-hfsplus_file_record = 2
-hfsplus_data_fork = 0x00
-hfsplus_resource_fork = 0xFF
-hfsplus_leaf_node = -1
-hfsplus_hard_link_finder_info = b"hlnkhfs+"
-hfsplus_compressed_flag = 0x20
+HFSPLUS_ROOT_FOLDER_ID = 2
+HFSPLUS_EXTENTS_FILE_ID = 3
+HFSPLUS_CATALOG_FILE_ID = 4
+HFSPLUS_FOLDER_RECORD = 1
+HFSPLUS_FILE_RECORD = 2
+HFSPLUS_DATA_FORK = 0x00
+HFSPLUS_RESOURCE_FORK = 0xFF
+HFSPLUS_LEAF_NODE = -1
+HFSPLUS_HARD_LINK_FINDER_INFO = b"hlnkhfs+"
+HFSPLUS_COMPRESSED_FLAG = 0x20
 
 # Filesystem internals at the root of an HFS+ volume
-hfsplus_private_data_name = "\0\0\0\0HFS+ Private Data"
-hfsplus_private_names = [hfsplus_private_data_name, ".HFS+ Private Directory Data\r", ".journal", ".journal_info_block"]
+HFSPLUS_PRIVATE_DATA_NAME = "\0\0\0\0HFS+ Private Data"
+hfsplus_private_names = [HFSPLUS_PRIVATE_DATA_NAME, ".HFS+ Private Directory Data\r", ".journal", ".journal_info_block"]
 
 # Bytes read from the image at a time
-hfsplus_chunk_size = 8 * 1024 * 1024
+HFSPLUS_CHUNK_SIZE = 8 * 1024 * 1024
 
 ###########################################################
 # Volumes
@@ -68,7 +68,7 @@ def get_hfs_volume_info(image_file, offset, length):
     signature = mdb[0:2]
     if signature in hfsplus_signatures:
         return (offset, length, signature)
-    if signature != hfs_signature:
+    if signature != HFS_SIGNATURE:
         return None
     if mdb[0x7C:0x7E] in hfsplus_signatures:
         allocation_block_size = struct.unpack(">I", mdb[0x14:0x18])[0]
@@ -85,7 +85,7 @@ def find_apm_partition(image_file, entry_size, partition_type):
     index = 0
     while index < entry_count:
         entry = serialization.read_binary_file(image_file, offset = entry_size * (index + 1), length = 80)
-        if not entry or len(entry) < 80 or entry[0:2] != apm_entry_signature:
+        if not entry or len(entry) < 80 or entry[0:2] != APM_ENTRY_SIGNATURE:
             return None
         entry_count, start_block, block_count = struct.unpack(">III", entry[4:16])
         if entry[48:80].rstrip(b"\0") == partition_type:
@@ -102,10 +102,10 @@ def find_hfs_volume(image_file):
 
     # Volume behind an Apple partition map
     # CD maps often give 2048-byte blocks yet space their entries and count their partitions in 512 bytes
-    if header[0:2] == apm_signature:
-        block_size = struct.unpack(">H", header[2:4])[0] or apm_default_block_size
-        for entry_size in sorted({apm_default_block_size, block_size}):
-            partition = find_apm_partition(image_file, entry_size, apm_hfs_partition_type)
+    if header[0:2] == APM_SIGNATURE:
+        block_size = struct.unpack(">H", header[2:4])[0] or APM_DEFAULT_BLOCK_SIZE
+        for entry_size in sorted({APM_DEFAULT_BLOCK_SIZE, block_size}):
+            partition = find_apm_partition(image_file, entry_size, APM_HFS_PARTITION_TYPE)
             if not partition:
                 continue
             start_block, block_count = partition
@@ -133,8 +133,8 @@ def get_local_filename(hfs_name):
 # Convert hfs date to appledouble date
 def convert_hfs_date_to_appledouble(hfs_date):
     if not hfs_date:
-        return appledouble_unknown_date
-    return hfs_date - hfs_to_appledouble_seconds
+        return APPLEDOUBLE_UNKNOWN_DATE
+    return hfs_date - HFS_TO_APPLEDOUBLE_SECONDS
 
 # Check if finder info needs appledouble
 def does_finder_info_need_appledouble(finder_info, resource_fork_size):
@@ -154,11 +154,11 @@ def build_appledouble(finder_info, dates, resource_fork):
         convert_hfs_date_to_appledouble(backed_up),
         convert_hfs_date_to_appledouble(modified))
     entries = [
-        (appledouble_entry_file_dates, file_dates),
-        (appledouble_entry_finder_info, finder_info.ljust(32, b"\0")[:32]),
-        (appledouble_entry_resource_fork, bytes(resource_fork))
+        (APPLEDOUBLE_ENTRY_FILE_DATES, file_dates),
+        (APPLEDOUBLE_ENTRY_FINDER_INFO, finder_info.ljust(32, b"\0")[:32]),
+        (APPLEDOUBLE_ENTRY_RESOURCE_FORK, bytes(resource_fork))
     ]
-    header = struct.pack(">II16sH", appledouble_magic, appledouble_version, b"", len(entries))
+    header = struct.pack(">II16sH", APPLEDOUBLE_MAGIC, APPLEDOUBLE_VERSION, b"", len(entries))
     offset = len(header) + 12 * len(entries)
     descriptors = b""
     for entry_id, entry_data in entries:
@@ -189,7 +189,7 @@ def write_mac_metadata(
     if dates[1]:
         fileops.set_file_modified_time(
             src = local_path,
-            timestamp = dates[1] - hfs_to_unix_seconds,
+            timestamp = dates[1] - HFS_TO_UNIX_SECONDS,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
@@ -336,7 +336,7 @@ def iterate_hfsplus_fork(volume, file_id, fork_type, fork):
         position = volume["offset"] + start_block * volume["block_size"]
         extent_remaining = min(block_count * volume["block_size"], remaining)
         while extent_remaining > 0:
-            length = min(hfsplus_chunk_size, extent_remaining)
+            length = min(HFSPLUS_CHUNK_SIZE, extent_remaining)
             chunk = serialization.read_binary_file(volume["image_file"], offset = position, length = length)
             if not chunk or len(chunk) != length:
                 raise ValueError("A fork of catalog node %d runs past the end of the image" % file_id)
@@ -367,7 +367,7 @@ def iterate_btree_leaf_records(tree_data):
         if len(node) < node_size:
             raise ValueError("B-tree node %d is past the end of its file" % node_index)
         forward_link, _, node_kind, _, record_count = struct.unpack(">IIbBH", node[0:12])
-        if node_kind != hfsplus_leaf_node:
+        if node_kind != HFSPLUS_LEAF_NODE:
             raise ValueError("B-tree node %d is not a leaf node" % node_index)
         offsets = [struct.unpack(">H", node[node_size - 2 * (index + 1):node_size - 2 * index])[0] for index in range(record_count + 1)]
         for index in range(record_count):
@@ -380,17 +380,17 @@ def parse_hfsplus_catalog_record(record):
     name = record[8:8 + 2 * name_length].decode("utf-16-be", errors = "replace")
     data = record[2 + key_length:]
     record_type = struct.unpack(">h", data[0:2])[0]
-    if record_type not in [hfsplus_folder_record, hfsplus_file_record]:
+    if record_type not in [HFSPLUS_FOLDER_RECORD, HFSPLUS_FILE_RECORD]:
         return None
     entry = {
-        "folder": record_type == hfsplus_folder_record,
+        "folder": record_type == HFSPLUS_FOLDER_RECORD,
         "id": struct.unpack(">I", data[8:12])[0],
         "parent": parent_id,
         "name": name,
         "dates": struct.unpack(">III", data[12:20] + data[28:32]),
         "finder_info": data[48:80]
     }
-    if record_type == hfsplus_file_record:
+    if record_type == HFSPLUS_FILE_RECORD:
         entry["owner_flags"] = data[41]
         entry["mode"], entry["special"] = struct.unpack(">HI", data[42:48])
         entry["data_fork"] = parse_hfsplus_fork_data(data[88:168])
@@ -405,22 +405,22 @@ def read_hfsplus_volume(image_file, volume_offset):
     volume = {
         "image_file": image_file,
         "offset": volume_offset,
-        "block_size": struct.unpack(">I", header[hfsplus_block_size_offset:hfsplus_block_size_offset + 4])[0],
+        "block_size": struct.unpack(">I", header[HFSPLUS_BLOCK_SIZE_OFFSET:HFSPLUS_BLOCK_SIZE_OFFSET + 4])[0],
         "overflow": {},
         "children": {}
     }
 
     # Read extents overflow file
-    extents_fork = parse_hfsplus_fork_data(header[hfsplus_extents_file_offset:hfsplus_extents_file_offset + 80])
-    extents_tree = read_hfsplus_fork(volume, hfsplus_extents_file_id, hfsplus_data_fork, extents_fork)
+    extents_fork = parse_hfsplus_fork_data(header[HFSPLUS_EXTENTS_FILE_OFFSET:HFSPLUS_EXTENTS_FILE_OFFSET + 80])
+    extents_tree = read_hfsplus_fork(volume, HFSPLUS_EXTENTS_FILE_ID, HFSPLUS_DATA_FORK, extents_fork)
     for record in iterate_btree_leaf_records(extents_tree):
         fork_type, file_id, start_block = struct.unpack(">BxII", record[2:12])
         extents = [struct.unpack(">II", record[12 + 8 * index:20 + 8 * index]) for index in range(8)]
         volume["overflow"][(file_id, fork_type, start_block)] = [extent for extent in extents if extent[1]]
 
     # Read catalog file
-    catalog_fork = parse_hfsplus_fork_data(header[hfsplus_catalog_file_offset:hfsplus_catalog_file_offset + 80])
-    catalog_tree = read_hfsplus_fork(volume, hfsplus_catalog_file_id, hfsplus_data_fork, catalog_fork)
+    catalog_fork = parse_hfsplus_fork_data(header[HFSPLUS_CATALOG_FILE_OFFSET:HFSPLUS_CATALOG_FILE_OFFSET + 80])
+    catalog_tree = read_hfsplus_fork(volume, HFSPLUS_CATALOG_FILE_ID, HFSPLUS_DATA_FORK, catalog_fork)
     for record in iterate_btree_leaf_records(catalog_tree):
         entry = parse_hfsplus_catalog_record(record)
         if entry:
@@ -430,8 +430,8 @@ def read_hfsplus_volume(image_file, volume_offset):
 # Get hfsplus hard link targets
 # Hard-linked files keep their contents as iNode<number> files in a hidden folder at the root
 def get_hfsplus_hard_link_targets(volume):
-    for entry in volume["children"].get(hfsplus_root_folder_id, []):
-        if entry["folder"] and entry["name"] == hfsplus_private_data_name:
+    for entry in volume["children"].get(HFSPLUS_ROOT_FOLDER_ID, []):
+        if entry["folder"] and entry["name"] == HFSPLUS_PRIVATE_DATA_NAME:
             return {child["name"]: child for child in volume["children"].get(entry["id"], [])}
     return {}
 
@@ -447,20 +447,20 @@ def extract_hfsplus_file(
 
     # Follow hard link
     source = entry
-    if entry["finder_info"][0:8] == hfsplus_hard_link_finder_info:
+    if entry["finder_info"][0:8] == HFSPLUS_HARD_LINK_FINDER_INFO:
         source = hard_link_targets.get("iNode%d" % entry["special"])
         if not source:
             logger.log_warning("Skipping hard link '%s' with no target" % local_path)
             return True
 
     # Skip compressed file
-    if source["owner_flags"] & hfsplus_compressed_flag:
+    if source["owner_flags"] & HFSPLUS_COMPRESSED_FLAG:
         logger.log_warning("Skipping compressed file '%s'" % local_path)
         return True
 
     # Make symlink
     if stat.S_ISLNK(source["mode"]):
-        link_target = read_hfsplus_fork(volume, source["id"], hfsplus_data_fork, source["data_fork"])
+        link_target = read_hfsplus_fork(volume, source["id"], HFSPLUS_DATA_FORK, source["data_fork"])
         return fileops.create_symlink(
             src = link_target.decode("utf-8", errors = "replace"),
             dest = local_path,
@@ -470,7 +470,7 @@ def extract_hfsplus_file(
 
     # Extract data fork
     contents_mode = "wb"
-    for chunk in iterate_hfsplus_fork(volume, source["id"], hfsplus_data_fork, source["data_fork"]):
+    for chunk in iterate_hfsplus_fork(volume, source["id"], HFSPLUS_DATA_FORK, source["data_fork"]):
         success = fileops.touch_file(
             src = local_path,
             contents = chunk,
@@ -503,7 +503,7 @@ def extract_hfsplus_file(
         local_path = local_path,
         finder_info = source["finder_info"],
         dates = source["dates"],
-        resource_fork = read_hfsplus_fork(volume, source["id"], hfsplus_resource_fork, source["resource_fork"]),
+        resource_fork = read_hfsplus_fork(volume, source["id"], HFSPLUS_RESOURCE_FORK, source["resource_fork"]),
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -529,7 +529,7 @@ def extract_hfsplus_folder(
 
     # Extract each item
     for entry in volume["children"].get(folder_id, []):
-        if folder_id == hfsplus_root_folder_id and entry["name"] in hfsplus_private_names:
+        if folder_id == HFSPLUS_ROOT_FOLDER_ID and entry["name"] in hfsplus_private_names:
             continue
         local_name = get_local_filename(entry["name"])
         if not local_name:
@@ -570,7 +570,7 @@ def extract_hfsplus_volume(
         volume = read_hfsplus_volume(image_file, volume_offset)
         return extract_hfsplus_folder(
             volume = volume,
-            folder_id = hfsplus_root_folder_id,
+            folder_id = HFSPLUS_ROOT_FOLDER_ID,
             extract_dir = extract_dir,
             hard_link_targets = get_hfsplus_hard_link_targets(volume),
             verbose = verbose,

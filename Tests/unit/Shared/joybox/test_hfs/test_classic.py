@@ -40,8 +40,8 @@ def test_extracting_writes_appledouble_only_beside_mac_files(image, tmp_path):
     hfs.extract_hfs(image, str(output))
 
     _, _, entries = read_appledouble_entries((output / "._Start").read_bytes())
-    assert entries[hfs.appledouble_entry_finder_info][:8] == b"APPLPJ03"
-    assert entries[hfs.appledouble_entry_resource_fork] == b"resources"
+    assert entries[hfs.APPLEDOUBLE_ENTRY_FINDER_INFO][:8] == b"APPLPJ03"
+    assert entries[hfs.APPLEDOUBLE_ENTRY_RESOURCE_FORK] == b"resources"
     assert not (output / "._Read Me").exists()
 
 
@@ -49,7 +49,7 @@ def test_extracting_keeps_the_modified_date(image, tmp_path):
     output = tmp_path / "Game"
     hfs.extract_hfs(image, str(output))
 
-    assert os.path.getmtime(str(output / "Read Me")) == NEW_YEAR_2005 - hfs.hfs_to_unix_seconds
+    assert os.path.getmtime(str(output / "Read Me")) == NEW_YEAR_2005 - hfs.HFS_TO_UNIX_SECONDS
 
 
 def test_an_unusable_name_is_skipped(tmp_path, caplog):

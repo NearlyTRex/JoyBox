@@ -17,14 +17,14 @@ from joybox import settings
 from joybox import runtime
 
 # Scraping limits; each can be overridden in UserData.Scraping
-default_element_wait_seconds = 15
-default_fetch_retries = 3
-default_fetch_retry_delay_seconds = 2
-default_min_match_score = 50
-default_page_load_interval_seconds = 3
+DEFAULT_ELEMENT_WAIT_SECONDS = 15
+DEFAULT_FETCH_RETRIES = 3
+DEFAULT_FETCH_RETRY_DELAY_SECONDS = 2
+DEFAULT_MIN_MATCH_SCORE = 50
+DEFAULT_PAGE_LOAD_INTERVAL_SECONDS = 3
 
 # Seconds a stopped browser gets to exit before it is killed
-browser_stop_seconds = 3
+BROWSER_STOP_SECONDS = 3
 
 ###########################################################
 
@@ -35,23 +35,23 @@ def get_scraping_limit(field, fallback, minimum = 0):
 
 # Seconds to wait for an element before treating it as absent
 def get_element_wait_seconds():
-    return get_scraping_limit("element_wait_seconds", default_element_wait_seconds, minimum = 1)
+    return get_scraping_limit("element_wait_seconds", DEFAULT_ELEMENT_WAIT_SECONDS, minimum = 1)
 
 # Attempts a page scrape gets before it is given up
 def get_fetch_retries():
-    return get_scraping_limit("fetch_retries", default_fetch_retries, minimum = 1)
+    return get_scraping_limit("fetch_retries", DEFAULT_FETCH_RETRIES, minimum = 1)
 
 # Seconds before the first retry of a scrape; each later retry waits twice as long
 def get_fetch_retry_delay_seconds():
-    return get_scraping_limit("fetch_retry_delay_seconds", default_fetch_retry_delay_seconds)
+    return get_scraping_limit("fetch_retry_delay_seconds", DEFAULT_FETCH_RETRY_DELAY_SECONDS)
 
 # Lowest title similarity (0-100) a search result needs to be opened
 def get_min_match_score():
-    return get_scraping_limit("min_match_score", default_min_match_score)
+    return get_scraping_limit("min_match_score", DEFAULT_MIN_MATCH_SCORE)
 
 # Seconds between two page loads from the same site
 def get_page_load_interval_seconds():
-    return get_scraping_limit("page_load_interval_seconds", default_page_load_interval_seconds)
+    return get_scraping_limit("page_load_interval_seconds", DEFAULT_PAGE_LOAD_INTERVAL_SECONDS)
 
 # Retry a scrape with the configured attempts and backoff, cleaning up between tries
 def retry_scrape(func, cleanup_func = None, verbose = False, operation_name = None):
@@ -130,7 +130,7 @@ def stop_browser_group(group_id):
     running_browser_groups.discard(group_id)
     if not signal_process_group(group_id, signal.SIGTERM):
         return
-    deadline = time.monotonic() + browser_stop_seconds
+    deadline = time.monotonic() + BROWSER_STOP_SECONDS
     while time.monotonic() < deadline:
         if not signal_process_group(group_id, 0):
             return

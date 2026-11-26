@@ -146,7 +146,7 @@ def test_preview_lists_the_plan_and_memory_ceiling(tool, tmp_path):
 
     tool.run("-c", "-s", "-r", "2", "-f", "2")
 
-    chunk_mb = config.hash_chunk_size // (1024 * 1024)
+    chunk_mb = config.HASH_CHUNK_SIZE // (1024 * 1024)
     assert [details for _, details in tool.previews] == [[
         "Source: %s" % tmp_path,
         "Destination: hetzner:/Locker/.locker_hashes.db",

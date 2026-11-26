@@ -22,20 +22,20 @@ from joybox import ubunturelease
 ###########################################################
 
 # The seed directory added to the image, and where it appears once booted
-seed_directory = "nocloud"
-seed_source = "/cdrom/%s/" % seed_directory
+SEED_DIRECTORY = "nocloud"
+SEED_SOURCE = "/cdrom/%s/" % SEED_DIRECTORY
 
 # The stock ISO waits for a menu choice; this is how long it waits before
 # installing itself, in seconds
-boot_timeout = 2
+BOOT_TIMEOUT = 2
 
 # What goes in the password field when a key is the only way in. An empty
 # field is not "no login", it is a login that takes no password, so the
 # account is locked instead and the key is left as the way in.
-locked_password = "!"
+LOCKED_PASSWORD = "!"
 
 # Where the stock image keeps the images it boots from
-bios_boot_image = "boot/grub/i386-pc/eltorito.img"
+BIOS_BOOT_IMAGE = "boot/grub/i386-pc/eltorito.img"
 # The efi image and the boot code are pulled out of the stock image and kept
 # beside the tree rather than inside it, since they are appended to the
 # rebuilt image as a partition and a system area rather than packed as files.
@@ -75,7 +75,7 @@ reserved_usernames = {
 }
 
 # What the installer accepts as a username
-username_pattern = r"^[a-z_][a-z0-9_-]*[$]?$"
+USERNAME_PATTERN = r"^[a-z_][a-z0-9_-]*[$]?$"
 
 # Get install profile
 # Everything the installer would have asked a person sitting at the machine.
@@ -123,7 +123,7 @@ def get_install_profile_problems(profile):
         problems.append(
             "Username %s is reserved by the system and the installer will "
             "refuse it (autoinstall_username)" % username)
-    elif not re.match(username_pattern, username):
+    elif not re.match(USERNAME_PATTERN, username):
         problems.append(
             "Username %s is not one the installer accepts; use lower case "
             "letters, digits, dashes and underscores (autoinstall_username)"
@@ -167,7 +167,7 @@ def build_network_config():
 # Where the sshd settings are written. sshd keeps the first value it reads
 # for a setting, and this sorts before the 50-cloud-init.conf cloud-init
 # writes, so these win.
-sshd_config_path = "/etc/ssh/sshd_config.d/10-joybox.conf"
+SSHD_CONFIG_PATH = "/etc/ssh/sshd_config.d/10-joybox.conf"
 
 # Build the sshd settings every installed machine gets: key-only login for the
 # account made here, and local port forwarding, so a service bound to localhost
@@ -201,7 +201,7 @@ def build_user_config(profile):
         "users": [account],
         "write_files": [
             {
-                "path": sshd_config_path,
+                "path": SSHD_CONFIG_PATH,
                 "content": build_sshd_config(profile.get("username")),
                 "permissions": "0644",
             },
@@ -222,7 +222,7 @@ def build_autoinstall_config(profile):
             "realname": profile.get("realname") or profile.get("username"),
             "username": profile.get("username"),
             "hostname": profile.get("hostname"),
-            "password": profile.get("password_hash") or locked_password,
+            "password": profile.get("password_hash") or LOCKED_PASSWORD,
         },
         "user-data": build_user_config(profile),
         "late-commands": [
@@ -328,7 +328,7 @@ def write_seed_files(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    seed_dir = paths.join_paths(iso_dir, seed_directory)
+    seed_dir = paths.join_paths(iso_dir, SEED_DIRECTORY)
     success = fileops.make_directory(
         src = seed_dir,
         verbose = verbose,
@@ -358,7 +358,7 @@ def write_seed_files(
 # seed's semicolon as a command break and boots an interactive installer, so it
 # is escaped for grub; isolinux takes it as written
 def get_kernel_arguments(profile = None, escape_semicolons = False):
-    seed_argument = "ds=nocloud;s=%s" % seed_source
+    seed_argument = "ds=nocloud;s=%s" % SEED_SOURCE
     if escape_semicolons:
         seed_argument = seed_argument.replace(";", "\\;")
     arguments = ["autoinstall", seed_argument]
@@ -393,10 +393,10 @@ def patch_boot_config_contents(contents, profile = None, escape_semicolons = Fal
             patched.append(patch_boot_entry(line, profile, escape_semicolons))
         elif stripped.startswith("set timeout="):
             leading = line[:len(line) - len(line.lstrip())]
-            patched.append("%sset timeout=%d\n" % (leading, boot_timeout))
+            patched.append("%sset timeout=%d\n" % (leading, BOOT_TIMEOUT))
         elif stripped.startswith("timeout "):
             leading = line[:len(line) - len(line.lstrip())]
-            patched.append("%stimeout %d\n" % (leading, boot_timeout * 10))
+            patched.append("%stimeout %d\n" % (leading, BOOT_TIMEOUT * 10))
         else:
             patched.append(line)
     return "".join(patched)
@@ -662,7 +662,7 @@ def build_autoinstall_image(
             iso_file = output_file,
             source_dir = iso_dir,
             volume_name = ubunturelease.get_volume_name(version),
-            bios_boot_image = bios_boot_image,
+            bios_boot_image = BIOS_BOOT_IMAGE,
             efi_boot_image = iso.get_iso_efi_boot_image(work_dir),
             mbr_image = iso.get_iso_mbr_image(work_dir),
             verbose = verbose,

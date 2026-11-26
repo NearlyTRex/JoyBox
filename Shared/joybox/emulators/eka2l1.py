@@ -192,8 +192,8 @@ class EKA2L1(emulatorbase.EmulatorBase):
         # Get launch command
         launch_cmd = [
             programs.get_emulator_program("EKA2L1"),
-            "--mount", config.token_game_dir,
-            "--app", config.token_game_name
+            "--mount", config.TOKEN_GAME_DIR,
+            "--app", config.TOKEN_GAME_NAME
         ]
 
         # Launch game

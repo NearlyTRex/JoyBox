@@ -125,7 +125,7 @@ def test_move_failure(tmp_path):
 ###########################################################
 
 def test_transfer_copies_contents_and_mode(tmp_path, monkeypatch):
-    monkeypatch.setattr(fileops.config, "transfer_chunk_size", 3)
+    monkeypatch.setattr(fileops.config, "TRANSFER_CHUNK_SIZE", 3)
     src = write(tmp_path / "src.bin", "0123456789")
     os.chmod(src, 0o750)
     dest = str(tmp_path / "dest.bin")
@@ -155,7 +155,7 @@ def test_transfer_reports_progress_and_closes_the_bar(tmp_path, monkeypatch):
         def close(self):
             self.closed = True
     monkeypatch.setattr(tqdm, "tqdm", RecordingBar)
-    monkeypatch.setattr(fileops.config, "transfer_chunk_size", 4)
+    monkeypatch.setattr(fileops.config, "TRANSFER_CHUNK_SIZE", 4)
     src = write(tmp_path / "src.bin", "0123456789")
     assert fileops.transfer_file(src, str(tmp_path / "dest.bin"), show_progress = True)
     assert bars[0].total == 10

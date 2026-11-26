@@ -39,7 +39,7 @@ def test_a_transfer_spans_several_chunks(tmp_path):
     # never exercises the second iteration.
     from joybox.config import general as config
 
-    payload = "x" * (config.transfer_chunk_size * 2 + 17)
+    payload = "x" * (config.TRANSFER_CHUNK_SIZE * 2 + 17)
     source = write(tmp_path / "big.bin", payload)
     target = str(tmp_path / "big-copy.bin")
 

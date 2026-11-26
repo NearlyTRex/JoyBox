@@ -13,7 +13,7 @@ from joybox import emulatorbase
 
 # Config files
 config_files = {}
-config_file_general = """
+CONFIG_FILE_GENERAL = """
 BIOS9Path=EMULATOR_SETUP_ROOT/sysdata/nds_arm9_usa.bin
 BIOS7Path=EMULATOR_SETUP_ROOT/sysdata/nds_arm7_usa.bin
 FirmwarePath=EMULATOR_SETUP_ROOT/sysdata/nds_firmware_usa.bin
@@ -23,8 +23,8 @@ DSiFirmwarePath=EMULATOR_SETUP_ROOT/sysdata/dsi_firmware_usa.bin
 DSiNANDPath=EMULATOR_SETUP_ROOT/nand/dsi_nand_usa.bin
 SaveFilePath=GAME_SAVE_DIR
 """
-config_files["melonDS/windows/melonDS.ini"] = config_file_general
-config_files["melonDS/linux/melonDS.AppImage.home/.config/melonDS/melonDS.ini"] = config_file_general
+config_files["melonDS/windows/melonDS.ini"] = CONFIG_FILE_GENERAL
+config_files["melonDS/linux/melonDS.AppImage.home/.config/melonDS/melonDS.ini"] = CONFIG_FILE_GENERAL
 
 # System files
 system_files = {}
@@ -222,7 +222,7 @@ class MelonDS(emulatorbase.EmulatorBase):
         # Get launch command
         launch_cmd = [
             programs.get_emulator_program("melonDS"),
-            config.token_game_file
+            config.TOKEN_GAME_FILE
         ]
         if fullscreen:
             launch_cmd += [

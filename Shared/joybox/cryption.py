@@ -100,7 +100,7 @@ def get_embedded_file_info(
     src,
     passphrase,
     hasher,
-    chunksize = config.hash_chunk_size,
+    chunksize = config.HASH_CHUNK_SIZE,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):

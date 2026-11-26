@@ -209,7 +209,7 @@ class RPCS3(emulatorbase.EmulatorBase):
         # Get launch command
         launch_cmd = [
             programs.get_emulator_program("RPCS3"),
-            config.token_game_file
+            config.TOKEN_GAME_FILE
         ]
         if fullscreen:
             launch_cmd += [

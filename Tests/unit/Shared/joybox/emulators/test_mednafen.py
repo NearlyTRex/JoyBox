@@ -106,11 +106,11 @@ def test_configure_stops_when_a_system_file_cannot_be_copied(seams):
 ###########################################################
 
 def test_launch_runs_the_program_on_the_game(seams):
-    assert launch_cmd(seams) == ["/bin/Mednafen", config.token_game_file]
+    assert launch_cmd(seams) == ["/bin/Mednafen", config.TOKEN_GAME_FILE]
 
 
 def test_launch_has_no_fullscreen_flag(seams):
-    assert launch_cmd(seams, fullscreen = True) == ["/bin/Mednafen", config.token_game_file]
+    assert launch_cmd(seams, fullscreen = True) == ["/bin/Mednafen", config.TOKEN_GAME_FILE]
 
 
 def test_launch_passes_the_game_and_options_through(seams):

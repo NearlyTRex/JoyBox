@@ -104,7 +104,7 @@ def test_an_unparsable_release_date_is_left_unset(gog_store, page):
     entry = gog_store.get_latest_metadata(URL)
 
     assert entry.get_release() is None
-    assert config.metadata_key_release not in entry.game_entry
+    assert config.METADATA_KEY_RELEASE not in entry.game_entry
 
 
 def test_a_bare_page_gives_an_empty_entry(gog_store, page):

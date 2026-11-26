@@ -25,39 +25,39 @@ def test_details_become_jsondata(humble_store, tools, recording_command, no_mani
 
     assert recording_command.only() == show_cmd(APPNAME)
     assert data.get_platform() == config.Platform.COMPUTER_HUMBLE_BUNDLE
-    assert data.get_value(config.json_key_store_appname) == APPNAME
-    assert data.get_value(config.json_key_store_appid)
-    assert data.get_value(config.json_key_store_name) == "Tomb Raider"
-    assert data.get_value(config.json_key_store_buildid) == "1700000000"
-    assert data.get_value(config.json_key_store_paths) == []
-    assert data.get_value(config.json_key_store_keys) == []
+    assert data.get_value(config.JSON_KEY_STORE_APPNAME) == APPNAME
+    assert data.get_value(config.JSON_KEY_STORE_APPID)
+    assert data.get_value(config.JSON_KEY_STORE_NAME) == "Tomb Raider"
+    assert data.get_value(config.JSON_KEY_STORE_BUILDID) == "1700000000"
+    assert data.get_value(config.JSON_KEY_STORE_PATHS) == []
+    assert data.get_value(config.JSON_KEY_STORE_KEYS) == []
 
 
 def test_every_lookup_gets_a_fresh_appid(humble_store, tools, recording_command, no_manifest):
     first = details(humble_store, recording_command, game("Tomb Raider"))
     second = details(humble_store, recording_command, game("Tomb Raider"))
 
-    assert first.get_value(config.json_key_store_appid) != second.get_value(config.json_key_store_appid)
+    assert first.get_value(config.JSON_KEY_STORE_APPID) != second.get_value(config.JSON_KEY_STORE_APPID)
 
 
 def test_the_buildid_follows_the_preferred_platform_only(humble_store, tools, recording_command, no_manifest):
     data = details(humble_store, recording_command, game(
         "Tomb Raider", download("linux", 999), download("windows", 100, "200"), download("mac", 555)))
 
-    assert data.get_value(config.json_key_store_buildid) == "200"
+    assert data.get_value(config.JSON_KEY_STORE_BUILDID) == "200"
 
 
 def test_a_game_without_preferred_downloads_keeps_the_default_buildid(humble_store, tools, recording_command, no_manifest):
     data = details(humble_store, recording_command, game("Tomb Raider", download("linux", 999)))
 
-    assert data.get_value(config.json_key_store_buildid) == config.default_buildid
+    assert data.get_value(config.JSON_KEY_STORE_BUILDID) == config.DEFAULT_BUILDID
 
 
 def test_missing_details_fall_back_to_defaults(humble_store, tools, recording_command, no_manifest):
     data = details(humble_store, recording_command, {})
 
-    assert data.get_value(config.json_key_store_name) == ""
-    assert data.get_value(config.json_key_store_buildid) == config.default_buildid
+    assert data.get_value(config.JSON_KEY_STORE_NAME) == ""
+    assert data.get_value(config.JSON_KEY_STORE_BUILDID) == config.DEFAULT_BUILDID
 
 
 @pytest.mark.parametrize("payload", [
@@ -70,15 +70,15 @@ def test_missing_details_fall_back_to_defaults(humble_store, tools, recording_co
 def test_null_or_odd_details_fall_back_to_defaults(humble_store, tools, recording_command, no_manifest, payload):
     data = details(humble_store, recording_command, payload)
 
-    assert data.get_value(config.json_key_store_name) == ""
-    assert data.get_value(config.json_key_store_buildid) == config.default_buildid
+    assert data.get_value(config.JSON_KEY_STORE_NAME) == ""
+    assert data.get_value(config.JSON_KEY_STORE_BUILDID) == config.DEFAULT_BUILDID
 
 
 def test_an_odd_build_entry_does_not_hide_a_good_one(humble_store, tools, recording_command, no_manifest):
     data = details(humble_store, recording_command, game(
         "Tomb Raider", {"platform": "windows", "download_struct": [{"timestamp": 300}, {"timestamp": None}]}))
 
-    assert data.get_value(config.json_key_store_buildid) == "300"
+    assert data.get_value(config.JSON_KEY_STORE_BUILDID) == "300"
 
 
 @pytest.mark.parametrize("output", ["", None, "not json", "null", "[1, 2]", '"text"'])

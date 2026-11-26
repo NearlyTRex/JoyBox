@@ -209,7 +209,7 @@ class Cemu(emulatorbase.EmulatorBase):
         # Get launch command
         launch_cmd = [
             programs.get_emulator_program("Cemu"),
-            "-g", config.token_game_file
+            "-g", config.TOKEN_GAME_FILE
         ]
         if fullscreen:
             launch_cmd += [

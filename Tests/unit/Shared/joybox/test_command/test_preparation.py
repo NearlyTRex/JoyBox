@@ -424,7 +424,7 @@ def test_a_win31_launch_uses_the_windows_config(dosbox, no_discs, tmp_path):
 ])
 def test_the_c_drive_is_mounted(dosbox, no_discs, tmp_path, builder):
     cmd = builder(options_with_prefix(tmp_path))
-    expected = os.path.join(str(tmp_path), config.computer_folder_dos, "C")
+    expected = os.path.join(str(tmp_path), config.COMPUTER_FOLDER_DOS, "C")
 
     assert 'mount c "%s"' % expected in cmd
 
@@ -551,7 +551,7 @@ def scummvm(monkeypatch):
 
 def test_a_scumm_launch_points_at_the_game_directory(scummvm, tmp_path):
     cmd = command.get_scumm_launch_command(options_with_prefix(tmp_path))
-    expected = os.path.join(str(tmp_path), config.computer_folder_scumm)
+    expected = os.path.join(str(tmp_path), config.COMPUTER_FOLDER_SCUMM)
 
     assert cmd[0] == "/emus/scummvm"
     assert "--path=%s" % expected in cmd

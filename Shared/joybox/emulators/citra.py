@@ -17,7 +17,7 @@ from joybox import emulatorbase
 
 # Config files
 config_files = {}
-config_file_general = r"""
+CONFIG_FILE_GENERAL = r"""
 [Data%20Storage]
 nand_directory=EMULATOR_SETUP_ROOT/nand/
 sdmc_directory=EMULATOR_SETUP_ROOT/sdmc/
@@ -25,8 +25,8 @@ sdmc_directory=EMULATOR_SETUP_ROOT/sdmc/
 [UI]
 Paths\screenshotPath=EMULATOR_SETUP_ROOT/screenshots/
 """
-config_files["Citra/windows/user/config/qt-config.ini"] = config_file_general
-config_files["Citra/linux/citra-qt.AppImage.home/.config/citra-emu/qt-config.ini"] = config_file_general
+config_files["Citra/windows/user/config/qt-config.ini"] = CONFIG_FILE_GENERAL
+config_files["Citra/linux/citra-qt.AppImage.home/.config/citra-emu/qt-config.ini"] = CONFIG_FILE_GENERAL
 
 # System files
 system_files = {}
@@ -185,7 +185,7 @@ class Citra(emulatorbase.EmulatorBase):
         # Get launch command
         launch_cmd = [
             programs.get_emulator_program("Citra"),
-            config.token_game_file
+            config.TOKEN_GAME_FILE
         ]
 
         # Launch game

@@ -40,7 +40,7 @@ def is_letter_platform(platform_type):
 
 # Get addons types
 def get_addon_types(platform_type):
-    return get_platform_value(platform_type, config.platform_key_addons)
+    return get_platform_value(platform_type, config.PLATFORM_KEY_ADDONS)
 
 # Check if updates are possible
 def are_updates_possible(platform_type):
@@ -58,7 +58,7 @@ def are_addons_possible(platform_type):
 
 # Get launcher types
 def get_launcher_types(platform_type):
-    return get_platform_value(platform_type, config.platform_key_launcher)
+    return get_platform_value(platform_type, config.PLATFORM_KEY_LAUNCHER)
 
 # Check if no launcher available
 def has_no_launcher(platform_type):
@@ -76,15 +76,15 @@ def is_launched_by_file(platform_type):
 
 # Get autofill json keys
 def get_autofill_json_keys(platform_type):
-    return get_platform_value(platform_type, config.platform_key_autofill_json)
+    return get_platform_value(platform_type, config.PLATFORM_KEY_AUTOFILL_JSON)
 
 # Get fillonce json keys
 def get_fillonce_json_keys(platform_type):
-    return get_platform_value(platform_type, config.platform_key_fillonce_json)
+    return get_platform_value(platform_type, config.PLATFORM_KEY_FILLONCE_JSON)
 
 # Get merge json keys
 def get_merge_json_keys(platform_type):
-    return get_platform_value(platform_type, config.platform_key_merge_json)
+    return get_platform_value(platform_type, config.PLATFORM_KEY_MERGE_JSON)
 
 # Check if autofill key
 def is_autofill_json_key(platform_type, json_key):

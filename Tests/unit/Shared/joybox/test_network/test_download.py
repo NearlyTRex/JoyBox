@@ -24,8 +24,8 @@ def test_a_download_retries_transient_failures_and_bounds_the_connect(installed,
 
     network.download_url("https://example.test/file.bin", output_file = str(target))
 
-    assert recording_command.value_after("--retry") == str(network.download_retries)
-    assert recording_command.value_after("--connect-timeout") == str(network.download_connect_timeout_seconds)
+    assert recording_command.value_after("--retry") == str(network.DOWNLOAD_RETRIES)
+    assert recording_command.value_after("--connect-timeout") == str(network.DOWNLOAD_CONNECT_TIMEOUT_SECONDS)
 
 
 def test_a_download_takes_its_own_retry_and_connect_limits(installed, recording_command, tmp_path):

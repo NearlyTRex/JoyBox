@@ -1,261 +1,261 @@
 # Platform keys
-platform_key_supercategory = "supercategory"
-platform_key_category = "category"
-platform_key_subcategory = "subcategory"
-platform_key_addons = "addons"
-platform_key_launcher = "launcher"
-platform_key_autofill_json = "autofill_json"
-platform_key_fillonce_json = "fillonce_json"
-platform_key_merge_json = "merge_json"
+PLATFORM_KEY_SUPERCATEGORY = "supercategory"
+PLATFORM_KEY_CATEGORY = "category"
+PLATFORM_KEY_SUBCATEGORY = "subcategory"
+PLATFORM_KEY_ADDONS = "addons"
+PLATFORM_KEY_LAUNCHER = "launcher"
+PLATFORM_KEY_AUTOFILL_JSON = "autofill_json"
+PLATFORM_KEY_FILLONCE_JSON = "fillonce_json"
+PLATFORM_KEY_MERGE_JSON = "merge_json"
 
 # Dat keys
-dat_key_game = "game"
-dat_key_file = "file"
-dat_key_size = "size"
-dat_key_crc = "crc"
-dat_key_md5 = "md5"
-dat_key_sha1 = "sha1"
-dat_key_sha256 = "sha256"
+DAT_KEY_GAME = "game"
+DAT_KEY_FILE = "file"
+DAT_KEY_SIZE = "size"
+DAT_KEY_CRC = "crc"
+DAT_KEY_MD5 = "md5"
+DAT_KEY_SHA1 = "sha1"
+DAT_KEY_SHA256 = "sha256"
 
 # Metadata keys
-metadata_key_game = "game"
-metadata_key_platform = "platform"
-metadata_key_supercategory = "supercategory"
-metadata_key_category = "category"
-metadata_key_subcategory = "subcategory"
-metadata_key_file = "file"
-metadata_key_description = "description"
-metadata_key_url = "url"
-metadata_key_genre = "genre"
-metadata_key_coop = "coop"
-metadata_key_playable = "playable"
-metadata_key_developer = "developer"
-metadata_key_publisher = "publisher"
-metadata_key_players = "players"
-metadata_key_release = "release"
-metadata_key_background = "background"
-metadata_key_boxback = "boxback"
-metadata_key_boxfront = "boxfront"
-metadata_key_label = "label"
-metadata_key_screenshot = "screenshot"
-metadata_key_video = "video"
-metadata_key_json = "json"
+METADATA_KEY_GAME = "game"
+METADATA_KEY_PLATFORM = "platform"
+METADATA_KEY_SUPERCATEGORY = "supercategory"
+METADATA_KEY_CATEGORY = "category"
+METADATA_KEY_SUBCATEGORY = "subcategory"
+METADATA_KEY_FILE = "file"
+METADATA_KEY_DESCRIPTION = "description"
+METADATA_KEY_URL = "url"
+METADATA_KEY_GENRE = "genre"
+METADATA_KEY_COOP = "coop"
+METADATA_KEY_PLAYABLE = "playable"
+METADATA_KEY_DEVELOPER = "developer"
+METADATA_KEY_PUBLISHER = "publisher"
+METADATA_KEY_PLAYERS = "players"
+METADATA_KEY_RELEASE = "release"
+METADATA_KEY_BACKGROUND = "background"
+METADATA_KEY_BOXBACK = "boxback"
+METADATA_KEY_BOXFRONT = "boxfront"
+METADATA_KEY_LABEL = "label"
+METADATA_KEY_SCREENSHOT = "screenshot"
+METADATA_KEY_VIDEO = "video"
+METADATA_KEY_JSON = "json"
 metadata_keys_minimum = [
-    metadata_key_game,
-    metadata_key_platform,
-    metadata_key_file
+    METADATA_KEY_GAME,
+    METADATA_KEY_PLATFORM,
+    METADATA_KEY_FILE
 ]
 metadata_keys_downloadable = [
-    metadata_key_description,
-    metadata_key_genre,
-    metadata_key_coop,
-    metadata_key_developer,
-    metadata_key_publisher,
-    metadata_key_players,
-    metadata_key_release
+    METADATA_KEY_DESCRIPTION,
+    METADATA_KEY_GENRE,
+    METADATA_KEY_COOP,
+    METADATA_KEY_DEVELOPER,
+    METADATA_KEY_PUBLISHER,
+    METADATA_KEY_PLAYERS,
+    METADATA_KEY_RELEASE
 ]
 metadata_keys_all = [
-    metadata_key_game,
-    metadata_key_platform,
-    metadata_key_supercategory,
-    metadata_key_category,
-    metadata_key_subcategory,
-    metadata_key_file,
-    metadata_key_description,
-    metadata_key_url,
-    metadata_key_genre,
-    metadata_key_coop,
-    metadata_key_playable,
-    metadata_key_developer,
-    metadata_key_publisher,
-    metadata_key_players,
-    metadata_key_release,
-    metadata_key_background,
-    metadata_key_boxback,
-    metadata_key_boxfront,
-    metadata_key_label,
-    metadata_key_screenshot,
-    metadata_key_video,
-    metadata_key_json
+    METADATA_KEY_GAME,
+    METADATA_KEY_PLATFORM,
+    METADATA_KEY_SUPERCATEGORY,
+    METADATA_KEY_CATEGORY,
+    METADATA_KEY_SUBCATEGORY,
+    METADATA_KEY_FILE,
+    METADATA_KEY_DESCRIPTION,
+    METADATA_KEY_URL,
+    METADATA_KEY_GENRE,
+    METADATA_KEY_COOP,
+    METADATA_KEY_PLAYABLE,
+    METADATA_KEY_DEVELOPER,
+    METADATA_KEY_PUBLISHER,
+    METADATA_KEY_PLAYERS,
+    METADATA_KEY_RELEASE,
+    METADATA_KEY_BACKGROUND,
+    METADATA_KEY_BOXBACK,
+    METADATA_KEY_BOXFRONT,
+    METADATA_KEY_LABEL,
+    METADATA_KEY_SCREENSHOT,
+    METADATA_KEY_VIDEO,
+    METADATA_KEY_JSON
 ]
 
 # Search keys
-search_result_key_id = "id"
-search_result_key_title = "title"
-search_result_key_description = "description"
-search_result_key_url = "url"
-search_result_key_date = "date"
-search_result_key_relevance = "relevance"
-search_result_key_data = "data"
+SEARCH_RESULT_KEY_ID = "id"
+SEARCH_RESULT_KEY_TITLE = "title"
+SEARCH_RESULT_KEY_DESCRIPTION = "description"
+SEARCH_RESULT_KEY_URL = "url"
+SEARCH_RESULT_KEY_DATE = "date"
+SEARCH_RESULT_KEY_RELEVANCE = "relevance"
+SEARCH_RESULT_KEY_DATA = "data"
 
 # Asset keys
-asset_key_mime = "mime"
-asset_key_width = "width"
-asset_key_height = "height"
-asset_key_duration = "duration"
+ASSET_KEY_MIME = "mime"
+ASSET_KEY_WIDTH = "width"
+ASSET_KEY_HEIGHT = "height"
+ASSET_KEY_DURATION = "duration"
 
 # Computer program keys
-program_key_exe = "exe"
-program_key_cwd = "cwd"
-program_key_env = "env"
-program_key_args = "args"
-program_key_winver = "winver"
-program_key_tricks = "tricks"
-program_key_overrides = "overrides"
-program_key_desktop = "desktop"
-program_key_desktop_width = "desktop_width"
-program_key_desktop_height = "desktop_height"
-program_key_installer_type = "installer_type"
-program_key_serial = "serial"
-program_key_is_shell = "is_shell"
-program_key_is_daemon = "is_daemon"
-program_key_suppress_output = "suppress_output"
-program_key_passthrough = "passthrough"
-program_key_is_32_bit = "is_32_bit"
-program_key_is_dos = "is_dos"
-program_key_is_win31 = "is_win31"
-program_key_is_scumm = "is_scumm"
-program_key_allow_processing = "allow_processing"
-program_key_force_powershell = "force_powershell"
-program_key_force_appimage = "force_appimage"
-program_key_use_virtual_desktop = "use_virtual_desktop"
-program_key_force_prefix = "force_prefix"
-program_key_is_wine_prefix = "is_wine_prefix"
-program_key_is_sandboxie_prefix = "is_sandboxie_prefix"
-program_key_is_prefix_mapped_cwd = "is_prefix_mapped_cwd"
-program_key_prefix_dir = "prefix_dir"
-program_key_general_prefix_dir = "general_prefix_dir"
-program_key_prefix_user_profile_dir = "prefix_user_profile_dir"
-program_key_prefix_c_drive_virtual = "prefix_c_drive_virtual"
-program_key_prefix_c_drive_real = "prefix_c_drive_real"
-program_key_prefix_name = "prefix_name"
-program_key_prefix_cwd = "prefix_cwd"
-program_key_lnk_base_path = "lnk_base_path"
-program_key_output_paths = "output_paths"
-program_key_blocking_processes = "blocking_processes"
-program_key_creationflags = "creationflags"
-program_key_stdout = "stdout"
-program_key_stderr = "stderr"
-program_key_include_stderr = "include_stderr"
-program_key_stdin_input = "stdin_input"
-program_key_timeout = "timeout"
+PROGRAM_KEY_EXE = "exe"
+PROGRAM_KEY_CWD = "cwd"
+PROGRAM_KEY_ENV = "env"
+PROGRAM_KEY_ARGS = "args"
+PROGRAM_KEY_WINVER = "winver"
+PROGRAM_KEY_TRICKS = "tricks"
+PROGRAM_KEY_OVERRIDES = "overrides"
+PROGRAM_KEY_DESKTOP = "desktop"
+PROGRAM_KEY_DESKTOP_WIDTH = "desktop_width"
+PROGRAM_KEY_DESKTOP_HEIGHT = "desktop_height"
+PROGRAM_KEY_INSTALLER_TYPE = "installer_type"
+PROGRAM_KEY_SERIAL = "serial"
+PROGRAM_KEY_IS_SHELL = "is_shell"
+PROGRAM_KEY_IS_DAEMON = "is_daemon"
+PROGRAM_KEY_SUPPRESS_OUTPUT = "suppress_output"
+PROGRAM_KEY_PASSTHROUGH = "passthrough"
+PROGRAM_KEY_IS_32_BIT = "is_32_bit"
+PROGRAM_KEY_IS_DOS = "is_dos"
+PROGRAM_KEY_IS_WIN31 = "is_win31"
+PROGRAM_KEY_IS_SCUMM = "is_scumm"
+PROGRAM_KEY_ALLOW_PROCESSING = "allow_processing"
+PROGRAM_KEY_FORCE_POWERSHELL = "force_powershell"
+PROGRAM_KEY_FORCE_APPIMAGE = "force_appimage"
+PROGRAM_KEY_USE_VIRTUAL_DESKTOP = "use_virtual_desktop"
+PROGRAM_KEY_FORCE_PREFIX = "force_prefix"
+PROGRAM_KEY_IS_WINE_PREFIX = "is_wine_prefix"
+PROGRAM_KEY_IS_SANDBOXIE_PREFIX = "is_sandboxie_prefix"
+PROGRAM_KEY_IS_PREFIX_MAPPED_CWD = "is_prefix_mapped_cwd"
+PROGRAM_KEY_PREFIX_DIR = "prefix_dir"
+PROGRAM_KEY_GENERAL_PREFIX_DIR = "general_prefix_dir"
+PROGRAM_KEY_PREFIX_USER_PROFILE_DIR = "prefix_user_profile_dir"
+PROGRAM_KEY_PREFIX_C_DRIVE_VIRTUAL = "prefix_c_drive_virtual"
+PROGRAM_KEY_PREFIX_C_DRIVE_REAL = "prefix_c_drive_real"
+PROGRAM_KEY_PREFIX_NAME = "prefix_name"
+PROGRAM_KEY_PREFIX_CWD = "prefix_cwd"
+PROGRAM_KEY_LNK_BASE_PATH = "lnk_base_path"
+PROGRAM_KEY_OUTPUT_PATHS = "output_paths"
+PROGRAM_KEY_BLOCKING_PROCESSES = "blocking_processes"
+PROGRAM_KEY_CREATIONFLAGS = "creationflags"
+PROGRAM_KEY_STDOUT = "stdout"
+PROGRAM_KEY_STDERR = "stderr"
+PROGRAM_KEY_INCLUDE_STDERR = "include_stderr"
+PROGRAM_KEY_STDIN_INPUT = "stdin_input"
+PROGRAM_KEY_TIMEOUT = "timeout"
 
 # Computer program step keys
-program_step_key_from = "from"
-program_step_key_to = "to"
-program_step_key_dir = "dir"
-program_step_key_type = "type"
-program_step_key_skip_existing = "skip_existing"
-program_step_key_skip_identical = "skip_identical"
+PROGRAM_STEP_KEY_FROM = "from"
+PROGRAM_STEP_KEY_TO = "to"
+PROGRAM_STEP_KEY_DIR = "dir"
+PROGRAM_STEP_KEY_TYPE = "type"
+PROGRAM_STEP_KEY_SKIP_EXISTING = "skip_existing"
+PROGRAM_STEP_KEY_SKIP_IDENTICAL = "skip_identical"
 
 # General json keys
-json_key_launch_name = "launch_name"
-json_key_launch_file = "launch_file"
-json_key_launch_dir = "launch_dir"
-json_key_transform_file = "transform_file"
-json_key_key_file = "key_file"
-json_key_files = "files"
-json_key_dlc = "dlc"
-json_key_update = "update"
-json_key_extra = "extra"
-json_key_dependencies = "dependencies"
+JSON_KEY_LAUNCH_NAME = "launch_name"
+JSON_KEY_LAUNCH_FILE = "launch_file"
+JSON_KEY_LAUNCH_DIR = "launch_dir"
+JSON_KEY_TRANSFORM_FILE = "transform_file"
+JSON_KEY_KEY_FILE = "key_file"
+JSON_KEY_FILES = "files"
+JSON_KEY_DLC = "dlc"
+JSON_KEY_UPDATE = "update"
+JSON_KEY_EXTRA = "extra"
+JSON_KEY_DEPENDENCIES = "dependencies"
 json_keys_general = [
-    json_key_launch_name,
-    json_key_launch_file,
-    json_key_launch_dir,
-    json_key_transform_file,
-    json_key_key_file,
-    json_key_files,
-    json_key_dlc,
-    json_key_update,
-    json_key_extra,
-    json_key_dependencies
+    JSON_KEY_LAUNCH_NAME,
+    JSON_KEY_LAUNCH_FILE,
+    JSON_KEY_LAUNCH_DIR,
+    JSON_KEY_TRANSFORM_FILE,
+    JSON_KEY_KEY_FILE,
+    JSON_KEY_FILES,
+    JSON_KEY_DLC,
+    JSON_KEY_UPDATE,
+    JSON_KEY_EXTRA,
+    JSON_KEY_DEPENDENCIES
 ]
 
 # Virtual json keys
-json_key_metadata = "metadata"
-json_key_save_dir = "save_dir"
-json_key_general_save_dir = "general_save_dir"
-json_key_local_cache_dir = "local_cache_dir"
-json_key_remote_cache_dir = "remote_cache_dir"
-json_key_local_rom_dir = "local_rom_dir"
-json_key_remote_rom_dir = "remote_rom_dir"
-json_key_local_save_dir = "local_save_dir"
-json_key_remote_save_dir = "remote_save_dir"
+JSON_KEY_METADATA = "metadata"
+JSON_KEY_SAVE_DIR = "save_dir"
+JSON_KEY_GENERAL_SAVE_DIR = "general_save_dir"
+JSON_KEY_LOCAL_CACHE_DIR = "local_cache_dir"
+JSON_KEY_REMOTE_CACHE_DIR = "remote_cache_dir"
+JSON_KEY_LOCAL_ROM_DIR = "local_rom_dir"
+JSON_KEY_REMOTE_ROM_DIR = "remote_rom_dir"
+JSON_KEY_LOCAL_SAVE_DIR = "local_save_dir"
+JSON_KEY_REMOTE_SAVE_DIR = "remote_save_dir"
 json_keys_virtual = [
-    json_key_metadata,
-    json_key_save_dir,
-    json_key_general_save_dir,
-    json_key_local_cache_dir,
-    json_key_remote_cache_dir,
-    json_key_local_rom_dir,
-    json_key_remote_rom_dir,
-    json_key_local_save_dir,
-    json_key_remote_save_dir
+    JSON_KEY_METADATA,
+    JSON_KEY_SAVE_DIR,
+    JSON_KEY_GENERAL_SAVE_DIR,
+    JSON_KEY_LOCAL_CACHE_DIR,
+    JSON_KEY_REMOTE_CACHE_DIR,
+    JSON_KEY_LOCAL_ROM_DIR,
+    JSON_KEY_REMOTE_ROM_DIR,
+    JSON_KEY_LOCAL_SAVE_DIR,
+    JSON_KEY_REMOTE_SAVE_DIR
 ]
 
 # Computer json keys
-json_key_amazon = "amazon"
-json_key_disc = "disc"
-json_key_epic = "epic"
-json_key_gog = "gog"
-json_key_humble = "humble"
-json_key_itchio = "itchio"
-json_key_legacy = "legacy"
-json_key_puppetcombo = "puppetcombo"
-json_key_redcandle = "redcandle"
-json_key_squareenix = "squareenix"
-json_key_steam = "steam"
-json_key_zoom = "zoom"
-json_key_store_appid = "appid"
-json_key_store_appname = "appname"
-json_key_store_appurl = "appurl"
-json_key_store_branchid = "branchid"
-json_key_store_builddate = "builddate"
-json_key_store_buildid = "buildid"
-json_key_store_name = "name"
-json_key_store_controller_support = "controller_support"
-json_key_store_installdir = "installdir"
-json_key_store_paths = "paths"
-json_key_store_keys = "keys"
-json_key_store_launch = "launch"
-json_key_store_setup = "setup"
-json_key_store_setup_install = "install"
-json_key_store_setup_preinstall = "preinstall"
-json_key_store_setup_postinstall = "postinstall"
+JSON_KEY_AMAZON = "amazon"
+JSON_KEY_DISC = "disc"
+JSON_KEY_EPIC = "epic"
+JSON_KEY_GOG = "gog"
+JSON_KEY_HUMBLE = "humble"
+JSON_KEY_ITCHIO = "itchio"
+JSON_KEY_LEGACY = "legacy"
+JSON_KEY_PUPPETCOMBO = "puppetcombo"
+JSON_KEY_REDCANDLE = "redcandle"
+JSON_KEY_SQUAREENIX = "squareenix"
+JSON_KEY_STEAM = "steam"
+JSON_KEY_ZOOM = "zoom"
+JSON_KEY_STORE_APPID = "appid"
+JSON_KEY_STORE_APPNAME = "appname"
+JSON_KEY_STORE_APPURL = "appurl"
+JSON_KEY_STORE_BRANCHID = "branchid"
+JSON_KEY_STORE_BUILDDATE = "builddate"
+JSON_KEY_STORE_BUILDID = "buildid"
+JSON_KEY_STORE_NAME = "name"
+JSON_KEY_STORE_CONTROLLER_SUPPORT = "controller_support"
+JSON_KEY_STORE_INSTALLDIR = "installdir"
+JSON_KEY_STORE_PATHS = "paths"
+JSON_KEY_STORE_KEYS = "keys"
+JSON_KEY_STORE_LAUNCH = "launch"
+JSON_KEY_STORE_SETUP = "setup"
+JSON_KEY_STORE_SETUP_INSTALL = "install"
+JSON_KEY_STORE_SETUP_PREINSTALL = "preinstall"
+JSON_KEY_STORE_SETUP_POSTINSTALL = "postinstall"
 json_keys_store = [
-    json_key_amazon,
-    json_key_disc,
-    json_key_epic,
-    json_key_gog,
-    json_key_humble,
-    json_key_itchio,
-    json_key_legacy,
-    json_key_puppetcombo,
-    json_key_redcandle,
-    json_key_squareenix,
-    json_key_steam,
-    json_key_zoom
+    JSON_KEY_AMAZON,
+    JSON_KEY_DISC,
+    JSON_KEY_EPIC,
+    JSON_KEY_GOG,
+    JSON_KEY_HUMBLE,
+    JSON_KEY_ITCHIO,
+    JSON_KEY_LEGACY,
+    JSON_KEY_PUPPETCOMBO,
+    JSON_KEY_REDCANDLE,
+    JSON_KEY_SQUAREENIX,
+    JSON_KEY_STEAM,
+    JSON_KEY_ZOOM
 ]
 json_keys_store_appdata = [
-    json_key_store_appid,
-    json_key_store_appname,
-    json_key_store_appurl
+    JSON_KEY_STORE_APPID,
+    JSON_KEY_STORE_APPNAME,
+    JSON_KEY_STORE_APPURL
 ]
 json_keys_store_subdata = [
-    json_key_store_appid,
-    json_key_store_appname,
-    json_key_store_appurl,
-    json_key_store_branchid,
-    json_key_store_builddate,
-    json_key_store_buildid,
-    json_key_store_name,
-    json_key_store_controller_support,
-    json_key_store_installdir,
-    json_key_store_paths,
-    json_key_store_keys,
-    json_key_store_launch,
-    json_key_store_setup
+    JSON_KEY_STORE_APPID,
+    JSON_KEY_STORE_APPNAME,
+    JSON_KEY_STORE_APPURL,
+    JSON_KEY_STORE_BRANCHID,
+    JSON_KEY_STORE_BUILDDATE,
+    JSON_KEY_STORE_BUILDID,
+    JSON_KEY_STORE_NAME,
+    JSON_KEY_STORE_CONTROLLER_SUPPORT,
+    JSON_KEY_STORE_INSTALLDIR,
+    JSON_KEY_STORE_PATHS,
+    JSON_KEY_STORE_KEYS,
+    JSON_KEY_STORE_LAUNCH,
+    JSON_KEY_STORE_SETUP
 ]
 
 # Persistent json keys

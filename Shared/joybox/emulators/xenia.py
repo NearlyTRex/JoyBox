@@ -137,7 +137,7 @@ class Xenia(emulatorbase.EmulatorBase):
         # Get launch command
         launch_cmd = [
             programs.get_emulator_program("Xenia"),
-            config.token_game_file
+            config.TOKEN_GAME_FILE
         ]
         if fullscreen:
             launch_cmd += [

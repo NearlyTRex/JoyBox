@@ -135,13 +135,13 @@ def prune_paths(paths, excludes = ()):
 # Prune child paths
 def prune_child_paths(paths):
     filtered_paths = list(paths)
-    if config.token_game_install_dir in filtered_paths:
+    if config.TOKEN_GAME_INSTALL_DIR in filtered_paths:
         has_specific_install_paths = any(
-            path.startswith(config.token_game_install_dir + "/")
+            path.startswith(config.TOKEN_GAME_INSTALL_DIR + "/")
             for path in filtered_paths
         )
         if has_specific_install_paths:
-            filtered_paths = [p for p in filtered_paths if p != config.token_game_install_dir]
+            filtered_paths = [p for p in filtered_paths if p != config.TOKEN_GAME_INSTALL_DIR]
     new_paths = set()
     for path in strings.sort_strings(filtered_paths):
         if not any(is_parent_path(added_path, path) for added_path in new_paths):
@@ -162,8 +162,8 @@ def build_file_list(root, excludes = None, new_relative_path = "", use_relative_
                 if ignore_symlinks and os.path.islink(location):
                     continue
                 if use_relative_paths:
-                    if len(new_relative_path) and not new_relative_path.endswith(config.os_pathsep):
-                        new_relative_path += config.os_pathsep
+                    if len(new_relative_path) and not new_relative_path.endswith(config.OS_PATHSEP):
+                        new_relative_path += config.OS_PATHSEP
                     files.append(new_relative_path + os.path.relpath(location, absolute_root))
                 else:
                     files.append(location)
@@ -202,8 +202,8 @@ def build_directory_list(root, excludes = None, new_relative_path = "", use_rela
             if ignore_symlinks and os.path.islink(location):
                 continue
             if use_relative_paths:
-                if len(new_relative_path) and not new_relative_path.endswith(config.os_pathsep):
-                    new_relative_path += config.os_pathsep
+                if len(new_relative_path) and not new_relative_path.endswith(config.OS_PATHSEP):
+                    new_relative_path += config.OS_PATHSEP
                 directories.append(new_relative_path + os.path.relpath(location, absolute_root))
             else:
                 directories.append(location)
@@ -364,12 +364,12 @@ def get_relative_path(path, start_dir):
 
 # Convert file list to relative paths
 def convert_file_list_to_relative_paths(file_list, base_dir):
-    replacement = normalize_file_path(base_dir, separator = config.os_pathsep)
-    if not replacement.endswith(config.os_pathsep):
-        replacement += config.os_pathsep
+    replacement = normalize_file_path(base_dir, separator = config.OS_PATHSEP)
+    if not replacement.endswith(config.OS_PATHSEP):
+        replacement += config.OS_PATHSEP
     relative_file_list = []
     for filename in file_list:
-        normalized_filename = normalize_file_path(filename, separator = config.os_pathsep)
+        normalized_filename = normalize_file_path(filename, separator = config.OS_PATHSEP)
         relative_file_list.append(normalized_filename.removeprefix(replacement))
     return strings.sort_strings(relative_file_list)
 
@@ -473,7 +473,7 @@ def get_directory_contents(path, excludes = None):
 
 # Get directory anchor
 def get_directory_anchor(path):
-    if path.startswith(config.drive_root_posix):
+    if path.startswith(config.DRIVE_ROOT_POSIX):
         return str(pathlib.PurePosixPath(path).anchor)
     else:
         return str(pathlib.PureWindowsPath(path).anchor)
@@ -586,7 +586,7 @@ def get_filename_extension(path):
 
 # Get filename anchor
 def get_filename_anchor(path):
-    if path.startswith(config.drive_root_posix):
+    if path.startswith(config.DRIVE_ROOT_POSIX):
         return str(pathlib.PurePosixPath(path).anchor)
     else:
         return str(pathlib.PureWindowsPath(path).anchor)
@@ -607,7 +607,7 @@ def get_filename_drive_offset(path):
 
 # Get filename front slice
 def get_filename_front_slice(path):
-    return rebase_file_path(path, get_filename_front(path) + config.os_pathsep, "")
+    return rebase_file_path(path, get_filename_front(path) + config.OS_PATHSEP, "")
 
 # Check if filename matches extensions
 def does_filename_match_extensions(path, extensions = None):

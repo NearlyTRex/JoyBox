@@ -36,7 +36,7 @@ def transform_computer_programs(
 
     # Get paths
     output_extract_dir = paths.join_paths(output_dir, gamenaming.derive_regular_name_from_game_name(game_name))
-    output_extract_index_file = paths.join_paths(output_extract_dir, config.raw_files_index)
+    output_extract_index_file = paths.join_paths(output_extract_dir, config.RAW_FILES_INDEX)
     output_install_file = paths.join_paths(output_dir, game_name + ".install")
     cached_install_dir = environment.get_cache_gaming_install_dir(game_category, game_subcategory, game_name)
     cached_install_file = paths.join_paths(cached_install_dir, game_name + ".install")
@@ -299,7 +299,7 @@ def transform_ps3_disc_image(
 
     # Touch index file
     success = fileops.touch_file(
-        src = paths.join_paths(output_dir, config.raw_files_index),
+        src = paths.join_paths(output_dir, config.RAW_FILES_INDEX),
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -307,7 +307,7 @@ def transform_ps3_disc_image(
         return (False, "Unable to create raw index")
 
     # Return output
-    return (True, paths.join_paths(output_dir, config.raw_files_index))
+    return (True, paths.join_paths(output_dir, config.RAW_FILES_INDEX))
 
 ###########################################################
 
@@ -357,7 +357,7 @@ def transform_ps3_network_package(
 
     # Touch index file
     success = fileops.touch_file(
-        src = paths.join_paths(output_dir, config.raw_files_index),
+        src = paths.join_paths(output_dir, config.RAW_FILES_INDEX),
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -365,7 +365,7 @@ def transform_ps3_network_package(
         return (False, "Unable to create raw index")
 
     # Return output
-    return (True, paths.join_paths(output_dir, config.raw_files_index))
+    return (True, paths.join_paths(output_dir, config.RAW_FILES_INDEX))
 
 ###########################################################
 
@@ -411,7 +411,7 @@ def transform_psv_network_package(
 
     # Touch index file
     success = fileops.touch_file(
-        src = paths.join_paths(output_dir, config.raw_files_index),
+        src = paths.join_paths(output_dir, config.RAW_FILES_INDEX),
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -419,7 +419,7 @@ def transform_psv_network_package(
         return (False, "Unable to create raw index")
 
     # Return output
-    return (True, paths.join_paths(output_dir, config.raw_files_index))
+    return (True, paths.join_paths(output_dir, config.RAW_FILES_INDEX))
 
 ###########################################################
 

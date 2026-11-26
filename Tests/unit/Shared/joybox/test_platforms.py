@@ -42,8 +42,8 @@ def test_a_missing_key_returns_nothing():
 def test_a_value_is_read_from_the_section():
     platform = ALL_PLATFORMS[0]
 
-    assert platforms.get_platform_value(platform, config.platform_key_addons) == \
-        config.platforms[platform][config.platform_key_addons]
+    assert platforms.get_platform_value(platform, config.PLATFORM_KEY_ADDONS) == \
+        config.platforms[platform][config.PLATFORM_KEY_ADDONS]
 
 
 ###########################################################

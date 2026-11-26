@@ -112,11 +112,11 @@ def test_configure_refuses_a_system_file_with_the_wrong_hash(seams):
 ###########################################################
 
 def test_launch_runs_the_program_on_the_game(seams):
-    assert launch_cmd(seams) == ["/bin/EKA2L1", "--mount", config.token_game_dir, "--app", config.token_game_name]
+    assert launch_cmd(seams) == ["/bin/EKA2L1", "--mount", config.TOKEN_GAME_DIR, "--app", config.TOKEN_GAME_NAME]
 
 
 def test_launch_has_no_fullscreen_flag(seams):
-    assert launch_cmd(seams, fullscreen = True) == ["/bin/EKA2L1", "--mount", config.token_game_dir, "--app", config.token_game_name]
+    assert launch_cmd(seams, fullscreen = True) == ["/bin/EKA2L1", "--mount", config.TOKEN_GAME_DIR, "--app", config.TOKEN_GAME_NAME]
 
 
 def test_launch_passes_the_game_and_options_through(seams):

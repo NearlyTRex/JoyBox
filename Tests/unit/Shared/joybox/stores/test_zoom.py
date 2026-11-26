@@ -50,21 +50,21 @@ def test_the_store_describes_itself(zoom_store, tmp_path):
     assert zoom_store.get_supercategory() == config.Supercategory.ROMS
     assert zoom_store.get_category() == config.Category.COMPUTER
     assert zoom_store.get_subcategory() == config.Subcategory.COMPUTER_ZOOM
-    assert zoom_store.get_key() == config.json_key_zoom
+    assert zoom_store.get_key() == config.JSON_KEY_ZOOM
     assert zoom_store.get_install_dir() == str(tmp_path / "Zoom")
 
 
 def test_the_platform_files_games_where_the_store_does(zoom_store):
     assert platform_placement(zoom_store) == (
         zoom_store.get_supercategory(), zoom_store.get_category(), zoom_store.get_subcategory())
-    assert zoom_store.get_key() in config.platforms[zoom_store.get_platform()][config.platform_key_merge_json]
+    assert zoom_store.get_key() in config.platforms[zoom_store.get_platform()][config.PLATFORM_KEY_MERGE_JSON]
     assert zoom_store.get_key() in config.json_keys_store
 
 
 def test_every_identifier_is_the_store_name(zoom_store):
-    assert zoom_store.get_identifier_keys() == every_identifier(config.json_key_store_name)
-    assert zoom_store.get_install_identifier_key() == config.json_key_store_name
-    assert zoom_store.get_page_identifier_key() == config.json_key_store_name
+    assert zoom_store.get_identifier_keys() == every_identifier(config.JSON_KEY_STORE_NAME)
+    assert zoom_store.get_install_identifier_key() == config.JSON_KEY_STORE_NAME
+    assert zoom_store.get_page_identifier_key() == config.JSON_KEY_STORE_NAME
 
 
 def test_it_imports_and_downloads_nothing(zoom_store):

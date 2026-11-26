@@ -113,7 +113,7 @@ def load_cookie(
 
 # Get cookie file
 def get_cookie_file(base_name):
-    cookie_file = base_name + config.cookie_suffix_path
+    cookie_file = base_name + config.COOKIE_SUFFIX_PATH
     cookie_dir = runtime.get_cookie_directory()
     return paths.join_paths(cookie_dir, cookie_file)
 

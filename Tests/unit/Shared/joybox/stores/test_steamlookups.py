@@ -99,7 +99,7 @@ def appid_list(monkeypatch):
 
 
 def row(appid, title):
-    return {config.search_result_key_id: appid, config.search_result_key_title: title}
+    return {config.SEARCH_RESULT_KEY_ID: appid, config.SEARCH_RESULT_KEY_TITLE: title}
 
 
 def test_a_matching_title_is_found(appid_list):

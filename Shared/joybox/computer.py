@@ -30,105 +30,105 @@ class Program(jsondata.JsonData):
 
     # Executable
     def set_exe(self, value):
-        self.set_value(config.program_key_exe, value)
+        self.set_value(config.PROGRAM_KEY_EXE, value)
     def get_exe(self, token_map = None):
-        path = self.get_value(config.program_key_exe)
+        path = self.get_value(config.PROGRAM_KEY_EXE)
         if path and token_map:
             return sandbox.resolve_path(path, token_map)
         return path
 
     # Current working directory
     def set_cwd(self, value):
-        self.set_value(config.program_key_cwd, value)
+        self.set_value(config.PROGRAM_KEY_CWD, value)
     def get_cwd(self, token_map = None):
-        path = self.get_value(config.program_key_cwd)
+        path = self.get_value(config.PROGRAM_KEY_CWD)
         if path and token_map:
             return sandbox.resolve_path(path, token_map)
         return path
 
     # Environment variables
     def set_env(self, value):
-        self.set_value(config.program_key_env, value)
+        self.set_value(config.PROGRAM_KEY_ENV, value)
     def get_env(self):
-        return self.get_value(config.program_key_env)
+        return self.get_value(config.PROGRAM_KEY_ENV)
 
     # Arguments
     def set_args(self, value):
-        self.set_value(config.program_key_args, value)
+        self.set_value(config.PROGRAM_KEY_ARGS, value)
     def get_args(self):
-        return self.get_value(config.program_key_args, [])
+        return self.get_value(config.PROGRAM_KEY_ARGS, [])
 
     # Windows version
     def set_winver(self, value):
-        self.set_value(config.program_key_winver, value)
+        self.set_value(config.PROGRAM_KEY_WINVER, value)
     def get_winver(self):
-        return self.get_value(config.program_key_winver)
+        return self.get_value(config.PROGRAM_KEY_WINVER)
 
     # Tricks
     def set_tricks(self, value):
-        self.set_value(config.program_key_tricks, value)
+        self.set_value(config.PROGRAM_KEY_TRICKS, value)
     def get_tricks(self):
-        return self.get_value(config.program_key_tricks, [])
+        return self.get_value(config.PROGRAM_KEY_TRICKS, [])
 
     # Overrides
     def set_overrides(self, value):
-        self.set_value(config.program_key_overrides, value)
+        self.set_value(config.PROGRAM_KEY_OVERRIDES, value)
     def get_overrides(self):
-        return self.get_value(config.program_key_overrides, [])
+        return self.get_value(config.PROGRAM_KEY_OVERRIDES, [])
 
     # Desktop resolution
     def set_desktop(self, value):
-        self.set_value(config.program_key_desktop, value)
+        self.set_value(config.PROGRAM_KEY_DESKTOP, value)
     def get_desktop(self):
-        return self.get_value(config.program_key_desktop)
+        return self.get_value(config.PROGRAM_KEY_DESKTOP)
 
     # Installer type
     def set_installer_type(self, value):
-        self.set_value(config.program_key_installer_type, value)
+        self.set_value(config.PROGRAM_KEY_INSTALLER_TYPE, value)
     def get_installer_type(self):
-        return self.get_value(config.program_key_installer_type)
+        return self.get_value(config.PROGRAM_KEY_INSTALLER_TYPE)
 
     # Serial number/key
     def set_serial(self, value):
-        self.set_value(config.program_key_serial, value)
+        self.set_value(config.PROGRAM_KEY_SERIAL, value)
     def get_serial(self):
-        return self.get_value(config.program_key_serial)
+        return self.get_value(config.PROGRAM_KEY_SERIAL)
 
     # Is shell program
     def set_is_shell(self, value):
-        self.set_value(config.program_key_is_shell, value)
+        self.set_value(config.PROGRAM_KEY_IS_SHELL, value)
     def is_shell(self):
-        return self.get_value(config.program_key_is_shell, False)
+        return self.get_value(config.PROGRAM_KEY_IS_SHELL, False)
 
     # Is daemon program
     def set_is_daemon(self, value):
-        self.set_value(config.program_key_is_daemon, value)
+        self.set_value(config.PROGRAM_KEY_IS_DAEMON, value)
     def is_daemon(self):
-        return self.get_value(config.program_key_is_daemon, False)
+        return self.get_value(config.PROGRAM_KEY_IS_DAEMON, False)
 
     # Is 32-bit program
     def set_is_32_bit(self, value):
-        self.set_value(config.program_key_is_32_bit, value)
+        self.set_value(config.PROGRAM_KEY_IS_32_BIT, value)
     def is_32_bit(self):
-        return self.get_value(config.program_key_is_32_bit, False)
+        return self.get_value(config.PROGRAM_KEY_IS_32_BIT, False)
 
     # Is dos program
     def set_is_dos(self, value):
-        self.set_value(config.program_key_is_dos, value)
+        self.set_value(config.PROGRAM_KEY_IS_DOS, value)
     def is_dos(self):
-        return self.get_value(config.program_key_is_dos, False)
+        return self.get_value(config.PROGRAM_KEY_IS_DOS, False)
 
     # Is windows 3.1 program
     def set_is_win31(self, value):
-        self.set_value(config.program_key_is_win31, value)
+        self.set_value(config.PROGRAM_KEY_IS_WIN31, value)
     def is_win31(self):
-        return self.get_value(config.program_key_is_win31, False)
+        return self.get_value(config.PROGRAM_KEY_IS_WIN31, False)
 
     # Is scumm program
     def set_is_scumm(self, value):
-        self.set_value(config.program_key_is_scumm, value)
+        self.set_value(config.PROGRAM_KEY_IS_SCUMM, value)
     def is_scumm(self):
-        return self.get_value(config.program_key_is_scumm, False)
+        return self.get_value(config.PROGRAM_KEY_IS_SCUMM, False)
 
     # Run program
     def run(
@@ -256,39 +256,39 @@ class ProgramStep(jsondata.JsonData):
 
     # From
     def set_from(self, value):
-        self.set_value(config.program_step_key_from, value)
+        self.set_value(config.PROGRAM_STEP_KEY_FROM, value)
     def get_from(self):
-        return self.get_value(config.program_step_key_from, "")
+        return self.get_value(config.PROGRAM_STEP_KEY_FROM, "")
 
     # To
     def set_to(self, value):
-        self.set_value(config.program_step_key_to, value)
+        self.set_value(config.PROGRAM_STEP_KEY_TO, value)
     def get_to(self):
-        return self.get_value(config.program_step_key_to, "")
+        return self.get_value(config.PROGRAM_STEP_KEY_TO, "")
 
     # Dir
     def set_dir(self, value):
-        self.set_value(config.program_step_key_dir, value)
+        self.set_value(config.PROGRAM_STEP_KEY_DIR, value)
     def get_dir(self):
-        return self.get_value(config.program_step_key_dir, "")
+        return self.get_value(config.PROGRAM_STEP_KEY_DIR, "")
 
     # Type
     def set_type(self, value):
-        self.set_value(config.program_step_key_type, value)
+        self.set_value(config.PROGRAM_STEP_KEY_TYPE, value)
     def get_type(self):
-        return self.get_value(config.program_step_key_type)
+        return self.get_value(config.PROGRAM_STEP_KEY_TYPE)
 
     # Skip existing
     def set_skip_existing(self, value):
-        self.set_value(config.program_step_key_skip_existing, value)
+        self.set_value(config.PROGRAM_STEP_KEY_SKIP_EXISTING, value)
     def skip_existing(self):
-        return self.get_value(config.program_step_key_skip_existing, False)
+        return self.get_value(config.PROGRAM_STEP_KEY_SKIP_EXISTING, False)
 
     # Skip identical
     def set_skip_identical(self, value):
-        self.set_value(config.program_step_key_skip_identical, value)
+        self.set_value(config.PROGRAM_STEP_KEY_SKIP_IDENTICAL, value)
     def skip_identical(self):
-        return self.get_value(config.program_step_key_skip_identical, False)
+        return self.get_value(config.PROGRAM_STEP_KEY_SKIP_IDENTICAL, False)
 
     # Run program step
     def run(

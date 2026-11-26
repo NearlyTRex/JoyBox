@@ -39,7 +39,7 @@ def test_the_store_describes_itself(epic_store, tmp_path):
     assert epic_store.get_supercategory() == config.Supercategory.ROMS
     assert epic_store.get_category() == config.Category.COMPUTER
     assert epic_store.get_subcategory() == config.Subcategory.COMPUTER_EPIC_GAMES
-    assert epic_store.get_key() == config.json_key_epic
+    assert epic_store.get_key() == config.JSON_KEY_EPIC
     assert epic_store.get_user_name() == "player"
     assert epic_store.get_install_dir() == str(tmp_path / "epic")
     assert epic_store.can_handle_installing() and epic_store.can_handle_launching()
@@ -49,8 +49,8 @@ def test_the_store_describes_itself(epic_store, tmp_path):
 def test_metadata_is_found_by_page_and_everything_else_by_appname(epic_store):
     keys = epic_store.get_identifier_keys()
 
-    assert keys.pop(config.StoreIdentifierType.METADATA) == config.json_key_store_appurl
-    assert set(keys.values()) == {config.json_key_store_appname}
+    assert keys.pop(config.StoreIdentifierType.METADATA) == config.JSON_KEY_STORE_APPURL
+    assert set(keys.values()) == {config.JSON_KEY_STORE_APPNAME}
 
 
 ###########################################################
@@ -96,16 +96,16 @@ def test_owned_games_become_purchases(epic_store, owned, recording_command):
     purchases = epic_store.get_latest_purchases()
 
     assert recording_command.only() == LEGENDARY + ["list", "--json"]
-    assert [p.get_value(config.json_key_store_appname) for p in purchases] == ["Fortnite", "Sugar"]
-    assert [p.get_value(config.json_key_store_name) for p in purchases] == ["Fortnite", "Hades"]
-    assert purchases[0].get_value(config.json_key_store_buildid) == "++Fortnite+Release-30.00"
-    assert purchases[0].get_value(config.json_key_store_appurl) == ""
+    assert [p.get_value(config.JSON_KEY_STORE_APPNAME) for p in purchases] == ["Fortnite", "Sugar"]
+    assert [p.get_value(config.JSON_KEY_STORE_NAME) for p in purchases] == ["Fortnite", "Hades"]
+    assert purchases[0].get_value(config.JSON_KEY_STORE_BUILDID) == "++Fortnite+Release-30.00"
+    assert purchases[0].get_value(config.JSON_KEY_STORE_APPURL) == ""
 
 
 def test_a_game_without_a_windows_build_gets_the_default_build(epic_store, owned):
     purchases = epic_store.get_latest_purchases()
 
-    assert purchases[1].get_value(config.json_key_store_buildid) == config.default_buildid
+    assert purchases[1].get_value(config.JSON_KEY_STORE_BUILDID) == config.DEFAULT_BUILDID
 
 
 def test_null_listing_fields_are_tolerated(epic_store, owned, recording_command):
@@ -113,8 +113,8 @@ def test_null_listing_fields_are_tolerated(epic_store, owned, recording_command)
 
     purchase = epic_store.get_latest_purchases()[0]
 
-    assert purchase.get_value(config.json_key_store_name) == ""
-    assert purchase.get_value(config.json_key_store_buildid) == config.default_buildid
+    assert purchase.get_value(config.JSON_KEY_STORE_NAME) == ""
+    assert purchase.get_value(config.JSON_KEY_STORE_BUILDID) == config.DEFAULT_BUILDID
 
 
 def test_purchases_are_cached_for_a_day(epic_store, owned, recording_command):
@@ -124,8 +124,8 @@ def test_purchases_are_cached_for_a_day(epic_store, owned, recording_command):
     again = epic_store.get_latest_purchases(verbose = True)
 
     assert len(recording_command.calls) == 1
-    assert [p.get_value(config.json_key_store_appname) for p in again] == ["Fortnite", "Sugar"]
-    assert again[0].get_value(config.json_key_store_buildid) == "++Fortnite+Release-30.00"
+    assert [p.get_value(config.JSON_KEY_STORE_APPNAME) for p in again] == ["Fortnite", "Sugar"]
+    assert again[0].get_value(config.JSON_KEY_STORE_BUILDID) == "++Fortnite+Release-30.00"
 
 
 def test_an_empty_library_is_cached_too(epic_store, owned, recording_command):

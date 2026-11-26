@@ -144,8 +144,8 @@ def launch_local_game(
         fileedits.replace_strings_in_file(
             src = game_launcher_config_file,
             replacements = [
-                {"from": config.token_emulator_setup_root, "to": game_launcher_setup_dir},
-                {"from": config.token_game_save_dir, "to": game_info.get_save_dir()}
+                {"from": config.TOKEN_EMULATOR_SETUP_ROOT, "to": game_launcher_setup_dir},
+                {"from": config.TOKEN_GAME_SAVE_DIR, "to": game_info.get_save_dir()}
             ],
             verbose = verbose,
             pretend_run = pretend_run,
@@ -167,8 +167,8 @@ def launch_local_game(
         fileedits.replace_strings_in_file(
             src = game_launcher_config_file,
             replacements = [
-                {"from": game_launcher_setup_dir, "to": config.token_emulator_setup_root},
-                {"from": game_info.get_save_dir(), "to": config.token_game_save_dir}
+                {"from": game_launcher_setup_dir, "to": config.TOKEN_EMULATOR_SETUP_ROOT},
+                {"from": game_info.get_save_dir(), "to": config.TOKEN_GAME_SAVE_DIR}
             ],
             verbose = verbose,
             pretend_run = pretend_run,

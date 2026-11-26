@@ -246,8 +246,8 @@ def test_raw_json_round_trips(game_tree):
 
 def test_metadata_flags(game):
     entry = metadataentry.MetadataEntry()
-    entry.set_value(config.metadata_key_coop, "Yes")
-    entry.set_value(config.metadata_key_playable, "No")
+    entry.set_value(config.METADATA_KEY_COOP, "Yes")
+    entry.set_value(config.METADATA_KEY_PLAYABLE, "No")
     game.set_metadata(entry)
 
     assert game.is_coop() is True

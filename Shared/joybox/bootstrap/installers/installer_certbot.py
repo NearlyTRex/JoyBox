@@ -12,7 +12,7 @@ from joybox import runoptions
 from joybox import logger
 
 # Nginx config template
-nginx_config_template = """
+NGINX_CONFIG_TEMPLATE = """
 server {{
     listen 80;
     listen [::]:80;
@@ -184,7 +184,7 @@ class Certbot(installer.Installer):
 
         # Update default entry
         logger.log_info("Creating default entry")
-        if self.connection.write_file("/tmp/default", nginx_config_template.format(**self.nginx_config_values)):
+        if self.connection.write_file("/tmp/default", NGINX_CONFIG_TEMPLATE.format(**self.nginx_config_values)):
             self.connection.run_checked([self.nginx_manager_tool, "install_conf", "/tmp/default"], sudo = True)
             self.connection.run_checked([self.nginx_manager_tool, "link_conf", "default"], sudo = True)
             self.connection.remove_file_or_directory("/tmp/default")

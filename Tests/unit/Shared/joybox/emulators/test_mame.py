@@ -213,7 +213,7 @@ def test_an_arcade_set_runs_by_name_from_the_game_dir(launcher):
     launched = launcher["launched"]
     assert launched["launch_cmd"] == [
         "/bin/mame", "-inipath", "/emu/config_dir",
-        "-rompath", config.token_game_dir, config.token_game_name]
+        "-rompath", config.TOKEN_GAME_DIR, config.TOKEN_GAME_NAME]
     assert launched["game_info"] is game
     assert (launched["capture_type"], launched["capture_file"]) == ("video", "/cap.mp4")
 
@@ -232,7 +232,7 @@ def test_a_console_runs_its_system_driver_with_the_game_as_media(launcher, platf
 
     assert launcher["launched"]["launch_cmd"] == [
         "/bin/mame", "-inipath", "/emu/config_dir",
-        "-rompath", "/emu/roms_dir", system_name, media_flag, config.token_game_file]
+        "-rompath", "/emu/roms_dir", system_name, media_flag, config.TOKEN_GAME_FILE]
 
 
 def test_a_windowed_launch_asks_mame_for_a_window(launcher):

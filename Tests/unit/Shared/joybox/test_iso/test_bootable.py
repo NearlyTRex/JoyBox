@@ -41,7 +41,7 @@ def test_a_bootable_image_can_be_written_to_a_usb_stick():
     command = bootable_command()
 
     assert "-append_partition" in command
-    assert iso.efi_partition_type in command
+    assert iso.EFI_PARTITION_TYPE in command
     assert "-appended_part_as_gpt" in command
     assert "--protective-msdos-label" in command
     assert "--grub2-mbr" in command

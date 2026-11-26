@@ -208,7 +208,7 @@ def test_an_image_is_built_from_the_stock_one(stock, tmp_path):
     work_dir = str(stock["work_dir"])
     assert created["iso_file"] == str(tmp_path / "out" / "autoinstall.iso")
     assert created["volume_name"] == "Ubuntu-Server 24.04"
-    assert created["bios_boot_image"] == autoinstall.bios_boot_image
+    assert created["bios_boot_image"] == autoinstall.BIOS_BOOT_IMAGE
     assert created["efi_boot_image"] == os.path.join(work_dir, "efi.img")
     assert created["mbr_image"] == os.path.join(work_dir, "mbr.img")
     assert created["user_data"].startswith("#cloud-config\n")

@@ -111,8 +111,8 @@ def test_mac_names_become_local_names(hfs_name, local_name):
 
 
 def test_an_unset_date_is_unknown_in_appledouble():
-    assert hfs.convert_hfs_date_to_appledouble(0) == hfs.appledouble_unknown_date
-    assert hfs.convert_hfs_date_to_appledouble(hfs.hfs_to_appledouble_seconds + 5) == 5
+    assert hfs.convert_hfs_date_to_appledouble(0) == hfs.APPLEDOUBLE_UNKNOWN_DATE
+    assert hfs.convert_hfs_date_to_appledouble(hfs.HFS_TO_APPLEDOUBLE_SECONDS + 5) == 5
 
 
 @pytest.mark.parametrize("finder_info, resource_fork_size, needed", [
@@ -131,12 +131,12 @@ def test_appledouble_carries_the_finder_info_dates_and_resource_fork():
     blob = hfs.build_appledouble(APPLICATION_INFO[:8] + b"\x01\x00", (0, NEW_YEAR_2005, 0), b"resources")
 
     magic, version, entries = read_appledouble_entries(blob)
-    assert (magic, version) == (hfs.appledouble_magic, hfs.appledouble_version)
-    assert entries[hfs.appledouble_entry_finder_info] == b"APPLPJ03\x01\x00" + bytes(22)
-    assert entries[hfs.appledouble_entry_resource_fork] == b"resources"
-    _, modified, backed_up, _ = struct.unpack(">iiii", entries[hfs.appledouble_entry_file_dates])
-    assert modified == NEW_YEAR_2005 - hfs.hfs_to_appledouble_seconds
-    assert backed_up == hfs.appledouble_unknown_date
+    assert (magic, version) == (hfs.APPLEDOUBLE_MAGIC, hfs.APPLEDOUBLE_VERSION)
+    assert entries[hfs.APPLEDOUBLE_ENTRY_FINDER_INFO] == b"APPLPJ03\x01\x00" + bytes(22)
+    assert entries[hfs.APPLEDOUBLE_ENTRY_RESOURCE_FORK] == b"resources"
+    _, modified, backed_up, _ = struct.unpack(">iiii", entries[hfs.APPLEDOUBLE_ENTRY_FILE_DATES])
+    assert modified == NEW_YEAR_2005 - hfs.HFS_TO_APPLEDOUBLE_SECONDS
+    assert backed_up == hfs.APPLEDOUBLE_UNKNOWN_DATE
 
 
 ###########################################################

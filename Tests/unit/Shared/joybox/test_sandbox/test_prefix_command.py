@@ -132,7 +132,7 @@ def test_the_working_directory_is_mapped_to_its_drive(tmp_path):
 
     sandbox.setup_prefix_environment(["game.exe"], options = entry)
 
-    drive = sandbox.get_real_drive_path(entry, config.drive_prefix_cwd)
+    drive = sandbox.get_real_drive_path(entry, config.DRIVE_PREFIX_CWD)
     assert os.path.realpath(drive) == str(tmp_path)
 
 
@@ -142,7 +142,7 @@ def test_an_unmapped_working_directory_gets_no_drive(tmp_path):
 
     sandbox.setup_prefix_environment(["game.exe"], options = entry)
 
-    assert not os.path.lexists(sandbox.get_real_drive_path(entry, config.drive_prefix_cwd))
+    assert not os.path.lexists(sandbox.get_real_drive_path(entry, config.DRIVE_PREFIX_CWD))
 
 
 def test_a_mapped_working_directory_needs_a_prefix_to_map_into(tmp_path, monkeypatch):

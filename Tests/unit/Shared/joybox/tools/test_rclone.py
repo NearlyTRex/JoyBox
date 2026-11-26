@@ -131,8 +131,8 @@ def test_configure_writes_the_note_for_both_platforms(written, tmp_path):
     assert rclone.RClone().configure()
 
     assert [(call["src"], call["contents"]) for call in written.calls] == [
-        (str(tmp_path / "RClone/windows/rclone.conf"), rclone.config_note),
-        (str(tmp_path / "RClone/linux/rclone.conf"), rclone.config_note),
+        (str(tmp_path / "RClone/windows/rclone.conf"), rclone.CONFIG_NOTE),
+        (str(tmp_path / "RClone/linux/rclone.conf"), rclone.CONFIG_NOTE),
     ]
 
 

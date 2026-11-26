@@ -90,18 +90,18 @@ class Steam(storebase.StoreBase):
 
     # Get key
     def get_key(self):
-        return config.json_key_steam
+        return config.JSON_KEY_STEAM
 
     # Get identifier keys
     def get_identifier_keys(self):
         return {
-            config.StoreIdentifierType.INFO: config.json_key_store_appid,
-            config.StoreIdentifierType.INSTALL: config.json_key_store_appid,
-            config.StoreIdentifierType.LAUNCH: config.json_key_store_appid,
-            config.StoreIdentifierType.DOWNLOAD: config.json_key_store_appid,
-            config.StoreIdentifierType.ASSET: config.json_key_store_appid,
-            config.StoreIdentifierType.METADATA: config.json_key_store_appurl,
-            config.StoreIdentifierType.PAGE: config.json_key_store_appid
+            config.StoreIdentifierType.INFO: config.JSON_KEY_STORE_APPID,
+            config.StoreIdentifierType.INSTALL: config.JSON_KEY_STORE_APPID,
+            config.StoreIdentifierType.LAUNCH: config.JSON_KEY_STORE_APPID,
+            config.StoreIdentifierType.DOWNLOAD: config.JSON_KEY_STORE_APPID,
+            config.StoreIdentifierType.ASSET: config.JSON_KEY_STORE_APPID,
+            config.StoreIdentifierType.METADATA: config.JSON_KEY_STORE_APPURL,
+            config.StoreIdentifierType.PAGE: config.JSON_KEY_STORE_APPID
         }
 
     # Get preferred platform
@@ -307,29 +307,29 @@ class Steam(storebase.StoreBase):
             line_url = self.get_latest_url(line_appid)
             line_keys = []
             line_paths = [
-                paths.join_paths(config.token_store_install_dir, "userdata", config.token_store_user_id, line_appid)
+                paths.join_paths(config.TOKEN_STORE_INSTALL_DIR, "userdata", config.TOKEN_STORE_USER_ID, line_appid)
             ]
 
             # Create purchase
             purchase = jsondata.JsonData(
                 json_data = {},
                 json_platform = self.get_platform())
-            purchase.set_value(config.json_key_store_appid, line_appid)
-            purchase.set_value(config.json_key_store_appurl, line_url)
-            purchase.set_value(config.json_key_store_name, line_title.strip())
-            purchase.set_value(config.json_key_store_branchid, config.SteamBranchType.PUBLIC.lower())
-            purchase.set_value(config.json_key_store_keys, line_keys)
-            purchase.set_value(config.json_key_store_paths, line_paths)
+            purchase.set_value(config.JSON_KEY_STORE_APPID, line_appid)
+            purchase.set_value(config.JSON_KEY_STORE_APPURL, line_url)
+            purchase.set_value(config.JSON_KEY_STORE_NAME, line_title.strip())
+            purchase.set_value(config.JSON_KEY_STORE_BRANCHID, config.SteamBranchType.PUBLIC.lower())
+            purchase.set_value(config.JSON_KEY_STORE_KEYS, line_keys)
+            purchase.set_value(config.JSON_KEY_STORE_PATHS, line_paths)
             purchases.append(purchase)
 
             # Store data for caching
             purchases_data.append({
-                config.json_key_store_appid: line_appid,
-                config.json_key_store_appurl: line_url,
-                config.json_key_store_name: line_title.strip(),
-                config.json_key_store_branchid: config.SteamBranchType.PUBLIC.lower(),
-                config.json_key_store_keys: line_keys,
-                config.json_key_store_paths: line_paths
+                config.JSON_KEY_STORE_APPID: line_appid,
+                config.JSON_KEY_STORE_APPURL: line_url,
+                config.JSON_KEY_STORE_NAME: line_title.strip(),
+                config.JSON_KEY_STORE_BRANCHID: config.SteamBranchType.PUBLIC.lower(),
+                config.JSON_KEY_STORE_KEYS: line_keys,
+                config.JSON_KEY_STORE_PATHS: line_paths
             })
 
         # Save to cache
@@ -360,8 +360,8 @@ class Steam(storebase.StoreBase):
         exit_on_failure = False):
 
         # Get existing paths and keys
-        game_paths = list(json_data.get_value(config.json_key_store_paths))
-        game_keys = list(json_data.get_value(config.json_key_store_keys))
+        game_paths = list(json_data.get_value(config.JSON_KEY_STORE_PATHS))
+        game_keys = list(json_data.get_value(config.JSON_KEY_STORE_KEYS))
 
         # Augment by manifest
         manifest_entry = manifest.get_manifest_instance().find_entry_by_steamid(
@@ -371,19 +371,19 @@ class Steam(storebase.StoreBase):
             exit_on_failure = exit_on_failure)
         if manifest_entry:
             base_path = None
-            if json_data.has_key(config.json_key_store_installdir):
+            if json_data.has_key(config.JSON_KEY_STORE_INSTALLDIR):
                 base_path = paths.join_paths(
-                    config.token_store_install_dir,
+                    config.TOKEN_STORE_INSTALL_DIR,
                     "steamapps",
                     "common",
-                    json_data.get_value(config.json_key_store_installdir))
+                    json_data.get_value(config.JSON_KEY_STORE_INSTALLDIR))
             manifest_paths = manifest_entry.get_paths(base_path)
             game_paths = list(set(game_paths).union(manifest_paths))
             game_keys = list(set(game_keys).union(manifest_entry.get_keys()))
 
         # Apply base path cleaning logic
-        json_data.set_value(config.json_key_store_paths, game_paths)
-        json_data.set_value(config.json_key_store_keys, game_keys)
+        json_data.set_value(config.JSON_KEY_STORE_PATHS, game_paths)
+        json_data.set_value(config.JSON_KEY_STORE_KEYS, game_keys)
         return super().augment_jsondata(
             json_data = json_data,
             identifier = identifier,
@@ -461,26 +461,26 @@ class Steam(storebase.StoreBase):
         if not isinstance(branch, str) or not branch:
             branch = config.SteamBranchType.PUBLIC.lower()
         json_data = self.create_default_jsondata()
-        json_data.set_value(config.json_key_store_appid, identifier)
-        json_data.set_value(config.json_key_store_appurl, self.get_latest_url(identifier))
-        json_data.set_value(config.json_key_store_branchid, branch)
-        json_data.set_value(config.json_key_store_paths, [
-            paths.join_paths(config.token_store_install_dir, "userdata", config.token_store_user_id, identifier)
+        json_data.set_value(config.JSON_KEY_STORE_APPID, identifier)
+        json_data.set_value(config.JSON_KEY_STORE_APPURL, self.get_latest_url(identifier))
+        json_data.set_value(config.JSON_KEY_STORE_BRANCHID, branch)
+        json_data.set_value(config.JSON_KEY_STORE_PATHS, [
+            paths.join_paths(config.TOKEN_STORE_INSTALL_DIR, "userdata", config.TOKEN_STORE_USER_ID, identifier)
         ])
         appdata = steam_json.get(identifier)
         if isinstance(appdata, dict):
             appcommon = appdata.get("common", {})
             appconfig = appdata.get("config", {})
             appdepots = appdata.get("depots", {}).get("branches", {}).get(branch, {})
-            json_data.set_value(config.json_key_store_name, appcommon.get("name", "").strip())
-            json_data.set_value(config.json_key_store_controller_support, appcommon.get("controller_support", "unknown"))
+            json_data.set_value(config.JSON_KEY_STORE_NAME, appcommon.get("name", "").strip())
+            json_data.set_value(config.JSON_KEY_STORE_CONTROLLER_SUPPORT, appcommon.get("controller_support", "unknown"))
             if appconfig.get("installdir"):
                 json_data.set_value(
-                    config.json_key_store_installdir,
+                    config.JSON_KEY_STORE_INSTALLDIR,
                     f'STORE_INSTALL_DIR/steamapps/common/{appconfig.get("installdir")}'
                 )
-            json_data.set_value(config.json_key_store_buildid, str(appdepots.get("buildid", config.default_buildid)))
-            json_data.set_value(config.json_key_store_builddate, str(appdepots.get("timeupdated", "unknown")))
+            json_data.set_value(config.JSON_KEY_STORE_BUILDID, str(appdepots.get("buildid", config.DEFAULT_BUILDID)))
+            json_data.set_value(config.JSON_KEY_STORE_BUILDDATE, str(appdepots.get("timeupdated", "unknown")))
         return self.augment_jsondata(
             json_data = json_data,
             identifier = identifier,
@@ -823,9 +823,9 @@ class Steam(storebase.StoreBase):
         translation_map = super().build_path_translation_map()
         if appid:
             prefix_path = get_steam_prefix_dir(self.get_install_dir(), appid)
-            translation_map[config.token_user_registry_dir].append(prefix_path)
-            translation_map[config.token_user_public_dir].append(paths.join_paths(prefix_path, "drive_c", "users", "Public"))
-            translation_map[config.token_user_profile_dir].append(paths.join_paths(prefix_path, "drive_c", "users", "steamuser"))
+            translation_map[config.TOKEN_USER_REGISTRY_DIR].append(prefix_path)
+            translation_map[config.TOKEN_USER_PUBLIC_DIR].append(paths.join_paths(prefix_path, "drive_c", "users", "Public"))
+            translation_map[config.TOKEN_USER_PROFILE_DIR].append(paths.join_paths(prefix_path, "drive_c", "users", "steamuser"))
         return translation_map
 
     # Get registered paths
@@ -841,10 +841,10 @@ class Steam(storebase.StoreBase):
 
         # Add user id variants
         for path in list(paths):
-            if config.token_store_user_id in path:
-                paths.append(path.replace(config.token_store_user_id, userid_64))
-                paths.append(path.replace(config.token_store_user_id, userid_3s))
-                paths.append(path.replace(config.token_store_user_id, userid_cs))
+            if config.TOKEN_STORE_USER_ID in path:
+                paths.append(path.replace(config.TOKEN_STORE_USER_ID, userid_64))
+                paths.append(path.replace(config.TOKEN_STORE_USER_ID, userid_3s))
+                paths.append(path.replace(config.TOKEN_STORE_USER_ID, userid_cs))
         return paths
 
     ############################################################

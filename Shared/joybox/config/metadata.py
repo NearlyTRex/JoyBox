@@ -42,7 +42,7 @@ gametype_weights = collections.OrderedDict(
     ]))
 
 # Other game types
-gametype_weight_else = 100
+GAMETYPE_WEIGHT_ELSE = 100
 
 ######################################################################################
 

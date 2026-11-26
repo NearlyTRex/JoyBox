@@ -19,9 +19,9 @@ def cache_file(tmp_path):
 
 def summary(purchases):
     return [(
-        purchase.get_value(config.json_key_store_appid),
-        purchase.get_value(config.json_key_store_appurl),
-        purchase.get_value(config.json_key_store_name)) for purchase in purchases]
+        purchase.get_value(config.JSON_KEY_STORE_APPID),
+        purchase.get_value(config.JSON_KEY_STORE_APPURL),
+        purchase.get_value(config.JSON_KEY_STORE_NAME)) for purchase in purchases]
 
 
 def write_cache(cache_file, data, hours_old = 0):
@@ -142,22 +142,22 @@ def test_purchases_are_cached_for_a_day(itchio_store, browser, cache_file, verbo
     again = itchio_store.get_latest_purchases(verbose = verbose)
 
     assert json.loads(cache_file.read_text()) == [{
-        config.json_key_store_appid: "1234",
-        config.json_key_store_appurl: GAME_URL,
-        config.json_key_store_name: "Cool Game"}]
+        config.JSON_KEY_STORE_APPID: "1234",
+        config.JSON_KEY_STORE_APPURL: GAME_URL,
+        config.JSON_KEY_STORE_NAME: "Cool Game"}]
     assert len(browser.connects) == 1
     assert summary(again) == [("1234", GAME_URL, "Cool Game")]
     assert again[0].get_platform() == config.Platform.COMPUTER_ITCHIO
 
 
 def test_a_day_old_cache_is_refreshed(itchio_store, browser, cache_file):
-    write_cache(cache_file, [{config.json_key_store_appid: "1", config.json_key_store_appurl: "old", config.json_key_store_name: "Old"}], hours_old = 25)
+    write_cache(cache_file, [{config.JSON_KEY_STORE_APPID: "1", config.JSON_KEY_STORE_APPURL: "old", config.JSON_KEY_STORE_NAME: "Old"}], hours_old = 25)
     browser.add(game_cell())
 
     purchases = itchio_store.get_latest_purchases()
 
     assert summary(purchases) == [("1234", GAME_URL, "Cool Game")]
-    assert json.loads(cache_file.read_text())[0][config.json_key_store_appid] == "1234"
+    assert json.loads(cache_file.read_text())[0][config.JSON_KEY_STORE_APPID] == "1234"
 
 
 def test_a_cached_empty_library_is_still_a_cache_hit(itchio_store, browser, cache_file):

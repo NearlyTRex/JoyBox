@@ -50,21 +50,21 @@ def test_the_store_describes_itself(disc_store, tmp_path):
     assert disc_store.get_supercategory() == config.Supercategory.ROMS
     assert disc_store.get_category() == config.Category.COMPUTER
     assert disc_store.get_subcategory() == config.Subcategory.COMPUTER_DISC
-    assert disc_store.get_key() == config.json_key_disc
+    assert disc_store.get_key() == config.JSON_KEY_DISC
     assert disc_store.get_install_dir() == str(tmp_path / "Disc")
 
 
 def test_the_platform_files_games_where_the_store_does(disc_store):
     assert platform_placement(disc_store) == (
         disc_store.get_supercategory(), disc_store.get_category(), disc_store.get_subcategory())
-    assert disc_store.get_key() in config.platforms[disc_store.get_platform()][config.platform_key_merge_json]
+    assert disc_store.get_key() in config.platforms[disc_store.get_platform()][config.PLATFORM_KEY_MERGE_JSON]
     assert disc_store.get_key() in config.json_keys_store
 
 
 def test_every_identifier_is_the_store_name(disc_store):
-    assert disc_store.get_identifier_keys() == every_identifier(config.json_key_store_name)
-    assert disc_store.get_install_identifier_key() == config.json_key_store_name
-    assert disc_store.get_page_identifier_key() == config.json_key_store_name
+    assert disc_store.get_identifier_keys() == every_identifier(config.JSON_KEY_STORE_NAME)
+    assert disc_store.get_install_identifier_key() == config.JSON_KEY_STORE_NAME
+    assert disc_store.get_page_identifier_key() == config.JSON_KEY_STORE_NAME
 
 
 def test_it_imports_and_downloads_nothing(disc_store):

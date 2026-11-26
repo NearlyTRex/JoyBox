@@ -67,7 +67,7 @@ def test_step_flags_do_not_share_a_key():
 
 
 def test_a_step_is_built_from_existing_json():
-    entry = computer.ProgramStep({config.program_step_key_type: "extract"})
+    entry = computer.ProgramStep({config.PROGRAM_STEP_KEY_TYPE: "extract"})
 
     assert entry.get_type() == "extract"
 

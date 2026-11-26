@@ -304,7 +304,7 @@ def test_writing_a_metadata_value_without_metadata_is_refused(game):
 
 def test_a_non_entry_is_not_metadata(game):
     # The key can hold anything; only a real entry counts.
-    game.set_value(config.json_key_metadata, {"genre": "RPG"})
+    game.set_value(config.JSON_KEY_METADATA, {"genre": "RPG"})
 
     assert game.has_metadata() is False
     assert game.get_metadata() is None

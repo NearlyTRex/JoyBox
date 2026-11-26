@@ -34,8 +34,8 @@ def test_data_and_plugins_are_both_backed_up(docker_app):
 
 
 def test_the_admin_script_renames_the_default_admin():
-    assert '$users->getByUsername("admin")' in installer_kanboard.admin_script
-    assert '"role" => "app-admin"' in installer_kanboard.admin_script
+    assert '$users->getByUsername("admin")' in installer_kanboard.ADMIN_SCRIPT
+    assert '"role" => "app-admin"' in installer_kanboard.ADMIN_SCRIPT
 
 
 def test_a_failed_login_reports_the_exit_code(isolated_settings, docker_app, caplog):
@@ -56,7 +56,7 @@ def test_install_starts_compose_and_marks_the_app_installed(isolated_settings, d
     app = with_password(isolated_settings, docker_app)
 
     assert app.installer.install()
-    assert app.connection.written("/tmp/kanboard.docker-compose.yml") == installer_kanboard.docker_compose_template
+    assert app.connection.written("/tmp/kanboard.docker-compose.yml") == installer_kanboard.DOCKER_COMPOSE_TEMPLATE
     assert ("/tmp/kanboard.env", f"{app.app_dir}/.env") in app.connection.moved
     assert (f"{app.app_dir}/.env", "600") in app.connection.permissions
     assert app.connection.ran("compose --env-file", f"{app.app_dir}/.env", "up -d --build")

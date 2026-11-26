@@ -11,7 +11,7 @@ from joybox import logger
 # host directories. The repositories directory is mounted read-only so jobs can
 # read the git repos on the box. The admin script is copied into JENKINS_HOME
 # on every start, because the image copies ref files ending in .override.
-docker_compose_template = """
+DOCKER_COMPOSE_TEMPLATE = """
 services:
   jenkins:
     image: ${JENKINS_IMAGE}
@@ -36,7 +36,7 @@ volumes:
 """
 
 # .env template
-env_template = """
+ENV_TEMPLATE = """
 JENKINS_PORT_HTTP={port_http}
 JENKINS_PORT_AGENT={port_agent}
 JENKINS_REPOSITORIES_DIR={repositories_dir}
@@ -48,7 +48,7 @@ JENKINS_ADMIN_PASS='{admin_pass}'
 # Creates the admin account, or resets its password, from the container
 # environment on every start. With no password set it does nothing, and the
 # setup wizard runs instead.
-admin_script = """
+ADMIN_SCRIPT = """
 import hudson.security.FullControlOnceLoggedInAuthorizationStrategy
 import hudson.security.HudsonPrivateSecurityRealm
 import jenkins.model.Jenkins
@@ -104,8 +104,8 @@ class Jenkins(installer_dockerapp.DockerAppInstaller):
         }
 
         # Templates
-        self.docker_compose_template = docker_compose_template
-        self.env_template = env_template
+        self.docker_compose_template = DOCKER_COMPOSE_TEMPLATE
+        self.env_template = ENV_TEMPLATE
 
         # Behavior
         self.required_settings = ["domain", "subdomain", "port_http", "port_agent", "repositories_dir"]
@@ -124,7 +124,7 @@ class Jenkins(installer_dockerapp.DockerAppInstaller):
         app_dir = self.get_app_dir()
         self.connection.make_directory(app_dir)
         script_path = f"{app_dir}/joybox-admin.groovy"
-        if not self.connection.write_file(script_path, admin_script):
+        if not self.connection.write_file(script_path, ADMIN_SCRIPT):
             logger.log_error(f"Unable to write the admin script for {self.app_name}")
             return False
         self.connection.change_permission(script_path, "644")

@@ -149,7 +149,7 @@ def test_a_login_is_written_with_a_fresh_salt(tmp_path):
     assert sunshine.write_login(state_file, "player", LOGIN_PHRASE)
 
     state = read_state(state_file)
-    assert state["username"] == "player" and len(state["salt"]) == sunshine.salt_length
+    assert state["username"] == "player" and len(state["salt"]) == sunshine.SALT_LENGTH
     assert state["password"] == sunshine.hash_password(LOGIN_PHRASE, state["salt"])
     assert oct(os.stat(state_file).st_mode & 0o777) == "0o600"
 

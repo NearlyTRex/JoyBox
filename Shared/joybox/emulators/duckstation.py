@@ -12,7 +12,7 @@ from joybox import emulatorbase
 
 # Config files
 config_files = {}
-config_file_general = """
+CONFIG_FILE_GENERAL = """
 [Main]
 SettingsVersion = 3
 
@@ -74,8 +74,8 @@ SmallMotor = SDL-0/SmallMotor
 LargeMotor = SDL-0/LargeMotor
 """
 config_files["DuckStation/windows/portable.txt"] = ""
-config_files["DuckStation/windows/settings.ini"] = config_file_general
-config_files["DuckStation/linux/DuckStation.AppImage.home/.config/duckstation/settings.ini"] = config_file_general
+config_files["DuckStation/windows/settings.ini"] = CONFIG_FILE_GENERAL
+config_files["DuckStation/linux/DuckStation.AppImage.home/.config/duckstation/settings.ini"] = CONFIG_FILE_GENERAL
 
 # System files
 system_files = {}
@@ -253,7 +253,7 @@ class DuckStation(emulatorbase.EmulatorBase):
         # Get launch command
         launch_cmd = [
             programs.get_emulator_program("DuckStation"),
-            config.token_game_file
+            config.TOKEN_GAME_FILE
         ]
         if fullscreen:
             launch_cmd += [

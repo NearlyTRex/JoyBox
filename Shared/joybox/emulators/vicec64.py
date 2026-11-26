@@ -179,7 +179,7 @@ class ViceC64(emulatorbase.EmulatorBase):
         # Get launch command
         launch_cmd = [
             programs.get_emulator_program("VICE-C64"),
-            config.token_game_file
+            config.TOKEN_GAME_FILE
         ]
 
         # Launch game

@@ -14,7 +14,7 @@ from joybox import emulatorbase
 
 # Config files
 config_files = {}
-config_file_general = r"""
+CONFIG_FILE_GENERAL = r"""
 [Data%20Storage]
 dump_directory="EMULATOR_SETUP_ROOT/dump"
 load_directory="EMULATOR_SETUP_ROOT/load"
@@ -25,8 +25,8 @@ tas_directory="EMULATOR_SETUP_ROOT/tas"
 [UI]
 Screenshots\screenshot_path="EMULATOR_SETUP_ROOT/screenshots"
 """
-config_files["Yuzu/windows/user/config/qt-config.ini"] = config_file_general
-config_files["Yuzu/linux/Yuzu.AppImage.home/.config/yuzu/qt-config.ini"] = config_file_general
+config_files["Yuzu/windows/user/config/qt-config.ini"] = CONFIG_FILE_GENERAL
+config_files["Yuzu/linux/Yuzu.AppImage.home/.config/yuzu/qt-config.ini"] = CONFIG_FILE_GENERAL
 
 # System files
 system_files = {}
@@ -219,7 +219,7 @@ class Yuzu(emulatorbase.EmulatorBase):
         # Get launch command
         launch_cmd = [
             programs.get_emulator_program("Yuzu"),
-            "-g", config.token_game_file
+            "-g", config.TOKEN_GAME_FILE
         ]
         if fullscreen:
             launch_cmd += [

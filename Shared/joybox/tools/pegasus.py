@@ -13,7 +13,7 @@ from joybox import desktopentry
 
 # Config files
 config_files = {}
-config_file_general = """
+CONFIG_FILE_GENERAL = """
 general.theme: themes/PegasusThemeGrid/
 general.verify-files: false
 general.input-mouse-support: true
@@ -37,9 +37,9 @@ keys.accept: Return,Enter,GamepadA
 """
 config_files["Pegasus/windows/portable.txt"] = ""
 config_files["Pegasus/windows/config/game_dirs.txt"] = ""
-config_files["Pegasus/windows/config/settings.txt"] = config_file_general
+config_files["Pegasus/windows/config/settings.txt"] = CONFIG_FILE_GENERAL
 config_files["Pegasus/linux/Pegasus.AppImage.home/.config/pegasus-frontend/game_dirs.txt"] = ""
-config_files["Pegasus/linux/Pegasus.AppImage.home/.config/pegasus-frontend/settings.txt"] = config_file_general
+config_files["Pegasus/linux/Pegasus.AppImage.home/.config/pegasus-frontend/settings.txt"] = CONFIG_FILE_GENERAL
 
 # Pegasus tool
 class Pegasus(toolbase.ToolBase):

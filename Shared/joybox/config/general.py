@@ -5,85 +5,85 @@ import getpass
 # Local imports
 
 # Project
-project_name = "JoyBox"
+PROJECT_NAME = "JoyBox"
 
 # Minimum python version
-minimum_python_major_version = 3
-minimum_python_minor_version = 10
-minimum_python_patch_version = 0
+MINIMUM_PYTHON_MAJOR_VERSION = 3
+MINIMUM_PYTHON_MINOR_VERSION = 10
+MINIMUM_PYTHON_PATCH_VERSION = 0
 minimum_python_version = (
-    minimum_python_major_version,
-    minimum_python_minor_version,
-    minimum_python_patch_version
+    MINIMUM_PYTHON_MAJOR_VERSION,
+    MINIMUM_PYTHON_MINOR_VERSION,
+    MINIMUM_PYTHON_PATCH_VERSION
 )
 
 # Tokens
-token_rom_storage_root = "ROM_STORAGE_ROOT"
-token_rom_json_root = "ROM_JSON_ROOT"
-token_tool_main_root = "TOOL_MAIN_ROOT"
-token_emulator_main_root = "EMULATOR_MAIN_ROOT"
-token_emulator_setup_root = "EMULATOR_SETUP_ROOT"
-token_setup_main_root = "SETUP_MAIN_ROOT"
-token_hdd_main_root = "HDD_MAIN_ROOT"
-token_dos_main_root = "DOS_MAIN_ROOT"
-token_scumm_main_root = "SCUMM_MAIN_ROOT"
-token_disc_main_root = "DISC_MAIN_ROOT"
-token_disc_update_root = "DISC_UPDATE_ROOT"
-token_disc_zero_root = "DISC_ZERO_ROOT"
-token_disc_one_root = "DISC_ONE_ROOT"
-token_disc_two_root = "DISC_TWO_ROOT"
-token_disc_three_root = "DISC_THREE_ROOT"
-token_disc_four_root = "DISC_FOUR_ROOT"
-token_disc_five_root = "DISC_FIVE_ROOT"
-token_disc_six_root = "DISC_SIX_ROOT"
-token_disc_seven_root = "DISC_SEVEN_ROOT"
-token_game_name = "GAME_NAME"
-token_game_file = "GAME_FILE"
-token_game_dir = "GAME_DIR"
-token_game_save_dir = "GAME_SAVE_DIR"
-token_game_install_dir = "GAME_INSTALL_DIR"
-token_python_bin = "PYTHON_BIN"
-token_user_registry_dir = "USER_REGISTRY_DIR"
-token_user_profile_dir = "USER_PROFILE_DIR"
-token_user_public_dir = "USER_PUBLIC_DIR"
-token_store_install_dir = "STORE_INSTALL_DIR"
-token_store_user_id = "STORE_USER_ID"
-token_command_split = "@=^=@"
-token_glob = "*"
+TOKEN_ROM_STORAGE_ROOT = "ROM_STORAGE_ROOT"
+TOKEN_ROM_JSON_ROOT = "ROM_JSON_ROOT"
+TOKEN_TOOL_MAIN_ROOT = "TOOL_MAIN_ROOT"
+TOKEN_EMULATOR_MAIN_ROOT = "EMULATOR_MAIN_ROOT"
+TOKEN_EMULATOR_SETUP_ROOT = "EMULATOR_SETUP_ROOT"
+TOKEN_SETUP_MAIN_ROOT = "SETUP_MAIN_ROOT"
+TOKEN_HDD_MAIN_ROOT = "HDD_MAIN_ROOT"
+TOKEN_DOS_MAIN_ROOT = "DOS_MAIN_ROOT"
+TOKEN_SCUMM_MAIN_ROOT = "SCUMM_MAIN_ROOT"
+TOKEN_DISC_MAIN_ROOT = "DISC_MAIN_ROOT"
+TOKEN_DISC_UPDATE_ROOT = "DISC_UPDATE_ROOT"
+TOKEN_DISC_ZERO_ROOT = "DISC_ZERO_ROOT"
+TOKEN_DISC_ONE_ROOT = "DISC_ONE_ROOT"
+TOKEN_DISC_TWO_ROOT = "DISC_TWO_ROOT"
+TOKEN_DISC_THREE_ROOT = "DISC_THREE_ROOT"
+TOKEN_DISC_FOUR_ROOT = "DISC_FOUR_ROOT"
+TOKEN_DISC_FIVE_ROOT = "DISC_FIVE_ROOT"
+TOKEN_DISC_SIX_ROOT = "DISC_SIX_ROOT"
+TOKEN_DISC_SEVEN_ROOT = "DISC_SEVEN_ROOT"
+TOKEN_GAME_NAME = "GAME_NAME"
+TOKEN_GAME_FILE = "GAME_FILE"
+TOKEN_GAME_DIR = "GAME_DIR"
+TOKEN_GAME_SAVE_DIR = "GAME_SAVE_DIR"
+TOKEN_GAME_INSTALL_DIR = "GAME_INSTALL_DIR"
+TOKEN_PYTHON_BIN = "PYTHON_BIN"
+TOKEN_USER_REGISTRY_DIR = "USER_REGISTRY_DIR"
+TOKEN_USER_PROFILE_DIR = "USER_PROFILE_DIR"
+TOKEN_USER_PUBLIC_DIR = "USER_PUBLIC_DIR"
+TOKEN_STORE_INSTALL_DIR = "STORE_INSTALL_DIR"
+TOKEN_STORE_USER_ID = "STORE_USER_ID"
+TOKEN_COMMAND_SPLIT = "@=^=@"
+TOKEN_GLOB = "*"
 tokens_disc = [
-    token_disc_main_root,
-    token_disc_update_root,
-    token_disc_zero_root,
-    token_disc_one_root,
-    token_disc_two_root,
-    token_disc_three_root,
-    token_disc_four_root,
-    token_disc_five_root,
-    token_disc_six_root,
-    token_disc_seven_root
+    TOKEN_DISC_MAIN_ROOT,
+    TOKEN_DISC_UPDATE_ROOT,
+    TOKEN_DISC_ZERO_ROOT,
+    TOKEN_DISC_ONE_ROOT,
+    TOKEN_DISC_TWO_ROOT,
+    TOKEN_DISC_THREE_ROOT,
+    TOKEN_DISC_FOUR_ROOT,
+    TOKEN_DISC_FIVE_ROOT,
+    TOKEN_DISC_SIX_ROOT,
+    TOKEN_DISC_SEVEN_ROOT
 ]
 token_disc_names = {
-    token_disc_zero_root: "Disc 0",
-    token_disc_one_root: "Disc 1",
-    token_disc_two_root: "Disc 2",
-    token_disc_three_root: "Disc 3",
-    token_disc_four_root: "Disc 4",
-    token_disc_five_root: "Disc 5",
-    token_disc_six_root: "Disc 6",
-    token_disc_seven_root: "Disc 7",
-    token_disc_update_root: "Update"
+    TOKEN_DISC_ZERO_ROOT: "Disc 0",
+    TOKEN_DISC_ONE_ROOT: "Disc 1",
+    TOKEN_DISC_TWO_ROOT: "Disc 2",
+    TOKEN_DISC_THREE_ROOT: "Disc 3",
+    TOKEN_DISC_FOUR_ROOT: "Disc 4",
+    TOKEN_DISC_FIVE_ROOT: "Disc 5",
+    TOKEN_DISC_SIX_ROOT: "Disc 6",
+    TOKEN_DISC_SEVEN_ROOT: "Disc 7",
+    TOKEN_DISC_UPDATE_ROOT: "Update"
 }
 
 # Separators
-os_curdir = os.sep
-os_pardir = os.pardir
-os_sep = os.sep
-os_pathsep = "/"
-os_envpathsep = os.pathsep
+OS_CURDIR = os.sep
+OS_PARDIR = os.pardir
+OS_SEP = os.sep
+OS_PATHSEP = "/"
+OS_ENVPATHSEP = os.pathsep
 
 # Drive roots
-drive_root_windows = "C:\\"
-drive_root_posix = "/"
+DRIVE_ROOT_WINDOWS = "C:\\"
+DRIVE_ROOT_POSIX = "/"
 
 # Mime types
 mime_types_zip = ["application/zip"]
@@ -97,84 +97,84 @@ mime_types_exe = ["application/x-dosexec"]
 mime_types_appimage = ["application/x-executable"]
 
 # Folders
-general_folder_numeric = "#-0"
-computer_folder_dos = "MS-DOS"
-computer_folder_scumm = "Scumm"
-computer_folder_appdata = "AppData"
-computer_folder_contacts = "Contacts"
-computer_folder_desktop = "Desktop"
-computer_folder_documents = "Documents"
-computer_folder_downloads = "Downloads"
-computer_folder_favorites = "Favorites"
-computer_folder_gamedata = "GameData"
-computer_folder_links = "Links"
-computer_folder_music = "Music"
-computer_folder_pictures = "Pictures"
-computer_folder_public = "Public"
-computer_folder_registry = "Registry"
-computer_folder_savedgames = "Saved Games"
-computer_folder_searches = "Searches"
-computer_folder_store = "Store"
-computer_folder_temp = "Temp"
-computer_folder_videos = "Videos"
+GENERAL_FOLDER_NUMERIC = "#-0"
+COMPUTER_FOLDER_DOS = "MS-DOS"
+COMPUTER_FOLDER_SCUMM = "Scumm"
+COMPUTER_FOLDER_APPDATA = "AppData"
+COMPUTER_FOLDER_CONTACTS = "Contacts"
+COMPUTER_FOLDER_DESKTOP = "Desktop"
+COMPUTER_FOLDER_DOCUMENTS = "Documents"
+COMPUTER_FOLDER_DOWNLOADS = "Downloads"
+COMPUTER_FOLDER_FAVORITES = "Favorites"
+COMPUTER_FOLDER_GAMEDATA = "GameData"
+COMPUTER_FOLDER_LINKS = "Links"
+COMPUTER_FOLDER_MUSIC = "Music"
+COMPUTER_FOLDER_PICTURES = "Pictures"
+COMPUTER_FOLDER_PUBLIC = "Public"
+COMPUTER_FOLDER_REGISTRY = "Registry"
+COMPUTER_FOLDER_SAVEDGAMES = "Saved Games"
+COMPUTER_FOLDER_SEARCHES = "Searches"
+COMPUTER_FOLDER_STORE = "Store"
+COMPUTER_FOLDER_TEMP = "Temp"
+COMPUTER_FOLDER_VIDEOS = "Videos"
 computer_user_folders = [
-    computer_folder_appdata,
-    computer_folder_contacts,
-    computer_folder_desktop,
-    computer_folder_documents,
-    computer_folder_downloads,
-    computer_folder_favorites,
-    computer_folder_gamedata,
-    computer_folder_links,
-    computer_folder_music,
-    computer_folder_pictures,
-    computer_folder_public,
-    computer_folder_registry,
-    computer_folder_savedgames,
-    computer_folder_searches,
-    computer_folder_store,
-    computer_folder_temp,
-    computer_folder_videos
+    COMPUTER_FOLDER_APPDATA,
+    COMPUTER_FOLDER_CONTACTS,
+    COMPUTER_FOLDER_DESKTOP,
+    COMPUTER_FOLDER_DOCUMENTS,
+    COMPUTER_FOLDER_DOWNLOADS,
+    COMPUTER_FOLDER_FAVORITES,
+    COMPUTER_FOLDER_GAMEDATA,
+    COMPUTER_FOLDER_LINKS,
+    COMPUTER_FOLDER_MUSIC,
+    COMPUTER_FOLDER_PICTURES,
+    COMPUTER_FOLDER_PUBLIC,
+    COMPUTER_FOLDER_REGISTRY,
+    COMPUTER_FOLDER_SAVEDGAMES,
+    COMPUTER_FOLDER_SEARCHES,
+    COMPUTER_FOLDER_STORE,
+    COMPUTER_FOLDER_TEMP,
+    COMPUTER_FOLDER_VIDEOS
 ]
 
 # Drives
-drive_prefix_cwd = "b"
-drive_available_start = "d"
-drive_available_end = "y"
+DRIVE_PREFIX_CWD = "b"
+DRIVE_AVAILABLE_START = "d"
+DRIVE_AVAILABLE_END = "y"
 drives_special = [
-    drive_prefix_cwd,
+    DRIVE_PREFIX_CWD,
     "c",
     "z"
 ]
 drives_regular = []
-for code in range(ord(drive_available_start), ord(drive_available_end)):
+for code in range(ord(DRIVE_AVAILABLE_START), ord(DRIVE_AVAILABLE_END)):
     drives_regular.append(chr(code))
 
 # Raw files index
-raw_files_index = "raw_files.index"
+RAW_FILES_INDEX = "raw_files.index"
 
 # Default buildid
-default_buildid = "1.0"
+DEFAULT_BUILDID = "1.0"
 
 # File sizes
-bytes_per_kilobyte = 1024
-bytes_per_megabyte = bytes_per_kilobyte * 1024
-bytes_per_gigabyte = bytes_per_megabyte * 1024
-max_disc_data_size_25gb = 22 * bytes_per_gigabyte
-max_disc_data_size_50gb = 44 * bytes_per_gigabyte
-max_disc_data_size_100gb = 88 * bytes_per_gigabyte
+BYTES_PER_KILOBYTE = 1024
+BYTES_PER_MEGABYTE = BYTES_PER_KILOBYTE * 1024
+BYTES_PER_GIGABYTE = BYTES_PER_MEGABYTE * 1024
+MAX_DISC_DATA_SIZE_25GB = 22 * BYTES_PER_GIGABYTE
+MAX_DISC_DATA_SIZE_50GB = 44 * BYTES_PER_GIGABYTE
+MAX_DISC_DATA_SIZE_100GB = 88 * BYTES_PER_GIGABYTE
 
 # Buffer sizes
-hash_chunk_size = 64 * 1024 * 1024
-transfer_chunk_size = 4096 * 1024
+HASH_CHUNK_SIZE = 64 * 1024 * 1024
+TRANSFER_CHUNK_SIZE = 4096 * 1024
 
 # Asset sizes
-asset_boxfront_width = 600
-asset_boxfront_height = 900
-asset_boxfront_dimensions = (asset_boxfront_width, asset_boxfront_height)
+ASSET_BOXFRONT_WIDTH = 600
+ASSET_BOXFRONT_HEIGHT = 900
+asset_boxfront_dimensions = (ASSET_BOXFRONT_WIDTH, ASSET_BOXFRONT_HEIGHT)
 
 # Cookie paths
-cookie_suffix_path = ".cookie.json"
+COOKIE_SUFFIX_PATH = ".cookie.json"
 
 # Ignored install paths
 ignored_paths_install = [
@@ -195,9 +195,9 @@ ignored_paths_install = [
 ]
 
 # Registry
-registry_filename_setup = "setup.reg"
-registry_filename_game = "game.reg"
-registry_filename_user = "user.reg"
+REGISTRY_FILENAME_SETUP = "setup.reg"
+REGISTRY_FILENAME_GAME = "game.reg"
+REGISTRY_FILENAME_USER = "user.reg"
 registry_export_keys_setup = [
     "HKCU\\Software",
     "HKLM\\Software"

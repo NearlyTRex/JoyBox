@@ -12,7 +12,7 @@ from joybox import emulatorbase
 
 # Config files
 config_files = {}
-config_file_general = """
+CONFIG_FILE_GENERAL = """
 [UI]
 SettingsVersion = 1
 
@@ -84,8 +84,8 @@ LargeMotor = SDL-0/LargeMotor
 SmallMotor = SDL-0/SmallMotor
 """
 config_files["PCSX2/windows/portable.ini"] = ""
-config_files["PCSX2/windows/inis/PCSX2.ini"] = config_file_general
-config_files["PCSX2/linux/PCSX2.AppImage.home/.config/PCSX2/inis/PCSX2.ini"] = config_file_general
+config_files["PCSX2/windows/inis/PCSX2.ini"] = CONFIG_FILE_GENERAL
+config_files["PCSX2/linux/PCSX2.AppImage.home/.config/PCSX2/inis/PCSX2.ini"] = CONFIG_FILE_GENERAL
 
 # System files
 system_files = {}
@@ -258,7 +258,7 @@ class PCSX2(emulatorbase.EmulatorBase):
         # Get launch command
         launch_cmd = [
             programs.get_emulator_program("PCSX2"),
-            config.token_game_file
+            config.TOKEN_GAME_FILE
         ]
         if fullscreen:
             launch_cmd += [

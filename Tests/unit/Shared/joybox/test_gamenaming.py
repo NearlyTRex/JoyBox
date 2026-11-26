@@ -38,7 +38,7 @@ def test_the_letter_is_the_uppercased_first_character(name, expected):
 
 @pytest.mark.parametrize("name", ["3D Blast", "007 Goldeneye", "1942"])
 def test_a_leading_digit_uses_the_numeric_folder(name):
-    assert gamenaming.derive_game_letter_from_name(name) == config.general_folder_numeric
+    assert gamenaming.derive_game_letter_from_name(name) == config.GENERAL_FOLDER_NUMERIC
 
 
 def test_an_empty_name_has_no_letter():
@@ -49,7 +49,7 @@ def test_an_empty_name_has_no_letter():
 def test_every_letter_is_one_of_the_expected_folders(name):
     # Names are transliterated to ascii before they reach here, so the folder
     # set stays A-Z plus the numeric one. Anything else is a stray directory.
-    expected = set("ABCDEFGHIJKLMNOPQRSTUVWXYZ") | {config.general_folder_numeric}
+    expected = set("ABCDEFGHIJKLMNOPQRSTUVWXYZ") | {config.GENERAL_FOLDER_NUMERIC}
     letter = gamenaming.derive_game_letter_from_name(paths.replace_invalid_path_characters(name))
 
     assert letter in expected, f"{name!r} derived {letter!r}"
@@ -74,7 +74,7 @@ def test_a_non_letter_platform_uses_the_name_alone():
 def test_a_numeric_name_nests_under_the_numeric_folder():
     derived = gamenaming.derive_game_name_path_from_name("1942", letter_platform())
 
-    assert derived.startswith(config.general_folder_numeric)
+    assert derived.startswith(config.GENERAL_FOLDER_NUMERIC)
 
 
 ###########################################################

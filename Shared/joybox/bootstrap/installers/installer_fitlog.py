@@ -12,7 +12,7 @@ from joybox import logger
 # container cannot write host directories, while a new volume takes the
 # ownership the image gives its mount point. On first start the app clones the
 # catalog into its volume, then pulls it on a timer.
-docker_compose_template = """
+DOCKER_COMPOSE_TEMPLATE = """
 services:
   fitlog:
     build:
@@ -40,7 +40,7 @@ volumes:
 """
 
 # Env template
-env_template = """
+ENV_TEMPLATE = """
 FITLOG_REPOSITORY={repository}
 FITLOG_CATALOG_BRANCH={catalog_branch}
 FITLOG_PORT_HTTP={port_http}
@@ -74,8 +74,8 @@ class FitLog(installer_dockerapp.DockerAppInstaller):
         }
 
         # Templates
-        self.docker_compose_template = docker_compose_template
-        self.env_template = env_template
+        self.docker_compose_template = DOCKER_COMPOSE_TEMPLATE
+        self.env_template = ENV_TEMPLATE
 
         # Behavior
         self.required_settings = ["domain", "subdomain", "port_http", "timezone"]

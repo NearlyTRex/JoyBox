@@ -82,7 +82,7 @@ def test_setup_stops_at_the_first_failure(seams, method, failing_call):
 ###########################################################
 
 def test_launch_runs_the_program_on_the_game(seams):
-    assert launch_cmd(seams) == ["/bin/Yuzu", "-g", config.token_game_file]
+    assert launch_cmd(seams) == ["/bin/Yuzu", "-g", config.TOKEN_GAME_FILE]
 
 
 def test_launch_fullscreen_adds_the_fullscreen_flags(seams):

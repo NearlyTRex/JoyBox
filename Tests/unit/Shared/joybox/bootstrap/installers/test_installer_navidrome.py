@@ -20,13 +20,13 @@ def test_the_env_carries_the_port_library_and_pinned_image(docker_app):
 
 
 def test_the_music_is_mounted_read_only():
-    assert "${NAVIDROME_MUSIC_DIR}:/music:ro" in installer_navidrome.docker_compose_template
+    assert "${NAVIDROME_MUSIC_DIR}:/music:ro" in installer_navidrome.DOCKER_COMPOSE_TEMPLATE
 
 
 def test_the_site_is_a_plain_http_proxy(docker_app):
     app = docker_app(installers.Navidrome)
 
-    assert app.installer.nginx_config_template == installer_dockerapp.nginx_http_config_template
+    assert app.installer.nginx_config_template == installer_dockerapp.NGINX_HTTP_CONFIG_TEMPLATE
     assert "music.joybox.test" in app.nginx()
     assert "proxy_pass http://localhost:8085" in app.nginx()
 

@@ -20,7 +20,7 @@ from joybox import cryption
 # Calculate file crc32
 def calculate_file_crc32(
     src,
-    chunksize = config.hash_chunk_size,
+    chunksize = config.HASH_CHUNK_SIZE,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -53,7 +53,7 @@ def calculate_file_crc32(
 # Calculate file md5
 def calculate_file_md5(
     src,
-    chunksize = config.hash_chunk_size,
+    chunksize = config.HASH_CHUNK_SIZE,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -86,7 +86,7 @@ def calculate_file_md5(
 # Calculate file sha1
 def calculate_file_sha1(
     src,
-    chunksize = config.hash_chunk_size,
+    chunksize = config.HASH_CHUNK_SIZE,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -119,7 +119,7 @@ def calculate_file_sha1(
 # Calculate file sha256
 def calculate_file_sha256(
     src,
-    chunksize = config.hash_chunk_size,
+    chunksize = config.HASH_CHUNK_SIZE,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -152,7 +152,7 @@ def calculate_file_sha256(
 # Calculate file xxh3
 def calculate_file_xxh3(
     src,
-    chunksize = config.hash_chunk_size,
+    chunksize = config.HASH_CHUNK_SIZE,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):

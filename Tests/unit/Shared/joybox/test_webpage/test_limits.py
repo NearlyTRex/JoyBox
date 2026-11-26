@@ -14,11 +14,11 @@ from webpage_helpers import FakeDriver
 ###########################################################
 
 LIMITS = [
-    pytest.param(webpage.get_element_wait_seconds, "element_wait_seconds", webpage.default_element_wait_seconds, 1, id = "element-wait"),
-    pytest.param(webpage.get_fetch_retries, "fetch_retries", webpage.default_fetch_retries, 1, id = "retries"),
-    pytest.param(webpage.get_fetch_retry_delay_seconds, "fetch_retry_delay_seconds", webpage.default_fetch_retry_delay_seconds, 0, id = "retry-delay"),
-    pytest.param(webpage.get_min_match_score, "min_match_score", webpage.default_min_match_score, 0, id = "match-score"),
-    pytest.param(webpage.get_page_load_interval_seconds, "page_load_interval_seconds", webpage.default_page_load_interval_seconds, 0, id = "page-interval"),
+    pytest.param(webpage.get_element_wait_seconds, "element_wait_seconds", webpage.DEFAULT_ELEMENT_WAIT_SECONDS, 1, id = "element-wait"),
+    pytest.param(webpage.get_fetch_retries, "fetch_retries", webpage.DEFAULT_FETCH_RETRIES, 1, id = "retries"),
+    pytest.param(webpage.get_fetch_retry_delay_seconds, "fetch_retry_delay_seconds", webpage.DEFAULT_FETCH_RETRY_DELAY_SECONDS, 0, id = "retry-delay"),
+    pytest.param(webpage.get_min_match_score, "min_match_score", webpage.DEFAULT_MIN_MATCH_SCORE, 0, id = "match-score"),
+    pytest.param(webpage.get_page_load_interval_seconds, "page_load_interval_seconds", webpage.DEFAULT_PAGE_LOAD_INTERVAL_SECONDS, 0, id = "page-interval"),
 ]
 
 

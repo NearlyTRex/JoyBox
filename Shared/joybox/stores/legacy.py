@@ -69,18 +69,18 @@ class Legacy(storebase.StoreBase):
 
     # Get key
     def get_key(self):
-        return config.json_key_legacy
+        return config.JSON_KEY_LEGACY
 
     # Get identifier keys
     def get_identifier_keys(self):
         return {
-            config.StoreIdentifierType.INFO: config.json_key_store_appid,
-            config.StoreIdentifierType.INSTALL: config.json_key_store_appid,
-            config.StoreIdentifierType.LAUNCH: config.json_key_store_appid,
-            config.StoreIdentifierType.DOWNLOAD: config.json_key_store_appid,
-            config.StoreIdentifierType.ASSET: config.json_key_store_appurl,
-            config.StoreIdentifierType.METADATA: config.json_key_store_name,
-            config.StoreIdentifierType.PAGE: config.json_key_store_appid
+            config.StoreIdentifierType.INFO: config.JSON_KEY_STORE_APPID,
+            config.StoreIdentifierType.INSTALL: config.JSON_KEY_STORE_APPID,
+            config.StoreIdentifierType.LAUNCH: config.JSON_KEY_STORE_APPID,
+            config.StoreIdentifierType.DOWNLOAD: config.JSON_KEY_STORE_APPID,
+            config.StoreIdentifierType.ASSET: config.JSON_KEY_STORE_APPURL,
+            config.StoreIdentifierType.METADATA: config.JSON_KEY_STORE_NAME,
+            config.StoreIdentifierType.PAGE: config.JSON_KEY_STORE_APPID
         }
 
     # Get user name
@@ -326,8 +326,8 @@ class Legacy(storebase.StoreBase):
             purchase = jsondata.JsonData(
                 json_data = {},
                 json_platform = self.get_platform())
-            purchase.set_value(config.json_key_store_appid, line_appid)
-            purchase.set_value(config.json_key_store_name, line_title)
+            purchase.set_value(config.JSON_KEY_STORE_APPID, line_appid)
+            purchase.set_value(config.JSON_KEY_STORE_NAME, line_title)
             purchases.append(purchase)
         return purchases
 
@@ -379,8 +379,8 @@ class Legacy(storebase.StoreBase):
 
         # Build jsondata
         json_data = self.create_default_jsondata()
-        json_data.set_value(config.json_key_store_appid, identifier)
-        json_data.set_value(config.json_key_store_name, get_json_string(legacy_json, "game_name"))
+        json_data.set_value(config.JSON_KEY_STORE_APPID, identifier)
+        json_data.set_value(config.JSON_KEY_STORE_NAME, get_json_string(legacy_json, "game_name"))
         return self.augment_jsondata(
             json_data = json_data,
             identifier = identifier,

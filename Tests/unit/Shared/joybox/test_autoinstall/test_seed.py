@@ -20,7 +20,7 @@ def test_a_key_only_account_is_locked_rather_than_passwordless():
     # can walk up to.
     _, seed = seed_for(password_hash = "", ssh_keys = ["ssh-ed25519 AAAA"])
 
-    assert seed["autoinstall"]["identity"]["password"] == autoinstall.locked_password
+    assert seed["autoinstall"]["identity"]["password"] == autoinstall.LOCKED_PASSWORD
 
 
 def test_a_configured_password_hash_is_used_as_it_is():
@@ -96,7 +96,7 @@ def test_the_profile_account_is_the_only_one():
 
 def sshd_settings(data):
     files = {entry["path"]: entry["content"] for entry in data["autoinstall"]["user-data"]["write_files"]}
-    return dict(line.split(" ", 1) for line in files[autoinstall.sshd_config_path].splitlines())
+    return dict(line.split(" ", 1) for line in files[autoinstall.SSHD_CONFIG_PATH].splitlines())
 
 
 def test_sshd_takes_only_a_key_for_the_profile_account():
@@ -120,7 +120,7 @@ def test_sshd_forwards_only_local_ports():
 
 def test_sshd_settings_sort_before_cloud_inits():
     # sshd keeps the first value it reads, and cloud-init writes 50-cloud-init.conf.
-    assert os.path.basename(autoinstall.sshd_config_path) < "50-cloud-init.conf"
+    assert os.path.basename(autoinstall.SSHD_CONFIG_PATH) < "50-cloud-init.conf"
 
 
 def test_ssh_is_enabled_on_the_installed_machine():

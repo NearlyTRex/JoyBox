@@ -52,7 +52,7 @@ def test_uninstall_hands_the_apex_back_to_the_static_fallback(isolated_settings)
     wordpress, connection = make()
 
     assert wordpress.uninstall_nginx_config()
-    assert connection.written("/tmp/apex-root.conf") == installer_nginx.apex_root_snippet_template
+    assert connection.written("/tmp/apex-root.conf") == installer_nginx.APEX_ROOT_SNIPPET_TEMPLATE
     assert connection.ran(wordpress.nginx_manager_tool, "remove_conf wordpress.conf")
 
 

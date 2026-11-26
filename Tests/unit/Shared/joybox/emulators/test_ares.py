@@ -112,7 +112,7 @@ def test_configure_stops_when_a_system_file_cannot_be_copied(seams):
 def test_launch_runs_the_system_matching_the_game_platform(seams, platform, system):
     game = Game(str(seams.cache_dir), platform)
 
-    assert launch_cmd(seams, game) == ["/bin/Ares", "--system", system, config.token_game_file]
+    assert launch_cmd(seams, game) == ["/bin/Ares", "--system", system, config.TOKEN_GAME_FILE]
 
 
 def test_launch_fullscreen_adds_the_fullscreen_flag(seams):

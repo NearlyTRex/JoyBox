@@ -15,7 +15,7 @@ from joybox import logger
 # Replaces the static snippet installed by the nginx component, so WordPress
 # serves the apex domain without a second server block claiming the same
 # server_name.
-apex_proxy_snippet_template = """
+APEX_PROXY_SNIPPET_TEMPLATE = """
 location / {{
     proxy_pass http://localhost:{port_http};
     proxy_set_header Host $host;
@@ -29,7 +29,7 @@ location / {{
 # Redirect config template
 #
 # The apex is canonical; www redirects to it.
-nginx_redirect_config_template = """
+NGINX_REDIRECT_CONFIG_TEMPLATE = """
 server {{
     listen 80;
     listen [::]:80;
@@ -48,7 +48,7 @@ server {{
 """
 
 # Docker compose template
-docker_compose_template = """
+DOCKER_COMPOSE_TEMPLATE = """
 services:
   wordpress:
     image: ${WORDPRESS_IMAGE}
@@ -117,7 +117,7 @@ volumes:
 """
 
 # Env template
-env_template = """
+ENV_TEMPLATE = """
 WORDPRESS_DB_HOST=db
 WORDPRESS_DB_USER={db_user}
 WORDPRESS_DB_PASSWORD={db_password}
@@ -170,8 +170,8 @@ class Wordpress(installer_dockerapp.DockerAppInstaller):
             default_value = "True", throw_exception = False)).strip().lower() in ["true", "1", "yes"]
 
         # Templates
-        self.docker_compose_template = docker_compose_template
-        self.env_template = env_template
+        self.docker_compose_template = DOCKER_COMPOSE_TEMPLATE
+        self.env_template = ENV_TEMPLATE
         self.app_subdirs = ["seed"]
 
         # Behavior
@@ -189,13 +189,13 @@ class Wordpress(installer_dockerapp.DockerAppInstaller):
         # snippet rather than adding a server block for the same name.
         logger.log_info("Installing apex root snippet")
         self.install_nginx_snippet("apex-root.conf",
-            apex_proxy_snippet_template.format(**self.nginx_config_values))
+            APEX_PROXY_SNIPPET_TEMPLATE.format(**self.nginx_config_values))
 
         # Redirect the www host to the canonical apex
         logger.log_info("Installing www redirect")
         nginx_tmp_path = f"/tmp/{self.app_name}.conf"
         if self.connection.write_file(nginx_tmp_path,
-                nginx_redirect_config_template.format(**self.nginx_config_values)):
+                NGINX_REDIRECT_CONFIG_TEMPLATE.format(**self.nginx_config_values)):
             self.connection.run_checked([self.nginx_manager_tool, "install_conf", nginx_tmp_path], sudo = True)
             self.connection.run_checked([self.nginx_manager_tool, "link_conf", f"{self.app_name}.conf"], sudo = True)
             self.connection.remove_file_or_directory(nginx_tmp_path)
@@ -205,7 +205,7 @@ class Wordpress(installer_dockerapp.DockerAppInstaller):
 
         # Hand the apex back to the static fallback
         logger.log_info("Restoring static apex root snippet")
-        self.install_nginx_snippet("apex-root.conf", installer_nginx.apex_root_snippet_template)
+        self.install_nginx_snippet("apex-root.conf", installer_nginx.APEX_ROOT_SNIPPET_TEMPLATE)
 
         # Remove the www redirect
         logger.log_info("Removing www redirect")

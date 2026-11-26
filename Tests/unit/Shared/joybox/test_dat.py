@@ -15,21 +15,21 @@ from joybox import config, dat
 def make_entry(game = "Chrono Trigger", file = "Chrono Trigger.sfc", size = "4194304",
                crc = "2d206bf7", md5 = "a2bc3f1e"):
     return {
-        config.dat_key_game: game,
-        config.dat_key_file: file,
-        config.dat_key_size: size,
-        config.dat_key_crc: crc,
-        config.dat_key_md5: md5,
+        config.DAT_KEY_GAME: game,
+        config.DAT_KEY_FILE: file,
+        config.DAT_KEY_SIZE: size,
+        config.DAT_KEY_CRC: crc,
+        config.DAT_KEY_MD5: md5,
     }
 
 
 def cache_line(entry):
     return " || ".join([
-        entry[config.dat_key_game],
-        entry[config.dat_key_file],
-        entry[config.dat_key_size],
-        entry[config.dat_key_crc],
-        entry[config.dat_key_md5],
+        entry[config.DAT_KEY_GAME],
+        entry[config.DAT_KEY_FILE],
+        entry[config.DAT_KEY_SIZE],
+        entry[config.DAT_KEY_CRC],
+        entry[config.DAT_KEY_MD5],
     ])
 
 
@@ -55,7 +55,7 @@ def test_a_game_is_found_by_its_md5():
     database.add_game(make_entry(md5 = "abc123"))
 
     assert database.is_md5_present("abc123") is True
-    assert database.get_by_md5("abc123")[config.dat_key_game] == "Chrono Trigger"
+    assert database.get_by_md5("abc123")[config.DAT_KEY_GAME] == "Chrono Trigger"
 
 
 def test_an_unknown_md5_is_absent():
@@ -83,7 +83,7 @@ def test_the_same_md5_is_stored_once():
     database.add_game(make_entry(game = "Second", md5 = "abc123"))
 
     assert len(database.game_database) == 1
-    assert database.get_by_md5("abc123")[config.dat_key_game] == "Second"
+    assert database.get_by_md5("abc123")[config.DAT_KEY_GAME] == "Second"
 
 
 def test_md5_lookup_is_case_sensitive():
@@ -104,7 +104,7 @@ def test_a_cache_dat_file_is_imported(tmp_path):
     database = dat.Dat()
 
     assert database.import_cache_dat_file(source) is True
-    assert database.get_by_md5("abc123")[config.dat_key_file] == "Chrono Trigger.sfc"
+    assert database.get_by_md5("abc123")[config.DAT_KEY_FILE] == "Chrono Trigger.sfc"
 
 
 def test_every_cache_field_survives_import(tmp_path):
@@ -113,7 +113,7 @@ def test_every_cache_field_survives_import(tmp_path):
     database = dat.Dat()
     database.import_cache_dat_file(source)
 
-    assert database.get_by_md5(entry[config.dat_key_md5]) == entry
+    assert database.get_by_md5(entry[config.DAT_KEY_MD5]) == entry
 
 
 def test_a_short_cache_line_is_skipped(tmp_path):
@@ -185,7 +185,7 @@ def test_a_game_name_with_spaces_round_trips(tmp_path):
     restored = dat.Dat()
     restored.import_cache_dat_file(target)
 
-    assert restored.get_by_md5("abc123")[config.dat_key_game] == "Final Fantasy VI (USA) (Rev 1)"
+    assert restored.get_by_md5("abc123")[config.DAT_KEY_GAME] == "Final Fantasy VI (USA) (Rev 1)"
 
 
 def test_pretending_does_not_write_a_cache_dat_file(tmp_path):
@@ -224,10 +224,10 @@ def test_a_clrmamepro_dat_file_is_imported(tmp_path):
 
     assert database.import_clrmamepro_dat_file(source) is True
     entry = database.get_by_md5("abc123")
-    assert entry[config.dat_key_game] == "Chrono Trigger (USA)"
-    assert entry[config.dat_key_file] == "Chrono Trigger (USA).sfc"
-    assert entry[config.dat_key_size] == "4194304"
-    assert entry[config.dat_key_crc] == "2d206bf7"
+    assert entry[config.DAT_KEY_GAME] == "Chrono Trigger (USA)"
+    assert entry[config.DAT_KEY_FILE] == "Chrono Trigger (USA).sfc"
+    assert entry[config.DAT_KEY_SIZE] == "4194304"
+    assert entry[config.DAT_KEY_CRC] == "2d206bf7"
 
 
 def test_a_windows_rom_path_is_reduced_to_its_filename(tmp_path):
@@ -243,7 +243,7 @@ def test_a_windows_rom_path_is_reduced_to_its_filename(tmp_path):
     database = dat.Dat()
     database.import_clrmamepro_dat_file(source)
 
-    assert database.get_by_md5("abc123")[config.dat_key_file] == "Game.sfc"
+    assert database.get_by_md5("abc123")[config.DAT_KEY_FILE] == "Game.sfc"
 
 
 @pytest.mark.parametrize("attribute", ["size", "crc", "md5"])
@@ -277,7 +277,7 @@ def test_a_multi_disc_game_contributes_one_entry_per_rom(tmp_path):
     database.import_clrmamepro_dat_file(source)
 
     assert sorted(database.game_database) == ["aaa", "bbb"]
-    assert database.get_by_md5("bbb")[config.dat_key_game] == "Final Fantasy VII"
+    assert database.get_by_md5("bbb")[config.DAT_KEY_GAME] == "Final Fantasy VII"
 
 
 def test_a_game_with_no_roms_contributes_nothing(tmp_path):

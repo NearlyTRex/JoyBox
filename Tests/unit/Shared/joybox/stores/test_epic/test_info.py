@@ -23,10 +23,10 @@ def test_game_info_is_read_from_legendary(epic_store, tools, recording_command, 
     data = info(epic_store, recording_command, legendary_info(title = " Hades ", version = " 1.38290 "))
 
     assert recording_command.only() == LEGENDARY + ["info", "Sugar", "--json"]
-    assert data.get_value(config.json_key_store_appname) == "Sugar"
-    assert data.get_value(config.json_key_store_name) == "Hades"
-    assert data.get_value(config.json_key_store_buildid) == "1.38290"
-    assert data.get_value(config.json_key_store_paths) == []
+    assert data.get_value(config.JSON_KEY_STORE_APPNAME) == "Sugar"
+    assert data.get_value(config.JSON_KEY_STORE_NAME) == "Hades"
+    assert data.get_value(config.JSON_KEY_STORE_BUILDID) == "1.38290"
+    assert data.get_value(config.JSON_KEY_STORE_PATHS) == []
 
 
 def test_the_version_is_the_build_id(epic_store, tools, recording_command, no_manifest):
@@ -40,13 +40,13 @@ def test_a_game_without_a_version_gets_the_default_build(epic_store, tools, reco
     # Legendary reports a null version when the game has no build for the platform
     data = info(epic_store, recording_command, legendary_info(**game))
 
-    assert data.get_value(config.json_key_store_buildid) == config.default_buildid
+    assert data.get_value(config.JSON_KEY_STORE_BUILDID) == config.DEFAULT_BUILDID
 
 
 def test_a_null_title_gives_an_empty_name(epic_store, tools, recording_command, no_manifest):
     data = info(epic_store, recording_command, legendary_info(title = None, version = "1"))
 
-    assert data.get_value(config.json_key_store_name) == ""
+    assert data.get_value(config.JSON_KEY_STORE_NAME) == ""
 
 
 def test_the_cloud_save_folder_becomes_a_tokenized_path(epic_store, tools, recording_command, no_manifest):
@@ -54,14 +54,14 @@ def test_the_cloud_save_folder_becomes_a_tokenized_path(epic_store, tools, recor
 
     data = info(epic_store, recording_command, output)
 
-    assert data.get_value(config.json_key_store_paths) == [
-        config.token_user_profile_dir + "/AppData/Roaming/Hades/" + config.token_game_install_dir + "/Saves"]
+    assert data.get_value(config.JSON_KEY_STORE_PATHS) == [
+        config.TOKEN_USER_PROFILE_DIR + "/AppData/Roaming/Hades/" + config.TOKEN_GAME_INSTALL_DIR + "/Saves"]
 
 
 def test_a_cloud_save_folder_under_the_user_id_is_dropped(epic_store, tools, recording_command, no_manifest):
     output = legendary_info(title = "Hades", version = "1", cloud_save_folder = "{AppData}/Hades/{EpicId}")
 
-    assert info(epic_store, recording_command, output).get_value(config.json_key_store_paths) == []
+    assert info(epic_store, recording_command, output).get_value(config.JSON_KEY_STORE_PATHS) == []
 
 
 def test_manifest_paths_join_the_game_info(epic_store, tools, recording_command, monkeypatch):
@@ -78,8 +78,8 @@ def test_manifest_paths_join_the_game_info(epic_store, tools, recording_command,
     monkeypatch.setattr(epic.storebase.manifest, "get_manifest_instance", OneEntryManifest)
     data = info(epic_store, recording_command, legendary_info(title = "Hades", version = "1"))
 
-    assert data.get_value(config.json_key_store_paths) == [config.token_game_install_dir + "/Saves"]
-    assert data.get_value(config.json_key_store_keys) == ["HKEY_CURRENT_USER/Software/Supergiant"]
+    assert data.get_value(config.JSON_KEY_STORE_PATHS) == [config.TOKEN_GAME_INSTALL_DIR + "/Saves"]
+    assert data.get_value(config.JSON_KEY_STORE_KEYS) == ["HKEY_CURRENT_USER/Software/Supergiant"]
 
 
 @pytest.mark.parametrize("output", [

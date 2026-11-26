@@ -76,18 +76,18 @@ class HumbleBundle(storebase.StoreBase):
 
     # Get key
     def get_key(self):
-        return config.json_key_humble
+        return config.JSON_KEY_HUMBLE
 
     # Get identifier keys
     def get_identifier_keys(self):
         return {
-            config.StoreIdentifierType.INFO: config.json_key_store_appname,
-            config.StoreIdentifierType.INSTALL: config.json_key_store_appname,
-            config.StoreIdentifierType.LAUNCH: config.json_key_store_appname,
-            config.StoreIdentifierType.DOWNLOAD: config.json_key_store_appname,
-            config.StoreIdentifierType.ASSET: config.json_key_store_name,
-            config.StoreIdentifierType.METADATA: config.json_key_store_name,
-            config.StoreIdentifierType.PAGE: config.json_key_store_appname
+            config.StoreIdentifierType.INFO: config.JSON_KEY_STORE_APPNAME,
+            config.StoreIdentifierType.INSTALL: config.JSON_KEY_STORE_APPNAME,
+            config.StoreIdentifierType.LAUNCH: config.JSON_KEY_STORE_APPNAME,
+            config.StoreIdentifierType.DOWNLOAD: config.JSON_KEY_STORE_APPNAME,
+            config.StoreIdentifierType.ASSET: config.JSON_KEY_STORE_NAME,
+            config.StoreIdentifierType.METADATA: config.JSON_KEY_STORE_NAME,
+            config.StoreIdentifierType.PAGE: config.JSON_KEY_STORE_APPNAME
         }
 
     # Get preferred platform
@@ -180,7 +180,7 @@ class HumbleBundle(storebase.StoreBase):
 
     # Get purchase buildid
     def get_purchase_buildid(self, humble_json):
-        buildid = config.default_buildid
+        buildid = config.DEFAULT_BUILDID
         downloads = humble_json.get("downloads")
         if not isinstance(downloads, list):
             return buildid
@@ -292,16 +292,16 @@ class HumbleBundle(storebase.StoreBase):
 
             # Create purchase
             purchase = jsondata.JsonData(json_data = {}, json_platform = self.get_platform())
-            purchase.set_value(config.json_key_store_appid, line_appid)
-            purchase.set_value(config.json_key_store_appname, line_appname)
-            purchase.set_value(config.json_key_store_name, line_name)
+            purchase.set_value(config.JSON_KEY_STORE_APPID, line_appid)
+            purchase.set_value(config.JSON_KEY_STORE_APPNAME, line_appname)
+            purchase.set_value(config.JSON_KEY_STORE_NAME, line_name)
             purchases.append(purchase)
 
             # Store data for caching
             purchases_data.append({
-                config.json_key_store_appid: line_appid,
-                config.json_key_store_appname: line_appname,
-                config.json_key_store_name: line_name
+                config.JSON_KEY_STORE_APPID: line_appid,
+                config.JSON_KEY_STORE_APPNAME: line_appname,
+                config.JSON_KEY_STORE_NAME: line_name
             })
 
         # Output without any game names is not a library listing
@@ -359,10 +359,10 @@ class HumbleBundle(storebase.StoreBase):
 
         # Build jsondata
         json_data = self.create_default_jsondata()
-        json_data.set_value(config.json_key_store_appid, strings.generate_unique_id())
-        json_data.set_value(config.json_key_store_appname, identifier)
-        json_data.set_value(config.json_key_store_name, self.get_purchase_name(humble_json))
-        json_data.set_value(config.json_key_store_buildid, self.get_purchase_buildid(humble_json))
+        json_data.set_value(config.JSON_KEY_STORE_APPID, strings.generate_unique_id())
+        json_data.set_value(config.JSON_KEY_STORE_APPNAME, identifier)
+        json_data.set_value(config.JSON_KEY_STORE_NAME, self.get_purchase_name(humble_json))
+        json_data.set_value(config.JSON_KEY_STORE_BUILDID, self.get_purchase_buildid(humble_json))
         return self.augment_jsondata(
             json_data = json_data,
             identifier = identifier,

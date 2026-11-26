@@ -12,7 +12,7 @@ from joybox import emulatorbase
 
 # Config files
 config_files = {}
-config_file_general = """
+CONFIG_FILE_GENERAL = """
 [ports.qt]
 gb.bios=EMULATOR_SETUP_ROOT/bios/gb_bios.bin
 gbc.bios=EMULATOR_SETUP_ROOT/bios/gbc_bios.bin
@@ -21,8 +21,8 @@ sgb.bios=EMULATOR_SETUP_ROOT/bios/sgb_bios.bin
 savegamePath=GAME_SAVE_DIR
 """
 config_files["mGBA/windows/portable.ini"] = ""
-config_files["mGBA/windows/config.ini"] = config_file_general
-config_files["mGBA/linux/mGBA.AppImage.home/.config/mgba/config.ini"] = config_file_general
+config_files["mGBA/windows/config.ini"] = CONFIG_FILE_GENERAL
+config_files["mGBA/linux/mGBA.AppImage.home/.config/mgba/config.ini"] = CONFIG_FILE_GENERAL
 
 # System files
 system_files = {}
@@ -203,7 +203,7 @@ class MGBA(emulatorbase.EmulatorBase):
         # Get launch command
         launch_cmd = [
             programs.get_emulator_program("mGBA"),
-            config.token_game_file
+            config.TOKEN_GAME_FILE
         ]
         if fullscreen:
             launch_cmd += [

@@ -37,7 +37,7 @@ def test_a_second_load_from_a_site_waits_out_the_interval(clock, page_load_pause
     clock["now"] += 1
     webpage.wait_for_page_load_turn("https://gamefaqs.example/search")
 
-    assert page_load_pauses == [webpage.default_page_load_interval_seconds - 1]
+    assert page_load_pauses == [webpage.DEFAULT_PAGE_LOAD_INTERVAL_SECONDS - 1]
 
 
 def test_loads_from_different_sites_do_not_wait_on_each_other(clock, page_load_pauses):
@@ -49,7 +49,7 @@ def test_loads_from_different_sites_do_not_wait_on_each_other(clock, page_load_p
 
 def test_a_load_after_the_interval_does_not_wait(clock, page_load_pauses):
     webpage.wait_for_page_load_turn("https://gamefaqs.example/")
-    clock["now"] += webpage.default_page_load_interval_seconds
+    clock["now"] += webpage.DEFAULT_PAGE_LOAD_INTERVAL_SECONDS
     webpage.wait_for_page_load_turn("https://gamefaqs.example/game")
 
     assert page_load_pauses == []
@@ -62,7 +62,7 @@ def test_loading_urls_paces_them_by_site(clock, page_load_pauses):
     assert webpage.load_url(driver, "https://gamefaqs.example/search") is True
 
     assert driver.visited == ["https://gamefaqs.example/", "https://gamefaqs.example/search"]
-    assert page_load_pauses == [webpage.default_page_load_interval_seconds]
+    assert page_load_pauses == [webpage.DEFAULT_PAGE_LOAD_INTERVAL_SECONDS]
 
 
 def test_a_pretend_load_is_not_paced(clock, page_load_pauses):

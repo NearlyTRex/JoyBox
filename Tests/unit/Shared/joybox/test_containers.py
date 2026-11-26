@@ -110,7 +110,7 @@ def test_an_asset_result_is_a_search_result():
 ###########################################################
 
 def test_a_result_can_be_built_from_existing_data():
-    result = containers.SearchResult({config.search_result_key_title: "Title"})
+    result = containers.SearchResult({config.SEARCH_RESULT_KEY_TITLE: "Title"})
 
     assert result.get_title() == "Title"
 

@@ -238,7 +238,7 @@ def test_launch_loads_the_core_mapped_to_the_platform(launcher):
     assert retroarch.RetroArch().launch(game, capture_type = "video", capture_file = "/cap.mp4") is True
 
     launched = launcher["launched"]
-    assert launched["launch_cmd"] == ["/bin/retroarch", "-L", core, config.token_game_file]
+    assert launched["launch_cmd"] == ["/bin/retroarch", "-L", core, config.TOKEN_GAME_FILE]
     assert launched["game_info"] is game
     assert (launched["capture_type"], launched["capture_file"]) == ("video", "/cap.mp4")
 

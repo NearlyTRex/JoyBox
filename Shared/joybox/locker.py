@@ -22,7 +22,7 @@ def get_default_remote_locker():
 # Check if path is local (exists on local filesystem)
 def is_local_path(path):
     local_locker_root = environment.get_locker_root_dir(config.LockerType.LOCAL)
-    if local_locker_root and path.startswith(local_locker_root + config.os_pathsep):
+    if local_locker_root and path.startswith(local_locker_root + config.OS_PATHSEP):
         return True
     if paths.does_path_exist(path):
         return True

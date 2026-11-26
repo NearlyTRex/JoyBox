@@ -14,7 +14,7 @@ from joybox import emulatorbase
 
 # Config files
 config_files = {}
-config_file_general = """
+CONFIG_FILE_GENERAL = """
 Paths
   Home
   Saves: EMULATOR_SETUP_ROOT/Saves/
@@ -62,8 +62,8 @@ VirtualPad1
   R-Left: 0x3/0/3/Lo;;
   R-Right: 0x3/0/3/Hi;;
 """
-config_files["Ares/windows/settings.bml"] = config_file_general
-config_files["Ares/linux/Ares.AppImage.home/.local/share/ares/settings.bml"] = config_file_general
+config_files["Ares/windows/settings.bml"] = CONFIG_FILE_GENERAL
+config_files["Ares/linux/Ares.AppImage.home/.local/share/ares/settings.bml"] = CONFIG_FILE_GENERAL
 
 # System files
 system_files = {}
@@ -334,7 +334,7 @@ class Ares(emulatorbase.EmulatorBase):
             programs.get_emulator_program("Ares"),
             "--system",
             system_types[game_platform],
-            config.token_game_file
+            config.TOKEN_GAME_FILE
         ]
         if fullscreen:
             launch_cmd += [

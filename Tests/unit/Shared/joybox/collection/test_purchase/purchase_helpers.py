@@ -24,7 +24,7 @@ class FakeStore:
         purchases = None,
         can_import = True,
         can_download = True,
-        identifier_key = config.json_key_store_appid,
+        identifier_key = config.JSON_KEY_STORE_APPID,
         latest_url = None,
         latest_version = "1.0",
         saved_login = True,
@@ -88,8 +88,8 @@ class FakeStore:
 
 def a_purchase(appid = "220", name = "Half-Life 2", appurl = None, appname = None):
     return FakePurchase(**{
-        config.json_key_store_appid: appid,
-        config.json_key_store_appname: appname,
-        config.json_key_store_appurl: appurl,
-        config.json_key_store_name: name,
+        config.JSON_KEY_STORE_APPID: appid,
+        config.JSON_KEY_STORE_APPNAME: appname,
+        config.JSON_KEY_STORE_APPURL: appurl,
+        config.JSON_KEY_STORE_NAME: name,
     })

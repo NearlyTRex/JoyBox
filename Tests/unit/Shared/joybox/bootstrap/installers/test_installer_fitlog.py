@@ -27,8 +27,8 @@ def test_the_env_carries_the_catalog_and_schedule(docker_app):
 
 
 def test_compose_builds_the_pinned_tag_from_the_repository():
-    assert "context: ${FITLOG_REPOSITORY}#${FITLOG_VERSION}" in installer_fitlog.docker_compose_template
-    assert 'FITLOG_TRUST_PROXY: "1"' in installer_fitlog.docker_compose_template
+    assert "context: ${FITLOG_REPOSITORY}#${FITLOG_VERSION}" in installer_fitlog.DOCKER_COMPOSE_TEMPLATE
+    assert 'FITLOG_TRUST_PROXY: "1"' in installer_fitlog.DOCKER_COMPOSE_TEMPLATE
 
 
 def test_the_site_is_served_on_its_subdomain(docker_app):

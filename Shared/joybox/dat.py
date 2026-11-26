@@ -18,7 +18,7 @@ class Dat:
 
     # Add game entry
     def add_game(self, game_entry):
-        game_md5 = game_entry[config.dat_key_md5]
+        game_md5 = game_entry[config.DAT_KEY_MD5]
         self.game_database[game_md5] = game_entry
 
     # Check if md5 is present
@@ -43,11 +43,11 @@ class Dat:
                 line_tokens = line.strip().split(" || ")
                 if len(line_tokens) >= 5:
                     game_entry = {}
-                    game_entry[config.dat_key_game] = line_tokens[0]
-                    game_entry[config.dat_key_file] = line_tokens[1]
-                    game_entry[config.dat_key_size] = line_tokens[2]
-                    game_entry[config.dat_key_crc] = line_tokens[3]
-                    game_entry[config.dat_key_md5] = line_tokens[4]
+                    game_entry[config.DAT_KEY_GAME] = line_tokens[0]
+                    game_entry[config.DAT_KEY_FILE] = line_tokens[1]
+                    game_entry[config.DAT_KEY_SIZE] = line_tokens[2]
+                    game_entry[config.DAT_KEY_CRC] = line_tokens[3]
+                    game_entry[config.DAT_KEY_MD5] = line_tokens[4]
                     self.add_game(game_entry)
         return True
 
@@ -56,7 +56,7 @@ class Dat:
         if verbose:
             logger.log_info("Exporting cache dat file '%s'" % dat_file)
         if not pretend_run:
-            fields = (config.dat_key_game, config.dat_key_file, config.dat_key_size, config.dat_key_crc, config.dat_key_md5)
+            fields = (config.DAT_KEY_GAME, config.DAT_KEY_FILE, config.DAT_KEY_SIZE, config.DAT_KEY_CRC, config.DAT_KEY_MD5)
             contents = "".join(
                 " || ".join(game_entry[field] for field in fields) + "\n" for game_entry in self.game_database.values())
             return serialization.write_text_file(dat_file, contents, exit_on_failure = exit_on_failure)
@@ -81,11 +81,11 @@ class Dat:
                         if not has_name or not has_file or not has_size or not has_crc or not has_md5:
                             continue
                         game_entry = {}
-                        game_entry[config.dat_key_game] = game_tag.attributes["name"].value
-                        game_entry[config.dat_key_file] = paths.get_filename_file(rom_tag.attributes["name"].value.replace("\\", "/"))
-                        game_entry[config.dat_key_size] = rom_tag.attributes["size"].value
-                        game_entry[config.dat_key_crc] = rom_tag.attributes["crc"].value
-                        game_entry[config.dat_key_md5] = rom_tag.attributes["md5"].value
+                        game_entry[config.DAT_KEY_GAME] = game_tag.attributes["name"].value
+                        game_entry[config.DAT_KEY_FILE] = paths.get_filename_file(rom_tag.attributes["name"].value.replace("\\", "/"))
+                        game_entry[config.DAT_KEY_SIZE] = rom_tag.attributes["size"].value
+                        game_entry[config.DAT_KEY_CRC] = rom_tag.attributes["crc"].value
+                        game_entry[config.DAT_KEY_MD5] = rom_tag.attributes["md5"].value
                         self.add_game(game_entry)
             return True
         except Exception as e:
@@ -110,7 +110,7 @@ class Dat:
             file_md5 = hashing.calculate_file_md5(file, verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure)
             if self.is_md5_present(file_md5):
                 game_entry = self.get_by_md5(file_md5)
-                file_path_new = paths.join_paths(file_dir, game_entry[config.dat_key_file])
+                file_path_new = paths.join_paths(file_dir, game_entry[config.DAT_KEY_FILE])
                 if file != file_path_new:
                     fileops.move_file_or_directory(
                         src = file,

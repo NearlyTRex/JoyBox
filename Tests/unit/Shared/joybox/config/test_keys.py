@@ -4,13 +4,13 @@ import pytest
 # Local imports
 from joybox.config import keys
 
-KEY_NAMES = [name for name, value in vars(keys).items() if "_key_" in name and isinstance(value, str)]
-KEY_GROUPS = sorted({name.split("_key_", 1)[0] for name in KEY_NAMES})
-KEY_LISTS = sorted(name for name, value in vars(keys).items() if "_keys" in name and isinstance(value, list))
+KEY_NAMES = [name for name, value in vars(keys).items() if "_KEY_" in name and isinstance(value, str)]
+KEY_GROUPS = sorted({name.split("_KEY_", 1)[0].lower() for name in KEY_NAMES})
+KEY_LISTS = sorted(name for name, value in vars(keys).items() if "_keys" in name.lower() and isinstance(value, list))
 
 
 def group_values(group):
-    return [getattr(keys, name) for name in KEY_NAMES if name.startswith(group + "_key_")]
+    return [getattr(keys, name) for name in KEY_NAMES if name.startswith(group.upper() + "_KEY_")]
 
 
 ###########################################################
@@ -19,7 +19,7 @@ def group_values(group):
 
 @pytest.mark.parametrize("name", KEY_NAMES)
 def test_key_value_matches_its_name(name):
-    suffix = name.split("_key_", 1)[1]
+    suffix = name.split("_KEY_", 1)[1].lower()
     for prefix in ("store_setup_", "store_"):
         if suffix != prefix.rstrip("_") and suffix.startswith(prefix):
             suffix = suffix.removeprefix(prefix)
@@ -59,8 +59,8 @@ def test_minimum_and_downloadable_metadata_do_not_overlap():
 
 def test_general_json_keys_hold_every_launch_and_content_key():
     general_names = [
-        "json_key_launch_name", "json_key_launch_file", "json_key_launch_dir", "json_key_transform_file",
-        "json_key_key_file", "json_key_files", "json_key_dlc", "json_key_update", "json_key_extra", "json_key_dependencies"]
+        "JSON_KEY_LAUNCH_NAME", "JSON_KEY_LAUNCH_FILE", "JSON_KEY_LAUNCH_DIR", "JSON_KEY_TRANSFORM_FILE",
+        "JSON_KEY_KEY_FILE", "JSON_KEY_FILES", "JSON_KEY_DLC", "JSON_KEY_UPDATE", "JSON_KEY_EXTRA", "JSON_KEY_DEPENDENCIES"]
     assert keys.json_keys_general == [getattr(keys, name) for name in general_names]
 
 
@@ -69,7 +69,7 @@ def test_store_appdata_is_a_prefix_of_store_subdata():
 
 
 def test_store_subdata_holds_every_top_level_store_key():
-    top_level = [getattr(keys, name) for name in KEY_NAMES if name.startswith("json_key_store_") and not name.startswith("json_key_store_setup_")]
+    top_level = [getattr(keys, name) for name in KEY_NAMES if name.startswith("JSON_KEY_STORE_") and not name.startswith("JSON_KEY_STORE_SETUP_")]
     assert sorted(keys.json_keys_store_subdata) == sorted(top_level)
 
 

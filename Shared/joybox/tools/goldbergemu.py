@@ -43,14 +43,14 @@ def generate_userid_file(prefix_dir):
 
 # Convert from native path
 def convert_from_native_path(path, user_id):
-    src_path = paths.join_paths(config.computer_folder_store, config.StoreType.STEAM, "userdata", user_id)
-    dest_path = paths.join_paths(config.computer_folder_appdata, "Roaming", "Goldberg SteamEmu Saves")
+    src_path = paths.join_paths(config.COMPUTER_FOLDER_STORE, config.StoreType.STEAM, "userdata", user_id)
+    dest_path = paths.join_paths(config.COMPUTER_FOLDER_APPDATA, "Roaming", "Goldberg SteamEmu Saves")
     return path.replace(src_path, dest_path)
 
 # Convert to native path
 def convert_to_native_path(path, user_id):
-    src_path = paths.join_paths(config.computer_folder_appdata, "Roaming", "Goldberg SteamEmu Saves")
-    dest_path = paths.join_paths(config.computer_folder_store, config.StoreType.STEAM, "userdata", user_id)
+    src_path = paths.join_paths(config.COMPUTER_FOLDER_APPDATA, "Roaming", "Goldberg SteamEmu Saves")
+    dest_path = paths.join_paths(config.COMPUTER_FOLDER_STORE, config.StoreType.STEAM, "userdata", user_id)
     return path.replace(src_path, dest_path)
 
 # Setup user files
@@ -94,10 +94,10 @@ def convert_to_native_save(
     exit_on_failure = False):
 
     # Get relative paths
-    roaming_path = paths.join_paths(config.SaveType.GENERAL, config.computer_folder_appdata, "Roaming")
-    search_path = paths.join_paths(config.SaveType.GENERAL, config.computer_folder_appdata, "Roaming", "Goldberg SteamEmu Saves")
-    ignore_path = paths.join_paths(config.SaveType.GENERAL, config.computer_folder_appdata, "Roaming", "Goldberg SteamEmu Saves", "settings")
-    replace_path = paths.join_paths(config.SaveType.GENERAL, config.computer_folder_store, config.StoreType.STEAM, "userdata", user_id)
+    roaming_path = paths.join_paths(config.SaveType.GENERAL, config.COMPUTER_FOLDER_APPDATA, "Roaming")
+    search_path = paths.join_paths(config.SaveType.GENERAL, config.COMPUTER_FOLDER_APPDATA, "Roaming", "Goldberg SteamEmu Saves")
+    ignore_path = paths.join_paths(config.SaveType.GENERAL, config.COMPUTER_FOLDER_APPDATA, "Roaming", "Goldberg SteamEmu Saves", "settings")
+    replace_path = paths.join_paths(config.SaveType.GENERAL, config.COMPUTER_FOLDER_STORE, config.StoreType.STEAM, "userdata", user_id)
 
     # Move save files
     for save_file in paths.build_file_list(save_dir):

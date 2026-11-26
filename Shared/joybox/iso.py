@@ -243,17 +243,17 @@ def get_iso_mbr_image(extract_dir):
 
 # Extract the boot images an extracted tree does not carry as ordinary files
 # Size of an iso block, and of the sectors el torito counts a load size in
-iso_block_size = 2048
-el_torito_sector_size = 512
+ISO_BLOCK_SIZE = 2048
+EL_TORITO_SECTOR_SIZE = 512
 
 # The boot code lives in the system area at the very front of an image, ahead
 # of the filesystem, and is not reachable as a file.
-iso_mbr_sectors = 16
+ISO_MBR_SECTORS = 16
 
 # Partition types a hybrid image is assembled with: the appended efi system
 # partition, and the type the iso filesystem itself is declared as.
-efi_partition_type = "28732ac11ff8d211ba4b00a0c93ec93b"
-iso_mbr_partition_type = "a2a0d0ebe5b9334487c068b6b72699c7"
+EFI_PARTITION_TYPE = "28732ac11ff8d211ba4b00a0c93ec93b"
+ISO_MBR_PARTITION_TYPE = "a2a0d0ebe5b9334487c068b6b72699c7"
 
 # Read the el torito catalogue of an image
 def get_iso_boot_report(
@@ -312,8 +312,8 @@ def get_efi_boot_image_extent(report):
                 break
     if load_size <= 0:
         return None
-    blocks = load_size * el_torito_sector_size
-    return block, (blocks + iso_block_size - 1) // iso_block_size
+    blocks = load_size * EL_TORITO_SECTOR_SIZE
+    return block, (blocks + ISO_BLOCK_SIZE - 1) // ISO_BLOCK_SIZE
 
 # Copy a run of bytes out of an image
 def copy_iso_extent(iso_file, output_file, offset, length):
@@ -356,7 +356,7 @@ def extract_iso_boot_images(
     if verbose:
         logger.log_info("Extracting efi boot image from %s" % iso_file)
     if not copy_iso_extent(
-        iso_file, output_file, block * iso_block_size, blocks * iso_block_size):
+        iso_file, output_file, block * ISO_BLOCK_SIZE, blocks * ISO_BLOCK_SIZE):
         logger.log_error("Unable to extract boot images from %s" % iso_file)
         return False
 
@@ -365,7 +365,7 @@ def extract_iso_boot_images(
     if verbose:
         logger.log_info("Extracting boot code from %s" % iso_file)
     if not copy_iso_extent(
-        iso_file, mbr_file, 0, iso_mbr_sectors * el_torito_sector_size):
+        iso_file, mbr_file, 0, ISO_MBR_SECTORS * EL_TORITO_SECTOR_SIZE):
         logger.log_error("Unable to extract boot code from %s" % iso_file)
         return False
     return True
@@ -399,9 +399,9 @@ def get_bootable_iso_command(
         ]
     if efi_boot_image:
         create_cmd += [
-            "-append_partition", "2", efi_partition_type, efi_boot_image,
+            "-append_partition", "2", EFI_PARTITION_TYPE, efi_boot_image,
             "-appended_part_as_gpt",
-            "-iso_mbr_part_type", iso_mbr_partition_type,
+            "-iso_mbr_part_type", ISO_MBR_PARTITION_TYPE,
         ]
     if bios_boot_image:
         create_cmd += [

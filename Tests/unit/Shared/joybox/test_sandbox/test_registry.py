@@ -20,7 +20,7 @@ from sandbox_helpers import WINE
 @pytest.fixture
 def registry_dir(tmp_path):
     profile = tmp_path / "profile"
-    (profile / config.computer_folder_registry).mkdir(parents = True)
+    (profile / config.COMPUTER_FOLDER_REGISTRY).mkdir(parents = True)
     return profile
 
 
@@ -55,11 +55,11 @@ def test_restoring_without_a_profile_fails(imported):
 
 
 @pytest.mark.parametrize("prefix_name, filename", [
-    (config.PrefixType.SETUP, config.registry_filename_setup),
-    (config.PrefixType.GAME, config.registry_filename_game),
+    (config.PrefixType.SETUP, config.REGISTRY_FILENAME_SETUP),
+    (config.PrefixType.GAME, config.REGISTRY_FILENAME_GAME),
 ])
 def test_each_prefix_restores_its_own_registry_file(registry_dir, imported, prefix_name, filename):
-    registry_file = registry_dir / config.computer_folder_registry / filename
+    registry_file = registry_dir / config.COMPUTER_FOLDER_REGISTRY / filename
     registry_file.write_text("REGEDIT4")
 
     assert sandbox.restore_registry(prefix(registry_dir, prefix_name), verbose = True, pretend_run = True) is True
@@ -79,7 +79,7 @@ def test_a_prefix_without_its_own_registry_restores_nothing(registry_dir, import
 
 
 def test_a_failed_import_is_reported(registry_dir, monkeypatch):
-    (registry_dir / config.computer_folder_registry / config.registry_filename_game).write_text("")
+    (registry_dir / config.COMPUTER_FOLDER_REGISTRY / config.REGISTRY_FILENAME_GAME).write_text("")
     monkeypatch.setattr(registry, "import_registry_file", lambda **kwargs: False)
 
     assert sandbox.restore_registry(prefix(registry_dir, config.PrefixType.GAME)) is False
@@ -106,7 +106,7 @@ def test_a_setup_prefix_backs_up_with_the_setup_rules(registry_dir, backed_up):
 
     call = backed_up[0]
     assert call["registry_file"] == os.path.join(
-        str(registry_dir), config.computer_folder_registry, config.registry_filename_setup)
+        str(registry_dir), config.COMPUTER_FOLDER_REGISTRY, config.REGISTRY_FILENAME_SETUP)
     assert call["export_keys"] == config.registry_export_keys_setup
     assert call["ignore_keys"] == config.ignored_registry_keys_setup
     assert call["keep_keys"] == ["HKCU\\Software\\Game"]
@@ -117,7 +117,7 @@ def test_a_game_prefix_backs_up_with_the_game_rules(registry_dir, backed_up):
         prefix(registry_dir, config.PrefixType.GAME), registry_keys = ["HKCU"], exit_on_failure = True) is True
 
     call = backed_up[0]
-    assert call["registry_file"].endswith(config.registry_filename_game)
+    assert call["registry_file"].endswith(config.REGISTRY_FILENAME_GAME)
     assert call["export_keys"] == config.registry_export_keys_game
     assert call["ignore_keys"] == config.ignored_registry_keys_game
     assert call["exit_on_failure"] is True

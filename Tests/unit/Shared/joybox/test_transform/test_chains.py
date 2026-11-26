@@ -213,7 +213,7 @@ def test_a_ps3_disc_is_decrypted_with_its_key(ps3_tools, tmp_path):
 
     assert success is True
     assert ps3_tools["iso"][0]["dkey"] == key
-    assert result == os.path.join(output, config.raw_files_index)
+    assert result == os.path.join(output, config.RAW_FILES_INDEX)
 
 
 def test_a_ps3_transform_leaves_an_index_behind(ps3_tools, tmp_path):
@@ -223,7 +223,7 @@ def test_a_ps3_transform_leaves_an_index_behind(ps3_tools, tmp_path):
 
     transform.transform_ps3_disc_image(source, "/keys/Game.dkey", output)
 
-    assert os.path.isfile(os.path.join(output, config.raw_files_index))
+    assert os.path.isfile(os.path.join(output, config.RAW_FILES_INDEX))
 
 
 def test_a_failed_ps3_decryption_reports_its_reason(monkeypatch, tmp_path):
@@ -315,7 +315,7 @@ def test_a_ps3_package_is_unpacked(psn_tools, tmp_path):
 
     assert success is True
     assert psn_tools["pkg"][0] == {"pkg": source, "dir": output}
-    assert result == os.path.join(output, config.raw_files_index)
+    assert result == os.path.join(output, config.RAW_FILES_INDEX)
 
 
 def test_a_licence_is_renamed_to_its_content_id(psn_tools, monkeypatch, tmp_path):
@@ -375,7 +375,7 @@ def test_a_vita_package_keeps_its_licence_as_work_bin(psn_tools, tmp_path):
     success, result = transform.transform_psv_network_package(source, output)
 
     assert success is True
-    assert result == os.path.join(output, config.raw_files_index)
+    assert result == os.path.join(output, config.RAW_FILES_INDEX)
     assert psn_tools["copied"] == [(
         str(tmp_path / "downloads" / "Game.work.bin"),
         os.path.join(output, "work.bin"))]
@@ -400,7 +400,7 @@ def test_a_network_transform_leaves_an_index_behind(psn_tools, tmp_path, builder
 
     builder(source, output)
 
-    assert os.path.isfile(os.path.join(output, config.raw_files_index))
+    assert os.path.isfile(os.path.join(output, config.RAW_FILES_INDEX))
 
 
 ###########################################################
@@ -514,4 +514,4 @@ def test_a_computer_transform_leaves_an_index_behind(computer_tools, tmp_path):
 
     assert success is True
     assert os.path.isfile(result)
-    assert result.endswith(config.raw_files_index)
+    assert result.endswith(config.RAW_FILES_INDEX)

@@ -12,7 +12,7 @@ from joybox import runoptions
 from joybox import logger
 
 # Nginx http config template
-nginx_http_config_template = """
+NGINX_HTTP_CONFIG_TEMPLATE = """
 server {{
     listen 80;
     server_name {subdomain}.{domain};
@@ -44,7 +44,7 @@ server {{
 """
 
 # Nginx http websocket config template
-nginx_http_websocket_config_template = """
+NGINX_HTTP_WEBSOCKET_CONFIG_TEMPLATE = """
 server {{
     listen 80;
     server_name {subdomain}.{domain};
@@ -96,7 +96,7 @@ class DockerAppInstaller(installer.Installer):
         # Templates
         self.docker_compose_template = ""
         self.env_template = ""
-        self.nginx_config_template = nginx_http_config_template
+        self.nginx_config_template = NGINX_HTTP_CONFIG_TEMPLATE
 
         # Template values
         self.env_values = {}

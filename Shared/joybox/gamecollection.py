@@ -22,7 +22,7 @@ def find_best_game_file(game_files):
         for file in game_files:
             game_file_entry = {}
             game_file_entry["file"] = os.path.abspath(file)
-            game_file_entry["weight"] = config.gametype_weight_else
+            game_file_entry["weight"] = config.GAMETYPE_WEIGHT_ELSE
             for key in config.gametype_weights.keys():
                 if file.endswith(key):
                     game_file_entry["weight"] = config.gametype_weights[key]

@@ -14,7 +14,7 @@ from joybox import emulatorbase
 
 # Config files
 config_files = {}
-config_file_general = """
+CONFIG_FILE_GENERAL = """
 #
 # CORE SEARCH PATH OPTIONS
 #
@@ -44,8 +44,8 @@ diff_directory            EMULATOR_SETUP_ROOT/diff
 comment_directory         EMULATOR_SETUP_ROOT/comments
 share_directory           EMULATOR_SETUP_ROOT/share
 """
-config_files["Mame/windows/mame.ini"] = config_file_general
-config_files["Mame/linux/Mame.AppImage.home/.mame/mame.ini"] = config_file_general
+config_files["Mame/windows/mame.ini"] = CONFIG_FILE_GENERAL
+config_files["Mame/linux/Mame.AppImage.home/.mame/mame.ini"] = CONFIG_FILE_GENERAL
 
 # System files
 system_files = {}
@@ -302,15 +302,15 @@ class Mame(emulatorbase.EmulatorBase):
         # Add rom path and launch file
         if game_platform == config.Platform.OTHER_ARCADE:
             launch_cmd += [
-                "-rompath", config.token_game_dir,
-                config.token_game_name
+                "-rompath", config.TOKEN_GAME_DIR,
+                config.TOKEN_GAME_NAME
             ]
         else:
             system_name, media_flag = system_drivers[game_platform]
             launch_cmd += [
                 "-rompath", programs.get_emulator_path_config_value("Mame", "roms_dir"),
                 system_name,
-                media_flag, config.token_game_file
+                media_flag, config.TOKEN_GAME_FILE
             ]
 
         # Mame runs fullscreen unless told otherwise

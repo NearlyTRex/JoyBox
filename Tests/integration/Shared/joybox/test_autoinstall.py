@@ -210,7 +210,7 @@ def test_the_bootloader_stops_waiting(tmp_path, stock_image, xorriso):
 
     grub = read_from_image(xorriso, output_file, "/boot/grub/grub.cfg", tmp_path)
 
-    assert "set timeout=%d" % autoinstall.boot_timeout in grub
+    assert "set timeout=%d" % autoinstall.BOOT_TIMEOUT in grub
     assert "set timeout=30" not in grub
 
 
@@ -389,7 +389,7 @@ def test_the_efi_image_is_a_partition_of_its_own(tmp_path, stock_image, xorriso)
 
     reported = system_area_report(xorriso, output_file)
 
-    assert iso.efi_partition_type in reported
+    assert iso.EFI_PARTITION_TYPE in reported
 
 
 def test_the_boot_code_is_carried_into_the_system_area(tmp_path, stock_image, xorriso):

@@ -115,7 +115,7 @@ def test_configure_refuses_a_system_file_with_the_wrong_hash(seams):
 ###########################################################
 
 def test_launch_runs_the_program_on_the_game(seams):
-    assert launch_cmd(seams) == ["/bin/Dolphin", config.token_game_file]
+    assert launch_cmd(seams) == ["/bin/Dolphin", config.TOKEN_GAME_FILE]
 
 
 def test_launch_fullscreen_adds_the_fullscreen_flags(seams):

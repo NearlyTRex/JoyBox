@@ -50,21 +50,21 @@ def test_the_store_describes_itself(squareenix_store, tmp_path):
     assert squareenix_store.get_supercategory() == config.Supercategory.ROMS
     assert squareenix_store.get_category() == config.Category.COMPUTER
     assert squareenix_store.get_subcategory() == config.Subcategory.COMPUTER_SQUARE_ENIX
-    assert squareenix_store.get_key() == config.json_key_squareenix
+    assert squareenix_store.get_key() == config.JSON_KEY_SQUAREENIX
     assert squareenix_store.get_install_dir() == str(tmp_path / "SquareEnix")
 
 
 def test_the_platform_files_games_where_the_store_does(squareenix_store):
     assert platform_placement(squareenix_store) == (
         squareenix_store.get_supercategory(), squareenix_store.get_category(), squareenix_store.get_subcategory())
-    assert squareenix_store.get_key() in config.platforms[squareenix_store.get_platform()][config.platform_key_merge_json]
+    assert squareenix_store.get_key() in config.platforms[squareenix_store.get_platform()][config.PLATFORM_KEY_MERGE_JSON]
     assert squareenix_store.get_key() in config.json_keys_store
 
 
 def test_every_identifier_is_the_store_name(squareenix_store):
-    assert squareenix_store.get_identifier_keys() == every_identifier(config.json_key_store_name)
-    assert squareenix_store.get_install_identifier_key() == config.json_key_store_name
-    assert squareenix_store.get_page_identifier_key() == config.json_key_store_name
+    assert squareenix_store.get_identifier_keys() == every_identifier(config.JSON_KEY_STORE_NAME)
+    assert squareenix_store.get_install_identifier_key() == config.JSON_KEY_STORE_NAME
+    assert squareenix_store.get_page_identifier_key() == config.JSON_KEY_STORE_NAME
 
 
 def test_it_imports_and_downloads_nothing(squareenix_store):

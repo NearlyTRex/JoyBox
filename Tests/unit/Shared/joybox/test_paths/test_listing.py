@@ -172,6 +172,6 @@ def test_child_paths_are_pruned_under_their_parents(tmp_path):
 
 def test_the_bare_install_dir_token_gives_way_to_specific_paths():
     from joybox import config
-    token = config.token_game_install_dir
+    token = config.TOKEN_GAME_INSTALL_DIR
     assert paths.prune_child_paths([token, token + "/saves"]) == [token + "/saves"]
     assert paths.prune_child_paths([token]) == [token]

@@ -21,14 +21,14 @@ def convert_to_tokenized_path(
     store_user_id = None):
 
     # Replace tokens
-    path = path.replace(paths.join_paths(config.SaveType.GENERAL, config.computer_folder_gamedata), config.token_game_install_dir)
-    path = path.replace(paths.join_paths(config.SaveType.GENERAL, config.computer_folder_public), config.token_user_public_dir)
-    path = path.replace(paths.join_paths(config.SaveType.GENERAL, config.computer_folder_registry), config.token_user_registry_dir)
+    path = path.replace(paths.join_paths(config.SaveType.GENERAL, config.COMPUTER_FOLDER_GAMEDATA), config.TOKEN_GAME_INSTALL_DIR)
+    path = path.replace(paths.join_paths(config.SaveType.GENERAL, config.COMPUTER_FOLDER_PUBLIC), config.TOKEN_USER_PUBLIC_DIR)
+    path = path.replace(paths.join_paths(config.SaveType.GENERAL, config.COMPUTER_FOLDER_REGISTRY), config.TOKEN_USER_REGISTRY_DIR)
     if store_type:
-        path = path.replace(paths.join_paths(config.SaveType.GENERAL, config.computer_folder_store, store_type), config.token_store_install_dir)
+        path = path.replace(paths.join_paths(config.SaveType.GENERAL, config.COMPUTER_FOLDER_STORE, store_type), config.TOKEN_STORE_INSTALL_DIR)
     if store_user_id:
-        path = path.replace(store_user_id, config.token_store_user_id)
-    path = path.replace(config.SaveType.GENERAL.val(), config.token_user_profile_dir)
+        path = path.replace(store_user_id, config.TOKEN_STORE_USER_ID)
+    path = path.replace(config.SaveType.GENERAL.val(), config.TOKEN_USER_PROFILE_DIR)
 
     # Return path
     return paths.normalize_file_path(path)
@@ -40,14 +40,14 @@ def convert_from_tokenized_path(
     store_user_id = None):
 
     # Replace tokens
-    path = path.replace(config.token_game_install_dir, paths.join_paths(config.SaveType.GENERAL, config.computer_folder_gamedata))
-    path = path.replace(config.token_user_public_dir, paths.join_paths(config.SaveType.GENERAL, config.computer_folder_public))
-    path = path.replace(config.token_user_registry_dir, paths.join_paths(config.SaveType.GENERAL, config.computer_folder_registry))
+    path = path.replace(config.TOKEN_GAME_INSTALL_DIR, paths.join_paths(config.SaveType.GENERAL, config.COMPUTER_FOLDER_GAMEDATA))
+    path = path.replace(config.TOKEN_USER_PUBLIC_DIR, paths.join_paths(config.SaveType.GENERAL, config.COMPUTER_FOLDER_PUBLIC))
+    path = path.replace(config.TOKEN_USER_REGISTRY_DIR, paths.join_paths(config.SaveType.GENERAL, config.COMPUTER_FOLDER_REGISTRY))
     if store_type:
-        path = path.replace(config.token_store_install_dir, paths.join_paths(config.SaveType.GENERAL, config.computer_folder_store, store_type))
+        path = path.replace(config.TOKEN_STORE_INSTALL_DIR, paths.join_paths(config.SaveType.GENERAL, config.COMPUTER_FOLDER_STORE, store_type))
     if store_user_id:
-        path = path.replace(config.token_store_user_id, store_user_id)
-    path = path.replace(config.token_user_profile_dir, config.SaveType.GENERAL.val())
+        path = path.replace(config.TOKEN_STORE_USER_ID, store_user_id)
+    path = path.replace(config.TOKEN_USER_PROFILE_DIR, config.SaveType.GENERAL.val())
 
     # Return path
     return paths.normalize_file_path(path)
@@ -297,7 +297,7 @@ class StoreBase:
             return None
 
         # Return version
-        return latest_jsondata.get_value(config.json_key_store_buildid)
+        return latest_jsondata.get_value(config.JSON_KEY_STORE_BUILDID)
 
     ############################################################
     # Page
@@ -337,9 +337,9 @@ class StoreBase:
     # Create default jsondata
     def create_default_jsondata(self):
         json_data = jsondata.JsonData({}, self.get_platform())
-        json_data.set_value(config.json_key_store_paths, [])
-        json_data.set_value(config.json_key_store_keys, [])
-        json_data.set_value(config.json_key_store_buildid, config.default_buildid)
+        json_data.set_value(config.JSON_KEY_STORE_PATHS, [])
+        json_data.set_value(config.JSON_KEY_STORE_KEYS, [])
+        json_data.set_value(config.JSON_KEY_STORE_BUILDID, config.DEFAULT_BUILDID)
         return json_data
 
     # Augment jsondata
@@ -352,8 +352,8 @@ class StoreBase:
         exit_on_failure = False):
 
         # Get existing paths and keys
-        game_paths = list(json_data.get_value(config.json_key_store_paths))
-        game_keys = list(json_data.get_value(config.json_key_store_keys))
+        game_paths = list(json_data.get_value(config.JSON_KEY_STORE_PATHS))
+        game_keys = list(json_data.get_value(config.JSON_KEY_STORE_KEYS))
 
         # Augment by manifest
         manifest_entry = manifest.get_manifest_instance().find_entry_by_name(
@@ -362,7 +362,7 @@ class StoreBase:
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if manifest_entry:
-            base_path = config.token_game_install_dir
+            base_path = config.TOKEN_GAME_INSTALL_DIR
             manifest_paths = manifest_entry.get_paths(base_path)
             game_paths = list(set(game_paths).union(manifest_paths))
             game_keys = list(set(game_keys).union(manifest_entry.get_keys()))
@@ -392,15 +392,15 @@ class StoreBase:
 
         # Remove invalid paths
         game_paths = [item for item in game_paths if not item.startswith("C:")]
-        game_paths = [item for item in game_paths if config.token_store_install_dir not in item]
-        game_paths = [item for item in game_paths if config.token_store_user_id not in item]
+        game_paths = [item for item in game_paths if config.TOKEN_STORE_INSTALL_DIR not in item]
+        game_paths = [item for item in game_paths if config.TOKEN_STORE_USER_ID not in item]
 
         # Remove duplicate paths
         game_paths = list(dict.fromkeys(game_paths))
 
         # Save paths and keys
-        json_data.set_value(config.json_key_store_paths, strings.sort_strings(game_paths))
-        json_data.set_value(config.json_key_store_keys, strings.sort_strings(game_keys))
+        json_data.set_value(config.JSON_KEY_STORE_PATHS, strings.sort_strings(game_paths))
+        json_data.set_value(config.JSON_KEY_STORE_KEYS, strings.sort_strings(game_keys))
         return json_data
 
     # Get latest jsondata
@@ -556,20 +556,20 @@ class StoreBase:
         translation_map = {}
 
         # Add registry dir
-        translation_map[config.token_user_registry_dir] = []
+        translation_map[config.TOKEN_USER_REGISTRY_DIR] = []
 
         # Add user public dir
-        translation_map[config.token_user_public_dir] = []
-        translation_map[config.token_user_public_dir].append("C:\\Users\\Public")
+        translation_map[config.TOKEN_USER_PUBLIC_DIR] = []
+        translation_map[config.TOKEN_USER_PUBLIC_DIR].append("C:\\Users\\Public")
 
         # Add user profile dir
-        translation_map[config.token_user_profile_dir] = []
+        translation_map[config.TOKEN_USER_PROFILE_DIR] = []
         if "USERPROFILE" in os.environ:
-            translation_map[config.token_user_profile_dir].append(os.environ["USERPROFILE"])
+            translation_map[config.TOKEN_USER_PROFILE_DIR].append(os.environ["USERPROFILE"])
 
         # Add store install dir
-        translation_map[config.token_store_install_dir] = []
-        translation_map[config.token_store_install_dir].append(self.get_install_dir())
+        translation_map[config.TOKEN_STORE_INSTALL_DIR] = []
+        translation_map[config.TOKEN_STORE_INSTALL_DIR].append(self.get_install_dir())
 
         # Return translation map
         return translation_map

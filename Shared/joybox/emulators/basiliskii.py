@@ -12,7 +12,7 @@ from joybox import emulatorbase
 
 # Config files
 config_files = {}
-config_file_general = """
+CONFIG_FILE_GENERAL = """
 displaycolordepth 0
 disk
 cdrom /dev/cdrom
@@ -60,8 +60,8 @@ mixer /dev/mixer
 idlewait true
 sdlrender software
 """
-config_files["BasiliskII/windows/BasiliskII_prefs"] = config_file_general
-config_files["BasiliskII/linux/BasiliskII.AppImage.home/.config/BasiliskII/prefs"] = config_file_general
+config_files["BasiliskII/windows/BasiliskII_prefs"] = CONFIG_FILE_GENERAL
+config_files["BasiliskII/linux/BasiliskII.AppImage.home/.config/BasiliskII/prefs"] = CONFIG_FILE_GENERAL
 
 # System files
 system_files = {}
@@ -234,7 +234,7 @@ class BasiliskII(emulatorbase.EmulatorBase):
         # Get launch command
         launch_cmd = [
             programs.get_emulator_program("BasiliskII"),
-            "--disk", config.token_game_file
+            "--disk", config.TOKEN_GAME_FILE
         ]
         if fullscreen:
             launch_cmd += [

@@ -64,18 +64,18 @@ class Epic(storebase.StoreBase):
 
     # Get key
     def get_key(self):
-        return config.json_key_epic
+        return config.JSON_KEY_EPIC
 
     # Get identifier keys
     def get_identifier_keys(self):
         return {
-            config.StoreIdentifierType.INFO: config.json_key_store_appname,
-            config.StoreIdentifierType.INSTALL: config.json_key_store_appname,
-            config.StoreIdentifierType.LAUNCH: config.json_key_store_appname,
-            config.StoreIdentifierType.DOWNLOAD: config.json_key_store_appname,
-            config.StoreIdentifierType.ASSET: config.json_key_store_appname,
-            config.StoreIdentifierType.METADATA: config.json_key_store_appurl,
-            config.StoreIdentifierType.PAGE: config.json_key_store_appname
+            config.StoreIdentifierType.INFO: config.JSON_KEY_STORE_APPNAME,
+            config.StoreIdentifierType.INSTALL: config.JSON_KEY_STORE_APPNAME,
+            config.StoreIdentifierType.LAUNCH: config.JSON_KEY_STORE_APPNAME,
+            config.StoreIdentifierType.DOWNLOAD: config.JSON_KEY_STORE_APPNAME,
+            config.StoreIdentifierType.ASSET: config.JSON_KEY_STORE_APPNAME,
+            config.StoreIdentifierType.METADATA: config.JSON_KEY_STORE_APPURL,
+            config.StoreIdentifierType.PAGE: config.JSON_KEY_STORE_APPNAME
         }
 
     # Get user name
@@ -329,24 +329,24 @@ class Epic(storebase.StoreBase):
             windows_asset = (entry.get("asset_infos") or {}).get("Windows") or {}
             line_appname = str(entry.get("app_name") or "")
             line_title = str(entry.get("app_title") or "")
-            line_buildid = str(windows_asset.get("build_version") or config.default_buildid)
+            line_buildid = str(windows_asset.get("build_version") or config.DEFAULT_BUILDID)
 
             # Create purchase
             purchase = jsondata.JsonData(
                 json_data = {},
                 json_platform = self.get_platform())
-            purchase.set_value(config.json_key_store_appname, line_appname)
-            purchase.set_value(config.json_key_store_appurl, "")
-            purchase.set_value(config.json_key_store_name, line_title)
-            purchase.set_value(config.json_key_store_buildid, line_buildid)
+            purchase.set_value(config.JSON_KEY_STORE_APPNAME, line_appname)
+            purchase.set_value(config.JSON_KEY_STORE_APPURL, "")
+            purchase.set_value(config.JSON_KEY_STORE_NAME, line_title)
+            purchase.set_value(config.JSON_KEY_STORE_BUILDID, line_buildid)
             purchases.append(purchase)
 
             # Store data for caching
             purchases_data.append({
-                config.json_key_store_appname: line_appname,
-                config.json_key_store_appurl: "",
-                config.json_key_store_name: line_title,
-                config.json_key_store_buildid: line_buildid
+                config.JSON_KEY_STORE_APPNAME: line_appname,
+                config.JSON_KEY_STORE_APPURL: "",
+                config.JSON_KEY_STORE_NAME: line_title,
+                config.JSON_KEY_STORE_BUILDID: line_buildid
             })
 
         # Save to cache
@@ -411,12 +411,12 @@ class Epic(storebase.StoreBase):
 
         # Build jsondata
         json_data = self.create_default_jsondata()
-        json_data.set_value(config.json_key_store_appname, identifier)
-        json_data.set_value(config.json_key_store_name, str(game_info.get("title") or "").strip())
-        json_data.set_value(config.json_key_store_buildid, str(game_info.get("version") or config.default_buildid).strip())
+        json_data.set_value(config.JSON_KEY_STORE_APPNAME, identifier)
+        json_data.set_value(config.JSON_KEY_STORE_NAME, str(game_info.get("title") or "").strip())
+        json_data.set_value(config.JSON_KEY_STORE_BUILDID, str(game_info.get("version") or config.DEFAULT_BUILDID).strip())
         cloud_save_folder = game_info.get("cloud_save_folder")
         if cloud_save_folder:
-            json_data.set_value(config.json_key_store_paths, [
+            json_data.set_value(config.JSON_KEY_STORE_PATHS, [
                 storepaths.create_tokenized_path(cloud_save_folder.strip())
             ])
         return self.augment_jsondata(

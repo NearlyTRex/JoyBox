@@ -174,33 +174,33 @@ manual_import_platforms = [
 
 # Computer autofill json keys
 json_keys_autofill_computer = [
-    keys.json_key_files,
-    keys.json_key_dlc,
-    keys.json_key_update,
-    keys.json_key_extra,
-    keys.json_key_dependencies,
-    keys.json_key_transform_file,
-    keys.json_key_store_builddate,
-    keys.json_key_store_buildid,
-    keys.json_key_store_name,
-    keys.json_key_store_controller_support,
-    keys.json_key_store_installdir
+    keys.JSON_KEY_FILES,
+    keys.JSON_KEY_DLC,
+    keys.JSON_KEY_UPDATE,
+    keys.JSON_KEY_EXTRA,
+    keys.JSON_KEY_DEPENDENCIES,
+    keys.JSON_KEY_TRANSFORM_FILE,
+    keys.JSON_KEY_STORE_BUILDDATE,
+    keys.JSON_KEY_STORE_BUILDID,
+    keys.JSON_KEY_STORE_NAME,
+    keys.JSON_KEY_STORE_CONTROLLER_SUPPORT,
+    keys.JSON_KEY_STORE_INSTALLDIR
 ]
 
 # Computer fillonce json keys
 json_keys_fillonce_computer = [
-    keys.json_key_store_appid,
-    keys.json_key_store_appname,
-    keys.json_key_store_appurl,
-    keys.json_key_store_branchid
+    keys.JSON_KEY_STORE_APPID,
+    keys.JSON_KEY_STORE_APPNAME,
+    keys.JSON_KEY_STORE_APPURL,
+    keys.JSON_KEY_STORE_BRANCHID
 ]
 
 # Computer merge json keys
 json_keys_merge_computer = [
-    keys.json_key_store_paths,
-    keys.json_key_store_keys,
-    keys.json_key_store_launch,
-    keys.json_key_store_setup
+    keys.JSON_KEY_STORE_PATHS,
+    keys.JSON_KEY_STORE_KEYS,
+    keys.JSON_KEY_STORE_LAUNCH,
+    keys.JSON_KEY_STORE_SETUP
 ]
 
 # Platforms
@@ -212,18 +212,18 @@ def add_platform(
     category,
     launcher,
     addons = (),
-    autofill = (keys.json_key_files,),
+    autofill = (keys.JSON_KEY_FILES,),
     fillonce = (),
     merge = ()):
     platforms[platform] = {
-        keys.platform_key_supercategory: categories.Supercategory.ROMS,
-        keys.platform_key_category: category,
-        keys.platform_key_subcategory: categories.Subcategory[platform.name],
-        keys.platform_key_addons: list(addons),
-        keys.platform_key_launcher: [launcher],
-        keys.platform_key_autofill_json: list(autofill),
-        keys.platform_key_fillonce_json: list(fillonce),
-        keys.platform_key_merge_json: list(merge)
+        keys.PLATFORM_KEY_SUPERCATEGORY: categories.Supercategory.ROMS,
+        keys.PLATFORM_KEY_CATEGORY: category,
+        keys.PLATFORM_KEY_SUBCATEGORY: categories.Subcategory[platform.name],
+        keys.PLATFORM_KEY_ADDONS: list(addons),
+        keys.PLATFORM_KEY_LAUNCHER: [launcher],
+        keys.PLATFORM_KEY_AUTOFILL_JSON: list(autofill),
+        keys.PLATFORM_KEY_FILLONCE_JSON: list(fillonce),
+        keys.PLATFORM_KEY_MERGE_JSON: list(merge)
     }
 
 # Add computer platform section, merging its store's json key
@@ -237,55 +237,55 @@ def add_computer_platform(platform, store_key):
         merge = json_keys_merge_computer + [store_key])
 
 # Computer - Amazon Games
-add_computer_platform(Platform.COMPUTER_AMAZON_GAMES, keys.json_key_amazon)
+add_computer_platform(Platform.COMPUTER_AMAZON_GAMES, keys.JSON_KEY_AMAZON)
 
 # Computer - Disc
-add_computer_platform(Platform.COMPUTER_DISC, keys.json_key_disc)
+add_computer_platform(Platform.COMPUTER_DISC, keys.JSON_KEY_DISC)
 
 # Computer - Epic Games
-add_computer_platform(Platform.COMPUTER_EPIC_GAMES, keys.json_key_epic)
+add_computer_platform(Platform.COMPUTER_EPIC_GAMES, keys.JSON_KEY_EPIC)
 
 # Computer - GOG
-add_computer_platform(Platform.COMPUTER_GOG, keys.json_key_gog)
+add_computer_platform(Platform.COMPUTER_GOG, keys.JSON_KEY_GOG)
 
 # Computer - Humble Bundle
-add_computer_platform(Platform.COMPUTER_HUMBLE_BUNDLE, keys.json_key_humble)
+add_computer_platform(Platform.COMPUTER_HUMBLE_BUNDLE, keys.JSON_KEY_HUMBLE)
 
 # Computer - Itchio
-add_computer_platform(Platform.COMPUTER_ITCHIO, keys.json_key_itchio)
+add_computer_platform(Platform.COMPUTER_ITCHIO, keys.JSON_KEY_ITCHIO)
 
 # Computer - Legacy Games
-add_computer_platform(Platform.COMPUTER_LEGACY_GAMES, keys.json_key_legacy)
+add_computer_platform(Platform.COMPUTER_LEGACY_GAMES, keys.JSON_KEY_LEGACY)
 
 # Computer - Puppet Combo
-add_computer_platform(Platform.COMPUTER_PUPPET_COMBO, keys.json_key_puppetcombo)
+add_computer_platform(Platform.COMPUTER_PUPPET_COMBO, keys.JSON_KEY_PUPPETCOMBO)
 
 # Computer - Red Candle
-add_computer_platform(Platform.COMPUTER_RED_CANDLE, keys.json_key_redcandle)
+add_computer_platform(Platform.COMPUTER_RED_CANDLE, keys.JSON_KEY_REDCANDLE)
 
 # Computer - Square Enix
-add_computer_platform(Platform.COMPUTER_SQUARE_ENIX, keys.json_key_squareenix)
+add_computer_platform(Platform.COMPUTER_SQUARE_ENIX, keys.JSON_KEY_SQUAREENIX)
 
 # Computer - Steam
-add_computer_platform(Platform.COMPUTER_STEAM, keys.json_key_steam)
+add_computer_platform(Platform.COMPUTER_STEAM, keys.JSON_KEY_STEAM)
 
 # Computer - Zoom
-add_computer_platform(Platform.COMPUTER_ZOOM, keys.json_key_zoom)
+add_computer_platform(Platform.COMPUTER_ZOOM, keys.JSON_KEY_ZOOM)
 
 # Microsoft MSX
 add_platform(
     Platform.MICROSOFT_MSX,
     categories.Category.MICROSOFT,
     types.LaunchType.LAUNCH_FILE,
-    autofill = [keys.json_key_files, keys.json_key_launch_file])
+    autofill = [keys.JSON_KEY_FILES, keys.JSON_KEY_LAUNCH_FILE])
 
 # Microsoft Xbox
 add_platform(
     Platform.MICROSOFT_XBOX,
     categories.Category.MICROSOFT,
     types.LaunchType.LAUNCH_FILE,
-    autofill = [keys.json_key_files, keys.json_key_transform_file],
-    fillonce = [keys.json_key_launch_file])
+    autofill = [keys.JSON_KEY_FILES, keys.JSON_KEY_TRANSFORM_FILE],
+    fillonce = [keys.JSON_KEY_LAUNCH_FILE])
 
 # Microsoft Xbox 360
 add_platform(
@@ -293,8 +293,8 @@ add_platform(
     categories.Category.MICROSOFT,
     types.LaunchType.LAUNCH_FILE,
     addons = [types.AddonType.DLC, types.AddonType.UPDATES],
-    autofill = [keys.json_key_files, keys.json_key_transform_file],
-    fillonce = [keys.json_key_launch_file])
+    autofill = [keys.JSON_KEY_FILES, keys.JSON_KEY_TRANSFORM_FILE],
+    fillonce = [keys.JSON_KEY_LAUNCH_FILE])
 
 # Microsoft Xbox 360 GOD
 add_platform(
@@ -302,7 +302,7 @@ add_platform(
     categories.Category.MICROSOFT,
     types.LaunchType.LAUNCH_FILE,
     addons = [types.AddonType.DLC, types.AddonType.UPDATES],
-    fillonce = [keys.json_key_launch_file])
+    fillonce = [keys.JSON_KEY_LAUNCH_FILE])
 
 # Microsoft Xbox 360 XBLA
 add_platform(
@@ -310,14 +310,14 @@ add_platform(
     categories.Category.MICROSOFT,
     types.LaunchType.LAUNCH_FILE,
     addons = [types.AddonType.DLC, types.AddonType.UPDATES],
-    fillonce = [keys.json_key_launch_file])
+    fillonce = [keys.JSON_KEY_LAUNCH_FILE])
 
 # Microsoft Xbox 360 XIG
 add_platform(
     Platform.MICROSOFT_XBOX_360_XIG,
     categories.Category.MICROSOFT,
     types.LaunchType.LAUNCH_FILE,
-    fillonce = [keys.json_key_launch_file])
+    fillonce = [keys.JSON_KEY_LAUNCH_FILE])
 
 # Microsoft Xbox One
 add_platform(
@@ -337,7 +337,7 @@ add_platform(
     categories.Category.NINTENDO,
     types.LaunchType.LAUNCH_FILE,
     addons = [types.AddonType.DLC, types.AddonType.UPDATES],
-    autofill = [keys.json_key_files, keys.json_key_launch_file])
+    autofill = [keys.JSON_KEY_FILES, keys.JSON_KEY_LAUNCH_FILE])
 
 # Nintendo 3DS Apps
 add_platform(
@@ -351,14 +351,14 @@ add_platform(
     categories.Category.NINTENDO,
     types.LaunchType.LAUNCH_FILE,
     addons = [types.AddonType.DLC, types.AddonType.UPDATES],
-    autofill = [keys.json_key_files, keys.json_key_launch_file])
+    autofill = [keys.JSON_KEY_FILES, keys.JSON_KEY_LAUNCH_FILE])
 
 # Nintendo 64
 add_platform(
     Platform.NINTENDO_64,
     categories.Category.NINTENDO,
     types.LaunchType.LAUNCH_FILE,
-    autofill = [keys.json_key_files, keys.json_key_launch_file])
+    autofill = [keys.JSON_KEY_FILES, keys.JSON_KEY_LAUNCH_FILE])
 
 # Nintendo Amiibo
 add_platform(
@@ -372,98 +372,98 @@ add_platform(
     Platform.NINTENDO_DS,
     categories.Category.NINTENDO,
     types.LaunchType.LAUNCH_FILE,
-    autofill = [keys.json_key_files, keys.json_key_launch_file])
+    autofill = [keys.JSON_KEY_FILES, keys.JSON_KEY_LAUNCH_FILE])
 
 # Nintendo DSi
 add_platform(
     Platform.NINTENDO_DSI,
     categories.Category.NINTENDO,
     types.LaunchType.LAUNCH_FILE,
-    autofill = [keys.json_key_files, keys.json_key_launch_file])
+    autofill = [keys.JSON_KEY_FILES, keys.JSON_KEY_LAUNCH_FILE])
 
 # Nintendo Famicom
 add_platform(
     Platform.NINTENDO_FAMICOM,
     categories.Category.NINTENDO,
     types.LaunchType.LAUNCH_FILE,
-    autofill = [keys.json_key_files, keys.json_key_launch_file])
+    autofill = [keys.JSON_KEY_FILES, keys.JSON_KEY_LAUNCH_FILE])
 
 # Nintendo Game Boy
 add_platform(
     Platform.NINTENDO_GAME_BOY,
     categories.Category.NINTENDO,
     types.LaunchType.LAUNCH_FILE,
-    autofill = [keys.json_key_files, keys.json_key_launch_file])
+    autofill = [keys.JSON_KEY_FILES, keys.JSON_KEY_LAUNCH_FILE])
 
 # Nintendo Game Boy Advance
 add_platform(
     Platform.NINTENDO_GAME_BOY_ADVANCE,
     categories.Category.NINTENDO,
     types.LaunchType.LAUNCH_FILE,
-    autofill = [keys.json_key_files, keys.json_key_launch_file])
+    autofill = [keys.JSON_KEY_FILES, keys.JSON_KEY_LAUNCH_FILE])
 
 # Nintendo Game Boy Advance e-Reader
 add_platform(
     Platform.NINTENDO_GAME_BOY_ADVANCE_EREADER,
     categories.Category.NINTENDO,
     types.LaunchType.LAUNCH_FILE,
-    autofill = [keys.json_key_files, keys.json_key_launch_file])
+    autofill = [keys.JSON_KEY_FILES, keys.JSON_KEY_LAUNCH_FILE])
 
 # Nintendo Game Boy Color
 add_platform(
     Platform.NINTENDO_GAME_BOY_COLOR,
     categories.Category.NINTENDO,
     types.LaunchType.LAUNCH_FILE,
-    autofill = [keys.json_key_files, keys.json_key_launch_file])
+    autofill = [keys.JSON_KEY_FILES, keys.JSON_KEY_LAUNCH_FILE])
 
 # Nintendo Gamecube
 add_platform(
     Platform.NINTENDO_GAMECUBE,
     categories.Category.NINTENDO,
     types.LaunchType.LAUNCH_FILE,
-    autofill = [keys.json_key_files, keys.json_key_launch_file])
+    autofill = [keys.JSON_KEY_FILES, keys.JSON_KEY_LAUNCH_FILE])
 
 # Nintendo NES
 add_platform(
     Platform.NINTENDO_NES,
     categories.Category.NINTENDO,
     types.LaunchType.LAUNCH_FILE,
-    autofill = [keys.json_key_files, keys.json_key_launch_file])
+    autofill = [keys.JSON_KEY_FILES, keys.JSON_KEY_LAUNCH_FILE])
 
 # Nintendo SNES
 add_platform(
     Platform.NINTENDO_SNES,
     categories.Category.NINTENDO,
     types.LaunchType.LAUNCH_FILE,
-    autofill = [keys.json_key_files, keys.json_key_launch_file])
+    autofill = [keys.JSON_KEY_FILES, keys.JSON_KEY_LAUNCH_FILE])
 
 # Nintendo SNES MSU-1
 add_platform(
     Platform.NINTENDO_SNES_MSU1,
     categories.Category.NINTENDO,
     types.LaunchType.LAUNCH_FILE,
-    autofill = [keys.json_key_files, keys.json_key_launch_file])
+    autofill = [keys.JSON_KEY_FILES, keys.JSON_KEY_LAUNCH_FILE])
 
 # Nintendo Super Famicom
 add_platform(
     Platform.NINTENDO_SUPER_FAMICOM,
     categories.Category.NINTENDO,
     types.LaunchType.LAUNCH_FILE,
-    autofill = [keys.json_key_files, keys.json_key_launch_file])
+    autofill = [keys.JSON_KEY_FILES, keys.JSON_KEY_LAUNCH_FILE])
 
 # Nintendo Super Game Boy
 add_platform(
     Platform.NINTENDO_SUPER_GAME_BOY,
     categories.Category.NINTENDO,
     types.LaunchType.LAUNCH_FILE,
-    autofill = [keys.json_key_files, keys.json_key_launch_file])
+    autofill = [keys.JSON_KEY_FILES, keys.JSON_KEY_LAUNCH_FILE])
 
 # Nintendo Super Game Boy Color
 add_platform(
     Platform.NINTENDO_SUPER_GAME_BOY_COLOR,
     categories.Category.NINTENDO,
     types.LaunchType.LAUNCH_FILE,
-    autofill = [keys.json_key_files, keys.json_key_launch_file])
+    autofill = [keys.JSON_KEY_FILES, keys.JSON_KEY_LAUNCH_FILE])
 
 # Nintendo Switch
 add_platform(
@@ -471,7 +471,7 @@ add_platform(
     categories.Category.NINTENDO,
     types.LaunchType.LAUNCH_FILE,
     addons = [types.AddonType.DLC, types.AddonType.UPDATES],
-    autofill = [keys.json_key_files, keys.json_key_launch_file])
+    autofill = [keys.JSON_KEY_FILES, keys.JSON_KEY_LAUNCH_FILE])
 
 # Nintendo Switch eShop
 add_platform(
@@ -479,14 +479,14 @@ add_platform(
     categories.Category.NINTENDO,
     types.LaunchType.LAUNCH_FILE,
     addons = [types.AddonType.DLC, types.AddonType.UPDATES],
-    autofill = [keys.json_key_files, keys.json_key_launch_file])
+    autofill = [keys.JSON_KEY_FILES, keys.JSON_KEY_LAUNCH_FILE])
 
 # Nintendo Virtual Boy
 add_platform(
     Platform.NINTENDO_VIRTUAL_BOY,
     categories.Category.NINTENDO,
     types.LaunchType.LAUNCH_FILE,
-    autofill = [keys.json_key_files, keys.json_key_launch_file])
+    autofill = [keys.JSON_KEY_FILES, keys.JSON_KEY_LAUNCH_FILE])
 
 # Nintendo Wii
 add_platform(
@@ -494,7 +494,7 @@ add_platform(
     categories.Category.NINTENDO,
     types.LaunchType.LAUNCH_FILE,
     addons = [types.AddonType.DLC],
-    autofill = [keys.json_key_files, keys.json_key_launch_file])
+    autofill = [keys.JSON_KEY_FILES, keys.JSON_KEY_LAUNCH_FILE])
 
 # Nintendo Wii U
 add_platform(
@@ -502,7 +502,7 @@ add_platform(
     categories.Category.NINTENDO,
     types.LaunchType.LAUNCH_FILE,
     addons = [types.AddonType.DLC, types.AddonType.UPDATES],
-    autofill = [keys.json_key_files, keys.json_key_launch_file])
+    autofill = [keys.JSON_KEY_FILES, keys.JSON_KEY_LAUNCH_FILE])
 
 # Nintendo Wii U eShop
 add_platform(
@@ -510,7 +510,7 @@ add_platform(
     categories.Category.NINTENDO,
     types.LaunchType.LAUNCH_FILE,
     addons = [types.AddonType.DLC, types.AddonType.UPDATES],
-    autofill = [keys.json_key_files, keys.json_key_launch_file])
+    autofill = [keys.JSON_KEY_FILES, keys.JSON_KEY_LAUNCH_FILE])
 
 # Nintendo WiiWare
 add_platform(
@@ -518,7 +518,7 @@ add_platform(
     categories.Category.NINTENDO,
     types.LaunchType.LAUNCH_FILE,
     addons = [types.AddonType.DLC],
-    autofill = [keys.json_key_files, keys.json_key_launch_file])
+    autofill = [keys.JSON_KEY_FILES, keys.JSON_KEY_LAUNCH_FILE])
 
 # Apple iOS
 add_platform(
@@ -531,98 +531,98 @@ add_platform(
     Platform.OTHER_APPLE_MACOS_8,
     categories.Category.OTHER,
     types.LaunchType.LAUNCH_FILE,
-    autofill = [keys.json_key_files, keys.json_key_launch_file])
+    autofill = [keys.JSON_KEY_FILES, keys.JSON_KEY_LAUNCH_FILE])
 
 # Arcade
 add_platform(
     Platform.OTHER_ARCADE,
     categories.Category.OTHER,
     types.LaunchType.LAUNCH_NAME,
-    fillonce = [keys.json_key_launch_name])
+    fillonce = [keys.JSON_KEY_LAUNCH_NAME])
 
 # Atari 800
 add_platform(
     Platform.OTHER_ATARI_800,
     categories.Category.OTHER,
     types.LaunchType.LAUNCH_FILE,
-    autofill = [keys.json_key_files, keys.json_key_launch_file])
+    autofill = [keys.JSON_KEY_FILES, keys.JSON_KEY_LAUNCH_FILE])
 
 # Atari 2600
 add_platform(
     Platform.OTHER_ATARI_2600,
     categories.Category.OTHER,
     types.LaunchType.LAUNCH_FILE,
-    autofill = [keys.json_key_files, keys.json_key_launch_file])
+    autofill = [keys.JSON_KEY_FILES, keys.JSON_KEY_LAUNCH_FILE])
 
 # Atari 5200
 add_platform(
     Platform.OTHER_ATARI_5200,
     categories.Category.OTHER,
     types.LaunchType.LAUNCH_FILE,
-    autofill = [keys.json_key_files, keys.json_key_launch_file])
+    autofill = [keys.JSON_KEY_FILES, keys.JSON_KEY_LAUNCH_FILE])
 
 # Atari 7800
 add_platform(
     Platform.OTHER_ATARI_7800,
     categories.Category.OTHER,
     types.LaunchType.LAUNCH_FILE,
-    autofill = [keys.json_key_files, keys.json_key_launch_file])
+    autofill = [keys.JSON_KEY_FILES, keys.JSON_KEY_LAUNCH_FILE])
 
 # Atari Jaguar
 add_platform(
     Platform.OTHER_ATARI_JAGUAR,
     categories.Category.OTHER,
     types.LaunchType.LAUNCH_FILE,
-    autofill = [keys.json_key_files, keys.json_key_launch_file])
+    autofill = [keys.JSON_KEY_FILES, keys.JSON_KEY_LAUNCH_FILE])
 
 # Atari Jaguar CD
 add_platform(
     Platform.OTHER_ATARI_JAGUAR_CD,
     categories.Category.OTHER,
     types.LaunchType.LAUNCH_FILE,
-    autofill = [keys.json_key_files, keys.json_key_launch_file])
+    autofill = [keys.JSON_KEY_FILES, keys.JSON_KEY_LAUNCH_FILE])
 
 # Atari Lynx
 add_platform(
     Platform.OTHER_ATARI_LYNX,
     categories.Category.OTHER,
     types.LaunchType.LAUNCH_FILE,
-    autofill = [keys.json_key_files, keys.json_key_launch_file])
+    autofill = [keys.JSON_KEY_FILES, keys.JSON_KEY_LAUNCH_FILE])
 
 # Bandai WonderSwan
 add_platform(
     Platform.OTHER_BANDAI_WONDERSWAN,
     categories.Category.OTHER,
     types.LaunchType.LAUNCH_FILE,
-    autofill = [keys.json_key_files, keys.json_key_launch_file])
+    autofill = [keys.JSON_KEY_FILES, keys.JSON_KEY_LAUNCH_FILE])
 
 # Bandai WonderSwan Color
 add_platform(
     Platform.OTHER_BANDAI_WONDERSWAN_COLOR,
     categories.Category.OTHER,
     types.LaunchType.LAUNCH_FILE,
-    autofill = [keys.json_key_files, keys.json_key_launch_file])
+    autofill = [keys.JSON_KEY_FILES, keys.JSON_KEY_LAUNCH_FILE])
 
 # Coleco ColecoVision
 add_platform(
     Platform.OTHER_COLECO_COLECOVISION,
     categories.Category.OTHER,
     types.LaunchType.LAUNCH_FILE,
-    autofill = [keys.json_key_files, keys.json_key_launch_file])
+    autofill = [keys.JSON_KEY_FILES, keys.JSON_KEY_LAUNCH_FILE])
 
 # Commodore 64
 add_platform(
     Platform.OTHER_COMMODORE_64,
     categories.Category.OTHER,
     types.LaunchType.LAUNCH_FILE,
-    autofill = [keys.json_key_files, keys.json_key_launch_file])
+    autofill = [keys.JSON_KEY_FILES, keys.JSON_KEY_LAUNCH_FILE])
 
 # Commodore Amiga
 add_platform(
     Platform.OTHER_COMMODORE_AMIGA,
     categories.Category.OTHER,
     types.LaunchType.LAUNCH_FILE,
-    autofill = [keys.json_key_files, keys.json_key_launch_file])
+    autofill = [keys.JSON_KEY_FILES, keys.JSON_KEY_LAUNCH_FILE])
 
 # Google Android
 add_platform(
@@ -635,168 +635,168 @@ add_platform(
     Platform.OTHER_MAGNAVOX_ODYSSEY_2,
     categories.Category.OTHER,
     types.LaunchType.LAUNCH_FILE,
-    autofill = [keys.json_key_files, keys.json_key_launch_file])
+    autofill = [keys.JSON_KEY_FILES, keys.JSON_KEY_LAUNCH_FILE])
 
 # Mattel Intellivision
 add_platform(
     Platform.OTHER_MATTEL_INTELLIVISION,
     categories.Category.OTHER,
     types.LaunchType.LAUNCH_FILE,
-    autofill = [keys.json_key_files, keys.json_key_launch_file])
+    autofill = [keys.JSON_KEY_FILES, keys.JSON_KEY_LAUNCH_FILE])
 
 # NEC PC-Engine
 add_platform(
     Platform.OTHER_NEC_PCENGINE,
     categories.Category.OTHER,
     types.LaunchType.LAUNCH_FILE,
-    autofill = [keys.json_key_files, keys.json_key_launch_file])
+    autofill = [keys.JSON_KEY_FILES, keys.JSON_KEY_LAUNCH_FILE])
 
 # NEC PC-Engine CD
 add_platform(
     Platform.OTHER_NEC_PCENGINE_CD,
     categories.Category.OTHER,
     types.LaunchType.LAUNCH_FILE,
-    autofill = [keys.json_key_files, keys.json_key_launch_file])
+    autofill = [keys.JSON_KEY_FILES, keys.JSON_KEY_LAUNCH_FILE])
 
 # NEC SuperGrafx
 add_platform(
     Platform.OTHER_NEC_SUPERGRAFX,
     categories.Category.OTHER,
     types.LaunchType.LAUNCH_FILE,
-    autofill = [keys.json_key_files, keys.json_key_launch_file])
+    autofill = [keys.JSON_KEY_FILES, keys.JSON_KEY_LAUNCH_FILE])
 
 # NEC TurboGrafx-16
 add_platform(
     Platform.OTHER_NEC_TURBOGRAFX_16,
     categories.Category.OTHER,
     types.LaunchType.LAUNCH_FILE,
-    autofill = [keys.json_key_files, keys.json_key_launch_file])
+    autofill = [keys.JSON_KEY_FILES, keys.JSON_KEY_LAUNCH_FILE])
 
 # NEC TurboGrafx CD
 add_platform(
     Platform.OTHER_NEC_TURBOGRAFX_CD,
     categories.Category.OTHER,
     types.LaunchType.LAUNCH_FILE,
-    autofill = [keys.json_key_files, keys.json_key_launch_file])
+    autofill = [keys.JSON_KEY_FILES, keys.JSON_KEY_LAUNCH_FILE])
 
 # Nokia N-Gage
 add_platform(
     Platform.OTHER_NOKIA_NGAGE,
     categories.Category.OTHER,
     types.LaunchType.LAUNCH_NAME,
-    fillonce = [keys.json_key_launch_name])
+    fillonce = [keys.JSON_KEY_LAUNCH_NAME])
 
 # Panasonic 3DO
 add_platform(
     Platform.OTHER_PANASONIC_3DO,
     categories.Category.OTHER,
     types.LaunchType.LAUNCH_FILE,
-    autofill = [keys.json_key_files, keys.json_key_launch_file])
+    autofill = [keys.JSON_KEY_FILES, keys.JSON_KEY_LAUNCH_FILE])
 
 # Philips CDi
 add_platform(
     Platform.OTHER_PHILIPS_CDI,
     categories.Category.OTHER,
     types.LaunchType.LAUNCH_FILE,
-    autofill = [keys.json_key_files, keys.json_key_launch_file])
+    autofill = [keys.JSON_KEY_FILES, keys.JSON_KEY_LAUNCH_FILE])
 
 # SNK Neo Geo Pocket Color
 add_platform(
     Platform.OTHER_SNK_NEOGEO_POCKET_COLOR,
     categories.Category.OTHER,
     types.LaunchType.LAUNCH_FILE,
-    autofill = [keys.json_key_files, keys.json_key_launch_file])
+    autofill = [keys.JSON_KEY_FILES, keys.JSON_KEY_LAUNCH_FILE])
 
 # Sega 32X
 add_platform(
     Platform.OTHER_SEGA_32X,
     categories.Category.OTHER,
     types.LaunchType.LAUNCH_FILE,
-    autofill = [keys.json_key_files, keys.json_key_launch_file])
+    autofill = [keys.JSON_KEY_FILES, keys.JSON_KEY_LAUNCH_FILE])
 
 # Sega CD
 add_platform(
     Platform.OTHER_SEGA_CD,
     categories.Category.OTHER,
     types.LaunchType.LAUNCH_FILE,
-    autofill = [keys.json_key_files, keys.json_key_launch_file])
+    autofill = [keys.JSON_KEY_FILES, keys.JSON_KEY_LAUNCH_FILE])
 
 # Sega CD 32X
 add_platform(
     Platform.OTHER_SEGA_CD_32X,
     categories.Category.OTHER,
     types.LaunchType.LAUNCH_FILE,
-    autofill = [keys.json_key_files, keys.json_key_launch_file])
+    autofill = [keys.JSON_KEY_FILES, keys.JSON_KEY_LAUNCH_FILE])
 
 # Sega Dreamcast
 add_platform(
     Platform.OTHER_SEGA_DREAMCAST,
     categories.Category.OTHER,
     types.LaunchType.LAUNCH_FILE,
-    autofill = [keys.json_key_files, keys.json_key_launch_file])
+    autofill = [keys.JSON_KEY_FILES, keys.JSON_KEY_LAUNCH_FILE])
 
 # Sega Game Gear
 add_platform(
     Platform.OTHER_SEGA_GAME_GEAR,
     categories.Category.OTHER,
     types.LaunchType.LAUNCH_FILE,
-    autofill = [keys.json_key_files, keys.json_key_launch_file])
+    autofill = [keys.JSON_KEY_FILES, keys.JSON_KEY_LAUNCH_FILE])
 
 # Sega Genesis
 add_platform(
     Platform.OTHER_SEGA_GENESIS,
     categories.Category.OTHER,
     types.LaunchType.LAUNCH_FILE,
-    autofill = [keys.json_key_files, keys.json_key_launch_file])
+    autofill = [keys.JSON_KEY_FILES, keys.JSON_KEY_LAUNCH_FILE])
 
 # Sega Master System
 add_platform(
     Platform.OTHER_SEGA_MASTER_SYSTEM,
     categories.Category.OTHER,
     types.LaunchType.LAUNCH_FILE,
-    autofill = [keys.json_key_files, keys.json_key_launch_file])
+    autofill = [keys.JSON_KEY_FILES, keys.JSON_KEY_LAUNCH_FILE])
 
 # Sega Saturn
 add_platform(
     Platform.OTHER_SEGA_SATURN,
     categories.Category.OTHER,
     types.LaunchType.LAUNCH_FILE,
-    autofill = [keys.json_key_files, keys.json_key_launch_file])
+    autofill = [keys.JSON_KEY_FILES, keys.JSON_KEY_LAUNCH_FILE])
 
 # Sinclair ZX Spectrum
 add_platform(
     Platform.OTHER_SINCLAIR_ZX_SPECTRUM,
     categories.Category.OTHER,
     types.LaunchType.LAUNCH_FILE,
-    autofill = [keys.json_key_files, keys.json_key_launch_file])
+    autofill = [keys.JSON_KEY_FILES, keys.JSON_KEY_LAUNCH_FILE])
 
 # Texas Instruments TI-99-4A
 add_platform(
     Platform.OTHER_TEXAS_INSTRUMENTS_TI994A,
     categories.Category.OTHER,
     types.LaunchType.LAUNCH_FILE,
-    autofill = [keys.json_key_files, keys.json_key_launch_file])
+    autofill = [keys.JSON_KEY_FILES, keys.JSON_KEY_LAUNCH_FILE])
 
 # Tiger Game.com
 add_platform(
     Platform.OTHER_TIGER_GAMECOM,
     categories.Category.OTHER,
     types.LaunchType.LAUNCH_FILE,
-    autofill = [keys.json_key_files, keys.json_key_launch_file])
+    autofill = [keys.JSON_KEY_FILES, keys.JSON_KEY_LAUNCH_FILE])
 
 # Sony PlayStation
 add_platform(
     Platform.SONY_PLAYSTATION,
     categories.Category.SONY,
     types.LaunchType.LAUNCH_FILE,
-    autofill = [keys.json_key_files, keys.json_key_launch_file])
+    autofill = [keys.JSON_KEY_FILES, keys.JSON_KEY_LAUNCH_FILE])
 
 # Sony PlayStation 2
 add_platform(
     Platform.SONY_PLAYSTATION_2,
     categories.Category.SONY,
     types.LaunchType.LAUNCH_FILE,
-    autofill = [keys.json_key_files, keys.json_key_launch_file])
+    autofill = [keys.JSON_KEY_FILES, keys.JSON_KEY_LAUNCH_FILE])
 
 # Sony PlayStation 3
 add_platform(
@@ -804,8 +804,8 @@ add_platform(
     categories.Category.SONY,
     types.LaunchType.LAUNCH_FILE,
     addons = [types.AddonType.DLC, types.AddonType.UPDATES],
-    autofill = [keys.json_key_files, keys.json_key_transform_file],
-    fillonce = [keys.json_key_launch_file])
+    autofill = [keys.JSON_KEY_FILES, keys.JSON_KEY_TRANSFORM_FILE],
+    fillonce = [keys.JSON_KEY_LAUNCH_FILE])
 
 # Sony PlayStation 4
 add_platform(
@@ -820,8 +820,8 @@ add_platform(
     categories.Category.SONY,
     types.LaunchType.LAUNCH_FILE,
     addons = [types.AddonType.DLC, types.AddonType.UPDATES],
-    autofill = [keys.json_key_files, keys.json_key_transform_file],
-    fillonce = [keys.json_key_launch_file])
+    autofill = [keys.JSON_KEY_FILES, keys.JSON_KEY_TRANSFORM_FILE],
+    fillonce = [keys.JSON_KEY_LAUNCH_FILE])
 
 # Sony PlayStation Network - PlayStation 4
 add_platform(
@@ -836,14 +836,14 @@ add_platform(
     categories.Category.SONY,
     types.LaunchType.LAUNCH_FILE,
     addons = [types.AddonType.DLC, types.AddonType.UPDATES],
-    autofill = [keys.json_key_files, keys.json_key_launch_file])
+    autofill = [keys.JSON_KEY_FILES, keys.JSON_KEY_LAUNCH_FILE])
 
 # Sony PlayStation Network - PlayStation Portable Minis
 add_platform(
     Platform.SONY_PLAYSTATION_NETWORK_PSPM,
     categories.Category.SONY,
     types.LaunchType.LAUNCH_FILE,
-    autofill = [keys.json_key_files, keys.json_key_launch_file])
+    autofill = [keys.JSON_KEY_FILES, keys.JSON_KEY_LAUNCH_FILE])
 
 # Sony PlayStation Network - PlayStation Vita
 add_platform(
@@ -851,8 +851,8 @@ add_platform(
     categories.Category.SONY,
     types.LaunchType.LAUNCH_NAME,
     addons = [types.AddonType.DLC, types.AddonType.UPDATES],
-    autofill = [keys.json_key_files, keys.json_key_transform_file],
-    fillonce = [keys.json_key_launch_name])
+    autofill = [keys.JSON_KEY_FILES, keys.JSON_KEY_TRANSFORM_FILE],
+    fillonce = [keys.JSON_KEY_LAUNCH_NAME])
 
 # Sony PlayStation Portable
 add_platform(
@@ -860,7 +860,7 @@ add_platform(
     categories.Category.SONY,
     types.LaunchType.LAUNCH_FILE,
     addons = [types.AddonType.DLC, types.AddonType.UPDATES],
-    autofill = [keys.json_key_files, keys.json_key_launch_file])
+    autofill = [keys.JSON_KEY_FILES, keys.JSON_KEY_LAUNCH_FILE])
 
 # Sony PlayStation Portable Video
 add_platform(
@@ -874,4 +874,4 @@ add_platform(
     categories.Category.SONY,
     types.LaunchType.LAUNCH_NAME,
     addons = [types.AddonType.DLC, types.AddonType.UPDATES],
-    fillonce = [keys.json_key_launch_name])
+    fillonce = [keys.JSON_KEY_LAUNCH_NAME])

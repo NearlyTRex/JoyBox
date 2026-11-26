@@ -44,7 +44,7 @@ def installer_classes():
         candidate = getattr(installers, name)
         if not isinstance(candidate, type):
             continue
-        template = getattr(candidate, "docker_compose_template", None)
+        template = getattr(candidate, "DOCKER_COMPOSE_TEMPLATE", None)
         if isinstance(template, str) and "ports:" in template:
             found.append((name, candidate))
     return found
@@ -89,7 +89,7 @@ def test_every_compose_template_is_covered_by_the_port_test(installers_dir):
             continue
         with open(os.path.join(installers_dir, filename), "r", encoding = "utf-8") as installer_file:
             source = installer_file.read()
-        if "docker_compose_template" in source and compose_port_specs(source):
+        if "DOCKER_COMPOSE_TEMPLATE" in source and compose_port_specs(source):
             with_ports.add(filename[len("installer_"):-3])
 
     uncovered = sorted(with_ports - covered)

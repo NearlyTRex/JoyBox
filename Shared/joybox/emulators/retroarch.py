@@ -296,7 +296,7 @@ class RetroArch(emulatorbase.EmulatorBase):
         launch_cmd = [
             programs.get_emulator_program("RetroArch"),
             "-L", core_file,
-            config.token_game_file
+            config.TOKEN_GAME_FILE
         ]
         if fullscreen:
             launch_cmd += [

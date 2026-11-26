@@ -54,8 +54,8 @@ state_files = {
 }
 
 # What a login's salt is made of, and how long it is, as Sunshine makes them
-salt_alphabet = string.ascii_letters + string.digits + "!@#$%^&*()"
-salt_length = 16
+SALT_ALPHABET = string.ascii_letters + string.digits + "!@#$%^&*()"
+SALT_LENGTH = 16
 
 # Hash a web page password the way Sunshine checks it: SHA-256 of the password
 # followed by its salt, written as hex with the bytes in reverse order
@@ -77,7 +77,7 @@ def write_login(state_file, username, password, verbose = False, pretend_run = F
             return False
     if is_login_current(state, username, password):
         return True
-    salt = "".join(secrets.choice(salt_alphabet) for _ in range(salt_length))
+    salt = "".join(secrets.choice(SALT_ALPHABET) for _ in range(SALT_LENGTH))
     state.update({"username": username, "salt": salt, "password": hash_password(password, salt)})
     return fileops.touch_file(
         src = state_file,

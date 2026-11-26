@@ -35,7 +35,7 @@ def test_the_store_describes_itself(amazon_store):
     assert amazon_store.get_supercategory() == config.Supercategory.ROMS
     assert amazon_store.get_category() == config.Category.COMPUTER
     assert amazon_store.get_subcategory() == config.Subcategory.COMPUTER_AMAZON_GAMES
-    assert amazon_store.get_key() == config.json_key_amazon
+    assert amazon_store.get_key() == config.JSON_KEY_AMAZON
     assert amazon_store.can_import_purchases() and amazon_store.can_download_purchases()
 
 
@@ -49,8 +49,8 @@ def test_names_find_pages_and_appids_find_everything_else(amazon_store):
     by_name = [config.StoreIdentifierType.ASSET, config.StoreIdentifierType.METADATA, config.StoreIdentifierType.PAGE]
     by_appid = [config.StoreIdentifierType.INFO, config.StoreIdentifierType.INSTALL,
                 config.StoreIdentifierType.LAUNCH, config.StoreIdentifierType.DOWNLOAD]
-    assert all(keys[kind] == config.json_key_store_name for kind in by_name)
-    assert all(keys[kind] == config.json_key_store_appid for kind in by_appid)
+    assert all(keys[kind] == config.JSON_KEY_STORE_NAME for kind in by_name)
+    assert all(keys[kind] == config.JSON_KEY_STORE_APPID for kind in by_appid)
     assert len(keys) == len(by_name) + len(by_appid)
 
 

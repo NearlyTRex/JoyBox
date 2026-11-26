@@ -367,8 +367,8 @@ def test_a_published_page_is_a_whole_document(metadata_root, published):
     publish(metadata_root)
     contents = published_file(published).read_text()
 
-    assert contents.startswith(config.publish_html_header % CATEGORY)
-    assert contents.endswith(config.publish_html_footer)
+    assert contents.startswith(config.PUBLISH_HTML_HEADER % CATEGORY)
+    assert contents.endswith(config.PUBLISH_HTML_FOOTER)
 
 
 def test_a_category_with_no_metadata_still_publishes_a_page(metadata_root, published):
@@ -385,8 +385,8 @@ def test_published_rows_alternate(metadata_root, published):
     publish(metadata_root)
     contents = published_file(published).read_text()
 
-    odd_marker = config.publish_html_entry_odd.split("%s", maxsplit = 1)[0]
-    even_marker = config.publish_html_entry_even.split("%s", maxsplit = 1)[0]
+    odd_marker = config.PUBLISH_HTML_ENTRY_ODD.split("%s", maxsplit = 1)[0]
+    even_marker = config.PUBLISH_HTML_ENTRY_EVEN.split("%s", maxsplit = 1)[0]
     assert odd_marker in contents
     assert even_marker in contents
 
@@ -401,7 +401,7 @@ def test_initial_values_override_the_defaults(metadata_root):
 def test_an_update_limited_to_present_keys_is_skipped(metadata_root, scraping):
     create(metadata_root)
 
-    assert update(metadata_root, keys = [config.metadata_key_players]) is True
+    assert update(metadata_root, keys = [config.METADATA_KEY_PLAYERS]) is True
     assert scraping["collected"] == []
 
 

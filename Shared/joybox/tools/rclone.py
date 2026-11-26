@@ -10,7 +10,7 @@ from joybox import toolbase
 
 # What rclone.conf holds. The remotes are defined by the settings and reach
 # rclone through the environment of each command; see joybox.rcloneremotes.
-config_note = """# Written by JoyBox. Remotes come from the locker settings in JoyBox.ini at
+CONFIG_NOTE = """# Written by JoyBox. Remotes come from the locker settings in JoyBox.ini at
 # run time, so no credential is kept here; anything added here is replaced.
 """
 
@@ -129,7 +129,7 @@ class RClone(toolbase.ToolBase):
         for config_filename in config_files:
             success = fileops.touch_file(
                 src = paths.join_paths(environment.get_tools_root_dir(), config_filename),
-                contents = config_note,
+                contents = CONFIG_NOTE,
                 verbose = setup_params.verbose,
                 pretend_run = setup_params.pretend_run,
                 exit_on_failure = setup_params.exit_on_failure)

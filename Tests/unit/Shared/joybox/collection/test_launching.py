@@ -271,11 +271,11 @@ def test_the_launcher_config_is_filled_in_and_reverted(steps, store, launcher, t
     filled, reverted = [kwargs["replacements"] for name, kwargs in steps.calls
                         if name == "replace_strings_in_file"]
     assert filled == [
-        {"from": config.token_emulator_setup_root, "to": "/setup"},
-        {"from": config.token_game_save_dir, "to": "/cache/saves/game"}]
+        {"from": config.TOKEN_EMULATOR_SETUP_ROOT, "to": "/setup"},
+        {"from": config.TOKEN_GAME_SAVE_DIR, "to": "/cache/saves/game"}]
     assert reverted == [
-        {"from": "/setup", "to": config.token_emulator_setup_root},
-        {"from": "/cache/saves/game", "to": config.token_game_save_dir}]
+        {"from": "/setup", "to": config.TOKEN_EMULATOR_SETUP_ROOT},
+        {"from": "/cache/saves/game", "to": config.TOKEN_GAME_SAVE_DIR}]
 
 
 def test_a_launcher_without_a_config_or_save_dir_is_left_alone(steps, store, launcher):

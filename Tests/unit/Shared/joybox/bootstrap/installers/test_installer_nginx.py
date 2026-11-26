@@ -43,9 +43,9 @@ def test_install_writes_the_default_entry_snippet_and_page(isolated_settings):
     assert "server_name joybox.test;" in connection.written("/tmp/default")
     assert connection.ran(nginx.nginx_manager_tool, "install_conf /tmp/default")
     assert connection.ran(nginx.nginx_manager_tool, "link_conf default")
-    assert connection.written("/tmp/apex-root.conf") == installer_nginx.apex_root_snippet_template
+    assert connection.written("/tmp/apex-root.conf") == installer_nginx.APEX_ROOT_SNIPPET_TEMPLATE
     assert connection.ran(nginx.nginx_manager_tool, "install_snippet /tmp/apex-root.conf")
-    assert connection.written("/tmp/index.html") == installer_nginx.apex_fallback_page
+    assert connection.written("/tmp/index.html") == installer_nginx.APEX_FALLBACK_PAGE
     assert connection.ran(nginx.nginx_manager_tool, "copy_html /tmp/index.html")
     assert connection.ran(nginx.nginx_manager_tool, "systemctl restart")
     assert {"/tmp/default", "/tmp/apex-root.conf", "/tmp/index.html"} <= set(connection.removed_paths)

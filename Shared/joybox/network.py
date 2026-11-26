@@ -16,11 +16,11 @@ from joybox import locker
 from joybox import platform_info, runtime
 
 # Seconds a plain HTTP request may take before it is abandoned
-request_timeout_seconds = 10
+REQUEST_TIMEOUT_SECONDS = 10
 
 # How often curl retries a transient download failure, and how long it waits to connect
-download_retries = 3
-download_connect_timeout_seconds = 30
+DOWNLOAD_RETRIES = 3
+DOWNLOAD_CONNECT_TIMEOUT_SECONDS = 30
 
 ###########################################################
 # Info
@@ -29,7 +29,7 @@ download_connect_timeout_seconds = 30
 # Check if url is reachable
 # Query parameters go in params rather than the url, so a key among them never
 # reaches a log line that names the url
-def is_url_reachable(url, params = None, timeout = request_timeout_seconds):
+def is_url_reachable(url, params = None, timeout = REQUEST_TIMEOUT_SECONDS):
     try:
         import requests
         get = requests.get(url, params=params, timeout=timeout)
@@ -42,7 +42,7 @@ def get_remote_json(
     url,
     headers = None,
     params = None,
-    timeout = request_timeout_seconds,
+    timeout = REQUEST_TIMEOUT_SECONDS,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -68,7 +68,7 @@ def get_remote_json(
 def get_remote_html(
     url,
     headers = None,
-    timeout = request_timeout_seconds,
+    timeout = REQUEST_TIMEOUT_SECONDS,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -95,7 +95,7 @@ def post_remote_json(
     url,
     headers = None,
     data = None,
-    timeout = request_timeout_seconds,
+    timeout = REQUEST_TIMEOUT_SECONDS,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -124,7 +124,7 @@ def post_remote_json(
 def get_remote_xml(
     url,
     headers = None,
-    timeout = request_timeout_seconds,
+    timeout = REQUEST_TIMEOUT_SECONDS,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -156,8 +156,8 @@ def download_url(
     url,
     output_dir = None,
     output_file = None,
-    retries = download_retries,
-    connect_timeout = download_connect_timeout_seconds,
+    retries = DOWNLOAD_RETRIES,
+    connect_timeout = DOWNLOAD_CONNECT_TIMEOUT_SECONDS,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):

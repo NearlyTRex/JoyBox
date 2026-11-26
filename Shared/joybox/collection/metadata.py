@@ -298,7 +298,7 @@ def publish_game_metadata_entries(
     metadata_counter = 1
 
     # Add header
-    publish_contents = config.publish_html_header % game_category
+    publish_contents = config.PUBLISH_HTML_HEADER % game_category
 
     # Iterate through each subcategory for the given category
     for game_subcategory in config.subcategory_map[game_category]:
@@ -339,14 +339,14 @@ def publish_game_metadata_entries(
 
                     # Add entry (using odd/even templates)
                     if (metadata_counter % 2) == 0:
-                        publish_contents += config.publish_html_entry_even % game_entry_info
+                        publish_contents += config.PUBLISH_HTML_ENTRY_EVEN % game_entry_info
                     else:
-                        publish_contents += config.publish_html_entry_odd % game_entry_info
+                        publish_contents += config.PUBLISH_HTML_ENTRY_ODD % game_entry_info
                     metadata_counter += 1
                     game_entry_id += 1
 
     # Add footer
-    publish_contents += config.publish_html_footer
+    publish_contents += config.PUBLISH_HTML_FOOTER
 
     # Write publish file
     success = fileops.touch_file(

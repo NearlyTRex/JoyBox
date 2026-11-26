@@ -50,7 +50,7 @@ def test_the_store_describes_itself(steam_store):
     assert steam_store.get_supercategory() == config.Supercategory.ROMS
     assert steam_store.get_category() == config.Category.COMPUTER
     assert steam_store.get_subcategory() == config.Subcategory.COMPUTER_STEAM
-    assert steam_store.get_key() == config.json_key_steam
+    assert steam_store.get_key() == config.JSON_KEY_STEAM
     assert steam_store.get_preferred_platform() == "linux"
     assert steam_store.get_preferred_architecture() == "64"
     assert steam_store.get_account_name() == "player"
@@ -63,8 +63,8 @@ def test_the_store_describes_itself(steam_store):
 def test_metadata_is_found_by_page_and_everything_else_by_appid(steam_store):
     keys = steam_store.get_identifier_keys()
 
-    assert keys.pop(config.StoreIdentifierType.METADATA) == config.json_key_store_appurl
-    assert set(keys.values()) == {config.json_key_store_appid}
+    assert keys.pop(config.StoreIdentifierType.METADATA) == config.JSON_KEY_STORE_APPURL
+    assert set(keys.values()) == {config.JSON_KEY_STORE_APPID}
 
 
 ###########################################################
@@ -115,11 +115,11 @@ def owned(steam_store, reachable, monkeypatch, tmp_path):
 def test_owned_games_become_purchases(steam_store, owned, reachable):
     purchases = steam_store.get_latest_purchases()
 
-    assert [p.get_value(config.json_key_store_appid) for p in purchases] == ["220", "400"]
+    assert [p.get_value(config.JSON_KEY_STORE_APPID) for p in purchases] == ["220", "400"]
     first = purchases[0]
-    assert first.get_value(config.json_key_store_name) == "Half-Life 2"
-    assert first.get_value(config.json_key_store_appurl) == "https://store.steampowered.com/app/220"
-    assert first.get_value(config.json_key_store_branchid) == "public"
+    assert first.get_value(config.JSON_KEY_STORE_NAME) == "Half-Life 2"
+    assert first.get_value(config.JSON_KEY_STORE_APPURL) == "https://store.steampowered.com/app/220"
+    assert first.get_value(config.JSON_KEY_STORE_BRANCHID) == "public"
     assert "steamid=%s" % STEAMID64 in owned["fetched"][0]
     assert owned["params"][0] == {"key": "apikey"}
     assert "apikey" not in owned["fetched"][0]
@@ -139,7 +139,7 @@ def test_purchases_are_cached_for_a_day(steam_store, owned):
     again = steam_store.get_latest_purchases(verbose = True)
 
     assert len(owned["fetched"]) == 1
-    assert [p.get_value(config.json_key_store_appid) for p in again] == ["220", "400"]
+    assert [p.get_value(config.JSON_KEY_STORE_APPID) for p in again] == ["220", "400"]
 
 
 def test_a_stale_cache_is_refreshed(steam_store, owned):
@@ -235,25 +235,25 @@ def test_app_info_is_parsed(steam_store, tools, recording_command, reachable, no
     data = app_info(steam_store, recording_command, APP_INFO + "Unloading Steam API...\n")
 
     assert recording_command.only() == ["/tools/steamcmd", "+login", "anonymous", "+app_info_print", "220", "+quit"]
-    assert data.get_value(config.json_key_store_name) == "Half-Life 2"
-    assert data.get_value(config.json_key_store_controller_support) == "full"
-    assert data.get_value(config.json_key_store_installdir) == "STORE_INSTALL_DIR/steamapps/common/Half-Life 2"
-    assert data.get_value(config.json_key_store_builddate) == "1700000000"
+    assert data.get_value(config.JSON_KEY_STORE_NAME) == "Half-Life 2"
+    assert data.get_value(config.JSON_KEY_STORE_CONTROLLER_SUPPORT) == "full"
+    assert data.get_value(config.JSON_KEY_STORE_INSTALLDIR) == "STORE_INSTALL_DIR/steamapps/common/Half-Life 2"
+    assert data.get_value(config.JSON_KEY_STORE_BUILDDATE) == "1700000000"
 
 
 def test_no_branch_reads_the_public_build(steam_store, tools, recording_command, reachable, no_manifest):
     data = app_info(steam_store, recording_command, APP_INFO)
 
-    assert data.get_value(config.json_key_store_branchid) == "public"
-    assert data.get_value(config.json_key_store_buildid) == "100"
+    assert data.get_value(config.JSON_KEY_STORE_BRANCHID) == "public"
+    assert data.get_value(config.JSON_KEY_STORE_BUILDID) == "100"
 
 
 def test_a_named_branch_reads_its_own_build(steam_store, tools, recording_command, reachable, no_manifest):
     data = app_info(steam_store, recording_command, APP_INFO, branch = "beta")
 
-    assert data.get_value(config.json_key_store_branchid) == "beta"
-    assert data.get_value(config.json_key_store_buildid) == "200"
-    assert data.get_value(config.json_key_store_builddate) == "unknown"
+    assert data.get_value(config.JSON_KEY_STORE_BRANCHID) == "beta"
+    assert data.get_value(config.JSON_KEY_STORE_BUILDID) == "200"
+    assert data.get_value(config.JSON_KEY_STORE_BUILDDATE) == "unknown"
 
 
 def test_output_without_the_app_is_refused(steam_store, tools, recording_command, no_manifest):
@@ -284,8 +284,8 @@ def test_manifest_paths_join_the_app_info(steam_store, tools, recording_command,
     monkeypatch.setattr(steam.manifest, "get_manifest_instance", OneEntryManifest)
     data = app_info(steam_store, recording_command, APP_INFO)
 
-    assert "GAME_INSTALL_DIR/cfg" in data.get_value(config.json_key_store_paths)
-    assert data.get_value(config.json_key_store_keys) == ["HKEY_CURRENT_USER/Software/Valve"]
+    assert "GAME_INSTALL_DIR/cfg" in data.get_value(config.JSON_KEY_STORE_PATHS)
+    assert data.get_value(config.JSON_KEY_STORE_KEYS) == ["HKEY_CURRENT_USER/Software/Valve"]
 
 
 APP_INFO_WITHOUT_INSTALLDIR = '''"220"
@@ -318,17 +318,17 @@ def test_an_app_without_an_installdir_takes_manifest_paths_unrooted(steam_store,
     data = app_info(steam_store, recording_command, APP_INFO_WITHOUT_INSTALLDIR)
 
     assert bases == [None]
-    assert data.get_value(config.json_key_store_name) == "Half-Life 2"
-    assert not data.get_value(config.json_key_store_installdir)
-    assert "GAME_INSTALL_DIR/cfg" in data.get_value(config.json_key_store_paths)
+    assert data.get_value(config.JSON_KEY_STORE_NAME) == "Half-Life 2"
+    assert not data.get_value(config.JSON_KEY_STORE_INSTALLDIR)
+    assert "GAME_INSTALL_DIR/cfg" in data.get_value(config.JSON_KEY_STORE_PATHS)
 
 
 def test_a_scalar_app_entry_gives_only_the_defaults(steam_store, tools, recording_command, reachable, no_manifest):
     data = app_info(steam_store, recording_command, '"220" "unavailable"\n')
 
-    assert data.get_value(config.json_key_store_appid) == "220"
-    assert data.get_value(config.json_key_store_branchid) == "public"
-    assert not data.get_value(config.json_key_store_name)
+    assert data.get_value(config.JSON_KEY_STORE_APPID) == "220"
+    assert data.get_value(config.JSON_KEY_STORE_BRANCHID) == "public"
+    assert not data.get_value(config.JSON_KEY_STORE_NAME)
 
 
 ###########################################################
@@ -502,9 +502,9 @@ def test_the_prefix_joins_the_translation_map(steam_store):
 
     translation_map = steam_store.build_path_translation_map(appid = "220")
 
-    assert prefix in translation_map[config.token_user_registry_dir]
-    assert os.path.join(prefix, "drive_c", "users", "steamuser") in translation_map[config.token_user_profile_dir]
-    assert os.path.join(prefix, "drive_c", "users", "Public") in translation_map[config.token_user_public_dir]
+    assert prefix in translation_map[config.TOKEN_USER_REGISTRY_DIR]
+    assert os.path.join(prefix, "drive_c", "users", "steamuser") in translation_map[config.TOKEN_USER_PROFILE_DIR]
+    assert os.path.join(prefix, "drive_c", "users", "Public") in translation_map[config.TOKEN_USER_PUBLIC_DIR]
     assert prefix not in str(steam_store.build_path_translation_map())
 
 

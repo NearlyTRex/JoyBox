@@ -293,7 +293,7 @@ def test_launch_runs_the_game_file(launcher):
     assert cemu.Cemu().launch(game, capture_type = "video", capture_file = "/cap.mp4", verbose = True) is True
 
     launched = launcher["launched"]
-    assert launched["launch_cmd"] == ["/bin/cemu", "-g", config.token_game_file]
+    assert launched["launch_cmd"] == ["/bin/cemu", "-g", config.TOKEN_GAME_FILE]
     assert launched["game_info"] is game
     assert (launched["capture_type"], launched["capture_file"], launched["verbose"]) == ("video", "/cap.mp4", True)
     assert launcher["keys"] == []

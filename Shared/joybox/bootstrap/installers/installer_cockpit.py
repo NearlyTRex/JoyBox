@@ -7,7 +7,7 @@ from joybox import runoptions
 from joybox import logger
 
 # Nginx config template
-nginx_config_template = """
+NGINX_CONFIG_TEMPLATE = """
 server {{
     listen 80;
     server_name {subdomain}.{domain};
@@ -74,7 +74,7 @@ class Cockpit(installer.Installer):
 
         # Create Nginx config
         logger.log_info("Creating Nginx config")
-        if self.connection.write_file(f"/tmp/{self.app_name}.conf", nginx_config_template.format(**self.nginx_config_values)):
+        if self.connection.write_file(f"/tmp/{self.app_name}.conf", NGINX_CONFIG_TEMPLATE.format(**self.nginx_config_values)):
             self.connection.run_checked([self.nginx_manager_tool, "install_conf", f"/tmp/{self.app_name}.conf"], sudo = True)
             self.connection.run_checked([self.nginx_manager_tool, "link_conf", f"{self.app_name}.conf"], sudo = True)
             self.connection.remove_file_or_directory(f"/tmp/{self.app_name}.conf")

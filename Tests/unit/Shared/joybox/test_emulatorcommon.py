@@ -45,7 +45,7 @@ def launches(monkeypatch):
     return calls
 
 
-LAUNCH_CMD = ["emu", config.token_game_file, "--dir", config.token_game_dir, "--name", config.token_game_name]
+LAUNCH_CMD = ["emu", config.TOKEN_GAME_FILE, "--dir", config.TOKEN_GAME_DIR, "--name", config.TOKEN_GAME_NAME]
 
 
 def test_a_single_launch_file_replaces_every_token(launches):
@@ -88,4 +88,4 @@ def test_a_launch_name_alone_leaves_the_file_token(launches):
     info = FakeGameInfo(launch_name = "Acme")
 
     emulatorcommon.simple_launch(info, LAUNCH_CMD)
-    assert launches[0]["cmd"] == ["emu", config.token_game_file, "--dir", CACHE_DIR, "--name", "Acme"]
+    assert launches[0]["cmd"] == ["emu", config.TOKEN_GAME_FILE, "--dir", CACHE_DIR, "--name", "Acme"]

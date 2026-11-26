@@ -17,13 +17,13 @@ from joybox import emulatorbase
 
 # Config files
 config_files = {}
-config_file_general = """
+CONFIG_FILE_GENERAL = """
 ---
 pref-path: EMULATOR_SETUP_ROOT
 ...
 """
-config_files["Vita3K/windows/config.yml"] = config_file_general
-config_files["Vita3K/linux/Vita3K.AppImage.home/.config/Vita3K/config.yml"] = config_file_general
+config_files["Vita3K/windows/config.yml"] = CONFIG_FILE_GENERAL
+config_files["Vita3K/linux/Vita3K.AppImage.home/.config/Vita3K/config.yml"] = CONFIG_FILE_GENERAL
 
 # System files
 system_files = {}
@@ -235,7 +235,7 @@ class Vita3K(emulatorbase.EmulatorBase):
 
         # Run installed app
         if os.path.isdir(paths.join_paths(programs.get_emulator_path_config_value("Vita3K", "app_dir"), title_id)):
-            launch_cmd += ["-r", config.token_game_name]
+            launch_cmd += ["-r", config.TOKEN_GAME_NAME]
 
         # Install and run from the cache
         else:

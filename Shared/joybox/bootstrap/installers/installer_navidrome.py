@@ -6,7 +6,7 @@ from joybox import runoptions
 from joybox import logger
 
 # Docker compose template
-docker_compose_template = """
+DOCKER_COMPOSE_TEMPLATE = """
 services:
   navidrome:
     image: ${NAVIDROME_IMAGE}
@@ -25,7 +25,7 @@ volumes:
 """
 
 # .env template
-env_template = """
+ENV_TEMPLATE = """
 NAVIDROME_PORT_HTTP={port_http}
 NAVIDROME_MUSIC_DIR={music_dir}
 """
@@ -50,8 +50,8 @@ class Navidrome(installer_dockerapp.DockerAppInstaller):
         }
 
         # Templates
-        self.docker_compose_template = docker_compose_template
-        self.env_template = env_template
+        self.docker_compose_template = DOCKER_COMPOSE_TEMPLATE
+        self.env_template = ENV_TEMPLATE
 
         # Behavior
         self.required_settings = ["domain", "subdomain", "port_http", "music_dir"]

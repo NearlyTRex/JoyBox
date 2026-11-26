@@ -90,18 +90,18 @@ class GOG(storebase.StoreBase):
 
     # Get key
     def get_key(self):
-        return config.json_key_gog
+        return config.JSON_KEY_GOG
 
     # Get identifier keys
     def get_identifier_keys(self):
         return {
-            config.StoreIdentifierType.INFO: config.json_key_store_appid,
-            config.StoreIdentifierType.INSTALL: config.json_key_store_appid,
-            config.StoreIdentifierType.LAUNCH: config.json_key_store_appname,
-            config.StoreIdentifierType.DOWNLOAD: config.json_key_store_appname,
-            config.StoreIdentifierType.ASSET: config.json_key_store_appurl,
-            config.StoreIdentifierType.METADATA: config.json_key_store_appurl,
-            config.StoreIdentifierType.PAGE: config.json_key_store_appname
+            config.StoreIdentifierType.INFO: config.JSON_KEY_STORE_APPID,
+            config.StoreIdentifierType.INSTALL: config.JSON_KEY_STORE_APPID,
+            config.StoreIdentifierType.LAUNCH: config.JSON_KEY_STORE_APPNAME,
+            config.StoreIdentifierType.DOWNLOAD: config.JSON_KEY_STORE_APPNAME,
+            config.StoreIdentifierType.ASSET: config.JSON_KEY_STORE_APPURL,
+            config.StoreIdentifierType.METADATA: config.JSON_KEY_STORE_APPURL,
+            config.StoreIdentifierType.PAGE: config.JSON_KEY_STORE_APPNAME
         }
 
     # Get preferred platform
@@ -371,10 +371,10 @@ class GOG(storebase.StoreBase):
             purchase = jsondata.JsonData(
                 json_data = {},
                 json_platform = self.get_platform())
-            purchase.set_value(config.json_key_store_appname, line_appname)
-            purchase.set_value(config.json_key_store_appid, line_appid)
-            purchase.set_value(config.json_key_store_appurl, self.get_latest_url(line_appname))
-            purchase.set_value(config.json_key_store_name, line_title)
+            purchase.set_value(config.JSON_KEY_STORE_APPNAME, line_appname)
+            purchase.set_value(config.JSON_KEY_STORE_APPID, line_appid)
+            purchase.set_value(config.JSON_KEY_STORE_APPURL, self.get_latest_url(line_appname))
+            purchase.set_value(config.JSON_KEY_STORE_NAME, line_title)
             purchases.append(purchase)
         return purchases
 
@@ -392,8 +392,8 @@ class GOG(storebase.StoreBase):
         exit_on_failure = False):
 
         # Get existing paths and keys
-        game_paths = list(json_data.get_value(config.json_key_store_paths))
-        game_keys = list(json_data.get_value(config.json_key_store_keys))
+        game_paths = list(json_data.get_value(config.JSON_KEY_STORE_PATHS))
+        game_keys = list(json_data.get_value(config.JSON_KEY_STORE_KEYS))
 
         # Augment by manifest
         manifest_entry = manifest.get_manifest_instance().find_entry_by_gogid(
@@ -402,13 +402,13 @@ class GOG(storebase.StoreBase):
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
         if manifest_entry:
-            manifest_paths = manifest_entry.get_paths(config.token_game_install_dir)
+            manifest_paths = manifest_entry.get_paths(config.TOKEN_GAME_INSTALL_DIR)
             game_paths = list(set(game_paths).union(manifest_paths))
             game_keys = list(set(game_keys).union(manifest_entry.get_keys()))
 
         # Apply base path cleaning logic
-        json_data.set_value(config.json_key_store_paths, game_paths)
-        json_data.set_value(config.json_key_store_keys, game_keys)
+        json_data.set_value(config.JSON_KEY_STORE_PATHS, game_paths)
+        json_data.set_value(config.JSON_KEY_STORE_KEYS, game_keys)
         return super().augment_jsondata(
             json_data = json_data,
             identifier = identifier,
@@ -447,21 +447,21 @@ class GOG(storebase.StoreBase):
 
         # Build jsondata
         json_data = self.create_default_jsondata()
-        json_data.set_value(config.json_key_store_appid, identifier)
-        json_data.set_value(config.json_key_store_appname, str(gog_json.get("slug", "")))
-        json_data.set_value(config.json_key_store_name, str(gog_json.get("title", "")).strip())
+        json_data.set_value(config.JSON_KEY_STORE_APPID, identifier)
+        json_data.set_value(config.JSON_KEY_STORE_APPNAME, str(gog_json.get("slug", "")))
+        json_data.set_value(config.JSON_KEY_STORE_NAME, str(gog_json.get("title", "")).strip())
         for installer in gog_json.get("downloads", {}).get("installers", []):
             if installer.get("os") == self.get_preferred_platform():
-                installer_version = installer.get("version", config.default_buildid)
+                installer_version = installer.get("version", config.DEFAULT_BUILDID)
                 if not installer_version:
-                    installer_version = config.default_buildid
-                json_data.set_value(config.json_key_store_buildid, installer_version)
+                    installer_version = config.DEFAULT_BUILDID
+                json_data.set_value(config.JSON_KEY_STORE_BUILDID, installer_version)
                 break
         appurl = gog_json.get("links", {}).get("product_card", "")
         if not network.is_url_reachable(appurl):
             appurl = self.get_latest_url(str(gog_json.get("slug", "")))
         if network.is_url_reachable(appurl):
-            json_data.set_value(config.json_key_store_appurl, appurl)
+            json_data.set_value(config.JSON_KEY_STORE_APPURL, appurl)
         return self.augment_jsondata(
             json_data = json_data,
             identifier = identifier,

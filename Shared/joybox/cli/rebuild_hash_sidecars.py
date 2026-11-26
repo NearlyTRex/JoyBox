@@ -126,7 +126,7 @@ def main():
     # Show preview
     if not args.no_preview:
         db_path = synctransfers.get_hash_database_path(dest_root)
-        max_memory_bytes = args.parallel_dirs * args.parallel_files * config.hash_chunk_size
+        max_memory_bytes = args.parallel_dirs * args.parallel_files * config.HASH_CHUNK_SIZE
         max_memory_mb = max_memory_bytes / (1024 * 1024)
         details = [
             "Source: %s" % source_path,
@@ -134,7 +134,7 @@ def main():
             "Parallel dirs: %d, Parallel files: %d" % (args.parallel_dirs, args.parallel_files),
             "Max memory usage: %.0f MB (%d × %d × %d MB chunk)" % (
                 max_memory_mb, args.parallel_dirs, args.parallel_files,
-                config.hash_chunk_size // (1024 * 1024))
+                config.HASH_CHUNK_SIZE // (1024 * 1024))
         ]
         if excludes:
             details.append("Excluded dirs: %s" % ", ".join(excludes))

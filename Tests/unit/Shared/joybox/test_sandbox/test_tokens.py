@@ -19,39 +19,39 @@ def test_an_empty_token_map_is_built():
 
 def test_the_store_install_dir_is_tokenized():
     assert build(store_install_dir = "/store/game") == \
-        {config.token_store_install_dir: "/store/game"}
+        {config.TOKEN_STORE_INSTALL_DIR: "/store/game"}
 
 
 def test_the_game_install_dir_is_tokenized():
     assert build(game_install_dir = "/prefix/drive_c/Game") == \
-        {config.token_game_install_dir: "/prefix/drive_c/Game"}
+        {config.TOKEN_GAME_INSTALL_DIR: "/prefix/drive_c/Game"}
 
 
 def test_the_setup_base_dir_is_tokenized():
-    assert build(setup_base_dir = "/setup") == {config.token_setup_main_root: "/setup"}
+    assert build(setup_base_dir = "/setup") == {config.TOKEN_SETUP_MAIN_ROOT: "/setup"}
 
 
 def test_the_hdd_base_dir_brings_its_computer_folders():
     # DOS and Scumm games address their own roots under the shared hdd.
     token_map = build(hdd_base_dir = "/hdd")
 
-    assert token_map[config.token_hdd_main_root] == "/hdd"
-    assert token_map[config.token_dos_main_root].endswith(config.computer_folder_dos)
-    assert token_map[config.token_scumm_main_root].endswith(config.computer_folder_scumm)
+    assert token_map[config.TOKEN_HDD_MAIN_ROOT] == "/hdd"
+    assert token_map[config.TOKEN_DOS_MAIN_ROOT].endswith(config.COMPUTER_FOLDER_DOS)
+    assert token_map[config.TOKEN_SCUMM_MAIN_ROOT].endswith(config.COMPUTER_FOLDER_SCUMM)
 
 
 def test_the_dos_and_scumm_roots_sit_under_the_hdd():
     token_map = build(hdd_base_dir = "/hdd")
 
-    assert token_map[config.token_dos_main_root].startswith("/hdd")
-    assert token_map[config.token_scumm_main_root].startswith("/hdd")
+    assert token_map[config.TOKEN_DOS_MAIN_ROOT].startswith("/hdd")
+    assert token_map[config.TOKEN_SCUMM_MAIN_ROOT].startswith("/hdd")
 
 
 def test_no_hdd_base_dir_leaves_the_computer_roots_out():
     token_map = build(game_install_dir = "/game")
 
-    assert config.token_dos_main_root not in token_map
-    assert config.token_scumm_main_root not in token_map
+    assert config.TOKEN_DOS_MAIN_ROOT not in token_map
+    assert config.TOKEN_SCUMM_MAIN_ROOT not in token_map
 
 
 def test_every_path_can_be_tokenized_at_once():
@@ -71,7 +71,7 @@ def test_every_path_can_be_tokenized_at_once():
 def test_a_single_disc_uses_the_main_disc_token():
     token_map = build(disc_files = ["/discs/game.chd"], disc_base_dir = "/mnt")
 
-    assert token_map == {config.token_disc_main_root: "/mnt/game"}
+    assert token_map == {config.TOKEN_DISC_MAIN_ROOT: "/mnt/game"}
 
 
 def test_a_numbered_disc_uses_its_own_token():
@@ -100,13 +100,13 @@ def test_an_update_disc_uses_the_update_token():
 def test_a_disc_path_is_reduced_to_its_basename():
     token_map = build(disc_files = ["/discs/nested/Game.chd"], disc_base_dir = "/mnt")
 
-    assert token_map[config.token_disc_main_root] == "/mnt/Game"
+    assert token_map[config.TOKEN_DISC_MAIN_ROOT] == "/mnt/Game"
 
 
 def test_no_disc_base_dir_leaves_a_bare_basename():
     token_map = build(disc_files = ["/discs/Game.chd"])
 
-    assert token_map[config.token_disc_main_root] == "Game"
+    assert token_map[config.TOKEN_DISC_MAIN_ROOT] == "Game"
 
 
 def test_drive_letters_replace_paths_when_asked():
@@ -133,7 +133,7 @@ def test_a_drive_letter_is_taken_even_by_an_unnumbered_disc():
         disc_files = ["/discs/Game.chd", "/discs/Game (Disc 1).chd"],
         use_drive_letters = True)
 
-    assert token_map[config.token_disc_main_root] == "d:/"
+    assert token_map[config.TOKEN_DISC_MAIN_ROOT] == "d:/"
     assert token_map["DISC_ONE_ROOT"] == "e:/"
 
 
@@ -143,7 +143,7 @@ def test_discs_and_directories_are_tokenized_together():
         disc_files = ["/discs/Game (Disc 1).chd"],
         disc_base_dir = "/mnt")
 
-    assert token_map[config.token_game_install_dir] == "/game"
+    assert token_map[config.TOKEN_GAME_INSTALL_DIR] == "/game"
     assert token_map["DISC_ONE_ROOT"] == "/mnt/Game (Disc 1)"
 
 
@@ -152,28 +152,28 @@ def test_discs_and_directories_are_tokenized_together():
 ###########################################################
 
 def test_a_token_is_replaced():
-    token_map = {config.token_game_install_dir: "/prefix/drive_c/Game"}
+    token_map = {config.TOKEN_GAME_INSTALL_DIR: "/prefix/drive_c/Game"}
 
     assert sandbox.resolve_path(
-        config.token_game_install_dir + "/game.exe", token_map) == \
+        config.TOKEN_GAME_INSTALL_DIR + "/game.exe", token_map) == \
         "/prefix/drive_c/Game/game.exe"
 
 
 def test_every_token_in_a_path_is_replaced():
     token_map = {
-        config.token_game_install_dir: "/game",
-        config.token_disc_main_root: "/mnt/disc",
+        config.TOKEN_GAME_INSTALL_DIR: "/game",
+        config.TOKEN_DISC_MAIN_ROOT: "/mnt/disc",
     }
     resolved = sandbox.resolve_path(
-        "%s/tool.exe %s" % (config.token_game_install_dir, config.token_disc_main_root),
+        "%s/tool.exe %s" % (config.TOKEN_GAME_INSTALL_DIR, config.TOKEN_DISC_MAIN_ROOT),
         token_map)
 
     assert resolved == "/game/tool.exe /mnt/disc"
 
 
 def test_a_repeated_token_is_replaced_everywhere():
-    token_map = {config.token_game_install_dir: "/game"}
-    token = config.token_game_install_dir
+    token_map = {config.TOKEN_GAME_INSTALL_DIR: "/game"}
+    token = config.TOKEN_GAME_INSTALL_DIR
     resolved = sandbox.resolve_path("%s/a %s/b" % (token, token), token_map)
 
     assert resolved == "/game/a /game/b"
@@ -184,13 +184,13 @@ def test_an_unknown_token_is_left_in_place():
 
 
 def test_a_path_without_tokens_is_unchanged():
-    token_map = {config.token_game_install_dir: "/game"}
+    token_map = {config.TOKEN_GAME_INSTALL_DIR: "/game"}
 
     assert sandbox.resolve_path("/absolute/game.exe", token_map) == "/absolute/game.exe"
 
 
 def test_an_empty_path_stays_empty():
-    assert sandbox.resolve_path("", {config.token_game_install_dir: "/game"}) == ""
+    assert sandbox.resolve_path("", {config.TOKEN_GAME_INSTALL_DIR: "/game"}) == ""
 
 
 def test_a_built_token_map_resolves_its_own_tokens():

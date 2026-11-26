@@ -13,11 +13,11 @@ from joybox import platform_info
 
 # Config files
 config_files = {}
-config_file_general_dos = """
+CONFIG_FILE_GENERAL_DOS = """
 [dosbox]
 working directory default = EMULATOR_SETUP_ROOT
 """
-config_file_general_win31 = """
+CONFIG_FILE_GENERAL_WIN31 = """
 [dosbox]
 working directory default = EMULATOR_SETUP_ROOT
 memsize = 256
@@ -38,10 +38,10 @@ floppy drive data rate limit = 0
 int13fakeio = true
 int13fakev86io = false
 """
-config_files["DosBoxX/windows/dosbox-x.conf"] = config_file_general_dos
-config_files["DosBoxX/windows/dosbox-x.win31.conf"] = config_file_general_win31
-config_files["DosBoxX/linux/DosBoxX.AppImage.home/.config/dosbox-x/dosbox-x.conf"] = config_file_general_dos
-config_files["DosBoxX/linux/DosBoxX.AppImage.home/.config/dosbox-x/dosbox-x.win31.conf"] = config_file_general_win31
+config_files["DosBoxX/windows/dosbox-x.conf"] = CONFIG_FILE_GENERAL_DOS
+config_files["DosBoxX/windows/dosbox-x.win31.conf"] = CONFIG_FILE_GENERAL_WIN31
+config_files["DosBoxX/linux/DosBoxX.AppImage.home/.config/dosbox-x/dosbox-x.conf"] = CONFIG_FILE_GENERAL_DOS
+config_files["DosBoxX/linux/DosBoxX.AppImage.home/.config/dosbox-x/dosbox-x.win31.conf"] = CONFIG_FILE_GENERAL_WIN31
 config_files["ScummVM/windows/scummvm.ini"] = ""
 config_files["ScummVM/linux/ScummVM.AppImage.home/.config/scummvm/scummvm.ini"] = ""
 

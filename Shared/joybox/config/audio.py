@@ -26,19 +26,19 @@ asmr_channels = [
 
 # Number of videos to download, archive, and upload per batch (incremental, so a
 # channel's audio is uploaded in chunks instead of all at the end). 0 = no batching.
-audio_download_batch_size = 25
+AUDIO_DOWNLOAD_BATCH_SIZE = 25
 
 # Number of fragments to download concurrently per video (yt-dlp -N). Speeds up
 # individual downloads without running multiple videos in parallel. The download
 # layer clamps this to a safe maximum (see google.MAX_CONCURRENT_FRAGMENTS) to
 # avoid triggering YouTube rate limits / bans. 1 = no concurrency (sequential).
-audio_download_concurrent_fragments = 4
+AUDIO_DOWNLOAD_CONCURRENT_FRAGMENTS = 4
 
 # Download a channel's videos oldest-first instead of the default newest-first.
 # Channels enumerate newest-first; enabling this reverses the (new, not-yet-
 # archived) video list before batching, so batch 1 is the oldest videos. The
 # download_audio_files --oldest_first flag also enables it per-run.
-audio_download_oldest_first = False
+AUDIO_DOWNLOAD_OLDEST_FIRST = False
 
 # Genres whose tracks should be renumbered by file index when tagging. These are
 # downloaded from YouTube (via download_audio_files), where yt-dlp embeds bogus,

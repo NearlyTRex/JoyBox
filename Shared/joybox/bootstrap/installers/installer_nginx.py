@@ -9,14 +9,14 @@ from joybox import logger
 #
 # Served at the apex only when no application owns it. Seeing this in
 # production means the apex-root.conf snippet was reverted to the fallback.
-apex_fallback_page = "<!doctype html><title>JoyBox</title><h1>JoyBox</h1><p>No site is configured for this domain yet.</p>"
+APEX_FALLBACK_PAGE = "<!doctype html><title>JoyBox</title><h1>JoyBox</h1><p>No site is configured for this domain yet.</p>"
 
 # Apex root snippet template
 #
 # Included by the certbot-managed apex 443 server block. This static version is
 # the fallback; the wordpress component replaces it with a proxy block and
 # restores this one on teardown.
-apex_root_snippet_template = """
+APEX_ROOT_SNIPPET_TEMPLATE = """
 root /var/www/html;
 index index.html;
 
@@ -26,7 +26,7 @@ location / {
 """
 
 # Nginx config template
-nginx_config_template = """
+NGINX_CONFIG_TEMPLATE = """
 server {{
     listen 80;
     listen [::]:80;
@@ -69,18 +69,18 @@ class Nginx(installer.Installer):
 
         # Create default entry
         logger.log_info("Creating default entry")
-        if self.connection.write_file("/tmp/default", nginx_config_template.format(**self.nginx_config_values)):
+        if self.connection.write_file("/tmp/default", NGINX_CONFIG_TEMPLATE.format(**self.nginx_config_values)):
             self.connection.run_checked([self.nginx_manager_tool, "install_conf", "/tmp/default"], sudo = True)
             self.connection.run_checked([self.nginx_manager_tool, "link_conf", "default"], sudo = True)
             self.connection.remove_file_or_directory("/tmp/default")
 
         # Create apex root snippet
         logger.log_info("Creating apex root snippet")
-        self.install_nginx_snippet("apex-root.conf", apex_root_snippet_template)
+        self.install_nginx_snippet("apex-root.conf", APEX_ROOT_SNIPPET_TEMPLATE)
 
         # Create default page
         logger.log_info("Creating default page")
-        if self.connection.write_file("/tmp/index.html", apex_fallback_page):
+        if self.connection.write_file("/tmp/index.html", APEX_FALLBACK_PAGE):
             self.connection.run_checked([self.nginx_manager_tool, "copy_html", "/tmp/index.html"], sudo = True)
             self.connection.remove_file_or_directory("/tmp/index.html")
 

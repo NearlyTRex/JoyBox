@@ -15,7 +15,7 @@ from joybox import logger
 # FileBrowser Quantum's own accounts are the login, so there is no basic auth.
 # Its login throttling is keyed by client IP, read from X-Real-IP, which nginx
 # always overwrites so a client cannot choose it.
-nginx_config_template = r"""
+NGINX_CONFIG_TEMPLATE = r"""
 server {{
     listen 80;
     server_name {subdomain}.{domain};
@@ -86,7 +86,7 @@ server {{
 # Other accounts are managed in the app. Every account must add an
 # authenticator code, whose seeds are stored encrypted with the TOTP secret. The config is inline so compose fills
 # it from .env like the rest of the file.
-docker_compose_template = """
+DOCKER_COMPOSE_TEMPLATE = """
 services:
   filebrowser:
     image: ${FILEBROWSER_IMAGE}
@@ -132,7 +132,7 @@ volumes:
 """
 
 # .env template
-env_template = """
+ENV_TEMPLATE = """
 FILEBROWSER_PORT_HTTP={port_http}
 FILEBROWSER_ROOT={user_root}
 FILEBROWSER_HOST={subdomain}.{domain}
@@ -186,9 +186,9 @@ class FileBrowser(installer_dockerapp.DockerAppInstaller):
         }
 
         # Templates
-        self.docker_compose_template = docker_compose_template
-        self.env_template = env_template
-        self.nginx_config_template = nginx_config_template
+        self.docker_compose_template = DOCKER_COMPOSE_TEMPLATE
+        self.env_template = ENV_TEMPLATE
+        self.nginx_config_template = NGINX_CONFIG_TEMPLATE
 
         # Behavior
         self.required_settings = ["domain", "subdomain", "port_http", "user_root", "admin_user", "admin_pass", "totp_secret"]

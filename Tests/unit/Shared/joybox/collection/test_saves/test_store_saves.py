@@ -20,16 +20,16 @@ from joybox import filebulk
 # save paths reads the packed archives back into tokenized paths.
 ###########################################################
 
-PROFILE = config.token_user_profile_dir
-INSTALL = config.token_store_install_dir
+PROFILE = config.TOKEN_USER_PROFILE_DIR
+INSTALL = config.TOKEN_STORE_INSTALL_DIR
 
 
 class FakeStore:
 
     def __init__(self, profile_dirs, install_dirs):
         self.translation_map = {
-            config.token_user_registry_dir: [],
-            config.token_user_public_dir: ["C:\\Users\\Public"],
+            config.TOKEN_USER_REGISTRY_DIR: [],
+            config.TOKEN_USER_PUBLIC_DIR: ["C:\\Users\\Public"],
             PROFILE: profile_dirs,
             INSTALL: install_dirs}
         self.asked = []

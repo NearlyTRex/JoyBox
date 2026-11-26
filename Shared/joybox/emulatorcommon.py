@@ -59,14 +59,14 @@ def simple_launch(
 
         # Replace game name
         if game_launch_name:
-            cmd_segment = cmd_segment.replace(config.token_game_name, game_launch_name)
+            cmd_segment = cmd_segment.replace(config.TOKEN_GAME_NAME, game_launch_name)
 
         # Replace game file
         if selected_launch_file:
-            cmd_segment = cmd_segment.replace(config.token_game_file, paths.join_paths(game_cache_dir, selected_launch_file))
+            cmd_segment = cmd_segment.replace(config.TOKEN_GAME_FILE, paths.join_paths(game_cache_dir, selected_launch_file))
 
         # Replace game dir
-        cmd_segment = cmd_segment.replace(config.token_game_dir, game_cache_dir)
+        cmd_segment = cmd_segment.replace(config.TOKEN_GAME_DIR, game_cache_dir)
 
         # Add segment
         real_launch_cmd += [cmd_segment]

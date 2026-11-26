@@ -109,11 +109,11 @@ def test_configure_refuses_a_system_file_with_the_wrong_hash(seams):
 ###########################################################
 
 def test_launch_runs_the_program_on_the_game(seams):
-    assert launch_cmd(seams) == ["/bin/Citra", config.token_game_file]
+    assert launch_cmd(seams) == ["/bin/Citra", config.TOKEN_GAME_FILE]
 
 
 def test_launch_has_no_fullscreen_flag(seams):
-    assert launch_cmd(seams, fullscreen = True) == ["/bin/Citra", config.token_game_file]
+    assert launch_cmd(seams, fullscreen = True) == ["/bin/Citra", config.TOKEN_GAME_FILE]
 
 
 def test_launch_passes_the_game_and_options_through(seams):

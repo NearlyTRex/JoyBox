@@ -276,9 +276,9 @@ def restore_registry(
     # Get registry file
     registry_file = ""
     if options.get_prefix_name() == config.PrefixType.SETUP:
-        registry_file = paths.join_paths(registry_dir, config.registry_filename_setup)
+        registry_file = paths.join_paths(registry_dir, config.REGISTRY_FILENAME_SETUP)
     elif options.get_prefix_name() == config.PrefixType.GAME:
-        registry_file = paths.join_paths(registry_dir, config.registry_filename_game)
+        registry_file = paths.join_paths(registry_dir, config.REGISTRY_FILENAME_GAME)
     if not paths.does_path_exist(registry_file):
         return True
 
@@ -315,11 +315,11 @@ def backup_registry(
 
     # Get registry file, export keys, and ignore keys
     if options.get_prefix_name() == config.PrefixType.SETUP:
-        registry_file = paths.join_paths(registry_dir, config.registry_filename_setup)
+        registry_file = paths.join_paths(registry_dir, config.REGISTRY_FILENAME_SETUP)
         registry_export_keys = config.registry_export_keys_setup
         registry_ignore_keys = config.ignored_registry_keys_setup
     elif options.get_prefix_name() == config.PrefixType.GAME:
-        registry_file = paths.join_paths(registry_dir, config.registry_filename_game)
+        registry_file = paths.join_paths(registry_dir, config.REGISTRY_FILENAME_GAME)
         registry_export_keys = config.registry_export_keys_game
         registry_ignore_keys = config.ignored_registry_keys_game
     else:
@@ -353,15 +353,15 @@ def build_token_map(
 
     # Add paths
     if store_install_dir:
-        token_map[config.token_store_install_dir] = store_install_dir
+        token_map[config.TOKEN_STORE_INSTALL_DIR] = store_install_dir
     if game_install_dir:
-        token_map[config.token_game_install_dir] = game_install_dir
+        token_map[config.TOKEN_GAME_INSTALL_DIR] = game_install_dir
     if setup_base_dir:
-        token_map[config.token_setup_main_root] = setup_base_dir
+        token_map[config.TOKEN_SETUP_MAIN_ROOT] = setup_base_dir
     if hdd_base_dir:
-        token_map[config.token_hdd_main_root] = hdd_base_dir
-        token_map[config.token_dos_main_root] = paths.join_paths(hdd_base_dir, config.computer_folder_dos)
-        token_map[config.token_scumm_main_root] = paths.join_paths(hdd_base_dir, config.computer_folder_scumm)
+        token_map[config.TOKEN_HDD_MAIN_ROOT] = hdd_base_dir
+        token_map[config.TOKEN_DOS_MAIN_ROOT] = paths.join_paths(hdd_base_dir, config.COMPUTER_FOLDER_DOS)
+        token_map[config.TOKEN_SCUMM_MAIN_ROOT] = paths.join_paths(hdd_base_dir, config.COMPUTER_FOLDER_SCUMM)
 
     # Add discs
     disc_letter_index = 0
@@ -375,7 +375,7 @@ def build_token_map(
         disc_file_basename = paths.get_filename_basename(disc_file)
 
         # Find which token to use
-        disc_token_to_use = config.token_disc_main_root
+        disc_token_to_use = config.TOKEN_DISC_MAIN_ROOT
         for disc_token, disc_name in config.token_disc_names.items():
             if disc_name in disc_file:
                 disc_token_to_use = disc_token
@@ -435,12 +435,12 @@ def get_prefix_path_info(
     new_options = options.copy()
 
     # Normalize paths
-    new_path = paths.normalize_file_path(new_path, separator = config.os_pathsep)
-    new_options.set_prefix_dir(paths.normalize_file_path(new_options.get_prefix_dir(), separator = config.os_pathsep))
+    new_path = paths.normalize_file_path(new_path, separator = config.OS_PATHSEP)
+    new_options.set_prefix_dir(paths.normalize_file_path(new_options.get_prefix_dir(), separator = config.OS_PATHSEP))
 
     # Fix path inconsistencies
     if new_options.is_wine_prefix():
-        if is_virtual_path and new_path.startswith(config.drive_root_posix):
+        if is_virtual_path and new_path.startswith(config.DRIVE_ROOT_POSIX):
             is_virtual_path = False
             is_real_path = True
 
@@ -452,9 +452,9 @@ def get_prefix_path_info(
 
     # Real path inside the prefix
     prefix_dir = new_options.get_prefix_dir()
-    is_inside_prefix = (new_path == prefix_dir or new_path.startswith(prefix_dir + config.os_pathsep))
+    is_inside_prefix = (new_path == prefix_dir or new_path.startswith(prefix_dir + config.OS_PATHSEP))
     if is_real_path and is_inside_prefix and new_options.is_prefix():
-        path_parts = new_path[len(prefix_dir + config.os_pathsep):].split(config.os_pathsep)
+        path_parts = new_path[len(prefix_dir + config.OS_PATHSEP):].split(config.OS_PATHSEP)
         path_rest = path_parts[1:]
         if new_options.is_wine_prefix():
             if path_parts[0] == "drive_c":
@@ -471,10 +471,10 @@ def get_prefix_path_info(
                 path_rest = path_parts[2:]
             elif path_parts[:2] == ["user", "current"]:
                 path_drive_letter = "c"
-                path_drive_extra = paths.normalize_file_path(paths.join_paths("Users", getpass.getuser()), separator = config.os_pathsep)
+                path_drive_extra = paths.normalize_file_path(paths.join_paths("Users", getpass.getuser()), separator = config.OS_PATHSEP)
                 path_drive_base = get_sandboxie_user_profile_path(new_options)
                 path_rest = path_parts[2:]
-        path_drive_offset = config.os_pathsep.join(path_rest)
+        path_drive_offset = config.OS_PATHSEP.join(path_rest)
 
     # Wine
     elif new_options.is_wine_prefix():
@@ -489,10 +489,10 @@ def get_prefix_path_info(
     elif new_options.is_sandboxie_prefix():
         path_drive_letter = paths.get_directory_drive(new_path)
         path_drive_offset = new_path[len(paths.get_directory_anchor(new_path)):]
-        path_drive_extra = paths.normalize_file_path(paths.join_paths("Users", getpass.getuser()), separator = config.os_pathsep)
-        if path_drive_offset == path_drive_extra or path_drive_offset.startswith(path_drive_extra + config.os_pathsep):
+        path_drive_extra = paths.normalize_file_path(paths.join_paths("Users", getpass.getuser()), separator = config.OS_PATHSEP)
+        if path_drive_offset == path_drive_extra or path_drive_offset.startswith(path_drive_extra + config.OS_PATHSEP):
             path_drive_base = get_sandboxie_user_profile_path(new_options)
-            path_drive_offset = path_drive_offset[len(path_drive_extra + config.os_pathsep):]
+            path_drive_offset = path_drive_offset[len(path_drive_extra + config.OS_PATHSEP):]
         else:
             path_drive_extra = ""
             path_drive_base = get_sandboxie_real_drive_path(new_options, path_drive_letter)
@@ -519,8 +519,8 @@ def get_prefix_path_info(
         path_full_virtual = new_path
         path_full_real = paths.join_paths(path_drive_base, path_drive_offset)
     else:
-        path_full_virtual += path_drive_letter.upper() + ":" + config.os_pathsep
-        path_full_virtual += path_drive_extra + config.os_pathsep
+        path_full_virtual += path_drive_letter.upper() + ":" + config.OS_PATHSEP
+        path_full_virtual += path_drive_extra + config.OS_PATHSEP
         path_full_virtual += path_drive_offset
         path_full_real = new_path
 
@@ -606,7 +606,7 @@ def setup_prefix_environment(
                 src = new_options.get_cwd(),
                 dest = get_real_drive_path(
                     options = new_options,
-                    drive = config.drive_prefix_cwd),
+                    drive = config.DRIVE_PREFIX_CWD),
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)

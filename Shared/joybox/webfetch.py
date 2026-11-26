@@ -10,7 +10,7 @@ from joybox import strings
 from joybox import webpage
 
 # Seconds a plain request may take before it is abandoned
-request_timeout_seconds = 30
+REQUEST_TIMEOUT_SECONDS = 30
 
 # Get website text
 def get_website_text(
@@ -61,7 +61,7 @@ def get_website_text(
         logger.log_info("GetWebsiteText: Attempting to fetch using requests library")
     try:
         import requests
-        reqs = requests.get(url, params = params, timeout = request_timeout_seconds)
+        reqs = requests.get(url, params = params, timeout = REQUEST_TIMEOUT_SECONDS)
         reqs.raise_for_status()
         if verbose:
             logger.log_info("GetWebsiteText: Successfully fetched content using requests (%d chars)" % len(reqs.text))

@@ -528,7 +528,7 @@ def move_file_or_directory(
 
 # Copy a file's contents from one open file to another in chunks, updating a progress bar when there is one
 def copy_file_chunks(fsrc, fdest, progress_bar = None):
-    for buf in iter(lambda: fsrc.read(config.transfer_chunk_size), b""):
+    for buf in iter(lambda: fsrc.read(config.TRANSFER_CHUNK_SIZE), b""):
         fdest.write(buf)
         if progress_bar:
             progress_bar.update(len(buf))

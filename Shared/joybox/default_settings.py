@@ -10,7 +10,7 @@ ini_defaults = {}
 
 # 1Password reference for a secret or personal value, by section and field
 def get_secret_reference(section, field):
-    return "%sPersonal/JoyBox/%s/%s" % (secretstore.secret_reference_prefix, section, field)
+    return "%sPersonal/JoyBox/%s/%s" % (secretstore.SECRET_REFERENCE_PREFIX, section, field)
 
 # UserData.Dirs
 ini_defaults["UserData.Dirs"] = {}

@@ -252,7 +252,7 @@ def test_the_files_on_disk_are_recorded(json_root, game_root, no_store):
 
     data = update(json_root, game_root)
 
-    assert "game.exe" in data[config.json_key_files]
+    assert "game.exe" in data[config.JSON_KEY_FILES]
 
 
 def test_a_nested_file_is_recorded_with_its_path(json_root, game_root, no_store):
@@ -260,14 +260,14 @@ def test_a_nested_file_is_recorded_with_its_path(json_root, game_root, no_store)
 
     data = update(json_root, game_root)
 
-    assert os.path.join("data", "assets.bin") in data[config.json_key_files]
+    assert os.path.join("data", "assets.bin") in data[config.JSON_KEY_FILES]
 
 
 @pytest.mark.parametrize("folder,key", [
-    (config.json_key_dlc, config.json_key_dlc),
-    (config.json_key_update, config.json_key_update),
-    (config.json_key_extra, config.json_key_extra),
-    (config.json_key_dependencies, config.json_key_dependencies),
+    (config.JSON_KEY_DLC, config.JSON_KEY_DLC),
+    (config.JSON_KEY_UPDATE, config.JSON_KEY_UPDATE),
+    (config.JSON_KEY_EXTRA, config.JSON_KEY_EXTRA),
+    (config.JSON_KEY_DEPENDENCIES, config.JSON_KEY_DEPENDENCIES),
 ])
 def test_each_known_folder_is_recorded_under_its_own_key(json_root, game_root, no_store, folder, key):
     # These folders are installed differently from the game itself, so they
@@ -280,13 +280,13 @@ def test_each_known_folder_is_recorded_under_its_own_key(json_root, game_root, n
 
 
 def test_a_known_folder_is_kept_out_of_the_main_listing(json_root, game_root, no_store):
-    write(game_root / config.json_key_dlc / "content.bin")
+    write(game_root / config.JSON_KEY_DLC / "content.bin")
     write(game_root / "game.exe")
 
     data = update(json_root, game_root)
 
-    assert data[config.json_key_dlc] == ["content.bin"]
-    assert "game.exe" in data[config.json_key_files]
+    assert data[config.JSON_KEY_DLC] == ["content.bin"]
+    assert "game.exe" in data[config.JSON_KEY_FILES]
 
 
 def test_an_update_of_a_missing_json_file_reports_failure(json_root, game_root, no_store):
@@ -312,8 +312,8 @@ def test_a_dry_run_builds_a_new_game_without_writing_it(json_root, game_root, no
 
 
 @pytest.mark.parametrize("category,subcategory,key", [
-    (config.Category.SONY, config.Subcategory.SONY_PLAYSTATION, config.json_key_launch_file),
-    (config.Category.COMPUTER, config.Subcategory.COMPUTER_DISC, config.json_key_transform_file),
+    (config.Category.SONY, config.Subcategory.SONY_PLAYSTATION, config.JSON_KEY_LAUNCH_FILE),
+    (config.Category.COMPUTER, config.Subcategory.COMPUTER_DISC, config.JSON_KEY_TRANSFORM_FILE),
 ])
 def test_numbered_discs_become_the_game_file(json_root, game_root, no_store, category, subcategory, key):
     # The playlist is made before the listing, so the json picks it.
@@ -325,7 +325,7 @@ def test_numbered_discs_become_the_game_file(json_root, game_root, no_store, cat
     data = read_json(json_root / str(category) / str(subcategory) / (GAME + ".json"))
 
     assert (game_root / (GAME + ".m3u")).exists()
-    assert GAME + ".m3u" in data[config.json_key_files]
+    assert GAME + ".m3u" in data[config.JSON_KEY_FILES]
     assert data[key] == GAME + ".m3u"
 
 
@@ -386,7 +386,7 @@ def test_a_category_without_json_files_updates_nothing(json_root, game_root, no_
 def test_an_empty_game_directory_records_no_files(json_root, game_root, no_store):
     data = update(json_root, game_root)
 
-    assert config.json_key_files not in data or data[config.json_key_files] == []
+    assert config.JSON_KEY_FILES not in data or data[config.JSON_KEY_FILES] == []
 
 
 ###########################################################
@@ -412,7 +412,7 @@ def test_an_encrypted_file_is_recorded_under_its_embedded_name(json_root, game_r
 
     data = update(json_root, game_root)
 
-    assert data[config.json_key_files] == ["game.nes"]
+    assert data[config.JSON_KEY_FILES] == ["game.nes"]
 
 
 def test_without_a_passphrase_files_are_recorded_as_stored(json_root, game_root, no_store, locker_phrase, monkeypatch):
@@ -425,7 +425,7 @@ def test_without_a_passphrase_files_are_recorded_as_stored(json_root, game_root,
 
     data = update(json_root, game_root)
 
-    assert data[config.json_key_files] == ["abc.enc"]
+    assert data[config.JSON_KEY_FILES] == ["abc.enc"]
 
 
 ###########################################################
@@ -452,7 +452,7 @@ class FakeStore:
         return "store"
 
     def get_info_identifier_key(self):
-        return config.json_key_store_appid
+        return config.JSON_KEY_STORE_APPID
 
     def get_latest_jsondata(self, identifier, branch, **kwargs):
         self.asked.append((identifier, branch))
@@ -477,46 +477,46 @@ def test_a_manually_imported_game_gets_generated_store_ids(json_root, game_root,
 
     data = update_as(json_root, game_root, subcategory = zoom)
 
-    assert data["store"][config.json_key_store_appid] == "unique-id"
-    assert data["store"][config.json_key_store_appname] == jsondata.strings.get_slug_string(GAME)
-    assert data["store"][config.json_key_store_name] == GAME
+    assert data["store"][config.JSON_KEY_STORE_APPID] == "unique-id"
+    assert data["store"][config.JSON_KEY_STORE_APPNAME] == jsondata.strings.get_slug_string(GAME)
+    assert data["store"][config.JSON_KEY_STORE_NAME] == GAME
     assert store["store"].asked == [("unique-id", None)]
 
 
 def test_latest_store_data_is_merged_under_the_store_key(json_root, game_root, store):
     write(json_path(json_root, CATEGORY, SUBCATEGORY), json.dumps({
-        "store": {config.json_key_store_appid: "220", config.json_key_store_branchid: "beta"}}))
+        "store": {config.JSON_KEY_STORE_APPID: "220", config.JSON_KEY_STORE_BRANCHID: "beta"}}))
     store["store"].latest = latest(**{
-        config.json_key_store_name: "Half-Life 2",
-        config.json_key_store_buildid: "500",
-        config.json_key_store_paths: ["saves", os.path.join("saves", "slot1")]})
+        config.JSON_KEY_STORE_NAME: "Half-Life 2",
+        config.JSON_KEY_STORE_BUILDID: "500",
+        config.JSON_KEY_STORE_PATHS: ["saves", os.path.join("saves", "slot1")]})
 
     data = update_as(json_root, game_root)
 
     assert store["store"].asked == [("220", "beta")]
-    assert data["store"][config.json_key_store_name] == "Half-Life 2"
-    assert data["store"][config.json_key_store_buildid] == "500"
-    assert data["store"][config.json_key_store_paths] == ["saves"]
+    assert data["store"][config.JSON_KEY_STORE_NAME] == "Half-Life 2"
+    assert data["store"][config.JSON_KEY_STORE_BUILDID] == "500"
+    assert data["store"][config.JSON_KEY_STORE_PATHS] == ["saves"]
 
 
 def test_a_default_build_id_does_not_replace_a_known_one(json_root, game_root, store):
     write(json_path(json_root, CATEGORY, SUBCATEGORY), json.dumps({
-        "store": {config.json_key_store_appid: "220", config.json_key_store_buildid: "500"}}))
-    store["store"].latest = latest(**{config.json_key_store_buildid: config.default_buildid})
+        "store": {config.JSON_KEY_STORE_APPID: "220", config.JSON_KEY_STORE_BUILDID: "500"}}))
+    store["store"].latest = latest(**{config.JSON_KEY_STORE_BUILDID: config.DEFAULT_BUILDID})
 
     data = update_as(json_root, game_root)
 
-    assert data["store"][config.json_key_store_buildid] == "500"
+    assert data["store"][config.JSON_KEY_STORE_BUILDID] == "500"
 
 
 def test_a_default_build_id_fills_an_empty_one(json_root, game_root, store):
     write(json_path(json_root, CATEGORY, SUBCATEGORY), json.dumps({
-        "store": {config.json_key_store_appid: "220"}}))
-    store["store"].latest = latest(**{config.json_key_store_buildid: config.default_buildid})
+        "store": {config.JSON_KEY_STORE_APPID: "220"}}))
+    store["store"].latest = latest(**{config.JSON_KEY_STORE_BUILDID: config.DEFAULT_BUILDID})
 
     data = update_as(json_root, game_root)
 
-    assert data["store"][config.json_key_store_buildid] == config.default_buildid
+    assert data["store"][config.JSON_KEY_STORE_BUILDID] == config.DEFAULT_BUILDID
 
 
 def test_a_console_game_launches_its_best_file(json_root, game_root, no_store):
@@ -525,7 +525,7 @@ def test_a_console_game_launches_its_best_file(json_root, game_root, no_store):
 
     data = update_as(json_root, game_root, category = config.Category.NINTENDO, subcategory = nes)
 
-    assert data[config.json_key_launch_file] == "Game (USA).nes"
+    assert data[config.JSON_KEY_LAUNCH_FILE] == "Game (USA).nes"
 
 
 def test_a_console_game_without_files_has_no_launch_file(json_root, game_root, no_store):
@@ -533,19 +533,19 @@ def test_a_console_game_without_files_has_no_launch_file(json_root, game_root, n
 
     data = update_as(json_root, game_root, category = config.Category.NINTENDO, subcategory = nes)
 
-    assert config.json_key_launch_file not in data
+    assert config.JSON_KEY_LAUNCH_FILE not in data
 
 
 def test_dlc_content_is_listed_flat_without_a_store(json_root, game_root, monkeypatch):
     monkeypatch.setattr(
         jsondata.stores, "get_store_by_platform", lambda **kwargs: pytest.fail("dlc has no store data"))
-    write(game_root / config.json_key_dlc / "content.bin")
+    write(game_root / config.JSON_KEY_DLC / "content.bin")
 
     data = update_as(json_root, game_root, supercategory = config.Supercategory.DLC)
 
-    assert data[config.json_key_files] == [os.path.join(config.json_key_dlc, "content.bin")]
-    assert config.json_key_dlc not in data
-    assert config.json_key_transform_file not in data
+    assert data[config.JSON_KEY_FILES] == [os.path.join(config.JSON_KEY_DLC, "content.bin")]
+    assert config.JSON_KEY_DLC not in data
+    assert config.JSON_KEY_TRANSFORM_FILE not in data
 
 
 def test_a_json_directory_that_cannot_be_made_creates_nothing(json_root, monkeypatch):

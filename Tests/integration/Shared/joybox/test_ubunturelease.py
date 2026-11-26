@@ -78,7 +78,7 @@ def test_a_real_signature_is_accepted(release, tmp_path, ubuntu_keyring):
         listing_file = listing,
         signature_file = signature,
         keyring_file = ubuntu_keyring,
-        fingerprint = ubunturelease.default_signing_fingerprint) is True
+        fingerprint = ubunturelease.DEFAULT_SIGNING_FINGERPRINT) is True
 
 
 @pytest.mark.parametrize("release", signed_releases())
@@ -96,7 +96,7 @@ def test_a_listing_changed_after_signing_is_refused(release, tmp_path, ubuntu_ke
         listing_file = str(tampered),
         signature_file = signature,
         keyring_file = ubuntu_keyring,
-        fingerprint = ubunturelease.default_signing_fingerprint) is False
+        fingerprint = ubunturelease.DEFAULT_SIGNING_FINGERPRINT) is False
 
 
 @pytest.mark.requires_binary("gpg")
@@ -122,4 +122,4 @@ def test_an_empty_signature_is_refused(signed_files, ubuntu_keyring, tmp_path):
         listing_file = listing,
         signature_file = str(empty),
         keyring_file = ubuntu_keyring,
-        fingerprint = ubunturelease.default_signing_fingerprint) is False
+        fingerprint = ubunturelease.DEFAULT_SIGNING_FINGERPRINT) is False

@@ -105,10 +105,10 @@ def import_game_store_purchases(
     # Import each purchase
     logger.log_info("Starting to import purchases for %s" % store_obj.get_type())
     for purchase in purchases:
-        purchase_appid = purchase.get_value(config.json_key_store_appid)
-        purchase_appname = purchase.get_value(config.json_key_store_appname)
-        purchase_appurl = purchase.get_value(config.json_key_store_appurl)
-        purchase_name = purchase.get_value(config.json_key_store_name)
+        purchase_appid = purchase.get_value(config.JSON_KEY_STORE_APPID)
+        purchase_appname = purchase.get_value(config.JSON_KEY_STORE_APPNAME)
+        purchase_appurl = purchase.get_value(config.JSON_KEY_STORE_APPURL)
+        purchase_name = purchase.get_value(config.JSON_KEY_STORE_NAME)
         purchase_identifiers = [
             purchase_appid,
             purchase_appname,
@@ -182,7 +182,7 @@ def import_game_store_purchases(
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
             if purchase_appurl:
-                purchase.set_value(config.json_key_store_appurl, purchase_appurl)
+                purchase.set_value(config.JSON_KEY_STORE_APPURL, purchase_appurl)
 
         # Create json file
         success = create_game_json_file(
@@ -261,9 +261,9 @@ def update_game_store_purchases(
     # Update each purchase
     logger.log_info("Starting to update purchases for %s" % store_obj.get_type())
     for purchase in purchases:
-        purchase_appid = purchase.get_value(config.json_key_store_appid)
-        purchase_appname = purchase.get_value(config.json_key_store_appname)
-        purchase_appurl = purchase.get_value(config.json_key_store_appurl)
+        purchase_appid = purchase.get_value(config.JSON_KEY_STORE_APPID)
+        purchase_appname = purchase.get_value(config.JSON_KEY_STORE_APPNAME)
+        purchase_appurl = purchase.get_value(config.JSON_KEY_STORE_APPURL)
         purchase_identifiers = [
             purchase_appid,
             purchase_appname,

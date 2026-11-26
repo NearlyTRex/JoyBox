@@ -16,13 +16,13 @@ from joybox import serialization
 from joybox import settings
 
 # Where the releases are published
-releases_url_base = "https://releases.ubuntu.com"
+RELEASES_URL_BASE = "https://releases.ubuntu.com"
 
 # The key the checksum listings are signed with, and where a distribution
 # keeps a copy of it. Both are settings, since a release may be signed by a
 # different key and a machine may keep its keyrings elsewhere.
-default_signing_fingerprint = "843938DF228D22F7B3742BC0D94AA3F0EFE21092"
-default_keyring_file = "/usr/share/keyrings/ubuntu-archive-keyring.gpg"
+DEFAULT_SIGNING_FINGERPRINT = "843938DF228D22F7B3742BC0D94AA3F0EFE21092"
+DEFAULT_KEYRING_FILE = "/usr/share/keyrings/ubuntu-archive-keyring.gpg"
 
 ###########################################################
 # Releases
@@ -30,7 +30,7 @@ default_keyring_file = "/usr/share/keyrings/ubuntu-archive-keyring.gpg"
 
 # Get release listing url
 def get_release_listing_url(version):
-    return "%s/%s/" % (releases_url_base, version)
+    return "%s/%s/" % (RELEASES_URL_BASE, version)
 
 # Find the server images published for a release
 def find_release_images(version, verbose = False, pretend_run = False, exit_on_failure = False):
@@ -107,13 +107,13 @@ def get_checksum_signature_url(version):
 def get_signing_keyring():
     return settings.get_path_value(
         "UserData.Autoinstall", "autoinstall_signing_keyring",
-        default_keyring_file, throw_exception = False)
+        DEFAULT_KEYRING_FILE, throw_exception = False)
 
 # Get the key the listing is expected to be signed by
 def get_signing_fingerprint():
     return settings.get_value(
         "UserData.Autoinstall", "autoinstall_signing_fingerprint",
-        default_signing_fingerprint, throw_exception = False)
+        DEFAULT_SIGNING_FINGERPRINT, throw_exception = False)
 
 # Get the signature verification tool
 def get_signature_tool():

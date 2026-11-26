@@ -23,24 +23,24 @@ from joybox import serialization
 
 # What a reference looks like. 1Password's own syntax, so the same string
 # works with the tool directly, and with op inject and op run.
-secret_reference_prefix = "op://"
+SECRET_REFERENCE_PREFIX = "op://"
 
 # The tool that resolves a reference
-secret_tool = "op"
+SECRET_TOOL = "op"
 
 # Where it is looked for when it is not on the path
 secret_tool_paths = ["/usr/bin/op", "/usr/local/bin/op", "/opt/1Password/op"]
 
 # How long to wait. Resolving prompts the desktop app to unlock, so this is a
 # person reaching for a key rather than a machine answering.
-secret_timeout_seconds = 120
+SECRET_TIMEOUT_SECONDS = 120
 
 # Secrets already fetched this run, so a field read in a loop asks once
 _resolved = {}
 
 # What the tool prints when it has no account to read from. Set once seen, so
 # a run that reads many references reports it once rather than for each.
-no_account_marker = "No accounts configured"
+NO_ACCOUNT_MARKER = "No accounts configured"
 _no_account = {"seen": False}
 
 ###########################################################
@@ -49,7 +49,7 @@ _no_account = {"seen": False}
 
 # Determine whether a configured value is a reference rather than a secret
 def is_secret_reference(value):
-    return isinstance(value, str) and value.strip().startswith(secret_reference_prefix)
+    return isinstance(value, str) and value.strip().startswith(SECRET_REFERENCE_PREFIX)
 
 # Find the tool that resolves references
 def get_secret_tool():
@@ -57,7 +57,7 @@ def get_secret_tool():
         if os.path.isfile(candidate) and os.access(candidate, os.X_OK):
             return candidate
     for directory in os.environ.get("PATH", "").split(os.pathsep):
-        candidate = os.path.join(directory, secret_tool)
+        candidate = os.path.join(directory, SECRET_TOOL)
         if os.path.isfile(candidate) and os.access(candidate, os.X_OK):
             return candidate
     return None
@@ -71,7 +71,7 @@ def get_secret_command(tool, reference):
 def parse_secret_reference(reference):
     if not is_secret_reference(reference):
         return None
-    parts = reference.strip()[len(secret_reference_prefix):].split("/")
+    parts = reference.strip()[len(SECRET_REFERENCE_PREFIX):].split("/")
     if any(not part for part in parts):
         return None
     if len(parts) == 3:
@@ -96,12 +96,12 @@ def run_secret_tool(cmd, action, reference, input_text = None):
             stdin = None if input_text is not None else subprocess.DEVNULL,
             capture_output = True,
             text = True,
-            timeout = secret_timeout_seconds)
+            timeout = SECRET_TIMEOUT_SECONDS)
     except subprocess.TimeoutExpired:
         logger.log_error(
             "Timed out %s %s; the vault may be waiting to be unlocked" % (action, reference))
     except Exception as e:
-        logger.log_error("Unable to run %s for %s" % (secret_tool, reference))
+        logger.log_error("Unable to run %s for %s" % (SECRET_TOOL, reference))
         logger.log_error(e)
     return None
 
@@ -131,7 +131,7 @@ def resolve_secret_reference(reference, verbose = False):
     if not tool:
         logger.log_error(
             "%s holds a secret reference but %s was not found; install the "
-            "1Password command line tool" % (reference, secret_tool))
+            "1Password command line tool" % (reference, SECRET_TOOL))
         return None
     if verbose:
         logger.log_info("Resolving %s" % reference)
@@ -143,7 +143,7 @@ def resolve_secret_reference(reference, verbose = False):
         # The tool's complaint names the item, not its contents
         detail = (result.stderr or "").strip().splitlines()
         logger.log_error("Unable to resolve %s" % reference)
-        if no_account_marker in (result.stderr or ""):
+        if NO_ACCOUNT_MARKER in (result.stderr or ""):
             _no_account["seen"] = True
             for line in detail:
                 if line.strip():

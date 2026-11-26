@@ -8,7 +8,7 @@ import pytest
 # Local imports
 from joybox.config import templates
 
-ENTRY_TEMPLATES = [templates.publish_html_entry_odd, templates.publish_html_entry_even]
+ENTRY_TEMPLATES = [templates.PUBLISH_HTML_ENTRY_ODD, templates.PUBLISH_HTML_ENTRY_EVEN]
 ENTRY_IDS = ["odd", "even"]
 ENTRY_VALUES = (7, "Nintendo NES", "Super Mario Bros.", "2", "No", "Super+Mario+Bros.", "Super+Mario+Bros.")
 
@@ -34,7 +34,7 @@ class TagBalance(html.parser.HTMLParser):
 
 
 def render_page(header_value, entries):
-    return templates.publish_html_header % header_value + "".join(entries) + templates.publish_html_footer
+    return templates.PUBLISH_HTML_HEADER % header_value + "".join(entries) + templates.PUBLISH_HTML_FOOTER
 
 
 @pytest.fixture
@@ -43,7 +43,7 @@ def balance():
 
 
 def test_header_takes_one_category_placeholder():
-    assert "<title>Game List - Sony</title>" in templates.publish_html_header % "Sony"
+    assert "<title>Game List - Sony</title>" in templates.PUBLISH_HTML_HEADER % "Sony"
 
 
 @pytest.mark.parametrize("template", ENTRY_TEMPLATES, ids = ENTRY_IDS)
@@ -61,12 +61,12 @@ def test_entry_rejects_a_short_tuple(template):
 
 
 def test_entry_header_columns_match_entry_cells():
-    columns = templates.publish_html_header.count("<th>")
+    columns = templates.PUBLISH_HTML_HEADER.count("<th>")
     assert all(template.count("<td>") == columns for template in ENTRY_TEMPLATES)
 
 
 def test_footer_takes_no_placeholders():
-    assert "%" not in templates.publish_html_footer
+    assert "%" not in templates.PUBLISH_HTML_FOOTER
 
 
 def test_assembled_page_has_balanced_tags(balance):
@@ -76,10 +76,10 @@ def test_assembled_page_has_balanced_tags(balance):
 
 
 def test_header_alone_leaves_the_table_body_open(balance):
-    balance.feed(templates.publish_html_header % "Nintendo")
+    balance.feed(templates.PUBLISH_HTML_HEADER % "Nintendo")
     assert balance.stack == ["html", "body", "table", "tbody"]
 
 
 def test_links_open_in_a_new_tab():
-    row = templates.publish_html_entry_odd % ENTRY_VALUES
+    row = templates.PUBLISH_HTML_ENTRY_ODD % ENTRY_VALUES
     assert row.count("target=\"_blank\"") == row.count("<a ")

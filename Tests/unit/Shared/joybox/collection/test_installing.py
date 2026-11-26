@@ -618,8 +618,8 @@ def test_addons_go_to_the_platforms_emulators(addons):
     other = FakeEmulator(["Nintendo Wii"])
     addons["emulators"] = [other, switch]
     game = LocalGameInfo(platform = "Nintendo Switch", values = {
-        installing.config.json_key_dlc: ["Game/dlc1"],
-        installing.config.json_key_update: ["Game/update1"],
+        installing.config.JSON_KEY_DLC: ["Game/dlc1"],
+        installing.config.JSON_KEY_UPDATE: ["Game/update1"],
     })
 
     assert installing.install_local_game_addons(game) is True

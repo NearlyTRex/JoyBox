@@ -220,7 +220,7 @@ def test_a_description_of_another_type_is_ignored():
     entry = metadataentry.MetadataEntry()
     entry.set_description(None)
 
-    assert entry.is_key_set(config.metadata_key_description) is False
+    assert entry.is_key_set(config.METADATA_KEY_DESCRIPTION) is False
 
 
 @pytest.mark.parametrize("values, missing", [
@@ -251,5 +251,5 @@ def test_syncing_records_present_assets_and_drops_missing_ones(monkeypatch, tmp_
     entry.sync_assets()
 
     assert entry.get_boxfront()
-    assert entry.is_key_set(config.metadata_key_video) is False
-    assert entry.is_key_set(config.metadata_key_label) is False
+    assert entry.is_key_set(config.METADATA_KEY_VIDEO) is False
+    assert entry.is_key_set(config.METADATA_KEY_LABEL) is False

@@ -25,10 +25,10 @@ NODE_SIZE = 512
 FIRST_DATA_BLOCK = 4
 
 # 2005-01-01 00:00:00 in HFS time
-NEW_YEAR_2005 = 1104537600 + hfs.hfs_to_unix_seconds
+NEW_YEAR_2005 = 1104537600 + hfs.HFS_TO_UNIX_SECONDS
 
 APPLICATION_INFO = b"APPLPJ03" + b"\0" * 24
-HARD_LINK_INFO = hfs.hfsplus_hard_link_finder_info + b"\0" * 24
+HARD_LINK_INFO = hfs.HFSPLUS_HARD_LINK_FINDER_INFO + b"\0" * 24
 
 
 def make_file(data = b"", rsrc = b"", file_type = b"    ", creator = b"    ", flags = 0, mddate = 0):
@@ -149,7 +149,7 @@ class HFSPlusBuilder:
         self.blob = bytearray(FIRST_DATA_BLOCK * BLOCK_SIZE)
         self.catalog_records = []
         self.overflow_records = []
-        self.add_folder(1, hfs.hfsplus_root_folder_id, "Volume")
+        self.add_folder(1, hfs.HFSPLUS_ROOT_FOLDER_ID, "Volume")
 
     def allocate(self, data, fragments = 1):
         block_count = -(-len(data) // BLOCK_SIZE)
@@ -176,7 +176,7 @@ class HFSPlusBuilder:
         return pack_fork_data(len(data) if size is None else size, extents)
 
     def add_folder(self, parent_id, folder_id, name, mddate = 0):
-        data = struct.pack(">hHII", hfs.hfsplus_folder_record, 0, 0, folder_id)
+        data = struct.pack(">hHII", hfs.HFSPLUS_FOLDER_RECORD, 0, 0, folder_id)
         data += struct.pack(">IIIII", 0, mddate, 0, 0, 0) + bytes(56)
         self.catalog_records.append(catalog_record(parent_id, name, data))
         thread = struct.pack(">hHI", 3, 0, parent_id) + struct.pack(">H", len(name)) + name.encode("utf-16-be")
@@ -198,23 +198,23 @@ class HFSPlusBuilder:
         keep_overflow = True,
         size = None):
         created, modified, backed_up = dates
-        record = struct.pack(">hHII", hfs.hfsplus_file_record, 0, 0, file_id)
+        record = struct.pack(">hHII", hfs.HFSPLUS_FILE_RECORD, 0, 0, file_id)
         record += struct.pack(">IIIII", created, modified, 0, 0, backed_up)
         record += struct.pack(">IIBBHI", 0, 0, 0, owner_flags, mode, special) + finder_info.ljust(32, b"\0") + bytes(8)
-        record += self.fork(file_id, hfs.hfsplus_data_fork, data, fragments, keep_overflow, size)
-        record += self.fork(file_id, hfs.hfsplus_resource_fork, rsrc)
+        record += self.fork(file_id, hfs.HFSPLUS_DATA_FORK, data, fragments, keep_overflow, size)
+        record += self.fork(file_id, hfs.HFSPLUS_RESOURCE_FORK, rsrc)
         self.catalog_records.append(catalog_record(parent_id, name, record))
 
     def build(self, catalog_tree = None, catalog_fragments = 1):
         catalog_tree = catalog_tree if catalog_tree is not None else build_btree(sorted(self.catalog_records))
-        catalog_fork = self.fork(hfs.hfsplus_catalog_file_id, hfs.hfsplus_data_fork, catalog_tree, catalog_fragments)
+        catalog_fork = self.fork(hfs.HFSPLUS_CATALOG_FILE_ID, hfs.HFSPLUS_DATA_FORK, catalog_tree, catalog_fragments)
         extents_tree = build_btree(sorted(self.overflow_records))
-        extents_fork = self.fork(hfs.hfsplus_extents_file_id, hfs.hfsplus_data_fork, extents_tree)
+        extents_fork = self.fork(hfs.HFSPLUS_EXTENTS_FILE_ID, hfs.HFSPLUS_DATA_FORK, extents_tree)
         header = bytearray(512)
         header[0:2] = self.signature
-        header[hfs.hfsplus_block_size_offset:hfs.hfsplus_block_size_offset + 4] = struct.pack(">I", BLOCK_SIZE)
-        header[hfs.hfsplus_extents_file_offset:hfs.hfsplus_extents_file_offset + 80] = extents_fork
-        header[hfs.hfsplus_catalog_file_offset:hfs.hfsplus_catalog_file_offset + 80] = catalog_fork
+        header[hfs.HFSPLUS_BLOCK_SIZE_OFFSET:hfs.HFSPLUS_BLOCK_SIZE_OFFSET + 4] = struct.pack(">I", BLOCK_SIZE)
+        header[hfs.HFSPLUS_EXTENTS_FILE_OFFSET:hfs.HFSPLUS_EXTENTS_FILE_OFFSET + 80] = extents_fork
+        header[hfs.HFSPLUS_CATALOG_FILE_OFFSET:hfs.HFSPLUS_CATALOG_FILE_OFFSET + 80] = catalog_fork
         self.blob[1024:1536] = header
         self.blob += bytes(-len(self.blob) % 512)
         return bytes(self.blob)

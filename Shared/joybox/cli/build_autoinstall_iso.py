@@ -187,7 +187,7 @@ def main():
     logger.log_info("  sudo dd if=%s of=/dev/sdX bs=4M status=progress conv=fsync" % output_file)
     logger.log_info(
         "Booting from it installs %s without asking anything (%d seconds to interrupt), then powers off."
-        % (profile.get("hostname"), autoinstall.boot_timeout))
+        % (profile.get("hostname"), autoinstall.BOOT_TIMEOUT))
 
 # Run through the shared error handling
 def run():
