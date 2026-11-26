@@ -8,6 +8,7 @@ import textwrap
 # Local imports
 from joybox import default_settings
 from joybox import command
+from joybox import commandbase
 from joybox import fileops
 from joybox import serialization
 
@@ -65,7 +66,7 @@ def describe_command(module_name, python_path, timeout = 60):
         env["HOME"] = home_dir
         env["USERPROFILE"] = home_dir
         env["PYTHONPATH"] = os.pathsep.join(python_path)
-        options = command.create_command_options()
+        options = commandbase.create_command_options()
         options.set_allow_processing(False)
         options.set_env(env)
         options.set_cwd(home_dir)

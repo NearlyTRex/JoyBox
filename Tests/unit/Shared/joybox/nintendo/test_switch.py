@@ -5,6 +5,7 @@ import os
 import pytest
 
 # Local imports
+from joybox import hashutil
 from joybox.nintendo import switch
 from nintendo_helpers import VALID_ID, read_dat
 
@@ -327,7 +328,7 @@ def test_installing_an_nsp_files_each_nca_by_its_hash(installed, scratch, monkey
 
     assert switch.install_switch_nsp("/in/Game.nsp", "/nand") is True
 
-    expected_digest = switch.hashing.calculate_string_sha256(bytes.fromhex(nca_id)).upper()
+    expected_digest = hashutil.calculate_string_sha256(bytes.fromhex(nca_id)).upper()
     assert copies[0][1] == os.path.join(
         "/nand", "user", "Contents", "registered",
         "000000%s" % expected_digest[0:2], nca_id + ".nca")

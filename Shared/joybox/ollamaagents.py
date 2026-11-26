@@ -9,6 +9,7 @@ import shutil
 
 # Local imports
 from joybox import command
+from joybox import commandbase
 from joybox import environment
 from joybox import logger
 from joybox import network
@@ -259,7 +260,7 @@ def launch_harness(model_name, harness = DEFAULT_HARNESS):
         if not check():
             return False
 
-    options = command.create_command_options()
+    options = commandbase.create_command_options()
     for key, value in spec.get("env", {}).items():
         options.set_env_var(key, fill(value))
     for key, build in spec.get("env_builders", {}).items():

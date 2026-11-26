@@ -7,6 +7,7 @@ from joybox import config
 from joybox import fileops
 from joybox import filebulk
 from joybox import command
+from joybox import commandbase
 from joybox import programs
 from joybox import text
 from joybox import validation
@@ -66,7 +67,7 @@ def get_embedded_filename(
     # Run info command (always run, even in pretend mode - this is read-only)
     info_output = command.run_output_command(
         cmd = info_cmd,
-        options = command.create_command_options(
+        options = commandbase.create_command_options(
             stdin_input = passphrase),
         verbose = verbose,
         pretend_run = False,
@@ -228,7 +229,7 @@ def encrypt_file(
     # Run encrypt command
     code = command.run_returncode_command(
         cmd = encrypt_cmd,
-        options = command.create_command_options(
+        options = commandbase.create_command_options(
             blocking_processes = [gpg_tool],
             stdin_input = passphrase),
         verbose = verbose,
@@ -315,7 +316,7 @@ def decrypt_file(
     # Run decrypt command
     code = command.run_returncode_command(
         cmd = decrypt_cmd,
-        options = command.create_command_options(
+        options = commandbase.create_command_options(
             blocking_processes = [gpg_tool],
             stdin_input = passphrase),
         verbose = verbose,

@@ -12,6 +12,7 @@ from joybox import settings
 from joybox import jsondata
 from joybox import webpage
 from joybox import storebase
+from joybox import storepaths
 from joybox import strings
 from joybox import metadataentry
 from joybox import paths
@@ -416,7 +417,7 @@ class Epic(storebase.StoreBase):
         cloud_save_folder = game_info.get("cloud_save_folder")
         if cloud_save_folder:
             json_data.set_value(config.json_key_store_paths, [
-                storebase.create_tokenized_path(cloud_save_folder.strip())
+                storepaths.create_tokenized_path(cloud_save_folder.strip())
             ])
         return self.augment_jsondata(
             json_data = json_data,

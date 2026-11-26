@@ -3,6 +3,7 @@ import urllib.parse
 
 # Local imports
 from joybox import command
+from joybox import commandbase
 from joybox import hardware
 from joybox import logger
 from joybox import network
@@ -45,7 +46,7 @@ def is_local_server():
 # Options for the ollama command, aimed at the configured server
 # The command ignores the setting and reads OLLAMA_HOST instead.
 def create_client_options():
-    options = command.create_command_options()
+    options = commandbase.create_command_options()
     options.set_env_var("OLLAMA_HOST", get_api_base())
     return options
 
@@ -115,7 +116,7 @@ def start_serve():
             logger.log_info("It is reached through an SSH tunnel to %s; check it with: systemctl --user status ollama-tunnel" % get_ssh_host())
         return False
     logger.log_info("Starting Ollama server...")
-    options = command.create_command_options()
+    options = commandbase.create_command_options()
     options.set_is_daemon(True)
     command.run_returncode_command(["ollama", "serve"], options = options)
     for _ in range(10):

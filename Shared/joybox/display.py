@@ -1,5 +1,6 @@
 # Local imports
 from joybox import command
+from joybox import commandbase
 from joybox import programs
 from joybox import settings
 
@@ -31,7 +32,7 @@ def set_screen_resolution(width, height, colors, verbose = False, pretend_run = 
     # Set resolution
     command.run_returncode_command(
         cmd = resolution_cmd,
-        options = command.create_command_options(
+        options = commandbase.create_command_options(
             shell = True),
         verbose = verbose,
         pretend_run = pretend_run,

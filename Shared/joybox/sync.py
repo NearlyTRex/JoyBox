@@ -6,6 +6,7 @@ import re
 # Local imports
 from joybox import config
 from joybox import command
+from joybox import commandbase
 from joybox import programs
 from joybox import rcloneremotes
 from joybox import strings
@@ -305,7 +306,7 @@ def does_file_exist(
         return False
 
     # Run lsjson, which succeeds only when the file exists
-    options = command.create_command_options()
+    options = commandbase.create_command_options()
     options.set_suppress_output(True)
     return run_rclone_command(
         cmd = [rclone_tool, "lsjson", get_remote_connection_path(remote_name, remote_type, remote_path)],
@@ -384,7 +385,7 @@ def create_remote_directory(
     # Run command, keeping stderr to tell an existing directory from a failure
     output, code = run_query_command(
         cmd = mkdir_cmd,
-        options = rcloneremotes.get_rclone_options([remote_name], command.create_command_options(include_stderr = True)),
+        options = rcloneremotes.get_rclone_options([remote_name], commandbase.create_command_options(include_stderr = True)),
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = False)

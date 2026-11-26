@@ -99,7 +99,7 @@ class SetupWorld:
         monkeypatch.setattr(
             computer.environment, "get_cache_gaming_setup_dir",
             lambda category, subcategory, name: self.setup_dir)
-        monkeypatch.setattr(computer.command, "create_command_options", lambda: self.options)
+        monkeypatch.setattr(computer.commandbase, "create_command_options", lambda: self.options)
         monkeypatch.setattr(computer.platform_info, "is_wine_platform", lambda: True)
         monkeypatch.setattr(computer.platform_info, "is_sandboxie_platform", lambda: False)
         monkeypatch.setattr(

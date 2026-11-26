@@ -21,6 +21,7 @@ from joybox import bootstrap
 from joybox.bootstrap import constants
 from joybox.bootstrap import runner
 from joybox import command
+from joybox import commandbase
 from joybox import hardening
 from joybox import hostsfile
 from joybox import logger
@@ -118,11 +119,11 @@ def is_port_open(host, port, timeout = 3):
 
 # Check the local certificate authority is trusted here, for mkcert entries
 def is_mkcert_ready():
-    if not command.is_runnable_command("mkcert"):
+    if not commandbase.is_runnable_command("mkcert"):
         return False
     output = command.run_output_command(
         cmd = ["mkcert", "-CAROOT"],
-        options = command.create_command_options(suppress_output = True))
+        options = commandbase.create_command_options(suppress_output = True))
     if isinstance(output, bytes):
         output = output.decode()
     ca_root = (output or "").strip()
@@ -351,7 +352,7 @@ class Provisioner:
     # The components, deployed as the account, the same way bootstrap.py does
     def run_deploy(self):
         if self.server.get_tls_mode() == "mkcert" and not is_mkcert_ready():
-            if not command.is_runnable_command("mkcert"):
+            if not commandbase.is_runnable_command("mkcert"):
                 logger.log_error(
                     "mkcert is not installed; run: python3 bootstrap.py -a setup "
                     "-t local_ubuntu --components aptget")

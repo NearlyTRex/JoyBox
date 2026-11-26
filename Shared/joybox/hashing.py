@@ -15,14 +15,6 @@ from joybox import cryption
 
 ###########################################################
 
-# String-hash primitives
-from joybox.hashutil import (
-    calculate_string_crc32 as calculate_string_crc32,
-    calculate_string_md5 as calculate_string_md5,
-    calculate_string_sha1 as calculate_string_sha1,
-    calculate_string_sha256 as calculate_string_sha256,
-    calculate_string_xxh3 as calculate_string_xxh3)
-
 ###########################################################
 
 # Calculate file crc32

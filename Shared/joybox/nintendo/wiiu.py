@@ -6,6 +6,7 @@ import os
 
 # Local imports
 from joybox import command
+from joybox import commandbase
 from joybox import config
 from joybox import fileops
 from joybox import filebulk
@@ -44,7 +45,7 @@ def decrypt_wiiu_nus_package(
     # Run decrypt command
     code = command.run_returncode_command(
         cmd = decrypt_cmd,
-        options = command.create_command_options(
+        options = commandbase.create_command_options(
             cwd = nus_package_dir,
             output_paths = [nus_package_dir],
             blocking_processes = [decrypt_tool]),

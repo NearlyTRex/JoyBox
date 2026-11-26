@@ -31,7 +31,7 @@ def test_every_required_tool_is_named():
 
 def test_a_missing_tool_is_reported(monkeypatch):
     monkeypatch.setattr(
-        virtualmachine.command, "is_runnable_command", lambda tool: tool != "virsh")
+        virtualmachine.commandbase, "is_runnable_command", lambda tool: tool != "virsh")
 
     assert virtualmachine.get_missing_tools() == ["virsh"]
     assert virtualmachine.are_tools_installed() is False
@@ -39,7 +39,7 @@ def test_a_missing_tool_is_reported(monkeypatch):
 
 def test_a_complete_workstation_is_reported_ready(monkeypatch):
     monkeypatch.setattr(
-        virtualmachine.command, "is_runnable_command", lambda tool: True)
+        virtualmachine.commandbase, "is_runnable_command", lambda tool: True)
 
     assert virtualmachine.get_missing_tools() == []
     assert virtualmachine.are_tools_installed() is True

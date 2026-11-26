@@ -6,6 +6,7 @@ import sys
 
 # Local imports
 from joybox import command
+from joybox import commandbase
 from joybox import environment
 from joybox import fileops
 from joybox import logger
@@ -65,7 +66,7 @@ def measure(repo_dir, data_file, include_integration = False, verbose = False, p
     fileops.make_directory(os.path.dirname(data_file), verbose = verbose, pretend_run = pretend_run)
     code = command.run_returncode_command(
         cmd = build_measure_command(data_file, include_integration),
-        options = command.create_command_options(cwd = repo_dir),
+        options = commandbase.create_command_options(cwd = repo_dir),
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -77,7 +78,7 @@ def measure(repo_dir, data_file, include_integration = False, verbose = False, p
 def combine(repo_dir, data_file, verbose = False):
     code = command.run_returncode_command(
         cmd = [sys.executable, "-m", "coverage", "combine", "--data-file", data_file, "--quiet"],
-        options = command.create_command_options(cwd = repo_dir),
+        options = commandbase.create_command_options(cwd = repo_dir),
         verbose = verbose)
     return code == 0
 
@@ -85,7 +86,7 @@ def combine(repo_dir, data_file, verbose = False):
 def export_json(repo_dir, data_file, json_file, verbose = False):
     code = command.run_returncode_command(
         cmd = [sys.executable, "-m", "coverage", "json", "--data-file", data_file, "-o", json_file, "-q"],
-        options = command.create_command_options(cwd = repo_dir),
+        options = commandbase.create_command_options(cwd = repo_dir),
         verbose = verbose)
     return code == 0
 

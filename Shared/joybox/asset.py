@@ -5,6 +5,7 @@ import urllib.parse
 from joybox import config
 from joybox import filebulk
 from joybox import command
+from joybox import commandbase
 from joybox import programs
 from joybox import network
 from joybox import image
@@ -40,7 +41,7 @@ def clean_exif_data(
     # Run clean command
     code = command.run_returncode_command(
         cmd = clean_cmd,
-        options = command.create_command_options(
+        options = commandbase.create_command_options(
             blocking_processes = [exif_tool]),
         verbose = verbose,
         pretend_run = pretend_run,

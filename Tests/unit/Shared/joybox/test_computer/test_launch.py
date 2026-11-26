@@ -87,7 +87,7 @@ def launch(monkeypatch, tmp_path):
     options = FakeLaunchOptions()
     windows = []
     tokens = []
-    monkeypatch.setattr(computer.command, "create_command_options", lambda: options)
+    monkeypatch.setattr(computer.commandbase, "create_command_options", lambda: options)
     monkeypatch.setattr(computer.platform_info, "is_linux_platform", lambda: True)
     monkeypatch.setattr(computer.platform_info, "is_windows_platform", lambda: False)
 

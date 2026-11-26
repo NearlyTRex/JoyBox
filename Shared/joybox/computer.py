@@ -10,6 +10,7 @@ from joybox import filebulk
 from joybox import jsondata
 from joybox import paths
 from joybox import command
+from joybox import commandbase
 from joybox import programs
 from joybox import sandbox
 from joybox import sandboxdrives
@@ -377,7 +378,7 @@ def setup_computer_game(
         return False
 
     # Get setup options
-    game_setup_options = command.create_command_options()
+    game_setup_options = commandbase.create_command_options()
 
     # Create prefix
     success = game_setup_options.create_prefix(
@@ -547,7 +548,7 @@ def launch_computer_game(
     exit_on_failure = False):
 
     # Get launch options
-    game_launch_options = command.create_command_options()
+    game_launch_options = commandbase.create_command_options()
 
     # Get mount links
     game_mount_links = []

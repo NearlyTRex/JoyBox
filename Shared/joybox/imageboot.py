@@ -11,6 +11,7 @@ import os
 
 # Local imports
 from joybox import command
+from joybox import commandbase
 from joybox import fileops
 from joybox import logger
 from joybox import paths
@@ -43,7 +44,7 @@ FIRMWARE_PAIRS = [
 
 # Get the tools a direct boot is missing from this workstation
 def get_missing_boot_tools():
-    return [tool for tool in BOOT_TOOLS if not command.is_runnable_command(tool)]
+    return [tool for tool in BOOT_TOOLS if not commandbase.is_runnable_command(tool)]
 
 # Find a firmware pair this workstation has
 def get_firmware_pair(pairs = None):

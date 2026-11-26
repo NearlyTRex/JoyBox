@@ -4,6 +4,7 @@ import re
 # Local imports
 from joybox import logger
 from joybox import command
+from joybox import commandbase
 from joybox import programs
 
 # Browser user agent. Rumble fingerprint-blocks some HTTP clients (python
@@ -45,7 +46,7 @@ def fetch_channel_page(page_url, verbose = False, pretend_run = False, exit_on_f
     fetch_cmd = [curl_tool, "-s", "-L", "-A", USER_AGENT, page_url]
     return command.run_output_command(
         cmd = fetch_cmd,
-        options = command.create_command_options(blocking_processes = [curl_tool]),
+        options = commandbase.create_command_options(blocking_processes = [curl_tool]),
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)

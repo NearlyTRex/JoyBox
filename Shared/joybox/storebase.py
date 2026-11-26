@@ -13,8 +13,6 @@ from joybox import strings
 from joybox import manifest
 from joybox import environment
 from joybox import fileops
-from joybox.storepaths import (
-    create_tokenized_path as create_tokenized_path)
 
 # Convert to tokenized path
 def convert_to_tokenized_path(

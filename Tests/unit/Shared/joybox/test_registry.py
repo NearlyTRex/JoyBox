@@ -2,6 +2,7 @@
 import pytest
 
 # Local imports
+from joybox import commandbase
 from joybox import registry
 
 
@@ -451,7 +452,7 @@ def reg_runs(monkeypatch):
 
 def test_exporting_runs_reg_export_in_the_prefix(tmp_path, reg_runs):
     target = str(tmp_path / "out.reg")
-    options = registry.command.create_command_options()
+    options = commandbase.create_command_options()
 
     assert registry.export_registry_file(target, "HKCU\\Software", options)
     cmd, used = reg_runs["calls"][0]
@@ -463,19 +464,19 @@ def test_exporting_runs_reg_export_in_the_prefix(tmp_path, reg_runs):
 
 def test_a_failed_export_reports_failure(tmp_path, reg_runs):
     reg_runs["code"] = 1
-    options = registry.command.create_command_options()
+    options = commandbase.create_command_options()
     assert registry.export_registry_file(str(tmp_path / "out.reg"), "HKCU\\Software", options) is False
 
 
 def test_an_export_that_writes_nothing_reports_failure(tmp_path, reg_runs):
     reg_runs["creates"] = False
-    options = registry.command.create_command_options()
+    options = commandbase.create_command_options()
     assert registry.export_registry_file(str(tmp_path / "out.reg"), "HKCU\\Software", options) is False
 
 
 def test_importing_runs_reg_import_in_the_prefix(tmp_path, reg_runs):
     source = write_reg(tmp_path / "in.reg", sample(ACME))
-    options = registry.command.create_command_options()
+    options = commandbase.create_command_options()
 
     assert registry.import_registry_file(source, options)
     cmd, used = reg_runs["calls"][0]
@@ -487,4 +488,4 @@ def test_importing_runs_reg_import_in_the_prefix(tmp_path, reg_runs):
 def test_a_failed_import_reports_failure(tmp_path, reg_runs):
     reg_runs["code"] = 1
     source = write_reg(tmp_path / "in.reg", sample(ACME))
-    assert registry.import_registry_file(source, registry.command.create_command_options()) is False
+    assert registry.import_registry_file(source, commandbase.create_command_options()) is False

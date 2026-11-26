@@ -1,6 +1,7 @@
 # Local imports
 from joybox import config
 from joybox import command
+from joybox import commandbase
 from joybox import programs
 from joybox import serialization
 from joybox import logger
@@ -198,7 +199,7 @@ class Steam(storebase.StoreBase):
         # Run login command
         code = command.run_interactive_command(
             cmd = login_cmd,
-            options = command.create_command_options(
+            options = commandbase.create_command_options(
                 blocking_processes = [steam_tool]),
             verbose = verbose,
             pretend_run = pretend_run,
@@ -420,7 +421,7 @@ class Steam(storebase.StoreBase):
         # Run info command
         info_output = command.run_output_command(
             cmd = info_cmd,
-            options = command.create_command_options(
+            options = commandbase.create_command_options(
                 blocking_processes = [steamcmd_tool]),
             verbose = verbose,
             pretend_run = pretend_run,
@@ -678,7 +679,7 @@ class Steam(storebase.StoreBase):
         # Run install command
         code = command.run_returncode_command(
             cmd = install_cmd,
-            options = command.create_command_options(
+            options = commandbase.create_command_options(
                 blocking_processes = [steam_tool]),
             verbose = verbose,
             pretend_run = pretend_run,
@@ -719,7 +720,7 @@ class Steam(storebase.StoreBase):
         # Run launch command
         code = command.run_returncode_command(
             cmd = launch_cmd,
-            options = command.create_command_options(
+            options = commandbase.create_command_options(
                 blocking_processes = [steam_tool]),
             verbose = verbose,
             pretend_run = pretend_run,
@@ -784,7 +785,7 @@ class Steam(storebase.StoreBase):
             # Run download command
             code = command.run_returncode_command(
                 cmd = download_cmd,
-                options = command.create_command_options(
+                options = commandbase.create_command_options(
                     blocking_processes = [steamdepot_tool]),
                 verbose = verbose,
                 pretend_run = pretend_run,

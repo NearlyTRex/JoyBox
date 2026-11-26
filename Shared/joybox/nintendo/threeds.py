@@ -6,6 +6,7 @@ import os
 
 # Local imports
 from joybox import command
+from joybox import commandbase
 from joybox import fileops
 from joybox import filebulk
 from joybox import paths
@@ -35,7 +36,7 @@ def convert_3ds_cia_to_cci(
     # Run convert command
     code = command.run_returncode_command(
         cmd = convert_cmd,
-        options = command.create_command_options(
+        options = commandbase.create_command_options(
             blocking_processes = [convert_tool]),
         verbose = verbose,
         pretend_run = pretend_run,
@@ -70,7 +71,7 @@ def convert_3ds_cci_to_cia(
     # Run convert command
     code = command.run_returncode_command(
         cmd = convert_cmd,
-        options = command.create_command_options(
+        options = commandbase.create_command_options(
             blocking_processes = [convert_tool]),
         verbose = verbose,
         pretend_run = pretend_run,
@@ -99,7 +100,7 @@ def run_3ds_rom_tool(mode, src_3ds_file, dest_3ds_file, verbose = False, pretend
             exit_on_failure = exit_on_failure)
         code = command.run_returncode_command(
             cmd = [trim_tool, mode, tmp_3ds_file],
-            options = command.create_command_options(
+            options = commandbase.create_command_options(
                 blocking_processes = [trim_tool]),
             verbose = verbose,
             pretend_run = pretend_run,
@@ -167,7 +168,7 @@ def extract_3ds_cia(
                 "--tmd", paths.join_paths(tmp_dir, "00000000.tmd"),
                 src_3ds_file
             ],
-            options = command.create_command_options(
+            options = commandbase.create_command_options(
                 blocking_processes = [extract_tool]),
             verbose = verbose,
             pretend_run = pretend_run,
@@ -204,7 +205,7 @@ def get_3ds_file_info(
     # Run print command
     output = command.run_output_command(
         cmd = print_cmd,
-        options = command.create_command_options(
+        options = commandbase.create_command_options(
             blocking_processes = [print_tool]),
         verbose = verbose,
         pretend_run = pretend_run,

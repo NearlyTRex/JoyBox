@@ -4,6 +4,7 @@ import os
 # Local imports
 from joybox import config
 from joybox import command
+from joybox import commandbase
 from joybox import programs
 from joybox import serialization
 from joybox import logger
@@ -170,7 +171,7 @@ class GOG(storebase.StoreBase):
         # Run login command
         code = command.run_interactive_command(
             cmd = login_cmd,
-            options = command.create_command_options(
+            options = commandbase.create_command_options(
                 blocking_processes = [gog_tool]),
             verbose = verbose,
             pretend_run = pretend_run,
@@ -326,7 +327,7 @@ class GOG(storebase.StoreBase):
                 # Run list command
                 code = command.run_returncode_command(
                     cmd = list_cmd,
-                    options = command.create_command_options(
+                    options = commandbase.create_command_options(
                         stdout = tmp_file_manifest),
                     verbose = False,
                     exit_on_failure = exit_on_failure)
@@ -759,7 +760,7 @@ class GOG(storebase.StoreBase):
             # Run download command
             code = command.run_returncode_command(
                 cmd = download_cmd,
-                options = command.create_command_options(
+                options = commandbase.create_command_options(
                     blocking_processes = [gog_tool]),
                 verbose = verbose,
                 pretend_run = pretend_run,

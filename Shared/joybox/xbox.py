@@ -4,6 +4,7 @@ import os.path
 
 # Local imports
 from joybox import command
+from joybox import commandbase
 from joybox import fileops
 from joybox import programs
 from joybox import logger
@@ -34,7 +35,7 @@ def extract_xbox_iso(
     # Run extract command
     code = command.run_returncode_command(
         cmd = extract_cmd,
-        options = command.create_command_options(
+        options = commandbase.create_command_options(
             blocking_processes = [extract_tool]),
         verbose = verbose,
         pretend_run = pretend_run,
@@ -80,7 +81,7 @@ def rewrite_xbox_iso(
     # Run rewrite command
     code = command.run_returncode_command(
         cmd = rewrite_cmd,
-        options = command.create_command_options(
+        options = commandbase.create_command_options(
             blocking_processes = [extract_tool]),
         verbose = verbose,
         pretend_run = pretend_run,

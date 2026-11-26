@@ -5,7 +5,7 @@ import os
 import pytest
 
 # Local imports
-from joybox import command, config
+from joybox import command, commandbase, config
 
 
 ###########################################################
@@ -17,7 +17,7 @@ from joybox import command, config
 ###########################################################
 
 def options_with_prefix(tmp_path):
-    options = command.create_command_options()
+    options = commandbase.create_command_options()
     options.set_prefix_c_drive_real(str(tmp_path))
     return options
 
@@ -58,7 +58,7 @@ def test_a_string_command_is_split_into_a_list():
 
 
 def test_preparing_for_powershell_leaves_the_original_options_alone():
-    options = command.create_command_options()
+    options = commandbase.create_command_options()
 
     _, new_options = command.setup_powershell_command(["Get-Process"], options = options)
 
@@ -142,7 +142,7 @@ def test_an_ordinary_command_is_left_as_it_is():
 
 
 def test_powershell_can_be_forced_onto_an_ordinary_command():
-    options = command.create_command_options(force_powershell = True)
+    options = commandbase.create_command_options(force_powershell = True)
 
     new_cmd, _ = command.preprocess_command(["Get-Process"], options = options)
 
@@ -153,7 +153,7 @@ def test_appimage_handling_can_be_forced(tmp_path):
     target = tmp_path / "Tool.AppImage"
     target.write_text("")
     (tmp_path / "Tool.AppImage.home").mkdir()
-    options = command.create_command_options(force_appimage = True)
+    options = commandbase.create_command_options(force_appimage = True)
 
     _, new_options = command.preprocess_command([str(target)], options = options)
 
@@ -208,7 +208,7 @@ def test_a_prefix_can_be_forced_onto_a_native_command(monkeypatch):
     monkeypatch.setattr(
         command, "setup_prefix_command",
         lambda cmd, options, **kwargs: (["sandboxed"] + cmd, options))
-    options = command.create_command_options(force_prefix = True)
+    options = commandbase.create_command_options(force_prefix = True)
 
     new_cmd, _ = command.preprocess_command(["/usr/bin/tool"], options = options)
 
@@ -248,7 +248,7 @@ def prefix_sandbox(monkeypatch):
 
     monkeypatch.setattr(command.sandbox, "should_be_run_via_wine", lambda cmd: True)
     monkeypatch.setattr(command.sandbox, "should_be_run_via_sandboxie", lambda cmd: False)
-    monkeypatch.setattr(type(command.create_command_options()), "create_prefix", create_prefix)
+    monkeypatch.setattr(type(commandbase.create_command_options()), "create_prefix", create_prefix)
     monkeypatch.setattr(command.sandbox, "setup_prefix_command", step("command"))
     monkeypatch.setattr(command.sandbox, "setup_prefix_environment", step("environment"))
     return state
@@ -264,7 +264,7 @@ def test_a_missing_prefix_is_created_as_the_default_prefix(prefix_sandbox):
 
 
 def test_a_ready_prefix_is_not_created_again(prefix_sandbox, tmp_path):
-    options = command.create_command_options(
+    options = commandbase.create_command_options(
         is_wine_prefix = True,
         prefix_name = config.PrefixType.GAME,
         prefix_dir = str(tmp_path))
@@ -291,7 +291,7 @@ def test_prefix_setup_passes_the_run_flags_to_every_step(prefix_sandbox):
 
 
 def test_prefix_setup_leaves_the_original_options_alone(prefix_sandbox):
-    options = command.create_command_options()
+    options = commandbase.create_command_options()
 
     _, new_options = command.setup_prefix_command(["/games/Game.exe"], options = options)
 
@@ -346,7 +346,7 @@ def test_every_output_path_is_transferred_out_of_the_sandbox(monkeypatch):
     monkeypatch.setattr(
         command.sandboxpaths, "transfer_from_sandbox",
         lambda path, **kwargs: transferred.append(path))
-    options = command.create_command_options(output_paths = ["/out/one", "/out/two"])
+    options = commandbase.create_command_options(output_paths = ["/out/one", "/out/two"])
 
     command.postprocess_command(["/games/Game.exe"], options = options)
 
@@ -360,7 +360,7 @@ def test_output_paths_that_are_not_a_list_are_ignored(monkeypatch):
     monkeypatch.setattr(
         command.sandboxpaths, "transfer_from_sandbox",
         lambda path, **kwargs: transferred.append(path))
-    options = command.create_command_options(output_paths = "/out/one")
+    options = commandbase.create_command_options(output_paths = "/out/one")
 
     command.postprocess_command(["/games/Game.exe"], options = options)
 
@@ -379,7 +379,7 @@ def test_postprocessing_passes_the_run_flags_to_every_step(monkeypatch):
     monkeypatch.setattr(command.sandbox, "cleanup_wine", record)
     monkeypatch.setattr(command.sandbox, "cleanup_sandboxie", record)
     monkeypatch.setattr(command.sandboxpaths, "transfer_from_sandbox", record)
-    options = command.create_command_options(output_paths = ["/out/one"])
+    options = commandbase.create_command_options(output_paths = ["/out/one"])
 
     command.postprocess_command(["/games/Game.exe"], options = options, **flags)
 
@@ -513,7 +513,7 @@ def test_win31_program_arguments_follow_the_program(dosbox, no_discs, tmp_path):
     command.get_win31_launch_command,
 ])
 def test_no_c_drive_is_mounted_without_a_prefix(dosbox, no_discs, builder):
-    cmd = builder(command.create_command_options())
+    cmd = builder(commandbase.create_command_options())
 
     assert not any(part.startswith("mount c") for part in cmd)
 

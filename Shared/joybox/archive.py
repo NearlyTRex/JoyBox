@@ -7,6 +7,7 @@ import re
 # Local imports
 from joybox import config
 from joybox import command
+from joybox import commandbase
 from joybox import programs
 from joybox import logger
 from joybox import paths
@@ -304,7 +305,7 @@ def create_archive_from_file(
     # Run create command
     code = command.run_returncode_command(
         cmd = create_command,
-        options = command.create_command_options(
+        options = commandbase.create_command_options(
             cwd = paths.get_filename_directory(source_file),
             output_paths = [archive_file],
             blocking_processes = [archive_tool]),
@@ -390,7 +391,7 @@ def create_archive_from_folder(
     # Run create command
     code = command.run_returncode_command(
         cmd = create_command,
-        options = command.create_command_options(
+        options = commandbase.create_command_options(
             cwd = source_dir,
             output_paths = [archive_file],
             blocking_processes = [archive_tool]),
@@ -533,7 +534,7 @@ def extract_archive(
     # Run extract command
     code = command.run_returncode_command(
         cmd = extract_cmd,
-        options = command.create_command_options(
+        options = commandbase.create_command_options(
             output_paths = [extract_dir],
             blocking_processes = [archive_tool]),
         verbose = verbose,
@@ -589,7 +590,7 @@ def test_archive(
     # Run test command
     code = command.run_returncode_command(
         cmd = test_cmd,
-        options = command.create_command_options(
+        options = commandbase.create_command_options(
             blocking_processes = [archive_tool]),
         verbose = verbose,
         pretend_run = pretend_run,
@@ -620,7 +621,7 @@ def list_archive(
     # Run list command
     list_output = command.run_output_command(
         cmd = list_command,
-        options = command.create_command_options(
+        options = commandbase.create_command_options(
             blocking_processes=[archive_tool]),
         verbose = verbose,
         pretend_run = pretend_run,

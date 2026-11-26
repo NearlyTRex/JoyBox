@@ -7,6 +7,7 @@ import re
 from joybox import config
 from joybox import fileops
 from joybox import command
+from joybox import commandbase
 from joybox import programs
 from joybox import paths
 from joybox import serialization
@@ -85,7 +86,7 @@ def create_disc_chd(
     # Run create command
     code = command.run_returncode_command(
         cmd = create_command,
-        options = command.create_command_options(
+        options = commandbase.create_command_options(
             output_paths = [chd_file],
             blocking_processes = [chd_tool]),
         verbose = verbose,
@@ -172,7 +173,7 @@ def extract_disc_chd(
     # Run extract command
     code = command.run_returncode_command(
         cmd = extract_cmd,
-        options = command.create_command_options(
+        options = commandbase.create_command_options(
             output_paths = [toc_file, binary_file],
             blocking_processes = [chd_tool]),
         verbose = verbose,
@@ -221,7 +222,7 @@ def split_cue_bin_tracks(bchunk_tool, chd_file, bin_file, cue_file, tracks_dir, 
         return False
     code = command.run_returncode_command(
         cmd = [bchunk_tool, bin_file, cue_file, paths.join_paths(tracks_dir, paths.get_filename_basename(iso_file))],
-        options = command.create_command_options(
+        options = commandbase.create_command_options(
             blocking_processes = [bchunk_tool]),
         verbose = verbose,
         exit_on_failure = exit_on_failure)

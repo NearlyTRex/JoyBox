@@ -4,6 +4,7 @@
 
 # Local imports
 from joybox import command
+from joybox import commandbase
 from joybox import programs
 
 # Encrypt Nintendo DS rom
@@ -29,7 +30,7 @@ def encrypt_nds_rom(
     # Run encrypt command
     code = command.run_returncode_command(
         cmd = encrypt_cmd,
-        options = command.create_command_options(
+        options = commandbase.create_command_options(
             blocking_processes = [encrypt_tool]),
         verbose = verbose,
         pretend_run = pretend_run,
@@ -59,7 +60,7 @@ def decrypt_nds_rom(
     # Run decrypt command
     code = command.run_returncode_command(
         cmd = decrypt_cmd,
-        options = command.create_command_options(
+        options = commandbase.create_command_options(
             blocking_processes = [decrypt_tool]),
         verbose = verbose,
         pretend_run = pretend_run,

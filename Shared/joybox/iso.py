@@ -4,6 +4,7 @@ import os.path
 
 # Local imports
 from joybox import command
+from joybox import commandbase
 from joybox import logger
 from joybox import serialization
 from joybox import paths
@@ -82,7 +83,7 @@ def create_iso(
     # Run create command
     code = command.run_returncode_command(
         cmd = create_command,
-        options = command.create_command_options(
+        options = commandbase.create_command_options(
             output_paths = [iso_file],
             blocking_processes = [iso_tool]),
         verbose = verbose,
@@ -144,7 +145,7 @@ def extract_iso(
     # Run extract command
     code = command.run_returncode_command(
         cmd = extract_cmd,
-        options = command.create_command_options(
+        options = commandbase.create_command_options(
             output_paths = [extract_dir],
             blocking_processes = [iso_tool]),
         verbose = verbose,
@@ -212,7 +213,7 @@ def extract_buildable_iso_tree(
     # Run extract command
     code = command.run_returncode_command(
         cmd = extract_cmd,
-        options = command.create_command_options(
+        options = commandbase.create_command_options(
             output_paths = [extract_dir],
             blocking_processes = [iso_tool]),
         verbose = verbose,
@@ -265,7 +266,7 @@ def get_iso_boot_report(
         return None
     return command.run_output_command(
         cmd = [iso_tool, "-indev", iso_file, "-report_el_torito", "plain"],
-        options = command.create_command_options(blocking_processes = [iso_tool]),
+        options = commandbase.create_command_options(blocking_processes = [iso_tool]),
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -448,7 +449,7 @@ def create_bootable_iso(
             bios_boot_image = bios_boot_image,
             efi_boot_image = efi_boot_image,
             mbr_image = mbr_image),
-        options = command.create_command_options(
+        options = commandbase.create_command_options(
             output_paths = [iso_file],
             blocking_processes = [iso_tool]),
         verbose = verbose,
@@ -484,7 +485,7 @@ def get_actual_mount_point(
         # Run drive command
         drive_output = command.run_output_command(
             cmd = drive_cmd,
-            options = command.create_command_options(
+            options = commandbase.create_command_options(
                 is_shell=True),
             verbose = verbose,
             pretend_run = pretend_run,
@@ -616,7 +617,7 @@ def unmount_iso(
         # Run unmount command
         code = command.run_returncode_command(
             cmd = unmount_cmd,
-            options = command.create_command_options(
+            options = commandbase.create_command_options(
                 blocking_processes = [iso_tool]),
             verbose = verbose,
             pretend_run = pretend_run,

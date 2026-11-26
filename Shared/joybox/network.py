@@ -6,6 +6,7 @@ import tempfile
 # Local imports
 from joybox import config
 from joybox import command
+from joybox import commandbase
 from joybox import logger
 from joybox import paths
 from joybox import fileops
@@ -195,7 +196,7 @@ def download_url(
     # Run download command
     code = command.run_returncode_command(
         cmd = download_cmd,
-        options = command.create_command_options(
+        options = commandbase.create_command_options(
             blocking_processes = [download_tool]),
         verbose = verbose,
         pretend_run = pretend_run,
@@ -269,7 +270,7 @@ def download_git_url(
     # Run download command
     code = command.run_returncode_command(
         cmd = download_cmd,
-        options = command.create_command_options(
+        options = commandbase.create_command_options(
             cwd = os.path.expanduser("~"),
             blocking_processes = [download_tool]),
         verbose = verbose,

@@ -13,6 +13,7 @@ from xml.etree import ElementTree
 
 # Local imports
 from joybox import command
+from joybox import commandbase
 from joybox import runoptions
 from joybox import fileops
 from joybox import logger
@@ -53,7 +54,7 @@ SSH_KEY_NAMES = ["id_ed25519.pub", "id_rsa.pub"]
 # Get the tools that are missing from this workstation
 def get_missing_tools():
     return [tool for tool in REQUIRED_TOOLS
-            if not command.is_runnable_command(tool)]
+            if not commandbase.is_runnable_command(tool)]
 
 # Check the workstation can manage a virtual machine
 def are_tools_installed():
@@ -149,7 +150,7 @@ def build_user_data(vm_name, ssh_public_key, console_password_hash):
 def hash_console_password(console_password, verbose = False, exit_on_failure = False):
     output = command.run_output_command(
         cmd = ["openssl", "passwd", "-6", "-stdin"],
-        options = command.create_command_options(stdin_input = console_password + "\n"),
+        options = commandbase.create_command_options(stdin_input = console_password + "\n"),
         verbose = verbose,
         pretend_run = False,
         exit_on_failure = exit_on_failure)
@@ -175,7 +176,7 @@ def build_meta_data(vm_name):
 def does_vm_exist(vm_name = DEFAULT_NAME, verbose = False, pretend_run = False):
     code = command.run_returncode_command(
         cmd = get_virsh_command(["dominfo", vm_name]),
-        options = command.create_command_options(suppress_output = True),
+        options = commandbase.create_command_options(suppress_output = True),
         verbose = verbose,
         pretend_run = pretend_run)
     return code == 0
@@ -377,7 +378,7 @@ def reserve_address(
 def forget_host_key(address, verbose = False, pretend_run = False):
     command.run_returncode_command(
         cmd = ["ssh-keygen", "-R", address],
-        options = command.create_command_options(suppress_output = True),
+        options = commandbase.create_command_options(suppress_output = True),
         verbose = verbose,
         pretend_run = pretend_run)
 
@@ -610,7 +611,7 @@ def destroy_vm(
     # Stop it first; a running guest cannot be undefined
     command.run_returncode_command(
         cmd = get_virsh_command(["destroy", vm_name]),
-        options = command.create_command_options(suppress_output = True),
+        options = commandbase.create_command_options(suppress_output = True),
         verbose = verbose,
         pretend_run = pretend_run)
     code = command.run_returncode_command(

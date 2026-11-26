@@ -6,6 +6,7 @@ from joybox import config
 from joybox import logger
 from joybox import serialization
 from joybox import command
+from joybox import commandbase
 from joybox import programs
 from joybox import strings
 from joybox import network
@@ -216,7 +217,7 @@ def find_videos(
     # Run search command
     search_output = command.run_output_command(
         cmd = search_cmd,
-        options = command.create_command_options(
+        options = commandbase.create_command_options(
             blocking_processes = [youtube_tool]),
         verbose = verbose,
         pretend_run = pretend_run,
@@ -284,7 +285,7 @@ def get_playlist_video_ids(
     # Run and parse unique ids (preserving order)
     output = command.run_output_command(
         cmd = list_cmd,
-        options = command.create_command_options(blocking_processes = [youtube_tool]),
+        options = commandbase.create_command_options(blocking_processes = [youtube_tool]),
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -389,7 +390,7 @@ def download_video(
     logger.log_info(f"Executing download command: {' '.join(download_cmd[:5])}...")
     code = command.run_returncode_command(
         cmd = download_cmd,
-        options = command.create_command_options(
+        options = commandbase.create_command_options(
             blocking_processes = [youtube_tool]),
         verbose = verbose,
         pretend_run = pretend_run,

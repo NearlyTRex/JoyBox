@@ -5,7 +5,7 @@
 import re
 
 # Local imports
-from joybox import command
+from joybox import commandbase
 from joybox import programs
 from joybox import rcloneremotes
 from joybox import serialization
@@ -127,7 +127,7 @@ def authorize_remote(
     authorize_cmd = [rclone_tool, "authorize", raw_type]
     if not open_browser:
         authorize_cmd += ["--auth-no-open-browser"]
-    authorize_options = command.create_command_options()
+    authorize_options = commandbase.create_command_options()
     authorize_options.set_env_var("RCLONE_%s_CLIENT_ID" % raw_type.upper(), client_id)
     authorize_options.set_env_var("RCLONE_%s_CLIENT_SECRET" % raw_type.upper(), client_secret)
 

@@ -3,6 +3,7 @@
 # Local imports
 from joybox import config
 from joybox import command
+from joybox import commandbase
 from joybox import programs
 from joybox import rcloneremotes
 from joybox import serialization
@@ -107,7 +108,7 @@ def mount_files(
     return sync.run_rclone_command(
         cmd = mount_cmd,
         remote_names = [remote_name],
-        options = command.create_command_options(is_daemon = platform_info.is_unix_platform()),
+        options = commandbase.create_command_options(is_daemon = platform_info.is_unix_platform()),
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)

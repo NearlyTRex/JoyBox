@@ -7,8 +7,9 @@ import textwrap
 
 # Local imports
 from joybox import command
+from joybox import commandbase
 from joybox import fileops
-from joybox import hashing
+from joybox import hashutil
 from joybox import paths
 from joybox import programs
 
@@ -170,7 +171,7 @@ def extract_switch_nsp(
     # Run extract command
     code = command.run_returncode_command(
         cmd = extract_cmd,
-        options = command.create_command_options(
+        options = commandbase.create_command_options(
             output_paths = [extract_dir],
             blocking_processes = [extract_tool]),
         verbose = verbose,
@@ -187,7 +188,7 @@ def install_switch_nca(nca_file, nand_dir, verbose = False, pretend_run = False,
     nca_id = paths.get_filename_basename(nca_file)
     if nca_id.endswith(".cnmt"):
         nca_id = paths.get_filename_basename(nca_id)
-    nca_id_sha256 = hashing.calculate_string_sha256(bytes.fromhex(nca_id)).upper()
+    nca_id_sha256 = hashutil.calculate_string_sha256(bytes.fromhex(nca_id)).upper()
     nca_output_dir = paths.join_paths(nand_dir, "user", "Contents", "registered", "000000%s" % nca_id_sha256[0:2])
     success = fileops.make_directory(
         src = nca_output_dir,

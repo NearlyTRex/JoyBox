@@ -9,6 +9,7 @@ import pytest
 
 # Local imports
 from joybox import command
+from joybox import commandbase
 
 
 ###########################################################
@@ -189,7 +190,7 @@ def test_both_ends_of_the_terminal_are_closed(terminal):
 
 
 def test_the_child_gets_the_working_directory_and_environment(terminal):
-    options = command.create_command_options(cwd = "/work")
+    options = commandbase.create_command_options(cwd = "/work")
     options.set_env_var("JOYBOX_TEST", "1")
 
     run(options = options)
@@ -200,7 +201,7 @@ def test_the_child_gets_the_working_directory_and_environment(terminal):
 
 
 def test_a_shell_interactive_command_runs_through_the_shell(terminal):
-    options = command.create_command_options(is_shell = True)
+    options = commandbase.create_command_options(is_shell = True)
 
     run(["echo", "a b"], options = options)
 
@@ -219,7 +220,7 @@ def test_an_interrupt_stops_the_child_and_reports_its_exit(terminal):
 
 def test_blocking_processes_are_waited_for_after_an_interactive_run(terminal):
     terminal.returncode = 3
-    options = command.create_command_options(blocking_processes = ["wineserver"])
+    options = commandbase.create_command_options(blocking_processes = ["wineserver"])
 
     assert run(options = options) == 3
     assert terminal.waited_for == [["wineserver"]]
@@ -236,7 +237,7 @@ def test_an_interactive_run_without_processing_is_not_postprocessed(terminal, mo
         raise AssertionError("processing was turned off")
 
     monkeypatch.setattr(command, "preprocess_command", fail)
-    options = command.create_command_options(allow_processing = False)
+    options = commandbase.create_command_options(allow_processing = False)
 
     run(options = options)
 
@@ -389,7 +390,7 @@ def test_a_windows_interactive_run_echoes_the_child_output(windows, capsys):
 
 
 def test_a_windows_interactive_run_gets_the_working_directory_and_environment(windows):
-    options = command.create_command_options(cwd = "C:\\work")
+    options = commandbase.create_command_options(cwd = "C:\\work")
     options.set_env_var("JOYBOX_TEST", "1")
 
     run(options = options)
@@ -409,7 +410,7 @@ def test_a_windows_interrupt_terminates_the_child(windows, monkeypatch):
 
 
 def test_a_windows_interactive_run_waits_for_blocking_processes(windows, terminal):
-    options = command.create_command_options(blocking_processes = ["wineserver"])
+    options = commandbase.create_command_options(blocking_processes = ["wineserver"])
 
     assert run(options = options) == 6
     assert terminal.waited_for == [["wineserver"]]

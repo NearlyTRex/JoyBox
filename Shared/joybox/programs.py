@@ -100,11 +100,11 @@ def should_library_be_installed(library_name):
 
 # Determine if program is installed
 def is_program_installed(program_name, program_platform = None):
-    from joybox import command
+    from joybox import commandbase
     if is_program_name_tool(program_name, program_platform):
-        return command.is_runnable_command(get_tool_program(program_name, program_platform))
+        return commandbase.is_runnable_command(get_tool_program(program_name, program_platform))
     elif is_program_name_emulator(program_name, program_platform):
-        return command.is_runnable_command(get_emulator_program(program_name, program_platform))
+        return commandbase.is_runnable_command(get_emulator_program(program_name, program_platform))
     return False
 
 ###########################################################

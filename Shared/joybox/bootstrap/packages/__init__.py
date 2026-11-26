@@ -1,16 +1,28 @@
 # Imports
 from joybox.bootstrap.packages.aptget import (
-    aptget as aptget)
+    aptget)
 from joybox.bootstrap.packages.cargo import (
-    cargo as cargo,
-    rust_targets as rust_targets)
+    cargo,
+    rust_targets)
 from joybox.bootstrap.packages.flatpak import (
-    flatpak as flatpak)
+    flatpak)
 from joybox.bootstrap.packages.images import (
-    docker_images as docker_images)
+    docker_images)
 from joybox.bootstrap.packages.node import (
-    node as node)
+    node)
 from joybox.bootstrap.packages.python import (
-    python as python)
+    python)
 from joybox.bootstrap.packages.winget import (
-    winget as winget)
+    winget)
+
+# The names this package re-exports
+__all__ = [
+    "aptget",
+    "cargo",
+    "rust_targets",
+    "flatpak",
+    "docker_images",
+    "node",
+    "python",
+    "winget",
+]

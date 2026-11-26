@@ -7,6 +7,7 @@ from joybox import logger
 from joybox import environment
 from joybox import programs
 from joybox import command
+from joybox import commandbase
 
 ###########################################################
 
@@ -110,7 +111,7 @@ def launch_program(verbose = False, pretend_run = False, exit_on_failure = False
         logger.log_info("  Ghidra: %s" % ghidra_install_dir)
 
     # Create command options with Ghidra install dir environment variable
-    cmd_options = command.create_command_options()
+    cmd_options = commandbase.create_command_options()
     cmd_options.set_env_var("GHIDRA_INSTALL_DIR", ghidra_install_dir)
 
     # Run launch command
@@ -184,7 +185,7 @@ def run_script(
             logger.log_info("  Args: %s" % script_args)
 
     # Create command options with Ghidra install dir environment variable
-    cmd_options = command.create_command_options()
+    cmd_options = commandbase.create_command_options()
     cmd_options.set_env_var("GHIDRA_INSTALL_DIR", ghidra_install_dir)
 
     # Force headless AWT for the PyGhidra JVM. Running scripts is a headless batch

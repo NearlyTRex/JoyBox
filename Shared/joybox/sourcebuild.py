@@ -7,6 +7,7 @@ import os
 # Local imports
 from joybox import archive
 from joybox import command
+from joybox import commandbase
 from joybox import environment
 from joybox import fileops
 from joybox import filebulk
@@ -78,7 +79,7 @@ def apply_source_patches(
                 "apply",
                 patch_temp_file
             ],
-            options = command.create_command_options(
+            options = commandbase.create_command_options(
                 cwd = source_dir),
             verbose = verbose,
             pretend_run = pretend_run,
@@ -228,7 +229,7 @@ def build_from_source(
         # Build release
         code = command.run_returncode_command(
             cmd = build_cmd,
-            options = command.create_command_options(
+            options = commandbase.create_command_options(
                 cwd = source_build_dir,
                 is_shell = True),
             verbose = verbose,
@@ -501,7 +502,7 @@ def build_appimage_from_source(
         # Build AppImage
         code = command.run_returncode_command(
             cmd = [programs.get_tool_program("AppImageTool"), appimage_dir],
-            options = command.create_command_options(
+            options = commandbase.create_command_options(
                 cwd = tmp_dir),
             verbose = verbose,
             pretend_run = pretend_run,

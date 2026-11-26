@@ -3,7 +3,7 @@ import os
 
 # Local imports
 from joybox import logger
-from joybox import hashing
+from joybox import hashutil
 from joybox import paths
 
 # AudioMetadata's methods for a whole album directory: reading, setting and clearing
@@ -80,7 +80,7 @@ class AlbumTagsMixin:
                 track_artwork = None
                 if "artwork" in tags and tags["artwork"]:
                     track_artwork_data = tags["artwork"][0]["data"]
-                    track_artwork_hash = hashing.calculate_string_sha256(track_artwork_data)
+                    track_artwork_hash = hashutil.calculate_string_sha256(track_artwork_data)
 
                     # Set album artwork from first track if not set
                     if album_artwork is None:

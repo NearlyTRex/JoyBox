@@ -4,6 +4,7 @@ import os.path
 from joybox import system
 from joybox import environment
 from joybox import command
+from joybox import commandbase
 from joybox import programs
 from joybox import arguments
 from joybox import setup
@@ -60,7 +61,7 @@ def main():
     ]
 
     # Get launch options
-    launch_options = command.create_command_options()
+    launch_options = commandbase.create_command_options()
     launch_options.set_cwd(paths.get_filename_directory(pegasus_tool))
     launch_options.set_env(dict(os.environ))
     launch_options.set_env_var("JOYBOX_LAUNCH_JSON", environment.get_command_path("launch_game_json"))
