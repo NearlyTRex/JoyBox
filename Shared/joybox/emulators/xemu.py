@@ -11,29 +11,6 @@ from joybox import programs
 from joybox import emulatorcommon
 from joybox import emulatorbase
 
-# Config files
-config_files = {}
-CONFIG_FILE_GENERAL = """
-[general]
-show_welcome = false
-
-[input.bindings]
-port1 = '030003f05e0400008e02000014010000'
-
-[sys.files]
-bootrom_path = 'EMULATOR_SETUP_ROOT/bios/mcpx_1.0.bin'
-flashrom_path = 'EMULATOR_SETUP_ROOT/bios/complex_4627.bin'
-eeprom_path = "GAME_SAVE_DIR/eeprom.bin"
-hdd_path = "GAME_SAVE_DIR/xbox_hdd.qcow2"
-"""
-config_files["Xemu/windows/xemu.toml"] = CONFIG_FILE_GENERAL
-config_files["Xemu/linux/Xemu.AppImage.home/.local/share/xemu/xemu/xemu.toml"] = CONFIG_FILE_GENERAL
-
-# System files
-system_files = {}
-system_files["bios/mcpx_1.0.bin"] = "d49c52a4102f6df7bcf8d0617ac475ed"
-system_files["bios/complex_4627.bin"] = "ec00e31e746de2473acfe7903c5a4cb7"
-system_files["bios/complex_4627_v1.03.bin"] = "21445c6f28fca7285b0f167ea770d1e5"
 
 # Xemu emulator
 class Xemu(emulatorbase.EmulatorBase):
@@ -47,33 +24,6 @@ class Xemu(emulatorbase.EmulatorBase):
         return [
             config.Platform.MICROSOFT_XBOX
         ]
-
-    # Get config
-    def get_config(self):
-        return {
-            "Xemu": {
-                "program": {
-                    "windows": "Xemu/windows/xemu.exe",
-                    "linux": "Xemu/linux/Xemu.AppImage"
-                },
-                "save_dir": {
-                    "windows": None,
-                    "linux": None
-                },
-                "setup_dir": {
-                    "windows": "Xemu/windows",
-                    "linux": "Xemu/linux/Xemu.AppImage.home/.local/share/xemu/xemu"
-                },
-                "config_file": {
-                    "windows": "Xemu/windows/xemu.toml",
-                    "linux": "Xemu/linux/Xemu.AppImage.home/.local/share/xemu/xemu/xemu.toml"
-                },
-                "run_sandboxed": {
-                    "windows": False,
-                    "linux": False
-                }
-            }
-        }
 
     # Setup
     def setup(self, setup_params = None):
@@ -167,7 +117,7 @@ class Xemu(emulatorbase.EmulatorBase):
             setup_params = config.SetupParams()
 
         # Create config files
-        for config_filename, config_contents in config_files.items():
+        for config_filename, config_contents in self.get_config_files().items():
             success = fileops.touch_file(
                 src = paths.join_paths(environment.get_emulators_root_dir(), config_filename),
                 contents = config_contents.strip(),
@@ -179,11 +129,11 @@ class Xemu(emulatorbase.EmulatorBase):
                 return False
 
         # Verify system files
-        if not self.verify_system_files(system_files, setup_params):
+        if not self.verify_system_files(self.get_system_files(), setup_params):
             return False
 
         # Copy system files
-        for filename in system_files.keys():
+        for filename in self.get_system_files().keys():
             for platform in ["windows", "linux"]:
                 success = filebulk.smart_copy(
                     src = paths.join_paths(environment.get_locker_gaming_emulator_setup_dir("Xemu"), filename),

@@ -1,0 +1,9 @@
+# SheepShaver: where its programs live and how they run, the files its setup writes
+# and the system files it checks. Read by joybox/programcatalog.py.
+
+[config.SheepShaver]
+run_sandboxed = { windows = false, linux = false }
+
+[config.SheepShaver.program]
+windows = "SheepShaver/windows/SheepShaver.exe"
+linux = "SheepShaver/linux/SheepShaver.AppImage"

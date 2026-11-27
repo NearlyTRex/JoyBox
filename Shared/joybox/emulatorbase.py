@@ -2,6 +2,7 @@
 from abc import ABC, abstractmethod
 
 # Local imports
+from joybox import programcatalog
 from joybox import programs
 from joybox import environment
 from joybox import paths
@@ -20,9 +21,17 @@ class EmulatorBase(ABC):
     def get_platforms(self):
         return []
 
-    # Get config
+    # Get config, from the emulator's program data
     def get_config(self):
-        return {}
+        return programcatalog.get_emulator_config(self.get_name())
+
+    # Get the files setup writes, by path, with their contents
+    def get_config_files(self):
+        return programcatalog.get_config_files(programcatalog.FAMILY_EMULATORS, self.get_name())
+
+    # Get the system files setup checks, by path, with their md5
+    def get_system_files(self):
+        return programcatalog.get_system_files(programcatalog.FAMILY_EMULATORS, self.get_name())
 
     # Get config file
     def get_config_file(self, emulator_platform = None):

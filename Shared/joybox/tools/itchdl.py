@@ -6,8 +6,6 @@ from joybox import release
 from joybox import programs
 from joybox import toolbase
 
-# Config files
-config_files = {}
 
 # ItchDL tool
 class ItchDL(toolbase.ToolBase):
@@ -15,14 +13,6 @@ class ItchDL(toolbase.ToolBase):
     # Get name
     def get_name(self):
         return "ItchDL"
-
-    # Get config
-    def get_config(self):
-        return {
-            "ItchDL": {
-                "program": "ItchDL/lib/itch_dl/cli.py"
-            }
-        }
 
     # Setup
     def setup(self, setup_params = None):

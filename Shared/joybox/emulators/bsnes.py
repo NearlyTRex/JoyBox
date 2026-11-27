@@ -5,11 +5,6 @@ from joybox import release
 from joybox import programs
 from joybox import emulatorbase
 
-# Config files
-config_files = {}
-
-# System files
-system_files = {}
 
 # BSnes emulator
 class BSnes(emulatorbase.EmulatorBase):
@@ -21,21 +16,6 @@ class BSnes(emulatorbase.EmulatorBase):
     # Get platforms
     def get_platforms(self):
         return []
-
-    # Get config
-    def get_config(self):
-        return {
-            "BSnes": {
-                "program": {
-                    "windows": "BSnes/windows/bsnes.exe",
-                    "linux": "BSnes/windows/bsnes.exe"
-                },
-                "run_sandboxed": {
-                    "windows": False,
-                    "linux": True
-                }
-            }
-        }
 
     # Setup
     def setup(self, setup_params = None):

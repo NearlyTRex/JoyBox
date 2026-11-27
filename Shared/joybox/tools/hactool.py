@@ -6,8 +6,6 @@ from joybox import sourcebuild
 from joybox import programs
 from joybox import toolbase
 
-# Config files
-config_files = {}
 
 # HacTool tool
 class HacTool(toolbase.ToolBase):
@@ -15,21 +13,6 @@ class HacTool(toolbase.ToolBase):
     # Get name
     def get_name(self):
         return "HacTool"
-
-    # Get config
-    def get_config(self):
-        return {
-            "HacTool": {
-                "program": {
-                    "windows": "HacTool/windows/hactool.exe",
-                    "linux": "HacTool/linux/HacTool.AppImage"
-                },
-                "run_sandboxed": {
-                    "windows": False,
-                    "linux": False
-                }
-            }
-        }
 
     # Setup
     def setup(self, setup_params = None):

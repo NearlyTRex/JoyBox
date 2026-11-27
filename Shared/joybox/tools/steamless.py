@@ -5,8 +5,6 @@ from joybox import release
 from joybox import programs
 from joybox import toolbase
 
-# Config files
-config_files = {}
 
 # Steamless tool
 class Steamless(toolbase.ToolBase):
@@ -14,21 +12,6 @@ class Steamless(toolbase.ToolBase):
     # Get name
     def get_name(self):
         return "Steamless"
-
-    # Get config
-    def get_config(self):
-        return {
-            "Steamless": {
-                "program": {
-                    "windows": "Steamless/windows/Steamless.CLI.exe",
-                    "linux": "Steamless/windows/Steamless.CLI.exe"
-                },
-                "run_sandboxed": {
-                    "windows": False,
-                    "linux": True
-                }
-            }
-        }
 
     # Setup
     def setup(self, setup_params = None):

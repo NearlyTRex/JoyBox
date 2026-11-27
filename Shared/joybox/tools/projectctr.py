@@ -5,8 +5,6 @@ from joybox import release
 from joybox import programs
 from joybox import toolbase
 
-# Config files
-config_files = {}
 
 # ProjectCTR tool
 class ProjectCTR(toolbase.ToolBase):
@@ -14,35 +12,6 @@ class ProjectCTR(toolbase.ToolBase):
     # Get name
     def get_name(self):
         return "ProjectCTR"
-
-    # Get config
-    def get_config(self):
-        return {
-
-            # CtrMakeRom
-            "CtrMakeRom": {
-                "program": {
-                    "windows": "CtrMakeRom/windows/makerom.exe",
-                    "linux": "CtrMakeRom/linux/makerom"
-                },
-                "run_sandboxed": {
-                    "windows": False,
-                    "linux": False
-                }
-            },
-
-            # CtrTool
-            "CtrTool": {
-                "program": {
-                    "windows": "CtrTool/windows/ctrtool.exe",
-                    "linux": "CtrTool/linux/ctrtool"
-                },
-                "run_sandboxed": {
-                    "windows": False,
-                    "linux": False
-                }
-            }
-        }
 
     # Setup
     def setup(self, setup_params = None):

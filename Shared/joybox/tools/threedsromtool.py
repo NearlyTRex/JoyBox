@@ -6,8 +6,6 @@ from joybox import sourcebuild
 from joybox import programs
 from joybox import toolbase
 
-# Config files
-config_files = {}
 
 # ThreeDSRomTool tool
 class ThreeDSRomTool(toolbase.ToolBase):
@@ -15,21 +13,6 @@ class ThreeDSRomTool(toolbase.ToolBase):
     # Get name
     def get_name(self):
         return "3DSRomTool"
-
-    # Get config
-    def get_config(self):
-        return {
-            "3DSRomTool": {
-                "program": {
-                    "windows": "3DSRomTool/windows/rom_tool.exe",
-                    "linux": "3DSRomTool/linux/3DSRomTool.AppImage"
-                },
-                "run_sandboxed": {
-                    "windows": False,
-                    "linux": False
-                }
-            }
-        }
 
     # Setup
     def setup(self, setup_params = None):

@@ -6,8 +6,6 @@ from joybox import release
 from joybox import programs
 from joybox import toolbase
 
-# Config files
-config_files = {}
 
 # Get libs
 def get_libs(key):
@@ -33,25 +31,6 @@ class DXVK(toolbase.ToolBase):
     # Get name
     def get_name(self):
         return "DXVK"
-
-    # Get config
-    def get_config(self):
-        return {
-            "DXVK": {
-                "lib32": [
-                    "x32/d3d10core.dll",
-                    "x32/d3d11.dll",
-                    "x32/d3d9.dll",
-                    "x32/dxgi.dll"
-                ],
-                "lib64": [
-                    "x64/d3d10core.dll",
-                    "x64/d3d11.dll",
-                    "x64/d3d9.dll",
-                    "x64/dxgi.dll"
-                ]
-            }
-        }
 
     # Setup
     def setup(self, setup_params = None):

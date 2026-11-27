@@ -7,8 +7,6 @@ from joybox import requirements
 from joybox import programs
 from joybox import toolbase
 
-# Config files
-config_files = {}
 
 # Legendary tool
 class Legendary(toolbase.ToolBase):
@@ -16,15 +14,6 @@ class Legendary(toolbase.ToolBase):
     # Get name
     def get_name(self):
         return "Legendary"
-
-    # Get config
-    def get_config(self):
-        return {
-            "Legendary": {
-                "program": "Legendary/lib/main.py",
-                "github_branch": "dev"
-            }
-        }
 
     # Setup
     def setup(self, setup_params = None):

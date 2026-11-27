@@ -7,8 +7,6 @@ from joybox import requirements
 from joybox import programs
 from joybox import toolbase
 
-# Config files
-config_files = {}
 
 # PySteamGridDB tool
 class PySteamGridDB(toolbase.ToolBase):
@@ -16,15 +14,6 @@ class PySteamGridDB(toolbase.ToolBase):
     # Get name
     def get_name(self):
         return "PySteamGridDB"
-
-    # Get config
-    def get_config(self):
-        return {
-            "PySteamGridDB": {
-                "package_dir": "PySteamGridDB/lib",
-                "package_name": "steamgrid"
-            }
-        }
 
     # Setup
     def setup(self, setup_params = None):

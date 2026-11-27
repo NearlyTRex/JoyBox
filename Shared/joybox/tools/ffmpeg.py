@@ -5,8 +5,6 @@ from joybox import release
 from joybox import programs
 from joybox import toolbase
 
-# Config files
-config_files = {}
 
 # FFMpeg tool
 class FFMpeg(toolbase.ToolBase):
@@ -14,21 +12,6 @@ class FFMpeg(toolbase.ToolBase):
     # Get name
     def get_name(self):
         return "FFMpeg"
-
-    # Get config
-    def get_config(self):
-        return {
-            "FFMpeg": {
-                "program": {
-                    "windows": "FFMpeg/windows/ffmpeg.exe",
-                    "linux": "FFMpeg/linux/ffmpeg"
-                },
-                "run_sandboxed": {
-                    "windows": False,
-                    "linux": False
-                }
-            }
-        }
 
     # Setup
     def setup(self, setup_params = None):

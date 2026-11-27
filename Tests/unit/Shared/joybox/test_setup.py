@@ -226,8 +226,8 @@ def test_force_with_nothing_installed_still_sets_up(tmp_path):
 
 
 @pytest.mark.parametrize("entry,lister,root_getter,package_type", [
-    ("setup_tools", "get_tools", "get_tools_root_dir", "tool"),
-    ("setup_emulators", "get_emulators", "get_emulators_root_dir", "emulator"),
+    ("setup_tools", ("tools", "get_tool_list"), "get_tools_root_dir", "tool"),
+    ("setup_emulators", ("emulators", "get_emulator_list"), "get_emulators_root_dir", "emulator"),
 ])
 def test_tools_and_emulators_use_their_own_list_and_root(monkeypatch, entry, lister, root_getter, package_type):
     received = {}
@@ -238,7 +238,7 @@ def test_tools_and_emulators_use_their_own_list_and_root(monkeypatch, entry, lis
         received.update(kwargs)
         return True
 
-    monkeypatch.setattr(setup.programs, lister, lambda: package_list)
+    monkeypatch.setattr(getattr(setup, lister[0]), lister[1], lambda: package_list)
     monkeypatch.setattr(setup.environment, root_getter, lambda: "/root/" + package_type)
     monkeypatch.setattr(setup, "setup_packages", setup_packages)
 

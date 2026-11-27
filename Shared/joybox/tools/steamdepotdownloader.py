@@ -5,8 +5,6 @@ from joybox import release
 from joybox import programs
 from joybox import toolbase
 
-# Config files
-config_files = {}
 
 # SteamDepotDownloader tool
 class SteamDepotDownloader(toolbase.ToolBase):
@@ -14,21 +12,6 @@ class SteamDepotDownloader(toolbase.ToolBase):
     # Get name
     def get_name(self):
         return "SteamDepotDownloader"
-
-    # Get config
-    def get_config(self):
-        return {
-            "SteamDepotDownloader": {
-                "program": {
-                    "windows": "SteamDepotDownloader/windows/DepotDownloader.exe",
-                    "linux": "SteamDepotDownloader/linux/DepotDownloader"
-                },
-                "run_sandboxed": {
-                    "windows": False,
-                    "linux": True
-                }
-            }
-        }
 
     # Setup
     def setup(self, setup_params = None):

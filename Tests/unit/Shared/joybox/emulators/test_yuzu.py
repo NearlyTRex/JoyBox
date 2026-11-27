@@ -154,7 +154,7 @@ def test_configure_copies_the_keys_and_sysdata_to_each_platform(profiles):
 
     assert profiles.copied.values("dest") == [
         "/emu/Yuzu/setup_dir/%s/%s" % (platform, filename)
-        for filename in yuzu.system_files for platform in PLATFORMS]
+        for filename in yuzu.Yuzu().get_system_files() for platform in PLATFORMS]
 
 
 def test_configure_refuses_keys_with_the_wrong_hash(profiles):

@@ -1,0 +1,5 @@
+# ItchDL: where its programs live and how they run, the files its setup writes
+# and the system files it checks. Read by joybox/programcatalog.py.
+
+[config.ItchDL]
+program = "ItchDL/lib/itch_dl/cli.py"

@@ -1,0 +1,6 @@
+# Wad2Bin: where its programs live and how they run, the files its setup writes
+# and the system files it checks. Read by joybox/programcatalog.py.
+
+[config.Wad2Bin]
+program = { windows = "Wad2Bin/windows/wad2bin-windows-x64.exe", linux = "Wad2Bin/linux/wad2bin" }
+run_sandboxed = { windows = false, linux = false }

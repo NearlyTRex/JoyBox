@@ -10,62 +10,6 @@ from joybox import programs
 from joybox import emulatorcommon
 from joybox import emulatorbase
 
-# Config files
-config_files = {}
-CONFIG_FILE_GENERAL = """
-displaycolordepth 0
-disk
-cdrom /dev/cdrom
-extfs /
-screen dga/1024/768
-seriala /dev/ttyS0
-serialb /dev/ttyS1
-udptunnel false
-udpport 6066
-rom EMULATOR_SETUP_ROOT/quadra.rom
-bootdrive 0
-bootdriver 0
-ramsize 67108864
-frameskip 1
-modelid 14
-cpu 4
-fpu true
-nocdrom false
-nosound false
-noclipconversion false
-nogui false
-jit false
-jitfpu true
-jitdebug false
-jitcachesize 8192
-jitlazyflush true
-jitinline true
-keyboardtype 5
-keycodes false
-mousewheelmode 1
-mousewheellines 3
-hotkey 0
-scale_nearest false
-scale_integer false
-yearofs 0
-dayofs 0
-mag_rate 0
-swap_opt_cmd true
-ignoresegv true
-sound_buffer 0
-name_encoding 0
-delay 0
-dsp /dev/dsp
-mixer /dev/mixer
-idlewait true
-sdlrender software
-"""
-config_files["BasiliskII/windows/BasiliskII_prefs"] = CONFIG_FILE_GENERAL
-config_files["BasiliskII/linux/BasiliskII.AppImage.home/.config/BasiliskII/prefs"] = CONFIG_FILE_GENERAL
-
-# System files
-system_files = {}
-system_files["quadra.rom"] = "69489153dde910a69d5ae6de5dd65323"
 
 # BasiliskII emulator
 class BasiliskII(emulatorbase.EmulatorBase):
@@ -79,33 +23,6 @@ class BasiliskII(emulatorbase.EmulatorBase):
         return [
             config.Platform.OTHER_APPLE_MACOS_8
         ]
-
-    # Get config
-    def get_config(self):
-        return {
-            "BasiliskII": {
-                "program": {
-                    "windows": "BasiliskII/windows/BasiliskII.exe",
-                    "linux": "BasiliskII/linux/BasiliskII.AppImage"
-                },
-                "save_dir": {
-                    "windows": None,
-                    "linux": None
-                },
-                "setup_dir": {
-                    "windows": "BasiliskII/windows",
-                    "linux": "BasiliskII/linux/BasiliskII.AppImage.home/.config/BasiliskII"
-                },
-                "config_file": {
-                    "windows": "BasiliskII/windows/BasiliskII_prefs",
-                    "linux": "BasiliskII/linux/BasiliskII.AppImage.home/.config/BasiliskII/prefs"
-                },
-                "run_sandboxed": {
-                    "windows": False,
-                    "linux": False
-                }
-            }
-        }
 
     # Setup
     def setup(self, setup_params = None):
@@ -191,7 +108,7 @@ class BasiliskII(emulatorbase.EmulatorBase):
             setup_params = config.SetupParams()
 
         # Create config files
-        for config_filename, config_contents in config_files.items():
+        for config_filename, config_contents in self.get_config_files().items():
             success = fileops.touch_file(
                 src = paths.join_paths(environment.get_emulators_root_dir(), config_filename),
                 contents = config_contents.strip(),
@@ -203,11 +120,11 @@ class BasiliskII(emulatorbase.EmulatorBase):
                 return False
 
         # Verify system files
-        if not self.verify_system_files(system_files, setup_params):
+        if not self.verify_system_files(self.get_system_files(), setup_params):
             return False
 
         # Copy system files
-        for filename in system_files.keys():
+        for filename in self.get_system_files().keys():
             for platform in ["windows", "linux"]:
                 success = filebulk.smart_copy(
                     src = paths.join_paths(environment.get_locker_gaming_emulator_setup_dir("BasiliskII"), filename),

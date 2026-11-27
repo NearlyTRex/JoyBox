@@ -5,8 +5,6 @@ from joybox import release
 from joybox import programs
 from joybox import toolbase
 
-# Config files
-config_files = {}
 
 # Sigtop tool
 class Sigtop(toolbase.ToolBase):
@@ -14,21 +12,6 @@ class Sigtop(toolbase.ToolBase):
     # Get name
     def get_name(self):
         return "Sigtop"
-
-    # Get config
-    def get_config(self):
-        return {
-            "Sigtop": {
-                "program": {
-                    "windows": "Sigtop/windows/sigtop.exe",
-                    "linux": "Sigtop/windows/sigtop.exe"
-                },
-                "run_sandboxed": {
-                    "windows": False,
-                    "linux": True
-                }
-            }
-        }
 
     # Setup
     def setup(self, setup_params = None):

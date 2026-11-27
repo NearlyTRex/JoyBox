@@ -2,6 +2,7 @@
 import pytest
 
 # Local imports
+from joybox import programcatalog
 from joybox.tools import sandboxie
 
 
@@ -25,14 +26,14 @@ def windows_settings(monkeypatch):
         "sandboxie_install_dir": "/sandboxie",
         "sandboxie_sandbox_dir": "/sandbox",
     }
-    monkeypatch.setattr(sandboxie.platform_info, "is_sandboxie_platform", lambda: True)
-    monkeypatch.setattr(sandboxie.settings, "get_value", lambda section, key, **kwargs: values[key])
-    monkeypatch.setattr(sandboxie.settings, "get_path_value", lambda section, key, **kwargs: values[key])
+    monkeypatch.setattr(programcatalog.platform_info, "is_sandboxie_platform", lambda: True)
+    monkeypatch.setattr(programcatalog.settings, "get_value", lambda section, key, **kwargs: values[key])
+    monkeypatch.setattr(programcatalog.settings, "get_path_value", lambda section, key, **kwargs: values[key])
     return values
 
 
 def test_other_platforms_have_no_config(monkeypatch):
-    monkeypatch.setattr(sandboxie.platform_info, "is_sandboxie_platform", lambda: False)
+    monkeypatch.setattr(programcatalog.platform_info, "is_sandboxie_platform", lambda: False)
 
     assert sandboxie.Sandboxie().get_config() == {}
 

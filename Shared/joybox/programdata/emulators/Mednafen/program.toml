@@ -1,0 +1,22 @@
+# Mednafen: where its programs live and how they run, the files its setup writes
+# and the system files it checks. Read by joybox/programcatalog.py.
+
+[config.Mednafen]
+program = { windows = "Mednafen/windows/mednafen.exe", linux = "Mednafen/linux/Mednafen.AppImage" }
+save_dir = { windows = "Mednafen/windows/sav", linux = "Mednafen/linux/Mednafen.AppImage.home/.mednafen/sav" }
+setup_dir = { windows = "Mednafen/windows", linux = "Mednafen/linux/Mednafen.AppImage.home/.mednafen" }
+run_sandboxed = { windows = false, linux = false }
+
+[config.Mednafen.config_file]
+windows = "Mednafen/windows/mednafen.cfg"
+linux = "Mednafen/linux/Mednafen.AppImage.home/.mednafen/mednafen.cfg"
+
+[[config_files]]
+path = "Mednafen/windows/mednafen.cfg"
+
+[[config_files]]
+path = "Mednafen/linux/Mednafen.AppImage.home/.mednafen/mednafen.cfg"
+
+[[system_files]]
+path = "firmware/lynxboot.img"
+md5 = "fcd403db69f54290b51035d82f835e7b"

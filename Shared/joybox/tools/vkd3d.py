@@ -6,8 +6,6 @@ from joybox import paths
 from joybox import programs
 from joybox import toolbase
 
-# Config files
-config_files = {}
 
 # Get libs
 def get_libs(key):
@@ -33,21 +31,6 @@ class VKD3D(toolbase.ToolBase):
     # Get name
     def get_name(self):
         return "VKD3D"
-
-    # Get config
-    def get_config(self):
-        return {
-            "VKD3D": {
-                "lib32": [
-                    "x86/d3d12.dll",
-                    "x86/d3d12core.dll"
-                ],
-                "lib64": [
-                    "x64/d3d12.dll",
-                    "x64/d3d12core.dll"
-                ]
-            }
-        }
 
     # Setup
     def setup(self, setup_params = None):

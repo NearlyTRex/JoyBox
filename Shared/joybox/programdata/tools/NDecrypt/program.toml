@@ -1,0 +1,6 @@
+# NDecrypt: where its programs live and how they run, the files its setup writes
+# and the system files it checks. Read by joybox/programcatalog.py.
+
+[config.NDecrypt]
+program = { windows = "NDecrypt/windows/NDecrypt.exe", linux = "NDecrypt/linux/NDecrypt" }
+run_sandboxed = { windows = false, linux = false }

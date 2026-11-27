@@ -18,12 +18,6 @@ from joybox import toolbase
 from joybox import desktopentry
 from joybox import settings
 
-# Config files
-config_files = {}
-config_files["Sunshine/windows/config/sunshine.conf"] = ""
-config_files["Sunshine/linux/Sunshine.AppImage.home/.config/sunshine/sunshine.conf"] = ""
-config_files["Sunshine/windows/config/apps.json"] = ""
-config_files["Sunshine/linux/Sunshine.AppImage.home/.config/sunshine/apps.json"] = ""
 
 # Build the app list a Moonlight client can start from, from config.streaming_apps
 # The Linux AppImage runs with its .home folder as HOME, which its apps would
@@ -93,21 +87,6 @@ class Sunshine(toolbase.ToolBase):
     # Get name
     def get_name(self):
         return "Sunshine"
-
-    # Get config
-    def get_config(self):
-        return {
-            "Sunshine": {
-                "program": {
-                    "windows": "Sunshine/windows/sunshine.exe",
-                    "linux": "Sunshine/linux/Sunshine.AppImage"
-                },
-                "run_sandboxed": {
-                    "windows": False,
-                    "linux": False
-                }
-            }
-        }
 
     # Setup
     def setup(self, setup_params = None):
@@ -195,6 +174,7 @@ class Sunshine(toolbase.ToolBase):
             setup_params = config.SetupParams()
 
         # Update app lists
+        config_files = self.get_config_files()
         config_files["Sunshine/windows/config/apps.json"] = build_apps("windows")
         config_files["Sunshine/linux/Sunshine.AppImage.home/.config/sunshine/apps.json"] = build_apps("linux")
 

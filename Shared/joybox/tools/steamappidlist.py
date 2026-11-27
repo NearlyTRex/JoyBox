@@ -6,8 +6,6 @@ from joybox import release
 from joybox import programs
 from joybox import toolbase
 
-# Config files
-config_files = {}
 
 # SteamAppIDList tool
 class SteamAppIDList(toolbase.ToolBase):
@@ -15,14 +13,6 @@ class SteamAppIDList(toolbase.ToolBase):
     # Get name
     def get_name(self):
         return "SteamAppIDList"
-
-    # Get config
-    def get_config(self):
-        return {
-            "SteamAppIDList": {
-                "csv": "SteamAppIDList/lib/steamcmd_appid.csv"
-            }
-        }
 
     # Setup
     def setup(self, setup_params = None):

@@ -1,0 +1,5 @@
+# ZoomPlatformSH: where its programs live and how they run, the files its setup writes
+# and the system files it checks. Read by joybox/programcatalog.py.
+
+[config.ZoomPlatformSH]
+program = "ZoomPlatformSH/lib/zoom-platform.sh"

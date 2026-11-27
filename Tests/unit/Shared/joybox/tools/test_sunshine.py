@@ -113,7 +113,7 @@ def test_configure_puts_sunshine_in_the_menu_only_on_a_streaming_host(steps, iso
 
 
 def test_a_failed_launcher_fails_the_configure(steps):
-    steps.fail_at = len(sunshine.config_files)
+    steps.fail_at = len(sunshine.Sunshine().get_config_files())
 
     assert not sunshine.Sunshine().configure()
     assert steps.errors == ["Could not setup the Sunshine launcher"]
@@ -210,7 +210,7 @@ def test_configure_without_a_login_leaves_the_web_page_to_ask(steps, isolated_se
 def test_a_failed_login_fails_the_configure(steps, isolated_settings):
     isolated_settings.set_value("UserData.Streaming", "sunshine_user", "player")
     isolated_settings.set_value("UserData.Streaming", "sunshine_pass", LOGIN_PHRASE)
-    steps.fail_at = len(sunshine.config_files)
+    steps.fail_at = len(sunshine.Sunshine().get_config_files())
 
     assert not sunshine.Sunshine().configure()
     assert steps.errors == ["Could not setup the Sunshine login"]

@@ -7,8 +7,6 @@ from joybox import requirements
 from joybox import programs
 from joybox import toolbase
 
-# Config files
-config_files = {}
 
 # PSNGetPkgInfo tool
 class PSNGetPkgInfo(toolbase.ToolBase):
@@ -16,14 +14,6 @@ class PSNGetPkgInfo(toolbase.ToolBase):
     # Get name
     def get_name(self):
         return "PSNGetPkgInfo"
-
-    # Get config
-    def get_config(self):
-        return {
-            "PSNGetPkgInfo": {
-                "program": "PSNGetPkgInfo/lib/PSN_get_pkg_info.py"
-            }
-        }
 
     # Setup
     def setup(self, setup_params = None):

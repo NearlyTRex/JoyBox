@@ -10,13 +10,6 @@ from joybox import programs
 from joybox import emulatorcommon
 from joybox import emulatorbase
 
-# Config files
-config_files = {}
-config_files["Atari800/windows/.atari800.cfg"] = ""
-config_files["Atari800/linux/Atari800.AppImage.home/.atari800.cfg"] = ""
-
-# System files
-system_files = {}
 
 # Atari800 emulator
 class Atari800(emulatorbase.EmulatorBase):
@@ -30,29 +23,6 @@ class Atari800(emulatorbase.EmulatorBase):
         return [
             config.Platform.OTHER_ATARI_800
         ]
-
-    # Get config
-    def get_config(self):
-        return {
-            "Atari800": {
-                "program": {
-                    "windows": "Atari800/windows/atari800.exe",
-                    "linux": "Atari800/linux/Atari800.AppImage"
-                },
-                "save_dir": {
-                    "windows": None,
-                    "linux": None
-                },
-                "config_file": {
-                    "windows": "Atari800/windows/.atari800.cfg",
-                    "linux": "Atari800/linux/Atari800.AppImage.home/.atari800.cfg"
-                },
-                "run_sandboxed": {
-                    "windows": False,
-                    "linux": False
-                }
-            }
-        }
 
     # Setup
     def setup(self, setup_params = None):
@@ -151,7 +121,7 @@ class Atari800(emulatorbase.EmulatorBase):
             setup_params = config.SetupParams()
 
         # Create config files
-        for config_filename, config_contents in config_files.items():
+        for config_filename, config_contents in self.get_config_files().items():
             success = fileops.touch_file(
                 src = paths.join_paths(environment.get_emulators_root_dir(), config_filename),
                 contents = config_contents.strip(),

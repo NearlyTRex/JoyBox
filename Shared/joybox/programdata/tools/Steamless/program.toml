@@ -1,0 +1,6 @@
+# Steamless: where its programs live and how they run, the files its setup writes
+# and the system files it checks. Read by joybox/programcatalog.py.
+
+[config.Steamless]
+program = { windows = "Steamless/windows/Steamless.CLI.exe", linux = "Steamless/windows/Steamless.CLI.exe" }
+run_sandboxed = { windows = false, linux = true }

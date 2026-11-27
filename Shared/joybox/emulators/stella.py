@@ -6,11 +6,6 @@ from joybox import sourcebuild
 from joybox import programs
 from joybox import emulatorbase
 
-# Config files
-config_files = {}
-
-# System files
-system_files = {}
 
 # Stella emulator
 class Stella(emulatorbase.EmulatorBase):
@@ -22,21 +17,6 @@ class Stella(emulatorbase.EmulatorBase):
     # Get platforms
     def get_platforms(self):
         return []
-
-    # Get config
-    def get_config(self):
-        return {
-            "Stella": {
-                "program": {
-                    "windows": "Stella/windows/Stella.exe",
-                    "linux": "Stella/linux/Stella.AppImage"
-                },
-                "run_sandboxed": {
-                    "windows": False,
-                    "linux": False
-                }
-            }
-        }
 
     # Setup
     def setup(self, setup_params = None):

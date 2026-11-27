@@ -138,7 +138,7 @@ def store(monkeypatch):
 @pytest.fixture
 def launcher(monkeypatch):
     fake = FakeLauncher()
-    monkeypatch.setattr(launching, "programs", types.SimpleNamespace(
+    monkeypatch.setattr(launching, "emulators", types.SimpleNamespace(
         get_emulator_by_platform = lambda platform: fake))
     return fake
 
@@ -293,7 +293,7 @@ def test_a_failed_local_install_stops_the_launch(steps, store, launcher):
 
 
 def test_a_platform_without_a_launcher_is_reported(steps, store, monkeypatch):
-    monkeypatch.setattr(launching, "programs", types.SimpleNamespace(
+    monkeypatch.setattr(launching, "emulators", types.SimpleNamespace(
         get_emulator_by_platform = lambda platform: None))
 
     assert launching.launch_local_game(FakeGameInfo()) is False

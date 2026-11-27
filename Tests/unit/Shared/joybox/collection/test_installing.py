@@ -623,7 +623,7 @@ def addons(monkeypatch):
     state = {"possible": True, "emulators": []}
     monkeypatch.setattr(
         installing.platforms, "are_addons_possible", lambda platform: state["possible"])
-    monkeypatch.setattr(installing.programs, "get_emulators", lambda: state["emulators"])
+    monkeypatch.setattr(installing.emulators, "get_emulator_list", lambda: state["emulators"])
     monkeypatch.setattr(
         installing.environment, "get_locker_gaming_dlc_root_dir", lambda: "/dlc")
     monkeypatch.setattr(

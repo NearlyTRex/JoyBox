@@ -11,35 +11,6 @@ from joybox import fileops
 from joybox import toolbase
 from joybox import desktopentry
 
-# Config files
-config_files = {}
-CONFIG_FILE_GENERAL = """
-general.theme: themes/PegasusThemeGrid/
-general.verify-files: false
-general.input-mouse-support: true
-general.fullscreen: true
-providers.steam.enabled: false
-providers.gog.enabled: false
-providers.es2.enabled: false
-providers.launchbox.enabled: false
-providers.logiqx.enabled: false
-providers.playnite.enabled: false
-providers.skraper.enabled: false
-keys.menu: F1,GamepadStart
-keys.page-down: PgDown,GamepadR2
-keys.prev-page: Q,A,GamepadL1
-keys.next-page: E,D,GamepadR1
-keys.filters: F,GamepadY
-keys.details: I,GamepadX
-keys.cancel: Esc,Backspace,GamepadB
-keys.page-up: PgUp,GamepadL2
-keys.accept: Return,Enter,GamepadA
-"""
-config_files["Pegasus/windows/portable.txt"] = ""
-config_files["Pegasus/windows/config/game_dirs.txt"] = ""
-config_files["Pegasus/windows/config/settings.txt"] = CONFIG_FILE_GENERAL
-config_files["Pegasus/linux/Pegasus.AppImage.home/.config/pegasus-frontend/game_dirs.txt"] = ""
-config_files["Pegasus/linux/Pegasus.AppImage.home/.config/pegasus-frontend/settings.txt"] = CONFIG_FILE_GENERAL
 
 # Pegasus tool
 class Pegasus(toolbase.ToolBase):
@@ -47,26 +18,6 @@ class Pegasus(toolbase.ToolBase):
     # Get name
     def get_name(self):
         return "Pegasus"
-
-    # Get config
-    def get_config(self):
-        return {
-            "Pegasus": {
-                "program": {
-                    "windows": "Pegasus/windows/pegasus-fe.exe",
-                    "linux": "Pegasus/linux/Pegasus.AppImage"
-                },
-                "themes_dir": {
-                    "windows": "Pegasus/windows/config/themes",
-                    "linux": "Pegasus/linux/Pegasus.AppImage.home/.config/pegasus-frontend/themes"
-                },
-                "run_sandboxed": {
-                    "windows": False,
-                    "linux": False
-                },
-                "theme_github_branch": "dev"
-            }
-        }
 
     # Setup
     def setup(self, setup_params = None):
@@ -195,6 +146,7 @@ class Pegasus(toolbase.ToolBase):
                 game_dirs.append(paths.get_filename_directory(pegasus_file))
 
         # Update game dir files
+        config_files = self.get_config_files()
         config_files["Pegasus/windows/config/game_dirs.txt"] = "\n".join(game_dirs)
         config_files["Pegasus/linux/Pegasus.AppImage.home/.config/pegasus-frontend/game_dirs.txt"] = "\n".join(game_dirs)
 

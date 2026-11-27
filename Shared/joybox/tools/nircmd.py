@@ -5,8 +5,6 @@ from joybox import release
 from joybox import programs
 from joybox import toolbase
 
-# Config files
-config_files = {}
 
 # NirCmd tool
 class NirCmd(toolbase.ToolBase):
@@ -14,21 +12,6 @@ class NirCmd(toolbase.ToolBase):
     # Get name
     def get_name(self):
         return "NirCmd"
-
-    # Get config
-    def get_config(self):
-        return {
-            "NirCmd": {
-                "program": {
-                    "windows": "NirCmd/windows/nircmdc.exe",
-                    "linux": "NirCmd/windows/nircmdc.exe"
-                },
-                "run_sandboxed": {
-                    "windows": False,
-                    "linux": True
-                }
-            }
-        }
 
     # Setup
     def setup(self, setup_params = None):

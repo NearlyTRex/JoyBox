@@ -1,0 +1,5 @@
+# Bchunk: where its programs live and how they run, the files its setup writes
+# and the system files it checks. Read by joybox/programcatalog.py.
+
+[config.Bchunk]
+program = "{path_setting:Tools.Bchunk.bchunk_install_dir}/{setting:Tools.Bchunk.bchunk_exe}"

@@ -1,0 +1,6 @@
+# GeckoDriver: where its programs live and how they run, the files its setup writes
+# and the system files it checks. Read by joybox/programcatalog.py.
+
+[config.GeckoDriver]
+program = { windows = "GeckoDriver/windows/geckodriver.exe", linux = "GeckoDriver/linux/geckodriver" }
+run_sandboxed = { windows = false, linux = false }

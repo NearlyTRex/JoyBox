@@ -1,0 +1,6 @@
+# Sigtop: where its programs live and how they run, the files its setup writes
+# and the system files it checks. Read by joybox/programcatalog.py.
+
+[config.Sigtop]
+program = { windows = "Sigtop/windows/sigtop.exe", linux = "Sigtop/windows/sigtop.exe" }
+run_sandboxed = { windows = false, linux = true }

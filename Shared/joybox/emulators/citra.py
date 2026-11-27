@@ -15,23 +15,6 @@ from joybox import paths
 from joybox import emulatorcommon
 from joybox import emulatorbase
 
-# Config files
-config_files = {}
-CONFIG_FILE_GENERAL = r"""
-[Data%20Storage]
-nand_directory=EMULATOR_SETUP_ROOT/nand/
-sdmc_directory=EMULATOR_SETUP_ROOT/sdmc/
-
-[UI]
-Paths\screenshotPath=EMULATOR_SETUP_ROOT/screenshots/
-"""
-config_files["Citra/windows/user/config/qt-config.ini"] = CONFIG_FILE_GENERAL
-config_files["Citra/linux/citra-qt.AppImage.home/.config/citra-emu/qt-config.ini"] = CONFIG_FILE_GENERAL
-
-# System files
-system_files = {}
-system_files["nand.zip"] = "7c9baaa35b620bbd2b18b4620e2831e1"
-system_files["sysdata.zip"] = "dcfa1fbaf7845c735b2c7d1ec9df2ed7"
 
 # Citra emulator
 class Citra(emulatorbase.EmulatorBase):
@@ -47,33 +30,6 @@ class Citra(emulatorbase.EmulatorBase):
             config.Platform.NINTENDO_3DS_APPS,
             config.Platform.NINTENDO_3DS_ESHOP
         ]
-
-    # Get config
-    def get_config(self):
-        return {
-            "Citra": {
-                "program": {
-                    "windows": "Citra/windows/citra-qt.exe",
-                    "linux": "Citra/linux/citra-qt.AppImage"
-                },
-                "save_dir": {
-                    "windows": "Citra/windows/user/sdmc/Nintendo 3DS/00000000000000000000000000000000/00000000000000000000000000000000/title/00040000",
-                    "linux": "Citra/linux/citra-qt.AppImage.home/.local/share/citra-emu/sdmc/Nintendo 3DS/00000000000000000000000000000000/00000000000000000000000000000000/title/00040000"
-                },
-                "setup_dir": {
-                    "windows": "Citra/windows/user",
-                    "linux": "Citra/linux/citra-qt.AppImage.home/.local/share/citra-emu"
-                },
-                "config_file": {
-                    "windows": "Citra/windows/user/config/qt-config.ini",
-                    "linux": "Citra/linux/citra-qt.AppImage.home/.config/citra-emu/qt-config.ini"
-                },
-                "run_sandboxed": {
-                    "windows": False,
-                    "linux": False
-                }
-            }
-        }
 
     # Install add-ons
     def install_addons(self, dlc_dirs = None, update_dirs = None, verbose = False, pretend_run = False, exit_on_failure = False):
@@ -140,7 +96,7 @@ class Citra(emulatorbase.EmulatorBase):
             setup_params = config.SetupParams()
 
         # Create config files
-        for config_filename, config_contents in config_files.items():
+        for config_filename, config_contents in self.get_config_files().items():
             success = fileops.touch_file(
                 src = paths.join_paths(environment.get_emulators_root_dir(), config_filename),
                 contents = config_contents.strip(),
@@ -152,7 +108,7 @@ class Citra(emulatorbase.EmulatorBase):
                 return False
 
         # Verify system files
-        if not self.verify_system_files(system_files, setup_params):
+        if not self.verify_system_files(self.get_system_files(), setup_params):
             return False
 
         # Extract system files

@@ -7,8 +7,6 @@ from joybox import requirements
 from joybox import programs
 from joybox import toolbase
 
-# Config files
-config_files = {}
 
 # XCITrimmer tool
 class XCITrimmer(toolbase.ToolBase):
@@ -16,14 +14,6 @@ class XCITrimmer(toolbase.ToolBase):
     # Get name
     def get_name(self):
         return "XCITrimmer"
-
-    # Get config
-    def get_config(self):
-        return {
-            "XCITrimmer": {
-                "program": "XCITrimmer/lib/XCI_Trimmer.py"
-            }
-        }
 
     # Setup
     def setup(self, setup_params = None):

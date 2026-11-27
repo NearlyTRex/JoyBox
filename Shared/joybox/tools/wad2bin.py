@@ -5,8 +5,6 @@ from joybox import release
 from joybox import programs
 from joybox import toolbase
 
-# Config files
-config_files = {}
 
 # Wad2Bin tool
 class Wad2Bin(toolbase.ToolBase):
@@ -14,21 +12,6 @@ class Wad2Bin(toolbase.ToolBase):
     # Get name
     def get_name(self):
         return "Wad2Bin"
-
-    # Get config
-    def get_config(self):
-        return {
-            "Wad2Bin": {
-                "program": {
-                    "windows": "Wad2Bin/windows/wad2bin-windows-x64.exe",
-                    "linux": "Wad2Bin/linux/wad2bin"
-                },
-                "run_sandboxed": {
-                    "windows": False,
-                    "linux": False
-                }
-            }
-        }
 
     # Setup
     def setup(self, setup_params = None):

@@ -11,14 +11,6 @@ from joybox import programs
 from joybox import emulatorcommon
 from joybox import emulatorbase
 
-# Config files
-config_files = {}
-config_files["Mednafen/windows/mednafen.cfg"] = ""
-config_files["Mednafen/linux/Mednafen.AppImage.home/.mednafen/mednafen.cfg"] = ""
-
-# System files
-system_files = {}
-system_files["firmware/lynxboot.img"] = "fcd403db69f54290b51035d82f835e7b"
 
 # Mednafen emulator
 class Mednafen(emulatorbase.EmulatorBase):
@@ -37,33 +29,6 @@ class Mednafen(emulatorbase.EmulatorBase):
             # Other
             config.Platform.OTHER_ATARI_LYNX
         ]
-
-    # Get config
-    def get_config(self):
-        return {
-            "Mednafen": {
-                "program": {
-                    "windows": "Mednafen/windows/mednafen.exe",
-                    "linux": "Mednafen/linux/Mednafen.AppImage"
-                },
-                "save_dir": {
-                    "windows": "Mednafen/windows/sav",
-                    "linux": "Mednafen/linux/Mednafen.AppImage.home/.mednafen/sav"
-                },
-                "setup_dir": {
-                    "windows": "Mednafen/windows",
-                    "linux": "Mednafen/linux/Mednafen.AppImage.home/.mednafen"
-                },
-                "config_file": {
-                    "windows": "Mednafen/windows/mednafen.cfg",
-                    "linux": "Mednafen/linux/Mednafen.AppImage.home/.mednafen/mednafen.cfg"
-                },
-                "run_sandboxed": {
-                    "windows": False,
-                    "linux": False
-                }
-            }
-        }
 
     # Setup
     def setup(self, setup_params = None):
@@ -159,7 +124,7 @@ class Mednafen(emulatorbase.EmulatorBase):
             setup_params = config.SetupParams()
 
         # Create config files
-        for config_filename, config_contents in config_files.items():
+        for config_filename, config_contents in self.get_config_files().items():
             success = fileops.touch_file(
                 src = paths.join_paths(environment.get_emulators_root_dir(), config_filename),
                 contents = config_contents.strip(),
@@ -171,11 +136,11 @@ class Mednafen(emulatorbase.EmulatorBase):
                 return False
 
         # Verify system files
-        if not self.verify_system_files(system_files, setup_params):
+        if not self.verify_system_files(self.get_system_files(), setup_params):
             return False
 
         # Copy system files
-        for filename in system_files.keys():
+        for filename in self.get_system_files().keys():
             for platform in ["windows", "linux"]:
                 success = filebulk.smart_copy(
                     src = paths.join_paths(environment.get_locker_gaming_emulator_setup_dir("Mednafen"), filename),

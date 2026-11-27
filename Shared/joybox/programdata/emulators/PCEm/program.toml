@@ -1,0 +1,6 @@
+# PCEm: where its programs live and how they run, the files its setup writes
+# and the system files it checks. Read by joybox/programcatalog.py.
+
+[config.PCEm]
+program = { windows = "PCEm/windows/PCem.exe", linux = "PCEm/windows/PCem.exe" }
+run_sandboxed = { windows = false, linux = true }

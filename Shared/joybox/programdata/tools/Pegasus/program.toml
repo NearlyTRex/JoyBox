@@ -1,0 +1,28 @@
+# Pegasus: where its programs live and how they run, the files its setup writes
+# and the system files it checks. Read by joybox/programcatalog.py.
+
+[config.Pegasus]
+program = { windows = "Pegasus/windows/pegasus-fe.exe", linux = "Pegasus/linux/Pegasus.AppImage" }
+run_sandboxed = { windows = false, linux = false }
+theme_github_branch = "dev"
+
+[config.Pegasus.themes_dir]
+windows = "Pegasus/windows/config/themes"
+linux = "Pegasus/linux/Pegasus.AppImage.home/.config/pegasus-frontend/themes"
+
+[[config_files]]
+path = "Pegasus/windows/portable.txt"
+
+[[config_files]]
+path = "Pegasus/windows/config/game_dirs.txt"
+
+[[config_files]]
+path = "Pegasus/windows/config/settings.txt"
+template = "settings.txt"
+
+[[config_files]]
+path = "Pegasus/linux/Pegasus.AppImage.home/.config/pegasus-frontend/game_dirs.txt"
+
+[[config_files]]
+path = "Pegasus/linux/Pegasus.AppImage.home/.config/pegasus-frontend/settings.txt"
+template = "settings.txt"

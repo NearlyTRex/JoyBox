@@ -153,7 +153,6 @@ def tools_root(monkeypatch, tmp_path):
     metadata = tmp_path / "metadata"
     monkeypatch.setattr(pegasus.environment, "get_tools_root_dir", lambda: str(root))
     monkeypatch.setattr(pegasus.environment, "get_game_pegasus_metadata_root_dir", lambda: str(metadata))
-    monkeypatch.setattr(pegasus, "config_files", dict(pegasus.config_files))
     return root, metadata
 
 

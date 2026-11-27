@@ -7,8 +7,6 @@ from joybox import requirements
 from joybox import programs
 from joybox import toolbase
 
-# Config files
-config_files = {}
 
 # PyLnk tool
 class PyLnk(toolbase.ToolBase):
@@ -16,15 +14,6 @@ class PyLnk(toolbase.ToolBase):
     # Get name
     def get_name(self):
         return "PyLnk"
-
-    # Get config
-    def get_config(self):
-        return {
-            "PyLnk": {
-                "program": "PyLnk/lib/pylnk3.py",
-                "github_branch": "dev"
-            }
-        }
 
     # Setup
     def setup(self, setup_params = None):

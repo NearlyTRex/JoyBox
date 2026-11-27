@@ -11,22 +11,6 @@ from joybox import programs
 from joybox import emulatorcommon
 from joybox import emulatorbase
 
-# Config files
-config_files = {}
-CONFIG_FILE_GENERAL = """
-[config]
-amiga_model = A500
-governor_warning = 0
-"""
-config_files["FS-UAE/windows/Portable.ini"] = ""
-config_files["FS-UAE/windows/Configurations/Default.fs-uae"] = CONFIG_FILE_GENERAL
-config_files["FS-UAE/linux/FS-UAE.AppImage.home/FS-UAE/Configurations/Default.fs-uae"] = CONFIG_FILE_GENERAL
-
-# System files
-system_files = {}
-system_files["Kickstarts/kick40068.A1200"] = "646773759326fbac3b2311fd8c8793ee"
-system_files["Kickstarts/kick34005.A500"] = "82a21c1890cae844b3df741f2762d48d"
-system_files["Kickstarts/kick40063.A600"] = "e40a5dfb3d017ba8779faba30cbd1c8e"
 
 # FSUAE emulator
 class FSUAE(emulatorbase.EmulatorBase):
@@ -40,33 +24,6 @@ class FSUAE(emulatorbase.EmulatorBase):
         return [
             config.Platform.OTHER_COMMODORE_AMIGA
         ]
-
-    # Get config
-    def get_config(self):
-        return {
-            "FS-UAE": {
-                "program": {
-                    "windows": "FS-UAE/windows/Windows/x86-64/fs-uae.exe",
-                    "linux": "FS-UAE/linux/FS-UAE.AppImage"
-                },
-                "save_dir": {
-                    "windows": None,
-                    "linux": None
-                },
-                "setup_dir": {
-                    "windows": "FS-UAE/windows",
-                    "linux": "FS-UAE/linux/FS-UAE.AppImage.home/FS-UAE"
-                },
-                "config_file": {
-                    "windows": "FS-UAE/windows/Configurations/Default.fs-uae",
-                    "linux": "FS-UAE/linux/FS-UAE.AppImage.home/FS-UAE/Configurations/Default.fs-uae"
-                },
-                "run_sandboxed": {
-                    "windows": False,
-                    "linux": False
-                }
-            }
-        }
 
     # Setup
     def setup(self, setup_params = None):
@@ -167,7 +124,7 @@ class FSUAE(emulatorbase.EmulatorBase):
             setup_params = config.SetupParams()
 
         # Create config files
-        for config_filename, config_contents in config_files.items():
+        for config_filename, config_contents in self.get_config_files().items():
             success = fileops.touch_file(
                 src = paths.join_paths(environment.get_emulators_root_dir(), config_filename),
                 contents = config_contents.strip(),
@@ -179,11 +136,11 @@ class FSUAE(emulatorbase.EmulatorBase):
                 return False
 
         # Verify system files
-        if not self.verify_system_files(system_files, setup_params):
+        if not self.verify_system_files(self.get_system_files(), setup_params):
             return False
 
         # Copy system files
-        for filename in system_files.keys():
+        for filename in self.get_system_files().keys():
             for platform in ["windows", "linux"]:
                 success = filebulk.smart_copy(
                     src = paths.join_paths(environment.get_locker_gaming_emulator_setup_dir("FS-UAE"), filename),

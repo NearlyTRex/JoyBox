@@ -1,0 +1,8 @@
+# HeroicGogDL: where its programs live and how they run, the files its setup writes
+# and the system files it checks. Read by joybox/programcatalog.py.
+
+[config.HeroicGogDL]
+program = "HeroicGogDL/lib/main.py"
+login_script = "HeroicGogDL/lib/login.py"
+auth_json = "HeroicGogDL/lib/auth.json"
+github_branch = "dev"

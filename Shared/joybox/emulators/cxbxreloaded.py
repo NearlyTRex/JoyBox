@@ -5,11 +5,6 @@ from joybox import release
 from joybox import programs
 from joybox import emulatorbase
 
-# Config files
-config_files = {}
-
-# System files
-system_files = {}
 
 # CxBxReloaded emulator
 class CxBxReloaded(emulatorbase.EmulatorBase):
@@ -21,21 +16,6 @@ class CxBxReloaded(emulatorbase.EmulatorBase):
     # Get platforms
     def get_platforms(self):
         return []
-
-    # Get config
-    def get_config(self):
-        return {
-            "CxBxReloaded": {
-                "program": {
-                    "windows": "CxBxReloaded/windows/cxbx.exe",
-                    "linux": "CxBxReloaded/windows/cxbx.exe"
-                },
-                "run_sandboxed": {
-                    "windows": False,
-                    "linux": True
-                }
-            }
-        }
 
     # Setup
     def setup(self, setup_params = None):

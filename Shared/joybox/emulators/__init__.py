@@ -94,6 +94,13 @@ def get_emulator_map():
 def get_emulator_list():
     return get_emulator_map().values()
 
+# Get the emulator that runs a platform
+def get_emulator_by_platform(emulator_platform):
+    for instance in get_emulator_list():
+        if emulator_platform in instance.get_platforms():
+            return instance
+    return None
+
 # Get emulator by name
 def get_emulator_by_name(tool_name):
     for instance in get_emulator_list():

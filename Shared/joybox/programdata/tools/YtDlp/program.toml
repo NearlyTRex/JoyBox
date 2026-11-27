@@ -1,0 +1,6 @@
+# YtDlp: where its programs live and how they run, the files its setup writes
+# and the system files it checks. Read by joybox/programcatalog.py.
+
+[config.YtDlp]
+program = { windows = "YtDlp/windows/yt-dlp.exe", linux = "YtDlp/linux/yt-dlp_linux" }
+run_sandboxed = { windows = false, linux = false }

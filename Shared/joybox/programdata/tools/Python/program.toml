@@ -1,0 +1,18 @@
+# Python: where its programs live and how they run, the files its setup writes
+# and the system files it checks. Read by joybox/programcatalog.py.
+
+[config.Python]
+program = "{path_setting:Tools.Python.python_install_dir}/{setting:Tools.Python.python_exe}"
+venv_dir = "{path_setting:Tools.Python.python_venv_dir}"
+
+[config.PythonVenvPython]
+
+[config.PythonVenvPython.program]
+windows = "{path_setting:Tools.Python.python_venv_dir}/Scripts/{setting:Tools.Python.python_exe}"
+linux = "{path_setting:Tools.Python.python_venv_dir}/bin/{setting:Tools.Python.python_exe}"
+
+[config.PythonVenvPip]
+
+[config.PythonVenvPip.program]
+windows = "{path_setting:Tools.Python.python_venv_dir}/Scripts/{setting:Tools.Python.python_pip_exe}"
+linux = "{path_setting:Tools.Python.python_venv_dir}/bin/{setting:Tools.Python.python_pip_exe}"

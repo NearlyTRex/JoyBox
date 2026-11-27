@@ -1,0 +1,6 @@
+# GoldbergEmu: where its programs live and how they run, the files its setup writes
+# and the system files it checks. Read by joybox/programcatalog.py.
+
+[config.GoldbergEmu]
+lib32 = ["steam_api.dll"]
+lib64 = ["steam_api64.dll"]

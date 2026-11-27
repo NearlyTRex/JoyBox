@@ -1,0 +1,18 @@
+# Sunshine: where its programs live and how they run, the files its setup writes
+# and the system files it checks. Read by joybox/programcatalog.py.
+
+[config.Sunshine]
+program = { windows = "Sunshine/windows/sunshine.exe", linux = "Sunshine/linux/Sunshine.AppImage" }
+run_sandboxed = { windows = false, linux = false }
+
+[[config_files]]
+path = "Sunshine/windows/config/sunshine.conf"
+
+[[config_files]]
+path = "Sunshine/linux/Sunshine.AppImage.home/.config/sunshine/sunshine.conf"
+
+[[config_files]]
+path = "Sunshine/windows/config/apps.json"
+
+[[config_files]]
+path = "Sunshine/linux/Sunshine.AppImage.home/.config/sunshine/apps.json"

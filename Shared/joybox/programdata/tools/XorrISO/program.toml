@@ -1,0 +1,6 @@
+# XorrISO: where its programs live and how they run, the files its setup writes
+# and the system files it checks. Read by joybox/programcatalog.py.
+
+[config.XorrISO]
+program = { windows = "XorrISO/windows/xorriso.exe", linux = "XorrISO/linux/XorrISO.AppImage" }
+run_sandboxed = { windows = false, linux = false }

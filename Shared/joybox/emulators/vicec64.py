@@ -10,13 +10,6 @@ from joybox import programs
 from joybox import emulatorcommon
 from joybox import emulatorbase
 
-# Config files
-config_files = {}
-config_files["VICE-C64/windows/sdl-vice.ini"] = ""
-config_files["VICE-C64/linux/VICE-C64.AppImage.home/.config/vice/vicerc"] = ""
-
-# System files
-system_files = {}
 
 # ViceC64 emulator
 class ViceC64(emulatorbase.EmulatorBase):
@@ -30,29 +23,6 @@ class ViceC64(emulatorbase.EmulatorBase):
         return [
             config.Platform.OTHER_COMMODORE_64
         ]
-
-    # Get config
-    def get_config(self):
-        return {
-            "VICE-C64": {
-                "program": {
-                    "windows": "VICE-C64/windows/x64sc.exe",
-                    "linux": "VICE-C64/linux/VICE-C64.AppImage"
-                },
-                "save_dir": {
-                    "windows": None,
-                    "linux": None
-                },
-                "config_file": {
-                    "windows": "VICE-C64/windows/sdl-vice.ini",
-                    "linux": "VICE-C64/linux/VICE-C64.AppImage.home/.config/vice/vicerc"
-                },
-                "run_sandboxed": {
-                    "windows": False,
-                    "linux": False
-                }
-            }
-        }
 
     # Setup
     def setup(self, setup_params = None):
@@ -153,7 +123,7 @@ class ViceC64(emulatorbase.EmulatorBase):
             setup_params = config.SetupParams()
 
         # Create config files
-        for config_filename, config_contents in config_files.items():
+        for config_filename, config_contents in self.get_config_files().items():
             success = fileops.touch_file(
                 src = paths.join_paths(environment.get_emulators_root_dir(), config_filename),
                 contents = config_contents.strip(),

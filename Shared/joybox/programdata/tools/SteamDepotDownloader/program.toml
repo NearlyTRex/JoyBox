@@ -1,0 +1,9 @@
+# SteamDepotDownloader: where its programs live and how they run, the files its setup writes
+# and the system files it checks. Read by joybox/programcatalog.py.
+
+[config.SteamDepotDownloader]
+run_sandboxed = { windows = false, linux = true }
+
+[config.SteamDepotDownloader.program]
+windows = "SteamDepotDownloader/windows/DepotDownloader.exe"
+linux = "SteamDepotDownloader/linux/DepotDownloader"

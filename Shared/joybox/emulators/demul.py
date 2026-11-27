@@ -5,11 +5,6 @@ from joybox import release
 from joybox import programs
 from joybox import emulatorbase
 
-# Config files
-config_files = {}
-
-# System files
-system_files = {}
 
 # Demul emulator
 class Demul(emulatorbase.EmulatorBase):
@@ -21,21 +16,6 @@ class Demul(emulatorbase.EmulatorBase):
     # Get platforms
     def get_platforms(self):
         return []
-
-    # Get config
-    def get_config(self):
-        return {
-            "Demul": {
-                "program": {
-                    "windows": "Demul/windows/demul.exe",
-                    "linux": "Demul/windows/demul.exe"
-                },
-                "run_sandboxed": {
-                    "windows": False,
-                    "linux": True
-                }
-            }
-        }
 
     # Setup
     def setup(self, setup_params = None):

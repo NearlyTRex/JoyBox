@@ -12,56 +12,6 @@ from joybox import gui
 from joybox import emulatorcommon
 from joybox import emulatorbase
 
-# Config files
-config_files = {}
-CONFIG_FILE_GENERAL = """
-#
-# CORE SEARCH PATH OPTIONS
-#
-homepath                  EMULATOR_SETUP_ROOT
-rompath                   EMULATOR_SETUP_ROOT/roms
-hashpath                  EMULATOR_SETUP_ROOT/hash
-samplepath                EMULATOR_SETUP_ROOT/samples
-artpath                   EMULATOR_SETUP_ROOT/artwork
-ctrlrpath                 EMULATOR_SETUP_ROOT/ctrlr
-inipath                   EMULATOR_SETUP_ROOT;EMULATOR_SETUP_ROOT/ini
-fontpath                  EMULATOR_SETUP_ROOT
-cheatpath                 EMULATOR_SETUP_ROOT/cheat
-crosshairpath             EMULATOR_SETUP_ROOT/crosshair
-pluginspath               EMULATOR_SETUP_ROOT/plugins
-languagepath              EMULATOR_SETUP_ROOT/language
-swpath                    EMULATOR_SETUP_ROOT/software
-
-#
-# CORE OUTPUT DIRECTORY OPTIONS
-#
-cfg_directory             EMULATOR_SETUP_ROOT/cfg
-nvram_directory           EMULATOR_SETUP_ROOT/nvram
-input_directory           EMULATOR_SETUP_ROOT/inp
-state_directory           EMULATOR_SETUP_ROOT/sta
-snapshot_directory        EMULATOR_SETUP_ROOT/snap
-diff_directory            EMULATOR_SETUP_ROOT/diff
-comment_directory         EMULATOR_SETUP_ROOT/comments
-share_directory           EMULATOR_SETUP_ROOT/share
-"""
-config_files["Mame/windows/mame.ini"] = CONFIG_FILE_GENERAL
-config_files["Mame/linux/Mame.AppImage.home/.mame/mame.ini"] = CONFIG_FILE_GENERAL
-
-# System files
-system_files = {}
-system_files["roms/cdimono1.zip"] = "d69f6a7347b9acefc65dd0822b523335"
-system_files["roms/videopac.zip"] = "a4fffe2ae1a7218939990430d378b059"
-system_files["roms/a5200.zip"] = "b44173fbccbb5dfbd97fba4fe2f2abad"
-system_files["roms/cdimono2.zip"] = "b3ccc0709e82aed4356e5d8a0948b4b9"
-system_files["roms/a7800.zip"] = "68abbc5084df34defeceb323cc9685d9"
-system_files["roms/gamecom.zip"] = "20506b663b593af57fb60364156b5b9f"
-system_files["roms/intv_ecs.zip"] = "98c257fabbb97cbf3c1ff199746ee4cc"
-system_files["roms/i8244.zip"] = "9fb6347babf9fc58578c56aa1e4d3dce"
-system_files["roms/ti99_4a.zip"] = "091448bf43235a5cae113884c0263639"
-system_files["roms/cdibios.zip"] = "f34b1f4badf6f587c91cb2505c3c531d"
-system_files["roms/intv_voice.zip"] = "60140f3f7c4409e18a65fe2799f22f79"
-system_files["roms/stic.zip"] = "2f4e36d03a8a2d9abaf3a94cb3583c8d"
-system_files["roms/intv.zip"] = "20b954b1ba6b378965050b2e887df924"
 
 # System drivers and media flags for non-arcade platforms
 system_drivers = {
@@ -93,41 +43,6 @@ class Mame(emulatorbase.EmulatorBase):
             config.Platform.OTHER_TEXAS_INSTRUMENTS_TI994A,
             config.Platform.OTHER_TIGER_GAMECOM
         ]
-
-    # Get config
-    def get_config(self):
-        return {
-            "Mame": {
-                "program": {
-                    "windows": "Mame/windows/mame.exe",
-                    "linux": "Mame/linux/Mame.AppImage"
-                },
-                "save_dir": {
-                    "windows": None,
-                    "linux": None
-                },
-                "setup_dir": {
-                    "windows": "Mame/windows",
-                    "linux": "Mame/linux/Mame.AppImage.home/.mame"
-                },
-                "config_dir": {
-                    "windows": "Mame/windows",
-                    "linux": "Mame/linux/Mame.AppImage.home/.mame"
-                },
-                "config_file": {
-                    "windows": "Mame/windows/mame.ini",
-                    "linux": "Mame/linux/Mame.AppImage.home/.mame/mame.ini"
-                },
-                "roms_dir": {
-                    "windows": "Mame/windows/roms",
-                    "linux": "Mame/linux/Mame.AppImage.home/.mame/roms"
-                },
-                "run_sandboxed": {
-                    "windows": False,
-                    "linux": False
-                }
-            }
-        }
 
     # Setup
     def setup(self, setup_params = None):
@@ -242,7 +157,7 @@ class Mame(emulatorbase.EmulatorBase):
             setup_params = config.SetupParams()
 
         # Create config files
-        for config_filename, config_contents in config_files.items():
+        for config_filename, config_contents in self.get_config_files().items():
             success = fileops.touch_file(
                 src = paths.join_paths(environment.get_emulators_root_dir(), config_filename),
                 contents = config_contents.strip(),
@@ -254,11 +169,11 @@ class Mame(emulatorbase.EmulatorBase):
                 return False
 
         # Verify system files
-        if not self.verify_system_files(system_files, setup_params):
+        if not self.verify_system_files(self.get_system_files(), setup_params):
             return False
 
         # Copy system files
-        for filename in system_files.keys():
+        for filename in self.get_system_files().keys():
             for platform in ["windows", "linux"]:
                 success = filebulk.smart_copy(
                     src = paths.join_paths(environment.get_locker_gaming_emulator_setup_dir("Mame"), filename),

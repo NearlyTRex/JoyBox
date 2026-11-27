@@ -6,8 +6,6 @@ from joybox import release
 from joybox import programs
 from joybox import toolbase
 
-# Config files
-config_files = {}
 
 # LudusaviManifest tool
 class LudusaviManifest(toolbase.ToolBase):
@@ -15,14 +13,6 @@ class LudusaviManifest(toolbase.ToolBase):
     # Get name
     def get_name(self):
         return "LudusaviManifest"
-
-    # Get config
-    def get_config(self):
-        return {
-            "LudusaviManifest": {
-                "yaml": "LudusaviManifest/lib/data/manifest.yaml"
-            }
-        }
 
     # Setup
     def setup(self, setup_params = None):

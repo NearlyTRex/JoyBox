@@ -6,8 +6,6 @@ from joybox import sourcebuild
 from joybox import programs
 from joybox import toolbase
 
-# Config files
-config_files = {}
 
 # CDecrypt tool
 class CDecrypt(toolbase.ToolBase):
@@ -15,21 +13,6 @@ class CDecrypt(toolbase.ToolBase):
     # Get name
     def get_name(self):
         return "CDecrypt"
-
-    # Get config
-    def get_config(self):
-        return {
-            "CDecrypt": {
-                "program": {
-                    "windows": "CDecrypt/windows/cdecrypt.exe",
-                    "linux": "CDecrypt/linux/CDecrypt.AppImage"
-                },
-                "run_sandboxed": {
-                    "windows": False,
-                    "linux": False
-                }
-            }
-        }
 
     # Setup
     def setup(self, setup_params = None):

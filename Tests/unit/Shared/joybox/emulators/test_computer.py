@@ -78,7 +78,7 @@ def test_the_config_files_match_the_configured_paths():
         for key in ("config_file", "config_file_win31"):
             configured |= set(entry.get(key, {}).values())
 
-    assert configured == set(computer.config_files)
+    assert configured == set(computer.Computer().get_config_files())
 
 
 @pytest.mark.parametrize("is_windows,save_type", [
@@ -212,8 +212,8 @@ def touched(monkeypatch):
 def test_configure_writes_every_config_file_stripped(touched):
     assert computer.Computer().configure() is True
 
-    assert [src for src, _, _ in touched["calls"]] == ["/emulators/%s" % name for name in computer.config_files]
-    for (_, contents, _), expected in zip(touched["calls"], computer.config_files.values(), strict = True):
+    assert [src for src, _, _ in touched["calls"]] == ["/emulators/%s" % name for name in computer.Computer().get_config_files()]
+    for (_, contents, _), expected in zip(touched["calls"], computer.Computer().get_config_files().values(), strict = True):
         assert contents == expected.strip()
 
 
@@ -229,7 +229,7 @@ def test_configure_passes_the_setup_params_through(touched):
     computer.Computer().configure(config.SetupParams(verbose = True, pretend_run = True, exit_on_failure = True))
 
     assert [kwargs for _, _, kwargs in touched["calls"]] == [
-        {"verbose": True, "pretend_run": True, "exit_on_failure": True}] * len(computer.config_files)
+        {"verbose": True, "pretend_run": True, "exit_on_failure": True}] * len(computer.Computer().get_config_files())
 
 
 def test_configure_stops_when_a_config_file_cannot_be_written(touched):

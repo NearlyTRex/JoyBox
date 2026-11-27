@@ -1,0 +1,6 @@
+# 3DSRomTool: where its programs live and how they run, the files its setup writes
+# and the system files it checks. Read by joybox/programcatalog.py.
+
+[config.3DSRomTool]
+program = { windows = "3DSRomTool/windows/rom_tool.exe", linux = "3DSRomTool/linux/3DSRomTool.AppImage" }
+run_sandboxed = { windows = false, linux = false }

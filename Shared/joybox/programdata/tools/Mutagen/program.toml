@@ -1,0 +1,18 @@
+# Mutagen: where its programs live and how they run, the files its setup writes
+# and the system files it checks. Read by joybox/programcatalog.py.
+
+[config.Mutagen]
+package_dir = "Mutagen/lib"
+package_name = "mutagen"
+
+[config.MutagenMP3]
+package_dir = "Mutagen/lib"
+package_name = "mutagen.mp3"
+
+[config.MutagenID3]
+package_dir = "Mutagen/lib"
+package_name = "mutagen.id3"
+
+[config.MutagenMP4]
+package_dir = "Mutagen/lib"
+package_name = "mutagen.mp4"

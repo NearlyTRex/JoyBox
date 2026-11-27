@@ -8,58 +8,6 @@ from joybox import environment
 from joybox import fileops
 from joybox import toolbase
 
-# Config files
-config_files = {}
-config_files["Ludusavi/windows/ludusavi.portable"] = ""
-config_files["Ludusavi/windows/config.yaml"] = """
----
-runtime:
-    threads: ~
-manifest:
-    url: "https://raw.githubusercontent.com/mtkennerly/ludusavi-manifest/master/data/manifest.yaml"
-language: en-US
-theme: light
-roots: []
-redirects: []
-backup:
-    path: .\\ludusavi-backup
-restore:
-    path: .\\ludusavi-backup
-scan:
-    showDeselectedGames: true
-    showUnchangedGames: true
-    showUnscannedGames: true
-cloud:
-    remote: ~
-    path: ludusavi-backup
-    synchronize: true
-customGames: []
-"""
-config_files["Ludusavi/linux/ludusavi.portable"] = ""
-config_files["Ludusavi/linux/config.yaml"] = """
----
-runtime:
-    threads: ~
-manifest:
-    url: "https://raw.githubusercontent.com/mtkennerly/ludusavi-manifest/master/data/manifest.yaml"
-language: en-US
-theme: light
-roots: []
-redirects: []
-backup:
-    path: ./ludusavi-backup
-restore:
-    path: ./ludusavi-backup
-scan:
-    showDeselectedGames: true
-    showUnchangedGames: true
-    showUnscannedGames: true
-cloud:
-    remote: ~
-    path: ludusavi-backup
-    synchronize: true
-customGames: []
-"""
 
 # Ludusavi tool
 class Ludusavi(toolbase.ToolBase):
@@ -67,21 +15,6 @@ class Ludusavi(toolbase.ToolBase):
     # Get name
     def get_name(self):
         return "Ludusavi"
-
-    # Get config
-    def get_config(self):
-        return {
-            "Ludusavi": {
-                "program": {
-                    "windows": "Ludusavi/windows/ludusavi.exe",
-                    "linux": "Ludusavi/linux/ludusavi"
-                },
-                "run_sandboxed": {
-                    "windows": False,
-                    "linux": False
-                }
-            }
-        }
 
     # Setup
     def setup(self, setup_params = None):
@@ -183,7 +116,7 @@ class Ludusavi(toolbase.ToolBase):
             setup_params = config.SetupParams()
 
         # Create config files
-        for config_filename, config_contents in config_files.items():
+        for config_filename, config_contents in self.get_config_files().items():
             success = fileops.touch_file(
                 src = paths.join_paths(environment.get_tools_root_dir(), config_filename),
                 contents = config_contents.strip(),

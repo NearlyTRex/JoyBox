@@ -10,13 +10,6 @@ from joybox import programs
 from joybox import emulatorcommon
 from joybox import emulatorbase
 
-# Config files
-config_files = {}
-config_files["PPSSPP/windows/memstick/PSP/SYSTEM/ppsspp.ini"] = ""
-config_files["PPSSPP/linux/PPSSPP.AppImage.home/.config/ppsspp/PSP/SYSTEM/ppsspp.ini"] = ""
-
-# System files
-system_files = {}
 
 # PPSSPP emulator
 class PPSSPP(emulatorbase.EmulatorBase):
@@ -32,29 +25,6 @@ class PPSSPP(emulatorbase.EmulatorBase):
             config.Platform.SONY_PLAYSTATION_NETWORK_PSPM,
             config.Platform.SONY_PLAYSTATION_PORTABLE
         ]
-
-    # Get config
-    def get_config(self):
-        return {
-            "PPSSPP": {
-                "program": {
-                    "windows": "PPSSPP/windows/PPSSPPWindows64.exe",
-                    "linux": "PPSSPP/linux/PPSSPP.AppImage"
-                },
-                "save_dir": {
-                    "windows": "PPSSPP/windows/memstick/PSP/SAVEDATA",
-                    "linux": "PPSSPP/linux/PPSSPP.AppImage.home/.config/ppsspp/PSP/SAVEDATA"
-                },
-                "config_file": {
-                    "windows": "PPSSPP/windows/memstick/PSP/SYSTEM/ppsspp.ini",
-                    "linux": "PPSSPP/linux/PPSSPP.AppImage.home/.config/ppsspp/PSP/SYSTEM/ppsspp.ini"
-                },
-                "run_sandboxed": {
-                    "windows": False,
-                    "linux": False
-                }
-            }
-        }
 
     # Setup
     def setup(self, setup_params = None):
@@ -151,7 +121,7 @@ class PPSSPP(emulatorbase.EmulatorBase):
             setup_params = config.SetupParams()
 
         # Create config files
-        for config_filename, config_contents in config_files.items():
+        for config_filename, config_contents in self.get_config_files().items():
             success = fileops.touch_file(
                 src = paths.join_paths(environment.get_emulators_root_dir(), config_filename),
                 contents = config_contents.strip(),

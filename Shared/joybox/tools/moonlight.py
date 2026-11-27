@@ -10,9 +10,6 @@ from joybox import toolbase
 from joybox import desktopentry
 from joybox import settings
 
-# Config files
-config_files = {}
-config_files["Moonlight/linux/Moonlight.AppImage.home/.config/Moonlight Game Streaming Project/Moonlight.conf"] = ""
 
 # Moonlight tool
 class Moonlight(toolbase.ToolBase):
@@ -20,21 +17,6 @@ class Moonlight(toolbase.ToolBase):
     # Get name
     def get_name(self):
         return "Moonlight"
-
-    # Get config
-    def get_config(self):
-        return {
-            "Moonlight": {
-                "program": {
-                    "windows": "Moonlight/windows/Moonlight.exe",
-                    "linux": "Moonlight/linux/Moonlight.AppImage"
-                },
-                "run_sandboxed": {
-                    "windows": False,
-                    "linux": False
-                }
-            }
-        }
 
     # Setup
     def setup(self, setup_params = None):
@@ -118,7 +100,7 @@ class Moonlight(toolbase.ToolBase):
             setup_params = config.SetupParams()
 
         # Create config files
-        for config_filename, config_contents in config_files.items():
+        for config_filename, config_contents in self.get_config_files().items():
             success = fileops.touch_file(
                 src = paths.join_paths(environment.get_tools_root_dir(), config_filename),
                 contents = config_contents.strip(),

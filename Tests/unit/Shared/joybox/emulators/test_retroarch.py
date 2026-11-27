@@ -145,8 +145,8 @@ def configure(monkeypatch):
 def test_configure_writes_configs_and_copies_system_files_to_each_platform(configure):
     assert retroarch.RetroArch().configure() is True
 
-    assert [src for src, _ in configure.touched] == ["/emulators/%s" % name for name in retroarch.config_files]
-    assert len(configure.copied) == 2 * len(retroarch.system_files)
+    assert [src for src, _ in configure.touched] == ["/emulators/%s" % name for name in retroarch.RetroArch().get_config_files()]
+    assert len(configure.copied) == 2 * len(retroarch.RetroArch().get_system_files())
     assert configure.copied[:2] == [
         ("/locker/RetroArch/system/panafz1.bin", "/emu/setup_dir/windows/system/panafz1.bin"),
         ("/locker/RetroArch/system/panafz1.bin", "/emu/setup_dir/linux/system/panafz1.bin"),
@@ -177,7 +177,7 @@ def test_configure_fails_when_a_system_file_cannot_be_copied(configure):
 
 def test_a_pretend_configure_succeeds_without_real_hashes(configure):
     assert retroarch.RetroArch().configure(config.SetupParams(pretend_run = True)) is True
-    assert len(configure.copied) == 2 * len(retroarch.system_files)
+    assert len(configure.copied) == 2 * len(retroarch.RetroArch().get_system_files())
 
 
 ###########################################################

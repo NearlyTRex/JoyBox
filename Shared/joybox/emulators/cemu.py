@@ -10,15 +10,6 @@ from joybox import paths
 from joybox import emulatorcommon
 from joybox import emulatorbase
 
-# Config files
-config_files = {}
-config_files["Cemu/windows/settings.xml"] = ""
-config_files["Cemu/windows/keys.txt"] = ""
-config_files["Cemu/linux/Cemu.AppImage.home/.config/Cemu/settings.xml"] = ""
-config_files["Cemu/linux/Cemu.AppImage.home/.local/share/Cemu/keys.txt"] = ""
-
-# System files
-system_files = {}
 
 # Cemu emulator
 class Cemu(emulatorbase.EmulatorBase):
@@ -33,37 +24,6 @@ class Cemu(emulatorbase.EmulatorBase):
             config.Platform.NINTENDO_WII_U,
             config.Platform.NINTENDO_WII_U_ESHOP
         ]
-
-    # Get config
-    def get_config(self):
-        return {
-            "Cemu": {
-                "program": {
-                    "windows": "Cemu/windows/Cemu.exe",
-                    "linux": "Cemu/linux/Cemu.AppImage"
-                },
-                "save_dir": {
-                    "windows": "Cemu/windows/mlc01/usr/save/00050000",
-                    "linux": "Cemu/linux/Cemu.AppImage.home/.local/share/Cemu/mlc01/usr/save/00050000"
-                },
-                "setup_dir": {
-                    "windows": "Cemu/windows",
-                    "linux": "Cemu/linux/Cemu.AppImage.home/.local/share/Cemu"
-                },
-                "config_file": {
-                    "windows": "Cemu/windows/settings.xml",
-                    "linux": "Cemu/linux/Cemu.AppImage.home/.config/Cemu/settings.xml"
-                },
-                "keys_file": {
-                    "windows": "Cemu/windows/keys.txt",
-                    "linux": "Cemu/linux/Cemu.AppImage.home/.local/share/Cemu/keys.txt"
-                },
-                "run_sandboxed": {
-                    "windows": False,
-                    "linux": False
-                }
-            }
-        }
 
     # Install add-ons
     def install_addons(self, dlc_dirs = None, update_dirs = None, verbose = False, pretend_run = False, exit_on_failure = False):
@@ -166,7 +126,7 @@ class Cemu(emulatorbase.EmulatorBase):
             setup_params = config.SetupParams()
 
         # Create config files
-        for config_filename, config_contents in config_files.items():
+        for config_filename, config_contents in self.get_config_files().items():
             success = fileops.touch_file(
                 src = paths.join_paths(environment.get_emulators_root_dir(), config_filename),
                 contents = config_contents.strip(),

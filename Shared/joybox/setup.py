@@ -2,12 +2,13 @@
 import sys
 
 # Local imports
+from joybox import emulators
+from joybox import tools
 from joybox import config
 from joybox import environment
 from joybox import fileops
 from joybox import logger
 from joybox import paths
-from joybox import programs
 from joybox import release
 from joybox import settings
 from joybox import platform_info, runtime
@@ -113,7 +114,7 @@ def setup_tools(
     packages = None,
     setup_params = None):
     return setup_packages(
-        package_list = programs.get_tools(),
+        package_list = tools.get_tool_list(),
         package_type = "tool",
         root_dir = environment.get_tools_root_dir(),
         offline = offline,
@@ -132,7 +133,7 @@ def setup_emulators(
     packages = None,
     setup_params = None):
     return setup_packages(
-        package_list = programs.get_emulators(),
+        package_list = emulators.get_emulator_list(),
         package_type = "emulator",
         root_dir = environment.get_emulators_root_dir(),
         offline = offline,

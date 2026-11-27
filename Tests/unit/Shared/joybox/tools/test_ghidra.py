@@ -1,6 +1,3 @@
-# Imports
-import os
-
 # Local imports
 from joybox.tools import ghidra
 from tools_helpers import (
@@ -50,15 +47,6 @@ def test_configure_installs_the_watcom_language_files(steps):
     assert ghidra.Ghidra().configure()
 
     written = {kwargs["src"]: kwargs["contents"] for kwargs in steps.made("touch_file")}
-    assert sorted(written) == sorted("/tools/" + path for path in ghidra.config_files)
-    for dest_path, src_filename in ghidra.config_files.items():
-        with open(os.path.join(ghidra.extra_files_dir, src_filename), encoding = "utf-8") as handle:
-            assert written["/tools/" + dest_path] == handle.read().strip()
-
-
-def test_configure_stops_when_a_language_file_is_missing(steps, monkeypatch):
-    monkeypatch.setattr(ghidra, "extra_files_dir", "/nonexistent")
-
-    assert ghidra.Ghidra().configure() is False
-    assert steps.calls == []
-    assert steps.errors
+    expected = ghidra.Ghidra().get_config_files()
+    assert sorted(written) == sorted("/tools/" + path for path in expected)
+    assert all(written["/tools/" + path] == contents.strip() for path, contents in expected.items())

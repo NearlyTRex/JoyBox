@@ -1,0 +1,17 @@
+# Atari800: where its programs live and how they run, the files its setup writes
+# and the system files it checks. Read by joybox/programcatalog.py.
+
+[config.Atari800]
+program = { windows = "Atari800/windows/atari800.exe", linux = "Atari800/linux/Atari800.AppImage" }
+save_dir = { windows = "<none>", linux = "<none>" }
+run_sandboxed = { windows = false, linux = false }
+
+[config.Atari800.config_file]
+windows = "Atari800/windows/.atari800.cfg"
+linux = "Atari800/linux/Atari800.AppImage.home/.atari800.cfg"
+
+[[config_files]]
+path = "Atari800/windows/.atari800.cfg"
+
+[[config_files]]
+path = "Atari800/linux/Atari800.AppImage.home/.atari800.cfg"

@@ -5,8 +5,6 @@ from joybox import release
 from joybox import programs
 from joybox import toolbase
 
-# Config files
-config_files = {}
 
 # BalenaEtcher tool
 class BalenaEtcher(toolbase.ToolBase):
@@ -14,21 +12,6 @@ class BalenaEtcher(toolbase.ToolBase):
     # Get name
     def get_name(self):
         return "BalenaEtcher"
-
-    # Get config
-    def get_config(self):
-        return {
-            "BalenaEtcher": {
-                "program": {
-                    "windows": "BalenaEtcher/windows/balenaEtcher.exe",
-                    "linux": "BalenaEtcher/linux/BalenaEtcher.AppImage"
-                },
-                "run_sandboxed": {
-                    "windows": False,
-                    "linux": False
-                }
-            }
-        }
 
     # Setup
     def setup(self, setup_params = None):

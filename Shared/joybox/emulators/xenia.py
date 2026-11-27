@@ -9,16 +9,6 @@ from joybox import programs
 from joybox import emulatorcommon
 from joybox import emulatorbase
 
-# Config files
-config_files = {}
-config_files["Xenia/windows/portable.txt"] = ""
-config_files["Xenia/windows/xenia.config.toml"] = """
-[Storage]
-content_root = "GAME_SAVE_DIR"
-"""
-
-# System files
-system_files = {}
 
 # Xenia emulator
 class Xenia(emulatorbase.EmulatorBase):
@@ -35,29 +25,6 @@ class Xenia(emulatorbase.EmulatorBase):
             config.Platform.MICROSOFT_XBOX_360_XBLA,
             config.Platform.MICROSOFT_XBOX_360_XIG
         ]
-
-    # Get config
-    def get_config(self):
-        return {
-            "Xenia": {
-                "program": {
-                    "windows": "Xenia/windows/xenia.exe",
-                    "linux": "Xenia/windows/xenia.exe"
-                },
-                "save_dir": {
-                    "windows": "Xenia/windows/content",
-                    "linux": "Xenia/windows/content"
-                },
-                "config_file": {
-                    "windows": "Xenia/windows/xenia.config.toml",
-                    "linux": "Xenia/windows/xenia.config.toml"
-                },
-                "run_sandboxed": {
-                    "windows": False,
-                    "linux": True
-                }
-            }
-        }
 
     # Setup
     def setup(self, setup_params = None):
@@ -111,7 +78,7 @@ class Xenia(emulatorbase.EmulatorBase):
             setup_params = config.SetupParams()
 
         # Create config files
-        for config_filename, config_contents in config_files.items():
+        for config_filename, config_contents in self.get_config_files().items():
             success = fileops.touch_file(
                 src = paths.join_paths(environment.get_emulators_root_dir(), config_filename),
                 contents = config_contents.strip(),

@@ -1,0 +1,14 @@
+# FuseISO: where its programs live and how they run, the files its setup writes
+# and the system files it checks. Read by joybox/programcatalog.py.
+
+[config.FuseISO]
+
+[config.FuseISO.program]
+windows = "<none>"
+linux = "{path_setting:Tools.FuseISO.fuseiso_install_dir}/{setting:Tools.FuseISO.fuseiso_exe}"
+
+[config.FUserMount]
+
+[config.FUserMount.program]
+windows = "<none>"
+linux = "{path_setting:Tools.FuseISO.fusermount_install_dir}/{setting:Tools.FuseISO.fusermount_exe}"

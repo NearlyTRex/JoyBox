@@ -5,8 +5,6 @@ from joybox import release
 from joybox import programs
 from joybox import toolbase
 
-# Config files
-config_files = {}
 
 # YtDlp tool
 class YtDlp(toolbase.ToolBase):
@@ -14,21 +12,6 @@ class YtDlp(toolbase.ToolBase):
     # Get name
     def get_name(self):
         return "YtDlp"
-
-    # Get config
-    def get_config(self):
-        return {
-            "YtDlp": {
-                "program": {
-                    "windows": "YtDlp/windows/yt-dlp.exe",
-                    "linux": "YtDlp/linux/yt-dlp_linux"
-                },
-                "run_sandboxed": {
-                    "windows": False,
-                    "linux": False
-                }
-            }
-        }
 
     # Setup
     def setup(self, setup_params = None):

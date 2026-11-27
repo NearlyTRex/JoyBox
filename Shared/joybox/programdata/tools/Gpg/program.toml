@@ -1,0 +1,5 @@
+# Gpg: where its programs live and how they run, the files its setup writes
+# and the system files it checks. Read by joybox/programcatalog.py.
+
+[config.Gpg]
+program = "{path_setting:Tools.Gpg.gpg_install_dir}/{setting:Tools.Gpg.gpg_exe}"

@@ -1,0 +1,6 @@
+# FFMpeg: where its programs live and how they run, the files its setup writes
+# and the system files it checks. Read by joybox/programcatalog.py.
+
+[config.FFMpeg]
+program = { windows = "FFMpeg/windows/ffmpeg.exe", linux = "FFMpeg/linux/ffmpeg" }
+run_sandboxed = { windows = false, linux = false }

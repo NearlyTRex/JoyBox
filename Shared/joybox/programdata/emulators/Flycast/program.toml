@@ -1,0 +1,20 @@
+# Flycast: where its programs live and how they run, the files its setup writes
+# and the system files it checks. Read by joybox/programcatalog.py.
+
+[config.Flycast]
+program = { windows = "Flycast/windows/flycast.exe", linux = "Flycast/linux/Flycast.AppImage" }
+run_sandboxed = { windows = false, linux = false }
+
+[config.Flycast.save_dir]
+windows = "Flycast/windows/data"
+linux = "Flycast/linux/Flycast.AppImage.home/.local/share/flycast"
+
+[config.Flycast.config_file]
+windows = "Flycast/windows/emu.cfg"
+linux = "Flycast/linux/Flycast.AppImage.home/.config/flycast/emu.cfg"
+
+[[config_files]]
+path = "Flycast/windows/emu.cfg"
+
+[[config_files]]
+path = "Flycast/linux/Flycast.AppImage.home/.config/flycast/emu.cfg"

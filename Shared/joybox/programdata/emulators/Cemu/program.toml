@@ -1,0 +1,31 @@
+# Cemu: where its programs live and how they run, the files its setup writes
+# and the system files it checks. Read by joybox/programcatalog.py.
+
+[config.Cemu]
+program = { windows = "Cemu/windows/Cemu.exe", linux = "Cemu/linux/Cemu.AppImage" }
+setup_dir = { windows = "Cemu/windows", linux = "Cemu/linux/Cemu.AppImage.home/.local/share/Cemu" }
+run_sandboxed = { windows = false, linux = false }
+
+[config.Cemu.save_dir]
+windows = "Cemu/windows/mlc01/usr/save/00050000"
+linux = "Cemu/linux/Cemu.AppImage.home/.local/share/Cemu/mlc01/usr/save/00050000"
+
+[config.Cemu.config_file]
+windows = "Cemu/windows/settings.xml"
+linux = "Cemu/linux/Cemu.AppImage.home/.config/Cemu/settings.xml"
+
+[config.Cemu.keys_file]
+windows = "Cemu/windows/keys.txt"
+linux = "Cemu/linux/Cemu.AppImage.home/.local/share/Cemu/keys.txt"
+
+[[config_files]]
+path = "Cemu/windows/settings.xml"
+
+[[config_files]]
+path = "Cemu/windows/keys.txt"
+
+[[config_files]]
+path = "Cemu/linux/Cemu.AppImage.home/.config/Cemu/settings.xml"
+
+[[config_files]]
+path = "Cemu/linux/Cemu.AppImage.home/.local/share/Cemu/keys.txt"

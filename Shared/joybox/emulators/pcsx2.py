@@ -10,88 +10,6 @@ from joybox import programs
 from joybox import emulatorcommon
 from joybox import emulatorbase
 
-# Config files
-config_files = {}
-CONFIG_FILE_GENERAL = """
-[UI]
-SettingsVersion = 1
-
-[Folders]
-Bios = EMULATOR_SETUP_ROOT/bios
-Snapshots = EMULATOR_SETUP_ROOT/snaps
-SaveStates = EMULATOR_SETUP_ROOT/sstates
-MemoryCards = GAME_SAVE_DIR
-Logs = EMULATOR_SETUP_ROOT/logs
-Cheats = EMULATOR_SETUP_ROOT/cheats
-CheatsWS = EMULATOR_SETUP_ROOT/cheats_ws
-CheatsNI = EMULATOR_SETUP_ROOT/cheats_ni
-Cache = EMULATOR_SETUP_ROOT/cache
-Textures = EMULATOR_SETUP_ROOT/textures
-InputProfiles = EMULATOR_SETUP_ROOT/inputprofiles
-
-[Filenames]
-BIOS = ps2-0170a-20030325.bin
-
-[MemoryCards]
-Slot1_Enable = true
-Slot1_Filename = Mcd001.ps2
-Slot2_Enable = false
-Slot2_Filename =
-Multitap1_Slot2_Enable = false
-Multitap1_Slot2_Filename = Mcd-Multitap1-Slot02.ps2
-Multitap1_Slot3_Enable = false
-Multitap1_Slot3_Filename = Mcd-Multitap1-Slot03.ps2
-Multitap1_Slot4_Enable = false
-Multitap1_Slot4_Filename = Mcd-Multitap1-Slot04.ps2
-Multitap2_Slot2_Enable = false
-Multitap2_Slot2_Filename = Mcd-Multitap2-Slot02.ps2
-Multitap2_Slot3_Enable = false
-Multitap2_Slot3_Filename = Mcd-Multitap2-Slot03.ps2
-Multitap2_Slot4_Enable = false
-Multitap2_Slot4_Filename = Mcd-Multitap2-Slot04.ps2
-
-[EmuCore]
-McdEnableEjection = true
-McdFolderAutoManage = true
-
-[Pad1]
-Up = SDL-0/DPadUp
-Right = SDL-0/DPadRight
-Down = SDL-0/DPadDown
-Left = SDL-0/DPadLeft
-Triangle = SDL-0/Y
-Circle = SDL-0/B
-Cross = SDL-0/A
-Square = SDL-0/X
-Select = SDL-0/Back
-Start = SDL-0/Start
-L1 = SDL-0/LeftShoulder
-L2 = SDL-0/+LeftTrigger
-R1 = SDL-0/RightShoulder
-R2 = SDL-0/+RightTrigger
-L3 = SDL-0/LeftStick
-R3 = SDL-0/RightStick
-Analog = SDL-0/Guide
-LUp = SDL-0/-LeftY
-LRight = SDL-0/+LeftX
-LDown = SDL-0/+LeftY
-LLeft = SDL-0/-LeftX
-RUp = SDL-0/-RightY
-RRight = SDL-0/+RightX
-RDown = SDL-0/+RightY
-RLeft = SDL-0/-RightX
-LargeMotor = SDL-0/LargeMotor
-SmallMotor = SDL-0/SmallMotor
-"""
-config_files["PCSX2/windows/portable.ini"] = ""
-config_files["PCSX2/windows/inis/PCSX2.ini"] = CONFIG_FILE_GENERAL
-config_files["PCSX2/linux/PCSX2.AppImage.home/.config/PCSX2/inis/PCSX2.ini"] = CONFIG_FILE_GENERAL
-
-# System files
-system_files = {}
-system_files["bios/ps2-0170e-20030227.bin"] = "6e69920fa6eef8522a1d688a11e41bc6"
-system_files["bios/ps2-0170j-20030206.bin"] = "312ad4816c232a9606e56f946bc0678a"
-system_files["bios/ps2-0170a-20030325.bin"] = "8aa12ce243210128c5074552d3b86251"
 
 # PCSX2 emulator
 class PCSX2(emulatorbase.EmulatorBase):
@@ -105,33 +23,6 @@ class PCSX2(emulatorbase.EmulatorBase):
         return [
             config.Platform.SONY_PLAYSTATION_2
         ]
-
-    # Get config
-    def get_config(self):
-        return {
-            "PCSX2": {
-                "program": {
-                    "windows": "PCSX2/windows/pcsx2-qt.exe",
-                    "linux": "PCSX2/linux/PCSX2.AppImage"
-                },
-                "save_dir": {
-                    "windows": "PCSX2/windows/memcards",
-                    "linux": "PCSX2/linux/PCSX2.AppImage.home/.config/PCSX2/memcards"
-                },
-                "setup_dir": {
-                    "windows": "PCSX2/windows",
-                    "linux": "PCSX2/linux/PCSX2.AppImage.home/.config/PCSX2"
-                },
-                "config_file": {
-                    "windows": "PCSX2/windows/inis/PCSX2.ini",
-                    "linux": "PCSX2/linux/PCSX2.AppImage.home/.config/PCSX2/inis/PCSX2.ini"
-                },
-                "run_sandboxed": {
-                    "windows": False,
-                    "linux": False
-                }
-            }
-        }
 
     # Setup
     def setup(self, setup_params = None):
@@ -215,7 +106,7 @@ class PCSX2(emulatorbase.EmulatorBase):
             setup_params = config.SetupParams()
 
         # Create config files
-        for config_filename, config_contents in config_files.items():
+        for config_filename, config_contents in self.get_config_files().items():
             success = fileops.touch_file(
                 src = paths.join_paths(environment.get_emulators_root_dir(), config_filename),
                 contents = config_contents.strip(),
@@ -227,11 +118,11 @@ class PCSX2(emulatorbase.EmulatorBase):
                 return False
 
         # Verify system files
-        if not self.verify_system_files(system_files, setup_params):
+        if not self.verify_system_files(self.get_system_files(), setup_params):
             return False
 
         # Copy system files
-        for filename in system_files.keys():
+        for filename in self.get_system_files().keys():
             for platform in ["windows", "linux"]:
                 success = filebulk.smart_copy(
                     src = paths.join_paths(environment.get_locker_gaming_emulator_setup_dir("PCSX2"), filename),

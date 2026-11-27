@@ -1,11 +1,11 @@
 # Local imports
+from joybox import emulators
 from joybox import config
 from joybox import logger
 from joybox import paths
 from joybox import environment
 from joybox import fileops
 from joybox import filebulk
-from joybox import programs
 from joybox import transform
 from joybox import platforms
 from joybox import locker
@@ -270,7 +270,7 @@ def install_local_game_addons(
         source_update_dirs += [paths.join_paths(environment.get_locker_gaming_update_root_dir(), filename)]
 
     # Install add-ons
-    for emulator in programs.get_emulators():
+    for emulator in emulators.get_emulator_list():
         if game_platform in emulator.get_platforms():
             success = emulator.install_addons(
                 dlc_dirs = source_dlc_dirs,

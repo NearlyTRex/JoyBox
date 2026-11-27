@@ -5,8 +5,6 @@ from joybox import release
 from joybox import programs
 from joybox import toolbase
 
-# Config files
-config_files = {}
 
 # ZoomPlatformSH tool
 class ZoomPlatformSH(toolbase.ToolBase):
@@ -14,14 +12,6 @@ class ZoomPlatformSH(toolbase.ToolBase):
     # Get name
     def get_name(self):
         return "ZoomPlatformSH"
-
-    # Get config
-    def get_config(self):
-        return {
-            "ZoomPlatformSH": {
-                "program": "ZoomPlatformSH/lib/zoom-platform.sh"
-            }
-        }
 
     # Setup
     def setup(self, setup_params = None):

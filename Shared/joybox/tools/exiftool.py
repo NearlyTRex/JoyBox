@@ -6,8 +6,6 @@ from joybox import programs
 from joybox import release
 from joybox import toolbase
 
-# Config files
-config_files = {}
 
 # ExifTool tool
 class ExifTool(toolbase.ToolBase):
@@ -15,14 +13,6 @@ class ExifTool(toolbase.ToolBase):
     # Get name
     def get_name(self):
         return "ExifTool"
-
-    # Get config
-    def get_config(self):
-        return {
-            "ExifTool": {
-                "program": "ExifTool/lib/exiftool"
-            }
-        }
 
     # Setup
     def setup(self, setup_params = None):

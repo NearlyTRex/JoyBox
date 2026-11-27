@@ -9,12 +9,6 @@ from joybox import programs
 from joybox import emulatorcommon
 from joybox import emulatorbase
 
-# Config files
-config_files = {}
-config_files["BigPEmu/windows/placeholder.txt"] = ""
-
-# System files
-system_files = {}
 
 # BigPEmu emulator
 class BigPEmu(emulatorbase.EmulatorBase):
@@ -29,29 +23,6 @@ class BigPEmu(emulatorbase.EmulatorBase):
             config.Platform.OTHER_ATARI_JAGUAR,
             config.Platform.OTHER_ATARI_JAGUAR_CD
         ]
-
-    # Get config
-    def get_config(self):
-        return {
-            "BigPEmu": {
-                "program": {
-                    "windows": "BigPEmu/windows/BigPEmu.exe",
-                    "linux": "BigPEmu/windows/BigPEmu.exe"
-                },
-                "save_dir": {
-                    "windows": "BigPEmu/windows/UserData",
-                    "linux": "BigPEmu/windows/UserData"
-                },
-                "config_file": {
-                    "windows": None,
-                    "linux": None
-                },
-                "run_sandboxed": {
-                    "windows": False,
-                    "linux": True
-                }
-            }
-        }
 
     # Setup
     def setup(self, setup_params = None):
@@ -105,7 +76,7 @@ class BigPEmu(emulatorbase.EmulatorBase):
             setup_params = config.SetupParams()
 
         # Create config files
-        for config_filename, config_contents in config_files.items():
+        for config_filename, config_contents in self.get_config_files().items():
             success = fileops.touch_file(
                 src = paths.join_paths(environment.get_emulators_root_dir(), config_filename),
                 contents = config_contents.strip(),

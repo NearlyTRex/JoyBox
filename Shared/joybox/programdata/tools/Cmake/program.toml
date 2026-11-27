@@ -1,0 +1,5 @@
+# Cmake: where its programs live and how they run, the files its setup writes
+# and the system files it checks. Read by joybox/programcatalog.py.
+
+[config.Cmake]
+program = "{path_setting:Tools.Cmake.cmake_install_dir}/{setting:Tools.Cmake.cmake_exe}"

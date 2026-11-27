@@ -73,7 +73,7 @@ class Seams:
         self.locker_root = tmp_path / "locker"
         self.cache_dir = tmp_path / "cache"
         self.cache_dir.mkdir()
-        self.hashes = dict(getattr(module, "system_files", {}))
+        self.hashes = dict(self.emulator_class().get_system_files())
         self.popups = []
 
         # Releases share one recorder so their order across functions is kept
@@ -252,7 +252,7 @@ class ConfigureSeams:
         self.copied = []
         self.touch_ok = True
         self.copy_ok = True
-        self.hashes = dict(module.system_files)
+        self.hashes = dict(find_emulator_class(module)().get_system_files())
         monkeypatch.setattr(module.environment, "get_emulators_root_dir", lambda: "/emulators")
         monkeypatch.setattr(module.environment, "get_locker_gaming_emulator_setup_dir",
             lambda name: "/locker/%s" % name)
@@ -280,7 +280,7 @@ def check_writes_every_config_file(seams):
     assert seams.emulator().configure() is True
 
     assert seams.touched.values("src", "contents") == [
-        ("/emulators/%s" % name, contents.strip()) for name, contents in seams.module.config_files.items()]
+        ("/emulators/%s" % name, contents.strip()) for name, contents in seams.emulator().get_config_files().items()]
 
 
 def check_stops_when_a_config_file_cannot_be_written(seams):
@@ -303,7 +303,7 @@ def check_copies_system_files_to_each_platform(seams):
 
     assert seams.copied.values("src", "dest") == [
         (seams.locker(seams.name) + "/" + filename, "/emu/%s/setup_dir/%s/%s" % (seams.name, platform, filename))
-        for filename in seams.module.system_files for platform in PLATFORMS]
+        for filename in seams.emulator().get_system_files() for platform in PLATFORMS]
 
 
 def check_refuses_a_system_file_with_the_wrong_hash(seams):

@@ -5,8 +5,6 @@ from joybox import release
 from joybox import programs
 from joybox import toolbase
 
-# Config files
-config_files = {}
 
 # NDecrypt tool
 class NDecrypt(toolbase.ToolBase):
@@ -14,21 +12,6 @@ class NDecrypt(toolbase.ToolBase):
     # Get name
     def get_name(self):
         return "NDecrypt"
-
-    # Get config
-    def get_config(self):
-        return {
-            "NDecrypt": {
-                "program": {
-                    "windows": "NDecrypt/windows/NDecrypt.exe",
-                    "linux": "NDecrypt/linux/NDecrypt"
-                },
-                "run_sandboxed": {
-                    "windows": False,
-                    "linux": False
-                }
-            }
-        }
 
     # Setup
     def setup(self, setup_params = None):

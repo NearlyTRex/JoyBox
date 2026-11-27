@@ -5,11 +5,6 @@ from joybox import release
 from joybox import programs
 from joybox import emulatorbase
 
-# Config files
-config_files = {}
-
-# System files
-system_files = {}
 
 # PCEm emulator
 class PCEm(emulatorbase.EmulatorBase):
@@ -21,21 +16,6 @@ class PCEm(emulatorbase.EmulatorBase):
     # Get platforms
     def get_platforms(self):
         return []
-
-    # Get config
-    def get_config(self):
-        return {
-            "PCEm": {
-                "program": {
-                    "windows": "PCEm/windows/PCem.exe",
-                    "linux": "PCEm/windows/PCem.exe"
-                },
-                "run_sandboxed": {
-                    "windows": False,
-                    "linux": True
-                }
-            }
-        }
 
     # Setup
     def setup(self, setup_params = None):

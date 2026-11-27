@@ -6,8 +6,6 @@ from joybox import sourcebuild
 from joybox import programs
 from joybox import toolbase
 
-# Config files
-config_files = {}
 
 # PS3Dec tool
 class PS3Dec(toolbase.ToolBase):
@@ -15,21 +13,6 @@ class PS3Dec(toolbase.ToolBase):
     # Get name
     def get_name(self):
         return "PS3Dec"
-
-    # Get config
-    def get_config(self):
-        return {
-            "PS3Dec": {
-                "program": {
-                    "windows": "PS3Dec/windows/PS3Dec.exe",
-                    "linux": "PS3Dec/linux/PS3Dec.AppImage"
-                },
-                "run_sandboxed": {
-                    "windows": False,
-                    "linux": False
-                }
-            }
-        }
 
     # Setup
     def setup(self, setup_params = None):

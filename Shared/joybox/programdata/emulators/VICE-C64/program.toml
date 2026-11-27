@@ -1,0 +1,17 @@
+# VICE-C64: where its programs live and how they run, the files its setup writes
+# and the system files it checks. Read by joybox/programcatalog.py.
+
+[config.VICE-C64]
+program = { windows = "VICE-C64/windows/x64sc.exe", linux = "VICE-C64/linux/VICE-C64.AppImage" }
+save_dir = { windows = "<none>", linux = "<none>" }
+run_sandboxed = { windows = false, linux = false }
+
+[config.VICE-C64.config_file]
+windows = "VICE-C64/windows/sdl-vice.ini"
+linux = "VICE-C64/linux/VICE-C64.AppImage.home/.config/vice/vicerc"
+
+[[config_files]]
+path = "VICE-C64/windows/sdl-vice.ini"
+
+[[config_files]]
+path = "VICE-C64/linux/VICE-C64.AppImage.home/.config/vice/vicerc"

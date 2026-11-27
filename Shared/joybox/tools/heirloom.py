@@ -7,8 +7,6 @@ from joybox import requirements
 from joybox import programs
 from joybox import toolbase
 
-# Config files
-config_files = {}
 
 # Heirloom tool
 class Heirloom(toolbase.ToolBase):
@@ -16,15 +14,6 @@ class Heirloom(toolbase.ToolBase):
     # Get name
     def get_name(self):
         return "Heirloom"
-
-    # Get config
-    def get_config(self):
-        return {
-            "Heirloom": {
-                "program": "Heirloom/lib/main.py",
-                "github_branch": "dev"
-            }
-        }
 
     # Setup
     def setup(self, setup_params = None):

@@ -11,42 +11,6 @@ from joybox import emulatorbase
 from joybox import computer
 from joybox import platform_info
 
-# Config files
-config_files = {}
-CONFIG_FILE_GENERAL_DOS = """
-[dosbox]
-working directory default = EMULATOR_SETUP_ROOT
-"""
-CONFIG_FILE_GENERAL_WIN31 = """
-[dosbox]
-working directory default = EMULATOR_SETUP_ROOT
-memsize = 256
-machine = svga_s3trio64
-
-[cpu]
-cputype = pentium
-core = normal
-
-[pci]
-voodoo = false
-
-[dos]
-hard drive data rate limit = 0
-floppy drive data rate limit = 0
-
-[ide, primary]
-int13fakeio = true
-int13fakev86io = false
-"""
-config_files["DosBoxX/windows/dosbox-x.conf"] = CONFIG_FILE_GENERAL_DOS
-config_files["DosBoxX/windows/dosbox-x.win31.conf"] = CONFIG_FILE_GENERAL_WIN31
-config_files["DosBoxX/linux/DosBoxX.AppImage.home/.config/dosbox-x/dosbox-x.conf"] = CONFIG_FILE_GENERAL_DOS
-config_files["DosBoxX/linux/DosBoxX.AppImage.home/.config/dosbox-x/dosbox-x.win31.conf"] = CONFIG_FILE_GENERAL_WIN31
-config_files["ScummVM/windows/scummvm.ini"] = ""
-config_files["ScummVM/linux/ScummVM.AppImage.home/.config/scummvm/scummvm.ini"] = ""
-
-# System files
-system_files = {}
 
 # Computer emulator
 class Computer(emulatorbase.EmulatorBase):
@@ -71,63 +35,6 @@ class Computer(emulatorbase.EmulatorBase):
             config.Platform.COMPUTER_STEAM,
             config.Platform.COMPUTER_ZOOM
         ]
-
-    # Get config
-    def get_config(self):
-        return {
-
-            # DosBoxX
-            "DosBoxX": {
-                "program": {
-                    "windows": "DosBoxX/windows/dosbox-x.exe",
-                    "linux": "DosBoxX/linux/DosBoxX.AppImage"
-                },
-                "save_dir": {
-                    "windows": None,
-                    "linux": None
-                },
-                "setup_dir": {
-                    "windows": "DosBoxX/windows",
-                    "linux": "DosBoxX/linux"
-                },
-                "config_file": {
-                    "windows": "DosBoxX/windows/dosbox-x.conf",
-                    "linux": "DosBoxX/linux/DosBoxX.AppImage.home/.config/dosbox-x/dosbox-x.conf"
-                },
-                "config_file_win31": {
-                    "windows": "DosBoxX/windows/dosbox-x.win31.conf",
-                    "linux": "DosBoxX/linux/DosBoxX.AppImage.home/.config/dosbox-x/dosbox-x.win31.conf"
-                },
-                "run_sandboxed": {
-                    "windows": False,
-                    "linux": False
-                }
-            },
-
-            # ScummVM
-            "ScummVM": {
-                "program": {
-                    "windows": "ScummVM/windows/scummvm.exe",
-                    "linux": "ScummVM/linux/ScummVM.AppImage"
-                },
-                "save_dir": {
-                    "windows": None,
-                    "linux": None
-                },
-                "setup_dir": {
-                    "windows": "ScummVM/windows",
-                    "linux": "ScummVM/linux"
-                },
-                "config_file": {
-                    "windows": "ScummVM/windows/scummvm.ini",
-                    "linux": "ScummVM/linux/ScummVM.AppImage.home/.config/scummvm/scummvm.ini"
-                },
-                "run_sandboxed": {
-                    "windows": False,
-                    "linux": False
-                }
-            }
-        }
 
     # Get save type
     def get_save_type(self):
@@ -350,7 +257,7 @@ class Computer(emulatorbase.EmulatorBase):
             setup_params = config.SetupParams()
 
         # Create config files
-        for config_filename, config_contents in config_files.items():
+        for config_filename, config_contents in self.get_config_files().items():
             success = fileops.touch_file(
                 src = paths.join_paths(environment.get_emulators_root_dir(), config_filename),
                 contents = config_contents.strip(),

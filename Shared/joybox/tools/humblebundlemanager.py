@@ -7,8 +7,6 @@ from joybox import requirements
 from joybox import programs
 from joybox import toolbase
 
-# Config files
-config_files = {}
 
 # HumbleBundleManager tool
 class HumbleBundleManager(toolbase.ToolBase):
@@ -16,15 +14,6 @@ class HumbleBundleManager(toolbase.ToolBase):
     # Get name
     def get_name(self):
         return "HumbleBundleManager"
-
-    # Get config
-    def get_config(self):
-        return {
-            "HumbleBundleManager": {
-                "program": "HumbleBundleManager/lib/humblebundle.py",
-                "github_branch": "dev"
-            }
-        }
 
     # Setup
     def setup(self, setup_params = None):

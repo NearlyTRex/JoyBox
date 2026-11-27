@@ -5,11 +5,6 @@ from joybox import release
 from joybox import programs
 from joybox import emulatorbase
 
-# Config files
-config_files = {}
-
-# System files
-system_files = {}
 
 # Snes9x emulator
 class Snes9x(emulatorbase.EmulatorBase):
@@ -21,21 +16,6 @@ class Snes9x(emulatorbase.EmulatorBase):
     # Get platforms
     def get_platforms(self):
         return []
-
-    # Get config
-    def get_config(self):
-        return {
-            "Snes9x": {
-                "program": {
-                    "windows": "Snes9x/windows/snes9x-x64.exe",
-                    "linux": "Snes9x/linux/Snes9x.AppImage"
-                },
-                "run_sandboxed": {
-                    "windows": False,
-                    "linux": False
-                }
-            }
-        }
 
     # Setup
     def setup(self, setup_params = None):

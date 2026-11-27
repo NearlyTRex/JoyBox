@@ -1,0 +1,7 @@
+# Firefox: where its programs live and how they run, the files its setup writes
+# and the system files it checks. Read by joybox/programcatalog.py.
+
+[config.Firefox]
+program = "{path_setting:Tools.Firefox.firefox_install_dir}/{setting:Tools.Firefox.firefox_exe}"
+download_dir = "{path_setting:Tools.Firefox.firefox_download_dir}"
+profile_dir = "{optional_path_setting:Tools.Firefox.firefox_profile_dir|firefox_default_profile}"

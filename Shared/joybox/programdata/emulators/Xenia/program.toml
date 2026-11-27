@@ -1,0 +1,15 @@
+# Xenia: where its programs live and how they run, the files its setup writes
+# and the system files it checks. Read by joybox/programcatalog.py.
+
+[config.Xenia]
+program = { windows = "Xenia/windows/xenia.exe", linux = "Xenia/windows/xenia.exe" }
+save_dir = { windows = "Xenia/windows/content", linux = "Xenia/windows/content" }
+config_file = { windows = "Xenia/windows/xenia.config.toml", linux = "Xenia/windows/xenia.config.toml" }
+run_sandboxed = { windows = false, linux = true }
+
+[[config_files]]
+path = "Xenia/windows/portable.txt"
+
+[[config_files]]
+path = "Xenia/windows/xenia.config.toml"
+template = "xenia.config.toml"

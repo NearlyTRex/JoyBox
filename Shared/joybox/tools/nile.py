@@ -7,8 +7,6 @@ from joybox import release
 from joybox import requirements
 from joybox import toolbase
 
-# Config files
-config_files = {}
 
 # Nile tool
 class Nile(toolbase.ToolBase):
@@ -16,15 +14,6 @@ class Nile(toolbase.ToolBase):
     # Get name
     def get_name(self):
         return "Nile"
-
-    # Get config
-    def get_config(self):
-        return {
-            "Nile": {
-                "program": "Nile/lib/main.py",
-                "github_branch": "dev"
-            }
-        }
 
     # Setup
     def setup(self, setup_params = None):

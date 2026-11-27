@@ -1,0 +1,9 @@
+# Phoenix: where its programs live and how they run, the files its setup writes
+# and the system files it checks. Read by joybox/programcatalog.py.
+
+[config.Phoenix]
+run_sandboxed = { windows = false, linux = true }
+
+[config.Phoenix.program]
+windows = "Phoenix/windows/PhoenixEmuProject.exe"
+linux = "Phoenix/windows/PhoenixEmuProject.exe"

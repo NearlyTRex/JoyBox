@@ -7,8 +7,6 @@ from joybox import requirements
 from joybox import programs
 from joybox import toolbase
 
-# Config files
-config_files = {}
 
 # HeroicGogDL tool
 class HeroicGogDL(toolbase.ToolBase):
@@ -16,17 +14,6 @@ class HeroicGogDL(toolbase.ToolBase):
     # Get name
     def get_name(self):
         return "HeroicGogDL"
-
-    # Get config
-    def get_config(self):
-        return {
-            "HeroicGogDL": {
-                "program": "HeroicGogDL/lib/main.py",
-                "login_script": "HeroicGogDL/lib/login.py",
-                "auth_json": "HeroicGogDL/lib/auth.json",
-                "github_branch": "dev"
-            }
-        }
 
     # Setup
     def setup(self, setup_params = None):

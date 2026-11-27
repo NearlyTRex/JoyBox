@@ -8,8 +8,6 @@ from joybox import release
 from joybox import programs
 from joybox import toolbase
 
-# Config files
-config_files = {}
 
 # Get libs
 def get_libs(key):
@@ -145,19 +143,6 @@ class GoldbergEmu(toolbase.ToolBase):
     # Get name
     def get_name(self):
         return "GoldbergEmu"
-
-    # Get config
-    def get_config(self):
-        return {
-            "GoldbergEmu": {
-                "lib32": [
-                    "steam_api.dll"
-                ],
-                "lib64": [
-                    "steam_api64.dll"
-                ]
-            }
-        }
 
     # Setup
     def setup(self, setup_params = None):

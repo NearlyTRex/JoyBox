@@ -1,0 +1,6 @@
+# DXVK: where its programs live and how they run, the files its setup writes
+# and the system files it checks. Read by joybox/programcatalog.py.
+
+[config.DXVK]
+lib32 = ["x32/d3d10core.dll", "x32/d3d11.dll", "x32/d3d9.dll", "x32/dxgi.dll"]
+lib64 = ["x64/d3d10core.dll", "x64/d3d11.dll", "x64/d3d9.dll", "x64/dxgi.dll"]

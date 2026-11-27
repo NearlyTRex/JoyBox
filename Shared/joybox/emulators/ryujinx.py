@@ -27,6 +27,14 @@ class Ryujinx(emulatorbase.EmulatorBase):
     def get_platforms(self):
         return []
 
+    # Get the files setup writes; Ryujinx is not registered, so they are kept here
+    def get_config_files(self):
+        return dict(config_files)
+
+    # Get the system files setup checks
+    def get_system_files(self):
+        return dict(system_files)
+
     # Get config
     def get_config(self):
         return {
@@ -126,7 +134,7 @@ class Ryujinx(emulatorbase.EmulatorBase):
             setup_params = config.SetupParams()
 
         # Create config files
-        for config_filename, config_contents in config_files.items():
+        for config_filename, config_contents in self.get_config_files().items():
             success = fileops.touch_file(
                 src = paths.join_paths(environment.get_emulators_root_dir(), config_filename),
                 contents = config_contents.strip(),

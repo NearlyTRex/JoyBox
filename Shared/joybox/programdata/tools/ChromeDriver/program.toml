@@ -1,0 +1,6 @@
+# ChromeDriver: where its programs live and how they run, the files its setup writes
+# and the system files it checks. Read by joybox/programcatalog.py.
+
+[config.ChromeDriver]
+program = { windows = "ChromeDriver/windows/chromedriver.exe", linux = "ChromeDriver/linux/chromedriver" }
+run_sandboxed = { windows = false, linux = false }

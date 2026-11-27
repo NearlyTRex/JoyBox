@@ -1,0 +1,5 @@
+# Curl: where its programs live and how they run, the files its setup writes
+# and the system files it checks. Read by joybox/programcatalog.py.
+
+[config.Curl]
+program = "{path_setting:Tools.Curl.curl_install_dir}/{setting:Tools.Curl.curl_exe}"

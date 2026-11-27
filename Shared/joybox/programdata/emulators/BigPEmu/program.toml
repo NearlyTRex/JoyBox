@@ -1,0 +1,11 @@
+# BigPEmu: where its programs live and how they run, the files its setup writes
+# and the system files it checks. Read by joybox/programcatalog.py.
+
+[config.BigPEmu]
+program = { windows = "BigPEmu/windows/BigPEmu.exe", linux = "BigPEmu/windows/BigPEmu.exe" }
+save_dir = { windows = "BigPEmu/windows/UserData", linux = "BigPEmu/windows/UserData" }
+config_file = { windows = "<none>", linux = "<none>" }
+run_sandboxed = { windows = false, linux = true }
+
+[[config_files]]
+path = "BigPEmu/windows/placeholder.txt"

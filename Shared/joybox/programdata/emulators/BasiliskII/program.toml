@@ -1,0 +1,27 @@
+# BasiliskII: where its programs live and how they run, the files its setup writes
+# and the system files it checks. Read by joybox/programcatalog.py.
+
+[config.BasiliskII]
+program = { windows = "BasiliskII/windows/BasiliskII.exe", linux = "BasiliskII/linux/BasiliskII.AppImage" }
+save_dir = { windows = "<none>", linux = "<none>" }
+run_sandboxed = { windows = false, linux = false }
+
+[config.BasiliskII.setup_dir]
+windows = "BasiliskII/windows"
+linux = "BasiliskII/linux/BasiliskII.AppImage.home/.config/BasiliskII"
+
+[config.BasiliskII.config_file]
+windows = "BasiliskII/windows/BasiliskII_prefs"
+linux = "BasiliskII/linux/BasiliskII.AppImage.home/.config/BasiliskII/prefs"
+
+[[config_files]]
+path = "BasiliskII/windows/BasiliskII_prefs"
+template = "BasiliskII_prefs"
+
+[[config_files]]
+path = "BasiliskII/linux/BasiliskII.AppImage.home/.config/BasiliskII/prefs"
+template = "prefs"
+
+[[system_files]]
+path = "quadra.rom"
+md5 = "69489153dde910a69d5ae6de5dd65323"

@@ -5,11 +5,6 @@ from joybox import release
 from joybox import programs
 from joybox import emulatorbase
 
-# Config files
-config_files = {}
-
-# System files
-system_files = {}
 
 # A7800 emulator
 class A7800(emulatorbase.EmulatorBase):
@@ -21,21 +16,6 @@ class A7800(emulatorbase.EmulatorBase):
     # Get platforms
     def get_platforms(self):
         return []
-
-    # Get config
-    def get_config(self):
-        return {
-            "A7800": {
-                "program": {
-                    "windows": "A7800/windows/a7800.exe",
-                    "linux": "A7800/windows/a7800.exe"
-                },
-                "run_sandboxed": {
-                    "windows": False,
-                    "linux": True
-                }
-            }
-        }
 
     # Setup
     def setup(self, setup_params = None):

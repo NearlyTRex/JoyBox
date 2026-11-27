@@ -11,31 +11,6 @@ from joybox import programs
 from joybox import emulatorcommon
 from joybox import emulatorbase
 
-# Config files
-config_files = {}
-CONFIG_FILE_GENERAL = """
-BIOS9Path=EMULATOR_SETUP_ROOT/sysdata/nds_arm9_usa.bin
-BIOS7Path=EMULATOR_SETUP_ROOT/sysdata/nds_arm7_usa.bin
-FirmwarePath=EMULATOR_SETUP_ROOT/sysdata/nds_firmware_usa.bin
-DSiBIOS9Path=EMULATOR_SETUP_ROOT/sysdata/dsi_arm9_usa.bin
-DSiBIOS7Path=EMULATOR_SETUP_ROOT/sysdata/dsi_arm7_usa.bin
-DSiFirmwarePath=EMULATOR_SETUP_ROOT/sysdata/dsi_firmware_usa.bin
-DSiNANDPath=EMULATOR_SETUP_ROOT/nand/dsi_nand_usa.bin
-SaveFilePath=GAME_SAVE_DIR
-"""
-config_files["melonDS/windows/melonDS.ini"] = CONFIG_FILE_GENERAL
-config_files["melonDS/linux/melonDS.AppImage.home/.config/melonDS/melonDS.ini"] = CONFIG_FILE_GENERAL
-
-# System files
-system_files = {}
-system_files["sysdata/nds_firmware_usa.bin"] = "10ec0b038afe62b6edf5d098615c8039"
-system_files["sysdata/dsi_arm7_usa.bin"] = "559dae4ea78eb9d67702c56c1d791e81"
-system_files["sysdata/dsi_arm9_usa.bin"] = "87b665fce118f76251271c3732532777"
-system_files["sysdata/nds_arm7_usa.bin"] = "df692a80a5b1bc90728bc3dfc76cd948"
-system_files["sysdata/dsi_firmware_usa.bin"] = "74f23348012d7b3e1cc216c47192ffeb"
-system_files["sysdata/nds_arm9_usa.bin"] = "a392174eb3e572fed6447e956bde4b25"
-system_files["nds_key_world.cfg"] = "c65df953c21897b85ebc8eefbba3c22f"
-system_files["nand/dsi_nand_usa.bin"] = "d9c875ded95daed312016f5c77f84db1"
 
 # MelonDS emulator
 class MelonDS(emulatorbase.EmulatorBase):
@@ -50,33 +25,6 @@ class MelonDS(emulatorbase.EmulatorBase):
             config.Platform.NINTENDO_DS,
             config.Platform.NINTENDO_DSI
         ]
-
-    # Get config
-    def get_config(self):
-        return {
-            "melonDS": {
-                "program": {
-                    "windows": "melonDS/windows/melonDS.exe",
-                    "linux": "melonDS/linux/melonDS.AppImage"
-                },
-                "save_dir": {
-                    "windows": None,
-                    "linux": None
-                },
-                "setup_dir": {
-                    "windows": "melonDS/windows",
-                    "linux": "melonDS/linux/melonDS.AppImage.home/.config/melonDS"
-                },
-                "config_file": {
-                    "windows": "melonDS/windows/melonDS.ini",
-                    "linux": "melonDS/linux/melonDS.AppImage.home/.config/melonDS/melonDS.ini"
-                },
-                "run_sandboxed": {
-                    "windows": False,
-                    "linux": False
-                }
-            }
-        }
 
     # Setup
     def setup(self, setup_params = None):
@@ -179,7 +127,7 @@ class MelonDS(emulatorbase.EmulatorBase):
             setup_params = config.SetupParams()
 
         # Create config files
-        for config_filename, config_contents in config_files.items():
+        for config_filename, config_contents in self.get_config_files().items():
             success = fileops.touch_file(
                 src = paths.join_paths(environment.get_emulators_root_dir(), config_filename),
                 contents = config_contents.strip(),
@@ -191,11 +139,11 @@ class MelonDS(emulatorbase.EmulatorBase):
                 return False
 
         # Verify system files
-        if not self.verify_system_files(system_files, setup_params):
+        if not self.verify_system_files(self.get_system_files(), setup_params):
             return False
 
         # Copy system files
-        for filename in system_files.keys():
+        for filename in self.get_system_files().keys():
             for platform in ["windows", "linux"]:
                 success = filebulk.smart_copy(
                     src = paths.join_paths(environment.get_locker_gaming_emulator_setup_dir("melonDS"), filename),

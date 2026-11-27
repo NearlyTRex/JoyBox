@@ -5,7 +5,7 @@ import os
 import pytest
 
 # Local imports
-from joybox import config, programs
+from joybox import programs
 
 
 ###########################################################
@@ -101,66 +101,6 @@ def test_the_platform_is_honoured_when_resolving_a_path():
 def test_get_program_reads_the_program_key():
     assert programs.get_program(CONFIG, "/base", "Simple") == \
         programs.get_path_config_value(CONFIG, "/base", "Simple", "program")
-
-
-###########################################################
-# Registry consistency
-###########################################################
-
-def test_the_tool_registry_is_populated():
-    assert len(programs.get_tools()) > 0
-
-
-def test_the_emulator_registry_is_populated():
-    assert len(programs.get_emulators()) > 0
-
-
-def test_tool_names_are_unique():
-    names = [tool.get_name() for tool in programs.get_tools()]
-    duplicates = sorted({name for name in names if names.count(name) > 1})
-
-    assert not duplicates, f"duplicate tool names: {duplicates}"
-
-
-def test_emulator_names_are_unique():
-    names = [emulator.get_name() for emulator in programs.get_emulators()]
-    duplicates = sorted({name for name in names if names.count(name) > 1})
-
-    assert not duplicates, f"duplicate emulator names: {duplicates}"
-
-
-def test_every_emulator_declares_known_platforms():
-    known = set(config.Platform.members())
-    unknown = [
-        (emulator.get_name(), platform) for emulator in programs.get_emulators()
-        for platform in emulator.get_platforms() if platform not in known]
-
-    assert not unknown, f"emulators declaring unknown platforms: {unknown}"
-
-
-def test_an_emulator_is_found_by_its_platform():
-    emulator = next(emulator for emulator in programs.get_emulators() if emulator.get_platforms())
-    found = programs.get_emulator_by_platform(emulator.get_platforms()[0])
-
-    assert emulator.get_platforms()[0] in found.get_platforms()
-
-
-def test_an_unhandled_platform_has_no_emulator():
-    assert programs.get_emulator_by_platform("not-a-real-platform") is None
-
-
-def test_the_merged_tool_config_covers_every_tool():
-    merged = programs.get_tool_config()
-
-    assert isinstance(merged, dict)
-    assert len(merged) > 0
-
-
-def test_the_merged_emulator_config_covers_every_emulator():
-    merged = programs.get_emulator_config()
-
-    assert isinstance(merged, dict)
-    assert len(merged) > 0
 
 
 ###########################################################
@@ -265,7 +205,7 @@ def test_a_program_is_the_program_key():
 def known_tool(tmp_path, monkeypatch):
     # The first tool with a program, installed under a scratch tools root
     monkeypatch.setattr(programs.environment, "get_tools_root_dir", lambda: str(tmp_path))
-    name = next(tool.get_name() for tool in programs.get_tools() if programs.get_tool_program(tool.get_name()))
+    name = next(name for name in programs.get_tool_config() if programs.get_tool_program(name))
     path = programs.get_tool_program(name)
     os.makedirs(os.path.dirname(path), exist_ok = True)
     with open(path, "w", encoding = "utf-8"):

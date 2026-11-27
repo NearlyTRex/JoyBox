@@ -7,6 +7,7 @@ from joybox import environment
 from joybox import paths
 from joybox import logger
 from joybox import platform_info
+from joybox import programcatalog
 
 ###########################################################
 
@@ -109,38 +110,13 @@ def is_program_installed(program_name, program_platform = None):
 
 ###########################################################
 
-# Get tools
-def get_tools():
-    from joybox import tools
-    return tools.get_tool_list()
-
-# Get emulators
-def get_emulators():
-    from joybox import emulators
-    return emulators.get_emulator_list()
-
-# Get emulator by platform
-def get_emulator_by_platform(emulator_platform):
-    for emulator in get_emulators():
-        if emulator_platform in emulator.get_platforms():
-            return emulator
-    return None
-
 # Get tool config
 def get_tool_config():
-    from joybox import tools
-    merged_config = {}
-    for tool in tools.get_tool_list():
-        merged_config.update(tool.get_config())
-    return merged_config
+    return programcatalog.get_tool_configs()
 
 # Get emulator config
 def get_emulator_config():
-    from joybox import emulators
-    merged_config = {}
-    for emulator in emulators.get_emulator_list():
-        merged_config.update(emulator.get_config())
-    return merged_config
+    return programcatalog.get_emulator_configs()
 
 ###########################################################
 

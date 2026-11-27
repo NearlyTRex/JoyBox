@@ -7,8 +7,6 @@ from joybox import requirements
 from joybox import programs
 from joybox import toolbase
 
-# Config files
-config_files = {}
 
 # PySimpleGUI tool
 class PySimpleGUI(toolbase.ToolBase):
@@ -16,14 +14,6 @@ class PySimpleGUI(toolbase.ToolBase):
     # Get name
     def get_name(self):
         return "PySimpleGUI"
-
-    # Get config
-    def get_config(self):
-        return {
-            "PySimpleGUI": {
-                "program": "PySimpleGUI/lib/PySimpleGUI.py"
-            }
-        }
 
     # Setup
     def setup(self, setup_params = None):

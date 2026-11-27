@@ -1,15 +1,16 @@
 # Local imports
+from joybox import programcatalog
 from joybox.tools import wine
 
 
 def test_other_platforms_have_no_config(monkeypatch):
-    monkeypatch.setattr(wine.platform_info, "is_wine_platform", lambda: False)
+    monkeypatch.setattr(programcatalog.platform_info, "is_wine_platform", lambda: False)
 
     assert wine.Wine().get_config() == {}
 
 
 def test_programs_live_in_the_install_dir(monkeypatch, isolated_settings):
-    monkeypatch.setattr(wine.platform_info, "is_wine_platform", lambda: True)
+    monkeypatch.setattr(programcatalog.platform_info, "is_wine_platform", lambda: True)
     isolated_settings.set_value("Tools.Wine", "wine_exe", "wine64")
     isolated_settings.set_value("Tools.Wine", "wine_boot_exe", "wineboot")
     isolated_settings.set_value("Tools.Wine", "wine_server_exe", "wineserver")

@@ -1,0 +1,9 @@
+# LGOGDownloader: where its programs live and how they run, the files its setup writes
+# and the system files it checks. Read by joybox/programcatalog.py.
+
+[config.LGOGDownloader]
+program = { windows = "<none>", linux = "LGOGDownloader/linux/LGOGDownloader.AppImage" }
+run_sandboxed = { windows = false, linux = false }
+
+[[config_files]]
+path = "LGOGDownloader/linux/LGOGDownloader.AppImage.home/.config/lgogdownloader/config.cfg"

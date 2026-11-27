@@ -5,8 +5,6 @@ from joybox import release
 from joybox import programs
 from joybox import toolbase
 
-# Config files
-config_files = {}
 
 # JDupes tool
 class JDupes(toolbase.ToolBase):
@@ -14,21 +12,6 @@ class JDupes(toolbase.ToolBase):
     # Get name
     def get_name(self):
         return "JDupes"
-
-    # Get config
-    def get_config(self):
-        return {
-            "JDupes": {
-                "program": {
-                    "windows": "JDupes/windows/jdupes.exe",
-                    "linux": "JDupes/linux/jdupes"
-                },
-                "run_sandboxed": {
-                    "windows": False,
-                    "linux": False
-                }
-            }
-        }
 
     # Setup
     def setup(self, setup_params = None):

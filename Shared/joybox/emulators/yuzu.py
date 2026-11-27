@@ -8,37 +8,9 @@ from joybox import release
 from joybox import programs
 from joybox.nintendo import switch
 from joybox import paths
-from joybox import settings
 from joybox import emulatorcommon
 from joybox import emulatorbase
 
-# Config files
-config_files = {}
-CONFIG_FILE_GENERAL = r"""
-[Data%20Storage]
-dump_directory="EMULATOR_SETUP_ROOT/dump"
-load_directory="EMULATOR_SETUP_ROOT/load"
-nand_directory="EMULATOR_SETUP_ROOT/nand"
-sdmc_directory="EMULATOR_SETUP_ROOT/sdmc"
-tas_directory="EMULATOR_SETUP_ROOT/tas"
-
-[UI]
-Screenshots\screenshot_path="EMULATOR_SETUP_ROOT/screenshots"
-"""
-config_files["Yuzu/windows/user/config/qt-config.ini"] = CONFIG_FILE_GENERAL
-config_files["Yuzu/linux/Yuzu.AppImage.home/.config/yuzu/qt-config.ini"] = CONFIG_FILE_GENERAL
-
-# System files
-system_files = {}
-system_files["sysdata/fuses.bin"] = "15437331fa1cf96fdeb61f39230a9526"
-system_files["sysdata/BOOT0"] = "cf9fb34f7702b26aa73be5acf96ee9c6"
-system_files["sysdata/BCPKG2-1-Normal-Main.bin"] = "216f85fc652a56391c11f08bd4f79d4b"
-system_files["sysdata/pkg1_decr.bin"] = "396fc1f6445e86b75dd521cba1d94d52"
-system_files["sysdata/PRODINFO.bin"] = "13ce15ab30e7c2d4ddf3eff40fb31d82"
-system_files["sysdata/secmon.bin"] = "45bc865a44a01358c137cda7c6009e21"
-system_files["keys/console.keys"] = "67b5b410da0a9bdcb37f92bd32a4c63d"
-system_files["keys/title.keys"] = "b5890c3d737880f6dd3751ffec5b128b"
-system_files["keys/prod.keys"] = "4ed853d4a52e6b9b9e11954f155ecb8a"
 
 # Yuzu emulator
 class Yuzu(emulatorbase.EmulatorBase):
@@ -53,49 +25,6 @@ class Yuzu(emulatorbase.EmulatorBase):
             config.Platform.NINTENDO_SWITCH,
             config.Platform.NINTENDO_SWITCH_ESHOP
         ]
-
-    # Get config
-    def get_config(self):
-
-        # Get switch info
-        profile_user_id = settings.get_value("UserData.Switch", "profile_user_id")
-        profile_account_name = settings.get_value("UserData.Switch", "profile_account_name")
-        if not switch.is_valid_switch_profile_info(profile_user_id, profile_account_name):
-            logger.log_warning("No Switch profile found in ini, using default")
-            profile_user_id = "F6F389D41D6BC0BDD6BD928C526AE556"
-            profile_account_name = "yuzu"
-
-        # Return config
-        return {
-            "Yuzu": {
-                "program": {
-                    "windows": "Yuzu/windows/yuzu.exe",
-                    "linux": "Yuzu/linux/Yuzu.AppImage"
-                },
-                "save_dir": {
-                    "windows": "Yuzu/windows/user/nand/user/save/0000000000000000/%s" % profile_user_id,
-                    "linux": "Yuzu/linux/Yuzu.AppImage.home/.local/share/yuzu/nand/user/save/0000000000000000/%s" % profile_user_id
-                },
-                "setup_dir": {
-                    "windows": "Yuzu/windows/user",
-                    "linux": "Yuzu/linux/Yuzu.AppImage.home/.local/share/yuzu"
-                },
-                "config_file": {
-                    "windows": "Yuzu/windows/user/config/qt-config.ini",
-                    "linux": "Yuzu/linux/Yuzu.AppImage.home/.config/yuzu/qt-config.ini"
-                },
-                "profiles_file": {
-                    "windows": "Yuzu/windows/user/nand/system/save/8000000000000010/su/avators/profiles.dat",
-                    "linux": "Yuzu/linux/Yuzu.AppImage.home/.local/share/yuzu/nand/system/save/8000000000000010/su/avators/profiles.dat"
-                },
-                "profile_user_id": profile_user_id,
-                "profile_account_name": profile_account_name,
-                "run_sandboxed": {
-                    "windows": False,
-                    "linux": False
-                }
-            }
-        }
 
     # Install add-ons
     def install_addons(self, dlc_dirs = None, update_dirs = None, verbose = False, pretend_run = False, exit_on_failure = False):
@@ -163,7 +92,7 @@ class Yuzu(emulatorbase.EmulatorBase):
             setup_params = config.SetupParams()
 
         # Create config files
-        for config_filename, config_contents in config_files.items():
+        for config_filename, config_contents in self.get_config_files().items():
             success = fileops.touch_file(
                 src = paths.join_paths(environment.get_emulators_root_dir(), config_filename),
                 contents = config_contents.strip(),
@@ -188,11 +117,11 @@ class Yuzu(emulatorbase.EmulatorBase):
                 return False
 
         # Verify system files
-        if not self.verify_system_files(system_files, setup_params):
+        if not self.verify_system_files(self.get_system_files(), setup_params):
             return False
 
         # Copy system files
-        for filename in system_files.keys():
+        for filename in self.get_system_files().keys():
             for platform in ["windows", "linux"]:
                 success = filebulk.smart_copy(
                     src = paths.join_paths(environment.get_locker_gaming_emulator_setup_dir("Yuzu"), filename),

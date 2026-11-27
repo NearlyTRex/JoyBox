@@ -1,3 +1,6 @@
+# Local imports
+from joybox import programcatalog
+
 # Base tool
 class ToolBase:
 
@@ -5,9 +8,13 @@ class ToolBase:
     def get_name(self):
         return ""
 
-    # Get config
+    # Get config, from the tool's program data
     def get_config(self):
-        return {}
+        return programcatalog.get_tool_config(self.get_name())
+
+    # Get the files setup writes, by path, with their contents
+    def get_config_files(self):
+        return programcatalog.get_config_files(programcatalog.FAMILY_TOOLS, self.get_name())
 
     # Setup
     def setup(self, setup_params = None):

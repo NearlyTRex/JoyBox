@@ -16,77 +16,6 @@ from joybox import paths
 from joybox import emulatorcommon
 from joybox import emulatorbase
 
-# Config files
-config_files = {}
-config_files["Dolphin/windows/portable.txt"] = ""
-config_files["Dolphin/windows/User/Config/Dolphin.ini"] = ""
-config_files["Dolphin/linux/Dolphin.AppImage.home/.config/dolphin-emu/Dolphin.ini"] = """
-[Analytics]
-ID = db8045cccc2ce4e3eebf2a60a1ee1424
-PermissionAsked = True
-[NetPlay]
-TraversalChoice = direct
-"""
-config_files["Dolphin/linux/Dolphin.AppImage.home/.config/dolphin-emu/GCPadNew.ini"] = """
-[GCPad1]
-Device = SDL/0/X360 Controller
-Buttons/A = `Button E`
-Buttons/B = `Button S`
-Buttons/X = `Button N`
-Buttons/Y = `Button W`
-Buttons/Z = Back
-Buttons/Start = Start
-Main Stick/Up = `Left Y+`
-Main Stick/Down = `Left Y-`
-Main Stick/Left = `Left X-`
-Main Stick/Right = `Left X+`
-Main Stick/Modifier = `Shift`
-Main Stick/Calibration = 100.00 141.42 100.00 141.42 100.00 141.42 100.00 141.42
-C-Stick/Up = `Right Y+`
-C-Stick/Down = `Right Y-`
-C-Stick/Left = `Right X-`
-C-Stick/Right = `Right X+`
-C-Stick/Modifier = `Ctrl`
-C-Stick/Calibration = 100.00 141.42 100.00 141.42 100.00 141.42 100.00 141.42
-Triggers/L = `Trigger L`
-Triggers/R = `Trigger R`
-D-Pad/Up = `Pad N`
-D-Pad/Down = `Pad S`
-D-Pad/Left = `Pad W`
-D-Pad/Right = `Pad E`
-Triggers/L-Analog = `Shoulder L`
-Triggers/R-Analog = `Shoulder R`
-[GCPad2]
-Device = XInput2/0/Virtual core pointer
-[GCPad3]
-Device = XInput2/0/Virtual core pointer
-[GCPad4]
-Device = XInput2/0/Virtual core pointer
-"""
-config_files["Dolphin/linux/Dolphin.AppImage.home/.config/dolphin-emu/GBA.ini"] = """
-[GBA1]
-Device = SDL/0/X360 Controller
-Buttons/B = `Button S`
-Buttons/A = `Button E`
-Buttons/L = `Shoulder L`
-Buttons/R = `Shoulder R`
-Buttons/SELECT = Back
-Buttons/START = Start
-D-Pad/Up = `Pad N`
-D-Pad/Down = `Pad S`
-D-Pad/Left = `Pad W`
-D-Pad/Right = `Pad E`
-[GBA2]
-Device = XInput2/0/Virtual core pointer
-[GBA3]
-Device = XInput2/0/Virtual core pointer
-[GBA4]
-Device = XInput2/0/Virtual core pointer
-"""
-
-# System files
-system_files = {}
-system_files["Wii.zip"] = "2029efb1ed06ef0cb3679537b803d9ab"
 
 # Dolphin emulator
 class Dolphin(emulatorbase.EmulatorBase):
@@ -102,44 +31,6 @@ class Dolphin(emulatorbase.EmulatorBase):
             config.Platform.NINTENDO_WII,
             config.Platform.NINTENDO_WIIWARE
         ]
-
-    # Get config
-    def get_config(self):
-        return {
-            "Dolphin": {
-                "program": {
-                    "windows": "Dolphin/windows/Dolphin.exe",
-                    "linux": "Dolphin/linux/Dolphin.AppImage"
-                },
-                "save_dir": {
-                    "windows": None,
-                    "linux": None
-                },
-                "save_base_dir": {
-                    "windows": "Dolphin/windows/User",
-                    "linux": "Dolphin/linux/Dolphin.AppImage.home/.local/share/dolphin-emu"
-                },
-                "save_sub_dirs": {
-
-                    # Nintendo
-                    config.Platform.NINTENDO_GAMECUBE: "GC",
-                    config.Platform.NINTENDO_WII: "Wii/title/00010000",
-                    config.Platform.NINTENDO_WIIWARE: "Wii/title/00010001"
-                },
-                "setup_dir": {
-                    "windows": "Dolphin/windows/User",
-                    "linux": "Dolphin/linux/Dolphin.AppImage.home/.local/share/dolphin-emu"
-                },
-                "config_file": {
-                    "windows": "Dolphin/windows/User/Config/Dolphin.ini",
-                    "linux": "Dolphin/linux/Dolphin.AppImage.home/.config/dolphin-emu/Dolphin.ini"
-                },
-                "run_sandboxed": {
-                    "windows": False,
-                    "linux": False
-                }
-            }
-        }
 
     # Install add-ons
     def install_addons(self, dlc_dirs = None, update_dirs = None, verbose = False, pretend_run = False, exit_on_failure = False):
@@ -255,7 +146,7 @@ class Dolphin(emulatorbase.EmulatorBase):
             setup_params = config.SetupParams()
 
         # Create config files
-        for config_filename, config_contents in config_files.items():
+        for config_filename, config_contents in self.get_config_files().items():
             success = fileops.touch_file(
                 src = paths.join_paths(environment.get_emulators_root_dir(), config_filename),
                 contents = config_contents.strip(),
@@ -267,7 +158,7 @@ class Dolphin(emulatorbase.EmulatorBase):
                 return False
 
         # Verify system files
-        if not self.verify_system_files(system_files, setup_params):
+        if not self.verify_system_files(self.get_system_files(), setup_params):
             return False
 
         # Extract system files

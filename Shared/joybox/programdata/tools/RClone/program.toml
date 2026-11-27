@@ -1,0 +1,8 @@
+# RClone: where its programs live and how they run, the files its setup writes
+# and the system files it checks. Read by joybox/programcatalog.py.
+
+[config.RClone]
+program = { windows = "RClone/windows/rclone.exe", linux = "RClone/linux/rclone" }
+config_file = { windows = "RClone/windows/rclone.conf", linux = "RClone/linux/rclone.conf" }
+cache_dir = { windows = "RClone/windows/cache", linux = "RClone/linux/cache" }
+run_sandboxed = { windows = false, linux = false }

@@ -1,9 +1,9 @@
 # Imports
+from joybox import emulators
 from joybox import config
 from joybox import arguments
 from joybox import system
 from joybox import setup
-from joybox import programs
 from joybox import logger
 
 # Build the argument parser
@@ -75,7 +75,7 @@ def main():
     packages = None
     if args.packages:
         packages = [p.strip() for p in args.packages.split(",") if p.strip()]
-        known_packages = [package.get_name() for package in programs.get_emulators()]
+        known_packages = [package.get_name() for package in emulators.get_emulator_list()]
         unknown_packages = [package for package in packages if package not in known_packages]
         if unknown_packages:
             logger.log_error("Unknown emulator packages: %s" % ", ".join(unknown_packages), quit_program = True)

@@ -68,7 +68,7 @@ def test_the_config_files_match_the_configured_paths():
     entry = cemu.Cemu().get_config()["Cemu"]
     configured = {entry[key][platform] for key in ("config_file", "keys_file") for platform in PLATFORMS}
 
-    assert configured == set(cemu.config_files)
+    assert configured == set(cemu.Cemu().get_config_files())
 
 
 def test_saves_live_inside_the_setup_dir():
@@ -172,7 +172,7 @@ def touched(monkeypatch):
 def test_configure_writes_every_config_file(touched):
     assert cemu.Cemu().configure() is True
 
-    assert [src for src, _, _ in touched["calls"]] == ["/emulators/%s" % name for name in cemu.config_files]
+    assert [src for src, _, _ in touched["calls"]] == ["/emulators/%s" % name for name in cemu.Cemu().get_config_files()]
     assert {contents for _, contents, _ in touched["calls"]} == {""}
 
 
@@ -180,7 +180,7 @@ def test_configure_passes_the_setup_params_through(touched):
     cemu.Cemu().configure(config.SetupParams(verbose = True, pretend_run = True, exit_on_failure = True))
 
     assert [kwargs for _, _, kwargs in touched["calls"]] == [
-        {"verbose": True, "pretend_run": True, "exit_on_failure": True}] * len(cemu.config_files)
+        {"verbose": True, "pretend_run": True, "exit_on_failure": True}] * len(cemu.Cemu().get_config_files())
 
 
 def test_configure_stops_when_a_config_file_cannot_be_written(touched):

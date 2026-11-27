@@ -1,0 +1,48 @@
+# Computer: where its programs live and how they run, the files its setup writes
+# and the system files it checks. Read by joybox/programcatalog.py.
+
+[config.DosBoxX]
+program = { windows = "DosBoxX/windows/dosbox-x.exe", linux = "DosBoxX/linux/DosBoxX.AppImage" }
+save_dir = { windows = "<none>", linux = "<none>" }
+setup_dir = { windows = "DosBoxX/windows", linux = "DosBoxX/linux" }
+run_sandboxed = { windows = false, linux = false }
+
+[config.DosBoxX.config_file]
+windows = "DosBoxX/windows/dosbox-x.conf"
+linux = "DosBoxX/linux/DosBoxX.AppImage.home/.config/dosbox-x/dosbox-x.conf"
+
+[config.DosBoxX.config_file_win31]
+windows = "DosBoxX/windows/dosbox-x.win31.conf"
+linux = "DosBoxX/linux/DosBoxX.AppImage.home/.config/dosbox-x/dosbox-x.win31.conf"
+
+[config.ScummVM]
+program = { windows = "ScummVM/windows/scummvm.exe", linux = "ScummVM/linux/ScummVM.AppImage" }
+save_dir = { windows = "<none>", linux = "<none>" }
+setup_dir = { windows = "ScummVM/windows", linux = "ScummVM/linux" }
+run_sandboxed = { windows = false, linux = false }
+
+[config.ScummVM.config_file]
+windows = "ScummVM/windows/scummvm.ini"
+linux = "ScummVM/linux/ScummVM.AppImage.home/.config/scummvm/scummvm.ini"
+
+[[config_files]]
+path = "DosBoxX/windows/dosbox-x.conf"
+template = "dosbox-x.conf"
+
+[[config_files]]
+path = "DosBoxX/windows/dosbox-x.win31.conf"
+template = "dosbox-x.win31.conf"
+
+[[config_files]]
+path = "DosBoxX/linux/DosBoxX.AppImage.home/.config/dosbox-x/dosbox-x.conf"
+template = "dosbox-x.conf"
+
+[[config_files]]
+path = "DosBoxX/linux/DosBoxX.AppImage.home/.config/dosbox-x/dosbox-x.win31.conf"
+template = "dosbox-x.win31.conf"
+
+[[config_files]]
+path = "ScummVM/windows/scummvm.ini"
+
+[[config_files]]
+path = "ScummVM/linux/ScummVM.AppImage.home/.config/scummvm/scummvm.ini"

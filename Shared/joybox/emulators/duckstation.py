@@ -10,81 +10,6 @@ from joybox import programs
 from joybox import emulatorcommon
 from joybox import emulatorbase
 
-# Config files
-config_files = {}
-CONFIG_FILE_GENERAL = """
-[Main]
-SettingsVersion = 3
-
-[BIOS]
-SearchDirectory = EMULATOR_SETUP_ROOT/bios
-
-[MemoryCards]
-Card1Type = PerGameTitle
-Card2Type = None
-UsePlaylistTitle = true
-Directory = GAME_SAVE_DIR
-
-[Folders]
-Cache = EMULATOR_SETUP_ROOT/cache
-Cheats = EMULATOR_SETUP_ROOT/cheats
-Covers = EMULATOR_SETUP_ROOT/covers
-Dumps = EMULATOR_SETUP_ROOT/dump
-GameSettings = EMULATOR_SETUP_ROOT/gamesettings
-InputProfiles = EMULATOR_SETUP_ROOT/inputprofiles
-SaveStates = EMULATOR_SETUP_ROOT/savestates
-Screenshots = EMULATOR_SETUP_ROOT/screenshots
-Shaders = EMULATOR_SETUP_ROOT/shaders
-Textures = EMULATOR_SETUP_ROOT/textures
-
-[ControllerPorts]
-ControllerSettingsMigrated = true
-
-[InputSources]
-SDL = true
-
-[Pad1]
-Type = AnalogController
-Up = SDL-0/DPadUp
-Right = SDL-0/DPadRight
-Down = SDL-0/DPadDown
-Left = SDL-0/DPadLeft
-Triangle = SDL-0/Y
-Circle = SDL-0/B
-Cross = SDL-0/A
-Square = SDL-0/X
-Select = SDL-0/Back
-Start = SDL-0/Start
-L1 = SDL-0/LeftShoulder
-R1 = SDL-0/RightShoulder
-L2 = SDL-0/+LeftTrigger
-R2 = SDL-0/+RightTrigger
-L3 = SDL-0/LeftStick
-R3 = SDL-0/RightStick
-LLeft = SDL-0/-LeftX
-LRight = SDL-0/+LeftX
-LDown = SDL-0/+LeftY
-LUp = SDL-0/-LeftY
-RLeft = SDL-0/-RightX
-RRight = SDL-0/+RightX
-RDown = SDL-0/+RightY
-RUp = SDL-0/-RightY
-Analog = SDL-0/Guide
-SmallMotor = SDL-0/SmallMotor
-LargeMotor = SDL-0/LargeMotor
-"""
-config_files["DuckStation/windows/portable.txt"] = ""
-config_files["DuckStation/windows/settings.ini"] = CONFIG_FILE_GENERAL
-config_files["DuckStation/linux/DuckStation.AppImage.home/.config/duckstation/settings.ini"] = CONFIG_FILE_GENERAL
-
-# System files
-system_files = {}
-system_files["bios/scph5500.bin"] = "8dd7d5296a650fac7319bce665a6a53c"
-system_files["bios/scph7001.bin"] = "1e68c231d0896b7eadcad1d7d8e76129"
-system_files["bios/scph1001.bin"] = "924e392ed05558ffdb115408c263dccf"
-system_files["bios/scph5501.bin"] = "490f666e1afb15b7362b406ed1cea246"
-system_files["bios/scph5502.bin"] = "32736f17079d0b2b7024407c39bd3050"
-system_files["bios/scph7502.bin"] = "b9d9a0286c33dc6b7237bb13cd46fdee"
 
 # DuckStation emulator
 class DuckStation(emulatorbase.EmulatorBase):
@@ -98,33 +23,6 @@ class DuckStation(emulatorbase.EmulatorBase):
         return [
             config.Platform.SONY_PLAYSTATION
         ]
-
-    # Get config
-    def get_config(self):
-        return {
-            "DuckStation": {
-                "program": {
-                    "windows": "DuckStation/windows/duckstation-qt-x64-ReleaseLTCG.exe",
-                    "linux": "DuckStation/linux/DuckStation.AppImage"
-                },
-                "save_dir": {
-                    "windows": "DuckStation/windows/memcards",
-                    "linux": "DuckStation/linux/DuckStation.AppImage.home/.config/duckstation/memcards"
-                },
-                "setup_dir": {
-                    "windows": "DuckStation/windows",
-                    "linux": "DuckStation/linux/DuckStation.AppImage.home/.config/duckstation"
-                },
-                "config_file": {
-                    "windows": "DuckStation/windows/settings.ini",
-                    "linux": "DuckStation/linux/DuckStation.AppImage.home/.config/duckstation/settings.ini"
-                },
-                "run_sandboxed": {
-                    "windows": False,
-                    "linux": False
-                }
-            }
-        }
 
     # Setup
     def setup(self, setup_params = None):
@@ -210,7 +108,7 @@ class DuckStation(emulatorbase.EmulatorBase):
             setup_params = config.SetupParams()
 
         # Create config files
-        for config_filename, config_contents in config_files.items():
+        for config_filename, config_contents in self.get_config_files().items():
             success = fileops.touch_file(
                 src = paths.join_paths(environment.get_emulators_root_dir(), config_filename),
                 contents = config_contents.strip(),
@@ -222,11 +120,11 @@ class DuckStation(emulatorbase.EmulatorBase):
                 return False
 
         # Verify system files
-        if not self.verify_system_files(system_files, setup_params):
+        if not self.verify_system_files(self.get_system_files(), setup_params):
             return False
 
         # Copy system files
-        for filename in system_files.keys():
+        for filename in self.get_system_files().keys():
             for platform in ["windows", "linux"]:
                 success = filebulk.smart_copy(
                     src = paths.join_paths(environment.get_locker_gaming_emulator_setup_dir("DuckStation"), filename),

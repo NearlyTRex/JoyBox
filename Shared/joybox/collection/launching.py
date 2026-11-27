@@ -1,8 +1,8 @@
 # Local imports
+from joybox import emulators
 from joybox import config
 from joybox import fileops
 from joybox import fileedits
-from joybox import programs
 from joybox import stores
 from joybox import gui
 from joybox import paths
@@ -94,7 +94,7 @@ def launch_local_game(
         return False
 
     # Get launcher
-    game_launcher = programs.get_emulator_by_platform(game_info.get_platform())
+    game_launcher = emulators.get_emulator_by_platform(game_info.get_platform())
     if not game_launcher:
         gui.display_error_popup(
             title_text = "Launcher not found",

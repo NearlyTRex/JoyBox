@@ -1,0 +1,6 @@
+# Demul: where its programs live and how they run, the files its setup writes
+# and the system files it checks. Read by joybox/programcatalog.py.
+
+[config.Demul]
+program = { windows = "Demul/windows/demul.exe", linux = "Demul/windows/demul.exe" }
+run_sandboxed = { windows = false, linux = true }

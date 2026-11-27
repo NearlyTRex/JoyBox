@@ -1,0 +1,9 @@
+# Moonlight: where its programs live and how they run, the files its setup writes
+# and the system files it checks. Read by joybox/programcatalog.py.
+
+[config.Moonlight]
+program = { windows = "Moonlight/windows/Moonlight.exe", linux = "Moonlight/linux/Moonlight.AppImage" }
+run_sandboxed = { windows = false, linux = false }
+
+[[config_files]]
+path = "Moonlight/linux/Moonlight.AppImage.home/.config/Moonlight Game Streaming Project/Moonlight.conf"

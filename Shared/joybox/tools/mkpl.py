@@ -6,8 +6,6 @@ from joybox import release
 from joybox import programs
 from joybox import toolbase
 
-# Config files
-config_files = {}
 
 # Mkpl tool
 class Mkpl(toolbase.ToolBase):
@@ -15,14 +13,6 @@ class Mkpl(toolbase.ToolBase):
     # Get name
     def get_name(self):
         return "Mkpl"
-
-    # Get config
-    def get_config(self):
-        return {
-            "Mkpl": {
-                "program": "Mkpl/lib/mkpl.py"
-            }
-        }
 
     # Setup
     def setup(self, setup_params = None):

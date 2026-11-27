@@ -21,29 +21,6 @@ class RClone(toolbase.ToolBase):
     def get_name(self):
         return "RClone"
 
-    # Get config
-    def get_config(self):
-        return {
-            "RClone": {
-                "program": {
-                    "windows": "RClone/windows/rclone.exe",
-                    "linux": "RClone/linux/rclone"
-                },
-                "config_file": {
-                    "windows": "RClone/windows/rclone.conf",
-                    "linux": "RClone/linux/rclone.conf"
-                },
-                "cache_dir": {
-                    "windows": "RClone/windows/cache",
-                    "linux": "RClone/linux/cache"
-                },
-                "run_sandboxed": {
-                    "windows": False,
-                    "linux": False
-                }
-            }
-        }
-
     # Setup
     def setup(self, setup_params = None):
         if not setup_params:

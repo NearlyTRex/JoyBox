@@ -14,14 +14,6 @@ from joybox import archive
 from joybox import emulatorcommon
 from joybox import emulatorbase
 
-# Config files
-config_files = {}
-config_files["EKA2L1/windows/config.yml"] = ""
-config_files["EKA2L1/linux/EKA2L1.AppImage.home/.local/share/EKA2L1/config.yml"] = ""
-
-# System files
-system_files = {}
-system_files["data.zip"] = "e4c10430ddc600cdffff1fb348a6b0c3"
 
 # EKA2L1 emulator
 class EKA2L1(emulatorbase.EmulatorBase):
@@ -35,33 +27,6 @@ class EKA2L1(emulatorbase.EmulatorBase):
         return [
             config.Platform.OTHER_NOKIA_NGAGE
         ]
-
-    # Get config
-    def get_config(self):
-        return {
-            "EKA2L1": {
-                "program": {
-                    "windows": "EKA2L1/windows/eka2l1_qt.exe",
-                    "linux": "EKA2L1/linux/EKA2L1.AppImage"
-                },
-                "save_dir": {
-                    "windows": "EKA2L1/windows/data/drives/c/system/apps",
-                    "linux": "EKA2L1/linux/EKA2L1.AppImage.home/.local/share/EKA2L1/data/drives/c/system/apps"
-                },
-                "setup_dir": {
-                    "windows": "EKA2L1/windows",
-                    "linux": "EKA2L1/linux/EKA2L1.AppImage.home/.local/share/EKA2L1"
-                },
-                "config_file": {
-                    "windows": "EKA2L1/windows/config.yml",
-                    "linux": "EKA2L1/linux/EKA2L1.AppImage.home/.local/share/EKA2L1/config.yml"
-                },
-                "run_sandboxed": {
-                    "windows": False,
-                    "linux": False
-                }
-            }
-        }
 
     # Setup
     def setup(self, setup_params = None):
@@ -147,7 +112,7 @@ class EKA2L1(emulatorbase.EmulatorBase):
             setup_params = config.SetupParams()
 
         # Create config files
-        for config_filename, config_contents in config_files.items():
+        for config_filename, config_contents in self.get_config_files().items():
             success = fileops.touch_file(
                 src = paths.join_paths(environment.get_emulators_root_dir(), config_filename),
                 contents = config_contents.strip(),
@@ -159,7 +124,7 @@ class EKA2L1(emulatorbase.EmulatorBase):
                 return False
 
         # Verify system files
-        if not self.verify_system_files(system_files, setup_params):
+        if not self.verify_system_files(self.get_system_files(), setup_params):
             return False
 
         # Extract system files

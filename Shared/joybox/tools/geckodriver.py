@@ -5,8 +5,6 @@ from joybox import release
 from joybox import programs
 from joybox import toolbase
 
-# Config files
-config_files = {}
 
 # GeckoDriver tool
 class GeckoDriver(toolbase.ToolBase):
@@ -14,21 +12,6 @@ class GeckoDriver(toolbase.ToolBase):
     # Get name
     def get_name(self):
         return "GeckoDriver"
-
-    # Get config
-    def get_config(self):
-        return {
-            "GeckoDriver": {
-                "program": {
-                    "windows": "GeckoDriver/windows/geckodriver.exe",
-                    "linux": "GeckoDriver/linux/geckodriver"
-                },
-                "run_sandboxed": {
-                    "windows": False,
-                    "linux": False
-                }
-            }
-        }
 
     # Setup
     def setup(self, setup_params = None):

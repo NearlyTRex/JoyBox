@@ -1,0 +1,71 @@
+# Mame: where its programs live and how they run, the files its setup writes
+# and the system files it checks. Read by joybox/programcatalog.py.
+
+[config.Mame]
+program = { windows = "Mame/windows/mame.exe", linux = "Mame/linux/Mame.AppImage" }
+save_dir = { windows = "<none>", linux = "<none>" }
+setup_dir = { windows = "Mame/windows", linux = "Mame/linux/Mame.AppImage.home/.mame" }
+config_dir = { windows = "Mame/windows", linux = "Mame/linux/Mame.AppImage.home/.mame" }
+config_file = { windows = "Mame/windows/mame.ini", linux = "Mame/linux/Mame.AppImage.home/.mame/mame.ini" }
+roms_dir = { windows = "Mame/windows/roms", linux = "Mame/linux/Mame.AppImage.home/.mame/roms" }
+run_sandboxed = { windows = false, linux = false }
+
+[[config_files]]
+path = "Mame/windows/mame.ini"
+template = "mame.ini"
+
+[[config_files]]
+path = "Mame/linux/Mame.AppImage.home/.mame/mame.ini"
+template = "mame.ini"
+
+[[system_files]]
+path = "roms/cdimono1.zip"
+md5 = "d69f6a7347b9acefc65dd0822b523335"
+
+[[system_files]]
+path = "roms/videopac.zip"
+md5 = "a4fffe2ae1a7218939990430d378b059"
+
+[[system_files]]
+path = "roms/a5200.zip"
+md5 = "b44173fbccbb5dfbd97fba4fe2f2abad"
+
+[[system_files]]
+path = "roms/cdimono2.zip"
+md5 = "b3ccc0709e82aed4356e5d8a0948b4b9"
+
+[[system_files]]
+path = "roms/a7800.zip"
+md5 = "68abbc5084df34defeceb323cc9685d9"
+
+[[system_files]]
+path = "roms/gamecom.zip"
+md5 = "20506b663b593af57fb60364156b5b9f"
+
+[[system_files]]
+path = "roms/intv_ecs.zip"
+md5 = "98c257fabbb97cbf3c1ff199746ee4cc"
+
+[[system_files]]
+path = "roms/i8244.zip"
+md5 = "9fb6347babf9fc58578c56aa1e4d3dce"
+
+[[system_files]]
+path = "roms/ti99_4a.zip"
+md5 = "091448bf43235a5cae113884c0263639"
+
+[[system_files]]
+path = "roms/cdibios.zip"
+md5 = "f34b1f4badf6f587c91cb2505c3c531d"
+
+[[system_files]]
+path = "roms/intv_voice.zip"
+md5 = "60140f3f7c4409e18a65fe2799f22f79"
+
+[[system_files]]
+path = "roms/stic.zip"
+md5 = "2f4e36d03a8a2d9abaf3a94cb3583c8d"
+
+[[system_files]]
+path = "roms/intv.zip"
+md5 = "20b954b1ba6b378965050b2e887df924"

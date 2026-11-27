@@ -10,9 +10,6 @@ from joybox import programs
 from joybox import toolbase
 from joybox import platform_info
 
-# Config files
-config_files = {}
-config_files["LGOGDownloader/linux/LGOGDownloader.AppImage.home/.config/lgogdownloader/config.cfg"] = ""
 
 # LGOGDownloader tool
 class LGOGDownloader(toolbase.ToolBase):
@@ -20,21 +17,6 @@ class LGOGDownloader(toolbase.ToolBase):
     # Get name
     def get_name(self):
         return "LGOGDownloader"
-
-    # Get config
-    def get_config(self):
-        return {
-            "LGOGDownloader": {
-                "program": {
-                    "windows": None,
-                    "linux": "LGOGDownloader/linux/LGOGDownloader.AppImage"
-                },
-                "run_sandboxed": {
-                    "windows": False,
-                    "linux": False
-                }
-            }
-        }
 
     # Setup
     def setup(self, setup_params = None):
@@ -98,7 +80,7 @@ class LGOGDownloader(toolbase.ToolBase):
 
         # Create config files
         if platform_info.is_linux_platform():
-            for config_filename, config_contents in config_files.items():
+            for config_filename, config_contents in self.get_config_files().items():
                 success = fileops.touch_file(
                     src = paths.join_paths(environment.get_tools_root_dir(), config_filename),
                     contents = config_contents.strip(),

@@ -1,0 +1,6 @@
+# WinUAE: where its programs live and how they run, the files its setup writes
+# and the system files it checks. Read by joybox/programcatalog.py.
+
+[config.WinUAE]
+program = { windows = "WinUAE/windows/winuae64.exe", linux = "WinUAE/windows/winuae64.exe" }
+run_sandboxed = { windows = false, linux = true }

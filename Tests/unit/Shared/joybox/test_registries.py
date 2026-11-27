@@ -2,7 +2,7 @@
 import pytest
 
 # Local imports
-from joybox import config, programs
+from joybox import config, emulators, programcatalog, programs, tools
 
 
 ###########################################################
@@ -13,8 +13,8 @@ from joybox import config, programs
 # another.
 ###########################################################
 
-TOOLS = list(programs.get_tools())
-EMULATORS = list(programs.get_emulators())
+TOOLS = list(tools.get_tool_list())
+EMULATORS = list(emulators.get_emulator_list())
 
 TOOL_IDS = [tool.get_name() for tool in TOOLS]
 EMULATOR_IDS = [emulator.get_name() for emulator in EMULATORS]
@@ -141,13 +141,13 @@ def test_no_platform_is_claimed_by_two_emulators():
 @pytest.mark.parametrize("emulator", EMULATORS, ids = EMULATOR_IDS)
 def test_a_declared_platform_resolves_back_to_its_emulator(emulator):
     platforms = emulator.get_platforms() or []
-    resolved = [programs.get_emulator_by_platform(platform) for platform in platforms]
+    resolved = [emulators.get_emulator_by_platform(platform) for platform in platforms]
 
     assert [found.get_name() if found else None for found in resolved] == [emulator.get_name()] * len(platforms)
 
 
 def test_an_unknown_platform_resolves_to_nothing():
-    assert programs.get_emulator_by_platform("not-a-real-platform") is None
+    assert emulators.get_emulator_by_platform("not-a-real-platform") is None
 
 
 def test_launchable_platforms_have_an_emulator():
@@ -229,3 +229,50 @@ def test_core_mappings_only_name_claimed_platforms(emulator):
     ]
 
     assert not stray, f"{emulator.get_name()} maps cores for unclaimed {stray}"
+
+
+###########################################################
+# Registry consistency
+###########################################################
+
+def test_every_emulator_declares_known_platforms():
+    known = set(config.Platform.members())
+    unknown = [
+        (emulator.get_name(), platform) for emulator in emulators.get_emulator_list()
+        for platform in emulator.get_platforms() if platform not in known]
+
+    assert not unknown, f"emulators declaring unknown platforms: {unknown}"
+
+
+def test_an_emulator_is_found_by_its_platform():
+    emulator = next(emulator for emulator in emulators.get_emulator_list() if emulator.get_platforms())
+    found = emulators.get_emulator_by_platform(emulator.get_platforms()[0])
+
+    assert emulator.get_platforms()[0] in found.get_platforms()
+
+
+def test_an_unhandled_platform_has_no_emulator():
+    assert emulators.get_emulator_by_platform("not-a-real-platform") is None
+
+
+def test_the_merged_tool_config_covers_every_tool():
+    merged = programs.get_tool_config()
+
+    assert isinstance(merged, dict)
+    assert len(merged) > 0
+
+
+def test_the_merged_emulator_config_covers_every_emulator():
+    merged = programs.get_emulator_config()
+
+    assert isinstance(merged, dict)
+    assert len(merged) > 0
+
+
+def test_every_registered_tool_has_a_catalog_entry_and_no_other():
+    # A tool registered without one would quietly have no programs.
+    assert sorted(TOOL_IDS) == sorted(programcatalog.load_family(programcatalog.FAMILY_TOOLS))
+
+
+def test_every_registered_emulator_has_a_catalog_entry_and_no_other():
+    assert sorted(EMULATOR_IDS) == sorted(programcatalog.load_family(programcatalog.FAMILY_EMULATORS))

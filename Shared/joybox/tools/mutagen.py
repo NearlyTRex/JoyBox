@@ -7,8 +7,6 @@ from joybox import requirements
 from joybox import programs
 from joybox import toolbase
 
-# Config files
-config_files = {}
 
 # Mutagen tool
 class Mutagen(toolbase.ToolBase):
@@ -16,27 +14,6 @@ class Mutagen(toolbase.ToolBase):
     # Get name
     def get_name(self):
         return "Mutagen"
-
-    # Get config
-    def get_config(self):
-        return {
-            "Mutagen": {
-                "package_dir": "Mutagen/lib",
-                "package_name": "mutagen"
-            },
-            "MutagenMP3": {
-                "package_dir": "Mutagen/lib",
-                "package_name": "mutagen.mp3"
-            },
-            "MutagenID3": {
-                "package_dir": "Mutagen/lib",
-                "package_name": "mutagen.id3"
-            },
-            "MutagenMP4": {
-                "package_dir": "Mutagen/lib",
-                "package_name": "mutagen.mp4"
-            }
-        }
 
     # Setup
     def setup(self, setup_params = None):

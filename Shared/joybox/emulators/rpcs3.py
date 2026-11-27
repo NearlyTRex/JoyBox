@@ -15,14 +15,6 @@ from joybox import archive
 from joybox import emulatorcommon
 from joybox import emulatorbase
 
-# Config files
-config_files = {}
-config_files["RPCS3/windows/GuiConfigs/CurrentSettings.ini"] = ""
-config_files["RPCS3/linux/RPCS3.AppImage.home/.config/rpcs3/GuiConfigs/CurrentSettings.ini"] = ""
-
-# System files
-system_files = {}
-system_files["dev_flash.zip"] = "08f2dc11bd3c7dfefae48ebbbc8caf55"
 
 # RPCS3 emulator
 class RPCS3(emulatorbase.EmulatorBase):
@@ -37,33 +29,6 @@ class RPCS3(emulatorbase.EmulatorBase):
             config.Platform.SONY_PLAYSTATION_3,
             config.Platform.SONY_PLAYSTATION_NETWORK_PS3
         ]
-
-    # Get config
-    def get_config(self):
-        return {
-            "RPCS3": {
-                "program": {
-                    "windows": "RPCS3/windows/rpcs3.exe",
-                    "linux": "RPCS3/linux/RPCS3.AppImage"
-                },
-                "save_dir": {
-                    "windows": "RPCS3/windows/dev_hdd0/home/00000001",
-                    "linux": "RPCS3/linux/RPCS3.AppImage.home/.config/rpcs3/dev_hdd0/home/00000001"
-                },
-                "setup_dir": {
-                    "windows": "RPCS3/windows",
-                    "linux": "RPCS3/linux/RPCS3.AppImage.home/.config/rpcs3"
-                },
-                "config_file": {
-                    "windows": "RPCS3/windows/GuiConfigs/CurrentSettings.ini",
-                    "linux": "RPCS3/linux/RPCS3.AppImage.home/.config/rpcs3/GuiConfigs/CurrentSettings.ini"
-                },
-                "run_sandboxed": {
-                    "windows": False,
-                    "linux": False
-                }
-            }
-        }
 
     # Setup
     def setup(self, setup_params = None):
@@ -149,7 +114,7 @@ class RPCS3(emulatorbase.EmulatorBase):
             setup_params = config.SetupParams()
 
         # Create config files
-        for config_filename, config_contents in config_files.items():
+        for config_filename, config_contents in self.get_config_files().items():
             success = fileops.touch_file(
                 src = paths.join_paths(environment.get_emulators_root_dir(), config_filename),
                 contents = config_contents.strip(),
@@ -161,7 +126,7 @@ class RPCS3(emulatorbase.EmulatorBase):
                 return False
 
         # Verify system files
-        if not self.verify_system_files(system_files, setup_params):
+        if not self.verify_system_files(self.get_system_files(), setup_params):
             return False
 
         # Extract system files

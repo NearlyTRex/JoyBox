@@ -6,8 +6,6 @@ from joybox import sourcebuild
 from joybox import programs
 from joybox import toolbase
 
-# Config files
-config_files = {}
 
 # ExtractXIso tool
 class ExtractXIso(toolbase.ToolBase):
@@ -15,21 +13,6 @@ class ExtractXIso(toolbase.ToolBase):
     # Get name
     def get_name(self):
         return "ExtractXIso"
-
-    # Get config
-    def get_config(self):
-        return {
-            "ExtractXIso": {
-                "program": {
-                    "windows": "ExtractXIso/windows/extract-xiso.exe",
-                    "linux": "ExtractXIso/linux/ExtractXIso.AppImage"
-                },
-                "run_sandboxed": {
-                    "windows": False,
-                    "linux": False
-                }
-            }
-        }
 
     # Setup
     def setup(self, setup_params = None):

@@ -1,0 +1,5 @@
+# Unrar: where its programs live and how they run, the files its setup writes
+# and the system files it checks. Read by joybox/programcatalog.py.
+
+[config.Unrar]
+program = "{path_setting:Tools.Unrar.unrar_install_dir}/{setting:Tools.Unrar.unrar_exe}"

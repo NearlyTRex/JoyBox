@@ -5,8 +5,6 @@ from joybox import release
 from joybox import programs
 from joybox import toolbase
 
-# Config files
-config_files = {}
 
 # PSVStrip tool
 class PSVStrip(toolbase.ToolBase):
@@ -14,21 +12,6 @@ class PSVStrip(toolbase.ToolBase):
     # Get name
     def get_name(self):
         return "PSVStrip"
-
-    # Get config
-    def get_config(self):
-        return {
-            "PSVStrip": {
-                "program": {
-                    "windows": "PSVStrip/windows/psvstrip.exe",
-                    "linux": "PSVStrip/windows/psvstrip.exe"
-                },
-                "run_sandboxed": {
-                    "windows": False,
-                    "linux": True
-                }
-            }
-        }
 
     # Setup
     def setup(self, setup_params = None):

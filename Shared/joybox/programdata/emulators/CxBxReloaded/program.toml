@@ -1,0 +1,6 @@
+# CxBxReloaded: where its programs live and how they run, the files its setup writes
+# and the system files it checks. Read by joybox/programcatalog.py.
+
+[config.CxBxReloaded]
+program = { windows = "CxBxReloaded/windows/cxbx.exe", linux = "CxBxReloaded/windows/cxbx.exe" }
+run_sandboxed = { windows = false, linux = true }

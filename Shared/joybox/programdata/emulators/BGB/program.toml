@@ -1,0 +1,6 @@
+# BGB: where its programs live and how they run, the files its setup writes
+# and the system files it checks. Read by joybox/programcatalog.py.
+
+[config.BGB]
+program = { windows = "BGB/windows/bgb.exe", linux = "BGB/windows/bgb.exe" }
+run_sandboxed = { windows = false, linux = true }

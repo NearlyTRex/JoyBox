@@ -10,13 +10,6 @@ from joybox import programs
 from joybox import emulatorcommon
 from joybox import emulatorbase
 
-# Config files
-config_files = {}
-config_files["Flycast/windows/emu.cfg"] = ""
-config_files["Flycast/linux/Flycast.AppImage.home/.config/flycast/emu.cfg"] = ""
-
-# System files
-system_files = {}
 
 # Flycast emulator
 class Flycast(emulatorbase.EmulatorBase):
@@ -30,29 +23,6 @@ class Flycast(emulatorbase.EmulatorBase):
         return [
             config.Platform.OTHER_SEGA_DREAMCAST
         ]
-
-    # Get config
-    def get_config(self):
-        return {
-            "Flycast": {
-                "program": {
-                    "windows": "Flycast/windows/flycast.exe",
-                    "linux": "Flycast/linux/Flycast.AppImage"
-                },
-                "save_dir": {
-                    "windows": "Flycast/windows/data",
-                    "linux": "Flycast/linux/Flycast.AppImage.home/.local/share/flycast"
-                },
-                "config_file": {
-                    "windows": "Flycast/windows/emu.cfg",
-                    "linux": "Flycast/linux/Flycast.AppImage.home/.config/flycast/emu.cfg"
-                },
-                "run_sandboxed": {
-                    "windows": False,
-                    "linux": False
-                }
-            }
-        }
 
     # Setup
     def setup(self, setup_params = None):
@@ -155,7 +125,7 @@ class Flycast(emulatorbase.EmulatorBase):
             setup_params = config.SetupParams()
 
         # Create config files
-        for config_filename, config_contents in config_files.items():
+        for config_filename, config_contents in self.get_config_files().items():
             success = fileops.touch_file(
                 src = paths.join_paths(environment.get_emulators_root_dir(), config_filename),
                 contents = config_contents.strip(),

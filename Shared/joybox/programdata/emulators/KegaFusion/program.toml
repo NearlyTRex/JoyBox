@@ -1,0 +1,6 @@
+# KegaFusion: where its programs live and how they run, the files its setup writes
+# and the system files it checks. Read by joybox/programcatalog.py.
+
+[config.KegaFusion]
+program = { windows = "KegaFusion/windows/Fusion.exe", linux = "KegaFusion/windows/Fusion.exe" }
+run_sandboxed = { windows = false, linux = true }

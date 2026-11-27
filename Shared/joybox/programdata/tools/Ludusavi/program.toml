@@ -1,0 +1,20 @@
+# Ludusavi: where its programs live and how they run, the files its setup writes
+# and the system files it checks. Read by joybox/programcatalog.py.
+
+[config.Ludusavi]
+program = { windows = "Ludusavi/windows/ludusavi.exe", linux = "Ludusavi/linux/ludusavi" }
+run_sandboxed = { windows = false, linux = false }
+
+[[config_files]]
+path = "Ludusavi/windows/ludusavi.portable"
+
+[[config_files]]
+path = "Ludusavi/windows/config.yaml"
+template = "config.yaml"
+
+[[config_files]]
+path = "Ludusavi/linux/ludusavi.portable"
+
+[[config_files]]
+path = "Ludusavi/linux/config.yaml"
+template = "linux-config.yaml"

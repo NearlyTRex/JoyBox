@@ -1,0 +1,9 @@
+# ExtractXIso: where its programs live and how they run, the files its setup writes
+# and the system files it checks. Read by joybox/programcatalog.py.
+
+[config.ExtractXIso]
+run_sandboxed = { windows = false, linux = false }
+
+[config.ExtractXIso.program]
+windows = "ExtractXIso/windows/extract-xiso.exe"
+linux = "ExtractXIso/linux/ExtractXIso.AppImage"

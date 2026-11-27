@@ -1,0 +1,6 @@
+# BSnes: where its programs live and how they run, the files its setup writes
+# and the system files it checks. Read by joybox/programcatalog.py.
+
+[config.BSnes]
+program = { windows = "BSnes/windows/bsnes.exe", linux = "BSnes/windows/bsnes.exe" }
+run_sandboxed = { windows = false, linux = true }

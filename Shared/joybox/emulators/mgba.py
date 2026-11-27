@@ -10,26 +10,6 @@ from joybox import programs
 from joybox import emulatorcommon
 from joybox import emulatorbase
 
-# Config files
-config_files = {}
-CONFIG_FILE_GENERAL = """
-[ports.qt]
-gb.bios=EMULATOR_SETUP_ROOT/bios/gb_bios.bin
-gbc.bios=EMULATOR_SETUP_ROOT/bios/gbc_bios.bin
-gba.bios=EMULATOR_SETUP_ROOT/bios/gba_bios.bin
-sgb.bios=EMULATOR_SETUP_ROOT/bios/sgb_bios.bin
-savegamePath=GAME_SAVE_DIR
-"""
-config_files["mGBA/windows/portable.ini"] = ""
-config_files["mGBA/windows/config.ini"] = CONFIG_FILE_GENERAL
-config_files["mGBA/linux/mGBA.AppImage.home/.config/mgba/config.ini"] = CONFIG_FILE_GENERAL
-
-# System files
-system_files = {}
-system_files["bios/gbc_bios.bin"] = "dbfce9db9deaa2567f6a84fde55f9680"
-system_files["bios/sgb_bios.bin"] = "d574d4f9c12f305074798f54c091a8b4"
-system_files["bios/gba_bios.bin"] = "a860e8c0b6d573d191e4ec7db1b1e4f6"
-system_files["bios/gb_bios.bin"] = "32fbbd84168d3482956eb3c5051637f5"
 
 # MGBA emulator
 class MGBA(emulatorbase.EmulatorBase):
@@ -48,33 +28,6 @@ class MGBA(emulatorbase.EmulatorBase):
             config.Platform.NINTENDO_SUPER_GAME_BOY,
             config.Platform.NINTENDO_SUPER_GAME_BOY_COLOR
         ]
-
-    # Get config
-    def get_config(self):
-        return {
-            "mGBA": {
-                "program": {
-                    "windows": "mGBA/windows/mGBA.exe",
-                    "linux": "mGBA/linux/mGBA.AppImage"
-                },
-                "save_dir": {
-                    "windows": None,
-                    "linux": None
-                },
-                "setup_dir": {
-                    "windows": "mGBA/windows",
-                    "linux": "mGBA/linux/mGBA.AppImage.home/.config/mgba"
-                },
-                "config_file": {
-                    "windows": "mGBA/windows/config.ini",
-                    "linux": "mGBA/linux/mGBA.AppImage.home/.config/mgba/config.ini"
-                },
-                "run_sandboxed": {
-                    "windows": False,
-                    "linux": False
-                }
-            }
-        }
 
     # Setup
     def setup(self, setup_params = None):
@@ -160,7 +113,7 @@ class MGBA(emulatorbase.EmulatorBase):
             setup_params = config.SetupParams()
 
         # Create config files
-        for config_filename, config_contents in config_files.items():
+        for config_filename, config_contents in self.get_config_files().items():
             success = fileops.touch_file(
                 src = paths.join_paths(environment.get_emulators_root_dir(), config_filename),
                 contents = config_contents.strip(),
@@ -172,11 +125,11 @@ class MGBA(emulatorbase.EmulatorBase):
                 return False
 
         # Verify system files
-        if not self.verify_system_files(system_files, setup_params):
+        if not self.verify_system_files(self.get_system_files(), setup_params):
             return False
 
         # Copy system files
-        for filename in system_files.keys():
+        for filename in self.get_system_files().keys():
             for platform in ["windows", "linux"]:
                 success = filebulk.smart_copy(
                     src = paths.join_paths(environment.get_locker_gaming_emulator_setup_dir("mGBA"), filename),

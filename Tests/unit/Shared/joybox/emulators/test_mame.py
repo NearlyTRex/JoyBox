@@ -132,9 +132,9 @@ def configure(monkeypatch):
 def test_configure_writes_inis_and_copies_system_files_to_each_platform(configure):
     assert mame.Mame().configure() is True
 
-    assert [src for src, _ in configure.touched] == ["/emulators/%s" % name for name in mame.config_files]
+    assert [src for src, _ in configure.touched] == ["/emulators/%s" % name for name in mame.Mame().get_config_files()]
     assert all(contents.startswith("#\n# CORE SEARCH PATH OPTIONS") for _, contents in configure.touched)
-    assert len(configure.copied) == 2 * len(mame.system_files)
+    assert len(configure.copied) == 2 * len(mame.Mame().get_system_files())
     assert configure.copied[:2] == [
         ("/locker/Mame/roms/cdimono1.zip", "/emu/setup_dir/windows/roms/cdimono1.zip"),
         ("/locker/Mame/roms/cdimono1.zip", "/emu/setup_dir/linux/roms/cdimono1.zip"),
@@ -165,7 +165,7 @@ def test_configure_fails_when_a_system_file_cannot_be_copied(configure):
 
 def test_a_pretend_configure_succeeds_without_real_hashes(configure):
     assert mame.Mame().configure(config.SetupParams(pretend_run = True)) is True
-    assert len(configure.copied) == 2 * len(mame.system_files)
+    assert len(configure.copied) == 2 * len(mame.Mame().get_system_files())
 
 
 ###########################################################

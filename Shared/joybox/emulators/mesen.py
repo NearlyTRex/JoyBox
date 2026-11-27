@@ -6,11 +6,6 @@ from joybox import sourcebuild
 from joybox import programs
 from joybox import emulatorbase
 
-# Config files
-config_files = {}
-
-# System files
-system_files = {}
 
 # Mesen emulator
 class Mesen(emulatorbase.EmulatorBase):
@@ -22,21 +17,6 @@ class Mesen(emulatorbase.EmulatorBase):
     # Get platforms
     def get_platforms(self):
         return []
-
-    # Get config
-    def get_config(self):
-        return {
-            "Mesen": {
-                "program": {
-                    "windows": "Mesen/windows/Mesen.exe",
-                    "linux": "Mesen/linux/Mesen.AppImage"
-                },
-                "run_sandboxed": {
-                    "windows": False,
-                    "linux": False
-                }
-            }
-        }
 
     # Setup
     def setup(self, setup_params = None):

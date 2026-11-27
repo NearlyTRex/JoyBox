@@ -7,8 +7,6 @@ from joybox import sourcebuild
 from joybox import programs
 from joybox import toolbase
 
-# Config files
-config_files = {}
 
 # XorrISO tool
 class XorrISO(toolbase.ToolBase):
@@ -16,21 +14,6 @@ class XorrISO(toolbase.ToolBase):
     # Get name
     def get_name(self):
         return "XorrISO"
-
-    # Get config
-    def get_config(self):
-        return {
-            "XorrISO": {
-                "program": {
-                    "windows": "XorrISO/windows/xorriso.exe",
-                    "linux": "XorrISO/linux/XorrISO.AppImage"
-                },
-                "run_sandboxed": {
-                    "windows": False,
-                    "linux": False
-                }
-            }
-        }
 
     # Setup
     def setup(self, setup_params = None):

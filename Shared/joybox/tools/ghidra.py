@@ -1,6 +1,4 @@
 # Imports
-import os
-import os.path
 
 # Local imports
 from joybox import config
@@ -8,23 +6,12 @@ from joybox import logger
 from joybox import paths
 from joybox import release
 from joybox import sourcebuild
-from joybox import serialization
 from joybox import programs
 from joybox import environment
 from joybox import fileops
 from joybox import toolbase
 from joybox import platform_info
 
-# Extra files directory
-extra_files_dir = os.path.join(os.path.dirname(__file__), "files", "ghidra")
-
-# Config files
-config_files = {
-    "Ghidra/lib/Ghidra/Processors/x86/data/languages/x86watcom.cspec": "x86watcom.cspec",
-    "Ghidra/lib/Ghidra/Processors/x86/data/languages/x86watcom.ldefs": "x86watcom.ldefs",
-    "Ghidra/lib/Ghidra/Processors/x86/data/patterns/patternconstraints.xml": "patternconstraints.xml",
-    "Ghidra/lib/Ghidra/Processors/x86/data/patterns/x86watcomcpp_patterns.xml": "x86watcomcpp_patterns.xml",
-}
 
 # Ghidra tool
 class Ghidra(toolbase.ToolBase):
@@ -32,31 +19,6 @@ class Ghidra(toolbase.ToolBase):
     # Get name
     def get_name(self):
         return "Ghidra"
-
-    # Get config
-    def get_config(self):
-        return {
-            "Ghidra": {
-                "program": {
-                    "windows": "Ghidra/lib/ghidraRun.bat",
-                    "linux": "Ghidra/lib/ghidraRun"
-                },
-                "package_dir": "Ghidra/lib/Ghidra/Features/PyGhidra/pypkg/src",
-                "package_name": "pyghidra"
-            },
-            "GhidraHeadless": {
-                "program": {
-                    "windows": "Ghidra/lib/support/analyzeHeadless.bat",
-                    "linux": "Ghidra/lib/support/analyzeHeadless"
-                }
-            },
-            "GhidraSleigh": {
-                "program": {
-                    "windows": "Ghidra/lib/support/sleigh.bat",
-                    "linux": "Ghidra/lib/support/sleigh"
-                }
-            }
-        }
 
     # Setup
     def setup(self, setup_params = None):
@@ -127,12 +89,7 @@ class Ghidra(toolbase.ToolBase):
             setup_params = config.SetupParams()
 
         # Create config files
-        for dest_path, src_filename in config_files.items():
-            src_path = os.path.join(extra_files_dir, src_filename)
-            contents = serialization.read_text_file(src_path, exit_on_failure = setup_params.exit_on_failure)
-            if contents is None:
-                logger.log_error("Could not read Ghidra config file: %s" % src_filename)
-                return False
+        for dest_path, contents in self.get_config_files().items():
             success = fileops.touch_file(
                 src = paths.join_paths(environment.get_tools_root_dir(), dest_path),
                 contents = contents.strip(),
