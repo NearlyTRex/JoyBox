@@ -175,15 +175,9 @@ def test_wine_cleanup_stops_the_wine_server(recording_command, monkeypatch):
     monkeypatch.setattr(sandbox.programs, "get_tool_program", lambda name: "/tools/" + name)
     monkeypatch.setattr(sandbox.process, "kill_active_named_processes", killed.append)
 
-    sandbox.cleanup_wine(["game.exe"], wine(), pretend_run = True)
+    sandbox.cleanup_wine(pretend_run = True)
 
     assert recording_command.only() == ["/tools/WineServer", "-k"]
     assert recording_command.calls[0]["kwargs"]["pretend_run"] is True
     assert recording_command.calls[0]["options"].is_shell()
     assert killed == [["/tools/WineServer"]]
-
-
-def test_sandboxie_cleanup_has_nothing_to_stop(recording_command):
-    sandbox.cleanup_sandboxie(["game.exe"], sandboxie())
-
-    assert recording_command.calls == []

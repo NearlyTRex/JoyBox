@@ -5,6 +5,7 @@ import re
 
 # Local imports
 from joybox import command
+from joybox import dispatch
 from joybox import hardware
 from joybox import logger
 from joybox import network
@@ -18,8 +19,8 @@ from joybox import terminal
 ###########################################################
 # Actions
 #
-# Every action takes the same keyword signature so the CLI can dispatch without
-# knowing which options a given action cares about.
+# Each action names only the options it reads; run_action offers them all and
+# passes each action the ones it names.
 ###########################################################
 
 # Whether a tag is a base or text model, which continues text rather than follows a
@@ -66,7 +67,7 @@ def pull_with_quantization(model_name):
     return pull_and_report(chosen)
 
 # List installed models
-def action_list(model_name = None, purpose = None, harness = None, show_all = False):
+def action_list():
     if not ollama.ensure_running():
         return False
     models = ollama.list_installed_models()
@@ -82,7 +83,7 @@ def action_list(model_name = None, purpose = None, harness = None, show_all = Fa
     return True
 
 # Show available models with recommendations
-def action_available(model_name = None, purpose = None, harness = None, show_all = False):
+def action_available(purpose = None, show_all = False):
     hw = ollama.get_server_hardware()
     hardware.print_hardware_summary(hw)
     logger.log_info("")
@@ -177,7 +178,7 @@ def action_available(model_name = None, purpose = None, harness = None, show_all
     return True
 
 # Pull a model
-def action_pull(model_name = None, purpose = None, harness = None, show_all = False):
+def action_pull(model_name = None, purpose = None, show_all = False):
     if not ollama.ensure_running():
         return False
     if not model_name:
@@ -185,7 +186,7 @@ def action_pull(model_name = None, purpose = None, harness = None, show_all = Fa
     return pull_with_quantization(model_name)
 
 # Delete a model
-def action_delete(model_name = None, purpose = None, harness = None, show_all = False):
+def action_delete(model_name = None):
     if not ollama.ensure_running():
         return False
     if not model_name:
@@ -216,7 +217,7 @@ def action_delete(model_name = None, purpose = None, harness = None, show_all = 
     return True
 
 # Show model info
-def action_info(model_name = None, purpose = None, harness = None, show_all = False):
+def action_info(model_name = None):
     if not ollama.ensure_running():
         return False
     if not model_name:
@@ -242,7 +243,7 @@ def action_info(model_name = None, purpose = None, harness = None, show_all = Fa
         return False
 
 # Launch a coding-agent harness with an Ollama model as the backend
-def action_harness(model_name = None, purpose = None, harness = None, show_all = False):
+def action_harness(model_name = None, harness = None):
     if not ollama.ensure_running():
         return False
 
@@ -292,7 +293,7 @@ def action_harness(model_name = None, purpose = None, harness = None, show_all =
     return ollamaagents.launch_harness(model_name, harness)
 
 # Recommend the best model for the current hardware and purpose
-def action_best(model_name = None, purpose = None, harness = None, show_all = False):
+def action_best(purpose = None):
     hw = ollama.get_server_hardware()
     purpose = purpose or ollamacatalog.PURPOSE_TOOLS
     best = ollamacatalog.get_best_model(
@@ -319,7 +320,7 @@ def action_best(model_name = None, purpose = None, harness = None, show_all = Fa
 
 # Start a coding agent in the current directory on the best coding model for the
 # server, picking, pulling and sizing it first
-def action_code(model_name = None, purpose = None, harness = None, show_all = False):
+def action_code(model_name = None, harness = None):
     harness = harness or ollamaagents.DEFAULT_HARNESS
     if harness not in ollamaagents.HARNESSES:
         logger.log_error("Unknown harness '%s'. Available: %s" % (harness, ", ".join(ollamaagents.get_harness_keys())))
@@ -348,7 +349,7 @@ def get_server_version():
     return (network.get_remote_json(ollama.get_api_base() + "/api/version") or {}).get("version")
 
 # Update ollama on the server by rerunning its installer there over SSH
-def action_update(model_name = None, purpose = None, harness = None, show_all = False):
+def action_update():
     host = ollama.get_ssh_host()
     if not host:
         logger.log_error("Updating needs the server's SSH destination in [Tools.Ollama] ollama_ssh_host")
@@ -389,7 +390,8 @@ def run_action(action, model_name = None, purpose = None, harness = None, show_a
     if action not in ACTIONS:
         logger.log_error("Unknown action '%s'. Valid actions: %s" % (action, ", ".join(get_action_keys())))
         return False
-    return ACTIONS[action](
+    return dispatch.call_with_options(
+        ACTIONS[action],
         model_name = model_name,
         purpose = purpose,
         harness = harness,

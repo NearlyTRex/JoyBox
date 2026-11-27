@@ -219,16 +219,6 @@ def install_wine_dlls(
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
 
-# Install sandboxie dlls
-def install_sandboxie_dlls(
-    options,
-    dlls_32 = (),
-    dlls_64 = (),
-    verbose = False,
-    pretend_run = False,
-    exit_on_failure = False):
-    pass
-
 # Install dlls
 def install_dlls(
     options,
@@ -239,16 +229,10 @@ def install_dlls(
     exit_on_failure = False):
     dlls_32 = [] if dlls_32 is None else dlls_32
     dlls_64 = [] if dlls_64 is None else dlls_64
+
+    # Only a wine prefix takes dlls; Sandboxie needs no libraries installed
     if options.is_wine_prefix():
         install_wine_dlls(
-            options = options,
-            dlls_32 = dlls_32,
-            dlls_64 = dlls_64,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-    elif options.is_sandboxie_prefix():
-        install_sandboxie_dlls(
             options = options,
             dlls_32 = dlls_32,
             dlls_64 = dlls_64,
@@ -623,10 +607,7 @@ def setup_prefix_environment(
 # Setup prefix command
 def setup_prefix_command(
     cmd,
-    options = None,
-    verbose = False,
-    pretend_run = False,
-    exit_on_failure = False):
+    options = None):
 
     # Imports
     from joybox import gui
@@ -692,7 +673,7 @@ def setup_prefix_command(
 ###########################################################
 
 # Cleanup wine
-def cleanup_wine(cmd, options, verbose = False, pretend_run = False, exit_on_failure = False):
+def cleanup_wine(verbose = False, pretend_run = False, exit_on_failure = False):
 
     # Imports
     from joybox import command
@@ -711,9 +692,5 @@ def cleanup_wine(cmd, options, verbose = False, pretend_run = False, exit_on_fai
 
     # Kill wine itself
     process.kill_active_named_processes([wine_server_tool])
-
-# Cleanup sandboxie
-def cleanup_sandboxie(cmd, options, verbose = False, pretend_run = False, exit_on_failure = False):
-    pass
 
 ###########################################################

@@ -7,6 +7,7 @@ import urllib.request
 
 # Local imports
 from joybox import chunkers
+from joybox import dispatch
 from joybox import logger
 from joybox import ollama
 from joybox import ollamaagents
@@ -115,7 +116,7 @@ class OpenAIBackend:
         del model
         return 0
 
-    def stream(self, model, messages, temperature, max_tokens, num_ctx, on_text):
+    def stream(self, model, messages, temperature, max_tokens, on_text):
         request = urllib.request.Request(
             f"{self.endpoint}/v1/chat/completions",
             data = json.dumps({"model": model, "messages": messages,
@@ -173,7 +174,7 @@ class ClaudeBackend:
             turns.append(f"{who}: {message['content']}")
         return system, "\n\n".join(turns) + "\n\nAssistant:"
 
-    def stream(self, model, messages, temperature, max_tokens, num_ctx, on_text):
+    def stream(self, model, messages, max_tokens, on_text):
         system, prompt = self.flatten(messages)
         reply = self.claude.send_message(
             prompt = prompt,
@@ -333,8 +334,9 @@ class Session:
     def ask(self, question, on_text):
         self.messages.append({"role": "user", "content": question})
         try:
-            reply = self.backend.stream(self.model, self.messages, self.temperature,
-                                        self.max_tokens, self.limit, on_text)
+            reply = dispatch.call_with_options(
+                self.backend.stream, model = self.model, messages = self.messages, temperature = self.temperature,
+                max_tokens = self.max_tokens, num_ctx = self.limit, on_text = on_text)
         except (urllib.error.URLError, OSError, http.client.HTTPException, RequestFailed) as error:
             logger.log_error(f"Request failed: {error}")
             self.messages.pop()

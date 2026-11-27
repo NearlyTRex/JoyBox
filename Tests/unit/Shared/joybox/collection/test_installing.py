@@ -175,7 +175,7 @@ def test_a_store_that_cannot_install_is_not_asked_to_uninstall(store):
 
 def test_store_addons_need_no_work(store):
     # Store clients fetch their own DLC.
-    assert installing.install_store_game_addons(FakeGameInfo()) is True
+    assert installing.install_game_addons(FakeGameInfo(platform = "Steam")) is True
 
 
 ###########################################################

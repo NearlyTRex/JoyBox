@@ -678,10 +678,10 @@ def test_all_sources_passes_the_callers_flags_to_each_source(monkeypatch):
     fake_source(monkeypatch, "tgdb", calls)
 
     metadatacollector.collect_metadata_from_all(PLATFORM, GAME_NAME, config.metadata_keys_downloadable,
-        verbose = True, pretend_run = True, exit_on_failure = True)
+        verbose = True, pretend_run = True)
 
     expected = {"game_platform": PLATFORM, "game_name": GAME_NAME, "stats": None,
-        "verbose": True, "pretend_run": True, "exit_on_failure": True}
+        "verbose": True, "pretend_run": True}
     assert calls == [("gamefaqs", expected), ("tgdb", expected)]
 
 

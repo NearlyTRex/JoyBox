@@ -95,10 +95,7 @@ def setup_prefix_command(
     # Setup prefix command
     new_cmd, new_options = sandbox.setup_prefix_command(
         cmd = new_cmd,
-        options = new_options,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
+        options = new_options)
     new_cmd, new_options = sandbox.setup_prefix_environment(
         cmd = new_cmd,
         options = new_options,
@@ -149,20 +146,9 @@ def postprocess_command(
     pretend_run = False,
     exit_on_failure = False):
 
-    # Postprocess for wine
+    # Postprocess for wine; Sandboxie has nothing to stop
     if sandbox.should_be_run_via_wine(cmd):
         sandbox.cleanup_wine(
-            cmd = cmd,
-            options = options,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
-
-    # Postprocess for sandboxie
-    if sandbox.should_be_run_via_sandboxie(cmd):
-        sandbox.cleanup_sandboxie(
-            cmd = cmd,
-            options = options,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)

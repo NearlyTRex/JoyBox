@@ -52,14 +52,6 @@ def test_nested_saves_count(tmp_path):
     assert saves.is_save_dir_packable(str(directory)) is True
 
 
-def test_the_output_directory_is_optional(tmp_path):
-    # can_save_be_packed asks with only an input directory.
-    source = populated(tmp_path)
-
-    assert saves.is_save_dir_packable(source) == \
-        saves.is_save_dir_packable(source, absent(tmp_path, "out"))
-
-
 ###########################################################
 # Unpacking
 ###########################################################
@@ -119,7 +111,7 @@ def test_packing_and_unpacking_disagree_about_a_live_directory(tmp_path):
     source = populated(tmp_path)
     destination = populated(tmp_path, "out")
 
-    assert saves.is_save_dir_packable(source, destination) is True
+    assert saves.is_save_dir_packable(source) is True
     assert saves.is_save_dir_unpackable(source, destination) is False
 
 

@@ -83,7 +83,7 @@ def test_json_files_are_not_possible_elsewhere(supercategory):
 
 def test_the_category_check_ignores_the_lower_levels():
     assert jsondata.are_game_json_file_possible(
-        config.Supercategory.ROMS, "not-a-category", "not-a-subcategory") is True
+        config.Supercategory.ROMS) is True
 
 
 ###########################################################

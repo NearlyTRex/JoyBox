@@ -9,7 +9,7 @@ from joybox import paths
 from joybox import archive
 
 # Check if install image is mounted
-def is_install_image_mounted(install_file, mount_dir):
+def is_install_image_mounted(mount_dir):
     return paths.does_directory_contain_files(mount_dir)
 
 # Mount install image

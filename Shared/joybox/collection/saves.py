@@ -16,7 +16,7 @@ from joybox import runtime
 ############################################################
 
 # Check if save dir is packable
-def is_save_dir_packable(input_save_dir, output_save_dir = None):
+def is_save_dir_packable(input_save_dir):
     return paths.does_directory_contain_files(input_save_dir)
 
 # Check if save dir is unpackable
@@ -57,7 +57,7 @@ def pack_save(
     if not input_save_dir:
         input_save_dir = game_info.get_save_dir()
     output_save_dir = game_info.get_local_save_dir()
-    if not is_save_dir_packable(input_save_dir, output_save_dir):
+    if not is_save_dir_packable(input_save_dir):
         if verbose:
             logger.log_info(f"No save data found for {game_info.get_name()}")
         return False
@@ -297,10 +297,7 @@ def translate_store_path(path, relative_path, translation_map):
 
 # Get store path entries
 def get_store_path_entries(
-    game_info,
-    verbose = False,
-    pretend_run = False,
-    exit_on_failure = False):
+    game_info):
 
     # Get store
     store_obj = stores.get_store_by_platform(game_info.get_platform())
@@ -355,13 +352,6 @@ def import_store_game_save_paths(
         exit_on_failure = exit_on_failure)
     return success
 
-# Import store game save
-def import_store_game_save(
-    game_info,
-    verbose = False,
-    pretend_run = False,
-    exit_on_failure = False):
-    return True
 
 # Copy the store save paths holding files into a directory, under their relative paths.
 # Returns whether every copy succeeded, and whether there was anything to copy.
@@ -400,10 +390,7 @@ def export_store_game_save(
 
         # Copy store files
         store_path_entries = get_store_path_entries(
-            game_info = game_info,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
+            game_info = game_info)
         success, copied = copy_store_save_files(store_path_entries, tmp_dir, verbose, pretend_run, exit_on_failure)
         if not success or not copied:
             return success
@@ -419,14 +406,6 @@ def export_store_game_save(
             exit_on_failure = exit_on_failure)
 
 ############################################################
-
-# Import local game save paths
-def import_local_game_save_paths(
-    game_info,
-    verbose = False,
-    pretend_run = False,
-    exit_on_failure = False):
-    return True
 
 # Import local game save
 def import_local_game_save(
@@ -483,11 +462,8 @@ def import_game_save_paths(
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
     else:
-        return import_local_game_save_paths(
-            game_info = game_info,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
+        # Only store games record save paths
+        return True
 
 # Import all game save paths
 def import_all_game_save_paths(
@@ -511,11 +487,8 @@ def import_game_save(
     pretend_run = False,
     exit_on_failure = False):
     if stores.is_store_platform(game_info.get_platform()):
-        return import_store_game_save(
-            game_info = game_info,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
+        # The store restores its own saves
+        return True
     else:
         return import_local_game_save(
             game_info = game_info,

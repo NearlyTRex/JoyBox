@@ -10,11 +10,9 @@ from joybox.stores import steamlookups
 
 # Find metadata assets from google images
 def find_metadata_assets_from_google_images(
-    game_platform,
     game_name,
     asset_type,
     verbose = False,
-    pretend_run = False,
     exit_on_failure = False):
 
     # Only allow BoxFront
@@ -32,7 +30,6 @@ def find_metadata_assets_from_google_images(
 
 # Find metadata asset from YouTube
 def find_metadata_assets_from_youtube(
-    game_platform,
     game_name,
     asset_type,
     verbose = False,
@@ -54,7 +51,6 @@ def find_metadata_assets_from_youtube(
 
 # Find metadata assets from Steam
 def find_metadata_assets_from_steam(
-    game_platform,
     game_name,
     asset_type,
     verbose = False,
@@ -77,11 +73,9 @@ def find_metadata_assets_from_steam(
 
 # Find metadata assets from SteamGridDB
 def find_metadata_assets_from_steamgriddb(
-    game_platform,
     game_name,
     asset_type,
     verbose = False,
-    pretend_run = False,
     exit_on_failure = False):
 
     # Only allow BoxFront
@@ -112,16 +106,13 @@ def find_metadata_asset(
 
     # Try searching Google Images
     search_results += find_metadata_assets_from_google_images(
-        game_platform = game_platform,
         game_name = game_name,
         asset_type = asset_type,
         verbose = verbose,
-        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
     # Try searching YouTube
     search_results += find_metadata_assets_from_youtube(
-        game_platform = game_platform,
         game_name = game_name,
         asset_type = asset_type,
         verbose = verbose,
@@ -130,7 +121,6 @@ def find_metadata_asset(
 
     # Try searching Steam
     search_results += find_metadata_assets_from_steam(
-        game_platform = game_platform,
         game_name = game_name,
         asset_type = asset_type,
         verbose = verbose,
@@ -139,11 +129,9 @@ def find_metadata_asset(
 
     # Try searching SteamGridDB
     search_results += find_metadata_assets_from_steamgriddb(
-        game_platform = game_platform,
         game_name = game_name,
         asset_type = asset_type,
         verbose = verbose,
-        pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
     # Show possible assets to the user

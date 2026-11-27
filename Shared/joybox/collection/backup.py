@@ -78,25 +78,6 @@ def backup_store_game_files(
 
 ###########################################################
 
-# Determine if local game files should be backed up
-def should_backup_local_game_files(
-    game_info,
-    verbose = False,
-    pretend_run = False,
-    exit_on_failure = False):
-    return False
-
-# Backup local game files
-def backup_local_game_files(
-    game_info,
-    locker_type,
-    verbose = False,
-    pretend_run = False,
-    exit_on_failure = False):
-    return True
-
-###########################################################
-
 # Determine if game files should be backed up
 def should_backup_game_files(
     game_info,
@@ -110,11 +91,8 @@ def should_backup_game_files(
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
     else:
-        return should_backup_local_game_files(
-            game_info = game_info,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
+        # A local game's copy is the master, with no upstream to fetch it again from
+        return False
 
 # Backup game files
 def backup_game_files(
@@ -131,12 +109,8 @@ def backup_game_files(
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
     else:
-        return backup_local_game_files(
-            game_info = game_info,
-            locker_type = locker_type,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
+        # A local game's copy is the master, with no upstream to fetch it again from
+        return True
 
 # Backup all game files
 def backup_all_game_files(

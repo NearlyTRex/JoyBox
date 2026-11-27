@@ -17,9 +17,7 @@ from .jsondata import read_game_json_data
 
 # Determine if game metadata files are possible
 def are_game_metadata_file_possible(
-    game_supercategory,
-    game_category = None,
-    game_subcategory = None):
+    game_supercategory):
     return game_supercategory == config.Supercategory.ROMS
 
 ############################################################
@@ -37,7 +35,7 @@ def create_game_metadata_entry(
     exit_on_failure = False):
 
     # Check categories
-    if not are_game_metadata_file_possible(game_supercategory, game_category, game_subcategory):
+    if not are_game_metadata_file_possible(game_supercategory):
         return True
 
     # Get platform
@@ -112,7 +110,7 @@ def update_game_metadata_entry(
         keys = config.metadata_keys_downloadable
 
     # Check categories
-    if not are_game_metadata_file_possible(game_supercategory, game_category, game_subcategory):
+    if not are_game_metadata_file_possible(game_supercategory):
         return True
 
     # Get platform
@@ -174,8 +172,7 @@ def update_game_metadata_entry(
             keys_to_check = config.metadata_keys_downloadable,
             stats = stats,
             verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
+            pretend_run = pretend_run)
 
     # Merge latest data
     if latest_metadata:
@@ -301,7 +298,7 @@ def publish_game_metadata_entries(
     for game_subcategory in config.subcategory_map[game_category]:
 
         # Check categories
-        if not are_game_metadata_file_possible(game_supercategory, game_category, game_subcategory):
+        if not are_game_metadata_file_possible(game_supercategory):
             continue
 
         # Get metadata file

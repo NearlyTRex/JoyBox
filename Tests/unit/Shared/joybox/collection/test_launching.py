@@ -114,7 +114,7 @@ def steps(monkeypatch):
     recorder = Recorder()
     for name in [
         "install_store_game", "install_local_game",
-        "import_store_game_save", "export_store_game_save",
+        "export_store_game_save",
         "import_local_game_save", "export_local_game_save"]:
         monkeypatch.setattr(launching, name, recorder.step(name))
     monkeypatch.setattr(launching, "fileops", types.SimpleNamespace(**{
@@ -151,14 +151,13 @@ def test_a_store_game_is_installed_restored_launched_and_saved(steps, store):
     game = FakeGameInfo(platform = "Steam")
 
     assert launching.launch_store_game(game, locker_type = config.LockerType.HETZNER) is True
-    assert steps.names() == ["install_store_game", "import_store_game_save", "export_store_game_save"]
+    assert steps.names() == ["install_store_game", "export_store_game_save"]
     assert store.launches[0][0] == "1145360"
 
 
 def test_a_store_save_is_exported_to_the_launch_locker(steps, store):
     launching.launch_store_game(FakeGameInfo(platform = "Steam"), locker_type = config.LockerType.HETZNER)
 
-    assert steps.kwargs("install_store_game")["locker_type"] == config.LockerType.HETZNER
     assert steps.kwargs("export_store_game_save")["locker_type"] == config.LockerType.HETZNER
 
 
@@ -191,13 +190,6 @@ def test_a_store_game_without_a_store_is_not_launched(steps, store):
 
 def test_a_store_that_cannot_launch_is_not_asked_to(steps, store):
     store.handles_launching = False
-
-    assert launching.launch_store_game(FakeGameInfo(platform = "Steam")) is False
-    assert store.launches == []
-
-
-def test_a_failed_store_save_import_stops_the_launch(steps, store):
-    steps.results["import_store_game_save"] = False
 
     assert launching.launch_store_game(FakeGameInfo(platform = "Steam")) is False
     assert store.launches == []

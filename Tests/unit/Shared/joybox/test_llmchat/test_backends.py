@@ -6,7 +6,7 @@ import urllib.error
 import pytest
 
 # Local imports
-from joybox import llmchat
+from joybox import dispatch, llmchat
 
 
 ###########################################################
@@ -93,8 +93,9 @@ def sent(request):
 
 def stream(backend, on_text = None, model = "m", num_ctx = 0):
     pieces = []
-    text = backend.stream(model, [{"role": "user", "content": "hi"}], 0.5, 64, num_ctx,
-                          on_text or pieces.append)
+    text = dispatch.call_with_options(
+        backend.stream, model = model, messages = [{"role": "user", "content": "hi"}], temperature = 0.5,
+        max_tokens = 64, num_ctx = num_ctx, on_text = on_text or pieces.append)
     return text, pieces
 
 
@@ -334,7 +335,7 @@ def test_claude_uses_the_session_model(claude):
 def test_claude_passes_the_system_prompt(claude):
     llmchat.ClaudeBackend().stream("m", [{"role": "system", "content": "Be terse."},
                                          {"role": "user", "content": "hi"}],
-                                   0.5, 64, 0, lambda text: None)
+                                   64, lambda text: None)
 
     assert claude["calls"][0]["system_prompt"] == "Be terse."
 
@@ -346,7 +347,7 @@ def test_claude_raises_when_no_reply_came(claude):
 
     with pytest.raises(llmchat.RequestFailed):
         llmchat.ClaudeBackend().stream("m", [{"role": "user", "content": "hi"}],
-                                       0.5, 64, 0, pieces.append)
+                                       64, pieces.append)
     assert pieces == []
 
 

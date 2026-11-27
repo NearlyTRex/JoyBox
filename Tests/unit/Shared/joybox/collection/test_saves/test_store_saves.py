@@ -191,9 +191,11 @@ def test_flags_reach_the_lister_and_the_json_write(archived, fake_archive, monke
     assert archived.updates == [expected]
 
 
-def test_importing_a_store_save_is_a_no_op(store_game):
+def test_importing_a_store_save_is_a_no_op(store_game, monkeypatch):
     # The store restores its own saves.
-    assert saves.import_store_game_save(store_game) is True
+    monkeypatch.setattr(saves.stores, "is_store_platform", lambda platform: platform == "Steam")
+
+    assert saves.import_game_save(store_game) is True
 
 
 ###########################################################

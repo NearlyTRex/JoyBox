@@ -199,23 +199,17 @@ def test_installing_dispatches_on_the_prefix_kind(prefix_tree, monkeypatch):
     reached = []
     monkeypatch.setattr(
         sandbox, "install_wine_dlls", lambda *args, **kwargs: reached.append("wine"))
-    monkeypatch.setattr(
-        sandbox, "install_sandboxie_dlls",
-        lambda *args, **kwargs: reached.append("sandboxie"))
 
     sandbox.install_dlls(options(wine = True, prefix_dir = str(root)))
     sandbox.install_dlls(options(sandboxie = True, prefix_dir = str(root)))
 
-    assert reached == ["wine", "sandboxie"]
+    assert reached == ["wine"]
 
 
 def test_a_non_prefix_installs_nothing(monkeypatch):
     reached = []
     monkeypatch.setattr(
         sandbox, "install_wine_dlls", lambda *args, **kwargs: reached.append("wine"))
-    monkeypatch.setattr(
-        sandbox, "install_sandboxie_dlls",
-        lambda *args, **kwargs: reached.append("sandboxie"))
 
     sandbox.install_dlls(NEITHER())
 

@@ -287,7 +287,8 @@ def test_prefix_setup_passes_the_run_flags_to_every_step(prefix_sandbox):
 
     created = prefix_sandbox["created"][0]
     assert {key: created[key] for key in flags} == flags
-    assert [kwargs for _, kwargs in prefix_sandbox["steps"]] == [flags, flags]
+    # Wrapping the command reads no flags; giving it its environment takes them all
+    assert [kwargs for _, kwargs in prefix_sandbox["steps"]] == [{}, flags]
 
 
 def test_prefix_setup_leaves_the_original_options_alone(prefix_sandbox):
@@ -314,15 +315,15 @@ def test_a_wine_command_is_cleaned_up_afterwards(monkeypatch):
     assert cleaned == ["wine"]
 
 
-def test_a_sandboxie_command_is_cleaned_up_afterwards(monkeypatch):
+def test_a_sandboxie_command_has_nothing_to_stop(monkeypatch):
     cleaned = []
     monkeypatch.setattr(command.sandbox, "should_be_run_via_wine", lambda cmd: False)
     monkeypatch.setattr(command.sandbox, "should_be_run_via_sandboxie", lambda cmd: True)
-    monkeypatch.setattr(command.sandbox, "cleanup_sandboxie", lambda **kwargs: cleaned.append("sandboxie"))
+    monkeypatch.setattr(command.sandbox, "cleanup_wine", lambda **kwargs: cleaned.append("wine"))
 
     command.postprocess_command(["/games/Game.exe"])
 
-    assert cleaned == ["sandboxie"]
+    assert cleaned == []
 
 
 def test_a_native_command_needs_no_cleanup(monkeypatch):
@@ -330,7 +331,6 @@ def test_a_native_command_needs_no_cleanup(monkeypatch):
     monkeypatch.setattr(command.sandbox, "should_be_run_via_wine", lambda cmd: False)
     monkeypatch.setattr(command.sandbox, "should_be_run_via_sandboxie", lambda cmd: False)
     monkeypatch.setattr(command.sandbox, "cleanup_wine", lambda **kwargs: cleaned.append("wine"))
-    monkeypatch.setattr(command.sandbox, "cleanup_sandboxie", lambda **kwargs: cleaned.append("sandboxie"))
 
     command.postprocess_command(["/usr/bin/true"])
 
@@ -377,13 +377,12 @@ def test_postprocessing_passes_the_run_flags_to_every_step(monkeypatch):
     monkeypatch.setattr(command.sandbox, "should_be_run_via_wine", lambda cmd: True)
     monkeypatch.setattr(command.sandbox, "should_be_run_via_sandboxie", lambda cmd: True)
     monkeypatch.setattr(command.sandbox, "cleanup_wine", record)
-    monkeypatch.setattr(command.sandbox, "cleanup_sandboxie", record)
     monkeypatch.setattr(command.sandboxpaths, "transfer_from_sandbox", record)
     options = commandbase.create_command_options(output_paths = ["/out/one"])
 
     command.postprocess_command(["/games/Game.exe"], options = options, **flags)
 
-    assert seen == [flags, flags, flags]
+    assert seen == [flags, flags]
 
 
 ###########################################################

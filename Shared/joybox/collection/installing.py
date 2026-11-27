@@ -39,8 +39,6 @@ def is_store_game_installed(game_info):
 # Install store game
 def install_store_game(
     game_info,
-    locker_type = None,
-    keep_setup_files = False,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -68,20 +66,10 @@ def install_store_game(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
-# Install store game addons
-def install_store_game_addons(
-    game_info,
-    verbose = False,
-    pretend_run = False,
-    exit_on_failure = False):
-
-    # Not needed
-    return True
 
 # Uninstall store game
 def uninstall_store_game(
     game_info,
-    locker_type = None,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -299,7 +287,6 @@ def install_local_game_addons(
 # Uninstall local game
 def uninstall_local_game(
     game_info,
-    locker_type = None,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -345,8 +332,6 @@ def install_game(
     if stores.is_store_platform(game_info.get_platform()):
         return install_store_game(
             game_info = game_info,
-            locker_type = locker_type,
-            keep_setup_files = keep_setup_files,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
@@ -366,11 +351,8 @@ def install_game_addons(
     pretend_run = False,
     exit_on_failure = False):
     if stores.is_store_platform(game_info.get_platform()):
-        return install_store_game_addons(
-            game_info = game_info,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
+        # Store clients fetch their own add-ons
+        return True
     else:
         return install_local_game_addons(
             game_info = game_info,
@@ -381,21 +363,18 @@ def install_game_addons(
 # Uninstall game
 def uninstall_game(
     game_info,
-    locker_type = None,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
     if stores.is_store_platform(game_info.get_platform()):
         return uninstall_store_game(
             game_info = game_info,
-            locker_type = locker_type,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
     else:
         return uninstall_local_game(
             game_info = game_info,
-            locker_type = locker_type,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)

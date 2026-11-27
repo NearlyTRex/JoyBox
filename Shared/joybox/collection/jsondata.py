@@ -18,9 +18,7 @@ from joybox import playlist
 
 # Determine if game json files are possible
 def are_game_json_file_possible(
-    game_supercategory,
-    game_category = None,
-    game_subcategory = None):
+    game_supercategory):
     return game_supercategory in [config.Supercategory.ROMS, config.Supercategory.DLC, config.Supercategory.UPDATES]
 
 ############################################################
@@ -35,7 +33,7 @@ def read_game_json_data(
     exit_on_failure = False):
 
     # Check categories
-    if not are_game_json_file_possible(game_supercategory, game_category, game_subcategory):
+    if not are_game_json_file_possible(game_supercategory):
         return None
 
     # Get json file path
@@ -72,7 +70,7 @@ def create_game_json_file(
     exit_on_failure = False):
 
     # Check categories
-    if not are_game_json_file_possible(game_supercategory, game_category, game_subcategory):
+    if not are_game_json_file_possible(game_supercategory):
         return True
 
     # Get json file path
@@ -126,7 +124,7 @@ def update_game_json_file(
     exit_on_failure = False):
 
     # Check categories
-    if not are_game_json_file_possible(game_supercategory, game_category, game_subcategory):
+    if not are_game_json_file_possible(game_supercategory):
         return True
 
     # Get platform
@@ -400,7 +398,7 @@ def get_game_json_ignore_entries(
     exit_on_failure = False):
 
     # Check categories
-    if not are_game_json_file_possible(game_supercategory, game_category, game_subcategory):
+    if not are_game_json_file_possible(game_supercategory):
         return {}
 
     # Get json file path
@@ -434,7 +432,7 @@ def add_game_json_ignore_entry(
     exit_on_failure = False):
 
     # Check categories
-    if not are_game_json_file_possible(game_supercategory, game_category, game_subcategory):
+    if not are_game_json_file_possible(game_supercategory):
         return True
 
     # Get platform

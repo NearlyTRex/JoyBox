@@ -29,9 +29,10 @@ def test_a_game_without_a_packed_save_imports_nothing(monkeypatch):
     assert saves.import_local_game_save(game_info = object()) is True
 
 
-def test_a_local_game_has_no_save_paths_to_import():
+def test_a_local_game_has_no_save_paths_to_import(routed):
     # Only store games record save paths; the rest succeed with nothing to do.
-    assert saves.import_local_game_save_paths(game_info = object()) is True
+    assert saves.import_game_save_paths(game_info = PlatformOnly("Nintendo SNES")) is True
+    assert routed == []
 
 
 ###########################################################
@@ -80,8 +81,8 @@ def routed(monkeypatch):
     calls = []
     monkeypatch.setattr(saves.stores, "is_store_platform", lambda platform: platform == "Steam")
     for name in [
-        "import_store_game_save_paths", "import_local_game_save_paths",
-        "import_store_game_save", "import_local_game_save",
+        "import_store_game_save_paths",
+        "import_local_game_save",
         "export_store_game_save", "export_local_game_save"]:
         def handler(name = name, **kwargs):
             calls.append((name, kwargs))
@@ -92,8 +93,6 @@ def routed(monkeypatch):
 
 @pytest.mark.parametrize("function, platform, expected", [
     ("import_game_save_paths", "Steam", "import_store_game_save_paths"),
-    ("import_game_save_paths", "Nintendo SNES", "import_local_game_save_paths"),
-    ("import_game_save", "Steam", "import_store_game_save"),
     ("import_game_save", "Nintendo SNES", "import_local_game_save"),
     ("export_game_save", "Steam", "export_store_game_save"),
     ("export_game_save", "Nintendo SNES", "export_local_game_save"),
@@ -104,6 +103,12 @@ def test_store_games_take_the_store_route(routed, function, platform, expected):
     assert getattr(saves, function)(game_info = game_info, pretend_run = True) == expected
     assert routed[0][1]["game_info"] is game_info
     assert routed[0][1]["pretend_run"] is True
+
+
+def test_importing_a_store_save_routes_nowhere(routed):
+    # The store restores its own saves.
+    assert saves.import_game_save(game_info = PlatformOnly("Steam")) is True
+    assert routed == []
 
 
 def test_an_export_carries_the_locker(routed):

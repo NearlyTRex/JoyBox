@@ -437,6 +437,7 @@ class StoreBase:
         verbose = False,
         pretend_run = False,
         exit_on_failure = False):
+        del exit_on_failure
 
         # Check identifier
         if not self.is_valid_metadata_identifier(identifier):
@@ -450,8 +451,7 @@ class StoreBase:
             game_name = identifier,
             keys_to_check = config.metadata_keys_downloadable,
             verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
+            pretend_run = pretend_run)
 
     ############################################################
     # Assets

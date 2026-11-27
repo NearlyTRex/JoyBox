@@ -8,7 +8,6 @@ from joybox import gui
 from joybox import paths
 from .installing import install_store_game
 from .installing import install_local_game
-from .saves import import_store_game_save
 from .saves import export_store_game_save
 from .saves import import_local_game_save
 from .saves import export_local_game_save
@@ -19,8 +18,6 @@ from .saves import export_local_game_save
 def launch_store_game(
     game_info,
     locker_type = None,
-    capture_type = None,
-    fullscreen = False,
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
@@ -32,7 +29,6 @@ def launch_store_game(
     # Install store game
     success = install_store_game(
         game_info = game_info,
-        locker_type = locker_type,
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
@@ -52,15 +48,6 @@ def launch_store_game(
     store_key = game_info.get_main_store_key()
     store_identifier_key = store_obj.get_install_identifier_key()
     store_identifier = game_info.get_subvalue(store_key, store_identifier_key)
-
-    # Import save
-    success = import_store_game_save(
-        game_info = game_info,
-        verbose = verbose,
-        pretend_run = pretend_run,
-        exit_on_failure = exit_on_failure)
-    if not success:
-        return False
 
     # Launch game
     success = store_obj.launch(
@@ -215,8 +202,6 @@ def launch_game(
         return launch_store_game(
             game_info = game_info,
             locker_type = locker_type,
-            capture_type = capture_type,
-            fullscreen = fullscreen,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)

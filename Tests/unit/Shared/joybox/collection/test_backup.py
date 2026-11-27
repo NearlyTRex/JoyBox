@@ -132,13 +132,17 @@ def test_the_identifier_and_branch_reach_the_store(store):
 # Local games
 ###########################################################
 
-def test_a_local_game_is_never_backed_up():
+def test_a_local_game_is_never_backed_up(store):
     # The local copy is the master; there is no upstream to re-fetch from.
-    assert backup.should_backup_local_game_files(FakeGameInfo()) is False
+    store["is_store"] = False
+
+    assert backup.should_backup_game_files(FakeGameInfo()) is False
 
 
-def test_backing_up_a_local_game_reports_success():
-    assert backup.backup_local_game_files(FakeGameInfo(), locker_type = None) is True
+def test_backing_up_a_local_game_reports_success(store):
+    store["is_store"] = False
+
+    assert backup.backup_game_files(FakeGameInfo(), locker_type = None) is True
 
 
 ###########################################################

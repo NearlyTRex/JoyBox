@@ -171,8 +171,7 @@ def collect_metadata_from_tgdb(
     game_name,
     stats = None,
     verbose = False,
-    pretend_run = False,
-    exit_on_failure = False):
+    pretend_run = False):
 
     # Get TheGamesDB platform ids
     tgdb_platform_ids = config.tgdb_platforms.get(game_platform)
@@ -299,8 +298,7 @@ def collect_metadata_from_gamefaqs(
     game_name,
     stats = None,
     verbose = False,
-    pretend_run = False,
-    exit_on_failure = False):
+    pretend_run = False):
 
     # Get GameFAQs platform name
     gamefaqs_platform_info = config.gamefaqs_platforms.get(game_platform)
@@ -451,8 +449,7 @@ def collect_metadata_from_bigfishgames(
     game_name,
     stats = None,
     verbose = False,
-    pretend_run = False,
-    exit_on_failure = False):
+    pretend_run = False):
 
     # Fetch function
     def attempt_metadata_fetch(web_driver):
@@ -527,8 +524,7 @@ def collect_metadata_from_all(
     keys_to_check,
     stats = None,
     verbose = False,
-    pretend_run = False,
-    exit_on_failure = False):
+    pretend_run = False):
 
     # Metadata result
     metadata_result = metadataentry.MetadataEntry()
@@ -545,8 +541,7 @@ def collect_metadata_from_all(
             game_name = game_name,
             stats = stats,
             verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
+            pretend_run = pretend_run)
         if isinstance(source_result, metadataentry.MetadataEntry):
             metadata_result.merge(source_result)
 

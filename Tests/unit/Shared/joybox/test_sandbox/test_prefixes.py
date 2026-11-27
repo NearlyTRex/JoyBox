@@ -160,5 +160,10 @@ def test_the_runners_are_the_configured_tools(monkeypatch):
     assert sandbox.get_sandboxie_command() == "/tools/Sandboxie"
 
 
-def test_sandboxie_needs_no_libraries_installed():
-    assert sandbox.install_sandboxie_dlls(SANDBOXIE(), dlls_32 = ["a.dll"]) is None
+def test_sandboxie_needs_no_libraries_installed(monkeypatch):
+    reached = []
+    monkeypatch.setattr(sandbox, "install_wine_dlls", lambda *args, **kwargs: reached.append("wine"))
+
+    sandbox.install_dlls(SANDBOXIE(), dlls_32 = ["a.dll"])
+
+    assert reached == []
