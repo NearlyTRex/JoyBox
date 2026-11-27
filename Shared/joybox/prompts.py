@@ -72,7 +72,7 @@ def prompt_for_confirmation(description, default_yes = False):
 # Rich prompts
 ###########################################################
 
-# Prompt for url
+# Ask until the answer is a URL that responds, then return it
 def prompt_for_url(description, default_value = None):
     while True:
         value = prompt_for_value(description, default_value)

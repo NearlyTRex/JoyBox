@@ -111,6 +111,8 @@ class LocalUbuntu(env.Environment):
         self.installer_wireplumber = self.available_components["wireplumber"]
         self.installer_xorg = self.available_components["xorg"]
 
+    # Refresh apt lists, install the selected desktop components carrying on past
+    # failures unless exit_on_failure is set, then autoremove when asked
     def setup(self):
         self.connect()
 
@@ -130,6 +132,7 @@ class LocalUbuntu(env.Environment):
                 return False
         return success
 
+    # Uninstall the selected components in reverse order, then autoremove when asked
     def teardown(self):
 
         # Process components in reverse order

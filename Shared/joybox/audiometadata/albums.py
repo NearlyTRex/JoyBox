@@ -10,6 +10,7 @@ from joybox import paths
 # the tags its tracks share
 class AlbumTagsMixin:
 
+    # Path, size, bitrate, length, sample rate, channels and tag presence, read as an MP3; None when unreadable
     def get_audio_file_info(self, audio_file, verbose = False, exit_on_failure = False):
 
         # Check file exists
@@ -38,6 +39,7 @@ class AlbumTagsMixin:
         }
         return file_info
 
+    # Album info, per-track tags and shared artwork for every audio file in the folder, sorted by name; None when there are none
     def get_album_tags(
         self,
         album_dir,
@@ -158,6 +160,7 @@ class AlbumTagsMixin:
             result["album_artwork"] = album_artwork
         return result
 
+    # Write each track's tags and its own or the album artwork back to the files; False at the first missing or failed track
     def set_album_tags(
         self,
         album_dir,
@@ -208,6 +211,7 @@ class AlbumTagsMixin:
                 return False
         return True
 
+    # Strip tags from every audio file in the folder, optionally keeping artwork; False at the first failure
     def clear_album_tags(
         self,
         album_dir,

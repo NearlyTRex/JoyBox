@@ -19,18 +19,10 @@ from joybox import emulatorbase
 # RetroArch emulator
 class RetroArch(emulatorbase.EmulatorBase):
 
-    # Get name
-    def get_name(self):
-        return "RetroArch"
+    NAME = "RetroArch"
 
-    # Get platforms
-    def get_platforms(self):
-        return [
-            config.Platform.OTHER_PANASONIC_3DO,
-            config.Platform.OTHER_SEGA_SATURN
-        ]
-
-    # Setup
+    # Download the nightly RetroArch program and cores 7z archives for Windows and Linux
+    # from buildbot.libretro.com
     def setup(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
@@ -94,7 +86,7 @@ class RetroArch(emulatorbase.EmulatorBase):
                 return False
         return True
 
-    # Setup offline
+    # Install the program and cores for Windows and Linux from the archives stored in their backups dirs
     def setup_offline(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
@@ -154,7 +146,7 @@ class RetroArch(emulatorbase.EmulatorBase):
                 return False
         return True
 
-    # Configure
+    # Write its config files, then verify the locker system files and copy them into each platform's setup dir
     def configure(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
@@ -189,7 +181,8 @@ class RetroArch(emulatorbase.EmulatorBase):
                     return False
         return True
 
-    # Launch
+    # Run RetroArch with -L on the core its cores_mapping names for the platform;
+    # quits with an error popup when the platform has no core or the core file is missing
     def launch(
         self,
         game_info,

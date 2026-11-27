@@ -27,7 +27,7 @@ def is_user_root():
     else:
         return os.getuid() == 0
 
-# Run as root
+# Call func elevated: on Windows relaunch through UAC when not admin, otherwise call it directly without elevating
 def run_as_root(func):
     if not callable(func):
         return

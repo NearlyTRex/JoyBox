@@ -44,6 +44,7 @@ class ColoredFormatter(logging.Formatter):
         super().__init__(fmt, datefmt)
         self.use_colors = use_colors and sys.stdout.isatty()
 
+    # The record formatted with its level name wrapped in the level's ANSI color, when colors are on
     def format(self, record):
         if self.use_colors:
             original_levelname = record.levelname
@@ -109,13 +110,16 @@ class Logger:
         if file_output:
             self.add_file_handler()
 
+    # The runtime's log directory, used when none is given
     def get_default_log_dir(self):
         return runtime.get_log_directory()
 
+    # Log file name: the logger name plus a YYYYmmdd_HHMMSS timestamp
     def get_timestamped_filename(self):
         timestamp = datetime.now().strftime("%Y%m%d_%H%M%S")
         return "%s_%s.log" % (self.name, timestamp)
 
+    # Attach a colored stdout handler at the logger's level, switching stdout to backslash-escape unencodable text
     def add_console_handler(self):
         # A replaced stdout, as under a test runner, may not be reconfigurable
         if callable(getattr(sys.stdout, "reconfigure", None)):
@@ -130,6 +134,7 @@ class Logger:
         handler.setFormatter(formatter)
         self._logger.addHandler(handler)
 
+    # Attach a handler writing a fresh timestamped log file in the log directory, and remember its path
     def add_file_handler(self):
         log_file = os.path.join(self.log_dir, self.get_timestamped_filename())
         handler = logging.FileHandler(log_file, mode="w", encoding="utf-8", errors="backslashreplace")
@@ -145,24 +150,31 @@ class Logger:
             return escape_surrogates("%s %s" % (context, message))
         return escape_surrogates(str(message))
 
+    # Log at DEBUG level, prefixed with the bracketed game context when given
     def debug(self, message, game_supercategory = None, game_category = None, game_subcategory = None, game_name = None):
         self._logger.debug(self._format_message(message, game_supercategory, game_category, game_subcategory, game_name))
 
+    # Log at INFO level, prefixed with the bracketed game context when given
     def info(self, message, game_supercategory = None, game_category = None, game_subcategory = None, game_name = None):
         self._logger.info(self._format_message(message, game_supercategory, game_category, game_subcategory, game_name))
 
+    # Log at WARNING level, prefixed with the bracketed game context when given
     def warning(self, message, game_supercategory = None, game_category = None, game_subcategory = None, game_name = None):
         self._logger.warning(self._format_message(message, game_supercategory, game_category, game_subcategory, game_name))
 
+    # Log at ERROR level, prefixed with the bracketed game context when given
     def error(self, message, game_supercategory = None, game_category = None, game_subcategory = None, game_name = None):
         self._logger.error(self._format_message(message, game_supercategory, game_category, game_subcategory, game_name))
 
+    # Log at CRITICAL level, prefixed with the bracketed game context when given
     def critical(self, message, game_supercategory = None, game_category = None, game_subcategory = None, game_name = None):
         self._logger.critical(self._format_message(message, game_supercategory, game_category, game_subcategory, game_name))
 
+    # Log at ERROR level with the current traceback, prefixed with the bracketed game context when given
     def exception(self, message, game_supercategory = None, game_category = None, game_subcategory = None, game_name = None):
         self._logger.exception(self._format_message(message, game_supercategory, game_category, game_subcategory, game_name))
 
+    # Path of the file this logger writes; None without a file handler
     @property
     def log_file(self):
         return self._current_log_file
@@ -179,16 +191,19 @@ def escape_surrogates(text):
 # The process-wide logger, made on first use or replaced by setup_logging
 _state = types.SimpleNamespace(logger = None)
 
+# The process-wide logger, created with console and file output on first use
 def get_logger(name = "output"):
     if _state.logger is None:
         _state.logger = Logger(name)
     return _state.logger
 
+# Base name of the running script without its extension; "output" when there is none
 def get_script_name():
     if sys.argv and sys.argv[0]:
         return os.path.splitext(os.path.basename(sys.argv[0]))[0] or "output"
     return "output"
 
+# Replace the process-wide logger with one named after the script unless a name is given
 def setup_logging(name = None, log_dir = None, level = logging.DEBUG, use_colors = True):
     if name is None:
         name = get_script_name()
@@ -199,34 +214,43 @@ def setup_logging(name = None, log_dir = None, level = logging.DEBUG, use_colors
         use_colors = use_colors)
     return _state.logger
 
+# Info message through the process-wide logger
 def log_info(message, game_supercategory = None, game_category = None, game_subcategory = None, game_name = None):
     get_logger().info(message, game_supercategory, game_category, game_subcategory, game_name)
 
+# Warning message through the process-wide logger
 def log_warning(message, game_supercategory = None, game_category = None, game_subcategory = None, game_name = None):
     get_logger().warning(message, game_supercategory, game_category, game_subcategory, game_name)
 
+# Error message through the process-wide logger, quitting the program when asked
 def log_error(message, game_supercategory = None, game_category = None, game_subcategory = None, game_name = None, quit_program = False):
     get_logger().error(message, game_supercategory, game_category, game_subcategory, game_name)
     if quit_program:
         runtime.quit_program()
 
+# Debug message through the process-wide logger
 def log_debug(message, game_supercategory = None, game_category = None, game_subcategory = None, game_name = None):
     get_logger().debug(message, game_supercategory, game_category, game_subcategory, game_name)
 
+# Error message through the process-wide logger, then quit the program
 def log_error_and_quit(message):
     log_error(message, quit_program = True)
 
+# Info message framed above and below by lines of equals signs
 def log_header(message, width = 60):
     log_info("=" * width)
     log_info(message)
     log_info("=" * width)
 
+# Overwrite the terminal line with a percent-complete readout
 def log_percent_complete(percent_complete):
     terminal.write(">>> Percent complete: %s%% \r" % percent_complete)
 
+# Write a single dot to the terminal, with no newline
 def log_progress_dot():
     terminal.write(".")
 
+# End a run of progress dots or percent readouts with a newline
 def log_progress_newline():
     terminal.write("\n")
 
@@ -238,6 +262,7 @@ def log_progress_newline():
 
 OUTPUT_LOGGER_NAME = "joybox.output"
 
+# Write text straight to stdout and flush, with no level or timestamp
 def log_output(text):
     sys.stdout.write(text)
     sys.stdout.flush()
@@ -256,5 +281,6 @@ def _ensure_output_recorder():
     recorder.addHandler(handler)
     return recorder
 
+# Append a line verbatim to this run's output log file
 def record_output(line):
     _ensure_output_recorder().info(line)

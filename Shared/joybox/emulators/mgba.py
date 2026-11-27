@@ -14,22 +14,9 @@ from joybox import emulatorbase
 # MGBA emulator
 class MGBA(emulatorbase.EmulatorBase):
 
-    # Get name
-    def get_name(self):
-        return "mGBA"
+    NAME = "mGBA"
 
-    # Get platforms
-    def get_platforms(self):
-        return [
-            config.Platform.NINTENDO_GAME_BOY_ADVANCE,
-            config.Platform.NINTENDO_GAME_BOY_ADVANCE_EREADER,
-            config.Platform.NINTENDO_GAME_BOY,
-            config.Platform.NINTENDO_GAME_BOY_COLOR,
-            config.Platform.NINTENDO_SUPER_GAME_BOY,
-            config.Platform.NINTENDO_SUPER_GAME_BOY_COLOR
-        ]
-
-    # Setup
+    # Download the Windows 7z and Linux AppImage from the mgba-emu GitHub release
     def setup(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
@@ -74,7 +61,7 @@ class MGBA(emulatorbase.EmulatorBase):
                 return False
         return True
 
-    # Setup offline
+    # Install the Windows and Linux builds from the releases stored in their backups dirs
     def setup_offline(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
@@ -107,7 +94,7 @@ class MGBA(emulatorbase.EmulatorBase):
                 return False
         return True
 
-    # Configure
+    # Write its config files, then verify the locker system files and copy them into each platform's setup dir
     def configure(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
@@ -142,7 +129,7 @@ class MGBA(emulatorbase.EmulatorBase):
                     return False
         return True
 
-    # Launch
+    # Run mGBA on the game file, with --fullscreen when asked
     def launch(
         self,
         game_info,

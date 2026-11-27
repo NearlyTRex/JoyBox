@@ -55,7 +55,7 @@ def build_parser():
     parser.add_common_arguments()
     return parser
 
-# Main
+# List the remote locker's files, under the subpath if given, that have no entry in its hash sidecar database
 def main():
 
     # Parse arguments

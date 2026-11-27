@@ -109,7 +109,7 @@ def get_remote_locker_types():
         locker_type for locker_type in config.LockerType.members()
         if locker_type not in (config.LockerType.ALL, config.LockerType.LOCAL, config.LockerType.EXTERNAL)]
 
-# Get locker setting
+# The locker_<type>_<field> value from [UserData.Share] in the settings; None when unset
 def get_locker_setting(locker_type, field):
     return settings.get_value("UserData.Share", "locker_%s_%s" % (locker_type.lower(), field), throw_exception = False)
 

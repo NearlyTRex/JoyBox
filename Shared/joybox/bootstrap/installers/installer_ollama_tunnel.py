@@ -25,6 +25,7 @@ class OllamaTunnel(installer.Installer):
         self.unit_name = "ollama-tunnel.service"
         self.unit_path = os.path.join(os.path.expanduser("~"), ".config", "systemd", "user", self.unit_name)
 
+    # The LLM server's ssh host from Tools.Ollama; empty when unset
     def get_ssh_host(self):
         return settings.get_value("Tools.Ollama", "ollama_ssh_host", "", throw_exception = False) or ""
 
@@ -32,14 +33,17 @@ class OllamaTunnel(installer.Installer):
     def get_tunnel_port(self):
         return settings.get_value("Tools.Ollama", "ollama_tunnel_port", "11444", throw_exception = False)
 
+    # Local Ubuntu only
     def get_supported_environments(self):
         return [
             constants.EnvironmentType.LOCAL_UBUNTU,
         ]
 
+    # Whether the user unit file exists
     def is_installed(self):
         return self.connection.does_file_or_directory_exist(self.unit_path)
 
+    # ollama-tunnel as installed or missing, by its unit file
     def get_package_status(self):
         if self.is_installed():
             return {"installed": ["ollama-tunnel"], "missing": []}
@@ -74,6 +78,8 @@ class OllamaTunnel(installer.Installer):
             "[Install]\n"
             "WantedBy=default.target\n" % (ssh_host, " ".join(command)))
 
+    # Write the user unit and enable it now and at login; True without doing
+    # anything when no ssh host is set
     def install(self):
 
         # Nothing to do without a server to reach
@@ -100,6 +106,7 @@ class OllamaTunnel(installer.Installer):
         logger.log_info(f"Tunnel up: point [Tools.Ollama] ollama_api_base at http://localhost:{self.get_tunnel_port()}")
         return True
 
+    # Disable and stop the user unit, then delete it; False when the delete fails
     def uninstall(self):
 
         # Start uninstall

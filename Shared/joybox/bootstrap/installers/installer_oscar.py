@@ -157,7 +157,8 @@ OSCAR_PORT_API={port_api}
 OSCAR_LOG_LEVEL={log_level}
 """
 
-# Oscar
+# Runs the Open OSCAR AIM server in docker, its port published through an nginx
+# stream and its management API behind https
 class Oscar(installer_dockerapp.DockerAppInstaller):
     def __init__(
         self,
@@ -209,6 +210,7 @@ class Oscar(installer_dockerapp.DockerAppInstaller):
         self.backup_label = "Oscar"
         self.backup_volumes = ["oscar_data"]
 
+    # Write the Dockerfile into the app dir, then run the docker app install
     def install(self):
 
         # Write the Dockerfile before the base class runs compose build
@@ -222,6 +224,8 @@ class Oscar(installer_dockerapp.DockerAppInstaller):
         self.connection.move_file_or_directory(dockerfile_tmp_path, f"{app_dir}/Dockerfile")
         return super().install()
 
+    # Create the configured screen name through the management API, resetting
+    # its password when it exists; skipped when none is set
     def post_install(self):
 
         # Screen names are otherwise created through the management API by hand
@@ -247,6 +251,7 @@ class Oscar(installer_dockerapp.DockerAppInstaller):
             return False
         return True
 
+    # Install the stream config for the public OSCAR port, then the API vhost
     def install_nginx_config(self):
 
         # Public OSCAR port, proxied to the loopback-bound container
@@ -264,6 +269,7 @@ class Oscar(installer_dockerapp.DockerAppInstaller):
         logger.log_info("Installing Oscar API entry")
         return super().install_nginx_config()
 
+    # Remove the stream config, then the API vhost
     def uninstall_nginx_config(self):
 
         # Remove the stream entry

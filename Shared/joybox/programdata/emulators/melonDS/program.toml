@@ -1,6 +1,9 @@
 # melonDS: where its programs live and how they run, the files its setup writes
 # and the system files it checks. Read by joybox/programcatalog.py.
 
+# The platforms it plays
+platforms = ["NINTENDO_DS", "NINTENDO_DSI"]
+
 [config.melonDS]
 program = { windows = "melonDS/windows/melonDS.exe", linux = "melonDS/linux/melonDS.AppImage" }
 save_dir = { windows = "<none>", linux = "<none>" }

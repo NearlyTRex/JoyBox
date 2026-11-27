@@ -40,7 +40,7 @@ def build_parser():
     parser.add_common_arguments()
     return parser
 
-# Main
+# Render a reference page from every console script's parser into Docs, reporting commands whose help text is incomplete
 def main():
 
     # Parse arguments

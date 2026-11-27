@@ -1,3 +1,6 @@
+# Imports
+import types
+
 # Local imports
 from joybox import config
 from joybox import settings
@@ -6,6 +9,22 @@ from joybox import paths
 
 # Zoom store
 class Zoom(storebase.StoreBase):
+
+    TYPE = config.StoreType.ZOOM
+    PLATFORM = config.Platform.COMPUTER_ZOOM
+    SUPERCATEGORY = config.Supercategory.ROMS
+    CATEGORY = config.Category.COMPUTER
+    SUBCATEGORY = config.Subcategory.COMPUTER_ZOOM
+    KEY = config.JSON_KEY_ZOOM
+    IDENTIFIER_KEYS = types.MappingProxyType({
+        config.StoreIdentifierType.INFO: config.JSON_KEY_STORE_NAME,
+        config.StoreIdentifierType.INSTALL: config.JSON_KEY_STORE_NAME,
+        config.StoreIdentifierType.LAUNCH: config.JSON_KEY_STORE_NAME,
+        config.StoreIdentifierType.DOWNLOAD: config.JSON_KEY_STORE_NAME,
+        config.StoreIdentifierType.ASSET: config.JSON_KEY_STORE_NAME,
+        config.StoreIdentifierType.METADATA: config.JSON_KEY_STORE_NAME,
+        config.StoreIdentifierType.PAGE: config.JSON_KEY_STORE_NAME,
+    })
 
     # Constructor
     def __init__(self):
@@ -19,49 +38,5 @@ class Zoom(storebase.StoreBase):
     ############################################################
     # Store
     ############################################################
-
-    # Get name
-    def get_name(self):
-        return config.StoreType.ZOOM.val()
-
-    # Get type
-    def get_type(self):
-        return config.StoreType.ZOOM
-
-    # Get platform
-    def get_platform(self):
-        return config.Platform.COMPUTER_ZOOM
-
-    # Get supercategory
-    def get_supercategory(self):
-        return config.Supercategory.ROMS
-
-    # Get category
-    def get_category(self):
-        return config.Category.COMPUTER
-
-    # Get subcategory
-    def get_subcategory(self):
-        return config.Subcategory.COMPUTER_ZOOM
-
-    # Get key
-    def get_key(self):
-        return config.JSON_KEY_ZOOM
-
-    # Get identifier keys
-    def get_identifier_keys(self):
-        return {
-            config.StoreIdentifierType.INFO: config.JSON_KEY_STORE_NAME,
-            config.StoreIdentifierType.INSTALL: config.JSON_KEY_STORE_NAME,
-            config.StoreIdentifierType.LAUNCH: config.JSON_KEY_STORE_NAME,
-            config.StoreIdentifierType.DOWNLOAD: config.JSON_KEY_STORE_NAME,
-            config.StoreIdentifierType.ASSET: config.JSON_KEY_STORE_NAME,
-            config.StoreIdentifierType.METADATA: config.JSON_KEY_STORE_NAME,
-            config.StoreIdentifierType.PAGE: config.JSON_KEY_STORE_NAME
-        }
-
-    # Get install dir
-    def get_install_dir(self):
-        return self.install_dir
 
     ############################################################

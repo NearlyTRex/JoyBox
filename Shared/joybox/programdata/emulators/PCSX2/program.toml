@@ -1,6 +1,9 @@
 # PCSX2: where its programs live and how they run, the files its setup writes
 # and the system files it checks. Read by joybox/programcatalog.py.
 
+# The platforms it plays
+platforms = ["SONY_PLAYSTATION_2"]
+
 [config.PCSX2]
 program = { windows = "PCSX2/windows/pcsx2-qt.exe", linux = "PCSX2/linux/PCSX2.AppImage" }
 setup_dir = { windows = "PCSX2/windows", linux = "PCSX2/linux/PCSX2.AppImage.home/.config/PCSX2" }

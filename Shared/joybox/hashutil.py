@@ -18,36 +18,36 @@ from joybox import serialization
 def _get_xxhash():
     return importlib.import_module("xxhash")
 
-# Calculate string crc32
+# CRC32 of a string (UTF-8) or bytes as 8 lowercase hex digits
 def calculate_string_crc32(string):
     if isinstance(string, str):
         string = string.encode("utf8")
     return "%08x" % zlib.crc32(string)
 
-# Calculate string md5
+# MD5 hex digest of a string (UTF-8) or bytes
 def calculate_string_md5(string):
     if isinstance(string, str):
         string = string.encode("utf8")
     return hashlib.md5(string).hexdigest()
 
-# Calculate string sha1
+# SHA-1 hex digest of a string (UTF-8) or bytes
 def calculate_string_sha1(string):
     if isinstance(string, str):
         string = string.encode("utf8")
     return hashlib.sha1(string).hexdigest()
 
-# Calculate string sha256
+# SHA-256 hex digest of a string (UTF-8) or bytes
 def calculate_string_sha256(string):
     if isinstance(string, str):
         string = string.encode("utf8")
     return hashlib.sha256(string).hexdigest()
 
-# Calculate string XXH3
+# 64-bit XXH3 hex digest of a string or bytes
 def calculate_string_xxh3(string):
     xxhash = _get_xxhash()
     return xxhash.xxh3_64(string).hexdigest()
 
-# Calculate file crc32
+# CRC32 of a file read in chunks, as 8 hex digits; empty string on a pretend run or read error
 def calculate_file_crc32(
     src,
     chunksize = config.HASH_CHUNK_SIZE,
@@ -80,7 +80,7 @@ def calculate_file_crc32(
             logger.log_error(e, quit_program = True)
         return ""
 
-# Calculate file md5
+# MD5 hex digest of a file read in chunks; empty string on a pretend run or read error
 def calculate_file_md5(
     src,
     chunksize = config.HASH_CHUNK_SIZE,
@@ -113,7 +113,7 @@ def calculate_file_md5(
             logger.log_error(e, quit_program = True)
         return ""
 
-# Calculate file sha1
+# SHA-1 hex digest of a file read in chunks; empty string on a pretend run or read error
 def calculate_file_sha1(
     src,
     chunksize = config.HASH_CHUNK_SIZE,
@@ -146,7 +146,7 @@ def calculate_file_sha1(
             logger.log_error(e, quit_program = True)
         return ""
 
-# Calculate file sha256
+# SHA-256 hex digest of a file read in chunks; empty string on a pretend run or read error
 def calculate_file_sha256(
     src,
     chunksize = config.HASH_CHUNK_SIZE,
@@ -179,7 +179,7 @@ def calculate_file_sha256(
             logger.log_error(e, quit_program = True)
         return ""
 
-# Calculate file xxh3
+# 64-bit XXH3 hex digest of a file read in chunks; empty string on a pretend run or read error
 def calculate_file_xxh3(
     src,
     chunksize = config.HASH_CHUNK_SIZE,

@@ -9,11 +9,9 @@ from joybox import toolbase
 # JDupes tool
 class JDupes(toolbase.ToolBase):
 
-    # Get name
-    def get_name(self):
-        return "JDupes"
+    NAME = "JDupes"
 
-    # Setup
+    # Download the Windows zip and Linux package from the NearlyTRex/JDupes GitHub release
     def setup(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
@@ -57,7 +55,7 @@ class JDupes(toolbase.ToolBase):
                 return False
         return True
 
-    # Setup offline
+    # Install the Windows and Linux builds from the releases stored in their backups dirs
     def setup_offline(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()

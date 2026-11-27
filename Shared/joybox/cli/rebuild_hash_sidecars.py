@@ -84,7 +84,7 @@ def build_parser():
     parser.add_common_arguments()
     return parser
 
-# Main
+# After a preview, rebuild the remote locker's hash sidecar database from the local content, clearing the old one first when asked
 def main():
 
     # Parse arguments

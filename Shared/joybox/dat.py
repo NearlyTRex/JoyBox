@@ -26,13 +26,14 @@ class Dat:
     def is_md5_present(self, md5):
         return md5 in self.game_database
 
-    # Get by md5
+    # The game entry whose ROM has this MD5; None when no imported dat lists it
     def get_by_md5(self, md5):
         if md5 not in self.game_database:
             return None
         return self.game_database[md5]
 
-    # Import cache dat file
+    # Load entries from a " || "-separated cache file of game, file, size, crc and md5;
+    # False when the file can't be read
     def import_cache_dat_file(self, dat_file, verbose = False, pretend_run = False, exit_on_failure = False):
         if verbose:
             logger.log_info("Importing cache dat file '%s'" % dat_file)
@@ -52,7 +53,7 @@ class Dat:
                     self.add_game(game_entry)
         return True
 
-    # Export cache dat file
+    # Write every entry as a " || "-separated cache line of game, file, size, crc and md5
     def export_cache_dat_file(self, dat_file, verbose = False, pretend_run = False, exit_on_failure = False):
         if verbose:
             logger.log_info("Exporting cache dat file '%s'" % dat_file)
@@ -63,7 +64,8 @@ class Dat:
             return serialization.write_text_file(dat_file, contents, exit_on_failure = exit_on_failure)
         return True
 
-    # Import clrmamepro dat file
+    # Load each ROM of a clrmamepro XML dat, skipping ROMs missing a name, size, crc or md5;
+    # False when the file can't be parsed
     def import_clrmamepro_dat_file(self, dat_file, verbose = False, pretend_run = False, exit_on_failure = False):
         try:
             if verbose:
@@ -95,12 +97,12 @@ class Dat:
                 logger.log_error(e, quit_program = True)
             return False
 
-    # Import clrmamepro dat files
+    # Load every .dat under the directory as a clrmamepro dat
     def import_clrmamepro_dat_files(self, dat_dir, verbose = False, pretend_run = False, exit_on_failure = False):
         for dat_file in paths.build_file_list_by_extensions(dat_dir, extensions = [".dat"]):
             self.import_clrmamepro_dat_file(dat_file, verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure)
 
-    # Rename files
+    # Rename each file under the directory to the file name its MD5 maps to in the imported dats
     def rename_files(self, input_dir, verbose = False, pretend_run = False, exit_on_failure = False):
         if verbose:
             logger.log_info("Renaming files in '%s' according to imported dats ..." % input_dir)

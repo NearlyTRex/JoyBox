@@ -30,12 +30,12 @@ def is_save_dir_unpackable(input_save_dir, output_save_dir):
             return False
     return True
 
-# Can save be packed
+# Whether the game's save dir holds any files to archive
 def can_save_be_packed(game_info):
     input_save_dir = game_info.get_save_dir()
     return is_save_dir_packable(input_save_dir)
 
-# Can save be unpacked
+# Whether the game has packed save archives and its save dir is missing or empty to receive them
 def can_save_be_unpacked(game_info):
     input_save_dir = game_info.get_local_save_dir()
     output_save_dir = game_info.get_save_dir()
@@ -43,7 +43,7 @@ def can_save_be_unpacked(game_info):
 
 ############################################################
 
-# Pack save
+# Zip the game's save dir, or the given dir, into a timestamped archive backed up to the local locker and the chosen one; False when it holds no saves
 def pack_save(
     game_info,
     save_dir = None,
@@ -196,7 +196,7 @@ def archive_and_backup_save(
     logger.log_info("Save packed successfully")
     return True
 
-# Pack all saves
+# Pack the save of every ROM game that has save files; stops at the first failure
 def pack_all_saves(
     locker_type = None,
     verbose = False,
@@ -217,7 +217,7 @@ def pack_all_saves(
 
 ############################################################
 
-# Unpack save
+# Extract the newest packed save archive into the game's empty save dir; False when there is nothing to unpack
 def unpack_save(
     game_info,
     save_dir = None,
@@ -268,7 +268,7 @@ def extract_save_archive(game_info, archive_file, output_save_dir, verbose = Fal
         return False
     return True
 
-# Unpack all saves
+# Unpack the newest save of every ROM game that can receive one; stops at the first failure
 def unpack_all_saves(
     verbose = False,
     pretend_run = False,
@@ -295,7 +295,7 @@ def translate_store_path(path, relative_path, translation_map):
             entries += [{"full": path.replace(base_key, key_replacement), "relative": relative_path} for key_replacement in key_replacements]
     return entries
 
-# Get store path entries
+# The game's store save paths with tokens expanded, each as a full path and its relative path; [] for non-store games
 def get_store_path_entries(
     game_info):
 
@@ -316,7 +316,7 @@ def get_store_path_entries(
                 translated_paths.append(entry)
     return translated_paths
 
-# Import store game save paths
+# Add the paths inside the game's packed save archives, tokenized, to its store save paths and write its JSON file
 def import_store_game_save_paths(
     game_info,
     verbose = False,
@@ -377,7 +377,7 @@ def copy_store_save_files(store_path_entries, dest_dir, verbose = False, pretend
         copied = True
     return True, copied
 
-# Export store game save
+# Copy the files under the game's store save paths into a temp dir and pack them as a save; True when none hold files
 def export_store_game_save(
     game_info,
     locker_type = None,
@@ -407,7 +407,7 @@ def export_store_game_save(
 
 ############################################################
 
-# Import local game save
+# Unpack the game's newest save when it can be; True when there is nothing to unpack
 def import_local_game_save(
     game_info,
     verbose = False,
@@ -426,7 +426,7 @@ def import_local_game_save(
         exit_on_failure = exit_on_failure)
     return success
 
-# Export local game save
+# Pack the game's save dir when it holds files; True when there is nothing to pack
 def export_local_game_save(
     game_info,
     locker_type = None,
@@ -449,7 +449,7 @@ def export_local_game_save(
 
 ############################################################
 
-# Import game save paths
+# Record save paths from a store game's packed archives; other games pass, as only store games record them
 def import_game_save_paths(
     game_info,
     verbose = False,
@@ -464,7 +464,7 @@ def import_game_save_paths(
     # Only store games record save paths
     return True
 
-# Import all game save paths
+# Record save paths for every ROM game in the collection; stops at the first failure
 def import_all_game_save_paths(
     verbose = False,
     pretend_run = False,
@@ -479,7 +479,7 @@ def import_all_game_save_paths(
             return False
     return True
 
-# Import game save
+# Unpack a local game's newest save; store games pass, as their store restores saves
 def import_game_save(
     game_info,
     verbose = False,
@@ -494,7 +494,7 @@ def import_game_save(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
-# Import all game save
+# Restore the save of every ROM game in the collection; stops at the first failure
 def import_all_game_saves(
     verbose = False,
     pretend_run = False,
@@ -509,7 +509,7 @@ def import_all_game_saves(
             return False
     return True
 
-# Export game save
+# Pack the save from the store save paths for store games, otherwise from the local save dir
 def export_game_save(
     game_info,
     locker_type = None,
@@ -530,7 +530,7 @@ def export_game_save(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
-# Export all game save
+# Pack the save of every ROM game in the collection; stops at the first failure
 def export_all_game_save(
     locker_type = None,
     verbose = False,

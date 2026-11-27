@@ -18,17 +18,9 @@ from joybox import emulatorbase
 # EKA2L1 emulator
 class EKA2L1(emulatorbase.EmulatorBase):
 
-    # Get name
-    def get_name(self):
-        return "EKA2L1"
+    NAME = "EKA2L1"
 
-    # Get platforms
-    def get_platforms(self):
-        return [
-            config.Platform.OTHER_NOKIA_NGAGE
-        ]
-
-    # Setup
+    # Download the Windows zip and Linux AppImage from the EKA2L1 GitHub release
     def setup(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
@@ -73,7 +65,7 @@ class EKA2L1(emulatorbase.EmulatorBase):
                 return False
         return True
 
-    # Setup offline
+    # Install the Windows and Linux builds from the releases stored in their backups dirs
     def setup_offline(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
@@ -106,7 +98,8 @@ class EKA2L1(emulatorbase.EmulatorBase):
                 return False
         return True
 
-    # Configure
+    # Write its config files, verify the locker system files, then unzip the data archive
+    # into each platform's setup dir, keeping files already there
     def configure(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
@@ -143,7 +136,7 @@ class EKA2L1(emulatorbase.EmulatorBase):
                         return False
         return True
 
-    # Launch
+    # Run EKA2L1 with the game dir mounted and the game name as the app to start
     def launch(
         self,
         game_info,

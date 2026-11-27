@@ -114,7 +114,7 @@ def build_parser():
     parser.add_common_arguments()
     return parser
 
-# Main
+# Build a self-installing Ubuntu Server image from the ini's autoinstall profile and command-line overrides, or only show the config it produces
 def main():
 
     # Parse arguments

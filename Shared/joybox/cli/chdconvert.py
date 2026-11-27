@@ -52,7 +52,7 @@ def build_parser():
     parser.add_common_arguments()
     return parser
 
-# Main
+# After a preview, convert each CD image of the chosen types under the input to a CHD beside it, skipping those already converted
 def main():
 
     # Parse arguments

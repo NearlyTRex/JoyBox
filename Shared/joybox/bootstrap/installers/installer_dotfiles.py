@@ -15,7 +15,8 @@ BLOCK_BEGIN = "# >>> JOYBOX MANAGED BLOCK >>>"
 BLOCK_END = "# <<< JOYBOX MANAGED BLOCK <<<"
 BLOCK_NOTE = "# Managed by JoyBox Bootstrap (dotfiles). Edits inside this block are overwritten."
 
-# Dotfiles
+# Installs the JoyBox shell files into ~/.joybox, a managed block in .bashrc and
+# .bash_profile that sources them, and the captured top-level dotfiles
 class Dotfiles(installer.Installer):
     def __init__(
         self,
@@ -54,12 +55,14 @@ class Dotfiles(installer.Installer):
             ".inputrc",
         ]
 
+    # Local and remote Ubuntu
     def get_supported_environments(self):
         return [
             constants.EnvironmentType.LOCAL_UBUNTU,
             constants.EnvironmentType.REMOTE_UBUNTU,
         ]
 
+    # Whether .bashrc holds the JoyBox managed block
     def is_installed(self):
         if not self.connection.does_file_or_directory_exist(self.bashrc_path):
             return False
@@ -68,6 +71,7 @@ class Dotfiles(installer.Installer):
             return False
         return BLOCK_BEGIN in content
 
+    # A file's text from the bootstrap dotfiles data dir; None, logged, when unreadable
     def get_template(self, template_name):
         template_path = os.path.join(self.template_dir, template_name)
         contents = serialization.read_text_file(template_path)
@@ -75,9 +79,12 @@ class Dotfiles(installer.Installer):
             logger.log_error(f"Failed to read template: {template_path}")
         return contents
 
+    # The name a home dotfile is captured under, its leading dot dropped
     def get_repo_name(self, home_name):
         return home_name[1:] if home_name.startswith(".") else home_name
 
+    # Copy each captured dotfile over its home copy, saving the first original
+    # as .joybox.backup; dotfiles with no capture are skipped
     def deploy_managed_dotfiles(self):
         for home_name in self.managed_dotfiles:
             repo_path = os.path.join(self.captured_dir, self.get_repo_name(home_name))
@@ -91,6 +98,8 @@ class Dotfiles(installer.Installer):
             logger.log_info(f"Deploying {home_name} from captured dotfiles")
             self.connection.copy_file_or_directory(repo_path, home_path)
 
+    # The text with the block between the begin and end markers removed; unchanged
+    # when either marker is missing
     def strip_managed_block(self, content, begin, end):
         if begin not in content or end not in content:
             return content
@@ -98,6 +107,8 @@ class Dotfiles(installer.Installer):
         _, _, after = rest.partition(end)
         return (before.rstrip() + "\n" + after.lstrip("\n")).strip() + "\n"
 
+    # Rewrite a file with its marked block replaced by the given body, saving an
+    # unmanaged original as a backup first; False when the write fails
     def inject_managed_block(self, path, body, begin, end, note = None, backup_suffix = ".joybox.backup"):
         existing = ""
         if self.connection.does_file_or_directory_exist(path):
@@ -114,6 +125,8 @@ class Dotfiles(installer.Installer):
         logger.log_info(f"Updating managed block in {path}")
         return self.connection.write_file(path, new_content)
 
+    # Write the shell files to ~/.joybox, seed .bashrc from /etc/skel when absent,
+    # inject the managed blocks, then deploy the captured dotfiles; False when a write fails
     def install(self):
         logger.log_info("Installing JoyBox dotfiles")
 
@@ -168,6 +181,7 @@ class Dotfiles(installer.Installer):
         logger.log_info("Dotfiles installation complete")
         return True
 
+    # Strip the managed blocks, put back the dotfile backups and delete ~/.joybox
     def uninstall(self):
         logger.log_info("Uninstalling JoyBox dotfiles")
 
@@ -200,6 +214,7 @@ class Dotfiles(installer.Installer):
         logger.log_info("Dotfile uninstallation complete")
         return True
 
+    # Copy the home copies of the managed dotfiles into the captured dir in the repo
     def backup(self, tag = ""):
         logger.log_info("Capturing dotfiles into the repo")
 

@@ -66,6 +66,8 @@ OSCAR_CONFIG_HEADER = """\
 #define SIZEOF_TIME_T 8
 """
 
+# Builds Pidgin 2.14.2's AIM and ICQ plugins from source against the installed
+# libpurple and puts them in ~/.purple/plugins
 class Pidgin(installer.Installer):
     def __init__(
         self,
@@ -78,25 +80,31 @@ class Pidgin(installer.Installer):
         self.archive_path = f"/tmp/pidgin-{self.oscar_version}.tar.bz2"
         self.build_dir = "/tmp/pidgin_oscar_build"
 
+    # Local Ubuntu only
     def get_supported_environments(self):
         return [
             constants.EnvironmentType.LOCAL_UBUNTU,
         ]
 
+    # SourceForge URL of the pinned Pidgin source tarball
     def get_source_url(self):
         return (
             f"https://downloads.sourceforge.net/project/pidgin/Pidgin/"
             f"{self.oscar_version}/pidgin-{self.oscar_version}.tar.bz2")
 
+    # The per-user plugin directory, ~/.purple/plugins
     def get_plugin_dir(self):
         return os.path.join(os.path.expanduser("~"), ".purple", "plugins")
 
+    # Where each protocol's lib<protocol>.so goes in the plugin directory
     def get_plugin_paths(self):
         return [os.path.join(self.get_plugin_dir(), f"lib{protocol}.so") for protocol in OSCAR_PROTOCOLS]
 
+    # Whether both the AIM and ICQ plugin files exist
     def is_installed(self):
         return all(self.connection.does_file_or_directory_exist(path) for path in self.get_plugin_paths())
 
+    # pidgin-aim and pidgin-icq as installed or missing, by their plugin files
     def get_package_status(self):
         installed = []
         missing = []
@@ -107,16 +115,20 @@ class Pidgin(installer.Installer):
                 missing.append(f"pidgin-{protocol}")
         return {"installed": installed, "missing": missing}
 
+    # Whether the downloaded tarball matches its pinned sha256; always True in a pretend run
     def is_archive_verified(self):
         if self.flags.pretend_run:
             return True
         output = self.connection.run_output(["sha256sum", self.archive_path])
         return output.split(" ")[0] == self.oscar_sha256
 
+    # Delete the downloaded tarball and the build directory in /tmp
     def clean_build(self):
         self.connection.remove_file_or_directory(self.archive_path)
         self.connection.remove_file_or_directory(self.build_dir)
 
+    # Compile one protocol's shared library with gcc from the OSCAR sources; its
+    # path, or None when gcc fails
     def build_plugin(self, protocol, source_dir, include_dir, cflags, libs):
         output_path = os.path.join(self.build_dir, f"lib{protocol}.so")
         sources = [os.path.join(source_dir, name) for name in OSCAR_SOURCES + [f"lib{protocol}.c"]]
@@ -130,6 +142,8 @@ class Pidgin(installer.Installer):
             return None
         return output_path
 
+    # Download and verify the source, compile both plugins against libpurple's
+    # headers and move them into the plugin dir; False when libpurple-dev is missing or a step fails
     def install(self):
 
         # Start install
@@ -197,6 +211,7 @@ class Pidgin(installer.Installer):
         logger.log_info("Pidgin AIM/ICQ plugins installed successfully")
         return True
 
+    # Delete the AIM and ICQ plugin files
     def uninstall(self):
 
         # Start uninstall

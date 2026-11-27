@@ -61,7 +61,7 @@ def build_parser():
     parser.add_common_arguments()
     return parser
 
-# Main
+# After a preview, download the chosen asset type for each selected game and back it up to the lockers
 def main():
 
     # Parse arguments

@@ -14,17 +14,10 @@ from joybox import emulatorbase
 # Flycast emulator
 class Flycast(emulatorbase.EmulatorBase):
 
-    # Get name
-    def get_name(self):
-        return "Flycast"
+    NAME = "Flycast"
 
-    # Get platforms
-    def get_platforms(self):
-        return [
-            config.Platform.OTHER_SEGA_DREAMCAST
-        ]
-
-    # Setup
+    # Windows build from the flyinghead/flycast GitHub release; Linux AppImage built from the
+    # NearlyTRex/Flycast fork with CMake
     def setup(self, setup_params = None):
 
         # Use default params if not provided
@@ -82,7 +75,7 @@ class Flycast(emulatorbase.EmulatorBase):
                 return False
         return True
 
-    # Setup offline
+    # Install the Windows and Linux builds from the releases stored in their backups dirs
     def setup_offline(self, setup_params = None):
 
         # Use default params if not provided
@@ -117,7 +110,7 @@ class Flycast(emulatorbase.EmulatorBase):
                 return False
         return True
 
-    # Configure
+    # Write its config files under the emulators root
     def configure(self, setup_params = None):
 
         # Use default params if not provided
@@ -137,7 +130,7 @@ class Flycast(emulatorbase.EmulatorBase):
                 return False
         return True
 
-    # Launch
+    # Run Flycast on the game file, setting window:fullscreen when asked
     def launch(
         self,
         game_info,

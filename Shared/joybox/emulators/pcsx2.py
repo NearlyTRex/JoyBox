@@ -14,17 +14,9 @@ from joybox import emulatorbase
 # PCSX2 emulator
 class PCSX2(emulatorbase.EmulatorBase):
 
-    # Get name
-    def get_name(self):
-        return "PCSX2"
+    NAME = "PCSX2"
 
-    # Get platforms
-    def get_platforms(self):
-        return [
-            config.Platform.SONY_PLAYSTATION_2
-        ]
-
-    # Setup
+    # Download the Windows Qt 7z and Linux AppImage from the PCSX2 GitHub release
     def setup(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
@@ -67,7 +59,7 @@ class PCSX2(emulatorbase.EmulatorBase):
                 return False
         return True
 
-    # Setup offline
+    # Install the Windows and Linux builds from the releases stored in their backups dirs
     def setup_offline(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
@@ -100,7 +92,7 @@ class PCSX2(emulatorbase.EmulatorBase):
                 return False
         return True
 
-    # Configure
+    # Write its config files, then verify the locker system files and copy them into each platform's setup dir
     def configure(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
@@ -135,7 +127,7 @@ class PCSX2(emulatorbase.EmulatorBase):
                     return False
         return True
 
-    # Launch
+    # Run PCSX2 on the game file, with -fullscreen when asked
     def launch(
         self,
         game_info,

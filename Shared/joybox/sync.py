@@ -17,23 +17,24 @@ from joybox import paths
 def is_tool_installed():
     return programs.is_tool_installed("RClone")
 
-# Get unencrypted remote name
+# Remote name with a trailing Enc removed, naming the remote an encrypted one wraps
 def get_unencrypted_remote_name(remote_name):
     if remote_name.endswith("Enc"):
         return remote_name[:-len("Enc")]
     return remote_name
 
-# Get remote raw type
+# Remote type as the lowercase name rclone uses
 def get_remote_raw_type(remote_type):
     return config.RemoteType.to_lower_string(remote_type)
 
-# Get remote connection path
+# rclone path for a remote location; B2 paths are prefixed with the bucket named after the unencrypted remote
 def get_remote_connection_path(remote_name, remote_type, remote_path):
     if remote_type == config.RemoteType.B2:
         return "%s:%s%s" % (remote_name, get_unencrypted_remote_name(remote_name), remote_path)
     return "%s:%s" % (remote_name, remote_path)
 
-# Get common remote flags
+# rclone flags every transfer uses: fast list, rate and transfer limits, smallest first
+# plus rename tracking for syncs, empty dirs for changes and Drive quota flags
 def get_common_remote_flags(remote_type, remote_action_type, tps_limit = 10, transfers = 1):
     flags = [
         "--fast-list",
@@ -58,7 +59,7 @@ def get_common_remote_flags(remote_type, remote_action_type, tps_limit = 10, tra
         ]
     return flags
 
-# Get exclude flags
+# --exclude flags for a pattern or list of patterns, skipping empty ones
 def get_exclude_flags(excludes):
     flags = []
     if isinstance(excludes, list):
@@ -193,7 +194,7 @@ def get_hash_entry(file_path, file_hash, size, mtime):
         "mtime": mtime or 0
     }
 
-# Get path MD5
+# MD5 hex digest of a remote file from rclone md5sum; None when the query fails or prints none
 def get_path_md5(
     remote_name,
     remote_type,
@@ -358,7 +359,7 @@ def does_path_contain_files(
         return False
     return len(result[0].strip()) > 0
 
-# Create directory on remote
+# Make a directory on the remote with rclone mkdir; True when it already exists, False without rclone
 def create_remote_directory(
     remote_name,
     remote_type,
@@ -391,7 +392,7 @@ def create_remote_directory(
         return True
     return "already exist" in output.lower()
 
-# Sync files to remote
+# Make the remote path match the local path with rclone sync, deleting remote extras
 def sync_files_to_remote(
     remote_name,
     remote_type,
@@ -410,7 +411,7 @@ def sync_files_to_remote(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
-# Move files on remote
+# Move files between two paths on the same remote, limited to files_from when given
 def move_files_on_remote(
     remote_name,
     remote_type,
@@ -432,7 +433,7 @@ def move_files_on_remote(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
-# Purge path on remote
+# Delete a remote path and everything under it with rclone purge
 def purge_path_on_remote(
     remote_name,
     remote_type,
@@ -517,7 +518,7 @@ def empty_recycle_bin(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
-# Pull files from remote
+# Make the local path match the remote with rclone sync, deleting local extras
 def pull_files_from_remote(
     remote_name,
     remote_type,
@@ -540,7 +541,7 @@ def pull_files_from_remote(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
-# Push files to remote
+# Make the remote match the local path with rclone sync, deleting remote extras
 def push_files_to_remote(
     remote_name,
     remote_type,
@@ -563,7 +564,7 @@ def push_files_to_remote(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
-# Merge files both ways
+# Two-way rclone bisync between local and remote, requiring check-access files; resync rebuilds its state
 def merge_files_both_ways(
     remote_name,
     remote_type,

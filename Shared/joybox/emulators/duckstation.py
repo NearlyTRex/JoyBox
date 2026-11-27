@@ -14,17 +14,9 @@ from joybox import emulatorbase
 # DuckStation emulator
 class DuckStation(emulatorbase.EmulatorBase):
 
-    # Get name
-    def get_name(self):
-        return "DuckStation"
+    NAME = "DuckStation"
 
-    # Get platforms
-    def get_platforms(self):
-        return [
-            config.Platform.SONY_PLAYSTATION
-        ]
-
-    # Setup
+    # Download the Windows zip and Linux AppImage from the stenzek/duckstation GitHub release
     def setup(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
@@ -69,7 +61,7 @@ class DuckStation(emulatorbase.EmulatorBase):
                 return False
         return True
 
-    # Setup offline
+    # Install the Windows and Linux builds from the releases stored in their backups dirs
     def setup_offline(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
@@ -102,7 +94,7 @@ class DuckStation(emulatorbase.EmulatorBase):
                 return False
         return True
 
-    # Configure
+    # Write its config files, then verify the locker system files and copy them into each platform's setup dir
     def configure(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
@@ -137,7 +129,7 @@ class DuckStation(emulatorbase.EmulatorBase):
                     return False
         return True
 
-    # Launch
+    # Run DuckStation on the game file, with -fullscreen when asked
     def launch(
         self,
         game_info,

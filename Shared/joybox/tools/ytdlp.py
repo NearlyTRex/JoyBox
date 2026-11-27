@@ -9,11 +9,10 @@ from joybox import toolbase
 # YtDlp tool
 class YtDlp(toolbase.ToolBase):
 
-    # Get name
-    def get_name(self):
-        return "YtDlp"
+    NAME = "YtDlp"
 
-    # Setup
+    # Download the latest Windows exe and Linux binary from the yt-dlp GitHub release,
+    # marking the Linux one executable
     def setup(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
@@ -68,7 +67,7 @@ class YtDlp(toolbase.ToolBase):
                 return False
         return True
 
-    # Setup offline
+    # Install the Windows and Linux binaries from the releases stored in their backups dirs
     def setup_offline(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()

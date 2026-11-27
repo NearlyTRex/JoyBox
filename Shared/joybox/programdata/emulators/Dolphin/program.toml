@@ -1,6 +1,9 @@
 # Dolphin: where its programs live and how they run, the files its setup writes
 # and the system files it checks. Read by joybox/programcatalog.py.
 
+# The platforms it plays
+platforms = ["NINTENDO_GAMECUBE", "NINTENDO_WII", "NINTENDO_WIIWARE"]
+
 [config.Dolphin]
 program = { windows = "Dolphin/windows/Dolphin.exe", linux = "Dolphin/linux/Dolphin.AppImage" }
 save_dir = { windows = "<none>", linux = "<none>" }

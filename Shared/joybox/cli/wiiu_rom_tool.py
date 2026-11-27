@@ -42,7 +42,7 @@ def build_parser():
     parser.add_common_arguments()
     return parser
 
-# Main
+# After a preview, decrypt or test-decrypt each Wii U NUS package under the input with CDecrypt
 def main():
 
     # Parse arguments

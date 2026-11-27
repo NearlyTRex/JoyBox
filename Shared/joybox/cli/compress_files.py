@@ -50,7 +50,7 @@ def build_parser():
     parser.add_common_arguments()
     return parser
 
-# Main
+# After a preview, compress each matching file directly inside the input dir into its own 7-Zip archive, skipping existing archives
 def main():
 
     # Parse arguments

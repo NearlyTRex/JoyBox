@@ -20,7 +20,7 @@ def get_flatpak_package_info(pkg):
         "category": pkg.get("category", "")
     }
 
-# Flatpak
+# Installs the environment's flatpak list for the user, from flathub unless an entry names a remote
 class Flatpak(installer.Installer):
     def __init__(
         self,
@@ -29,15 +29,18 @@ class Flatpak(installer.Installer):
         options = runoptions.RunOptions()):
         super().__init__(connection, flags, options)
 
+    # Local and remote Ubuntu
     def get_supported_environments(self):
         return [
             constants.EnvironmentType.LOCAL_UBUNTU,
             constants.EnvironmentType.REMOTE_UBUNTU,
         ]
 
+    # The flatpak entries packages lists for this environment type
     def get_packages(self):
         return packages.flatpak.get(self.get_environment_type(), [])
 
+    # Whether flatpak info finds every listed app in the user installation
     def is_installed(self):
         for pkg in self.get_packages():
             pkg_id = get_flatpak_package_id(pkg)
@@ -45,6 +48,7 @@ class Flatpak(installer.Installer):
                 return False
         return True
 
+    # The listed apps split into installed and missing display names
     def get_package_status(self):
         installed = []
         missing = []
@@ -58,6 +62,7 @@ class Flatpak(installer.Installer):
                 missing.append(display_name)
         return {"installed": installed, "missing": missing}
 
+    # Add the flathub remote for the user when it is missing; False on failure
     def ensure_flathub_remote(self):
         logger.log_info("Ensuring flathub remote is configured")
         code = self.connection.run_blocking([
@@ -66,6 +71,7 @@ class Flatpak(installer.Installer):
         ])
         return code == 0
 
+    # Add flathub, then install each listed app for the user; False at the first failure
     def install(self):
         logger.log_info("Installing Flatpak packages")
         if not self.ensure_flathub_remote():
@@ -81,6 +87,7 @@ class Flatpak(installer.Installer):
                 return False
         return True
 
+    # Uninstall each listed app for the user; False at the first failure
     def uninstall(self):
         logger.log_info("Uninstalling Flatpak packages")
         for pkg in self.get_packages():
@@ -92,18 +99,22 @@ class Flatpak(installer.Installer):
                 return False
         return True
 
+    # Whether flatpak info finds the app in the user installation
     def is_package_installed(self, package):
         code = self.connection.run_blocking([self.flatpak_tool, "info", "--user", package])
         return code == 0
 
+    # Update every user-installed flatpak; False on a nonzero exit
     def update_packages(self):
         code = self.connection.run_blocking([self.flatpak_tool, "update", "--user", "-y"])
         return code == 0
 
+    # Install one app for the user from the given remote; False on a nonzero exit
     def install_package(self, repository, package):
         code = self.connection.run_blocking([self.flatpak_tool, "install", "--user", "-y", repository, package])
         return code == 0
 
+    # Uninstall one app from the user installation; False on a nonzero exit
     def uninstall_package(self, package):
         code = self.connection.run_blocking([self.flatpak_tool, "uninstall", "--user", "-y", package])
         return code == 0

@@ -19,7 +19,7 @@ USER_FILES = [
 # The extensions, one id per line, as codium --list-extensions prints them
 EXTENSIONS_FILE = "extensions.txt"
 
-# VSCodium
+# Installs VSCodium from its apt repository, then the repo's captured user files and extensions
 class VSCodium(installer.Installer):
     def __init__(
         self,
@@ -37,32 +37,39 @@ class VSCodium(installer.Installer):
         self.captured_dir = os.path.join(bootstrap.get_data_dir(), "vscodium")
         self.user_dir = os.path.join(os.path.expanduser("~"), ".config", "VSCodium", "User")
 
+    # Local Ubuntu only
     def get_supported_environments(self):
         return [
             constants.EnvironmentType.LOCAL_UBUNTU,
         ]
 
+    # A captured file's text from the bootstrap vscodium data dir; None when absent
     def get_captured_file(self, name):
         return serialization.read_text_file(os.path.join(self.captured_dir, name))
 
+    # The extension ids the captured extensions.txt lists
     def get_wanted_extensions(self):
         text = self.get_captured_file(EXTENSIONS_FILE) or ""
         return [line.strip() for line in text.splitlines() if line.strip() and not line.startswith("#")]
 
+    # Lowercased ids codium --list-extensions prints
     def get_installed_extensions(self):
         output = self.connection.run_output([self.program_path, "--list-extensions"]) or ""
         return {line.strip().lower() for line in output.splitlines() if line.strip()}
 
+    # The listed extensions codium does not have
     def get_missing_extensions(self):
         installed = self.get_installed_extensions()
         return [extension for extension in self.get_wanted_extensions() if extension.lower() not in installed]
 
+    # A file's text from the VSCodium User dir; None when absent
     def get_user_file(self, name):
         path = os.path.join(self.user_dir, name)
         if not self.connection.does_file_or_directory_exist(path):
             return None
         return self.connection.read_file(path)
 
+    # Names of the user files whose captured copy differs from the one in the User dir
     def get_outdated_user_files(self):
         outdated = []
         for name in USER_FILES:
@@ -71,11 +78,13 @@ class VSCodium(installer.Installer):
                 outdated.append(name)
         return outdated
 
+    # Whether codium exists with the captured user files and every listed extension
     def is_installed(self):
         if not self.connection.does_file_or_directory_exist(self.program_path):
             return False
         return not self.get_outdated_user_files() and not self.get_missing_extensions()
 
+    # Add the VSCodium apt keyring and source, then apt-get install codium
     def install_program(self):
         logger.log_info("Installing VSCodium")
         self.connection.download_file(self.gpg_url, "/tmp/vscodium.gpg")
@@ -86,6 +95,8 @@ class VSCodium(installer.Installer):
         self.connection.run_checked([self.aptget_tool, "update"], sudo = True)
         self.connection.run_checked([self.aptget_tool, "install", "-y", "codium"], sudo = True)
 
+    # Write each outdated captured file into the User dir, saving the first
+    # original as .joybox.backup; False when a write fails
     def deploy_user_files(self):
         self.connection.make_directory(self.user_dir)
         for name in self.get_outdated_user_files():
@@ -99,6 +110,7 @@ class VSCodium(installer.Installer):
                 return False
         return True
 
+    # codium --install-extension each missing extension; False at the first failure
     def install_extensions(self):
         for extension in self.get_missing_extensions():
             logger.log_info(f"Installing VSCodium extension {extension}")
@@ -107,6 +119,7 @@ class VSCodium(installer.Installer):
                 return False
         return True
 
+    # Install codium when absent, then deploy the user files and missing extensions
     def install(self):
         if not self.connection.does_file_or_directory_exist(self.program_path):
             self.install_program()
@@ -114,6 +127,7 @@ class VSCodium(installer.Installer):
             return False
         return self.install_extensions()
 
+    # apt-get remove codium and delete its apt source and keyring
     def uninstall(self):
         logger.log_info("Uninstalling VSCodium")
         self.connection.run_checked([self.aptget_tool, "remove", "-y", "codium"], sudo = True)
@@ -121,6 +135,7 @@ class VSCodium(installer.Installer):
         self.connection.remove_file_or_directory(self.archive_key_path, sudo = True)
         return True
 
+    # Capture the User dir files and the installed extension list into the repo's vscodium dir
     def backup(self, tag = ""):
         logger.log_info("Capturing VSCodium settings into the repo")
         self.connection.make_directory(self.captured_dir)

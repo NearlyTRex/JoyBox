@@ -24,6 +24,7 @@ SKIP = "SKIP"
 # Results
 ###########################################################
 
+# Outcome of one check: its section, PASS/FAIL/SKIP, a message and optional detail lines
 class CheckResult:
 
     # Constructor
@@ -71,6 +72,7 @@ def format_results(results):
 # bound to every interface.
 DEFAULT_PUBLIC_PORTS = ["22", "80", "443"]
 
+# Listen addresses from ss -tlnH bound to every interface on a port outside the allowed list
 def parse_wildcard_listeners(output, allowed_ports = None):
     if allowed_ports is None:
         allowed_ports = DEFAULT_PUBLIC_PORTS

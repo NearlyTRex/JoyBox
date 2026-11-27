@@ -50,7 +50,7 @@ def build_parser():
     parser.add_common_arguments()
     return parser
 
-# Main
+# Write one tree playlist of every matching media file under the input, or a local playlist inside each dir holding them
 def main():
 
     # Parse arguments

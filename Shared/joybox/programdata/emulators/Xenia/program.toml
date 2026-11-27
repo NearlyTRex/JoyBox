@@ -1,6 +1,9 @@
 # Xenia: where its programs live and how they run, the files its setup writes
 # and the system files it checks. Read by joybox/programcatalog.py.
 
+# The platforms it plays
+platforms = ["MICROSOFT_XBOX_360", "MICROSOFT_XBOX_360_GOD", "MICROSOFT_XBOX_360_XBLA", "MICROSOFT_XBOX_360_XIG"]
+
 [config.Xenia]
 program = { windows = "Xenia/windows/xenia.exe", linux = "Xenia/windows/xenia.exe" }
 save_dir = { windows = "Xenia/windows/content", linux = "Xenia/windows/content" }

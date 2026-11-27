@@ -1,7 +1,7 @@
 # Local imports
 from . import types
 
-# Supercategory
+# Top-level kinds of collection content (roms, saves, DLC...), the first level of the file layout
 class Supercategory(types.EnumType):
     ASSETS                              = "Assets"
     EMULATORS                           = "Emulators"
@@ -13,7 +13,7 @@ class Supercategory(types.EnumType):
     SETUP                               = "Setup"
     INSTALLS                            = "Installs"
 
-# Category
+# Platform makers and families (Nintendo, Sony, Computer...), the second level of the file layout
 class Category(types.EnumType):
     COMPUTER                            = "Computer"
     MICROSOFT                           = "Microsoft"
@@ -21,7 +21,7 @@ class Category(types.EnumType):
     OTHER                               = "Other"
     SONY                                = "Sony"
 
-# Subcategory
+# Individual systems and stores within each category, the third level of the file layout
 class Subcategory(types.EnumType):
 
     # Computer

@@ -24,7 +24,7 @@ def _get_pil_image():
 def _get_pil_image_tk():
     return importlib.import_module("PIL.ImageTk")
 
-# Get current screen resolution
+# Width and height of the primary monitor in pixels; (0, 0) when none is primary
 def get_current_screen_resolution():
     screeninfo = _get_screeninfo()
     for monitor in screeninfo.get_monitors():
@@ -32,7 +32,7 @@ def get_current_screen_resolution():
             return (monitor.width, monitor.height)
     return (0, 0)
 
-# Display popup
+# Show a PySimpleGUI popup of the given message type and return its answer (button text, entered text or chosen path)
 def display_popup(
     title_text,
     message_text,
@@ -174,7 +174,7 @@ def display_popup(
         image = image_file,
         modal = modal)
 
-# Display info popup
+# Show an OK popup kept on top
 def display_info_popup(title_text, message_text):
     display_popup(
         title_text = title_text,
@@ -182,7 +182,7 @@ def display_info_popup(title_text, message_text):
         message_type = config.MessageType.OK,
         keep_on_top = True)
 
-# Display warning popup
+# Show a yes/no popup kept on top; answering No quits the program
 def display_warning_popup(title_text, message_text):
     response = display_popup(
         title_text = title_text,
@@ -192,7 +192,7 @@ def display_warning_popup(title_text, message_text):
     if response == "No":
         runtime.quit_program()
 
-# Display error popup
+# Show an error popup kept on top, then quit the program
 def display_error_popup(title_text, message_text):
     display_popup(
         title_text = title_text,
@@ -201,28 +201,28 @@ def display_error_popup(title_text, message_text):
         keep_on_top = True)
     runtime.quit_program()
 
-# Display text input popup
+# Prompt for text in a popup; returns the entered text, or None when cancelled
 def display_text_input_popup(title_text, message_text):
     return display_popup(
         title_text = title_text,
         message_text = message_text,
         message_type = config.MessageType.GET_TEXT)
 
-# Display file chooser popup
+# Prompt for a file path in a popup; returns the chosen path, or None when cancelled
 def display_file_chooser_popup(title_text, message_text):
     return display_popup(
         title_text = title_text,
         message_text = message_text,
         message_type = config.MessageType.GET_FILE)
 
-# Display folder chooser popup
+# Prompt for a folder path in a popup; returns the chosen path, or None when cancelled
 def display_folder_chooser_popup(title_text, message_text):
     return display_popup(
         title_text = title_text,
         message_text = message_text,
         message_type = config.MessageType.GET_FOLDER)
 
-# Display loading window
+# Show a window with an indeterminate progress bar while run_func runs in the background, then a completion or failure popup
 def display_loading_window(
     title_text,
     message_text,
@@ -352,7 +352,7 @@ def display_loading_window(
     # Close window
     window.close()
 
-# Display choices window
+# Show a list of choices and pass the one submitted to run_func; nothing runs when the window is closed
 def display_choices_window(
     choice_list,
     title_text,

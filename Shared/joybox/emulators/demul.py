@@ -9,15 +9,9 @@ from joybox import emulatorbase
 # Demul emulator
 class Demul(emulatorbase.EmulatorBase):
 
-    # Get name
-    def get_name(self):
-        return "Demul"
+    NAME = "Demul"
 
-    # Get platforms
-    def get_platforms(self):
-        return []
-
-    # Setup
+    # Download the Windows 7z linked from the demul.emulation64.com downloads page; Windows only
     def setup(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
@@ -42,7 +36,7 @@ class Demul(emulatorbase.EmulatorBase):
                 return False
         return True
 
-    # Setup offline
+    # Install the Windows build from the release stored in its backups dir
     def setup_offline(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()

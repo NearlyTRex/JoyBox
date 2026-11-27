@@ -44,7 +44,7 @@ def build_parser():
     parser.add_common_arguments()
     return parser
 
-# Main
+# After a preview, rename each file under the input to the ROM name its MD5 matches in the DAT files or DAT cache
 def main():
 
     # Parse arguments

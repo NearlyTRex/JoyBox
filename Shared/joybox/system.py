@@ -6,7 +6,7 @@ from joybox import runtime
 # Program control
 ###########################################################
 
-# Run main function
+# Run a script's main, logging success or exiting 1 on a False result and 130 on Ctrl-C
 def run_main(main_func):
     try:
         success = main_func()

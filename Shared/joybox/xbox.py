@@ -10,7 +10,7 @@ from joybox import programs
 from joybox import logger
 from joybox import paths
 
-# Extract Xbox ISO
+# Unpack an Xbox ISO's files into extract_dir with extract-xiso, optionally deleting the ISO
 def extract_xbox_iso(
     iso_file,
     extract_dir,
@@ -55,7 +55,7 @@ def extract_xbox_iso(
     # Check result
     return os.path.exists(extract_dir)
 
-# Rewrite Xbox ISO
+# Rebuild an Xbox ISO in place with extract-xiso -r, trimming unused space; -D deletes the original
 def rewrite_xbox_iso(
     iso_file,
     delete_original = False,

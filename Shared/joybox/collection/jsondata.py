@@ -23,7 +23,7 @@ def are_game_json_file_possible(
 
 ############################################################
 
-# Read game json data
+# Load the game's JSON metadata file as a JsonData for its platform; None when the supercategory has none or the file is missing
 def read_game_json_data(
     game_supercategory,
     game_category,
@@ -58,7 +58,7 @@ def read_game_json_data(
 
 ############################################################
 
-# Create game json file
+# Write the game's JSON file from the initial data; True without writing when it exists or the supercategory takes none
 def create_game_json_file(
     game_supercategory,
     game_category,
@@ -111,7 +111,7 @@ def create_game_json_file(
 
 ############################################################
 
-# Update game json file
+# Refill the game's JSON with its file, DLC, update, extra and launch entries from the game root, merge the store's latest data, and write it sorted
 def update_game_json_file(
     game_supercategory,
     game_category,
@@ -283,7 +283,7 @@ def update_game_json_file(
 
 ############################################################
 
-# Build game json file
+# Create and refresh the game's JSON from its locker folder, first writing a disc playlist when asked; False when the folder is missing
 def build_game_json_file(
     game_supercategory,
     game_category,
@@ -347,7 +347,7 @@ def build_game_json_file(
         exit_on_failure = exit_on_failure)
     return success
 
-# Build all game json files
+# Build the JSON of every locker ROM game in the chosen categories and subcategories; stops at the first failure
 def build_all_game_json_files(
     locker_type = None,
     categories = None,
@@ -388,7 +388,7 @@ def build_all_game_json_files(
 
 ############################################################
 
-# Get game json ignore entries
+# The identifier-to-name map of the category's JSON ignore file, created empty when missing; {} when the supercategory takes none
 def get_game_json_ignore_entries(
     game_supercategory,
     game_category,
@@ -420,7 +420,7 @@ def get_game_json_ignore_entries(
         exit_on_failure = exit_on_failure)
     return json_file_data
 
-# Add game json ignore entry
+# Record an identifier and game name in the category's JSON ignore file, creating it when missing
 def add_game_json_ignore_entry(
     game_supercategory,
     game_category,

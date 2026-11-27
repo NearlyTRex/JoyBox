@@ -34,7 +34,7 @@ def build_parser():
     parser.add_common_arguments()
     return parser
 
-# Main
+# After a preview, rewrite every game JSON file with sorted keys and empty top-level values dropped
 def main():
 
     # Parse arguments

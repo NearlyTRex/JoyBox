@@ -41,6 +41,7 @@ server {{
 }}
 """
 
+# Installs the Cockpit web console through its manager script, served behind nginx on its subdomain
 class Cockpit(installer.Installer):
     def __init__(
         self,
@@ -55,17 +56,20 @@ class Cockpit(installer.Installer):
             "port_http": settings.get_value("UserData.Cockpit", "cockpit_port_http")
         }
 
+    # Remote Ubuntu only
     def get_supported_environments(self):
         return [
             constants.EnvironmentType.REMOTE_UBUNTU,
         ]
 
+    # Whether cockpit.socket is enabled with the JoyBox listen drop-in and its nginx site is enabled
     def is_installed(self):
         output = self.connection.run_output("systemctl is-enabled cockpit.socket")
         return ("enabled" in output
             and self.connection.does_file_or_directory_exist("/etc/systemd/system/cockpit.socket.d/joybox-listen.conf")
             and self.connection.does_file_or_directory_exist(f"/etc/nginx/sites-enabled/{self.app_name}.conf"))
 
+    # Install Cockpit with the cockpit manager, then add and enable its nginx site and restart nginx
     def install(self):
 
         # Install Cockpit
@@ -84,6 +88,7 @@ class Cockpit(installer.Installer):
         self.connection.run_checked([self.nginx_manager_tool, "systemctl", "restart"], sudo = True)
         return True
 
+    # Remove the nginx site, restart nginx, then uninstall Cockpit with the cockpit manager
     def uninstall(self):
 
         # Remove Nginx config

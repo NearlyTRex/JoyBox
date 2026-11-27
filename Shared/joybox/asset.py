@@ -17,7 +17,7 @@ def is_youtube_url(url):
     parsed = urllib.parse.urlparse(url)
     return parsed.scheme == "https" and parsed.hostname == "www.youtube.com"
 
-# Clean exif data
+# Strip all metadata tags from a file or folder in place with ExifTool; False when ExifTool is missing or fails
 def clean_exif_data(
     asset_file,
     verbose = False,
@@ -48,7 +48,7 @@ def clean_exif_data(
         exit_on_failure = exit_on_failure)
     return code == 0
 
-# Download asset
+# Fetch an asset to a file, through the YouTube video downloader for YouTube videos and a plain download otherwise
 def download_asset(
     asset_url,
     asset_file,
@@ -79,7 +79,7 @@ def download_asset(
         exit_on_failure = exit_on_failure)
     return success
 
-# Clean asset
+# Strip the downloaded asset's EXIF metadata; False when that fails
 def clean_asset(
     asset_file,
     verbose = False,
@@ -98,7 +98,7 @@ def clean_asset(
     # Should be successful
     return True
 
-# Convert asset
+# Turn an image asset into a JPEG at the destination, then move the source there unless it already exists
 def convert_asset(
     asset_src,
     asset_dest,

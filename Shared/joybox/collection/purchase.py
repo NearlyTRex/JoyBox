@@ -21,7 +21,7 @@ from .jsondata import update_game_json_file
 
 ############################################################
 
-# Login game store
+# Sign in to the store for these categories; True when there is no store or it has no login of its own
 def login_game_store(
     game_supercategory,
     game_category,
@@ -44,7 +44,7 @@ def login_game_store(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
-# Login all game stores
+# Sign in to the store of every ROM category; stops at the first failure
 def login_all_game_stores(
     verbose = False,
     pretend_run = False,
@@ -63,7 +63,7 @@ def login_all_game_stores(
 
 ############################################################
 
-# Import game store purchases
+# Prompt for each store purchase with no JSON file or ignore entry: import it as a JSON file and metadata entry, skip it, or ignore it
 def import_game_store_purchases(
     game_supercategory,
     game_category,
@@ -216,7 +216,7 @@ def import_game_store_purchases(
 
 ############################################################
 
-# Update game store purchases
+# Refresh the JSON file and metadata entry of each store purchase that already has a JSON file
 def update_game_store_purchases(
     game_supercategory,
     game_category,
@@ -354,7 +354,7 @@ def get_game_store_purchases(
         skipped_stores.append(store_obj.get_type())
     return purchases
 
-# Build game store purchase
+# Fetch the store's purchases once, import the new ones and update the known ones; True when the store is skipped for no sign-in
 def build_game_store_purchases(
     game_supercategory,
     game_category,
@@ -396,7 +396,7 @@ def build_game_store_purchases(
         return False
     return update_game_store_purchases(keys = keys, force = force, **selection)
 
-# Build all game store purchases
+# Build store purchases for the chosen ROM categories, then warn which stores were skipped
 def build_all_game_store_purchases(
     keys = None,
     categories = None,
@@ -434,7 +434,7 @@ def build_all_game_store_purchases(
 
 ############################################################
 
-# Download game store purchase
+# Download the store's latest build into the locker folder or under the output dir; True when the store has no downloads
 def download_game_store_purchase(
     game_info,
     output_dir = None,
@@ -494,7 +494,7 @@ def download_game_store_purchase(
         exit_on_failure = exit_on_failure)
     return success
 
-# Download all game store purchases
+# Download the store build of every ROM game in the collection; stops at the first failure
 def download_all_game_store_purchases(
     verbose = False,
     pretend_run = False,

@@ -1,4 +1,5 @@
 # Imports
+import types
 
 # Local imports
 from joybox import config
@@ -16,6 +17,22 @@ from joybox import settings
 
 # HumbleBundle store
 class HumbleBundle(storebase.StoreBase):
+
+    TYPE = config.StoreType.HUMBLE_BUNDLE
+    PLATFORM = config.Platform.COMPUTER_HUMBLE_BUNDLE
+    SUPERCATEGORY = config.Supercategory.ROMS
+    CATEGORY = config.Category.COMPUTER
+    SUBCATEGORY = config.Subcategory.COMPUTER_HUMBLE_BUNDLE
+    KEY = config.JSON_KEY_HUMBLE
+    IDENTIFIER_KEYS = types.MappingProxyType({
+        config.StoreIdentifierType.INFO: config.JSON_KEY_STORE_APPNAME,
+        config.StoreIdentifierType.INSTALL: config.JSON_KEY_STORE_APPNAME,
+        config.StoreIdentifierType.LAUNCH: config.JSON_KEY_STORE_APPNAME,
+        config.StoreIdentifierType.DOWNLOAD: config.JSON_KEY_STORE_APPNAME,
+        config.StoreIdentifierType.ASSET: config.JSON_KEY_STORE_NAME,
+        config.StoreIdentifierType.METADATA: config.JSON_KEY_STORE_NAME,
+        config.StoreIdentifierType.PAGE: config.JSON_KEY_STORE_APPNAME,
+    })
 
     # Constructor
     def __init__(self):
@@ -50,65 +67,21 @@ class HumbleBundle(storebase.StoreBase):
     # Store
     ############################################################
 
-    # Get name
-    def get_name(self):
-        return config.StoreType.HUMBLE_BUNDLE.val()
-
-    # Get type
-    def get_type(self):
-        return config.StoreType.HUMBLE_BUNDLE
-
-    # Get platform
-    def get_platform(self):
-        return config.Platform.COMPUTER_HUMBLE_BUNDLE
-
-    # Get supercategory
-    def get_supercategory(self):
-        return config.Supercategory.ROMS
-
-    # Get category
-    def get_category(self):
-        return config.Category.COMPUTER
-
-    # Get subcategory
-    def get_subcategory(self):
-        return config.Subcategory.COMPUTER_HUMBLE_BUNDLE
-
-    # Get key
-    def get_key(self):
-        return config.JSON_KEY_HUMBLE
-
-    # Get identifier keys
-    def get_identifier_keys(self):
-        return {
-            config.StoreIdentifierType.INFO: config.JSON_KEY_STORE_APPNAME,
-            config.StoreIdentifierType.INSTALL: config.JSON_KEY_STORE_APPNAME,
-            config.StoreIdentifierType.LAUNCH: config.JSON_KEY_STORE_APPNAME,
-            config.StoreIdentifierType.DOWNLOAD: config.JSON_KEY_STORE_APPNAME,
-            config.StoreIdentifierType.ASSET: config.JSON_KEY_STORE_NAME,
-            config.StoreIdentifierType.METADATA: config.JSON_KEY_STORE_NAME,
-            config.StoreIdentifierType.PAGE: config.JSON_KEY_STORE_APPNAME
-        }
-
-    # Get preferred platform
+    # The download platform (windows, linux, mac...) from the settings, used to filter listings and builds
     def get_preferred_platform(self):
         return self.platform
 
-    # Get user name
+    # The Humble Bundle username from the settings; the constructor refuses to build without one
     def get_user_name(self):
         return self.username
 
-    # Get email
+    # The Humble Bundle account email from the settings; the constructor refuses to build without one
     def get_email(self):
         return self.email
 
-    # Get auth token
+    # The _simpleauth_sess session cookie from the settings, which HumbleBundleManager signs in with
     def get_auth_token(self):
         return self.auth_token
-
-    # Get install dir
-    def get_install_dir(self):
-        return self.install_dir
 
     # Check if purchases can be imported
     def can_import_purchases(self):
@@ -139,7 +112,7 @@ class HumbleBundle(storebase.StoreBase):
             return None
         return script_cmd + ["--auth", self.get_auth_token()]
 
-    # Get purchase details
+    # HumbleBundleManager's JSON description of one purchase as a dict; None when it gives nothing parsable
     def get_purchase_details(
         self,
         manager_cmd,
@@ -171,14 +144,14 @@ class HumbleBundle(storebase.StoreBase):
             return None
         return humble_json
 
-    # Get purchase name
+    # The purchase's display name from its details, stripped; empty when missing
     def get_purchase_name(self, humble_json):
         name = humble_json.get("human_name")
         if not isinstance(name, str):
             return ""
         return name.strip()
 
-    # Get purchase buildid
+    # The last download timestamp for the preferred platform in the purchase details; the default build id when none
     def get_purchase_buildid(self, humble_json):
         buildid = config.DEFAULT_BUILDID
         downloads = humble_json.get("downloads")
@@ -203,7 +176,7 @@ class HumbleBundle(storebase.StoreBase):
     # Purchases
     ############################################################
 
-    # Get purchases
+    # Owned games for the preferred platform with a generated id, appname and name, from a cache under a day old or else HumbleBundleManager
     def get_latest_purchases(
         self,
         verbose = False,
@@ -326,7 +299,7 @@ class HumbleBundle(storebase.StoreBase):
     # Json
     ############################################################
 
-    # Get latest jsondata
+    # Appname, name and build from HumbleBundleManager's details, with a fresh random appid each call; None when unknown
     def get_latest_jsondata(
         self,
         identifier,
@@ -372,7 +345,7 @@ class HumbleBundle(storebase.StoreBase):
     # Download
     ############################################################
 
-    # Download
+    # Fetch the game for the preferred platform with HumbleBundleManager into a temp dir and archive it into output_dir
     def download(
         self,
         identifier,

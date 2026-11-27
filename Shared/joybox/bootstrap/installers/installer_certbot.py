@@ -46,7 +46,8 @@ server {{
 }}
 """
 
-# Certbot
+# Installs certbot and the TLS certificate for the domain and its app subdomains,
+# from Let's Encrypt, mkcert or a self-signed cert as tls_mode says
 class Certbot(installer.Installer):
     def __init__(
         self,
@@ -73,20 +74,25 @@ class Certbot(installer.Installer):
             "domain": self.domain_name
         }
 
+    # Remote Ubuntu only
     def get_supported_environments(self):
         return [
             constants.EnvironmentType.REMOTE_UBUNTU,
         ]
 
+    # Whether /usr/bin/certbot exists and the certbot manager finds a cert for the domain
     def is_installed(self):
         if not self.connection.does_file_or_directory_exist("/usr/bin/certbot"):
             return False
         return self.connection.run_return_code(
             [self.cert_manager_tool, "check", self.domain_name], sudo = True) == 0
 
+    # The letsencrypt live directory the domain's certificate goes in
     def get_cert_dir(self):
         return f"/etc/letsencrypt/live/{self.domain_name}"
 
+    # Issue a cert for every domain with mkcert on the workstation and copy it to
+    # the target; False when mkcert fails or produces nothing
     def install_mkcert_cert(self):
 
         # mkcert has to run on the workstation, not the target: it signs with the
@@ -118,6 +124,7 @@ class Certbot(installer.Installer):
             return False
         return self.write_cert_pair(cert_contents, key_contents)
 
+    # Have the certbot manager self-sign a cert for every domain on the target
     def install_selfsigned_cert(self):
 
         # No local dependency, but nothing trusts the result - browsers warn once.
@@ -127,6 +134,8 @@ class Certbot(installer.Installer):
             [self.cert_manager_tool, "selfsign"] + self.fully_qualified_domains, sudo = True)
         return True
 
+    # Stage a cert and key in a private /tmp dir on the target and have the certbot
+    # manager install them; False when staging fails
     def write_cert_pair(self, cert_contents, key_contents):
 
         # Staged in a directory only the account can enter, then installed by the
@@ -151,6 +160,8 @@ class Certbot(installer.Installer):
         logger.log_info(f"Installed certificate to {self.get_cert_dir()}")
         return True
 
+    # apt-get install certbot and its nginx plugin, issue the cert per tls_mode
+    # (adding a renew cron for Let's Encrypt), write the default nginx entry, restart nginx
     def install(self):
 
         # Install certbot
@@ -194,6 +205,7 @@ class Certbot(installer.Installer):
         self.connection.run_checked([self.nginx_manager_tool, "systemctl", "restart"], sudo = True)
         return True
 
+    # Drop the renew cron in letsencrypt mode, then apt-get remove certbot and its nginx plugin
     def uninstall(self):
 
         # Remove cert renewal (only the letsencrypt mode ever adds one)

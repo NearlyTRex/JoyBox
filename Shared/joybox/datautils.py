@@ -15,7 +15,8 @@ def _get_mergedeep():
 # Data structure utilities
 ###########################################################
 
-# Merge dictionaries
+# Deep-merge dict2 into dict1 with the mergedeep strategy the merge type picks; whichever
+# side is a dict when only one is, dict1 unchanged on a type clash, None when neither is
 def merge_dictionaries(dict1, dict2, merge_type = None):
     if isinstance(dict1, dict) and isinstance(dict2, dict):
         mergedeep = _get_mergedeep()
@@ -38,7 +39,7 @@ def merge_dictionaries(dict1, dict2, merge_type = None):
     else:
         return None
 
-# Merge lists
+# The sorted union of both lists without duplicates; whichever is a list when only one is
 def merge_lists(list1, list2):
     if isinstance(list1, list) and isinstance(list2, list):
         return sorted(set(list1 + list2))
@@ -48,7 +49,8 @@ def merge_lists(list1, list2):
         return list2
     return None
 
-# Merge data
+# Merge two values by kind: dicts deep-merge, lists union, two scalars pair into a list,
+# and a lone non-empty value comes back as is; None when both are empty
 def merge_data(data1, data2, merge_type = None):
     if isinstance(data1, dict) or isinstance(data2, dict):
         return merge_dictionaries(
@@ -67,7 +69,7 @@ def merge_data(data1, data2, merge_type = None):
         return data2
     return None
 
-# Deduplicate adjacent lines
+# Drop lines that repeat the line before them, keeping the first of each run
 def deduplicate_adjacent_lines(lines):
     new_lines = []
     for line in lines:
@@ -85,7 +87,8 @@ def is_iterable_non_string(obj):
         return False
     return is_iterable_container(obj)
 
-# Search dictionary
+# The first (key, value) whose string value contains the search text, recursing into
+# nested dicts and limited to the given keys when any; empty list when none match
 def search_dictionary(data, search_value, search_keys = None):
     search_keys = [] if search_keys is None else search_keys
     if not isinstance(data, dict):

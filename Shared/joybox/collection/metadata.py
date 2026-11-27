@@ -22,7 +22,7 @@ def are_game_metadata_file_possible(
 
 ############################################################
 
-# Create game metadata entry
+# Add the game to its category's metadata file with default players, coop and playable values; True without writing when it is already listed
 def create_game_metadata_entry(
     game_supercategory,
     game_category,
@@ -92,7 +92,7 @@ def create_game_metadata_entry(
         exit_on_failure = exit_on_failure)
     return True
 
-# Update game metadata entry
+# Fill the listed game's missing keys, or all keys when forced, from its store or the metadata collectors and rewrite the metadata file
 def update_game_metadata_entry(
     game_supercategory,
     game_category,
@@ -193,7 +193,7 @@ def update_game_metadata_entry(
 
 ############################################################
 
-# Build game metadata entry
+# Ensure the game has a metadata entry, then fill its missing keys from the store or the collectors
 def build_game_metadata_entry(
     game_supercategory,
     game_category,
@@ -235,7 +235,7 @@ def build_game_metadata_entry(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
-# Build all game metadata entries
+# Build the metadata entry of every JSON ROM game in the chosen categories, logging collector stats; stops at the first failure
 def build_all_game_metadata_entries(
     keys = None,
     categories = None,
@@ -280,7 +280,7 @@ def iterate_selected_json_games(categories, subcategories, locker_type):
 
 ############################################################
 
-# Publish game metadata entries
+# Render the category's metadata entries as an HTML table into the published metadata dir, one row per game
 def publish_game_metadata_entries(
     game_supercategory,
     game_category,
@@ -352,7 +352,7 @@ def publish_game_metadata_entries(
         exit_on_failure = exit_on_failure)
     return success
 
-# Publish all game metadata entries
+# Write the HTML page of each chosen ROM category, skipping categories holding none of the chosen subcategories
 def publish_all_game_metadata_entries(
     categories = None,
     subcategories = None,

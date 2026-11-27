@@ -7,7 +7,7 @@ from joybox import programs
 from joybox import toolbase
 
 
-# Get libs
+# Files under the DXVK lib dir whose names end with an entry of the given tool config list
 def get_libs(key):
     lib_files = []
     lib_root = programs.get_library_install_dir("DXVK", "lib")
@@ -28,11 +28,9 @@ def get_libs64():
 # DXVK tool
 class DXVK(toolbase.ToolBase):
 
-    # Get name
-    def get_name(self):
-        return "DXVK"
+    NAME = "DXVK"
 
-    # Setup
+    # Download the 2.2 release tarball from the doitsujin/dxvk GitHub releases into its lib dir
     def setup(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
@@ -56,7 +54,7 @@ class DXVK(toolbase.ToolBase):
                 return False
         return True
 
-    # Setup offline
+    # Install the library from the release stored in its backups dir
     def setup_offline(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()

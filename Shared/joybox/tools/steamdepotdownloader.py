@@ -9,11 +9,10 @@ from joybox import toolbase
 # SteamDepotDownloader tool
 class SteamDepotDownloader(toolbase.ToolBase):
 
-    # Get name
-    def get_name(self):
-        return "SteamDepotDownloader"
+    NAME = "SteamDepotDownloader"
 
-    # Setup
+    # Download the Windows and Linux binaries from the SteamRE/DepotDownloader GitHub release,
+    # marking the Linux one executable
     def setup(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
@@ -66,7 +65,7 @@ class SteamDepotDownloader(toolbase.ToolBase):
                 return False
         return True
 
-    # Setup offline
+    # Install the Windows and Linux binaries from the releases stored in their backups dirs
     def setup_offline(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()

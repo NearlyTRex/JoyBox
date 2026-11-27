@@ -40,7 +40,7 @@ def get_editor():
 # Tools
 ###########################################################
 
-# Get tools root dir
+# Where tool programs install, from the UserData.Dirs tools_dir setting
 def get_tools_root_dir():
     return settings.get_path_value("UserData.Dirs", "tools_dir")
 
@@ -48,7 +48,7 @@ def get_tools_root_dir():
 # Emulators
 ###########################################################
 
-# Get emulators root dir
+# Where emulators install, from the UserData.Dirs emulators_dir setting
 def get_emulators_root_dir():
     return settings.get_path_value("UserData.Dirs", "emulators_dir")
 
@@ -56,7 +56,7 @@ def get_emulators_root_dir():
 # Locker
 ###########################################################
 
-# Get locker root dir
+# Mount path of the given locker, the local one by default
 def get_locker_root_dir(locker_type = None):
     if locker_type is None:
         locker_type = config.LockerType.LOCAL
@@ -67,13 +67,13 @@ def get_locker_root_dir(locker_type = None):
 # Locker - Development
 ###########################################################
 
-# Get locker development root dir
+# The locker's Development folder
 def get_locker_development_root_dir(locker_type = None):
     return paths.join_paths(
         get_locker_root_dir(locker_type),
         config.LockerFolderType.DEVELOPMENT)
 
-# Get locker development archives root dir
+# The Archive folder under the locker's Development folder
 def get_locker_development_archives_root_dir(locker_type = None):
     return paths.join_paths(
         get_locker_development_root_dir(locker_type),
@@ -83,31 +83,31 @@ def get_locker_development_archives_root_dir(locker_type = None):
 # Locker - Gaming
 ###########################################################
 
-# Get locker gaming root dir
+# The locker's Gaming folder, parent of the ROM, DLC, save and asset trees
 def get_locker_gaming_root_dir(locker_type = None):
     return paths.join_paths(
         get_locker_root_dir(locker_type),
         config.LockerFolderType.GAMING)
 
-# Get locker gaming roms root dir
+# The ROMs supercategory folder under the locker's Gaming folder
 def get_locker_gaming_roms_root_dir(locker_type = None):
     return paths.join_paths(
         get_locker_gaming_root_dir(locker_type),
         config.Supercategory.ROMS)
 
-# Get locker gaming dlc root dir
+# The DLC supercategory folder under the locker's Gaming folder
 def get_locker_gaming_dlc_root_dir(locker_type = None):
     return paths.join_paths(
         get_locker_gaming_root_dir(locker_type),
         config.Supercategory.DLC)
 
-# Get locker gaming update root dir
+# The Updates supercategory folder under the locker's Gaming folder
 def get_locker_gaming_update_root_dir(locker_type = None):
     return paths.join_paths(
         get_locker_gaming_root_dir(locker_type),
         config.Supercategory.UPDATES)
 
-# Get locker gaming tags root dir
+# The Tags supercategory folder under the locker's Gaming folder
 def get_locker_gaming_tags_root_dir(locker_type = None):
     return paths.join_paths(
         get_locker_gaming_root_dir(locker_type),
@@ -117,7 +117,8 @@ def get_locker_gaming_tags_root_dir(locker_type = None):
 # Locker - Gaming - Files
 ###########################################################
 
-# Get locker gaming files offset
+# Relative path supercategory/category/subcategory/name of a game's files, with a
+# first-letter folder before the name on letter platforms
 def get_locker_gaming_files_offset(game_supercategory, game_category, game_subcategory, game_name):
     game_platform = gamenaming.derive_game_platform_from_categories(game_subcategory)
     game_name_path = gamenaming.derive_game_name_path_from_name(game_name, game_platform)
@@ -127,7 +128,7 @@ def get_locker_gaming_files_offset(game_supercategory, game_category, game_subca
         game_subcategory,
         game_name_path)
 
-# Get locker gaming files dir
+# Absolute folder of a game's files: its relative offset under the locker's Gaming folder
 def get_locker_gaming_files_dir(game_supercategory, game_category, game_subcategory, game_name, locker_type = None):
     return paths.join_paths(
         get_locker_gaming_root_dir(locker_type),
@@ -137,13 +138,13 @@ def get_locker_gaming_files_dir(game_supercategory, game_category, game_subcateg
 # Locker - Gaming - Saves
 ###########################################################
 
-# Get locker gaming saves root dir
+# The Saves supercategory folder under the locker's Gaming folder
 def get_locker_gaming_saves_root_dir(locker_type = None):
     return paths.join_paths(
         get_locker_gaming_root_dir(locker_type),
         config.Supercategory.SAVES)
 
-# Get locker gaming save dir
+# Locker folder for one game's saves, by category, subcategory and name path
 def get_locker_gaming_save_dir(game_category, game_subcategory, game_name, locker_type = None):
     game_platform = gamenaming.derive_game_platform_from_categories(game_subcategory)
     game_name_path = gamenaming.derive_game_name_path_from_name(game_name, game_platform)
@@ -157,13 +158,13 @@ def get_locker_gaming_save_dir(game_category, game_subcategory, game_name, locke
 # Locker - Gaming - Assets
 ###########################################################
 
-# Get locker gaming assets root dir
+# The Assets supercategory folder under the locker's Gaming folder
 def get_locker_gaming_assets_root_dir(locker_type = None):
     return paths.join_paths(
         get_locker_gaming_root_dir(locker_type),
         config.Supercategory.ASSETS)
 
-# Get locker gaming asset dir
+# Locker folder holding one asset type for a category and subcategory
 def get_locker_gaming_asset_dir(game_category, game_subcategory, asset_type, locker_type = None):
     return paths.join_paths(
         get_locker_gaming_assets_root_dir(locker_type),
@@ -171,7 +172,7 @@ def get_locker_gaming_asset_dir(game_category, game_subcategory, asset_type, loc
         game_subcategory,
         asset_type)
 
-# Get locker gaming asset file
+# Locker path of a game's asset: the game name plus the asset type's extension, in its asset folder
 def get_locker_gaming_asset_file(game_category, game_subcategory, game_name, asset_type, locker_type = None):
     asset_file = "%s%s" % (game_name, asset_type.cval())
     return paths.join_paths(
@@ -185,13 +186,13 @@ def get_locker_gaming_asset_file(game_category, game_subcategory, game_name, ass
 # Locker - Gaming - Emulators
 ###########################################################
 
-# Get locker gaming emulators root dir
+# The Emulators supercategory folder under the locker's Gaming folder
 def get_locker_gaming_emulators_root_dir(locker_type = None):
     return paths.join_paths(
         get_locker_gaming_root_dir(locker_type),
         config.Supercategory.EMULATORS)
 
-# Get locker gaming emulator binaries dir
+# Locker folder of an emulator's stored release for one platform, under its Binaries folder
 def get_locker_gaming_emulator_binaries_dir(emu_name, emu_platform, locker_type = None):
     return paths.join_paths(
         get_locker_gaming_emulators_root_dir(locker_type),
@@ -199,7 +200,7 @@ def get_locker_gaming_emulator_binaries_dir(emu_name, emu_platform, locker_type 
         "Binaries",
         emu_platform)
 
-# Get locker gaming emulator setup dir
+# Locker folder of an emulator's Setup files, such as BIOS images
 def get_locker_gaming_emulator_setup_dir(emu_name, locker_type = None):
     return paths.join_paths(
         get_locker_gaming_emulators_root_dir(locker_type),
@@ -210,7 +211,7 @@ def get_locker_gaming_emulator_setup_dir(emu_name, locker_type = None):
 # Locker - Music
 ###########################################################
 
-# Get locker music root dir
+# The locker's Music folder, or the genre's folder inside it when given one
 def get_locker_music_root_dir(locker_type = None, genre_type = None):
     if genre_type:
         return paths.join_paths(get_locker_root_dir(locker_type), config.LockerFolderType.MUSIC, genre_type)
@@ -222,7 +223,7 @@ def get_locker_music_dir(genre_type = None):
         return get_locker_music_root_dir(genre_type = genre_type)
     return get_locker_music_root_dir()
 
-# Get locker music album dir
+# Locker folder of an album, under its artist folder when given one
 def get_locker_music_album_dir(album_name, artist_name = None, locker_type = None, genre_type = None):
     if artist_name:
         return paths.join_paths(get_locker_music_root_dir(locker_type, genre_type), artist_name, album_name)
@@ -232,7 +233,7 @@ def get_locker_music_album_dir(album_name, artist_name = None, locker_type = Non
 # Locker - Photos
 ###########################################################
 
-# Get locker photos root dir
+# The locker's Photos folder
 def get_locker_photos_root_dir(locker_type = None):
     return paths.join_paths(
         get_locker_root_dir(locker_type),
@@ -242,19 +243,19 @@ def get_locker_photos_root_dir(locker_type = None):
 # Locker - Programs
 ###########################################################
 
-# Get locker programs root dir
+# The locker's Programs folder
 def get_locker_programs_root_dir(locker_type = None):
     return paths.join_paths(
         get_locker_root_dir(locker_type),
         config.LockerFolderType.PROGRAMS)
 
-# Get locker programs tools root dir
+# The Tools folder under the locker's Programs folder
 def get_locker_programs_tools_root_dir(locker_type = None):
     return paths.join_paths(
         get_locker_programs_root_dir(locker_type),
         "Tools")
 
-# Get locker program tool dir
+# Locker folder of a stored tool, under a per-platform folder when given one
 def get_locker_program_tool_dir(tool_name, tool_platform = None, locker_type = None):
     if tool_platform:
         return paths.join_paths(
@@ -269,15 +270,15 @@ def get_locker_program_tool_dir(tool_name, tool_platform = None, locker_type = N
 # Metadata - Games
 ###########################################################
 
-# Get game metadata root dir
+# Root of game metadata, from the UserData.Dirs game_metadata_dir setting
 def get_game_metadata_root_dir():
     return settings.get_path_value("UserData.Dirs", "game_metadata_dir")
 
-# Get pegasus metadata root dir
+# The Pegasus folder under the game metadata root
 def get_game_pegasus_metadata_root_dir():
     return paths.join_paths(get_game_metadata_root_dir(), "Pegasus")
 
-# Get pegasus metadata file
+# The metadata.pegasus.txt listing the ROMs of a category and subcategory
 def get_game_pegasus_metadata_file(game_category, game_subcategory):
     return paths.join_paths(
         get_game_pegasus_metadata_root_dir(),
@@ -286,7 +287,7 @@ def get_game_pegasus_metadata_file(game_category, game_subcategory):
         game_subcategory,
         "metadata.pegasus.txt")
 
-# Get pegasus metadata asset dir
+# Folder of one asset type for a category and subcategory in the Pegasus metadata tree
 def get_game_pegasus_metadata_asset_dir(game_category, game_subcategory, asset_type):
     return paths.join_paths(
         get_game_pegasus_metadata_root_dir(),
@@ -295,7 +296,7 @@ def get_game_pegasus_metadata_asset_dir(game_category, game_subcategory, asset_t
         game_subcategory,
         asset_type)
 
-# Get metadata file
+# The metadata file for a category and subcategory in the given format; None for formats other than Pegasus
 def get_game_metadata_file(game_category, game_subcategory, metadata_format = config.MetadataFormatType.PEGASUS):
     if metadata_format == config.MetadataFormatType.PEGASUS:
         return get_game_pegasus_metadata_file(game_category, game_subcategory)
@@ -305,19 +306,19 @@ def get_game_metadata_file(game_category, game_subcategory, metadata_format = co
 def is_game_metadata_file(metadata_file):
     return metadata_file.endswith("metadata.pegasus.txt")
 
-# Get published metadata root dir
+# The Published folder under the game metadata root
 def get_game_published_metadata_root_dir():
     return paths.join_paths(get_game_metadata_root_dir(), "Published")
 
-# Get misc metadata root dir
+# The Misc folder under the game metadata root
 def get_game_misc_metadata_root_dir():
     return paths.join_paths(get_game_metadata_root_dir(), "Misc")
 
-# Get hashes metadata root dir
+# The Hashes folder under the game metadata root
 def get_game_hashes_metadata_root_dir():
     return paths.join_paths(get_game_metadata_root_dir(), "Hashes")
 
-# Get hashes metadata file
+# The <subcategory>.json holding file hashes for a supercategory and category
 def get_game_hashes_metadata_file(game_supercategory, game_category, game_subcategory):
     return paths.join_paths(
         get_game_hashes_metadata_root_dir(),
@@ -325,7 +326,7 @@ def get_game_hashes_metadata_file(game_supercategory, game_category, game_subcat
         game_category,
         game_subcategory + ".json")
 
-# Get json metadata root dir
+# The Json folder under the game metadata root
 def get_game_json_metadata_root_dir():
     return paths.join_paths(get_game_metadata_root_dir(), "Json")
 
@@ -337,7 +338,7 @@ def get_json_metadata_dir(game_supercategory, game_category, game_subcategory):
         game_category,
         game_subcategory)
 
-# Get json metadata file
+# The <name>.json describing one game, in its name path folder of the Json metadata tree
 def get_game_json_metadata_file(game_supercategory, game_category, game_subcategory, game_name):
     game_platform = gamenaming.derive_game_platform_from_categories(game_subcategory)
     game_name_path = gamenaming.derive_game_name_path_from_name(game_name, game_platform)
@@ -346,7 +347,7 @@ def get_game_json_metadata_file(game_supercategory, game_category, game_subcateg
         game_name_path,
         game_name + ".json")
 
-# Get json metadata ignore file
+# The ignores.json beside a subcategory's game JSON files
 def get_game_json_metadata_ignore_file(game_supercategory, game_category, game_subcategory):
     return paths.join_paths(
         get_json_metadata_dir(game_supercategory, game_category, game_subcategory),
@@ -356,11 +357,11 @@ def get_game_json_metadata_ignore_file(game_supercategory, game_category, game_s
 # Metadata - Files
 ###########################################################
 
-# Get file metadata root dir
+# Root of non-game file metadata, from the UserData.Dirs file_metadata_dir setting
 def get_file_metadata_root_dir():
     return settings.get_path_value("UserData.Dirs", "file_metadata_dir")
 
-# Get audio metadata root dir
+# Audio/<metadata type>/<genre> under the file metadata root
 def get_file_audio_metadata_root_dir(metadata_type, genre_type):
     return paths.join_paths(get_file_metadata_root_dir(), "Audio", metadata_type, genre_type)
 
@@ -370,18 +371,20 @@ def get_file_audio_metadata_dir(metadata_type, genre_type, artist_name = None):
         return paths.join_paths(get_file_metadata_root_dir(), "Audio", metadata_type, genre_type, artist_name)
     return paths.join_paths(get_file_metadata_root_dir(), "Audio", metadata_type, genre_type)
 
-# Get audio metadata archive file
+# The <album>.txt archive listing for an album in a genre
 def get_file_audio_metadata_archive_file(genre_type, album_name):
     return paths.join_paths(get_file_audio_metadata_root_dir(config.AudioMetadataType.ARCHIVE, genre_type), album_name + ".txt")
 
-# Get audio metadata album dir
+# Folder of an album's audio metadata, under its genre and artist when given; directly
+# under the file metadata root without a genre
 def get_file_audio_metadata_album_dir(metadata_type, genre_type, album_name, artist_name = None):
     if genre_type:
         output_dir = get_file_audio_metadata_dir(metadata_type, genre_type, artist_name)
         return paths.join_paths(output_dir, album_name)
     return paths.join_paths(get_file_metadata_root_dir(), album_name)
 
-# Get audio metadata file
+# The <album>.json of an album's audio metadata, under its genre and artist when given;
+# directly under the file metadata root without a genre
 def get_file_audio_metadata_file(metadata_type, genre_type, album_name, artist_name = None):
     if genre_type:
         output_dir = get_file_audio_metadata_dir(metadata_type, genre_type, artist_name)
@@ -389,7 +392,7 @@ def get_file_audio_metadata_file(metadata_type, genre_type, album_name, artist_n
         output_dir = get_file_metadata_root_dir()
     return paths.join_paths(output_dir, f"{album_name}.json")
 
-# Get file locker hashes root dir
+# The Locker/Hashes folder under the file metadata root
 def get_file_locker_hashes_root_dir():
     return paths.join_paths(get_file_metadata_root_dir(), "Locker", "Hashes")
 
@@ -409,11 +412,11 @@ def get_repo_root(expand = False):
     root = re.sub(r"[\\/]Scripts[\\/]*$", "", scripts_dir) if scripts_dir else "$HOME/Repositories/JoyBox"
     return os.path.expandvars(root) if expand else root
 
-# Get scripts root dir
+# The JoyBox Scripts folder, from the UserData.Dirs scripts_dir setting
 def get_scripts_root_dir():
     return settings.get_path_value("UserData.Dirs", "scripts_dir")
 
-# Get scripts icons dir
+# The icons folder under the Scripts folder
 def get_scripts_icons_dir():
     return paths.join_paths(get_scripts_root_dir(), "icons")
 
@@ -433,7 +436,7 @@ def get_command_path(command_name):
 # Repositories
 ###########################################################
 
-# Get repositories root dir
+# Folder holding cloned repositories, from the UserData.Dirs repositories_dir setting
 def get_repositories_root_dir():
     return settings.get_path_value("UserData.Dirs", "repositories_dir")
 
@@ -441,35 +444,35 @@ def get_repositories_root_dir():
 # Cache
 ###########################################################
 
-# Get cache root dir
+# Root of the local cache, from the UserData.Dirs cache_dir setting
 def get_cache_root_dir():
     return settings.get_path_value("UserData.Dirs", "cache_dir")
 
-# Get cache sync dir
+# The Sync folder under the cache root
 def get_cache_sync_dir():
     return paths.join_paths(
         get_cache_root_dir(),
         "Sync")
 
-# Get cache purchases dir
+# The Purchases folder under the cache root
 def get_cache_purchases_dir():
     return paths.join_paths(
         get_cache_root_dir(),
         "Purchases")
 
-# Get cache gaming root dir
+# The Gaming folder under the cache root
 def get_cache_gaming_root_dir():
     return paths.join_paths(
         get_cache_root_dir(),
         config.LockerFolderType.GAMING)
 
-# Get cache gaming roms root dir
+# The ROMs supercategory folder under the cache's Gaming folder
 def get_cache_gaming_roms_root_dir():
     return paths.join_paths(
         get_cache_gaming_root_dir(),
         config.Supercategory.ROMS)
 
-# Get cache gaming rom dir
+# Cache folder for one game's ROM files, by category, subcategory and name path
 def get_cache_gaming_rom_dir(game_category, game_subcategory, game_name):
     game_platform = gamenaming.derive_game_platform_from_categories(game_subcategory)
     game_name_path = gamenaming.derive_game_name_path_from_name(game_name, game_platform)
@@ -479,13 +482,13 @@ def get_cache_gaming_rom_dir(game_category, game_subcategory, game_name):
         game_subcategory,
         game_name_path)
 
-# Get cache gaming install root dir
+# The Installs supercategory folder under the cache's Gaming folder
 def get_cache_gaming_installs_root_dir():
     return paths.join_paths(
         get_cache_gaming_root_dir(),
         config.Supercategory.INSTALLS)
 
-# Get cache gaming install dir
+# Cache folder one game installs into, by category, subcategory and name path
 def get_cache_gaming_install_dir(game_category, game_subcategory, game_name):
     game_platform = gamenaming.derive_game_platform_from_categories(game_subcategory)
     game_name_path = gamenaming.derive_game_name_path_from_name(game_name, game_platform)
@@ -495,13 +498,13 @@ def get_cache_gaming_install_dir(game_category, game_subcategory, game_name):
         game_subcategory,
         game_name_path)
 
-# Get cache gaming saves root dir
+# The Saves supercategory folder under the cache's Gaming folder
 def get_cache_gaming_saves_root_dir():
     return paths.join_paths(
         get_cache_gaming_root_dir(),
         config.Supercategory.SAVES)
 
-# Get cache gaming save dir
+# Cache folder for one game's saves, narrowed to a save type folder when given one
 def get_cache_gaming_save_dir(game_category, game_subcategory, game_name, save_type = None):
     game_platform = gamenaming.derive_game_platform_from_categories(game_subcategory)
     game_name_path = gamenaming.derive_game_name_path_from_name(game_name, game_platform)
@@ -518,13 +521,13 @@ def get_cache_gaming_save_dir(game_category, game_subcategory, game_name, save_t
         game_subcategory,
         game_name_path)
 
-# Get cache gaming setup root dir
+# The Setup supercategory folder under the cache's Gaming folder
 def get_cache_gaming_setup_root_dir():
     return paths.join_paths(
         get_cache_gaming_root_dir(),
         config.Supercategory.SETUP)
 
-# Get cache gaming setup dir
+# Cache folder for one game's setup files, by category, subcategory and name path
 def get_cache_gaming_setup_dir(game_category, game_subcategory, game_name):
     game_platform = gamenaming.derive_game_platform_from_categories(game_subcategory)
     game_name_path = gamenaming.derive_game_name_path_from_name(game_name, game_platform)

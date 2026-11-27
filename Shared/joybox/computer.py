@@ -23,13 +23,15 @@ from joybox import gui
 from joybox import logger
 from joybox import platform_info
 
-# Program
+# A launchable or setup program from a computer game's JSON: executable, working directory, Wine settings
+# and whether it runs natively or under DOSBox-X or ScummVM
 class Program(jsondata.JsonData):
 
 
     # Executable
     def set_exe(self, value):
         self.set_value(config.PROGRAM_KEY_EXE, value)
+    # Executable path, with prefix tokens resolved when a token map is given; None when unset
     def get_exe(self, token_map = None):
         path = self.get_value(config.PROGRAM_KEY_EXE)
         if path and token_map:
@@ -39,6 +41,7 @@ class Program(jsondata.JsonData):
     # Current working directory
     def set_cwd(self, value):
         self.set_value(config.PROGRAM_KEY_CWD, value)
+    # Working directory, with prefix tokens resolved when a token map is given; None when unset
     def get_cwd(self, token_map = None):
         path = self.get_value(config.PROGRAM_KEY_CWD)
         if path and token_map:
@@ -48,84 +51,98 @@ class Program(jsondata.JsonData):
     # Environment variables
     def set_env(self, value):
         self.set_value(config.PROGRAM_KEY_ENV, value)
+    # Environment variables to run it with; None when unset
     def get_env(self):
         return self.get_value(config.PROGRAM_KEY_ENV)
 
     # Arguments
     def set_args(self, value):
         self.set_value(config.PROGRAM_KEY_ARGS, value)
+    # Arguments passed to the executable; empty by default
     def get_args(self):
         return self.get_value(config.PROGRAM_KEY_ARGS, [])
 
     # Windows version
     def set_winver(self, value):
         self.set_value(config.PROGRAM_KEY_WINVER, value)
+    # Windows version the Wine prefix should report; None when unset
     def get_winver(self):
         return self.get_value(config.PROGRAM_KEY_WINVER)
 
-    # Tricks
+    # Winetricks verbs the program needs
     def set_tricks(self, value):
         self.set_value(config.PROGRAM_KEY_TRICKS, value)
+    # Winetricks verbs the program needs; empty by default
     def get_tricks(self):
         return self.get_value(config.PROGRAM_KEY_TRICKS, [])
 
-    # Overrides
+    # Wine DLL overrides the program needs
     def set_overrides(self, value):
         self.set_value(config.PROGRAM_KEY_OVERRIDES, value)
+    # Wine DLL overrides the program needs; empty by default
     def get_overrides(self):
         return self.get_value(config.PROGRAM_KEY_OVERRIDES, [])
 
     # Desktop resolution
     def set_desktop(self, value):
         self.set_value(config.PROGRAM_KEY_DESKTOP, value)
+    # Virtual desktop resolution to run in; None when unset
     def get_desktop(self):
         return self.get_value(config.PROGRAM_KEY_DESKTOP)
 
-    # Installer type
+    # Kind of Windows installer this program is, such as Inno or NSIS
     def set_installer_type(self, value):
         self.set_value(config.PROGRAM_KEY_INSTALLER_TYPE, value)
+    # Kind of Windows installer this program is; None when unset
     def get_installer_type(self):
         return self.get_value(config.PROGRAM_KEY_INSTALLER_TYPE)
 
     # Serial number/key
     def set_serial(self, value):
         self.set_value(config.PROGRAM_KEY_SERIAL, value)
+    # Product key to enter during install; None when unset
     def get_serial(self):
         return self.get_value(config.PROGRAM_KEY_SERIAL)
 
     # Is shell program
     def set_is_shell(self, value):
         self.set_value(config.PROGRAM_KEY_IS_SHELL, value)
+    # Whether it runs through the shell; False by default
     def is_shell(self):
         return self.get_value(config.PROGRAM_KEY_IS_SHELL, False)
 
     # Is daemon program
     def set_is_daemon(self, value):
         self.set_value(config.PROGRAM_KEY_IS_DAEMON, value)
+    # Whether it is left running in the background; False by default
     def is_daemon(self):
         return self.get_value(config.PROGRAM_KEY_IS_DAEMON, False)
 
     # Is 32-bit program
     def set_is_32_bit(self, value):
         self.set_value(config.PROGRAM_KEY_IS_32_BIT, value)
+    # Whether it needs a 32-bit Wine prefix; False by default
     def is_32_bit(self):
         return self.get_value(config.PROGRAM_KEY_IS_32_BIT, False)
 
     # Is dos program
     def set_is_dos(self, value):
         self.set_value(config.PROGRAM_KEY_IS_DOS, value)
+    # Whether it runs under DOSBox-X as a DOS program; False by default
     def is_dos(self):
         return self.get_value(config.PROGRAM_KEY_IS_DOS, False)
 
     # Is windows 3.1 program
     def set_is_win31(self, value):
         self.set_value(config.PROGRAM_KEY_IS_WIN31, value)
+    # Whether it runs under DOSBox-X in Windows 3.1; False by default
     def is_win31(self):
         return self.get_value(config.PROGRAM_KEY_IS_WIN31, False)
 
     # Is scumm program
     def set_is_scumm(self, value):
         self.set_value(config.PROGRAM_KEY_IS_SCUMM, value)
+    # Whether it runs as a ScummVM game; False by default
     def is_scumm(self):
         return self.get_value(config.PROGRAM_KEY_IS_SCUMM, False)
 
@@ -250,39 +267,45 @@ class Program(jsondata.JsonData):
 class ProgramStep(jsondata.JsonData):
 
 
-    # From
+    # Source path of a copy, move or extract step, may hold prefix tokens
     def set_from(self, value):
         self.set_value(config.PROGRAM_STEP_KEY_FROM, value)
+    # Source path of the step, unresolved; empty by default
     def get_from(self):
         return self.get_value(config.PROGRAM_STEP_KEY_FROM, "")
 
-    # To
+    # Destination path of a copy, move or extract step, may hold prefix tokens
     def set_to(self, value):
         self.set_value(config.PROGRAM_STEP_KEY_TO, value)
+    # Destination path of the step, unresolved; empty by default
     def get_to(self):
         return self.get_value(config.PROGRAM_STEP_KEY_TO, "")
 
-    # Dir
+    # Directory a lowercase step renames within, may hold prefix tokens
     def set_dir(self, value):
         self.set_value(config.PROGRAM_STEP_KEY_DIR, value)
+    # Directory of a lowercase step, unresolved; empty by default
     def get_dir(self):
         return self.get_value(config.PROGRAM_STEP_KEY_DIR, "")
 
-    # Type
+    # Step kind: copy, move, extract or lowercase
     def set_type(self, value):
         self.set_value(config.PROGRAM_STEP_KEY_TYPE, value)
+    # Step kind: copy, move, extract or lowercase; None when unset
     def get_type(self):
         return self.get_value(config.PROGRAM_STEP_KEY_TYPE)
 
-    # Skip existing
+    # Whether a copy, move or extract step leaves files already at the destination
     def set_skip_existing(self, value):
         self.set_value(config.PROGRAM_STEP_KEY_SKIP_EXISTING, value)
+    # Whether the step leaves files already at the destination; False by default
     def skip_existing(self):
         return self.get_value(config.PROGRAM_STEP_KEY_SKIP_EXISTING, False)
 
-    # Skip identical
+    # Whether a copy or move step leaves destination files with the same content
     def set_skip_identical(self, value):
         self.set_value(config.PROGRAM_STEP_KEY_SKIP_IDENTICAL, value)
+    # Whether the step leaves destination files with the same content; False by default
     def skip_identical(self):
         return self.get_value(config.PROGRAM_STEP_KEY_SKIP_IDENTICAL, False)
 
@@ -347,7 +370,8 @@ class ProgramStep(jsondata.JsonData):
         # Should be successful
         return True
 
-# Setup computer game
+# Install a computer game in a throwaway setup prefix from its source files and discs, running its store setup steps
+# and programs, then pack the prefix's C drive into the output install image
 def setup_computer_game(
     game_info,
     source_file,
@@ -534,7 +558,7 @@ def setup_computer_game(
     # Should be successful
     return True
 
-# Launch computer game
+# Build the game's prefix over its save dir and cached install, then run the store launch program it selects
 def launch_computer_game(
     game_info,
     capture_type = None,

@@ -20,11 +20,11 @@ from joybox import archive
 def is_chd_file(path):
     return path.endswith(config.DiscImageFileType.CHD.cval())
 
-# Get disc iso
+# The .iso path beside a chd, where mounting extracts its image
 def get_disc_iso(chd_file):
     return chd_file.replace(config.DiscImageFileType.CHD.cval(), config.DiscImageFileType.ISO.cval())
 
-# Get disc toc
+# The .toc path beside a chd, where mounting extracts its track sheet
 def get_disc_toc(chd_file):
     return chd_file.replace(config.DiscImageFileType.CHD.cval(), config.DiscImageFileType.TOC.cval())
 
@@ -53,7 +53,7 @@ def get_disc_sheet_converter(source_file):
             return converter
     return None
 
-# Create disc chd
+# Compress a disc image into a chd with chdman createcd, converting formats chdman cannot read first
 def create_disc_chd(
     chd_file,
     source_iso,
@@ -147,7 +147,7 @@ def create_disc_chd_with_converter(
             fileops.remove_file(src = src, verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure)
     return True
 
-# Extract disc chd
+# Unpack a chd into a binary image and track sheet with chdman extractcd; False when the binary is missing after
 def extract_disc_chd(
     chd_file,
     binary_file,
@@ -205,7 +205,7 @@ bchunk_track_types = ["MODE1/2352", "MODE2/2352", "MODE2/2336", "AUDIO"]
 # Track types that already hold plain 2048-byte iso sectors
 iso_track_types = ["MODE1/2048", "MODE2/2048"]
 
-# Get cue track types
+# Mode of each TRACK line in a cue sheet, such as MODE1/2352 or AUDIO; empty when it is unreadable
 def get_cue_track_types(cue_file):
     cue_text = serialization.read_text_file(cue_file) or ""
     return re.findall(r"^\s*TRACK\s+\d+\s+(\S+)", cue_text, flags = re.MULTILINE | re.IGNORECASE)
@@ -251,7 +251,7 @@ def move_split_tracks(chd_file, tracks_dir, iso_file, verbose = False, exit_on_f
             return False
     return True
 
-# Extract disc chd to iso
+# Unpack a chd to cue/bin and split it into an iso, or numbered tracks beside it for multi-track discs, with bchunk
 def extract_disc_chd_to_iso(
     chd_file,
     iso_file,
@@ -316,7 +316,7 @@ def archive_mounted_disc_chd(chd_file, zip_file, mount_dir, verbose = False, pre
             verbose = verbose,
             pretend_run = pretend_run)
 
-# Archive disc chd
+# Zip the files on a chd disc by mounting it in a temporary directory; False unless the zip exists
 def archive_disc_chd(
     chd_file,
     zip_file,
@@ -338,7 +338,7 @@ def archive_disc_chd(
             pretend_run = pretend_run)
     return os.path.exists(zip_file)
 
-# Verify disc chd
+# Whether chdman verify reports the chd's overall SHA1 as matching
 def verify_disc_chd(
     chd_file,
     verbose = False,
@@ -370,7 +370,7 @@ def verify_disc_chd(
         verify_text = verify_output.decode()
     return "Overall SHA1 verification successful!" in verify_text
 
-# Mount disc chd
+# Extract a chd to an iso beside it and mount that at the directory; True when it is already mounted
 def mount_disc_chd(
     chd_file,
     mount_dir,
@@ -407,7 +407,7 @@ def mount_disc_chd(
     # Check result
     return is_disc_chd_mounted(chd_file, mount_dir)
 
-# Unmount disc chd
+# Unmount the iso extracted from a chd; True when it was not mounted
 def unmount_disc_chd(
     chd_file,
     mount_dir,

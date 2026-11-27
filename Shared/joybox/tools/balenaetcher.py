@@ -9,11 +9,9 @@ from joybox import toolbase
 # BalenaEtcher tool
 class BalenaEtcher(toolbase.ToolBase):
 
-    # Get name
-    def get_name(self):
-        return "BalenaEtcher"
+    NAME = "BalenaEtcher"
 
-    # Setup
+    # Download the Windows zip and Linux AppImage from the balena-io/etcher GitHub release
     def setup(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
@@ -56,7 +54,7 @@ class BalenaEtcher(toolbase.ToolBase):
                 return False
         return True
 
-    # Setup offline
+    # Install the Windows and Linux builds from the releases stored in their backups dirs
     def setup_offline(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()

@@ -39,7 +39,7 @@ def build_parser():
     parser.add_common_arguments()
     return parser
 
-# Main
+# After a preview, rename the PSN packages and license files under the input to their content IDs
 def main():
 
     # Parse arguments

@@ -164,15 +164,15 @@ class GameInfo:
         self.set_value(config.JSON_KEY_LOCAL_SAVE_DIR, local_save_dir)
         self.set_value(config.JSON_KEY_REMOTE_SAVE_DIR, remote_save_dir)
 
-    # Get json file
+    # Path of the game's JSON metadata file this info was read from
     def get_json_file(self):
         return self.json_file
 
-    # Get json data
+    # The in-memory JsonData wrapper, including the derived paths and metadata entry
     def get_json_data(self):
         return self.json_data
 
-    # Read raw json data
+    # The game's JSON file as it is on disk, as a plain dict, without the derived values
     def read_raw_json_data(
         self,
         verbose = False,
@@ -182,7 +182,7 @@ class GameInfo:
             verbose = verbose,
             exit_on_failure = exit_on_failure)
 
-    # Write raw json data
+    # Overwrite the game's JSON file with the dict given, keys sorted
     def write_raw_json_data(
         self,
         json_data,
@@ -197,7 +197,7 @@ class GameInfo:
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
-    # Read wrapped json data
+    # The game's JSON file as it is on disk, wrapped in JsonData for the game's platform
     def read_wrapped_json_data(
         self,
         verbose = False,
@@ -208,7 +208,7 @@ class GameInfo:
                 exit_on_failure = exit_on_failure),
             json_platform = self.get_platform())
 
-    # Write wrapped json data
+    # Overwrite the game's JSON file with a JsonData wrapper's data
     def write_wrapped_json_data(
         self,
         json_wrapper,
@@ -223,7 +223,8 @@ class GameInfo:
 
     ##############################
 
-    # Update json file
+    # Copy the non-empty persistent keys from memory into the JSON file on disk, leaving its
+    # other keys as they are
     def update_json_file(
         self,
         verbose = False,
@@ -252,7 +253,7 @@ class GameInfo:
     def has_subkey(self, key, subkey):
         return self.json_data.has_subkey(key, subkey)
 
-    # Get value
+    # A top-level key of the in-memory JSON data, or default_value when absent
     def get_value(self, key, default_value = None):
         return self.json_data.get_value(key, default_value)
 
@@ -260,7 +261,7 @@ class GameInfo:
     def get_subvalue(self, key, subkey, default_value = None):
         return self.json_data.get_subvalue(key, subkey, default_value)
 
-    # Get wrapped value
+    # A top-level key of the in-memory JSON data wrapped in JsonData, for nested lookups
     def get_wrapped_value(self, key, default_value = None):
         return jsondata.JsonData(self.get_value(key, default_value))
 
@@ -268,7 +269,7 @@ class GameInfo:
     def get_wrapped_subvalue(self, key, subkey, default_value = None):
         return jsondata.JsonData(self.get_subvalue(key, subkey, default_value))
 
-    # Set value
+    # Store a top-level key in memory only; update_json_file writes it out
     def set_value(self, key, value):
         return self.json_data.set_value(key, value)
 
@@ -276,7 +277,7 @@ class GameInfo:
     def set_subvalue(self, key, subkey, value):
         return self.json_data.set_subvalue(key, subkey, value)
 
-    # Set default value
+    # Store a top-level key only when it is absent; False when it already exists
     def set_default_value(self, key, value):
         if not self.has_key(key):
             return self.set_value(key, value)
@@ -290,7 +291,7 @@ class GameInfo:
 
     ##############################
 
-    # Get metadata file
+    # Path of the Pegasus metadata file listing this game's category and subcategory
     def get_metadata_file(self):
         return self.metadata_file
 
@@ -298,29 +299,29 @@ class GameInfo:
     def has_metadata(self):
         return isinstance(self.get_value(config.JSON_KEY_METADATA), metadataentry.MetadataEntry)
 
-    # Get metadata
+    # The game's MetadataEntry from the Pegasus file; None when it has none
     def get_metadata(self):
         if self.has_metadata():
             return self.get_value(config.JSON_KEY_METADATA)
         return None
 
-    # Set metadata
+    # Attach a MetadataEntry in memory; write_metadata saves it to the Pegasus file
     def set_metadata(self, metadata_value):
         return self.set_value(config.JSON_KEY_METADATA, metadata_value)
 
-    # Get metadata value
+    # One field of the game's Pegasus metadata entry; None when it has no entry
     def get_metadata_value(self, key):
         if self.has_metadata():
             return self.get_metadata().get_value(key)
         return None
 
-    # Set metadata value
+    # Change one field of the game's metadata entry in memory; False when it has no entry
     def set_metadata_value(self, key, value):
         if self.has_metadata():
             return self.get_metadata().set_value(key, value)
         return False
 
-    # Write metadata
+    # Save the game's metadata entry back into its Pegasus metadata file; does nothing without one
     def write_metadata(self):
         if self.has_metadata():
             metadata_obj = metadata.Metadata()
@@ -337,23 +338,23 @@ class GameInfo:
 
     ##############################
 
-    # Get name
+    # Game name, taken from the JSON file's base name
     def get_name(self):
         return self.game_name
 
-    # Get supercategory
+    # Supercategory derived from where the JSON file sits, such as Roms
     def get_supercategory(self):
         return self.game_supercategory
 
-    # Get category
+    # Category derived from where the JSON file sits, such as Nintendo
     def get_category(self):
         return self.game_category
 
-    # Get subcategory
+    # Subcategory derived from where the JSON file sits, naming the system
     def get_subcategory(self):
         return self.game_subcategory
 
-    # Get platform
+    # Platform matched from the subcategory
     def get_platform(self):
         return self.game_platform
 
@@ -369,7 +370,7 @@ class GameInfo:
 
     ##############################
 
-    # Get background asset
+    # Locker path the game's background image belongs at, whether or not it exists
     def get_background_asset(self):
         return environment.get_locker_gaming_asset_file(
             game_category = self.get_category(),
@@ -377,7 +378,7 @@ class GameInfo:
             game_name = self.get_name(),
             asset_type = config.AssetType.BACKGROUND)
 
-    # Get boxback asset
+    # Locker path the game's back cover image belongs at, whether or not it exists
     def get_boxback_asset(self):
         return environment.get_locker_gaming_asset_file(
             game_category = self.get_category(),
@@ -385,7 +386,7 @@ class GameInfo:
             game_name = self.get_name(),
             asset_type = config.AssetType.BOXBACK)
 
-    # Get boxfront asset
+    # Locker path the game's front cover image belongs at, whether or not it exists
     def get_boxfront_asset(self):
         return environment.get_locker_gaming_asset_file(
             game_category = self.get_category(),
@@ -393,7 +394,7 @@ class GameInfo:
             game_name = self.get_name(),
             asset_type = config.AssetType.BOXFRONT)
 
-    # Get label asset
+    # Locker path the game's disc or cartridge label image belongs at, whether or not it exists
     def get_label_asset(self):
         return environment.get_locker_gaming_asset_file(
             game_category = self.get_category(),
@@ -401,7 +402,7 @@ class GameInfo:
             game_name = self.get_name(),
             asset_type = config.AssetType.LABEL)
 
-    # Get screenshot asset
+    # Locker path the game's screenshot belongs at, whether or not it exists
     def get_screenshot_asset(self):
         return environment.get_locker_gaming_asset_file(
             game_category = self.get_category(),
@@ -409,7 +410,7 @@ class GameInfo:
             game_name = self.get_name(),
             asset_type = config.AssetType.SCREENSHOT)
 
-    # Get video asset
+    # Locker path the game's preview video belongs at, whether or not it exists
     def get_video_asset(self):
         return environment.get_locker_gaming_asset_file(
             game_category = self.get_category(),
@@ -419,27 +420,28 @@ class GameInfo:
 
     ##############################
 
-    # Get launch name
+    # The JSON's launch name; None when unset
     def get_launch_name(self):
         return self.get_value(config.JSON_KEY_LAUNCH_NAME)
 
-    # Get launch file
+    # The JSON's file to launch the game from; None when unset
     def get_launch_file(self):
         return self.get_value(config.JSON_KEY_LAUNCH_FILE)
 
-    # Get launch dir
+    # The JSON's directory to launch the game in; None when unset
     def get_launch_dir(self):
         return self.get_value(config.JSON_KEY_LAUNCH_DIR)
 
-    # Get transform file
+    # The JSON's source file to transform into a launchable one; None when unset
     def get_transform_file(self):
         return self.get_value(config.JSON_KEY_TRANSFORM_FILE)
 
-    # Get key file
+    # The JSON's decryption key file for the game; None when unset
     def get_key_file(self):
         return self.get_value(config.JSON_KEY_KEY_FILE)
 
-    # Get files
+    # The JSON's game files, narrowed case-insensitively to one extension or any of a list;
+    # empty when there are none
     def get_files(self, extension = None):
         files = self.get_value(config.JSON_KEY_FILES)
         if not files:
@@ -450,53 +452,53 @@ class GameInfo:
             return [file for file in files if any(file.lower().endswith(ext.lower()) for ext in extension)]
         return files
 
-    # Get dlc
+    # The JSON's DLC files; None when unset
     def get_dlc(self):
         return self.get_value(config.JSON_KEY_DLC)
 
-    # Get updates
+    # The JSON's update files; None when unset
     def get_updates(self):
         return self.get_value(config.JSON_KEY_UPDATE)
 
-    # Get extras
+    # The JSON's extra files, such as manuals; None when unset
     def get_extras(self):
         return self.get_value(config.JSON_KEY_EXTRA)
 
-    # Get dependencies
+    # The JSON's dependencies the game needs installed; None when unset
     def get_dependencies(self):
         return self.get_value(config.JSON_KEY_DEPENDENCIES)
 
     ##############################
 
-    # Get save dir
+    # Cache folder for the game's saves, the Sandboxie or Wine one for computer games
     def get_save_dir(self):
         return self.get_value(config.JSON_KEY_SAVE_DIR)
 
-    # Get general save dir
+    # Cache folder for the game's general saves, apart from sandbox-specific ones
     def get_general_save_dir(self):
         return self.get_value(config.JSON_KEY_GENERAL_SAVE_DIR)
 
-    # Get local cache dir
+    # Cache folder holding a working copy of the game's ROM files
     def get_local_cache_dir(self):
         return self.get_value(config.JSON_KEY_LOCAL_CACHE_DIR)
 
-    # Get remote cache dir
+    # Cache folder the game installs into
     def get_remote_cache_dir(self):
         return self.get_value(config.JSON_KEY_REMOTE_CACHE_DIR)
 
-    # Get local rom dir
+    # Folder of the game's files in the local locker
     def get_local_rom_dir(self):
         return self.get_value(config.JSON_KEY_LOCAL_ROM_DIR)
 
-    # Get remote rom dir
+    # Folder of the game's files in the remote locker, the primary one unless another was given
     def get_remote_rom_dir(self):
         return self.get_value(config.JSON_KEY_REMOTE_ROM_DIR)
 
-    # Get local save dir
+    # Folder of the game's saves in the local locker
     def get_local_save_dir(self):
         return self.get_value(config.JSON_KEY_LOCAL_SAVE_DIR)
 
-    # Get remote save dir
+    # Folder of the game's saves in the remote locker
     def get_remote_save_dir(self):
         return self.get_value(config.JSON_KEY_REMOTE_SAVE_DIR)
 
@@ -508,21 +510,21 @@ class GameInfo:
 
     ##############################
 
-    # Get main store key
+    # JSON key of the store that sells the game's platform; None when no store does
     def get_main_store_key(self):
         store_obj = stores.get_store_by_platform(self.get_platform())
         if store_obj:
             return store_obj.get_key()
         return None
 
-    # Get main store type
+    # Type of the store that sells the game's platform; None when no store does
     def get_main_store_type(self):
         store_obj = stores.get_store_by_platform(self.get_platform())
         if store_obj:
             return store_obj.get_type()
         return None
 
-    # Get main store install dir
+    # Where the platform's store installs games, from the settings; None when no store does
     def get_main_store_install_dir(self):
         store_obj = stores.get_store_by_platform(self.get_platform())
         if store_obj:
@@ -531,49 +533,49 @@ class GameInfo:
 
     ##############################
 
-    # Get store info identifier
+    # The store value identifying the game when fetching its store info; None without a store
     def get_store_info_identifier(self):
         store_obj = stores.get_store_by_platform(self.get_platform())
         if store_obj:
             return self.get_subvalue(store_obj.get_key(), store_obj.get_info_identifier_key())
         return None
 
-    # Get store install identifier
+    # The store value identifying the game when installing it; None without a store
     def get_store_install_identifier(self):
         store_obj = stores.get_store_by_platform(self.get_platform())
         if store_obj:
             return self.get_subvalue(store_obj.get_key(), store_obj.get_install_identifier_key())
         return None
 
-    # Get store launch identifier
+    # The store value identifying the game when launching it; None without a store
     def get_store_launch_identifier(self):
         store_obj = stores.get_store_by_platform(self.get_platform())
         if store_obj:
             return self.get_subvalue(store_obj.get_key(), store_obj.get_launch_identifier_key())
         return None
 
-    # Get store download identifier
+    # The store value identifying the game when downloading it; None without a store
     def get_store_download_identifier(self):
         store_obj = stores.get_store_by_platform(self.get_platform())
         if store_obj:
             return self.get_subvalue(store_obj.get_key(), store_obj.get_download_identifier_key())
         return None
 
-    # Get store asset identifier
+    # The store value identifying the game when looking up its artwork; None without a store
     def get_store_asset_identifier(self):
         store_obj = stores.get_store_by_platform(self.get_platform())
         if store_obj:
             return self.get_subvalue(store_obj.get_key(), store_obj.get_asset_identifier_key())
         return None
 
-    # Get store metadata identifier
+    # The store value identifying the game when collecting its metadata; None without a store
     def get_store_metadata_identifier(self):
         store_obj = stores.get_store_by_platform(self.get_platform())
         if store_obj:
             return self.get_subvalue(store_obj.get_key(), store_obj.get_metadata_identifier_key())
         return None
 
-    # Get store page identifier
+    # The store value identifying the game in its store page url; None without a store
     def get_store_page_identifier(self):
         store_obj = stores.get_store_by_platform(self.get_platform())
         if store_obj:
@@ -582,109 +584,128 @@ class GameInfo:
 
     ##############################
 
-    # Get store appid
+    # The store's app id for the game, under the given store key or the platform's own store
     def get_store_appid(self, store_key = None):
         return self.get_subvalue(store_key if store_key else self.get_main_store_key(), config.JSON_KEY_STORE_APPID)
+    # Store the app id under the given store key or the platform's own store, in memory only
     def set_store_appid(self, value, store_key = None):
         self.set_subvalue(store_key if store_key else self.get_main_store_key(), config.JSON_KEY_STORE_APPID, value)
 
-    # Get store appname
+    # The store's internal app name for the game, under the given or platform store key
     def get_store_appname(self, store_key = None):
         return self.get_subvalue(store_key if store_key else self.get_main_store_key(), config.JSON_KEY_STORE_APPNAME)
+    # Store the internal app name under the given or platform store key, in memory only
     def set_store_appname(self, value, store_key = None):
         self.set_subvalue(store_key if store_key else self.get_main_store_key(), config.JSON_KEY_STORE_APPNAME, value)
 
-    # Get store appurl
+    # The game's store page link, under the given or platform store key
     def get_store_appurl(self, store_key = None):
         return self.get_subvalue(store_key if store_key else self.get_main_store_key(), config.JSON_KEY_STORE_APPURL)
+    # Store the store page link under the given or platform store key, in memory only
     def set_store_appurl(self, value, store_key = None):
         self.set_subvalue(store_key if store_key else self.get_main_store_key(), config.JSON_KEY_STORE_APPURL, value)
 
-    # Get store branchid
+    # The store build branch the game tracks, under the given or platform store key
     def get_store_branchid(self, store_key = None):
         return self.get_subvalue(store_key if store_key else self.get_main_store_key(), config.JSON_KEY_STORE_BRANCHID)
+    # Store the build branch under the given or platform store key, in memory only
     def set_store_branchid(self, value, store_key = None):
         self.set_subvalue(store_key if store_key else self.get_main_store_key(), config.JSON_KEY_STORE_BRANCHID, value)
 
-    # Get store builddate
+    # When the store's current build of the game was published, under the given or platform store key
     def get_store_builddate(self, store_key = None):
         return self.get_subvalue(store_key if store_key else self.get_main_store_key(), config.JSON_KEY_STORE_BUILDDATE)
+    # Store the build publish date under the given or platform store key, in memory only
     def set_store_builddate(self, value, store_key = None):
         self.set_subvalue(store_key if store_key else self.get_main_store_key(), config.JSON_KEY_STORE_BUILDDATE, value)
 
-    # Get store buildid
+    # The store's identifier for the game's current build, under the given or platform store key
     def get_store_buildid(self, store_key = None):
         return self.get_subvalue(store_key if store_key else self.get_main_store_key(), config.JSON_KEY_STORE_BUILDID)
+    # Store the current build identifier under the given or platform store key, in memory only
     def set_store_buildid(self, value, store_key = None):
         self.set_subvalue(store_key if store_key else self.get_main_store_key(), config.JSON_KEY_STORE_BUILDID, value)
 
-    # Get store name
+    # The game's title as the store lists it, under the given or platform store key
     def get_store_name(self, store_key = None):
         return self.get_subvalue(store_key if store_key else self.get_main_store_key(), config.JSON_KEY_STORE_NAME)
+    # Store the store's title for the game under the given or platform store key, in memory only
     def set_store_name(self, value, store_key = None):
         self.set_subvalue(store_key if store_key else self.get_main_store_key(), config.JSON_KEY_STORE_NAME, value)
 
-    # Get store controller support
+    # The controller support level the store reports, under the given or platform store key
     def get_store_controller_support(self, store_key = None):
         return self.get_subvalue(store_key if store_key else self.get_main_store_key(), config.JSON_KEY_STORE_CONTROLLER_SUPPORT)
+    # Store the reported controller support under the given or platform store key, in memory only
     def set_store_controller_support(self, value, store_key = None):
         self.set_subvalue(store_key if store_key else self.get_main_store_key(), config.JSON_KEY_STORE_CONTROLLER_SUPPORT, value)
 
-    # Get store installdir
+    # The folder name the store installs the game under, under the given or platform store key
     def get_store_installdir(self, store_key = None):
         return self.get_subvalue(store_key if store_key else self.get_main_store_key(), config.JSON_KEY_STORE_INSTALLDIR)
+    # Store the install folder name under the given or platform store key, in memory only
     def set_store_installdir(self, value, store_key = None):
         self.set_subvalue(store_key if store_key else self.get_main_store_key(), config.JSON_KEY_STORE_INSTALLDIR, value)
 
-    # Get store paths
+    # Paths the game keeps data in, such as saves, under the store key; empty when unset
     def get_store_paths(self, store_key = None):
         return self.get_subvalue(store_key if store_key else self.get_main_store_key(), config.JSON_KEY_STORE_PATHS, [])
+    # Store the game's data paths under the given or platform store key, in memory only
     def set_store_paths(self, value, store_key = None):
         self.set_subvalue(store_key if store_key else self.get_main_store_key(), config.JSON_KEY_STORE_PATHS, value)
 
-    # Get store keys
+    # Product keys recorded for the game under the store key; empty when unset
     def get_store_keys(self, store_key = None):
         return self.get_subvalue(store_key if store_key else self.get_main_store_key(), config.JSON_KEY_STORE_KEYS, [])
+    # Store the product keys under the given or platform store key, in memory only
     def set_store_keys(self, value, store_key = None):
         self.set_subvalue(store_key if store_key else self.get_main_store_key(), config.JSON_KEY_STORE_KEYS, value)
 
-    # Get store launch
+    # Raw launch program entries under the store key; empty when unset
     def get_store_launch(self, store_key = None):
         return self.get_subvalue(store_key if store_key else self.get_main_store_key(), config.JSON_KEY_STORE_LAUNCH, [])
+    # The launch entries under the store key as computer.Program objects
     def get_store_launch_programs(self, store_key = None):
         return [computer.Program(p) for p in self.get_store_launch(store_key)]
+    # Store raw launch program entries under the given or platform store key, in memory only
     def set_store_launch(self, value, store_key = None):
         self.set_subvalue(store_key if store_key else self.get_main_store_key(), config.JSON_KEY_STORE_LAUNCH, value)
+    # Store computer.Program objects as the launch entries, in memory only
     def set_store_launch_programs(self, value, store_key = None):
         self.set_store_launch([v.get_data() for v in value], store_key)
 
-    # Get store setup
+    # The setup section under the store key, holding preinstall, install and postinstall; empty when unset
     def get_store_setup(self, store_key = None):
         return self.get_subvalue(store_key if store_key else self.get_main_store_key(), config.JSON_KEY_STORE_SETUP, {})
+    # Store the setup section under the given or platform store key, in memory only
     def set_store_setup(self, value, store_key = None):
         self.set_subvalue(store_key if store_key else self.get_main_store_key(), config.JSON_KEY_STORE_SETUP, value)
 
-    # Get store setup install
+    # Raw installer program entries from the store setup section; empty when unset
     def get_store_setup_install(self, store_key = None):
         return self.get_store_setup(store_key).get(config.JSON_KEY_STORE_SETUP_INSTALL, [])
+    # The setup section's installers as computer.Program objects
     def get_store_setup_install_programs(self, store_key = None):
         return [computer.Program(p) for p in self.get_store_setup_install(store_key)]
 
-    # Get store setup preinstall
+    # Raw steps to run before installing, from the store setup section; empty when unset
     def get_store_setup_preinstall(self, store_key = None):
         return self.get_store_setup(store_key).get(config.JSON_KEY_STORE_SETUP_PREINSTALL, [])
+    # The setup section's preinstall steps as computer.ProgramStep objects
     def get_store_setup_preinstall_steps(self, store_key = None):
         return [computer.ProgramStep(p) for p in self.get_store_setup_preinstall(store_key)]
 
-    # Get store setup postinstall
+    # Raw steps to run after installing, from the store setup section; empty when unset
     def get_store_setup_postinstall(self, store_key = None):
         return self.get_store_setup(store_key).get(config.JSON_KEY_STORE_SETUP_POSTINSTALL, [])
+    # The setup section's postinstall steps as computer.ProgramStep objects
     def get_store_setup_postinstall_steps(self, store_key = None):
         return [computer.ProgramStep(p) for p in self.get_store_setup_postinstall(store_key)]
 
     ##############################
 
-    # Select store launch program
+    # The Program to run: the only one, or the user's pick from a window; with none recorded,
+    # scan base_dir for likely executables and save them to the JSON file; None when none are found
     def select_store_launch_program(self, base_dir, store_key = None):
 
         # Get list of launch programs from the json
@@ -768,7 +789,7 @@ class GameInfo:
         # Return launch info
         return launch_program
 
-    # Find store matching programs
+    # Launch and installer programs under the store key whose store_subkey flag is set
     def find_store_matching_programs(self, store_key = None, store_subkey = None):
         potential_programs = []
         potential_programs += self.get_store_launch_programs(store_key)
@@ -814,7 +835,8 @@ class GameInfo:
 
 ###########################################################
 
-# Derive game categories from file
+# (supercategory, category, subcategory) from where a file sits under the locker, cache or
+# JSON metadata gaming roots; category falls back to Other; all None when the path doesn't fit
 def derive_game_categories_from_file(game_file):
 
     # Check file

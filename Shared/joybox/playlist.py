@@ -108,7 +108,7 @@ def generate_tree_playlist(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
-# Generate local playlists
+# Write a <dirname>.m3u of bare file names into each directory under source_dir that directly holds matching files
 def generate_local_playlists(
     source_dir,
     extensions = None,

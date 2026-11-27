@@ -41,7 +41,7 @@ from .xemu import Xemu
 from .xenia import Xenia
 from .yuzu import Yuzu
 
-# Get emulator map
+# One instance of every emulator class, keyed by its registered name
 def get_emulator_map():
     instances = {}
     def add_instance(class_name):
@@ -90,7 +90,7 @@ def get_emulator_map():
     add_instance(Yuzu)
     return instances
 
-# Get emulator list
+# Every emulator instance, in registration order
 def get_emulator_list():
     return get_emulator_map().values()
 
@@ -101,7 +101,7 @@ def get_emulator_by_platform(emulator_platform):
             return instance
     return None
 
-# Get emulator by name
+# The emulator registered under a name; None when none matches
 def get_emulator_by_name(tool_name):
     for instance in get_emulator_list():
         if instance.get_name() == tool_name:

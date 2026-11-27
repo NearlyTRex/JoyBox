@@ -77,6 +77,8 @@ if (name && pass) {
 }
 """
 
+# Runs Jenkins in docker behind nginx, with a startup script that sets the admin
+# login from the settings
 class Jenkins(installer_dockerapp.DockerAppInstaller):
     def __init__(
         self,
@@ -116,6 +118,7 @@ class Jenkins(installer_dockerapp.DockerAppInstaller):
         self.backup_volumes = ["jenkins_home"]
         self.backup_excludes = ["./workspace", "./caches"]
 
+    # Write the admin groovy script into the app dir, then run the docker app install
     def install(self):
 
         # Write the admin script before the base class starts the container.

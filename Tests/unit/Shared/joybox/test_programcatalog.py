@@ -6,6 +6,7 @@ import tomllib
 import pytest
 
 # Local imports
+from joybox import config
 from joybox import programcatalog
 from joybox.nintendo import switchprofile
 
@@ -20,7 +21,7 @@ from joybox.nintendo import switchprofile
 ###########################################################
 
 FAMILIES = [programcatalog.FAMILY_TOOLS, programcatalog.FAMILY_EMULATORS]
-KNOWN_KEYS = {"config", "config_files", "system_files", "only_on", "program_unknown_when_unset"}
+KNOWN_KEYS = {"config", "config_files", "system_files", "only_on", "program_unknown_when_unset", "platforms"}
 
 
 def all_programs():
@@ -71,6 +72,19 @@ def test_every_placeholder_is_filled_in(family, name, isolated_settings, monkeyp
 
 def test_a_tool_is_looked_up_by_its_name():
     assert programcatalog.get_tool_config("FFMpeg")["FFMpeg"]["program"]["linux"] == "FFMpeg/linux/ffmpeg"
+
+
+def test_an_emulator_plays_the_platforms_its_data_lists():
+    assert programcatalog.get_emulator_platforms("Dolphin") == [
+        config.Platform.NINTENDO_GAMECUBE, config.Platform.NINTENDO_WII, config.Platform.NINTENDO_WIIWARE]
+
+
+def test_an_emulator_whose_data_lists_no_platforms_plays_none():
+    assert programcatalog.get_emulator_platforms("BlastEm") == []
+
+
+def test_an_unknown_emulator_plays_no_platforms():
+    assert programcatalog.get_emulator_platforms("NotAnEmulator") == []
 
 
 def test_an_unknown_program_has_no_data():

@@ -25,14 +25,17 @@ class LlamaCpp(installer.Installer):
         # no ROCm; hip AMD through ROCm
         self.backend = "vulkan"
 
+    # Local Ubuntu only
     def get_supported_environments(self):
         return [
             constants.EnvironmentType.LOCAL_UBUNTU,
         ]
 
+    # Whether /usr/local/bin/llama-server exists
     def is_installed(self):
         return self.connection.does_file_or_directory_exist(self.server_binary_path)
 
+    # llama-server, llama-cli and llama-bench as installed or missing in /usr/local/bin
     def get_package_status(self):
         installed = []
         missing = []
@@ -44,12 +47,14 @@ class LlamaCpp(installer.Installer):
                 missing.append(name)
         return {"installed": installed, "missing": missing}
 
+    # The apt packages the build needs, with the Vulkan headers and tools for that backend
     def get_build_dependencies(self):
         packages = ["build-essential", "cmake", "git", "libssl-dev"]
         if self.backend == "vulkan":
             packages += ["libvulkan-dev", "glslc", "spirv-headers", "vulkan-tools"]
         return packages
 
+    # CMake flags for a Release build into /usr/local with the chosen GGML backend
     def get_cmake_flags(self):
         flags = ["-DCMAKE_BUILD_TYPE=Release",
                  f"-DCMAKE_INSTALL_PREFIX={self.install_prefix}"]
@@ -61,6 +66,8 @@ class LlamaCpp(installer.Installer):
             flags.append("-DGGML_HIP=ON")
         return flags
 
+    # apt-get the build deps, clone or pull ~/Tools/llama.cpp, then cmake build and
+    # install into /usr/local; False when a step fails
     def install(self):
 
         # Start install
@@ -122,6 +129,7 @@ class LlamaCpp(installer.Installer):
         logger.log_info("llama.cpp installed successfully")
         return True
 
+    # Delete the llama binaries from /usr/local/bin, keeping the source checkout
     def uninstall(self):
 
         # Start uninstall

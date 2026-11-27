@@ -84,11 +84,9 @@ def write_login(state_file, username, password, verbose = False, pretend_run = F
 # Sunshine tool
 class Sunshine(toolbase.ToolBase):
 
-    # Get name
-    def get_name(self):
-        return "Sunshine"
+    NAME = "Sunshine"
 
-    # Setup
+    # Download the Windows zip and Linux AppImage from the LizardByte/Sunshine GitHub release
     def setup(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
@@ -133,7 +131,7 @@ class Sunshine(toolbase.ToolBase):
                 return False
         return True
 
-    # Setup offline
+    # Install the Windows and Linux builds from the releases stored in their backups dirs
     def setup_offline(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
@@ -168,7 +166,8 @@ class Sunshine(toolbase.ToolBase):
                 return False
         return True
 
-    # Configure
+    # Write its config files with each platform's apps.json, the web login from [UserData.Streaming]
+    # when both are set, and its app menu entry by the sunshine_streaming_host setting
     def configure(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()

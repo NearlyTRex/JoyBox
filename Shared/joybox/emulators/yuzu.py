@@ -15,16 +15,7 @@ from joybox import emulatorbase
 # Yuzu emulator
 class Yuzu(emulatorbase.EmulatorBase):
 
-    # Get name
-    def get_name(self):
-        return "Yuzu"
-
-    # Get platforms
-    def get_platforms(self):
-        return [
-            config.Platform.NINTENDO_SWITCH,
-            config.Platform.NINTENDO_SWITCH_ESHOP
-        ]
+    NAME = "Yuzu"
 
     # Install add-ons
     def install_addons(self, dlc_dirs = None, update_dirs = None, verbose = False, pretend_run = False, exit_on_failure = False):
@@ -43,7 +34,8 @@ class Yuzu(emulatorbase.EmulatorBase):
                         return False
         return True
 
-    # Setup
+    # Install the EA 4176 Windows and Linux builds from the archives stored in their backups dirs;
+    # nothing is downloaded, and a missing archive is skipped
     def setup(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
@@ -80,13 +72,14 @@ class Yuzu(emulatorbase.EmulatorBase):
                 return False
         return True
 
-    # Setup offline
+    # Same as setup, which already works only from stored releases
     def setup_offline(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
         return self.setup(setup_params = setup_params)
 
-    # Configure
+    # Write its config files, write each platform's profiles file for the configured user,
+    # then verify the locker system files and copy them into each platform's setup dir
     def configure(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
@@ -134,7 +127,7 @@ class Yuzu(emulatorbase.EmulatorBase):
                     return False
         return True
 
-    # Launch
+    # Run Yuzu with -g on the game file, with -f when fullscreen is asked
     def launch(
         self,
         game_info,

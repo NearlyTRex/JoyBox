@@ -36,7 +36,8 @@ def find_best_game_file(game_files):
         break
     return game_file
 
-# Find all game names
+# Sorted names of the game folders under base_dir for a category, reading through the
+# first-letter folders on letter platforms
 def find_all_game_names(base_dir, game_supercategory, game_category, game_subcategory):
 
     # Get base path
@@ -65,7 +66,8 @@ def find_json_game_names(game_supercategory, game_category, game_subcategory, lo
         game_names = [game_name for game_name in game_names if game_name in locker_game_names]
     return game_names
 
-# Find locker game names
+# Names of the games stored in a locker's Gaming tree for a category, or under the given
+# base directory's Gaming folder instead
 def find_locker_game_names(game_supercategory, game_category, game_subcategory, locker_type = None, locker_base_dir = None):
     if locker_base_dir:
         base_dir = paths.join_paths(locker_base_dir, config.LockerFolderType.GAMING)
@@ -91,7 +93,8 @@ def iterate_rom_game_infos(verbose = False, exit_on_failure = False):
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
 
-# Iterate selected game categories
+# Yield (supercategory, category, subcategory) the parser selected: the one named in its
+# arguments in custom mode, else every selected combination in sorted order
 def iterate_selected_game_categories(
     parser,
     generation_mode = None,
@@ -122,7 +125,8 @@ def iterate_selected_game_categories(
             for game_subcategory in sorted(game_subcategories):
                 yield (game_supercategory, game_category, game_subcategory)
 
-# Iterate selected game infos
+# Yield a GameInfo for each selected game: the one named in custom mode, else every game with
+# JSON metadata, or locker files when a locker is given, optionally matched to one name
 def iterate_selected_game_infos(
     parser,
     generation_mode = None,

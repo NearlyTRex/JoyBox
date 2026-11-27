@@ -24,7 +24,7 @@ def _get_relativedelta():
 # ID generation utilities
 ###########################################################
 
-# Generate unique ID
+# A random UUID4 as a string
 def generate_unique_id():
     return str(uuid.uuid4())
 
@@ -32,7 +32,7 @@ def generate_unique_id():
 # String manipulation utilities
 ###########################################################
 
-# Remove enclosed substrings
+# The string with every delimited span, delimiters included, cut out and spacing collapsed; quotes by default
 def remove_enclosed_substrings(string, opening_delim = "\"", closing_delim = "\""):
     for substring in text.find_enclosed_substrings(string, opening_delim, closing_delim):
         full_braced_substring = f"{opening_delim}{substring}{closing_delim}"
@@ -42,7 +42,7 @@ def remove_enclosed_substrings(string, opening_delim = "\"", closing_delim = "\"
         string = string.replace(full_braced_substring, "")
     return string.strip()
 
-# Get string similarity ratio
+# Fuzzy match score from 0 to 100 via thefuzz; 0 when it is not installed
 def get_string_similarity_ratio(string1, string2):
     try:
         fuzz = _get_fuzz()
@@ -65,11 +65,11 @@ def are_strings_possibly_similar(string1, string2):
     ratio = get_string_similarity_ratio(string1, string2)
     return ratio >= 50
 
-# Sort strings
+# Sorted alphabetically, ties broken by length
 def sort_strings(strings):
     return sorted(strings, key=lambda item: (item, len(item)))
 
-# Sort strings with length
+# Sorted shortest first, then alphabetically
 def sort_strings_with_length(strings):
     return sorted(strings, key=lambda item: (len(item), item))
 
@@ -85,13 +85,13 @@ def does_string_end_with_substring(string, substring, case_sensitive = False):
         return string.endswith(substring)
     return string.lower().endswith(substring.lower())
 
-# Trim substring from start
+# The string without a leading substring, case-insensitive by default; unchanged when it does not start with it
 def trim_substring_from_start(string, substring, case_sensitive = False):
     if does_string_start_with_substring(string, substring, case_sensitive):
         return string[len(substring):]
     return string
 
-# Trim substring from end
+# The string without a trailing substring, case-insensitive by default; unchanged when it does not end with it
 def trim_substring_from_end(string, substring, case_sensitive = False):
     if not substring:
         return string
@@ -99,21 +99,22 @@ def trim_substring_from_end(string, substring, case_sensitive = False):
         return string[:-len(substring)]
     return string
 
-# Remove string escape sequences
+# The string with ANSI terminal escape codes stripped
 def remove_string_escape_sequences(string):
     pattern = re.compile(r'\x1B(?:[@-Z\\-_]|\[[0-?]*[ -/]*[@-~])')
     return pattern.sub("", string)
 
-# Remove string tag sequences
+# The string with HTML or XML tags stripped, keeping their text
 def remove_string_tag_sequences(string):
     pattern = re.compile(r'</?[^>]+>')
     return pattern.sub("", string)
 
-# Get datetime from string
+# Parse with a strptime format; raises ValueError on a mismatch
 def get_datetime_from_string(string, format_code):
     return datetime.strptime(string, format_code)
 
-# Get datetime from unknown string
+# Parse relative phrases like "3 days ago" or "yesterday", else any format dateutil can fuzzily read
+# None when nothing parses
 def get_datetime_from_unknown_string(string):
 
     # Imports
@@ -146,7 +147,7 @@ def get_datetime_from_unknown_string(string):
 def get_string_from_datetime(date_time, format_code):
     return date_time.strftime(format_code)
 
-# Convert datetime to string
+# Reformat a date string from one strptime format to another, falling back to fuzzy parsing; None when unparseable
 def convert_date_string(string, old_format_code, new_format_code):
     try:
         date_time = get_datetime_from_string(string, old_format_code)
@@ -154,7 +155,7 @@ def convert_date_string(string, old_format_code, new_format_code):
         date_time = get_datetime_from_unknown_string(string)
     return get_string_from_datetime(date_time, new_format_code) if date_time else None
 
-# Convert unknown date string
+# Reformat a date in any recognizable format into new_format_code; None when unparseable
 def convert_unknown_date_string(string, new_format_code):
     date_time = get_datetime_from_unknown_string(string)
     if date_time:
@@ -176,31 +177,31 @@ def parse_timestamp(timestamp_string):
     except ValueError:
         return 0
 
-# Get url scheme
+# Scheme part of a url, such as https; empty when absent
 def get_url_scheme(string):
     return urllib.parse.urlparse(string).scheme
 
-# Get url netloc
+# Host and port part of a url; empty when absent
 def get_url_netloc(string):
     return urllib.parse.urlparse(string).netloc
 
-# Get url path
+# Path part of a url, without query or fragment
 def get_url_path(string):
     return urllib.parse.urlparse(string).path
 
-# Get url params
+# Semicolon parameters of the last path segment of a url; usually empty
 def get_url_params(string):
     return urllib.parse.urlparse(string).params
 
-# Get url query
+# Query string of a url, without the leading ?
 def get_url_query(string):
     return urllib.parse.urlparse(string).query
 
-# Get url fragment
+# Fragment of a url, without the leading #
 def get_url_fragment(string):
     return urllib.parse.urlparse(string).fragment
 
-# Get URL components
+# A url split into a dict of scheme, netloc, path, params, query and fragment
 def get_url_components(string):
     return {
         "scheme": get_url_scheme(string),
@@ -211,21 +212,21 @@ def get_url_components(string):
         "fragment": get_url_fragment(string)
     }
 
-# Encode url string
+# Percent-encode text for a url; use_plus turns spaces into + for query strings
 def encode_url_string(string, use_plus = False):
     if use_plus:
         return urllib.parse.quote_plus(string)
     return urllib.parse.quote(string)
 
-# Join strings as url
+# Resolve string2 against string1 as a base url, as a browser would
 def join_strings_as_url(string1, string2, allow_fragments = True):
     return urllib.parse.urljoin(string1, string2, allow_fragments = allow_fragments)
 
-# Strip string query params
+# The url with its query string removed, keeping any fragment
 def strip_string_query_params(string):
     return urllib.parse.urlunparse(urllib.parse.urlparse(string)._replace(query=""))
 
-# Get slug string
+# Lowercase identifier from text: spaces to underscores, only a-z, 0-9 and single underscores kept
 def get_slug_string(string):
     string = string.strip().lower()
     string = string.replace(" ", "_")

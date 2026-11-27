@@ -80,7 +80,7 @@ def build_parser():
     parser.add_common_arguments()
     return parser
 
-# Main
+# Create, destroy, snapshot, restore, inspect or attach to the local KVM test guest, or point the test domain at it
 def main():
 
     # Parse arguments

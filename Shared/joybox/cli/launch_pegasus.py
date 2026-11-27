@@ -35,7 +35,7 @@ def build_parser():
     parser.add_common_arguments()
     return parser
 
-# Main
+# Run Pegasus from its tools folder with JOYBOX_LAUNCH_JSON set to the launcher command, and wait for it to exit
 def main():
 
     # Parse arguments

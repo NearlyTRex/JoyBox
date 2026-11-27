@@ -57,7 +57,7 @@ def is_prefix_command(cmd):
 
 ###########################################################
 
-# Setup powershell command
+# Wrap a command in "powershell -NoProfile -Command" unless it already starts with PowerShell
 def setup_powershell_command(
     cmd,
     options = create_command_options()):
@@ -73,7 +73,7 @@ def setup_powershell_command(
     new_cmd += cmdline.create_command_list(cmd)
     return (new_cmd, new_options)
 
-# Setup appimage command
+# Point the XDG config, cache, data and state dirs at an AppImage's portable .home folder when it has one
 def setup_appimage_command(
     cmd,
     options = create_command_options()):
@@ -94,7 +94,7 @@ def setup_appimage_command(
                 break
     return (new_cmd, new_options)
 
-# Setup prefix command
+# Create the default Wine or Sandboxie prefix if the options lack a ready one, then rewrite the command to run inside it
 def setup_prefix_command(
     cmd,
     options = create_command_options(),
@@ -225,7 +225,8 @@ def finish_command(
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
-# Run command
+# Run a command through the PowerShell, AppImage and prefix wrapping, returning (output, return code);
+# a pretend run returns ("", 0) and an OS error returns ("", 1)
 def run_command(
     cmd,
     options = create_command_options(),
@@ -266,7 +267,7 @@ def run_command(
             logger.log_error(e, quit_program = exit_on_failure)
         return ("", 1)
 
-# Run output command
+# Captured output of a command, without logging its streams; empty on a pretend run or error
 def run_output_command(
     cmd,
     options = create_command_options(),
@@ -284,7 +285,7 @@ def run_output_command(
         exit_on_failure = exit_on_failure)
     return output
 
-# Run returncode command
+# Exit code of a command whose stdout and stderr go to the log uncaptured; 0 on a pretend run
 def run_returncode_command(
     cmd,
     options = create_command_options(),
@@ -302,7 +303,7 @@ def run_returncode_command(
         exit_on_failure = exit_on_failure)
     return returncode
 
-# Run interactive command
+# Run a command on a pseudo-terminal, relaying its output and the user's typed input live; returns its exit code
 def run_interactive_command(
     cmd,
     options = create_command_options(),
@@ -419,7 +420,7 @@ def run_interactive_command(
 
 ###########################################################
 
-# Get installer type
+# Installer kind of a Windows setup file, from marker strings in its bytes; UNKNOWN when none matches
 def get_installer_type(installer_file):
     installer_markers = [
         ("Inno Setup", config.InstallerType.INNO),
@@ -442,7 +443,7 @@ def get_installer_type(installer_file):
             carried = window[-overlap:]
     return config.InstallerType.UNKNOWN
 
-# Get installer setup command
+# Argument list running an installer, with silent and target-dir flags for 7-Zip and WinRAR self-extractors
 def get_installer_setup_command(
     installer_file,
     installer_type,
@@ -465,7 +466,7 @@ def get_installer_setup_command(
 
 ###########################################################
 
-# Get dos launch command
+# DOSBox-X arguments mounting the prefix's C drive and its CHD discs, then switching drive, folder and starting the program
 def get_dos_launch_command(
     options,
     start_program = None,
@@ -521,7 +522,7 @@ def get_dos_launch_command(
     # Return launch command
     return launch_cmd
 
-# Get win31 launch command
+# DOSBox-X arguments with the Windows 3.1 config that mount the prefix drives and start the program with WIN RUNEXIT
 def get_win31_launch_command(
     options,
     start_program = None,
@@ -580,7 +581,7 @@ def get_win31_launch_command(
     # Return launch command
     return launch_cmd
 
-# Get scumm launch command
+# ScummVM arguments auto-detecting the game in the prefix's scumm folder, saving to its gamedata folder
 def get_scumm_launch_command(
     options,
     fullscreen = False):

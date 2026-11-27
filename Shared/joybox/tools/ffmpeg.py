@@ -9,11 +9,9 @@ from joybox import toolbase
 # FFMpeg tool
 class FFMpeg(toolbase.ToolBase):
 
-    # Get name
-    def get_name(self):
-        return "FFMpeg"
+    NAME = "FFMpeg"
 
-    # Setup
+    # Download the ffmpeg binary for Windows and Linux from the BtbN/FFmpeg-Builds master GPL release
     def setup(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
@@ -59,7 +57,7 @@ class FFMpeg(toolbase.ToolBase):
                 return False
         return True
 
-    # Setup offline
+    # Install the Windows and Linux binaries from the releases stored in their backups dirs
     def setup_offline(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()

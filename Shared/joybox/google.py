@@ -66,7 +66,7 @@ def parse_image_dimensions(image_dimensions):
     except (TypeError, ValueError):
         return None
 
-# Parse image search item
+# Title, url, mime, width and height of one custom search image result; None when a field is missing or malformed
 def parse_image_search_item(image_json_item):
     if not isinstance(image_json_item, dict):
         return None
@@ -84,7 +84,7 @@ def parse_image_search_item(image_json_item):
         return None
     return (item_title, item_url, image_json_item.get("mime"), item_width, item_height)
 
-# Find images
+# Google custom search images similar to the name, filtered by type, size and exact dimensions, best match first; empty without the API settings
 def find_images(
     search_name,
     image_type = None,
@@ -163,7 +163,7 @@ def find_images(
     # Return search results
     return sorted(search_results, key=lambda x: x.get_relevance(), reverse = True)
 
-# Parse video search line
+# Title, channel, duration, duration string and url from one yt-dlp JSON line; None when the line is not a usable result
 def parse_video_search_line(line):
     line_json = serialization.parse_json_or_none(line)
     if not isinstance(line_json, dict):
@@ -179,7 +179,7 @@ def parse_video_search_line(line):
     line_duration_str = line_json.get("duration_string") or "Unknown"
     return (line_title, line_channel, line_duration, line_duration_str, line_url)
 
-# Find videos
+# YouTube search results via yt-dlp whose titles resemble the name, shortest first; empty when yt-dlp is missing
 def find_videos(
     search_name,
     num_results = 20,
@@ -246,7 +246,7 @@ def find_videos(
     # Return search results
     return sorted(search_results, key=lambda d: d.get_duration())
 
-# Get playlist video ids
+# Ordered unique (id, url) pairs of a playlist or channel, listed by yt-dlp without downloading; Rumble channels use the scraper
 def get_playlist_video_ids(
     video_url,
     cookie_source = None,
@@ -306,7 +306,7 @@ def get_media_files(output_dir):
         return set()
     return {f for f in paths.get_directory_contents(output_dir) if f.endswith((".mp3", ".mp4"))}
 
-# Download video
+# Download videos (or mp3 audio) with yt-dlp, optionally sanitizing filenames after; False on a serious yt-dlp error or failed sanitize
 def download_video(
     video_url,
     audio_only = False,

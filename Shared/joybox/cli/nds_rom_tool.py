@@ -34,7 +34,7 @@ def build_parser():
     parser.add_common_arguments()
     return parser
 
-# Main
+# After a preview, decrypt or encrypt the secure area of each NDS ROM under the input in place with NDecrypt
 def main():
 
     # Parse arguments

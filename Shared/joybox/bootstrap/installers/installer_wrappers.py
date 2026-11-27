@@ -29,7 +29,7 @@ MARKER_FILE = ".joybox_wrappers_installed"
 # installed into the venv by pip, from the package's [project.scripts].
 WRAPPER_NAMES = ["python3", "pip3"]
 
-# Wrappers
+# Writes python3 and pip3 wrappers into ~/.joybox/bin that run the venv's copies
 class Wrappers(installer.Installer):
     def __init__(
         self,
@@ -48,19 +48,24 @@ class Wrappers(installer.Installer):
         self.venv_python = os.path.join(venv_bin_dir, "python3")
         self.venv_pip = os.path.join(venv_bin_dir, "pip3")
 
+    # Local Ubuntu only
     def get_supported_environments(self):
         return [
             constants.EnvironmentType.LOCAL_UBUNTU,
         ]
 
+    # Wrapper names the marker file records; empty when it is absent
     def get_recorded_wrappers(self):
         if not self.connection.does_file_or_directory_exist(self.marker_path):
             return []
         return [name for name in (self.connection.read_file(self.marker_path) or "").split("\n") if name]
 
+    # Whether the marker records exactly the current wrapper names
     def is_installed(self):
         return sorted(self.get_recorded_wrappers()) == sorted(WRAPPER_NAMES)
 
+    # Remove recorded wrappers no longer made, write the venv wrappers and record
+    # them; False when the venv python is missing or a write fails
     def install(self):
 
         # Start install
@@ -91,6 +96,7 @@ class Wrappers(installer.Installer):
         # Record what was installed
         return self.connection.write_file(self.marker_path, "\n".join(WRAPPER_NAMES))
 
+    # Delete each recorded wrapper and the marker file
     def uninstall(self):
 
         # Start uninstall
@@ -101,6 +107,7 @@ class Wrappers(installer.Installer):
         self.connection.remove_file_or_directory(self.marker_path)
         return True
 
+    # The wrapper names split into installed and missing, by the marker file
     def get_package_status(self):
         recorded = self.get_recorded_wrappers()
         return {

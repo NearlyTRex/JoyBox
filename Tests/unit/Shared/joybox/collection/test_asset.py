@@ -242,7 +242,7 @@ def test_a_failed_download_is_not_converted(assets):
 
 @pytest.fixture
 def all_assets(monkeypatch):
-    state = {"names": ["Half-Life 2"], "downloaded": [], "ok": True, "lockers": set()}
+    state = {"names": ["Half-Life 2"], "downloaded": [], "ok": True, "lockers": set(), "backed_up_to": set()}
 
     def find_json_game_names(supercategory, category, subcategory, locker_type = None):
         state["lockers"].add(locker_type)
@@ -252,7 +252,8 @@ def all_assets(monkeypatch):
         asset.gameinfo, "GameInfo",
         lambda **kwargs: FakeGameInfo(name = kwargs["game_name"]))
 
-    def download_metadata_asset(game_info, asset_type, skip_existing, **kwargs):
+    def download_metadata_asset(game_info, asset_type, skip_existing, locker_type = None, **kwargs):
+        state["backed_up_to"].add(locker_type)
         state["downloaded"].append((
             game_info.get_name(), asset_type, skip_existing,
             game_info.get_subcategory()))
@@ -294,6 +295,7 @@ def test_every_asset_can_be_limited_to_a_lockers_games(all_assets):
     asset.download_all_metadata_assets(categories = [config.Category.COMPUTER], locker_type = config.LockerType.LOCAL)
 
     assert all_assets["lockers"] == {config.LockerType.LOCAL}
+    assert all_assets["backed_up_to"] == {config.LockerType.LOCAL}
 
 
 def test_downloading_every_asset_stops_at_the_first_failure(all_assets):

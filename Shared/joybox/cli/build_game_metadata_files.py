@@ -50,7 +50,7 @@ def build_parser():
     parser.add_common_arguments()
     return parser
 
-# Main
+# After a preview, add each selected game with a JSON file to its Pegasus metadata file and fetch its missing details
 def main():
 
     # Parse arguments

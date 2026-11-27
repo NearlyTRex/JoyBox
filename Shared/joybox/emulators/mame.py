@@ -27,24 +27,10 @@ system_drivers = {
 # Mame emulator
 class Mame(emulatorbase.EmulatorBase):
 
-    # Get name
-    def get_name(self):
-        return "Mame"
+    NAME = "Mame"
 
-    # Get platforms
-    def get_platforms(self):
-        return [
-            config.Platform.OTHER_ARCADE,
-            config.Platform.OTHER_ATARI_5200,
-            config.Platform.OTHER_ATARI_7800,
-            config.Platform.OTHER_MAGNAVOX_ODYSSEY_2,
-            config.Platform.OTHER_MATTEL_INTELLIVISION,
-            config.Platform.OTHER_PHILIPS_CDI,
-            config.Platform.OTHER_TEXAS_INSTRUMENTS_TI994A,
-            config.Platform.OTHER_TIGER_GAMECOM
-        ]
-
-    # Setup
+    # Windows build from the mamedev GitHub release's self-extracting exe; Linux AppImage built from the
+    # NearlyTRex/Mame fork with make, its support dirs copied into the AppImage home
     def setup(self, setup_params = None):
 
         # Use default params if not provided
@@ -114,7 +100,7 @@ class Mame(emulatorbase.EmulatorBase):
                 return False
         return True
 
-    # Setup offline
+    # Install the Windows and Linux builds from the releases stored in their backups dirs
     def setup_offline(self, setup_params = None):
 
         # Use default params if not provided
@@ -149,7 +135,7 @@ class Mame(emulatorbase.EmulatorBase):
                 return False
         return True
 
-    # Configure
+    # Write its config files, then verify the locker system files and copy them into each platform's setup dir
     def configure(self, setup_params = None):
 
         # Use default params if not provided
@@ -186,7 +172,8 @@ class Mame(emulatorbase.EmulatorBase):
                     return False
         return True
 
-    # Launch
+    # Run MAME with its ini path; arcade games load by set name from the game dir, other platforms
+    # through their system driver and media flag; windowed unless fullscreen is asked
     def launch(
         self,
         game_info,

@@ -19,16 +19,19 @@ class Claude(installer.Installer):
         self.claude_local_bin_path = os.path.expanduser("~/.local/bin/claude")
         self.claude_home_binary_path = os.path.expanduser("~/.claude/local/bin/claude")
 
+    # Local Ubuntu only
     def get_supported_environments(self):
         return [
             constants.EnvironmentType.LOCAL_UBUNTU,
         ]
 
+    # Whether a claude binary is in /usr/local/bin, ~/.local/bin or ~/.claude/local/bin
     def is_installed(self):
         return (self.connection.does_file_or_directory_exist(self.claude_binary_path) or
                 self.connection.does_file_or_directory_exist(self.claude_local_bin_path) or
                 self.connection.does_file_or_directory_exist(self.claude_home_binary_path))
 
+    # claude-code as installed or missing, by the same three binary paths
     def get_package_status(self):
         installed = []
         missing = []
@@ -40,6 +43,8 @@ class Claude(installer.Installer):
             missing.append("claude-code")
         return {"installed": installed, "missing": missing}
 
+    # Run the claude.ai install.sh script with bash, then check a binary landed;
+    # False when either fails
     def install(self):
 
         # Start install
@@ -69,6 +74,8 @@ class Claude(installer.Installer):
         logger.log_info("Claude Code CLI installed successfully")
         return True
 
+    # Delete the claude binaries in /usr/local/bin and ~/.local/bin and the
+    # ~/.claude/local install
     def uninstall(self):
 
         # Start uninstall

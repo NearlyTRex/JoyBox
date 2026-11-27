@@ -15,17 +15,10 @@ from joybox import emulatorbase
 # Xemu emulator
 class Xemu(emulatorbase.EmulatorBase):
 
-    # Get name
-    def get_name(self):
-        return "Xemu"
+    NAME = "Xemu"
 
-    # Get platforms
-    def get_platforms(self):
-        return [
-            config.Platform.MICROSOFT_XBOX
-        ]
-
-    # Setup
+    # Windows build from the mborgerson/xemu GitHub release; Linux AppImage built from the
+    # NearlyTRex/Xemu fork with its build.sh
     def setup(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
@@ -78,7 +71,7 @@ class Xemu(emulatorbase.EmulatorBase):
                 return False
         return True
 
-    # Setup offline
+    # Install the Windows and Linux builds from the releases stored in their backups dirs
     def setup_offline(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
@@ -111,7 +104,7 @@ class Xemu(emulatorbase.EmulatorBase):
                 return False
         return True
 
-    # Configure
+    # Write its config files, then verify the locker system files and copy them into each platform's setup dir
     def configure(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
@@ -146,7 +139,7 @@ class Xemu(emulatorbase.EmulatorBase):
                     return False
         return True
 
-    # Launch
+    # Run Xemu with the game as its -dvd_path, with -full-screen when asked
     def launch(
         self,
         game_info,

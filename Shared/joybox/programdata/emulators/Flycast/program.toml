@@ -1,6 +1,9 @@
 # Flycast: where its programs live and how they run, the files its setup writes
 # and the system files it checks. Read by joybox/programcatalog.py.
 
+# The platforms it plays
+platforms = ["OTHER_SEGA_DREAMCAST"]
+
 [config.Flycast]
 program = { windows = "Flycast/windows/flycast.exe", linux = "Flycast/linux/Flycast.AppImage" }
 run_sandboxed = { windows = false, linux = false }

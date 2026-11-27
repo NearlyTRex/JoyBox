@@ -59,7 +59,7 @@ def build_parser():
     parser.add_common_arguments()
     return parser
 
-# Main
+# Install, update or rebuild the selected third-party tools, or all of them, with the setup options given
 def main():
 
     # Parse arguments

@@ -9,15 +9,9 @@ from joybox import emulatorbase
 # WinUAE emulator
 class WinUAE(emulatorbase.EmulatorBase):
 
-    # Get name
-    def get_name(self):
-        return "WinUAE"
+    NAME = "WinUAE"
 
-    # Get platforms
-    def get_platforms(self):
-        return []
-
-    # Setup
+    # Download the x64 Windows zip linked from the winuae.net download page; Windows only
     def setup(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
@@ -42,7 +36,7 @@ class WinUAE(emulatorbase.EmulatorBase):
                 return False
         return True
 
-    # Setup offline
+    # Install the Windows build from the release stored in its backups dir
     def setup_offline(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()

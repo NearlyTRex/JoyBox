@@ -9,11 +9,9 @@ from joybox import toolbase
 # NirCmd tool
 class NirCmd(toolbase.ToolBase):
 
-    # Get name
-    def get_name(self):
-        return "NirCmd"
+    NAME = "NirCmd"
 
-    # Setup
+    # Download the x64 zip from nirsoft.net; Windows only
     def setup(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
@@ -35,7 +33,7 @@ class NirCmd(toolbase.ToolBase):
                 return False
         return True
 
-    # Setup offline
+    # Install the Windows build from the release stored in its backups dir
     def setup_offline(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()

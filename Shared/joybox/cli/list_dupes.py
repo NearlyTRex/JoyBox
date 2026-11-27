@@ -26,7 +26,7 @@ def build_parser():
     parser.add_common_arguments()
     return parser
 
-# Main
+# Print the sets of duplicate files under the input dir with jdupes; deletes nothing
 def main():
 
     # Parse arguments

@@ -53,7 +53,7 @@ def is_url_reachable(url, params = None, timeout = REQUEST_TIMEOUT_SECONDS):
     except requests.RequestException:
         return False
 
-# Get remote json
+# GET a URL and decode its JSON body; None on any non-200 answer or request error
 def get_remote_json(
     url,
     headers = None,
@@ -79,7 +79,7 @@ def get_remote_json(
             logger.log_error(e, quit_program = True)
         return None
 
-# Get remote html
+# GET a URL and return its body text; None on any non-200 answer or request error
 def get_remote_html(
     url,
     headers = None,
@@ -104,7 +104,7 @@ def get_remote_html(
             logger.log_error(e, quit_program = True)
         return None
 
-# Post remote json
+# POST data as JSON and decode the JSON reply; None on a non-200 answer, request error or pretend run
 def post_remote_json(
     url,
     headers = None,
@@ -134,7 +134,7 @@ def post_remote_json(
             logger.log_error(e, quit_program = True)
         return None
 
-# Get remote xml
+# GET a URL and parse its XML body into a dict; None on a non-200 answer, request or parse error
 def get_remote_xml(
     url,
     headers = None,
@@ -232,7 +232,7 @@ def download_url(
         return paths.is_path_file(output_file)
     return False
 
-# Download git url
+# Clone a repo into output_dir with Git, optionally wiping it first; True without cloning when it already has files
 def download_git_url(
     url,
     output_dir,
@@ -359,7 +359,7 @@ def write_cifs_credentials(username, password):
         handle.write("username=%s\npassword=%s\n" % (username, password))
     return credentials_file
 
-# Mount network share
+# Mount an SMB share at mount_dir, as a mapped drive on Windows or a sudo CIFS mount on Linux; True when already mounted
 def mount_network_share(
     mount_dir,
     base_location,
@@ -454,7 +454,7 @@ def mount_network_share(
 # Github
 ###########################################################
 
-# Get github repository
+# Repository object for user/repo from the GitHub API; None on an API error
 def get_github_repository(
     github_user,
     github_repo,
@@ -474,7 +474,7 @@ def get_github_repository(
             logger.log_error(e, quit_program = True)
         return None
 
-# Get github repositories
+# Repositories the token's user owns under github_user, filtered by the include, exclude, fork and private options
 def get_github_repositories(
     github_user,
     github_token = None,
@@ -510,7 +510,7 @@ def get_github_repositories(
             logger.log_error(e, quit_program = True)
         return []
 
-# Download github repository
+# Clone a GitHub repo over HTTPS, embedding the token in the URL when one is given
 def download_github_repository(
     github_user,
     github_repo,
@@ -535,7 +535,7 @@ def download_github_repository(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
-# Update github repository
+# Sync a fork branch with its upstream through the GitHub merge-upstream API; False when the call fails
 def update_github_repository(
     github_user,
     github_repo,
@@ -581,7 +581,7 @@ def update_github_repository(
     # Should be successful
     return True
 
-# Archive github repository
+# Clone a GitHub repo, zip it with a timestamped name and back the zip up to the locker
 def archive_github_repository(
     github_user,
     github_repo,

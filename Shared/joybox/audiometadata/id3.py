@@ -11,6 +11,7 @@ from joybox import paths
 # frame mappings its constructor loads
 class Id3TagsMixin:
 
+    # An MP3's text frames, comments and artwork as a dict, artwork base64 and converted to the format (JPEG by default); empty when untagged, None when unreadable
     def get_id3_tags(
         self,
         audio_file,
@@ -100,6 +101,7 @@ class Id3TagsMixin:
                 tags["artwork"] = artwork
         return tags
 
+    # Write text frames, comments and base64 artwork from the dict into the MP3, optionally clearing it first; skips the save in a pretend run
     def set_id3_tags(
         self,
         audio_file,
@@ -161,6 +163,7 @@ class Id3TagsMixin:
             audio.save()
         return True
 
+    # Delete the MP3's ID3 tag, optionally putting its artwork frames back; True when there was nothing to remove
     def remove_id3_tags(
         self,
         audio_file,
@@ -208,6 +211,7 @@ class Id3TagsMixin:
         audio.save()
         return True
 
+    # Whether the MP3 has an ID3 tag with at least one frame; False when missing or unreadable
     def has_id3_tags(self, audio_file):
 
         # Check file exists

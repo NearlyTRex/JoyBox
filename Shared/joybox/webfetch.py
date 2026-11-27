@@ -17,7 +17,7 @@ def _get_requests():
 # Seconds a plain request may take before it is abandoned
 REQUEST_TIMEOUT_SECONDS = 30
 
-# Get website text
+# Page source fetched with a headless web driver, else with requests; empty when both fail
 def get_website_text(
     url,
     params = None,
@@ -181,7 +181,8 @@ def get_matching_urls(
 def get_natural_sort_key(value):
     return [int(token) if token.isdigit() else token.lower() for token in re.split(r"(\d+)", value)]
 
-# Get matching url
+# First url on the page matching starts_with and ends_with, or with get_latest the one whose
+# last path segment sorts highest naturally; None when nothing matches
 def get_matching_url(
     url,
     base_url,

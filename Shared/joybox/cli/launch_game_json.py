@@ -65,7 +65,7 @@ def build_parser():
     parser.add_common_arguments()
     return parser
 
-# Main
+# Launch the playable game named by a JSON file, by category and name, or picked at random, installing it and restoring its save first
 def main():
 
     # Parse arguments

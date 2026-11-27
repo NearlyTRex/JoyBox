@@ -9,15 +9,9 @@ from joybox import emulatorbase
 # Nestopia emulator
 class Nestopia(emulatorbase.EmulatorBase):
 
-    # Get name
-    def get_name(self):
-        return "Nestopia"
+    NAME = "Nestopia"
 
-    # Get platforms
-    def get_platforms(self):
-        return []
-
-    # Setup
+    # Download the Windows build from the 0ldsk00l/nestopia GitHub release; Windows only
     def setup(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
@@ -43,7 +37,7 @@ class Nestopia(emulatorbase.EmulatorBase):
                 return False
         return True
 
-    # Setup offline
+    # Install the Windows build from the release stored in its backups dir
     def setup_offline(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()

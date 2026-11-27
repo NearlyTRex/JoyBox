@@ -27,7 +27,7 @@ def build_parser():
     parser.add_common_arguments()
     return parser
 
-# Main
+# Fail at the first .exe under the input larger than the 4092 MB archive volume size
 def main():
 
     # Parse arguments

@@ -90,7 +90,8 @@ def apply_source_patches(
             return False
     return True
 
-# Build from source
+# Fetch source by git or archive into a temp dir, apply patches and run build_cmd there
+# Returns the tmp, source and build dirs, or None on failure with the temp dir removed
 def build_from_source(
     release_url = "",
     release_branch = "",
@@ -251,7 +252,8 @@ def build_from_source(
         if not build_succeeded:
             release.remove_temporary_directory(tmp_dir_result, verbose = verbose, pretend_run = pretend_run)
 
-# Build binary from source
+# Build from source, then install the built file (extracting it if an archive) and extra copies into install_dir
+# Backs up to the locker unless skipped; False on failure
 def build_binary_from_source(
     release_url = "",
     release_branch = "",
@@ -412,7 +414,8 @@ def build_binary_from_source(
     finally:
         release.remove_temporary_directory(tmp_dir, verbose = verbose, pretend_run = pretend_run)
 
-# Build AppImage from source
+# Build from source, assemble and package an AppImage, then install it and extra copies into install_dir
+# Backs up to the locker unless skipped; False on failure
 def build_appimage_from_source(
     release_url = "",
     release_branch = "",

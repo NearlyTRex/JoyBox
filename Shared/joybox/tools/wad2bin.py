@@ -9,11 +9,9 @@ from joybox import toolbase
 # Wad2Bin tool
 class Wad2Bin(toolbase.ToolBase):
 
-    # Get name
-    def get_name(self):
-        return "Wad2Bin"
+    NAME = "Wad2Bin"
 
-    # Setup
+    # Download the Windows exe and Linux tarball from the DarkMatterCore/wad2bin GitHub release
     def setup(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
@@ -57,7 +55,7 @@ class Wad2Bin(toolbase.ToolBase):
                 return False
         return True
 
-    # Setup offline
+    # Install the Windows and Linux builds from the releases stored in their backups dirs
     def setup_offline(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()

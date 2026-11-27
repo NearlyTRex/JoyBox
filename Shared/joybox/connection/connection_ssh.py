@@ -49,6 +49,7 @@ class RememberNewHostKeyPolicy:
     def __init__(self, known_hosts_path):
         self.known_hosts_path = known_hosts_path
 
+    # Append the unseen key to known_hosts, creating its directory mode 700, and accept it for this session
     def missing_host_key(self, client, hostname, key):
         known_hosts_dir = os.path.dirname(self.known_hosts_path)
         if not paths.does_path_exist(known_hosts_dir):
@@ -60,6 +61,7 @@ class RememberNewHostKeyPolicy:
         client.get_host_keys().add(hostname, key.get_name(), key)
         logger.log_info("Trusting the %s host key of %s, seen for the first time" % (key.get_name(), hostname))
 
+# Connection to a remote host over paramiko: commands via exec_command, file contents and uploads via SFTP
 class ConnectionSSH(connection.Connection):
     ssh_client = None
 
@@ -82,6 +84,7 @@ class ConnectionSSH(connection.Connection):
         self.ssh_password = ssh_password
         self.remote_home_directory = None
 
+    # Log in with the key (string preferred over file) or else the password; no-op when a session is already live
     def connect(self, timeout = None):
         paramiko = _get_paramiko()
         if not ConnectionSSH.ssh_client:
@@ -116,6 +119,7 @@ class ConnectionSSH(connection.Connection):
         else:
             raise ValueError("Either ssh_key_str, ssh_key_filepath, or ssh_password must be provided.")
 
+    # Connect, logging and re-raising any failure
     def setup(self):
         try:
             self.connect()
@@ -133,6 +137,7 @@ class ConnectionSSH(connection.Connection):
             self.teardown()
             return False
 
+    # Whether the shared SSH client has an active transport
     def is_connected(self):
         if not ConnectionSSH.ssh_client:
             return False
@@ -145,6 +150,7 @@ class ConnectionSSH(connection.Connection):
             raise ConnectionError("SSH client not initialized")
         return ConnectionSSH.ssh_client.open_sftp()
 
+    # Close the shared SSH client and forget it, logging a close failure rather than raising
     def teardown(self):
         try:
             if ConnectionSSH.ssh_client:
@@ -154,6 +160,7 @@ class ConnectionSSH(connection.Connection):
             logger.log_error(e)
         ConnectionSSH.ssh_client = None
 
+    # Remote home, as SFTP resolves the login directory; cached after the first lookup, None when not connected
     def get_home_directory(self):
         if self.remote_home_directory:
             return self.remote_home_directory
@@ -169,6 +176,7 @@ class ConnectionSSH(connection.Connection):
             return self.handle_error("Unable to resolve remote home directory", e, return_value = None)
         return self.remote_home_directory
 
+    # Prefix sudo -n, so a password prompt fails instead of hanging the remote command
     def mark_command_as_sudo(self, cmd):
         if isinstance(cmd, str):
             return f"sudo -n {cmd}"
@@ -176,6 +184,7 @@ class ConnectionSSH(connection.Connection):
             return ["sudo", "-n"] + cmd
         return cmd
 
+    # Wrap a command string with exports for the option env and a cd to the option cwd, ~ mapped to $HOME
     def process_command(self, cmd):
         parts = []
         if self.options.env:
@@ -193,6 +202,7 @@ class ConnectionSSH(connection.Connection):
         parts.append(cmd)
         return " && ".join(parts)
 
+    # Run over exec_command and return stripped stdout, plus stderr when the options ask; empty on error
     def run_output(self, cmd, sudo = False):
         try:
             if not ConnectionSSH.ssh_client:
@@ -221,6 +231,7 @@ class ConnectionSSH(connection.Connection):
                 runtime.quit_program()
             return ""
 
+    # Run over exec_command and return the remote exit status; 1 on error
     def run_return_code(self, cmd, sudo = False):
         try:
             if not ConnectionSSH.ssh_client:
@@ -244,6 +255,7 @@ class ConnectionSSH(connection.Connection):
                 runtime.quit_program()
             return 1
 
+    # Run over exec_command, streaming the channel output to the log; returns the exit status, 1 on error
     def run_blocking(self, cmd, sudo = False):
         try:
             if not ConnectionSSH.ssh_client:
@@ -269,6 +281,7 @@ class ConnectionSSH(connection.Connection):
                 runtime.quit_program()
             return 1
 
+    # Run inside a remote login shell, logging its output when verbose; returns the exit status, 1 on error
     def run_interactive(self, cmd, sudo = False):
         try:
             if not ConnectionSSH.ssh_client:
@@ -303,6 +316,7 @@ class ConnectionSSH(connection.Connection):
                 runtime.quit_program()
             return 1
 
+    # Run blocking; on a nonzero exit raise ValueError when asked, otherwise quit with that code
     def run_checked(self, cmd, sudo = False, throw_exception = False):
         code = self.run_blocking(cmd = cmd, sudo = sudo)
         if code != 0:
@@ -310,6 +324,7 @@ class ConnectionSSH(connection.Connection):
                 raise ValueError("Unable to run command: %s" % cmd)
             runtime.quit_program(code)
 
+    # Create a remote temp directory by mktemp -d; None in a pretend run or on failure
     def make_temporary_directory(self):
         if self.flags.pretend_run:
             return None
@@ -320,6 +335,7 @@ class ConnectionSSH(connection.Connection):
             logger.log_info(f"Created temporary directory: {temp_dir}")
         return temp_dir
 
+    # Whether the remote path exists, by an SFTP stat
     def does_file_or_directory_exist(self, src):
         try:
             if self.flags.verbose:
@@ -336,6 +352,7 @@ class ConnectionSSH(connection.Connection):
         except _get_ssh_errors() as e:
             return self.handle_error(f"Error checking existence of {src}", e)
 
+    # Upload a local file or tree over SFTP, eight files at a time; under sudo, upload to /tmp then cp into place as root
     def transfer_files(self, src, dest, excludes = None, sudo = False):
         excludes = [] if excludes is None else excludes
         try:
@@ -405,6 +422,7 @@ class ConnectionSSH(connection.Connection):
         with concurrent.futures.ThreadPoolExecutor(max_workers = 8) as executor:
             return list(executor.map(upload_file, file_tasks))
 
+    # Read a remote file over SFTP, or by sudo cat when sudo is set
     def read_file(self, src, sudo = False):
         try:
             if self.flags.verbose:
@@ -422,6 +440,7 @@ class ConnectionSSH(connection.Connection):
         except _get_ssh_errors() + (ValueError,) as e:
             return self.handle_error(f"Unable to read file from {src}", e, return_value = None)
 
+    # Write a remote file over SFTP; under sudo, write to /tmp then cp into place as root
     def write_file(self, src, contents, sudo = False):
         try:
             if self.flags.verbose:
@@ -459,29 +478,38 @@ class ConnectionSSH(connection.Connection):
         except _get_ssh_errors() + (ValueError,) as e:
             return self.handle_error(message, e)
 
+    # Create the remote directory and parents by mkdir -p
     def make_directory(self, src, sudo = False):
         return self._run_operation(["mkdir", "-p", src], sudo, f"Unable to make directory {src}")
 
+    # Delete the remote path by rm -rf
     def remove_file_or_directory(self, src, sudo = False):
         return self._run_operation(["rm", "-rf", "--", src], sudo, f"Unable to remove {src}")
 
+    # Copy within the remote host by cp -r
     def copy_file_or_directory(self, src, dest, sudo = False):
         return self._run_operation(["cp", "-r", src, dest], sudo, f"Unable to copy {src} to {dest}")
 
+    # Move within the remote host by mv
     def move_file_or_directory(self, src, dest, sudo = False):
         return self._run_operation(["mv", src, dest], sudo, f"Unable to move {src} to {dest}")
 
+    # Symlink on the remote host by ln -sf
     def link_file_or_directory(self, src, dest, sudo = False):
         return self._run_operation(["ln", "-sf", src, dest], sudo, f"Unable to link {src} to {dest}")
 
+    # Fetch the URL on the remote host by curl -fL, failing on HTTP errors
     def download_file(self, url, dest, sudo = False):
         return self._run_operation(["curl", "-fL", "-o", dest, url], sudo, f"Unable to download {url} to {dest}")
 
+    # Unpack a tar archive already on the remote host by tar -xf
     def extract_tar_archive(self, src, dest, sudo = False):
         return self._run_operation(["tar", "-xf", src, "-C", dest], sudo, f"Unable to extract {src} to {dest}")
 
+    # Recursive chown on the remote host
     def change_owner(self, src, owner, sudo = False):
         return self._run_operation(["chown", "-R", owner, src], sudo, f"Unable to change owner of {src}")
 
+    # Recursive chmod on the remote host
     def change_permission(self, src, permission, sudo = False):
         return self._run_operation(["chmod", "-R", permission, src], sudo, f"Unable to change permissions of {src}")

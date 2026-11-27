@@ -39,7 +39,7 @@ def build_parser():
     parser.add_common_arguments()
     return parser
 
-# Main
+# After a preview, trim or untrim each Switch XCI under the input with XCI Trimmer into a new file beside it
 def main():
 
     # Parse arguments

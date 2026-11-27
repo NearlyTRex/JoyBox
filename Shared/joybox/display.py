@@ -5,7 +5,7 @@ from joybox import gui
 from joybox import programs
 from joybox import settings
 
-# Set screen resolution
+# Switch the display mode through NirCmd setdisplay; False only when NirCmd is missing
 def set_screen_resolution(width, height, colors, verbose = False, pretend_run = False, exit_on_failure = False):
 
     # Get tool
@@ -32,7 +32,7 @@ def set_screen_resolution(width, height, colors, verbose = False, pretend_run = 
         exit_on_failure = exit_on_failure)
     return True
 
-# Restore default screen resolution
+# Return to the resolution the UserData.Resolution settings name, unless the screen is already at it
 def restore_default_screen_resolution(verbose = False, pretend_run = False, exit_on_failure = False):
 
     # Get resolution info

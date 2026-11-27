@@ -36,7 +36,7 @@ def build_parser():
     parser.add_common_arguments()
     return parser
 
-# Main
+# After a preview, rebuild each zip under the input in place with fixed, reproducible 7-Zip settings
 def main():
 
     # Parse arguments

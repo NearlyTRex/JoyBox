@@ -196,8 +196,8 @@ wrapper_modules = [
 
 [tool.testrex.baseline]
 # Findings the library had when each rule was adopted; lowered as they are fixed, never raised
-documented = 800
-doc-paraphrase = 1568
+documented = 0
+doc-paraphrase = 0
 long-functions = 528
 # pylint over Shared and Scripts with pytest-testrex's library rcfile
 pylint-source = 0

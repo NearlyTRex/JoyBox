@@ -1,4 +1,5 @@
 # Imports
+import types
 import importlib
 
 # Local imports
@@ -25,16 +26,32 @@ from joybox.stores import steamlookups
 def _get_vdf():
     return importlib.import_module("vdf")
 
-# Get steam prefix dir
+# The Proton wine prefix for an app under a Steam install dir (steamapps/compatdata/<appid>/pfx)
 def get_steam_prefix_dir(install_dir, appid):
     return paths.join_paths(install_dir, "steamapps", "compatdata", appid, "pfx")
 
-# Get steam manifest file
+# The appmanifest_<appid>.acf path Steam writes under steamapps once an app is installed
 def get_steam_manifest_file(install_dir, appid):
     return paths.join_paths(install_dir, "steamapps", f"appmanifest_{appid}.acf")
 
 # Steam store
 class Steam(storebase.StoreBase):
+
+    TYPE = config.StoreType.STEAM
+    PLATFORM = config.Platform.COMPUTER_STEAM
+    SUPERCATEGORY = config.Supercategory.ROMS
+    CATEGORY = config.Category.COMPUTER
+    SUBCATEGORY = config.Subcategory.COMPUTER_STEAM
+    KEY = config.JSON_KEY_STEAM
+    IDENTIFIER_KEYS = types.MappingProxyType({
+        config.StoreIdentifierType.INFO: config.JSON_KEY_STORE_APPID,
+        config.StoreIdentifierType.INSTALL: config.JSON_KEY_STORE_APPID,
+        config.StoreIdentifierType.LAUNCH: config.JSON_KEY_STORE_APPID,
+        config.StoreIdentifierType.DOWNLOAD: config.JSON_KEY_STORE_APPID,
+        config.StoreIdentifierType.ASSET: config.JSON_KEY_STORE_APPID,
+        config.StoreIdentifierType.METADATA: config.JSON_KEY_STORE_APPURL,
+        config.StoreIdentifierType.PAGE: config.JSON_KEY_STORE_APPID,
+    })
 
     # Constructor
     def __init__(self):
@@ -71,63 +88,23 @@ class Steam(storebase.StoreBase):
     # Store
     ############################################################
 
-    # Get name
-    def get_name(self):
-        return config.StoreType.STEAM.val()
-
-    # Get type
-    def get_type(self):
-        return config.StoreType.STEAM
-
-    # Get platform
-    def get_platform(self):
-        return config.Platform.COMPUTER_STEAM
-
-    # Get supercategory
-    def get_supercategory(self):
-        return config.Supercategory.ROMS
-
-    # Get category
-    def get_category(self):
-        return config.Category.COMPUTER
-
-    # Get subcategory
-    def get_subcategory(self):
-        return config.Subcategory.COMPUTER_STEAM
-
-    # Get key
-    def get_key(self):
-        return config.JSON_KEY_STEAM
-
-    # Get identifier keys
-    def get_identifier_keys(self):
-        return {
-            config.StoreIdentifierType.INFO: config.JSON_KEY_STORE_APPID,
-            config.StoreIdentifierType.INSTALL: config.JSON_KEY_STORE_APPID,
-            config.StoreIdentifierType.LAUNCH: config.JSON_KEY_STORE_APPID,
-            config.StoreIdentifierType.DOWNLOAD: config.JSON_KEY_STORE_APPID,
-            config.StoreIdentifierType.ASSET: config.JSON_KEY_STORE_APPID,
-            config.StoreIdentifierType.METADATA: config.JSON_KEY_STORE_APPURL,
-            config.StoreIdentifierType.PAGE: config.JSON_KEY_STORE_APPID
-        }
-
-    # Get preferred platform
+    # The OS SteamCMD and DepotDownloader fetch builds for, from the settings
     def get_preferred_platform(self):
         return self.platform
 
-    # Get preferred architecture
+    # The CPU architecture DepotDownloader fetches builds for, from the settings
     def get_preferred_architecture(self):
         return self.arch
 
-    # Get account name
+    # The Steam login account name from the settings, used for SteamCMD and DepotDownloader sign-in
     def get_account_name(self):
         return self.accountname
 
-    # Get user name
+    # The Steam profile name from the settings; the constructor refuses to build without one
     def get_user_name(self):
         return self.username
 
-    # Get user id
+    # The configured 64-bit SteamID, or the same account rendered in another SteamIDFormatType
     def get_user_id(self, format_type = None):
         steamid = self.userid
         steamid64ident = 76561197960265728
@@ -148,13 +125,9 @@ class Steam(storebase.StoreBase):
             steamid = str(steamidacct // 2)
         return steamid
 
-    # Get web api key
+    # The Steam Web API key from the settings, used to list owned games
     def get_web_api_key(self):
         return self.web_api_key
-
-    # Get install dir
-    def get_install_dir(self):
-        return self.install_dir
 
     # Check if store can handle installing
     def can_handle_installing(self):
@@ -180,7 +153,7 @@ class Steam(storebase.StoreBase):
     def get_login_hint(self):
         return "check steam_userid and steam_web_api_key in the UserData.Steam section of JoyBox.ini"
 
-    # Login
+    # Sign in to SteamCMD interactively with the account name; True at once when already signed in
     def login(
         self,
         verbose = False,
@@ -222,7 +195,7 @@ class Steam(storebase.StoreBase):
     # Page
     ############################################################
 
-    # Get latest url
+    # The store page for an appid; None when the page is unreachable
     def get_latest_url(
         self,
         identifier,
@@ -242,7 +215,7 @@ class Steam(storebase.StoreBase):
     # Purchases
     ############################################################
 
-    # Get purchases
+    # Owned games, free ones included, from a cache under a day old or else the Web API, with userdata save paths
     def get_latest_purchases(
         self,
         verbose = False,
@@ -354,7 +327,7 @@ class Steam(storebase.StoreBase):
     # Json
     ############################################################
 
-    # Augment jsondata
+    # Merge in manifest save paths and registry keys matched by appid, rooted at the game's install dir when known, then the base cleanup
     def augment_jsondata(
         self,
         json_data,
@@ -392,7 +365,7 @@ class Steam(storebase.StoreBase):
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
-    # Get latest jsondata
+    # Name, install dir, controller support and the branch's build id and date from SteamCMD's anonymous app_info_print
     def get_latest_jsondata(
         self,
         identifier,
@@ -493,7 +466,7 @@ class Steam(storebase.StoreBase):
     # Metadata
     ############################################################
 
-    # Get latest metadata
+    # Description and the genre, developer, publisher and release details scraped from the store page, with retries
     def get_latest_metadata(
         self,
         identifier,
@@ -591,7 +564,7 @@ class Steam(storebase.StoreBase):
     # Assets
     ############################################################
 
-    # Get latest asset url
+    # The library cover for a box front or the first trailer for a video; None for other types
     def get_latest_asset_url(
         self,
         identifier,
@@ -644,7 +617,7 @@ class Steam(storebase.StoreBase):
         # Check for manifest
         return paths.is_path_file(get_steam_manifest_file(self.get_install_dir(), identifier))
 
-    # Install
+    # Install or validate the app with SteamCMD for the preferred OS; quits when SteamCMD is missing
     def install(
         self,
         identifier,
@@ -689,7 +662,7 @@ class Steam(storebase.StoreBase):
     # Launch
     ############################################################
 
-    # Launch
+    # Start the game through the Steam client's rungameid URL; quits when Steam is missing
     def launch(
         self,
         identifier,
@@ -730,7 +703,7 @@ class Steam(storebase.StoreBase):
     # Download
     ############################################################
 
-    # Download
+    # Fetch the app (or a beta branch) with DepotDownloader into a temp dir and archive it into output_dir, minus its state folder
     def download(
         self,
         identifier,
@@ -815,7 +788,7 @@ class Steam(storebase.StoreBase):
     # Paths
     ############################################################
 
-    # Build path translation map
+    # The base token map plus the app's Proton prefix for registry, Public and steamuser profile paths
     def build_path_translation_map(self, appid = None, appname = None):
 
         # Build translation map
@@ -827,7 +800,7 @@ class Steam(storebase.StoreBase):
             translation_map[config.TOKEN_USER_PROFILE_DIR].append(paths.join_paths(prefix_path, "drive_c", "users", "steamuser"))
         return translation_map
 
-    # Get registered paths
+    # The base variants plus copies of each user-id path in the 64-bit, account-number and legacy SteamID forms
     def add_path_variants(self, path_list = None):
 
         # Add parent variants

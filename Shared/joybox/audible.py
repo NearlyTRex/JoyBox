@@ -22,7 +22,8 @@ def extract_activation_bytes(text):
         return match.group(1)
     return None
 
-# Get activation bytes
+# The 8-hex-digit Audible key from the settings, the given authcode file, $AUDIBLE_ACTIVATION_BYTES
+# or ~/.audible_authcode, in that order; None when none has one
 def get_activation_bytes(authcode_file = None, verbose = False, exit_on_failure = False):
 
     # Check ini file first

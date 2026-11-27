@@ -133,7 +133,7 @@ def ensure_running():
         return True
     return start_serve()
 
-# List installed models
+# Models the Ollama server reports through /api/tags, with size and details, sorted by name; empty when unreachable
 def list_installed_models():
     result = network.get_remote_json(get_api_base() + "/api/tags")
     if not result or "models" not in result:
@@ -162,7 +162,7 @@ def pull_model(model_name):
         options = options)
     return code == 0
 
-# Delete a model
+# Remove a model from the configured Ollama server with ollama rm; True on success
 def delete_model(model_name):
     code = command.run_returncode_command(
         ["ollama", "rm", model_name],

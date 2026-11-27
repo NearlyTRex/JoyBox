@@ -11,7 +11,7 @@ from joybox import programcatalog
 
 ###########################################################
 
-# Get config value
+# A program's config key, narrowed to the platform's entry when it is per-platform; None when unset
 def get_config_value(program_config, program_name, program_key, program_platform = None):
     if not program_platform:
         program_platform = platform_info.get_current_platform()
@@ -25,7 +25,7 @@ def get_config_value(program_config, program_name, program_key, program_platform
         return program_value
     return program_value
 
-# Get path config value
+# A program's path config key, used as is when it exists or joined under base_dir; None when unset
 def get_path_config_value(program_config, base_dir, program_name, program_key, program_platform = None):
     program_path = get_config_value(program_config, program_name, program_key, program_platform)
     if program_path:
@@ -34,13 +34,13 @@ def get_path_config_value(program_config, base_dir, program_name, program_key, p
         return paths.join_paths(base_dir, program_path)
     return None
 
-# Get program
+# A program's executable path from its "program" config key; None when it has none
 def get_program(program_config, base_dir, program_name, program_platform = None):
     return get_path_config_value(program_config, base_dir, program_name, "program", program_platform)
 
 ###########################################################
 
-# Get program install dir
+# Install folder of a tool or emulator under its root dir, by platform; None for an unknown program
 def get_program_install_dir(program_name, program_platform = None):
     if is_program_name_tool(program_name, program_platform):
         return paths.join_paths(environment.get_tools_root_dir(), program_name, program_platform)
@@ -48,7 +48,7 @@ def get_program_install_dir(program_name, program_platform = None):
         return paths.join_paths(environment.get_emulators_root_dir(), program_name, program_platform)
     return None
 
-# Get program backup dir
+# Locker folder holding a tool's or emulator's backed-up binaries; None for an unknown program
 def get_program_backup_dir(program_name, program_platform = None):
     if is_program_name_tool(program_name, program_platform):
         return environment.get_locker_program_tool_dir(program_name, program_platform)
@@ -56,13 +56,13 @@ def get_program_backup_dir(program_name, program_platform = None):
         return environment.get_locker_gaming_emulator_binaries_dir(program_name, program_platform)
     return None
 
-# Get library install dir
+# Install folder of a library under the tools root, per platform when one is given
 def get_library_install_dir(library_name, library_platform = None):
     if library_platform:
         return paths.join_paths(environment.get_tools_root_dir(), library_name, library_platform)
     return paths.join_paths(environment.get_tools_root_dir(), library_name)
 
-# Get library backup dir
+# Locker folder holding a library's backup, per platform when one is given
 def get_library_backup_dir(library_name, library_platform = None):
     if library_platform:
         return paths.join_paths(environment.get_locker_program_tool_dir(library_name), library_platform)
@@ -105,49 +105,49 @@ def is_program_installed(program_name, program_platform = None):
 
 ###########################################################
 
-# Get tool config
+# Every tool's config, from the program catalog
 def get_tool_config():
     return programcatalog.get_tool_configs()
 
-# Get emulator config
+# Every emulator's config, from the program catalog
 def get_emulator_config():
     return programcatalog.get_emulator_configs()
 
 ###########################################################
 
-# Get tool program
+# A tool's executable path under the tools root; None when it has none
 def get_tool_program(tool_name, tool_platform = None):
     return get_program(get_tool_config(), environment.get_tools_root_dir(), tool_name, tool_platform)
 
-# Get emulator program
+# An emulator's executable path under the emulators root; None when it has none
 def get_emulator_program(emulator_name, emulator_platform = None):
     return get_program(get_emulator_config(), environment.get_emulators_root_dir(), emulator_name, emulator_platform)
 
-# Get tool program dir
+# Folder holding a tool's executable
 def get_tool_program_dir(tool_name, tool_platform = None):
     return paths.get_filename_directory(get_tool_program(tool_name, tool_platform))
 
-# Get emulator program dir
+# Folder holding an emulator's executable
 def get_emulator_program_dir(emulator_name, emulator_platform = None):
     return paths.get_filename_directory(get_emulator_program(emulator_name, emulator_platform))
 
-# Get tool config value
+# One key of a tool's catalog config, narrowed to the platform; None when unset
 def get_tool_config_value(tool_name, tool_key, tool_platform = None):
     return get_config_value(get_tool_config(), tool_name, tool_key, tool_platform)
 
-# Get emulator config value
+# One key of an emulator's catalog config, narrowed to the platform; None when unset
 def get_emulator_config_value(emulator_name, emulator_key, emulator_platform = None):
     return get_config_value(get_emulator_config(), emulator_name, emulator_key, emulator_platform)
 
-# Get tool path config value
+# A tool's path config key, resolved under the tools root unless it already exists; None when unset
 def get_tool_path_config_value(tool_name, tool_key, tool_platform = None):
     return get_path_config_value(get_tool_config(), environment.get_tools_root_dir(), tool_name, tool_key, tool_platform)
 
-# Get emulator path config value
+# An emulator's path config key, resolved under the emulators root unless it already exists; None when unset
 def get_emulator_path_config_value(emulator_name, emulator_key, emulator_platform = None):
     return get_path_config_value(get_emulator_config(), environment.get_emulators_root_dir(), emulator_name, emulator_key, emulator_platform)
 
-# Derive tool name from program path
+# Name of the tool whose executable is at an existing path; None when no tool matches
 def derive_tool_name_from_program_path(program_path, tool_platform = None):
     if not program_path or not os.path.exists(program_path):
         return None
@@ -157,7 +157,7 @@ def derive_tool_name_from_program_path(program_path, tool_platform = None):
             return tool_name
     return None
 
-# Derive emulator name from program path
+# Name of the emulator whose executable is at an existing path; None when no emulator matches
 def derive_emulator_name_from_program_path(program_path, emulator_platform = None):
     if not program_path or not os.path.exists(program_path):
         return None

@@ -4,7 +4,7 @@ from joybox import runoptions
 from joybox import logger
 from . import installer
 
-# Steam
+# Installs Steam and SteamCMD from apt, with i386 enabled and the SteamCMD license pre-accepted
 class Steam(installer.Installer):
     def __init__(
         self,
@@ -13,16 +13,19 @@ class Steam(installer.Installer):
         options = runoptions.RunOptions()):
         super().__init__(connection, flags, options)
 
+    # Local Ubuntu only
     def get_supported_environments(self):
         return [
             constants.EnvironmentType.LOCAL_UBUNTU,
         ]
 
+    # Whether both /usr/games/steam and /usr/games/steamcmd exist
     def is_installed(self):
         steam_installed = self.connection.does_file_or_directory_exist("/usr/games/steam")
         steamcmd_installed = self.connection.does_file_or_directory_exist("/usr/games/steamcmd")
         return steam_installed and steamcmd_installed
 
+    # steam and steamcmd as installed or missing, by their /usr/games binaries
     def get_package_status(self):
         installed = []
         missing = []
@@ -36,6 +39,8 @@ class Steam(installer.Installer):
             missing.append("steamcmd")
         return {"installed": installed, "missing": missing}
 
+    # Enable i386, apt-get install steam-installer (steam when that fails), preseed
+    # the license, then install steamcmd; False when a step fails
     def install(self):
 
         # Start install
@@ -96,6 +101,7 @@ class Steam(installer.Installer):
         logger.log_info("Steam and SteamCMD installed successfully")
         return True
 
+    # apt-get remove steamcmd, steam-installer and steam
     def uninstall(self):
 
         # Start uninstall

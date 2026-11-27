@@ -19,7 +19,7 @@ def _get_html_text():
 # Text processing utilities
 ###########################################################
 
-# Capitalize text
+# Title-case each word by its first letter, leaving filler words after the first lowercase as written
 def capitalize_text(text):
     if len(text) == 0:
         return ""
@@ -38,7 +38,7 @@ def capitalize_text(text):
                 words.append(word[0].upper() + word[1:])
     return " ".join(words)
 
-# Wrap text to lines
+# Lines wrapped to width, with a spacer line between the original paragraphs
 def wrap_text_to_lines(text, width = 80, spacer = "."):
     wrapped_lines = []
     text_lines = text.split("\n")
@@ -49,7 +49,7 @@ def wrap_text_to_lines(text, width = 80, spacer = "."):
             wrapped_lines.append(spacer)
     return wrapped_lines
 
-# Clean rich text
+# Plain ASCII text: transliterated by unidecode when installed, typographic characters replaced, the rest dropped
 def clean_rich_text(text):
     new_text = text
     # unidecode is optional; without it non-ascii is dropped below
@@ -61,14 +61,14 @@ def clean_rich_text(text):
     new_text = new_text.encode("ascii", "ignore").decode()
     return new_text.strip()
 
-# Clean web text
+# Rich text cleanup plus the configured web text replacements
 def clean_web_text(text):
     new_text = clean_rich_text(text)
     for old, new in config.web_text_replacements.items():
         new_text = new_text.replace(old, new)
     return new_text
 
-# Extract web text
+# Readable text from an HTML document via html_text; None when it is not installed
 def extract_web_text(text):
     try:
         html_text = _get_html_text()

@@ -29,7 +29,8 @@ def find_prepackaged_archive(source_file, game_name):
             return candidate
     return paths.join_paths(source_dir, game_name + ".exe")
 
-# Transform computer programs
+# Unpack a computer game into output_dir from its pre-packaged archive, or by running its installers
+# into an install image that is backed up then unpacked; returns (success, index file or error)
 def transform_computer_programs(
     game_info,
     source_file,
@@ -133,7 +134,8 @@ def transform_computer_programs(
 
 ###########################################################
 
-# Transform disc images
+# Extract a CHD, or each CHD a playlist lists, to ISO in output_dir, rewriting the playlist to match
+# Returns (True, iso or m3u path), or (False, source_file) when there was nothing to extract
 def transform_disc_image(
     source_file,
     output_dir,
@@ -197,7 +199,7 @@ def transform_disc_image(
 
 ###########################################################
 
-# Transform Xbox disc image
+# Rewrite an Xbox ISO, or each ISO a playlist lists, in place with extract-xiso; returns (success, path or error)
 def transform_xbox_disc_image(
     source_file,
     output_dir,
@@ -240,7 +242,7 @@ def transform_xbox_disc_image(
 
 ###########################################################
 
-# Transform PS3 disc image
+# Extract a PS3 ISO with its disc key into output_dir, then the pkg files on it; returns (success, index file or error)
 def transform_ps3_disc_image(
     source_file,
     source_file_dkey,
@@ -315,7 +317,7 @@ def transform_ps3_disc_image(
 
 ###########################################################
 
-# Transform PS3 network package
+# Copy the .rap licenses beside a PS3 pkg and extract the pkgs into output_dir; returns (success, index file or error)
 def transform_ps3_network_package(
     source_file,
     output_dir,
@@ -373,7 +375,7 @@ def transform_ps3_network_package(
 
 ###########################################################
 
-# Transform PSV network package
+# Copy the .work.bin licenses beside a Vita pkg and extract the pkgs into output_dir; returns (success, index file or error)
 def transform_psv_network_package(
     source_file,
     output_dir,
@@ -427,7 +429,8 @@ def transform_psv_network_package(
 
 ###########################################################
 
-# Transform game file
+# Turn a game's stored file into its playable form in a temp dir, by platform, then move it into output_dir
+# Returns (success, output path or error)
 def transform_game_file(
     game_info,
     source_dir,

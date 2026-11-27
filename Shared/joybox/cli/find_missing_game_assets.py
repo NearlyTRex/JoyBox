@@ -39,7 +39,7 @@ def build_parser():
     parser.add_common_arguments()
     return parser
 
-# Main
+# After a preview, report the Pegasus entries missing each asset type and the asset files no entry uses, writing each list to a file
 def main():
 
     # Parse arguments

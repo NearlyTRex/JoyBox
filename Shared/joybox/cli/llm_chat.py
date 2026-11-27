@@ -111,6 +111,8 @@ def build_parser():
 ###########################################################
 # Main
 ###########################################################
+
+# Chat in the terminal with an Ollama, OpenAI-compatible or Claude backend, seeded with a prompt and files, or answer one question and exit
 def main():
 
     # Parse arguments

@@ -198,6 +198,8 @@ class FileBrowser(installer_dockerapp.DockerAppInstaller):
         self.backup_label = "FileBrowser"
         self.backup_volumes = ["data"]
 
+    # The base checks, plus an admin user of safe characters, a long enough admin
+    # password and a valid TOTP secret
     def check_required_settings(self):
         if not super().check_required_settings():
             return False

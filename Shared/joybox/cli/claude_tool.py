@@ -67,7 +67,7 @@ def build_parser():
     parser.add_common_arguments()
     return parser
 
-# Main
+# After a preview, send each matching file in the input tree to Claude through the prompt template and write the replies to a mirrored output tree
 def main():
 
     # Parse arguments

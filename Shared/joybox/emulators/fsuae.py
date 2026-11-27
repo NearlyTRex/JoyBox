@@ -15,17 +15,10 @@ from joybox import emulatorbase
 # FSUAE emulator
 class FSUAE(emulatorbase.EmulatorBase):
 
-    # Get name
-    def get_name(self):
-        return "FS-UAE"
+    NAME = "FS-UAE"
 
-    # Get platforms
-    def get_platforms(self):
-        return [
-            config.Platform.OTHER_COMMODORE_AMIGA
-        ]
-
-    # Setup
+    # Windows build from the FrodeSolheim/fs-uae GitHub release; Linux AppImage built from
+    # the 3.1.66 source tarball, with fs-uae.dat beside it
     def setup(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
@@ -85,7 +78,7 @@ class FSUAE(emulatorbase.EmulatorBase):
                 return False
         return True
 
-    # Setup offline
+    # Install the Windows and Linux builds from the releases stored in their backups dirs
     def setup_offline(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
@@ -118,7 +111,7 @@ class FSUAE(emulatorbase.EmulatorBase):
                 return False
         return True
 
-    # Configure
+    # Write its config files, then verify the locker system files and copy them into each platform's setup dir
     def configure(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
@@ -153,7 +146,7 @@ class FSUAE(emulatorbase.EmulatorBase):
                     return False
         return True
 
-    # Launch
+    # Run FS-UAE on the game file, with --fullscreen=1 when asked
     def launch(
         self,
         game_info,

@@ -48,7 +48,7 @@ def build_parser():
     parser.add_common_arguments()
     return parser
 
-# Main
+# After a preview, convert, trim, untrim, extract or inspect each 3DS CIA and CCI file under the input
 def main():
 
     # Parse arguments

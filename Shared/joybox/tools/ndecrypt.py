@@ -9,11 +9,10 @@ from joybox import toolbase
 # NDecrypt tool
 class NDecrypt(toolbase.ToolBase):
 
-    # Get name
-    def get_name(self):
-        return "NDecrypt"
+    NAME = "NDecrypt"
 
-    # Setup
+    # Download the Windows and Linux binaries from the SabreTools/NDecrypt GitHub release,
+    # marking the Linux one executable
     def setup(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
@@ -65,7 +64,7 @@ class NDecrypt(toolbase.ToolBase):
                 return False
         return True
 
-    # Setup offline
+    # Install the Windows and Linux binaries from the releases stored in their backups dirs
     def setup_offline(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()

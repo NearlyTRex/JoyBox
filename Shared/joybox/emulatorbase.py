@@ -13,13 +13,16 @@ from joybox import platform_info
 # Base emulator
 class EmulatorBase(ABC):
 
-    # Get name
-    def get_name(self):
-        return ""
+    # The name the emulator is registered under, which also files its program data
+    NAME = ""
 
-    # Get platforms
+    # The emulator's registered name
+    def get_name(self):
+        return self.NAME
+
+    # The platforms whose games it plays, as its program data lists them
     def get_platforms(self):
-        return []
+        return programcatalog.get_emulator_platforms(self.get_name())
 
     # Get config, from the emulator's program data
     def get_config(self):
@@ -33,7 +36,7 @@ class EmulatorBase(ABC):
     def get_system_files(self):
         return programcatalog.get_system_files(programcatalog.FAMILY_EMULATORS, self.get_name())
 
-    # Get config file
+    # Path of the emulator's own config file for the platform, from its program data under the emulators root
     def get_config_file(self, emulator_platform = None):
         return programs.get_path_config_value(
             program_config = self.get_config(),
@@ -42,7 +45,7 @@ class EmulatorBase(ABC):
             program_key = "config_file",
             program_platform = emulator_platform)
 
-    # Get setup dir
+    # Directory the emulator keeps its setup files in for the platform, under the emulators root
     def get_setup_dir(self, emulator_platform = None):
         return programs.get_path_config_value(
             program_config = self.get_config(),
@@ -51,11 +54,11 @@ class EmulatorBase(ABC):
             program_key = "setup_dir",
             program_platform = emulator_platform)
 
-    # Get save type
+    # The kind of save data the emulator keeps; None in the base, emulators override it
     def get_save_type(self):
         return None
 
-    # Get save base dir
+    # Root the per-platform save sub directories hang off, from the program data; None when unset
     def get_save_base_dir(self, emulator_platform = None):
         return programs.get_path_config_value(
             program_config = self.get_config(),
@@ -64,7 +67,7 @@ class EmulatorBase(ABC):
             program_key = "save_base_dir",
             program_platform = emulator_platform)
 
-    # Get save sub dirs
+    # Map of game platform to save sub directory, from the program data; None when unset
     def get_save_sub_dirs(self, emulator_platform = None):
         return programs.get_config_value(
             program_config = self.get_config(),
@@ -72,7 +75,8 @@ class EmulatorBase(ABC):
             program_key = "save_sub_dirs",
             program_platform = emulator_platform)
 
-    # Get save dir
+    # Where saves for a game platform go: the base dir plus that platform's sub dir when the
+    # program data maps one, else the plain save_dir; emulator platform defaults to the current one
     def get_save_dir(self, game_platform, emulator_platform = None):
 
         # Use current platform if none specified
@@ -102,17 +106,17 @@ class EmulatorBase(ABC):
         del dlc_dirs, update_dirs, verbose, pretend_run, exit_on_failure
         return True
 
-    # Setup
+    # Download the emulator's releases for each platform it installs on, keeping backups
     @abstractmethod
     def setup(self, setup_params = None):
         ...
 
-    # Setup offline
+    # Install the emulator from its stored backup releases instead of downloading
     @abstractmethod
     def setup_offline(self, setup_params = None):
         ...
 
-    # Configure
+    # Write the config files and copy in verified system files after install; the base does nothing
     def configure(self, setup_params = None):
         del setup_params
         return True
@@ -133,7 +137,7 @@ class EmulatorBase(ABC):
                 return False
         return True
 
-    # Launch
+    # Start a game, optionally capturing video or a screenshot; the base launches nothing and returns False
     def launch(
         self,
         game_info,

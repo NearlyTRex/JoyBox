@@ -12,11 +12,10 @@ from joybox import toolbase
 # Ludusavi tool
 class Ludusavi(toolbase.ToolBase):
 
-    # Get name
-    def get_name(self):
-        return "Ludusavi"
+    NAME = "Ludusavi"
 
-    # Setup
+    # Download the Windows and Linux binaries from the mtkennerly/ludusavi GitHub release,
+    # marking the Linux one executable
     def setup(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
@@ -68,7 +67,7 @@ class Ludusavi(toolbase.ToolBase):
                 return False
         return True
 
-    # Setup offline
+    # Install the Windows and Linux binaries from the releases stored in their backups dirs
     def setup_offline(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
@@ -110,7 +109,7 @@ class Ludusavi(toolbase.ToolBase):
                 return False
         return True
 
-    # Configure
+    # Write its config files under the tools root
     def configure(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()

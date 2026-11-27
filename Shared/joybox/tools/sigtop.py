@@ -9,11 +9,9 @@ from joybox import toolbase
 # Sigtop tool
 class Sigtop(toolbase.ToolBase):
 
-    # Get name
-    def get_name(self):
-        return "Sigtop"
+    NAME = "Sigtop"
 
-    # Setup
+    # Download the Windows exe from the tbvdm/sigtop GitHub release; Windows only
     def setup(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
@@ -39,7 +37,7 @@ class Sigtop(toolbase.ToolBase):
                 return False
         return True
 
-    # Setup offline
+    # Install the Windows build from the release stored in its backups dir
     def setup_offline(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()

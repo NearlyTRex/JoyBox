@@ -14,7 +14,7 @@ from joybox import paths
 from joybox import fileops
 from joybox import sandboxpaths
 
-# Get archive compression flags
+# 7-Zip flags for a zip or 7z archive, plus password and volume-split flags when given
 def get_archive_compression_flags(archive_type, password, volume_size):
     compression_flags = []
     if archive_type == config.ArchiveFileType.ZIP:
@@ -46,7 +46,7 @@ def get_archive_compression_flags(archive_type, password, volume_size):
         ]
     return compression_flags
 
-# Check archive compression output files
+# Whether 7-Zip wrote its output; a lone .001 volume is renamed to the plain archive name
 def check_archive_compression_output_files(
     archive_file,
     volume_size,
@@ -87,7 +87,7 @@ def check_archive_compression_output_files(
             return False
     return True
 
-# Create archive from file
+# Compress one file into an archive with 7-Zip, optionally deleting the source; False on any failure
 def create_archive_from_file(
     archive_file,
     source_file,
@@ -166,7 +166,7 @@ def create_archive_from_file(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
-# Create archive from folder
+# Compress a folder's contents, minus excludes, into an archive with 7-Zip; False on any failure
 def create_archive_from_folder(
     archive_file,
     source_dir,
@@ -251,7 +251,7 @@ def create_archive_from_folder(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
-# Extract archive
+# Unpack an archive with tar, unrar, unar or 7-Zip by its type; False when nothing was extracted
 def extract_archive(
     archive_file,
     extract_dir,
@@ -398,7 +398,7 @@ def extract_archive(
     # Check result
     return os.path.exists(extract_dir) and not paths.is_directory_empty(extract_dir)
 
-# Test archive
+# Whether 7-Zip's integrity test passes for the archive
 def test_archive(
     archive_file,
     verbose = False,
@@ -430,7 +430,7 @@ def test_archive(
         exit_on_failure = exit_on_failure)
     return code == 0
 
-# List archive
+# File paths inside the archive from 7-Zip's listing, directories left out; empty without 7-Zip
 def list_archive(
     archive_file,
     verbose = False,

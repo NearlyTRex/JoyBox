@@ -23,7 +23,7 @@ from joybox import platform_info
 def _get_image_grab():
     return importlib.import_module("PIL.ImageGrab")
 
-# Capture screenshot
+# Grab the screen, or the region at origin of the given resolution, into an image file with Pillow; False when it fails
 def capture_screenshot(
     output_file,
     capture_origin = None,
@@ -62,7 +62,7 @@ def capture_screenshot(
     # Check result
     return os.path.exists(output_file)
 
-# Capture screenshot while running
+# Run a function while a background job re-grabs the screenshot every interval; True when the image exists
 def capture_screenshot_while_running(
     run_func,
     output_file,
@@ -107,7 +107,7 @@ def capture_screenshot_while_running(
         return True
     return os.path.exists(output_file)
 
-# Capture video
+# Record the screen region, plus desktop audio on Linux, to an NVENC H.264 file with FFMpeg for the duration in seconds
 def capture_video(
     output_file,
     capture_origin,
@@ -209,7 +209,7 @@ def capture_video(
         return True
     return os.path.exists(output_file)
 
-# Capture video while running
+# Record the screen with FFMpeg on a thread while a function runs, interrupting FFMpeg when it returns
 def capture_video_while_running(
     run_func,
     output_file,
@@ -260,7 +260,7 @@ def capture_video_while_running(
         return True
     return os.path.exists(output_file)
 
-# Run capture command
+# Run a command while taking screenshots or video per the capture settings; existing captures are kept unless overwrite is set
 def run_capture_command(
     cmd,
     options = commandbase.create_command_options(),

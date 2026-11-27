@@ -1,6 +1,9 @@
 # Xemu: where its programs live and how they run, the files its setup writes
 # and the system files it checks. Read by joybox/programcatalog.py.
 
+# The platforms it plays
+platforms = ["MICROSOFT_XBOX"]
+
 [config.Xemu]
 program = { windows = "Xemu/windows/xemu.exe", linux = "Xemu/linux/Xemu.AppImage" }
 save_dir = { windows = "<none>", linux = "<none>" }

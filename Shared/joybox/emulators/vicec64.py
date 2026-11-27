@@ -14,17 +14,10 @@ from joybox import emulatorbase
 # ViceC64 emulator
 class ViceC64(emulatorbase.EmulatorBase):
 
-    # Get name
-    def get_name(self):
-        return "VICE-C64"
+    NAME = "VICE-C64"
 
-    # Get platforms
-    def get_platforms(self):
-        return [
-            config.Platform.OTHER_COMMODORE_64
-        ]
-
-    # Setup
+    # Windows SDL2 build from the VICE-Team/svn-mirror GitHub release; Linux AppImage of x64sc
+    # built from the NearlyTRex/ViceC64 fork with autotools
     def setup(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
@@ -84,7 +77,7 @@ class ViceC64(emulatorbase.EmulatorBase):
                 return False
         return True
 
-    # Setup offline
+    # Install the Windows and Linux builds from the releases stored in their backups dirs
     def setup_offline(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
@@ -117,7 +110,7 @@ class ViceC64(emulatorbase.EmulatorBase):
                 return False
         return True
 
-    # Configure
+    # Write its config files under the emulators root
     def configure(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
@@ -135,7 +128,7 @@ class ViceC64(emulatorbase.EmulatorBase):
                 return False
         return True
 
-    # Launch
+    # Run the x64sc emulator on the game file
     def launch(
         self,
         game_info,

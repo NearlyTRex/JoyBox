@@ -13,15 +13,15 @@ from joybox import platform_info
 from joybox import programs
 from joybox import validation
 
-# Get wine prefix
+# Folder for the options' prefix name under the Wine sandbox_dir tool setting
 def get_wine_prefix(options):
     return paths.join_paths(programs.get_tool_path_config_value("Wine", "sandbox_dir"), options.get_prefix_name())
 
-# Get sandboxie prefix
+# Folder for the options' prefix name under the Sandboxie sandbox_dir tool setting
 def get_sandboxie_prefix(options):
     return paths.join_paths(programs.get_tool_path_config_value("Sandboxie", "sandbox_dir"), options.get_prefix_name())
 
-# Get prefix
+# Wine or Sandboxie folder for the options' prefix name; None without a name or prefix kind
 def get_prefix(options):
     prefix_dir = None
     if options.get_prefix_name():
@@ -31,17 +31,17 @@ def get_prefix(options):
             prefix_dir = get_sandboxie_prefix(options)
     return prefix_dir
 
-# Get wine real drive path
+# Host folder backing a Wine drive letter: drive_c for C, dosdevices/<letter>: for the rest
 def get_wine_real_drive_path(options, drive):
     if drive.lower() == "c":
         return paths.join_paths(options.get_prefix_dir(), "drive_c")
     return paths.join_paths(options.get_prefix_dir(), "dosdevices", drive.lower() + ":")
 
-# Get sandboxie real drive path
+# Host folder backing a Sandboxie drive letter, drive/<LETTER> in the prefix
 def get_sandboxie_real_drive_path(options, drive):
     return paths.join_paths(options.get_prefix_dir(), "drive", drive.upper())
 
-# Get real drive path
+# Host folder backing a drive letter in the Wine or Sandboxie prefix; None when neither
 def get_real_drive_path(options, drive):
     real_drive_path = None
     if options.is_wine_prefix():
@@ -50,19 +50,19 @@ def get_real_drive_path(options, drive):
         real_drive_path = get_sandboxie_real_drive_path(options, drive)
     return real_drive_path
 
-# Get real c drive path
+# Host folder backing the prefix's C drive; None when it is neither Wine nor Sandboxie
 def get_real_c_drive_path(options):
     return get_real_drive_path(options, "c")
 
-# Get wine user profile path
+# Host folder of the current user's profile in a Wine prefix, drive_c/users/<user>
 def get_wine_user_profile_path(options):
     return paths.normalize_file_path(paths.join_paths(options.get_prefix_dir(), "drive_c", "users", getpass.getuser()))
 
-# Get sandboxie user profile path
+# Host folder of the current user's profile in a Sandboxie prefix, user/current
 def get_sandboxie_user_profile_path(options):
     return paths.normalize_file_path(paths.join_paths(options.get_prefix_dir(), "user", "current"))
 
-# Get user profile path
+# Host folder of the current user's profile in the Wine or Sandboxie prefix; None when neither
 def get_user_profile_path(options):
     user_profile_dir = None
     if options.is_wine_prefix():
@@ -71,15 +71,15 @@ def get_user_profile_path(options):
         user_profile_dir = get_sandboxie_user_profile_path(options)
     return user_profile_dir
 
-# Get wine public profile path
+# Host folder of the shared Public profile in a Wine prefix, drive_c/users/Public
 def get_wine_public_profile_path(options):
     return paths.normalize_file_path(paths.join_paths(options.get_prefix_dir(), "drive_c", "users", "Public"))
 
-# Get sandboxie public profile path
+# Host folder of the shared Public profile in a Sandboxie prefix, drive/C/Public
 def get_sandboxie_public_profile_path(options):
     return paths.normalize_file_path(paths.join_paths(options.get_prefix_dir(), "drive", "C", "Public"))
 
-# Get public profile path
+# Host folder of the Public profile in the Wine or Sandboxie prefix; None when neither
 def get_public_profile_path(options):
     public_profile_dir = None
     if options.is_wine_prefix():
@@ -88,7 +88,7 @@ def get_public_profile_path(options):
         public_profile_dir = get_sandboxie_public_profile_path(options)
     return public_profile_dir
 
-# Build token map
+# Map path tokens to install, setup, hdd and per-disc roots; discs get drive letters in order when use_drive_letters is set
 def build_token_map(
     store_install_dir = None,
     game_install_dir = None,
@@ -142,7 +142,7 @@ def build_token_map(
     # Return token map
     return token_map
 
-# Resolve path
+# Path with every token in token_map replaced by its value
 def resolve_path(
     path,
     token_map = None):
@@ -152,7 +152,7 @@ def resolve_path(
             path = path.replace(token, replacement)
     return path
 
-# Get prefix path info
+# Split a virtual (drive letter) or real (host) path into prefix, letter, base and offset with both forms; None when invalid
 def get_prefix_path_info(
     path,
     options,

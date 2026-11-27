@@ -125,6 +125,7 @@ def get_percent(summary):
 SUMMED_FIELDS = (
     "num_statements", "missing_lines", "covered_lines",
     "num_branches", "covered_branches", "num_partial_branches")
+# Add each summed field of summary into total in place, returning total
 def add_summary(total, summary):
     for field in SUMMED_FIELDS:
         total[field] = total.get(field, 0) + summary.get(field, 0)
@@ -234,6 +235,7 @@ def format_count(value):
 
 # List names for a table cell, at most a few before a count of the rest
 NAMES_PER_CELL = 8
+# Names as backticked, comma-joined code, the first few then "and N more"
 def list_names(names):
     shown = ", ".join("`%s`" % name for name in names[:NAMES_PER_CELL])
     if len(names) > NAMES_PER_CELL:

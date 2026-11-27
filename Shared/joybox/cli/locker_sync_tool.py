@@ -69,7 +69,7 @@ def build_parser():
     parser.add_common_arguments()
     return parser
 
-# Main
+# Sync the primary locker to each secondary, reviewing the planned changes in an editor before applying them
 def main():
 
     # Parse arguments

@@ -71,7 +71,7 @@ def build_parser():
     parser.add_common_arguments()
     return parser
 
-# Main
+# After a preview, pack, unpack, import or export the save, or import the save paths, on each selected game with a JSON entry
 def main():
 
     # Parse arguments

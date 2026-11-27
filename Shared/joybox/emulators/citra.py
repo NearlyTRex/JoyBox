@@ -19,17 +19,7 @@ from joybox import emulatorbase
 # Citra emulator
 class Citra(emulatorbase.EmulatorBase):
 
-    # Get name
-    def get_name(self):
-        return "Citra"
-
-    # Get platforms
-    def get_platforms(self):
-        return [
-            config.Platform.NINTENDO_3DS,
-            config.Platform.NINTENDO_3DS_APPS,
-            config.Platform.NINTENDO_3DS_ESHOP
-        ]
+    NAME = "Citra"
 
     # Install add-ons
     def install_addons(self, dlc_dirs = None, update_dirs = None, verbose = False, pretend_run = False, exit_on_failure = False):
@@ -48,7 +38,8 @@ class Citra(emulatorbase.EmulatorBase):
                         return False
         return True
 
-    # Setup
+    # Install the Windows and Linux builds from the releases stored in their backups dirs;
+    # nothing is downloaded, and a missing archive is skipped
     def setup(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
@@ -84,13 +75,14 @@ class Citra(emulatorbase.EmulatorBase):
                 return False
         return True
 
-    # Setup offline
+    # Same as setup, which already works only from stored releases
     def setup_offline(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
         return self.setup(setup_params = setup_params)
 
-    # Configure
+    # Write its config files, verify the locker system files, then unzip the nand and sysdata archives
+    # into each platform's setup dir, keeping files already there
     def configure(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
@@ -127,7 +119,7 @@ class Citra(emulatorbase.EmulatorBase):
                         return False
         return True
 
-    # Launch
+    # Run Citra on the game file
     def launch(
         self,
         game_info,

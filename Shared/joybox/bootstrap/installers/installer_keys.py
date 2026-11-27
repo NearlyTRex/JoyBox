@@ -32,7 +32,8 @@ KEYS = [
     },
 ]
 
-# Keys
+# Puts the keys KEYS lists in place: secrets written from their settings,
+# machine keys generated with ssh-keygen
 class Keys(installer.Installer):
     def __init__(
         self,
@@ -41,14 +42,17 @@ class Keys(installer.Installer):
         options = runoptions.RunOptions()):
         super().__init__(connection, flags, options)
 
+    # Local Ubuntu only
     def get_supported_environments(self):
         return [
             constants.EnvironmentType.LOCAL_UBUNTU,
         ]
 
+    # Where the key goes, from its path setting; empty when unset
     def get_key_path(self, key):
         return settings.get_path_value(*key["path"], default_value = "", throw_exception = False) or ""
 
+    # Whether every key with a path setting exists
     def is_installed(self):
         for key in KEYS:
             path = self.get_key_path(key)
@@ -89,6 +93,7 @@ class Keys(installer.Installer):
             "authorized_keys so this machine can log in")
         return True
 
+    # Write or generate each missing key, leaving existing ones alone; False at the first failure
     def install(self):
 
         # Start install

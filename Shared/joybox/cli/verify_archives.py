@@ -38,7 +38,7 @@ def build_parser():
     parser.add_common_arguments()
     return parser
 
-# Main
+# After a preview, test each archive of the chosen types under the input with 7-Zip; stops at the first that fails
 def main():
 
     # Parse arguments

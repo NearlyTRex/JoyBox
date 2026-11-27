@@ -37,7 +37,7 @@ def build_parser():
     parser.add_common_arguments()
     return parser
 
-# Main
+# After a preview, zip the files on each CHD's disc filesystem into a zip beside it, skipping CHDs already zipped
 def main():
 
     # Parse arguments

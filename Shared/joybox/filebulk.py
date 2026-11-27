@@ -16,7 +16,8 @@ from joybox import fileops
 # Bulk copy/move utilities
 ###########################################################
 
-# Copy contents
+# Copy every file under src into dest keeping relative paths; with skip_on_error, log failures
+# and carry on, else stop at the first; False when src is missing or a file fails
 def copy_contents(
     src,
     dest,
@@ -80,7 +81,8 @@ def copy_contents(
             (" (logged to %s)" % error_log_path) if error_log_path else ""))
     return True
 
-# Move contents
+# Move every file under src into dest keeping relative paths, leaving src's folders behind;
+# with skip_on_error, log failures and carry on; False when src is missing or a file fails
 def move_contents(
     src,
     dest,
@@ -145,7 +147,7 @@ def move_contents(
             (" (logged to %s)" % error_log_path) if error_log_path else ""))
     return True
 
-# Copy globbed files
+# Copy each file the glob matches into dest_dir, keeping its path relative to the glob's folder
 def copy_globbed_files(
     glob_pattern,
     dest_dir,
@@ -200,7 +202,7 @@ def copy_globbed_files(
             (" (logged to %s)" % error_log_path) if error_log_path else ""))
     return True
 
-# Move globbed files
+# Move each file the glob matches into dest_dir, keeping its path relative to the glob's folder
 def move_globbed_files(
     glob_pattern,
     dest_dir,
@@ -260,7 +262,7 @@ def move_globbed_files(
 # Smart copy/move utilities
 ###########################################################
 
-# Smart copy
+# Copy a glob's matches, a directory's contents or one file to dest, picking by what src names
 def smart_copy(
     src,
     dest,
@@ -323,7 +325,7 @@ def smart_copy(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
-# Smart move
+# Move a glob's matches, a directory's contents or one file to dest, picking by what src names
 def smart_move(
     src,
     dest,
@@ -387,7 +389,7 @@ def smart_move(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
-# Smart transfer
+# smart_move when delete_afterwards is set, otherwise smart_copy
 def smart_transfer(
     src,
     dest,
@@ -437,7 +439,7 @@ def smart_transfer(
 # Sync utilities
 ###########################################################
 
-# Sync contents
+# Make dest an exact copy of src by emptying it and copying src's contents in
 def sync_contents(
     src,
     dest,
@@ -474,7 +476,8 @@ def sync_contents(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
-# Sync data
+# Mirror a source into dest: glob to glob copies matches, a directory syncs, a file copies;
+# False when the source is none of these
 def sync_data(data_src, data_dest, verbose = False, pretend_run = False, exit_on_failure = False):
     is_glob_src = config.TOKEN_GLOB in paths.get_filename_basename(data_src)
     is_glob_dest = config.TOKEN_GLOB in paths.get_filename_basename(data_dest)

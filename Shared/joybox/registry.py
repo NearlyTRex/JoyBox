@@ -10,7 +10,7 @@ from joybox import fileops
 from joybox import serialization
 from joybox import command
 
-# Read registry file
+# Parse a UTF-16 .reg file into its header and key/value entries, filtered by key prefix; empty on a pretend run
 def read_registry_file(
     registry_file,
     ignore_keys = (),
@@ -87,7 +87,7 @@ def read_registry_file(
     # Return results
     return registry
 
-# Write registry file
+# Write a header and entries back out as a UTF-16 .reg file in the platform's line endings
 def write_registry_file(
     registry_file,
     registry_data,
@@ -110,7 +110,7 @@ def write_registry_file(
         registry_file, registry_text, encoding = "utf-16", newline = None,
         verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure)
 
-# Export registry file
+# Export one key with reg export through the options' prefix; True when the .reg file appears
 def export_registry_file(
     registry_file,
     registry_key,
@@ -151,7 +151,7 @@ def export_registry_file(
     # Check result
     return os.path.exists(registry_file)
 
-# Import registry file
+# Load a .reg file with reg import through the options' prefix; True when reg exits cleanly
 def import_registry_file(
     registry_file,
     options,
@@ -186,7 +186,7 @@ def import_registry_file(
     # Assume successful
     return True
 
-# Backup registry
+# Export each key to a temporary .reg, keep the entries the filters allow, and write them into one .reg file
 def backup_user_registry(
     registry_file,
     options,
@@ -247,7 +247,7 @@ def backup_user_registry(
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
-# Restore registry
+# Import the setup or game prefix's saved .reg file; True with nothing to do when none is saved
 def restore_registry(
     options,
     verbose = False,
@@ -276,7 +276,7 @@ def restore_registry(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
-# Backup registry
+# Save the requested keys from the setup or game prefix into its profile's .reg file; False for any other prefix
 def backup_registry(
     options,
     registry_keys = None,

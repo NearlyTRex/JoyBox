@@ -43,7 +43,7 @@ def build_parser():
     parser.add_common_arguments()
     return parser
 
-# Main
+# Log in to the store of each selected category and subcategory through its own command-line login
 def main():
 
     # Parse arguments

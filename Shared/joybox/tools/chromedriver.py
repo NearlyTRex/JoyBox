@@ -9,11 +9,9 @@ from joybox import toolbase
 # ChromeDriver tool
 class ChromeDriver(toolbase.ToolBase):
 
-    # Get name
-    def get_name(self):
-        return "ChromeDriver"
+    NAME = "ChromeDriver"
 
-    # Setup
+    # Download the Windows and Linux drivers linked from the Chrome for Testing page
     def setup(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
@@ -57,7 +55,7 @@ class ChromeDriver(toolbase.ToolBase):
                 return False
         return True
 
-    # Setup offline
+    # Install the Windows and Linux drivers from the releases stored in their backups dirs
     def setup_offline(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()

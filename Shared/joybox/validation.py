@@ -78,6 +78,6 @@ def assert_dictionary_has_key(var_value, var_key):
 def assert_callable(var_value, var_name):
     assert callable(var_value), "%s should be a callable" % var_name
 
-# Assert that path exists
+# Raise AssertionError naming var_name when the path does not exist
 def assert_path_exists(var_value, var_name):
     assert os.path.exists(var_value), "%s should be a path that exists" % var_name

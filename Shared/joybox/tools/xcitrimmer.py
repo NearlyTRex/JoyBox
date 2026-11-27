@@ -11,11 +11,10 @@ from joybox import toolbase
 # XCITrimmer tool
 class XCITrimmer(toolbase.ToolBase):
 
-    # Get name
-    def get_name(self):
-        return "XCITrimmer"
+    NAME = "XCITrimmer"
 
-    # Setup
+    # Clone the NearlyTRex/XCITrimmer repo at its configured branch into its lib dir, install its
+    # Python requirements, then archive the repo into its backups dir
     def setup(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
@@ -58,7 +57,7 @@ class XCITrimmer(toolbase.ToolBase):
                 return False
         return True
 
-    # Setup offline
+    # Install the library from the repo archive stored in its backups dir, then its Python requirements offline
     def setup_offline(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()

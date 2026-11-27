@@ -31,7 +31,7 @@ def build_parser():
     parser.add_common_arguments()
     return parser
 
-# Main
+# After a preview, verify each CHD under the input against its SHA-1; stops at the first that fails
 def main():
 
     # Parse arguments

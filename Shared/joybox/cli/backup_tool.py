@@ -94,7 +94,7 @@ def build_parser():
     parser.add_common_arguments()
     return parser
 
-# Main
+# After a preview, copy the source tree into the destination, encrypting or decrypting each file, or pack its second-level folders into split 7z archives
 def main():
 
     # Parse arguments

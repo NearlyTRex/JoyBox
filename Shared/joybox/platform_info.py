@@ -35,7 +35,7 @@ def is_wine_platform():
 def is_sandboxie_platform():
     return is_windows_platform()
 
-# Get current platform
+# "windows", "linux" or "macos" for the running OS; None for any other
 def get_current_platform():
     if is_windows_platform():
         return "windows"
@@ -64,18 +64,23 @@ def get_linux_distro_value(field):
             return tokens[1].strip("\"")
     return ""
 
+# Distro NAME from /etc/os-release; empty off Linux or when unset
 def get_linux_distro_name():
     return get_linux_distro_value("NAME")
 
+# Distro VERSION from /etc/os-release; empty off Linux or when unset
 def get_linux_distro_version():
     return get_linux_distro_value("VERSION")
 
+# Distro ID from /etc/os-release; empty off Linux or when unset
 def get_linux_distro_id():
     return get_linux_distro_value("ID")
 
+# Distro ID_LIKE parents from /etc/os-release; empty off Linux or when unset
 def get_linux_distro_id_like():
     return get_linux_distro_value("ID_LIKE")
 
+# Whether os-release names Ubuntu in NAME, ID or ID_LIKE, so Ubuntu derivatives count
 def is_ubuntu_distro():
     if "ubuntu" in get_linux_distro_name().lower():
         return True
@@ -85,5 +90,6 @@ def is_ubuntu_distro():
         return True
     return False
 
+# UBUNTU_CODENAME from /etc/os-release, such as noble; empty when unset
 def get_ubuntu_codename():
     return get_linux_distro_value("UBUNTU_CODENAME")

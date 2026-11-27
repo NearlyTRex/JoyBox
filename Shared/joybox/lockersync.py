@@ -45,11 +45,13 @@ CRYPTION_LABELS = {
 # Cache Management
 ###########################################################
 
+# Folder holding cached locker hash maps, created when missing
 def get_cache_dir():
     cache_dir = environment.get_cache_sync_dir()
     fileops.make_directory(src = cache_dir)
     return cache_dir
 
+# Cache file for a locker's hash map; a map built with excludes gets its own file keyed by their MD5
 def get_cache_file(locker_name, excludes = ()):
 
     # A map built with excludes is missing files, so it is cached apart from the full one
@@ -58,6 +60,7 @@ def get_cache_file(locker_name, excludes = ()):
     excludes_key = hashutil.calculate_string_md5("\n".join(sorted(excludes)))[:12]
     return paths.join_paths(get_cache_dir(), "%s_%s_hashmap.json" % (locker_name, excludes_key))
 
+# Empty the hash map cache folder
 def clear_cache():
     cache_dir = get_cache_dir()
     if paths.does_path_exist(cache_dir):
@@ -72,6 +75,7 @@ SIDECAR_ONLY_REMOTE_TYPES = [
     config.RemoteType.SFTP,
 ]
 
+# A hash map cached less than 24 hours ago; None when absent, stale or malformed
 def load_cached_hash_map(cache_file, locker_name, verbose = False):
 
     # Only a recent cache is used
@@ -139,6 +143,7 @@ def get_backend_hash_map(backend, locker_name, excludes, verbose = False, preten
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
+# Relative path to hash entry for a locker, from a recent cache or built from its backend and cached; None when the build fails
 def build_locker_hash_map(
     backend,
     locker_name,
@@ -178,6 +183,7 @@ def build_locker_hash_map(
 # Sync Actions
 ###########################################################
 
+# Copy or update action type for a file, with decrypt or encrypt when the two lockers' encryption differs
 def get_sync_action_type(base_action, primary_encrypted, secondary_encrypted):
 
     # Only COPY is special-cased; anything else updates in place
@@ -194,6 +200,7 @@ def get_sync_action_type(base_action, primary_encrypted, secondary_encrypted):
     # Same encryption state: plain copy/update
     return config.SyncActionType.COPY if is_copy else config.SyncActionType.UPDATE
 
+# Whether a relative path is the recycle folder or inside it
 def is_in_recycle_bin(rel_path):
     normalized = rel_path.replace("\\", "/")
     return normalized == RECYCLE_FOLDER or normalized.startswith(RECYCLE_FOLDER + "/")
@@ -202,6 +209,7 @@ def is_in_recycle_bin(rel_path):
 def is_skipped_sync_path(rel_path, exclude_write_paths):
     return paths.matches_exclude_pattern(rel_path, exclude_write_paths) or is_in_recycle_bin(rel_path)
 
+# Copy actions for files missing on the secondary, update actions for differing hashes, and recycle actions for secondary-only files
 def build_sync_actions(
     primary_hashes,
     secondary_hashes,
@@ -247,6 +255,7 @@ def build_sync_actions(
 def get_action_lines(actions):
     return ["%s %s" % (action["type"].upper(), action.get("dest", action.get("src", action.get("path", "")))) for action in actions]
 
+# Editor file text listing new, updated and (commented-out) orphan actions in sections, with instructions in its header
 def generate_action_file_content(actions, target_name, include_orphans = True):
 
     # Group actions by type
@@ -276,6 +285,7 @@ def generate_action_file_content(actions, target_name, include_orphans = True):
             "Save and close editor to proceed, or delete all lines to abort"
         ])
 
+# The proposed actions the edited lines still name, by type and path, taking any destination the edit gave; unknown lines are warned about and dropped
 def match_edited_actions(actions, edited_lines):
 
     # Index the proposed actions by type and path
@@ -303,6 +313,7 @@ def match_edited_actions(actions, edited_lines):
         approved.append(approved_action)
     return approved
 
+# Let the user edit the proposed actions in an editor; returns the approved ones, or None when cancelled
 def open_editor_for_sync_actions(
     actions,
     target_name,
@@ -368,6 +379,7 @@ def execute_sync_action(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
+# Run transfer and recycle actions one at a time, logging the tally; True when none failed
 def execute_sync_actions(
     actions,
     primary_backend,
@@ -393,6 +405,7 @@ def execute_sync_actions(
     logger.log_info("Sync complete: %d succeeded, %d failed" % (success_count, fail_count))
     return fail_count == 0
 
+# An action's type as a SyncActionType, parsing it when given as a string
 def normalize_action_type(action):
     raw_type = action.get("type", "")
     if isinstance(raw_type, str):
@@ -408,6 +421,7 @@ def group_actions_by_cryption(actions):
             groups[cryption_type].append(action)
     return groups
 
+# One batched transfer per cryption type, then recycles one by one; returns whether all succeeded and the paths that did
 def execute_sync_actions_batched(
     actions,
     primary_backend,
@@ -461,6 +475,7 @@ def is_backend_accessible(backend, role):
             return False
     return True
 
+# Whether the primary and every secondary locker is reachable: local paths exist, remotes are configured
 def verify_prerequisites(
     primary_backend,
     secondary_backends):
@@ -626,6 +641,7 @@ def sync_secondary(primary, sec_info, sec_backend, skip_cache = False, interacti
         return refresh_secondary_sidecar(primary_backend, sec_backend, sec_name, exclude_patterns, verbose, pretend_run, exit_on_failure)
     return success
 
+# Sync a primary locker onto each secondary by hash comparison, with editor approval when interactive; True when every secondary synced
 def sync_lockers(
     primary_locker_type,
     secondary_locker_types,

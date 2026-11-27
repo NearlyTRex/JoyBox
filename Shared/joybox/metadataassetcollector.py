@@ -8,7 +8,7 @@ from joybox.stores import steamlookups
 
 ############################################################
 
-# Find metadata assets from google images
+# Google Images results sized for box fronts; empty for any other asset type
 def find_metadata_assets_from_google_images(
     game_name,
     asset_type,
@@ -28,7 +28,7 @@ def find_metadata_assets_from_google_images(
 
 ############################################################
 
-# Find metadata asset from YouTube
+# YouTube results for the game's trailer; empty for any asset type but video
 def find_metadata_assets_from_youtube(
     game_name,
     asset_type,
@@ -49,7 +49,7 @@ def find_metadata_assets_from_youtube(
 
 ############################################################
 
-# Find metadata assets from Steam
+# Steam store box fronts or videos for the game; empty for other asset types
 def find_metadata_assets_from_steam(
     game_name,
     asset_type,
@@ -71,7 +71,7 @@ def find_metadata_assets_from_steam(
 
 ############################################################
 
-# Find metadata assets from SteamGridDB
+# SteamGridDB covers sized for box fronts; empty for any other asset type
 def find_metadata_assets_from_steamgriddb(
     game_name,
     asset_type,
@@ -92,7 +92,7 @@ def find_metadata_assets_from_steamgriddb(
 
 ############################################################
 
-# Find metadata asset
+# Gather candidates from every source and have the user pick one by index or paste a URL; None when skipped
 def find_metadata_asset(
     game_platform,
     game_name,

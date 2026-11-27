@@ -14,19 +14,10 @@ from joybox import emulatorbase
 # PPSSPP emulator
 class PPSSPP(emulatorbase.EmulatorBase):
 
-    # Get name
-    def get_name(self):
-        return "PPSSPP"
+    NAME = "PPSSPP"
 
-    # Get platforms
-    def get_platforms(self):
-        return [
-            config.Platform.SONY_PLAYSTATION_NETWORK_PSP,
-            config.Platform.SONY_PLAYSTATION_NETWORK_PSPM,
-            config.Platform.SONY_PLAYSTATION_PORTABLE
-        ]
-
-    # Setup
+    # Windows build from the ppsspp.org download page; Linux SDL AppImage built from the
+    # NearlyTRex/PPSSPP fork with CMake
     def setup(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
@@ -82,7 +73,7 @@ class PPSSPP(emulatorbase.EmulatorBase):
                 return False
         return True
 
-    # Setup offline
+    # Install the Windows and Linux builds from the releases stored in their backups dirs
     def setup_offline(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
@@ -115,7 +106,7 @@ class PPSSPP(emulatorbase.EmulatorBase):
                 return False
         return True
 
-    # Configure
+    # Write its config files under the emulators root
     def configure(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
@@ -133,7 +124,7 @@ class PPSSPP(emulatorbase.EmulatorBase):
                 return False
         return True
 
-    # Launch
+    # Run PPSSPP on the game file
     def launch(
         self,
         game_info,

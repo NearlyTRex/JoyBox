@@ -34,7 +34,7 @@ def build_parser():
     parser.add_common_arguments()
     return parser
 
-# Main
+# After a preview, rewrite every Pegasus metadata file found under the metadata repository in sorted order
 def main():
 
     # Parse arguments

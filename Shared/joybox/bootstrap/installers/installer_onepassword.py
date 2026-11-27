@@ -4,7 +4,7 @@ from joybox import runoptions
 from joybox import logger
 from . import installer
 
-# OnePassword
+# Installs the 1Password app and op CLI from 1Password's apt repository, with its debsig policy
 class OnePassword(installer.Installer):
     def __init__(
         self,
@@ -24,16 +24,20 @@ class OnePassword(installer.Installer):
         self.app_path = "/usr/bin/1password"
         self.cli_path = "/usr/bin/op"
 
+    # Local Ubuntu only
     def get_supported_environments(self):
         return [
             constants.EnvironmentType.LOCAL_UBUNTU,
         ]
 
+    # Whether both /usr/bin/1password and /usr/bin/op exist
     def is_installed(self):
         return all(
             self.connection.does_file_or_directory_exist(path)
             for path in [self.app_path, self.cli_path])
 
+    # Add 1Password's keyring, debsig policy and apt source, then apt-get install
+    # the app and CLI
     def install(self):
         logger.log_info("Installing 1Password")
         self.connection.make_directory(self.policy_path, sudo = True)
@@ -48,6 +52,7 @@ class OnePassword(installer.Installer):
             [self.aptget_tool, "install", "-y"] + self.packages, sudo = True)
         return True
 
+    # apt-get remove the app and CLI, then delete the source, keyring and debsig policy
     def uninstall(self):
         logger.log_info("Uninstalling 1Password")
         self.connection.run_checked(

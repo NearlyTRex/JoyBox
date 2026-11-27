@@ -528,6 +528,7 @@ def parse_interface_mac(output):
                 return token.lower()
     return None
 
+# MAC of the guest's first network interface from virsh domiflist; None when none is listed
 def get_vm_interface_mac(vm_name = DEFAULT_NAME, verbose = False, pretend_run = False):
     output = command.run_output_command(
         cmd = get_virsh_command(["domiflist", vm_name]),

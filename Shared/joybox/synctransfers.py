@@ -25,7 +25,7 @@ HASH_DATABASE_FILE = ".locker_hashes.db"
 LARGE_DIRECTORY_FILE_COUNT = 500
 LARGE_DIRECTORY_SIZE = 10 * 1024 * 1024 * 1024
 
-# Download files from remote
+# Copy remote files into local_path, or onto it with copyto when it names a single file
 def download_files_from_remote(
     remote_name,
     remote_type,
@@ -61,7 +61,8 @@ def download_files_from_remote(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
-# Upload files to remote
+# Copy local files to the remote, optionally skipping existing ones, then add them to the hash sidecar under local_root
+# A sidecar that cannot be updated only warns
 def upload_files_to_remote(
     remote_name,
     remote_type,
@@ -184,7 +185,7 @@ def list_files_with_hashes_from_sidecar(
         logger.log_info("Loaded %d file hashes from database" % len(hash_map))
     return hash_map
 
-# Get hash database path
+# Path of the hash sidecar database under a remote root, with forward slashes
 def get_hash_database_path(remote_path = ""):
     return paths.join_paths(remote_path, HASH_DATABASE_FILE).replace("\\", "/")
 
@@ -283,7 +284,7 @@ def get_remote_relative_path(remote_path, remote_root):
         return remote_path[len(root) + 1:]
     return None
 
-# Clear hash sidecar files
+# Delete the hash sidecar database at the remote root
 def clear_hash_sidecar_files(
     remote_name,
     remote_type,
@@ -421,7 +422,8 @@ def store_hash_database(remote_name, remote_type, remote_db_path, temp_db_path, 
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
-# Upload hash sidecar files
+# Hash the files under local_path and merge them into the sidecar database at the local_root remote root
+# skip_existing leaves already-listed files unhashed; False when the database cannot be fetched or stored
 def upload_hash_sidecar_files(
     remote_name,
     remote_type,

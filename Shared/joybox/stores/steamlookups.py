@@ -16,14 +16,14 @@ from joybox import strings
 from joybox import webpage
 from joybox import webfetch
 
-# Get steam page
+# The store page URL for an appid; None when it is unreachable
 def get_steam_page(appid):
     url = "https://store.steampowered.com/app/%s" % appid
     if network.is_url_reachable(url):
         return url
     return None
 
-# Get steam cover
+# The 600x900 library cover from the first Steam CDN that serves it; None when none does
 def get_steam_cover(appid):
     for cdn_type in config.ContentDeliveryNetworkType.members():
         url = "https://cdn.%s.steamstatic.com/steam/apps/%s/library_600x900_2x.jpg" % (cdn_type.lower(), appid)
@@ -31,7 +31,7 @@ def get_steam_cover(appid):
             return url
     return None
 
-# Get steam trailer
+# The first .mp4 store trailer linked from the app's store page, trying each Steam CDN; None when none is found
 def get_steam_trailer(
     appid,
     verbose = False,
@@ -50,7 +50,7 @@ def get_steam_trailer(
             return asset_url
     return None
 
-# Find steam appid matches
+# Entries of the SteamAppIDList CSV whose titles are highly similar to the name, each scored by similarity
 def find_steam_appid_matches(
     search_name,
     verbose = False,
@@ -72,7 +72,7 @@ def find_steam_appid_matches(
             search_results.append(search_result)
     return search_results
 
-# Find steam appid match
+# The best-scoring appid match, by default the best one whose store page is reachable; None when nothing matches
 def find_steam_appid_match(
     search_name,
     only_active_pages = True,
@@ -96,7 +96,7 @@ def find_steam_appid_match(
         return None
     return ranked_results[0]
 
-# Find Steam assets
+# The cover or trailer of the best appid match, as a one-item result list; empty when none is found
 def find_steam_assets(
     search_name,
     asset_type,

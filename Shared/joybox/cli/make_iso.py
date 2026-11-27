@@ -51,7 +51,7 @@ def build_parser():
     parser.add_common_arguments()
     return parser
 
-# Main
+# Build an ISO from each folder in the input dir, or from each zip under it after extracting it, skipping existing ISOs
 def main():
 
     # Parse arguments

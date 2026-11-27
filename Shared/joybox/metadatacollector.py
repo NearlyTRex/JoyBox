@@ -292,7 +292,7 @@ def collect_metadata_from_tgdb(
 
 ############################################################
 
-# Collect metadata from GameFAQs
+# Scrape description, genre, developer, publisher and release from the first GameFAQs hit on the platform; None when blocked or unsupported
 def collect_metadata_from_gamefaqs(
     game_platform,
     game_name,
@@ -443,7 +443,7 @@ def collect_metadata_from_gamefaqs(
 
 ############################################################
 
-# Collect metadata from BigFishGames
+# Scrape the description and feature bullets from the BigFishGames search page; None when there is no description
 def collect_metadata_from_bigfishgames(
     game_platform,
     game_name,
@@ -517,7 +517,7 @@ def get_skip_reason(source_name, metadata_result, keys_to_check):
         return "given up"
     return None
 
-# Collect metadata from all
+# Merge GameFAQs then TheGamesDB results, skipping a source once the keys are filled, and tally the game in stats
 def collect_metadata_from_all(
     game_platform,
     game_name,

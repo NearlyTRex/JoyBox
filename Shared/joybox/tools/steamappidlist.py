@@ -10,11 +10,10 @@ from joybox import toolbase
 # SteamAppIDList tool
 class SteamAppIDList(toolbase.ToolBase):
 
-    # Get name
-    def get_name(self):
-        return "SteamAppIDList"
+    NAME = "SteamAppIDList"
 
-    # Setup
+    # Clone the NearlyTRex/SteamAppIDList repo at its configured branch into its lib dir,
+    # then archive the repo into its backups dir
     def setup(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
@@ -49,7 +48,7 @@ class SteamAppIDList(toolbase.ToolBase):
                 return False
         return True
 
-    # Setup offline
+    # Install the library from the repo archive stored in its backups dir
     def setup_offline(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()

@@ -9,15 +9,9 @@ from joybox import emulatorbase
 # Snes9x emulator
 class Snes9x(emulatorbase.EmulatorBase):
 
-    # Get name
-    def get_name(self):
-        return "Snes9x"
+    NAME = "Snes9x"
 
-    # Get platforms
-    def get_platforms(self):
-        return []
-
-    # Setup
+    # Download the Windows zip and Linux AppImage from the snes9xgit/snes9x GitHub release
     def setup(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
@@ -60,7 +54,7 @@ class Snes9x(emulatorbase.EmulatorBase):
                 return False
         return True
 
-    # Setup offline
+    # Install the Windows and Linux builds from the releases stored in their backups dirs
     def setup_offline(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()

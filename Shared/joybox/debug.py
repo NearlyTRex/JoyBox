@@ -6,7 +6,7 @@ import inspect
 # Debug utilities
 ###########################################################
 
-# Get source info
+# "(file:line)" of the caller depth frames up, or "(unknown:0)" when the stack is shorter
 def get_source_info(depth = 1):
     frame = inspect.currentframe()
     for _ in range(depth + 1):
@@ -18,7 +18,8 @@ def get_source_info(depth = 1):
     line_number = frame.f_lineno
     return f"({file_name}:{line_number})"
 
-# Get backtrace
+# The call stack above the caller as newline-joined file, line and function entries,
+# skipping the given number of innermost frames
 def get_backtrace(skip = 0):
     stack = inspect.stack()
     backtrace = []

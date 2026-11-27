@@ -116,9 +116,11 @@ class DockerAppInstaller(installer.Installer):
         self.backup_dirs = []
         self.backup_excludes = []
 
+    # The app's compose directory, ~/apps/<app_name> on the remote host
     def get_app_dir(self):
         return "%s/apps/%s" % (self.get_remote_home(), self.app_name)
 
+    # Stop the compose project, deleting its volumes only with --purge-data
     def compose_down(self):
 
         # Stop the compose project. Volumes are preserved unless --purge-data
@@ -135,6 +137,7 @@ class DockerAppInstaller(installer.Installer):
         self.connection.set_current_working_directory(None)
         return True
 
+    # Rename the app directory aside with a timestamp, or delete it with --purge-data
     def retire_app_dir(self):
 
         # Bind-mounted app data lives inside the app directory, so removing it
@@ -149,14 +152,18 @@ class DockerAppInstaller(installer.Installer):
         self.connection.move_file_or_directory(app_dir, retired_dir)
         return True
 
+    # Remote Ubuntu only
     def get_supported_environments(self):
         return [
             constants.EnvironmentType.REMOTE_UBUNTU,
         ]
 
+    # Path of the marker file a completed install writes in the app directory
     def get_install_marker(self):
         return f"{self.get_app_dir()}/.joybox-installed"
 
+    # Whether the install marker exists and every container named for the app is
+    # running and not unhealthy
     def is_installed(self):
         if not self.connection.does_file_or_directory_exist(self.get_install_marker()):
             return False
@@ -166,6 +173,8 @@ class DockerAppInstaller(installer.Installer):
             len(fields) == 3 and fields[1] == "running" and "(unhealthy)" not in fields[2]
             for fields in mine)
 
+    # Env name to image ref for the app, from the pins in packages with any
+    # [UserData.Images] override applied
     def get_app_images(self):
 
         # Central pins from packages/images.py, optionally overridden
@@ -180,6 +189,7 @@ class DockerAppInstaller(installer.Installer):
                 images[env_name] = pinned_image
         return images
 
+    # The image pins as NAME=ref lines to append to the .env file
     def get_image_env_lines(self):
 
         # Compose substitutes ${VAR} from the env file, so pins reach the
@@ -189,11 +199,14 @@ class DockerAppInstaller(installer.Installer):
             lines += f"{env_name}={image_ref}\n"
         return lines
 
+    # The nginx manager subcommand for an action, the stream variant in stream mode
     def get_nginx_action(self, action):
         if self.nginx_config_mode == "stream":
             return f"{action}_stream_conf"
         return f"{action}_conf"
 
+    # Whether every required setting is present and non-blank, and no quoted
+    # setting holds a single quote or newline; logs the offenders
     def check_required_settings(self):
 
         # A missing key resolves to None and formats into templates as the
@@ -219,10 +232,12 @@ class DockerAppInstaller(installer.Installer):
             return False
         return True
 
+    # Backup root directory from UserData.Backup, /mnt/storage/Backups by default
     def get_backup_root(self):
         return settings.get_value("UserData.Backup", "backup_root",
             default_value = "/mnt/storage/Backups", throw_exception = False)
 
+    # How many backups to retain, from UserData.Backup; at least 1, 7 when unset or invalid
     def get_backup_keep(self):
         keep = settings.get_value("UserData.Backup", "backup_keep",
             default_value = "7", throw_exception = False)
@@ -231,28 +246,35 @@ class DockerAppInstaller(installer.Installer):
         except ValueError:
             return 7
 
+    # The age public key backups are encrypted to; empty when backups stay plain
     def get_backup_age_recipient(self):
         return settings.get_value("UserData.Backup", "backup_age_recipient",
             default_value = "", throw_exception = False).strip()
 
+    # Local path of the age private key restores decrypt with; empty when unset
     def get_backup_age_identity(self):
         return settings.get_value("UserData.Backup", "backup_age_identity",
             default_value = "", throw_exception = False).strip()
 
+    # The backup directory name: the backup label, or the app name without one
     def get_backup_label(self):
         return self.backup_label if self.backup_label else self.app_name
 
+    # Where this app's backups go under the backup root
     def get_backup_dir(self):
         return "%s/%s" % (self.get_backup_root(), self.get_backup_label())
 
+    # Whether the app has a database, volume or directory to back up
     def has_backup_items(self):
         return bool(self.backup_database or self.backup_volumes or self.backup_dirs)
 
+    # Image used to tar volumes, the UserData.Images override or the pinned one
     def get_helper_image(self):
         return settings.get_value("UserData.Images", "backup_helper_image",
             default_value = "", throw_exception = False).strip() \
             or packages.docker_images["_backup"]["BACKUP_HELPER_IMAGE"]
 
+    # Shell command printing the id of the compose service's container, found by label
     def get_container_lookup(self, service):
 
         # Resolve by compose label rather than container name: the services do
@@ -260,6 +282,8 @@ class DockerAppInstaller(installer.Installer):
         return ("docker ps -q --filter label=com.docker.compose.project=%s "
                 "--filter label=com.docker.compose.service=%s | head -n1") % (self.app_name, service)
 
+    # Shell prologue that sets BACKUP_BASE, warns when its parent is not a mount
+    # and fails when it is not writable
     def get_backup_preamble(self):
 
         # A silent backup onto an unmounted path fills the root disk instead.
@@ -276,6 +300,8 @@ if [ ! -w "$BACKUP_BASE" ]; then
 fi
 """ % self.get_backup_dir()
 
+    # Shell script that dumps the database and tars volumes and directories into a
+    # timestamped dir, age-encrypted when a recipient is set, then prunes old backups
     def build_backup_script(self, tag = ""):
 
         # Everything is redirected server-side; archive bytes never travel
@@ -337,6 +363,8 @@ fi
         script += 'rm -rf "$BACKUP_BASE"/*.partial 2>/dev/null || true\n'
         return script
 
+    # Run the backup script on the server; True without doing anything when the
+    # app has nothing to back up or is not installed
     def backup(self, tag = ""):
 
         # Nothing stateful to capture
@@ -354,6 +382,8 @@ fi
             return False
         return True
 
+    # Shell script that verifies a backup's checksums, then replaces volumes,
+    # directories and the database from it, decrypting .age archives
     def build_restore_script(self, backup_id, identity_path = ""):
         script = self.get_backup_preamble()
         if identity_path:
@@ -399,6 +429,8 @@ fi
         script += 'echo "Restore complete from $SRC"\n'
         return script
 
+    # Restore the --backup-id backup (latest by default) after a pre-restore snapshot,
+    # staging the age key in /dev/shm for the run; False when not installed
     def restore(self):
 
         # Nothing stateful to restore
@@ -447,6 +479,7 @@ fi
             return False
         return True
 
+    # Render the nginx template and have the nginx manager install and enable it
     def install_nginx_config(self):
         nginx_tmp_path = f"/tmp/{self.app_name}.conf"
         if not self.connection.write_file(nginx_tmp_path, self.nginx_config_template.format(**self.nginx_config_values)):
@@ -457,10 +490,13 @@ fi
         self.connection.remove_file_or_directory(nginx_tmp_path)
         return True
 
+    # Have the nginx manager remove the app's nginx config
     def uninstall_nginx_config(self):
         self.connection.run_checked([self.nginx_manager_tool, self.get_nginx_action("remove"), f"{self.app_name}.conf"], sudo = True)
         return True
 
+    # Write the compose file and a 600 .env, add the nginx config and firewall ports,
+    # bring the project up, run post_install, then write the install marker
     def install(self):
 
         # Check required settings
@@ -525,9 +561,12 @@ fi
             return False
         return self.connection.write_file(self.get_install_marker(), f"{self.app_name}\n")
 
+    # Setup an app runs once its containers are up; the base has none and returns True
     def post_install(self):
         return True
 
+    # Send a JSON payload to a URL with curl from the server via a private file;
+    # the HTTP status code as a string, empty when staging fails
     def call_local_api(self, method, url, payload):
 
         # The payload carries a password, so it goes through a private file
@@ -542,6 +581,7 @@ fi
         self.connection.remove_file_or_directory(payload_path)
         return (status or "").strip()
 
+    # Whether the URL answers with any HTTP status within the timeout, in seconds
     def wait_for_http(self, url, timeout_seconds = 180):
         logger.log_info(f"Waiting for {self.app_name} to answer at {url}")
         script = ('for i in $(seq 1 %d); do '
@@ -549,6 +589,8 @@ fi
                   'sleep 1; done; exit 1') % (timeout_seconds, url)
         return self.connection.run_return_code(["sh", "-c", script]) == 0
 
+    # Whether the service's container reports healthy, or running when it has no
+    # healthcheck, within the timeout in seconds
     def wait_for_service_health(self, service, timeout_seconds = 300):
 
         # Compose only guarantees the container started; an app behind it may
@@ -572,6 +614,8 @@ exit 1
 """ % (timeout_seconds, lookup, service, service)
         return self.connection.run_return_code(["sh", "-c", script]) == 0
 
+    # Stop the project, retire its directory, remove the nginx config, close its
+    # firewall ports and restart nginx
     def uninstall(self):
 
         # Stop docker

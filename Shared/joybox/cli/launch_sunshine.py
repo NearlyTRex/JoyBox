@@ -28,7 +28,7 @@ def build_parser():
     parser.add_common_arguments()
     return parser
 
-# Main
+# Run the Sunshine streaming host from its tools folder and wait for it to exit
 def main():
 
     # Parse arguments

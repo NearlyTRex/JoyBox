@@ -92,6 +92,8 @@ class FitLog(installer_dockerapp.DockerAppInstaller):
         self.backup_label = "FitLog"
         self.backup_volumes = ["fitlog_state"]
 
+    # Create the configured FitLog login through the app's CLI once it is healthy;
+    # skipped when no login is set, and kept when one already exists
     def post_install(self):
 
         # Without a login in the ini, it is created by hand

@@ -54,7 +54,7 @@ def build_parser():
     parser.add_common_arguments()
     return parser
 
-# Main
+# Run the hardening checks against a server entry or this machine and exit with the failure count
 def main():
 
     # Parse arguments

@@ -132,7 +132,8 @@ WP_ADMIN_PASS={admin_pass}
 WP_ADMIN_EMAIL={admin_email}
 """
 
-# Wordpress
+# Runs WordPress with MariaDB in docker on the apex domain, redirecting www,
+# and seeds it with wp-cli from the repo unless seeding is turned off
 class Wordpress(installer_dockerapp.DockerAppInstaller):
     def __init__(
         self,
@@ -183,6 +184,7 @@ class Wordpress(installer_dockerapp.DockerAppInstaller):
         self.backup_database = "db"
         self.backup_volumes = ["wp_data"]
 
+    # Replace the apex-root snippet with a proxy to WordPress and install the www redirect
     def install_nginx_config(self):
 
         # WordPress serves the apex domain, so it takes over the apex-root
@@ -201,6 +203,7 @@ class Wordpress(installer_dockerapp.DockerAppInstaller):
             self.connection.remove_file_or_directory(nginx_tmp_path)
         return True
 
+    # Put back the static apex-root snippet and remove the www redirect
     def uninstall_nginx_config(self):
 
         # Hand the apex back to the static fallback
@@ -212,6 +215,8 @@ class Wordpress(installer_dockerapp.DockerAppInstaller):
         self.connection.run_checked([self.nginx_manager_tool, "remove_conf", f"{self.app_name}.conf"], sudo = True)
         return True
 
+    # Once WordPress is healthy, copy the repo's seed files to the server and run
+    # seed.sh in the wpcli container; skipped when seeding is off
     def post_install(self):
 
         # Seeding is opt-out

@@ -10,6 +10,7 @@ from joybox import paths
 # class and tag mappings its constructor loads
 class Mp4TagsMixin:
 
+    # An MP4/M4A file's text atoms as strings (number pairs as n/total) and its covers as base64 artwork; empty when untagged, None when unreadable
     def get_mp4_tags(
         self,
         audio_file,
@@ -63,6 +64,7 @@ class Mp4TagsMixin:
                 tags["artwork"] = artwork
         return tags
 
+    # Write text, number-pair, bpm and cover atoms from the dict; False when a numeric tag is not a number; skips the save in a pretend run
     def set_mp4_tags(
         self,
         audio_file,
@@ -132,6 +134,7 @@ class Mp4TagsMixin:
             audio.save()
         return True
 
+    # Delete every atom from the file, optionally putting its covers back; True when there was nothing to remove
     def remove_mp4_tags(
         self,
         audio_file,
@@ -176,6 +179,7 @@ class Mp4TagsMixin:
         audio.save()
         return True
 
+    # Whether the file has at least one MP4 tag atom; False when missing or unreadable
     def has_mp4_tags(self, audio_file):
 
         # Check file exists
@@ -189,6 +193,7 @@ class Mp4TagsMixin:
         except self.mutagen.MutagenError:
             return False
 
+    # Path, size, bitrate, length, sample rate, channels, codec and tag presence; None when unreadable
     def get_mp4_file_info(self, audio_file, verbose = False, exit_on_failure = False):
 
         # Check file exists

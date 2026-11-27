@@ -16,46 +16,10 @@ from joybox import emulatorbase
 # Ares emulator
 class Ares(emulatorbase.EmulatorBase):
 
-    # Get name
-    def get_name(self):
-        return "Ares"
+    NAME = "Ares"
 
-    # Get platforms
-    def get_platforms(self):
-        return [
-
-            # Microsoft
-            config.Platform.MICROSOFT_MSX,
-
-            # Nintendo
-            config.Platform.NINTENDO_64,
-            config.Platform.NINTENDO_FAMICOM,
-            config.Platform.NINTENDO_NES,
-            config.Platform.NINTENDO_SNES,
-            config.Platform.NINTENDO_SNES_MSU1,
-            config.Platform.NINTENDO_SUPER_FAMICOM,
-
-            # Other
-            config.Platform.OTHER_ATARI_2600,
-            config.Platform.OTHER_BANDAI_WONDERSWAN_COLOR,
-            config.Platform.OTHER_BANDAI_WONDERSWAN,
-            config.Platform.OTHER_COLECO_COLECOVISION,
-            config.Platform.OTHER_NEC_PCENGINE,
-            config.Platform.OTHER_NEC_PCENGINE_CD,
-            config.Platform.OTHER_NEC_SUPERGRAFX,
-            config.Platform.OTHER_NEC_TURBOGRAFX_16,
-            config.Platform.OTHER_NEC_TURBOGRAFX_CD,
-            config.Platform.OTHER_SEGA_32X,
-            config.Platform.OTHER_SEGA_CD_32X,
-            config.Platform.OTHER_SEGA_CD,
-            config.Platform.OTHER_SEGA_GAME_GEAR,
-            config.Platform.OTHER_SEGA_GENESIS,
-            config.Platform.OTHER_SEGA_MASTER_SYSTEM,
-            config.Platform.OTHER_SINCLAIR_ZX_SPECTRUM,
-            config.Platform.OTHER_SNK_NEOGEO_POCKET_COLOR
-        ]
-
-    # Setup
+    # Windows build from the ares-emulator GitHub release; Linux AppImage built from the NearlyTRex/Ares fork
+    # with CMake, its Database and Firmware copied into the AppImage home
     def setup(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
@@ -114,7 +78,7 @@ class Ares(emulatorbase.EmulatorBase):
                 return False
         return True
 
-    # Setup offline
+    # Install the Windows and Linux builds from the releases stored in their backups dirs
     def setup_offline(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
@@ -147,7 +111,7 @@ class Ares(emulatorbase.EmulatorBase):
                 return False
         return True
 
-    # Configure
+    # Write its config files, then verify the locker system files and copy them into each platform's setup dir
     def configure(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
@@ -182,7 +146,7 @@ class Ares(emulatorbase.EmulatorBase):
                     return False
         return True
 
-    # Launch
+    # Run Ares with --system set from the platform's save_sub_dirs entry; quits with an error popup when it has none
     def launch(
         self,
         game_info,

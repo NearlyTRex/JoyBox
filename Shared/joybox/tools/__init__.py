@@ -70,7 +70,7 @@ from .xorriso import XorrISO
 from .ytdlp import YtDlp
 from .zoomplatformsh import ZoomPlatformSH
 
-# Get tool map
+# One instance of every tool class, keyed by its registered name
 def get_tool_map():
     instances = {}
     def add_instance(class_name):
@@ -148,11 +148,11 @@ def get_tool_map():
     add_instance(ZoomPlatformSH)
     return instances
 
-# Get tool list
+# Every tool instance, in registration order
 def get_tool_list():
     return get_tool_map().values()
 
-# Get tool by name
+# The tool registered under a name; None when none matches
 def get_tool_by_name(tool_name):
     for instance in get_tool_list():
         if instance.get_name() == tool_name:

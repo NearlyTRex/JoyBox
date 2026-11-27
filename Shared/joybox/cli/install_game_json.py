@@ -50,7 +50,7 @@ def build_parser():
     parser.add_common_arguments()
     return parser
 
-# Main
+# After a preview, install the game named by a JSON file or by category, subcategory and name into the local cache, then its addons
 def main():
 
     # Parse arguments

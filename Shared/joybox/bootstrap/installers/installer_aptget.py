@@ -22,7 +22,7 @@ def get_aptget_package_info(pkg):
         "category": pkg.get("category", "")
     }
 
-# AptGet
+# Installs the environment's apt package list, enabling any foreign architectures it names
 class AptGet(installer.Installer):
     def __init__(
         self,
@@ -31,15 +31,18 @@ class AptGet(installer.Installer):
         options = runoptions.RunOptions()):
         super().__init__(connection, flags, options)
 
+    # Local and remote Ubuntu only
     def get_supported_environments(self):
         return [
             constants.EnvironmentType.LOCAL_UBUNTU,
             constants.EnvironmentType.REMOTE_UBUNTU,
         ]
 
+    # The apt entries, plain ids or dicts, that packages lists for this environment type
     def get_packages(self):
         return packages.aptget.get(self.get_environment_type(), [])
 
+    # Whether dpkg reports every listed package installed
     def is_installed(self):
         for pkg in self.get_packages():
             pkg_id = get_aptget_package_id(pkg)
@@ -47,6 +50,7 @@ class AptGet(installer.Installer):
                 return False
         return True
 
+    # The listed packages split into installed and missing display names
     def get_package_status(self):
         installed = []
         missing = []
@@ -60,6 +64,8 @@ class AptGet(installer.Installer):
                 missing.append(display_name)
         return {"installed": installed, "missing": missing}
 
+    # Enable the foreign architectures the list needs, then apt-get install each
+    # package; False at the first failure
     def install(self):
         logger.log_info("Installing AptGet packages")
         if not self.ensure_foreign_architectures():
@@ -73,6 +79,7 @@ class AptGet(installer.Installer):
                 return False
         return True
 
+    # apt-get remove each listed package; False at the first failure
     def uninstall(self):
         logger.log_info("Uninstalling AptGet packages")
         for pkg in self.get_packages():
@@ -84,6 +91,8 @@ class AptGet(installer.Installer):
                 return False
         return True
 
+    # Add with dpkg any architecture suffix (pkg:i386) the list uses that is not
+    # enabled yet, refreshing the lists after; False when dpkg or the update fails
     def ensure_foreign_architectures(self):
         architectures = []
         for pkg in self.get_packages():
@@ -109,18 +118,22 @@ class AptGet(installer.Installer):
             return False
         return True
 
+    # Whether dpkg reports the package as install ok installed
     def is_package_installed(self, package):
         output = self.connection.run_output([self.aptgetinstall_tool, "-s", package])
         return "Status: install ok installed" in output
 
+    # Run apt-get update as root; False on a nonzero exit
     def update_package_lists(self):
         code = self.connection.run_blocking([self.aptget_tool, "update"], sudo = True)
         return code == 0
 
+    # Run apt-get autoremove as root; False on a nonzero exit
     def auto_remove_packages(self):
         code = self.connection.run_blocking([self.aptget_tool, "autoremove", "-y"], sudo = True)
         return code == 0
 
+    # The package names a simulated apt-get install would remove
     def packages_removed_by_install(self, package):
         output = self.connection.run_output([
             self.aptget_tool, "install", "-s", package
@@ -132,6 +145,7 @@ class AptGet(installer.Installer):
                 removed.append(line.split()[1])
         return removed
 
+    # Whether apt-cache policy shows an install candidate for the package
     def is_package_available(self, package):
         apt_cache_tool = self.aptget_tool.replace("apt-get", "apt-cache")
         output = self.connection.run_output([apt_cache_tool, "policy", package]) or ""
@@ -142,6 +156,8 @@ class AptGet(installer.Installer):
                 return candidate not in ("", "(none)")
         return False
 
+    # apt-get install one package noninteractively, keeping existing conffiles;
+    # skipped with a warning, and True, when it has no candidate or would remove others
     def install_package(self, package):
 
         # Skip packages the repos no longer offer
@@ -172,6 +188,7 @@ class AptGet(installer.Installer):
         ], sudo = True)
         return code == 0
 
+    # apt-get remove one package as root; False on a nonzero exit
     def uninstall_package(self, package):
         code = self.connection.run_blocking([self.aptget_tool, "remove", "-y", package], sudo = True)
         return code == 0

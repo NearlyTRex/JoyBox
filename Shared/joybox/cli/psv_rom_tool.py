@@ -50,7 +50,7 @@ def build_parser():
     parser.add_common_arguments()
     return parser
 
-# Main
+# After a preview, strip, unstrip, trim, untrim or verify each Vita cartridge dump under the input
 def main():
 
     # Parse arguments

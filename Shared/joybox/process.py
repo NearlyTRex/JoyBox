@@ -31,7 +31,7 @@ def has_process_name(proc, process_names):
     return any(process_name == name or ntpath.basename(process_name) == ntpath.basename(name)
                for process_name in process_names)
 
-# Find active processes
+# Running psutil processes whose name or basename matches one given; empty when they cannot be listed
 def find_active_named_processes(process_names = ()):
     psutil = _get_psutil()
     try:
@@ -40,7 +40,7 @@ def find_active_named_processes(process_names = ()):
         return []
     return [proc for proc in candidates if has_process_name(proc, process_names)]
 
-# Kill active processes
+# Send a kill to every running process with a matching name, logging any that refuse
 def kill_active_named_processes(process_names = ()):
     for proc in find_active_named_processes(process_names):
         try:
@@ -48,7 +48,7 @@ def kill_active_named_processes(process_names = ()):
         except get_process_errors() as e:
             logger.log_error(e)
 
-# Interrupt active processes
+# Send Ctrl+C (SIGINT off Windows) to every running process with a matching name
 def interrupt_active_named_processes(process_names = ()):
     number = signal.CTRL_C_EVENT if hasattr(signal, "CTRL_C_EVENT") else signal.SIGINT
     for proc in find_active_named_processes(process_names):
@@ -67,7 +67,7 @@ def wait_for_process(proc, start_time, timeout):
         runtime.sleep_program(1)
     logger.log_info("Process (pid=%d) finished" % proc.pid)
 
-# Wait for processes
+# Block until each matching process exits, sharing one timeout in seconds counted from the call
 def wait_for_named_processes(process_names = (), timeout = 1200):
     psutil = _get_psutil()
     start_time = time.time()

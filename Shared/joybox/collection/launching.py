@@ -14,7 +14,7 @@ from .saves import export_local_game_save
 
 ###########################################################
 
-# Launch store game
+# Install the game through its store client, launch it there, then export its save to the locker
 def launch_store_game(
     game_info,
     locker_type = None,
@@ -69,7 +69,7 @@ def launch_store_game(
 
 ###########################################################
 
-# Launch local game
+# Cache the game, import its save, point the emulator's save dir and config at it, launch, then revert them and export the save
 def launch_local_game(
     game_info,
     locker_type = None,
@@ -189,7 +189,7 @@ def launch_local_game(
 
 ###########################################################
 
-# Launch game
+# Launch through the store client for store platforms, otherwise through the platform's emulator
 def launch_game(
     game_info,
     locker_type = None,

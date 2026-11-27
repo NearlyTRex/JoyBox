@@ -18,14 +18,17 @@ class AwsCli(installer.Installer):
         self.aws_binary_path = "/usr/local/bin/aws"
         self.install_dir = "/usr/local/aws-cli"
 
+    # Local Ubuntu only
     def get_supported_environments(self):
         return [
             constants.EnvironmentType.LOCAL_UBUNTU,
         ]
 
+    # Whether /usr/local/bin/aws exists
     def is_installed(self):
         return self.connection.does_file_or_directory_exist(self.aws_binary_path)
 
+    # aws-cli as installed or missing, by /usr/local/bin/aws
     def get_package_status(self):
         installed = []
         missing = []
@@ -35,6 +38,8 @@ class AwsCli(installer.Installer):
             missing.append("aws-cli")
         return {"installed": installed, "missing": missing}
 
+    # Install or update AWS CLI v2 from Amazon's x86_64 zip with its bundled
+    # installer, then check aws --version; False when a step fails
     def install(self):
 
         # Start install
@@ -108,6 +113,7 @@ class AwsCli(installer.Installer):
         logger.log_info("AWS CLI installed successfully")
         return True
 
+    # Remove /usr/local/aws-cli and the aws and aws_completer links in /usr/local/bin
     def uninstall(self):
 
         # Start uninstall

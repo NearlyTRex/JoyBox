@@ -1,6 +1,9 @@
 # Vita3K: where its programs live and how they run, the files its setup writes
 # and the system files it checks. Read by joybox/programcatalog.py.
 
+# The platforms it plays
+platforms = ["SONY_PLAYSTATION_NETWORK_PSV", "SONY_PLAYSTATION_VITA"]
+
 [config.Vita3K]
 program = { windows = "Vita3K/windows/Vita3K.exe", linux = "Vita3K/linux/Vita3K.AppImage" }
 run_sandboxed = { windows = false, linux = false }

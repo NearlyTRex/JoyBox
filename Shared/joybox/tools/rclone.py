@@ -17,11 +17,9 @@ CONFIG_NOTE = """# Written by JoyBox. Remotes come from the locker settings in J
 # RClone tool
 class RClone(toolbase.ToolBase):
 
-    # Get name
-    def get_name(self):
-        return "RClone"
+    NAME = "RClone"
 
-    # Setup
+    # Download the current Windows and Linux zips from downloads.rclone.org
     def setup(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
@@ -59,7 +57,7 @@ class RClone(toolbase.ToolBase):
                 return False
         return True
 
-    # Setup offline
+    # Install the Windows and Linux builds from the releases stored in their backups dirs
     def setup_offline(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
@@ -93,7 +91,8 @@ class RClone(toolbase.ToolBase):
                 return False
         return True
 
-    # Configure
+    # Overwrite both rclone.conf files with a credential-free note, since remotes reach rclone
+    # through each command's environment
     def configure(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()

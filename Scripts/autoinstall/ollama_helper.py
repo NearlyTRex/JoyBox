@@ -153,6 +153,7 @@ class ThreadingWSGIServer(socketserver.ThreadingMixIn, simple_server.WSGIServer)
 
 # A request handler that keeps requests out of the log
 class QuietHandler(simple_server.WSGIRequestHandler):
+    # Drop the access log line the base handler writes to stderr
     def log_message(self, format, *args):
         pass
 

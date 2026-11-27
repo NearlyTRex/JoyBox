@@ -73,7 +73,7 @@ def build_parser():
     parser.add_common_arguments()
     return parser
 
-# Main
+# Download new videos from the Story or ASMR genre's configured channels as MP3 and back them up to the locker
 def main():
 
     # Parse arguments

@@ -19,18 +19,9 @@ from joybox import emulatorbase
 # RPCS3 emulator
 class RPCS3(emulatorbase.EmulatorBase):
 
-    # Get name
-    def get_name(self):
-        return "RPCS3"
+    NAME = "RPCS3"
 
-    # Get platforms
-    def get_platforms(self):
-        return [
-            config.Platform.SONY_PLAYSTATION_3,
-            config.Platform.SONY_PLAYSTATION_NETWORK_PS3
-        ]
-
-    # Setup
+    # Download the Windows 7z and Linux AppImage from the RPCS3 rpcs3-binaries-win and -linux GitHub releases
     def setup(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
@@ -75,7 +66,7 @@ class RPCS3(emulatorbase.EmulatorBase):
                 return False
         return True
 
-    # Setup offline
+    # Install the Windows and Linux builds from the releases stored in their backups dirs
     def setup_offline(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
@@ -108,7 +99,8 @@ class RPCS3(emulatorbase.EmulatorBase):
                 return False
         return True
 
-    # Configure
+    # Write its config files, verify the locker system files, then unzip the dev_flash archive
+    # into each platform's setup dir, keeping files already there
     def configure(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
@@ -145,7 +137,8 @@ class RPCS3(emulatorbase.EmulatorBase):
                         return False
         return True
 
-    # Launch
+    # Copy PSN games' .rap and .edat files into the save exdata dir, then run RPCS3 on the game;
+    # fullscreen also hides its GUI
     def launch(
         self,
         game_info,

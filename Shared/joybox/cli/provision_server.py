@@ -63,7 +63,7 @@ def build_parser():
     parser.add_common_arguments()
     return parser
 
-# Main
+# Check the inputs, plan the stages for a server entry, then run them over SSH to deploy, harden and verify it
 def main():
 
     # Parse arguments

@@ -15,50 +15,32 @@ from joybox import platform_info
 # Computer emulator
 class Computer(emulatorbase.EmulatorBase):
 
-    # Get name
-    def get_name(self):
-        return "Computer"
+    NAME = "Computer"
 
-    # Get platforms
-    def get_platforms(self):
-        return [
-            config.Platform.COMPUTER_AMAZON_GAMES,
-            config.Platform.COMPUTER_DISC,
-            config.Platform.COMPUTER_EPIC_GAMES,
-            config.Platform.COMPUTER_GOG,
-            config.Platform.COMPUTER_HUMBLE_BUNDLE,
-            config.Platform.COMPUTER_ITCHIO,
-            config.Platform.COMPUTER_LEGACY_GAMES,
-            config.Platform.COMPUTER_PUPPET_COMBO,
-            config.Platform.COMPUTER_RED_CANDLE,
-            config.Platform.COMPUTER_SQUARE_ENIX,
-            config.Platform.COMPUTER_STEAM,
-            config.Platform.COMPUTER_ZOOM
-        ]
-
-    # Get save type
+    # Sandboxie on Windows, Wine elsewhere, since computer games save inside their sandbox
     def get_save_type(self):
         if platform_info.is_windows_platform():
             return config.SaveType.SANDBOXIE
         return config.SaveType.WINE
 
-    # Get config file
+    # Always None: computer games have no single emulator config file
     def get_config_file(self, emulator_platform = None):
         return None
 
-    # Get save base dir
+    # Always None: saves live in each game's sandbox, not an emulator dir
     def get_save_base_dir(self, emulator_platform = None):
         return None
 
-    # Get save sub dirs
+    # Always None: there are no per-platform save subdirs
     def get_save_sub_dirs(self, emulator_platform = None):
         return None
 
-    # Get save dir
+    # Always None: saves live in each game's sandbox, not an emulator dir
     def get_save_dir(self, game_platform, emulator_platform = None):
         return None
 
-    # Setup
+    # Windows DOSBox-X from its GitHub release and ScummVM from scummvm.org;
+    # Linux AppImages of both built from the NearlyTRex DosboxX and ScummVM forks
     def setup(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
@@ -194,7 +176,7 @@ class Computer(emulatorbase.EmulatorBase):
                 return False
         return True
 
-    # Setup offline
+    # Install DOSBox-X and ScummVM for Windows and Linux from the releases stored in their backups dirs
     def setup_offline(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
@@ -250,7 +232,7 @@ class Computer(emulatorbase.EmulatorBase):
                 return False
         return True
 
-    # Configure
+    # Write the DOSBox-X and ScummVM config files under the emulators root
     def configure(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
@@ -268,7 +250,7 @@ class Computer(emulatorbase.EmulatorBase):
                 return False
         return True
 
-    # Launch
+    # Hand the game to the computer launcher, which runs it inside a Wine prefix on Linux or Sandboxie on Windows
     def launch(
         self,
         game_info,

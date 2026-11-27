@@ -15,22 +15,10 @@ from joybox import emulatorbase
 # Mednafen emulator
 class Mednafen(emulatorbase.EmulatorBase):
 
-    # Get name
-    def get_name(self):
-        return "Mednafen"
+    NAME = "Mednafen"
 
-    # Get platforms
-    def get_platforms(self):
-        return [
-
-            # Nintendo
-            config.Platform.NINTENDO_VIRTUAL_BOY,
-
-            # Other
-            config.Platform.OTHER_ATARI_LYNX
-        ]
-
-    # Setup
+    # Windows build from the latest unstable zip on mednafen.github.io; Linux AppImage built from the
+    # NearlyTRex/Mednafen fork with autotools
     def setup(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
@@ -85,7 +73,7 @@ class Mednafen(emulatorbase.EmulatorBase):
                 return False
         return True
 
-    # Setup offline
+    # Install the Windows and Linux builds from the releases stored in their backups dirs
     def setup_offline(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
@@ -118,7 +106,7 @@ class Mednafen(emulatorbase.EmulatorBase):
                 return False
         return True
 
-    # Configure
+    # Write its config files, then verify the locker system files and copy them into each platform's setup dir
     def configure(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
@@ -153,7 +141,7 @@ class Mednafen(emulatorbase.EmulatorBase):
                     return False
         return True
 
-    # Launch
+    # Run Mednafen on the game file
     def launch(
         self,
         game_info,

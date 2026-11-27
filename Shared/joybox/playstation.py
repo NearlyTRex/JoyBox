@@ -28,7 +28,7 @@ PS3_DECRYPTED_HEADERS = [
     (("PS3_GAME", "USRDIR", "EBOOT.BIN"), "SCE")
 ]
 
-# Get decryption key
+# Hex key text from a .dkey file, stripped; empty when the file is missing or unreadable
 def get_ps3_decryption_key(dkey_file):
     if not os.path.exists(dkey_file):
         return ""
@@ -72,7 +72,7 @@ def crypt_ps3_iso(mode, src_iso_file, dest_iso_file, dkey_file, failure_message,
         return False
     return os.path.exists(dest_iso_file)
 
-# Encrypt ps3 iso
+# Re-encrypt a decrypted ps3 iso with PS3Dec and the .dkey key; True when the output exists
 def encrypt_ps3_iso(
     iso_file_dec,
     iso_file_enc,
@@ -85,7 +85,7 @@ def encrypt_ps3_iso(
         "Unable to encrypt ps3 iso '%s' to '%s'" % (iso_file_dec, iso_file_enc),
         verbose, pretend_run, exit_on_failure)
 
-# Decrypt ps3 iso
+# Decrypt a ps3 iso with PS3Dec and the .dkey key; True when the output exists
 def decrypt_ps3_iso(
     iso_file_enc,
     iso_file_dec,
@@ -110,7 +110,7 @@ def is_ps3_file_decrypted(extract_dir, rel_path, header, dkey_file, iso_file, ex
         runtime.quit_program()
     return False
 
-# Extract ps3 iso
+# Decrypt to a .dec.iso beside the source, extract it, and check the LIC.DAT and EBOOT.BIN headers prove the key fit
 def extract_ps3_iso(
     iso_file,
     dkey_file,
@@ -176,7 +176,7 @@ def extract_and_decrypt_ps3_chd(chd_file, tmp_dir, verbose = False, pretend_run 
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
-# Verify ps3 chd
+# Whether a ps3 chd extracts and decrypts cleanly with the .dkey beside it, working in a temporary directory
 def verify_ps3_chd(
     chd_file,
     verbose = False,
@@ -189,7 +189,7 @@ def verify_ps3_chd(
             return False
         return extract_and_decrypt_ps3_chd(chd_file, tmp_dir, verbose, pretend_run, exit_on_failure)
 
-# Extract psn pkg
+# Unpack a psn pkg's content into extract_dir with PSNGetPkgInfo; True when the directory exists after
 def extract_psn_pkg(
     pkg_file,
     extract_dir,
@@ -376,7 +376,7 @@ def decode_content_id(data):
     except UnicodeDecodeError:
         return None
 
-# Get psn package content id
+# Content id stored at offset 0x30 of a pkg file; None when unreadable or not text
 def get_psn_package_content_id(pkg_file):
     return decode_content_id(serialization.read_binary_file(pkg_file, offset = 0x30, length = 0x24))
 
@@ -398,7 +398,7 @@ def parse_psn_package_info(info_output):
             info[info_key] = line_value.strip()
     return info
 
-# Get psn package info
+# Title, region, content id and the other fields PSNGetPkgInfo reports for a pkg; None when it fails
 def get_psn_package_info(
     pkg_file,
     verbose = False,
@@ -416,7 +416,7 @@ def get_psn_package_info(
         return None
     return parse_psn_package_info(info_output)
 
-# Rename psn package file
+# Rename a pkg to <content id>.pkg in place, leaving an existing target alone; False without an id
 def rename_psn_package_file(
     pkg_file,
     verbose = False,
@@ -433,7 +433,7 @@ def rename_psn_package_file(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
-# Rename psn rap file
+# Rename a rap to <content id>.rap using the pkg of the same base name beside it; False without that pkg
 def rename_psn_rap_file(
     rap_file,
     verbose = False,

@@ -124,7 +124,7 @@ def build_parser():
         description = "In `available`, also list models too large for this machine's VRAM and RAM")
     return parser
 
-# Main
+# Run the chosen Ollama action: find, pull or manage models sized to this machine, or run a coding agent on one
 def main():
 
     # Parse arguments

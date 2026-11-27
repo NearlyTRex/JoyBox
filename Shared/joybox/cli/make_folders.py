@@ -31,7 +31,7 @@ def build_parser():
     parser.add_common_arguments()
     return parser
 
-# Main
+# Move each file with a given extension directly inside the input dir into a folder named after it
 def main():
 
     # Parse arguments

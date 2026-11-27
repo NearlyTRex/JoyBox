@@ -42,7 +42,7 @@ def get_album_directories(genre_type = None, album_name = None, artist_name = No
                     album_dirs.append(item_path)
     return album_dirs
 
-# Get archived video ids
+# Video ids already listed in a yt-dlp download archive; empty when it is absent or unreadable
 def get_archived_video_ids(archive_file):
     ids = set()
     if archive_file and paths.is_path_file(archive_file):
@@ -141,7 +141,8 @@ def download_audio_batch(
         return collect_and_upload_audio(
             work_dir, music_dir, locker_type = locker_type, verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure)
 
-# Download channel audio files
+# Download every channel's not-yet-archived videos as audio in batches and upload them to its music album;
+# channel_name narrows to one channel by exact then substring match
 def download_channel_audio_files(channels, genre_type, channel_name = None, oldest_first = None, cookie_source = None, locker_type = None, output_path = None, verbose = False, pretend_run = False, exit_on_failure = False):
 
     # Resolve download order. oldest_first is tri-state: True/False force the order,
@@ -257,7 +258,7 @@ def download_channel_audio_files(channels, genre_type, channel_name = None, olde
     logger.log_info("Audio download process completed successfully")
     return True
 
-# Download story audio files
+# Download new audio from the configured story channels into the story genre
 def download_story_audio_files(channel_name = None, oldest_first = None, cookie_source = None, locker_type = None, output_path = None, verbose = False, pretend_run = False, exit_on_failure = False):
     return download_channel_audio_files(
         channels = config.story_channels,
@@ -271,7 +272,7 @@ def download_story_audio_files(channel_name = None, oldest_first = None, cookie_
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
-# Download asmr audio files
+# Download new audio from the configured ASMR channels into the ASMR genre
 def download_asmr_audio_files(channel_name = None, oldest_first = None, cookie_source = None, locker_type = None, output_path = None, verbose = False, pretend_run = False, exit_on_failure = False):
     return download_channel_audio_files(
         channels = config.asmr_channels,
@@ -285,7 +286,7 @@ def download_asmr_audio_files(channel_name = None, oldest_first = None, cookie_s
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
-# Build audio metadata files
+# Read the tags of each selected album and write them to its JSON metadata file; False on the first failure
 def build_audio_metadata_files(
     genre_type = None,
     album_name = None,
@@ -351,7 +352,7 @@ def build_audio_metadata_files(
             return False
     return True
 
-# Clear audio metadata tags
+# Strip tags from every selected album's tracks, optionally keeping artwork; False on the first failure
 def clear_audio_metadata_tags(
     genre_type = None,
     album_name = None,
@@ -394,7 +395,7 @@ def clear_audio_metadata_tags(
             return False
     return True
 
-# Apply audio metadata tags
+# Write each selected album's JSON metadata file back into its track tags; False when a file is missing or a write fails
 def apply_audio_metadata_tags(
     genre_type = None,
     album_name = None,

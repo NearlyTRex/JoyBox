@@ -181,7 +181,7 @@ class ArgumentParser:
 
     #################################################
 
-    # Get path
+    # Resolved real path given for the named option; None when the option is undeclared or unset
     def get_path(self, argname):
         if not self.is_known_argument(argname):
             return None
@@ -192,7 +192,7 @@ class ArgumentParser:
         real_path = os.path.realpath(virt_path)
         return real_path
 
-    # Get checked path
+    # Resolved path given for the named option, quitting with an error when it does not exist
     def get_checked_path(self, argname):
         path = self.get_path(argname)
         if not paths.does_path_exist(path):
@@ -201,7 +201,7 @@ class ArgumentParser:
 
     #################################################
 
-    # Add string argument
+    # Declare a text option; a positional one becomes optional when it has a default
     def add_string_argument(
         self,
         args,
@@ -238,7 +238,7 @@ class ArgumentParser:
             type = str,
             help = description)
 
-    # Add integer argument
+    # Declare a whole-number option; a positional one becomes optional when it has a default
     def add_integer_argument(
         self,
         args,
@@ -258,7 +258,7 @@ class ArgumentParser:
             type = int,
             help = description)
 
-    # Add boolean argument
+    # Declare an on/off flag that is False unless passed
     def add_boolean_argument(
         self,
         args,
@@ -267,7 +267,7 @@ class ArgumentParser:
             action = "store_true",
             help = description)
 
-    # Add enum argument
+    # Declare an option parsed into a member of the enum, listing allowed values in help; allow_multiple takes several
     def add_enum_argument(
         self,
         args,
@@ -303,7 +303,7 @@ class ArgumentParser:
             required = required,
             metavar = metavar)
 
-    # Add enum list argument
+    # Declare a comma-delimited option whose allowed values come from the enum; the value stays an unparsed string
     def add_enum_list_argument(
         self,
         args,
@@ -320,7 +320,7 @@ class ArgumentParser:
 
     #################################################
 
-    # Add input path argument
+    # Declare -i/--input_path, or the given flags, as a text option
     def add_input_path_argument(self, args = ("-i", "--input_path"), default = None, required = False, description = "Input path"):
         self.add_string_argument(
             args = args,
@@ -328,7 +328,7 @@ class ArgumentParser:
             required = required,
             description = description)
 
-    # Add output path argument
+    # Declare -o/--output_path, or the given flags, as a text option
     def add_output_path_argument(self, args = ("-o", "--output_path"), default = None, required = False, description = "Output path"):
         self.add_string_argument(
             args = args,
@@ -336,13 +336,13 @@ class ArgumentParser:
             required = required,
             description = description)
 
-    # Get input path
+    # Resolved --input_path value, quitting when it is missing on disk unless check_exists is False
     def get_input_path(self, check_exists = True):
         if check_exists:
             return self.get_checked_path("input_path")
         return self.get_path("input_path")
 
-    # Get output path
+    # Resolved --output_path value, quitting when it is missing on disk unless check_exists is False
     def get_output_path(self, check_exists = True):
         if check_exists:
             return self.get_checked_path("output_path")
@@ -350,7 +350,7 @@ class ArgumentParser:
 
     #################################################
 
-    # Add game supercategory argument
+    # Declare -u/--game_supercategory, defaulting to roms
     def add_game_supercategory_argument(self, args = ("-u", "--game_supercategory"), description = "Game supercategory type"):
         self.add_enum_argument(
             args = args,
@@ -358,33 +358,33 @@ class ArgumentParser:
             default = config.Supercategory.ROMS,
             description = description)
 
-    # Add game category argument
+    # Declare -c/--game_category as a Category choice with no default
     def add_game_category_argument(self, args = ("-c", "--game_category"), description = "Game category type"):
         self.add_enum_argument(
             args = args,
             arg_type = config.Category,
             description = description)
 
-    # Add game subcategory argument
+    # Declare -s/--game_subcategory as a Subcategory choice with no default
     def add_game_subcategory_argument(self, args = ("-s", "--game_subcategory"), description = "Game subcategory type"):
         self.add_enum_argument(
             args = args,
             arg_type = config.Subcategory,
             description = description)
 
-    # Add game name argument
+    # Declare -n/--game_name as a text option
     def add_game_name_argument(self, args = ("-n", "--game_name"), description = "Game name"):
         self.add_string_argument(
             args = args,
             description = description)
 
-    # Add game offset argument
+    # Declare -g/--game_offset as a text option
     def add_game_offset_argument(self, args = ("-g", "--game_offset"), description = "Game offset"):
         self.add_string_argument(
             args = args,
             description = description)
 
-    # Get selected supercategories
+    # The one supercategory passed on the command line, or every supercategory when none was
     def get_selected_supercategories(self, argname = "game_supercategory"):
         args, _ = self.parse_known_args()
         supercategories = []
@@ -395,7 +395,7 @@ class ArgumentParser:
             supercategories = config.Supercategory.members()
         return supercategories
 
-    # Get selected categories
+    # The one category passed on the command line, or every category when none was
     def get_selected_categories(self, argname = "game_category"):
         args, _ = self.parse_known_args()
         categories = []
@@ -406,7 +406,7 @@ class ArgumentParser:
             categories = config.Category.members()
         return categories
 
-    # Get selected subcategories
+    # Map of each selected category to the subcategory passed, or to all of its subcategories when none was
     def get_selected_subcategories(
         self,
         category_argname = "game_category",
@@ -425,7 +425,7 @@ class ArgumentParser:
 
     #################################################
 
-    # Add common arguments
+    # Declare the verbose, pretend-run, exit-on-failure and no-preview flags in a "Common options" group
     def add_common_arguments(self):
         previous_target = self._target
         self.add_group("Common options")

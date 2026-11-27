@@ -42,7 +42,7 @@ def convert_to_relative_path(path, locker_type = None):
         old_base_path = locker_root,
         new_base_path = "")
 
-# Convert to local path
+# Rebase a path from a remote locker's root (the default remote when none is given) onto the local locker root; local paths pass through
 def convert_to_local_path(path, source_locker_type = None):
     if is_local_path(path):
         return path

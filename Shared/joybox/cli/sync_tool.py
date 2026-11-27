@@ -100,7 +100,7 @@ def build_parser():
     parser.add_common_arguments()
     return parser
 
-# Main
+# After a preview, run the chosen rclone action between the local locker and the remote locker; its outcome is the exit status
 def main():
 
     # Parse arguments

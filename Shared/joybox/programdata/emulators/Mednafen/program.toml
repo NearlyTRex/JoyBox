@@ -1,6 +1,9 @@
 # Mednafen: where its programs live and how they run, the files its setup writes
 # and the system files it checks. Read by joybox/programcatalog.py.
 
+# The platforms it plays
+platforms = ["NINTENDO_VIRTUAL_BOY", "OTHER_ATARI_LYNX"]
+
 [config.Mednafen]
 program = { windows = "Mednafen/windows/mednafen.exe", linux = "Mednafen/linux/Mednafen.AppImage" }
 save_dir = { windows = "Mednafen/windows/sav", linux = "Mednafen/linux/Mednafen.AppImage.home/.mednafen/sav" }

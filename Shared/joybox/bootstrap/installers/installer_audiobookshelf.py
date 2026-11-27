@@ -68,6 +68,8 @@ class Audiobookshelf(installer_dockerapp.DockerAppInstaller):
         self.backup_label = "Audiobookshelf"
         self.backup_volumes = ["config_data"]
 
+    # Create the configured root user through the API of a server not yet
+    # initialised; skipped with a warning when no admin password is set
     def post_install(self):
 
         # Without a password the first visitor to the site creates the root user

@@ -46,7 +46,7 @@ def build_parser():
     parser.add_common_arguments()
     return parser
 
-# Main
+# After a preview, cross-check the game JSON, Pegasus metadata and hash files against the local locker's Gaming folder
 def main():
 
     # Parse arguments

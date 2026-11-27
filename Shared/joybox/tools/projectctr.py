@@ -9,11 +9,10 @@ from joybox import toolbase
 # ProjectCTR tool
 class ProjectCTR(toolbase.ToolBase):
 
-    # Get name
-    def get_name(self):
-        return "ProjectCTR"
+    NAME = "ProjectCTR"
 
-    # Setup
+    # Download makerom and ctrtool for Windows and Linux from the 3DSGuy/Project_CTR GitHub release,
+    # marking the Linux ones executable
     def setup(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
@@ -113,7 +112,7 @@ class ProjectCTR(toolbase.ToolBase):
                 return False
         return True
 
-    # Setup offline
+    # Install makerom and ctrtool for Windows and Linux from the releases stored in their backups dirs
     def setup_offline(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()

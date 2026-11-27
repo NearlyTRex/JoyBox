@@ -11,11 +11,10 @@ from joybox import toolbase
 # Legendary tool
 class Legendary(toolbase.ToolBase):
 
-    # Get name
-    def get_name(self):
-        return "Legendary"
+    NAME = "Legendary"
 
-    # Setup
+    # Clone the NearlyTRex/Legendary repo at its configured branch into its lib dir, install its
+    # Python requirements, then archive the repo into its backups dir
     def setup(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
@@ -58,7 +57,7 @@ class Legendary(toolbase.ToolBase):
                 return False
         return True
 
-    # Setup offline
+    # Install the library from the repo archive stored in its backups dir, then its Python requirements offline
     def setup_offline(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()

@@ -76,7 +76,7 @@ def build_parser():
     parser.add_common_arguments()
     return parser
 
-# Main
+# After a preview, create or refresh the JSON file of each selected game found in the locker
 def main():
 
     # Parse arguments

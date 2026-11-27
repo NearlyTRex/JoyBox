@@ -80,7 +80,7 @@ def build_parser():
     parser.add_common_arguments()
     return parser
 
-# Main
+# Boot an installer image, or the disk it installed, in a throwaway UEFI qemu machine, then say what to do next
 def main():
 
     # Parse arguments

@@ -182,7 +182,7 @@ def get_meminfo_mb(field):
 def get_system_ram_mb():
     return get_meminfo_mb("MemTotal")
 
-# Get available system RAM in MB
+# MemAvailable from /proc/meminfo in megabytes; 0 when it cannot be read
 def get_system_ram_available_mb():
     return get_meminfo_mb("MemAvailable")
 

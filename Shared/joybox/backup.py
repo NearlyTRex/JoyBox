@@ -10,7 +10,7 @@ from joybox import cryption
 from joybox import hashutil
 from joybox import lockerinfo
 
-# Resolve path
+# The path itself when it exists, else the base path or locker root extended by the given game category folders
 def resolve_path(
     path = None,
     locker_type = None,
@@ -43,7 +43,8 @@ def resolve_path(
     # Return result
     return resolved_path
 
-# Copy files normally
+# Copy every non-excluded file under one folder to the same relative spot under another, without encryption;
+# with skip_on_error a failed file is logged and counted instead of stopping the copy
 def copy_files_normally(
     input_base_path,
     output_base_path,
@@ -136,7 +137,7 @@ def update_decrypted_file(src_path, dest_path, passphrase, delete_original = Fal
         fileops.remove_file(src = src_path, verbose = verbose, exit_on_failure = exit_on_failure)
     return True
 
-# Copy and encrypt files
+# Encrypt every non-excluded file under one folder into the same relative spot under another, under an encrypted name
 def copy_and_encrypt_files(
     input_base_path,
     output_base_path,
@@ -201,7 +202,7 @@ def copy_and_encrypt_files(
     # Should be successful
     return True
 
-# Copy and decrypt files
+# Decrypt every non-excluded file under one folder into the same relative spot under another, under its embedded real name
 def copy_and_decrypt_files(
     input_base_path,
     output_base_path,
@@ -276,7 +277,7 @@ def copy_and_decrypt_files(
     # Should be successful
     return True
 
-# Copy files
+# Copy a folder tree plainly, encrypting or decrypting with the locker's passphrase as cryption_type says
 def copy_files(
     input_base_path,
     output_base_path,
@@ -379,7 +380,7 @@ def archive_folder_into(
             return False
         return True
 
-# Archive folder
+# Pack a folder into output_path/output_name as a 7z, or the given type, in 4092 MB volumes; False unless the archive lands
 def archive_folder(
     input_path,
     output_path,
@@ -418,7 +419,7 @@ def archive_folder(
         exit_on_failure = exit_on_failure)
     return success and paths.does_path_exist(paths.join_paths(output_path, archive_file_name))
 
-# Archive sub-folders
+# Pack each second-level folder into its own archive, kept under its top-level folder's name in the output
 def archive_sub_folders(
     input_base_path,
     output_base_path,

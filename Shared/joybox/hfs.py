@@ -135,7 +135,7 @@ def get_local_filename(hfs_name):
         return None
     return local_name
 
-# Convert hfs date to appledouble date
+# HFS seconds-since-1904 as AppleDouble seconds-since-2000; zero (unset) becomes the unknown-date marker
 def convert_hfs_date_to_appledouble(hfs_date):
     if not hfs_date:
         return APPLEDOUBLE_UNKNOWN_DATE
@@ -204,7 +204,7 @@ def write_mac_metadata(
 # HFS
 ###########################################################
 
-# Extract hfs folder
+# Write a machfs folder tree to disk: data forks as files, finder info and resource forks as ._ AppleDouble files
 def extract_hfs_folder(
     hfs_folder,
     extract_dir,
@@ -266,7 +266,7 @@ def extract_hfs_folder(
             return False
     return True
 
-# Extract hfs volume
+# Read an HFS volume from the image with machfs and extract it to the folder; False when machfs is missing or the volume is unreadable
 def extract_hfs_volume(
     image_file,
     volume_offset,
@@ -311,7 +311,7 @@ def extract_hfs_volume(
 # HFS+
 ###########################################################
 
-# Parse hfsplus fork data
+# Logical size, total blocks and the non-empty inline extents of an 80-byte HFS+ fork record
 def parse_hfsplus_fork_data(fork_data):
     logical_size, _, total_blocks = struct.unpack(">QII", fork_data[0:16])
     extents = [struct.unpack(">II", fork_data[16 + 8 * index:24 + 8 * index]) for index in range(8)]
@@ -334,7 +334,7 @@ def get_hfsplus_fork_extents(volume, file_id, fork_type, fork):
         found_blocks += sum(block_count for _, block_count in more_extents)
     return extents
 
-# Iterate hfsplus fork
+# Yield a fork's bytes in chunks from the image across all its extents; ValueError when the image is truncated
 def iterate_hfsplus_fork(volume, file_id, fork_type, fork):
     remaining = fork["size"]
     for start_block, block_count in get_hfsplus_fork_extents(volume, file_id, fork_type, fork):
@@ -352,11 +352,11 @@ def iterate_hfsplus_fork(volume, file_id, fork_type, fork):
     if remaining > 0:
         raise ValueError("A fork of catalog node %d is missing %d bytes" % (file_id, remaining))
 
-# Read hfsplus fork
+# A whole HFS+ fork as bytes
 def read_hfsplus_fork(volume, file_id, fork_type, fork):
     return b"".join(iterate_hfsplus_fork(volume, file_id, fork_type, fork))
 
-# Iterate btree leaf records
+# Yield each record of every leaf node of an HFS+ B-tree, following forward links from the first leaf
 def iterate_btree_leaf_records(tree_data):
     if len(tree_data) < 34:
         raise ValueError("A B-tree is too short for its header node")
@@ -379,7 +379,7 @@ def iterate_btree_leaf_records(tree_data):
             yield node[offsets[index]:offsets[index + 1]]
         node_index = forward_link
 
-# Parse hfsplus catalog record
+# Folder or file entry from an HFS+ catalog leaf record, with dates, finder info and fork data; None for thread records
 def parse_hfsplus_catalog_record(record):
     key_length, parent_id, name_length = struct.unpack(">HIH", record[0:8])
     name = record[8:8 + 2 * name_length].decode("utf-16-be", errors = "replace")
@@ -402,7 +402,7 @@ def parse_hfsplus_catalog_record(record):
         entry["resource_fork"] = parse_hfsplus_fork_data(data[168:248])
     return entry
 
-# Read hfsplus volume
+# Volume header, extents overflow map and catalog entries grouped by parent folder id, read from the image
 def read_hfsplus_volume(image_file, volume_offset):
     header = serialization.read_binary_file(image_file, offset = volume_offset + 1024, length = 512)
     if not header or len(header) < 512:
@@ -440,7 +440,7 @@ def get_hfsplus_hard_link_targets(volume):
             return {child["name"]: child for child in volume["children"].get(entry["id"], [])}
     return {}
 
-# Extract hfsplus file
+# Extract one HFS+ catalog file, following hard links, as a file or symlink with mode and Mac metadata; compressed files are skipped
 def extract_hfsplus_file(
     volume,
     entry,
@@ -513,7 +513,7 @@ def extract_hfsplus_file(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
-# Extract hfsplus folder
+# Extract an HFS+ folder recursively, leaving out the filesystem's private items at the root
 def extract_hfsplus_folder(
     volume,
     folder_id,
@@ -563,7 +563,7 @@ def extract_hfsplus_folder(
             return False
     return True
 
-# Extract hfsplus volume
+# Read an HFS+ volume and extract its root folder; False when the volume structures are unreadable
 def extract_hfsplus_volume(
     image_file,
     volume_offset,
@@ -588,7 +588,7 @@ def extract_hfsplus_volume(
 
 ###########################################################
 
-# Extract hfs
+# Extract the HFS or HFS+ volume of a disc image to a folder, optionally deleting the image; True when the folder ends up with files
 def extract_hfs(
     image_file,
     extract_dir,

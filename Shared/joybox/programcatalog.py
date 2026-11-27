@@ -10,6 +10,7 @@ import os
 import re
 
 # Local imports
+from joybox import config
 from joybox import logger
 from joybox import paths
 from joybox import platform_info
@@ -29,6 +30,7 @@ from joybox.nintendo import switchprofile
 #   only_on           "wine" or "sandboxie": the program exists only there
 #   program_unknown_when_unset
 #                     a program whose path names an unset setting is unknown
+#   platforms         the config.Platform members an emulator plays, by member name
 #
 # TOML has no null, so "<none>" stands for a value that is not set. A string
 # that is one {placeholder} is the value it names, as the settings ini has it; a
@@ -230,6 +232,13 @@ def get_system_files(family, name):
         return {}
     return {system_file["path"]: system_file["md5"] for system_file in entry["data"].get("system_files", [])}
 
+# Get the platforms a program plays, by its name; none when its data lists none
+def get_platforms(family, name):
+    entry = load_family(family).get(name)
+    if not entry:
+        return []
+    return [config.Platform[platform] for platform in entry["data"].get("platforms", [])]
+
 # Get a tool's config by its name
 def get_tool_config(name):
     return get_config(FAMILY_TOOLS, name)
@@ -245,3 +254,7 @@ def get_emulator_config(name):
 # Get every emulator's config, merged into one map of program name to config
 def get_emulator_configs():
     return get_configs(FAMILY_EMULATORS)
+
+# Get the platforms an emulator plays, by its name
+def get_emulator_platforms(name):
+    return get_platforms(FAMILY_EMULATORS, name)

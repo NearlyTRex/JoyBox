@@ -13,7 +13,7 @@ from joybox import runtime
 from joybox import serialization
 from joybox import webpage
 
-# Save cookie
+# Write the browser session's cookies to path as JSON; False when the session is gone or has none
 def save_cookie(
     driver,
     path,
@@ -61,7 +61,7 @@ def save_cookie(
             runtime.quit_program()
         return False
 
-# Load cookie
+# Add the cookies saved at path to the browser session; False when none could be added
 def load_cookie(
     driver,
     path,
@@ -101,7 +101,7 @@ def load_cookie(
             logger.log_info("Successfully loaded %d cookies" % cookies_loaded)
     return True
 
-# Get cookie file
+# Cookie file for a base name in the user's Cookies directory
 def get_cookie_file(base_name):
     cookie_file = base_name + config.COOKIE_SUFFIX_PATH
     cookie_dir = runtime.get_cookie_directory()
@@ -109,7 +109,7 @@ def get_cookie_file(base_name):
 
 ###########################################################
 
-# Login cookie website
+# Open the login page, wait for the user to sign in until locator appears, then save the session's cookies
 def login_cookie_website(
     driver,
     url,
@@ -149,7 +149,7 @@ def login_cookie_website(
         exit_on_failure = exit_on_failure)
     return success
 
-# Load cookie website
+# Open the url, add the saved cookies, then reload it so the page sees them signed in
 def load_cookie_website(
     driver,
     url,

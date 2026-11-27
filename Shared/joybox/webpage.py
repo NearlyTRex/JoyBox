@@ -88,7 +88,7 @@ def retry_scrape(func, cleanup_func = None, verbose = False, operation_name = No
 
 ###########################################################
 
-# Parse page source
+# BeautifulSoup tree of the contents with the given parser, lxml by default; None when that parser is missing
 def parse_page_source(contents, features = "lxml"):
     bs4 = _get_bs4()
     try:
@@ -96,11 +96,11 @@ def parse_page_source(contents, features = "lxml"):
     except bs4.FeatureNotFound:
         return None
 
-# Parse html page source
+# BeautifulSoup tree using Python's built-in html.parser
 def parse_html_page_source(html_contents):
     return parse_page_source(html_contents, features = "html.parser")
 
-# Parse xml page source
+# BeautifulSoup tree using the lxml XML parser
 def parse_xml_page_source(xml_contents):
     return parse_page_source(xml_contents, features = "xml")
 
@@ -179,7 +179,8 @@ def start_browser(browser_class, service, options):
         running_browser_groups.add(group_id)
     return web_driver
 
-# Create chrome web driver
+# Start a Chromium-based browser through webdriver_manager, with optional download dir, profile, binary and headless
+# None when ChromeDriver is not installed or the browser fails to start
 def create_chrome_web_driver(
     download_dir = None,
     profile_dir = None,
@@ -238,7 +239,8 @@ def create_chrome_web_driver(
             runtime.quit_program()
     return None
 
-# Create firefox web driver
+# Start Firefox through webdriver_manager, with optional download dir, profile, binary and headless
+# None when GeckoDriver is not installed or the browser fails to start
 def create_firefox_web_driver(
     download_dir = None,
     profile_dir = None,
@@ -287,7 +289,7 @@ def create_firefox_web_driver(
             runtime.quit_program()
     return None
 
-# Create web driver
+# Start the browser the settings choose (Firefox, Chrome or Brave), Firefox when unset
 def create_web_driver(
     driver_type = None,
     download_dir = None,
@@ -331,7 +333,7 @@ def create_web_driver(
             exit_on_failure = exit_on_failure)
     return None
 
-# Destroy web driver
+# Quit the browser and stop its driver's process group; False when quitting fails
 def destroy_web_driver(
     driver,
     verbose = False,
@@ -358,7 +360,7 @@ def destroy_web_driver(
             runtime.quit_program()
     return False
 
-# Load url
+# Navigate the browser to url after waiting out the site's page load interval; False on an invalid url or dead session
 def load_url(
     driver,
     url,
@@ -386,7 +388,7 @@ def load_url(
             runtime.quit_program()
     return False
 
-# Get current page url
+# Url the browser is showing; None when the session is gone
 def get_current_page_url(driver, verbose = False):
     try:
         if not is_session_valid(driver, verbose):
@@ -457,10 +459,11 @@ class ElementLocator:
                 self.by_value = value
         else:
             raise ValueError("Locator dictionary should contain exactly one key-value pair.")
+    # The (By type, value) pair Selenium's find calls take
     def get(self):
         return (self.by_type, self.by_value)
 
-# Wait for all elements
+# Wait up to wait_time seconds until every locator matches; the found elements, or None on timeout
 def wait_for_all_elements(
     driver,
     locators = None,
@@ -495,7 +498,7 @@ def wait_for_all_elements(
             runtime.quit_program()
     return None
 
-# Wait for any element
+# Wait up to wait_time seconds until any locator matches; the first found, or None on timeout
 def wait_for_any_element(
     driver,
     locators = None,
@@ -547,7 +550,7 @@ def is_session_valid(
             logger.log_warning("Object session invalid")
         return False
 
-# Wait for element
+# Wait until the locator matches, the configured element wait by default; the element, or None on timeout
 def wait_for_element(
     driver,
     locator,
@@ -581,7 +584,7 @@ def wait_for_element(
             runtime.quit_program()
         return None
 
-# Get element
+# First match under parent, or every match with all_elements; None when nothing matches
 def get_element(
     parent,
     locator,
@@ -616,7 +619,7 @@ def get_element(
             runtime.quit_program()
         return None
 
-# Get element text
+# Visible text of an element; None for a missing or stale element
 def get_element_text(element, verbose = False):
     try:
         if not element:
@@ -629,7 +632,7 @@ def get_element_text(element, verbose = False):
             logger.log_warning("GetElementText: Failed to get element text: %s" % str(e))
         return None
 
-# Get element attribute
+# Value of an element's attribute; None when the element or attribute name is missing
 def get_element_attribute(element, attribute_name, verbose = False):
     try:
         if not element:
@@ -646,7 +649,7 @@ def get_element_attribute(element, attribute_name, verbose = False):
             logger.log_warning("GetElementAttribute: Failed to get attribute '%s': %s" % (attribute_name, str(e)))
         return None
 
-# Get element children text
+# Readable text extracted from an element's inner HTML; None when it has none
 def get_element_children_text(element, verbose = False):
     if not element:
         if verbose:
@@ -657,7 +660,7 @@ def get_element_children_text(element, verbose = False):
         return text.extract_web_text(attribute)
     return None
 
-# Get element link url
+# href of the first link inside an element; None when it contains no link
 def get_element_link_url(element, verbose = False):
     try:
         if not element:
@@ -673,7 +676,7 @@ def get_element_link_url(element, verbose = False):
             logger.log_warning("GetElementLinkUrl: Failed to get element link URL: %s" % str(e))
         return None
 
-# Click element
+# Click an element unless pretending; False when it is missing or the click fails
 def click_element(
     element,
     verbose = False,
@@ -700,7 +703,7 @@ def click_element(
             runtime.quit_program()
         return False
 
-# Send keys to element
+# Type keys into an element unless pretending; False when it or the keys are missing
 def send_keys_to_element(
     element,
     keys,
@@ -732,7 +735,7 @@ def send_keys_to_element(
             runtime.quit_program()
         return False
 
-# Scroll to end of page
+# Scroll the window to the bottom of the document; False when the session is gone
 def scroll_to_end_of_page(
     driver,
     verbose = False,
@@ -755,7 +758,7 @@ def scroll_to_end_of_page(
             runtime.quit_program()
         return False
 
-# Get page source
+# Current page HTML, loading url first when given; empty on a pretend run, None on failure
 def get_page_source(
     driver,
     url = None,

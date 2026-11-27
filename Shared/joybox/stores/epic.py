@@ -1,4 +1,5 @@
 # Imports
+import types
 import os
 
 # Local imports
@@ -20,6 +21,22 @@ from joybox import paths
 # Epic store
 class Epic(storebase.StoreBase):
 
+    TYPE = config.StoreType.EPIC
+    PLATFORM = config.Platform.COMPUTER_EPIC_GAMES
+    SUPERCATEGORY = config.Supercategory.ROMS
+    CATEGORY = config.Category.COMPUTER
+    SUBCATEGORY = config.Subcategory.COMPUTER_EPIC_GAMES
+    KEY = config.JSON_KEY_EPIC
+    IDENTIFIER_KEYS = types.MappingProxyType({
+        config.StoreIdentifierType.INFO: config.JSON_KEY_STORE_APPNAME,
+        config.StoreIdentifierType.INSTALL: config.JSON_KEY_STORE_APPNAME,
+        config.StoreIdentifierType.LAUNCH: config.JSON_KEY_STORE_APPNAME,
+        config.StoreIdentifierType.DOWNLOAD: config.JSON_KEY_STORE_APPNAME,
+        config.StoreIdentifierType.ASSET: config.JSON_KEY_STORE_APPNAME,
+        config.StoreIdentifierType.METADATA: config.JSON_KEY_STORE_APPURL,
+        config.StoreIdentifierType.PAGE: config.JSON_KEY_STORE_APPNAME,
+    })
+
     # Constructor
     def __init__(self):
         super().__init__()
@@ -38,53 +55,9 @@ class Epic(storebase.StoreBase):
     # Store
     ############################################################
 
-    # Get name
-    def get_name(self):
-        return config.StoreType.EPIC.val()
-
-    # Get type
-    def get_type(self):
-        return config.StoreType.EPIC
-
-    # Get platform
-    def get_platform(self):
-        return config.Platform.COMPUTER_EPIC_GAMES
-
-    # Get supercategory
-    def get_supercategory(self):
-        return config.Supercategory.ROMS
-
-    # Get category
-    def get_category(self):
-        return config.Category.COMPUTER
-
-    # Get subcategory
-    def get_subcategory(self):
-        return config.Subcategory.COMPUTER_EPIC_GAMES
-
-    # Get key
-    def get_key(self):
-        return config.JSON_KEY_EPIC
-
-    # Get identifier keys
-    def get_identifier_keys(self):
-        return {
-            config.StoreIdentifierType.INFO: config.JSON_KEY_STORE_APPNAME,
-            config.StoreIdentifierType.INSTALL: config.JSON_KEY_STORE_APPNAME,
-            config.StoreIdentifierType.LAUNCH: config.JSON_KEY_STORE_APPNAME,
-            config.StoreIdentifierType.DOWNLOAD: config.JSON_KEY_STORE_APPNAME,
-            config.StoreIdentifierType.ASSET: config.JSON_KEY_STORE_APPNAME,
-            config.StoreIdentifierType.METADATA: config.JSON_KEY_STORE_APPURL,
-            config.StoreIdentifierType.PAGE: config.JSON_KEY_STORE_APPNAME
-        }
-
-    # Get user name
+    # The Epic username from the settings; the constructor refuses to build without one
     def get_user_name(self):
         return self.username
-
-    # Get install dir
-    def get_install_dir(self):
-        return self.install_dir
 
     # Check if store can handle installing
     def can_handle_installing(self):
@@ -111,7 +84,7 @@ class Epic(storebase.StoreBase):
         config_dir = os.environ.get("LEGENDARY_CONFIG_PATH") or paths.join_paths(self.get_user_config_dir(), "legendary")
         return [paths.join_paths(config_dir, "user.json")]
 
-    # Login
+    # Sign in through Legendary's interactive auth; True at once when already signed in
     def login(
         self,
         verbose = False,
@@ -149,7 +122,7 @@ class Epic(storebase.StoreBase):
     # Page
     ############################################################
 
-    # Get latest url
+    # Store page link found by searching the Epic store in a headless browser; None when nothing matches closely
     def get_latest_url(
         self,
         identifier,
@@ -185,7 +158,7 @@ class Epic(storebase.StoreBase):
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
 
-    # Find best store url
+    # Search the Epic store for the identifier and return the link of the closest title above the match threshold, else None
     def find_best_store_url(
         self,
         web_driver,
@@ -250,7 +223,7 @@ class Epic(storebase.StoreBase):
     # Purchases
     ############################################################
 
-    # Get purchases
+    # Owned games with appname, title and Windows build, from a cache under a day old or else Legendary's list
     def get_latest_purchases(
         self,
         verbose = False,
@@ -362,7 +335,7 @@ class Epic(storebase.StoreBase):
     # Json
     ############################################################
 
-    # Get latest jsondata
+    # Appname, title, version and cloud save folder from Legendary's info, plus manifest save paths; None when unknown
     def get_latest_jsondata(
         self,
         identifier,
@@ -425,7 +398,7 @@ class Epic(storebase.StoreBase):
     # Metadata
     ############################################################
 
-    # Get latest metadata
+    # Description, genres, developer, publisher and release date scraped from the game's store page, with retries
     def get_latest_metadata(
         self,
         identifier,

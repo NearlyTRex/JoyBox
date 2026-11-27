@@ -39,7 +39,7 @@ server {{
 }}
 """
 
-# Nginx
+# Installs nginx with the default server entry, the apex fallback snippet and page
 class Nginx(installer.Installer):
     def __init__(
         self,
@@ -51,14 +51,18 @@ class Nginx(installer.Installer):
             "domain": serverinfo.get_domain_name()
         }
 
+    # Remote Ubuntu only
     def get_supported_environments(self):
         return [
             constants.EnvironmentType.REMOTE_UBUNTU,
         ]
 
+    # Whether /usr/sbin/nginx exists
     def is_installed(self):
         return self.connection.does_file_or_directory_exist("/usr/sbin/nginx")
 
+    # apt-get install nginx, then have the nginx manager install the default entry,
+    # the apex-root snippet and fallback page, and restart it
     def install(self):
 
         # Install Nginx
@@ -89,6 +93,7 @@ class Nginx(installer.Installer):
         self.connection.run_checked([self.nginx_manager_tool, "systemctl", "restart"], sudo = True)
         return True
 
+    # Stop nginx, remove the default entry, then apt-get remove nginx and nginx-common
     def uninstall(self):
 
         # Stop Nginx

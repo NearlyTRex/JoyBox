@@ -10,11 +10,10 @@ from joybox import toolbase
 # PS3Dec tool
 class PS3Dec(toolbase.ToolBase):
 
-    # Get name
-    def get_name(self):
-        return "PS3Dec"
+    NAME = "PS3Dec"
 
-    # Setup
+    # Windows exe from the NearlyTRex/PS3Dec GitHub release; Linux AppImage built from the
+    # same repo with CMake and Ninja
     def setup(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
@@ -70,7 +69,7 @@ class PS3Dec(toolbase.ToolBase):
                 return False
         return True
 
-    # Setup offline
+    # Install the Windows and Linux builds from the releases stored in their backups dirs
     def setup_offline(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()

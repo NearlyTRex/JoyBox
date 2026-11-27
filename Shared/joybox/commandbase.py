@@ -9,13 +9,13 @@ from joybox import environment
 from joybox import commandoptions
 from joybox import programs
 
-# Create command options
+# A CommandOptions built from the given arguments, so callers need not import commandoptions
 def create_command_options(*args, **kwargs):
     return commandoptions.CommandOptions(*args, **kwargs)
 
 ###########################################################
 
-# Get starter command
+# The program a command runs, its first argument; empty for an empty command
 def get_starter_command(cmd):
     cmd_list = cmdline.create_command_list(cmd)
     if len(cmd_list) == 0:
@@ -95,7 +95,7 @@ def is_appimage_command(cmd):
 
 ###########################################################
 
-# Print command
+# Log a command at info level with passwords and other sensitive arguments masked
 def print_command(cmd):
     masked_cmd = cmdline.mask_sensitive_args(cmd)
     if isinstance(masked_cmd, str):

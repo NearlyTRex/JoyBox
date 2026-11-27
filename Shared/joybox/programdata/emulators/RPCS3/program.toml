@@ -1,6 +1,9 @@
 # RPCS3: where its programs live and how they run, the files its setup writes
 # and the system files it checks. Read by joybox/programcatalog.py.
 
+# The platforms it plays
+platforms = ["SONY_PLAYSTATION_3", "SONY_PLAYSTATION_NETWORK_PS3"]
+
 [config.RPCS3]
 program = { windows = "RPCS3/windows/rpcs3.exe", linux = "RPCS3/linux/RPCS3.AppImage" }
 setup_dir = { windows = "RPCS3/windows", linux = "RPCS3/linux/RPCS3.AppImage.home/.config/rpcs3" }

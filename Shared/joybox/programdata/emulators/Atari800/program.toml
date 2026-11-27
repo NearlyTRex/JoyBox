@@ -1,6 +1,9 @@
 # Atari800: where its programs live and how they run, the files its setup writes
 # and the system files it checks. Read by joybox/programcatalog.py.
 
+# The platforms it plays
+platforms = ["OTHER_ATARI_800"]
+
 [config.Atari800]
 program = { windows = "Atari800/windows/atari800.exe", linux = "Atari800/linux/Atari800.AppImage" }
 save_dir = { windows = "<none>", linux = "<none>" }

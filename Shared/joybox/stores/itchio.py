@@ -1,3 +1,6 @@
+# Imports
+import types
+
 # Local imports
 from joybox import config
 from joybox import serialization
@@ -17,6 +20,22 @@ from joybox import runtime
 # Itchio store
 class Itchio(storebase.StoreBase):
 
+    TYPE = config.StoreType.ITCHIO
+    PLATFORM = config.Platform.COMPUTER_ITCHIO
+    SUPERCATEGORY = config.Supercategory.ROMS
+    CATEGORY = config.Category.COMPUTER
+    SUBCATEGORY = config.Subcategory.COMPUTER_ITCHIO
+    KEY = config.JSON_KEY_ITCHIO
+    IDENTIFIER_KEYS = types.MappingProxyType({
+        config.StoreIdentifierType.INFO: config.JSON_KEY_STORE_APPURL,
+        config.StoreIdentifierType.INSTALL: config.JSON_KEY_STORE_APPURL,
+        config.StoreIdentifierType.LAUNCH: config.JSON_KEY_STORE_APPURL,
+        config.StoreIdentifierType.DOWNLOAD: config.JSON_KEY_STORE_APPURL,
+        config.StoreIdentifierType.ASSET: config.JSON_KEY_STORE_APPURL,
+        config.StoreIdentifierType.METADATA: config.JSON_KEY_STORE_APPURL,
+        config.StoreIdentifierType.PAGE: config.JSON_KEY_STORE_APPURL,
+    })
+
     # Constructor
     def __init__(self):
         super().__init__()
@@ -29,50 +48,6 @@ class Itchio(storebase.StoreBase):
     ############################################################
     # Store
     ############################################################
-
-    # Get name
-    def get_name(self):
-        return config.StoreType.ITCHIO.val()
-
-    # Get type
-    def get_type(self):
-        return config.StoreType.ITCHIO
-
-    # Get platform
-    def get_platform(self):
-        return config.Platform.COMPUTER_ITCHIO
-
-    # Get supercategory
-    def get_supercategory(self):
-        return config.Supercategory.ROMS
-
-    # Get category
-    def get_category(self):
-        return config.Category.COMPUTER
-
-    # Get subcategory
-    def get_subcategory(self):
-        return config.Subcategory.COMPUTER_ITCHIO
-
-    # Get key
-    def get_key(self):
-        return config.JSON_KEY_ITCHIO
-
-    # Get identifier keys
-    def get_identifier_keys(self):
-        return {
-            config.StoreIdentifierType.INFO: config.JSON_KEY_STORE_APPURL,
-            config.StoreIdentifierType.INSTALL: config.JSON_KEY_STORE_APPURL,
-            config.StoreIdentifierType.LAUNCH: config.JSON_KEY_STORE_APPURL,
-            config.StoreIdentifierType.DOWNLOAD: config.JSON_KEY_STORE_APPURL,
-            config.StoreIdentifierType.ASSET: config.JSON_KEY_STORE_APPURL,
-            config.StoreIdentifierType.METADATA: config.JSON_KEY_STORE_APPURL,
-            config.StoreIdentifierType.PAGE: config.JSON_KEY_STORE_APPURL
-        }
-
-    # Get install dir
-    def get_install_dir(self):
-        return self.install_dir
 
     # Check if purchases can be imported
     def can_import_purchases(self):
@@ -90,7 +65,7 @@ class Itchio(storebase.StoreBase):
     def get_login_files(self):
         return [self.get_cookie_file()]
 
-    # Login
+    # Sign in to itch.io in a visible browser and save its cookie file; True at once when already signed in
     def login(
         self,
         verbose = False,
@@ -135,7 +110,7 @@ class Itchio(storebase.StoreBase):
     # Purchases
     ############################################################
 
-    # Get purchases
+    # Owned games with id, page and title, from a cache under a day old or else scraped from the my-purchases page
     def get_latest_purchases(
         self,
         verbose = False,
@@ -209,7 +184,7 @@ class Itchio(storebase.StoreBase):
         # Return purchases
         return self.make_purchases(purchases_data)
 
-    # Make purchases
+    # Wrap each cached or scraped purchase dict as a JsonData for the itch.io platform
     def make_purchases(self, purchases_data):
         purchases = []
         for purchase_data in purchases_data:
@@ -218,7 +193,7 @@ class Itchio(storebase.StoreBase):
                 json_platform = self.get_platform()))
         return purchases
 
-    # Scrape purchases
+    # Read id, page and title from every cell of the cookie-authenticated my-purchases page; None when it fails to load
     def scrape_purchases(
         self,
         web_driver,
@@ -278,7 +253,7 @@ class Itchio(storebase.StoreBase):
     # Metadata
     ############################################################
 
-    # Get latest metadata
+    # Description, release date, authors and genres scraped from the game page with the saved cookie, with retries
     def get_latest_metadata(
         self,
         identifier,
@@ -408,7 +383,7 @@ class Itchio(storebase.StoreBase):
     # Assets
     ############################################################
 
-    # Get latest asset url
+    # A box front found through the itch.io search, or the YouTube embed on the game page; None for other types
     def get_latest_asset_url(
         self,
         identifier,
@@ -468,7 +443,7 @@ class Itchio(storebase.StoreBase):
         # Return latest asset url
         return latest_asset_url
 
-    # Search cover
+    # Search itch.io by the page's path and return the cover image of the result linking to that exact page, else None
     def search_cover(
         self,
         web_driver,

@@ -45,7 +45,7 @@ def build_parser():
     parser.add_common_arguments()
     return parser
 
-# Main
+# After a preview, log and write per key the Pegasus metadata entries missing the chosen fields
 def main():
 
     # Parse arguments

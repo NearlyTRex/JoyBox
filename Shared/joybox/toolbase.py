@@ -4,9 +4,12 @@ from joybox import programcatalog
 # Base tool
 class ToolBase:
 
-    # Get name
+    # The name the tool is registered under, which also files its program data
+    NAME = ""
+
+    # The tool's registered name
     def get_name(self):
-        return ""
+        return self.NAME
 
     # Get config, from the tool's program data
     def get_config(self):
@@ -16,17 +19,17 @@ class ToolBase:
     def get_config_files(self):
         return programcatalog.get_config_files(programcatalog.FAMILY_TOOLS, self.get_name())
 
-    # Setup
+    # Download and install the tool; the base has nothing to install and succeeds
     def setup(self, setup_params = None):
         del setup_params
         return True
 
-    # Setup offline
+    # Install the tool from local copies without downloading; succeeds in the base
     def setup_offline(self, setup_params = None):
         del setup_params
         return True
 
-    # Configure
+    # Write the tool's config files after install; succeeds in the base
     def configure(self, setup_params = None):
         del setup_params
         return True

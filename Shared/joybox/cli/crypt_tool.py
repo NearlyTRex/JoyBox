@@ -50,7 +50,7 @@ def build_parser():
     parser.add_common_arguments()
     return parser
 
-# Main
+# After a preview, GPG-encrypt or decrypt the input file or tree in place with the passphrase from the config
 def main():
 
     # Parse arguments

@@ -18,7 +18,7 @@ from joybox import prefixlayout
 
 ###########################################################
 
-# Get program prefix name
+# Prefix type for a program: TOOL or EMULATOR by which catalog it is in; None otherwise
 def get_program_prefix_name(program_name):
     if programs.is_program_name_tool(program_name):
         return config.PrefixType.TOOL
@@ -26,7 +26,7 @@ def get_program_prefix_name(program_name):
         return config.PrefixType.EMULATOR
     return None
 
-# Translate path if necessary
+# The path as the program sees it inside its Wine or Sandboxie prefix; the path unchanged for native programs
 def translate_path_if_necessary(path, program_exe, program_name):
 
     # Check params
@@ -51,7 +51,7 @@ def translate_path_if_necessary(path, program_exe, program_name):
         path = path,
         options = options)
 
-# Translate virtual path to real path
+# Host path for a path seen inside the prefix; the path unchanged for non-prefix options, None when unresolvable
 def translate_virtual_path_to_real_path(
     path,
     options):
@@ -82,7 +82,7 @@ def translate_virtual_path_to_real_path(
     # Return real path
     return path_info["real"]
 
-# Translate real path to virtual path
+# Path inside the prefix for a host path; the path unchanged for non-prefix options, None when unresolvable
 def translate_real_path_to_virtual_path(
     path,
     options):
@@ -113,7 +113,8 @@ def translate_real_path_to_virtual_path(
     # Return virtual path
     return path_info["virtual"]
 
-# Transfer from sandbox
+# Move what the sandbox wrote at its real path back to path, or copy it when keep_in_sandbox
+# Skipped when the path does not translate or nothing exists there
 def transfer_from_sandbox(
     path,
     options,

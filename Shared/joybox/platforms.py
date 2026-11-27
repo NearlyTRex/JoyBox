@@ -9,13 +9,13 @@ def is_platform_valid(platform_type):
         return platform_type in config.platforms
     return False
 
-# Get platform section
+# Platform's whole entry in config.platforms; None for an unknown platform
 def get_platform_section(platform_type):
     if platform_type and platform_type in config.platforms:
         return config.platforms[platform_type]
     return None
 
-# Get platform value
+# One key of the platform's config.platforms entry; None when the platform or key is unknown
 def get_platform_value(platform_type, platform_key):
     if platform_type and platform_type in config.platforms:
         if platform_key and platform_key in config.platforms[platform_type]:
@@ -38,7 +38,7 @@ def is_letter_platform(platform_type):
 
 ###########################################################
 
-# Get addons types
+# Addon kinds (updates, DLC) the platform supports, from config.platforms; None for an unknown platform
 def get_addon_types(platform_type):
     return get_platform_value(platform_type, config.PLATFORM_KEY_ADDONS)
 
@@ -56,7 +56,7 @@ def are_addons_possible(platform_type):
 
 ###########################################################
 
-# Get launcher types
+# Launch modes the platform supports, from config.platforms; None for an unknown platform
 def get_launcher_types(platform_type):
     return get_platform_value(platform_type, config.PLATFORM_KEY_LAUNCHER)
 
@@ -74,15 +74,15 @@ def is_launched_by_file(platform_type):
 
 ###########################################################
 
-# Get autofill json keys
+# JSON keys whose values are always overwritten when filled; None for an unknown platform
 def get_autofill_json_keys(platform_type):
     return get_platform_value(platform_type, config.PLATFORM_KEY_AUTOFILL_JSON)
 
-# Get fillonce json keys
+# JSON keys filled only while absent, then kept; None for an unknown platform
 def get_fillonce_json_keys(platform_type):
     return get_platform_value(platform_type, config.PLATFORM_KEY_FILLONCE_JSON)
 
-# Get merge json keys
+# JSON keys whose new values merge additively into the old; None for an unknown platform
 def get_merge_json_keys(platform_type):
     return get_platform_value(platform_type, config.PLATFORM_KEY_MERGE_JSON)
 

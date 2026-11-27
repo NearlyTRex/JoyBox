@@ -10,15 +10,10 @@ from joybox import emulatorbase
 # Stella emulator
 class Stella(emulatorbase.EmulatorBase):
 
-    # Get name
-    def get_name(self):
-        return "Stella"
+    NAME = "Stella"
 
-    # Get platforms
-    def get_platforms(self):
-        return []
-
-    # Setup
+    # Windows build from the stella-emu GitHub release; Linux AppImage built from the
+    # NearlyTRex/Stella fork with autotools
     def setup(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
@@ -72,7 +67,7 @@ class Stella(emulatorbase.EmulatorBase):
                 return False
         return True
 
-    # Setup offline
+    # Install the Windows and Linux builds from the releases stored in their backups dirs
     def setup_offline(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()

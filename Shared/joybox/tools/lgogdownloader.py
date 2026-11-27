@@ -14,11 +14,9 @@ from joybox import platform_info
 # LGOGDownloader tool
 class LGOGDownloader(toolbase.ToolBase):
 
-    # Get name
-    def get_name(self):
-        return "LGOGDownloader"
+    NAME = "LGOGDownloader"
 
-    # Setup
+    # Build a Linux AppImage from the NearlyTRex/LGOGDownloader fork with CMake; Linux only
     def setup(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
@@ -54,7 +52,7 @@ class LGOGDownloader(toolbase.ToolBase):
                 return False
         return True
 
-    # Setup offline
+    # Install the Linux AppImage from the build stored in its backups dir
     def setup_offline(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
@@ -73,7 +71,7 @@ class LGOGDownloader(toolbase.ToolBase):
                 return False
         return True
 
-    # Configure
+    # On Linux, write its config files under the tools root
     def configure(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()

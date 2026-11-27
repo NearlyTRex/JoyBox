@@ -1,4 +1,5 @@
 # Imports
+import types
 import os
 
 # Local imports
@@ -29,6 +30,22 @@ gogdl_platforms = {
 
 # GOG store
 class GOG(storebase.StoreBase):
+
+    TYPE = config.StoreType.GOG
+    PLATFORM = config.Platform.COMPUTER_GOG
+    SUPERCATEGORY = config.Supercategory.ROMS
+    CATEGORY = config.Category.COMPUTER
+    SUBCATEGORY = config.Subcategory.COMPUTER_GOG
+    KEY = config.JSON_KEY_GOG
+    IDENTIFIER_KEYS = types.MappingProxyType({
+        config.StoreIdentifierType.INFO: config.JSON_KEY_STORE_APPID,
+        config.StoreIdentifierType.INSTALL: config.JSON_KEY_STORE_APPID,
+        config.StoreIdentifierType.LAUNCH: config.JSON_KEY_STORE_APPNAME,
+        config.StoreIdentifierType.DOWNLOAD: config.JSON_KEY_STORE_APPNAME,
+        config.StoreIdentifierType.ASSET: config.JSON_KEY_STORE_APPURL,
+        config.StoreIdentifierType.METADATA: config.JSON_KEY_STORE_APPURL,
+        config.StoreIdentifierType.PAGE: config.JSON_KEY_STORE_APPNAME,
+    })
 
     # Constructor
     def __init__(self):
@@ -64,61 +81,17 @@ class GOG(storebase.StoreBase):
     # Store
     ############################################################
 
-    # Get name
-    def get_name(self):
-        return config.StoreType.GOG.val()
-
-    # Get type
-    def get_type(self):
-        return config.StoreType.GOG
-
-    # Get platform
-    def get_platform(self):
-        return config.Platform.COMPUTER_GOG
-
-    # Get supercategory
-    def get_supercategory(self):
-        return config.Supercategory.ROMS
-
-    # Get category
-    def get_category(self):
-        return config.Category.COMPUTER
-
-    # Get subcategory
-    def get_subcategory(self):
-        return config.Subcategory.COMPUTER_GOG
-
-    # Get key
-    def get_key(self):
-        return config.JSON_KEY_GOG
-
-    # Get identifier keys
-    def get_identifier_keys(self):
-        return {
-            config.StoreIdentifierType.INFO: config.JSON_KEY_STORE_APPID,
-            config.StoreIdentifierType.INSTALL: config.JSON_KEY_STORE_APPID,
-            config.StoreIdentifierType.LAUNCH: config.JSON_KEY_STORE_APPNAME,
-            config.StoreIdentifierType.DOWNLOAD: config.JSON_KEY_STORE_APPNAME,
-            config.StoreIdentifierType.ASSET: config.JSON_KEY_STORE_APPURL,
-            config.StoreIdentifierType.METADATA: config.JSON_KEY_STORE_APPURL,
-            config.StoreIdentifierType.PAGE: config.JSON_KEY_STORE_APPNAME
-        }
-
-    # Get preferred platform
+    # The GOG installer OS (windows, linux, mac) from the settings, used to pick builds and downloads
     def get_preferred_platform(self):
         return self.platform
 
-    # Get user name
+    # The GOG username from the settings; the constructor refuses to build without one
     def get_user_name(self):
         return self.username
 
-    # Get email
+    # The GOG account email from the settings; the constructor refuses to build without one
     def get_email(self):
         return self.email
-
-    # Get install dir
-    def get_install_dir(self):
-        return self.install_dir
 
     # Check if store can handle installing
     def can_handle_installing(self):
@@ -215,7 +188,7 @@ class GOG(storebase.StoreBase):
             exit_on_failure = exit_on_failure)
         return code == 0
 
-    # Login
+    # Sign in to both LGOGDownloader and HeroicGogDL interactively; True only when both succeed
     def login(
         self,
         verbose = False,
@@ -250,7 +223,7 @@ class GOG(storebase.StoreBase):
     # Page
     ############################################################
 
-    # Get latest url
+    # The gog.com game page for a slug, built from the identifier without checking it exists
     def get_latest_url(
         self,
         identifier,
@@ -271,7 +244,7 @@ class GOG(storebase.StoreBase):
     # Purchases
     ############################################################
 
-    # Get purchases
+    # Owned games with slug, product id, page and title, from a cache under a day old or else LGOGDownloader's JSON list
     def get_latest_purchases(
         self,
         verbose = False,
@@ -380,7 +353,7 @@ class GOG(storebase.StoreBase):
     # Json
     ############################################################
 
-    # Augment jsondata
+    # Merge in manifest save paths and registry keys matched by GOG product id, then apply the base path cleanup
     def augment_jsondata(
         self,
         json_data,
@@ -411,7 +384,7 @@ class GOG(storebase.StoreBase):
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
-    # Get latest jsondata
+    # Slug, title, page and the preferred-OS installer version from the GOG products API; None when unreachable
     def get_latest_jsondata(
         self,
         identifier,
@@ -467,7 +440,7 @@ class GOG(storebase.StoreBase):
     # Metadata
     ############################################################
 
-    # Get latest metadata
+    # Description, developer, publisher, release date and genres scraped from the game's GOG page, with retries
     def get_latest_metadata(
         self,
         identifier,
@@ -579,7 +552,7 @@ class GOG(storebase.StoreBase):
     # Assets
     ############################################################
 
-    # Get latest asset url
+    # A box front from the metadata asset collectors, or the YouTube embed found on the game page; None for other types
     def get_latest_asset_url(
         self,
         identifier,
@@ -625,7 +598,7 @@ class GOG(storebase.StoreBase):
     # Install
     ############################################################
 
-    # Get install path
+    # Where the game with this product id installs: its own folder under the store install dir
     def get_install_path(self, identifier):
         return paths.join_paths(self.get_install_dir(), identifier)
 
@@ -640,7 +613,7 @@ class GOG(storebase.StoreBase):
             return False
         return paths.does_directory_contain_files(self.get_install_path(identifier))
 
-    # Install
+    # Install the game into its install path with HeroicGogDL for the preferred OS; True when the tool exits cleanly
     def install(
         self,
         identifier,
@@ -692,7 +665,7 @@ class GOG(storebase.StoreBase):
     # Download
     ############################################################
 
-    # Download
+    # Fetch installers, extras and DLC with LGOGDownloader, fold DLC extras into extra, and move it all into output_dir
     def download(
         self,
         identifier,

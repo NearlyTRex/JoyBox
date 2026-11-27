@@ -9,11 +9,9 @@ from joybox import toolbase
 # GeckoDriver tool
 class GeckoDriver(toolbase.ToolBase):
 
-    # Get name
-    def get_name(self):
-        return "GeckoDriver"
+    NAME = "GeckoDriver"
 
-    # Setup
+    # Download the Windows and Linux drivers from the mozilla/geckodriver GitHub release
     def setup(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
@@ -59,7 +57,7 @@ class GeckoDriver(toolbase.ToolBase):
                 return False
         return True
 
-    # Setup offline
+    # Install the Windows and Linux drivers from the releases stored in their backups dirs
     def setup_offline(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()

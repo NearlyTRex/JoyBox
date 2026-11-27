@@ -10,11 +10,10 @@ from joybox import toolbase
 # MameTools tool
 class MameTools(toolbase.ToolBase):
 
-    # Get name
-    def get_name(self):
-        return "MameTools"
+    NAME = "MameTools"
 
-    # Setup
+    # Windows chdman.exe pulled from the mamedev/mame self-extracting release; Linux chdman AppImage
+    # built tools-only from the NearlyTRex/Mame fork
     def setup(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
@@ -69,7 +68,7 @@ class MameTools(toolbase.ToolBase):
                 return False
         return True
 
-    # Setup offline
+    # Install chdman for Windows and Linux from the releases stored in their backups dirs
     def setup_offline(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()

@@ -1,6 +1,9 @@
 # Mame: where its programs live and how they run, the files its setup writes
 # and the system files it checks. Read by joybox/programcatalog.py.
 
+# The platforms it plays
+platforms = ["OTHER_ARCADE", "OTHER_ATARI_5200", "OTHER_ATARI_7800", "OTHER_MAGNAVOX_ODYSSEY_2", "OTHER_MATTEL_INTELLIVISION", "OTHER_PHILIPS_CDI", "OTHER_TEXAS_INSTRUMENTS_TI994A", "OTHER_TIGER_GAMECOM"]
+
 [config.Mame]
 program = { windows = "Mame/windows/mame.exe", linux = "Mame/linux/Mame.AppImage" }
 save_dir = { windows = "<none>", linux = "<none>" }

@@ -67,7 +67,7 @@ def build_parser():
     parser.add_common_arguments()
     return parser
 
-# Main
+# Tag each genre's albums to JSON with its fixed defaults, then write the tags back into the audio files unless told not to
 def main():
 
     # Parse arguments

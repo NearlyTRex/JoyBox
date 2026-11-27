@@ -11,11 +11,10 @@ from joybox import toolbase
 # XorrISO tool
 class XorrISO(toolbase.ToolBase):
 
-    # Get name
-    def get_name(self):
-        return "XorrISO"
+    NAME = "XorrISO"
 
-    # Setup
+    # Windows build cloned from the NearlyTRex/XorrISOWindows repo and archived to its backups dir;
+    # Linux AppImage built from the GNU xorriso 1.5.2 tarball
     def setup(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
@@ -82,7 +81,7 @@ class XorrISO(toolbase.ToolBase):
                 return False
         return True
 
-    # Setup offline
+    # Install the Windows and Linux builds from the archives stored in their backups dirs
     def setup_offline(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()

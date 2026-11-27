@@ -12,7 +12,7 @@ from joybox import archive
 def is_install_image_mounted(mount_dir):
     return paths.does_directory_contain_files(mount_dir)
 
-# Mount install image
+# Unpack the install archive into the mount folder unless it already holds files
 def mount_install_image(
     install_file,
     mount_dir,
@@ -46,7 +46,7 @@ def copy_install_files(input_dir, output_dir, verbose = False, pretend_run = Fal
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
-# Pack install image
+# Archive an install folder's files, minus the ignored install paths, into an image; optionally delete the folder; True when the image exists
 def pack_install_image(
     input_dir,
     output_image,
@@ -78,7 +78,7 @@ def pack_install_image(
             exit_on_failure = exit_on_failure)
     return os.path.exists(output_image)
 
-# Unpack install image
+# Extract an install archive into a folder, optionally deleting the archive
 def unpack_install_image(
     input_image,
     output_dir,

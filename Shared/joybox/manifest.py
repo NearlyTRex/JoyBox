@@ -15,7 +15,7 @@ class ManifestEntry:
     def __init__(self, manifest_data):
         self.manifest_data = manifest_data
 
-    # Get paths
+    # Tokenized save paths under base_path for the Windows, DOS and Steam file entries
     def get_paths(self, base_path):
         paths = []
         if "files" in self.manifest_data:
@@ -33,7 +33,7 @@ class ManifestEntry:
                             paths.append(storepaths.create_tokenized_path(path_location, base_path))
         return paths
 
-    # Get keys
+    # Registry keys the entry lists; empty when it has none
     def get_keys(self):
         keys = []
         if "registry" in self.manifest_data:
@@ -41,14 +41,14 @@ class ManifestEntry:
                 keys.append(key)
         return keys
 
-    # Get install dir
+    # First installDir name the entry lists; None when it has none
     def get_install_dir(self):
         if "installDir" in self.manifest_data:
             for key in self.manifest_data["installDir"]:
                 return key
         return None
 
-# Manifest class
+# Ludusavi game manifest, keyed by game name
 class Manifest:
 
     # Constructor
@@ -57,14 +57,14 @@ class Manifest:
         if manifest:
             self.manifest = manifest
 
-    # Load
+    # Read the Ludusavi manifest YAML from the tool path the config names
     def load(self, verbose = False, exit_on_failure = False):
         self.manifest = serialization.read_yaml_file(
             src = programs.get_tool_path_config_value("LudusaviManifest", "yaml"),
             verbose = verbose,
             exit_on_failure = exit_on_failure)
 
-    # Find entry by name
+    # Closest highly similar game name in the manifest; None when nothing matches
     def find_entry_by_name(self, name):
         search_results = []
         for manifest_name, manifest_entry in self.manifest.items():

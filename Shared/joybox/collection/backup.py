@@ -39,7 +39,7 @@ def should_backup_store_game_files(
     # Check versions
     return latest_version != store_buildid
 
-# Backup store game files
+# Download the store's latest build into a temp dir and upload it to the locker; True without work when the stored build is current
 def backup_store_game_files(
     game_info,
     locker_type,
@@ -93,7 +93,7 @@ def should_backup_game_files(
     # A local game's copy is the master, with no upstream to fetch it again from
     return False
 
-# Backup game files
+# Back up a store game's latest build; local games are the master copy, so they pass with nothing done
 def backup_game_files(
     game_info,
     locker_type,
@@ -110,7 +110,7 @@ def backup_game_files(
     # A local game's copy is the master, with no upstream to fetch it again from
     return True
 
-# Backup all game files
+# Back up every ROM game in the collection; stops at the first failure
 def backup_all_game_files(
     locker_type,
     verbose = False,

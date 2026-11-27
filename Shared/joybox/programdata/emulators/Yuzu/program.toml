@@ -1,6 +1,9 @@
 # Yuzu: where its programs live and how they run, the files its setup writes
 # and the system files it checks. Read by joybox/programcatalog.py.
 
+# The platforms it plays
+platforms = ["NINTENDO_SWITCH", "NINTENDO_SWITCH_ESHOP"]
+
 [config.Yuzu]
 program = { windows = "Yuzu/windows/yuzu.exe", linux = "Yuzu/linux/Yuzu.AppImage" }
 setup_dir = { windows = "Yuzu/windows/user", linux = "Yuzu/linux/Yuzu.AppImage.home/.local/share/yuzu" }

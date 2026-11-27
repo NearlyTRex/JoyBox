@@ -54,7 +54,7 @@ def build_parser():
     parser.add_common_arguments()
     return parser
 
-# Main
+# After a preview, extract each CHD under the input to a disc image beside it in the chosen sheet or ISO format
 def main():
 
     # Parse arguments

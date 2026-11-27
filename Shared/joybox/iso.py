@@ -23,28 +23,28 @@ def is_iso_mounted(iso_file, mount_dir):
         not paths.is_directory_empty(mount_point)
     )
 
-# Get the iso tool
+# The XorrISO program path; None, logging an error, when it is not installed
 def get_iso_tool():
     if programs.is_tool_installed("XorrISO"):
         return programs.get_tool_program("XorrISO")
     logger.log_error("XorrISO was not found")
     return None
 
-# Get the mount tool
+# The FuseISO program path; None, logging an error, when it is not installed
 def get_mount_tool():
     if programs.is_tool_installed("FuseISO"):
         return programs.get_tool_program("FuseISO")
     logger.log_error("FuseISO was not found")
     return None
 
-# Get the unmount tool
+# The FUserMount program path; None, logging an error, when it is not installed
 def get_unmount_tool():
     if programs.is_tool_installed("FUserMount"):
         return programs.get_tool_program("FUserMount")
     logger.log_error("FUserMount was not found")
     return None
 
-# Create iso
+# Build an ISO 9660 + Joliet image from one or more folders with xorriso, optionally deleting the source folder; True when the image exists
 def create_iso(
     iso_file,
     source_dir = None,
@@ -103,7 +103,7 @@ def create_iso(
     # Check result
     return os.path.exists(iso_file)
 
-# Extract iso
+# Extract an iso as an archive, falling back to xorriso with permissions opened to 666/777; True when the folder ends up with files
 def extract_iso(
     iso_file,
     extract_dir,
@@ -462,7 +462,7 @@ def create_bootable_iso(
         return True
     return paths.is_path_file(iso_file)
 
-# Get actual mount point
+# Where the iso is mounted: its drive root from PowerShell on Windows (None when not mounted), otherwise mount_dir
 def get_actual_mount_point(
     iso_file,
     mount_dir,
@@ -503,7 +503,7 @@ def get_actual_mount_point(
     # Mount point matches expectations
     return mount_dir
 
-# Mount iso
+# Mount an iso with Mount-DiskImage on Windows or fuseiso on Linux, unless it is already mounted; True when the mount holds files
 def mount_iso(
     iso_file,
     mount_dir,
@@ -568,7 +568,7 @@ def mount_iso(
     # Check result
     return is_iso_mounted(iso_file, mount_dir)
 
-# Unmount iso
+# Unmount an iso with Dismount-DiskImage or fusermount -u and remove the mount folder; True when it is no longer mounted
 def unmount_iso(
     iso_file,
     mount_dir,

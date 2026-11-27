@@ -9,7 +9,7 @@ from joybox import gamenaming
 
 ###########################################################
 
-# Build hash files
+# Hash the game's files, encrypted fields included, into its category's JSON hash file; defaults to its locker folder, False when none exists
 def build_hash_files(
     game_info,
     game_root = None,
@@ -50,7 +50,7 @@ def build_hash_files(
         exit_on_failure = exit_on_failure)
     return success
 
-# Clean missing hash entries
+# Drop entries from a category's hash file whose files are gone from the locker root; True when there is no hash file
 def clean_missing_hash_entries(
     game_supercategory,
     game_category,
@@ -74,7 +74,7 @@ def clean_missing_hash_entries(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
-# Build all hash files
+# Hash the files of every ROM game in the collection; stops at the first failure
 def build_all_hash_files(
     locker_type = None,
     verbose = False,
@@ -93,7 +93,7 @@ def build_all_hash_files(
 
 ############################################################
 
-# Sort hash file
+# Sort the hash file of the game's category; False when that file is missing
 def sort_hash_file(
     game_info,
     verbose = False,
@@ -116,7 +116,7 @@ def sort_hash_file(
         exit_on_failure = exit_on_failure)
     return success
 
-# Sort all hash files
+# Sort every existing hash file across all supercategories, categories and subcategories
 def sort_all_hash_files(
     verbose = False,
     pretend_run = False,

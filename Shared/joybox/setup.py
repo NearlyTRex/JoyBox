@@ -13,7 +13,7 @@ from joybox import release
 from joybox import settings
 from joybox import platform_info, runtime
 
-# Check requirements
+# Quit unless Python meets the minimum version, the OS is Windows or Linux, symlinks work and the ini exists
 def check_requirements():
 
     # Check python version
@@ -36,7 +36,8 @@ def check_requirements():
     if not settings.is_present():
         logger.log_error("Ini file not found, please run setup first", quit_program = True)
 
-# Setup packages
+# Install each package (or only those named), optionally online/offline, configured, cleaned or forced
+# Stops with False at the first failure; warns about downloads the lockers could not back up
 def setup_packages(
     package_list,
     package_type,
@@ -105,7 +106,7 @@ def setup_packages(
         logger.log_warning("Fix the lockers, then reinstall those %ss with --force to back them up" % package_type)
     return True
 
-# Setup tools
+# Install every tool into the tools root directory through setup_packages
 def setup_tools(
     offline = False,
     configure = False,
@@ -124,7 +125,7 @@ def setup_tools(
         packages = packages,
         setup_params = setup_params)
 
-# Setup emulators
+# Install every emulator into the emulators root directory through setup_packages
 def setup_emulators(
     offline = False,
     configure = False,
@@ -143,7 +144,7 @@ def setup_emulators(
         packages = packages,
         setup_params = setup_params)
 
-# Setup assets
+# Symlink each category's locker asset directories into the Pegasus metadata tree, creating missing sources
 def setup_assets(verbose = False, pretend_run = False, exit_on_failure = False):
     for game_category in config.Category.members():
         for game_subcategory in config.subcategory_map[game_category]:

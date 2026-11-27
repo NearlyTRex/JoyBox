@@ -13,7 +13,7 @@ from joybox import cryption
 
 ###########################################################
 
-# Get file groupings
+# Split the files listed in JSON hash files into numbered groups of at most max_group_size bytes, never splitting a directory
 def get_file_groupings(filenames, max_group_size):
 
     # Group results
@@ -67,7 +67,7 @@ def get_file_groupings(filenames, max_group_size):
 
 ###########################################################
 
-# Read json hash file
+# Entries of a JSON hash file keyed by dir/filename, with missing encryption fields filled; empty when the file is not a list
 def read_hash_file_json(
     src,
     verbose = False,
@@ -89,7 +89,7 @@ def read_hash_file_json(
             hash_contents[file_location] = json_hash
     return hash_contents
 
-# Write json hash file
+# Write hash entries as a JSON list sorted by key; returns whether the write succeeded
 def write_hash_file_json(
     src,
     hash_contents,
@@ -111,7 +111,7 @@ def write_hash_file_json(
 # The columns of a csv hash file, in order
 HASH_FILE_COLUMNS = ["dir", "filename", "hash", "size", "mtime"]
 
-# Read csv hash file
+# Entries of a CSV hash file keyed by dir/filename, size and mtime as ints; empty when the file is missing
 def read_hash_file_csv(
     src,
     verbose = False,
@@ -138,7 +138,7 @@ def read_hash_file_csv(
             logger.log_error(e, quit_program = True)
     return hash_contents
 
-# Write csv hash file
+# Write hash entries as CSV in the fixed column order, creating the folder; True without writing on a pretend run
 def write_hash_file_csv(
     src,
     hash_contents,
@@ -158,7 +158,7 @@ def write_hash_file_csv(
                for hash_key in sorted(hash_contents.keys())]
     return serialization.write_csv_records(src, HASH_FILE_COLUMNS, records, exit_on_failure = exit_on_failure)
 
-# Sort hash file
+# Rewrite a JSON hash file with its entries in key order
 def sort_hash_file(
     src,
     verbose = False,
@@ -499,7 +499,7 @@ def clean_missing_hash_entries(
             exit_on_failure = exit_on_failure)
     return True
 
-# Build hash map
+# Hash every file under a path with the chosen algorithm (MD5 by default), keyed by relative path with size and mtime; empty when the path is missing
 def build_hash_map(
     src_path,
     hash_type = None,

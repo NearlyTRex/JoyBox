@@ -31,7 +31,7 @@ def build_parser():
     parser.add_common_arguments()
     return parser
 
-# Main
+# After a preview, rewrite every game hash file with its entries sorted
 def main():
 
     # Parse arguments

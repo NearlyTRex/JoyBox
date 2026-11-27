@@ -67,7 +67,7 @@ def build_parser():
     parser.add_common_arguments()
     return parser
 
-# Main
+# List presets or scripts, open the Ghidra GUI through PyGhidra, or run a PyGhidra script headless from a preset or given paths
 def main():
 
     # Parse arguments

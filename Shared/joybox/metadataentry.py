@@ -26,7 +26,7 @@ class MetadataEntry:
     def __init__(self):
         self.game_entry = {}
 
-    # Has minimum keys
+    # Whether every key in config.metadata_keys_minimum is present
     def has_minimum_keys(self):
         for key in config.metadata_keys_minimum:
             if key not in self.game_entry.keys():
@@ -37,15 +37,15 @@ class MetadataEntry:
     def is_key_set(self, key):
         return key in self.game_entry.keys()
 
-    # Get value
+    # Value stored under key, or default_value when the key is absent
     def get_value(self, key, default_value = None):
         return self.game_entry.get(key, default_value)
 
-    # Set value
+    # Store value under key, replacing any existing one
     def set_value(self, key, value):
         self.game_entry[key] = value
 
-    # Delete value
+    # Remove key from the entry; raises KeyError when it is absent
     def delete_value(self, key):
         del self.game_entry[key]
 
@@ -61,42 +61,49 @@ class MetadataEntry:
     # Game name
     def get_game(self, default_value = None):
         return self.get_value(config.METADATA_KEY_GAME, default_value)
+    # Store the game's name
     def set_game(self, value):
         self.set_value(config.METADATA_KEY_GAME, value)
 
     # Game platform
     def get_platform(self, default_value = None):
         return self.get_value(config.METADATA_KEY_PLATFORM, default_value)
+    # Store the game's platform
     def set_platform(self, value):
         self.set_value(config.METADATA_KEY_PLATFORM, value)
 
     # Game supercategory
     def get_supercategory(self, default_value = None):
         return self.get_value(config.METADATA_KEY_SUPERCATEGORY, default_value)
+    # Store the game's supercategory
     def set_supercategory(self, value):
         self.set_value(config.METADATA_KEY_SUPERCATEGORY, value)
 
     # Game category
     def get_category(self, default_value = None):
         return self.get_value(config.METADATA_KEY_CATEGORY, default_value)
+    # Store the game's category
     def set_category(self, value):
         self.set_value(config.METADATA_KEY_CATEGORY, value)
 
     # Game subcategory
     def get_subcategory(self, default_value = None):
         return self.get_value(config.METADATA_KEY_SUBCATEGORY, default_value)
+    # Store the game's subcategory
     def set_subcategory(self, value):
         self.set_value(config.METADATA_KEY_SUBCATEGORY, value)
 
     # Game file
     def get_file(self, default_value = None):
         return self.get_value(config.METADATA_KEY_FILE, default_value)
+    # Store the game's file path relative to the metadata root
     def set_file(self, value):
         self.set_value(config.METADATA_KEY_FILE, value)
 
     # Game description
     def get_description(self, default_value = None):
         return self.get_value(config.METADATA_KEY_DESCRIPTION, default_value)
+    # Store a list of lines as given; a string is cleaned, wrapped and de-duplicated into lines first
     def set_description(self, value):
         if isinstance(value, list):
             self.set_value(config.METADATA_KEY_DESCRIPTION, value)
@@ -109,84 +116,98 @@ class MetadataEntry:
     # Game url
     def get_url(self, default_value = None):
         return self.get_value(config.METADATA_KEY_URL, default_value)
+    # Store the game's store or info page URL
     def set_url(self, value):
         self.set_value(config.METADATA_KEY_URL, value)
 
     # Game genre
     def get_genre(self, default_value = None):
         return self.get_value(config.METADATA_KEY_GENRE, default_value)
+    # Store the game's genre
     def set_genre(self, value):
         self.set_value(config.METADATA_KEY_GENRE, value)
 
     # Game coop
     def get_coop(self, default_value = None):
         return self.get_value(config.METADATA_KEY_COOP, default_value)
+    # Store the game's co-op flag
     def set_coop(self, value):
         self.set_value(config.METADATA_KEY_COOP, value)
 
     # Game playable
     def get_playable(self, default_value = None):
         return self.get_value(config.METADATA_KEY_PLAYABLE, default_value)
+    # Store the game's playable flag
     def set_playable(self, value):
         self.set_value(config.METADATA_KEY_PLAYABLE, value)
 
     # Game developer
     def get_developer(self, default_value = None):
         return self.get_value(config.METADATA_KEY_DEVELOPER, default_value)
+    # Store the game's developer
     def set_developer(self, value):
         self.set_value(config.METADATA_KEY_DEVELOPER, value)
 
     # Game publisher
     def get_publisher(self, default_value = None):
         return self.get_value(config.METADATA_KEY_PUBLISHER, default_value)
+    # Store the game's publisher
     def set_publisher(self, value):
         self.set_value(config.METADATA_KEY_PUBLISHER, value)
 
     # Game players
     def get_players(self, default_value = None):
         return self.get_value(config.METADATA_KEY_PLAYERS, default_value)
+    # Store the game's player count
     def set_players(self, value):
         self.set_value(config.METADATA_KEY_PLAYERS, value)
 
     # Game release
     def get_release(self, default_value = None):
         return self.get_value(config.METADATA_KEY_RELEASE, default_value)
+    # Store the game's release date
     def set_release(self, value):
         self.set_value(config.METADATA_KEY_RELEASE, value)
 
     # Game background
     def get_background(self, default_value = None):
         return self.get_value(config.METADATA_KEY_BACKGROUND, default_value)
+    # Store the game's background asset path
     def set_background(self, value):
         self.set_value(config.METADATA_KEY_BACKGROUND, value)
 
     # Game box back
     def get_boxback(self, default_value = None):
         return self.get_value(config.METADATA_KEY_BOXBACK, default_value)
+    # Store the game's box back asset path
     def set_boxback(self, value):
         self.set_value(config.METADATA_KEY_BOXBACK, value)
 
     # Game box front
     def get_boxfront(self, default_value = None):
         return self.get_value(config.METADATA_KEY_BOXFRONT, default_value)
+    # Store the game's box front asset path
     def set_boxfront(self, value):
         self.set_value(config.METADATA_KEY_BOXFRONT, value)
 
     # Game label
     def get_label(self, default_value = None):
         return self.get_value(config.METADATA_KEY_LABEL, default_value)
+    # Store the game's label asset path
     def set_label(self, value):
         self.set_value(config.METADATA_KEY_LABEL, value)
 
     # Game screenshot
     def get_screenshot(self, default_value = None):
         return self.get_value(config.METADATA_KEY_SCREENSHOT, default_value)
+    # Store the game's screenshot asset path
     def set_screenshot(self, value):
         self.set_value(config.METADATA_KEY_SCREENSHOT, value)
 
     # Game video
     def get_video(self, default_value = None):
         return self.get_value(config.METADATA_KEY_VIDEO, default_value)
+    # Store the game's video asset path
     def set_video(self, value):
         self.set_value(config.METADATA_KEY_VIDEO, value)
 
@@ -199,7 +220,7 @@ class MetadataEntry:
                 return True
         return False
 
-    # Sync assets
+    # Point each asset key at the locker asset file when it exists, and drop the key when it does not
     def sync_assets(self):
         for asset_type in config.AssetType.members():
             game_asset_string = gamenaming.derive_game_asset_path_from_name(

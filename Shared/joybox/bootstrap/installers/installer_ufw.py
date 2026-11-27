@@ -27,7 +27,8 @@ UFW_RULES = [
     },
 ]
 
-# Ufw
+# Opens the ufw ports of the streaming roles this machine's settings turn on,
+# only to the Sunshine allowed subnet
 class Ufw(installer.Installer):
     def __init__(
         self,
@@ -37,22 +38,27 @@ class Ufw(installer.Installer):
         super().__init__(connection, flags, options)
         self.allowed_subnet = settings.get_value("Tools.Sunshine", "sunshine_allowed_subnet", "", throw_exception = False) or ""
 
+    # Local Ubuntu only
     def get_supported_environments(self):
         return [
             constants.EnvironmentType.LOCAL_UBUNTU,
         ]
 
+    # The rules whose enabling setting is on; unset counts as off
     def get_enabled_rules(self):
         return [rule for rule in UFW_RULES
             if settings.get_bool_value(*rule["enabled_by"], default_value = False, throw_exception = False)]
 
+    # The ufw arguments allowing the rule's ports and protocol from the allowed subnet
     def get_rule_args(self, rule):
         return ["allow", "from", self.allowed_subnet, "to", "any",
             "port", rule["ports"], "proto", rule["protocol"]]
 
+    # The joybox- comment that tags the rule in ufw status
     def get_rule_comment(self, rule):
         return "joybox-" + rule["name"]
 
+    # Whether ufw status shows every enabled rule by its comment; True when none is enabled
     def is_installed(self):
         rules = self.get_enabled_rules()
         if not rules:
@@ -60,6 +66,8 @@ class Ufw(installer.Installer):
         status = self.connection.run_output(["ufw", "status"], sudo = True)
         return all(self.get_rule_comment(rule) in status for rule in rules)
 
+    # Add each enabled rule with its comment; False without an allowed subnet or
+    # when ufw fails, True without doing anything when ufw is absent
     def install(self):
 
         # Nothing to open on this machine
@@ -86,6 +94,7 @@ class Ufw(installer.Installer):
         logger.log_info("Firewall rules installed (they take effect once ufw is enabled)")
         return True
 
+    # Delete every rule, enabled or not
     def uninstall(self):
 
         # Start uninstall

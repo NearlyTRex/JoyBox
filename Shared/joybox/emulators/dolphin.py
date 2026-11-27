@@ -20,17 +20,7 @@ from joybox import emulatorbase
 # Dolphin emulator
 class Dolphin(emulatorbase.EmulatorBase):
 
-    # Get name
-    def get_name(self):
-        return "Dolphin"
-
-    # Get platforms
-    def get_platforms(self):
-        return [
-            config.Platform.NINTENDO_GAMECUBE,
-            config.Platform.NINTENDO_WII,
-            config.Platform.NINTENDO_WIIWARE
-        ]
+    NAME = "Dolphin"
 
     # Install add-ons
     def install_addons(self, dlc_dirs = None, update_dirs = None, verbose = False, pretend_run = False, exit_on_failure = False):
@@ -49,7 +39,8 @@ class Dolphin(emulatorbase.EmulatorBase):
                         return False
         return True
 
-    # Setup
+    # Windows build from the latest dolphin-emu.org download; Linux AppImage built from the
+    # NearlyTRex/Dolphin fork with CMake
     def setup(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
@@ -107,7 +98,7 @@ class Dolphin(emulatorbase.EmulatorBase):
                 return False
         return True
 
-    # Setup offline
+    # Install the Windows and Linux builds from the releases stored in their backups dirs
     def setup_offline(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
@@ -140,7 +131,8 @@ class Dolphin(emulatorbase.EmulatorBase):
                 return False
         return True
 
-    # Configure
+    # Write its config files, verify the locker system files, then unzip the Wii archive
+    # into each platform's setup dir, keeping files already there
     def configure(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
@@ -177,7 +169,7 @@ class Dolphin(emulatorbase.EmulatorBase):
                         return False
         return True
 
-    # Launch
+    # Run Dolphin on the game file, turning on its fullscreen display option when asked
     def launch(
         self,
         game_info,

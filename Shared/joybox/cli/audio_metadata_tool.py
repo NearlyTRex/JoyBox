@@ -85,7 +85,7 @@ def build_parser():
     parser.add_common_arguments()
     return parser
 
-# Main
+# Run the chosen tag action (extract to JSON, clear or apply) on the albums of one genre in the local locker's music tree, or of every genre
 def main():
 
     # Parse arguments

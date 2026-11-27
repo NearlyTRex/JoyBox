@@ -16,11 +16,10 @@ from joybox import platform_info
 # Ghidra tool
 class Ghidra(toolbase.ToolBase):
 
-    # Get name
-    def get_name(self):
-        return "Ghidra"
+    NAME = "Ghidra"
 
-    # Setup
+    # Build Ghidra with Gradle from the dev-testing branch of the NearlyTRex/Ghidra fork
+    # and install the dist zip into its lib dir
     def setup(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
@@ -63,7 +62,7 @@ class Ghidra(toolbase.ToolBase):
                 return False
         return True
 
-    # Setup offline
+    # Install the library from the build stored in its backups dir
     def setup_offline(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
@@ -83,7 +82,7 @@ class Ghidra(toolbase.ToolBase):
                 return False
         return True
 
-    # Configure
+    # Write its config files under the tools root
     def configure(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()

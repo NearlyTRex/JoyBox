@@ -21,55 +21,22 @@ from joybox import synctransfers
 from joybox import serialization
 from joybox import environment
 
-# Cryption types a transfer understands
-CRYPTION_TYPES = (
-    config.CryptionType.NONE,
-    config.CryptionType.ENCRYPT,
-    config.CryptionType.DECRYPT,
-)
-
-# The function that carries out an encrypt or decrypt
-def get_cryption_function(cryption_type):
-    if cryption_type == config.CryptionType.ENCRYPT:
-        return cryption.encrypt_file
-    return cryption.decrypt_file
-
-# Encrypt a batch of files into a staging directory, each under its destination's encrypted
-# path, returning the destinations staged and those that failed
-def stage_encrypted_batch(batch, src_root, staging, passphrase, verbose = False, pretend_run = False, exit_on_failure = False):
-    staged, failed = [], []
-    for action in batch:
-        src_rel = action.get("src", "")
-        dest_rel = action.get("dest", src_rel)
-        dest_dir_rel = paths.get_filename_directory(dest_rel)
-        staged_dir = paths.join_paths(staging, dest_dir_rel) if dest_dir_rel else staging
-        fileops.make_directory(src = staged_dir)
-        if cryption.encrypt_file(
-            src = paths.join_paths(src_root, src_rel),
-            passphrase = passphrase,
-            output_file = paths.join_paths(staged_dir, cryption.generate_encrypted_filename(paths.get_filename_file(dest_rel))),
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure):
-            staged.append(dest_rel)
-        else:
-            logger.log_error("Failed to encrypt: %s" % dest_rel)
-            failed.append(dest_rel)
-    return staged, failed
-
 ###########################################################
 # Abstract Base Class
 ###########################################################
 
+# File operations every locker supports, addressed by paths relative to the locker root
 class LockerBackend(ABC):
     """Abstract interface for locker file operations"""
     def __init__(self, locker_info):
         self.locker_info = locker_info
 
+    # Where the locker's files live: a local folder or an rclone remote path
     @abstractmethod
     def get_root_path(self):
         """Get the root path for this locker"""
 
+    # Relative path to name, dir, hash, size and mtime of every file not excluded; None when the listing fails
     @abstractmethod
     def list_files_with_hashes(
         self,
@@ -83,6 +50,7 @@ class LockerBackend(ABC):
         or None when the listing failed
         """
 
+    # Move a file into the locker's recycle folder rather than deleting it
     @abstractmethod
     def recycle_file(
         self,
@@ -93,6 +61,7 @@ class LockerBackend(ABC):
         exit_on_failure = False):
         """Move file to recycle bin instead of deleting"""
 
+    # Bring one file over from another locker, encrypting or decrypting on the way
     @abstractmethod
     def sync_from(
         self,
@@ -107,6 +76,7 @@ class LockerBackend(ABC):
         exit_on_failure = False):
         """Sync a file from another backend to this one, optionally encrypting/decrypting"""
 
+    # Copy a local file or folder into the locker at a relative path
     @abstractmethod
     def copy_from(
         self,
@@ -120,18 +90,22 @@ class LockerBackend(ABC):
         exit_on_failure = False):
         """Copy from an absolute source path to this backend"""
 
+    # Whether a regular file is at the relative path
     @abstractmethod
     def file_exists(self, rel_path):
         """Check if file exists at relative path"""
 
+    # Whether a file or folder is at the relative path
     @abstractmethod
     def path_exists(self, rel_path):
         """Check if path (file or directory) exists at relative path"""
 
+    # Whether the relative path is a file or a folder holding at least one file
     @abstractmethod
     def path_contains_files(self, rel_path):
         """Check if path contains any files"""
 
+    # Path relative to the locker root; empty for the root itself, unchanged when outside it
     def get_relative_path(self, full_path):
         """Convert a full path to a relative path within this locker"""
         root = self.get_root_path()
@@ -144,6 +118,7 @@ class LockerBackend(ABC):
             return full_path[len(trimmed_root) + len(os.sep):]
         return full_path
 
+    # Sync actions one file at a time; returns the destinations that succeeded and those that failed
     def sync_batch_from(
         self,
         src_backend,
@@ -175,6 +150,7 @@ class LockerBackend(ABC):
                 failed.append(dest_rel)
         return (succeeded, failed)
 
+    # No-op for lockers without a hash sidecar; always True
     def update_sidecar_from_local(
         self,
         local_root_path,
@@ -190,14 +166,17 @@ class LockerBackend(ABC):
 # Local Backend (Local folders and external mounted drives)
 ###########################################################
 
+# A locker in a local folder or on a mounted external drive, rooted at its mount path
 class LocalBackend(LockerBackend):
     def __init__(self, locker_info):
         super().__init__(locker_info)
         self.root_path = locker_info.get_mount_path()
 
+    # The locker's mount path from its settings
     def get_root_path(self):
         return self.root_path
 
+    # MD5, size and mtime of every non-excluded file under the root, hashed on parallel threads even on a pretend run; None when the root is missing
     def list_files_with_hashes(
         self,
         excludes = None,
@@ -260,6 +239,7 @@ class LocalBackend(LockerBackend):
                 hash_one(item)
         return hash_map
 
+    # Move a file into the recycle folder at the locker root
     def recycle_file(
         self,
         rel_path,
@@ -275,6 +255,7 @@ class LocalBackend(LockerBackend):
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
+    # Download from a remote or copy from a local locker into this folder, converting through a temp file when encrypting or decrypting
     def sync_from(
         self,
         src_backend,
@@ -290,7 +271,7 @@ class LocalBackend(LockerBackend):
         # Default cryption type
         if cryption_type is None:
             cryption_type = config.CryptionType.NONE
-        if cryption_type not in CRYPTION_TYPES:
+        if cryption_type not in cryption.CRYPTION_TYPES:
             logger.log_error("Unknown cryption type: %s" % cryption_type)
             return False
 
@@ -332,7 +313,7 @@ class LocalBackend(LockerBackend):
                     exit_on_failure = exit_on_failure)
                 if not success:
                     return False
-                return get_cryption_function(cryption_type)(
+                return cryption.get_cryption_function(cryption_type)(
                     src = temp_file,
                     passphrase = passphrase,
                     output_file = dest_full_path,
@@ -354,7 +335,7 @@ class LocalBackend(LockerBackend):
                 exit_on_failure = exit_on_failure)
 
         # Encrypt or decrypt
-        return get_cryption_function(cryption_type)(
+        return cryption.get_cryption_function(cryption_type)(
             src = src_full_path,
             passphrase = passphrase,
             output_file = dest_full_path,
@@ -362,6 +343,7 @@ class LocalBackend(LockerBackend):
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
+    # Copy a local file or folder into the locker folder, optionally skipping existing or identical files
     def copy_from(
         self,
         src_abs_path,
@@ -383,12 +365,15 @@ class LocalBackend(LockerBackend):
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
+    # Whether a regular file is at the relative path under the root
     def file_exists(self, rel_path):
         return paths.is_path_file(paths.join_paths(self.root_path, rel_path))
 
+    # Whether anything is at the relative path under the root
     def path_exists(self, rel_path):
         return paths.does_path_exist(paths.join_paths(self.root_path, rel_path))
 
+    # Whether the relative path is a file, or a folder with at least one file beneath it
     def path_contains_files(self, rel_path):
         full_path = paths.join_paths(self.root_path, rel_path)
         if not paths.does_path_exist(full_path):
@@ -403,6 +388,7 @@ class LocalBackend(LockerBackend):
 # Remote Backend (rclone-based remotes: gdrive, hetzner, etc.)
 ###########################################################
 
+# A locker on an rclone remote (Google Drive, Hetzner and the like), named and typed by its settings
 class RemoteBackend(LockerBackend):
     def __init__(self, locker_info):
         super().__init__(locker_info)
@@ -410,12 +396,14 @@ class RemoteBackend(LockerBackend):
         self.remote_type = locker_info.get_type()
         self.remote_path = locker_info.get_remote_path() or ""
 
+    # The rclone connection path of the locker's remote path
     def get_root_path(self):
         return sync.get_remote_connection_path(
             self.remote_name,
             self.remote_type,
             self.remote_path)
 
+    # The relative path a file is stored under: its encrypted name on an encrypted locker
     def get_stored_rel_path(self, rel_path):
         """The relative path a file is stored under, which is its encrypted name on an encrypted locker"""
         if not self.locker_info.is_encrypted():
@@ -424,6 +412,7 @@ class RemoteBackend(LockerBackend):
         enc_name = cryption.generate_encrypted_filename(paths.get_filename_file(rel_path))
         return (paths.join_paths(dir_rel, enc_name) if dir_rel else enc_name).replace("\\", "/")
 
+    # MD5, size and mtime of every non-excluded file, listed by rclone from the remote
     def list_files_with_hashes(
         self,
         excludes = None,
@@ -439,6 +428,7 @@ class RemoteBackend(LockerBackend):
             verbose = verbose,
             exit_on_failure = exit_on_failure)
 
+    # File hashes as the remote's hash sidecar records them, without listing the remote
     def list_files_with_hashes_from_sidecar(
         self,
         verbose = False,
@@ -452,6 +442,7 @@ class RemoteBackend(LockerBackend):
             verbose = verbose,
             exit_on_failure = exit_on_failure)
 
+    # Upload a local file or folder to a relative path, staging a renamed file under its destination name first
     def upload_local_path(
         self,
         src_full_path,
@@ -495,6 +486,7 @@ class RemoteBackend(LockerBackend):
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
 
+    # Batch uploads from a local locker: one files-from copy for plain files, about 4 GiB staged batches for encrypted ones; other cases go file by file
     def sync_batch_from(
         self,
         src_backend,
@@ -637,7 +629,7 @@ class RemoteBackend(LockerBackend):
             if not staging:
                 logger.log_error("Failed to create staging directory for encrypted upload")
                 return [], [a.get("dest", a.get("src", "")) for a in batch]
-            staged, failed = stage_encrypted_batch(batch, src_root, staging, passphrase, verbose, pretend_run, exit_on_failure)
+            staged, failed = cryption.stage_encrypted_batch(batch, src_root, staging, passphrase, verbose, pretend_run, exit_on_failure)
             if not staged:
                 return [], failed
             if synctransfers.upload_files_to_remote(
@@ -652,6 +644,7 @@ class RemoteBackend(LockerBackend):
                 return staged, failed
             return [], failed + staged
 
+    # Rebuild the remote's hash sidecar from the plaintext local copy, optionally clearing it first; False when the clear fails
     def update_sidecar_from_local(
         self,
         local_root_path,
@@ -688,6 +681,7 @@ class RemoteBackend(LockerBackend):
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
+    # Move a file, by its stored (possibly encrypted) name, into the remote's recycle folder
     def recycle_file(
         self,
         rel_path,
@@ -717,6 +711,7 @@ class RemoteBackend(LockerBackend):
         finally:
             fileops.remove_file(temp_file, exit_on_failure = False)
 
+    # Copy into the remote from a local or remote locker; plain remote copies stay remote, conversions are staged locally under the destination name
     def sync_from(
         self,
         src_backend,
@@ -732,7 +727,7 @@ class RemoteBackend(LockerBackend):
         # Default cryption type
         if cryption_type is None:
             cryption_type = config.CryptionType.NONE
-        if cryption_type not in CRYPTION_TYPES:
+        if cryption_type not in cryption.CRYPTION_TYPES:
             logger.log_error("Unknown cryption type: %s" % cryption_type)
             return False
         if not isinstance(src_backend, (LocalBackend, RemoteBackend)):
@@ -797,7 +792,7 @@ class RemoteBackend(LockerBackend):
                     return False
 
             # Stage it under the destination name, converting it on the way
-            if not get_cryption_function(cryption_type)(
+            if not cryption.get_cryption_function(cryption_type)(
                 src = source_file,
                 passphrase = passphrase,
                 output_file = staged_file,
@@ -817,6 +812,7 @@ class RemoteBackend(LockerBackend):
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
 
+    # Upload a local file or folder to a relative path; skip_identical and show_progress are ignored
     def copy_from(
         self,
         src_abs_path,
@@ -835,6 +831,7 @@ class RemoteBackend(LockerBackend):
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
+    # Whether anything exists at the relative path on the remote; does not check that it is a file
     def file_exists(self, rel_path):
         full_path = paths.join_paths(self.remote_path, rel_path)
         return sync.does_path_exist(
@@ -842,6 +839,7 @@ class RemoteBackend(LockerBackend):
             remote_type = self.remote_type,
             remote_path = full_path)
 
+    # Whether a file or folder exists at the relative path on the remote
     def path_exists(self, rel_path):
         full_path = paths.join_paths(self.remote_path, rel_path)
         return sync.does_path_exist(
@@ -849,6 +847,7 @@ class RemoteBackend(LockerBackend):
             remote_type = self.remote_type,
             remote_path = full_path)
 
+    # Whether the relative path on the remote holds any files
     def path_contains_files(self, rel_path):
         full_path = paths.join_paths(self.remote_path, rel_path)
         return sync.does_path_contain_files(
@@ -860,6 +859,7 @@ class RemoteBackend(LockerBackend):
 # Factory Function
 ###########################################################
 
+# A remote backend when the locker's rclone remote is configured, otherwise a local one on its mount path
 def get_backend_for_locker(locker_info):
     if locker_info.is_local_only():
         return LocalBackend(locker_info)

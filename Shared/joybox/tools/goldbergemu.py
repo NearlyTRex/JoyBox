@@ -9,7 +9,7 @@ from joybox import programs
 from joybox import toolbase
 
 
-# Get libs
+# Files under the GoldbergEmu lib dir whose names end with an entry of the given tool config list
 def get_libs(key):
     lib_files = []
     lib_root = programs.get_library_install_dir("GoldbergEmu", "lib")
@@ -27,7 +27,7 @@ def get_libs32():
 def get_libs64():
     return get_libs("lib64")
 
-# Generate base path
+# The Goldberg SteamEmu Saves dir under a prefix's roaming AppData
 def generate_base_path(prefix_dir):
     return paths.join_paths(prefix_dir, "AppData", "Roaming", "Goldberg SteamEmu Saves")
 
@@ -39,19 +39,19 @@ def generate_username_file(prefix_dir):
 def generate_userid_file(prefix_dir):
     return paths.join_paths(generate_base_path(prefix_dir), "settings", "user_steam_id.txt")
 
-# Convert from native path
+# Rewrite a path in the Steam userdata dir for a user to the matching Goldberg saves path
 def convert_from_native_path(path, user_id):
     src_path = paths.join_paths(config.COMPUTER_FOLDER_STORE, config.StoreType.STEAM, "userdata", user_id)
     dest_path = paths.join_paths(config.COMPUTER_FOLDER_APPDATA, "Roaming", "Goldberg SteamEmu Saves")
     return path.replace(src_path, dest_path)
 
-# Convert to native path
+# Rewrite a path in the Goldberg saves dir to the matching Steam userdata path for a user
 def convert_to_native_path(path, user_id):
     src_path = paths.join_paths(config.COMPUTER_FOLDER_APPDATA, "Roaming", "Goldberg SteamEmu Saves")
     dest_path = paths.join_paths(config.COMPUTER_FOLDER_STORE, config.StoreType.STEAM, "userdata", user_id)
     return path.replace(src_path, dest_path)
 
-# Setup user files
+# Write the account name and Steam id files Goldberg reads from a prefix's settings dir
 def setup_user_files(
     prefix_dir,
     user_name,
@@ -83,7 +83,8 @@ def setup_user_files(
     # Must have succeeded
     return True
 
-# Convert to native save
+# Move Goldberg save files in a save dir, minus its settings, into the Steam userdata layout,
+# then remove the emptied Goldberg and roaming dirs
 def convert_to_native_save(
     save_dir,
     user_id,
@@ -140,11 +141,9 @@ def convert_to_native_save(
 # GoldbergEmu tool
 class GoldbergEmu(toolbase.ToolBase):
 
-    # Get name
-    def get_name(self):
-        return "GoldbergEmu"
+    NAME = "GoldbergEmu"
 
-    # Setup
+    # Download the latest GitLab job artifact linked from the Goldberg emulator page into its lib dir
     def setup(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
@@ -168,7 +167,7 @@ class GoldbergEmu(toolbase.ToolBase):
                 return False
         return True
 
-    # Setup offline
+    # Install the library from the release stored in its backups dir
     def setup_offline(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()

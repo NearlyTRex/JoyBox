@@ -3,7 +3,7 @@ from . import categories
 from . import keys
 from . import types
 
-# Platforms
+# Every game platform, each named as its category and subcategory joined by a dash
 class Platform(types.EnumType):
 
     # Computer

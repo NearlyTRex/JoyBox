@@ -10,11 +10,10 @@ from joybox import toolbase
 # ExtractXIso tool
 class ExtractXIso(toolbase.ToolBase):
 
-    # Get name
-    def get_name(self):
-        return "ExtractXIso"
+    NAME = "ExtractXIso"
 
-    # Setup
+    # Windows exe from the XboxDev/extract-xiso GitHub release; Linux AppImage built from the
+    # NearlyTRex/ExtractXIso fork with CMake
     def setup(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
@@ -70,7 +69,7 @@ class ExtractXIso(toolbase.ToolBase):
                 return False
         return True
 
-    # Setup offline
+    # Install the Windows and Linux builds from the releases stored in their backups dirs
     def setup_offline(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()

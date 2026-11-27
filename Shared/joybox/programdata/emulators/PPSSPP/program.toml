@@ -1,6 +1,9 @@
 # PPSSPP: where its programs live and how they run, the files its setup writes
 # and the system files it checks. Read by joybox/programcatalog.py.
 
+# The platforms it plays
+platforms = ["SONY_PLAYSTATION_NETWORK_PSP", "SONY_PLAYSTATION_NETWORK_PSPM", "SONY_PLAYSTATION_PORTABLE"]
+
 [config.PPSSPP]
 program = { windows = "PPSSPP/windows/PPSSPPWindows64.exe", linux = "PPSSPP/linux/PPSSPP.AppImage" }
 run_sandboxed = { windows = false, linux = false }

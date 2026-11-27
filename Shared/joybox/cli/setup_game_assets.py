@@ -30,7 +30,7 @@ def build_parser():
     parser.add_common_arguments()
     return parser
 
-# Main
+# Symlink the Pegasus asset folders of every category to the locker's artwork folders, creating missing targets
 def main():
 
     # Parse arguments

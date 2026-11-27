@@ -184,7 +184,7 @@ def extract_3ds_cia(
             exit_on_failure = exit_on_failure)
     return os.path.exists(extract_dir) and not paths.is_directory_empty(extract_dir)
 
-# Get 3DS file info
+# CtrTool's printed description of a 3DS file as text; empty when CtrTool is not installed
 def get_3ds_file_info(
     src_3ds_file,
     verbose = False,

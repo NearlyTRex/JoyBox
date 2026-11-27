@@ -54,7 +54,7 @@ def build_parser():
     parser.add_common_arguments()
     return parser
 
-# Main
+# After a preview, download each selected store game whose build has changed and upload it, encrypted, to the locker
 def main():
 
     # Parse arguments

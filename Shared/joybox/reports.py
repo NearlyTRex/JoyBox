@@ -19,7 +19,7 @@ def get_summarized_list(items, max_display = 20):
         summarized.extend(items[-show_count:])
     return summarized, total_count, True
 
-# Write list report
+# Log a titled, truncated listing and total count; the full list goes to report_file when given
 def write_list_report(
     items,
     title = None,

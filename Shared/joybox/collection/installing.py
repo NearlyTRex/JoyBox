@@ -36,7 +36,7 @@ def is_store_game_installed(game_info):
     store_identifier = game_info.get_subvalue(store_key, store_identifier_key)
     return store_obj.is_installed(store_identifier)
 
-# Install store game
+# Install the game through its store client by its install identifier; False when the store does not handle installing
 def install_store_game(
     game_info,
     verbose = False,
@@ -67,7 +67,7 @@ def install_store_game(
         exit_on_failure = exit_on_failure)
 
 
-# Uninstall store game
+# Remove the game through its store client by its install identifier; False when the store does not handle installing
 def uninstall_store_game(
     game_info,
     verbose = False,
@@ -104,7 +104,7 @@ def is_local_game_installed(game_info):
     cache_dir = game_info.get_local_cache_dir()
     return paths.does_directory_contain_files(cache_dir)
 
-# Install local game
+# Decrypt the game's ROM files from one locker into a temp dir and copy them, transformed when the platform needs it, into the local cache
 def install_local_game(
     game_info,
     locker_type = None,
@@ -194,7 +194,7 @@ def install_local_game(
         return False
     return True
 
-# Install local untransformed game
+# Copy the source dir's files into the game's local cache; True when the cache then holds files
 def install_local_untransformed_game(
     game_info,
     source_dir,
@@ -247,7 +247,7 @@ def install_local_transformed_game(
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
-# Install local game addons
+# Hand the game's DLC and update folders from the locker to each emulator for its platform; True when the platform takes no addons
 def install_local_game_addons(
     game_info,
     verbose = False,
@@ -284,7 +284,7 @@ def install_local_game_addons(
     # Should be successful
     return True
 
-# Uninstall local game
+# Remove the game's local and remote cache dirs; True when it is not cached
 def uninstall_local_game(
     game_info,
     verbose = False,
@@ -320,7 +320,7 @@ def is_game_installed(game_info):
         return is_store_game_installed(game_info)
     return is_local_game_installed(game_info)
 
-# Install game
+# Install through the store client for store platforms, otherwise into the local cache from the locker
 def install_game(
     game_info,
     locker_type = None,
@@ -342,7 +342,7 @@ def install_game(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
-# Install game addons
+# Install a local game's DLC and updates into its emulators; store games pass, as their clients fetch add-ons
 def install_game_addons(
     game_info,
     verbose = False,
@@ -357,7 +357,7 @@ def install_game_addons(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
-# Uninstall game
+# Uninstall through the store client for store platforms, otherwise remove the local game's cache
 def uninstall_game(
     game_info,
     verbose = False,

@@ -9,15 +9,9 @@ from joybox import emulatorbase
 # A7800 emulator
 class A7800(emulatorbase.EmulatorBase):
 
-    # Get name
-    def get_name(self):
-        return "A7800"
+    NAME = "A7800"
 
-    # Get platforms
-    def get_platforms(self):
-        return []
-
-    # Setup
+    # Download the Windows build from the 7800-devtools/a7800 GitHub release; Windows only
     def setup(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
@@ -42,7 +36,7 @@ class A7800(emulatorbase.EmulatorBase):
                 return False
         return True
 
-    # Setup offline
+    # Install the Windows build from the release stored in its backups dir
     def setup_offline(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()

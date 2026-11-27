@@ -9,11 +9,10 @@ from joybox import toolbase
 # ZoomPlatformSH tool
 class ZoomPlatformSH(toolbase.ToolBase):
 
-    # Get name
-    def get_name(self):
-        return "ZoomPlatformSH"
+    NAME = "ZoomPlatformSH"
 
-    # Setup
+    # Download the latest zoom-platform.sh script from the ZOOM-Platform GitHub release
+    # and mark it executable
     def setup(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
@@ -47,7 +46,7 @@ class ZoomPlatformSH(toolbase.ToolBase):
                 return False
         return True
 
-    # Setup offline
+    # Install the script from the release stored in its backups dir
     def setup_offline(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()

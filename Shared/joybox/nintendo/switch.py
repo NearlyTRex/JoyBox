@@ -14,7 +14,7 @@ from joybox import paths
 from joybox import programs
 from joybox.nintendo import switchprofile
 
-# Create Switch profiles dat
+# Write a 1616-byte profiles.dat holding one user: the byte-reversed user id twice and the account name; False when the info is invalid
 def create_switch_profiles_dat(
     profiles_file,
     user_id,

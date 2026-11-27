@@ -89,6 +89,8 @@ class Kanboard(installer_dockerapp.DockerAppInstaller):
         self.backup_label = "Kanboard"
         self.backup_volumes = ["kanboard_data", "kanboard_plugins"]
 
+    # Once the container is healthy, set the admin login with a PHP script run
+    # inside it; False when either step fails
     def post_install(self):
 
         # The database is created and migrated by the first PHP process, so

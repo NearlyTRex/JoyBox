@@ -19,7 +19,7 @@ def _get_yaml():
 # Text file I/O utilities
 ###########################################################
 
-# Read text file
+# Whole file as a string; None when it cannot be opened or decoded
 def read_text_file(src, encoding = "utf-8", errors = "strict", verbose = False, exit_on_failure = False):
     try:
         if verbose:
@@ -42,7 +42,7 @@ def read_text_lines(src, encoding = "utf-8", errors = "strict", verbose = False,
     lines = contents.split("\n")
     return lines[:-1] if lines[-1] == "" else lines
 
-# Read binary file
+# Bytes from offset, length of them or all the rest; None when the file cannot be read
 def read_binary_file(src, offset = 0, length = None, verbose = False, exit_on_failure = False):
     try:
         if verbose:
@@ -145,7 +145,7 @@ def copy_binary_records(
             runtime.quit_program()
         return False
 
-# Write text file
+# Replace the file with contents, creating parent directories; False on failure
 def write_text_file(src, contents, encoding = "utf-8", newline = "\n", verbose = False, pretend_run = False, exit_on_failure = False):
     try:
         if verbose:
@@ -168,7 +168,7 @@ def write_text_file(src, contents, encoding = "utf-8", newline = "\n", verbose =
 # JSON file I/O utilities
 ###########################################################
 
-# Parse json string
+# Decoded JSON value; an empty dict when the string is not valid JSON
 def parse_json_string(string, verbose = False, exit_on_failure = False):
     try:
         if verbose:
@@ -190,7 +190,7 @@ def parse_json_or_none(string):
     except (TypeError, ValueError):
         return None
 
-# Read json file
+# Decoded contents of a .json file; an empty dict for other extensions or on failure
 def read_json_file(src, verbose = False, exit_on_failure = False):
     try:
         if not src.endswith(".json"):
@@ -209,7 +209,7 @@ def read_json_file(src, verbose = False, exit_on_failure = False):
             runtime.quit_program()
         return {}
 
-# Write json file
+# Write data as 4-space indented JSON, creating parent directories; False for non-.json paths
 def write_json_file(src, json_data, sort_keys = False, verbose = False, pretend_run = False, exit_on_failure = False):
     try:
         if not src.endswith(".json"):
@@ -231,7 +231,7 @@ def write_json_file(src, json_data, sort_keys = False, verbose = False, pretend_
             runtime.quit_program()
         return False
 
-# Clean json file
+# Rewrite a .json file reindented, optionally sorted and without top-level null, false or empty values
 def clean_json_file(src, sort_keys = False, remove_empty_values = False, verbose = False, pretend_run = False, exit_on_failure = False):
     try:
         if not src.endswith(".json"):
@@ -270,7 +270,7 @@ def clean_json_file(src, sort_keys = False, remove_empty_values = False, verbose
             runtime.quit_program()
         return False
 
-# Search json files
+# The .json files under src whose data contains any of the search values, limited to search_keys when given
 def search_json_files(src, search_values = (), search_keys = None, verbose = False, exit_on_failure = False):
     found_files = []
     for json_file in paths.build_file_list_by_extensions(src, extensions = [".json"]):
@@ -292,7 +292,7 @@ def search_json_files(src, search_values = (), search_keys = None, verbose = Fal
 # YAML file I/O utilities
 ###########################################################
 
-# Read yaml file
+# Safely loaded contents of a .yaml file, stripping stray 0x81/0x82 characters; an empty dict on failure
 def read_yaml_file(src, verbose = False, exit_on_failure = False):
     yaml = _get_yaml()
     try:
@@ -318,7 +318,7 @@ def read_yaml_file(src, verbose = False, exit_on_failure = False):
 # CSV file I/O utilities
 ###########################################################
 
-# Read csv file
+# Rows of a .csv file as dicts keyed by headers; rows with a different field count are skipped
 def read_csv_file(src, headers, verbose = False, exit_on_failure = False):
     try:
         if not src.endswith(".csv"):

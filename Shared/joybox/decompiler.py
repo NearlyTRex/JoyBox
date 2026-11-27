@@ -11,24 +11,30 @@ from joybox import commandbase
 
 ###########################################################
 
+# The named Ghidra project preset from config.decompiler_presets; None when unknown
 def get_decompiler_preset(preset_name):
     return config.decompiler_presets.get(preset_name)
 
+# Every preset name config.decompiler_presets defines
 def get_decompiler_preset_names():
     return list(config.decompiler_presets.keys())
 
+# Names of the scripts a preset defines; empty when the preset is unknown or has none
 def get_preset_script_names(preset_name):
     preset = get_decompiler_preset(preset_name)
     if preset and "scripts" in preset:
         return list(preset["scripts"].keys())
     return []
 
+# A preset script's settings by name; None when the preset or script is unknown
 def get_preset_script(preset_name, script_name):
     preset = get_decompiler_preset(preset_name)
     if preset and "scripts" in preset:
         return preset["scripts"].get(script_name)
     return None
 
+# A copy of the preset with its repository, project directory, script paths and path-like
+# default arguments made absolute under the repositories root; None when unknown
 def resolve_preset_paths(preset_name):
 
     # Get preset
@@ -63,6 +69,7 @@ def resolve_preset_paths(preset_name):
         resolved["scripts"] = resolved_scripts
     return resolved
 
+# (name, description) for every preset, with "No description" when one has none
 def list_presets():
     presets = []
     for preset_name in get_decompiler_preset_names():
@@ -71,6 +78,7 @@ def list_presets():
         presets.append((preset_name, desc))
     return presets
 
+# (name, description) for each script in a preset; None when the preset is unknown
 def list_preset_scripts(preset_name):
     preset = get_decompiler_preset(preset_name)
     if not preset:
@@ -83,6 +91,8 @@ def list_preset_scripts(preset_name):
 
 ###########################################################
 
+# Open the Ghidra GUI through pyghidra -g in the venv Python; False when Python or Ghidra
+# is missing or it exits nonzero
 def launch_program(verbose = False, pretend_run = False, exit_on_failure = False):
 
     # Get Python tool
@@ -123,6 +133,8 @@ def launch_program(verbose = False, pretend_run = False, exit_on_failure = False
         exit_on_failure = exit_on_failure)
     return code == 0
 
+# Run a PyGhidra script headless against a program in a Ghidra project, passing the project,
+# program and extra arguments; False when a tool, the script or the project is missing
 def run_script(
     project_dir,
     project_name,
@@ -209,6 +221,8 @@ def run_script(
         exit_on_failure = exit_on_failure)
     return code == 0
 
+# Run one of a preset's scripts with its resolved paths, falling back to its default arguments
+# and preset-level program name; False when the preset or script is unknown
 def run_script_from_preset(
     preset_name,
     script_name,

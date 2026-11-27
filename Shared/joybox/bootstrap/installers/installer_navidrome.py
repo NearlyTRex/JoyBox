@@ -68,6 +68,8 @@ class Navidrome(installer_dockerapp.DockerAppInstaller):
         self.backup_label = "Navidrome"
         self.backup_volumes = ["config_data"]
 
+    # Create the configured first admin through Navidrome's API; skipped with a
+    # warning when no admin password is set, and True when an admin exists
     def post_install(self):
 
         # Without a password the first visitor to the site creates the admin

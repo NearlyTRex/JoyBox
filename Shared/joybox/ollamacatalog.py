@@ -363,7 +363,7 @@ def format_model_display(model):
         model["description"]
     )
 
-# Format installed model for display
+# One-line label with name, size in GB, parameter size and quantization
 def format_installed_model_display(model):
     return "%s (%.1f GB, %s %s)" % (
         model["name"],

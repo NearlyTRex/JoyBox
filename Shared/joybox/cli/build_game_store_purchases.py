@@ -50,7 +50,7 @@ def build_parser():
     parser.add_common_arguments()
     return parser
 
-# Main
+# After a preview, import new purchases from the selected stores as JSON and metadata entries and refresh the known ones
 def main():
 
     # Parse arguments

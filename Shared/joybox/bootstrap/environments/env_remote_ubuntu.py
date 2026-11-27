@@ -75,12 +75,15 @@ class RemoteUbuntu(env.Environment):
         self.installer_kanboard = self.available_components["kanboard"]
         self.installer_oscar = self.available_components["oscar"]
 
+    # The sorted port strings the components serve through nginx
     def get_public_ports(self):
         ports = set()
         for component in self.available_components.values():
             ports.update(str(port) for port in getattr(component, "nginx_ports", []))
         return sorted(ports)
 
+    # Refresh apt lists, install the selected server components stopping at the
+    # first failure, then autoremove when asked
     def setup(self):
         self.connect()
 
@@ -99,6 +102,7 @@ class RemoteUbuntu(env.Environment):
                 return False
         return success
 
+    # Uninstall the selected components in reverse order, then autoremove when asked
     def teardown(self):
 
         # Process components in reverse order

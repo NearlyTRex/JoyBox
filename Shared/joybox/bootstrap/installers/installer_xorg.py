@@ -21,7 +21,7 @@ INPUT_CLASSES = [
     },
 ]
 
-# Xorg
+# Writes the Xorg InputClass sections in INPUT_CLASSES to a drop-in in /etc/X11/xorg.conf.d
 class Xorg(installer.Installer):
     def __init__(
         self,
@@ -33,11 +33,13 @@ class Xorg(installer.Installer):
         # Path to the Xorg input configuration drop-in
         self.conf_path = "/etc/X11/xorg.conf.d/99-joybox-input.conf"
 
+    # Local Ubuntu only
     def get_supported_environments(self):
         return [
             constants.EnvironmentType.LOCAL_UBUNTU,
         ]
 
+    # The drop-in text: one InputClass section per entry, each under its description
     def build_contents(self):
         lines = ["# Managed by JoyBox - do not edit by hand"]
         for input_class in INPUT_CLASSES:
@@ -50,12 +52,14 @@ class Xorg(installer.Installer):
             lines.append("EndSection")
         return "\n".join(lines) + "\n"
 
+    # Whether the drop-in exists and matches what the entries would write
     def is_installed(self):
         if not self.connection.does_file_or_directory_exist(self.conf_path):
             return False
         current = self.connection.read_file(self.conf_path, sudo=True)
         return current == self.build_contents()
 
+    # Create xorg.conf.d and write the drop-in as root; it applies at the next X start
     def install(self):
 
         # Start install
@@ -81,6 +85,7 @@ class Xorg(installer.Installer):
         logger.log_info("Log out and back in (or reboot) for it to take effect")
         return True
 
+    # Delete the drop-in
     def uninstall(self):
 
         # Start uninstall

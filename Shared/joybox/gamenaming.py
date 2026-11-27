@@ -8,7 +8,7 @@ from joybox import platforms
 from joybox import strings
 from joybox import text
 
-# Derive game letter from name
+# Uppercase first character of the name, or the numeric folder name when it is a digit; empty for an empty name
 def derive_game_letter_from_name(game_name):
     letter = ""
     if len(game_name):
@@ -17,24 +17,24 @@ def derive_game_letter_from_name(game_name):
         letter = config.GENERAL_FOLDER_NUMERIC
     return letter
 
-# Derive game name path from name
+# Relative path of the game folder, under its letter folder on letter platforms
 def derive_game_name_path_from_name(game_name, game_platform):
     if platforms.is_letter_platform(game_platform):
         return paths.join_paths(derive_game_letter_from_name(game_name), game_name)
     return game_name
 
-# Derive game platform from categories
+# Platform whose value ends with the subcategory's value; None when no platform matches
 def derive_game_platform_from_categories(game_subcategory):
     for game_platform in config.Platform.members():
         if game_platform.val().endswith(game_subcategory.val()):
             return game_platform
     return None
 
-# Derive game asset path from name
+# Relative asset file path: asset type folder, then the game name with the asset type's extension
 def derive_game_asset_path_from_name(game_name, asset_type):
     return "%s/%s%s" % (asset_type.val(), game_name, asset_type.cval())
 
-# Derive game categories from platform
+# ROMs supercategory plus the category and subcategory whose names prefix the platform's; all None without a platform
 def derive_game_categories_from_platform(game_platform):
     if not game_platform:
         return (None, None, None)
@@ -49,7 +49,7 @@ def derive_game_categories_from_platform(game_platform):
             derived_subcategory = game_subcategory
     return (derived_supercategory, derived_category, derived_subcategory)
 
-# Derive regular name from game name
+# Display name: flippable words moved back to the front, parenthesized tags dropped, prefix and suffix added
 def derive_regular_name_from_game_name(game_name, custom_prefix = "", custom_suffix = ""):
     regular_name = game_name
     for flippable_word in config.flippable_words:
@@ -62,7 +62,7 @@ def derive_regular_name_from_game_name(game_name, custom_prefix = "", custom_suf
     regular_name = f"{custom_prefix}{regular_name}{custom_suffix}"
     return regular_name
 
-# Derive game name from regular name
+# Archive-style name: punctuation replaced, text cleaned and capitalized, leading flippable word moved after a comma, region appended
 def derive_game_name_from_regular_name(regular_name, region="USA"):
     game_name = regular_name.strip()
     game_name = game_name.replace(":", " -")
@@ -82,16 +82,16 @@ def derive_game_name_from_regular_name(regular_name, region="USA"):
             break
     return f"{game_name} ({region})"
 
-# Derive slug name from regular name
+# URL slug of the display name
 def derive_slug_name_from_regular_name(regular_name):
     return strings.get_slug_string(regular_name)
 
-# Derive slug name from game name
+# URL slug of the display name derived from the game name, with optional prefix and suffix
 def derive_slug_name_from_game_name(game_name, custom_prefix = "", custom_suffix = ""):
     regular_name = derive_regular_name_from_game_name(game_name, custom_prefix, custom_suffix)
     return derive_slug_name_from_regular_name(regular_name)
 
-# Derive game search terms from name
+# Display name derived from the game name, URL-encoded with plus signs for a search query
 def derive_game_search_terms_from_name(game_name, custom_prefix = "", custom_suffix = ""):
     regular_name = derive_regular_name_from_game_name(game_name, custom_prefix, custom_suffix)
     return strings.encode_url_string(regular_name, use_plus = True)

@@ -4,7 +4,7 @@ from joybox import runoptions
 from joybox import logger
 from . import installer
 
-# Chrome
+# Installs Google Chrome from Google's stable .deb
 class Chrome(installer.Installer):
     def __init__(
         self,
@@ -18,14 +18,17 @@ class Chrome(installer.Installer):
         self.archive_key_path = f"/etc/apt/trusted.gpg.d/{self.archive_key}"
         self.sources_list_path = f"/etc/apt/sources.list.d/{self.sources_list}"
 
+    # Local Ubuntu only
     def get_supported_environments(self):
         return [
             constants.EnvironmentType.LOCAL_UBUNTU,
         ]
 
+    # Whether /usr/bin/google-chrome exists
     def is_installed(self):
         return self.connection.does_file_or_directory_exist("/usr/bin/google-chrome")
 
+    # Download the current stable amd64 .deb and install it with dpkg
     def install(self):
         logger.log_info("Installing Chrome")
         self.connection.download_file(f"{self.url}/google-chrome-stable_current_amd64.deb", "/tmp/google-chrome.deb")
@@ -33,6 +36,7 @@ class Chrome(installer.Installer):
         self.connection.remove_file_or_directory("/tmp/google-chrome.deb")
         return True
 
+    # apt-get remove google-chrome-stable and delete the apt source and key the .deb adds
     def uninstall(self):
         logger.log_info("Uninstalling Chrome")
         self.connection.run_checked([self.aptget_tool, "remove", "-y", "google-chrome-stable"], sudo = True)

@@ -66,28 +66,34 @@ class EnumType(enum.Enum):
             return self.val() >= other
         return NotImplemented
 
+    # Every member, in definition order
     @classmethod
     def members(cls):
         return list(cls.__members__.values())
 
+    # Every member's string value, in definition order
     @classmethod
     def values(cls):
         return [member.value for member in cls]
 
+    # Every member's companion value (such as a file extension), in definition order
     @classmethod
     def cvalues(cls):
         return [member.cvalue for member in cls]
 
+    # Whether the value is already a member of this enum, not just a matching string
     @classmethod
     def is_member(cls, value):
         return isinstance(value, cls)
 
+    # Whether the value is a member or exactly matches a member's value, case included
     @classmethod
     def is_convertible(cls, value):
         if isinstance(value, cls):
             return True
         return value in cls.values()
 
+    # The member with the same value as a member of another enum or an exact string; None when none matches
     @classmethod
     def from_enum(cls, other):
         if isinstance(other, cls):
@@ -102,6 +108,7 @@ class EnumType(enum.Enum):
                     return member
         return None
 
+    # The member whose value matches the string, ignoring case; None for no match or a non-string
     @classmethod
     def from_string(cls, value):
         if not isinstance(value, str):
@@ -111,6 +118,7 @@ class EnumType(enum.Enum):
                 return member
         return None
 
+    # Members for a comma-separated string or a list of names and members, unknown names dropped; None when empty
     @classmethod
     def from_list(cls, values):
         if not values:
@@ -131,6 +139,7 @@ class EnumType(enum.Enum):
             return [values]
         return None
 
+    # The canonical value for a member or a case-insensitive name; None when it matches nothing
     @classmethod
     def to_string(cls, value):
         if isinstance(value, cls):
@@ -141,6 +150,7 @@ class EnumType(enum.Enum):
                 return member.value
         return None
 
+    # The canonical value lowercased; None when it matches nothing
     @classmethod
     def to_lower_string(cls, value):
         value_str = cls.to_string(value)
@@ -148,6 +158,7 @@ class EnumType(enum.Enum):
             return value_str.lower()
         return None
 
+    # The canonical value uppercased; None when it matches nothing
     @classmethod
     def to_upper_string(cls, value):
         value_str = cls.to_string(value)
@@ -155,19 +166,23 @@ class EnumType(enum.Enum):
             return value_str.upper()
         return None
 
+    # The member's string value
     def val(self):
         return self.value
 
+    # The member's companion value, the plain value unless a tuple gave a second one
     def cval(self):
         return self.cvalue
 
+    # The member's value lowercased
     def lower(self):
         return self.value.lower()
 
+    # The member's value uppercased
     def upper(self):
         return self.value.upper()
 
-# Setup parameters class
+# Locker, autobackup and run flags shared by setup steps
 class SetupParams:
     def __init__(
         self,
@@ -182,6 +197,7 @@ class SetupParams:
         self.pretend_run = pretend_run
         self.exit_on_failure = exit_on_failure
 
+    # Build from parsed arguments, defaulting any missing attribute
     @classmethod
     def from_args(cls, args):
         return cls(
@@ -191,6 +207,7 @@ class SetupParams:
             pretend_run = getattr(args, 'pretend_run', False),
             exit_on_failure = getattr(args, 'exit_on_failure', False))
 
+    # The parameters as a plain dict keyed by argument name
     def to_dict(self):
         return {
             'locker_type': self.locker_type,

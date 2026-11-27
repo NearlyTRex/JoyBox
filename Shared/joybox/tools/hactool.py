@@ -10,11 +10,10 @@ from joybox import toolbase
 # HacTool tool
 class HacTool(toolbase.ToolBase):
 
-    # Get name
-    def get_name(self):
-        return "HacTool"
+    NAME = "HacTool"
 
-    # Setup
+    # Windows exe from the SciresM/hactool GitHub release; Linux AppImage built from the
+    # NearlyTRex/HacTool fork with make
     def setup(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
@@ -69,7 +68,7 @@ class HacTool(toolbase.ToolBase):
                 return False
         return True
 
-    # Setup offline
+    # Install the Windows and Linux builds from the releases stored in their backups dirs
     def setup_offline(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()

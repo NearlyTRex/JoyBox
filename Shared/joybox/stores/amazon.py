@@ -1,4 +1,5 @@
 # Imports
+import types
 import os
 import re
 
@@ -22,6 +23,22 @@ nile_library_line = re.compile(r"^(?:\(INSTALLED\) )?(?P<title>.*) ID: (?P<appid
 # Amazon store
 class Amazon(storebase.StoreBase):
 
+    TYPE = config.StoreType.AMAZON
+    PLATFORM = config.Platform.COMPUTER_AMAZON_GAMES
+    SUPERCATEGORY = config.Supercategory.ROMS
+    CATEGORY = config.Category.COMPUTER
+    SUBCATEGORY = config.Subcategory.COMPUTER_AMAZON_GAMES
+    KEY = config.JSON_KEY_AMAZON
+    IDENTIFIER_KEYS = types.MappingProxyType({
+        config.StoreIdentifierType.INFO: config.JSON_KEY_STORE_APPID,
+        config.StoreIdentifierType.INSTALL: config.JSON_KEY_STORE_APPID,
+        config.StoreIdentifierType.LAUNCH: config.JSON_KEY_STORE_APPID,
+        config.StoreIdentifierType.DOWNLOAD: config.JSON_KEY_STORE_APPID,
+        config.StoreIdentifierType.ASSET: config.JSON_KEY_STORE_NAME,
+        config.StoreIdentifierType.METADATA: config.JSON_KEY_STORE_NAME,
+        config.StoreIdentifierType.PAGE: config.JSON_KEY_STORE_NAME,
+    })
+
     # Constructor
     def __init__(self):
         super().__init__()
@@ -34,50 +51,6 @@ class Amazon(storebase.StoreBase):
     ############################################################
     # Store
     ############################################################
-
-    # Get name
-    def get_name(self):
-        return config.StoreType.AMAZON.val()
-
-    # Get type
-    def get_type(self):
-        return config.StoreType.AMAZON
-
-    # Get platform
-    def get_platform(self):
-        return config.Platform.COMPUTER_AMAZON_GAMES
-
-    # Get supercategory
-    def get_supercategory(self):
-        return config.Supercategory.ROMS
-
-    # Get category
-    def get_category(self):
-        return config.Category.COMPUTER
-
-    # Get subcategory
-    def get_subcategory(self):
-        return config.Subcategory.COMPUTER_AMAZON_GAMES
-
-    # Get key
-    def get_key(self):
-        return config.JSON_KEY_AMAZON
-
-    # Get identifier keys
-    def get_identifier_keys(self):
-        return {
-            config.StoreIdentifierType.INFO: config.JSON_KEY_STORE_APPID,
-            config.StoreIdentifierType.INSTALL: config.JSON_KEY_STORE_APPID,
-            config.StoreIdentifierType.LAUNCH: config.JSON_KEY_STORE_APPID,
-            config.StoreIdentifierType.DOWNLOAD: config.JSON_KEY_STORE_APPID,
-            config.StoreIdentifierType.ASSET: config.JSON_KEY_STORE_NAME,
-            config.StoreIdentifierType.METADATA: config.JSON_KEY_STORE_NAME,
-            config.StoreIdentifierType.PAGE: config.JSON_KEY_STORE_NAME
-        }
-
-    # Get install dir
-    def get_install_dir(self):
-        return self.install_dir
 
     # Check if purchases can be imported
     def can_import_purchases(self):
@@ -96,7 +69,7 @@ class Amazon(storebase.StoreBase):
         config_dir = paths.join_paths(os.environ.get("NILE_CONFIG_PATH") or self.get_user_config_dir(), "nile")
         return [paths.join_paths(config_dir, "user.json")]
 
-    # Login
+    # Sign in through Nile interactively, then refresh its token; True at once when already signed in
     def login(
         self,
         verbose = False,
@@ -152,7 +125,7 @@ class Amazon(storebase.StoreBase):
     # Purchases
     ############################################################
 
-    # Get purchases
+    # Owned titles as appid/name entries, from a cache under a day old or else a Nile sync and library list
     def get_latest_purchases(
         self,
         verbose = False,
@@ -288,7 +261,7 @@ class Amazon(storebase.StoreBase):
     # Json
     ############################################################
 
-    # Get latest jsondata
+    # Appid, version and title from Nile's details output, plus manifest save paths; None when Nile gives nothing usable
     def get_latest_jsondata(
         self,
         identifier,
@@ -358,7 +331,7 @@ class Amazon(storebase.StoreBase):
     # Download
     ############################################################
 
-    # Download
+    # Fetch the game with Nile into a temp dir and archive it into output_dir; True when output_dir ends up with files
     def download(
         self,
         identifier,

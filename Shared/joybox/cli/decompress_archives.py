@@ -47,7 +47,7 @@ def build_parser():
     parser.add_common_arguments()
     return parser
 
-# Main
+# After a preview, extract each archive of the chosen types under the input into a folder beside it, or into its own dir
 def main():
 
     # Parse arguments

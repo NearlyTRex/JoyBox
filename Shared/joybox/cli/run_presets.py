@@ -50,7 +50,7 @@ def build_parser():
     parser.add_common_arguments()
     return parser
 
-# Main
+# Run the chosen tool, only backup_tool so far, once per subcategory of the preset group with the shared options
 def main():
 
     # Parse arguments

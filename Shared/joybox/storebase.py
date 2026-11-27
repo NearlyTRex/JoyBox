@@ -1,4 +1,5 @@
 # Imports
+import types
 import os
 import os.path
 
@@ -16,7 +17,7 @@ from joybox import fileops
 from joybox import metadataassetcollector
 from joybox import metadatacollector
 
-# Convert to tokenized path
+# Replace the general save folders, store install dir and user id in a path with their tokens
 def convert_to_tokenized_path(
     path,
     store_type = None,
@@ -35,7 +36,7 @@ def convert_to_tokenized_path(
     # Return path
     return paths.normalize_file_path(path)
 
-# Convert from tokenized path
+# Expand path tokens back into the general save folders, store install dir and user id
 def convert_from_tokenized_path(
     path,
     store_type = None,
@@ -57,69 +58,79 @@ def convert_from_tokenized_path(
 # Base store
 class StoreBase:
 
+    # What each store sets to say which store it is and where its games are filed
+    TYPE = None
+    PLATFORM = ""
+    SUPERCATEGORY = ""
+    CATEGORY = ""
+    SUBCATEGORY = ""
+    KEY = ""
+    IDENTIFIER_KEYS = types.MappingProxyType({})
+
     # Constructor
     def __init__(self):
         self.logged_in = False
+        self.install_dir = None
 
     ############################################################
     # Store
     ############################################################
 
-    # Get name
+    # The store's name, as its StoreType spells it
     def get_name(self):
-        return ""
+        return self.TYPE.val() if self.TYPE else ""
 
-    # Get type
+    # Which StoreType the store is
     def get_type(self):
-        return None
+        return self.TYPE
 
-    # Get platform
+    # The platform its games are filed under
     def get_platform(self):
-        return ""
+        return self.PLATFORM
 
-    # Get supercategory
+    # The supercategory its games are filed under
     def get_supercategory(self):
-        return ""
+        return self.SUPERCATEGORY
 
-    # Get category
+    # The category its games are filed under
     def get_category(self):
-        return ""
+        return self.CATEGORY
 
-    # Get subcategory
+    # The subcategory its games are filed under
     def get_subcategory(self):
-        return ""
+        return self.SUBCATEGORY
 
-    # Get key
+    # The key its section of a game's json file is stored under
     def get_key(self):
-        return ""
+        return self.KEY
 
-    # Get identifier keys
+    # Which json key identifies a game for each kind of lookup (info, install, launch...)
     def get_identifier_keys(self):
-        return {}
+        return dict(self.IDENTIFIER_KEYS)
 
-    # Get preferred platform
+    # Platform to request builds for; None in the base, letting the store choose
     def get_preferred_platform(self):
         return None
 
-    # Get preferred architecture
+    # Architecture to request builds for; None in the base, letting the store choose
     def get_preferred_architecture(self):
         return None
 
-    # Get account name
+    # Store account login name; None in the base
     def get_account_name(self):
         return None
 
-    # Get user name
+    # Store display user name; None in the base
     def get_user_name(self):
         return None
 
-    # Get email
+    # Store account email address; None in the base
     def get_email(self):
         return None
 
-    # Get install dir
+    # Where the store installs games, from the settings; None when it has none
     def get_install_dir(self):
-        return None
+        return self.install_dir
 
     # Check if store can handle installing
     def can_handle_installing(self):
@@ -141,67 +152,67 @@ class StoreBase:
     # Identifiers
     ############################################################
 
-    # Get identifier key
+    # Json key that identifies a game for this lookup type; None when the store has none
     def get_identifier_key(self, identifier_type):
         return self.get_identifier_keys().get(identifier_type)
 
-    # Get info identifier key
+    # Json key identifying a game when fetching its store info
     def get_info_identifier_key(self):
         return self.get_identifier_key(config.StoreIdentifierType.INFO)
 
-    # Get install identifier key
+    # Json key identifying a game when installing it
     def get_install_identifier_key(self):
         return self.get_identifier_key(config.StoreIdentifierType.INSTALL)
 
-    # Get launch identifier key
+    # Json key identifying a game when launching it
     def get_launch_identifier_key(self):
         return self.get_identifier_key(config.StoreIdentifierType.LAUNCH)
 
-    # Get download identifier key
+    # Json key identifying a game when downloading it
     def get_download_identifier_key(self):
         return self.get_identifier_key(config.StoreIdentifierType.DOWNLOAD)
 
-    # Get asset identifier key
+    # Json key identifying a game when looking up its artwork
     def get_asset_identifier_key(self):
         return self.get_identifier_key(config.StoreIdentifierType.ASSET)
 
-    # Get metadata identifier key
+    # Json key identifying a game when collecting its metadata
     def get_metadata_identifier_key(self):
         return self.get_identifier_key(config.StoreIdentifierType.METADATA)
 
-    # Get page identifier key
+    # Json key identifying a game when building its store page url
     def get_page_identifier_key(self):
         return self.get_identifier_key(config.StoreIdentifierType.PAGE)
 
-    # Is valid identifier
+    # True for any non-empty string; stores override per lookup type
     def is_valid_identifier(self, identifier):
         return isinstance(identifier, str) and len(identifier) > 0
 
-    # Is valid info identifier
+    # Whether the value can look up store info; any non-empty string in the base
     def is_valid_info_identifier(self, identifier):
         return self.is_valid_identifier(identifier)
 
-    # Is valid install identifier
+    # Whether the value can install a game; any non-empty string in the base
     def is_valid_install_identifier(self, identifier):
         return self.is_valid_identifier(identifier)
 
-    # Is valid launch identifier
+    # Whether the value can launch a game; any non-empty string in the base
     def is_valid_launch_identifier(self, identifier):
         return self.is_valid_identifier(identifier)
 
-    # Is valid download identifier
+    # Whether the value can download a game; any non-empty string in the base
     def is_valid_download_identifier(self, identifier):
         return self.is_valid_identifier(identifier)
 
-    # Is valid asset identifier
+    # Whether the value can look up artwork; any non-empty string in the base
     def is_valid_asset_identifier(self, identifier):
         return self.is_valid_identifier(identifier)
 
-    # Is valid metadata identifier
+    # Whether the value can look up metadata; any non-empty string in the base
     def is_valid_metadata_identifier(self, identifier):
         return self.is_valid_identifier(identifier)
 
-    # Is valid page identifier
+    # Whether the value can build a store page url; any non-empty string in the base
     def is_valid_page_identifier(self, identifier):
         return self.is_valid_identifier(identifier)
 
@@ -213,7 +224,7 @@ class StoreBase:
     def is_logged_in(self):
         return self.logged_in
 
-    # Set logged in
+    # Record whether a sign-in succeeded this run
     def set_logged_in(self, value):
         self.logged_in = value
 
@@ -233,7 +244,7 @@ class StoreBase:
     def get_user_config_dir(self):
         return os.environ.get("XDG_CONFIG_HOME") or paths.expand_path("~/.config")
 
-    # Login
+    # Sign in to the store; the base has no sign-in and returns False
     def login(
         self,
         verbose = False,
@@ -242,7 +253,7 @@ class StoreBase:
         del verbose, pretend_run, exit_on_failure
         return False
 
-    # Web connect
+    # Start a Selenium web driver for scraping the store, headless when asked
     def web_connect(
         self,
         headless = False,
@@ -257,7 +268,7 @@ class StoreBase:
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
-    # Web disconnect
+    # Shut down a web driver from web_connect
     def web_disconnect(
         self,
         web_driver,
@@ -272,7 +283,7 @@ class StoreBase:
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
-    # Get cookie file
+    # Saved browser cookie file named after the store
     def get_cookie_file(self):
         return webcookies.get_cookie_file(self.get_name().lower())
 
@@ -280,7 +291,7 @@ class StoreBase:
     # Versions
     ############################################################
 
-    # Get latest version
+    # Build id from the game's latest store json; None when it cannot be fetched
     def get_latest_version(
         self,
         identifier,
@@ -306,7 +317,7 @@ class StoreBase:
     # Page
     ############################################################
 
-    # Get latest url
+    # Store page url for a game; None in the base
     def get_latest_url(
         self,
         identifier,
@@ -325,7 +336,7 @@ class StoreBase:
         fileops.make_directory(src = cache_dir)
         return cache_dir
 
-    # Get purchases
+    # Games the account owns, from the store; empty in the base
     def get_latest_purchases(
         self,
         verbose = False,
@@ -338,7 +349,7 @@ class StoreBase:
     # Json
     ############################################################
 
-    # Create default jsondata
+    # Store json for this platform with empty paths and keys and the default build id
     def create_default_jsondata(self):
         json_data = jsondata.JsonData({}, self.get_platform())
         json_data.set_value(config.JSON_KEY_STORE_PATHS, [])
@@ -346,7 +357,8 @@ class StoreBase:
         json_data.set_value(config.JSON_KEY_STORE_BUILDID, config.DEFAULT_BUILDID)
         return json_data
 
-    # Augment jsondata
+    # Merge Ludusavi manifest save paths and keys into the json, collapse repeated path segments
+    # and drop C:, store install dir and store user id paths; returns the json sorted
     def augment_jsondata(
         self,
         json_data,
@@ -405,7 +417,7 @@ class StoreBase:
         json_data.set_value(config.JSON_KEY_STORE_KEYS, strings.sort_strings(game_keys))
         return json_data
 
-    # Get latest jsondata
+    # Default store json augmented from the manifest; None for an invalid info identifier
     def get_latest_jsondata(
         self,
         identifier,
@@ -432,7 +444,7 @@ class StoreBase:
     # Metadata
     ############################################################
 
-    # Get latest metadata
+    # Metadata gathered from every collector for the game; None for an invalid identifier
     def get_latest_metadata(
         self,
         identifier,
@@ -458,7 +470,7 @@ class StoreBase:
     # Assets
     ############################################################
 
-    # Get latest asset url
+    # Url of an artwork asset found by the asset collectors; None for an invalid identifier
     def get_latest_asset_url(
         self,
         identifier,
@@ -496,7 +508,7 @@ class StoreBase:
         del identifier, verbose, pretend_run, exit_on_failure
         return False
 
-    # Install
+    # Install a game through the store client; False in the base
     def install(
         self,
         identifier,
@@ -506,7 +518,7 @@ class StoreBase:
         del identifier, verbose, pretend_run, exit_on_failure
         return False
 
-    # Uninstall
+    # Remove a game through the store client; False in the base
     def uninstall(
         self,
         identifier,
@@ -520,7 +532,7 @@ class StoreBase:
     # Launch
     ############################################################
 
-    # Launch
+    # Start a game through the store client; False in the base
     def launch(
         self,
         identifier,
@@ -534,7 +546,7 @@ class StoreBase:
     # Download
     ############################################################
 
-    # Download
+    # Download a game's files into output_dir; False in the base
     def download(
         self,
         identifier,
@@ -556,7 +568,7 @@ class StoreBase:
     # Paths
     ############################################################
 
-    # Build path translation map
+    # Real locations for each path token: public dir, USERPROFILE and the store install dir; registry has none
     def build_path_translation_map(self, appid = None, appname = None):
 
         # Build translation map
@@ -582,7 +594,7 @@ class StoreBase:
         # Return translation map
         return translation_map
 
-    # Add path variants
+    # The paths plus copies with each AppData base swapped for its configured variants
     def add_path_variants(self, path_list = None):
 
         # Copy the input

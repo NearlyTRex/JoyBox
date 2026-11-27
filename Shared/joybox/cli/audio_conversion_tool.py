@@ -64,7 +64,7 @@ def build_parser():
     parser.add_common_arguments()
     return parser
 
-# Main
+# Strip the DRM from an Audible AAX/AA file, or every one in a directory, into M4A with FFmpeg, copying the streams unchanged
 def main():
 
     # Parse arguments

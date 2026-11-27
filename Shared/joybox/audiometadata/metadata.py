@@ -118,6 +118,7 @@ class AudioMetadata(Id3TagsMixin, Mp4TagsMixin, AlbumTagsMixin):
     # Generic Methods (auto-detect format)
     ###########################################################
 
+    # Tags of an MP4-family file (by extension) or else an MP3, as the matching mixin reads them; None when the file is missing
     def get_tags(
         self,
         audio_file,
@@ -146,6 +147,7 @@ class AudioMetadata(Id3TagsMixin, Mp4TagsMixin, AlbumTagsMixin):
             verbose = verbose,
             exit_on_failure = exit_on_failure)
 
+    # Write tags with the MP4 or ID3 writer chosen by extension; False when the file is missing
     def set_tags(
         self,
         audio_file,
@@ -178,6 +180,7 @@ class AudioMetadata(Id3TagsMixin, Mp4TagsMixin, AlbumTagsMixin):
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
+    # Strip tags with the MP4 or ID3 remover chosen by extension, optionally keeping artwork; False when the file is missing
     def remove_tags(
         self,
         audio_file,
@@ -207,6 +210,7 @@ class AudioMetadata(Id3TagsMixin, Mp4TagsMixin, AlbumTagsMixin):
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
+    # Whether the file carries any MP4 or ID3 tags, chosen by extension; False when missing
     def has_tags(self, audio_file):
 
         # Check file exists
@@ -219,6 +223,7 @@ class AudioMetadata(Id3TagsMixin, Mp4TagsMixin, AlbumTagsMixin):
             return self.has_mp4_tags(audio_file)
         return self.has_id3_tags(audio_file)
 
+    # Size, bitrate, length and stream details from the MP4 or MP3 reader chosen by extension; None when missing
     def get_file_info(self, audio_file, verbose = False, exit_on_failure = False):
 
         # Check file exists

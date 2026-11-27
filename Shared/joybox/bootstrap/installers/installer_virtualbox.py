@@ -21,14 +21,17 @@ class VirtualBox(installer.Installer):
         self.sources_list_path = f"/etc/apt/sources.list.d/{self.sources_list}"
         self.package_name = "virtualbox-7.1"
 
+    # Local Ubuntu only
     def get_supported_environments(self):
         return [
             constants.EnvironmentType.LOCAL_UBUNTU,
         ]
 
+    # Whether /usr/bin/virtualbox exists
     def is_installed(self):
         return self.connection.does_file_or_directory_exist("/usr/bin/virtualbox")
 
+    # virtualbox-7.1 as installed or missing, by /usr/bin/virtualbox
     def get_package_status(self):
         installed = []
         missing = []
@@ -38,6 +41,8 @@ class VirtualBox(installer.Installer):
             missing.append(self.package_name)
         return {"installed": installed, "missing": missing}
 
+    # Add Oracle's keyring and apt source for the Ubuntu codename, apt-get install
+    # virtualbox-7.1, then check /usr/bin/virtualbox
     def install(self):
 
         # Start install
@@ -79,6 +84,7 @@ class VirtualBox(installer.Installer):
         logger.log_info("VirtualBox installed successfully")
         return True
 
+    # apt-get remove virtualbox-7.1 and delete its apt source and keyring
     def uninstall(self):
 
         # Start uninstall

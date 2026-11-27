@@ -32,7 +32,7 @@ def build_parser():
     parser.add_common_arguments()
     return parser
 
-# Main
+# Log the games whose JSON file lists no files and those not marked playable, across every category; changes nothing
 def main():
 
     # Parse arguments

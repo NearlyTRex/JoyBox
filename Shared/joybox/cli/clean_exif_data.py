@@ -29,7 +29,7 @@ def build_parser():
     parser.add_common_arguments()
     return parser
 
-# Main
+# Strip every EXIF and embedded metadata tag from the input image or directory in place with ExifTool
 def main():
 
     # Parse arguments

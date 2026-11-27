@@ -1,4 +1,5 @@
 # Imports
+import types
 
 # Local imports
 from joybox import config
@@ -25,6 +26,22 @@ def get_json_string(json_object, key):
 # Legacy store
 class Legacy(storebase.StoreBase):
 
+    TYPE = config.StoreType.LEGACY
+    PLATFORM = config.Platform.COMPUTER_LEGACY_GAMES
+    SUPERCATEGORY = config.Supercategory.ROMS
+    CATEGORY = config.Category.COMPUTER
+    SUBCATEGORY = config.Subcategory.COMPUTER_LEGACY_GAMES
+    KEY = config.JSON_KEY_LEGACY
+    IDENTIFIER_KEYS = types.MappingProxyType({
+        config.StoreIdentifierType.INFO: config.JSON_KEY_STORE_APPID,
+        config.StoreIdentifierType.INSTALL: config.JSON_KEY_STORE_APPID,
+        config.StoreIdentifierType.LAUNCH: config.JSON_KEY_STORE_APPID,
+        config.StoreIdentifierType.DOWNLOAD: config.JSON_KEY_STORE_APPID,
+        config.StoreIdentifierType.ASSET: config.JSON_KEY_STORE_APPURL,
+        config.StoreIdentifierType.METADATA: config.JSON_KEY_STORE_NAME,
+        config.StoreIdentifierType.PAGE: config.JSON_KEY_STORE_APPID,
+    })
+
     # Constructor
     def __init__(self):
         super().__init__()
@@ -43,53 +60,9 @@ class Legacy(storebase.StoreBase):
     # Store
     ############################################################
 
-    # Get name
-    def get_name(self):
-        return config.StoreType.LEGACY.val()
-
-    # Get type
-    def get_type(self):
-        return config.StoreType.LEGACY
-
-    # Get platform
-    def get_platform(self):
-        return config.Platform.COMPUTER_LEGACY_GAMES
-
-    # Get supercategory
-    def get_supercategory(self):
-        return config.Supercategory.ROMS
-
-    # Get category
-    def get_category(self):
-        return config.Category.COMPUTER
-
-    # Get subcategory
-    def get_subcategory(self):
-        return config.Subcategory.COMPUTER_LEGACY_GAMES
-
-    # Get key
-    def get_key(self):
-        return config.JSON_KEY_LEGACY
-
-    # Get identifier keys
-    def get_identifier_keys(self):
-        return {
-            config.StoreIdentifierType.INFO: config.JSON_KEY_STORE_APPID,
-            config.StoreIdentifierType.INSTALL: config.JSON_KEY_STORE_APPID,
-            config.StoreIdentifierType.LAUNCH: config.JSON_KEY_STORE_APPID,
-            config.StoreIdentifierType.DOWNLOAD: config.JSON_KEY_STORE_APPID,
-            config.StoreIdentifierType.ASSET: config.JSON_KEY_STORE_APPURL,
-            config.StoreIdentifierType.METADATA: config.JSON_KEY_STORE_NAME,
-            config.StoreIdentifierType.PAGE: config.JSON_KEY_STORE_APPID
-        }
-
-    # Get user name
+    # The Legacy Games username from the settings; the constructor refuses to build without one
     def get_user_name(self):
         return self.username
-
-    # Get install dir
-    def get_install_dir(self):
-        return self.install_dir
 
     # Check if purchases can be imported
     def can_import_purchases(self):
@@ -103,7 +76,7 @@ class Legacy(storebase.StoreBase):
     # Connection
     ############################################################
 
-    # Login
+    # Sign in through Heirloom interactively, then refresh it; True at once when already signed in
     def login(
         self,
         verbose = False,
@@ -155,7 +128,7 @@ class Legacy(storebase.StoreBase):
     # Page
     ############################################################
 
-    # Get latest url
+    # Big Fish Games page of the closest title found by searching its site in a headless browser, query stripped; None when none is close
     def get_latest_url(
         self,
         identifier,
@@ -271,7 +244,7 @@ class Legacy(storebase.StoreBase):
     # Purchases
     ############################################################
 
-    # Get purchases
+    # Owned games as installer uuid and name from Heirloom's JSON list, skipping entries without a uuid
     def get_latest_purchases(
         self,
         verbose = False,
@@ -331,7 +304,7 @@ class Legacy(storebase.StoreBase):
     # Json
     ############################################################
 
-    # Get latest jsondata
+    # The game name from Heirloom's info for an installer uuid, plus manifest save paths; None when unknown
     def get_latest_jsondata(
         self,
         identifier,
@@ -388,7 +361,7 @@ class Legacy(storebase.StoreBase):
     # Assets
     ############################################################
 
-    # Get latest asset url
+    # A box front from the metadata asset collectors, or the YouTube embed on the game page; None for other types
     def get_latest_asset_url(
         self,
         identifier,

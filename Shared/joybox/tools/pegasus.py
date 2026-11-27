@@ -15,11 +15,10 @@ from joybox import desktopentry
 # Pegasus tool
 class Pegasus(toolbase.ToolBase):
 
-    # Get name
-    def get_name(self):
-        return "Pegasus"
+    NAME = "Pegasus"
 
-    # Setup
+    # Windows build from the mmatyas/pegasus-frontend GitHub release; Linux AppImage built from the
+    # NearlyTRex/Pegasus fork with qmake; each also clones the PegasusThemeGrid theme
     def setup(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
@@ -100,7 +99,7 @@ class Pegasus(toolbase.ToolBase):
                 return False
         return True
 
-    # Setup offline
+    # Install the Windows and Linux builds from the releases stored in their backups dirs
     def setup_offline(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
@@ -134,7 +133,8 @@ class Pegasus(toolbase.ToolBase):
                 return False
         return True
 
-    # Configure
+    # Write its config files with game_dirs.txt listing every dir that holds a metadata.pegasus.txt,
+    # then add its app menu entry
     def configure(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()

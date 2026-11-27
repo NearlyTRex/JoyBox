@@ -28,7 +28,7 @@ DEFAULT_KEYRING_FILE = "/usr/share/keyrings/ubuntu-archive-keyring.gpg"
 # Releases
 ###########################################################
 
-# Get release listing url
+# Directory url on releases.ubuntu.com listing a version's images and checksums
 def get_release_listing_url(version):
     return "%s/%s/" % (RELEASES_URL_BASE, version)
 

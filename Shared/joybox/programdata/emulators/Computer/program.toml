@@ -1,6 +1,9 @@
 # Computer: where its programs live and how they run, the files its setup writes
 # and the system files it checks. Read by joybox/programcatalog.py.
 
+# The platforms it plays
+platforms = ["COMPUTER_AMAZON_GAMES", "COMPUTER_DISC", "COMPUTER_EPIC_GAMES", "COMPUTER_GOG", "COMPUTER_HUMBLE_BUNDLE", "COMPUTER_ITCHIO", "COMPUTER_LEGACY_GAMES", "COMPUTER_PUPPET_COMBO", "COMPUTER_RED_CANDLE", "COMPUTER_SQUARE_ENIX", "COMPUTER_STEAM", "COMPUTER_ZOOM"]
+
 [config.DosBoxX]
 program = { windows = "DosBoxX/windows/dosbox-x.exe", linux = "DosBoxX/linux/DosBoxX.AppImage" }
 save_dir = { windows = "<none>", linux = "<none>" }

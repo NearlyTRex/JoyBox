@@ -19,13 +19,7 @@ system_files = {}
 # Ryujinx emulator
 class Ryujinx(emulatorbase.EmulatorBase):
 
-    # Get name
-    def get_name(self):
-        return "Ryujinx"
-
-    # Get platforms
-    def get_platforms(self):
-        return []
+    NAME = "Ryujinx"
 
     # Get the files setup writes; Ryujinx is not registered, so they are kept here
     def get_config_files(self):
@@ -35,7 +29,7 @@ class Ryujinx(emulatorbase.EmulatorBase):
     def get_system_files(self):
         return dict(system_files)
 
-    # Get config
+    # Program paths fixed in code rather than read from program data, with sandboxing off on both platforms
     def get_config(self):
         return {
             "Ryujinx": {
@@ -50,7 +44,7 @@ class Ryujinx(emulatorbase.EmulatorBase):
             }
         }
 
-    # Setup
+    # Download the Windows zip and Linux tarball from the Ryujinx release-channel-master GitHub release
     def setup(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
@@ -94,7 +88,7 @@ class Ryujinx(emulatorbase.EmulatorBase):
                 return False
         return True
 
-    # Setup offline
+    # Install the Windows and Linux builds from the releases stored in their backups dirs
     def setup_offline(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
@@ -128,7 +122,7 @@ class Ryujinx(emulatorbase.EmulatorBase):
                 return False
         return True
 
-    # Configure
+    # Write its config files under the emulators root
     def configure(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()

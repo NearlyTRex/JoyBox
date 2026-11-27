@@ -39,6 +39,7 @@ class OllamaBackend:
     def __init__(self, endpoint = None):
         self.endpoint = endpoint or ollama.get_api_base()
 
+    # Model ids the Ollama server lists on its OpenAI-compatible route; empty when unreachable
     def models(self):
         try:
             with urllib.request.urlopen(f"{self.endpoint}/v1/models", timeout = 10) as response:
@@ -47,6 +48,7 @@ class OllamaBackend:
         except (OSError, KeyError):
             return []
 
+    # Context length the Ollama server reports for the model via /api/show; 0 when unknown
     def context_limit(self, model):
         try:
             request = urllib.request.Request(
@@ -62,6 +64,7 @@ class OllamaBackend:
             return 0
         return 0
 
+    # Stream a chat reply from /api/chat, passing each piece to on_text, with num_ctx widening the window; returns the full reply
     def stream(self, model, messages, temperature, max_tokens, num_ctx, on_text):
         options = {"temperature": temperature, "num_predict": max_tokens}
         if num_ctx:
@@ -98,12 +101,14 @@ class OpenAIBackend:
         self.endpoint = endpoint.rstrip("/")
         self.api_key = api_key
 
+    # JSON content type plus a bearer token when an API key is set
     def headers(self):
         out = {"Content-Type": "application/json"}
         if self.api_key:
             out["Authorization"] = f"Bearer {self.api_key}"
         return out
 
+    # Model ids the endpoint lists at /v1/models; empty when unreachable
     def models(self):
         try:
             request = urllib.request.Request(f"{self.endpoint}/v1/models", headers = self.headers())
@@ -113,10 +118,12 @@ class OpenAIBackend:
         except (OSError, KeyError):
             return []
 
+    # Always 0: the endpoint does not report a window
     def context_limit(self, model):
         del model
         return 0
 
+    # Stream a chat completion over server-sent events, passing each piece to on_text; returns the full reply
     def stream(self, model, messages, temperature, max_tokens, on_text):
         request = urllib.request.Request(
             f"{self.endpoint}/v1/chat/completions",
@@ -157,13 +164,16 @@ class ClaudeBackend:
         self.claude = claude
         self.model = model or claude.DEFAULT_MODEL
 
+    # Only the configured Claude model
     def models(self):
         return [self.model]
 
+    # Always 0: no window is enforced for Claude
     def context_limit(self, model):
         del model
         return 0
 
+    # System prompt and a Human/Assistant transcript ending in an open Assistant turn, from a message list
     def flatten(self, messages):
         system = "\n\n".join(m["content"] for m in messages if m["role"] == "system")
         turns = []
@@ -174,6 +184,7 @@ class ClaudeBackend:
             turns.append(f"{who}: {message['content']}")
         return system, "\n\n".join(turns) + "\n\nAssistant:"
 
+    # Send the flattened conversation to Claude in one call and hand the whole reply to on_text; RequestFailed when none comes back
     def stream(self, model, messages, max_tokens, on_text):
         system, prompt = self.flatten(messages)
         reply = self.claude.send_message(
@@ -270,15 +281,19 @@ class Session:
         self.messages = list(messages)
         return messages
 
+    # Drop everything after the seed context
     def reset(self):
         self.messages = list(self.seed)
 
     ###########################################################
     # Budget
     ###########################################################
+
+    # Estimated token count of the whole conversation
     def tokens(self):
         return chunkers.estimate_tokens("".join(m["content"] for m in self.messages))
 
+    # Estimated token count of the seed context alone
     def seed_tokens(self):
         return chunkers.estimate_tokens("".join(m["content"] for m in self.seed))
 
@@ -312,15 +327,19 @@ class Session:
         self.add_block(text)
         return True, cost
 
+    # Add a whole file, rendered by its chunker, without checking the budget
     def attach_file(self, path):
         return self.add_block(chunkers.render_file(path))
 
+    # Add a file's outline without its body, without checking the budget
     def attach_outline(self, path):
         return self.add_block(chunkers.outline(path))
 
+    # Add a line range of a file, without checking the budget
     def attach_slice(self, path, start = 0, end = 0):
         return self.add_block(chunkers.slice_lines(path, start, end))
 
+    # Add a named region of a file as its chunker sees it; False when no region matches
     def attach_region(self, path, name):
         text = chunkers.slice_region(path, name)
         if not text:
@@ -331,6 +350,8 @@ class Session:
     ###########################################################
     # Asking
     ###########################################################
+
+    # Send a question with the history to the backend and record the reply; None, with the question dropped, when the request fails
     def ask(self, question, on_text):
         self.messages.append({"role": "user", "content": question})
         try:
@@ -344,6 +365,7 @@ class Session:
         self.messages.append({"role": "assistant", "content": reply})
         return reply
 
+    # The conversation as Markdown, one heading per message role
     def transcript(self):
         return "\n\n".join(f"## {m['role']}\n\n{m['content']}" for m in self.messages)
 

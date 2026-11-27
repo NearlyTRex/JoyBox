@@ -33,7 +33,7 @@ def build_parser():
     parser.add_common_arguments()
     return parser
 
-# Main
+# After a preview, rewrite the Pegasus metadata file of each known category and subcategory in sorted order
 def main():
 
     # Parse arguments

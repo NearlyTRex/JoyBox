@@ -15,18 +15,10 @@ from joybox import emulatorbase
 # MelonDS emulator
 class MelonDS(emulatorbase.EmulatorBase):
 
-    # Get name
-    def get_name(self):
-        return "melonDS"
+    NAME = "melonDS"
 
-    # Get platforms
-    def get_platforms(self):
-        return [
-            config.Platform.NINTENDO_DS,
-            config.Platform.NINTENDO_DSI
-        ]
-
-    # Setup
+    # Windows build from the melonDS-emu GitHub release; Linux AppImage built from the
+    # NearlyTRex/melonDS fork with CMake
     def setup(self, setup_params = None):
 
         # Use default params if not provided
@@ -84,7 +76,7 @@ class MelonDS(emulatorbase.EmulatorBase):
                 return False
         return True
 
-    # Setup offline
+    # Install the Windows and Linux builds from the releases stored in their backups dirs
     def setup_offline(self, setup_params = None):
 
         # Use default params if not provided
@@ -119,7 +111,7 @@ class MelonDS(emulatorbase.EmulatorBase):
                 return False
         return True
 
-    # Configure
+    # Write its config files, then verify the locker system files and copy them into each platform's setup dir
     def configure(self, setup_params = None):
 
         # Use default params if not provided
@@ -156,7 +148,7 @@ class MelonDS(emulatorbase.EmulatorBase):
                     return False
         return True
 
-    # Launch
+    # Run melonDS on the game file, with --fullscreen when asked
     def launch(
         self,
         game_info,

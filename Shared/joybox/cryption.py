@@ -26,19 +26,20 @@ def is_file_encrypted(src):
 def is_passphrase_valid(passphrase):
     return isinstance(passphrase, str) and len(passphrase) > 0
 
-# Generate encrypted filename
+# The MD5 of the name plus the .enc extension; already-encrypted names come back unchanged
 def generate_encrypted_filename(src):
     if is_file_encrypted(src):
         return src
     return hashutil.calculate_string_md5(src) + config.EncryptedFileType.ENC.cval()
 
-# Generate encrypted path
+# The source path with its file name swapped for the hashed .enc name, in the same directory
 def generate_encrypted_path(source_path):
     output_dir = paths.get_filename_directory(source_path)
     output_name = generate_encrypted_filename(paths.get_filename_file(source_path))
     return paths.join_paths(output_dir, output_name)
 
-# Get embedded filename
+# The original name gpg stored inside an encrypted file, read from its packet listing
+# even in pretend mode; None when gpg is missing or no name is found
 def get_embedded_filename(
     src,
     passphrase,
@@ -94,7 +95,8 @@ def get_decrypted_file_info(src, decrypted_file, embedded_filename, hasher, chun
     file_info["mtime"] = paths.get_file_mod_time(src)
     return file_info
 
-# Get embedded file info
+# Decrypt into a temporary directory to read the embedded name, hash, size and mtime;
+# None when the name can't be read or decryption fails
 def get_embedded_file_info(
     src,
     passphrase,
@@ -129,7 +131,8 @@ def get_embedded_file_info(
             return None
         return get_decrypted_file_info(src, tmp_file, embedded_filename, hasher, chunksize, verbose, pretend_run, exit_on_failure)
 
-# Get real file path
+# Where the decrypted copy lands: the embedded name beside the source, or the source itself
+# when it isn't encrypted; None when the embedded name can't be read
 def get_real_file_path(
     src,
     passphrase,
@@ -147,7 +150,7 @@ def get_real_file_path(
         return paths.join_paths(real_dir, real_name)
     return None
 
-# Get real file paths
+# The decrypted-copy paths for a list of files, skipping unreadable ones; empty for a non-list
 def get_real_file_paths(
     src,
     passphrase,
@@ -165,7 +168,8 @@ def get_real_file_paths(
                 real_paths.append(real_path)
     return real_paths
 
-# Encrypt file
+# Encrypt with gpg AES256 under the passphrase, to the hashed .enc path unless given one;
+# copies already-encrypted files, keeps an existing output, and can delete the original
 def encrypt_file(
     src,
     passphrase,
@@ -249,7 +253,8 @@ def encrypt_file(
     # Check result
     return os.path.exists(output_file)
 
-# Decrypt file
+# Decrypt with gpg to the embedded name unless given an output; copies unencrypted files,
+# keeps an existing output, and can delete the original
 def decrypt_file(
     src,
     passphrase,
@@ -335,7 +340,7 @@ def decrypt_file(
     # Check result
     return os.path.exists(output_file)
 
-# Encrypt files
+# Encrypt every file under the source to its hashed .enc path; returns the outputs that succeeded
 def encrypt_files(
     src,
     passphrase,
@@ -358,7 +363,7 @@ def encrypt_files(
             output_files.append(output_file)
     return output_files
 
-# Decrypt files
+# Decrypt every file under the source to its embedded name; returns the outputs that succeeded
 def decrypt_files(
     src,
     passphrase,
@@ -387,3 +392,43 @@ def decrypt_files(
         if success:
             output_files.append(output_file)
     return output_files
+
+###########################################################
+# Transfers
+###########################################################
+
+# Cryption types a transfer understands
+CRYPTION_TYPES = (
+    config.CryptionType.NONE,
+    config.CryptionType.ENCRYPT,
+    config.CryptionType.DECRYPT,
+)
+
+# The function that carries out an encrypt or decrypt
+def get_cryption_function(cryption_type):
+    if cryption_type == config.CryptionType.ENCRYPT:
+        return encrypt_file
+    return decrypt_file
+
+# Encrypt a batch of files into a staging directory, each under its destination's encrypted
+# path, returning the destinations staged and those that failed
+def stage_encrypted_batch(batch, src_root, staging, passphrase, verbose = False, pretend_run = False, exit_on_failure = False):
+    staged, failed = [], []
+    for action in batch:
+        src_rel = action.get("src", "")
+        dest_rel = action.get("dest", src_rel)
+        dest_dir_rel = paths.get_filename_directory(dest_rel)
+        staged_dir = paths.join_paths(staging, dest_dir_rel) if dest_dir_rel else staging
+        fileops.make_directory(src = staged_dir)
+        if encrypt_file(
+            src = paths.join_paths(src_root, src_rel),
+            passphrase = passphrase,
+            output_file = paths.join_paths(staged_dir, generate_encrypted_filename(paths.get_filename_file(dest_rel))),
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure):
+            staged.append(dest_rel)
+        else:
+            logger.log_error("Failed to encrypt: %s" % dest_rel)
+            failed.append(dest_rel)
+    return staged, failed

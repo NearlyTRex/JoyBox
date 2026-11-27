@@ -14,17 +14,9 @@ from joybox import emulatorbase
 # BasiliskII emulator
 class BasiliskII(emulatorbase.EmulatorBase):
 
-    # Get name
-    def get_name(self):
-        return "BasiliskII"
+    NAME = "BasiliskII"
 
-    # Get platforms
-    def get_platforms(self):
-        return [
-            config.Platform.OTHER_APPLE_MACOS_8
-        ]
-
-    # Setup
+    # Windows build from the NearlyTRex/MacEmu GitHub release; Linux AppImage from Korkman/macemu-appimage-builder
     def setup(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
@@ -69,7 +61,7 @@ class BasiliskII(emulatorbase.EmulatorBase):
                 return False
         return True
 
-    # Setup offline
+    # Install the Windows and Linux builds from the releases stored in their backups dirs
     def setup_offline(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
@@ -102,7 +94,7 @@ class BasiliskII(emulatorbase.EmulatorBase):
                 return False
         return True
 
-    # Configure
+    # Write its config files, then verify the locker system files and copy them into each platform's setup dir
     def configure(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
@@ -137,7 +129,7 @@ class BasiliskII(emulatorbase.EmulatorBase):
                     return False
         return True
 
-    # Launch
+    # Run BasiliskII with the game as its --disk; fullscreen hides the GUI with --nogui
     def launch(
         self,
         game_info,

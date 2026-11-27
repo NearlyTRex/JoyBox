@@ -10,7 +10,7 @@ from .hashing import build_hash_files
 
 ############################################################
 
-# Upload game files
+# Encrypt the game's files in place, rebuild their hashes and sync them to the remote locker; False without a valid locker passphrase
 def upload_game_files(
     game_info,
     game_root = None,
@@ -67,7 +67,7 @@ def upload_game_files(
         exit_on_failure = exit_on_failure)
     return success
 
-# Upload all game files
+# Upload every ROM game in the collection; stops at the first failure
 def upload_all_game_files(
     locker_type = None,
     verbose = False,

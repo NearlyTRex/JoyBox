@@ -62,23 +62,23 @@ def should_be_run_via_sandboxie(cmd):
 
 ###########################################################
 
-# Get wine command
+# Path to the Wine executable from the tool programs
 def get_wine_command():
     return programs.get_tool_program("Wine")
 
-# Get sandboxie command
+# Path to the Sandboxie launcher from the tool programs
 def get_sandboxie_command():
     return programs.get_tool_program("Sandboxie")
 
 ###########################################################
 
-# Get wine blocking processes
+# Processes to wait on after a Wine run: the wineserver
 def get_wine_blocking_processes():
     return [
         programs.get_tool_program("WineServer")
     ]
 
-# Get sandboxie blocking processes
+# Processes to wait on after a Sandboxie run: its launcher, ini, rpcss and dcomlaunch services
 def get_sandboxie_blocking_processes():
     return [
         programs.get_tool_program("Sandboxie"),
@@ -87,7 +87,7 @@ def get_sandboxie_blocking_processes():
         programs.get_tool_program("SandboxieDcomlaunch")
     ]
 
-# Get blocking processes
+# The initial processes plus the Wine or Sandboxie ones the options' prefix needs, as a new list
 def get_blocking_processes(options, initial_processes = None):
     initial_processes = [] if initial_processes is None else initial_processes
     blocking_processes = copy.deepcopy(initial_processes)
@@ -99,7 +99,7 @@ def get_blocking_processes(options, initial_processes = None):
 
 ###########################################################
 
-# Install wine dlls
+# Copy DLLs into the Wine prefix: 32-bit ones to system32 on a 32-bit prefix, else 64 to system32 and 32 to syswow64
 def install_wine_dlls(
     options,
     dlls_32 = (),
@@ -134,7 +134,7 @@ def install_wine_dlls(
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
 
-# Install dlls
+# Copy DLLs into the options' prefix; only Wine prefixes take them, Sandboxie is a no-op
 def install_dlls(
     options,
     dlls_32 = None,
@@ -157,7 +157,8 @@ def install_dlls(
 
 ###########################################################
 
-# Setup prefix environment
+# Copies of cmd and options with Wine env vars, cwd drive mapping and blocking processes set for the prefix
+# Unchanged when the options are not a prefix
 def setup_prefix_environment(
     cmd,
     options = None,
@@ -222,7 +223,8 @@ def setup_prefix_environment(
     # Return results
     return (new_cmd, new_options)
 
-# Setup prefix command
+# Wrap cmd to run under Wine or Sandboxie, resolving .lnk targets and running .bat via cmd /c in Sandboxie
+# Returns the new command and options; unchanged when the options are not a prefix
 def setup_prefix_command(
     cmd,
     options = None):

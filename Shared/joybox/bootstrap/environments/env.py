@@ -4,7 +4,8 @@ from joybox import logger
 from joybox import runtime
 from joybox import settings
 
-# Environment
+# Base for a machine bootstrap manages: holds its installers by component name
+# and runs an action over the ones selected
 class Environment:
     def __init__(
         self,
@@ -16,20 +17,25 @@ class Environment:
         self.available_components = {}
         self.connection = None
 
+    # Open the connection to the machine, when there is one
     def connect(self):
         if self.connection:
             self.connection.setup()
 
+    # Close the connection to the machine, when there is one
     def disconnect(self):
         if self.connection:
             self.connection.teardown()
 
+    # Record the environment type in the UserData.General settings
     def set_environment_type(self, environment_type):
         settings.set_value("UserData.General", "environment_type", environment_type)
 
+    # The environment type recorded in the UserData.General settings
     def get_environment_type(self):
         return settings.get_value("UserData.General", "environment_type")
 
+    # Limit processing to the named components, None for all; quits when a name is unknown
     def set_components_to_process(self, components):
         if components is not None:
             available = set(self.get_available_components())
@@ -41,14 +47,18 @@ class Environment:
                 runtime.quit_program()
         self.components_to_process = components
 
+    # The component names this environment knows, in processing order
     def get_available_components(self):
         return list(self.available_components.keys())
 
+    # Whether a component is selected; every component is when no selection was made
     def should_process_component(self, component_name):
         if self.components_to_process is None:
             return True
         return component_name in self.components_to_process
 
+    # Call the named action on each selected installer, skipping installs already
+    # done and uninstalls of absent ones unless forced; False when any action fails
     def process_components(self, action_method_name, reverse_order = False, force = False, continue_on_failure = False):
         self.connect()
         component_items = list(self.available_components.items())
@@ -89,6 +99,7 @@ class Environment:
             return False
         return True
 
+    # Each selected component's name, installed state and package status, as dicts
     def status(self):
         self.connect()
         results = []
@@ -103,14 +114,18 @@ class Environment:
                 })
         return results
 
+    # Install the components; the base does nothing and returns False
     def setup(self):
         return False
 
+    # Uninstall the components; the base does nothing and returns False
     def teardown(self):
         return False
 
+    # Back up every selected component, carrying on past failures
     def backup(self):
         return self.process_components("backup", continue_on_failure = True)
 
+    # Restore every selected component, stopping at the first failure
     def restore(self):
         return self.process_components("restore")

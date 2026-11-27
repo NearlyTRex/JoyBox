@@ -62,7 +62,8 @@ def build_parser():
     parser.add_argument("--recreate-config", dest = "recreate_config", action = "store_true", help = "Rebuild the config file from the current defaults, keeping the values it sets and backing it up first, then exit")
     return parser
 
-# Main
+# Run one bootstrap action (setup, teardown, backup, restore or status) on the chosen
+# environment's components, creating the config file first when setup finds none
 def main(argv = None):
 
     # Parse arguments

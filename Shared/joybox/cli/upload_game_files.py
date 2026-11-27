@@ -69,7 +69,7 @@ def build_parser():
     parser.add_common_arguments()
     return parser
 
-# Main
+# After a preview, encrypt each selected game's folder in place, hash it and upload it to the remote locker
 def main():
 
     # Parse arguments

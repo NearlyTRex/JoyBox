@@ -261,17 +261,17 @@ class HashDatabase(Database):
             (param,))
         return [dict(row) for row in results]
 
-    # Get all hashes
+    # Every row of the hash table as a dict
     def get_all_hashes(self):
         results = self.fetch_all("SELECT * FROM %s" % self.TABLE_NAME)
         return [dict(row) for row in results]
 
-    # Delete hash
+    # Remove the row for one file path and commit
     def delete_hash(self, file_path):
         self.delete(self.TABLE_NAME, "file_path = ?", (file_path,))
         self.commit()
 
-    # Delete hashes by prefix
+    # Remove every row whose file path starts with prefix and commit
     def delete_hashes_by_prefix(self, prefix):
         clause, param = build_prefix_clause("file_path", prefix)
         self.delete(self.TABLE_NAME, clause, (param,))

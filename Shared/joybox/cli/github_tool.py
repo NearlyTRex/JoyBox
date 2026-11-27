@@ -73,7 +73,7 @@ def build_parser():
     parser.add_common_arguments()
     return parser
 
-# Main
+# After a preview, archive each of the user's GitHub repositories into the locker as a zip, or sync each fork with its upstream
 def main():
 
     # Parse arguments

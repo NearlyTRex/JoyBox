@@ -13,20 +13,9 @@ from joybox import emulatorbase
 # Xenia emulator
 class Xenia(emulatorbase.EmulatorBase):
 
-    # Get name
-    def get_name(self):
-        return "Xenia"
+    NAME = "Xenia"
 
-    # Get platforms
-    def get_platforms(self):
-        return [
-            config.Platform.MICROSOFT_XBOX_360,
-            config.Platform.MICROSOFT_XBOX_360_GOD,
-            config.Platform.MICROSOFT_XBOX_360_XBLA,
-            config.Platform.MICROSOFT_XBOX_360_XIG
-        ]
-
-    # Setup
+    # Download the master Windows build from the xenia-project release-builds-windows GitHub release; Windows only
     def setup(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
@@ -52,7 +41,7 @@ class Xenia(emulatorbase.EmulatorBase):
                 return False
         return True
 
-    # Setup offline
+    # Install the Windows build from the release stored in its backups dir
     def setup_offline(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
@@ -72,7 +61,7 @@ class Xenia(emulatorbase.EmulatorBase):
                 return False
         return True
 
-    # Configure
+    # Write its config files under the emulators root
     def configure(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
@@ -90,7 +79,7 @@ class Xenia(emulatorbase.EmulatorBase):
                 return False
         return True
 
-    # Launch
+    # Run Xenia on the game file, with --fullscreen=true when asked
     def launch(
         self,
         game_info,

@@ -19,18 +19,9 @@ from joybox import emulatorbase
 # Vita3K emulator
 class Vita3K(emulatorbase.EmulatorBase):
 
-    # Get name
-    def get_name(self):
-        return "Vita3K"
+    NAME = "Vita3K"
 
-    # Get platforms
-    def get_platforms(self):
-        return [
-            config.Platform.SONY_PLAYSTATION_NETWORK_PSV,
-            config.Platform.SONY_PLAYSTATION_VITA
-        ]
-
-    # Setup
+    # Download the Windows zip and Linux AppImage from the Vita3K GitHub release
     def setup(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
@@ -75,7 +66,7 @@ class Vita3K(emulatorbase.EmulatorBase):
                 return False
         return True
 
-    # Setup offline
+    # Install the Windows and Linux builds from the releases stored in their backups dirs
     def setup_offline(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
@@ -108,7 +99,8 @@ class Vita3K(emulatorbase.EmulatorBase):
                 return False
         return True
 
-    # Configure
+    # Write its config files, verify the locker system files, then unzip the os0, sa0 and vs0 archives
+    # into each platform's setup dir, keeping files already there
     def configure(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
@@ -165,7 +157,8 @@ class Vita3K(emulatorbase.EmulatorBase):
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
-    # Launch
+    # Run Vita3K by title id when the app is installed, else stage the cached content and run it from there;
+    # False when the game has no title id as its launch name
     def launch(
         self,
         game_info,

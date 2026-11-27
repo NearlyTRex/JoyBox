@@ -2,7 +2,8 @@
 from joybox import config
 from joybox import paths
 
-# Create tokenized path
+# Rewrite a store or manifest save path's placeholders into JoyBox path tokens
+# Install-dir placeholders become base_path when valid, else the game install token
 def create_tokenized_path(path, base_path = None):
 
     # Replace tokens

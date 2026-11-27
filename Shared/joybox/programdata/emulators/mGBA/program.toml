@@ -1,6 +1,9 @@
 # mGBA: where its programs live and how they run, the files its setup writes
 # and the system files it checks. Read by joybox/programcatalog.py.
 
+# The platforms it plays
+platforms = ["NINTENDO_GAME_BOY_ADVANCE", "NINTENDO_GAME_BOY_ADVANCE_EREADER", "NINTENDO_GAME_BOY", "NINTENDO_GAME_BOY_COLOR", "NINTENDO_SUPER_GAME_BOY", "NINTENDO_SUPER_GAME_BOY_COLOR"]
+
 [config.mGBA]
 program = { windows = "mGBA/windows/mGBA.exe", linux = "mGBA/linux/mGBA.AppImage" }
 save_dir = { windows = "<none>", linux = "<none>" }

@@ -10,11 +10,10 @@ from joybox import toolbase
 # CDecrypt tool
 class CDecrypt(toolbase.ToolBase):
 
-    # Get name
-    def get_name(self):
-        return "CDecrypt"
+    NAME = "CDecrypt"
 
-    # Setup
+    # Windows exe from the VitaSmith/cdecrypt GitHub release; Linux AppImage built from the
+    # NearlyTRex/CDecrypt fork with make
     def setup(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
@@ -67,7 +66,7 @@ class CDecrypt(toolbase.ToolBase):
                 return False
         return True
 
-    # Setup offline
+    # Install the Windows and Linux builds from the releases stored in their backups dirs
     def setup_offline(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()

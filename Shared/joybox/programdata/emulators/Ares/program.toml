@@ -1,6 +1,9 @@
 # Ares: where its programs live and how they run, the files its setup writes
 # and the system files it checks. Read by joybox/programcatalog.py.
 
+# The platforms it plays
+platforms = ["MICROSOFT_MSX", "NINTENDO_64", "NINTENDO_FAMICOM", "NINTENDO_NES", "NINTENDO_SNES", "NINTENDO_SNES_MSU1", "NINTENDO_SUPER_FAMICOM", "OTHER_ATARI_2600", "OTHER_BANDAI_WONDERSWAN_COLOR", "OTHER_BANDAI_WONDERSWAN", "OTHER_COLECO_COLECOVISION", "OTHER_NEC_PCENGINE", "OTHER_NEC_PCENGINE_CD", "OTHER_NEC_SUPERGRAFX", "OTHER_NEC_TURBOGRAFX_16", "OTHER_NEC_TURBOGRAFX_CD", "OTHER_SEGA_32X", "OTHER_SEGA_CD_32X", "OTHER_SEGA_CD", "OTHER_SEGA_GAME_GEAR", "OTHER_SEGA_GENESIS", "OTHER_SEGA_MASTER_SYSTEM", "OTHER_SINCLAIR_ZX_SPECTRUM", "OTHER_SNK_NEOGEO_POCKET_COLOR"]
+
 [config.Ares]
 program = { windows = "Ares/windows/ares.exe", linux = "Ares/linux/Ares.AppImage" }
 save_dir = { windows = "<none>", linux = "<none>" }

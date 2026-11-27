@@ -14,17 +14,10 @@ from joybox import emulatorbase
 # Atari800 emulator
 class Atari800(emulatorbase.EmulatorBase):
 
-    # Get name
-    def get_name(self):
-        return "Atari800"
+    NAME = "Atari800"
 
-    # Get platforms
-    def get_platforms(self):
-        return [
-            config.Platform.OTHER_ATARI_800
-        ]
-
-    # Setup
+    # Windows SDL build from the atari800 GitHub release (pinned, not latest);
+    # Linux AppImage built from the NearlyTRex/Atari800 fork with autotools
     def setup(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
@@ -82,7 +75,7 @@ class Atari800(emulatorbase.EmulatorBase):
                 return False
         return True
 
-    # Setup offline
+    # Install the Windows and Linux builds from the releases stored in their backups dirs
     def setup_offline(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
@@ -115,7 +108,7 @@ class Atari800(emulatorbase.EmulatorBase):
                 return False
         return True
 
-    # Configure
+    # Write its config files under the emulators root
     def configure(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
@@ -133,7 +126,7 @@ class Atari800(emulatorbase.EmulatorBase):
                 return False
         return True
 
-    # Launch
+    # Run Atari800 on the game file
     def launch(
         self,
         game_info,

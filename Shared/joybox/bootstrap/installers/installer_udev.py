@@ -29,7 +29,7 @@ UDEV_RULES = [
     },
 ]
 
-# Udev
+# Installs the udev rules in UDEV_RULES into /etc/udev/rules.d
 class Udev(installer.Installer):
     def __init__(
         self,
@@ -41,6 +41,7 @@ class Udev(installer.Installer):
         # Path to udev rules directory
         self.rules_dir = "/etc/udev/rules.d"
 
+    # Local Ubuntu only
     def get_supported_environments(self):
         return [
             constants.EnvironmentType.LOCAL_UBUNTU,
@@ -49,6 +50,7 @@ class Udev(installer.Installer):
     def _get_rule_path(self, rule):
         return os.path.join(self.rules_dir, rule["filename"])
 
+    # Whether every rule file exists, whatever its contents
     def is_installed(self):
         for rule in UDEV_RULES:
             rule_path = self._get_rule_path(rule)
@@ -56,6 +58,8 @@ class Udev(installer.Installer):
                 return False
         return True
 
+    # Write each rule file not already present, then reload and trigger udev;
+    # False when a write or udevadm fails
     def install(self):
 
         # Start install
@@ -92,6 +96,7 @@ class Udev(installer.Installer):
         logger.log_info("Udev rules installed successfully")
         return True
 
+    # Delete each rule file, then reload and trigger udev
     def uninstall(self):
 
         # Start uninstall

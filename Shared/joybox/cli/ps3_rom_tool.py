@@ -35,7 +35,7 @@ def build_parser():
     parser.add_common_arguments()
     return parser
 
-# Main
+# After a preview, check each PS3 disc CHD under the input decrypts with its disc key and extracts
 def main():
 
     # Parse arguments

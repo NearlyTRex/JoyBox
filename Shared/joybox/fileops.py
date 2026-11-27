@@ -62,7 +62,7 @@ def report_fileio_error(src_path, dest_path = None, error_log_path = None, verbo
 # Directory modification utilities
 ###########################################################
 
-# Remove empty directories
+# Delete every empty directory under src; False at the first that can't be removed
 def remove_empty_directories(src, verbose = False, pretend_run = False, exit_on_failure = False):
     for empty_dir in paths.build_empty_directory_list(src):
         success = remove_directory(
@@ -74,7 +74,7 @@ def remove_empty_directories(src, verbose = False, pretend_run = False, exit_on_
             return False
     return True
 
-# Replace symlinked directories
+# Swap each symlinked directory under src for an empty real directory at the same path
 def replace_symlinked_directories(src, verbose = False, pretend_run = False, exit_on_failure = False):
     for symlink_dir in paths.build_symlink_directory_list(src):
         success = remove_symlink(
@@ -93,7 +93,7 @@ def replace_symlinked_directories(src, verbose = False, pretend_run = False, exi
             return False
     return True
 
-# Lowercase all paths
+# Rename every file and directory under src to its lowercase name, deepest first
 def lowercase_all_paths(src, verbose = False, pretend_run = False, exit_on_failure = False):
     try:
         if verbose:
@@ -201,7 +201,8 @@ def decode_legacy_filenames(src, encoding, verbose = False, pretend_run = False,
     except OSError as e:
         return report_failure("Unable to decode paths in directory %s" % src, e, exit_on_failure)
 
-# Sanitize filenames
+# Rename files directly in path to drop characters invalid in paths, limited to one extension
+# when given; names already taken are left as they are
 def sanitize_filenames(path, extension = None, verbose = False, pretend_run = False, exit_on_failure = False):
     for obj in paths.get_directory_contents(path):
         obj_path = paths.join_paths(path, obj)
@@ -245,7 +246,8 @@ def write_file_contents(src, contents, contents_mode = "w", encoding = None, pri
     with handle as f:
         f.write(contents)
 
-# Touch file
+# Create the file and its parent directories, writing contents over it when given any,
+# else leaving an existing file's contents alone; private files only their owner can read
 def touch_file(src, contents = "", contents_mode = "w", encoding = None, private = False, verbose = False, pretend_run = False, exit_on_failure = False):
     try:
         if verbose:
@@ -273,7 +275,8 @@ def chmod_directory_tree(src, perms, dperms = None):
         for d in dirs:
             os.chmod(os.path.join(root, d), dir_mode)
 
-# Chmod file or directory
+# Set octal permissions on a file, or on a whole directory tree with dperms for its
+# directories when given; False when the path is missing
 def chmod_file_or_directory(src, perms, dperms = None, verbose = False, pretend_run = False, exit_on_failure = False):
     message = "Unable to change permissions of %s to %s" % (src, str(perms))
     try:
@@ -291,7 +294,7 @@ def chmod_file_or_directory(src, perms, dperms = None, verbose = False, pretend_
     except (OSError, ValueError) as e:
         return report_failure(message, e, exit_on_failure)
 
-# Set file modified time
+# Set both access and modification times to the timestamp, in seconds since the epoch
 def set_file_modified_time(src, timestamp, verbose = False, pretend_run = False, exit_on_failure = False):
     try:
         if verbose:
@@ -302,7 +305,7 @@ def set_file_modified_time(src, timestamp, verbose = False, pretend_run = False,
     except OSError as e:
         return report_failure("Unable to set modified time of %s" % src, e, exit_on_failure)
 
-# Mark as executable
+# Add the owner execute bit, keeping the other permission bits
 def mark_as_executable(src, verbose = False, pretend_run = False, exit_on_failure = False):
     try:
         if verbose:
@@ -314,7 +317,8 @@ def mark_as_executable(src, verbose = False, pretend_run = False, exit_on_failur
     except OSError as e:
         return report_failure("Unable to mark %s as executable" % src, e, exit_on_failure)
 
-# Create temporary directory
+# Make a fresh temporary directory, inside the given one when set; returns (success, path or
+# error message), with a would-be path in pretend runs; the caller removes it
 def create_temporary_directory(directory = None, verbose = False, pretend_run = False):
     if verbose:
         logger.log_info("Creating temporary directory")
@@ -354,7 +358,7 @@ def existing_or_temporary_directory(existing_dir, verbose = False, pretend_run =
             existing_dir = stack.enter_context(temporary_directory(verbose = verbose, pretend_run = pretend_run))
         yield existing_dir
 
-# Create temporary file
+# Make an empty named temporary file the caller removes; returns (success, path or error message)
 def create_temporary_file(suffix = "", prefix = "tmp", verbose = False, pretend_run = False):
     if verbose:
         logger.log_info("Creating temporary file")
@@ -392,7 +396,8 @@ def remove_existing_path(path):
     elif os.path.isdir(path):
         shutil.rmtree(path)
 
-# Create symlink
+# Link dest to src, resolving relative to cwd when given, making dest's parent and replacing
+# anything already at dest unless told not to
 def create_symlink(
     src,
     dest,
@@ -437,7 +442,7 @@ def are_symlinks_supported():
     create_symlink(test_file_src, test_file_dest)
     return os.path.islink(test_file_dest)
 
-# Resolve symlink
+# The fully resolved target of a symlink; None when src isn't one or in pretend runs
 def resolve_symlink(src, verbose = False, pretend_run = False, exit_on_failure = False):
     try:
         if verbose:
@@ -521,7 +526,7 @@ def copy_file_or_directory(
             "Unable to copy %s to %s" % (src, dest), e,
             src, dest, skip_on_error, error_log_path, verbose, pretend_run, exit_on_failure)
 
-# Move file or directory
+# Move src to dest with shutil.move, unless skipping an existing or identical destination
 def move_file_or_directory(
     src,
     dest,
@@ -567,7 +572,8 @@ def copy_file_contents(src, dest, show_progress = False):
         if progress_bar:
             progress_bar.close()
 
-# Transfer file
+# Copy one file's bytes and mode to dest in chunks, deleting src afterwards when asked;
+# same paths and skipped existing or identical destinations count as success
 def transfer_file(
     src,
     dest,
@@ -602,7 +608,7 @@ def transfer_file(
 # Directory creation/removal utilities
 ###########################################################
 
-# Make directory
+# Make the directory and its parents; True when it already exists
 def make_directory(src, verbose = False, pretend_run = False, exit_on_failure = False):
     try:
         if not os.path.isdir(src):
@@ -616,7 +622,7 @@ def make_directory(src, verbose = False, pretend_run = False, exit_on_failure = 
             return report_failure("Unable to make directory %s" % src, e, exit_on_failure)
         return True
 
-# Remove file
+# Delete src when it is a regular file; True when there is nothing to delete
 def remove_file(src, verbose = False, pretend_run = False, exit_on_failure = False):
     try:
         if verbose:
@@ -628,7 +634,7 @@ def remove_file(src, verbose = False, pretend_run = False, exit_on_failure = Fal
     except OSError as e:
         return report_failure("Unable to remove file %s" % src, e, exit_on_failure)
 
-# Remove symlink
+# Unlink src when it is a symlink, leaving its target; True when it isn't one
 def remove_symlink(src, verbose = False, pretend_run = False, exit_on_failure = False):
     try:
         if verbose:
@@ -640,7 +646,7 @@ def remove_symlink(src, verbose = False, pretend_run = False, exit_on_failure = 
     except OSError as e:
         return report_failure("Unable to remove symlink %s" % src, e, exit_on_failure)
 
-# Remove directory
+# Delete src and everything under it; True when it isn't a directory
 def remove_directory(src, verbose = False, pretend_run = False, exit_on_failure = False):
     try:
         if verbose:
@@ -673,7 +679,7 @@ def remove_directory_entry(path):
         make_directories_writable(path)
         shutil.rmtree(path)
 
-# Remove directory contents
+# Delete everything inside src but keep src, forcing read-only subdirectories writable when needed
 def remove_directory_contents(src, verbose = False, pretend_run = False, exit_on_failure = False):
     try:
         if verbose:
@@ -686,9 +692,8 @@ def remove_directory_contents(src, verbose = False, pretend_run = False, exit_on
         return report_failure("Unable to remove contents of directory %s" % src, e, exit_on_failure)
 
 
-# Remove object
-# Remove a file or directory, expanding shell glob patterns in the source path.
-# Each match is removed by type (file, symlink, or directory tree).
+# Remove every path the shell glob in src matches, each by its type (file, symlink, or
+# directory tree)
 def remove_file_or_directory(src, verbose = False, pretend_run = False, exit_on_failure = False):
     try:
         if verbose:
@@ -704,6 +709,7 @@ def remove_file_or_directory(src, verbose = False, pretend_run = False, exit_on_
     except OSError as e:
         return report_failure("Unable to remove %s" % src, e, exit_on_failure)
 
+# Remove one path by its type: a file, a symlink, or a directory with its contents; False when nothing is there
 def remove_object(obj, verbose = False, pretend_run = False, exit_on_failure = False):
     if os.path.isfile(obj):
         return remove_file(
@@ -786,7 +792,7 @@ def recycle_file(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
-# Empty recycle bin
+# Delete everything in the recycle folder under recycle_root, keeping the folder; True when it doesn't exist
 def empty_recycle_bin(
     recycle_root,
     recycle_folder = ".recycle_bin",
@@ -830,7 +836,8 @@ def get_parsed_link_info(lnk, lnk_base_path):
         lnk_cwd = paths.normalize_file_path(os.path.join(paths.get_filename_directory(lnk_target), lnk_working_dir))
     return {"target": lnk_target, "cwd": lnk_cwd, "args": lnk_arguments}
 
-# Get link info
+# Target, working directory and arguments of a Windows .lnk shortcut, mapped under the base
+# path through PyLnk; empty values when either path is invalid or parsing fails
 def get_link_info(lnk_path, lnk_base_path):
     pylnk = modules.import_python_module_file(
         module_path = programs.get_tool_program("PyLnk"),

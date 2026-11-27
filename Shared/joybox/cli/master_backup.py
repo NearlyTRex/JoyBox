@@ -71,7 +71,7 @@ def build_parser():
     parser.add_common_arguments()
     return parser
 
-# Main
+# After one confirmation, push new and changed files from the source locker to each destination locker unattended
 def main():
 
     # Parse arguments

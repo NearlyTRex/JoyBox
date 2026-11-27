@@ -14,16 +14,7 @@ from joybox import emulatorbase
 # Cemu emulator
 class Cemu(emulatorbase.EmulatorBase):
 
-    # Get name
-    def get_name(self):
-        return "Cemu"
-
-    # Get platforms
-    def get_platforms(self):
-        return [
-            config.Platform.NINTENDO_WII_U,
-            config.Platform.NINTENDO_WII_U_ESHOP
-        ]
+    NAME = "Cemu"
 
     # Install add-ons
     def install_addons(self, dlc_dirs = None, update_dirs = None, verbose = False, pretend_run = False, exit_on_failure = False):
@@ -44,7 +35,7 @@ class Cemu(emulatorbase.EmulatorBase):
                             return False
         return True
 
-    # Setup
+    # Download the Windows zip and Linux AppImage from the cemu-project GitHub release
     def setup(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
@@ -87,7 +78,7 @@ class Cemu(emulatorbase.EmulatorBase):
                 return False
         return True
 
-    # Setup offline
+    # Install the Windows and Linux builds from the releases stored in their backups dirs
     def setup_offline(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
@@ -120,7 +111,7 @@ class Cemu(emulatorbase.EmulatorBase):
                 return False
         return True
 
-    # Configure
+    # Write its config files under the emulators root
     def configure(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
@@ -138,7 +129,7 @@ class Cemu(emulatorbase.EmulatorBase):
                 return False
         return True
 
-    # Launch
+    # Merge the game's .key.txt files into each platform's keys file, then run Cemu with -g on the game
     def launch(
         self,
         game_info,

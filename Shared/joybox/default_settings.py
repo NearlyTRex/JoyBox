@@ -715,6 +715,7 @@ def generate_default_config_content(sections = None, include_secret_references =
         content += "\n"
     return content
 
+# Write the generated default ini, limited to the given sections and overlaid with values, to path
 def create_default_config_file(path, sections = None, include_secret_references = True, values = None, verbose = False, pretend_run = False, exit_on_failure = False):
     return serialization.write_text_file(
         src = path,

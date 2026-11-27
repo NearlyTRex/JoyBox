@@ -64,7 +64,7 @@ def build_parser():
     parser.add_common_arguments()
     return parser
 
-# Main
+# Extract each ISO and Toast image under the input into a folder beside it, as ISO, HFS or archive, skipping existing folders
 def main():
 
     # Parse arguments

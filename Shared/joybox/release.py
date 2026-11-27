@@ -32,7 +32,7 @@ def remove_temporary_directory(tmp_dir, verbose = False, pretend_run = False):
         pretend_run = pretend_run,
         exit_on_failure = False)
 
-# Setup stored release
+# Install a release archive already in archive_dir, picked by name or as the first or last found; True when skipping a missing locker copy
 def setup_stored_release(
     archive_dir,
     install_name,
@@ -305,7 +305,7 @@ def install_general_release(
         return True
     return paths.does_directory_contain_files(install_dir)
 
-# Setup general release
+# Install a local release archive into install_dir by way of a temporary directory; True when install_dir ends up with files
 def setup_general_release(
     archive_file,
     install_name,
@@ -344,7 +344,7 @@ def setup_general_release(
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
-# Download general release
+# Download a release archive by URL into a temporary directory and install it from there
 def download_general_release(
     archive_url,
     install_name,
@@ -419,7 +419,7 @@ def find_github_asset_url(release_json_list, starts_with, ends_with):
                 return browser_download_url
     return ""
 
-# Download github release
+# Install the first GitHub release asset whose name has the given prefix and suffix, from all releases or only the latest
 def download_github_release(
     github_user,
     github_repo,
@@ -481,7 +481,7 @@ def download_github_release(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
-# Download webpage release
+# Install the release a web page links to, the link chosen by its prefix and suffix
 def download_webpage_release(
     webpage_url,
     webpage_base_url,

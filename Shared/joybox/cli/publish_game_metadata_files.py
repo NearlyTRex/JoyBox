@@ -32,7 +32,7 @@ def build_parser():
     parser.add_common_arguments()
     return parser
 
-# Main
+# After a preview, render the Pegasus metadata of every ROM category as an HTML table page
 def main():
 
     # Parse arguments

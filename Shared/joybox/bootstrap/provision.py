@@ -134,6 +134,7 @@ def is_mkcert_ready():
 # Provisioner
 ###########################################################
 
+# Runs the provisioning stages for one server entry, from the workstation over ssh
 class Provisioner:
     def __init__(
         self,
@@ -153,6 +154,7 @@ class Provisioner:
     # Connections
     ###########################################################
 
+    # An unopened ssh connection to the server as the given user, that does not exit on failure
     def build_connection(self, username):
         flags = self.flags.copy()
         flags.set(exit_on_failure = False)
@@ -200,6 +202,7 @@ class Provisioner:
             return False
         return connection.write_file(path, contents)
 
+    # Run a command on the target, logging it by label; False on a nonzero exit
     def run_step(self, connection, label, cmd):
         logger.log_info("Running %s" % label)
         code = connection.run_blocking(cmd)

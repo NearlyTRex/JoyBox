@@ -12,7 +12,7 @@ from .squareenix import SquareEnix
 from .steam import Steam
 from .zoom import Zoom
 
-# Get store map
+# A fresh instance of every store, keyed by its name
 def get_store_map():
     instances = {}
     def add_instance(class_name):
@@ -32,11 +32,11 @@ def get_store_map():
     add_instance(Zoom)
     return instances
 
-# Get store list
+# Fresh instances of every store, in registration order
 def get_store_list():
     return get_store_map().values()
 
-# Prepare store
+# Log the store in when asked, then hand it back; None passes through
 def prepare_store(
     instance,
     login = False,
@@ -50,7 +50,7 @@ def prepare_store(
             exit_on_failure = exit_on_failure)
     return instance
 
-# Get store by name
+# The store whose name matches exactly, logged in when asked; None when none does
 def get_store_by_name(
     store_name,
     login = False,
@@ -62,7 +62,7 @@ def get_store_by_name(
             return prepare_store(instance, login, verbose, pretend_run, exit_on_failure)
     return None
 
-# Get store by type
+# The store of the given StoreType, logged in when asked; None when none is
 def get_store_by_type(
     store_type,
     login = False,
@@ -74,7 +74,7 @@ def get_store_by_type(
             return prepare_store(instance, login, verbose, pretend_run, exit_on_failure)
     return None
 
-# Get store by platform
+# The store whose games file under the platform, logged in when asked; None when none do
 def get_store_by_platform(
     store_platform,
     login = False,
@@ -86,7 +86,7 @@ def get_store_by_platform(
             return prepare_store(instance, login, verbose, pretend_run, exit_on_failure)
     return None
 
-# Get store by categories
+# The store filed under that exact super/category/subcategory, logged in when asked; None when none is
 def get_store_by_categories(
     store_supercategory,
     store_category,

@@ -62,7 +62,7 @@ def build_parser():
     parser.add_common_arguments()
     return parser
 
-# Main
+# After a preview, import store purchases, then build JSON files and metadata, optionally download assets, and publish the HTML pages
 def main():
 
     # Parse arguments

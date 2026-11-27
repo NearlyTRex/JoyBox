@@ -31,7 +31,7 @@ def build_parser():
     parser.add_common_arguments()
     return parser
 
-# Main
+# After a preview, rename each file directly inside the input dir to a plain ASCII name safe on every filesystem
 def main():
 
     # Parse arguments

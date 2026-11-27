@@ -46,7 +46,7 @@ def build_parser():
     parser.add_common_arguments()
     return parser
 
-# Main
+# Download a video, playlist or channel URL with yt-dlp as MP4, or as MP3 with the audio flag
 def main():
 
     # Parse arguments

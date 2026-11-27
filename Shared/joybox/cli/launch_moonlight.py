@@ -45,7 +45,7 @@ def build_parser():
     parser.add_common_arguments()
     return parser
 
-# Main
+# Start Moonlight streaming the configured or given host and app, or pair with the host
 def main():
 
     # Parse arguments

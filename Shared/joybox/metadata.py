@@ -60,7 +60,7 @@ class Metadata:
         else:
             self.game_database[game_platform][game_name] = game_entry
 
-    # Get sorted platforms
+    # Platforms present in the game database, in alphabetical order
     def get_sorted_platforms(self):
         potential_platforms = []
         for platform in self.game_database.keys():
@@ -76,28 +76,28 @@ class Metadata:
             potential_names.append(name)
         return sorted(potential_names)
 
-    # Get all sorted names
+    # Game names across every platform, platform by platform, each alphabetized
     def get_all_sorted_names(self):
         names = []
         for game_platform in self.get_sorted_platforms():
             names += self.get_sorted_names(game_platform)
         return names
 
-    # Get sorted entries
+    # Entries for one platform, ordered by game name
     def get_sorted_entries(self, game_platform):
         entries = []
         for game_name in self.get_sorted_names(game_platform):
             entries.append(self.get_game(game_platform, game_name))
         return entries
 
-    # Get all sorted entries
+    # Entries across every platform, ordered by platform then game name
     def get_all_sorted_entries(self):
         entries = []
         for game_platform in self.get_sorted_platforms():
             entries += self.get_sorted_entries(game_platform)
         return entries
 
-    # Get random entry
+    # One entry picked at random from a non-empty platform; None when the database is empty
     def get_random_entry(self):
         game_platforms = [platform for platform in self.get_sorted_platforms() if self.get_sorted_names(platform)]
         if not game_platforms:
@@ -133,7 +133,7 @@ class Metadata:
         for entry in self.get_all_sorted_entries():
             entry.sync_assets()
 
-    # Verify files
+    # Check each entry's file exists under the JSON metadata root; False at the first missing one
     def verify_files(
         self,
         verbose = False,
@@ -155,7 +155,7 @@ class Metadata:
                     return False
         return True
 
-    # Import from pegasus file
+    # Parse a Pegasus metadata.txt into entries for its collection platform, keeping those with the minimum keys
     def import_from_pegasus_file(
         self,
         pegasus_file,
@@ -279,7 +279,7 @@ class Metadata:
                     if game_entry.has_minimum_keys():
                         self.add_game(game_entry)
 
-    # Import from metadata file
+    # Import a metadata file by its format; only Pegasus is handled
     def import_from_metadata_file(
         self,
         metadata_file,
@@ -292,7 +292,7 @@ class Metadata:
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
 
-    # Export to pegasus file
+    # Write every platform's entries as Pegasus collections with a launch line, optionally after the file's existing text
     def export_to_pegasus_file(
         self,
         pegasus_file,
@@ -402,7 +402,7 @@ class Metadata:
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
 
-    # Export to metadata file
+    # Export to a metadata file in the given format; only Pegasus is handled
     def export_to_metadata_file(
         self,
         metadata_file,

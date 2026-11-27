@@ -533,7 +533,8 @@ def obtain_source_image(
             return None
     return output_file
 
-# Build an autoinstall image
+# Repack a stock Ubuntu Server ISO, downloaded unless given, with a seed from the install profile or a user-data file
+# and a bootloader patched to use it, staying BIOS and EFI bootable; False on any failure
 def build_autoinstall_image(
     output_file,
     source_file = None,

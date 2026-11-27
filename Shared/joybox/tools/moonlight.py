@@ -14,11 +14,9 @@ from joybox import settings
 # Moonlight tool
 class Moonlight(toolbase.ToolBase):
 
-    # Get name
-    def get_name(self):
-        return "Moonlight"
+    NAME = "Moonlight"
 
-    # Setup
+    # Download the Windows portable zip and Linux AppImage from the moonlight-stream/moonlight-qt GitHub release
     def setup(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
@@ -61,7 +59,7 @@ class Moonlight(toolbase.ToolBase):
                 return False
         return True
 
-    # Setup offline
+    # Install the Windows and Linux builds from the releases stored in their backups dirs
     def setup_offline(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
@@ -94,7 +92,8 @@ class Moonlight(toolbase.ToolBase):
                 return False
         return True
 
-    # Configure
+    # Write its config files under the tools root, and add or remove its app menu
+    # entry by the Tools.Moonlight moonlight_client setting
     def configure(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()

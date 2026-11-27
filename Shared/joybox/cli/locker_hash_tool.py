@@ -63,7 +63,7 @@ def build_parser():
     parser.add_common_arguments()
     return parser
 
-# Main
+# Write the XXH3 hash, size and mtime of each filtered file in the locker dir to CSVs grouped by its leading folders
 def main():
 
     # Parse arguments

@@ -52,7 +52,8 @@ def report_diff(diff_paths, remote_type, remote_path, local_path, verbose, prete
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
 
-# Diff files
+# Compare local and remote with rclone check, skipping hidden files, and write the requested diff lists
+# False only when rclone is missing; size-only when quick
 def diff_files(
     remote_name,
     remote_type,
@@ -215,7 +216,8 @@ def run_diff_sync_transfers(transfer, files_to_upload, files_to_download, recycl
     logger.log_info("Downloading %d files from remote..." % len(files_to_download))
     return synctransfers.download_files_from_remote(**transfer, files_from = transfer_list_path, interactive = interactive)
 
-# Diff sync files
+# Diff local against remote, upload what the remote lacks, then download what local lacks
+# or, with recycle_missing, move it to the remote recycle folder; changed files go the newer way
 def diff_sync_files(
     remote_name,
     remote_type,

@@ -7,7 +7,7 @@ from joybox import programs
 from joybox import toolbase
 
 
-# Get libs
+# Files under the VKD3D lib dir whose names end with an entry of the given tool config list
 def get_libs(key):
     lib_files = []
     lib_root = programs.get_library_install_dir("VKD3D", "lib")
@@ -28,11 +28,9 @@ def get_libs64():
 # VKD3D tool
 class VKD3D(toolbase.ToolBase):
 
-    # Get name
-    def get_name(self):
-        return "VKD3D"
+    NAME = "VKD3D"
 
-    # Setup
+    # Download the HansKristian-Work/vkd3d-proton release tarball into its lib dir
     def setup(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
@@ -56,7 +54,7 @@ class VKD3D(toolbase.ToolBase):
                 return False
         return True
 
-    # Setup offline
+    # Install the library from the release stored in its backups dir
     def setup_offline(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()

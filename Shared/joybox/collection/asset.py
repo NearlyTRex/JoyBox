@@ -27,7 +27,7 @@ def does_metadata_asset_exist(game_info, asset_type):
 
 ############################################################
 
-# Download metadata asset
+# Fetch one asset type from the game's store or the metadata collectors, convert and clean it, then back it up to the locker; False on any failed step
 def download_metadata_asset(
     game_info,
     asset_type,
@@ -171,7 +171,7 @@ def download_metadata_asset(
         # Should be successful
         return True
 
-# Download all metadata assets
+# Download every minimum asset type for each ROM game in the chosen categories and subcategories; stops at the first failure
 def download_all_metadata_assets(
     categories = None,
     subcategories = None,
@@ -206,6 +206,7 @@ def download_all_metadata_assets(
                             game_info = game_info,
                             asset_type = asset_type,
                             skip_existing = skip_existing,
+                            locker_type = locker_type,
                             verbose = verbose,
                             pretend_run = pretend_run,
                             exit_on_failure = exit_on_failure)

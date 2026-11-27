@@ -20,7 +20,7 @@ from joybox import prefixlayout
 
 ###########################################################
 
-# Create wine prefix
+# Make the prefix directory, run wineboot, then winetricks with the options' tricks; False on any non-zero exit
 def create_wine_prefix(
     options,
     verbose = False,
@@ -71,7 +71,7 @@ def create_wine_prefix(
     # Creation successful
     return True
 
-# Create sandboxie prefix
+# Make the box directories and write the box settings with SandboxieIni; False on any non-zero exit
 def create_sandboxie_prefix(
     options,
     verbose = False,
@@ -134,7 +134,7 @@ def create_sandboxie_prefix(
     # Creation successful
     return True
 
-# Clean existing prefix
+# Remove the prefix directory, even a dangling link; True when nothing is there
 def clean_existing_prefix(
     options,
     verbose = False,
@@ -148,7 +148,8 @@ def clean_existing_prefix(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
-# Create basic prefix
+# Create a standalone Wine or Sandboxie prefix, replacing Wine's symlinked profile folders with real ones
+# False when the options name no prefix type
 def create_basic_prefix(
     options,
     clean_existing = True,
@@ -202,7 +203,8 @@ def create_basic_prefix(
     # Not a prefix
     return False
 
-# Create linked prefix
+# Create a prefix whose user profile links to the shared general prefix, then link other_links into its C drive
+# Links whose source is missing are skipped
 def create_linked_prefix(
     options,
     other_links = (),
@@ -358,7 +360,7 @@ def create_prefix(
     # Should be successful
     return True
 
-# Cleanup wine
+# Kill everything running under Wine with wineserver -k, then any wineserver left
 def cleanup_wine(verbose = False, pretend_run = False, exit_on_failure = False):
 
     # Get wine server tool

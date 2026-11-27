@@ -13,11 +13,9 @@ from joybox import platform_info
 # AppImageTool tool
 class AppImageTool(toolbase.ToolBase):
 
-    # Get name
-    def get_name(self):
-        return "AppImageTool"
+    NAME = "AppImageTool"
 
-    # Setup
+    # Download the Linux AppImage from the AppImage/AppImageKit GitHub release; Linux only
     def setup(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
@@ -42,7 +40,7 @@ class AppImageTool(toolbase.ToolBase):
                 return False
         return True
 
-    # Setup offline
+    # Install the Linux AppImage from the release stored in its backups dir
     def setup_offline(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
@@ -62,7 +60,7 @@ class AppImageTool(toolbase.ToolBase):
                 return False
         return True
 
-    # Configure
+    # On Linux, copy the default icon into its install dir and write its config files under the tools root
     def configure(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()

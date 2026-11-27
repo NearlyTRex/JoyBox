@@ -15,7 +15,7 @@ from joybox import runtime
 def _get_pil_image():
     return importlib.import_module("PIL.Image")
 
-# Get image format
+# Image file type read by Pillow for an existing file, or guessed from a jpg/png extension otherwise; None when unknown
 def get_image_format(image_file):
     if paths.is_path_file(image_file):
         pil_image = _get_pil_image()
@@ -48,7 +48,7 @@ def is_image_png(image_file):
         image_file = image_file,
         image_format = config.ImageFileType.PNG)
 
-# Convert image
+# Save the first frame of an image as RGB in the given format, or the one its destination extension names; False on a pretend run or failure
 def convert_image(
     image_src,
     image_dest,
@@ -85,7 +85,7 @@ def convert_image(
             runtime.quit_program()
         return False
 
-# Convert image to jpeg
+# Copy an image that is already JPEG, otherwise convert it to JPEG
 def convert_image_to_jpeg(
     image_src,
     image_dest,
@@ -108,7 +108,7 @@ def convert_image_to_jpeg(
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
 
-# Convert image to png
+# Copy an image that is already PNG, otherwise convert it to PNG
 def convert_image_to_png(
     image_src,
     image_dest,

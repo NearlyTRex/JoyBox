@@ -31,7 +31,7 @@ AUTOSTART_ENTRIES = [
     },
 ]
 
-# Autostart
+# Writes the XDG autostart entries for the streaming programs this machine's settings turn on
 class Autostart(installer.Installer):
     def __init__(
         self,
@@ -43,21 +43,26 @@ class Autostart(installer.Installer):
         # Path to the user's autostart directory
         self.autostart_dir = os.path.join(os.path.expanduser("~"), ".config", "autostart")
 
+    # Local Ubuntu only
     def get_supported_environments(self):
         return [
             constants.EnvironmentType.LOCAL_UBUNTU,
         ]
 
+    # The entry's .desktop path in ~/.config/autostart
     def get_entry_path(self, entry):
         return os.path.join(self.autostart_dir, entry["filename"])
 
+    # Whether the setting the entry names turns it on; False when unset
     def is_entry_enabled(self, entry):
         return settings.get_bool_value(*entry["enabled_by"], default_value = False, throw_exception = False)
 
+    # The entry's .desktop file contents, marked enabled for GNOME autostart
     def build_entry(self, entry):
         return desktopentry.build_desktop_entry(
             entry["name"], entry["description"], entry["command"], ["X-GNOME-Autostart-enabled=true"])
 
+    # Whether exactly the enabled entries have a .desktop file present
     def is_installed(self):
         for entry in AUTOSTART_ENTRIES:
             exists = self.connection.does_file_or_directory_exist(self.get_entry_path(entry))
@@ -65,6 +70,8 @@ class Autostart(installer.Installer):
                 return False
         return True
 
+    # Write a .desktop file for each enabled entry and delete those turned off;
+    # False when a write fails
     def install(self):
 
         # Start install
@@ -88,6 +95,7 @@ class Autostart(installer.Installer):
         logger.log_info("Autostart entries installed")
         return True
 
+    # Delete every entry's .desktop file that exists
     def uninstall(self):
 
         # Start uninstall

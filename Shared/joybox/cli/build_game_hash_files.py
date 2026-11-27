@@ -67,7 +67,7 @@ def build_parser():
     parser.add_common_arguments()
     return parser
 
-# Main
+# After a preview, hash each selected game's files into its subcategory hash file, then drop entries whose files are gone
 def main():
 
     # Parse arguments

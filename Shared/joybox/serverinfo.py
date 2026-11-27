@@ -61,48 +61,63 @@ class ServerInfo:
         return settings.get_value(
             SECTION, field, default_value = "", throw_exception = False) or None
 
+    # Which server_N entry under UserData.Servers this was read from
     def get_index(self):
         return self.server_index
 
+    # Hostname or address to connect to; None when the entry has none
     def get_host(self):
         return self.host
 
+    # SSH port, 22 when the entry does not set one
     def get_port(self):
         return self.port
 
+    # Login user on the server; None when unset
     def get_user(self):
         return self.user
 
+    # Login password from the entry, secret references resolved; None when unset
     def get_password(self):
         return self.password
 
+    # SSH private key file for key auth; None for entries without one
     def get_key_filepath(self):
         return self.key_filepath
 
+    # Domain the server serves; None when unset
     def get_domain_name(self):
         return self.domain_name
 
+    # Contact email registered with the certificate authority; None when unset
     def get_domain_contact(self):
         return self.domain_contact
 
+    # How the certificate is obtained, lowercased; letsencrypt when unset
     def get_tls_mode(self):
         return self.tls_mode
 
+    # Local test guest this entry points at; None for a real server
     def get_vm_name(self):
         return self.vm_name
 
+    # Login user guarding the admin pages; None when unset
     def get_htpasswd_user(self):
         return self.htpasswd_user
 
+    # Password guarding the admin pages; None when unset
     def get_htpasswd_password(self):
         return self.htpasswd_password
 
+    # Storage Box login mounted at /mnt/storage; None when local storage stands in
     def get_storage_user(self):
         return self.storage_user
 
+    # Storage Box host mounted at /mnt/storage; None when local storage stands in
     def get_storage_host(self):
         return self.storage_host
 
+    # Storage Box password; None when local storage stands in
     def get_storage_password(self):
         return self.storage_password
 

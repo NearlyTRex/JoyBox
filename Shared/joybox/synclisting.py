@@ -21,7 +21,7 @@ LISTED_HASH_NAMES = {
     config.HashType.SHA256: ("SHA-256", "sha256")
 }
 
-# List files
+# Show a remote listing with rclone: files one level deep, or directories with lsd; recursive goes all the way
 def list_files(
     remote_name,
     remote_type,
@@ -77,7 +77,7 @@ def get_mount_flags(no_checksum = False, no_modtime = False, no_seek = False, re
         flags += ["--log-file", "/tmp/rclone.log", "--log-level", "INFO"]
     return flags
 
-# Mount files
+# Mount a remote path at mount_path with rclone, as a daemon on unix; True when the mount point is already non-empty
 def mount_files(
     remote_name,
     remote_type,
@@ -146,7 +146,8 @@ def build_listed_hash_map(files_list, hash_type):
                 strings.parse_timestamp(file_info.get("ModTime") or ""))
     return hash_map
 
-# List files with hashes
+# Map of relative path to hash entry from rclone lsjson, MD5 unless hash_type says otherwise
+# None when rclone is missing or the listing fails, since a partial one would look like missing files
 def list_files_with_hashes(
     remote_name,
     remote_type,

@@ -70,7 +70,7 @@ def build_parser():
     parser.add_common_arguments()
     return parser
 
-# Main
+# Run the unit tests under coverage and report, or report on the last measurement
 def main():
 
     # Parse arguments

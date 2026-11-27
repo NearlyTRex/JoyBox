@@ -106,7 +106,7 @@ def is_appimage_archive(archive_file):
         extensions = [config.LinuxProgramFileType.APPIMAGE.cval()],
         mime_types = config.mime_types_appimage)
 
-# Get archive type
+# The archive type matching the extension, else sniffed from the file's mime type; None when unknown
 def get_archive_type(archive_file):
     archive_ext = paths.get_filename_extension(archive_file)
     for archive_type in config.ArchiveFileType.members():

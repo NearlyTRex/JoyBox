@@ -13,18 +13,9 @@ from joybox import emulatorbase
 # BigPEmu emulator
 class BigPEmu(emulatorbase.EmulatorBase):
 
-    # Get name
-    def get_name(self):
-        return "BigPEmu"
+    NAME = "BigPEmu"
 
-    # Get platforms
-    def get_platforms(self):
-        return [
-            config.Platform.OTHER_ATARI_JAGUAR,
-            config.Platform.OTHER_ATARI_JAGUAR_CD
-        ]
-
-    # Setup
+    # Download the latest Windows zip linked from the richwhitehouse.com Jaguar download page; Windows only
     def setup(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
@@ -50,7 +41,7 @@ class BigPEmu(emulatorbase.EmulatorBase):
                 return False
         return True
 
-    # Setup offline
+    # Install the Windows build from the release stored in its backups dir
     def setup_offline(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
@@ -70,7 +61,7 @@ class BigPEmu(emulatorbase.EmulatorBase):
                 return False
         return True
 
-    # Configure
+    # Write its config files under the emulators root
     def configure(self, setup_params = None):
         if not setup_params:
             setup_params = config.SetupParams()
@@ -88,7 +79,7 @@ class BigPEmu(emulatorbase.EmulatorBase):
                 return False
         return True
 
-    # Launch
+    # Run BigPEmu on the game file with -localdata so it keeps its data beside the program
     def launch(
         self,
         game_info,
