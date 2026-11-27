@@ -29,6 +29,7 @@ The remote's options go in `locker_<name>_config` as a JSON object, kept in 1Pas
   (`known_hosts_file`): the first time a machine uses the locker its key is recorded there, and
   after that a different key is refused, so nothing can pose as the server. Set
   `known_hosts_file` in the config to use a file of your own instead.
+
 - **Google Drive** — an OAuth token from your own Google account and your own OAuth client:
 
   ```text

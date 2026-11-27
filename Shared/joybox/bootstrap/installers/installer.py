@@ -1,6 +1,3 @@
-# Imports
-import datetime
-
 # Local imports
 from joybox import systemtools as tools
 from joybox.bootstrap import constants
@@ -82,9 +79,6 @@ class Installer:
             self.remote_home = resolved
         return self.remote_home
 
-    def get_app_dir(self):
-        return "%s/apps/%s" % (self.get_remote_home(), self.app_name)
-
     # Write a file only its owner can read, created that way before anything is
     # in it so the contents are never readable by anyone else
     def write_secret_file(self, path, contents):
@@ -101,36 +95,6 @@ class Installer:
         if self.connection.write_file(snippet_tmp_path, contents):
             self.connection.run_checked([self.nginx_manager_tool, "install_snippet", snippet_tmp_path], sudo = True)
             self.connection.remove_file_or_directory(snippet_tmp_path)
-        return True
-
-    def compose_down(self):
-
-        # Stop the compose project. Volumes are preserved unless --purge-data
-        # was passed; "down -v" destroys databases and app data.
-        app_dir = self.get_app_dir()
-        down_command = self.docker_compose_command + ["--env-file", f"{app_dir}/.env", "down"]
-        if self.flags.purge_data:
-            logger.log_warning(f"Purging data: deleting container volumes for {self.app_name}")
-            down_command += ["-v"]
-        else:
-            logger.log_info(f"Keeping container volumes for {self.app_name} (use --purge-data to delete)")
-        self.connection.set_current_working_directory(app_dir)
-        self.connection.run_checked(down_command)
-        self.connection.set_current_working_directory(None)
-        return True
-
-    def retire_app_dir(self):
-
-        # Bind-mounted app data lives inside the app directory, so removing it
-        # destroys that data even when the volumes were kept. Rename instead.
-        app_dir = self.get_app_dir()
-        if self.flags.purge_data:
-            logger.log_warning(f"Purging data: removing {app_dir}")
-            self.connection.remove_file_or_directory(app_dir)
-            return True
-        retired_dir = "%s.removed-%s" % (app_dir, datetime.datetime.now().strftime("%Y%m%d_%H%M%S"))
-        logger.log_info(f"Preserving app directory, moving to {retired_dir}")
-        self.connection.move_file_or_directory(app_dir, retired_dir)
         return True
 
     def is_installed(self):

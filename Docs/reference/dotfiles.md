@@ -6,6 +6,7 @@ The `dotfiles` component manages your shell config **non-destructively**:
 
 - It installs the JoyBox shell config into `~/.joybox/` (`shell.sh`, `aliases.sh`,
   `functions.sh`, `completions.sh`).
+
 - It injects a single marker-delimited block into `~/.bashrc` / `~/.bash_profile` that
   sources those files. Everything outside the block (your own edits, things added by other
   installers such as the `deno` and rustup `.cargo/env` lines) is left untouched:

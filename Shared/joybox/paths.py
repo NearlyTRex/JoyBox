@@ -706,7 +706,7 @@ def is_path_valid(path):
             try:
                 os.lstat(drive + x)
             except OSError as e:
-                if hasattr(e, "winerror") and e.winerror == 123:
+                if getattr(e, "winerror", None) == 123:
                     return False
                 elif e.errno in {errno.ENAMETOOLONG, errno.ERANGE}:
                     return False

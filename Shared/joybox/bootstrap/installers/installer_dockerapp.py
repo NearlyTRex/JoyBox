@@ -1,4 +1,5 @@
 # Imports
+import datetime
 import json
 import os
 
@@ -114,6 +115,39 @@ class DockerAppInstaller(installer.Installer):
         self.backup_volumes = []
         self.backup_dirs = []
         self.backup_excludes = []
+
+    def get_app_dir(self):
+        return "%s/apps/%s" % (self.get_remote_home(), self.app_name)
+
+    def compose_down(self):
+
+        # Stop the compose project. Volumes are preserved unless --purge-data
+        # was passed; "down -v" destroys databases and app data.
+        app_dir = self.get_app_dir()
+        down_command = self.docker_compose_command + ["--env-file", f"{app_dir}/.env", "down"]
+        if self.flags.purge_data:
+            logger.log_warning(f"Purging data: deleting container volumes for {self.app_name}")
+            down_command += ["-v"]
+        else:
+            logger.log_info(f"Keeping container volumes for {self.app_name} (use --purge-data to delete)")
+        self.connection.set_current_working_directory(app_dir)
+        self.connection.run_checked(down_command)
+        self.connection.set_current_working_directory(None)
+        return True
+
+    def retire_app_dir(self):
+
+        # Bind-mounted app data lives inside the app directory, so removing it
+        # destroys that data even when the volumes were kept. Rename instead.
+        app_dir = self.get_app_dir()
+        if self.flags.purge_data:
+            logger.log_warning(f"Purging data: removing {app_dir}")
+            self.connection.remove_file_or_directory(app_dir)
+            return True
+        retired_dir = "%s.removed-%s" % (app_dir, datetime.datetime.now().strftime("%Y%m%d_%H%M%S"))
+        logger.log_info(f"Preserving app directory, moving to {retired_dir}")
+        self.connection.move_file_or_directory(app_dir, retired_dir)
+        return True
 
     def get_supported_environments(self):
         return [
