@@ -195,7 +195,7 @@ class Legacy(storebase.StoreBase):
             if not web_driver:
                 if pretend_run:
                     return None
-                raise Exception("Failed to connect to web driver")
+                raise webpage.ScrapeFailed("Failed to connect to web driver")
 
             # Get search terms
             search_terms = strings.encode_url_string(identifier.strip(), use_plus = True)
@@ -203,7 +203,7 @@ class Legacy(storebase.StoreBase):
             # Load url
             success = webpage.load_url(web_driver, "https://www.bigfishgames.com/us/en/games/search.html?platform=150&language=114&search_query=" + search_terms)
             if not success:
-                raise Exception("Failed to load search URL")
+                raise webpage.ScrapeFailed("Failed to load search URL")
 
             # Find the root container element
             element_search_result = webpage.wait_for_element(

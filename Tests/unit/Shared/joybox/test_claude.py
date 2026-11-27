@@ -10,6 +10,9 @@ import pytest
 # Local imports
 from joybox import claude
 
+anthropic = pytest.importorskip("anthropic")
+httpx = pytest.importorskip("httpx")
+
 FAKE_API_KEY = "configured-for-tests"
 
 
@@ -78,7 +81,7 @@ class FakeAnthropic:
 def library(monkeypatch, configured_key):
     FakeAnthropic.instances = []
     monkeypatch.setitem(
-        sys.modules, "anthropic", types.SimpleNamespace(Anthropic = FakeAnthropic))
+        sys.modules, "anthropic", types.SimpleNamespace(Anthropic = FakeAnthropic, APIError = anthropic.APIError))
     return FakeAnthropic
 
 
@@ -154,7 +157,7 @@ def test_an_empty_reply_is_none(client):
 def test_an_api_error_becomes_a_warning(client, monkeypatch, error, expected):
     warnings = []
     monkeypatch.setattr(claude.logger, "log_warning", warnings.append)
-    client.error = RuntimeError(error)
+    client.error = anthropic.APIError(error, httpx.Request("POST", "https://api.anthropic.com/v1/messages"), body = None)
 
     assert claude.send_message("hello") is None
     assert len(warnings) == 1

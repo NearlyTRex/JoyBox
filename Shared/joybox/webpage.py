@@ -4,6 +4,7 @@ import os
 import signal
 import subprocess
 import time
+import importlib
 import urllib.parse
 
 # Local imports
@@ -53,10 +54,19 @@ def get_min_match_score():
 def get_page_load_interval_seconds():
     return get_scraping_limit("page_load_interval_seconds", DEFAULT_PAGE_LOAD_INTERVAL_SECONDS)
 
+# Selenium's exceptions, imported on first use so this module imports without it
+def get_selenium_errors():
+    return importlib.import_module("selenium.common.exceptions")
+
+# A scrape step that failed in a way another attempt may get past
+class ScrapeFailed(Exception):
+    pass
+
 # Retry a scrape with the configured attempts and backoff, cleaning up between tries
 def retry_scrape(func, cleanup_func = None, verbose = False, operation_name = None):
     return datautils.retry_with_backoff(
         func = func,
+        retry_on = (ScrapeFailed, get_selenium_errors().WebDriverException),
         cleanup_func = cleanup_func,
         max_retries = get_fetch_retries(),
         initial_delay = get_fetch_retry_delay_seconds(),
@@ -68,10 +78,10 @@ def retry_scrape(func, cleanup_func = None, verbose = False, operation_name = No
 
 # Parse page source
 def parse_page_source(contents, features = "lxml"):
+    import bs4
     try:
-        import bs4
         return bs4.BeautifulSoup(contents, features=features)
-    except Exception:
+    except bs4.FeatureNotFound:
         return None
 
 # Parse html page source
@@ -210,7 +220,7 @@ def create_chrome_web_driver(
                 options.binary_location = binary_location
             return start_browser(Chrome, service, options)
         return None
-    except Exception as e:
+    except (get_selenium_errors().WebDriverException, OSError, ValueError) as e:
         if verbose:
             logger.log_warning("CreateChromeWebDriver: Failed to create web driver: %s" % str(e))
         if exit_on_failure:
@@ -262,7 +272,7 @@ def create_firefox_web_driver(
                 options.binary_location = binary_location
             return start_browser(Firefox, service, options)
         return None
-    except Exception as e:
+    except (get_selenium_errors().WebDriverException, OSError, ValueError) as e:
         if verbose:
             logger.log_warning("CreateFirefoxWebDriver: Failed to create web driver: %s" % str(e))
         if exit_on_failure:
@@ -333,7 +343,7 @@ def destroy_web_driver(
             finally:
                 stop_browser_group(group_id)
         return True
-    except Exception as e:
+    except (get_selenium_errors().WebDriverException, OSError) as e:
         if verbose:
             logger.log_warning("DestroyWebDriver: Failed to destroy web driver: %s" % str(e))
         if exit_on_failure:
@@ -361,7 +371,7 @@ def load_url(
             wait_for_page_load_turn(url)
             driver.get(url)
         return True
-    except Exception as e:
+    except get_selenium_errors().WebDriverException as e:
         if verbose:
             logger.log_warning("LoadUrl: Failed to load URL '%s': %s" % (url, str(e)))
         if exit_on_failure:
@@ -376,28 +386,23 @@ def get_current_page_url(driver, verbose = False):
         if not is_session_valid(driver, verbose):
             return None
         return driver.current_url
-    except Exception as e:
+    except get_selenium_errors().WebDriverException as e:
         if verbose:
             logger.log_warning("GetCurrentPageUrl: Failed to get current URL: %s" % str(e))
         return None
 
 # Check if page url is loaded
 def is_url_loaded(driver, url, verbose = False):
-    try:
-        if not is_session_valid(driver, verbose):
-            return False
-        if not url or not isinstance(url, str):
-            if verbose:
-                logger.log_warning("IsUrlLoaded: Invalid URL provided")
-            return False
-        current_url = get_current_page_url(driver, verbose)
-        if current_url:
-            return current_url.startswith(url)
+    if not is_session_valid(driver, verbose):
         return False
-    except Exception as e:
+    if not url or not isinstance(url, str):
         if verbose:
-            logger.log_warning("IsUrlLoaded: Failed to check if URL is loaded: %s" % str(e))
+            logger.log_warning("IsUrlLoaded: Invalid URL provided")
         return False
+    current_url = get_current_page_url(driver, verbose)
+    if isinstance(current_url, str):
+        return current_url.startswith(url)
+    return False
 
 # Check if the page is a Cloudflare bot challenge instead of the requested content
 def is_challenge_page(driver, verbose = False):
@@ -410,7 +415,7 @@ def is_challenge_page(driver, verbose = False):
                 logger.log_warning("IsChallengePage: Bot challenge served for %s" % get_current_page_url(driver, verbose))
             return True
         return False
-    except Exception as e:
+    except get_selenium_errors().WebDriverException as e:
         if verbose:
             logger.log_warning("IsChallengePage: Failed to check for a bot challenge: %s" % str(e))
         return False
@@ -476,7 +481,7 @@ def wait_for_all_elements(
         if verbose:
             logger.log_info("WaitForAllElements: All elements found successfully")
         return result
-    except Exception as e:
+    except get_selenium_errors().WebDriverException as e:
         if verbose:
             logger.log_warning("WaitForAllElements: Failed to find all elements: %s" % str(e))
         if exit_on_failure:
@@ -511,7 +516,7 @@ def wait_for_any_element(
         if verbose:
             logger.log_info("WaitForAnyElement: Found at least one element")
         return result
-    except Exception as e:
+    except get_selenium_errors().WebDriverException as e:
         if verbose:
             logger.log_warning("WaitForAnyElement: Failed to find any elements: %s" % str(e))
         if exit_on_failure:
@@ -531,7 +536,7 @@ def is_session_valid(
         # Reading the URL raises once the browser session has gone away
         getattr(obj, "current_url", None)
         return True
-    except Exception:
+    except get_selenium_errors().WebDriverException:
         if verbose:
             logger.log_warning("Object session invalid")
         return False
@@ -548,7 +553,6 @@ def wait_for_element(
     try:
         from selenium.webdriver.support.ui import WebDriverWait
         from selenium.webdriver.support import expected_conditions as EC
-        from selenium.common.exceptions import TimeoutException, WebDriverException
         if verbose:
             logger.log_info("WaitForElement: Waiting for element (timeout: %d seconds)" % wait_time)
             logger.log_info("  Locator: %s" % str(locator.get()))
@@ -558,18 +562,14 @@ def wait_for_element(
         if verbose:
             logger.log_info("WaitForElement: Element found successfully")
         return element
-    except TimeoutException:
+    except get_selenium_errors().TimeoutException:
         if verbose:
             logger.log_warning("WaitForElement: Timeout waiting for element after %d seconds" % wait_time)
             logger.log_warning("  Locator: %s" % str(locator.get()))
         return None
-    except WebDriverException as e:
+    except get_selenium_errors().WebDriverException as e:
         if verbose:
             logger.log_warning("WaitForElement: WebDriver error: %s" % str(e))
-        return None
-    except Exception as e:
-        if verbose:
-            logger.log_warning("WaitForElement: Unexpected error: %s" % str(e))
         if exit_on_failure:
             logger.log_error(e)
             runtime.quit_program()
@@ -583,7 +583,6 @@ def get_element(
     verbose = False,
     exit_on_failure = False):
     try:
-        from selenium.common.exceptions import NoSuchElementException, WebDriverException
         if verbose:
             logger.log_info("GetElement: Searching for element%s" % (" (all instances)" if all_elements else ""))
             logger.log_info("  Locator: %s" % str(locator.get()))
@@ -599,18 +598,14 @@ def get_element(
             if verbose:
                 logger.log_info("GetElement: Element found successfully")
             return element
-    except NoSuchElementException:
+    except get_selenium_errors().NoSuchElementException:
         if verbose:
             logger.log_warning("GetElement: Element not found")
             logger.log_warning("  Locator: %s" % str(locator.get()))
         return None
-    except WebDriverException as e:
+    except get_selenium_errors().WebDriverException as e:
         if verbose:
             logger.log_warning("GetElement: WebDriver error: %s" % str(e))
-        return None
-    except Exception as e:
-        if verbose:
-            logger.log_warning("GetElement: Unexpected error: %s" % str(e))
         if exit_on_failure:
             logger.log_error(e)
             runtime.quit_program()
@@ -624,7 +619,7 @@ def get_element_text(element, verbose = False):
                 logger.log_warning("GetElementText: Element is None")
             return None
         return element.text
-    except Exception as e:
+    except get_selenium_errors().WebDriverException as e:
         if verbose:
             logger.log_warning("GetElementText: Failed to get element text: %s" % str(e))
         return None
@@ -641,26 +636,21 @@ def get_element_attribute(element, attribute_name, verbose = False):
                 logger.log_warning("GetElementAttribute: Invalid attribute name")
             return None
         return element.get_attribute(attribute_name)
-    except Exception as e:
+    except get_selenium_errors().WebDriverException as e:
         if verbose:
             logger.log_warning("GetElementAttribute: Failed to get attribute '%s': %s" % (attribute_name, str(e)))
         return None
 
 # Get element children text
 def get_element_children_text(element, verbose = False):
-    try:
-        if not element:
-            if verbose:
-                logger.log_warning("GetElementChildrenText: Element is None")
-            return None
-        attribute = get_element_attribute(element, "innerHTML", verbose)
-        if attribute:
-            return text.extract_web_text(attribute)
-        return None
-    except Exception as e:
+    if not element:
         if verbose:
-            logger.log_warning("GetElementChildrenText: Failed to get element children text: %s" % str(e))
+            logger.log_warning("GetElementChildrenText: Element is None")
         return None
+    attribute = get_element_attribute(element, "innerHTML", verbose)
+    if attribute:
+        return text.extract_web_text(attribute)
+    return None
 
 # Get element link url
 def get_element_link_url(element, verbose = False):
@@ -673,7 +663,7 @@ def get_element_link_url(element, verbose = False):
         if link_element:
             return get_element_attribute(link_element, "href", verbose)
         return None
-    except Exception as e:
+    except get_selenium_errors().WebDriverException as e:
         if verbose:
             logger.log_warning("GetElementLinkUrl: Failed to get element link URL: %s" % str(e))
         return None
@@ -696,7 +686,7 @@ def click_element(
         if verbose:
             logger.log_info("ClickElement: Successfully clicked element")
         return True
-    except Exception as e:
+    except get_selenium_errors().WebDriverException as e:
         if verbose:
             logger.log_warning("ClickElement: Failed to click element: %s" % str(e))
         if exit_on_failure:
@@ -728,7 +718,7 @@ def send_keys_to_element(
         if verbose:
             logger.log_info("SendKeysToElement: Successfully sent keys to element")
         return True
-    except Exception as e:
+    except get_selenium_errors().WebDriverException as e:
         if verbose:
             logger.log_warning("SendKeysToElement: Failed to send keys: %s" % str(e))
         if exit_on_failure:
@@ -751,7 +741,7 @@ def scroll_to_end_of_page(
         if not pretend_run:
             driver.execute_script("window.scrollTo(0, document.body.scrollHeight)")
         return True
-    except Exception as e:
+    except get_selenium_errors().WebDriverException as e:
         if verbose:
             logger.log_warning("ScrollToEndOfPage: Failed to scroll: %s" % str(e))
         if exit_on_failure:
@@ -783,7 +773,7 @@ def get_page_source(
         if not pretend_run:
             return str(driver.page_source)
         return ""
-    except Exception as e:
+    except get_selenium_errors().WebDriverException as e:
         if verbose:
             logger.log_warning("GetPageSource: Failed to get page source: %s" % str(e))
         if exit_on_failure:

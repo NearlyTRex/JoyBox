@@ -60,6 +60,7 @@ def console(monkeypatch):
         ollama.hardware, "get_hardware_summary", lambda: state["hardware"])
     monkeypatch.setattr(ollama.hardware, "print_hardware_summary", lambda hw = None: None)
     monkeypatch.setattr(ollama, "get_api_base", lambda: "http://localhost:11434")
+    monkeypatch.setattr(ollama, "read_helper_report", lambda: None)
     monkeypatch.setattr(ollama, "get_setting_mb", lambda field: None)
     monkeypatch.setattr(ollamaagents, "check_context_window", lambda name, harness: True)
 
@@ -450,9 +451,12 @@ def test_an_empty_catalogue_is_not_a_failure(console, catalog):
 # Dispatch
 ###########################################################
 
-def test_every_action_can_be_dispatched_by_name(console, catalog):
+def test_every_action_can_be_dispatched_by_name(console, catalog, monkeypatch):
     # With nothing installed or configured, the actions that need a model or a
-    # host refuse and the rest succeed
+    # host refuse and the rest succeed; neither the server nor the model
+    # library answers
+    monkeypatch.setattr(ollamaactions, "get_server_version", lambda: None)
+    monkeypatch.setattr(ollamacatalog, "get_model_tags", lambda base_name: [])
     results = {action: ollamaactions.run_action(action) for action in ollamaactions.get_action_keys()}
 
     assert results == {

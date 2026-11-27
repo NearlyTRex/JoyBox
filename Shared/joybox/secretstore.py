@@ -100,7 +100,7 @@ def run_secret_tool(cmd, action, reference, input_text = None):
     except subprocess.TimeoutExpired:
         logger.log_error(
             "Timed out %s %s; the vault may be waiting to be unlocked" % (action, reference))
-    except Exception as e:
+    except (OSError, subprocess.SubprocessError) as e:
         logger.log_error("Unable to run %s for %s" % (SECRET_TOOL, reference))
         logger.log_error(e)
     return None

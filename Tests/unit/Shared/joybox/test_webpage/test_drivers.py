@@ -5,6 +5,8 @@ import pytest
 from joybox import webpage
 from webpage_helpers import FakeDriver
 
+exceptions = pytest.importorskip("selenium.common.exceptions")
+
 webdriver = pytest.importorskip("selenium.webdriver")
 chrome_service = pytest.importorskip("selenium.webdriver.chrome.service")
 chrome_options = pytest.importorskip("selenium.webdriver.chrome.options")
@@ -109,7 +111,7 @@ def test_chrome_without_a_driver_is_not_created(browsers, missing):
     if missing == "tool":
         del browsers["installed"]["ChromeDriver"]
     else:
-        browsers["manager_error"] = RuntimeError("offline")
+        browsers["manager_error"] = ConnectionError("offline")
 
     assert webpage.create_chrome_web_driver() is None
     assert browsers["created"] == []
@@ -164,13 +166,13 @@ def test_pretending_creates_no_chrome(browsers):
 
 
 def test_a_chrome_that_fails_to_start_is_absent(browsers):
-    browsers["error"] = RuntimeError("no display")
+    browsers["error"] = exceptions.SessionNotCreatedException("no display")
 
     assert webpage.create_chrome_web_driver(verbose = True) is None
 
 
 def test_a_chrome_that_fails_to_start_can_quit_the_program(browsers):
-    browsers["error"] = RuntimeError("no display")
+    browsers["error"] = exceptions.SessionNotCreatedException("no display")
 
     with pytest.raises(SystemExit):
         webpage.create_chrome_web_driver(exit_on_failure = True)
@@ -192,7 +194,7 @@ def test_firefox_without_a_driver_is_not_created(browsers, missing):
     if missing == "tool":
         del browsers["installed"]["GeckoDriver"]
     else:
-        browsers["manager_error"] = RuntimeError("offline")
+        browsers["manager_error"] = ConnectionError("offline")
 
     assert webpage.create_firefox_web_driver() is None
     assert browsers["created"] == []
@@ -245,13 +247,13 @@ def test_pretending_creates_no_firefox(browsers):
 
 
 def test_a_firefox_that_fails_to_start_is_absent(browsers):
-    browsers["error"] = RuntimeError("no display")
+    browsers["error"] = exceptions.SessionNotCreatedException("no display")
 
     assert webpage.create_firefox_web_driver(verbose = True) is None
 
 
 def test_a_firefox_that_fails_to_start_can_quit_the_program(browsers):
-    browsers["error"] = RuntimeError("no display")
+    browsers["error"] = exceptions.SessionNotCreatedException("no display")
 
     with pytest.raises(SystemExit):
         webpage.create_firefox_web_driver(exit_on_failure = True)
@@ -348,7 +350,7 @@ def test_pretending_destroys_nothing():
 def test_a_failed_teardown_can_quit_the_program():
     class Stubborn(FakeDriver):
         def quit(self):
-            raise RuntimeError("already gone")
+            raise exceptions.InvalidSessionIdException("already gone")
 
     with pytest.raises(SystemExit):
         webpage.destroy_web_driver(Stubborn(), verbose = True, exit_on_failure = True)

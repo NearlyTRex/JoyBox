@@ -132,7 +132,7 @@ def read_hash_file_csv(
                 "size": int(row["size"]),
                 "mtime": int(row["mtime"])
             }
-    except Exception as e:
+    except (KeyError, ValueError) as e:
         if exit_on_failure:
             logger.log_error("Unable to read CSV hash file: %s" % src)
             logger.log_error(e, quit_program = True)

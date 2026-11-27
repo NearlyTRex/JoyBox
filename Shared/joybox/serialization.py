@@ -21,7 +21,7 @@ def read_text_file(src, encoding = "utf-8", errors = "strict", verbose = False, 
             logger.log_info("Reading %s" % src)
         with open(src, "r", encoding = encoding, errors = errors) as input_file:
             return input_file.read()
-    except Exception as e:
+    except (OSError, ValueError) as e:
         if exit_on_failure:
             logger.log_error("Unable to read %s" % src)
             logger.log_error(e)
@@ -47,7 +47,7 @@ def read_binary_file(src, offset = 0, length = None, verbose = False, exit_on_fa
             if length is None:
                 return input_file.read()
             return input_file.read(length)
-    except Exception as e:
+    except OSError as e:
         if exit_on_failure:
             logger.log_error("Unable to read %s" % src)
             logger.log_error(e)
@@ -133,7 +133,7 @@ def copy_binary_records(
                 count = min(records_per_read, record_count - first)
                 output_file.write(read_binary_records(input_file, count, record_size, keep_size or record_size))
         return True
-    except Exception as e:
+    except (OSError, ValueError, EOFError) as e:
         if exit_on_failure:
             logger.log_error("Unable to copy records from %s to %s" % (src, dest))
             logger.log_error(e)
@@ -152,7 +152,7 @@ def write_text_file(src, contents, encoding = "utf-8", newline = "\n", verbose =
             with open(src, "w", encoding = encoding, newline = newline) as output_file:
                 output_file.write(contents)
         return True
-    except Exception as e:
+    except (OSError, ValueError) as e:
         if exit_on_failure:
             logger.log_error("Unable to write %s" % src)
             logger.log_error(e)
@@ -170,7 +170,7 @@ def parse_json_string(string, verbose = False, exit_on_failure = False):
             logger.log_info("Parsing %s" % string)
         json_data = json.loads(string)
         return json_data
-    except Exception as e:
+    except (ValueError, TypeError) as e:
         if exit_on_failure:
             logger.log_error("Unable to read %s" % string)
             logger.log_error(e)
@@ -197,7 +197,7 @@ def read_json_file(src, verbose = False, exit_on_failure = False):
             file_contents = input_file.read()
             json_data = json.loads(file_contents)
         return json_data
-    except Exception as e:
+    except (OSError, ValueError) as e:
         if exit_on_failure:
             logger.log_error("Unable to read %s" % src)
             logger.log_error(e)
@@ -219,7 +219,7 @@ def write_json_file(src, json_data, sort_keys = False, verbose = False, pretend_
                 json_string = json.dumps(json_data, indent = 4, sort_keys = sort_keys)
                 output_file.write(json_string)
         return True
-    except Exception as e:
+    except (OSError, ValueError, TypeError) as e:
         if exit_on_failure:
             logger.log_error("Unable to write %s" % src)
             logger.log_error(e)
@@ -258,7 +258,7 @@ def clean_json_file(src, sort_keys = False, remove_empty_values = False, verbose
                     json_string = json.dumps(json_data, indent = 4, sort_keys = sort_keys)
                     output_file.write(json_string)
         return True
-    except Exception as e:
+    except (OSError, ValueError, TypeError) as e:
         if exit_on_failure:
             logger.log_error("Unable to clean %s" % src)
             logger.log_error(e)
@@ -289,8 +289,8 @@ def search_json_files(src, search_values = (), search_keys = None, verbose = Fal
 
 # Read yaml file
 def read_yaml_file(src, verbose = False, exit_on_failure = False):
+    import yaml
     try:
-        import yaml
         if not src.endswith(".yaml"):
             return {}
         if verbose:
@@ -302,7 +302,7 @@ def read_yaml_file(src, verbose = False, exit_on_failure = False):
             file_contents = file_contents.replace(u'\x82', "")
             yaml_data = yaml.safe_load(file_contents)
         return yaml_data
-    except Exception as e:
+    except (OSError, yaml.YAMLError) as e:
         if exit_on_failure:
             logger.log_error("Unable to read %s" % src)
             logger.log_error(e)
@@ -329,7 +329,7 @@ def read_csv_file(src, headers, verbose = False, exit_on_failure = False):
                     row_dict = {headers[i]: row[i] for i in range(len(headers))}
                     csv_data.append(row_dict)
         return csv_data
-    except Exception as e:
+    except (OSError, ValueError, csv.Error) as e:
         if exit_on_failure:
             logger.log_error("Unable to read %s" % src)
             logger.log_error(e)

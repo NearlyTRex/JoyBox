@@ -69,7 +69,7 @@ def calculate_file_crc32(
                 percent_done = int(round(100 * read_size / total_size))
                 logger.log_percent_complete(percent_done)
         return "%08x" % checksum
-    except Exception as e:
+    except OSError as e:
         if exit_on_failure:
             logger.log_error("Unable to calculate crc32 for %s" % src)
             logger.log_error(e, quit_program = True)
@@ -102,7 +102,7 @@ def calculate_file_md5(
                 percent_done = int(round(100 * read_size / total_size))
                 logger.log_percent_complete(percent_done)
         return md5_hash.hexdigest()
-    except Exception as e:
+    except OSError as e:
         if exit_on_failure:
             logger.log_error("Unable to calculate md5 for %s" % src)
             logger.log_error(e, quit_program = True)
@@ -135,7 +135,7 @@ def calculate_file_sha1(
                 percent_done = int(round(100 * read_size / total_size))
                 logger.log_percent_complete(percent_done)
         return sha1_hash.hexdigest()
-    except Exception as e:
+    except OSError as e:
         if exit_on_failure:
             logger.log_error("Unable to calculate sha1 for %s" % src)
             logger.log_error(e, quit_program = True)
@@ -168,7 +168,7 @@ def calculate_file_sha256(
                 percent_done = int(round(100 * read_size / total_size))
                 logger.log_percent_complete(percent_done)
         return sha256_hash.hexdigest()
-    except Exception as e:
+    except OSError as e:
         if exit_on_failure:
             logger.log_error("Unable to calculate sha256 for %s" % src)
             logger.log_error(e, quit_program = True)
@@ -181,6 +181,7 @@ def calculate_file_xxh3(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
+    import xxhash
     try:
         if pretend_run:
             if verbose:
@@ -188,7 +189,6 @@ def calculate_file_xxh3(
             return ""
         if verbose:
             logger.log_info("Calculating xxh3 for %s" % src)
-        import xxhash
         read_size = 0
         total_size = os.path.getsize(src)
         percent_done = 0
@@ -202,7 +202,7 @@ def calculate_file_xxh3(
                 percent_done = int(round(100 * read_size / total_size))
                 logger.log_percent_complete(percent_done)
         return xxh3_hash.hexdigest()
-    except Exception as e:
+    except OSError as e:
         if exit_on_failure:
             logger.log_error("Unable to calculate xxh3 for %s" % src)
             logger.log_error(e, quit_program = True)

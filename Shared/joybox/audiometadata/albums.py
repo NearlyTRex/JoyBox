@@ -24,7 +24,7 @@ class AlbumTagsMixin:
         # Get audio info
         try:
             audio = self.mp3_class(audio_file, ID3 = self.id3_class)
-        except Exception as e:
+        except self.mutagen.MutagenError as e:
             logger.log_error(f"Failed to get MP3 file info: {e}", quit_program = exit_on_failure)
             return None
         file_info = {

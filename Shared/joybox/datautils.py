@@ -13,8 +13,8 @@ from joybox import logger
 # Merge dictionaries
 def merge_dictionaries(dict1, dict2, merge_type = None):
     if isinstance(dict1, dict) and isinstance(dict2, dict):
+        import mergedeep
         try:
-            import mergedeep
             if merge_type == config.MergeType.REPLACE:
                 return mergedeep.merge(dict1, dict2, strategy=mergedeep.Strategy.REPLACE)
             elif merge_type == config.MergeType.ADDITIVE:
@@ -25,7 +25,7 @@ def merge_dictionaries(dict1, dict2, merge_type = None):
                 return mergedeep.merge(dict1, dict2, strategy=mergedeep.Strategy.TYPESAFE_ADDITIVE)
             else:
                 return mergedeep.merge(dict1, dict2)
-        except Exception:
+        except TypeError:
             return dict1
     elif isinstance(dict1, dict) and not isinstance(dict2, dict):
         return dict1
@@ -103,9 +103,11 @@ def search_dictionary(data, search_value, search_keys = None):
 # Retry utilities
 ###########################################################
 
-# Retry function with exponential backoff and cleanup
+# Retry function with exponential backoff and cleanup, retrying when it returns
+# None or raises one of the retry_on errors
 def retry_with_backoff(
     func,
+    retry_on,
     cleanup_func = None,
     max_retries = 3,
     initial_delay = 1,
@@ -118,7 +120,7 @@ def retry_with_backoff(
             if result is not None or attempt == 0:
                 return result
             reason = "no result"
-        except Exception as e:
+        except retry_on as e:
             reason = str(e)
         if verbose and operation_name:
             logger.log_warning("%s failed (attempt %d/%d): %s" % (operation_name, attempt + 1, max_retries, reason))
@@ -127,7 +129,7 @@ def retry_with_backoff(
         if cleanup_func:
             try:
                 cleanup_func()
-            except Exception as cleanup_error:
+            except retry_on as cleanup_error:
                 if verbose:
                     logger.log_warning("Cleanup failed: %s" % str(cleanup_error))
         if attempt == max_retries - 1:

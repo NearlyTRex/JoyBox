@@ -427,8 +427,8 @@ class Steam(storebase.StoreBase):
 
         # Get steam json
         steam_json = {}
+        import vdf
         try:
-            import vdf
             vdf_start = info_output.find(f'"{identifier}"')
             if vdf_start == -1:
                 raise ValueError("App VDF not found in output")
@@ -446,7 +446,7 @@ class Steam(storebase.StoreBase):
                             break
             vdf_text = info_output[vdf_start:vdf_end].strip()
             steam_json = vdf.loads(vdf_text)
-        except Exception as e:
+        except (SyntaxError, ValueError) as e:
             logger.log_error(e)
             logger.log_error("Unable to parse steam information for '%s'" % identifier)
             logger.log_error("Received output:\n%s" % info_output)
@@ -527,12 +527,12 @@ class Steam(storebase.StoreBase):
             if not web_driver:
                 if pretend_run:
                     return None
-                raise Exception("Failed to connect to web driver")
+                raise webpage.ScrapeFailed("Failed to connect to web driver")
 
             # Load url
             success = webpage.load_url(web_driver, identifier)
             if not success:
-                raise Exception("Failed to load URL: %s" % identifier)
+                raise webpage.ScrapeFailed("Failed to load URL: %s" % identifier)
 
             # Create metadata entry
             metadata_entry = metadataentry.MetadataEntry()

@@ -75,4 +75,5 @@ def test_a_scrape_is_retried_with_the_configured_attempts_and_delay(isolated_set
 
     assert webpage.retry_scrape(fetch, cleanup, verbose = True, operation_name = "Fetch") == "result"
     assert calls == [{"func": fetch, "cleanup_func": cleanup, "max_retries": 5, "initial_delay": 9,
-        "backoff_factor": 2, "verbose": True, "operation_name": "Fetch"}]
+        "backoff_factor": 2, "verbose": True, "operation_name": "Fetch",
+        "retry_on": (webpage.ScrapeFailed, webpage.get_selenium_errors().WebDriverException)}]

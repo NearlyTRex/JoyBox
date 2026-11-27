@@ -319,7 +319,7 @@ class Itchio(storebase.StoreBase):
             if not web_driver:
                 if pretend_run:
                     return None
-                raise Exception("Failed to connect to web driver")
+                raise webpage.ScrapeFailed("Failed to connect to web driver")
 
             # Load url with cookie
             success = webcookies.load_cookie_website(
@@ -330,7 +330,7 @@ class Itchio(storebase.StoreBase):
                 pretend_run = pretend_run,
                 exit_on_failure = False)
             if not success:
-                raise Exception("Failed to load URL: %s" % identifier)
+                raise webpage.ScrapeFailed("Failed to load URL: %s" % identifier)
 
             # Create metadata entry
             metadata_entry = metadataentry.MetadataEntry()

@@ -289,7 +289,7 @@ def extract_hfs_volume(
     volume = machfs.Volume()
     try:
         volume.read(volume_data)
-    except Exception as e:
+    except (ValueError, KeyError, IndexError, ZeroDivisionError, struct.error) as e:
         logger.log_error("Unable to read the HFS volume in '%s'" % image_file)
         logger.log_error(e)
         return False

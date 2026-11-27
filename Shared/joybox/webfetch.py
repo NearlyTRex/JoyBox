@@ -59,14 +59,14 @@ def get_website_text(
     # Next, try requests
     if verbose:
         logger.log_info("GetWebsiteText: Attempting to fetch using requests library")
+    import requests
     try:
-        import requests
         reqs = requests.get(url, params = params, timeout = REQUEST_TIMEOUT_SECONDS)
         reqs.raise_for_status()
         if verbose:
             logger.log_info("GetWebsiteText: Successfully fetched content using requests (%d chars)" % len(reqs.text))
         return reqs.text
-    except Exception as e:
+    except requests.RequestException as e:
         if verbose:
             logger.log_warning("GetWebsiteText: Requests library failed: %s" % str(e))
 

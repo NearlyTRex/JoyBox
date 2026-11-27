@@ -62,6 +62,9 @@ class AcceptingClient(RefusingClient):
 
 def fake_paramiko(monkeypatch, client, **members):
     class Module:
+        class SSHException(Exception):
+            pass
+
         @staticmethod
         def SSHClient():
             return client

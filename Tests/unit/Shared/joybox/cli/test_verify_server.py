@@ -84,7 +84,8 @@ def test_the_exit_status_counts_the_failures(tool, capsys):
 def test_the_connection_is_torn_down_when_a_check_raises(tool):
     tool.results = RuntimeError("boom")
 
-    assert tool.exit_code() != 0
+    with pytest.raises(RuntimeError, match = "boom"):
+        tool.exit_code()
 
     assert tool.connection.events == ["setup", "teardown"]
 

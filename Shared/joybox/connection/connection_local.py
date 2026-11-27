@@ -80,7 +80,7 @@ class ConnectionLocal(connection.Connection):
                         stdout = subprocess.PIPE).stdout
                 return cmdline.clean_command_output(output.strip())
             return ""
-        except Exception as e:
+        except (OSError, ValueError) as e:
             if self.flags.exit_on_failure:
                 logger.log_error(e)
                 runtime.quit_program()
@@ -106,7 +106,7 @@ class ConnectionLocal(connection.Connection):
                         stdout = stdout,
                         stderr = stderr)
             return 0
-        except Exception as e:
+        except (OSError, ValueError) as e:
             if self.flags.exit_on_failure:
                 logger.log_error(e)
                 runtime.quit_program()
@@ -128,7 +128,7 @@ class ConnectionLocal(connection.Connection):
                     self.stream_command_output(iter(lambda: process.stdout.read(4096), b""))
                     return process.wait()
             return 0
-        except Exception as e:
+        except (OSError, ValueError) as e:
             if self.flags.exit_on_failure:
                 logger.log_error(e)
                 runtime.quit_program()
@@ -160,7 +160,7 @@ class ConnectionLocal(connection.Connection):
             if not self.flags.pretend_run:
                 return os.path.exists(src)
             return True
-        except Exception as e:
+        except OSError as e:
             return self.handle_error("Error checking existence of %s" % src, e)
 
     def transfer_files(self, src, dest, excludes = None, sudo = False):
@@ -188,7 +188,7 @@ class ConnectionLocal(connection.Connection):
                 finally:
                     fileops.remove_directory(staged)
                 return True
-            except Exception as e:
+            except (OSError, ValueError) as e:
                 return self.handle_error(f"Unable to transfer files from {src} to {dest}", e)
         return fileops.copy_file_or_directory(
             src, dest,
@@ -226,7 +226,7 @@ class ConnectionLocal(connection.Connection):
                     if code != 0:
                         return self.handle_error(f"Unable to write file to {src}", "copy failed")
                 return True
-            except Exception as e:
+            except (OSError, ValueError) as e:
                 return self.handle_error(f"Unable to write file to {src}", e)
         return fileops.touch_file(src, contents = contents, **self._io_flags())
 
@@ -238,7 +238,7 @@ class ConnectionLocal(connection.Connection):
                 if not self.flags.pretend_run:
                     self.run_checked([tools.get_make_dir_tool(), "-p", src], sudo = True, throw_exception = True)
                 return True
-            except Exception as e:
+            except (OSError, ValueError) as e:
                 return self.handle_error(f"Unable to make directory {src}", e)
         return fileops.make_directory(src, **self._io_flags())
 
@@ -250,7 +250,7 @@ class ConnectionLocal(connection.Connection):
                 if not self.flags.pretend_run:
                     self.run_checked([tools.get_remove_tool(), "-rf", "--", src], sudo = True, throw_exception = True)
                 return True
-            except Exception as e:
+            except (OSError, ValueError) as e:
                 return self.handle_error(f"Unable to remove {src}", e)
         return fileops.remove_file_or_directory(src, **self._io_flags())
 
@@ -263,7 +263,7 @@ class ConnectionLocal(connection.Connection):
                     cmd = [tools.get_copy_tool(), "-r", src, dest] if os.path.isdir(src) else [tools.get_copy_tool(), src, dest]
                     self.run_checked(cmd, sudo = True, throw_exception = True)
                 return True
-            except Exception as e:
+            except (OSError, ValueError) as e:
                 return self.handle_error(f"Unable to copy {src} to {dest}", e)
         return fileops.copy_file_or_directory(src, dest, **self._io_flags())
 
@@ -275,7 +275,7 @@ class ConnectionLocal(connection.Connection):
                 if not self.flags.pretend_run:
                     self.run_checked([tools.get_move_tool(), src, dest], sudo = True, throw_exception = True)
                 return True
-            except Exception as e:
+            except (OSError, ValueError) as e:
                 return self.handle_error(f"Unable to move {src} to {dest}", e)
         return fileops.move_file_or_directory(src, dest, **self._io_flags())
 
@@ -287,7 +287,7 @@ class ConnectionLocal(connection.Connection):
                 if not self.flags.pretend_run:
                     self.run_checked([tools.get_link_tool(), "-sf", src, dest], sudo = True, throw_exception = True)
                 return True
-            except Exception as e:
+            except (OSError, ValueError) as e:
                 return self.handle_error(f"Unable to link {src} to {dest}", e)
         return fileops.create_symlink(src, dest, **self._io_flags())
 
@@ -311,7 +311,7 @@ class ConnectionLocal(connection.Connection):
                     finally:
                         fileops.remove_file(temp_path)
                 return True
-            except Exception as e:
+            except (OSError, ValueError) as e:
                 return self.handle_error(f"Unable to download {url} to {dest}", e)
         return network.download_url(url, output_file = dest, **self._io_flags())
 
@@ -323,7 +323,7 @@ class ConnectionLocal(connection.Connection):
                 if not self.flags.pretend_run:
                     self.run_checked([programs.get_tool_program("Tar"), "-xf", src, "-C", dest], sudo = True, throw_exception = True)
                 return True
-            except Exception as e:
+            except (OSError, ValueError) as e:
                 return self.handle_error(f"Unable to extract {src} to {dest}", e)
         return archive.extract_archive(src, dest, **self._io_flags())
 
@@ -336,7 +336,7 @@ class ConnectionLocal(connection.Connection):
             if not self.flags.pretend_run:
                 self.run_checked([tools.get_change_owner_tool(), "-R", owner, src], sudo = sudo, throw_exception = True)
             return True
-        except Exception as e:
+        except (OSError, ValueError) as e:
             return self.handle_error(f"Unable to change owner of {src}", e)
 
     def change_permission(self, src, permission, sudo = False):
@@ -348,5 +348,5 @@ class ConnectionLocal(connection.Connection):
             if not self.flags.pretend_run:
                 self.run_checked([tools.get_change_permission_tool(), "-R", permission, src], sudo = sudo, throw_exception = True)
             return True
-        except Exception as e:
+        except (OSError, ValueError) as e:
             return self.handle_error(f"Unable to change permissions of {src}", e)

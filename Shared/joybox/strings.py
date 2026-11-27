@@ -33,9 +33,9 @@ def remove_enclosed_substrings(string, opening_delim = "\"", closing_delim = "\"
 def get_string_similarity_ratio(string1, string2):
     try:
         from thefuzz import fuzz
-        return fuzz.ratio(string1, string2)
-    except Exception:
+    except ImportError:
         return 0
+    return fuzz.ratio(string1, string2)
 
 # Check if strings are highly similar
 def are_strings_highly_similar(string1, string2):
@@ -126,7 +126,7 @@ def get_datetime_from_unknown_string(string):
     # Standard and fuzzy formats
     try:
         return date_parser.parse(string, fuzzy = True)
-    except Exception:
+    except (ValueError, OverflowError):
         return None
 
 # Convert datetime to string
@@ -137,7 +137,7 @@ def get_string_from_datetime(date_time, format_code):
 def convert_date_string(string, old_format_code, new_format_code):
     try:
         date_time = get_datetime_from_string(string, old_format_code)
-    except Exception:
+    except ValueError:
         date_time = get_datetime_from_unknown_string(string)
     return get_string_from_datetime(date_time, new_format_code) if date_time else None
 
@@ -161,7 +161,7 @@ def parse_timestamp(timestamp_string):
         else:
             dt = datetime.strptime(timestamp_string.strip(), "%Y-%m-%d %H:%M:%S")
             return int(dt.timestamp())
-    except Exception:
+    except ValueError:
         return 0
 
 # Get url scheme

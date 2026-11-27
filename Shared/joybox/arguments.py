@@ -13,11 +13,9 @@ from joybox import paths
 def parse_enum_value(enum_type, enum_value):
     if isinstance(enum_value, enum_type):
         return enum_value
-    else:
-        try:
-            return enum_type.from_string(enum_value)
-        except Exception:
-            return None
+    if not hasattr(enum_type, "from_string"):
+        return None
+    return enum_type.from_string(enum_value)
 
 # Enum argparse action
 class EnumArgparseAction(argparse.Action):

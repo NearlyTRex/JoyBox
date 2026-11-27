@@ -27,7 +27,7 @@ class Mp4TagsMixin:
             logger.log_info(f"Reading MP4 tags from {audio_file}")
         try:
             audio = self.mp4_class(audio_file)
-        except Exception as e:
+        except self.mutagen.MutagenError as e:
             logger.log_error(f"Failed to load MP4 file: {e}", quit_program = exit_on_failure)
             return None
         if audio.tags is None:
@@ -82,7 +82,7 @@ class Mp4TagsMixin:
             logger.log_info(f"Setting MP4 tags on {audio_file}")
         try:
             audio = self.mp4_class(audio_file)
-        except Exception as e:
+        except self.mutagen.MutagenError as e:
             logger.log_error(f"Failed to load MP4 file: {e}", quit_program = exit_on_failure)
             return False
 
@@ -150,7 +150,7 @@ class Mp4TagsMixin:
             logger.log_info(f"Removing MP4 tags from {audio_file}")
         try:
             audio = self.mp4_class(audio_file)
-        except Exception as e:
+        except self.mutagen.MutagenError as e:
             logger.log_error(f"Failed to load MP4 file: {e}", quit_program = exit_on_failure)
             return False
 
@@ -186,7 +186,7 @@ class Mp4TagsMixin:
         try:
             audio = self.mp4_class(audio_file)
             return audio.tags is not None and len(audio.tags) > 0
-        except Exception:
+        except self.mutagen.MutagenError:
             return False
 
     def get_mp4_file_info(self, audio_file, verbose = False, exit_on_failure = False):
@@ -214,6 +214,6 @@ class Mp4TagsMixin:
                 "codec": getattr(audio.info, "codec", None)
             }
             return file_info
-        except Exception as e:
+        except self.mutagen.MutagenError as e:
             logger.log_error(f"Failed to get MP4 file info: {e}", quit_program = exit_on_failure)
             return None

@@ -94,10 +94,9 @@ def create_command_list(cmd, style = "enclosed"):
 
 # Decode raw command output to text, ignoring undecodable bytes.
 def clean_command_output(output):
-    try:
+    if isinstance(output, bytes):
         return output.decode("utf-8", "ignore")
-    except Exception:
-        return output
+    return output
 
 ###########################################################
 # Logging support

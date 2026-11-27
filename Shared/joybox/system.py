@@ -19,6 +19,3 @@ def run_main(main_func):
     except KeyboardInterrupt:
         logger.log_warning("\nOperation cancelled by user")
         runtime.quit_program(130)
-    except Exception as e:
-        logger.log_error(f"Script failed with exception: {e}")
-        runtime.quit_program(1)

@@ -195,7 +195,7 @@ def run_prepared_returncode_command(
             log_stderr = True,
             verbose = verbose)
         return returncode
-    except Exception as e:
+    except (OSError, ValueError) as e:
         if verbose or exit_on_failure:
             logger.log_error(e, quit_program = exit_on_failure)
         return 1

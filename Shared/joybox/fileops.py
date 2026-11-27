@@ -3,6 +3,7 @@ import os
 import contextlib
 import codecs
 import stat
+import struct
 import time
 import shutil
 import tempfile
@@ -102,7 +103,7 @@ def lowercase_all_paths(src, verbose = False, pretend_run = False, exit_on_failu
             on_found_items(root, dirs)
             on_found_items(root, files)
         return True
-    except Exception as e:
+    except OSError as e:
         return report_failure("Unable to lowercase directory %s" % src, e, exit_on_failure)
 
 # Whether a name is valid utf-8, rather than holding undecodable bytes
@@ -191,7 +192,7 @@ def decode_legacy_filenames(src, encoding, verbose = False, pretend_run = False,
             decode_legacy_names(root, dirs, encoding, verbose, pretend_run)
             decode_legacy_names(root, files, encoding, verbose, pretend_run)
         return True
-    except Exception as e:
+    except OSError as e:
         return report_failure("Unable to decode paths in directory %s" % src, e, exit_on_failure)
 
 # Sanitize filenames
@@ -251,7 +252,7 @@ def touch_file(src, contents = "", contents_mode = "w", encoding = None, private
         else:
             open(src, "a", encoding = "utf-8").close()
         return True
-    except Exception as e:
+    except (OSError, ValueError) as e:
         return report_failure("Unable to touch file %s" % src, e, exit_on_failure)
 
 # Change a directory's permissions and those of everything under it, directories to dperms when given
@@ -280,7 +281,7 @@ def chmod_file_or_directory(src, perms, dperms = None, verbose = False, pretend_
         elif os.path.isdir(src):
             chmod_directory_tree(src, perms, dperms)
         return True
-    except Exception as e:
+    except (OSError, ValueError) as e:
         return report_failure(message, e, exit_on_failure)
 
 # Set file modified time
@@ -291,7 +292,7 @@ def set_file_modified_time(src, timestamp, verbose = False, pretend_run = False,
         if not pretend_run:
             os.utime(src, (timestamp, timestamp))
         return True
-    except Exception as e:
+    except OSError as e:
         return report_failure("Unable to set modified time of %s" % src, e, exit_on_failure)
 
 # Mark as executable
@@ -303,7 +304,7 @@ def mark_as_executable(src, verbose = False, pretend_run = False, exit_on_failur
             st = os.stat(src)
             os.chmod(src, st.st_mode | stat.S_IEXEC)
         return True
-    except Exception as e:
+    except OSError as e:
         return report_failure("Unable to mark %s as executable" % src, e, exit_on_failure)
 
 # Create temporary directory
@@ -411,7 +412,7 @@ def create_symlink(
             remove_existing_path(dest)
         os.symlink(src, dest, target_is_directory = os.path.isdir(src))
         return True
-    except Exception as e:
+    except OSError as e:
         return report_failure("Unable to create symlink from %s to %s" % (src, dest), e, exit_on_failure)
     finally:
         if prev_cwd is not None:
@@ -440,7 +441,7 @@ def resolve_symlink(src, verbose = False, pretend_run = False, exit_on_failure =
             if os.path.islink(src):
                 return os.path.realpath(src)
         return None
-    except Exception as e:
+    except OSError as e:
         report_failure("Unable to resolve symlink %s" % src, e, exit_on_failure)
         return None
 
@@ -510,7 +511,7 @@ def copy_file_or_directory(
         elif not is_excluded_name(os.path.basename(src), excludes):
             shutil.copy(src, dest)
         return True
-    except Exception as e:
+    except OSError as e:
         return report_transfer_failure(
             "Unable to copy %s to %s" % (src, dest), e,
             src, dest, skip_on_error, error_log_path, verbose, pretend_run, exit_on_failure)
@@ -536,7 +537,7 @@ def move_file_or_directory(
         if not pretend_run:
             shutil.move(src, dest)
         return True
-    except Exception as e:
+    except OSError as e:
         return report_transfer_failure(
             "Unable to move %s to %s" % (src, dest), e,
             src, dest, skip_on_error, error_log_path, verbose, pretend_run, exit_on_failure)
@@ -587,7 +588,7 @@ def transfer_file(
             if delete_afterwards:
                 os.remove(src)
         return True
-    except Exception as e:
+    except OSError as e:
         return report_transfer_failure(
             "Unable to transfer %s to %s" % (src, dest), e,
             src, dest, skip_on_error, error_log_path, verbose, pretend_run, exit_on_failure)
@@ -605,7 +606,7 @@ def make_directory(src, verbose = False, pretend_run = False, exit_on_failure = 
             if not pretend_run:
                 os.makedirs(src, exist_ok = True)
         return True
-    except Exception as e:
+    except OSError as e:
         if not os.path.isdir(src):
             return report_failure("Unable to make directory %s" % src, e, exit_on_failure)
         return True
@@ -619,7 +620,7 @@ def remove_file(src, verbose = False, pretend_run = False, exit_on_failure = Fal
             if os.path.isfile(src):
                 os.remove(src)
         return True
-    except Exception as e:
+    except OSError as e:
         return report_failure("Unable to remove file %s" % src, e, exit_on_failure)
 
 # Remove symlink
@@ -631,7 +632,7 @@ def remove_symlink(src, verbose = False, pretend_run = False, exit_on_failure = 
             if os.path.islink(src):
                 os.unlink(src)
         return True
-    except Exception as e:
+    except OSError as e:
         return report_failure("Unable to remove symlink %s" % src, e, exit_on_failure)
 
 # Remove directory
@@ -643,7 +644,7 @@ def remove_directory(src, verbose = False, pretend_run = False, exit_on_failure 
             if os.path.isdir(src):
                 shutil.rmtree(src)
         return True
-    except Exception as e:
+    except OSError as e:
         return report_failure("Unable to remove directory %s" % src, e, exit_on_failure)
 
 # Make a directory and the directories under it writable, leaving links alone
@@ -676,7 +677,7 @@ def remove_directory_contents(src, verbose = False, pretend_run = False, exit_on
             for name in os.listdir(src):
                 remove_directory_entry(os.path.join(src, name))
         return True
-    except Exception as e:
+    except OSError as e:
         return report_failure("Unable to remove contents of directory %s" % src, e, exit_on_failure)
 
 
@@ -695,7 +696,7 @@ def remove_file_or_directory(src, verbose = False, pretend_run = False, exit_on_
                     pretend_run = pretend_run,
                     exit_on_failure = exit_on_failure)
         return True
-    except Exception as e:
+    except OSError as e:
         return report_failure("Unable to remove %s" % src, e, exit_on_failure)
 
 def remove_object(obj, verbose = False, pretend_run = False, exit_on_failure = False):
@@ -839,6 +840,6 @@ def get_link_info(lnk_path, lnk_base_path):
         lnk = pylnk.Lnk(lnk_path)
         if lnk._link_info:
             info = get_parsed_link_info(lnk, lnk_base_path)
-    except Exception as e:
+    except (OSError, ValueError, KeyError, struct.error, pylnk.FormatException) as e:
         logger.log_error(e)
     return info

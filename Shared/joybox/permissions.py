@@ -13,8 +13,11 @@ def is_user_root():
     if platform_info.is_windows_platform():
         try:
             import pyuac
+        except ImportError:
+            return False
+        try:
             return pyuac.isUserAdmin()
-        except Exception:
+        except OSError:
             return False
     else:
         return os.getuid() == 0
@@ -32,7 +35,5 @@ def run_as_root(func):
                 func()
         except ModuleNotFoundError:
             func()
-        except Exception:
-            raise
     else:
         func()

@@ -9,6 +9,8 @@ import pytest
 from joybox import webpage
 from webpage_helpers import FakeDriver
 
+exceptions = pytest.importorskip("selenium.common.exceptions")
+
 # The real pause, before the suite's fixture records pauses in its place
 REAL_PAUSE = webpage.pause
 
@@ -190,7 +192,7 @@ def test_a_browser_without_a_group_is_not_tracked(groups):
 def test_the_group_is_stopped_even_when_quit_fails(groups):
     class Stubborn(FakeDriver):
         def quit(self):
-            raise RuntimeError("already gone")
+            raise exceptions.InvalidSessionIdException("already gone")
     driver = Stubborn()
     driver.service = service(43)
 

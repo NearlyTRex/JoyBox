@@ -4,6 +4,8 @@ import pytest
 # Local imports
 from itchio_helpers import FakeElement, GAME_URL
 
+exceptions = pytest.importorskip("selenium.common.exceptions")
+
 
 def add_details(browser, *lines):
     browser.add(FakeElement("game_info_panel_widget", text = "\n".join(lines)))
@@ -97,7 +99,7 @@ def test_a_failed_attempt_then_a_good_one_closes_each_browser_once(itchio_store,
     def flaky(url, cookie):
         attempts.append(url)
         if len(attempts) == 1:
-            raise RuntimeError("session lost")
+            raise exceptions.InvalidSessionIdException("session lost")
         load(url, cookie)
     monkeypatch.setattr(browser, "load", flaky)
 

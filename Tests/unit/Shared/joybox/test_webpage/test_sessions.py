@@ -9,6 +9,8 @@ from webpage_helpers import FakeDriver, FakeElement, FakeParent
 
 pytest.importorskip("bs4")
 
+exceptions = pytest.importorskip("selenium.common.exceptions")
+
 
 
 ###########################################################
@@ -120,7 +122,7 @@ def test_a_dead_session_is_not_a_challenge_page():
 
 @pytest.mark.parametrize("verbose", [True, False])
 def test_a_failed_challenge_lookup_is_not_a_challenge_page(verbose):
-    assert webpage.is_challenge_page(FakeParent(error = RuntimeError("crashed")), verbose = verbose) is False
+    assert webpage.is_challenge_page(FakeParent(error = exceptions.WebDriverException("crashed")), verbose = verbose) is False
 
 
 ###########################################################
@@ -166,6 +168,6 @@ def test_destroying_nothing_is_harmless():
 def test_a_driver_that_fails_to_quit_is_handled():
     class Stubborn(FakeDriver):
         def quit(self):
-            raise RuntimeError("already gone")
+            raise exceptions.InvalidSessionIdException("already gone")
 
     assert webpage.destroy_web_driver(Stubborn()) is False

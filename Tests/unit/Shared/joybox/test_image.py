@@ -173,6 +173,15 @@ def test_an_undeterminable_format_reports_failure(tmp_path):
     assert not target.exists()
 
 
+def test_an_undeterminable_format_is_logged_when_failures_matter(tmp_path, monkeypatch):
+    errors = []
+    monkeypatch.setattr(image.logger, "log_error", errors.append)
+    source = make_image(tmp_path / "art.png")
+
+    assert image.convert_image(source, str(tmp_path / "art.dat"), exit_on_failure = True) is False
+    assert any("art.dat" in message for message in errors)
+
+
 def test_the_source_survives_conversion(tmp_path):
     source = make_image(tmp_path / "art.jpg")
     original = pathlib.Path(source).read_bytes()

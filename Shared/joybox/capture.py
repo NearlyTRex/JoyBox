@@ -44,11 +44,11 @@ def capture_screenshot(
         logger.log_info("Capturing screenshot to %s" % output_file)
     if pretend_run:
         return True
+    from PIL import ImageGrab
     try:
-        from PIL import ImageGrab
         screenshot = ImageGrab.grab(bbox = capture_region)
         screenshot.save(output_file)
-    except Exception as e:
+    except (OSError, ValueError) as e:
         if verbose or exit_on_failure:
             logger.log_error("Unable to capture screenshot to %s" % output_file)
             logger.log_error(e, quit_program = exit_on_failure)

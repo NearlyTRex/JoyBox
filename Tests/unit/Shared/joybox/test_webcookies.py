@@ -325,21 +325,17 @@ def test_a_verbose_cookie_file_that_is_not_a_list_is_refused(tmp_path):
     assert webcookies.load_cookie(FakeDriver(), write_cookies(tmp_path, {"name": "x"}), verbose = True) is False
 
 
+def write_garbled_cookies(tmp_path):
+    target = tmp_path / "store.json"
+    target.write_text("{not json")
+    return str(target)
+
+
 @pytest.mark.parametrize("verbose", [False, True])
-def test_a_cookie_file_that_cannot_be_read_loads_nothing(tmp_path, monkeypatch, verbose):
-    def broken(**kwargs):
-        raise OSError("disk error")
-
-    monkeypatch.setattr(webcookies.serialization, "read_json_file", broken)
-
-    assert webcookies.load_cookie(FakeDriver(), write_cookies(tmp_path, COOKIES), verbose = verbose) is False
+def test_a_cookie_file_that_cannot_be_read_loads_nothing(tmp_path, verbose):
+    assert webcookies.load_cookie(FakeDriver(), write_garbled_cookies(tmp_path), verbose = verbose) is False
 
 
-def test_a_failed_cookie_load_can_quit_the_program(tmp_path, monkeypatch):
-    def broken(**kwargs):
-        raise OSError("disk error")
-
-    monkeypatch.setattr(webcookies.serialization, "read_json_file", broken)
-
+def test_a_failed_cookie_load_can_quit_the_program(tmp_path):
     with pytest.raises(SystemExit):
-        webcookies.load_cookie(FakeDriver(), write_cookies(tmp_path, COOKIES), exit_on_failure = True)
+        webcookies.load_cookie(FakeDriver(), write_garbled_cookies(tmp_path), exit_on_failure = True)

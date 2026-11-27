@@ -34,7 +34,7 @@ class Id3TagsMixin:
             logger.log_info(f"Reading ID3 tags from {audio_file}")
         try:
             audio = self.mp3_class(audio_file, ID3 = self.id3_class)
-        except Exception as e:
+        except self.mutagen.MutagenError as e:
             logger.log_error(f"Failed to load MP3 file: {e}", quit_program = exit_on_failure)
             return None
         if audio.tags is None:
@@ -119,7 +119,7 @@ class Id3TagsMixin:
             logger.log_info(f"Setting ID3 tags on {audio_file}")
         try:
             audio = self.mp3_class(audio_file, ID3 = self.id3_class)
-        except Exception as e:
+        except self.mutagen.MutagenError as e:
             logger.log_error(f"Failed to load MP3 file: {e}", quit_program = exit_on_failure)
             return False
 
@@ -179,7 +179,7 @@ class Id3TagsMixin:
             logger.log_info(f"Removing ID3 tags from {audio_file}")
         try:
             audio = self.mp3_class(audio_file, ID3 = self.id3_class)
-        except Exception as e:
+        except self.mutagen.MutagenError as e:
             logger.log_error(f"Failed to load MP3 file: {e}", quit_program = exit_on_failure)
             return False
 
@@ -218,5 +218,5 @@ class Id3TagsMixin:
         try:
             audio = self.mp3_class(audio_file, ID3 = self.id3_class)
             return audio.tags is not None and len(audio.tags) > 0
-        except Exception:
+        except self.mutagen.MutagenError:
             return False

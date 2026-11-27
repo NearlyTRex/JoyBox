@@ -52,7 +52,7 @@ def save_cookie(
         if success and verbose:
             logger.log_info("Successfully saved cookies")
         return success
-    except Exception as e:
+    except (webpage.get_selenium_errors().WebDriverException, TypeError) as e:
         if verbose:
             logger.log_warning("SaveCookie: Failed to save cookies: %s" % str(e))
         if exit_on_failure:
@@ -68,47 +68,38 @@ def load_cookie(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    try:
-        if not webpage.is_session_valid(driver, verbose):
-            return False
-        if not paths.does_path_exist(path):
-            if verbose:
-                logger.log_warning("LoadCookie: Cookie file does not exist: %s" % path)
-            return False
-        if verbose:
-            logger.log_info("Loading cookies from %s" % path)
-        cookie_list = serialization.read_json_file(
-            src = path,
-            verbose = verbose,
-            exit_on_failure = exit_on_failure)
-        if not isinstance(cookie_list, list):
-            if verbose:
-                logger.log_warning("LoadCookie: Cookie file does not contain valid cookie list")
-            return False
-        if not pretend_run:
-            cookies_loaded = 0
-            for cookie in cookie_list:
-                try:
-                    driver.add_cookie(cookie)
-                    cookies_loaded += 1
-                except Exception as cookie_error:
-                    if verbose:
-                        logger.log_warning("LoadCookie: Failed to add cookie: %s" % str(cookie_error))
-            if cookies_loaded == 0:
-                if verbose:
-                    logger.log_warning("LoadCookie: No cookies could be added")
-                return False
-            if verbose:
-                logger.log_info("Successfully loaded %d cookies" % cookies_loaded)
-        return True
-    except Exception as e:
-        if verbose:
-            logger.log_warning("LoadCookie: Failed to load cookies: %s" % str(e))
-        if exit_on_failure:
-            logger.log_error("Unable to load cookies")
-            logger.log_error(e)
-            runtime.quit_program()
+    if not webpage.is_session_valid(driver, verbose):
         return False
+    if not paths.does_path_exist(path):
+        if verbose:
+            logger.log_warning("LoadCookie: Cookie file does not exist: %s" % path)
+        return False
+    if verbose:
+        logger.log_info("Loading cookies from %s" % path)
+    cookie_list = serialization.read_json_file(
+        src = path,
+        verbose = verbose,
+        exit_on_failure = exit_on_failure)
+    if not isinstance(cookie_list, list):
+        if verbose:
+            logger.log_warning("LoadCookie: Cookie file does not contain valid cookie list")
+        return False
+    if not pretend_run:
+        cookies_loaded = 0
+        for cookie in cookie_list:
+            try:
+                driver.add_cookie(cookie)
+                cookies_loaded += 1
+            except webpage.get_selenium_errors().WebDriverException as cookie_error:
+                if verbose:
+                    logger.log_warning("LoadCookie: Failed to add cookie: %s" % str(cookie_error))
+        if cookies_loaded == 0:
+            if verbose:
+                logger.log_warning("LoadCookie: No cookies could be added")
+            return False
+        if verbose:
+            logger.log_info("Successfully loaded %d cookies" % cookies_loaded)
+    return True
 
 # Get cookie file
 def get_cookie_file(base_name):

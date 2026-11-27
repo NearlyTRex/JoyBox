@@ -187,11 +187,11 @@ class Connection(ABC):
     def install_crontab(self, contents):
         temp_dir = self.make_temporary_directory()
         if not temp_dir:
-            raise RuntimeError("Unable to stage the crontab")
+            raise OSError("Unable to stage the crontab")
         try:
             tmp_crontab = temp_dir + "/crontab"
             if not self.write_file(tmp_crontab, contents):
-                raise RuntimeError("Unable to write %s" % tmp_crontab)
+                raise OSError("Unable to write %s" % tmp_crontab)
             self.run_checked(["crontab", tmp_crontab], throw_exception = True)
         finally:
             self.remove_file_or_directory(temp_dir)
@@ -210,7 +210,7 @@ class Connection(ABC):
                     new_cron = f"{output.strip()}\n{pattern}" if output.strip() else pattern
                     self.install_crontab(new_cron + "\n")
             return True
-        except Exception as e:
+        except (OSError, ValueError) as e:
             return self.handle_error(f"Unable to add to crontab: {pattern}", e, return_value = False)
 
     def remove_from_crontab(self, pattern):
@@ -227,7 +227,7 @@ class Connection(ABC):
                     return True
                 self.install_crontab("\n".join(new_lines) + "\n")
             return True
-        except Exception as e:
+        except (OSError, ValueError) as e:
             return self.handle_error(f"Unable to remove from crontab: {pattern}", e, return_value = False)
 
     def add_to_path(self, src):
@@ -264,7 +264,7 @@ class Connection(ABC):
                 ])
                 return code == 0
             return True
-        except Exception as e:
+        except (OSError, ValueError) as e:
             return self.handle_error(f"Unable to add {src} to path", e, return_value = False)
 
     def add_to_unix_path(self, src):
@@ -304,5 +304,5 @@ class Connection(ABC):
                     new_content = existing_content + "\n" + export_line + "\n"
                     return self.write_file(profile_file, new_content)
             return True
-        except Exception as e:
+        except (OSError, ValueError) as e:
             return self.handle_error(f"Unable to add {src} to path", e, return_value = False)

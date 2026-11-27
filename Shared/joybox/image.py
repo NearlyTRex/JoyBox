@@ -13,11 +13,11 @@ from joybox import runtime
 # Get image format
 def get_image_format(image_file):
     if paths.is_path_file(image_file):
+        from PIL import Image
         try:
-            from PIL import Image
             with Image.open(image_file) as img:
                 return config.ImageFileType.from_string(img.format)
-        except Exception:
+        except OSError:
             return None
     else:
         image_ext = paths.get_filename_extension(image_file).lower()
@@ -51,11 +51,11 @@ def convert_image(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
+    from PIL import Image
     try:
         if verbose:
             logger.log_info("Converting image %s to %s" % (image_src, image_dest))
         if not pretend_run:
-            from PIL import Image
             src_image = Image.open(image_src)
             if getattr(src_image, "is_animated", False):
                 src_image.seek(0)
@@ -66,10 +66,14 @@ def convert_image(
                     image_format = config.ImageFileType.JPEG
                 elif image_ext in [".png"]:
                     image_format = config.ImageFileType.PNG
+            if not image_format:
+                if exit_on_failure:
+                    logger.log_error("Unable to tell which image format to convert %s to" % image_dest)
+                return False
             rgb_image.save(image_dest, image_format.val())
             return paths.does_path_exist(image_dest)
         return False
-    except Exception as e:
+    except (OSError, ValueError) as e:
         if exit_on_failure:
             logger.log_error("Unable to convert %s to %s" % (image_src, image_dest))
             logger.log_error(e)

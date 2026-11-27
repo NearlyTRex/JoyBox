@@ -235,7 +235,7 @@ def run_command(
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
         return (output, returncode)
-    except Exception as e:
+    except (OSError, ValueError) as e:
         if verbose or exit_on_failure:
             logger.log_error(e, quit_program = exit_on_failure)
         return ("", 1)
@@ -400,7 +400,7 @@ def run_interactive_command(
         if verbose or exit_on_failure:
             logger.log_error(e, quit_program = exit_on_failure)
         return e.returncode
-    except Exception as e:
+    except (OSError, ValueError) as e:
         if verbose or exit_on_failure:
             logger.log_error(e, quit_program = exit_on_failure)
         return 1

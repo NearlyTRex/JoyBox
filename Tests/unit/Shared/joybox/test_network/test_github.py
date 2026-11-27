@@ -7,6 +7,8 @@ import pytest
 from joybox import network
 from network_helpers import FakeRepo, names
 
+real_github = pytest.importorskip("github")
+
 
 GITHUB_TOKEN = "ghp_exampletoken"
 
@@ -156,10 +158,11 @@ def test_every_filter_applies_together(github):
 def install_broken_github(monkeypatch):
     class Broken:
         def __init__(self, token = None):
-            raise RuntimeError("rate limited")
+            raise real_github.GithubException(403, {"message": "rate limited"}, None)
 
     module = types.ModuleType("github")
     module.Github = Broken
+    module.GithubException = real_github.GithubException
     monkeypatch.setitem(sys.modules, "github", module)
 
 

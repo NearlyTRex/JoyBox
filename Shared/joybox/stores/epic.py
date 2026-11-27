@@ -466,12 +466,12 @@ class Epic(storebase.StoreBase):
             if not web_driver:
                 if pretend_run:
                     return None
-                raise Exception("Failed to connect to web driver")
+                raise webpage.ScrapeFailed("Failed to connect to web driver")
 
             # Load url
             success = webpage.load_url(web_driver, identifier)
             if not success:
-                raise Exception("Failed to load URL: %s" % identifier)
+                raise webpage.ScrapeFailed("Failed to load URL: %s" % identifier)
 
             # Create metadata entry
             metadata_entry = metadataentry.MetadataEntry()

@@ -64,9 +64,9 @@ def clean_web_text(text):
 def extract_web_text(text):
     try:
         import html_text
-        return html_text.extract_text(text)
-    except Exception:
+    except ImportError:
         return None
+    return html_text.extract_text(text)
 
 ###########################################################
 # Substring utilities

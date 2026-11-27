@@ -55,6 +55,7 @@ def send_message(
     client = create_client()
     if not client:
         return None
+    import anthropic as anthropic_lib
 
     try:
         # Build message parameters
@@ -81,7 +82,7 @@ def send_message(
         return None
 
     # Extract friendly error message from API errors
-    except Exception as e:
+    except anthropic_lib.APIError as e:
         error_str = str(e)
         if "credit balance is too low" in error_str:
             logger.log_warning("Anthropic API: Insufficient credits. Add credits at https://console.anthropic.com/settings/billing")

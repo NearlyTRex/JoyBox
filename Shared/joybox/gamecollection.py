@@ -187,5 +187,5 @@ def iterate_selected_game_infos(
                     game_name = game_name,
                     verbose = verbose,
                     exit_on_failure = exit_on_failure)
-            except Exception as e:
+            except (OSError, ValueError) as e:
                 logger.log_warning("Skipping '%s': %s" % (game_name, str(e)))

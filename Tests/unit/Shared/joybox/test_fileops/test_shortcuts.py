@@ -14,17 +14,20 @@ from file_helpers import write
 ###########################################################
 
 def fake_pylnk(monkeypatch, work_dir = None, arguments = None, link_path = "C:\\Games\\Title\\game.exe", raises = False):
+    class FormatException(Exception):
+        pass
+
     class Lnk:
         def __init__(self, path):
             if raises:
-                raise ValueError("corrupt shortcut")
+                raise FormatException("This is not a .lnk file.")
             self._link_info = types.SimpleNamespace(path = link_path) if link_path else None
             self.link_flags = types.SimpleNamespace(
                 HasWorkingDir = work_dir is not None,
                 HasArguments = arguments is not None)
             self.work_dir = work_dir
             self.arguments = arguments
-    module = types.SimpleNamespace(Lnk = Lnk)
+    module = types.SimpleNamespace(Lnk = Lnk, FormatException = FormatException)
     monkeypatch.setattr(programs, "get_tool_program", lambda name: "pylnk.py")
     monkeypatch.setattr(modules, "import_python_module_file", lambda module_path, module_name: module)
 

@@ -130,10 +130,14 @@ def test_a_verbose_lookup_finds_every_match():
 @pytest.mark.parametrize("error", [
     exceptions.NoSuchElementException("gone"),
     exceptions.WebDriverException("disconnected"),
-    ValueError("unexpected"),
 ])
 def test_a_verbose_failed_lookup_is_absent(error):
     assert webpage.get_element(FakeParent(error = error), LOCATOR, verbose = True) is None
+
+
+def test_a_bug_in_a_lookup_is_not_taken_for_a_missing_element():
+    with pytest.raises(ValueError):
+        webpage.get_element(FakeParent(error = ValueError("unexpected")), LOCATOR)
 
 
 def test_an_expected_lookup_miss_does_not_quit_the_program():
@@ -165,17 +169,6 @@ def test_a_verbose_unreadable_attribute_is_absent(element, name):
     assert webpage.get_element_attribute(element, name, verbose = True) is None
 
 
-@pytest.mark.parametrize("verbose", [False, True])
-def test_children_text_that_cannot_be_extracted_is_absent(monkeypatch, verbose):
-    def broken(html):
-        raise ValueError("bad markup")
-
-    monkeypatch.setattr(webpage.text, "extract_web_text", broken)
-    element = FakeElement(attributes = {"innerHTML": "<p>x</p>"})
-
-    assert webpage.get_element_children_text(element, verbose = verbose) is None
-
-
 ###########################################################
 # Link urls
 ###########################################################
@@ -196,7 +189,7 @@ def test_an_element_without_a_link_has_no_link_url():
 @pytest.mark.parametrize("verbose", [False, True])
 def test_a_failing_link_lookup_has_no_link_url(monkeypatch, verbose):
     def broken(**kwargs):
-        raise RuntimeError("lookup failed")
+        raise exceptions.WebDriverException("lookup failed")
 
     monkeypatch.setattr(webpage, "get_element", broken)
 
@@ -214,7 +207,7 @@ def test_a_verbose_click_clicks():
     assert element.clicks == 1
 
 
-@pytest.mark.parametrize("element", [None, ClickableElement(error = RuntimeError("covered"))])
+@pytest.mark.parametrize("element", [None, ClickableElement(error = exceptions.ElementClickInterceptedException("covered"))])
 def test_a_verbose_failed_click_reports_failure(element):
     assert webpage.click_element(element, verbose = True) is False
 
@@ -229,7 +222,7 @@ def test_verbose_keys_are_sent():
 @pytest.mark.parametrize("element,keys", [
     (None, "text"),
     (ClickableElement(), None),
-    (ClickableElement(error = RuntimeError("detached")), "text"),
+    (ClickableElement(error = exceptions.StaleElementReferenceException("detached")), "text"),
 ])
 def test_verbose_keys_that_are_not_sent_report_failure(element, keys):
     assert webpage.send_keys_to_element(element, keys, verbose = True) is False

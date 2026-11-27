@@ -132,6 +132,12 @@ def test_a_path_expands_environment_variables(config_file, monkeypatch):
     assert settings.get_path_value("S", "root") == "/expanded/data"
 
 
+def test_a_text_value_is_returned_as_written(config_file):
+    config_file("[S]\nroot = $DATA/x\n")
+
+    assert settings.get_text_value("S", "root") == "$DATA/x"
+
+
 ###########################################################
 # The overlay
 ###########################################################
@@ -430,6 +436,7 @@ def test_fields_are_listed_and_a_missing_section_has_none(config_file):
     lambda: settings.get_raw_value("A", "x"),
     lambda: settings.get_integer_value("A", "x"),
     lambda: settings.get_bool_value("A", "x"),
+    lambda: settings.get_text_value("A", "x"),
     lambda: settings.get_path_value("A", "x"),
     lambda: settings.get_list_value("A", "x"),
 ])
@@ -450,6 +457,7 @@ def test_a_malformed_file_raises_a_runtime_error_naming_the_file(config_file, ca
     (lambda: settings.get_integer_value("A", "x", default_value = 3, throw_exception = False), 3),
     (lambda: settings.get_bool_value("A", "x", default_value = True, throw_exception = False),
      True),
+    (lambda: settings.get_text_value("A", "x", default_value = "d", throw_exception = False), "d"),
 ])
 def test_a_malformed_file_yields_the_fallback_when_not_throwing(config_file, call, expected):
     config_file(MALFORMED)
@@ -465,14 +473,14 @@ def test_overlay_integers_coerce_bools_ints_and_text(config_file, value, expecte
     assert settings.get_integer_value("S", "port") == expected
 
 
-@pytest.mark.parametrize("getter", [settings.get_path_value, settings.get_list_value])
+@pytest.mark.parametrize("getter", [settings.get_text_value, settings.get_path_value, settings.get_list_value])
 def test_an_unset_path_or_list_returns_the_default(config_file, getter):
     config_file("[S]\n")
 
     assert getter("Nowhere", "nothing") is None
 
 
-@pytest.mark.parametrize("getter", [settings.get_path_value, settings.get_list_value])
+@pytest.mark.parametrize("getter", [settings.get_text_value, settings.get_path_value, settings.get_list_value])
 def test_a_non_text_path_or_list_value_raises(config_file, getter):
     config_file("[S]\n")
     settings.set_value("S", "field", 5)
@@ -481,12 +489,13 @@ def test_a_non_text_path_or_list_value_raises(config_file, getter):
         getter("S", "field")
 
 
-@pytest.mark.parametrize("getter", [settings.get_path_value, settings.get_list_value])
-def test_a_non_text_path_or_list_value_falls_back_when_not_throwing(config_file, getter):
+@pytest.mark.parametrize("getter", [settings.get_text_value, settings.get_path_value, settings.get_list_value])
+def test_a_non_text_value_reads_as_unset_when_not_throwing(config_file, getter):
     config_file("[S]\n")
     settings.set_value("S", "field", 5)
 
-    assert getter("S", "field", default_value = "d", throw_exception = False) == "d"
+    unset = getter("S", "other", default_value = "d", throw_exception = False)
+    assert getter("S", "field", default_value = "d", throw_exception = False) == unset
 
 
 def test_a_non_boolean_overlay_value_raises(config_file):

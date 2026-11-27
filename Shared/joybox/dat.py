@@ -1,5 +1,6 @@
 # Imports
 from xml.dom import minidom
+from xml.parsers.expat import ExpatError
 
 # Local imports
 from joybox import config
@@ -88,7 +89,7 @@ class Dat:
                         game_entry[config.DAT_KEY_MD5] = rom_tag.attributes["md5"].value
                         self.add_game(game_entry)
             return True
-        except Exception as e:
+        except (OSError, KeyError, ExpatError) as e:
             if exit_on_failure:
                 logger.log_error("Unable to import clrmamepro dat file '%s'" % dat_file)
                 logger.log_error(e, quit_program = True)

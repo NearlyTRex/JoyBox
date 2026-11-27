@@ -1,5 +1,10 @@
+# Third-party imports
+import pytest
+
 # Local imports
 from joybox import webpage
+
+errors = pytest.importorskip("selenium.common.exceptions")
 
 # A locator the fakes answer to
 LOCATOR = webpage.ElementLocator({"css_selector": "div.game"})
@@ -26,10 +31,10 @@ class BrokenElement:
 
     @property
     def text(self):
-        raise RuntimeError("stale element")
+        raise errors.StaleElementReferenceException("stale element")
 
     def get_attribute(self, name):
-        raise RuntimeError("stale element")
+        raise errors.StaleElementReferenceException("stale element")
 
 
 class FakeDriver:
@@ -47,33 +52,33 @@ class FakeDriver:
     @property
     def current_url(self):
         if self.dead:
-            raise RuntimeError("session deleted")
+            raise errors.InvalidSessionIdException("session deleted")
         return self._url
 
     def get(self, url):
         if self.dead:
-            raise RuntimeError("session deleted")
+            raise errors.InvalidSessionIdException("session deleted")
         self.visited.append(url)
         self._url = url
 
     def get_cookies(self):
         if self.dead:
-            raise RuntimeError("session deleted")
+            raise errors.InvalidSessionIdException("session deleted")
         return self._cookies
 
     def add_cookie(self, cookie):
         if not isinstance(cookie, dict) or "name" not in cookie:
-            raise ValueError("bad cookie")
+            raise errors.InvalidArgumentException("bad cookie")
         self.added_cookies.append(cookie)
 
     def execute_script(self, script):
         if self.dead:
-            raise RuntimeError("session deleted")
+            raise errors.InvalidSessionIdException("session deleted")
         self.scripts.append(script)
 
     def close(self):
         if self.dead:
-            raise RuntimeError("session deleted")
+            raise errors.InvalidSessionIdException("session deleted")
 
     def quit(self):
         self.quit_calls += 1
@@ -132,7 +137,7 @@ class FailingDriver(FakeDriver):
 
     def _check(self, name):
         if name in self.failing:
-            raise RuntimeError("%s failed" % name)
+            raise errors.WebDriverException("%s failed" % name)
 
     def get(self, url):
         self._check("get")
@@ -162,7 +167,7 @@ class DyingDriver(FakeDriver):
     @property
     def current_url(self):
         if self.reads_left <= 0:
-            raise RuntimeError("session deleted")
+            raise errors.InvalidSessionIdException("session deleted")
         self.reads_left -= 1
         return self._url
 

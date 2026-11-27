@@ -651,14 +651,14 @@ def get_file_age_in_hours(path):
         current_time = time.time()
         age_seconds = current_time - file_mtime
         return age_seconds / 3600.0  # Convert to hours
-    except Exception:
+    except OSError:
         return float('inf')  # Return infinite age if file doesn't exist or error
 
 # Get file modification time as timestamp
 def get_file_mod_time(path):
     try:
         return int(os.path.getmtime(path))
-    except Exception:
+    except OSError:
         return 0
 
 # Get filename info

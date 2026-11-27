@@ -20,6 +20,10 @@ from joybox import knownhosts
 def _get_paramiko():
     return importlib.import_module("paramiko")
 
+# The errors an SSH session or SFTP transfer fails with
+def _get_ssh_errors():
+    return (_get_paramiko().SSHException, OSError, EOFError)
+
 # Load a private key without assuming its type. RSAKey.from_private_key* accepts
 # only RSA, so an ed25519 key - what ssh-keygen produces by default - is rejected
 # outright. Newer paramiko exposes PKey.from_path, which sniffs the type; fall back
@@ -34,7 +38,7 @@ def _load_private_key(filepath = None, key_str = None):
             if filepath:
                 return key_class.from_private_key_file(filepath)
             return key_class.from_private_key(StringIO(key_str))
-        except Exception as e:
+        except _get_ssh_errors() + (ValueError,) as e:
             attempts.append("%s: %s" % (key_class.__name__, e))
     raise ValueError("Could not load SSH private key (%s)" % "; ".join(attempts))
 
@@ -125,7 +129,7 @@ class ConnectionSSH(connection.Connection):
         try:
             self.connect(timeout = timeout)
             return True
-        except Exception:
+        except _get_ssh_errors() + (ValueError,):
             self.teardown()
             return False
 
@@ -135,11 +139,17 @@ class ConnectionSSH(connection.Connection):
         transport = ConnectionSSH.ssh_client.get_transport()
         return bool(transport and transport.is_active())
 
+    # Open an SFTP session on the live connection
+    def _open_sftp(self):
+        if not ConnectionSSH.ssh_client:
+            raise ConnectionError("SSH client not initialized")
+        return ConnectionSSH.ssh_client.open_sftp()
+
     def teardown(self):
         try:
             if ConnectionSSH.ssh_client:
                 ConnectionSSH.ssh_client.close()
-        except Exception as e:
+        except _get_ssh_errors() as e:
             logger.log_error("Failed to close SSH connection")
             logger.log_error(e)
         ConnectionSSH.ssh_client = None
@@ -150,12 +160,12 @@ class ConnectionSSH(connection.Connection):
         try:
             if not ConnectionSSH.ssh_client:
                 return None
-            sftp = ConnectionSSH.ssh_client.open_sftp()
+            sftp = self._open_sftp()
             try:
                 self.remote_home_directory = sftp.normalize(".")
             finally:
                 sftp.close()
-        except Exception as e:
+        except _get_ssh_errors() as e:
             return self.handle_error("Unable to resolve remote home directory", e, return_value = None)
         return self.remote_home_directory
 
@@ -186,7 +196,7 @@ class ConnectionSSH(connection.Connection):
     def run_output(self, cmd, sudo = False):
         try:
             if not ConnectionSSH.ssh_client:
-                raise RuntimeError("SSH client not initialized")
+                raise ConnectionError("SSH client not initialized")
             cmd = cmdline.create_command_string(cmd, style = "posix")
             if sudo:
                 cmd = self.mark_command_as_sudo(cmd)
@@ -205,7 +215,7 @@ class ConnectionSSH(connection.Connection):
                     return output + "\n" + error
                 return output
             return ""
-        except Exception as e:
+        except _get_ssh_errors() as e:
             if self.flags.exit_on_failure:
                 logger.log_error(e)
                 runtime.quit_program()
@@ -214,7 +224,7 @@ class ConnectionSSH(connection.Connection):
     def run_return_code(self, cmd, sudo = False):
         try:
             if not ConnectionSSH.ssh_client:
-                raise RuntimeError("SSH client not initialized")
+                raise ConnectionError("SSH client not initialized")
             cmd = cmdline.create_command_string(cmd, style = "posix")
             if sudo:
                 cmd = self.mark_command_as_sudo(cmd)
@@ -228,7 +238,7 @@ class ConnectionSSH(connection.Connection):
                 exit_code = stdout.channel.recv_exit_status()
                 return exit_code
             return 0
-        except Exception as e:
+        except _get_ssh_errors() as e:
             if self.flags.exit_on_failure:
                 logger.log_error(e)
                 runtime.quit_program()
@@ -237,7 +247,7 @@ class ConnectionSSH(connection.Connection):
     def run_blocking(self, cmd, sudo = False):
         try:
             if not ConnectionSSH.ssh_client:
-                raise RuntimeError("SSH client not initialized")
+                raise ConnectionError("SSH client not initialized")
             cmd = cmdline.create_command_string(cmd, style = "posix")
             if sudo:
                 cmd = self.mark_command_as_sudo(cmd)
@@ -253,7 +263,7 @@ class ConnectionSSH(connection.Connection):
                 exit_code = channel.recv_exit_status()
                 return exit_code
             return 0
-        except Exception as e:
+        except _get_ssh_errors() as e:
             if self.flags.exit_on_failure:
                 logger.log_error(e)
                 runtime.quit_program()
@@ -262,7 +272,7 @@ class ConnectionSSH(connection.Connection):
     def run_interactive(self, cmd, sudo = False):
         try:
             if not ConnectionSSH.ssh_client:
-                raise RuntimeError("SSH client not initialized")
+                raise ConnectionError("SSH client not initialized")
             cmd = cmdline.create_command_string(cmd, style = "posix")
             if sudo:
                 cmd = self.mark_command_as_sudo(cmd)
@@ -287,7 +297,7 @@ class ConnectionSSH(connection.Connection):
                 finally:
                     channel.close()
             return 0
-        except Exception as e:
+        except _get_ssh_errors() as e:
             if self.flags.exit_on_failure:
                 logger.log_error(e)
                 runtime.quit_program()
@@ -316,7 +326,7 @@ class ConnectionSSH(connection.Connection):
             if self.flags.verbose:
                 logger.log_info(f"Checking existence of {src}")
             if not self.flags.pretend_run:
-                sftp = ConnectionSSH.ssh_client.open_sftp()
+                sftp = self._open_sftp()
                 try:
                     sftp.stat(src)
                 finally:
@@ -324,7 +334,7 @@ class ConnectionSSH(connection.Connection):
             return True
         except FileNotFoundError:
             return False
-        except Exception as e:
+        except _get_ssh_errors() as e:
             return self.handle_error(f"Error checking existence of {src}", e)
 
     def transfer_files(self, src, dest, excludes = None, sudo = False):
@@ -336,7 +346,7 @@ class ConnectionSSH(connection.Connection):
                 return True
             upload_dest = "/tmp/transfer_" + uuid.uuid4().hex if sudo else dest
             try:
-                sftp = ConnectionSSH.ssh_client.open_sftp()
+                sftp = self._open_sftp()
                 try:
                     uploaded = self._upload_files(sftp, self._plan_upload(sftp, src, upload_dest, excludes))
                 finally:
@@ -355,7 +365,7 @@ class ConnectionSSH(connection.Connection):
             finally:
                 if sudo:
                     self.run_blocking(["rm", "-rf", "--", upload_dest])
-        except Exception as e:
+        except _get_ssh_errors() + (ValueError,) as e:
             return self.handle_error(f"Failed to transfer {src} to {dest}", e)
 
     def _plan_upload(self, sftp, src, dest, excludes):
@@ -389,7 +399,7 @@ class ConnectionSSH(connection.Connection):
                         logger.log_info(f"Transferring file: {local_file} to {remote_file}")
                     sftp.put(local_file, remote_file)
                 return True
-            except Exception as e:
+            except _get_ssh_errors() as e:
                 logger.log_error(f"Failed to transfer file {local_file} to {remote_file}: {e}")
                 return False
 
@@ -404,14 +414,14 @@ class ConnectionSSH(connection.Connection):
                 if sudo:
                     return self.run_output(["cat", src], sudo = True)
                 else:
-                    sftp = ConnectionSSH.ssh_client.open_sftp()
+                    sftp = self._open_sftp()
                     try:
                         with sftp.file(src, "r") as f:
                             return f.read().decode()
                     finally:
                         sftp.close()
             return None
-        except Exception as e:
+        except _get_ssh_errors() + (ValueError,) as e:
             return self.handle_error(f"Unable to read file from {src}", e, return_value = None)
 
     def write_file(self, src, contents, sudo = False):
@@ -421,7 +431,7 @@ class ConnectionSSH(connection.Connection):
             if not self.flags.pretend_run:
                 if sudo:
                     temp_path = "/tmp/tmp_write_file_" + uuid.uuid4().hex
-                    sftp = ConnectionSSH.ssh_client.open_sftp()
+                    sftp = self._open_sftp()
                     try:
                         with sftp.file(temp_path, "w") as remote_file:
                             remote_file.write(contents)
@@ -433,7 +443,7 @@ class ConnectionSSH(connection.Connection):
                     if code != 0:
                         return self.handle_error(f"Failed to write file {src}", "copy failed")
                 else:
-                    sftp = ConnectionSSH.ssh_client.open_sftp()
+                    sftp = self._open_sftp()
                     try:
                         with sftp.file(src, "w") as remote_file:
                             remote_file.write(contents)
@@ -441,14 +451,14 @@ class ConnectionSSH(connection.Connection):
                     finally:
                         sftp.close()
             return True
-        except Exception as e:
+        except _get_ssh_errors() + (ValueError,) as e:
             return self.handle_error(f"Failed to write file {src}", e)
 
     def _run_operation(self, cmd, sudo, message):
         try:
             self.run_checked(cmd, sudo = sudo, throw_exception = True)
             return True
-        except Exception as e:
+        except _get_ssh_errors() + (ValueError,) as e:
             return self.handle_error(message, e)
 
     def make_directory(self, src, sudo = False):

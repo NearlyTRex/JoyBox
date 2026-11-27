@@ -11,6 +11,7 @@ from joybox import webfetch
 from webpage_helpers import FakeDriver
 
 pytest.importorskip("bs4")
+real_requests = pytest.importorskip("requests")
 
 
 @pytest.fixture
@@ -34,7 +35,7 @@ def fetches(monkeypatch):
 
     def raise_for_status():
         if state["status"] >= 400:
-            raise RuntimeError("HTTP %d" % state["status"])
+            raise real_requests.HTTPError("HTTP %d" % state["status"])
 
     def get(url, params = None, timeout = None):
         state["requests"].append({"url": url, "params": params, "timeout": timeout})
@@ -47,6 +48,7 @@ def fetches(monkeypatch):
 
     module = types.ModuleType("requests")
     module.get = get
+    module.RequestException = real_requests.RequestException
     monkeypatch.setitem(sys.modules, "requests", module)
     return state
 
@@ -104,7 +106,7 @@ def test_the_driver_is_shut_down_when_reading_the_page_quits(fetches):
 
 def test_a_page_nothing_can_fetch_can_quit_the_program(fetches):
     fetches["driver"] = None
-    fetches["error"] = OSError("no route to host")
+    fetches["error"] = real_requests.ConnectionError("no route to host")
 
     with pytest.raises(SystemExit):
         webfetch.get_website_text("https://store.example", exit_on_failure = True)
@@ -121,7 +123,7 @@ def test_a_fetched_page_does_not_quit_the_program(fetches):
     (FakeDriver(), "<html>driver</html>", None, "<html>driver</html>"),
     (FakeDriver(), "", None, "<html>requests</html>"),
     (None, "", None, "<html>requests</html>"),
-    (None, "", OSError("down"), ""),
+    (None, "", real_requests.ConnectionError("down"), ""),
 ])
 def test_verbose_fetching_returns_the_same_text(fetches, driver, source, error, expected):
     fetches.update(driver = driver, source = source, error = error)
@@ -270,7 +272,7 @@ def test_an_empty_driver_result_falls_back_to_a_plain_request(fetches):
 
 def test_a_page_nothing_can_fetch_is_empty(fetches):
     fetches["driver"] = None
-    fetches["error"] = OSError("no route to host")
+    fetches["error"] = real_requests.ConnectionError("no route to host")
 
     assert webfetch.get_website_text("https://store.example") == ""
 

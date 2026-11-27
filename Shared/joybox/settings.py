@@ -60,7 +60,7 @@ def get_sections(throw_exception = True):
     try:
         _ensure_loaded()
         return _state.parser.sections()
-    except Exception as e:
+    except (OSError, ValueError, configparser.Error) as e:
         if throw_exception:
             raise RuntimeError("Unable to read settings sections [file=%s]" % _state.settings_file) from e
         return []
@@ -71,7 +71,7 @@ def get_fields(section, throw_exception = True):
         if section not in _state.parser:
             return []
         return list(_state.parser[section].keys())
-    except Exception as e:
+    except (OSError, ValueError, configparser.Error) as e:
         if throw_exception:
             raise RuntimeError("Unable to read settings fields [file=%s][section=%s]" % (_state.settings_file, section)) from e
         return []
@@ -80,7 +80,7 @@ def has_section(section, throw_exception = True):
     try:
         _ensure_loaded()
         return section in _state.parser
-    except Exception as e:
+    except (OSError, ValueError, configparser.Error) as e:
         if throw_exception:
             raise RuntimeError("Unable to check settings section [file=%s][section=%s]" % (_state.settings_file, section)) from e
         return False
@@ -89,7 +89,7 @@ def has_field(section, field, throw_exception = True):
     try:
         _ensure_loaded()
         return (section in _state.parser) and (field in _state.parser[section])
-    except Exception as e:
+    except (OSError, ValueError, configparser.Error) as e:
         if throw_exception:
             raise RuntimeError("Unable to check settings field [file=%s][section=%s][field=%s]" % (_state.settings_file, section, field)) from e
         return False
@@ -109,7 +109,7 @@ def get_value(section, field, default_value = None, throw_exception = True):
         return secretstore.resolve_value(
             _state.parser.get(section, field, fallback = default_value
                 if default_value is not None else _get_shipped_default(section, field)))
-    except Exception as e:
+    except (OSError, ValueError, configparser.Error) as e:
         if throw_exception:
             raise RuntimeError("Unable to get settings value [file=%s][section=%s][field=%s]" % (_state.settings_file, section, field)) from e
         return default_value
@@ -122,7 +122,7 @@ def get_raw_value(section, field, default_value = None, throw_exception = True):
         _ensure_loaded()
         return _state.parser.get(section, field, fallback = default_value
             if default_value is not None else _get_shipped_default(section, field))
-    except Exception as e:
+    except (OSError, ValueError, configparser.Error) as e:
         if throw_exception:
             raise RuntimeError("Unable to get settings value [file=%s][section=%s][field=%s]" % (_state.settings_file, section, field)) from e
         return default_value
@@ -151,7 +151,7 @@ def get_integer_value(section, field, default_value = None, throw_exception = Tr
             shipped = _get_shipped_default(section, field)
             return None if shipped is None else _coerce_integer(shipped)
         return _state.parser.getint(section, field, fallback = default_value)
-    except Exception as e:
+    except (OSError, ValueError, configparser.Error) as e:
         if throw_exception:
             raise RuntimeError("Unable to get settings integer value [file=%s][section=%s][field=%s]" % (_state.settings_file, section, field)) from e
         return default_value
@@ -165,32 +165,27 @@ def get_bool_value(section, field, default_value = None, throw_exception = True)
             shipped = _get_shipped_default(section, field)
             return None if shipped is None else _coerce_bool(shipped)
         return _state.parser.getboolean(section, field, fallback = default_value)
-    except Exception as e:
+    except (OSError, ValueError, configparser.Error) as e:
         if throw_exception:
             raise RuntimeError("Unable to get settings boolean value [file=%s][section=%s][field=%s]" % (_state.settings_file, section, field)) from e
         return default_value
 
+# Get a value that must be text; not throwing, anything else reads as unset
+def get_text_value(section, field, default_value = None, throw_exception = True):
+    value = get_value(section, field, default_value = default_value, throw_exception = throw_exception)
+    if value is None or value is default_value or isinstance(value, str):
+        return value
+    if throw_exception:
+        raise RuntimeError("Settings value is not text [file=%s][section=%s][field=%s]" % (_state.settings_file, section, field))
+    return default_value
+
 def get_path_value(section, field, default_value = None, throw_exception = True):
-    try:
-        value = get_value(section, field, default_value = default_value, throw_exception = throw_exception)
-        if value is None:
-            return default_value
-        return os.path.expandvars(value)
-    except Exception as e:
-        if throw_exception:
-            raise RuntimeError("Unable to get settings path value [file=%s][section=%s][field=%s]" % (_state.settings_file, section, field)) from e
-        return default_value
+    value = get_text_value(section, field, default_value = default_value, throw_exception = throw_exception)
+    return os.path.expandvars(value) if isinstance(value, str) else value
 
 def get_list_value(section, field, delimiter = ",", default_value = None, throw_exception = True):
-    try:
-        value = get_value(section, field, default_value = default_value, throw_exception = throw_exception)
-        if value is None:
-            return default_value
-        return value.split(delimiter)
-    except Exception as e:
-        if throw_exception:
-            raise RuntimeError("Unable to get settings list value [file=%s][section=%s][field=%s][delimiter=%s]" % (_state.settings_file, section, field, delimiter)) from e
-        return default_value
+    value = get_text_value(section, field, default_value = default_value, throw_exception = throw_exception)
+    return value.split(delimiter) if isinstance(value, str) else value
 
 ###########################################################
 # Write API (in-memory overlay; persisted only via save())

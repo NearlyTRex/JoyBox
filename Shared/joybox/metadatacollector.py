@@ -127,7 +127,7 @@ def fetch_with_web_driver(
         if not web_driver:
             if pretend_run:
                 return None
-            raise Exception("Failed to create web driver")
+            raise webpage.ScrapeFailed("Failed to create web driver")
         return fetch_func(web_driver)
 
     # Use retry function with cleanup
@@ -192,7 +192,7 @@ def collect_metadata_from_tgdb(
         # Load url
         success = webpage.load_url(web_driver, "https://thegamesdb.net/search.php?name=" + search_terms + platform_filter)
         if not success:
-            raise Exception("Failed to load TheGamesDB search page")
+            raise webpage.ScrapeFailed("Failed to load TheGamesDB search page")
 
         # Get natural name
         natural_name = gamenaming.derive_regular_name_from_game_name(game_name)
@@ -319,7 +319,7 @@ def collect_metadata_from_gamefaqs(
         # Load homepage
         success = webpage.load_url(web_driver, "https://gamefaqs.gamespot.com")
         if not success:
-            raise Exception("Failed to load GameFAQs homepage")
+            raise webpage.ScrapeFailed("Failed to load GameFAQs homepage")
         if webpage.is_challenge_page(web_driver, verbose = verbose):
             return BLOCKED
 
@@ -330,12 +330,12 @@ def collect_metadata_from_gamefaqs(
             verbose = verbose,
             exit_on_failure = False)
         if not element_homepage_marker:
-            raise Exception("GameFAQs homepage marker not found")
+            raise webpage.ScrapeFailed("GameFAQs homepage marker not found")
 
         # Load search URL
         success = webpage.load_url(web_driver, "https://gamefaqs.gamespot.com/search?game=" + search_terms)
         if not success:
-            raise Exception("Failed to load GameFAQs search page")
+            raise webpage.ScrapeFailed("Failed to load GameFAQs search page")
         if webpage.is_challenge_page(web_driver, verbose = verbose):
             return BLOCKED
 
@@ -463,7 +463,7 @@ def collect_metadata_from_bigfishgames(
         # Load url
         success = webpage.load_url(web_driver, "https://www.bigfishgames.com/us/en/games/search.html?platform=150&language=114&search_query=" + search_terms)
         if not success:
-            raise Exception("Failed to load BigFishGames search page")
+            raise webpage.ScrapeFailed("Failed to load BigFishGames search page")
 
         # Look for game description
         element_game_description = webpage.wait_for_element(

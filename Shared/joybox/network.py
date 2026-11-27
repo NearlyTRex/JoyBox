@@ -2,6 +2,7 @@
 import os
 import os.path
 import tempfile
+from xml.parsers.expat import ExpatError
 
 # Local imports
 from joybox import config
@@ -30,11 +31,11 @@ DOWNLOAD_CONNECT_TIMEOUT_SECONDS = 30
 # Query parameters go in params rather than the url, so a key among them never
 # reaches a log line that names the url
 def is_url_reachable(url, params = None, timeout = REQUEST_TIMEOUT_SECONDS):
+    import requests
     try:
-        import requests
         get = requests.get(url, params=params, timeout=timeout)
         return get.status_code == 200
-    except Exception:
+    except requests.RequestException:
         return False
 
 # Get remote json
@@ -45,10 +46,10 @@ def get_remote_json(
     timeout = REQUEST_TIMEOUT_SECONDS,
     verbose = False,
     exit_on_failure = False):
+    import requests
     try:
         if verbose:
             logger.log_info("Processing GET request to '%s'" % url)
-        import requests
         if not headers:
             headers = {"Accept": "application/json"}
         get = requests.get(url, headers=headers, params=params, timeout=timeout)
@@ -57,7 +58,7 @@ def get_remote_json(
         if get.status_code == 200:
             return get.json()
         return None
-    except Exception as e:
+    except requests.RequestException as e:
         if exit_on_failure:
             logger.log_error("Unable to process GET request to '%s'" % url)
             logger.log_error(e, quit_program = True)
@@ -70,10 +71,10 @@ def get_remote_html(
     timeout = REQUEST_TIMEOUT_SECONDS,
     verbose = False,
     exit_on_failure = False):
+    import requests
     try:
         if verbose:
             logger.log_info("Processing GET request to '%s'" % url)
-        import requests
         if not headers:
             headers = {}
         get = requests.get(url, headers=headers, timeout=timeout)
@@ -82,7 +83,7 @@ def get_remote_html(
         if get.status_code == 200:
             return get.text
         return None
-    except Exception as e:
+    except requests.RequestException as e:
         if exit_on_failure:
             logger.log_error("Unable to process GET request to '%s'" % url)
             logger.log_error(e, quit_program = True)
@@ -100,10 +101,10 @@ def post_remote_json(
     if pretend_run:
         logger.log_info("Would POST to '%s'" % url)
         return None
+    import requests
     try:
         if verbose:
             logger.log_info("Processing POST request to '%s'" % url)
-        import requests
         if not headers:
             headers = {"Accept": "application/json"}
         post = requests.post(url, headers=headers, json=data, timeout=timeout)
@@ -112,7 +113,7 @@ def post_remote_json(
         if post.status_code == 200:
             return post.json()
         return None
-    except Exception as e:
+    except requests.RequestException as e:
         if exit_on_failure:
             logger.log_error("Unable to process POST request to '%s'" % url)
             logger.log_error(e, quit_program = True)
@@ -125,11 +126,11 @@ def get_remote_xml(
     timeout = REQUEST_TIMEOUT_SECONDS,
     verbose = False,
     exit_on_failure = False):
+    import requests
+    import xmltodict
     try:
         if verbose:
             logger.log_info("Processing GET request to '%s'" % url)
-        import requests
-        import xmltodict
         if not headers:
             headers = {"Accept": "text/xml"}
         get = requests.get(url, headers=headers, timeout=timeout)
@@ -138,7 +139,7 @@ def get_remote_xml(
         if get.status_code == 200:
             return xmltodict.parse(get.text)
         return None
-    except Exception as e:
+    except (requests.RequestException, ExpatError) as e:
         if exit_on_failure:
             logger.log_error("Unable to process GET request to '%s'" % url)
             logger.log_error(e, quit_program = True)
@@ -448,14 +449,14 @@ def get_github_repository(
     github_token = None,
     verbose = False,
     exit_on_failure = False):
+    import github
     try:
-        import github
         if verbose:
             logger.log_info("Getting github repository '%s/%s'" % (github_user, github_repo))
         gh = github.Github(github_token)
         repo = gh.get_repo("%s/%s" % (github_user, github_repo))
         return repo
-    except Exception as e:
+    except (github.GithubException, OSError) as e:
         if exit_on_failure:
             logger.log_error("Unable to get github repository '%s/%s'" % (github_user, github_repo))
             logger.log_error(e, quit_program = True)
@@ -471,8 +472,8 @@ def get_github_repositories(
     exclude_private = False,
     verbose = False,
     exit_on_failure = False):
+    import github
     try:
-        import github
         if verbose:
             logger.log_info("Getting github repositories for '%s'" % github_user)
         gh = github.Github(github_token)
@@ -491,7 +492,7 @@ def get_github_repositories(
                 continue
             repositories.append(repo)
         return repositories
-    except Exception as e:
+    except (github.GithubException, OSError) as e:
         if exit_on_failure:
             logger.log_error("Unable to get github repositories for '%s'" % github_user)
             logger.log_error(e, quit_program = True)
