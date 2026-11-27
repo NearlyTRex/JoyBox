@@ -58,3 +58,7 @@ search_file = "Cemu.exe"
 [[setup_offline]]
 kind = "stored_release"
 platform = "linux"
+
+[launch]
+args = ["-g", "{game_file}"]
+fullscreen_args = ["-f"]

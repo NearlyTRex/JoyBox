@@ -1,7 +1,5 @@
 # Local imports
 from joybox import config
-from joybox import command
-from joybox import programs
 from joybox import logger
 from joybox import paths
 from joybox import environment
@@ -55,15 +53,6 @@ class Moonlight(toolbase.ToolBase):
 # Launching
 ###########################################################
 
-# The installed Moonlight program, quitting with an error when it is missing
-def get_moonlight_program():
-    moonlight_tool = None
-    if programs.is_tool_installed("Moonlight"):
-        moonlight_tool = programs.get_tool_program("Moonlight")
-    if not moonlight_tool:
-        logger.log_error("Moonlight was not found", quit_program = True)
-    return moonlight_tool
-
 # The Moonlight command line: pair with or list the host, stream the app from it when both are
 # known, or else open Moonlight's host list
 def build_moonlight_command(moonlight_tool, host = None, app = None, pair = False, list_apps = False):
@@ -79,7 +68,7 @@ def build_moonlight_command(moonlight_tool, host = None, app = None, pair = Fals
 # Start Moonlight streaming the given or configured host and app, or pair with or list the host;
 # quits when the options conflict, a host is needed but missing, or Moonlight fails
 def launch_moonlight(host = None, app = None, pair = False, list_apps = False, verbose = False, pretend_run = False, exit_on_failure = False):
-    moonlight_tool = get_moonlight_program()
+    moonlight_tool = Moonlight().get_installed_program()
     host = host or settings.get_value("Tools.Moonlight", "moonlight_host", "", throw_exception = False)
     app = app or settings.get_value("Tools.Moonlight", "moonlight_app", "", throw_exception = False)
     if pair and list_apps:
@@ -87,10 +76,8 @@ def launch_moonlight(host = None, app = None, pair = False, list_apps = False, v
     if (pair or list_apps) and not host:
         logger.log_error("%s needs a host, from --host or [Tools.Moonlight] moonlight_host" % (
             "Pairing" if pair else "Listing apps"), quit_program = True)
-    code = command.run_returncode_command(
-        cmd = build_moonlight_command(moonlight_tool, host, app, pair = pair, list_apps = list_apps),
+    Moonlight().run_launch_command(
+        build_moonlight_command(moonlight_tool, host, app, pair = pair, list_apps = list_apps),
         verbose = verbose,
         pretend_run = pretend_run,
         exit_on_failure = exit_on_failure)
-    if code != 0:
-        logger.log_error("Launch command failed with code %d" % code, quit_program = True)

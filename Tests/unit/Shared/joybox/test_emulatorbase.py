@@ -362,3 +362,96 @@ def test_a_failed_system_archive_extraction_fails(system_archive):
     system_archive["state"]["ok"] = False
 
     assert build({}).extract_system_archive("linux", "nand", config.SetupParams()) is False
+
+
+
+###########################################################
+# Launching from program data
+#
+# The command is the program, then its [launch] args with the game tokens and
+# platform values filled in, then fullscreen_args when fullscreen.
+###########################################################
+
+class FakeGame:
+    def __init__(self, platform = "Nintendo 64"):
+        self.platform = platform
+
+    def get_platform(self):
+        return self.platform
+
+
+class Prepared(Bare):
+    NAME = "TestMulator"
+
+    def __init__(self, prepared = True, values = None):
+        self.prepared = prepared
+        self.values = values or {}
+        self.prepare_calls = []
+
+    def prepare_launch(self, game_info, verbose = False, pretend_run = False, exit_on_failure = False):
+        self.prepare_calls.append((game_info, verbose, pretend_run, exit_on_failure))
+        return self.prepared
+
+    def get_launch_values(self, game_info):
+        return self.values
+
+
+@pytest.fixture
+def launcher(monkeypatch):
+    state = {"launch": {"args": ["--system", "{platform_config:systems}", "{game_file}"], "fullscreen_args": ["-f"]},
+        "launched": [], "popups": []}
+    monkeypatch.setattr(emulatorbase.programcatalog, "get_launch", lambda family, name: state["launch"])
+    monkeypatch.setattr(emulatorbase.programs, "get_emulator_program", lambda name: "/bin/%s" % name)
+    monkeypatch.setattr(emulatorbase.programs, "get_emulator_config_value", lambda name, key: {"Nintendo 64": "N64"})
+    monkeypatch.setattr(emulatorbase.emulatorcommon, "simple_launch", lambda **kwargs: state["launched"].append(kwargs) or True)
+
+    def popup(title_text, message_text):
+        state["popups"].append((title_text, message_text))
+        raise LookupError(message_text)
+    monkeypatch.setattr(emulatorbase.gui, "display_error_popup", popup)
+    return state
+
+
+def test_a_launch_runs_the_program_with_its_filled_in_args(launcher):
+    game = FakeGame()
+
+    assert Prepared().launch(game, capture_type = "video", capture_file = "/cap.mp4", verbose = True) is True
+    launched = launcher["launched"][0]
+    assert launched["launch_cmd"] == ["/bin/TestMulator", "--system", "N64", config.TOKEN_GAME_FILE]
+    assert (launched["game_info"], launched["capture_type"], launched["capture_file"], launched["verbose"]) == (game, "video", "/cap.mp4", True)
+
+
+def test_a_fullscreen_launch_adds_the_fullscreen_args(launcher):
+    assert Prepared().get_launch_command(FakeGame(), fullscreen = True)[-1] == "-f"
+
+
+def test_every_game_token_is_filled_in(launcher):
+    launcher["launch"] = {"args": ["{game_file}", "{game_dir}", "{game_name}", "plain"]}
+
+    assert Prepared().get_launch_command(FakeGame())[1:] == [config.TOKEN_GAME_FILE, config.TOKEN_GAME_DIR, config.TOKEN_GAME_NAME, "plain"]
+
+
+def test_an_emulators_own_launch_values_fill_its_placeholders(launcher):
+    launcher["launch"] = {"args": ["-L", "{core_file}", "{game_file}"]}
+
+    assert Prepared(values = {"core_file": "/cores/n64.so"}).get_launch_command(FakeGame())[1:3] == ["-L", "/cores/n64.so"]
+
+
+def test_a_platform_missing_from_the_config_table_stops_with_a_popup(launcher):
+    with pytest.raises(LookupError):
+        Prepared().get_launch_command(FakeGame("Sega Saturn"))
+
+    assert launcher["popups"] == [("Launch platform not defined", "Launch platform Sega Saturn not defined in TestMulator config")]
+
+
+def test_a_failed_preparation_launches_nothing(launcher):
+    emulator = Prepared(prepared = False)
+
+    assert emulator.launch(FakeGame(), verbose = True, pretend_run = True, exit_on_failure = True) is False
+    assert emulator.prepare_calls[0][1:] == (True, True, True)
+    assert launcher["launched"] == []
+
+
+def test_the_base_needs_no_preparation_or_launch_values():
+    assert Bare().prepare_launch(FakeGame()) is True
+    assert Bare().get_launch_values(FakeGame()) == {}

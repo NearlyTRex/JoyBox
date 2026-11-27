@@ -65,3 +65,7 @@ search_file = "pcsx2-qt.exe"
 [[setup_offline]]
 kind = "stored_release"
 platform = "linux"
+
+[launch]
+args = ["{game_file}"]
+fullscreen_args = ["-fullscreen"]

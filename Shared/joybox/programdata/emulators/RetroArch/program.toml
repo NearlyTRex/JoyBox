@@ -151,3 +151,7 @@ label = "RetroArch cores"
 preferred_archive = "RetroArch_cores.7z"
 search_file = "snes9x_libretro.so"
 install_dir = "{program_path_config:cores_dir}"
+
+[launch]
+args = ["-L", "{core_file}", "{game_file}"]
+fullscreen_args = ["-f"]

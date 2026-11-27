@@ -55,3 +55,6 @@ search_file = "mednafen.exe"
 [[setup_offline]]
 kind = "stored_release"
 platform = "linux"
+
+[launch]
+args = ["{game_file}"]

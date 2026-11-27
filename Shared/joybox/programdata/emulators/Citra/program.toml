@@ -59,3 +59,6 @@ kind = "stored_release"
 platform = "linux"
 search_file = "citra-qt.AppImage"
 skip_if_missing = true
+
+[launch]
+args = ["{game_file}"]

@@ -119,3 +119,7 @@ search_file = "ares.exe"
 [[setup_offline]]
 kind = "stored_release"
 platform = "linux"
+
+[launch]
+args = ["--system", "{platform_config:save_sub_dirs}", "{game_file}"]
+fullscreen_args = ["--fullscreen"]

@@ -65,3 +65,7 @@ search_file = "xemu.exe"
 [[setup_offline]]
 kind = "stored_release"
 platform = "linux"
+
+[launch]
+args = ["-dvd_path", "{game_file}"]
+fullscreen_args = ["-full-screen"]

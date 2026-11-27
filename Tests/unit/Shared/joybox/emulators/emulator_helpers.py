@@ -119,10 +119,8 @@ class Seams:
         monkeypatch.setattr(module.emulatorbase.fileops, "touch_file", self.touched)
         monkeypatch.setattr(filebulk, "smart_copy", self.copied)
         monkeypatch.setattr(module.emulatorbase.archive, "extract_archive", self.extracted)
-        if hasattr(module, "emulatorcommon"):
-            monkeypatch.setattr(module.emulatorcommon, "simple_launch", self.launched)
-        if hasattr(module, "gui"):
-            monkeypatch.setattr(module.gui, "display_error_popup", self.popup)
+        monkeypatch.setattr(module.emulatorbase.emulatorcommon, "simple_launch", self.launched)
+        monkeypatch.setattr(module.emulatorbase.gui, "display_error_popup", self.popup)
 
     def fake(self, owner, name):
         # Replaces owner.name with a fresh recorder, for collaborators one module uses alone

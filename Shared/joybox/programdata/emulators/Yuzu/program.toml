@@ -92,3 +92,7 @@ kind = "stored_release"
 platform = "linux"
 preferred_archive = "Linux-Yuzu-EA-4176"
 skip_if_missing = true
+
+[launch]
+args = ["-g", "{game_file}"]
+fullscreen_args = ["-f"]

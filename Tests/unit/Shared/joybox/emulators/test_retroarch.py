@@ -212,7 +212,7 @@ def launcher(monkeypatch, tmp_path):
         lambda name, key, platform = None: values[key])
     monkeypatch.setattr(retroarch.programs, "get_emulator_program", lambda name: "/bin/retroarch")
     monkeypatch.setattr(retroarch.gui, "display_error_popup", popup)
-    monkeypatch.setattr(retroarch.emulatorcommon, "simple_launch", simple_launch)
+    monkeypatch.setattr(retroarch.emulatorbase.emulatorcommon, "simple_launch", simple_launch)
     return {"launched": launched, "popups": popups, "cores_dir": cores_dir}
 
 

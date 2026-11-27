@@ -33,6 +33,12 @@ from joybox.nintendo import switchprofile
 #   platforms         the config.Platform members an emulator plays, by member name
 #   setup, setup_offline
 #                     the steps that install it, run by joybox/programsetup.py
+#   launch            how the program is started. An emulator's args after its
+#                     program, and fullscreen_args for a fullscreen launch, where
+#                     {game_file}, {game_dir}, {game_name} and {platform_config:<key>}
+#                     are filled in by joybox/emulatorbase.py. A tool's args, cwd and
+#                     env, where {program_dir} and {command_path:<name>} are filled
+#                     in by joybox/toolbase.py
 #
 # TOML has no null, so "<none>" stands for a value that is not set. A string
 # that is one {placeholder} is the value it names, as the settings ini has it; a
@@ -251,6 +257,14 @@ def get_setup_steps(family, name, offline = False):
     if not entry:
         return []
     return [dict(step) for step in entry["data"].get("setup_offline" if offline else "setup", [])]
+
+# Get a program's launch table by its name: args, and fullscreen_args added for a fullscreen
+# launch; empty when its data has none
+def get_launch(family, name):
+    entry = load_family(family).get(name)
+    if not entry:
+        return {}
+    return dict(entry["data"].get("launch", {}))
 
 # Get a tool's config by its name
 def get_tool_config(name):

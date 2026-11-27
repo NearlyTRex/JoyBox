@@ -54,3 +54,6 @@ search_file = "eka2l1_qt.exe"
 [[setup_offline]]
 kind = "stored_release"
 platform = "linux"
+
+[launch]
+args = ["--mount", "{game_dir}", "--app", "{game_name}"]

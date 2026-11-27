@@ -3,6 +3,7 @@ import pytest
 
 # Local imports
 from cli_helpers import CommandHarness, assert_entry_points
+from joybox import toolbase
 from joybox.cli import launch_moonlight
 
 
@@ -20,14 +21,14 @@ def tool(monkeypatch, isolated_settings):
     harness.code = 0
     harness.installed = True
     harness.settings = isolated_settings
-    monkeypatch.setattr(launch_moonlight.moonlight.programs, "is_tool_installed", lambda name: harness.installed)
-    monkeypatch.setattr(launch_moonlight.moonlight.programs, "get_tool_program", lambda name: MOONLIGHT_PATH)
+    monkeypatch.setattr(toolbase.programs, "is_tool_installed", lambda name: harness.installed)
+    monkeypatch.setattr(toolbase.programs, "get_tool_program", lambda name: MOONLIGHT_PATH)
 
     def run_command(cmd, **kwargs):
         harness.commands.append(cmd)
         return harness.code
 
-    monkeypatch.setattr(launch_moonlight.moonlight.command, "run_returncode_command", run_command)
+    monkeypatch.setattr(toolbase.command, "run_returncode_command", run_command)
     return harness
 
 

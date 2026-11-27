@@ -27,3 +27,6 @@ get_latest = true
 kind = "stored_release"
 platform = "windows"
 search_file = "BigPEmu.exe"
+
+[launch]
+args = ["{game_file}", "-localdata"]

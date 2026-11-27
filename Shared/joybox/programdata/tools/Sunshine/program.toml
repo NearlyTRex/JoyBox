@@ -46,3 +46,6 @@ install_files = ["sunshine.exe", "assets", "scripts", "tools"]
 kind = "stored_release"
 platform = "linux"
 search_file = "Sunshine.AppImage"
+
+[launch]
+args = []

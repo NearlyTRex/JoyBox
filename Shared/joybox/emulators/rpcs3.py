@@ -4,8 +4,6 @@
 from joybox import config
 from joybox import filebulk
 from joybox import paths
-from joybox import programs
-from joybox import emulatorcommon
 from joybox import emulatorbase
 
 # Copy the .rap and .edat files from the game's cache dir into its save exdata dir
@@ -44,44 +42,9 @@ class RPCS3(emulatorbase.EmulatorBase):
                     return False
         return True
 
-    # Copy PSN games' .rap and .edat files into the save exdata dir, then run RPCS3 on the game;
-    # fullscreen also hides its GUI
-    def launch(
-        self,
-        game_info,
-        capture_type = None,
-        capture_file = None,
-        fullscreen = False,
-        verbose = False,
-        pretend_run = False,
-        exit_on_failure = False):
-
-        # Get game info
-        game_platform = game_info.get_platform()
-        game_save_dir = game_info.get_save_dir()
-        game_cache_dir = game_info.get_local_cache_dir()
-
-        # Copy exdata files
-        if game_platform == config.Platform.SONY_PLAYSTATION_NETWORK_PS3:
-            copy_exdata_files(game_cache_dir, game_save_dir, verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure)
-
-        # Get launch command
-        launch_cmd = [
-            programs.get_emulator_program("RPCS3"),
-            config.TOKEN_GAME_FILE
-        ]
-        if fullscreen:
-            launch_cmd += [
-                "--fullscreen",
-                "--no-gui"
-            ]
-
-        # Launch game
-        return emulatorcommon.simple_launch(
-            game_info = game_info,
-            launch_cmd = launch_cmd,
-            capture_type = capture_type,
-            capture_file = capture_file,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
+    # Copy a PSN game's .rap and .edat files into its save dir before RPCS3 runs; a failed copy
+    # doesn't stop the launch
+    def prepare_launch(self, game_info, verbose = False, pretend_run = False, exit_on_failure = False):
+        if game_info.get_platform() == config.Platform.SONY_PLAYSTATION_NETWORK_PS3:
+            copy_exdata_files(game_info.get_local_cache_dir(), game_info.get_save_dir(), verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure)
+        return True

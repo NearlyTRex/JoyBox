@@ -54,3 +54,7 @@ search_file = "flycast.exe"
 [[setup_offline]]
 kind = "stored_release"
 platform = "linux"
+
+[launch]
+args = ["{game_file}"]
+fullscreen_args = ["-config", "window:fullscreen=yes"]

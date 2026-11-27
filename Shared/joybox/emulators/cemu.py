@@ -1,5 +1,4 @@
 # Local imports
-from joybox import config
 from joybox import logger
 from joybox import programs
 from joybox.nintendo import wiiu
@@ -59,40 +58,6 @@ class Cemu(emulatorbase.EmulatorBase):
     def configure(self, setup_params = None):
         return self.write_config_files(setup_params)
 
-    # Merge the game's .key.txt files into each platform's keys file, then run Cemu with -g on the game
-    def launch(
-        self,
-        game_info,
-        capture_type = None,
-        capture_file = None,
-        fullscreen = False,
-        verbose = False,
-        pretend_run = False,
-        exit_on_failure = False):
-
-        # Get game info
-        game_cache_dir = game_info.get_local_cache_dir()
-
-        # Update keys
-        if not update_keys(game_cache_dir, verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure):
-            return False
-
-        # Get launch command
-        launch_cmd = [
-            programs.get_emulator_program("Cemu"),
-            "-g", config.TOKEN_GAME_FILE
-        ]
-        if fullscreen:
-            launch_cmd += [
-                "-f"
-            ]
-
-        # Launch game
-        return emulatorcommon.simple_launch(
-            game_info = game_info,
-            launch_cmd = launch_cmd,
-            capture_type = capture_type,
-            capture_file = capture_file,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
+    # Merge the game's .key.txt files into each platform's keys file before Cemu runs
+    def prepare_launch(self, game_info, verbose = False, pretend_run = False, exit_on_failure = False):
+        return update_keys(game_info.get_local_cache_dir(), verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure)

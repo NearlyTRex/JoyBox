@@ -56,3 +56,7 @@ search_file = "BasiliskII.exe"
 [[setup_offline]]
 kind = "stored_release"
 platform = "linux"
+
+[launch]
+args = ["--disk", "{game_file}"]
+fullscreen_args = ["--nogui", "true"]

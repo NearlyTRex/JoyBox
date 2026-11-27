@@ -81,3 +81,7 @@ github_repo = "PegasusThemeGrid"
 github_branch = "{program_config:theme_github_branch}"
 output_dir = "{program_path_config:themes_dir}/PegasusThemeGrid"
 clean = true
+
+[launch]
+cwd = "{program_dir}"
+env = { JOYBOX_LAUNCH_JSON = "{command_path:launch_game_json}" }

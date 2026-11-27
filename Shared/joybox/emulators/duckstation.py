@@ -5,7 +5,6 @@ from joybox import filebulk
 from joybox import logger
 from joybox import paths
 from joybox import programs
-from joybox import emulatorcommon
 from joybox import emulatorbase
 
 
@@ -40,34 +39,3 @@ class DuckStation(emulatorbase.EmulatorBase):
                     logger.log_error("Could not setup DuckStation system files")
                     return False
         return True
-
-    # Run DuckStation on the game file, with -fullscreen when asked
-    def launch(
-        self,
-        game_info,
-        capture_type = None,
-        capture_file = None,
-        fullscreen = False,
-        verbose = False,
-        pretend_run = False,
-        exit_on_failure = False):
-
-        # Get launch command
-        launch_cmd = [
-            programs.get_emulator_program("DuckStation"),
-            config.TOKEN_GAME_FILE
-        ]
-        if fullscreen:
-            launch_cmd += [
-                "-fullscreen"
-            ]
-
-        # Launch game
-        return emulatorcommon.simple_launch(
-            game_info = game_info,
-            launch_cmd = launch_cmd,
-            capture_type = capture_type,
-            capture_file = capture_file,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)

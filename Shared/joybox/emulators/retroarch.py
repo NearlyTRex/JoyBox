@@ -10,7 +10,6 @@ from joybox import logger
 from joybox import paths
 from joybox import programs
 from joybox import gui
-from joybox import emulatorcommon
 from joybox import emulatorbase
 
 # The core file its cores_mapping names for the platform; shows an error popup when the
@@ -68,38 +67,6 @@ class RetroArch(emulatorbase.EmulatorBase):
                     return False
         return True
 
-    # Run RetroArch with -L on the core its cores_mapping names for the platform;
-    # quits with an error popup when the platform has no core or the core file is missing
-    def launch(
-        self,
-        game_info,
-        capture_type = None,
-        capture_file = None,
-        fullscreen = False,
-        verbose = False,
-        pretend_run = False,
-        exit_on_failure = False):
-
-        # Get core file
-        core_file = get_core_file(game_info.get_platform())
-
-        # Get launch command
-        launch_cmd = [
-            programs.get_emulator_program("RetroArch"),
-            "-L", core_file,
-            config.TOKEN_GAME_FILE
-        ]
-        if fullscreen:
-            launch_cmd += [
-                "-f"
-            ]
-
-        # Launch game
-        return emulatorcommon.simple_launch(
-            game_info = game_info,
-            launch_cmd = launch_cmd,
-            capture_type = capture_type,
-            capture_file = capture_file,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
+    # The core file its cores_mapping names for the game's platform, for the {core_file} launch argument
+    def get_launch_values(self, game_info):
+        return {"core_file": get_core_file(game_info.get_platform())}

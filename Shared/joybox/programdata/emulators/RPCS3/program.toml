@@ -54,3 +54,7 @@ search_file = "rpcs3.exe"
 [[setup_offline]]
 kind = "stored_release"
 platform = "linux"
+
+[launch]
+args = ["{game_file}"]
+fullscreen_args = ["--fullscreen", "--no-gui"]

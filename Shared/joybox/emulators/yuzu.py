@@ -83,34 +83,3 @@ class Yuzu(emulatorbase.EmulatorBase):
                     logger.log_error("Could not setup Yuzu system files")
                     return False
         return True
-
-    # Run Yuzu with -g on the game file, with -f when fullscreen is asked
-    def launch(
-        self,
-        game_info,
-        capture_type = None,
-        capture_file = None,
-        fullscreen = False,
-        verbose = False,
-        pretend_run = False,
-        exit_on_failure = False):
-
-        # Get launch command
-        launch_cmd = [
-            programs.get_emulator_program("Yuzu"),
-            "-g", config.TOKEN_GAME_FILE
-        ]
-        if fullscreen:
-            launch_cmd += [
-                "-f"
-            ]
-
-        # Launch game
-        return emulatorcommon.simple_launch(
-            game_info = game_info,
-            launch_cmd = launch_cmd,
-            capture_type = capture_type,
-            capture_file = capture_file,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)

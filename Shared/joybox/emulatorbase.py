@@ -1,9 +1,12 @@
 # Imports
+import re
 from abc import ABC
 
 # Local imports
 from joybox import archive
 from joybox import config
+from joybox import emulatorcommon
+from joybox import gui
 from joybox import fileops
 from joybox import programcatalog
 from joybox import programsetup
@@ -13,6 +16,16 @@ from joybox import paths
 from joybox import hashutil
 from joybox import logger
 from joybox import platform_info
+
+# The game placeholders an emulator's [launch] data can use, and the launch tokens they become
+LAUNCH_TOKENS = {
+    "{game_file}": config.TOKEN_GAME_FILE,
+    "{game_dir}": config.TOKEN_GAME_DIR,
+    "{game_name}": config.TOKEN_GAME_NAME,
+}
+
+# A launch argument that is the value a config table maps the game's platform to
+PLATFORM_CONFIG_VALUE = re.compile(r"^\{platform_config:([A-Za-z0-9_]+)\}$")
 
 # Base emulator
 class EmulatorBase(ABC):
@@ -178,7 +191,47 @@ class EmulatorBase(ABC):
                 return False
         return True
 
-    # Start a game, optionally capturing video or a screenshot; the base launches nothing and returns False
+    # Work a launch needs done before its command runs; True when it needs none
+    def prepare_launch(self, game_info, verbose = False, pretend_run = False, exit_on_failure = False):
+        del game_info, verbose, pretend_run, exit_on_failure
+        return True
+
+    # Values for the emulator's own {name} launch placeholders, beyond the game ones; none by default
+    def get_launch_values(self, game_info):
+        del game_info
+        return {}
+
+    # The value its config table maps the game's platform to; quits with an error popup when
+    # the table has no entry for the platform
+    def get_platform_config_value(self, key, game_platform):
+        values = programs.get_emulator_config_value(self.get_name(), key)
+        if game_platform not in values:
+            gui.display_error_popup(
+                title_text = "Launch platform not defined",
+                message_text = "Launch platform %s not defined in %s config" % (game_platform, self.get_name()))
+        return values[game_platform]
+
+    # One launch argument with its placeholder filled in from the values or the game's platform
+    def fill_launch_argument(self, argument, values, game_info):
+        if argument in values:
+            return values[argument]
+        match = PLATFORM_CONFIG_VALUE.match(argument)
+        if match:
+            return self.get_platform_config_value(match[1], game_info.get_platform())
+        return argument
+
+    # The program and its [launch] args for the game, with fullscreen_args for a fullscreen launch;
+    # None when its data has no launch table
+    def get_launch_command(self, game_info, fullscreen = False):
+        launch = programcatalog.get_launch(programcatalog.FAMILY_EMULATORS, self.get_name())
+        if not launch:
+            return None
+        values = {**LAUNCH_TOKENS, **{"{%s}" % key: value for key, value in self.get_launch_values(game_info).items()}}
+        arguments = launch.get("args", []) + (launch.get("fullscreen_args", []) if fullscreen else [])
+        return [programs.get_emulator_program(self.get_name())] + [self.fill_launch_argument(argument, values, game_info) for argument in arguments]
+
+    # Start a game with the command from its launch data, after any work the launch needs,
+    # optionally capturing video or a screenshot; False when it has no launch data
     def launch(
         self,
         game_info,
@@ -188,5 +241,16 @@ class EmulatorBase(ABC):
         verbose = False,
         pretend_run = False,
         exit_on_failure = False):
-        del game_info, capture_type, capture_file, fullscreen, verbose, pretend_run, exit_on_failure
-        return False
+        if not self.prepare_launch(game_info, verbose = verbose, pretend_run = pretend_run, exit_on_failure = exit_on_failure):
+            return False
+        launch_cmd = self.get_launch_command(game_info, fullscreen = fullscreen)
+        if not launch_cmd:
+            return False
+        return emulatorcommon.simple_launch(
+            game_info = game_info,
+            launch_cmd = launch_cmd,
+            capture_type = capture_type,
+            capture_file = capture_file,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)

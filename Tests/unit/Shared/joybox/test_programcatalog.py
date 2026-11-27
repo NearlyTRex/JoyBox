@@ -21,7 +21,7 @@ from joybox.nintendo import switchprofile
 ###########################################################
 
 FAMILIES = [programcatalog.FAMILY_TOOLS, programcatalog.FAMILY_EMULATORS]
-KNOWN_KEYS = {"config", "config_files", "system_files", "only_on", "program_unknown_when_unset", "platforms", "setup", "setup_offline"}
+KNOWN_KEYS = {"config", "config_files", "system_files", "only_on", "program_unknown_when_unset", "platforms", "setup", "setup_offline", "launch"}
 
 
 def all_programs():
@@ -40,6 +40,21 @@ def read_data(family, name):
 @pytest.mark.parametrize("family, name", all_programs())
 def test_a_program_file_holds_only_known_keys(family, name):
     assert set(read_data(family, name)) <= KNOWN_KEYS
+
+
+@pytest.mark.parametrize("family, name", all_programs())
+def test_a_launch_table_holds_only_launch_arguments(family, name):
+    launch = read_data(family, name).get("launch", {})
+    allowed = {"args", "fullscreen_args"} if family == programcatalog.FAMILY_EMULATORS else {"args", "cwd", "env"}
+
+    assert set(launch) <= allowed
+    assert all(isinstance(argument, str) for argument in launch.get("args", []) + launch.get("fullscreen_args", []))
+    assert all(isinstance(value, str) for value in launch.get("env", {}).values())
+
+
+def test_a_launch_table_is_read_by_program_name():
+    assert programcatalog.get_launch(programcatalog.FAMILY_EMULATORS, "Cemu") == {"args": ["-g", "{game_file}"], "fullscreen_args": ["-f"]}
+    assert programcatalog.get_launch(programcatalog.FAMILY_EMULATORS, "Unknown") == {}
 
 
 @pytest.mark.parametrize("family, name", all_programs())

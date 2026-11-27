@@ -31,3 +31,7 @@ get_latest = true
 kind = "stored_release"
 platform = "windows"
 search_file = "xenia.exe"
+
+[launch]
+args = ["{game_file}"]
+fullscreen_args = ["--fullscreen=true"]
