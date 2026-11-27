@@ -1,4 +1,5 @@
 # Imports
+import importlib
 import os
 import shutil
 import errno
@@ -12,6 +13,10 @@ import time
 from joybox import config
 from joybox import text
 from joybox import strings
+
+# Get magic, imported on first use
+def _get_magic():
+    return importlib.import_module("magic")
 
 ###########################################################
 # Path checking and validation utilities
@@ -632,7 +637,7 @@ def get_file_size(path):
 # Get file mime type
 def get_file_mime_type(path):
     try:
-        import magic
+        magic = _get_magic()
     except ImportError:
         return ""
     try:

@@ -1,4 +1,5 @@
 # Imports
+import importlib
 import os
 import contextlib
 import codecs
@@ -20,6 +21,11 @@ from joybox import paths
 from joybox import platform_info
 from joybox import runtime
 from joybox import text
+from joybox import programs
+
+# Get tqdm, imported on first use
+def _get_tqdm():
+    return importlib.import_module("tqdm")
 
 ###########################################################
 # Error handlers
@@ -551,7 +557,7 @@ def copy_file_chunks(fsrc, fdest, progress_bar = None):
 def copy_file_contents(src, dest, show_progress = False):
     progress_bar = None
     if show_progress:
-        import tqdm
+        tqdm = _get_tqdm()
         progress_bar = tqdm.tqdm(total = paths.get_file_size(src))
     try:
         with open(src, "rb") as fsrc, open(dest, "wb") as fdest:
@@ -825,7 +831,6 @@ def get_parsed_link_info(lnk, lnk_base_path):
 
 # Get link info
 def get_link_info(lnk_path, lnk_base_path):
-    from joybox import programs
     pylnk = modules.import_python_module_file(
         module_path = programs.get_tool_program("PyLnk"),
         module_name = "pylnk")

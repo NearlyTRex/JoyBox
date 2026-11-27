@@ -13,6 +13,8 @@ from joybox import strings
 from joybox import manifest
 from joybox import environment
 from joybox import fileops
+from joybox import metadataassetcollector
+from joybox import metadatacollector
 
 # Convert to tokenized path
 def convert_to_tokenized_path(
@@ -445,7 +447,6 @@ class StoreBase:
             return None
 
         # Collect metadata entry
-        from joybox import metadatacollector
         return metadatacollector.collect_metadata_from_all(
             game_platform = self.get_platform(),
             game_name = identifier,
@@ -473,7 +474,6 @@ class StoreBase:
             return None
 
         # Collect asset url
-        from joybox import metadataassetcollector
         return metadataassetcollector.find_metadata_asset(
             game_platform = self.get_platform(),
             game_name = game_name if game_name else identifier,

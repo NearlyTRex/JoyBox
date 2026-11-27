@@ -1,10 +1,15 @@
 # Imports
+import importlib
 import threading
 
 # Local imports
 from joybox import config
 from joybox import validation
 from joybox import runtime
+
+# Get schedule, imported on first use
+def _get_schedule():
+    return importlib.import_module("schedule")
 
 # Background job
 class BackgroundJob:
@@ -44,7 +49,7 @@ class BackgroundJob:
                         runtime.sleep_program(self.sleep_interval)
 
         # Create scheduler
-        import schedule
+        schedule = _get_schedule()
         self.job_scheduler = schedule.Scheduler()
 
         # Create job

@@ -1,4 +1,5 @@
 # Imports
+import importlib
 import stat
 import struct
 import unicodedata
@@ -8,6 +9,10 @@ from joybox import fileops
 from joybox import logger
 from joybox import paths
 from joybox import serialization
+
+# Get machfs, imported on first use
+def _get_machfs():
+    return importlib.import_module("machfs")
 
 # Volume signatures, 1024 bytes into the volume
 HFS_SIGNATURE = b"BD"
@@ -206,7 +211,7 @@ def extract_hfs_folder(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    import machfs
+    machfs = _get_machfs()
 
     # Make folder
     success = fileops.make_directory(
@@ -273,7 +278,7 @@ def extract_hfs_volume(
 
     # Get tool
     try:
-        import machfs
+        machfs = _get_machfs()
     except ImportError:
         logger.log_error("machfs was not found")
         return False

@@ -118,7 +118,7 @@ class Terminal:
             return (rlist, [], [])
 
         monkeypatch.setitem(sys.modules, "pty", types.SimpleNamespace(openpty = lambda: (MASTER_FD, SLAVE_FD)))
-        monkeypatch.setitem(sys.modules, "select", types.SimpleNamespace(select = select))
+        monkeypatch.setattr(command, "select", types.SimpleNamespace(select = select))
         monkeypatch.setattr(command, "os", self.os)
         monkeypatch.setattr(command.subprocess, "Popen", popen)
         monkeypatch.setattr(command.platform_info, "is_windows_platform", lambda: False)

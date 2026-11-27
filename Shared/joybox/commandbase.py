@@ -7,6 +7,7 @@ from joybox import config
 from joybox import logger
 from joybox import environment
 from joybox import commandoptions
+from joybox import programs
 
 # Create command options
 def create_command_options(*args, **kwargs):
@@ -61,7 +62,6 @@ def is_local_script_command(cmd):
 
 # Check if local program command
 def is_local_program_command(cmd):
-    from joybox import programs
     starter_cmd = get_starter_command(cmd)
     is_tool = programs.is_program_path_tool(starter_cmd)
     is_emulator = programs.is_program_path_emulator(starter_cmd)
@@ -69,7 +69,6 @@ def is_local_program_command(cmd):
 
 # Check if local sandboxed program command
 def is_local_sandboxed_program_command(cmd):
-    from joybox import programs
     starter_cmd = get_starter_command(cmd)
     is_sandboxed_tool = programs.is_program_path_sandboxed_tool(starter_cmd)
     is_sandboxed_emulator = programs.is_program_path_sandboxed_emulator(starter_cmd)

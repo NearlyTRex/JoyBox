@@ -1,6 +1,7 @@
 # Imports
 import base64
 import binascii
+import importlib
 import json
 import os
 import re
@@ -12,6 +13,10 @@ from joybox import knownhosts
 from joybox import logger
 from joybox import serialization
 from joybox import settings
+
+# Get cryptography.hazmat.primitives.ciphers, imported on first use
+def _get_ciphers():
+    return importlib.import_module("cryptography.hazmat.primitives.ciphers")
 
 ###########################################################
 # Remotes from the settings
@@ -66,8 +71,8 @@ OBSCURED_VALUE = re.compile(r"^[A-Za-z0-9_-]+$")
 
 # Apply obscure cipher key
 def apply_obscure_cipher(data, iv):
-    from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
-    cipher = Cipher(algorithms.AES(OBSCURE_KEY), modes.CTR(iv)).encryptor()
+    ciphers = _get_ciphers()
+    cipher = ciphers.Cipher(ciphers.algorithms.AES(OBSCURE_KEY), ciphers.modes.CTR(iv)).encryptor()
     return cipher.update(data) + cipher.finalize()
 
 # Obscure a value the way `rclone obscure` does

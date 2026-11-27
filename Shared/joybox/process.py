@@ -1,4 +1,5 @@
 # Imports
+import importlib
 import signal
 import time
 import ntpath
@@ -7,13 +8,17 @@ import ntpath
 from joybox import logger
 from joybox import runtime
 
+# Get psutil, imported on first use
+def _get_psutil():
+    return importlib.import_module("psutil")
+
 ###########################################################
 # Process management
 ###########################################################
 
 # The errors psutil raises for a process that has exited or cannot be read
 def get_process_errors():
-    import psutil
+    psutil = _get_psutil()
     return (psutil.NoSuchProcess, psutil.AccessDenied, psutil.ZombieProcess)
 
 # Whether a process has one of the names, exactly or by basename; one that has
@@ -28,7 +33,7 @@ def has_process_name(proc, process_names):
 
 # Find active processes
 def find_active_named_processes(process_names = ()):
-    import psutil
+    psutil = _get_psutil()
     try:
         candidates = list(psutil.process_iter())
     except get_process_errors():
@@ -64,7 +69,7 @@ def wait_for_process(proc, start_time, timeout):
 
 # Wait for processes
 def wait_for_named_processes(process_names = (), timeout = 1200):
-    import psutil
+    psutil = _get_psutil()
     start_time = time.time()
     for proc in find_active_named_processes(process_names):
         try:

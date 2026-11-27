@@ -1,4 +1,5 @@
 # Imports
+import importlib
 import os
 import json
 import csv
@@ -9,6 +10,10 @@ from joybox import logger
 from joybox import paths
 from joybox import datautils
 from joybox import runtime
+
+# Get yaml, imported on first use
+def _get_yaml():
+    return importlib.import_module("yaml")
 
 ###########################################################
 # Text file I/O utilities
@@ -289,7 +294,7 @@ def search_json_files(src, search_values = (), search_keys = None, verbose = Fal
 
 # Read yaml file
 def read_yaml_file(src, verbose = False, exit_on_failure = False):
-    import yaml
+    yaml = _get_yaml()
     try:
         if not src.endswith(".yaml"):
             return {}

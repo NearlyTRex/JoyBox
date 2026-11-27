@@ -1,4 +1,5 @@
 # Imports
+import importlib
 import os
 import os.path
 
@@ -8,6 +9,10 @@ from joybox import settings
 from joybox import logger
 from joybox import paths
 from joybox import serialization
+
+# Get anthropic, imported on first use
+def _get_anthropic():
+    return importlib.import_module("anthropic")
 
 # Default model
 DEFAULT_MODEL = "claude-sonnet-4-20250514"
@@ -27,7 +32,7 @@ def is_configured():
 # Create Anthropic client
 def create_client():
     try:
-        import anthropic as anthropic_lib
+        anthropic_lib = _get_anthropic()
     except ImportError:
         logger.log_error("Anthropic not installed")
         return None
@@ -55,7 +60,7 @@ def send_message(
     client = create_client()
     if not client:
         return None
-    import anthropic as anthropic_lib
+    anthropic_lib = _get_anthropic()
 
     try:
         # Build message parameters

@@ -1,3 +1,6 @@
+# Imports
+import importlib
+
 # Local imports
 from joybox import config
 from joybox import command
@@ -17,6 +20,10 @@ from joybox import metadataentry
 from joybox import manifest
 from joybox import backup
 from joybox.stores import steamlookups
+
+# Get vdf, imported on first use
+def _get_vdf():
+    return importlib.import_module("vdf")
 
 # Get steam prefix dir
 def get_steam_prefix_dir(install_dir, appid):
@@ -426,7 +433,7 @@ class Steam(storebase.StoreBase):
 
         # Get steam json
         steam_json = {}
-        import vdf
+        vdf = _get_vdf()
         try:
             vdf_start = info_output.find(f'"{identifier}"')
             if vdf_start == -1:

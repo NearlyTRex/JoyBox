@@ -1,6 +1,7 @@
 # Fetching a page's text, and finding the links on a page that match a pattern.
 
 # Imports
+import importlib
 import re
 
 # Local imports
@@ -8,6 +9,10 @@ from joybox import logger
 from joybox import runtime
 from joybox import strings
 from joybox import webpage
+
+# Get requests, imported on first use
+def _get_requests():
+    return importlib.import_module("requests")
 
 # Seconds a plain request may take before it is abandoned
 REQUEST_TIMEOUT_SECONDS = 30
@@ -59,7 +64,7 @@ def get_website_text(
     # Next, try requests
     if verbose:
         logger.log_info("GetWebsiteText: Attempting to fetch using requests library")
-    import requests
+    requests = _get_requests()
     try:
         reqs = requests.get(url, params = params, timeout = REQUEST_TIMEOUT_SECONDS)
         reqs.raise_for_status()

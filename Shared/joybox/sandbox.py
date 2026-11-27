@@ -10,6 +10,7 @@ from joybox import paths
 from joybox import prefixlayout
 from joybox import cmdline
 from joybox import platform_info
+from joybox import gui
 
 ###########################################################
 
@@ -225,9 +226,6 @@ def setup_prefix_environment(
 def setup_prefix_command(
     cmd,
     options = None):
-
-    # Imports
-    from joybox import gui
 
     # Check options
     if not options:

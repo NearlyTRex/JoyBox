@@ -1,10 +1,15 @@
 # Imports
+import importlib
 import time
 import collections.abc
 
 # Local imports
 from joybox import config
 from joybox import logger
+
+# Get mergedeep, imported on first use
+def _get_mergedeep():
+    return importlib.import_module("mergedeep")
 
 ###########################################################
 # Data structure utilities
@@ -13,7 +18,7 @@ from joybox import logger
 # Merge dictionaries
 def merge_dictionaries(dict1, dict2, merge_type = None):
     if isinstance(dict1, dict) and isinstance(dict2, dict):
-        import mergedeep
+        mergedeep = _get_mergedeep()
         try:
             if merge_type == config.MergeType.REPLACE:
                 return mergedeep.merge(dict1, dict2, strategy=mergedeep.Strategy.REPLACE)

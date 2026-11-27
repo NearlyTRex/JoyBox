@@ -1,5 +1,6 @@
 # Imports
 import base64
+import importlib
 
 # Local imports
 from joybox import config
@@ -10,12 +11,16 @@ from joybox import logger
 from joybox import paths
 from joybox import runtime
 
+# Get PIL.Image, imported on first use
+def _get_pil_image():
+    return importlib.import_module("PIL.Image")
+
 # Get image format
 def get_image_format(image_file):
     if paths.is_path_file(image_file):
-        from PIL import Image
+        pil_image = _get_pil_image()
         try:
-            with Image.open(image_file) as img:
+            with pil_image.open(image_file) as img:
                 return config.ImageFileType.from_string(img.format)
         except OSError:
             return None
@@ -51,12 +56,12 @@ def convert_image(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    from PIL import Image
+    pil_image = _get_pil_image()
     try:
         if verbose:
             logger.log_info("Converting image %s to %s" % (image_src, image_dest))
         if not pretend_run:
-            src_image = Image.open(image_src)
+            src_image = pil_image.open(image_src)
             if getattr(src_image, "is_animated", False):
                 src_image.seek(0)
             rgb_image = src_image.convert("RGB")

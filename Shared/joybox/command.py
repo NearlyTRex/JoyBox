@@ -1,5 +1,7 @@
 # Imports
+import importlib
 import os
+import select
 import sys
 import subprocess
 import threading
@@ -19,6 +21,14 @@ from joybox.commandbase import (
     is_powershell_command,
     is_appimage_command,
     print_command)
+
+# Get winpty, imported on first use since only Windows has it
+def _get_winpty():
+    return importlib.import_module("winpty")
+
+# Get pty, imported on first use since Windows lacks it
+def _get_pty():
+    return importlib.import_module("pty")
 
 ###########################################################
 
@@ -307,8 +317,7 @@ def run_interactive_command(
             if platform_info.is_windows_platform():
 
                 # Open psuedo-terminal
-                from winpty import PtyProcess
-                with PtyProcess.spawn(cmd, cwd = options.get_cwd(), env = options.get_env()) as pty_process:
+                with _get_winpty().PtyProcess.spawn(cmd, cwd = options.get_cwd(), env = options.get_env()) as pty_process:
 
                     # Reads from pseudo-terminal and displays it in real-time
                     def read_output():
@@ -338,9 +347,7 @@ def run_interactive_command(
             else:
 
                 # Open pseudo-terminal
-                import pty
-                import select
-                master_fd, slave_fd = pty.openpty()
+                master_fd, slave_fd = _get_pty().openpty()
                 try:
                     proc = subprocess.Popen(
                         cmd,

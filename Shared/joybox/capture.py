@@ -1,4 +1,5 @@
 # Imports
+import importlib
 import os
 import os.path
 import threading
@@ -17,6 +18,10 @@ from joybox import sandboxpaths
 from joybox import background
 from joybox import process
 from joybox import platform_info
+
+# Get PIL.ImageGrab, imported on first use
+def _get_image_grab():
+    return importlib.import_module("PIL.ImageGrab")
 
 # Capture screenshot
 def capture_screenshot(
@@ -44,9 +49,9 @@ def capture_screenshot(
         logger.log_info("Capturing screenshot to %s" % output_file)
     if pretend_run:
         return True
-    from PIL import ImageGrab
+    image_grab = _get_image_grab()
     try:
-        screenshot = ImageGrab.grab(bbox = capture_region)
+        screenshot = image_grab.grab(bbox = capture_region)
         screenshot.save(output_file)
     except (OSError, ValueError) as e:
         if verbose or exit_on_failure:

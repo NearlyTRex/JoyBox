@@ -396,9 +396,8 @@ def fake_pil(monkeypatch, open_image):
 
     image_module = types.SimpleNamespace(open = lambda path: open_image(path, Picture))
     imagetk_module = types.SimpleNamespace(PhotoImage = lambda image: ("photo", image))
-    monkeypatch.setitem(
-        sys.modules, "PIL",
-        types.SimpleNamespace(Image = image_module, ImageTk = imagetk_module))
+    monkeypatch.setitem(sys.modules, "PIL.Image", image_module)
+    monkeypatch.setitem(sys.modules, "PIL.ImageTk", imagetk_module)
     return thumbnails
 
 

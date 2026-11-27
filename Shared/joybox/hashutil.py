@@ -2,6 +2,7 @@
 # files by checksum, zip archives by the checksums of what they hold.
 
 # Imports
+import importlib
 import os
 import zlib
 import hashlib
@@ -12,6 +13,10 @@ from joybox import config
 from joybox import logger
 from joybox import paths
 from joybox import serialization
+
+# Get xxhash, imported on first use
+def _get_xxhash():
+    return importlib.import_module("xxhash")
 
 # Calculate string crc32
 def calculate_string_crc32(string):
@@ -39,7 +44,7 @@ def calculate_string_sha256(string):
 
 # Calculate string XXH3
 def calculate_string_xxh3(string):
-    import xxhash
+    xxhash = _get_xxhash()
     return xxhash.xxh3_64(string).hexdigest()
 
 # Calculate file crc32
@@ -181,7 +186,7 @@ def calculate_file_xxh3(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    import xxhash
+    xxhash = _get_xxhash()
     try:
         if pretend_run:
             if verbose:

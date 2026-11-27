@@ -1,4 +1,5 @@
 # Imports
+import importlib
 import copy
 import re
 
@@ -11,6 +12,10 @@ from joybox import paths
 from joybox import serialization
 from joybox import settings
 from joybox import ubunturelease
+
+# Get yaml, imported on first use
+def _get_yaml():
+    return importlib.import_module("yaml")
 
 ###########################################################
 # Ubuntu autoinstall images
@@ -244,7 +249,7 @@ def build_autoinstall_config(profile):
 
 # Build the user-data seed file contents
 def build_user_data(profile, overlay = None):
-    import yaml
+    yaml = _get_yaml()
 
     body = yaml.safe_dump(
         merge_autoinstall_data(build_autoinstall_config(profile), overlay),

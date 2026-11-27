@@ -1,4 +1,5 @@
 # Imports
+import importlib
 import re
 import uuid
 import urllib.parse
@@ -6,6 +7,18 @@ from datetime import datetime, timedelta
 
 # Local imports
 from joybox import text
+
+# Get thefuzz.fuzz, imported on first use
+def _get_fuzz():
+    return importlib.import_module("thefuzz.fuzz")
+
+# Get dateutil.parser, imported on first use
+def _get_date_parser():
+    return importlib.import_module("dateutil.parser")
+
+# Get dateutil.relativedelta, imported on first use
+def _get_relativedelta():
+    return importlib.import_module("dateutil.relativedelta")
 
 ###########################################################
 # ID generation utilities
@@ -32,7 +45,7 @@ def remove_enclosed_substrings(string, opening_delim = "\"", closing_delim = "\"
 # Get string similarity ratio
 def get_string_similarity_ratio(string1, string2):
     try:
-        from thefuzz import fuzz
+        fuzz = _get_fuzz()
     except ImportError:
         return 0
     return fuzz.ratio(string1, string2)
@@ -104,8 +117,8 @@ def get_datetime_from_string(string, format_code):
 def get_datetime_from_unknown_string(string):
 
     # Imports
-    from dateutil import parser as date_parser
-    from dateutil.relativedelta import relativedelta
+    date_parser = _get_date_parser()
+    relativedelta = _get_relativedelta().relativedelta
 
     # Relative phrases first, since fuzzy parsing reads "3 days ago" as the 3rd
     string = string.strip().lower()

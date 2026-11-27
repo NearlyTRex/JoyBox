@@ -1,12 +1,17 @@
 # Nintendo Wii WAD files: installing them into an emulated NAND.
 
 # Imports
+import importlib
 import struct
 
 # Local imports
 from joybox import fileops
 from joybox import logger
 from joybox import serialization
+
+# Get libWiiPy, imported on first use
+def _get_libwiipy():
+    return importlib.import_module("libWiiPy")
 
 # Install Wii WAD file into an emulated NAND
 def install_wii_wad(
@@ -15,7 +20,7 @@ def install_wii_wad(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-    import libWiiPy
+    libwiipy = _get_libwiipy()
 
     # Read wad
     wad_data = serialization.read_binary_file(
@@ -28,7 +33,7 @@ def install_wii_wad(
 
     # Load title
     try:
-        title = libWiiPy.title.Title()
+        title = libwiipy.title.Title()
         title.load_wad(wad_data)
     except (ValueError, TypeError, IndexError, struct.error) as e:
         logger.log_error("Unable to load WAD %s" % src_wad_file)
@@ -50,7 +55,7 @@ def install_wii_wad(
     if pretend_run:
         return True
     try:
-        libWiiPy.nand.EmuNAND(nand_dir).install_title(title)
+        libwiipy.nand.EmuNAND(nand_dir).install_title(title)
     except (OSError, ValueError, TypeError, IndexError) as e:
         logger.log_error("Unable to install WAD %s" % src_wad_file)
         logger.log_error(e, quit_program = exit_on_failure)

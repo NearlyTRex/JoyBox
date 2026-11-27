@@ -1,4 +1,5 @@
 # Imports
+import importlib
 import os
 import os.path
 
@@ -11,9 +12,21 @@ from joybox import modules
 from joybox import platform_info, runtime
 from joybox import paths
 
+# Get screeninfo, imported on first use
+def _get_screeninfo():
+    return importlib.import_module("screeninfo")
+
+# Get PIL.Image, imported on first use
+def _get_pil_image():
+    return importlib.import_module("PIL.Image")
+
+# Get PIL.ImageTk, imported on first use
+def _get_pil_image_tk():
+    return importlib.import_module("PIL.ImageTk")
+
 # Get current screen resolution
 def get_current_screen_resolution():
-    import screeninfo
+    screeninfo = _get_screeninfo()
     for monitor in screeninfo.get_monitors():
         if monitor.is_primary:
             return (monitor.width, monitor.height)
@@ -295,11 +308,12 @@ def display_loading_window(
     window["progress"].Widget.config(mode = "indeterminate")
     if paths.is_path_valid(image_file) and os.path.exists(image_file):
         try:
-            from PIL import Image, ImageTk
+            pil_image = _get_pil_image()
+            pil_image_tk = _get_pil_image_tk()
             window_width, window_height = window.size
-            image_obj = Image.open(image_file)
+            image_obj = pil_image.open(image_file)
             image_obj.thumbnail((window_width, window_height / 2))
-            window["image"].update(data = ImageTk.PhotoImage(image_obj))
+            window["image"].update(data = pil_image_tk.PhotoImage(image_obj))
         except (ImportError, OSError) as e:
             logger.log_warning("Unable to show image %s: %s" % (image_file, e))
 

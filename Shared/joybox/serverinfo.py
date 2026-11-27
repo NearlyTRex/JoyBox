@@ -6,6 +6,8 @@
 
 # Local imports
 from joybox import settings
+from joybox import runoptions
+from joybox.connection import ConnectionLocal, ConnectionSSH
 
 # Section holding the server entries
 SECTION = "UserData.Servers"
@@ -155,8 +157,6 @@ def get_tls_mode():
 
 # Build a connection to a server entry, or to this machine when none is named
 def get_connection(server_index = None, flags = None, options = None):
-    from joybox.connection import ConnectionLocal, ConnectionSSH
-    from joybox import runoptions
     if flags is None:
         flags = runoptions.RunFlags()
     if options is None:

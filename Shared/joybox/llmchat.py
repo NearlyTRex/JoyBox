@@ -12,6 +12,7 @@ from joybox import logger
 from joybox import ollama
 from joybox import ollamaagents
 from joybox import serialization
+from joybox import claude
 
 ###########################################################
 # Backends
@@ -153,7 +154,6 @@ class ClaudeBackend:
     kind = BACKEND_CLAUDE
 
     def __init__(self, model = None):
-        from joybox import claude
         self.claude = claude
         self.model = model or claude.DEFAULT_MODEL
 

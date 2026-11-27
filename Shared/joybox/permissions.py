@@ -1,8 +1,13 @@
 # Imports
+import importlib
 import os
 
 # Local imports
 from joybox import platform_info
+
+# Get pyuac, imported on first use
+def _get_pyuac():
+    return importlib.import_module("pyuac")
 
 ###########################################################
 # Root access
@@ -12,7 +17,7 @@ from joybox import platform_info
 def is_user_root():
     if platform_info.is_windows_platform():
         try:
-            import pyuac
+            pyuac = _get_pyuac()
         except ImportError:
             return False
         try:
@@ -28,7 +33,7 @@ def run_as_root(func):
         return
     if platform_info.is_windows_platform():
         try:
-            import pyuac
+            pyuac = _get_pyuac()
             if not pyuac.isUserAdmin():
                 pyuac.runAsAdmin()
             else:

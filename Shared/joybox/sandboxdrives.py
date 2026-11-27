@@ -9,6 +9,7 @@ from joybox import validation
 from joybox import fileops
 from joybox import paths
 from joybox import prefixlayout
+from joybox import chd
 
 ###########################################################
 
@@ -61,9 +62,6 @@ def mount_disc_image(
     pretend_run = False,
     exit_on_failure = False):
 
-    # Imports
-    from joybox import chd
-
     # Check params
     validation.assert_path_exists(src, "src")
 
@@ -102,9 +100,6 @@ def unmount_disc_image(
     verbose = False,
     pretend_run = False,
     exit_on_failure = False):
-
-    # Imports
-    from joybox import chd
 
     # Check params
     validation.assert_path_exists(src, "src")

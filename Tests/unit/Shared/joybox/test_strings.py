@@ -228,6 +228,7 @@ def test_similarity_tiers_follow_the_ratio():
 
 def test_similarity_without_thefuzz_is_zero(monkeypatch):
     monkeypatch.setitem(sys.modules, "thefuzz", None)
+    monkeypatch.setitem(sys.modules, "thefuzz.fuzz", None)
 
     assert strings.get_string_similarity_ratio("same", "same") == 0
 

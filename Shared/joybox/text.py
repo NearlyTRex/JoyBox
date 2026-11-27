@@ -1,10 +1,19 @@
 # Imports
+import importlib
 import importlib.util
 import re
 import textwrap
 
 # Local imports
 from joybox import config
+
+# Get unidecode, imported on first use
+def _get_unidecode():
+    return importlib.import_module("unidecode")
+
+# Get html_text, imported on first use
+def _get_html_text():
+    return importlib.import_module("html_text")
 
 ###########################################################
 # Text processing utilities
@@ -45,7 +54,7 @@ def clean_rich_text(text):
     new_text = text
     # unidecode is optional; without it non-ascii is dropped below
     if importlib.util.find_spec("unidecode"):
-        import unidecode
+        unidecode = _get_unidecode()
         new_text = unidecode.unidecode(new_text)
     for old, new in config.rich_text_replacements.items():
         new_text = new_text.replace(old, new)
@@ -62,7 +71,7 @@ def clean_web_text(text):
 # Extract web text
 def extract_web_text(text):
     try:
-        import html_text
+        html_text = _get_html_text()
     except ImportError:
         return None
     return html_text.extract_text(text)

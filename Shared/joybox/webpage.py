@@ -17,6 +17,10 @@ from joybox import paths
 from joybox import settings
 from joybox import runtime
 
+# Get bs4, imported on first use
+def _get_bs4():
+    return importlib.import_module("bs4")
+
 # Scraping limits; each can be overridden in UserData.Scraping
 DEFAULT_ELEMENT_WAIT_SECONDS = 15
 DEFAULT_FETCH_RETRIES = 3
@@ -54,9 +58,17 @@ def get_min_match_score():
 def get_page_load_interval_seconds():
     return get_scraping_limit("page_load_interval_seconds", DEFAULT_PAGE_LOAD_INTERVAL_SECONDS)
 
-# Selenium's exceptions, imported on first use so this module imports without it
+# Get a selenium module, imported on first use so this module imports without it
+def _get_selenium(module_name):
+    return importlib.import_module("selenium." + module_name)
+
+# Get a webdriver_manager module, imported on first use
+def _get_webdriver_manager(module_name):
+    return importlib.import_module("webdriver_manager." + module_name)
+
+# Selenium's exceptions
 def get_selenium_errors():
-    return importlib.import_module("selenium.common.exceptions")
+    return _get_selenium("common.exceptions")
 
 # A scrape step that failed in a way another attempt may get past
 class ScrapeFailed(Exception):
@@ -78,7 +90,7 @@ def retry_scrape(func, cleanup_func = None, verbose = False, operation_name = No
 
 # Parse page source
 def parse_page_source(contents, features = "lxml"):
-    import bs4
+    bs4 = _get_bs4()
     try:
         return bs4.BeautifulSoup(contents, features=features)
     except bs4.FeatureNotFound:
@@ -190,15 +202,12 @@ def create_chrome_web_driver(
         if verbose:
             logger.log_info("Creating chrome web driver")
         if not pretend_run:
-            from selenium.webdriver.chrome.service import Service as ChromeService
-            from selenium.webdriver.chrome.options import Options as ChromeOptions
-            from selenium.webdriver import Chrome
-            from webdriver_manager.chrome import ChromeDriverManager
-            service = ChromeService(
-                executable_path = ChromeDriverManager().install(),
+            driver_manager = _get_webdriver_manager("chrome").ChromeDriverManager()
+            service = _get_selenium("webdriver.chrome.service").Service(
+                executable_path = driver_manager.install(),
                 log_output = subprocess.DEVNULL,
                 **get_driver_service_options())
-            options = ChromeOptions()
+            options = _get_selenium("webdriver.chrome.options").Options()
             options.add_argument("--start-maximized")
             options.add_argument("--no-sandbox")
             options.add_argument("--ignore-certificate-errors")
@@ -218,7 +227,7 @@ def create_chrome_web_driver(
                 options.add_argument("--window-size=1920,1080")
             if paths.is_path_valid(binary_location) and paths.does_path_exist(binary_location):
                 options.binary_location = binary_location
-            return start_browser(Chrome, service, options)
+            return start_browser(_get_selenium("webdriver").Chrome, service, options)
         return None
     except (get_selenium_errors().WebDriverException, OSError, ValueError) as e:
         if verbose:
@@ -252,15 +261,12 @@ def create_firefox_web_driver(
         if verbose:
             logger.log_info("Creating firefox web driver")
         if not pretend_run:
-            from selenium.webdriver.firefox.service import Service as FirefoxService
-            from selenium.webdriver.firefox.options import Options as FirefoxOptions
-            from selenium.webdriver import Firefox
-            from webdriver_manager.firefox import GeckoDriverManager
-            service = FirefoxService(
-                executable_path = GeckoDriverManager().install(),
+            driver_manager = _get_webdriver_manager("firefox").GeckoDriverManager()
+            service = _get_selenium("webdriver.firefox.service").Service(
+                executable_path = driver_manager.install(),
                 log_output = subprocess.DEVNULL,
                 **get_driver_service_options())
-            options = FirefoxOptions()
+            options = _get_selenium("webdriver.firefox.options").Options()
             if paths.is_path_valid(download_dir) and paths.does_path_exist(download_dir):
                 options.set_preference("browser.download.folderList", 2)
                 options.set_preference("browser.download.dir", download_dir)
@@ -270,7 +276,7 @@ def create_firefox_web_driver(
                 options.add_argument("--headless")
             if paths.is_path_valid(binary_location) and paths.does_path_exist(binary_location):
                 options.binary_location = binary_location
-            return start_browser(Firefox, service, options)
+            return start_browser(_get_selenium("webdriver").Firefox, service, options)
         return None
     except (get_selenium_errors().WebDriverException, OSError, ValueError) as e:
         if verbose:
@@ -407,10 +413,10 @@ def is_url_loaded(driver, url, verbose = False):
 # Check if the page is a Cloudflare bot challenge instead of the requested content
 def is_challenge_page(driver, verbose = False):
     try:
-        from selenium.webdriver.common.by import By
+        by = _get_selenium("webdriver.common.by").By
         if not is_session_valid(driver, verbose):
             return False
-        if driver.find_elements(By.ID, "challenge-error-text"):
+        if driver.find_elements(by.ID, "challenge-error-text"):
             if verbose:
                 logger.log_warning("IsChallengePage: Bot challenge served for %s" % get_current_page_url(driver, verbose))
             return True
@@ -425,27 +431,27 @@ def is_challenge_page(driver, verbose = False):
 # Element locator
 class ElementLocator:
     def __init__(self, info):
-        from selenium.webdriver.common.by import By
+        by = _get_selenium("webdriver.common.by").By
         self.by_type = None
         self.by_value = None
         if isinstance(info, dict) and len(info) == 1:
             for key, value in info.items():
                 if key == "id":
-                    self.by_type = By.ID
+                    self.by_type = by.ID
                 elif key == "name":
-                    self.by_type = By.NAME
+                    self.by_type = by.NAME
                 elif key == "class":
-                    self.by_type = By.CLASS_NAME
+                    self.by_type = by.CLASS_NAME
                 elif key == "tag":
-                    self.by_type = By.TAG_NAME
+                    self.by_type = by.TAG_NAME
                 elif key == "xpath":
-                    self.by_type = By.XPATH
+                    self.by_type = by.XPATH
                 elif key == "css_selector":
-                    self.by_type = By.CSS_SELECTOR
+                    self.by_type = by.CSS_SELECTOR
                 elif key == "link_text":
-                    self.by_type = By.LINK_TEXT
+                    self.by_type = by.LINK_TEXT
                 elif key == "partial_link_text":
-                    self.by_type = By.PARTIAL_LINK_TEXT
+                    self.by_type = by.PARTIAL_LINK_TEXT
                 else:
                     raise ValueError("Unsupported locator type: %s" % key)
                 self.by_value = value
@@ -462,8 +468,8 @@ def wait_for_all_elements(
     verbose = False,
     exit_on_failure = False):
     try:
-        from selenium.webdriver.support.ui import WebDriverWait
-        from selenium.webdriver.support import expected_conditions as EC
+        support_ui = _get_selenium("webdriver.support.ui")
+        expected_conditions = _get_selenium("webdriver.support.expected_conditions")
         if not locators:
             if verbose:
                 logger.log_warning("WaitForAllElements: No locators provided")
@@ -474,9 +480,9 @@ def wait_for_all_elements(
             logger.log_info("WaitForAllElements: Waiting for all %d element(s) (timeout: %d seconds)" % (len(locators), wait_time))
             for i, locator in enumerate(locators):
                 logger.log_info("  Locator %d: %s" % (i + 1, str(locator.get())))
-        conditions = [EC.presence_of_element_located(locator.get()) for locator in locators]
-        result = WebDriverWait(driver, wait_time).until(
-            EC.all_of(*conditions)
+        conditions = [expected_conditions.presence_of_element_located(locator.get()) for locator in locators]
+        result = support_ui.WebDriverWait(driver, wait_time).until(
+            expected_conditions.all_of(*conditions)
         )
         if verbose:
             logger.log_info("WaitForAllElements: All elements found successfully")
@@ -497,8 +503,8 @@ def wait_for_any_element(
     verbose = False,
     exit_on_failure = False):
     try:
-        from selenium.webdriver.support.ui import WebDriverWait
-        from selenium.webdriver.support import expected_conditions as EC
+        support_ui = _get_selenium("webdriver.support.ui")
+        expected_conditions = _get_selenium("webdriver.support.expected_conditions")
         if not locators:
             if verbose:
                 logger.log_warning("WaitForAnyElement: No locators provided")
@@ -509,9 +515,9 @@ def wait_for_any_element(
             logger.log_info("WaitForAnyElement: Waiting for any of %d element(s) (timeout: %d seconds)" % (len(locators), wait_time))
             for i, locator in enumerate(locators):
                 logger.log_info("  Locator %d: %s" % (i + 1, str(locator.get())))
-        conditions = [EC.presence_of_element_located(locator.get()) for locator in locators]
-        result = WebDriverWait(driver, wait_time).until(
-            EC.any_of(*conditions)
+        conditions = [expected_conditions.presence_of_element_located(locator.get()) for locator in locators]
+        result = support_ui.WebDriverWait(driver, wait_time).until(
+            expected_conditions.any_of(*conditions)
         )
         if verbose:
             logger.log_info("WaitForAnyElement: Found at least one element")
@@ -551,14 +557,14 @@ def wait_for_element(
     if wait_time is None:
         wait_time = get_element_wait_seconds()
     try:
-        from selenium.webdriver.support.ui import WebDriverWait
-        from selenium.webdriver.support import expected_conditions as EC
+        support_ui = _get_selenium("webdriver.support.ui")
+        expected_conditions = _get_selenium("webdriver.support.expected_conditions")
         if verbose:
             logger.log_info("WaitForElement: Waiting for element (timeout: %d seconds)" % wait_time)
             logger.log_info("  Locator: %s" % str(locator.get()))
         if not is_session_valid(driver, verbose):
             return None
-        element = WebDriverWait(driver, wait_time).until(EC.presence_of_element_located(locator.get()))
+        element = support_ui.WebDriverWait(driver, wait_time).until(expected_conditions.presence_of_element_located(locator.get()))
         if verbose:
             logger.log_info("WaitForElement: Element found successfully")
         return element

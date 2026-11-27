@@ -1,4 +1,6 @@
 # Imports
+import importlib
+import importlib.util
 import sys
 
 # Local imports
@@ -10,7 +12,6 @@ from joybox import paths
 
 # Import python module package
 def import_python_module_package(module_path, module_name):
-    import importlib
     if paths.is_path_directory(module_path):
         if module_name not in sys.modules:
             sys.path.append(module_path)
@@ -21,7 +22,6 @@ def import_python_module_package(module_path, module_name):
 
 # Import python module file
 def import_python_module_file(module_path, module_name):
-    import importlib.util
     if paths.is_path_file(module_path):
         spec = importlib.util.spec_from_file_location(module_name, module_path)
         module = importlib.util.module_from_spec(spec)

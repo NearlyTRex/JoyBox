@@ -1,7 +1,10 @@
 # Imports
+import importlib
+import ctypes
 import os
 import os.path
 import tempfile
+from ctypes import wintypes
 from xml.parsers.expat import ExpatError
 
 # Local imports
@@ -15,6 +18,18 @@ from joybox import archive
 from joybox import programs
 from joybox import locker
 from joybox import platform_info, runtime
+
+# Get requests, imported on first use
+def _get_requests():
+    return importlib.import_module("requests")
+
+# Get xmltodict, imported on first use
+def _get_xmltodict():
+    return importlib.import_module("xmltodict")
+
+# Get github, imported on first use
+def _get_github():
+    return importlib.import_module("github")
 
 # Seconds a plain HTTP request may take before it is abandoned
 REQUEST_TIMEOUT_SECONDS = 10
@@ -31,7 +46,7 @@ DOWNLOAD_CONNECT_TIMEOUT_SECONDS = 30
 # Query parameters go in params rather than the url, so a key among them never
 # reaches a log line that names the url
 def is_url_reachable(url, params = None, timeout = REQUEST_TIMEOUT_SECONDS):
-    import requests
+    requests = _get_requests()
     try:
         get = requests.get(url, params=params, timeout=timeout)
         return get.status_code == 200
@@ -46,7 +61,7 @@ def get_remote_json(
     timeout = REQUEST_TIMEOUT_SECONDS,
     verbose = False,
     exit_on_failure = False):
-    import requests
+    requests = _get_requests()
     try:
         if verbose:
             logger.log_info("Processing GET request to '%s'" % url)
@@ -71,7 +86,7 @@ def get_remote_html(
     timeout = REQUEST_TIMEOUT_SECONDS,
     verbose = False,
     exit_on_failure = False):
-    import requests
+    requests = _get_requests()
     try:
         if verbose:
             logger.log_info("Processing GET request to '%s'" % url)
@@ -101,7 +116,7 @@ def post_remote_json(
     if pretend_run:
         logger.log_info("Would POST to '%s'" % url)
         return None
-    import requests
+    requests = _get_requests()
     try:
         if verbose:
             logger.log_info("Processing POST request to '%s'" % url)
@@ -126,8 +141,8 @@ def get_remote_xml(
     timeout = REQUEST_TIMEOUT_SECONDS,
     verbose = False,
     exit_on_failure = False):
-    import requests
-    import xmltodict
+    requests = _get_requests()
+    xmltodict = _get_xmltodict()
     try:
         if verbose:
             logger.log_info("Processing GET request to '%s'" % url)
@@ -314,9 +329,6 @@ def is_network_share_mounted(mount_dir, base_location, network_share):
 
 # Map a windows drive to a share, passing the password in-process rather than on a command line
 def map_windows_drive(drive, remote, username, password):
-    import ctypes
-    from ctypes import wintypes
-
     class NETRESOURCE(ctypes.Structure):
         _fields_ = [
             ("dwScope", wintypes.DWORD),
@@ -449,7 +461,7 @@ def get_github_repository(
     github_token = None,
     verbose = False,
     exit_on_failure = False):
-    import github
+    github = _get_github()
     try:
         if verbose:
             logger.log_info("Getting github repository '%s/%s'" % (github_user, github_repo))
@@ -472,7 +484,7 @@ def get_github_repositories(
     exclude_private = False,
     verbose = False,
     exit_on_failure = False):
-    import github
+    github = _get_github()
     try:
         if verbose:
             logger.log_info("Getting github repositories for '%s'" % github_user)

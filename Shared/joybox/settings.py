@@ -7,6 +7,7 @@ import types
 # Local imports
 from joybox import secretstore
 from joybox import serialization
+from joybox import default_settings
 
 # Settings file name and default locations (home preferred, repo-root fallback)
 CONFIG_FILENAME = "JoyBox.ini"
@@ -95,7 +96,6 @@ def has_field(section, field, throw_exception = True):
         return False
 
 def _get_shipped_default(section, field):
-    from joybox import default_settings
     value = default_settings.ini_defaults.get(section, {}).get(field)
     if secretstore.is_secret_reference(value):
         return None
