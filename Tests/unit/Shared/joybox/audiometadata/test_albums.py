@@ -1,8 +1,12 @@
 # Imports
 import os
 
+# Third-party imports
+import pytest
+
 # Local imports
 from joybox import config
+from joybox import logger
 from audiometadata_helpers import MP3_FRAME, build_m4a, artwork
 
 GENRE = config.AudioGenreType.REGULAR
@@ -223,3 +227,32 @@ def test_album_fields_already_on_a_track_are_kept(metadata, tmp_path):
     tags = metadata.get_album_tags(album, GENRE)["tracks"][0]["tags"]
 
     assert (tags["album"], tags["album_artist"]) == ("Real Album", "Various")
+
+
+###########################################################
+# Verbose runs
+#
+# The log line names the file being worked on, and only a verbose run asks for it.
+###########################################################
+
+CALLS = [
+    lambda metadata, path, **options: metadata.get_audio_file_info(path, **options),]
+
+
+@pytest.mark.parametrize("call", CALLS)
+def test_a_verbose_run_names_the_file(metadata, mp3_file, monkeypatch, call):
+    logged = []
+    monkeypatch.setattr(logger, "log_info", logged.append)
+    call(metadata, mp3_file, verbose = True)
+
+    assert len(logged) == 1
+    assert mp3_file in logged[0]
+
+
+@pytest.mark.parametrize("call", CALLS)
+def test_a_quiet_run_logs_nothing(metadata, mp3_file, monkeypatch, call):
+    logged = []
+    monkeypatch.setattr(logger, "log_info", logged.append)
+    call(metadata, mp3_file)
+
+    assert not logged

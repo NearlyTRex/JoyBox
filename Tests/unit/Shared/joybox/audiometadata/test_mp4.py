@@ -5,6 +5,7 @@ import base64
 import pytest
 
 # Local imports
+from joybox import logger
 from audiometadata_helpers import PNG_PIXEL, artwork
 
 
@@ -218,3 +219,35 @@ def test_kept_cover_art_is_restored_when_removal_drops_the_tag_block(metadata, m
     metadata.remove_mp4_tags(m4a_file, preserve_artwork = True)
 
     assert metadata.get_mp4_tags(m4a_file)["artwork"][0]["data"] == artwork()["data"]
+
+
+###########################################################
+# Verbose runs
+#
+# The log line names the file being worked on, and only a verbose run asks for it.
+###########################################################
+
+CALLS = [
+    lambda metadata, path, **options: metadata.get_mp4_tags(path, **options),
+    lambda metadata, path, **options: metadata.set_mp4_tags(path, {"title": "A Title"}, **options),
+    lambda metadata, path, **options: metadata.remove_mp4_tags(path, **options),
+    lambda metadata, path, **options: metadata.get_mp4_file_info(path, **options),]
+
+
+@pytest.mark.parametrize("call", CALLS)
+def test_a_verbose_run_names_the_file(metadata, m4a_file, monkeypatch, call):
+    logged = []
+    monkeypatch.setattr(logger, "log_info", logged.append)
+    call(metadata, m4a_file, verbose = True)
+
+    assert len(logged) == 1
+    assert m4a_file in logged[0]
+
+
+@pytest.mark.parametrize("call", CALLS)
+def test_a_quiet_run_logs_nothing(metadata, m4a_file, monkeypatch, call):
+    logged = []
+    monkeypatch.setattr(logger, "log_info", logged.append)
+    call(metadata, m4a_file)
+
+    assert not logged

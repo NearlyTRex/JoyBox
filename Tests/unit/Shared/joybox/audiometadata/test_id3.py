@@ -8,6 +8,7 @@ import pytest
 from joybox import audiometadata
 from joybox import config
 from joybox import image
+from joybox import logger
 from joybox import modules
 from audiometadata_helpers import PNG_PIXEL, artwork
 
@@ -264,3 +265,34 @@ def test_kept_artwork_is_restored_when_removal_drops_the_tag_block(metadata, mp3
     tags = metadata.get_id3_tags(mp3_file, artwork_format = config.ImageFileType.PNG)
 
     assert tags["artwork"][0]["data"] == artwork()["data"]
+
+
+###########################################################
+# Verbose runs
+#
+# The log line names the file being worked on, and only a verbose run asks for it.
+###########################################################
+
+CALLS = [
+    lambda metadata, path, **options: metadata.get_id3_tags(path, **options),
+    lambda metadata, path, **options: metadata.set_id3_tags(path, {"title": "A Title"}, **options),
+    lambda metadata, path, **options: metadata.remove_id3_tags(path, **options),]
+
+
+@pytest.mark.parametrize("call", CALLS)
+def test_a_verbose_run_names_the_file(metadata, mp3_file, monkeypatch, call):
+    logged = []
+    monkeypatch.setattr(logger, "log_info", logged.append)
+    call(metadata, mp3_file, verbose = True)
+
+    assert len(logged) == 1
+    assert mp3_file in logged[0]
+
+
+@pytest.mark.parametrize("call", CALLS)
+def test_a_quiet_run_logs_nothing(metadata, mp3_file, monkeypatch, call):
+    logged = []
+    monkeypatch.setattr(logger, "log_info", logged.append)
+    call(metadata, mp3_file)
+
+    assert not logged
