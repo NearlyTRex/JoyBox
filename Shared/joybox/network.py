@@ -297,7 +297,7 @@ def is_network_share_mounted(mount_dir, base_location, network_share):
         return paths.is_path_directory(mount_dir) and not paths.is_directory_empty(mount_dir)
 
     # Linux
-    elif platform_info.is_linux_platform():
+    if platform_info.is_linux_platform():
         mount_lines = command.run_output_command(
             cmd = ["mount"])
         share_source = "//%s/%s" % (base_location, network_share)
@@ -384,7 +384,7 @@ def mount_network_share(
         return True
 
     # Linux
-    elif platform_info.is_linux_platform():
+    if platform_info.is_linux_platform():
 
         # Get mkdir command
         mkdir_cmd = [

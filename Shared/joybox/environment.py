@@ -220,8 +220,7 @@ def get_locker_music_root_dir(locker_type = None, genre_type = None):
 def get_locker_music_dir(genre_type = None):
     if genre_type:
         return get_locker_music_root_dir(genre_type = genre_type)
-    else:
-        return get_locker_music_root_dir()
+    return get_locker_music_root_dir()
 
 # Get locker music album dir
 def get_locker_music_album_dir(album_name, artist_name = None, locker_type = None, genre_type = None):
@@ -262,10 +261,9 @@ def get_locker_program_tool_dir(tool_name, tool_platform = None, locker_type = N
             get_locker_programs_tools_root_dir(locker_type),
             tool_name,
             tool_platform)
-    else:
-        return paths.join_paths(
-            get_locker_programs_tools_root_dir(locker_type),
-            tool_name)
+    return paths.join_paths(
+        get_locker_programs_tools_root_dir(locker_type),
+        tool_name)
 
 ###########################################################
 # Metadata - Games
@@ -381,8 +379,7 @@ def get_file_audio_metadata_album_dir(metadata_type, genre_type, album_name, art
     if genre_type:
         output_dir = get_file_audio_metadata_dir(metadata_type, genre_type, artist_name)
         return paths.join_paths(output_dir, album_name)
-    else:
-        return paths.join_paths(get_file_metadata_root_dir(), album_name)
+    return paths.join_paths(get_file_metadata_root_dir(), album_name)
 
 # Get audio metadata file
 def get_file_audio_metadata_file(metadata_type, genre_type, album_name, artist_name = None):
@@ -515,12 +512,11 @@ def get_cache_gaming_save_dir(game_category, game_subcategory, game_name, save_t
             game_subcategory,
             game_name_path,
             save_type)
-    else:
-        return paths.join_paths(
-            get_cache_gaming_saves_root_dir(),
-            game_category,
-            game_subcategory,
-            game_name_path)
+    return paths.join_paths(
+        get_cache_gaming_saves_root_dir(),
+        game_category,
+        game_subcategory,
+        game_name_path)
 
 # Get cache gaming setup root dir
 def get_cache_gaming_setup_root_dir():

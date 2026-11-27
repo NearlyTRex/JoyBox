@@ -1,8 +1,8 @@
 # Local imports
 from joybox.bootstrap import constants
-from . import installer
 from joybox import runoptions
 from joybox import logger
+from . import installer
 
 # dconf/gsettings settings to apply (desktop only)
 # Each setting has: schema, key, value (GVariant text), description

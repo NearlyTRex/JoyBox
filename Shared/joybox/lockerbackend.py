@@ -863,10 +863,8 @@ class RemoteBackend(LockerBackend):
 def get_backend_for_locker(locker_info):
     if locker_info.is_local_only():
         return LocalBackend(locker_info)
-    else:
-        remote_name = locker_info.get_name()
-        remote_type = locker_info.get_type()
-        if remote_name and remote_type and syncremotes.is_remote_configured(remote_name, remote_type):
-            return RemoteBackend(locker_info)
-        else:
-            return LocalBackend(locker_info)
+    remote_name = locker_info.get_name()
+    remote_type = locker_info.get_type()
+    if remote_name and remote_type and syncremotes.is_remote_configured(remote_name, remote_type):
+        return RemoteBackend(locker_info)
+    return LocalBackend(locker_info)

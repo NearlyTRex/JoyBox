@@ -1,9 +1,9 @@
 # Local imports
 from joybox.bootstrap import constants
-from . import installer
 from joybox import runoptions
 from joybox import logger
 from joybox import platform_info
+from . import installer
 
 # Wine
 class Wine(installer.Installer):

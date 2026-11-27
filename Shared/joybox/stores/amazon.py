@@ -186,10 +186,9 @@ class Amazon(storebase.StoreBase):
                         json_platform = self.get_platform())
                     cached_purchases.append(purchase)
                 return cached_purchases
-            else:
-                if verbose:
-                    logger.log_warning("Failed to load Amazon cache, will fetch fresh data")
-                use_cache = False
+            if verbose:
+                logger.log_warning("Failed to load Amazon cache, will fetch fresh data")
+            use_cache = False
 
         # Get script command
         script_cmd = programs.get_python_script_command("Nile")

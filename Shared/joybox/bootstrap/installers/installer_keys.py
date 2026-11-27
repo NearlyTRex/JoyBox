@@ -5,10 +5,10 @@ import getpass
 
 # Local imports
 from joybox.bootstrap import constants
-from . import installer
 from joybox import runoptions
 from joybox import logger
 from joybox import settings
+from . import installer
 
 # Keys this machine needs
 # A "secret" key is the same on every machine, so it is written from the value

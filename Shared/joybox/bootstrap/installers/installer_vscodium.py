@@ -4,10 +4,10 @@ import os
 # Local imports
 from joybox import bootstrap
 from joybox.bootstrap import constants
-from . import installer
 from joybox import runoptions
 from joybox import logger
 from joybox import serialization
+from . import installer
 
 # User files kept in the repo, under Bootstrap/vscodium; captured by backup and
 # deployed by setup, so every machine's editor matches

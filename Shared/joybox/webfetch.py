@@ -141,7 +141,7 @@ def get_matching_urls(
 
         # Look through tag attributes to find links
         for tag in parser.find_all(True):
-            for attr, value in tag.attrs.items():
+            for value in tag.attrs.values():
                 if isinstance(value, str) and re.match(r'https?://', value):
                     potential_urls.append(value)
                     potential_urls.append(strings.strip_string_query_params(value))

@@ -22,10 +22,8 @@ def get_config_value(program_config, program_name, program_key, program_platform
     if isinstance(program_value, dict):
         if program_platform in program_value.keys():
             return program_value[program_platform]
-        else:
-            return program_value
-    else:
         return program_value
+    return program_value
 
 # Get path config value
 def get_path_config_value(program_config, base_dir, program_name, program_key, program_platform = None):
@@ -46,7 +44,7 @@ def get_program(program_config, base_dir, program_name, program_platform = None)
 def get_program_install_dir(program_name, program_platform = None):
     if is_program_name_tool(program_name, program_platform):
         return paths.join_paths(environment.get_tools_root_dir(), program_name, program_platform)
-    elif is_program_name_emulator(program_name, program_platform):
+    if is_program_name_emulator(program_name, program_platform):
         return paths.join_paths(environment.get_emulators_root_dir(), program_name, program_platform)
     return None
 
@@ -54,7 +52,7 @@ def get_program_install_dir(program_name, program_platform = None):
 def get_program_backup_dir(program_name, program_platform = None):
     if is_program_name_tool(program_name, program_platform):
         return environment.get_locker_program_tool_dir(program_name, program_platform)
-    elif is_program_name_emulator(program_name, program_platform):
+    if is_program_name_emulator(program_name, program_platform):
         return environment.get_locker_gaming_emulator_binaries_dir(program_name, program_platform)
     return None
 
@@ -62,15 +60,13 @@ def get_program_backup_dir(program_name, program_platform = None):
 def get_library_install_dir(library_name, library_platform = None):
     if library_platform:
         return paths.join_paths(environment.get_tools_root_dir(), library_name, library_platform)
-    else:
-        return paths.join_paths(environment.get_tools_root_dir(), library_name)
+    return paths.join_paths(environment.get_tools_root_dir(), library_name)
 
 # Get library backup dir
 def get_library_backup_dir(library_name, library_platform = None):
     if library_platform:
         return paths.join_paths(environment.get_locker_program_tool_dir(library_name), library_platform)
-    else:
-        return environment.get_locker_program_tool_dir(library_name)
+    return environment.get_locker_program_tool_dir(library_name)
 
 # Determine if program should be installed
 def should_program_be_installed(program_name, program_platform = None):
@@ -103,7 +99,7 @@ def should_library_be_installed(library_name):
 def is_program_installed(program_name, program_platform = None):
     if is_program_name_tool(program_name, program_platform):
         return paths.is_runnable_command(get_tool_program(program_name, program_platform))
-    elif is_program_name_emulator(program_name, program_platform):
+    if is_program_name_emulator(program_name, program_platform):
         return paths.is_runnable_command(get_emulator_program(program_name, program_platform))
     return False
 

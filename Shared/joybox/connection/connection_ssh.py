@@ -11,10 +11,10 @@ from io import StringIO
 # Local imports
 from joybox import runtime, cmdline
 from joybox import logger, runoptions
-from . import connection
 from joybox import paths
 from joybox import fileops
 from joybox import knownhosts
+from . import connection
 
 # Get paramiko, imported on first use since only SSH connections need it
 def _get_paramiko():
@@ -204,7 +204,7 @@ class ConnectionSSH(connection.Connection):
                 self.print_command(cmd)
             if not self.flags.pretend_run:
                 cmd = self.process_command(cmd)
-                stdin, stdout, stderr = ConnectionSSH.ssh_client.exec_command(
+                _, stdout, stderr = ConnectionSSH.ssh_client.exec_command(
                     command = cmd,
                     get_pty = self.options.shell)
                 output = stdout.read()
@@ -232,7 +232,7 @@ class ConnectionSSH(connection.Connection):
                 self.print_command(cmd)
             if not self.flags.pretend_run:
                 cmd = self.process_command(cmd)
-                stdin, stdout, stderr = ConnectionSSH.ssh_client.exec_command(
+                _, stdout, _ = ConnectionSSH.ssh_client.exec_command(
                     command = cmd,
                     get_pty = self.options.shell)
                 exit_code = stdout.channel.recv_exit_status()
@@ -255,7 +255,7 @@ class ConnectionSSH(connection.Connection):
                 self.print_command(cmd)
             if not self.flags.pretend_run:
                 cmd = self.process_command(cmd)
-                stdin, stdout, stderr = ConnectionSSH.ssh_client.exec_command(
+                _, stdout, _ = ConnectionSSH.ssh_client.exec_command(
                     command = cmd,
                     get_pty = self.options.shell)
                 channel = stdout.channel
@@ -308,8 +308,7 @@ class ConnectionSSH(connection.Connection):
         if code != 0:
             if throw_exception:
                 raise ValueError("Unable to run command: %s" % cmd)
-            else:
-                runtime.quit_program(code)
+            runtime.quit_program(code)
 
     def make_temporary_directory(self):
         if self.flags.pretend_run:
@@ -413,13 +412,12 @@ class ConnectionSSH(connection.Connection):
             if not self.flags.pretend_run:
                 if sudo:
                     return self.run_output(["cat", src], sudo = True)
-                else:
-                    sftp = self._open_sftp()
-                    try:
-                        with sftp.file(src, "r") as f:
-                            return f.read().decode()
-                    finally:
-                        sftp.close()
+                sftp = self._open_sftp()
+                try:
+                    with sftp.file(src, "r") as f:
+                        return f.read().decode()
+                finally:
+                    sftp.close()
             return None
         except _get_ssh_errors() + (ValueError,) as e:
             return self.handle_error(f"Unable to read file from {src}", e, return_value = None)

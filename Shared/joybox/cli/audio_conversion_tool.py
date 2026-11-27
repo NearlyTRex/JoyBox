@@ -69,7 +69,7 @@ def main():
 
     # Parse arguments
     parser = build_parser()
-    args, unknown = parser.parse_known_args()
+    args, _ = parser.parse_known_args()
 
     # Check requirements
     setup.check_requirements()
@@ -95,7 +95,7 @@ def main():
             verbose = args.verbose,
             pretend_run = args.pretend_run,
             exit_on_failure = args.exit_on_failure)
-    elif paths.is_path_file(input_path):
+    if paths.is_path_file(input_path):
         return audible.decrypt_aax_to_m4a(
             input_file = input_path,
             output_file = output_path,

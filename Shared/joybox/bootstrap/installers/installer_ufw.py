@@ -1,10 +1,10 @@
 # Local imports
 from joybox.bootstrap import constants
-from . import installer
 from joybox import runoptions
 from joybox import logger
 from joybox import settings
 from joybox import hardening
+from . import installer
 
 # Firewall rules to install
 # Each rule has: name, description, ports, protocol, and the setting that turns

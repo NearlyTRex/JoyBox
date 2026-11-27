@@ -139,13 +139,12 @@ class AudioMetadata(Id3TagsMixin, Mp4TagsMixin, AlbumTagsMixin):
                 include_artwork = include_artwork,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
-        else:
-            return self.get_id3_tags(
-                audio_file = audio_file,
-                include_artwork = include_artwork,
-                exclude_comments = exclude_comments,
-                verbose = verbose,
-                exit_on_failure = exit_on_failure)
+        return self.get_id3_tags(
+            audio_file = audio_file,
+            include_artwork = include_artwork,
+            exclude_comments = exclude_comments,
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)
 
     def set_tags(
         self,
@@ -171,14 +170,13 @@ class AudioMetadata(Id3TagsMixin, Mp4TagsMixin, AlbumTagsMixin):
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-        else:
-            return self.set_id3_tags(
-                audio_file = audio_file,
-                tags = tags,
-                clear_existing = clear_existing,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+        return self.set_id3_tags(
+            audio_file = audio_file,
+            tags = tags,
+            clear_existing = clear_existing,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
 
     def remove_tags(
         self,
@@ -202,13 +200,12 @@ class AudioMetadata(Id3TagsMixin, Mp4TagsMixin, AlbumTagsMixin):
                 verbose = verbose,
                 pretend_run = pretend_run,
                 exit_on_failure = exit_on_failure)
-        else:
-            return self.remove_id3_tags(
-                audio_file = audio_file,
-                preserve_artwork = preserve_artwork,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
+        return self.remove_id3_tags(
+            audio_file = audio_file,
+            preserve_artwork = preserve_artwork,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
 
     def has_tags(self, audio_file):
 
@@ -220,8 +217,7 @@ class AudioMetadata(Id3TagsMixin, Mp4TagsMixin, AlbumTagsMixin):
         ext = paths.get_filename_extension(audio_file).lower()
         if ext in [".m4a", ".m4b", ".mp4", ".aac"]:
             return self.has_mp4_tags(audio_file)
-        else:
-            return self.has_id3_tags(audio_file)
+        return self.has_id3_tags(audio_file)
 
     def get_file_info(self, audio_file, verbose = False, exit_on_failure = False):
 
@@ -237,8 +233,7 @@ class AudioMetadata(Id3TagsMixin, Mp4TagsMixin, AlbumTagsMixin):
                 audio_file = audio_file,
                 verbose = verbose,
                 exit_on_failure = exit_on_failure)
-        else:
-            return self.get_audio_file_info(
-                audio_file = audio_file,
-                verbose = verbose,
-                exit_on_failure = exit_on_failure)
+        return self.get_audio_file_info(
+            audio_file = audio_file,
+            verbose = verbose,
+            exit_on_failure = exit_on_failure)

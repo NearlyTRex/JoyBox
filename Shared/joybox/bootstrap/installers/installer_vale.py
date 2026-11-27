@@ -3,9 +3,9 @@ import os
 
 # Local imports
 from joybox.bootstrap import constants
-from . import installer
 from joybox import runoptions
 from joybox import logger
+from . import installer
 
 # Vale, a rule-based prose linter with no model, so deterministic in CI; promptc
 # uses it for the vocabulary and banned-phrase checks behind PC104

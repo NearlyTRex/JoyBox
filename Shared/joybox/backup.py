@@ -330,7 +330,7 @@ def copy_files(
             exit_on_failure = exit_on_failure)
 
     # Decrypt
-    elif cryption_type == config.CryptionType.DECRYPT:
+    if cryption_type == config.CryptionType.DECRYPT:
         return copy_and_decrypt_files(
             input_base_path = input_base_path,
             output_base_path = output_base_path,

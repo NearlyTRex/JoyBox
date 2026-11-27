@@ -461,9 +461,8 @@ def import_game_save_paths(
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-    else:
-        # Only store games record save paths
-        return True
+    # Only store games record save paths
+    return True
 
 # Import all game save paths
 def import_all_game_save_paths(
@@ -489,12 +488,11 @@ def import_game_save(
     if stores.is_store_platform(game_info.get_platform()):
         # The store restores its own saves
         return True
-    else:
-        return import_local_game_save(
-            game_info = game_info,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
+    return import_local_game_save(
+        game_info = game_info,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
 
 # Import all game save
 def import_all_game_saves(
@@ -525,13 +523,12 @@ def export_game_save(
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-    else:
-        return export_local_game_save(
-            game_info = game_info,
-            locker_type = locker_type,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
+    return export_local_game_save(
+        game_info = game_info,
+        locker_type = locker_type,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
 
 # Export all game save
 def export_all_game_save(

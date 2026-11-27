@@ -2,9 +2,9 @@
 from joybox.bootstrap import constants
 from joybox import connection
 from joybox.bootstrap import installers
-from . import env
 from joybox import runoptions
 from joybox import logger
+from . import env
 
 # Remote Ubuntu
 class RemoteUbuntu(env.Environment):

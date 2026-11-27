@@ -163,10 +163,9 @@ class Itchio(storebase.StoreBase):
                 exit_on_failure = False)
             if isinstance(cached_data, list) and all(isinstance(entry, dict) for entry in cached_data):
                 return self.make_purchases(cached_data)
-            else:
-                if verbose:
-                    logger.log_warning("Failed to load itch.io cache, will fetch fresh data")
-                use_cache = False
+            if verbose:
+                logger.log_warning("Failed to load itch.io cache, will fetch fresh data")
+            use_cache = False
 
         # Connect to web
         web_driver = self.web_connect(

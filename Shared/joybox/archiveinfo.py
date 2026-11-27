@@ -25,21 +25,21 @@ def is_known_archive(archive_file, extensions = (), mime_types = ()):
 def is_archive(archive_file):
     if is_zip_archive(archive_file):
         return True
-    elif is_7z_archive(archive_file):
+    if is_7z_archive(archive_file):
         return True
-    elif is_rar_archive(archive_file):
+    if is_rar_archive(archive_file):
         return True
-    elif is_lzh_archive(archive_file):
+    if is_lzh_archive(archive_file):
         return True
-    elif is_stuffit_archive(archive_file):
+    if is_stuffit_archive(archive_file):
         return True
-    elif is_tarball_archive(archive_file):
+    if is_tarball_archive(archive_file):
         return True
-    elif is_disc_archive(archive_file):
+    if is_disc_archive(archive_file):
         return True
-    elif is_exe_archive(archive_file):
+    if is_exe_archive(archive_file):
         return True
-    elif is_appimage_archive(archive_file):
+    if is_appimage_archive(archive_file):
         return True
     return False
 

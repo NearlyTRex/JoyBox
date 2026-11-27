@@ -158,9 +158,8 @@ def parse_timestamp(timestamp_string):
                 timestamp_string = timestamp_string.split(".")[0] + "Z"
             dt = datetime.strptime(timestamp_string.replace("Z", "+0000"), "%Y-%m-%dT%H:%M:%S%z")
             return int(dt.timestamp())
-        else:
-            dt = datetime.strptime(timestamp_string.strip(), "%Y-%m-%d %H:%M:%S")
-            return int(dt.timestamp())
+        dt = datetime.strptime(timestamp_string.strip(), "%Y-%m-%d %H:%M:%S")
+        return int(dt.timestamp())
     except ValueError:
         return 0
 
@@ -203,8 +202,7 @@ def get_url_components(string):
 def encode_url_string(string, use_plus = False):
     if use_plus:
         return urllib.parse.quote_plus(string)
-    else:
-        return urllib.parse.quote(string)
+    return urllib.parse.quote(string)
 
 # Join strings as url
 def join_strings_as_url(string1, string2, allow_fragments = True):

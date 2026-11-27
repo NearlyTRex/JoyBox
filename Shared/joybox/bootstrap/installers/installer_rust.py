@@ -4,9 +4,9 @@ import os
 # Local imports
 from joybox.bootstrap import constants
 from joybox.bootstrap import packages
-from . import installer
 from joybox import runoptions
 from joybox import logger
+from . import installer
 
 # Extract package identifier from dict
 def get_cargo_package_id(pkg):

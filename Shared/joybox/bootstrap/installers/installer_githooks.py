@@ -3,10 +3,10 @@ import os
 
 # Local imports
 from joybox.bootstrap import constants
-from . import installer
 from joybox import runoptions
 from joybox import logger
 from joybox import environment
+from . import installer
 
 # GitHooks
 class GitHooks(installer.Installer):

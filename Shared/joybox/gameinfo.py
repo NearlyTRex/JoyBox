@@ -446,7 +446,7 @@ class GameInfo:
             return []
         if isinstance(extension, str):
             return [file for file in files if file.lower().endswith(extension.lower())]
-        elif isinstance(extension, (list, tuple)):
+        if isinstance(extension, (list, tuple)):
             return [file for file in files if any(file.lower().endswith(ext.lower()) for ext in extension)]
         return files
 
@@ -504,8 +504,7 @@ class GameInfo:
     def get_rom_dir(self, locker_type):
         if locker_type == config.LockerType.LOCAL:
             return self.get_local_rom_dir()
-        else:
-            return self.get_remote_rom_dir()
+        return self.get_remote_rom_dir()
 
     ##############################
 

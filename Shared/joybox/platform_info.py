@@ -39,9 +39,9 @@ def is_sandboxie_platform():
 def get_current_platform():
     if is_windows_platform():
         return "windows"
-    elif is_linux_platform():
+    if is_linux_platform():
         return "linux"
-    elif is_mac_platform():
+    if is_mac_platform():
         return "macos"
     return None
 
@@ -79,9 +79,9 @@ def get_linux_distro_id_like():
 def is_ubuntu_distro():
     if "ubuntu" in get_linux_distro_name().lower():
         return True
-    elif "ubuntu" in get_linux_distro_id():
+    if "ubuntu" in get_linux_distro_id():
         return True
-    elif "ubuntu" in get_linux_distro_id_like():
+    if "ubuntu" in get_linux_distro_id_like():
         return True
     return False
 

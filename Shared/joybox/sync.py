@@ -31,8 +31,7 @@ def get_remote_raw_type(remote_type):
 def get_remote_connection_path(remote_name, remote_type, remote_path):
     if remote_type == config.RemoteType.B2:
         return "%s:%s%s" % (remote_name, get_unencrypted_remote_name(remote_name), remote_path)
-    else:
-        return "%s:%s" % (remote_name, remote_path)
+    return "%s:%s" % (remote_name, remote_path)
 
 # Get common remote flags
 def get_common_remote_flags(remote_type, remote_action_type, tps_limit = 10, transfers = 1):

@@ -35,8 +35,7 @@ def get_prefix(options):
 def get_wine_real_drive_path(options, drive):
     if drive.lower() == "c":
         return paths.join_paths(options.get_prefix_dir(), "drive_c")
-    else:
-        return paths.join_paths(options.get_prefix_dir(), "dosdevices", drive.lower() + ":")
+    return paths.join_paths(options.get_prefix_dir(), "dosdevices", drive.lower() + ":")
 
 # Get sandboxie real drive path
 def get_sandboxie_real_drive_path(options, drive):

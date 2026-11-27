@@ -3,10 +3,10 @@ import os
 
 # Local imports
 from joybox import bootstrap
-from . import installer
 from joybox import runoptions
 from joybox import logger
 from joybox import serialization
+from . import installer
 
 # User config files deployed from a folder under Bootstrap
 class ManagedFiles(installer.Installer):

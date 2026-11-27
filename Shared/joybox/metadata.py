@@ -307,7 +307,7 @@ class Metadata:
                 verbose = verbose,
                 exit_on_failure = exit_on_failure) or "")
         for game_platform in self.get_sorted_platforms():
-            game_supercategory, game_category, game_subcategory = gamenaming.derive_game_categories_from_platform(game_platform)
+            _, game_category, game_subcategory = gamenaming.derive_game_categories_from_platform(game_platform)
 
             # Get launch command
             launch_cmd = [

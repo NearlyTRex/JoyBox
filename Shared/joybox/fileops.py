@@ -422,15 +422,13 @@ def create_symlink(
 def are_symlinks_supported():
     if platform_info.is_unix_platform():
         return True
-    else:
-        test_file_src = paths.join_paths(os.path.expanduser("~"), ".symsrc")
-        test_file_dest = paths.join_paths(os.path.expanduser("~"), ".symdest")
-        if os.path.islink(test_file_dest):
-            return True
-        touch_file(test_file_src)
-        create_symlink(test_file_src, test_file_dest)
-        return os.path.islink(test_file_dest)
-    return False
+    test_file_src = paths.join_paths(os.path.expanduser("~"), ".symsrc")
+    test_file_dest = paths.join_paths(os.path.expanduser("~"), ".symdest")
+    if os.path.islink(test_file_dest):
+        return True
+    touch_file(test_file_src)
+    create_symlink(test_file_src, test_file_dest)
+    return os.path.islink(test_file_dest)
 
 # Resolve symlink
 def resolve_symlink(src, verbose = False, pretend_run = False, exit_on_failure = False):
@@ -706,13 +704,13 @@ def remove_object(obj, verbose = False, pretend_run = False, exit_on_failure = F
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-    elif os.path.islink(obj):
+    if os.path.islink(obj):
         return remove_symlink(
             src = obj,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-    elif os.path.isdir(obj):
+    if os.path.isdir(obj):
         success_contents = remove_directory_contents(
             src = obj,
             verbose = verbose,

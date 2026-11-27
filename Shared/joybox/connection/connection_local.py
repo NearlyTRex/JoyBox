@@ -11,8 +11,8 @@ from joybox import network, archive
 from joybox import logger, runoptions
 from joybox import systemtools as tools
 from joybox import programs
-from . import connection
 from joybox import paths
+from . import connection
 
 class ConnectionLocal(connection.Connection):
     def __init__(
@@ -142,8 +142,7 @@ class ConnectionLocal(connection.Connection):
         if code != 0:
             if throw_exception:
                 raise ValueError("Unable to run command: %s" % cmd)
-            else:
-                runtime.quit_program(code)
+            runtime.quit_program(code)
 
     def make_temporary_directory(self):
         if self.flags.pretend_run:

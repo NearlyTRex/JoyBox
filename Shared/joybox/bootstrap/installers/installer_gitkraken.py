@@ -1,8 +1,8 @@
 # Local imports
 from joybox.bootstrap import constants
-from . import installer
 from joybox import runoptions
 from joybox import logger
+from . import installer
 
 # GitKraken
 class GitKraken(installer.Installer):

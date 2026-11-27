@@ -40,8 +40,7 @@ class Computer(emulatorbase.EmulatorBase):
     def get_save_type(self):
         if platform_info.is_windows_platform():
             return config.SaveType.SANDBOXIE
-        else:
-            return config.SaveType.WINE
+        return config.SaveType.WINE
 
     # Get config file
     def get_config_file(self, emulator_platform = None):

@@ -7,13 +7,13 @@ import tomllib
 from joybox.bootstrap import constants
 from joybox.bootstrap import packages
 from joybox import settings
-from . import installer
 from joybox import runoptions
 from joybox import logger
 from joybox import environment
 from joybox import platform_info
 from joybox import serialization
 from joybox import systemtools as tools
+from . import installer
 
 # Extras of joybox the venv gets
 JOYBOX_EXTRAS = ["dev", "decompiler"]

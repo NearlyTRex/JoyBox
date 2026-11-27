@@ -486,7 +486,7 @@ def run_metadata_action(
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-    elif action == config.AudioMetadataAction.CLEAR:
+    if action == config.AudioMetadataAction.CLEAR:
         return clear_audio_metadata_tags(
             genre_type = genre_type,
             album_name = album_name,
@@ -495,7 +495,7 @@ def run_metadata_action(
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-    elif action == config.AudioMetadataAction.APPLY:
+    if action == config.AudioMetadataAction.APPLY:
         return apply_audio_metadata_tags(
             genre_type = genre_type,
             album_name = album_name,
@@ -504,9 +504,8 @@ def run_metadata_action(
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-    else:
-        logger.log_error(f"Unknown action: {action}")
-        return False
+    logger.log_error(f"Unknown action: {action}")
+    return False
 
 # Tag one genre using the universal and per-genre policies
 def tag_genre_with_policy(

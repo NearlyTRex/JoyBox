@@ -16,8 +16,7 @@ def import_python_module_package(module_path, module_name):
             sys.path.append(module_path)
             module = importlib.import_module(module_name)
             return module
-        else:
-            return sys.modules[module_name]
+        return sys.modules[module_name]
     return None
 
 # Import python module file

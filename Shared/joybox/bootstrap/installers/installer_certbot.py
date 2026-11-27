@@ -7,9 +7,9 @@ from joybox.bootstrap import constants
 from joybox import settings
 from joybox import serverinfo
 from joybox import connection
-from . import installer
 from joybox import runoptions
 from joybox import logger
+from . import installer
 
 # Nginx config template
 NGINX_CONFIG_TEMPLATE = """

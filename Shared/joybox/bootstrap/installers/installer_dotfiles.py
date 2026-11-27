@@ -5,10 +5,10 @@ import os
 from joybox import bootstrap
 from joybox.bootstrap import constants
 from joybox import serialization
-from . import installer
 from joybox import runoptions
 from joybox import logger
 from joybox import environment
+from . import installer
 
 # Managed block markers
 BLOCK_BEGIN = "# >>> JOYBOX MANAGED BLOCK >>>"

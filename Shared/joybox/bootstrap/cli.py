@@ -67,7 +67,7 @@ def main(argv = None):
 
     # Parse arguments
     parser = build_parser()
-    args, unknown = parser.parse_known_args(argv)
+    args, _ = parser.parse_known_args(argv)
 
     # Require action unless listing components or rebuilding the config
     is_info_only = args.list_components or args.list_images

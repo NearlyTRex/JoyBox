@@ -14,21 +14,20 @@ from joybox import config
 def capitalize_text(text):
     if len(text) == 0:
         return ""
-    elif len(text) == 1:
+    if len(text) == 1:
         return text.upper()
-    else:
-        words = []
-        for index, word in enumerate(text.split(" ")):
-            for filler_word in config.filler_words:
-                if index != 0 and word.lower() == filler_word.lower():
-                    words.append(word)
-                    break
-            else:
-                if len(word) == 1:
-                    words.append(word[0].upper())
-                elif len(word) >= 2:
-                    words.append(word[0].upper() + word[1:])
-        return " ".join(words)
+    words = []
+    for index, word in enumerate(text.split(" ")):
+        for filler_word in config.filler_words:
+            if index != 0 and word.lower() == filler_word.lower():
+                words.append(word)
+                break
+        else:
+            if len(word) == 1:
+                words.append(word[0].upper())
+            elif len(word) >= 2:
+                words.append(word[0].upper() + word[1:])
+    return " ".join(words)
 
 # Wrap text to lines
 def wrap_text_to_lines(text, width = 80, spacer = "."):

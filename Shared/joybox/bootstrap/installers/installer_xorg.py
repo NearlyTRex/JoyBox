@@ -3,9 +3,9 @@ import os
 
 # Local imports
 from joybox.bootstrap import constants
-from . import installer
 from joybox import runoptions
 from joybox import logger
+from . import installer
 
 # Xorg InputClass snippets to install
 # Each input class has: identifier, description, options (a list of MatchX / Option lines)

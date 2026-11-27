@@ -190,7 +190,7 @@ def create_basic_prefix(
             exit_on_failure = exit_on_failure)
 
     # Setup sandboxie prefix
-    elif options.is_sandboxie_prefix():
+    if options.is_sandboxie_prefix():
 
         # Create sandboxie prefix
         return create_sandboxie_prefix(

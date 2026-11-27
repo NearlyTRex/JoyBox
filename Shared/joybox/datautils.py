@@ -17,14 +17,13 @@ def merge_dictionaries(dict1, dict2, merge_type = None):
         try:
             if merge_type == config.MergeType.REPLACE:
                 return mergedeep.merge(dict1, dict2, strategy=mergedeep.Strategy.REPLACE)
-            elif merge_type == config.MergeType.ADDITIVE:
+            if merge_type == config.MergeType.ADDITIVE:
                 return mergedeep.merge(dict1, dict2, strategy=mergedeep.Strategy.ADDITIVE)
-            elif merge_type == config.MergeType.SAFE_REPLACE:
+            if merge_type == config.MergeType.SAFE_REPLACE:
                 return mergedeep.merge(dict1, dict2, strategy=mergedeep.Strategy.TYPESAFE_REPLACE)
-            elif merge_type == config.MergeType.SAFE_ADDITIVE:
+            if merge_type == config.MergeType.SAFE_ADDITIVE:
                 return mergedeep.merge(dict1, dict2, strategy=mergedeep.Strategy.TYPESAFE_ADDITIVE)
-            else:
-                return mergedeep.merge(dict1, dict2)
+            return mergedeep.merge(dict1, dict2)
         except TypeError:
             return dict1
     elif isinstance(dict1, dict) and not isinstance(dict2, dict):
@@ -38,12 +37,11 @@ def merge_dictionaries(dict1, dict2, merge_type = None):
 def merge_lists(list1, list2):
     if isinstance(list1, list) and isinstance(list2, list):
         return sorted(set(list1 + list2))
-    elif isinstance(list1, list) and not isinstance(list2, list):
+    if isinstance(list1, list) and not isinstance(list2, list):
         return list1
-    elif not isinstance(list1, list) and isinstance(list2, list):
+    if not isinstance(list1, list) and isinstance(list2, list):
         return list2
-    else:
-        return None
+    return None
 
 # Merge data
 def merge_data(data1, data2, merge_type = None):
@@ -52,19 +50,17 @@ def merge_data(data1, data2, merge_type = None):
             dict1 = data1,
             dict2 = data2,
             merge_type = merge_type)
-    elif isinstance(data1, list) or isinstance(data2, list):
+    if isinstance(data1, list) or isinstance(data2, list):
         return merge_lists(
             list1 = data1,
             list2 = data2)
-    else:
-        if data1 and data2:
-            return [data1, data2]
-        elif data1 and not data2:
-            return data1
-        elif not data1 and data2:
-            return data2
-        else:
-            return None
+    if data1 and data2:
+        return [data1, data2]
+    if data1 and not data2:
+        return data1
+    if not data1 and data2:
+        return data2
+    return None
 
 # Deduplicate adjacent lines
 def deduplicate_adjacent_lines(lines):

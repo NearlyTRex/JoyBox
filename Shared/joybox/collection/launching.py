@@ -205,14 +205,13 @@ def launch_game(
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-    else:
-        return launch_local_game(
-            game_info = game_info,
-            locker_type = locker_type,
-            capture_type = capture_type,
-            fullscreen = fullscreen,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
+    return launch_local_game(
+        game_info = game_info,
+        locker_type = locker_type,
+        capture_type = capture_type,
+        fullscreen = fullscreen,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
 
 ###########################################################

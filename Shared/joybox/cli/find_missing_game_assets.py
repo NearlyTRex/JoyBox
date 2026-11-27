@@ -44,7 +44,7 @@ def main():
 
     # Parse arguments
     parser = build_parser()
-    args, unknown = parser.parse_known_args()
+    args, _ = parser.parse_known_args()
 
     # Check requirements
     setup.check_requirements()
@@ -86,7 +86,7 @@ def main():
 
                         # Get game info
                         game_name = game_entry.get_game()
-                        game_supercategory, game_category, game_subcategory = gamenaming.derive_game_categories_from_platform(game_platform)
+                        _, game_category, game_subcategory = gamenaming.derive_game_categories_from_platform(game_platform)
 
                         # Get asset file
                         asset_file = environment.get_locker_gaming_asset_file(game_category, game_subcategory, game_name, asset_type)

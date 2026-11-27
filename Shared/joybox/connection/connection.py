@@ -71,7 +71,7 @@ class Connection(ABC):
     def mark_command_as_sudo(self, cmd):
         if isinstance(cmd, str):
             return f"sudo {cmd}"
-        elif isinstance(cmd, list):
+        if isinstance(cmd, list):
             return ["sudo"] + cmd
         return cmd
 
@@ -233,8 +233,7 @@ class Connection(ABC):
     def add_to_path(self, src):
         if platform_info.is_windows_platform():
             return self.add_to_windows_path(src)
-        else:
-            return self.add_to_unix_path(src)
+        return self.add_to_unix_path(src)
 
     def add_to_windows_path(self, src):
         try:

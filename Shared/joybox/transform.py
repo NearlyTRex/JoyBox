@@ -185,7 +185,7 @@ def transform_disc_image(
     # TODO: These kinds of functions would be better as a function (IsFileCHD, or something)
     if source_file.endswith(".chd"):
         return (True, paths.join_paths(output_dir, paths.get_filename_basename(source_file) + config.DiscImageFileType.ISO.cval()))
-    elif source_file.endswith(".m3u"):
+    if source_file.endswith(".m3u"):
         return (True, paths.join_paths(output_dir, paths.get_filename_basename(source_file) + ".m3u"))
 
     # No transformation was done

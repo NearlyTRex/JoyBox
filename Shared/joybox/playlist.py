@@ -72,7 +72,7 @@ def generate_playlist(
     # Check length
     if not allow_empty_lists and len(playlist_contents) == 0:
         return True
-    elif not allow_single_lists and len(playlist_contents) == 1:
+    if not allow_single_lists and len(playlist_contents) == 1:
         return True
 
     # Write playlist

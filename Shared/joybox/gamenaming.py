@@ -21,8 +21,7 @@ def derive_game_letter_from_name(game_name):
 def derive_game_name_path_from_name(game_name, game_platform):
     if platforms.is_letter_platform(game_platform):
         return paths.join_paths(derive_game_letter_from_name(game_name), game_name)
-    else:
-        return game_name
+    return game_name
 
 # Derive game platform from categories
 def derive_game_platform_from_categories(game_subcategory):

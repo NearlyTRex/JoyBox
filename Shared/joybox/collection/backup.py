@@ -90,9 +90,8 @@ def should_backup_game_files(
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-    else:
-        # A local game's copy is the master, with no upstream to fetch it again from
-        return False
+    # A local game's copy is the master, with no upstream to fetch it again from
+    return False
 
 # Backup game files
 def backup_game_files(
@@ -108,9 +107,8 @@ def backup_game_files(
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-    else:
-        # A local game's copy is the master, with no upstream to fetch it again from
-        return True
+    # A local game's copy is the master, with no upstream to fetch it again from
+    return True
 
 # Backup all game files
 def backup_all_game_files(

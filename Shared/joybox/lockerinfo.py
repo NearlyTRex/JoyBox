@@ -73,10 +73,9 @@ class LockerInfo:
     def get_backend_type(self):
         if self.locker_type == config.LockerType.EXTERNAL:
             return config.BackendType.EXTERNAL
-        elif self.type is None:
+        if self.type is None:
             return config.BackendType.LOCAL
-        else:
-            return config.BackendType.REMOTE
+        return config.BackendType.REMOTE
 
     def get_locker_root_path(self):
         if self.mount_path:

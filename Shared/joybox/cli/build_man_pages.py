@@ -45,7 +45,7 @@ def main():
 
     # Parse arguments
     parser = build_parser()
-    args, unknown = parser.parse_known_args()
+    args, _ = parser.parse_known_args()
 
     # Resolve directories
     shared_folder = os.path.realpath(os.path.join(os.path.dirname(__file__), "..", ".."))

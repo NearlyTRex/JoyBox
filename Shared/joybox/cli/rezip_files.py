@@ -41,7 +41,7 @@ def main():
 
     # Parse arguments
     parser = build_parser()
-    args, unknown = parser.parse_known_args()
+    args, _ = parser.parse_known_args()
 
     # Check requirements
     setup.check_requirements()

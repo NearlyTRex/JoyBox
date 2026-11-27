@@ -1,10 +1,10 @@
 # Local imports
 from joybox.bootstrap import constants
 from joybox import default_settings
-from . import installer
 from joybox import runoptions
 from joybox import logger
 from joybox import settings
+from . import installer
 
 # Config
 class Config(installer.Installer):

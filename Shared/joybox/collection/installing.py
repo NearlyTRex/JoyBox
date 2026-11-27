@@ -318,8 +318,7 @@ def uninstall_local_game(
 def is_game_installed(game_info):
     if stores.is_store_platform(game_info.get_platform()):
         return is_store_game_installed(game_info)
-    else:
-        return is_local_game_installed(game_info)
+    return is_local_game_installed(game_info)
 
 # Install game
 def install_game(
@@ -335,14 +334,13 @@ def install_game(
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-    else:
-        return install_local_game(
-            game_info = game_info,
-            locker_type = locker_type,
-            keep_setup_files = keep_setup_files,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
+    return install_local_game(
+        game_info = game_info,
+        locker_type = locker_type,
+        keep_setup_files = keep_setup_files,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
 
 # Install game addons
 def install_game_addons(
@@ -353,12 +351,11 @@ def install_game_addons(
     if stores.is_store_platform(game_info.get_platform()):
         # Store clients fetch their own add-ons
         return True
-    else:
-        return install_local_game_addons(
-            game_info = game_info,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
+    return install_local_game_addons(
+        game_info = game_info,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
 
 # Uninstall game
 def uninstall_game(
@@ -372,11 +369,10 @@ def uninstall_game(
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-    else:
-        return uninstall_local_game(
-            game_info = game_info,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
+    return uninstall_local_game(
+        game_info = game_info,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
 
 ###########################################################

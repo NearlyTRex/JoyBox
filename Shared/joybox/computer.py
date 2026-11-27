@@ -321,7 +321,7 @@ class ProgramStep(jsondata.JsonData):
                 exit_on_failure = exit_on_failure)
 
         # Move step
-        elif program_step_type == "move":
+        if program_step_type == "move":
             return filebulk.smart_move(
                 src = program_step_from,
                 dest = program_step_to,
@@ -333,7 +333,7 @@ class ProgramStep(jsondata.JsonData):
                 exit_on_failure = exit_on_failure)
 
         # Extract step
-        elif program_step_type == "extract":
+        if program_step_type == "extract":
             return archive.extract_archive(
                 archive_file = program_step_from,
                 extract_dir = program_step_to,
@@ -343,7 +343,7 @@ class ProgramStep(jsondata.JsonData):
                 exit_on_failure = exit_on_failure)
 
         # Lowercase step
-        elif program_step_type == "lowercase":
+        if program_step_type == "lowercase":
             return fileops.lowercase_all_paths(
                 src = program_step_dir,
                 verbose = verbose,

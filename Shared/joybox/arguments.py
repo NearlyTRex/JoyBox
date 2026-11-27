@@ -188,7 +188,7 @@ class ArgumentParser:
     def get_path(self, argname):
         if not self.is_known_argument(argname):
             return None
-        args, unknown = self.parse_known_args()
+        args, _ = self.parse_known_args()
         args_dict = vars(args)
         if argname not in args_dict.keys():
             return None
@@ -392,7 +392,7 @@ class ArgumentParser:
 
     # Get selected supercategories
     def get_selected_supercategories(self, argname = "game_supercategory"):
-        args, unknown = self.parse_known_args()
+        args, _ = self.parse_known_args()
         supercategories = []
         supercategory_arg = getattr(args, argname, None)
         if supercategory_arg:
@@ -403,7 +403,7 @@ class ArgumentParser:
 
     # Get selected categories
     def get_selected_categories(self, argname = "game_category"):
-        args, unknown = self.parse_known_args()
+        args, _ = self.parse_known_args()
         categories = []
         category_arg = getattr(args, argname, None)
         if category_arg:
@@ -417,7 +417,7 @@ class ArgumentParser:
         self,
         category_argname = "game_category",
         subcategory_argname = "game_subcategory"):
-        args, unknown = self.parse_known_args()
+        args, _ = self.parse_known_args()
         subcategory_map = {}
         for category in self.get_selected_categories(argname = category_argname):
             subcategories = []

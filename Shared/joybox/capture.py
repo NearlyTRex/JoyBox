@@ -305,7 +305,7 @@ def run_capture_command(
             exit_on_failure = exit_on_failure)
 
     # Video capturing
-    elif capture_type == config.CaptureType.VIDEO:
+    if capture_type == config.CaptureType.VIDEO:
 
         # Run while capturing video
         if paths.is_path_file(capture_file) and not overwrite_videos:
@@ -322,5 +322,4 @@ def run_capture_command(
             exit_on_failure = exit_on_failure)
 
     # No capture
-    else:
-        return run_start()
+    return run_start()

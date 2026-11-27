@@ -211,9 +211,8 @@ def action_delete(model_name = None):
         if ollama.delete_model(model_name):
             logger.log_info("Successfully deleted %s" % model_name)
             return True
-        else:
-            logger.log_error("Failed to delete %s" % model_name)
-            return False
+        logger.log_error("Failed to delete %s" % model_name)
+        return False
     return True
 
 # Show model info
@@ -238,9 +237,8 @@ def action_info(model_name = None):
         logger.log_info("Model info for %s:" % model_name)
         terminal.write(info + "\n")
         return True
-    else:
-        logger.log_error("Could not get info for %s (is it installed?)" % model_name)
-        return False
+    logger.log_error("Could not get info for %s (is it installed?)" % model_name)
+    return False
 
 # Launch a coding-agent harness with an Ollama model as the backend
 def action_harness(model_name = None, harness = None):

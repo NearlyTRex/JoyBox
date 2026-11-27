@@ -36,7 +36,7 @@ def does_path_exist(path, case_sensitive_paths = True, partial_paths = False):
         return False
     if case_sensitive_paths:
         return os.path.exists(path)
-    elif partial_paths:
+    if partial_paths:
         path_parent = str(pathlib.Path(path).parent)
         path_name = str(pathlib.Path(path).name)
         if os.path.isdir(path_parent):
@@ -157,7 +157,7 @@ def build_file_list(root, excludes = None, new_relative_path = "", use_relative_
         return files
     absolute_root = os.path.abspath(root)
     if os.path.isdir(root):
-        for base, dirnames, filenames in os.walk(root, followlinks = follow_symlink_dirs):
+        for base, _, filenames in os.walk(root, followlinks = follow_symlink_dirs):
             for filename in filenames:
                 location = os.path.abspath(os.path.join(base, filename))
                 if ignore_symlinks and os.path.islink(location):
@@ -180,7 +180,7 @@ def build_file_list_by_extensions(root, excludes = None, extensions = None, new_
     extensions = [] if extensions is None else extensions
     files = []
     for file in build_file_list(root, excludes, new_relative_path, use_relative_paths, ignore_symlinks, follow_symlink_dirs):
-        base, ext = get_filename_split(file)
+        _, ext = get_filename_split(file)
         if isinstance(extensions, list) and len(extensions) > 0:
             if ext in extensions or ext.lower() in extensions or ext.upper() in extensions:
                 files.append(file)
@@ -197,7 +197,7 @@ def build_directory_list(root, excludes = None, new_relative_path = "", use_rela
     absolute_root = os.path.abspath(root)
     if os.path.isdir(absolute_root):
         directories.append(absolute_root)
-    for base, dirnames, filenames in os.walk(root, followlinks = follow_symlink_dirs):
+    for base, dirnames, _ in os.walk(root, followlinks = follow_symlink_dirs):
         for dirname in dirnames:
             location = os.path.abspath(os.path.join(base, dirname))
             if ignore_symlinks and os.path.islink(location):
@@ -476,8 +476,7 @@ def get_directory_contents(path, excludes = None):
 def get_directory_anchor(path):
     if path.startswith(config.DRIVE_ROOT_POSIX):
         return str(pathlib.PurePosixPath(path).anchor)
-    else:
-        return str(pathlib.PureWindowsPath(path).anchor)
+    return str(pathlib.PureWindowsPath(path).anchor)
 
 # Get directory drive
 def get_directory_drive(path):
@@ -501,27 +500,25 @@ def is_directory_empty(path):
 def does_directory_contain_files(path, recursive = True):
     if recursive:
         return len(build_file_list(path)) > 0
-    else:
-        files = []
-        for obj in get_directory_contents(path):
-            obj_path = os.path.join(path, obj)
-            if os.path.isfile(obj_path):
-                files.append(obj)
-        return len(files) > 0
+    files = []
+    for obj in get_directory_contents(path):
+        obj_path = os.path.join(path, obj)
+        if os.path.isfile(obj_path):
+            files.append(obj)
+    return len(files) > 0
 
 # Check if directory contains files by extensions
 def does_directory_contain_files_by_extensions(path, extensions = None, recursive = True):
     extensions = [] if extensions is None else extensions
     if recursive:
         return len(build_file_list_by_extensions(path, extensions = extensions)) > 0
-    else:
-        files = []
-        for obj in get_directory_contents(path):
-            obj_path = os.path.join(path, obj)
-            if os.path.isfile(obj_path):
-                if does_filename_match_extensions(obj_path, extensions):
-                    files.append(obj)
-        return len(files) > 0
+    files = []
+    for obj in get_directory_contents(path):
+        obj_path = os.path.join(path, obj)
+        if os.path.isfile(obj_path):
+            if does_filename_match_extensions(obj_path, extensions):
+                files.append(obj)
+    return len(files) > 0
 
 # Check if directory contains symlink dirs
 def does_directory_contain_symlink_dirs(path):
@@ -589,8 +586,7 @@ def get_filename_extension(path):
 def get_filename_anchor(path):
     if path.startswith(config.DRIVE_ROOT_POSIX):
         return str(pathlib.PurePosixPath(path).anchor)
-    else:
-        return str(pathlib.PureWindowsPath(path).anchor)
+    return str(pathlib.PureWindowsPath(path).anchor)
 
 # Get filename drive
 def get_filename_drive(path):
@@ -709,12 +705,11 @@ def is_path_valid(path):
             except OSError as e:
                 if getattr(e, "winerror", None) == 123:
                     return False
-                elif e.errno in {errno.ENAMETOOLONG, errno.ERANGE}:
+                if e.errno in {errno.ENAMETOOLONG, errno.ERANGE}:
                     return False
     except (TypeError, ValueError):
         return False
-    else:
-        return True
+    return True
 
 # Check if a path should be excluded (any exclude token appears in a path component)
 def is_exclude_path(path, excludes = ()):

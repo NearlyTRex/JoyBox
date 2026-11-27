@@ -498,8 +498,7 @@ def get_actual_mount_point(
         drive_text = (drive_text or "").strip()
         if drive_text:
             return f"{drive_text}:\\"
-        else:
-            return None
+        return None
 
     # Mount point matches expectations
     return mount_dir

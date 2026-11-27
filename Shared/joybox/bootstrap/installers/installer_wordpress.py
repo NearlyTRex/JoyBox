@@ -5,10 +5,10 @@ import os
 from joybox import bootstrap
 from joybox import settings
 from joybox import serverinfo
-from . import installer_dockerapp
-from . import installer_nginx
 from joybox import runoptions
 from joybox import logger
+from . import installer_dockerapp
+from . import installer_nginx
 
 # Apex root snippet template
 #

@@ -3,10 +3,10 @@ import os
 
 # Local imports
 from joybox.bootstrap import constants
-from . import installer
 from joybox import runoptions
 from joybox import logger
 from joybox import settings
+from . import installer
 
 # Nous Research's Hermes agent CLI, run editable from a pinned checkout in its own
 # venv, since it finds its files through the source tree and its install.sh edits

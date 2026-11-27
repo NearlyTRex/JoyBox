@@ -269,10 +269,9 @@ class Steam(storebase.StoreBase):
                         json_platform = self.get_platform())
                     cached_purchases.append(purchase)
                 return cached_purchases
-            else:
-                if verbose:
-                    logger.log_warning("Failed to load Steam cache, will fetch fresh data")
-                use_cache = False
+            if verbose:
+                logger.log_warning("Failed to load Steam cache, will fetch fresh data")
+            use_cache = False
 
         # Get steam url
         steam_url = "https://api.steampowered.com/IPlayerService/GetOwnedGames/v0001/"

@@ -305,7 +305,7 @@ def create_web_driver(
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-    elif driver_type == config.WebDriverType.CHROME:
+    if driver_type == config.WebDriverType.CHROME:
         return create_chrome_web_driver(
             download_dir = download_dir,
             profile_dir = profile_dir,
@@ -314,7 +314,7 @@ def create_web_driver(
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-    elif driver_type == config.WebDriverType.BRAVE:
+    if driver_type == config.WebDriverType.BRAVE:
         return create_chrome_web_driver(
             download_dir = download_dir,
             profile_dir = profile_dir,
@@ -593,11 +593,10 @@ def get_element(
             if verbose:
                 logger.log_info("GetElement: Found %d element(s)" % len(elements))
             return elements
-        else:
-            element = parent.find_element(*locator.get())
-            if verbose:
-                logger.log_info("GetElement: Element found successfully")
-            return element
+        element = parent.find_element(*locator.get())
+        if verbose:
+            logger.log_info("GetElement: Element found successfully")
+        return element
     except get_selenium_errors().NoSuchElementException:
         if verbose:
             logger.log_warning("GetElement: Element not found")

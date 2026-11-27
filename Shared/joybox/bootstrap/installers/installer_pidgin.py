@@ -3,9 +3,9 @@ import os
 
 # Local imports
 from joybox.bootstrap import constants
-from . import installer
 from joybox import runoptions
 from joybox import logger
+from . import installer
 
 # Pidgin AIM/ICQ plugins
 # Pidgin itself comes from apt. Upstream dropped the OSCAR protocol after

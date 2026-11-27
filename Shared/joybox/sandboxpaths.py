@@ -22,7 +22,7 @@ from joybox import prefixlayout
 def get_program_prefix_name(program_name):
     if programs.is_program_name_tool(program_name):
         return config.PrefixType.TOOL
-    elif programs.is_program_name_emulator(program_name):
+    if programs.is_program_name_emulator(program_name):
         return config.PrefixType.EMULATOR
     return None
 

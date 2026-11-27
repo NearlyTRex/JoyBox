@@ -295,36 +295,33 @@ def smart_copy(
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-    else:
-        if os.path.isdir(src):
-            return copy_contents(
-                src = src,
-                dest = dest,
-                show_progress = show_progress,
-                skip_existing = skip_existing,
-                skip_identical = skip_identical,
-                skip_on_error = skip_on_error,
-                error_log_path = error_log_path,
-                case_sensitive_paths = case_sensitive_paths,
-                ignore_symlinks = ignore_symlinks,
-                follow_symlink_dirs = follow_symlink_dirs,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
-        else:
-            return fileops.transfer_file(
-                src = src,
-                dest = dest,
-                show_progress = show_progress,
-                skip_existing = skip_existing,
-                skip_identical = skip_identical,
-                skip_on_error = skip_on_error,
-                error_log_path = error_log_path,
-                case_sensitive_paths = case_sensitive_paths,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
-    return True
+    if os.path.isdir(src):
+        return copy_contents(
+            src = src,
+            dest = dest,
+            show_progress = show_progress,
+            skip_existing = skip_existing,
+            skip_identical = skip_identical,
+            skip_on_error = skip_on_error,
+            error_log_path = error_log_path,
+            case_sensitive_paths = case_sensitive_paths,
+            ignore_symlinks = ignore_symlinks,
+            follow_symlink_dirs = follow_symlink_dirs,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+    return fileops.transfer_file(
+        src = src,
+        dest = dest,
+        show_progress = show_progress,
+        skip_existing = skip_existing,
+        skip_identical = skip_identical,
+        skip_on_error = skip_on_error,
+        error_log_path = error_log_path,
+        case_sensitive_paths = case_sensitive_paths,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
 
 # Smart move
 def smart_move(
@@ -361,37 +358,34 @@ def smart_move(
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-    else:
-        if os.path.isdir(src):
-            return move_contents(
-                src = src,
-                dest = dest,
-                show_progress = show_progress,
-                skip_existing = skip_existing,
-                skip_identical = skip_identical,
-                skip_on_error = skip_on_error,
-                error_log_path = error_log_path,
-                case_sensitive_paths = case_sensitive_paths,
-                ignore_symlinks = ignore_symlinks,
-                follow_symlink_dirs = follow_symlink_dirs,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
-        else:
-            return fileops.transfer_file(
-                src = src,
-                dest = dest,
-                delete_afterwards = True,
-                show_progress = show_progress,
-                skip_existing = skip_existing,
-                skip_identical = skip_identical,
-                skip_on_error = skip_on_error,
-                error_log_path = error_log_path,
-                case_sensitive_paths = case_sensitive_paths,
-                verbose = verbose,
-                pretend_run = pretend_run,
-                exit_on_failure = exit_on_failure)
-    return True
+    if os.path.isdir(src):
+        return move_contents(
+            src = src,
+            dest = dest,
+            show_progress = show_progress,
+            skip_existing = skip_existing,
+            skip_identical = skip_identical,
+            skip_on_error = skip_on_error,
+            error_log_path = error_log_path,
+            case_sensitive_paths = case_sensitive_paths,
+            ignore_symlinks = ignore_symlinks,
+            follow_symlink_dirs = follow_symlink_dirs,
+            verbose = verbose,
+            pretend_run = pretend_run,
+            exit_on_failure = exit_on_failure)
+    return fileops.transfer_file(
+        src = src,
+        dest = dest,
+        delete_afterwards = True,
+        show_progress = show_progress,
+        skip_existing = skip_existing,
+        skip_identical = skip_identical,
+        skip_on_error = skip_on_error,
+        error_log_path = error_log_path,
+        case_sensitive_paths = case_sensitive_paths,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
 
 # Smart transfer
 def smart_transfer(
@@ -424,21 +418,20 @@ def smart_transfer(
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-    else:
-        return smart_copy(
-            src = src,
-            dest = dest,
-            show_progress = show_progress,
-            skip_existing = skip_existing,
-            skip_identical = skip_identical,
-            skip_on_error = skip_on_error,
-            error_log_path = error_log_path,
-            case_sensitive_paths = case_sensitive_paths,
-            ignore_symlinks = ignore_symlinks,
-            follow_symlink_dirs = follow_symlink_dirs,
-            verbose = verbose,
-            pretend_run = pretend_run,
-            exit_on_failure = exit_on_failure)
+    return smart_copy(
+        src = src,
+        dest = dest,
+        show_progress = show_progress,
+        skip_existing = skip_existing,
+        skip_identical = skip_identical,
+        skip_on_error = skip_on_error,
+        error_log_path = error_log_path,
+        case_sensitive_paths = case_sensitive_paths,
+        ignore_symlinks = ignore_symlinks,
+        follow_symlink_dirs = follow_symlink_dirs,
+        verbose = verbose,
+        pretend_run = pretend_run,
+        exit_on_failure = exit_on_failure)
 
 ###########################################################
 # Sync utilities
@@ -492,14 +485,14 @@ def sync_data(data_src, data_dest, verbose = False, pretend_run = False, exit_on
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-    elif os.path.isdir(data_src):
+    if os.path.isdir(data_src):
         return sync_contents(
             src = data_src,
             dest = data_dest,
             verbose = verbose,
             pretend_run = pretend_run,
             exit_on_failure = exit_on_failure)
-    elif os.path.isfile(data_src):
+    if os.path.isfile(data_src):
         return smart_copy(
             src = data_src,
             dest = data_dest,

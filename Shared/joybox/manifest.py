@@ -80,7 +80,7 @@ class Manifest:
 
     # Find entry by steam id
     def find_entry_by_steamid(self, steamid):
-        for manifest_name, manifest_entry in self.manifest.items():
+        for manifest_entry in self.manifest.values():
             if "steam" not in manifest_entry:
                 continue
             if "id" not in manifest_entry["steam"]:
@@ -91,7 +91,7 @@ class Manifest:
 
     # Find entry by gog id
     def find_entry_by_gogid(self, gogid):
-        for manifest_name, manifest_entry in self.manifest.items():
+        for manifest_entry in self.manifest.values():
             if "gog" not in manifest_entry:
                 continue
             if "id" not in manifest_entry["gog"]:

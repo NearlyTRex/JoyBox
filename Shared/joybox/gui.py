@@ -95,7 +95,7 @@ def display_popup(
             keep_on_top = keep_on_top,
             image = image_file,
             modal = modal)
-    elif message_type == config.MessageType.GET_TEXT:
+    if message_type == config.MessageType.GET_TEXT:
         return popup_func(
             message_text,
             title = title_text,
@@ -109,7 +109,7 @@ def display_popup(
             keep_on_top = keep_on_top,
             image = image_file,
             modal = modal)
-    elif message_type == config.MessageType.GET_FILE:
+    if message_type == config.MessageType.GET_FILE:
         return popup_func(
             message_text,
             title = title_text,
@@ -128,7 +128,7 @@ def display_popup(
             file_types = file_types,
             initial_folder = initial_folder,
             default_path = default_path)
-    elif message_type == config.MessageType.GET_FOLDER:
+    if message_type == config.MessageType.GET_FOLDER:
         return popup_func(
             message_text,
             title = title_text,
@@ -145,22 +145,21 @@ def display_popup(
             no_window = no_window,
             initial_folder = initial_folder,
             default_path = default_path)
-    else:
-        return popup_func(
-            message_text,
-            title = title_text,
-            button_color = button_color,
-            background_color = background_color,
-            text_color = text_color,
-            non_blocking = non_blocking,
-            icon = icon_file,
-            line_width = line_width,
-            font = font,
-            no_titlebar = no_titlebar,
-            grab_anywhere = grab_anywhere,
-            keep_on_top = keep_on_top,
-            image = image_file,
-            modal = modal)
+    return popup_func(
+        message_text,
+        title = title_text,
+        button_color = button_color,
+        background_color = background_color,
+        text_color = text_color,
+        non_blocking = non_blocking,
+        icon = icon_file,
+        line_width = line_width,
+        font = font,
+        no_titlebar = no_titlebar,
+        grab_anywhere = grab_anywhere,
+        keep_on_top = keep_on_top,
+        image = image_file,
+        modal = modal)
 
 # Display info popup
 def display_info_popup(title_text, message_text):
@@ -426,7 +425,7 @@ def display_choices_window(
 
     # Handle events
     while True:
-        event, values = window.read(timeout=100)
+        event, _ = window.read(timeout=100)
         if event in (psg.WIN_CLOSED, "ESCAPE_PRESSED"):
             break
 
